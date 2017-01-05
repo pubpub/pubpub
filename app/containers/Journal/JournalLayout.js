@@ -137,6 +137,7 @@ export const JournalLayout = React.createClass({
 						label={'Logo'}
 						tooltip={'Used in the Header bar for all branded Journal pages'} 
 						containerStyle={styles.imageContainer}
+						key={'logo-upload'}
 						onNewImage={this.printNewImage} />
 
 					<ImageUpload 
@@ -145,6 +146,7 @@ export const JournalLayout = React.createClass({
 						label={'Icon'}
 						tooltip={'Used in search results, must be square'} 
 						containerStyle={styles.imageContainer}
+						key={'icon-upload'}
 						onNewImage={this.printNewImage} />
 
 					<ImageUpload 
@@ -153,6 +155,7 @@ export const JournalLayout = React.createClass({
 						label={'Background Image'}
 						tooltip={'Testing Tooltip layout'} 
 						containerStyle={styles.imageContainer}
+						key={'background-upload'}
 						onNewImage={this.printNewImage} />
 					<div>
 						<label htmlFor={'logo'}>

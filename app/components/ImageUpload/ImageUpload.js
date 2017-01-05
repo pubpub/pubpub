@@ -12,6 +12,7 @@ export const ImageUpload = React.createClass({
 		userCrop: PropTypes.bool,
 		width: PropTypes.number,
 		label: PropTypes.node,
+		key: PropTypes.string,
 		tooltip: PropTypes.node,
 		containerStyle: PropTypes.object,
 		onNewImage: PropTypes.func,
@@ -80,7 +81,10 @@ export const ImageUpload = React.createClass({
 		this.setState({
 			loadingImage: false,
 		});
-		this.props.onNewImage(this.state.imageURL);
+		if (this.state.imageURL) {
+			this.props.onNewImage(this.state.imageURL);	
+		}
+		
 	},
 
 	onImageError: function() {
@@ -102,7 +106,7 @@ export const ImageUpload = React.createClass({
 				
 			<div style={[styles.container, containerStyle]}>
 				<Tooltip content={<span style={styles.tooltipText}>{this.props.tooltip}</span>} position={Position.TOP_LEFT}>
-					<label htmlFor={'logo'}>
+					<label htmlFor={this.props.key}>
 						<div style={styles.label}>
 							{this.props.label}
 						</div>
@@ -121,7 +125,7 @@ export const ImageUpload = React.createClass({
 						</div>
 						
 						{!this.state.loadingImage &&
-							<input id={'logo'} name={'logo image'} type="file" accept="image/*" onChange={this.handleImageSelect} style={{ position: 'fixed', top: '-100px' }}/>
+							<input id={this.props.key} name={'logo image'} type="file" accept="image/*" onChange={this.handleImageSelect} style={styles.fileInput}/>
 						}
 
 						
@@ -168,6 +172,7 @@ styles = {
 	imageCropperWrapper: {
 		height: '100vh',
 		width: '100vw',
+		zIndex: 10,
 		backgroundColor: 'rgba(255,255,255,0.75)',
 		position: 'fixed',
 		top: 0,
@@ -193,5 +198,9 @@ styles = {
 			height: 'auto',
 			left: 0,
 		},
+	},
+	fileInput: { 
+		position: 'fixed', 
+		top: '-100px' ,
 	},
 };

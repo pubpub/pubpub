@@ -145,6 +145,13 @@ export const Journal = React.createClass({
 			return <NoMatch />;
 		}
 
+		if (!journal.name && !this.props.journalData.error) {
+			return <div>Loading</div>;
+		}
+		if (!journal.name && this.props.journalData.error) {
+			return <div>Error</div>;
+		}
+
 		return (
 			<div style={styles.container}>
 				<Helmet {...metaData} />
@@ -167,7 +174,7 @@ export const Journal = React.createClass({
 								journalId={journal.id} 
 								followData={followData} 
 								followerCount={followers.length} 
-								followersLink={'/' + journal.slug + '/followers'}
+								followersLink={{ pathname: '/' + journal.slug + '/followers' }}
 								dispatch={this.props.dispatch} />
 						</div>
 					}

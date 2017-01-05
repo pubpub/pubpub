@@ -38,11 +38,24 @@ export const JournalEdit = React.createClass({
 
 	componentWillMount() {
 		const journal = this.props.journal || {};
-		this.initialize(journal);
+		this.setState({
+			slug: journal.slug || '',
+			name: journal.name || '',
+			icon: journal.icon || 'https://assets.pubpub.org/_site/journal.png',
+			logo: journal.logo,
+			shortDescription: journal.shortDescription || '',
+			headerColor: journal.headerColor || '#13A6EF',
+			headerMode: journal.headerMode || 'title',
+			headerAlign: journal.headerAlign || 'left',
+			headerImage: journal.headerImage,
+			website: journal.website || '',
+			twitter: journal.twitter || '',
+			facebook: journal.facebook || '',
+		});
 	},
 	
 	componentWillReceiveProps(nextProps) {
-		const journal = nextProps.journal || {};
+		// const journal = nextProps.journal || {};
 		// this.initialize(journal);
 
 		// If the slug changed, redirect to new slug.
@@ -53,24 +66,7 @@ export const JournalEdit = React.createClass({
 		}
 	},
 
-	initialize: function(journal) {
-		// Initialize data once we have it.
-		if (journal.id && this.state.icon === undefined) {
-			this.setState({
-				slug: journal.slug || '',
-				name: journal.name || '',
-				icon: journal.icon || 'https://assets.pubpub.org/_site/journal.png',
-				shortDescription: journal.shortDescription || '',
-				headerColor: journal.headerColor || '#13A6EF',
-				headerMode: journal.headerMode || 'title',
-				headerAlign: journal.headerAlign || 'left',
-				headerImage: journal.headerImage,
-				website: journal.website || '',
-				twitter: journal.twitter || '',
-				facebook: journal.facebook || '',
-			});
-		}
-	},
+
 
 	componentWillUnmount() {
 		this.props.handleHeaderUpdate({
@@ -140,6 +136,16 @@ export const JournalEdit = React.createClass({
 	},
 	handleIconFinish: function(imageUrl) {
 		this.setState({ icon: imageUrl });
+		this.props.handleHeaderUpdate({ icon: imageUrl });
+	},
+
+	handleLogoFinish: function(imageUrl) {
+		this.setState({ logo: imageUrl });
+		this.props.handleHeaderUpdate({ logo: imageUrl });
+	},
+	handleHeaderImageFinish: function(imageUrl) {
+		this.setState({ headerImage: imageUrl });
+		this.props.handleHeaderUpdate({ headerImage: imageUrl });
 	},
 
 	render: function() {
@@ -161,10 +167,10 @@ export const JournalEdit = React.createClass({
 					'.colorPicker > div': { boxShadow: '0px 0px 0px black !important', border: '1px solid #BBBDC0 !important' },
 				}} />
 
-				<form onSubmit={this.saveLayout} style={styles.form}>
+				<form onSubmit={this.saveJournal} style={styles.form}>
 					<div style={styles.buttonWrapper}>
-						<button className={'pt-button pt-intent-primary'} onClick={this.saveLayout}>
-							<FormattedMessage {...globalMessages.SaveLayout} />
+						<button type="button" className={'pt-button pt-intent-primary'} onClick={this.saveJournal}>
+							Save Journal
 						</button>
 
 						<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!errorMessage} /></div>
@@ -201,6 +207,50 @@ export const JournalEdit = React.createClass({
 							containerStyle={styles.imageContainer}
 							onNewImage={this.handleIconFinish} />
 
+						<ImageUpload 
+							defaultImage={this.state.logo}
+							userCrop={false}
+							label={'Logo'}
+							tooltip={'Used in the Header bar for all branded Journal pages'} 
+							containerStyle={styles.imageContainer}
+							onNewImage={this.handleLogoFinish} />
+
+
+						<ImageUpload 
+							defaultImage={this.state.headerImage}
+							userCrop={false}
+							label={'Background Image'}
+							tooltip={'Testing Tooltip layout'} 
+							containerStyle={styles.imageContainer}
+							onNewImage={this.handleHeaderImageFinish} />
+
+
+						<label htmlFor={'headerMode'}>
+							<FormattedMessage {...globalMessages.HeaderMode} />
+
+							<div style={{margin:'1em'}} className={'pt-button-group'}>
+								<button className={this.state.headerMode === 'title' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'title')}>Title</button>
+								<button className={this.state.headerMode === 'logo' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'logo')}>Logo</button>
+								<button className={this.state.headerMode === 'both' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'both')}>Both</button>
+							</div>
+						</label>
+						
+
+						<label htmlFor={'headerAlign'}>
+							<FormattedMessage {...globalMessages.HeaderAlign} />
+							<div style={{margin:'1em'}} className={'pt-button-group'}>
+								<button className={this.state.headerAlign === 'left' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderAlignChange.bind(this, 'left')}>Left</button>
+								<button className={this.state.headerAlign === 'center' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderAlignChange.bind(this, 'center')}>Center</button>
+							</div>
+						</label>
+	
+
+						<label>
+							<FormattedMessage {...globalMessages.BackgroundColor} />
+							<div className={'colorPicker'}>
+								<ChromePicker color={this.state.headerColor} disableAlpha={true} onChange={this.handleColorChange} />
+							</div>
+						</label>
 
 						<label style={styles.label} htmlFor={'website'}>
 							<FormattedMessage {...globalMessages.Website}/>
@@ -225,72 +275,11 @@ export const JournalEdit = React.createClass({
 
 
 
-						<ImageUpload 
-							defaultImage={journal.logo}
-							userCrop={false}
-							label={'Logo'}
-							tooltip={'Used in the Header bar for all branded Journal pages'} 
-							containerStyle={styles.imageContainer}
-							onNewImage={this.handleLogoFinish} />
+						
 
-
-						<ImageUpload 
-							defaultImage={this.state.headerImage}
-							userCrop={false}
-							label={'Background Image'}
-							tooltip={'Testing Tooltip layout'} 
-							containerStyle={styles.imageContainer}
-							onNewImage={this.handleHeaderImageFinish} />
-
-						<label htmlFor={'headerMode'}>
-							<FormattedMessage {...globalMessages.HeaderMode} />
-
-							<div style={{margin:'1em'}} className={'pt-button-group'}>
-								<button className={this.state.headerMode === 'title' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'title')}>Title</button>
-								<button className={this.state.headerMode === 'logo' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'logo')}>Logo</button>
-								<button className={this.state.headerMode === 'both' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'both')}>Both</button>
-							</div>
-						</label>
-						{/*<RadioGroup name="header mode" selectedValue={this.state.headerMode} onChange={this.handleHeaderModeChange}>
-							<Radio value="title" style={styles.radioInput} label={<FormattedMessage {...globalMessages.Title} />} />
-							<Radio value="logo" style={styles.radioInput} label={<FormattedMessage {...globalMessages.Logo} />} />
-							<Radio value="both" style={styles.radioInput} label={<FormattedMessage {...globalMessages.Both} />} />
-						</RadioGroup>*/}
-
-						<label htmlFor={'headerAlign'}>
-							<FormattedMessage {...globalMessages.HeaderAlign} />
-							<div style={{margin:'1em'}} className={'pt-button-group'}>
-								<button className={this.state.headerMode === 'left' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderAlignChange.bind(this, 'left')}>Left</button>
-								<button className={this.state.headerMode === 'center' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderAlignChange.bind(this, 'center')}>Center</button>
-							</div>
-						</label>
-						{/*<RadioGroup name="header align" selectedValue={this.state.headerAlign} onChange={this.handleHeaderAlignChange}>
-							<Radio value="left" style={styles.radioInput} label={<FormattedMessage {...globalMessages.Left} />} /> 
-							<Radio value="center" style={styles.radioInput} label={<FormattedMessage {...globalMessages.Center} />} /> 
-						</RadioGroup>*/}
-
-						<label>
-							<FormattedMessage {...globalMessages.BackgroundColor} />
-							<div className={'colorPicker'}>
-								<ChromePicker color={this.state.headerColor} disableAlpha={true} onChange={this.handleColorChange} />
-							</div>
-						</label>
+						
 							
 
-
-						{/*<div>
-							<label htmlFor={'headerImage'}>
-								<FormattedMessage {...globalMessages.BackgroundImage} />
-							</label>
-							{this.state.headerImage &&
-								<img style={styles.image} src={'https://jake.pubpub.org/unsafe/fit-in/500x0/' + this.state.headerImage} />
-							}
-							<input id={'headerImage'} name={'background image'} type="file" accept="image/*" onChange={this.handleHeaderImageSelect} />
-							<div className={'light-color inputSubtext underlineOnHover'} onClick={this.clearHeaderImageFinish} style={[styles.clear, !this.state.headerImage && {display: 'none'}]}>
-								<FormattedMessage {...globalMessages.Clear} />
-							</div>
-
-						</div>*/}
 					</div>
 
 
