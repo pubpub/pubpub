@@ -120,6 +120,7 @@ styles = {
 	},
 	logoImage: {
 		maxWidth: '100%',
+		maxHeight: '150px',
 	},
 	followButtonStyle: {
 		position: 'absolute',

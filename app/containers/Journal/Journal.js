@@ -241,7 +241,11 @@ export const Journal = React.createClass({
 							);
 						case 'about':
 							return (
-								<JournalAbout journal={journal} />
+								<JournalAbout 
+									journal={journal} 
+									isLoading={this.props.journalData.putDataLoading}
+									error={this.props.journalData.putDataError}
+									dispatch={this.props.dispatch} />
 							);
 						case 'collection':
 							return (
@@ -259,38 +263,6 @@ export const Journal = React.createClass({
 						default:
 							return (
 								<div>
-									<button className={'pt-button'} style={{margin:'1em'}}>Cancel</button>
-									<button className={'pt-button pt-icons-edit pt-intent-primary'} style={{margin:'1em'}}>Save</button>
-
-									<div style={{margin:'1em'}} className={'pt-button-group pt-minimal'}>
-										<button className={'pt-button pt-icon-globe'} />
-										<button className={'pt-button pt-icon-globe'} />
-										<button className={'pt-button pt-icon-globe'} />
-									</div>
-
-									<div style={{margin:'1em'}} className={'pt-button-group pt-minimal'}>
-										<button className={'pt-button pt-active'}>Left</button>
-										<button className={'pt-button'}>Center</button>
-									</div>
-
-									<div style={{margin:'1em'}} className={'pt-button-group pt-minimal'}>
-										<button className={'pt-button'}>Title</button>
-										<button className={'pt-button pt-active'}>Logo</button>
-										<button className={'pt-button'}>Both</button>
-									</div>
-
-									<div className="pt-control-group">
-										<div className={'pt-button pt-disabled pt-block'}>facebook.com/</div>
-										<input type="text" className="pt-input" placeholder="Find filters..." />
-									</div>
-									<h1>History</h1>
-									<p>This journal was first created with tthe goal of doing things that are like writing and readin and other stuff. This journal was first created with tthe goal of doing things that are like writing and readin and other stuff.</p>
-									<h1>Foreward Path</h1>
-									<p>We're interested in writing things that make people read and putting pictures in them and talking about them and figuring stuff out. We're interested in writing things that make people read and putting pictures in them and talking about them and figuring stuff out.</p>
-									<p>Most commonly we are interested in writing things that make people read and putting pictures in them and talking about them and figuring stuff out. We're interested in writing things that make people read and putting pictures in them and talking about them and figuring stuff out.</p>
-
-
-
 									<div style={styles.headerWrapper}>
 										<div style={styles.headerOptions}>
 											<div className="pt-button-group pt-minimal">
