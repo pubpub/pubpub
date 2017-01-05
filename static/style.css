@@ -34,7 +34,11 @@ body {
 }
 
 .pt-input:focus {
-	box-shadow: inset 0 0px 1px 1px rgba(16, 22, 26, 0.5);
+	box-shadow: inset 0 0px 1px 1px rgba(16, 22, 26, 0.85);
+}
+
+.pt-input.margin-bottom {
+	margin-bottom: 1em;
 }
 
 form {

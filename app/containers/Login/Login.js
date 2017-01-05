@@ -31,6 +31,10 @@ export const Login = React.createClass({
 		};
 	},
 
+	componentDidMount: function() {
+		this.initFocusInput.focus(); 
+	},
+
 	componentWillReceiveProps(nextProps) {
 		// If login was succesful, redirect
 		const oldLoading = this.props.loginData.loading;
@@ -74,14 +78,14 @@ export const Login = React.createClass({
 						<label style={styles.label} htmlFor={'email'}>
 							<FormattedMessage {...globalMessages.Email} />
 						</label>
-						<input id={'email'} name={'email'} type="text" style={styles.input} value={this.state.email} onChange={this.inputUpdateLowerCase.bind(this, 'email')} />
+						<input className={'pt-input margin-bottom'} ref={(input)=> { this.initFocusInput = input; }} id={'email'} name={'email'} type="text" style={styles.input} value={this.state.email} onChange={this.inputUpdateLowerCase.bind(this, 'email')} />
 					</div>
 
 					<div>
 						<label style={styles.label} htmlFor={'password'}>
 							<FormattedMessage {...globalMessages.Password} />
 						</label>
-						<input id={'password'} name={'password'} type="password" style={styles.input} value={this.state.password} onChange={this.inputUpdate.bind(this, 'password')} />
+						<input className={'pt-input margin-bottom'} id={'password'} name={'password'} type="password" style={styles.input} value={this.state.password} onChange={this.inputUpdate.bind(this, 'password')} />
 						<Link className={'light-color inputSubtext'} to={'/resetpassword'}>
 							<FormattedMessage id="login.ForgotPassword" defaultMessage="Forgot Password?" />
 						</Link>
