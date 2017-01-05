@@ -18,13 +18,13 @@ $dark-navbar-background-color: $dark-gray2;
 
 // Override component styles here
 // ****************************
-.pt-button.pt-intent-primary:hover {
+.pt-button.pt-intent-primary:hover:not(:disabled) {
 	background: $dark-gray2;
 	background: -webkit-linear-gradient( top , rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)) left no-repeat, center no-repeat $dark-gray2;
 	background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)) left no-repeat, center no-repeat $dark-gray2;
 }
 
-.pt-button.pt-intent-primary:active, .pt-intent-primary.pt-button.pt-active {
+.pt-button.pt-intent-primary:active:not(:disabled), .pt-intent-primary.pt-button.pt-active:not(:disabled) {
 	background: $dark-gray1;
 }
 

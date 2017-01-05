@@ -33,6 +33,7 @@ export const JournalEdit = React.createClass({
 			icon: undefined,
 			name: '',
 			shortDescription: '',
+			canSave: false,
 		};
 	},
 
@@ -80,46 +81,46 @@ export const JournalEdit = React.createClass({
 
 	
 
-	onHeaderImageFinish: function(evt, index, type, filename) {
-		this.setState({ headerImage: 'https://assets.pubpub.org/' + filename });
-		this.props.handleHeaderUpdate({ headerImage: 'https://assets.pubpub.org/' + filename });
-	},
+	// onHeaderImageFinish: function(evt, index, type, filename) {
+	// 	this.setState({ headerImage: 'https://assets.pubpub.org/' + filename });
+	// 	this.props.handleHeaderUpdate({ headerImage: 'https://assets.pubpub.org/' + filename });
+	// },
 	clearHeaderImageFinish: function() {
 		this.setState({ headerImage: null });
 		this.props.handleHeaderUpdate({ headerImage: null });
 	},
 
 	handleColorChange: function(colorChange) {
-		this.setState({ headerColor: colorChange.hex });
+		this.setState({ headerColor: colorChange.hex, canSave: true });
 		this.props.handleHeaderUpdate({ headerColor: colorChange.hex });
 	},
 	handleHeaderModeChange: function(value, evt) {
 		evt.preventDefault();
 		const newHeaderMode = value;
-		this.setState({ headerMode: newHeaderMode });
+		this.setState({ headerMode: newHeaderMode, canSave: true });
 		this.props.handleHeaderUpdate({ headerMode: newHeaderMode });
 	},
 
 	handleHeaderAlignChange: function(value, evt) {
 		evt.preventDefault();
 		const newHeaderAlign = value;
-		this.setState({ headerAlign: newHeaderAlign });
+		this.setState({ headerAlign: newHeaderAlign, canSave: true });
 		this.props.handleHeaderUpdate({ headerAlign: newHeaderAlign });
 	},
 
 	inputUpdate: function(key, evt) {
 		const value = evt.target.value || '';
-		this.setState({ [key]: value });
+		this.setState({ [key]: value, canSave: true });
 	},
 
 	inputUpdateLowerCase: function(key, evt) {
 		const value = evt.target.value || '';
-		this.setState({ [key]: value.toLowerCase() });
+		this.setState({ [key]: value.toLowerCase(), canSave: true });
 	},
 
 	shortDescriptionUpdate: function(evt) {
 		const description = evt.target.value || '';
-		this.setState({ shortDescription: description.substring(0, 140) });
+		this.setState({ shortDescription: description.substring(0, 140), canSave: true });
 	},
 
 	saveJournal: function(evt) {
@@ -132,19 +133,21 @@ export const JournalEdit = React.createClass({
 			}
 		});
 
+		this.setState({ canSave: false });
+
 		this.props.dispatch(putJournal(this.props.journal.id, newJournalData));
 	},
 	handleIconFinish: function(imageUrl) {
-		this.setState({ icon: imageUrl });
+		this.setState({ icon: imageUrl, canSave: true });
 		this.props.handleHeaderUpdate({ icon: imageUrl });
 	},
 
 	handleLogoFinish: function(imageUrl) {
-		this.setState({ logo: imageUrl });
+		this.setState({ logo: imageUrl, canSave: true });
 		this.props.handleHeaderUpdate({ logo: imageUrl });
 	},
 	handleHeaderImageFinish: function(imageUrl) {
-		this.setState({ headerImage: imageUrl });
+		this.setState({ headerImage: imageUrl, canSave: true });
 		this.props.handleHeaderUpdate({ headerImage: imageUrl });
 	},
 
@@ -169,7 +172,7 @@ export const JournalEdit = React.createClass({
 
 				<form onSubmit={this.saveJournal} style={styles.form}>
 					<div style={styles.buttonWrapper}>
-						<button type="button" className={'pt-button pt-intent-primary'} onClick={this.saveJournal}>
+						<button type="button" className={'pt-button pt-intent-primary'} disabled={!this.state.canSave} onClick={this.saveJournal}>
 							Save Journal
 						</button>
 
@@ -179,7 +182,63 @@ export const JournalEdit = React.createClass({
 					</div>
 
 					<div style={styles.formContentWrapper}>
+						<label style={styles.label} htmlFor={'name'}>
+							<FormattedMessage {...globalMessages.JournalName} />
+							<input className={'pt-input margin-bottom'} id={'name'} name={'name'} type="text" style={styles.input} value={this.state.name} onChange={this.inputUpdate.bind(this, 'name')} />
+						</label>
+
+						<ImageUpload 
+							defaultImage={this.state.icon}
+							userCrop={true}
+							label={<FormattedMessage {...globalMessages.JournalIcon} />}
+							tooltip={<FormattedMessage id="JournalProfileEdit.journalIconDescription" defaultMessage="Used as the Journal's preview image in search results and throughout the site."/>} 
+							containerStyle={styles.imageContainer}
+							onNewImage={this.handleIconFinish} />
+
+						<ImageUpload 
+							defaultImage={this.state.logo}
+							userCrop={false}
+							label={'Logo'}
+							tooltip={'Used in the Header bar for all branded Journal pages'} 
+							containerStyle={styles.imageContainer}
+							onNewImage={this.handleLogoFinish} />
+
+
+						<ImageUpload 
+							defaultImage={this.state.headerImage}
+							userCrop={false}
+							label={'Background Image'}
+							tooltip={'Testing Tooltip layout'} 
+							containerStyle={styles.imageContainer}
+							onNewImage={this.handleHeaderImageFinish} />
+
+
+						<label htmlFor={'headerMode'}>
+							<FormattedMessage {...globalMessages.HeaderMode} />
+
+							<div style={{margin:'1em'}} className={'pt-button-group'}>
+								<button className={this.state.headerMode === 'title' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'title')}>Title</button>
+								<button className={this.state.headerMode === 'logo' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'logo')}>Logo</button>
+								<button className={this.state.headerMode === 'both' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'both')}>Both</button>
+							</div>
+						</label>
 						
+
+						<label htmlFor={'headerAlign'}>
+							<FormattedMessage {...globalMessages.HeaderAlign} />
+							<div style={{margin:'1em'}} className={'pt-button-group'}>
+								<button className={this.state.headerAlign === 'left' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderAlignChange.bind(this, 'left')}>Left</button>
+								<button className={this.state.headerAlign === 'center' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderAlignChange.bind(this, 'center')}>Center</button>
+							</div>
+						</label>
+	
+
+						<label>
+							<FormattedMessage {...globalMessages.BackgroundColor} />
+							<div className={'colorPicker'}>
+								<ChromePicker color={this.state.headerColor} disableAlpha={true} onChange={this.handleColorChange} />
+							</div>
+						</label>
 
 						<label style={styles.label} htmlFor={'name'}>
 							<FormattedMessage {...globalMessages.JournalName} />
