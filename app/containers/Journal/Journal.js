@@ -312,7 +312,7 @@ export const Journal = React.createClass({
 									}
 
 									{query.view === 'collections' &&
-										<div><h2>COLLECTIONS YO!</h2></div>
+										<div><h2>Collections</h2></div>
 									}
 								</div>
 							);

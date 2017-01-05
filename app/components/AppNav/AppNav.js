@@ -71,7 +71,9 @@ export const AppNav = React.createClass({
 					{headerJournal &&
 						<div style={styles.journalLogoWrapper}>
 							<div style={styles.journalLogoDivider} />
-							<img src={headerJournal.logo} style={styles.journalLogo} />
+							<Link to={'/' + headerJournal.slug}>
+								<img src={headerJournal.logo} style={styles.journalLogo} />
+							</Link>
 						</div>
 					}
 					<form onSubmit={this.searchSubmited}>
@@ -169,7 +171,7 @@ styles = {
 		verticalAlign: 'middle',
 	},
 	journalLogoWrapper: {
-		padding: '0em 0.5em',
+		padding: '0em 15px',
 		margin: '.25em 0em',
 		position: 'relative',
 	},

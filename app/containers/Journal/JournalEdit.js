@@ -279,16 +279,7 @@ export const JournalEdit = React.createClass({
 							</div>
 						</label>
 
-
-
-						
-
-						
-							
-
 					</div>
-
-
 
 				</form>
 				</StickyContainer>
