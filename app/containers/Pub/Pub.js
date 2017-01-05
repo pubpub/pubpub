@@ -5,7 +5,7 @@ import Helmet from 'react-helmet';
 import { Link, browserHistory } from 'react-router';
 import { StickyContainer, Sticky } from 'react-sticky';
 import dateFormat from 'dateformat';
-
+import { NonIdealState } from '@blueprintjs/core';
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
@@ -125,11 +125,17 @@ export const Pub = React.createClass({
 
 	render() {
 		const pub = this.props.pubData.pub || {};
-		if (!pub.title && !this.props.pubData.error) {
+		if (this.props.pubData.loading && !this.props.pubData.error) {
 			return <div>Loading</div>;
 		}
-		if (!pub.title && this.props.pubData.error) {
-			return <div>Error</div>;
+		if (!this.props.pubData.loading && (this.props.pubData.error || !pub.title)) {
+			return (
+				<div style={{ margin: '2em' }}>
+					<NonIdealState
+						title={'Pub Not Found'}
+						visual={'error'} />
+				</div>
+			);
 		}
 
 		const currentFile = this.props.params.filename;

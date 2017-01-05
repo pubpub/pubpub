@@ -30,7 +30,7 @@ body {
 .prefixed-group.pt-control-group {
 	display: table;
 }
-.input-prefix.pt-button:not([class*="pt-intent-"]):disabled, .pt-button.pt-disabled:not([class*="pt-intent-"]) {
+.input-prefix.pt-button:not([class*="pt-intent-"]):disabled, .input-prefix.pt-button.pt-disabled:not([class*="pt-intent-"]) {
     color: inherit;
     border-color: rgba(16, 22, 26, 0.1) rgba(16, 22, 26, 0.1) rgba(16, 22, 26, 0.17) rgba(16, 22, 26, 0.1);
     cursor: default;

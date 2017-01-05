@@ -139,7 +139,7 @@ export const JournalAbout = React.createClass({
 					{!journal.longDescription && !this.state.editorOpen &&
 						<NonIdealState
 							action={<button className={'pt-button pt-icon-edit'} role="button" onClick={this.openEditor}>Add Details</button>}
-							description={'Details about this journal have not yet been added. Click below to add'}
+							description={'Details about this journal have not yet been added. You can use this space to describe the journal\'s vision, review process, or mission.'}
 							title={'No Content Yet'}
 							visual={'annotation'} />
 					}
