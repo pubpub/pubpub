@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import { Loader } from 'components';
+import { Spinner } from '@blueprintjs/core';
 import { s3Upload } from 'utils/uploadFile';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
@@ -27,28 +27,34 @@ export const ImageCropper = React.createClass({
 	onFileFinish: function(evt, index, type, filename) {
 		// console.log('https://s3.amazonaws.com/pubpub-upload/' + filename);
 		// console.log('finish');
-		this.setState({isUploading: false});
+		this.setState({
+			isUploading: false,
+			scale: 1,
+			preview: null,
+		});
 		this.props.onUpload('https://assets.pubpub.org/' + filename);
 	},
 	handleUpdate: function() {
 		const img = this.refs.userImageCrop.getImage('image/jpeg');
-		this.setState({preview: img});
+		this.setState({ preview: img });
 	},
 	handleSaveImage: function() {
 		const binary = atob(this.state.preview.split(',')[1]);
 		const mimeString = this.state.preview.split(',')[0].split(':')[1].split(';')[0];
 		const array = [];
-		for (let iii = 0; iii < binary.length; iii++) { array.push(binary.charCodeAt(iii));}
-		const file = new Blob([new Uint8Array(array)], {type: mimeString});
+		for (let iii = 0; iii < binary.length; iii++) { array.push(binary.charCodeAt(iii)); }
+		const file = new Blob([new Uint8Array(array)], { type: mimeString });
 
-		this.setState({isUploading: true});
+		this.setState({ isUploading: true });
 		s3Upload(file, ()=>{}, this.onFileFinish, 0);
 
 	},
-	handleScale: function() {
-		const scale = this.refs.scale.value;
+	handleScale: function(evt) {
 		const img = this.refs.userImageCrop.getImage('image/jpeg');
-		this.setState({scale: scale, preview: img});
+		this.setState({
+			scale: evt.target.value, 
+			preview: img
+		});
 	},
 
 	handleCancel: function() {
@@ -76,19 +82,21 @@ export const ImageCropper = React.createClass({
 						onImageChange={this.handleUpdate}
 						style={canvasStyle}/>
 
-						<input style={styles.slider} name="scale" type="range" ref="scale" onChange={this.handleScale} min="1" max="3" step="0.01" defaultValue="1" />
+						<input style={styles.slider} name="scale" type="range" value={this.state.scale} onChange={this.handleScale} min="1" max="3" step="0.01"/>
 				</div>
 				<div style={styles.previewAndOptions}>
 					<img style={styles.preview}src={this.state.preview} />
-					<button className={'pt-button'} style={styles.option} key="userUploadCancel" onClick={this.handleCancel}>
+					<button type="button" className={'pt-button'} style={styles.option} key="userUploadCancel" onClick={this.handleCancel}>
 						<FormattedMessage {...globalMessages.Cancel} />
 					</button>
-					<button className={'pt-button pt-intent-primary'} style={styles.option} key="userUploadSave" onClick={this.handleSaveImage}>
+					<button type="button" className={'pt-button pt-intent-primary'} style={styles.option} key="userUploadSave" onClick={this.handleSaveImage}>
 						<FormattedMessage {...globalMessages.Save} />
 					</button>
 				</div>
 				<div style={styles.loaderWrapper}>
-					<Loader loading={this.state.isUploading}/>
+					{this.state.isUploading &&
+						<Spinner className={'pt-small'} />	
+					}
 				</div>
 
 
@@ -109,8 +117,8 @@ styles = {
 	loaderWrapper: {
 		position: 'absolute',
 		width: '40px',
-		bottom: 0,
-		right: 0,
+		bottom: 15,
+		right: 10,
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			position: 'static',
 			margin: '0 auto',

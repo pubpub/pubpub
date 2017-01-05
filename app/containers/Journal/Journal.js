@@ -16,6 +16,7 @@ import { getJournalData } from './actions';
 
 import JournalHeader from './JournalHeader';
 import JournalLayout from './JournalLayout';
+import JournalEdit from './JournalEdit';
 import JournalDetails from './JournalDetails';
 import JournalSubmits from './JournalSubmits';
 import JournalFeatures from './JournalFeatures';
@@ -206,20 +207,12 @@ export const Journal = React.createClass({
 							);
 						case 'edit': 
 							return (
-								<div>
-									<JournalDetails
-										journal={journal}
-										isLoading={this.props.journalData.putDataLoading}
-										error={this.props.journalData.putDataError}
-										dispatch={this.props.dispatch} />
-
-									<JournalLayout
-										journal={journal}
-										handleHeaderUpdate={this.handleHeaderUpdate}
-										isLoading={this.props.journalData.putDataLoading}
-										error={this.props.journalData.putDataError}
-										dispatch={this.props.dispatch} />
-								</div>
+								<JournalEdit
+									journal={journal}
+									handleHeaderUpdate={this.handleHeaderUpdate}
+									isLoading={this.props.journalData.putDataLoading}
+									error={this.props.journalData.putDataError}
+									dispatch={this.props.dispatch} />
 							);
 						case 'featured':
 							return (
