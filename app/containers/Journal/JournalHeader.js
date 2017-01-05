@@ -13,6 +13,7 @@ export const JournalProfileHeader = React.createClass({
 		isFollowing: PropTypes.bool,
 		description: PropTypes.string,
 		logo: PropTypes.string,
+		collections: PropTypes.array,
 		headerColor: PropTypes.string,
 		headerImage: PropTypes.string,
 		headerMode: PropTypes.string,
@@ -27,6 +28,7 @@ export const JournalProfileHeader = React.createClass({
 			textAlign: this.props.headerAlign || 'left',
 		};
 
+		const collections = this.props.collections || [];
 		return (
 			<div style={[styles.headerBackground, customBackgroundStyle]}>
 				<div style={styles.backgroundGrey} />
@@ -48,6 +50,15 @@ export const JournalProfileHeader = React.createClass({
 
 					</div>
 				</div>
+
+				<div style={styles.bottom}>
+					<Link style={styles.collectionLink} to={'/' + this.props.journalSlug}>Home</Link>
+					<Link style={styles.aboutLink} to={'/' + this.props.journalSlug + '/about'}>About</Link>
+					{collections.map((collection)=> {
+						return <Link key={'collection-' + collection.id} style={styles.collectionLink} to={'/' + this.props.journalSlug + '/collection/' + collection.title}>{collection.title}</Link>;
+					})}
+				</div>
+
 			</div>
 		);
 	}
@@ -58,8 +69,8 @@ export default Radium(JournalProfileHeader);
 
 styles = {
 	headerBackground: {
-		padding: '2em 0em',
-		marginBottom: '3em',
+		padding: '2em 0em 1em 0em',
+		marginBottom: '2em',
 		position: 'relative',
 		color: 'white',
 		backgroundRepeat: 'no-repeat',
@@ -91,8 +102,25 @@ styles = {
 	headerTitle: {
 		color: 'white',
 	},
+	bottom: {
+		maxWidth: '1024px',
+		padding: '0em 2em',
+		margin: '0 auto',
+		color: 'white',
+		zIndex: 3,
+		position: 'relative',
+	},
+	aboutLink: {
+		color: 'inherit',
+		paddingRight: '4em',
+	},
+	collectionLink: {
+		color: 'inherit',
+		paddingRight: '1em',
+	},
 	logoImage: {
 		maxWidth: '100%',
+		maxHeight: '150px',
 	},
 	followButtonStyle: {
 		position: 'absolute',

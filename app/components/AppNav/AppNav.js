@@ -10,7 +10,9 @@ export const AppNav = React.createClass({
 	propTypes: {
 		accountData: PropTypes.object,
 		pubData: PropTypes.object,
+		journalData: PropTypes.object,
 		location: PropTypes.object,
+		params: PropTypes.object,
 		logoutHandler: PropTypes.func,
 	},
 
@@ -34,10 +36,13 @@ export const AppNav = React.createClass({
 	render() {
 		const user = this.props.accountData.user || {};
 		const pub = this.props.pubData.pub || {};
+		const journal = this.props.journalData.journal || {};
 		const location = this.props.location || {};
 		const redirectURL = location.pathname.indexOf('/signup') !== 0 && location.pathname.indexOf('/reset') !== 0 && location.pathname !== '/' ? location.pathname : undefined;
 		const query = location.query || {};
+		const params = this.props.params || {};
 		const isPub = location.pathname.indexOf('/pub') === 0;
+		const isJournal = !isPub && params.slug;
 		const pubFeatures = isPub ? pub.pubFeatures || [] : [];
 		const contextJournal = pubFeatures.reduce((previous, current)=> {
 			if (!query.context && current.journalId === pub.defaultContext) { return current.journal; }
@@ -45,8 +50,10 @@ export const AppNav = React.createClass({
 			return previous;
 		}, undefined);
 
+		const headerJournal = isJournal ? journal : contextJournal;
+
 		const navClass = 'pt-navbar pt-dark';
-		const navStyle = contextJournal ? { backgroundColor: contextJournal.headerColor } : {};
+		const navStyle = headerJournal ? { backgroundColor: headerJournal.headerColor } : {};
 
 
 		return (
@@ -61,10 +68,12 @@ export const AppNav = React.createClass({
 						
 						
 					</Link>
-					{isPub && contextJournal &&
+					{headerJournal &&
 						<div style={styles.journalLogoWrapper}>
 							<div style={styles.journalLogoDivider} />
-							<img src={contextJournal.logo} style={styles.journalLogo} />
+							<Link to={'/' + headerJournal.slug}>
+								<img src={headerJournal.logo} style={styles.journalLogo} />
+							</Link>
 						</div>
 					}
 					<form onSubmit={this.searchSubmited}>
@@ -162,7 +171,7 @@ styles = {
 		verticalAlign: 'middle',
 	},
 	journalLogoWrapper: {
-		padding: '0em 0.5em',
+		padding: '0em 15px',
 		margin: '.25em 0em',
 		position: 'relative',
 	},

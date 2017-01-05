@@ -26,6 +26,29 @@ body {
 }
 /* Input Fields */
 /* ------------ */
+
+.prefixed-group.pt-control-group {
+	display: table;
+}
+.input-prefix.pt-button:not([class*="pt-intent-"]):disabled, .pt-button.pt-disabled:not([class*="pt-intent-"]) {
+    color: inherit;
+    border-color: rgba(16, 22, 26, 0.1) rgba(16, 22, 26, 0.1) rgba(16, 22, 26, 0.17) rgba(16, 22, 26, 0.1);
+    cursor: default;
+    display: table-cell;
+    width: 1%;
+}
+.prefixed-input.pt-intput {
+	display: table-cell;
+}
+
+.pt-input:focus {
+	box-shadow: inset 0 0px 1px 1px rgba(16, 22, 26, 0.85);
+}
+
+.pt-input.margin-bottom, .pt-control-group.margin-bottom {
+	margin-bottom: 1.2em;
+}
+
 form {
 	margin-bottom: 0em;
 }
@@ -44,7 +67,7 @@ input[type="text"]:not(.pt-input), input[type="email"]:not(.pt-input), input[typ
 	margin-bottom: 1em;
 	resize: vertical;
 }
-input[type="text"]:focus:not(.pt-input), input[type="email"]:focus:not(.pt-input), input[type="password"]:focus:not(.pt-input), textarea:focus{
+input[type="text"]:focus:not(.pt-input), input[type="email"]:focus:not(.pt-input), input[type="password"]:focus:not(.pt-input), textarea:focus:not(.pt-input){
 	outline: none;
 	border: 2px solid #58585B;
 }
@@ -330,3 +353,28 @@ input[type="file"]:focus {
 }
 /* ------ */
 
+
+/* ------ */
+/* About Page Content */
+/* ------ */
+.journal-about-content {
+	padding-left: 1em;
+	border-left: 1px solid #EEE;
+	h1, h2, h3, h4, h5, h6 {
+		color: #444;
+		font-size: 1em
+	}
+	h1 {
+		font-size: 2em;
+	}
+	h2 {
+		font-size: 1.5em;
+	}
+	h3 {
+		font-size: 1.25em;
+	}
+	img {
+		max-width: 100%;
+	}
+}
+/* ------ */

@@ -19,6 +19,10 @@ export const SignUp = React.createClass({
 		};
 	},
 
+	componentDidMount: function() {
+		this.initFocusInput.focus(); 
+	},
+
 	inputUpdateLowerCase: function(key, evt) {
 		const value = evt.target.value || '';
 		this.setState({ [key]: value.toLowerCase() });
@@ -49,7 +53,7 @@ export const SignUp = React.createClass({
 						<form onSubmit={this.handleSubmit} style={styles.form}>
 							<label htmlFor={'email'}>
 								Email
-								<input id={'email'} name={'email'} type="email" style={styles.input} value={this.state.email} onChange={this.inputUpdateLowerCase.bind(this, 'email')} />
+								<input className={'pt-input margin-bottom'} ref={(input)=> { this.initFocusInput = input; }} id={'email'} name={'email'} type="email" style={styles.input} value={this.state.email} onChange={this.inputUpdateLowerCase.bind(this, 'email')} />
 							</label>
 							
 							<button className={'pt-button pt-intent-primary'} name={'login'} onClick={this.handleSubmit}>

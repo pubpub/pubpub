@@ -110,37 +110,5 @@ styles = {
 	container: {
 		padding: '1.5em',
 	},
-	adminWrapper: {
-		margin: '2em 0em',
-	},
-	detailsWrapper: {
-		display: 'inline-block',
-	},
-	adminImage: {
-		verticalAlign: 'top',
-		paddingRight: '1em',
-	},
-	adminName: {
-		fontSize: '1.25em',
-		display: 'inline-block',
-		verticalAlign: 'middle',
-		paddingRight: '1em',
-	},
-	adminAction: {
-		display: 'inline-block',
-		paddingRight: '2em',
-	},
-	menuSubText: {
-		maxWidth: '300px',
-		marginBottom: 0,
-		fontSize: '0.85em',
-		whiteSpace: 'normal',
-	},
-	role: {
-		display: 'inline-block',
-		border: '1px solid #CCC',
-		fontSize: '.85em',
-		padding: '0em .5em',
-		marginRight: '1em',
-	},
+	
 };

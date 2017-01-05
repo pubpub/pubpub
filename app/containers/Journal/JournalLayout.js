@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import Radium, { Style } from 'radium';
 import Helmet from 'react-helmet';
-import { Loader } from 'components';
+import { ImageUpload, Loader } from 'components';
 import { s3Upload } from 'utils/uploadFile';
 import { RadioGroup, Radio } from '@blueprintjs/core';
 import { ChromePicker } from 'react-color';
@@ -106,6 +106,9 @@ export const JournalLayout = React.createClass({
 
 		this.props.dispatch(putJournal(this.props.journal.id, newJournalData));
 	},
+	printNewImage: function(imageUrl) {
+		console.log(imageUrl);
+	},
 
 	render: function() {
 		const journal = this.props.journal || {};
@@ -128,6 +131,32 @@ export const JournalLayout = React.createClass({
 
 				<form onSubmit={this.saveLayout} style={styles.form}>
 
+					<ImageUpload 
+						defaultImage={journal.logo}
+						userCrop={false}
+						label={'Logo'}
+						tooltip={'Used in the Header bar for all branded Journal pages'} 
+						containerStyle={styles.imageContainer}
+						key={'logo-upload'}
+						onNewImage={this.printNewImage} />
+
+					<ImageUpload 
+						defaultImage={journal.icon}
+						userCrop={true}
+						label={'Icon'}
+						tooltip={'Used in search results, must be square'} 
+						containerStyle={styles.imageContainer}
+						key={'icon-upload'}
+						onNewImage={this.printNewImage} />
+
+					<ImageUpload 
+						defaultImage={journal.headerImage}
+						userCrop={false}
+						label={'Background Image'}
+						tooltip={'Testing Tooltip layout'} 
+						containerStyle={styles.imageContainer}
+						key={'background-upload'}
+						onNewImage={this.printNewImage} />
 					<div>
 						<label htmlFor={'logo'}>
 							<FormattedMessage {...globalMessages.JournalLogo} />
@@ -210,12 +239,16 @@ styles = {
 			width: 'auto',
 		}
 	},
+	imageContainer: {
+		marginRight: '3em',
+	},
 	input: {
 		width: 'calc(100% - 20px - 4px)', // Calculations come from padding and border in pubpub.css
 	},
 	image: {
 		maxWidth: '100%',
 	},
+
 	loaderContainer: {
 		display: 'inline-block',
 		position: 'relative',

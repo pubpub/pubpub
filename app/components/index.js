@@ -6,6 +6,7 @@ export AutocompleteBar from './AutocompleteBar/AutocompleteBar';
 export DropdownButton from './DropdownButton/DropdownButton';
 export FileDiff from './FileDiff/FileDiff';
 export ImageCropper from './ImageCropper/ImageCropper';
+export ImageUpload from './ImageUpload/ImageUpload';
 export Loader from './Loader/Loader';
 export NavContentWrapper from './NavContentWrapper/NavContentWrapper';
 export PreviewPub from './PreviewPub/PreviewPub';

@@ -50,7 +50,6 @@ export const JournalDetails = React.createClass({
 		if (lastSlug && nextSlug && lastSlug !== nextSlug) {
 			browserHistory.push('/' + nextSlug + '/details');
 		}
-		
 	},
 
 	initialize: function(journal) {
