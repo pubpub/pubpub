@@ -13,8 +13,7 @@ let styles;
 export const PubDiscussionsNew = React.createClass({
 	propTypes: {
 		discussionsData: PropTypes.array,
-		labelsData: PropTypes.array,
-		pubId: PropTypes.number,
+		pub: PropTypes.object,
 		isLoading: PropTypes.bool,
 		pathname: PropTypes.string,
 		query: PropTypes.object,
@@ -61,8 +60,8 @@ export const PubDiscussionsNew = React.createClass({
 	createSubmit: function(evt) {
 		evt.preventDefault();
 		const createData = {
-			replyRootPubId: this.props.pubId,
-			replyParentPubId: this.props.pubId,
+			replyRootPubId: this.props.pub.id,
+			replyParentPubId: this.props.pub.id,
 			title: this.state.title,
 			description: this.state.description,
 			labels: this.state.labels,
@@ -75,7 +74,8 @@ export const PubDiscussionsNew = React.createClass({
 	},
 
 	render: function() {
-		const labelList = this.props.labelsData || [];		
+		const pub = this.props.pub || {};
+		const labelList = pub.pubLabels || [];		
 		const isLoading = this.props.isLoading;
 		const serverErrors = {
 			'Slug already used': <FormattedMessage id="discussion.JournalURLalreadyused" defaultMessage="Journal URL already used" />,
@@ -85,7 +85,7 @@ export const PubDiscussionsNew = React.createClass({
 			<div style={styles.container}>
 				<h3>New Discussion</h3>
 				<form onSubmit={this.createSubmit}>
-					<PubLabelList allLabels={labelList} onChange={this.onLabelsChange} canSelect={true} rootPubId={this.props.pubId} pathname={this.props.pathname} query={this.props.query} dispatch={this.props.dispatch} />
+					<PubLabelList allLabels={labelList} onChange={this.onLabelsChange} canEdit={pub.canEdit} canSelect={true} rootPubId={this.props.pub.id} pathname={this.props.pathname} query={this.props.query} dispatch={this.props.dispatch} />
 					<input id={'journalName'} name={'journal name'} placeholder={'Title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
 						
 					<textarea id={'description'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.inputUpdate.bind(this, 'description')} />

@@ -13,7 +13,6 @@ let styles;
 export const PubSettings = React.createClass({
 	propTypes: {
 		pub: PropTypes.object,
-		pubId: PropTypes.number,
 		isLoading: PropTypes.bool,
 		error: PropTypes.string,
 		dispatch: PropTypes.func,
@@ -112,11 +111,14 @@ export const PubSettings = React.createClass({
 		const { isValid, validationError } = this.validate(updateData);
 		this.setState({ validationError: validationError });
 		if (isValid) {
-			this.props.dispatch(updatePub(this.props.pubId, updateData));	
+			this.props.dispatch(updatePub(this.props.pub.id, updateData));	
 		}
 	},
 
 	render: function() {
+		const pub = this.props.pub || {};
+		if (!pub.canEdit) { return <div />; }
+		
 		// const pub = this.props.pub || {};
 		const isLoading = this.props.isLoading;
 		const serverErrors = {

@@ -15,8 +15,7 @@ let styles;
 export const PubDiscussion = React.createClass({
 	propTypes: {
 		discussion: PropTypes.object,
-		labelsData: PropTypes.array,
-		pubId: PropTypes.number,
+		pub: PropTypes.object,
 		allReactions: PropTypes.array,
 		accountId: PropTypes.number,
 		pathname: PropTypes.string,
@@ -61,8 +60,11 @@ export const PubDiscussion = React.createClass({
 
 	createSubmit: function(evt) {
 		evt.preventDefault();
+		if (!this.props.accountId) {
+			return this.setState({ validationError: 'Must be Logged In' });
+		}
 		const createData = {
-			replyRootPubId: this.props.pubId,
+			replyRootPubId: this.props.pub.id,
 			replyParentPubId: this.props.discussion.id,
 			title: 'Reply to: ' + this.props.discussion.title,
 			description: this.state.description,
@@ -110,14 +112,13 @@ export const PubDiscussion = React.createClass({
 
 	render: function() {
 		const discussion = this.props.discussion || {};
-		const labelsData = this.props.labelsData || [];
+		const pub = this.props.pub || {};
+		const pubLabels = pub.pubLabels || [];
 		const children = discussion.children || [];
-		const allReactions = this.props.allReactions || [];
+		const allReactions = pub.allReactions || [];
 		const isLoading = this.props.isLoading;
-		const serverErrors = {
-			'Slug already used': '',
-		};
-		const errorMessage = serverErrors[this.props.error] || this.state.validationError;
+
+		const errorMessage = this.state.validationError || this.props.error;
 
 		const discussions = [discussion, ...children];
 
@@ -130,7 +131,9 @@ export const PubDiscussion = React.createClass({
 				{this.state.openEditor !== 'title' &&
 				<h3>
 					{discussion.title}
-					<button className={'pt-button pt-minimal pt-icon-edit'} onClick={this.setOpenEditor.bind(this, 'title', undefined, discussion.title)} />
+					{discussion.contributors[0].user.id === this.props.accountId &&
+						<button className={'pt-button pt-minimal pt-icon-edit'} onClick={this.setOpenEditor.bind(this, 'title', undefined, discussion.title)} />
+					}
 				</h3>
 				}
 				{this.state.openEditor === 'title' &&
@@ -148,11 +151,11 @@ export const PubDiscussion = React.createClass({
 				
 				
 				<PubLabelList 
-					allLabels={labelsData} 
+					allLabels={pubLabels} 
 					selectedLabels={discussion.labels} 
 					pubId={discussion.id} 
-					rootPubId={this.props.pubId} 
-					canEdit={true} 
+					rootPubId={this.props.pub.id} 
+					canEdit={pub.canEdit} 
 					pathname={this.props.pathname} 
 					query={this.props.query} 
 					dispatch={this.props.dispatch} />
@@ -164,6 +167,7 @@ export const PubDiscussion = React.createClass({
 					return 0;
 				}).map((child, index)=> {
 					const user = child.contributors[0].user;
+					const isAuthor = user.id === this.props.accountId;
 					const editorOpen = this.state.openEditor === child.id;
 					const pubReactions = child.pubReactions || [];
 					
@@ -211,9 +215,11 @@ export const PubDiscussion = React.createClass({
 											<button type="button" className="pt-button pt-icon-social-media" />
 										</Popover>
 									</Tooltip>
-									<Tooltip content={'Edit'} position={Position.LEFT} useSmartPositioning={true}>						
-										<button type="button" className="pt-button pt-icon-edit" onClick={this.setOpenEditor.bind(this, child.id, child.description)} />
-									</Tooltip>
+									{isAuthor &&
+										<Tooltip content={'Edit'} position={Position.LEFT} useSmartPositioning={true}>						
+											<button type="button" className="pt-button pt-icon-edit" onClick={this.setOpenEditor.bind(this, child.id, child.description)} />
+										</Tooltip>
+									}
 									<Tooltip content={'Cite Discussion'} position={Position.LEFT} useSmartPositioning={true}>						
 										
 										<Popover 

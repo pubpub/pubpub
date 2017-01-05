@@ -157,9 +157,7 @@ export const Pub = React.createClass({
 		const contributors = pub.contributors || [];
 		const invitedReviewers = pub.invitedReviewers || [];
 		const versions = pub.versions || [];
-		const pubSubmits = pub.pubSubmits || [];
 		const pubFeatures = pub.pubFeatures || [];
-		const labelsData = pub.pubLabels || [];
 		const followers = pub.followers || [];
 
 		const accountData = this.props.accountData || {};
@@ -298,7 +296,7 @@ export const Pub = React.createClass({
 					<h1 style={styles.pubTitle}>{pub.title}</h1>
 					
 					<div style={{ paddingLeft: '1em' }}>
-						<PubLabelList selectedLabels={pub.labels} pubId={pub.id} rootPubId={pub.id} globalLabels={true} canEdit={true} pathname={pathname} query={query} dispatch={this.props.dispatch} />	
+						<PubLabelList selectedLabels={pub.labels} pubId={pub.id} rootPubId={pub.id} globalLabels={true} canEdit={pub.canEdit} pathname={pathname} query={query} dispatch={this.props.dispatch} />	
 					</div>
 					
 					<div style={styles.pubAuthors}>
@@ -336,7 +334,7 @@ export const Pub = React.createClass({
 						{!!versions.length && <Link to={{ pathname: '/pub/' + this.props.params.slug + '/versions', query: preservedQuery }}><div style={[styles.navItem, meta === 'versions' && styles.navItemActive]} className={'bottomShadowOnHover'}>Versions ({versions.length})</div></Link> }
 						<Link to={{ pathname: '/pub/' + this.props.params.slug + '/contributors', query: preservedQuery }}><div style={[styles.navItem, meta === 'contributors' && styles.navItemActive]} className={'bottomShadowOnHover'}>Contributors ({contributors.length})</div></Link>
 						{!!versions.length && <Link to={{ pathname: '/pub/' + this.props.params.slug + '/journals', query: preservedQuery }}><div style={[styles.navItem, meta === 'journals' && styles.navItemActive]} className={'bottomShadowOnHover'}>Journals {pubFeatures.length ? '(' + pubFeatures.length + ')' : ''}</div></Link> }
-						<Link to={{ pathname: '/pub/' + this.props.params.slug + '/settings', query: preservedQuery }}><div style={[styles.navItem, meta === 'settings' && styles.navItemActive]} className={'bottomShadowOnHover'}>Settings</div></Link>
+						{pub.canEdit && <Link to={{ pathname: '/pub/' + this.props.params.slug + '/settings', query: preservedQuery }}><div style={[styles.navItem, meta === 'settings' && styles.navItemActive]} className={'bottomShadowOnHover'}>Settings</div></Link>}
 					</div>
 
 
@@ -346,9 +344,8 @@ export const Pub = React.createClass({
 					{meta === 'versions' && 
 						<PubVersions
 							versionsData={versions}
-							pubId={pub.id}
+							pub={pub}
 							location={this.props.location} 
-							pubSlug={pub.slug}
 							isLoading={this.props.pubData.versionsLoading}
 							error={this.props.pubData.versionsError}
 							dispatch={this.props.dispatch} />
@@ -356,15 +353,13 @@ export const Pub = React.createClass({
 					{meta === 'contributors' && 
 						<PubContributors
 							contributors={contributors}
-							pubId={pub.id}
-							allRoles={pub.allRoles}
+							pub={pub}
 							dispatch={this.props.dispatch} />
 					}
 					{(!meta || meta === 'files') && 
 						<PubContent
 							version={currentVersion}
-							pubId={pub.id}
-							pubSlug={pub.slug}
+							pub={pub}
 							params={this.props.params}
 							query={query}
 							isLoading={this.props.pubData.versionsLoading}
@@ -374,17 +369,13 @@ export const Pub = React.createClass({
 					{meta === 'settings' && 
 						<PubSettings
 							pub={pub}
-							pubId={pub.id}
 							isLoading={this.props.pubData.settingsLoading}
 							error={this.props.pubData.settingsError}
 							dispatch={this.props.dispatch} />
 					}
 					{meta === 'journals' && 
 						<PubJournals
-							pubSubmits={pubSubmits}
-							pubFeatures={pubFeatures}
-							pubId={pub.id}
-							pubDefaultContext={pub.defaultContext}
+							pub={pub}
 							dispatch={this.props.dispatch} />
 					}
 					{meta === 'followers' && 
@@ -440,8 +431,7 @@ export const Pub = React.createClass({
 						{panel === 'new' && 
 							<PubDiscussionsNew 
 								discussionsData={discussionsData}
-								labelsData={labelsData}
-								pubId={pub.id}
+								pub={pub}
 								isLoading={this.props.pubData.discussionsLoading}
 								error={this.props.pubData.discussionsError}
 								pathname={pathname}
@@ -451,7 +441,7 @@ export const Pub = React.createClass({
 						{!panel && !queryDiscussion && 
 							<PubDiscussionsList 
 								discussionsData={discussionsData} 
-								labelsData={labelsData} 
+								pub={pub}
 								pathname={pathname} 
 								query={query} 
 								dispatch={this.props.dispatch} />
@@ -459,9 +449,7 @@ export const Pub = React.createClass({
 						{!!queryDiscussion && 
 							<PubDiscussion
 								discussion={activeDiscussion}
-								labelsData={labelsData}
-								pubId={pub.id}
-								allReactions={pub.allReactions}
+								pub={pub}
 								accountId={accountId}
 								isLoading={this.props.pubData.discussionsLoading}
 								error={this.props.pubData.discussionsError}

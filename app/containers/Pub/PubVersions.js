@@ -11,8 +11,7 @@ let styles;
 export const PubVersions = React.createClass({
 	propTypes: {
 		versionsData: PropTypes.array,
-		pubSlug: PropTypes.string,
-		pubId: PropTypes.number,
+		pub: PropTypes.object,
 		location: PropTypes.object,
 		isLoading: PropTypes.bool,
 		error: PropTypes.object,
@@ -36,7 +35,7 @@ export const PubVersions = React.createClass({
 	},
 
 	publishVersion: function() {
-		this.props.dispatch(putVersion(this.props.pubId, this.state.confirmPublish));
+		this.props.dispatch(putVersion(this.props.pub.id, this.state.confirmPublish));
 	},
 
 	render: function() {
@@ -59,36 +58,38 @@ export const PubVersions = React.createClass({
 					return (
 						<div key={'version-' + version.id} style={styles.versionRow}>
 
-							<div style={styles.smallColumn}>
-								<Tooltip 
-									content={
-										<div>
-											<div>Version is {version.isPublished ? 'Public' : 'Private'}</div>
-											{!version.isPublished &&
-												<div>Click to publish</div>
-											}
-											
-										</div>
-									} 
-									position={Position.BOTTOM_LEFT}>
-									<span onClick={version.isPublished ? ()=>{} : this.setPublish.bind(this, version.id)} className={'pt-button pt-minimal'} style={version.isPublished ? styles.noClick : {}}>
-										<span className={'pt-icon-standard pt-icon-globe'} style={version.isPublished ? styles.icon : [styles.icon, styles.inactiveIcon]} />
-										<span style={styles.iconSpacer} />
-										<span className={'pt-icon-standard pt-icon-lock'} style={version.isPublished ? [styles.icon, styles.inactiveIcon] : styles.icon} />
-									</span>
-								</Tooltip>
-							</div>
+							{this.props.pub.canEdit &&
+								<div style={styles.smallColumn}>
+									<Tooltip 
+										content={
+											<div>
+												<div>Version is {version.isPublished ? 'Public' : 'Private'}</div>
+												{!version.isPublished &&
+													<div>Click to publish</div>
+												}
+												
+											</div>
+										} 
+										position={Position.BOTTOM_LEFT}>
+										<span onClick={version.isPublished ? ()=>{} : this.setPublish.bind(this, version.id)} className={'pt-button pt-minimal'} style={version.isPublished ? styles.noClick : {}}>
+											<span className={'pt-icon-standard pt-icon-globe'} style={version.isPublished ? styles.icon : [styles.icon, styles.inactiveIcon]} />
+											<span style={styles.iconSpacer} />
+											<span className={'pt-icon-standard pt-icon-lock'} style={version.isPublished ? [styles.icon, styles.inactiveIcon] : styles.icon} />
+										</span>
+									</Tooltip>
+								</div>
+							}
 							
 							<div style={styles.largeColumn}>
 								{/* Link to Diff view */}
-								<Link to={{ pathname: '/pub/' + this.props.pubSlug + '/diff', query: { ...query, version: undefined, base: previousVersion.hash, target: version.hash } }}>
+								<Link to={{ pathname: '/pub/' + this.props.pub.slug + '/diff', query: { ...query, version: undefined, base: previousVersion.hash, target: version.hash } }}>
 									<h6 style={styles.noMargin}>{version.versionMessage || 'No message'}</h6>
 								</Link>
 								<p style={styles.noMargin}>{dateFormat(version.createdAt, 'mmm dd, yyyy HH:MM')}</p>
 							</div>
 							<div style={styles.smallColumn}>
 								{/* Link to pub at that version instance */}
-								<Link to={{ pathname: '/pub/' + this.props.pubSlug, query: { ...query, version: version.hash } }}>	
+								<Link to={{ pathname: '/pub/' + this.props.pub.slug, query: { ...query, version: version.hash } }}>	
 									<button className={'pt-button p2-minimal'}>View Pub</button>
 								</Link>
 							</div>

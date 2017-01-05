@@ -13,8 +13,7 @@ let styles;
 export const PubContributors = React.createClass({
 	propTypes: {
 		contributors: PropTypes.array,
-		allRoles: PropTypes.array,
-		pubId: PropTypes.number,
+		pub: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
 
@@ -94,7 +93,7 @@ export const PubContributors = React.createClass({
 			} 
 		});
 		this.props.dispatch(putContributor(
-			this.props.pubId, 
+			this.props.pub.id, 
 			contributorId, 
 			true || this.state.contributorStates[contributorId].canEdit, 
 			this.state.contributorStates[contributorId].canRead, 
@@ -115,7 +114,7 @@ export const PubContributors = React.createClass({
 			} 
 		});
 		this.props.dispatch(putContributor(
-			this.props.pubId, 
+			this.props.pub.id, 
 			contributorId, 
 			this.state.contributorStates[contributorId].canEdit, 
 			this.state.contributorStates[contributorId].canRead, 
@@ -138,7 +137,7 @@ export const PubContributors = React.createClass({
 			} 
 		});
 		this.props.dispatch(putContributor(
-			this.props.pubId, 
+			this.props.pub.id, 
 			contributorId, 
 			canEdit, 
 			canRead, 
@@ -148,11 +147,11 @@ export const PubContributors = React.createClass({
 	},
 
 	addContributor: function() {
-		this.props.dispatch(postContributor(this.state.newContributor.id, this.props.pubId));
+		this.props.dispatch(postContributor(this.state.newContributor.id, this.props.pub.id));
 	},
 
 	deleteContributor: function(contributorId) {
-		this.props.dispatch(deleteContributor(this.props.pubId, contributorId));
+		this.props.dispatch(deleteContributor(this.props.pub.id, contributorId));
 	},
 
 	render() {
@@ -160,27 +159,29 @@ export const PubContributors = React.createClass({
 		return (
 			<div style={styles.container}>
 				<h2>Contributors</h2>
-				<p>Contributors can be added and given edit permissions, to signify authorship, or to ackowledge contributions. Check out roles.</p>
+				<p>Contributors can be added and given edit permissions, to signify authorship, or to ackowledge contributions.</p>
 
-				<AutocompleteBar
-					filterOptions={(options)=>{
-						return options.filter((option)=>{
-							for (let index = 0; index < contributors.length; index++) {
-								if (contributors[index].userId === option.id) {
-									return false;
+				{this.props.pub.canEdit &&
+					<AutocompleteBar
+						filterOptions={(options)=>{
+							return options.filter((option)=>{
+								for (let index = 0; index < contributors.length; index++) {
+									if (contributors[index].userId === option.id) {
+										return false;
+									}
 								}
-							}
-							return true;
-						});
-					}}
-					placeholder={'Find New Contributor'}
-					loadOptions={this.loadOptions}
-					value={this.state.newContributor}
-					onChange={this.handleSelectChange}
-					onComplete={this.addContributor}
-					completeDisabled={!this.state.newContributor || !this.state.newContributor.id}
-					completeString={'Add'}
-				/>			
+								return true;
+							});
+						}}
+						placeholder={'Find New Contributor'}
+						loadOptions={this.loadOptions}
+						value={this.state.newContributor}
+						onChange={this.handleSelectChange}
+						onComplete={this.addContributor}
+						completeDisabled={!this.state.newContributor || !this.state.newContributor.id}
+						completeString={'Add'}
+					/>	
+				}		
 
 					
 				{contributors.map((contributor, index)=> {
@@ -193,77 +194,80 @@ export const PubContributors = React.createClass({
 							<img src={'https://jake.pubpub.org/unsafe/50x50/' + user.image} style={styles.contributorImage} alt={user.firstName + ' ' + user.lastName} />
 							<div style={styles.detailsWrapper}>
 								<div style={styles.contributorName}>{user.firstName + ' ' + user.lastName}</div>
-								<div style={styles.contributorPermission}>
-									<Popover 
-										content={<Menu>
-											<MenuItem 
-												onClick={this.permissionChange.bind(this, contributor.id, 0)}
-												text={
-													<div>
-														<b>None</b>
-														<p style={styles.menuSubText}>Ackowledge contributor for their input, but grant no special permissions.</p>
-													</div>
-												}
-											/>
-											<MenuDivider />
-											<MenuItem 
-												onClick={this.permissionChange.bind(this, contributor.id, 1)}
-												text={
-													<div>
-														<b>Can Read</b>
-														<p style={styles.menuSubText}>Allow contributor to read private versions and discussions.</p>
-													</div>
-												}
-											/>
-											<MenuDivider />
-											<MenuItem 
-												onClick={this.permissionChange.bind(this, contributor.id, 2)}
-												text={
-													<div>
-														<b>Can Edit</b>
-														<p style={styles.menuSubText}>Allow contributor to create new versions, publish versions, manage discussions, submit to journals.</p>
-													</div>
-												}
-											/>
-										</Menu>}
-										interactionKind={PopoverInteractionKind.CLICK}
-										position={Position.BOTTOM_LEFT}
-										transitionDuration={200}
-										popoverClassName="pt-minimal"
-									>
-										<Tooltip content={'Authors are granted Edit permissions'} isDisabled={!isAuthor} position={Position.BOTTOM} useSmartPositioning={true}>
-											<button type="button" className={isAuthor ? 'pt-button pt-disabled' : 'pt-button'}>
-												Permission: {(canEdit || isAuthor) && 'Can Edit'}{(canRead && !isAuthor) && 'Can Read'}{(!canRead && !canEdit && !isAuthor) && 'None'}
-												<span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
-											</button>
-										</Tooltip>
-										
-									</Popover>	
+								{this.props.pub.canEdit &&
+									<div style={styles.contributorPermission}>
+										<Popover 
+											content={<Menu>
+												<MenuItem 
+													onClick={this.permissionChange.bind(this, contributor.id, 0)}
+													text={
+														<div>
+															<b>None</b>
+															<p style={styles.menuSubText}>Ackowledge contributor for their input, but grant no special permissions.</p>
+														</div>
+													}
+												/>
+												<MenuDivider />
+												<MenuItem 
+													onClick={this.permissionChange.bind(this, contributor.id, 1)}
+													text={
+														<div>
+															<b>Can Read</b>
+															<p style={styles.menuSubText}>Allow contributor to read private versions and discussions.</p>
+														</div>
+													}
+												/>
+												<MenuDivider />
+												<MenuItem 
+													onClick={this.permissionChange.bind(this, contributor.id, 2)}
+													text={
+														<div>
+															<b>Can Edit</b>
+															<p style={styles.menuSubText}>Allow contributor to create new versions, publish versions, manage discussions, submit to journals.</p>
+														</div>
+													}
+												/>
+											</Menu>}
+											interactionKind={PopoverInteractionKind.CLICK}
+											position={Position.BOTTOM_LEFT}
+											transitionDuration={200}
+											popoverClassName="pt-minimal"
+										>
+											<Tooltip content={'Authors are granted Edit permissions'} isDisabled={!isAuthor} position={Position.BOTTOM} useSmartPositioning={true}>
+												<button type="button" className={isAuthor ? 'pt-button pt-disabled' : 'pt-button'}>
+													Permission: {(canEdit || isAuthor) && 'Can Edit'}{(canRead && !isAuthor) && 'Can Read'}{(!canRead && !canEdit && !isAuthor) && 'None'}
+													<span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
+												</button>
+											</Tooltip>
+											
+										</Popover>	
 
-								</div>
-
-								<div>
-									<label style={styles.contributorAction} className="pt-control pt-checkbox">
-										<input type="checkbox" checked={this.state.contributorStates[contributor.id].isAuthor} onChange={this.isAuthorChange.bind(this, contributor.id)} />
-										<span className="pt-control-indicator" />
-										List as Author
-									</label>
-									<label style={styles.contributorAction} className="pt-control pt-checkbox">
-										<input type="checkbox" checked={this.state.contributorStates[contributor.id].isHidden} onChange={this.isHiddenChange.bind(this, contributor.id)} />
-										<span className="pt-control-indicator" />
-										Hide Contributor
-									</label>
-									<div style={styles.contributorAction}>
-										<button type="button" className="pt-button pt-intent-danger pt-minimal" onClick={this.deleteContributor.bind(this, contributor.id)}>Delete Contributor</button>
 									</div>
-								</div>
+								}
+								{this.props.pub.canEdit &&
+									<div>
+										<label style={styles.contributorAction} className="pt-control pt-checkbox">
+											<input type="checkbox" checked={this.state.contributorStates[contributor.id].isAuthor} onChange={this.isAuthorChange.bind(this, contributor.id)} />
+											<span className="pt-control-indicator" />
+											List as Author
+										</label>
+										<label style={styles.contributorAction} className="pt-control pt-checkbox">
+											<input type="checkbox" checked={this.state.contributorStates[contributor.id].isHidden} onChange={this.isHiddenChange.bind(this, contributor.id)} />
+											<span className="pt-control-indicator" />
+											Hide Contributor
+										</label>
+										<div style={styles.contributorAction}>
+											<button type="button" className="pt-button pt-intent-danger pt-minimal" onClick={this.deleteContributor.bind(this, contributor.id)}>Delete Contributor</button>
+										</div>
+									</div>
+								}
 							</div>
 							<PubContributorRoleList
-								allRoles={this.props.allRoles}
+								allRoles={this.props.pub.allRoles}
 								selectedRoles={contributor.roles}
-								pubId={this.props.pubId}
+								pubId={this.props.pub.id}
 								contributorId={contributor.id}
-								canSelect={true}
+								canSelect={this.props.pub.canEdit}
 								dispatch={this.props.dispatch} />
 							<hr />
 						

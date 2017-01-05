@@ -9,10 +9,7 @@ let styles;
 
 export const PubJournals = React.createClass({
 	propTypes: {
-		pubSubmits: PropTypes.array,
-		pubFeatures: PropTypes.array,
-		pubDefaultContext: PropTypes.number,
-		pubId: PropTypes.number,
+		pub: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
 
@@ -53,21 +50,22 @@ export const PubJournals = React.createClass({
 		this.setState({ newSubmission: value });
 	},
 	createSubmission: function() {
-		this.props.dispatch(postJournalSubmit(this.props.pubId, this.state.newSubmission.id));
+		this.props.dispatch(postJournalSubmit(this.props.pub.id, this.state.newSubmission.id));
 	},
 	setDisplayed: function(journalId, evt) {
-		this.props.dispatch(putFeature(this.props.pubId, journalId, evt.target.checked));
+		this.props.dispatch(putFeature(this.props.pub.id, journalId, evt.target.checked));
 	},
 	setContext: function(journalId, evt) {
-		if (journalId === this.props.pubDefaultContext) {
-			return this.props.dispatch(putPubContext(this.props.pubId, null));
+		if (journalId === this.props.pub.defaultContext) {
+			return this.props.dispatch(putPubContext(this.props.pub.id, null));
 		}
-		return this.props.dispatch(putPubContext(this.props.pubId, journalId));
+		return this.props.dispatch(putPubContext(this.props.pub.id, journalId));
 	},
 
 	render: function() {
-		const pubSubmits = this.props.pubSubmits || [];
-		const pubFeatures = this.props.pubFeatures || [];
+		const pub = this.props.pub || {};
+		const pubSubmits = pub.pubSubmits || [];
+		const pubFeatures = pub.pubFeatures || [];
 
 		const featuredIds = {};
 		pubFeatures.map((feature)=> {
@@ -78,25 +76,27 @@ export const PubJournals = React.createClass({
 			<div style={styles.container}>
 				<h2>Journals</h2>
 
-				<AutocompleteBar
-					filterOptions={(options)=>{
-						return options.filter((option)=>{
-							for (let index = 0; index < pubSubmits.length; index++) {
-								if (pubSubmits[index].journal.id === option.id) {
-									return false;
+				{pub.canEdit &&
+					<AutocompleteBar
+						filterOptions={(options)=>{
+							return options.filter((option)=>{
+								for (let index = 0; index < pubSubmits.length; index++) {
+									if (pubSubmits[index].journal.id === option.id) {
+										return false;
+									}
 								}
-							}
-							return true;
-						});
-					}}
-					placeholder={'Submit to new journal'}
-					loadOptions={this.loadOptions}
-					value={this.state.newSubmission}
-					onChange={this.handleSelectChange}
-					onComplete={this.createSubmission}
-					completeDisabled={!this.state.newSubmission || !this.state.newSubmission.id}
-					completeString={'Submit Pub'}
-				/>
+								return true;
+							});
+						}}
+						placeholder={'Submit to new journal'}
+						loadOptions={this.loadOptions}
+						value={this.state.newSubmission}
+						onChange={this.handleSelectChange}
+						onComplete={this.createSubmission}
+						completeDisabled={!this.state.newSubmission || !this.state.newSubmission.id}
+						completeString={'Submit Pub'}
+					/>
+				}
 				
 				{!!pubFeatures.length && 
 					<div style={styles.section}>
@@ -109,7 +109,7 @@ export const PubJournals = React.createClass({
 						}).map((feature, index)=> {
 							const journal = feature.journal;
 							const isDisplayed = feature.isDisplayed;
-							const isContext = feature.journalId === this.props.pubDefaultContext;
+							const isContext = feature.journalId === this.props.pub.defaultContext;
 							return (
 								<div key={'pubFeature-' + index}>
 									<PreviewJournal 
@@ -119,7 +119,7 @@ export const PubJournals = React.createClass({
 												<div>Featured: {dateFormat(feature.createdAt, 'mmm dd, yyyy')}</div>
 											</div>
 										} 
-										bottomContent={
+										bottomContent={pub.canEdit &&
 											<div>
 												<label style={styles.contributorAction} className={'pt-control pt-checkbox'}>
 													<input type="checkbox" checked={isDisplayed} onChange={this.setDisplayed.bind(this, feature.journalId)} />

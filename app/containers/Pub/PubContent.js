@@ -15,7 +15,7 @@ let styles;
 export const PubContent = React.createClass({
 	propTypes: {
 		version: PropTypes.object,
-		pubId: PropTypes.number,
+		pub: PropTypes.object,
 		pubSlug: PropTypes.string,
 		params: PropTypes.object,
 		query: PropTypes.object,
@@ -135,7 +135,7 @@ export const PubContent = React.createClass({
 			return this.setState({ newVersionError: 'Version message required' });
 		}
 		if (!this.state.uploadingFinished) { return false; }
-		const pubId = this.props.pubId;
+		const pubId = this.props.pub.id;
 		const newUploadedFileObjects = this.state.uploadedFileObjects;
 
 		const version = this.props.version || {};
@@ -158,7 +158,7 @@ export const PubContent = React.createClass({
 	},
 
 	defaultFileChange: function(filename) {
-		this.props.dispatch(putDefaultFile(this.props.pubId, this.props.version.id, filename));
+		this.props.dispatch(putDefaultFile(this.props.pub.id, this.props.version.id, filename));
 	},
 
 	render() {
@@ -192,7 +192,7 @@ export const PubContent = React.createClass({
 			<div style={styles.container}>
 
 				{/* No files associated with Pub yet*/}
-				{!files.length && !this.state.uploading &&
+				{!files.length && !this.state.uploading && this.props.pub.canEdit &&
 					<NonIdealState
 						action={
 							<div>
@@ -213,7 +213,7 @@ export const PubContent = React.createClass({
 
 				{/* Upload and Editor Buttons */}
 				{/* Only shown on main Files list view, when not uploading */}
-				{meta === 'files' && !!files.length && !this.state.uploading && !routeFilename &&
+				{meta === 'files' && !!files.length && !this.state.uploading && !routeFilename && this.props.pub.canEdit &&
 					<div style={styles.topButtons}>
 						<label className="pt-button" htmlFor={'upload'}>
 							Upload Files
@@ -234,18 +234,18 @@ export const PubContent = React.createClass({
 					<div style={{ marginBottom: '1em' }}>
 						{meta !== 'files' && !routeFilename &&
 							<ul className="pt-breadcrumbs">
-								<li><Link to={{ pathname: '/pub/' + this.props.pubSlug + '/files', query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> {files.length} Files</Link></li>
+								<li><Link to={{ pathname: '/pub/' + this.props.pub.slug + '/files', query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> {files.length} Files</Link></li>
 							</ul>
 						}
 						{meta === 'files' && !routeFilename &&
 							<ul className="pt-breadcrumbs">
-								<li><Link to={{ pathname: '/pub/' + this.props.pubSlug, query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-document" /> Main</Link></li>
+								<li><Link to={{ pathname: '/pub/' + this.props.pub.slug, query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-document" /> Main</Link></li>
 							</ul>
 						}
 
 						{!!routeFilename &&
 							<ul className="pt-breadcrumbs">
-								<li><Link to={{ pathname: '/pub/' + this.props.pubSlug + '/files', query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> Files</Link></li>
+								<li><Link to={{ pathname: '/pub/' + this.props.pub.slug + '/files', query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> Files</Link></li>
 								<li><a className="pt-breadcrumb">{routeFile.name}</a></li>
 							</ul>
 						}
@@ -323,13 +323,13 @@ export const PubContent = React.createClass({
 								}).map((file, index)=> {
 									return (
 										<tr key={'file-' + index}>
-											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={{ pathname: '/pub/' + this.props.pubSlug + '/files/' + file.name, query: query }}>{file.name}</Link></td>
+											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={{ pathname: '/pub/' + this.props.pub.slug + '/files/' + file.name, query: query }}>{file.name}</Link></td>
 											<td style={styles.tableCell}>{dateFormat(file.createdAt, 'mmm dd, yyyy')}</td>
 											<td style={[styles.tableCell, styles.tableCellSmall]}>
 												{file.name === mainFile.name &&
 													<button role="button" className={'pt-button pt-fill pt-active'}>Main File</button>	
 												}
-												{file.name !== mainFile.name &&
+												{file.name !== mainFile.name && this.props.pub.canEdit &&
 													<button role="button" className={'pt-button pt-fill'} onClick={this.defaultFileChange.bind(this, file.name)}>Set as main</button>
 												}
 												

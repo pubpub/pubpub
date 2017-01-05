@@ -12,7 +12,7 @@ let styles;
 export const PubDiscussionsList = React.createClass({
 	propTypes: {
 		discussionsData: PropTypes.array,
-		labelsData: PropTypes.array,
+		pub: PropTypes.object,
 		pathname: PropTypes.string,
 		query: PropTypes.object,
 		dispatch: PropTypes.func,
@@ -98,7 +98,8 @@ export const PubDiscussionsList = React.createClass({
 			return keepResult;
 		});
 
-		const labelList = this.props.labelsData || [];
+		const pub = this.props.pub || {};
+		const labelList = pub.pubLabels || [];
 		const sortList = ['Newest', 'Oldest', 'Most Replies', 'Least Replies'];
 
 		const authorsMenu = (
@@ -204,7 +205,7 @@ export const PubDiscussionsList = React.createClass({
 							</Link>
 
 							<PubLabelList 
-								allLabels={this.props.labelsData} 
+								allLabels={labelList} 
 								selectedLabels={labels} 
 								canEdit={false} 
 								pathname={this.props.pathname} 
