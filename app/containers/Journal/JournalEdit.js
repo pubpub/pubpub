@@ -257,58 +257,6 @@ export const JournalEdit = React.createClass({
 							</div>
 						</label>
 
-						<ImageUpload 
-							defaultImage={this.state.icon}
-							userCrop={true}
-							label={<FormattedMessage {...globalMessages.JournalIcon} />}
-							tooltip={<FormattedMessage id="JournalProfileEdit.journalIconDescription" defaultMessage="Used as the Journal's preview image in search results and throughout the site."/>} 
-							containerStyle={styles.imageContainer}
-							onNewImage={this.handleIconFinish} />
-
-						<ImageUpload 
-							defaultImage={this.state.logo}
-							userCrop={false}
-							label={'Logo'}
-							tooltip={'Used in the Header bar for all branded Journal pages'} 
-							containerStyle={styles.imageContainer}
-							onNewImage={this.handleLogoFinish} />
-
-
-						<ImageUpload 
-							defaultImage={this.state.headerImage}
-							userCrop={false}
-							label={'Background Image'}
-							tooltip={'Testing Tooltip layout'} 
-							containerStyle={styles.imageContainer}
-							onNewImage={this.handleHeaderImageFinish} />
-
-
-						<label htmlFor={'headerMode'}>
-							<FormattedMessage {...globalMessages.HeaderMode} />
-
-							<div style={{margin:'1em'}} className={'pt-button-group'}>
-								<button className={this.state.headerMode === 'title' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'title')}>Title</button>
-								<button className={this.state.headerMode === 'logo' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'logo')}>Logo</button>
-								<button className={this.state.headerMode === 'both' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'both')}>Both</button>
-							</div>
-						</label>
-						
-
-						<label htmlFor={'headerAlign'}>
-							<FormattedMessage {...globalMessages.HeaderAlign} />
-							<div style={{margin:'1em'}} className={'pt-button-group'}>
-								<button className={this.state.headerAlign === 'left' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderAlignChange.bind(this, 'left')}>Left</button>
-								<button className={this.state.headerAlign === 'center' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderAlignChange.bind(this, 'center')}>Center</button>
-							</div>
-						</label>
-	
-
-						<label>
-							<FormattedMessage {...globalMessages.BackgroundColor} />
-							<div className={'colorPicker'}>
-								<ChromePicker color={this.state.headerColor} disableAlpha={true} onChange={this.handleColorChange} />
-							</div>
-						</label>
 
 						<label style={styles.label} htmlFor={'website'}>
 							<FormattedMessage {...globalMessages.Website}/>
