@@ -211,6 +211,9 @@ export const UserSettingsProfile = React.createClass({
 
 				</form>
 
+				<h2>Access Token</h2>
+				<input id={'accessToken'} name={'access token'} type="text" disabled style={styles.input} value={user.accessToken} />
+
 				<div style={[styles.imageCropperWrapper, this.state.userImageFile !== null && styles.imageCropperWrapperVisible]} >
 					<div style={styles.imageCropper}>
 						<ImageCropper height={500} width={500} image={this.state.userImageFile} onCancel={this.cancelImageUpload} onUpload={this.userImageUploaded} />
