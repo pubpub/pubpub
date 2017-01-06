@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { createSignUp } from './actions';
 import { globalStyles } from 'utils/globalStyles';
@@ -46,6 +47,24 @@ export const SignUp = React.createClass({
 				{!this.props.signUpData.destinationEmail && 
 					<div>
 						<h1>Sign Up</h1>
+
+						<div className="pt-callout pt-intent-danger">
+							<h5>SignUps disabled</h5>
+							<p>We don't dispatch emails from this dev deployment, so you won't get a signup link by entering your email below.
+							Instead, feel free to Login with one of the dev accounts to play around:</p>
+							<ul>
+								<li>test1@email.com</li>
+								<li>test2@email.com</li>
+								<li>test3@email.com</li>
+								<li>test4@email.com</li>
+							</ul>
+							<p>All use password: 'password'.</p>
+							<div>
+								<Link to={'/login'} className={'pt-button pt-intent-primary'}>Login</Link>	
+							</div>
+							
+						</div>
+
 						<p>Enter your email to signup for PubPub. We'll send you a link to create your account!</p>
 
 						<hr />
