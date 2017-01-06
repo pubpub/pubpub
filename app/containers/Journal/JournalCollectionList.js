@@ -165,7 +165,7 @@ export const JournalCollectionList = React.createClass({
 				{/* Display button to toggle Label creator */}
 				{this.props.canEdit && !this.state.createOpen &&
 					<Link to={{ pathname: this.props.pathname, query: { ...this.props.query, view: 'collections' } }} className="pt-button pt-fill pt-minimal">
-						Create New Collection
+						Manage Collections
 					</Link>
 				}
 				

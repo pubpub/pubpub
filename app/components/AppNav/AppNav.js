@@ -52,7 +52,8 @@ export const AppNav = React.createClass({
 
 		const headerJournal = isJournal ? journal : contextJournal;
 
-		const navClass = 'pt-navbar pt-dark';
+		const isLight = headerJournal && headerJournal.headerColor === '#ffffff'; // This is a bad hack. Calculate whether text should be light or dark, and then set
+		const navClass = isLight ? 'pt-navbar' : 'pt-navbar pt-dark'; 
 		const navStyle = headerJournal ? { backgroundColor: headerJournal.headerColor } : {};
 
 
@@ -62,15 +63,21 @@ export const AppNav = React.createClass({
 					<Link to={'/'} className="pt-navbar-heading" style={styles.logo}>
 						{/* PubPub */}
 						{/*<img src={'http://i.imgur.com/eQMn3ya.png'} style={styles.journalLogo} />*/}
-						<img src={'https://i.imgur.com/Z3xWDMT.png'} style={styles.journalLogo} />
+						{/*<img src={'https://i.imgur.com/Z3xWDMT.png'} style={styles.journalLogo} />*/}
 						{/*<img src={'http://i.imgur.com/QpKGIVn.png'} style={styles.journalLogo} />*/}
 						{/*<img src={'http://i.imgur.com/0AgfSdL.png'} style={styles.journalLogo} />*/}
 						
+						{isLight &&
+							<img src={'http://i.imgur.com/8mTuvQc.png'} style={styles.journalLogo} />
+						}
+						{!isLight &&
+							<img src={'https://i.imgur.com/Z3xWDMT.png'} style={styles.journalLogo} />
+						}
 						
 					</Link>
 					{headerJournal &&
 						<div style={styles.journalLogoWrapper}>
-							<div style={styles.journalLogoDivider} />
+							<div style={[styles.journalLogoDivider, isLight && styles.journalLogoDividerDark]} />
 							<Link to={'/' + headerJournal.slug}>
 								<img src={headerJournal.logo} style={styles.journalLogo} />
 							</Link>
@@ -182,6 +189,9 @@ styles = {
 		height: '30px',
 		width: '1px',
 		backgroundColor: 'rgba(255,255,255,0.25)',
+	},
+	journalLogoDividerDark: {
+		backgroundColor: 'rgba(0,0,0,0.25)',	
 	},
 	journalLogo: {
 		height: '100%',
