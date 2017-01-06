@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import { Highlighter } from 'containers';
 import RenderFilePDF from './RenderFilePDF';
 import RenderFilePPT from './RenderFilePPT';
+import RenderFileDoc from './RenderFileDoc';
 
 let styles;
 
@@ -39,6 +40,9 @@ export const RenderFile = React.createClass({
 		case 'application/vnd.ms-powerpoint':
 		case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
 			return <RenderFilePPT file={file} />;
+		case 'application/msword':
+		case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+			return <RenderFileDoc file={file} />;
 		default: 
 			return (
 				<div className={'pt-callout'}>
