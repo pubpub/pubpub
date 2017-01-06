@@ -212,6 +212,7 @@ export const UserSettingsProfile = React.createClass({
 				</form>
 
 				<h2>Access Token</h2>
+				<p>Use the following access token when using the PubPub API (<a href={'https://v2-dev-docs.pubpub.org'}>https://v2-dev-docs.pubpub.org</a>)</p>
 				<input id={'accessToken'} name={'access token'} type="text" disabled style={styles.input} value={user.accessToken} />
 
 				<div style={[styles.imageCropperWrapper, this.state.userImageFile !== null && styles.imageCropperWrapperVisible]} >
