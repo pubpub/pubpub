@@ -1,39 +1,42 @@
 @import "~normalize.css";
 @import "~pdfjs-dist/web/pdf_viewer.css";
 
+// Override Default blueprint colors here
+// ****************************
+$dark-gray1: desaturate(#182026, 0%) ;
+$dark-gray2: desaturate(#202b33, 0%) ;
+$dark-gray3: desaturate(#293742, 0%) ;
+$dark-gray4: desaturate(#30404d, 0%) ;
+$dark-gray5: desaturate(#394b59, 0%) ;
+
+$gray1: desaturate(#5c7080, 0%) ;
+$gray2: desaturate(#738694, 0%) ;
+$gray3: desaturate(#8a9ba8, 0%) ;
+$gray4: desaturate(#a7b6c2, 0%) ;
+$gray5: desaturate(#bfccd6, 0%) ;
+
+$light-gray1: desaturate(#ced9e0, 0%) ;
+$light-gray2: desaturate(#d8e1e8, 0%) ;
+$light-gray3: desaturate(#e1e8ed, 0%) ;
+$light-gray4: desaturate(#ebf1f5, 0%) ;
+$light-gray5: desaturate(#f5f8fa, 0%) ;
+
+$blue1: $dark-gray1;
+$blue2: $dark-gray2;
+$blue3: $dark-gray3;
+$blue4: $dark-gray4;
+$blue5: $dark-gray5;
+
+// Import blueprint core color and variables
+// ****************************
 $icon-font-path: "~@blueprintjs/core/resources/icons";
 @import "~@blueprintjs/core/src/common/_colors.scss";
 @import "~@blueprintjs/core/src/common/_variables.scss";
 
 // Override sass Variables here
 // ****************************
-$pt-intent-primary: $dark-gray3;
-$pt-link-color: $dark-gray2;
 $pt-border-radius: floor($pt-grid-size / 5);
-$dark-navbar-background-color: $dark-gray2;
 
 // Import Core Blueprint sass
 // ****************************
 @import "~@blueprintjs/core/src/blueprint.scss";
-
-// Override component styles here
-// ****************************
-.pt-button.pt-intent-primary:hover:not(:disabled) {
-	background: $dark-gray2;
-	background: -webkit-linear-gradient( top , rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)) left no-repeat, center no-repeat $dark-gray2;
-	background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)) left no-repeat, center no-repeat $dark-gray2;
-}
-
-.pt-button.pt-intent-primary:active:not(:disabled), .pt-intent-primary.pt-button.pt-active:not(:disabled) {
-	background: $dark-gray1;
-}
-
-.pt-control:hover input:checked ~ .pt-control-indicator, .pt-control:hover .pt-control.pt-checkbox input:indeterminate ~ .pt-control-indicator, .pt-control.pt-checkbox .pt-control:hover input:indeterminate ~ .pt-control-indicator, .pt-control.pt-checkbox:hover input:indeterminate ~ .pt-control-indicator {
-	background: $dark-gray2;
-	background: -webkit-linear-gradient( top , rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)) left no-repeat, center no-repeat $dark-gray2;
-	background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)) left no-repeat, center no-repeat $dark-gray2;
-}
-
-.pt-control input:not(:disabled):active:checked ~ .pt-control-indicator, .pt-control.pt-checkbox input:not(:disabled):active:indeterminate ~ .pt-control-indicator {
-	background: $dark-gray1;
-}

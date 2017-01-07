@@ -58,14 +58,15 @@ export const Search = React.createClass({
 		const pathname = nextProps.location.pathname;
 		const mode = query.mode;
 
-		if (this.props.searchData.loading && !nextProps.searchData.loading && !pubs.length && users.length && mode === undefined) {
-			browserHistory.replace({ pathname: pathname, query: { ...query, mode: 'users' } });
-		}
-		if (this.props.searchData.loading && !nextProps.searchData.loading && !pubs.length && !users.length && journals.length && mode === undefined) {
-			browserHistory.replace({ pathname: pathname, query: { ...query, mode: 'journals' } });
-		}
-		if (this.props.searchData.loading && !nextProps.searchData.loading && !pubs.length && !users.length && !journals.length && labels.length && mode === undefined) {
-			browserHistory.replace({ pathname: pathname, query: { ...query, mode: 'labels' } });
+		const currentModeCount = mode ? searchData[mode].length : 0;
+		const finishedLoading = this.props.searchData.loading && !nextProps.searchData.loading;
+		if (finishedLoading && currentModeCount === 0) {
+			let nextMode;
+			if (labels.length) { nextMode = 'labels'; }
+			if (journals.length) { nextMode = 'journals'; }
+			if (users.length) { nextMode = 'users'; }
+			if (pubs.length) { nextMode = 'pubs'; }
+			browserHistory.replace({ pathname: pathname, query: { ...query, mode: nextMode } });
 		}
 	},
 

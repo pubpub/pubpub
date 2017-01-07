@@ -162,7 +162,7 @@ styles = {
 		display: 'block',
 	},
 	searchInput: {
-		backgroundColor: '#394B59',
+		// backgroundColor: '#394B59',
 	},
 	menuLink: {
 		...globalStyles.link,
