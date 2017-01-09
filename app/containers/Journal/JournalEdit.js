@@ -57,9 +57,6 @@ export const JournalEdit = React.createClass({
 	},
 	
 	componentWillReceiveProps(nextProps) {
-		// const journal = nextProps.journal || {};
-		// this.initialize(journal);
-
 		// If the slug changed, redirect to new slug.
 		const lastSlug = this.props.journal.slug;
 		const nextSlug = nextProps.journal.slug;
@@ -80,12 +77,6 @@ export const JournalEdit = React.createClass({
 		});
 	},
 
-	
-
-	// onHeaderImageFinish: function(evt, index, type, filename) {
-	// 	this.setState({ headerImage: 'https://assets.pubpub.org/' + filename });
-	// 	this.props.handleHeaderUpdate({ headerImage: 'https://assets.pubpub.org/' + filename });
-	// },
 	clearHeaderImageFinish: function() {
 		this.setState({ headerImage: null });
 		this.props.handleHeaderUpdate({ headerImage: null });
@@ -95,6 +86,7 @@ export const JournalEdit = React.createClass({
 		this.setState({ headerColor: colorChange.hex, canSave: true });
 		this.props.handleHeaderUpdate({ headerColor: colorChange.hex });
 	},
+
 	handleHeaderModeChange: function(value, evt) {
 		evt.preventDefault();
 		const newHeaderMode = value;
@@ -133,7 +125,6 @@ export const JournalEdit = React.createClass({
 		});
 
 		this.setState({ canSave: false });
-
 		this.props.dispatch(putJournal(this.props.journal.id, newJournalData));
 	},
 	handleIconFinish: function(imageUrl) {
@@ -210,7 +201,7 @@ export const JournalEdit = React.createClass({
 							defaultImage={this.state.headerImage}
 							userCrop={false}
 							label={'Background Image'}
-							tooltip={'Testing Tooltip layout'} 
+							tooltip={'Used for the Joural\'s header background'} 
 							containerStyle={styles.imageContainer}
 							onNewImage={this.handleHeaderImageFinish}
 							canClear={true} />
