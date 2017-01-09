@@ -11,6 +11,7 @@ import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
 
 import { FollowButton } from 'containers';
+import { Tag } from 'components';
 
 // import PubDocument from './PubDocument';
 import PubContributors from './PubContributors';
@@ -277,8 +278,8 @@ export const Pub = React.createClass({
 							}).map((feature)=> {
 								const journal = feature.journal || {};
 								return (
-									<Link to={'/' + journal.slug} key={'header-feature-' + feature.journalId}>
-										<span className={'pt-tag pt-large'} style={[styles.journalHeaderTag, { backgroundColor: journal.headerColor }]}>{journal.name}</span>
+									<Link to={'/' + journal.slug} key={'header-feature-' + feature.journalId} style={styles.journalHeaderTag}>
+										<Tag backgroundColor={journal.headerColor} isLarge={true}>{journal.name}</Tag>
 									</Link>
 								);
 							})}

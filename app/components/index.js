@@ -16,3 +16,4 @@ export PreviewUser from './PreviewUser/PreviewUser';
 export RenderFile from './RenderFile/RenderFile';
 export SelectValue from './SelectValue/SelectValue';
 export SelectOption from './SelectOption/SelectOption';
+export Tag from './Tag/Tag';
