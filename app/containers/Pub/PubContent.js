@@ -90,6 +90,7 @@ export const PubContent = React.createClass({
 			uploadFileNames: uploadFileNames,
 			uploadFiles: uploadFiles,
 			uploading: true,
+			uploadingFinished: false,
 		});
 	},
 
@@ -261,12 +262,14 @@ export const PubContent = React.createClass({
 							</div>
 						}
 
-						<div style={styles.topRightButton}>
-							<label className="pt-button pt-minimal" htmlFor={'add-more-files'}>
-								Add more files
-								<input id={'add-more-files'} type="file" multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
-							</label>
-						</div>
+						{!isLoading &&
+							<div style={styles.topRightButton}>
+								<label className="pt-button pt-minimal" htmlFor={'add-more-files'}>
+									Add more files
+									<input id={'add-more-files'} type="file" multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
+								</label>
+							</div>
+						}
 
 						<h3>Uploading</h3>
 

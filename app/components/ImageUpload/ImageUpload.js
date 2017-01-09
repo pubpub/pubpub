@@ -16,6 +16,7 @@ export const ImageUpload = React.createClass({
 		tooltip: PropTypes.node,
 		containerStyle: PropTypes.object,
 		onNewImage: PropTypes.func,
+		canClear: PropTypes.bool,
 	},
 
 	getInitialState() {
@@ -87,6 +88,16 @@ export const ImageUpload = React.createClass({
 		
 	},
 
+	clearImage: function() {
+		this.setState({
+			imageFile: null, 
+			imageURL: null,
+			uploading: false,
+			loadingImage: false,
+		});
+		this.props.onNewImage(null);	
+	},
+
 	onImageError: function() {
 		console.log('Image error. Please retry');
 		this.setState({
@@ -101,6 +112,7 @@ export const ImageUpload = React.createClass({
 		const width = (this.props.width || 75);
 		// const imageDimensions = { width: width, maxHeight: width };
 		const imageDimensions = { maxWidth: '30vw', height: width };
+		const emptyDimensions = { width: width, height: width };
 		const containerStyle = this.props.containerStyle || {};
 		return (
 				
@@ -112,10 +124,17 @@ export const ImageUpload = React.createClass({
 						</div>
 						
 						
-						<div className={'showChildOnHover'} style={{position: 'relative'}}>
+						<div style={{position: 'relative'}}>
 							<img style={imageDimensions} src={(this.state.imageURL || this.props.defaultImage)} onLoad={this.onImageRender} onError={this.onImageError}/>		
-							<a role="button" className={'pt-button pt-icon-edit'} style={styles.editButton} />
-							
+							{!(this.state.imageURL || this.props.defaultImage) &&
+								<div style={[styles.emptyState, emptyDimensions]}>
+									<span className="pt-icon-standard pt-icon-large pt-icon-add" style={{ lineHeight: emptyDimensions.height + 'px' }} />
+								</div>
+							}
+
+							{(this.state.imageURL || this.props.defaultImage) &&
+								<a role="button" className={'pt-button pt-icon-edit'} style={styles.editButton} />							
+							}
 							{this.state.loadingImage &&
 								<div style={styles.loader}>
 									<Spinner className={'pt-small'} />	
@@ -127,9 +146,7 @@ export const ImageUpload = React.createClass({
 						{!this.state.loadingImage &&
 							<input id={this.props.key} name={'logo image'} type="file" accept="image/*" onChange={this.handleImageSelect} style={styles.fileInput}/>
 						}
-
-						
-						
+		
 					</label>
 				</Tooltip>
 				<div style={[styles.imageCropperWrapper, this.state.imageFile !== null && styles.imageCropperWrapperVisible]} >
@@ -137,6 +154,9 @@ export const ImageUpload = React.createClass({
 						<ImageCropper height={500} width={500} image={this.state.imageFile} onCancel={this.cancelImageUpload} onUpload={this.imageUploaded}/>
 					</div>
 				</div>
+				{this.props.canClear && (this.state.imageURL || this.props.defaultImage) &&
+					<a role="button" className={'pt-button pt-minimal pt-icon-trash pt-intent-danger'} style={[styles.editButton, styles.clearButton]} onClick={this.clearImage}/>
+				}
 			</div>
 		);
 	}
@@ -158,6 +178,17 @@ styles = {
 		left: 0,
 		paddingTop: '6px',
 		boxShadow: '0 1px 2px rgba(16, 22, 26, 0.3)'
+	},
+	clearButton: {
+		left: '30px',
+		boxShadow: '0px 0px 0px transparent',
+	},
+	emptyState: {
+		backgroundColor: '#EEE',
+		textAlign: 'center',
+		position: 'absolute',
+		top: 0,
+		cursor: 'pointer',
 	},
 	loader: {
 		position: 'absolute',

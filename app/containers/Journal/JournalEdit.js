@@ -129,9 +129,7 @@ export const JournalEdit = React.createClass({
 
 		const newJournalData = {};
 		Object.keys(this.state).map((key)=> {
-			if (this.state[key]) {
-				newJournalData[key] = this.state[key];
-			}
+			newJournalData[key] = this.state[key];
 		});
 
 		this.setState({ canSave: false });
@@ -214,7 +212,8 @@ export const JournalEdit = React.createClass({
 							label={'Background Image'}
 							tooltip={'Testing Tooltip layout'} 
 							containerStyle={styles.imageContainer}
-							onNewImage={this.handleHeaderImageFinish} />
+							onNewImage={this.handleHeaderImageFinish}
+							canClear={true} />
 
 
 						<label htmlFor={'headerMode'}>
