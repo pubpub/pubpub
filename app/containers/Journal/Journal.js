@@ -15,12 +15,9 @@ import { FormattedMessage } from 'react-intl';
 import { getJournalData } from './actions';
 
 import JournalHeader from './JournalHeader';
-import JournalLayout from './JournalLayout';
 import JournalEdit from './JournalEdit';
-import JournalDetails from './JournalDetails';
 import JournalSubmits from './JournalSubmits';
 import JournalFeatures from './JournalFeatures';
-import JournalAdmins from './JournalAdmins';
 import JournalAbout from './JournalAbout';
 import JournalCollection from './JournalCollection';
 import JournalFollowers from './JournalFollowers';
@@ -35,14 +32,6 @@ export const Journal = React.createClass({
 		location: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
-
-	// statics: {
-	// 	readyOnActions: function(dispatch, params) {
-	// 		return Promise.all([
-	// 			dispatch(getJournalData(params.slug))
-	// 		]);
-	// 	}
-	// },
 
 	getInitialState: function() {
 		return {
@@ -107,7 +96,6 @@ export const Journal = React.createClass({
 		const journal = this.props.journalData.journal || {};
 		const collections = journal.collections || [];
 		const followers = journal.followers || [];
-		const pubFeatures = journal.pubFeatures || [];
 		const isAdmin = this.props.journalData.isAdmin || true; // The || true is for dev only.
 
 		const accountData = this.props.accountData || {};
@@ -137,7 +125,7 @@ export const Journal = React.createClass({
 			]
 		};
 
-		if (!isAdmin && (mode === 'details' || mode === 'layout' || mode === 'featured' || mode === 'submitted' || mode === 'collections' || mode === 'admins')) {
+		if (!isAdmin && (mode === 'about' || mode === 'collections' || mode === 'followers')) {
 			mode = 'notFound';
 		}
 
@@ -187,31 +175,6 @@ export const Journal = React.createClass({
 				<div style={styles.content}>
 					{(() => {
 						switch (mode) {
-						case 'layout':
-							return (
-								<JournalLayout
-									journal={journal}
-									handleHeaderUpdate={this.handleHeaderUpdate}
-									isLoading={this.props.journalData.putDataLoading}
-									error={this.props.journalData.putDataError}
-									dispatch={this.props.dispatch} />
-							);
-						case 'details':
-							return (
-								<JournalDetails
-									journal={journal}
-									isLoading={this.props.journalData.putDataLoading}
-									error={this.props.journalData.putDataError}
-									dispatch={this.props.dispatch} />
-							);
-						case 'submitted':
-							return (
-								<JournalSubmits
-									journal={journal}
-									isLoading={this.props.journalData.submitsLoading}
-									error={this.props.journalData.submitsError}
-									dispatch={this.props.dispatch} />
-							);
 						case 'edit': 
 							return (
 								<JournalEdit
@@ -221,24 +184,7 @@ export const Journal = React.createClass({
 									error={this.props.journalData.putDataError}
 									dispatch={this.props.dispatch} />
 							);
-						case 'featured':
-							return (
-								<JournalFeatures
-									journal={journal}
-									isLoading={this.props.journalData.featuresLoading}
-									error={this.props.journalData.featuresError}
-									pathname={pathname}
-									query={query}
-									dispatch={this.props.dispatch} />
-							);
-						case 'admins':
-							return (
-								<JournalAdmins
-									journal={journal}
-									isLoading={this.props.journalData.adminsLoading}
-									error={this.props.journalData.adminsError}
-									dispatch={this.props.dispatch} />
-							);
+						
 						case 'about':
 							return (
 								<JournalAbout 
