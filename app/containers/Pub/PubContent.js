@@ -347,7 +347,7 @@ export const PubContent = React.createClass({
 
 				{/* Render specific File */}
 				{!!files.length && (meta !== 'files' || (meta !== 'files' && routeFile)) && 
-					<RenderFile file={routeFile || mainFile} />
+					<RenderFile file={routeFile || mainFile} allFiles={files} />
 				}
 			</div>
 		);

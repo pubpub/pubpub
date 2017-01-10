@@ -1,16 +1,17 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import ReactMarkdown from 'react-markdown';
 import { Highlighter } from 'containers';
 import RenderFilePDF from './RenderFilePDF';
 import RenderFilePPT from './RenderFilePPT';
 import RenderFileDoc from './RenderFileDoc';
+import RenderFileMarkdown from './RenderFileMarkdown';
 
 let styles;
 
 export const RenderFile = React.createClass({
 	propTypes: {
 		file: PropTypes.object,
+		allFiles: PropTypes.array,
 	},
 
 	render() {
@@ -21,7 +22,7 @@ export const RenderFile = React.createClass({
 			return (
 				<div id={'content-wrapper'} className={'pub-body'} style={styles.pubBody}>
 					<Highlighter />
-					<ReactMarkdown source={file.content} />
+					<RenderFileMarkdown file={file} allFiles={this.props.allFiles} />
 				</div>
 			);
 		case 'image/png':
