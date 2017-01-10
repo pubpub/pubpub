@@ -1,6 +1,6 @@
+/* eslint-disable no-param-reassign */
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import ReactMarkdown from 'react-markdown';
 import MDReactComponent from 'markdown-react-js';
 import sub from 'markdown-it-sub';
 import sup from 'markdown-it-sup';
@@ -8,7 +8,7 @@ import RenderFile from './RenderFile';
 
 function fileParser(state, silent) {
 	let token;
-	const UNESCAPE_RE = /\\([ \\!"#$%&'()*+,.\/:;<=>?@[\]^_`{|}~-])/g;
+	const UNESCAPE_RE = /\\([ \\!"#$%&'()*+,./:;<=>?@[\]^_`{|}~-])/g;
 	const max = state.posMax;
 	const start = state.pos;
 
@@ -53,18 +53,18 @@ export const RenderFileMarkdown = React.createClass({
 	},
 
 	handleIterate: function(Tag, props, children, level) {
-	  if (Tag === 'file') {
-	    const allFiles = this.props.allFiles || [];
-		const file = this.props.allFiles.reduce((previous, current)=> {
-			if (current.name === children[0]) { return current; }
-			return previous;
-		}, undefined);
-		if (file) {
-			return <RenderFile file={file} allFiles={this.props.allFiles}/>;	
+		if (Tag === 'file') {
+			const allFiles = this.props.allFiles || [];
+			const file = allFiles.reduce((previous, current)=> {
+				if (current.name === children[0]) { return current; }
+				return previous;
+			}, undefined);
+			if (file) {
+				return <RenderFile file={file} allFiles={this.props.allFiles} />;	
+			}
 		}
-	  }
-	  if (Tag === 'img') { return <Tag {...props} />; }
-	  return <Tag {...props} children={children} />;
+		if (Tag === 'img') { return <Tag {...props} />; }
+		return <Tag {...props} children={children} />;
 	},
 
 	filePlugin: function(md) {
@@ -73,23 +73,23 @@ export const RenderFileMarkdown = React.createClass({
 	
 	render() {
 		const file = this.props.file || {};
-		return <MDReactComponent 
-			text={file.content}
-			onIterate={this.handleIterate}
-			markdownOptions={{
-				html: false,
-				typographer: true,
-				linkify: true,
-			}}
-			plugins={[
-				sub,
-				sup,
-				this.filePlugin
-			]} /> 
+		return (
+			<MDReactComponent 
+				text={file.content}
+				onIterate={this.handleIterate}
+				markdownOptions={{
+					html: false,
+					typographer: true,
+					linkify: true,
+				}}
+				plugins={[
+					sub,
+					sup,
+					this.filePlugin
+				]} /> 
+		);
 	}
 
 });
 
 export default Radium(RenderFileMarkdown);
-
-
