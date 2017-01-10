@@ -28,6 +28,7 @@ import PubFollowers from './PubFollowers';
 import PubDiffVersions from './PubDiffVersions';
 
 import { getPubData } from './actions';
+import { putReviewer } from './actionsReviewers';
 
 let styles;
 
@@ -124,6 +125,10 @@ export const Pub = React.createClass({
 	// 	});
 	// },
 
+	updateReviewer: function() {
+		this.props.dispatch(putReviewer(this.props.pubData.pub.id, false, true, 'I have no idea what this is'));
+	},
+
 	render() {
 		const pub = this.props.pubData.pub || {};
 		if (this.props.pubData.loading && !this.props.pubData.error) {
@@ -152,18 +157,26 @@ export const Pub = React.createClass({
 			filter: query.filter,
 		};
 		const pathname = this.props.location.pathname;
+		
+		const accountData = this.props.accountData || {};
+		const accountUser = accountData.user || {};
+		const accountId = accountUser.id;
+
 		const panel = query.panel;
 		const queryDiscussion = query.discussion;
 		const discussions = pub.discussions || [];
 		const contributors = pub.contributors || [];
 		const invitedReviewers = pub.invitedReviewers || [];
+		const isInvitedReviewer = invitedReviewers.reduce((previous, current)=> {
+			if (!current.invitationRejected && current.invitedUserId === accountUser.id) { return true; }
+			return previous;
+		}, false);
+
 		const versions = pub.versions || [];
 		const pubFeatures = pub.pubFeatures || [];
 		const followers = pub.followers || [];
 
-		const accountData = this.props.accountData || {};
-		const accountUser = accountData.user || {};
-		const accountId = accountUser.id;
+		
 		const followData = followers.reduce((previous, current)=> {
 			if (current.id === accountId) { return current.FollowsPub; }
 			return previous;
@@ -259,6 +272,14 @@ export const Pub = React.createClass({
 			<div style={styles.container}>
 
 				<Helmet {...metaData} />
+
+				{isInvitedReviewer &&
+					<div style={{ backgroundColor: '#232729' }}>
+						INVITED!!!!!
+						<button type="button" onClick={this.updateReviewer}>CLICK ME TO UPDATE</button>
+					</div>
+				}
+
 
 				{/* ---------- */}
 				{/* Left Panel */}
@@ -423,6 +444,7 @@ export const Pub = React.createClass({
 						{panel === 'reviewers' && 
 							<PubReviewers 
 								invitedReviewers={invitedReviewers}
+								accountUser={accountUser}
 								discussionsData={discussionsData}
 								pubId={pub.id}
 								pathname={pathname}

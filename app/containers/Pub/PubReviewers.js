@@ -1,16 +1,18 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { Link } from 'react-router';
-import { AutocompleteBar } from 'components';
+import { AutocompleteBar, DropdownButton } from 'components';
 import request from 'superagent';
 import dateFormat from 'dateformat';
 import { postReviewer } from './actionsReviewers';
+import { Menu } from '@blueprintjs/core';
 
 let styles;
 
 export const PubReviewers = React.createClass({
 	propTypes: {
 		invitedReviewers: PropTypes.array,
+		accountUser: PropTypes.object,
 		discussionsData: PropTypes.array,
 		pubId: PropTypes.number,
 		pathname: PropTypes.string,
@@ -21,6 +23,8 @@ export const PubReviewers = React.createClass({
 	getInitialState: function() {
 		return {
 			newReviewer: null,
+			newReviewerEmail: '',
+			newReviewerName: '',
 		};
 	},
 
@@ -58,16 +62,69 @@ export const PubReviewers = React.createClass({
 	inviteReviewer: function() {
 		const email = null;
 		const name = null;
-		const inviterJournalId = null;
+		const inviterJournal = this.state.inviterJournal || {};
+		const inviterJournalId = inviterJournal.id || null;
 		this.props.dispatch(postReviewer(email, name, this.props.pubId, this.state.newReviewer.id, inviterJournalId));
+	},
+
+	newReviewerEmailChange: function(evt) {
+		this.setState({ newReviewerEmail: evt.target.value });
+	},
+	newReviewerNameChange: function(evt) {
+		this.setState({ newReviewerName: evt.target.value });
+	},
+
+	handleEmailInvite: function(evt) {
+		evt.preventDefault();
+		// console.log('sending invite to ', this.state.newReviewerEmail);
+		const email = this.state.newReviewerEmail;
+		const name = this.state.newReviewerName;
+		const inviterJournal = this.state.inviterJournal || {};
+		const inviterJournalId = inviterJournal.id || null;
+		const invitedUserId = null;
+		this.props.dispatch(postReviewer(email, name, this.props.pubId, invitedUserId, inviterJournalId));
+	},
+	setJournal: function(journal) {
+		this.setState({ inviterJournal: journal });
 	},
 
 	render: function() {
 		const invitedReviewers = this.props.invitedReviewers || [];
 		const discussionsData = this.props.discussionsData || [];
+		const accountUser = this.props.accountUser || {};
+		const accountJournalAdmins = accountUser.journalAdmins || [];
+		const accountJournals = accountJournalAdmins.map((journalAdmin)=> {
+			return journalAdmin.journal;
+		});
+		const inviterJournal = this.state.inviterJournal || {};
+
 		return (
 			<div style={styles.container}>
 				<h2>Reviewers</h2>
+
+				<p>Inviting as: <img src={accountUser.image} style={{ width: '35px' }} /></p>
+				{!!accountJournals.length &&
+					<div>
+						<DropdownButton 
+							content={
+								<Menu>
+									<li key={'authorFilter-null'} onClick={this.setJournal.bind(this, undefined)} className="pt-menu-item pt-popover-dismiss">None</li>
+									{accountJournals.map((journal, index)=> {
+										return (
+											<li key={'authorFilter-' + index} onClick={this.setJournal.bind(this, journal)} className="pt-menu-item pt-popover-dismiss">{journal.name}</li>
+										);
+									})}
+								</Menu>
+							} 
+							title={
+								<span>
+									Inviting on behalf of {inviterJournal.name}
+								</span>
+							} 
+							position={0} />
+					</div>	
+				}
+				
 
 				<AutocompleteBar
 					filterOptions={(options)=>{
@@ -91,8 +148,27 @@ export const PubReviewers = React.createClass({
 					completeString={'Invite'}
 				/>
 
+				<form onSubmit={this.handleEmailInvite}>
+					<label htmlFor={'email'}>
+						Email
+						<input className={'pt-input margin-bottom'} id={'email'} name={'email'} type="email" style={styles.input} value={this.state.newReviewerEmail} onChange={this.newReviewerEmailChange} placeholder={'example@email.com'}/>
+					</label>
+					<label htmlFor={'name'}>
+						name
+						<input className={'pt-input margin-bottom'} id={'name'} name={'name'} type="text" style={styles.input} value={this.state.newReviewerName} onChange={this.newReviewerNameChange} placeholder={'Jane Doe'}/>
+					</label>
+					<button className={'pt-button pt-intent-primary'} name={'login'} onClick={this.handleEmailInvite}>
+						Invite by Email
+					</button>
+					<div style={styles.errorMessage}>{false}</div>
+				</form>
+
 				{invitedReviewers.map((reviewer, index)=> {
-					const invitedUser = reviewer.invitedUser;
+					const invitedUser = reviewer.invitedUser || {
+						firstName: reviewer.name,
+						lastName: '',
+						image: 'http://icons.iconarchive.com/icons/uiconstock/socialmedia/256/Email-icon.png',
+					};
 					const inviterUser = reviewer.inviterUser;
 					const discussionCount = discussionsData.reduce((previous, current)=> {
 						const children = current.children || [];
@@ -106,7 +182,7 @@ export const PubReviewers = React.createClass({
 					}, 0);
 
 					return (
-						<div key={'reviewer-' + reviewer.invitedUserId} style={styles.invitationWrapper}>
+						<div key={'reviewer-' + index} style={styles.invitationWrapper}>
 							<div style={styles.invitedReviewerWrapper}>
 								<div style={styles.reviewerImageWrapper}>
 									<Link to={'/user/' + invitedUser.username}>

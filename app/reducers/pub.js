@@ -72,6 +72,10 @@ import {
 	POST_REVIEWER_LOAD,
 	POST_REVIEWER_SUCCESS,
 	POST_REVIEWER_FAIL,
+
+	PUT_REVIEWER_LOAD,
+	PUT_REVIEWER_SUCCESS,
+	PUT_REVIEWER_FAIL,
 } from 'containers/Pub/actionsReviewers';
 
 import {
@@ -120,8 +124,10 @@ const defaultState = Immutable.Map({
 	settingsError: undefined,
 	discussionsLoading: false,
 	discussionsError: undefined,
-	reviewersLoading: false,
-	reviewersError: undefined,
+	inviteReviewerLoading: false,
+	inviteReviewerError: undefined,
+	updateReviewerLoading: false,
+	updateReviewerError: undefined,
 	pub: {},
 });
 
@@ -431,13 +437,13 @@ export default function reducer(state = defaultState, action) {
 
 	case POST_REVIEWER_LOAD:
 		return state.merge({
-			reviewersLoading: true,
-			reviewersError: undefined,
+			inviteReviewerLoading: true,
+			inviteReviewerError: undefined,
 		});	
 	case POST_REVIEWER_SUCCESS:
 		return state.merge({
-			reviewersLoading: false,
-			reviewersError: undefined,
+			inviteReviewerLoading: false,
+			inviteReviewerError: undefined,
 		})
 		.mergeIn(
 			['pub', 'invitedReviewers'], 
@@ -445,8 +451,28 @@ export default function reducer(state = defaultState, action) {
 		);
 	case POST_REVIEWER_FAIL:
 		return state.merge({
-			reviewersLoading: false,
-			reviewersError: action.error,
+			inviteReviewerLoading: false,
+			inviteReviewerError: action.error,
+		});
+
+	case PUT_REVIEWER_LOAD:
+		return state.merge({
+			updateReviewerLoading: true,
+			updateReviewerError: undefined,
+		});	
+	case PUT_REVIEWER_SUCCESS:
+		return state.merge({
+			updateReviewerLoading: false,
+			updateReviewerError: undefined,
+		});
+		// .mergeIn(
+		// 	['pub', 'invitedReviewers'], 
+		// 	state.getIn(['pub', 'invitedReviewers']).push(ensureImmutable(action.result))
+		// );
+	case PUT_REVIEWER_FAIL:
+		return state.merge({
+			updateReviewerLoading: false,
+			updateReviewerError: action.error,
 		});
 
 	case POST_PUB_LABEL_LOAD:

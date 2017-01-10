@@ -8,6 +8,10 @@ export const POST_REVIEWER_LOAD = 'pub/POST_REVIEWER_LOAD';
 export const POST_REVIEWER_SUCCESS = 'pub/POST_REVIEWER_SUCCESS';
 export const POST_REVIEWER_FAIL = 'pub/POST_REVIEWER_FAIL';
 
+export const PUT_REVIEWER_LOAD = 'pub/PUT_REVIEWER_LOAD';
+export const PUT_REVIEWER_SUCCESS = 'pub/PUT_REVIEWER_SUCCESS';
+export const PUT_REVIEWER_FAIL = 'pub/PUT_REVIEWER_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -39,6 +43,33 @@ export function postReviewer(email, name, pubId, invitedUserId, inviterJournalId
 		.catch((error) => {
 			console.log(error);
 			dispatch({ type: POST_REVIEWER_FAIL, error });
+		});
+	};
+}
+
+export function putReviewer(pubId, invitationAccepted, invitationRejected, rejectionReason) {
+	return (dispatch) => {
+		dispatch({ type: PUT_REVIEWER_LOAD });
+
+		return clientFetch('/api/pub/reviewers', {
+			method: 'PUT',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				pubId: pubId,
+				invitationAccepted: invitationAccepted,
+				invitationRejected: invitationRejected,
+				rejectionReason: rejectionReason,
+			})
+		})
+		.then((result) => {
+			dispatch({ type: PUT_REVIEWER_SUCCESS, result });
+		})
+		.catch((error) => {
+			console.log(error);
+			dispatch({ type: PUT_REVIEWER_FAIL, error });
 		});
 	};
 }

@@ -17,6 +17,7 @@ export const CreateAccount = React.createClass({
 	propTypes: {
 		accountData: PropTypes.object,
 		params: PropTypes.object,
+		location: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
 
@@ -50,7 +51,8 @@ export const CreateAccount = React.createClass({
 		const nextError = nextProps.accountData.createAccountError;
 
 		if (oldLoading && !nextLoading && !nextError) {
-			browserHistory.push('/');
+			const redirectRoute = this.props.location.query && this.props.location.query.redirect;
+			browserHistory.push(redirectRoute || '/');
 		}
 	},
 
