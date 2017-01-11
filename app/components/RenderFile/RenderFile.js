@@ -5,6 +5,7 @@ import RenderFilePDF from './RenderFilePDF';
 import RenderFilePPT from './RenderFilePPT';
 import RenderFileDoc from './RenderFileDoc';
 import RenderFileMarkdown from './RenderFileMarkdown';
+import RenderFileSTL from './RenderFileSTL';
 
 let styles;
 
@@ -16,8 +17,8 @@ export const RenderFile = React.createClass({
 
 	render() {
 		const file = this.props.file || {};
-
-		switch (file.type) {
+		const fileType = file.type || file.url.split('.').pop();
+		switch (fileType) {
 		case 'text/markdown': 
 			return (
 				<div id={'content-wrapper'} className={'pub-body'} style={styles.pubBody}>
@@ -44,6 +45,8 @@ export const RenderFile = React.createClass({
 		case 'application/msword':
 		case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
 			return <RenderFileDoc file={file} />;
+		case 'stl':
+			return <RenderFileSTL file={file} />;
 		default: 
 			return (
 				<div className={'pt-callout'}>
