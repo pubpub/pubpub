@@ -1,14 +1,15 @@
+import { NonIdealState, ProgressBar, Spinner } from '@blueprintjs/core';
 import React, { PropTypes } from 'react';
-import Radium from 'radium';
+
 // import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router';
-import { NonIdealState, ProgressBar, Spinner } from '@blueprintjs/core';
-import { s3Upload } from 'utils/uploadFile';
+import Radium from 'radium';
+import { RenderFile } from 'components';
+import dateFormat from 'dateformat';
 import { globalStyles } from 'utils/globalStyles';
 import { postVersion } from './actionsVersions';
 import { putDefaultFile } from './actionsFiles';
-import { RenderFile } from 'components';
-import dateFormat from 'dateformat';
+import { s3Upload } from 'utils/uploadFile';
 
 let styles;
 
@@ -17,6 +18,8 @@ export const PubContent = React.createClass({
 		version: PropTypes.object,
 		pub: PropTypes.object,
 		pubSlug: PropTypes.string,
+		userName: PropTypes.string,
+		userAccessToken: PropTypes.string,
 		params: PropTypes.object,
 		query: PropTypes.object,
 		isLoading: PropTypes.bool,
@@ -60,7 +63,7 @@ export const PubContent = React.createClass({
 		// Go over all of the files
 		// Upload to s3
 		// Get URLs from s3 and add into fileObject
-		// Chunk them into type 
+		// Chunk them into type
 		// create fileObjects
 		// When they're all done, bundle them into a version (replacing similar named files)
 		// Create version
@@ -107,7 +110,7 @@ export const PubContent = React.createClass({
 		// check if all are done. if all are done. Do a thing.
 		// Once all created, and version has been created and updated on client, set uploading to false
 		// console.log('File Finish!', filename, type, title, index);
-		
+
 		const newUploadedFileObject = {
 			url: 'https://assets.pubpub.org/' + filename,
 			type: type,
@@ -116,7 +119,7 @@ export const PubContent = React.createClass({
 		const newUploadedFileObjects = [...this.state.uploadedFileObjects, newUploadedFileObject];
 
 		const finished = this.state.uploadRates.reduce((previous, current)=> {
-			if (current !== 1) { return false; } 
+			if (current !== 1) { return false; }
 			return previous;
 		}, true);
 
@@ -124,7 +127,7 @@ export const PubContent = React.createClass({
 		this.setState({
 			uploadedFileObjects: newUploadedFileObjects,
 			uploadingFinished: finished,
-		});		
+		});
 	},
 
 	versionMessageChange: function(evt) {
@@ -149,7 +152,7 @@ export const PubContent = React.createClass({
 			return file;
 		}).filter((item)=> {
 			if (fileNames[item.name]) { return false; }
-			
+
 			fileNames[item.name] = true;
 			return true;
 		});
@@ -160,6 +163,15 @@ export const PubContent = React.createClass({
 
 	defaultFileChange: function(filename) {
 		this.props.dispatch(putDefaultFile(this.props.pub.id, this.props.version.id, filename));
+	},
+
+	openEditor: function() {
+		const { userAccessToken, userName } = this.props;
+		const slug = this.props.pub.slug;
+		const editorURL = 'https://pubpub-editor-frontend.herokuapp.com';
+		const url = `${editorURL}/user/access/${slug}/${userName}/${userAccessToken}`;
+		window.open(url, '_blank');
+		console.log(this.props);
 	},
 
 	render() {
@@ -185,9 +197,9 @@ export const PubContent = React.createClass({
 		}, files[0]);
 
 		const routeFile = files.reduce((previous, current)=> {
-			if (current.name === routeFilename) { return current; } 
+			if (current.name === routeFilename) { return current; }
 			return previous;
-		}, undefined);	
+		}, undefined);
 
 		return (
 			<div style={styles.container}>
@@ -202,8 +214,8 @@ export const PubContent = React.createClass({
 									<input type="file" id={'add-files'} multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
 								</label>
 								<span style={{ width: '1em', height: '1em', display: 'inline-block' }} />
-								<a className="pt-button" tabIndex="0" role="button">Open Editor</a>
-								
+								<a className="pt-button" tabIndex="0" role="button" >Open Editor</a>
+
 
 							</div>
 						}
@@ -220,12 +232,12 @@ export const PubContent = React.createClass({
 							Upload Files
 							<input id={'upload'} type="file" multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
 						</label>
-						
-						<button className={'pt-button'} style={{ marginLeft: '1em' }}>
+
+						<button className={'pt-button'} onClick={this.openEditor} style={{ marginLeft: '1em' }}>
 							Open Editor
 							<span className={'pt-icon-standard  pt-icon-caret-down pt-align-right'} />
 						</button>
-						
+
 					</div>
 				}
 
@@ -256,7 +268,7 @@ export const PubContent = React.createClass({
 				{/* Uploading Section */}
 				{this.state.uploading &&
 					<div style={styles.uploadingSection} className={'pt-card pt-elevation-2'}>
-						{!!isLoading && 
+						{!!isLoading &&
 							<div style={styles.newVersionLoading}>
 								<Spinner className={'pt-small'} />
 							</div>
@@ -281,13 +293,13 @@ export const PubContent = React.createClass({
 								</label>
 								<div style={styles.uploadingSubmit}>
 									<button className={this.state.uploadingFinished ? 'pt-button pt-intent-primary' : 'pt-button pt-intent-primary pt-disabled'} onClick={this.postNewVersion}>
-										{this.state.uploadingFinished 
+										{this.state.uploadingFinished
 											? 'Save New Version'
 											: 'Uploading'
 										}
-									</button>	
+									</button>
 								</div>
-								
+
 							</div>
 							{this.state.newVersionError &&
 								<div style={styles.errorMessage}>{this.state.newVersionError}</div>
@@ -309,7 +321,7 @@ export const PubContent = React.createClass({
 				{/* File List */}
 				{meta === 'files' && !routeFile &&
 					<div>
-						
+
 						<table className="pt-table pt-condensed pt-striped" style={{ width: '100%' }}>
 							<thead>
 								<tr>
@@ -330,12 +342,12 @@ export const PubContent = React.createClass({
 											<td style={styles.tableCell}>{dateFormat(file.createdAt, 'mmm dd, yyyy')}</td>
 											<td style={[styles.tableCell, styles.tableCellSmall]}>
 												{file.name === mainFile.name &&
-													<button role="button" className={'pt-button pt-fill pt-active'}>Main File</button>	
+													<button role="button" className={'pt-button pt-fill pt-active'}>Main File</button>
 												}
 												{file.name !== mainFile.name && this.props.pub.canEdit &&
 													<button role="button" className={'pt-button pt-fill'} onClick={this.defaultFileChange.bind(this, file.name)}>Set as main</button>
 												}
-												
+
 											</td>
 										</tr>
 									);
@@ -343,10 +355,10 @@ export const PubContent = React.createClass({
 							</tbody>
 						</table>
 					</div>
-				}		
+				}
 
 				{/* Render specific File */}
-				{!!files.length && (meta !== 'files' || (meta !== 'files' && routeFile)) && 
+				{!!files.length && (meta !== 'files' || (meta !== 'files' && routeFile)) &&
 					<RenderFile file={routeFile || mainFile} allFiles={files} />
 				}
 			</div>

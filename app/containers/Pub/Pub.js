@@ -1,33 +1,31 @@
-import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
-import Radium from 'radium';
-import Helmet from 'react-helmet';
 import { Link, browserHistory } from 'react-router';
-import { StickyContainer, Sticky } from 'react-sticky';
-import dateFormat from 'dateformat';
-import { NonIdealState } from '@blueprintjs/core';
-import { globalStyles } from 'utils/globalStyles';
-import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
+import React, { PropTypes } from 'react';
+import { Sticky, StickyContainer } from 'react-sticky';
 
 import { FollowButton } from 'containers';
-import { Tag } from 'components';
-
+import { FormattedMessage } from 'react-intl';
+import Helmet from 'react-helmet';
+import { NonIdealState } from '@blueprintjs/core';
+import PubContent from './PubContent';
 // import PubDocument from './PubDocument';
 import PubContributors from './PubContributors';
-import PubContent from './PubContent';
+import PubDiffVersions from './PubDiffVersions';
+import PubDiscussion from './PubDiscussion';
+import PubDiscussionsList from './PubDiscussionsList';
+import PubDiscussionsNew from './PubDiscussionsNew';
+import PubFollowers from './PubFollowers';
 import PubJournals from './PubJournals';
+import PubLabelList from './PubLabelList';
+import PubReviewers from './PubReviewers';
 import PubSettings from './PubSettings';
 import PubVersions from './PubVersions';
-import PubDiscussionsNew from './PubDiscussionsNew';
-import PubDiscussionsList from './PubDiscussionsList';
-import PubDiscussion from './PubDiscussion';
-import PubReviewers from './PubReviewers';
-import PubLabelList from './PubLabelList';
-import PubFollowers from './PubFollowers';
-import PubDiffVersions from './PubDiffVersions';
-
+import Radium from 'radium';
+import { Tag } from 'components';
+import { connect } from 'react-redux';
+import dateFormat from 'dateformat';
 import { getPubData } from './actions';
+import { globalMessages } from 'utils/globalMessages';
+import { globalStyles } from 'utils/globalStyles';
 import { putReviewer } from './actionsReviewers';
 
 let styles;
@@ -51,7 +49,7 @@ export const Pub = React.createClass({
 		const params = this.props.params || {};
 		this.props.dispatch(getPubData(params.slug));
 	},
-	
+
 	componentWillReceiveProps(nextProps) {
 		// const nextLocation = nextProps.location;
 		const lastPanel = this.props.location.query.panel;
@@ -108,7 +106,7 @@ export const Pub = React.createClass({
 			const pathname = this.props.location.pathname;
 			browserHistory.push({
 				pathname: pathname,
-				query: { ...query, panel: undefined, discussion: undefined } 
+				query: { ...query, panel: undefined, discussion: undefined }
 			});
 		}
 	},
@@ -157,7 +155,7 @@ export const Pub = React.createClass({
 			filter: query.filter,
 		};
 		const pathname = this.props.location.pathname;
-		
+
 		const accountData = this.props.accountData || {};
 		const accountUser = accountData.user || {};
 		const accountId = accountUser.id;
@@ -176,7 +174,7 @@ export const Pub = React.createClass({
 		const pubFeatures = pub.pubFeatures || [];
 		const followers = pub.followers || [];
 
-		
+
 		const followData = followers.reduce((previous, current)=> {
 			if (current.id === accountId) { return current.FollowsPub; }
 			return previous;
@@ -223,7 +221,7 @@ export const Pub = React.createClass({
 			return discussion;
 		});
 
-		
+
 		const discussionsData = discussions.filter((discussion)=> {
 			return discussion.replyParentPubId === pub.id;
 		}).sort((foo, bar)=> {
@@ -231,7 +229,7 @@ export const Pub = React.createClass({
 			if (foo.createdAt < bar.createdAt) { return -1; }
 			return 0;
 		});
-		
+
 		const activeDiscussion = discussionsData.reduce((previous, current)=> {
 			if (queryDiscussion === String(current.threadNumber)) { return current; }
 			return previous;
@@ -267,7 +265,10 @@ export const Pub = React.createClass({
 				{ name: 'twitter:image:alt', content: 'Preview image for ' + pub.title }
 			]
 		};
-		
+
+		const userName = (this.props.accountData && this.props.accountData.user) ? this.props.accountData.user.username : null;
+		const userAccessToken = (this.props.accountData && this.props.accountData.user) ? this.props.accountData.user.accessToken : null;
+
 		return (
 			<div style={styles.container}>
 
@@ -307,20 +308,20 @@ export const Pub = React.createClass({
 						</div>
 					}
 					<div style={styles.followButtonWrapper}>
-						<FollowButton 
-							pubId={pub.id} 
-							followData={followData} 
-							followerCount={followers.length} 
+						<FollowButton
+							pubId={pub.id}
+							followData={followData}
+							followerCount={followers.length}
 							followersLink={{ pathname: '/pub/' + pub.slug + '/followers', query: query }}
 							dispatch={this.props.dispatch} />
 					</div>
 
 					<h1 style={styles.pubTitle}>{pub.title}</h1>
-					
+
 					<div style={{ paddingLeft: '1em' }}>
-						<PubLabelList selectedLabels={pub.labels} pubId={pub.id} rootPubId={pub.id} globalLabels={true} canEdit={pub.canEdit} pathname={pathname} query={query} dispatch={this.props.dispatch} />	
+						<PubLabelList selectedLabels={pub.labels} pubId={pub.id} rootPubId={pub.id} globalLabels={true} canEdit={pub.canEdit} pathname={pathname} query={query} dispatch={this.props.dispatch} />
 					</div>
-					
+
 					<div style={styles.pubAuthors}>
 						{contributors.filter((contributor)=>{
 							return contributor.isAuthor === true;
@@ -336,10 +337,10 @@ export const Pub = React.createClass({
 							{firstPublishedVersion.id &&
 								<Link to={{ pathname: pathname, query: { ...query, version: firstPublishedVersion.hash } }} style={styles.versionDate}>Originally Published<br />{dateFormat(firstPublishedVersion.createdAt, 'mmmm dd, yy HH:MM')}</Link>
 							}
-							
+
 							<Link to={{ pathname: pathname, query: { ...query, version: currentVersion.hash } }} style={styles.versionDate}>Current Version<br />{dateFormat(currentVersion.createdAt, 'mmm dd, yy HH:MM')}</Link>
 							{currentVersion.id !== lastVersion.id &&
-								<Link to={{ pathname: pathname, query: { ...query, version: undefined } }} style={styles.versionDate}>Most Recent Version<br />{dateFormat(lastVersion.createdAt, 'mmm dd, yy HH:MM')}</Link>	
+								<Link to={{ pathname: pathname, query: { ...query, version: undefined } }} style={styles.versionDate}>Most Recent Version<br />{dateFormat(lastVersion.createdAt, 'mmm dd, yy HH:MM')}</Link>
 							}
 						</div>
 					}
@@ -363,52 +364,54 @@ export const Pub = React.createClass({
 					{/* ------- */}
 					{/* Content */}
 					{/* ------- */}
-					{meta === 'versions' && 
+					{meta === 'versions' &&
 						<PubVersions
 							versionsData={versions}
 							pub={pub}
-							location={this.props.location} 
+							location={this.props.location}
 							isLoading={this.props.pubData.versionsLoading}
 							error={this.props.pubData.versionsError}
 							dispatch={this.props.dispatch} />
 					}
-					{meta === 'contributors' && 
+					{meta === 'contributors' &&
 						<PubContributors
 							contributors={contributors}
 							pub={pub}
 							dispatch={this.props.dispatch} />
 					}
-					{(!meta || meta === 'files') && 
+					{(!meta || meta === 'files') &&
 						<PubContent
 							version={currentVersion}
 							pub={pub}
 							params={this.props.params}
 							query={query}
+							userAccessToken={userAccessToken}
+							userName={userName}
 							isLoading={this.props.pubData.versionsLoading}
 							error={this.props.pubData.versionsError}
 							dispatch={this.props.dispatch} />
 					}
-					{meta === 'settings' && 
+					{meta === 'settings' &&
 						<PubSettings
 							pub={pub}
 							isLoading={this.props.pubData.settingsLoading}
 							error={this.props.pubData.settingsError}
 							dispatch={this.props.dispatch} />
 					}
-					{meta === 'journals' && 
+					{meta === 'journals' &&
 						<PubJournals
 							pub={pub}
 							dispatch={this.props.dispatch} />
 					}
-					{meta === 'followers' && 
+					{meta === 'followers' &&
 						<PubFollowers
 							followers={followers}
 							pathname={pathname}
 							query={query} />
 					}
-					{meta === 'diff' && 
+					{meta === 'diff' &&
 						<PubDiffVersions
-							versions={versions} 
+							versions={versions}
 							pathname={pathname}
 							query={query} />
 					}
@@ -440,9 +443,9 @@ export const Pub = React.createClass({
 								</button>
 							}
 						</div>
-						
-						{panel === 'reviewers' && 
-							<PubReviewers 
+
+						{panel === 'reviewers' &&
+							<PubReviewers
 								invitedReviewers={invitedReviewers}
 								accountUser={accountUser}
 								discussionsData={discussionsData}
@@ -451,8 +454,8 @@ export const Pub = React.createClass({
 								query={query}
 								dispatch={this.props.dispatch} />
 						}
-						{panel === 'new' && 
-							<PubDiscussionsNew 
+						{panel === 'new' &&
+							<PubDiscussionsNew
 								discussionsData={discussionsData}
 								pub={pub}
 								isLoading={this.props.pubData.discussionsLoading}
@@ -461,15 +464,15 @@ export const Pub = React.createClass({
 								query={query}
 								dispatch={this.props.dispatch} />
 						}
-						{!panel && !queryDiscussion && 
-							<PubDiscussionsList 
-								discussionsData={discussionsData} 
+						{!panel && !queryDiscussion &&
+							<PubDiscussionsList
+								discussionsData={discussionsData}
 								pub={pub}
-								pathname={pathname} 
-								query={query} 
+								pathname={pathname}
+								query={query}
 								dispatch={this.props.dispatch} />
 						}
-						{!!queryDiscussion && 
+						{!!queryDiscussion &&
 							<PubDiscussion
 								discussion={activeDiscussion}
 								pub={pub}
@@ -490,7 +493,7 @@ export const Pub = React.createClass({
 
 function mapStateToProps(state) {
 	return {
-		accountData: state.account.toJS(), 
+		accountData: state.account.toJS(),
 		pubData: state.pub.toJS(),
 	};
 }
@@ -526,7 +529,7 @@ styles = {
 		padding: '0em 0em 1em',
 	},
 	panelButtonGroup: {
-		padding: '0em .25em', 
+		padding: '0em .25em',
 		verticalAlign: 'top',
 	},
 	forkHeader: {
@@ -588,5 +591,5 @@ styles = {
 	journalHeaderTag: {
 		marginRight: '0.5em',
 	},
-	
+
 };
