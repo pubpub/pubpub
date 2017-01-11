@@ -2,7 +2,7 @@
   "name": "pubpub",
   "version": "3.0.0",
   "description": "PubPub - Open Publishing",
-  "main": "server.js",
+  "main": "exports.js",
   "author": "PubPub <pubpub@media.mit.edu>",
   "license": "GPL-2.0+",
   "repository": {
