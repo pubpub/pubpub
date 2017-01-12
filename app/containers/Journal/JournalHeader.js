@@ -7,13 +7,7 @@ let styles = {};
 
 export const JournalProfileHeader = React.createClass({
 	propTypes: {
-		journalName: PropTypes.string,
-		journalSlug: PropTypes.string,
-		journalID: PropTypes.number,
-		isFollowing: PropTypes.bool,
-		description: PropTypes.string,
-		logo: PropTypes.string,
-		collections: PropTypes.array,
+		journal: PropTypes.object,
 		headerColor: PropTypes.string,
 		headerImage: PropTypes.string,
 		headerMode: PropTypes.string,
@@ -22,13 +16,14 @@ export const JournalProfileHeader = React.createClass({
 	},
 
 	render: function() {
+		const journal = this.props.journal || {};
 		const customBackgroundStyle = {
 			backgroundColor: this.props.headerColor || '#13A6EF',
 			backgroundImage: this.props.headerImage ? 'url("' + this.props.headerImage + '")' : '',
 			textAlign: this.props.headerAlign || 'left',
 		};
 
-		const collections = this.props.collections || [];
+		// const collections = this.props.collections || [];
 		return (
 			<div style={[styles.headerBackground, customBackgroundStyle]}>
 				<div style={styles.backgroundGrey} />
@@ -37,26 +32,32 @@ export const JournalProfileHeader = React.createClass({
 
 					<div style={styles.headerTextWrapper}>
 						{(this.props.headerMode === 'logo' || this.props.headerMode === 'both') &&
-							<Link to={'/' + this.props.journalSlug} style={globalStyles.link}><img style={styles.logoImage} src={this.props.logo} /></Link>
+							<Link to={'/' + journal.slug} style={globalStyles.link}><img style={styles.logoImage} src={journal.logo} /></Link>
 						}
 
 						{(this.props.headerMode !== 'logo') &&
-							<Link to={'/' + this.props.journalSlug} style={globalStyles.link}><h1 style={[styles.headerTitle]}>{this.props.journalName}</h1></Link>
+							<Link to={'/' + journal.slug} style={globalStyles.link}><h1 style={[styles.headerTitle]}>{journal.name}</h1></Link>
 						}
 
 						{(this.props.headerMode !== 'logo') &&
-							<p>{this.props.description}</p>
+							<p>{journal.description}</p>
 						}
 
 					</div>
 				</div>
 
 				<div style={styles.bottom}>
-					<Link style={styles.collectionLink} to={'/' + this.props.journalSlug}>Home</Link>
-					<Link style={styles.aboutLink} to={'/' + this.props.journalSlug + '/about'}>About</Link>
-					{collections.map((collection)=> {
-						return <Link key={'collection-' + collection.id} style={styles.collectionLink} to={'/' + this.props.journalSlug + '/collection/' + collection.title}>{collection.title}</Link>;
-					})}
+					<Link style={styles.collectionLink} to={'/' + journal.slug}>Home</Link>
+					<Link style={styles.aboutLink} to={'/' + journal.slug + '/about'}>About</Link>
+					{journal.website &&
+						<Link to={journal.website} style={styles.collectionLink}>{journal.website}</Link>
+					}
+					{journal.twitter &&
+						<Link to={'https://twitter.com/' + journal.twitter} style={styles.collectionLink}>@{journal.twitter}</Link>
+					}
+					{journal.facebook &&
+						<Link to={'https://facebook.com/' + journal.facebook} style={styles.collectionLink}>facebook.com/{journal.facebook}</Link>
+					}
 				</div>
 
 			</div>

@@ -18,7 +18,6 @@ export const DropdownButton = React.createClass({
 		if (this.props.position === 1) { position = Position.BOTTOM; }
 		if (this.props.position === 2) { position = Position.BOTTOM_RIGHT; }
 		const propsStyle = this.props.style || {};
-		console.log(propsStyle);
 		return (
 			<Popover 
 				content={this.props.content}

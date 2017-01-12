@@ -3,6 +3,7 @@ import Radium from 'radium';
 import { Link, browserHistory } from 'react-router';
 import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { globalStyles } from 'utils/globalStyles';
+import { contrastText } from 'utils/contrastText';
 
 let styles;
 
@@ -37,6 +38,12 @@ export const AppNav = React.createClass({
 		const user = this.props.accountData.user || {};
 		const pub = this.props.pubData.pub || {};
 		const journal = this.props.journalData.journal || {};
+		const collections = journal.collections || [];
+		const sortedCollections = collections.sort((foo, bar)=> {
+			if (foo.order < bar.order) { return -1; }
+			if (foo.order > bar.order) { return 1; }
+			return 0;
+		});
 		const location = this.props.location || {};
 		const redirectURL = location.pathname.indexOf('/signup') !== 0 && location.pathname.indexOf('/reset') !== 0 && location.pathname !== '/' ? location.pathname : undefined;
 		const query = location.query || {};
@@ -51,10 +58,9 @@ export const AppNav = React.createClass({
 		}, undefined);
 
 		const headerJournal = isJournal ? journal : contextJournal;
-
-		const isLight = headerJournal && headerJournal.headerColor === '#ffffff'; // This is a bad hack. Calculate whether text should be light or dark, and then set
+		const isLight = headerJournal && contrastText(headerJournal.headerColor) === '#000000'; // This is a bad hack. Calculate whether text should be light or dark, and then set
 		const navClass = isLight ? 'pt-navbar' : 'pt-navbar pt-dark'; 
-		const navStyle = headerJournal ? { backgroundColor: headerJournal.headerColor } : {};
+		const navStyle = headerJournal ? { backgroundColor: headerJournal.headerColor, minHeight: '50px', height: 'auto' } : {};
 
 
 		return (
@@ -68,7 +74,8 @@ export const AppNav = React.createClass({
 						{/*<img src={'http://i.imgur.com/0AgfSdL.png'} style={styles.journalLogo} />*/}
 						
 						{isLight &&
-							<img src={'http://i.imgur.com/8mTuvQc.png'} style={styles.journalLogo} />
+							// <img src={'http://i.imgur.com/8mTuvQc.png'} style={styles.journalLogo} />
+							<img src={'https://i.imgur.com/Z3xWDMT.png'} style={styles.journalLogo} />
 						}
 						{!isLight &&
 							<img src={'https://i.imgur.com/Z3xWDMT.png'} style={styles.journalLogo} />
@@ -139,12 +146,19 @@ export const AppNav = React.createClass({
 						</Popover>
 					</div>
 				}
-				{/* <div className={'clearfix'} />
-				<div className={'pt-button-group pt-minimal'}>
-					<Link className={'pt-button'}>Fall 2016</Link>
-					<Link className={'pt-button'}>Optimized Phyics</Link>
-					<Link className={'pt-button'}>Community Discussion</Link>
-				</div>	*/}
+
+				{headerJournal && !!sortedCollections.length &&
+					<div>
+						<div className={'clearfix'} />
+						<div className={'pt-button-group pt-minimal'} style={{ marginLeft: '45px' }}>
+							{sortedCollections.filter((collection)=> {
+								return collection.isDisplayed;
+							}).map((collection)=> {
+								return <Link className={'pt-button'} role={'button'} key={'collection-' + collection.id} to={'/' + journal.slug + '/collection/' + collection.title}>{collection.title}</Link>;
+							})}
+						</div>		
+					</div>
+				}
 			</nav>
 		);
 	}

@@ -232,14 +232,12 @@ export default function reducer(state = defaultState, action) {
 		return state;
 
 	case PUT_LABEL_LOAD:
-		return state;	
-	case PUT_LABEL_SUCCESS:
 		return state.setIn(
 			// Update all of the collections associated with a journal. Labels owned by the journal.
 			['journal', 'collections'], 
 			state.getIn(['journal', 'collections']).map((label)=> {
 				if (label.get('id') === action.labelId) {
-					return label.merge({ title: action.title });
+					return label.merge(action.labelUpdates);
 				}
 				return label;
 			})
@@ -251,13 +249,14 @@ export default function reducer(state = defaultState, action) {
 					['pub', 'labels'], 
 					pubFeature.getIn(['pub', 'labels']).map((label)=> {
 						if (label.get('id') === action.labelId) {
-							return label.merge({ title: action.title });
+							return label.merge(action.labelUpdates);
 						}
 						return label;
 					})
 				);
 			})
 		);
+	case PUT_LABEL_SUCCESS:
 	case PUT_LABEL_FAIL:
 		return state;
 

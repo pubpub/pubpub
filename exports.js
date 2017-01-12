@@ -1,3 +1,3 @@
 exports.components = {
-  RenderFile: require('./app/components/RenderFile/RenderFile'),
+	RenderFile: require('./app/components/RenderFile/RenderFile'),
 };

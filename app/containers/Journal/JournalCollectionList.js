@@ -118,7 +118,11 @@ export const JournalCollectionList = React.createClass({
 			<div style={styles.popoverContentWrapper}>
 
 				{/* Display all possible labels that can be applied. Provide options to edit */}
-				{allLabels.map((label, index)=> {
+				{allLabels.sort((foo, bar)=> {
+					if (foo.order < bar.order) { return -1; }
+					if (foo.order > bar.order) { return 1; }
+					return 0;
+				}).map((label, index)=> {
 					if (this.state.editingLabelId === label.id) {
 						return (
 							<div style={styles.labelEditCard} className={'pt-card pt-elevation-2'} key={'publabeledit- ' + label.id}>
@@ -138,9 +142,9 @@ export const JournalCollectionList = React.createClass({
 							<button className="pt-button pt-fill" style={styles.labelButton} onClick={this.selectLabel.bind(this, label)}>
 								<span style={styles.labelColor} className={selectedLabelIds.includes(label.id) ? 'pt-icon-standard pt-icon-small-tick' : ''} /> {label.title}
 							</button>
-							{this.props.canEdit &&
+							{/*this.props.canEdit &&
 								<button className="pt-button pt-icon-edit" onClick={this.editClick.bind(this, label)} />
-							}
+							*/}
 							
 						</div>
 					);

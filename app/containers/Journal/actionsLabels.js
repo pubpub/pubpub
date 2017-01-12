@@ -23,7 +23,7 @@ export const DELETE_LABEL_FAIL = 'journal/DELETE_LABEL_FAIL';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function postLabel(journalId, title) {
+export function postLabel(journalId, title, description, isDisplayed, order) {
 	return (dispatch) => {
 		dispatch({ type: POST_LABEL_LOAD });
 
@@ -34,8 +34,11 @@ export function postLabel(journalId, title) {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
+				journalId: journalId,
 				title: title,
-				journalId: journalId
+				description: description,
+				isDisplayed: isDisplayed,
+				order: order,
 			})
 		})
 		.then((result) => {
@@ -48,9 +51,9 @@ export function postLabel(journalId, title) {
 	};
 }
 
-export function putLabel(journalId, labelId, title) {
+export function putLabel(journalId, labelId, labelUpdates) {
 	return (dispatch) => {
-		dispatch({ type: PUT_LABEL_LOAD });
+		dispatch({ type: PUT_LABEL_LOAD, labelId: labelId, labelUpdates: labelUpdates });
 
 		return clientFetch('/api/labels', {
 			method: 'PUT',
@@ -60,12 +63,12 @@ export function putLabel(journalId, labelId, title) {
 			},
 			body: JSON.stringify({
 				labelId: labelId,
-				title: title,
-				journalId: journalId
+				journalId: journalId,
+				...labelUpdates
 			})
 		})
 		.then((result) => {
-			dispatch({ type: PUT_LABEL_SUCCESS, result, labelId: labelId, title: title, journalId: journalId });
+			dispatch({ type: PUT_LABEL_SUCCESS, result });
 		})
 		.catch((error) => {
 			console.log(error);

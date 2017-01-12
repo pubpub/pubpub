@@ -20,6 +20,7 @@ import JournalSubmits from './JournalSubmits';
 import JournalFeatures from './JournalFeatures';
 import JournalAbout from './JournalAbout';
 import JournalCollection from './JournalCollection';
+import JournalCollections from './JournalCollections';
 import JournalFollowers from './JournalFollowers';
 
 let styles;
@@ -146,12 +147,7 @@ export const Journal = React.createClass({
 			
 
 				<JournalHeader
-					journalName={journal.name}
-					journalSlug={journal.slug}
-					journalID={journal.id}
-					isFollowing={false}
-					description={journal.shortDescription}
-					logo={this.state.logo || journal.logo}
+					journal={journal}
 					followContent={
 						<div style={styles.followButtonWrapper}>
 							<div className={'pt-button-group'} style={styles.editButton}>
@@ -166,7 +162,6 @@ export const Journal = React.createClass({
 								dispatch={this.props.dispatch} />
 						</div>
 					}
-					collections={collections}
 					headerColor={this.state.headerColor || journal.headerColor}
 					headerMode={this.state.headerMode || journal.headerMode}
 					headerAlign={this.state.headerAlign || journal.headerAlign}
@@ -258,7 +253,11 @@ export const Journal = React.createClass({
 									}
 
 									{query.view === 'collections' &&
-										<div><h2>Collections</h2></div>
+										<JournalCollections
+											journal={journal}
+											isLoading={this.props.journalData.collectionsLoading}
+											error={this.props.journalData.collectionsError}
+											dispatch={this.props.dispatch} />
 									}
 								</div>
 							);

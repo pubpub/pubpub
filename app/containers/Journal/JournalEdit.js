@@ -5,7 +5,7 @@ import { ImageUpload, Loader } from 'components';
 import { s3Upload } from 'utils/uploadFile';
 import { StickyContainer, Sticky } from 'react-sticky';
 import { RadioGroup, Radio } from '@blueprintjs/core';
-import { ChromePicker } from 'react-color';
+import { BlockPicker } from 'react-color';
 
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
@@ -155,10 +155,10 @@ export const JournalEdit = React.createClass({
 			<div>
 				<Helmet {...metaData} />
 
-				<Style rules={{
+				{/*<Style rules={{
 					'.colorPicker': { margin: '1em 0.5em', },
 					'.colorPicker > div': { boxShadow: '0px 0px 0px black !important', border: '1px solid #BBBDC0 !important' },
-				}} />
+				}} />*/}
 
 				<StickyContainer>
 				<form onSubmit={this.saveJournal} style={styles.form}>
@@ -230,7 +230,7 @@ export const JournalEdit = React.createClass({
 						<label>
 							<FormattedMessage {...globalMessages.BackgroundColor} />
 							<div className={'colorPicker'}>
-								<ChromePicker color={this.state.headerColor} disableAlpha={true} onChange={this.handleColorChange} />
+								<BlockPicker color={this.state.headerColor} onChange={this.handleColorChange} />
 							</div>
 						</label>
 

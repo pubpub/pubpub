@@ -123,7 +123,7 @@ export const JournalAbout = React.createClass({
 			<div style={styles.container}>
 				
 				<h2>About {journal.name}</h2>
-				<div style={styles.linksSection}>
+				{/*<div style={styles.linksSection}>
 					{journal.website &&
 						<Link to={journal.website} style={styles.outLink}>{journal.website}</Link>
 					}
@@ -133,7 +133,7 @@ export const JournalAbout = React.createClass({
 					{journal.facebook &&
 						<Link to={'https://facebook.com/' + journal.facebook} style={styles.outLink}>facebook.com/{journal.facebook}</Link>
 					}
-				</div>
+				</div>*/}
 
 				<div style={styles.aboutContent}>
 					{!journal.longDescription && !this.state.editorOpen &&

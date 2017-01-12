@@ -32,6 +32,7 @@ export const JournalCollection = React.createClass({
 		return (
 			<div style={styles.container}>
 				<h2>{collection}</h2>
+				<p>{collection.description}</p>
 				{!pubs.length &&
 					<NonIdealState
 						description={'Pubs have not yet been added into this collection.'}
