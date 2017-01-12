@@ -45,7 +45,7 @@ export const AppNav = React.createClass({
 			return 0;
 		});
 		const location = this.props.location || {};
-		const redirectURL = location.pathname.indexOf('/signup') !== 0 && location.pathname.indexOf('/reset') !== 0 && location.pathname !== '/' ? location.pathname : undefined;
+		const redirectURL = location.pathname.indexOf('/signup') !== 0 && location.pathname.indexOf('/reset') !== 0 && location.pathname !== '/' ? location.pathname + location.search : undefined;
 		const query = location.query || {};
 		const params = this.props.params || {};
 		const isPub = location.pathname.indexOf('/pub') === 0;
@@ -98,7 +98,7 @@ export const AppNav = React.createClass({
 				{!user.id &&
 					<div className="pt-navbar-group pt-align-right">
 						<Link to={{ pathname: '/login', query: { redirect: redirectURL } }} style={styles.menuLink}><button className="pt-button pt-minimal">Login</button></Link>
-						<Link to={'/signup'} style={styles.menuLink}><button className="pt-button pt-intent-primary">Signup</button></Link>		
+						<Link to={{ pathname: '/signup' }} style={styles.menuLink}><button className="pt-button pt-intent-primary">Signup</button></Link>		
 					</div>
 				}
 

@@ -201,7 +201,6 @@ export const JournalCollections = React.createClass({
 		});
 
 		const SortableList = SortableContainer(({items}) => {
-			console.log(items);
 			return (
 				<div>
 					{items.map((value, index) =>
