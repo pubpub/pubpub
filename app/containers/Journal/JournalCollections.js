@@ -217,7 +217,6 @@ export const JournalCollections = React.createClass({
 				<Helmet {...metaData} />
 
 				<h2>Collections</h2>
-
 				{/*
 					Display collections if not logged in
 					Show title, description
@@ -230,7 +229,7 @@ export const JournalCollections = React.createClass({
 					Map all collections and build out their edit interfaces.
 				*/}
 
-				{!this.state.createOpen &&
+				{!this.state.createOpen && !!sortedCollections.length &&
 				<div style={{ textAlign: 'right' }}>
 					<button className={'pt-button pt-intent-primary'} onClick={this.toggleCreate}>Create New Collection</button>
 				</div>
@@ -256,6 +255,13 @@ export const JournalCollections = React.createClass({
 					</div>
 				}
 
+				{!this.state.createOpen && !sortedCollections.length &&
+					<NonIdealState
+						action={<button className={'pt-button pt-intent-primary'} onClick={this.toggleCreate}>Create New Collection</button>}
+						description={'Collections can be used to group featured pubs together.'}
+						title={'No Collections'}
+						visual={'application'} />
+				}
 				<SortableList items={sortedCollections} onSortEnd={this.onSortEnd} useDragHandle={true} lockAxis={'y'} />
 
 			</div>
