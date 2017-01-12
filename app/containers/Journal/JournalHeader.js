@@ -8,6 +8,7 @@ let styles = {};
 export const JournalProfileHeader = React.createClass({
 	propTypes: {
 		journal: PropTypes.object,
+		logo: PropTypes.string,
 		headerColor: PropTypes.string,
 		headerImage: PropTypes.string,
 		headerMode: PropTypes.string,
@@ -32,16 +33,17 @@ export const JournalProfileHeader = React.createClass({
 
 					<div style={styles.headerTextWrapper}>
 						{(this.props.headerMode === 'logo' || this.props.headerMode === 'both') &&
-							<Link to={'/' + journal.slug} style={globalStyles.link}><img style={styles.logoImage} src={journal.logo} /></Link>
+							<Link to={'/' + journal.slug} style={globalStyles.link}><img style={styles.logoImage} src={this.props.logo} /></Link>
 						}
 
 						{(this.props.headerMode !== 'logo') &&
 							<Link to={'/' + journal.slug} style={globalStyles.link}><h1 style={[styles.headerTitle]}>{journal.name}</h1></Link>
 						}
 
-						{(this.props.headerMode !== 'logo') &&
-							<p>{journal.description}</p>
-						}
+						{/*(this.props.headerMode !== 'logo') &&
+							<p>{journal.shortDescription}</p>
+						*/}
+						<p>{journal.shortDescription}</p>
 
 					</div>
 				</div>

@@ -215,8 +215,10 @@ export const JournalCollections = React.createClass({
 		return (
 			<div>
 				<Helmet {...metaData} />
-
-				<h2>Collections</h2>
+				{!!sortedCollections.length &&
+					<h2>Collections</h2>
+				}
+				
 				{/*
 					Display collections if not logged in
 					Show title, description

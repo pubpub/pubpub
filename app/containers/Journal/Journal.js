@@ -162,6 +162,7 @@ export const Journal = React.createClass({
 								dispatch={this.props.dispatch} />
 						</div>
 					}
+					logo={this.state.logo || journal.logo}
 					headerColor={this.state.headerColor || journal.headerColor}
 					headerMode={this.state.headerMode || journal.headerMode}
 					headerAlign={this.state.headerAlign || journal.headerAlign}
