@@ -61,9 +61,9 @@ export const CreateAccount = React.createClass({
 		this.setState({ [key]: value });
 	},
 
-	inputUpdateLowerCase: function(key, evt) {
+	inputUpdateUsername: function(key, evt) {
 		const value = evt.target.value || '';
-		this.setState({ [key]: value.toLowerCase() });
+		this.setState({ [key]: value.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase() });
 	},
 
 	bioUpdate: function(evt) {
@@ -183,7 +183,7 @@ export const CreateAccount = React.createClass({
 							
 							<label htmlFor={'username'}>
 								<FormattedMessage {...globalMessages.Username} />
-								<input id={'username'} name={'username'} type="text" style={styles.input} value={this.state.username} onChange={this.inputUpdateLowerCase.bind(this, 'username')} />
+								<input id={'username'} name={'username'} type="text" style={styles.input} value={this.state.username} onChange={this.inputUpdateUsername.bind(this, 'username')} />
 								<div className={'light-color inputSubtext'}>
 									pubpub.org/user/<b>{this.state.username || 'username'}</b>
 								</div>
