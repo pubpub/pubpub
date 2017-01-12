@@ -74,6 +74,8 @@ export const PubVersions = React.createClass({
 										<span onClick={version.isPublished ? ()=>{} : this.setPublish.bind(this, version.id)} className={'pt-button pt-minimal'} style={version.isPublished ? styles.noClick : {}}>
 											<span className={'pt-icon-standard pt-icon-globe'} style={version.isPublished ? styles.icon : [styles.icon, styles.inactiveIcon]} />
 											<span style={styles.iconSpacer} />
+											<span className={'pt-icon-standard pt-icon-people'} style={styles.inactiveIcon} />
+											<span style={styles.iconSpacer} />
 											<span className={'pt-icon-standard pt-icon-lock'} style={version.isPublished ? [styles.icon, styles.inactiveIcon] : styles.icon} />
 										</span>
 									</Tooltip>

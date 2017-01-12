@@ -273,8 +273,8 @@ export const Pub = React.createClass({
 
 				<Helmet {...metaData} />
 
-				{isInvitedReviewer &&
-					<div style={{ backgroundColor: '#232729' }}>
+				{false && isInvitedReviewer &&
+					<div className={'pt-callout'}>
 						INVITED!!!!!
 						<button type="button" onClick={this.updateReviewer}>CLICK ME TO UPDATE</button>
 					</div>
