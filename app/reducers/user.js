@@ -37,6 +37,7 @@ export default function reducer(state = defaultState, action) {
 		return state.merge({
 			loading: true,
 			error: false,
+			user: {},
 		});	
 	case GET_USER_DATA_SUCCESS:
 		return state.merge({

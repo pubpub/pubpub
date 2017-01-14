@@ -33,7 +33,14 @@ export const User = React.createClass({
 
 	componentWillMount() {
 		const params = this.props.params || {};
-		this.props.dispatch(getUserData(params.username));		
+		this.props.dispatch(getUserData(params.username));
+	},
+	componentWillReceiveProps(nextProps) {
+		const params = this.props.params || {};
+		const nextParams = nextProps.params || {};
+		if (params.username !== nextParams.username) {
+			this.props.dispatch(getUserData(nextParams.username));
+		}
 	},
 
 	getInitialState() {

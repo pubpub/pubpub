@@ -47,6 +47,13 @@ export const Journal = React.createClass({
 	componentWillMount() {
 		this.props.dispatch(getJournalData(this.props.params.slug));
 	},
+	componentWillReceiveProps(nextProps) {
+		const params = this.props.params || {};
+		const nextParams = nextProps.params || {};
+		if (params.slug !== nextParams.slug) {
+			this.props.dispatch(getJournalData(nextParams.slug));
+		}
+	},
 	
 	handleHeaderUpdate: function(updateObject) {
 		this.setState(updateObject);

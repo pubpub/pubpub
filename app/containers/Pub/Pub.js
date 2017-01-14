@@ -66,6 +66,11 @@ export const Pub = React.createClass({
 			this.setState({ canGoBack: false });
 		}
 
+		const params = this.props.params || {};
+		const nextParams = nextProps.params || {};
+		if (params.slug !== nextParams.slug) {
+			this.props.dispatch(getPubData(nextParams.slug));
+		}
 		// Handle case when discussionId is present
 		// const nextPubData = nextProps.pubData || {};
 		// const pub = nextPubData.pub || {};
