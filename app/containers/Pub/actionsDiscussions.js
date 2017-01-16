@@ -83,7 +83,7 @@ export function putDiscussion(pubId, title, description) {
 	};
 }
 
-export function postReaction(pubId, reactionId) {
+export function postReaction(pubId, replyRootPubId, reactionId) {
 	return (dispatch) => {
 		dispatch({ type: POST_REACTION_LOAD });
 
@@ -95,11 +95,12 @@ export function postReaction(pubId, reactionId) {
 			},
 			body: JSON.stringify({
 				pubId: pubId,
+				replyRootPubId: replyRootPubId,
 				reactionId: reactionId,
 			})
 		})
 		.then((result) => {
-			dispatch({ type: POST_REACTION_SUCCESS, result, pubId: pubId, });
+			dispatch({ type: POST_REACTION_SUCCESS, result, pubId: pubId });
 		})
 		.catch((error) => {
 			console.log(error);
@@ -108,7 +109,7 @@ export function postReaction(pubId, reactionId) {
 	};
 }
 
-export function deleteReaction(pubId, reactionId, accountId) {
+export function deleteReaction(pubId, replyRootPubId, reactionId, accountId) {
 	return (dispatch) => {
 		dispatch({ type: DELETE_REACTION_LOAD });
 
@@ -120,6 +121,7 @@ export function deleteReaction(pubId, reactionId, accountId) {
 			},
 			body: JSON.stringify({
 				pubId: pubId,
+				replyRootPubId: replyRootPubId,
 				reactionId: reactionId,
 			})
 		})

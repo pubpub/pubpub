@@ -101,13 +101,13 @@ export const PubDiscussion = React.createClass({
 
 	},
 
-	setReaction: function(pubId, reactionId, reactionSet) {
+	setReaction: function(pubId, replyRootPubId, reactionId, reactionSet) {
 		if (!this.props.accountId) { return false; }
 
 		if (reactionSet) {
-			return this.props.dispatch(deleteReaction(pubId, reactionId, this.props.accountId));
+			return this.props.dispatch(deleteReaction(pubId, replyRootPubId, reactionId, this.props.accountId));
 		}
-		return this.props.dispatch(postReaction(pubId, reactionId));
+		return this.props.dispatch(postReaction(pubId, replyRootPubId, reactionId));
 	},
 
 	render: function() {
@@ -170,6 +170,7 @@ export const PubDiscussion = React.createClass({
 					const isAuthor = user.id === this.props.accountId;
 					const editorOpen = this.state.openEditor === child.id;
 					const pubReactions = child.pubReactions || [];
+					console.log(child);
 					
 					const usedReactions = {};
 					pubReactions.map((PubReaction)=> {
@@ -206,7 +207,7 @@ export const PubDiscussion = React.createClass({
 														const classes = reactionSet
 															? 'pt-button pt-minimal pt-active'
 															: 'pt-button pt-minimal';
-														return <button key={'reaction-' + reaction.id} className={classes} style={styles.reactionItem} onClick={this.setReaction.bind(this, child.id, reaction.id, reactionSet)}>{reaction.title}</button>;
+														return <button key={'reaction-' + reaction.id} className={classes} style={styles.reactionItem} onClick={this.setReaction.bind(this, child.id, child.replyRootPubId, reaction.id, reactionSet)}>{reaction.title}</button>;
 													})}
 												</div>
 											}
