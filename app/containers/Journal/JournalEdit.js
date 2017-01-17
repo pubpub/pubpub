@@ -31,7 +31,7 @@ export const JournalEdit = React.createClass({
 			headerMode: '',
 			headerAlign: '',
 			headerImage: null,
-			icon: undefined,
+			avatar: undefined,
 			title: '',
 			description: '',
 			canSave: false,
@@ -43,7 +43,7 @@ export const JournalEdit = React.createClass({
 		this.setState({
 			slug: journal.slug || '',
 			title: journal.title || '',
-			icon: journal.icon || 'https://assets.pubpub.org/_site/journal.png',
+			avatar: journal.avatar || 'https://assets.pubpub.org/_site/journal.png',
 			logo: journal.logo,
 			description: journal.description || '',
 			headerColor: journal.headerColor || '#13A6EF',
@@ -128,8 +128,8 @@ export const JournalEdit = React.createClass({
 		this.props.dispatch(putJournal(this.props.journal.id, newJournalData));
 	},
 	handleIconFinish: function(imageUrl) {
-		this.setState({ icon: imageUrl, canSave: true });
-		this.props.handleHeaderUpdate({ icon: imageUrl });
+		this.setState({ avatar: imageUrl, canSave: true });
+		this.props.handleHeaderUpdate({ avatar: imageUrl });
 	},
 
 	handleLogoFinish: function(imageUrl) {
@@ -181,7 +181,7 @@ export const JournalEdit = React.createClass({
 						</label>
 
 						<ImageUpload 
-							defaultImage={this.state.icon}
+							defaultImage={this.state.avatar}
 							userCrop={true}
 							label={<FormattedMessage {...globalMessages.JournalIcon} />}
 							tooltip={<FormattedMessage id="JournalProfileEdit.journalIconDescription" defaultMessage="Used as the Journal's preview image in search results and throughout the site."/>} 

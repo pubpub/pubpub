@@ -121,14 +121,14 @@ export const Journal = React.createClass({
 				{ property: 'og:type', content: 'article' },
 				{ property: 'og:description', content: journal.description },
 				{ property: 'og:url', content: 'https://www.pubpub.org/' + journal.slug },
-				{ property: 'og:image', content: journal.icon },
-				{ property: 'og:image:url', content: journal.icon },
+				{ property: 'og:image', content: journal.avatar },
+				{ property: 'og:image:url', content: journal.avatar },
 				{ property: 'og:image:width', content: '500' },
 				{ name: 'twitter:card', content: 'summary' },
 				{ name: 'twitter:site', content: '@pubpub' },
 				{ name: 'twitter:title', content: (journal.title || journal.slug) },
-				{ name: 'twitter:description', content: journal.description || journal.longDescription || journal.title || journal.slug },
-				{ name: 'twitter:image', content: journal.icon },
+				{ name: 'twitter:description', content: journal.description || journal.about || journal.title || journal.slug },
+				{ name: 'twitter:image', content: journal.avatar },
 				{ name: 'twitter:image:alt', content: 'Image for ' + (journal.title || journal.slug) }
 			]
 		};

@@ -26,7 +26,7 @@ export const CreateJournal = React.createClass({
 			title: '',
 			description: '',
 			imageFile: null,
-			icon: 'https://assets.pubpub.org/_site/journal.png',
+			avatar: 'https://assets.pubpub.org/_site/journal.png',
 
 		};
 	},
@@ -70,12 +70,12 @@ export const CreateJournal = React.createClass({
 
 	cancelImageUpload: function() {
 		this.setState({ imageFile: null });
-		document.getElementById('icon').value = null;
+		document.getElementById('avatar').value = null;
 	},
 
 	imageUploaded: function(url) {
-		this.setState({ imageFile: null, icon: url });
-		document.getElementById('icon').value = null;
+		this.setState({ imageFile: null, avatar: url });
+		document.getElementById('avatar').value = null;
 	},
 
 	validate: function(data) {
@@ -104,7 +104,7 @@ export const CreateJournal = React.createClass({
 			slug: this.state.slug,
 			title: this.state.title,
 			description: this.state.description,
-			icon: this.state.icon,
+			avatar: this.state.avatar,
 		};
 		const { isValid, validationError } = this.validate(createData);
 		this.setState({ validationError: validationError });
@@ -154,10 +154,10 @@ export const CreateJournal = React.createClass({
 						</div>
 					</label>
 					
-					<label htmlFor={'icon'}>
+					<label htmlFor={'avatar'}>
 						<FormattedMessage {...globalMessages.Icon} />
-						<img role="presentation" style={styles.icon} src={this.state.icon} />
-						<input id={'icon'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
+						<img role="presentation" style={styles.avatar} src={this.state.avatar} />
+						<input id={'avatar'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 					</label>
 
 					<button className={'pt-button pt-intent-primary'} onClick={this.createSubmit}>
@@ -212,7 +212,7 @@ styles = {
 		height: '4em',
 	},
 
-	icon: {
+	avatar: {
 		width: '100px',
 		display: 'block',
 	},

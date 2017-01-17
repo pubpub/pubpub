@@ -28,7 +28,7 @@ export function createJournal(createData) {
 			body: JSON.stringify({
 				title: createData.title,
 				description: createData.description,
-				icon: createData.icon,
+				avatar: createData.avatar,
 				slug: createData.slug,
 			})
 		})

@@ -89,7 +89,7 @@ export const JournalAbout = React.createClass({
 	openEditor: function() {
 		this.setState({
 			editorOpen: true,
-			editorContent: this.props.journal.longDescription || ''
+			editorContent: this.props.journal.about || ''
 		});
 	},
 	closeEditor: function() {
@@ -99,7 +99,7 @@ export const JournalAbout = React.createClass({
 		});
 	},
 	saveEditor: function() {
-		const newJournalData = { longDescription: this.state.editorContent };
+		const newJournalData = { about: this.state.editorContent };
 		this.props.dispatch(putJournal(this.props.journal.id, newJournalData));
 		
 		// Need to actually do this in the willreceive
@@ -136,7 +136,7 @@ export const JournalAbout = React.createClass({
 				</div>*/}
 
 				<div style={styles.aboutContent}>
-					{!journal.longDescription && !this.state.editorOpen &&
+					{!journal.about && !this.state.editorOpen &&
 						<NonIdealState
 							action={<button className={'pt-button pt-icon-edit'} role="button" onClick={this.openEditor}>Add Details</button>}
 							description={'Details about this journal have not yet been added. You can use this space to describe the journal\'s vision, review process, or mission.'}
@@ -144,12 +144,12 @@ export const JournalAbout = React.createClass({
 							visual={'annotation'} />
 					}
 
-					{journal.longDescription && !this.state.editorOpen &&
+					{journal.about && !this.state.editorOpen &&
 						<div className="journal-about-content">
 							<div style={{float: 'right'}}>
 								<button className={'pt-button pt-icon-edit'} role="button" onClick={this.openEditor}>Edit Details</button>
 							</div>
-							<ReactMarkdown source={journal.longDescription} />
+							<ReactMarkdown source={journal.about} />
 						</div>	
 					}
 					{this.state.editorOpen &&

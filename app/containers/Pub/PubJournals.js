@@ -38,7 +38,7 @@ export const PubJournals = React.createClass({
 				return {
 					value: item.slug,
 					label: item.title,
-					image: item.icon,
+					image: item.avatar,
 					slug: item.slug,
 					id: item.id,
 				};

@@ -123,7 +123,7 @@ export const PubReviewers = React.createClass({
 											{accountJournals.map((journal, index)=> {
 												return (
 													<li key={'authorFilter-' + index} onClick={this.setJournal.bind(this, journal)} className="pt-menu-item pt-popover-dismiss">
-														<img src={journal.icon} style={{ maxWidth: '35px', verticalAlign: 'middle', marginRight: '0.5em' }} />
+														<img src={journal.avatar} style={{ maxWidth: '35px', verticalAlign: 'middle', marginRight: '0.5em' }} />
 														{journal.title}
 													</li>
 												);
@@ -134,7 +134,7 @@ export const PubReviewers = React.createClass({
 										<span>
 											{!!currentInviterJournal.id &&
 												<span>
-													<img src={currentInviterJournal.icon} style={{ maxWidth: '35px', verticalAlign: 'middle', marginRight: '0.5em' }} /> {currentInviterJournal.title}
+													<img src={currentInviterJournal.avatar} style={{ maxWidth: '35px', verticalAlign: 'middle', marginRight: '0.5em' }} /> {currentInviterJournal.title}
 												</span>
 											}
 											{!currentInviterJournal.id &&
@@ -264,7 +264,7 @@ export const PubReviewers = React.createClass({
 									{!!inviterJournal &&
 										<div>
 											<Link to={'/' + inviterJournal.slug}>
-												<img alt={inviterJournal.title} src={'https://jake.pubpub.org/unsafe/50x50/' + inviterJournal.icon} style={styles.inviterImage} />	
+												<img alt={inviterJournal.title} src={'https://jake.pubpub.org/unsafe/50x50/' + inviterJournal.avatar} style={styles.inviterImage} />	
 											</Link>
 											on behalf of <Link to={'/' + inviterJournal.slug}>{inviterJournal.title}</Link>
 										</div>
