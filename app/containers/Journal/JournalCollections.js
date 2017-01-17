@@ -25,8 +25,8 @@ export const JournalCollections = React.createClass({
 	getInitialState: function() {
 		return {
 			editingLabelId: undefined,
-			editingTitle: '',
-			editingDescription: '',
+			// editingTitle: '',
+			// editingDescription: '',
 			createOpen: false,
 			creatingTitle: '',
 			creatingDescription: '',
@@ -45,21 +45,28 @@ export const JournalCollections = React.createClass({
 		this.setState({ 
 			editingLabelId: collection.id,
 			editingTitle: collection.title,
+			editingDescription: collection.description,
 		});
+		
+		
 	},
 	
-	updateEditTitle: function(evt) {
-		this.setState({ editingTitle: evt.target.value });
-	},
+	// updateEditTitle: function(evt) {
+	// 	this.setState({ editingTitle: evt.target.value });
+	// },
 
-	updateEditDescription: function(evt) {
-		this.setState({ editingDescription: evt.target.value });
-	},
+	// updateEditDescription: function(evt) {
+	// 	this.setState({ editingDescription: evt.target.value });
+	// },
 
 	saveEdit: function() {
+		// const labelUpdates = {
+		// 	title: this.state.editingTitle,
+		// 	description: this.state.editingDescription
+		// };
 		const labelUpdates = {
-			title: this.state.editingTitle,
-			description: this.state.editingDescription
+			title: document.getElementById('editTitle').value,
+			description: document.getElementById('editDescription').value
 		};
 		this.props.dispatch(putLabel(this.props.journal.id, this.state.editingLabelId, labelUpdates));
 		this.setState({ editingLabelId: undefined });
@@ -176,13 +183,15 @@ export const JournalCollections = React.createClass({
 
 					{isEditing &&
 						<div style={styles.labelEditCard} className={'pt-card pt-elevation-2'} key={'publabeledit- ' + collection.id}>
-							<label>
+							<label key={'thinger' + collection.id}>
 								Title
-								<input type="text" className={'pt-input'} value={this.state.editingTitle} onChange={this.updateEditTitle} style={styles.labelEditInput} />
+								{/* <input type="text" className={'pt-input'} value={this.state.editingTitle} onChange={this.updateEditTitle} style={styles.labelEditInput} /> */}
+								<input type="text" className={'pt-input'} id={'editTitle'} defaultValue={collection.title} style={styles.labelEditInput} />
 							</label>
 							<label>
 								Description
-								<textarea type="text" className={'pt-input'} value={this.state.editingDescription} onChange={this.updateEditDescription} style={styles.labelEditInput} />	
+								{/* <textarea type="text" className={'pt-input'} value={this.state.editingDescription} onChange={this.updateEditDescription} style={styles.labelEditInput} /> */}
+								<textarea type="text" className={'pt-input'} id={'editDescription'} defaultValue={collection.description} style={styles.labelEditInput} />
 							</label>
 							
 							<div className="pt-button-group" style={styles.labelEditActions}>
