@@ -193,7 +193,8 @@ export const JournalEdit = React.createClass({
 							label={'Logo'}
 							tooltip={'Used in the Header bar for all branded Journal pages'} 
 							containerStyle={styles.imageContainer}
-							onNewImage={this.handleLogoFinish} />
+							onNewImage={this.handleLogoFinish}
+							canClear={true} />
 
 
 						<ImageUpload 

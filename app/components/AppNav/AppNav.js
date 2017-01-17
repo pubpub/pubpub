@@ -60,7 +60,8 @@ export const AppNav = React.createClass({
 			return 0;
 		});
 
-		const isLight = headerJournal && contrastText(headerJournal.headerColor) === '#000000'; // This is a bad hack. Calculate whether text should be light or dark, and then set
+		const contrastColor = headerJournal && contrastText(headerJournal.headerColor);
+		const isLight = headerJournal && contrastColor === '#000000';
 		const navClass = isLight ? 'pt-navbar' : 'pt-navbar pt-dark'; 
 		const navStyle = headerJournal ? { backgroundColor: headerJournal.headerColor, minHeight: '50px', height: 'auto' } : {};
 
@@ -88,7 +89,12 @@ export const AppNav = React.createClass({
 						<div style={styles.journalLogoWrapper}>
 							<div style={[styles.journalLogoDivider, isLight && styles.journalLogoDividerDark]} />
 							<Link to={'/' + headerJournal.slug}>
-								<img src={headerJournal.logo} style={styles.journalLogo} />
+								{!!headerJournal.logo &&
+									<img src={headerJournal.logo} style={styles.journalLogo} />
+								}
+								{!headerJournal.logo &&
+									<span style={[styles.journalTitle, { color: contrastColor }]}>{headerJournal.title}</span>
+								}
 							</Link>
 						</div>
 					}
@@ -212,5 +218,10 @@ styles = {
 	journalLogo: {
 		height: '100%',
 		padding: '10px 0px',
+	},
+	journalTitle: {
+		display: 'block',
+		height: '50px',
+		lineHeight: '50px',
 	},
 };

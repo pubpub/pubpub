@@ -250,6 +250,11 @@ export const Pub = React.createClass({
 			return feature.isDisplayed && (!contextJournal || feature.journalId !== contextJournal.id);
 		});
 
+		const globalLabels = pub.labels.filter((label)=> {
+			console.log(label);
+			return !label.userId && !label.journalId && !label.pubId;
+		});
+
 		const metaData = {
 			title: (pub.title || this.props.params.slug) + ' · PubPub',
 			meta: [
@@ -324,7 +329,7 @@ export const Pub = React.createClass({
 					<h1 style={styles.pubTitle}>{pub.title}</h1>
 
 					<div style={{ paddingLeft: '1em' }}>
-						<PubLabelList selectedLabels={pub.labels} pubId={pub.id} rootPubId={pub.id} globalLabels={true} canEdit={pub.canEdit} pathname={pathname} query={query} dispatch={this.props.dispatch} />
+						<PubLabelList selectedLabels={globalLabels} pubId={pub.id} rootPubId={pub.id} globalLabels={true} canEdit={pub.canEdit} pathname={pathname} query={query} dispatch={this.props.dispatch} />
 					</div>
 
 					<div style={styles.pubAuthors}>

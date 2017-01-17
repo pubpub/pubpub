@@ -104,7 +104,7 @@ export const Journal = React.createClass({
 		const journal = this.props.journalData.journal || {};
 		const collections = journal.collections || [];
 		const followers = journal.followers || [];
-		const isAdmin = this.props.journalData.isAdmin || true; // The || true is for dev only.
+		const isAdmin = journal.isAdmin; // Add || true for dev only.
 
 		const accountData = this.props.accountData || {};
 		const accountUser = accountData.user || {};
@@ -157,9 +157,12 @@ export const Journal = React.createClass({
 					journal={journal}
 					followContent={
 						<div style={styles.followButtonWrapper}>
-							<div className={'pt-button-group'} style={styles.editButton}>
-								<Link className={'pt-button pt-icon-edit'} to={'/' + journal.slug + '/edit'} >Edit Journal</Link>
-							</div>
+							{isAdmin &&
+								<div className={'pt-button-group'} style={styles.editButton}>
+									<Link className={'pt-button pt-icon-edit'} to={'/' + journal.slug + '/edit'} >Edit Journal</Link>
+								</div>
+							}
+							
 							
 							<FollowButton 
 								journalId={journal.id} 
