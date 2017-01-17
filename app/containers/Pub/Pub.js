@@ -257,8 +257,8 @@ export const Pub = React.createClass({
 				{ property: 'og:type', content: 'article' },
 				{ property: 'og:description', content: pub.description },
 				{ property: 'og:url', content: 'https://www.pubpub.org/pub/' + pub.slug },
-				{ property: 'og:image', content: pub.previewImage },
-				{ property: 'og:image:url', content: pub.previewImage },
+				{ property: 'og:image', content: pub.avatar },
+				{ property: 'og:image:url', content: pub.avatar },
 				{ property: 'og:image:width', content: '500' },
 				{ property: 'article:published_time', content: pub.updatedAt || pub.createdAt },
 				{ property: 'article:modified_time', content: pub.updatedAt },
@@ -266,8 +266,8 @@ export const Pub = React.createClass({
 				{ name: 'twitter:site', content: '@pubpub' },
 				{ name: 'twitter:title', content: pub.title },
 				{ name: 'twitter:description', content: pub.description || pub.title },
-				{ name: 'twitter:image', content: pub.previewImage },
-				{ name: 'twitter:image:alt', content: 'Preview image for ' + pub.title }
+				{ name: 'twitter:image', content: pub.avatar },
+				{ name: 'twitter:image:alt', content: 'Avatar for ' + pub.title }
 			]
 		};
 

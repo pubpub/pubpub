@@ -262,18 +262,6 @@ styles = {
 		boxShadow: '0 1px 4px rgba(0,0,0,0.05),inset 0 0 0 1px rgba(0,0,0,0.1)',
 		borderRadius: '0px 2px 2px 0px',
 	},
-	pubPreviewImageWrapper: {
-		display: 'table-cell',
-		verticalAlign: 'middle',
-		boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.1)',
-		width: '125px',
-		height: '125px',
-		backgroundSize: 'cover',
-		backgroundRepeat: 'no-repeat',
-		backgroundPosition: 'center center',
-		borderRadius: '2px 0px 0px 2px',
-		boxSizing: 'border-box',
-	},
 	pubPreviewDetails: {
 		display: 'table-cell',
 		verticalAlign: 'middle',

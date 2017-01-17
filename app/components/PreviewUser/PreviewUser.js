@@ -17,7 +17,7 @@ export const PreviewUser = React.createClass({
 		const user = this.props.user || {};
 		return (
 			<div style={styles.pubPreviewWrapper}>
-				<Link to={'/user/' + user.username} style={[styles.pubPreviewImageWrapper, { backgroundImage: user.avatar ? 'url("https://jake.pubpub.org/unsafe/150x150/' +  user.avatar + '")' : '' }]} />
+				<Link to={'/user/' + user.username} style={[styles.avatarWrapper, { backgroundImage: user.avatar ? 'url("https://jake.pubpub.org/unsafe/150x150/' +  user.avatar + '")' : '' }]} />
 				
 				<div style={styles.pubPreviewDetails}>
 					<Link to={'/user/' + user.username}><h5 style={styles.name}>{user.firstName + ' ' + user.lastName}</h5></Link>
@@ -47,7 +47,7 @@ styles = {
 		boxShadow: '0 1px 4px rgba(0,0,0,0.05),inset 0 0 0 1px rgba(0,0,0,0.1)',
 		borderRadius: '0px 2px 2px 0px',
 	},
-	pubPreviewImageWrapper: {
+	avatarWrapper: {
 		display: 'table-cell',
 		verticalAlign: 'middle',
 		boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.1)',

@@ -16,7 +16,7 @@ export const PreviewJournal = React.createClass({
 		const journal = this.props.journal || {};
 		return (
 			<div style={styles.pubPreviewWrapper}>
-				<Link to={'/' + journal.slug} style={[styles.pubPreviewImageWrapper, { backgroundImage: journal.icon ? 'url("' + journal.icon + '")' : '' }]} />
+				<Link to={'/' + journal.slug} style={[styles.avatarWrapper, { backgroundImage: journal.icon ? 'url("' + journal.icon + '")' : '' }]} />
 				
 				<div style={styles.pubPreviewDetails}>
 					<Link to={'/' + journal.slug}><h4>{journal.name}</h4></Link>
@@ -49,7 +49,7 @@ styles = {
 		boxShadow: '0 1px 4px rgba(0,0,0,0.05),inset 0 0 0 1px rgba(0,0,0,0.1)',
 		borderRadius: '0px 2px 2px 0px',
 	},
-	pubPreviewImageWrapper: {
+	avatarWrapper: {
 		display: 'table-cell',
 		verticalAlign: 'middle',
 		boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.1)',

@@ -48,9 +48,9 @@ export const ActivityGroup = React.createClass({
 		};
 
 		const makeLink = function(item) { 
-			return (item.username && '/user/' + item.username)
-				|| (item.icon && '/' + item.slug)
-				|| (item.previewImage && '/pub/' + item.slug)
+			return ('username' in item && '/user/' + item.username)
+				|| ('about' in item && '/' + item.slug)
+				|| ('isPublished' in item && '/pub/' + item.slug)
 				|| '/label/' + item.title;
 				// have to handle discussion links
 		};

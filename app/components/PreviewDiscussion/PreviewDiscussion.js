@@ -17,7 +17,7 @@ export const PreviewDiscussion = React.createClass({
 		const parent = this.props.parent || {};
 		return (
 			<div style={styles.pubPreviewWrapper}>
-				<Link to={'/pub/' + parent.slug + '?discussionId=' + discussion.id} style={[styles.pubPreviewImageWrapper, { backgroundImage: parent.avatar ? 'url("' + parent.avatar + '")' : '' }]} />
+				<Link to={'/pub/' + parent.slug + '?discussionId=' + discussion.id} style={[styles.avatarWrapper, { backgroundImage: parent.avatar ? 'url("' + parent.avatar + '")' : '' }]} />
 				
 				<div style={styles.pubPreviewDetails}>
 					<Link to={'/pub/' + parent.slug + '?discussionId=' + discussion.id}>Discussion on <b>{parent.title}</b></Link>
@@ -45,7 +45,7 @@ styles = {
 		boxShadow: '0 1px 4px rgba(0,0,0,0.05),inset 0 0 0 1px rgba(0,0,0,0.1)',
 		borderRadius: '0px 2px 2px 0px',
 	},
-	pubPreviewImageWrapper: {
+	avatarWrapper: {
 		display: 'table-cell',
 		verticalAlign: 'middle',
 		boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.1)',

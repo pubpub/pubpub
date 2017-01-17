@@ -86,7 +86,7 @@ export const JournalSubmits = React.createClass({
 							<div key={'submission-' + index} style={styles.submissionWrapper}>
 								<div style={styles.imageWrapper}>
 									<Link to={'/pub/' + pub.slug}>
-										<img src={pub.previewImage} style={[styles.submissionImage, isDisabled && styles.dimItem]} />
+										<img src={pub.avatar} style={[styles.submissionImage, isDisabled && styles.dimItem]} />
 									</Link>
 								</div>
 								

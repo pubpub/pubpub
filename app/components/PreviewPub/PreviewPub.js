@@ -15,7 +15,7 @@ export const PreviewPub = React.createClass({
 		const pub = this.props.pub || {};
 		return (
 			<div style={styles.pubPreviewWrapper}>
-				<Link to={'/pub/' + pub.slug} style={[styles.pubPreviewImageWrapper, { backgroundImage: pub.avatar ? 'url("' + pub.avatar + '")' : '' }]} />
+				<Link to={'/pub/' + pub.slug} style={[styles.avatarWrapper, { backgroundImage: pub.avatar ? 'url("' + pub.avatar + '")' : '' }]} />
 				
 				<div style={styles.pubPreviewDetails}>
 					<Link to={'/pub/' + pub.slug}><h4>{pub.title}</h4></Link>
@@ -43,7 +43,7 @@ styles = {
 		boxShadow: '0 1px 4px rgba(0,0,0,0.05),inset 0 0 0 1px rgba(0,0,0,0.1)',
 		borderRadius: '0px 2px 2px 0px',
 	},
-	pubPreviewImageWrapper: {
+	avatarWrapper: {
 		display: 'table-cell',
 		verticalAlign: 'middle',
 		boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.1)',

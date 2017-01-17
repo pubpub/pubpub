@@ -157,7 +157,7 @@ export const CreatePub = React.createClass({
 					</label>
 
 					<label htmlFor={'avatar'}>
-						<FormattedMessage {...globalMessages.PreviewImage} />
+						<FormattedMessage {...globalMessages.Avatar} />
 						<img role="presentation" style={styles.avatar} src={this.state.imageURL} />
 						<input id={'avatar'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 					</label>

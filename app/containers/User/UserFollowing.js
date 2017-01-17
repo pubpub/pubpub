@@ -129,7 +129,7 @@ export const UserFollowing = React.createClass({
 				{mode === 'all' && 
 					this.sortList([...followsJournals, ...followsUsers, ...followsPubs]).map((follower, index)=> {
 						if (follower.username) { return <PreviewUser key={'followsUser-' + index} user={follower} />; }
-						if (follower.title && follower.previewImage) { return <PreviewPub key={'followsPub-' + index} pub={follower} />; }
+						if (follower.title && follower.avatar) { return <PreviewPub key={'followsPub-' + index} pub={follower} />; }
 						if (follower.title) { return <div key={'followsLabel-' + index}>{follower.title}</div>; }
 						if (follower.shortDescription) { return <PreviewJournal key={'followsJournal-' + index} journal={follower} />; }
 						return null;

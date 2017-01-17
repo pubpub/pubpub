@@ -541,9 +541,9 @@ export const globalMessages = defineMessages({
 		id: 'global.View',
 		defaultMessage: 'View',
 	},
-	PreviewImage: {
-		id: 'global.PreviewImage',
-		defaultMessage: 'Preview Image',
+	Avatar: {
+		id: 'global.Avatar',
+		defaultMessage: 'Avatar',
 	},
 	Icon: {
 		id: 'global.Icon',
