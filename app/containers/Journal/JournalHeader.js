@@ -41,9 +41,9 @@ export const JournalProfileHeader = React.createClass({
 						}
 
 						{/*(this.props.headerMode !== 'logo') &&
-							<p>{journal.shortDescription}</p>
+							<p>{journal.description}</p>
 						*/}
-						<p>{journal.shortDescription}</p>
+						<p>{journal.description}</p>
 
 					</div>
 				</div>

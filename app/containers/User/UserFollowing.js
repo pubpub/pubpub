@@ -131,7 +131,7 @@ export const UserFollowing = React.createClass({
 						if (follower.username) { return <PreviewUser key={'followsUser-' + index} user={follower} />; }
 						if (follower.title && follower.avatar) { return <PreviewPub key={'followsPub-' + index} pub={follower} />; }
 						if (follower.title) { return <div key={'followsLabel-' + index}>{follower.title}</div>; }
-						if (follower.shortDescription) { return <PreviewJournal key={'followsJournal-' + index} journal={follower} />; }
+						if (follower.description) { return <PreviewJournal key={'followsJournal-' + index} journal={follower} />; }
 						return null;
 					})
 				}

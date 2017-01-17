@@ -79,9 +79,9 @@ export const ActivityGroup = React.createClass({
 				targetLink: makeLink(target),
 				objectLink: makeLink(object),
 
-				actorDetails: actor.description || actor.shortDescription || actor.bio,
-				targetDetails: target.description || target.shortDescription || target.bio,
-				objectDetails: object.description || object.shortDescription || object.bio,
+				actorDetails: actor.description || actor.bio,
+				targetDetails: target.description || target.bio,
+				objectDetails: object.description || object.bio,
 				
 				actorNode: <Link to={makeLink(actor)} style={styles.link}>{makeString(actor)}</Link>,
 				targetNode: <Link to={makeLink(target)} style={styles.link}>{makeString(target)}</Link>,

@@ -33,7 +33,7 @@ export const JournalEdit = React.createClass({
 			headerImage: null,
 			icon: undefined,
 			title: '',
-			shortDescription: '',
+			description: '',
 			canSave: false,
 		};
 	},
@@ -45,7 +45,7 @@ export const JournalEdit = React.createClass({
 			title: journal.title || '',
 			icon: journal.icon || 'https://assets.pubpub.org/_site/journal.png',
 			logo: journal.logo,
-			shortDescription: journal.shortDescription || '',
+			description: journal.description || '',
 			headerColor: journal.headerColor || '#13A6EF',
 			headerMode: journal.headerMode || 'title',
 			headerAlign: journal.headerAlign || 'left',
@@ -111,9 +111,9 @@ export const JournalEdit = React.createClass({
 		this.setState({ [key]: value.toLowerCase(), canSave: true });
 	},
 
-	shortDescriptionUpdate: function(evt) {
+	descriptionUpdate: function(evt) {
 		const description = evt.target.value || '';
-		this.setState({ shortDescription: description.substring(0, 140), canSave: true });
+		this.setState({ description: description.substring(0, 140), canSave: true });
 	},
 
 	saveJournal: function(evt) {
@@ -239,11 +239,11 @@ export const JournalEdit = React.createClass({
 							<input className={'pt-input margin-bottom'} id={'slug'} name={'slug'} type="text" style={styles.input} value={this.state.slug} onChange={this.inputUpdate.bind(this, 'slug')} />
 						</label>
 
-						<label style={styles.label} htmlFor={'shortDescription'}>
+						<label style={styles.label} htmlFor={'description'}>
 							Short Description
-							<textarea className={'pt-input margin-bottom'} id={'shortDescription'} name={'shortDescription'} type="text" style={[styles.input, styles.textarea]} onChange={this.shortDescriptionUpdate} value={this.state.shortDescription} />
+							<textarea className={'pt-input margin-bottom'} id={'description'} name={'description'} type="text" style={[styles.input, styles.textarea]} onChange={this.descriptionUpdate} value={this.state.description} />
 							<div className={'light-color inputSubtext'}>
-								{this.state.shortDescription.length} / 140
+								{this.state.description.length} / 140
 							</div>
 						</label>
 

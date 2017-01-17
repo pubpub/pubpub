@@ -72,9 +72,9 @@ export const ActivityItem = React.createClass({
 		const targetLink = makeLink(target);
 		const objectLink = makeLink(object);
 
-		const actorDetails = actor.description || actor.shortDescription || actor.bio;
-		const targetDetails = target.description || target.shortDescription || target.bio;
-		const objectDetails = object.description || object.shortDescription || object.bio;
+		const actorDetails = actor.description || actor.bio;
+		const targetDetails = target.description || target.bio;
+		const objectDetails = object.description || object.bio;
 
 		const verbsWithObjects = ['publishedPub', 'newDiscussion', 'newReply', 'newPubLabel', 'createdJournal', 'featuredPub'];
 		const showObject = verbsWithObjects.includes(verb);

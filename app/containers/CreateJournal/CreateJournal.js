@@ -24,7 +24,7 @@ export const CreateJournal = React.createClass({
 		return {
 			slug: '',
 			title: '',
-			shortDescription: '',
+			description: '',
 			imageFile: null,
 			icon: 'https://assets.pubpub.org/_site/journal.png',
 
@@ -53,8 +53,8 @@ export const CreateJournal = React.createClass({
 	},
 
 	descriptionUpdate: function(evt) {
-		const shortDescription = evt.target.value || '';
-		this.setState({ shortDescription: shortDescription.substring(0, 140) });
+		const description = evt.target.value || '';
+		this.setState({ description: description.substring(0, 140) });
 	},
 
 	slugUpdate: function(evt) {
@@ -90,7 +90,7 @@ export const CreateJournal = React.createClass({
 		}
 
 		// Check to make sure short description exists
-		if (!data.shortDescription || !data.shortDescription.length) {
+		if (!data.description || !data.description.length) {
 			return { isValid: false, validationError: <FormattedMessage id="createJournal.Descriptionrequired" defaultMessage="Description required" /> };
 		}
 
@@ -103,7 +103,7 @@ export const CreateJournal = React.createClass({
 		const createData = {
 			slug: this.state.slug,
 			title: this.state.title,
-			shortDescription: this.state.shortDescription,
+			description: this.state.description,
 			icon: this.state.icon,
 		};
 		const { isValid, validationError } = this.validate(createData);
@@ -148,9 +148,9 @@ export const CreateJournal = React.createClass({
 						
 					<label htmlFor={'description'}>
 						<FormattedMessage {...globalMessages.Description} />
-						<textarea id={'description'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.shortDescription} onChange={this.descriptionUpdate} />
+						<textarea id={'description'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.descriptionUpdate} />
 						<div className={'light-color inputSubtext'}>
-							{this.state.shortDescription.length} / 140
+							{this.state.description.length} / 140
 						</div>
 					</label>
 					

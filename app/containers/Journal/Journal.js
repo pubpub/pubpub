@@ -119,7 +119,7 @@ export const Journal = React.createClass({
 			meta: [
 				{ property: 'og:title', content: (journal.title || journal.slug) },
 				{ property: 'og:type', content: 'article' },
-				{ property: 'og:description', content: journal.shortDescription },
+				{ property: 'og:description', content: journal.description },
 				{ property: 'og:url', content: 'https://www.pubpub.org/' + journal.slug },
 				{ property: 'og:image', content: journal.icon },
 				{ property: 'og:image:url', content: journal.icon },
@@ -127,7 +127,7 @@ export const Journal = React.createClass({
 				{ name: 'twitter:card', content: 'summary' },
 				{ name: 'twitter:site', content: '@pubpub' },
 				{ name: 'twitter:title', content: (journal.title || journal.slug) },
-				{ name: 'twitter:description', content: journal.shortDescription || journal.longDescription || journal.title || journal.slug },
+				{ name: 'twitter:description', content: journal.description || journal.longDescription || journal.title || journal.slug },
 				{ name: 'twitter:image', content: journal.icon },
 				{ name: 'twitter:image:alt', content: 'Image for ' + (journal.title || journal.slug) }
 			]

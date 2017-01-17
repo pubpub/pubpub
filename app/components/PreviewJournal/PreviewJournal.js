@@ -20,7 +20,7 @@ export const PreviewJournal = React.createClass({
 				
 				<div style={styles.pubPreviewDetails}>
 					<Link to={'/' + journal.slug}><h4>{journal.title}</h4></Link>
-					<p>{journal.shortDescription}</p>
+					<p>{journal.description}</p>
 					{this.props.bottomContent &&
 						<div>
 							{this.props.bottomContent}
