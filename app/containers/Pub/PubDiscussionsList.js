@@ -211,7 +211,7 @@ export const PubDiscussionsList = React.createClass({
 								pathname={this.props.pathname} 
 								query={this.props.query} />
 
-							<div>{dateFormat(discussion.createdAt, 'mmmm dd, yyyy')} | by {author.firstName + ' ' + author.lastName} | Replies: {children.length}</div>
+							<div>{!discussion.isPublished && <span className={'pt-icon-standard pt-icon-lock'} />}{dateFormat(discussion.createdAt, 'mmmm dd, yyyy')} | by {author.firstName + ' ' + author.lastName} | Replies: {children.length}</div>
 
 							{discussionAuthors.map((image, imageIndex)=> {
 								return <img src={'https://jake.pubpub.org/unsafe/50x50/' + image} style={styles.authorImages} key={'discussionImage-' + discussion.id + '-' + imageIndex}/>;

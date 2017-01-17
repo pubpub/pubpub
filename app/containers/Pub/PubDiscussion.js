@@ -71,9 +71,8 @@ export const PubDiscussion = React.createClass({
 		};
 		const { isValid, validationError } = this.validate(createData);
 		this.setState({ validationError: validationError, openEditor: undefined });
-		if (isValid) {
-			this.props.dispatch(postDiscussion(createData.replyRootPubId, createData.replyParentPubId, createData.title, createData.description));	
-		}
+		if (!isValid) { return null; }
+		return this.props.dispatch(postDiscussion(createData.replyRootPubId, createData.replyParentPubId, createData.title, createData.description, undefined, !this.props.discussion.isPublished));		
 	},
 
 	setOpenEditor: function(id, description, title) {
@@ -129,13 +128,14 @@ export const PubDiscussion = React.createClass({
 				}} />
 
 				{this.state.openEditor !== 'title' &&
-				<h3>
-					{discussion.title}
-					{discussion.contributors[0].user.id === this.props.accountId &&
-						<button className={'pt-button pt-minimal pt-icon-edit'} onClick={this.setOpenEditor.bind(this, 'title', undefined, discussion.title)} />
-					}
-				</h3>
+					<h3>
+						{discussion.title}
+						{discussion.contributors && discussion.contributors[0].user.id === this.props.accountId &&
+							<button className={'pt-button pt-minimal pt-icon-edit'} onClick={this.setOpenEditor.bind(this, 'title', undefined, discussion.title)} />
+						}
+					</h3>
 				}
+
 				{this.state.openEditor === 'title' &&
 					<div>
 						<input type="text" value={this.state.editTitle} onChange={this.editTitleChange} />
@@ -146,6 +146,13 @@ export const PubDiscussion = React.createClass({
 							<Loader loading={isLoading} showCompletion={!errorMessage} />
 						</div>
 					</div>
+				}
+
+				{!discussion.isPublished && 
+					<div className={'pt-callout'}>
+						<span className={'pt-icon-standard pt-icon-lock'} /> Private	
+					</div>
+					
 				}
 				
 				<PubLabelList 
@@ -168,7 +175,6 @@ export const PubDiscussion = React.createClass({
 					const isAuthor = user.id === this.props.accountId;
 					const editorOpen = this.state.openEditor === child.id;
 					const pubReactions = child.pubReactions || [];
-					console.log(child);
 					
 					const usedReactions = {};
 					pubReactions.map((PubReaction)=> {

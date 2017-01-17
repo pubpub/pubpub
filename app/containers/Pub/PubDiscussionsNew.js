@@ -7,6 +7,7 @@ import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
 import { postDiscussion } from './actionsDiscussions';
 import PubLabelList from './PubLabelList';
+import { Checkbox } from '@blueprintjs/core';
 
 let styles;
 
@@ -26,6 +27,7 @@ export const PubDiscussionsNew = React.createClass({
 			title: '',
 			description: '',
 			labels: [],
+			isPrivate: false,
 		};
 	},
 
@@ -43,6 +45,9 @@ export const PubDiscussionsNew = React.createClass({
 		this.setState({ [key]: value });
 	},
 
+	toggleIsPrivate: function(evt) {
+		this.setState({ isPrivate: !this.state.isPrivate });
+	},
 	onLabelsChange: function(newLabels) {
 		this.setState({ labels: newLabels.map((label)=> {
 			return label.id;
@@ -68,8 +73,9 @@ export const PubDiscussionsNew = React.createClass({
 		};
 		const { isValid, validationError } = this.validate(createData);
 		this.setState({ validationError: validationError });
+		const isPrivate = this.state.isPrivate;
 		if (isValid) {
-			this.props.dispatch(postDiscussion(createData.replyRootPubId, createData.replyParentPubId, createData.title, createData.description, createData.labels));	
+			this.props.dispatch(postDiscussion(createData.replyRootPubId, createData.replyParentPubId, createData.title, createData.description, createData.labels, isPrivate));	
 		}
 	},
 
@@ -90,6 +96,9 @@ export const PubDiscussionsNew = React.createClass({
 						
 					<textarea id={'description'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.inputUpdate.bind(this, 'description')} />
 					
+					{(pub.canEdit || pub.canRead) &&
+						<Checkbox checked={this.state.isPrivate} label={'Private Discussion'} onChange={this.toggleIsPrivate} />
+					}
 					<button className={'pt-button pt-intent-primary'} onClick={this.createSubmit}>
 						Create New Discussion
 					</button>
