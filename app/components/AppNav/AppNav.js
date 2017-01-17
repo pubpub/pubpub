@@ -71,17 +71,11 @@ export const AppNav = React.createClass({
 				<div className="pt-navbar-group pt-align-left">
 					<Link to={'/'} className="pt-navbar-heading" style={styles.logo}>
 						{/* PubPub */}
-						{/*<img src={'http://i.imgur.com/eQMn3ya.png'} style={styles.journalLogo} />*/}
-						{/*<img src={'https://i.imgur.com/Z3xWDMT.png'} style={styles.journalLogo} />*/}
-						{/*<img src={'http://i.imgur.com/QpKGIVn.png'} style={styles.journalLogo} />*/}
-						{/*<img src={'http://i.imgur.com/0AgfSdL.png'} style={styles.journalLogo} />*/}
-						
 						{isLight &&
-							// <img src={'http://i.imgur.com/8mTuvQc.png'} style={styles.journalLogo} />
-							<img src={'https://i.imgur.com/Z3xWDMT.png'} style={styles.journalLogo} />
+							<img alt={'PubPub Logo'} src={'https://assets.pubpub.org/_site/logo_dark.png'} style={styles.journalLogo} />
 						}
 						{!isLight &&
-							<img src={'https://i.imgur.com/Z3xWDMT.png'} style={styles.journalLogo} />
+							<img alt={'PubPub Logo'} src={'https://assets.pubpub.org/_site/logo_light.png'} style={styles.journalLogo} />
 						}
 						
 					</Link>
@@ -90,7 +84,7 @@ export const AppNav = React.createClass({
 							<div style={[styles.journalLogoDivider, isLight && styles.journalLogoDividerDark]} />
 							<Link to={'/' + headerJournal.slug}>
 								{!!headerJournal.logo &&
-									<img src={headerJournal.logo} style={styles.journalLogo} />
+									<img alt={headerJournal.title} src={headerJournal.logo} style={styles.journalLogo} />
 								}
 								{!headerJournal.logo &&
 									<span style={[styles.journalTitle, { color: contrastColor }]}>{headerJournal.title}</span>
