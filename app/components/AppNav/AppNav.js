@@ -38,12 +38,6 @@ export const AppNav = React.createClass({
 		const user = this.props.accountData.user || {};
 		const pub = this.props.pubData.pub || {};
 		const journal = this.props.journalData.journal || {};
-		const collections = journal.collections || [];
-		const sortedCollections = collections.sort((foo, bar)=> {
-			if (foo.order < bar.order) { return -1; }
-			if (foo.order > bar.order) { return 1; }
-			return 0;
-		});
 		const location = this.props.location || {};
 		const redirectURL = location.pathname.indexOf('/signup') !== 0 && location.pathname.indexOf('/reset') !== 0 && location.pathname !== '/' ? location.pathname + location.search : undefined;
 		const query = location.query || {};
@@ -53,11 +47,19 @@ export const AppNav = React.createClass({
 		const pubFeatures = isPub ? pub.pubFeatures || [] : [];
 		const contextJournal = pubFeatures.reduce((previous, current)=> {
 			if (!query.context && current.journalId === pub.defaultContext) { return current.journal; }
-			if (current.journal.name === query.context) { return current.journal; }
+			if (current.journal.title === query.context) { return current.journal; }
 			return previous;
 		}, undefined);
 
 		const headerJournal = isJournal ? journal : contextJournal;
+
+		const collections = headerJournal.collections || [];
+		const sortedCollections = collections.sort((foo, bar)=> {
+			if (foo.order < bar.order) { return -1; }
+			if (foo.order > bar.order) { return 1; }
+			return 0;
+		});
+
 		const isLight = headerJournal && contrastText(headerJournal.headerColor) === '#000000'; // This is a bad hack. Calculate whether text should be light or dark, and then set
 		const navClass = isLight ? 'pt-navbar' : 'pt-navbar pt-dark'; 
 		const navStyle = headerJournal ? { backgroundColor: headerJournal.headerColor, minHeight: '50px', height: 'auto' } : {};

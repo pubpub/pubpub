@@ -2,16 +2,14 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
-import dateFormat from 'dateformat';
-import { Dialog, NonIdealState, Checkbox } from '@blueprintjs/core';
+import { NonIdealState, Checkbox } from '@blueprintjs/core';
 
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
 
 import { postLabel, putLabel, deleteLabel } from './actionsLabels'; 
-import { Loader } from 'components';
-import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'react-sortable-hoc';
+import { SortableContainer, SortableElement, SortableHandle, arrayMove } from 'react-sortable-hoc';
 
 let styles = {};
 
@@ -60,8 +58,8 @@ export const JournalCollections = React.createClass({
 
 	saveEdit: function() {
 		const labelUpdates = {
-			 title: this.state.editingTitle,
-			 description: this.state.editingDescription
+			title: this.state.editingTitle,
+			description: this.state.editingDescription
 		};
 		this.props.dispatch(putLabel(this.props.journal.id, this.state.editingLabelId, labelUpdates));
 		this.setState({ editingLabelId: undefined });
@@ -114,7 +112,8 @@ export const JournalCollections = React.createClass({
 		});
 	},
 
-	onSortEnd: function({oldIndex, newIndex}) {
+	onSortEnd: function({ oldIndex, newIndex }) {
+		if (oldIndex === newIndex) { return null; }
 		const collections = this.props.journal.collections || [];
 		const sortedCollections = collections.sort((foo, bar)=> {
 			if (foo.order < bar.order) { return -1; }
@@ -133,7 +132,7 @@ export const JournalCollections = React.createClass({
 			nextOrder = (newSortedCollections[newIndex + 1].order + newSortedCollections[newIndex - 1].order) / 2;
 		}
 
-		this.props.dispatch(putLabel(this.props.journal.id, collection.id, { order: nextOrder }));
+		return this.props.dispatch(putLabel(this.props.journal.id, collection.id, { order: nextOrder }));
 	},
 
 	render: function() {
@@ -152,7 +151,7 @@ export const JournalCollections = React.createClass({
 
 		const DragHandle = SortableHandle(() => <span style={styles.dragHandle} className={'pt-icon-standard pt-icon-drag-handle-vertical pt-icon-large'} />); // This can be any component you want
 
-		const SortableItem = SortableElement(({value})=> {
+		const SortableItem = SortableElement(({ value })=> {
 			const collection = value || {};
 			const isEditing = this.state.editingLabelId === collection.id;
 			return (
@@ -194,13 +193,11 @@ export const JournalCollections = React.createClass({
 						</div>
 					}
 
-					
-
 				</div>
 			);
 		});
 
-		const SortableList = SortableContainer(({items}) => {
+		const SortableList = SortableContainer(({ items }) => {
 			return (
 				<div>
 					{items.map((value, index) =>
