@@ -139,7 +139,7 @@ export const AppNav = React.createClass({
 							inheritDarkTheme={false}
 						>
 							<button className="pt-button pt-minimal">
-								<img style={styles.userImage} alt={user.firstName + ' ' + user.lastName} src={'https://jake.pubpub.org/unsafe/50x50/' + user.image} />
+								<img style={styles.userImage} alt={user.firstName + ' ' + user.lastName} src={'https://jake.pubpub.org/unsafe/50x50/' + user.avatar} />
 								<span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
 							</button>
 							

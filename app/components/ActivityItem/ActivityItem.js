@@ -19,12 +19,12 @@ export const ActivityItem = React.createClass({
 		
 	},
 
-	renderAttachment: function(image, link, string, details, id) {
+	renderAttachment: function(avatar, link, string, details, id) {
 		return (
 			<div style={styles.objectWrapper} key={'attachment-' + id}>
 				<div style={styles.imageWrapper} className={'opacity-on-hover-child'}>
 					<Link to={link}>
-						<img src={image} style={styles.largeImage} alt={string} />
+						<img src={avatar} style={styles.largeImage} alt={string} />
 					</Link>
 				</div>
 				
@@ -50,9 +50,9 @@ export const ActivityItem = React.createClass({
 		const target = activity.targetPub || activity.targetUser || activity.targetJournal || activity.targetLabel || {};
 		const object = activity.objectPub || activity.objectUser || activity.objectJournal || activity.objectLabel || {};
 
-		const actorImage = actor.image || actor.previewImage || actor.icon || 'https://assets.pubpub.org/_site/label.png';
-		const targetImage = target.image || target.previewImage || target.icon || 'https://assets.pubpub.org/_site/label.png';
-		const objectImage = object.image || object.previewImage || object.icon || 'https://assets.pubpub.org/_site/label.png';
+		const actorAvatar = actor.avatar || 'https://assets.pubpub.org/_site/label.png';
+		const targetAvatar = target.avatar || 'https://assets.pubpub.org/_site/label.png';
+		const objectAvatar = object.avatar || 'https://assets.pubpub.org/_site/label.png';
 
 		const makeString = function(item) { 
 			return item.title || item.name || item.firstName + ' ' + item.lastName; 
@@ -89,7 +89,7 @@ export const ActivityItem = React.createClass({
 				<div style={styles.tableWrapper}>
 					<div style={styles.imageWrapper} className={'opacity-on-hover-child'}>
 						<Link to={actorLink}>
-							<img src={actorImage} style={styles.smallImage} alt={actorString} />
+							<img src={actorAvatar} style={styles.smallImage} alt={actorString} />
 						</Link>
 					</div>
 					
@@ -150,17 +150,17 @@ export const ActivityItem = React.createClass({
 								{(() => {
 									switch (verb) {
 									case 'publishedPub':
-										return this.renderAttachment(targetImage, targetLink, targetString, targetDetails, activity.id);
+										return this.renderAttachment(targetAvatar, targetLink, targetString, targetDetails, activity.id);
 									case 'newDiscussion': 
-										return this.renderAttachment(targetImage, objectLink, objectString, objectDetails, activity.id);
+										return this.renderAttachment(targetAvatar, objectLink, objectString, objectDetails, activity.id);
 									case 'newReply': 
-										return this.renderAttachment(targetImage, objectLink, '', objectDetails, activity.id);
+										return this.renderAttachment(targetAvatar, objectLink, '', objectDetails, activity.id);
 									case 'newPubLabel': 
-										return this.renderAttachment(objectImage, objectLink, objectString, objectDetails, activity.id);
+										return this.renderAttachment(objectAvatar, objectLink, objectString, objectDetails, activity.id);
 									case 'createdJournal': 
-										return this.renderAttachment(targetImage, targetLink, targetString, targetDetails, activity.id);
+										return this.renderAttachment(targetAvatar, targetLink, targetString, targetDetails, activity.id);
 									case 'featuredPub': 
-										return this.renderAttachment(targetImage, targetLink, targetString, targetDetails, activity.id);
+										return this.renderAttachment(targetAvatar, targetLink, targetString, targetDetails, activity.id);
 									default: 
 										return <div />;
 									}

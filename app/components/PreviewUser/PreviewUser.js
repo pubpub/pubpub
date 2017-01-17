@@ -17,7 +17,7 @@ export const PreviewUser = React.createClass({
 		const user = this.props.user || {};
 		return (
 			<div style={styles.pubPreviewWrapper}>
-				<Link to={'/user/' + user.username} style={[styles.pubPreviewImageWrapper, { backgroundImage: user.image ? 'url("https://jake.pubpub.org/unsafe/150x150/' +  user.image + '")' : '' }]} />
+				<Link to={'/user/' + user.username} style={[styles.pubPreviewImageWrapper, { backgroundImage: user.avatar ? 'url("https://jake.pubpub.org/unsafe/150x150/' +  user.avatar + '")' : '' }]} />
 				
 				<div style={styles.pubPreviewDetails}>
 					<Link to={'/user/' + user.username}><h5 style={styles.name}>{user.firstName + ' ' + user.lastName}</h5></Link>

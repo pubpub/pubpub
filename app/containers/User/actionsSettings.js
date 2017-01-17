@@ -32,7 +32,7 @@ export function putUser(userId, putUserData) {
 				email: putUserData.email,
 				firstName: putUserData.firstName,
 				lastName: putUserData.lastName,
-				image: putUserData.image,
+				avatar: putUserData.avatar,
 				bio: putUserData.bio,
 				publicEmail: putUserData.publicEmail,
 				website: putUserData.website,

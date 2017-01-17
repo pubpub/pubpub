@@ -17,7 +17,7 @@ export const PreviewDiscussion = React.createClass({
 		const parent = this.props.parent || {};
 		return (
 			<div style={styles.pubPreviewWrapper}>
-				<Link to={'/pub/' + parent.slug + '?discussionId=' + discussion.id} style={[styles.pubPreviewImageWrapper, { backgroundImage: parent.previewImage ? 'url("' + parent.previewImage + '")' : '' }]} />
+				<Link to={'/pub/' + parent.slug + '?discussionId=' + discussion.id} style={[styles.pubPreviewImageWrapper, { backgroundImage: parent.avatar ? 'url("' + parent.avatar + '")' : '' }]} />
 				
 				<div style={styles.pubPreviewDetails}>
 					<Link to={'/pub/' + parent.slug + '?discussionId=' + discussion.id}>Discussion on <b>{parent.title}</b></Link>

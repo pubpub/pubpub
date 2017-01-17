@@ -73,14 +73,14 @@ export const User = React.createClass({
 				{ property: 'og:type', content: 'article' },
 				{ property: 'og:description', content: user.bio },
 				{ property: 'og:url', content: 'https://www.pubpub.org/user/' + username },
-				{ property: 'og:image', content: user.image },
-				{ property: 'og:image:url', content: user.image },
+				{ property: 'og:image', content: user.avatar },
+				{ property: 'og:image:url', content: user.avatar },
 				{ property: 'og:image:width', content: '500' },
 				{ name: 'twitter:card', content: 'summary' },
 				{ name: 'twitter:site', content: '@pubpub' },
 				{ name: 'twitter:title', content: name },
 				{ name: 'twitter:description', content: user.bio || name },
-				{ name: 'twitter:image', content: user.image },
+				{ name: 'twitter:image', content: user.avatar },
 				{ name: 'twitter:image:alt', content: 'Image of ' + name }
 			]
 		};
@@ -134,7 +134,7 @@ export const User = React.createClass({
 				
 				<div style={styles.headerWrapper}>
 					<div style={styles.headerImageWrapper}>
-						<img alt={user.username} style={styles.userImage} src={'https://jake.pubpub.org/unsafe/150x150/' + user.image} />
+						<img alt={user.username} style={styles.userImage} src={'https://jake.pubpub.org/unsafe/150x150/' + user.avatar} />
 					</div>
 					<div style={styles.headerTextWrapper}>
 						{!ownProfile &&

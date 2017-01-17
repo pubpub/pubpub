@@ -56,7 +56,7 @@ export function createAccount(createAccountData) {
 				firstName: createAccountData.firstName,
 				lastName: createAccountData.lastName,
 				password: SHA3(createAccountData.password).toString(encHex),
-				image: createAccountData.image,
+				avatar: createAccountData.avatar,
 				bio: createAccountData.bio,
 				publicEmail: createAccountData.publicEmail,
 				website: createAccountData.website,

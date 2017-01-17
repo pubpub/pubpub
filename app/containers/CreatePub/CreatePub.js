@@ -70,12 +70,12 @@ export const CreatePub = React.createClass({
 
 	cancelImageUpload: function() {
 		this.setState({ imageFile: null });
-		document.getElementById('previewImage').value = null;
+		document.getElementById('avatar').value = null;
 	},
 
 	imageUploaded: function(url) {
 		this.setState({ imageFile: null, imageURL: url });
-		document.getElementById('previewImage').value = null;
+		document.getElementById('avatar').value = null;
 	},
 
 	validate: function(data) {
@@ -99,7 +99,7 @@ export const CreatePub = React.createClass({
 			slug: this.state.slug,
 			title: this.state.title,
 			description: this.state.description,
-			previewImage: this.state.imageURL,
+			avatar: this.state.imageURL,
 		};
 		const { isValid, validationError } = this.validate(createData);
 		this.setState({ validationError: validationError });
@@ -120,7 +120,7 @@ export const CreatePub = React.createClass({
 		// 	title: this.state.title || 'Your New Pub Title',
 		// 	slug: this.state.slug,
 		// 	description: this.state.description || 'Description of your pub',
-		// 	previewImage: this.state.imageURL,
+		// 	avatar: this.state.imageURL,
 		// };
 
 		return (
@@ -156,10 +156,10 @@ export const CreatePub = React.createClass({
 						</div>
 					</label>
 
-					<label htmlFor={'previewImage'}>
+					<label htmlFor={'avatar'}>
 						<FormattedMessage {...globalMessages.PreviewImage} />
-						<img role="presentation" style={styles.previewImage} src={this.state.imageURL} />
-						<input id={'previewImage'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
+						<img role="presentation" style={styles.avatar} src={this.state.imageURL} />
+						<input id={'avatar'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 					</label>
 
 					<button className={'pt-button pt-intent-primary'} onClick={this.createSubmit}>
@@ -216,7 +216,7 @@ styles = {
 		height: '4em',
 	},
 
-	previewImage: {
+	avatar: {
 		width: '100px',
 		display: 'block',
 	},

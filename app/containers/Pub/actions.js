@@ -50,7 +50,7 @@ export function updatePub(pubId, updateData) {
 				pubId: pubId,
 				title: updateData.title,
 				description: updateData.description,
-				previewImage: updateData.previewImage,
+				avatar: updateData.avatar,
 				slug: updateData.slug,
 
 			})

@@ -70,7 +70,7 @@ export const PubContributors = React.createClass({
 					value: item.username,
 					label: item.firstName + ' ' + item.lastName,
 					slug: item.username,
-					image: item.image,
+					image: item.avatar,
 					id: item.id,
 				};
 			});
@@ -191,7 +191,7 @@ export const PubContributors = React.createClass({
 					const isAuthor = this.state.contributorStates[contributor.id].isAuthor;
 					return (
 						<div key={'contributorId-' + contributor.id} style={styles.contributorWrapper}>
-							<img src={'https://jake.pubpub.org/unsafe/50x50/' + user.image} style={styles.contributorImage} alt={user.firstName + ' ' + user.lastName} />
+							<img src={'https://jake.pubpub.org/unsafe/50x50/' + user.avatar} style={styles.contributorImage} alt={user.firstName + ' ' + user.lastName} />
 							<div style={styles.detailsWrapper}>
 								<div style={styles.contributorName}>{user.firstName + ' ' + user.lastName}</div>
 								{this.props.pub.canEdit &&

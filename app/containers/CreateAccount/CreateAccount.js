@@ -134,7 +134,7 @@ export const CreateAccount = React.createClass({
 			firstName: this.state.firstName,
 			lastName: this.state.lastName,
 			password: this.state.password,
-			image: this.state.userImageURL,
+			avatar: this.state.userImageURL,
 			bio: this.state.bio,
 			publicEmail: this.state.publicEmail,
 			website: this.state.website,

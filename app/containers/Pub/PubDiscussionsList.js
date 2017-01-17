@@ -110,7 +110,7 @@ export const PubDiscussionsList = React.createClass({
 				{uniqueAuthors.map((author, index)=> {
 					return (
 						<li key={'authorFilter-' + index}><Link to={{pathname: this.props.pathname, query: { ...this.props.query, author: author.username }}} className="pt-menu-item pt-popover-dismiss">
-							<img src={'https://jake.pubpub.org/unsafe/50x50/' + author.image} style={styles.authorImages}/> {author.firstName + ' ' + author.lastName}
+							<img src={'https://jake.pubpub.org/unsafe/50x50/' + author.avatar} style={styles.authorImages}/> {author.firstName + ' ' + author.lastName}
 							{query.author === author.username && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
 							
 						</Link></li>
@@ -191,9 +191,9 @@ export const PubDiscussionsList = React.createClass({
 					const labels = discussion.labels || [];
 					const children = discussion.children || [];
 					const discussionAuthors = [...new Set([
-						discussion.contributors[0].user.image,
+						discussion.contributors[0].user.avatar,
 						...children.map((child)=> {
-							return child.contributors[0].user.image;
+							return child.contributors[0].user.avatar;
 						})
 					])];
 					return (

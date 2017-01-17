@@ -147,8 +147,6 @@ export const PubDiscussion = React.createClass({
 						</div>
 					</div>
 				}
-
-				
 				
 				<PubLabelList 
 					allLabels={pubLabels} 
@@ -190,7 +188,7 @@ export const PubDiscussion = React.createClass({
 						<div key={'discussion-' + index} style={styles.discussionItem}>
 							<div style={styles.discussionItemHeader}>
 								<div style={styles.discussionItemImageWrapper}>
-									<img src={'https://jake.pubpub.org/unsafe/50x50/' + user.image} style={styles.discussionItemImage} />	
+									<img src={'https://jake.pubpub.org/unsafe/50x50/' + user.avatar} style={styles.discussionItemImage} />	
 								</div>
 								
 								<div style={styles.discussionItemName}>

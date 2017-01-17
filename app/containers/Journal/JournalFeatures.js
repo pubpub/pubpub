@@ -95,7 +95,7 @@ export const JournalFeatures = React.createClass({
 								<div style={styles.featureTable}>
 									<div style={styles.imageWrapper}>
 										<Link to={'/pub/' + pub.slug}>
-											<img src={pub.previewImage} style={styles.featureImage} />
+											<img src={pub.avatar} style={styles.featureImage} />
 										</Link>
 									</div>
 									

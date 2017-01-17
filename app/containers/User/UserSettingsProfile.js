@@ -41,7 +41,7 @@ export const UserSettingsProfile = React.createClass({
 	componentWillMount() {
 		const user = this.props.user || {};
 		this.setState({
-			userImageURL: user.image,
+			userImageURL: user.avatar,
 			firstName: user.firstName,
 			lastName: user.lastName,
 			bio: user.bio,
@@ -107,7 +107,7 @@ export const UserSettingsProfile = React.createClass({
 		const putAccountData = {
 			firstName: this.state.firstName,
 			lastName: this.state.lastName,
-			image: this.state.userImageURL,
+			avatar: this.state.userImageURL,
 			bio: this.state.bio,
 			publicEmail: this.state.publicEmail,
 			website: this.state.website,

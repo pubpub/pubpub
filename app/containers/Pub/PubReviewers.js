@@ -49,7 +49,7 @@ export const PubReviewers = React.createClass({
 					value: item.username,
 					label: item.firstName + ' ' + item.lastName,
 					slug: item.username,
-					image: item.image,
+					image: item.avatar,
 					id: item.id,
 				};
 			});
@@ -110,7 +110,7 @@ export const PubReviewers = React.createClass({
 				<div style={styles.invitingAsTable}>
 					<div style={styles.invitingAs}>
 						<div style={styles.invitingText}>Inviting as:</div>
-						<img src={accountUser.image} style={{ maxWidth: '35px' }} />	
+						<img src={accountUser.avatar} style={{ maxWidth: '35px' }} />	
 					</div>
 					{!!accountJournals.length &&
 						<div style={styles.invitingOnBehalf}>
@@ -228,7 +228,7 @@ export const PubReviewers = React.createClass({
 									<div style={styles.invitedReviewerWrapper}>
 										<div style={styles.reviewerImageWrapper}>
 											<Link to={'/user/' + invitedUser.username}>
-												<img alt={invitedUser.firstName + ' ' + invitedUser.lastName} src={'https://jake.pubpub.org/unsafe/50x50/' + invitedUser.image} />	
+												<img alt={invitedUser.firstName + ' ' + invitedUser.lastName} src={'https://jake.pubpub.org/unsafe/50x50/' + invitedUser.avatar} />	
 											</Link>
 										</div>
 										
@@ -258,7 +258,7 @@ export const PubReviewers = React.createClass({
 								}
 								<div>
 									<Link to={'/user/' + inviterUser.username}>
-										<img alt={inviterUser.firstName + ' ' + inviterUser.lastName} src={'https://jake.pubpub.org/unsafe/50x50/' + inviterUser.image} style={styles.inviterImage} />	
+										<img alt={inviterUser.firstName + ' ' + inviterUser.lastName} src={'https://jake.pubpub.org/unsafe/50x50/' + inviterUser.avatar} style={styles.inviterImage} />	
 									</Link>
 									Invited by <Link to={'/user/' + inviterUser.username}>{inviterUser.firstName + ' ' + inviterUser.lastName}</Link>
 									{!!inviterJournal &&

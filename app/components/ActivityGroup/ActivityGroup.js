@@ -18,7 +18,7 @@ export const ActivityGroup = React.createClass({
 		
 	},
 	
-	renderAttachment: function(verb, image, link, string, details, id) {
+	renderAttachment: function(verb, avatar, link, string, details, id) {
 		let adjustSize = {};
 		if (verb === 'newPubLabel') {
 			adjustSize = { width: '20px' };
@@ -27,7 +27,7 @@ export const ActivityGroup = React.createClass({
 			<div style={styles.objectWrapper} key={'attachment-' + id}>
 				<div style={styles.imageWrapper} className={'opacity-on-hover-child'}>
 					<Link to={link}>
-						<img src={image} style={[styles.largeImage, adjustSize]} alt={string} />
+						<img src={avatar} style={[styles.largeImage, adjustSize]} alt={string} />
 					</Link>
 				</div>
 				
@@ -68,9 +68,9 @@ export const ActivityGroup = React.createClass({
 				verb: verb,
 				target: target,
 				object: object,
-				actorImage: actor.image || actor.previewImage || actor.icon || 'https://assets.pubpub.org/_site/label.png',
-				targetImage: target.image || target.previewImage || target.icon || 'https://assets.pubpub.org/_site/label.png',
-				objectImage: object.image || object.previewImage || object.icon || 'https://assets.pubpub.org/_site/label.png',
+				actorAvatar: actor.avatar || 'https://assets.pubpub.org/_site/label.png',
+				targetAvatar: target.avatar || 'https://assets.pubpub.org/_site/label.png',
+				objectAvatar: object.avatar || 'https://assets.pubpub.org/_site/label.png',
 				actorString: makeString(actor),
 				targetString: makeString(target),
 				objectString: makeString(object),
@@ -96,13 +96,13 @@ export const ActivityGroup = React.createClass({
 				<div style={styles.tableWrapper}>
 					<div style={styles.imageWrapper} className={'opacity-on-hover-child'}>
 						<Link to={headerActivity.actorLink}>
-							<img src={headerActivity.actorImage} style={styles.smallImage} alt={headerActivity.actorString} />
+							<img src={headerActivity.actorAvatar} style={styles.smallImage} alt={headerActivity.actorString} />
 						</Link>
 					</div>
 					
 					<div style={styles.detailsWrapper}>
 						{(() => {
-							const { actor, verb, target, object, actorImage, targetImage, objectImage, actorString, targetString, objectString, actorLink, targetLink, objectLink, actorDetails, targetDetails, objectDetails, actorNode, targetNode, objectNode } = headerActivity;
+							const { actor, verb, target, object, actorAvatar, targetAvatar, objectAvatar, actorString, targetString, objectString, actorLink, targetLink, objectLink, actorDetails, targetDetails, objectDetails, actorNode, targetNode, objectNode } = headerActivity;
 							switch (verb) {
 							// case 'followedUser': 
 							// case 'followedPub': 
@@ -149,27 +149,27 @@ export const ActivityGroup = React.createClass({
 						</div>
 						<div style={styles.tableCell}>
 							{activitiesContent.map((activity)=> {
-								const { actor, verb, target, object, actorImage, targetImage, objectImage, actorString, targetString, objectString, actorLink, targetLink, objectLink, actorDetails, targetDetails, objectDetails, actorNode, targetNode, objectNode } = activity;
+								const { actor, verb, target, object, actorAvatar, targetAvatar, objectAvatar, actorString, targetString, objectString, actorLink, targetLink, objectLink, actorDetails, targetDetails, objectDetails, actorNode, targetNode, objectNode } = activity;
 								switch (verb) {
 								// case 'publishedPub':
-								// 	return this.renderAttachment(targetImage, targetLink, targetString, targetDetails);
+								// 	return this.renderAttachment(targetAvatar, targetLink, targetString, targetDetails);
 								case 'followedUser': 
 								case 'followedPub': 
 								case 'followedJournal': 
 								case 'followedLabel': 
-									return this.renderAttachment(verb, targetImage, targetLink, targetString, targetDetails, activity.id);
+									return this.renderAttachment(verb, targetAvatar, targetLink, targetString, targetDetails, activity.id);
 								case 'newDiscussion': 
-									return this.renderAttachment(verb, actorImage, (targetLink + '?discussion=' + object.threadNumber), objectString, objectDetails, activity.id);
+									return this.renderAttachment(verb, actorAvatar, (targetLink + '?discussion=' + object.threadNumber), objectString, objectDetails, activity.id);
 								case 'addedContributor': 
-									return this.renderAttachment(verb, objectImage, objectLink, objectString, objectDetails, activity.id);
+									return this.renderAttachment(verb, objectAvatar, objectLink, objectString, objectDetails, activity.id);
 								case 'addedAdmin': 
-									return this.renderAttachment(verb, objectImage, objectLink, objectString, objectDetails, activity.id);
+									return this.renderAttachment(verb, objectAvatar, objectLink, objectString, objectDetails, activity.id);
 								case 'newReply': 
-									return this.renderAttachment(verb, actorImage, objectLink, '', objectDetails, activity.id);
+									return this.renderAttachment(verb, actorAvatar, objectLink, '', objectDetails, activity.id);
 								case 'newPubLabel': 
-									return this.renderAttachment(verb, targetImage, targetLink, targetString, '', activity.id);
+									return this.renderAttachment(verb, targetAvatar, targetLink, targetString, '', activity.id);
 								case 'featuredPub': 
-									return this.renderAttachment(verb, targetImage, targetLink, targetString, targetDetails, activity.id);
+									return this.renderAttachment(verb, targetAvatar, targetLink, targetString, targetDetails, activity.id);
 								default: 
 									return <div />;
 								}

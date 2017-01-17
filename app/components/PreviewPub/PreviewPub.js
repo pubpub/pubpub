@@ -15,7 +15,7 @@ export const PreviewPub = React.createClass({
 		const pub = this.props.pub || {};
 		return (
 			<div style={styles.pubPreviewWrapper}>
-				<Link to={'/pub/' + pub.slug} style={[styles.pubPreviewImageWrapper, { backgroundImage: pub.previewImage ? 'url("' + pub.previewImage + '")' : '' }]} />
+				<Link to={'/pub/' + pub.slug} style={[styles.pubPreviewImageWrapper, { backgroundImage: pub.avatar ? 'url("' + pub.avatar + '")' : '' }]} />
 				
 				<div style={styles.pubPreviewDetails}>
 					<Link to={'/pub/' + pub.slug}><h4>{pub.title}</h4></Link>

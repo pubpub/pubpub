@@ -28,7 +28,7 @@ export function createPub(createData) {
 			body: JSON.stringify({
 				title: createData.title,
 				description: createData.description,
-				previewImage: createData.previewImage,
+				avatar: createData.avatar,
 				slug: createData.slug,
 
 			})
