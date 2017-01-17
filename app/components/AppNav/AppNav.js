@@ -53,7 +53,7 @@ export const AppNav = React.createClass({
 
 		const headerJournal = isJournal ? journal : contextJournal;
 
-		const collections = headerJournal.collections || [];
+		const collections = headerJournal ? headerJournal.collections || [] : [];
 		const sortedCollections = collections.sort((foo, bar)=> {
 			if (foo.order < bar.order) { return -1; }
 			if (foo.order > bar.order) { return 1; }
