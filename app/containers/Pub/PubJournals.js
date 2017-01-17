@@ -37,7 +37,7 @@ export const PubJournals = React.createClass({
 			const options = responseArray.map((item)=>{
 				return {
 					value: item.slug,
-					label: item.name,
+					label: item.title,
 					image: item.icon,
 					slug: item.slug,
 					id: item.id,

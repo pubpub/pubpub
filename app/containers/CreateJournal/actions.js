@@ -26,7 +26,7 @@ export function createJournal(createData) {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-				name: createData.name,
+				title: createData.title,
 				shortDescription: createData.shortDescription,
 				icon: createData.icon,
 				slug: createData.slug,

@@ -145,7 +145,7 @@ export const JournalCollections = React.createClass({
 			return 0;
 		});
 		const metaData = {
-			title: 'Collections · ' + journal.name,
+			title: 'Collections · ' + journal.title,
 		};
 		const isLoading = this.props.isLoading;
 		const errorMessage = this.props.error;

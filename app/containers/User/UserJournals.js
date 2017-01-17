@@ -22,8 +22,8 @@ export const UserJournals = React.createClass({
 		return list.sort((foo, bar)=> {
 			const query = this.props.query;
 
-			const fooTitle = foo.firstName || foo.name || foo.title || '';
-			const barTitle = bar.firstName || bar.name || bar.title || '';
+			const fooTitle = foo.firstName || foo.title || '';
+			const barTitle = bar.firstName || bar.title || '';
 			
 			const fooDate = foo.createdAt;
 			const barDate = bar.createdAt;

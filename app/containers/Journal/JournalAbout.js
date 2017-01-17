@@ -122,7 +122,7 @@ export const JournalAbout = React.createClass({
 		return (
 			<div style={styles.container}>
 				
-				<h2>About {journal.name}</h2>
+				<h2>About {journal.title}</h2>
 				{/*<div style={styles.linksSection}>
 					{journal.website &&
 						<Link to={journal.website} style={styles.outLink}>{journal.website}</Link>

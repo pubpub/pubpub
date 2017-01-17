@@ -37,7 +37,7 @@ export const JournalProfileHeader = React.createClass({
 						}
 
 						{(this.props.headerMode !== 'logo') &&
-							<Link to={'/' + journal.slug} style={globalStyles.link}><h1 style={[styles.headerTitle]}>{journal.name}</h1></Link>
+							<Link to={'/' + journal.slug} style={globalStyles.link}><h1 style={[styles.headerTitle]}>{journal.title}</h1></Link>
 						}
 
 						{/*(this.props.headerMode !== 'logo') &&

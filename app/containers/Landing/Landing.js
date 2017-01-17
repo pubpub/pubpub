@@ -273,7 +273,7 @@ export const Landing = React.createClass({
 									</div>
 									<div className="pt-dialog-body">
 										{assetJournals.map((journal)=> {
-											return <Link key={'journal-link-' + journal.id} style={styles.sideLink} className={'pt-text-overflow-ellipsis'} to={'/' + journal.slug}>{journal.name}</Link>;
+											return <Link key={'journal-link-' + journal.id} style={styles.sideLink} className={'pt-text-overflow-ellipsis'} to={'/' + journal.slug}>{journal.title}</Link>;
 										})}
 
 										{/* 

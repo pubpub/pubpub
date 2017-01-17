@@ -44,7 +44,7 @@ export const ActivityGroup = React.createClass({
 		const activities = this.props.activities || [];
 		
 		const makeString = function(item) { 
-			return item.title || item.name || item.firstName + ' ' + item.lastName; 
+			return item.title || item.firstName + ' ' + item.lastName; 
 		};
 
 		const makeLink = function(item) { 

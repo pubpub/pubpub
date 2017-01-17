@@ -32,7 +32,7 @@ export const JournalEdit = React.createClass({
 			headerAlign: '',
 			headerImage: null,
 			icon: undefined,
-			name: '',
+			title: '',
 			shortDescription: '',
 			canSave: false,
 		};
@@ -42,7 +42,7 @@ export const JournalEdit = React.createClass({
 		const journal = this.props.journal || {};
 		this.setState({
 			slug: journal.slug || '',
-			name: journal.name || '',
+			title: journal.title || '',
 			icon: journal.icon || 'https://assets.pubpub.org/_site/journal.png',
 			logo: journal.logo,
 			shortDescription: journal.shortDescription || '',
@@ -145,7 +145,7 @@ export const JournalEdit = React.createClass({
 		const journal = this.props.journal || {};
 
 		const metaData = {
-			title: 'Edit · ' + journal.name,
+			title: 'Edit · ' + journal.title,
 		};
 
 		const isLoading = this.props.isLoading;
@@ -175,9 +175,9 @@ export const JournalEdit = React.createClass({
 					</Sticky>
 
 					<div style={styles.formContentWrapper}>
-						<label style={styles.label} htmlFor={'name'}>
+						<label style={styles.label} htmlFor={'title'}>
 							<FormattedMessage {...globalMessages.JournalName} />
-							<input className={'pt-input margin-bottom'} id={'name'} name={'name'} type="text" style={styles.input} value={this.state.name} onChange={this.inputUpdate.bind(this, 'name')} />
+							<input className={'pt-input margin-bottom'} id={'title'} name={'title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
 						</label>
 
 						<ImageUpload 

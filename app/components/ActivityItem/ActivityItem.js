@@ -55,7 +55,7 @@ export const ActivityItem = React.createClass({
 		const objectAvatar = object.avatar || 'https://assets.pubpub.org/_site/label.png';
 
 		const makeString = function(item) { 
-			return item.title || item.name || item.firstName + ' ' + item.lastName; 
+			return item.title || item.firstName + ' ' + item.lastName; 
 		};
 		const actorString = makeString(actor);
 		const targetString = makeString(target);

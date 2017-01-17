@@ -63,8 +63,8 @@ export const Journal = React.createClass({
 		return list.sort((foo, bar)=> {
 			const query = this.props.location.query || {};
 
-			const fooTitle = foo.firstName || foo.name || foo.title || '';
-			const barTitle = bar.firstName || bar.name || bar.title || '';
+			const fooTitle = foo.firstName || foo.title || '';
+			const barTitle = bar.firstName || bar.title || '';
 			
 			const fooDate = foo.updatedAt;
 			const barDate = bar.updatedAt;
@@ -115,9 +115,9 @@ export const Journal = React.createClass({
 		}, undefined);
 
 		const metaData = {
-			title: journal.name + ' · PubPub',
+			title: journal.title + ' · PubPub',
 			meta: [
-				{ property: 'og:title', content: (journal.name || journal.slug) },
+				{ property: 'og:title', content: (journal.title || journal.slug) },
 				{ property: 'og:type', content: 'article' },
 				{ property: 'og:description', content: journal.shortDescription },
 				{ property: 'og:url', content: 'https://www.pubpub.org/' + journal.slug },
@@ -126,10 +126,10 @@ export const Journal = React.createClass({
 				{ property: 'og:image:width', content: '500' },
 				{ name: 'twitter:card', content: 'summary' },
 				{ name: 'twitter:site', content: '@pubpub' },
-				{ name: 'twitter:title', content: (journal.name || journal.slug) },
-				{ name: 'twitter:description', content: journal.shortDescription || journal.longDescription || journal.name || journal.slug },
+				{ name: 'twitter:title', content: (journal.title || journal.slug) },
+				{ name: 'twitter:description', content: journal.shortDescription || journal.longDescription || journal.title || journal.slug },
 				{ name: 'twitter:image', content: journal.icon },
-				{ name: 'twitter:image:alt', content: 'Image for ' + (journal.name || journal.slug) }
+				{ name: 'twitter:image:alt', content: 'Image for ' + (journal.title || journal.slug) }
 			]
 		};
 
@@ -141,10 +141,10 @@ export const Journal = React.createClass({
 			return <NoMatch />;
 		}
 
-		if (!journal.name && !this.props.journalData.error) {
+		if (!journal.title && !this.props.journalData.error) {
 			return <div>Loading</div>;
 		}
-		if (!journal.name && this.props.journalData.error) {
+		if (!journal.title && this.props.journalData.error) {
 			return <div>Error</div>;
 		}
 

@@ -23,7 +23,7 @@ export const CreateJournal = React.createClass({
 	getInitialState() {
 		return {
 			slug: '',
-			name: '',
+			title: '',
 			shortDescription: '',
 			imageFile: null,
 			icon: 'https://assets.pubpub.org/_site/journal.png',
@@ -79,8 +79,8 @@ export const CreateJournal = React.createClass({
 	},
 
 	validate: function(data) {
-		// Check to make sure name exists
-		if (!data.name || !data.name.length) {
+		// Check to make sure title exists
+		if (!data.title || !data.title.length) {
 			return { isValid: false, validationError: <FormattedMessage id="createJournal.JournalNamerequired" defaultMessage="Journal Name required" /> };
 		}
 
@@ -102,7 +102,7 @@ export const CreateJournal = React.createClass({
 		evt.preventDefault();
 		const createData = {
 			slug: this.state.slug,
-			name: this.state.name,
+			title: this.state.title,
 			shortDescription: this.state.shortDescription,
 			icon: this.state.icon,
 		};
@@ -135,7 +135,7 @@ export const CreateJournal = React.createClass({
 					
 					<label style={styles.label} htmlFor={'journalName'}>
 						<FormattedMessage {...globalMessages.JournalName} />
-						<input id={'journalName'} name={'journal name'} type="text" style={styles.input} value={this.state.name} onChange={this.inputUpdate.bind(this, 'name')} />
+						<input id={'journalName'} name={'journal title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
 					</label>
 
 					<label style={styles.label} htmlFor={'journalURL'}>

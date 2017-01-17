@@ -58,7 +58,7 @@ export const JournalSubmits = React.createClass({
 		const journal = this.props.journal || {};
 		const pubSubmits = journal.pubSubmits || [];
 		const metaData = {
-			title: 'Submitted · ' + journal.name,
+			title: 'Submitted · ' + journal.title,
 		};
 		const isLoading = this.props.isLoading;
 		const errorMessage = this.props.error;

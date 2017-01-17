@@ -19,7 +19,7 @@ export const PreviewJournal = React.createClass({
 				<Link to={'/' + journal.slug} style={[styles.avatarWrapper, { backgroundImage: journal.icon ? 'url("' + journal.icon + '")' : '' }]} />
 				
 				<div style={styles.pubPreviewDetails}>
-					<Link to={'/' + journal.slug}><h4>{journal.name}</h4></Link>
+					<Link to={'/' + journal.slug}><h4>{journal.title}</h4></Link>
 					<p>{journal.shortDescription}</p>
 					{this.props.bottomContent &&
 						<div>

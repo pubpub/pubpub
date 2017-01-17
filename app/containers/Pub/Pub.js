@@ -242,7 +242,7 @@ export const Pub = React.createClass({
 
 		const contextJournal = pubFeatures.reduce((previous, current)=> {
 			if (!query.context && current.journalId === pub.defaultContext) { return current.journal; }
-			if (current.journal.name === query.context) { return current.journal; }
+			if (current.journal.title === query.context) { return current.journal; }
 			return previous;
 		}, undefined);
 
@@ -306,7 +306,7 @@ export const Pub = React.createClass({
 								const journal = feature.journal || {};
 								return (
 									<Link to={'/' + journal.slug} key={'header-feature-' + feature.journalId} style={styles.journalHeaderTag}>
-										<Tag backgroundColor={journal.headerColor} isLarge={true}>{journal.name}</Tag>
+										<Tag backgroundColor={journal.headerColor} isLarge={true}>{journal.title}</Tag>
 									</Link>
 								);
 							})}

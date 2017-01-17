@@ -58,7 +58,7 @@ export const JournalFeatures = React.createClass({
 		const journal = this.props.journal || {};
 		const pubFeatures = journal.pubFeatures || [];
 		const metaData = {
-			title: 'Featured · ' + journal.name,
+			title: 'Featured · ' + journal.title,
 		};
 		const isLoading = this.props.isLoading;
 		const errorMessage = this.props.error;
