@@ -328,6 +328,7 @@ export const PubContent = React.createClass({
 									<th>Name</th>
 									<th>Updated</th>
 									<th />
+									<th />
 								</tr>
 							</thead>
 							<tbody>
@@ -340,6 +341,11 @@ export const PubContent = React.createClass({
 										<tr key={'file-' + index}>
 											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={{ pathname: '/pub/' + this.props.pub.slug + '/files/' + file.name, query: query }}>{file.name}</Link></td>
 											<td style={styles.tableCell}>{dateFormat(file.createdAt, 'mmm dd, yyyy')}</td>
+											<td style={[styles.tableCell, styles.tableCellSmall]}>
+												<a href={file.url} target={'_blank'}>
+													<button type="button" className={'pt-button pt-minimal pt-icon-import'} />
+												</a>
+											</td>
 											<td style={[styles.tableCell, styles.tableCellSmall]}>
 												{file.name === mainFile.name &&
 													<button role="button" className={'pt-button pt-fill pt-active'}>Main File</button>
