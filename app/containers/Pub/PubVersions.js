@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import Radium from 'radium';
 import dateFormat from 'dateformat';
-import { Dialog, Position, Tooltip } from '@blueprintjs/core';
+import { Dialog, Position, Menu, MenuDivider, Popover, PopoverInteractionKind } from '@blueprintjs/core';
 import { putVersion } from './actionsVersions';
 import { Loader } from 'components';
 
@@ -21,29 +21,41 @@ export const PubVersions = React.createClass({
 	getInitialState: function() {
 		return {
 			confirmPublish: undefined,
+			confirmRestricted: undefined,
 		};
 	},
 
 	componentWillReceiveProps(nextProps) {
 		if (this.props.isLoading && !nextProps.isLoading && !nextProps.error) {
-			this.setState({ confirmPublish: undefined });	
+			this.setState({ 
+				confirmPublish: undefined,
+				confirmRestricted: undefined 
+			});	
 		}
+	},
+
+	setRestricted: function(versionId) {
+		this.setState({ confirmRestricted: versionId });
 	},
 
 	setPublish: function(versionId) {
 		this.setState({ confirmPublish: versionId });
 	},
 
+	restrictVersion: function() {
+		this.props.dispatch(putVersion(this.props.pub.id, this.state.confirmRestricted, null, true));
+	},
+
 	publishVersion: function() {
-		this.props.dispatch(putVersion(this.props.pub.id, this.state.confirmPublish));
+		this.props.dispatch(putVersion(this.props.pub.id, this.state.confirmPublish, true));
 	},
 
 	render: function() {
 		const location = this.props.location || {};
-		const pathname = location.pathname;
 		const query = location.query || {};
 		const isLoading = this.props.isLoading;
 		const errorMessage = this.props.error;
+
 		return (
 			<div style={styles.container}>
 				<h2>Versions</h2>
@@ -55,30 +67,56 @@ export const PubVersions = React.createClass({
 					return 0;
 				}).map((version, index, array)=> {
 					const previousVersion = index < array.length - 1 ? array[index + 1] : {};
+					let mode = 'private';
+					if (version.isRestricted) { mode = 'restricted'; }
+					if (version.isPublished) { mode = 'published'; }
+
 					return (
 						<div key={'version-' + version.id} style={styles.versionRow}>
 
 							{this.props.pub.canEdit &&
 								<div style={styles.smallColumn}>
-									<Tooltip 
+									<Popover 
 										content={
 											<div>
-												<div>Version is {version.isPublished ? 'Public' : 'Private'}</div>
-												{!version.isPublished &&
-													<div>Click to publish</div>
-												}
-												
+												<Menu>
+													<li className={'pt-menu-header'}><h6>Version is <span style={{ textTransform: 'capitalize' }}>{mode}</span></h6></li>
+													{mode === 'private' &&
+														<MenuDivider />
+													}
+													{mode === 'private' &&
+														<li>
+															<button type={'button'} className={'pt-menu-item'} onClick={this.setRestricted.bind(this, version.id)}>
+																<p style={{ fontSize: '1.2em' }}>Set Restricted</p>
+																<p>Restricted pubs can be read by journals and invited reviewers</p>
+															</button>
+														</li>
+													}
+													{(mode === 'private' || mode === 'restricted') &&
+														<MenuDivider />
+													}
+													{(mode === 'private' || mode === 'restricted') &&
+														<li>
+															<button type={'button'} className={'pt-menu-item'} onClick={this.setPublish.bind(this, version.id)}>
+																<p style={{fontSize: '1.2em'}}>Publish</p>
+																<p>Make it publicly available</p>
+															</button>
+														</li>
+													}
+												</Menu>
 											</div>
-										} 
+										}
+										interactionKind={PopoverInteractionKind.HOVER}
 										position={Position.BOTTOM_LEFT}>
-										<span onClick={version.isPublished ? ()=>{} : this.setPublish.bind(this, version.id)} className={'pt-button pt-minimal'} style={version.isPublished ? styles.noClick : {}}>
-											<span className={'pt-icon-standard pt-icon-globe'} style={version.isPublished ? styles.icon : [styles.icon, styles.inactiveIcon]} />
+										<span className={'pt-button pt-minimal'}>
+											<span className={'pt-icon-standard pt-icon-globe'} style={mode === 'published' ? styles.icon : [styles.icon, styles.inactiveIcon]} />
 											<span style={styles.iconSpacer} />
-											<span className={'pt-icon-standard pt-icon-people'} style={styles.inactiveIcon} />
+											<span className={'pt-icon-standard pt-icon-people'} style={mode === 'restricted' ? styles.icon : [styles.icon, styles.inactiveIcon]} />
 											<span style={styles.iconSpacer} />
-											<span className={'pt-icon-standard pt-icon-lock'} style={version.isPublished ? [styles.icon, styles.inactiveIcon] : styles.icon} />
+											<span className={'pt-icon-standard pt-icon-lock'} style={mode === 'private' ? styles.icon : [styles.icon, styles.inactiveIcon]} />
 										</span>
-									</Tooltip>
+						            </Popover>
+
 								</div>
 							}
 							
@@ -95,6 +133,27 @@ export const PubVersions = React.createClass({
 									<button className={'pt-button p2-minimal'}>View Pub</button>
 								</Link>
 							</div>
+
+							{!version.isPublished && !version.isRestricted &&
+								<Dialog isOpen={this.state.confirmRestricted === version.id} onClose={this.setRestricted.bind(this, undefined)}>
+									<div className="pt-dialog-body">
+										<p>Please confirm that you want to set restricted access on this version. Once set, journal admins and invited reviewers will be granted read-acess to this version.</p>
+										<p><b>Setting restricted access cannot be undone.</b></p>
+										<div className={'pt-card pt-elevation-2'}>
+											<h6 style={styles.noMargin}>{version.versionMessage || 'No message'}</h6>
+											<p style={styles.noMargin}>{dateFormat(version.createdAt, 'mmm dd, yyyy HH:MM')}</p>
+										</div>
+									</div>
+									<div className="pt-dialog-footer">
+										<div className="pt-dialog-footer-actions">
+											<div style={styles.loaderContainer}><Loader loading={isLoading} /></div>
+											<div style={styles.loaderContainer}>{errorMessage}</div>
+											<button type="button" className="pt-button" onClick={this.setRestricted.bind(this, undefined)}>Cancel</button>
+											<button type="submit" className="pt-button pt-intent-primary" onClick={this.restrictVersion}>Enable Restricted Access</button>
+										</div>
+									</div>
+								</Dialog>
+							}
 
 							{!version.isPublished &&
 								<Dialog isOpen={this.state.confirmPublish === version.id} onClose={this.setPublish.bind(this, undefined)}>

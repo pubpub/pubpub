@@ -251,7 +251,6 @@ export const Pub = React.createClass({
 		});
 
 		const globalLabels = pub.labels.filter((label)=> {
-			console.log(label);
 			return !label.userId && !label.journalId && !label.pubId;
 		});
 

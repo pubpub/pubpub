@@ -25,7 +25,7 @@ export function postJournalAdmin(journalId, userId) {
 	return (dispatch) => {
 		dispatch({ type: POST_JOURNAL_ADMIN_LOAD });
 
-		return clientFetch('/api/journal/admins', {
+		return clientFetch('/api/journal/admin', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -51,7 +51,7 @@ export function deleteJournalAdmin(journalId, journalAdminId) {
 	return (dispatch) => {
 		dispatch({ type: DELETE_JOURNAL_ADMIN_LOAD });
 
-		return clientFetch('/api/journal/admins', {
+		return clientFetch('/api/journal/admin', {
 			method: 'DELETE',
 			headers: {
 				Accept: 'application/json',

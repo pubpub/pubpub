@@ -49,7 +49,7 @@ export function postVersion(pubId, versionMessage, isPublished, files, defaultFi
 	};
 }
 
-export function putVersion(pubId, versionId) {
+export function putVersion(pubId, versionId, isPublished, isRestricted) {
 	return (dispatch) => {
 		dispatch({ type: PUT_VERSION_LOAD });
 
@@ -62,11 +62,12 @@ export function putVersion(pubId, versionId) {
 			body: JSON.stringify({
 				pubId: pubId, 
 				versionId: versionId, 
-				isPublished: true,
+				isPublished: isPublished,
+				isRestricted: isRestricted || null,
 			})
 		})
 		.then((result) => {
-			dispatch({ type: PUT_VERSION_SUCCESS, result, pubId: pubId, versionId: versionId });
+			dispatch({ type: PUT_VERSION_SUCCESS, result, pubId: pubId, versionId: versionId, isPublished: isPublished, isRestricted: isRestricted });
 		})
 		.catch((error) => {
 			console.log(error);

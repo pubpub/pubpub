@@ -86,8 +86,9 @@ export const JournalFeatures = React.createClass({
 						if (foo.createdAt < bar.createdAt) { return 1; }
 						return 0;
 					}).map((pubFeature, index)=> {
-						const pub = pubFeature.pub;
-						const pubCollections = pub.labels.filter((label)=> {
+						const pub = pubFeature.pub || {};
+						const labels = pub.labels || [];
+						const pubCollections = labels.filter((label)=> {
 							return label.journalId === journal.id;
 						});
 						return (

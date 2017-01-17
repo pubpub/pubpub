@@ -276,7 +276,10 @@ export default function reducer(state = defaultState, action) {
 			['pub', 'versions'], 
 			state.getIn(['pub', 'versions']).map((version)=> {
 				if (version.get('id') === action.versionId) {
-					return version.set('isPublished', true);
+					return version.merge({
+						isPublished: action.isPublished,
+						isRestricted: action.isRestricted,
+					});
 				}
 				return version;
 			})

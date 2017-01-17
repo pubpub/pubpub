@@ -218,6 +218,7 @@ styles = {
 	journalLogo: {
 		height: '100%',
 		padding: '10px 0px',
+		maxHeight: '50px',
 	},
 	journalTitle: {
 		display: 'block',
