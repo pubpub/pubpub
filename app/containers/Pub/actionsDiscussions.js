@@ -31,7 +31,7 @@ export function postDiscussion(replyRootPubId, replyParentPubId, title, descript
 	return (dispatch) => {
 		dispatch({ type: POST_DISCUSSION_LOAD });
 
-		return clientFetch('/api/pub/discussions', {
+		return clientFetch('/api/pub/discussion', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -87,7 +87,7 @@ export function postReaction(pubId, replyRootPubId, reactionId) {
 	return (dispatch) => {
 		dispatch({ type: POST_REACTION_LOAD });
 
-		return clientFetch('/api/pub/reactions', {
+		return clientFetch('/api/pub/reaction', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -113,7 +113,7 @@ export function deleteReaction(pubId, replyRootPubId, reactionId, accountId) {
 	return (dispatch) => {
 		dispatch({ type: DELETE_REACTION_LOAD });
 
-		return clientFetch('/api/pub/reactions', {
+		return clientFetch('/api/pub/reaction', {
 			method: 'DELETE',
 			headers: {
 				Accept: 'application/json',

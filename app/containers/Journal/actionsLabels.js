@@ -27,7 +27,7 @@ export function postLabel(journalId, title, description, isDisplayed, order) {
 	return (dispatch) => {
 		dispatch({ type: POST_LABEL_LOAD });
 
-		return clientFetch('/api/labels', {
+		return clientFetch('/api/label', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -55,7 +55,7 @@ export function putLabel(journalId, labelId, labelUpdates) {
 	return (dispatch) => {
 		dispatch({ type: PUT_LABEL_LOAD, labelId: labelId, labelUpdates: labelUpdates });
 
-		return clientFetch('/api/labels', {
+		return clientFetch('/api/label', {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',
@@ -81,7 +81,7 @@ export function deleteLabel(journalId, labelId) {
 	return (dispatch) => {
 		dispatch({ type: DELETE_LABEL_LOAD });
 
-		return clientFetch('/api/labels', {
+		return clientFetch('/api/label', {
 			method: 'DELETE',
 			headers: {
 				Accept: 'application/json',

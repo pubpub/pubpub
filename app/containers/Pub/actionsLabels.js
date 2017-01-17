@@ -27,7 +27,7 @@ export function postLabel(pubId, title, color) {
 	return (dispatch) => {
 		dispatch({ type: POST_LABEL_LOAD });
 
-		return clientFetch('/api/labels', {
+		return clientFetch('/api/label', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -53,7 +53,7 @@ export function putLabel(pubId, labelId, title, color) {
 	return (dispatch) => {
 		dispatch({ type: PUT_LABEL_LOAD });
 
-		return clientFetch('/api/labels', {
+		return clientFetch('/api/label', {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',
@@ -80,7 +80,7 @@ export function deleteLabel(pubId, labelId) {
 	return (dispatch) => {
 		dispatch({ type: DELETE_LABEL_LOAD });
 
-		return clientFetch('/api/labels', {
+		return clientFetch('/api/label', {
 			method: 'DELETE',
 			headers: {
 				Accept: 'application/json',

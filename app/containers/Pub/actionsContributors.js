@@ -35,7 +35,7 @@ export function postContributor(userId, pubId) {
 	return (dispatch) => {
 		dispatch({ type: POST_CONTRIBUTOR_LOAD });
 
-		return clientFetch('/api/pub/contributors', {
+		return clientFetch('/api/pub/contributor', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -60,7 +60,7 @@ export function putContributor(pubId, contributorId, canEdit, canRead, isAuthor,
 	return (dispatch) => {
 		dispatch({ type: PUT_CONTRIBUTOR_LOAD });
 
-		return clientFetch('/api/pub/contributors', {
+		return clientFetch('/api/pub/contributor', {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',
@@ -89,7 +89,7 @@ export function deleteContributor(pubId, contributorId) {
 	return (dispatch) => {
 		dispatch({ type: DELETE_CONTRIBUTOR_LOAD });
 
-		return clientFetch('/api/pub/contributors', {
+		return clientFetch('/api/pub/contributor', {
 			method: 'DELETE',
 			headers: {
 				Accept: 'application/json',
@@ -114,7 +114,7 @@ export function postContributorRole(pubId, contributorId, roleId) {
 	return (dispatch) => {
 		dispatch({ type: POST_CONTRIBUTOR_ROLE_LOAD });
 
-		return clientFetch('/api/pub/contributor/roles', {
+		return clientFetch('/api/pub/contributor/role', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -140,7 +140,7 @@ export function deleteContributorRole(pubId, contributorId, roleId) {
 	return (dispatch) => {
 		dispatch({ type: DELETE_CONTRIBUTOR_ROLE_LOAD });
 
-		return clientFetch('/api/pub/contributor/roles', {
+		return clientFetch('/api/pub/contributor/role', {
 			method: 'DELETE',
 			headers: {
 				Accept: 'application/json',

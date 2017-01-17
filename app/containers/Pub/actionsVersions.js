@@ -23,7 +23,7 @@ export function postVersion(pubId, versionMessage, isPublished, files, defaultFi
 	return (dispatch) => {
 		dispatch({ type: POST_VERSION_LOAD });
 
-		return clientFetch('/api/pub/versions', {
+		return clientFetch('/api/pub/version', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -53,7 +53,7 @@ export function putVersion(pubId, versionId) {
 	return (dispatch) => {
 		dispatch({ type: PUT_VERSION_LOAD });
 
-		return clientFetch('/api/pub/versions', {
+		return clientFetch('/api/pub/version', {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',

@@ -20,7 +20,7 @@ export function getLabel(query) {
 	return (dispatch) => {
 		dispatch({ type: GET_LABEL_LOAD });
 
-		return clientFetch('/api/labels?title=' + query, {
+		return clientFetch('/api/label?title=' + query, {
 			method: 'GET'
 		})
 		.then((result) => {

@@ -23,7 +23,7 @@ export function postPubLabel(pubId, labelId, journalId) {
 	return (dispatch) => {
 		dispatch({ type: POST_PUB_LABEL_LOAD });
 
-		return clientFetch('/api/journal/labels', {
+		return clientFetch('/api/journal/label', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -49,7 +49,7 @@ export function deletePubLabel(pubId, labelId, journalId) {
 	return (dispatch) => {
 		dispatch({ type: DELETE_PUB_LABEL_LOAD });
 
-		return clientFetch('/api/journal/labels', {
+		return clientFetch('/api/journal/label', {
 			method: 'DELETE',
 			headers: {
 				Accept: 'application/json',

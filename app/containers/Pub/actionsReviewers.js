@@ -23,7 +23,7 @@ export function postReviewer(email, name, pubId, invitedUserId, inviterJournalId
 	return (dispatch) => {
 		dispatch({ type: POST_REVIEWER_LOAD });
 
-		return clientFetch('/api/pub/reviewers', {
+		return clientFetch('/api/pub/reviewer', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -51,7 +51,7 @@ export function putReviewer(pubId, invitationAccepted, invitationRejected, rejec
 	return (dispatch) => {
 		dispatch({ type: PUT_REVIEWER_LOAD });
 
-		return clientFetch('/api/pub/reviewers', {
+		return clientFetch('/api/pub/reviewer', {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',

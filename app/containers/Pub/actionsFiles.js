@@ -19,7 +19,7 @@ export function putDefaultFile(pubId, versionId, defaultFile) {
 	return (dispatch) => {
 		dispatch({ type: PUT_DEFAULT_FILE_LOAD, versionId: versionId, defaultFile: defaultFile });
 
-		return clientFetch('/api/pub/versions', {
+		return clientFetch('/api/pub/version', {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',
