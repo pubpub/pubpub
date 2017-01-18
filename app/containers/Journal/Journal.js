@@ -105,7 +105,7 @@ export const Journal = React.createClass({
 		const collections = journal.collections || [];
 		const followers = journal.followers || [];
 		const isAdmin = journal.isAdmin; // Add || true for dev only.
-
+		console.log(isAdmin);
 		const accountData = this.props.accountData || {};
 		const accountUser = accountData.user || {};
 		const accountId = accountUser.id;

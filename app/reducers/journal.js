@@ -245,9 +245,11 @@ export default function reducer(state = defaultState, action) {
 			// Update all of the labels associated with discussions. Labels applied to a discussion.
 			['journal', 'pubFeatures'],
 			state.getIn(['journal', 'pubFeatures']).map((pubFeature)=> {
+				const pubLabels = pubFeature.getIn(['pub', 'labels']);
+				if (!pubLabels) { return pubFeature; }
 				return pubFeature.setIn(
 					['pub', 'labels'], 
-					pubFeature.getIn(['pub', 'labels']).map((label)=> {
+					pubLabels.map((label)=> {
 						if (label.get('id') === action.labelId) {
 							return label.merge(action.labelUpdates);
 						}
@@ -273,9 +275,11 @@ export default function reducer(state = defaultState, action) {
 			// Update all of the collections associated with featured pubs. Labels applied to a featured pub.
 			['journal', 'pubFeatures'],
 			state.getIn(['journal', 'pubFeatures']).map((pubFeature)=> {
+				const pubLabels = pubFeature.getIn(['pub', 'labels']);
+				if (!pubLabels) { return pubFeature; }
 				return pubFeature.setIn(
 					['pub', 'labels'], 
-					pubFeature.getIn(['pub', 'labels']).filter((label)=> {
+					pubLabels.filter((label)=> {
 						return label.get('id') !== action.labelId;
 					})
 				);

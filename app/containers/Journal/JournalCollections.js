@@ -44,10 +44,9 @@ export const JournalCollections = React.createClass({
 	editClick: function(collection, evt) {
 		this.setState({ 
 			editingLabelId: collection.id,
-			editingTitle: collection.title,
-			editingDescription: collection.description,
+			// editingTitle: collection.title,
+			// editingDescription: collection.description,
 		});
-		
 		
 	},
 	
@@ -153,8 +152,8 @@ export const JournalCollections = React.createClass({
 		const metaData = {
 			title: 'Collections · ' + journal.title,
 		};
-		const isLoading = this.props.isLoading;
-		const errorMessage = this.props.error;
+		// const isLoading = this.props.isLoading;
+		// const errorMessage = this.props.error;
 
 		const DragHandle = SortableHandle(() => <span style={styles.dragHandle} className={'pt-icon-standard pt-icon-drag-handle-vertical pt-icon-large'} />); // This can be any component you want
 
@@ -215,26 +214,12 @@ export const JournalCollections = React.createClass({
 				</div>
 			);
 		});
-
-
 		return (
 			<div>
 				<Helmet {...metaData} />
 				{!!sortedCollections.length &&
 					<h2>Collections</h2>
 				}
-				
-				{/*
-					Display collections if not logged in
-					Show title, description
-					Set isDisplayed
-					Drag order
-
-					Actions:
-					Move over the dispatch functions needed from CollectionsList
-					Move over state and edit functions. 
-					Map all collections and build out their edit interfaces.
-				*/}
 
 				{!this.state.createOpen && !!sortedCollections.length &&
 				<div style={{ textAlign: 'right' }}>

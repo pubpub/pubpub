@@ -18,6 +18,7 @@ export const JournalProfileHeader = React.createClass({
 
 	render: function() {
 		const journal = this.props.journal || {};
+		const headerAlign = this.props.headerAlign;
 		const customBackgroundStyle = {
 			backgroundColor: this.props.headerColor || '#13A6EF',
 			backgroundImage: this.props.headerImage ? 'url("' + this.props.headerImage + '")' : '',
@@ -49,16 +50,17 @@ export const JournalProfileHeader = React.createClass({
 				</div>
 
 				<div style={styles.bottom}>
-					<Link style={styles.collectionLink} to={'/' + journal.slug}>Home</Link>
-					<Link style={styles.aboutLink} to={'/' + journal.slug + '/about'}>About</Link>
+					<Link style={headerAlign === 'left' ? styles.collectionLinkLeft : styles.collectionLinkCenter} to={'/' + journal.slug}>Home</Link>
+					<Link style={headerAlign === 'left' ? styles.collectionLinkLeft : styles.collectionLinkCenter} to={'/' + journal.slug + '/about'}>About</Link>
+					<div style={styles.headerSpacer}></div>
 					{journal.website &&
-						<Link to={journal.website} style={styles.collectionLink}>{journal.website}</Link>
+						<Link to={journal.website} style={headerAlign === 'left' ? styles.collectionLinkLeft : styles.collectionLinkCenter}>{journal.website}</Link>
 					}
 					{journal.twitter &&
-						<Link to={'https://twitter.com/' + journal.twitter} style={styles.collectionLink}>@{journal.twitter}</Link>
+						<Link to={'https://twitter.com/' + journal.twitter} style={headerAlign === 'left' ? styles.collectionLinkLeft : styles.collectionLinkCenter}>@{journal.twitter}</Link>
 					}
 					{journal.facebook &&
-						<Link to={'https://facebook.com/' + journal.facebook} style={styles.collectionLink}>facebook.com/{journal.facebook}</Link>
+						<Link to={'https://facebook.com/' + journal.facebook} style={headerAlign === 'left' ? styles.collectionLinkLeft : styles.collectionLinkCenter}>facebook.com/{journal.facebook}</Link>
 					}
 				</div>
 
@@ -117,9 +119,17 @@ styles = {
 		color: 'inherit',
 		paddingRight: '4em',
 	},
-	collectionLink: {
+	headerSpacer: {
+		display: 'inline-block',
+		width: '4em',
+	},
+	collectionLinkLeft: {
 		color: 'inherit',
 		paddingRight: '1em',
+	},
+	collectionLinkCenter: {
+		color: 'inherit',
+		padding: '0em 0.5em',
 	},
 	logoImage: {
 		maxWidth: '100%',

@@ -52,7 +52,7 @@ export const JournalCollectionList = React.createClass({
 		// If we have dispatch and a pubId, save the result
 		if (this.props.pubId && this.props.dispatch) {
 			const action = labelIds.includes(label.id) ? deletePubLabel : postPubLabel;
-			this.props.dispatch(action(this.props.pubId, label.id));
+			this.props.dispatch(action(this.props.pubId, label.id, this.props.journalId));
 		}
 		
 	},
