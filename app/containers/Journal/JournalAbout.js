@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import { Link } from 'react-router';
 import ReactMarkdown from 'react-markdown';
 import { AutocompleteBar, PreviewUser, Loader } from 'components';
 import request from 'superagent';
@@ -51,8 +50,6 @@ export const JournalAbout = React.createClass({
 				editorContent: undefined
 			});
 		}
-
-
 	},
 
 	loadOptions: function(input, callback) {
@@ -100,15 +97,7 @@ export const JournalAbout = React.createClass({
 	},
 	saveEditor: function() {
 		const newJournalData = { about: this.state.editorContent };
-		this.props.dispatch(putJournal(this.props.journal.id, newJournalData));
-		
-		// Need to actually do this in the willreceive
-		// this.setState({
-		// 	editorOpen: false,
-		// 	editorContent: undefined
-		// });
-		
-
+		this.props.dispatch(putJournal(this.props.journal.id, newJournalData));		
 	},
 
 	detailsChanged: function(evt) {
@@ -123,17 +112,6 @@ export const JournalAbout = React.createClass({
 			<div style={styles.container}>
 				
 				<h2>About {journal.title}</h2>
-				{/*<div style={styles.linksSection}>
-					{journal.website &&
-						<Link to={journal.website} style={styles.outLink}>{journal.website}</Link>
-					}
-					{journal.twitter &&
-						<Link to={'https://twitter.com/' + journal.twitter} style={styles.outLink}>@{journal.twitter}</Link>
-					}
-					{journal.facebook &&
-						<Link to={'https://facebook.com/' + journal.facebook} style={styles.outLink}>facebook.com/{journal.facebook}</Link>
-					}
-				</div>*/}
 
 				<div style={styles.aboutContent}>
 					{!journal.about && !this.state.editorOpen &&
@@ -147,7 +125,7 @@ export const JournalAbout = React.createClass({
 					{journal.about && !this.state.editorOpen &&
 						<div className="journal-about-content">
 							{journal.isAdmin &&
-								<div style={{float: 'right'}}>
+								<div style={{ float: 'right' }}>
 									<button className={'pt-button pt-icon-edit'} role="button" onClick={this.openEditor}>Edit Details</button>
 								</div>
 							}
@@ -159,18 +137,17 @@ export const JournalAbout = React.createClass({
 						<div>
 							<div>
 								
-								<div style={{float: 'right'}}>
+								<div style={{ float: 'right' }}>
 									<div style={styles.loaderContainer}><Loader loading={this.props.isLoading} showCompletion={!this.props.error} /></div>
-									<button className={'pt-button'} role="button" onClick={this.closeEditor} style={{marginRight: '0.5em'}}>Cancel</button>
+									<button className={'pt-button'} role="button" onClick={this.closeEditor} style={{ marginRight: '0.5em' }}>Cancel</button>
 									<button className={'pt-button pt-intent-primary'} role="button" onClick={this.saveEditor}>Save Details</button>
 								</div>
-								<p style={{paddingTop: '8px'}}><a href={'https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet'} target={'_blank'}>Markdown supported</a></p>
+								<p style={{ paddingTop: '8px' }}><a href={'https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet'} target={'_blank'}>Markdown supported</a></p>
 							</div>
 							
-							<Textarea onChange={this.detailsChanged} value={this.state.editorContent} minRows={3} style={{width: '100%', border: '1px solid #CCC', resize: 'none'}} />
+							<Textarea onChange={this.detailsChanged} value={this.state.editorContent} minRows={3} style={{ width: '100%', border: '1px solid #CCC', resize: 'none' }} />
 						</div>	
 					}
-					
 				</div>
 			
 
