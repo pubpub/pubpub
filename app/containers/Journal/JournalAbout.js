@@ -146,9 +146,12 @@ export const JournalAbout = React.createClass({
 
 					{journal.about && !this.state.editorOpen &&
 						<div className="journal-about-content">
-							<div style={{float: 'right'}}>
-								<button className={'pt-button pt-icon-edit'} role="button" onClick={this.openEditor}>Edit Details</button>
-							</div>
+							{journal.isAdmin &&
+								<div style={{float: 'right'}}>
+									<button className={'pt-button pt-icon-edit'} role="button" onClick={this.openEditor}>Edit Details</button>
+								</div>
+							}
+							
 							<ReactMarkdown source={journal.about} />
 						</div>	
 					}
@@ -172,27 +175,31 @@ export const JournalAbout = React.createClass({
 			
 
 				<h2><FormattedMessage {...globalMessages.Admins} /></h2>
-				<p>Admins are displayed publicly and can feature pubs, organize collections, and add admins.</p>
-
-				<AutocompleteBar
-					filterOptions={(options)=>{
-						return options.filter((option)=>{
-							for (let index = 0; index < admins.length; index++) {
-								if (admins[index].userId === option.id) {
-									return false;
+				{journal.isAdmin &&
+					<p>Admins are displayed publicly and can feature pubs, organize collections, and add admins.</p>
+				}
+				
+				{journal.isAdmin &&
+					<AutocompleteBar
+						filterOptions={(options)=>{
+							return options.filter((option)=>{
+								for (let index = 0; index < admins.length; index++) {
+									if (admins[index].userId === option.id) {
+										return false;
+									}
 								}
-							}
-							return true;
-						});
-					}}
-					placeholder={'Find New Admin'}
-					loadOptions={this.loadOptions}
-					value={this.state.newAdmin}
-					onChange={this.handleSelectChange}
-					onComplete={this.addAdmin}
-					completeDisabled={!this.state.newAdmin || !this.state.newAdmin.id}
-					completeString={'Add'}
-				/>			
+								return true;
+							});
+						}}
+						placeholder={'Find New Admin'}
+						loadOptions={this.loadOptions}
+						value={this.state.newAdmin}
+						onChange={this.handleSelectChange}
+						onComplete={this.addAdmin}
+						completeDisabled={!this.state.newAdmin || !this.state.newAdmin.id}
+						completeString={'Add'}
+					/>	
+				}
 
 				{admins.map((admin)=> {
 					const user = admin.user || {};
@@ -201,7 +208,7 @@ export const JournalAbout = React.createClass({
 							key={'admin-' + admin.id}
 							user={user} 
 							details={<span>Added: {dateFormat(admin.createdAt, 'mmmm dd, yyyy')}</span>}
-							rightContent={<button type="button" className="pt-button pt-intent-danger pt-minimal" style={{ whiteSpace: 'nowrap' }} onClick={this.deleteAdmin.bind(this, admin.id)}>Delete Admin</button>} />
+							rightContent={journal.isAdmin ? <button type="button" className="pt-button pt-intent-danger pt-minimal" style={{ whiteSpace: 'nowrap' }} onClick={this.deleteAdmin.bind(this, admin.id)}>Delete Admin</button> : null} />
 					);
 				})}
 			</div>
