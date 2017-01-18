@@ -12,6 +12,10 @@ export const PUT_VERSION_LOAD = 'pub/PUT_VERSION_LOAD';
 export const PUT_VERSION_SUCCESS = 'pub/PUT_VERSION_SUCCESS';
 export const PUT_VERSION_FAIL = 'pub/PUT_VERSION_FAIL';
 
+export const POST_DOI_LOAD = 'pub/POST_DOI_LOAD';
+export const POST_DOI_SUCCESS = 'pub/POST_DOI_SUCCESS';
+export const POST_DOI_FAIL = 'pub/POST_DOI_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -72,6 +76,31 @@ export function putVersion(pubId, versionId, isPublished, isRestricted) {
 		.catch((error) => {
 			console.log(error);
 			dispatch({ type: PUT_VERSION_FAIL, error });
+		});
+	};
+}
+
+export function postDoi(pubId, versionId) {
+	return (dispatch) => {
+		dispatch({ type: POST_DOI_LOAD });
+
+		return clientFetch('/api/pub/version/doi', {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				pubId: pubId, 
+				versionId: versionId, 
+			})
+		})
+		.then((result) => {
+			dispatch({ type: POST_DOI_SUCCESS, result, pubId: pubId, versionId: versionId });
+		})
+		.catch((error) => {
+			console.log(error);
+			dispatch({ type: POST_DOI_FAIL, error });
 		});
 	};
 }

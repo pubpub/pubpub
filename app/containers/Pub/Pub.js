@@ -202,6 +202,11 @@ export const Pub = React.createClass({
 
 		}, {});
 
+		const pubDOI = versions.reduce((previous, current)=> {
+			if (current.doi) { return current.doi; }
+			return previous;
+		}, undefined);
+
 		const sortedVersions = versions.sort((foo, bar)=> {
 			// Sort so that least recent is first in array
 			if (foo.createdAt > bar.createdAt) { return 1; }
@@ -340,6 +345,12 @@ export const Pub = React.createClass({
 						})}
 					</div>
 
+					{pubDOI &&
+						<div style={styles.pubAuthors}>
+							DOI: <a href={'https://doi.org/' + pubDOI} target={'_blank'}>{pubDOI}</a>
+						</div>
+					}
+
 					{(!meta || meta === 'files' || true) &&
 						<div style={styles.versionDates}>
 							{/* <div style={styles.versionDate}>First Version: {dateFormat(firstVersion.createdAt, 'mmmm dd, yy HH:MM')}</div> */}
@@ -348,6 +359,7 @@ export const Pub = React.createClass({
 							}
 
 							<Link to={{ pathname: pathname, query: { ...query, version: currentVersion.hash } }} style={styles.versionDate}>Current Version<br />{dateFormat(currentVersion.createdAt, 'mmm dd, yy HH:MM')}</Link>
+							
 							{currentVersion.id !== lastVersion.id &&
 								<Link to={{ pathname: pathname, query: { ...query, version: undefined } }} style={styles.versionDate}>Most Recent Version<br />{dateFormat(lastVersion.createdAt, 'mmm dd, yy HH:MM')}</Link>
 							}

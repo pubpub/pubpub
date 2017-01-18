@@ -34,6 +34,9 @@ import {
 	PUT_VERSION_LOAD,
 	PUT_VERSION_SUCCESS,
 	PUT_VERSION_FAIL,
+	POST_DOI_LOAD,
+	POST_DOI_SUCCESS,
+	POST_DOI_FAIL,
 } from 'containers/Pub/actionsVersions';
 
 import {
@@ -285,6 +288,33 @@ export default function reducer(state = defaultState, action) {
 			})
 		);
 	case PUT_VERSION_FAIL:
+		return state.merge({
+			versionsLoading: false,
+			versionsError: action.error,
+		});
+
+	case POST_DOI_LOAD:
+		return state.merge({
+			versionsLoading: true,
+			versionsError: undefined,
+		});	
+	case POST_DOI_SUCCESS:
+		return state.merge({
+			versionsLoading: false,
+			versionsError: undefined,
+		})
+		.mergeIn(
+			['pub', 'versions'], 
+			state.getIn(['pub', 'versions']).map((version)=> {
+				if (version.get('id') === action.versionId) {
+					return version.merge({
+						doi: action.result,
+					});
+				}
+				return version;
+			})
+		);
+	case POST_DOI_FAIL:
 		return state.merge({
 			versionsLoading: false,
 			versionsError: action.error,

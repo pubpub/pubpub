@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import Radium from 'radium';
 import dateFormat from 'dateformat';
 import { Dialog, Position, Menu, MenuDivider, Popover, PopoverInteractionKind } from '@blueprintjs/core';
-import { putVersion } from './actionsVersions';
+import { putVersion, postDoi } from './actionsVersions';
 import { Loader } from 'components';
 
 let styles;
@@ -22,6 +22,7 @@ export const PubVersions = React.createClass({
 		return {
 			confirmPublish: undefined,
 			confirmRestricted: undefined,
+			confirmDoi: undefined,
 		};
 	},
 
@@ -29,7 +30,8 @@ export const PubVersions = React.createClass({
 		if (this.props.isLoading && !nextProps.isLoading && !nextProps.error) {
 			this.setState({ 
 				confirmPublish: undefined,
-				confirmRestricted: undefined 
+				confirmRestricted: undefined,
+				confirmDoi: undefined,
 			});	
 		}
 	},
@@ -50,17 +52,30 @@ export const PubVersions = React.createClass({
 		this.props.dispatch(putVersion(this.props.pub.id, this.state.confirmPublish, true));
 	},
 
+	toggleDoiDialog: function(versionId) {
+		this.setState({ confirmDoi: versionId });
+	},
+
+	createDoi: function() {
+		this.props.dispatch(postDoi(this.props.pub.id, this.state.confirmDoi));
+	},
+
 	render: function() {
 		const location = this.props.location || {};
 		const query = location.query || {};
 		const isLoading = this.props.isLoading;
 		const errorMessage = this.props.error;
+		const versions = this.props.versionsData || [];
+		const pubDOI = versions.reduce((previous, current)=> {
+			if (current.doi) { return current.doi; }
+			return previous;
+		}, undefined);
 
 		return (
 			<div style={styles.container}>
 				<h2>Versions</h2>
 
-				{this.props.versionsData.sort((foo, bar)=> {
+				{versions.sort((foo, bar)=> {
 					// Sort so that most recent is first in array
 					if (foo.createdAt > bar.createdAt) { return -1; }
 					if (foo.createdAt < bar.createdAt) { return 1; }
@@ -115,7 +130,7 @@ export const PubVersions = React.createClass({
 											<span style={styles.iconSpacer} />
 											<span className={'pt-icon-standard pt-icon-lock'} style={mode === 'private' ? styles.icon : [styles.icon, styles.inactiveIcon]} />
 										</span>
-						            </Popover>
+									</Popover>
 
 								</div>
 							}
@@ -127,6 +142,19 @@ export const PubVersions = React.createClass({
 								</Link>
 								<p style={styles.noMargin}>{dateFormat(version.createdAt, 'mmm dd, yyyy HH:MM')}</p>
 							</div>
+
+							{this.props.pub.canEdit && mode === 'published' && !pubDOI &&
+								<div style={[styles.smallColumn, { padding: '0.5em' }]}>
+									<button className={'pt-button'} onClick={this.toggleDoiDialog.bind(this, version.id)}>Assign DOI</button>
+								</div>
+							}
+
+							{version.doi &&
+								<div style={[styles.smallColumn, { padding: '0.5em' }]}>
+									<span className={'pt-tag'}>{version.doi}</span>
+								</div>
+							}
+
 							<div style={styles.smallColumn}>
 								{/* Link to pub at that version instance */}
 								<Link to={{ pathname: '/pub/' + this.props.pub.slug, query: { ...query, version: version.hash } }}>	
@@ -171,6 +199,27 @@ export const PubVersions = React.createClass({
 											<div style={styles.loaderContainer}>{errorMessage}</div>
 											<button type="button" className="pt-button" onClick={this.setPublish.bind(this, undefined)}>Cancel</button>
 											<button type="submit" className="pt-button pt-intent-primary" onClick={this.publishVersion}>Publish Version</button>
+										</div>
+									</div>
+								</Dialog>
+							}
+
+							{!version.doi && version.isPublished &&
+								<Dialog isOpen={this.state.confirmDoi === version.id} onClose={this.toggleDoiDialog.bind(this, undefined)}>
+									<div className="pt-dialog-body">
+										<p>Please confirm that you want to assign a DOI to this version of the pub.</p>
+										<p><b>DOIs are permanent and can only be set on one version.</b></p>
+										<div className={'pt-card pt-elevation-2'}>
+											<h6 style={styles.noMargin}>{version.versionMessage || 'No message'}</h6>
+											<p style={styles.noMargin}>{dateFormat(version.createdAt, 'mmm dd, yyyy HH:MM')}</p>
+										</div>
+									</div>
+									<div className="pt-dialog-footer">
+										<div className="pt-dialog-footer-actions">
+											<div style={styles.loaderContainer}><Loader loading={isLoading} /></div>
+											<div style={styles.loaderContainer}>{errorMessage}</div>
+											<button type="button" className="pt-button" onClick={this.toggleDoiDialog.bind(this, undefined)}>Cancel</button>
+											<button type="submit" className="pt-button pt-intent-primary" onClick={this.createDoi}>Assign DOI</button>
 										</div>
 									</div>
 								</Dialog>
