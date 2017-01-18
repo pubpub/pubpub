@@ -162,9 +162,11 @@ export const JournalCollections = React.createClass({
 			const isEditing = this.state.editingLabelId === collection.id;
 			return (
 				<div style={styles.collectionWrapper}>
-					<div style={styles.smallTableCell}>
-						<DragHandle />
-					</div>
+					{journal.isAdmin &&
+						<div style={styles.smallTableCell}>
+							<DragHandle />
+						</div>
+					}
 					{!isEditing &&
 						<div style={styles.tableCell}>
 							<Link style={styles.collectionTitle} to={'/' + journal.slug + '/collection/' + collection.title}>{collection.title}</Link>
@@ -172,7 +174,7 @@ export const JournalCollections = React.createClass({
 						</div>
 					}
 					
-					{!isEditing &&
+					{!isEditing && journal.isAdmin &&
 						<div style={styles.smallTableCell}>
 							<button className="pt-button pt-icon-edit" style={{ marginBottom: '0.5em' }} onClick={this.editClick.bind(this, collection)}>Edit</button>	
 							<Checkbox checked={collection.isDisplayed} label={'Display in Header'} onChange={this.toggleIsDisplayed.bind(this, collection)} />
@@ -221,10 +223,10 @@ export const JournalCollections = React.createClass({
 					<h2>Collections</h2>
 				}
 
-				{!this.state.createOpen && !!sortedCollections.length &&
-				<div style={{ textAlign: 'right' }}>
-					<button className={'pt-button pt-intent-primary'} onClick={this.toggleCreate}>Create New Collection</button>
-				</div>
+				{!this.state.createOpen && !!sortedCollections.length && journal.isAdmin &&
+					<div style={{ textAlign: 'right' }}>
+						<button className={'pt-button pt-intent-primary'} onClick={this.toggleCreate}>Create New Collection</button>
+					</div>
 				}
 
 				{this.state.createOpen &&

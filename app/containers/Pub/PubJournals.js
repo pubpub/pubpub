@@ -20,9 +20,10 @@ export const PubJournals = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
-		const prevSubmits = this.props.pubSubmits || [];
-		const nextSubmits = nextProps.pubSubmits || [];
-
+		const prevPub = this.props.pub || {};
+		const prevSubmits = prevPub.pubSubmits || [];
+		const nextPub = nextProps.pub || {};
+		const nextSubmits = nextPub.pubSubmits || [];
 		if (prevSubmits.length < nextSubmits.length) {
 			this.setState({ newSubmission: null });
 		}

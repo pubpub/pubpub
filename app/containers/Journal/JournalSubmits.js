@@ -101,7 +101,7 @@ export const JournalSubmits = React.createClass({
 									<p style={[isDisabled && styles.dimItem]}>{pub.description}</p>	
 								</div>
 
-								{!isDisabled &&
+								{!isDisabled && journal.isAdmin &&
 									<div style={styles.buttons}>
 										<div className="pt-button-group pt-vertical">
 											<button type="button" className="pt-button" onClick={this.setFeature.bind(this, pub.id)}>Accept</button>
