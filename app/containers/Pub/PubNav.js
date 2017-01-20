@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { Link } from 'react-router';
-// import dateFormat from 'dateformat';
+import dateFormat from 'dateformat';
 import { FollowButton } from 'containers';
 import { Tag } from 'components';
 
@@ -15,6 +15,8 @@ export const PubNav = React.createClass({
 		pub: PropTypes.object,
 		accountId: PropTypes.number,
 		preservedQuery: PropTypes.object,
+		currentVersion: PropTypes.object,
+		meta: PropTypes.string,
 		pathname: PropTypes.string,
 		query: PropTypes.object,
 		dispatch: PropTypes.func,
@@ -28,54 +30,38 @@ export const PubNav = React.createClass({
 		const meta = this.props.meta;
 
 		const contributors = pub.contributors || [];
-		const followers = pub.followers || [];
 		const pubFeatures = pub.pubFeatures || [];
-		
-		const contextJournal = pubFeatures.reduce((previous, current)=> {
-			if (!query.context && current.journalId === pub.defaultContext) { return current.journal; }
-			if (current.journal.title === query.context) { return current.journal; }
-			return previous;
-		}, undefined);
+		const versions = pub.versions || [];
 
-		const displayedFeatures = pubFeatures.filter((feature)=> {
-			return feature.isDisplayed && (!contextJournal || feature.journalId !== contextJournal.id);
-		});
-
-		const followData = followers.reduce((previous, current)=> {
-			if (current.id === this.props.accountId) { return current.FollowsPub; }
-			return previous;
-		}, undefined);
-
-		const globalLabels = pub.labels.filter((label)=> {
-			return !label.userId && !label.journalId && !label.pubId;
-		});
+		const currentVersion = this.props.currentVersion || {};
+		const currentFiles = currentVersion.files || [];
 
 		const navItems = [
 			{
 				icon: 'pt-icon-projects',
 				title: 'Content',
-				subtitle: '13 cool things',
+				subtitle: `${currentFiles.length} files`,
 				to: { pathname: '/pub/' + pub.slug, query: preservedQuery },
 				active: meta === '/' || !meta
 			},
 			{
 				icon: 'pt-icon-calendar',
-				title: '19 Versions',
-				subtitle: '13 cool things',
+				title: `${versions.length} Versions`,
+				subtitle: `Current: ${dateFormat(currentVersion.createdAt, 'mmm dd, yyyy')}`,
 				to: { pathname: '/pub/' + pub.slug + '/versions', query: preservedQuery },
 				active: meta === 'versions'
 			},
 			{
 				icon: 'pt-icon-person',
-				title: '4 Contributors',
-				subtitle: '13 cool things',
+				title: `${contributors.length} Contributors`,
+				subtitle: `${contributors.length} authors`,
 				to: { pathname: '/pub/' + pub.slug + '/contributors', query: preservedQuery },
 				active: meta === 'contributors'
 			},
 			{
 				icon: 'pt-icon-manual',
-				title: '3 Journals',
-				subtitle: '13 cool things',
+				title: `${pubFeatures.length} Journals`,
+				subtitle: `${pubFeatures.length} featuring`,
 				to: { pathname: '/pub/' + pub.slug + '/journals', query: preservedQuery },
 				active: meta === 'journals'
 			},
@@ -127,7 +113,7 @@ styles = {
 		width: '100%',
 		maxWidth: '1200px',
 		margin: '0 auto',
-		padding: '10px 2em 30px',
+		padding: '10px 0em 30px',
 
 
 	},
@@ -138,7 +124,7 @@ styles = {
 			width: `calc(${100 / count}% - 4px)`,
 			// paddingRight: '3em',
 			// marginRight: '3em',
-			padding: '10px 3em',
+			padding: '10px 2em',
 			margin: '0px 2px',
 			cursor: 'pointer',
 			textDecoration: 'none',
@@ -159,7 +145,7 @@ styles = {
 		color: '#5c7080',
 	},
 	navTitle: {
-		paddingBottom: '0.75em',
+		paddingBottom: '0.5em',
 	},
 	navTitleActive: {
 		fontWeight: 'bold',

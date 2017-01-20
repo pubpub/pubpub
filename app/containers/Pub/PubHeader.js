@@ -140,7 +140,7 @@ styles = {
 		overflow: 'auto',
 	},
 	backgroundContainer: {
-		backgroundColor: 'rgba(218, 218,218, 0.35)',
+		backgroundColor: 'rgba(218, 218, 218, 0.35)',
 		position: 'absolute',
 		width: '100%',
 		height: '100%',
@@ -166,7 +166,7 @@ styles = {
 		paddingLeft: '1em'
 	},
 	labelsWrapper: {
-		margin: '40px 0px 20px',
+		margin: '20px 0px 20px',
 		// backgroundColor: 'rgba(125, 255, 0, 0.25)',
 	},
 	title: {

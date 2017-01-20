@@ -6,6 +6,7 @@ import { Menu, MenuDivider } from '@blueprintjs/core';
 import { DropdownButton } from 'components';
 import PubLabelList from './PubLabelList';
 import fuzzysearch from 'fuzzysearch';
+import { FormattedRelative } from 'react-intl';
 
 let styles;
 
@@ -205,6 +206,16 @@ export const PubDiscussionsList = React.createClass({
 								{discussion.title}
 							</Link>
 
+							<div>
+								{!discussion.isPublished && 
+									<span className={'pt-icon-standard pt-icon-lock'} />
+								}
+								<FormattedRelative value={discussion.createdAt} />
+								{discussionAuthors.map((image, imageIndex)=> {
+									return <img src={'https://jake.pubpub.org/unsafe/50x50/' + image} style={[styles.authorImages, {zIndex: discussionAuthors.length - imageIndex}, imageIndex === 0 && {marginLeft: '1em'}]} key={'discussionImage-' + discussion.id + '-' + imageIndex}/>;
+								})}
+							</div>
+							
 							<PubLabelList 
 								allLabels={labelList} 
 								selectedLabels={labels} 
@@ -212,11 +223,9 @@ export const PubDiscussionsList = React.createClass({
 								pathname={this.props.pathname} 
 								query={this.props.query} />
 
-							<div>{!discussion.isPublished && <span className={'pt-icon-standard pt-icon-lock'} />}{dateFormat(discussion.createdAt, 'mmmm dd, yyyy')} | by {author.firstName + ' ' + author.lastName} | Replies: {children.length}</div>
+							
 
-							{discussionAuthors.map((image, imageIndex)=> {
-								return <img src={'https://jake.pubpub.org/unsafe/50x50/' + image} style={styles.authorImages} key={'discussionImage-' + discussion.id + '-' + imageIndex}/>;
-							})}
+							
 							
 						</div>
 					);
@@ -231,12 +240,13 @@ export default Radium(PubDiscussionsList);
 
 styles = {
 	container: {
-		height: 'calc(100% - 50px)', 
+		// height: 'calc(100% - 50px)', 
 		width: '100%', 
 		// backgroundColor: 'orange', 
 		overflow: 'hidden', 
 		overflowY: 'scroll', 
-		position: 'relative'
+		position: 'relative',
+		color: '#738694',
 	},
 	buttonGroup: {
 		marginBottom: '2em',
@@ -256,8 +266,9 @@ styles = {
 		textAlign: 'right',
 	},
 	discussionTitle: {
-		fontWeight: 'bold',
-		fontSize: '1.25em',
+		// fontWeight: 'bold',
+		// fontSize: '1.25em',
+		color: '#202b33',
 		display: 'block',
 	},
 	threadNumber: {
@@ -270,6 +281,10 @@ styles = {
 	authorImages: {
 		width: '20px',
 		verticalAlign: 'middle',
+		marginLeft: '-8px',
+		borderRadius: '16px',
+		boxShadow: '0px 0px 1px 0px #000',
+		position: 'relative',
 	},
 	input: {
 		width: '100%',

@@ -66,7 +66,7 @@ styles = {
 		position: 'relative',
 	},
 	pubBody: {
-		padding: '0em 1.25em',
+		// padding: '0em 1.25em',
 		fontFamily: 'serif',
 		lineHeight: '1.6em',
 		fontSize: '1.2em',

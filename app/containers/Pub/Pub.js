@@ -303,6 +303,7 @@ export const Pub = React.createClass({
 					pub={pub}
 					accountId={accountId}
 					preservedQuery={preservedQuery}
+					currentVersion={currentVersion}
 					meta={meta}
 					pathname={pathname}
 					query={query}
@@ -594,10 +595,11 @@ styles = {
 	content: {
 		maxWidth: '1200px',
 		margin: '0 auto',
-		padding: '0em 2em'
+		padding: '0em 4em'
 	},
 	left: {
 		marginRight: '35%',
+		paddingRight: '4em',
 	},
 	rightPanel: {
 		position: 'absolute',
