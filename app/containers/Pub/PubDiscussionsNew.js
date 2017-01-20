@@ -28,9 +28,13 @@ export const PubDiscussionsNew = React.createClass({
 			description: '',
 			labels: [],
 			isPrivate: false,
+			mounting: true,
 		};
 	},
 
+	componentDidMount() {
+		this.setState({ mounting: false });
+	},
 	componentWillReceiveProps(nextProps) {
 		const previousDiscussions = this.props.discussionsData || [];
 		const nextDiscussions = nextProps.discussionsData || [];
@@ -88,7 +92,7 @@ export const PubDiscussionsNew = React.createClass({
 		};
 		const errorMessage = serverErrors[this.props.error] || this.state.validationError;
 		return (
-			<div style={styles.container}>
+			<div style={[styles.container, this.state.mounting ? {opacity: 0, transform: 'scale(0.9)'} : {opacity: 1}]} className={'pt-card pt-elevation-3'}>
 				<h3>New Discussion</h3>
 				<form onSubmit={this.createSubmit}>
 					<PubLabelList allLabels={labelList} onChange={this.onLabelsChange} canEdit={pub.canEdit} canSelect={true} rootPubId={this.props.pub.id} pathname={this.props.pathname} query={this.props.query} dispatch={this.props.dispatch} />
@@ -119,7 +123,13 @@ export default Radium(PubDiscussionsNew);
 
 styles = {
 	container: {
-		
+		maxHeight: 'calc(100% - 100px)', 
+		width: '100%', 
+		// backgroundColor: 'orange', 
+		overflow: 'hidden', 
+		overflowY: 'scroll', 
+		position: 'relative',
+		transition: '.1s linear opacity, .1s ease-in-out transform',
 	},
 	input: {
 		width: '100%',

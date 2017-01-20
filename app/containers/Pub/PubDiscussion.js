@@ -31,7 +31,12 @@ export const PubDiscussion = React.createClass({
 			openEditor: undefined,
 			editTitle: undefined,
 			editDescription: undefined,
+			mounting: true,
 		};
+	},
+
+	componentDidMount() {
+		this.setState({ mounting: false });
 	},
 
 	componentWillMount() {
@@ -122,11 +127,12 @@ export const PubDiscussion = React.createClass({
 		const discussions = [discussion, ...children];
 
 		return (
-			<div style={styles.container} className={'discussion-item'}>
+			<div style={[styles.container, this.state.mounting ? {opacity: 0, transform: 'scale(0.9)'} : {opacity: 1}]} className={'pt-card pt-elevation-3'}>
 				<Style rules={{
 					'.discussion-item .pt-button-group:not(.pt-vertical) .pt-popover-target, .discussion-item .pt-button-group:not(.pt-vertical) .pt-tether-target': { float: 'none' },
 				}} />
 
+				<div style={styles.topSection}>
 				{this.state.openEditor !== 'title' &&
 					<h3>
 						{discussion.title}
@@ -278,8 +284,12 @@ export const PubDiscussion = React.createClass({
 						</div>
 					);
 				})}
-
-				<hr />
+				</div>
+				<div style={styles.bottomSection}>
+					<div style={styles.bottomFade}></div>
+					<input style={{ width: '100%' }} className={'pt-input'} type={'text'} placeholder={'Reply to discussion'} />
+				</div>
+				{/*<hr />
 
 				<form onSubmit={this.createSubmit}>
 					<h3>Reply</h3>
@@ -299,7 +309,7 @@ export const PubDiscussion = React.createClass({
 
 					<div style={styles.errorMessage}>{errorMessage}</div>
 
-				</form>
+				</form>*/}
 			</div>
 		);
 	}
@@ -307,9 +317,59 @@ export const PubDiscussion = React.createClass({
 
 export default Radium(PubDiscussion);
 
+// <div style={{height: 'calc(100% - 150px)', width: '100%', backgroundColor: 'orange', overflow: 'hidden', overflowY: 'scroll', position: 'relative'}}>
+// 	<p>Hey so this is a thing about cats and dogs.</p>
+// 	<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+// 	<p>Hey so this is a thing about cats and dogs.</p>
+// 	<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+// 	<p>Hey so this is a thing about cats and dogs.</p>
+// 	<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+// 	<p>Hey so this is a thing about cats and dogs.</p>
+// 	<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+// 	<p>Hey so this is a thing about cats and dogs.</p>
+// 	<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+// 	<p>Hey so this is a thing about cats and dogs.</p>
+// 	<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+// 	<p>Hey so this is a thing about cats and dogs.</p>
+// 	<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+// 	<p>Hey so this is a thing about cats and dogs.</p>
+// 	<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+	
+// </div>
+
+// <div style={{height: '100px', width: '100%', backgroundColor: 'red', position: 'relative'}}>
+// 	<div style={styles.bottomFade}></div>
+// </div>
 styles = {
 	container: {
-		
+		padding: 0,
+		transition: '.1s linear opacity, .1s ease-in-out transform',
+	},
+	topSection: {
+		maxHeight: 'calc(100% - 200px)', 
+		width: '100%', 
+		// backgroundColor: 'orange', 
+		overflow: 'hidden', 
+		overflowY: 'scroll', 
+		position: 'relative',
+		padding: '1em',
+	},
+	bottomSection: {
+		height: '99px', 
+		width: '100%', 
+		// backgroundColor: 'red', 
+		position: 'relative',
+		borderTop: '1px solid #CCC',
+		padding: '1em',
+	},
+	bottomFade: {
+		position: 'absolute',
+		top: '-31px',
+		left: 0,
+		backgroundImage: ' linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%)',
+		width: '100%',
+		height: '30px',
+		zIndex: '2',
 	},
 	discussionItem: {
 		border: '1px solid #CCC',

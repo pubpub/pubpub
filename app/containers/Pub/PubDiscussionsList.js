@@ -152,8 +152,9 @@ export const PubDiscussionsList = React.createClass({
 		);
 
 		return (
+
 			<div style={styles.container}>
-				<form onSubmit={this.filterSubmit}>
+				{/* <form onSubmit={this.filterSubmit}>
 					<input type="text" placeholder={'Filter discussions'} style={styles.input} value={this.state.filter} onChange={this.inputUpdate.bind(this, 'filter')} />
 				</form>
 				
@@ -161,7 +162,7 @@ export const PubDiscussionsList = React.createClass({
 					<DropdownButton content={authorsMenu} title={'Authors'} position={0} />
 					<DropdownButton content={labelMenu} title={'Label'} position={1} />
 					<DropdownButton content={sortMenu} title={'Sort'} position={2} />
-				</div>
+				</div> */}
 				
 				{filteredDiscussions.sort((foo, bar)=> {
 					const fooChildren = foo.children || [];
@@ -197,7 +198,7 @@ export const PubDiscussionsList = React.createClass({
 						})
 					])];
 					return (
-						<div style={styles.discussionItem} key={'discussionItem-' + discussion.id} className={'pt-card pt-elevation-1'}>
+						<div style={styles.discussionItem} key={'discussionItem-' + discussion.id} className={'ptt-card ptt-elevation-1'}>
 							
 							<Link to={{pathname: this.props.pathname, query: { ...this.props.query, discussion: discussion.threadNumber }}} style={styles.discussionTitle}>
 								<span style={styles.threadNumber}>#{discussion.threadNumber}</span>
@@ -229,6 +230,14 @@ export const PubDiscussionsList = React.createClass({
 export default Radium(PubDiscussionsList);
 
 styles = {
+	container: {
+		height: 'calc(100% - 50px)', 
+		width: '100%', 
+		// backgroundColor: 'orange', 
+		overflow: 'hidden', 
+		overflowY: 'scroll', 
+		position: 'relative'
+	},
 	buttonGroup: {
 		marginBottom: '2em',
 	},
@@ -241,8 +250,10 @@ styles = {
 	},
 	discussionItem: {
 		padding: '.5em',
-		backgroundColor: '#f3f3f4',
+		margin: '.5em 0em',
+		// backgroundColor: '#f3f3f4',
 		borderRadius: '1px',
+		textAlign: 'right',
 	},
 	discussionTitle: {
 		fontWeight: 'bold',
