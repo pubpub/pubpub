@@ -10,6 +10,10 @@ body {
 	background-color: green;
 }
 
+.light-background-on-hover:hover {
+	background-color: rgba(167, 182, 194, 0.3);
+}
+
 .verticalNavHover:hover {
 	padding: .15em .5em .15em calc(.5em - 3px) !important;
 	border-left: 3px solid #2C2A2B !important;
