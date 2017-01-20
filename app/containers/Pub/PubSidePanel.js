@@ -17,6 +17,11 @@ export const PubSidePanel = React.createClass({
 			left: 0,
 		};
 	},
+	componentDidMount() {
+		setTimeout(()=> {
+			this.positionContainer();
+		}, 0);
+	},
 
 	componentWillMount() {
 		const events = ['resize', 'scroll', 'touchstart', 'touchmove', 'touchend', 'pageshow', 'load'];
