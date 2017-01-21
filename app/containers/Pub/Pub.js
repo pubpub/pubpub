@@ -9,7 +9,7 @@ import { NonIdealState } from '@blueprintjs/core';
 import PubContent from './PubContent';
 // import PubDocument from './PubDocument';
 import PubHeader from './PubHeader';
-// import PubNav from './PubNav';
+import PubBreadcrumbs from './PubBreadcrumbs';
 import PubContributors from './PubContributors';
 import PubDiffVersions from './PubDiffVersions';
 import PubDiscussion from './PubDiscussion';
@@ -426,114 +426,123 @@ export const Pub = React.createClass({
 					}
 					{(!meta || meta === 'files') &&
 						/*<div style={{ position: 'relative', width: '100%' }}>*/
-						<div id={'content-wrapper'} style={{ position: 'relative', width: '100%' }}>
-							
-							<div style={(meta !== 'files' || this.props.params.filename) ? styles.left : {}}>
-								<PubContent
-									version={currentVersion}
-									pub={pub}
-									params={this.props.params}
-									query={query}
-									userAccessToken={userAccessToken}
-									userName={userName}
-									isLoading={this.props.pubData.versionsLoading}
-									error={this.props.pubData.versionsError}
-									dispatch={this.props.dispatch} />
-							</div>
-							{(meta !== 'files' || this.props.params.filename) &&
-								<div style={styles.rightPanel}>
-									<PubSidePanel parentId={'content-wrapper'}>
-										{/*<div style={{height: '100%', width: '100%', backgroundColor: 'blue', position: 'relative'}}>*/}
-										<div style={{height: '100%', width: '100%', position: 'relative'}}>
-											{/*<div style={{padding: '10px 0px', height: '50px', width: '100%', backgroundColor: 'green'}}>*/}
-											<div style={{padding: '10px 0px', height: '50px', width: '100%'}}>
-												<div style={styles.panelButtons}>
-													{!panel && !queryDiscussion &&
-														<div>
-															{false &&
-																<div className="pt-button-group" style={styles.panelButtonGroup}>
-																	<Link to={{ pathname: pathname, query: { ...query, panel: 'reviewers' } }} className="pt-button">Invite Reviewer</Link>
-																	<Link to={{ pathname: pathname, query: { ...query, panel: 'reviewers' } }} className="pt-button">{invitedReviewers.length}</Link>
-																</div>
-															}
-				
-															<Link to={{ pathname: pathname, query: { ...query, panel: 'new' } }} className="pt-button pt-intent-primary pt-minimal pt-icon-add">New Discussion</Link>
-															<button role={'button'} className={'pt-button pt-minimal pt-icon-filter-list'}>Filter</button>
-														</div>
-													}
-				
-													{(!!panel || !!queryDiscussion) &&
-														<button type="button" className="pt-button pt-intent-primary pt-minimal" onClick={this.goBack}>
-															<span className="pt-icon-standard pt-icon-chevron-left" />
-															Back
-														</button>
-													}
-												</div>
-											</div>
 
-											{panel === 'new' &&
-												<PubDiscussionsNew
-													discussionsData={discussionsData}
-													pub={pub}
-													isLoading={this.props.pubData.discussionsLoading}
-													error={this.props.pubData.discussionsError}
-													pathname={pathname}
-													query={query}
-													dispatch={this.props.dispatch} />
-											}
-											{!panel && !queryDiscussion &&
-												<PubDiscussionsList
-													discussionsData={discussionsData}
-													pub={pub}
-													pathname={pathname}
-													query={query}
-													dispatch={this.props.dispatch} />
-											}
-											{!!queryDiscussion &&
-												<PubDiscussion
-													discussion={activeDiscussion}
-													pub={pub}
-													accountId={accountId}
-													isLoading={this.props.pubData.discussionsLoading}
-													error={this.props.pubData.discussionsError}
-													pathname={pathname}
-													query={query}
-													dispatch={this.props.dispatch} />
-											}
+						<div>
+							<PubBreadcrumbs 
+								pub={pub}
+								version={currentVersion}
+								params={this.props.params}
+								query={query} />
 
-											{/*<div style={{height: 'calc(100% - 150px)', width: '100%', backgroundColor: 'orange', overflow: 'hidden', overflowY: 'scroll', position: 'relative'}}>
-												<p>Hey so this is a thing about cats and dogs.</p>
-												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-												<p>Hey so this is a thing about cats and dogs.</p>
-												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-												<p>Hey so this is a thing about cats and dogs.</p>
-												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-												<p>Hey so this is a thing about cats and dogs.</p>
-												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-												<p>Hey so this is a thing about cats and dogs.</p>
-												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-												<p>Hey so this is a thing about cats and dogs.</p>
-												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-												<p>Hey so this is a thing about cats and dogs.</p>
-												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-												<p>Hey so this is a thing about cats and dogs.</p>
-												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-												
-											</div>
-
-											<div style={{height: '100px', width: '100%', backgroundColor: 'red', position: 'relative'}}>
-												<div style={styles.bottomFade}></div>
-											</div>*/}
-										</div>
-									</PubSidePanel>
-									
-									
-											
+							<div id={'content-wrapper'} style={{ position: 'relative', width: '100%' }}>
 								
-									
+								<div style={(meta !== 'files' || this.props.params.filename) ? styles.left : {}}>
+									<PubContent
+										version={currentVersion}
+										pub={pub}
+										params={this.props.params}
+										query={query}
+										userAccessToken={userAccessToken}
+										userName={userName}
+										isLoading={this.props.pubData.versionsLoading}
+										error={this.props.pubData.versionsError}
+										dispatch={this.props.dispatch} />
 								</div>
-							}
-							
+								{(meta !== 'files' || this.props.params.filename) &&
+									<div style={styles.rightPanel}>
+										<PubSidePanel parentId={'content-wrapper'}>
+											{/*<div style={{height: '100%', width: '100%', backgroundColor: 'blue', position: 'relative'}}>*/}
+											<div style={{height: '100%', width: '100%', position: 'relative'}}>
+												{/*<div style={{padding: '10px 0px', height: '50px', width: '100%', backgroundColor: 'green'}}>*/}
+												<div style={{padding: '10px 0px', height: '50px', width: '100%'}}>
+													<div style={styles.panelButtons}>
+														{!panel && !queryDiscussion &&
+															<div>
+																{false &&
+																	<div className="pt-button-group" style={styles.panelButtonGroup}>
+																		<Link to={{ pathname: pathname, query: { ...query, panel: 'reviewers' } }} className="pt-button">Invite Reviewer</Link>
+																		<Link to={{ pathname: pathname, query: { ...query, panel: 'reviewers' } }} className="pt-button">{invitedReviewers.length}</Link>
+																	</div>
+																}
+					
+																<Link to={{ pathname: pathname, query: { ...query, panel: 'new' } }} className="pt-button pt-intent-primary pt-minimal pt-icon-add">New Discussion</Link>
+																<button role={'button'} className={'pt-button pt-minimal pt-icon-filter-list'}>Filter</button>
+															</div>
+														}
+					
+														{(!!panel || !!queryDiscussion) &&
+															<button type="button" className="pt-button pt-intent-primary pt-minimal" onClick={this.goBack}>
+																<span className="pt-icon-standard pt-icon-chevron-left" />
+																Back
+															</button>
+														}
+													</div>
+												</div>
+
+												{panel === 'new' &&
+													<PubDiscussionsNew
+														discussionsData={discussionsData}
+														pub={pub}
+														isLoading={this.props.pubData.discussionsLoading}
+														error={this.props.pubData.discussionsError}
+														pathname={pathname}
+														query={query}
+														dispatch={this.props.dispatch} />
+												}
+												{!panel && !queryDiscussion &&
+													<PubDiscussionsList
+														discussionsData={discussionsData}
+														pub={pub}
+														pathname={pathname}
+														query={query}
+														dispatch={this.props.dispatch} />
+												}
+												{!!queryDiscussion &&
+													<PubDiscussion
+														discussion={activeDiscussion}
+														pub={pub}
+														accountId={accountId}
+														isLoading={this.props.pubData.discussionsLoading}
+														error={this.props.pubData.discussionsError}
+														pathname={pathname}
+														query={query}
+														dispatch={this.props.dispatch} />
+												}
+
+												{/*<div style={{height: 'calc(100% - 150px)', width: '100%', backgroundColor: 'orange', overflow: 'hidden', overflowY: 'scroll', position: 'relative'}}>
+													<p>Hey so this is a thing about cats and dogs.</p>
+													<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+													<p>Hey so this is a thing about cats and dogs.</p>
+													<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+													<p>Hey so this is a thing about cats and dogs.</p>
+													<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+													<p>Hey so this is a thing about cats and dogs.</p>
+													<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+													<p>Hey so this is a thing about cats and dogs.</p>
+													<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+													<p>Hey so this is a thing about cats and dogs.</p>
+													<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+													<p>Hey so this is a thing about cats and dogs.</p>
+													<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+													<p>Hey so this is a thing about cats and dogs.</p>
+													<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+													
+												</div>
+
+												<div style={{height: '100px', width: '100%', backgroundColor: 'red', position: 'relative'}}>
+													<div style={styles.bottomFade}></div>
+												</div>*/}
+											</div>
+										</PubSidePanel>
+										
+										
+												
+									
+										
+									</div>
+								}
+								
+							</div>
 						</div>
 						
 					}

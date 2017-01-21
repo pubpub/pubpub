@@ -243,7 +243,7 @@ export const PubContent = React.createClass({
 
 				{/* Breadcrumbs */}
 				{/* Shown as long as there are files */}
-				{!!files.length && files.length > 1 &&
+				{/*!!files.length && files.length > 1 &&
 					<div style={{ marginBottom: '1em' }}>
 						{meta !== 'files' && !routeFilename &&
 							<ul className="pt-breadcrumbs">
@@ -263,7 +263,7 @@ export const PubContent = React.createClass({
 							</ul>
 						}
 					</div>
-				}
+				*/}
 
 				{/* Uploading Section */}
 				{this.state.uploading &&

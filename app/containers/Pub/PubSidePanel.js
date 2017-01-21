@@ -48,7 +48,10 @@ export const PubSidePanel = React.createClass({
 				bottom: Math.max(0, window.innerHeight - boundingRect.bottom),
 				width: boundingRect.width * 0.35,
 				left: boundingRect.left + (boundingRect.width * 0.65),
+				right: 0,
 				position: 'fixed',
+				height: 'auto',
+				backfaceVisibility: 'hidden',
 			})
 			: this.setState({
 				top: 0,
@@ -57,6 +60,7 @@ export const PubSidePanel = React.createClass({
 				left: undefined,
 				right: 0,
 				position: 'absolute',
+				height: '100vh',
 			});
 	},
 

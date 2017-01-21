@@ -53,14 +53,14 @@ export const PubHeader = React.createClass({
 
 		let headerImage;
 		// headerImage = 'http://www.hotel-r.net/im/hotel/au/naturescape-23.jpg';
-		// headerImage = 'http://www.wallpaperun.com/wp-content/uploads/2016/02/Galaxy-Wallpapers-Cool-K1N.jpg';
+		headerImage = 'http://www.wallpaperun.com/wp-content/uploads/2016/02/Galaxy-Wallpapers-Cool-K1N.jpg';
 		// headerImage = 'http://www.jpl.nasa.gov/images/msl/20140203/pia17931-640.jpg';
 		// headerImage = 'https://i.ytimg.com/vi/LJb0VAcK6N0/maxresdefault.jpg';
 		// headerImage = 'http://wallpapercave.com/wp/fRYYDpF.jpg';
 		// headerImage = 'http://www.homebusinessandfamilylife.com/admin/slide/1474636405unnamed.jpg';
 		// headerImage = 'http://i.imgur.com/Zpx3pcV.jpg';
 		headerImage = 'http://ellarow.com/i/2017/01/elephant-black-and-white-wallpapers-picture.jpg';
-		headerImage = '';
+		// headerImage = '';
 
 		return (
 			<div style={styles.container}>
@@ -245,7 +245,7 @@ styles = {
 	content: {
 		maxWidth: '1200px',
 		margin: '0 auto',
-		padding: '80px 2em',
+		padding: '50px 2em',
 		position: 'relative',
 		zIndex: 3,
 	},

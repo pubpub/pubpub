@@ -238,7 +238,7 @@ export default Radium(PubVersions);
 
 styles = {
 	container: {
-		padding: '1.5em',
+		padding: '2em 0em',
 	},
 	noMargin: {
 		margin: 0,
