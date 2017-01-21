@@ -16,6 +16,7 @@ export const PubNav = React.createClass({
 		accountId: PropTypes.number,
 		preservedQuery: PropTypes.object,
 		currentVersion: PropTypes.object,
+		hasImage: PropTypes.bool,
 		meta: PropTypes.string,
 		pathname: PropTypes.string,
 		query: PropTypes.object,
@@ -65,31 +66,47 @@ export const PubNav = React.createClass({
 				to: { pathname: '/pub/' + pub.slug + '/journals', query: preservedQuery },
 				active: meta === 'journals'
 			},
+			{
+				icon: 'pt-icon-cog',
+				title: 'Settings',
+				subtitle: `${pubFeatures.length} featuring`,
+				to: { pathname: '/pub/' + pub.slug + '/settings', query: preservedQuery },
+				active: meta === 'settings'
+			},
 		];
 		console.log(navItems);
 		return (
-			<div style={styles.container}>
-
+			<div style={styles.container} className={'button-wrapper'}>
+				<div style={styles.content} className={'pt-button-group pt-minimal pt-fill'}>
 				
 					{navItems.map((navItem, index)=> {
 						return (
-							<Link to={navItem.to} style={styles.navItemWrapper(navItems.length)} key={`navItem-${index}`} className={'light-background-on-hover'}>
-								<div style={styles.navItem}>
-									{index !== (navItems.length - 1) &&
-										<div style={styles.navSeparator} />
-									}
-									<div style={[styles.navTitle, navItem.active && styles.navTitleActive]}>
-										<span style={styles.navIcon} className={'pt-icon-standard ' + navItem.icon} /> {navItem.title}
-									</div>
-									<div style={styles.navSubtitle}>
-										{navItem.subtitle}
-									</div>
-								</div>
+							<Link to={navItem.to} className={'pt-button ' + navItem.icon} style={styles.navItemWrapper(navItems.length, navItem.active)} key={`navItem-${index}`}>
+								{navItem.title}
+								{navItem.active &&
+									<div style={styles.bottomBorder(this.props.hasImage)} />
+								}
 							</Link>
 						);
 					})}
+				</div>
 			</div>
 		);
+
+		/*<Link to={navItem.to} style={styles.navItemWrapper(navItems.length, navItem.active)} key={`navItem-${index}`} className={'light-background-on-hover'}>
+			<div style={styles.navItem}>
+				{index !== (navItems.length - 1) &&
+					<div style={styles.navSeparator} />
+				}
+				<div style={[styles.navTitle, navItem.active && styles.navTitleActive]}>
+					<span style={styles.navIcon} className={'pt-icon-standard ' + navItem.icon} /> {navItem.title}
+				</div>
+				<div style={styles.navSubtitle}>
+					{navItem.subtitle}
+				</div>
+				<div style={styles.navSeparatorRight} />
+			</div>
+		</Link>*/
 
 		// return (
 		// 	<div style={styles.container}>
@@ -110,24 +127,44 @@ export default Radium(PubNav);
 
 styles = {
 	container: {
+		// borderBottom: '1px solid #f3f3f4',
+		// padding: '10px 0em',
+		// marginBottom: '40px',
+	},
+	content: {
 		width: '100%',
 		maxWidth: '1200px',
 		margin: '0 auto',
-		padding: '10px 0em 30px',
-
-
+		padding: '0em 2em',
 	},
-	navItemWrapper: (count)=> {
+	navItemWrapper: (count, isActive)=> {
 		return {
-			position: 'relative',
-			display: 'inline-block',
-			width: `calc(${100 / count}% - 4px)`,
+			// position: 'relative',
+			// display: 'inline-block',
+			// width: `calc(${100 / count}% - 4px)`,
 			// paddingRight: '3em',
 			// marginRight: '3em',
-			padding: '10px 2em',
-			margin: '0px 2px',
-			cursor: 'pointer',
-			textDecoration: 'none',
+			// padding: '10px 2em',
+			// margin: '0px 2px',
+			// cursor: 'pointer',
+			// textDecoration: 'none',
+			// backgroundColor: isActive ? 'rgba(167, 182, 194, 0.18)' : '',
+			fontWeight: 200,
+			position: 'relative',
+			// top: 1, // To get active line to overlap the bottom border
+			// border: 0,
+			// borderRadius: '0px !important',
+			// boxShadow: isActive ? 'inset 0px -3px 0px -1px rgb(92, 112, 128)' : '',
+		};
+	},
+	bottomBorder: (hasImage)=> {
+		return {
+			position: 'absolute',
+			bottom: -1,
+			left: 0,
+			width: '100%',
+			height: '2px',
+			backgroundColor: hasImage ? '#BFCCD6' : 'rgb(92, 112, 128)',
 		};
 	},
 	navItem: {
@@ -139,18 +176,29 @@ styles = {
 		top: '15%',
 		bottom: '15%',
 		backgroundColor: 'rgba(16, 22, 26, 0.15)',
+		left: -2,
+	},
+	navSeparatorRight: {
+		position: 'absolute',
+		width: '1px',
+		top: '15%',
+		bottom: '15%',
+		backgroundColor: 'rgba(16, 22, 26, 0.15)',
 		right: -2,
 	},
 	navIcon: {
 		color: '#5c7080',
 	},
 	navTitle: {
-		paddingBottom: '0.5em',
+		textAlign: 'center',
+		fontWeight: '200',
 	},
-	navTitleActive: {
-		fontWeight: 'bold',
-	},
+	// navTitleActive: {
+	// 	fontWeight: 'bold',
+	// },
 	navSubtitle: {
-		color: '#738694'
+		paddingTop: '0.5em',
+		color: '#738694',
+		display: 'none',
 	},
 };

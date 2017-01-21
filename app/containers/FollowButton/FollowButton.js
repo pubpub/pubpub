@@ -83,12 +83,12 @@ export const FollowButton = React.createClass({
 		return (
 			<div className="pt-button-group pt-minimal">
 				{!isFollowing && isLoggedIn &&
-					<a role="button" className="pt-button pt-icon-new-person" onClick={this.createFollow.bind(this, followId, mode)}>Follow</a>
+					<a role="button" className="pt-button pt-icon-new-person" onClick={this.createFollow.bind(this, followId, mode)}>Follow <span style={{textTransform: 'capitalie'}}>{mode}</span></a>
 				}
 
 				{!isFollowing && !isLoggedIn &&
 					<Tooltip content="Must be logged in to Follow" position={Position.BOTTOM}>
-						<Link to={'/login'} className="pt-button pt-icon-new-person">Follow</Link>
+						<Link to={'/login'} className="pt-button pt-icon-new-person">Follow <span style={{textTransform: 'capitalie'}}>{mode}</span></Link>
 					</Tooltip>
 				}
 

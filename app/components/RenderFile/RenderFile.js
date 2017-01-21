@@ -21,7 +21,7 @@ export const RenderFile = React.createClass({
 		switch (fileType) {
 		case 'text/markdown': 
 			return (
-				<div id={'content-wrapper'} className={'pub-body'} style={styles.pubBody}>
+				<div id={'content-wrapper'} className={'pub-body'} style={[styles.contentWrapper, styles.pubBody]}>
 					<Highlighter />
 					<RenderFileMarkdown file={file} allFiles={this.props.allFiles} />
 				</div>
@@ -33,7 +33,7 @@ export const RenderFile = React.createClass({
 			return <img alt={file.name} src={file.url} style={{ maxWidth: '100%' }} />;
 		case 'application/pdf':
 			return (
-				<div id={'content-wrapper'}>
+				<div id={'content-wrapper'} style={styles.contentWrapper}>
 					<Highlighter />
 					<RenderFilePDF file={file} />
 				</div>
@@ -62,14 +62,17 @@ export const RenderFile = React.createClass({
 export default Radium(RenderFile);
 
 styles = {
-	container: {
+	contentWrapper: {
 		position: 'relative',
 	},
 	pubBody: {
 		// padding: '0em 1.25em',
-		fontFamily: 'serif',
-		lineHeight: '1.6em',
-		fontSize: '1.2em',
+		fontFamily: 'Merriweather',
+		fontWeight: 'light',
+		fontSize: '14px',
+		lineHeight: '24px',
+		// lineHeight: '1.6em',
+		// fontSize: '1.2em',
 		color: '#333',
 		maxWidth: '700px',
 	},

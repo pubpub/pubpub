@@ -49,7 +49,7 @@ export const Highlighter = React.createClass({
 	onMouseUp: function(event) {
 		const container = document.getElementById('content-wrapper');
 		const offsetTop = container.parentNode.style.top ? parseInt(container.parentNode.style.top, 10) : 0;
-		const yLocOffset = document.body.scrollTop + document.documentElement.scrollTop + container.scrollTop - offsetTop - 32;
+		const yLocOffset = document.body.scrollTop + document.documentElement.scrollTop + container.scrollTop - offsetTop - 32 - 330;
 		
 		const selection = Rangy.getSelection();
 		if (selection.isCollapsed) { return this.setState({ popupVisible: false }); }

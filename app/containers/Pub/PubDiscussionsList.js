@@ -283,7 +283,8 @@ styles = {
 		verticalAlign: 'middle',
 		marginLeft: '-8px',
 		borderRadius: '16px',
-		boxShadow: '0px 0px 1px 0px #000',
+		// boxShadow: '0px 0px 1px 0px #000',
+		boxShadow: '0px 0px 0px px #fff',
 		position: 'relative',
 	},
 	input: {

@@ -9,7 +9,7 @@ import { NonIdealState } from '@blueprintjs/core';
 import PubContent from './PubContent';
 // import PubDocument from './PubDocument';
 import PubHeader from './PubHeader';
-import PubNav from './PubNav';
+// import PubNav from './PubNav';
 import PubContributors from './PubContributors';
 import PubDiffVersions from './PubDiffVersions';
 import PubDiscussion from './PubDiscussion';
@@ -295,11 +295,14 @@ export const Pub = React.createClass({
 				<PubHeader 
 					pub={pub}
 					accountId={accountId}
+					preservedQuery={preservedQuery}
+					currentVersion={currentVersion}
+					meta={meta}
 					pathname={pathname}
 					query={query}
 					dispatch={this.props.dispatch} />
 
-				<PubNav
+				{/*<PubNav
 					pub={pub}
 					accountId={accountId}
 					preservedQuery={preservedQuery}
@@ -307,7 +310,7 @@ export const Pub = React.createClass({
 					meta={meta}
 					pathname={pathname}
 					query={query}
-					dispatch={this.props.dispatch} />
+					dispatch={this.props.dispatch} />*/}
 
 				{/* false && isInvitedReviewer &&
 					<div className={'pt-callout'}>
@@ -455,6 +458,7 @@ export const Pub = React.createClass({
 															}
 				
 															<Link to={{ pathname: pathname, query: { ...query, panel: 'new' } }} className="pt-button pt-intent-primary pt-minimal pt-icon-add">New Discussion</Link>
+															<button role={'button'} className={'pt-button pt-minimal pt-icon-filter-list'}>Filter</button>
 														</div>
 													}
 				
@@ -595,7 +599,7 @@ styles = {
 	content: {
 		maxWidth: '1200px',
 		margin: '0 auto',
-		padding: '0em 4em'
+		padding: '0em 2em'
 	},
 	left: {
 		marginRight: '35%',

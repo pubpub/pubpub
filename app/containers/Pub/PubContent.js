@@ -244,7 +244,7 @@ export const PubContent = React.createClass({
 				{/* Breadcrumbs */}
 				{/* Shown as long as there are files */}
 				{!!files.length && files.length > 1 &&
-					<div style={{ marginBottom: '1em', position: 'absolute', top: '-2em', left: '-2em' }}>
+					<div style={{ marginBottom: '1em' }}>
 						{meta !== 'files' && !routeFilename &&
 							<ul className="pt-breadcrumbs">
 								<li><Link to={{ pathname: '/pub/' + this.props.pub.slug + '/files', query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> {files.length} Files</Link></li>
@@ -378,6 +378,7 @@ export default Radium(PubContent);
 styles = {
 	container: {
 		// padding: '0em 1.25em 1.25em',
+		paddingTop: '10px',
 	},
 	topButtons: {
 		float: 'right',

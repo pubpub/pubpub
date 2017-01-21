@@ -127,7 +127,7 @@ export const PubDiscussion = React.createClass({
 		const discussions = [discussion, ...children];
 
 		return (
-			<div style={[styles.container, this.state.mounting ? {opacity: 0, transform: 'scale(0.9)'} : {opacity: 1}]} className={'pt-card pt-elevation-3'}>
+			<div style={[styles.container, this.state.mounting ? {opacity: 0, transform: 'scale(0.9)'} : {opacity: 1}]} className={'pt-card pt-elevation-2'}>
 				<Style rules={{
 					'.discussion-item .pt-button-group:not(.pt-vertical) .pt-popover-target, .discussion-item .pt-button-group:not(.pt-vertical) .pt-tether-target': { float: 'none' },
 				}} />
