@@ -50,7 +50,8 @@ export const PubNav = React.createClass({
 				title: `${versions.length} Versions`,
 				subtitle: `Current: ${dateFormat(currentVersion.createdAt, 'mmm dd, yyyy')}`,
 				to: { pathname: '/pub/' + pub.slug + '/versions', query: preservedQuery },
-				active: meta === 'versions'
+				active: meta === 'versions',
+				hidden: !currentVersion.files,
 			},
 			{
 				icon: 'pt-icon-person',
@@ -64,7 +65,8 @@ export const PubNav = React.createClass({
 				title: `${pubFeatures.length} Journals`,
 				subtitle: `${pubFeatures.length} featuring`,
 				to: { pathname: '/pub/' + pub.slug + '/journals', query: preservedQuery },
-				active: meta === 'journals'
+				active: meta === 'journals',
+				hidden: !currentVersion.files,
 			},
 			{
 				icon: 'pt-icon-cog',

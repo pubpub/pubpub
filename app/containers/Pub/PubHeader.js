@@ -69,7 +69,7 @@ export const PubHeader = React.createClass({
 		headerImage = 'https://static.vecteezy.com/system/resources/previews/000/111/495/original/abstract-colored-cubes-background-vector.jpg';
 		headerImage = '';
 		const hasHeaderImage = !!pub.headerImage;
-		const useLightText = hasHeaderImage ? true : contrastText(pub.headerColor) === '#ffffff';
+		const useLightText = hasHeaderImage ? true : contrastText(pub.headerColor || '#f3f3f4') === '#ffffff';
 
 		// LightHover rgba(167, 182, 194, 0.3)
 		return (

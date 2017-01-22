@@ -206,22 +206,24 @@ export const PubContent = React.createClass({
 
 				{/* No files associated with Pub yet*/}
 				{!files.length && !this.state.uploading && this.props.pub.canEdit &&
-					<NonIdealState
-						action={
-							<div>
-								<label className="pt-button" htmlFor={'add-files'}>
-									Upload Files
-									<input type="file" id={'add-files'} multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
-								</label>
-								<span style={{ width: '1em', height: '1em', display: 'inline-block' }} />
-								<a className="pt-button" tabIndex="0" role="button" >Open Editor</a>
+					<div style={{ paddingTop: '2em'}}>
+						<NonIdealState
+							action={
+								<div>
+									<label className="pt-button" htmlFor={'add-files'}>
+										Upload Files
+										<input type="file" id={'add-files'} multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
+									</label>
+									<span style={{ width: '1em', height: '1em', display: 'inline-block' }} />
+									<a className="pt-button" tabIndex="0" role="button" >Open Editor</a>
 
 
-							</div>
-						}
-						description={'There are no files associated with this pub yet.'}
-						title={'No Files'}
-						visual={'folder-open'} />
+								</div>
+							}
+							description={'There are no files associated with this pub yet.'}
+							title={'No Files'}
+							visual={'folder-open'} />
+					</div>
 				}
 
 				{/* Upload and Editor Buttons */}

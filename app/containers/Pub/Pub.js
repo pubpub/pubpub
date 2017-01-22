@@ -436,7 +436,7 @@ export const Pub = React.createClass({
 
 							<div id={'content-wrapper'} style={{ position: 'relative', width: '100%' }}>
 								
-								<div style={(meta !== 'files' || this.props.params.filename) ? styles.left : {}}>
+								<div style={currentVersion.files && (meta !== 'files' || this.props.params.filename) ? styles.left : {}}>
 									<PubContent
 										version={currentVersion}
 										pub={pub}
@@ -448,7 +448,7 @@ export const Pub = React.createClass({
 										error={this.props.pubData.versionsError}
 										dispatch={this.props.dispatch} />
 								</div>
-								{(meta !== 'files' || this.props.params.filename) &&
+								{currentVersion.files && (meta !== 'files' || this.props.params.filename) &&
 									<div style={styles.rightPanel}>
 										<PubSidePanel parentId={'content-wrapper'}>
 											{/*<div style={{height: '100%', width: '100%', backgroundColor: 'blue', position: 'relative'}}>*/}

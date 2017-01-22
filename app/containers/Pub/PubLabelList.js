@@ -342,7 +342,7 @@ styles = {
 	},
 	label: {
 		backgroundColor: '#CED9E0', 
-		margin: '0em .25em 0em 0em', 
+		margin: '0em .25em 0.25em 0em', 
 		textDecoration: 'none',
 	},
 	editLabelsButton: {
@@ -350,7 +350,7 @@ styles = {
 		boxShadow: 'inset 0px 0px 0px 1px #BBB',
 		color: '#888',
 		cursor: 'pointer',
-		margin: '0em .25em 0em 0em',
+		margin: '0em .25em 0.25em 0em',
 	},
 	editLabelsButtonIcon: {
 		color: '#888',
