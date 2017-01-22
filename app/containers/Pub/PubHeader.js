@@ -29,6 +29,7 @@ export const PubHeader = React.createClass({
 		const pathname = this.props.pathname;
 
 		const contributors = pub.contributors || [];
+		const versions = pub.versions || [];
 		const followers = pub.followers || [];
 		const pubFeatures = pub.pubFeatures || [];
 		
@@ -51,6 +52,11 @@ export const PubHeader = React.createClass({
 			return !label.userId && !label.journalId && !label.pubId;
 		});
 
+		const pubDOI = versions.reduce((previous, current)=> {
+			if (current.doi) { return current.doi; }
+			return previous;
+		}, undefined);
+
 		let headerImage;
 		// headerImage = 'http://www.hotel-r.net/im/hotel/au/naturescape-23.jpg';
 		headerImage = 'http://www.wallpaperun.com/wp-content/uploads/2016/02/Galaxy-Wallpapers-Cool-K1N.jpg';
@@ -60,26 +66,40 @@ export const PubHeader = React.createClass({
 		// headerImage = 'http://www.homebusinessandfamilylife.com/admin/slide/1474636405unnamed.jpg';
 		// headerImage = 'http://i.imgur.com/Zpx3pcV.jpg';
 		headerImage = 'http://ellarow.com/i/2017/01/elephant-black-and-white-wallpapers-picture.jpg';
-		// headerImage = '';
+		headerImage = 'https://static.vecteezy.com/system/resources/previews/000/111/495/original/abstract-colored-cubes-background-vector.jpg';
+		headerImage = '';
+		const hasHeaderImage = !!pub.headerImage;
+		const useLightText = hasHeaderImage ? true : contrastText(pub.headerColor) === '#ffffff';
 
+		// LightHover rgba(167, 182, 194, 0.3)
 		return (
 			<div style={styles.container}>
 				<Style rules={{
-					'.button-wrapper .pt-button .pt-icon, .button-wrapper .pt-button .pt-icon-standard, .button-wrapper .pt-button .pt-icon-large, .button-wrapper .pt-button[class*="pt-icon-"]::before': { color: headerImage ? '#BFCCD6' : '#5c7080' },
-					'.button-wrapper .pt-button-group.pt-minimal .pt-button': { color: headerImage ? '#f5f8fa' : 'inherit' },
-					'.button-wrapper .pt-button-group.pt-minimal .pt-button::after': { background: headerImage ? 'rgba(255, 255, 255, 0.15)' : 'rgba(16, 22, 26, 0.15)' },
-					'.button-wrapper .pt-button-group.pt-minimal .pt-button:hover': { color: headerImage ? '#f5f8fa' : '#182026' },
+					'.button-wrapper .pt-button .pt-icon, .button-wrapper .pt-button .pt-icon-standard, .button-wrapper .pt-button .pt-icon-large, .button-wrapper .pt-button[class*="pt-icon-"]::before': { color: useLightText ? '#BFCCD6' : '#5c7080' },
+					'.button-wrapper .pt-button-group .pt-button': { color: useLightText ? '#f5f8fa' : 'inherit', minHeight: '24px', lineHeight: '24px' },
+					'.button-wrapper .pt-button-group .pt-button::after': { background: useLightText ? 'rgba(255, 255, 255, 0.15)' : 'rgba(16, 22, 26, 0.15)' },
+					'.button-wrapper .pt-button-group .pt-button:hover': { color: useLightText ? '#f5f8fa' : '#182026' },
+					'.button-wrapper .pt-button-group:not(.pt-minimal) .pt-button': { boxShadow: '0px 0px 0px white', backgroundColor: 'transparent', background: 'transparent', border: '1px solid #fff', borderColor: useLightText ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.25)' },
+					'.button-wrapper .pt-button-group:not(.pt-minimal) .pt-button:hover': { backgroundColor: 'rgba(167, 182, 194, 0.3)' },
+
+					// '.button-wrapper .pt-minimal .pt-button .pt-icon, .button-wrapper .pt-minimal .pt-button .pt-icon-standard, .button-wrapper .pt-minimal .pt-button .pt-icon-large, .button-wrapper .pt-minimal .pt-button[class*="pt-icon-"]::before': { color: useLightText ? '#BFCCD6' : '#5c7080' },
+					// '.button-wrapper .pt-minimal.pt-button-group .pt-button': { color: useLightText ? '#f5f8fa' : 'inherit'},
+					// '.button-wrapper .pt-button-group .pt-button': { minHeight: '24px', lineHeight: '24px' },
+					// '.button-wrapper .pt-minimal.pt-button-group .pt-button::after': { background: useLightText ? 'rgba(255, 255, 255, 0.15)' : 'rgba(16, 22, 26, 0.15)' },
+					// '.button-wrapper .pt-minimal.pt-button-group .pt-button:hover': { color: useLightText ? '#f5f8fa' : '#182026' },					
 				}} />
 
-				{!!headerImage &&
-					<div style={styles.backgroundImage(headerImage)} />
+				{hasHeaderImage &&
+					<div style={styles.backgroundImage(pub.headerImage)} />
 				}
-				<div style={styles.backgroundContainer(!!headerImage)} />
-				{!!headerImage &&
+
+				<div style={styles.backgroundContainer(hasHeaderImage, pub.headerColor)} />
+				
+				{hasHeaderImage &&
 					<div style={styles.backgroundBottomShadow} />
 				}
 				
-				<div style={styles.content}>
+				<div style={styles.content(hasHeaderImage)}>
 
 					{/* ------------ */}
 					{/*  Button Box  */}
@@ -108,26 +128,27 @@ export const PubHeader = React.createClass({
 						</div>*/}
 
 						<div style={styles.buttonWrapper} className={'button-wrapper'}>
-							<div className={'pt-button-group pt-minimal'}>
+							<div className={'pt-button-group'}>
 								<Link to={'/pub/spectral/versions'} className={'pt-button pt-icon-edit'}>Edit Pub</Link>
-								<Link to={'/pub/spectral/versions'} className={'pt-button pt-icon-fork'}>15</Link>
+								{/*<Link to={'/pub/spectral/forks'} className={'pt-button pt-icon-fork'}>15</Link>*/}
+								<Link to={'/pub/spectral/forks'} className={'pt-button'}>15</Link>
+
 								{/*<Link to={'/pub/spectral/versions'} className={'pt-button'}>15</Link>*/}
 							</div>
 						</div>
 
 						<div style={styles.buttonWrapper} className={'button-wrapper'}>
-							<div className={'pt-button-group pt-minimal'}>
-								<Link to={'/pub/spectral/versions'} className={'pt-button pt-icon-bookmark'}>Cite</Link>
-								<Link to={'/pub/spectral/versions'} className={'pt-button'}>10.10281/128G7s</Link>
+							<div className={'pt-button-group'}>
+								<Link to={'/pub/spectral/cite'} className={'pt-button pt-icon-bookmark'}>Cite</Link>
+								{pubDOI &&
+									<a href={'https://doi.org/' + pubDOI} target={'_blank'} className={'pt-button'}>DOI {pubDOI}</a>
+								}
+								
 							</div>
 						</div>
 
 						
-						{/*truepubDOI &&
-							<div style={styles.pubAuthors}>
-								DOI: <a href={'https://doi.org/' + pubDOI} target={'_blank'}>{pubDOI}</a>
-							</div>
-						*/}
+						
 					</div>
 
 					{/* ---------- */}
@@ -164,20 +185,20 @@ export const PubHeader = React.createClass({
 					{/*  Labels  */}
 					{/* ------------ */}
 					<div style={styles.labelsWrapper}>
-						<PubLabelList selectedLabels={globalLabels} pubId={pub.id} rootPubId={pub.id} globalLabels={true} canEdit={pub.canEdit} pathname={pathname} labelStyle={styles.label(!!headerImage)} query={query} dispatch={this.props.dispatch} />
+						<PubLabelList selectedLabels={globalLabels} pubId={pub.id} rootPubId={pub.id} globalLabels={true} canEdit={pub.canEdit} pathname={pathname} labelStyle={styles.label(useLightText)} query={query} dispatch={this.props.dispatch} />
 					</div>
 					
 					{/* ------------ */}
 					{/*    Title     */}
 					{/* ------------ */}
-					<div style={styles.title(!!headerImage)}>
+					<div style={styles.title(useLightText)}>
 						{pub.title}
 					</div>
 
 					{/* ------------ */}
 					{/*   Authors    */}
 					{/* ------------ */}
-					<div style={styles.authorsWrapper(!!headerImage)}>
+					<div style={styles.authorsWrapper(useLightText)}>
 							{contributors.filter((contributor)=>{
 								return contributor.isAuthor === true;
 							}).map((contributor, index, array)=> {
@@ -194,7 +215,7 @@ export const PubHeader = React.createClass({
 						accountId={this.props.accountId}
 						preservedQuery={this.props.preservedQuery}
 						currentVersion={this.props.currentVersion}
-						hasImage={!!headerImage}
+						useLightText={useLightText}
 						meta={this.props.meta}
 						pathname={this.props.pathname}
 						query={this.props.query}
@@ -225,9 +246,9 @@ styles = {
 			zIndex: 1,
 		};
 	},
-	backgroundContainer: (hasImage)=> {
+	backgroundContainer: (hasHeaderImage, headerColor)=> {
 		return {
-			backgroundColor: hasImage ? 'rgba(16, 22, 26, 0.6)' : 'rgba(218, 218, 218, 0.35)',
+			backgroundColor: hasHeaderImage ? 'rgba(16, 22, 26, 0.6)' : headerColor || '#F3F3F4',
 			position: 'absolute',
 			width: '100%',
 			height: '100%',
@@ -242,12 +263,14 @@ styles = {
 		zIndex: 2,
 		backgroundImage: 'linear-gradient(-180deg, rgba(24,32,38,0.00) 78%, #182026 100%)',
 	},
-	content: {
-		maxWidth: '1200px',
-		margin: '0 auto',
-		padding: '50px 2em',
-		position: 'relative',
-		zIndex: 3,
+	content: (hasHeaderImage)=> {
+		return {
+			maxWidth: '1200px',
+			margin: '0 auto',
+			padding: hasHeaderImage ? '100px 2em' : '50px 2em',
+			position: 'relative',
+			zIndex: 3,
+		};
 	},
 	navWrapper: {
 		position: 'relative',
@@ -276,29 +299,29 @@ styles = {
 		marginBottom: '20px', // Equal to height of labels
 		// backgroundColor: 'rgba(125, 255, 0, 0.25)',
 	},
-	label: (hasImage)=> {
+	label: (useLightText)=> {
 		return {
-			color: hasImage ? '#F5F8FA' : '#182026',
+			color: useLightText ? '#F5F8FA' : '#182026',
 			backgroundColor: 'rgba(138, 155, 168, 0.4)',
 		};
 		
 	},
-	title: (hasImage)=> {
+	title: (useLightText)=> {
 		return {
 			fontSize: '2.25em',
-			color: hasImage ? '#FFF' : '#10161A',
+			color: useLightText ? '#FFF' : '#10161A',
 			// letterSpacing: '-1px',
 			fontWeight: '500',
 			marginBottom: '20px'
 		};
 		
 	},
-	authorsWrapper: (hasImage)=> {
+	authorsWrapper: (useLightText)=> {
 		return {
 			// backgroundColor: 'rgba(125, 125, 50, 0.25)',	
 			marginBottom: '20px',
 			fontStyle: 'italic',
-			color: hasImage ? 'rgba(255, 255, 255, 0.7)' : '#5C7080',
+			color: useLightText ? 'rgba(255, 255, 255, 0.7)' : '#5C7080',
 			letterSpacing: '0px',
 			lineHeight: '27px',
 		};
@@ -315,7 +338,7 @@ styles = {
 			
 			width: '35px',
 			borderRadius: '35px',
-			display: 'inline-block',
+			// display: 'inline-block',
 			verticalAlign: 'middle',
 			position: 'relative',
 			zIndex: 2,

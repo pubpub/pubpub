@@ -52,7 +52,8 @@ export function updatePub(pubId, updateData) {
 				description: updateData.description,
 				avatar: updateData.avatar,
 				slug: updateData.slug,
-
+				headerColor: updateData.headerColor,
+				headerImage: updateData.headerImage,
 			})
 		})
 		.then((result) => {

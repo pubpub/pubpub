@@ -81,7 +81,7 @@ export const FollowButton = React.createClass({
 		};
 
 		return (
-			<div className="pt-button-group pt-minimal">
+			<div className="pt-button-group">
 				{!isFollowing && isLoggedIn &&
 					<a role="button" className="pt-button pt-icon-new-person" onClick={this.createFollow.bind(this, followId, mode)}>Follow <span style={{textTransform: 'capitalie'}}>{mode}</span></a>
 				}

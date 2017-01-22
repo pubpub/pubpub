@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import Radium from 'radium';
+import Radium, { Style } from 'radium';
 import { Link } from 'react-router';
 import dateFormat from 'dateformat';
 import { FollowButton } from 'containers';
@@ -16,7 +16,7 @@ export const PubNav = React.createClass({
 		accountId: PropTypes.number,
 		preservedQuery: PropTypes.object,
 		currentVersion: PropTypes.object,
-		hasImage: PropTypes.bool,
+		useLightText: PropTypes.bool,
 		meta: PropTypes.string,
 		pathname: PropTypes.string,
 		query: PropTypes.object,
@@ -71,20 +71,27 @@ export const PubNav = React.createClass({
 				title: 'Settings',
 				subtitle: `${pubFeatures.length} featuring`,
 				to: { pathname: '/pub/' + pub.slug + '/settings', query: preservedQuery },
-				active: meta === 'settings'
+				active: meta === 'settings',
+				hidden: !pub.isAuthor && !pub.canEdit,
 			},
 		];
 		console.log(navItems);
 		return (
-			<div style={styles.container} className={'button-wrapper'}>
+			<div style={styles.container} className={'button-wrapper button-nav'}>
+				<Style rules={{
+					'.button-nav .pt-button-group.pt-minimal .pt-button::after': { margin: '7px 5px' },
+				}} />
+			
 				<div style={styles.content} className={'pt-button-group pt-minimal pt-fill'}>
 				
-					{navItems.map((navItem, index)=> {
+					{navItems.filter((navItem)=> {
+						return !navItem.hidden;
+					}).map((navItem, index)=> {
 						return (
 							<Link to={navItem.to} className={'pt-button ' + navItem.icon} style={styles.navItemWrapper(navItems.length, navItem.active)} key={`navItem-${index}`}>
 								{navItem.title}
 								{navItem.active &&
-									<div style={styles.bottomBorder(this.props.hasImage)} />
+									<div style={styles.bottomBorder(this.props.useLightText)} />
 								}
 							</Link>
 						);
@@ -151,20 +158,21 @@ styles = {
 			// backgroundColor: isActive ? 'rgba(167, 182, 194, 0.18)' : '',
 			fontWeight: 200,
 			position: 'relative',
+			padding: '5px 0px',
 			// top: 1, // To get active line to overlap the bottom border
 			// border: 0,
 			// borderRadius: '0px !important',
 			// boxShadow: isActive ? 'inset 0px -3px 0px -1px rgb(92, 112, 128)' : '',
 		};
 	},
-	bottomBorder: (hasImage)=> {
+	bottomBorder: (useLightText)=> {
 		return {
 			position: 'absolute',
 			bottom: -1,
 			left: 0,
 			width: '100%',
 			height: '2px',
-			backgroundColor: hasImage ? '#BFCCD6' : 'rgb(92, 112, 128)',
+			backgroundColor: useLightText ? '#BFCCD6' : 'rgb(92, 112, 128)',
 		};
 	},
 	navItem: {

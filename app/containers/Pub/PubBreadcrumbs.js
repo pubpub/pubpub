@@ -70,8 +70,8 @@ export default Radium(PubBreadcrumbs);
 
 styles = {
 	container: {
-		marginBottom: '1em',
-		padding: '1em 0em',
+		marginBottom: '2em',
+		padding: '1em 0em 0em',
 		borderBottom: '1px solid #CCC',
 	},
 	versionStatus: {

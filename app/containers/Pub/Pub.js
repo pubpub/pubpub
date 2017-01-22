@@ -206,10 +206,10 @@ export const Pub = React.createClass({
 
 		}, {});
 
-		const pubDOI = versions.reduce((previous, current)=> {
-			if (current.doi) { return current.doi; }
-			return previous;
-		}, undefined);
+		// const pubDOI = versions.reduce((previous, current)=> {
+		// 	if (current.doi) { return current.doi; }
+		// 	return previous;
+		// }, undefined);
 
 		const sortedVersions = versions.sort((foo, bar)=> {
 			// Sort so that least recent is first in array
@@ -408,7 +408,7 @@ export const Pub = React.createClass({
 				{/* ------- */}
 				{/* Content */}
 				{/* ------- */}
-				<div style={styles.content}>
+				<div style={styles.content(meta)}>
 					{meta === 'versions' &&
 						<PubVersions
 							versionsData={versions}
@@ -605,10 +605,12 @@ styles = {
 		padding: '0em',
 		// margin: '0 auto',
 	},
-	content: {
-		maxWidth: '1200px',
-		margin: '0 auto',
-		padding: '0em 2em'
+	content: (meta)=> {
+		return {
+			maxWidth: '1200px',
+			margin: '0 auto',
+			padding: meta === 'files' || meta === undefined ? '0em 2em' : '3em 2em',
+		};
 	},
 	left: {
 		marginRight: '35%',

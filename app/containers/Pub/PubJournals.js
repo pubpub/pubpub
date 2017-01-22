@@ -181,7 +181,7 @@ export default Radium(PubJournals);
 
 styles = {
 	container: {
-		padding: '1.5em',
+		// padding: '1.5em',
 	},
 	section: {
 		margin: '2em 0em',

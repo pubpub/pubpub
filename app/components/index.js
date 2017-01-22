@@ -3,6 +3,7 @@ export ActivityGroup from './ActivityGroup/ActivityGroup';
 export AppFooter from './AppFooter/AppFooter';
 export AppNav from './AppNav/AppNav';
 export AutocompleteBar from './AutocompleteBar/AutocompleteBar';
+export ColorPicker from './ColorPicker/ColorPicker';
 export DropdownButton from './DropdownButton/DropdownButton';
 export FileDiff from './FileDiff/FileDiff';
 export ImageCropper from './ImageCropper/ImageCropper';
