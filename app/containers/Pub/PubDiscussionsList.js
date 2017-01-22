@@ -6,6 +6,7 @@ import { Menu, MenuDivider } from '@blueprintjs/core';
 import { DropdownButton } from 'components';
 import PubLabelList from './PubLabelList';
 import fuzzysearch from 'fuzzysearch';
+import { FormattedRelative } from 'react-intl';
 
 let styles;
 
@@ -152,8 +153,9 @@ export const PubDiscussionsList = React.createClass({
 		);
 
 		return (
+
 			<div style={styles.container}>
-				<form onSubmit={this.filterSubmit}>
+				{/* <form onSubmit={this.filterSubmit}>
 					<input type="text" placeholder={'Filter discussions'} style={styles.input} value={this.state.filter} onChange={this.inputUpdate.bind(this, 'filter')} />
 				</form>
 				
@@ -161,7 +163,7 @@ export const PubDiscussionsList = React.createClass({
 					<DropdownButton content={authorsMenu} title={'Authors'} position={0} />
 					<DropdownButton content={labelMenu} title={'Label'} position={1} />
 					<DropdownButton content={sortMenu} title={'Sort'} position={2} />
-				</div>
+				</div> */}
 				
 				{filteredDiscussions.sort((foo, bar)=> {
 					const fooChildren = foo.children || [];
@@ -197,13 +199,23 @@ export const PubDiscussionsList = React.createClass({
 						})
 					])];
 					return (
-						<div style={styles.discussionItem} key={'discussionItem-' + discussion.id} className={'pt-card pt-elevation-1'}>
+						<div style={styles.discussionItem} key={'discussionItem-' + discussion.id} className={'ptt-card ptt-elevation-1'}>
 							
 							<Link to={{pathname: this.props.pathname, query: { ...this.props.query, discussion: discussion.threadNumber }}} style={styles.discussionTitle}>
 								<span style={styles.threadNumber}>#{discussion.threadNumber}</span>
 								{discussion.title}
 							</Link>
 
+							<div>
+								{!discussion.isPublished && 
+									<span className={'pt-icon-standard pt-icon-lock'} />
+								}
+								<FormattedRelative value={discussion.createdAt} />
+								{discussionAuthors.map((image, imageIndex)=> {
+									return <img src={'https://jake.pubpub.org/unsafe/50x50/' + image} style={[styles.authorImages, {zIndex: discussionAuthors.length - imageIndex}, imageIndex === 0 && {marginLeft: '1em'}]} key={'discussionImage-' + discussion.id + '-' + imageIndex}/>;
+								})}
+							</div>
+							
 							<PubLabelList 
 								allLabels={labelList} 
 								selectedLabels={labels} 
@@ -211,11 +223,9 @@ export const PubDiscussionsList = React.createClass({
 								pathname={this.props.pathname} 
 								query={this.props.query} />
 
-							<div>{!discussion.isPublished && <span className={'pt-icon-standard pt-icon-lock'} />}{dateFormat(discussion.createdAt, 'mmmm dd, yyyy')} | by {author.firstName + ' ' + author.lastName} | Replies: {children.length}</div>
+							
 
-							{discussionAuthors.map((image, imageIndex)=> {
-								return <img src={'https://jake.pubpub.org/unsafe/50x50/' + image} style={styles.authorImages} key={'discussionImage-' + discussion.id + '-' + imageIndex}/>;
-							})}
+							
 							
 						</div>
 					);
@@ -229,6 +239,15 @@ export const PubDiscussionsList = React.createClass({
 export default Radium(PubDiscussionsList);
 
 styles = {
+	container: {
+		// height: 'calc(100% - 50px)', 
+		width: '100%', 
+		// backgroundColor: 'orange', 
+		overflow: 'hidden', 
+		overflowY: 'scroll', 
+		position: 'relative',
+		color: '#738694',
+	},
 	buttonGroup: {
 		marginBottom: '2em',
 	},
@@ -241,12 +260,15 @@ styles = {
 	},
 	discussionItem: {
 		padding: '.5em',
-		backgroundColor: '#f3f3f4',
+		margin: '.5em 0em',
+		// backgroundColor: '#f3f3f4',
 		borderRadius: '1px',
+		textAlign: 'right',
 	},
 	discussionTitle: {
-		fontWeight: 'bold',
-		fontSize: '1.25em',
+		// fontWeight: 'bold',
+		// fontSize: '1.25em',
+		color: '#202b33',
 		display: 'block',
 	},
 	threadNumber: {
@@ -259,6 +281,11 @@ styles = {
 	authorImages: {
 		width: '20px',
 		verticalAlign: 'middle',
+		marginLeft: '-8px',
+		borderRadius: '16px',
+		// boxShadow: '0px 0px 1px 0px #000',
+		boxShadow: '0px 0px 0px px #fff',
+		position: 'relative',
 	},
 	input: {
 		width: '100%',

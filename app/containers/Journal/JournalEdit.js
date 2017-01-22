@@ -1,11 +1,9 @@
 import React, { PropTypes } from 'react';
-import Radium, { Style } from 'radium';
+import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { browserHistory } from 'react-router';
 import { ImageUpload, Loader } from 'components';
-import { s3Upload } from 'utils/uploadFile';
 import { StickyContainer, Sticky } from 'react-sticky';
-import { RadioGroup, Radio } from '@blueprintjs/core';
 import { BlockPicker } from 'react-color';
 
 import { globalStyles } from 'utils/globalStyles';

@@ -20,6 +20,7 @@ export const PubLabelList = React.createClass({
 		globalLabels: PropTypes.bool,
 		canEdit: PropTypes.bool,
 		canSelect: PropTypes.bool,
+		labelStyle: PropTypes.object,
 		pathname: PropTypes.string,
 		query: PropTypes.object,
 		dispatch: PropTypes.func,
@@ -307,7 +308,7 @@ export const PubLabelList = React.createClass({
 						position={Position.BOTTOM_LEFT}
 						transitionDuration={200}
 					>
-						<span className="pt-tag" style={styles.editLabelsButton}>
+						<span className="pt-tag" style={[styles.editLabelsButton, { color: this.props.labelStyle ? this.props.labelStyle.color : 'inherit' }]}>
 							Labels <span className="pt-icon-standard pt-icon-small-plus" style={styles.editLabelsButtonIcon}/>
 						</span>	
 					</Popover>
@@ -318,7 +319,7 @@ export const PubLabelList = React.createClass({
 						? { pathname: '/label/' + label.title, query: {} }
 						: { pathname: this.props.pathname, query: { ...this.props.query, label: label.title, path: undefined, author: undefined, sort: undefined, discussion: undefined } };
 
-					return <Link to={toObject} key={'label-' + index} className="pt-tag" style={[styles.label, { backgroundColor: label.color || '#CED9E0', color: label.color ? '#FFF' : '#293742' }]}>{label.title}</Link>;
+					return <Link to={toObject} key={'label-' + index} className="pt-tag" style={[styles.label, { backgroundColor: label.color || '#CED9E0', color: label.color ? '#FFF' : '#293742' }, this.props.labelStyle]}>{label.title}</Link>;
 				})}
 					
 			</div>
@@ -332,7 +333,7 @@ export default Radium(PubLabelList);
 
 styles = {
 	container: {
-		padding: '0.25em 0em',
+		// padding: '0.25em 0em',
 		// textAlign: 'right',
 	},
 	popoverContentWrapper: {
@@ -341,7 +342,7 @@ styles = {
 	},
 	label: {
 		backgroundColor: '#CED9E0', 
-		margin: '0em .25em .25em 0em', 
+		margin: '0em .25em 0.25em 0em', 
 		textDecoration: 'none',
 	},
 	editLabelsButton: {
@@ -349,7 +350,7 @@ styles = {
 		boxShadow: 'inset 0px 0px 0px 1px #BBB',
 		color: '#888',
 		cursor: 'pointer',
-		margin: '0em .25em .25em 0em',
+		margin: '0em .25em 0.25em 0em',
 	},
 	editLabelsButtonIcon: {
 		color: '#888',

@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { browserHistory } from 'react-router';
-import { Loader, ImageCropper } from 'components';
+import { Loader, ImageUpload, ImageCropper, ColorPicker } from 'components';
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
@@ -25,7 +25,8 @@ export const PubSettings = React.createClass({
 			description: '',
 			avatar: '',
 			imageFile: null,
-			
+			headerColor: '',
+			headerImage: '',
 		};
 	},
 
@@ -36,6 +37,8 @@ export const PubSettings = React.createClass({
 			title: pub.title,
 			description: pub.description,
 			avatar: pub.avatar,
+			headerColor: pub.headerColor || '#F3F3F4', 
+			headerImage: pub.headerImage, 
 		});
 	},
 
@@ -75,6 +78,11 @@ export const PubSettings = React.createClass({
 		}
 	},
 
+	headerColorChange: function(color) {
+		console.log(color);
+		this.setState({ headerColor: color.hex });
+	},
+
 	cancelImageUpload: function() {
 		this.setState({ imageFile: null });
 		document.getElementById('avatar').value = null;
@@ -83,6 +91,10 @@ export const PubSettings = React.createClass({
 	imageUploaded: function(url) {
 		this.setState({ imageFile: null, avatar: url });
 		document.getElementById('avatar').value = null;
+	},
+
+	handleBackgroundImageChange: function(imageUrl) {
+		this.setState({ headerImage: imageUrl, canSave: true });
 	},
 
 	validate: function(data) {
@@ -107,6 +119,8 @@ export const PubSettings = React.createClass({
 			title: this.state.title,
 			description: this.state.description,
 			avatar: this.state.avatar,
+			headerColor: this.state.headerColor,
+			headerImage: this.state.headerImage,
 		};
 		const { isValid, validationError } = this.validate(updateData);
 		this.setState({ validationError: validationError });
@@ -159,6 +173,17 @@ export const PubSettings = React.createClass({
 						<input id={'avatar'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 					</label>
 
+					<ColorPicker color={this.state.headerColor} onChange={this.headerColorChange} />
+
+					<ImageUpload 
+						defaultImage={this.state.headerImage}
+						userCrop={false}
+						label={'Header Image'}
+						tooltip={false} 
+						containerStyle={styles.imageContainer}
+						onNewImage={this.handleBackgroundImageChange}
+						canClear={true} />
+
 					<button className={'pt-button pt-intent-primary'} onClick={this.settingsSubmit}>
 						Save Settings
 					</button>
@@ -186,7 +211,7 @@ export default Radium(PubSettings);
 
 styles = {
 	container: {
-		padding: '1.5em',
+		// padding: '1.5em',
 	},
 	input: {
 		width: 'calc(100% - 20px - 4px)',

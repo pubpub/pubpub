@@ -206,22 +206,24 @@ export const PubContent = React.createClass({
 
 				{/* No files associated with Pub yet*/}
 				{!files.length && !this.state.uploading && this.props.pub.canEdit &&
-					<NonIdealState
-						action={
-							<div>
-								<label className="pt-button" htmlFor={'add-files'}>
-									Upload Files
-									<input type="file" id={'add-files'} multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
-								</label>
-								<span style={{ width: '1em', height: '1em', display: 'inline-block' }} />
-								<a className="pt-button" tabIndex="0" role="button" >Open Editor</a>
+					<div style={{ paddingTop: '2em'}}>
+						<NonIdealState
+							action={
+								<div>
+									<label className="pt-button" htmlFor={'add-files'}>
+										Upload Files
+										<input type="file" id={'add-files'} multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
+									</label>
+									<span style={{ width: '1em', height: '1em', display: 'inline-block' }} />
+									<a className="pt-button" tabIndex="0" role="button" >Open Editor</a>
 
 
-							</div>
-						}
-						description={'There are no files associated with this pub yet.'}
-						title={'No Files'}
-						visual={'folder-open'} />
+								</div>
+							}
+							description={'There are no files associated with this pub yet.'}
+							title={'No Files'}
+							visual={'folder-open'} />
+					</div>
 				}
 
 				{/* Upload and Editor Buttons */}
@@ -243,7 +245,7 @@ export const PubContent = React.createClass({
 
 				{/* Breadcrumbs */}
 				{/* Shown as long as there are files */}
-				{!!files.length &&
+				{/*!!files.length && files.length > 1 &&
 					<div style={{ marginBottom: '1em' }}>
 						{meta !== 'files' && !routeFilename &&
 							<ul className="pt-breadcrumbs">
@@ -263,7 +265,7 @@ export const PubContent = React.createClass({
 							</ul>
 						}
 					</div>
-				}
+				*/}
 
 				{/* Uploading Section */}
 				{this.state.uploading &&
@@ -377,7 +379,8 @@ export default Radium(PubContent);
 
 styles = {
 	container: {
-		padding: '0em 1.25em 1.25em',
+		// padding: '0em 1.25em 1.25em',
+		paddingTop: '10px',
 	},
 	topButtons: {
 		float: 'right',

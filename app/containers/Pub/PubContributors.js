@@ -283,7 +283,7 @@ export default Radium(PubContributors);
 
 styles = {
 	container: {
-		padding: '1.5em',
+		
 	},
 	contributorWrapper: {
 		margin: '2em 0em',

@@ -117,7 +117,7 @@ export const ImageUpload = React.createClass({
 		return (
 				
 			<div style={[styles.container, containerStyle]}>
-				<Tooltip content={<span style={styles.tooltipText}>{this.props.tooltip}</span>} position={Position.TOP_LEFT}>
+				<Tooltip isDisabled={!this.props.tooltip} content={<span style={styles.tooltipText}>{this.props.tooltip}</span>} position={Position.TOP_LEFT}>
 					<label htmlFor={this.props.key}>
 						<div style={styles.label}>
 							{this.props.label}
