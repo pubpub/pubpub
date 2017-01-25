@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import Radium, { Style } from 'radium';
-import { Loader } from 'components';
+import { Loader, RenderFile } from 'components';
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
@@ -117,6 +117,7 @@ export const PubDiscussion = React.createClass({
 	render: function() {
 		const discussion = this.props.discussion || {};
 		const pub = this.props.pub || {};
+
 		const pubLabels = pub.pubLabels || [];
 		const children = discussion.children || [];
 		const allReactions = pub.allReactions || [];
@@ -183,19 +184,37 @@ export const PubDiscussion = React.createClass({
 					const pubReactions = child.pubReactions || [];
 					
 					const usedReactions = {};
-					pubReactions.map((PubReaction)=> {
-						const reactionId = PubReaction.reactionId;
+					pubReactions.filter((pubReaction)=> {
+						return pubReaction.reactionId;
+					}).map((pubReaction)=> {
+						const reactionId = pubReaction.reactionId;
 						if (reactionId in usedReactions) {
 							usedReactions[reactionId].count += 1;
 						} else {
-							usedReactions[reactionId] = { count: 1, setByUser: false, reaction: PubReaction.reaction };
+							usedReactions[reactionId] = { count: 1, setByUser: false, reaction: pubReaction.reaction };
 						}
-						if (PubReaction.userId === this.props.accountId) {
+						if (pubReaction.userId === this.props.accountId) {
 							usedReactions[reactionId].setByUser = true;
 						}
-
-						
 					});
+
+					const currentVersion = child.versions.reduce((previous, current)=> {
+						console.log('current is', current);
+						console.log(current.createdAt, previous.createdAt);
+						return (!previous.createdAt || current.createdAt > previous.createdAt) ? current : previous;
+					}, {}); // Get the last version
+
+					console.log('currentVersion', currentVersion);
+					const files = currentVersion.files || [];
+					console.log('files', files);
+
+					const mainFile = files.reduce((previous, current)=> {
+						if (currentVersion.defaultFile === current.name) { return current; }
+						if (!currentVersion.defaultFile && current.name.split('.')[0] === 'main') { return current; }
+						return previous;
+					}, files[0]);
+					console.log('mainFile', mainFile);
+
 					return (
 						<div key={'discussion-' + index} style={styles.discussionItem}>
 							<div style={styles.discussionItemHeader}>
@@ -251,7 +270,8 @@ export const PubDiscussion = React.createClass({
 							</div>
 							{!editorOpen && 
 								<div style={styles.discussionItemBody} className={'discussion-body'}>
-									<ReactMarkdown source={child.description} />
+									{/*<ReactMarkdown source={child.description} />*/}
+									<RenderFile file={mainFile} allFiles={files} />
 								</div>
 							}
 							{editorOpen && 

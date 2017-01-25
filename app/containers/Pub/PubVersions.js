@@ -138,7 +138,7 @@ export const PubVersions = React.createClass({
 							<div style={styles.largeColumn}>
 								{/* Link to Diff view */}
 								<Link to={{ pathname: '/pub/' + this.props.pub.slug + '/diff', query: { ...query, version: undefined, base: previousVersion.hash, target: version.hash } }}>
-									<h6 style={styles.noMargin}>{version.versionMessage || 'No message'}</h6>
+									<h6 style={styles.noMargin}>{version.message || 'No message'}</h6>
 								</Link>
 								<p style={styles.noMargin}>{dateFormat(version.createdAt, 'mmm dd, yyyy HH:MM')}</p>
 							</div>
@@ -168,7 +168,7 @@ export const PubVersions = React.createClass({
 										<p>Please confirm that you want to set restricted access on this version. Once set, journal admins and invited reviewers will be granted read-acess to this version.</p>
 										<p><b>Setting restricted access cannot be undone.</b></p>
 										<div className={'pt-card pt-elevation-2'}>
-											<h6 style={styles.noMargin}>{version.versionMessage || 'No message'}</h6>
+											<h6 style={styles.noMargin}>{version.message || 'No message'}</h6>
 											<p style={styles.noMargin}>{dateFormat(version.createdAt, 'mmm dd, yyyy HH:MM')}</p>
 										</div>
 									</div>
@@ -189,7 +189,7 @@ export const PubVersions = React.createClass({
 										<p>Please confirm that you want to publish the following version. Once published, the version will be publicly available.</p>
 										<p><b>Publishing cannot be undone.</b></p>
 										<div className={'pt-card pt-elevation-2'}>
-											<h6 style={styles.noMargin}>{version.versionMessage || 'No message'}</h6>
+											<h6 style={styles.noMargin}>{version.message || 'No message'}</h6>
 											<p style={styles.noMargin}>{dateFormat(version.createdAt, 'mmm dd, yyyy HH:MM')}</p>
 										</div>
 									</div>
@@ -210,7 +210,7 @@ export const PubVersions = React.createClass({
 										<p>Please confirm that you want to assign a DOI to this version of the pub.</p>
 										<p><b>DOIs are permanent and can only be set on one version.</b></p>
 										<div className={'pt-card pt-elevation-2'}>
-											<h6 style={styles.noMargin}>{version.versionMessage || 'No message'}</h6>
+											<h6 style={styles.noMargin}>{version.message || 'No message'}</h6>
 											<p style={styles.noMargin}>{dateFormat(version.createdAt, 'mmm dd, yyyy HH:MM')}</p>
 										</div>
 									</div>

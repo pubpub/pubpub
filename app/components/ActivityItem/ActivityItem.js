@@ -76,7 +76,8 @@ export const ActivityItem = React.createClass({
 		const targetDetails = target.description || target.bio;
 		const objectDetails = object.description || object.bio;
 
-		const verbsWithObjects = ['publishedPub', 'newDiscussion', 'newReply', 'newPubLabel', 'createdJournal', 'featuredPub'];
+		// const verbsWithObjects = ['publishedPub', 'newDiscussion', 'newReply', 'newPubLabel', 'createdJournal', 'featuredPub'];
+		const verbsWithObjects = ['publishedPub', 'newPubLabel', 'createdJournal', 'featuredPub']; // Removing discussions until we decide how to render/truncate (also how to poulate version data efficiently)
 		const showObject = verbsWithObjects.includes(verb);
 
 		const buildLink = function(link, string) { return <Link to={link} style={styles.link}>{string}</Link>; };

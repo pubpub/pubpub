@@ -77,7 +77,6 @@ export const PubNav = React.createClass({
 				hidden: !pub.isAuthor && !pub.canEdit,
 			},
 		];
-		console.log(navItems);
 		return (
 			<div style={styles.container} className={'button-wrapper button-nav'}>
 				<Style rules={{

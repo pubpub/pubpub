@@ -57,6 +57,10 @@ export const ActivityGroup = React.createClass({
 
 		const buildLink = function(link, string) { return <Link to={link} style={styles.link}>{string}</Link>; };
 
+		// const verbsWithObjects = ['followedUser', 'followedPub', 'followedJournal', 'followedLabel', 'newDiscussion', 'addedContributor', 'addedAdmin', 'newReply', 'newPubLabel', 'featuredPub']
+		const verbsWithObjects = ['followedUser', 'followedPub', 'followedJournal', 'followedLabel', 'addedContributor', 'addedAdmin', 'newPubLabel', 'featuredPub']; // Removing discussions until we decide how to render/truncate (also how to poulate version data efficiently)
+		const showObject = verbsWithObjects.includes(activities[0].verb);
+
 		const activitiesContent = activities.map((activity)=> {
 			const actor = activity.actorPub || activity.actorUser || activity.actorJournal || activity.actorLabel || {};
 			const verb = activity.verb || '';
@@ -140,46 +144,48 @@ export const ActivityGroup = React.createClass({
 					</div>
 				</div>
 
-				<div style={styles.attachmentWrapper}>
-					
+				{showObject &&
+					<div style={styles.attachmentWrapper}>
+						
 
-					<div style={styles.tableWrapper}>
-						<div style={styles.imageWrapper}>
-							<div style={styles.smallImage} />
-						</div>
-						<div style={styles.tableCell}>
-							{activitiesContent.map((activity)=> {
-								const { actor, verb, target, object, actorAvatar, targetAvatar, objectAvatar, actorString, targetString, objectString, actorLink, targetLink, objectLink, actorDetails, targetDetails, objectDetails, actorNode, targetNode, objectNode } = activity;
-								switch (verb) {
-								// case 'publishedPub':
-								// 	return this.renderAttachment(targetAvatar, targetLink, targetString, targetDetails);
-								case 'followedUser': 
-								case 'followedPub': 
-								case 'followedJournal': 
-								case 'followedLabel': 
-									return this.renderAttachment(verb, targetAvatar, targetLink, targetString, targetDetails, activity.id);
-								case 'newDiscussion': 
-									return this.renderAttachment(verb, actorAvatar, (targetLink + '?discussion=' + object.threadNumber), objectString, objectDetails, activity.id);
-								case 'addedContributor': 
-									return this.renderAttachment(verb, objectAvatar, objectLink, objectString, objectDetails, activity.id);
-								case 'addedAdmin': 
-									return this.renderAttachment(verb, objectAvatar, objectLink, objectString, objectDetails, activity.id);
-								case 'newReply': 
-									return this.renderAttachment(verb, actorAvatar, objectLink, '', objectDetails, activity.id);
-								case 'newPubLabel': 
-									return this.renderAttachment(verb, targetAvatar, targetLink, targetString, '', activity.id);
-								case 'featuredPub': 
-									return this.renderAttachment(verb, targetAvatar, targetLink, targetString, targetDetails, activity.id);
-								default: 
-									return <div />;
-								}
-							})}
-						</div>
-						<div style={[styles.dateWrapper, styles.hidden]}>
-							<FormattedRelative value={headerActivity.createdAt} />
+						<div style={styles.tableWrapper}>
+							<div style={styles.imageWrapper}>
+								<div style={styles.smallImage} />
+							</div>
+							<div style={styles.tableCell}>
+								{activitiesContent.map((activity)=> {
+									const { actor, verb, target, object, actorAvatar, targetAvatar, objectAvatar, actorString, targetString, objectString, actorLink, targetLink, objectLink, actorDetails, targetDetails, objectDetails, actorNode, targetNode, objectNode } = activity;
+									switch (verb) {
+									// case 'publishedPub':
+									// 	return this.renderAttachment(targetAvatar, targetLink, targetString, targetDetails);
+									case 'followedUser': 
+									case 'followedPub': 
+									case 'followedJournal': 
+									case 'followedLabel': 
+										return this.renderAttachment(verb, targetAvatar, targetLink, targetString, targetDetails, activity.id);
+									case 'newDiscussion': 
+										return this.renderAttachment(verb, actorAvatar, (targetLink + '?discussion=' + object.threadNumber), objectString, objectDetails, activity.id);
+									case 'addedContributor': 
+										return this.renderAttachment(verb, objectAvatar, objectLink, objectString, objectDetails, activity.id);
+									case 'addedAdmin': 
+										return this.renderAttachment(verb, objectAvatar, objectLink, objectString, objectDetails, activity.id);
+									case 'newReply': 
+										return this.renderAttachment(verb, actorAvatar, objectLink, '', objectDetails, activity.id);
+									case 'newPubLabel': 
+										return this.renderAttachment(verb, targetAvatar, targetLink, targetString, '', activity.id);
+									case 'featuredPub': 
+										return this.renderAttachment(verb, targetAvatar, targetLink, targetString, targetDetails, activity.id);
+									default: 
+										return <div />;
+									}
+								})}
+							</div>
+							<div style={[styles.dateWrapper, styles.hidden]}>
+								<FormattedRelative value={headerActivity.createdAt} />
+							</div>
 						</div>
 					</div>
-				</div>
+				}
 				
 			</div>
 		);

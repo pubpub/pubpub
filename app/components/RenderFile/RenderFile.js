@@ -15,10 +15,28 @@ export const RenderFile = React.createClass({
 		allFiles: PropTypes.array,
 	},
 
+	renderContent: function(object) {
+		return object.map((newObject)=> {
+			return (
+				<div key={Math.random()}>
+					{newObject.type === 'text' && newObject.text}
+					{newObject.content && (Array.isArray(newObject.content) ? this.renderContent(newObject.content) : this.renderContent([newObject.content]))}
+				</div>
+			);
+		});
+	},
 	render() {
 		const file = this.props.file || {};
 		const fileType = file.type || file.url.split('.').pop();
 		switch (fileType) {
+		case 'ppub': 
+			const content = JSON.parse(file.content);
+			return (
+				<div id={'content-wrapper'} className={'pub-body'} style={[styles.contentWrapper, styles.pubBody]}>
+					<Highlighter />
+					{this.renderContent([content])}
+				</div>
+			);
 		case 'text/markdown': 
 			return (
 				<div id={'content-wrapper'} className={'pub-body'} style={[styles.contentWrapper, styles.pubBody]}>
