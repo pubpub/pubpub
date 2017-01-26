@@ -16,6 +16,7 @@ export const PubDiscussion = React.createClass({
 	propTypes: {
 		discussion: PropTypes.object,
 		pub: PropTypes.object,
+		goBack: PropTypes.func,
 		allReactions: PropTypes.array,
 		accountId: PropTypes.number,
 		pathname: PropTypes.string,

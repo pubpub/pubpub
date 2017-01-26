@@ -159,18 +159,18 @@ export const PubDiscussionsList = React.createClass({
 			</Menu>
 		);
 
-		const initDiscussionCount = 8;
+		const initDiscussionCount = 5;
 		return (
 
 			<div style={styles.container}>
 				<div style={styles.header}>
 					<div style={{ textAlign: 'right' }}>
-						<div className="pt-button-group small-button">
+						<div className="pt-button-group small-button" style={styles.topButton}>
 							<Link to={{ pathname: `/pub/${pub.slug}/reviewers`, query: { ...query } }} className="pt-button">Invite Reviewer</Link>
 							<Link to={{ pathname: `/pub/${pub.slug}/reviewers`, query: { ...query } }} className="pt-button">{invitedReviewers.length}</Link>
 						</div>
 
-						<Link to={{ pathname: pathname, query: { ...query, panel: 'new' } }} className="pt-button small-button pt-icon-add">New Discussion</Link>
+						<Link to={{ pathname: pathname, query: { ...query, panel: 'new' } }} className="pt-button small-button pt-icon-add" style={styles.topButton}>New Discussion</Link>
 
 						<div style={{ textAlign: 'right' }}>
 							<button role={'button'} className={'pt-button pt-minimal pt-icon-filter-list'}>Filter</button>	
@@ -219,7 +219,7 @@ export const PubDiscussionsList = React.createClass({
 							})
 						])];
 						return (
-							<div style={styles.discussionItem} key={'discussionItem-' + discussion.id} className={'ptt-card ptt-elevation-1'}>
+							<div style={[styles.discussionItem, index === 0 && { margin: '0em' }]} key={'discussionItem-' + discussion.id} className={'ptt-card ptt-elevation-1'}>
 								<div style={styles.discussionSeparator} />
 								<PubLabelList 
 									allLabels={labelList} 
@@ -227,7 +227,7 @@ export const PubDiscussionsList = React.createClass({
 									canEdit={false} 
 									pathname={this.props.pathname} 
 									query={this.props.query} 
-									labelStyle={{ opacity: 0.85, fontSize: '10px', lineHeight: '12px' }} />
+									labelStyle={{ opacity: 0.75, fontSize: '10px', lineHeight: '12px' }} />
 
 								<Link to={{pathname: this.props.pathname, query: { ...this.props.query, discussion: discussion.threadNumber }}} style={styles.discussionTitle}>
 									<span style={styles.threadNumber}>#{discussion.threadNumber}</span>
@@ -329,16 +329,20 @@ styles = {
 		};
 	},
 
+	topButton: {
+		marginLeft: '0.5em',
+		verticalAlign: 'top',
+	},
 	labelColor: {
 		display: 'inline-block',
-		width: '1em',
-		height: '1em',
+		width: '1.25em',
+		height: '1.25em',
 		borderRadius: '2px',
 		verticalAlign: 'middle',
 	},
 	discussionItem: {
-		margin: '1.5em 0em 0em',
-		padding: '1.5em 0em 0em',
+		margin: '1em 0em 0em',
+		padding: '1em 0em 0em',
 		// padding: '.5em',
 		// margin: '.5em 0em',
 		// backgroundColor: '#f3f3f4',
@@ -370,10 +374,10 @@ styles = {
 		paddingRight: '.25em',
 	},
 	authorImages: {
-		width: '25px',
+		width: '20px',
 		verticalAlign: 'middle',
 		marginLeft: '-8px',
-		borderRadius: '25px',
+		borderRadius: '20px',
 		// boxShadow: '0px 0px 1px 0px #000',
 		boxShadow: '0px 0px 0px px #fff',
 		position: 'relative',

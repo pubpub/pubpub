@@ -427,6 +427,7 @@ export const Pub = React.createClass({
 												<PubDiscussionsNew
 													discussionsData={discussionsData}
 													pub={pub}
+													goBack={this.goBack}
 													isLoading={this.props.pubData.discussionsLoading}
 													error={this.props.pubData.discussionsError}
 													pathname={pathname}
@@ -445,6 +446,7 @@ export const Pub = React.createClass({
 												<PubDiscussion
 													discussion={activeDiscussion}
 													pub={pub}
+													goBack={this.goBack}
 													accountId={accountId}
 													isLoading={this.props.pubData.discussionsLoading}
 													error={this.props.pubData.discussionsError}
