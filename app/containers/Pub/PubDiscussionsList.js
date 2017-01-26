@@ -16,6 +16,8 @@ export const PubDiscussionsList = React.createClass({
 		pub: PropTypes.object,
 		showAllDiscussions: PropTypes.bool,
 		toggleShowAllDiscussions: PropTypes.func,
+		// showClosedDiscussions: PropTypes.bool,
+		// toggleShowClosedDiscussions: PropTypes.func,
 		pathname: PropTypes.string,
 		query: PropTypes.object,
 		dispatch: PropTypes.func,
@@ -179,7 +181,7 @@ export const PubDiscussionsList = React.createClass({
 				</div>
 
 				<div style={styles.contentBorder(this.props.showAllDiscussions, true)} />
-				<div style={styles.content}>
+				<div style={styles.content(this.props.showAllDiscussions)}>
 
 					{filteredDiscussions.sort((foo, bar)=> {
 						const fooChildren = foo.children || [];
@@ -206,6 +208,7 @@ export const PubDiscussionsList = React.createClass({
 						return 0;
 					}).filter((item, index)=> {
 						if (!this.props.showAllDiscussions && index >= initDiscussionCount) { return false; }
+						if (!this.props.showClosedDiscussions && item.isClosed) { return false; }
 						return true;
 					}).map((discussion, index)=> {
 						const author = discussion.contributors[0].user;
@@ -237,6 +240,9 @@ export const PubDiscussionsList = React.createClass({
 									{!discussion.isPublished && 
 										<span className={'pt-icon-standard pt-icon-lock'} />
 									}
+									{discussion.isClosed && 
+										<span className={'pt-icon-standard pt-icon-compressed'} />
+									}
 									<span style={{ fontSize: '0.85em' }}>
 										<FormattedRelative value={discussion.createdAt} />	
 									</span>
@@ -255,6 +261,12 @@ export const PubDiscussionsList = React.createClass({
 							<button role={'button'} onClick={this.props.toggleShowAllDiscussions} className={'pt-button small-button'}>Show {this.props.showAllDiscussions ? 'Fewer' : `${filteredDiscussions.length - initDiscussionCount} More`}</button>	
 						</div>
 					}
+
+					{/*(filteredDiscussions.length - initDiscussionCount <= 0 || this.props.showAllDiscussions) &&
+						<div style={styles.toggleButtonWrapper}>
+							<button role={'button'} onClick={this.props.toggleShowClosedDiscussions} className={'pt-button small-button'}>{`${this.props.showClosedDiscussions ? 'Hide' : 'Show'} Closed Discussions`}</button>	
+						</div>
+					*/}
 
 				</div>
 
@@ -292,12 +304,15 @@ styles = {
 		height: '70px', 
 		width: '100%',
 	},
-	content: {
-		height: 'calc(100% - 80px)', 
-		width: '100%', 
-		overflow: 'hidden', 
-		overflowY: 'scroll', 
-		position: 'relative',
+	content: (showAllDiscussions)=> {
+		return {
+			height: 'calc(100% - 80px)', 
+			width: '100%', 
+			overflow: showAllDiscussions ? 'hidden' : 'visible', 
+			overflowY: showAllDiscussions ? 'scroll' : 'visible', 
+			position: 'relative',
+		};
+		
 	},
 
 	toggleButtonWrapper: {

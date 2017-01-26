@@ -51,6 +51,7 @@ export const Pub = React.createClass({
 		return {
 			canGoBack: false,
 			showAllDiscussions: false,
+			// showClosedDiscussions: false,
 		};
 	},
 
@@ -128,18 +129,10 @@ export const Pub = React.createClass({
 	toggleShowAllDiscussions: function() {
 		this.setState({ showAllDiscussions: !this.state.showAllDiscussions });
 	},
-
-	// addDiscussionIndex: function(discussions, pubId) {
-	// 	return discussions.filter((discussion)=> {
-	// 		return discussion.replyParentPubId === pubId;
-	// 	}).sort((foo, bar)=> {
-	// 		if (foo.createdAt > bar.createdAt) { return 1; }
-	// 		if (foo.createdAt < bar.createdAt) { return -1; }
-	// 		return 0;
-	// 	}).map((discussion, index)=>{
-	// 		return { ...discussion, discussionIndex: index + 1 };
-	// 	});
+	// toggleShowClosedDiscussions: function() {
+	// 	this.setState({ showClosedDiscussions: !this.state.showClosedDiscussions });
 	// },
+
 
 	updateReviewer: function() {
 		this.props.dispatch(putReviewer(this.props.pubData.pub.id, false, true, 'I have no idea what this is'));
@@ -434,6 +427,8 @@ export const Pub = React.createClass({
 													pub={pub}
 													showAllDiscussions={this.state.showAllDiscussions}
 													toggleShowAllDiscussions={this.toggleShowAllDiscussions}
+													// showClosedDiscussions={this.state.showClosedDiscussions}
+													// toggleShowClosedDiscussions={this.toggleShowClosedDiscussions}
 													pathname={pathname}
 													query={query}
 													dispatch={this.props.dispatch} />

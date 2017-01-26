@@ -12,6 +12,10 @@ export const PUT_DISCUSSION_LOAD = 'pub/PUT_DISCUSSION_LOAD';
 export const PUT_DISCUSSION_SUCCESS = 'pub/PUT_DISCUSSION_SUCCESS';
 export const PUT_DISCUSSION_FAIL = 'pub/PUT_DISCUSSION_FAIL';
 
+export const PUT_DISCUSSION_CLOSE_LOAD = 'pub/PUT_DISCUSSION_CLOSE_LOAD';
+export const PUT_DISCUSSION_CLOSE_SUCCESS = 'pub/PUT_DISCUSSION_CLOSE_SUCCESS';
+export const PUT_DISCUSSION_CLOSE_FAIL = 'pub/PUT_DISCUSSION_CLOSE_FAIL';
+
 export const POST_REACTION_LOAD = 'pub/POST_REACTION_LOAD';
 export const POST_REACTION_SUCCESS = 'pub/POST_REACTION_SUCCESS';
 export const POST_REACTION_FAIL = 'pub/POST_REACTION_FAIL';
@@ -80,6 +84,32 @@ export function putDiscussion(pubId, title, description) {
 		.catch((error) => {
 			console.log(error);
 			dispatch({ type: PUT_DISCUSSION_FAIL, error });
+		});
+	};
+}
+
+export function toggleCloseDiscussion(pubId, replyRootPubId, isClosed) {
+	return (dispatch) => {
+		dispatch({ type: PUT_DISCUSSION_CLOSE_LOAD });
+
+		return clientFetch('/api/pub/discussion', {
+			method: 'PUT',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				pubId: pubId,
+				replyRootPubId: replyRootPubId,
+				isClosed: isClosed,
+			})
+		})
+		.then((result) => {
+			dispatch({ type: PUT_DISCUSSION_CLOSE_SUCCESS, result, pubId: pubId, replyRootPubId: replyRootPubId, isClosed: isClosed });
+		})
+		.catch((error) => {
+			console.log(error);
+			dispatch({ type: PUT_DISCUSSION_CLOSE_FAIL, error });
 		});
 	};
 }

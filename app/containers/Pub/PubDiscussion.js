@@ -7,7 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import dateFormat from 'dateformat';
 import ReactMarkdown from 'react-markdown';
 import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider, Tooltip } from '@blueprintjs/core';
-import { postDiscussion, putDiscussion, postReaction, deleteReaction } from './actionsDiscussions';
+import { postDiscussion, putDiscussion, postReaction, deleteReaction, toggleCloseDiscussion } from './actionsDiscussions';
 import PubLabelList from './PubLabelList';
 import { FormattedRelative } from 'react-intl';
 
@@ -116,6 +116,10 @@ export const PubDiscussion = React.createClass({
 		return this.props.dispatch(postReaction(pubId, replyRootPubId, reactionId));
 	},
 
+	toggleIsClosed: function(newIsClosed) {
+		console.log(this.props.discussion);
+		this.props.dispatch(toggleCloseDiscussion(this.props.discussion.id, this.props.discussion.replyRootPubId, newIsClosed));
+	},
 
 	render: function() {
 		const discussion = this.props.discussion || {};
@@ -145,6 +149,9 @@ export const PubDiscussion = React.createClass({
 				</div>
 				<div style={styles.content} className={'pt-card pt-elevation-3'}>
 					<div style={styles.contentScroll}>
+						{discussion.isClosed &&
+							<div className={'pt-callout pt-intent-danger'} style={{ marginBottom: '1em' }}>Discussion is Closed</div>
+						}
 						<PubLabelList 
 							allLabels={pubLabels} 
 							selectedLabels={discussion.labels} 
@@ -160,7 +167,7 @@ export const PubDiscussion = React.createClass({
 								{(true || (discussion.contributors && discussion.contributors[0].user.id === this.props.accountId)) &&
 									<div className={'pt-button-group'} style={styles.titleButtons}>
 										<button className={'pt-button pt-minimal pt-icon-edit'} onClick={this.setOpenEditor.bind(this, 'title', undefined, discussion.title)} />
-										<button className={'pt-button pt-minimal pt-icon-compressed'} onClick={this.setOpenEditor.bind(this, 'title', undefined, discussion.title)} />
+										<button className={'pt-button pt-minimal pt-icon-compressed'} onClick={this.toggleIsClosed.bind(this, !discussion.isClosed)} />
 									</div>
 								}
 								<div style={styles.title}>

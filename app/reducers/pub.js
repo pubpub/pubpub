@@ -62,6 +62,10 @@ import {
 	PUT_DISCUSSION_SUCCESS,
 	PUT_DISCUSSION_FAIL,
 
+	PUT_DISCUSSION_CLOSE_LOAD,
+	PUT_DISCUSSION_CLOSE_SUCCESS,
+	PUT_DISCUSSION_CLOSE_FAIL,
+
 	POST_REACTION_LOAD,
 	POST_REACTION_SUCCESS,
 	POST_REACTION_FAIL,
@@ -418,13 +422,39 @@ export default function reducer(state = defaultState, action) {
 				if (discussion.get('id') === action.pubId) {
 					return discussion.merge({
 						title: action.title || discussion.get('title'), 
-						description: action.description || discussion.get('description')
+						description: action.description || discussion.get('description'),
 					});
 				}
 				return discussion;
 			})
 		);
 	case PUT_DISCUSSION_FAIL:
+		return state.merge({
+			discussionsLoading: false,
+			discussionsError: action.error,
+		});
+	case PUT_DISCUSSION_CLOSE_LOAD:
+		return state.merge({
+			discussionsLoading: true,
+			discussionsError: undefined,
+		});	
+	case PUT_DISCUSSION_CLOSE_SUCCESS:
+		return state.merge({
+			discussionsLoading: false,
+			discussionsError: undefined,
+		})
+		.mergeIn(
+			['pub', 'discussions'], 
+			state.getIn(['pub', 'discussions']).map((discussion)=> {
+				if (discussion.get('id') === action.pubId) {
+					return discussion.merge({
+						isClosed: action.isClosed,
+					});
+				}
+				return discussion;
+			})
+		);
+	case PUT_DISCUSSION_CLOSE_FAIL:
 		return state.merge({
 			discussionsLoading: false,
 			discussionsError: action.error,
