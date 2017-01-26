@@ -33,19 +33,19 @@ export const Highlighter = React.createClass({
 	},
 
 	componentDidMount() {
-		const container = document.getElementById('content-wrapper');
-		if (!container) { console.log('Error: <Highlighter /> must be a child of a div with id="content-wrapper"'); }
+		const container = document.getElementById('highlighter-wrapper');
+		if (!container) { console.log('Error: <Highlighter /> must be a child of a div with id="highlighter-wrapper"'); }
 		container.addEventListener('mouseup', this.onMouseUp);
 	},
 
 
 	componentWillUnmount() {
-		document.getElementById('content-wrapper').removeEventListener('mouseup', this.onMouseUp);
+		document.getElementById('highlighter-wrapper').removeEventListener('mouseup', this.onMouseUp);
 	},
 
 	componentWillReceiveProps(nextProps) {
 		if (this.props.highlightData.loading && !nextProps.highlightData.loading && !nextProps.highlightData.error) {
-			const container = document.getElementById('content-wrapper');
+			const container = document.getElementById('highlighter-wrapper');
 			const highlightObject = this.state.highlightObject;
 
 			const textQuoteRange = textQuote.toRange(container, highlightObject);
@@ -74,7 +74,7 @@ export const Highlighter = React.createClass({
 	},
 
 	onMouseUp: function(event) {
-		const container = document.getElementById('content-wrapper');
+		const container = document.getElementById('highlighter-wrapper');
 		const offsetTop = container.parentNode.style.top ? parseInt(container.parentNode.style.top, 10) : 0;
 		const offsetLeft = container.getBoundingClientRect().left || 0;
 		const yLocOffset = document.body.scrollTop + document.documentElement.scrollTop + container.scrollTop - offsetTop - 32 - 345;
@@ -103,7 +103,7 @@ export const Highlighter = React.createClass({
 
 	saveHighlight: function() {
 		const highlightObject = this.state.highlightObject;
-		
+
 		const query = this.props.query || {};
 		const params = this.props.params || {};
 		const routeFilename = params.filename;

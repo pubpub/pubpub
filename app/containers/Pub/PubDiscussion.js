@@ -199,21 +199,16 @@ export const PubDiscussion = React.createClass({
 					});
 
 					const currentVersion = child.versions.reduce((previous, current)=> {
-						console.log('current is', current);
-						console.log(current.createdAt, previous.createdAt);
 						return (!previous.createdAt || current.createdAt > previous.createdAt) ? current : previous;
 					}, {}); // Get the last version
 
-					console.log('currentVersion', currentVersion);
 					const files = currentVersion.files || [];
-					console.log('files', files);
 
 					const mainFile = files.reduce((previous, current)=> {
 						if (currentVersion.defaultFile === current.name) { return current; }
 						if (!currentVersion.defaultFile && current.name.split('.')[0] === 'main') { return current; }
 						return previous;
 					}, files[0]);
-					console.log('mainFile', mainFile);
 
 					return (
 						<div key={'discussion-' + index} style={styles.discussionItem}>
@@ -271,7 +266,7 @@ export const PubDiscussion = React.createClass({
 							{!editorOpen && 
 								<div style={styles.discussionItemBody} className={'discussion-body'}>
 									{/*<ReactMarkdown source={child.description} />*/}
-									<RenderFile file={mainFile} allFiles={files} />
+									<RenderFile file={mainFile} allFiles={files} noHighlighter={true} />
 								</div>
 							}
 							{editorOpen && 
