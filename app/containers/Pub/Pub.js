@@ -2,6 +2,11 @@ import { Link, browserHistory } from 'react-router';
 import React, { PropTypes } from 'react';
 import { Sticky, StickyContainer } from 'react-sticky';
 
+import * as textQuote from 'dom-anchor-text-quote';
+import Rangy from 'rangy';
+require('rangy/lib/rangy-textrange');
+import * as Marklib from 'marklib';
+
 // import { FollowButton } from 'containers';
 import { FormattedMessage } from 'react-intl';
 import Helmet from 'react-helmet';
@@ -135,6 +140,22 @@ export const Pub = React.createClass({
 		this.props.dispatch(putReviewer(this.props.pubData.pub.id, false, true, 'I have no idea what this is'));
 	},
 
+	extractHighlights: function(object, array) {
+		// console.log(object);
+		const tempArray = array || [];
+		if (object.type === 'embed' && object.attrs && object.attrs.data && object.attrs.data.type === 'highlight') { 
+			tempArray.push(object.attrs.data.content); 
+		}
+		if (object.content) {
+			const newContent = Array.isArray(object.content) ? object.content : [object.content];
+			newContent.forEach((content)=> {
+				this.extractHighlights(content, tempArray);
+			});
+		}
+
+		return tempArray;
+	},
+
 	render() {
 		const pub = this.props.pubData.pub || {};
 		if (this.props.pubData.loading && !this.props.pubData.error) {
@@ -182,6 +203,58 @@ export const Pub = React.createClass({
 		const versions = pub.versions || [];
 		const pubFeatures = pub.pubFeatures || [];
 		const followers = pub.followers || [];
+
+
+		/*---------*/
+		// All of this should be done outside of discussions - perhaps in it's own component.
+		// This is re-rendering on every scroll because of fixed position.
+		const allHighlights = discussions.reduce((previous, current)=> {
+			const currentVersion = current.versions.reduce((previousVersionItem, currentVersionItem)=> {
+				return (!previousVersionItem.createdAt || currentVersionItem.createdAt > previousVersionItem.createdAt) ? currentVersionItem : previousVersionItem;
+			}, {}); // Get the last version
+			const files = currentVersion.files || [];
+
+			const mainFile = files.reduce((previousFileItem, currentFileItem)=> {
+				if (currentVersion.defaultFile === currentFileItem.name) { return currentFileItem; }
+				if (!currentVersion.defaultFile && currentFileItem.name.split('.')[0] === 'main') { return currentFileItem; }
+				return previousFileItem;
+			}, files[0]);
+
+			if (mainFile.type === 'ppub') {
+				// console.log(mainFile.content);
+				return this.extractHighlights(JSON.parse(mainFile.content), previous);
+			}
+			return previous;
+
+		}, []);
+
+
+		console.log(allHighlights);
+
+		setTimeout(()=> {
+			const container = document.getElementById('highlighter-wrapper');
+			allHighlights.forEach((highlight)=> {
+				const context = highlight.context;
+				const text = highlight.text;
+				const textStart = context.indexOf(text);
+				const textEnd = textStart + text.length;
+				const prefixStart = Math.max(textStart - 10, 0);
+				const suffixEnd = Math.min(textEnd + 10, context.length);
+				const highlightObject = {
+					prefix: context.substring(prefixStart, textStart),
+					exact: highlight.text,
+					suffix: context.substring(textEnd, suffixEnd),
+				};
+				// console.log(highlightObject);
+				const textQuoteRange = textQuote.toRange(container, highlightObject);
+				const renderer = new Marklib.Rendering(document, { className: 'highlight' }, document);
+				renderer.renderWithRange(textQuoteRange);
+			});
+		}, 100);
+		
+		/*---------*/
+
+
 
 
 		// const followData = followers.reduce((previous, current)=> {
@@ -457,16 +530,18 @@ export const Pub = React.createClass({
 												<div style={{padding: '10px 0px', height: '50px', width: '100%'}}>
 													<div style={styles.panelButtons}>
 														{!panel && !queryDiscussion &&
-															<div>
-																{false &&
-																	<div className="pt-button-group" style={styles.panelButtonGroup}>
-																		<Link to={{ pathname: pathname, query: { ...query, panel: 'reviewers' } }} className="pt-button">Invite Reviewer</Link>
-																		<Link to={{ pathname: pathname, query: { ...query, panel: 'reviewers' } }} className="pt-button">{invitedReviewers.length}</Link>
-																	</div>
-																}
+															<div style={{ textAlign: 'right' }}>
+																<div className="pt-button-group small-button" style={styles.panelButtonGroup}>
+																	<Link to={{ pathname: `/pub/${pub.slug}/reviewers`, query: { ...query } }} className="pt-button">Invite Reviewer</Link>
+																	<Link to={{ pathname: `/pub/${pub.slug}/reviewers`, query: { ...query } }} className="pt-button">{invitedReviewers.length}</Link>
+																</div>
 					
-																<Link to={{ pathname: pathname, query: { ...query, panel: 'new' } }} className="pt-button pt-intent-primary pt-minimal pt-icon-add">New Discussion</Link>
-																<button role={'button'} className={'pt-button pt-minimal pt-icon-filter-list'}>Filter</button>
+																<Link to={{ pathname: pathname, query: { ...query, panel: 'new' } }} className="pt-button small-button pt-icon-add">New Discussion</Link>
+
+																<div style={{ textAlign: 'right' }}>
+																	<button role={'button'} className={'pt-button pt-minimal pt-icon-filter-list'}>Filter</button>	
+																</div>
+																
 															</div>
 														}
 					

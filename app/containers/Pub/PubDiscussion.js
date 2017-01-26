@@ -114,6 +114,7 @@ export const PubDiscussion = React.createClass({
 		return this.props.dispatch(postReaction(pubId, replyRootPubId, reactionId));
 	},
 
+
 	render: function() {
 		const discussion = this.props.discussion || {};
 		const pub = this.props.pub || {};
@@ -128,7 +129,7 @@ export const PubDiscussion = React.createClass({
 		const discussions = [discussion, ...children];
 
 		return (
-			<div style={[styles.container, this.state.mounting ? {opacity: 0, transform: 'scale(0.9)'} : {opacity: 1}]} className={'pt-card pt-elevation-2'}>
+			<div style={[styles.container, this.state.mounting ? { opacity: 0, transform: 'scale(0.9)' } : { opacity: 1 }]} className={'pt-card pt-elevation-2'}>
 				<Style rules={{
 					'.discussion-item .pt-button-group:not(.pt-vertical) .pt-popover-target, .discussion-item .pt-button-group:not(.pt-vertical) .pt-tether-target': { float: 'none' },
 				}} />

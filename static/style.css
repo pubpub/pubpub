@@ -97,6 +97,13 @@ input[type="file"]:focus {
 .subtext {
 	font-size: 0.8em;
 }
+
+
+.small-button.pt-button-group .pt-button, .small-button.pt-button { 
+	min-height: 24px;
+	line-height: 24px;
+}
+
 /* ------------ */
 
 .pub-body img {
