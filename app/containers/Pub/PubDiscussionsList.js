@@ -14,6 +14,8 @@ export const PubDiscussionsList = React.createClass({
 	propTypes: {
 		discussionsData: PropTypes.array,
 		pub: PropTypes.object,
+		showAllDiscussions: PropTypes.bool,
+		toggleShowAllDiscussions: PropTypes.func,
 		pathname: PropTypes.string,
 		query: PropTypes.object,
 		dispatch: PropTypes.func,
@@ -22,7 +24,6 @@ export const PubDiscussionsList = React.createClass({
 	getInitialState() {
 		return {
 			filter: '',
-			showAll: false,
 		};
 	},
 
@@ -47,9 +48,7 @@ export const PubDiscussionsList = React.createClass({
 		browserHistory.push({ pathname: this.props.pathname, query: { ...this.props.query, filter: newFilter } });
 	},
 
-	toggleShowAll: function() {
-		this.setState({ showAll: !this.state.showAll });
-	},
+	
 
 	render: function() {
 		const discussionsData = this.props.discussionsData || [];
@@ -179,7 +178,7 @@ export const PubDiscussionsList = React.createClass({
 					</div>
 				</div>
 
-				<div style={styles.contentBorder(this.state.showAll, true)} />
+				<div style={styles.contentBorder(this.props.showAllDiscussions, true)} />
 				<div style={styles.content}>
 
 					{filteredDiscussions.sort((foo, bar)=> {
@@ -206,7 +205,7 @@ export const PubDiscussionsList = React.createClass({
 
 						return 0;
 					}).filter((item, index)=> {
-						if (!this.state.showAll && index >= initDiscussionCount) { return false; }
+						if (!this.props.showAllDiscussions && index >= initDiscussionCount) { return false; }
 						return true;
 					}).map((discussion, index)=> {
 						const author = discussion.contributors[0].user;
@@ -253,13 +252,13 @@ export const PubDiscussionsList = React.createClass({
 
 					{filteredDiscussions.length - initDiscussionCount > 0 &&
 						<div style={styles.toggleButtonWrapper}>
-							<button role={'button'} onClick={this.toggleShowAll} className={'pt-button small-button'}>Show {this.state.showAll ? 'Fewer' : `${filteredDiscussions.length - initDiscussionCount} More`}</button>	
+							<button role={'button'} onClick={this.props.toggleShowAllDiscussions} className={'pt-button small-button'}>Show {this.props.showAllDiscussions ? 'Fewer' : `${filteredDiscussions.length - initDiscussionCount} More`}</button>	
 						</div>
 					}
 
 				</div>
 
-				<div style={styles.contentBorder(this.state.showAll, false)} />
+				<div style={styles.contentBorder(this.props.showAllDiscussions, false)} />
 
 
 
@@ -283,16 +282,6 @@ export const PubDiscussionsList = React.createClass({
 export default Radium(PubDiscussionsList);
 
 styles = {
-	// container: {
-	// 	// height: 'calc(100% - 50px)', 
-	// 	width: '100%', 
-	// 	// backgroundColor: 'orange', 
-	// 	overflow: 'hidden', 
-	// 	overflowY: 'scroll', 
-	// 	position: 'relative',
-	// 	color: '#738694',
-	// },
-
 	container: {
 		height: '100%',
 		width: '100%',
@@ -309,7 +298,6 @@ styles = {
 		overflow: 'hidden', 
 		overflowY: 'scroll', 
 		position: 'relative',
-		color: '#738694',
 	},
 
 	toggleButtonWrapper: {

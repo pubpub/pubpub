@@ -50,6 +50,7 @@ export const Pub = React.createClass({
 	getInitialState() {
 		return {
 			canGoBack: false,
+			showAllDiscussions: false,
 		};
 	},
 
@@ -122,6 +123,10 @@ export const Pub = React.createClass({
 				query: { ...query, panel: undefined, discussion: undefined }
 			});
 		}
+	},
+
+	toggleShowAllDiscussions: function() {
+		this.setState({ showAllDiscussions: !this.state.showAllDiscussions });
 	},
 
 	// addDiscussionIndex: function(discussions, pubId) {
@@ -423,6 +428,16 @@ export const Pub = React.createClass({
 								{currentVersion.files && (meta !== 'files' || this.props.params.filename) &&
 									<div style={styles.rightPanel}>
 										<PubSidePanel parentId={'content-wrapper'}>
+											<div style={styles.discussionListVisible(!panel && !queryDiscussion)}>
+												<PubDiscussionsList
+													discussionsData={discussionsData}
+													pub={pub}
+													showAllDiscussions={this.state.showAllDiscussions}
+													toggleShowAllDiscussions={this.toggleShowAllDiscussions}
+													pathname={pathname}
+													query={query}
+													dispatch={this.props.dispatch} />
+											</div>
 											{panel === 'new' &&
 												<PubDiscussionsNew
 													discussionsData={discussionsData}
@@ -430,14 +445,6 @@ export const Pub = React.createClass({
 													goBack={this.goBack}
 													isLoading={this.props.pubData.discussionsLoading}
 													error={this.props.pubData.discussionsError}
-													pathname={pathname}
-													query={query}
-													dispatch={this.props.dispatch} />
-											}
-											{!panel && !queryDiscussion &&
-												<PubDiscussionsList
-													discussionsData={discussionsData}
-													pub={pub}
 													pathname={pathname}
 													query={query}
 													dispatch={this.props.dispatch} />
@@ -595,6 +602,11 @@ styles = {
 	// },
 	pubAuthors: {
 		padding: '.5em 1.5em 1em',
+	},
+	discussionListVisible: (isVisible)=> {
+		return {
+			display: isVisible ? 'block' : 'none',
+		};
 	},
 	nav: {
 		borderBottom: '1px solid #ccc',

@@ -151,9 +151,7 @@ styles = {
 		overflow: 'hidden', 
 		overflowY: 'scroll', 
 		position: 'relative',
-		color: '#738694',
 	},
-
 	topButton: {
 		marginLeft: '0.5em',
 		verticalAlign: 'top',

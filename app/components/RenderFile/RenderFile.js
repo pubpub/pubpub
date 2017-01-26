@@ -34,7 +34,7 @@ export const RenderFile = React.createClass({
 		case 'ppub': 
 			const content = JSON.parse(file.content);
 			return (
-				<div id={wrapperId} className={'pub-body'} style={[styles.contentWrapper, styles.pubBody]}>
+				<div id={wrapperId} className={'pub-body'} style={styles.contentWrapper}>
 					{!this.props.noHighlighter && 
 						<Highlighter />
 					}
@@ -44,7 +44,7 @@ export const RenderFile = React.createClass({
 			);
 		case 'text/markdown': 
 			return (
-				<div id={wrapperId} className={'pub-body'} style={[styles.contentWrapper, styles.pubBody]}>
+				<div id={wrapperId} className={'pub-body'} style={styles.contentWrapper}>
 					{!this.props.noHighlighter && 
 						<Highlighter />
 					}
@@ -91,16 +91,5 @@ export default Radium(RenderFile);
 styles = {
 	contentWrapper: {
 		position: 'relative',
-	},
-	pubBody: {
-		// padding: '0em 1.25em',
-		fontFamily: 'Merriweather',
-		fontWeight: 'light',
-		fontSize: '14px',
-		lineHeight: '24px',
-		// lineHeight: '1.6em',
-		// fontSize: '1.2em',
-		color: '#333',
-		maxWidth: '700px',
 	},
 };

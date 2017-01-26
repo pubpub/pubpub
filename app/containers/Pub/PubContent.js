@@ -367,7 +367,9 @@ export const PubContent = React.createClass({
 
 				{/* Render specific File */}
 				{!!files.length && (meta !== 'files' || (meta !== 'files' && routeFile)) &&
-					<RenderFile file={routeFile || mainFile} allFiles={files} />
+					<div style={styles.pubStyle}>
+						<RenderFile file={routeFile || mainFile} allFiles={files} />
+					</div>
 				}
 			</div>
 		);
@@ -444,4 +446,15 @@ styles = {
 		margin: '-1em 0px 1em',
 		color: globalStyles.errorRed,
 	},
+	pubStyle: {
+		// padding: '0em 1.25em',
+		fontFamily: 'Merriweather',
+		fontWeight: 'light',
+		fontSize: '14px',
+		lineHeight: '24px',
+		// lineHeight: '1.6em',
+		// fontSize: '1.2em',
+		color: '#333',
+		maxWidth: '700px',
+	}
 };
