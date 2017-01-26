@@ -22,6 +22,7 @@ export const PubDiscussionsList = React.createClass({
 	getInitialState() {
 		return {
 			filter: '',
+			showAll: false,
 		};
 	},
 
@@ -46,9 +47,14 @@ export const PubDiscussionsList = React.createClass({
 		browserHistory.push({ pathname: this.props.pathname, query: { ...this.props.query, filter: newFilter } });
 	},
 
+	toggleShowAll: function() {
+		this.setState({ showAll: !this.state.showAll });
+	},
+
 	render: function() {
 		const discussionsData = this.props.discussionsData || [];
 		const query = this.props.query || {};
+		const pathname = this.props.pathname;
 		const allAuthors = [
 			...discussionsData.map((discussion)=> {
 				return discussion.contributors[0].user;
@@ -100,6 +106,7 @@ export const PubDiscussionsList = React.createClass({
 		});
 
 		const pub = this.props.pub || {};
+		const invitedReviewers = pub.invitedReviewers || [];
 		const labelList = pub.pubLabels || [];
 		const sortList = ['Newest', 'Oldest', 'Most Replies', 'Least Replies'];
 
@@ -152,90 +159,121 @@ export const PubDiscussionsList = React.createClass({
 			</Menu>
 		);
 
+		const initDiscussionCount = 8;
 		return (
 
 			<div style={styles.container}>
-				{/* <form onSubmit={this.filterSubmit}>
-					<input type="text" placeholder={'Filter discussions'} style={styles.input} value={this.state.filter} onChange={this.inputUpdate.bind(this, 'filter')} />
-				</form>
-				
-				<div className="pt-button-group" style={styles.buttonGroup}>
-					<DropdownButton content={authorsMenu} title={'Authors'} position={0} />
-					<DropdownButton content={labelMenu} title={'Label'} position={1} />
-					<DropdownButton content={sortMenu} title={'Sort'} position={2} />
-				</div> */}
-				
-				{filteredDiscussions.sort((foo, bar)=> {
-					const fooChildren = foo.children || [];
-					const barChildren = bar.children || [];
-
-					const newest = !query.sort || query.sort === 'Newest';
-					const oldest = query.sort === 'Oldest';
-
-					const mostReplies = query.sort === 'Most Replies';
-					const leastReplies = query.sort === 'Least Replies';
-
-					if (newest && foo.createdAt > bar.createdAt) { return -1; }
-					if (newest && foo.createdAt < bar.createdAt) { return 1; }
-
-					if (oldest && foo.createdAt > bar.createdAt) { return 1; }
-					if (oldest && foo.createdAt < bar.createdAt) { return -1; }
-
-					if (mostReplies && fooChildren.length > barChildren.length) { return -1; }
-					if (mostReplies && fooChildren.length < barChildren.length) { return 1; }
-
-					if (leastReplies && fooChildren.length > barChildren.length) { return 1; }
-					if (leastReplies && fooChildren.length < barChildren.length) { return -1; }
-
-					return 0;
-				}).map((discussion, index)=> {
-					const author = discussion.contributors[0].user;
-					const labels = discussion.labels || [];
-					const children = discussion.children || [];
-					const discussionAuthors = [...new Set([
-						discussion.contributors[0].user.avatar,
-						...children.map((child)=> {
-							return child.contributors[0].user.avatar;
-						})
-					])];
-					return (
-						<div style={styles.discussionItem} key={'discussionItem-' + discussion.id} className={'ptt-card ptt-elevation-1'}>
-							<div style={styles.discussionSeparator} />
-							<PubLabelList 
-								allLabels={labelList} 
-								selectedLabels={labels} 
-								canEdit={false} 
-								pathname={this.props.pathname} 
-								query={this.props.query} 
-								labelStyle={{ opacity: 0.85, fontSize: '10px', lineHeight: '12px' }} />
-
-							<Link to={{pathname: this.props.pathname, query: { ...this.props.query, discussion: discussion.threadNumber }}} style={styles.discussionTitle}>
-								<span style={styles.threadNumber}>#{discussion.threadNumber}</span>
-								{discussion.title}
-							</Link>
-
-							<div>
-								{!discussion.isPublished && 
-									<span className={'pt-icon-standard pt-icon-lock'} />
-								}
-								<span style={{ fontSize: '0.85em' }}>
-									<FormattedRelative value={discussion.createdAt} />	
-								</span>
-								
-								{discussionAuthors.map((image, imageIndex)=> {
-									return <img src={'https://jake.pubpub.org/unsafe/50x50/' + image} style={[styles.authorImages, {zIndex: discussionAuthors.length - imageIndex}, imageIndex === 0 && {marginLeft: '1em'}]} key={'discussionImage-' + discussion.id + '-' + imageIndex}/>;
-								})}
-							</div>
-							
-							
-
-							
-
-							
-							
+				<div style={styles.header}>
+					<div style={{ textAlign: 'right' }}>
+						<div className="pt-button-group small-button">
+							<Link to={{ pathname: `/pub/${pub.slug}/reviewers`, query: { ...query } }} className="pt-button">Invite Reviewer</Link>
+							<Link to={{ pathname: `/pub/${pub.slug}/reviewers`, query: { ...query } }} className="pt-button">{invitedReviewers.length}</Link>
 						</div>
-					);
-				})}
+
+						<Link to={{ pathname: pathname, query: { ...query, panel: 'new' } }} className="pt-button small-button pt-icon-add">New Discussion</Link>
+
+						<div style={{ textAlign: 'right' }}>
+							<button role={'button'} className={'pt-button pt-minimal pt-icon-filter-list'}>Filter</button>	
+						</div>
+						
+					</div>
+				</div>
+
+				<div style={styles.contentBorder(this.state.showAll, true)} />
+				<div style={styles.content}>
+
+					{filteredDiscussions.sort((foo, bar)=> {
+						const fooChildren = foo.children || [];
+						const barChildren = bar.children || [];
+
+						const newest = !query.sort || query.sort === 'Newest';
+						const oldest = query.sort === 'Oldest';
+
+						const mostReplies = query.sort === 'Most Replies';
+						const leastReplies = query.sort === 'Least Replies';
+
+						if (newest && foo.createdAt > bar.createdAt) { return -1; }
+						if (newest && foo.createdAt < bar.createdAt) { return 1; }
+
+						if (oldest && foo.createdAt > bar.createdAt) { return 1; }
+						if (oldest && foo.createdAt < bar.createdAt) { return -1; }
+
+						if (mostReplies && fooChildren.length > barChildren.length) { return -1; }
+						if (mostReplies && fooChildren.length < barChildren.length) { return 1; }
+
+						if (leastReplies && fooChildren.length > barChildren.length) { return 1; }
+						if (leastReplies && fooChildren.length < barChildren.length) { return -1; }
+
+						return 0;
+					}).filter((item, index)=> {
+						if (!this.state.showAll && index >= initDiscussionCount) { return false; }
+						return true;
+					}).map((discussion, index)=> {
+						const author = discussion.contributors[0].user;
+						const labels = discussion.labels || [];
+						const children = discussion.children || [];
+						const discussionAuthors = [...new Set([
+							discussion.contributors[0].user.avatar,
+							...children.map((child)=> {
+								return child.contributors[0].user.avatar;
+							})
+						])];
+						return (
+							<div style={styles.discussionItem} key={'discussionItem-' + discussion.id} className={'ptt-card ptt-elevation-1'}>
+								<div style={styles.discussionSeparator} />
+								<PubLabelList 
+									allLabels={labelList} 
+									selectedLabels={labels} 
+									canEdit={false} 
+									pathname={this.props.pathname} 
+									query={this.props.query} 
+									labelStyle={{ opacity: 0.85, fontSize: '10px', lineHeight: '12px' }} />
+
+								<Link to={{pathname: this.props.pathname, query: { ...this.props.query, discussion: discussion.threadNumber }}} style={styles.discussionTitle}>
+									<span style={styles.threadNumber}>#{discussion.threadNumber}</span>
+									{discussion.title}
+								</Link>
+
+								<div>
+									{!discussion.isPublished && 
+										<span className={'pt-icon-standard pt-icon-lock'} />
+									}
+									<span style={{ fontSize: '0.85em' }}>
+										<FormattedRelative value={discussion.createdAt} />	
+									</span>
+									
+									{discussionAuthors.map((image, imageIndex)=> {
+										return <img src={'https://jake.pubpub.org/unsafe/50x50/' + image} style={[styles.authorImages, {zIndex: discussionAuthors.length - imageIndex}, imageIndex === 0 && {marginLeft: '1em'}]} key={'discussionImage-' + discussion.id + '-' + imageIndex}/>;
+									})}
+								</div>
+								
+							</div>
+						);
+					})}
+
+					{filteredDiscussions.length - initDiscussionCount > 0 &&
+						<div style={styles.toggleButtonWrapper}>
+							<button role={'button'} onClick={this.toggleShowAll} className={'pt-button small-button'}>Show {this.state.showAll ? 'Fewer' : `${filteredDiscussions.length - initDiscussionCount} More`}</button>	
+						</div>
+					}
+
+				</div>
+
+				<div style={styles.contentBorder(this.state.showAll, false)} />
+
+
+
+
+			{/* <form onSubmit={this.filterSubmit}>
+				<input type="text" placeholder={'Filter discussions'} style={styles.input} value={this.state.filter} onChange={this.inputUpdate.bind(this, 'filter')} />
+			</form>
+			
+			<div className="pt-button-group" style={styles.buttonGroup}>
+				<DropdownButton content={authorsMenu} title={'Authors'} position={0} />
+				<DropdownButton content={labelMenu} title={'Label'} position={1} />
+				<DropdownButton content={sortMenu} title={'Sort'} position={2} />
+			</div> */}
+				
 
 			</div>
 		);
@@ -245,18 +283,52 @@ export const PubDiscussionsList = React.createClass({
 export default Radium(PubDiscussionsList);
 
 styles = {
+	// container: {
+	// 	// height: 'calc(100% - 50px)', 
+	// 	width: '100%', 
+	// 	// backgroundColor: 'orange', 
+	// 	overflow: 'hidden', 
+	// 	overflowY: 'scroll', 
+	// 	position: 'relative',
+	// 	color: '#738694',
+	// },
+
 	container: {
-		// height: 'calc(100% - 50px)', 
+		height: '100%',
+		width: '100%',
+		position: 'relative',
+	},
+	header: {
+		padding: '10px 0px', 
+		height: '70px', 
+		width: '100%',
+	},
+	content: {
+		height: 'calc(100% - 80px)', 
 		width: '100%', 
-		// backgroundColor: 'orange', 
 		overflow: 'hidden', 
 		overflowY: 'scroll', 
 		position: 'relative',
 		color: '#738694',
 	},
-	buttonGroup: {
-		marginBottom: '2em',
+
+	toggleButtonWrapper: {
+		padding: '2em 0em',
+		textAlign: 'right',
 	},
+
+	contentBorder: (isVisible, isTop)=> {
+		return {
+			opacity: isVisible ? 1 : 0,
+			transition: '0.1s linear opacity',
+			height: '1px',
+			width: '100%',
+			position: 'absolute',
+			zIndex: 2,
+			boxShadow: isTop ? '0px -1px 1px rgba(0,0,0,0.5)' : '0px 1px 1px rgba(0,0,0,0.5)',
+		};
+	},
+
 	labelColor: {
 		display: 'inline-block',
 		width: '1em',

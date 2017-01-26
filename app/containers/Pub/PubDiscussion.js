@@ -128,6 +128,12 @@ export const PubDiscussion = React.createClass({
 
 		const discussions = [discussion, ...children];
 
+		// {(!!panel || !!queryDiscussion) &&
+		// 	<button type="button" className="pt-button pt-intent-primary pt-minimal" onClick={this.goBack}>
+		// 		<span className="pt-icon-standard pt-icon-chevron-left" />
+		// 		Back
+		// 	</button>
+		// }
 		return (
 			<div style={[styles.container, this.state.mounting ? { opacity: 0, transform: 'scale(0.9)' } : { opacity: 1 }]} className={'pt-card pt-elevation-2'}>
 				<Style rules={{
