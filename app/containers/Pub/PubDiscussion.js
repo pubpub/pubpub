@@ -353,7 +353,7 @@ styles = {
 		verticalAlign: 'top',
 	},
 	titleSection: {
-
+		marginBottom: '2em',
 	},
 	titleButtons: {
 		float: 'right',

@@ -257,7 +257,7 @@ export const PubContributors = React.createClass({
 											Hide Contributor
 										</label>
 										<div style={styles.contributorAction}>
-											<button type="button" className="pt-button pt-intent-danger pt-minimal" onClick={this.deleteContributor.bind(this, contributor.id)}>Delete Contributor</button>
+											<button type="button" className="pt-button pt-intent-danger pt-minimal" onClick={this.deleteContributor.bind(this, contributor.id)}>Remove Contributor</button>
 										</div>
 									</div>
 								}

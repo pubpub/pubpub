@@ -27,13 +27,20 @@ export const App = React.createClass({
 		dispatch: PropTypes.func,
 	},
 
-	logoutHandler: function() {
-		this.props.dispatch(logout());
-	},
 	componentWillMount() {
 		const FocusStyleManager = require('@blueprintjs/core').FocusStyleManager;
 		FocusStyleManager.onlyShowFocusOnTabs();
 		this.props.dispatch(login());
+	},
+
+	// componentWillReceiveProps(nextProps) {
+	// 	if (this.props.accountData.user.id && !nextProps.accountData.user.id) {
+	// 		window.location.reload();
+	// 	}
+	// },
+
+	logoutHandler: function() {
+		this.props.dispatch(logout());
 	},
 
 	render() {
