@@ -200,7 +200,15 @@ export const PubDiscussionsList = React.createClass({
 					])];
 					return (
 						<div style={styles.discussionItem} key={'discussionItem-' + discussion.id} className={'ptt-card ptt-elevation-1'}>
-							
+							<div style={styles.discussionSeparator} />
+							<PubLabelList 
+								allLabels={labelList} 
+								selectedLabels={labels} 
+								canEdit={false} 
+								pathname={this.props.pathname} 
+								query={this.props.query} 
+								labelStyle={{ opacity: 0.85, fontSize: '10px', lineHeight: '12px' }} />
+
 							<Link to={{pathname: this.props.pathname, query: { ...this.props.query, discussion: discussion.threadNumber }}} style={styles.discussionTitle}>
 								<span style={styles.threadNumber}>#{discussion.threadNumber}</span>
 								{discussion.title}
@@ -210,18 +218,16 @@ export const PubDiscussionsList = React.createClass({
 								{!discussion.isPublished && 
 									<span className={'pt-icon-standard pt-icon-lock'} />
 								}
-								<FormattedRelative value={discussion.createdAt} />
+								<span style={{ fontSize: '0.85em' }}>
+									<FormattedRelative value={discussion.createdAt} />	
+								</span>
+								
 								{discussionAuthors.map((image, imageIndex)=> {
 									return <img src={'https://jake.pubpub.org/unsafe/50x50/' + image} style={[styles.authorImages, {zIndex: discussionAuthors.length - imageIndex}, imageIndex === 0 && {marginLeft: '1em'}]} key={'discussionImage-' + discussion.id + '-' + imageIndex}/>;
 								})}
 							</div>
 							
-							<PubLabelList 
-								allLabels={labelList} 
-								selectedLabels={labels} 
-								canEdit={false} 
-								pathname={this.props.pathname} 
-								query={this.props.query} />
+							
 
 							
 
@@ -259,17 +265,30 @@ styles = {
 		verticalAlign: 'middle',
 	},
 	discussionItem: {
-		padding: '.5em',
-		margin: '.5em 0em',
+		margin: '1.5em 0em 0em',
+		padding: '1.5em 0em 0em',
+		// padding: '.5em',
+		// margin: '.5em 0em',
 		// backgroundColor: '#f3f3f4',
-		borderRadius: '1px',
+		// borderRadius: '1px',
 		textAlign: 'right',
+		position: 'relative',
+	},
+	discussionSeparator: {
+		width: '50%',
+		maxWidth: '150px',
+		height: '1px',
+		backgroundColor: '#EBF1F5',
+		position: 'absolute',
+		top: 0,
+		right: 0,
 	},
 	discussionTitle: {
 		// fontWeight: 'bold',
-		// fontSize: '1.25em',
+		fontSize: '1.1em',
 		color: '#202b33',
 		display: 'block',
+
 	},
 	threadNumber: {
 		opacity: '0.25', 
@@ -279,10 +298,10 @@ styles = {
 		paddingRight: '.25em',
 	},
 	authorImages: {
-		width: '20px',
+		width: '25px',
 		verticalAlign: 'middle',
 		marginLeft: '-8px',
-		borderRadius: '16px',
+		borderRadius: '25px',
 		// boxShadow: '0px 0px 1px 0px #000',
 		boxShadow: '0px 0px 0px px #fff',
 		position: 'relative',

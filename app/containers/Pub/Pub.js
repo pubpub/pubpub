@@ -209,6 +209,7 @@ export const Pub = React.createClass({
 		// All of this should be done outside of discussions - perhaps in it's own component.
 		// This is re-rendering on every scroll because of fixed position.
 		const allHighlights = discussions.reduce((previous, current)=> {
+			if (!current.versions.length) { return previous; }
 			const currentVersion = current.versions.reduce((previousVersionItem, currentVersionItem)=> {
 				return (!previousVersionItem.createdAt || currentVersionItem.createdAt > previousVersionItem.createdAt) ? currentVersionItem : previousVersionItem;
 			}, {}); // Get the last version
