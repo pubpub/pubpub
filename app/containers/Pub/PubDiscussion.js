@@ -35,6 +35,7 @@ export const PubDiscussion = React.createClass({
 			editorMode: undefined,
 			editTitle: undefined,
 			editDescription: undefined,
+			replyExpanded: false,
 			// mounting: true,
 		};
 	},
@@ -67,6 +68,14 @@ export const PubDiscussion = React.createClass({
 
 	},
 
+	expandReply: function() {
+		this.setState({ replyExpanded: true });
+	},
+
+	collapseReply: function() {
+		this.setState({ replyExpanded: false });
+	},
+
 	createSubmit: function(evt) {
 		evt.preventDefault();
 		if (!this.props.accountId) {
@@ -80,14 +89,14 @@ export const PubDiscussion = React.createClass({
 			files: [
 				{
 					type: 'text/markdown',
-					url: 'temp.md',
+					url: '/temp.md',
 					name: 'main.md',
 					content: this.state.description,
 				}
 			],
 		};
 		const { isValid, validationError } = this.validate(createData);
-		// this.setState({ validationError: validationError, openEditor: undefined, editorMode });
+		this.setState({ validationError: validationError });
 		if (!isValid) { return null; }
 		return this.props.dispatch(postDiscussion(createData.replyRootPubId, createData.replyParentPubId, createData.title, createData.description, undefined, createData.files, !this.props.discussion.isPublished));		
 	},
@@ -173,12 +182,14 @@ export const PubDiscussion = React.createClass({
 							<button type="button" className="pt-button small-button pt-icon-chevron-left" onClick={this.props.goBack}>Back</button>
 						</div>
 					</div>
-					<div style={styles.content} className={'pt-card pt-elevation-3'}>
+					<div style={[styles.content, { padding: '20px' }]} className={'pt-card pt-elevation-3'}>
 						Discussion not found.
 					</div>
 				</div>
 			);
 		}
+
+		const isExpanded = this.state.replyExpanded || this.state.description;
 
 		return (
 			<div style={styles.container}>
@@ -277,7 +288,7 @@ export const PubDiscussion = React.createClass({
 							}, files[0]);
 
 							return (
-								<div key={'discussion-' + index} style={[styles.discussionItem, index === discussions.length - 1 && { marginBottom: `${30 + 70}px` }]}>
+								<div key={'discussion-' + index} style={[styles.discussionItem, index === discussions.length - 1 && styles.lastDiscussionItem(isExpanded)]}>
 									<div style={styles.discussionImageWrapper}>
 										<img src={'https://jake.pubpub.org/unsafe/50x50/' + user.avatar} style={styles.discussionImage} />	
 									</div>
@@ -337,9 +348,19 @@ export const PubDiscussion = React.createClass({
 						})}
 
 					</div>
-					<div style={styles.contentBottom}>
+					<div style={styles.contentBottom(isExpanded)}>
 						<div style={styles.bottomFade}></div>
-						<input style={styles.bottomInput} className={'pt-input'} type={'text'} placeholder={'Reply to discussion'} />
+						<form>
+							<textarea onFocus={this.expandReply} onBlur={this.collapseReply} style={styles.bottomInput(isExpanded)} resize={'none'} className={'pt-input'} type={'text'} value={this.state.description} onChange={this.inputUpdate.bind(this, 'description')} placeholder={'Reply to discussion'} />	
+							{isExpanded &&
+								<div>
+									<Button text={'Submit Reply'} loading={isLoading} onClick={this.createSubmit} className={'pt-intent-primary'}/>
+									<span style={styles.errorMessage}>{this.state.validationError}</span>	
+								</div>
+								
+							}
+						</form>
+						
 					</div>
 				</div>
 			</div>
@@ -374,16 +395,19 @@ styles = {
 		overflowY: 'scroll',
 		padding: '20px 20px 0px'
 	},
-	contentBottom: {
-		width: '100%',
-		padding: '20px',
-		borderTop: '1px solid #D8E1E8',
-		height: '70px',
-		position: 'absolute',
-		bottom: '0px',
-		left: 0,
-		backgroundColor: '#fff',
-		zIndex: 2,
+	contentBottom: (isExpanded)=> {
+		return {
+			width: '100%',
+			padding: '20px',
+			borderTop: '1px solid #D8E1E8',
+			height: isExpanded ? '160px' : '70px',
+			position: 'absolute',
+			bottom: '0px',
+			left: 0,
+			backgroundColor: '#fff',
+			zIndex: 2,
+		};
+		
 	},
 	bottomFade: {
 		position: 'absolute',
@@ -394,9 +418,13 @@ styles = {
 		height: '30px',
 		zIndex: '2',
 	},
-	bottomInput: {
-		width: '100%',
-		height: '100%',
+	bottomInput: (isExpanded)=> {
+		return {
+			width: '100%',
+			height: isExpanded ? 'calc(100% - 30px)' : '100%',
+			padding: isExpanded ? '10px' : '6px 10px',
+			resize: 'none',
+		};
 	},
 	topButton: {
 		marginLeft: '0.5em',
@@ -419,6 +447,11 @@ styles = {
 		borderTop: '1px solid #EBF1F5',
 		display: 'table',
 		width: '100%',
+	},
+	lastDiscussionItem: (isExpanded)=> {
+		return {
+			marginBottom: isExpanded ? `${30 + 160}px` : `${30 + 70}px`,
+		};
 	},
 	discussionImageWrapper: {
 		display: 'table-cell',
@@ -526,7 +559,7 @@ styles = {
 	// 	height: '8em',
 	// },
 	errorMessage: {
-		padding: '10px 0px',
+		padding: '0px 10px',
 		color: globalStyles.errorRed,
 	},
 	reactionMenu: {
