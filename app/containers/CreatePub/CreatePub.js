@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-
-import { Loader, ImageCropper, PreviewPub } from 'components';
+import { Button } from '@blueprintjs/core';
+import { ImageCropper, PreviewPub } from 'components';
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
@@ -120,10 +120,10 @@ export const CreatePub = React.createClass({
 		
 		const isLoading = createPubData.loading;
 		const serverErrors = {
-			'Email already used': <FormattedMessage id="createPub.Emailalreadyused" defaultMessage="Email already used" />,
-			'Username already used': <FormattedMessage id="createPub.Usernamealreadyused" defaultMessage="Username already used" />,
+			'Validation error': <FormattedMessage id="createPub.Usernamealreadyused" defaultMessage="Pub URL already used" />,
 		};
 		const errorMessage = serverErrors[createPubData.error] || this.state.validationError;
+
 		// const previewPub = {
 		// 	title: this.state.title || 'Your New Pub Title',
 		// 	slug: this.state.slug,
@@ -170,15 +170,8 @@ export const CreatePub = React.createClass({
 						<input id={'avatar'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 					</label>
 
-					<button className={'pt-button pt-intent-primary'} onClick={this.createSubmit}>
-						Create pub
-					</button>
-
-					<div style={styles.loaderContainer}>
-						<Loader loading={isLoading} showCompletion={!errorMessage} />
-					</div>
-
-					<div style={styles.errorMessage}>{errorMessage}</div>
+					<Button loading={isLoading} className={'pt-button pt-intent-primary'} onClick={this.createSubmit} text={'Create Pub'} />
+					<span style={styles.errorMessage}>{errorMessage}</span>
 
 				</form>
 
@@ -229,7 +222,7 @@ styles = {
 		display: 'block',
 	},
 	errorMessage: {
-		padding: '10px 0px',
+		padding: '0px 10px',
 		color: globalStyles.errorRed,
 	},
 	imageCropperWrapper: {
