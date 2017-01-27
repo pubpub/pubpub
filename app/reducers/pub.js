@@ -58,6 +58,10 @@ import {
 	POST_DISCUSSION_SUCCESS,
 	POST_DISCUSSION_FAIL,
 
+	POST_DISCUSSION_VERSION_LOAD,
+	POST_DISCUSSION_VERSION_SUCCESS,
+	POST_DISCUSSION_VERSION_FAIL,
+
 	PUT_DISCUSSION_LOAD,
 	PUT_DISCUSSION_SUCCESS,
 	PUT_DISCUSSION_FAIL,
@@ -406,6 +410,33 @@ export default function reducer(state = defaultState, action) {
 			discussionsLoading: false,
 			discussionsError: action.error,
 		});
+
+	case POST_DISCUSSION_VERSION_LOAD:
+		return state.merge({
+			discussionsLoading: true,
+			discussionsError: undefined,
+		});	
+	case POST_DISCUSSION_VERSION_SUCCESS:
+		return state.merge({
+			discussionsLoading: false,
+			discussionsError: undefined,
+		})
+		.mergeIn(
+			['pub', 'discussions'], 
+			state.getIn(['pub', 'discussions']).map((discussion)=> {
+				if (discussion.get('id') === action.result.pubId) {
+					return discussion.merge({
+						versions: [ensureImmutable(action.result)], 
+					});
+				}
+				return discussion;
+			})
+		);
+	case POST_DISCUSSION_VERSION_FAIL:
+		return state.merge({
+			discussionsLoading: false,
+			discussionsError: action.error,
+		});
 	case PUT_DISCUSSION_LOAD:
 		return state.merge({
 			discussionsLoading: true,
@@ -422,7 +453,7 @@ export default function reducer(state = defaultState, action) {
 				if (discussion.get('id') === action.pubId) {
 					return discussion.merge({
 						title: action.title || discussion.get('title'), 
-						description: action.description || discussion.get('description'),
+						// description: action.description || discussion.get('description'),
 					});
 				}
 				return discussion;

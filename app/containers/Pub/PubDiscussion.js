@@ -2,12 +2,13 @@ import React, { PropTypes } from 'react';
 import Radium, { Style } from 'radium';
 import { Loader, RenderFile } from 'components';
 import { globalStyles } from 'utils/globalStyles';
-import { globalMessages } from 'utils/globalMessages';
+// import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
-import dateFormat from 'dateformat';
-import ReactMarkdown from 'react-markdown';
-import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider, Tooltip } from '@blueprintjs/core';
-import { postDiscussion, putDiscussion, postReaction, deleteReaction, toggleCloseDiscussion } from './actionsDiscussions';
+// import dateFormat from 'dateformat';
+// import ReactMarkdown from 'react-markdown';
+// import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider, Tooltip } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
+import { postDiscussion, putDiscussion, postReaction, deleteReaction, toggleCloseDiscussion, postDiscussionVersion } from './actionsDiscussions';
 import PubLabelList from './PubLabelList';
 import { FormattedRelative } from 'react-intl';
 
@@ -31,22 +32,23 @@ export const PubDiscussion = React.createClass({
 		return {
 			description: '',
 			openEditor: undefined,
+			editorMode: undefined,
 			editTitle: undefined,
 			editDescription: undefined,
-			mounting: true,
+			// mounting: true,
 		};
 	},
 
-	componentDidMount() {
-		this.setState({ mounting: false });
-	},
+	// componentDidMount() {
+	// 	this.setState({ mounting: false });
+	// },
 
-	componentWillMount() {
-		this.setState({ editTitle: this.props.discussion.title });
-	},
+	// componentWillMount() {
+	// 	this.setState({ editTitle: this.props.discussion.title });
+	// },
 	componentWillReceiveProps(nextProps) {
 		if (this.props.isLoading && !nextProps.isLoading && !nextProps.error) {
-			this.setState({ description: '', openEditor: undefined });
+			this.setState({ description: '', openEditor: undefined, editorMode: undefined, });
 		}
 	},
 
@@ -85,20 +87,41 @@ export const PubDiscussion = React.createClass({
 			],
 		};
 		const { isValid, validationError } = this.validate(createData);
-		this.setState({ validationError: validationError, openEditor: undefined });
+		// this.setState({ validationError: validationError, openEditor: undefined, editorMode });
 		if (!isValid) { return null; }
 		return this.props.dispatch(postDiscussion(createData.replyRootPubId, createData.replyParentPubId, createData.title, createData.description, undefined, createData.files, !this.props.discussion.isPublished));		
 	},
 
-	setOpenEditor: function(id, description, title) {
-		this.setState({ openEditor: id, editDescription: description, editTitle: title });
+	setOpenEditor: function(discussion, mode) {
+		if (!mode) { this.setState({ openEditor: undefined, editDescription: undefined, editorMode: undefined, editTitle: undefined }); }
+		const currentVersion = discussion.versions.reduce((previous, current)=> {
+			return (!previous.createdAt || current.createdAt > previous.createdAt) ? current : previous;
+		}, {});
+
+		const content = currentVersion && currentVersion.files && currentVersion.files[0].content;
+		const title = discussion && discussion.title;
+		this.setState({ openEditor: discussion, editDescription: content, editTitle: title, editorMode: mode });
 	},
 
 	discussionChange: function(evt) {
 		this.setState({ editDescription: evt.target.value });
 	},
-	updateDiscussion: function() {
-		this.props.dispatch(putDiscussion(this.state.openEditor, undefined, this.state.editDescription));
+	updateDiscussion: function(evt) {
+		// this.props.dispatch(putDiscussion(this.state.openEditor, undefined, this.state.editDescription));
+
+		evt.preventDefault();
+		const pubId = this.state.openEditor.id;
+		const newVersionFiles = [
+			{
+				type: 'text/markdown',
+				url: '/temp.md',
+				name: 'main.md',
+				content: this.state.editDescription,
+			}
+		];
+
+		// this.setState({ newVersionError: '' });
+		return this.props.dispatch(postDiscussionVersion(pubId, 'Update discussion content', this.state.openEditor.isPublished, newVersionFiles, 'main.md'));
 	},
 
 	editTitleChange: function(evt) {
@@ -170,11 +193,11 @@ export const PubDiscussion = React.createClass({
 							query={this.props.query} 
 							dispatch={this.props.dispatch} />
 
-						{this.state.openEditor !== 'title' &&
+						{this.state.editorMode !== 'title' &&
 							<div style={styles.titleSection}>
 								{(true || (discussion.contributors && discussion.contributors[0].user.id === this.props.accountId)) &&
 									<div className={'pt-button-group'} style={styles.titleButtons}>
-										<button className={'pt-button pt-minimal pt-icon-edit'} onClick={this.setOpenEditor.bind(this, 'title', undefined, discussion.title)} />
+										<button className={'pt-button pt-minimal pt-icon-edit'} onClick={this.setOpenEditor.bind(this, discussion, 'title')} />
 										<button className={'pt-button pt-minimal pt-icon-compressed'} onClick={this.toggleIsClosed.bind(this, !discussion.isClosed)} />
 									</div>
 								}
@@ -187,15 +210,17 @@ export const PubDiscussion = React.createClass({
 							</div>
 						}
 
-						{this.state.openEditor === 'title' &&
+						{this.state.editorMode === 'title' &&
 							<div>
 								<input type="text" value={this.state.editTitle} onChange={this.editTitleChange} />
 								<hr />
-								<button className={'pt-button'} onClick={this.setOpenEditor.bind(this, undefined)}>Cancel</button>
-								<button className={'pt-button pt-intent-primary'} onClick={this.confirmEditTitle}>Save</button>
-								<div style={styles.loaderContainer}>
+								<button className={'pt-button'} onClick={this.setOpenEditor.bind(this, undefined, undefined)}>Cancel</button>
+								<Button className={'pt-button pt-intent-primary'} onClick={this.confirmEditTitle} loading={isLoading} text={'Save'} />
+								
+								{/*<button className={'pt-button pt-intent-primary'} onClick={this.confirmEditTitle}>Save</button>
+									<div style={styles.loaderContainer}>
 									<Loader loading={isLoading} showCompletion={!errorMessage} />
-								</div>
+								</div>*/}
 							</div>
 						}
 
@@ -207,7 +232,7 @@ export const PubDiscussion = React.createClass({
 						}).map((child, index)=> {
 							const user = child.contributors[0].user;
 							const isAuthor = user.id === this.props.accountId;
-							const editorOpen = this.state.openEditor === child.id;
+							const editorOpen = this.state.openEditor && this.state.openEditor.id === child.id;
 							const pubReactions = child.pubReactions || [];
 							
 							const usedReactions = {};
@@ -246,7 +271,7 @@ export const PubDiscussion = React.createClass({
 									<div style={styles.discussionContentWrapper}>
 										<div style={styles.discussionButtons} className={'pt-button-group'}>
 											<button type="button" style={styles.discussionButton} className="pt-button pt-minimal pt-icon-social-media" />
-											<button type="button" style={styles.discussionButton} className="pt-button pt-minimal pt-icon-edit" onClick={this.setOpenEditor.bind(this, child.id, child.description)} />
+											<button type="button" style={styles.discussionButton} className="pt-button pt-minimal pt-icon-edit" onClick={this.setOpenEditor.bind(this, child, 'body')} />
 											<button type="button" style={styles.discussionButton} className="pt-button pt-minimal pt-icon-bookmark" />
 										</div>
 
@@ -266,11 +291,12 @@ export const PubDiscussion = React.createClass({
 											<div style={styles.discussionText} className={'discussion-body'}>
 												<textarea value={this.state.editDescription} onChange={this.discussionChange} />
 												<hr />
-												<button className={'pt-button'} onClick={this.setOpenEditor.bind(this, undefined)}>Cancel</button>
-												<button className={'pt-button pt-intent-primary'} onClick={this.updateDiscussion}>Save</button>
+												<button className={'pt-button'} onClick={this.setOpenEditor.bind(this, undefined, undefined)}>Cancel</button>
+												<Button className={'pt-button pt-intent-primary'} onClick={this.updateDiscussion} loading={isLoading} text={'Save'}/>
+												{/*<button className={'pt-button pt-intent-primary'} onClick={this.updateDiscussion}>Save</button>
 												<div style={styles.loaderContainer}>
 													<Loader loading={isLoading} showCompletion={!errorMessage} />
-												</div>
+												</div>*/}
 											</div>
 										}
 
