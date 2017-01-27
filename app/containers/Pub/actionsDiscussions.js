@@ -31,7 +31,7 @@ export const DELETE_REACTION_FAIL = 'pub/DELETE_REACTION_FAIL';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function postDiscussion(replyRootPubId, replyParentPubId, title, description, labels, isPrivate) {
+export function postDiscussion(replyRootPubId, replyParentPubId, title, description, labels, files, isPrivate) {
 	return (dispatch) => {
 		dispatch({ type: POST_DISCUSSION_LOAD });
 
@@ -47,6 +47,7 @@ export function postDiscussion(replyRootPubId, replyParentPubId, title, descript
 				replyParentPubId: replyParentPubId,
 				description: description, 
 				labels: labels,
+				files: files,
 				isPrivate: isPrivate,
 				// We are using the description to store the body content for now. This is to avoid creating a version, file, etc.
 				// If the need to have more robust content in discussions arises, then we can switch to full pub structure.

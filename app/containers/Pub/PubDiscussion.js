@@ -57,7 +57,7 @@ export const PubDiscussion = React.createClass({
 
 	validate: function(data) {
 		// Check to make sure name exists
-		if (!data.description || !data.description.length) {
+		if (!data.files || !data.files.length || !data.files[0].content) {
 			return { isValid: false, validationError: <FormattedMessage id="discussion.CannotPostEmptyReply" defaultMessage="Cannot post empty reply" /> };
 		}
 
@@ -74,12 +74,20 @@ export const PubDiscussion = React.createClass({
 			replyRootPubId: this.props.pub.id,
 			replyParentPubId: this.props.discussion.id,
 			title: 'Reply to: ' + this.props.discussion.title,
-			description: this.state.description,
+			description: undefined,
+			files: [
+				{
+					type: 'text/markdown',
+					url: 'temp.md',
+					name: 'main.md',
+					content: this.state.description,
+				}
+			],
 		};
 		const { isValid, validationError } = this.validate(createData);
 		this.setState({ validationError: validationError, openEditor: undefined });
 		if (!isValid) { return null; }
-		return this.props.dispatch(postDiscussion(createData.replyRootPubId, createData.replyParentPubId, createData.title, createData.description, undefined, !this.props.discussion.isPublished));		
+		return this.props.dispatch(postDiscussion(createData.replyRootPubId, createData.replyParentPubId, createData.title, createData.description, undefined, createData.files, !this.props.discussion.isPublished));		
 	},
 
 	setOpenEditor: function(id, description, title) {

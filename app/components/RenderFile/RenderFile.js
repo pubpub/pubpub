@@ -27,6 +27,7 @@ export const RenderFile = React.createClass({
 		});
 	},
 	render() {
+
 		const file = this.props.file || {};
 		const fileType = file.type || file.url.split('.').pop();
 		const wrapperId = this.props.noHighlighter ? '' : 'highlighter-wrapper';

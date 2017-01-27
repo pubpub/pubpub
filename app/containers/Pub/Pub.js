@@ -438,6 +438,7 @@ export const Pub = React.createClass({
 													discussionsData={discussionsData}
 													pub={pub}
 													goBack={this.goBack}
+													accountId={accountId}
 													isLoading={this.props.pubData.discussionsLoading}
 													error={this.props.pubData.discussionsError}
 													pathname={pathname}

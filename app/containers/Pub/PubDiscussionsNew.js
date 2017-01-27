@@ -16,6 +16,7 @@ export const PubDiscussionsNew = React.createClass({
 		discussionsData: PropTypes.array,
 		pub: PropTypes.object,
 		goBack: PropTypes.func,
+		accountId: PropTypes.number,
 		isLoading: PropTypes.bool,
 		pathname: PropTypes.string,
 		query: PropTypes.object,
@@ -69,18 +70,29 @@ export const PubDiscussionsNew = React.createClass({
 
 	createSubmit: function(evt) {
 		evt.preventDefault();
+		if (!this.props.accountId) {
+			return this.setState({ validationError: 'Must be Logged In' });
+		}
 		const createData = {
 			replyRootPubId: this.props.pub.id,
 			replyParentPubId: this.props.pub.id,
 			title: this.state.title,
-			description: this.state.description,
+			description: undefined,
 			labels: this.state.labels,
+			files: [
+				{
+					type: 'text/markdown',
+					url: '/temp.md',
+					name: 'main.md',
+					content: this.state.description,
+				}
+			],
 		};
 		const { isValid, validationError } = this.validate(createData);
 		this.setState({ validationError: validationError });
 		const isPrivate = this.state.isPrivate;
 		if (isValid) {
-			this.props.dispatch(postDiscussion(createData.replyRootPubId, createData.replyParentPubId, createData.title, createData.description, createData.labels, isPrivate));	
+			this.props.dispatch(postDiscussion(createData.replyRootPubId, createData.replyParentPubId, createData.title, createData.description, createData.labels, createData.files, isPrivate));	
 		}
 	},
 
