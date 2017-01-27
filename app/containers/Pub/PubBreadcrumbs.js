@@ -47,7 +47,7 @@ export const PubBreadcrumbs = React.createClass({
 				<div style={styles.versionStatus}>
 					<Link to={{ pathname: '/pub/' + this.props.pub.slug + '/versions', query: query }}>{dateFormat(version.createdAt, 'mmmm dd, yy')} · {mode}</Link>
 				</div>
-				<ul className="pt-breadcrumbs">
+				<ul className="pt-breadcrumbs" style={styles.breadcrumbs}>
 					<li><Link to={{ pathname: '/pub/' + this.props.pub.slug + '/files', query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> Files</Link></li>
 
 					{meta !== 'files' && !routeFilename &&
@@ -73,6 +73,9 @@ styles = {
 		marginBottom: '2em',
 		padding: '1em 0em 0em',
 		borderBottom: '1px solid #CCC',
+	},
+	breadcrumbs: {
+		minHeight: '30px',
 	},
 	versionStatus: {
 		float: 'right',

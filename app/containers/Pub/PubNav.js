@@ -47,7 +47,7 @@ export const PubNav = React.createClass({
 			},
 			{
 				icon: 'pt-icon-calendar',
-				title: `${versions.length} Versions`,
+				title: `${versions.length} Version${versions.length === 1 ? '' : 's'}`,
 				subtitle: `Current: ${dateFormat(currentVersion.createdAt, 'mmm dd, yyyy')}`,
 				to: { pathname: '/pub/' + pub.slug + '/versions', query: preservedQuery },
 				active: meta === 'versions',
@@ -55,14 +55,14 @@ export const PubNav = React.createClass({
 			},
 			{
 				icon: 'pt-icon-person',
-				title: `${contributors.length} Contributors`,
+				title: `${contributors.length} Contributor${contributors.length === 1 ? '' : 's'}`,
 				subtitle: `${contributors.length} authors`,
 				to: { pathname: '/pub/' + pub.slug + '/contributors', query: preservedQuery },
 				active: meta === 'contributors'
 			},
 			{
 				icon: 'pt-icon-manual',
-				title: `${pubFeatures.length} Journals`,
+				title: `${pubFeatures.length} Journal${pubFeatures.length === 1 ? '' : 's'}`,
 				subtitle: `${pubFeatures.length} featuring`,
 				to: { pathname: '/pub/' + pub.slug + '/journals', query: preservedQuery },
 				active: meta === 'journals',
@@ -77,7 +77,6 @@ export const PubNav = React.createClass({
 				hidden: !pub.isAuthor && !pub.canEdit,
 			},
 		];
-		console.log(navItems);
 		return (
 			<div style={styles.container} className={'button-wrapper button-nav'}>
 				<Style rules={{

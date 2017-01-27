@@ -112,9 +112,11 @@ export default function reducer(state = defaultState, action) {
 	case LOGOUT_LOAD:
 		return state;
 	case LOGOUT_SUCCESS:
-		return state.merge({
-			user: {},
-		});
+		window.location.reload();
+		// return state.merge({
+		// 	user: {},
+		// });
+		return state;
 	case LOGOUT_FAIL:
 		return state;
 

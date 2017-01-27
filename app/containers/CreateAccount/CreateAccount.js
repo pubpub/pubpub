@@ -128,20 +128,20 @@ export const CreateAccount = React.createClass({
 		const accountData = this.props.accountData || {};
 		const user = accountData.user || {};
 		const createAccountData = {
-			email: user.email,
+			email: user.email.trim(),
 			hash: this.props.params.hash,
-			username: this.state.username,
-			firstName: this.state.firstName,
-			lastName: this.state.lastName,
+			username: this.state.username.trim(),
+			firstName: this.state.firstName.trim(),
+			lastName: this.state.lastName.trim(),
 			password: this.state.password,
 			avatar: this.state.userImageURL,
-			bio: this.state.bio,
-			publicEmail: this.state.publicEmail,
-			website: this.state.website,
-			twitter: this.state.twitter,
-			orcid: this.state.orcid,
-			github: this.state.github,
-			googleScholar: this.state.googleScholar,
+			bio: this.state.bio.trim(),
+			publicEmail: this.state.publicEmail.trim(),
+			website: this.state.website.trim(),
+			twitter: this.state.twitter.trim(),
+			orcid: this.state.orcid.trim(),
+			github: this.state.github.trim(),
+			googleScholar: this.state.googleScholar.trim(),
 		};
 		const { isValid, validationError } = this.validate(createAccountData);
 		this.setState({ validationError: validationError });

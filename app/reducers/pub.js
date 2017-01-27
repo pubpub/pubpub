@@ -58,9 +58,17 @@ import {
 	POST_DISCUSSION_SUCCESS,
 	POST_DISCUSSION_FAIL,
 
+	POST_DISCUSSION_VERSION_LOAD,
+	POST_DISCUSSION_VERSION_SUCCESS,
+	POST_DISCUSSION_VERSION_FAIL,
+
 	PUT_DISCUSSION_LOAD,
 	PUT_DISCUSSION_SUCCESS,
 	PUT_DISCUSSION_FAIL,
+
+	PUT_DISCUSSION_CLOSE_LOAD,
+	PUT_DISCUSSION_CLOSE_SUCCESS,
+	PUT_DISCUSSION_CLOSE_FAIL,
 
 	POST_REACTION_LOAD,
 	POST_REACTION_SUCCESS,
@@ -402,6 +410,33 @@ export default function reducer(state = defaultState, action) {
 			discussionsLoading: false,
 			discussionsError: action.error,
 		});
+
+	case POST_DISCUSSION_VERSION_LOAD:
+		return state.merge({
+			discussionsLoading: true,
+			discussionsError: undefined,
+		});	
+	case POST_DISCUSSION_VERSION_SUCCESS:
+		return state.merge({
+			discussionsLoading: false,
+			discussionsError: undefined,
+		})
+		.mergeIn(
+			['pub', 'discussions'], 
+			state.getIn(['pub', 'discussions']).map((discussion)=> {
+				if (discussion.get('id') === action.result.pubId) {
+					return discussion.merge({
+						versions: [ensureImmutable(action.result)], 
+					});
+				}
+				return discussion;
+			})
+		);
+	case POST_DISCUSSION_VERSION_FAIL:
+		return state.merge({
+			discussionsLoading: false,
+			discussionsError: action.error,
+		});
 	case PUT_DISCUSSION_LOAD:
 		return state.merge({
 			discussionsLoading: true,
@@ -418,13 +453,39 @@ export default function reducer(state = defaultState, action) {
 				if (discussion.get('id') === action.pubId) {
 					return discussion.merge({
 						title: action.title || discussion.get('title'), 
-						description: action.description || discussion.get('description')
+						// description: action.description || discussion.get('description'),
 					});
 				}
 				return discussion;
 			})
 		);
 	case PUT_DISCUSSION_FAIL:
+		return state.merge({
+			discussionsLoading: false,
+			discussionsError: action.error,
+		});
+	case PUT_DISCUSSION_CLOSE_LOAD:
+		return state.merge({
+			discussionsLoading: true,
+			discussionsError: undefined,
+		});	
+	case PUT_DISCUSSION_CLOSE_SUCCESS:
+		return state.merge({
+			discussionsLoading: false,
+			discussionsError: undefined,
+		})
+		.mergeIn(
+			['pub', 'discussions'], 
+			state.getIn(['pub', 'discussions']).map((discussion)=> {
+				if (discussion.get('id') === action.pubId) {
+					return discussion.merge({
+						isClosed: action.isClosed,
+					});
+				}
+				return discussion;
+			})
+		);
+	case PUT_DISCUSSION_CLOSE_FAIL:
 		return state.merge({
 			discussionsLoading: false,
 			discussionsError: action.error,
@@ -497,11 +558,20 @@ export default function reducer(state = defaultState, action) {
 		return state.merge({
 			updateReviewerLoading: false,
 			updateReviewerError: undefined,
-		});
-		// .mergeIn(
-		// 	['pub', 'invitedReviewers'], 
-		// 	state.getIn(['pub', 'invitedReviewers']).push(ensureImmutable(action.result))
-		// );
+		})
+		.mergeIn(
+			['pub', 'invitedReviewers'], 
+			state.getIn(['pub', 'invitedReviewers']).map((invitedReviewer)=> {
+				if (invitedReviewer.get('id') === action.invitedReviewerId) {
+					return invitedReviewer.merge({
+						invitationAccepted: action.invitationAccepted || invitedReviewer.get('invitationAccepted'), 
+						invitationRejected: action.invitationRejected || invitedReviewer.get('invitationRejected'), 
+						rejectionReason: action.rejectionReason || invitedReviewer.get('rejectionReason'), 
+					});
+				}
+				return invitedReviewer;
+			})
+		);
 	case PUT_REVIEWER_FAIL:
 		return state.merge({
 			updateReviewerLoading: false,

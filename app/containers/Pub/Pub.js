@@ -2,6 +2,11 @@ import { Link, browserHistory } from 'react-router';
 import React, { PropTypes } from 'react';
 import { Sticky, StickyContainer } from 'react-sticky';
 
+import * as textQuote from 'dom-anchor-text-quote';
+import Rangy from 'rangy';
+require('rangy/lib/rangy-textrange');
+import * as Marklib from 'marklib';
+
 // import { FollowButton } from 'containers';
 import { FormattedMessage } from 'react-intl';
 import Helmet from 'react-helmet';
@@ -17,6 +22,7 @@ import PubDiscussionsList from './PubDiscussionsList';
 import PubDiscussionsNew from './PubDiscussionsNew';
 import PubFollowers from './PubFollowers';
 import PubJournals from './PubJournals';
+import PubInvitedReviewerMessage from './PubInvitedReviewerMessage';
 // import PubLabelList from './PubLabelList';
 import PubReviewers from './PubReviewers';
 import PubSettings from './PubSettings';
@@ -29,7 +35,6 @@ import dateFormat from 'dateformat';
 import { getPubData } from './actions';
 import { globalMessages } from 'utils/globalMessages';
 import { globalStyles } from 'utils/globalStyles';
-import { putReviewer } from './actionsReviewers';
 
 let styles;
 
@@ -45,6 +50,8 @@ export const Pub = React.createClass({
 	getInitialState() {
 		return {
 			canGoBack: false,
+			showAllDiscussions: false,
+			// showClosedDiscussions: false,
 		};
 	},
 
@@ -119,20 +126,28 @@ export const Pub = React.createClass({
 		}
 	},
 
-	// addDiscussionIndex: function(discussions, pubId) {
-	// 	return discussions.filter((discussion)=> {
-	// 		return discussion.replyParentPubId === pubId;
-	// 	}).sort((foo, bar)=> {
-	// 		if (foo.createdAt > bar.createdAt) { return 1; }
-	// 		if (foo.createdAt < bar.createdAt) { return -1; }
-	// 		return 0;
-	// 	}).map((discussion, index)=>{
-	// 		return { ...discussion, discussionIndex: index + 1 };
-	// 	});
+	toggleShowAllDiscussions: function() {
+		this.setState({ showAllDiscussions: !this.state.showAllDiscussions });
+	},
+	// toggleShowClosedDiscussions: function() {
+	// 	this.setState({ showClosedDiscussions: !this.state.showClosedDiscussions });
 	// },
 
-	updateReviewer: function() {
-		this.props.dispatch(putReviewer(this.props.pubData.pub.id, false, true, 'I have no idea what this is'));
+
+	extractHighlights: function(object, array) {
+		// console.log(object);
+		const tempArray = array || [];
+		if (object.type === 'embed' && object.attrs && object.attrs.data && object.attrs.data.type === 'highlight') { 
+			tempArray.push(object.attrs.data.content); 
+		}
+		if (object.content) {
+			const newContent = Array.isArray(object.content) ? object.content : [object.content];
+			newContent.forEach((content)=> {
+				this.extractHighlights(content, tempArray);
+			});
+		}
+
+		return tempArray;
 	},
 
 	render() {
@@ -174,14 +189,67 @@ export const Pub = React.createClass({
 		const discussions = pub.discussions || [];
 		const contributors = pub.contributors || [];
 		const invitedReviewers = pub.invitedReviewers || [];
-		const isInvitedReviewer = invitedReviewers.reduce((previous, current)=> {
-			if (!current.invitationRejected && current.invitedUserId === accountUser.id) { return true; }
+		const currentInvitedReviewer = invitedReviewers.reduce((previous, current)=> {
+			if (!current.invitationRejected && current.invitedUserId === accountUser.id) { return current; }
 			return previous;
-		}, false);
+		}, undefined);
 
 		const versions = pub.versions || [];
 		const pubFeatures = pub.pubFeatures || [];
 		const followers = pub.followers || [];
+
+
+		/*---------*/
+		// All of this should be done outside of discussions - perhaps in it's own component.
+		// This is re-rendering on every scroll because of fixed position.
+		const allHighlights = discussions.reduce((previous, current)=> {
+			if (!current.versions.length) { return previous; }
+			const currentVersion = current.versions.reduce((previousVersionItem, currentVersionItem)=> {
+				return (!previousVersionItem.createdAt || currentVersionItem.createdAt > previousVersionItem.createdAt) ? currentVersionItem : previousVersionItem;
+			}, {}); // Get the last version
+			const files = currentVersion.files || [];
+
+			const mainFile = files.reduce((previousFileItem, currentFileItem)=> {
+				if (currentVersion.defaultFile === currentFileItem.name) { return currentFileItem; }
+				if (!currentVersion.defaultFile && currentFileItem.name.split('.')[0] === 'main') { return currentFileItem; }
+				return previousFileItem;
+			}, files[0]);
+
+			if (mainFile.type === 'ppub') {
+				// console.log(mainFile.content);
+				return this.extractHighlights(JSON.parse(mainFile.content), previous);
+			}
+			return previous;
+
+		}, []);
+
+
+		console.log(allHighlights);
+
+		setTimeout(()=> {
+			const container = document.getElementById('highlighter-wrapper');
+			allHighlights.forEach((highlight)=> {
+				const context = highlight.context;
+				const text = highlight.text;
+				const textStart = context.indexOf(text);
+				const textEnd = textStart + text.length;
+				const prefixStart = Math.max(textStart - 10, 0);
+				const suffixEnd = Math.min(textEnd + 10, context.length);
+				const highlightObject = {
+					prefix: context.substring(prefixStart, textStart),
+					exact: highlight.text,
+					suffix: context.substring(textEnd, suffixEnd),
+				};
+				// console.log(highlightObject);
+				const textQuoteRange = textQuote.toRange(container, highlightObject);
+				const renderer = new Marklib.Rendering(document, { className: 'highlight' }, document);
+				renderer.renderWithRange(textQuoteRange);
+			});
+		}, 100);
+		
+		/*---------*/
+
+
 
 
 		// const followData = followers.reduce((previous, current)=> {
@@ -302,108 +370,15 @@ export const Pub = React.createClass({
 					query={query}
 					dispatch={this.props.dispatch} />
 
-				{/*<PubNav
-					pub={pub}
-					accountId={accountId}
-					preservedQuery={preservedQuery}
-					currentVersion={currentVersion}
-					meta={meta}
-					pathname={pathname}
-					query={query}
-					dispatch={this.props.dispatch} />*/}
+				{/* ------- */}
+				{/* Message */}
+				{/* ------- */}
 
-				{/* false && isInvitedReviewer &&
-					<div className={'pt-callout'}>
-						INVITED!!!!!
-						<button type="button" onClick={this.updateReviewer}>CLICK ME TO UPDATE</button>
+				{currentInvitedReviewer && !currentInvitedReviewer.invitationAccepted && !currentInvitedReviewer.invitationRejected &&
+					<div style={styles.messageSection}>
+						<PubInvitedReviewerMessage pub={pub} isLoading={this.props.pubData.updateReviewerLoading} currentInvitedReviewer={currentInvitedReviewer} dispatch={this.props.dispatch} />
 					</div>
-				*/}
-
-				{/* ---------- */}
-				{/*   Header   */}
-				{/* ---------- */}
-
-				<div style={styles.header}>
-					{/*!!displayedFeatures.length &&
-						<div style={styles.journalHeader}>
-							{!!contextJournal &&
-								<div>also featured in:</div>
-							}
-							{displayedFeatures.sort((foo, bar)=> {
-								// Sort so that least recent is first in array
-								if (foo.createdAt > bar.createdAt) { return 1; }
-								if (foo.createdAt < bar.createdAt) { return -1; }
-								return 0;
-							}).map((feature)=> {
-								const journal = feature.journal || {};
-								return (
-									<Link to={'/' + journal.slug} key={'header-feature-' + feature.journalId} style={styles.journalHeaderTag}>
-										<Tag backgroundColor={journal.headerColor} isLarge={true}>{journal.title}</Tag>
-									</Link>
-								);
-							})}
-						</div>
-					*/}
-					{/*<div style={styles.followButtonWrapper}>
-						<FollowButton
-							pubId={pub.id}
-							followData={followData}
-							followerCount={followers.length}
-							followersLink={{ pathname: '/pub/' + pub.slug + '/followers', query: query }}
-							dispatch={this.props.dispatch} />
-					</div>*/}
-
-					{/*<h1 style={styles.pubTitle}>{pub.title}</h1>*/}
-
-					{/*<div style={{ paddingLeft: '1em' }}>
-						<PubLabelList selectedLabels={globalLabels} pubId={pub.id} rootPubId={pub.id} globalLabels={true} canEdit={pub.canEdit} pathname={pathname} query={query} dispatch={this.props.dispatch} />
-					</div>*/}
-
-					{/*<div style={styles.pubAuthors}>
-						{contributors.filter((contributor)=>{
-							return contributor.isAuthor === true;
-						}).map((contributor, index, array)=> {
-							const user = contributor.user || {};
-							return <Link to={'/user/' + user.username} key={'contributor-' + index}>{user.firstName + ' ' + user.lastName}{index !== array.length - 1 ? ', ' : ''}</Link>;
-						})}
-					</div>*/}
-
-					{/*pubDOI &&
-						<div style={styles.pubAuthors}>
-							DOI: <a href={'https://doi.org/' + pubDOI} target={'_blank'}>{pubDOI}</a>
-						</div>
-					*/}
-
-					{/*(!meta || meta === 'files' || true) &&
-						<div style={styles.versionDates}>
-							<div style={styles.versionDate}>First Version: {dateFormat(firstVersion.createdAt, 'mmmm dd, yy HH:MM')}</div>
-							{firstPublishedVersion.id &&
-								<Link to={{ pathname: pathname, query: { ...query, version: firstPublishedVersion.hash } }} style={styles.versionDate}>Originally Published<br />{dateFormat(firstPublishedVersion.createdAt, 'mmmm dd, yy HH:MM')}</Link>
-							}
-
-							<Link to={{ pathname: pathname, query: { ...query, version: currentVersion.hash } }} style={styles.versionDate}>Current Version<br />{dateFormat(currentVersion.createdAt, 'mmm dd, yy HH:MM')}</Link>
-							
-							{currentVersion.id !== lastVersion.id &&
-								<Link to={{ pathname: pathname, query: { ...query, version: undefined } }} style={styles.versionDate}>Most Recent Version<br />{dateFormat(lastVersion.createdAt, 'mmm dd, yy HH:MM')}</Link>
-							}
-						</div>
-					*/}
-					
-
-					{/* ------- */}
-					{/* Nav Bar */}
-					{/* ------- */}
-					{/*<div style={styles.nav}>
-						<Link to={{ pathname: '/pub/' + this.props.params.slug, query: preservedQuery }}><div style={[styles.navItem, (!meta || meta === 'files') && styles.navItemActive]} className={'bottomShadowOnHover'}>Content</div></Link>
-						{!!versions.length && <Link to={{ pathname: '/pub/' + this.props.params.slug + '/versions', query: preservedQuery }}><div style={[styles.navItem, meta === 'versions' && styles.navItemActive]} className={'bottomShadowOnHover'}>Versions ({versions.length})</div></Link> }
-						<Link to={{ pathname: '/pub/' + this.props.params.slug + '/contributors', query: preservedQuery }}><div style={[styles.navItem, meta === 'contributors' && styles.navItemActive]} className={'bottomShadowOnHover'}>Contributors ({contributors.length})</div></Link>
-						{!!versions.length && <Link to={{ pathname: '/pub/' + this.props.params.slug + '/journals', query: preservedQuery }}><div style={[styles.navItem, meta === 'journals' && styles.navItemActive]} className={'bottomShadowOnHover'}>Journals {pubFeatures.length ? '(' + pubFeatures.length + ')' : ''}</div></Link> }
-						{pub.canEdit && <Link to={{ pathname: '/pub/' + this.props.params.slug + '/settings', query: preservedQuery }}><div style={[styles.navItem, meta === 'settings' && styles.navItemActive]} className={'bottomShadowOnHover'}>Settings</div></Link>}
-					</div>*/}
-
-				</div>
-
-
+				}
 
 				{/* ------- */}
 				{/* Content */}
@@ -424,8 +399,18 @@ export const Pub = React.createClass({
 							pub={pub}
 							dispatch={this.props.dispatch} />
 					}
+					{meta === 'reviewers' &&
+						<PubReviewers
+							invitedReviewers={invitedReviewers}
+							accountUser={accountUser}
+							discussionsData={discussionsData}
+							isLoading={this.props.pubData.inviteReviewerLoading}
+							pubId={pub.id}
+							pathname={pathname}
+							query={query}
+							dispatch={this.props.dispatch} />
+					}
 					{(!meta || meta === 'files') &&
-						/*<div style={{ position: 'relative', width: '100%' }}>*/
 
 						<div>
 							<PubBreadcrumbs 
@@ -451,94 +436,67 @@ export const Pub = React.createClass({
 								{currentVersion.files && (meta !== 'files' || this.props.params.filename) &&
 									<div style={styles.rightPanel}>
 										<PubSidePanel parentId={'content-wrapper'}>
-											{/*<div style={{height: '100%', width: '100%', backgroundColor: 'blue', position: 'relative'}}>*/}
-											<div style={{height: '100%', width: '100%', position: 'relative'}}>
-												{/*<div style={{padding: '10px 0px', height: '50px', width: '100%', backgroundColor: 'green'}}>*/}
-												<div style={{padding: '10px 0px', height: '50px', width: '100%'}}>
-													<div style={styles.panelButtons}>
-														{!panel && !queryDiscussion &&
-															<div>
-																{false &&
-																	<div className="pt-button-group" style={styles.panelButtonGroup}>
-																		<Link to={{ pathname: pathname, query: { ...query, panel: 'reviewers' } }} className="pt-button">Invite Reviewer</Link>
-																		<Link to={{ pathname: pathname, query: { ...query, panel: 'reviewers' } }} className="pt-button">{invitedReviewers.length}</Link>
-																	</div>
-																}
-					
-																<Link to={{ pathname: pathname, query: { ...query, panel: 'new' } }} className="pt-button pt-intent-primary pt-minimal pt-icon-add">New Discussion</Link>
-																<button role={'button'} className={'pt-button pt-minimal pt-icon-filter-list'}>Filter</button>
-															</div>
-														}
-					
-														{(!!panel || !!queryDiscussion) &&
-															<button type="button" className="pt-button pt-intent-primary pt-minimal" onClick={this.goBack}>
-																<span className="pt-icon-standard pt-icon-chevron-left" />
-																Back
-															</button>
-														}
-													</div>
-												</div>
-
-												{panel === 'new' &&
-													<PubDiscussionsNew
-														discussionsData={discussionsData}
-														pub={pub}
-														isLoading={this.props.pubData.discussionsLoading}
-														error={this.props.pubData.discussionsError}
-														pathname={pathname}
-														query={query}
-														dispatch={this.props.dispatch} />
-												}
-												{!panel && !queryDiscussion &&
-													<PubDiscussionsList
-														discussionsData={discussionsData}
-														pub={pub}
-														pathname={pathname}
-														query={query}
-														dispatch={this.props.dispatch} />
-												}
-												{!!queryDiscussion &&
-													<PubDiscussion
-														discussion={activeDiscussion}
-														pub={pub}
-														accountId={accountId}
-														isLoading={this.props.pubData.discussionsLoading}
-														error={this.props.pubData.discussionsError}
-														pathname={pathname}
-														query={query}
-														dispatch={this.props.dispatch} />
-												}
-
-												{/*<div style={{height: 'calc(100% - 150px)', width: '100%', backgroundColor: 'orange', overflow: 'hidden', overflowY: 'scroll', position: 'relative'}}>
-													<p>Hey so this is a thing about cats and dogs.</p>
-													<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-													<p>Hey so this is a thing about cats and dogs.</p>
-													<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-													<p>Hey so this is a thing about cats and dogs.</p>
-													<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-													<p>Hey so this is a thing about cats and dogs.</p>
-													<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-													<p>Hey so this is a thing about cats and dogs.</p>
-													<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-													<p>Hey so this is a thing about cats and dogs.</p>
-													<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-													<p>Hey so this is a thing about cats and dogs.</p>
-													<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-													<p>Hey so this is a thing about cats and dogs.</p>
-													<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-													
-												</div>
-
-												<div style={{height: '100px', width: '100%', backgroundColor: 'red', position: 'relative'}}>
-													<div style={styles.bottomFade}></div>
-												</div>*/}
+											<div style={styles.discussionListVisible(!panel && !queryDiscussion)}>
+												<PubDiscussionsList
+													discussionsData={discussionsData}
+													pub={pub}
+													showAllDiscussions={this.state.showAllDiscussions}
+													toggleShowAllDiscussions={this.toggleShowAllDiscussions}
+													// showClosedDiscussions={this.state.showClosedDiscussions}
+													// toggleShowClosedDiscussions={this.toggleShowClosedDiscussions}
+													pathname={pathname}
+													query={query}
+													dispatch={this.props.dispatch} />
 											</div>
-										</PubSidePanel>
-										
-										
+											{panel === 'new' &&
+												<PubDiscussionsNew
+													discussionsData={discussionsData}
+													pub={pub}
+													goBack={this.goBack}
+													accountId={accountId}
+													isLoading={this.props.pubData.discussionsLoading}
+													error={this.props.pubData.discussionsError}
+													pathname={pathname}
+													query={query}
+													dispatch={this.props.dispatch} />
+											}
+											{!!queryDiscussion &&
+												<PubDiscussion
+													discussion={activeDiscussion}
+													pub={pub}
+													goBack={this.goBack}
+													accountId={accountId}
+													isLoading={this.props.pubData.discussionsLoading}
+													error={this.props.pubData.discussionsError}
+													pathname={pathname}
+													query={query}
+													dispatch={this.props.dispatch} />
+											}
+
+											{/*<div style={{height: 'calc(100% - 150px)', width: '100%', backgroundColor: 'orange', overflow: 'hidden', overflowY: 'scroll', position: 'relative'}}>
+												<p>Hey so this is a thing about cats and dogs.</p>
+												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+												<p>Hey so this is a thing about cats and dogs.</p>
+												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+												<p>Hey so this is a thing about cats and dogs.</p>
+												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+												<p>Hey so this is a thing about cats and dogs.</p>
+												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+												<p>Hey so this is a thing about cats and dogs.</p>
+												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+												<p>Hey so this is a thing about cats and dogs.</p>
+												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+												<p>Hey so this is a thing about cats and dogs.</p>
+												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
+												<p>Hey so this is a thing about cats and dogs.</p>
+												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
 												
-									
-										
+											</div>
+
+											<div style={{height: '100px', width: '100%', backgroundColor: 'red', position: 'relative'}}>
+												<div style={styles.bottomFade}></div>
+											</div>*/}
+										</PubSidePanel>
 									</div>
 								}
 								
@@ -570,16 +528,6 @@ export const Pub = React.createClass({
 							pathname={pathname}
 							query={query} />
 					}
-					{meta === 'reviewers' &&
-						<PubReviewers
-							invitedReviewers={invitedReviewers}
-							accountUser={accountUser}
-							discussionsData={discussionsData}
-							pubId={pub.id}
-							pathname={pathname}
-							query={query}
-							dispatch={this.props.dispatch} />
-					}
 				</div>
 
 			</div>
@@ -604,6 +552,11 @@ styles = {
 		// maxWidth: '1400px',
 		padding: '0em',
 		// margin: '0 auto',
+	},
+	messageSection: {
+		maxWidth: '1200px',
+		margin: '0 auto',
+		padding: '1em 2em',
 	},
 	content: (meta)=> {
 		return {
@@ -639,14 +592,14 @@ styles = {
 		overflowY: 'scroll',
 		padding: '0.5em 1em 0.5em',
 	},
-	panelButtons: {
-		textAlign: 'right',
-		padding: '0em 0em 1em',
-	},
-	panelButtonGroup: {
-		padding: '0em .25em',
-		verticalAlign: 'top',
-	},
+	// panelButtons: {
+	// 	textAlign: 'right',
+	// 	padding: '0em 0em 1em',
+	// },
+	// panelButtonGroup: {
+	// 	padding: '0em .25em',
+	// 	verticalAlign: 'top',
+	// },
 	
 	// pubTitle: {
 	// 	padding: '1em 0.5em 0em',
@@ -655,6 +608,11 @@ styles = {
 	// },
 	pubAuthors: {
 		padding: '.5em 1.5em 1em',
+	},
+	discussionListVisible: (isVisible)=> {
+		return {
+			display: isVisible ? 'block' : 'none',
+		};
 	},
 	nav: {
 		borderBottom: '1px solid #ccc',

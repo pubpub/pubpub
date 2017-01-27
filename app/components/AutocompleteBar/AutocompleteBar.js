@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import Radium, { Style } from 'radium';
 import Select from 'react-select';
 import { SelectOption, SelectValue } from 'components';
+import { Button } from '@blueprintjs/core';
 import 'react-select/dist/react-select.css';
 
 let styles = {};
@@ -14,6 +15,7 @@ export const AutoCompleteBar = React.createClass({
 		value: PropTypes.object,
 		onChange: PropTypes.func,
 		onComplete: PropTypes.func,
+		completeLoading: PropTypes.bool,
 		completeDisabled: PropTypes.bool,
 	},
 
@@ -35,7 +37,7 @@ export const AutoCompleteBar = React.createClass({
 					onChange={this.props.onChange}
 					optionComponent={SelectOption}
 					valueComponent={SelectValue} />
-				<button onClick={this.props.onComplete} style={styles.addControlButton} className={this.props.completeDisabled ? 'pt-button pt-intent-primary pt-disabled' : 'pt-button pt-intent-primary'}>{this.props.completeString}</button>
+				<Button loading={this.props.completeLoading} onClick={this.props.onComplete} style={styles.addControlButton} className={this.props.completeDisabled ? 'pt-button pt-intent-primary pt-disabled' : 'pt-button pt-intent-primary'} text={this.props.completeString} />
 			</div>
 		);
 	}

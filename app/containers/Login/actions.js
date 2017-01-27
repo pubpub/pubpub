@@ -37,7 +37,7 @@ export function login(email, password) {
 			dispatch({ type: LOGIN_POST_SUCCESS, result });
 		})
 		.catch((error) => {
-			console.log(error);
+			// console.log(error);
 			dispatch({ type: LOGIN_POST_FAIL, error });
 		});
 	};

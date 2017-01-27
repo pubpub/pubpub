@@ -185,7 +185,7 @@ export const JournalAbout = React.createClass({
 							key={'admin-' + admin.id}
 							user={user} 
 							details={<span>Added: {dateFormat(admin.createdAt, 'mmmm dd, yyyy')}</span>}
-							rightContent={journal.isAdmin ? <button type="button" className="pt-button pt-intent-danger pt-minimal" style={{ whiteSpace: 'nowrap' }} onClick={this.deleteAdmin.bind(this, admin.id)}>Delete Admin</button> : null} />
+							rightContent={journal.isAdmin ? <button type="button" className="pt-button pt-intent-danger pt-minimal" style={{ whiteSpace: 'nowrap' }} onClick={this.deleteAdmin.bind(this, admin.id)}>Remove Admin</button> : null} />
 					);
 				})}
 			</div>

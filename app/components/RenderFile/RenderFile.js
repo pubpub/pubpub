@@ -13,16 +13,42 @@ export const RenderFile = React.createClass({
 	propTypes: {
 		file: PropTypes.object,
 		allFiles: PropTypes.array,
+		noHighlighter: PropTypes.bool,
 	},
 
+	renderContent: function(object) {
+		return object.map((newObject)=> {
+			return (
+				<div key={Math.random()}>
+					{newObject.type === 'text' && newObject.text}
+					{newObject.content && (Array.isArray(newObject.content) ? this.renderContent(newObject.content) : this.renderContent([newObject.content]))}
+				</div>
+			);
+		});
+	},
 	render() {
+
 		const file = this.props.file || {};
 		const fileType = file.type || file.url.split('.').pop();
+		const wrapperId = this.props.noHighlighter ? '' : 'highlighter-wrapper';
 		switch (fileType) {
+		case 'ppub': 
+			const content = JSON.parse(file.content);
+			return (
+				<div id={wrapperId} className={'pub-body'} style={styles.contentWrapper}>
+					{!this.props.noHighlighter && 
+						<Highlighter />
+					}
+					
+					{this.renderContent([content])}
+				</div>
+			);
 		case 'text/markdown': 
 			return (
-				<div id={'content-wrapper'} className={'pub-body'} style={[styles.contentWrapper, styles.pubBody]}>
-					<Highlighter />
+				<div id={wrapperId} className={'pub-body'} style={styles.contentWrapper}>
+					{!this.props.noHighlighter && 
+						<Highlighter />
+					}
 					<RenderFileMarkdown file={file} allFiles={this.props.allFiles} />
 				</div>
 			);
@@ -33,8 +59,10 @@ export const RenderFile = React.createClass({
 			return <img alt={file.name} src={file.url} style={{ maxWidth: '100%' }} />;
 		case 'application/pdf':
 			return (
-				<div id={'content-wrapper'} style={styles.contentWrapper}>
-					<Highlighter />
+				<div id={wrapperId} style={styles.contentWrapper}>
+					{!this.props.noHighlighter && 
+						<Highlighter />
+					}
 					<RenderFilePDF file={file} />
 				</div>
 				
@@ -64,16 +92,5 @@ export default Radium(RenderFile);
 styles = {
 	contentWrapper: {
 		position: 'relative',
-	},
-	pubBody: {
-		// padding: '0em 1.25em',
-		fontFamily: 'Merriweather',
-		fontWeight: 'light',
-		fontSize: '14px',
-		lineHeight: '24px',
-		// lineHeight: '1.6em',
-		// fontSize: '1.2em',
-		color: '#333',
-		maxWidth: '700px',
 	},
 };

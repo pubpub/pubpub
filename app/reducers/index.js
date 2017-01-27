@@ -6,6 +6,7 @@ import app from './app';
 import createPub from './createPub';
 import createJournal from './createJournal';
 import followButton from './followButton';
+import highlight from './highlight';
 import journal from './journal';
 import label from './label';
 import login from './login';
@@ -35,6 +36,7 @@ export default combineReducers({
 	createPub,
 	createJournal,
 	followButton,
+	highlight,
 	journal,
 	label,
 	login,

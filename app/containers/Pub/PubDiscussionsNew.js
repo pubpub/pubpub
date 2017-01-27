@@ -7,7 +7,7 @@ import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
 import { postDiscussion } from './actionsDiscussions';
 import PubLabelList from './PubLabelList';
-import { Checkbox } from '@blueprintjs/core';
+import { Checkbox, Button } from '@blueprintjs/core';
 
 let styles;
 
@@ -15,6 +15,8 @@ export const PubDiscussionsNew = React.createClass({
 	propTypes: {
 		discussionsData: PropTypes.array,
 		pub: PropTypes.object,
+		goBack: PropTypes.func,
+		accountId: PropTypes.number,
 		isLoading: PropTypes.bool,
 		pathname: PropTypes.string,
 		query: PropTypes.object,
@@ -68,18 +70,29 @@ export const PubDiscussionsNew = React.createClass({
 
 	createSubmit: function(evt) {
 		evt.preventDefault();
+		if (!this.props.accountId) {
+			return this.setState({ validationError: 'Must be Logged In' });
+		}
 		const createData = {
 			replyRootPubId: this.props.pub.id,
 			replyParentPubId: this.props.pub.id,
 			title: this.state.title,
-			description: this.state.description,
+			description: undefined,
 			labels: this.state.labels,
+			files: [
+				{
+					type: 'text/markdown',
+					url: '/temp.md',
+					name: 'main.md',
+					content: this.state.description,
+				}
+			],
 		};
 		const { isValid, validationError } = this.validate(createData);
 		this.setState({ validationError: validationError });
 		const isPrivate = this.state.isPrivate;
 		if (isValid) {
-			this.props.dispatch(postDiscussion(createData.replyRootPubId, createData.replyParentPubId, createData.title, createData.description, createData.labels, isPrivate));	
+			this.props.dispatch(postDiscussion(createData.replyRootPubId, createData.replyParentPubId, createData.title, createData.description, createData.labels, createData.files, isPrivate));	
 		}
 	},
 
@@ -92,28 +105,40 @@ export const PubDiscussionsNew = React.createClass({
 		};
 		const errorMessage = serverErrors[this.props.error] || this.state.validationError;
 		return (
-			<div style={[styles.container, this.state.mounting ? {opacity: 0, transform: 'scale(0.9)'} : {opacity: 1}]} className={'pt-card pt-elevation-3'}>
-				<h3>New Discussion</h3>
-				<form onSubmit={this.createSubmit}>
-					<PubLabelList allLabels={labelList} onChange={this.onLabelsChange} canEdit={pub.canEdit} canSelect={true} rootPubId={this.props.pub.id} pathname={this.props.pathname} query={this.props.query} dispatch={this.props.dispatch} />
-					<input id={'journalName'} name={'journal name'} placeholder={'Title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
-						
-					<textarea id={'description'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.inputUpdate.bind(this, 'description')} />
-					
-					{(pub.canEdit || pub.canRead) &&
-						<Checkbox checked={this.state.isPrivate} label={'Private Discussion'} onChange={this.toggleIsPrivate} />
-					}
-					<button className={'pt-button pt-intent-primary'} onClick={this.createSubmit}>
-						Create New Discussion
-					</button>
 
-					<div style={styles.loaderContainer}>
-						<Loader loading={isLoading} showCompletion={!errorMessage} />
+			<div style={styles.container} >
+				<div style={styles.header}>
+					<div style={{ textAlign: 'right' }}>
+						<button type="button" className="pt-button small-button pt-icon-chevron-left" onClick={this.props.goBack}>
+							Back
+						</button>
 					</div>
+				</div>
+				<div style={styles.content} className={'pt-card pt-elevation-3'}>
+					<h3>New Discussion</h3>
+					<form onSubmit={this.createSubmit}>
+						<PubLabelList allLabels={labelList} onChange={this.onLabelsChange} canEdit={pub.canEdit} canSelect={true} rootPubId={this.props.pub.id} pathname={this.props.pathname} query={this.props.query} dispatch={this.props.dispatch} />
+						<input id={'journalName'} className={'pt-input'} name={'journal name'} placeholder={'Title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
+							
+						<textarea id={'description'} className={'pt-input'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.inputUpdate.bind(this, 'description')} />
+						
+						{(pub.canEdit || pub.canRead) &&
+							<Checkbox checked={this.state.isPrivate} label={'Private Discussion'} onChange={this.toggleIsPrivate} />
+						}
+						{/*<button className={'pt-button pt-intent-primary'} onClick={this.createSubmit}>
+							Create New Discussion
+						</button>*/}
 
-					<div style={styles.errorMessage}>{errorMessage}</div>
+						<Button className={'pt-button pt-intent-primary'} onClick={this.createSubmit} loading={isLoading}>Create New Discussion</Button>
 
-				</form>
+						{/*<div style={styles.loaderContainer}>
+							<Loader loading={isLoading} showCompletion={!errorMessage} />
+						</div>*/}
+
+						<div style={styles.errorMessage}>{errorMessage}</div>
+
+					</form>
+				</div>
 			</div>
 		);
 	}
@@ -123,22 +148,36 @@ export default Radium(PubDiscussionsNew);
 
 styles = {
 	container: {
-		maxHeight: 'calc(100% - 100px)', 
+		height: '100%',
+		width: '100%',
+		position: 'relative',
+	},
+	header: {
+		padding: '10px 0px', 
+		height: '50px', 
+		width: '100%',
+	},
+	content: {
+		maxHeight: 'calc(100% - 60px)', 
 		width: '100%', 
-		// backgroundColor: 'orange', 
 		overflow: 'hidden', 
 		overflowY: 'scroll', 
 		position: 'relative',
-		transition: '.1s linear opacity, .1s ease-in-out transform',
 	},
+	topButton: {
+		marginLeft: '0.5em',
+		verticalAlign: 'top',
+	},
+
 	input: {
 		width: '100%',
+		marginBottom: '1em',
 	},
-	loaderContainer: {
-		display: 'inline-block',
-		position: 'relative',
-		top: 15,
-	},
+	// loaderContainer: {
+	// 	display: 'inline-block',
+	// 	position: 'relative',
+	// 	top: 15,
+	// },
 	description: {
 		height: '8em',
 	},
