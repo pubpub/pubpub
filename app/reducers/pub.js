@@ -558,11 +558,20 @@ export default function reducer(state = defaultState, action) {
 		return state.merge({
 			updateReviewerLoading: false,
 			updateReviewerError: undefined,
-		});
-		// .mergeIn(
-		// 	['pub', 'invitedReviewers'], 
-		// 	state.getIn(['pub', 'invitedReviewers']).push(ensureImmutable(action.result))
-		// );
+		})
+		.mergeIn(
+			['pub', 'invitedReviewers'], 
+			state.getIn(['pub', 'invitedReviewers']).map((invitedReviewer)=> {
+				if (invitedReviewer.get('id') === action.invitedReviewerId) {
+					return invitedReviewer.merge({
+						invitationAccepted: action.invitationAccepted || invitedReviewer.get('invitationAccepted'), 
+						invitationRejected: action.invitationRejected || invitedReviewer.get('invitationRejected'), 
+						rejectionReason: action.rejectionReason || invitedReviewer.get('rejectionReason'), 
+					});
+				}
+				return invitedReviewer;
+			})
+		);
 	case PUT_REVIEWER_FAIL:
 		return state.merge({
 			updateReviewerLoading: false,

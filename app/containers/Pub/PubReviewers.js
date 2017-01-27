@@ -113,6 +113,9 @@ export const PubReviewers = React.createClass({
 			<div style={styles.container}>
 				<h2>Reviewers</h2>
 
+				{/*<div style={{ position: 'fixed', top: '20px', right: '20px'}}>
+					<div className={'pt-card pt-elevation-3'}>Hey you're invited!</div>
+				</div>*/}
 				<div style={styles.invitingAsTable}>
 					<div style={styles.invitingAs}>
 						<div style={styles.invitingText}>Inviting as:</div>
@@ -242,6 +245,7 @@ export const PubReviewers = React.createClass({
 										<div style={styles.reviewerDetails}>
 											<div style={styles.reviewerName}>
 												<Link to={'/user/' + invitedUser.username}>{invitedUser.firstName + ' ' + invitedUser.lastName}</Link>
+												<span style={styles.reviewerStatus}>({!reviewer.invitationAccepted && !reviewer.invitationRejected && 'Pending'}{reviewer.invitationAccepted && 'Accepted'}{reviewer.invitationRejected && 'Rejected'}{reviewer.rejectionReason && `: ${reviewer.rejectionReason}`})</span>
 											</div>
 											<div>Invited on {dateFormat(reviewer.createdAt, 'mmm dd, yyyy')} · <Link to={{ pathname: this.props.pathname, query: { ...this.props.query, panel: undefined, label: undefined, sort: undefined, author: invitedUser.username } }}>{discussionCount} discussions</Link> </div>
 										</div>
@@ -258,6 +262,7 @@ export const PubReviewers = React.createClass({
 										<div style={styles.reviewerDetails}>
 											<div style={styles.reviewerName}>
 												<span>{reviewer.name}</span>
+												<span style={styles.reviewerStatus}>(Pending)</span>
 											</div>
 											<div>Invited on {dateFormat(reviewer.createdAt, 'mmm dd, yyyy')}</div>
 										</div>
@@ -330,6 +335,11 @@ styles = {
 		padding: '0em 0em 1em',
 		borderBottom: '1px solid #CCC',
 		margin: '0em 0em 1em',
+	},
+	reviewerStatus: {
+		fontWeight: 'normal',
+		opacity: '0.75',
+		padding: '0em 1em',
 	},
 	invitedReviewerWrapper: {
 		display: 'table',

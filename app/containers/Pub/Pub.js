@@ -22,6 +22,7 @@ import PubDiscussionsList from './PubDiscussionsList';
 import PubDiscussionsNew from './PubDiscussionsNew';
 import PubFollowers from './PubFollowers';
 import PubJournals from './PubJournals';
+import PubInvitedReviewerMessage from './PubInvitedReviewerMessage';
 // import PubLabelList from './PubLabelList';
 import PubReviewers from './PubReviewers';
 import PubSettings from './PubSettings';
@@ -34,7 +35,6 @@ import dateFormat from 'dateformat';
 import { getPubData } from './actions';
 import { globalMessages } from 'utils/globalMessages';
 import { globalStyles } from 'utils/globalStyles';
-import { putReviewer } from './actionsReviewers';
 
 let styles;
 
@@ -134,10 +134,6 @@ export const Pub = React.createClass({
 	// },
 
 
-	updateReviewer: function() {
-		this.props.dispatch(putReviewer(this.props.pubData.pub.id, false, true, 'I have no idea what this is'));
-	},
-
 	extractHighlights: function(object, array) {
 		// console.log(object);
 		const tempArray = array || [];
@@ -193,10 +189,10 @@ export const Pub = React.createClass({
 		const discussions = pub.discussions || [];
 		const contributors = pub.contributors || [];
 		const invitedReviewers = pub.invitedReviewers || [];
-		const isInvitedReviewer = invitedReviewers.reduce((previous, current)=> {
-			if (!current.invitationRejected && current.invitedUserId === accountUser.id) { return true; }
+		const currentInvitedReviewer = invitedReviewers.reduce((previous, current)=> {
+			if (!current.invitationRejected && current.invitedUserId === accountUser.id) { return current; }
 			return previous;
-		}, false);
+		}, undefined);
 
 		const versions = pub.versions || [];
 		const pubFeatures = pub.pubFeatures || [];
@@ -374,7 +370,15 @@ export const Pub = React.createClass({
 					query={query}
 					dispatch={this.props.dispatch} />
 
+				{/* ------- */}
+				{/* Message */}
+				{/* ------- */}
 
+				{currentInvitedReviewer && !currentInvitedReviewer.invitationAccepted && !currentInvitedReviewer.invitationRejected &&
+					<div style={styles.messageSection}>
+						<PubInvitedReviewerMessage pub={pub} isLoading={this.props.pubData.updateReviewerLoading} currentInvitedReviewer={currentInvitedReviewer} dispatch={this.props.dispatch} />
+					</div>
+				}
 
 				{/* ------- */}
 				{/* Content */}
@@ -548,6 +552,11 @@ styles = {
 		// maxWidth: '1400px',
 		padding: '0em',
 		// margin: '0 auto',
+	},
+	messageSection: {
+		maxWidth: '1200px',
+		margin: '0 auto',
+		padding: '1em 2em',
 	},
 	content: (meta)=> {
 		return {

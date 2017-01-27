@@ -47,7 +47,7 @@ export function postReviewer(email, name, pubId, invitedUserId, inviterJournalId
 	};
 }
 
-export function putReviewer(pubId, invitationAccepted, invitationRejected, rejectionReason) {
+export function putReviewer(pubId, invitedReviewerId, invitationAccepted, invitationRejected, rejectionReason) {
 	return (dispatch) => {
 		dispatch({ type: PUT_REVIEWER_LOAD });
 
@@ -65,7 +65,7 @@ export function putReviewer(pubId, invitationAccepted, invitationRejected, rejec
 			})
 		})
 		.then((result) => {
-			dispatch({ type: PUT_REVIEWER_SUCCESS, result });
+			dispatch({ type: PUT_REVIEWER_SUCCESS, result, invitedReviewerId: invitedReviewerId, invitationAccepted: invitationAccepted, invitationRejected: invitationRejected, rejectionReason: rejectionReason });
 		})
 		.catch((error) => {
 			console.log(error);
