@@ -195,7 +195,7 @@ export const PubDiscussion = React.createClass({
 
 						{this.state.editorMode !== 'title' &&
 							<div style={styles.titleSection}>
-								{(true || (discussion.contributors && discussion.contributors[0].user.id === this.props.accountId)) &&
+								{discussion.contributors && discussion.contributors[0].user.id === this.props.accountId &&
 									<div className={'pt-button-group'} style={styles.titleButtons}>
 										<button className={'pt-button pt-minimal pt-icon-edit'} onClick={this.setOpenEditor.bind(this, discussion, 'title')} />
 										<button className={'pt-button pt-minimal pt-icon-compressed'} onClick={this.toggleIsClosed.bind(this, !discussion.isClosed)} />
@@ -271,7 +271,9 @@ export const PubDiscussion = React.createClass({
 									<div style={styles.discussionContentWrapper}>
 										<div style={styles.discussionButtons} className={'pt-button-group'}>
 											<button type="button" style={styles.discussionButton} className="pt-button pt-minimal pt-icon-social-media" />
-											<button type="button" style={styles.discussionButton} className="pt-button pt-minimal pt-icon-edit" onClick={this.setOpenEditor.bind(this, child, 'body')} />
+											{isAuthor &&
+												<button type="button" style={styles.discussionButton} className="pt-button pt-minimal pt-icon-edit" onClick={this.setOpenEditor.bind(this, child, 'body')} />
+											}
 											<button type="button" style={styles.discussionButton} className="pt-button pt-minimal pt-icon-bookmark" />
 										</div>
 
