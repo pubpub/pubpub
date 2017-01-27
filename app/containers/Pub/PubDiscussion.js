@@ -165,6 +165,20 @@ export const PubDiscussion = React.createClass({
 
 		const discussions = [discussion, ...children];
 		const bottomExpanded = false;
+		if (!discussion.id) {
+			return (
+				<div style={styles.container}>
+					<div style={styles.header}>
+						<div style={{ textAlign: 'right' }}>
+							<button type="button" className="pt-button small-button pt-icon-chevron-left" onClick={this.props.goBack}>Back</button>
+						</div>
+					</div>
+					<div style={styles.content} className={'pt-card pt-elevation-3'}>
+						Discussion not found.
+					</div>
+				</div>
+			);
+		}
 
 		return (
 			<div style={styles.container}>
