@@ -41,6 +41,7 @@ export const CreateAccount = React.createClass({
 			github: '',
 			googleScholar: '',
 			validationError: undefined,
+			userEditedUsername: false,
 		};
 	},
 
@@ -58,12 +59,20 @@ export const CreateAccount = React.createClass({
 
 	inputUpdate: function(key, evt) {
 		const value = evt.target.value || '';
-		this.setState({ [key]: value });
+		const firstName = key === 'firstName' ? value : this.state.firstName;
+		const lastName = key === 'lastName' ? value : this.state.lastName;
+		this.setState({ 
+			[key]: value,
+			username: !this.state.userEditedUsername ? `${firstName.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase()}${lastName ? '-' : ''}${lastName.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase()}` : this.state.username,
+		});
 	},
 
 	inputUpdateUsername: function(key, evt) {
 		const value = evt.target.value || '';
-		this.setState({ [key]: value.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase() });
+		this.setState({ 
+			[key]: value.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase(),
+			userEditedUsername: true 
+		});
 	},
 
 	bioUpdate: function(evt) {
@@ -181,13 +190,6 @@ export const CreateAccount = React.createClass({
 
 						<form onSubmit={this.createAccountSubmit}>
 							
-							<label htmlFor={'username'}>
-								<FormattedMessage {...globalMessages.Username} />
-								<input id={'username'} name={'username'} type="text" style={styles.input} value={this.state.username} onChange={this.inputUpdateUsername.bind(this, 'username')} />
-								<div className={'light-color inputSubtext'}>
-									pubpub.org/user/<b>{this.state.username || 'username'}</b>
-								</div>
-							</label>
 
 							{/* <label htmlFor={'username'}>
 								<FormattedMessage {...globalMessages.Username} />
@@ -205,6 +207,14 @@ export const CreateAccount = React.createClass({
 							<label htmlFor={'lastName'}>
 								<FormattedMessage {...globalMessages.LastName} />
 								<input id={'lastName'} name={'last name'} type="text" style={styles.input} value={this.state.lastName} onChange={this.inputUpdate.bind(this, 'lastName')} />
+							</label>
+
+							<label htmlFor={'username'}>
+								<FormattedMessage {...globalMessages.Username} />
+								<input id={'username'} name={'username'} type="text" style={styles.input} value={this.state.username} onChange={this.inputUpdateUsername.bind(this, 'username')} />
+								<div className={'light-color inputSubtext'}>
+									pubpub.org/user/<b>{this.state.username || 'username'}</b>
+								</div>
 							</label>
 
 							<label htmlFor={'password'}>

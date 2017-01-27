@@ -27,6 +27,7 @@ export const CreatePub = React.createClass({
 			description: '',
 			imageFile: null,
 			imageURL: 'https://assets.pubpub.org/_site/pub.png',
+			userEditedSlug: false,
 
 		};
 	},
@@ -44,7 +45,10 @@ export const CreatePub = React.createClass({
 
 	inputUpdate: function(key, evt) {
 		const value = evt.target.value || '';
-		this.setState({ [key]: value });
+		this.setState({ 
+			[key]: value,
+			slug: key === 'title' && !this.state.userEditedSlug ? value.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase() : this.state.slug,
+		});
 	},
 
 	inputUpdateLowerCase: function(key, evt) {
@@ -59,7 +63,11 @@ export const CreatePub = React.createClass({
 
 	slugUpdate: function(evt) {
 		const slug = evt.target.value || '';
-		this.setState({ slug: slug.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase() });
+		this.setState({ 
+			slug: slug.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase(),
+			userEditedSlug: true 
+		});
+
 	},
 
 	handleFileSelect: function(evt) {
