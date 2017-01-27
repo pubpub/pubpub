@@ -4,8 +4,9 @@ import { Link } from 'react-router';
 import { AutocompleteBar, DropdownButton } from 'components';
 import request from 'superagent';
 import dateFormat from 'dateformat';
+import { Menu, Button } from '@blueprintjs/core';
+import { globalStyles } from 'utils/globalStyles';
 import { postReviewer } from './actionsReviewers';
-import { Menu } from '@blueprintjs/core';
 
 let styles;
 
@@ -14,6 +15,7 @@ export const PubReviewers = React.createClass({
 		invitedReviewers: PropTypes.array,
 		accountUser: PropTypes.object,
 		discussionsData: PropTypes.array,
+		isLoading: PropTypes.bool,
 		pubId: PropTypes.number,
 		pathname: PropTypes.string,
 		query: PropTypes.object,
@@ -83,7 +85,11 @@ export const PubReviewers = React.createClass({
 		const inviterJournal = this.state.inviterJournal || {};
 		const inviterJournalId = inviterJournal.id || null;
 		const invitedUserId = null;
-		this.props.dispatch(postReviewer(email, name, this.props.pubId, invitedUserId, inviterJournalId));
+		if (!email || !name) {
+			return this.setState({ errorMessage: 'Both email and name are required' });
+		}
+		this.setState({ errorMessage: undefined });
+		return this.props.dispatch(postReviewer(email, name, this.props.pubId, invitedUserId, inviterJournalId));
 	},
 	setJournal: function(journal) {
 		this.setState({ inviterJournal: journal });
@@ -172,6 +178,7 @@ export const PubReviewers = React.createClass({
 							onChange={this.handleSelectChange}
 							onComplete={this.inviteReviewer}
 							completeDisabled={!this.state.newReviewer || !this.state.newReviewer.id}
+							completeLoading={this.props.isLoading}
 							completeString={'Invite'}
 						/>
 						<div style={[styles.emailToggleText, { marginTop: '-1em' }]} className={'pt-button pt-minimal'} onClick={this.toggleInviteByEmail}>
@@ -191,10 +198,9 @@ export const PubReviewers = React.createClass({
 								Name
 								<input className={'pt-input margin-bottom'} id={'name'} name={'name'} type="text" style={styles.input} value={this.state.newReviewerName} onChange={this.newReviewerNameChange} placeholder={'Jane Doe'}/>
 							</label>
-							<button className={'pt-button pt-intent-primary'} name={'login'} onClick={this.handleEmailInvite}>
-								Send Email Invitation
-							</button>
-							<div style={styles.errorMessage}>{false}</div>
+
+							<Button text={'Send Email Invitation'} className={'pt-button pt-intent-primary'} onClick={this.handleEmailInvite} loading={this.props.isLoading}/>
+							<span style={styles.errorMessage}>{this.state.errorMessage}</span>
 						</form>
 						<div style={styles.emailToggleText} className={'pt-button pt-minimal'} onClick={this.toggleInviteByEmail}>
 							Invite existing PubPub users
@@ -212,6 +218,7 @@ export const PubReviewers = React.createClass({
 						const inviterUser = reviewer.inviterUser;
 						const inviterJournal = reviewer.inviterJournal;
 						const discussionCount = discussionsData.reduce((previous, current)=> {
+							if (!invitedUser) { return previous; }
 							const children = current.children || [];
 							const discussionAuthors = [
 								current.contributors[0].user.username,
@@ -346,5 +353,9 @@ styles = {
 		verticalAlign: 'middle',
 		padding: '.25em 0em',
 		marginRight: '.25em',
+	},
+	errorMessage: {
+		padding: '0px 10px',
+		color: globalStyles.errorRed,
 	},
 };

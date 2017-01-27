@@ -395,6 +395,17 @@ export const Pub = React.createClass({
 							pub={pub}
 							dispatch={this.props.dispatch} />
 					}
+					{meta === 'reviewers' &&
+						<PubReviewers
+							invitedReviewers={invitedReviewers}
+							accountUser={accountUser}
+							discussionsData={discussionsData}
+							isLoading={this.props.pubData.inviteReviewerLoading}
+							pubId={pub.id}
+							pathname={pathname}
+							query={query}
+							dispatch={this.props.dispatch} />
+					}
 					{(!meta || meta === 'files') &&
 
 						<div>
@@ -512,16 +523,6 @@ export const Pub = React.createClass({
 							versions={versions}
 							pathname={pathname}
 							query={query} />
-					}
-					{meta === 'reviewers' &&
-						<PubReviewers
-							invitedReviewers={invitedReviewers}
-							accountUser={accountUser}
-							discussionsData={discussionsData}
-							pubId={pub.id}
-							pathname={pathname}
-							query={query}
-							dispatch={this.props.dispatch} />
 					}
 				</div>
 
