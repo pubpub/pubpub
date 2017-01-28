@@ -46,7 +46,7 @@ export const PubBreadcrumbs = React.createClass({
 			<div style={styles.container}>
 				<div style={styles.versionStatus}>
 					<Link to={{ pathname: '/pub/' + this.props.pub.slug + '/versions', query: query }} className={'opacity-on-hover-parent pt-button pt-minimal'} style={styles.statusLink}>
-						{dateFormat(version.createdAt, 'mmmm dd, yy')} · {mode}
+						{dateFormat(version.createdAt, 'mmmm dd, yyyy')} · {mode}
 						{mode === 'Private' &&
 							<span style={styles.modeIcon} className={'pt-icon-standard pt-icon-lock opacity-on-hover-child'} />
 						}
