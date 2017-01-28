@@ -25,7 +25,12 @@ export const JournalProfileHeader = React.createClass({
 			textAlign: this.props.headerAlign || 'left',
 		};
 
-		// const collections = this.props.collections || [];
+		let journalUrl = journal.website || '';
+		journalUrl = journalUrl.slice(0, 7) === 'http://' || journalUrl.slice(0, 8) === 'https://' ? journalUrl : `http://${journalUrl}`;
+
+		let journalText = journalUrl.slice(0, 7) === 'http://' ? journalUrl.slice(7, journalUrl.length - 1) : journalUrl;
+		journalText = journalText.slice(0, 8) === 'https://' ? journalText.slice(8, journalText.length - 1) : journalText;
+
 		return (
 			<div style={[styles.headerBackground, customBackgroundStyle]}>
 				<div style={styles.backgroundGrey} />
@@ -52,9 +57,9 @@ export const JournalProfileHeader = React.createClass({
 				<div style={styles.bottom}>
 					<Link style={headerAlign === 'left' ? styles.collectionLinkLeft : styles.collectionLinkCenter} to={'/' + journal.slug}>Home</Link>
 					<Link style={headerAlign === 'left' ? styles.collectionLinkLeft : styles.collectionLinkCenter} to={'/' + journal.slug + '/about'}>About</Link>
-					<div style={styles.headerSpacer}></div>
+					<div style={styles.headerSpacer} />
 					{journal.website &&
-						<Link to={journal.website} style={headerAlign === 'left' ? styles.collectionLinkLeft : styles.collectionLinkCenter}>{journal.website}</Link>
+						<Link to={journalUrl} style={headerAlign === 'left' ? styles.collectionLinkLeft : styles.collectionLinkCenter}>{journalText}</Link>
 					}
 					{journal.twitter &&
 						<Link to={'https://twitter.com/' + journal.twitter} style={headerAlign === 'left' ? styles.collectionLinkLeft : styles.collectionLinkCenter}>@{journal.twitter}</Link>

@@ -114,9 +114,15 @@ export const User = React.createClass({
 			...ownProfileItems,
 		];
 
+		let websiteUrl = user.website || '';
+		websiteUrl = websiteUrl.slice(0, 7) === 'http://' || websiteUrl.slice(0, 8) === 'https://' ? websiteUrl : `http://${websiteUrl}`;
+
+		let websiteText = websiteUrl.slice(0, 7) === 'http://' ? websiteUrl.slice(7, websiteUrl.length - 1) : websiteUrl;
+		websiteText = websiteText.slice(0, 8) === 'https://' ? websiteText.slice(8, websiteUrl.length - 1) : websiteText;
+		
 		const links = [
 			{ key: 'publicEmail', href: 'mailto:' + user.publicEmail, text: <span>{user.publicEmail}</span> },
-			{ key: 'website', href: user.website, text: <span>{user.website}</span> },
+			{ key: 'website', href: websiteUrl, text: <span>{websiteText}</span> },
 			{ key: 'twitter', href: 'https://twitter.com/' + user.twitter, text: <span>@{user.twitter}</span> },
 			{ key: 'github', href: 'https://github.com/' + user.github, text: <span>github.com/{user.github}</span> },
 			{ key: 'orcid', href: 'https://orcid.org/' + user.orcid, text: <span>orcid.com/{user.orcid}</span> },
