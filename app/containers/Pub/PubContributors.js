@@ -88,14 +88,13 @@ export const PubContributors = React.createClass({
 				[contributorId]: {
 					...this.state.contributorStates[contributorId],
 					isAuthor: evt.target.checked,
-					canEdit: evt.target.checked || this.state.contributorStates[contributorId].canEdit,
 				}
 			} 
 		});
 		this.props.dispatch(putContributor(
 			this.props.pub.id, 
 			contributorId, 
-			true || this.state.contributorStates[contributorId].canEdit, 
+			this.state.contributorStates[contributorId].canEdit, 
 			this.state.contributorStates[contributorId].canRead, 
 			evt.target.checked,
 			this.state.contributorStates[contributorId].isHidden, 
@@ -156,6 +155,13 @@ export const PubContributors = React.createClass({
 
 	render() {
 		const contributors = this.props.contributors || [];
+		const numberOfEditors = Object.keys(this.state.contributorStates).reduce((previous, current)=> {
+			const canEdit = this.state.contributorStates[current].canEdit;
+			const isAuthor = this.state.contributorStates[current].isAuthor;
+			if (canEdit || isAuthor) { return previous + 1; }
+			return previous;
+		}, 0);
+		console.log('number of editors ', numberOfEditors);
 		return (
 			<div style={styles.container}>
 				<h2>Contributors</h2>
@@ -189,6 +195,8 @@ export const PubContributors = React.createClass({
 					const canEdit = this.state.contributorStates[contributor.id].canEdit;
 					const canRead = this.state.contributorStates[contributor.id].canRead;
 					const isAuthor = this.state.contributorStates[contributor.id].isAuthor;
+					const isDisabled = !(isAuthor || (canEdit && numberOfEditors === 1));
+					console.log(isDisabled);
 					return (
 						<div key={'contributorId-' + contributor.id} style={styles.contributorWrapper}>
 							<img src={'https://jake.pubpub.org/unsafe/50x50/' + user.avatar} style={styles.contributorImage} alt={user.firstName + ' ' + user.lastName} />
@@ -231,10 +239,11 @@ export const PubContributors = React.createClass({
 											interactionKind={PopoverInteractionKind.CLICK}
 											position={Position.BOTTOM_LEFT}
 											transitionDuration={200}
+											isDisabled={(isAuthor || (canEdit && numberOfEditors === 1))}
 											popoverClassName="pt-minimal"
 										>
-											<Tooltip content={'Authors are granted Edit permissions'} isDisabled={!isAuthor} position={Position.BOTTOM} useSmartPositioning={true}>
-												<button type="button" className={isAuthor ? 'pt-button pt-disabled' : 'pt-button'}>
+											<Tooltip content={isAuthor ? 'Authors are granted Edit permissions' : 'At least one contributor must have Edit Permissions'} isDisabled={!(isAuthor || (canEdit && numberOfEditors === 1))} position={Position.BOTTOM} useSmartPositioning={true}>
+												<button type="button" className={isAuthor || (canEdit && numberOfEditors === 1) ? 'pt-button pt-disabled' : 'pt-button'}>
 													Permission: {(canEdit || isAuthor) && 'Can Edit'}{(canRead && !isAuthor) && 'Can Read'}{(!canRead && !canEdit && !isAuthor) && 'None'}
 													<span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
 												</button>
@@ -256,9 +265,11 @@ export const PubContributors = React.createClass({
 											<span className="pt-control-indicator" />
 											Hide Contributor
 										</label>
-										<div style={styles.contributorAction}>
-											<button type="button" className="pt-button pt-intent-danger pt-minimal" onClick={this.deleteContributor.bind(this, contributor.id)}>Remove Contributor</button>
-										</div>
+										{(numberOfEditors > 1 || !(canEdit || isAuthor)) &&
+											<div style={styles.contributorAction}>
+												<button type="button" className="pt-button pt-intent-danger pt-minimal" onClick={this.deleteContributor.bind(this, contributor.id)}>Remove Contributor</button>
+											</div>
+										}
 									</div>
 								}
 							</div>
