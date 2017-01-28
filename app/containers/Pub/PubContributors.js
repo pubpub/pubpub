@@ -161,7 +161,6 @@ export const PubContributors = React.createClass({
 			if (canEdit || isAuthor) { return previous + 1; }
 			return previous;
 		}, 0);
-		console.log('number of editors ', numberOfEditors);
 		return (
 			<div style={styles.container}>
 				<h2>Contributors</h2>
@@ -196,7 +195,6 @@ export const PubContributors = React.createClass({
 					const canRead = this.state.contributorStates[contributor.id].canRead;
 					const isAuthor = this.state.contributorStates[contributor.id].isAuthor;
 					const isDisabled = !(isAuthor || (canEdit && numberOfEditors === 1));
-					console.log(isDisabled);
 					return (
 						<div key={'contributorId-' + contributor.id} style={styles.contributorWrapper}>
 							<img src={'https://jake.pubpub.org/unsafe/50x50/' + user.avatar} style={styles.contributorImage} alt={user.firstName + ' ' + user.lastName} />
