@@ -313,6 +313,14 @@ export default function reducer(state = defaultState, action) {
 				}
 				return version;
 			})
+		)
+		.mergeIn(
+			['pub'],
+			{
+				isPublished: action.isPublished || state.getIn(['pub', 'isPublished']),
+				isRestricted: action.isRestricted || state.getIn(['pub', 'isRestricted']),
+			}
+
 		);
 	case PUT_VERSION_FAIL:
 		return state.merge({

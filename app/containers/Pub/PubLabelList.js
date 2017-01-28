@@ -33,7 +33,7 @@ export const PubLabelList = React.createClass({
 			editingColor: undefined,
 			editingTitle: '',
 			createOpen: false,
-			creatingColor: '#c0392b',
+			creatingColor: '#4FC1E9',
 			creatingTitle: '',
 			asyncLabels: [],
 			asyncLabelsCache: {},
@@ -111,14 +111,14 @@ export const PubLabelList = React.createClass({
 		this.props.dispatch(postLabel(this.props.rootPubId, this.state.creatingTitle, this.state.creatingColor));
 		return this.setState({
 			createOpen: false,
-			creatingColor: '#c0392b',
+			creatingColor: '#4FC1E9',
 			creatingTitle: ''
 		});
 	},
 	toggleCreate: function() {
 		this.setState({
 			createOpen: !this.state.createOpen,
-			creatingColor: '#c0392b',
+			creatingColor: '#4FC1E9',
 			creatingTitle: ''
 		});
 	},
@@ -172,7 +172,7 @@ export const PubLabelList = React.createClass({
 			});
 
 		// Define Popover content for labels button when we are using local (i.e. pub-owned) labels
-		const localLabelColors = ['#c0392b', '#e74c3c', '#d35400', '#f39c12', '#16a085', '#27ae60', '#2ecc71', '#2980b9', '#3498db', '#8e44ad', '#9b59b6', '#2c3e50'];
+		const localLabelColors = ['#DA4453', '#ED5565', '#FC6E51', '#F6BB42', '#8CC152', '#37BC9B', '#4FC1E9', '#5D9CEC', '#AC92EC', '#EC87C0', '#AAB2BD', '#656D78'];
 		const localLabelsContent = (
 			<div style={styles.popoverContentWrapper}>
 

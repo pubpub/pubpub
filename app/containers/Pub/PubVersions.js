@@ -61,6 +61,7 @@ export const PubVersions = React.createClass({
 	},
 
 	render: function() {
+		const pub = this.props.pub || {};
 		const location = this.props.location || {};
 		const query = location.query || {};
 		const isLoading = this.props.isLoading;
@@ -188,6 +189,10 @@ export const PubVersions = React.createClass({
 									<div className="pt-dialog-body">
 										<p>Please confirm that you want to publish the following version. Once published, the version will be publicly available.</p>
 										<p><b>Publishing cannot be undone.</b></p>
+
+										{!pub.isPublished &&
+											<p><b>The Pub's URL (www.pubpub.org/pub/{pub.slug}) cannot be changed once published.</b></p>
+										}
 										<div className={'pt-card pt-elevation-2'}>
 											<h6 style={styles.noMargin}>{version.message || 'No message'}</h6>
 											<p style={styles.noMargin}>{dateFormat(version.createdAt, 'mmm dd, yyyy HH:MM')}</p>
