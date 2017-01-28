@@ -13,11 +13,21 @@ export const PreviewPub = React.createClass({
 
 	render() {
 		const pub = this.props.pub || {};
+
+		let mode = 'Private';
+		if (pub.isRestricted) { mode = 'Restricted'; }
+		if (pub.isPublished) { mode = 'Published'; }
+
 		return (
 			<div style={styles.pubPreviewWrapper}>
 				<Link to={'/pub/' + pub.slug} style={[styles.avatarWrapper, { backgroundImage: pub.avatar ? 'url("' + pub.avatar + '")' : '' }]} />
 				
 				<div style={styles.pubPreviewDetails}>
+					<div style={styles.modeIcon}>
+						{mode === 'Private' && <span className={'pt-icon-standard pt-icon-lock'} /> }
+						{mode === 'Restricted' && <span className={'pt-icon-standard pt-icon-people'} /> }
+						{mode === 'Published' && <span className={'pt-icon-standard pt-icon-globe'} /> }
+					</div>
 					<Link to={'/pub/' + pub.slug}><h4>{pub.title}</h4></Link>
 					<p>{pub.description}</p>
 				</div>
@@ -59,6 +69,9 @@ styles = {
 		display: 'table-cell',
 		verticalAlign: 'middle',
 		padding: '1em',
+	},
+	modeIcon: {
+		float: 'right',
 	},
 	pubPreviewTitle: {
 		fontSize: '1.5em',

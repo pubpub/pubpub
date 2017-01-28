@@ -159,8 +159,8 @@ export const Pub = React.createClass({
 			return (
 				<div style={{ margin: '2em' }}>
 					<NonIdealState
-						title={'Pub Not Found'}
-						visual={'error'} />
+						title={this.props.pubData.error === 'Pub Deleted' ? 'Pub Deleted' : 'Pub Not Found'}
+						visual={this.props.pubData.error === 'Pub Deleted' ? 'delete' : 'error'} />
 				</div>
 			);
 		}

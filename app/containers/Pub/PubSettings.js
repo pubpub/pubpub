@@ -2,11 +2,12 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { browserHistory } from 'react-router';
 import { Loader, ImageUpload, ImageCropper, ColorPicker } from 'components';
+import { Button, Dialog } from '@blueprintjs/core';
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
 
-import { updatePub } from './actions';
+import { updatePub, deletePub } from './actions';
 
 let styles;
 
@@ -27,6 +28,7 @@ export const PubSettings = React.createClass({
 			imageFile: null,
 			headerColor: '',
 			headerImage: '',
+			confirmDelete: false,
 		};
 	},
 
@@ -129,6 +131,17 @@ export const PubSettings = React.createClass({
 		}
 	},
 
+	confirmDelete: function() {
+		this.setState({ confirmDelete: true });
+	},
+	cancelConfirmDelete: function() {
+		this.setState({ confirmDelete: false });
+	},
+
+	deletePub: function() {
+		this.props.dispatch(deletePub(this.props.pub.id));
+	},
+
 	render: function() {
 		const pub = this.props.pub || {};
 		if (!pub.canEdit) { return <div />; }
@@ -195,6 +208,35 @@ export const PubSettings = React.createClass({
 					<div style={styles.errorMessage}>{errorMessage}</div>
 
 				</form>
+
+				{!pub.isPublished && 
+					<div>
+						<div className={'pt-callout pt-intent-danger'}>
+							<h5>Delete Pub</h5>
+							<p>A pub cannot be deleted if it is published. Deleting a Pub is permanent.</p>
+							<Button text={'Delete Pub'} onClick={this.confirmDelete} />
+						</div>
+
+						<Dialog
+							iconName="delete"
+							isOpen={this.state.confirmDelete}
+							onClose={this.cancelConfirmDelete}
+							title="Confirm Delete"
+						>
+							<div className="pt-dialog-body">
+								Please confirm that you'd like to delete this pub. This action is permanent.
+							</div>
+							<div className="pt-dialog-footer">
+								<div className="pt-dialog-footer-actions">
+									<Button text="Cancel" onClick={this.cancelConfirmDelete} />
+									<Button className={'pt-intent-danger'} onClick={this.deletePub} text="Delete Pub" loading={isLoading} />
+								</div>
+							</div>
+						</Dialog>
+
+					</div>
+				}
+				
 
 				<div style={[styles.imageCropperWrapper, this.state.imageFile !== null && styles.imageCropperWrapperVisible]} >
 					<div style={styles.imageCropper}>

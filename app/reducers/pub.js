@@ -8,9 +8,14 @@ import {
 	GET_PUB_DATA_LOAD,
 	GET_PUB_DATA_SUCCESS,
 	GET_PUB_DATA_FAIL,
+
 	PUT_PUB_DATA_LOAD,
 	PUT_PUB_DATA_SUCCESS,
 	PUT_PUB_DATA_FAIL,
+
+	DELETE_PUB_LOAD,
+	DELETE_PUB_SUCCESS,
+	DELETE_PUB_FAIL,
 } from 'containers/Pub/actions';
 
 import {
@@ -182,6 +187,20 @@ export default function reducer(state = defaultState, action) {
 			action.updateData
 		);
 	case PUT_PUB_DATA_FAIL:
+		return state.merge({
+			settingsLoading: false,
+			settingsError: action.error,
+		});
+
+	case DELETE_PUB_LOAD:
+		return state.merge({
+			settingsLoading: true,
+			settingsError: undefined,
+		});	
+	case DELETE_PUB_SUCCESS:
+		window.location.reload();
+		return state;
+	case DELETE_PUB_FAIL:
 		return state.merge({
 			settingsLoading: false,
 			settingsError: action.error,

@@ -45,7 +45,18 @@ export const PubBreadcrumbs = React.createClass({
 		return (
 			<div style={styles.container}>
 				<div style={styles.versionStatus}>
-					<Link to={{ pathname: '/pub/' + this.props.pub.slug + '/versions', query: query }}>{dateFormat(version.createdAt, 'mmmm dd, yy')} · {mode}</Link>
+					<Link to={{ pathname: '/pub/' + this.props.pub.slug + '/versions', query: query }} className={'opacity-on-hover-parent pt-button pt-minimal'} style={styles.statusLink}>
+						{dateFormat(version.createdAt, 'mmmm dd, yy')} · {mode}
+						{mode === 'Private' &&
+							<span style={styles.modeIcon} className={'pt-icon-standard pt-icon-lock opacity-on-hover-child'} />
+						}
+						{mode === 'Restricted' &&
+							<span style={styles.modeIcon} className={'pt-icon-standard pt-icon-people opacity-on-hover-child'} />
+						}
+						{mode === 'Published' &&
+							<span style={styles.modeIcon} className={'pt-icon-standard pt-icon-globe opacity-on-hover-child'} />
+						}
+					</Link>
 				</div>
 				<ul className="pt-breadcrumbs" style={styles.breadcrumbs}>
 					<li><Link to={{ pathname: '/pub/' + this.props.pub.slug + '/files', query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> Files</Link></li>
@@ -80,5 +91,14 @@ styles = {
 	versionStatus: {
 		float: 'right',
 		lineHeight: '30px',
+	},
+	statusLink: {
+		display: 'inline-block',
+		padding: '0px 2px',
+	},
+	modeIcon: {
+		paddingLeft: '0.5em',
+		color: '#5c7080',
+		margin: 0,
 	},
 };
