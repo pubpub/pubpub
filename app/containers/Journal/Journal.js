@@ -109,9 +109,12 @@ export const Journal = React.createClass({
 		const accountUser = accountData.user || {};
 		const accountId = accountUser.id;
 		const followData = followers.reduce((previous, current)=> {
+			console.log('current', current.id);
+			console.log('accountid', accountId);
 			if (current.id === accountId) { return current.FollowsJournal; }
 			return previous;
 		}, undefined);
+		console.log('followData', followData);
 
 		const metaData = {
 			title: journal.title + ' · PubPub',

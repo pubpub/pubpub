@@ -2,8 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import Radium from 'radium';
-import Helmet from 'react-helmet';
-import { Popover, Position, Tooltip } from '@blueprintjs/core';
+import {Position, Tooltip } from '@blueprintjs/core';
 
 // import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
@@ -36,6 +35,7 @@ export const FollowButton = React.createClass({
 	getInitialState() {
 		return {
 			justFollowed: 0,
+			leftUnfollow: false,
 		};
 	},
 
@@ -44,7 +44,10 @@ export const FollowButton = React.createClass({
 		if (mode === 'user') { this.props.dispatch(postFollowsUser(followId)); }
 		if (mode === 'journal') { this.props.dispatch(postFollowsJournal(followId)); }
 		if (mode === 'label') { this.props.dispatch(postFollowsLabel(followId)); }
-		this.setState({ justFollowed: this.state.justFollowed + 1 });
+		this.setState({ 
+			justFollowed: this.state.justFollowed + 1,
+			leftUnfollow: false
+		});
 	},
 
 	deleteFollow: function(followId, mode) {
@@ -52,7 +55,11 @@ export const FollowButton = React.createClass({
 		if (mode === 'user') { this.props.dispatch(deleteFollowsUser(followId)); }
 		if (mode === 'journal') { this.props.dispatch(deleteFollowsJournal(followId)); }
 		if (mode === 'label') { this.props.dispatch(deleteFollowsLabel(followId)); }
-		this.setState({ justFollowed: this.state.justFollowed -1 });
+		this.setState({ justFollowed: this.state.justFollowed - 1 });
+	},
+
+	leftUnfollow: function() {
+		this.setState({ leftUnfollow: true });
 	},
 
 	render() {
@@ -70,43 +77,30 @@ export const FollowButton = React.createClass({
 		if (this.props.labelId !== undefined) { mode = 'label'; }
 		
 		const followData = this.props.followData || {};
+		console.log(followData);
 		const isFollowing = this.state.justFollowed !== -1 && (followData.followerId || this.state.justFollowed === 1);
 		const followerCount = this.props.followerCount;
-
-		const followDescription = {
-			pub: 'Receiving updates for new versions, new discussions, new contributors, and new journal features.',
-			user: 'Receiving updates for new pubs, new journals, and new follows.',
-			journal: 'Receiving updates for new features, new submissions, and new admins.',
-			label: 'Receiving updates for new pubs and new followers.',
-		};
 
 		return (
 			<div className="pt-button-group">
 				{!isFollowing && isLoggedIn &&
-					<a role="button" className="pt-button pt-icon-new-person" onClick={this.createFollow.bind(this, followId, mode)}>Follow <span style={{textTransform: 'capitalie'}}>{mode}</span></a>
+					<a role="button" className="pt-button pt-icon-new-person" onClick={this.createFollow.bind(this, followId, mode)}>Follow <span style={{ textTransform: 'capitalize' }}>{mode}</span></a>
 				}
 
 				{!isFollowing && !isLoggedIn &&
 					<Tooltip content="Must be logged in to Follow" position={Position.BOTTOM}>
-						<Link to={'/login'} className="pt-button pt-icon-new-person">Follow <span style={{textTransform: 'capitalie'}}>{mode}</span></Link>
+						<Link to={'/login'} className="pt-button pt-icon-new-person">Follow <span style={{ textTransform: 'capitalize' }}>{mode}</span></Link>
 					</Tooltip>
 				}
 
 				{isFollowing &&
-					<Popover 
-						content={
-							<div style={styles.followingBox}>
-								<p style={styles.followDescription}>{followDescription[mode]}</p>
-								<hr />
-								<button className={'pt-button pt-fill'} onClick={this.deleteFollow.bind(this, followId, mode)}>Unfollow</button>
-							</div>
-							
-						} 
-						position={Position.BOTTOM_RIGHT}>
-
-						<a role="button" className="pt-button pt-icon-new-person">Following <span className="pt-icon-standard pt-icon-caret-down pt-align-right" /></a>
-
-					</Popover>
+					<a role="button" style={styles.following} className="pt-button pt-icon-new-person showChildOnHover" onMouseLeave={this.leftUnfollow}>
+						Following
+						{(!this.state.justFollowed || this.state.leftUnfollow) && 
+							<button style={styles.unfollow} className={'pt-button pt-fill pt-intent-danger hoverChild'} onClick={this.deleteFollow.bind(this, followId, mode)}>Unfollow</button>
+						}
+						
+					</a>
 				}
 				
 				{followerCount !== undefined &&
@@ -130,6 +124,19 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps)(Radium(FollowButton));
 
 styles = {
+	following: {
+		position: 'relative',
+	},
+	unfollow: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		width: '100%',
+		height: '100%',
+		transition: '0s linear all',
+		border: '0px solid black',
+		boxShadow: '0px 0px 0px black',
+	},
 	followingBox: {
 		maxWidth: '250px',
 		padding: '.5em',

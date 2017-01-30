@@ -76,11 +76,12 @@ export const PubHeader = React.createClass({
 			<div style={styles.container}>
 				<Style rules={{
 					'.button-wrapper .pt-button .pt-icon, .button-wrapper .pt-button .pt-icon-standard, .button-wrapper .pt-button .pt-icon-large, .button-wrapper .pt-button[class*="pt-icon-"]::before': { color: useLightText ? '#BFCCD6' : '#5c7080' },
-					'.button-wrapper .pt-button-group .pt-button': { color: useLightText ? '#f5f8fa' : 'inherit', minHeight: '24px', lineHeight: '24px' },
-					'.button-wrapper .pt-button-group .pt-button::after': { background: useLightText ? 'rgba(255, 255, 255, 0.15)' : 'rgba(16, 22, 26, 0.15)' },
-					'.button-wrapper .pt-button-group .pt-button:hover': { color: useLightText ? '#f5f8fa' : '#182026' },
-					'.button-wrapper .pt-button-group:not(.pt-minimal) .pt-button': { boxShadow: '0px 0px 0px white', backgroundColor: 'transparent', background: 'transparent', border: '1px solid #fff', borderColor: useLightText ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.25)' },
-					'.button-wrapper .pt-button-group:not(.pt-minimal) .pt-button:hover': { backgroundColor: 'rgba(167, 182, 194, 0.3)' },
+					'.button-wrapper .pt-button-group .pt-button:not(.pt-intent-danger)': { color: useLightText ? '#f5f8fa' : 'inherit' },
+					'.button-wrapper .pt-button-group .pt-button': { minHeight: '24px', lineHeight: '24px' },
+					'.button-wrapper .pt-button-group .pt-button:not(.pt-intent-danger)::after': { background: useLightText ? 'rgba(255, 255, 255, 0.15)' : 'rgba(16, 22, 26, 0.15)' },
+					'.button-wrapper .pt-button-group .pt-button:not(.pt-intent-danger):hover': { color: useLightText ? '#f5f8fa' : '#182026' },
+					'.button-wrapper .pt-button-group:not(.pt-minimal) .pt-button:not(.pt-intent-danger)': { boxShadow: '0px 0px 0px white', backgroundColor: 'transparent', background: 'transparent', border: '1px solid #fff', borderColor: useLightText ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.25)' },
+					'.button-wrapper .pt-button-group:not(.pt-minimal) .pt-button:not(.pt-intent-danger):hover': { backgroundColor: 'rgba(167, 182, 194, 0.3)' },
 
 					// '.button-wrapper .pt-minimal .pt-button .pt-icon, .button-wrapper .pt-minimal .pt-button .pt-icon-standard, .button-wrapper .pt-minimal .pt-button .pt-icon-large, .button-wrapper .pt-minimal .pt-button[class*="pt-icon-"]::before': { color: useLightText ? '#BFCCD6' : '#5c7080' },
 					// '.button-wrapper .pt-minimal.pt-button-group .pt-button': { color: useLightText ? '#f5f8fa' : 'inherit'},
