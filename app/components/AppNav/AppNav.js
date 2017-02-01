@@ -64,10 +64,10 @@ export const AppNav = React.createClass({
 		const isLight = headerJournal && contrastColor === '#000000';
 		const navClass = isLight ? 'pt-navbar' : 'pt-navbar pt-dark'; 
 		const navStyle = headerJournal ? { backgroundColor: headerJournal.headerColor, minHeight: '50px', height: 'auto' } : {};
-
+		const landingNav = location.pathname === '/' ? { backgroundColor: 'transparent', boxShadow: '0px 0px 0px black', width: '100%', position: 'absolute' } : {};
 
 		return (
-			<nav className={navClass} style={navStyle}>
+			<nav className={navClass} style={[navStyle, landingNav]}>
 				<div className="pt-navbar-group pt-align-left">
 					<Link to={'/'} className="pt-navbar-heading" style={styles.logo}>
 						{/* PubPub */}
