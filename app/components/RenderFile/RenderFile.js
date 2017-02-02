@@ -48,12 +48,13 @@ export const RenderFile = React.createClass({
 		switch (fileType) {
 		case 'ppub':
 			const content = JSON.parse(file.content);
+			console.log(file.content);
 			return (
 				<div id={wrapperId} className={'pub-body'} style={styles.contentWrapper}>
 					{!this.props.noHighlighter &&
 						<Highlighter />
 					}
-					{this.renderReactFromJSON(content, this.getFileMap(this.props.allFiles))}
+					{renderReactFromJSON(content, this.getFileMap(this.props.allFiles))}
 				</div>
 			);
 		case 'text/markdown':
