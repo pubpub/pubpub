@@ -24,8 +24,10 @@ module.exports = {
 				test: /\.js?/,
 				loader: 'babel-loader',
 				include: [
-					path.resolve('app')
+					path.resolve('app'),
+					path.resolve('node_modules')
 				],
+				exclude: /(node_modules\/(?!(pubpub-prose|pubpub-render-files)\/).*)|(.*citeproc.*)/,
 				query: {
 					plugins: [
 						['react-transform', {
@@ -50,7 +52,7 @@ module.exports = {
 			{ test: /\.jpg$/, loader: 'file-loader' },
 			{ test: /\.json$/, loader: 'json-loader' },
 			{ test: /\.html$/, loader: 'html' },
-			{ test: /\.(woff|woff2)$/, use: 'url-loader', options: { name: 'fonts/[hash].[ext]', limit: 5000, mimetype: 'application/font-woff' } }, 
+			{ test: /\.(woff|woff2)$/, use: 'url-loader', options: { name: 'fonts/[hash].[ext]', limit: 5000, mimetype: 'application/font-woff' } },
 			{ test: /\.(ttf|eot|svg)$/, use: 'file-loader', options: { name: 'fonts/[hash].[ext]' } }
 		]
 	},
