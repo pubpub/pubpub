@@ -30,13 +30,14 @@ body {
 }
 
 .background-button {
-	background: rgba(255, 255, 255, 0.8) !important;
+	/*background: rgba(255, 255, 255, 0.8) !important;
 	&:hover {
 		background: rgba(255, 255, 255, 0.9) !important;
 	}
 	&:active {
 		background: rgba(255, 255, 255, 0.95) !important;
-	}
+	}*/
+	opacity: 0.9;
 }
 /* Input Fields */
 /* ------------ */

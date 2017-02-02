@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, browserHistory } from 'react-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-
+import { Button } from '@blueprintjs/core';
 import { Loader, ImageCropper } from 'components';
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
@@ -282,13 +282,11 @@ export const CreateAccount = React.createClass({
 							</label>
 								
 
-							<button className={'pt-button pt-intent-primary'} onClick={this.createAccountSubmit}>
-								<FormattedMessage {...globalMessages.SignUp} />
-							</button>
-
-							<div style={styles.loaderContainer}>
-								<Loader loading={isLoading} showCompletion={!errorMessage} />
-							</div>
+							<Button 
+								className={'pt-intent-primary'} 
+								onClick={this.createAccountSubmit}
+								text={<FormattedMessage {...globalMessages.SignUp} />}
+								loading={isLoading} />
 
 							<div style={styles.errorMessage}>{errorMessage}</div>
 

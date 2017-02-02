@@ -94,6 +94,7 @@ export const Login = React.createClass({
 
 					<Button 
 						name={'login'} 
+						type={'submit'}
 						className={'pt-button pt-intent-primary'} 
 						onClick={this.handleLoginSubmit}
 						text={<FormattedMessage {...globalMessages.Login} />}

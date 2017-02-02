@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+// import { Link } from 'react-router';
 
 let styles;
 
@@ -8,11 +8,9 @@ export const AppFooter = React.createClass({
 	render() {
 		return (
 			<div style={styles.container}>
-				{/*<Link to={'/about'} className={'link'} style={styles.item}>About</Link>
-				<a href={'http://docs.listoflinks.co'} className={'link'} style={styles.item}>API</a>
-				<a href={'https://github.com/isTravis/list-of-links'} className={'link'} style={styles.item}>Github</a>
-				<a href={'mailto:hello@listoflinks.co'} className={'link'} style={styles.item}>Contact</a>*/}
-				<a href={'mailto:hello@listoflinks.co'} className={'link'} style={styles.item}>Contact us at pubpub@media.mit.edu</a>
+				<a href={'https://github.com/pubpub/pubpub'} className={'link'} style={styles.item}>Github</a>
+				<a href={'http://v2-dev-docs.pubpub.org'} className={'link'} style={styles.item}>API</a>
+				<a href={'mailto:pubpub@media.mit.edu'} className={'link'} style={styles.item}>Contact us at pubpub@media.mit.edu</a>
 			</div>
 		);
 	}

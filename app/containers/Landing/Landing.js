@@ -200,12 +200,12 @@ export const Landing = React.createClass({
 									<Link to={'/journals/create'} className={'pt-button background-button'} style={{ marginRight: '1em' }}>Start a Journal</Link>
 								</div>
 								<div className="pt-control-group">
-								    <div className="pt-input-group">
-								      <span className="pt-icon pt-icon-envelope" />
-								      <input type="text" className="pt-input" placeholder="Email address" />
-								    </div>
-								    <button className="pt-button pt-intent-primary">Join PubPub</button>
-								  </div>
+									<div className="pt-input-group">
+										<span className="pt-icon pt-icon-envelope" />
+										<input type="text" className="pt-input" placeholder="Email address" />
+									</div>
+									<button className="pt-button pt-intent-primary">Join PubPub</button>
+								</div>
 							</div>
 						</div>
 
@@ -286,18 +286,24 @@ export const Landing = React.createClass({
 									<div className="pt-dialog-header">
 										{/* <span className="pt-icon-large pt-icon-application" /> */}
 										<h5>Your Pubs</h5>
-										<Link to={'/pubs/create'} className={'pt-button pt-icon-add'} style={styles.sideButton}>New</Link>
+										{!!assetPubs.length &&
+											<Link to={'/pubs/create'} className={'pt-button pt-icon-add'} style={styles.sideButton}>New</Link>
+										}
+										
 									</div>
 									<div className="pt-dialog-body">
 										{assetPubs.map((pub)=> {
 											return <Link key={'pub-link-' + pub.id} style={styles.sideLink} className={'pt-text-overflow-ellipsis'} to={'/pub/' + pub.slug}>{pub.title}</Link>;
 										})}
 
-										{/*
-										<div style={styles.sideAction}>
-											<Link to={'pubs/create'} className={'pt-button pt-fill pt-intent-primary'}>New Pub</Link>	
-										</div>
-										*/}
+										{!assetPubs.length &&
+											<div style={{ paddingBottom: '1em' }}>
+												<NonIdealState
+													title={'No Pubs'}
+													action={<Link to={'/pubs/create'} className={'pt-button pt-icon-add'} style={{ whiteSpace: 'nowrap' }}>Create new Pub</Link>}
+													visual={'application'} />
+											</div>
+										}
 									</div>
 										
 									
@@ -307,18 +313,24 @@ export const Landing = React.createClass({
 									<div className="pt-dialog-header">
 										{/* <span className="pt-icon-large pt-icon-applications" /> */}
 										<h5>Your Journals</h5>
-										<Link to={'/journals/create'} className={'pt-button pt-icon-add'} style={styles.sideButton}>New</Link>
+										{!!assetJournals.length &&
+											<Link to={'/journals/create'} className={'pt-button pt-icon-add'} style={styles.sideButton}>New</Link>	
+										}
+										
 									</div>
 									<div className="pt-dialog-body">
 										{assetJournals.map((journal)=> {
 											return <Link key={'journal-link-' + journal.id} style={styles.sideLink} className={'pt-text-overflow-ellipsis'} to={'/' + journal.slug}>{journal.title}</Link>;
 										})}
 
-										{/* 
-										<div style={styles.sideAction}>
-											<Link to={'journals/create'} className={'pt-button pt-fill pt-intent-primary'}>New Journal</Link>	
-										</div> 
-										*/}
+										{!assetJournals.length &&
+											<div style={{ paddingBottom: '1em' }}>
+												<NonIdealState
+													title={'No Journals'}
+													action={<Link to={'/journals/create'} className={'pt-button pt-icon-add'} style={{ whiteSpace: 'nowrap' }}>Create new Journal</Link>}
+													visual={'applications'} />
+											</div>
+										}
 									</div>
 								</div>
 								
