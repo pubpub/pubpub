@@ -9,7 +9,7 @@ export const AppFooter = React.createClass({
 		return (
 			<div style={styles.container}>
 				<a href={'https://github.com/pubpub/pubpub'} className={'link'} style={styles.item}>Github</a>
-				<a href={'http://v2-dev-docs.pubpub.org'} className={'link'} style={styles.item}>API</a>
+				<a href={'http://docs.pubpub.org'} className={'link'} style={styles.item}>API</a>
 				<a href={'mailto:pubpub@media.mit.edu'} className={'link'} style={styles.item}>Contact us at pubpub@media.mit.edu</a>
 			</div>
 		);
