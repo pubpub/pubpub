@@ -51,8 +51,8 @@ module.exports = {
 			{ test: /\.jpg$/, loader: 'file-loader' },
 			{ test: /\.json$/, loader: 'json-loader' },
 			{ test: /\.html$/, loader: 'html' },
-			{ test: /\.(woff|woff2)$/, use: 'url-loader', options: { name: 'fonts/[hash].[ext]', limit: 5000, mimetype: 'application/font-woff' } },
-			{ test: /\.(ttf|eot|svg)$/, use: 'file-loader', options: { name: 'fonts/[hash].[ext]' } }
+			{ test: /\.(woff|woff2)$/, use: [{ loader: 'url-loader', query: { name: 'fonts/[hash].[ext]', limit: 5000, mimetype: 'application/font-woff' } }] },
+			{ test: /\.(ttf|eot|svg)$/, use: [{ loader: 'file-loader', query: { name: 'fonts/[hash].[ext]' } }] }
 		]
 	},
 	resolve: {
