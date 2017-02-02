@@ -189,12 +189,50 @@ export const Landing = React.createClass({
 
 				{!user.id &&
 					<div>
-						<h1>Welcome to PubPub</h1>
-						About section here!
+						<div style={styles.headerSection}>
+							<div style={styles.headerImage} />
+							<div style={styles.headerContent}>
+								<div style={styles.splashTitle}>Open Publishing</div>
+								<p style={{ fontSize: '1.25em' }}>PubPub is a blah blah blah</p>
+
+								<div className={'pt-button-groupp pt-large'} style={styles.splashButtons}>
+									<Link to={'/pubs/create'} className={'pt-button background-button'} style={{ marginRight: '1em' }}>Start a Pub</Link>
+									<Link to={'/journals/create'} className={'pt-button background-button'} style={{ marginRight: '1em' }}>Start a Journal</Link>
+								</div>
+								<div className="pt-control-group">
+								    <div className="pt-input-group">
+								      <span className="pt-icon pt-icon-envelope" />
+								      <input type="text" className="pt-input" placeholder="Email address" />
+								    </div>
+								    <button className="pt-button pt-intent-primary">Join PubPub</button>
+								  </div>
+							</div>
+						</div>
+
+						<div style={styles.section()}>
+							<div style={styles.sectionContent}>
+								<h2>Pubs</h2>
+							</div>
+						</div>
+
+						<div style={styles.section(true)}>
+							<div style={styles.sectionContent}>
+								<h2>Journals</h2>
+							</div>
+						</div>
+
+						<div style={styles.section()}>
+							<div style={styles.sectionContent}>
+								<h2>Open</h2>
+							</div>
+						</div>
 					</div>
 				}
 
+				
+
 				{user.id &&
+
 					<div style={styles.activitiesTable}>
 						<div style={styles.leftPanel}>
 							<div style={styles.headerWrapper}>
@@ -306,14 +344,59 @@ export default connect(mapStateToProps)(Landing);
 
 styles = {
 	container: {
-		padding: '1.5em',
+		// padding: '1.5em',
+		// width: 'calc(100% - 3em)',
+		// maxWidth: '1024px',
+		// margin: '0 auto',
+	},
+	headerSection: {
+		position: 'relative',
+
+	},
+	headerImage: {
+		backgroundImage: 'url("https://images.unsplash.com/photo-1478250242432-9381e12b763b?dpr=1&auto=format&fit=crop&w=1500&h=1097&q=80&cs=tinysrgb&crop=")',
+		backgroundRepeat: 'no-repeat',
+		backgroundPosition: 'center bottom',
+		backgroundSize: 'cover',
+		position: 'absolute',
+		width: '100%',
+		height: '100%',
+		zIndex: 1,
+	},
+	headerContent: {
+		padding: '150px 1.5em 150px',
+		width: 'calc(100% - 3em)',
+		maxWidth: '1024px',
+		margin: '0 auto',
+		zIndex: 2,
+		position: 'relative',
+		color: 'white',
+	},
+	splashTitle: {
+		fontSize: '3.5em',
+		fontWeight: '200',
+	},
+	splashButtons: {
+		paddingTop: '2em',
+	},
+	section: (isGray)=> {
+		return {
+			backgroundColor: isGray ? '#F3F3F4' : '#FFF',
+		};
+	},
+	sectionContent: {
+		padding: '4em 1.5em',
 		width: 'calc(100% - 3em)',
 		maxWidth: '1024px',
 		margin: '0 auto',
 	},
 	activitiesTable: {
 		display: 'table',
-		width: '100%',
+		// width: '100%',
+		padding: '1.5em',
+		width: 'calc(100% - 3em)',
+		maxWidth: '1024px',
+		margin: '0 auto',
 	},
 	leftPanel: {
 		display: 'table-cell',
