@@ -56,6 +56,7 @@ module.exports = {
 				test: /\.js?$/,
 				loader: 'babel-loader',
 				include: path.join(__dirname, 'app'),
+				exclude: /(node_modules\/(?!(pubpub-prose|pubpub-render-files)\/).*)|(.*citeproc.*)/,
 				query: {
 					plugins: [
 						['transform-object-assign']
@@ -70,7 +71,7 @@ module.exports = {
 			{ test: /\.jpg$/, loader: 'file-loader' },
 			{ test: /\.json$/, loader: 'json-loader' },
 			{ test: /\.html$/, loader: 'html-loader' },
-			{ test: /\.(woff|woff2)$/, use: 'url-loader', options: { name: 'fonts/[hash].[ext]', limit: 5000, mimetype: 'application/font-woff' } }, 
+			{ test: /\.(woff|woff2)$/, use: 'url-loader', options: { name: 'fonts/[hash].[ext]', limit: 5000, mimetype: 'application/font-woff' } },
 			{ test: /\.(ttf|eot|svg)$/, use: 'file-loader', options: { name: 'fonts/[hash].[ext]' } }
 		]
 	},

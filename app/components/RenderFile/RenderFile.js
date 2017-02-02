@@ -1,11 +1,13 @@
 import React, { PropTypes } from 'react';
-import Radium from 'radium';
+
 import { Highlighter } from 'containers';
-import RenderFilePDF from './RenderFilePDF';
-import RenderFilePPT from './RenderFilePPT';
+import Radium from 'radium';
 import RenderFileDoc from './RenderFileDoc';
 import RenderFileMarkdown from './RenderFileMarkdown';
+import RenderFilePDF from './RenderFilePDF';
+import RenderFilePPT from './RenderFilePPT';
 import RenderFileSTL from './RenderFileSTL';
+import { renderReactFromJSON } from 'pubpub-render-files/ppub';
 
 let styles;
 
@@ -26,27 +28,39 @@ export const RenderFile = React.createClass({
 			);
 		});
 	},
+
+	getFileMap: function(files) {
+		if (!files) {
+			return {};
+		}
+		const fileMap = {};
+		for (const file of files) {
+			fileMap[file.name] = file.url;
+		}
+		return fileMap;
+	},
+
 	render() {
 
 		const file = this.props.file || {};
 		const fileType = file.type || file.url.split('.').pop();
 		const wrapperId = this.props.noHighlighter ? '' : 'highlighter-wrapper';
 		switch (fileType) {
-		case 'ppub': 
+		case 'ppub':
 			const content = JSON.parse(file.content);
+			console.log(file.content);
 			return (
 				<div id={wrapperId} className={'pub-body'} style={styles.contentWrapper}>
-					{!this.props.noHighlighter && 
+					{!this.props.noHighlighter &&
 						<Highlighter />
 					}
-					
-					{this.renderContent([content])}
+					{renderReactFromJSON(content, this.getFileMap(this.props.allFiles))}
 				</div>
 			);
-		case 'text/markdown': 
+		case 'text/markdown':
 			return (
 				<div id={wrapperId} className={'pub-body'} style={styles.contentWrapper}>
-					{!this.props.noHighlighter && 
+					{!this.props.noHighlighter &&
 						<Highlighter />
 					}
 					<RenderFileMarkdown file={file} allFiles={this.props.allFiles} />
@@ -60,12 +74,12 @@ export const RenderFile = React.createClass({
 		case 'application/pdf':
 			return (
 				<div id={wrapperId} style={styles.contentWrapper}>
-					{!this.props.noHighlighter && 
+					{!this.props.noHighlighter &&
 						<Highlighter />
 					}
 					<RenderFilePDF file={file} />
 				</div>
-				
+
 			);
 		case 'application/vnd.ms-powerpoint':
 		case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
@@ -75,7 +89,7 @@ export const RenderFile = React.createClass({
 			return <RenderFileDoc file={file} />;
 		case 'stl':
 			return <RenderFileSTL file={file} />;
-		default: 
+		default:
 			return (
 				<div className={'pt-callout'}>
 					<p>Can not render this file. Click to download the file in your browser.</p>
