@@ -34,7 +34,7 @@ export const ColorPicker = React.createClass({
 				content={
 					<div style={styles.pickerWrapper}>
 						<CirclePicker color={this.props.color} colors={colors} onChange={this.props.onChange} />		
-						<EditableInput style={{}} label="hex" value={this.props.color} onChange={this.props.onChange} />
+						<EditableInput style={{ wrap: { position: 'absolute', bottom: 16, right: 14 }, input: { width: '110px', padding: '2px 5px', color: '#58585B' }, label: {} }} label="" value={this.props.color} onChange={this.props.onChange} />
 					</div>
 				}
 				position={Position.RIGHT}>

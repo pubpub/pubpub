@@ -2,9 +2,10 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { browserHistory } from 'react-router';
-import { ImageUpload, Loader } from 'components';
+import { ImageUpload, Loader, ColorPicker } from 'components';
+import { Button } from '@blueprintjs/core';
 import { StickyContainer, Sticky } from 'react-sticky';
-import { BlockPicker } from 'react-color';
+// import { BlockPicker } from 'react-color';
 
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
@@ -161,11 +162,14 @@ export const JournalEdit = React.createClass({
 				<form onSubmit={this.saveJournal} style={styles.form}>
 					<Sticky>
 					<div style={styles.buttonWrapper}>
-						<button type="button" className={'pt-button pt-intent-primary'} disabled={!this.state.canSave} onClick={this.saveJournal}>
-							Save Journal
-						</button>
-
-						<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!errorMessage} /></div>
+						<Button 
+							type="button" 
+							className={'pt-intent-primary'} 
+							disabled={!this.state.canSave} 
+							onClick={this.saveJournal} 
+							text={'Save Journal'} 
+							loading={isLoading} />
+						
 
 						<div style={styles.errorMessage}>{errorMessage}</div>
 					</div>
@@ -205,10 +209,10 @@ export const JournalEdit = React.createClass({
 							canClear={true} />
 
 
-						<label htmlFor={'headerMode'}>
+						<label htmlFor={'headerMode'} style={{ display: 'inline-block', padding: '1em 2em 1em 0em', verticalAlign: 'top'}}>
 							<FormattedMessage {...globalMessages.HeaderMode} />
 
-							<div style={{margin:'1em'}} className={'pt-button-group'}>
+							<div style={{margin:'0.5em 0em', display: 'block'}} className={'pt-button-group'}>
 								<button className={this.state.headerMode === 'title' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'title')}>Title</button>
 								<button className={this.state.headerMode === 'logo' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'logo')}>Logo</button>
 								<button className={this.state.headerMode === 'both' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'both')}>Both</button>
@@ -216,20 +220,21 @@ export const JournalEdit = React.createClass({
 						</label>
 						
 
-						<label htmlFor={'headerAlign'}>
+						<label htmlFor={'headerAlign'} style={{ display: 'inline-block', padding: '1em 2em 1em 0em', verticalAlign: 'top'}}>
 							<FormattedMessage {...globalMessages.HeaderAlign} />
-							<div style={{margin:'1em'}} className={'pt-button-group'}>
+							<div style={{margin:'0.5em', display: 'block'}} className={'pt-button-group'}>
 								<button className={this.state.headerAlign === 'left' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderAlignChange.bind(this, 'left')}>Left</button>
 								<button className={this.state.headerAlign === 'center' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderAlignChange.bind(this, 'center')}>Center</button>
 							</div>
 						</label>
 	
 
-						<label>
+						<label style={{ display: 'inline-block', padding: '1em 2em 1em 0em', verticalAlign: 'top' }}>
 							<FormattedMessage {...globalMessages.BackgroundColor} />
-							<div className={'colorPicker'}>
-								<BlockPicker color={this.state.headerColor} onChange={this.handleColorChange} />
+							<div style={{margin:'0.75em 0em', display: 'block'}}>
+								<ColorPicker color={this.state.headerColor} onChange={this.handleColorChange} />	
 							</div>
+							
 						</label>
 
 						<label style={styles.label} htmlFor={'slug'}>
