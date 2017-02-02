@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import { CirclePicker } from 'react-color'
+import { CirclePicker } from 'react-color';
 import { EditableInput } from 'react-color/lib/components/common';
 
 import { Popover, Position } from '@blueprintjs/core';
@@ -28,7 +28,7 @@ export const ColorPicker = React.createClass({
 
 	render: function() {
 		// const colors = ['#f3f3f4', "#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", "#ff5722", "#795548", "#607d8b"];
-		const colors = ['#f7b8b8', '#f7d2b8', '#f7efb8', '#deded8','#cdf7b8', '#b8f7e0', '#b8f7f7', '#b8daf7', '#b8baf7', '#cdb8f7', '#edb8f7', '#f7b8d8', '#a6aaab', '#575858', '#f3f3f4'];
+		const colors = ['#f7b8b8', '#f7d2b8', '#f7efb8', '#deded8', '#cdf7b8', '#b8f7e0', '#b8f7f7', '#b8daf7', '#b8baf7', '#cdb8f7', '#edb8f7', '#f7b8d8', '#a6aaab', '#575858', '#f3f3f4'];
 		return (
 			<Popover 
 				content={

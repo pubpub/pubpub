@@ -111,7 +111,7 @@ export const ImageUpload = React.createClass({
 	render: function() {
 		const width = (this.props.width || 75);
 		// const imageDimensions = { width: width, maxHeight: width };
-		const imageDimensions = { maxWidth: '30vw', height: width };
+		const imageDimensions = { maxWidth: '150px', height: width };
 		const emptyDimensions = { width: width, height: width };
 		const containerStyle = this.props.containerStyle || {};
 		return (

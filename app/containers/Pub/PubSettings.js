@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { browserHistory } from 'react-router';
-import { Loader, ImageUpload, ImageCropper, ColorPicker } from 'components';
+import { ImageUpload, ColorPicker } from 'components';
+import { StickyContainer, Sticky } from 'react-sticky';
 import { Button, Dialog } from '@blueprintjs/core';
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
@@ -29,6 +30,7 @@ export const PubSettings = React.createClass({
 			headerColor: '',
 			headerImage: '',
 			confirmDelete: false,
+			canSave: false,
 		};
 	},
 
@@ -56,22 +58,22 @@ export const PubSettings = React.createClass({
 
 	inputUpdate: function(key, evt) {
 		const value = evt.target.value || '';
-		this.setState({ [key]: value });
+		this.setState({ [key]: value, canSave: true });
 	},
 
 	inputUpdateLowerCase: function(key, evt) {
 		const value = evt.target.value || '';
-		this.setState({ [key]: value.toLowerCase() });
+		this.setState({ [key]: value.toLowerCase(), canSave: true });
 	},
 
 	descriptionUpdate: function(evt) {
 		const description = evt.target.value || '';
-		this.setState({ description: description.substring(0, 140) });
+		this.setState({ description: description.substring(0, 140), canSave: true });
 	},
 
 	slugUpdate: function(evt) {
 		const slug = evt.target.value || '';
-		this.setState({ slug: slug.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase() });
+		this.setState({ slug: slug.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase(), canSave: true });
 	},
 
 	handleFileSelect: function(evt) {
@@ -81,8 +83,7 @@ export const PubSettings = React.createClass({
 	},
 
 	headerColorChange: function(color) {
-		console.log(color);
-		this.setState({ headerColor: color.hex });
+		this.setState({ headerColor: color.hex, canSave: true });
 	},
 
 	cancelImageUpload: function() {
@@ -91,7 +92,7 @@ export const PubSettings = React.createClass({
 	},
 
 	imageUploaded: function(url) {
-		this.setState({ imageFile: null, avatar: url });
+		this.setState({ imageFile: null, avatar: url, canSave: true });
 		document.getElementById('avatar').value = null;
 	},
 
@@ -125,9 +126,12 @@ export const PubSettings = React.createClass({
 			headerImage: this.state.headerImage,
 		};
 		const { isValid, validationError } = this.validate(updateData);
-		this.setState({ validationError: validationError });
+		
 		if (isValid) {
+			this.setState({ canSave: false });
 			this.props.dispatch(updatePub(this.props.pub.id, updateData));	
+		} else {
+			this.setState({ validationError: validationError });	
 		}
 	},
 
@@ -157,57 +161,79 @@ export const PubSettings = React.createClass({
 			<div style={styles.container}>
 				<h2>Settings</h2>
 
-				<form onSubmit={this.settingsSubmit}>
-					
-					<label style={styles.label} htmlFor={'title'}>
-						<FormattedMessage {...globalMessages.Title} />
-						<input id={'title'} className={'pt-input margin-bottom'} name={'title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
-					</label>
+				<StickyContainer>
+					<form onSubmit={this.settingsSubmit}>
+						<Sticky>
+							<div style={styles.buttonWrapper}>
+								<Button 
+									type="button" 
+									className={'pt-intent-primary'} 
+									disabled={!this.state.canSave} 
+									onClick={this.settingsSubmit} 
+									text={'Save Settings'} 
+									loading={isLoading} />
+								
 
-					<label style={styles.label} htmlFor={'pubURL'}>
-						<FormattedMessage {...globalMessages.PubURL} />
-						<input id={'pubURL'} className={'pt-input margin-bottom'} name={'pubURL'} type="text" style={styles.input} value={this.state.slug} onChange={this.slugUpdate} />
-						<div className={'light-color inputSubtext'}>
-							pubpub.org/pub/<b>{this.state.slug || 'pubURL'}</b>
+								<div style={styles.errorMessage}>{errorMessage}</div>
+							</div>
+
+						</Sticky>
+
+						<div style={styles.formContentWrapper}>
+							<label style={styles.label} htmlFor={'title'}>
+								<FormattedMessage {...globalMessages.Title} />
+								<input id={'title'} className={'pt-input margin-bottom'} name={'title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
+							</label>
+
+							<label style={styles.label} htmlFor={'pubURL'}>
+								<FormattedMessage {...globalMessages.PubURL} />
+								<input id={'pubURL'} className={'pt-input margin-bottom'} name={'pubURL'} type="text" style={styles.input} value={this.state.slug} onChange={this.slugUpdate} />
+								<div className={'light-color inputSubtext'}>
+									pubpub.org/pub/<b>{this.state.slug || 'pubURL'}</b>
+								</div>
+							</label>		
+								
+							<label htmlFor={'description'}>
+								<FormattedMessage {...globalMessages.Description} />
+								<textarea id={'description'} className={'pt-input margin-bottom'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.descriptionUpdate} />
+								<div className={'light-color inputSubtext'}>
+									{this.state.description.length} / 140
+								</div>
+							</label>
+
+							{/*<label htmlFor={'avatar'}>
+								<FormattedMessage {...globalMessages.Avatar} />
+								<img role="presentation" style={styles.avatar} src={this.state.avatar} />
+								<input id={'avatar'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
+							</label>*/}
+
+							<ImageUpload 
+									defaultImage={this.state.avatar}
+									userCrop={true}
+									label={'Pub Avatar'}
+									tooltip={'Used in search results and profiles'} 
+									containerStyle={styles.imageContainer}
+									onNewImage={this.imageUploaded} />
+
+							<ImageUpload 
+								defaultImage={this.state.headerImage}
+								userCrop={false}
+								label={'Header Image'}
+								tooltip={false} 
+								containerStyle={styles.imageContainer}
+								onNewImage={this.handleBackgroundImageChange}
+								canClear={true} />
+
+							<label style={styles.imageContainer}>
+								<FormattedMessage {...globalMessages.BackgroundColor} />
+								<div style={{ margin:'1em 0em', display: 'block' }}>
+									<ColorPicker color={this.state.headerColor} onChange={this.headerColorChange} />	
+								</div>
+							</label>
 						</div>
-					</label>		
-						
-					<label htmlFor={'description'}>
-						<FormattedMessage {...globalMessages.Description} />
-						<textarea id={'description'} className={'pt-input margin-bottom'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.descriptionUpdate} />
-						<div className={'light-color inputSubtext'}>
-							{this.state.description.length} / 140
-						</div>
-					</label>
 
-					<label htmlFor={'avatar'}>
-						<FormattedMessage {...globalMessages.Avatar} />
-						<img role="presentation" style={styles.avatar} src={this.state.avatar} />
-						<input id={'avatar'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
-					</label>
-
-					<ColorPicker color={this.state.headerColor} onChange={this.headerColorChange} />
-
-					<ImageUpload 
-						defaultImage={this.state.headerImage}
-						userCrop={false}
-						label={'Header Image'}
-						tooltip={false} 
-						containerStyle={styles.imageContainer}
-						onNewImage={this.handleBackgroundImageChange}
-						canClear={true} />
-
-					<button className={'pt-button pt-intent-primary'} onClick={this.settingsSubmit}>
-						Save Settings
-					</button>
-
-					<div style={styles.loaderContainer}>
-						<Loader loading={isLoading} showCompletion={!errorMessage} />
-					</div>
-
-					<div style={styles.errorMessage}>{errorMessage}</div>
-
-				</form>
+					</form>
+				</StickyContainer>
 
 				{!pub.isPublished && 
 					<div>
@@ -236,13 +262,7 @@ export const PubSettings = React.createClass({
 
 					</div>
 				}
-				
-
-				<div style={[styles.imageCropperWrapper, this.state.imageFile !== null && styles.imageCropperWrapperVisible]} >
-					<div style={styles.imageCropper}>
-						<ImageCropper height={500} width={500} image={this.state.imageFile} onCancel={this.cancelImageUpload} onUpload={this.imageUploaded} />
-					</div>
-				</div>
+			
 				
 			</div>
 		);
@@ -258,13 +278,20 @@ styles = {
 	input: {
 		width: 'calc(100% - 20px - 4px)',
 	},
-	loaderContainer: {
-		display: 'inline-block',
-		position: 'relative',
-		top: 15,
-	},
 	bio: {
 		height: '4em',
+	},
+	formContentWrapper: {
+		width: 'calc(100% - 200px)',
+		// width: '500px',
+		position: 'relative',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: 'auto',
+		}
+	},
+	buttonWrapper: {
+		position: 'absolute',
+		right: 0,
 	},
 
 	avatar: {
@@ -275,34 +302,9 @@ styles = {
 		padding: '10px 0px',
 		color: globalStyles.errorRed,
 	},
-	imageCropperWrapper: {
-		height: '100vh',
-		width: '100vw',
-		backgroundColor: 'rgba(255,255,255,0.75)',
-		position: 'fixed',
-		top: 0,
-		left: 0,
-		opacity: 0,
-		pointerEvents: 'none',
-		transition: '.1s linear opacity',
-		display: 'flex',
-		justifyContent: 'center',
-		zIndex: 1,
-	},
-	imageCropperWrapperVisible: {
-		opacity: 1,
-		pointerEvents: 'auto',
-	},
-	imageCropper: {
-		height: '270px',
-		width: '450px',
-		alignSelf: 'center',
-		backgroundColor: 'white',
-		boxShadow: '0px 0px 10px #808284',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			width: '100%',
-			height: 'auto',
-			left: 0,
-		},
+	imageContainer: {
+		marginRight: '3em',
+		verticalAlign: 'top',
+		display: 'inline-block',
 	},
 };
