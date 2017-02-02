@@ -1,4 +1,4 @@
-# PubPub v3 Demo
+# PubPub
 
 ## Install & run
 
