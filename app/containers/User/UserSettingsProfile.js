@@ -134,12 +134,12 @@ export const UserSettingsProfile = React.createClass({
 
 					<label htmlFor={'firstName'}>
 						<FormattedMessage {...globalMessages.FirstName} />
-						<input id={'firstName'} name={'first name'} type="text" style={styles.input} value={this.state.firstName} onChange={this.inputUpdate.bind(this, 'firstName')} />
+						<input id={'firstName'} className={'pt-input margin-bottom'} name={'first name'} type="text" style={styles.input} value={this.state.firstName} onChange={this.inputUpdate.bind(this, 'firstName')} />
 					</label>
 					
 					<label htmlFor={'lastName'}>
 						<FormattedMessage {...globalMessages.LastName} />
-						<input id={'lastName'} name={'last name'} type="text" style={styles.input} value={this.state.lastName} onChange={this.inputUpdate.bind(this, 'lastName')} />
+						<input id={'lastName'} className={'pt-input margin-bottom'} name={'last name'} type="text" style={styles.input} value={this.state.lastName} onChange={this.inputUpdate.bind(this, 'lastName')} />
 					</label>
 						
 					<label htmlFor={'userImage'}>
@@ -150,7 +150,7 @@ export const UserSettingsProfile = React.createClass({
 
 					<label htmlFor={'bio'}>
 						<FormattedMessage {...globalMessages.Bio} />
-						<textarea id={'bio'} name={'bio'} type="text" style={[styles.input, styles.bio]} value={this.state.bio} onChange={this.bioUpdate} />
+						<textarea id={'bio'} className={'pt-input margin-bottom'} name={'bio'} type="text" style={[styles.input, styles.bio]} value={this.state.bio} onChange={this.bioUpdate} />
 						<div className={'light-color inputSubtext'}>
 							{this.state.bio.length} / 140
 						</div>
@@ -158,43 +158,43 @@ export const UserSettingsProfile = React.createClass({
 
 					<label htmlFor={'publicEmail'}>
 						<FormattedMessage {...globalMessages.PublicEmail} />
-						<input id={'publicEmail'} name={'publicEmail'} type="text" style={styles.input} value={this.state.publicEmail} onChange={this.inputUpdate.bind(this, 'publicEmail')} />
+						<input id={'publicEmail'} className={'pt-input margin-bottom'} name={'publicEmail'} type="text" style={styles.input} value={this.state.publicEmail} onChange={this.inputUpdate.bind(this, 'publicEmail')} />
 					</label>
 
 					<label htmlFor={'website'}>
 						<FormattedMessage {...globalMessages.Website} />
-						<input id={'website'} name={'website'} type="text" style={styles.input} value={this.state.website} onChange={this.inputUpdate.bind(this, 'website')} />
+						<input id={'website'} className={'pt-input margin-bottom'} name={'website'} type="text" style={styles.input} value={this.state.website} onChange={this.inputUpdate.bind(this, 'website')} />
 					</label>
 
 					<label htmlFor={'twitter'}>
 						Twitter
-						<div style={styles.prefixedInputWrapper}>
-							<div style={styles.prefix}>@</div>
-							<input id={'twitter'} name={'twitter'} type="text" style={[styles.input, styles.prefixedInput]} value={this.state.twitter} onChange={this.inputUpdate.bind(this, 'twitter')} />
+						<div className="pt-control-group prefixed-group margin-bottom">
+							<div className={'pt-button pt-disabled input-prefix'}>@</div>
+							<input id={'twitter'} className={'pt-input prefixed-input'} name={'twitter'} type="text" style={styles.input} value={this.state.twitter} onChange={this.inputUpdate.bind(this, 'twitter')} />
 						</div>
 					</label>
 
 					<label htmlFor={'orcid'}>
 						ORCID
-						<div style={styles.prefixedInputWrapper}>
-							<div style={styles.prefix}>orcid.org/</div>
-							<input id={'orcid'} name={'orcid'} type="text" style={[styles.input, styles.prefixedInput]} value={this.state.orcid} onChange={this.inputUpdate.bind(this, 'orcid')} />
+						<div className="pt-control-group prefixed-group margin-bottom">
+							<div className={'pt-button pt-disabled input-prefix'}>orcid.org/</div>
+							<input id={'orcid'} className={'pt-input prefixed-input'} name={'orcid'} type="text" style={styles.input} value={this.state.orcid} onChange={this.inputUpdate.bind(this, 'orcid')} />
 						</div>
 					</label>
 						
 					<label htmlFor={'github'}>
 						Github
-						<div style={styles.prefixedInputWrapper}>
-							<div style={styles.prefix}>github.com/</div>
-							<input id={'github'} name={'github'} type="text" style={[styles.input, styles.prefixedInput]} value={this.state.github} onChange={this.inputUpdate.bind(this, 'github')} />
+						<div className="pt-control-group prefixed-group margin-bottom">
+							<div className={'pt-button pt-disabled input-prefix'}>github.com/</div>
+							<input id={'github'} className={'pt-input prefixed-input'} name={'github'} type="text" style={styles.input} value={this.state.github} onChange={this.inputUpdate.bind(this, 'github')} />
 						</div>
 					</label>
 						
 					<label htmlFor={'googleScholar'}>
 						Google Scholar
-						<div style={styles.prefixedInputWrapper}>
-							<div style={styles.prefix}>scholar.google.com/citations?user=</div>
-							<input id={'googleScholar'} name={'google scholar'} type="text" style={[styles.input, styles.prefixedInput]} value={this.state.googleScholar} onChange={this.inputUpdate.bind(this, 'googleScholar')} />
+						<div className="pt-control-group prefixed-group margin-bottom">
+							<div className={'pt-button pt-disabled input-prefix'}>scholar.google.com/citations?user=</div>
+							<input id={'googleScholar'} className={'pt-input prefixed-input'} name={'google scholar'} type="text" style={styles.input} value={this.state.googleScholar} onChange={this.inputUpdate.bind(this, 'googleScholar')} />
 						</div>
 					</label>
 						
@@ -213,7 +213,7 @@ export const UserSettingsProfile = React.createClass({
 
 				<h2>Access Token</h2>
 				<p>Use the following access token when using the PubPub API (<a href={'https://v2-dev-docs.pubpub.org'}>https://v2-dev-docs.pubpub.org</a>)</p>
-				<input id={'accessToken'} name={'access token'} type="text" disabled style={styles.input} value={user.accessToken} />
+				<input id={'accessToken'} className={'pt-input margin-bottom'} name={'access token'} type="text" disabled style={styles.input} value={user.accessToken} />
 
 				<div style={[styles.imageCropperWrapper, this.state.userImageFile !== null && styles.imageCropperWrapperVisible]} >
 					<div style={styles.imageCropper}>
@@ -250,30 +250,6 @@ styles = {
 	errorMessage: {
 		padding: '10px 0px',
 		color: globalStyles.errorRed,
-	},
-	prefixedInputWrapper: {
-		display: 'table',
-		width: '100%',
-		marginBottom: '1.2em',
-	},
-	prefix: {
-		display: 'table-cell',
-		backgroundColor: '#F3F3F4',
-		verticalAlign: 'middle',
-		textAlign: 'center',
-		padding: '4px 10px',
-		borderWidth: '2px 0px 2px 2px',
-		borderStyle: 'solid',
-		borderColor: '#BBBDC0',
-		borderRadius: '1px 0px 0px 1px',
-		width: '1%',
-		fontSize: '0.9em',
-		whiteSpace: 'nowrap',
-	},
-	prefixedInput: {
-		display: 'table-cell',
-		marginBottom: 0,
-		borderRadius: '0px 1px 1px 0px',
 	},
 	imageCropperWrapper: {
 		height: '100vh',

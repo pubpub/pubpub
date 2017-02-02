@@ -161,12 +161,12 @@ export const PubSettings = React.createClass({
 					
 					<label style={styles.label} htmlFor={'title'}>
 						<FormattedMessage {...globalMessages.Title} />
-						<input id={'title'} name={'title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
+						<input id={'title'} className={'pt-input margin-bottom'} name={'title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
 					</label>
 
 					<label style={styles.label} htmlFor={'pubURL'}>
 						<FormattedMessage {...globalMessages.PubURL} />
-						<input id={'pubURL'} name={'pubURL'} type="text" style={styles.input} value={this.state.slug} onChange={this.slugUpdate} />
+						<input id={'pubURL'} className={'pt-input margin-bottom'} name={'pubURL'} type="text" style={styles.input} value={this.state.slug} onChange={this.slugUpdate} />
 						<div className={'light-color inputSubtext'}>
 							pubpub.org/pub/<b>{this.state.slug || 'pubURL'}</b>
 						</div>
@@ -174,7 +174,7 @@ export const PubSettings = React.createClass({
 						
 					<label htmlFor={'description'}>
 						<FormattedMessage {...globalMessages.Description} />
-						<textarea id={'description'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.descriptionUpdate} />
+						<textarea id={'description'} className={'pt-input margin-bottom'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.descriptionUpdate} />
 						<div className={'light-color inputSubtext'}>
 							{this.state.description.length} / 140
 						</div>

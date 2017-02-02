@@ -39,6 +39,7 @@ body {
     border-color: rgba(16, 22, 26, 0.1) rgba(16, 22, 26, 0.1) rgba(16, 22, 26, 0.17) rgba(16, 22, 26, 0.1);
     cursor: default;
     display: table-cell;
+    white-space: nowrap;
     width: 1%;
 }
 .prefixed-input.pt-intput {
