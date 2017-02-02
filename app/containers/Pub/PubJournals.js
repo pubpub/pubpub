@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
+import { Link } from 'react-router';
 import { AutocompleteBar, PreviewJournal } from 'components';
 import request from 'superagent';
 import dateFormat from 'dateformat';
@@ -67,36 +68,51 @@ export const PubJournals = React.createClass({
 		const pub = this.props.pub || {};
 		const pubSubmits = pub.pubSubmits || [];
 		const pubFeatures = pub.pubFeatures || [];
+		const versions = pub.versions || [];
 
 		const featuredIds = {};
 		pubFeatures.map((feature)=> {
 			featuredIds[feature.journalId] = feature;
 		});
+
+		const canSubmit = versions.reduce((previous, current)=> {
+			if (current.isPublished || current.isRestricted) { return true; }
+			return previous;
+		}, false);
 		
 		return (
 			<div style={styles.container}>
 				<h2>Journals</h2>
 
 				{pub.canEdit &&
-					<AutocompleteBar
-						filterOptions={(options)=>{
-							return options.filter((option)=>{
-								for (let index = 0; index < pubSubmits.length; index++) {
-									if (pubSubmits[index].journal.id === option.id) {
-										return false;
-									}
-								}
-								return true;
-							});
-						}}
-						placeholder={'Submit to new journal'}
-						loadOptions={this.loadOptions}
-						value={this.state.newSubmission}
-						onChange={this.handleSelectChange}
-						onComplete={this.createSubmission}
-						completeDisabled={!this.state.newSubmission || !this.state.newSubmission.id}
-						completeString={'Submit Pub'}
-					/>
+					<div>
+						{!canSubmit &&
+							<div>Pubs must have at least one published or restricted version to submit to a journal. Go to <Link to={`/pub/${pub.slug}/versions`}>Versions</Link> to update.</div>
+						}
+						<div style={canSubmit ? {} : styles.disabled}>
+							<AutocompleteBar
+								filterOptions={(options)=>{
+									return options.filter((option)=>{
+										for (let index = 0; index < pubSubmits.length; index++) {
+											if (pubSubmits[index].journal.id === option.id) {
+												return false;
+											}
+										}
+										return true;
+									});
+								}}
+								placeholder={'Submit to new journal'}
+								loadOptions={this.loadOptions}
+								value={this.state.newSubmission}
+								onChange={this.handleSelectChange}
+								onComplete={this.createSubmission}
+								completeDisabled={!this.state.newSubmission || !this.state.newSubmission.id}
+								completeString={'Submit Pub'}
+							/>
+						</div>
+
+					</div>
+					
 				}
 				
 				{!!pubFeatures.length && 
@@ -122,11 +138,11 @@ export const PubJournals = React.createClass({
 										} 
 										bottomContent={pub.canEdit &&
 											<div>
-												<label style={styles.contributorAction} className={'pt-control pt-checkbox'}>
+												{/*<label style={styles.contributorAction} className={'pt-control pt-checkbox'}>
 													<input type="checkbox" checked={isDisplayed} onChange={this.setDisplayed.bind(this, feature.journalId)} />
 													<span className="pt-control-indicator" />
 													Display in Header
-												</label>
+												</label>*/}
 												<label style={styles.contributorAction} className="pt-control pt-checkbox">
 													<input type="checkbox" checked={isContext} onChange={this.setContext.bind(this, feature.journalId)} />
 													<span className="pt-control-indicator" />
@@ -186,10 +202,10 @@ styles = {
 	section: {
 		margin: '2em 0em',
 	},
-	// disabled: {
-	// 	pointerEvents: 'none',
-	// 	opacity: '0.5',
-	// },
+	disabled: {
+		pointerEvents: 'none',
+		opacity: '0.5',
+	},
 	dimItem: {
 		opacity: '0.35',
 	},

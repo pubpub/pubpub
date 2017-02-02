@@ -224,27 +224,29 @@ export const Pub = React.createClass({
 		}, []);
 
 
-		console.log(allHighlights);
+		// console.log(allHighlights);
 
 		setTimeout(()=> {
 			const container = document.getElementById('highlighter-wrapper');
-			allHighlights.forEach((highlight)=> {
-				const context = highlight.context;
-				const text = highlight.text;
-				const textStart = context.indexOf(text);
-				const textEnd = textStart + text.length;
-				const prefixStart = Math.max(textStart - 10, 0);
-				const suffixEnd = Math.min(textEnd + 10, context.length);
-				const highlightObject = {
-					prefix: context.substring(prefixStart, textStart),
-					exact: highlight.text,
-					suffix: context.substring(textEnd, suffixEnd),
-				};
-				// console.log(highlightObject);
-				const textQuoteRange = textQuote.toRange(container, highlightObject);
-				const renderer = new Marklib.Rendering(document, { className: 'highlight' }, document);
-				renderer.renderWithRange(textQuoteRange);
-			});
+				if (container) {
+				allHighlights.forEach((highlight)=> {
+					const context = highlight.context;
+					const text = highlight.text;
+					const textStart = context.indexOf(text);
+					const textEnd = textStart + text.length;
+					const prefixStart = Math.max(textStart - 10, 0);
+					const suffixEnd = Math.min(textEnd + 10, context.length);
+					const highlightObject = {
+						prefix: context.substring(prefixStart, textStart),
+						exact: highlight.text,
+						suffix: context.substring(textEnd, suffixEnd),
+					};
+					// console.log(highlightObject);
+					const textQuoteRange = textQuote.toRange(container, highlightObject);
+					const renderer = new Marklib.Rendering(document, { className: 'highlight' }, document);
+					renderer.renderWithRange(textQuoteRange);
+				});
+			}
 		}, 100);
 		
 		/*---------*/

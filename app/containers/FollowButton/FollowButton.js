@@ -77,7 +77,6 @@ export const FollowButton = React.createClass({
 		if (this.props.labelId !== undefined) { mode = 'label'; }
 		
 		const followData = this.props.followData || {};
-		console.log(followData);
 		const isFollowing = this.state.justFollowed !== -1 && (followData.followerId || this.state.justFollowed === 1);
 		const followerCount = this.props.followerCount;
 

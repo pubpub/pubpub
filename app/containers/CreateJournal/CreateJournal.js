@@ -135,12 +135,12 @@ export const CreateJournal = React.createClass({
 					
 					<label style={styles.label} htmlFor={'journalName'}>
 						<FormattedMessage {...globalMessages.JournalName} />
-						<input id={'journalName'} name={'journal title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
+						<input id={'journalName'} className={'pt-input margin-bottom'} name={'journal title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
 					</label>
 
 					<label style={styles.label} htmlFor={'journalURL'}>
 						<FormattedMessage {...globalMessages.JournalURL} />
-						<input id={'journalURL'} name={'journalURL'} type="text" style={styles.input} value={this.state.slug} onChange={this.slugUpdate} />
+						<input id={'journalURL'} className={'pt-input margin-bottom'} name={'journalURL'} type="text" style={styles.input} value={this.state.slug} onChange={this.slugUpdate} />
 						<div className={'light-color inputSubtext'}>
 							pubpub.org/<b>{this.state.slug || 'journalURL'}</b>
 						</div>
@@ -148,7 +148,7 @@ export const CreateJournal = React.createClass({
 						
 					<label htmlFor={'description'}>
 						<FormattedMessage {...globalMessages.Description} />
-						<textarea id={'description'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.descriptionUpdate} />
+						<textarea id={'description'} className={'pt-input margin-bottom'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.descriptionUpdate} />
 						<div className={'light-color inputSubtext'}>
 							{this.state.description.length} / 140
 						</div>
