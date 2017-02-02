@@ -42,15 +42,15 @@ export const UserSettingsProfile = React.createClass({
 		const user = this.props.user || {};
 		this.setState({
 			userImageURL: user.avatar,
-			firstName: user.firstName,
-			lastName: user.lastName,
-			bio: user.bio,
-			publicEmail: user.publicEmail,
-			website: user.website,
-			twitter: user.twitter,
-			orcid: user.orcid,
-			github: user.github,
-			googleScholar: user.googleScholar,
+			firstName: user.firstName || '',
+			lastName: user.lastName || '',
+			bio: user.bio || '',
+			publicEmail: user.publicEmail || '',
+			website: user.website || '',
+			twitter: user.twitter || '',
+			orcid: user.orcid || '',
+			github: user.github || '',
+			googleScholar: user.googleScholar || '',
 		});
 	},
 

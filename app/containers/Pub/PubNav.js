@@ -2,10 +2,6 @@ import React, { PropTypes } from 'react';
 import Radium, { Style } from 'radium';
 import { Link } from 'react-router';
 import dateFormat from 'dateformat';
-import { FollowButton } from 'containers';
-import { Tag } from 'components';
-
-import PubLabelList from './PubLabelList';
 
 
 let styles;

@@ -6,7 +6,8 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 
 
-import { Loader } from 'components';
+// import { Loader } from 'components';
+import { Button } from '@blueprintjs/core';
 
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
@@ -91,11 +92,14 @@ export const Login = React.createClass({
 						</Link>
 					</div>
 
-					<button name={'login'} className={'pt-button pt-intent-primary'} onClick={this.handleLoginSubmit}>
-						<FormattedMessage {...globalMessages.Login} />
-					</button>
+					<Button 
+						name={'login'} 
+						className={'pt-button pt-intent-primary'} 
+						onClick={this.handleLoginSubmit}
+						text={<FormattedMessage {...globalMessages.Login} />}
+						loading={isLoading} />
 
-					<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!error} /></div>
+					{/*<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!error} /></div>*/}
 
 					{error &&
 						<div style={styles.errorMessage}>
@@ -136,11 +140,11 @@ styles = {
 	input: {
 		width: 'calc(100% - 20px - 4px)', // Calculations come from padding and border in pubpub.css
 	},
-	loaderContainer: {
-		display: 'inline-block',
-		position: 'relative',
-		top: 15,
-	},
+	// loaderContainer: {
+	// 	display: 'inline-block',
+	// 	position: 'relative',
+	// 	top: 15,
+	// },
 	errorMessage: {
 		margin: '1em 0px',
 		color: globalStyles.errorRed,

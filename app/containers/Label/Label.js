@@ -69,7 +69,7 @@ export const Label = React.createClass({
 							labelId={label.id} 
 							followData={followData} 
 							followerCount={followers.length} 
-							followersLink={'/label/' + label.title + '/followers'}
+							followersLink={{ pathname: '/label/' + label.title + '/followers' }}
 							dispatch={this.props.dispatch} />
 					</div>
 

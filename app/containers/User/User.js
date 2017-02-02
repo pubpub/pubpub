@@ -149,7 +149,7 @@ export const User = React.createClass({
 									userId={user.id} 
 									followData={followData} 
 									followerCount={followers.length} 
-									followersLink={'/user/' + user.username + '/followers'}
+									followersLink={{pathname: '/user/' + user.username + '/followers'}}
 									dispatch={this.props.dispatch} />
 							</div>
 						}
