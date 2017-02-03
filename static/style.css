@@ -8,6 +8,7 @@ body {
 
 .highlight {
 	background-color: green;
+	background-color: #cddeea;
 }
 
 .light-background-on-hover:hover {
@@ -137,6 +138,14 @@ input[type="file"]:focus {
 		font-size: 1.25em;
 	}
 	p {
+		font-size: 16px;
+		line-height: 1.75;
+		margin-bottom: 1.5em
+	}
+}
+
+.pub-article {
+	.p-block {
 		font-size: 16px;
 		line-height: 1.75;
 		margin-bottom: 1.5em

@@ -5,7 +5,7 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 
 import { FollowButton, NoMatch } from 'containers';
-import { Menu, MenuDivider } from '@blueprintjs/core';
+import { Menu, MenuDivider, Spinner } from '@blueprintjs/core';
 import { DropdownButton } from 'components';
 
 import { globalStyles } from 'utils/globalStyles';
@@ -141,7 +141,7 @@ export const Journal = React.createClass({
 		}
 
 		if (!journal.title && !this.props.journalData.error) {
-			return <div>Loading</div>;
+			return <div style={{ margin: '5em auto', width: '50px' }}><Spinner /></div>;
 		}
 		if (!journal.title && this.props.journalData.error) {
 			return <div>Error</div>;

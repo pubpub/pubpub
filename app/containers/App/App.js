@@ -57,7 +57,7 @@ export const App = React.createClass({
 			<IntlProvider locale={locale} messages={messages}>
 				<StyleRoot>
 					<Helmet 
-						title="PubPub Test"  
+						title="PubPub"  
 						meta={[
 							{ name: 'description', content: 'A simple tool testing PubPub v3' },
 							{ property: 'og:title', content: 'PubPub Test' },

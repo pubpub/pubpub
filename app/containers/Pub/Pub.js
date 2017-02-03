@@ -10,7 +10,7 @@ import * as Marklib from 'marklib';
 // import { FollowButton } from 'containers';
 import { FormattedMessage } from 'react-intl';
 import Helmet from 'react-helmet';
-import { NonIdealState } from '@blueprintjs/core';
+import { NonIdealState, Spinner } from '@blueprintjs/core';
 import PubContent from './PubContent';
 // import PubDocument from './PubDocument';
 import PubHeader from './PubHeader';
@@ -153,7 +153,7 @@ export const Pub = React.createClass({
 	render() {
 		const pub = this.props.pubData.pub || {};
 		if (this.props.pubData.loading && !this.props.pubData.error) {
-			return <div>Loading</div>;
+			return <div style={{ margin: '5em auto', width: '50px' }}><Spinner /></div>;
 		}
 		if (!this.props.pubData.loading && (this.props.pubData.error || !pub.title)) {
 			return (
