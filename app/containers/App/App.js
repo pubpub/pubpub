@@ -51,10 +51,12 @@ export const App = React.createClass({
 		return true;
 	},
 
+	makeError: function() {
+		console.log(dog);
+	},
 	render() {
 		const messages = {};
 		const locale = 'en';
-		const first = cat;
 		// const loginFinished = this.props.appData.loginFinished;
 		// const hiddenStyle = loginFinished
 		// 	? {}
@@ -88,6 +90,7 @@ export const App = React.createClass({
 					/> 
 					{/*<div style={hiddenStyle}>*/}
 						<AppNav accountData={this.props.accountData} pubData={this.props.pubData} journalData={this.props.journalData} location={this.props.location} params={this.props.params} logoutHandler={this.logoutHandler} />
+						<button role="button" onClick={this.makeError}>Make Error </button>
 						<div style={{ minHeight: 'calc(100vh - 75px)' }}>{this.props.children}</div>
 						<AppFooter />
 					{/*</div>*/}
