@@ -51,9 +51,6 @@ export const App = React.createClass({
 		return true;
 	},
 
-	makeError: function() {
-		console.log(superpasta);
-	},
 	render() {
 		const messages = {};
 		const locale = 'en';

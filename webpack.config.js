@@ -4,7 +4,7 @@ const webpack = require('webpack');
 module.exports = {
 	// devtool: '#source-map',
 	// devtool: '#cheap-module-eval-source-map', // Faster builds with less accurate source maps
-	devtool: '#eval-source-map', // Faster builds with less accurate source maps
+	devtool: '#eval',
 	entry: [
 		'webpack-hot-middleware/client',
 		'./app/index.js',
@@ -18,12 +18,6 @@ module.exports = {
 		new webpack.optimize.OccurrenceOrderPlugin(),
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NoErrorsPlugin(),
-		new webpack.optimize.UglifyJsPlugin({
-			compressor: {
-				warnings: false,
-				screw_ie8: true
-			},
-		}),
 	],
 	module: {
 		loaders: [
