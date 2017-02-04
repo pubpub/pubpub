@@ -11,6 +11,8 @@
   },
   "scripts": {
     "build": "NODE_ENV=production webpack --config ./webpack.production.config.js --progress",
+    "build-dev": "mv _redirects-dev dist/_redirects; npm install; npm build",
+    "build-prod": "mv _redirects-prod dist/_redirects; npm install; npm build",
     "lint": "eslint app",
     "postinstall": "npm run build",
     "start": "NODE_PATH=./app node server",
