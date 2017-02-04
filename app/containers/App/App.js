@@ -68,20 +68,20 @@ export const App = React.createClass({
 						title="PubPub"  
 						meta={[
 							{ name: 'ROBOTS', content: this.isProduction() ? 'INDEX, FOLLOW' : 'NOINDEX, NOFOLLOW' },
-							{ name: 'description', content: 'A simple tool testing PubPub v3' },
-							{ property: 'og:title', content: 'PubPub Test' },
+							{ name: 'description', content: 'PubPub is a free and open tool for collaborative editing, instant publishing, continuous review, and grassroots journals.' },
+							{ property: 'og:title', content: 'PubPub' },
 							{ property: 'og:type', content: 'website' },
-							{ property: 'og:description', content: 'A simple tool testing PubPub v3' },
-							{ property: 'og:url', content: 'https://www.listoflinks.co/' },
-							{ property: 'og:image', content: 'https://www.listoflinks.co/static/logo_large.png' },
-							{ property: 'og:image:url', content: 'https://www.listoflinks.co/static/logo_large.png' },
+							{ property: 'og:description', content: 'PubPub is a free and open tool for collaborative editing, instant publishing, continuous review, and grassroots journals.' },
+							{ property: 'og:url', content: 'https://www.pubpub.org/' },
+							{ property: 'og:image', content: 'https://assets.pubpub.org/_site/logo_dark.png' },
+							{ property: 'og:image:url', content: 'https://assets.pubpub.org/_site/logo_dark.png' },
 							{ property: 'og:image:width', content: '500' },
 							{ name: 'twitter:card', content: 'summary' },
-							{ name: 'twitter:site', content: '@listoflinks' },
-							{ name: 'twitter:title', content: 'List of Links' },
-							{ name: 'twitter:description', content: 'A simple tool testing PubPub v3' },
-							{ name: 'twitter:image', content: 'https://www.listoflinks.co/static/logo_large.png' },
-							{ name: 'twitter:image:alt', content: 'Logo for List of Links' }
+							{ name: 'twitter:site', content: '@pubpub' },
+							{ name: 'twitter:title', content: 'PubPub' },
+							{ name: 'twitter:description', content: 'PubPub is a free and open tool for collaborative editing, instant publishing, continuous review, and grassroots journals.' },
+							{ name: 'twitter:image', content: 'https://assets.pubpub.org/_site/logo_dark.png' },
+							{ name: 'twitter:image:alt', content: 'Logo for PubPub' }
 						]} 
 					/> 
 					{/*<div style={hiddenStyle}>*/}
