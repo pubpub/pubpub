@@ -23,9 +23,9 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, 'dist'),
 		filename: 'app.[hash].js',
-		sourceMapFilename: 'app.[hash].js.map',
 		publicPath: '/'
 	},
+	devtool: '#source-map',
 	plugins: [
 		new webpack.optimize.OccurrenceOrderPlugin(),
 		new CleanPlugin({

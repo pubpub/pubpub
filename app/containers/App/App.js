@@ -52,7 +52,7 @@ export const App = React.createClass({
 	},
 
 	makeError: function() {
-		console.log(fish);
+		console.log(catfood);
 	},
 	render() {
 		const messages = {};
