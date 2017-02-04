@@ -46,8 +46,7 @@ module.exports = {
 		}),
 		new HtmlPluginRemove(/<script type="text\/javascript" src="\/app.js"><\/script>/),
 		new CopyWebpackPlugin([
-			{ from: 'static', to: 'static' },
-			{ from: '_redirects' },
+			{ from: 'static', to: 'static' }
 		])
 	],
 	module: {
