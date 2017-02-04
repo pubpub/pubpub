@@ -9,7 +9,7 @@ import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
 
-import JournalCollectionList from './JournalCollectionList';
+import JournalPageList from './JournalPageList';
 
 let styles = {};
 
@@ -88,7 +88,7 @@ export const JournalFeatures = React.createClass({
 					}).map((pubFeature, index)=> {
 						const pub = pubFeature.pub || {};
 						const labels = pub.labels || [];
-						const pubCollections = labels.filter((label)=> {
+						const pubPages = labels.filter((label)=> {
 							return label.journalId === journal.id;
 						});
 						return (
@@ -106,9 +106,9 @@ export const JournalFeatures = React.createClass({
 										<p>Featured on {dateFormat(pubFeature.updatedAt, 'mmmm dd, yyyy')}</p>	
 									</div>
 								</div>
-								<JournalCollectionList 
-									allLabels={journal.collections} 
-									selectedLabels={pubCollections} 
+								<JournalPageList 
+									allLabels={journal.pages} 
+									selectedLabels={pubPages} 
 									pubId={pub.id} 
 									journalId={journal.id} 
 									canEdit={journal.isAdmin} 

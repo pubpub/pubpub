@@ -8,7 +8,7 @@ import { postLabel, putLabel, deleteLabel } from './actionsLabels';
 
 let styles;
 
-export const JournalCollectionList = React.createClass({
+export const JournalPageList = React.createClass({
 	propTypes: {
 		allLabels: PropTypes.array,
 		selectedLabels: PropTypes.array,
@@ -157,19 +157,19 @@ export const JournalCollectionList = React.createClass({
 				{/* Display interface for creating a new label */}
 				{this.state.createOpen &&
 					<div style={styles.labelEditCard} className={allLabels.length ? 'pt-card pt-elevation-2' : ''}>
-						<input type="text" className={'pt-input'} value={this.state.creatingTitle} onChange={this.updateCreateTitle} placeholder={'Collection Name'} style={styles.labelEditInput} />
+						<input type="text" className={'pt-input'} value={this.state.creatingTitle} onChange={this.updateCreateTitle} placeholder={'Page Name'} style={styles.labelEditInput} />
 						
 						<div className="pt-button-group pt-fill" style={styles.labelEditActions}>
 							<button className="pt-button" onClick={this.toggleCreate}>Cancel</button>
-							<button className={this.state.creatingTitle ? 'pt-button pt-intent-primary' : 'pt-button pt-intent-primary pt-disabled'} onClick={this.saveCreate}>Create Collection</button>
+							<button className={this.state.creatingTitle ? 'pt-button pt-intent-primary' : 'pt-button pt-intent-primary pt-disabled'} onClick={this.saveCreate}>Create Page</button>
 						</div>
 					</div>
 				}
 
 				{/* Display button to toggle Label creator */}
 				{this.props.canEdit && !this.state.createOpen &&
-					<Link to={{ pathname: this.props.pathname, query: { ...this.props.query, view: 'collections' } }} className="pt-button pt-fill pt-minimal">
-						Manage Collections
+					<Link to={{ pathname: this.props.pathname, query: { ...this.props.query, view: 'pages' } }} className="pt-button pt-fill pt-minimal">
+						Manage Pages
 					</Link>
 				}
 				
@@ -186,7 +186,7 @@ export const JournalCollectionList = React.createClass({
 						transitionDuration={200}
 					>
 						<span className="pt-tag" style={styles.editLabelsButton}>
-							Collections <span className="pt-icon-standard pt-icon-small-plus" style={styles.editLabelsButtonIcon}/>
+							Pages <span className="pt-icon-standard pt-icon-small-plus" style={styles.editLabelsButtonIcon}/>
 						</span>	
 					</Popover>
 				}
@@ -204,7 +204,7 @@ export const JournalCollectionList = React.createClass({
 
 });
 
-export default Radium(JournalCollectionList);
+export default Radium(JournalPageList);
 
 styles = {
 	container: {

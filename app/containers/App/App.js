@@ -2,18 +2,12 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { StyleRoot } from 'radium';
 import Helmet from 'react-helmet';
-import { IntlProvider, addLocaleData } from 'react-intl';
-import en from 'react-intl/locale-data/en';
-import fr from 'react-intl/locale-data/fr';
-import es from 'react-intl/locale-data/es';
+import { IntlProvider } from 'react-intl';
 import { AppNav, AppFooter } from 'components';
 import { login, logout } from './actions';
 
 require('../../../static/blueprint.scss');
 require('../../../static/style.scss');
-
-
-addLocaleData([...en, ...fr, ...es]);
 
 export const App = React.createClass({
 	propTypes: {
@@ -33,12 +27,6 @@ export const App = React.createClass({
 		this.props.dispatch(login());
 	},
 
-	// componentWillReceiveProps(nextProps) {
-	// 	if (this.props.accountData.user.id && !nextProps.accountData.user.id) {
-	// 		window.location.reload();
-	// 	}
-	// },
-
 	logoutHandler: function() {
 		this.props.dispatch(logout());
 	},
@@ -52,8 +40,6 @@ export const App = React.createClass({
 	},
 
 	render() {
-		const messages = {};
-		const locale = 'en';
 		// const loginFinished = this.props.appData.loginFinished;
 		// const hiddenStyle = loginFinished
 		// 	? {}
@@ -62,7 +48,7 @@ export const App = React.createClass({
 		// 		overflow: 'hidden',
 		// 	};
 		return (
-			<IntlProvider locale={locale} messages={messages}>
+			<IntlProvider locale={'en'} messages={{}}>
 				<StyleRoot>
 					<Helmet 
 						title="PubPub"  
@@ -85,11 +71,9 @@ export const App = React.createClass({
 							{ name: 'twitter:image:alt', content: 'Logo for PubPub' }
 						]} 
 					/> 
-					{/*<div style={hiddenStyle}>*/}
-						<AppNav accountData={this.props.accountData} pubData={this.props.pubData} journalData={this.props.journalData} location={this.props.location} params={this.props.params} logoutHandler={this.logoutHandler} />
-						<div style={{ minHeight: 'calc(100vh - 75px)' }}>{this.props.children}</div>
-						<AppFooter />
-					{/*</div>*/}
+					<AppNav accountData={this.props.accountData} pubData={this.props.pubData} journalData={this.props.journalData} location={this.props.location} params={this.props.params} logoutHandler={this.logoutHandler} />
+					<div style={{ minHeight: 'calc(100vh - 75px)' }}>{this.props.children}</div>
+					<AppFooter />
 				</StyleRoot>
 			</IntlProvider>
 		);

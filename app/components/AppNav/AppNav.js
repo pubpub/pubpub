@@ -53,8 +53,8 @@ export const AppNav = React.createClass({
 
 		const headerJournal = isJournal ? journal : contextJournal;
 
-		const collections = headerJournal ? headerJournal.collections || [] : [];
-		const sortedCollections = collections.sort((foo, bar)=> {
+		const pages = headerJournal ? headerJournal.pages || [] : [];
+		const sortedPages = pages.sort((foo, bar)=> {
 			if (foo.order < bar.order) { return -1; }
 			if (foo.order > bar.order) { return 1; }
 			return 0;
@@ -148,14 +148,14 @@ export const AppNav = React.createClass({
 					</div>
 				}
 
-				{headerJournal && !!sortedCollections.length &&
+				{headerJournal && !!sortedPages.length &&
 					<div>
 						<div className={'clearfix'} />
 						<div className={'pt-button-group pt-minimal'} style={{ marginLeft: '45px' }}>
-							{sortedCollections.filter((collection)=> {
-								return collection.isDisplayed;
-							}).map((collection)=> {
-								return <Link className={'pt-button'} role={'button'} key={'collection-' + collection.id} to={'/' + journal.slug + '/collection/' + collection.title}>{collection.title}</Link>;
+							{sortedPages.filter((page)=> {
+								return page.isDisplayed;
+							}).map((page)=> {
+								return <Link className={'pt-button'} role={'button'} key={'page-' + page.id} to={'/' + journal.slug + '/page/' + page.title}>{page.title}</Link>;
 							})}
 						</div>		
 					</div>

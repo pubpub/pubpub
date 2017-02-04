@@ -55,17 +55,17 @@ export const JournalProfileHeader = React.createClass({
 				</div>
 
 				<div style={styles.bottom}>
-					<Link style={headerAlign === 'left' ? styles.collectionLinkLeft : styles.collectionLinkCenter} to={'/' + journal.slug}>Home</Link>
-					<Link style={headerAlign === 'left' ? styles.collectionLinkLeft : styles.collectionLinkCenter} to={'/' + journal.slug + '/about'}>About</Link>
+					<Link style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter} to={'/' + journal.slug}>Home</Link>
+					<Link style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter} to={'/' + journal.slug + '/about'}>About</Link>
 					<div style={styles.headerSpacer} />
 					{journal.website &&
-						<Link to={journalUrl} style={headerAlign === 'left' ? styles.collectionLinkLeft : styles.collectionLinkCenter}>{journalText}</Link>
+						<Link to={journalUrl} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}>{journalText}</Link>
 					}
 					{journal.twitter &&
-						<Link to={'https://twitter.com/' + journal.twitter} style={headerAlign === 'left' ? styles.collectionLinkLeft : styles.collectionLinkCenter}>@{journal.twitter}</Link>
+						<Link to={'https://twitter.com/' + journal.twitter} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}>@{journal.twitter}</Link>
 					}
 					{journal.facebook &&
-						<Link to={'https://facebook.com/' + journal.facebook} style={headerAlign === 'left' ? styles.collectionLinkLeft : styles.collectionLinkCenter}>facebook.com/{journal.facebook}</Link>
+						<Link to={'https://facebook.com/' + journal.facebook} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}>facebook.com/{journal.facebook}</Link>
 					}
 				</div>
 
@@ -128,11 +128,11 @@ styles = {
 		display: 'inline-block',
 		width: '4em',
 	},
-	collectionLinkLeft: {
+	pageLinkLeft: {
 		color: 'inherit',
 		paddingRight: '1em',
 	},
-	collectionLinkCenter: {
+	pageLinkCenter: {
 		color: 'inherit',
 		padding: '0em 0.5em',
 	},

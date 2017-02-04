@@ -11,37 +11,37 @@ import { FormattedMessage } from 'react-intl';
 
 let styles;
 
-export const JournalCollection = React.createClass({
+export const JournalPage = React.createClass({
 	propTypes: {
 		journal: PropTypes.object,
-		collection: PropTypes.string,
+		page: PropTypes.string,
 	},
 
 	render() {
 		const journal = this.props.journal || {};
-		const collection = this.props.collection || '';
+		const page = this.props.page || '';
 		const pubFeatures = journal.pubFeatures || [];
 		const pubs = pubFeatures.filter((pubFeature)=> {
 			const pub = pubFeature.pub || {};
 			const labels = pub.labels || [];
 			return labels.reduce((previous, current)=> {
-				if (current.journalId === journal.id && current.title === collection) { return true; }
+				if (current.journalId === journal.id && current.title === page) { return true; }
 				return previous;
 			}, false);
 		});
 		return (
 			<div style={styles.container}>
-				<h2>{collection}</h2>
-				<p>{collection.description}</p>
+				<h2>{page}</h2>
+				<p>{page.description}</p>
 				{!pubs.length &&
 					<NonIdealState
-						description={'Pubs have not yet been added into this collection.'}
-						title={'Empty Collection'}
+						description={'Pubs have not yet been added into this page.'}
+						title={'Empty Page'}
 						visual={'application'} />
 				}
 
 				{pubs.map((pubFeature, index)=> {
-					return <PreviewPub key={'collectionItem-' + index} pub={pubFeature.pub} />;
+					return <PreviewPub key={'pageItem-' + index} pub={pubFeature.pub} />;
 				})}
 
 			</div>
@@ -49,7 +49,7 @@ export const JournalCollection = React.createClass({
 	}
 });
 
-export default Radium(JournalCollection);
+export default Radium(JournalPage);
 
 styles = {
 	container: {

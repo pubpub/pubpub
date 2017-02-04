@@ -28,7 +28,6 @@ export function login() {
 			dispatch({ type: LOGIN_GET_SUCCESS, result });
 		})
 		.catch((error) => {
-			console.log(error);
 			dispatch({ type: LOGIN_GET_FAIL, error });
 		});
 	};
@@ -45,7 +44,6 @@ export function logout(hash) {
 			dispatch({ type: LOGOUT_SUCCESS, result });
 		})
 		.catch((error) => {
-			console.log(error);
 			dispatch({ type: LOGOUT_FAIL, error });
 		});
 	};

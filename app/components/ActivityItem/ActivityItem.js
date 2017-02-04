@@ -129,7 +129,7 @@ export const ActivityItem = React.createClass({
 							case 'featuredPub': 
 								return <div>{actorNode} featured a pub</div>;
 							case 'createdJournalLabel': 
-								return <div>{actorNode} created a new collection, {buildLink(actorLink + '/collection/' + target.title, targetString)}</div>;
+								return <div>{actorNode} created a new page, {buildLink(actorLink + '/page/' + target.title, targetString)}</div>;
 							default: 
 								return <div />;
 							}
