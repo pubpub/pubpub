@@ -14,7 +14,6 @@
     "build-dev": "mv _redirects-dev dist/_redirects; npm install; npm build",
     "build-prod": "mv _redirects-prod dist/_redirects; npm install; npm build",
     "lint": "eslint app",
-    "postinstall": "npm run build",
     "start": "NODE_PATH=./app node server",
     "start-prod": "NODE_PATH=./app NODE_ENV=production node server",
     "start-prod-local": "npm run build && NODE_PATH=./app NODE_ENV=production PORT=3000 node server",
