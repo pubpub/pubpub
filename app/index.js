@@ -1,3 +1,4 @@
+/* global Raven */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ga from 'react-ga';

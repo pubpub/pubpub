@@ -54,6 +54,7 @@ export const App = React.createClass({
 	render() {
 		const messages = {};
 		const locale = 'en';
+		const first = cat;
 		// const loginFinished = this.props.appData.loginFinished;
 		// const hiddenStyle = loginFinished
 		// 	? {}
