@@ -23,6 +23,7 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, 'dist'),
 		filename: 'app.[hash].js',
+		sourceMapFilename: 'app.[hash].js.map',
 		publicPath: '/'
 	},
 	plugins: [
