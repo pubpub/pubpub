@@ -20,12 +20,14 @@ class CleanPlugin {
 
 module.exports = {
 	entry: './app/index',
+	devtool: '#source-map',
 	output: {
 		path: path.join(__dirname, 'dist'),
 		filename: 'app.[hash].js',
+		sourceMapFilename: 'app.[hash].js.map',
 		publicPath: '/'
 	},
-	devtool: '#source-map',
+	
 	plugins: [
 		new webpack.optimize.OccurrenceOrderPlugin(),
 		new CleanPlugin({
@@ -61,6 +63,7 @@ module.exports = {
 				],
 				exclude: /(node_modules\/(?!(pubpub-prose|pubpub-render-files)\/).*)|(.*citeproc.*)/,
 				query: {
+					retainLines: true,
 					plugins: [
 						['transform-object-assign']
 					]

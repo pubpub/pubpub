@@ -52,7 +52,7 @@ export const App = React.createClass({
 	},
 
 	makeError: function() {
-		console.log(catfood);
+		console.log(pastpasta);
 	},
 	render() {
 		const messages = {};
