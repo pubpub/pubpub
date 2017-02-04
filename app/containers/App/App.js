@@ -43,6 +43,14 @@ export const App = React.createClass({
 		this.props.dispatch(logout());
 	},
 
+	isProduction: function() {
+		const hostname = window.location.hostname;
+		if (hostname === 'dev.pubpub.org' || hostname === 'staging.pubpub.org') {
+			return false;
+		}
+		return true;
+	},
+
 	render() {
 		const messages = {};
 		const locale = 'en';
@@ -59,6 +67,7 @@ export const App = React.createClass({
 					<Helmet 
 						title="PubPub"  
 						meta={[
+							{ name: 'ROBOTS', content: this.isProduction() ? 'INDEX, FOLLOW' : 'NOINDEX, NOFOLLOW' },
 							{ name: 'description', content: 'A simple tool testing PubPub v3' },
 							{ property: 'og:title', content: 'PubPub Test' },
 							{ property: 'og:type', content: 'website' },
