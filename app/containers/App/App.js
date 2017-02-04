@@ -76,6 +76,7 @@ export const App = React.createClass({
 							{ property: 'og:image', content: 'https://assets.pubpub.org/_site/logo_dark.png' },
 							{ property: 'og:image:url', content: 'https://assets.pubpub.org/_site/logo_dark.png' },
 							{ property: 'og:image:width', content: '500' },
+							{ property: 'fb:app_id', content: '924988584221879' },
 							{ name: 'twitter:card', content: 'summary' },
 							{ name: 'twitter:site', content: '@pubpub' },
 							{ name: 'twitter:title', content: 'PubPub' },

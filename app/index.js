@@ -10,7 +10,10 @@ import configureStore from './configureStore';
 import fetch from 'isomorphic-fetch';
 
 const store = configureStore();
-// ga.initialize('UA-85097FF6-1');
+if (window.location.hostname !== 'localhost') {
+	ga.initialize('UA-61723493-4');	
+}
+
 
 if (/PhantomJS/.test(window.navigator.userAgent)) { require('es6-promise').polyfill(); }
 
