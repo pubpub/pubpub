@@ -199,24 +199,19 @@ export const Landing = React.createClass({
 									<Link to={'/pubs/create'} className={'pt-button background-button'} style={{ marginRight: '1em' }}>Create a Pub</Link>
 									<Link to={'/journals/create'} className={'pt-button background-button'} style={{ marginRight: '1em' }}>Create a Journal</Link>
 								</div>
-								{/*<div className="pt-control-group">
-																	<div className="pt-input-group">
-																		<span className="pt-icon pt-icon-envelope" />
-																		<input type="text" className="pt-input" placeholder="Email address" />
-																	</div>
-																	<button className="pt-button pt-intent-primary">Join PubPub</button>
-																</div>*/}
+								{/* <div className="pt-control-group">
+									<div className="pt-input-group">
+										<span className="pt-icon pt-icon-envelope" />
+										<input type="text" className="pt-input" placeholder="Email address" />
+									</div>
+									<button className="pt-button pt-intent-primary">Join PubPub</button>
+								</div> */}
 							</div>
 						</div>
 
 						<div style={styles.section()}>
 							<div style={styles.sectionContent}>
-								<div style={{ width: '60%', margin: '0em 2em 2em', float: 'right' }}>
-									<img style={{ width: '100%' }} src={'http://teams.pubpub.org/static/diagram.svg'} />
-								</div>
 								<h2>Author Driven Publications</h2>
-								<p>PubPub is a full-stack open source publishing platform that enables structured collaboration across individuals, teams, or countries.</p>
-								<div style={{display: 'table', clear: 'both', }}></div>
 								
 							</div>
 						</div>
@@ -224,10 +219,6 @@ export const Landing = React.createClass({
 						<div style={styles.section(true)}>
 							<div style={styles.sectionContent}>
 								<h2>Journals</h2>
-								<p>Created by anyone for any community. Journals become tools for curating published content, not gatekeepers of scientific progress. Pubs can be submitted to and featured in as many journals as relevant. Journals can be run for large or small audiences, by institutions or individuals.</p>
-								<div style={{ width: '80%', margin: '2em auto' }}>
-									<img style={{ width: '100%' }} src={'https://res.cloudinary.com/pubpub/image/upload/c_scale,w_415/v1451417712/outputjournal_qcdqyh.gif'} />
-								</div>
 
 							</div>
 						</div>
@@ -235,13 +226,13 @@ export const Landing = React.createClass({
 						<div style={styles.section()}>
 							<div style={styles.sectionContent}>
 								<h2>Open</h2>
+
 							</div>
 						</div>
 					</div>
 				}
 
 				
-
 				{user.id &&
 
 					<div style={styles.activitiesTable}>

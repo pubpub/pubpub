@@ -1,5 +1,5 @@
 /favicon.ico  /static/favicon.ico
 /opensearch.xml  /static/opensearch.xml
 /robots.txt  /static/robots.txt
-/api/*  https://api.pubpub.org/:splat  200
+/api/*  https://v2-api.pubpub.org/:splat  200
 /*    /index.html   200
