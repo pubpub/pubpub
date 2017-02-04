@@ -24,10 +24,8 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, 'dist'),
 		filename: 'app.[hash].js',
-		sourceMapFilename: 'app.[hash].js.map',
 		publicPath: '/'
 	},
-	
 	plugins: [
 		new webpack.optimize.OccurrenceOrderPlugin(),
 		new CleanPlugin({
@@ -42,7 +40,8 @@ module.exports = {
 			compressor: {
 				warnings: false,
 				screw_ie8: true
-			}
+			},
+			sourceMap: true,
 		}),
 		new HtmlWebpackPlugin({
 			template: 'index.html',

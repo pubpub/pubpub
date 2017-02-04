@@ -52,7 +52,7 @@ export const App = React.createClass({
 	},
 
 	makeError: function() {
-		console.log(pastpasta);
+		console.log(superpasta);
 	},
 	render() {
 		const messages = {};
