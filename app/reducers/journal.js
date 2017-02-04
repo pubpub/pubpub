@@ -71,6 +71,8 @@ const defaultState = Immutable.Map({
 	submitsError: undefined,
 	adminsLoading: false,
 	adminsError: undefined,
+	pagesLoading: false,
+	pagesError: undefined,
 });
 
 /* ----------------------------------------- */
@@ -222,14 +224,23 @@ export default function reducer(state = defaultState, action) {
 		});
 
 	case POST_LABEL_LOAD:
-		return state;	
+		return state.merge({
+			pagesLoading: true,
+			pagesError: undefined,
+		});	
 	case POST_LABEL_SUCCESS:
-		return state.setIn(
+		return state.merge({
+			pagesLoading: false,
+			pagesError: undefined,
+		}).setIn(
 			['journal', 'pages'], 
 			state.getIn(['journal', 'pages']).push(ensureImmutable(action.result))
 		);
 	case POST_LABEL_FAIL:
-		return state;
+		return state.merge({
+			pagesLoading: false,
+			pagesError: action.error,
+		});
 
 	case PUT_LABEL_LOAD:
 		return state.setIn(
@@ -263,9 +274,15 @@ export default function reducer(state = defaultState, action) {
 		return state;
 
 	case DELETE_LABEL_LOAD:
-		return state;	
+		return state.merge({
+			pagesLoading: true,
+			pagesError: undefined,
+		});	
 	case DELETE_LABEL_SUCCESS:
-		return state.setIn(
+		return state.merge({
+			pagesLoading: false,
+			pagesError: undefined,
+		}).setIn(
 			// Update all of the pages associated with a journal. 
 			['journal', 'pages'], 
 			state.getIn(['journal', 'pages']).filter((label)=> {
@@ -286,7 +303,10 @@ export default function reducer(state = defaultState, action) {
 			})
 		);
 	case DELETE_LABEL_FAIL:
-		return state;
+		return state.merge({
+			pagesLoading: false,
+			pagesError: action.error,
+		});
 
 	case POST_PUB_LABEL_LOAD:
 		return state;	

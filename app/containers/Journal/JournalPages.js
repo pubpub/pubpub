@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
-import { NonIdealState, Checkbox } from '@blueprintjs/core';
+import { NonIdealState, Checkbox, Button } from '@blueprintjs/core';
 
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
@@ -36,8 +36,13 @@ export const JournalPages = React.createClass({
 	
 	componentWillReceiveProps(nextProps) {
 		if (this.props.isLoading && !nextProps.isLoading && !nextProps.error) {
-			this.setState({ editingLabelId: undefined });	
-			this.setState({ createOpen: false });	
+			this.setState({ 
+				editingLabelId: undefined,
+				createOpen: false,
+				creatingTitle: '',
+				creatingDescription: '',
+				creatingIsDisplayed: true,
+			});	
 		}
 	},
 
@@ -75,7 +80,7 @@ export const JournalPages = React.createClass({
 	},
 	deleteEdit: function() {
 		this.props.dispatch(deleteLabel(this.props.journal.id, this.state.editingLabelId));
-		this.setState({ editingLabelId: undefined });
+		// this.setState({ editingLabelId: undefined });
 	},
 
 	toggleIsDisplayed: function(page, evt) {
@@ -110,12 +115,12 @@ export const JournalPages = React.createClass({
 		});
 		const order = sortedPages.length ? sortedPages[0].order / 2 : 0.5;
 		this.props.dispatch(postLabel(this.props.journal.id, this.state.creatingTitle, this.state.creatingDescription, this.state.creatingIsDisplayed, order));
-		return this.setState({
-			createOpen: false,
-			creatingTitle: '',
-			creatingDescription: '',
-			creatingIsDisplayed: true,
-		});
+		// return this.setState({
+		// 	createOpen: false,
+		// 	creatingTitle: '',
+		// 	creatingDescription: '',
+		// 	creatingIsDisplayed: true,
+		// });
 	},
 
 	onSortEnd: function({ oldIndex, newIndex }) {
@@ -169,7 +174,7 @@ export const JournalPages = React.createClass({
 					}
 					{!isEditing &&
 						<div style={styles.tableCell}>
-							<Link style={styles.pageTitle} to={'/' + journal.slug + '/page/' + page.title}>{page.title}</Link>
+							<Link style={styles.pageTitle} to={'/' + journal.slug + '/page/' + page.slug}>{page.title}</Link>
 							<div style={styles.pageDescription}>{page.description}</div>
 						</div>
 					}
@@ -196,9 +201,9 @@ export const JournalPages = React.createClass({
 							</label>
 							
 							<div className="pt-button-group" style={styles.labelEditActions}>
-								<button className="pt-button pt-minimal pt-icon-trash" onClick={this.deleteEdit} />
+								<Button loading={this.props.isLoading} className="pt-button pt-minimal pt-icon-trash" onClick={this.deleteEdit} />
 								<button className="pt-button" onClick={this.cancelEdit}>Cancel</button>
-								<button className="pt-button pt-intent-primary" onClick={this.saveEdit.bind(this, page)}>Save Label</button>
+								<button className="pt-button pt-intent-primary" onClick={this.saveEdit.bind(this, page)}>Save Page</button>
 							</div>
 						</div>
 					}
@@ -244,15 +249,15 @@ export const JournalPages = React.createClass({
 
 						<div className="pt-button-group" style={styles.labelEditActions}>
 							<button className="pt-button" onClick={this.toggleCreate}>Cancel</button>
-							<button className={this.state.creatingTitle ? 'pt-button pt-intent-primary' : 'pt-button pt-intent-primary pt-disabled'} onClick={this.saveCreate}>Create Page</button>
+							<Button loading={this.props.isLoading} className={this.state.creatingTitle ? 'pt-button pt-intent-primary' : 'pt-button pt-intent-primary pt-disabled'} onClick={this.saveCreate} text={'Create Page'} />
 						</div>
 					</div>
 				}
 
 				{!this.state.createOpen && !sortedPages.length &&
 					<NonIdealState
-						action={<button className={'pt-button pt-intent-primary'} onClick={this.toggleCreate}>Create New Page</button>}
-						description={'Pages can be used to group featured pubs together.'}
+						action={journal.isAdmin ? <button className={'pt-button pt-intent-primary'} onClick={this.toggleCreate}>Create New Page</button> : undefined}
+						description={journal.isAdmin ? 'Pages can be used to group featured pubs together.' : ''}
 						title={'No Pages'}
 						visual={'application'} />
 				}

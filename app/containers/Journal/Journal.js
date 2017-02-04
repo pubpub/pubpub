@@ -100,9 +100,14 @@ export const Journal = React.createClass({
 
 		
 		const pathname = this.props.location.pathname;
-		const page = this.props.params.page;
+		const pageSlug = this.props.params.pageSlug;
 		const journal = this.props.journalData.journal || {};
 		const pages = journal.pages || [];
+		const page = pages.reduce((previous, current)=> {
+			if (current.slug === pageSlug) { return current; }
+			return previous;
+		}, {});
+
 		const followers = journal.followers || [];
 		const isAdmin = journal.isAdmin; // Add || true for dev only.
 		const accountData = this.props.accountData || {};
@@ -156,19 +161,17 @@ export const Journal = React.createClass({
 					journal={journal}
 					followContent={
 						<div style={styles.followButtonWrapper}>
-							{isAdmin &&
-								<div className={'pt-button-group'} style={styles.editButton}>
-									<Link className={'pt-button pt-icon-edit'} to={'/' + journal.slug + '/edit'} >Edit Journal</Link>
-								</div>
-							}
-							
-							
 							<FollowButton 
 								journalId={journal.id} 
 								followData={followData} 
 								followerCount={followers.length} 
 								followersLink={{ pathname: '/' + journal.slug + '/followers' }}
 								dispatch={this.props.dispatch} />
+							{isAdmin &&
+								<div style={styles.editButton}>
+									<Link className={'pt-button pt-icon-edit'} to={'/' + journal.slug + '/edit'} >Edit Journal</Link>
+								</div>
+							}
 						</div>
 					}
 					logo={this.state.logo || journal.logo}
@@ -295,8 +298,7 @@ styles = {
 
 	},
 	editButton: {
-		// display: 'block',
-		marginRight: '0.5em',
+		marginTop: '0.5em',
 	},
 	followButtonWrapper: {
 		// float: 'right',

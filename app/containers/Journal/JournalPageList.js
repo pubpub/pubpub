@@ -14,6 +14,7 @@ export const JournalPageList = React.createClass({
 		selectedLabels: PropTypes.array,
 		pubId: PropTypes.number, // id of the pub the label is applied to
 		journalId: PropTypes.number, // id of the journal owning the labels
+		journalSlug: PropTypes.string,
 		canEdit: PropTypes.bool,
 		canSelect: PropTypes.bool,
 		pathname: PropTypes.string,
@@ -192,7 +193,7 @@ export const JournalPageList = React.createClass({
 				}
 
 				{selectedLabelsRender.map((label, index)=> {
-					const toObject = { pathname: this.props.pathname, query: { ...this.props.query, label: label.title, path: undefined, author: undefined, sort: undefined, discussion: undefined } };
+					const toObject = { pathname: `/${this.props.journalSlug}/page/${label.slug}` };
 
 					return <Link to={toObject} key={'label-' + index} className="pt-tag" style={[styles.label, { backgroundColor: label.color || '#CED9E0', color: label.color ? '#FFF' : '#293742' }]}>{label.title}</Link>;
 				})}

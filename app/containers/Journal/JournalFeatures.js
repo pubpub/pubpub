@@ -111,6 +111,7 @@ export const JournalFeatures = React.createClass({
 									selectedLabels={pubPages} 
 									pubId={pub.id} 
 									journalId={journal.id} 
+									journalSlug={journal.slug}
 									canEdit={journal.isAdmin} 
 									canSelect={journal.isAdmin} 
 									pathname={this.props.pathname} 

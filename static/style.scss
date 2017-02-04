@@ -119,6 +119,25 @@ input[type="file"]:focus {
 
 /* ------------ */
 
+.journal-page-content {
+	img {
+		max-width: 100%;
+		display: block;
+		margin: 0 auto;
+	}
+	h1 {
+		font-size: 2em;
+	}
+
+	h2 {
+		font-size: 1.6em;
+	}
+
+	h3 {
+		font-size: 1.4em;
+	}
+}
+
 .pub-body img {
 	max-width: 100%;
 }
@@ -134,7 +153,7 @@ input[type="file"]:focus {
 	h2 {
 		font-size: 1.5em;
 	}
-	h3: {
+	h3 {
 		font-size: 1.25em;
 	}
 	p {

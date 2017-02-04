@@ -155,7 +155,7 @@ export const AppNav = React.createClass({
 							{sortedPages.filter((page)=> {
 								return page.isDisplayed;
 							}).map((page)=> {
-								return <Link className={'pt-button'} role={'button'} key={'page-' + page.id} to={'/' + journal.slug + '/page/' + page.title}>{page.title}</Link>;
+								return <Link className={'pt-button'} role={'button'} key={'page-' + page.id} to={'/' + journal.slug + '/page/' + page.slug}>{page.title}</Link>;
 							})}
 						</div>		
 					</div>
