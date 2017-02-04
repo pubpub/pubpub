@@ -2,12 +2,15 @@
 
 ## Servers
 
-- `pubpub.org` Deployed from Master branch on pubpub/pubpub
-- `api.pubpub.org` Deployed from Master branch on pubpub/pubpub-api
-- `dev.pubpub.org` Deployed from Dev branch on pubpub/pubpub
-- `dev-api.pubpub.org` Deployed from Master Dev on pubpub/pubpub-api
-- `staging.pubpub.org` Deployed from Staging branch on pubpub/pubpub
+- `pubpub.org` Deployed from master branch on pubpub/pubpub
+- `api.pubpub.org` Deployed from master branch on pubpub/pubpub-api
+- `dev.pubpub.org` Deployed from dev branch on pubpub/pubpub
+- `dev-api.pubpub.org` Deployed from dev branch on pubpub/pubpub-api
+- `staging.pubpub.org` Deployed from staging branch on pubpub/pubpub
     (staging.pubpub.org uses the production API, so there should never be a staging-api.pubpub.org)
+
+- `docs.pubpub.org` Deployed from master branch on pubpub/pubpub-api
+- `dev-docs.pubpub.org` Deployed from dev branch on pubpub/pubpub-api
 
 Arbitrary subdomains are acceptable for custom branches if needed, e.g: `teams.pubpub.org`.
 
