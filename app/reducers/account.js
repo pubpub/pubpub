@@ -116,6 +116,9 @@ export default function reducer(state = defaultState, action) {
 	case LOGOUT_LOAD:
 		return state;
 	case LOGOUT_SUCCESS:
+		if (window.location.hostname !== 'localhost') {
+			Raven.setUserContext();
+		}
 		window.location.reload();
 		// return state.merge({
 		// 	user: {},
