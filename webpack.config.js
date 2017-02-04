@@ -16,7 +16,13 @@ module.exports = {
 	plugins: [
 		new webpack.optimize.OccurrenceOrderPlugin(),
 		new webpack.HotModuleReplacementPlugin(),
-		new webpack.NoErrorsPlugin()
+		new webpack.NoErrorsPlugin(),
+		new webpack.optimize.UglifyJsPlugin({
+			compressor: {
+				warnings: false,
+				screw_ie8: true
+			},
+		}),
 	],
 	module: {
 		loaders: [
@@ -43,8 +49,22 @@ module.exports = {
 					]
 				}
 			},
-			{ test: /\.css$/, loader: 'style-loader!css-loader!sass-loader' },
-			{ test: /\.scss$/, loader: 'style-loader!css-loader!sass-loader' },
+			{ 
+				test: /\.css$/, 
+				use: [
+					{ loader: 'style-loader' }, 
+					{ loader: 'css-loader', options: { minimize: true } }, 
+					{ loader: 'sass-loader' }
+				]
+			},
+			{ 
+				test: /\.scss$/, 
+				use: [
+					{ loader: 'style-loader' }, 
+					{ loader: 'css-loader', options: { minimize: true } }, 
+					{ loader: 'sass-loader' }
+				]
+			},
 			{ test: /\.svg$/, loader: 'file-loader' },
 			{ test: /\.png$/, loader: 'file-loader' },
 			{ test: /\.gif$/, loader: 'file-loader' },

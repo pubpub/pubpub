@@ -10,7 +10,7 @@ import { AppNav, AppFooter } from 'components';
 import { login, logout } from './actions';
 
 require('../../../static/blueprint.scss');
-require('../../../static/style.css');
+require('../../../static/style.scss');
 
 
 addLocaleData([...en, ...fr, ...es]);
