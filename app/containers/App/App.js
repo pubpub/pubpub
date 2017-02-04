@@ -87,7 +87,6 @@ export const App = React.createClass({
 					/> 
 					{/*<div style={hiddenStyle}>*/}
 						<AppNav accountData={this.props.accountData} pubData={this.props.pubData} journalData={this.props.journalData} location={this.props.location} params={this.props.params} logoutHandler={this.logoutHandler} />
-						<button role="button" onClick={this.makeError}>Make Error </button>
 						<div style={{ minHeight: 'calc(100vh - 75px)' }}>{this.props.children}</div>
 						<AppFooter />
 					{/*</div>*/}
