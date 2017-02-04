@@ -65,7 +65,7 @@ module.exports = {
 					]
 				}
 			},
-			{ test: /\.css$/, loader: 'style-loader!css-loader!sass-loader' },
+			{ test: /\.css$/, use: { loader: 'style-loader!css-loader!sass-loader', options: { minimize: true } } },
 			{ test: /\.scss$/, loader: 'style-loader!css-loader!sass-loader' },
 			{ test: /\.svg$/, loader: 'file-loader' },
 			{ test: /\.png$/, loader: 'file-loader' },
