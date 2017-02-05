@@ -52,7 +52,10 @@ export const UserJournals = React.createClass({
 
 	render() {
 		const user = this.props.user || {};
-		const journals = user.journals || [];
+		const journalAdmins = user.journalAdmins || [];
+		const journals = journalAdmins.map((journalAdmin)=> {
+			return journalAdmin.journal;
+		});
 
 		const query = this.props.query || {};
 		const sortList = ['Most Recently Created', 'Least Recently Created', 'A → Z', 'Z → A'];

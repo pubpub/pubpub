@@ -146,6 +146,7 @@ styles = {
 	rightContent: {
 		display: 'table-cell',
 		width: '1%',
+		whiteSpace: 'nowrap',
 	},
 
 };
