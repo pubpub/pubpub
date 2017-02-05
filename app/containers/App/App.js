@@ -43,7 +43,7 @@ export const App = React.createClass({
 		const loginFinished = this.props.appData.loginFinished;
 		const hiddenStyle = loginFinished
 			? {}
-			: {height: '0px', overflow: 'hidden', opacity: 0 };
+			: { height: '0px', overflow: 'hidden', opacity: 0 };
 		return (
 			<IntlProvider locale={'en'} messages={{}}>
 				<StyleRoot>
@@ -69,7 +69,7 @@ export const App = React.createClass({
 						]} 
 					/> 
 					<div style={hiddenStyle}>
-						<Announcements />
+						{/* <Announcements /> */}
 						<AppNav accountData={this.props.accountData} pubData={this.props.pubData} journalData={this.props.journalData} location={this.props.location} params={this.props.params} logoutHandler={this.logoutHandler} />
 						<div style={{ minHeight: 'calc(100vh - 75px)' }}>{this.props.children}</div>
 						<AppFooter />

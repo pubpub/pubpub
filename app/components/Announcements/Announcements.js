@@ -8,21 +8,39 @@ export const Announcements = React.createClass({
 		data: PropTypes.object,
 	},
 
-	componentWillMount() {
-
-	},
 	getInitialState() {
 		return {
-			search: '',
+			clearedBeta: undefined,
 		};
+	},
+
+	componentWillMount() {
+		this.setState({
+			beta_v3: localStorage.getItem('beta_v3'),
+		});
+	},
+	
+	clearItem: function(item) {
+		const clearTime = new Date().getTime();
+		localStorage.setItem(item, clearTime);
+		this.setState({ [item]: clearTime });
 	},
 
 
 	render() {
-		
 		return (
-			<div className={'pt-card pt-elevation-6'} style={styles.container}>
-				Heyyy
+			<div style={styles.container}>
+				{!this.state.beta_v3 &&
+					<div className={'pt-card pt-elevation-4'} style={styles.announcement}>
+						<div style={styles.announcementContent}>Welcome to the PubPub v3 beta. Read about all the updates, or just play around on the site! Let us know if you find any lingering bugs.</div>
+						<div style={styles.announcementButtonWrapper}>
+							<button className={'pt-button pt-minimal'} onClick={this.clearItem.bind(this, 'beta_v3')} style={styles.announcementButton}>
+								<span className={'pt-icon-large pt-icon-delete'} style={styles.closeButton} />
+							</button>
+						</div>
+					</div>
+				}
+				
 			</div>
 		);
 	}
@@ -34,8 +52,29 @@ export default Radium(Announcements);
 styles = {
 	container: {
 		position: 'absolute',
-		top: 10,
+		top: 75,
 		right: 10,
 		zIndex: 100,
+	},
+	announcement: {
+		maxWidth: '400px',
+		display: 'table',
+		marginBottom: '1em',
+		padding: 0
+	},
+	announcementContent: {
+		display: 'table-cell',
+		padding: '1em',
+	},
+	announcementButtonWrapper: {
+		display: 'table-cell',
+		width: '1%',
+	},
+	announcementButton: {
+		padding: '1em'
+	},
+	closeButton: {
+		margin: 0,
+		opacity: 0.75,
 	},
 };
