@@ -170,7 +170,7 @@ export const Pub = React.createClass({
 		const query = this.props.location.query;
 		const preservedQuery = {
 			version: query.version,
-			content: query.context,
+			context: query.context,
 			// panel: query.panel,
 			// discussion: query.discussion,
 			// label: query.label,

@@ -47,8 +47,9 @@ export const AppNav = React.createClass({
 
 		const pubFeatures = pub.pubFeatures || [];
 		const contextJournal = pubFeatures.reduce((previous, current)=> {
+			const slug = query.context || params.slug;
 			if (!query.context && current.journalId === pub.defaultContext) { return current.journal; }
-			if (current.journal.slug === query.context) { return current.journal; }
+			if (current.journal.slug === slug) { return current.journal; }
 			return previous;
 		}, undefined);
 
@@ -56,8 +57,8 @@ export const AppNav = React.createClass({
 		const journalLoading = this.props.journalData.loading;
 
 		let headerJournal = {};
-		if (pubLoading || (!journalLoading && isJournal)) { headerJournal = journal; }
-		if (journalLoading || (!pubLoading && isPub)) { headerJournal = contextJournal; }
+		if (pubLoading || (!journalLoading && isJournal)) { console.log('here1'); headerJournal = journal; }
+		if (journalLoading || (!pubLoading && isPub)) { console.log('here2'); headerJournal = contextJournal; }
 
 		const pages = headerJournal ? headerJournal.pages || [] : [];
 		const sortedPages = pages.sort((foo, bar)=> {
