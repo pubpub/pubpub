@@ -143,7 +143,7 @@ export const Landing = React.createClass({
 							<span className={'pt-icon-large pt-icon-applications'} style={styles.sectionIcon}/>
 							Journals
 						</div>
-						<div style={styles.sectionText}>A pub contains all of the content needed to document and reproduce your research. Pubs maintain full revision histories, can have collaborators, and provide a platform for review and discussion.</div>
+						<div style={styles.sectionText}>Journals are tools for curation. Journals can enforce their own strategies for peer-review, feature content that is relevant to their community, and organize discussions to support progress.</div>
 
 						{journals.map((journal, index)=> {
 							return (
@@ -301,6 +301,7 @@ styles = {
 	},
 	previewWrapper: {
 		marginTop: '1em',
+		backgroundColor: 'white',
 	},
 	
 };
