@@ -48,10 +48,9 @@ export const RenderFile = React.createClass({
 		switch (fileType) {
 		case 'ppub':
 			const content = JSON.parse(file.content);
-			console.log(file.content);
 			return (
 				<div id={wrapperId} className={'pub-body'} style={styles.contentWrapper}>
-					{!this.props.noHighlighter &&
+					{false && !this.props.noHighlighter &&
 						<Highlighter />
 					}
 					{renderReactFromJSON(content, this.getFileMap(this.props.allFiles))}
@@ -60,7 +59,7 @@ export const RenderFile = React.createClass({
 		case 'text/markdown':
 			return (
 				<div id={wrapperId} className={'pub-body'} style={styles.contentWrapper}>
-					{!this.props.noHighlighter &&
+					{false && !this.props.noHighlighter &&
 						<Highlighter />
 					}
 					<RenderFileMarkdown file={file} allFiles={this.props.allFiles} />

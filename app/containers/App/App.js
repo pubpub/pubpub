@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { StyleRoot } from 'radium';
 import Helmet from 'react-helmet';
 import { IntlProvider } from 'react-intl';
-import { AppNav, AppFooter } from 'components';
+import { AppNav, AppFooter, Announcements } from 'components';
 import { login, logout } from './actions';
 
 require('../../../static/blueprint.scss');
@@ -69,6 +69,7 @@ export const App = React.createClass({
 						]} 
 					/> 
 					<div style={hiddenStyle}>
+						<Announcements />
 						<AppNav accountData={this.props.accountData} pubData={this.props.pubData} journalData={this.props.journalData} location={this.props.location} params={this.props.params} logoutHandler={this.logoutHandler} />
 						<div style={{ minHeight: 'calc(100vh - 75px)' }}>{this.props.children}</div>
 						<AppFooter />
