@@ -21,7 +21,9 @@ export const SignUp = React.createClass({
 	},
 
 	componentDidMount: function() {
-		this.initFocusInput.focus(); 
+		if (!this.props.signUpData.destinationEmail) {
+			this.initFocusInput.focus(); 	
+		}
 	},
 
 	inputUpdateLowerCase: function(key, evt) {

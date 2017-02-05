@@ -8,9 +8,10 @@ export const AppFooter = React.createClass({
 	render() {
 		return (
 			<div style={styles.container}>
-				<a href={'https://github.com/pubpub/pubpub'} className={'link'} style={styles.item}>Github</a>
-				<a href={'http://docs.pubpub.org'} className={'link'} style={styles.item}>API</a>
-				<a href={'mailto:pubpub@media.mit.edu'} className={'link'} style={styles.item}>Contact us at pubpub@media.mit.edu</a>
+				<a target={'_blank'} href={'https://github.com/pubpub/pubpub'} className={'link'} style={styles.item}>Github</a>
+				<a target={'_blank'} href={'http://docs.pubpub.org'} className={'link'} style={styles.item}>API</a>
+				<a target={'_blank'} href={'mailto:pubpub@media.mit.edu'} className={'link'} style={styles.item}>pubpub@media.mit.edu</a>
+				<a target={'_blank'} href={'https://www.twitter.com/pubpub'} className={'link'} style={styles.item}>@pubpub</a>
 			</div>
 		);
 	}

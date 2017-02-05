@@ -1,9 +1,11 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
-import { Menu, NonIdealState } from '@blueprintjs/core';
-import { ActivityItem, ActivityGroup, DropdownButton } from 'components';
+import { Link, browserHistory } from 'react-router';
+import { Menu, NonIdealState, Button } from '@blueprintjs/core';
+import { PreviewPub, PreviewJournal } from 'components';
+import { createSignUp } from 'containers/SignUp/actions';
+import { globalStyles } from 'utils/globalStyles';
 import { getLandingFeatures } from './actions';
 
 let styles;
@@ -11,15 +13,41 @@ let styles;
 export const Landing = React.createClass({
 	propTypes: {
 		landingData: PropTypes.object,
+		signUpData: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
 
+	getInitialState() {
+		return {
+			email: '',
+		};
+	},
+
 	componentWillMount() {
-		// this.props.dispatch(getLandingFeatures());
+		this.props.dispatch(getLandingFeatures());
+	},
+
+	componentWillReceiveProps(nextProps) {
+		if (this.props.signUpData.loading && !nextProps.signUpData.loading && !nextProps.signUpData.error) { 
+			browserHistory.push('/signup');
+		}
+	},
+
+	inputUpdateLowerCase: function(key, evt) {
+		const value = evt.target.value || '';
+		this.setState({ [key]: value.toLowerCase() });
+	},
+
+	handleSubmit: function(evt) {
+		evt.preventDefault();
+		this.props.dispatch(createSignUp(this.state.email));
 	},
 
 	render() {
 		const landingData = this.props.landingData || {};
+		const pubs = landingData.pubs || [];
+		const journals = landingData.journals || [];
+
 		const featureBlockData = [
 			{
 				icon: 'pt-icon-annotation',
@@ -53,12 +81,19 @@ export const Landing = React.createClass({
 							<Link to={'/journals/create'} className={'pt-button background-button'} style={{ marginRight: '1em' }}>Create a Journal</Link>
 						</div>*/}
 						<div style={styles.signupText}>Sign up to publish, curate, or follow work you care about.</div>
-						<div className="pt-control-group" style={styles.signupForm}>
-							<div className="pt-input-group">
-								<input style={styles.signupInput} type="text" className="pt-input" placeholder="example@email.com" />
+						<form onSubmit={this.handleSubmit}>
+							<div className="pt-control-group" style={styles.signupForm}>
+								<div className="pt-input-group">
+									<input style={styles.signupInput} type="email" className="pt-input" placeholder="example@email.com" value={this.state.email} onChange={this.inputUpdateLowerCase.bind(this, 'email')} />
+								</div>
+							
+								<Button role={'submit'} className="pt-button pt-intent-primary" onClick={this.handleSubmit} text={'Join PubPub'} loading={this.props.signUpData.loading} />								
 							</div>
-							<button className="pt-button pt-intent-primary">Join PubPub</button>
-						</div>
+						</form>
+						{!!this.props.signUpData.error &&
+							<div style={styles.errorMessage}>{this.props.signUpData.error}</div>
+						}
+						
 					</div>
 				</div>
 
@@ -90,6 +125,13 @@ export const Landing = React.createClass({
 						</div>
 						<div style={styles.sectionText}>A pub contains all of the content needed to document and reproduce your research. Pubs maintain full revision histories, can have collaborators, and provide a platform for review and discussion.</div>
 
+						{pubs.map((pub, index)=> {
+							return (
+								<div style={styles.previewWrapper} key={`pub-${pub.id}`}>
+									<PreviewPub pub={pub} />
+								</div>
+							);
+						})}
 					</div>
 				</div>
 
@@ -103,6 +145,13 @@ export const Landing = React.createClass({
 						</div>
 						<div style={styles.sectionText}>A pub contains all of the content needed to document and reproduce your research. Pubs maintain full revision histories, can have collaborators, and provide a platform for review and discussion.</div>
 
+						{journals.map((journal, index)=> {
+							return (
+								<div style={styles.previewWrapper} key={`journal-${journal.id}`}>
+									<PreviewJournal journal={journal} />
+								</div>
+							);
+						})}
 					</div>
 				</div>
 
@@ -159,7 +208,7 @@ styles = {
 	},
 
 	headerContent: {
-		padding: '150px 1.5em 150px',
+		padding: '150px 1.5em 120px',
 		width: 'calc(100% - 3em)',
 		maxWidth: '1024px',
 		margin: '0 auto',
@@ -184,6 +233,13 @@ styles = {
 	},
 	signupInput: {
 		width: '300px',
+	},
+	errorMessage: {
+		margin: '10px 0px',
+		padding: '5px',
+		position: 'absolute',
+		backgroundColor: 'rgba(255, 255, 255, 0.5)',
+		color: globalStyles.errorRed,
 	},
 	section: (isGray)=> {
 		return {
@@ -242,6 +298,9 @@ styles = {
 	},
 	featureText: {
 		opacity: 0.85,
+	},
+	previewWrapper: {
+		marginTop: '1em',
 	},
 	
 };

@@ -13,6 +13,8 @@ export const Landing = React.createClass({
 	propTypes: {
 		accountData: PropTypes.object,
 		activitiesData: PropTypes.object,
+		landingData: PropTypes.object,
+		signUpData: PropTypes.object,
 		location: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
@@ -190,7 +192,7 @@ export const Landing = React.createClass({
 			<div style={styles.container}>
 
 				{!user.id &&
-					<LandingAbout dispatch={this.props.dispatch} />
+					<LandingAbout dispatch={this.props.dispatch} landingData={this.props.landingData} signUpData={this.props.signUpData} />
 				}
 
 				
@@ -312,6 +314,8 @@ function mapStateToProps(state) {
 	return {
 		accountData: state.account.toJS(),
 		activitiesData: state.activities.toJS(),
+		landingData: state.landing.toJS(),
+		signUpData: state.signUp.toJS(),
 	};
 }
 
