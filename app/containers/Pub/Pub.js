@@ -570,12 +570,19 @@ styles = {
 	left: {
 		marginRight: '35%',
 		paddingRight: '4em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			marginRight: 0,
+			paddingRight: 0,
+		}
 	},
 	rightPanel: {
 		position: 'absolute',
 		right: 0,
 		top: 0,
 		width: '35%',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		}
 	},
 	right: {
 		height: '100%',

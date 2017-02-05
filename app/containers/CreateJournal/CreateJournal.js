@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-
+import { Button } from '@blueprintjs/core';
 import { Loader, ImageCropper } from 'components';
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
@@ -16,6 +16,7 @@ let styles;
 export const CreateJournal = React.createClass({
 	propTypes: {
 		createJournalData: PropTypes.object,
+		accountData: PropTypes.object,
 		params: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
@@ -100,6 +101,11 @@ export const CreateJournal = React.createClass({
 
 	createSubmit: function(evt) {
 		evt.preventDefault();
+
+		if (!this.props.accountData.user.id) {
+			return this.setState({ validationError: 'Must be logged in to create a new Journal' });
+		}
+
 		const createData = {
 			slug: this.state.slug,
 			title: this.state.title,
@@ -160,13 +166,7 @@ export const CreateJournal = React.createClass({
 						<input id={'avatar'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 					</label>
 
-					<button className={'pt-button pt-intent-primary'} onClick={this.createSubmit}>
-						Create Journal
-					</button>
-
-					<div style={styles.loaderContainer}>
-						<Loader loading={isLoading} showCompletion={!errorMessage} />
-					</div>
+					<Button className={'pt-button pt-intent-primary'} onClick={this.createSubmit} text={'Create Journal'} loading={isLoading} />
 
 					<div style={styles.errorMessage}>{errorMessage}</div>
 
@@ -186,6 +186,7 @@ export const CreateJournal = React.createClass({
 function mapStateToProps(state) {
 	return {
 		createJournalData: state.createJournal.toJS(),
+		accountData: state.account.toJS(),
 	};
 }
 

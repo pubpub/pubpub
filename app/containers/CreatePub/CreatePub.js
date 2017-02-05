@@ -16,6 +16,7 @@ let styles;
 export const CreatePub = React.createClass({
 	propTypes: {
 		createPubData: PropTypes.object,
+		accountData: PropTypes.object,
 		params: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
@@ -103,6 +104,10 @@ export const CreatePub = React.createClass({
 
 	createSubmit: function(evt) {
 		evt.preventDefault();
+
+		if (!this.props.accountData.user.id) {
+			return this.setState({ validationError: 'Must be logged in to create a new Pub' });
+		}
 		const createData = {
 			slug: this.state.slug,
 			title: this.state.title,
@@ -191,6 +196,7 @@ export const CreatePub = React.createClass({
 function mapStateToProps(state) {
 	return {
 		createPubData: state.createPub.toJS(),
+		accountData: state.account.toJS(),
 	};
 }
 

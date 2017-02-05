@@ -123,14 +123,14 @@ export const PubHeader = React.createClass({
 							</div>
 						</div>
 
-						<div style={styles.buttonWrapper} className={'button-wrapper'}>
+						{/*<div style={styles.buttonWrapper} className={'button-wrapper'}>
 							<div className={'pt-button-group'}>
 								<Link to={`/pub/${pub.slug}/cite`} className={'pt-button pt-icon-bookmark'}>Cite</Link>
 								{pubDOI &&
 									<a href={'https://doi.org/' + pubDOI} target={'_blank'} className={'pt-button'}>DOI {pubDOI}</a>
 								}
 							</div>
-						</div>	
+						</div>	*/}
 						
 					</div>
 
