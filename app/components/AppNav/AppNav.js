@@ -57,8 +57,9 @@ export const AppNav = React.createClass({
 		const journalLoading = this.props.journalData.loading;
 
 		let headerJournal = {};
-		if (pubLoading || (!journalLoading && isJournal)) { console.log('here1'); headerJournal = journal; }
-		if (journalLoading || (!pubLoading && isPub)) { console.log('here2'); headerJournal = contextJournal; }
+		// TODO - this needs to be updated so that if you're not navigating from journal->pub or pub->journal, it doesn't show any stored data.
+		if (pubLoading || (!journalLoading && isJournal)) { headerJournal = journal; }
+		if (journalLoading || (!pubLoading && isPub)) { headerJournal = contextJournal; }
 
 		const pages = headerJournal ? headerJournal.pages || [] : [];
 		const sortedPages = pages.sort((foo, bar)=> {
