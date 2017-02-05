@@ -43,15 +43,21 @@ export const AppNav = React.createClass({
 		const query = location.query || {};
 		const params = this.props.params || {};
 		const isPub = location.pathname.indexOf('/pub') === 0;
-		const isJournal = !isPub && params.slug;
-		const pubFeatures = isPub ? pub.pubFeatures || [] : [];
+		const isJournal = location.pathname.split('/')[1] === params.slug;
+
+		const pubFeatures = pub.pubFeatures || [];
 		const contextJournal = pubFeatures.reduce((previous, current)=> {
 			if (!query.context && current.journalId === pub.defaultContext) { return current.journal; }
-			if (current.journal.title === query.context) { return current.journal; }
+			if (current.journal.slug === query.context) { return current.journal; }
 			return previous;
 		}, undefined);
 
-		const headerJournal = isJournal ? journal : contextJournal;
+		const pubLoading = this.props.pubData.loading;
+		const journalLoading = this.props.journalData.loading;
+
+		let headerJournal = {};
+		if (pubLoading || (!journalLoading && isJournal)) { headerJournal = journal; }
+		if (journalLoading || (!pubLoading && isPub)) { headerJournal = contextJournal; }
 
 		const pages = headerJournal ? headerJournal.pages || [] : [];
 		const sortedPages = pages.sort((foo, bar)=> {
@@ -78,7 +84,7 @@ export const AppNav = React.createClass({
 						}
 						
 					</Link>
-					{headerJournal &&
+					{headerJournal && headerJournal.id &&
 						<div style={styles.journalLogoWrapper}>
 							<div style={[styles.journalLogoDivider, isLight && styles.journalLogoDividerDark]} />
 							<Link to={'/' + headerJournal.slug}>
@@ -91,7 +97,7 @@ export const AppNav = React.createClass({
 							</Link>
 						</div>
 					}
-					<form onSubmit={this.searchSubmited}>
+					<form onSubmit={this.searchSubmited} style={styles.searchForm}>
 						<input className="pt-input" placeholder="Search PubPub" type="text" style={styles.searchInput} value={this.state.search} onChange={this.inputUpdate.bind(this, 'search')} />
 					</form>
 				</div>
@@ -148,7 +154,7 @@ export const AppNav = React.createClass({
 					</div>
 				}
 
-				{headerJournal &&
+				{headerJournal && headerJournal.id &&
 					<div>
 						<div className={'clearfix'} />
 						<div className={'pt-button-group pt-minimal'} style={{ marginLeft: '45px' }}>
@@ -177,6 +183,11 @@ styles = {
 		fontSize: '1.5em',
 		color: 'inherit',
 		display: 'block',
+	},
+	searchForm: {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		}
 	},
 	searchInput: {
 		// backgroundColor: '#394B59',

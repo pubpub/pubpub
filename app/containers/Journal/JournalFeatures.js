@@ -95,13 +95,13 @@ export const JournalFeatures = React.createClass({
 							<div key={'feature-' + index} style={styles.featureWrapper}>
 								<div style={styles.featureTable}>
 									<div style={styles.imageWrapper}>
-										<Link to={'/pub/' + pub.slug}>
+										<Link to={{ pathname: '/pub/' + pub.slug, query: { context: journal.slug } }}>
 											<img src={pub.avatar} style={styles.featureImage} />
 										</Link>
 									</div>
 									
 									<div style={styles.featureDetails}>
-										<h4><Link to={'/pub/' + pub.slug}>{pub.title}</Link></h4>
+										<h4><Link to={{ pathname: '/pub/' + pub.slug, query: { context: journal.slug } }}>{pub.title}</Link></h4>
 										<p>{pub.description}</p>	
 										<p>Featured on {dateFormat(pubFeature.updatedAt, 'mmmm dd, yyyy')}</p>	
 									</div>

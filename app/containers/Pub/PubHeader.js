@@ -106,13 +106,6 @@ export const PubHeader = React.createClass({
 					{/*  Button Box  */}
 					{/* ------------ */}
 					<div style={styles.buttonsWrapper}>
-						{/*<div style={styles.buttonWrapper} className={'button-wrapper'}>
-							<div className={'pt-button-group pt-minimal'}>
-								<Link to={'/pub/spectral/versions'} className={'pt-button'}><span className={'pt-icon-standard pt-icon-lock'} /> Unpublished • Jan 16, 2016</Link>
-								
-							</div>
-						</div>*/}
-
 						<div style={styles.buttonWrapper} className={'button-wrapper'}>
 							<FollowButton
 								pubId={pub.id}
@@ -122,33 +115,22 @@ export const PubHeader = React.createClass({
 								dispatch={this.props.dispatch} />
 						</div>
 
-						{/*<div style={styles.buttonWrapper} className={'button-wrapper'}>
-							<div className={'pt-button-group pt-minimal'}>
-								<Link to={'/pub/spectral/versions'} className={'pt-button pt-icon-edit'}>Edit Pub</Link>
-							</div>
-						</div>*/}
-
 						<div style={styles.buttonWrapper} className={'button-wrapper'}>
 							<div className={'pt-button-group'}>
-								<Link to={'/pub/spectral/versions'} className={'pt-button pt-icon-edit'}>Edit Pub</Link>
-								{/*<Link to={'/pub/spectral/forks'} className={'pt-button pt-icon-fork'}>15</Link>*/}
-								<Link to={'/pub/spectral/forks'} className={'pt-button'}>15</Link>
-
-								{/*<Link to={'/pub/spectral/versions'} className={'pt-button'}>15</Link>*/}
+								<Link to={`/pub/${pub.slug}/versions`} className={'pt-button pt-icon-edit'}>Edit Pub</Link>
+								{/*<Link to={'/pub/${pub.slug}/forks'} className={'pt-button pt-icon-fork'}>15</Link>*/}
+								{/*<Link to={'/pub/${pub.slug}/forks'} className={'pt-button'}>15</Link>*/}
 							</div>
 						</div>
 
 						<div style={styles.buttonWrapper} className={'button-wrapper'}>
 							<div className={'pt-button-group'}>
-								<Link to={'/pub/spectral/cite'} className={'pt-button pt-icon-bookmark'}>Cite</Link>
+								<Link to={`/pub/${pub.slug}/cite`} className={'pt-button pt-icon-bookmark'}>Cite</Link>
 								{pubDOI &&
 									<a href={'https://doi.org/' + pubDOI} target={'_blank'} className={'pt-button'}>DOI {pubDOI}</a>
 								}
-								
 							</div>
-						</div>
-
-						
+						</div>	
 						
 					</div>
 
