@@ -148,10 +148,12 @@ export const AppNav = React.createClass({
 					</div>
 				}
 
-				{headerJournal && !!sortedPages.length &&
+				{headerJournal &&
 					<div>
 						<div className={'clearfix'} />
 						<div className={'pt-button-group pt-minimal'} style={{ marginLeft: '45px' }}>
+							<Link className={'pt-button'} role={'button'} key={'journal-home'} to={'/' + journal.slug}>Home</Link>
+							<Link className={'pt-button'} role={'button'} key={'journal-about'} to={'/' + journal.slug + '/about'}>About</Link>
 							{sortedPages.filter((page)=> {
 								return page.isDisplayed;
 							}).map((page)=> {

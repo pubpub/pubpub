@@ -28,9 +28,6 @@ export const JournalProfileHeader = React.createClass({
 		let journalUrl = journal.website || '';
 		journalUrl = journalUrl.slice(0, 7) === 'http://' || journalUrl.slice(0, 8) === 'https://' ? journalUrl : `http://${journalUrl}`;
 
-		let journalText = journalUrl.slice(0, 7) === 'http://' ? journalUrl.slice(7, journalUrl.length - 1) : journalUrl;
-		journalText = journalText.slice(0, 8) === 'https://' ? journalText.slice(8, journalText.length - 1) : journalText;
-
 		return (
 			<div style={[styles.headerBackground, customBackgroundStyle]}>
 				<div style={styles.backgroundGrey} />
@@ -55,17 +52,16 @@ export const JournalProfileHeader = React.createClass({
 				</div>
 
 				<div style={styles.bottom}>
-					<Link style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter} to={'/' + journal.slug}>Home</Link>
-					<Link style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter} to={'/' + journal.slug + '/about'}>About</Link>
-					<div style={styles.headerSpacer} />
+					{/* <Link style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter} to={'/' + journal.slug}>Home</Link>
+					<Link style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter} to={'/' + journal.slug + '/about'}>About</Link> */}
 					{journal.website &&
-						<Link to={journalUrl} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}>{journalText}</Link>
+						<Link to={journalUrl} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}><span className={'pt-icon-large pt-icon-globe'} /></Link>
 					}
 					{journal.twitter &&
-						<Link to={'https://twitter.com/' + journal.twitter} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}>@{journal.twitter}</Link>
+						<Link to={'https://twitter.com/' + journal.twitter} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}><span className={'pt-icon-large pt-icon-twitter'} /></Link>
 					}
 					{journal.facebook &&
-						<Link to={'https://facebook.com/' + journal.facebook} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}>facebook.com/{journal.facebook}</Link>
+						<Link to={'https://facebook.com/' + journal.facebook} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}><span className={'pt-icon-large pt-icon-facebook'} /></Link>
 					}
 				</div>
 
@@ -79,13 +75,14 @@ export default Radium(JournalProfileHeader);
 
 styles = {
 	headerBackground: {
-		padding: '2em 0em 1em 0em',
+		padding: '5em 0em 2em 0em',
 		marginBottom: '2em',
 		position: 'relative',
 		color: 'white',
 		backgroundRepeat: 'no-repeat',
 		backgroundPosition: 'center center',
 		backgroundSize: 'cover',
+		minHeight: '400px',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			marginBottom: '0em',
 		}
@@ -101,7 +98,7 @@ styles = {
 	},
 	headerContent: {
 		position: 'relative',
-		padding: '3em 2em',
+		padding: '0em 2em',
 		margin: '0 auto',
 		maxWidth: '1024px',
 	},
@@ -142,7 +139,7 @@ styles = {
 	},
 	followButtonStyle: {
 		position: 'absolute',
-		top: 0,
+		// top: 0,
 		right: 0,
 		zIndex: 1,
 		backgroundColor: 'transparent',
