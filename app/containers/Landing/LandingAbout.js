@@ -209,7 +209,7 @@ styles = {
 	},
 
 	headerContent: {
-		padding: '150px 1.5em 120px',
+		padding: '150px 1.5em 150px',
 		width: 'calc(100% - 3em)',
 		maxWidth: '1024px',
 		margin: '0 auto',
@@ -232,8 +232,14 @@ styles = {
 		padding: '3em 0em 0.5em',
 		fontWeight: '200',
 	},
+	signupForm: {
+		maxWidth: '100%',
+	},
 	signupInput: {
 		width: '300px',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			width: 'auto',
+		}
 	},
 	errorMessage: {
 		margin: '10px 0px',

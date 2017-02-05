@@ -25,7 +25,7 @@ export const PreviewJournal = React.createClass({
 				<div style={styles.pubPreviewDetails}>
 					<Link to={'/' + journal.slug} style={styles.title}>{journal.title}</Link>
 
-					<p>{journal.description}</p>
+					<p style={styles.authorsWrapper}>{journal.description}</p>
 					{this.props.bottomContent &&
 						<div>
 							{this.props.bottomContent}
@@ -76,6 +76,9 @@ styles = {
 		boxShadow: '0 1px 4px rgba(0,0,0,0.05),inset 0 0 0 1px rgba(0,0,0,0.1)',
 		borderRadius: '0px 2px 2px 0px',
 		position: 'relative',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+		}
 	},
 	avatarWrapper: {
 		display: 'table-cell',
@@ -88,11 +91,18 @@ styles = {
 		backgroundPosition: 'center center',
 		borderRadius: '2px 0px 0px 2px',
 		boxSizing: 'border-box',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+			width: '100%',
+		}
 	},
 	pubPreviewDetails: {
 		display: 'table-cell',
 		// verticalAlign: 'middle',
 		padding: '2em 1em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'block',
+		}
 	},
 	modeIcon: {
 		float: 'right',
@@ -114,11 +124,17 @@ styles = {
 	previewStats: {
 		position: 'absolute',
 		bottom: '5px',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			position: 'relative',
+			bottom: '-1em',
+		}
 	},
 	statItem: {
 		fontSize: '1em',
 		paddingRight: '3em',
 		opacity: 0.75,
+		whiteSpace: 'nowrap',
+		display: 'inline-block',
 	},
 	statItemIcon: {
 		opacity: 0.5,
