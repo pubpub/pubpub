@@ -83,11 +83,11 @@ export const Landing = React.createClass({
 						<div style={styles.signupText}>Sign up to publish, curate, or follow work you care about.</div>
 						<form onSubmit={this.handleSubmit}>
 							<div className="pt-control-group" style={styles.signupForm}>
-								<div className="pt-input-group">
+								<div className="pt-input-group pt-large">
 									<input style={styles.signupInput} type="email" className="pt-input" placeholder="example@email.com" value={this.state.email} onChange={this.inputUpdateLowerCase.bind(this, 'email')} />
 								</div>
 							
-								<Button role={'submit'} className="pt-button pt-intent-primary" onClick={this.handleSubmit} text={'Join PubPub'} loading={this.props.signUpData.loading} />								
+								<Button role={'submit'} className="pt-button pt-intent-primary pt-large" onClick={this.handleSubmit} text={'Join PubPub'} loading={this.props.signUpData.loading} />								
 							</div>
 						</form>
 						{!!this.props.signUpData.error &&
@@ -118,13 +118,14 @@ export const Landing = React.createClass({
 				<div style={styles.section(true)}>
 					<div style={styles.sectionContent}>
 						<Link style={styles.sectionButton} className={'pt-button pt-intent-primary'} to={'/pubs/create'}>Create New Pub</Link>
-						
+
 						<div style={styles.sectionTitle}>
 							<span className={'pt-icon-large pt-icon-application'} style={styles.sectionIcon}/>
 							Pubs
 						</div>
 						<div style={styles.sectionText}>A pub contains all of the content needed to document and reproduce your research. Pubs maintain full revision histories, can have collaborators, and provide a platform for review and discussion.</div>
 
+						
 						{pubs.map((pub, index)=> {
 							return (
 								<div style={styles.previewWrapper} key={`pub-${pub.id}`}>
@@ -254,6 +255,7 @@ styles = {
 	},
 	sectionButton: {
 		float: 'right',
+		marginLeft: '2em',
 	},
 	sectionIcon: {
 		fontSize: '30px',
