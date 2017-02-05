@@ -308,7 +308,7 @@ styles = {
 		opacity: 0.85,
 	},
 	previewWrapper: {
-		marginTop: '1em',
+		marginTop: '2em',
 		backgroundColor: 'white',
 	},
 	

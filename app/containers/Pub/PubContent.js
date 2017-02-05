@@ -168,7 +168,7 @@ export const PubContent = React.createClass({
 	openEditor: function() {
 		const { userAccessToken, userName } = this.props;
 		const slug = this.props.pub.slug;
-		const editorURL = 'https://pubpub-editor-frontend.herokuapp.com';
+		const editorURL = 'https://editor.pubpub.org';
 		const url = `${editorURL}/user/access/${slug}/${userName}/${userAccessToken}`;
 		window.open(url, '_blank');
 		console.log(this.props);
