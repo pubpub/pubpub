@@ -134,15 +134,15 @@ export const CreatePub = React.createClass({
 		return (
 			<div style={styles.container}>
 				<Helmet title={'Create Pub · PubPub'} />
-				
-				
+
+
 				<h1>Create Pub</h1>
 				<p>A pub contains all of the content needed to document and reproduce your research.</p>
-				<p>Pubs maintain full revision histories, can have collaborators, and provide a platform for review and discussion.</p>
+				<p>This includes full revision histories, adding collaborators, and a platform for review and discussion.</p>
 
 				<hr />
 				<form onSubmit={this.createSubmit}>
-					
+
 					<label style={styles.label} htmlFor={'title'}>
 						<FormattedMessage {...globalMessages.Title} />
 						<input id={'title'} className={'pt-input margin-bottom'} name={'title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />

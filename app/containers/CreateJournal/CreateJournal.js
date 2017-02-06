@@ -127,7 +127,8 @@ export const CreateJournal = React.createClass({
 
 
 				<h1>Create Journal</h1>
-				<p>Journals can be created by anybody and can dictate their own review expectations and process.</p>
+				<p>A journal is a tool to curate work for a given community.</p>
+				<p>They can be created by anybody and they dictate their own review expectations and process.</p>
 
 				<hr />
 				<form onSubmit={this.createSubmit}>
