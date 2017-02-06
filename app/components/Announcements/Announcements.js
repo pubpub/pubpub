@@ -32,7 +32,7 @@ export const Announcements = React.createClass({
 			<div style={styles.container}>
 				{!this.state.beta_v3 &&
 					<div className={'pt-card pt-elevation-4'} style={styles.announcement}>
-						<div style={styles.announcementContent}>Welcome to the PubPub v3 beta. Read about all the updates, or just play around on the site! Let us know if you find any lingering bugs.</div>
+						<div style={styles.announcementContent}>Welcome to the PubPub_v3 beta. We've made a lot of updates and improvements. <a target={'_blank'} href={'mailto:pubpub@media.mit.edu'}>Contact us</a> with any questions or bug reports.</div>
 						<div style={styles.announcementButtonWrapper}>
 							<button className={'pt-button pt-minimal'} onClick={this.clearItem.bind(this, 'beta_v3')} style={styles.announcementButton}>
 								<span className={'pt-icon-large pt-icon-delete'} style={styles.closeButton} />

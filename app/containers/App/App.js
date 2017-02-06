@@ -69,7 +69,7 @@ export const App = React.createClass({
 						]} 
 					/> 
 					<div style={hiddenStyle}>
-						{/* <Announcements /> */}
+						<Announcements />
 						<AppNav accountData={this.props.accountData} pubData={this.props.pubData} journalData={this.props.journalData} location={this.props.location} params={this.props.params} logoutHandler={this.logoutHandler} />
 						<div style={{ minHeight: 'calc(100vh - 75px)' }}>{this.props.children}</div>
 						<AppFooter />
