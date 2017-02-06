@@ -124,15 +124,15 @@ export const CreateJournal = React.createClass({
 		return (
 			<div style={styles.container}>
 				<Helmet title={'Create Journal · PubPub'} />
-				
-				
+
+
 				<h1>Create Journal</h1>
 				<p>A journal is a tool to curate work for a given community.</p>
-				<p>Journals can be created by anyway and can dictate their own review expectations and process.</p>
+				<p>Journals can be created by anybody and can dictate their own review expectations and process.</p>
 
 				<hr />
 				<form onSubmit={this.createSubmit}>
-					
+
 					<label style={styles.label} htmlFor={'journalName'}>
 						<FormattedMessage {...globalMessages.JournalName} />
 						<input id={'journalName'} className={'pt-input margin-bottom'} name={'journal title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
