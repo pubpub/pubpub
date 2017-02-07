@@ -37,7 +37,7 @@ export const RenderFilePPT = React.createClass({
 		return (
 			<div className={'ppt-container'}>
 				<iframe 
-					src={'http://docs.google.com/gview?url=' + file.url + '&embedded=true'} 
+					src={'https://docs.google.com/gview?url=' + file.url + '&embedded=true'} 
 					style={{ width: this.state.width, height: this.state.height }} 
 					frameBorder="0" />
 			</div>
