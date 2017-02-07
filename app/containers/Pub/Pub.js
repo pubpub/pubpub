@@ -202,57 +202,52 @@ export const Pub = React.createClass({
 		/*---------*/
 		// All of this should be done outside of discussions - perhaps in it's own component.
 		// This is re-rendering on every scroll because of fixed position.
-		const allHighlights = discussions.reduce((previous, current)=> {
-			if (!current.versions.length) { return previous; }
-			const currentVersion = current.versions.reduce((previousVersionItem, currentVersionItem)=> {
-				return (!previousVersionItem.createdAt || currentVersionItem.createdAt > previousVersionItem.createdAt) ? currentVersionItem : previousVersionItem;
-			}, {}); // Get the last version
-			const files = currentVersion.files || [];
 
-			const mainFile = files.reduce((previousFileItem, currentFileItem)=> {
-				if (currentVersion.defaultFile === currentFileItem.name) { return currentFileItem; }
-				if (!currentVersion.defaultFile && currentFileItem.name.split('.')[0] === 'main') { return currentFileItem; }
-				return previousFileItem;
-			}, files[0]);
+		// const allHighlights = discussions.reduce((previous, current)=> {
+		// 	if (!current.versions.length) { return previous; }
+		// 	const currentVersion = current.versions.reduce((previousVersionItem, currentVersionItem)=> {
+		// 		return (!previousVersionItem.createdAt || currentVersionItem.createdAt > previousVersionItem.createdAt) ? currentVersionItem : previousVersionItem;
+		// 	}, {}); // Get the last version
+		// 	const files = currentVersion.files || [];
 
-			if (mainFile.type === 'ppub') {
-				// console.log(mainFile.content);
-				return this.extractHighlights(JSON.parse(mainFile.content), previous);
-			}
-			return previous;
+		// 	const mainFile = files.reduce((previousFileItem, currentFileItem)=> {
+		// 		if (currentVersion.defaultFile === currentFileItem.name) { return currentFileItem; }
+		// 		if (!currentVersion.defaultFile && currentFileItem.name.split('.')[0] === 'main') { return currentFileItem; }
+		// 		return previousFileItem;
+		// 	}, files[0]);
 
-		}, []);
+		// 	if (mainFile.type === 'ppub') {
+		// 		// console.log(mainFile.content);
+		// 		return this.extractHighlights(JSON.parse(mainFile.content), previous);
+		// 	}
+		// 	return previous;
 
+		// }, []);
 
-		// console.log(allHighlights);
-
-		setTimeout(()=> {
-			const container = document.getElementById('highlighter-wrapper');
-				if (container) {
-				allHighlights.forEach((highlight)=> {
-					const context = highlight.context;
-					const text = highlight.text;
-					const textStart = context.indexOf(text);
-					const textEnd = textStart + text.length;
-					const prefixStart = Math.max(textStart - 10, 0);
-					const suffixEnd = Math.min(textEnd + 10, context.length);
-					const highlightObject = {
-						prefix: context.substring(prefixStart, textStart),
-						exact: highlight.text,
-						suffix: context.substring(textEnd, suffixEnd),
-					};
-					// console.log(highlightObject);
-					const textQuoteRange = textQuote.toRange(container, highlightObject);
-					const renderer = new Marklib.Rendering(document, { className: 'highlight' }, document);
-					renderer.renderWithRange(textQuoteRange);
-				});
-			}
-		}, 100);
+		// setTimeout(()=> {
+		// 	const container = document.getElementById('highlighter-wrapper');
+		// 		if (container) {
+		// 		allHighlights.forEach((highlight)=> {
+		// 			const context = highlight.context;
+		// 			const text = highlight.text;
+		// 			const textStart = context.indexOf(text);
+		// 			const textEnd = textStart + text.length;
+		// 			const prefixStart = Math.max(textStart - 10, 0);
+		// 			const suffixEnd = Math.min(textEnd + 10, context.length);
+		// 			const highlightObject = {
+		// 				prefix: context.substring(prefixStart, textStart),
+		// 				exact: highlight.text,
+		// 				suffix: context.substring(textEnd, suffixEnd),
+		// 			};
+		// 			// console.log(highlightObject);
+		// 			const textQuoteRange = textQuote.toRange(container, highlightObject);
+		// 			const renderer = new Marklib.Rendering(document, { className: 'highlight' }, document);
+		// 			renderer.renderWithRange(textQuoteRange);
+		// 		});
+		// 	}
+		// }, 100);
 		
 		/*---------*/
-
-
-
 
 		// const followData = followers.reduce((previous, current)=> {
 		// 	if (current.id === accountId) { return current.FollowsPub; }

@@ -181,10 +181,9 @@ export default Radium(AppNav);
 styles = {
 	logo: {
 		textDecoration: 'none',
-		fontFamily: 'Yrsa',
-		fontSize: '1.5em',
 		color: 'inherit',
 		display: 'block',
+		height: '50px',
 	},
 	searchForm: {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
