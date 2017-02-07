@@ -421,7 +421,7 @@ styles = {
 	bottomInput: (isExpanded)=> {
 		return {
 			width: '100%',
-			height: isExpanded ? 'calc(100% - 30px)' : '30px',
+			height: isExpanded ? '76px' : '30px',
 			padding: isExpanded ? '10px' : '6px 10px',
 			resize: 'none',
 		};

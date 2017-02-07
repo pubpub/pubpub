@@ -50,7 +50,7 @@ export const PubSidePanel = React.createClass({
 			left: boundingRect.left + (boundingRect.width * 0.65),
 			right: 0,
 			position: 'fixed',
-			height: 'auto',
+			height: window.innerHeight,
 			backfaceVisibility: 'hidden',
 		};
 		const unfixedStyle = {
