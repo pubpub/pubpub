@@ -80,7 +80,7 @@ export const RenderFile = React.createClass({
 		case 'application/pdf':
 			return (
 				<div id={wrapperId} style={styles.contentWrapper}>
-					{!this.props.noHighlighter &&
+					{false && !this.props.noHighlighter &&
 						<Highlighter />
 					}
 					<RenderFilePDF file={file} />
