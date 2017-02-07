@@ -16,6 +16,7 @@ let styles;
 export const CreatePub = React.createClass({
 	propTypes: {
 		createPubData: PropTypes.object,
+		accountData: PropTypes.object,
 		params: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
@@ -103,6 +104,10 @@ export const CreatePub = React.createClass({
 
 	createSubmit: function(evt) {
 		evt.preventDefault();
+
+		if (!this.props.accountData.user.id) {
+			return this.setState({ validationError: 'Must be logged in to create a new Pub' });
+		}
 		const createData = {
 			slug: this.state.slug,
 			title: this.state.title,
@@ -134,15 +139,15 @@ export const CreatePub = React.createClass({
 		return (
 			<div style={styles.container}>
 				<Helmet title={'Create Pub · PubPub'} />
-				
-				
+
+
 				<h1>Create Pub</h1>
 				<p>A pub contains all of the content needed to document and reproduce your research.</p>
-				<p>Pubs maintain full revision histories, can have collaborators, and provide a platform for review and discussion.</p>
+				<p>This includes full revision histories, adding collaborators, and a platform for review and discussion.</p>
 
 				<hr />
 				<form onSubmit={this.createSubmit}>
-					
+
 					<label style={styles.label} htmlFor={'title'}>
 						<FormattedMessage {...globalMessages.Title} />
 						<input id={'title'} className={'pt-input margin-bottom'} name={'title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
@@ -191,6 +196,7 @@ export const CreatePub = React.createClass({
 function mapStateToProps(state) {
 	return {
 		createPubData: state.createPub.toJS(),
+		accountData: state.account.toJS(),
 	};
 }
 

@@ -232,7 +232,10 @@ export const JournalEdit = React.createClass({
 						<label style={{ display: 'inline-block', padding: '1em 2em 1em 0em', verticalAlign: 'top' }}>
 							<FormattedMessage {...globalMessages.BackgroundColor} />
 							<div style={{margin:'0.75em 0em', display: 'block'}}>
-								<ColorPicker color={this.state.headerColor} onChange={this.handleColorChange} />	
+								<ColorPicker 
+									color={this.state.headerColor} 
+									onChange={this.handleColorChange} 
+									colors={['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50', '#ffc107', '#ff9800', '#ff5722', '#795548', '#607d8b']} />	
 							</div>
 							
 						</label>

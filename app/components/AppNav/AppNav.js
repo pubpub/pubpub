@@ -43,18 +43,26 @@ export const AppNav = React.createClass({
 		const query = location.query || {};
 		const params = this.props.params || {};
 		const isPub = location.pathname.indexOf('/pub') === 0;
-		const isJournal = !isPub && params.slug;
-		const pubFeatures = isPub ? pub.pubFeatures || [] : [];
+		const isJournal = location.pathname.split('/')[1] === params.slug;
+
+		const pubFeatures = pub.pubFeatures || [];
 		const contextJournal = pubFeatures.reduce((previous, current)=> {
+			const slug = query.context || params.slug;
 			if (!query.context && current.journalId === pub.defaultContext) { return current.journal; }
-			if (current.journal.title === query.context) { return current.journal; }
+			if (current.journal.slug === slug) { return current.journal; }
 			return previous;
 		}, undefined);
 
-		const headerJournal = isJournal ? journal : contextJournal;
+		const pubLoading = this.props.pubData.loading;
+		const journalLoading = this.props.journalData.loading;
 
-		const collections = headerJournal ? headerJournal.collections || [] : [];
-		const sortedCollections = collections.sort((foo, bar)=> {
+		let headerJournal = {};
+		// TODO - this needs to be updated so that if you're not navigating from journal->pub or pub->journal, it doesn't show any stored data.
+		if (pubLoading || (!journalLoading && isJournal)) { headerJournal = journal; }
+		if (journalLoading || (!pubLoading && isPub)) { headerJournal = contextJournal; }
+
+		const pages = headerJournal ? headerJournal.pages || [] : [];
+		const sortedPages = pages.sort((foo, bar)=> {
 			if (foo.order < bar.order) { return -1; }
 			if (foo.order > bar.order) { return 1; }
 			return 0;
@@ -78,7 +86,7 @@ export const AppNav = React.createClass({
 						}
 						
 					</Link>
-					{headerJournal &&
+					{headerJournal && headerJournal.id &&
 						<div style={styles.journalLogoWrapper}>
 							<div style={[styles.journalLogoDivider, isLight && styles.journalLogoDividerDark]} />
 							<Link to={'/' + headerJournal.slug}>
@@ -91,7 +99,7 @@ export const AppNav = React.createClass({
 							</Link>
 						</div>
 					}
-					<form onSubmit={this.searchSubmited}>
+					<form onSubmit={this.searchSubmited} style={styles.searchForm}>
 						<input className="pt-input" placeholder="Search PubPub" type="text" style={styles.searchInput} value={this.state.search} onChange={this.inputUpdate.bind(this, 'search')} />
 					</form>
 				</div>
@@ -148,14 +156,16 @@ export const AppNav = React.createClass({
 					</div>
 				}
 
-				{headerJournal && !!sortedCollections.length &&
+				{headerJournal && headerJournal.id &&
 					<div>
 						<div className={'clearfix'} />
 						<div className={'pt-button-group pt-minimal'} style={{ marginLeft: '45px' }}>
-							{sortedCollections.filter((collection)=> {
-								return collection.isDisplayed;
-							}).map((collection)=> {
-								return <Link className={'pt-button'} role={'button'} key={'collection-' + collection.id} to={'/' + journal.slug + '/collection/' + collection.title}>{collection.title}</Link>;
+							<Link className={'pt-button'} role={'button'} key={'journal-home'} to={'/' + journal.slug}>Home</Link>
+							<Link className={'pt-button'} role={'button'} key={'journal-about'} to={'/' + journal.slug + '/about'}>About</Link>
+							{sortedPages.filter((page)=> {
+								return page.isDisplayed;
+							}).map((page)=> {
+								return <Link className={'pt-button'} role={'button'} key={'page-' + page.id} to={'/' + journal.slug + '/page/' + page.slug}>{page.title}</Link>;
 							})}
 						</div>		
 					</div>
@@ -171,10 +181,14 @@ export default Radium(AppNav);
 styles = {
 	logo: {
 		textDecoration: 'none',
-		fontFamily: 'Yrsa',
-		fontSize: '1.5em',
 		color: 'inherit',
 		display: 'block',
+		height: '50px',
+	},
+	searchForm: {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		}
 	},
 	searchInput: {
 		// backgroundColor: '#394B59',

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router';
 import { App, CreateAccount, CreatePub, CreateJournal, Landing, Label, Journal, Login, Pub, Search, SignUp, NoMatch, User, ResetPassword } from 'containers';
-
 export default (
 	<Route component={App}>
 		<Route path="/" component={Landing} />
@@ -27,7 +26,7 @@ export default (
 		<Route path="/journals/create" component={CreateJournal} />
 		<Route path="/:slug" component={Journal} />
 		<Route path="/:slug/:mode" component={Journal} />
-		<Route path="/:slug/:mode/:collection" component={Journal} />
+		<Route path="/:slug/:mode/:pageSlug" component={Journal} />
 
 		<Route path="*" component={NoMatch} />
 	</Route>

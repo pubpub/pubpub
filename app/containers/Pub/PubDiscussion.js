@@ -295,11 +295,11 @@ export const PubDiscussion = React.createClass({
 
 									<div style={styles.discussionContentWrapper}>
 										<div style={styles.discussionButtons} className={'pt-button-group'}>
-											<button type="button" style={styles.discussionButton} className="pt-button pt-minimal pt-icon-social-media" />
+											{/*<button type="button" style={styles.discussionButton} className="pt-button pt-minimal pt-icon-social-media" />*/}
 											{isAuthor &&
 												<button type="button" style={styles.discussionButton} className="pt-button pt-minimal pt-icon-edit" onClick={this.setOpenEditor.bind(this, child, 'body')} />
 											}
-											<button type="button" style={styles.discussionButton} className="pt-button pt-minimal pt-icon-bookmark" />
+											{/*<button type="button" style={styles.discussionButton} className="pt-button pt-minimal pt-icon-bookmark" />*/}
 										</div>
 
 										<div style={styles.discussionNameWrapper}>
@@ -316,7 +316,7 @@ export const PubDiscussion = React.createClass({
 										}
 										{editorOpen && 
 											<div style={styles.discussionText} className={'discussion-body'}>
-												<textarea value={this.state.editDescription} onChange={this.discussionChange} />
+												<textarea className={'pt-input margin-bottom'} value={this.state.editDescription} style={{ width: '100%' }} onChange={this.discussionChange} />
 												<hr />
 												<button className={'pt-button'} onClick={this.setOpenEditor.bind(this, undefined, undefined)}>Cancel</button>
 												<Button className={'pt-button pt-intent-primary'} onClick={this.updateDiscussion} loading={isLoading} text={'Save'}/>
@@ -421,7 +421,7 @@ styles = {
 	bottomInput: (isExpanded)=> {
 		return {
 			width: '100%',
-			height: isExpanded ? 'calc(100% - 30px)' : '100%',
+			height: isExpanded ? 'calc(100% - 30px)' : '30px',
 			padding: isExpanded ? '10px' : '6px 10px',
 			resize: 'none',
 		};

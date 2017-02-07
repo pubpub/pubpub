@@ -10,7 +10,7 @@ import * as Marklib from 'marklib';
 // import { FollowButton } from 'containers';
 import { FormattedMessage } from 'react-intl';
 import Helmet from 'react-helmet';
-import { NonIdealState } from '@blueprintjs/core';
+import { NonIdealState, Spinner } from '@blueprintjs/core';
 import PubContent from './PubContent';
 // import PubDocument from './PubDocument';
 import PubHeader from './PubHeader';
@@ -153,7 +153,7 @@ export const Pub = React.createClass({
 	render() {
 		const pub = this.props.pubData.pub || {};
 		if (this.props.pubData.loading && !this.props.pubData.error) {
-			return <div>Loading</div>;
+			return <div style={{ margin: '5em auto', width: '50px' }}><Spinner /></div>;
 		}
 		if (!this.props.pubData.loading && (this.props.pubData.error || !pub.title)) {
 			return (
@@ -170,7 +170,7 @@ export const Pub = React.createClass({
 		const query = this.props.location.query;
 		const preservedQuery = {
 			version: query.version,
-			content: query.context,
+			context: query.context,
 			// panel: query.panel,
 			// discussion: query.discussion,
 			// label: query.label,
@@ -202,57 +202,52 @@ export const Pub = React.createClass({
 		/*---------*/
 		// All of this should be done outside of discussions - perhaps in it's own component.
 		// This is re-rendering on every scroll because of fixed position.
-		const allHighlights = discussions.reduce((previous, current)=> {
-			if (!current.versions.length) { return previous; }
-			const currentVersion = current.versions.reduce((previousVersionItem, currentVersionItem)=> {
-				return (!previousVersionItem.createdAt || currentVersionItem.createdAt > previousVersionItem.createdAt) ? currentVersionItem : previousVersionItem;
-			}, {}); // Get the last version
-			const files = currentVersion.files || [];
 
-			const mainFile = files.reduce((previousFileItem, currentFileItem)=> {
-				if (currentVersion.defaultFile === currentFileItem.name) { return currentFileItem; }
-				if (!currentVersion.defaultFile && currentFileItem.name.split('.')[0] === 'main') { return currentFileItem; }
-				return previousFileItem;
-			}, files[0]);
+		// const allHighlights = discussions.reduce((previous, current)=> {
+		// 	if (!current.versions.length) { return previous; }
+		// 	const currentVersion = current.versions.reduce((previousVersionItem, currentVersionItem)=> {
+		// 		return (!previousVersionItem.createdAt || currentVersionItem.createdAt > previousVersionItem.createdAt) ? currentVersionItem : previousVersionItem;
+		// 	}, {}); // Get the last version
+		// 	const files = currentVersion.files || [];
 
-			if (mainFile.type === 'ppub') {
-				// console.log(mainFile.content);
-				return this.extractHighlights(JSON.parse(mainFile.content), previous);
-			}
-			return previous;
+		// 	const mainFile = files.reduce((previousFileItem, currentFileItem)=> {
+		// 		if (currentVersion.defaultFile === currentFileItem.name) { return currentFileItem; }
+		// 		if (!currentVersion.defaultFile && currentFileItem.name.split('.')[0] === 'main') { return currentFileItem; }
+		// 		return previousFileItem;
+		// 	}, files[0]);
 
-		}, []);
+		// 	if (mainFile.type === 'ppub') {
+		// 		// console.log(mainFile.content);
+		// 		return this.extractHighlights(JSON.parse(mainFile.content), previous);
+		// 	}
+		// 	return previous;
 
+		// }, []);
 
-		// console.log(allHighlights);
-
-		setTimeout(()=> {
-			const container = document.getElementById('highlighter-wrapper');
-				if (container) {
-				allHighlights.forEach((highlight)=> {
-					const context = highlight.context;
-					const text = highlight.text;
-					const textStart = context.indexOf(text);
-					const textEnd = textStart + text.length;
-					const prefixStart = Math.max(textStart - 10, 0);
-					const suffixEnd = Math.min(textEnd + 10, context.length);
-					const highlightObject = {
-						prefix: context.substring(prefixStart, textStart),
-						exact: highlight.text,
-						suffix: context.substring(textEnd, suffixEnd),
-					};
-					// console.log(highlightObject);
-					const textQuoteRange = textQuote.toRange(container, highlightObject);
-					const renderer = new Marklib.Rendering(document, { className: 'highlight' }, document);
-					renderer.renderWithRange(textQuoteRange);
-				});
-			}
-		}, 100);
+		// setTimeout(()=> {
+		// 	const container = document.getElementById('highlighter-wrapper');
+		// 		if (container) {
+		// 		allHighlights.forEach((highlight)=> {
+		// 			const context = highlight.context;
+		// 			const text = highlight.text;
+		// 			const textStart = context.indexOf(text);
+		// 			const textEnd = textStart + text.length;
+		// 			const prefixStart = Math.max(textStart - 10, 0);
+		// 			const suffixEnd = Math.min(textEnd + 10, context.length);
+		// 			const highlightObject = {
+		// 				prefix: context.substring(prefixStart, textStart),
+		// 				exact: highlight.text,
+		// 				suffix: context.substring(textEnd, suffixEnd),
+		// 			};
+		// 			// console.log(highlightObject);
+		// 			const textQuoteRange = textQuote.toRange(container, highlightObject);
+		// 			const renderer = new Marklib.Rendering(document, { className: 'highlight' }, document);
+		// 			renderer.renderWithRange(textQuoteRange);
+		// 		});
+		// 	}
+		// }, 100);
 		
 		/*---------*/
-
-
-
 
 		// const followData = followers.reduce((previous, current)=> {
 		// 	if (current.id === accountId) { return current.FollowsPub; }
@@ -570,12 +565,19 @@ styles = {
 	left: {
 		marginRight: '35%',
 		paddingRight: '4em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			marginRight: 0,
+			paddingRight: 0,
+		}
 	},
 	rightPanel: {
 		position: 'absolute',
 		right: 0,
 		top: 0,
 		width: '35%',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		}
 	},
 	right: {
 		height: '100%',

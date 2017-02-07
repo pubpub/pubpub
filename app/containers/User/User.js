@@ -5,6 +5,7 @@ const Link = Radium(UnwrappedLink);
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 
+import { Spinner } from '@blueprintjs/core';
 import { NavContentWrapper } from 'components';
 import { FollowButton } from 'containers';
 
@@ -130,7 +131,7 @@ export const User = React.createClass({
 		];
 
 		if (!user.username) {
-			return <div>Loading</div>;
+			return <div style={{ margin: '5em auto', width: '50px' }}><Spinner /></div>;
 		}
 
 		// window.prerenderReady = true;

@@ -1,9 +1,11 @@
 import React, { PropTypes } from 'react';
+import Radium from 'radium';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { Menu, NonIdealState } from '@blueprintjs/core';
 import { ActivityItem, ActivityGroup, DropdownButton } from 'components';
 import { getActivities } from './actions';
+import LandingAbout from './LandingAbout';
 
 let styles;
 
@@ -11,6 +13,8 @@ export const Landing = React.createClass({
 	propTypes: {
 		accountData: PropTypes.object,
 		activitiesData: PropTypes.object,
+		landingData: PropTypes.object,
+		signUpData: PropTypes.object,
 		location: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
@@ -102,8 +106,8 @@ export const Landing = React.createClass({
 
 		// Iterate over all activities and add create keys based on the actor-object, actor-target, or target values
 		// Keys are also set with the date of the activity, so only same-day activities get grouped.
-		// The key is checked across a list of approved groups per type. If valid, that specific type of key (keyTarget, keyActorObject or KeyActorTarget) is 
-		// added to the groups object. 
+		// The key is checked across a list of approved groups per type. If valid, that specific type of key (keyTarget, keyActorObject or KeyActorTarget) is
+		// added to the groups object.
 		// Objects that are not an approved verb type for groups simply get added to the groups object with their id as key
 		// At the end, we have a groups objet that has arrays organized by the specfic (groupable) keys.
 		// We iterate over these keys, and if length === 1, pull out the single activity
@@ -142,7 +146,7 @@ export const Landing = React.createClass({
 					groups[keyTarget].push(activity);
 				} else {
 					groups[keyTarget] = [activity];
-				}	
+				}
 			} else if (actorTargetGroups.includes(activity.verb)) {
 				if (keyActorTarget in groups) {
 					groups[keyActorTarget].push(activity);
@@ -164,7 +168,7 @@ export const Landing = React.createClass({
 			} else {
 				groups[activity.id] = [activity];
 			}
-		});		
+		});
 
 		const realActivities = Object.keys(groups).map((activityGroupKey)=> {
 			const activityGroup = groups[activityGroupKey];
@@ -188,49 +192,9 @@ export const Landing = React.createClass({
 			<div style={styles.container}>
 
 				{!user.id &&
-					<div>
-						<div style={styles.headerSection}>
-							<div style={styles.headerImage} />
-							<div style={styles.headerContent}>
-								<div style={styles.splashTitle}>Open Publishing</div>
-								<p style={{ fontSize: '1.25em' }}>PubPub is a blah blah blah</p>
-
-								<div className={'pt-button-groupp pt-large'} style={styles.splashButtons}>
-									<Link to={'/pubs/create'} className={'pt-button background-button'} style={{ marginRight: '1em' }}>Start a Pub</Link>
-									<Link to={'/journals/create'} className={'pt-button background-button'} style={{ marginRight: '1em' }}>Start a Journal</Link>
-								</div>
-								<div className="pt-control-group">
-									<div className="pt-input-group">
-										<span className="pt-icon pt-icon-envelope" />
-										<input type="text" className="pt-input" placeholder="Email address" />
-									</div>
-									<button className="pt-button pt-intent-primary">Join PubPub</button>
-								</div>
-							</div>
-						</div>
-
-						<div style={styles.section()}>
-							<div style={styles.sectionContent}>
-								<h2>Pubs</h2>
-							</div>
-						</div>
-
-						<div style={styles.section(true)}>
-							<div style={styles.sectionContent}>
-								<h2>Journals</h2>
-							</div>
-						</div>
-
-						<div style={styles.section()}>
-							<div style={styles.sectionContent}>
-								<h2>Open</h2>
-							</div>
-						</div>
-					</div>
+					<LandingAbout dispatch={this.props.dispatch} landingData={this.props.landingData} signUpData={this.props.signUpData} />
 				}
-
-				
-
+      
 				{user.id &&
 
 					<div style={styles.activitiesTable}>
@@ -243,11 +207,11 @@ export const Landing = React.createClass({
 									<div className="pt-button-group pt-minimal">
 										{/* <Link to={{ pathname: '/', query: { ...query, mode: 'global', filter: undefined } }} className={mode === 'global' ? 'pt-button pt-active' : 'pt-button'}>Global</Link> */}
 										<Link to={{ pathname: '/', query: { ...query, mode: undefined, filter: undefined } }} className={mode === 'following' ? 'pt-button pt-active' : 'pt-button'}>Following</Link>
-										<Link to={{ pathname: '/', query: { ...query, mode: 'you', filter: undefined } }} className={mode === 'you' ? 'pt-button pt-active' : 'pt-button'}>Your Things</Link>
+										<Link to={{ pathname: '/', query: { ...query, mode: 'you', filter: undefined } }} className={mode === 'you' ? 'pt-button pt-active' : 'pt-button'}>Your Activity</Link>
 									</div>
 								</div>
 								<div style={styles.headerRight}>
-									<DropdownButton 
+									<DropdownButton
 										content={
 											<Menu>
 												{filterList.map((filter, index)=> {
@@ -260,14 +224,14 @@ export const Landing = React.createClass({
 												})}
 											</Menu>
 										}
-										title={'Filter: ' + ((filterMode === 'People' && mode === 'you') ? 'You' : filterMode)} 
+										title={'Filter: ' + ((filterMode === 'People' && mode === 'you') ? 'You' : filterMode)}
 										position={2} />
 								</div>
 							</div>
 
 							{realActivities.map((activity)=> {
 								if (Array.isArray(activity)) {
-									return <ActivityGroup key={'activityGroup-' + activity[0].id} activities={activity} />;	
+									return <ActivityGroup key={'activityGroup-' + activity[0].id} activities={activity} />;
 								}
 								return <ActivityItem key={'activity-' + activity.id} activity={activity} />;
 							})}
@@ -277,7 +241,7 @@ export const Landing = React.createClass({
 									title={'No Activities'}
 									visual={'pulse'} />
 							}
-							
+
 						</div>
 
 						<div style={styles.rightPanel}>
@@ -289,7 +253,7 @@ export const Landing = React.createClass({
 										{!!assetPubs.length &&
 											<Link to={'/pubs/create'} className={'pt-button pt-icon-add'} style={styles.sideButton}>New</Link>
 										}
-										
+
 									</div>
 									<div className="pt-dialog-body">
 										{assetPubs.map((pub)=> {
@@ -305,8 +269,8 @@ export const Landing = React.createClass({
 											</div>
 										}
 									</div>
-										
-									
+
+
 								</div>
 
 								<div style={styles.rightSection} className={'pt-card pt-elevation-0'}>
@@ -314,9 +278,9 @@ export const Landing = React.createClass({
 										{/* <span className="pt-icon-large pt-icon-applications" /> */}
 										<h5>Your Journals</h5>
 										{!!assetJournals.length &&
-											<Link to={'/journals/create'} className={'pt-button pt-icon-add'} style={styles.sideButton}>New</Link>	
+											<Link to={'/journals/create'} className={'pt-button pt-icon-add'} style={styles.sideButton}>New</Link>
 										}
-										
+
 									</div>
 									<div className="pt-dialog-body">
 										{assetJournals.map((journal)=> {
@@ -333,7 +297,7 @@ export const Landing = React.createClass({
 										}
 									</div>
 								</div>
-								
+
 
 							</div>
 						</div>
@@ -349,10 +313,12 @@ function mapStateToProps(state) {
 	return {
 		accountData: state.account.toJS(),
 		activitiesData: state.activities.toJS(),
+		landingData: state.landing.toJS(),
+		signUpData: state.signUp.toJS(),
 	};
 }
 
-export default connect(mapStateToProps)(Landing);
+export default connect(mapStateToProps)(Radium(Landing));
 
 styles = {
 	container: {
@@ -463,5 +429,5 @@ styles = {
 	sideButton: {
 		margin: '.5em',
 	},
-	
+
 };

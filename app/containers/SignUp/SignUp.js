@@ -3,6 +3,7 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import { Button } from '@blueprintjs/core';
 import { createSignUp } from './actions';
 import { globalStyles } from 'utils/globalStyles';
 
@@ -21,7 +22,9 @@ export const SignUp = React.createClass({
 	},
 
 	componentDidMount: function() {
-		this.initFocusInput.focus(); 
+		if (!this.props.signUpData.destinationEmail) {
+			this.initFocusInput.focus(); 	
+		}
 	},
 
 	inputUpdateLowerCase: function(key, evt) {
@@ -48,23 +51,6 @@ export const SignUp = React.createClass({
 					<div>
 						<h1>Sign Up</h1>
 
-						<div className="pt-callout pt-intent-danger">
-							<h5>SignUps disabled</h5>
-							<p>We don't dispatch emails from this dev deployment, so you won't get a signup link by entering your email below.
-							Instead, feel free to Login with one of the dev accounts to play around:</p>
-							<ul>
-								<li>test1@email.com</li>
-								<li>test2@email.com</li>
-								<li>test3@email.com</li>
-								<li>test4@email.com</li>
-							</ul>
-							<p>All use password: 'password'.</p>
-							<div>
-								<Link to={'/login'} className={'pt-button pt-intent-primary'}>Login</Link>	
-							</div>
-							
-						</div>
-
 						<p>Enter your email to signup for PubPub. We'll send you a link to create your account!</p>
 
 						<hr />
@@ -75,9 +61,7 @@ export const SignUp = React.createClass({
 								<input className={'pt-input margin-bottom'} ref={(input)=> { this.initFocusInput = input; }} id={'email'} name={'email'} type="email" style={styles.input} value={this.state.email} onChange={this.inputUpdateLowerCase.bind(this, 'email')} />
 							</label>
 							
-							<button className={'pt-button pt-intent-primary'} name={'login'} onClick={this.handleSubmit}>
-								Email Sign Up Link
-							</button>
+							<Button className={'pt-button pt-intent-primary'} name={'login'} onClick={this.handleSubmit} text={'Email Sign Up Link'} loading={this.props.signUpData.loading} />
 							<div style={styles.errorMessage}>{this.props.signUpData.error}</div>
 						</form>
 					</div>

@@ -2,6 +2,7 @@ export ActivityItem from './ActivityItem/ActivityItem';
 export ActivityGroup from './ActivityGroup/ActivityGroup';
 export AppFooter from './AppFooter/AppFooter';
 export AppNav from './AppNav/AppNav';
+export Announcements from './Announcements/Announcements';
 export AutocompleteBar from './AutocompleteBar/AutocompleteBar';
 export ColorPicker from './ColorPicker/ColorPicker';
 export DropdownButton from './DropdownButton/DropdownButton';

@@ -5,7 +5,7 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 
 import { FollowButton, NoMatch } from 'containers';
-import { Menu, MenuDivider } from '@blueprintjs/core';
+import { Menu, MenuDivider, Spinner } from '@blueprintjs/core';
 import { DropdownButton } from 'components';
 
 import { globalStyles } from 'utils/globalStyles';
@@ -19,8 +19,8 @@ import JournalEdit from './JournalEdit';
 import JournalSubmits from './JournalSubmits';
 import JournalFeatures from './JournalFeatures';
 import JournalAbout from './JournalAbout';
-import JournalCollection from './JournalCollection';
-import JournalCollections from './JournalCollections';
+import JournalPage from './JournalPage';
+import JournalPages from './JournalPages';
 import JournalFollowers from './JournalFollowers';
 
 let styles;
@@ -100,9 +100,14 @@ export const Journal = React.createClass({
 
 		
 		const pathname = this.props.location.pathname;
-		const collection = this.props.params.collection;
+		const pageSlug = this.props.params.pageSlug;
 		const journal = this.props.journalData.journal || {};
-		const collections = journal.collections || [];
+		const pages = journal.pages || [];
+		const page = pages.reduce((previous, current)=> {
+			if (current.slug === pageSlug) { return current; }
+			return previous;
+		}, {});
+
 		const followers = journal.followers || [];
 		const isAdmin = journal.isAdmin; // Add || true for dev only.
 		const accountData = this.props.accountData || {};
@@ -141,7 +146,7 @@ export const Journal = React.createClass({
 		}
 
 		if (!journal.title && !this.props.journalData.error) {
-			return <div>Loading</div>;
+			return <div style={{ margin: '5em auto', width: '50px' }}><Spinner /></div>;
 		}
 		if (!journal.title && this.props.journalData.error) {
 			return <div>Error</div>;
@@ -156,19 +161,17 @@ export const Journal = React.createClass({
 					journal={journal}
 					followContent={
 						<div style={styles.followButtonWrapper}>
-							{isAdmin &&
-								<div className={'pt-button-group'} style={styles.editButton}>
-									<Link className={'pt-button pt-icon-edit'} to={'/' + journal.slug + '/edit'} >Edit Journal</Link>
-								</div>
-							}
-							
-							
 							<FollowButton 
 								journalId={journal.id} 
 								followData={followData} 
 								followerCount={followers.length} 
 								followersLink={{ pathname: '/' + journal.slug + '/followers' }}
 								dispatch={this.props.dispatch} />
+							{isAdmin &&
+								<div style={styles.editButton}>
+									<Link className={'pt-button pt-icon-edit'} to={'/' + journal.slug + '/edit'} >Edit Journal</Link>
+								</div>
+							}
 						</div>
 					}
 					logo={this.state.logo || journal.logo}
@@ -198,11 +201,11 @@ export const Journal = React.createClass({
 									error={this.props.journalData.putDataError}
 									dispatch={this.props.dispatch} />
 							);
-						case 'collection':
+						case 'page':
 							return (
-								<JournalCollection 
+								<JournalPage 
 									journal={journal}
-									collection={collection} />
+									page={page} />
 							);
 						case 'followers':
 							return (
@@ -219,7 +222,7 @@ export const Journal = React.createClass({
 											<div className="pt-button-group pt-minimal">
 												<Link to={{ pathname: '/' + journal.slug, query: { ...query, view: undefined } }} className={view === undefined || view === 'featured' ? 'pt-button pt-active' : 'pt-button'}>Featured</Link>
 												<Link to={{ pathname: '/' + journal.slug, query: { ...query, view: 'submitted' } }} className={view === 'submitted' ? 'pt-button pt-active' : 'pt-button'}>Submitted</Link>
-												<Link to={{ pathname: '/' + journal.slug, query: { ...query, view: 'collections' } }} className={view === 'collections' ? 'pt-button pt-active' : 'pt-button'}>Collections</Link>
+												<Link to={{ pathname: '/' + journal.slug, query: { ...query, view: 'pages' } }} className={view === 'pages' ? 'pt-button pt-active' : 'pt-button'}>Pages</Link>
 											</div>
 										</div>
 										<div style={styles.headerRight}>
@@ -262,11 +265,11 @@ export const Journal = React.createClass({
 											dispatch={this.props.dispatch} />
 									}
 
-									{query.view === 'collections' &&
-										<JournalCollections
+									{query.view === 'pages' &&
+										<JournalPages
 											journal={journal}
-											isLoading={this.props.journalData.collectionsLoading}
-											error={this.props.journalData.collectionsError}
+											isLoading={this.props.journalData.pagesLoading}
+											error={this.props.journalData.pagesError}
 											dispatch={this.props.dispatch} />
 									}
 								</div>
@@ -295,8 +298,7 @@ styles = {
 
 	},
 	editButton: {
-		// display: 'block',
-		marginRight: '0.5em',
+		marginTop: '0.5em',
 	},
 	followButtonWrapper: {
 		// float: 'right',

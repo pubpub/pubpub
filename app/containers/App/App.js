@@ -2,18 +2,13 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { StyleRoot } from 'radium';
 import Helmet from 'react-helmet';
-import { IntlProvider, addLocaleData } from 'react-intl';
-import en from 'react-intl/locale-data/en';
-import fr from 'react-intl/locale-data/fr';
-import es from 'react-intl/locale-data/es';
-import { AppNav, AppFooter } from 'components';
+import { IntlProvider } from 'react-intl';
+import { AppNav, AppFooter, Announcements } from 'components';
 import { login, logout } from './actions';
 
 require('../../../static/blueprint.scss');
-require('../../../static/style.css');
-
-
-addLocaleData([...en, ...fr, ...es]);
+require('../../../static/style.scss');
+require('../../../static/pubBody.scss');
 
 export const App = React.createClass({
 	propTypes: {
@@ -33,53 +28,53 @@ export const App = React.createClass({
 		this.props.dispatch(login());
 	},
 
-	// componentWillReceiveProps(nextProps) {
-	// 	if (this.props.accountData.user.id && !nextProps.accountData.user.id) {
-	// 		window.location.reload();
-	// 	}
-	// },
-
 	logoutHandler: function() {
 		this.props.dispatch(logout());
 	},
 
+	isProduction: function() {
+		const hostname = window.location.hostname;
+		if (hostname === 'dev.pubpub.org' || hostname === 'staging.pubpub.org') {
+			return false;
+		}
+		return true;
+	},
+
 	render() {
-		const messages = {};
-		const locale = 'en';
-		// const loginFinished = this.props.appData.loginFinished;
-		// const hiddenStyle = loginFinished
-		// 	? {}
-		// 	: {
-		// 		height: '0px',
-		// 		overflow: 'hidden',
-		// 	};
+		const loginFinished = this.props.appData.loginFinished;
+		const hiddenStyle = loginFinished
+			? {}
+			: { height: '0px', overflow: 'hidden', opacity: 0 };
 		return (
-			<IntlProvider locale={locale} messages={messages}>
+			<IntlProvider locale={'en'} messages={{}}>
 				<StyleRoot>
 					<Helmet 
-						title="PubPub Test"  
+						title="PubPub"  
 						meta={[
-							{ name: 'description', content: 'A simple tool testing PubPub v3' },
-							{ property: 'og:title', content: 'PubPub Test' },
+							{ name: 'ROBOTS', content: this.isProduction() ? 'INDEX, FOLLOW' : 'NOINDEX, NOFOLLOW' },
+							{ name: 'description', content: 'PubPub is a free and open tool for collaborative editing, instant publishing, continuous review, and grassroots journals.' },
+							{ property: 'og:title', content: 'PubPub' },
 							{ property: 'og:type', content: 'website' },
-							{ property: 'og:description', content: 'A simple tool testing PubPub v3' },
-							{ property: 'og:url', content: 'https://www.listoflinks.co/' },
-							{ property: 'og:image', content: 'https://www.listoflinks.co/static/logo_large.png' },
-							{ property: 'og:image:url', content: 'https://www.listoflinks.co/static/logo_large.png' },
+							{ property: 'og:description', content: 'PubPub is a free and open tool for collaborative editing, instant publishing, continuous review, and grassroots journals.' },
+							{ property: 'og:url', content: 'https://www.pubpub.org/' },
+							{ property: 'og:image', content: 'https://assets.pubpub.org/_site/logo_dark.png' },
+							{ property: 'og:image:url', content: 'https://assets.pubpub.org/_site/logo_dark.png' },
 							{ property: 'og:image:width', content: '500' },
+							{ property: 'fb:app_id', content: '924988584221879' },
 							{ name: 'twitter:card', content: 'summary' },
-							{ name: 'twitter:site', content: '@listoflinks' },
-							{ name: 'twitter:title', content: 'List of Links' },
-							{ name: 'twitter:description', content: 'A simple tool testing PubPub v3' },
-							{ name: 'twitter:image', content: 'https://www.listoflinks.co/static/logo_large.png' },
-							{ name: 'twitter:image:alt', content: 'Logo for List of Links' }
+							{ name: 'twitter:site', content: '@pubpub' },
+							{ name: 'twitter:title', content: 'PubPub' },
+							{ name: 'twitter:description', content: 'PubPub is a free and open tool for collaborative editing, instant publishing, continuous review, and grassroots journals.' },
+							{ name: 'twitter:image', content: 'https://assets.pubpub.org/_site/logo_dark.png' },
+							{ name: 'twitter:image:alt', content: 'Logo for PubPub' }
 						]} 
 					/> 
-					{/*<div style={hiddenStyle}>*/}
+					<div style={hiddenStyle}>
+						<Announcements />
 						<AppNav accountData={this.props.accountData} pubData={this.props.pubData} journalData={this.props.journalData} location={this.props.location} params={this.props.params} logoutHandler={this.logoutHandler} />
 						<div style={{ minHeight: 'calc(100vh - 75px)' }}>{this.props.children}</div>
 						<AppFooter />
-					{/*</div>*/}
+					</div>
 				</StyleRoot>
 			</IntlProvider>
 		);

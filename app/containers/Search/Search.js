@@ -58,7 +58,7 @@ export const Search = React.createClass({
 		const pathname = nextProps.location.pathname;
 		const mode = query.mode;
 
-		const currentModeCount = mode ? searchData[mode].length : 0;
+		const currentModeCount = mode && searchData[mode] ? searchData[mode].length : 0;
 		const finishedLoading = this.props.searchData.loading && !nextProps.searchData.loading;
 		if (finishedLoading && currentModeCount === 0) {
 			let nextMode;
