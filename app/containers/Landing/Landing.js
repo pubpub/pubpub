@@ -106,8 +106,8 @@ export const Landing = React.createClass({
 
 		// Iterate over all activities and add create keys based on the actor-object, actor-target, or target values
 		// Keys are also set with the date of the activity, so only same-day activities get grouped.
-		// The key is checked across a list of approved groups per type. If valid, that specific type of key (keyTarget, keyActorObject or KeyActorTarget) is 
-		// added to the groups object. 
+		// The key is checked across a list of approved groups per type. If valid, that specific type of key (keyTarget, keyActorObject or KeyActorTarget) is
+		// added to the groups object.
 		// Objects that are not an approved verb type for groups simply get added to the groups object with their id as key
 		// At the end, we have a groups objet that has arrays organized by the specfic (groupable) keys.
 		// We iterate over these keys, and if length === 1, pull out the single activity
@@ -146,7 +146,7 @@ export const Landing = React.createClass({
 					groups[keyTarget].push(activity);
 				} else {
 					groups[keyTarget] = [activity];
-				}	
+				}
 			} else if (actorTargetGroups.includes(activity.verb)) {
 				if (keyActorTarget in groups) {
 					groups[keyActorTarget].push(activity);
@@ -168,7 +168,7 @@ export const Landing = React.createClass({
 			} else {
 				groups[activity.id] = [activity];
 			}
-		});		
+		});
 
 		const realActivities = Object.keys(groups).map((activityGroupKey)=> {
 			const activityGroup = groups[activityGroupKey];
@@ -194,8 +194,7 @@ export const Landing = React.createClass({
 				{!user.id &&
 					<LandingAbout dispatch={this.props.dispatch} landingData={this.props.landingData} signUpData={this.props.signUpData} />
 				}
-
-				
+      
 				{user.id &&
 
 					<div style={styles.activitiesTable}>
@@ -208,11 +207,11 @@ export const Landing = React.createClass({
 									<div className="pt-button-group pt-minimal">
 										{/* <Link to={{ pathname: '/', query: { ...query, mode: 'global', filter: undefined } }} className={mode === 'global' ? 'pt-button pt-active' : 'pt-button'}>Global</Link> */}
 										<Link to={{ pathname: '/', query: { ...query, mode: undefined, filter: undefined } }} className={mode === 'following' ? 'pt-button pt-active' : 'pt-button'}>Following</Link>
-										<Link to={{ pathname: '/', query: { ...query, mode: 'you', filter: undefined } }} className={mode === 'you' ? 'pt-button pt-active' : 'pt-button'}>Your Things</Link>
+										<Link to={{ pathname: '/', query: { ...query, mode: 'you', filter: undefined } }} className={mode === 'you' ? 'pt-button pt-active' : 'pt-button'}>Your Activity</Link>
 									</div>
 								</div>
 								<div style={styles.headerRight}>
-									<DropdownButton 
+									<DropdownButton
 										content={
 											<Menu>
 												{filterList.map((filter, index)=> {
@@ -225,14 +224,14 @@ export const Landing = React.createClass({
 												})}
 											</Menu>
 										}
-										title={'Filter: ' + ((filterMode === 'People' && mode === 'you') ? 'You' : filterMode)} 
+										title={'Filter: ' + ((filterMode === 'People' && mode === 'you') ? 'You' : filterMode)}
 										position={2} />
 								</div>
 							</div>
 
 							{realActivities.map((activity)=> {
 								if (Array.isArray(activity)) {
-									return <ActivityGroup key={'activityGroup-' + activity[0].id} activities={activity} />;	
+									return <ActivityGroup key={'activityGroup-' + activity[0].id} activities={activity} />;
 								}
 								return <ActivityItem key={'activity-' + activity.id} activity={activity} />;
 							})}
@@ -242,7 +241,7 @@ export const Landing = React.createClass({
 									title={'No Activities'}
 									visual={'pulse'} />
 							}
-							
+
 						</div>
 
 						<div style={styles.rightPanel}>
@@ -254,7 +253,7 @@ export const Landing = React.createClass({
 										{!!assetPubs.length &&
 											<Link to={'/pubs/create'} className={'pt-button pt-icon-add'} style={styles.sideButton}>New</Link>
 										}
-										
+
 									</div>
 									<div className="pt-dialog-body">
 										{assetPubs.map((pub)=> {
@@ -270,8 +269,8 @@ export const Landing = React.createClass({
 											</div>
 										}
 									</div>
-										
-									
+
+
 								</div>
 
 								<div style={styles.rightSection} className={'pt-card pt-elevation-0'}>
@@ -279,9 +278,9 @@ export const Landing = React.createClass({
 										{/* <span className="pt-icon-large pt-icon-applications" /> */}
 										<h5>Your Journals</h5>
 										{!!assetJournals.length &&
-											<Link to={'/journals/create'} className={'pt-button pt-icon-add'} style={styles.sideButton}>New</Link>	
+											<Link to={'/journals/create'} className={'pt-button pt-icon-add'} style={styles.sideButton}>New</Link>
 										}
-										
+
 									</div>
 									<div className="pt-dialog-body">
 										{assetJournals.map((journal)=> {
@@ -298,7 +297,7 @@ export const Landing = React.createClass({
 										}
 									</div>
 								</div>
-								
+
 
 							</div>
 						</div>
@@ -430,5 +429,5 @@ styles = {
 	sideButton: {
 		margin: '.5em',
 	},
-	
+
 };

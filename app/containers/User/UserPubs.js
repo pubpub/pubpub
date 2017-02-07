@@ -88,12 +88,12 @@ export const UserPubs = React.createClass({
 						<div className="pt-button-group pt-minimal">
 							<Link to={{ pathname: this.props.pathname, query: { ...query, mode: undefined } }} className={mode === undefined || mode === 'authored' ? 'pt-button pt-active' : 'pt-button'}>Authored</Link>
 							<Link to={{ pathname: this.props.pathname, query: { ...query, mode: 'contributed' } }} className={mode === 'contributed' ? 'pt-button pt-active' : 'pt-button'}>Contributed</Link>
-							<Link to={{ pathname: this.props.pathname, query: { ...query, mode: 'discussions' } }} className={mode === 'discussions' ? 'pt-button pt-active' : 'pt-button'}>Discussions</Link>
+							<Link to={{ pathname: this.props.pathname, query: { ...query, mode: 'discussions' } }} className={mode === 'discussions' ? 'pt-button pt-active' : 'pt-button'}>Discussed</Link>
 							{/* <Link to={{ pathname: this.props.pathname, query: { ...query, mode: 'all' } }} className={mode === 'all' ? 'pt-button pt-active' : 'pt-button'}>All</Link> */}
 						</div>
 					</div>
 					<div style={styles.headerRight}>
-						<DropdownButton 
+						<DropdownButton
 							content={
 								<Menu>
 									<li className={'pt-menu-header'}><h6>Sort by:</h6></li>
