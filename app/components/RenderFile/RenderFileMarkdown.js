@@ -111,7 +111,7 @@ export const RenderFileMarkdown = React.createClass({
 		if (Tag === 'mention') {
 			const allFiles = this.props.allFiles || [];
 			return allFiles.reduce((previous, current)=> {
-				if (current.type !== 'application/x-bibtex' && current.url.split('.').pop() !== 'bib') { return previous; }
+				if (current.type !== 'application/x-bibtex' && current.url && current.url.split('.').pop() !== 'bib') { return previous; }
 				const bibliography = parseString(current.content);
 				const currentKey = children[0].split('ref/')[1];
 				return <AMA entry={bibliography.entries[currentKey.toLowerCase()]} />;

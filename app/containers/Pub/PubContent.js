@@ -205,14 +205,18 @@ export const PubContent = React.createClass({
 
 				{/* No files associated with Pub yet*/}
 				{!files.length && !this.state.uploading && this.props.pub.canEdit &&
-					<div style={{ paddingTop: '2em'}}>
+					<div style={{ paddingTop: '2em' }}>
 						<NonIdealState
 							action={
-								<div>
+								<div style={{ textAlign: 'center' }}>
 									<label className="pt-button" htmlFor={'add-files'}>
 										Upload Files
 										<input type="file" id={'add-files'} multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
 									</label>
+									<div>
+										<Link to={'/pub/markdown'} style={{ marginRight: '0.5em' }}>How to write with PubPub Markdown</Link>
+									</div>
+									
 									{/*<span style={{ width: '1em', height: '1em', display: 'inline-block' }} />
 									<a className="pt-button" tabIndex="0" role="button" >Open Editor</a>*/}
 
@@ -229,15 +233,16 @@ export const PubContent = React.createClass({
 				{/* Only shown on main Files list view, when not uploading */}
 				{meta === 'files' && !!files.length && !this.state.uploading && !routeFilename && this.props.pub.canEdit &&
 					<div style={styles.topButtons}>
+						<Link to={'/pub/markdown'} style={{ marginRight: '0.5em' }}>Rendering with PubPub Markdown</Link>
 						<label className="pt-button" htmlFor={'upload'}>
 							Upload Files
 							<input id={'upload'} type="file" multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
 						</label>
 
-						<button className={'pt-button'} onClick={this.openEditor} style={{ marginLeft: '1em' }}>
+						{/*<button className={'pt-button'} onClick={this.openEditor} style={{ marginLeft: '1em' }}>
 							Open Editor
 							<span className={'pt-icon-standard  pt-icon-caret-down pt-align-right'} />
-						</button>
+						</button>*/}
 
 					</div>
 				}
