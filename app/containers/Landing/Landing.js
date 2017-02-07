@@ -1,9 +1,11 @@
 import React, { PropTypes } from 'react';
+import Radium from 'radium';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { Menu, NonIdealState } from '@blueprintjs/core';
 import { ActivityItem, ActivityGroup, DropdownButton } from 'components';
 import { getActivities } from './actions';
+import LandingAbout from './LandingAbout';
 
 let styles;
 
@@ -11,6 +13,8 @@ export const Landing = React.createClass({
 	propTypes: {
 		accountData: PropTypes.object,
 		activitiesData: PropTypes.object,
+		landingData: PropTypes.object,
+		signUpData: PropTypes.object,
 		location: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
@@ -188,49 +192,9 @@ export const Landing = React.createClass({
 			<div style={styles.container}>
 
 				{!user.id &&
-					<div>
-						<div style={styles.headerSection}>
-							<div style={styles.headerImage} />
-							<div style={styles.headerContent}>
-								<div style={styles.splashTitle}>Open Publishing</div>
-								<p style={{ fontSize: '1.25em' }}>PubPub is a blah blah blah</p>
-
-								<div className={'pt-button-groupp pt-large'} style={styles.splashButtons}>
-									<Link to={'/pubs/create'} className={'pt-button background-button'} style={{ marginRight: '1em' }}>Start a Pub</Link>
-									<Link to={'/journals/create'} className={'pt-button background-button'} style={{ marginRight: '1em' }}>Start a Journal</Link>
-								</div>
-								<div className="pt-control-group">
-									<div className="pt-input-group">
-										<span className="pt-icon pt-icon-envelope" />
-										<input type="text" className="pt-input" placeholder="Email address" />
-									</div>
-									<button className="pt-button pt-intent-primary">Join PubPub</button>
-								</div>
-							</div>
-						</div>
-
-						<div style={styles.section()}>
-							<div style={styles.sectionContent}>
-								<h2>Pubs</h2>
-							</div>
-						</div>
-
-						<div style={styles.section(true)}>
-							<div style={styles.sectionContent}>
-								<h2>Journals</h2>
-							</div>
-						</div>
-
-						<div style={styles.section()}>
-							<div style={styles.sectionContent}>
-								<h2>Open</h2>
-							</div>
-						</div>
-					</div>
+					<LandingAbout dispatch={this.props.dispatch} landingData={this.props.landingData} signUpData={this.props.signUpData} />
 				}
-
-
-
+      
 				{user.id &&
 
 					<div style={styles.activitiesTable}>
@@ -349,10 +313,12 @@ function mapStateToProps(state) {
 	return {
 		accountData: state.account.toJS(),
 		activitiesData: state.activities.toJS(),
+		landingData: state.landing.toJS(),
+		signUpData: state.signUp.toJS(),
 	};
 }
 
-export default connect(mapStateToProps)(Landing);
+export default connect(mapStateToProps)(Radium(Landing));
 
 styles = {
 	container: {

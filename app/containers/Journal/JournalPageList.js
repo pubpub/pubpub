@@ -8,12 +8,13 @@ import { postLabel, putLabel, deleteLabel } from './actionsLabels';
 
 let styles;
 
-export const JournalCollectionList = React.createClass({
+export const JournalPageList = React.createClass({
 	propTypes: {
 		allLabels: PropTypes.array,
 		selectedLabels: PropTypes.array,
 		pubId: PropTypes.number, // id of the pub the label is applied to
 		journalId: PropTypes.number, // id of the journal owning the labels
+		journalSlug: PropTypes.string,
 		canEdit: PropTypes.bool,
 		canSelect: PropTypes.bool,
 		pathname: PropTypes.string,
@@ -157,19 +158,19 @@ export const JournalCollectionList = React.createClass({
 				{/* Display interface for creating a new label */}
 				{this.state.createOpen &&
 					<div style={styles.labelEditCard} className={allLabels.length ? 'pt-card pt-elevation-2' : ''}>
-						<input type="text" className={'pt-input'} value={this.state.creatingTitle} onChange={this.updateCreateTitle} placeholder={'Collection Name'} style={styles.labelEditInput} />
+						<input type="text" className={'pt-input'} value={this.state.creatingTitle} onChange={this.updateCreateTitle} placeholder={'Page Name'} style={styles.labelEditInput} />
 						
 						<div className="pt-button-group pt-fill" style={styles.labelEditActions}>
 							<button className="pt-button" onClick={this.toggleCreate}>Cancel</button>
-							<button className={this.state.creatingTitle ? 'pt-button pt-intent-primary' : 'pt-button pt-intent-primary pt-disabled'} onClick={this.saveCreate}>Create Collection</button>
+							<button className={this.state.creatingTitle ? 'pt-button pt-intent-primary' : 'pt-button pt-intent-primary pt-disabled'} onClick={this.saveCreate}>Create Page</button>
 						</div>
 					</div>
 				}
 
 				{/* Display button to toggle Label creator */}
 				{this.props.canEdit && !this.state.createOpen &&
-					<Link to={{ pathname: this.props.pathname, query: { ...this.props.query, view: 'collections' } }} className="pt-button pt-fill pt-minimal">
-						Manage Collections
+					<Link to={{ pathname: this.props.pathname, query: { ...this.props.query, view: 'pages' } }} className="pt-button pt-fill pt-minimal">
+						Manage Pages
 					</Link>
 				}
 				
@@ -186,13 +187,13 @@ export const JournalCollectionList = React.createClass({
 						transitionDuration={200}
 					>
 						<span className="pt-tag" style={styles.editLabelsButton}>
-							Collections <span className="pt-icon-standard pt-icon-small-plus" style={styles.editLabelsButtonIcon}/>
+							Pages <span className="pt-icon-standard pt-icon-small-plus" style={styles.editLabelsButtonIcon}/>
 						</span>	
 					</Popover>
 				}
 
 				{selectedLabelsRender.map((label, index)=> {
-					const toObject = { pathname: this.props.pathname, query: { ...this.props.query, label: label.title, path: undefined, author: undefined, sort: undefined, discussion: undefined } };
+					const toObject = { pathname: `/${this.props.journalSlug}/page/${label.slug}` };
 
 					return <Link to={toObject} key={'label-' + index} className="pt-tag" style={[styles.label, { backgroundColor: label.color || '#CED9E0', color: label.color ? '#FFF' : '#293742' }]}>{label.title}</Link>;
 				})}
@@ -204,7 +205,7 @@ export const JournalCollectionList = React.createClass({
 
 });
 
-export default Radium(JournalCollectionList);
+export default Radium(JournalPageList);
 
 styles = {
 	container: {

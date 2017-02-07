@@ -153,7 +153,7 @@ export const JournalAbout = React.createClass({
 
 				<h2><FormattedMessage {...globalMessages.Admins} /></h2>
 				{journal.isAdmin &&
-					<p>Admins are displayed publicly and can feature pubs, organize collections, and add admins.</p>
+					<p>Admins are displayed publicly and can feature pubs, organize pages, and add admins.</p>
 				}
 				
 				{journal.isAdmin &&

@@ -185,13 +185,13 @@ export const globalMessages = defineMessages({
 		id: 'global.Public',
 		defaultMessage: 'Public',
 	},
-	NewCollection: {
-		id: 'global.NewCollection',
-		defaultMessage: 'New Collection',
+	NewPage: {
+		id: 'global.NewPage',
+		defaultMessage: 'New Page',
 	},
-	AddCollection: {
-		id: 'global.AddCollection',
-		defaultMessage: 'Add Collection',
+	AddPage: {
+		id: 'global.AddPage',
+		defaultMessage: 'Add Page',
 	},
 	DeleteAdmin: {
 		id: 'global.DeleteAdmin',
@@ -698,9 +698,9 @@ export const globalMessages = defineMessages({
 		id: 'global.Submit',
 		defaultMessage: 'Submit',
 	},
-	Collections: {
-		id: 'global.Collections',
-		defaultMessage: 'Collections',
+	Pages: {
+		id: 'global.Pages',
+		defaultMessage: 'Pages',
 	},
 	Admins: {
 		id: 'global.Admins',

@@ -1,3 +1,4 @@
+/* global Raven */
 import Immutable from 'immutable';
 import { ensureImmutable } from './index';
 
@@ -98,6 +99,9 @@ export default function reducer(state = defaultState, action) {
 		});
 	case LOGIN_GET_SUCCESS:
 	case LOGIN_POST_SUCCESS:
+		if (window.location.hostname !== 'localhost') {
+			Raven.setUserContext({ username: action.result.username });
+		}
 		return state.merge({
 			loginLoading: false,
 			loginError: undefined,
@@ -112,6 +116,9 @@ export default function reducer(state = defaultState, action) {
 	case LOGOUT_LOAD:
 		return state;
 	case LOGOUT_SUCCESS:
+		if (window.location.hostname !== 'localhost') {
+			Raven.setUserContext();
+		}
 		window.location.reload();
 		// return state.merge({
 		// 	user: {},

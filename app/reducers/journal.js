@@ -71,6 +71,8 @@ const defaultState = Immutable.Map({
 	submitsError: undefined,
 	adminsLoading: false,
 	adminsError: undefined,
+	pagesLoading: false,
+	pagesError: undefined,
 });
 
 /* ----------------------------------------- */
@@ -222,20 +224,29 @@ export default function reducer(state = defaultState, action) {
 		});
 
 	case POST_LABEL_LOAD:
-		return state;	
+		return state.merge({
+			pagesLoading: true,
+			pagesError: undefined,
+		});	
 	case POST_LABEL_SUCCESS:
-		return state.setIn(
-			['journal', 'collections'], 
-			state.getIn(['journal', 'collections']).push(ensureImmutable(action.result))
+		return state.merge({
+			pagesLoading: false,
+			pagesError: undefined,
+		}).setIn(
+			['journal', 'pages'], 
+			state.getIn(['journal', 'pages']).push(ensureImmutable(action.result))
 		);
 	case POST_LABEL_FAIL:
-		return state;
+		return state.merge({
+			pagesLoading: false,
+			pagesError: action.error,
+		});
 
 	case PUT_LABEL_LOAD:
 		return state.setIn(
-			// Update all of the collections associated with a journal. Labels owned by the journal.
-			['journal', 'collections'], 
-			state.getIn(['journal', 'collections']).map((label)=> {
+			// Update all of the pages associated with a journal. Labels owned by the journal.
+			['journal', 'pages'], 
+			state.getIn(['journal', 'pages']).map((label)=> {
 				if (label.get('id') === action.labelId) {
 					return label.merge(action.labelUpdates);
 				}
@@ -263,16 +274,22 @@ export default function reducer(state = defaultState, action) {
 		return state;
 
 	case DELETE_LABEL_LOAD:
-		return state;	
+		return state.merge({
+			pagesLoading: true,
+			pagesError: undefined,
+		});	
 	case DELETE_LABEL_SUCCESS:
-		return state.setIn(
-			// Update all of the collections associated with a journal. 
-			['journal', 'collections'], 
-			state.getIn(['journal', 'collections']).filter((label)=> {
+		return state.merge({
+			pagesLoading: false,
+			pagesError: undefined,
+		}).setIn(
+			// Update all of the pages associated with a journal. 
+			['journal', 'pages'], 
+			state.getIn(['journal', 'pages']).filter((label)=> {
 				return label.get('id') !== action.labelId;
 			})
 		).setIn(
-			// Update all of the collections associated with featured pubs. Labels applied to a featured pub.
+			// Update all of the pages associated with featured pubs. Labels applied to a featured pub.
 			['journal', 'pubFeatures'],
 			state.getIn(['journal', 'pubFeatures']).map((pubFeature)=> {
 				const pubLabels = pubFeature.getIn(['pub', 'labels']);
@@ -286,7 +303,10 @@ export default function reducer(state = defaultState, action) {
 			})
 		);
 	case DELETE_LABEL_FAIL:
-		return state;
+		return state.merge({
+			pagesLoading: false,
+			pagesError: action.error,
+		});
 
 	case POST_PUB_LABEL_LOAD:
 		return state;	

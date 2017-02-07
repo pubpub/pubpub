@@ -31,7 +31,7 @@ export const PubDiffVersions = React.createClass({
 	},
 
 	filterSelect: function(option, string) {
-		const message = option.versionMessage ? option.versionMessage.toLowerCase() : '';
+		const message = option.message ? option.message.toLowerCase() : '';
 		const value = option.value ? option.value.toLowerCase() : '';
 		const lowercaseString = string ? string.toLowerCase() : '';
 
@@ -43,7 +43,7 @@ export const PubDiffVersions = React.createClass({
 		return (
 			<div>
 				<div>{option.label}</div>
-				<div>{option.versionMessage}</div>
+				<div>{option.message}</div>
 				<div>{dateFormat(option.date, 'mmm dd, yyyy HH:MM')}</div>
 			</div>
 		);
@@ -51,7 +51,7 @@ export const PubDiffVersions = React.createClass({
 	buildOption: function(version) {
 		return {
 			label: version.hash,
-			versionMessage: version.versionMessage,
+			message: version.message,
 			date: version.createdAt,
 			value: version.hash,
 		};

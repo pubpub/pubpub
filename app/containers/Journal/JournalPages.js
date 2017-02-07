@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
-import { NonIdealState, Checkbox } from '@blueprintjs/core';
+import { NonIdealState, Checkbox, Button } from '@blueprintjs/core';
 
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
@@ -14,7 +14,7 @@ import { SortableContainer, SortableElement, SortableHandle, arrayMove } from 'r
 let styles = {};
 
 
-export const JournalCollections = React.createClass({
+export const JournalPages = React.createClass({
 	propTypes: {
 		journal: PropTypes.object,
 		isLoading: PropTypes.bool,
@@ -36,16 +36,21 @@ export const JournalCollections = React.createClass({
 	
 	componentWillReceiveProps(nextProps) {
 		if (this.props.isLoading && !nextProps.isLoading && !nextProps.error) {
-			this.setState({ editingLabelId: undefined });	
-			this.setState({ createOpen: false });	
+			this.setState({ 
+				editingLabelId: undefined,
+				createOpen: false,
+				creatingTitle: '',
+				creatingDescription: '',
+				creatingIsDisplayed: true,
+			});	
 		}
 	},
 
-	editClick: function(collection, evt) {
+	editClick: function(page, evt) {
 		this.setState({ 
-			editingLabelId: collection.id,
-			// editingTitle: collection.title,
-			// editingDescription: collection.description,
+			editingLabelId: page.id,
+			// editingTitle: page.title,
+			// editingDescription: page.description,
 		});
 		
 	},
@@ -75,12 +80,12 @@ export const JournalCollections = React.createClass({
 	},
 	deleteEdit: function() {
 		this.props.dispatch(deleteLabel(this.props.journal.id, this.state.editingLabelId));
-		this.setState({ editingLabelId: undefined });
+		// this.setState({ editingLabelId: undefined });
 	},
 
-	toggleIsDisplayed: function(collection, evt) {
-		const labelUpdates = { isDisplayed: !collection.isDisplayed };
-		this.props.dispatch(putLabel(this.props.journal.id, collection.id, labelUpdates));
+	toggleIsDisplayed: function(page, evt) {
+		const labelUpdates = { isDisplayed: !page.isDisplayed };
+		this.props.dispatch(putLabel(this.props.journal.id, page.id, labelUpdates));
 	},
 
 	toggleCreate: function() {
@@ -102,55 +107,55 @@ export const JournalCollections = React.createClass({
 	},
 	saveCreate: function() {
 		if (!this.state.creatingTitle) { return null; }
-		const collections = this.props.journal.collections || [];
-		const sortedCollections = collections.sort((foo, bar)=> {
+		const pages = this.props.journal.pages || [];
+		const sortedPages = pages.sort((foo, bar)=> {
 			if (foo.order < bar.order) { return -1; }
 			if (foo.order > bar.order) { return 1; }
 			return 0;
 		});
-		const order = sortedCollections.length ? sortedCollections[0].order / 2 : 0.5;
+		const order = sortedPages.length ? sortedPages[0].order / 2 : 0.5;
 		this.props.dispatch(postLabel(this.props.journal.id, this.state.creatingTitle, this.state.creatingDescription, this.state.creatingIsDisplayed, order));
-		return this.setState({
-			createOpen: false,
-			creatingTitle: '',
-			creatingDescription: '',
-			creatingIsDisplayed: true,
-		});
+		// return this.setState({
+		// 	createOpen: false,
+		// 	creatingTitle: '',
+		// 	creatingDescription: '',
+		// 	creatingIsDisplayed: true,
+		// });
 	},
 
 	onSortEnd: function({ oldIndex, newIndex }) {
 		if (oldIndex === newIndex) { return null; }
-		const collections = this.props.journal.collections || [];
-		const sortedCollections = collections.sort((foo, bar)=> {
+		const pages = this.props.journal.pages || [];
+		const sortedPages = pages.sort((foo, bar)=> {
 			if (foo.order < bar.order) { return -1; }
 			if (foo.order > bar.order) { return 1; }
 			return 0;
 		});
-		const collection = sortedCollections[oldIndex];
-		const newSortedCollections = arrayMove(sortedCollections, oldIndex, newIndex);
+		const page = sortedPages[oldIndex];
+		const newSortedPages = arrayMove(sortedPages, oldIndex, newIndex);
 
 		let nextOrder;
-		if (newIndex === newSortedCollections.length - 1) {
-			nextOrder = (1 + newSortedCollections[newIndex - 1].order) / 2;			
+		if (newIndex === newSortedPages.length - 1) {
+			nextOrder = (1 + newSortedPages[newIndex - 1].order) / 2;			
 		} else if (newIndex === 0) {
-			nextOrder = newSortedCollections[newIndex + 1].order / 2;
+			nextOrder = newSortedPages[newIndex + 1].order / 2;
 		} else {
-			nextOrder = (newSortedCollections[newIndex + 1].order + newSortedCollections[newIndex - 1].order) / 2;
+			nextOrder = (newSortedPages[newIndex + 1].order + newSortedPages[newIndex - 1].order) / 2;
 		}
 
-		return this.props.dispatch(putLabel(this.props.journal.id, collection.id, { order: nextOrder }));
+		return this.props.dispatch(putLabel(this.props.journal.id, page.id, { order: nextOrder }));
 	},
 
 	render: function() {
 		const journal = this.props.journal || {};
-		const collections = journal.collections || [];
-		const sortedCollections = collections.sort((foo, bar)=> {
+		const pages = journal.pages || [];
+		const sortedPages = pages.sort((foo, bar)=> {
 			if (foo.order < bar.order) { return -1; }
 			if (foo.order > bar.order) { return 1; }
 			return 0;
 		});
 		const metaData = {
-			title: 'Collections · ' + journal.title,
+			title: 'Pages · ' + journal.title,
 		};
 		// const isLoading = this.props.isLoading;
 		// const errorMessage = this.props.error;
@@ -158,10 +163,10 @@ export const JournalCollections = React.createClass({
 		const DragHandle = SortableHandle(() => <span style={styles.dragHandle} className={'pt-icon-standard pt-icon-drag-handle-vertical pt-icon-large'} />); // This can be any component you want
 
 		const SortableItem = SortableElement(({ value })=> {
-			const collection = value || {};
-			const isEditing = this.state.editingLabelId === collection.id;
+			const page = value || {};
+			const isEditing = this.state.editingLabelId === page.id;
 			return (
-				<div style={styles.collectionWrapper}>
+				<div style={styles.pageWrapper}>
 					{journal.isAdmin &&
 						<div style={styles.smallTableCell}>
 							<DragHandle />
@@ -169,36 +174,36 @@ export const JournalCollections = React.createClass({
 					}
 					{!isEditing &&
 						<div style={styles.tableCell}>
-							<Link style={styles.collectionTitle} to={'/' + journal.slug + '/collection/' + collection.title}>{collection.title}</Link>
-							<div style={styles.collectionDescription}>{collection.description}</div>
+							<Link style={styles.pageTitle} to={'/' + journal.slug + '/page/' + page.slug}>{page.title}</Link>
+							<div style={styles.pageDescription}>{page.description}</div>
 						</div>
 					}
 					
 					{!isEditing && journal.isAdmin &&
 						<div style={styles.smallTableCell}>
-							<button className="pt-button pt-icon-edit" style={{ marginBottom: '0.5em' }} onClick={this.editClick.bind(this, collection)}>Edit</button>	
-							<Checkbox checked={collection.isDisplayed} label={'Display in Header'} onChange={this.toggleIsDisplayed.bind(this, collection)} />
+							<button className="pt-button pt-icon-edit" style={{ marginBottom: '0.5em' }} onClick={this.editClick.bind(this, page)}>Edit</button>	
+							<Checkbox checked={page.isDisplayed} label={'Display in Header'} onChange={this.toggleIsDisplayed.bind(this, page)} />
 						</div>
 						
 					}
 
 					{isEditing &&
-						<div style={styles.labelEditCard} className={'pt-card pt-elevation-2'} key={'publabeledit- ' + collection.id}>
-							<label key={'thinger' + collection.id}>
+						<div style={styles.labelEditCard} className={'pt-card pt-elevation-2'} key={'publabeledit- ' + page.id}>
+							<label key={'thinger' + page.id}>
 								Title
 								{/* <input type="text" className={'pt-input'} value={this.state.editingTitle} onChange={this.updateEditTitle} style={styles.labelEditInput} /> */}
-								<input type="text" className={'pt-input'} id={'editTitle'} defaultValue={collection.title} style={styles.labelEditInput} />
+								<input type="text" className={'pt-input'} id={'editTitle'} defaultValue={page.title} style={styles.labelEditInput} />
 							</label>
 							<label>
 								Description
 								{/* <textarea type="text" className={'pt-input'} value={this.state.editingDescription} onChange={this.updateEditDescription} style={styles.labelEditInput} /> */}
-								<textarea type="text" className={'pt-input'} id={'editDescription'} defaultValue={collection.description} style={styles.labelEditInput} />
+								<textarea type="text" className={'pt-input'} id={'editDescription'} defaultValue={page.description} style={styles.labelEditInput} />
 							</label>
 							
 							<div className="pt-button-group" style={styles.labelEditActions}>
-								<button className="pt-button pt-minimal pt-icon-trash" onClick={this.deleteEdit} />
+								<Button loading={this.props.isLoading} className="pt-button pt-minimal pt-icon-trash" onClick={this.deleteEdit} />
 								<button className="pt-button" onClick={this.cancelEdit}>Cancel</button>
-								<button className="pt-button pt-intent-primary" onClick={this.saveEdit.bind(this, collection)}>Save Label</button>
+								<button className="pt-button pt-intent-primary" onClick={this.saveEdit.bind(this, page)}>Save Page</button>
 							</div>
 						</div>
 					}
@@ -219,13 +224,13 @@ export const JournalCollections = React.createClass({
 		return (
 			<div>
 				<Helmet {...metaData} />
-				{!!sortedCollections.length &&
-					<h2>Collections</h2>
+				{!!sortedPages.length &&
+					<h2>Pages</h2>
 				}
 
-				{!this.state.createOpen && !!sortedCollections.length && journal.isAdmin &&
+				{!this.state.createOpen && !!sortedPages.length && journal.isAdmin &&
 					<div style={{ textAlign: 'right' }}>
-						<button className={'pt-button pt-intent-primary'} onClick={this.toggleCreate}>Create New Collection</button>
+						<button className={'pt-button pt-intent-primary'} onClick={this.toggleCreate}>Create New Page</button>
 					</div>
 				}
 
@@ -233,30 +238,30 @@ export const JournalCollections = React.createClass({
 					<div style={styles.labelEditCard} className={'pt-card pt-elevation-2'}>
 						<label>
 							Title
-							<input type="text" className={'pt-input'} value={this.state.creatingTitle} onChange={this.updateCreateTitle} placeholder={'Collection Name'} style={styles.labelEditInput} />
+							<input type="text" className={'pt-input'} value={this.state.creatingTitle} onChange={this.updateCreateTitle} placeholder={'Page Name'} style={styles.labelEditInput} />
 						</label>
 						<label>
 							Description
-							<textarea type="text" className={'pt-input'} value={this.state.creatingDescription} onChange={this.updateCreateDescription} placeholder={'Collection Description'} style={styles.labelEditInput} />
+							<textarea type="text" className={'pt-input'} value={this.state.creatingDescription} onChange={this.updateCreateDescription} placeholder={'Page Description'} style={styles.labelEditInput} />
 						</label>
 						
 						<Checkbox checked={this.state.creatingIsDisplayed} label={'Display in Header'} onChange={this.updateCreateIsDisplayed} />
 
 						<div className="pt-button-group" style={styles.labelEditActions}>
 							<button className="pt-button" onClick={this.toggleCreate}>Cancel</button>
-							<button className={this.state.creatingTitle ? 'pt-button pt-intent-primary' : 'pt-button pt-intent-primary pt-disabled'} onClick={this.saveCreate}>Create Collection</button>
+							<Button loading={this.props.isLoading} className={this.state.creatingTitle ? 'pt-button pt-intent-primary' : 'pt-button pt-intent-primary pt-disabled'} onClick={this.saveCreate} text={'Create Page'} />
 						</div>
 					</div>
 				}
 
-				{!this.state.createOpen && !sortedCollections.length &&
+				{!this.state.createOpen && !sortedPages.length &&
 					<NonIdealState
-						action={<button className={'pt-button pt-intent-primary'} onClick={this.toggleCreate}>Create New Collection</button>}
-						description={'Collections can be used to group featured pubs together.'}
-						title={'No Collections'}
+						action={journal.isAdmin ? <button className={'pt-button pt-intent-primary'} onClick={this.toggleCreate}>Create New Page</button> : undefined}
+						description={journal.isAdmin ? 'Pages can be used to group featured pubs together.' : ''}
+						title={'No Pages'}
 						visual={'application'} />
 				}
-				<SortableList items={sortedCollections} onSortEnd={this.onSortEnd} useDragHandle={true} lockAxis={'y'} />
+				<SortableList items={sortedPages} onSortEnd={this.onSortEnd} useDragHandle={true} lockAxis={'y'} />
 
 			</div>
 		);
@@ -264,10 +269,10 @@ export const JournalCollections = React.createClass({
 
 });
 
-export default Radium(JournalCollections);
+export default Radium(JournalPages);
 
 styles = {
-	collectionWrapper: {
+	pageWrapper: {
 		margin: '1em 0em',
 		borderTop: '1px solid #DDD',
 		display: 'table',
@@ -288,12 +293,12 @@ styles = {
 		cursor: 'move',
 		padding: '.5em',
 	},
-	collectionTitle: {
+	pageTitle: {
 		display: 'block',
 		fontWeight: 'bold',
 		fontSize: '1.2em',
 	},
-	collectionDescription: {
+	pageDescription: {
 		padding: '0.5em 0em',
 	},
 	labelEditInput: {

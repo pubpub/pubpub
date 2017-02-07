@@ -93,7 +93,7 @@ export function putDiscussion(pubId, title, description) {
 	};
 }
 
-export function postDiscussionVersion(pubId, versionMessage, isPublished, files, defaultFile, newFileAttribution, newFileRelations) {
+export function postDiscussionVersion(pubId, message, isPublished, files, defaultFile, newFileAttribution, newFileRelations) {
 	return (dispatch) => {
 		dispatch({ type: POST_DISCUSSION_VERSION_LOAD });
 
@@ -105,7 +105,7 @@ export function postDiscussionVersion(pubId, versionMessage, isPublished, files,
 			},
 			body: JSON.stringify({
 				pubId: pubId, 
-				versionMessage: versionMessage, 
+				message: message, 
 				isPublished: isPublished, 
 				files: files, 
 				defaultFile: defaultFile,

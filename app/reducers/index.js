@@ -9,6 +9,7 @@ import followButton from './followButton';
 import highlight from './highlight';
 import journal from './journal';
 import label from './label';
+import landing from './landing';
 import login from './login';
 import pub from './pub';
 import search from './search';
@@ -39,6 +40,7 @@ export default combineReducers({
 	highlight,
 	journal,
 	label,
+	landing,
 	login,
 	pub,
 	search,

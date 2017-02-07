@@ -41,3 +41,15 @@ $dark-navbar-background-color: $dark-gray2 !default;
 // Import Core Blueprint sass
 // ****************************
 @import "~@blueprintjs/core/src/blueprint.scss";
+
+// Import Custom Icon Fonts
+// ****************************
+@font-face {
+	font-family: 'fontello';
+	src: url('/static/assets/fontello.eot?91611267');
+	src: url('/static/assets/fontello.eot?91611267#iefix') format('embedded-opentype'),url('/static/assets/fontello.woff2?91611267') format('woff2'), url('/static/assets/fontello.woff?91611267') format('woff'), url('/static/assets/fontello.ttf?91611267') format('truetype'), url('/static/assets/fontello.svg?91611267#fontello') format('svg');
+}
+ 
+.pt-icon-twitter:before { font-family: "fontello"; content: '\f099'; }
+.pt-icon-github:before { font-family: "fontello"; content: '\f300'; }
+.pt-icon-facebook:before { font-family: "fontello"; content: '\f308'; }

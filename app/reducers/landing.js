@@ -5,10 +5,10 @@ import { ensureImmutable } from './index';
 // Load Actions
 /* ---------- */
 import {
-	CREATE_SIGN_UP_LOAD,
-	CREATE_SIGN_UP_SUCCESS,
-	CREATE_SIGN_UP_FAIL,
-} from 'containers/SignUp/actions';
+	GET_LANDING_FEATURES_LOAD,
+	GET_LANDING_FEATURES_SUCCESS,
+	GET_LANDING_FEATURES_FAIL,
+} from 'containers/Landing/actions';
 
 /* ------------------- */
 // Define Default State
@@ -16,8 +16,8 @@ import {
 const defaultState = Immutable.Map({
 	loading: false,
 	error: undefined,
-	destinationEmail: undefined,
-	resendSuccess: false,
+	pubs: [],
+	journals: [],
 });
 
 /* ----------------------------------------- */
@@ -26,24 +26,24 @@ const defaultState = Immutable.Map({
 export default function reducer(state = defaultState, action) {
 	switch (action.type) {
 	
-	case CREATE_SIGN_UP_LOAD:
-		return state.merge({
-			loading: true,
-			resendSuccess: false,
-			error: undefined,
-		});	
-	case CREATE_SIGN_UP_SUCCESS:
+	case GET_LANDING_FEATURES_LOAD:
 		return state.merge({
 			loading: false,
-			destinationEmail: action.email,
-			resendSuccess: !!state.get('destinationEmail'),
-			error: undefined,
+			error: undefined
 		});
-	case CREATE_SIGN_UP_FAIL:
+
+	case GET_LANDING_FEATURES_SUCCESS:
 		return state.merge({
 			loading: false,
-			error: action.error,
-			resendSuccess: false,
+			error: undefined,
+			pubs: action.result.pubs,
+			journals: action.result.journals
+		});
+
+	case GET_LANDING_FEATURES_FAIL:
+		return state.merge({
+			loading: false,
+			error: action.error
 		});
 
 	default:
