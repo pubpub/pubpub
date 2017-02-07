@@ -306,7 +306,7 @@ styles = {
 	},
 	content: (showAllDiscussions)=> {
 		return {
-			height: 'calc(100% - 80px)', 
+			height: 'calc(100vh - 80px)', 
 			width: '100%', 
 			overflow: showAllDiscussions ? 'hidden' : 'visible', 
 			overflowY: showAllDiscussions ? 'scroll' : 'visible', 

@@ -351,7 +351,7 @@ export const PubDiscussion = React.createClass({
 					<div style={styles.contentBottom(isExpanded)}>
 						<div style={styles.bottomFade}></div>
 						<form>
-							<textarea onFocus={this.expandReply} onBlur={this.collapseReply} style={styles.bottomInput(isExpanded)} resize={'none'} className={'pt-input'} type={'text'} value={this.state.description} onChange={this.inputUpdate.bind(this, 'description')} placeholder={'Reply to discussion'} />	
+							<textarea onFocus={this.expandReply} onBlur={this.collapseReply} style={styles.bottomInput(isExpanded)} className={'pt-input'} type={'text'} value={this.state.description} onChange={this.inputUpdate.bind(this, 'description')} placeholder={'Reply to discussion'} />	
 							{isExpanded &&
 								<div>
 									<Button text={'Submit Reply'} loading={isLoading} onClick={this.createSubmit} className={'pt-intent-primary'}/>
@@ -390,7 +390,7 @@ styles = {
 		padding: 0,
 	},
 	contentScroll: {
-		maxHeight: 'calc(100% - 50px)',
+		maxHeight: 'calc(100vh - 50px)',
 		overflow: 'hidden',
 		overflowY: 'scroll',
 		padding: '20px 20px 0px'

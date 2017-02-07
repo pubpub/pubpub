@@ -37,6 +37,7 @@ export const PubSidePanel = React.createClass({
 	},
 
 	positionContainer: function(evt) {
+		console.log('resizing');
 		const component = document.getElementById(this.props.parentId);
 		if (!component) { return null; }
 		const boundingRect = component.getBoundingClientRect();
