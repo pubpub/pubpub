@@ -117,7 +117,7 @@ export const PubHeader = React.createClass({
 
 						<div style={styles.buttonWrapper} className={'button-wrapper'}>
 							<div className={'pt-button-group'}>
-								<Link to={`/pub/${pub.slug}/versions`} className={'pt-button pt-icon-edit'}>Edit Pub</Link>
+								<Link to={`/pub/${pub.slug}/files`} className={'pt-button pt-icon-edit'}>Edit Pub</Link>
 								{/*<Link to={'/pub/${pub.slug}/forks'} className={'pt-button pt-icon-fork'}>15</Link>*/}
 								{/*<Link to={'/pub/${pub.slug}/forks'} className={'pt-button'}>15</Link>*/}
 							</div>

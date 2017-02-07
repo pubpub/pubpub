@@ -49,7 +49,7 @@ export const RenderFile = React.createClass({
 		case 'ppub':
 			const content = JSON.parse(file.content);
 			return (
-				<div id={wrapperId} className={'pub-body'} style={styles.contentWrapper}>
+				<div id={wrapperId} style={styles.contentWrapper}>
 					{false && !this.props.noHighlighter &&
 						<Highlighter />
 					}
@@ -58,7 +58,7 @@ export const RenderFile = React.createClass({
 			);
 		case 'text/markdown':
 			return (
-				<div id={wrapperId} className={'pub-body'} style={styles.contentWrapper}>
+				<div id={wrapperId} style={styles.contentWrapper}>
 					{false && !this.props.noHighlighter &&
 						<Highlighter />
 					}
@@ -70,6 +70,13 @@ export const RenderFile = React.createClass({
 		case 'image/jpeg':
 		case 'image/gif':
 			return <img alt={file.name} src={file.url} style={{ maxWidth: '100%' }} />;
+		case 'video/mp4':
+		case 'mp4':
+			return (
+				<video width={'100%'} controls>
+					<source src={file.url} type={'video/mp4'} />
+				</video>
+			);
 		case 'application/pdf':
 			return (
 				<div id={wrapperId} style={styles.contentWrapper}>

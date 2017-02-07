@@ -171,7 +171,6 @@ export const PubContent = React.createClass({
 		const editorURL = 'https://editor.pubpub.org';
 		const url = `${editorURL}/user/access/${slug}/${userName}/${userAccessToken}`;
 		window.open(url, '_blank');
-		console.log(this.props);
 	},
 
 	render() {
@@ -214,8 +213,8 @@ export const PubContent = React.createClass({
 										Upload Files
 										<input type="file" id={'add-files'} multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
 									</label>
-									<span style={{ width: '1em', height: '1em', display: 'inline-block' }} />
-									<a className="pt-button" tabIndex="0" role="button" >Open Editor</a>
+									{/*<span style={{ width: '1em', height: '1em', display: 'inline-block' }} />
+									<a className="pt-button" tabIndex="0" role="button" >Open Editor</a>*/}
 
 
 								</div>
@@ -367,7 +366,7 @@ export const PubContent = React.createClass({
 
 				{/* Render specific File */}
 				{!!files.length && (meta !== 'files' || (meta !== 'files' && routeFile)) &&
-					<div style={styles.pubStyle}>
+					<div style={styles.pubStyle} className={'pub-body'}>
 						<RenderFile file={routeFile || mainFile} allFiles={files} />
 					</div>
 				}
@@ -448,13 +447,13 @@ styles = {
 	},
 	pubStyle: {
 		// padding: '0em 1.25em',
-		fontFamily: 'Merriweather',
-		fontWeight: 'light',
-		fontSize: '14px',
-		lineHeight: '24px',
+		// fontFamily: 'Merriweather',
+		// fontWeight: 'light',
+		// fontSize: '14px',
+		// lineHeight: '24px',
 		// lineHeight: '1.6em',
 		// fontSize: '1.2em',
-		color: '#333',
+		// color: '#333',
 		maxWidth: '700px',
 	}
 };
