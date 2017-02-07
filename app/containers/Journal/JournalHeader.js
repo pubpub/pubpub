@@ -55,13 +55,13 @@ export const JournalProfileHeader = React.createClass({
 					{/* <Link style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter} to={'/' + journal.slug}>Home</Link>
 					<Link style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter} to={'/' + journal.slug + '/about'}>About</Link> */}
 					{journal.website &&
-						<Link to={journalUrl} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}><span className={'pt-icon-large pt-icon-globe'} /></Link>
+						<a href={journalUrl} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}><span className={'pt-icon-large pt-icon-globe'} /></a>
 					}
 					{journal.twitter &&
-						<Link to={'https://twitter.com/' + journal.twitter} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}><span className={'pt-icon-large pt-icon-twitter'} /></Link>
+						<a href={'https://twitter.com/' + journal.twitter} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}><span className={'pt-icon-large pt-icon-twitter'} /></a>
 					}
 					{journal.facebook &&
-						<Link to={'https://facebook.com/' + journal.facebook} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}><span className={'pt-icon-large pt-icon-facebook'} /></Link>
+						<a href={'https://facebook.com/' + journal.facebook} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}><span className={'pt-icon-large pt-icon-facebook'} /></a>
 					}
 				</div>
 
