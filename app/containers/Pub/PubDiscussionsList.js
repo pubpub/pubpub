@@ -173,7 +173,7 @@ export const PubDiscussionsList = React.createClass({
 
 						<Link to={{ pathname: pathname, query: { ...query, panel: 'new' } }} className="pt-button small-button pt-icon-add" style={styles.topButton}>New Discussion</Link>
 
-						<div style={{ textAlign: 'right' }}>
+						<div style={{ textAlign: 'right', opacity: 0, pointerEvents: 'none' }}>
 							<button role={'button'} className={'pt-button pt-minimal pt-icon-filter-list'}>Filter</button>	
 						</div>
 						
