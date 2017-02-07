@@ -55,12 +55,18 @@ styles = {
 		top: 75,
 		right: 10,
 		zIndex: 100,
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			left: 10,
+		}
 	},
 	announcement: {
 		maxWidth: '400px',
 		display: 'table',
 		marginBottom: '1em',
-		padding: 0
+		padding: 0,
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			maxWidth: '100%',
+		}
 	},
 	announcementContent: {
 		display: 'table-cell',
