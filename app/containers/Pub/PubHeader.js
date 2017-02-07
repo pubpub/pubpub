@@ -115,13 +115,15 @@ export const PubHeader = React.createClass({
 								dispatch={this.props.dispatch} />
 						</div>
 
-						<div style={styles.buttonWrapper} className={'button-wrapper'}>
-							<div className={'pt-button-group'}>
-								<Link to={`/pub/${pub.slug}/files`} className={'pt-button pt-icon-edit'}>Edit Pub</Link>
-								{/*<Link to={'/pub/${pub.slug}/forks'} className={'pt-button pt-icon-fork'}>15</Link>*/}
-								{/*<Link to={'/pub/${pub.slug}/forks'} className={'pt-button'}>15</Link>*/}
+						{(pub.isAuthor || pub.canEdit) &&
+							<div style={styles.buttonWrapper} className={'button-wrapper'}>
+								<div className={'pt-button-group'}>
+									<Link to={`/pub/${pub.slug}/files`} className={'pt-button pt-icon-edit'}>Edit Pub</Link>
+									{/*<Link to={'/pub/${pub.slug}/forks'} className={'pt-button pt-icon-fork'}>15</Link>*/}
+									{/*<Link to={'/pub/${pub.slug}/forks'} className={'pt-button'}>15</Link>*/}
+								</div>
 							</div>
-						</div>
+						}
 
 						{/*<div style={styles.buttonWrapper} className={'button-wrapper'}>
 							<div className={'pt-button-group'}>

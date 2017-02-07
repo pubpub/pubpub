@@ -160,12 +160,12 @@ export const AppNav = React.createClass({
 					<div>
 						<div className={'clearfix'} />
 						<div className={'pt-button-group pt-minimal'} style={{ marginLeft: '45px' }}>
-							<Link className={'pt-button'} role={'button'} key={'journal-home'} to={'/' + journal.slug}>Home</Link>
-							<Link className={'pt-button'} role={'button'} key={'journal-about'} to={'/' + journal.slug + '/about'}>About</Link>
+							<Link className={'pt-button'} role={'button'} key={'journal-home'} to={'/' + headerJournal.slug}>Home</Link>
+							<Link className={'pt-button'} role={'button'} key={'journal-about'} to={'/' + headerJournal.slug + '/about'}>About</Link>
 							{sortedPages.filter((page)=> {
 								return page.isDisplayed;
 							}).map((page)=> {
-								return <Link className={'pt-button'} role={'button'} key={'page-' + page.id} to={'/' + journal.slug + '/page/' + page.slug}>{page.title}</Link>;
+								return <Link className={'pt-button'} role={'button'} key={'page-' + page.id} to={'/' + headerJournal.slug + '/page/' + page.slug}>{page.title}</Link>;
 							})}
 						</div>		
 					</div>
