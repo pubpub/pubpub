@@ -10,7 +10,6 @@ export FileDiff from './FileDiff/FileDiff';
 export ImageCropper from './ImageCropper/ImageCropper';
 export ImageUpload from './ImageUpload/ImageUpload';
 export Loader from './Loader/Loader';
-export MarkdownDocs from './MarkdownDocs/MarkdownDocs';
 export NavContentWrapper from './NavContentWrapper/NavContentWrapper';
 export PreviewPub from './PreviewPub/PreviewPub';
 export PreviewDiscussion from './PreviewDiscussion/PreviewDiscussion';
