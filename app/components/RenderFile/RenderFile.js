@@ -16,6 +16,8 @@ export const RenderFile = React.createClass({
 		file: PropTypes.object,
 		allFiles: PropTypes.array,
 		noHighlighter: PropTypes.bool,
+		query: PropTypes.object,
+		pubSlug: PropTypes.string,
 	},
 
 	renderContent: function(object) {
@@ -62,7 +64,7 @@ export const RenderFile = React.createClass({
 					{false && !this.props.noHighlighter &&
 						<Highlighter />
 					}
-					<RenderFileMarkdown file={file} allFiles={this.props.allFiles} />
+					<RenderFileMarkdown file={file} allFiles={this.props.allFiles} query={this.props.query} pubSlug={this.props.pubSlug} />
 				</div>
 			);
 		case 'image/png':

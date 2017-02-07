@@ -1,13 +1,14 @@
 /* eslint-disable no-param-reassign */
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
+import { Link } from 'react-router';
 import MDReactComponent from './ReactMarkdownMD';
 import sub from 'markdown-it-sub';
 import sup from 'markdown-it-sup';
 import mk from 'markdown-it-katex';
 import katex from 'katex';
-import { parseString } from 'bibliography';
-import AMA from 'bibliography/AMA';
+// import { parseString } from 'bibliography';
+// import AMA from 'bibliography/AMA';
 
 import RenderFile from './RenderFile';
 
@@ -95,35 +96,67 @@ export const RenderFileMarkdown = React.createClass({
 	propTypes: {
 		file: PropTypes.object,
 		allFiles: PropTypes.array,
+		pubSlug: PropTypes.string,
+		query: PropTypes.object,
+
 	},
 
 	handleIterate: function(Tag, props, children, level) {
-		if (Tag === 'file') {
+		// if (Tag === 'file') {
+		// 	const allFiles = this.props.allFiles || [];
+		// 	const file = allFiles.reduce((previous, current)=> {
+		// 		if (current.name === children[0]) { return current; }
+		// 		return previous;
+		// 	}, undefined);
+		// 	if (file) {
+		// 		return <RenderFile file={file} allFiles={this.props.allFiles} />;	
+		// 	}
+		// }
+		if (Tag === 'img') {
 			const allFiles = this.props.allFiles || [];
 			const file = allFiles.reduce((previous, current)=> {
-				if (current.name === children[0]) { return current; }
+				if (current.name === props.src) { return current; }
 				return previous;
 			}, undefined);
 			if (file) {
 				return <RenderFile file={file} allFiles={this.props.allFiles} />;	
 			}
+			return <Tag {...props} />;
 		}
-		if (Tag === 'mention') {
+		if (Tag === 'a') {
 			const allFiles = this.props.allFiles || [];
-			return allFiles.reduce((previous, current)=> {
-				if (current.type !== 'application/x-bibtex' && current.url && current.url.split('.').pop() !== 'bib') { return previous; }
-				const bibliography = parseString(current.content);
-				const currentKey = children[0].split('ref/')[1];
-				return <AMA entry={bibliography.entries[currentKey.toLowerCase()]} />;
+			const file = allFiles.reduce((previous, current)=> {
+				if (current.name === props.href) { return current; }
+				return previous;
 			}, undefined);
+			if (file) {
+				return <Link to={{ pathname: `/pub/${this.props.pubSlug}/files/${file.name}`, query: this.props.query }}>{children[0]}</Link>;	
+			}
 		}
-		if (Tag === 'img' || Tag === 'hr' || Tag === 'br') { return <Tag {...props} />; }
+		// if (Tag === 'mention') {
+		// 	// const allFiles = this.props.allFiles || [];
+		// 	// return allFiles.reduce((previous, current)=> {
+		// 	// 	if (current.type !== 'application/x-bibtex' && current.url && current.url.split('.').pop() !== 'bib') { return previous; }
+		// 	// 	const bibliography = parseString(current.content);
+		// 	// 	const currentKey = children[0].split('ref/')[1];
+		// 	// 	return <AMA entry={bibliography.entries[currentKey.toLowerCase()]} />;
+		// 	// }, undefined);
+		// 	const allFiles = this.props.allFiles || [];
+		// 	const file = allFiles.reduce((previous, current)=> {
+		// 		if (current.name === children[0]) { return current; }
+		// 		return previous;
+		// 	}, undefined);
+		// 	if (file) {
+		// 		return <Link to={{ pathname: `/pub/${this.props.pubSlug}/files/${file.name}`, query: this.props.query }}>{file.name}</Link>;	
+		// 	}
+		// }
+		if (Tag === 'hr' || Tag === 'br') { return <Tag {...props} />; }
 		if (Tag === 'math') {
 			try {
 				if (props['data-type'] === 'math_block') {
-					return <p><math dangerouslySetInnerHTML={{ __html: katex.renderToString(props['data-content'])}} /></p>;	
+					return <p><math dangerouslySetInnerHTML={{ __html: katex.renderToString(props['data-content']) }} /></p>;	
 				}
-				return <math dangerouslySetInnerHTML={{ __html: katex.renderToString(props['data-content'])}} />;
+				return <math dangerouslySetInnerHTML={{ __html: katex.renderToString(props['data-content']) }} />;
 			} catch (err) {
 				return null;
 			}

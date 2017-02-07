@@ -17,7 +17,7 @@ export const PubContent = React.createClass({
 	propTypes: {
 		version: PropTypes.object,
 		pub: PropTypes.object,
-		pubSlug: PropTypes.string,
+		// pubSlug: PropTypes.string,
 		userName: PropTypes.string,
 		userAccessToken: PropTypes.string,
 		params: PropTypes.object,
@@ -372,7 +372,7 @@ export const PubContent = React.createClass({
 				{/* Render specific File */}
 				{!!files.length && (meta !== 'files' || (meta !== 'files' && routeFile)) &&
 					<div style={styles.pubStyle} className={'pub-body'}>
-						<RenderFile file={routeFile || mainFile} allFiles={files} />
+						<RenderFile file={routeFile || mainFile} allFiles={files} pubSlug={this.props.pub.slug} query={this.props.query}/>
 					</div>
 				}
 			</div>
