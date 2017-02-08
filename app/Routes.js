@@ -21,7 +21,6 @@ export default (
 	<Route component={App}>
 		<Route path="/" getComponent={getComponent('Landing')} />
 		<Route path="/login" getComponent={getComponent('Login')} />
-		{/*
 		<Route path="/signup" getComponent={getComponent('SignUp')} />
 		<Route path="/resetpassword" getComponent={getComponent('ResetPassword')} />
 		<Route path="/resetpassword/:resetHash/:username" getComponent={getComponent('ResetPassword')} />
@@ -44,7 +43,6 @@ export default (
 		<Route path="/:slug" getComponent={getComponent('Journal')} />
 		<Route path="/:slug/:mode" getComponent={getComponent('Journal')} />
 		<Route path="/:slug/:mode/:pageSlug" getComponent={getComponent('Journal')} />
-*/}
 		<Route path="*" getComponent={getComponent('NoMatch')} />
 	</Route>
 );

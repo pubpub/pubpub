@@ -29,7 +29,7 @@ module.exports = {
 		js: ['./app/index'],
 		vendor: ['react', 'react-dom', 'radium', 'crypto-js', 'redux', 'rangy', 'immutable', 'intl']
 	},
-	// devtool: '#source-map',
+	devtool: '#source-map',
 	output: {
 		path: path.join(__dirname, 'dist'),
 		filename: '[name].[chunkhash].js',
@@ -50,15 +50,15 @@ module.exports = {
 				NODE_ENV: JSON.stringify('production'),
 			}
 		}),
-		// new webpack.optimize.UglifyJsPlugin({
-		// 	compressor: {
-		// 		warnings: false,
-		// 		screw_ie8: true,
-		// 		unused: true,
-		// 		dead_code: true,
-		// 	},
-		// 	sourceMap: true,
-		// }),
+		new webpack.optimize.UglifyJsPlugin({
+			compressor: {
+				warnings: false,
+				screw_ie8: true,
+				unused: true,
+				dead_code: true,
+			},
+			sourceMap: true,
+		}),
 		new HtmlWebpackPlugin({
 			template: 'index.html',
 			filename: 'index.html',
