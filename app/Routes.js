@@ -2,20 +2,55 @@ import React from 'react';
 import { Route } from 'react-router';
 import App from 'containers/App/App';
 
-// throws an error in the console if the page wasn't able to load
-function errorLoading(error) {
-	throw new Error(`Dynamic page loading failed: ${error}`);
-}
-
-function loadRoute(cb) {
-	return module => cb(null, module.default);
-}
-
 function getComponent(component) {
 	return (location, cb)=> {
-		System.import(`containers/${component}/${component}`).then(loadRoute(cb, false)).catch(errorLoading);
+		System.import(`containers/${component}/${component}`)
+		.then(function(module) {
+			cb(null, module.default);
+		})
+		.catch(function(error) {
+			throw new Error(`Dynamic page loading failed: ${error}`);
+		});
 	};
 }
+
+// function buildProps(componentName) {
+// 	const isProduction = process.env.NODE_ENV === 'production';
+// 	return {
+// 		component: isProduction ? undefined : require(`containers/${componentName}/${componentName}`).default,
+// 		getComponent: isProduction ? getComponent(componentName) : undefined,
+// 	};
+// }
+
+// export default (
+// 	<Route component={App}>
+// 		<Route path="/" {...buildProps('Landing')} />
+// 		<Route path="/login" {...buildProps('Login')} />
+// 		<Route path="/signup" {...buildProps('SignUp')} />
+// 		<Route path="/resetpassword" {...buildProps('ResetPassword')} />
+// 		<Route path="/resetpassword/:resetHash/:username" {...buildProps('ResetPassword')} />
+
+// 		<Route path="/search" {...buildProps('Search')} />
+
+// 		<Route path="/users/create/:hash" {...buildProps('CreateAccount')} />
+// 		<Route path="/user/:username" {...buildProps('User')} />
+// 		<Route path="/user/:username/:mode" {...buildProps('User')} />
+
+// 		<Route path="/label/:title" {...buildProps('Label')} />
+// 		<Route path="/label/:title/:mode" {...buildProps('Label')} />
+
+// 		<Route path="/pubs/create" {...buildProps('CreatePub')} />
+// 		<Route path="/pub/:slug" {...buildProps('Pub')} />
+// 		<Route path="/pub/:slug/:meta" {...buildProps('Pub')} />
+// 		<Route path="/pub/:slug/files/:filename" {...buildProps('Pub')} />
+
+// 		<Route path="/journals/create" {...buildProps('CreateJournal')} />
+// 		<Route path="/:slug" {...buildProps('Journal')} />
+// 		<Route path="/:slug/:mode" {...buildProps('Journal')} />
+// 		<Route path="/:slug/:mode/:pageSlug" {...buildProps('Journal')} />
+// 		<Route path="*" {...buildProps('NoMatch')} />
+// 	</Route>
+// );
 
 export default (
 	<Route component={App}>

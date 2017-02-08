@@ -59,6 +59,8 @@ if (!process.env.NODE_ENV) {
 		stats: {
 			colors: true,
 			hash: false,
+			assets: false,
+			children: false,
 			timings: true,
 			chunks: false,
 			chunkModules: false,
