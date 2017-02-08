@@ -7,7 +7,7 @@ import sub from 'markdown-it-sub';
 import sup from 'markdown-it-sup';
 
 import { NonIdealState } from '@blueprintjs/core';
-import { PreviewPub } from 'components';
+import PreviewPub from 'components/PreviewPub/PreviewPub';
 
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';

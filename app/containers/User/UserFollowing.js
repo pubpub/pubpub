@@ -2,7 +2,10 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { Link } from 'react-router';
 import { Menu, MenuDivider } from '@blueprintjs/core';
-import { PreviewUser, PreviewPub, PreviewJournal, DropdownButton } from 'components';
+import PreviewUser from 'components/PreviewUser/PreviewUser';
+import PreviewPub from 'components/PreviewPub/PreviewPub';
+import PreviewJournal from 'components/PreviewJournal/PreviewJournal';
+import DropdownButton from 'components/DropdownButton/DropdownButton';
 
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';

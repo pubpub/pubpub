@@ -18,16 +18,30 @@ class CleanPlugin {
 	}
 }
 
+// Ideally, webpack should be generating chunks that have deterministic hashes.
+// This is documented here: https://webpack.js.org/guides/caching/#deterministic-hashes
+// Actually making it work though was a nightmare on 2/8/17. Plugins don't seem to work 
+// together and I couldn't ever get the chunk-manigest inlined into the HTML file correctly.
+// A whole day of code lost. Friggin webpack...
+
 module.exports = {
-	entry: './app/index',
-	devtool: '#source-map',
+	entry: {
+		js: ['./app/index'],
+		vendor: ['react', 'react-dom', 'radium', 'crypto-js', 'redux', 'rangy', 'immutable', 'intl']
+	},
+	// devtool: '#source-map',
 	output: {
 		path: path.join(__dirname, 'dist'),
-		filename: 'app.[hash].js',
+		filename: '[name].[chunkhash].js',
+		chunkFilename: '[name].[chunkhash].js',
 		publicPath: '/'
 	},
 	plugins: [
 		new webpack.optimize.OccurrenceOrderPlugin(),
+		new webpack.optimize.CommonsChunkPlugin({
+			name: 'vendor',
+			minChunks: Infinity,
+		}),
 		new CleanPlugin({
 			files: ['dist/*']
 		}),
@@ -36,15 +50,18 @@ module.exports = {
 				NODE_ENV: JSON.stringify('production'),
 			}
 		}),
-		new webpack.optimize.UglifyJsPlugin({
-			compressor: {
-				warnings: false,
-				screw_ie8: true
-			},
-			sourceMap: true,
-		}),
+		// new webpack.optimize.UglifyJsPlugin({
+		// 	compressor: {
+		// 		warnings: false,
+		// 		screw_ie8: true,
+		// 		unused: true,
+		// 		dead_code: true,
+		// 	},
+		// 	sourceMap: true,
+		// }),
 		new HtmlWebpackPlugin({
 			template: 'index.html',
+			filename: 'index.html',
 		}),
 		new HtmlPluginRemove(/<script type="text\/javascript" src="\/app.js"><\/script>/),
 		new CopyWebpackPlugin([

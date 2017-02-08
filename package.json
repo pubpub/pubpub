@@ -56,6 +56,7 @@
     "html-webpack-plugin-remove": "0.0.2",
     "http-proxy": "^1.14.0",
     "immutable": "^3.8.1",
+    "inline-manifest-webpack-plugin": "^3.0.1",
     "intl": "^1.2.5",
     "isomorphic-fetch": "^2.2.1",
     "json-loader": "^0.5.4",
@@ -101,7 +102,7 @@
     "superagent": "^3.0.0",
     "testdom": "^2.0.0",
     "url-loader": "^0.5.7",
-    "webpack": "^2.1.0-beta.25",
+    "webpack": "^2.2.0",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-hot-middleware": "^2.13.2"
   },

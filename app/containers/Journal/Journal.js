@@ -4,9 +4,10 @@ import { Link } from 'react-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 
-import { FollowButton, NoMatch } from 'containers';
+import FollowButton from 'containers/FollowButton/FollowButton';
+import NoMatch from 'containers/NoMatch/NoMatch';
 import { Menu, MenuDivider, Spinner } from '@blueprintjs/core';
-import { DropdownButton } from 'components';
+import DropdownButton from 'components/DropdownButton/DropdownButton';
 
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';

@@ -4,7 +4,7 @@ import React, { PropTypes } from 'react';
 // import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router';
 import Radium from 'radium';
-import { RenderFile } from 'components';
+import RenderFile from 'components/RenderFile/RenderFile';
 import dateFormat from 'dateformat';
 import { globalStyles } from 'utils/globalStyles';
 import { postVersion } from './actionsVersions';

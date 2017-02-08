@@ -6,8 +6,8 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 
 import { Spinner } from '@blueprintjs/core';
-import { NavContentWrapper } from 'components';
-import { FollowButton } from 'containers';
+import NavContentWrapper from 'components/NavContentWrapper/NavContentWrapper';
+import FollowButton from 'containers/FollowButton/FollowButton';
 
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';

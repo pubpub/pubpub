@@ -7,7 +7,7 @@ import Rangy from 'rangy';
 require('rangy/lib/rangy-textrange');
 import * as Marklib from 'marklib';
 
-// import { FollowButton } from 'containers';
+// import FollowButton from 'containers/FollowButton/FollowButton';
 import { FormattedMessage } from 'react-intl';
 import Helmet from 'react-helmet';
 import { NonIdealState, Spinner } from '@blueprintjs/core';
@@ -29,7 +29,7 @@ import PubSettings from './PubSettings';
 import PubVersions from './PubVersions';
 import PubSidePanel from './PubSidePanel';
 import Radium from 'radium';
-import { Tag } from 'components';
+// import Tag from 'components/Tag/Tag';
 import { connect } from 'react-redux';
 import dateFormat from 'dateformat';
 import { getPubData } from './actions';

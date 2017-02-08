@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { browserHistory } from 'react-router';
-import { ImageUpload, ColorPicker } from 'components';
+import ImageUpload from 'components/ImageUpload/ImageUpload';
+import ColorPicker from 'components/ColorPicker/ColorPicker';
 import { StickyContainer, Sticky } from 'react-sticky';
 import { Button, Dialog } from '@blueprintjs/core';
 import { globalStyles } from 'utils/globalStyles';

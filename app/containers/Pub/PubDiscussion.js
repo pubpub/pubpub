@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import Radium, { Style } from 'radium';
-import { Loader, RenderFile } from 'components';
+import Loader from 'components/Loader/Loader';
+import RenderFile from 'components/RenderFile/RenderFile';
 import { globalStyles } from 'utils/globalStyles';
 // import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';

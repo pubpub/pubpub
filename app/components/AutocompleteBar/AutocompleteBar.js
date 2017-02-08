@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
 import Radium, { Style } from 'radium';
 import Select from 'react-select';
-import { SelectOption, SelectValue } from 'components';
+import SelectOption from 'components/SelectOption/SelectOption';
+import SelectValue from 'components/SelectValue/SelectValue';
 import { Button } from '@blueprintjs/core';
 import 'react-select/dist/react-select.css';
 

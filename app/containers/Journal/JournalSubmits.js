@@ -9,7 +9,7 @@ import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
 import { putJournalSubmit, postJournalFeature } from './actionsSubmits';
-import { Loader } from 'components';
+import Loader from 'components/Loader/Loader';
 
 let styles = {};
 

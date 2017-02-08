@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { StyleRoot } from 'radium';
 import Helmet from 'react-helmet';
 import { IntlProvider } from 'react-intl';
-import { AppNav, AppFooter, Announcements } from 'components';
+import AppNav from 'components/AppNav/AppNav';
+import AppFooter from 'components/AppFooter/AppFooter';
+import Announcements from 'components/Announcements/Announcements';
 import { login, logout } from './actions';
 
 require('../../../static/blueprint.scss');

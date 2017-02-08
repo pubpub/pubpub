@@ -4,8 +4,9 @@ import { browserHistory, Link } from 'react-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { Spinner } from '@blueprintjs/core';
-import { PreviewUser, PreviewPub } from 'components';
-import { FollowButton } from 'containers';
+import PreviewUser from 'components/PreviewUser/PreviewUser';
+import PreviewPub from 'components/PreviewPub/PreviewPub';
+import FollowButton from 'containers/FollowButton/FollowButton';
 
 // import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';

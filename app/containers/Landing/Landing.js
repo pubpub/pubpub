@@ -3,7 +3,9 @@ import Radium from 'radium';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { Menu, NonIdealState } from '@blueprintjs/core';
-import { ActivityItem, ActivityGroup, DropdownButton } from 'components';
+import ActivityItem from 'components/ActivityItem/ActivityItem';
+import ActivityGroup from 'components/ActivityGroup/ActivityGroup';
+import DropdownButton from 'components/DropdownButton/DropdownButton';
 import { getActivities } from './actions';
 import LandingAbout from './LandingAbout';
 

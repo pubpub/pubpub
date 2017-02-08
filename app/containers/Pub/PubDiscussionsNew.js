@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import { Loader } from 'components';
+import Loader from 'components/Loader/Loader';
 import { browserHistory } from 'react-router';
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';

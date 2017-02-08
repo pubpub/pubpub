@@ -4,7 +4,7 @@ import Radium from 'radium';
 import dateFormat from 'dateformat';
 import { Dialog, Position, Menu, MenuDivider, Popover, PopoverInteractionKind } from '@blueprintjs/core';
 import { putVersion, postDoi } from './actionsVersions';
-import { Loader } from 'components';
+import Loader from 'components/Loader/Loader';
 
 let styles;
 

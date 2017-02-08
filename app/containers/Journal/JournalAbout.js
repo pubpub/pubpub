@@ -1,7 +1,9 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import ReactMarkdown from 'react-markdown';
-import { AutocompleteBar, PreviewUser, Loader } from 'components';
+import AutocompleteBar from 'components/AutocompleteBar/AutocompleteBar';
+import PreviewUser from 'components/PreviewUser/PreviewUser';
+import Loader from 'components/Loader/Loader';
 import request from 'superagent';
 import dateFormat from 'dateformat';
 import { postJournalAdmin, deleteJournalAdmin } from './actionsAdmins';

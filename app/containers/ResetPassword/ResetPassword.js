@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { Link } from 'react-router';
-import { Loader } from 'components';
+import Loader from 'components/Loader/Loader';
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';

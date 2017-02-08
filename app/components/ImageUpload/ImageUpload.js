@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Radium from 'radium';
-import { ImageCropper } from 'components';
+import ImageCropper from 'components/ImageCropper/ImageCropper';
 import { s3Upload } from 'utils/uploadFile';
 import { Spinner, Tooltip, Position } from '@blueprintjs/core';
 

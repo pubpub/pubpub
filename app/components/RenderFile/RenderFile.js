@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-import { Highlighter } from 'containers';
+import Highlighter from 'containers/Highlighter/Highlighter';
 import Radium from 'radium';
 import RenderFileDoc from './RenderFileDoc';
 import RenderFileMarkdown from './RenderFileMarkdown';

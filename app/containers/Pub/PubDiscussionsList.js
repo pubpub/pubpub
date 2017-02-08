@@ -3,7 +3,7 @@ import { Link, browserHistory } from 'react-router';
 import Radium from 'radium';
 import dateFormat from 'dateformat';
 import { Menu, MenuDivider } from '@blueprintjs/core';
-import { DropdownButton } from 'components';
+import DropdownButton from 'components/DropdownButton/DropdownButton';
 import PubLabelList from './PubLabelList';
 import fuzzysearch from 'fuzzysearch';
 import { FormattedRelative } from 'react-intl';

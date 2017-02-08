@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider, Tooltip } from '@blueprintjs/core';
-import { AutocompleteBar } from 'components';
+import AutocompleteBar from 'components/AutocompleteBar/AutocompleteBar';
 import request from 'superagent';
 import { postContributor, putContributor, deleteContributor } from './actionsContributors';
 import PubContributorRoleList from './PubContributorRoleList';

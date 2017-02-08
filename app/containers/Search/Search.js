@@ -4,7 +4,10 @@ import { browserHistory, Link } from 'react-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { Spinner } from '@blueprintjs/core';
-import { PreviewUser, PreviewPub, PreviewJournal, NavContentWrapper } from 'components';
+import PreviewUser from 'components/PreviewUser/PreviewUser';
+import PreviewPub from 'components/PreviewPub/PreviewPub';
+import PreviewJournal from 'components/PreviewJournal/PreviewJournal';
+import NavContentWrapper from 'components/NavContentWrapper/NavContentWrapper';
 
 // import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';

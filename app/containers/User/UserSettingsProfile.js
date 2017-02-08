@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { Link } from 'react-router';
-import { Loader, ImageCropper } from 'components';
+import Loader from 'components/Loader/Loader';
+import ImageCropper from 'components/ImageCropper/ImageCropper';
 
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';

@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { Link } from 'react-router';
-import { AutocompleteBar, PreviewJournal } from 'components';
+import AutocompleteBar from 'components/AutocompleteBar/AutocompleteBar';
+import PreviewJournal from 'components/PreviewJournal/PreviewJournal';
 import request from 'superagent';
 import dateFormat from 'dateformat';
 import { postJournalSubmit, putFeature, putPubContext } from './actionsJournals';

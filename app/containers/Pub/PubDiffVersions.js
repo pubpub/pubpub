@@ -4,7 +4,7 @@ import { browserHistory } from 'react-router';
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
-import { FileDiff } from 'components';
+import FileDiff from 'components/FileDiff/FileDiff';
 import dateFormat from 'dateformat';
 import Select from 'react-select';
 
