@@ -14,45 +14,7 @@ function getComponent(component) {
 	};
 }
 
-// function buildProps(componentName) {
-// 	const isProduction = process.env.NODE_ENV === 'production';
-// 	return {
-// 		component: isProduction ? undefined : require(`containers/${componentName}/${componentName}`).default,
-// 		getComponent: isProduction ? getComponent(componentName) : undefined,
-// 	};
-// }
-
-// export default (
-// 	<Route component={App}>
-// 		<Route path="/" {...buildProps('Landing')} />
-// 		<Route path="/login" {...buildProps('Login')} />
-// 		<Route path="/signup" {...buildProps('SignUp')} />
-// 		<Route path="/resetpassword" {...buildProps('ResetPassword')} />
-// 		<Route path="/resetpassword/:resetHash/:username" {...buildProps('ResetPassword')} />
-
-// 		<Route path="/search" {...buildProps('Search')} />
-
-// 		<Route path="/users/create/:hash" {...buildProps('CreateAccount')} />
-// 		<Route path="/user/:username" {...buildProps('User')} />
-// 		<Route path="/user/:username/:mode" {...buildProps('User')} />
-
-// 		<Route path="/label/:title" {...buildProps('Label')} />
-// 		<Route path="/label/:title/:mode" {...buildProps('Label')} />
-
-// 		<Route path="/pubs/create" {...buildProps('CreatePub')} />
-// 		<Route path="/pub/:slug" {...buildProps('Pub')} />
-// 		<Route path="/pub/:slug/:meta" {...buildProps('Pub')} />
-// 		<Route path="/pub/:slug/files/:filename" {...buildProps('Pub')} />
-
-// 		<Route path="/journals/create" {...buildProps('CreateJournal')} />
-// 		<Route path="/:slug" {...buildProps('Journal')} />
-// 		<Route path="/:slug/:mode" {...buildProps('Journal')} />
-// 		<Route path="/:slug/:mode/:pageSlug" {...buildProps('Journal')} />
-// 		<Route path="*" {...buildProps('NoMatch')} />
-// 	</Route>
-// );
-
-export default (
+const pubpubRoutes = (
 	<Route component={App}>
 		<Route path="/" getComponent={getComponent('Landing')} />
 		<Route path="/login" getComponent={getComponent('Login')} />
@@ -81,3 +43,21 @@ export default (
 		<Route path="*" getComponent={getComponent('NoMatch')} />
 	</Route>
 );
+
+const journalRoutes = (
+	<Route component={App}>
+		<Route path="/" getComponent={getComponent('Journal')} />
+		<Route path="/:mode" getComponent={getComponent('Journal')} />
+		<Route path="/:mode/:pageSlug" getComponent={getComponent('Journal')} />
+		<Route path="*" getComponent={getComponent('NoMatch')} />
+	</Route>
+);
+
+const host = window.location.hostname;
+const isJournal = host !== 'www.pubpub.org' && 
+	host !== 'dev.pubpub.org' && 
+	host !== 'staging.pubpub.org' && 
+	host !== 'localhost';
+const routes = isJournal ? journalRoutes : pubpubRoutes;
+
+export default routes;
