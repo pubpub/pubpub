@@ -223,9 +223,8 @@ styles = {
 		backgroundColor: 'rgba(0,0,0,0.25)',	
 	},
 	journalLogo: {
-		height: '100%',
+		height: '50px',
 		padding: '10px 0px',
-		maxHeight: '50px',
 	},
 	journalTitle: {
 		display: 'block',

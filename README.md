@@ -24,6 +24,8 @@ This will build and then run your app with environment set to production, so tha
 
 ---
 
+# Repo Architecture
+
 ## Containers
 
 The Containers folder is used for ['smart components'](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0#.pnw7tliip).
