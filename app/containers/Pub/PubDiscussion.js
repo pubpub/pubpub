@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import Radium, { Style } from 'radium';
+import { Link } from 'react-router';
 import Loader from 'components/Loader/Loader';
 import RenderFile from 'components/RenderFile/RenderFile';
 import { globalStyles } from 'utils/globalStyles';
@@ -291,7 +292,9 @@ export const PubDiscussion = React.createClass({
 							return (
 								<div key={'discussion-' + index} style={[styles.discussionItem, index === discussions.length - 1 && styles.lastDiscussionItem(isExpanded)]}>
 									<div style={styles.discussionImageWrapper}>
-										<img src={'https://jake.pubpub.org/unsafe/50x50/' + user.avatar} style={styles.discussionImage} />	
+										<Link to={`/user/${user.username}`}>
+											<img src={'https://jake.pubpub.org/unsafe/50x50/' + user.avatar} style={styles.discussionImage} />	
+										</Link>
 									</div>
 
 									<div style={styles.discussionContentWrapper}>
@@ -304,7 +307,7 @@ export const PubDiscussion = React.createClass({
 										</div>
 
 										<div style={styles.discussionNameWrapper}>
-											<span style={styles.discussionName}>{user.firstName + ' ' + user.lastName} </span>
+											<Link to={`/user/${user.username}`} style={styles.discussionName}>{user.firstName + ' ' + user.lastName} </Link>
 											<span style={styles.discussionDate}><FormattedRelative value={child.createdAt} /></span>
 										</div>
 

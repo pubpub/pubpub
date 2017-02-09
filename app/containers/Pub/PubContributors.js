@@ -1,14 +1,12 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
+import { Link } from 'react-router';
 import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider, Tooltip } from '@blueprintjs/core';
 import AutocompleteBar from 'components/AutocompleteBar/AutocompleteBar';
 import request from 'superagent';
 import { postContributor, putContributor, deleteContributor } from './actionsContributors';
 import PubContributorRoleList from './PubContributorRoleList';
 let styles;
-
-
-
 
 export const PubContributors = React.createClass({
 	propTypes: {
@@ -197,9 +195,13 @@ export const PubContributors = React.createClass({
 					const isDisabled = !(isAuthor || (canEdit && numberOfEditors === 1));
 					return (
 						<div key={'contributorId-' + contributor.id} style={styles.contributorWrapper}>
-							<img src={'https://jake.pubpub.org/unsafe/50x50/' + user.avatar} style={styles.contributorImage} alt={user.firstName + ' ' + user.lastName} />
+							<Link to={`/user/${user.username}`}>
+								<img src={'https://jake.pubpub.org/unsafe/50x50/' + user.avatar} style={styles.contributorImage} alt={user.firstName + ' ' + user.lastName} />
+							</Link>
 							<div style={styles.detailsWrapper}>
-								<div style={styles.contributorName}>{user.firstName + ' ' + user.lastName}</div>
+								<div style={styles.contributorName}>
+									<Link to={`/user/${user.username}`}>{user.firstName + ' ' + user.lastName}</Link>
+								</div>
 								{this.props.pub.canEdit &&
 									<div style={styles.contributorPermission}>
 										<Popover 
