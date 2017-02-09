@@ -151,9 +151,9 @@ export const PubVersions = React.createClass({
 							}
 
 							{version.doi &&
-								<div style={[styles.smallColumn, { padding: '0.5em' }]}>
-									<span className={'pt-tag'}>{version.doi}</span>
-								</div>
+								<a href={'https://doi.org/' + pubDOI} style={[styles.smallColumn, { padding: '0.5em', display: 'block' }]}>
+									<span href={'https://doi.org/' + pubDOI} className={'pt-tag'}>{version.doi}</span>
+								</a>
 							}
 
 							<div style={styles.smallColumn}>
