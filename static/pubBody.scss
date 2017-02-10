@@ -4,10 +4,14 @@
   color: #333;
   font-family: "Merriweather", serif;
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.8;
   word-wrap: break-word;
 }
 
+.pub-body .pub-article *:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
 .pub-body a {
   background-color: transparent;
 }

@@ -183,6 +183,7 @@ export const RenderFileMarkdown = React.createClass({
 					typographer: true,
 					linkify: false,
 				}}
+				className={'pub-article'}
 				plugins={[
 					sub,
 					sup,
