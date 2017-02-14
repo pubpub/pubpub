@@ -46,7 +46,7 @@ export const Journal = React.createClass({
 	},
 
 	componentWillMount() {
-		this.props.dispatch(getJournalData(this.props.params.slug));
+		this.props.dispatch(getJournalData(this.props.params.slug || 'resci'));
 	},
 	componentWillReceiveProps(nextProps) {
 		const params = this.props.params || {};
