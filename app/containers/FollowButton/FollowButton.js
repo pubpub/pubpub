@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+// import { Link } from 'react-router';
+import Link from 'components/Link/Link';
 import Radium from 'radium';
 import {Position, Tooltip } from '@blueprintjs/core';
 
@@ -23,6 +24,7 @@ export const FollowButton = React.createClass({
 		accountData: PropTypes.object,
 		pubId: PropTypes.number,
 		journalId: PropTypes.number,
+		journalCustomDomain: PropTypes.string,
 		userId: PropTypes.number,
 		labelId: PropTypes.number,
 		followData: PropTypes.object,
@@ -105,7 +107,7 @@ export const FollowButton = React.createClass({
 				{followerCount !== undefined &&
 					// Need to make this a link that appends /followers
 					// Might need to take in a link
-					<Link to={this.props.followersLink} className="pt-button">{followerCount + Number((followData.followerId && this.state.justFollowed === 1) ? 0 : this.state.justFollowed || 0)}</Link>
+					<Link to={this.props.followersLink} toJournal={!!this.props.journalId} customDomain={this.props.journalCustomDomain} className="pt-button">{followerCount + Number((followData.followerId && this.state.justFollowed === 1) ? 0 : this.state.justFollowed || 0)}</Link>
 				}
 				
 			</div>

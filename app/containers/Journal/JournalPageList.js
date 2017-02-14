@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
-import { Link as UnwrappedLink } from 'react-router';
-const Link = Radium(UnwrappedLink);
+// import { Link as UnwrappedLink } from 'react-router';
+// const Link = Radium(UnwrappedLink);
+import Link from 'components/Link/Link';
 import { postPubLabel, deletePubLabel } from './actionsPubLabels';
 import { postLabel, putLabel, deleteLabel } from './actionsLabels'; 
 
@@ -13,8 +14,7 @@ export const JournalPageList = React.createClass({
 		allLabels: PropTypes.array,
 		selectedLabels: PropTypes.array,
 		pubId: PropTypes.number, // id of the pub the label is applied to
-		journalId: PropTypes.number, // id of the journal owning the labels
-		journalSlug: PropTypes.string,
+		journal: PropTypes.object,
 		canEdit: PropTypes.bool,
 		canSelect: PropTypes.bool,
 		pathname: PropTypes.string,
@@ -53,7 +53,7 @@ export const JournalPageList = React.createClass({
 		// If we have dispatch and a pubId, save the result
 		if (this.props.pubId && this.props.dispatch) {
 			const action = labelIds.includes(label.id) ? deletePubLabel : postPubLabel;
-			this.props.dispatch(action(this.props.pubId, label.id, this.props.journalId));
+			this.props.dispatch(action(this.props.pubId, label.id, this.props.journal.id));
 		}
 		
 	},
@@ -70,14 +70,14 @@ export const JournalPageList = React.createClass({
 	},
 
 	saveEdit: function() {
-		this.props.dispatch(putLabel(this.props.journalId, this.state.editingLabelId, this.state.editingTitle));
+		this.props.dispatch(putLabel(this.props.journal.id, this.state.editingLabelId, this.state.editingTitle));
 		this.setState({ editingLabelId: undefined });
 	},
 	cancelEdit: function() {
 		this.setState({ editingLabelId: undefined });
 	},
 	deleteEdit: function() {
-		this.props.dispatch(deleteLabel(this.props.journalId, this.state.editingLabelId));
+		this.props.dispatch(deleteLabel(this.props.journal.id, this.state.editingLabelId));
 		this.setState({ editingLabelId: undefined });
 	},
 
@@ -87,7 +87,7 @@ export const JournalPageList = React.createClass({
 	},
 	saveCreate: function() {
 		if (!this.state.creatingTitle) { return null; }
-		this.props.dispatch(postLabel(this.props.journalId, this.state.creatingTitle));
+		this.props.dispatch(postLabel(this.props.journal.id, this.state.creatingTitle));
 		return this.setState({
 			createOpen: false,
 			creatingTitle: ''
@@ -102,6 +102,7 @@ export const JournalPageList = React.createClass({
 
 
 	render() {
+		const journal = this.props.journal || {};
 		const allLabels = this.props.allLabels || [];
 		
 		const selectedLabels = this.state.selectedLabels || [];
@@ -169,7 +170,7 @@ export const JournalPageList = React.createClass({
 
 				{/* Display button to toggle Label creator */}
 				{this.props.canEdit && !this.state.createOpen &&
-					<Link to={{ pathname: this.props.pathname, query: { ...this.props.query, view: 'pages' } }} className="pt-button pt-fill pt-minimal">
+					<Link to={{ pathname: this.props.pathname, query: { ...this.props.query, view: 'pages' } }} toJournal={true} customDomain={journal.customDomain} className="pt-button pt-fill pt-minimal">
 						Manage Pages
 					</Link>
 				}
@@ -187,15 +188,15 @@ export const JournalPageList = React.createClass({
 						transitionDuration={200}
 					>
 						<span className="pt-tag" style={styles.editLabelsButton}>
-							Pages <span className="pt-icon-standard pt-icon-small-plus" style={styles.editLabelsButtonIcon}/>
+							Pages <span className="pt-icon-standard pt-icon-small-plus" style={styles.editLabelsButtonIcon} />
 						</span>	
 					</Popover>
 				}
 
 				{selectedLabelsRender.map((label, index)=> {
-					const toObject = { pathname: `/${this.props.journalSlug}/page/${label.slug}` };
+					const toObject = { pathname: `/${this.props.journal.slug}/page/${label.slug}` };
 
-					return <Link to={toObject} key={'label-' + index} className="pt-tag" style={[styles.label, { backgroundColor: label.color || '#CED9E0', color: label.color ? '#FFF' : '#293742' }]}>{label.title}</Link>;
+					return <Link to={toObject} toJournal={true} customDomain={journal.customDomain} key={'label-' + index} className="pt-tag" style={[styles.label, { backgroundColor: label.color || '#CED9E0', color: label.color ? '#FFF' : '#293742' }]}>{label.title}</Link>;
 				})}
 					
 			</div>

@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import { Link } from 'react-router';
 import ReactMarkdown from 'react-markdown';
 
 import sub from 'markdown-it-sub';

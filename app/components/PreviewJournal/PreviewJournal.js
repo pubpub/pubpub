@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import { Link as UnwrappedLink } from 'react-router';
-const Link = Radium(UnwrappedLink);
+// import { Link as UnwrappedLink } from 'react-router';
+// const Link = Radium(UnwrappedLink);
+import Link from 'components/Link/Link';
 
 let styles;
 
@@ -20,10 +21,10 @@ export const PreviewJournal = React.createClass({
 
 		return (
 			<div style={styles.pubPreviewWrapper}>
-				<Link to={'/' + journal.slug} style={[styles.avatarWrapper, { backgroundImage: journal.avatar ? 'url("' + journal.avatar + '")' : '' }]} />
+				<Link to={'/' + journal.slug} toJournal={true} customDomain={journal.customDomain} style={[styles.avatarWrapper, { backgroundImage: journal.avatar ? 'url("' + journal.avatar + '")' : '' }]} />
 				
 				<div style={styles.pubPreviewDetails}>
-					<Link to={'/' + journal.slug} style={styles.title}>{journal.title}</Link>
+					<Link to={'/' + journal.slug} toJournal={true} customDomain={journal.customDomain} style={styles.title}>{journal.title}</Link>
 
 					<p style={styles.authorsWrapper}>{journal.description}</p>
 					{this.props.bottomContent &&
@@ -36,19 +37,19 @@ export const PreviewJournal = React.createClass({
 
 						{!!pubFeatures.length &&
 							<span style={styles.statItem}>
-								<span className={'pt-icon-standard pt-icon-application'} style={styles.statItemIcon}/>
+								<span className={'pt-icon-standard pt-icon-application'} style={styles.statItemIcon} />
 								{pubFeatures.length} Pub{pubFeatures.length > 1 ? 's' : ''}
 							</span>
 						}
 						{!!admins.length &&
 							<span style={styles.statItem}>
-								<span className={'pt-icon-standard pt-icon-person'} style={styles.statItemIcon}/>
+								<span className={'pt-icon-standard pt-icon-person'} style={styles.statItemIcon} />
 								{admins.length} admin{admins.length > 1 ? 's' : ''}
 							</span>
 						}
 						{!!followers.length &&
 							<span style={styles.statItem}>
-								<span className={'pt-icon-standard pt-icon-people'} style={styles.statItemIcon}/>
+								<span className={'pt-icon-standard pt-icon-people'} style={styles.statItemIcon} />
 								{followers.length} follower{followers.length > 1 ? 's' : ''}
 							</span>
 						}
