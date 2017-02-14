@@ -20,10 +20,16 @@ export const LOGOUT_FAIL = 'app/LOGOUT_FAIL';
 // function calls
 /*--------*/
 export function login() {
+	const isDev = window.location.hostname === 'www.funky.com' || window.location.hostname === 'localhost';
+	let urlPrefix = '';
+	if (window.isJournal && isDev) { urlPrefix = 'http://localhost:3000'; }
+	if (window.isJournal && !isDev) { urlPrefix = 'https://www.pubpub.org'; }
+	// If we're on a journal, we need to query login directly to pubpub.org 
+	// so that cookies are included.
+
 	return (dispatch) => {
 		dispatch({ type: LOGIN_GET_LOAD });
-
-		return clientFetch('/api/login')
+		return clientFetch(urlPrefix + '/api/login')
 		.then((result) => {
 			dispatch({ type: LOGIN_GET_SUCCESS, result });
 		})

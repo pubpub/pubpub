@@ -27,7 +27,8 @@ function logPageView() {
 global.clientFetch = function(route, opts) {
 	return fetch(route, {
 		...opts,
-		credentials: 'same-origin'
+		// credentials: 'same-origin'
+		credentials: 'include',
 	})
 	.then((response)=> {
 		if (!response.ok) { 

@@ -44,7 +44,7 @@ export const Login = React.createClass({
 
 		if (oldLoading && !nextLoading && !nextError) {
 			const redirectRoute = this.props.location.query && this.props.location.query.redirect;
-			if (redirectRoute.indexOf('https://') > -1) {
+			if (redirectRoute && redirectRoute.indexOf('https://') > -1) {
 				window.location.href = redirectRoute;
 			} else {
 				browserHistory.push(redirectRoute || '/');	
