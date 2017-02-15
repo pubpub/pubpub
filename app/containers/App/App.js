@@ -70,6 +70,7 @@ export const App = React.createClass({
 							{ name: 'twitter:image', content: 'https://assets.pubpub.org/_site/logo_dark.png' },
 							{ name: 'twitter:image:alt', content: 'Logo for PubPub' }
 						]} 
+						link={window.isJournal ? [] : [{ rel: 'shortcut icon', href: '/static/favicon.ico' }]}
 					/> 
 					<div style={hiddenStyle}>
 						<Announcements />

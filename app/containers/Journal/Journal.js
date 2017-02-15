@@ -113,7 +113,8 @@ export const Journal = React.createClass({
 		}, {});
 
 		if (!window.isJournal && journal.customDomain) {
-			window.location.replace(`${journal.customDomain}${location.pathname}${location.search}`);
+			const reducedPathname = location.pathname.substring(journal.slug.length + 1, location.pathname.length);
+			window.location.replace(`${journal.customDomain}${reducedPathname}${location.search}`);
 		}
 
 		const followers = journal.followers || [];
@@ -142,7 +143,10 @@ export const Journal = React.createClass({
 				{ name: 'twitter:description', content: journal.description || journal.about || journal.title || journal.slug },
 				{ name: 'twitter:image', content: journal.avatar },
 				{ name: 'twitter:image:alt', content: 'Image for ' + (journal.title || journal.slug) }
-			]
+			],
+			link: window.isJournal
+				? [{ rel: 'shortcut icon', type: 'image/png', href: `https://jake.pubpub.org/unsafe/32x32/filters:format(png)/${journal.avatar}` }]
+				: [],
 		};
 
 		if (!isAdmin && mode === 'edit') {
