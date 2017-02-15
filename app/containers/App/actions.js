@@ -22,7 +22,6 @@ export const LOGOUT_FAIL = 'app/LOGOUT_FAIL';
 export function login() {
 	return (dispatch) => {
 		dispatch({ type: LOGIN_GET_LOAD });
-
 		return clientFetch('/api/login')
 		.then((result) => {
 			dispatch({ type: LOGIN_GET_SUCCESS, result });

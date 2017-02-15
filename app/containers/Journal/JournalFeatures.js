@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import { Link, browserHistory } from 'react-router';
+import { browserHistory } from 'react-router';
+import Link from 'components/Link/Link';
 import dateFormat from 'dateformat';
 import { InputGroup, NonIdealState } from '@blueprintjs/core';
 
@@ -110,8 +111,7 @@ export const JournalFeatures = React.createClass({
 									allLabels={journal.pages} 
 									selectedLabels={pubPages} 
 									pubId={pub.id} 
-									journalId={journal.id} 
-									journalSlug={journal.slug}
+									journal={journal}
 									canEdit={journal.isAdmin} 
 									canSelect={journal.isAdmin} 
 									pathname={this.props.pathname} 

@@ -25,9 +25,21 @@ function logPageView() {
 }
 
 global.clientFetch = function(route, opts) {
-	return fetch(route, {
+	const isLocalDev = window.location.hostname === 'www.funky.com' || window.location.hostname === 'localhost';
+	const isRemoteDev = window.location.hostname === 'dev.pubpub.org' || window.location.hostname === 'test.epsx.org';
+
+	let urlPrefix = '';
+	if (window.isJournal && isLocalDev) { urlPrefix = 'http://localhost:3000'; }
+	if (window.isJournal && isRemoteDev) { urlPrefix = 'https://dev.pubpub.org'; }
+	if (window.isJournal && !isLocalDev && !isRemoteDev) { urlPrefix = 'https://www.pubpub.org'; }
+	// If we're on a journal, we need to query login directly to pubpub.org 
+	// so that cookies are included.
+	const finalRoute = urlPrefix + route;
+
+	return fetch(finalRoute, {
 		...opts,
-		credentials: 'same-origin'
+		// credentials: 'same-origin'
+		credentials: 'include',
 	})
 	.then((response)=> {
 		if (!response.ok) { 

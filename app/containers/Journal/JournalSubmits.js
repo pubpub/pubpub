@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import { Link } from 'react-router';
+import Link from 'components/Link/Link';
 import dateFormat from 'dateformat';
 import { Dialog, NonIdealState } from '@blueprintjs/core';
 

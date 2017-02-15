@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import { Link } from 'react-router';
 import PreviewUser from 'components/PreviewUser/PreviewUser';
 
 import { globalMessages } from 'utils/globalMessages';

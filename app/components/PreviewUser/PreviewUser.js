@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import { Link as UnwrappedLink } from 'react-router';
-const Link = Radium(UnwrappedLink);
+// import { Link as UnwrappedLink } from 'react-router';
+// const Link = Radium(UnwrappedLink);
+import Link from 'components/Link/Link';
 
 let styles;
 

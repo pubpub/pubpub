@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import { Link } from 'react-router';
+import Link from 'components/Link/Link';
 import { NonIdealState, Checkbox, Button } from '@blueprintjs/core';
 
 import { globalStyles } from 'utils/globalStyles';
@@ -174,7 +174,7 @@ export const JournalPages = React.createClass({
 					}
 					{!isEditing &&
 						<div style={styles.tableCell}>
-							<Link style={styles.pageTitle} to={'/' + journal.slug + '/page/' + page.slug}>{page.title}</Link>
+							<Link style={styles.pageTitle} to={'/' + journal.slug + '/page/' + page.slug} toJournal={true} customDomain={journal.customDomain}>{page.title}</Link>
 							<div style={styles.pageDescription}>{page.description}</div>
 						</div>
 					}

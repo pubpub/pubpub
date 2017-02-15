@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+// import { Link } from 'react-router';
+import Link from 'components/Link/Link';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 
@@ -46,7 +47,7 @@ export const Journal = React.createClass({
 	},
 
 	componentWillMount() {
-		this.props.dispatch(getJournalData(this.props.params.slug));
+		this.props.dispatch(getJournalData(this.props.params.slug || 'jods'));
 	},
 	componentWillReceiveProps(nextProps) {
 		const params = this.props.params || {};
@@ -99,8 +100,8 @@ export const Journal = React.createClass({
 		const view = query.view;
 		const sortList = ['Most Recent', 'Least Recent', 'A → Z', 'Z → A'];
 
-		
-		const pathname = this.props.location.pathname;
+		const location = this.props.location;
+		const pathname = location.pathname;
 		const pageSlug = this.props.params.pageSlug;
 		const journal = this.props.journalData.journal || {};
 		const pages = journal.pages || [];
@@ -108,6 +109,10 @@ export const Journal = React.createClass({
 			if (current.slug === pageSlug) { return current; }
 			return previous;
 		}, {});
+
+		if (!window.isJournal && journal.customDomain) {
+			window.location.replace(`${journal.customDomain}${location.pathname}${location.search}`);
+		}
 
 		const followers = journal.followers || [];
 		const isAdmin = journal.isAdmin; // Add || true for dev only.
@@ -164,13 +169,14 @@ export const Journal = React.createClass({
 						<div style={styles.followButtonWrapper}>
 							<FollowButton 
 								journalId={journal.id} 
+								journalCustomDomain={journal.customDomain}
 								followData={followData} 
 								followerCount={followers.length} 
 								followersLink={{ pathname: '/' + journal.slug + '/followers' }}
 								dispatch={this.props.dispatch} />
 							{isAdmin &&
 								<div style={styles.editButton}>
-									<Link className={'pt-button pt-icon-edit'} to={'/' + journal.slug + '/edit'} >Edit Journal</Link>
+									<Link className={'pt-button pt-icon-edit'} to={'/' + journal.slug + '/edit'} toJournal={true} customDomain={journal.customDomain}>Edit Journal</Link>
 								</div>
 							}
 						</div>
@@ -221,9 +227,9 @@ export const Journal = React.createClass({
 									<div style={styles.headerWrapper}>
 										<div style={styles.headerOptions}>
 											<div className="pt-button-group pt-minimal">
-												<Link to={{ pathname: '/' + journal.slug, query: { ...query, view: undefined } }} className={view === undefined || view === 'featured' ? 'pt-button pt-active' : 'pt-button'}>Featured</Link>
-												<Link to={{ pathname: '/' + journal.slug, query: { ...query, view: 'submitted' } }} className={view === 'submitted' ? 'pt-button pt-active' : 'pt-button'}>Submitted</Link>
-												<Link to={{ pathname: '/' + journal.slug, query: { ...query, view: 'pages' } }} className={view === 'pages' ? 'pt-button pt-active' : 'pt-button'}>Pages</Link>
+												<Link to={{ pathname: '/' + journal.slug, query: { ...query, view: undefined } }} toJournal={true} customDomain={journal.customDomain} className={view === undefined || view === 'featured' ? 'pt-button pt-active' : 'pt-button'}>Featured</Link>
+												<Link to={{ pathname: '/' + journal.slug, query: { ...query, view: 'submitted' } }} toJournal={true} customDomain={journal.customDomain} className={view === 'submitted' ? 'pt-button pt-active' : 'pt-button'}>Submitted</Link>
+												<Link to={{ pathname: '/' + journal.slug, query: { ...query, view: 'pages' } }} toJournal={true} customDomain={journal.customDomain} className={view === 'pages' ? 'pt-button pt-active' : 'pt-button'}>Pages</Link>
 											</div>
 										</div>
 										<div style={styles.headerRight}>
@@ -235,7 +241,7 @@ export const Journal = React.createClass({
 														{sortList.map((sort, index)=> {
 															const sortMode = query.sort || 'Most Recent';
 															return (
-																<li key={'sortFilter-' + index}><Link to={{ pathname: '/' + journal.slug, query: { ...query, sort: sort } }} className="pt-menu-item pt-popover-dismiss">
+																<li key={'sortFilter-' + index}><Link to={{ pathname: '/' + journal.slug, query: { ...query, sort: sort } }} className="pt-menu-item pt-popover-dismiss" toJournal={true} customDomain={journal.customDomain}>
 																	{sort}
 																	{sortMode === sort && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
 																</Link></li>

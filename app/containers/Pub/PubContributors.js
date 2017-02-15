@@ -162,7 +162,7 @@ export const PubContributors = React.createClass({
 		return (
 			<div style={styles.container}>
 				<h2>Contributors</h2>
-				<p>Contributors can be added and given edit permissions, to signify authorship, or to ackowledge contributions.</p>
+				<p>Contributors can be added and given edit permissions, to signify authorship, or to acknowledge contributions.</p>
 
 				{this.props.pub.canEdit &&
 					<AutocompleteBar

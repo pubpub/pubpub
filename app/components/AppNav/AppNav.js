@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import { Link, browserHistory } from 'react-router';
+import { browserHistory } from 'react-router';
+import Link from 'components/Link/Link';
 import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { globalStyles } from 'utils/globalStyles';
 import { contrastText } from 'utils/contrastText';
@@ -30,8 +31,12 @@ export const AppNav = React.createClass({
 
 	searchSubmited: function(evt) {
 		evt.preventDefault();
-		browserHistory.push('/search?q=' + this.state.search);
-		this.setState({ search: '' });
+		if (window.isJournal) {
+			window.location.href = `https://www.pubpub.org'/search?q=${this.state.search}`;
+		} else {
+			browserHistory.push('/search?q=' + this.state.search);
+			this.setState({ search: '' });
+		}
 	},
 
 	render() {
@@ -39,11 +44,11 @@ export const AppNav = React.createClass({
 		const pub = this.props.pubData.pub || {};
 		const journal = this.props.journalData.journal || {};
 		const location = this.props.location || {};
-		const redirectURL = location.pathname.indexOf('/signup') !== 0 && location.pathname.indexOf('/reset') !== 0 && location.pathname !== '/' ? location.pathname + location.search : undefined;
+		const redirectURL = window.isJournal || (location.pathname.indexOf('/signup') !== 0 && location.pathname.indexOf('/reset') !== 0 && location.pathname !== '/') ? `${window.isJournal ? 'https://' : ''}${window.isJournal ? window.location.hostname : ''}${location.pathname}${location.search}` : undefined;
 		const query = location.query || {};
 		const params = this.props.params || {};
 		const isPub = location.pathname.indexOf('/pub') === 0;
-		const isJournal = location.pathname.split('/')[1] === params.slug;
+		const isJournal = location.pathname.split('/')[1] === params.slug || window.isJournal;
 
 		const pubFeatures = pub.pubFeatures || [];
 		const contextJournal = pubFeatures.reduce((previous, current)=> {
@@ -72,7 +77,7 @@ export const AppNav = React.createClass({
 		const isLight = headerJournal && contrastColor === '#000000';
 		const navClass = isLight ? 'pt-navbar' : 'pt-navbar pt-dark'; 
 		const navStyle = headerJournal ? { backgroundColor: headerJournal.headerColor, minHeight: '50px', height: 'auto' } : {};
-		const landingNav = location.pathname === '/' && !user.id ? { backgroundColor: 'transparent', boxShadow: '0px 0px 0px black', width: '100%', position: 'absolute' } : {};
+		const landingNav = !window.isJournal && location.pathname === '/' && !user.id ? { backgroundColor: 'transparent', boxShadow: '0px 0px 0px black', width: '100%', position: 'absolute' } : {};
 		return (
 			<nav className={navClass} style={[navStyle, landingNav]}>
 				<div className="pt-navbar-group pt-align-left">
@@ -89,7 +94,7 @@ export const AppNav = React.createClass({
 					{headerJournal && headerJournal.id &&
 						<div style={styles.journalLogoWrapper}>
 							<div style={[styles.journalLogoDivider, isLight && styles.journalLogoDividerDark]} />
-							<Link to={'/' + headerJournal.slug}>
+							<Link to={'/' + headerJournal.slug} toJournal={true} customDomain={headerJournal.customDomain}>
 								{!!headerJournal.logo &&
 									<img alt={headerJournal.title} src={headerJournal.logo} style={styles.journalLogo} />
 								}
@@ -160,12 +165,12 @@ export const AppNav = React.createClass({
 					<div>
 						<div className={'clearfix'} />
 						<div className={'pt-button-group pt-minimal'} style={{ marginLeft: '45px' }}>
-							<Link className={'pt-button'} role={'button'} key={'journal-home'} to={'/' + headerJournal.slug}>Home</Link>
-							<Link className={'pt-button'} role={'button'} key={'journal-about'} to={'/' + headerJournal.slug + '/about'}>About</Link>
+							<Link className={'pt-button'} role={'button'} key={'journal-home'} to={'/' + headerJournal.slug} toJournal={true} customDomain={headerJournal.customDomain}>Home</Link>
+							<Link className={'pt-button'} role={'button'} key={'journal-about'} to={'/' + headerJournal.slug + '/about'} toJournal={true} customDomain={headerJournal.customDomain}>About</Link>
 							{sortedPages.filter((page)=> {
 								return page.isDisplayed;
 							}).map((page)=> {
-								return <Link className={'pt-button'} role={'button'} key={'page-' + page.id} to={'/' + headerJournal.slug + '/page/' + page.slug}>{page.title}</Link>;
+								return <Link className={'pt-button'} role={'button'} key={'page-' + page.id} to={'/' + headerJournal.slug + '/page/' + page.slug} toJournal={true} customDomain={headerJournal.customDomain}>{page.title}</Link>;
 							})}
 						</div>		
 					</div>
