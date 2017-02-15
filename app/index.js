@@ -32,7 +32,7 @@ global.clientFetch = function(route, opts) {
 	if (window.isJournal && isLocalDev) { urlPrefix = 'http://localhost:3000'; }
 	if (window.isJournal && isRemoteDev) { urlPrefix = 'https://dev.pubpub.org'; }
 	if (window.isJournal && !isLocalDev && !isRemoteDev) { urlPrefix = 'https://www.pubpub.org'; }
-	// If we're on a journal, we need to query login directly to pubpub.org 
+	// If we're on a journal, we need to query routes directly to pubpub.org 
 	// so that cookies are included.
 	const finalRoute = urlPrefix + route;
 

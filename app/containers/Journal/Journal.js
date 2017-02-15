@@ -47,7 +47,9 @@ export const Journal = React.createClass({
 	},
 
 	componentWillMount() {
-		this.props.dispatch(getJournalData(this.props.params.slug || 'jods'));
+		const urlTerms = window.location.href.split('/');
+		const currentRootAddress = `${urlTerms[0]}//${urlTerms[2]}`;
+		this.props.dispatch(getJournalData(this.props.params.slug || currentRootAddress));
 	},
 	componentWillReceiveProps(nextProps) {
 		const params = this.props.params || {};
