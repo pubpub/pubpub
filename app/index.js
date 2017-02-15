@@ -29,17 +29,17 @@ global.clientFetch = function(route, opts) {
 	const isRemoteDev = window.location.hostname === 'dev.pubpub.org' || window.location.hostname === 'test.epsx.org' || window.location.hostname === 'testnocors.epsx.org';
 
 	let urlPrefix = '';
-	if (isLocalDev) { urlPrefix = 'http://localhost:3000'; }
-	if (isRemoteDev) { urlPrefix = 'https://dev.pubpub.org'; }
-	if (!isLocalDev && !isRemoteDev) { urlPrefix = 'https://www.pubpub.org'; }
+	if (window.isJournal && isLocalDev) { urlPrefix = 'http://localhost:3000'; }
+	if (window.isJournal && isRemoteDev) { urlPrefix = 'https://dev.pubpub.org'; }
+	if (window.isJournal && !isLocalDev && !isRemoteDev) { urlPrefix = 'https://www.pubpub.org'; }
 	// If we're on a journal, we need to query routes directly to pubpub.org 
 	// so that cookies are included.
 	const finalRoute = urlPrefix + route;
 
 	return fetch(finalRoute, {
 		...opts,
-		credentials: 'same-origin'
-		// credentials: 'include',
+		// credentials: 'same-origin'
+		credentials: 'include',
 	})
 	.then((response)=> {
 		if (!response.ok) { 
