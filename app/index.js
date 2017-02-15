@@ -25,7 +25,7 @@ function logPageView() {
 }
 
 global.clientFetch = function(route, opts) {
-	const isLocalDev = window.location.hostname === 'www.funky.com' || window.location.hostname === 'localhost';
+	const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === 'www.funky.com' || window.location.hostname === 'www.funkynocors.com';
 	const isRemoteDev = window.location.hostname === 'dev.pubpub.org' || window.location.hostname === 'test.epsx.org' || window.location.hostname === 'testnocors.epsx.org';
 
 	let urlPrefix = '';
