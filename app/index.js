@@ -26,7 +26,7 @@ function logPageView() {
 
 global.clientFetch = function(route, opts) {
 	const isLocalDev = window.location.hostname === 'www.funky.com' || window.location.hostname === 'localhost';
-	const isRemoteDev = window.location.hostname === 'dev.pubpub.org' || window.location.hostname === 'test.epsx.org';
+	const isRemoteDev = window.location.hostname === 'dev.pubpub.org' || window.location.hostname === 'test.epsx.org' || window.location.hostname === 'testnocors.epsx.org';
 
 	let urlPrefix = '';
 	if (window.isJournal && isLocalDev) { urlPrefix = 'http://localhost:3000'; }
