@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import { Link } from 'react-router';
+import Link from 'components/Link/Link';
 import { FormattedRelative } from 'react-intl';
 let styles = {};
 
@@ -18,7 +18,7 @@ export const ActivityGroup = React.createClass({
 		
 	},
 	
-	renderAttachment: function(verb, avatar, link, string, details, id) {
+	renderAttachment: function(verb, avatar, link, string, details, id, customDomain) {
 		let adjustSize = {};
 		if (verb === 'newPubLabel') {
 			adjustSize = { width: '20px' };
@@ -26,13 +26,13 @@ export const ActivityGroup = React.createClass({
 		return (
 			<div style={styles.objectWrapper} key={'attachment-' + id}>
 				<div style={styles.imageWrapper} className={'opacity-on-hover-child'}>
-					<Link to={link}>
+					<Link to={link} customDomain={customDomain}>
 						<img src={avatar} style={[styles.largeImage, adjustSize]} alt={string} />
 					</Link>
 				</div>
 				
 				<div style={styles.detailsWrapper}>
-					<h5 style={styles.objectTitle}><Link to={link} style={styles.link}>{string}</Link></h5>
+					<h5 style={styles.objectTitle}><Link to={link} style={styles.link} customDomain={customDomain}>{string}</Link></h5>
 					<p>{details}</p>
 				</div>
 			</div>
@@ -162,7 +162,7 @@ export const ActivityGroup = React.createClass({
 									case 'followedPub': 
 									case 'followedJournal': 
 									case 'followedLabel': 
-										return this.renderAttachment(verb, targetAvatar, targetLink, targetString, targetDetails, activity.id);
+										return this.renderAttachment(verb, targetAvatar, targetLink, targetString, targetDetails, activity.id, target.customDomain);
 									case 'newDiscussion': 
 										return this.renderAttachment(verb, actorAvatar, (targetLink + '?discussion=' + object.threadNumber), objectString, objectDetails, activity.id);
 									case 'addedContributor': 

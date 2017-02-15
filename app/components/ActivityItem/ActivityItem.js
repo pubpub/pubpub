@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import { Link } from 'react-router';
+// import { Link } from 'react-router';
+import Link from 'components/Link/Link';
 import { FormattedRelative } from 'react-intl';
 let styles = {};
 
@@ -19,17 +20,17 @@ export const ActivityItem = React.createClass({
 		
 	},
 
-	renderAttachment: function(avatar, link, string, details, id) {
+	renderAttachment: function(avatar, link, string, details, id, customDomain) {
 		return (
 			<div style={styles.objectWrapper} key={'attachment-' + id}>
 				<div style={styles.imageWrapper} className={'opacity-on-hover-child'}>
-					<Link to={link}>
+					<Link to={link} customDomain={customDomain}>
 						<img src={avatar} style={styles.largeImage} alt={string} />
 					</Link>
 				</div>
 				
 				<div style={styles.detailsWrapper}>
-					<h5 style={styles.objectTitle}><Link to={link} style={styles.link}>{string}</Link></h5>
+					<h5 style={styles.objectTitle}><Link to={link} style={styles.link} customDomain={customDomain}>{string}</Link></h5>
 					<p>{details}</p>
 				</div>
 			</div>
@@ -81,9 +82,9 @@ export const ActivityItem = React.createClass({
 		const showObject = verbsWithObjects.includes(verb);
 
 		const buildLink = function(link, string) { return <Link to={link} style={styles.link}>{string}</Link>; };
-		const actorNode = <Link to={actorLink} style={styles.link}>{actorString}</Link>;
-		const targetNode = <Link to={targetLink} style={styles.link}>{targetString}</Link>;
-		const objectNode = <Link to={objectLink} style={styles.link}>{objectString}</Link>;
+		const actorNode = <Link to={actorLink} style={styles.link} customDomain={actor.customDomain}>{actorString}</Link>;
+		const targetNode = <Link to={targetLink} style={styles.link} customDomain={target.customDomain}>{targetString}</Link>;
+		const objectNode = <Link to={objectLink} style={styles.link} customDomain={object.customDomain}>{objectString}</Link>;
 
 		return (
 			<div style={styles.container} className={'opacity-on-hover-parent'}>
@@ -159,7 +160,7 @@ export const ActivityItem = React.createClass({
 									case 'newPubLabel': 
 										return this.renderAttachment(objectAvatar, objectLink, objectString, objectDetails, activity.id);
 									case 'createdJournal': 
-										return this.renderAttachment(targetAvatar, targetLink, targetString, targetDetails, activity.id);
+										return this.renderAttachment(targetAvatar, targetLink, targetString, targetDetails, activity.id, target.customDomain);
 									case 'featuredPub': 
 										return this.renderAttachment(targetAvatar, targetLink, targetString, targetDetails, activity.id);
 									default: 

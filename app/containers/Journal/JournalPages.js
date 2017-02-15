@@ -174,7 +174,7 @@ export const JournalPages = React.createClass({
 					}
 					{!isEditing &&
 						<div style={styles.tableCell}>
-							<Link style={styles.pageTitle} to={'/' + journal.slug + '/page/' + page.slug} toJournal={true} customDomain={journal.customDomain}>{page.title}</Link>
+							<Link style={styles.pageTitle} to={'/' + journal.slug + '/page/' + page.slug} customDomain={journal.customDomain}>{page.title}</Link>
 							<div style={styles.pageDescription}>{page.description}</div>
 						</div>
 					}

@@ -21,10 +21,10 @@ export const PreviewJournal = React.createClass({
 
 		return (
 			<div style={styles.pubPreviewWrapper}>
-				<Link to={'/' + journal.slug} toJournal={true} customDomain={journal.customDomain} style={[styles.avatarWrapper, { backgroundImage: journal.avatar ? 'url("' + journal.avatar + '")' : '' }]} />
+				<Link to={'/' + journal.slug} customDomain={journal.customDomain} style={[styles.avatarWrapper, { backgroundImage: journal.avatar ? 'url("' + journal.avatar + '")' : '' }]} />
 				
 				<div style={styles.pubPreviewDetails}>
-					<Link to={'/' + journal.slug} toJournal={true} customDomain={journal.customDomain} style={styles.title}>{journal.title}</Link>
+					<Link to={'/' + journal.slug} customDomain={journal.customDomain} style={styles.title}>{journal.title}</Link>
 
 					<p style={styles.authorsWrapper}>{journal.description}</p>
 					{this.props.bottomContent &&

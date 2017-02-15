@@ -107,7 +107,7 @@ export const FollowButton = React.createClass({
 				{followerCount !== undefined &&
 					// Need to make this a link that appends /followers
 					// Might need to take in a link
-					<Link to={this.props.followersLink} toJournal={!!this.props.journalId} customDomain={this.props.journalCustomDomain} className="pt-button">{followerCount + Number((followData.followerId && this.state.justFollowed === 1) ? 0 : this.state.justFollowed || 0)}</Link>
+					<Link to={this.props.followersLink} customDomain={this.props.journalCustomDomain} className="pt-button">{followerCount + Number((followData.followerId && this.state.justFollowed === 1) ? 0 : this.state.justFollowed || 0)}</Link>
 				}
 				
 			</div>

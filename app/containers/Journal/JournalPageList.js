@@ -170,7 +170,7 @@ export const JournalPageList = React.createClass({
 
 				{/* Display button to toggle Label creator */}
 				{this.props.canEdit && !this.state.createOpen &&
-					<Link to={{ pathname: this.props.pathname, query: { ...this.props.query, view: 'pages' } }} toJournal={true} customDomain={journal.customDomain} className="pt-button pt-fill pt-minimal">
+					<Link to={{ pathname: this.props.pathname, query: { ...this.props.query, view: 'pages' } }} customDomain={journal.customDomain} className="pt-button pt-fill pt-minimal">
 						Manage Pages
 					</Link>
 				}
@@ -196,7 +196,7 @@ export const JournalPageList = React.createClass({
 				{selectedLabelsRender.map((label, index)=> {
 					const toObject = { pathname: `/${this.props.journal.slug}/page/${label.slug}` };
 
-					return <Link to={toObject} toJournal={true} customDomain={journal.customDomain} key={'label-' + index} className="pt-tag" style={[styles.label, { backgroundColor: label.color || '#CED9E0', color: label.color ? '#FFF' : '#293742' }]}>{label.title}</Link>;
+					return <Link to={toObject} customDomain={journal.customDomain} key={'label-' + index} className="pt-tag" style={[styles.label, { backgroundColor: label.color || '#CED9E0', color: label.color ? '#FFF' : '#293742' }]}>{label.title}</Link>;
 				})}
 					
 			</div>

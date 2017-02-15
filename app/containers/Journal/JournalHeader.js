@@ -36,11 +36,11 @@ export const JournalProfileHeader = React.createClass({
 
 					<div style={styles.headerTextWrapper}>
 						{(this.props.headerMode === 'logo' || this.props.headerMode === 'both') &&
-							<Link to={'/' + journal.slug} toJournal={true} customDomain={journal.customDomain} style={globalStyles.link}><img style={styles.logoImage} src={this.props.logo} /></Link>
+							<Link to={'/' + journal.slug} customDomain={journal.customDomain} style={globalStyles.link}><img style={styles.logoImage} src={this.props.logo} /></Link>
 						}
 
 						{(this.props.headerMode !== 'logo') &&
-							<Link to={'/' + journal.slug} toJournal={true} customDomain={journal.customDomain} style={globalStyles.link}><h1 style={[styles.headerTitle]}>{journal.title}</h1></Link>
+							<Link to={'/' + journal.slug} customDomain={journal.customDomain} style={globalStyles.link}><h1 style={[styles.headerTitle]}>{journal.title}</h1></Link>
 						}
 
 						{/*(this.props.headerMode !== 'logo') &&

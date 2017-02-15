@@ -94,7 +94,7 @@ export const AppNav = React.createClass({
 					{headerJournal && headerJournal.id &&
 						<div style={styles.journalLogoWrapper}>
 							<div style={[styles.journalLogoDivider, isLight && styles.journalLogoDividerDark]} />
-							<Link to={'/' + headerJournal.slug} toJournal={true} customDomain={headerJournal.customDomain}>
+							<Link to={'/' + headerJournal.slug} customDomain={headerJournal.customDomain}>
 								{!!headerJournal.logo &&
 									<img alt={headerJournal.title} src={headerJournal.logo} style={styles.journalLogo} />
 								}
@@ -165,12 +165,12 @@ export const AppNav = React.createClass({
 					<div>
 						<div className={'clearfix'} />
 						<div className={'pt-button-group pt-minimal'} style={{ marginLeft: '45px' }}>
-							<Link className={'pt-button'} role={'button'} key={'journal-home'} to={'/' + headerJournal.slug} toJournal={true} customDomain={headerJournal.customDomain}>Home</Link>
-							<Link className={'pt-button'} role={'button'} key={'journal-about'} to={'/' + headerJournal.slug + '/about'} toJournal={true} customDomain={headerJournal.customDomain}>About</Link>
+							<Link className={'pt-button'} role={'button'} key={'journal-home'} to={'/' + headerJournal.slug} customDomain={headerJournal.customDomain}>Home</Link>
+							<Link className={'pt-button'} role={'button'} key={'journal-about'} to={'/' + headerJournal.slug + '/about'} customDomain={headerJournal.customDomain}>About</Link>
 							{sortedPages.filter((page)=> {
 								return page.isDisplayed;
 							}).map((page)=> {
-								return <Link className={'pt-button'} role={'button'} key={'page-' + page.id} to={'/' + headerJournal.slug + '/page/' + page.slug} toJournal={true} customDomain={headerJournal.customDomain}>{page.title}</Link>;
+								return <Link className={'pt-button'} role={'button'} key={'page-' + page.id} to={'/' + headerJournal.slug + '/page/' + page.slug} customDomain={headerJournal.customDomain}>{page.title}</Link>;
 							})}
 						</div>		
 					</div>
