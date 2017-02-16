@@ -90,11 +90,12 @@ export const JournalPage = React.createClass({
 				{/*<h2 style={styles.pageHeader}>{page.title}</h2>*/}
 
 				{journal.isAdmin && !page.description && !this.state.editorOpen &&
-					<NonIdealState
-						action={<button className={'pt-button pt-icon-edit'} role="button" onClick={this.openEditor}>Add Details</button>}
-						description={'Add details to this Page.'}
-						title={'No Content Yet'}
-						visual={'annotation'} />
+					<div style={{ marginBottom: '3em' }}>
+						<NonIdealState
+							action={<button className={'pt-button pt-icon-edit'} role="button" onClick={this.openEditor}>Add Details to this Page</button>}
+							title={'No Details'}
+							visual={'annotation'} />
+					</div>
 				}
 
 				{page.description && !this.state.editorOpen &&
