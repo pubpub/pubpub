@@ -101,7 +101,7 @@ export const JournalPage = React.createClass({
 				{page.description && !this.state.editorOpen &&
 					<div className="journal-about-content">
 						{journal.isAdmin &&
-							<div style={{ float: 'right' }}>
+							<div style={{ float: 'right', margin: '0em 0em 1em 2em' }}>
 								<button className={'pt-button pt-icon-edit'} role="button" onClick={this.openEditor}>Edit Details</button>
 							</div>
 						}
@@ -134,7 +134,7 @@ export const JournalPage = React.createClass({
 				}
 
 				{!!pubs.length && page.description &&
-					<div style={styles.pubsHeader} />
+					<div style={styles.divider} />
 				}
 				{pubs.map((pubFeature, index)=> {
 					return <PreviewPub key={'pageItem-' + index} pub={pubFeature.pub} />;
@@ -157,9 +157,8 @@ styles = {
 	pageHeader: {
 		paddingBottom: '1em',
 	},
-	pubsHeader: {
-		margin: '1em 0em 0em',
-		padding: '1em 0em',
+	divider: {
+		margin: '2em 0em',
 		borderTop: '1px solid #F3F3F4',
 	},
 	loaderContainer: {

@@ -98,9 +98,6 @@ styles = {
 			backgroundPosition: 'center center',
 			backgroundSize: 'cover',
 			minHeight: hasPage ? '150px' : '400px',
-			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-				marginBottom: '0em',
-			}
 		};
 	},
 	backgroundGrey: {

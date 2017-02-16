@@ -328,7 +328,7 @@ styles = {
 	},
 	followButtonWrapper: {
 		// float: 'right',
-		right: 0,
+		right: '2em',
 		top: 0,
 		// position: 'relative',
 		position: 'absolute',
