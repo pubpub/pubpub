@@ -113,7 +113,7 @@ export const JournalEdit = React.createClass({
 
 	descriptionUpdate: function(evt) {
 		const description = evt.target.value || '';
-		this.setState({ description: description.substring(0, 140), canSave: true });
+		this.setState({ description: description.substring(0, 280), canSave: true });
 	},
 
 	saveJournal: function(evt) {
@@ -251,7 +251,7 @@ export const JournalEdit = React.createClass({
 							Short Description
 							<textarea className={'pt-input margin-bottom'} id={'description'} name={'description'} type="text" style={[styles.input, styles.textarea]} onChange={this.descriptionUpdate} value={this.state.description} />
 							<div className={'light-color inputSubtext'}>
-								{this.state.description.length} / 140
+								{this.state.description.length} / 280
 							</div>
 						</label>
 

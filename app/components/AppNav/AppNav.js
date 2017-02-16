@@ -166,7 +166,6 @@ export const AppNav = React.createClass({
 						<div className={'clearfix'} />
 						<div className={'pt-button-group pt-minimal'} style={{ marginLeft: '45px' }}>
 							<Link className={'pt-button'} role={'button'} key={'journal-home'} to={'/' + headerJournal.slug} customDomain={headerJournal.customDomain}>Home</Link>
-							<Link className={'pt-button'} role={'button'} key={'journal-about'} to={'/' + headerJournal.slug + '/about'} customDomain={headerJournal.customDomain}>About</Link>
 							{sortedPages.filter((page)=> {
 								return page.isDisplayed;
 							}).map((page)=> {

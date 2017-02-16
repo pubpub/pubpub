@@ -243,7 +243,15 @@ export default function reducer(state = defaultState, action) {
 		});
 
 	case PUT_LABEL_LOAD:
-		return state.setIn(
+		return state.merge({
+			pagesLoading: true,
+			pagesError: undefined,
+		});	
+	case PUT_LABEL_SUCCESS:
+		return state.merge({
+			pagesLoading: false,
+			pagesError: undefined,
+		}).setIn(
 			// Update all of the pages associated with a journal. Labels owned by the journal.
 			['journal', 'pages'], 
 			state.getIn(['journal', 'pages']).map((label)=> {
@@ -269,9 +277,12 @@ export default function reducer(state = defaultState, action) {
 				);
 			})
 		);
-	case PUT_LABEL_SUCCESS:
+	
 	case PUT_LABEL_FAIL:
-		return state;
+		return state.merge({
+			pagesLoading: false,
+			pagesError: action.error,
+		});	
 
 	case DELETE_LABEL_LOAD:
 		return state.merge({

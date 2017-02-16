@@ -175,7 +175,7 @@ export const JournalPages = React.createClass({
 					{!isEditing &&
 						<div style={styles.tableCell}>
 							<Link style={styles.pageTitle} to={'/' + journal.slug + '/page/' + page.slug} customDomain={journal.customDomain}>{page.title}</Link>
-							<div style={styles.pageDescription}>{page.description}</div>
+							{/* <div style={styles.pageDescription}>{page.description}</div >*/}
 						</div>
 					}
 					
@@ -194,11 +194,10 @@ export const JournalPages = React.createClass({
 								{/* <input type="text" className={'pt-input'} value={this.state.editingTitle} onChange={this.updateEditTitle} style={styles.labelEditInput} /> */}
 								<input type="text" className={'pt-input'} id={'editTitle'} defaultValue={page.title} style={styles.labelEditInput} />
 							</label>
-							<label>
+							{/* <label>
 								Description
-								{/* <textarea type="text" className={'pt-input'} value={this.state.editingDescription} onChange={this.updateEditDescription} style={styles.labelEditInput} /> */}
 								<textarea type="text" className={'pt-input'} id={'editDescription'} defaultValue={page.description} style={styles.labelEditInput} />
-							</label>
+							</label> */}
 							
 							<div className="pt-button-group" style={styles.labelEditActions}>
 								<Button loading={this.props.isLoading} className="pt-button pt-minimal pt-icon-trash" onClick={this.deleteEdit} />
@@ -240,10 +239,10 @@ export const JournalPages = React.createClass({
 							Title
 							<input type="text" className={'pt-input'} value={this.state.creatingTitle} onChange={this.updateCreateTitle} placeholder={'Page Name'} style={styles.labelEditInput} />
 						</label>
-						<label>
+						{/* <label>
 							Description
 							<textarea type="text" className={'pt-input'} value={this.state.creatingDescription} onChange={this.updateCreateDescription} placeholder={'Page Description'} style={styles.labelEditInput} />
-						</label>
+						</label> */}
 						
 						<Checkbox checked={this.state.creatingIsDisplayed} label={'Display in Header'} onChange={this.updateCreateIsDisplayed} />
 

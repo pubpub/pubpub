@@ -8,6 +8,7 @@ let styles = {};
 export const JournalProfileHeader = React.createClass({
 	propTypes: {
 		journal: PropTypes.object,
+		page: PropTypes.object,
 		logo: PropTypes.string,
 		headerColor: PropTypes.string,
 		headerImage: PropTypes.string,
@@ -18,52 +19,65 @@ export const JournalProfileHeader = React.createClass({
 
 	render: function() {
 		const journal = this.props.journal || {};
+		const hasPage = !!this.props.page.id;
 		const headerAlign = this.props.headerAlign;
 		const customBackgroundStyle = {
 			backgroundColor: this.props.headerColor || '#13A6EF',
 			backgroundImage: this.props.headerImage ? 'url("' + this.props.headerImage + '")' : '',
-			textAlign: this.props.headerAlign || 'left',
+			textAlign: hasPage ? 'left' : this.props.headerAlign || 'left',
 		};
 
 		let journalUrl = journal.website || '';
 		journalUrl = journalUrl.slice(0, 7) === 'http://' || journalUrl.slice(0, 8) === 'https://' ? journalUrl : `http://${journalUrl}`;
 
+		
+
 		return (
-			<div style={[styles.headerBackground, customBackgroundStyle]}>
+			<div style={[styles.headerBackground(hasPage), customBackgroundStyle]}>
 				<div style={styles.backgroundGrey} />
 				<div style={styles.headerContent}>
 					{this.props.followContent}
 
-					<div style={styles.headerTextWrapper}>
-						{(this.props.headerMode === 'logo' || this.props.headerMode === 'both') &&
-							<Link to={'/' + journal.slug} customDomain={journal.customDomain} style={globalStyles.link}><img style={styles.logoImage} src={this.props.logo} /></Link>
-						}
+					{!hasPage &&
+						<div style={styles.headerTextWrapper}>
+							{(this.props.headerMode === 'logo' || this.props.headerMode === 'both') &&
+								<Link to={'/' + journal.slug} customDomain={journal.customDomain} style={globalStyles.link}><img style={styles.logoImage} src={this.props.logo} /></Link>
+							}
 
-						{(this.props.headerMode !== 'logo') &&
-							<Link to={'/' + journal.slug} customDomain={journal.customDomain} style={globalStyles.link}><h1 style={[styles.headerTitle]}>{journal.title}</h1></Link>
-						}
+							{(this.props.headerMode !== 'logo') &&
+								<Link to={'/' + journal.slug} customDomain={journal.customDomain} style={globalStyles.link}><h1 style={styles.headerTitle}>{journal.title}</h1></Link>
+							}
 
-						{/*(this.props.headerMode !== 'logo') &&
+							{/*(this.props.headerMode !== 'logo') &&
+								<p>{journal.description}</p>
+							*/}
+
 							<p>{journal.description}</p>
-						*/}
-						<p>{journal.description}</p>
 
+						</div>
+					}
+
+					{hasPage && 
+						<div style={styles.headerTextWrapper}>
+							<h1 style={styles.headerTitle}>{this.props.page.title}</h1>
+						</div>
+					}
+				</div>
+
+				{!hasPage &&
+					<div style={styles.bottom}>
+						{journal.website &&
+							<a href={journalUrl} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}><span className={'pt-icon-large pt-icon-globe'} /></a>
+						}
+						{journal.twitter &&
+							<a href={'https://twitter.com/' + journal.twitter} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}><span className={'pt-icon-large pt-icon-twitter'} /></a>
+						}
+						{journal.facebook &&
+							<a href={'https://facebook.com/' + journal.facebook} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}><span className={'pt-icon-large pt-icon-facebook'} /></a>
+						}
 					</div>
-				</div>
-
-				<div style={styles.bottom}>
-					{/* <Link style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter} to={'/' + journal.slug}>Home</Link>
-					<Link style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter} to={'/' + journal.slug + '/about'}>About</Link> */}
-					{journal.website &&
-						<a href={journalUrl} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}><span className={'pt-icon-large pt-icon-globe'} /></a>
-					}
-					{journal.twitter &&
-						<a href={'https://twitter.com/' + journal.twitter} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}><span className={'pt-icon-large pt-icon-twitter'} /></a>
-					}
-					{journal.facebook &&
-						<a href={'https://facebook.com/' + journal.facebook} style={headerAlign === 'left' ? styles.pageLinkLeft : styles.pageLinkCenter}><span className={'pt-icon-large pt-icon-facebook'} /></a>
-					}
-				</div>
+				}
+				
 
 			</div>
 		);
@@ -74,18 +88,20 @@ export const JournalProfileHeader = React.createClass({
 export default Radium(JournalProfileHeader);
 
 styles = {
-	headerBackground: {
-		padding: '5em 0em 2em 0em',
-		marginBottom: '2em',
-		position: 'relative',
-		color: 'white',
-		backgroundRepeat: 'no-repeat',
-		backgroundPosition: 'center center',
-		backgroundSize: 'cover',
-		minHeight: '400px',
-		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
-			marginBottom: '0em',
-		}
+	headerBackground: function(hasPage) {
+		return {
+			padding: hasPage ? '3em 0em 2em 0em' : '5em 0em 2em 0em',
+			marginBottom: '2em',
+			position: 'relative',
+			color: 'white',
+			backgroundRepeat: 'no-repeat',
+			backgroundPosition: 'center center',
+			backgroundSize: 'cover',
+			minHeight: hasPage ? '150px' : '400px',
+			'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+				marginBottom: '0em',
+			}
+		};
 	},
 	backgroundGrey: {
 		position: 'absolute',

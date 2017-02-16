@@ -3,11 +3,10 @@ import Radium from 'radium';
 import ReactMarkdown from 'react-markdown';
 import AutocompleteBar from 'components/AutocompleteBar/AutocompleteBar';
 import PreviewUser from 'components/PreviewUser/PreviewUser';
-import Loader from 'components/Loader/Loader';
 import request from 'superagent';
 import dateFormat from 'dateformat';
 import { postJournalAdmin, deleteJournalAdmin } from './actionsAdmins';
-import { NonIdealState } from '@blueprintjs/core';
+import { NonIdealState, Button } from '@blueprintjs/core';
 import { putJournal } from './actions';
 import Textarea from 'react-textarea-autosize';
 
@@ -17,7 +16,7 @@ import { FormattedMessage } from 'react-intl';
 
 let styles;
 
-export const JournalAbout = React.createClass({
+export const JournalPeople = React.createClass({
 	propTypes: {
 		journal: PropTypes.object,
 		isLoading: PropTypes.bool,
@@ -28,8 +27,6 @@ export const JournalAbout = React.createClass({
 	getInitialState: function() {
 		return {
 			newAdmin: null,
-			editorOpen: false,
-			editorContent: undefined,
 		};
 	},
 
@@ -41,16 +38,6 @@ export const JournalAbout = React.createClass({
 
 		if (prevAdmins.length < nextAdmins.length) {
 			this.setState({ newAdmin: null });
-		}
-
-		const prevLoading = this.props.isLoading;
-		const nextLoading = nextProps.isLoading;
-		const nextError = nextProps.error;
-		if (prevLoading && !nextLoading && !nextError) {
-			this.setState({
-				editorOpen: false,
-				editorContent: undefined
-			});
 		}
 	},
 
@@ -85,26 +72,6 @@ export const JournalAbout = React.createClass({
 		this.props.dispatch(deleteJournalAdmin(this.props.journal.id, journalAdminId));
 	},
 
-	openEditor: function() {
-		this.setState({
-			editorOpen: true,
-			editorContent: this.props.journal.about || ''
-		});
-	},
-	closeEditor: function() {
-		this.setState({
-			editorOpen: false,
-			editorContent: undefined
-		});
-	},
-	saveEditor: function() {
-		const newJournalData = { about: this.state.editorContent };
-		this.props.dispatch(putJournal(this.props.journal.id, newJournalData));		
-	},
-
-	detailsChanged: function(evt) {
-		this.setState({ editorContent: evt.target.value });
-	},
 
 	render() {
 		const journal = this.props.journal || {};
@@ -112,46 +79,6 @@ export const JournalAbout = React.createClass({
 
 		return (
 			<div style={styles.container}>
-				
-				<h2>About {journal.title}</h2>
-
-				<div style={styles.aboutContent}>
-					{!journal.about && !this.state.editorOpen &&
-						<NonIdealState
-							action={<button className={'pt-button pt-icon-edit'} role="button" onClick={this.openEditor}>Add Details</button>}
-							description={'Details about this journal have not yet been added. You can use this space to describe the journal\'s vision, review process, or mission.'}
-							title={'No Content Yet'}
-							visual={'annotation'} />
-					}
-
-					{journal.about && !this.state.editorOpen &&
-						<div className="journal-about-content">
-							{journal.isAdmin &&
-								<div style={{ float: 'right' }}>
-									<button className={'pt-button pt-icon-edit'} role="button" onClick={this.openEditor}>Edit Details</button>
-								</div>
-							}
-							
-							<ReactMarkdown source={journal.about} />
-						</div>	
-					}
-					{this.state.editorOpen &&
-						<div>
-							<div>
-								
-								<div style={{ float: 'right' }}>
-									<div style={styles.loaderContainer}><Loader loading={this.props.isLoading} showCompletion={!this.props.error} /></div>
-									<button className={'pt-button'} role="button" onClick={this.closeEditor} style={{ marginRight: '0.5em' }}>Cancel</button>
-									<button className={'pt-button pt-intent-primary'} role="button" onClick={this.saveEditor}>Save Details</button>
-								</div>
-								<p style={{ paddingTop: '8px' }}><a href={'https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet'} target={'_blank'}>Markdown supported</a></p>
-							</div>
-							
-							<Textarea onChange={this.detailsChanged} value={this.state.editorContent} minRows={3} style={{ width: '100%', border: '1px solid #CCC', resize: 'none' }} />
-						</div>	
-					}
-				</div>
-			
 
 				<h2><FormattedMessage {...globalMessages.Admins} /></h2>
 				{journal.isAdmin &&
@@ -195,12 +122,11 @@ export const JournalAbout = React.createClass({
 	}
 });
 
-export default Radium(JournalAbout);
+export default Radium(JournalPeople);
 
 styles = {
 	container: {
-		maxWidth: '800px',
-		margin: '0 auto',
+		
 	},
 	aboutContent: {
 		margin: '2em 0em',

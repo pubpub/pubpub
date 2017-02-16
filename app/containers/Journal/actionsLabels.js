@@ -53,7 +53,7 @@ export function postLabel(journalId, title, description, isDisplayed, order) {
 
 export function putLabel(journalId, labelId, labelUpdates) {
 	return (dispatch) => {
-		dispatch({ type: PUT_LABEL_LOAD, labelId: labelId, labelUpdates: labelUpdates });
+		dispatch({ type: PUT_LABEL_LOAD });
 
 		return clientFetch('/api/label', {
 			method: 'PUT',
@@ -68,7 +68,7 @@ export function putLabel(journalId, labelId, labelUpdates) {
 			})
 		})
 		.then((result) => {
-			dispatch({ type: PUT_LABEL_SUCCESS, result });
+			dispatch({ type: PUT_LABEL_SUCCESS, result, labelId: labelId, labelUpdates: labelUpdates  });
 		})
 		.catch((error) => {
 			console.log(error);

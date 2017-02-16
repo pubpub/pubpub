@@ -57,5 +57,6 @@ styles = {
 		height: 'calc(100% + 2px)',
 		borderRadius: '0px 2px 2px 0px',
 		whiteSpace: 'nowrap',
+		padding: '3px 10px',
 	},
 };
