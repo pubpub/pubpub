@@ -19,7 +19,8 @@ export const JournalProfileHeader = React.createClass({
 
 	render: function() {
 		const journal = this.props.journal || {};
-		const hasPage = !!this.props.page.id;
+		const page = this.props.page || {};
+		const hasPage = !!page.id;
 		const headerAlign = this.props.headerAlign;
 		const customBackgroundStyle = {
 			backgroundColor: this.props.headerColor || '#13A6EF',
