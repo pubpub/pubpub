@@ -39,6 +39,37 @@ export const AppNav = React.createClass({
 		}
 	},
 
+	buildMenu: function(array, headerJournal) {
+		return (
+			<Menu>
+				{array.map((item)=> {
+					if (!item.children.length) {
+						return (
+							<li key={'page-' + item.id}>
+								<Link className={'pt-menu-item'} to={'/' + headerJournal.slug + '/page/' + item.slug} customDomain={headerJournal.customDomain}>{item.title}</Link>
+							</li>
+						);	
+					}
+					return (
+						<li className={'pt-submenu'}>
+							<Popover 
+								content={this.buildMenu(item.children, headerJournal)}
+								popoverClassName={'pt-minimal'}
+								transitionDuration={0}
+								inheritDarkTheme={false}
+								interactionKind={PopoverInteractionKind.HOVER}
+								key={'page-' + item.id}
+							>
+								
+									<Link className={'pt-menu-item'} to={'/' + headerJournal.slug + '/page/' + item.slug} customDomain={headerJournal.customDomain}>{item.title}</Link>	
+							</Popover>
+						</li>
+					);
+				})}
+			</Menu>
+		);
+	},
+
 	render() {
 		const user = this.props.accountData.user || {};
 		const pub = this.props.pubData.pub || {};
@@ -67,11 +98,39 @@ export const AppNav = React.createClass({
 		if (journalLoading || (!pubLoading && isPub)) { headerJournal = contextJournal; }
 
 		const pages = headerJournal ? headerJournal.pages || [] : [];
+
 		const sortedPages = pages.sort((foo, bar)=> {
 			if (foo.order < bar.order) { return -1; }
 			if (foo.order > bar.order) { return 1; }
 			return 0;
+		}).map((page)=> {
+			// console.log(page);
+			if (page.title === 'Issue 1') {
+				return { ...page, depth: 1 };
+			}
+			if (page.title === 'Issue 2') {
+				return { ...page, depth: 2 };
+			}
+			return { ...page, depth: 0 };
 		});
+
+		const getChildren = (arr, rootDepth = 0) => {
+			return arr.reduceRight((acc, val) => {
+				if (val.depth === rootDepth) {
+					val.children = getChildren(acc.children, rootDepth + 1);
+					acc.result.unshift(val);
+					acc.children = [];
+				} else {
+					acc.children.unshift(val);
+				}
+				return acc;
+			}, {
+				result: [],
+				children: []
+			}).result;
+		};
+		const nestedPages = getChildren(sortedPages);
+		console.log(nestedPages);
 
 		const contrastColor = headerJournal && contrastText(headerJournal.headerColor);
 		const isLight = headerJournal && contrastColor === '#000000';
@@ -166,10 +225,35 @@ export const AppNav = React.createClass({
 						<div className={'clearfix'} />
 						<div className={'pt-button-group pt-minimal'} style={{ marginLeft: '45px' }}>
 							<Link className={'pt-button'} role={'button'} key={'journal-home'} to={'/' + headerJournal.slug} customDomain={headerJournal.customDomain}>Home</Link>
-							{sortedPages.filter((page)=> {
+							{/*sortedPages.filter((page)=> {
 								return page.isDisplayed;
 							}).map((page)=> {
 								return <Link className={'pt-button'} role={'button'} key={'page-' + page.id} to={'/' + headerJournal.slug + '/page/' + page.slug} customDomain={headerJournal.customDomain}>{page.title}</Link>;
+							})*/}
+
+							{nestedPages.filter((page)=> {
+								return page.isDisplayed;
+							}).map((page)=> {
+								if (!page.children.length) {
+									return <Link className={'pt-button'} role={'button'} key={'page-' + page.id} to={'/' + headerJournal.slug + '/page/' + page.slug} customDomain={headerJournal.customDomain}>{page.title}</Link>;
+								}
+								return (
+									<Popover 
+										content={this.buildMenu(page.children, headerJournal)}
+										popoverClassName={'pt-minimal'}
+										transitionDuration={0}
+										inheritDarkTheme={false}
+										position={Position.BOTTOM_LEFT}
+										interactionKind={PopoverInteractionKind.HOVER}
+										key={'page-' + page.id}
+									>
+										<Link className={'pt-button'} role={'button'} key={'page-' + page.id} to={'/' + headerJournal.slug + '/page/' + page.slug} customDomain={headerJournal.customDomain}>
+											{page.title}
+											<span className={'pt-icon-standard pt-icon-caret-down pt-align-right'} />
+										</Link>
+									</Popover>
+								);
+								
 							})}
 						</div>		
 					</div>
