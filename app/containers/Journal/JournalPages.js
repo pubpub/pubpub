@@ -177,7 +177,7 @@ export const JournalPages = React.createClass({
 							{!!page.depth &&
 								<button style={styles.caretButton} onClick={this.onDepthChange.bind(this, page.id, 0)} className={'pt-button pt-minimal pt-icon-caret-left'} />
 							}
-							{!page.depth &&
+							{!page.isFirst && !page.depth &&
 								<button style={styles.caretButton} onClick={this.onDepthChange.bind(this, page.id, 1)} className={'pt-button pt-minimal pt-icon-caret-right'} />
 							}
 							
@@ -234,11 +234,10 @@ export const JournalPages = React.createClass({
 		const SortableList = SortableContainer(({ items }) => {
 			return (
 				<div>
-					{items.map((value, index, array) => {
+					{items.map((value, index) => {
 						const renderValue = {
 							...value,
-							minusDepth: Math.max(0, value.depth - 1),
-							addDepth: index === 0 ? 0 : Math.min(value.depth + 1, array[index - 1].depth + 1)
+							isFirst: index === 0
 						};
 						return <SortableItem key={`item-${index}`} index={index} value={renderValue} />;
 					})}
