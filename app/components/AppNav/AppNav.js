@@ -43,27 +43,12 @@ export const AppNav = React.createClass({
 		return (
 			<Menu>
 				{array.map((item)=> {
-					if (!item.children.length) {
-						return (
-							<li key={'page-' + item.id}>
-								<Link className={'pt-menu-item pt-popover-dismiss'} to={'/' + headerJournal.slug + '/page/' + item.slug} customDomain={headerJournal.customDomain}>{item.title}</Link>
-							</li>
-						);	
-					}
+					
 					return (
-						<li className={'pt-submenu'} key={'page-' + item.id}>
-							<Popover 
-								content={this.buildMenu(item.children, headerJournal)}
-								popoverClassName={'pt-minimal'}
-								transitionDuration={0}
-								inheritDarkTheme={false}
-								position={Position.RIGHT_TOP}
-								interactionKind={PopoverInteractionKind.HOVER}
-							>
-								<Link className={'pt-menu-item pt-popover-dismiss'} to={'/' + headerJournal.slug + '/page/' + item.slug} customDomain={headerJournal.customDomain}>{item.title}</Link>	
-							</Popover>
+						<li key={'page-' + item.id}>
+							<Link className={'pt-menu-item pt-popover-dismiss'} to={'/' + headerJournal.slug + '/page/' + item.slug} customDomain={headerJournal.customDomain}>{item.title}</Link>
 						</li>
-					);
+					);	
 				})}
 			</Menu>
 		);
@@ -230,7 +215,17 @@ export const AppNav = React.createClass({
 								}
 								return (
 									<Popover 
-										content={this.buildMenu(page.children, headerJournal)}
+										content={
+											<Menu>
+												{page.children.map((item)=> {
+													return (
+														<li key={'page-' + item.id}>
+															<Link className={'pt-menu-item pt-popover-dismiss'} to={'/' + headerJournal.slug + '/page/' + item.slug} customDomain={headerJournal.customDomain}>{item.title}</Link>
+														</li>
+													);	
+												})}
+											</Menu>
+										}
 										popoverClassName={'pt-minimal'}
 										transitionDuration={0}
 										inheritDarkTheme={false}

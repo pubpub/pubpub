@@ -186,8 +186,8 @@ export const JournalPages = React.createClass({
 					{!isEditing && journal.isAdmin &&
 						<div style={styles.smallTableCell}>
 							<div className={'pt-button-gorup'}>
-								<button onClick={this.onDepthChange.bind(this, page.id, page.depth - 1)} disabled={page.depth === 0}} className={'pt-button pt-icon-caret-left'} />
-								<button onClick={this.onDepthChange.bind(this, page.id, page.depth + 1)} disabled={page.depth + 1 > value.addDepth} className={'pt-button pt-icon-caret-right'} />
+								<button onClick={this.onDepthChange.bind(this, page.id, 0)} disabled={!page.depth} className={'pt-button pt-icon-caret-left'} />
+								<button onClick={this.onDepthChange.bind(this, page.id, 1)} disabled={page.depth} className={'pt-button pt-icon-caret-right'} />
 							</div>
 						</div>
 						
