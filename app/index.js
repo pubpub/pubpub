@@ -10,6 +10,8 @@ import configureStore from './configureStore';
 
 import fetch from 'isomorphic-fetch';
 
+require('./utils/includesPolyfill');
+
 const store = configureStore();
 if (window.location.hostname !== 'localhost') {
 	ga.initialize('UA-61723493-4');	

@@ -174,6 +174,13 @@ export const JournalPages = React.createClass({
 					{journal.isAdmin &&
 						<div style={styles.smallTableCell}>
 							<DragHandle />
+							{!!page.depth &&
+								<button style={styles.caretButton} onClick={this.onDepthChange.bind(this, page.id, 0)} className={'pt-button pt-minimal pt-icon-caret-left'} />
+							}
+							{!page.depth &&
+								<button style={styles.caretButton} onClick={this.onDepthChange.bind(this, page.id, 1)} className={'pt-button pt-minimal pt-icon-caret-right'} />
+							}
+							
 						</div>
 					}
 					{!isEditing &&
@@ -183,15 +190,14 @@ export const JournalPages = React.createClass({
 						</div>
 					}
 					
-					{!isEditing && journal.isAdmin &&
+					{/*!isEditing && journal.isAdmin &&
 						<div style={styles.smallTableCell}>
 							<div className={'pt-button-gorup'}>
 								<button onClick={this.onDepthChange.bind(this, page.id, 0)} disabled={!page.depth} className={'pt-button pt-icon-caret-left'} />
 								<button onClick={this.onDepthChange.bind(this, page.id, 1)} disabled={page.depth} className={'pt-button pt-icon-caret-right'} />
 							</div>
 						</div>
-						
-					}
+					*/}
 
 					{!isEditing && journal.isAdmin &&
 						<div style={styles.smallTableCell}>
@@ -313,6 +319,11 @@ styles = {
 	dragHandle: {
 		cursor: 'move',
 		padding: '.5em',
+	},
+	caretButton: {
+		display: 'block',
+		padding: '0em',
+		marginLeft: '5px',
 	},
 	pageTitle: {
 		display: 'block',
