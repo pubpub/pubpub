@@ -73,8 +73,11 @@ export const JournalSubmits = React.createClass({
 						title={'No Submitted Pubs'}
 						visual={'application'} />
 				}
+				<div className={'pt-callout pt-intent-warning'} style={{ marginBottom: '1em' }}>The below pubs have been submitted by their authors to <b>{journal.title}</b>. They have not yet been endorsed by this journal, but are available for the community to review and discuss.</div>
 				{
-					pubSubmits.sort((foo, bar)=>{
+					pubSubmits.filter((pubSubmit)=>{
+						return journal.isAdmin || !pubSubmit.isRejected;
+					}).sort((foo, bar)=>{
 						// Sort so that most recent is first in array
 						if (foo.createdAt > bar.createdAt) { return -1; }
 						if (foo.createdAt < bar.createdAt) { return 1; }
@@ -178,6 +181,7 @@ styles = {
 	buttons: {
 		display: 'table-cell',
 		width: '1%',
+		verticalAlign: 'top',
 	},
 	loaderContainer: {
 		display: 'inline-block',
