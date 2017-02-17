@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 import Radium from 'radium';
 import ReactMarkdown from 'react-markdown';
 
@@ -122,14 +123,14 @@ export const JournalPage = React.createClass({
 							<p style={{ paddingTop: '8px' }}><a href={'https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet'} target={'_blank'}>Markdown supported</a></p>
 						</div>
 						
-						<Textarea onChange={this.detailsChanged} value={this.state.editorContent} minRows={3} style={{ width: '100%', border: '1px solid #CCC', resize: 'none' }} />
+						<Textarea ref={(component) => ReactDOM.findDOMNode(component).focus()} onChange={this.detailsChanged} value={this.state.editorContent} minRows={3} style={{ width: '100%', border: '1px solid #CCC', resize: 'none' }} />
 					</div>	
 				}
 
 				{!pubs.length && !page.description &&
 					<NonIdealState
 						description={'Pubs have not yet been added into this page.'}
-						title={'Empty Page'}
+						title={'No Pubs'}
 						visual={'application'} />
 				}
 
