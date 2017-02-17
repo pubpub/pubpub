@@ -68,7 +68,7 @@ export function putLabel(journalId, labelId, labelUpdates) {
 			})
 		})
 		.then((result) => {
-			dispatch({ type: PUT_LABEL_SUCCESS, result, labelId: labelId, labelUpdates: labelUpdates  });
+			dispatch({ type: PUT_LABEL_SUCCESS, result, labelId: labelId, labelUpdates: labelUpdates });
 		})
 		.catch((error) => {
 			console.log(error);

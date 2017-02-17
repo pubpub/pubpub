@@ -146,6 +146,10 @@ export const JournalPages = React.createClass({
 		return this.props.dispatch(putLabel(this.props.journal.id, page.id, { order: nextOrder }));
 	},
 
+	onDepthChange: function(pageId, depth) {
+		return this.props.dispatch(putLabel(this.props.journal.id, pageId, { depth: depth }));
+	},
+
 	render: function() {
 		const journal = this.props.journal || {};
 		const pages = journal.pages || [];
@@ -166,7 +170,7 @@ export const JournalPages = React.createClass({
 			const page = value || {};
 			const isEditing = this.state.editingLabelId === page.id;
 			return (
-				<div style={styles.pageWrapper}>
+				<div style={styles.pageWrapper(page.depth)}>
 					{journal.isAdmin &&
 						<div style={styles.smallTableCell}>
 							<DragHandle />
@@ -179,6 +183,16 @@ export const JournalPages = React.createClass({
 						</div>
 					}
 					
+					{!isEditing && journal.isAdmin &&
+						<div style={styles.smallTableCell}>
+							<div className={'pt-button-gorup'}>
+								<button onClick={this.onDepthChange.bind(this, page.id, page.depth - 1)} disabled={page.depth === 0}} className={'pt-button pt-icon-caret-left'} />
+								<button onClick={this.onDepthChange.bind(this, page.id, page.depth + 1)} disabled={page.depth + 1 > value.addDepth} className={'pt-button pt-icon-caret-right'} />
+							</div>
+						</div>
+						
+					}
+
 					{!isEditing && journal.isAdmin &&
 						<div style={styles.smallTableCell}>
 							<button className="pt-button pt-icon-edit" style={{ marginBottom: '0.5em' }} onClick={this.editClick.bind(this, page)}>Edit</button>	
@@ -214,9 +228,14 @@ export const JournalPages = React.createClass({
 		const SortableList = SortableContainer(({ items }) => {
 			return (
 				<div>
-					{items.map((value, index) =>
-						<SortableItem key={`item-${index}`} index={index} value={value} />
-					)}
+					{items.map((value, index, array) => {
+						const renderValue = {
+							...value,
+							minusDepth: Math.max(0, value.depth - 1),
+							addDepth: index === 0 ? 0 : Math.min(value.depth + 1, array[index - 1].depth + 1)
+						};
+						return <SortableItem key={`item-${index}`} index={index} value={renderValue} />;
+					})}
 				</div>
 			);
 		});
@@ -271,12 +290,15 @@ export const JournalPages = React.createClass({
 export default Radium(JournalPages);
 
 styles = {
-	pageWrapper: {
-		margin: '1em 0em',
-		borderTop: '1px solid #DDD',
-		display: 'table',
-		width: '100%',
-		paddingTop: '1em',
+	pageWrapper: function(depth) {
+		return {
+			margin: `1em 0em 1em ${depth * 2}em`,
+			borderTop: '1px solid #DDD',
+			display: 'table',
+			maxWidth: '100%',
+			paddingTop: '1em',
+		};
+		
 	},
 	smallTableCell: {
 		display: 'table-cell',

@@ -46,22 +46,21 @@ export const AppNav = React.createClass({
 					if (!item.children.length) {
 						return (
 							<li key={'page-' + item.id}>
-								<Link className={'pt-menu-item'} to={'/' + headerJournal.slug + '/page/' + item.slug} customDomain={headerJournal.customDomain}>{item.title}</Link>
+								<Link className={'pt-menu-item pt-popover-dismiss'} to={'/' + headerJournal.slug + '/page/' + item.slug} customDomain={headerJournal.customDomain}>{item.title}</Link>
 							</li>
 						);	
 					}
 					return (
-						<li className={'pt-submenu'}>
+						<li className={'pt-submenu'} key={'page-' + item.id}>
 							<Popover 
 								content={this.buildMenu(item.children, headerJournal)}
 								popoverClassName={'pt-minimal'}
 								transitionDuration={0}
 								inheritDarkTheme={false}
+								position={Position.RIGHT_TOP}
 								interactionKind={PopoverInteractionKind.HOVER}
-								key={'page-' + item.id}
 							>
-								
-									<Link className={'pt-menu-item'} to={'/' + headerJournal.slug + '/page/' + item.slug} customDomain={headerJournal.customDomain}>{item.title}</Link>	
+								<Link className={'pt-menu-item pt-popover-dismiss'} to={'/' + headerJournal.slug + '/page/' + item.slug} customDomain={headerJournal.customDomain}>{item.title}</Link>	
 							</Popover>
 						</li>
 					);
@@ -104,14 +103,7 @@ export const AppNav = React.createClass({
 			if (foo.order > bar.order) { return 1; }
 			return 0;
 		}).map((page)=> {
-			// console.log(page);
-			if (page.title === 'Issue 1') {
-				return { ...page, depth: 1 };
-			}
-			if (page.title === 'Issue 2') {
-				return { ...page, depth: 2 };
-			}
-			return { ...page, depth: 0 };
+			return { ...page, depth: page.depth || 0 };
 		});
 
 		const getChildren = (arr, rootDepth = 0) => {
@@ -130,7 +122,6 @@ export const AppNav = React.createClass({
 			}).result;
 		};
 		const nestedPages = getChildren(sortedPages);
-		console.log(nestedPages);
 
 		const contrastColor = headerJournal && contrastText(headerJournal.headerColor);
 		const isLight = headerJournal && contrastColor === '#000000';
