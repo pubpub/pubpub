@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import ReactDOM from 'react-dom';
 import Radium from 'radium';
 import ReactMarkdown from 'react-markdown';
 
@@ -27,6 +26,7 @@ export const JournalPage = React.createClass({
 		return {
 			editorOpen: false,
 			editorContent: undefined,
+			textAreaFocused: false,
 		};
 	},
 
@@ -45,13 +45,14 @@ export const JournalPage = React.createClass({
 	openEditor: function() {
 		this.setState({
 			editorOpen: true,
-			editorContent: this.props.page.description || ''
+			editorContent: this.props.page.description || '',
+			textAreaFocused: false,
 		});
 	},
 	closeEditor: function() {
 		this.setState({
 			editorOpen: false,
-			editorContent: undefined
+			editorContent: undefined,
 		});
 	},
 	saveEditor: function() {
@@ -61,6 +62,13 @@ export const JournalPage = React.createClass({
 
 	detailsChanged: function(evt) {
 		this.setState({ editorContent: evt.target.value });
+	},
+
+	focusTextArea(component) {
+		if (!this.state.textAreaFocused) {
+			component.focus();
+			this.setState({ textAreaFocused: true });
+		}
 	},
 
 	render() {
@@ -123,7 +131,7 @@ export const JournalPage = React.createClass({
 							<p style={{ paddingTop: '8px' }}><a href={'https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet'} target={'_blank'}>Markdown supported</a></p>
 						</div>
 						
-						<Textarea ref={(component) => ReactDOM.findDOMNode(component).focus()} onChange={this.detailsChanged} value={this.state.editorContent} minRows={3} style={{ width: '100%', border: '1px solid #CCC', resize: 'none' }} />
+						<Textarea ref={this.focusTextArea} onChange={this.detailsChanged} value={this.state.editorContent} minRows={3} style={{ width: '100%', border: '1px solid #CCC', resize: 'none' }} />
 					</div>	
 				}
 
