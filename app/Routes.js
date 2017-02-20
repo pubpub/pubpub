@@ -49,6 +49,9 @@ const routes = (
 		<Route path="/pub/:slug/:meta" getComponent={getComponent('Pub', 'redirect')} />
 		<Route path="/pub/:slug/files/:filename" getComponent={getComponent('Pub', 'redirect')} />
 
+		<Route path="/experiments" getComponent={getComponent('Experiments', 'redirect')} />
+		<Route path="/experiments/:experiment" getComponent={getComponent('Experiments', 'redirect')} />
+
 		<Route path="/journals/create" getComponent={getComponent('CreateJournal', 'redirect')} />
 
 		{!isJournal &&

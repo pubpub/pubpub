@@ -63,6 +63,7 @@ export const AppNav = React.createClass({
 		const query = location.query || {};
 		const params = this.props.params || {};
 		const isPub = location.pathname.indexOf('/pub') === 0;
+		const isExperiment = location.pathname.substring(0, 12) === '/experiments';
 		const isJournal = location.pathname.split('/')[1] === params.slug || window.isJournal;
 
 		const pubFeatures = pub.pubFeatures || [];
@@ -139,19 +140,21 @@ export const AppNav = React.createClass({
 							</Link>
 						</div>
 					}
-					<form onSubmit={this.searchSubmited} style={styles.searchForm}>
-						<input className="pt-input" placeholder="Search PubPub" type="text" style={styles.searchInput} value={this.state.search} onChange={this.inputUpdate.bind(this, 'search')} />
-					</form>
+					{!isExperiment &&
+						<form onSubmit={this.searchSubmited} style={styles.searchForm}>
+							<input className="pt-input" placeholder="Search PubPub" type="text" style={styles.searchInput} value={this.state.search} onChange={this.inputUpdate.bind(this, 'search')} />
+						</form>
+					}
 				</div>
 				
-				{!user.id &&
+				{!user.id && !isExperiment &&
 					<div className="pt-navbar-group pt-align-right">
 						<Link to={{ pathname: '/login', query: { redirect: redirectURL } }} style={styles.menuLink}><button className="pt-button pt-minimal">Login</button></Link>
 						<Link to={{ pathname: '/signup' }} style={styles.menuLink}><button className="pt-button pt-intent-primary">Signup</button></Link>		
 					</div>
 				}
 
-				{user.id &&
+				{user.id && !isExperiment &&
 					<div className="pt-navbar-group pt-align-right">
 						<Popover 
 							content={<Menu>
