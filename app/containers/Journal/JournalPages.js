@@ -153,11 +153,15 @@ export const JournalPages = React.createClass({
 	render: function() {
 		const journal = this.props.journal || {};
 		const pages = journal.pages || [];
+
 		const sortedPages = pages.sort((foo, bar)=> {
 			if (foo.order < bar.order) { return -1; }
 			if (foo.order > bar.order) { return 1; }
 			return 0;
+		}).map((page)=> {
+			return { ...page, depth: page.depth || 0 };
 		});
+
 		const metaData = {
 			title: 'Pages · ' + journal.title,
 		};
