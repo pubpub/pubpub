@@ -19,9 +19,9 @@ export const ExperimentsMain = React.createClass({
 				link: '/experiments/reviewdiff',
 			},
 			{
-				title: 'Impact of Review',
-				description: 'We study the influence peer review has on the content of submitted peer-reviewed scientific papers. We ask for the first draft and final draft (after peer review) and anylyze the change in content. We will never share, publish, or release the raw before-and-after content - only measurements of differences.',
-				image: 'https://i.imgur.com/PNhwsH3.jpg',
+				title: 'Review Dinosaur Findings',
+				description: 'We explore a series of new tools for peer review. In this experiment, a user is simply asked to peer review a short article on the growth of dinosaurs.',
+				image: 'https://i.imgur.com/FZmoBfA.jpg',
 				link: '/experiments/reviewdiff',
 			}
 		];

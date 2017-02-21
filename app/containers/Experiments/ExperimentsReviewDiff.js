@@ -125,8 +125,8 @@ export const ExperimentsReviewDiff = React.createClass({
 
 						<p>Your submitted content and answers are anonymous and will never be shared, sold, or distributed in any identifiable form.</p>
 						<p>The results of these experiments will be published and available on PubPub.</p>
-						<div className={'pt-button-group'}>
-							<Button onClick={this.acceptTerms} className={'pt-intent-primary'}>I agree</Button>
+						<div>
+							<Button style={styles.button} onClick={this.acceptTerms} className={'pt-intent-primary'}>I agree</Button>
 						</div>
 					</div>
 				}
@@ -145,9 +145,9 @@ export const ExperimentsReviewDiff = React.createClass({
 								<Textarea style={styles.input} className={'pt-input'} value={this.state.after} onChange={evt => this.setState({ after: evt.target.value })}/>
 							</div>
 						</div>
-						<div className={'pt-button-group'}>
-							<Button onClick={this.acceptTermsBack}>Back</Button>
-							<Button onClick={this.addContent} className={'pt-intent-primary'}>Calculate Difference</Button>
+						<div>
+							<Button style={styles.button} onClick={this.acceptTermsBack}>Back</Button>
+							<Button style={styles.button} onClick={this.addContent} className={'pt-intent-primary'}>Calculate Difference</Button>
 						</div>
 					</div>
 				}
@@ -159,9 +159,9 @@ export const ExperimentsReviewDiff = React.createClass({
 						<div style={styles.differenceView}>
 							<Diff inputA={this.state.before} inputB={this.state.after} type={'sentences'}/>
 						</div>
-						<div className={'pt-button-group'}>
-							<Button onClick={this.addContentBack}>Back</Button>
-							<Button onClick={this.verifyDiff} className={'pt-intent-primary'}>Verify Difference</Button>
+						<div>
+							<Button style={styles.button} onClick={this.addContentBack}>Back</Button>
+							<Button style={styles.button} onClick={this.verifyDiff} className={'pt-intent-primary'}>Verify Difference</Button>
 						</div>
 					</div>
 				}
@@ -192,9 +192,9 @@ export const ExperimentsReviewDiff = React.createClass({
 							<Checkbox checked={this.state.accepted} label={'Work was accepted for publication'} onChange={evt => this.setState({ accepted: !this.state.accepted})} />
 							
 						</div>
-						<div className={'pt-button-group'}>
-							<Button onClick={this.verifyDiffBack}>Back</Button>
-							<Button onClick={this.submit} loading={this.state.submitLoading} className={'pt-intent-primary'}>Submit Content</Button>
+						<div>
+							<Button style={styles.button} onClick={this.verifyDiffBack}>Back</Button>
+							<Button style={styles.button} onClick={this.submit} loading={this.state.submitLoading} className={'pt-intent-primary'}>Submit Content</Button>
 						</div>
 						
 					</div>
@@ -261,6 +261,9 @@ styles = {
 	},
 	complete: {
 		margin: '3em 0em',
+	},
+	button: {
+		marginRight: '1em',
 	},
 	
 };
