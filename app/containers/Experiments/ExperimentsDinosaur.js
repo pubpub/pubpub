@@ -5,6 +5,8 @@ import Link from 'components/Link/Link';
 import Textarea from 'react-textarea-autosize';
 import { NonIdealState, Checkbox, Button, NumericInput, RadioGroup, Radio } from '@blueprintjs/core';
 import fetch from 'isomorphic-fetch';
+import ExperimentsDinosaurPaper from './ExperimentsDinosaurPaper';
+
 let styles = {};
 
 export const ExperimentsDinosaur = React.createClass({
@@ -32,7 +34,7 @@ export const ExperimentsDinosaur = React.createClass({
 			interestedInTopic: undefined,
 			field: 'todo: update choosing options',
 			feedback: '',
-			usedInterface: '',
+			usedInterface: undefined,
 		};
 	},
 
@@ -65,13 +67,13 @@ export const ExperimentsDinosaur = React.createClass({
 
 		if (!this.state.age) { return this.setState({ error: 'Age is required'}); }
 		if (!this.state.levelOfEducation) { return this.setState({ error: 'Level of Education is required'}); }
-		if (!this.state.isScientist) { return this.setState({ error: 'Scientist status is required'}); }
+		if (this.state.isScientist === undefined) { return this.setState({ error: 'Scientist status is required'}); }
 		if (!this.state.hasReviewed) { return this.setState({ error: 'Review experience is required'}); }
 		if (!this.state.hasBeenReviewed) { return this.setState({ error: 'Publishing experience is required'}); }
-		if (!this.state.interestedInTopic) { return this.setState({ error: 'Stated interest is required'}); }
+		if (this.state.interestedInTopic === undefined) { return this.setState({ error: 'Stated interest is required'}); }
 		if (!this.state.field) { return this.setState({ error: 'Field is required'}); }
 		if (!this.state.feedback) { return this.setState({ error: 'Please provide a short sentence or more describing your experience with this experiment.'}); }
-		if (this.state.mode !== 0 && !this.state.usedInterface) { return this.setState({ error: 'Used interactive interface is required'}); }
+		if (this.state.mode !== 0 && this.state.usedInterface === undefined) { return this.setState({ error: 'Used interactive interface is required'}); }
 
 		this.setState({ submitLoading: true, error: undefined });
 
@@ -124,13 +126,22 @@ export const ExperimentsDinosaur = React.createClass({
 		const hasBeenReviewedOptions = hasReviewedOptions;
 		const levelOfEducationOptions = ['None', 'High school student', 'Undergraduate student', 'Masters student', 'PhD student', 'Postdoc', 'Faculty'];
 
-		
+		const devMode = window.location.hostname !== 'www.pubpub.org';
 			
-			
-
 		return (
 			<div style={styles.container}>
 				<Helmet title={'Review of Scientific Work · PubPub'} />
+
+				{!!devMode &&
+					<div style={{ backgroundColor: '#F3F3F4', position: 'fixed', right: '1em', top: '5em', textAlign: 'right', padding: '0.5em' }}>
+						<h6>Dev: Set Mode</h6>
+						<div className={'pt-button-group'}>
+							<Button key={'mode-0'} text={'0'} onClick={evt => this.setState({ mode: 0 })} className={this.state.mode === 0 ? 'pt-active' : ''}/>
+							<Button key={'mode-1'} text={'1'} onClick={evt => this.setState({ mode: 1 })} className={this.state.mode === 1 ? 'pt-active' : ''}/>
+							<Button key={'mode-2'} text={'2'} onClick={evt => this.setState({ mode: 2 })} className={this.state.mode === 2 ? 'pt-active' : ''}/>
+						</div>
+					</div>
+				}
 
 				{!this.state.acceptedTerms &&
 					<div>
@@ -142,6 +153,7 @@ export const ExperimentsDinosaur = React.createClass({
 							<li>Answer a short series of survey questions.</li>
 						</ol>
 
+						<p>The content of the article you will review is taken from a real scientific publication. We omit references and real names, alter the text for brevity, and make other manipulations for the sake of this study. The paper presented is <i>not</i> the work of the original authors, though we pull heavily from it. Proper attribution and links to the source material will be available at the end of the study. </p>
 						<p>Your submitted content and answers are anonymous and will never be shared, sold, or distributed in any identifiable form.</p>
 						<p>The results of this experiment will be published and available on PubPub.</p>
 						<div>
@@ -155,8 +167,8 @@ export const ExperimentsDinosaur = React.createClass({
 						<h1>Review of Scientific Work: Review</h1>				
 						<p>Please read the following article. Your goal as a peer reviewer is to be critical of the processes, writing, and conclusions. At the end of the article, we ask you to write a few short sentences and rate the work.</p>
 						
-						<div className={'pt-card pt-elevation-2'}>
-							<h1>Great Paper</h1>
+						<div className={'pt-card pt-elevation-2'} style={styles.paper}>
+							<ExperimentsDinosaurPaper mode={this.state.mode} />
 						</div>
 
 						<label>
@@ -181,9 +193,9 @@ export const ExperimentsDinosaur = React.createClass({
 								<Button key={'reviewRating-10'} text={10} onClick={evt => this.setState({ reviewRating: 10 })} className={this.state.reviewRating === 10 ? 'pt-active' : ''}/>
 							</div>
 
-							<div style={{ width: 'calc(100% / 11 * 4 - 2px', display: 'inline-block', textAlign: 'center', padding: '4em 0em 1em', marginTop: '-3em', backgroundColor: '#f3f3f4'}}>Reject</div>
-							<div style={{ width: 'calc(100% / 11 * 3', display: 'inline-block', textAlign: 'center', padding: '4em 0em 1em', marginTop: '-3em', backgroundColor: '#d3d3d4'}}>Request Revisions</div>
-							<div style={{ width: 'calc(100% / 11 * 4', display: 'inline-block', textAlign: 'center', padding: '4em 0em 1em', marginTop: '-3em', backgroundColor: '#f3f3f4'}}>Accept</div>
+							<div style={{ width: 'calc(100% / 11 * 4 - 2px', display: 'inline-block', textAlign: 'center', padding: '4em 0em 1em', marginTop: '-3em', backgroundColor: '#f3f3f4'}}>0-3 = Reject</div>
+							<div style={{ width: 'calc(100% / 11 * 3', display: 'inline-block', textAlign: 'center', padding: '4em 0em 1em', marginTop: '-3em', backgroundColor: '#d3d3d4'}}>4-6 = Request Revisions</div>
+							<div style={{ width: 'calc(100% / 11 * 4', display: 'inline-block', textAlign: 'center', padding: '4em 0em 1em', marginTop: '-3em', backgroundColor: '#f3f3f4'}}>7-10 = Accept</div>
 						</div>
 
 						<div>
@@ -255,7 +267,7 @@ export const ExperimentsDinosaur = React.createClass({
 
 						<div>
 							<Button style={styles.button} onClick={this.submitReviewBack}>Back</Button>
-							<Button style={styles.button} onClick={this.submitSurvey} className={'pt-intent-primary'}>Submit and Finish Experiment</Button>
+							<Button style={styles.button} onClick={this.submitSurvey} loading={this.state.submitLoading} className={'pt-intent-primary'}>Submit and Finish Experiment</Button>
 						</div>
 					</div>
 				}
@@ -272,6 +284,9 @@ export const ExperimentsDinosaur = React.createClass({
 								title={'Review Submitted!'}
 								visual={'endorsed'} />
 						</div>
+						<div>The original scientific articles used for this study are cited below. The work presented in this study is an alteration of the two documents and does not represent the original science presented by the authors.</div>
+						<div className={'pt-callout'}>Bybee, P. J., Lee, A. H. and Lamm, E.-T. (2006), Sizing the Jurassic theropod dinosaur Allosaurus: Assessing growth strategy and evolution of ontogenetic scaling of limbs. J. Morphol., 267: 347–359. doi:10.1002/jmor.10406</div>
+						<div className={'pt-callout'}>Myhrvold NP (2013) Revisiting the Estimation of Dinosaur Growth Rates. PLOS ONE 8(12): e81917. doi: 10.1371/journal.pone.0081917</div>
 					</div>
 				}
 
@@ -293,7 +308,7 @@ export default Radium(ExperimentsDinosaur);
 
 styles = {
 	container: {
-		maxWidth: '767px',
+		maxWidth: '967px',
 		padding: '2em 1em',
 		margin: '0 auto',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
@@ -315,5 +330,8 @@ styles = {
 		width: '100%',
 		minHeight: '3em',
 	},
+	paper: {
+		marginBottom: '3em',
+	}
 	
 };
