@@ -3,6 +3,7 @@ import Radium from 'radium';
 
 import ExperimentsMain from './ExperimentsMain';
 import ExperimentsReviewDiff from './ExperimentsReviewDiff';
+import ExperimentsDinosaur from './ExperimentsDinosaur';
 
 export const Experiments = React.createClass({
 	propTypes: {
@@ -23,7 +24,9 @@ export const Experiments = React.createClass({
 		switch (mode) {
 		case 'reviewdiff':
 			return <ExperimentsReviewDiff />;
-		default :
+		case 'dinosaur':
+			return <ExperimentsDinosaur />;
+		default:
 			return <ExperimentsMain />;
 		}
 		

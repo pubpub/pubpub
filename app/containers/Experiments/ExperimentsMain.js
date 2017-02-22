@@ -20,9 +20,9 @@ export const ExperimentsMain = React.createClass({
 			},
 			{
 				title: 'Review Dinosaur Findings',
-				description: 'We explore a series of new tools for peer review. In this experiment, a user is simply asked to peer review a short article on the growth of dinosaurs.',
+				description: 'We explore a series of tools for peer review. We ask you to play the role of a peer reviewer and review a short article on the growth of dinosaurs.',
 				image: 'https://i.imgur.com/FZmoBfA.jpg',
-				link: '/experiments/reviewdiff',
+				link: '/experiments/dinosaur',
 			}
 		];
 

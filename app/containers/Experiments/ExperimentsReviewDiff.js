@@ -124,7 +124,7 @@ export const ExperimentsReviewDiff = React.createClass({
 						</ol>
 
 						<p>Your submitted content and answers are anonymous and will never be shared, sold, or distributed in any identifiable form.</p>
-						<p>The results of these experiments will be published and available on PubPub.</p>
+						<p>The result of this experiment will be published and available on PubPub.</p>
 						<div>
 							<Button style={styles.button} onClick={this.acceptTerms} className={'pt-intent-primary'}>I agree</Button>
 						</div>
@@ -138,11 +138,11 @@ export const ExperimentsReviewDiff = React.createClass({
 						<div style={styles.addContentTable}>
 							<div style={styles.addContentCell}>
 								Draft before Review:
-								<Textarea style={styles.input} className={'pt-input'} value={this.state.before} onChange={evt => this.setState({ before: evt.target.value })}/>
+								<Textarea style={styles.input} className={'pt-input'} value={this.state.before} onChange={evt => this.setState({ before: evt.target.value })} />
 							</div>
 							<div style={styles.addContentCell}>
 								Draft after Review:
-								<Textarea style={styles.input} className={'pt-input'} value={this.state.after} onChange={evt => this.setState({ after: evt.target.value })}/>
+								<Textarea style={styles.input} className={'pt-input'} value={this.state.after} onChange={evt => this.setState({ after: evt.target.value })} />
 							</div>
 						</div>
 						<div>
