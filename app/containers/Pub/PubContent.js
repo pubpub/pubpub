@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 
 // import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router';
-import { PUBPUB_EDITOR_URL } from 'config';
+import { PUBPUB_EDITOR_URL } from 'configURLs';
 import Radium from 'radium';
 import RenderFile from 'components/RenderFile/RenderFile';
 import dateFormat from 'dateformat';

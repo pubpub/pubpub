@@ -1,7 +1,3 @@
-if (process.env.NODE_ENV !== 'production') {
-	require('./config');
-}
-
 require('babel-core/register');
 
 require.extensions['.css'] = () => { return; };
