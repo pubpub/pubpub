@@ -121,6 +121,8 @@ export const ExperimentsDinosaur = React.createClass({
 	render: function() {
 		// TODO - need to check if the user has already completed this experiment
 		// TODO - add field to 
+		// TODO - track time on page
+		// TODO - track time interacting
 		const ageOptions = ['0 - 18', '19 - 25', '26 - 35'];
 		const hasReviewedOptions = ['never', '1 or 2 times', '2-5 times', 'more than 5 times'];
 		const hasBeenReviewedOptions = hasReviewedOptions;
