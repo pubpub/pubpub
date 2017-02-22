@@ -148,7 +148,9 @@ export const ExperimentsDinosaurPaper = React.createClass({
 		// TODO: Make review textarea not state bound - otherwise we keep re-rendering graph.
 		// Store code and slider offsets on save
 		// TODO: don't display on mobile
-
+		// todo: Store interaction data - don't ask the question. Number of focuses on code. Number of times code run. Number of slide changes. Number of slide releases.
+		// Todo - make active buttons darker
+		
 		return (
 			<div id={'article-container'}>
 				<h1 style={styles.header}>Assessing Growth Patterns of the Jurassic Theropod Dinosaur Allosaurus</h1>
