@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 
 // import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router';
+import { PUBPUB_EDITOR_URL } from 'config';
 import Radium from 'radium';
 import RenderFile from 'components/RenderFile/RenderFile';
 import dateFormat from 'dateformat';
@@ -168,8 +169,7 @@ export const PubContent = React.createClass({
 	openEditor: function() {
 		const { userAccessToken, userName } = this.props;
 		const slug = this.props.pub.slug;
-		const editorURL = 'https://editor.pubpub.org';
-		const url = `${editorURL}/user/access/${slug}/${userName}/${userAccessToken}`;
+		const url = `${PUBPUB_EDITOR_URL}/user/access/${slug}/${userName}/${userAccessToken}`;
 		window.open(url, '_blank');
 	},
 
@@ -216,7 +216,7 @@ export const PubContent = React.createClass({
 									<div>
 										<Link to={'/pub/markdown'} style={{ marginRight: '0.5em' }}>How to write with PubPub Markdown</Link>
 									</div>
-									
+
 									{/*<span style={{ width: '1em', height: '1em', display: 'inline-block' }} />
 									<a className="pt-button" tabIndex="0" role="button" >Open Editor</a>*/}
 
@@ -239,10 +239,10 @@ export const PubContent = React.createClass({
 							<input id={'upload'} type="file" multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
 						</label>
 
-						{/*<button className={'pt-button'} onClick={this.openEditor} style={{ marginLeft: '1em' }}>
+						<button className={'pt-button'} onClick={this.openEditor} style={{ marginLeft: '1em' }}>
 							Open Editor
 							<span className={'pt-icon-standard  pt-icon-caret-down pt-align-right'} />
-						</button>*/}
+						</button>
 
 					</div>
 				}
