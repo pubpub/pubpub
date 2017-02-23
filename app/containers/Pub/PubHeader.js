@@ -19,6 +19,8 @@ export const PubHeader = React.createClass({
 		preservedQuery: PropTypes.object,
 		currentVersion: PropTypes.object,
 		meta: PropTypes.string,
+		userAccessToken: PropTypes.string,
+		userName: PropTypes.string,
 		pathname: PropTypes.string,
 		query: PropTypes.object,
 		dispatch: PropTypes.func,
