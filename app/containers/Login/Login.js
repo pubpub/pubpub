@@ -5,8 +5,6 @@ import { Link, browserHistory } from 'react-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 
-
-// import { Loader } from 'components';
 import { Button } from '@blueprintjs/core';
 
 import { globalStyles } from 'utils/globalStyles';
@@ -146,11 +144,6 @@ styles = {
 	input: {
 		width: 'calc(100% - 20px - 4px)', // Calculations come from padding and border in pubpub.css
 	},
-	// loaderContainer: {
-	// 	display: 'inline-block',
-	// 	position: 'relative',
-	// 	top: 15,
-	// },
 	errorMessage: {
 		margin: '1em 0px',
 		color: globalStyles.errorRed,

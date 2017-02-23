@@ -167,11 +167,11 @@ export const PubDiscussionsList = React.createClass({
 				<div style={styles.header}>
 					<div style={{ textAlign: 'right' }}>
 						<div className="pt-button-group small-button" style={styles.topButton}>
-							<Link to={{ pathname: `/pub/${pub.slug}/reviewers`, query: { ...query } }} className="pt-button">Invite Reviewer</Link>
+							<Link to={{ pathname: `/pub/${pub.slug}/reviewers`, query: { ...query } }} className="pt-button">Invite reviewer</Link>
 							<Link to={{ pathname: `/pub/${pub.slug}/reviewers`, query: { ...query } }} className="pt-button">{invitedReviewers.length}</Link>
 						</div>
 
-						<Link to={{ pathname: pathname, query: { ...query, panel: 'new' } }} className="pt-button small-button pt-icon-add" style={styles.topButton}>New Discussion</Link>
+						<Link to={{ pathname: pathname, query: { ...query, panel: 'new' } }} className="pt-button small-button pt-icon-add" style={styles.topButton}>New discussion</Link>
 
 						<div style={{ textAlign: 'right', opacity: 0, pointerEvents: 'none' }}>
 							<button role={'button'} className={'pt-button pt-minimal pt-icon-filter-list'}>Filter</button>	
