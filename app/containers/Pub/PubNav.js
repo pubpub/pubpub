@@ -37,6 +37,7 @@ export const PubNav = React.createClass({
 			{
 				icon: 'pt-icon-projects',
 				title: 'Content',
+				mobileTitle: '',
 				subtitle: `${currentFiles.length} files`,
 				to: { pathname: '/pub/' + pub.slug, query: preservedQuery },
 				active: meta === '/' || !meta
@@ -44,6 +45,7 @@ export const PubNav = React.createClass({
 			{
 				icon: 'pt-icon-calendar',
 				title: `${versions.length} Version${versions.length === 1 ? '' : 's'}`,
+				mobileTitle: versions.length,
 				subtitle: `Current: ${dateFormat(currentVersion.createdAt, 'mmm dd, yyyy')}`,
 				to: { pathname: '/pub/' + pub.slug + '/versions', query: preservedQuery },
 				active: meta === 'versions',
@@ -52,6 +54,7 @@ export const PubNav = React.createClass({
 			{
 				icon: 'pt-icon-person',
 				title: `${contributors.length} Contributor${contributors.length === 1 ? '' : 's'}`,
+				mobileTitle: contributors.length,
 				subtitle: `${contributors.length} authors`,
 				to: { pathname: '/pub/' + pub.slug + '/contributors', query: preservedQuery },
 				active: meta === 'contributors'
@@ -59,6 +62,7 @@ export const PubNav = React.createClass({
 			{
 				icon: 'pt-icon-manual',
 				title: `${pubFeatures.length} Journal${pubFeatures.length === 1 ? '' : 's'}`,
+				mobileTitle: pubFeatures.length,
 				subtitle: `${pubFeatures.length} featuring`,
 				to: { pathname: '/pub/' + pub.slug + '/journals', query: preservedQuery },
 				active: meta === 'journals',
@@ -67,6 +71,7 @@ export const PubNav = React.createClass({
 			{
 				icon: 'pt-icon-cog',
 				title: 'Settings',
+				mobileTitle: '',
 				subtitle: `${pubFeatures.length} featuring`,
 				to: { pathname: '/pub/' + pub.slug + '/settings', query: preservedQuery },
 				active: meta === 'settings',
@@ -86,7 +91,8 @@ export const PubNav = React.createClass({
 					}).map((navItem, index)=> {
 						return (
 							<Link to={navItem.to} className={'pt-button ' + navItem.icon} style={styles.navItemWrapper(navItems.length, navItem.active)} key={`navItem-${index}`}>
-								{navItem.title}
+								<span style={styles.desktopTitle}>{navItem.title}</span>
+								<span style={styles.mobileTitle}>{navItem.mobileTitle}</span>
 								{navItem.active &&
 									<div style={styles.bottomBorder(this.props.useLightText)} />
 								}
@@ -208,5 +214,16 @@ styles = {
 		paddingTop: '0.5em',
 		color: '#738694',
 		display: 'none',
+	},
+	desktopTitle: {
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		}
+	},
+	mobileTitle: {
+		display: 'none',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'inline',
+		}
 	},
 };
