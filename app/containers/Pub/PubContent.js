@@ -238,19 +238,11 @@ export const PubContent = React.createClass({
 							Upload Files
 							<input id={'upload'} type="file" multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
 						</label>
-
-<<<<<<< HEAD
-=======
-						{/*
->>>>>>> master
+						
 						<button className={'pt-button'} onClick={this.openEditor} style={{ marginLeft: '1em' }}>
 							Open Editor
 							<span className={'pt-icon-standard pt-align-right'} />
 						</button>
-<<<<<<< HEAD
-=======
-						*/}
->>>>>>> master
 					</div>
 				}
 
