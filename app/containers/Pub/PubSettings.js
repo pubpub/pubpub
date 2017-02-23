@@ -237,7 +237,7 @@ export const PubSettings = React.createClass({
 				</StickyContainer>
 
 				{!pub.isPublished && 
-					<div>
+					<div style={styles.deleteBlock}>
 						<div className={'pt-callout pt-intent-danger'}>
 							<h5>Delete Pub</h5>
 							<p>A pub cannot be deleted if it is published. Deleting a Pub is permanent.</p>
@@ -307,5 +307,8 @@ styles = {
 		marginRight: '3em',
 		verticalAlign: 'top',
 		display: 'inline-block',
+	},
+	deleteBlock: {
+		padding: '1em 0em',
 	},
 };
