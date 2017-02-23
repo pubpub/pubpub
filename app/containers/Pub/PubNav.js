@@ -137,15 +137,15 @@ export default Radium(PubNav);
 
 styles = {
 	container: {
-		// borderBottom: '1px solid #f3f3f4',
-		// padding: '10px 0em',
-		// marginBottom: '40px',
-	},
-	content: {
-		width: '100%',
 		maxWidth: '1200px',
 		margin: '0 auto',
 		padding: '0em 2em',
+	},
+	content: {
+		width: '100%',
+		// maxWidth: '1200px',
+		// margin: '0 auto',
+		// padding: '0em 2em',
 	},
 	navItemWrapper: (count, isActive)=> {
 		return {
