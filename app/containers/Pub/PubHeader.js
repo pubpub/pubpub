@@ -28,7 +28,7 @@ export const PubHeader = React.createClass({
 		const { userAccessToken, userName } = this.props;
 		const slug = this.props.pub.slug;
 		const url = `${PUBPUB_EDITOR_URL}/user/access/${slug}/${userName}/${userAccessToken}`;
-		window.href = url;
+		window.location.href = url;
 	},
 
 

@@ -170,7 +170,7 @@ export const PubContent = React.createClass({
 		const { userAccessToken, userName } = this.props;
 		const slug = this.props.pub.slug;
 		const url = `${PUBPUB_EDITOR_URL}/user/access/${slug}/${userName}/${userAccessToken}`;
-		location.href = url;
+		window.location.href = url;
 	},
 
 	render() {
@@ -238,7 +238,7 @@ export const PubContent = React.createClass({
 							Upload Files
 							<input id={'upload'} type="file" multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
 						</label>
-						
+
 						<button className={'pt-button'} onClick={this.openEditor} style={{ marginLeft: '1em' }}>
 							Open Editor
 							<span className={'pt-icon-standard pt-align-right'} />
