@@ -79,7 +79,7 @@ export const PubNav = React.createClass({
 					'.button-nav .pt-button-group.pt-minimal .pt-button::after': { margin: '7px 5px' },
 				}} />
 			
-				<div style={styles.content} className={'pt-button-group pt-minimal pt-fill'}>
+				<div style={styles.content} className={'pt-button-group pt-minimal pt-fill-not'}>
 				
 					{navItems.filter((navItem)=> {
 						return !navItem.hidden;
@@ -153,9 +153,12 @@ styles = {
 			// cursor: 'pointer',
 			// textDecoration: 'none',
 			// backgroundColor: isActive ? 'rgba(167, 182, 194, 0.18)' : '',
+			
 			fontWeight: 200,
 			position: 'relative',
-			padding: '5px 0px',
+			// padding: '5px 0px',
+			padding: '8px 25px',
+
 			// top: 1, // To get active line to overlap the bottom border
 			// border: 0,
 			// borderRadius: '0px !important',
