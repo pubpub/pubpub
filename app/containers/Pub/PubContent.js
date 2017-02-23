@@ -170,7 +170,7 @@ export const PubContent = React.createClass({
 		const { userAccessToken, userName } = this.props;
 		const slug = this.props.pub.slug;
 		const url = `${PUBPUB_EDITOR_URL}/user/access/${slug}/${userName}/${userAccessToken}`;
-		window.href = url;
+		location.href = url;
 	},
 
 	render() {
