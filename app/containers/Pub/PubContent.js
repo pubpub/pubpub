@@ -252,30 +252,6 @@ export const PubContent = React.createClass({
 					</div>
 				}
 
-				{/* Breadcrumbs */}
-				{/* Shown as long as there are files */}
-				{/*!!files.length && files.length > 1 &&
-					<div style={{ marginBottom: '1em' }}>
-						{meta !== 'files' && !routeFilename &&
-							<ul className="pt-breadcrumbs">
-								<li><Link to={{ pathname: '/pub/' + this.props.pub.slug + '/files', query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> {files.length} Files</Link></li>
-							</ul>
-						}
-						{meta === 'files' && !routeFilename &&
-							<ul className="pt-breadcrumbs">
-								<li><Link to={{ pathname: '/pub/' + this.props.pub.slug, query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-document" /> Main</Link></li>
-							</ul>
-						}
-
-						{!!routeFilename &&
-							<ul className="pt-breadcrumbs">
-								<li><Link to={{ pathname: '/pub/' + this.props.pub.slug + '/files', query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> Files</Link></li>
-								<li><a className="pt-breadcrumb">{routeFile.name}</a></li>
-							</ul>
-						}
-					</div>
-				*/}
-
 				{/* Uploading Section */}
 				{this.state.uploading &&
 					<div style={styles.uploadingSection} className={'pt-card pt-elevation-2'}>
@@ -456,14 +432,6 @@ styles = {
 		color: globalStyles.errorRed,
 	},
 	pubStyle: {
-		// padding: '0em 1.25em',
-		// fontFamily: 'Merriweather',
-		// fontWeight: 'light',
-		// fontSize: '14px',
-		// lineHeight: '24px',
-		// lineHeight: '1.6em',
-		// fontSize: '1.2em',
-		// color: '#333',
 		maxWidth: '700px',
 	}
 };

@@ -17,18 +17,15 @@ import PubDiscussion from './PubDiscussion';
 import PubDiscussionsList from './PubDiscussionsList';
 import PubDiscussionsNew from './PubDiscussionsNew';
 import PubFollowers from './PubFollowers';
-// import PubDocument from './PubDocument';
 import PubHeader from './PubHeader';
 import PubInvitedReviewerMessage from './PubInvitedReviewerMessage';
 import PubJournals from './PubJournals';
-// import PubLabelList from './PubLabelList';
 import PubReviewers from './PubReviewers';
 import PubSettings from './PubSettings';
 import PubSidePanel from './PubSidePanel';
 import PubVersions from './PubVersions';
 import Radium from 'radium';
 import Rangy from 'rangy';
-// import Tag from 'components/Tag/Tag';
 import { connect } from 'react-redux';
 import dateFormat from 'dateformat';
 import { getPubData } from './actions';
@@ -474,29 +471,6 @@ export const Pub = React.createClass({
 													dispatch={this.props.dispatch} />
 											}
 
-											{/*<div style={{height: 'calc(100% - 150px)', width: '100%', backgroundColor: 'orange', overflow: 'hidden', overflowY: 'scroll', position: 'relative'}}>
-												<p>Hey so this is a thing about cats and dogs.</p>
-												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-												<p>Hey so this is a thing about cats and dogs.</p>
-												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-												<p>Hey so this is a thing about cats and dogs.</p>
-												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-												<p>Hey so this is a thing about cats and dogs.</p>
-												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-												<p>Hey so this is a thing about cats and dogs.</p>
-												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-												<p>Hey so this is a thing about cats and dogs.</p>
-												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-												<p>Hey so this is a thing about cats and dogs.</p>
-												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-												<p>Hey so this is a thing about cats and dogs.</p>
-												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-
-											</div>
-
-											<div style={{height: '100px', width: '100%', backgroundColor: 'red', position: 'relative'}}>
-												<div style={styles.bottomFade}></div>
-											</div>*/}
 										</PubSidePanel>
 									</div>
 								}
