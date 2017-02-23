@@ -213,6 +213,12 @@ export const PubContent = React.createClass({
 										Upload Files
 										<input type="file" id={'add-files'} multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
 									</label>
+
+									<button className={'pt-button'} onClick={this.openEditor} style={{ marginLeft: '1em' }}>
+										Open Editor
+										<span className={'pt-icon-standard pt-align-right'} />
+									</button>
+
 									<div>
 										<Link to={'/pub/markdown'} style={{ marginRight: '0.5em' }}>How to write with PubPub Markdown</Link>
 									</div>
