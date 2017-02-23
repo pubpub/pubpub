@@ -1,13 +1,14 @@
-import React, { PropTypes } from 'react';
 import Radium, { Style } from 'radium';
-import { Link } from 'react-router';
+import React, { PropTypes } from 'react';
+
 // import dateFormat from 'dateformat';
 import FollowButton from 'containers/FollowButton/FollowButton';
+import { Link } from 'react-router';
+import { PUBPUB_EDITOR_URL } from 'configURLs';
+import PubLabelList from './PubLabelList';
+import PubNav from './PubNav';
 import Tag from 'components/Tag/Tag';
 import { contrastText } from 'utils/contrastText';
-import PubNav from './PubNav';
-import PubLabelList from './PubLabelList';
-
 
 let styles;
 
@@ -23,6 +24,14 @@ export const PubHeader = React.createClass({
 		dispatch: PropTypes.func,
 	},
 
+	openEditor: function() {
+		const { userAccessToken, userName } = this.props;
+		const slug = this.props.pub.slug;
+		const url = `${PUBPUB_EDITOR_URL}/user/access/${slug}/${userName}/${userAccessToken}`;
+		window.href = url;
+	},
+
+
 	render: function() {
 		const pub = this.props.pub || {};
 		const query = this.props.query;
@@ -32,7 +41,7 @@ export const PubHeader = React.createClass({
 		const versions = pub.versions || [];
 		const followers = pub.followers || [];
 		const pubFeatures = pub.pubFeatures || [];
-		
+
 		const contextJournal = pubFeatures.reduce((previous, current)=> {
 			if (!query.context && current.journalId === pub.defaultContext) { return current.journal; }
 			if (current.journal.title === query.context) { return current.journal; }
@@ -87,7 +96,7 @@ export const PubHeader = React.createClass({
 					// '.button-wrapper .pt-minimal.pt-button-group .pt-button': { color: useLightText ? '#f5f8fa' : 'inherit'},
 					// '.button-wrapper .pt-button-group .pt-button': { minHeight: '24px', lineHeight: '24px' },
 					// '.button-wrapper .pt-minimal.pt-button-group .pt-button::after': { background: useLightText ? 'rgba(255, 255, 255, 0.15)' : 'rgba(16, 22, 26, 0.15)' },
-					// '.button-wrapper .pt-minimal.pt-button-group .pt-button:hover': { color: useLightText ? '#f5f8fa' : '#182026' },					
+					// '.button-wrapper .pt-minimal.pt-button-group .pt-button:hover': { color: useLightText ? '#f5f8fa' : '#182026' },
 				}} />
 
 				{hasHeaderImage &&
@@ -95,11 +104,11 @@ export const PubHeader = React.createClass({
 				}
 
 				<div style={styles.backgroundContainer(hasHeaderImage, pub.headerColor)} />
-				
+
 				{hasHeaderImage &&
 					<div style={styles.backgroundBottomShadow} />
 				}
-				
+
 				<div style={styles.content(hasHeaderImage)}>
 
 					{/* ------------ */}
@@ -118,7 +127,9 @@ export const PubHeader = React.createClass({
 						{(pub.isAuthor || pub.canEdit) &&
 							<div style={styles.buttonWrapper} className={'button-wrapper'}>
 								<div className={'pt-button-group'}>
-									<Link to={`/pub/${pub.slug}/files`} className={'pt-button pt-icon-edit'}>Edit Pub</Link>
+									<button className={'pt-button pt-icon-edit'} onClick={this.openEditor}>
+										Edit Pub
+									</button>
 									{/*<Link to={'/pub/${pub.slug}/forks'} className={'pt-button pt-icon-fork'}>15</Link>*/}
 									{/*<Link to={'/pub/${pub.slug}/forks'} className={'pt-button'}>15</Link>*/}
 								</div>
@@ -141,7 +152,7 @@ export const PubHeader = React.createClass({
 								</div>
 							</div>
 						}
-						
+
 					</div>
 
 					{/* ---------- */}
@@ -180,7 +191,7 @@ export const PubHeader = React.createClass({
 					<div style={styles.labelsWrapper}>
 						<PubLabelList selectedLabels={globalLabels} pubId={pub.id} rootPubId={pub.id} globalLabels={true} canEdit={pub.canEdit} pathname={pathname} labelStyle={styles.label(useLightText)} query={query} dispatch={this.props.dispatch} />
 					</div>
-					
+
 					{/* ------------ */}
 					{/*    Title     */}
 					{/* ------------ */}
@@ -214,7 +225,7 @@ export const PubHeader = React.createClass({
 						query={this.props.query}
 						dispatch={this.props.dispatch} />
 				</div>
-				
+
 			</div>
 		);
 	}
@@ -297,7 +308,7 @@ styles = {
 			color: useLightText ? '#F5F8FA' : '#182026',
 			backgroundColor: 'rgba(138, 155, 168, 0.4)',
 		};
-		
+
 	},
 	title: (useLightText)=> {
 		return {
@@ -307,11 +318,11 @@ styles = {
 			fontWeight: '500',
 			marginBottom: '20px'
 		};
-		
+
 	},
 	authorsWrapper: (useLightText)=> {
 		return {
-			// backgroundColor: 'rgba(125, 125, 50, 0.25)',	
+			// backgroundColor: 'rgba(125, 125, 50, 0.25)',
 			marginBottom: '20px',
 			fontStyle: 'italic',
 			color: useLightText ? 'rgba(255, 255, 255, 0.7)' : '#5C7080',
@@ -328,7 +339,7 @@ styles = {
 	},
 	journalHeaderImage: (hasImage)=> {
 		return {
-			
+
 			width: '35px',
 			borderRadius: '35px',
 			// display: 'inline-block',
@@ -337,7 +348,7 @@ styles = {
 			zIndex: 2,
 			display: 'none',
 		};
-		
+
 	},
 	journalHeaderTitle: {
 		display: 'inline-block',
@@ -349,6 +360,6 @@ styles = {
 		// left: '-10px',
 		// zIndex: 1,
 		boxShadow: '0px 0px 1px #fff',
-		
+
 	},
 };

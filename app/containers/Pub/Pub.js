@@ -1,40 +1,42 @@
+import * as Marklib from 'marklib';
+import * as textQuote from 'dom-anchor-text-quote';
+
 import { Link, browserHistory } from 'react-router';
+import { NonIdealState, Spinner } from '@blueprintjs/core';
 import React, { PropTypes } from 'react';
 import { Sticky, StickyContainer } from 'react-sticky';
-
-import * as textQuote from 'dom-anchor-text-quote';
-import Rangy from 'rangy';
-require('rangy/lib/rangy-textrange');
-import * as Marklib from 'marklib';
 
 // import FollowButton from 'containers/FollowButton/FollowButton';
 import { FormattedMessage } from 'react-intl';
 import Helmet from 'react-helmet';
-import { NonIdealState, Spinner } from '@blueprintjs/core';
-import PubContent from './PubContent';
-// import PubDocument from './PubDocument';
-import PubHeader from './PubHeader';
 import PubBreadcrumbs from './PubBreadcrumbs';
+import PubContent from './PubContent';
 import PubContributors from './PubContributors';
 import PubDiffVersions from './PubDiffVersions';
 import PubDiscussion from './PubDiscussion';
 import PubDiscussionsList from './PubDiscussionsList';
 import PubDiscussionsNew from './PubDiscussionsNew';
 import PubFollowers from './PubFollowers';
-import PubJournals from './PubJournals';
+// import PubDocument from './PubDocument';
+import PubHeader from './PubHeader';
 import PubInvitedReviewerMessage from './PubInvitedReviewerMessage';
+import PubJournals from './PubJournals';
 // import PubLabelList from './PubLabelList';
 import PubReviewers from './PubReviewers';
 import PubSettings from './PubSettings';
-import PubVersions from './PubVersions';
 import PubSidePanel from './PubSidePanel';
+import PubVersions from './PubVersions';
 import Radium from 'radium';
+import Rangy from 'rangy';
 // import Tag from 'components/Tag/Tag';
 import { connect } from 'react-redux';
 import dateFormat from 'dateformat';
 import { getPubData } from './actions';
 import { globalMessages } from 'utils/globalMessages';
 import { globalStyles } from 'utils/globalStyles';
+
+require('rangy/lib/rangy-textrange');
+
 
 let styles;
 
@@ -137,8 +139,8 @@ export const Pub = React.createClass({
 	extractHighlights: function(object, array) {
 		// console.log(object);
 		const tempArray = array || [];
-		if (object.type === 'embed' && object.attrs && object.attrs.data && object.attrs.data.type === 'highlight') { 
-			tempArray.push(object.attrs.data.content); 
+		if (object.type === 'embed' && object.attrs && object.attrs.data && object.attrs.data.type === 'highlight') {
+			tempArray.push(object.attrs.data.content);
 		}
 		if (object.content) {
 			const newContent = Array.isArray(object.content) ? object.content : [object.content];
@@ -246,7 +248,7 @@ export const Pub = React.createClass({
 		// 		});
 		// 	}
 		// }, 100);
-		
+
 		/*---------*/
 
 		// const followData = followers.reduce((previous, current)=> {
@@ -357,7 +359,7 @@ export const Pub = React.createClass({
 
 				<Helmet {...metaData} />
 
-				<PubHeader 
+				<PubHeader
 					pub={pub}
 					accountId={accountId}
 					preservedQuery={preservedQuery}
@@ -365,6 +367,8 @@ export const Pub = React.createClass({
 					meta={meta}
 					pathname={pathname}
 					query={query}
+					userAccessToken={userAccessToken}
+					userName={userName}
 					dispatch={this.props.dispatch} />
 
 				{/* ------- */}
@@ -410,14 +414,14 @@ export const Pub = React.createClass({
 					{(!meta || meta === 'files') &&
 
 						<div>
-							<PubBreadcrumbs 
+							<PubBreadcrumbs
 								pub={pub}
 								version={currentVersion}
 								params={this.props.params}
 								query={query} />
 
 							<div id={'content-wrapper'} style={{ position: 'relative', width: '100%' }}>
-								
+
 								<div style={currentVersion.files && (meta !== 'files' || this.props.params.filename) ? styles.left : {}}>
 									<PubContent
 										version={currentVersion}
@@ -487,7 +491,7 @@ export const Pub = React.createClass({
 												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
 												<p>Hey so this is a thing about cats and dogs.</p>
 												<p>The thing about cats is that they're not fish - but something they do make sounds.</p>
-												
+
 											</div>
 
 											<div style={{height: '100px', width: '100%', backgroundColor: 'red', position: 'relative'}}>
@@ -496,10 +500,10 @@ export const Pub = React.createClass({
 										</PubSidePanel>
 									</div>
 								}
-								
+
 							</div>
 						</div>
-						
+
 					}
 					{meta === 'settings' &&
 						<PubSettings
@@ -604,7 +608,7 @@ styles = {
 	// 	padding: '0em .25em',
 	// 	verticalAlign: 'top',
 	// },
-	
+
 	// pubTitle: {
 	// 	padding: '1em 0.5em 0em',
 	// 	fontSize: '2em',
