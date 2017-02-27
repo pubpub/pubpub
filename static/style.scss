@@ -120,13 +120,17 @@ input[type="file"]:focus {
 
 /* ------------ */
 
-.journal-page-content {
+.pub-body.journal-page-content {
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 	img {
 		max-width: 100%;
 		display: block;
 		margin: 0 auto;
 		border: 1px solid #DDD;
+	}
+	*:first-child {
+	  margin-top: 0;
+	  padding-top: 0;
 	}
 
 	// h1 {
