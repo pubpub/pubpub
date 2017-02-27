@@ -114,7 +114,7 @@ export const JournalPage = React.createClass({
 								<button className={'pt-button pt-icon-edit'} role="button" onClick={this.openEditor}>Edit Details</button>
 							</div>
 						}
-						<div className={'journal-page-content'}>
+						<div className={'pub-body journal-page-content'}>
 							<ReactMarkdown source={pageText} />
 						</div>
 					</div>	
