@@ -44,6 +44,6 @@ Components that are specific to a given view live within its associated containe
 ## Custom domains
 To add a custom domain, changes must be made in three places: 
 
-1. In the CORS configuration of server.js in the [pubpub-api repo](https://github.org/pubpub/pubpub-api)
+1. In the CORS configuration of server.js in the [pubpub-api repo](https://github.com/pubpub/pubpub-api)
 2. A domain alias must be added to on your hosting platform. 
 3. The full url (e.g. `https://www.journal.com`) with no trailing slash must be added to the customDomain column of the Journals table
