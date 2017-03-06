@@ -18,7 +18,7 @@ export function s3Upload(file, progressEvent, finishEvent, index) {
 		const formData = new FormData();
 
 		formData.append('key', filename);
-		formData.append('AWSAccessKeyId', 'AKIAJKX3SN6BRBPWWGHQ');
+		formData.append('AWSAccessKeyId', 'AKIAJQ5MNLCTIMY2ZF7Q');
 		formData.append('acl', 'public-read');
 		formData.append('policy', JSON.parse(this.responseText).policy);
 		formData.append('signature', JSON.parse(this.responseText).signature);
