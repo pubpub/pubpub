@@ -191,16 +191,23 @@ export const RenderFileMarkdown = React.createClass({
 			if (highlightObject) {
 				const addHover = function() {
 					const element = document.getElementsByClassName(`highlight-${highlightId}`)[0];
-					element.className += ' highlight-hover';
+					if (element) {
+						element.className += ' highlight-hover';	
+					}
+					
 				};
 				const removeHover = function() {
 					const element = document.getElementsByClassName(`highlight-${highlightId}`)[0];
-					element.className = element.className.replace(' highlight-hover', '');
+					if (element) {
+						element.className = element.className.replace(' highlight-hover', '');
+					}
 				};
 				const scrollToHighlight = function() {
 					const element = document.getElementsByClassName(`highlight-${highlightId}`)[0];
-					const top = element.getBoundingClientRect().top;
-					window.scrollBy({ top: top - 50, behavior: 'smooth' });
+					if (element) {
+						const top = element.getBoundingClientRect().top;
+						window.scrollBy({ top: top - 50, behavior: 'smooth' });
+					}
 				};
 
 				return (

@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import Loader from 'components/Loader/Loader';
 import RenderFile from 'components/RenderFile/RenderFile';
 import { globalStyles } from 'utils/globalStyles';
+import Textarea from 'react-textarea-autosize';
 // import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
 // import dateFormat from 'dateformat';
@@ -35,6 +36,8 @@ export const PubDiscussion = React.createClass({
 		return {
 			description: '',
 			highlights: [],
+			preview: false,
+			previewFiles: [],
 			openEditor: undefined,
 			editorMode: undefined,
 			editTitle: undefined,
@@ -128,6 +131,26 @@ export const PubDiscussion = React.createClass({
 		this.setState({ validationError: validationError });
 		if (!isValid) { return null; }
 		return this.props.dispatch(postDiscussion(createData.replyRootPubId, createData.replyParentPubId, createData.title, createData.description, undefined, createData.files, !this.props.discussion.isPublished));		
+	},
+
+	togglePreview: function() {
+		this.setState({
+			preview: !this.state.preview,
+			previewFiles: [
+				{
+					name: 'main.md',
+					url: '/main.md',
+					type: 'text/markdown',
+					content: this.state.description,
+				},
+				{
+					name: 'highlights.json',
+					url: '/highlights.json',
+					type: 'application/json',
+					content: JSON.stringify(this.state.highlights),
+				}
+			],
+		});
 	},
 
 	setOpenEditor: function(discussion, mode) {
@@ -336,7 +359,7 @@ export const PubDiscussion = React.createClass({
 									<div style={styles.discussionContentWrapper}>
 										<div style={styles.discussionButtons} className={'pt-button-group'}>
 											{/*<button type="button" style={styles.discussionButton} className="pt-button pt-minimal pt-icon-social-media" />*/}
-											{isAuthor &&
+											{isAuthor && !editorOpen &&
 												<button type="button" style={styles.discussionButton} className="pt-button pt-minimal pt-icon-edit" onClick={this.setOpenEditor.bind(this, child, 'body')} />
 											}
 											{/*<button type="button" style={styles.discussionButton} className="pt-button pt-minimal pt-icon-bookmark" />*/}
@@ -356,7 +379,7 @@ export const PubDiscussion = React.createClass({
 										}
 										{editorOpen && 
 											<div style={styles.discussionText} className={'discussion-body'}>
-												<textarea className={'pt-input margin-bottom'} value={this.state.editDescription} style={{ width: '100%' }} onChange={this.discussionChange} />
+												<Textarea className={'pt-input margin-bottom'} value={this.state.editDescription} style={{ width: '100%' }} onChange={this.discussionChange} />
 												<hr />
 												<button className={'pt-button'} onClick={this.setOpenEditor.bind(this, undefined, undefined)}>Cancel</button>
 												<Button className={'pt-button pt-intent-primary'} onClick={this.updateDiscussion} loading={isLoading} text={'Save'}/>
@@ -391,10 +414,21 @@ export const PubDiscussion = React.createClass({
 					<div style={styles.contentBottom(isExpanded)}>
 						<div style={styles.bottomFade}></div>
 						<form>
-							<textarea onFocus={this.expandReply} onBlur={this.collapseReply} style={styles.bottomInput(isExpanded)} className={'pt-input'} type={'text'} value={this.state.description} onChange={this.inputUpdate.bind(this, 'description')} placeholder={'Reply to discussion'} />	
+							
+
+							{!this.state.preview &&
+								<textarea onFocus={this.expandReply} onBlur={this.collapseReply} style={styles.bottomInput(isExpanded)} className={'pt-input'} type={'text'} value={this.state.description} onChange={this.inputUpdate.bind(this, 'description')} placeholder={'Reply to discussion'} />	
+							}	
+							{this.state.preview && 
+								<div style={{ border: '1px solid #CCC', padding: '1em', margin: '0.5em 0em' }}>
+									<RenderFile file={this.state.previewFiles[0]} allFiles={this.state.previewFiles} noHighlighter={true} />
+								</div>
+							}
+
 							{isExpanded &&
 								<div>
-									<Button text={'Submit Reply'} loading={isLoading} onClick={this.createSubmit} className={'pt-intent-primary'}/>
+									<Button text={'Submit Reply'} loading={isLoading} onClick={this.createSubmit} className={'pt-intent-primary'} />
+									<Button style={{ margin: '0em 0.5em' }} onClick={this.togglePreview}>{this.state.preview ? 'Edit' : 'Preview'}</Button>
 									<span style={styles.errorMessage}>{this.state.validationError}</span>	
 								</div>
 								
@@ -440,7 +474,7 @@ styles = {
 			width: '100%',
 			padding: '20px',
 			borderTop: '1px solid #D8E1E8',
-			height: isExpanded ? '160px' : '70px',
+			minHeight: isExpanded ? '160px' : '70px',
 			position: 'absolute',
 			bottom: '0px',
 			left: 0,
@@ -457,6 +491,7 @@ styles = {
 		width: '100%',
 		height: '30px',
 		zIndex: '2',
+		pointerEvents: 'none',
 	},
 	bottomInput: (isExpanded)=> {
 		return {
