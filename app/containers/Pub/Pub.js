@@ -305,18 +305,9 @@ export const Pub = React.createClass({
 		setTimeout(()=> {
 			const container = document.getElementById('highlighter-wrapper');
 			if (container) {
-				console.log(allHighlights);
 				allHighlights.forEach((highlight)=> {
-					// const context = highlight.context;
-					// const exact = highlight.exact;
-					// const textStart = context && context.indexOf(text);
-					// const textEnd = textStart + text.length;
-					// const prefixStart = Math.max(textStart - 10, 0);
-					// const suffixEnd = Math.min(textEnd + 10, context.length);
 					const highlightObject = {
-						// prefix: context.substring(prefixStart, textStart),
 						exact: highlight.exact,
-						// suffix: context.substring(textEnd, suffixEnd),
 						prefix: highlight.prefix,
 						suffix: highlight.suffix,
 					};
@@ -325,8 +316,8 @@ export const Pub = React.createClass({
 					if (document.getElementsByClassName(`highlight-${highlight.id}`).length === 0) {
 						const renderer = new Rendering(document, { hoverClass: 'highlight-hover', className: `highlight highlight-${highlight.id} discussion-${highlight.threadNumber}` });
 						renderer.renderWithRange(textQuoteRange);
-						
 						const element = document.getElementsByClassName(`highlight-${highlight.id}`)[0];
+						
 						element.addEventListener('click', ()=> {
 							this.openDiscussion(highlight.threadNumber);
 						});
@@ -341,9 +332,8 @@ export const Pub = React.createClass({
 
 						const marker = document.createElement('div');
 						marker.className = 'highlight-marker';
-						marker.style = `transform: translateY(${Math.floor(Math.random() * 20) - 10}px)`;
+						marker.setAttribute('style', `transform: translateY(${Math.floor(Math.random() * 20) - 10}px)`);
 						element.appendChild(marker);
-						
 					}
 					
 				});

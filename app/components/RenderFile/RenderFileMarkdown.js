@@ -147,7 +147,19 @@ export const RenderFileMarkdown = React.createClass({
 	},
 
 	componentWillMount() {
-		const highlightsFile = this.props.allFiles.reduce((previous, current)=> {
+		this.setHighlights(this.props.allFiles);
+	},
+
+	componentWillReceiveProps(nextProps) {
+		const prevFile = this.props.file;
+		const nextFile = nextProps.file;
+		if (prevFile.id && nextFile.id && prevFile.id !== nextFile.id) {
+			this.setHighlights(nextProps.allFiles);
+		}
+	},
+
+	setHighlights(allFiles) {
+		const highlightsFile = allFiles.reduce((previous, current)=> {
 			if (current.name === 'highlights.json') { return current; }
 			return previous;
 		}, undefined);
@@ -155,7 +167,6 @@ export const RenderFileMarkdown = React.createClass({
 		if (highlightsFile) {
 			this.setState({ highlights: JSON.parse(highlightsFile.content) });	
 		}
-		
 	},
 
 	handleIterate: function(Tag, props, children, level) {
