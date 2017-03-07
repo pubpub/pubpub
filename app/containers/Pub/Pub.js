@@ -1,7 +1,4 @@
 import { Rendering } from 'marklib';
-Rendering.globalEmitter().on('click', function() {
-	console.log('heyy');
-});
 import * as textQuote from 'dom-anchor-text-quote';
 
 import { Link, browserHistory } from 'react-router';
@@ -313,7 +310,8 @@ export const Pub = React.createClass({
 					};
 					
 					const textQuoteRange = textQuote.toRange(container, highlightObject);
-					if (document.getElementsByClassName(`highlight-${highlight.id}`).length === 0) {
+					console.log(textQuoteRange)
+					if (textQuoteRange && document.getElementsByClassName(`highlight-${highlight.id}`).length === 0) {
 						const renderer = new Rendering(document, { hoverClass: 'highlight-hover', className: `highlight highlight-${highlight.id} discussion-${highlight.threadNumber}` });
 						renderer.renderWithRange(textQuoteRange);
 						const element = document.getElementsByClassName(`highlight-${highlight.id}`)[0];

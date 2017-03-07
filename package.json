@@ -38,7 +38,7 @@
     "css-loader": "^0.25.0",
     "dateformat": "^1.0.12",
     "del": "^2.2.1",
-    "dom-anchor-text-quote": "^3.0.0",
+    "dom-anchor-text-quote": "^4.0.2",
     "es6-promise": "^4.0.5",
     "eslint": "^3.9.1",
     "eslint-config-airbnb": "^11.2.0",
