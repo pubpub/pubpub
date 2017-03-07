@@ -11,6 +11,7 @@ import configureStore from './configureStore';
 import fetch from 'isomorphic-fetch';
 
 require('./utils/includesPolyfill');
+require('smoothscroll-polyfill').polyfill();
 
 const store = configureStore();
 if (window.location.hostname !== 'localhost') {

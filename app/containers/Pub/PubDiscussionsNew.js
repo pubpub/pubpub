@@ -14,6 +14,7 @@ let styles;
 export const PubDiscussionsNew = React.createClass({
 	propTypes: {
 		discussionsData: PropTypes.array,
+		highlightData: PropTypes.object,
 		pub: PropTypes.object,
 		goBack: PropTypes.func,
 		accountId: PropTypes.number,
@@ -29,20 +30,43 @@ export const PubDiscussionsNew = React.createClass({
 			title: '',
 			description: '',
 			labels: [],
+			highlights: [],
 			isPrivate: false,
 			mounting: true,
 		};
 	},
 
+	componentWillMount() {
+		const highlightData = this.props.highlightData || {};
+		const result = highlightData.result || {};
+		if (this.props.query.useHighlight === 'true' && result.id) {
+			this.setState({ 
+				description: `[@highlight/${result.id}]`,
+				highlights: [...this.state.highlights, result],
+			});
+		}
+	},
+
 	componentDidMount() {
 		this.setState({ mounting: false });
 	},
+
 	componentWillReceiveProps(nextProps) {
 		const previousDiscussions = this.props.discussionsData || [];
 		const nextDiscussions = nextProps.discussionsData || [];
 		if (nextDiscussions.length > previousDiscussions.length) {
 			const newDiscussion = nextDiscussions[nextDiscussions.length - 1];
 			browserHistory.push({ pathname: nextProps.pathname, query: { discussion: newDiscussion.threadNumber } });
+		}
+
+		const previousHighlightData = this.props.highlightData || {};
+		const nextHighlightData = nextProps.highlightData || {};
+		console.log(previousHighlightData, nextHighlightData);
+		if (!previousHighlightData.result && nextHighlightData.result) {
+			this.setState({ 
+				description: this.state.description + `[@highlight/${nextHighlightData.result.id}]`,
+				highlights: [...this.state.highlights, nextHighlightData.result]
+			});
 		}
 	},
 
@@ -88,6 +112,16 @@ export const PubDiscussionsNew = React.createClass({
 				}
 			],
 		};
+		
+		if (this.state.highlights.length) {
+			createData.files.push({
+				type: 'application/json',
+				url: '/tempHighlights.json',
+				name: 'highlights.json',
+				content: JSON.stringify(this.state.highlights, null, 2),
+			});
+		}
+
 		const { isValid, validationError } = this.validate(createData);
 		this.setState({ validationError: validationError });
 		const isPrivate = this.state.isPrivate;

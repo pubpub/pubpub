@@ -8,8 +8,38 @@ body {
 }
 
 .highlight {
-	background-color: green;
-	background-color: #cddeea;
+	background-color: transparent;
+	transition: .1s linear background-color;
+	cursor: pointer;
+
+}
+.highlight-marker {
+	width: 15px;
+	height: 10px;
+	background-color: rgba(115, 134, 148, 0.7);
+	border-radius: 15px;
+	position: absolute;
+	right: -45px;
+	margin-top: 7px;
+	display: inline-block;
+}
+// .highlight:after {
+// 	content: "";
+// 	width: 15px;
+// 	height: 15px;
+// 	background-color: rgba(205, 222, 234, 0.7);
+// 	border-radius: 15px;
+// 	position: absolute;
+// 	right: -45px;
+// 	margin-top: 7px;
+// }
+
+// .highlight:hover, .highlight-hover {
+.highlight-hover {
+	background-color: #cddefa;
+	.highlight-marker {
+		background-color: rgba(115, 134, 148, 1.0);
+	}
 }
 
 .light-background-on-hover:hover {

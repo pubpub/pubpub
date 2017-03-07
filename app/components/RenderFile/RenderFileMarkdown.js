@@ -12,6 +12,7 @@ import katex from 'katex';
 
 import RenderFile from './RenderFile';
 
+let styles;
 
 function fileParser(state, silent) {
 	let token;
@@ -92,6 +93,44 @@ function mentionParser(state, silent) {
 	return true;
 }
 
+function highlightParser(state, silent) {
+	let token;
+	const UNESCAPE_RE = /\\([ \\!"#$%&'()*+,./:;<=>?@[\]^_`{|}~-])/g;
+	const max = state.posMax;
+	const start = state.pos;
+
+	// if (state.src.charAt(start) !== '[') { return false; }
+	if (state.src.substring(0, 12) !== '[@highlight/') { return false; }
+	if (silent) { return false; } // don't run any pairs in validation mode
+	if (start + 2 >= max) { return false; }
+
+	state.pos = start + 1;
+	while (state.pos < max) {
+		if (state.src.charAt(state.pos) === ']') { break; }
+		state.pos += 1;
+	}
+
+	if (start + 1 === state.pos) { state.pos = start; return false; }
+
+	const content = state.src.slice(start + 1, state.pos);
+	if (content.match(/(^|[^\\])(\\\\)*[\n]/)) { state.pos = start; return false; }
+
+	state.posMax = state.pos;
+	state.pos = start + 1;
+
+	// Earlier we checked !silent, but this implementation does not need it
+	token = state.push('highlight_open', 'highlight', 1);
+
+	token = state.push('text', '', 0);
+	token.content = content.replace(UNESCAPE_RE, '$1');
+
+	token = state.push('highlight_close', 'highlight', -1);
+	
+	state.pos = state.posMax + 1;
+	state.posMax = max;
+	return true;
+}
+
 export const RenderFileMarkdown = React.createClass({
 	propTypes: {
 		file: PropTypes.object,
@@ -99,6 +138,24 @@ export const RenderFileMarkdown = React.createClass({
 		pubSlug: PropTypes.string,
 		query: PropTypes.object,
 
+	},
+
+	getInitialState() {
+		return {
+			highlights: [],
+		};
+	},
+
+	componentWillMount() {
+		const highlightsFile = this.props.allFiles.reduce((previous, current)=> {
+			if (current.name === 'highlights.json') { return current; }
+			return previous;
+		}, undefined);
+
+		if (highlightsFile) {
+			this.setState({ highlights: JSON.parse(highlightsFile.content) });	
+		}
+		
 	},
 
 	handleIterate: function(Tag, props, children, level) {
@@ -112,6 +169,40 @@ export const RenderFileMarkdown = React.createClass({
 		// 		return <RenderFile file={file} allFiles={this.props.allFiles} />;	
 		// 	}
 		// }
+		if (Tag === 'highlight') {
+			const child = children[0] || '';
+			const highlightId = child.replace('@highlight/', '');
+			const highlights = this.state.highlights || [];
+			const highlightObject = highlights.reduce((previous, current)=> {
+				if (String(current.id) === highlightId) { return current; }
+				return previous;
+			}, undefined);
+			if (highlightObject) {
+				const addHover = function() {
+					const element = document.getElementsByClassName(`highlight-${highlightId}`)[0];
+					element.className += ' highlight-hover';
+				};
+				const removeHover = function() {
+					const element = document.getElementsByClassName(`highlight-${highlightId}`)[0];
+					element.className = element.className.replace(' highlight-hover', '');
+				};
+				const scrollToHighlight = function() {
+					const element = document.getElementsByClassName(`highlight-${highlightId}`)[0];
+					const top = element.getBoundingClientRect().top;
+					window.scrollBy({ top: top - 50, behavior: 'smooth' });
+				};
+
+				return (
+					<span style={styles.highlightWrapper} onMouseEnter={addHover} onMouseLeave={removeHover} onClick={scrollToHighlight}>
+						<span style={styles.highlightContext}>{highlightObject.prefix}</span>
+						<span style={styles.highlightText}>{highlightObject.exact}</span>
+						<span style={styles.highlightContext}>{highlightObject.suffix}</span>
+					</span>
+				);
+			}
+			return <span>[{child} - not found]</span>;
+		}
+
 		if (Tag === 'img') {
 			const allFiles = this.props.allFiles || [];
 			const file = allFiles.reduce((previous, current)=> {
@@ -164,12 +255,16 @@ export const RenderFileMarkdown = React.createClass({
 		return <Tag {...props} children={children} />;
 	},
 
-	filePlugin: function(md) {
-		md.inline.ruler.push('file', fileParser);
-	},
+	// filePlugin: function(md) {
+	// 	md.inline.ruler.push('file', fileParser);
+	// },
 
-	mentionPlugin: function(md) {
-		md.inline.ruler.push('mention', mentionParser);
+	// mentionPlugin: function(md) {
+	// 	md.inline.ruler.push('mention', mentionParser);
+	// },
+
+	highlightPlugin: function(md) {
+		md.inline.ruler.push('highlight', highlightParser);
 	},
 	
 	render() {
@@ -188,8 +283,9 @@ export const RenderFileMarkdown = React.createClass({
 					sub,
 					sup,
 					mk,
-					this.filePlugin,
-					this.mentionPlugin,
+					// this.filePlugin,
+					// this.mentionPlugin,
+					this.highlightPlugin,
 				]} /> 
 		);
 	}
@@ -197,3 +293,17 @@ export const RenderFileMarkdown = React.createClass({
 });
 
 export default Radium(RenderFileMarkdown);
+
+styles = {
+	highlightWrapper: {
+		display: 'block',
+		margin: '1em 0em',
+		padding: '0.5em',
+		boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.25)',
+		fontWeight: 400,
+		fontFamily: '"Merriweather", serif',
+	},
+	highlightContext: {
+		opacity: 0.5,
+	},
+};

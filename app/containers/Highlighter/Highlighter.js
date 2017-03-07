@@ -77,7 +77,7 @@ export const Highlighter = React.createClass({
 		const container = document.getElementById('highlighter-wrapper');
 		const offsetTop = container.parentNode.style.top ? parseInt(container.parentNode.style.top, 10) : 0;
 		const offsetLeft = container.getBoundingClientRect().left || 0;
-		const yLocOffset = document.body.scrollTop + document.documentElement.scrollTop + container.scrollTop - offsetTop - 32 - 345;
+		const yLocOffset = document.body.scrollTop + document.documentElement.scrollTop + container.scrollTop - offsetTop;
 		
 		const selection = Rangy.getSelection();
 		if (selection.isCollapsed) { return this.setState({ popupVisible: false }); }
@@ -89,11 +89,11 @@ export const Highlighter = React.createClass({
 		const boundingBox = range.nativeRange.getBoundingClientRect();
 		const ancestorText = this.getAncestorText(range.commonAncestorContainer);
 		const highlightObject = textQuote.fromRange(container, range);
-		
 		return this.setState({
 			popupVisible: true,
 			xLoc: (boundingBox.left + boundingBox.right) / 2 - offsetLeft,
-			yLoc: (boundingBox.bottom + yLocOffset),
+			yLoc: (boundingBox.top + ((boundingBox.bottom - boundingBox.top) / 2) - container.getBoundingClientRect().top - 20),
+			// yLoc: (boundingBox.bottom + 0),
 			ancestorText: ancestorText,
 			highlightObject: highlightObject
 		});
@@ -156,7 +156,8 @@ export const Highlighter = React.createClass({
 	getPluginPopupLoc: function() {
 		return {
 			top: this.state.yLoc,
-			left: this.state.xLoc,
+			// left: this.state.xLoc,
+			right: -48
 		};
 	},
 
@@ -166,12 +167,13 @@ export const Highlighter = React.createClass({
 		return (
 			<div style={[styles.pluginPopup, this.getPluginPopupLoc(), this.state.popupVisible && styles.pluginPopupVisible]}>
 
-				<div style={styles.pluginPopupArrow} />
+				{/* <div style={styles.pluginPopupArrow} /> */}
 				<div style={styles.pluginContent}>
 					
 					<div>
 						{loggedIn &&
-							<Button className={'pt-minimal'} onClick={this.saveHighlight} text={'Create Highlight'} loading={loading} />
+							<Button className={'pt-minimal'} onClick={this.saveHighlight} iconName={'comment'} loading={loading} style={styles.createButton}/>
+
 						}
 						{!loggedIn &&
 							<Link to={'/login'} className={'pt-button pt-minimal'}>Login to Create Highlight</Link>
@@ -205,7 +207,7 @@ styles = {
 		transition: '.1s linear transform, .1s linear opacity',
 		zIndex: 5,
 		pointerEvents: 'none',
-		padding: 5,
+		// padding: 5,
 		borderRadius: '1px',
 		// marginLeft: -173,
 		marginLeft: -23,
@@ -234,5 +236,11 @@ styles = {
 		position: 'relative',
 		backgroundColor: 'white',
 		zIndex: 5,
+	},
+	createButton: {
+		borderRadius: '2px',
+		lineHeight: 1,
+		padding: '12px',
+		width: '38px',
 	},
 };

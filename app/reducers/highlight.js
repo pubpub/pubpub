@@ -16,6 +16,7 @@ import {
 const defaultState = Immutable.Map({
 	loading: false,
 	error: undefined,
+	result: undefined,
 });
 
 /* ----------------------------------------- */
@@ -28,11 +29,13 @@ export default function reducer(state = defaultState, action) {
 		return state.merge({
 			loading: true,
 			error: undefined,
+			result: undefined,
 		});	
 	case CREATE_HIGHLIGHT_SUCCESS:
 		return state.merge({
 			loading: false,
 			error: undefined,
+			result: action.result,
 		});
 	case CREATE_HIGHLIGHT_FAIL:
 		return state.merge({

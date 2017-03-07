@@ -97,6 +97,7 @@
     "redux-devtools": "^3.3.1",
     "redux-thunk": "^2.1.0",
     "sass-loader": "^4.0.1",
+    "smoothscroll-polyfill": "^0.3.4",
     "stl-viewer": "^0.3.0",
     "style-loader": "^0.13.1",
     "superagent": "^3.0.0",

@@ -19,6 +19,7 @@ let styles;
 export const PubDiscussion = React.createClass({
 	propTypes: {
 		discussion: PropTypes.object,
+		highlightData: PropTypes.object,
 		pub: PropTypes.object,
 		goBack: PropTypes.func,
 		allReactions: PropTypes.array,
@@ -33,6 +34,7 @@ export const PubDiscussion = React.createClass({
 	getInitialState() {
 		return {
 			description: '',
+			highlights: [],
 			openEditor: undefined,
 			editorMode: undefined,
 			editTitle: undefined,
@@ -52,6 +54,23 @@ export const PubDiscussion = React.createClass({
 	componentWillReceiveProps(nextProps) {
 		if (this.props.isLoading && !nextProps.isLoading && !nextProps.error) {
 			this.setState({ description: '', openEditor: undefined, editorMode: undefined, });
+		}
+
+		const previousHighlightData = this.props.highlightData || {};
+		const nextHighlightData = nextProps.highlightData || {};
+		if (!previousHighlightData.result && nextHighlightData.result) {
+			if (this.state.openEditor) {
+				this.setState({ 
+					editDescription: this.state.editDescription + `[@highlight/${nextHighlightData.result.id}]`,
+					highlights: [...this.state.highlights, nextHighlightData.result]
+				});
+			} else {
+				this.setState({ 
+					description: this.state.description + `[@highlight/${nextHighlightData.result.id}]`,
+					highlights: [...this.state.highlights, nextHighlightData.result],
+				});
+			}
+			
 		}
 	},
 
@@ -97,6 +116,14 @@ export const PubDiscussion = React.createClass({
 				}
 			],
 		};
+		if (this.state.highlights.length) {
+			createData.files.push({
+				type: 'application/json',
+				url: '/tempHighlights.json',
+				name: 'highlights.json',
+				content: JSON.stringify(this.state.highlights, null, 2),
+			});
+		}
 		const { isValid, validationError } = this.validate(createData);
 		this.setState({ validationError: validationError });
 		if (!isValid) { return null; }
@@ -104,14 +131,15 @@ export const PubDiscussion = React.createClass({
 	},
 
 	setOpenEditor: function(discussion, mode) {
-		if (!mode) { this.setState({ openEditor: undefined, editDescription: undefined, editorMode: undefined, editTitle: undefined }); }
+		if (!mode) { return this.setState({ openEditor: undefined, editDescription: undefined, editorMode: undefined, editTitle: undefined }); }
+		
 		const currentVersion = discussion.versions.reduce((previous, current)=> {
 			return (!previous.createdAt || current.createdAt > previous.createdAt) ? current : previous;
 		}, {});
 
 		const content = currentVersion && currentVersion.files && currentVersion.files[0].content;
 		const title = discussion && discussion.title;
-		this.setState({ openEditor: discussion, editDescription: content, editTitle: title, editorMode: mode });
+		return this.setState({ openEditor: discussion, editDescription: content, editTitle: title, editorMode: mode });
 	},
 
 	discussionChange: function(evt) {
@@ -130,6 +158,14 @@ export const PubDiscussion = React.createClass({
 				content: this.state.editDescription,
 			}
 		];
+		if (this.state.highlights.length) {
+			newVersionFiles.push({
+				type: 'application/json',
+				url: '/tempHighlights.json',
+				name: 'highlights.json',
+				content: JSON.stringify(this.state.highlights, null, 2),
+			});
+		}
 
 		// this.setState({ newVersionError: '' });
 		return this.props.dispatch(postDiscussionVersion(pubId, 'Update discussion content', this.state.openEditor.isPublished, newVersionFiles, 'main.md'));
