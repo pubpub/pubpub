@@ -1,4 +1,4 @@
-import * as Marklib from 'marklib';
+import { Rendering } from 'marklib';
 import * as textQuote from 'dom-anchor-text-quote';
 
 import { Link, browserHistory } from 'react-router';
@@ -40,6 +40,7 @@ let styles;
 export const Pub = React.createClass({
 	propTypes: {
 		accountData: PropTypes.object,
+		highlightData: PropTypes.object,
 		pubData: PropTypes.object,
 		params: PropTypes.object,
 		location: PropTypes.object,
@@ -50,6 +51,7 @@ export const Pub = React.createClass({
 		return {
 			canGoBack: false,
 			showAllDiscussions: false,
+			highlightsMade: {},
 			// showClosedDiscussions: false,
 		};
 	},
@@ -57,6 +59,10 @@ export const Pub = React.createClass({
 	componentWillMount() {
 		const params = this.props.params || {};
 		this.props.dispatch(getPubData(params.slug));
+		setTimeout(()=> {
+			this.setState({});
+			// This is a bad hack for PDFs to trigger their rebuild. What should we do instead? Send highlights into RenderFile?
+		}, 20000);
 	},
 
 	componentWillReceiveProps(nextProps) {
@@ -79,6 +85,13 @@ export const Pub = React.createClass({
 		const nextParams = nextProps.params || {};
 		if (params.slug !== nextParams.slug) {
 			this.props.dispatch(getPubData(nextParams.slug));
+		}
+		if (lastPathname !== nextPathname) {
+			this.setState({ highlightsMade: {} });
+			setTimeout(()=> {
+				this.setState({});
+				// This is a bad hack for PDFs to trigger their rebuild. What should we do instead? Send highlights into RenderFile?
+			}, 20000);
 		}
 		// Handle case when discussionId is present
 		// const nextPubData = nextProps.pubData || {};
@@ -120,7 +133,7 @@ export const Pub = React.createClass({
 			const pathname = this.props.location.pathname;
 			browserHistory.push({
 				pathname: pathname,
-				query: { ...query, panel: undefined, discussion: undefined }
+				query: { ...query, panel: undefined, discussion: undefined, useHighlight: undefined, }
 			});
 		}
 	},
@@ -147,6 +160,31 @@ export const Pub = React.createClass({
 		}
 
 		return tempArray;
+	},
+
+	openDiscussion: function(threadNumber) {
+		browserHistory.push({
+			pathname: this.props.location.pathname,
+			query: { ...this.props.location.query, panel: undefined, discussion: threadNumber }
+		});
+	},
+
+	highlightBubbleEnter: function(highlightId) {
+		// console.log('enter ', highlightId);
+		const elements = document.getElementsByClassName(`highlight-${highlightId}`);
+		// console.log(elements);
+		for (let index = 0; index < elements.length; index++) {
+			const element = elements[index];
+			element.className += ' highlight-hover';
+		}
+	},
+
+	highlightBubbleLeave: function(highlightId) {
+		const elements = document.getElementsByClassName(`highlight-${highlightId}`);
+		for (let index = 0; index < elements.length; index++) {
+			const element = elements[index];
+			element.className = element.className.replace(' highlight-hover', '');
+		}
 	},
 
 	render() {
@@ -197,56 +235,6 @@ export const Pub = React.createClass({
 		const pubFeatures = pub.pubFeatures || [];
 		const followers = pub.followers || [];
 
-
-		/*---------*/
-		// All of this should be done outside of discussions - perhaps in it's own component.
-		// This is re-rendering on every scroll because of fixed position.
-
-		// const allHighlights = discussions.reduce((previous, current)=> {
-		// 	if (!current.versions.length) { return previous; }
-		// 	const currentVersion = current.versions.reduce((previousVersionItem, currentVersionItem)=> {
-		// 		return (!previousVersionItem.createdAt || currentVersionItem.createdAt > previousVersionItem.createdAt) ? currentVersionItem : previousVersionItem;
-		// 	}, {}); // Get the last version
-		// 	const files = currentVersion.files || [];
-
-		// 	const mainFile = files.reduce((previousFileItem, currentFileItem)=> {
-		// 		if (currentVersion.defaultFile === currentFileItem.name) { return currentFileItem; }
-		// 		if (!currentVersion.defaultFile && currentFileItem.name.split('.')[0] === 'main') { return currentFileItem; }
-		// 		return previousFileItem;
-		// 	}, files[0]);
-
-		// 	if (mainFile.type === 'ppub') {
-		// 		// console.log(mainFile.content);
-		// 		return this.extractHighlights(JSON.parse(mainFile.content), previous);
-		// 	}
-		// 	return previous;
-
-		// }, []);
-
-		// setTimeout(()=> {
-		// 	const container = document.getElementById('highlighter-wrapper');
-		// 		if (container) {
-		// 		allHighlights.forEach((highlight)=> {
-		// 			const context = highlight.context;
-		// 			const text = highlight.text;
-		// 			const textStart = context && context.indexOf(text);
-		// 			const textEnd = textStart + text.length;
-		// 			const prefixStart = Math.max(textStart - 10, 0);
-		// 			const suffixEnd = Math.min(textEnd + 10, context.length);
-		// 			const highlightObject = {
-		// 				prefix: context.substring(prefixStart, textStart),
-		// 				exact: highlight.text,
-		// 				suffix: context.substring(textEnd, suffixEnd),
-		// 			};
-		// 			// console.log(highlightObject);
-		// 			const textQuoteRange = textQuote.toRange(container, highlightObject);
-		// 			const renderer = new Marklib.Rendering(document, { className: 'highlight' }, document);
-		// 			renderer.renderWithRange(textQuoteRange);
-		// 		});
-		// 	}
-		// }, 100);
-
-		/*---------*/
 
 		// const followData = followers.reduce((previous, current)=> {
 		// 	if (current.id === accountId) { return current.FollowsPub; }
@@ -312,6 +300,114 @@ export const Pub = React.createClass({
 			if (queryDiscussion === String(current.threadNumber)) { return current; }
 			return previous;
 		}, {});
+
+
+		/*---------*/
+		// All of this should be done outside of discussions - perhaps in it's own component.
+		// This is re-rendering on every scroll because of fixed position.
+
+		const allHighlights = discussions.reduce((previous, current)=> {
+			if (!current.versions.length) { return previous; }
+			const currentFileVersion = current.versions.reduce((previousVersionItem, currentVersionItem)=> {
+				return (!previousVersionItem.createdAt || currentVersionItem.createdAt > previousVersionItem.createdAt) ? currentVersionItem : previousVersionItem;
+			}, {}); // Get the last version
+			const files = currentFileVersion.files || [];
+
+			const highlightFileArray = files.reduce((previousFileItem, currentFileItem)=> {
+				if (currentFileItem.name === 'highlights.json') { return JSON.parse(currentFileItem.content); }
+				return previousFileItem;
+			}, []);
+
+			const addedThreadNumber = highlightFileArray.map((item) => {
+				return {
+					...item,
+					threadNumber: current.threadNumber
+				};
+			});
+			return [...previous, ...addedThreadNumber];
+
+		}, []);
+
+		// console.log('allHighlights', allHighlights);
+		if (true || pub.slug === 'mindstorms') {
+			setTimeout(()=> {
+				const container = document.getElementById('highlighter-wrapper');
+				if (container) {
+					const newHighlightsMade = {};
+					allHighlights.forEach((highlight)=> {
+						const highlightObject = {
+							exact: highlight.exact,
+							prefix: highlight.prefix,
+							suffix: highlight.suffix,
+						};
+						const t0 = performance.now();
+						// const textQuoteRange = textQuote.toRange(container, highlightObject);
+						// const t1 = performance.now();
+						// console.log('-----------');
+						
+						// if (textQuoteRange && document.getElementsByClassName(`highlight-${highlight.id}`).length === 0) {
+						if (!this.state.highlightsMade[highlight.id]) {
+							
+							const t1 = performance.now();
+							const textQuoteRange = textQuote.toRange(container, highlightObject);
+							// console.log('t01: ', t1 - t0);
+							if (textQuoteRange) {
+
+								const t2 = performance.now();
+								const renderer = new Rendering(document, { hoverClass: 'highlight-hover', className: `highlight highlight-${highlight.id} discussion-${highlight.threadNumber}` });
+								const t3 = performance.now();
+								renderer.renderWithRange(textQuoteRange);
+								const t4 = performance.now();
+								// const element = document.getElementsByClassName(`highlight-${highlight.id}`)[0];
+								const elements = document.getElementsByClassName(`highlight-${highlight.id}`);
+								const elementBox = elements[0].getBoundingClientRect();
+								const wrapperBox = document.getElementById('content-wrapper').getBoundingClientRect();
+								newHighlightsMade[highlight.id] = [highlight.threadNumber, elementBox.top + ((elementBox.bottom - elementBox.top) / 2) + (Math.floor(Math.random() * 20) - 10) - wrapperBox.top];
+								const t5 = performance.now();
+								for (let index = 0; index < elements.length; index++) {
+									const element = elements[index];
+									element.addEventListener('click', ()=> {
+										this.openDiscussion(highlight.threadNumber);
+									});
+
+									element.addEventListener('mouseenter', ()=> {
+										this.highlightBubbleEnter(highlight.id);
+										// element.className += ' highlight-hover';
+									});
+
+									element.addEventListener('mouseleave', ()=> {
+										this.highlightBubbleLeave(highlight.id);
+										// element.className = element.className.replace(' highlight-hover', '');
+									});
+
+									// const marker = document.createElement('div');
+									// marker.className = 'highlight-marker';
+									// marker.setAttribute('style', `transform: translateY(${Math.floor(Math.random() * 20) - 10}px)`);
+									// element.appendChild(marker);
+									
+								}
+								const t6 = performance.now();
+								const t7 = performance.now();
+								
+								// console.log('t12: ', t2 - t1);
+								// console.log('t23: ', t3 - t2);
+								// console.log('t34: ', t4 - t3);
+								// console.log('t45: ', t5 - t4);
+								// console.log('t56: ', t6 - t5);
+								// console.log('t67: ', t7 - t6);
+							}
+						}
+		
+					});
+					if (Object.keys(newHighlightsMade).length) {
+						this.setState({ highlightsMade: { ...this.state.highlightsMade, ...newHighlightsMade } });
+					}
+				}
+			}, 1000);
+		}
+		// console.log('highlightsMade', this.state.highlightsMade);
+
+		/*---------*/
 
 		// const contextJournal = pubFeatures.reduce((previous, current)=> {
 		// 	if (!query.context && current.journalId === pub.defaultContext) { return current.journal; }
@@ -430,6 +526,9 @@ export const Pub = React.createClass({
 										isLoading={this.props.pubData.versionsLoading}
 										error={this.props.pubData.versionsError}
 										dispatch={this.props.dispatch} />
+									{Object.keys(this.state.highlightsMade).map((highlightKey)=> {
+										return <div key={`highlightBubble-${highlightKey}`} className={'highlight-marker'} onMouseEnter={this.highlightBubbleEnter.bind(this, highlightKey)} onMouseLeave={this.highlightBubbleLeave.bind(this, highlightKey)} onClick={this.openDiscussion.bind(this, this.state.highlightsMade[highlightKey][0])} style={{ right: 18, top: this.state.highlightsMade[highlightKey][1] }} />;
+									})}
 								</div>
 								{currentVersion.files && (meta !== 'files' || this.props.params.filename) &&
 									<div style={styles.rightPanel}>
@@ -437,18 +536,21 @@ export const Pub = React.createClass({
 											<div style={styles.discussionListVisible(!panel && !queryDiscussion)}>
 												<PubDiscussionsList
 													discussionsData={discussionsData}
+													highlightData={this.props.highlightData}
 													pub={pub}
 													showAllDiscussions={this.state.showAllDiscussions}
 													toggleShowAllDiscussions={this.toggleShowAllDiscussions}
 													// showClosedDiscussions={this.state.showClosedDiscussions}
 													// toggleShowClosedDiscussions={this.toggleShowClosedDiscussions}
 													pathname={pathname}
+													isVisible={!panel && !queryDiscussion}
 													query={query}
 													dispatch={this.props.dispatch} />
 											</div>
 											{panel === 'new' &&
 												<PubDiscussionsNew
 													discussionsData={discussionsData}
+													highlightData={this.props.highlightData}
 													pub={pub}
 													goBack={this.goBack}
 													accountId={accountId}
@@ -461,6 +563,7 @@ export const Pub = React.createClass({
 											{!!queryDiscussion &&
 												<PubDiscussion
 													discussion={activeDiscussion}
+													highlightData={this.props.highlightData}
 													pub={pub}
 													goBack={this.goBack}
 													accountId={accountId}
@@ -514,6 +617,7 @@ export const Pub = React.createClass({
 function mapStateToProps(state) {
 	return {
 		accountData: state.account.toJS(),
+		highlightData: state.highlight.toJS(),
 		pubData: state.pub.toJS(),
 	};
 }
@@ -541,6 +645,7 @@ styles = {
 		};
 	},
 	left: {
+		position: 'relative',
 		marginRight: '35%',
 		paddingRight: '4em',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {

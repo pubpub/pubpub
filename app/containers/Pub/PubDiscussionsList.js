@@ -13,9 +13,11 @@ let styles;
 export const PubDiscussionsList = React.createClass({
 	propTypes: {
 		discussionsData: PropTypes.array,
+		highlightData: PropTypes.object,
 		pub: PropTypes.object,
 		showAllDiscussions: PropTypes.bool,
 		toggleShowAllDiscussions: PropTypes.func,
+		isVisible: PropTypes.bool,
 		// showClosedDiscussions: PropTypes.bool,
 		// toggleShowClosedDiscussions: PropTypes.func,
 		pathname: PropTypes.string,
@@ -37,6 +39,12 @@ export const PubDiscussionsList = React.createClass({
 	componentWillReceiveProps(nextProps) {
 		const query = nextProps.query;
 		this.setState({ filter: query.filter || '' });
+
+		const previousHighlightData = this.props.highlightData || {};
+		const nextHighlightData = nextProps.highlightData || {};
+		if (!previousHighlightData.result && nextHighlightData.result && this.props.isVisible) {
+			browserHistory.push({ pathname: this.props.pathname, query: { ...query, panel: 'new', useHighlight: 'true' } });
+		}
 	},
 
 	inputUpdate: function(key, evt) {

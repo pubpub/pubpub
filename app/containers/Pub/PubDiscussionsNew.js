@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import Loader from 'components/Loader/Loader';
 import { browserHistory } from 'react-router';
+import RenderFile from 'components/RenderFile/RenderFile';
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
@@ -14,6 +15,7 @@ let styles;
 export const PubDiscussionsNew = React.createClass({
 	propTypes: {
 		discussionsData: PropTypes.array,
+		highlightData: PropTypes.object,
 		pub: PropTypes.object,
 		goBack: PropTypes.func,
 		accountId: PropTypes.number,
@@ -29,20 +31,44 @@ export const PubDiscussionsNew = React.createClass({
 			title: '',
 			description: '',
 			labels: [],
+			highlights: [],
 			isPrivate: false,
 			mounting: true,
+			preview: false,
+			previewFiles: [],
 		};
+	},
+
+	componentWillMount() {
+		const highlightData = this.props.highlightData || {};
+		const result = highlightData.result || {};
+		if (this.props.query.useHighlight === 'true' && result.id) {
+			this.setState({ 
+				description: `[@highlight/${result.id}]`,
+				highlights: [...this.state.highlights, result],
+			});
+		}
 	},
 
 	componentDidMount() {
 		this.setState({ mounting: false });
 	},
+
 	componentWillReceiveProps(nextProps) {
 		const previousDiscussions = this.props.discussionsData || [];
 		const nextDiscussions = nextProps.discussionsData || [];
 		if (nextDiscussions.length > previousDiscussions.length) {
 			const newDiscussion = nextDiscussions[nextDiscussions.length - 1];
 			browserHistory.push({ pathname: nextProps.pathname, query: { discussion: newDiscussion.threadNumber } });
+		}
+
+		const previousHighlightData = this.props.highlightData || {};
+		const nextHighlightData = nextProps.highlightData || {};
+		if (!previousHighlightData.result && nextHighlightData.result) {
+			this.setState({ 
+				description: this.state.description + `[@highlight/${nextHighlightData.result.id}]`,
+				highlights: [...this.state.highlights, nextHighlightData.result]
+			});
 		}
 	},
 
@@ -88,6 +114,16 @@ export const PubDiscussionsNew = React.createClass({
 				}
 			],
 		};
+
+		if (this.state.highlights.length) {
+			createData.files.push({
+				type: 'application/json',
+				url: '/tempHighlights.json',
+				name: 'highlights.json',
+				content: JSON.stringify(this.state.highlights, null, 2),
+			});
+		}
+
 		const { isValid, validationError } = this.validate(createData);
 		this.setState({ validationError: validationError });
 		const isPrivate = this.state.isPrivate;
@@ -96,6 +132,25 @@ export const PubDiscussionsNew = React.createClass({
 		}
 	},
 
+	togglePreview: function() {
+		this.setState({
+			preview: !this.state.preview,
+			previewFiles: [
+				{
+					name: 'main.md',
+					url: '/main.md',
+					type: 'text/markdown',
+					content: this.state.description,
+				},
+				{
+					name: 'highlights.json',
+					url: '/highlights.json',
+					type: 'application/json',
+					content: JSON.stringify(this.state.highlights),
+				}
+			],
+		});
+	},
 	render: function() {
 		const pub = this.props.pub || {};
 		const labelList = pub.pubLabels || [];		
@@ -119,21 +174,23 @@ export const PubDiscussionsNew = React.createClass({
 					<form onSubmit={this.createSubmit}>
 						<PubLabelList allLabels={labelList} onChange={this.onLabelsChange} canEdit={pub.canEdit} canSelect={true} rootPubId={this.props.pub.id} pathname={this.props.pathname} query={this.props.query} dispatch={this.props.dispatch} />
 						<input id={'journalName'} className={'pt-input'} name={'journal name'} placeholder={'Title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
-							
-						<textarea id={'description'} className={'pt-input'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.inputUpdate.bind(this, 'description')} />
+						
+						{!this.state.preview &&
+							<textarea id={'description'} className={'pt-input'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.inputUpdate.bind(this, 'description')} />
+						}	
+						{this.state.preview && 
+							<div style={{ border: '1px solid #CCC', padding: '1em', margin: '0.5em 0em' }}>
+								<RenderFile file={this.state.previewFiles[0]} allFiles={this.state.previewFiles} noHighlighter={true} />
+							</div>
+						}
+						
 						
 						{(pub.canEdit || pub.canRead) &&
 							<Checkbox checked={this.state.isPrivate} label={'Private Discussion'} onChange={this.toggleIsPrivate} />
 						}
-						{/*<button className={'pt-button pt-intent-primary'} onClick={this.createSubmit}>
-							Create New Discussion
-						</button>*/}
 
 						<Button className={'pt-button pt-intent-primary'} onClick={this.createSubmit} loading={isLoading}>Create New Discussion</Button>
-
-						{/*<div style={styles.loaderContainer}>
-							<Loader loading={isLoading} showCompletion={!errorMessage} />
-						</div>*/}
+						<Button style={{ margin: '0em 0.5em' }} onClick={this.togglePreview}>{this.state.preview ? 'Edit' : 'Preview'}</Button>
 
 						<div style={styles.errorMessage}>{errorMessage}</div>
 

@@ -7,9 +7,50 @@ body {
 	/*font-family: 'Helvetica';*/
 }
 
-.highlight {
-	background-color: green;
-	background-color: #cddeea;
+.highlight, .textLayer .highlight {
+	background-color: transparent;
+	transition: .1s linear background-color;
+	cursor: pointer;
+	margin: 0;
+	padding: 0;
+	border-radius: 0;
+
+}
+.highlight-marker {
+	width: 15px;
+	height: 10px;
+	background-color: rgba(115, 134, 148, 0.7);
+	border-radius: 15px;
+	position: absolute;
+	// right: -45px;
+	display: inline-block;
+	cursor: pointer;
+}
+.highlight-marker:hover {
+	background-color: rgba(115, 134, 148, 1.0);
+}
+// .highlight:after {
+// 	content: "";
+// 	width: 15px;
+// 	height: 15px;
+// 	background-color: rgba(205, 222, 234, 0.7);
+// 	border-radius: 15px;
+// 	position: absolute;
+// 	right: -45px;
+// 	margin-top: 7px;
+// }
+
+// .highlight:hover, .highlight-hover {
+.highlight-hover {
+	background-color: #cddefa;
+	// .highlight-marker {
+	// 	background-color: rgba(115, 134, 148, 1.0);
+	// }
+}
+
+// .textLayer .highlight:hover, .textLayer .highlight-hover {
+.textLayer .highlight-hover {
+ 	background-color: #334769;
 }
 
 .light-background-on-hover:hover {
