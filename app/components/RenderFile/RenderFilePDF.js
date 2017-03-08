@@ -39,12 +39,8 @@ export const RenderFilePDF = React.createClass({
 			// Document loaded, specifying document for the viewer and
 			// the (optional) linkService.
 			pdfViewer.setDocument(pdfDocument);
-
 			pdfLinkService.setDocument(pdfDocument, null);
 		});
-
-
-
 
 		// const url = this.props.file.url || '';
 		// PDFJS.getDocument(url).then((pdf)=> {
@@ -54,6 +50,12 @@ export const RenderFilePDF = React.createClass({
 		// window.addEventListener('resize', this.renderPDF);
 
 	},
+	shouldComponentUpdate(nextProps) {
+		const prevFile = this.props.file || {};
+		const nextFile = nextProps.file || {};
+		return prevFile.url !== nextFile.url;
+	},
+
 	componentWillUnmount() {
 		// window.removeEventListener('resize', this.renderPDF);
 	},
@@ -96,11 +98,18 @@ export const RenderFilePDF = React.createClass({
 		return (
 			<div>
 				<Style rules={{
-					'.pdfWrapper .page': { position: 'relative', boxShadow: '0px 2px 5px #888', marginBottom: '0.5em' },
+					'.pdfWrapper .page': { 
+						position: 'relative', 
+						boxShadow: '0px 2px 5px #888', 
+						margin: '0px auto 0.5em', 
+						border: '0px solid transparent',
+						borderImage: 'url("") 0 repeat',
+
+					},
 				}} />
 				<div id="container" className={'pdfWrapper'} style={styles.container} >
-					{/* <div id="viewer" className={'pdfViewer'} /> */}
-					<div id="viewer" />
+					<div id="viewer" className={'pdfViewer'} />
+					{/* <div id="viewer" /> */}
 				</div>
 			</div>
 				

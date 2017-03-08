@@ -51,6 +51,7 @@ export const Pub = React.createClass({
 		return {
 			canGoBack: false,
 			showAllDiscussions: false,
+			highlightsMade: {},
 			// showClosedDiscussions: false,
 		};
 	},
@@ -58,6 +59,10 @@ export const Pub = React.createClass({
 	componentWillMount() {
 		const params = this.props.params || {};
 		this.props.dispatch(getPubData(params.slug));
+		setTimeout(()=> {
+			this.setState({});
+			// This is a bad hack for PDFs to trigger their rebuild. What should we do instead? Send highlights into RenderFile?
+		}, 20000);
 	},
 
 	componentWillReceiveProps(nextProps) {
@@ -80,6 +85,13 @@ export const Pub = React.createClass({
 		const nextParams = nextProps.params || {};
 		if (params.slug !== nextParams.slug) {
 			this.props.dispatch(getPubData(nextParams.slug));
+		}
+		if (lastPathname !== nextPathname) {
+			this.setState({ highlightsMade: {} });
+			setTimeout(()=> {
+				this.setState({});
+				// This is a bad hack for PDFs to trigger their rebuild. What should we do instead? Send highlights into RenderFile?
+			}, 20000);
 		}
 		// Handle case when discussionId is present
 		// const nextPubData = nextProps.pubData || {};
@@ -155,6 +167,24 @@ export const Pub = React.createClass({
 			pathname: this.props.location.pathname,
 			query: { ...this.props.location.query, panel: undefined, discussion: threadNumber }
 		});
+	},
+
+	highlightBubbleEnter: function(highlightId) {
+		// console.log('enter ', highlightId);
+		const elements = document.getElementsByClassName(`highlight-${highlightId}`);
+		// console.log(elements);
+		for (let index = 0; index < elements.length; index++) {
+			const element = elements[index];
+			element.className += ' highlight-hover';
+		}
+	},
+
+	highlightBubbleLeave: function(highlightId) {
+		const elements = document.getElementsByClassName(`highlight-${highlightId}`);
+		for (let index = 0; index < elements.length; index++) {
+			const element = elements[index];
+			element.className = element.className.replace(' highlight-hover', '');
+		}
 	},
 
 	render() {
@@ -299,43 +329,82 @@ export const Pub = React.createClass({
 		}, []);
 
 		// console.log('allHighlights', allHighlights);
+		
 		setTimeout(()=> {
 			const container = document.getElementById('highlighter-wrapper');
 			if (container) {
+				const newHighlightsMade = {};
 				allHighlights.forEach((highlight)=> {
 					const highlightObject = {
 						exact: highlight.exact,
 						prefix: highlight.prefix,
 						suffix: highlight.suffix,
 					};
+					const t0 = performance.now();
+					// const textQuoteRange = textQuote.toRange(container, highlightObject);
+					// const t1 = performance.now();
+					// console.log('-----------');
 					
-					const textQuoteRange = textQuote.toRange(container, highlightObject);
-					if (textQuoteRange && document.getElementsByClassName(`highlight-${highlight.id}`).length === 0) {
-						const renderer = new Rendering(document, { hoverClass: 'highlight-hover', className: `highlight highlight-${highlight.id} discussion-${highlight.threadNumber}` });
-						renderer.renderWithRange(textQuoteRange);
-						const element = document.getElementsByClassName(`highlight-${highlight.id}`)[0];
+					// if (textQuoteRange && document.getElementsByClassName(`highlight-${highlight.id}`).length === 0) {
+					if (!this.state.highlightsMade[highlight.id]) {
 						
-						element.addEventListener('click', ()=> {
-							this.openDiscussion(highlight.threadNumber);
-						});
+						const t1 = performance.now();
+						const textQuoteRange = textQuote.toRange(container, highlightObject);
+						// console.log('t01: ', t1 - t0);
+						if (textQuoteRange) {
 
-						element.addEventListener('mouseover', ()=> {
-							element.className += ' highlight-hover';
-						});
+							const t2 = performance.now();
+							const renderer = new Rendering(document, { hoverClass: 'highlight-hover', className: `highlight highlight-${highlight.id} discussion-${highlight.threadNumber}` });
+							const t3 = performance.now();
+							renderer.renderWithRange(textQuoteRange);
+							const t4 = performance.now();
+							// const element = document.getElementsByClassName(`highlight-${highlight.id}`)[0];
+							const elements = document.getElementsByClassName(`highlight-${highlight.id}`);
+							const elementBox = elements[0].getBoundingClientRect();
+							const wrapperBox = document.getElementById('content-wrapper').getBoundingClientRect();
+							newHighlightsMade[highlight.id] = [highlight.threadNumber, elementBox.top + ((elementBox.bottom - elementBox.top) / 2) + (Math.floor(Math.random() * 20) - 10) - wrapperBox.top];
+							const t5 = performance.now();
+							for (let index = 0; index < elements.length; index++) {
+								const element = elements[index];
+								element.addEventListener('click', ()=> {
+									this.openDiscussion(highlight.threadNumber);
+								});
 
-						element.addEventListener('mouseleave', ()=> {
-							element.className = element.className.replace(' highlight-hover', '');
-						});
+								element.addEventListener('mouseenter', ()=> {
+									this.highlightBubbleEnter(highlight.id);
+									// element.className += ' highlight-hover';
+								});
 
-						const marker = document.createElement('div');
-						marker.className = 'highlight-marker';
-						marker.setAttribute('style', `transform: translateY(${Math.floor(Math.random() * 20) - 10}px)`);
-						element.appendChild(marker);
+								element.addEventListener('mouseleave', ()=> {
+									this.highlightBubbleLeave(highlight.id);
+									// element.className = element.className.replace(' highlight-hover', '');
+								});
+
+								// const marker = document.createElement('div');
+								// marker.className = 'highlight-marker';
+								// marker.setAttribute('style', `transform: translateY(${Math.floor(Math.random() * 20) - 10}px)`);
+								// element.appendChild(marker);
+								
+							}
+							const t6 = performance.now();
+							const t7 = performance.now();
+							
+							// console.log('t12: ', t2 - t1);
+							// console.log('t23: ', t3 - t2);
+							// console.log('t34: ', t4 - t3);
+							// console.log('t45: ', t5 - t4);
+							// console.log('t56: ', t6 - t5);
+							// console.log('t67: ', t7 - t6);
+						}
 					}
-					
+	
 				});
+				if (Object.keys(newHighlightsMade).length) {
+					this.setState({ highlightsMade: { ...this.state.highlightsMade, ...newHighlightsMade } });
+				}
 			}
 		}, 1000);
+		// console.log('highlightsMade', this.state.highlightsMade);
 
 		/*---------*/
 
@@ -456,6 +525,9 @@ export const Pub = React.createClass({
 										isLoading={this.props.pubData.versionsLoading}
 										error={this.props.pubData.versionsError}
 										dispatch={this.props.dispatch} />
+									{Object.keys(this.state.highlightsMade).map((highlightKey)=> {
+										return <div key={`highlightBubble-${highlightKey}`} className={'highlight-marker'} onMouseEnter={this.highlightBubbleEnter.bind(this, highlightKey)} onMouseLeave={this.highlightBubbleLeave.bind(this, highlightKey)} onClick={this.openDiscussion.bind(this, this.state.highlightsMade[highlightKey][0])} style={{ right: 18, top: this.state.highlightsMade[highlightKey][1] }} />;
+									})}
 								</div>
 								{currentVersion.files && (meta !== 'files' || this.props.params.filename) &&
 									<div style={styles.rightPanel}>
@@ -572,6 +644,7 @@ styles = {
 		};
 	},
 	left: {
+		position: 'relative',
 		marginRight: '35%',
 		paddingRight: '4em',
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
