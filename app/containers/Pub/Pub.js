@@ -310,7 +310,6 @@ export const Pub = React.createClass({
 					};
 					
 					const textQuoteRange = textQuote.toRange(container, highlightObject);
-					console.log(textQuoteRange)
 					if (textQuoteRange && document.getElementsByClassName(`highlight-${highlight.id}`).length === 0) {
 						const renderer = new Rendering(document, { hoverClass: 'highlight-hover', className: `highlight highlight-${highlight.id} discussion-${highlight.threadNumber}` });
 						renderer.renderWithRange(textQuoteRange);
