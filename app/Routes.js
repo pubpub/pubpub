@@ -41,8 +41,8 @@ const routes = (
 		<Route path="/user/:username" getComponent={getComponent('User', 'redirect')} />
 		<Route path="/user/:username/:mode" getComponent={getComponent('User', 'redirect')} />
 
-		<Route path="/label/:title" getComponent={getComponent('Label', 'redirect')} />
-		<Route path="/label/:title/:mode" getComponent={getComponent('Label', 'redirect')} />
+		<Route path="/label/:slug" getComponent={getComponent('Label', 'redirect')} />
+		<Route path="/label/:slug/:mode" getComponent={getComponent('Label', 'redirect')} />
 
 		<Route path="/pubs/create" getComponent={getComponent('CreatePub', 'redirect')} />
 		<Route path="/pub/:slug" getComponent={getComponent('Pub', 'redirect')} />
