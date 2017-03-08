@@ -329,7 +329,7 @@ export const Pub = React.createClass({
 		}, []);
 
 		// console.log('allHighlights', allHighlights);
-		if (true || pub.slug === 'mindstorms') {
+		if (pub.slug === 'mindstorms') {
 			setTimeout(()=> {
 				const container = document.getElementById('highlighter-wrapper');
 				if (container) {
