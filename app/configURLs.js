@@ -3,3 +3,4 @@ const isRemoteDev = window.location.hostname === 'dev.pubpub.org' || window.loca
 const isProd = !(isLocalDev || isRemoteDev);
 
 exports.PUBPUB_EDITOR_URL = (isProd) ? 'https://editor.pubpub.org' : 'https://pubpub-editor-frontend.herokuapp.com';
+exports.PUBPUB_CONVERSION_URL = 'https://pubpub-converter.herokuapp.com';

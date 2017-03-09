@@ -1,10 +1,13 @@
+import { Dialog, Menu, MenuDivider, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 import React, { PropTypes } from 'react';
+import { postDoi, putVersion } from './actionsVersions';
+
 import { Link } from 'react-router';
+import Loader from 'components/Loader/Loader';
+import { PUBPUB_CONVERSION_URL } from 'configURLs';
 import Radium from 'radium';
 import dateFormat from 'dateformat';
-import { Dialog, Position, Menu, MenuDivider, Popover, PopoverInteractionKind } from '@blueprintjs/core';
-import { putVersion, postDoi } from './actionsVersions';
-import Loader from 'components/Loader/Loader';
+import request from 'superagent';
 
 let styles;
 
@@ -28,11 +31,11 @@ export const PubVersions = React.createClass({
 
 	componentWillReceiveProps(nextProps) {
 		if (this.props.isLoading && !nextProps.isLoading && !nextProps.error) {
-			this.setState({ 
+			this.setState({
 				confirmPublish: undefined,
 				confirmRestricted: undefined,
 				confirmDoi: undefined,
-			});	
+			});
 		}
 	},
 
@@ -58,6 +61,46 @@ export const PubVersions = React.createClass({
 
 	createDoi: function() {
 		this.props.dispatch(postDoi(this.props.pub.id, this.state.confirmDoi));
+	},
+
+	pollURL: function(url) {
+
+		const pollUrl = 'https://pubpub-converter.herokuapp.com'+url;
+
+		request
+		.get(pollUrl)
+		.end((err, res) => {
+			console.log(err, res);
+			if (!err && res && res.statusCode === 200) {
+				if (res.body.url) {
+					window.open(res.body.url, '_blank');
+				}
+			}
+		});
+	},
+
+	printVersion: function(version) {
+		console.log('got version!', version);
+		const {files, defaultFile} = version;
+		for (const file of files) {
+			if (file.name === defaultFile) {
+				console.log('got url!', file.url);
+				request
+		    .post(PUBPUB_CONVERSION_URL)
+		    .send({ inputType: 'pub', outputType: 'pdf', inputUrl: file.url, metadata: { title: 'test', authors: ['test author'] }})
+		    .set('Accept', 'application/json')
+		    .end((err, res) => {
+		      if (err || !res.ok) {
+		        alert('Oh no! error', err);
+		      } else {
+						const pollUrl = res.body.pollUrl;
+						window.setInterval(this.pollURL.bind(this, pollUrl), 2000);
+		      }
+		    });
+
+
+			}
+		}
 	},
 
 	render: function() {
@@ -92,7 +135,7 @@ export const PubVersions = React.createClass({
 
 							{this.props.pub.canEdit &&
 								<div style={styles.smallColumn}>
-									<Popover 
+									<Popover
 										content={
 											<div>
 												<Menu>
@@ -135,7 +178,7 @@ export const PubVersions = React.createClass({
 
 								</div>
 							}
-							
+
 							<div style={styles.largeColumn}>
 								{/* Link to Diff view */}
 								<Link to={{ pathname: '/pub/' + this.props.pub.slug + '/diff', query: { ...query, version: undefined, base: previousVersion.hash, target: version.hash } }}>
@@ -156,9 +199,14 @@ export const PubVersions = React.createClass({
 								</a>
 							}
 
+
+							<div style={[styles.smallColumn, { padding: '0.5em' }]}>
+								<button className={'pt-button p2-minimal'} onClick={this.printVersion.bind(this, version)}>Print Pub</button>
+							</div>
+
 							<div style={styles.smallColumn}>
 								{/* Link to pub at that version instance */}
-								<Link to={{ pathname: '/pub/' + this.props.pub.slug, query: { ...query, version: version.hash } }}>	
+								<Link to={{ pathname: '/pub/' + this.props.pub.slug, query: { ...query, version: version.hash } }}>
 									<button className={'pt-button p2-minimal'}>View Pub</button>
 								</Link>
 							</div>
@@ -229,7 +277,7 @@ export const PubVersions = React.createClass({
 									</div>
 								</Dialog>
 							}
-							
+
 						</div>
 					);
 				})}
@@ -243,7 +291,7 @@ export default Radium(PubVersions);
 
 styles = {
 	container: {
-		
+
 	},
 	noMargin: {
 		margin: 0,
@@ -261,7 +309,7 @@ styles = {
 		width: '1%',
 		whiteSpace: 'nowrap',
 		verticalAlign: 'middle',
-	}, 
+	},
 	largeColumn: {
 		display: 'table-cell',
 		width: '100%',
@@ -275,9 +323,9 @@ styles = {
 		margin: 0,
 		lineHeight: 'inherit',
 	},
-	iconSpacer: { 
-		width: '0.5em', 
-		height: '1em', 
+	iconSpacer: {
+		width: '0.5em',
+		height: '1em',
 		display: 'inline-block',
 	},
 	noClick: {
