@@ -132,7 +132,7 @@ styles = {
 		fontSize: '1.5em',
 		fontWeight: 'bold',
 		display: 'inline',
-		lineHeight: 0.9,
+		lineHeight: 1.1,
 	},
 	authorsWrapper: {
 		paddingTop: '0.25em',
