@@ -70,7 +70,7 @@ export const JournalPages = React.createClass({
 		// };
 		const labelUpdates = {
 			title: document.getElementById('editTitle').value,
-			description: document.getElementById('editDescription').value
+			// description: document.getElementById('editDescription').value
 		};
 		this.props.dispatch(putLabel(this.props.journal.id, this.state.editingLabelId, labelUpdates));
 		this.setState({ editingLabelId: undefined });
