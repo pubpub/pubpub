@@ -65,7 +65,12 @@ export const PubVersions = React.createClass({
 
 	pollURL: function(url) {
 
-		const pollUrl = 'https://pubpub-converter.herokuapp.com'+url;
+		const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === 'www.funky.com' || window.location.hostname === 'www.funkynocors.com';
+		const isRemoteDev = window.location.hostname === 'dev.pubpub.org' || window.location.hostname === 'test.epsx.org' || window.location.hostname === 'testnocors.epsx.org';
+		const isProd = !(isLocalDev || isRemoteDev);
+
+		let pollUrl = (isProd) ? 'https://pubpub-converter-prod.herokuapp.com' : 'https://pubpub-converter-dev.herokuapp.com';
+		pollUrl += url;
 
 		request
 		.get(pollUrl)
