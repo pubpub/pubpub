@@ -1,4 +1,4 @@
-import { Dialog, Menu, MenuDivider, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
+import { Dialog, Menu, MenuDivider, Popover, PopoverInteractionKind, Position, Button } from '@blueprintjs/core';
 import React, { PropTypes } from 'react';
 import { postDoi, putVersion } from './actionsVersions';
 
@@ -26,6 +26,9 @@ export const PubVersions = React.createClass({
 			confirmPublish: undefined,
 			confirmRestricted: undefined,
 			confirmDoi: undefined,
+			printLoading: [],
+			printReady: [],
+			printReadyUrls: []
 		};
 	},
 
@@ -63,7 +66,7 @@ export const PubVersions = React.createClass({
 		this.props.dispatch(postDoi(this.props.pub.id, this.state.confirmDoi));
 	},
 
-	pollURL: function(url) {
+	pollURL: function(url, versionHash) {
 
 		const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === 'www.funky.com' || window.location.hostname === 'www.funkynocors.com';
 		const isRemoteDev = window.location.hostname === 'dev.pubpub.org' || window.location.hostname === 'test.epsx.org' || window.location.hostname === 'testnocors.epsx.org';
@@ -79,31 +82,57 @@ export const PubVersions = React.createClass({
 			if (!err && res && res.statusCode === 200) {
 				if (res.body.url) {
 					window.open(res.body.url, '_blank');
+					var index = this.state.printLoading.indexOf(versionHash)
+					this.setState({
+						printLoading: this.state.printLoading.filter((_, i) => i !== index)
+					});
+					console.log("URL -- " + res.body.url)
+					this.setState({
+						printReady: this.state.printReady.concat([versionHash]),
+						printReadyUrls: this.state.printReadyUrls.concat([res.body.url])
+
+					});
+				} else {
+					window.setTimeout(this.pollURL.bind(this, url, versionHash), 2000);
 				}
+			} else if (err) {
+				console.log('herpadoo there was an error ' + err);
 			}
 		});
 	},
 
 	printVersion: function(version) {
-		console.log('got version!', version);
 		const {files, defaultFile} = version;
+
+		console.log(this.state.printLoading)
+		console.log( 'print version hash' + version.hash)
+
+		if (this.state.printLoading.indexOf(version.hash) === -1) {
+			this.setState({
+				printLoading: this.state.printLoading.concat([version.hash])
+			});
+		} else {
+			return;
+		}
+
+
 		for (const file of files) {
 			if (file.name === defaultFile) {
 				console.log('got url!', file.url);
 				request
-		    .post(PUBPUB_CONVERSION_URL)
-		    .send({ inputType: 'pub', outputType: 'pdf', inputUrl: file.url, metadata: { title: 'test', authors: ['test author'] }})
-		    .set('Accept', 'application/json')
-		    .end((err, res) => {
-		      if (err || !res.ok) {
-		        alert('Oh no! error', err);
-		      } else {
-						const pollUrl = res.body.pollUrl;
-						window.setInterval(this.pollURL.bind(this, pollUrl), 2000);
-		      }
-		    });
+				.post(PUBPUB_CONVERSION_URL)
+				.send({ inputType: 'pub', outputType: 'pdf', inputUrl: file.url, metadata: { title: 'test', authors: ['test author'] }})
+				.set('Accept', 'application/json')
+				.end((err, res) => {
+					if (err || !res.ok) {
+						alert('Oh no! error', err);
+					} else {
+						const pollUrl = res.body.pollUrl
+						console.log('set timeout on url ' + pollUrl)
+						window.setTimeout(this.pollURL.bind(this, pollUrl, version.hash), 2000);
 
-
+					}
+				});
 			}
 		}
 	},
@@ -134,6 +163,14 @@ export const PubVersions = React.createClass({
 					let mode = 'private';
 					if (version.isRestricted) { mode = 'restricted'; }
 					if (version.isPublished) { mode = 'published'; }
+					const printReady = (this.state.printReady.indexOf(version.hash) !== -1);
+					let printReadyUrl;
+					if (printReady) {
+						printReadyUrl = this.state.printReadyUrls[this.state.printReady.indexOf(version.hash)];
+						console.log(printReadyUrl)
+					}
+					const printLoading = (this.state.printLoading.indexOf(version.hash) !== -1)
+
 
 					return (
 						<div key={'version-' + version.id} style={styles.versionRow}>
@@ -206,7 +243,21 @@ export const PubVersions = React.createClass({
 
 
 							<div style={[styles.smallColumn, { padding: '0.5em' }]}>
-								<button className={'pt-button p2-minimal'} onClick={this.printVersion.bind(this, version)}>Print Pub</button>
+								{console.log('ok no here ' + this.state.printLoading)}
+								{console.log(version.hash)}
+
+								{ !printReady &&
+									<Button loading={printLoading} className={'pt-button p2-minimal'} onClick={this.printVersion.bind(this, version)} text='Print Pub' />
+								}
+								{
+									printReady &&
+									<a href={printReadyUrl}>
+										<Button className={'pt-button p2-minimal'} onClick={this.printVersion.bind(this, version)} text='Click Again' />
+									</a>
+									
+								}
+
+
 							</div>
 
 							<div style={styles.smallColumn}>
