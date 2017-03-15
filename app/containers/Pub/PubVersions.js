@@ -179,12 +179,9 @@ export const PubVersions = React.createClass({
 							<div className="pt-dialog-footer-actions">
 								<div style={styles.loaderContainer}>{errorMessage}</div>
 								<button type="button" className="pt-button" onClick={this.togglePrintErrorDialog}>Close</button>
-									<a target={'_blank'} href={'mailto:pubpub@media.mit.edu'} className={'link'}>
-										<button type="submit" className="pt-button pt-intent-primary">Email Support</button>
-
-									</a>
-
-
+								<a target={'_blank'} href={'mailto:pubpub@media.mit.edu'} className={'link'}>
+									<button type="submit" className="pt-button pt-intent-primary">Email Support</button>
+								</a>
 							</div>
 						</div>
 					</Dialog>
