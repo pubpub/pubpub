@@ -26,6 +26,8 @@ export const PubVersions = React.createClass({
 			confirmPublish: undefined,
 			confirmRestricted: undefined,
 			confirmDoi: undefined,
+			printErrorDialog: false,
+			printError: [],
 			printLoading: [],
 			printReady: [],
 			printReadyUrls: []
@@ -58,6 +60,10 @@ export const PubVersions = React.createClass({
 		this.props.dispatch(putVersion(this.props.pub.id, this.state.confirmPublish, true));
 	},
 
+	togglePrintErrorDialog: function () {
+		this.setState({ printErrorDialog: !this.state.printErrorDialog });
+	},
+
 	toggleDoiDialog: function(versionId) {
 		this.setState({ confirmDoi: versionId });
 	},
@@ -86,17 +92,19 @@ export const PubVersions = React.createClass({
 					this.setState({
 						printLoading: this.state.printLoading.filter((_, i) => i !== index)
 					});
-					console.log("URL -- " + res.body.url)
 					this.setState({
 						printReady: this.state.printReady.concat([versionHash]),
 						printReadyUrls: this.state.printReadyUrls.concat([res.body.url])
-
 					});
 				} else {
 					window.setTimeout(this.pollURL.bind(this, url, versionHash), 2000);
 				}
 			} else if (err) {
-				console.log('herpadoo there was an error ' + err);
+				this.setState({
+					printError: this.state.printError.concat([versionHash]),
+					printErrorDialog: true
+				});
+
 			}
 		});
 	},
@@ -162,6 +170,25 @@ export const PubVersions = React.createClass({
 			<div style={styles.container}>
 				<h2>Versions</h2>
 
+					<Dialog title="Error" isOpen={this.state.printErrorDialog} onClose={this.togglePrintErrorDialog} canOutsideClickClose={true}>
+						<div className="pt-dialog-body">
+							<p>There was an error producing a PDF.</p>
+							<p><b>Please contact support and let them know.</b></p>
+						</div>
+						<div className="pt-dialog-footer">
+							<div className="pt-dialog-footer-actions">
+								<div style={styles.loaderContainer}>{errorMessage}</div>
+								<button type="button" className="pt-button" onClick={this.togglePrintErrorDialog}>Close</button>
+									<a target={'_blank'} href={'mailto:pubpub@media.mit.edu'} className={'link'}>
+										<button type="submit" className="pt-button pt-intent-primary">Email Support</button>
+
+									</a>
+
+
+							</div>
+						</div>
+					</Dialog>
+
 				{versions.sort((foo, bar)=> {
 					// Sort so that most recent is first in array
 					if (foo.createdAt > bar.createdAt) { return -1; }
@@ -176,10 +203,9 @@ export const PubVersions = React.createClass({
 					let printReadyUrl;
 					if (printReady) {
 						printReadyUrl = this.state.printReadyUrls[this.state.printReady.indexOf(version.hash)];
-						console.log(printReadyUrl)
 					}
-					const printLoading = (this.state.printLoading.indexOf(version.hash) !== -1)
-
+					const printLoading = (this.state.printLoading.indexOf(version.hash) !== -1);
+					const printError = (this.state.printError.indexOf(version.hash) !== -1);
 
 					return (
 						<div key={'version-' + version.id} style={styles.versionRow}>
@@ -255,15 +281,19 @@ export const PubVersions = React.createClass({
 								{console.log('ok no here ' + this.state.printLoading)}
 								{console.log(version.hash)}
 
-								{ !printReady &&
+								{ !printReady && !printError &&
 									<Button loading={printLoading} className={'pt-button p2-minimal'} onClick={this.printVersion.bind(this, version)} text='Print Pub' />
 								}
 								{
-									printReady &&
+									printReady && !printError &&
 									<a href={printReadyUrl}>
 										<Button className={'pt-button p2-minimal'} onClick={this.printVersion.bind(this, version)} text='Click Again' />
 									</a>
-									
+								}
+
+								{
+									printError &&
+									<Button disabled={true} className={'pt-button p2-minimal'} text='Error'/>
 								}
 
 
