@@ -1,4 +1,4 @@
-import { Dialog, Menu, MenuDivider, Popover, PopoverInteractionKind, Position, Button } from '@blueprintjs/core';
+import { Dialog, Menu, MenuDivider, Popover, PopoverInteractionKind, Position, Button, Alert } from '@blueprintjs/core';
 import React, { PropTypes } from 'react';
 import { postDoi, putVersion } from './actionsVersions';
 
@@ -26,7 +26,7 @@ export const PubVersions = React.createClass({
 			confirmPublish: undefined,
 			confirmRestricted: undefined,
 			confirmDoi: undefined,
-			printErrorDialog: false,
+			printErrorAlert: false,
 			printError: [],
 			printLoading: [],
 			printReady: [],
@@ -60,8 +60,8 @@ export const PubVersions = React.createClass({
 		this.props.dispatch(putVersion(this.props.pub.id, this.state.confirmPublish, true));
 	},
 
-	togglePrintErrorDialog: function () {
-		this.setState({ printErrorDialog: !this.state.printErrorDialog });
+	toggleprintErrorAlert: function () {
+		this.setState({ printErrorAlert: !this.state.printErrorAlert });
 	},
 
 	toggleDoiDialog: function(versionId) {
@@ -102,7 +102,7 @@ export const PubVersions = React.createClass({
 			} else if (err) {
 				this.setState({
 					printError: this.state.printError.concat([versionHash]),
-					printErrorDialog: true
+					printErrorAlert: true
 				});
 
 			}
@@ -153,6 +153,18 @@ export const PubVersions = React.createClass({
 			}
 		}
 	},
+	prepareSupportEmail: function() {
+		// <a target={'_blank'} href={'mailto:pubpub@media.mit.edu'} className={'link'}>
+		// 	<button type="submit" className="pt-button pt-intent-primary">Email Support</button>
+		// </a>
+		const emailTo = 'pubpub@media.mit.edu';
+		const pub = this.props.pub.slug;
+		const emailSubject = `Help: Trouble producing PDF With Pub slug==${pub} `;
+		const emailBody = '';
+		// location.href = `mailto:"${emailTo}"?subject="${emailSubject}"&body="${emailBody}"`;
+		window.open(`mailto:${emailTo}?subject=${emailSubject}&body=${emailBody}`);
+
+	},
 
 	render: function() {
 		const pub = this.props.pub || {};
@@ -169,22 +181,12 @@ export const PubVersions = React.createClass({
 		return (
 			<div style={styles.container}>
 				<h2>Versions</h2>
-
-					<Dialog title="Error" isOpen={this.state.printErrorDialog} onClose={this.togglePrintErrorDialog} canOutsideClickClose={true}>
+					<Alert title="Error" isOpen={this.state.printErrorAlert} cancelButtonText='Email Support' onCancel={this.prepareSupportEmail} confirmButtonText="Okay" onConfirm={this.toggleprintErrorAlert}>
 						<div className="pt-dialog-body">
 							<p>There was an error producing a PDF.</p>
 							<p><b>Please contact support and let them know.</b></p>
 						</div>
-						<div className="pt-dialog-footer">
-							<div className="pt-dialog-footer-actions">
-								<div style={styles.loaderContainer}>{errorMessage}</div>
-								<button type="button" className="pt-button" onClick={this.togglePrintErrorDialog}>Close</button>
-								<a target={'_blank'} href={'mailto:pubpub@media.mit.edu'} className={'link'}>
-									<button type="submit" className="pt-button pt-intent-primary">Email Support</button>
-								</a>
-							</div>
-						</div>
-					</Dialog>
+					</Alert>
 
 				{versions.sort((foo, bar)=> {
 					// Sort so that most recent is first in array
