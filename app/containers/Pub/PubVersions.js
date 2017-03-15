@@ -115,13 +115,22 @@ export const PubVersions = React.createClass({
 			return;
 		}
 
+		const title = this.props.pub.title;
+		const authors = [];
+
+		this.props.pub.contributors.forEach((contributor) => {
+			if (contributor.isAuthor) {
+				authors.push(`${contributor.user.firstName} ${contributor.user.lastName}`);
+			}
+		});
+
 
 		for (const file of files) {
 			if (file.name === defaultFile) {
 				console.log('got url!', file.url);
 				request
 				.post(PUBPUB_CONVERSION_URL)
-				.send({ inputType: 'pub', outputType: 'pdf', inputUrl: file.url, metadata: { title: 'test', authors: ['test author'] }})
+				.send({ inputType: 'pub', outputType: 'pdf', inputUrl: file.url, metadata: { title: title, authors: authors }})
 				.set('Accept', 'application/json')
 				.end((err, res) => {
 					if (err || !res.ok) {
