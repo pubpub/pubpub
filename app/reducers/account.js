@@ -38,6 +38,12 @@ import {
 	PUT_USER_FAIL,
 } from 'containers/User/actionsSettings';
 
+import {
+	GET_USER_JOURNALS_LOAD,
+	GET_USER_JOURNALS_SUCCESS,
+	GET_USER_JOURNALS_FAIL,
+} from 'containers/Pub/actionsReviewers';
+
 /* ------------------- */
 // Define Default State
 /* ------------------- */
@@ -132,6 +138,13 @@ export default function reducer(state = defaultState, action) {
 	case PUT_USER_SUCCESS:
 		return state.mergeIn(['user'], action.result);
 	case PUT_USER_FAIL:
+		return state;
+
+	case GET_USER_JOURNALS_LOAD:
+		return state;
+	case GET_USER_JOURNALS_SUCCESS:
+		return state.setIn(['user', 'journalAdmins'], action.result);
+	case GET_USER_JOURNALS_FAIL:
 		return state;
 
 	default:

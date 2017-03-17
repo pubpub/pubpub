@@ -7,6 +7,7 @@ const del = require('del');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlPluginRemove = require('html-webpack-plugin-remove');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+// https://github.com/th0r/webpack-bundle-analyzer
 
 class CleanPlugin {
 	constructor(options) {
@@ -77,7 +78,7 @@ module.exports = {
 					path.join(__dirname, 'app'),
 					path.join(__dirname, 'node_modules'),
 				],
-				exclude: /(node_modules\/(?!(pubpub-prose|pubpub-render-files)\/).*)|(.*citeproc.*)/,
+				exclude: /(node_modules)/,
 				query: {
 					retainLines: true,
 					plugins: [

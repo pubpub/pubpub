@@ -7,7 +7,7 @@ import request from 'superagent';
 import dateFormat from 'dateformat';
 import { Menu, Button } from '@blueprintjs/core';
 import { globalStyles } from 'utils/globalStyles';
-import { postReviewer } from './actionsReviewers';
+import { postReviewer, getUserJournals } from './actionsReviewers';
 
 let styles;
 
@@ -32,12 +32,26 @@ export const PubReviewers = React.createClass({
 		};
 	},
 
+	componentWillMount() {
+		const accountUser = this.props.accountUser || {};
+		if (accountUser.id) {
+			console.log('calling in mount');
+			this.props.dispatch(getUserJournals(accountUser.id));
+		}
+	},
 	componentWillReceiveProps(nextProps) {
 		const prevReviewers = this.props.invitedReviewers || [];
 		const nextReviewers = nextProps.invitedReviewers || [];
 
 		if (prevReviewers.length < nextReviewers.length) {
 			this.setState({ newReviewer: null });
+		}
+
+		const prevAccountUser = this.props.accountUser || {};
+		const nextAccountUser = this.props.accountUser || {};
+		if (!prevAccountUser.id && nextAccountUser.id) {
+			console.log('calling in receive');
+			this.props.dispatch(getUserJournals(nextAccountUser.id));
 		}
 	},
 
@@ -155,7 +169,7 @@ export const PubReviewers = React.createClass({
 										</span>
 									} 
 									style={{ paddingLeft: '0px' }}
-									position={2} />
+									position={0} />
 							</div>	
 						</div>
 					}
