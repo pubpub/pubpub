@@ -7,7 +7,7 @@ import RenderFileMarkdown from './RenderFileMarkdown';
 import RenderFilePDF from './RenderFilePDF';
 import RenderFilePPT from './RenderFilePPT';
 import RenderFileSTL from './RenderFileSTL';
-import { renderReactFromJSON } from 'pubpub-render-files/dist/ppub';
+import { renderReactFromJSON } from '@pubpub/render-files/dist/ppub';
 
 let styles;
 
