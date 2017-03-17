@@ -20,7 +20,7 @@
     "test": "NODE_PATH=./app TESTING=true mocha $(find app -name '*.test.js') --compilers js:babel-register --require ./app/tests/mochaEnvInit.js --watch --watch-extensions js --reporter list"
   },
   "dependencies": {
-    "@blueprintjs/core": "^1.8.0",
+    "@blueprintjs/core": "^1.12.0",
     "@pubpub/render-files": "^1.1.4",
     "babel-core": "^6.13.2",
     "babel-eslint": "^6.1.2",
@@ -76,11 +76,11 @@
     "pubpub-render-files": "github:pubpub/pubpub-render-files",
     "radium": "^0.18.1",
     "rangy": "^1.3.0",
-    "react": "^15.3.0",
+    "react": "^15.4.2",
     "react-addons-css-transition-group": "^15.3.2",
     "react-addons-test-utils": "^15.3.2",
     "react-color": "^2.8.0",
-    "react-dom": "^15.3.0",
+    "react-dom": "^15.4.2",
     "react-ga": "^2.1.2",
     "react-helmet": "^3.1.0",
     "react-intl": "^2.1.5",
@@ -109,6 +109,6 @@
     "webpack-hot-middleware": "^2.13.2"
   },
   "engines": {
-    "node": "6.1.0"
+    "node": "6.10.0"
   }
 }

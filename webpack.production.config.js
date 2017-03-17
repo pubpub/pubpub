@@ -7,6 +7,7 @@ const del = require('del');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlPluginRemove = require('html-webpack-plugin-remove');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+// https://github.com/th0r/webpack-bundle-analyzer
 
 class CleanPlugin {
 	constructor(options) {
