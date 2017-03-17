@@ -495,11 +495,11 @@ export const Pub = React.createClass({
 					}
 					{meta === 'reviewers' &&
 						<PubReviewers
+							pub={pub}
 							invitedReviewers={invitedReviewers}
 							accountUser={accountUser}
 							discussionsData={discussionsData}
 							isLoading={this.props.pubData.inviteReviewerLoading}
-							pubId={pub.id}
 							pathname={pathname}
 							query={query}
 							dispatch={this.props.dispatch} />
