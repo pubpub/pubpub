@@ -78,7 +78,7 @@ module.exports = {
 					path.join(__dirname, 'app'),
 					path.join(__dirname, 'node_modules'),
 				],
-				exclude: /(node_modules\/(?!(pubpub-prose|pubpub-render-files)\/).*)|(.*citeproc.*)/,
+				exclude: /(node_modules)/,
 				query: {
 					retainLines: true,
 					plugins: [
