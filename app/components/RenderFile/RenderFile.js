@@ -97,6 +97,9 @@ export const RenderFile = React.createClass({
 		case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
 			return <RenderFileDoc file={file} />;
 		case 'stl':
+		case 'application/sla':
+		case 'application/vnd.ms-pki.stl':
+		case 'application/x-navistyle':
 			return <RenderFileSTL file={file} />;
 		default:
 			return (
