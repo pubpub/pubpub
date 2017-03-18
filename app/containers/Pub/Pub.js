@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
-import Radium from 'radium';
 import Helmet from 'react-helmet';
-// import { browserHistory } from 'react-router';
+// import { withRouter } from 'react-router';
 // import { Rendering } from 'marklib';
 // import * as textQuote from 'dom-anchor-text-quote';
 
@@ -45,6 +44,8 @@ export const Pub = React.createClass({
 		pubData: PropTypes.object,
 		params: PropTypes.object,
 		location: PropTypes.object,
+		route: PropTypes.object,
+		router: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
 
@@ -60,10 +61,12 @@ export const Pub = React.createClass({
 	componentWillMount() {
 		const params = this.props.params || {};
 		this.props.dispatch(getPubData(params.slug));
-		// setTimeout(()=> {
-		// 	this.setState({});
-		// 	// This is a bad hack for PDFs to trigger their rebuild. What should we do instead? Send highlights into RenderFile?
-		// }, 20000);
+		window.unsavedEdits = true;
+	},
+
+	componentWillUnmount() {
+		console.log('Unmounting');
+		window.unsavedEdits = false;
 	},
 
 	// componentWillReceiveProps(nextProps) {
@@ -190,7 +193,7 @@ export const Pub = React.createClass({
 
 	render() {
 		const pub = this.props.pubData.pub || {};
-		
+
 		if (this.props.pubData.loading && !this.props.pubData.error) {
 			return <div style={{ margin: '5em auto', width: '50px' }}><Spinner /></div>;
 		}
@@ -556,7 +559,7 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps)(Radium(Pub));
+export default connect(mapStateToProps)(Pub);
 
 styles = {
 	container: {

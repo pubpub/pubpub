@@ -20,6 +20,8 @@ export const App = React.createClass({
 		pubData: PropTypes.object,
 		location: PropTypes.object,
 		params: PropTypes.object,
+		router: PropTypes.object,
+		route: PropTypes.object,
 		children: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
@@ -28,6 +30,20 @@ export const App = React.createClass({
 		const FocusStyleManager = require('@blueprintjs/core').FocusStyleManager;
 		FocusStyleManager.onlyShowFocusOnTabs();
 		this.props.dispatch(login());
+	},
+
+	componentWillReceiveProps(nextProps) {
+		// On each routeChange, we need to update setRouteLeaveHook. 
+		// This will make sure we throw a warning if window.unsavedEdits is truthy
+		window.onbeforeunload = this.confirmExit;
+		nextProps.router.setRouteLeaveHook(nextProps.router.routes[1], this.confirmExit);
+	},
+
+	confirmExit: function() {
+		if (window.unsavedEdits) {
+			return 'Your unsaved changes will be lost.';
+		}
+		return null;
 	},
 
 	logoutHandler: function() {
