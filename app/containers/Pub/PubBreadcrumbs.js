@@ -58,6 +58,7 @@ export const PubBreadcrumbs = React.createClass({
 						}
 					</Link>
 				</div>
+				
 				<ul className="pt-breadcrumbs" style={styles.breadcrumbs}>
 					<li><Link to={{ pathname: '/pub/' + this.props.pub.slug + '/files', query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> Files</Link></li>
 

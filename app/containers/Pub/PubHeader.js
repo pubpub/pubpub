@@ -17,20 +17,20 @@ export const PubHeader = React.createClass({
 		pub: PropTypes.object,
 		accountId: PropTypes.number,
 		preservedQuery: PropTypes.object,
-		currentVersion: PropTypes.object,
+		// currentVersion: PropTypes.object,
 		meta: PropTypes.string,
-		userAccessToken: PropTypes.string,
-		userName: PropTypes.string,
+		// userAccessToken: PropTypes.string,
+		// userName: PropTypes.string,
 		pathname: PropTypes.string,
 		query: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
 
 	openEditor: function() {
-		const { userAccessToken, userName } = this.props;
+		// const { userAccessToken, userName } = this.props;
 		const slug = this.props.pub.slug;
-		const url = `${PUBPUB_EDITOR_URL}/user/access/${slug}/${userName}/${userAccessToken}`;
-		window.location.href = url;
+		// const url = `${PUBPUB_EDITOR_URL}/user/access/${slug}/${userName}/${userAccessToken}`;
+		// window.location.href = url;
 	},
 
 
@@ -220,7 +220,7 @@ export const PubHeader = React.createClass({
 						pub={this.props.pub}
 						accountId={this.props.accountId}
 						preservedQuery={this.props.preservedQuery}
-						currentVersion={this.props.currentVersion}
+						// currentVersion={this.props.currentVersion}
 						useLightText={useLightText}
 						meta={this.props.meta}
 						pathname={this.props.pathname}

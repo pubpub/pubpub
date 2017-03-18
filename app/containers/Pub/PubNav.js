@@ -11,7 +11,7 @@ export const PubNav = React.createClass({
 		pub: PropTypes.object,
 		accountId: PropTypes.number,
 		preservedQuery: PropTypes.object,
-		currentVersion: PropTypes.object,
+		// currentVersion: PropTypes.object,
 		useLightText: PropTypes.bool,
 		meta: PropTypes.string,
 		pathname: PropTypes.string,
@@ -30,27 +30,27 @@ export const PubNav = React.createClass({
 		const pubFeatures = pub.pubFeatures || [];
 		const versions = pub.versions || [];
 
-		const currentVersion = this.props.currentVersion || {};
-		const currentFiles = currentVersion.files || [];
+		// const currentVersion = this.props.currentVersion || {};
+		// const currentFiles = currentVersion.files || [];
 
 		const navItems = [
 			{
 				icon: 'pt-icon-projects',
 				title: 'Content',
 				mobileTitle: '',
-				subtitle: `${currentFiles.length} files`,
+				// subtitle: `${currentFiles.length} files`,
 				to: { pathname: '/pub/' + pub.slug, query: preservedQuery },
 				active: meta === '/' || !meta
 			},
-			{
-				icon: 'pt-icon-calendar',
-				title: `${versions.length} Version${versions.length === 1 ? '' : 's'}`,
-				mobileTitle: versions.length,
-				subtitle: `Current: ${dateFormat(currentVersion.createdAt, 'mmm dd, yyyy')}`,
-				to: { pathname: '/pub/' + pub.slug + '/versions', query: preservedQuery },
-				active: meta === 'versions',
-				hidden: !currentVersion.files,
-			},
+			// {
+			// 	icon: 'pt-icon-calendar',
+			// 	title: `${versions.length} Version${versions.length === 1 ? '' : 's'}`,
+			// 	mobileTitle: versions.length,
+			// 	subtitle: `Current: ${dateFormat(currentVersion.createdAt, 'mmm dd, yyyy')}`,
+			// 	to: { pathname: '/pub/' + pub.slug + '/versions', query: preservedQuery },
+			// 	active: meta === 'versions',
+			// 	hidden: !currentVersion.files,
+			// },
 			{
 				icon: 'pt-icon-person',
 				title: `${contributors.length} Contributor${contributors.length === 1 ? '' : 's'}`,
@@ -66,7 +66,7 @@ export const PubNav = React.createClass({
 				subtitle: `${pubFeatures.length} featuring`,
 				to: { pathname: '/pub/' + pub.slug + '/journals', query: preservedQuery },
 				active: meta === 'journals',
-				hidden: !currentVersion.files,
+				// hidden: !currentVersion.files,
 			},
 			{
 				icon: 'pt-icon-cog',
