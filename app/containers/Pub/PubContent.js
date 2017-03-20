@@ -4,7 +4,7 @@ import { browserHistory } from 'react-router';
 import { NonIdealState, Spinner } from '@blueprintjs/core';
 
 import PubBreadcrumbs from './PubBreadcrumbs';
-import PubContentOld from './PubContentOld';
+import PubContentFiles from './PubContentFiles';
 import PubDiscussion from './PubDiscussion';
 import PubDiscussionsList from './PubDiscussionsList';
 import PubDiscussionsNew from './PubDiscussionsNew';
@@ -83,8 +83,6 @@ export const PubContent = React.createClass({
 			);
 		}
 
-		// const currentFile = this.props.params.filename;
-		// const meta = currentFile ? 'files' : this.props.params.meta;
 		const meta = !this.props.params.meta ? 'files' : this.props.params.meta;
 		const query = this.props.location.query;
 		
@@ -97,24 +95,9 @@ export const PubContent = React.createClass({
 		const panel = query.panel;
 		const queryDiscussion = query.discussion;
 		const discussions = pub.discussions || [];
-		// const contributors = pub.contributors || [];
-		// const invitedReviewers = pub.invitedReviewers || [];
-		// const currentInvitedReviewer = invitedReviewers.reduce((previous, current)=> {
-		// 	if (!current.invitationRejected && current.invitedUserId === accountUser.id) { return current; }
-		// 	return previous;
-		// }, undefined);
-
+		
 		const versions = pub.versions || [];
-		// const pubFeatures = pub.pubFeatures || [];
-		// const followers = pub.followers || [];
-
-
-		// const followData = followers.reduce((previous, current)=> {
-		// 	if (current.id === accountId) { return current.FollowsPub; }
-		// 	return previous;
-		// }, undefined);
-
-		// Might have to sort these if it isn't in chronological order
+		
 		const currentVersion = versions.sort((foo, bar)=> {
 			// Sort so that most recent is first in array
 			if (foo.createdAt > bar.createdAt) { return -1; }
@@ -131,25 +114,6 @@ export const PubContent = React.createClass({
 
 		}, {});
 
-		// const pubDOI = versions.reduce((previous, current)=> {
-		// 	if (current.doi) { return current.doi; }
-		// 	return previous;
-		// }, undefined);
-
-		// const sortedVersions = versions.sort((foo, bar)=> {
-		// 	// Sort so that least recent is first in array
-		// 	if (foo.createdAt > bar.createdAt) { return 1; }
-		// 	if (foo.createdAt < bar.createdAt) { return -1; }
-		// 	return 0;
-		// });
-
-		// const firstPublishedVersion = sortedVersions.reduce((previous, current, index, array)=> {
-		// 	if (previous) { return previous; }
-		// 	if (current.isPublished) { return current; }
-		// }, undefined) || {};
-
-		// const firstVersion = sortedVersions[0] || {};
-		// const lastVersion = sortedVersions[sortedVersions.length - 1] || {};
 
 		// Populate parent discussions with their children
 		const tempArray = [...discussions];
@@ -173,33 +137,6 @@ export const PubContent = React.createClass({
 			if (queryDiscussion === String(current.threadNumber)) { return current; }
 			return previous;
 		}, {});
-
-
-		/*---------*/
-		// All of this should be done outside of discussions - perhaps in it's own component.
-		// This is re-rendering on every scroll because of fixed position.
-
-		const allHighlights = discussions.reduce((previous, current)=> {
-			if (!current.versions.length) { return previous; }
-			const currentFileVersion = current.versions.reduce((previousVersionItem, currentVersionItem)=> {
-				return (!previousVersionItem.createdAt || currentVersionItem.createdAt > previousVersionItem.createdAt) ? currentVersionItem : previousVersionItem;
-			}, {}); // Get the last version
-			const files = currentFileVersion.files || [];
-
-			const highlightFileArray = files.reduce((previousFileItem, currentFileItem)=> {
-				if (currentFileItem.name === 'highlights.json') { return JSON.parse(currentFileItem.content); }
-				return previousFileItem;
-			}, []);
-
-			const addedThreadNumber = highlightFileArray.map((item) => {
-				return {
-					...item,
-					threadNumber: current.threadNumber
-				};
-			});
-			return [...previous, ...addedThreadNumber];
-
-		}, []);
 	
 
 		return (
@@ -212,8 +149,8 @@ export const PubContent = React.createClass({
 
 				<div id={'content-wrapper'} style={{ position: 'relative', width: '100%' }}>
 
-					<div style={currentVersion.files && (meta === 'files' || this.props.params.filename) ? styles.left : {}}>
-						<PubContentOld
+					<div style={currentVersion.files && (this.props.params.meta !== 'files' || this.props.params.filename) ? styles.left : {}}>
+						<PubContentFiles
 							version={currentVersion}
 							pub={pub}
 							params={this.props.params}
@@ -222,7 +159,7 @@ export const PubContent = React.createClass({
 							error={this.props.pubData.versionsError}
 							dispatch={this.props.dispatch} />
 
-						<PubHighlights allHighlights={allHighlights} location={this.props.location} />
+						<PubHighlights discussions={discussions} location={this.props.location} />
 					</div>
 					{currentVersion.files && (this.props.params.meta !== 'files' || this.props.params.filename) &&
 						<div style={styles.rightPanel}>

@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 
 // import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router';
-import { PUBPUB_EDITOR_URL } from 'configURLs';
+// import { PUBPUB_EDITOR_URL } from 'configURLs';
 import Radium from 'radium';
 import RenderFile from 'components/RenderFile/RenderFile';
 import dateFormat from 'dateformat';
@@ -14,13 +14,10 @@ import { s3Upload } from 'utils/uploadFile';
 
 let styles;
 
-export const PubContentOld = React.createClass({
+export const PubContentFiles = React.createClass({
 	propTypes: {
 		version: PropTypes.object,
 		pub: PropTypes.object,
-		// pubSlug: PropTypes.string,
-		// userName: PropTypes.string,
-		// userAccessToken: PropTypes.string,
 		params: PropTypes.object,
 		query: PropTypes.object,
 		isLoading: PropTypes.bool,
@@ -362,7 +359,7 @@ export const PubContentOld = React.createClass({
 
 });
 
-export default Radium(PubContentOld);
+export default Radium(PubContentFiles);
 
 styles = {
 	container: {

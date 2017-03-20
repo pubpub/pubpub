@@ -25,16 +25,18 @@ export const PubBreadcrumbs = React.createClass({
 		const meta = params.meta;
 		const routeFilename = params.filename;
 
-		// const mainFile = files.reduce((previous, current)=> {
-		// 	if (version.defaultFile === current.name) { return current; }
-		// 	if (!version.defaultFile && current.name.split('.')[0] === 'main') { return current; }
-		// 	return previous;
-		// }, files[0]);
+		const mainFile = files.reduce((previous, current)=> {
+			if (version.defaultFile === current.name) { return current; }
+			if (!version.defaultFile && current.name.split('.')[0] === 'main') { return current; }
+			return previous;
+		}, files[0]);
 
 		const routeFile = files.reduce((previous, current)=> {
 			if (current.name === routeFilename) { return current; }
 			return previous;
 		}, undefined);
+
+		const currentFile = routeFile || mainFile;
 
 		if (!files.length) { return <div />; }
 
@@ -58,19 +60,12 @@ export const PubBreadcrumbs = React.createClass({
 						}
 					</Link>
 				</div>
-				
+
 				<ul className="pt-breadcrumbs" style={styles.breadcrumbs}>
 					<li><Link to={{ pathname: '/pub/' + this.props.pub.slug + '/files', query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> Files</Link></li>
-
-					{meta !== 'files' && !routeFilename &&
-						<li><a className="pt-breadcrumb">Main</a></li>
-					}
-
-					{!!routeFilename &&
-						<li><a className="pt-breadcrumb">{routeFile.name}</a></li>
-					}
-
+					<li><a className="pt-breadcrumb">{currentFile.name}</a></li>
 				</ul>
+				<button className={'pt-button pt-icon-edit pt-minimal'}>Edit</button>
 				
 			</div>
 		);

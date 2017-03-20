@@ -8,7 +8,7 @@ let styles;
 
 export const PubHighlights = React.createClass({
 	propTypes: {
-		allHighlights: PropTypes.array,
+		discussions: PropTypes.array,
 		location: PropTypes.object,
 	},
 
@@ -56,7 +56,28 @@ export const PubHighlights = React.createClass({
 	},
 
 	render() {
-		const allHighlights = this.props.allHighlights || [];
+		const discussions = this.props.discussions || [];
+		const allHighlights = discussions.reduce((previous, current)=> {
+			if (!current.versions.length) { return previous; }
+			const currentFileVersion = current.versions.reduce((previousVersionItem, currentVersionItem)=> {
+				return (!previousVersionItem.createdAt || currentVersionItem.createdAt > previousVersionItem.createdAt) ? currentVersionItem : previousVersionItem;
+			}, {}); // Get the last version
+			const files = currentFileVersion.files || [];
+
+			const highlightFileArray = files.reduce((previousFileItem, currentFileItem)=> {
+				if (currentFileItem.name === 'highlights.json') { return JSON.parse(currentFileItem.content); }
+				return previousFileItem;
+			}, []);
+
+			const addedThreadNumber = highlightFileArray.map((item) => {
+				return {
+					...item,
+					threadNumber: current.threadNumber
+				};
+			});
+			return [...previous, ...addedThreadNumber];
+
+		}, []);
 
 		setTimeout(()=> {
 			const container = document.getElementById('highlighter-wrapper');
