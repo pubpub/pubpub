@@ -19,8 +19,8 @@ export const PubContentOld = React.createClass({
 		version: PropTypes.object,
 		pub: PropTypes.object,
 		// pubSlug: PropTypes.string,
-		userName: PropTypes.string,
-		userAccessToken: PropTypes.string,
+		// userName: PropTypes.string,
+		// userAccessToken: PropTypes.string,
 		params: PropTypes.object,
 		query: PropTypes.object,
 		isLoading: PropTypes.bool,
@@ -166,12 +166,12 @@ export const PubContentOld = React.createClass({
 		this.props.dispatch(putDefaultFile(this.props.pub.id, this.props.version.id, filename));
 	},
 
-	openEditor: function() {
-		const { userAccessToken, userName } = this.props;
-		const slug = this.props.pub.slug;
-		const url = `${PUBPUB_EDITOR_URL}/user/access/${slug}/${userName}/${userAccessToken}`;
-		window.location.href = url;
-	},
+	// openEditor: function() {
+	// 	const { userAccessToken, userName } = this.props;
+	// 	const slug = this.props.pub.slug;
+	// 	const url = `${PUBPUB_EDITOR_URL}/user/access/${slug}/${userName}/${userAccessToken}`;
+	// 	window.location.href = url;
+	// },
 
 	render() {
 		// Default view, no files, no nothing
@@ -245,10 +245,10 @@ export const PubContentOld = React.createClass({
 							<input id={'upload'} type="file" multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
 						</label>
 
-						<button className={'pt-button'} onClick={this.openEditor} style={{ marginLeft: '1em' }}>
+						{/*<button className={'pt-button'} onClick={this.openEditor} style={{ marginLeft: '1em' }}>
 							Open Editor
 							<span className={'pt-icon-standard pt-align-right'} />
-						</button>
+						</button>*/}
 					</div>
 				}
 
