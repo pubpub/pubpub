@@ -48,6 +48,7 @@ const routes = (
 		<Route path="/pub/:slug" getComponent={getComponent('Pub', 'redirect')} />
 		<Route path="/pub/:slug/:meta" getComponent={getComponent('Pub', 'redirect')} />
 		<Route path="/pub/:slug/files/:filename" getComponent={getComponent('Pub', 'redirect')} />
+		<Route path="/pub/:slug/files/:filename/:mode" getComponent={getComponent('Pub', 'redirect')} />
 
 		<Route path="/journals/create" getComponent={getComponent('CreateJournal', 'redirect')} />
 

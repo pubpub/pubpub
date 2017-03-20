@@ -184,6 +184,7 @@ export const PubContentFiles = React.createClass({
 		const query = this.props.query || {};
 		const params = this.props.params || {};
 		const meta = params.meta;
+		const mode = params.mode;
 		const routeFilename = params.filename;
 
 		const mainFile = files.reduce((previous, current)=> {
@@ -196,6 +197,8 @@ export const PubContentFiles = React.createClass({
 			if (current.name === routeFilename) { return current; }
 			return previous;
 		}, undefined);
+
+		const currentFile = meta === 'files' ? routeFile : mainFile;
 
 		return (
 			<div style={styles.container}>
@@ -348,9 +351,23 @@ export const PubContentFiles = React.createClass({
 				}
 
 				{/* Render specific File */}
-				{!!files.length && (meta !== 'files' || (meta !== 'files' && routeFile)) &&
+				{!!files.length && currentFile && !mode &&
 					<div style={styles.pubStyle} className={'pub-body'}>
-						<RenderFile file={routeFile || mainFile} allFiles={files} pubSlug={this.props.pub.slug} query={this.props.query}/>
+						<RenderFile file={currentFile} allFiles={files} pubSlug={this.props.pub.slug} query={this.props.query}/>
+					</div>
+				}
+
+				{/* Edit specific File */}
+				{!!files.length && currentFile && mode === 'edit' &&
+					<div className={'pt-card pt-elevation-3'} style={{ padding: '0em' }}>
+						<div style={{ backgroundColor: '#ebf1f5', padding: '0.5em', textAlign: 'right', borderBottom: '1px solid rgba(16, 22, 26, 0.15)' }}>
+							<div className={'pt-button-group'}>
+								<div className={'pt-button'}>Markdown</div>
+								<div className={'pt-button'}>Rich</div>
+								<button className={'pt-button pt-icon-trash pt-minimal'} style={{ margin: '0em 1em' }} />
+							</div>
+						</div>
+						<textarea style={{ width: '100%', minHeight: '400px', padding: '1em 4em', outline: 0, border: '0px solid white' }} defaultValue={currentFile.content}></textarea>
 					</div>
 				}
 			</div>

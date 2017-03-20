@@ -84,6 +84,7 @@ export const PubContent = React.createClass({
 		}
 
 		const meta = !this.props.params.meta ? 'files' : this.props.params.meta;
+		const mode = this.props.params.mode;
 		const query = this.props.location.query;
 		
 		const pathname = this.props.location.pathname;
@@ -149,7 +150,7 @@ export const PubContent = React.createClass({
 
 				<div id={'content-wrapper'} style={{ position: 'relative', width: '100%' }}>
 
-					<div style={currentVersion.files && (this.props.params.meta !== 'files' || this.props.params.filename) ? styles.left : {}}>
+					<div style={currentVersion.files && mode !=='edit' && (this.props.params.meta !== 'files' || this.props.params.filename) ? styles.left : {}}>
 						<PubContentFiles
 							version={currentVersion}
 							pub={pub}
@@ -161,7 +162,7 @@ export const PubContent = React.createClass({
 
 						<PubHighlights discussions={discussions} location={this.props.location} />
 					</div>
-					{currentVersion.files && (this.props.params.meta !== 'files' || this.props.params.filename) &&
+					{currentVersion.files && mode !== 'edit' && (this.props.params.meta !== 'files' || this.props.params.filename) &&
 						<div style={styles.rightPanel}>
 							<PubSidePanel parentId={'content-wrapper'}>
 								<div style={styles.discussionListVisible(!panel && !queryDiscussion)}>

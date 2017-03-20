@@ -36,7 +36,7 @@ export const PubBreadcrumbs = React.createClass({
 			return previous;
 		}, undefined);
 
-		const currentFile = routeFile || mainFile;
+		const currentFile = meta === 'files' ? routeFile : mainFile;
 
 		if (!files.length) { return <div />; }
 
@@ -63,9 +63,15 @@ export const PubBreadcrumbs = React.createClass({
 
 				<ul className="pt-breadcrumbs" style={styles.breadcrumbs}>
 					<li><Link to={{ pathname: '/pub/' + this.props.pub.slug + '/files', query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> Files</Link></li>
-					<li><a className="pt-breadcrumb">{currentFile.name}</a></li>
+					{currentFile &&
+						<li><a className="pt-breadcrumb">{currentFile.name}</a></li>
+					}
+					
 				</ul>
-				<button className={'pt-button pt-icon-edit pt-minimal'}>Edit</button>
+				{currentFile &&
+					<Link to={`/pub/${this.props.pub.slug}/files/${currentFile.name}/edit`} className={'pt-button pt-icon-edit pt-minimal'}>Edit</Link>
+				}
+				
 				
 			</div>
 		);
