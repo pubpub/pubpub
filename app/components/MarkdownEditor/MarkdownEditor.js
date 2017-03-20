@@ -27,6 +27,11 @@ export const MarkdownEditor = React.createClass({
 				spellChecker: false,
 				status: false,
 				toolbar: false,
+				shortcuts: {
+					togglePreview: null,
+					toggleSideBySide: null,
+					toggleFullScreen: null,
+				}
 			});
 
 			this.simpleMDE.value(this.props.initialContent || '');
