@@ -4,7 +4,6 @@ import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import Radium from 'radium';
 import dateFormat from 'dateformat';
-import { globalStyles } from 'utils/globalStyles';
 
 let styles;
 
@@ -23,6 +22,7 @@ export const PubBreadcrumbs = React.createClass({
 		const query = this.props.query || {};
 		const params = this.props.params || {};
 		const meta = params.meta;
+		const mode = params.mode;
 		const routeFilename = params.filename;
 
 		const mainFile = files.reduce((previous, current)=> {
@@ -40,37 +40,59 @@ export const PubBreadcrumbs = React.createClass({
 
 		if (!files.length) { return <div />; }
 
-		let mode = 'Private';
-		if (version.isRestricted) { mode = 'Restricted'; }
-		if (version.isPublished) { mode = 'Published'; }
+		let privacy = 'Private';
+		if (version.isRestricted) { privacy = 'Restricted'; }
+		if (version.isPublished) { privacy = 'Published'; }
 
 		return (
 			<div style={styles.container}>
 				<div style={styles.versionStatus}>
 					<Link to={{ pathname: '/pub/' + this.props.pub.slug + '/versions', query: query }} className={'opacity-on-hover-parent pt-button pt-minimal'} style={styles.statusLink}>
-						{dateFormat(version.createdAt, 'mmmm dd, yyyy')} · {mode}
-						{mode === 'Private' &&
-							<span style={styles.modeIcon} className={'pt-icon-standard pt-icon-lock opacity-on-hover-child'} />
+						{dateFormat(version.createdAt, 'mmmm dd, yyyy')} · {privacy}
+						{privacy === 'Private' &&
+							<span style={styles.privacyIcon} className={'pt-icon-standard pt-icon-lock opacity-on-hover-child'} />
 						}
-						{mode === 'Restricted' &&
-							<span style={styles.modeIcon} className={'pt-icon-standard pt-icon-people opacity-on-hover-child'} />
+						{privacy === 'Restricted' &&
+							<span style={styles.privacyIcon} className={'pt-icon-standard pt-icon-people opacity-on-hover-child'} />
 						}
-						{mode === 'Published' &&
-							<span style={styles.modeIcon} className={'pt-icon-standard pt-icon-globe opacity-on-hover-child'} />
+						{privacy === 'Published' &&
+							<span style={styles.privacyIcon} className={'pt-icon-standard pt-icon-globe opacity-on-hover-child'} />
 						}
 					</Link>
 				</div>
 
 				<ul className="pt-breadcrumbs" style={styles.breadcrumbs}>
 					<li><Link to={{ pathname: '/pub/' + this.props.pub.slug + '/files', query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> Files</Link></li>
-					{currentFile &&
+					{currentFile && !mode &&
 						<li><a className="pt-breadcrumb">{currentFile.name}</a></li>
+					}
+					{currentFile && mode === 'edit' &&
+						<li><a className="pt-breadcrumb">
+							<input className={'pt-input'} defaultValue={currentFile.name} />
+						</a></li>
+						
 					}
 					
 				</ul>
-				{currentFile &&
+				{currentFile && !mode &&
 					<Link to={`/pub/${this.props.pub.slug}/files/${currentFile.name}/edit`} className={'pt-button pt-icon-edit pt-minimal'}>Edit</Link>
 				}
+
+				{mode === 'edit' &&
+					<div style={styles.editModeBar}>
+						<div style={styles.versionStatus}>
+							<div className="pt-control-group">  
+								<input type="text" className="pt-input" placeholder="Describe your changes..." />
+								<button className="pt-button pt-intent-primary">Save Changes</button>
+							</div>
+						</div>
+
+						<div style={{ lineHeight: '45px' }}>2 files changed, 1 new file</div>
+						
+					</div>
+				}
+
+				
 				
 				
 			</div>
@@ -98,9 +120,12 @@ styles = {
 		display: 'inline-block',
 		padding: '0px 2px',
 	},
-	modeIcon: {
+	privacyIcon: {
 		paddingLeft: '0.5em',
 		color: '#5c7080',
 		margin: 0,
+	},
+	editModeBar: {
+		
 	},
 };

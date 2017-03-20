@@ -6,6 +6,7 @@ import { Link } from 'react-router';
 // import { PUBPUB_EDITOR_URL } from 'configURLs';
 import Radium from 'radium';
 import RenderFile from 'components/RenderFile/RenderFile';
+import MarkdownEditor from 'components/MarkdownEditor/MarkdownEditor';
 import dateFormat from 'dateformat';
 import { globalStyles } from 'utils/globalStyles';
 import { postVersion } from './actionsVersions';
@@ -367,9 +368,10 @@ export const PubContentFiles = React.createClass({
 								<button className={'pt-button pt-icon-trash pt-minimal'} style={{ margin: '0em 1em' }} />
 							</div>
 						</div>
-						<textarea style={{ width: '100%', minHeight: '400px', padding: '1em 4em', outline: 0, border: '0px solid white' }} defaultValue={currentFile.content}></textarea>
+						<MarkdownEditor initialContent={currentFile.content} onChange={(value)=> { console.log(value); }} />
 					</div>
 				}
+
 			</div>
 		);
 	},

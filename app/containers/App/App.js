@@ -11,6 +11,7 @@ import { login, logout } from './actions';
 require('../../../static/blueprint.scss');
 require('../../../static/style.scss');
 require('../../../static/pubBody.scss');
+require('../../../static/markdown.scss');
 
 export const App = React.createClass({
 	propTypes: {
