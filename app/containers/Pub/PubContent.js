@@ -218,6 +218,13 @@ export const PubContent = React.createClass({
 		});
 	},
 
+	onVersionPrivacyChange: function(isRestricted, isPublished) {
+		this.setState({
+			editorIsPublished: isPublished,
+			editorIsRestricted: isRestricted,
+		});
+	},
+
 	// TODO: discard changes when viewing new file keeps filename in URL and causes bad render state
 	// TODO: Need to block empty md files from being saved
 	// TODO: Need to file filenames on edit (append md when necessary) - perhaps on save version
@@ -266,7 +273,7 @@ export const PubContent = React.createClass({
 
 		const defaultFile = this.state.editorFiles[this.state.editorDefaultFile].newName || this.state.editorFiles[this.state.editorDefaultFile].name;
 		this.setState({ editorError: '' });
-		return this.props.dispatch(postVersion(pubId, this.state.editorVersionMessage, false, newVersionFiles, defaultFile));
+		return this.props.dispatch(postVersion(pubId, this.state.editorVersionMessage, this.state.editorIsPublished, this.state.editorIsRestricted, newVersionFiles, defaultFile));
 	},
 	onDiscardChanges: function() {
 		window.unsavedEdits = false;
@@ -353,12 +360,17 @@ export const PubContent = React.createClass({
 					pub={pub}
 					editorFiles={this.state.editorFiles}
 					editorVersionMessage={this.state.editorVersionMessage}
+					editorIsPublished={this.state.editorIsPublished}
+					editorIsRestricted={this.state.editorIsRestricted}
 					onNameChange={this.onNameChange}
 					onVersionMessageChange={this.onVersionMessageChange}
 					onSaveVersion={this.onSaveVersion}
+					onVersionPrivacyChange={this.onVersionPrivacyChange}
 					onDiscardChanges={this.onDiscardChanges}
 					version={currentVersion}
 					params={this.props.params}
+					isLoading={this.props.pubData.versionsLoading}
+					error={this.props.pubData.versionsError}
 					query={query} />
 
 				<div id={'content-wrapper'} style={{ position: 'relative', width: '100%' }}>

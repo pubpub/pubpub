@@ -23,7 +23,7 @@ export const POST_DOI_FAIL = 'pub/POST_DOI_FAIL';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function postVersion(pubId, message, isPublished, files, defaultFile, newFileAttribution, newFileRelations) {
+export function postVersion(pubId, message, isPublished, isRestricted, files, defaultFile, newFileAttribution, newFileRelations) {
 	return (dispatch) => {
 		dispatch({ type: POST_VERSION_LOAD });
 
@@ -37,6 +37,7 @@ export function postVersion(pubId, message, isPublished, files, defaultFile, new
 				pubId: pubId, 
 				message: message, 
 				isPublished: isPublished, 
+				isRestricted: isRestricted,
 				files: files, 
 				defaultFile: defaultFile,
 				newFileAttribution: newFileAttribution, 

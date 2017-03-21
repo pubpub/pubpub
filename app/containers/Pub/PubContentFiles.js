@@ -168,31 +168,31 @@ export const PubContentFiles = React.createClass({
 	},
 
 	postNewVersion: function(evt) {
-		evt.preventDefault();
-		if (!this.state.newVersionMessage) {
-			return this.setState({ newVersionError: 'Version message required' });
-		}
-		if (!this.state.uploadingFinished) { return false; }
-		const pubId = this.props.pub.id;
-		const newUploadedFileObjects = this.state.uploadedFileObjects;
+		// evt.preventDefault();
+		// if (!this.state.newVersionMessage) {
+		// 	return this.setState({ newVersionError: 'Version message required' });
+		// }
+		// if (!this.state.uploadingFinished) { return false; }
+		// const pubId = this.props.pub.id;
+		// const newUploadedFileObjects = this.state.uploadedFileObjects;
 
-		const version = this.props.version || {};
-		const files = version.files || [];
+		// const version = this.props.version || {};
+		// const files = version.files || [];
 
-		const fileNames = {};
-		const mergedFiles = [...newUploadedFileObjects, ...files];
-		const newVersionFiles = mergedFiles.map((file)=> {
-			fileNames[file.name] = false;
-			return file;
-		}).filter((item)=> {
-			if (fileNames[item.name]) { return false; }
+		// const fileNames = {};
+		// const mergedFiles = [...newUploadedFileObjects, ...files];
+		// const newVersionFiles = mergedFiles.map((file)=> {
+		// 	fileNames[file.name] = false;
+		// 	return file;
+		// }).filter((item)=> {
+		// 	if (fileNames[item.name]) { return false; }
 
-			fileNames[item.name] = true;
-			return true;
-		});
+		// 	fileNames[item.name] = true;
+		// 	return true;
+		// });
 
-		this.setState({ newVersionError: '' });
-		return this.props.dispatch(postVersion(pubId, this.state.newVersionMessage, false, newVersionFiles, version.defaultFile));
+		// this.setState({ newVersionError: '' });
+		// return this.props.dispatch(postVersion(pubId, this.state.newVersionMessage, false, newVersionFiles, version.defaultFile));
 	},
 
 	defaultFileChange: function(filename) {
@@ -377,13 +377,22 @@ export const PubContentFiles = React.createClass({
 								{files.sort((foo, bar)=> {
 									if (!foo.isNew && bar.isNew) { return 1; }
 									if (foo.isNew && !bar.isNew) { return -1; }
+									if (!foo.isDeleted && bar.isDeleted) { return 1; }
+									if (foo.isDeleted && !bar.isDeleted) { return -1; }
+									if (!(foo.newName || foo.newMarkdown || foo.newJSON) && (bar.newName || bar.newMarkdown || bar.newJSON)) { return 1; }
+									if ((foo.newName || foo.newMarkdown || foo.newJSON) && !(bar.newName || bar.newMarkdown || bar.newJSON)) { return -1; }
 									if (foo.name > bar.name) { return 1; }
 									if (foo.name < bar.name) { return -1; }
 									return 0;
 								}).map((file, index)=> {
 									return (
-										<tr key={'file-' + index} style={[file.isNew && {backgroundColor: '#3DCC91'}, file.isDeleted && {backgroundColor: '#FF7373'}]}>
-											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={{ pathname: `/pub/${this.props.pub.slug}/files/${file.name}${editMode ? '/edit' : ''}`, query: query }}>{file.isNew && <span style={{ marginRight: '0.5em'}} className={'pt-tag'}>new</span>}{file.newName || file.name}</Link></td>
+										<tr key={'file-' + index}>
+											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={{ pathname: `/pub/${this.props.pub.slug}/files/${file.name}${editMode ? '/edit' : ''}`, query: query }}>
+												{!file.isDeleted && file.isNew && <span style={[file.isNew && {backgroundColor: '#48AFF0'}, file.isNew && {backgroundColor: '#3DCC91'}, file.isDeleted && {backgroundColor: '#FF7373'}, { marginRight: '0.5em' }]} className={'pt-tag'}>new</span>}
+												{file.isDeleted && <span style={[file.isNew && {backgroundColor: '#48AFF0'}, file.isNew && {backgroundColor: '#3DCC91'}, file.isDeleted && {backgroundColor: '#FF7373'}, { marginRight: '0.5em' }]} className={'pt-tag'}>deleted</span>}
+												{!file.isNew && !file.isDeleted && (file.newName || file.newMarkdown || file.newJSON) && <span style={[file.isNew && {backgroundColor: '#48AFF0'}, file.isNew && {backgroundColor: '#3DCC91'}, file.isDeleted && {backgroundColor: '#FF7373'}, { marginRight: '0.5em' }]} className={'pt-tag'}>updated</span>}
+												{file.newName || file.name}
+											</Link></td>
 											<td style={styles.tableCell}>{dateFormat(file.createdAt, 'mmm dd, yyyy')}</td>
 											<td style={[styles.tableCell, styles.tableCellSmall]}>
 												<a href={file.url} target={'_blank'}>

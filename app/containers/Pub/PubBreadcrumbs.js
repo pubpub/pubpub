@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import { Sticky } from 'react-sticky';
 // import ReactMarkdown from 'react-markdown';
+import { Menu, Button } from '@blueprintjs/core';
+import DropdownButton from 'components/DropdownButton/DropdownButton';
 import { Link } from 'react-router';
 import Radium from 'radium';
 import dateFormat from 'dateformat';
@@ -12,13 +14,30 @@ export const PubBreadcrumbs = React.createClass({
 		pub: PropTypes.object,
 		editorFiles: PropTypes.object,
 		editorVersionMessage: PropTypes.string,
+		editorIsPublished: PropTypes.bool,
+		editorIsRestricted: PropTypes.bool,
 		onNameChange: PropTypes.func,
 		onVersionMessageChange: PropTypes.func,
+		onVersionPrivacyChange: PropTypes.func,
 		onSaveVersion: PropTypes.func,
 		onDiscardChanges: PropTypes.func,
 		version: PropTypes.object,
 		params: PropTypes.object,
+		isLoading: PropTypes.bool,
+		error: PropTypes.string,
 		query: PropTypes.object,
+	},
+
+	setEditorPrivacy: function(mode) {
+		if (mode === 'private') {
+			this.props.onVersionPrivacyChange(false, false);
+		}
+		if (mode === 'restricted') {
+			this.props.onVersionPrivacyChange(true, false);
+		}
+		if (mode === 'published') {
+			this.props.onVersionPrivacyChange(false, true);
+		}
 	},
 
 	render() {
@@ -55,6 +74,10 @@ export const PubBreadcrumbs = React.createClass({
 		if (version.isRestricted) { privacy = 'Restricted'; }
 		if (version.isPublished) { privacy = 'Published'; }
 
+		let editorPrivacy = 'Private';
+		if (this.props.editorIsRestricted) { editorPrivacy = 'Restricted'; }
+		if (this.props.editorIsPublished) { editorPrivacy = 'Published'; }
+
 		const currentEditorFile = this.props.editorFiles[routeFilename];
 
 		const newFileCount = files.reduce((previous, current)=> {
@@ -75,18 +98,68 @@ export const PubBreadcrumbs = React.createClass({
 		return (
 			<Sticky style={styles.container(editMode)} isActive={editMode}>
 				<div style={styles.versionStatus}>
-					<Link to={{ pathname: '/pub/' + this.props.pub.slug + '/versions', query: query }} className={'opacity-on-hover-parent pt-button pt-minimal'} style={styles.statusLink}>
-						{dateFormat(version.createdAt, 'mmmm dd, yyyy')} · {privacy}
-						{privacy === 'Private' &&
-							<span style={styles.privacyIcon} className={'pt-icon-standard pt-icon-lock opacity-on-hover-child'} />
-						}
-						{privacy === 'Restricted' &&
-							<span style={styles.privacyIcon} className={'pt-icon-standard pt-icon-people opacity-on-hover-child'} />
-						}
-						{privacy === 'Published' &&
-							<span style={styles.privacyIcon} className={'pt-icon-standard pt-icon-globe opacity-on-hover-child'} />
-						}
-					</Link>
+					{!editMode &&
+						<Link to={{ pathname: '/pub/' + this.props.pub.slug + '/versions', query: query }} className={'opacity-on-hover-parent pt-button pt-minimal'} style={styles.statusLink}>
+							{dateFormat(version.createdAt, 'mmmm dd, yyyy')} · {privacy}
+							{privacy === 'Private' &&
+								<span style={styles.privacyIcon} className={'pt-icon-standard pt-icon-lock opacity-on-hover-child'} />
+							}
+							{privacy === 'Restricted' &&
+								<span style={styles.privacyIcon} className={'pt-icon-standard pt-icon-people opacity-on-hover-child'} />
+							}
+							{privacy === 'Published' &&
+								<span style={styles.privacyIcon} className={'pt-icon-standard pt-icon-globe opacity-on-hover-child'} />
+							}
+						</Link>
+					}
+					{false && editMode &&
+						<Link to={{ pathname: '/pub/' + this.props.pub.slug + '/versions', query: query }} className={'opacity-on-hover-parent pt-button pt-minimal'} style={styles.statusLink}>
+							Draft · Will be {editorPrivacy}
+							{editorPrivacy === 'Private' &&
+								<span style={styles.privacyIcon} className={'pt-icon-standard pt-icon-lock opacity-on-hover-child'} />
+							}
+							{editorPrivacy === 'Restricted' &&
+								<span style={styles.privacyIcon} className={'pt-icon-standard pt-icon-people opacity-on-hover-child'} />
+							}
+							{editorPrivacy === 'Published' &&
+								<span style={styles.privacyIcon} className={'pt-icon-standard pt-icon-globe opacity-on-hover-child'} />
+							}
+						</Link>
+					}
+					{editMode &&
+						<DropdownButton 
+							content={
+								<Menu>
+									<li><a className="pt-menu-item pt-popover-dismiss" onClick={this.setEditorPrivacy.bind(this, 'private')}>
+										Private
+										{true === false && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
+									</a></li>
+									<li><a className="pt-menu-item pt-popover-dismiss" onClick={this.setEditorPrivacy.bind(this, 'restricted')}>
+										Restricted
+										{true === false && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
+									</a></li>
+									<li><a className="pt-menu-item pt-popover-dismiss" onClick={this.setEditorPrivacy.bind(this, 'published')}>
+										Published
+										{true === false && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
+									</a></li>
+								</Menu>
+							}
+							title={
+								<span>
+									Will be {editorPrivacy}
+									{editorPrivacy === 'Private' &&
+										<span style={styles.privacyIcon} className={'pt-icon-standard pt-icon-lock opacity-on-hover-child'} />
+									}
+									{editorPrivacy === 'Restricted' &&
+										<span style={styles.privacyIcon} className={'pt-icon-standard pt-icon-people opacity-on-hover-child'} />
+									}
+									{editorPrivacy === 'Published' &&
+										<span style={styles.privacyIcon} className={'pt-icon-standard pt-icon-globe opacity-on-hover-child'} />
+									}
+								</span>
+							} 
+							position={2} />
+					}
 				</div>
 
 				<ul className="pt-breadcrumbs" style={styles.breadcrumbs}>
@@ -117,23 +190,26 @@ export const PubBreadcrumbs = React.createClass({
 						<div style={styles.versionStatus}>
 							<form style={{ display: 'inline-block', verticalAlign: 'middle' }}>
 								<div className="pt-control-group">  
-									<input type="text" className="pt-input" placeholder="Describe your changes..." onChange={this.props.onVersionMessageChange} value={this.props.editorVersionMessage}/>
-									<button className="pt-button pt-intent-primary" onClick={this.props.onSaveVersion}>Save Changes</button>
+									<input type="text" style={{ minWidth: '300px' }} className="pt-input" placeholder="Describe your changes..." onChange={this.props.onVersionMessageChange} value={this.props.editorVersionMessage}/>
+									<Button className="pt-intent-success" onClick={this.props.onSaveVersion} loading={this.props.isLoading}>Save Changes</Button>
 								</div>
 							</form>
-							<button className="pt-button" onClick={this.props.onDiscardChanges}>Discard Changes</button>
 						</div>
 
-						<div style={{ lineHeight: '45px' }}>
+						<div style={{ minHeight: '45px', lineHeight: '45px' }}>
 							{!!newFileCount &&
-								<span>{newFileCount} file{newFileCount !== 1 && 's'} added </span>
+								<span style={{ verticalAlign: 'middle' }}>{newFileCount} file{newFileCount !== 1 && 's'} added </span>
 							}
 							{!!removedFileCount &&
-								<span>{removedFileCount} file{removedFileCount !== 1 && 's'} deleted </span>
+								<span style={{ verticalAlign: 'middle' }}>{removedFileCount} file{removedFileCount !== 1 && 's'} deleted </span>
 							}
 							{!!updatedFileCount &&
-								<span>{updatedFileCount} file{updatedFileCount !== 1 && 's'} updated </span>
+								<span style={{ verticalAlign: 'middle' }}>{updatedFileCount} file{updatedFileCount !== 1 && 's'} updated </span>
 							}
+							{(!!newFileCount || !!removedFileCount || !!updatedFileCount) && !this.props.isLoading &&
+								<Button style={{ verticalAlign: 'middle' }} className="pt-minimal" onClick={this.props.onDiscardChanges}>(Discard Changes)</Button>
+							}
+							
 						</div>
 						<div style={styles.editModeLine(editMode)} />
 					</div>
