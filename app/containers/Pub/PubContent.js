@@ -231,6 +231,7 @@ export const PubContent = React.createClass({
 	// TODO: discard changes when viewing new file keeps filename in URL and causes bad render state
 	// TODO: Need to block empty md files from being saved
 	// TODO: Need to file filenames on edit (append md when necessary) - perhaps on save version
+	// TODO: Without any unsavedChanges, will remain in editor mode on Content root, even though it should not remain in editor)
 
 	onFileDelete: function() {
 		if (!this.state.editorMode) { return false; }
