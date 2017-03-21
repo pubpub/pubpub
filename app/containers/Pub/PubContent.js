@@ -174,7 +174,6 @@ export const PubContent = React.createClass({
 		const newEditorFiles = { ...newState.editorFiles };
 		newEditorFiles[file.name] = file;
 		window.unsavedEdits = true;
-		// TODO: uploaded markdown files won't have any content field
 		this.setState({
 			...newState,
 			editorFiles: newEditorFiles 
@@ -228,8 +227,6 @@ export const PubContent = React.createClass({
 	// TODO: discard changes when viewing new file keeps filename in URL and causes bad render state
 	// TODO: Need to block empty md files from being saved
 	// TODO: Need to file filenames on edit (append md when necessary) - perhaps on save version
-	// TODO: Need to show real privacy state and let switch
-	// TODO: Make '2 files changed' real.
 
 	onFileDelete: function() {
 		if (!this.state.editorMode) { return false; }
@@ -375,7 +372,7 @@ export const PubContent = React.createClass({
 
 				<div id={'content-wrapper'} style={{ position: 'relative', width: '100%' }}>
 
-					<div style={currentVersion.files && mode !=='edit' && (this.props.params.meta !== 'files' || this.props.params.filename) ? styles.left : {}}>
+					<div style={currentVersion.files && mode !== 'edit' && (this.props.params.meta !== 'files' || this.props.params.filename) ? styles.left : {}}>
 						<PubContentFiles
 							version={currentVersion}
 							pub={pub}

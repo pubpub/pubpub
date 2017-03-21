@@ -1,4 +1,4 @@
-import { NonIdealState, ProgressBar, Spinner } from '@blueprintjs/core';
+import { NonIdealState, ProgressBar } from '@blueprintjs/core';
 import React, { PropTypes } from 'react';
 
 // import ReactMarkdown from 'react-markdown';
@@ -9,7 +9,7 @@ import RenderFile from 'components/RenderFile/RenderFile';
 import MarkdownEditor from 'components/MarkdownEditor/MarkdownEditor';
 import dateFormat from 'dateformat';
 import { globalStyles } from 'utils/globalStyles';
-import { postVersion } from './actionsVersions';
+// import { postVersion } from './actionsVersions';
 import { putDefaultFile } from './actionsFiles';
 import { s3Upload } from 'utils/uploadFile';
 
