@@ -222,6 +222,8 @@ export const PubContent = React.createClass({
 	// TODO: discard changes when viewing new file keeps filename in URL and causes bad render state
 	// TODO: Need to block empty md files from being saved
 	// TODO: Need to file filenames on edit (append md when necessary) - perhaps on save version
+	// TODO: Need to show real privacy state and let switch
+	// TODO: Make '2 files changed' real.
 
 	onFileDelete: function() {
 		if (!this.state.editorMode) { return false; }

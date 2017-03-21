@@ -23,12 +23,17 @@ export const PubBreadcrumbs = React.createClass({
 
 	render() {
 		const version = this.props.version || {};
-		const files = version.files || [];
+		const editMode = Object.keys(this.props.editorFiles).length > 0;
+		
+		const files = editMode 
+			? Object.keys(this.props.editorFiles).map((key)=> {
+				return this.props.editorFiles[key];
+			})
+			: version.files || [];
 
 		const query = this.props.query || {};
 		const params = this.props.params || {};
 		const meta = params.meta;
-		const editMode = Object.keys(this.props.editorFiles).length > 0;
 		const routeFilename = params.filename;
 
 		const mainFile = files.reduce((previous, current)=> {
@@ -51,6 +56,22 @@ export const PubBreadcrumbs = React.createClass({
 		if (version.isPublished) { privacy = 'Published'; }
 
 		const currentEditorFile = this.props.editorFiles[routeFilename];
+
+		const newFileCount = files.reduce((previous, current)=> {
+			if (current.isNew) { return previous + 1; }
+			return previous;
+		}, 0);
+
+		const removedFileCount = files.reduce((previous, current)=> {
+			if (current.isDeleted) { return previous + 1; }
+			return previous;
+		}, 0);
+
+		const updatedFileCount = files.reduce((previous, current)=> {
+			if (current.newName || current.newMarkdown || current.newJSON) { return previous + 1; }
+			return previous;
+		}, 0);
+
 		return (
 			<div style={styles.container}>
 				<div style={styles.versionStatus}>
@@ -103,14 +124,21 @@ export const PubBreadcrumbs = React.createClass({
 							<button className="pt-button" onClick={this.props.onDiscardChanges}>Discard Changes</button>
 						</div>
 
-						<div style={{ lineHeight: '45px' }}>2 files changed, 1 new file</div>
+						<div style={{ lineHeight: '45px' }}>
+							{!!newFileCount &&
+								<span>{newFileCount} file{newFileCount !== 1 && 's'} added </span>
+							}
+							{!!removedFileCount &&
+								<span>{removedFileCount} file{removedFileCount !== 1 && 's'} deleted </span>
+							}
+							{!!updatedFileCount &&
+								<span>{updatedFileCount} file{updatedFileCount !== 1 && 's'} updated </span>
+							}
+						</div>
 						
 					</div>
 				}
-
-				
-				
-				
+			
 			</div>
 		);
 	},
@@ -142,6 +170,6 @@ styles = {
 		margin: 0,
 	},
 	editModeBar: {
-		
+		clear: 'both',
 	},
 };
