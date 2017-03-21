@@ -10,6 +10,11 @@ let styles;
 export const PubBreadcrumbs = React.createClass({
 	propTypes: {
 		pub: PropTypes.object,
+		editorFiles: PropTypes.object,
+		editorVersionMessage: PropTypes.string,
+		onNameChange: PropTypes.func,
+		onVersionMessageChange: PropTypes.func,
+		onSaveVersion: PropTypes.func,
 		version: PropTypes.object,
 		params: PropTypes.object,
 		query: PropTypes.object,
@@ -44,6 +49,7 @@ export const PubBreadcrumbs = React.createClass({
 		if (version.isRestricted) { privacy = 'Restricted'; }
 		if (version.isPublished) { privacy = 'Published'; }
 
+		const currentEditorFile = this.props.editorFiles[routeFilename];
 		return (
 			<div style={styles.container}>
 				<div style={styles.versionStatus}>
@@ -66,9 +72,9 @@ export const PubBreadcrumbs = React.createClass({
 					{currentFile && !mode &&
 						<li><a className="pt-breadcrumb">{currentFile.name}</a></li>
 					}
-					{currentFile && mode === 'edit' &&
+					{currentEditorFile && mode === 'edit' &&
 						<li><a className="pt-breadcrumb">
-							<input className={'pt-input'} defaultValue={currentFile.name} />
+							<input className={'pt-input'} onChange={this.props.onNameChange} value={currentEditorFile.newName || currentEditorFile.name} />
 						</a></li>
 						
 					}
@@ -81,10 +87,12 @@ export const PubBreadcrumbs = React.createClass({
 				{mode === 'edit' &&
 					<div style={styles.editModeBar}>
 						<div style={styles.versionStatus}>
-							<div className="pt-control-group">  
-								<input type="text" className="pt-input" placeholder="Describe your changes..." />
-								<button className="pt-button pt-intent-primary">Save Changes</button>
-							</div>
+							<form>
+								<div className="pt-control-group">  
+									<input type="text" className="pt-input" placeholder="Describe your changes..." onChange={this.props.onVersionMessageChange} value={this.props.editorVersionMessage}/>
+									<button className="pt-button pt-intent-primary" onClick={this.props.onSaveVersion}>Save Changes</button>
+								</div>
+							</form>
 						</div>
 
 						<div style={{ lineHeight: '45px' }}>2 files changed, 1 new file</div>

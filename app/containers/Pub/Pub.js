@@ -61,7 +61,6 @@ export const Pub = React.createClass({
 	componentWillMount() {
 		const params = this.props.params || {};
 		this.props.dispatch(getPubData(params.slug));
-		window.unsavedEdits = true;
 	},
 
 	componentWillUnmount() {

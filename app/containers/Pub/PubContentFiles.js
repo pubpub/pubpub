@@ -19,6 +19,7 @@ export const PubContentFiles = React.createClass({
 	propTypes: {
 		version: PropTypes.object,
 		pub: PropTypes.object,
+		onEditChange: PropTypes.func,
 		params: PropTypes.object,
 		query: PropTypes.object,
 		isLoading: PropTypes.bool,
@@ -368,7 +369,7 @@ export const PubContentFiles = React.createClass({
 								<button className={'pt-button pt-icon-trash pt-minimal'} style={{ margin: '0em 1em' }} />
 							</div>
 						</div>
-						<MarkdownEditor initialContent={currentFile.content} onChange={(value)=> { console.log(value); }} />
+						<MarkdownEditor initialContent={currentFile.content} onChange={this.props.onEditChange} />
 					</div>
 				}
 

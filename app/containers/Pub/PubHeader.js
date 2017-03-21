@@ -4,7 +4,7 @@ import React, { PropTypes } from 'react';
 // import dateFormat from 'dateformat';
 import FollowButton from 'containers/FollowButton/FollowButton';
 import { Link } from 'react-router';
-import { PUBPUB_EDITOR_URL } from 'configURLs';
+// import { PUBPUB_EDITOR_URL } from 'configURLs';
 import PubLabelList from './PubLabelList';
 import PubNav from './PubNav';
 import Tag from 'components/Tag/Tag';
@@ -26,12 +26,12 @@ export const PubHeader = React.createClass({
 		dispatch: PropTypes.func,
 	},
 
-	openEditor: function() {
+	// openEditor: function() {
 		// const { userAccessToken, userName } = this.props;
-		const slug = this.props.pub.slug;
+		// const slug = this.props.pub.slug;
 		// const url = `${PUBPUB_EDITOR_URL}/user/access/${slug}/${userName}/${userAccessToken}`;
 		// window.location.href = url;
-	},
+	// },
 
 
 	render: function() {
@@ -129,9 +129,9 @@ export const PubHeader = React.createClass({
 						{(pub.isAuthor || pub.canEdit) &&
 							<div style={styles.buttonWrapper} className={'button-wrapper'}>
 								<div className={'pt-button-group'}>
-									<button className={'pt-button pt-icon-edit'} onClick={this.openEditor}>
-										Edit Pub
-									</button>
+									{/*<button className={'pt-button pt-icon-edit'} onClick={this.openEditor}>
+																			Edit Pub
+																		</button>*/}
 									{/*<Link to={'/pub/${pub.slug}/forks'} className={'pt-button pt-icon-fork'}>15</Link>*/}
 									{/*<Link to={'/pub/${pub.slug}/forks'} className={'pt-button'}>15</Link>*/}
 								</div>
