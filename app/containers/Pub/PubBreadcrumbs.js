@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-
+import { Sticky } from 'react-sticky';
 // import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router';
 import Radium from 'radium';
@@ -73,7 +73,7 @@ export const PubBreadcrumbs = React.createClass({
 		}, 0);
 
 		return (
-			<div style={styles.container}>
+			<Sticky style={styles.container(editMode)} isActive={editMode}>
 				<div style={styles.versionStatus}>
 					<Link to={{ pathname: '/pub/' + this.props.pub.slug + '/versions', query: query }} className={'opacity-on-hover-parent pt-button pt-minimal'} style={styles.statusLink}>
 						{dateFormat(version.createdAt, 'mmmm dd, yyyy')} · {privacy}
@@ -135,11 +135,11 @@ export const PubBreadcrumbs = React.createClass({
 								<span>{updatedFileCount} file{updatedFileCount !== 1 && 's'} updated </span>
 							}
 						</div>
-						
+						<div style={styles.editModeLine(editMode)} />
 					</div>
 				}
 			
-			</div>
+			</Sticky>
 		);
 	},
 
@@ -148,10 +148,29 @@ export const PubBreadcrumbs = React.createClass({
 export default Radium(PubBreadcrumbs);
 
 styles = {
-	container: {
-		marginBottom: '2em',
-		padding: '1em 0em 0em',
-		borderBottom: '1px solid #CCC',
+	container: function(editMode) {
+		return {
+			marginBottom: '2em',
+			padding: '1em 0em 0em',
+			borderBottom: editMode ? '0px solid black' : '1px solid #CCC',
+			// borderBottom: '1px solid #CCC',
+			zIndex: 10,
+		};
+		
+	},
+	editModeLine: function(editMode) {
+		return {
+			display: editMode ? 'block' : 'none',
+			position: 'absolute',
+			boxShadow: '0px 1px 1px rgba(16, 22, 26, 0.2), 0px 3px 3px rgba(16, 22, 26, 0.2)',
+			left: '-100vw',
+			top: 0,
+			width: '200vw',
+			height: '100%',
+			zIndex: '-1',
+			backgroundColor: 'white',
+		};
+		
 	},
 	breadcrumbs: {
 		minHeight: '30px',

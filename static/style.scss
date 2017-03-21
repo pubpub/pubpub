@@ -1,4 +1,6 @@
 body {
+	maxWidth: 100vw;
+	overflow-x: hidden;
 	/*max-width: 1024px;*/
 	// min-width: 800px; // This is a bad band-aid until we get better mobile support.
 	margin: 0 auto;

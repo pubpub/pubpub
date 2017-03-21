@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { browserHistory } from 'react-router';
 import { NonIdealState, Spinner } from '@blueprintjs/core';
-
+import { StickyContainer } from 'react-sticky';
 import PubBreadcrumbs from './PubBreadcrumbs';
 import PubContentFiles from './PubContentFiles';
 import PubDiscussion from './PubDiscussion';
@@ -59,7 +59,6 @@ export const PubContent = React.createClass({
 
 		const editMode = Object.keys(this.state.editorFiles).length > 0;
 		if (!editMode && (!this.props.pubData.pub.id && nextPathname.pubData.pub.id && this.props.params.mode === 'edit' || !this.props.params.mode && nextProps.params.mode === 'edit')) {
-			console.log('Trying to enter edit mode');
 			this.setState(this.enterEditModeObject)
 		}
 
@@ -270,7 +269,6 @@ export const PubContent = React.createClass({
 		return this.props.dispatch(postVersion(pubId, this.state.editorVersionMessage, false, newVersionFiles, defaultFile));
 	},
 	onDiscardChanges: function() {
-		console.log('in discard');
 		window.unsavedEdits = false;
 		const currentEditorFile = this.state.editorFiles[this.props.params.filename] || {};
 		const nextName = currentEditorFile.name;
@@ -350,7 +348,7 @@ export const PubContent = React.createClass({
 	
 
 		return (
-			<div>
+			<StickyContainer>
 				<PubBreadcrumbs
 					pub={pub}
 					editorFiles={this.state.editorFiles}
@@ -433,7 +431,7 @@ export const PubContent = React.createClass({
 					}
 
 				</div>
-			</div>
+			</StickyContainer>
 
 		);
 	}
@@ -460,23 +458,23 @@ styles = {
 			display: 'none',
 		}
 	},
-	right: {
-		height: '100%',
-		// maxHeight: '100vh',
-		// backgroundColor: '#f3f3f4',
-		width: '35%',
-		position: 'absolute',
-		right: 0,
-		top: 0,
-		zIndex: 10,
-		// boxShadow: 'inset 0px 0px 1px #777',
-	},
-	rightSticky: {
-		maxHeight: '100vh',
-		overflow: 'hidden',
-		overflowY: 'scroll',
-		padding: '0.5em 1em 0.5em',
-	},
+	// right: {
+	// 	height: '100%',
+	// 	// maxHeight: '100vh',
+	// 	// backgroundColor: '#f3f3f4',
+	// 	width: '35%',
+	// 	position: 'absolute',
+	// 	right: 0,
+	// 	top: 0,
+	// 	zIndex: 10,
+	// 	// boxShadow: 'inset 0px 0px 1px #777',
+	// },
+	// rightSticky: {
+	// 	maxHeight: '100vh',
+	// 	overflow: 'hidden',
+	// 	overflowY: 'scroll',
+	// 	padding: '0.5em 1em 0.5em',
+	// },
 	
 	discussionListVisible: (isVisible)=> {
 		return {
