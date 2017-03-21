@@ -19,7 +19,9 @@ export const PubContentFiles = React.createClass({
 	propTypes: {
 		version: PropTypes.object,
 		pub: PropTypes.object,
+		editorFiles: PropTypes.object,
 		onEditChange: PropTypes.func,
+		onFileDelete: PropTypes.func,
 		params: PropTypes.object,
 		query: PropTypes.object,
 		isLoading: PropTypes.bool,
@@ -202,6 +204,8 @@ export const PubContentFiles = React.createClass({
 
 		const currentFile = meta === 'files' ? routeFile : mainFile;
 
+		const editMode = Object.keys(this.props.editorFiles).length > 0;
+
 		return (
 			<div style={styles.container}>
 
@@ -327,8 +331,8 @@ export const PubContentFiles = React.createClass({
 									return 0;
 								}).map((file, index)=> {
 									return (
-										<tr key={'file-' + index}>
-											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={{ pathname: '/pub/' + this.props.pub.slug + '/files/' + file.name, query: query }}>{file.name}</Link></td>
+										<tr key={'file-' + index} style={file.isDeleted ? {backgroundColor: 'red'} : {}}>
+											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={{ pathname: `/pub/${this.props.pub.slug}/files/${file.name}${editMode ? '/edit' : ''}`, query: query }}>{file.name}</Link></td>
 											<td style={styles.tableCell}>{dateFormat(file.createdAt, 'mmm dd, yyyy')}</td>
 											<td style={[styles.tableCell, styles.tableCellSmall]}>
 												<a href={file.url} target={'_blank'}>
@@ -361,12 +365,12 @@ export const PubContentFiles = React.createClass({
 
 				{/* Edit specific File */}
 				{!!files.length && currentFile && mode === 'edit' &&
-					<div className={'pt-card pt-elevation-3'} style={{ padding: '0em' }}>
+					<div className={'pt-card pt-elevation-3'} style={{ padding: '0em', margin: '0em 0em 2em' }}>
 						<div style={{ backgroundColor: '#ebf1f5', padding: '0.5em', textAlign: 'right', borderBottom: '1px solid rgba(16, 22, 26, 0.15)' }}>
 							<div className={'pt-button-group'}>
 								<div className={'pt-button'}>Markdown</div>
 								<div className={'pt-button'}>Rich</div>
-								<button className={'pt-button pt-icon-trash pt-minimal'} style={{ margin: '0em 1em' }} />
+								<button className={'pt-button pt-icon-trash pt-minimal'} style={{ margin: '0em 1em' }} onClick={this.props.onFileDelete} />
 							</div>
 						</div>
 						<MarkdownEditor initialContent={currentFile.content} onChange={this.props.onEditChange} />

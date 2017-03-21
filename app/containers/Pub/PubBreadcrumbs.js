@@ -15,6 +15,7 @@ export const PubBreadcrumbs = React.createClass({
 		onNameChange: PropTypes.func,
 		onVersionMessageChange: PropTypes.func,
 		onSaveVersion: PropTypes.func,
+		onDiscardChanges: PropTypes.func,
 		version: PropTypes.object,
 		params: PropTypes.object,
 		query: PropTypes.object,
@@ -27,7 +28,7 @@ export const PubBreadcrumbs = React.createClass({
 		const query = this.props.query || {};
 		const params = this.props.params || {};
 		const meta = params.meta;
-		const mode = params.mode;
+		const editMode = Object.keys(this.props.editorFiles).length > 0;
 		const routeFilename = params.filename;
 
 		const mainFile = files.reduce((previous, current)=> {
@@ -69,10 +70,10 @@ export const PubBreadcrumbs = React.createClass({
 
 				<ul className="pt-breadcrumbs" style={styles.breadcrumbs}>
 					<li><Link to={{ pathname: '/pub/' + this.props.pub.slug + '/files', query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> Files</Link></li>
-					{currentFile && !mode &&
+					{currentFile && !editMode &&
 						<li><a className="pt-breadcrumb">{currentFile.name}</a></li>
 					}
-					{currentEditorFile && mode === 'edit' &&
+					{currentEditorFile && editMode &&
 						<li><a className="pt-breadcrumb">
 							<input className={'pt-input'} onChange={this.props.onNameChange} value={currentEditorFile.newName || currentEditorFile.name} />
 						</a></li>
@@ -80,19 +81,20 @@ export const PubBreadcrumbs = React.createClass({
 					}
 					
 				</ul>
-				{currentFile && !mode &&
+				{currentFile && !editMode &&
 					<Link to={`/pub/${this.props.pub.slug}/files/${currentFile.name}/edit`} className={'pt-button pt-icon-edit pt-minimal'}>Edit</Link>
 				}
 
-				{mode === 'edit' &&
+				{editMode &&
 					<div style={styles.editModeBar}>
 						<div style={styles.versionStatus}>
-							<form>
+							<form style={{ display: 'inline-block', verticalAlign: 'middle' }}>
 								<div className="pt-control-group">  
 									<input type="text" className="pt-input" placeholder="Describe your changes..." onChange={this.props.onVersionMessageChange} value={this.props.editorVersionMessage}/>
 									<button className="pt-button pt-intent-primary" onClick={this.props.onSaveVersion}>Save Changes</button>
 								</div>
 							</form>
+							<button className="pt-button" onClick={this.props.onDiscardChanges}>Discard Changes</button>
 						</div>
 
 						<div style={{ lineHeight: '45px' }}>2 files changed, 1 new file</div>

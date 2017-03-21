@@ -37,11 +37,12 @@ export const App = React.createClass({
 		// On each routeChange, we need to update setRouteLeaveHook. 
 		// This will make sure we throw a warning if window.unsavedEdits is truthy
 		window.onbeforeunload = this.confirmExit;
-		nextProps.router.setRouteLeaveHook(nextProps.router.routes[1], this.confirmExit);
+		nextProps.router.setRouteLeaveHook(nextProps.router.routes[1], this.confirmExit.bind(this, nextProps));
 	},
 
-	confirmExit: function() {
-		if (window.unsavedEdits) {
+	confirmExit: function(props, nextRoute) {
+		const stayingInFiles = props && nextRoute && props.params.meta === 'files' && nextRoute.pathname.indexOf(`/pub/${props.params.slug}/files`) > -1;
+		if (window.unsavedEdits && !stayingInFiles) {
 			return 'Your unsaved changes will be lost.';
 		}
 		return null;

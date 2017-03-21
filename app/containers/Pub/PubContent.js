@@ -81,7 +81,7 @@ export const PubContent = React.createClass({
 		if (currentPub.id && this.getCurrentVersion(currentPub.versions).id !== this.getCurrentVersion(nextPub.versions).id) {
 			window.unsavedEdits = false;
 			const currentEditorFile = this.state.editorFiles[this.props.params.filename];
-			const nextName = currentEditorFile.newName || currentEditorFile.name;
+			const nextName = currentEditorFile && (currentEditorFile.newName || currentEditorFile.name);
 			this.setState({
 				editorMode: undefined,
 				editorFiles: {},
@@ -166,6 +166,18 @@ export const PubContent = React.createClass({
 			editorVersionMessageUserChanged: true,
 		});
 	},
+
+	onFileDelete: function() {
+		if (!this.state.editorMode) { return false; }
+		const currentFile = this.props.params.filename;
+		const newEditorFiles = { ...this.state.editorFiles };
+		newEditorFiles[currentFile].isDeleted = true;
+		window.unsavedEdits = true;
+		this.setState({ editorFiles: newEditorFiles });
+		return browserHistory.push({
+			pathname: `/pub/${this.props.pubData.pub.slug}/files`,
+		});
+	},
 	onSaveVersion: function(evt) {
 		evt.preventDefault();
 		if (!this.state.editorVersionMessage) {
@@ -191,11 +203,27 @@ export const PubContent = React.createClass({
 				delete newFile.id;
 			}
 			return newFile;
+		}).filter((file)=> {
+			return !file.isDeleted;
 		}); 
 
 		const defaultFile = this.state.editorFiles[version.defaultFile].newName || version.defaultFile;
 		this.setState({ editorError: '' });
 		return this.props.dispatch(postVersion(pubId, this.state.editorVersionMessage, false, newVersionFiles, defaultFile));
+	},
+	onDiscardChanges: function() {
+		window.unsavedEdits = false;
+		const currentEditorFile = this.state.editorFiles[this.props.params.filename];
+		const nextName = currentEditorFile.name;
+		this.setState({
+			editorMode: undefined,
+			editorFiles: {},
+			editorVersionMessage: '',
+			editorVersionMessageUserChanged: false,
+		});
+		browserHistory.push({
+			pathname: `/pub/${this.props.pubData.pub.slug}/files/${nextName || ''}`,
+		});
 	},
 
 	render() {
@@ -264,6 +292,7 @@ export const PubContent = React.createClass({
 					onNameChange={this.onNameChange}
 					onVersionMessageChange={this.onVersionMessageChange}
 					onSaveVersion={this.onSaveVersion}
+					onDiscardChanges={this.onDiscardChanges}
 					version={currentVersion}
 					params={this.props.params}
 					query={query} />
@@ -274,7 +303,9 @@ export const PubContent = React.createClass({
 						<PubContentFiles
 							version={currentVersion}
 							pub={pub}
+							editorFiles={this.state.editorFiles}
 							onEditChange={this.onEditChange}
+							onFileDelete={this.onFileDelete}
 							params={this.props.params}
 							query={query}
 							isLoading={this.props.pubData.versionsLoading}
