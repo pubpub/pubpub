@@ -20,10 +20,12 @@ export const PubContentFiles = React.createClass({
 		version: PropTypes.object,
 		pub: PropTypes.object,
 		editorFiles: PropTypes.object,
+		editorDefaultFile: PropTypes.string,
 		onEditChange: PropTypes.func,
 		onFileDelete: PropTypes.func,
 		onFileAdd: PropTypes.func,
-		updateDefaultFile: PropTypes.func,
+		onFileCreate: PropTypes.func,
+		updateEditorDefaultFile: PropTypes.func,
 		params: PropTypes.object,
 		query: PropTypes.object,
 		isLoading: PropTypes.bool,
@@ -122,6 +124,7 @@ export const PubContentFiles = React.createClass({
 			isNew: true,
 		};
 		if (type === 'text/markdown' || title.split('.').pop() === 'md') {
+			// If it's markdown, we have to pull out the content from the file so it is available to edit.
 			const reader = new FileReader();
 			reader.readAsText(this.state.uploadFiles[index], 'UTF-8');
 			reader.onload = (event)=> {
@@ -195,7 +198,7 @@ export const PubContentFiles = React.createClass({
 	defaultFileChange: function(filename) {
 		const editMode = Object.keys(this.props.editorFiles).length > 0;
 		if (editMode) {
-			return this.props.updateDefaultFile(filename);
+			return this.props.updateEditorDefaultFile(filename);
 		}
 		return this.props.dispatch(putDefaultFile(this.props.pub.id, this.props.version.id, filename));
 	},
@@ -228,9 +231,10 @@ export const PubContentFiles = React.createClass({
 		const mode = params.mode;
 		const routeFilename = params.filename;
 
+		const defaultFile = editMode ? this.props.editorDefaultFile : version.defaultFile;
 		const mainFile = files.reduce((previous, current)=> {
-			if (version.defaultFile === current.name) { return current; }
-			if (!version.defaultFile && current.name.split('.')[0] === 'main') { return current; }
+			if (defaultFile === current.name) { return current; }
+			if (!defaultFile && current.name.split('.')[0] === 'main') { return current; }
 			return previous;
 		}, files[0]);
 
@@ -241,7 +245,10 @@ export const PubContentFiles = React.createClass({
 
 		const currentFile = meta === 'files' ? routeFile : mainFile;
 
-		console.log(currentFile);
+		const isRemainingUploads = this.state.uploadFileNames.reduce((previous, current, index)=> {
+			if (this.state.uploadRates[index] !== 1) { return true; }
+			return previous;
+		}, false);
 
 		return (
 			<div style={styles.container}>
@@ -285,10 +292,11 @@ export const PubContentFiles = React.createClass({
 					<div style={styles.topButtons}>
 						{/*<Link to={'/pub/markdown'} style={{ marginRight: '0.5em' }}>Rendering with PubPub Markdown</Link>*/}
 						<Link style={{ marginRight: '0.5em' }}>What can I upload?</Link>
-						<label className="pt-button" htmlFor={'upload'}>
+						<label className="pt-button pt-icon-add" htmlFor={'upload'}>
 							Upload Files
 							<input id={'upload'} type="file" multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
 						</label>
+						<button className={'pt-button pt-icon-document !pt-minimal'} onClick={this.props.onFileCreate}>New Doc</button>
 
 						{/*<button className={'pt-button'} onClick={this.openEditor} style={{ marginLeft: '1em' }}>
 							Open Editor
@@ -298,8 +306,8 @@ export const PubContentFiles = React.createClass({
 				}
 
 				{/* Uploading Section */}
-				{this.state.uploading &&
-					<div style={styles.uploadingSection} className={'!pt-card !pt-elevation-2'}>
+				{isRemainingUploads &&
+					<div style={styles.uploadingSection} className={'pt-card pt-elevation-2'}>
 						{/*!!isLoading &&
 							<div style={styles.newVersionLoading}>
 								<Spinner className={'pt-small'} />
@@ -374,7 +382,7 @@ export const PubContentFiles = React.createClass({
 									return 0;
 								}).map((file, index)=> {
 									return (
-										<tr key={'file-' + index} style={[file.isDeleted && {backgroundColor: '#FF7373'}, file.isNew && {backgroundColor: '#3DCC91'}]}>
+										<tr key={'file-' + index} style={[file.isNew && {backgroundColor: '#3DCC91'}, file.isDeleted && {backgroundColor: '#FF7373'}]}>
 											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={{ pathname: `/pub/${this.props.pub.slug}/files/${file.name}${editMode ? '/edit' : ''}`, query: query }}>{file.isNew && <span style={{ marginRight: '0.5em'}} className={'pt-tag'}>new</span>}{file.newName || file.name}</Link></td>
 											<td style={styles.tableCell}>{dateFormat(file.createdAt, 'mmm dd, yyyy')}</td>
 											<td style={[styles.tableCell, styles.tableCellSmall]}>
@@ -440,10 +448,12 @@ styles = {
 		paddingTop: '10px',
 	},
 	topButtons: {
-		float: 'right',
+		textAlign: 'right',
+		margin: '-1em 0em 1em',
 	},
 	uploadingSection: {
-		// marginBottom: '2em',
+		marginBottom: '2em',
+		clear: 'both',
 	},
 	topRightButton: {
 		float: 'right',

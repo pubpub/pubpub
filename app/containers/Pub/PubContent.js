@@ -33,12 +33,15 @@ export const PubContent = React.createClass({
 			editorFiles: {},
 			editorVersionMessage: '',
 			editorVersionMessageUserChanged: false,
+			editorIsPublished: undefined,
+			editorIsRestricted: undefined,
+			editorDefaultFile: undefined,
 		};
 	},
 
 	componentWillMount() {
 		if (this.props.pubData.pub.id && this.props.params.mode === 'edit') {
-			this.enterEditMode();
+			this.setState(this.enterEditModeObject)
 		}
 	},
 
@@ -57,7 +60,7 @@ export const PubContent = React.createClass({
 		const editMode = Object.keys(this.state.editorFiles).length > 0;
 		if (!editMode && (!this.props.pubData.pub.id && nextPathname.pubData.pub.id && this.props.params.mode === 'edit' || !this.props.params.mode && nextProps.params.mode === 'edit')) {
 			console.log('Trying to enter edit mode');
-			this.enterEditMode();
+			this.setState(this.enterEditModeObject)
 		}
 
 		const currentPub = this.props.pubData.pub || {};
@@ -71,6 +74,9 @@ export const PubContent = React.createClass({
 				editorFiles: {},
 				editorVersionMessage: '',
 				editorVersionMessageUserChanged: false,
+				editorIsPublished: undefined,
+				editorIsRestricted: undefined,
+				editorDefaultFile: undefined,
 			});
 			browserHistory.push({
 				pathname: `/pub/${nextPub.slug}/files/${nextName || ''}`,
@@ -79,17 +85,20 @@ export const PubContent = React.createClass({
 		}
 	},
 
-	enterEditMode: function() {
+	enterEditModeObject: function() {
 		const versions = this.props.pubData.pub.versions || [];
 		const currentVersion = this.getCurrentVersion(versions);
 		const files = currentVersion.files || [];
-		this.setState({
+		return {
 			editorMode: 'markdown',
+			editorIsPublished: currentVersion.isPublished,
+			editorIsRestricted: currentVersion.isRestricted,
+			editorDefaultFile: currentVersion.defaultFile,
 			editorFiles: files.reduce((previous, current)=> {
 				previous[current.name] = { ...current };
 				return previous;
 			}, {}),
-		});
+		};
 	},
 
 	goBack: function() {
@@ -135,7 +144,6 @@ export const PubContent = React.createClass({
 	},
 
 	onEditChange: function(newVal) {
-		console.log('in edit change');
 		if (!this.state.editorMode) { return false; }
 		const currentFile = this.props.params.filename;
 		const newEditorFiles = { ...this.state.editorFiles };
@@ -151,7 +159,6 @@ export const PubContent = React.createClass({
 		
 	},
 	onNameChange: function(evt) {
-		console.log('in namechange');
 		if (!this.state.editorMode) { return false; }
 		const currentFile = this.props.params.filename;
 		const newEditorFiles = { ...this.state.editorFiles };
@@ -161,15 +168,48 @@ export const PubContent = React.createClass({
 	},
 
 	onFileAdd: function(file) {
-		console.log('in add');
 		const editMode = Object.keys(this.state.editorFiles).length > 0;
-		if (!editMode) { this.enterEditMode(); }
-		
-		const newEditorFiles = { ...this.state.editorFiles };
+		// if (!editMode) { this.enterEditMode(); }
+		const newState = !editMode ? this.enterEditModeObject() : this.state;
+
+		const newEditorFiles = { ...newState.editorFiles };
 		newEditorFiles[file.name] = file;
 		window.unsavedEdits = true;
 		// TODO: uploaded markdown files won't have any content field
-		return this.setState({ editorFiles: newEditorFiles });
+		this.setState({
+			...newState,
+			editorFiles: newEditorFiles 
+		});
+	},
+
+	onFileCreate: function() {
+		const editMode = Object.keys(this.state.editorFiles).length > 0;
+		// if (!editMode) { this.enterEditMode(); }
+		const newState = !editMode ? this.enterEditModeObject() : this.state;
+
+		const date = new Date();
+		const hours = ('0' + date.getHours()).slice(-2);
+		const minutes = ('0' + date.getMinutes()).slice(-2);
+		const seconds = ('0' + date.getSeconds()).slice(-2);
+		const file = {
+			url: '/temp.md',
+			type: 'text/markdown',
+			name: `New File ${hours}:${minutes}:${seconds}`,
+			isNew: true,
+			content: '',
+		};
+
+		const newEditorFiles = { ...newState.editorFiles };
+		newEditorFiles[file.name] = file;
+		window.unsavedEdits = true;
+		// this.setState({ editorFiles: newEditorFiles });
+		this.setState({
+			...newState,
+			editorFiles: newEditorFiles 
+		});
+		browserHistory.push({
+			pathname: `/pub/${this.props.pubData.pub.slug}/files/${file.name}/edit`,
+		});
 	},
 
 	onVersionMessageChange: function(evt) {
@@ -179,8 +219,11 @@ export const PubContent = React.createClass({
 		});
 	},
 
+	// TODO: discard changes when viewing new file keeps filename in URL and causes bad render state
+	// TODO: Need to block empty md files from being saved
+	// TODO: Need to file filenames on edit (append md when necessary) - perhaps on save version
+
 	onFileDelete: function() {
-		console.log('in delete');
 		if (!this.state.editorMode) { return false; }
 		const currentFile = this.props.params.filename;
 		const newEditorFiles = { ...this.state.editorFiles };
@@ -220,7 +263,7 @@ export const PubContent = React.createClass({
 			return !file.isDeleted;
 		}); 
 
-		const defaultFile = this.state.editorFiles[version.defaultFile].newName || version.defaultFile;
+		const defaultFile = this.state.editorFiles[this.state.editorDefaultFile].newName || this.state.editorFiles[this.state.editorDefaultFile].name;
 		this.setState({ editorError: '' });
 		return this.props.dispatch(postVersion(pubId, this.state.editorVersionMessage, false, newVersionFiles, defaultFile));
 	},
@@ -234,10 +277,17 @@ export const PubContent = React.createClass({
 			editorFiles: {},
 			editorVersionMessage: '',
 			editorVersionMessageUserChanged: false,
+			editorIsPublished: undefined,
+			editorIsRestricted: undefined,
+			editorDefaultFile: undefined,
 		});
 		browserHistory.push({
 			pathname: `/pub/${this.props.pubData.pub.slug}/files/${nextName || ''}`,
 		});
+	},
+
+	updateEditorDefaultFile: function(filename) {
+		this.setState({ editorDefaultFile: filename });
 	},
 
 	render() {
@@ -318,9 +368,12 @@ export const PubContent = React.createClass({
 							version={currentVersion}
 							pub={pub}
 							editorFiles={this.state.editorFiles}
+							editorDefaultFile={this.state.editorDefaultFile}
 							onEditChange={this.onEditChange}
 							onFileDelete={this.onFileDelete}
 							onFileAdd={this.onFileAdd}
+							onFileCreate={this.onFileCreate}
+							updateEditorDefaultFile={this.updateEditorDefaultFile}
 							params={this.props.params}
 							query={query}
 							isLoading={this.props.pubData.versionsLoading}
