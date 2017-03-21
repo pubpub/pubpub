@@ -38,16 +38,7 @@ export const PubContent = React.createClass({
 
 	componentWillMount() {
 		if (this.props.pubData.pub.id && this.props.params.mode === 'edit') {
-			const versions = this.props.pubData.pub.versions || [];
-			const currentVersion = this.getCurrentVersion(versions);
-			const files = currentVersion.files || [];
-			this.setState({
-				editorMode: 'markdown',
-				editorFiles: files.reduce((previous, current)=> {
-					previous[current.name] = current;
-					return previous;
-				}, {}),
-			});
+			this.enterEditMode();
 		}
 	},
 
@@ -63,17 +54,10 @@ export const PubContent = React.createClass({
 			this.setState({ canGoBack: false });
 		}
 
-		if (!this.props.pubData.pub.id && nextPathname.pubData.pub.id && this.props.params.mode === 'edit' || !this.props.params.mode && nextProps.params.mode === 'edit') {
-			const versions = this.props.pubData.pub.versions || [];
-			const currentVersion = this.getCurrentVersion(versions);
-			const files = currentVersion.files || [];
-			this.setState({
-				editorMode: 'markdown',
-				editorFiles: files.reduce((previous, current)=> {
-					previous[current.name] = current;
-					return previous;
-				}, {}),
-			});
+		const editMode = Object.keys(this.state.editorFiles).length > 0;
+		if (!editMode && (!this.props.pubData.pub.id && nextPathname.pubData.pub.id && this.props.params.mode === 'edit' || !this.props.params.mode && nextProps.params.mode === 'edit')) {
+			console.log('Trying to enter edit mode');
+			this.enterEditMode();
 		}
 
 		const currentPub = this.props.pubData.pub || {};
@@ -93,6 +77,19 @@ export const PubContent = React.createClass({
 			});
 			
 		}
+	},
+
+	enterEditMode: function() {
+		const versions = this.props.pubData.pub.versions || [];
+		const currentVersion = this.getCurrentVersion(versions);
+		const files = currentVersion.files || [];
+		this.setState({
+			editorMode: 'markdown',
+			editorFiles: files.reduce((previous, current)=> {
+				previous[current.name] = { ...current };
+				return previous;
+			}, {}),
+		});
 	},
 
 	goBack: function() {
@@ -138,6 +135,7 @@ export const PubContent = React.createClass({
 	},
 
 	onEditChange: function(newVal) {
+		console.log('in edit change');
 		if (!this.state.editorMode) { return false; }
 		const currentFile = this.props.params.filename;
 		const newEditorFiles = { ...this.state.editorFiles };
@@ -153,6 +151,7 @@ export const PubContent = React.createClass({
 		
 	},
 	onNameChange: function(evt) {
+		console.log('in namechange');
 		if (!this.state.editorMode) { return false; }
 		const currentFile = this.props.params.filename;
 		const newEditorFiles = { ...this.state.editorFiles };
@@ -160,6 +159,19 @@ export const PubContent = React.createClass({
 		window.unsavedEdits = true;
 		return this.setState({ editorFiles: newEditorFiles });
 	},
+
+	onFileAdd: function(file) {
+		console.log('in add');
+		const editMode = Object.keys(this.state.editorFiles).length > 0;
+		if (!editMode) { this.enterEditMode(); }
+		
+		const newEditorFiles = { ...this.state.editorFiles };
+		newEditorFiles[file.name] = file;
+		window.unsavedEdits = true;
+		// TODO: uploaded markdown files won't have any content field
+		return this.setState({ editorFiles: newEditorFiles });
+	},
+
 	onVersionMessageChange: function(evt) {
 		this.setState({
 			editorVersionMessage: evt.target.value,
@@ -168,6 +180,7 @@ export const PubContent = React.createClass({
 	},
 
 	onFileDelete: function() {
+		console.log('in delete');
 		if (!this.state.editorMode) { return false; }
 		const currentFile = this.props.params.filename;
 		const newEditorFiles = { ...this.state.editorFiles };
@@ -212,8 +225,9 @@ export const PubContent = React.createClass({
 		return this.props.dispatch(postVersion(pubId, this.state.editorVersionMessage, false, newVersionFiles, defaultFile));
 	},
 	onDiscardChanges: function() {
+		console.log('in discard');
 		window.unsavedEdits = false;
-		const currentEditorFile = this.state.editorFiles[this.props.params.filename];
+		const currentEditorFile = this.state.editorFiles[this.props.params.filename] || {};
 		const nextName = currentEditorFile.name;
 		this.setState({
 			editorMode: undefined,
@@ -306,6 +320,7 @@ export const PubContent = React.createClass({
 							editorFiles={this.state.editorFiles}
 							onEditChange={this.onEditChange}
 							onFileDelete={this.onFileDelete}
+							onFileAdd={this.onFileAdd}
 							params={this.props.params}
 							query={query}
 							isLoading={this.props.pubData.versionsLoading}

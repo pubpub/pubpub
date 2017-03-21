@@ -22,6 +22,8 @@ export const PubContentFiles = React.createClass({
 		editorFiles: PropTypes.object,
 		onEditChange: PropTypes.func,
 		onFileDelete: PropTypes.func,
+		onFileAdd: PropTypes.func,
+		updateDefaultFile: PropTypes.func,
 		params: PropTypes.object,
 		query: PropTypes.object,
 		isLoading: PropTypes.bool,
@@ -117,24 +119,51 @@ export const PubContentFiles = React.createClass({
 			url: 'https://assets.pubpub.org/' + filename,
 			type: type,
 			name: title,
+			isNew: true,
 		};
-		const newUploadedFileObjects = [...this.state.uploadedFileObjects, newUploadedFileObject];
+		if (type === 'text/markdown' || title.split('.').pop() === 'md') {
+			const reader = new FileReader();
+			reader.readAsText(this.state.uploadFiles[index], 'UTF-8');
+			reader.onload = (event)=> {
+				const newUploadedFileObjects = [...this.state.uploadedFileObjects, newUploadedFileObject];
 
-		const finished = this.state.uploadRates.reduce((previous, current)=> {
-			if (current !== 1) { return false; }
-			return previous;
-		}, true);
+				const finished = this.state.uploadRates.reduce((previous, current)=> {
+					if (current !== 1) { return false; }
+					return previous;
+				}, true);
 
-		// Let the uploading animation finish
-		this.setState({
-			uploadedFileObjects: newUploadedFileObjects,
-			uploadingFinished: finished,
-		});
+				// Let the uploading animation finish
+				this.setState({
+					uploadedFileObjects: newUploadedFileObjects,
+					uploadingFinished: finished,
+				});
+				this.props.onFileAdd({ ...newUploadedFileObject, content: event.target.result });
+			};
+			reader.onerror = (event)=> {
+				console.error('error reading file');
+			};
+		} else {
+			const newUploadedFileObjects = [...this.state.uploadedFileObjects, newUploadedFileObject];
+
+			const finished = this.state.uploadRates.reduce((previous, current)=> {
+				if (current !== 1) { return false; }
+				return previous;
+			}, true);
+
+			// Let the uploading animation finish
+			this.setState({
+				uploadedFileObjects: newUploadedFileObjects,
+				uploadingFinished: finished,
+			});
+			this.props.onFileAdd(newUploadedFileObject);
+		}
+		
 	},
 
 	versionMessageChange: function(evt) {
 		this.setState({ newVersionMessage: evt.target.value });
 	},
+
 	postNewVersion: function(evt) {
 		evt.preventDefault();
 		if (!this.state.newVersionMessage) {
@@ -164,7 +193,11 @@ export const PubContentFiles = React.createClass({
 	},
 
 	defaultFileChange: function(filename) {
-		this.props.dispatch(putDefaultFile(this.props.pub.id, this.props.version.id, filename));
+		const editMode = Object.keys(this.props.editorFiles).length > 0;
+		if (editMode) {
+			return this.props.updateDefaultFile(filename);
+		}
+		return this.props.dispatch(putDefaultFile(this.props.pub.id, this.props.version.id, filename));
 	},
 
 	// openEditor: function() {
@@ -180,9 +213,13 @@ export const PubContentFiles = React.createClass({
 		// Default files list
 		// Default files list, uploading
 		// Specific file view
-
+		const editMode = Object.keys(this.props.editorFiles).length > 0;
 		const version = this.props.version || {};
-		const files = version.files || [];
+		const files = editMode 
+			? Object.keys(this.props.editorFiles).map((key)=> {
+				return this.props.editorFiles[key];
+			})
+			: version.files || [];
 
 		const isLoading = this.props.isLoading;
 		const query = this.props.query || {};
@@ -204,7 +241,7 @@ export const PubContentFiles = React.createClass({
 
 		const currentFile = meta === 'files' ? routeFile : mainFile;
 
-		const editMode = Object.keys(this.props.editorFiles).length > 0;
+		console.log(currentFile);
 
 		return (
 			<div style={styles.container}>
@@ -243,9 +280,11 @@ export const PubContentFiles = React.createClass({
 
 				{/* Upload and Editor Buttons */}
 				{/* Only shown on main Files list view, when not uploading */}
-				{meta === 'files' && !!files.length && !this.state.uploading && !routeFilename && this.props.pub.canEdit &&
+				{/*{meta === 'files' && !!files.length && !this.state.uploading && !routeFilename && this.props.pub.canEdit &&*/}
+				{meta === 'files' && !!files.length && !routeFilename && this.props.pub.canEdit &&
 					<div style={styles.topButtons}>
-						<Link to={'/pub/markdown'} style={{ marginRight: '0.5em' }}>Rendering with PubPub Markdown</Link>
+						{/*<Link to={'/pub/markdown'} style={{ marginRight: '0.5em' }}>Rendering with PubPub Markdown</Link>*/}
+						<Link style={{ marginRight: '0.5em' }}>What can I upload?</Link>
 						<label className="pt-button" htmlFor={'upload'}>
 							Upload Files
 							<input id={'upload'} type="file" multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
@@ -260,25 +299,25 @@ export const PubContentFiles = React.createClass({
 
 				{/* Uploading Section */}
 				{this.state.uploading &&
-					<div style={styles.uploadingSection} className={'pt-card pt-elevation-2'}>
-						{!!isLoading &&
+					<div style={styles.uploadingSection} className={'!pt-card !pt-elevation-2'}>
+						{/*!!isLoading &&
 							<div style={styles.newVersionLoading}>
 								<Spinner className={'pt-small'} />
 							</div>
-						}
+						*/}
 
-						{!isLoading &&
+						{/*!isLoading &&
 							<div style={styles.topRightButton}>
 								<label className="pt-button pt-minimal" htmlFor={'add-more-files'}>
 									Add more files
 									<input id={'add-more-files'} type="file" multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
 								</label>
 							</div>
-						}
+						*/}
 
-						<h3>Uploading</h3>
+						{/*<h3>Uploading</h3>*/}
 
-						<form onSubmit={this.postNewVersion}>
+						{/*<form onSubmit={this.postNewVersion}>
 							<div style={styles.uploadingFormTable}>
 								<label htmlFor={'versionMessage'} style={styles.uploadingMessage}>
 									Version Message
@@ -297,7 +336,7 @@ export const PubContentFiles = React.createClass({
 							{this.state.newVersionError &&
 								<div style={styles.errorMessage}>{this.state.newVersionError}</div>
 							}
-						</form>
+						</form>*/}
 
 						{this.state.uploadFileNames.map((uploadFile, index)=> {
 							return (
@@ -306,6 +345,8 @@ export const PubContentFiles = React.createClass({
 									<ProgressBar value={this.state.uploadRates[index]} className={this.state.uploadRates[index] === 1 ? 'pt-no-stripes pt-intent-success' : 'pt-no-stripes'} />
 								</div>
 							);
+						}).filter((uploadFile, index)=> {
+							return this.state.uploadRates[index] !== 1;
 						})}
 
 					</div>
@@ -326,13 +367,15 @@ export const PubContentFiles = React.createClass({
 							</thead>
 							<tbody>
 								{files.sort((foo, bar)=> {
+									if (!foo.isNew && bar.isNew) { return 1; }
+									if (foo.isNew && !bar.isNew) { return -1; }
 									if (foo.name > bar.name) { return 1; }
 									if (foo.name < bar.name) { return -1; }
 									return 0;
 								}).map((file, index)=> {
 									return (
-										<tr key={'file-' + index} style={file.isDeleted ? {backgroundColor: 'red'} : {}}>
-											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={{ pathname: `/pub/${this.props.pub.slug}/files/${file.name}${editMode ? '/edit' : ''}`, query: query }}>{file.name}</Link></td>
+										<tr key={'file-' + index} style={[file.isDeleted && {backgroundColor: '#FF7373'}, file.isNew && {backgroundColor: '#3DCC91'}]}>
+											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={{ pathname: `/pub/${this.props.pub.slug}/files/${file.name}${editMode ? '/edit' : ''}`, query: query }}>{file.isNew && <span style={{ marginRight: '0.5em'}} className={'pt-tag'}>new</span>}{file.newName || file.name}</Link></td>
 											<td style={styles.tableCell}>{dateFormat(file.createdAt, 'mmm dd, yyyy')}</td>
 											<td style={[styles.tableCell, styles.tableCellSmall]}>
 												<a href={file.url} target={'_blank'}>
@@ -359,7 +402,7 @@ export const PubContentFiles = React.createClass({
 				{/* Render specific File */}
 				{!!files.length && currentFile && !mode &&
 					<div style={styles.pubStyle} className={'pub-body'}>
-						<RenderFile file={currentFile} allFiles={files} pubSlug={this.props.pub.slug} query={this.props.query}/>
+						<RenderFile file={currentFile} allFiles={files} pubSlug={this.props.pub.slug} query={this.props.query} />
 					</div>
 				}
 
@@ -373,7 +416,13 @@ export const PubContentFiles = React.createClass({
 								<button className={'pt-button pt-icon-trash pt-minimal'} style={{ margin: '0em 1em' }} onClick={this.props.onFileDelete} />
 							</div>
 						</div>
-						<MarkdownEditor initialContent={currentFile.content} onChange={this.props.onEditChange} />
+						{currentFile.type === 'text/markdown' &&
+							<MarkdownEditor initialContent={currentFile.content} onChange={this.props.onEditChange} />
+						}
+						{currentFile.type !== 'text/markdown' &&
+							<RenderFile file={currentFile} allFiles={files} pubSlug={this.props.pub.slug} query={this.props.query} />
+						}
+						
 					</div>
 				}
 
@@ -394,7 +443,7 @@ styles = {
 		float: 'right',
 	},
 	uploadingSection: {
-		marginBottom: '2em',
+		// marginBottom: '2em',
 	},
 	topRightButton: {
 		float: 'right',
