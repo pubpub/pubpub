@@ -84,6 +84,10 @@ export const PubContent = React.createClass({
 		}
 	},
 
+	componentWillUnmount() {
+		window.unsavedEdits = false;
+	},
+
 	enterEditModeObject: function() {
 		const versions = this.props.pubData.pub.versions || [];
 		const currentVersion = this.getCurrentVersion(versions);
