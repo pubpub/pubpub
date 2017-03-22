@@ -83,7 +83,9 @@ export const AppNav = React.createClass({
 
 		const pages = headerJournal ? headerJournal.pages || [] : [];
 
-		const sortedPages = pages.sort((foo, bar)=> {
+		const sortedPages = pages.filter((page)=> {
+			return page.isDisplayed;
+		}).sort((foo, bar)=> {
 			if (foo.order < bar.order) { return -1; }
 			if (foo.order > bar.order) { return 1; }
 			return 0;
