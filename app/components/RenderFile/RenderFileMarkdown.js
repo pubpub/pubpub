@@ -12,6 +12,8 @@ import katex from 'katex';
 
 import RenderFile from './RenderFile';
 
+// Well formatted Markdown guide: https://simplemde.com/markdown-guide
+
 let styles;
 
 // function fileParser(state, silent) {
