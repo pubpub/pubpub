@@ -176,7 +176,7 @@ export const PubBreadcrumbs = React.createClass({
 					
 				</ul>
 				{currentFile && !editMode &&
-					<Link to={`/pub/${this.props.pub.slug}/files/${currentFile.name}/edit`} className={'pt-button pt-icon-edit !pt-minimal'}>Edit</Link>
+					<Link to={`/pub/${this.props.pub.slug}/files/${currentFile.name}/edit`} style={{ marginLeft: '1em', minHeight: '25px', lineHeight: '25px' }} className={'pt-button pt-icon-edit !pt-minimal'}>Edit</Link>
 				}
 				{/*!currentFile &&
 					<span>
