@@ -191,7 +191,7 @@ export const PubBreadcrumbs = React.createClass({
 							<form style={{ display: 'inline-block', verticalAlign: 'middle' }}>
 								<div className="pt-control-group">  
 									<input type="text" style={{ minWidth: '300px' }} className="pt-input" placeholder="Describe your changes..." onChange={this.props.onVersionMessageChange} value={this.props.editorVersionMessage}/>
-									<Button className="pt-intent-success" onClick={this.props.onSaveVersion} loading={this.props.isLoading}>Save Changes</Button>
+									<Button type="submit" className="pt-intent-success" onClick={this.props.onSaveVersion} loading={this.props.isLoading}>Save Changes</Button>
 								</div>
 							</form>
 						</div>
