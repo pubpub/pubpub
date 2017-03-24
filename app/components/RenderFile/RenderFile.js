@@ -53,7 +53,7 @@ export const RenderFile = React.createClass({
 			const content = JSON.parse(file.content);
 			return (
 				<div id={wrapperId} style={styles.contentWrapper}>
-					{!this.props.noHighlighter &&
+					{this.props.pubSlug === 'mindstorms' && !this.props.noHighlighter &&
 						<Highlighter />
 					}
 					{renderReactFromJSON(content, this.getFileMap(this.props.allFiles))}
@@ -62,7 +62,7 @@ export const RenderFile = React.createClass({
 		case 'text/markdown':
 			return (
 				<div id={wrapperId} style={styles.contentWrapper}>
-					{!this.props.noHighlighter &&
+					{this.props.pubSlug === 'mindstorms' && !this.props.noHighlighter &&
 						<Highlighter />
 					}
 					<RenderFileMarkdown file={file} allFiles={this.props.allFiles} query={this.props.query} pubSlug={this.props.pubSlug} />
@@ -83,7 +83,7 @@ export const RenderFile = React.createClass({
 		case 'application/pdf':
 			return (
 				<div id={wrapperId} style={styles.contentWrapper}>
-					{!this.props.noHighlighter &&
+					{this.props.pubSlug === 'mindstorms' && !this.props.noHighlighter &&
 						<Highlighter />
 					}
 					<RenderFilePDF file={file} />

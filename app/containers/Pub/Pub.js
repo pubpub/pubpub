@@ -329,80 +329,82 @@ export const Pub = React.createClass({
 		}, []);
 
 		// console.log('allHighlights', allHighlights);
-		setTimeout(()=> {
-			const container = document.getElementById('highlighter-wrapper');
-			if (container) {
-				const newHighlightsMade = {};
-				allHighlights.forEach((highlight)=> {
-					const highlightObject = {
-						exact: highlight.exact,
-						prefix: highlight.prefix,
-						suffix: highlight.suffix,
-					};
-					const t0 = performance.now();
-					// const textQuoteRange = textQuote.toRange(container, highlightObject);
-					// const t1 = performance.now();
-					// console.log('-----------');
-					
-					// if (textQuoteRange && document.getElementsByClassName(`highlight-${highlight.id}`).length === 0) {
-					if (!this.state.highlightsMade[highlight.id]) {
+		if (pub.slug === 'mindstorms') {
+			setTimeout(()=> {
+				const container = document.getElementById('highlighter-wrapper');
+				if (container) {
+					const newHighlightsMade = {};
+					allHighlights.forEach((highlight)=> {
+						const highlightObject = {
+							exact: highlight.exact,
+							prefix: highlight.prefix,
+							suffix: highlight.suffix,
+						};
+						const t0 = performance.now();
+						// const textQuoteRange = textQuote.toRange(container, highlightObject);
+						// const t1 = performance.now();
+						// console.log('-----------');
 						
-						const t1 = performance.now();
-						const textQuoteRange = textQuote.toRange(container, highlightObject);
-						// console.log('t01: ', t1 - t0);
-						if (textQuoteRange) {
-
-							const t2 = performance.now();
-							const renderer = new Rendering(document, { hoverClass: 'highlight-hover', className: `highlight highlight-${highlight.id} discussion-${highlight.threadNumber}` });
-							const t3 = performance.now();
-							renderer.renderWithRange(textQuoteRange);
-							const t4 = performance.now();
-							// const element = document.getElementsByClassName(`highlight-${highlight.id}`)[0];
-							const elements = document.getElementsByClassName(`highlight-${highlight.id}`);
-							const elementBox = elements[0].getBoundingClientRect();
-							const wrapperBox = document.getElementById('content-wrapper').getBoundingClientRect();
-							newHighlightsMade[highlight.id] = [highlight.threadNumber, elementBox.top + ((elementBox.bottom - elementBox.top) / 2) + (Math.floor(Math.random() * 20) - 10) - wrapperBox.top];
-							const t5 = performance.now();
-							for (let index = 0; index < elements.length; index++) {
-								const element = elements[index];
-								element.addEventListener('click', ()=> {
-									this.openDiscussion(highlight.threadNumber);
-								});
-
-								element.addEventListener('mouseenter', ()=> {
-									this.highlightBubbleEnter(highlight.id);
-									// element.className += ' highlight-hover';
-								});
-
-								element.addEventListener('mouseleave', ()=> {
-									this.highlightBubbleLeave(highlight.id);
-									// element.className = element.className.replace(' highlight-hover', '');
-								});
-
-								// const marker = document.createElement('div');
-								// marker.className = 'highlight-marker';
-								// marker.setAttribute('style', `transform: translateY(${Math.floor(Math.random() * 20) - 10}px)`);
-								// element.appendChild(marker);
-								
-							}
-							const t6 = performance.now();
-							const t7 = performance.now();
+						// if (textQuoteRange && document.getElementsByClassName(`highlight-${highlight.id}`).length === 0) {
+						if (!this.state.highlightsMade[highlight.id]) {
 							
-							// console.log('t12: ', t2 - t1);
-							// console.log('t23: ', t3 - t2);
-							// console.log('t34: ', t4 - t3);
-							// console.log('t45: ', t5 - t4);
-							// console.log('t56: ', t6 - t5);
-							// console.log('t67: ', t7 - t6);
+							const t1 = performance.now();
+							const textQuoteRange = textQuote.toRange(container, highlightObject);
+							// console.log('t01: ', t1 - t0);
+							if (textQuoteRange) {
+
+								const t2 = performance.now();
+								const renderer = new Rendering(document, { hoverClass: 'highlight-hover', className: `highlight highlight-${highlight.id} discussion-${highlight.threadNumber}` });
+								const t3 = performance.now();
+								renderer.renderWithRange(textQuoteRange);
+								const t4 = performance.now();
+								// const element = document.getElementsByClassName(`highlight-${highlight.id}`)[0];
+								const elements = document.getElementsByClassName(`highlight-${highlight.id}`);
+								const elementBox = elements[0].getBoundingClientRect();
+								const wrapperBox = document.getElementById('content-wrapper').getBoundingClientRect();
+								newHighlightsMade[highlight.id] = [highlight.threadNumber, elementBox.top + ((elementBox.bottom - elementBox.top) / 2) + (Math.floor(Math.random() * 20) - 10) - wrapperBox.top];
+								const t5 = performance.now();
+								for (let index = 0; index < elements.length; index++) {
+									const element = elements[index];
+									element.addEventListener('click', ()=> {
+										this.openDiscussion(highlight.threadNumber);
+									});
+
+									element.addEventListener('mouseenter', ()=> {
+										this.highlightBubbleEnter(highlight.id);
+										// element.className += ' highlight-hover';
+									});
+
+									element.addEventListener('mouseleave', ()=> {
+										this.highlightBubbleLeave(highlight.id);
+										// element.className = element.className.replace(' highlight-hover', '');
+									});
+
+									// const marker = document.createElement('div');
+									// marker.className = 'highlight-marker';
+									// marker.setAttribute('style', `transform: translateY(${Math.floor(Math.random() * 20) - 10}px)`);
+									// element.appendChild(marker);
+									
+								}
+								const t6 = performance.now();
+								const t7 = performance.now();
+								
+								// console.log('t12: ', t2 - t1);
+								// console.log('t23: ', t3 - t2);
+								// console.log('t34: ', t4 - t3);
+								// console.log('t45: ', t5 - t4);
+								// console.log('t56: ', t6 - t5);
+								// console.log('t67: ', t7 - t6);
+							}
 						}
+		
+					});
+					if (Object.keys(newHighlightsMade).length) {
+						this.setState({ highlightsMade: { ...this.state.highlightsMade, ...newHighlightsMade } });
 					}
-	
-				});
-				if (Object.keys(newHighlightsMade).length) {
-					this.setState({ highlightsMade: { ...this.state.highlightsMade, ...newHighlightsMade } });
 				}
-			}
-		}, 1000);
+			}, 1000);
+		}
 		// console.log('highlightsMade', this.state.highlightsMade);
 
 		/*---------*/
