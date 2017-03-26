@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import ReactMarkdown from 'react-markdown';
+import Helmet from 'react-helmet';
 
 import { NonIdealState, Button } from '@blueprintjs/core';
 import PreviewPub from 'components/PreviewPub/PreviewPub';
@@ -96,6 +97,7 @@ export const JournalPage = React.createClass({
 
 		return (
 			<div style={styles.container}>
+				<Helmet title={`${page.title} · ${journal.title}`} />
 				{/*<h2 style={styles.pageHeader}>{page.title}</h2>*/}
 
 				{journal.isAdmin && !page.description && !this.state.editorOpen &&
