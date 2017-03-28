@@ -9,6 +9,7 @@ let styles;
 export const PreviewPub = React.createClass({
 	propTypes: {
 		pub: PropTypes.object,
+		context: PropTypes.string,
 		rightContent: PropTypes.node,
 	},
 
@@ -26,7 +27,7 @@ export const PreviewPub = React.createClass({
 
 		return (
 			<div style={styles.pubPreviewWrapper}>
-				<Link to={'/pub/' + pub.slug} style={[styles.avatarWrapper, { backgroundImage: pub.avatar ? 'url("' + pub.avatar + '")' : '' }]} />
+				<Link to={`/pub/${pub.slug}${this.props.context ? `?context=${this.props.context}` : ''}`} style={[styles.avatarWrapper, { backgroundImage: pub.avatar ? 'url("' + pub.avatar + '")' : '' }]} />
 				
 				<div style={styles.pubPreviewDetails}>
 					<div style={styles.modeIcon}>
@@ -34,7 +35,7 @@ export const PreviewPub = React.createClass({
 						{mode === 'Restricted' && <span className={'pt-icon-standard pt-icon-people'} /> }
 						{mode === 'Published' && <span className={'pt-icon-standard pt-icon-globe'} /> }
 					</div>
-					<Link to={'/pub/' + pub.slug} style={styles.title}>{pub.title}</Link>
+					<Link to={`/pub/${pub.slug}${this.props.context ? `?context=${this.props.context}` : ''}`} style={styles.title}>{pub.title}</Link>
 					<p style={styles.authorsWrapper}>
 						{contributors.filter((contributor)=>{
 							return contributor.isAuthor === true;
