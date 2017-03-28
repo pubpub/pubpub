@@ -28,9 +28,10 @@ export const Announcements = React.createClass({
 
 
 	render() {
+		const isPubPub = window.location.hostname === 'www.pubpub.org' || window.location.hostname === 'staging.pubpub.org';
 		return (
 			<div style={styles.container}>
-				{!this.state.beta_v3 &&
+				{!this.state.beta_v3 && isPubPub &&
 					<div className={'pt-card pt-elevation-4'} style={styles.announcement}>
 						<div style={styles.announcementContent}>Welcome to the PubPub_v3 beta. We're gradually rolling out major updates. <a target={'_blank'} href={'mailto:pubpub@media.mit.edu'}>Contact us</a> with any questions or bug reports.</div>
 						<div style={styles.announcementButtonWrapper}>
