@@ -1,4 +1,4 @@
-import { Dialog, Menu, MenuDivider, Popover, PopoverInteractionKind, Position, Button, Alert } from '@blueprintjs/core';
+import { Dialog, Menu, MenuItem, MenuDivider, Popover, PopoverInteractionKind, Position, Button, Alert } from '@blueprintjs/core';
 import React, { PropTypes } from 'react';
 import { postDoi, putVersion } from './actionsVersions';
 
@@ -26,11 +26,17 @@ export const PubVersions = React.createClass({
 			confirmPublish: undefined,
 			confirmRestricted: undefined,
 			confirmDoi: undefined,
-			printErrorAlert: false,
-			printError: [],
-			printLoading: [],
-			printReady: [],
-			printReadyUrls: []
+			exportErrorAlert: false,
+			showExportOptions: false,
+			pdftexTemplates: undefined,
+			selectedTemplate: undefined,
+			exportOptionsVersion: undefined,
+			exportOutputType: undefined,
+			metadata: {},
+			convertError: [],
+			conversionLoading: [],
+			downloadReady: [],
+			downloadReadyUrls: []
 		};
 	},
 
@@ -60,8 +66,8 @@ export const PubVersions = React.createClass({
 		this.props.dispatch(putVersion(this.props.pub.id, this.state.confirmPublish, true));
 	},
 
-	toggleprintErrorAlert: function () {
-		this.setState({ printErrorAlert: !this.state.printErrorAlert });
+	toggleexportErrorAlert: function () {
+		this.setState({ exportErrorAlert: !this.state.exportErrorAlert });
 	},
 
 	toggleDoiDialog: function(versionId) {
@@ -70,6 +76,9 @@ export const PubVersions = React.createClass({
 
 	createDoi: function() {
 		this.props.dispatch(postDoi(this.props.pub.id, this.state.confirmDoi));
+	},
+	toggleShowExportOptions: function() {
+		this.setState({ showExportOptions: !this.state.showExportOptions });
 	},
 
 	pollURL: function(url, versionHash) {
@@ -88,38 +97,81 @@ export const PubVersions = React.createClass({
 			if (!err && res && res.statusCode === 200) {
 				if (res.body.url) {
 					window.open(res.body.url, '_blank');
-					var index = this.state.printLoading.indexOf(versionHash)
+					const index = this.state.conversionLoading.indexOf(versionHash);
 					this.setState({
-						printLoading: this.state.printLoading.filter((_, i) => i !== index)
+						conversionLoading: this.state.conversionLoading.filter((_, ii) => ii !== index)
 					});
 					this.setState({
-						printReady: this.state.printReady.concat([versionHash]),
-						printReadyUrls: this.state.printReadyUrls.concat([res.body.url])
+						downloadReady: this.state.downloadReady.concat([versionHash]),
+						downloadReadyUrls: this.state.downloadReadyUrls.concat([res.body.url])
 					});
 				} else {
 					window.setTimeout(this.pollURL.bind(this, url, versionHash), 2000);
 				}
 			} else if (err) {
 				this.setState({
-					printError: this.state.printError.concat([versionHash]),
-					printErrorAlert: true
+					convertError: this.state.convertError.concat([versionHash]),
+					exportErrorAlert: true
 				});
 
 			}
 		});
 	},
+	exportOptionsSubmit: function() {
+		const metadata = this.state.metadata;
+		const version = this.state.exportOptionsVersion;
 
-	printVersion: function(version) {
-		const {files, defaultFile} = version;
+		this.convertVersion(version, {});
 
-		console.log(this.state.printLoading)
-		console.log( 'print version hash' + version.hash)
+		// If Valud
+		this.setState({
+			showExportOptions: false,
+			exportOptionsVersion: undefined
+		});
+	},
+	exportOptionsDialog: function(version, options) {
+		const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === 'www.funky.com' || window.location.hostname === 'www.funkynocors.com';
+		const isRemoteDev = window.location.hostname === 'dev.pubpub.org' || window.location.hostname === 'test.epsx.org' || window.location.hostname === 'testnocors.epsx.org';
+		const isProd = !(isLocalDev || isRemoteDev);
+		const reqURL = (isProd) ? 'https://pubpub-converter-prod.herokuapp.com/templates/all' : 'https://pubpub-converter-dev.herokuapp.com/templates/all';
 
-		if (this.state.printLoading.indexOf(version.hash) === -1) {
+		const outputType = options.outputType;
+
+
+		if (!this.state.pdftexTemplates) {
+			request
+			.get(reqURL)
+			.end((err, res) => {
+				this.setState({
+					pdftexTemplates: res.body
+				});
+			});
+		}
+
+		this.setState({
+			showExportOptions: true,
+			exportOptionsVersion: version,
+			exportOutputType: outputType
+		});
+	},
+
+	convertVersion: function(version, options) {
+		const { files, defaultFile } = version;
+
+		const outputType = (options && options.outputType) ? options.outputType : this.state.exportOutputType;
+
+		const metadata = this.state.metadata;
+
+
+		if (this.state.conversionLoading.indexOf(version.hash) === -1) {
 			this.setState({
-				printLoading: this.state.printLoading.concat([version.hash])
+				conversionLoading: this.state.conversionLoading.concat([version.hash]),
+				exportOutputType: undefined
 			});
 		} else {
+			this.setState({
+				exportOutputType: undefined
+			});
 			return;
 		}
 
@@ -131,6 +183,8 @@ export const PubVersions = React.createClass({
 				authors.push(`${contributor.user.firstName} ${contributor.user.lastName}`);
 			}
 		});
+		metadata.title = title;
+		metadata.authors = authors;
 
 
 		for (const file of files) {
@@ -138,14 +192,13 @@ export const PubVersions = React.createClass({
 				console.log('got url!', file.url);
 				request
 				.post(PUBPUB_CONVERSION_URL)
-				.send({ inputType: 'pub', outputType: 'pdf', inputUrl: file.url, metadata: { title: title, authors: authors }})
+				.send({ inputType: 'pub', outputType: outputType, inputUrl: file.url, metadata: metadata })
 				.set('Accept', 'application/json')
 				.end((err, res) => {
 					if (err || !res.ok) {
 						alert('Oh no! error', err);
 					} else {
-						const pollUrl = res.body.pollUrl
-						console.log('set timeout on url ' + pollUrl)
+						const pollUrl = res.body.pollUrl;
 						window.setTimeout(this.pollURL.bind(this, pollUrl, version.hash), 2000);
 
 					}
@@ -153,17 +206,26 @@ export const PubVersions = React.createClass({
 			}
 		}
 	},
+	setMetadata: function(event, val) {
+		const metadata = this.state.metadata;
+		metadata[val] = event.target.value;
+		this.setState({ metadata: metadata });
+	},
+	handleTemplateChange: function(event) {
+		this.setState({ selectedTemplate: event.target.value });
+	},
 	prepareSupportEmail: function() {
-		// <a target={'_blank'} href={'mailto:pubpub@media.mit.edu'} className={'link'}>
-		// 	<button type="submit" className="pt-button pt-intent-primary">Email Support</button>
-		// </a>
 		const emailTo = 'pubpub@media.mit.edu';
 		const pub = this.props.pub.slug;
 		const emailSubject = `Help: Trouble producing PDF With Pub slug==${pub} `;
 		const emailBody = '';
-		// location.href = `mailto:"${emailTo}"?subject="${emailSubject}"&body="${emailBody}"`;
 		window.open(`mailto:${emailTo}?subject=${emailSubject}&body=${emailBody}`);
 
+	},
+	clearDownloadUrl: function(index) {
+		this.setState({
+			downloadReady: this.state.downloadReady.filter((_, ii) => ii !== index)
+		});
 	},
 
 	render: function() {
@@ -173,6 +235,11 @@ export const PubVersions = React.createClass({
 		const isLoading = this.props.isLoading;
 		const errorMessage = this.props.error;
 		const versions = this.props.versionsData || [];
+		const pdftexTemplates = this.state.pdftexTemplates || {};
+		const selectedTemplate = this.state.selectedTemplate || 'default';
+		const selectedTemplateMetadata = (pdftexTemplates && pdftexTemplates[selectedTemplate]) ? pdftexTemplates[selectedTemplate].metadata : {};
+
+		window.pdftexTemplates = pdftexTemplates;
 		const pubDOI = versions.reduce((previous, current)=> {
 			if (current.doi) { return current.doi; }
 			return previous;
@@ -181,14 +248,61 @@ export const PubVersions = React.createClass({
 		return (
 			<div style={styles.container}>
 				<h2>Versions</h2>
-					<Alert title="Error" isOpen={this.state.printErrorAlert} cancelButtonText='Email Support' onCancel={this.prepareSupportEmail} confirmButtonText="Okay" onConfirm={this.toggleprintErrorAlert}>
+					<Alert title="Error" isOpen={this.state.exportErrorAlert} cancelButtonText='Email Support' onCancel={this.prepareSupportEmail} confirmButtonText="Okay" onConfirm={this.toggleexportErrorAlert}>
 						<div className="pt-dialog-body">
 							<p>There was an error producing a PDF.</p>
 							<p><b>Please contact support and let them know.</b></p>
 						</div>
 					</Alert>
 
-				{versions.sort((foo, bar)=> {
+					<Dialog isOpen={this.state.showExportOptions} onClose={this.toggleShowExportOptions} autofocus={true} enforceFocus={true}>
+
+						<div className="pt-select pt-disabled">
+								<select value={selectedTemplate} onChange={this.handleTemplateChange}>
+								{Object.keys(pdftexTemplates).map((val) => {
+									return (
+										<option value={val}>{pdftexTemplates[val].displayName}</option>
+									);
+								})
+							}
+							</select>
+						</div>
+
+						<form>
+							<div>Mandatory</div>
+							{
+								selectedTemplateMetadata.mandatory &&
+								Object.keys(selectedTemplateMetadata.mandatory).map((val) => {
+									if (val === 'authors' || val === 'title') return;
+
+									return (
+										<label>
+											{selectedTemplateMetadata.mandatory[val].displayName}:
+											<input name={val} type="text" onChange={(e) => this.setMetadata(e, val) }/>
+										</label>);
+									}
+								)
+							}
+							{
+								selectedTemplateMetadata.optional &&
+								<div>Optional</div>
+							}
+							{
+								selectedTemplateMetadata.optional &&
+								Object.keys(selectedTemplateMetadata.optional).map((val) => {
+									return (
+										<label>
+											{selectedTemplateMetadata.optional[val].displayName}:
+											<input name={val} type="text" onChange={(e) => this.setMetadata(e, val) }/>
+										</label>);
+									}
+								)
+							}
+						</form>
+						<Button onClick={this.exportOptionsSubmit} style={{ float: 'right' }}>Submit</Button>
+					</Dialog>
+
+					{versions.sort((foo, bar)=> {
 					// Sort so that most recent is first in array
 					if (foo.createdAt > bar.createdAt) { return -1; }
 					if (foo.createdAt < bar.createdAt) { return 1; }
@@ -198,13 +312,13 @@ export const PubVersions = React.createClass({
 					let mode = 'private';
 					if (version.isRestricted) { mode = 'restricted'; }
 					if (version.isPublished) { mode = 'published'; }
-					const printReady = (this.state.printReady.indexOf(version.hash) !== -1);
-					let printReadyUrl;
-					if (printReady) {
-						printReadyUrl = this.state.printReadyUrls[this.state.printReady.indexOf(version.hash)];
+					const downloadReady = (this.state.downloadReady.indexOf(version.hash) !== -1);
+					let downloadReadyUrl;
+					if (downloadReady) {
+						downloadReadyUrl = this.state.downloadReadyUrls[this.state.downloadReady.indexOf(version.hash)];
 					}
-					const printLoading = (this.state.printLoading.indexOf(version.hash) !== -1);
-					const printError = (this.state.printError.indexOf(version.hash) !== -1);
+					const conversionLoading = (this.state.conversionLoading.indexOf(version.hash) !== -1);
+					const convertError = (this.state.convertError.indexOf(version.hash) !== -1);
 
 					return (
 						<div key={'version-' + version.id} style={styles.versionRow}>
@@ -277,21 +391,50 @@ export const PubVersions = React.createClass({
 
 
 							<div style={[styles.smallColumn, { padding: '0.5em' }]}>
-								{console.log('ok no here ' + this.state.printLoading)}
+								{console.log('ok no here ' + this.state.conversionLoading)}
 								{console.log(version.hash)}
 
-								{ !printReady && !printError &&
-									<Button loading={printLoading} className={'pt-button p2-minimal'} onClick={this.printVersion.bind(this, version)} text='Print Pub' />
+								{ !downloadReady && !convertError &&
+									<Popover content={
+											<Menu>
+												<MenuItem
+													onClick={this.exportOptionsDialog.bind(this, version, { outputType: 'pdf' })}
+													text={
+														<div>
+															<b>PDF</b>
+														</div>
+													}
+													/>
+												<MenuItem
+													onClick={this.exportOptionsDialog.bind(this, version, { outputType: 'latex' })}
+													text={
+														<div>
+															<b>Latex</b>
+														</div>
+													}
+													/>
+												<MenuItem
+													onClick={this.convertVersion.bind(this, version, { outputType: 'docx' })}
+													text={
+														<div>
+															<b>Docx</b>
+														</div>
+													}
+													/>
+											</Menu>
+									} position={Position.BOTTOM}>
+										<Button loading={conversionLoading} className={'pt-button p2-minimal'} onClick={''} text="Export" />
+									</Popover>
 								}
 								{
-									printReady && !printError &&
-									<a href={printReadyUrl}>
-										<Button className={'pt-button p2-minimal'} onClick={this.printVersion.bind(this, version)} text='Click Again' />
+									downloadReady && !convertError &&
+									<a href={downloadReadyUrl}>
+										<Button className={'pt-button p2-minimal'} onClick={this.clearDownloadUrl.bind(this, this.state.downloadReady.indexOf(version.hash))} text='Click Again' />
 									</a>
 								}
 
 								{
-									printError &&
+									convertError &&
 									<Button disabled={true} className={'pt-button p2-minimal'} text='Error'/>
 								}
 
