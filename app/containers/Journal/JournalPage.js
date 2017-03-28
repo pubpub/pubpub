@@ -148,7 +148,7 @@ export const JournalPage = React.createClass({
 					<div style={styles.divider} />
 				}
 				{pubs.map((pubFeature, index)=> {
-					return <PreviewPub key={'pageItem-' + index} pub={pubFeature.pub} />;
+					return <PreviewPub key={'pageItem-' + index} context={journal.slug} pub={pubFeature.pub} />;
 				})}
 
 			</div>
