@@ -127,7 +127,6 @@ export const PubVersions = React.createClass({
 		const selectedTemplate = this.state.selectedTemplate || 'default';
 		const pdftexTemplates = this.state.pdftexTemplates || {};
 		const selectedTemplateMetadata = (pdftexTemplates && pdftexTemplates[selectedTemplate]) ? pdftexTemplates[selectedTemplate].metadata : {};
-		console.log(`exportOptionsSubmit`)
 		const requiredMetadata = selectedTemplateMetadata.required || {};
 		const missingMetadata = [];
 		this.setState({
@@ -139,16 +138,13 @@ export const PubVersions = React.createClass({
 				missingMetadata.push(val);
 			}
 		});
-		console.log(`missing Metadata ${missingMetadata}`);
 
 		if (missingMetadata.length > 0) { // 2 is from authors and title
-			console.log(`missing Metadata ${missingMetadata}`);
 			this.setState({
 				missingMetadata: missingMetadata,
 			});
 			return;
 		}
-		console.log(`converting Version`);
 		this.convertVersion(version, {});
 
 		// If Valud
@@ -292,47 +288,49 @@ export const PubVersions = React.createClass({
 					</Alert>
 
 					<Dialog isOpen={this.state.showExportOptions} onClose={this.toggleShowExportOptions} autofocus={true} enforceFocus={true}>
-
-						<div className="pt-select pt-disabled">
+						<div style={styles.exportOptionsDialog}>
+							<div className="pt-select pt-disabled">
 								<select value={selectedTemplate} onChange={this.handleTemplateChange}>
-								{Object.keys(pdftexTemplates).map((val) => {
-									return (
-										<option value={val}>{pdftexTemplates[val].displayName}</option>
-									);
-								})
-							}
-						</select>
-					</div>
+									{Object.keys(pdftexTemplates).map((val) => {
+										return (
+											<option value={val}>{pdftexTemplates[val].displayName}</option>
+										);
+									})
+								}
+							</select>
+						</div>
 
-					{
-						selectedTemplateMetadata.required && selectedTemplateMetadata.required.length > 2 &&
-						<div>Required</div>
-					}
-					{
-						selectedTemplateMetadata.required &&
-						Object.keys(selectedTemplateMetadata.required).map((val) => {
-							if (val === 'authors' || val === 'title') return;
-							console.log(missingMetadata, val)
-							if (missingMetadata.indexOf(val) !== -1) {
-								return (
-									<div className="pt-form-group pt-intent-danger">
-										<label>
-											{selectedTemplateMetadata.required[val].displayName}:
-										</label>
-										<div className="pt-form-content">
-											<div className="pt-input-group pt-intent-danger">
-												<input name={val} onChange={(e) => this.setMetadata(e, val)} className="pt-input" style="width: 200px;" type="text" placeholder={selectedTemplateMetadata.required[val].displayName} dir="auto" />
+						{
+							selectedTemplateMetadata.required && selectedTemplateMetadata.required.length > 2 &&
+							<div>Required</div>
+						}
+						{
+							selectedTemplateMetadata.required &&
+							Object.keys(selectedTemplateMetadata.required).map((val) => {
+								if (val === 'authors' || val === 'title') return;
+								if (missingMetadata.indexOf(val) !== -1) {
+									return (
+										<div className="pt-form-group pt-intent-danger">
+											<label style={styles.label}>
+												{selectedTemplateMetadata.required[val].displayName}:
+											</label>
+											<div className="pt-form-content">
+												<div className="pt-input-group pt-intent-danger">
+													<input name={val} onChange={(e) => this.setMetadata(e, val)} className="pt-input" style="width: 200px;" type="text" placeholder={selectedTemplateMetadata.required[val].displayName} dir="auto" />
+												</div>
+												<div className="pt-form-helper-text">Please enter a value</div>
 											</div>
-											<div className="pt-form-helper-text">Please enter a value</div>
 										</div>
-									</div>
-								);
+									);
 								} else {
-								return (
-									<label>
-										{selectedTemplateMetadata.required[val].displayName}:
-										<input name={val} type="text" onChange={(e) => this.setMetadata(e, val) } value={metadata[val]}/>
-									</label>);
+									return (
+										<div>
+											<label style={styles.label} htmlFor={val}>
+												<span>{selectedTemplateMetadata.required[val].displayName}</span>
+											</label>
+											<input id={val} className={'pt-input margin-bottom'} style={styles.input} name={val} type="text" onChange={(e) => this.setMetadata(e, val)} value={metadata[val]}/>
+										</div>
+									);
 								}
 							}
 						)
@@ -341,19 +339,23 @@ export const PubVersions = React.createClass({
 						selectedTemplateMetadata.optional &&
 						<div>Optional</div>
 					}
-							{
-								selectedTemplateMetadata.optional &&
-								Object.keys(selectedTemplateMetadata.optional).map((val) => {
-									return (
-										<label>
-											{selectedTemplateMetadata.optional[val].displayName}:
-											<input name={val} type="text" onChange={(e) => this.setMetadata(e, val) }/>
-										</label>);
-									}
-								)
-							}
-						<Button onClick={this.exportOptionsSubmit} style={{ float: 'right' }}>Submit</Button>
-					</Dialog>
+					{
+						selectedTemplateMetadata.optional &&
+						Object.keys(selectedTemplateMetadata.optional).map((val) => {
+							return (
+								<div>
+									<label style={styles.label} htmlFor={val}>
+										<span>{selectedTemplateMetadata.optional[val].displayName}</span>
+									</label>
+									<input id={val} className={'pt-input margin-bottom'} style={styles.input} name={val} type="text" onChange={(e) => this.setMetadata(e, val)} value={metadata[val]}/>
+								</div>
+							);
+						}
+					)
+				}
+				<Button onClick={this.exportOptionsSubmit} style={{ float: 'right' }}>Submit</Button>
+			</div>
+		</Dialog>
 
 					{versions.sort((foo, bar)=> {
 					// Sort so that most recent is first in array
@@ -623,4 +625,10 @@ styles = {
 		display: 'inline-block',
 		margin: 'auto 0',
 	},
+	input: {
+		width: 'calc((100% - 20px) - 4px)'
+	},
+	exportOptionsDialog: {
+		padding: '2em 1em'
+	}
 };
