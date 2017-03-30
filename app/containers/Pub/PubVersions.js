@@ -236,7 +236,19 @@ export const PubVersions = React.createClass({
 	},
 	setMetadata: function(event, val) {
 		const metadata = this.state.metadata;
-		metadata[val] = event.target.value;
+		const pdftexTemplates = this.state.pdftexTemplates || {};
+		const selectedTemplate = this.state.selectedTemplate || 'default';
+		const selectedTemplateMetadata = (pdftexTemplates && pdftexTemplates[selectedTemplate]) ? pdftexTemplates[selectedTemplate].metadata : {};
+		console.log('1')
+		const isArrayInput = (selectedTemplateMetadata.required[val].type === 'array');
+		console.log(2)
+		if (isArrayInput) {
+			metadata[val] = event.target.value.split(',');
+
+		} else {
+			metadata[val] = event.target.value;
+		}
+
 		this.setState({ metadata: metadata });
 	},
 	handleTemplateChange: function(event) {
@@ -330,11 +342,13 @@ export const PubVersions = React.createClass({
 							selectedTemplateMetadata.required &&
 							Object.keys(selectedTemplateMetadata.required).map((val) => {
 								if (val === 'authors' || val === 'title') return;
+								const isArrayInput = (selectedTemplateMetadata.required[val].type === 'array');
+
 								if (missingMetadata.indexOf(val) !== -1) {
 									return (
 										<div className="pt-form-group pt-intent-danger">
 											<label style={styles.label} htmlFor={val}>
-												<span>{selectedTemplateMetadata.required[val].displayName}</span>
+												<span>{selectedTemplateMetadata.required[val].displayName} {isArrayInput && <small>(Comma separated)</small>}</span>
 											</label>
 											<div className="pt-form-content">
 												<div className="pt-input-group pt-intent-danger">
@@ -348,8 +362,9 @@ export const PubVersions = React.createClass({
 									return (
 										<div>
 											<label style={styles.label} htmlFor={val}>
-												<span>{selectedTemplateMetadata.required[val].displayName}</span>
+												<span>{selectedTemplateMetadata.required[val].displayName} {isArrayInput && <small>(Comma separated)</small>}</span>
 											</label>
+
 											<input id={val} className={'pt-input margin-bottom'} style={styles.input} name={val} type="text" onChange={(e) => this.setMetadata(e, val)} value={metadata[val]}/>
 										</div>
 									);
@@ -367,7 +382,7 @@ export const PubVersions = React.createClass({
 							return (
 								<div>
 									<label style={styles.label} htmlFor={val}>
-										<span>{selectedTemplateMetadata.optional[val].displayName}</span>
+										<span>{selectedTemplateMetadata.required[val].displayName} {isArrayInput && <small>(Comma separated)</small>}</span>
 									</label>
 									<input id={val} className={'pt-input margin-bottom'} style={styles.input} name={val} type="text" onChange={(e) => this.setMetadata(e, val)} value={metadata[val]}/>
 								</div>
