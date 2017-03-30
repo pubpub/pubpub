@@ -36,7 +36,8 @@ export const PubVersions = React.createClass({
 			convertError: [],
 			conversionLoading: [],
 			downloadReady: [],
-			downloadReadyUrls: []
+			downloadReadyUrls: [],
+			missingMetadata: undefined
 		};
 	},
 
@@ -78,7 +79,10 @@ export const PubVersions = React.createClass({
 		this.props.dispatch(postDoi(this.props.pub.id, this.state.confirmDoi));
 	},
 	toggleShowExportOptions: function() {
-		this.setState({ showExportOptions: !this.state.showExportOptions });
+		this.setState({
+			showExportOptions: !this.state.showExportOptions,
+			missingMetadata: undefined
+		});
 	},
 
 	pollURL: function(url, versionHash) {
@@ -120,13 +124,38 @@ export const PubVersions = React.createClass({
 	exportOptionsSubmit: function() {
 		const metadata = this.state.metadata;
 		const version = this.state.exportOptionsVersion;
+		const selectedTemplate = this.state.selectedTemplate || 'default';
+		const pdftexTemplates = this.state.pdftexTemplates || {};
+		const selectedTemplateMetadata = (pdftexTemplates && pdftexTemplates[selectedTemplate]) ? pdftexTemplates[selectedTemplate].metadata : {};
+		console.log(`exportOptionsSubmit`)
+		const requiredMetadata = selectedTemplateMetadata.required || {};
+		const missingMetadata = [];
+		this.setState({
+			missingMetadata: undefined,
+		});
+		Object.keys(requiredMetadata).forEach((val) => {
+			if (!metadata[val]) {
+				if (val === 'authors' || val === 'title') return;
+				missingMetadata.push(val);
+			}
+		});
+		console.log(`missing Metadata ${missingMetadata}`);
 
+		if (missingMetadata.length > 0) { // 2 is from authors and title
+			console.log(`missing Metadata ${missingMetadata}`);
+			this.setState({
+				missingMetadata: missingMetadata,
+			});
+			return;
+		}
+		console.log(`converting Version`);
 		this.convertVersion(version, {});
 
 		// If Valud
 		this.setState({
 			showExportOptions: false,
-			exportOptionsVersion: undefined
+			exportOptionsVersion: undefined,
+			metadata: {}
 		});
 	},
 	exportOptionsDialog: function(version, options) {
@@ -137,6 +166,7 @@ export const PubVersions = React.createClass({
 
 		const outputType = options.outputType;
 
+		//set metadata to nothing
 
 		if (!this.state.pdftexTemplates) {
 			request
@@ -212,7 +242,10 @@ export const PubVersions = React.createClass({
 		this.setState({ metadata: metadata });
 	},
 	handleTemplateChange: function(event) {
-		this.setState({ selectedTemplate: event.target.value });
+		this.setState({
+			selectedTemplate: event.target.value,
+			missingMetadata: undefined
+		});
 	},
 	prepareSupportEmail: function() {
 		const emailTo = 'pubpub@media.mit.edu';
@@ -238,6 +271,9 @@ export const PubVersions = React.createClass({
 		const pdftexTemplates = this.state.pdftexTemplates || {};
 		const selectedTemplate = this.state.selectedTemplate || 'default';
 		const selectedTemplateMetadata = (pdftexTemplates && pdftexTemplates[selectedTemplate]) ? pdftexTemplates[selectedTemplate].metadata : {};
+		const missingMetadata = this.state.missingMetadata || [];
+		const metadata = this.state.metadata;
+
 
 		window.pdftexTemplates = pdftexTemplates;
 		const pubDOI = versions.reduce((previous, current)=> {
@@ -265,28 +301,46 @@ export const PubVersions = React.createClass({
 									);
 								})
 							}
-							</select>
-						</div>
+						</select>
+					</div>
 
-						<form>
-							<div>Mandatory</div>
-							{
-								selectedTemplateMetadata.mandatory &&
-								Object.keys(selectedTemplateMetadata.mandatory).map((val) => {
-									if (val === 'authors' || val === 'title') return;
-
-									return (
+					{
+						selectedTemplateMetadata.required && selectedTemplateMetadata.required.length > 2 &&
+						<div>Required</div>
+					}
+					{
+						selectedTemplateMetadata.required &&
+						Object.keys(selectedTemplateMetadata.required).map((val) => {
+							if (val === 'authors' || val === 'title') return;
+							console.log(missingMetadata, val)
+							if (missingMetadata.indexOf(val) !== -1) {
+								return (
+									<div className="pt-form-group pt-intent-danger">
 										<label>
-											{selectedTemplateMetadata.mandatory[val].displayName}:
-											<input name={val} type="text" onChange={(e) => this.setMetadata(e, val) }/>
-										</label>);
-									}
-								)
+											{selectedTemplateMetadata.required[val].displayName}:
+										</label>
+										<div className="pt-form-content">
+											<div className="pt-input-group pt-intent-danger">
+												<input name={val} onChange={(e) => this.setMetadata(e, val)} className="pt-input" style="width: 200px;" type="text" placeholder={selectedTemplateMetadata.required[val].displayName} dir="auto" />
+											</div>
+											<div className="pt-form-helper-text">Please enter a value</div>
+										</div>
+									</div>
+								);
+								} else {
+								return (
+									<label>
+										{selectedTemplateMetadata.required[val].displayName}:
+										<input name={val} type="text" onChange={(e) => this.setMetadata(e, val) } value={metadata[val]}/>
+									</label>);
+								}
 							}
-							{
-								selectedTemplateMetadata.optional &&
-								<div>Optional</div>
-							}
+						)
+					}
+					{
+						selectedTemplateMetadata.optional &&
+						<div>Optional</div>
+					}
 							{
 								selectedTemplateMetadata.optional &&
 								Object.keys(selectedTemplateMetadata.optional).map((val) => {
@@ -298,7 +352,6 @@ export const PubVersions = React.createClass({
 									}
 								)
 							}
-						</form>
 						<Button onClick={this.exportOptionsSubmit} style={{ float: 'right' }}>Submit</Button>
 					</Dialog>
 
@@ -391,8 +444,6 @@ export const PubVersions = React.createClass({
 
 
 							<div style={[styles.smallColumn, { padding: '0.5em' }]}>
-								{console.log('ok no here ' + this.state.conversionLoading)}
-								{console.log(version.hash)}
 
 								{ !downloadReady && !convertError &&
 									<Popover content={
