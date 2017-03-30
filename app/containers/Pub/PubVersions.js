@@ -141,7 +141,7 @@ export const PubVersions = React.createClass({
 			}
 		});
 
-		if (missingMetadata.length > 0) { // 2 is from authors and title
+		if (missingMetadata.length > 0) {
 			this.setState({
 				missingMetadata: missingMetadata,
 			});
@@ -214,13 +214,16 @@ export const PubVersions = React.createClass({
 		metadata.title = title;
 		metadata.authors = authors;
 
+		console.log(JSON.stringify(metadata))
+		const selectedTemplate = this.state.selectedTemplate || 'default';
+
 
 		for (const file of files) {
 			if (file.name === defaultFile) {
 				console.log('got url!', file.url);
 				request
 				.post(PUBPUB_CONVERSION_URL)
-				.send({ inputType: 'pub', outputType: outputType, inputUrl: file.url, metadata: metadata })
+				.send({ inputType: 'pub', outputType: outputType, inputUrl: file.url, metadata: metadata, template: selectedTemplate })
 				.set('Accept', 'application/json')
 				.end((err, res) => {
 					if (err || !res.ok) {
@@ -239,9 +242,16 @@ export const PubVersions = React.createClass({
 		const pdftexTemplates = this.state.pdftexTemplates || {};
 		const selectedTemplate = this.state.selectedTemplate || 'default';
 		const selectedTemplateMetadata = (pdftexTemplates && pdftexTemplates[selectedTemplate]) ? pdftexTemplates[selectedTemplate].metadata : {};
-		console.log('1')
-		const isArrayInput = (selectedTemplateMetadata.required[val].type === 'array');
-		console.log(2)
+
+		let isArrayInput
+		if (selectedTemplateMetadata.required[val]) {
+			isArrayInput = (selectedTemplateMetadata.required[val].type === 'array');
+		} else {
+			isArrayInput = (selectedTemplateMetadata.optional[val].type === 'array');
+
+		}
+
+
 		if (isArrayInput) {
 			metadata[val] = event.target.value.split(',');
 
@@ -342,7 +352,7 @@ export const PubVersions = React.createClass({
 							selectedTemplateMetadata.required &&
 							Object.keys(selectedTemplateMetadata.required).map((val) => {
 								if (val === 'authors' || val === 'title') return;
-								const isArrayInput = (selectedTemplateMetadata.required[val].type === 'array');
+								const isArrayInput = (selectedTemplateMetadata.required[val].type && selectedTemplateMetadata.required[val].type === 'array');
 
 								if (missingMetadata.indexOf(val) !== -1) {
 									return (
@@ -379,10 +389,12 @@ export const PubVersions = React.createClass({
 					{
 						selectedTemplateMetadata.optional &&
 						Object.keys(selectedTemplateMetadata.optional).map((val) => {
+							const isArrayInput = (selectedTemplateMetadata.optional[val].type && selectedTemplateMetadata.optional[val].type === 'array');
+
 							return (
 								<div>
 									<label style={styles.label} htmlFor={val}>
-										<span>{selectedTemplateMetadata.required[val].displayName} {isArrayInput && <small>(Comma separated)</small>}</span>
+										<span>{selectedTemplateMetadata.optional[val].displayName} {isArrayInput && <small>(Comma separated)</small>}</span>
 									</label>
 									<input id={val} className={'pt-input margin-bottom'} style={styles.input} name={val} type="text" onChange={(e) => this.setMetadata(e, val)} value={metadata[val]}/>
 								</div>
