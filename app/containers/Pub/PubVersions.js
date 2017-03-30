@@ -333,12 +333,12 @@ export const PubVersions = React.createClass({
 								if (missingMetadata.indexOf(val) !== -1) {
 									return (
 										<div className="pt-form-group pt-intent-danger">
-											<label style={styles.label}>
-												{selectedTemplateMetadata.required[val].displayName}:
+											<label style={styles.label} htmlFor={val}>
+												<span>{selectedTemplateMetadata.required[val].displayName}</span>
 											</label>
 											<div className="pt-form-content">
 												<div className="pt-input-group pt-intent-danger">
-													<input name={val} onChange={(e) => this.setMetadata(e, val)} className="pt-input" style="width: 200px;" type="text" placeholder={selectedTemplateMetadata.required[val].displayName} dir="auto" />
+													<input id={val} className={'pt-input margin-bottom'} style={styles.input} name={val} type="text" onChange={(e) => this.setMetadata(e, val)} value={metadata[val]}/>
 												</div>
 												<div className="pt-form-helper-text">Please enter a value</div>
 											</div>
