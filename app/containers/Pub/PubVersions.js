@@ -35,7 +35,6 @@ export const PubVersions = React.createClass({
 			missingMetadata: undefined,
 			exportOutputTypes: undefined,
 			metadata: {},
-			convertError: [],
 			conversionLoading: [],
 			downloadReady: [],
 			downloadReadyUrls: []
@@ -99,10 +98,11 @@ export const PubVersions = React.createClass({
 		.get(pollUrl)
 		.end((err, res) => {
 			console.log(err, res);
+			const index = this.state.conversionLoading.indexOf(versionHash);
 			if (!err && res && res.statusCode === 200) {
+
 				if (res.body.url) {
 					window.open(res.body.url, '_blank');
-					const index = this.state.conversionLoading.indexOf(versionHash);
 
 					this.setState({
 						conversionLoading: this.state.conversionLoading.filter((_, ii) => ii !== index),
@@ -113,9 +113,11 @@ export const PubVersions = React.createClass({
 					window.setTimeout(this.pollURL.bind(this, url, versionHash), 2000);
 				}
 			} else if (err) {
+
 				this.setState({
-					convertError: this.state.convertError.concat([versionHash]),
-					exportErrorAlert: true
+					exportErrorAlert: true,
+					conversionLoading: this.state.conversionLoading.filter((_, ii) => ii !== index),
+
 				});
 
 			}
@@ -393,7 +395,6 @@ export const PubVersions = React.createClass({
 						downloadReadyUrl = this.state.downloadReadyUrls[this.state.downloadReady.indexOf(version.hash)];
 					}
 					const conversionLoading = (this.state.conversionLoading.indexOf(version.hash) !== -1);
-					const convertError = (this.state.convertError.indexOf(version.hash) !== -1);
 
 					return (
 						<div key={'version-' + version.id} style={styles.versionRow}>
@@ -467,7 +468,7 @@ export const PubVersions = React.createClass({
 
 							<div style={[styles.smallColumn, { padding: '0.5em' }]}>
 
-								{ !downloadReady && !convertError &&
+								{ !downloadReady &&
 									<Popover content={
 											<Menu>
 												{outputTypes.map((outputType) => {
@@ -489,16 +490,13 @@ export const PubVersions = React.createClass({
 									</Popover>
 								}
 								{
-									downloadReady && !convertError &&
+									downloadReady &&
 									<a href={downloadReadyUrl}>
 										<Button className={'pt-button p2-minimal'} onClick={this.clearDownloadUrl.bind(this, this.state.downloadReady.indexOf(version.hash))} text='Click Again' />
 									</a>
 								}
 
-								{
-									convertError &&
-									<Button disabled={true} className={'pt-button p2-minimal'} text='Error'/>
-								}
+
 
 
 							</div>
