@@ -217,13 +217,12 @@ export const PubVersions = React.createClass({
 		console.log(JSON.stringify(metadata))
 		const selectedTemplate = this.state.selectedTemplate || 'default';
 
-
 		for (const file of files) {
 			if (file.name === defaultFile) {
 				console.log('got url!', file.url);
 				request
 				.post(PUBPUB_CONVERSION_URL)
-				.send({ inputType: 'pub', outputType: outputType, inputUrl: file.url, metadata: metadata, template: selectedTemplate })
+				.send({ inputType: 'pub', outputType: outputType, inputUrl: file.url, metadata: metadata, template: selectedTemplate, options: { template: selectedTemplate} })
 				.set('Accept', 'application/json')
 				.end((err, res) => {
 					if (err || !res.ok) {
