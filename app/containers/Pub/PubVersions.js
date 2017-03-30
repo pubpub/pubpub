@@ -32,12 +32,13 @@ export const PubVersions = React.createClass({
 			selectedTemplate: undefined,
 			exportOptionsVersion: undefined,
 			exportOutputType: undefined,
+			missingMetadata: undefined,
+			exportOutputTypes: undefined,
 			metadata: {},
 			convertError: [],
 			conversionLoading: [],
 			downloadReady: [],
-			downloadReadyUrls: [],
-			missingMetadata: undefined
+			downloadReadyUrls: []
 		};
 	},
 
@@ -102,10 +103,9 @@ export const PubVersions = React.createClass({
 				if (res.body.url) {
 					window.open(res.body.url, '_blank');
 					const index = this.state.conversionLoading.indexOf(versionHash);
+
 					this.setState({
-						conversionLoading: this.state.conversionLoading.filter((_, ii) => ii !== index)
-					});
-					this.setState({
+						conversionLoading: this.state.conversionLoading.filter((_, ii) => ii !== index),
 						downloadReady: this.state.downloadReady.concat([versionHash]),
 						downloadReadyUrls: this.state.downloadReadyUrls.concat([res.body.url])
 					});
@@ -253,8 +253,27 @@ export const PubVersions = React.createClass({
 	},
 	clearDownloadUrl: function(index) {
 		this.setState({
-			downloadReady: this.state.downloadReady.filter((_, ii) => ii !== index)
+			downloadReady: this.state.downloadReady.filter((_, ii) => ii !== index),
+			downloadReadyUrls: this.state.downloadReadyUrls.filter((_, ii) => ii !== index)
 		});
+	},
+
+	componentDidMount: function() {
+		const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === 'www.funky.com' || window.location.hostname === 'www.funkynocors.com';
+		const isRemoteDev = window.location.hostname === 'dev.pubpub.org' || window.location.hostname === 'test.epsx.org' || window.location.hostname === 'testnocors.epsx.org';
+		const isProd = !(isLocalDev || isRemoteDev);
+		const reqURL = (isProd) ? 'https://pubpub-converter-prod.herokuapp.com/outputTypes/all' : 'https://pubpub-converter-dev.herokuapp.com/outputTypes/all';
+
+		if (!this.state.exportOutputTypes) {
+			request
+			.get(reqURL)
+			.end((err, res) => {
+				this.setState({
+					exportOutputTypes: res.body
+				});
+			});
+		}
+
 	},
 
 	render: function() {
@@ -269,6 +288,7 @@ export const PubVersions = React.createClass({
 		const selectedTemplateMetadata = (pdftexTemplates && pdftexTemplates[selectedTemplate]) ? pdftexTemplates[selectedTemplate].metadata : {};
 		const missingMetadata = this.state.missingMetadata || [];
 		const metadata = this.state.metadata;
+		const outputTypes = this.state.exportOutputTypes || [];
 
 
 		window.pdftexTemplates = pdftexTemplates;
@@ -450,30 +470,19 @@ export const PubVersions = React.createClass({
 								{ !downloadReady && !convertError &&
 									<Popover content={
 											<Menu>
-												<MenuItem
-													onClick={this.exportOptionsDialog.bind(this, version, { outputType: 'pdf' })}
-													text={
-														<div>
-															<b>PDF</b>
-														</div>
-													}
-													/>
-												<MenuItem
-													onClick={this.exportOptionsDialog.bind(this, version, { outputType: 'latex' })}
-													text={
-														<div>
-															<b>Latex</b>
-														</div>
-													}
-													/>
-												<MenuItem
-													onClick={this.convertVersion.bind(this, version, { outputType: 'docx' })}
-													text={
-														<div>
-															<b>Docx</b>
-														</div>
-													}
-													/>
+												{outputTypes.map((outputType) => {
+													const pdfOrLatex = (outputType === 'pdf' || outputType === 'latex');
+													const onClickFn = pdfOrLatex ? this.exportOptionsDialog : this.convertVersion;
+													return (<MenuItem
+														onClick={onClickFn.bind(this, version, { outputType: outputType })}
+														text={
+															<div>
+																<b>{outputType}</b>
+															</div>
+														}
+														/>)
+												})
+											}
 											</Menu>
 									} position={Position.BOTTOM}>
 										<Button loading={conversionLoading} className={'pt-button p2-minimal'} onClick={''} text="Export" />
