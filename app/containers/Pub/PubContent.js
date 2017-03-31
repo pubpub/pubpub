@@ -116,8 +116,9 @@ export const PubContent = React.createClass({
 		const versions = this.props.pubData.pub.versions || [];
 		const currentVersion = this.getCurrentVersion(versions);
 		const files = currentVersion.files || [];
-		const currentFileName = this.props.params.filename;
-		const defaultMode = 'markdown';
+		const currentFileName = this.props.params.filename || currentVersion.defaultFile;
+
+		const defaultMode = 'rich';
 
 		return {
 			editorMode: defaultMode,
