@@ -31,8 +31,6 @@ export const JournalProfileHeader = React.createClass({
 		let journalUrl = journal.website || '';
 		journalUrl = journalUrl.slice(0, 7) === 'http://' || journalUrl.slice(0, 8) === 'https://' ? journalUrl : `http://${journalUrl}`;
 
-		
-
 		return (
 			<div style={[styles.headerBackground(hasPage), customBackgroundStyle]}>
 				<div style={styles.backgroundGrey} />
@@ -49,11 +47,7 @@ export const JournalProfileHeader = React.createClass({
 								<Link to={'/' + journal.slug} customDomain={journal.customDomain} style={globalStyles.link}><h1 style={styles.headerTitle}>{journal.title}</h1></Link>
 							}
 
-							{/*(this.props.headerMode !== 'logo') &&
-								<p>{journal.description}</p>
-							*/}
-
-							<p>{journal.description}</p>
+							<p style={{ fontSize: '1.5em', fontWeight: '200', margin: '20px 0px', letterSpacing: '1px', maxWidth: '500px' }}>{journal.description}</p>
 
 						</div>
 					}
@@ -122,6 +116,7 @@ styles = {
 	},
 	headerTitle: {
 		color: 'white',
+		fontSize: '50px',
 	},
 	bottom: {
 		maxWidth: '1024px',

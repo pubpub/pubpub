@@ -316,7 +316,7 @@ export const PubLabelList = React.createClass({
 
 				{selectedLabelsRender.map((label, index)=> {
 					const toObject = this.props.globalLabels
-						? { pathname: '/label/' + label.title, query: {} }
+						? { pathname: '/label/' + label.slug, query: {} }
 						: { pathname: this.props.pathname, query: { ...this.props.query, label: label.title, path: undefined, author: undefined, sort: undefined, discussion: undefined } };
 
 					return <Link to={toObject} key={'label-' + index} className="pt-tag" style={[styles.label, { backgroundColor: label.color || '#CED9E0', color: label.color ? '#FFF' : '#293742' }, this.props.labelStyle]}>{label.title}</Link>;

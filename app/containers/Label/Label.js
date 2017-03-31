@@ -27,7 +27,7 @@ export const Label = React.createClass({
 
 	componentWillMount() {
 		const params = this.props.params || {};
-		this.props.dispatch(getLabel(params.title));
+		this.props.dispatch(getLabel(params.slug));
 	},
 
 	// getInitialState() {
@@ -62,7 +62,7 @@ export const Label = React.createClass({
 		}
 		return (
 			<div style={styles.container}>
-				<Helmet title={label.title || params.title + ' · PubPub'} />
+				<Helmet title={label.title || params.slug + ' · PubPub'} />
 				
 				<div>
 					<div style={styles.followButtonWrapper}>
@@ -70,12 +70,12 @@ export const Label = React.createClass({
 							labelId={label.id} 
 							followData={followData} 
 							followerCount={followers.length} 
-							followersLink={{ pathname: '/label/' + label.title + '/followers' }}
+							followersLink={{ pathname: '/label/' + label.slug + '/followers' }}
 							dispatch={this.props.dispatch} />
 					</div>
 
 					<h1>
-						<Link to={'/label/' + label.title}>{label.title}</Link>
+						<Link to={'/label/' + label.slug}>{label.title}</Link>
 					</h1>
 
 					{!params.mode && pubs.map((pub, index)=> {

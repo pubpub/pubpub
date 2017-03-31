@@ -16,11 +16,10 @@ export const GET_LABEL_FAIL = 'search/GET_LABEL_FAIL';
 // function calls
 /*--------*/
 export function getLabel(query) {
-	const empty = null;
 	return (dispatch) => {
 		dispatch({ type: GET_LABEL_LOAD });
 
-		return clientFetch('/api/label?title=' + query, {
+		return clientFetch('/api/label?slug=' + query, {
 			method: 'GET'
 		})
 		.then((result) => {

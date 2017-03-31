@@ -11,6 +11,7 @@ import configureStore from './configureStore';
 import fetch from 'isomorphic-fetch';
 
 require('./utils/includesPolyfill');
+require('smoothscroll-polyfill').polyfill();
 
 const store = configureStore();
 if (window.location.hostname !== 'localhost') {
@@ -62,7 +63,6 @@ ReactDOM.render(
 				if (prevRouterProps && prevRouterProps.location.pathname === nextRouterProps.location.pathname) {
 					return false;
 				}
-
 				return true;
 			}))} 
 		/>

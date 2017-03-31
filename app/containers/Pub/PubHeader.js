@@ -4,7 +4,7 @@ import React, { PropTypes } from 'react';
 // import dateFormat from 'dateformat';
 import FollowButton from 'containers/FollowButton/FollowButton';
 import { Link } from 'react-router';
-import { PUBPUB_EDITOR_URL } from 'configURLs';
+// import { PUBPUB_EDITOR_URL } from 'configURLs';
 import PubLabelList from './PubLabelList';
 import PubNav from './PubNav';
 import Tag from 'components/Tag/Tag';
@@ -17,21 +17,21 @@ export const PubHeader = React.createClass({
 		pub: PropTypes.object,
 		accountId: PropTypes.number,
 		preservedQuery: PropTypes.object,
-		currentVersion: PropTypes.object,
+		// currentVersion: PropTypes.object,
 		meta: PropTypes.string,
-		userAccessToken: PropTypes.string,
-		userName: PropTypes.string,
+		// userAccessToken: PropTypes.string,
+		// userName: PropTypes.string,
 		pathname: PropTypes.string,
 		query: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
 
-	openEditor: function() {
-		const { userAccessToken, userName } = this.props;
-		const slug = this.props.pub.slug;
-		const url = `${PUBPUB_EDITOR_URL}/user/access/${slug}/${userName}/${userAccessToken}`;
-		window.location.href = url;
-	},
+	// openEditor: function() {
+		// const { userAccessToken, userName } = this.props;
+		// const slug = this.props.pub.slug;
+		// const url = `${PUBPUB_EDITOR_URL}/user/access/${slug}/${userName}/${userAccessToken}`;
+		// window.location.href = url;
+	// },
 
 
 	render: function() {
@@ -129,9 +129,9 @@ export const PubHeader = React.createClass({
 						{(pub.isAuthor || pub.canEdit) &&
 							<div style={styles.buttonWrapper} className={'button-wrapper'}>
 								<div className={'pt-button-group'}>
-									<button className={'pt-button pt-icon-edit'} onClick={this.openEditor}>
-										Edit Pub
-									</button>
+									{/*<button className={'pt-button pt-icon-edit'} onClick={this.openEditor}>
+																			Edit Pub
+																		</button>*/}
 									{/*<Link to={'/pub/${pub.slug}/forks'} className={'pt-button pt-icon-fork'}>15</Link>*/}
 									{/*<Link to={'/pub/${pub.slug}/forks'} className={'pt-button'}>15</Link>*/}
 								</div>
@@ -220,7 +220,7 @@ export const PubHeader = React.createClass({
 						pub={this.props.pub}
 						accountId={this.props.accountId}
 						preservedQuery={this.props.preservedQuery}
-						currentVersion={this.props.currentVersion}
+						// currentVersion={this.props.currentVersion}
 						useLightText={useLightText}
 						meta={this.props.meta}
 						pathname={this.props.pathname}

@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import Loader from 'components/Loader/Loader';
 import RenderFile from 'components/RenderFile/RenderFile';
 import { globalStyles } from 'utils/globalStyles';
+import Textarea from 'react-textarea-autosize';
 // import { globalMessages } from 'utils/globalMessages';
 import { FormattedMessage } from 'react-intl';
 // import dateFormat from 'dateformat';
@@ -19,6 +20,7 @@ let styles;
 export const PubDiscussion = React.createClass({
 	propTypes: {
 		discussion: PropTypes.object,
+		highlightData: PropTypes.object,
 		pub: PropTypes.object,
 		goBack: PropTypes.func,
 		allReactions: PropTypes.array,
@@ -33,6 +35,9 @@ export const PubDiscussion = React.createClass({
 	getInitialState() {
 		return {
 			description: '',
+			highlights: [],
+			preview: false,
+			previewFiles: [],
 			openEditor: undefined,
 			editorMode: undefined,
 			editTitle: undefined,
@@ -52,6 +57,23 @@ export const PubDiscussion = React.createClass({
 	componentWillReceiveProps(nextProps) {
 		if (this.props.isLoading && !nextProps.isLoading && !nextProps.error) {
 			this.setState({ description: '', openEditor: undefined, editorMode: undefined, });
+		}
+
+		const previousHighlightData = this.props.highlightData || {};
+		const nextHighlightData = nextProps.highlightData || {};
+		if (!previousHighlightData.result && nextHighlightData.result) {
+			if (this.state.openEditor) {
+				this.setState({ 
+					editDescription: this.state.editDescription + `[@highlight/${nextHighlightData.result.id}]`,
+					highlights: [...this.state.highlights, nextHighlightData.result]
+				});
+			} else {
+				this.setState({ 
+					description: this.state.description + `[@highlight/${nextHighlightData.result.id}]`,
+					highlights: [...this.state.highlights, nextHighlightData.result],
+				});
+			}
+			
 		}
 	},
 
@@ -97,21 +119,50 @@ export const PubDiscussion = React.createClass({
 				}
 			],
 		};
+		if (this.state.highlights.length) {
+			createData.files.push({
+				type: 'application/json',
+				url: '/tempHighlights.json',
+				name: 'highlights.json',
+				content: JSON.stringify(this.state.highlights, null, 2),
+			});
+		}
 		const { isValid, validationError } = this.validate(createData);
 		this.setState({ validationError: validationError });
 		if (!isValid) { return null; }
 		return this.props.dispatch(postDiscussion(createData.replyRootPubId, createData.replyParentPubId, createData.title, createData.description, undefined, createData.files, !this.props.discussion.isPublished));		
 	},
 
+	togglePreview: function() {
+		this.setState({
+			preview: !this.state.preview,
+			previewFiles: [
+				{
+					name: 'main.md',
+					url: '/main.md',
+					type: 'text/markdown',
+					content: this.state.description,
+				},
+				{
+					name: 'highlights.json',
+					url: '/highlights.json',
+					type: 'application/json',
+					content: JSON.stringify(this.state.highlights),
+				}
+			],
+		});
+	},
+
 	setOpenEditor: function(discussion, mode) {
-		if (!mode) { this.setState({ openEditor: undefined, editDescription: undefined, editorMode: undefined, editTitle: undefined }); }
+		if (!mode) { return this.setState({ openEditor: undefined, editDescription: undefined, editorMode: undefined, editTitle: undefined }); }
+		
 		const currentVersion = discussion.versions.reduce((previous, current)=> {
 			return (!previous.createdAt || current.createdAt > previous.createdAt) ? current : previous;
 		}, {});
 
 		const content = currentVersion && currentVersion.files && currentVersion.files[0].content;
 		const title = discussion && discussion.title;
-		this.setState({ openEditor: discussion, editDescription: content, editTitle: title, editorMode: mode });
+		return this.setState({ openEditor: discussion, editDescription: content, editTitle: title, editorMode: mode });
 	},
 
 	discussionChange: function(evt) {
@@ -130,6 +181,14 @@ export const PubDiscussion = React.createClass({
 				content: this.state.editDescription,
 			}
 		];
+		if (this.state.highlights.length) {
+			newVersionFiles.push({
+				type: 'application/json',
+				url: '/tempHighlights.json',
+				name: 'highlights.json',
+				content: JSON.stringify(this.state.highlights, null, 2),
+			});
+		}
 
 		// this.setState({ newVersionError: '' });
 		return this.props.dispatch(postDiscussionVersion(pubId, 'Update discussion content', this.state.openEditor.isPublished, newVersionFiles, 'main.md'));
@@ -300,7 +359,7 @@ export const PubDiscussion = React.createClass({
 									<div style={styles.discussionContentWrapper}>
 										<div style={styles.discussionButtons} className={'pt-button-group'}>
 											{/*<button type="button" style={styles.discussionButton} className="pt-button pt-minimal pt-icon-social-media" />*/}
-											{isAuthor &&
+											{isAuthor && !editorOpen &&
 												<button type="button" style={styles.discussionButton} className="pt-button pt-minimal pt-icon-edit" onClick={this.setOpenEditor.bind(this, child, 'body')} />
 											}
 											{/*<button type="button" style={styles.discussionButton} className="pt-button pt-minimal pt-icon-bookmark" />*/}
@@ -320,7 +379,7 @@ export const PubDiscussion = React.createClass({
 										}
 										{editorOpen && 
 											<div style={styles.discussionText} className={'discussion-body'}>
-												<textarea className={'pt-input margin-bottom'} value={this.state.editDescription} style={{ width: '100%' }} onChange={this.discussionChange} />
+												<Textarea className={'pt-input margin-bottom'} value={this.state.editDescription} style={{ width: '100%' }} onChange={this.discussionChange} />
 												<hr />
 												<button className={'pt-button'} onClick={this.setOpenEditor.bind(this, undefined, undefined)}>Cancel</button>
 												<Button className={'pt-button pt-intent-primary'} onClick={this.updateDiscussion} loading={isLoading} text={'Save'}/>
@@ -355,10 +414,21 @@ export const PubDiscussion = React.createClass({
 					<div style={styles.contentBottom(isExpanded)}>
 						<div style={styles.bottomFade}></div>
 						<form>
-							<textarea onFocus={this.expandReply} onBlur={this.collapseReply} style={styles.bottomInput(isExpanded)} className={'pt-input'} type={'text'} value={this.state.description} onChange={this.inputUpdate.bind(this, 'description')} placeholder={'Reply to discussion'} />	
+							
+
+							{!this.state.preview &&
+								<textarea onFocus={this.expandReply} onBlur={this.collapseReply} style={styles.bottomInput(isExpanded)} className={'pt-input'} type={'text'} value={this.state.description} onChange={this.inputUpdate.bind(this, 'description')} placeholder={'Reply to discussion'} />	
+							}	
+							{this.state.preview && 
+								<div style={{ border: '1px solid #CCC', padding: '1em', margin: '0.5em 0em' }}>
+									<RenderFile file={this.state.previewFiles[0]} allFiles={this.state.previewFiles} noHighlighter={true} />
+								</div>
+							}
+
 							{isExpanded &&
 								<div>
-									<Button text={'Submit Reply'} loading={isLoading} onClick={this.createSubmit} className={'pt-intent-primary'}/>
+									<Button text={'Submit Reply'} loading={isLoading} onClick={this.createSubmit} className={'pt-intent-primary'} />
+									<Button style={{ margin: '0em 0.5em' }} onClick={this.togglePreview}>{this.state.preview ? 'Edit' : 'Preview'}</Button>
 									<span style={styles.errorMessage}>{this.state.validationError}</span>	
 								</div>
 								
@@ -404,7 +474,7 @@ styles = {
 			width: '100%',
 			padding: '20px',
 			borderTop: '1px solid #D8E1E8',
-			height: isExpanded ? '160px' : '70px',
+			minHeight: isExpanded ? '160px' : '70px',
 			position: 'absolute',
 			bottom: '0px',
 			left: 0,
@@ -421,6 +491,7 @@ styles = {
 		width: '100%',
 		height: '30px',
 		zIndex: '2',
+		pointerEvents: 'none',
 	},
 	bottomInput: (isExpanded)=> {
 		return {

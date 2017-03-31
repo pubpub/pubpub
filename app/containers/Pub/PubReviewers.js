@@ -7,17 +7,17 @@ import request from 'superagent';
 import dateFormat from 'dateformat';
 import { Menu, Button } from '@blueprintjs/core';
 import { globalStyles } from 'utils/globalStyles';
-import { postReviewer } from './actionsReviewers';
+import { postReviewer, getUserJournals } from './actionsReviewers';
 
 let styles;
 
 export const PubReviewers = React.createClass({
 	propTypes: {
+		pub: PropTypes.object,
 		invitedReviewers: PropTypes.array,
 		accountUser: PropTypes.object,
 		discussionsData: PropTypes.array,
 		isLoading: PropTypes.bool,
-		pubId: PropTypes.number,
 		pathname: PropTypes.string,
 		query: PropTypes.object,
 		dispatch: PropTypes.func,
@@ -32,12 +32,24 @@ export const PubReviewers = React.createClass({
 		};
 	},
 
+	componentWillMount() {
+		const accountUser = this.props.accountUser || {};
+		if (accountUser.id) {
+			this.props.dispatch(getUserJournals(accountUser.id));
+		}
+	},
 	componentWillReceiveProps(nextProps) {
 		const prevReviewers = this.props.invitedReviewers || [];
 		const nextReviewers = nextProps.invitedReviewers || [];
 
 		if (prevReviewers.length < nextReviewers.length) {
 			this.setState({ newReviewer: null });
+		}
+
+		const prevAccountUser = this.props.accountUser || {};
+		const nextAccountUser = this.props.accountUser || {};
+		if (!prevAccountUser.id && nextAccountUser.id) {
+			this.props.dispatch(getUserJournals(nextAccountUser.id));
 		}
 	},
 
@@ -68,7 +80,7 @@ export const PubReviewers = React.createClass({
 		const name = null;
 		const inviterJournal = this.state.inviterJournal || {};
 		const inviterJournalId = inviterJournal.id || null;
-		this.props.dispatch(postReviewer(email, name, this.props.pubId, this.state.newReviewer.id, inviterJournalId));
+		this.props.dispatch(postReviewer(email, name, this.props.pub.id, this.state.newReviewer.id, inviterJournalId));
 	},
 
 	newReviewerEmailChange: function(evt) {
@@ -90,7 +102,7 @@ export const PubReviewers = React.createClass({
 			return this.setState({ errorMessage: 'Both email and name are required' });
 		}
 		this.setState({ errorMessage: undefined });
-		return this.props.dispatch(postReviewer(email, name, this.props.pubId, invitedUserId, inviterJournalId));
+		return this.props.dispatch(postReviewer(email, name, this.props.pub.id, invitedUserId, inviterJournalId));
 	},
 	setJournal: function(journal) {
 		this.setState({ inviterJournal: journal });
@@ -110,6 +122,13 @@ export const PubReviewers = React.createClass({
 		});
 		const currentInviterJournal = this.state.inviterJournal || {};
 
+		const pub = this.props.pub || {};
+		const versions = pub.versions || [];
+		const canInvite = versions.reduce((previous, current)=> {
+			if (current.isPublished || current.isRestricted) { return true; }
+			return previous;
+		}, false);
+
 		return (
 			<div style={styles.container}>
 				<h2>Reviewers</h2>
@@ -117,105 +136,117 @@ export const PubReviewers = React.createClass({
 				{/*<div style={{ position: 'fixed', top: '20px', right: '20px'}}>
 					<div className={'pt-card pt-elevation-3'}>Hey you're invited!</div>
 				</div>*/}
-				<div style={styles.invitingAsTable}>
-					<div style={styles.invitingAs}>
-						<div style={styles.invitingText}>Inviting as:</div>
-						<img src={accountUser.avatar} style={{ maxWidth: '35px' }} />	
-					</div>
-					{!!accountJournals.length &&
-						<div style={styles.invitingOnBehalf}>
-							<div style={styles.invitingText}>On behalf of:</div>
-							<div>
-								<DropdownButton 
-									content={
-										<Menu>
-											<li key={'authorFilter-null'} onClick={this.setJournal.bind(this, undefined)} className="pt-menu-item pt-popover-dismiss">None</li>
-											{accountJournals.map((journal, index)=> {
-												return (
-													<li key={'authorFilter-' + index} onClick={this.setJournal.bind(this, journal)} className="pt-menu-item pt-popover-dismiss">
-														<img src={journal.avatar} style={{ maxWidth: '35px', verticalAlign: 'middle', marginRight: '0.5em' }} />
-														{journal.title}
-													</li>
-												);
-											})}
-										</Menu>
-									} 
-									title={
-										<span>
-											{!!currentInviterJournal.id &&
-												<span>
-													<img src={currentInviterJournal.avatar} style={{ maxWidth: '35px', verticalAlign: 'middle', marginRight: '0.5em' }} /> {currentInviterJournal.title}
-												</span>
-											}
-											{!currentInviterJournal.id &&
-												<span style={styles.placeholder}>
-													Select Journal
-												</span>
-											}
-										</span>
-									} 
-									style={{ paddingLeft: '0px' }}
-									position={2} />
-							</div>	
-						</div>
-					}
-				</div>
-				
-				{!this.state.inviteByEmail &&
-					<div>
-						<AutocompleteBar
-							filterOptions={(options)=>{
-								// Remove if invited, or if an existing contributor on the work.
 
-								return options.filter((option)=>{
-									for (let index = 0; index < invitedReviewers.length; index++) {
-										if (invitedReviewers[index].invitedUserId === option.id) {
-											return false;
-										}
-									}
-									return true;
-								});
-							}}
-							placeholder={'Find New Reviewer'}
-							loadOptions={this.loadOptions}
-							value={this.state.newReviewer}
-							onChange={this.handleSelectChange}
-							onComplete={this.inviteReviewer}
-							completeDisabled={!this.state.newReviewer || !this.state.newReviewer.id}
-							completeLoading={this.props.isLoading}
-							completeString={'Invite'}
-						/>
-						<div style={[styles.emailToggleText, { marginTop: '-1em' }]} className={'pt-button pt-minimal'} onClick={this.toggleInviteByEmail}>
-							Invite by email
-						</div>
-					</div>
+				{!!accountUser.id &&
+					<div>
+						{!canInvite &&
+							<div className={'pt-callout pt-intent-danger'} style={{ margin: '1em 0em' }}>Pubs must have at least one published or restricted version to invite a reviewer. Go to <Link to={`/pub/${pub.slug}/versions`}>Versions</Link> to update.</div>
+						}
+						<div style={canInvite ? {} : styles.disabled}>
+							<div style={styles.invitingAsTable}>
+								<div style={styles.invitingAs}>
+									<div style={styles.invitingText}>Inviting as:</div>
+									<img src={accountUser.avatar} style={{ maxWidth: '35px' }} />	
+								</div>
+								{!!accountJournals.length &&
+									<div style={styles.invitingOnBehalf}>
+										<div style={styles.invitingText}>On behalf of:</div>
+										<div>
+											<DropdownButton 
+												content={
+													<Menu>
+														<li key={'authorFilter-null'} onClick={this.setJournal.bind(this, undefined)} className="pt-menu-item pt-popover-dismiss">None</li>
+														{accountJournals.map((journal, index)=> {
+															return (
+																<li key={'authorFilter-' + index} onClick={this.setJournal.bind(this, journal)} className="pt-menu-item pt-popover-dismiss">
+																	<img src={journal.avatar} style={{ maxWidth: '35px', verticalAlign: 'middle', marginRight: '0.5em' }} />
+																	{journal.title}
+																</li>
+															);
+														})}
+													</Menu>
+												} 
+												title={
+													<span>
+														{!!currentInviterJournal.id &&
+															<span>
+																<img src={currentInviterJournal.avatar} style={{ maxWidth: '35px', verticalAlign: 'middle', marginRight: '0.5em' }} /> {currentInviterJournal.title}
+															</span>
+														}
+														{!currentInviterJournal.id &&
+															<span style={styles.placeholder}>
+																Select Journal
+															</span>
+														}
+													</span>
+												} 
+												style={{ paddingLeft: '0px' }}
+												position={0} />
+										</div>	
+									</div>
+								}
+							</div>
+
 					
-				}
-				{this.state.inviteByEmail &&
-					<div>
-						<form onSubmit={this.handleEmailInvite} style={styles.inviteEmailForm}>
-							<label htmlFor={'email'}>
-								Email
-								<input className={'pt-input margin-bottom'} id={'email'} name={'email'} type="email" style={styles.input} value={this.state.newReviewerEmail} onChange={this.newReviewerEmailChange} placeholder={'example@email.com'}/>
-							</label>
-							<label htmlFor={'name'}>
-								Name
-								<input className={'pt-input margin-bottom'} id={'name'} name={'name'} type="text" style={styles.input} value={this.state.newReviewerName} onChange={this.newReviewerNameChange} placeholder={'Jane Doe'}/>
-							</label>
+							{!this.state.inviteByEmail &&
+								<div>
+									<AutocompleteBar
+										filterOptions={(options)=>{
+											// Remove if invited, or if an existing contributor on the work.
 
-							<Button text={'Send Email Invitation'} className={'pt-button pt-intent-primary'} onClick={this.handleEmailInvite} loading={this.props.isLoading}/>
-							<span style={styles.errorMessage}>{this.state.errorMessage}</span>
-						</form>
-						<div style={styles.emailToggleText} className={'pt-button pt-minimal'} onClick={this.toggleInviteByEmail}>
-							Invite existing PubPub users
+											return options.filter((option)=>{
+												for (let index = 0; index < invitedReviewers.length; index++) {
+													if (invitedReviewers[index].invitedUserId === option.id) {
+														return false;
+													}
+												}
+												return true;
+											});
+										}}
+										placeholder={'Find New Reviewer'}
+										loadOptions={this.loadOptions}
+										value={this.state.newReviewer}
+										onChange={this.handleSelectChange}
+										onComplete={this.inviteReviewer}
+										completeDisabled={!this.state.newReviewer || !this.state.newReviewer.id}
+										completeLoading={this.props.isLoading}
+										completeString={'Invite'}
+									/>
+									<div style={[styles.emailToggleText, { marginTop: '-1em' }]} className={'pt-button pt-minimal'} onClick={this.toggleInviteByEmail}>
+										Invite by email
+									</div>
+								</div>
+								
+							}
+							{this.state.inviteByEmail &&
+								<div>
+									<form onSubmit={this.handleEmailInvite} style={styles.inviteEmailForm}>
+										<label htmlFor={'email'}>
+											Email
+											<input className={'pt-input margin-bottom'} id={'email'} name={'email'} type="email" style={styles.input} value={this.state.newReviewerEmail} onChange={this.newReviewerEmailChange} placeholder={'example@email.com'}/>
+										</label>
+										<label htmlFor={'name'}>
+											Name
+											<input className={'pt-input margin-bottom'} id={'name'} name={'name'} type="text" style={styles.input} value={this.state.newReviewerName} onChange={this.newReviewerNameChange} placeholder={'Jane Doe'}/>
+										</label>
+
+										<Button text={'Send Email Invitation'} className={'pt-button pt-intent-primary'} onClick={this.handleEmailInvite} loading={this.props.isLoading}/>
+										<span style={styles.errorMessage}>{this.state.errorMessage}</span>
+									</form>
+									<div style={styles.emailToggleText} className={'pt-button pt-minimal'} onClick={this.toggleInviteByEmail}>
+										Invite existing PubPub users
+									</div>
+								</div>
+							}
 						</div>
 					</div>
+				}
+
+				{!accountUser.id &&
+					<div className={'pt-callout'}>You must be logged in to Invite Reviewers.</div>
 				}
 
 				<div style={styles.invitedReviewers}>
-				
-
-				
 
 					{invitedReviewers.map((reviewer, index)=> {
 						const invitedUser = reviewer.invitedUser;
@@ -325,6 +356,10 @@ styles = {
 		padding: 0,
 		color: '#555',
 		marginTop: '-1em',
+	},
+	disabled: {
+		pointerEvents: 'none',
+		opacity: '0.5',
 	},
 	input: {
 		width: 'calc(100% - 20px - 4px)', // Calculations come from padding and border in pubpub.css

@@ -86,6 +86,9 @@ export const JournalFeatures = React.createClass({
 						if (foo.createdAt > bar.createdAt) { return -1; }
 						if (foo.createdAt < bar.createdAt) { return 1; }
 						return 0;
+					}).filter((item)=> {
+						const pub = item.pub || {};
+						return pub.slug !== 'designandsciencej';
 					}).map((pubFeature, index)=> {
 						const pub = pubFeature.pub || {};
 						const labels = pub.labels || [];

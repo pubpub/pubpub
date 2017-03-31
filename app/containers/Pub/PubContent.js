@@ -1,437 +1,499 @@
-import { NonIdealState, ProgressBar, Spinner } from '@blueprintjs/core';
 import React, { PropTypes } from 'react';
-
-// import ReactMarkdown from 'react-markdown';
-import { Link } from 'react-router';
-import { PUBPUB_EDITOR_URL } from 'configURLs';
 import Radium from 'radium';
-import RenderFile from 'components/RenderFile/RenderFile';
-import dateFormat from 'dateformat';
-import { globalStyles } from 'utils/globalStyles';
+import { browserHistory } from 'react-router';
+import { NonIdealState, Spinner } from '@blueprintjs/core';
+import { StickyContainer } from 'react-sticky';
+import PubBreadcrumbs from './PubBreadcrumbs';
+import PubContentFiles from './PubContentFiles';
+import PubDiscussion from './PubDiscussion';
+import PubDiscussionsList from './PubDiscussionsList';
+import PubDiscussionsNew from './PubDiscussionsNew';
+import PubSidePanel from './PubSidePanel';
+import PubHighlights from './PubHighlights';
 import { postVersion } from './actionsVersions';
-import { putDefaultFile } from './actionsFiles';
-import { s3Upload } from 'utils/uploadFile';
 
 let styles;
 
 export const PubContent = React.createClass({
 	propTypes: {
-		version: PropTypes.object,
-		pub: PropTypes.object,
-		// pubSlug: PropTypes.string,
-		userName: PropTypes.string,
-		userAccessToken: PropTypes.string,
+		accountData: PropTypes.object,
+		highlightData: PropTypes.object,
+		pubData: PropTypes.object,
 		params: PropTypes.object,
-		query: PropTypes.object,
-		isLoading: PropTypes.bool,
-		error: PropTypes.object,
+		location: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
 
 	getInitialState() {
 		return {
-			uploadRates: [],
-			uploadFileNames: [],
-			uploadFiles: [],
-			uploading: false,
-			uploadingFinished: false,
-			uploadedFileObjects: [],
-			newVersionMessage: '',
-			newVersionError: '',
+			canGoBack: false,
+			showAllDiscussions: false,
+			// showClosedDiscussions: false,
+			editorMode: undefined,
+			editorFiles: {},
+			editorVersionMessage: '',
+			editorVersionMessageUserChanged: false,
+			editorIsPublished: undefined,
+			editorIsRestricted: undefined,
+			editorDefaultFile: undefined,
 		};
 	},
 
-	componentWillReceiveProps(nextProps) {
-		// If login was succesful, redirect
-		const oldLoading = this.props.isLoading;
-		const nextLoading = nextProps.isLoading;
-		const nextError = nextProps.error;
+	componentWillMount() {
+		if (this.props.pubData.pub.id && this.props.params.mode === 'edit') {
+			this.setState(this.enterEditModeObject)
+		}
+	},
 
-		if (oldLoading && !nextLoading && !nextError) {
+	componentWillReceiveProps(nextProps) {
+		const lastPanel = this.props.location.query.panel;
+		const nextPanel = nextProps.location.query.panel;
+		const lastPathname = this.props.location.pathname;
+		const nextPathname = nextProps.location.pathname;
+
+		if (!lastPanel && nextPanel && lastPathname === nextPathname) {
+			this.setState({ canGoBack: true });
+		} else {
+			this.setState({ canGoBack: false });
+		}
+
+		const editMode = Object.keys(this.state.editorFiles).length > 0;
+		if (!editMode && (!this.props.pubData.pub.id && nextPathname.pubData.pub.id && this.props.params.mode === 'edit' || !this.props.params.mode && nextProps.params.mode === 'edit')) {
+			this.setState(this.enterEditModeObject)
+		}
+
+		const currentPub = this.props.pubData.pub || {};
+		const nextPub = nextProps.pubData.pub || {};
+		if (currentPub.id && this.getCurrentVersion(currentPub.versions).id !== this.getCurrentVersion(nextPub.versions).id) {
+			window.unsavedEdits = false;
+			const currentEditorFile = this.state.editorFiles[this.props.params.filename];
+			const nextName = currentEditorFile && (currentEditorFile.newName || currentEditorFile.name);
 			this.setState({
-				uploadRates: [],
-				uploadFileNames: [],
-				uploadFiles: [],
-				uploading: false,
-				uploadingFinished: false,
-				uploadedFileObjects: [],
-				newVersionMessage: '',
+				editorMode: undefined,
+				editorFiles: {},
+				editorVersionMessage: '',
+				editorVersionMessageUserChanged: false,
+				editorIsPublished: undefined,
+				editorIsRestricted: undefined,
+				editorDefaultFile: undefined,
+			});
+			browserHistory.push({
+				pathname: `/pub/${nextPub.slug}/files/${nextName || ''}`,
+			});
+			
+		}
+	},
+
+	componentWillUnmount() {
+		window.unsavedEdits = false;
+	},
+
+	enterEditModeObject: function() {
+		const versions = this.props.pubData.pub.versions || [];
+		const currentVersion = this.getCurrentVersion(versions);
+		const files = currentVersion.files || [];
+		return {
+			editorMode: 'markdown',
+			editorIsPublished: currentVersion.isPublished,
+			editorIsRestricted: currentVersion.isRestricted,
+			editorDefaultFile: currentVersion.defaultFile,
+			editorFiles: files.reduce((previous, current)=> {
+				previous[current.name] = { ...current };
+				return previous;
+			}, {}),
+		};
+	},
+
+	goBack: function() {
+		// Note, this breaks if a user directly navigates to a discussion, clicks 'back' (rendering canGoBack = true), and then navigates back twice.
+		// We need a way to turn canGoBack off again, but that feels a bit cumbersome at the moment.
+		// Seems to be an open bug on react-router: https://github.com/ReactTraining/react-router/issues/408
+		if (this.state.canGoBack) {
+			browserHistory.goBack();
+		} else {
+			const query = this.props.location.query;
+			const pathname = this.props.location.pathname;
+			browserHistory.push({
+				pathname: pathname,
+				query: { ...query, panel: undefined, discussion: undefined, useHighlight: undefined, }
 			});
 		}
 	},
 
-	handleFileUploads: function(evt) {
-		// Go over all of the files
-		// Upload to s3
-		// Get URLs from s3 and add into fileObject
-		// Chunk them into type
-		// create fileObjects
-		// When they're all done, bundle them into a version (replacing similar named files)
-		// Create version
+	toggleShowAllDiscussions: function() {
+		this.setState({ showAllDiscussions: !this.state.showAllDiscussions });
+	},
+	// toggleShowClosedDiscussions: function() {
+	// 	this.setState({ showClosedDiscussions: !this.state.showClosedDiscussions });
+	// },	
 
-		const files = [];
-		for (let index = 0; index < evt.target.files.length; index++) {
-			files.push(evt.target.files[index]);
-		}
-		const startingFileIndex = this.state.uploadRates.length;
-		const newUploadRates = files.map((file)=> {
+	getCurrentVersion: function(versions) {
+		const query = this.props.location.query;
+		return versions.sort((foo, bar)=> {
+			// Sort so that most recent is first in array
+			if (foo.createdAt > bar.createdAt) { return -1; }
+			if (foo.createdAt < bar.createdAt) { return 1; }
 			return 0;
-		});
-		const newUploadFileNames = files.map((file)=> {
-			return file.name;
-		});
+		}).reduce((previous, current, index, array)=> {
+			const previousDate = new Date(previous.createdAt).getTime();
+			const currentDate = new Date(current.createdAt).getTime();
 
-		const uploadRates = [...this.state.uploadRates, ...newUploadRates];
-		const uploadFileNames = [...this.state.uploadFileNames, ...newUploadFileNames];
-		const uploadFiles = [...this.state.uploadFiles, ...files];
-
-		files.map((file, index)=> {
-			s3Upload(file, this.onFileProgress, this.onFileFinish, startingFileIndex + index);
-		});
-
-		this.setState({
-			uploadRates: uploadRates,
-			uploadFileNames: uploadFileNames,
-			uploadFiles: uploadFiles,
-			uploading: true,
-			uploadingFinished: false,
-		});
-	},
-
-	// Update state's progress value when new events received.
-	onFileProgress: function(evt, index) {
-		const percentage = evt.loaded / evt.total;
-		const tempUploadRates = this.state.uploadRates;
-		tempUploadRates[index] = percentage;
-		this.setState({ uploadRates: tempUploadRates });
-	},
-
-	onFileFinish: function(evt, index, type, filename, title) {
-		// Build file item, add it to some state
-		// check if all are done. if all are done. Do a thing.
-		// Once all created, and version has been created and updated on client, set uploading to false
-		// console.log('File Finish!', filename, type, title, index);
-
-		const newUploadedFileObject = {
-			url: 'https://assets.pubpub.org/' + filename,
-			type: type,
-			name: title,
-		};
-		const newUploadedFileObjects = [...this.state.uploadedFileObjects, newUploadedFileObject];
-
-		const finished = this.state.uploadRates.reduce((previous, current)=> {
-			if (current !== 1) { return false; }
+			if (!previous.id) { return current; } // If this is the first loop
+			if (query.version === current.hash) { return current; } // If the query version matches current
+			if (!query.version && currentDate > previousDate) { return current; }
 			return previous;
-		}, true);
 
-		// Let the uploading animation finish
+		}, {});
+	},
+
+	onEditChange: function(newVal) {
+		if (!this.state.editorMode) { return false; }
+		const currentFile = this.props.params.filename;
+		const newEditorFiles = { ...this.state.editorFiles };
+		// newEditorFiles[currentFile] = {
+		// 	...newEditorFiles[currentFile],
+		// 	newMarkdown: this.state.editorMode === 'markdown' ? newVal : undefined,
+		// 	newJSON: this.state.editorMode === 'rich' ? newVal : undefined,
+		// };
+		newEditorFiles[currentFile].newMarkdown = this.state.editorMode === 'markdown' ? newVal : undefined;
+		newEditorFiles[currentFile].newJSON = this.state.editorMode === 'rich' ? newVal : undefined;
+		window.unsavedEdits = true;
+		return this.setState({ editorFiles: newEditorFiles });
+		
+	},
+	onNameChange: function(evt) {
+		if (!this.state.editorMode) { return false; }
+		const currentFile = this.props.params.filename;
+		const newEditorFiles = { ...this.state.editorFiles };
+		newEditorFiles[currentFile].newName = evt.target.value;
+		window.unsavedEdits = true;
+		return this.setState({ editorFiles: newEditorFiles });
+	},
+
+	onFileAdd: function(file) {
+		const editMode = Object.keys(this.state.editorFiles).length > 0;
+		// if (!editMode) { this.enterEditMode(); }
+		const newState = !editMode ? this.enterEditModeObject() : this.state;
+
+		const newEditorFiles = { ...newState.editorFiles };
+		newEditorFiles[file.name] = file;
+		window.unsavedEdits = true;
 		this.setState({
-			uploadedFileObjects: newUploadedFileObjects,
-			uploadingFinished: finished,
+			...newState,
+			editorFiles: newEditorFiles 
 		});
 	},
 
-	versionMessageChange: function(evt) {
-		this.setState({ newVersionMessage: evt.target.value });
+	onFileCreate: function() {
+		const editMode = Object.keys(this.state.editorFiles).length > 0;
+		// if (!editMode) { this.enterEditMode(); }
+		const newState = !editMode ? this.enterEditModeObject() : this.state;
+
+		const date = new Date();
+		const hours = ('0' + date.getHours()).slice(-2);
+		const minutes = ('0' + date.getMinutes()).slice(-2);
+		const seconds = ('0' + date.getSeconds()).slice(-2);
+		const file = {
+			url: '/temp.md',
+			type: 'text/markdown',
+			name: `New File ${hours}:${minutes}:${seconds}`,
+			isNew: true,
+			content: '',
+		};
+
+		const newEditorFiles = { ...newState.editorFiles };
+		newEditorFiles[file.name] = file;
+		window.unsavedEdits = true;
+		// this.setState({ editorFiles: newEditorFiles });
+		this.setState({
+			...newState,
+			editorFiles: newEditorFiles 
+		});
+		browserHistory.push({
+			pathname: `/pub/${this.props.pubData.pub.slug}/files/${file.name}/edit`,
+		});
 	},
-	postNewVersion: function(evt) {
+
+	onVersionMessageChange: function(evt) {
+		this.setState({
+			editorVersionMessage: evt.target.value,
+			editorVersionMessageUserChanged: true,
+		});
+	},
+
+	onVersionPrivacyChange: function(isRestricted, isPublished) {
+		this.setState({
+			editorIsPublished: isPublished,
+			editorIsRestricted: isRestricted,
+		});
+	},
+
+	// TODO: discard changes when viewing new file keeps filename in URL and causes bad render state
+	// TODO: Need to block empty md files from being saved
+	// TODO: Need to file filenames on edit (append md when necessary) - perhaps on save version
+	// TODO: Without any unsavedChanges, will remain in editor mode on Content root, even though it should not remain in editor)
+
+	onFileDelete: function() {
+		if (!this.state.editorMode) { return false; }
+		const currentFile = this.props.params.filename;
+		const newEditorFiles = { ...this.state.editorFiles };
+		newEditorFiles[currentFile].isDeleted = true;
+		window.unsavedEdits = true;
+		this.setState({ editorFiles: newEditorFiles });
+		return browserHistory.push({
+			pathname: `/pub/${this.props.pubData.pub.slug}/files`,
+		});
+	},
+	onSaveVersion: function(evt) {
 		evt.preventDefault();
-		if (!this.state.newVersionMessage) {
-			return this.setState({ newVersionError: 'Version message required' });
+		if (!this.state.editorVersionMessage) {
+			return this.setState({ editorError: 'Version message required' });
 		}
-		if (!this.state.uploadingFinished) { return false; }
-		const pubId = this.props.pub.id;
-		const newUploadedFileObjects = this.state.uploadedFileObjects;
+		
+		const pubId = this.props.pubData.pub.id;
+		const version = this.getCurrentVersion(this.props.pubData.pub.versions);
+		// TODO: Remove duplicates if uploaded files with identical names
+		
+		const newVersionFiles = Object.keys(this.state.editorFiles).map((key)=> {
+			const newFile = { ...this.state.editorFiles[key] };
+			newFile.name = newFile.newName || newFile.name;
+			if (this.state.editorMode === 'markdown') {
+				newFile.content = newFile.newMarkdown || newFile.content;
+			}
+			// if (this.stae.editorMode === 'rich') {
+			// 	newFile.content = parseMarkdown(newFile.newJSON) || newFile.content;	
+			// }
+			if (newFile.newName || newFile.newMarkdown || newFile.newJSON) {
+				// If there are updates to the file, it's a new file, so remove its id.
+				newFile.url = '/temp.md';
+				delete newFile.id;
+			}
+			return newFile;
+		}).filter((file)=> {
+			return !file.isDeleted;
+		}); 
 
-		const version = this.props.version || {};
-		const files = version.files || [];
-
-		const fileNames = {};
-		const mergedFiles = [...newUploadedFileObjects, ...files];
-		const newVersionFiles = mergedFiles.map((file)=> {
-			fileNames[file.name] = false;
-			return file;
-		}).filter((item)=> {
-			if (fileNames[item.name]) { return false; }
-
-			fileNames[item.name] = true;
-			return true;
+		const defaultFile = this.state.editorFiles[this.state.editorDefaultFile].newName || this.state.editorFiles[this.state.editorDefaultFile].name;
+		this.setState({ editorError: '' });
+		return this.props.dispatch(postVersion(pubId, this.state.editorVersionMessage, this.state.editorIsPublished, this.state.editorIsRestricted, newVersionFiles, defaultFile));
+	},
+	onDiscardChanges: function() {
+		window.unsavedEdits = false;
+		const currentEditorFile = this.state.editorFiles[this.props.params.filename] || {};
+		const nextName = currentEditorFile.name;
+		this.setState({
+			editorMode: undefined,
+			editorFiles: {},
+			editorVersionMessage: '',
+			editorVersionMessageUserChanged: false,
+			editorIsPublished: undefined,
+			editorIsRestricted: undefined,
+			editorDefaultFile: undefined,
 		});
-
-		this.setState({ newVersionError: '' });
-		return this.props.dispatch(postVersion(pubId, this.state.newVersionMessage, false, newVersionFiles, version.defaultFile));
+		browserHistory.push({
+			pathname: `/pub/${this.props.pubData.pub.slug}/files/${nextName || ''}`,
+		});
 	},
 
-	defaultFileChange: function(filename) {
-		this.props.dispatch(putDefaultFile(this.props.pub.id, this.props.version.id, filename));
-	},
-
-	openEditor: function() {
-		const { userAccessToken, userName } = this.props;
-		const slug = this.props.pub.slug;
-		const url = `${PUBPUB_EDITOR_URL}/user/access/${slug}/${userName}/${userAccessToken}`;
-		window.location.href = url;
+	updateEditorDefaultFile: function(filename) {
+		this.setState({ editorDefaultFile: filename });
 	},
 
 	render() {
-		// Default view, no files, no nothing
-		// Default doc view
-		// Default files list
-		// Default files list, uploading
-		// Specific file view
+		const pub = this.props.pubData.pub || {};
+		if (this.props.pubData.loading && !this.props.pubData.error) {
+			return <div style={{ margin: '5em auto', width: '50px' }}><Spinner /></div>;
+		}
+		if (!this.props.pubData.loading && (this.props.pubData.error || !pub.title)) {
+			return (
+				<div style={{ margin: '2em' }}>
+					<NonIdealState
+						title={this.props.pubData.error === 'Pub Deleted' ? 'Pub Deleted' : 'Pub Not Found'}
+						visual={this.props.pubData.error === 'Pub Deleted' ? 'delete' : 'error'} />
+				</div>
+			);
+		}
 
-		const version = this.props.version || {};
-		const files = version.files || [];
+		const meta = !this.props.params.meta ? 'files' : this.props.params.meta;
+		const mode = this.props.params.mode;
+		const query = this.props.location.query;
+		
+		const pathname = this.props.location.pathname;
 
-		const isLoading = this.props.isLoading;
-		const query = this.props.query || {};
-		const params = this.props.params || {};
-		const meta = params.meta;
-		const routeFilename = params.filename;
+		const accountData = this.props.accountData || {};
+		const accountUser = accountData.user || {};
+		const accountId = accountUser.id;
 
-		const mainFile = files.reduce((previous, current)=> {
-			if (version.defaultFile === current.name) { return current; }
-			if (!version.defaultFile && current.name.split('.')[0] === 'main') { return current; }
+		const panel = query.panel;
+		const queryDiscussion = query.discussion;
+		const discussions = pub.discussions || [];
+		
+		const versions = pub.versions || [];
+		const currentVersion = this.getCurrentVersion(versions);
+
+
+		// Populate parent discussions with their children
+		const tempArray = [...discussions];
+		tempArray.forEach((discussion)=> {
+			discussion.children = tempArray.filter((child)=> {
+				return (child.replyParentPubId === discussion.id);
+			});
+			return discussion;
+		});
+
+
+		const discussionsData = discussions.filter((discussion)=> {
+			return discussion.replyParentPubId === pub.id;
+		}).sort((foo, bar)=> {
+			if (foo.createdAt > bar.createdAt) { return 1; }
+			if (foo.createdAt < bar.createdAt) { return -1; }
+			return 0;
+		});
+
+		const activeDiscussion = discussionsData.reduce((previous, current)=> {
+			if (queryDiscussion === String(current.threadNumber)) { return current; }
 			return previous;
-		}, files[0]);
-
-		const routeFile = files.reduce((previous, current)=> {
-			if (current.name === routeFilename) { return current; }
-			return previous;
-		}, undefined);
+		}, {});
+	
 
 		return (
-			<div style={styles.container}>
+			<StickyContainer>
+				<PubBreadcrumbs
+					pub={pub}
+					editorFiles={this.state.editorFiles}
+					editorVersionMessage={this.state.editorVersionMessage}
+					editorIsPublished={this.state.editorIsPublished}
+					editorIsRestricted={this.state.editorIsRestricted}
+					onNameChange={this.onNameChange}
+					onVersionMessageChange={this.onVersionMessageChange}
+					onSaveVersion={this.onSaveVersion}
+					onVersionPrivacyChange={this.onVersionPrivacyChange}
+					onDiscardChanges={this.onDiscardChanges}
+					version={currentVersion}
+					params={this.props.params}
+					isLoading={this.props.pubData.versionsLoading}
+					error={this.props.pubData.versionsError}
+					query={query} />
 
-				{/* No files associated with Pub yet*/}
-				{!files.length && !this.state.uploading && this.props.pub.canEdit &&
-					<div style={{ paddingTop: '2em' }}>
-						<NonIdealState
-							action={
-								<div style={{ textAlign: 'center' }}>
-									<label className="pt-button" htmlFor={'add-files'}>
-										Upload Files
-										<input type="file" id={'add-files'} multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
-									</label>
+				<div id={'content-wrapper'} style={{ position: 'relative', width: '100%' }}>
 
-									<button className={'pt-button'} onClick={this.openEditor} style={{ marginLeft: '1em' }}>
-										Open Editor
-										<span className={'pt-icon-standard pt-align-right'} />
-									</button>
+					<div style={currentVersion.files && mode !== 'edit' && (this.props.params.meta !== 'files' || this.props.params.filename) ? styles.left : {}}>
+						<PubContentFiles
+							version={currentVersion}
+							pub={pub}
+							editorFiles={this.state.editorFiles}
+							editorDefaultFile={this.state.editorDefaultFile}
+							onEditChange={this.onEditChange}
+							onFileDelete={this.onFileDelete}
+							onFileAdd={this.onFileAdd}
+							onFileCreate={this.onFileCreate}
+							updateEditorDefaultFile={this.updateEditorDefaultFile}
+							params={this.props.params}
+							query={query}
+							isLoading={this.props.pubData.versionsLoading}
+							error={this.props.pubData.versionsError}
+							dispatch={this.props.dispatch} />
 
-									<div>
-										<Link to={'/pub/markdown'} style={{ marginRight: '0.5em' }}>How to write with PubPub Markdown</Link>
-									</div>
-
-									{/*<span style={{ width: '1em', height: '1em', display: 'inline-block' }} />
-									<a className="pt-button" tabIndex="0" role="button" >Open Editor</a>*/}
-
-
+						<PubHighlights discussions={discussions} location={this.props.location} />
+					</div>
+					{currentVersion.files && mode !== 'edit' && (this.props.params.meta !== 'files' || this.props.params.filename) &&
+						<div style={styles.rightPanel}>
+							<PubSidePanel parentId={'content-wrapper'}>
+								<div style={styles.discussionListVisible(!panel && !queryDiscussion)}>
+									<PubDiscussionsList
+										discussionsData={discussionsData}
+										highlightData={this.props.highlightData}
+										pub={pub}
+										showAllDiscussions={this.state.showAllDiscussions}
+										toggleShowAllDiscussions={this.toggleShowAllDiscussions}
+										// showClosedDiscussions={this.state.showClosedDiscussions}
+										// toggleShowClosedDiscussions={this.toggleShowClosedDiscussions}
+										pathname={pathname}
+										isVisible={!panel && !queryDiscussion}
+										query={query}
+										dispatch={this.props.dispatch} />
 								</div>
-							}
-							description={'There are no files associated with this pub yet.'}
-							title={'No Files'}
-							visual={'folder-open'} />
-					</div>
-				}
+								{panel === 'new' &&
+									<PubDiscussionsNew
+										discussionsData={discussionsData}
+										highlightData={this.props.highlightData}
+										pub={pub}
+										goBack={this.goBack}
+										accountId={accountId}
+										isLoading={this.props.pubData.discussionsLoading}
+										error={this.props.pubData.discussionsError}
+										pathname={pathname}
+										query={query}
+										dispatch={this.props.dispatch} />
+								}
+								{!!queryDiscussion &&
+									<PubDiscussion
+										discussion={activeDiscussion}
+										highlightData={this.props.highlightData}
+										pub={pub}
+										goBack={this.goBack}
+										accountId={accountId}
+										isLoading={this.props.pubData.discussionsLoading}
+										error={this.props.pubData.discussionsError}
+										pathname={pathname}
+										query={query}
+										dispatch={this.props.dispatch} />
+								}
 
-				{/* Upload and Editor Buttons */}
-				{/* Only shown on main Files list view, when not uploading */}
-				{meta === 'files' && !!files.length && !this.state.uploading && !routeFilename && this.props.pub.canEdit &&
-					<div style={styles.topButtons}>
-						<Link to={'/pub/markdown'} style={{ marginRight: '0.5em' }}>Rendering with PubPub Markdown</Link>
-						<label className="pt-button" htmlFor={'upload'}>
-							Upload Files
-							<input id={'upload'} type="file" multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
-						</label>
+							</PubSidePanel>
+						</div>
+					}
 
-						<button className={'pt-button'} onClick={this.openEditor} style={{ marginLeft: '1em' }}>
-							Open Editor
-							<span className={'pt-icon-standard pt-align-right'} />
-						</button>
-					</div>
-				}
+				</div>
+			</StickyContainer>
 
-				{/* Uploading Section */}
-				{this.state.uploading &&
-					<div style={styles.uploadingSection} className={'pt-card pt-elevation-2'}>
-						{!!isLoading &&
-							<div style={styles.newVersionLoading}>
-								<Spinner className={'pt-small'} />
-							</div>
-						}
-
-						{!isLoading &&
-							<div style={styles.topRightButton}>
-								<label className="pt-button pt-minimal" htmlFor={'add-more-files'}>
-									Add more files
-									<input id={'add-more-files'} type="file" multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
-								</label>
-							</div>
-						}
-
-						<h3>Uploading</h3>
-
-						<form onSubmit={this.postNewVersion}>
-							<div style={styles.uploadingFormTable}>
-								<label htmlFor={'versionMessage'} style={styles.uploadingMessage}>
-									Version Message
-									<input style={styles.uploadingInput} className={'pt-input'} id={'versionMessage'} name={'versionMessage'} type="text" placeholder={'Describe this version'} value={this.state.newVersionMessage} onChange={this.versionMessageChange} />
-								</label>
-								<div style={styles.uploadingSubmit}>
-									<button className={this.state.uploadingFinished ? 'pt-button pt-intent-primary' : 'pt-button pt-intent-primary pt-disabled'} onClick={this.postNewVersion}>
-										{this.state.uploadingFinished
-											? 'Save New Version'
-											: 'Uploading'
-										}
-									</button>
-								</div>
-
-							</div>
-							{this.state.newVersionError &&
-								<div style={styles.errorMessage}>{this.state.newVersionError}</div>
-							}
-						</form>
-
-						{this.state.uploadFileNames.map((uploadFile, index)=> {
-							return (
-								<div key={'uploadFile-' + index} style={styles.uploadBar}>
-									{uploadFile}
-									<ProgressBar value={this.state.uploadRates[index]} className={this.state.uploadRates[index] === 1 ? 'pt-no-stripes pt-intent-success' : 'pt-no-stripes'} />
-								</div>
-							);
-						})}
-
-					</div>
-				}
-
-				{/* File List */}
-				{meta === 'files' && !routeFile &&
-					<div>
-
-						<table className="pt-table pt-condensed pt-striped" style={{ width: '100%' }}>
-							<thead>
-								<tr>
-									<th>Name</th>
-									<th>Updated</th>
-									<th />
-									<th />
-								</tr>
-							</thead>
-							<tbody>
-								{files.sort((foo, bar)=> {
-									if (foo.name > bar.name) { return 1; }
-									if (foo.name < bar.name) { return -1; }
-									return 0;
-								}).map((file, index)=> {
-									return (
-										<tr key={'file-' + index}>
-											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={{ pathname: '/pub/' + this.props.pub.slug + '/files/' + file.name, query: query }}>{file.name}</Link></td>
-											<td style={styles.tableCell}>{dateFormat(file.createdAt, 'mmm dd, yyyy')}</td>
-											<td style={[styles.tableCell, styles.tableCellSmall]}>
-												<a href={file.url} target={'_blank'}>
-													<button type="button" className={'pt-button pt-minimal pt-icon-import'} />
-												</a>
-											</td>
-											<td style={[styles.tableCell, styles.tableCellSmall]}>
-												{file.name === mainFile.name &&
-													<button role="button" className={'pt-button pt-fill pt-active'}>Main File</button>
-												}
-												{file.name !== mainFile.name && this.props.pub.canEdit &&
-													<button role="button" className={'pt-button pt-fill'} onClick={this.defaultFileChange.bind(this, file.name)}>Set as main</button>
-												}
-
-											</td>
-										</tr>
-									);
-								})}
-							</tbody>
-						</table>
-					</div>
-				}
-
-				{/* Render specific File */}
-				{!!files.length && (meta !== 'files' || (meta !== 'files' && routeFile)) &&
-					<div style={styles.pubStyle} className={'pub-body'}>
-						<RenderFile file={routeFile || mainFile} allFiles={files} pubSlug={this.props.pub.slug} query={this.props.query}/>
-					</div>
-				}
-			</div>
 		);
-	},
-
+	}
 });
 
 export default Radium(PubContent);
 
 styles = {
-	container: {
-		// padding: '0em 1.25em 1.25em',
-		paddingTop: '10px',
-	},
-	topButtons: {
-		float: 'right',
-	},
-	uploadingSection: {
-		marginBottom: '2em',
-	},
-	topRightButton: {
-		float: 'right',
-	},
-	uploadingFormTable: {
-		display: 'table',
-		verticalAlign: 'middle',
-		width: '100%',
-	},
-	uploadingMessage: {
-		display: 'table-cell',
-		verticalAlign: 'middle',
-		width: '100%',
-	},
-	uploadingInput: {
-		width: '95%',
-		marginBottom: '1em',
-	},
-	uploadingSubmit: {
-		display: 'table-cell',
-		verticalAlign: 'middle',
-		whiteSpace: 'nowrap',
-	},
-	newVersionLoading: {
-		float: 'right',
-	},
-	inputButtonLabel: {
-		overflow: 'hidden',
-	},
-	inputButton: {
-		display: 'inline-block',
-		width: '100%',
-		margin: 0,
-	},
-	inputButtonText: {
-		cursor: 'pointer',
-		zIndex: 3,
+	left: {
 		position: 'relative',
+		marginRight: '35%',
+		paddingRight: '4em',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			marginRight: 0,
+			paddingRight: 0,
+		}
 	},
-	inputTest: {
-		margin: 0,
-		overflow: 'hidden',
+	rightPanel: {
+		position: 'absolute',
+		right: 0,
+		top: 0,
+		width: '35%',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		}
 	},
-	tableCell: {
-		verticalAlign: 'middle',
+	// right: {
+	// 	height: '100%',
+	// 	// maxHeight: '100vh',
+	// 	// backgroundColor: '#f3f3f4',
+	// 	width: '35%',
+	// 	position: 'absolute',
+	// 	right: 0,
+	// 	top: 0,
+	// 	zIndex: 10,
+	// 	// boxShadow: 'inset 0px 0px 1px #777',
+	// },
+	// rightSticky: {
+	// 	maxHeight: '100vh',
+	// 	overflow: 'hidden',
+	// 	overflowY: 'scroll',
+	// 	padding: '0.5em 1em 0.5em',
+	// },
+	
+	discussionListVisible: (isVisible)=> {
+		return {
+			display: isVisible ? 'block' : 'none',
+		};
 	},
-	tableCellSmall: {
-		width: '1%',
-		whiteSpace: 'nowrap',
-	},
-	tableCellRight: {
-		textAlign: 'right',
-	},
-	errorMessage: {
-		margin: '-1em 0px 1em',
-		color: globalStyles.errorRed,
-	},
-	pubStyle: {
-		maxWidth: '700px',
-	}
+
 };

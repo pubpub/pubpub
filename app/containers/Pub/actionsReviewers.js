@@ -12,6 +12,10 @@ export const PUT_REVIEWER_LOAD = 'pub/PUT_REVIEWER_LOAD';
 export const PUT_REVIEWER_SUCCESS = 'pub/PUT_REVIEWER_SUCCESS';
 export const PUT_REVIEWER_FAIL = 'pub/PUT_REVIEWER_FAIL';
 
+export const GET_USER_JOURNALS_LOAD = 'pub/GET_USER_JOURNALS_LOAD';
+export const GET_USER_JOURNALS_SUCCESS = 'pub/GET_USER_JOURNALS_SUCCESS';
+export const GET_USER_JOURNALS_FAIL = 'pub/GET_USER_JOURNALS_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -70,6 +74,19 @@ export function putReviewer(pubId, invitedReviewerId, invitationAccepted, invita
 		.catch((error) => {
 			console.log(error);
 			dispatch({ type: PUT_REVIEWER_FAIL, error });
+		});
+	};
+}
+
+export function getUserJournals(userId) {
+	return (dispatch) => {
+		dispatch({ type: GET_USER_JOURNALS_LOAD });
+		return clientFetch(`/api/user/journals?userId=${userId}`)
+		.then((result) => {
+			dispatch({ type: GET_USER_JOURNALS_SUCCESS, result });
+		})
+		.catch((error) => {
+			dispatch({ type: GET_USER_JOURNALS_FAIL, error });
 		});
 	};
 }

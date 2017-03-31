@@ -41,7 +41,7 @@ export function createHighlight(highlightObject) {
 			})
 		})
 		.then((result) => {
-			dispatch({ type: CREATE_HIGHLIGHT_SUCCESS });
+			dispatch({ type: CREATE_HIGHLIGHT_SUCCESS, result });
 		})
 		.catch((error) => {
 			console.log(error);
