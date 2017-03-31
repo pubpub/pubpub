@@ -115,5 +115,11 @@ module.exports = {
 	resolve: {
 		modules: [path.resolve('app'), 'node_modules'],
 		extensions: ['.json', '.js', '.jsx'],
+	},
+	node: {
+		net: 'empty',
+		tls: 'empty',
+		dns: 'empty',
+		fs: 'empty',
 	}
 };

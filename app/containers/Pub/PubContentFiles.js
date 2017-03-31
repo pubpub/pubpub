@@ -6,7 +6,9 @@ import { Link } from 'react-router';
 // import { PUBPUB_EDITOR_URL } from 'configURLs';
 import Radium from 'radium';
 import RenderFile from 'components/RenderFile/RenderFile';
-import MarkdownEditor from 'components/MarkdownEditor/MarkdownEditor';
+// import MarkdownEditor from 'components/MarkdownEditor/MarkdownEditor';
+import { FullEditor, jsonToMarkdown, markdownToJSON } from '@pubpub/prose';
+
 import dateFormat from 'dateformat';
 import { globalStyles } from 'utils/globalStyles';
 // import { postVersion } from './actionsVersions';
@@ -43,7 +45,44 @@ export const PubContentFiles = React.createClass({
 			uploadedFileObjects: [],
 			newVersionMessage: '',
 			newVersionError: '',
+
+			mode: 'markdown',
+			initialContent: undefined,
+			content: undefined,
 		};
+	},
+
+	componentWillMount() {
+		const editMode = Object.keys(this.props.editorFiles).length > 0;
+		const version = this.props.version || {};
+		const files = editMode 
+			? Object.keys(this.props.editorFiles).map((key)=> {
+				return this.props.editorFiles[key];
+			})
+			: version.files || [];
+
+		const params = this.props.params || {};
+		const meta = params.meta;
+		const routeFilename = params.filename;
+
+		const defaultFile = editMode ? this.props.editorDefaultFile : version.defaultFile;
+		const mainFile = files.reduce((previous, current)=> {
+			if (defaultFile === current.name) { return current; }
+			if (!defaultFile && current.name.split('.')[0] === 'main') { return current; }
+			return previous;
+		}, files[0]);
+
+		const routeFile = files.reduce((previous, current)=> {
+			if (current.name === routeFilename) { return current; }
+			return previous;
+		}, undefined);
+
+		const currentFile = meta === 'files' ? routeFile : mainFile;
+
+		this.setState({
+			initialContent: currentFile.content,
+			content: currentFile.content,
+		});
 	},
 
 	componentWillReceiveProps(nextProps) {
@@ -53,6 +92,34 @@ export const PubContentFiles = React.createClass({
 		const nextError = nextProps.error;
 
 		if (oldLoading && !nextLoading && !nextError) {
+
+			const editMode = Object.keys(this.props.editorFiles).length > 0;
+			const version = this.props.version || {};
+			const files = editMode 
+				? Object.keys(this.props.editorFiles).map((key)=> {
+					return this.props.editorFiles[key];
+				})
+				: version.files || [];
+
+			const params = this.props.params || {};
+			const meta = params.meta;
+			const routeFilename = params.filename;
+
+			const defaultFile = editMode ? this.props.editorDefaultFile : version.defaultFile;
+			const mainFile = files.reduce((previous, current)=> {
+				if (defaultFile === current.name) { return current; }
+				if (!defaultFile && current.name.split('.')[0] === 'main') { return current; }
+				return previous;
+			}, files[0]);
+
+			const routeFile = files.reduce((previous, current)=> {
+				if (current.name === routeFilename) { return current; }
+				return previous;
+			}, undefined);
+
+			const currentFile = meta === 'files' ? routeFile : mainFile;
+
+
 			this.setState({
 				uploadRates: [],
 				uploadFileNames: [],
@@ -61,8 +128,30 @@ export const PubContentFiles = React.createClass({
 				uploadingFinished: false,
 				uploadedFileObjects: [],
 				newVersionMessage: '',
+
+				initialContent: currentFile.content,
+				content: currentFile.content,
 			});
 		}
+	},
+
+
+	setMode: function(mode) {
+		if (mode === 'markdown') {
+			const newMarkdown = this.state.content ? jsonToMarkdown(this.state.content) : '';
+			return this.setState({
+				mode: 'markdown',
+				initialContent: newMarkdown,
+				content: newMarkdown,
+			});
+		}
+
+		const newJSON = markdownToJSON(this.state.content || '');
+		return this.setState({
+			mode: 'rich',
+			initialContent: newJSON,
+			content: newJSON,
+		});
 	},
 
 	handleFileUploads: function(evt) {
@@ -110,6 +199,7 @@ export const PubContentFiles = React.createClass({
 		tempUploadRates[index] = percentage;
 		this.setState({ uploadRates: tempUploadRates });
 	},
+
 
 	onFileFinish: function(evt, index, type, filename, title) {
 		// Build file item, add it to some state
@@ -428,13 +518,19 @@ export const PubContentFiles = React.createClass({
 					<div className={'pt-card pt-elevation-3'} style={{ padding: '0em', margin: '0em 0em 2em' }}>
 						<div style={{ backgroundColor: '#ebf1f5', padding: '0.5em', textAlign: 'right', borderBottom: '1px solid rgba(16, 22, 26, 0.15)' }}>
 							<div className={'pt-button-group'}>
-								<div className={'pt-button'}>Markdown</div>
-								<div className={'pt-button'}>Rich</div>
+								<div className={`pt-button${this.state.mode === 'markdown' ? ' pt-active' : ''}`} onClick={this.setMode.bind(this, 'markdown')}>Markdown</div>
+								<div className={`pt-button${this.state.mode === 'rich' ? ' pt-active' : ''}`} onClick={this.setMode.bind(this, 'rich')}>Rich</div>
 								<button className={'pt-button pt-icon-trash pt-minimal'} style={{ margin: '0em 1em' }} onClick={this.props.onFileDelete} />
 							</div>
 						</div>
-						{currentFile.type === 'text/markdown' &&
-							<MarkdownEditor initialContent={currentFile.content} onChange={this.props.onEditChange} />
+
+						{this.state.initialContent && // currentFile.type === 'text/markdown' &&
+							<FullEditor 
+								initialContent={this.state.initialContent} 
+								onChange={this.props.onEditChange} 
+								globalCategories={['pubs', 'users']}
+								mode={this.state.mode} />
+							// <MarkdownEditor initialContent={currentFile.content} onChange={this.props.onEditChange} />
 						}
 						{currentFile.type !== 'text/markdown' &&
 							<RenderFile file={currentFile} allFiles={files} pubSlug={this.props.pub.slug} query={this.props.query} />
