@@ -117,24 +117,16 @@ export const PubContent = React.createClass({
 		const currentVersion = this.getCurrentVersion(versions);
 		const files = currentVersion.files || [];
 		const currentFileName = this.props.params.filename;
+		const defaultMode = 'markdown';
 
 		return {
-			// editorMode: 'markdown',
-			// editorIsPublished: currentVersion.isPublished,
-			// editorIsRestricted: currentVersion.isRestricted,
-			// editorDefaultFile: currentVersion.defaultFile,
-			// editorFiles: files.reduce((previous, current)=> {
-			// 	previous[current.name] = { ...current };
-			// 	return previous;
-			// }, {}),
-
-			editorMode: 'rich',
+			editorMode: defaultMode,
 			editorIsPublished: currentVersion.isPublished,
 			editorIsRestricted: currentVersion.isRestricted,
 			editorDefaultFile: currentVersion.defaultFile,
 			editorFiles: files.reduce((previous, current)=> {
 				previous[current.name] = { ...current };
-				if (currentFileName === current.name) {
+				if (defaultMode === 'rich' && currentFileName === current.name) {
 					const newJSON = markdownToJSON(current.content);
 					previous[current.name].newJSON = newJSON;
 					previous[current.name].initialContent = newJSON;
@@ -142,6 +134,7 @@ export const PubContent = React.createClass({
 				return previous;
 			}, {}),
 		};
+
 	},
 
 	goBack: function() {
