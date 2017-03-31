@@ -7,7 +7,7 @@ import { Link } from 'react-router';
 import Radium from 'radium';
 import RenderFile from 'components/RenderFile/RenderFile';
 // import MarkdownEditor from 'components/MarkdownEditor/MarkdownEditor';
-import { FullEditor } from '@pubpub/prose';
+import { FullEditor, bibtexToCSL } from '@pubpub/prose';
 
 import dateFormat from 'dateformat';
 import { globalStyles } from 'utils/globalStyles';
@@ -325,6 +325,14 @@ export const PubContentFiles = React.createClass({
 			})
 			: version.files || [];
 
+		const bibtexFile = files.reduce((previous, current)=> {
+			if (current.name === 'references.bib') { return current; }
+			return previous;
+		}, undefined);
+
+		const localReferences = bibtexFile ? bibtexToCSL(bibtexFile.content) : [];
+		console.log(localReferences);
+
 		const isLoading = this.props.isLoading;
 		const query = this.props.query || {};
 		const params = this.props.params || {};
@@ -541,6 +549,7 @@ export const PubContentFiles = React.createClass({
 									initialContent={currentFile.initialContent || currentFile.content} 
 									onChange={this.props.onEditChange} 
 									localFiles={files}
+									localReferences={localReferences}
 									globalCategories={['pubs', 'users']}
 									mode={this.props.editorMode} />
 								{/*<MarkdownEditor initialContent={currentFile.content} onChange={this.props.onEditChange} />*/}
