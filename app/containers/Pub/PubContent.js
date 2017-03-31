@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { browserHistory } from 'react-router';
 import { NonIdealState, Spinner } from '@blueprintjs/core';
+import { jsonToMarkdown, markdownToJSON } from '@pubpub/prose';
 import { StickyContainer } from 'react-sticky';
 import PubBreadcrumbs from './PubBreadcrumbs';
 import PubContentFiles from './PubContentFiles';
@@ -11,6 +12,7 @@ import PubDiscussionsNew from './PubDiscussionsNew';
 import PubSidePanel from './PubSidePanel';
 import PubHighlights from './PubHighlights';
 import { postVersion } from './actionsVersions';
+
 
 let styles;
 
@@ -41,7 +43,7 @@ export const PubContent = React.createClass({
 
 	componentWillMount() {
 		if (this.props.pubData.pub.id && this.props.params.mode === 'edit') {
-			this.setState(this.enterEditModeObject)
+			this.setState(this.enterEditModeObject);
 		}
 	},
 
@@ -69,7 +71,6 @@ export const PubContent = React.createClass({
 			const currentEditorFile = this.state.editorFiles[this.props.params.filename];
 			const nextName = currentEditorFile && (currentEditorFile.newName || currentEditorFile.name);
 			this.setState({
-				editorMode: undefined,
 				editorFiles: {},
 				editorVersionMessage: '',
 				editorVersionMessageUserChanged: false,
@@ -92,13 +93,29 @@ export const PubContent = React.createClass({
 		const versions = this.props.pubData.pub.versions || [];
 		const currentVersion = this.getCurrentVersion(versions);
 		const files = currentVersion.files || [];
+		const currentFileName = this.props.params.filename;
+
 		return {
-			editorMode: 'markdown',
+			// editorMode: 'markdown',
+			// editorIsPublished: currentVersion.isPublished,
+			// editorIsRestricted: currentVersion.isRestricted,
+			// editorDefaultFile: currentVersion.defaultFile,
+			// editorFiles: files.reduce((previous, current)=> {
+			// 	previous[current.name] = { ...current };
+			// 	return previous;
+			// }, {}),
+
+			editorMode: 'rich',
 			editorIsPublished: currentVersion.isPublished,
 			editorIsRestricted: currentVersion.isRestricted,
 			editorDefaultFile: currentVersion.defaultFile,
 			editorFiles: files.reduce((previous, current)=> {
 				previous[current.name] = { ...current };
+				if (currentFileName === current.name) {
+					const newJSON = markdownToJSON(current.content);
+					previous[current.name].newJSON = newJSON;
+					previous[current.name].initialContent = newJSON;
+				}
 				return previous;
 			}, {}),
 		};
@@ -149,6 +166,7 @@ export const PubContent = React.createClass({
 	onEditChange: function(newVal) {
 		if (!this.state.editorMode) { return false; }
 		const currentFile = this.props.params.filename;
+		if (!currentFile) { return false; }
 		const newEditorFiles = { ...this.state.editorFiles };
 		// newEditorFiles[currentFile] = {
 		// 	...newEditorFiles[currentFile],
@@ -161,6 +179,30 @@ export const PubContent = React.createClass({
 		return this.setState({ editorFiles: newEditorFiles });
 		
 	},
+
+	onEditorModeChange: function(newMode) {
+		if (!this.state.editorMode) { return false; }
+		const currentFile = this.props.params.filename;
+		const newEditorFiles = { ...this.state.editorFiles };
+
+		if (newMode === 'markdown') {
+			const newMarkdown = jsonToMarkdown(newEditorFiles[currentFile].newJSON);
+			newEditorFiles[currentFile].newMarkdown = newMarkdown;
+			newEditorFiles[currentFile].newJSON = undefined;
+			newEditorFiles[currentFile].initialContent = newMarkdown;
+		} else {
+			const newJSON = markdownToJSON(newEditorFiles[currentFile].newMarkdown || newEditorFiles[currentFile].content);
+			newEditorFiles[currentFile].newMarkdown = undefined;
+			newEditorFiles[currentFile].newJSON = newJSON;
+			newEditorFiles[currentFile].initialContent = newJSON;
+		}
+		return this.setState({ 
+			editorFiles: newEditorFiles,
+			editorMode: newMode,
+		});
+				
+	},
+
 	onNameChange: function(evt) {
 		if (!this.state.editorMode) { return false; }
 		const currentFile = this.props.params.filename;
@@ -196,7 +238,7 @@ export const PubContent = React.createClass({
 		const file = {
 			url: '/temp.md',
 			type: 'text/markdown',
-			name: `New File ${hours}:${minutes}:${seconds}`,
+			name: `NewFile-${hours}-${minutes}-${seconds}.md`,
 			isNew: true,
 			content: '',
 		};
@@ -260,9 +302,9 @@ export const PubContent = React.createClass({
 			if (this.state.editorMode === 'markdown') {
 				newFile.content = newFile.newMarkdown || newFile.content;
 			}
-			// if (this.stae.editorMode === 'rich') {
-			// 	newFile.content = parseMarkdown(newFile.newJSON) || newFile.content;	
-			// }
+			if (this.state.editorMode === 'rich') {
+				newFile.content = newFile.newJSON ? jsonToMarkdown(newFile.newJSON) : newFile.content;	
+			}
 			if (newFile.newName || newFile.newMarkdown || newFile.newJSON) {
 				// If there are updates to the file, it's a new file, so remove its id.
 				newFile.url = '/temp.md';
@@ -273,7 +315,10 @@ export const PubContent = React.createClass({
 			return !file.isDeleted;
 		}); 
 
-		const defaultFile = this.state.editorFiles[this.state.editorDefaultFile].newName || this.state.editorFiles[this.state.editorDefaultFile].name;
+		const newDefaultFile = this.state.editorFiles[this.state.editorDefaultFile] || {};
+		const oldDefaultFile = this.state.editorFiles[this.state.editorDefaultFile] || {};
+		const currentDefaultFile = this.state.editorFiles[Object.keys(this.state.editorFiles)[0]] || {};
+		const defaultFile = newDefaultFile.newName || newDefaultFile.name || oldDefaultFile.newName || oldDefaultFile.name || currentDefaultFile.newName || currentDefaultFile.name || 'main.md';
 		this.setState({ editorError: '' });
 		return this.props.dispatch(postVersion(pubId, this.state.editorVersionMessage, this.state.editorIsPublished, this.state.editorIsRestricted, newVersionFiles, defaultFile));
 	},
@@ -381,8 +426,10 @@ export const PubContent = React.createClass({
 						<PubContentFiles
 							version={currentVersion}
 							pub={pub}
+							editorMode={this.state.editorMode}
 							editorFiles={this.state.editorFiles}
 							editorDefaultFile={this.state.editorDefaultFile}
+							onEditorModeChange={this.onEditorModeChange}
 							onEditChange={this.onEditChange}
 							onFileDelete={this.onFileDelete}
 							onFileAdd={this.onFileAdd}
