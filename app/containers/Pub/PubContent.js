@@ -61,7 +61,30 @@ export const PubContent = React.createClass({
 
 		const editMode = Object.keys(this.state.editorFiles).length > 0;
 		if (!editMode && (!this.props.pubData.pub.id && nextPathname.pubData.pub.id && this.props.params.mode === 'edit' || !this.props.params.mode && nextProps.params.mode === 'edit')) {
-			this.setState(this.enterEditModeObject)
+			this.setState(this.enterEditModeObject);
+		}
+
+		if (editMode && this.props.params.filename !== nextProps.params.filename && nextProps.params.filename) {
+			const versions = nextProps.pubData.pub.versions || [];
+			const currentVersion = this.getCurrentVersion(versions);
+			// const files = currentVersion.files || [];
+			const currentFileName = nextProps.params.filename;
+
+			const newEditorFiles = { ...this.state.editorFiles };
+			// if (this.state.editorMode === 'markdown') {
+			// 	newEditorFiles[currentFileName].initialContent = newEditorFiles[currentFileName].newMarkdown || (newEditorFiles[currentFileName].newJSON && jsonToMarkdown(newEditorFiles[currentFileName].newJSON)) || newEditorFiles[currentFileName].content;
+			// }
+			// if (this.state.editorMode === 'rich') {
+			newEditorFiles[currentFileName].initialContent = newEditorFiles[currentFileName].newJSON || (newEditorFiles[currentFileName].newMarkdown && markdownToJSON(newEditorFiles[currentFileName].newMarkdown)) || markdownToJSON(newEditorFiles[currentFileName].content);
+			newEditorFiles[currentFileName].newJSON = newEditorFiles[currentFileName].newJSON || (newEditorFiles[currentFileName].newMarkdown && markdownToJSON(newEditorFiles[currentFileName].newMarkdown)) || markdownToJSON(newEditorFiles[currentFileName].content);
+			// }
+			
+
+			this.setState({
+				editorMode: 'rich',
+				editorFiles: newEditorFiles,
+			});
+
 		}
 
 		const currentPub = this.props.pubData.pub || {};
@@ -293,22 +316,29 @@ export const PubContent = React.createClass({
 		}
 		
 		const pubId = this.props.pubData.pub.id;
-		const version = this.getCurrentVersion(this.props.pubData.pub.versions);
+		// const version = this.getCurrentVersion(this.props.pubData.pub.versions);
 		// TODO: Remove duplicates if uploaded files with identical names
-		
 		const newVersionFiles = Object.keys(this.state.editorFiles).map((key)=> {
 			const newFile = { ...this.state.editorFiles[key] };
 			newFile.name = newFile.newName || newFile.name;
-			if (this.state.editorMode === 'markdown') {
-				newFile.content = newFile.newMarkdown || newFile.content;
+			// if (this.state.editorMode === 'markdown') {
+			if (newFile.newMarkdown) {
+				// newFile.content = newFile.newMarkdown || newFile.content;
+				newFile.content = newFile.newMarkdown;
 			}
-			if (this.state.editorMode === 'rich') {
-				newFile.content = newFile.newJSON ? jsonToMarkdown(newFile.newJSON) : newFile.content;	
+			// if (this.state.editorMode === 'rich') {
+			if (newFile.newJSON) {
+				// newFile.content = newFile.newJSON ? jsonToMarkdown(newFile.newJSON) : newFile.content;	
+				newFile.content = jsonToMarkdown(newFile.newJSON);
 			}
 			if (newFile.newName || newFile.newMarkdown || newFile.newJSON) {
 				// If there are updates to the file, it's a new file, so remove its id.
-				newFile.url = '/temp.md';
+				newFile.url = `/temp.md`;
 				delete newFile.id;
+				delete newFile.hash;
+				delete newFile.newJSON;
+				delete newFile.newMarkdown;
+				delete newFile.newName;
 			}
 			return newFile;
 		}).filter((file)=> {
