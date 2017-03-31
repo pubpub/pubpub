@@ -305,6 +305,12 @@ export const PubContentFiles = React.createClass({
 		this.props.onEditorModeChange(mode);
 	},
 
+	// objectToArray: function(object) {
+	// 	return Object.keys(object).map((item)=> {
+	// 		return object[item];
+	// 	});
+	// },
+
 	render() {
 		// Default view, no files, no nothing
 		// Default doc view
@@ -534,6 +540,7 @@ export const PubContentFiles = React.createClass({
 								<FullEditor 
 									initialContent={currentFile.initialContent || currentFile.content} 
 									onChange={this.props.onEditChange} 
+									localFiles={files}
 									globalCategories={['pubs', 'users']}
 									mode={this.props.editorMode} />
 								{/*<MarkdownEditor initialContent={currentFile.content} onChange={this.props.onEditChange} />*/}
