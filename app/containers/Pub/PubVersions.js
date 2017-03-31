@@ -67,7 +67,7 @@ export const PubVersions = React.createClass({
 		this.props.dispatch(putVersion(this.props.pub.id, this.state.confirmPublish, true));
 	},
 
-	toggleexportErrorAlert: function () {
+	toggleExportErrorAlert: function () {
 		this.setState({ exportErrorAlert: !this.state.exportErrorAlert });
 	},
 
@@ -222,7 +222,8 @@ export const PubVersions = React.createClass({
 				console.log('got url!', file.url);
 				request
 				.post(PUBPUB_CONVERSION_URL)
-				.send({ inputType: 'pub', outputType: outputType, inputUrl: file.url, metadata: metadata, template: selectedTemplate, options: { template: selectedTemplate} })
+				.send({ inputType: 'pub', outputType: outputType, inputUrl: file.url, metadata: metadata,
+					 options: { template: selectedTemplate} })
 				.set('Accept', 'application/json')
 				.end((err, res) => {
 					if (err || !res.ok) {
@@ -314,7 +315,6 @@ export const PubVersions = React.createClass({
 		const outputTypes = this.state.exportOutputTypes || [];
 
 
-		window.pdftexTemplates = pdftexTemplates;
 		const pubDOI = versions.reduce((previous, current)=> {
 			if (current.doi) { return current.doi; }
 			return previous;
@@ -323,7 +323,7 @@ export const PubVersions = React.createClass({
 		return (
 			<div style={styles.container}>
 				<h2>Versions</h2>
-					<Alert title="Error" isOpen={this.state.exportErrorAlert} cancelButtonText='Email Support' onCancel={this.prepareSupportEmail} confirmButtonText="Okay" onConfirm={this.toggleexportErrorAlert}>
+					<Alert title="Error" isOpen={this.state.exportErrorAlert} cancelButtonText='Email Support' onCancel={this.prepareSupportEmail} confirmButtonText="Okay" onConfirm={this.toggleExportErrorAlert}>
 						<div className="pt-dialog-body">
 							<p>There was an error producing a PDF.</p>
 							<p><b>Please contact support and let them know.</b></p>
