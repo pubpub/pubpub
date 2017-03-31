@@ -160,7 +160,7 @@ export const PubVersions = React.createClass({
 		const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === 'www.funky.com' || window.location.hostname === 'www.funkynocors.com';
 		const isRemoteDev = window.location.hostname === 'dev.pubpub.org' || window.location.hostname === 'test.epsx.org' || window.location.hostname === 'testnocors.epsx.org';
 		const isProd = !(isLocalDev || isRemoteDev);
-		const reqURL = (isProd) ? 'https://pubpub-converter-prod.herokuapp.com/templates/all' : 'https://pubpub-converter-dev.herokuapp.com/templates/all';
+		const reqURL = (isProd) ? 'https://pubpub-converter-prod.herokuapp.com/templates' : 'https://pubpub-converter-dev.herokuapp.com/templates';
 
 		const outputType = options.outputType;
 
@@ -286,7 +286,7 @@ export const PubVersions = React.createClass({
 		const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === 'www.funky.com' || window.location.hostname === 'www.funkynocors.com';
 		const isRemoteDev = window.location.hostname === 'dev.pubpub.org' || window.location.hostname === 'test.epsx.org' || window.location.hostname === 'testnocors.epsx.org';
 		const isProd = !(isLocalDev || isRemoteDev);
-		const reqURL = (isProd) ? 'https://pubpub-converter-prod.herokuapp.com/outputTypes/all' : 'https://pubpub-converter-dev.herokuapp.com/outputTypes/all';
+		const reqURL = (isProd) ? 'https://pubpub-converter-prod.herokuapp.com/outputTypes' : 'https://pubpub-converter-dev.herokuapp.com/outputTypes';
 
 		if (!this.state.exportOutputTypes) {
 			request
@@ -518,7 +518,7 @@ export const PubVersions = React.createClass({
 								{
 									downloadReady &&
 									<a href={downloadReadyUrl}>
-										<Button className={'pt-button p2-minimal'} onClick={this.clearDownloadUrl.bind(this, this.state.downloadReady.indexOf(version.hash))} text='Click Again' />
+										<Button className={'pt-button p2-minimal'} onClick={this.clearDownloadUrl.bind(this, this.state.downloadReady.indexOf(version.hash))} text='Click to Download' />
 									</a>
 								}
 
