@@ -327,12 +327,13 @@ export const PubContent = React.createClass({
 			}
 			if (newFile.newName || newFile.newMarkdown || newFile.newJSON) {
 				// If there are updates to the file, it's a new file, so remove its id.
-				newFile.url = `/temp.md`;
+				newFile.url = '/temp.md';
 				delete newFile.id;
 				delete newFile.hash;
 				delete newFile.newJSON;
 				delete newFile.newMarkdown;
 				delete newFile.newName;
+				delete newFile.initialContent;
 			}
 			return newFile;
 		}).filter((file)=> {
