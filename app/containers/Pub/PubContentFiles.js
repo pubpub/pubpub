@@ -164,6 +164,7 @@ export const PubContentFiles = React.createClass({
 		// When they're all done, bundle them into a version (replacing similar named files)
 		// Create version
 
+		console.log('in handle', evt);
 		const files = [];
 		for (let index = 0; index < evt.target.files.length; index++) {
 			files.push(evt.target.files[index]);
@@ -179,8 +180,9 @@ export const PubContentFiles = React.createClass({
 		const uploadRates = [...this.state.uploadRates, ...newUploadRates];
 		const uploadFileNames = [...this.state.uploadFileNames, ...newUploadFileNames];
 		const uploadFiles = [...this.state.uploadFiles, ...files];
-
+		console.log('in handle 2', files);
 		files.map((file, index)=> {
+			console.log('in handle 3', file);
 			s3Upload(file, this.onFileProgress, this.onFileFinish, startingFileIndex + index);
 		});
 
@@ -191,6 +193,27 @@ export const PubContentFiles = React.createClass({
 			uploading: true,
 			uploadingFinished: false,
 		});
+	},
+
+	handleFileSelect: function(file, callback) { // Used for rich editor
+		console.log('in select', file);
+		this.setState({ richUploadCallback: callback });
+		this.handleFileUploads({
+			target: {
+				files: [
+					file
+				]
+			}
+		});
+
+	},
+
+	handleReferenceAdd: function(referenceObject, callback) {
+		// const bibtexContent = this.props.editorFiles.bibtex.content || this.props.editorFiles.bibtex.newContent || ''
+		// const newBibtexConten = bibtexContent + turnObjectToString(referenceObject);
+		// const newBibtexFile = { ...bibtexFile, newContent: newBibtexContent, id: undefined, hash: undefined };
+		// this.setState({ editorFiles.bibtexFile = newBibtexFile })
+		// this.callback(refenceObject)
 	},
 
 	// Update state's progress value when new events received.
@@ -214,6 +237,7 @@ export const PubContentFiles = React.createClass({
 			name: title,
 			isNew: true,
 		};
+
 		if (type === 'text/markdown' || title.split('.').pop() === 'md') {
 			// If it's markdown, we have to pull out the content from the file so it is available to edit.
 			const reader = new FileReader();
@@ -232,6 +256,11 @@ export const PubContentFiles = React.createClass({
 					uploadingFinished: finished,
 				});
 				this.props.onFileAdd({ ...newUploadedFileObject, content: event.target.result });
+
+				console.log('about to call with', filename);
+				setTimeout(()=> {
+					this.state.richUploadCallback(filename);
+				}, 0);
 			};
 			reader.onerror = (event)=> {
 				console.error('error reading file');
@@ -250,7 +279,14 @@ export const PubContentFiles = React.createClass({
 				uploadingFinished: finished,
 			});
 			this.props.onFileAdd(newUploadedFileObject);
+
+			console.log('about to call with', filename);
+			setTimeout(()=> {
+				this.state.richUploadCallback(filename);
+			}, 0);
 		}
+
+
 		
 	},
 
@@ -551,6 +587,7 @@ export const PubContentFiles = React.createClass({
 									localFiles={files}
 									localReferences={localReferences}
 									globalCategories={['pubs', 'users']}
+									handleFileUpload={this.handleFileSelect}
 									mode={this.props.editorMode} />
 								{/*<MarkdownEditor initialContent={currentFile.content} onChange={this.props.onEditChange} />*/}
 							</div>
