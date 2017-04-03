@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { browserHistory } from 'react-router';
 import { NonIdealState, Spinner } from '@blueprintjs/core';
-import { jsonToMarkdown, markdownToJSON } from '@pubpub/prose';
+import { jsonToMarkdown, markdownToJSON, bibtexToCSL } from '@pubpub/prose';
 import { StickyContainer } from 'react-sticky';
 import PubBreadcrumbs from './PubBreadcrumbs';
 import PubContentFiles from './PubContentFiles';
@@ -61,7 +61,7 @@ export const PubContent = React.createClass({
 
 		const editMode = Object.keys(this.state.editorFiles).length > 0;
 		if (!editMode && (!this.props.pubData.pub.id && nextPathname.pubData.pub.id && this.props.params.mode === 'edit' || !this.props.params.mode && nextProps.params.mode === 'edit')) {
-			this.setState(this.enterEditModeObject);
+			this.setState(this.enterEditModeObject(nextProps));
 		}
 
 		if (editMode && this.props.params.filename !== nextProps.params.filename && nextProps.params.filename) {
@@ -75,8 +75,14 @@ export const PubContent = React.createClass({
 			// 	newEditorFiles[currentFileName].initialContent = newEditorFiles[currentFileName].newMarkdown || (newEditorFiles[currentFileName].newJSON && jsonToMarkdown(newEditorFiles[currentFileName].newJSON)) || newEditorFiles[currentFileName].content;
 			// }
 			// if (this.state.editorMode === 'rich') {
-			newEditorFiles[currentFileName].initialContent = newEditorFiles[currentFileName].newJSON || (newEditorFiles[currentFileName].newMarkdown && markdownToJSON(newEditorFiles[currentFileName].newMarkdown)) || markdownToJSON(newEditorFiles[currentFileName].content);
-			newEditorFiles[currentFileName].newJSON = newEditorFiles[currentFileName].newJSON || (newEditorFiles[currentFileName].newMarkdown && markdownToJSON(newEditorFiles[currentFileName].newMarkdown)) || markdownToJSON(newEditorFiles[currentFileName].content);
+
+			const files = Object.keys(this.state.editorFiles).map((key)=> {
+				return this.state.editorFiles[key];
+			});
+
+			const localReferences = this.getLocalReferences(files);
+			newEditorFiles[currentFileName].initialContent = newEditorFiles[currentFileName].newJSON || (newEditorFiles[currentFileName].newMarkdown && markdownToJSON(newEditorFiles[currentFileName].newMarkdown), localReferences) || markdownToJSON(newEditorFiles[currentFileName].content, localReferences);
+			newEditorFiles[currentFileName].newJSON = newEditorFiles[currentFileName].newJSON || (newEditorFiles[currentFileName].newMarkdown && markdownToJSON(newEditorFiles[currentFileName].newMarkdown), localReferences) || markdownToJSON(newEditorFiles[currentFileName].content, localReferences);
 			// }
 			
 
@@ -85,6 +91,18 @@ export const PubContent = React.createClass({
 				editorFiles: newEditorFiles,
 			});
 
+		}
+
+		if (this.props.params.meta === 'files' && nextProps.params.meta !== 'files') {
+			this.setState({
+				editorMode: undefined,
+				editorFiles: {},
+				editorVersionMessage: '',
+				editorVersionMessageUserChanged: false,
+				editorIsPublished: undefined,
+				editorIsRestricted: undefined,
+				editorDefaultFile: undefined,
+			});
 		}
 
 		const currentPub = this.props.pubData.pub || {};
@@ -112,14 +130,17 @@ export const PubContent = React.createClass({
 		window.unsavedEdits = false;
 	},
 
-	enterEditModeObject: function() {
-		const versions = this.props.pubData.pub.versions || [];
+	enterEditModeObject: function(inputProps) {
+		const props = inputProps || this.props;
+		const versions = props.pubData.pub.versions || [];
 		const currentVersion = this.getCurrentVersion(versions);
 		const files = currentVersion.files || [];
-		const currentFileName = this.props.params.filename || currentVersion.defaultFile;
-
+		// const currentFileName = props.params.filename || currentVersion.defaultFile;
+		const currentFileName = props.params.filename;
+		console.log('currentFileName', currentFileName);
 		const defaultMode = 'rich';
-
+		const localReferences = this.getLocalReferences(files);
+		// console.log('localReferences are', localReferences);
 		return {
 			editorMode: defaultMode,
 			editorIsPublished: currentVersion.isPublished,
@@ -128,7 +149,7 @@ export const PubContent = React.createClass({
 			editorFiles: files.reduce((previous, current)=> {
 				previous[current.name] = { ...current };
 				if (defaultMode === 'rich' && currentFileName === current.name) {
-					const newJSON = markdownToJSON(current.content);
+					const newJSON = markdownToJSON(current.content, localReferences);
 					previous[current.name].newJSON = newJSON;
 					previous[current.name].initialContent = newJSON;
 				}
@@ -208,7 +229,13 @@ export const PubContent = React.createClass({
 			newEditorFiles[currentFile].newJSON = undefined;
 			newEditorFiles[currentFile].initialContent = newMarkdown;
 		} else {
-			const newJSON = markdownToJSON(newEditorFiles[currentFile].newMarkdown || newEditorFiles[currentFile].content);
+			const files = Object.keys(this.state.editorFiles).map((key)=> {
+				return this.state.editorFiles[key];
+			});
+
+			const localReferences = this.getLocalReferences(files);
+			console.log('these references are ', localReferences)
+			const newJSON = markdownToJSON(newEditorFiles[currentFile].newMarkdown || newEditorFiles[currentFile].content, localReferences);
 			newEditorFiles[currentFile].newMarkdown = undefined;
 			newEditorFiles[currentFile].newJSON = newJSON;
 			newEditorFiles[currentFile].initialContent = newJSON;
@@ -368,6 +395,17 @@ export const PubContent = React.createClass({
 	updateEditorDefaultFile: function(filename) {
 		this.setState({ editorDefaultFile: filename });
 	},
+
+	getLocalReferences: function(files) {
+		const bibtexFile = files.reduce((previous, current)=> {
+			if (current.name === 'references.bib') { return current; }
+			return previous;
+		}, undefined);
+
+		const localReferences = bibtexFile ? bibtexToCSL(bibtexFile.content) : [];
+		return localReferences;
+	},
+
 
 	render() {
 		const pub = this.props.pubData.pub || {};

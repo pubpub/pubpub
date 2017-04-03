@@ -2,6 +2,8 @@ import { Dialog, Menu, MenuItem, MenuDivider, Popover, PopoverInteractionKind, P
 import React, { PropTypes } from 'react';
 import { postDoi, putVersion } from './actionsVersions';
 
+import { markdownToJSON } from '@pubpub/prose';
+
 import { Link } from 'react-router';
 import Loader from 'components/Loader/Loader';
 import { PUBPUB_CONVERSION_URL } from 'configURLs';
@@ -183,6 +185,33 @@ export const PubVersions = React.createClass({
 		});
 	},
 
+	appendURLs: function(json, files) {
+		const fileMap = {};
+		files.forEach((file)=> {
+			fileMap[file.name] = file.url;
+		});
+
+
+		const iterateJSON = (node) => {
+			if (node.content) {
+				const children = node.content;
+				children.forEach((child)=> {
+					iterateJSON(child);
+				});
+			}
+			if (node.type === 'embed') {
+				const filename = node.attrs.filename;
+				// console.log('going to add url of ', fileMap[filename]);
+				node.attrs.url = fileMap[filename];
+				// console.log(node.attrs.url);
+			}
+		};
+		iterateJSON(json);
+		// console.log(JSON.stringify(json, null, 2));
+		return json;
+
+	},
+
 	convertVersion: function(version, options) {
 		const { files, defaultFile } = version;
 
@@ -214,16 +243,32 @@ export const PubVersions = React.createClass({
 		metadata.title = title;
 		metadata.authors = authors;
 
-		console.log(JSON.stringify(metadata))
+		// console.log(JSON.stringify(metadata))
 		const selectedTemplate = this.state.selectedTemplate || 'default';
+
+
 
 		for (const file of files) {
 			if (file.name === defaultFile) {
-				console.log('got url!', file.url);
+				// TODO: This only works for markdown main file at the moment
+
+				// console.log('got url!', file.url);
+
+				const markdownContent = file.content;
+				const jsonContent = markdownToJSON(markdownContent);
+
+				const populatedJSONContent = this.appendURLs(jsonContent, files);
+				// console.log(populatedJSONContent);
 				request
 				.post(PUBPUB_CONVERSION_URL)
-				.send({ inputType: 'pub', outputType: outputType, inputUrl: file.url, metadata: metadata,
-					 options: { template: selectedTemplate} })
+				.send({ 
+					inputType: 'pub', 
+					outputType: outputType, 
+					// inputUrl: file.url, 
+					inputJSON: populatedJSONContent,
+					metadata: metadata,
+					options: { template: selectedTemplate }
+				})
 				.set('Accept', 'application/json')
 				.end((err, res) => {
 					if (err || !res.ok) {
@@ -334,9 +379,9 @@ export const PubVersions = React.createClass({
 						<div style={styles.exportOptionsDialog}>
 							<div className="pt-select pt-disabled">
 								<select value={selectedTemplate} onChange={this.handleTemplateChange}>
-									{Object.keys(pdftexTemplates).map((val) => {
+									{Object.keys(pdftexTemplates).map((val, index) => {
 										return (
-											<option value={val}>{pdftexTemplates[val].displayName}</option>
+											<option key={`option-${index}`} value={val}>{pdftexTemplates[val].displayName}</option>
 										);
 									})
 								}
@@ -349,13 +394,13 @@ export const PubVersions = React.createClass({
 						}
 						{
 							selectedTemplateMetadata.required &&
-							Object.keys(selectedTemplateMetadata.required).map((val) => {
+							Object.keys(selectedTemplateMetadata.required).map((val, index) => {
 								if (val === 'authors' || val === 'title') return;
 								const isArrayInput = (selectedTemplateMetadata.required[val].type && selectedTemplateMetadata.required[val].type === 'array');
 
 								if (missingMetadata.indexOf(val) !== -1) {
 									return (
-										<div className="pt-form-group pt-intent-danger">
+										<div className="pt-form-group pt-intent-danger" key={`metadata-${index}`}>
 											<label style={styles.label} htmlFor={val}>
 												<span>{selectedTemplateMetadata.required[val].displayName} {isArrayInput && <small>(Comma separated)</small>}</span>
 											</label>
@@ -369,7 +414,7 @@ export const PubVersions = React.createClass({
 									);
 								} else {
 									return (
-										<div>
+										<div key={`metadata-${index}`}>
 											<label style={styles.label} htmlFor={val}>
 												<span>{selectedTemplateMetadata.required[val].displayName} {isArrayInput && <small>(Comma separated)</small>}</span>
 											</label>
@@ -387,11 +432,11 @@ export const PubVersions = React.createClass({
 					}
 					{
 						selectedTemplateMetadata.optional &&
-						Object.keys(selectedTemplateMetadata.optional).map((val) => {
+						Object.keys(selectedTemplateMetadata.optional).map((val, index) => {
 							const isArrayInput = (selectedTemplateMetadata.optional[val].type && selectedTemplateMetadata.optional[val].type === 'array');
 
 							return (
-								<div>
+								<div key={`template-${index}`}>
 									<label style={styles.label} htmlFor={val}>
 										<span>{selectedTemplateMetadata.optional[val].displayName} {isArrayInput && <small>(Comma separated)</small>}</span>
 									</label>
@@ -497,17 +542,20 @@ export const PubVersions = React.createClass({
 								{ !downloadReady &&
 									<Popover content={
 											<Menu>
-												{outputTypes.map((outputType) => {
+												{outputTypes.map((outputType, index) => {
 													const pdfOrLatex = (outputType === 'pdf' || outputType === 'latex');
 													const onClickFn = pdfOrLatex ? this.exportOptionsDialog : this.convertVersion;
-													return (<MenuItem
-														onClick={onClickFn.bind(this, version, { outputType: outputType })}
-														text={
-															<div>
-																<b>{outputType}</b>
-															</div>
-														}
-														/>)
+													return (
+														<MenuItem
+															key={`downloadMenuItem-${index}`}
+															onClick={onClickFn.bind(this, version, { outputType: outputType })}
+															text={
+																<div>
+																	<b>{outputType}</b>
+																</div>
+															}
+														/>
+													);
 												})
 											}
 											</Menu>

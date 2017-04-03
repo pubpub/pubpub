@@ -295,6 +295,7 @@ export const RenderFileMarkdown = React.createClass({
 	
 	render() {
 		const file = this.props.file || {};
+		// return <div>{file.content}</div>;
 		return (
 			<MDReactComponent 
 				text={file.content}

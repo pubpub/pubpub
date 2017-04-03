@@ -164,7 +164,7 @@ export const PubContentFiles = React.createClass({
 		// When they're all done, bundle them into a version (replacing similar named files)
 		// Create version
 
-		console.log('in handle', evt);
+		// console.log('in handle', evt);
 		const files = [];
 		for (let index = 0; index < evt.target.files.length; index++) {
 			files.push(evt.target.files[index]);
@@ -180,9 +180,9 @@ export const PubContentFiles = React.createClass({
 		const uploadRates = [...this.state.uploadRates, ...newUploadRates];
 		const uploadFileNames = [...this.state.uploadFileNames, ...newUploadFileNames];
 		const uploadFiles = [...this.state.uploadFiles, ...files];
-		console.log('in handle 2', files);
+		// console.log('in handle 2', files);
 		files.map((file, index)=> {
-			console.log('in handle 3', file);
+			// console.log('in handle 3', file);
 			s3Upload(file, this.onFileProgress, this.onFileFinish, startingFileIndex + index);
 		});
 
@@ -238,7 +238,7 @@ export const PubContentFiles = React.createClass({
 			isNew: true,
 		};
 
-		if (type === 'text/markdown' || title.split('.').pop() === 'md') {
+		if (type === 'text/markdown' || title.split('.').pop() === 'bib' || title.split('.').pop() === 'md') {
 			// If it's markdown, we have to pull out the content from the file so it is available to edit.
 			const reader = new FileReader();
 			reader.readAsText(this.state.uploadFiles[index], 'UTF-8');
@@ -257,7 +257,7 @@ export const PubContentFiles = React.createClass({
 				});
 				this.props.onFileAdd({ ...newUploadedFileObject, content: event.target.result });
 
-				console.log('about to call with', filename);
+				// console.log('about to call with', filename);
 				setTimeout(()=> {
 					this.state.richUploadCallback(filename);
 				}, 0);
@@ -280,7 +280,7 @@ export const PubContentFiles = React.createClass({
 			});
 			this.props.onFileAdd(newUploadedFileObject);
 
-			console.log('about to call with', filename);
+			// console.log('about to call with', filename);
 			setTimeout(()=> {
 				this.state.richUploadCallback(filename);
 			}, 0);
@@ -367,7 +367,7 @@ export const PubContentFiles = React.createClass({
 		}, undefined);
 
 		const localReferences = bibtexFile ? bibtexToCSL(bibtexFile.content) : [];
-		console.log(localReferences);
+		// console.log(localReferences);
 
 		const isLoading = this.props.isLoading;
 		const query = this.props.query || {};
@@ -571,12 +571,14 @@ export const PubContentFiles = React.createClass({
 				{/* Edit specific File */}
 				{!!files.length && currentFile && mode === 'edit' &&
 					<div className={'pt-card pt-elevation-3'} style={{ padding: '0em', margin: '0em 0em 2em' }}>
-						<div style={{ backgroundColor: '#ebf1f5', padding: '0.5em', textAlign: 'right', borderBottom: '1px solid rgba(16, 22, 26, 0.15)' }}>
-							<div className={'pt-button-group'}>
-								<div className={`pt-button${this.props.editorMode === 'markdown' ? ' pt-active' : ''}`} onClick={this.handleEditModeChange.bind(this, 'markdown')}>Markdown</div>
-								<div className={`pt-button${this.props.editorMode === 'rich' ? ' pt-active' : ''}`} onClick={this.handleEditModeChange.bind(this, 'rich')}>Rich</div>
-								<button className={'pt-button pt-icon-trash pt-minimal'} style={{ margin: '0em 1em' }} onClick={this.props.onFileDelete} />
-							</div>
+						<div style={{ minHeight: '45px', backgroundColor: '#ebf1f5', padding: '0.5em', textAlign: 'right', borderBottom: '1px solid rgba(16, 22, 26, 0.15)' }}>
+							{currentFile.type === 'text/markdown' &&
+								<div className={'pt-button-group'}>
+									<div className={`pt-button${this.props.editorMode === 'markdown' ? ' pt-active' : ''}`} onClick={this.handleEditModeChange.bind(this, 'markdown')}>Markdown</div>
+									<div className={`pt-button${this.props.editorMode === 'rich' ? ' pt-active' : ''}`} onClick={this.handleEditModeChange.bind(this, 'rich')}>Rich</div>
+									<button className={'pt-button pt-icon-trash pt-minimal'} style={{ margin: '0em 1em' }} onClick={this.props.onFileDelete} />
+								</div>
+							}
 						</div>
 
 						{currentFile.type === 'text/markdown' &&
