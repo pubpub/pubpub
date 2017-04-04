@@ -2,7 +2,7 @@ import { Dialog, Menu, MenuItem, MenuDivider, Popover, PopoverInteractionKind, P
 import React, { PropTypes } from 'react';
 import { postDoi, putVersion } from './actionsVersions';
 
-import { markdownToJSON } from '@pubpub/prose';
+import { markdownToJSON, bibtexToCSL } from '@pubpub/prose';
 
 import { Link } from 'react-router';
 import Loader from 'components/Loader/Loader';
@@ -253,9 +253,15 @@ export const PubVersions = React.createClass({
 				// TODO: This only works for markdown main file at the moment
 
 				// console.log('got url!', file.url);
+				const bibtexFile = files.reduce((previous, current)=> {
+					if (current.name === 'references.bib') { return current; }
+					return previous;
+				}, undefined);
+
+				const localReferences = bibtexFile ? bibtexToCSL(bibtexFile.content) : [];
 
 				const markdownContent = file.content;
-				const jsonContent = markdownToJSON(markdownContent);
+				const jsonContent = markdownToJSON(markdownContent, localReferences);
 
 				const populatedJSONContent = this.appendURLs(jsonContent, files);
 				// console.log(populatedJSONContent);
