@@ -1,6 +1,6 @@
 # PubPub
 
-## Install & run
+## Install & run
 
 ```
 npm i && npm start

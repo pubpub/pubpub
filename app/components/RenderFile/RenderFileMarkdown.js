@@ -12,86 +12,88 @@ import katex from 'katex';
 
 import RenderFile from './RenderFile';
 
+// Well formatted Markdown guide: https://simplemde.com/markdown-guide
+
 let styles;
 
-function fileParser(state, silent) {
-	let token;
-	const UNESCAPE_RE = /\\([ \\!"#$%&'()*+,./:;<=>?@[\]^_`{|}~-])/g;
-	const max = state.posMax;
-	const start = state.pos;
+// function fileParser(state, silent) {
+// 	let token;
+// 	const UNESCAPE_RE = /\\([ \\!"#$%&'()*+,./:;<=>?@[\]^_`{|}~-])/g;
+// 	const max = state.posMax;
+// 	const start = state.pos;
 
-	if (state.src.charAt(start) !== '!') { return false; }
-	if (silent) { return false; } // don't run any pairs in validation mode
-	if (state.src.charAt(start + 1) === '[') { return false; }
-	if (start + 2 >= max) { return false; }
+// 	if (state.src.charAt(start) !== '!') { return false; }
+// 	if (silent) { return false; } // don't run any pairs in validation mode
+// 	if (state.src.charAt(start + 1) === '[') { return false; }
+// 	if (start + 2 >= max) { return false; }
 
-	state.pos = start + 1;
-	while (state.pos < max) {
-		if (state.src.charAt(state.pos) === ' ') { break; }
-		state.pos += 1;
-	}
+// 	state.pos = start + 1;
+// 	while (state.pos < max) {
+// 		if (state.src.charAt(state.pos) === ' ') { break; }
+// 		state.pos += 1;
+// 	}
 
-	if (start + 1 === state.pos) { state.pos = start; return false; }
+// 	if (start + 1 === state.pos) { state.pos = start; return false; }
 
-	const content = state.src.slice(start + 1, state.pos);
-	if (content.match(/(^|[^\\])(\\\\)*[\n]/)) { state.pos = start; return false; }
+// 	const content = state.src.slice(start + 1, state.pos);
+// 	if (content.match(/(^|[^\\])(\\\\)*[\n]/)) { state.pos = start; return false; }
 
-	state.posMax = state.pos;
-	state.pos = start + 1;
+// 	state.posMax = state.pos;
+// 	state.pos = start + 1;
 
-	// Earlier we checked !silent, but this implementation does not need it
-	token = state.push('file_open', 'file', 1);
-	token.markup = '!';
+// 	// Earlier we checked !silent, but this implementation does not need it
+// 	token = state.push('file_open', 'file', 1);
+// 	token.markup = '!';
 
-	token = state.push('text', '', 0);
-	token.content = content.replace(UNESCAPE_RE, '$1');
+// 	token = state.push('text', '', 0);
+// 	token.content = content.replace(UNESCAPE_RE, '$1');
 
-	token = state.push('file_close', 'file', -1);
-	token.markup = '!';
+// 	token = state.push('file_close', 'file', -1);
+// 	token.markup = '!';
 	
-	state.pos = state.posMax + 1;
-	state.posMax = max;
-	return true;
-}
+// 	state.pos = state.posMax + 1;
+// 	state.posMax = max;
+// 	return true;
+// }
 
-function mentionParser(state, silent) {
-	let token;
-	const UNESCAPE_RE = /\\([ \\!"#$%&'()*+,./:;<=>?@[\]^_`{|}~-])/g;
-	const max = state.posMax;
-	const start = state.pos;
+// function mentionParser(state, silent) {
+// 	let token;
+// 	const UNESCAPE_RE = /\\([ \\!"#$%&'()*+,./:;<=>?@[\]^_`{|}~-])/g;
+// 	const max = state.posMax;
+// 	const start = state.pos;
 
-	if (state.src.charAt(start) !== '@') { return false; }
-	if (silent) { return false; } // don't run any pairs in validation mode
-	if (start + 2 >= max) { return false; }
+// 	if (state.src.charAt(start) !== '@') { return false; }
+// 	if (silent) { return false; } // don't run any pairs in validation mode
+// 	if (start + 2 >= max) { return false; }
 
-	state.pos = start + 1;
-	while (state.pos < max) {
-		if (state.src.charAt(state.pos) === ' ') { break; }
-		state.pos += 1;
-	}
+// 	state.pos = start + 1;
+// 	while (state.pos < max) {
+// 		if (state.src.charAt(state.pos) === ' ') { break; }
+// 		state.pos += 1;
+// 	}
 
-	if (start + 1 === state.pos) { state.pos = start; return false; }
+// 	if (start + 1 === state.pos) { state.pos = start; return false; }
 
-	const content = state.src.slice(start + 1, state.pos);
-	if (content.match(/(^|[^\\])(\\\\)*[\n]/)) { state.pos = start; return false; }
+// 	const content = state.src.slice(start + 1, state.pos);
+// 	if (content.match(/(^|[^\\])(\\\\)*[\n]/)) { state.pos = start; return false; }
 
-	state.posMax = state.pos;
-	state.pos = start + 1;
+// 	state.posMax = state.pos;
+// 	state.pos = start + 1;
 
-	// Earlier we checked !silent, but this implementation does not need it
-	token = state.push('mention_open', 'mention', 1);
-	token.markup = '@';
+// 	// Earlier we checked !silent, but this implementation does not need it
+// 	token = state.push('mention_open', 'mention', 1);
+// 	token.markup = '@';
 
-	token = state.push('text', '', 0);
-	token.content = content.replace(UNESCAPE_RE, '$1');
+// 	token = state.push('text', '', 0);
+// 	token.content = content.replace(UNESCAPE_RE, '$1');
 
-	token = state.push('mention_close', 'mention', -1);
-	token.markup = '@';
+// 	token = state.push('mention_close', 'mention', -1);
+// 	token.markup = '@';
 	
-	state.pos = state.posMax + 1;
-	state.posMax = max;
-	return true;
-}
+// 	state.pos = state.posMax + 1;
+// 	state.posMax = max;
+// 	return true;
+// }
 
 function highlightParser(state, silent) {
 	let token;
@@ -137,7 +139,6 @@ export const RenderFileMarkdown = React.createClass({
 		allFiles: PropTypes.array,
 		pubSlug: PropTypes.string,
 		query: PropTypes.object,
-
 	},
 
 	getInitialState() {
@@ -294,6 +295,7 @@ export const RenderFileMarkdown = React.createClass({
 	
 	render() {
 		const file = this.props.file || {};
+		// return <div>{file.content}</div>;
 		return (
 			<MDReactComponent 
 				text={file.content}

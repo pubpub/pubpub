@@ -11,6 +11,7 @@ import { login, logout } from './actions';
 require('../../../static/blueprint.scss');
 require('../../../static/style.scss');
 require('../../../static/pubBody.scss');
+require('../../../static/markdown.scss');
 
 export const App = React.createClass({
 	propTypes: {
@@ -20,6 +21,8 @@ export const App = React.createClass({
 		pubData: PropTypes.object,
 		location: PropTypes.object,
 		params: PropTypes.object,
+		router: PropTypes.object,
+		route: PropTypes.object,
 		children: PropTypes.object,
 		dispatch: PropTypes.func,
 	},
@@ -28,6 +31,21 @@ export const App = React.createClass({
 		const FocusStyleManager = require('@blueprintjs/core').FocusStyleManager;
 		FocusStyleManager.onlyShowFocusOnTabs();
 		this.props.dispatch(login());
+	},
+
+	componentWillReceiveProps(nextProps) {
+		// On each routeChange, we need to update setRouteLeaveHook. 
+		// This will make sure we throw a warning if window.unsavedEdits is truthy
+		window.onbeforeunload = this.confirmExit;
+		nextProps.router.setRouteLeaveHook(nextProps.router.routes[1], this.confirmExit.bind(this, nextProps));
+	},
+
+	confirmExit: function(props, nextRoute) {
+		const stayingInFiles = props && nextRoute && ((props.params.meta === 'files' && nextRoute.pathname.indexOf(`/pub/${props.params.slug}/files`) > -1) || (props.params.meta === undefined && nextRoute.pathname.indexOf(`/pub/${props.params.slug}/files`) > -1));
+		if (window.unsavedEdits && !stayingInFiles) {
+			return 'Your unsaved changes will be lost.';
+		}
+		return null;
 	},
 
 	logoutHandler: function() {

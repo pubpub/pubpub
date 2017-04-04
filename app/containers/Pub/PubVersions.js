@@ -1,10 +1,15 @@
+import { Dialog, Menu, MenuItem, MenuDivider, Popover, PopoverInteractionKind, Position, Button, Alert } from '@blueprintjs/core';
 import React, { PropTypes } from 'react';
+import { postDoi, putVersion } from './actionsVersions';
+
+import { markdownToJSON, bibtexToCSL } from '@pubpub/prose';
+
 import { Link } from 'react-router';
+import Loader from 'components/Loader/Loader';
+import { PUBPUB_CONVERSION_URL } from 'configURLs';
 import Radium from 'radium';
 import dateFormat from 'dateformat';
-import { Dialog, Position, Menu, MenuDivider, Popover, PopoverInteractionKind } from '@blueprintjs/core';
-import { putVersion, postDoi } from './actionsVersions';
-import Loader from 'components/Loader/Loader';
+import request from 'superagent';
 
 let styles;
 
@@ -23,16 +28,28 @@ export const PubVersions = React.createClass({
 			confirmPublish: undefined,
 			confirmRestricted: undefined,
 			confirmDoi: undefined,
+			exportErrorAlert: false,
+			showExportOptions: false,
+			pdftexTemplates: undefined,
+			selectedTemplate: undefined,
+			exportOptionsVersion: undefined,
+			exportOutputType: undefined,
+			missingMetadata: undefined,
+			exportOutputTypes: undefined,
+			metadata: {},
+			conversionLoading: [],
+			downloadReady: [],
+			downloadReadyUrls: []
 		};
 	},
 
 	componentWillReceiveProps(nextProps) {
 		if (this.props.isLoading && !nextProps.isLoading && !nextProps.error) {
-			this.setState({ 
+			this.setState({
 				confirmPublish: undefined,
 				confirmRestricted: undefined,
 				confirmDoi: undefined,
-			});	
+			});
 		}
 	},
 
@@ -52,12 +69,286 @@ export const PubVersions = React.createClass({
 		this.props.dispatch(putVersion(this.props.pub.id, this.state.confirmPublish, true));
 	},
 
+	toggleExportErrorAlert: function () {
+		this.setState({ exportErrorAlert: !this.state.exportErrorAlert });
+	},
+
 	toggleDoiDialog: function(versionId) {
 		this.setState({ confirmDoi: versionId });
 	},
 
 	createDoi: function() {
 		this.props.dispatch(postDoi(this.props.pub.id, this.state.confirmDoi));
+	},
+	toggleShowExportOptions: function() {
+		this.setState({
+			showExportOptions: !this.state.showExportOptions,
+			missingMetadata: undefined
+		});
+	},
+
+	pollURL: function(url, versionHash) {
+
+		const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === 'www.funky.com' || window.location.hostname === 'www.funkynocors.com';
+		const isRemoteDev = window.location.hostname === 'dev.pubpub.org' || window.location.hostname === 'test.epsx.org' || window.location.hostname === 'testnocors.epsx.org';
+		const isProd = !(isLocalDev || isRemoteDev);
+
+		let pollUrl = (isProd) ? 'https://pubpub-converter-prod.herokuapp.com' : 'https://pubpub-converter-dev.herokuapp.com';
+		pollUrl += url;
+
+		request
+		.get(pollUrl)
+		.end((err, res) => {
+			console.log(err, res);
+			const index = this.state.conversionLoading.indexOf(versionHash);
+			if (!err && res && res.statusCode === 200) {
+
+				if (res.body.url) {
+					window.open(res.body.url, '_blank');
+
+					this.setState({
+						conversionLoading: this.state.conversionLoading.filter((_, ii) => ii !== index),
+						downloadReady: this.state.downloadReady.concat([versionHash]),
+						downloadReadyUrls: this.state.downloadReadyUrls.concat([res.body.url])
+					});
+				} else {
+					window.setTimeout(this.pollURL.bind(this, url, versionHash), 2000);
+				}
+			} else if (err) {
+
+				this.setState({
+					exportErrorAlert: true,
+					conversionLoading: this.state.conversionLoading.filter((_, ii) => ii !== index),
+
+				});
+
+			}
+		});
+	},
+	exportOptionsSubmit: function() {
+		const metadata = this.state.metadata;
+		const version = this.state.exportOptionsVersion;
+		const selectedTemplate = this.state.selectedTemplate || 'default';
+		const pdftexTemplates = this.state.pdftexTemplates || {};
+		const selectedTemplateMetadata = (pdftexTemplates && pdftexTemplates[selectedTemplate]) ? pdftexTemplates[selectedTemplate].metadata : {};
+		const requiredMetadata = selectedTemplateMetadata.required || {};
+		const missingMetadata = [];
+		this.setState({
+			missingMetadata: undefined,
+		});
+		Object.keys(requiredMetadata).forEach((val) => {
+			if (!metadata[val]) {
+				if (val === 'authors' || val === 'title') return;
+				missingMetadata.push(val);
+			}
+		});
+
+		if (missingMetadata.length > 0) {
+			this.setState({
+				missingMetadata: missingMetadata,
+			});
+			return;
+		}
+		this.convertVersion(version, {});
+
+		// If Valud
+		this.setState({
+			showExportOptions: false,
+			exportOptionsVersion: undefined,
+			metadata: {}
+		});
+	},
+	exportOptionsDialog: function(version, options) {
+		const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === 'www.funky.com' || window.location.hostname === 'www.funkynocors.com';
+		const isRemoteDev = window.location.hostname === 'dev.pubpub.org' || window.location.hostname === 'test.epsx.org' || window.location.hostname === 'testnocors.epsx.org';
+		const isProd = !(isLocalDev || isRemoteDev);
+		const reqURL = (isProd) ? 'https://pubpub-converter-prod.herokuapp.com/templates' : 'https://pubpub-converter-dev.herokuapp.com/templates';
+
+		const outputType = options.outputType;
+
+		//set metadata to nothing
+
+		if (!this.state.pdftexTemplates) {
+			request
+			.get(reqURL)
+			.end((err, res) => {
+				this.setState({
+					pdftexTemplates: res.body
+				});
+			});
+		}
+
+		this.setState({
+			showExportOptions: true,
+			exportOptionsVersion: version,
+			exportOutputType: outputType
+		});
+	},
+
+	appendURLs: function(json, files) {
+		const fileMap = {};
+		files.forEach((file)=> {
+			fileMap[file.name] = file.url;
+		});
+
+
+		const iterateJSON = (node) => {
+			if (node.content) {
+				const children = node.content;
+				children.forEach((child)=> {
+					iterateJSON(child);
+				});
+			}
+			if (node.type === 'embed') {
+				const filename = node.attrs.filename;
+				// console.log('going to add url of ', fileMap[filename]);
+				node.attrs.url = fileMap[filename];
+				// console.log(node.attrs.url);
+			}
+		};
+		iterateJSON(json);
+		// console.log(JSON.stringify(json, null, 2));
+		return json;
+
+	},
+
+	convertVersion: function(version, options) {
+		const { files, defaultFile } = version;
+
+		const outputType = (options && options.outputType) ? options.outputType : this.state.exportOutputType;
+
+		const metadata = this.state.metadata;
+
+
+		if (this.state.conversionLoading.indexOf(version.hash) === -1) {
+			this.setState({
+				conversionLoading: this.state.conversionLoading.concat([version.hash]),
+				exportOutputType: undefined
+			});
+		} else {
+			this.setState({
+				exportOutputType: undefined
+			});
+			return;
+		}
+
+		const title = this.props.pub.title;
+		const authors = [];
+
+		this.props.pub.contributors.forEach((contributor) => {
+			if (contributor.isAuthor) {
+				authors.push(`${contributor.user.firstName} ${contributor.user.lastName}`);
+			}
+		});
+		metadata.title = title;
+		metadata.authors = authors;
+
+		// console.log(JSON.stringify(metadata))
+		const selectedTemplate = this.state.selectedTemplate || 'default';
+
+
+
+		for (const file of files) {
+			if (file.name === defaultFile) {
+				// TODO: This only works for markdown main file at the moment
+
+				// console.log('got url!', file.url);
+				const bibtexFile = files.reduce((previous, current)=> {
+					if (current.name === 'references.bib') { return current; }
+					return previous;
+				}, undefined);
+
+				const localReferences = bibtexFile ? bibtexToCSL(bibtexFile.content) : [];
+
+				const markdownContent = file.content;
+				const jsonContent = markdownToJSON(markdownContent, localReferences);
+
+				const populatedJSONContent = this.appendURLs(jsonContent, files);
+				// console.log(populatedJSONContent);
+				request
+				.post(PUBPUB_CONVERSION_URL)
+				.send({ 
+					inputType: 'pub', 
+					outputType: outputType, 
+					// inputUrl: file.url, 
+					inputJSON: populatedJSONContent,
+					metadata: metadata,
+					options: { template: selectedTemplate }
+				})
+				.set('Accept', 'application/json')
+				.end((err, res) => {
+					if (err || !res.ok) {
+						alert('Oh no! error', err);
+					} else {
+						const pollUrl = res.body.pollUrl;
+						window.setTimeout(this.pollURL.bind(this, pollUrl, version.hash), 2000);
+
+					}
+				});
+			}
+		}
+	},
+	setMetadata: function(event, val) {
+		const metadata = this.state.metadata;
+		const pdftexTemplates = this.state.pdftexTemplates || {};
+		const selectedTemplate = this.state.selectedTemplate || 'default';
+		const selectedTemplateMetadata = (pdftexTemplates && pdftexTemplates[selectedTemplate]) ? pdftexTemplates[selectedTemplate].metadata : {};
+
+		let isArrayInput
+		if (selectedTemplateMetadata.required[val]) {
+			isArrayInput = (selectedTemplateMetadata.required[val].type === 'array');
+		} else {
+			isArrayInput = (selectedTemplateMetadata.optional[val].type === 'array');
+
+		}
+
+
+		if (isArrayInput) {
+			metadata[val] = event.target.value.split(',');
+
+		} else {
+			metadata[val] = event.target.value;
+		}
+
+		this.setState({ metadata: metadata });
+	},
+	handleTemplateChange: function(event) {
+		this.setState({
+			selectedTemplate: event.target.value,
+			missingMetadata: undefined
+		});
+	},
+	prepareSupportEmail: function() {
+		const emailTo = 'pubpub@media.mit.edu';
+		const pub = this.props.pub.slug;
+		const emailSubject = `Help: Trouble producing PDF With Pub slug==${pub} `;
+		const emailBody = '';
+		window.open(`mailto:${emailTo}?subject=${emailSubject}&body=${emailBody}`);
+
+	},
+	clearDownloadUrl: function(index) {
+		this.setState({
+			downloadReady: this.state.downloadReady.filter((_, ii) => ii !== index),
+			downloadReadyUrls: this.state.downloadReadyUrls.filter((_, ii) => ii !== index)
+		});
+	},
+
+	componentDidMount: function() {
+		const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === 'www.funky.com' || window.location.hostname === 'www.funkynocors.com';
+		const isRemoteDev = window.location.hostname === 'dev.pubpub.org' || window.location.hostname === 'test.epsx.org' || window.location.hostname === 'testnocors.epsx.org';
+		const isProd = !(isLocalDev || isRemoteDev);
+		const reqURL = (isProd) ? 'https://pubpub-converter-prod.herokuapp.com/outputTypes' : 'https://pubpub-converter-dev.herokuapp.com/outputTypes';
+
+		if (!this.state.exportOutputTypes) {
+			request
+			.get(reqURL)
+			.end((err, res) => {
+				this.setState({
+					exportOutputTypes: res.body
+				});
+			});
+		}
+
 	},
 
 	render: function() {
@@ -67,6 +358,14 @@ export const PubVersions = React.createClass({
 		const isLoading = this.props.isLoading;
 		const errorMessage = this.props.error;
 		const versions = this.props.versionsData || [];
+		const pdftexTemplates = this.state.pdftexTemplates || {};
+		const selectedTemplate = this.state.selectedTemplate || 'default';
+		const selectedTemplateMetadata = (pdftexTemplates && pdftexTemplates[selectedTemplate]) ? pdftexTemplates[selectedTemplate].metadata : {};
+		const missingMetadata = this.state.missingMetadata || [];
+		const metadata = this.state.metadata;
+		const outputTypes = this.state.exportOutputTypes || [];
+
+
 		const pubDOI = versions.reduce((previous, current)=> {
 			if (current.doi) { return current.doi; }
 			return previous;
@@ -75,8 +374,89 @@ export const PubVersions = React.createClass({
 		return (
 			<div style={styles.container}>
 				<h2>Versions</h2>
+					<Alert title="Error" isOpen={this.state.exportErrorAlert} cancelButtonText='Email Support' onCancel={this.prepareSupportEmail} confirmButtonText="Okay" onConfirm={this.toggleExportErrorAlert}>
+						<div className="pt-dialog-body">
+							<p>There was an error producing a PDF.</p>
+							<p><b>Please contact support and let them know.</b></p>
+						</div>
+					</Alert>
 
-				{versions.sort((foo, bar)=> {
+					<Dialog isOpen={this.state.showExportOptions} onClose={this.toggleShowExportOptions} autofocus={true} enforceFocus={true}>
+						<div style={styles.exportOptionsDialog}>
+							<div className="pt-select pt-disabled">
+								<select value={selectedTemplate} onChange={this.handleTemplateChange}>
+									{Object.keys(pdftexTemplates).map((val, index) => {
+										return (
+											<option key={`option-${index}`} value={val}>{pdftexTemplates[val].displayName}</option>
+										);
+									})
+								}
+							</select>
+						</div>
+
+						{
+							selectedTemplateMetadata.required && selectedTemplateMetadata.required.length > 2 &&
+							<div>Required</div>
+						}
+						{
+							selectedTemplateMetadata.required &&
+							Object.keys(selectedTemplateMetadata.required).map((val, index) => {
+								if (val === 'authors' || val === 'title') return;
+								const isArrayInput = (selectedTemplateMetadata.required[val].type && selectedTemplateMetadata.required[val].type === 'array');
+
+								if (missingMetadata.indexOf(val) !== -1) {
+									return (
+										<div className="pt-form-group pt-intent-danger" key={`metadata-${index}`}>
+											<label style={styles.label} htmlFor={val}>
+												<span>{selectedTemplateMetadata.required[val].displayName} {isArrayInput && <small>(Comma separated)</small>}</span>
+											</label>
+											<div className="pt-form-content">
+												<div className="pt-input-group pt-intent-danger">
+													<input id={val} className={'pt-input margin-bottom'} style={styles.input} name={val} type="text" onChange={(e) => this.setMetadata(e, val)} value={metadata[val]}/>
+												</div>
+												<div className="pt-form-helper-text">Please enter a value</div>
+											</div>
+										</div>
+									);
+								} else {
+									return (
+										<div key={`metadata-${index}`}>
+											<label style={styles.label} htmlFor={val}>
+												<span>{selectedTemplateMetadata.required[val].displayName} {isArrayInput && <small>(Comma separated)</small>}</span>
+											</label>
+
+											<input id={val} className={'pt-input margin-bottom'} style={styles.input} name={val} type="text" onChange={(e) => this.setMetadata(e, val)} value={metadata[val]}/>
+										</div>
+									);
+								}
+							}
+						)
+					}
+					{
+						selectedTemplateMetadata.optional &&
+						<div>Optional</div>
+					}
+					{
+						selectedTemplateMetadata.optional &&
+						Object.keys(selectedTemplateMetadata.optional).map((val, index) => {
+							const isArrayInput = (selectedTemplateMetadata.optional[val].type && selectedTemplateMetadata.optional[val].type === 'array');
+
+							return (
+								<div key={`template-${index}`}>
+									<label style={styles.label} htmlFor={val}>
+										<span>{selectedTemplateMetadata.optional[val].displayName} {isArrayInput && <small>(Comma separated)</small>}</span>
+									</label>
+									<input id={val} className={'pt-input margin-bottom'} style={styles.input} name={val} type="text" onChange={(e) => this.setMetadata(e, val)} value={metadata[val]}/>
+								</div>
+							);
+						}
+					)
+				}
+				<Button onClick={this.exportOptionsSubmit} style={{ float: 'right' }}>Submit</Button>
+			</div>
+		</Dialog>
+
+					{versions.sort((foo, bar)=> {
 					// Sort so that most recent is first in array
 					if (foo.createdAt > bar.createdAt) { return -1; }
 					if (foo.createdAt < bar.createdAt) { return 1; }
@@ -86,13 +466,19 @@ export const PubVersions = React.createClass({
 					let mode = 'private';
 					if (version.isRestricted) { mode = 'restricted'; }
 					if (version.isPublished) { mode = 'published'; }
+					const downloadReady = (this.state.downloadReady.indexOf(version.hash) !== -1);
+					let downloadReadyUrl;
+					if (downloadReady) {
+						downloadReadyUrl = this.state.downloadReadyUrls[this.state.downloadReady.indexOf(version.hash)];
+					}
+					const conversionLoading = (this.state.conversionLoading.indexOf(version.hash) !== -1);
 
 					return (
 						<div key={'version-' + version.id} style={styles.versionRow}>
 
 							{this.props.pub.canEdit &&
 								<div style={styles.smallColumn}>
-									<Popover 
+									<Popover
 										content={
 											<div>
 												<Menu>
@@ -135,7 +521,7 @@ export const PubVersions = React.createClass({
 
 								</div>
 							}
-							
+
 							<div style={styles.largeColumn}>
 								{/* Link to Diff view */}
 								<Link to={{ pathname: '/pub/' + this.props.pub.slug + '/diff', query: { ...query, version: undefined, base: previousVersion.hash, target: version.hash } }}>
@@ -156,9 +542,48 @@ export const PubVersions = React.createClass({
 								</a>
 							}
 
+
+							<div style={[styles.smallColumn, { padding: '0.5em' }]}>
+
+								{ !downloadReady &&
+									<Popover content={
+											<Menu>
+												{outputTypes.map((outputType, index) => {
+													const pdfOrLatex = (outputType === 'pdf' || outputType === 'latex');
+													const onClickFn = pdfOrLatex ? this.exportOptionsDialog : this.convertVersion;
+													return (
+														<MenuItem
+															key={`downloadMenuItem-${index}`}
+															onClick={onClickFn.bind(this, version, { outputType: outputType })}
+															text={
+																<div>
+																	<b>{outputType}</b>
+																</div>
+															}
+														/>
+													);
+												})
+											}
+											</Menu>
+									} position={Position.BOTTOM}>
+										<Button loading={conversionLoading} className={'pt-button p2-minimal'} onClick={''} text="Export" />
+									</Popover>
+								}
+								{
+									downloadReady &&
+									<a href={downloadReadyUrl}>
+										<Button className={'pt-button p2-minimal'} onClick={this.clearDownloadUrl.bind(this, this.state.downloadReady.indexOf(version.hash))} text='Click to Download' />
+									</a>
+								}
+
+
+
+
+							</div>
+
 							<div style={styles.smallColumn}>
 								{/* Link to pub at that version instance */}
-								<Link to={{ pathname: '/pub/' + this.props.pub.slug, query: { ...query, version: version.hash } }}>	
+								<Link to={{ pathname: '/pub/' + this.props.pub.slug, query: { ...query, version: version.hash } }}>
 									<button className={'pt-button p2-minimal'}>View Pub</button>
 								</Link>
 							</div>
@@ -229,7 +654,7 @@ export const PubVersions = React.createClass({
 									</div>
 								</Dialog>
 							}
-							
+
 						</div>
 					);
 				})}
@@ -243,7 +668,7 @@ export default Radium(PubVersions);
 
 styles = {
 	container: {
-		
+
 	},
 	noMargin: {
 		margin: 0,
@@ -261,7 +686,7 @@ styles = {
 		width: '1%',
 		whiteSpace: 'nowrap',
 		verticalAlign: 'middle',
-	}, 
+	},
 	largeColumn: {
 		display: 'table-cell',
 		width: '100%',
@@ -275,9 +700,9 @@ styles = {
 		margin: 0,
 		lineHeight: 'inherit',
 	},
-	iconSpacer: { 
-		width: '0.5em', 
-		height: '1em', 
+	iconSpacer: {
+		width: '0.5em',
+		height: '1em',
 		display: 'inline-block',
 	},
 	noClick: {
@@ -287,4 +712,10 @@ styles = {
 		display: 'inline-block',
 		margin: 'auto 0',
 	},
+	input: {
+		width: 'calc((100% - 20px) - 4px)'
+	},
+	exportOptionsDialog: {
+		padding: '2em 1em'
+	}
 };

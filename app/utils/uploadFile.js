@@ -13,7 +13,8 @@ export function s3Upload(file, progressEvent, finishEvent, index) {
 		
 		const extension = file.name !== undefined ? file.name.substr((~-file.name.lastIndexOf('.') >>> 0) + 2) : 'jpg';
 
-		const filename = folderName + '/' + new Date().getTime() + '.' + extension;
+		// const filename = folderName + '/' + new Date().getTime() + '.' + extension;
+		const filename = folderName + '/' + (Math.floor(Math.random() * 8)) + new Date().getTime() + '.' + extension;
 		const fileType = file.type !== undefined ? file.type : 'image/jpeg';
 		const formData = new FormData();
 

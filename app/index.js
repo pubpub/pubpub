@@ -63,7 +63,6 @@ ReactDOM.render(
 				if (prevRouterProps && prevRouterProps.location.pathname === nextRouterProps.location.pathname) {
 					return false;
 				}
-
 				return true;
 			}))} 
 		/>
