@@ -81,7 +81,7 @@ export const PubContent = React.createClass({
 			});
 
 			const localReferences = this.getLocalReferences(files);
-			newEditorFiles[currentFileName].initialContent = newEditorFiles[currentFileName].newJSON || (newEditorFiles[currentFileName].newMarkdown && markdownToJSON(newEditorFiles[currentFileName].newMarkdown), localReferences) || markdownToJSON(newEditorFiles[currentFileName].content, localReferences);
+			newEditorFiles[currentFileName].initialContent = newEditorFiles[currentFileName].newJSON || (newEditorFiles[currentFileName].newMarkdown && markdownToJSON(newEditorFiles[currentFileName].newMarkdown, localReferences)) || markdownToJSON(newEditorFiles[currentFileName].content, localReferences);
 			newEditorFiles[currentFileName].newJSON = newEditorFiles[currentFileName].newJSON || (newEditorFiles[currentFileName].newMarkdown && markdownToJSON(newEditorFiles[currentFileName].newMarkdown), localReferences) || markdownToJSON(newEditorFiles[currentFileName].content, localReferences);
 			// }
 			
