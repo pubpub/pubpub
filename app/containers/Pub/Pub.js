@@ -12,6 +12,7 @@ import PubInvitedReviewerMessage from './PubInvitedReviewerMessage';
 import PubJournals from './PubJournals';
 import PubReviewers from './PubReviewers';
 import PubSettings from './PubSettings';
+import PubEditor from './PubEditor';
 import PubVersions from './PubVersions';
 import { getPubData } from './actions';
 
@@ -173,6 +174,15 @@ export const Pub = React.createClass({
 							location={this.props.location}
 							dispatch={this.props.dispatch} />
 					}
+					{meta === 'edit' &&
+						<PubEditor 
+							accountData={this.props.accountData}
+							highlightData={this.props.highlightData}
+							pubData={this.props.pubData}
+							params={this.props.params}
+							location={this.props.location}
+							dispatch={this.props.dispatch} />
+					}
 					{meta === 'settings' &&
 						<PubSettings
 							pub={pub}
@@ -230,7 +240,7 @@ styles = {
 		return {
 			maxWidth: '1200px',
 			margin: '0 auto',
-			padding: meta === 'files' ? '0em 2em' : '3em 2em',
+			padding: (meta === 'files' || meta === 'edit') ? '0em 2em' : '3em 2em',
 		};
 	},
 };
