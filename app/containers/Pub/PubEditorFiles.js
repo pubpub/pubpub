@@ -21,6 +21,7 @@ export const PubEditorFiles = React.createClass({
 	propTypes: {
 		version: PropTypes.object,
 		pub: PropTypes.object,
+		onNameChange: PropTypes.func,
 		editorMode: PropTypes.string,
 		editorFiles: PropTypes.object,
 		editorDefaultFile: PropTypes.string,
@@ -86,55 +87,55 @@ export const PubEditorFiles = React.createClass({
 		
 	// },
 
-	componentWillReceiveProps(nextProps) {
-		// If login was succesful, redirect
-		const oldLoading = this.props.isLoading;
-		const nextLoading = nextProps.isLoading;
-		const nextError = nextProps.error;
+	// componentWillReceiveProps(nextProps) {
+	// 	// If login was succesful, redirect
+	// 	const oldLoading = this.props.isLoading;
+	// 	const nextLoading = nextProps.isLoading;
+	// 	const nextError = nextProps.error;
 
-		if (oldLoading && !nextLoading && !nextError) {
+	// 	if (oldLoading && !nextLoading && !nextError) {
 
-			// const editMode = Object.keys(this.props.editorFiles).length > 0;
-			// const version = this.props.version || {};
-			// const files = editMode 
-			// 	? Object.keys(this.props.editorFiles).map((key)=> {
-			// 		return this.props.editorFiles[key];
-			// 	})
-			// 	: version.files || [];
+	// 		// const editMode = Object.keys(this.props.editorFiles).length > 0;
+	// 		// const version = this.props.version || {};
+	// 		// const files = editMode 
+	// 		// 	? Object.keys(this.props.editorFiles).map((key)=> {
+	// 		// 		return this.props.editorFiles[key];
+	// 		// 	})
+	// 		// 	: version.files || [];
 
-			// const params = this.props.params || {};
-			// const meta = params.meta;
-			// const routeFilename = params.filename;
+	// 		// const params = this.props.params || {};
+	// 		// const meta = params.meta;
+	// 		// const routeFilename = params.filename;
 
-			// const defaultFile = editMode ? this.props.editorDefaultFile : version.defaultFile;
-			// const mainFile = files.reduce((previous, current)=> {
-			// 	if (defaultFile === current.name) { return current; }
-			// 	if (!defaultFile && current.name.split('.')[0] === 'main') { return current; }
-			// 	return previous;
-			// }, files[0]);
+	// 		// const defaultFile = editMode ? this.props.editorDefaultFile : version.defaultFile;
+	// 		// const mainFile = files.reduce((previous, current)=> {
+	// 		// 	if (defaultFile === current.name) { return current; }
+	// 		// 	if (!defaultFile && current.name.split('.')[0] === 'main') { return current; }
+	// 		// 	return previous;
+	// 		// }, files[0]);
 
-			// const routeFile = files.reduce((previous, current)=> {
-			// 	if (current.name === routeFilename) { return current; }
-			// 	return previous;
-			// }, undefined);
+	// 		// const routeFile = files.reduce((previous, current)=> {
+	// 		// 	if (current.name === routeFilename) { return current; }
+	// 		// 	return previous;
+	// 		// }, undefined);
 
-			// const currentFile = meta === 'files' ? routeFile : mainFile;
+	// 		// const currentFile = meta === 'files' ? routeFile : mainFile;
 
 
-			this.setState({
-				uploadRates: [],
-				uploadFileNames: [],
-				uploadFiles: [],
-				uploading: false,
-				uploadingFinished: false,
-				uploadedFileObjects: [],
-				newVersionMessage: '',
+	// 		this.setState({
+	// 			uploadRates: [],
+	// 			uploadFileNames: [],
+	// 			uploadFiles: [],
+	// 			uploading: false,
+	// 			uploadingFinished: false,
+	// 			uploadedFileObjects: [],
+	// 			newVersionMessage: '',
 
-				// initialContent: currentFile.content || '',
-				// content: currentFile.content || '',
-			});
-		}
-	},
+	// 			// initialContent: currentFile.content || '',
+	// 			// content: currentFile.content || '',
+	// 		});
+	// 	}
+	// },
 
 
 	// setMode: function(mode) {
@@ -323,11 +324,11 @@ export const PubEditorFiles = React.createClass({
 	},
 
 	defaultFileChange: function(filename) {
-		const editMode = Object.keys(this.props.editorFiles).length > 0;
-		if (editMode) {
-			return this.props.updateEditorDefaultFile(filename);
-		}
-		return this.props.dispatch(putDefaultFile(this.props.pub.id, this.props.version.id, filename));
+		// const editMode = Object.keys(this.props.editorFiles).length > 0;
+		// if (editMode) {
+		return this.props.updateEditorDefaultFile(filename);
+		// }
+		// return this.props.dispatch(putDefaultFile(this.props.pub.id, this.props.version.id, filename));
 	},
 
 	// openEditor: function() {
@@ -353,13 +354,11 @@ export const PubEditorFiles = React.createClass({
 		// Default files list
 		// Default files list, uploading
 		// Specific file view
-		const editMode = Object.keys(this.props.editorFiles).length > 0;
+		// const editMode = Object.keys(this.props.editorFiles).length > 0;
 		const version = this.props.version || {};
-		const files = editMode 
-			? Object.keys(this.props.editorFiles).map((key)=> {
-				return this.props.editorFiles[key];
-			})
-			: version.files || [];
+		const files = Object.keys(this.props.editorFiles).map((key)=> {
+			return this.props.editorFiles[key];
+		});
 
 		const bibtexFile = files.reduce((previous, current)=> {
 			if (current.name === 'references.bib') { return current; }
@@ -376,7 +375,7 @@ export const PubEditorFiles = React.createClass({
 		const mode = params.mode;
 		const routeFilename = params.filename;
 
-		const defaultFile = editMode ? this.props.editorDefaultFile : version.defaultFile;
+		const defaultFile = this.props.editorDefaultFile;
 		const mainFile = files.reduce((previous, current)=> {
 			if (defaultFile === current.name) { return current; }
 			if (!defaultFile && current.name.split('.')[0] === 'main') { return current; }
@@ -388,7 +387,7 @@ export const PubEditorFiles = React.createClass({
 			return previous;
 		}, undefined);
 
-		const currentFile = meta === 'files' ? routeFile : mainFile;
+		// const currentFile = meta === 'files' ? routeFile : mainFile;
 
 		const isRemainingUploads = this.state.uploadFileNames.reduce((previous, current, index)=> {
 			if (this.state.uploadRates[index] !== 1) { return true; }
@@ -414,9 +413,9 @@ export const PubEditorFiles = React.createClass({
 										<span className={'pt-icon-standard pt-align-right'} />
 									</button>
 
-									<div>
+									{/*<div>
 										<Link to={'/pub/markdown'} style={{ marginRight: '0.5em' }}>How to write with PubPub Markdown</Link>
-									</div>
+									</div>*/}
 
 									{/*<span style={{ width: '1em', height: '1em', display: 'inline-block' }} />
 									<a className="pt-button" tabIndex="0" role="button" >Open Editor</a>*/}
@@ -433,15 +432,15 @@ export const PubEditorFiles = React.createClass({
 				{/* Upload and Editor Buttons */}
 				{/* Only shown on main Files list view, when not uploading */}
 				{/*{meta === 'files' && !!files.length && !this.state.uploading && !routeFilename && this.props.pub.canEdit &&*/}
-				{meta === 'files' && !!files.length && !routeFilename && this.props.pub.canEdit &&
+				{!!files.length && !routeFilename && this.props.pub.canEdit &&
 					<div style={styles.topButtons}>
 						{/*<Link to={'/pub/markdown'} style={{ marginRight: '0.5em' }}>Rendering with PubPub Markdown</Link>*/}
-						<Link style={{ marginRight: '0.5em' }}>What can I upload?</Link>
+						{/*<Link style={{ marginRight: '0.5em' }}>What can I upload?</Link>*/}
 						<label className="pt-button pt-icon-add" htmlFor={'upload'}>
 							Upload Files
 							<input id={'upload'} type="file" multiple style={{ position: 'fixed', top: '-100px' }} onChange={this.handleFileUploads} />
 						</label>
-						<button className={'pt-button pt-icon-document !pt-minimal'} onClick={this.props.onFileCreate}>New Doc</button>
+						<button className={'pt-button pt-icon-document !pt-minimal'} style={{ marginLeft: '1em' }} onClick={this.props.onFileCreate}>New Doc</button>
 
 						{/*<button className={'pt-button'} onClick={this.openEditor} style={{ marginLeft: '1em' }}>
 							Open Editor
@@ -506,7 +505,7 @@ export const PubEditorFiles = React.createClass({
 				}
 
 				{/* File List */}
-				{meta === 'files' && !routeFile &&
+				{!!files.length && !routeFile &&
 					<div>
 
 						<table className="pt-table pt-condensed pt-striped" style={{ width: '100%' }}>
@@ -524,18 +523,18 @@ export const PubEditorFiles = React.createClass({
 									if (foo.isNew && !bar.isNew) { return -1; }
 									if (!foo.isDeleted && bar.isDeleted) { return 1; }
 									if (foo.isDeleted && !bar.isDeleted) { return -1; }
-									if (!(foo.newName || foo.newMarkdown || foo.newJSON) && (bar.newName || bar.newMarkdown || bar.newJSON)) { return 1; }
-									if ((foo.newName || foo.newMarkdown || foo.newJSON) && !(bar.newName || bar.newMarkdown || bar.newJSON)) { return -1; }
+									if (!(foo.newName || foo.newContent) && (bar.newName || bar.newContent)) { return 1; }
+									if ((foo.newName || foo.newContent) && !(bar.newName || bar.newContent)) { return -1; }
 									if (foo.name > bar.name) { return 1; }
 									if (foo.name < bar.name) { return -1; }
 									return 0;
 								}).map((file, index)=> {
 									return (
 										<tr key={'file-' + index}>
-											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={{ pathname: `/pub/${this.props.pub.slug}/files/${file.name}${editMode ? '/edit' : ''}`, query: query }}>
+											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={{ pathname: `/pub/${this.props.pub.slug}/edit/${file.name}`, query: query }}>
 												{!file.isDeleted && file.isNew && <span style={[file.isNew && {backgroundColor: '#48AFF0'}, file.isNew && {backgroundColor: '#3DCC91'}, file.isDeleted && {backgroundColor: '#FF7373'}, { marginRight: '0.5em' }]} className={'pt-tag'}>new</span>}
 												{file.isDeleted && <span style={[file.isNew && {backgroundColor: '#48AFF0'}, file.isNew && {backgroundColor: '#3DCC91'}, file.isDeleted && {backgroundColor: '#FF7373'}, { marginRight: '0.5em' }]} className={'pt-tag'}>deleted</span>}
-												{!file.isNew && !file.isDeleted && (file.newName || file.newMarkdown || file.newJSON) && <span style={[file.isNew && {backgroundColor: '#48AFF0'}, file.isNew && {backgroundColor: '#3DCC91'}, file.isDeleted && {backgroundColor: '#FF7373'}, { marginRight: '0.5em' }]} className={'pt-tag'}>updated</span>}
+												{!file.isNew && !file.isDeleted && (file.newName || file.newContent) && <span style={[file.isNew && {backgroundColor: '#48AFF0'}, file.isNew && {backgroundColor: '#3DCC91'}, file.isDeleted && {backgroundColor: '#FF7373'}, { marginRight: '0.5em' }]} className={'pt-tag'}>updated</span>}
 												{file.newName || file.name}
 											</Link></td>
 											<td style={styles.tableCell}>{dateFormat(file.createdAt, 'mmm dd, yyyy')}</td>
@@ -561,44 +560,51 @@ export const PubEditorFiles = React.createClass({
 					</div>
 				}
 
-				{/* Render specific File */}
-				{!!files.length && currentFile && !mode &&
-					<div style={styles.pubStyle} className={'pub-body'}>
-						<RenderFile file={currentFile} allFiles={files} pubSlug={this.props.pub.slug} query={this.props.query} />
-					</div>
-				}
 
 				{/* Edit specific File */}
-				{!!files.length && currentFile && mode === 'edit' &&
+				{!!files.length && !!routeFile &&
 					<div className={'pt-card pt-elevation-3'} style={{ padding: '0em', margin: '0em 0em 2em' }}>
+
+
 						<div style={{ minHeight: '45px', backgroundColor: '#ebf1f5', padding: '0.5em', textAlign: 'right', borderBottom: '1px solid rgba(16, 22, 26, 0.15)' }}>
-							{currentFile.type === 'text/markdown' &&
-								<div className={'pt-button-group'}>
+							<div style={{ float: 'left' }}>
+								<input className={'pt-input'} onChange={this.props.onNameChange} value={routeFile.newName || routeFile.name} />
+							</div>
+							
+							<div className={'pt-button-group'}>
+								{routeFile.type === 'text/markdown' &&
 									<div className={`pt-button${this.props.editorMode === 'markdown' ? ' pt-active' : ''}`} onClick={this.handleEditModeChange.bind(this, 'markdown')}>Markdown</div>
+								}
+								{routeFile.type === 'text/markdown' &&
 									<div className={`pt-button${this.props.editorMode === 'rich' ? ' pt-active' : ''}`} onClick={this.handleEditModeChange.bind(this, 'rich')}>Rich</div>
-									<button className={'pt-button pt-icon-trash pt-minimal'} style={{ margin: '0em 1em' }} onClick={this.props.onFileDelete} />
-								</div>
-							}
+								}
+								<button className={'pt-button pt-icon-trash pt-minimal'} style={{ margin: '0em 1em' }} onClick={this.props.onFileDelete} />
+							</div>
+							
 						</div>
 
-						{currentFile.type === 'text/markdown' &&
+						{routeFile.type === 'text/markdown' &&
 							<div style={{ padding: '1em 4em', minHeight: '400px' }}>
 								<FullEditor 
-									initialContent={currentFile.initialContent || currentFile.content} 
+									initialContent={routeFile.initialContent || routeFile.content} 
 									onChange={this.props.onEditChange} 
 									localFiles={files}
 									localReferences={localReferences}
 									globalCategories={['pubs', 'users']}
 									handleFileUpload={this.handleFileSelect}
 									mode={this.props.editorMode} />
-								{/*<MarkdownEditor initialContent={currentFile.content} onChange={this.props.onEditChange} />*/}
+								{/*<MarkdownEditor initialContent={routeFile.content} onChange={this.props.onEditChange} />*/}
 							</div>
 						}
-						{currentFile.name.split('.').pop() === 'bib' &&
-							<CodeEditor initialContent={currentFile.initialContent || currentFile.content} onChange={this.props.onEditChange}  />
+						{routeFile.name.split('.').pop() === 'bib' &&
+							<div style={{ padding: '1em 4em', minHeight: '400px' }}>
+								<CodeEditor initialContent={routeFile.initialContent || routeFile.content} onChange={this.props.onEditChange}  />
+							</div>
 						}
-						{currentFile.type !== 'text/markdown' &&
-							<RenderFile file={currentFile} allFiles={files} pubSlug={this.props.pub.slug} query={this.props.query} />
+						{routeFile.type !== 'text/markdown' && routeFile.name.split('.').pop() !== 'bib' &&
+							<div style={{ padding: '1em', minHeight: '400px' }}>
+								<RenderFile file={routeFile} allFiles={files} pubSlug={this.props.pub.slug} query={this.props.query} />
+							</div>
 						}
 						
 					</div>

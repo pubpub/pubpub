@@ -4,13 +4,10 @@ import { browserHistory } from 'react-router';
 import { NonIdealState, Spinner } from '@blueprintjs/core';
 import { jsonToMarkdown, markdownToJSON, bibtexToCSL } from '@pubpub/prose';
 import { StickyContainer } from 'react-sticky';
+
 import PubEditorHeader from './PubEditorHeader';
 import PubEditorFiles from './PubEditorFiles';
-import PubDiscussion from './PubDiscussion';
-import PubDiscussionsList from './PubDiscussionsList';
-import PubDiscussionsNew from './PubDiscussionsNew';
-import PubSidePanel from './PubSidePanel';
-import PubHighlights from './PubHighlights';
+
 import { postVersion } from './actionsVersions';
 
 
@@ -19,7 +16,6 @@ let styles;
 export const PubEditor = React.createClass({
 	propTypes: {
 		accountData: PropTypes.object,
-		highlightData: PropTypes.object,
 		pubData: PropTypes.object,
 		params: PropTypes.object,
 		location: PropTypes.object,
@@ -39,62 +35,68 @@ export const PubEditor = React.createClass({
 	},
 
 	componentWillMount() {
-		console.log('mounting editor', this.props.pubData.pub);
-		// if (this.props.pubData.pub.id && this.props.params.mode === 'edit') {
-		// this.setState(this.enterEditModeObject);
-		// }
+		// console.log('mounting editor', this.props.pubData.pub);
+
+		const pub = this.props.pubData.pub || {};
+		const versions = pub.versions || [];
+		const currentVersion = this.getCurrentVersion(versions);
+		const files = currentVersion.files || [];
+		const localReferences = this.getLocalReferences(files);
+		const currentFileName = this.props.params.filename;
+		const defaultMode = currentFileName && currentFileName.split('.').pop() === 'md' ? 'rich' : 'code';
+
+		this.setState({
+			editorMode: defaultMode,
+			editorIsPublished: currentVersion.isPublished,
+			editorIsRestricted: currentVersion.isRestricted,
+			editorDefaultFile: currentVersion.defaultFile,
+			editorFiles: files.reduce((previous, current)=> {
+				previous[current.name] = { ...current };
+				// if (defaultMode === 'rich' && currentFileName === current.name) {
+				if (currentFileName === current.name) {
+					const initialContent = defaultMode === 'rich' 
+						? markdownToJSON(current.content, localReferences)
+						: current.content;
+					previous[current.name].initialContent = initialContent;
+				}
+				return previous;
+			}, {}),
+		});
+
+
 	},
 
 	componentWillReceiveProps(nextProps) {
-		const lastPanel = this.props.location.query.panel;
-		const nextPanel = nextProps.location.query.panel;
-		const lastPathname = this.props.location.pathname;
-		const nextPathname = nextProps.location.pathname;
+		// const lastPathname = this.props.location.pathname;
+		// const nextPathname = nextProps.location.pathname;
 
-		const editMode = Object.keys(this.state.editorFiles).length > 0;
-		if (!editMode && (!this.props.pubData.pub.id && nextPathname.pubData.pub.id && this.props.params.mode === 'edit' || !this.props.params.mode && nextProps.params.mode === 'edit')) {
-			this.setState(this.enterEditModeObject(nextProps));
-		}
-
-		if (editMode && this.props.params.filename !== nextProps.params.filename && nextProps.params.filename) {
-			const versions = nextProps.pubData.pub.versions || [];
-			const currentVersion = this.getCurrentVersion(versions);
-			// const files = currentVersion.files || [];
-			const currentFileName = nextProps.params.filename;
-
-			const newEditorFiles = { ...this.state.editorFiles };
-			// if (this.state.editorMode === 'markdown') {
-			// 	newEditorFiles[currentFileName].initialContent = newEditorFiles[currentFileName].newMarkdown || (newEditorFiles[currentFileName].newJSON && jsonToMarkdown(newEditorFiles[currentFileName].newJSON)) || newEditorFiles[currentFileName].content;
-			// }
-			// if (this.state.editorMode === 'rich') {
-
+		if (this.props.params.filename !== nextProps.params.filename && nextProps.params.filename) {
+			// const versions = nextProps.pubData.pub.versions || [];
+			// const currentVersion = this.getCurrentVersion(versions);
+			
+			
 			const files = Object.keys(this.state.editorFiles).map((key)=> {
 				return this.state.editorFiles[key];
 			});
-
 			const localReferences = this.getLocalReferences(files);
-			newEditorFiles[currentFileName].initialContent = newEditorFiles[currentFileName].newJSON || (newEditorFiles[currentFileName].newMarkdown && markdownToJSON(newEditorFiles[currentFileName].newMarkdown, localReferences)) || markdownToJSON(newEditorFiles[currentFileName].content, localReferences);
-			newEditorFiles[currentFileName].newJSON = newEditorFiles[currentFileName].newJSON || (newEditorFiles[currentFileName].newMarkdown && markdownToJSON(newEditorFiles[currentFileName].newMarkdown), localReferences) || markdownToJSON(newEditorFiles[currentFileName].content, localReferences);
-			// }
-			
+
+			const newEditorFiles = { ...this.state.editorFiles };
+
+			const currentFileName = nextProps.params.filename;
+			const nextMode = currentFileName && newEditorFiles[currentFileName].name.split('.').pop() === 'md' ? 'rich' : 'code';
+
+			let initialContent = newEditorFiles[currentFileName].newContent || newEditorFiles[currentFileName].content;
+			if (nextMode === 'rich' && typeof initialContent === 'string') {
+				initialContent = markdownToJSON(initialContent, localReferences);
+			}
+
+			newEditorFiles[currentFileName].initialContent = initialContent;
 
 			this.setState({
-				editorMode: 'rich',
+				editorMode: nextMode,
 				editorFiles: newEditorFiles,
 			});
 
-		}
-
-		if (this.props.params.meta === 'files' && nextProps.params.meta !== 'files') {
-			this.setState({
-				editorMode: undefined,
-				editorFiles: {},
-				editorVersionMessage: '',
-				editorVersionMessageUserChanged: false,
-				editorIsPublished: undefined,
-				editorIsRestricted: undefined,
-				editorDefaultFile: undefined,
-			});
 		}
 
 		const currentPub = this.props.pubData.pub || {};
@@ -103,14 +105,7 @@ export const PubEditor = React.createClass({
 			window.unsavedEdits = false;
 			const currentEditorFile = this.state.editorFiles[this.props.params.filename];
 			const nextName = currentEditorFile && (currentEditorFile.newName || currentEditorFile.name);
-			this.setState({
-				editorFiles: {},
-				editorVersionMessage: '',
-				editorVersionMessageUserChanged: false,
-				editorIsPublished: undefined,
-				editorIsRestricted: undefined,
-				editorDefaultFile: undefined,
-			});
+
 			browserHistory.push({
 				pathname: `/pub/${nextPub.slug}/files/${nextName || ''}`,
 			});
@@ -122,34 +117,34 @@ export const PubEditor = React.createClass({
 		window.unsavedEdits = false;
 	},
 
-	enterEditModeObject: function(inputProps) {
-		const props = inputProps || this.props;
-		const versions = props.pubData.pub.versions || [];
-		const currentVersion = this.getCurrentVersion(versions);
-		const files = currentVersion.files || [];
-		// const currentFileName = props.params.filename || currentVersion.defaultFile;
-		const currentFileName = props.params.filename;
-		console.log('currentFileName', currentFileName);
-		const defaultMode = 'rich';
-		const localReferences = this.getLocalReferences(files);
-		// console.log('localReferences are', localReferences);
-		return {
-			editorMode: defaultMode,
-			editorIsPublished: currentVersion.isPublished,
-			editorIsRestricted: currentVersion.isRestricted,
-			editorDefaultFile: currentVersion.defaultFile,
-			editorFiles: files.reduce((previous, current)=> {
-				previous[current.name] = { ...current };
-				if (defaultMode === 'rich' && currentFileName === current.name) {
-					const newJSON = markdownToJSON(current.content, localReferences);
-					previous[current.name].newJSON = newJSON;
-					previous[current.name].initialContent = newJSON;
-				}
-				return previous;
-			}, {}),
-		};
+	// enterEditModeObject: function(inputProps) {
+	// 	const props = inputProps || this.props;
+	// 	const versions = props.pubData.pub.versions || [];
+	// 	const currentVersion = this.getCurrentVersion(versions);
+	// 	const files = currentVersion.files || [];
+	// 	// const currentFileName = props.params.filename || currentVersion.defaultFile;
+	// 	const currentFileName = props.params.filename;
+	// 	console.log('currentFileName', currentFileName);
+	// 	const defaultMode = 'rich';
+	// 	const localReferences = this.getLocalReferences(files);
+	// 	// console.log('localReferences are', localReferences);
+	// 	return {
+	// 		editorMode: defaultMode,
+	// 		editorIsPublished: currentVersion.isPublished,
+	// 		editorIsRestricted: currentVersion.isRestricted,
+	// 		editorDefaultFile: currentVersion.defaultFile,
+	// 		editorFiles: files.reduce((previous, current)=> {
+	// 			previous[current.name] = { ...current };
+	// 			if (defaultMode === 'rich' && currentFileName === current.name) {
+	// 				const newJSON = markdownToJSON(current.content, localReferences);
+	// 				previous[current.name].newJSON = newJSON;
+	// 				previous[current.name].initialContent = newJSON;
+	// 			}
+	// 			return previous;
+	// 		}, {}),
+	// 	};
 
-	},
+	// },
 
 	// goBack: function() {
 	// 	// Note, this breaks if a user directly navigates to a discussion, clicks 'back' (rendering canGoBack = true), and then navigates back twice.
@@ -194,7 +189,8 @@ export const PubEditor = React.createClass({
 	},
 
 	onEditChange: function(newVal) {
-		if (!this.state.editorMode) { return false; }
+		// console.log(newVal);
+		// if (!this.state.editorMode) { return false; }
 		const currentFile = this.props.params.filename;
 		if (!currentFile) { return false; }
 		const newEditorFiles = { ...this.state.editorFiles };
@@ -203,8 +199,9 @@ export const PubEditor = React.createClass({
 		// 	newMarkdown: this.state.editorMode === 'markdown' ? newVal : undefined,
 		// 	newJSON: this.state.editorMode === 'rich' ? newVal : undefined,
 		// };
-		newEditorFiles[currentFile].newMarkdown = this.state.editorMode === 'markdown' ? newVal : undefined;
-		newEditorFiles[currentFile].newJSON = this.state.editorMode === 'rich' ? newVal : undefined;
+		// newEditorFiles[currentFile].newMarkdown = this.state.editorMode === 'markdown' ? newVal : undefined;
+		// newEditorFiles[currentFile].newJSON = this.state.editorMode === 'rich' ? newVal : undefined;
+		newEditorFiles[currentFile].newContent = newVal;
 		window.unsavedEdits = true;
 		return this.setState({ editorFiles: newEditorFiles });
 		
@@ -215,23 +212,26 @@ export const PubEditor = React.createClass({
 		const currentFile = this.props.params.filename;
 		const newEditorFiles = { ...this.state.editorFiles };
 
+		const currentContent = newEditorFiles[currentFile].newContent || newEditorFiles[currentFile].initialContent;
+		let newContent;
 		if (newMode === 'markdown') {
-			const newMarkdown = jsonToMarkdown(newEditorFiles[currentFile].newJSON);
-			newEditorFiles[currentFile].newMarkdown = newMarkdown;
-			newEditorFiles[currentFile].newJSON = undefined;
-			newEditorFiles[currentFile].initialContent = newMarkdown;
+			newContent = jsonToMarkdown(currentContent);
+			// newEditorFiles[currentFile].newContent = newContent;
+			// newEditorFiles[currentFile].initialContent = newContent;
 		} else {
 			const files = Object.keys(this.state.editorFiles).map((key)=> {
 				return this.state.editorFiles[key];
 			});
 
 			const localReferences = this.getLocalReferences(files);
-			console.log('these references are ', localReferences)
-			const newJSON = markdownToJSON(newEditorFiles[currentFile].newMarkdown || newEditorFiles[currentFile].content, localReferences);
-			newEditorFiles[currentFile].newMarkdown = undefined;
-			newEditorFiles[currentFile].newJSON = newJSON;
-			newEditorFiles[currentFile].initialContent = newJSON;
+			// console.log('these references are ', localReferences)
+			newContent = markdownToJSON(currentContent, localReferences);
+			// newEditorFiles[currentFile].newMarkdown = undefined;
+			// newEditorFiles[currentFile].newJSON = newJSON;
+			// newEditorFiles[currentFile].initialContent = newContent;
 		}
+		newEditorFiles[currentFile].newContent = newContent;
+		newEditorFiles[currentFile].initialContent = newContent;
 		return this.setState({ 
 			editorFiles: newEditorFiles,
 			editorMode: newMode,
@@ -240,8 +240,8 @@ export const PubEditor = React.createClass({
 	},
 
 	onNameChange: function(evt) {
-		if (!this.state.editorMode) { return false; }
 		const currentFile = this.props.params.filename;
+		if (!currentFile) { return false; }
 		const newEditorFiles = { ...this.state.editorFiles };
 		newEditorFiles[currentFile].newName = evt.target.value;
 		window.unsavedEdits = true;
@@ -249,23 +249,23 @@ export const PubEditor = React.createClass({
 	},
 
 	onFileAdd: function(file) {
-		const editMode = Object.keys(this.state.editorFiles).length > 0;
+		// const editMode = Object.keys(this.state.editorFiles).length > 0;
 		// if (!editMode) { this.enterEditMode(); }
-		const newState = !editMode ? this.enterEditModeObject() : this.state;
+		// const newState = { ...this.state };
 
-		const newEditorFiles = { ...newState.editorFiles };
+		const newEditorFiles = { ...this.state.editorFiles };
 		newEditorFiles[file.name] = file;
 		window.unsavedEdits = true;
 		this.setState({
-			...newState,
+			// ...newState,
 			editorFiles: newEditorFiles 
 		});
 	},
 
 	onFileCreate: function() {
-		const editMode = Object.keys(this.state.editorFiles).length > 0;
+		// const editMode = Object.keys(this.state.editorFiles).length > 0;
 		// if (!editMode) { this.enterEditMode(); }
-		const newState = !editMode ? this.enterEditModeObject() : this.state;
+		// const newState = !editMode ? this.enterEditModeObject() : this.state;
 
 		const date = new Date();
 		const hours = ('0' + date.getHours()).slice(-2);
@@ -277,18 +277,19 @@ export const PubEditor = React.createClass({
 			name: `NewFile-${hours}-${minutes}-${seconds}.md`,
 			isNew: true,
 			content: '',
+			initialContent: '',
 		};
 
-		const newEditorFiles = { ...newState.editorFiles };
+		const newEditorFiles = { ...this.state.editorFiles };
 		newEditorFiles[file.name] = file;
 		window.unsavedEdits = true;
 		// this.setState({ editorFiles: newEditorFiles });
 		this.setState({
-			...newState,
+			// ...newState,
 			editorFiles: newEditorFiles 
 		});
 		browserHistory.push({
-			pathname: `/pub/${this.props.pubData.pub.slug}/files/${file.name}/edit`,
+			pathname: `/pub/${this.props.pubData.pub.slug}/edit/${file.name}`,
 		});
 	},
 
@@ -312,14 +313,14 @@ export const PubEditor = React.createClass({
 	// TODO: Without any unsavedChanges, will remain in editor mode on Content root, even though it should not remain in editor)
 
 	onFileDelete: function() {
-		if (!this.state.editorMode) { return false; }
+		// if (!this.state.editorMode) { return false; }
 		const currentFile = this.props.params.filename;
 		const newEditorFiles = { ...this.state.editorFiles };
 		newEditorFiles[currentFile].isDeleted = true;
 		window.unsavedEdits = true;
 		this.setState({ editorFiles: newEditorFiles });
 		return browserHistory.push({
-			pathname: `/pub/${this.props.pubData.pub.slug}/files`,
+			pathname: `/pub/${this.props.pubData.pub.slug}/edit`,
 		});
 	},
 	onSaveVersion: function(evt) {
@@ -335,22 +336,26 @@ export const PubEditor = React.createClass({
 			const newFile = { ...this.state.editorFiles[key] };
 			newFile.name = newFile.newName || newFile.name;
 			// if (this.state.editorMode === 'markdown') {
-			if (newFile.newMarkdown) {
+			if (newFile.newContent && typeof newFile.newContent === 'object') {
 				// newFile.content = newFile.newMarkdown || newFile.content;
-				newFile.content = newFile.newMarkdown;
+				newFile.content = jsonToMarkdown(newFile.newContent);
+			} else if (newFile.newContent) {
+				newFile.content = newFile.newContent;
 			}
 			// if (this.state.editorMode === 'rich') {
-			if (newFile.newJSON) {
-				// newFile.content = newFile.newJSON ? jsonToMarkdown(newFile.newJSON) : newFile.content;	
-				newFile.content = jsonToMarkdown(newFile.newJSON);
-			}
-			if (newFile.newName || newFile.newMarkdown || newFile.newJSON) {
+			// if (newFile.newJSON) {
+			// 	// newFile.content = newFile.newJSON ? jsonToMarkdown(newFile.newJSON) : newFile.content;	
+			// 	newFile.content = jsonToMarkdown(newFile.newJSON);
+			// }
+
+			const extension = newFile.name.split('.').pop;
+			if (newFile.newName || newFile.newContent) {
 				// If there are updates to the file, it's a new file, so remove its id.
-				newFile.url = '/temp.md';
+				newFile.url = `/temp.${extension}`;
 				delete newFile.id;
 				delete newFile.hash;
-				delete newFile.newJSON;
-				delete newFile.newMarkdown;
+				// delete newFile.newJSON;
+				delete newFile.newContent;
 				delete newFile.newName;
 				delete newFile.initialContent;
 			}
@@ -370,15 +375,15 @@ export const PubEditor = React.createClass({
 		window.unsavedEdits = false;
 		const currentEditorFile = this.state.editorFiles[this.props.params.filename] || {};
 		const nextName = currentEditorFile.name;
-		this.setState({
-			editorMode: undefined,
-			editorFiles: {},
-			editorVersionMessage: '',
-			editorVersionMessageUserChanged: false,
-			editorIsPublished: undefined,
-			editorIsRestricted: undefined,
-			editorDefaultFile: undefined,
-		});
+		// this.setState({
+		// 	editorMode: undefined,
+		// 	editorFiles: {},
+		// 	editorVersionMessage: '',
+		// 	editorVersionMessageUserChanged: false,
+		// 	editorIsPublished: undefined,
+		// 	editorIsRestricted: undefined,
+		// 	editorDefaultFile: undefined,
+		// });
 		browserHistory.push({
 			pathname: `/pub/${this.props.pubData.pub.slug}/files/${nextName || ''}`,
 		});
@@ -414,46 +419,46 @@ export const PubEditor = React.createClass({
 			);
 		}
 
-		const meta = !this.props.params.meta ? 'files' : this.props.params.meta;
-		const mode = this.props.params.mode;
+		// const meta = !this.props.params.meta ? 'files' : this.props.params.meta;
+		// const mode = this.props.params.mode;
 		const query = this.props.location.query;
 		
-		const pathname = this.props.location.pathname;
+		// const pathname = this.props.location.pathname;
 
-		const accountData = this.props.accountData || {};
-		const accountUser = accountData.user || {};
-		const accountId = accountUser.id;
+		// const accountData = this.props.accountData || {};
+		// const accountUser = accountData.user || {};
+		// const accountId = accountUser.id;
 
-		const panel = query.panel;
-		const queryDiscussion = query.discussion;
-		const discussions = pub.discussions || [];
+		// const panel = query.panel;
+		// const queryDiscussion = query.discussion;
+		// const discussions = pub.discussions || [];
 		
 		const versions = pub.versions || [];
 		const currentVersion = this.getCurrentVersion(versions);
 
 
 		// Populate parent discussions with their children
-		const tempArray = [...discussions];
-		tempArray.forEach((discussion)=> {
-			discussion.children = tempArray.filter((child)=> {
-				return (child.replyParentPubId === discussion.id);
-			});
-			return discussion;
-		});
+		// const tempArray = [...discussions];
+		// tempArray.forEach((discussion)=> {
+		// 	discussion.children = tempArray.filter((child)=> {
+		// 		return (child.replyParentPubId === discussion.id);
+		// 	});
+		// 	return discussion;
+		// });
 
 
-		const discussionsData = discussions.filter((discussion)=> {
-			return discussion.replyParentPubId === pub.id;
-		}).sort((foo, bar)=> {
-			if (foo.createdAt > bar.createdAt) { return 1; }
-			if (foo.createdAt < bar.createdAt) { return -1; }
-			return 0;
-		});
+		// const discussionsData = discussions.filter((discussion)=> {
+		// 	return discussion.replyParentPubId === pub.id;
+		// }).sort((foo, bar)=> {
+		// 	if (foo.createdAt > bar.createdAt) { return 1; }
+		// 	if (foo.createdAt < bar.createdAt) { return -1; }
+		// 	return 0;
+		// });
 
-		const activeDiscussion = discussionsData.reduce((previous, current)=> {
-			if (queryDiscussion === String(current.threadNumber)) { return current; }
-			return previous;
-		}, {});
+		// const activeDiscussion = discussionsData.reduce((previous, current)=> {
+		// 	if (queryDiscussion === String(current.threadNumber)) { return current; }
+		// 	return previous;
+		// }, {});
 	
 
 		return (
@@ -464,7 +469,7 @@ export const PubEditor = React.createClass({
 					editorVersionMessage={this.state.editorVersionMessage}
 					editorIsPublished={this.state.editorIsPublished}
 					editorIsRestricted={this.state.editorIsRestricted}
-					onNameChange={this.onNameChange}
+					// onNameChange={this.onNameChange}
 					onVersionMessageChange={this.onVersionMessageChange}
 					onSaveVersion={this.onSaveVersion}
 					onVersionPrivacyChange={this.onVersionPrivacyChange}
@@ -481,6 +486,7 @@ export const PubEditor = React.createClass({
 					<PubEditorFiles
 						version={currentVersion}
 						pub={pub}
+						onNameChange={this.onNameChange}
 						editorMode={this.state.editorMode}
 						editorFiles={this.state.editorFiles}
 						editorDefaultFile={this.state.editorDefaultFile}

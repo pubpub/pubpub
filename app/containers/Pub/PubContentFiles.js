@@ -77,7 +77,7 @@ export const PubContentFiles = React.createClass({
 										<tr key={'file-' + index}>
 											<td style={styles.tableCell}>
 												<Link className={'underlineOnHover link'} to={{ pathname: `/pub/${this.props.pub.slug}/files/${file.name}`, query: query }}>
-													file.name
+													{file.name}
 												</Link>
 											</td>
 											<td style={styles.tableCell}>{dateFormat(file.createdAt, 'mmm dd, yyyy')}</td>
