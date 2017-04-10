@@ -514,7 +514,6 @@ export const PubEditorFiles = React.createClass({
 									<th>Name</th>
 									<th>Updated</th>
 									<th />
-									<th />
 								</tr>
 							</thead>
 							<tbody>
@@ -538,11 +537,6 @@ export const PubEditorFiles = React.createClass({
 												{file.newName || file.name}
 											</Link></td>
 											<td style={styles.tableCell}>{dateFormat(file.createdAt, 'mmm dd, yyyy')}</td>
-											<td style={[styles.tableCell, styles.tableCellSmall]}>
-												<a href={file.url} target={'_blank'}>
-													<button type="button" className={'pt-button pt-minimal pt-icon-import'} />
-												</a>
-											</td>
 											<td style={[styles.tableCell, styles.tableCellSmall]}>
 												{file.name === mainFile.name &&
 													<button role="button" className={'pt-button pt-fill pt-active'}>Main File</button>
