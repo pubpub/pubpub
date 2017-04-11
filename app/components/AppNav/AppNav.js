@@ -112,7 +112,7 @@ export const AppNav = React.createClass({
 
 		const contrastColor = headerJournal && contrastText(headerJournal.headerColor);
 		// const isLight = headerJournal && contrastColor === '#000000';
-		const isLight = !headerJournal || contrastColor === '#000000';
+		const isLight = !isPub || !isJournal || (headerJournal && contrastColor === '#000000');
 		const navClass = isLight ? 'pt-navbar' : 'pt-navbar pt-dark'; 
 		const navStyle = headerJournal ? { backgroundColor: headerJournal.headerColor, minHeight: '50px', height: 'auto' } : {};
 		const landingNav = !window.isJournal && location.pathname === '/' && !user.id ? { backgroundColor: 'transparent', boxShadow: '0px 0px 0px black', width: '100%', position: 'absolute' } : {};
