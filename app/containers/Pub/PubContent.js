@@ -154,7 +154,9 @@ export const PubContent = React.createClass({
 				<PubBreadcrumbs
 					pub={pub}
 					version={currentVersion}
+					versions={versions}
 					params={this.props.params}
+					pathname={pathname}
 					query={query} />
 
 				<div id={'content-wrapper'} style={{ position: 'relative', width: '100%' }}>

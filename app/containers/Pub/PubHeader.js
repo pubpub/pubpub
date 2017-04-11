@@ -129,9 +129,9 @@ export const PubHeader = React.createClass({
 						{(pub.isAuthor || pub.canEdit) &&
 							<div style={styles.buttonWrapper} className={'button-wrapper'}>
 								<div className={'pt-button-group'}>
-									{/*<button className={'pt-button pt-icon-edit'} onClick={this.openEditor}>
-																			Edit Pub
-																		</button>*/}
+									<Link className={'pt-button pt-icon-edit'} to={`/pub/${pub.slug}/edit`}>
+										Edit Pub
+									</Link>
 									{/*<Link to={'/pub/${pub.slug}/forks'} className={'pt-button pt-icon-fork'}>15</Link>*/}
 									{/*<Link to={'/pub/${pub.slug}/forks'} className={'pt-button'}>15</Link>*/}
 								</div>
@@ -242,7 +242,7 @@ styles = {
 	},
 	backgroundImage: (image)=> {
 		return {
-			backgroundImage: `url("${image}")`,
+			backgroundImage: `url("https://jake.pubpub.org/unsafe/fit-in/1200x1000/${image}")`,
 			backgroundRepeat: 'no-repeat',
 			backgroundPosition: 'center center',
 			backgroundSize: 'cover',

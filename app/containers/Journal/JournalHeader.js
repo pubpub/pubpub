@@ -24,7 +24,8 @@ export const JournalProfileHeader = React.createClass({
 		const headerAlign = this.props.headerAlign;
 		const customBackgroundStyle = {
 			backgroundColor: this.props.headerColor || '#13A6EF',
-			backgroundImage: this.props.headerImage ? 'url("' + this.props.headerImage + '")' : '',
+			backgroundImage: this.props.headerImage ? `url("https://jake.pubpub.org/unsafe/fit-in/1200x1000/${this.props.headerImage}")` : '',
+			
 			textAlign: hasPage ? 'left' : this.props.headerAlign || 'left',
 		};
 

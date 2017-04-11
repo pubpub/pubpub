@@ -87,9 +87,11 @@ export const PubEditorHeader = React.createClass({
 		}, 0);
 
 		const updatedFileCount = files.reduce((previous, current)=> {
-			if (current.newName || current.newMarkdown || current.newJSON) { return previous + 1; }
+			if (current.newName || current.newContent) { return previous + 1; }
 			return previous;
 		}, 0);
+
+		const changeCount = newFileCount + removedFileCount + updatedFileCount;
 
 		return (
 			<Sticky style={styles.container}>
@@ -128,22 +130,22 @@ export const PubEditorHeader = React.createClass({
 						position={2} />
 				</div>
 
-				<ul className="pt-breadcrumbs" style={styles.breadcrumbs}>
+				{routeFilename &&
+					<Link to={{ pathname: '/pub/' + this.props.pub.slug + '/edit', query: query }} className="pt-button pt-icon-folder-open">Show All Files</Link>
+				}
+				{/*<ul className="pt-breadcrumbs" style={styles.breadcrumbs}>
+
 					<li><Link to={{ pathname: '/pub/' + this.props.pub.slug + '/edit', query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> Show All Files</Link></li>
-					{/*currentEditorFile &&
-						<li><a className="pt-breadcrumb">
-							<input className={'pt-input'} onChange={this.props.onNameChange} value={currentEditorFile.newName || currentEditorFile.name} />
-						</a></li>
-					*/}
 					
-				</ul>
+				</ul>*/}
 
 				<div style={styles.editModeBar}>
 					<div style={styles.versionStatus}>
 						<form style={{ display: 'inline-block', verticalAlign: 'middle' }}>
 							<div className="pt-control-group">  
 								<input type="text" style={{ minWidth: '300px' }} className="pt-input" placeholder="Describe your changes..." onChange={this.props.onVersionMessageChange} value={this.props.editorVersionMessage} />
-								<Button type="submit" className="pt-intent-success" onClick={this.props.onSaveVersion} loading={this.props.isLoading}>Save Changes</Button>
+
+								<Button type="submit" className={`pt-intent-success${changeCount ? '' : ' pt-disabled'}`} onClick={this.props.onSaveVersion} loading={this.props.isLoading}>{changeCount ? 'Save Changes' : 'No Changes to Save'}</Button>
 							</div>
 						</form>
 					</div>

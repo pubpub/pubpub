@@ -49,14 +49,14 @@ export const PubContentFiles = React.createClass({
 			<div style={styles.container}>
 
 				{/* Add or Edit Button */}
-				{meta === 'files' && !!files.length && !routeFilename && this.props.pub.canEdit &&
+				{/*meta === 'files' && !!files.length && !routeFilename && this.props.pub.canEdit &&
 					<div style={styles.topButtons}>
 						<Link className={'pt-button pt-icon-add'} to={`/pub/${params.slug}/edit`}>Add or Edit Files</Link>
 					</div>
-				}
+				*/}
 
 				{/* File List */}
-				{meta === 'files' && !routeFile &&
+				{meta === 'files' && !routeFilename &&
 					<div>
 						<table className="pt-table pt-condensed pt-striped" style={{ width: '100%' }}>
 							<thead>
