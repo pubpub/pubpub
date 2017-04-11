@@ -512,7 +512,6 @@ export const PubEditorFiles = React.createClass({
 							<thead>
 								<tr>
 									<th>Name</th>
-									<th>Updated</th>
 									<th />
 								</tr>
 							</thead>
@@ -534,9 +533,8 @@ export const PubEditorFiles = React.createClass({
 												{!file.isDeleted && file.isNew && <span style={[file.isNew && {backgroundColor: '#48AFF0'}, file.isNew && {backgroundColor: '#3DCC91'}, file.isDeleted && {backgroundColor: '#FF7373'}, { marginRight: '0.5em' }]} className={'pt-tag'}>new</span>}
 												{file.isDeleted && <span style={[file.isNew && {backgroundColor: '#48AFF0'}, file.isNew && {backgroundColor: '#3DCC91'}, file.isDeleted && {backgroundColor: '#FF7373'}, { marginRight: '0.5em' }]} className={'pt-tag'}>deleted</span>}
 												{!file.isNew && !file.isDeleted && (file.newName || file.newContent) && <span style={[file.isNew && {backgroundColor: '#48AFF0'}, file.isNew && {backgroundColor: '#3DCC91'}, file.isDeleted && {backgroundColor: '#FF7373'}, { marginRight: '0.5em' }]} className={'pt-tag'}>updated</span>}
-												{file.newName || file.name}
+												{file.newName || file.name} <span className={'pt-icon-standard pt-icon-edit'} />
 											</Link></td>
-											<td style={styles.tableCell}>{dateFormat(file.createdAt, 'mmm dd, yyyy')}</td>
 											<td style={[styles.tableCell, styles.tableCellSmall]}>
 												{file.name === mainFile.name &&
 													<button role="button" className={'pt-button pt-fill pt-active'}>Main File</button>

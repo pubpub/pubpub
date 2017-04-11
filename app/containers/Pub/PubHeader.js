@@ -273,7 +273,8 @@ styles = {
 		return {
 			maxWidth: '1200px',
 			margin: '0 auto',
-			padding: hasHeaderImage ? '100px 2em' : '50px 2em',
+			// padding: hasHeaderImage ? '100px 2em' : '50px 2em',
+			padding: '50px 2em',
 			position: 'relative',
 			zIndex: 3,
 		};
