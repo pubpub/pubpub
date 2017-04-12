@@ -179,9 +179,7 @@ export const PubEditorFiles = React.createClass({
 		const uploadRates = [...this.state.uploadRates, ...newUploadRates];
 		const uploadFileNames = [...this.state.uploadFileNames, ...newUploadFileNames];
 		const uploadFiles = [...this.state.uploadFiles, ...files];
-		// console.log('in handle 2', files);
 		files.map((file, index)=> {
-			// console.log('in handle 3', file);
 			s3Upload(file, this.onFileProgress, this.onFileFinish, startingFileIndex + index);
 		});
 
@@ -264,7 +262,7 @@ export const PubEditorFiles = React.createClass({
 
 				// console.log('about to call with', filename);
 				setTimeout(()=> {
-					this.state.richUploadCallback(filename);
+					this.state.richUploadCallback(newUploadedFileObject.name, newUploadedFileObject.url);
 				}, 0);
 			};
 			reader.onerror = (event)=> {
@@ -287,7 +285,7 @@ export const PubEditorFiles = React.createClass({
 
 			// console.log('about to call with', filename);
 			setTimeout(()=> {
-				this.state.richUploadCallback(filename);
+				this.state.richUploadCallback(newUploadedFileObject.name, newUploadedFileObject.url);
 			}, 0);
 		}
 
