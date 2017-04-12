@@ -1,11 +1,21 @@
+import { Button, Menu } from '@blueprintjs/core';
 import React, { PropTypes } from 'react';
-import { Sticky } from 'react-sticky';
-import { Menu, Button } from '@blueprintjs/core';
+
 import DropdownButton from 'components/DropdownButton/DropdownButton';
 import { Link } from 'react-router';
 import Radium from 'radium';
+import { Sticky } from 'react-sticky';
 
 let styles;
+
+
+const PrivacyListItem = ({ title, icon, active, description, setEditorPrivacy }) => (
+	<li><a className={`pt-menu-item pt-popover-dismiss ${(active) ? 'pt-active' : null}`} onClick={setEditorPrivacy}>
+		<span style={styles.privacyIconRight} className={`pt-icon-standard ${icon} opacity-on-hover-child`} />
+		<strong>{title}</strong>
+		<div style={styles.privacyDescription} className="pt-text-muted">{description}</div>
+	</a></li>
+);
 
 export const PubEditorHeader = React.createClass({
 	propTypes: {
@@ -41,7 +51,7 @@ export const PubEditorHeader = React.createClass({
 	render() {
 		// const version = this.props.version || {};
 		// const editMode = Object.keys(this.props.editorFiles).length > 0;
-		
+
 		const files = Object.keys(this.props.editorFiles).map((key)=> {
 			return this.props.editorFiles[key];
 		});
@@ -95,27 +105,38 @@ export const PubEditorHeader = React.createClass({
 
 		return (
 			<Sticky style={styles.container}>
-				<div style={styles.versionStatus}>					
-					<DropdownButton 
+				<div style={styles.versionStatus}>
+					<DropdownButton
 						content={
-							<Menu>
-								<li><a className="pt-menu-item pt-popover-dismiss" onClick={this.setEditorPrivacy.bind(this, 'private')}>
-									Private
-									{true === false && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
-								</a></li>
-								<li><a className="pt-menu-item pt-popover-dismiss" onClick={this.setEditorPrivacy.bind(this, 'restricted')}>
-									Restricted
-									{true === false && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
-								</a></li>
-								<li><a className="pt-menu-item pt-popover-dismiss" onClick={this.setEditorPrivacy.bind(this, 'published')}>
-									Published
-									{true === false && <span className={'pt-icon-standard pt-icon-tick pt-menu-item-label'} />}
-								</a></li>
-							</Menu>
+							<div style={styles.privacyBox}>
+								<Menu>
+									<PrivacyListItem
+										title="Private"
+										icon="pt-icon-lock"
+										description="Only collaborators on this pub will be able to see and access the pub."
+										active={(editorPrivacy === 'Private')}
+										setEditorPrivacy={this.setEditorPrivacy.bind(this, 'private')}
+										/>
+									<PrivacyListItem
+										title="Restricted"
+										icon="pt-icon-people"
+										description="Only collaborators, reviewers and editors of journals will be able to see and access the pub."
+										active={(editorPrivacy === 'Restricted')}
+										setEditorPrivacy={this.setEditorPrivacy.bind(this, 'restricted')}
+										/>
+									<PrivacyListItem
+										title="Published"
+										icon="pt-icon-globe"
+										description="This pub will be public and can be accessed by anyone. It will also show up on your public profile."
+										active={(editorPrivacy === 'Published')}
+										setEditorPrivacy={this.setEditorPrivacy.bind(this, 'published')}
+										/>
+								</Menu>
+							</div>
 						}
 						title={
 							<span>
-								Will be {editorPrivacy}
+								Will be <strong>{editorPrivacy}</strong>
 								{editorPrivacy === 'Private' &&
 									<span style={styles.privacyIcon} className={'pt-icon-standard pt-icon-lock opacity-on-hover-child'} />
 								}
@@ -126,7 +147,7 @@ export const PubEditorHeader = React.createClass({
 									<span style={styles.privacyIcon} className={'pt-icon-standard pt-icon-globe opacity-on-hover-child'} />
 								}
 							</span>
-						} 
+						}
 						position={2} />
 				</div>
 
@@ -136,13 +157,13 @@ export const PubEditorHeader = React.createClass({
 				{/*<ul className="pt-breadcrumbs" style={styles.breadcrumbs}>
 
 					<li><Link to={{ pathname: '/pub/' + this.props.pub.slug + '/edit', query: query }} className="pt-breadcrumb"><span className="pt-icon-standard pt-icon-folder-open" /> Show All Files</Link></li>
-					
+
 				</ul>*/}
 
 				<div style={styles.editModeBar}>
 					<div style={styles.versionStatus}>
 						<form style={{ display: 'inline-block', verticalAlign: 'middle' }}>
-							<div className="pt-control-group">  
+							<div className="pt-control-group">
 								<input type="text" style={{ minWidth: '300px' }} className="pt-input" placeholder="Describe your changes..." onChange={this.props.onVersionMessageChange} value={this.props.editorVersionMessage} />
 
 								<Button type="submit" className={`pt-intent-success${changeCount ? '' : ' pt-disabled'}`} onClick={this.props.onSaveVersion} loading={this.props.isLoading}>{changeCount ? 'Save Changes' : 'No Changes to Save'}</Button>
@@ -163,11 +184,11 @@ export const PubEditorHeader = React.createClass({
 						{(!!newFileCount || !!removedFileCount || !!updatedFileCount) && !this.props.isLoading &&
 							<Button style={{ verticalAlign: 'middle' }} className="pt-minimal" onClick={this.props.onDiscardChanges}>(Discard Changes)</Button>
 						}
-						
+
 					</div>
 					<div style={styles.editModeLine} />
 				</div>
-			
+
 			</Sticky>
 		);
 	},
@@ -182,7 +203,7 @@ styles = {
 		padding: '1em 0em 0em',
 		borderBottom: '0px solid black',
 		zIndex: 10,
-		
+
 	},
 	editModeLine: {
 		position: 'absolute',
@@ -209,6 +230,19 @@ styles = {
 		paddingLeft: '0.5em',
 		color: '#5c7080',
 		margin: 0,
+	},
+	privacyIconRight: {
+		paddingRight: '0.5em',
+		color: '#5c7080',
+		margin: 0,
+	},
+	privacyDescription: {
+		margin: '5px 0px 0px',
+		fontSize: '0.9em',
+		whiteSpace: 'normal'
+	},
+	privacyBox: {
+		width: 300,
 	},
 	editModeBar: {
 		clear: 'both',
