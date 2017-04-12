@@ -1,8 +1,7 @@
-import { Dialog, Menu, MenuItem, MenuDivider, Popover, PopoverInteractionKind, Position, Button, Alert } from '@blueprintjs/core';
+import { Alert, Button, Dialog, Menu, MenuDivider, MenuItem, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 import React, { PropTypes } from 'react';
+import { bibtexToCSL, markdownToJSON } from '@pubpub/editor';
 import { postDoi, putVersion } from './actionsVersions';
-
-import { markdownToJSON, bibtexToCSL } from '@pubpub/prose';
 
 import { Link } from 'react-router';
 import Loader from 'components/Loader/Loader';
@@ -267,10 +266,10 @@ export const PubVersions = React.createClass({
 				// console.log(populatedJSONContent);
 				request
 				.post(PUBPUB_CONVERSION_URL)
-				.send({ 
-					inputType: 'pub', 
-					outputType: outputType, 
-					// inputUrl: file.url, 
+				.send({
+					inputType: 'pub',
+					outputType: outputType,
+					// inputUrl: file.url,
 					inputJSON: populatedJSONContent,
 					metadata: metadata,
 					options: { template: selectedTemplate }

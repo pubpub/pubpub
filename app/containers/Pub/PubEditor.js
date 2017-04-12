@@ -1,15 +1,13 @@
-import React, { PropTypes } from 'react';
-import Radium from 'radium';
-import { browserHistory } from 'react-router';
 import { NonIdealState, Spinner } from '@blueprintjs/core';
-import { jsonToMarkdown, markdownToJSON, bibtexToCSL } from '@pubpub/prose';
-import { StickyContainer } from 'react-sticky';
+import React, { PropTypes } from 'react';
+import { bibtexToCSL, jsonToMarkdown, markdownToJSON } from '@pubpub/editor';
 
-import PubEditorHeader from './PubEditorHeader';
 import PubEditorFiles from './PubEditorFiles';
-
+import PubEditorHeader from './PubEditorHeader';
+import Radium from 'radium';
+import { StickyContainer } from 'react-sticky';
+import { browserHistory } from 'react-router';
 import { postVersion } from './actionsVersions';
-
 
 let styles;
 
@@ -54,7 +52,7 @@ export const PubEditor = React.createClass({
 				previous[current.name] = { ...current };
 				// if (defaultMode === 'rich' && currentFileName === current.name) {
 				if (currentFileName === current.name) {
-					const initialContent = defaultMode === 'rich' 
+					const initialContent = defaultMode === 'rich'
 						? markdownToJSON(current.content, localReferences)
 						: current.content;
 					previous[current.name].initialContent = initialContent;
@@ -73,8 +71,8 @@ export const PubEditor = React.createClass({
 		if (this.props.params.filename !== nextProps.params.filename && nextProps.params.filename) {
 			// const versions = nextProps.pubData.pub.versions || [];
 			// const currentVersion = this.getCurrentVersion(versions);
-			
-			
+
+
 			const files = Object.keys(this.state.editorFiles).map((key)=> {
 				return this.state.editorFiles[key];
 			});
@@ -109,7 +107,7 @@ export const PubEditor = React.createClass({
 			browserHistory.push({
 				pathname: `/pub/${nextPub.slug}/files/${nextName || ''}`,
 			});
-			
+
 		}
 	},
 
@@ -167,7 +165,7 @@ export const PubEditor = React.createClass({
 	// },
 	// toggleShowClosedDiscussions: function() {
 	// 	this.setState({ showClosedDiscussions: !this.state.showClosedDiscussions });
-	// },	
+	// },
 
 	getCurrentVersion: function(versions) {
 		const query = this.props.location.query;
@@ -204,7 +202,7 @@ export const PubEditor = React.createClass({
 		newEditorFiles[currentFile].newContent = newVal;
 		window.unsavedEdits = true;
 		return this.setState({ editorFiles: newEditorFiles });
-		
+
 	},
 
 	onEditorModeChange: function(newMode) {
@@ -232,11 +230,11 @@ export const PubEditor = React.createClass({
 		}
 		newEditorFiles[currentFile].newContent = newContent;
 		newEditorFiles[currentFile].initialContent = newContent;
-		return this.setState({ 
+		return this.setState({
 			editorFiles: newEditorFiles,
 			editorMode: newMode,
 		});
-				
+
 	},
 
 	onNameChange: function(evt) {
@@ -258,7 +256,7 @@ export const PubEditor = React.createClass({
 		window.unsavedEdits = true;
 		this.setState({
 			// ...newState,
-			editorFiles: newEditorFiles 
+			editorFiles: newEditorFiles
 		});
 	},
 
@@ -286,7 +284,7 @@ export const PubEditor = React.createClass({
 		// this.setState({ editorFiles: newEditorFiles });
 		this.setState({
 			// ...newState,
-			editorFiles: newEditorFiles 
+			editorFiles: newEditorFiles
 		});
 		browserHistory.push({
 			pathname: `/pub/${this.props.pubData.pub.slug}/edit/${file.name}`,
@@ -328,7 +326,7 @@ export const PubEditor = React.createClass({
 		if (!this.state.editorVersionMessage) {
 			return this.setState({ editorError: 'Version message required' });
 		}
-		
+
 		const pubId = this.props.pubData.pub.id;
 		// const version = this.getCurrentVersion(this.props.pubData.pub.versions);
 		// TODO: Remove duplicates if uploaded files with identical names
@@ -344,7 +342,7 @@ export const PubEditor = React.createClass({
 			}
 			// if (this.state.editorMode === 'rich') {
 			// if (newFile.newJSON) {
-			// 	// newFile.content = newFile.newJSON ? jsonToMarkdown(newFile.newJSON) : newFile.content;	
+			// 	// newFile.content = newFile.newJSON ? jsonToMarkdown(newFile.newJSON) : newFile.content;
 			// 	newFile.content = jsonToMarkdown(newFile.newJSON);
 			// }
 
@@ -362,7 +360,7 @@ export const PubEditor = React.createClass({
 			return newFile;
 		}).filter((file)=> {
 			return !file.isDeleted;
-		}); 
+		});
 
 		const newDefaultFile = this.state.editorFiles[this.state.editorDefaultFile] || {};
 		const oldDefaultFile = this.state.editorFiles[this.state.editorDefaultFile] || {};
@@ -422,7 +420,7 @@ export const PubEditor = React.createClass({
 		// const meta = !this.props.params.meta ? 'files' : this.props.params.meta;
 		// const mode = this.props.params.mode;
 		const query = this.props.location.query;
-		
+
 		// const pathname = this.props.location.pathname;
 
 		// const accountData = this.props.accountData || {};
@@ -432,7 +430,7 @@ export const PubEditor = React.createClass({
 		// const panel = query.panel;
 		// const queryDiscussion = query.discussion;
 		// const discussions = pub.discussions || [];
-		
+
 		const versions = pub.versions || [];
 		const currentVersion = this.getCurrentVersion(versions);
 
@@ -459,7 +457,7 @@ export const PubEditor = React.createClass({
 		// 	if (queryDiscussion === String(current.threadNumber)) { return current; }
 		// 	return previous;
 		// }, {});
-	
+
 
 		return (
 			<StickyContainer>
@@ -482,7 +480,7 @@ export const PubEditor = React.createClass({
 
 				<div id={'content-wrapper'} style={{ position: 'relative', width: '100%' }}>
 
-					
+
 					<PubEditorFiles
 						version={currentVersion}
 						pub={pub}
@@ -513,6 +511,6 @@ export const PubEditor = React.createClass({
 export default Radium(PubEditor);
 
 styles = {
-	
+
 
 };

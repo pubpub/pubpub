@@ -1,3 +1,5 @@
+// import MarkdownEditor from 'components/MarkdownEditor/MarkdownEditor';
+import { CodeEditor, FullEditor, bibtexToCSL, csltoBibtex } from '@pubpub/editor';
 import { NonIdealState, ProgressBar } from '@blueprintjs/core';
 import React, { PropTypes } from 'react';
 
@@ -6,12 +8,8 @@ import { Link } from 'react-router';
 // import { PUBPUB_EDITOR_URL } from 'configURLs';
 import Radium from 'radium';
 import RenderFile from 'components/RenderFile/RenderFile';
-// import MarkdownEditor from 'components/MarkdownEditor/MarkdownEditor';
-import { FullEditor, CodeEditor, bibtexToCSL } from '@pubpub/prose';
-
 import dateFormat from 'dateformat';
 import { globalStyles } from 'utils/globalStyles';
-// import { postVersion } from './actionsVersions';
 import { putDefaultFile } from './actionsFiles';
 import { s3Upload } from 'utils/uploadFile';
 
@@ -54,7 +52,7 @@ export const PubEditorFiles = React.createClass({
 	// componentWillMount() {
 	// 	const editMode = Object.keys(this.props.editorFiles).length > 0;
 	// 	const version = this.props.version || {};
-	// 	const files = editMode 
+	// 	const files = editMode
 	// 		? Object.keys(this.props.editorFiles).map((key)=> {
 	// 			return this.props.editorFiles[key];
 	// 		})
@@ -82,9 +80,9 @@ export const PubEditorFiles = React.createClass({
 	// 		this.setState({
 	// 			initialContent: currentFile.content || '',
 	// 			content: currentFile.content || '',
-	// 		});	
+	// 		});
 	// 	}
-		
+
 	// },
 
 	// componentWillReceiveProps(nextProps) {
@@ -97,7 +95,7 @@ export const PubEditorFiles = React.createClass({
 
 	// 		// const editMode = Object.keys(this.props.editorFiles).length > 0;
 	// 		// const version = this.props.version || {};
-	// 		// const files = editMode 
+	// 		// const files = editMode
 	// 		// 	? Object.keys(this.props.editorFiles).map((key)=> {
 	// 		// 		return this.props.editorFiles[key];
 	// 		// 	})
@@ -210,11 +208,21 @@ export const PubEditorFiles = React.createClass({
 	},
 
 	handleReferenceAdd: function(referenceObject, callback) {
-		// const bibtexContent = this.props.editorFiles.bibtex.content || this.props.editorFiles.bibtex.newContent || ''
-		// const newBibtexConten = bibtexContent + turnObjectToString(referenceObject);
-		// const newBibtexFile = { ...bibtexFile, newContent: newBibtexContent, id: undefined, hash: undefined };
-		// this.setState({ editorFiles.bibtexFile = newBibtexFile })
-		// this.callback(refenceObject)
+		const referencesFilename = 'references.bib';
+		// console.log(this.props.editorFiles);
+		let bibtexFile;
+		if (this.props.editorFiles[referencesFilename] && this.props.editorFiles[referencesFilename].content) {
+			bibtexFile = this.props.editorFiles[referencesFilename];
+		} else {
+			bibtexFile = { content: '' };
+		}
+		const bibtexContent = (bibtexFile.newContent || bibtexFile.content);
+		const newBibtexContent = bibtexContent + csltoBibtex(referenceObject);
+	 	const newBibtexFile = { ...bibtexFile, newContent: newBibtexContent, id: undefined, hash: undefined };
+		const editorFiles = this.state.editorFiles || th;
+		editorFiles[referencesFilename] = newBibtexFile;
+	 	this.setState({ editorFiles });
+		this.callback(refenceObject);
 	},
 
 	// Update state's progress value when new events received.
@@ -288,7 +296,7 @@ export const PubEditorFiles = React.createClass({
 		}
 
 
-		
+
 	},
 
 	versionMessageChange: function(evt) {
@@ -562,7 +570,7 @@ export const PubEditorFiles = React.createClass({
 							<div style={{ float: 'left' }}>
 								<input className={'pt-input'} onChange={this.props.onNameChange} value={routeFile.newName || routeFile.name} />
 							</div>
-							
+
 							<div className={'pt-button-group'}>
 								{routeFile.type === 'text/markdown' &&
 									<div className={`pt-button${this.props.editorMode === 'markdown' ? ' pt-active' : ''}`} onClick={this.handleEditModeChange.bind(this, 'markdown')}>Markdown</div>
@@ -572,18 +580,19 @@ export const PubEditorFiles = React.createClass({
 								}
 								<button className={'pt-button pt-icon-trash pt-minimal'} style={{ margin: '0em 1em' }} onClick={this.props.onFileDelete} />
 							</div>
-							
+
 						</div>
 
 						{routeFile.type === 'text/markdown' &&
 							<div style={{ padding: '1em 4em', minHeight: '400px' }}>
-								<FullEditor 
-									initialContent={routeFile.initialContent || routeFile.content} 
-									onChange={this.props.onEditChange} 
+								<FullEditor
+									initialContent={routeFile.initialContent || routeFile.content}
+									onChange={this.props.onEditChange}
 									localFiles={files}
 									localReferences={localReferences}
 									globalCategories={['pubs', 'users']}
 									handleFileUpload={this.handleFileSelect}
+									handleReferenceAdd={this.handleReferenceAdd}
 									mode={this.props.editorMode} />
 								{/*<MarkdownEditor initialContent={routeFile.content} onChange={this.props.onEditChange} />*/}
 							</div>
@@ -598,7 +607,7 @@ export const PubEditorFiles = React.createClass({
 								<RenderFile file={routeFile} allFiles={files} pubSlug={this.props.pub.slug} query={this.props.query} />
 							</div>
 						}
-						
+
 					</div>
 				}
 
