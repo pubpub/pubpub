@@ -367,8 +367,7 @@ export const PubEditorFiles = React.createClass({
 			return previous;
 		}, undefined);
 
-		const localReferences = bibtexFile ? bibtexToCSL(bibtexFile.content) : [];
-		// console.log(localReferences);
+		const localReferences = bibtexFile ? bibtexToCSL(bibtexFile.newContent || bibtexFile.content) : [];
 
 		const isLoading = this.props.isLoading;
 		const query = this.props.query || {};
