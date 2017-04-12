@@ -195,7 +195,6 @@ export const PubEditorFiles = React.createClass({
 	},
 
 	handleFileSelect: function(file, callback) { // Used for rich editor
-		console.log('in select', file);
 		this.setState({ richUploadCallback: callback });
 		this.handleFileUploads({
 			target: {
@@ -209,20 +208,17 @@ export const PubEditorFiles = React.createClass({
 
 	handleReferenceAdd: function(referenceObject, callback) {
 		const referencesFilename = 'references.bib';
-		// console.log(this.props.editorFiles);
 		let bibtexFile;
 		if (this.props.editorFiles[referencesFilename] && this.props.editorFiles[referencesFilename].content) {
 			bibtexFile = this.props.editorFiles[referencesFilename];
 		} else {
-			bibtexFile = { content: '' };
+			bibtexFile = { url: './'+referencesFilename, name: referencesFilename, content: '', isNew: true, type: 'applications/x-bibtex' };
 		}
 		const bibtexContent = (bibtexFile.newContent || bibtexFile.content);
-		const newBibtexContent = bibtexContent + csltoBibtex(referenceObject);
-	 	const newBibtexFile = { ...bibtexFile, newContent: newBibtexContent, id: undefined, hash: undefined };
-		const editorFiles = this.state.editorFiles || th;
-		editorFiles[referencesFilename] = newBibtexFile;
-	 	this.setState({ editorFiles });
-		this.callback(refenceObject);
+		const newBibtexContent = bibtexContent + csltoBibtex([referenceObject]);
+		const newBibtexFile = { ...bibtexFile, newContent: newBibtexContent, id: undefined, hash: undefined };
+		this.props.onFileAdd(newBibtexFile);
+		callback(referenceObject);
 	},
 
 	// Update state's progress value when new events received.
