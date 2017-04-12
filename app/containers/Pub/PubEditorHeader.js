@@ -113,21 +113,21 @@ export const PubEditorHeader = React.createClass({
 									<PrivacyListItem
 										title="Private"
 										icon="pt-icon-lock"
-										description="Only collaborators on this pub will be able to see and access the pub."
+										description="Only collaborators on this pub will be able to see and access the version."
 										active={(editorPrivacy === 'Private')}
 										setEditorPrivacy={this.setEditorPrivacy.bind(this, 'private')}
 										/>
 									<PrivacyListItem
 										title="Restricted"
 										icon="pt-icon-people"
-										description="Only collaborators, reviewers and editors of journals will be able to see and access the pub."
+										description="Only collaborators, reviewers and editors of journals will be able to see and access the version."
 										active={(editorPrivacy === 'Restricted')}
 										setEditorPrivacy={this.setEditorPrivacy.bind(this, 'restricted')}
 										/>
 									<PrivacyListItem
 										title="Published"
 										icon="pt-icon-globe"
-										description="This pub will be public and can be accessed by anyone. It will also show up on your public profile."
+										description="This version will be public and can be accessed by anyone. It will also show up on your public profile."
 										active={(editorPrivacy === 'Published')}
 										setEditorPrivacy={this.setEditorPrivacy.bind(this, 'published')}
 										/>
