@@ -2,12 +2,12 @@ import React, { PropTypes } from 'react';
 
 import Highlighter from 'containers/Highlighter/Highlighter';
 import Radium from 'radium';
+import { RenderDocument } from '@pubpub/editor';
 import RenderFileDoc from './RenderFileDoc';
 import RenderFileMarkdown from './RenderFileMarkdown';
 import RenderFilePDF from './RenderFilePDF';
 import RenderFilePPT from './RenderFilePPT';
 import RenderFileSTL from './RenderFileSTL';
-import { renderReactFromJSON } from '@pubpub/render-files/dist/ppub';
 
 let styles;
 
@@ -15,6 +15,7 @@ export const RenderFile = React.createClass({
 	propTypes: {
 		file: PropTypes.object,
 		allFiles: PropTypes.array,
+		allReferences: PropTypes.array,
 		noHighlighter: PropTypes.bool,
 		query: PropTypes.object,
 		pubSlug: PropTypes.string,
@@ -43,20 +44,24 @@ export const RenderFile = React.createClass({
 	},
 
 	render() {
-
 		const file = this.props.file || {};
+
 		if (!file.url) { return null; }
 		const fileType = file.type || file.url.split('.').pop();
 		const wrapperId = this.props.noHighlighter ? '' : 'highlighter-wrapper';
 		switch (fileType) {
 		case 'ppub':
-			const content = JSON.parse(file.content);
+			// const content = JSON.parse(file.content);
 			return (
 				<div id={wrapperId} style={styles.contentWrapper}>
 					{!this.props.noHighlighter &&
 						<Highlighter />
 					}
-					{renderReactFromJSON(content, this.getFileMap(this.props.allFiles))}
+					<RenderDocument
+						json={JSON.parse(file.content)}
+						localReferences={this.props.allReferences}
+						localFiles={this.props.allFiles}
+						/>
 				</div>
 			);
 		case 'text/markdown':
@@ -65,7 +70,11 @@ export const RenderFile = React.createClass({
 					{!this.props.noHighlighter &&
 						<Highlighter />
 					}
-					<RenderFileMarkdown file={file} allFiles={this.props.allFiles} query={this.props.query} pubSlug={this.props.pubSlug} />
+					<RenderDocument
+						markdown={file.content}
+						localReferences={this.props.allReferences}
+						localFiles={this.props.allFiles}
+						/>
 				</div>
 			);
 		case 'image/png':

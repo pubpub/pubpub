@@ -357,6 +357,7 @@ export const PubEditorFiles = React.createClass({
 		// Default files list, uploading
 		// Specific file view
 		// const editMode = Object.keys(this.props.editorFiles).length > 0;
+
 		const version = this.props.version || {};
 		const files = Object.keys(this.props.editorFiles).map((key)=> {
 			return this.props.editorFiles[key];
@@ -393,6 +394,7 @@ export const PubEditorFiles = React.createClass({
 		const isRemainingUploads = this.state.uploadFileNames.reduce((previous, current, index)=> {
 			if (this.state.uploadRates[index] !== 1) { return true; }
 			return previous;
+
 		}, false);
 
 		return (
@@ -590,6 +592,21 @@ export const PubEditorFiles = React.createClass({
 								{/*<MarkdownEditor initialContent={routeFile.content} onChange={this.props.onEditChange} />*/}
 							</div>
 						}
+
+						{routeFile.type === 'ppub' &&
+							<div style={{ padding: '1em 4em', minHeight: '400px' }}>
+								<FullEditor
+									initialContent={JSON.parse(routeFile.initialContent || routeFile.content)}
+									onChange={this.props.onEditChange}
+									localFiles={files}
+									localReferences={localReferences}
+									globalCategories={['pubs', 'users']}
+									handleFileUpload={this.handleFileSelect}
+									handleReferenceAdd={this.handleReferenceAdd}
+									mode={'rich'} />
+							</div>
+						}
+
 						{routeFile.name.split('.').pop() === 'bib' &&
 							<div style={{ padding: '1em 4em', minHeight: '400px' }}>
 								<CodeEditor initialContent={routeFile.initialContent || routeFile.content} onChange={this.props.onEditChange}  />
@@ -597,7 +614,7 @@ export const PubEditorFiles = React.createClass({
 						}
 						{routeFile.type !== 'text/markdown' && routeFile.name.split('.').pop() !== 'bib' &&
 							<div style={{ padding: '1em', minHeight: '400px' }}>
-								<RenderFile file={routeFile} allFiles={files} pubSlug={this.props.pub.slug} query={this.props.query} />
+								<RenderFile file={routeFile} allFiles={files} allReferences={localReferences} pubSlug={this.props.pub.slug} query={this.props.query} />
 							</div>
 						}
 

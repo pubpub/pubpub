@@ -334,37 +334,54 @@ export const PubEditor = React.createClass({
 		const pubId = this.props.pubData.pub.id;
 		// const version = this.getCurrentVersion(this.props.pubData.pub.versions);
 		// TODO: Remove duplicates if uploaded files with identical names
-		const newVersionFiles = Object.keys(this.state.editorFiles).map((key)=> {
-			const newFile = { ...this.state.editorFiles[key] };
-			newFile.name = newFile.newName || newFile.name;
-			// if (this.state.editorMode === 'markdown') {
-			if (newFile.newContent && typeof newFile.newContent === 'object') {
-				// newFile.content = newFile.newMarkdown || newFile.content;
-				newFile.content = jsonToMarkdown(newFile.newContent);
-			} else if (newFile.newContent) {
-				newFile.content = newFile.newContent;
-			}
-			// if (this.state.editorMode === 'rich') {
-			// if (newFile.newJSON) {
-			// 	// newFile.content = newFile.newJSON ? jsonToMarkdown(newFile.newJSON) : newFile.content;
-			// 	newFile.content = jsonToMarkdown(newFile.newJSON);
-			// }
 
-			const extension = newFile.name.split('.').pop;
-			if (newFile.newName || newFile.newContent) {
-				// If there are updates to the file, it's a new file, so remove its id.
-				newFile.url = `/temp.${extension}`;
-				delete newFile.id;
-				delete newFile.hash;
-				// delete newFile.newJSON;
-				delete newFile.newContent;
-				delete newFile.newName;
-				delete newFile.initialContent;
-			}
-			return newFile;
-		}).filter((file)=> {
-			return !file.isDeleted;
-		});
+
+		let newVersionFiles;
+		try {
+			newVersionFiles = Object.keys(this.state.editorFiles).map((key)=> {
+				const newFile = { ...this.state.editorFiles[key] };
+				newFile.name = newFile.newName || newFile.name;
+				// if (this.state.editorMode === 'markdown') {
+				if (newFile.newContent && typeof newFile.newContent === 'object') {
+					// newFile.content = newFile.newMarkdown || newFile.content;
+					console.log('new content!');
+					console.log(newFile.newContent.doc);
+					newFile.content = jsonToMarkdown(newFile.newContent.doc);
+
+					// turn ppub files into markdown files when saving
+					if (newFile.type === 'ppub') {
+						newFile.type = "text/markdown";
+						newFile.name = newFile.name.substr(0, newFile.name.lastIndexOf(".")) + ".md";
+					}
+				} else if (newFile.newContent) {
+					newFile.content = newFile.newContent;
+				}
+				// if (this.state.editorMode === 'rich') {
+				// if (newFile.newJSON) {
+				// 	// newFile.content = newFile.newJSON ? jsonToMarkdown(newFile.newJSON) : newFile.content;
+				// 	newFile.content = jsonToMarkdown(newFile.newJSON);
+				// }
+
+				const extension = newFile.name.split('.').pop;
+				if (newFile.newName || newFile.newContent) {
+					// If there are updates to the file, it's a new file, so remove its id.
+					newFile.url = `/temp.${extension}`;
+					delete newFile.id;
+					delete newFile.hash;
+					// delete newFile.newJSON;
+					delete newFile.newContent;
+					delete newFile.newName;
+					delete newFile.initialContent;
+				}
+				return newFile;
+			}).filter((file)=> {
+				return !file.isDeleted;
+			});
+		} catch (err) {
+			console.log('Error saving', err);
+			return this.setState({ editorError: 'Error saving files. Please email pubpub@media.mit.edu.' });
+		}
+
 
 		const newDefaultFile = this.state.editorFiles[this.state.editorDefaultFile] || {};
 		const oldDefaultFile = this.state.editorFiles[this.state.editorDefaultFile] || {};
@@ -407,6 +424,7 @@ export const PubEditor = React.createClass({
 
 
 	render() {
+
 		const pub = this.props.pubData.pub || {};
 		if (this.props.pubData.loading && !this.props.pubData.error) {
 			return <div style={{ margin: '5em auto', width: '50px' }}><Spinner /></div>;
