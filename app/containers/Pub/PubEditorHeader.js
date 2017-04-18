@@ -184,8 +184,10 @@ export const PubEditorHeader = React.createClass({
 						{(!!newFileCount || !!removedFileCount || !!updatedFileCount) && !this.props.isLoading &&
 							<Button style={{ verticalAlign: 'middle' }} className="pt-minimal" onClick={this.props.onDiscardChanges}>(Discard Changes)</Button>
 						}
-
 					</div>
+					{(changeCount) ?
+						<div style={styles.saveWarning} className="pt-text-muted">Save often! Changes are lost if you close the window without saving. </div>
+					: null}
 					<div style={styles.editModeLine} />
 				</div>
 
@@ -225,6 +227,11 @@ styles = {
 	statusLink: {
 		display: 'inline-block',
 		padding: '0px 2px',
+	},
+	saveWarning: {
+		fontSize: '0.8em',
+		marginTop: '-8px',
+		paddingBottom: '3px',
 	},
 	privacyIcon: {
 		paddingLeft: '0.5em',

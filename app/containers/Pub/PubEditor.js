@@ -103,7 +103,6 @@ export const PubEditor = React.createClass({
 		const nextPub = nextProps.pubData.pub || {};
 		if (currentPub.id && this.getCurrentVersion(currentPub.versions).id !== this.getCurrentVersion(nextPub.versions).id) {
 			window.unsavedEdits = false;
-			console.log(this.state.editorCurrentFile);
 			// const currentEditorFile = this.state.editorFiles[this.state.editorCurrentFile];
 			// const nextName = currentEditorFile && (currentEditorFile.newName || currentEditorFile.name);
 
@@ -386,11 +385,6 @@ export const PubEditor = React.createClass({
 					delete newFile.newName;
 					delete newFile.initialContent;
 				}
-				if (editorCurrentFile === key && newFile.newName) {
-
-					editorCurrentFile = newFile.newName;
-					console.log('setting current file!', editorCurrentFile);
-				}
 				return newFile;
 			}).filter((file)=> {
 				return !file.isDeleted;
@@ -400,8 +394,6 @@ export const PubEditor = React.createClass({
 			return this.setState({ editorError: 'Error saving files. Please email pubpub@media.mit.edu.' });
 		}
 
-
-		console.log('Saving new default file!', defaultFile);
 		this.setState({ editorError: '', editorCurrentFile });
 		return this.props.dispatch(postVersion(pubId, this.state.editorVersionMessage, this.state.editorIsPublished, this.state.editorIsRestricted, newVersionFiles, defaultFile));
 	},

@@ -3,6 +3,7 @@ import { CodeEditor, FullEditor, bibtexToCSL, csltoBibtex } from '@pubpub/editor
 import { NonIdealState, ProgressBar } from '@blueprintjs/core';
 import React, { PropTypes } from 'react';
 
+import EditingTips from 'components/EditingTips/EditingTips';
 // import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router';
 // import { PUBPUB_EDITOR_URL } from 'configURLs';
@@ -580,6 +581,7 @@ export const PubEditorFiles = React.createClass({
 							</div>
 
 						</div>
+						<EditingTips />
 
 						{routeFile.type === 'text/markdown' &&
 							<div style={{ padding: '1em 4em', minHeight: '400px' }}>
