@@ -169,9 +169,12 @@ export const PubEditorHeader = React.createClass({
 								<Button type="submit" className={`pt-intent-success${changeCount ? '' : ' pt-disabled'}`} onClick={this.props.onSaveVersion} loading={this.props.isLoading}>{changeCount ? 'Save Changes' : 'No Changes to Save'}</Button>
 							</div>
 						</form>
+						{(changeCount) ?
+							<div style={styles.saveWarning} className="pt-text-muted">Save often! Changes are lost if you close the window without saving. </div>
+						: null}
 					</div>
 
-					<div style={{ minHeight: '45px', lineHeight: '45px' }}>
+					<div style={{ minHeight: '55px', lineHeight: '55px' }}>
 						{!!newFileCount &&
 							<span style={{ verticalAlign: 'middle' }}>{newFileCount} file{newFileCount !== 1 && 's'} added </span>
 						}
@@ -185,9 +188,6 @@ export const PubEditorHeader = React.createClass({
 							<Button style={{ verticalAlign: 'middle' }} className="pt-minimal" onClick={this.props.onDiscardChanges}>(Discard Changes)</Button>
 						}
 					</div>
-					{(changeCount) ?
-						<div style={styles.saveWarning} className="pt-text-muted">Save often! Changes are lost if you close the window without saving. </div>
-					: null}
 					<div style={styles.editModeLine} />
 				</div>
 
@@ -230,8 +230,8 @@ styles = {
 	},
 	saveWarning: {
 		fontSize: '0.8em',
-		marginTop: '-8px',
-		paddingBottom: '3px',
+		marginTop: '-3px',
+		textAlign: 'right',
 	},
 	privacyIcon: {
 		paddingLeft: '0.5em',
