@@ -48,6 +48,7 @@ export const PubEditor = React.createClass({
 			editorIsPublished: currentVersion.isPublished,
 			editorIsRestricted: currentVersion.isRestricted,
 			editorDefaultFile: currentVersion.defaultFile,
+			editorCurrentFile: currentFileName,
 			editorFiles: files.reduce((previous, current)=> {
 				previous[current.name] = { ...current };
 				// if (defaultMode === 'rich' && currentFileName === current.name) {
@@ -102,11 +103,13 @@ export const PubEditor = React.createClass({
 		const nextPub = nextProps.pubData.pub || {};
 		if (currentPub.id && this.getCurrentVersion(currentPub.versions).id !== this.getCurrentVersion(nextPub.versions).id) {
 			window.unsavedEdits = false;
-			const currentEditorFile = this.state.editorFiles[this.props.params.filename];
-			const nextName = currentEditorFile && (currentEditorFile.newName || currentEditorFile.name);
+			console.log(this.state.editorCurrentFile);
+			// const currentEditorFile = this.state.editorFiles[this.state.editorCurrentFile];
+			// const nextName = currentEditorFile && (currentEditorFile.newName || currentEditorFile.name);
 
+			// This is a temporary fix for the renaming files bug
 			browserHistory.push({
-				pathname: `/pub/${nextPub.slug}/files/${nextName || ''}`,
+				pathname: `/pub/${nextPub.slug}`,
 			});
 
 		}
@@ -335,10 +338,17 @@ export const PubEditor = React.createClass({
 		// const version = this.getCurrentVersion(this.props.pubData.pub.versions);
 		// TODO: Remove duplicates if uploaded files with identical names
 
+		let editorCurrentFile = this.state.editorCurrentFile;
+		const newDefaultFile = this.state.editorFiles[this.state.editorDefaultFile] || {};
+		const oldDefaultFile = this.state.editorFiles[this.state.editorDefaultFile] || {};
+		const currentDefaultFile = this.state.editorFiles[Object.keys(this.state.editorFiles)[0]] || {};
+		let defaultFile = newDefaultFile.newName || newDefaultFile.name || oldDefaultFile.newName || oldDefaultFile.name || currentDefaultFile.newName || currentDefaultFile.name || 'main.md';
+
 
 		let newVersionFiles;
 		try {
 			newVersionFiles = Object.keys(this.state.editorFiles).map((key)=> {
+
 				const newFile = { ...this.state.editorFiles[key] };
 				newFile.name = newFile.newName || newFile.name;
 				// if (this.state.editorMode === 'markdown') {
@@ -349,7 +359,12 @@ export const PubEditor = React.createClass({
 					// turn ppub files into markdown files when saving
 					if (newFile.type === 'ppub') {
 						newFile.type = "text/markdown";
-						newFile.name = newFile.name.substr(0, newFile.name.lastIndexOf(".")) + ".md";
+						newFile.newName = newFile.name.substr(0, newFile.name.lastIndexOf(".")) + ".md";
+						newFile.name = newFile.newName;
+
+						if (key === defaultFile) {
+							defaultFile = newFile.name;
+						}
 					}
 				} else if (newFile.newContent) {
 					newFile.content = newFile.newContent;
@@ -371,6 +386,11 @@ export const PubEditor = React.createClass({
 					delete newFile.newName;
 					delete newFile.initialContent;
 				}
+				if (editorCurrentFile === key && newFile.newName) {
+
+					editorCurrentFile = newFile.newName;
+					console.log('setting current file!', editorCurrentFile);
+				}
 				return newFile;
 			}).filter((file)=> {
 				return !file.isDeleted;
@@ -381,11 +401,8 @@ export const PubEditor = React.createClass({
 		}
 
 
-		const newDefaultFile = this.state.editorFiles[this.state.editorDefaultFile] || {};
-		const oldDefaultFile = this.state.editorFiles[this.state.editorDefaultFile] || {};
-		const currentDefaultFile = this.state.editorFiles[Object.keys(this.state.editorFiles)[0]] || {};
-		const defaultFile = newDefaultFile.newName || newDefaultFile.name || oldDefaultFile.newName || oldDefaultFile.name || currentDefaultFile.newName || currentDefaultFile.name || 'main.md';
-		this.setState({ editorError: '' });
+		console.log('Saving new default file!', defaultFile);
+		this.setState({ editorError: '', editorCurrentFile });
 		return this.props.dispatch(postVersion(pubId, this.state.editorVersionMessage, this.state.editorIsPublished, this.state.editorIsRestricted, newVersionFiles, defaultFile));
 	},
 	onDiscardChanges: function() {
