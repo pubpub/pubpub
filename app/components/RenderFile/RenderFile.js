@@ -59,8 +59,8 @@ export const RenderFile = React.createClass({
 					}
 					<RenderDocument
 						json={JSON.parse(file.content)}
-						localReferences={this.props.allReferences}
-						localFiles={this.props.allFiles}
+						allReferences={this.props.allReferences}
+						allFiles={this.props.allFiles}
 						/>
 				</div>
 			);
@@ -72,8 +72,8 @@ export const RenderFile = React.createClass({
 					}
 					<RenderDocument
 						markdown={file.content}
-						localReferences={this.props.allReferences}
-						localFiles={this.props.allFiles}
+						allReferences={this.props.allReferences}
+						allFiles={this.props.allFiles}
 						/>
 				</div>
 			);

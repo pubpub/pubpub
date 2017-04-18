@@ -1,8 +1,9 @@
 import React, { PropTypes } from 'react';
+
 import { Link } from 'react-router';
 import Radium from 'radium';
-import dateFormat from 'dateformat';
 import RenderFile from 'components/RenderFile/RenderFile';
+import dateFormat from 'dateformat';
 import { globalStyles } from 'utils/globalStyles';
 import { putDefaultFile } from './actionsFiles';
 
@@ -42,6 +43,13 @@ export const PubContentFiles = React.createClass({
 			if (current.name === routeFilename) { return current; }
 			return previous;
 		}, undefined);
+
+		const bibtexFile = files.reduce((previous, current)=> {
+			if (current.name === 'references.bib') { return current; }
+			return previous;
+		}, undefined);
+
+		const localReferences = bibtexFile ? bibtexToCSL(bibtexFile.newContent || bibtexFile.content) : [];
 
 		const currentFile = meta === 'files' ? routeFile : mainFile;
 
@@ -105,7 +113,7 @@ export const PubContentFiles = React.createClass({
 				{/* Render specific File */}
 				{!!files.length && currentFile && !mode &&
 					<div style={styles.pubStyle} className={'pub-body'}>
-						<RenderFile file={currentFile} allFiles={files} pubSlug={this.props.pub.slug} query={this.props.query} />
+						<RenderFile file={currentFile} allFiles={files} allReferences={localReferences} pubSlug={this.props.pub.slug} query={this.props.query} />
 					</div>
 				}
 			</div>

@@ -344,9 +344,7 @@ export const PubEditor = React.createClass({
 				// if (this.state.editorMode === 'markdown') {
 				if (newFile.newContent && typeof newFile.newContent === 'object') {
 					// newFile.content = newFile.newMarkdown || newFile.content;
-					console.log('new content!');
-					console.log(newFile.newContent.doc);
-					newFile.content = jsonToMarkdown(newFile.newContent.doc);
+					newFile.content = jsonToMarkdown(newFile.newContent);
 
 					// turn ppub files into markdown files when saving
 					if (newFile.type === 'ppub') {

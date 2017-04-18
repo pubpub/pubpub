@@ -216,7 +216,10 @@ export const PubEditorFiles = React.createClass({
 		const newBibtexContent = bibtexContent + csltoBibtex([referenceObject]);
 		const newBibtexFile = { ...bibtexFile, newContent: newBibtexContent, id: undefined, hash: undefined };
 		this.props.onFileAdd(newBibtexFile);
-		callback(referenceObject);
+		if (callback) {
+			callback(referenceObject);
+		}
+
 	},
 
 	// Update state's progress value when new events received.
