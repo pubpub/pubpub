@@ -392,6 +392,8 @@ export const PubEditorFiles = React.createClass({
 			return previous;
 		}, files[0]);
 
+		console.log('Got defualt file!', mainFile);
+
 		const routeFile = files.reduce((previous, current)=> {
 			if (current.name === routeFilename) { return current; }
 			return previous;
@@ -528,19 +530,40 @@ export const PubEditorFiles = React.createClass({
 							</thead>
 							<tbody>
 								{files.sort((foo, bar)=> {
+									if (foo === mainFile) { return -1 };
+									if (bar === mainFile) {	return 1 };
 									if (!foo.isNew && bar.isNew) { return 1; }
 									if (foo.isNew && !bar.isNew) { return -1; }
 									if (!foo.isDeleted && bar.isDeleted) { return 1; }
 									if (foo.isDeleted && !bar.isDeleted) { return -1; }
 									if (!(foo.newName || foo.newContent) && (bar.newName || bar.newContent)) { return 1; }
 									if ((foo.newName || foo.newContent) && !(bar.newName || bar.newContent)) { return -1; }
+									if (foo.type === "text/markdown" || foo.type === "ppub") { return -1; }
+									if (bar.type === "text/markdown" || bar.type === "ppub") { return 1; }
+
+
 									if (foo.name > bar.name) { return 1; }
 									if (foo.name < bar.name) { return -1; }
+
+
+
 									return 0;
 								}).map((file, index)=> {
+									const isDoc = (file.type === "text/markdown" || file.type === "ppub");
+									const isImage = (file.type.indexOf('image') !== -1);
+
+									let icon;
+									if (isDoc) {
+										icon = 'pt-icon-git-repo';
+									} else if (isImage) {
+										icon = 'pt-icon-media';
+									} else {
+										icon = 'pt-icon-document'
+									}
 									return (
-										<tr key={'file-' + index}>
+ 										<tr key={'file-' + index}>
 											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={{ pathname: `/pub/${this.props.pub.slug}/edit/${file.name}`, query: query }}>
+												<span style={styles.fileIcon} className={`pt-icon-standard ${icon}`}></span>
 												{!file.isDeleted && file.isNew && <span style={[file.isNew && {backgroundColor: '#48AFF0'}, file.isNew && {backgroundColor: '#3DCC91'}, file.isDeleted && {backgroundColor: '#FF7373'}, { marginRight: '0.5em' }]} className={'pt-tag'}>new</span>}
 												{file.isDeleted && <span style={[file.isNew && {backgroundColor: '#48AFF0'}, file.isNew && {backgroundColor: '#3DCC91'}, file.isDeleted && {backgroundColor: '#FF7373'}, { marginRight: '0.5em' }]} className={'pt-tag'}>deleted</span>}
 												{!file.isNew && !file.isDeleted && (file.newName || file.newContent) && <span style={[file.isNew && {backgroundColor: '#48AFF0'}, file.isNew && {backgroundColor: '#3DCC91'}, file.isDeleted && {backgroundColor: '#FF7373'}, { marginRight: '0.5em' }]} className={'pt-tag'}>updated</span>}
@@ -639,6 +662,10 @@ export const PubEditorFiles = React.createClass({
 export default Radium(PubEditorFiles);
 
 styles = {
+	fileIcon: {
+		color: '#5c7080',
+		paddingRight: '10px',
+	},
 	container: {
 		// padding: '0em 1.25em 1.25em',
 		paddingTop: '10px',

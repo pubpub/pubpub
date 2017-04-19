@@ -77,13 +77,31 @@ export const PubContentFiles = React.createClass({
 							</thead>
 							<tbody>
 								{files.sort((foo, bar)=> {
+									if (foo === mainFile) { return -1 };
+									if (bar === mainFile) {	return 1 };
+									if (foo.type === "text/markdown" || foo.type === "ppub") { return -1; }
+									if (bar.type === "text/markdown" || bar.type === "ppub") { return 1; }
 									if (foo.name > bar.name) { return 1; }
 									if (foo.name < bar.name) { return -1; }
 									return 0;
 								}).map((file, index)=> {
+
+									const isDoc = (file.type === "text/markdown" || file.type === "ppub");
+									const isImage = (file.type.indexOf('image') !== -1);
+
+									let icon;
+									if (isDoc) {
+										icon = 'pt-icon-git-repo';
+									} else if (isImage) {
+										icon = 'pt-icon-media';
+									} else {
+										icon = 'pt-icon-document'
+									}
+
 									return (
 										<tr key={'file-' + index}>
 											<td style={styles.tableCell}>
+												<span style={styles.fileIcon} className={`pt-icon-standard ${icon}`}></span>
 												<Link className={'underlineOnHover link'} to={{ pathname: `/pub/${this.props.pub.slug}/files/${file.name}`, query: query }}>
 													{file.name}
 												</Link>
@@ -125,6 +143,10 @@ export const PubContentFiles = React.createClass({
 export default Radium(PubContentFiles);
 
 styles = {
+	fileIcon: {
+		color: '#5c7080',
+		paddingRight: '10px',
+	},
 	container: {
 		paddingTop: '10px',
 	},
