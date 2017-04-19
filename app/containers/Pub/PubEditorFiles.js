@@ -364,6 +364,10 @@ export const PubEditorFiles = React.createClass({
 
 		const version = this.props.version || {};
 		const files = Object.keys(this.props.editorFiles).map((key)=> {
+			const file = this.props.editorFiles[key];
+			if (file.type === 'text/markdown' || file.type === 'ppub') {
+				file.slug = this.props.pub.slug;
+			}
 			return this.props.editorFiles[key];
 		});
 
