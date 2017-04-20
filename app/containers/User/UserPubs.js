@@ -6,9 +6,6 @@ import PreviewDiscussion from 'components/PreviewDiscussion/PreviewDiscussion';
 import PreviewPub from 'components/PreviewPub/PreviewPub';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
 
-import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
-
 
 let styles;
 

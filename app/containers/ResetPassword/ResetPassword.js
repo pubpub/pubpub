@@ -5,8 +5,6 @@ import Helmet from 'react-helmet';
 import { Link } from 'react-router';
 import Loader from 'components/Loader/Loader';
 import { globalStyles } from 'utils/globalStyles';
-import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
 import { NonIdealState, Spinner } from '@blueprintjs/core';
 
 import { postResetRequest, checkResetHash, postPassword } from './actions';
@@ -60,7 +58,7 @@ export const ResetPassword = React.createClass({
 	},
 
 	validate: function(password) {
-		if (password.length <= 7) return { isValid: false, validationError: <FormattedMessage id="setPassword.Passwordtooshort" defaultMessage="Password too short" /> };
+		if (password.length <= 7) return { isValid: false, validationError: 'Password too short' };
 		return { isValid: true, validationError: undefined };
 	},
 
@@ -97,10 +95,10 @@ export const ResetPassword = React.createClass({
 				<Helmet title={'Reset Password · PubPub'} />
 
 				{!resetHash &&
-					<h1 style={styles.header}><FormattedMessage {...globalMessages.ResetPassword} /></h1>
+					<h1 style={styles.header}>Reset Password</h1>
 				}
 				{!!resetHash &&
-					<h1 style={styles.header}><FormattedMessage {...globalMessages.SetPassword} /></h1>
+					<h1 style={styles.header}>Set Password</h1>
 				}
 				
 				{/* Show form to submit email */}
@@ -109,18 +107,18 @@ export const ResetPassword = React.createClass({
 						<p>Enter your email and a link to reset your password will be sent to you.</p>
 
 						<label style={styles.label} htmlFor={'email'}>
-							<FormattedMessage {...globalMessages.Email} />
+							Email
 							<input id={'email'} className={'pt-input margin-bottom'} name={'email'} type="text" style={styles.input} value={this.state.email} onChange={this.inputUpdateLowerCase.bind(this, 'email')} />
 						</label>
 						
 						<button name={'submitResetRequest'} className={'pt-button pt-intent-primary'} onClick={this.handleResetPasswordSubmit}>
-							<FormattedMessage {...globalMessages.ResetPassword} />
+							Reset Password
 						</button>
 
 						<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!error} /></div>
 						{ error &&
 							<div style={styles.errorMessage}>
-								<FormattedMessage id="resetPassword.InvalidEmail" defaultMessage="Invalid Email" />
+								Invalid Email
 							</div>
 						}
 					</form>
@@ -129,8 +127,8 @@ export const ResetPassword = React.createClass({
 				{/* Show password reset request confirmation, with directions to check email  */}
 				{!resetHash && this.state.showConfirmation &&
 					<NonIdealState
-						description={<span><FormattedMessage id="resetPassword.CheckInbox" defaultMessage="Check your inbox for an email with a reset link" /></span>}
-						title={<span><FormattedMessage id="resetPassword.EmailSent" defaultMessage="Reset Password Email Sent" /></span>}
+						description={<span>Check your inbox for an email with a reset link</span>}
+						title={<span>Reset Password Email Sent</span>}
 						visual={'envelope'} />
 				}
 
@@ -150,10 +148,10 @@ export const ResetPassword = React.createClass({
 				{resetHash && !hashLoading && !hashError && !this.state.showConfirmation &&
 					<form onSubmit={this.handleSetPasswordSubmit}>
 						<label htmlFor={'password'}>
-							<FormattedMessage {...globalMessages.Password} />
+							Password
 							<input id={'password'} name={'password'} type="password" style={styles.input} value={this.state.password} onChange={this.inputUpdate.bind(this, 'password')} />
 							<div className={'light-color inputSubtext'} to={'/setpassword'}>
-								<FormattedMessage {...globalMessages.PasswordLength} />
+								Must be at least 8 characters
 							</div>
 						</label>
 
@@ -172,7 +170,7 @@ export const ResetPassword = React.createClass({
 				{/* Show confirmation of password reset. Link to Login */}
 				{resetHash && !hashLoading && !hashError && this.state.showConfirmation &&
 					<NonIdealState
-						description={<span><FormattedMessage id="setPassword.SuccessDescription" defaultMessage="Your password has been successfully changed." /></span>}
+						description={<span>Your password has been successfully changed.</span>}
 						title={'Reset Password Successful'}
 						visual={'tick'}
 						action={

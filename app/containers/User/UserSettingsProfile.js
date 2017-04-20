@@ -1,12 +1,9 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import { Link } from 'react-router';
 import Loader from 'components/Loader/Loader';
 import ImageCropper from 'components/ImageCropper/ImageCropper';
 
 import { globalStyles } from 'utils/globalStyles';
-import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
 
 import { putUser } from './actionsSettings';
 let styles;
@@ -90,12 +87,12 @@ export const UserSettingsProfile = React.createClass({
 
 		// Check to make sure firstName exists
 		if (!data.firstName || !data.firstName.length) {
-			return { isValid: false, validationError: <FormattedMessage { ...globalMessages.FirstNamerequired } /> };
+			return { isValid: false, validationError: 'First Name required' };
 		}
 
 		// Check to make sure lastName exists
 		if (!data.lastName || !data.lastName.length) {
-			return { isValid: false, validationError: <FormattedMessage { ...globalMessages.LastNamerequired } /> };
+			return { isValid: false, validationError: 'Last Name required' };
 		}
 
 		return { isValid: true, validationError: undefined };
@@ -134,23 +131,23 @@ export const UserSettingsProfile = React.createClass({
 				<form onSubmit={this.putUserSubmit}>
 
 					<label htmlFor={'firstName'}>
-						<FormattedMessage {...globalMessages.FirstName} />
+						First Name
 						<input id={'firstName'} className={'pt-input margin-bottom'} name={'first name'} type="text" style={styles.input} value={this.state.firstName} onChange={this.inputUpdate.bind(this, 'firstName')} />
 					</label>
 					
 					<label htmlFor={'lastName'}>
-						<FormattedMessage {...globalMessages.LastName} />
+						Last Name
 						<input id={'lastName'} className={'pt-input margin-bottom'} name={'last name'} type="text" style={styles.input} value={this.state.lastName} onChange={this.inputUpdate.bind(this, 'lastName')} />
 					</label>
 						
 					<label htmlFor={'userImage'}>
-						<FormattedMessage {...globalMessages.ProfileImage} />
+						Profile Image
 						<img role="presentation" style={styles.userImage} src={this.state.userImageURL} />
 						<input id={'userImage'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 					</label>
 
 					<label htmlFor={'bio'}>
-						<FormattedMessage {...globalMessages.Bio} />
+						Bio
 						<textarea id={'bio'} className={'pt-input margin-bottom'} name={'bio'} type="text" style={[styles.input, styles.bio]} value={this.state.bio} onChange={this.bioUpdate} />
 						<div className={'light-color inputSubtext'}>
 							{this.state.bio.length} / 140
@@ -158,12 +155,12 @@ export const UserSettingsProfile = React.createClass({
 					</label>
 
 					<label htmlFor={'publicEmail'}>
-						<FormattedMessage {...globalMessages.PublicEmail} />
+						Public Email
 						<input id={'publicEmail'} className={'pt-input margin-bottom'} name={'publicEmail'} type="text" style={styles.input} value={this.state.publicEmail} onChange={this.inputUpdate.bind(this, 'publicEmail')} />
 					</label>
 
 					<label htmlFor={'website'}>
-						<FormattedMessage {...globalMessages.Website} />
+						Website
 						<input id={'website'} className={'pt-input margin-bottom'} name={'website'} type="text" style={styles.input} value={this.state.website} onChange={this.inputUpdate.bind(this, 'website')} />
 					</label>
 

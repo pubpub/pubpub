@@ -5,9 +5,6 @@ import { Menu, MenuDivider } from '@blueprintjs/core';
 import PreviewJournal from 'components/PreviewJournal/PreviewJournal';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
 
-import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
-
 
 let styles;
 

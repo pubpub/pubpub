@@ -9,10 +9,6 @@ import PreviewPub from 'components/PreviewPub/PreviewPub';
 import PreviewJournal from 'components/PreviewJournal/PreviewJournal';
 import NavContentWrapper from 'components/NavContentWrapper/NavContentWrapper';
 
-// import { globalStyles } from 'utils/globalStyles';
-import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
-
 import { search } from './actions';
 
 let styles;
@@ -99,14 +95,14 @@ export const Search = React.createClass({
 
 		const mobileNavButtons = [
 			{ type: 'link', mobile: true, text: ' ', link: { pathname: pathname, query: { ...query, mode: undefined } } },
-			{ type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Menu} />, action: undefined },
+			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
 		];
 
 		const navItems = [
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Pubs} />, count: pubs.length, link: { pathname: pathname, query: { ...query, mode: undefined } }, active: mode === 'pubs' || !mode },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Users} />, count: users.length, link: { pathname: pathname, query: { ...query, mode: 'users' } }, active: mode === 'users' },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Journals} />, count: journals.length, link: { pathname: pathname, query: { ...query, mode: 'journals' } }, active: mode === 'journals' },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Labels} />, count: labels.length, link: { pathname: pathname, query: { ...query, mode: 'labels' } }, active: mode === 'labels' },
+			{ type: 'link', text: 'Pubs', count: pubs.length, link: { pathname: pathname, query: { ...query, mode: undefined } }, active: mode === 'pubs' || !mode },
+			{ type: 'link', text: 'Users', count: users.length, link: { pathname: pathname, query: { ...query, mode: 'users' } }, active: mode === 'users' },
+			{ type: 'link', text: 'Journals', count: journals.length, link: { pathname: pathname, query: { ...query, mode: 'journals' } }, active: mode === 'journals' },
+			{ type: 'link', text: 'Labels', count: labels.length, link: { pathname: pathname, query: { ...query, mode: 'labels' } }, active: mode === 'labels' },
 		];
 		
 		return (

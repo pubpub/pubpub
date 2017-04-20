@@ -1,17 +1,11 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Link as UnwrappedLink } from 'react-router';
-const Link = Radium(UnwrappedLink);
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 
 import { Spinner } from '@blueprintjs/core';
 import NavContentWrapper from 'components/NavContentWrapper/NavContentWrapper';
 import FollowButton from 'containers/FollowButton/FollowButton';
-
-import { globalStyles } from 'utils/globalStyles';
-import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
 
 import { getUserData } from './actions';
 
@@ -92,26 +86,26 @@ export const User = React.createClass({
 		}
 
 		const mobileNavButtons = [
-			{ type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Follow} />, action: this.followUserToggle },
-			{ type: 'button', mobile: true, text: <FormattedMessage {...globalMessages.Menu} />, action: undefined },
+			{ type: 'button', mobile: true, text: 'Follow', action: this.followUserToggle },
+			{ type: 'button', mobile: true, text: 'Menu', action: undefined },
 		];
 
 		const ownProfileItems = ownProfile
 		? [
 			{ type: 'spacer' },
-			{ type: 'title', text: <FormattedMessage {...globalMessages.Settings} /> },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Profile} />, link: '/user/' + username + '/profile', active: mode === 'profile' },
+			{ type: 'title', text: 'Settings' },
+			{ type: 'link', text: 'Profile', link: '/user/' + username + '/profile', active: mode === 'profile' },
 			// { type: 'link', text: 'Account', link: '/user/' + username + '/account', active: mode === 'account'},
-			// { type: 'link', text: <FormattedMessage {...globalMessages.Notifications} />, link: '/user/' + username + '/notifications', active: mode === 'notifications' },
+			// { type: 'link', text: 'Notifications', link: '/user/' + username + '/notifications', active: mode === 'notifications' },
 			// { type: 'link', text: 'Access Token', link: '/user/' + username + '/tokens', active: mode === 'tokens' },
 
 		]
 		: [];
 		const navItems = [
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Pubs} />, link: '/user/' + username, active: mode === undefined },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Journals} />, link: '/user/' + username + '/journals', active: mode === 'journals' },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Following} />, link: '/user/' + username + '/following', active: mode === 'following' },
-			{ type: 'link', text: <FormattedMessage {...globalMessages.Followers} />, link: '/user/' + username + '/followers', active: mode === 'followers' },
+			{ type: 'link', text: 'Pubs', link: '/user/' + username, active: mode === undefined },
+			{ type: 'link', text: 'Journals', link: '/user/' + username + '/journals', active: mode === 'journals' },
+			{ type: 'link', text: 'Following', link: '/user/' + username + '/following', active: mode === 'following' },
+			{ type: 'link', text: 'Followers', link: '/user/' + username + '/followers', active: mode === 'followers' },
 			...ownProfileItems,
 		];
 
