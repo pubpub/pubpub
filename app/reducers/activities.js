@@ -14,7 +14,7 @@ import {
 // Define Default State
 /* ------------------- */
 const defaultState = Immutable.Map({
-	loading: false,
+	loading: true,
 	error: undefined,
 	activities: {},
 	assets: {},
@@ -28,7 +28,7 @@ export default function reducer(state = defaultState, action) {
 	
 	case GET_ACTIVITIES_LOAD:
 		return state.merge({
-			loading: false,
+			loading: true,
 			error: undefined
 		});
 

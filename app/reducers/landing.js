@@ -14,7 +14,7 @@ import {
 // Define Default State
 /* ------------------- */
 const defaultState = Immutable.Map({
-	loading: false,
+	loading: true,
 	error: undefined,
 	pubs: [],
 	journals: [],
@@ -28,7 +28,7 @@ export default function reducer(state = defaultState, action) {
 	
 	case GET_LANDING_FEATURES_LOAD:
 		return state.merge({
-			loading: false,
+			loading: true,
 			error: undefined
 		});
 

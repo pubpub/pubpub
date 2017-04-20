@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import { Menu, NonIdealState } from '@blueprintjs/core';
+import { Menu, NonIdealState, Spinner } from '@blueprintjs/core';
 import ActivityItem from 'components/ActivityItem/ActivityItem';
 import ActivityGroup from 'components/ActivityGroup/ActivityGroup';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
@@ -63,6 +63,7 @@ export const Landing = React.createClass({
 
 		const activitiesData = this.props.activitiesData || {};
 		const activities = activitiesData.activities || {};
+		const activitiesLoading = activitiesData.loading;
 
 		const activitiesPubs = activities.pubs || [];
 		const activitiesUsers = activities.users || [];
@@ -231,14 +232,21 @@ export const Landing = React.createClass({
 								</div>
 							</div>
 
-							{realActivities.map((activity)=> {
+							{activitiesLoading &&
+								<div style={{ textAlign: 'center', padding: '2em 0em' }}>
+									<Spinner />
+								</div>
+								
+							}
+
+							{!activitiesLoading && realActivities.map((activity)=> {
 								if (Array.isArray(activity)) {
 									return <ActivityGroup key={'activityGroup-' + activity[0].id} activities={activity} />;
 								}
 								return <ActivityItem key={'activity-' + activity.id} activity={activity} />;
 							})}
 
-							{!realActivities.length &&
+							{!activitiesLoading && !realActivities.length &&
 								<NonIdealState
 									title={'No Activities'}
 									visual={'pulse'} />
@@ -247,61 +255,63 @@ export const Landing = React.createClass({
 						</div>
 
 						<div style={styles.rightPanel}>
-							<div style={styles.rightContent}>
-								<div style={styles.rightSection} className={'pt-card pt-elevation-0'}>
-									<div className="pt-dialog-header">
-										{/* <span className="pt-icon-large pt-icon-application" /> */}
-										<h5>Your Pubs</h5>
-										{!!assetPubs.length &&
-											<Link to={'/pubs/create'} className={'pt-button pt-icon-add'} style={styles.sideButton}>New</Link>
-										}
+							{!activitiesLoading &&
+								<div style={styles.rightContent}>
+									<div style={styles.rightSection} className={'pt-card pt-elevation-0'}>
+										<div className="pt-dialog-header">
+											{/* <span className="pt-icon-large pt-icon-application" /> */}
+											<h5>Your Pubs</h5>
+											{!!assetPubs.length &&
+												<Link to={'/pubs/create'} className={'pt-button pt-icon-add'} style={styles.sideButton}>New</Link>
+											}
+
+										</div>
+										<div className="pt-dialog-body">
+											{assetPubs.map((pub)=> {
+												return <Link key={'pub-link-' + pub.id} style={styles.sideLink} className={'pt-text-overflow-ellipsis'} to={'/pub/' + pub.slug}>{pub.title}</Link>;
+											})}
+
+											{!assetPubs.length &&
+												<div style={{ paddingBottom: '1em' }}>
+													<NonIdealState
+														title={'No Pubs'}
+														action={<Link to={'/pubs/create'} className={'pt-button pt-icon-add'} style={{ whiteSpace: 'nowrap' }}>Create new Pub</Link>}
+														visual={'application'} />
+												</div>
+											}
+										</div>
+
 
 									</div>
-									<div className="pt-dialog-body">
-										{assetPubs.map((pub)=> {
-											return <Link key={'pub-link-' + pub.id} style={styles.sideLink} className={'pt-text-overflow-ellipsis'} to={'/pub/' + pub.slug}>{pub.title}</Link>;
-										})}
 
-										{!assetPubs.length &&
-											<div style={{ paddingBottom: '1em' }}>
-												<NonIdealState
-													title={'No Pubs'}
-													action={<Link to={'/pubs/create'} className={'pt-button pt-icon-add'} style={{ whiteSpace: 'nowrap' }}>Create new Pub</Link>}
-													visual={'application'} />
-											</div>
-										}
+									<div style={styles.rightSection} className={'pt-card pt-elevation-0'}>
+										<div className="pt-dialog-header">
+											{/* <span className="pt-icon-large pt-icon-applications" /> */}
+											<h5>Your Journals</h5>
+											{!!assetJournals.length &&
+												<Link to={'/journals/create'} className={'pt-button pt-icon-add'} style={styles.sideButton}>New</Link>
+											}
+
+										</div>
+										<div className="pt-dialog-body">
+											{assetJournals.map((journal)=> {
+												return <Link key={'journal-link-' + journal.id} style={styles.sideLink} className={'pt-text-overflow-ellipsis'} to={'/' + journal.slug}>{journal.title}</Link>;
+											})}
+
+											{!assetJournals.length &&
+												<div style={{ paddingBottom: '1em' }}>
+													<NonIdealState
+														title={'No Journals'}
+														action={<Link to={'/journals/create'} className={'pt-button pt-icon-add'} style={{ whiteSpace: 'nowrap' }}>Create new Journal</Link>}
+														visual={'applications'} />
+												</div>
+											}
+										</div>
 									</div>
 
 
 								</div>
-
-								<div style={styles.rightSection} className={'pt-card pt-elevation-0'}>
-									<div className="pt-dialog-header">
-										{/* <span className="pt-icon-large pt-icon-applications" /> */}
-										<h5>Your Journals</h5>
-										{!!assetJournals.length &&
-											<Link to={'/journals/create'} className={'pt-button pt-icon-add'} style={styles.sideButton}>New</Link>
-										}
-
-									</div>
-									<div className="pt-dialog-body">
-										{assetJournals.map((journal)=> {
-											return <Link key={'journal-link-' + journal.id} style={styles.sideLink} className={'pt-text-overflow-ellipsis'} to={'/' + journal.slug}>{journal.title}</Link>;
-										})}
-
-										{!assetJournals.length &&
-											<div style={{ paddingBottom: '1em' }}>
-												<NonIdealState
-													title={'No Journals'}
-													action={<Link to={'/journals/create'} className={'pt-button pt-icon-add'} style={{ whiteSpace: 'nowrap' }}>Create new Journal</Link>}
-													visual={'applications'} />
-											</div>
-										}
-									</div>
-								</div>
-
-
-							</div>
+							}
 						</div>
 					</div>
 				}
@@ -384,7 +394,8 @@ styles = {
 	rightPanel: {
 		display: 'table-cell',
 		paddingLeft: '1em',
-		width: '1%',
+		// width: '1%',
+		width: '268px',
 	},
 	rightContent: {
 		// borderLeft: '1px solid #EEE',
