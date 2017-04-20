@@ -271,7 +271,7 @@ export const PubEditor = React.createClass({
 		// if (!editMode) { this.enterEditMode(); }
 		// const newState = !editMode ? this.enterEditModeObject() : this.state;
 
-		const hasFiles = this.state.editorFiles.length !== 0;
+		const hasFiles = Object.keys(this.state.editorFiles).length !== 0;
 		const date = new Date();
 		const hours = ('0' + date.getHours()).slice(-2);
 		const minutes = ('0' + date.getMinutes()).slice(-2);
