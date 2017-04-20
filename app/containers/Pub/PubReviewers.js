@@ -223,14 +223,14 @@ export const PubReviewers = React.createClass({
 									<form onSubmit={this.handleEmailInvite} style={styles.inviteEmailForm}>
 										<label htmlFor={'email'}>
 											Email
-											<input className={'pt-input margin-bottom'} id={'email'} name={'email'} type="email" style={styles.input} value={this.state.newReviewerEmail} onChange={this.newReviewerEmailChange} placeholder={'example@email.com'}/>
+											<input className={'pt-input margin-bottom'} id={'email'} name={'email'} type="email" style={styles.input} value={this.state.newReviewerEmail} onChange={this.newReviewerEmailChange} placeholder={'example@email.com'} />
 										</label>
 										<label htmlFor={'name'}>
 											Name
-											<input className={'pt-input margin-bottom'} id={'name'} name={'name'} type="text" style={styles.input} value={this.state.newReviewerName} onChange={this.newReviewerNameChange} placeholder={'Jane Doe'}/>
+											<input className={'pt-input margin-bottom'} id={'name'} name={'name'} type="text" style={styles.input} value={this.state.newReviewerName} onChange={this.newReviewerNameChange} placeholder={'Jane Doe'} />
 										</label>
 
-										<Button text={'Send Email Invitation'} className={'pt-button pt-intent-primary'} onClick={this.handleEmailInvite} loading={this.props.isLoading}/>
+										<Button text={'Send Email Invitation'} className={'pt-button pt-intent-primary'} onClick={this.handleEmailInvite} loading={this.props.isLoading} />
 										<span style={styles.errorMessage}>{this.state.errorMessage}</span>
 									</form>
 									<div style={styles.emailToggleText} className={'pt-button pt-minimal'} onClick={this.toggleInviteByEmail}>
