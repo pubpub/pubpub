@@ -27,7 +27,7 @@ export const ActivityGroup = React.createClass({
 			<div style={styles.objectWrapper} key={'attachment-' + id}>
 				<div style={styles.imageWrapper} className={'opacity-on-hover-child'}>
 					<Link to={link} customDomain={customDomain}>
-						<img src={avatar} style={[styles.largeImage, adjustSize]} alt={string} />
+						<img src={'https://jake.pubpub.org/unsafe/50x50/' + avatar} style={[styles.largeImage, adjustSize]} alt={string} />
 					</Link>
 				</div>
 				
@@ -100,7 +100,7 @@ export const ActivityGroup = React.createClass({
 				<div style={styles.tableWrapper}>
 					<div style={styles.imageWrapper} className={'opacity-on-hover-child'}>
 						<Link to={headerActivity.actorLink}>
-							<img src={headerActivity.actorAvatar} style={styles.smallImage} alt={headerActivity.actorString} />
+							<img src={'https://jake.pubpub.org/unsafe/50x50/' + headerActivity.actorAvatar} style={styles.smallImage} alt={headerActivity.actorString} />
 						</Link>
 					</div>
 					

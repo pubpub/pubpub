@@ -25,7 +25,7 @@ export const ActivityItem = React.createClass({
 			<div style={styles.objectWrapper} key={'attachment-' + id}>
 				<div style={styles.imageWrapper} className={'opacity-on-hover-child'}>
 					<Link to={link} customDomain={customDomain}>
-						<img src={avatar} style={styles.largeImage} alt={string} />
+						<img src={'https://jake.pubpub.org/unsafe/50x50/' + avatar} style={styles.largeImage} alt={string} />
 					</Link>
 				</div>
 				
@@ -91,7 +91,7 @@ export const ActivityItem = React.createClass({
 				<div style={styles.tableWrapper}>
 					<div style={styles.imageWrapper} className={'opacity-on-hover-child'}>
 						<Link to={actorLink}>
-							<img src={actorAvatar} style={styles.smallImage} alt={actorString} />
+							<img src={'https://jake.pubpub.org/unsafe/50x50/' + actorAvatar} style={styles.smallImage} alt={actorString} />
 						</Link>
 					</div>
 					

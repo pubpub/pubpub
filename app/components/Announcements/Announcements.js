@@ -16,7 +16,8 @@ export const Announcements = React.createClass({
 
 	componentWillMount() {
 		this.setState({
-			beta_v3: localStorage.getItem('beta_v3'),
+			// beta_v3: localStorage.getItem('beta_v3'),
+			beta_v3: true,
 		});
 	},
 	
