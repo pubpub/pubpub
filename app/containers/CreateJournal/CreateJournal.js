@@ -7,8 +7,8 @@ import { Button } from '@blueprintjs/core';
 import Loader from 'components/Loader/Loader';
 import ImageCropper from 'components/ImageCropper/ImageCropper';
 import { globalStyles } from 'utils/globalStyles';
-import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
+// import { globalMessages } from 'utils/globalMessages';
+// import { FormattedMessage } from 'react-intl';
 
 import { createJournal } from './actions';
 
@@ -83,17 +83,17 @@ export const CreateJournal = React.createClass({
 	validate: function(data) {
 		// Check to make sure title exists
 		if (!data.title || !data.title.length) {
-			return { isValid: false, validationError: <FormattedMessage id="createJournal.JournalNamerequired" defaultMessage="Journal Name required" /> };
+			return { isValid: false, validationError: 'Journal Name required' };
 		}
 
 		// Check to make sure slug exists
 		if (!data.slug || !data.slug.length) {
-			return { isValid: false, validationError: <FormattedMessage id="createJournal.JournalURLrequired" defaultMessage="Journal URL required" /> };
+			return { isValid: false, validationError: 'Journal URL required' };
 		}
 
 		// Check to make sure short description exists
 		if (!data.description || !data.description.length) {
-			return { isValid: false, validationError: <FormattedMessage id="createJournal.Descriptionrequired" defaultMessage="Description required" /> };
+			return { isValid: false, validationError: 'Description required' };
 		}
 
 		return { isValid: true, validationError: undefined };
@@ -141,12 +141,12 @@ export const CreateJournal = React.createClass({
 				<form onSubmit={this.createSubmit}>
 
 					<label style={styles.label} htmlFor={'journalName'}>
-						<FormattedMessage {...globalMessages.JournalName} />
+						Journal Name
 						<input id={'journalName'} className={'pt-input margin-bottom'} name={'journal title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
 					</label>
 
 					<label style={styles.label} htmlFor={'journalURL'}>
-						<FormattedMessage {...globalMessages.JournalURL} />
+						Journal URL
 						<input id={'journalURL'} className={'pt-input margin-bottom'} name={'journalURL'} type="text" style={styles.input} value={this.state.slug} onChange={this.slugUpdate} />
 						<div className={'light-color inputSubtext'}>
 							pubpub.org/<b>{this.state.slug || 'journalURL'}</b>
@@ -154,7 +154,7 @@ export const CreateJournal = React.createClass({
 					</label>		
 						
 					<label htmlFor={'description'}>
-						<FormattedMessage {...globalMessages.Description} />
+						Description
 						<textarea id={'description'} className={'pt-input margin-bottom'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.descriptionUpdate} />
 						<div className={'light-color inputSubtext'}>
 							{this.state.description.length} / 280
@@ -162,7 +162,7 @@ export const CreateJournal = React.createClass({
 					</label>
 					
 					<label htmlFor={'avatar'}>
-						<FormattedMessage {...globalMessages.Icon} />
+						Avatar
 						<img role="presentation" style={styles.avatar} src={this.state.avatar} />
 						<input id={'avatar'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 					</label>

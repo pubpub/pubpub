@@ -7,8 +7,8 @@ import { Button } from '@blueprintjs/core';
 import Loader from 'components/Loader/Loader';
 import ImageCropper from 'components/ImageCropper/ImageCropper';
 import { globalStyles } from 'utils/globalStyles';
-import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
+// import { globalMessages } from 'utils/globalMessages';
+// import { FormattedMessage } from 'react-intl';
 
 import { getSignUpData, createAccount } from './actions';
 
@@ -100,33 +100,33 @@ export const CreateAccount = React.createClass({
 	validate: function(data) {
 		// Check to make sure username exists
 		if (!data.username || !data.username.length) {
-			return { isValid: false, validationError: <FormattedMessage {...globalMessages.Usernamerequired} /> };
+			return { isValid: false, validationError: 'Username required' };
 		}
 
 		// Check to make sure firstName exists
 		if (!data.firstName || !data.firstName.length) {
-			return { isValid: false, validationError: <FormattedMessage {...globalMessages.FirstNamerequired} /> };
+			return { isValid: false, validationError: 'First Name required' };
 		}
 
 		// Check to make sure lastName exists
 		if (!data.lastName || !data.lastName.length) {
-			return { isValid: false, validationError: <FormattedMessage {...globalMessages.LastNamerequired} /> };
+			return { isValid: false, validationError: 'Last Name required' };
 		}
 
 		// Check to make sure email exists
 		if (!data.email || !data.email.length) {
-			return { isValid: false, validationError: <FormattedMessage {...globalMessages.Emailrequired} /> };
+			return { isValid: false, validationError: 'Email required' };
 		}
 
 		// Check to make sure email is lightly valid (complete validation is impossible in JS - so just check for the most common error)
 		const regexTest = /\S+@\S+/;
 		if (!regexTest.test(data.email)) {
-			return { isValid: false, validationError: <FormattedMessage {...globalMessages.Emailisinvalid} /> };
+			return { isValid: false, validationError: 'Email is invalid' };
 		}
 
 		// Check to make sure password exists
 		if (!data.password || data.password.length < 8) {
-			return { isValid: false, validationError: <FormattedMessage {...globalMessages.Passwordtooshort} /> };
+			return { isValid: false, validationError: 'Password too short' };
 		}
 
 		return { isValid: true, validationError: undefined };
@@ -163,11 +163,7 @@ export const CreateAccount = React.createClass({
 		const accountData = this.props.accountData || {};
 		const user = accountData.user || {};
 		const isLoading = accountData.createAccountLoading;
-		const serverErrors = {
-			'Email already used': <FormattedMessage id="signup.Emailalreadyused" defaultMessage="Email already used" />,
-			'Username already used': <FormattedMessage id="signup.Usernamealreadyused" defaultMessage="Username already used" />,
-		};
-		const errorMessage = serverErrors[accountData.createAccountError] || this.state.validationError;
+		const errorMessage = accountData.createAccountError || this.state.validationError;
 		return (
 			<div style={styles.container}>
 				<Helmet title={'Create Account · PubPub'} />
@@ -201,17 +197,17 @@ export const CreateAccount = React.createClass({
 							</label> */}
 
 							<label htmlFor={'firstName'}>
-								<FormattedMessage {...globalMessages.FirstName} />
+								First Name
 								<input id={'firstName'} className={'pt-input margin-bottom'} name={'first name'} type="text" style={styles.input} value={this.state.firstName} onChange={this.inputUpdate.bind(this, 'firstName')} />
 							</label>
 
 							<label htmlFor={'lastName'}>
-								<FormattedMessage {...globalMessages.LastName} />
+								Last Name
 								<input id={'lastName'} className={'pt-input margin-bottom'} name={'last name'} type="text" style={styles.input} value={this.state.lastName} onChange={this.inputUpdate.bind(this, 'lastName')} />
 							</label>
 
 							<label htmlFor={'username'}>
-								<FormattedMessage {...globalMessages.Username} />
+								Username
 								<input id={'username'} className={'pt-input margin-bottom'} name={'username'} type="text" style={styles.input} value={this.state.username} onChange={this.inputUpdateUsername.bind(this, 'username')} />
 								<div className={'light-color inputSubtext'}>
 									pubpub.org/user/<b>{this.state.username || 'username'}</b>
@@ -219,21 +215,21 @@ export const CreateAccount = React.createClass({
 							</label>
 
 							<label htmlFor={'password'}>
-								<FormattedMessage {...globalMessages.Password} />
+								Password
 								<input id={'password'} className={'pt-input margin-bottom'} name={'password'} type="password" style={styles.input} value={this.state.password} onChange={this.inputUpdate.bind(this, 'password')} />
 								<div className={'light-color inputSubtext'}>
-									<FormattedMessage {...globalMessages.PasswordLength} />
+									Must be at least 8 characters
 								</div>
 							</label>
 
 							<label htmlFor={'userImage'}>
-								<FormattedMessage {...globalMessages.ProfileImage} />
+								Profile Image
 								<img role="presentation" style={styles.userImage} src={this.state.userImageURL} />
 								<input id={'userImage'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 							</label>
 
 							<label htmlFor={'bio'}>
-								<FormattedMessage {...globalMessages.Bio} />
+								Bio
 								<textarea id={'bio'} className={'pt-input margin-bottom'} name={'bio'} type="text" style={[styles.input, styles.bio]} value={this.state.bio} onChange={this.bioUpdate} />
 								<div className={'light-color inputSubtext'}>
 									{this.state.bio.length} / 140
@@ -241,12 +237,12 @@ export const CreateAccount = React.createClass({
 							</label>
 
 							<label htmlFor={'publicEmail'}>
-								<FormattedMessage {...globalMessages.PublicEmail} />
+								Public Email
 								<input id={'publicEmail'} className={'pt-input margin-bottom'} name={'publicEmail'} type="text" style={styles.input} value={this.state.publicEmail} onChange={this.inputUpdate.bind(this, 'publicEmail')} />
 							</label>
 
 							<label htmlFor={'website'}>
-								<FormattedMessage {...globalMessages.Website} />
+								Website
 								<input id={'website'} className={'pt-input margin-bottom'} name={'website'} type="text" style={styles.input} value={this.state.website} onChange={this.inputUpdate.bind(this, 'website')} />
 							</label>
 
@@ -286,7 +282,7 @@ export const CreateAccount = React.createClass({
 							<Button 
 								className={'pt-intent-primary'} 
 								onClick={this.createAccountSubmit}
-								text={<FormattedMessage {...globalMessages.SignUp} />}
+								text={'Sign Up'}
 								loading={isLoading} />
 
 							<div style={styles.errorMessage}>{errorMessage}</div>

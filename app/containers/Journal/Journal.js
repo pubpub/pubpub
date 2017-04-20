@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-// import { Link } from 'react-router';
 import Link from 'components/Link/Link';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
@@ -9,10 +8,6 @@ import FollowButton from 'containers/FollowButton/FollowButton';
 import NoMatch from 'containers/NoMatch/NoMatch';
 import { Menu, MenuDivider, Spinner } from '@blueprintjs/core';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
-
-import { globalStyles } from 'utils/globalStyles';
-import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
 
 import { getJournalData } from './actions';
 

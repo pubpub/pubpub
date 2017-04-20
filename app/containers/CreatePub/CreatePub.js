@@ -5,10 +5,7 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { Button } from '@blueprintjs/core';
 import ImageCropper from 'components/ImageCropper/ImageCropper';
-import PreviewPub from 'components/PreviewPub/PreviewPub';
 import { globalStyles } from 'utils/globalStyles';
-import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
 
 import { createPub } from './actions';
 
@@ -91,12 +88,12 @@ export const CreatePub = React.createClass({
 	validate: function(data) {
 		// Check to make sure username exists
 		if (!data.slug || !data.slug.length) {
-			return { isValid: false, validationError: <FormattedMessage id="createPub.PubURLrequired" defaultMessage="Pub URL required" /> };
+			return { isValid: false, validationError: 'Pub URL required' };
 		}
 
 		// Check to make sure firstName exists
 		if (!data.title || !data.title.length) {
-			return { isValid: false, validationError: <FormattedMessage id="createPub.Titlerequired" defaultMessage="Title required" /> };
+			return { isValid: false, validationError: 'Title required' };
 		}
 
 		return { isValid: true, validationError: undefined };
@@ -126,7 +123,7 @@ export const CreatePub = React.createClass({
 		
 		const isLoading = createPubData.loading;
 		const serverErrors = {
-			'Validation error': <FormattedMessage id="createPub.Usernamealreadyused" defaultMessage="Pub URL already used" />,
+			'Validation error': 'Pub URL already used',
 		};
 		const errorMessage = serverErrors[createPubData.error] || this.state.validationError;
 
@@ -150,12 +147,12 @@ export const CreatePub = React.createClass({
 				<form onSubmit={this.createSubmit}>
 
 					<label style={styles.label} htmlFor={'title'}>
-						<FormattedMessage {...globalMessages.Title} />
+						Title
 						<input id={'title'} className={'pt-input margin-bottom'} name={'title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
 					</label>
 
 					<label style={styles.label} htmlFor={'pubURL'}>
-						<FormattedMessage {...globalMessages.PubURL} />
+						Pub URL
 						<input id={'pubURL'} className={'pt-input margin-bottom'} name={'pubURL'} type="text" style={styles.input} value={this.state.slug} onChange={this.slugUpdate} />
 						<div className={'light-color inputSubtext'}>
 							pubpub.org/pub/<b>{this.state.slug || 'pubURL'}</b>
@@ -163,7 +160,7 @@ export const CreatePub = React.createClass({
 					</label>		
 						
 					<label htmlFor={'description'}>
-						<FormattedMessage {...globalMessages.Description} />
+						Description
 						<textarea className={'pt-input margin-bottom'} id={'description'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.descriptionUpdate} />
 						<div className={'light-color inputSubtext'}>
 							{this.state.description.length} / 140
@@ -171,7 +168,7 @@ export const CreatePub = React.createClass({
 					</label>
 
 					<label htmlFor={'avatar'}>
-						<FormattedMessage {...globalMessages.Avatar} />
+						Avatar
 						<img role="presentation" style={styles.avatar} src={this.state.imageURL} />
 						<input id={'avatar'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
 					</label>

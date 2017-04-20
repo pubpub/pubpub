@@ -9,7 +9,6 @@ import { putLabel } from './actionsLabels';
 import Textarea from 'react-textarea-autosize';
 
 import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
 
 
 let styles;

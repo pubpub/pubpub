@@ -6,10 +6,8 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 
 import { Button } from '@blueprintjs/core';
-
 import { globalStyles } from 'utils/globalStyles';
-import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
+
 
 import { login } from './actions';
 
@@ -75,23 +73,23 @@ export const Login = React.createClass({
 			<div style={styles.container}>
 				<Helmet title={'Login · PubPub'} />
 
-				<h1><FormattedMessage {...globalMessages.Login} /></h1>
+				<h1>Login</h1>
 
 				<form onSubmit={this.handleLoginSubmit}>
 					<div>
 						<label style={styles.label} htmlFor={'email'}>
-							<FormattedMessage {...globalMessages.Email} />
+							Email
 						</label>
 						<input className={'pt-input margin-bottom'} ref={(input)=> { this.initFocusInput = input; }} id={'email'} name={'email'} type="text" style={styles.input} value={this.state.email} onChange={this.inputUpdateLowerCase.bind(this, 'email')} />
 					</div>
 
 					<div>
 						<label style={styles.label} htmlFor={'password'}>
-							<FormattedMessage {...globalMessages.Password} />
+							Password
 						</label>
 						<input className={'pt-input margin-bottom'} id={'password'} name={'password'} type="password" style={styles.input} value={this.state.password} onChange={this.inputUpdate.bind(this, 'password')} />
 						<Link className={'light-color inputSubtext'} to={'/resetpassword'}>
-							<FormattedMessage id="login.ForgotPassword" defaultMessage="Forgot Password?" />
+							Forgot Password?
 						</Link>
 					</div>
 
@@ -100,20 +98,18 @@ export const Login = React.createClass({
 						type={'submit'}
 						className={'pt-button pt-intent-primary'} 
 						onClick={this.handleLoginSubmit}
-						text={<FormattedMessage {...globalMessages.Login} />}
+						text={'Login'}
 						loading={isLoading} />
-
-					{/*<div style={styles.loaderContainer}><Loader loading={isLoading} showCompletion={!error} /></div>*/}
 
 					{error &&
 						<div style={styles.errorMessage}>
-							<FormattedMessage id="login.InvalidEmailOrPassword" defaultMessage="Invalid Email or Password" />
+							Invalid Email or Password
 						</div>	
 					}
 				</form>
 
 				<Link to={'/signup'} style={styles.registerLink}>
-					<FormattedMessage id="login.newToPubPub" defaultMessage="New to PubPub? Click to Sign Up!" />
+					New to PubPub? Click to Sign Up!
 				</Link>	
 				
 

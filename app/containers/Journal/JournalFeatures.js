@@ -8,7 +8,6 @@ import { InputGroup, NonIdealState } from '@blueprintjs/core';
 
 import { globalStyles } from 'utils/globalStyles';
 import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
 
 import JournalPageList from './JournalPageList';
 

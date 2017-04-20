@@ -3,11 +3,7 @@ import { connect } from 'react-redux';
 // import { Link } from 'react-router';
 import Link from 'components/Link/Link';
 import Radium from 'radium';
-import {Position, Tooltip } from '@blueprintjs/core';
-
-// import { globalStyles } from 'utils/globalStyles';
-import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
+import { Position, Tooltip } from '@blueprintjs/core';
 
 import { 
 	postFollowsPub, deleteFollowsPub,

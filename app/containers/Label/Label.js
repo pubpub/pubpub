@@ -1,16 +1,11 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { browserHistory, Link } from 'react-router';
+import { Link } from 'react-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
-import { Spinner } from '@blueprintjs/core';
 import PreviewUser from 'components/PreviewUser/PreviewUser';
 import PreviewPub from 'components/PreviewPub/PreviewPub';
 import FollowButton from 'containers/FollowButton/FollowButton';
-
-// import { globalStyles } from 'utils/globalStyles';
-import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
 
 import { getLabel } from './actions';
 
@@ -30,12 +25,6 @@ export const Label = React.createClass({
 		this.props.dispatch(getLabel(params.slug));
 	},
 
-	// getInitialState() {
-	// 	return {
-			
-	// 	};
-	// },
-
 	componentWillReceiveProps(nextProps) {
 		
 	},
@@ -46,8 +35,8 @@ export const Label = React.createClass({
 		const pubs = label.pubs || [];
 		
 		const params = this.props.params || {};
-		const query = this.props.location.query;
-		const pathname = this.props.location.pathname;
+		// const query = this.props.location.query;
+		// const pathname = this.props.location.pathname;
 		
 		const accountData = this.props.accountData || {};
 		const accountUser = accountData.user || {};
@@ -60,6 +49,7 @@ export const Label = React.createClass({
 		if (this.props.labelData.loading) {
 			return <div>Loading</div>;
 		}
+		
 		return (
 			<div style={styles.container}>
 				<Helmet title={label.title || params.slug + ' · PubPub'} />

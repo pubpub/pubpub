@@ -1,17 +1,10 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import ReactMarkdown from 'react-markdown';
 import AutocompleteBar from 'components/AutocompleteBar/AutocompleteBar';
 import PreviewUser from 'components/PreviewUser/PreviewUser';
 import request from 'superagent';
 import dateFormat from 'dateformat';
 import { postJournalAdmin, deleteJournalAdmin } from './actionsAdmins';
-import { NonIdealState, Button } from '@blueprintjs/core';
-import { putJournal } from './actions';
-import Textarea from 'react-textarea-autosize';
-
-import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
 
 
 let styles;
@@ -80,7 +73,7 @@ export const JournalPeople = React.createClass({
 		return (
 			<div style={styles.container}>
 
-				<h2><FormattedMessage {...globalMessages.Admins} /></h2>
+				<h2>Admins</h2>
 				{journal.isAdmin &&
 					<p>Admins are displayed publicly and can feature pubs, organize pages, and add admins.</p>
 				}

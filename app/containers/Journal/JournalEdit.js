@@ -3,15 +3,11 @@ import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { browserHistory } from 'react-router';
 import ImageUpload from 'components/ImageUpload/ImageUpload';
-import Loader from 'components/Loader/Loader';
 import ColorPicker from 'components/ColorPicker/ColorPicker';
 import { Button } from '@blueprintjs/core';
 import { StickyContainer, Sticky } from 'react-sticky';
-// import { BlockPicker } from 'react-color';
 
 import { globalStyles } from 'utils/globalStyles';
-import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
 
 import { putJournal } from './actions';
 
@@ -179,15 +175,15 @@ export const JournalEdit = React.createClass({
 
 					<div style={styles.formContentWrapper}>
 						<label style={styles.label} htmlFor={'title'}>
-							<FormattedMessage {...globalMessages.JournalName} />
+							Journal Name
 							<input className={'pt-input margin-bottom'} id={'title'} name={'title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
 						</label>
 
 						<ImageUpload 
 							defaultImage={this.state.avatar}
 							userCrop={true}
-							label={<FormattedMessage {...globalMessages.JournalIcon} />}
-							tooltip={<FormattedMessage id="JournalProfileEdit.journalIconDescription" defaultMessage="Used as the Journal's preview image in search results and throughout the site."/>} 
+							label={'Journal Avatar'}
+							tooltip={'Used as the Journal\'s preview image in search results and throughout the site.'} 
 							containerStyle={styles.imageContainer}
 							onNewImage={this.handleIconFinish} />
 
@@ -212,9 +208,9 @@ export const JournalEdit = React.createClass({
 
 
 						<label htmlFor={'headerMode'} style={{ display: 'inline-block', padding: '1em 2em 1em 0em', verticalAlign: 'top'}}>
-							<FormattedMessage {...globalMessages.HeaderMode} />
+							Header Mode
 
-							<div style={{margin:'0.5em 0em', display: 'block'}} className={'pt-button-group'}>
+							<div style={{ margin: '0.5em 0em', display: 'block' }} className={'pt-button-group'}>
 								<button className={this.state.headerMode === 'title' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'title')}>Title</button>
 								<button className={this.state.headerMode === 'logo' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'logo')}>Logo</button>
 								<button className={this.state.headerMode === 'both' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'both')}>Both</button>
@@ -223,7 +219,7 @@ export const JournalEdit = React.createClass({
 						
 
 						<label htmlFor={'headerAlign'} style={{ display: 'inline-block', padding: '1em 2em 1em 0em', verticalAlign: 'top'}}>
-							<FormattedMessage {...globalMessages.HeaderAlign} />
+							Header Align
 							<div style={{margin:'0.5em', display: 'block'}} className={'pt-button-group'}>
 								<button className={this.state.headerAlign === 'left' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderAlignChange.bind(this, 'left')}>Left</button>
 								<button className={this.state.headerAlign === 'center' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderAlignChange.bind(this, 'center')}>Center</button>
@@ -232,8 +228,8 @@ export const JournalEdit = React.createClass({
 	
 
 						<label style={{ display: 'inline-block', padding: '1em 2em 1em 0em', verticalAlign: 'top' }}>
-							<FormattedMessage {...globalMessages.BackgroundColor} />
-							<div style={{margin:'0.75em 0em', display: 'block'}}>
+							Background Color
+							<div style={{ margin: '0.75em 0em', display: 'block' }}>
 								<ColorPicker 
 									color={this.state.headerColor} 
 									onChange={this.handleColorChange} 
@@ -243,7 +239,7 @@ export const JournalEdit = React.createClass({
 						</label>
 
 						<label style={styles.label} htmlFor={'slug'}>
-							<FormattedMessage {...globalMessages.JournalURL} />
+							Journal URL
 							<input className={'pt-input margin-bottom'} id={'slug'} name={'slug'} type="text" style={styles.input} value={this.state.slug} onChange={this.inputUpdate.bind(this, 'slug')} />
 						</label>
 
@@ -257,7 +253,7 @@ export const JournalEdit = React.createClass({
 
 
 						<label style={styles.label} htmlFor={'website'}>
-							<FormattedMessage {...globalMessages.Website}/>
+							Website
 							<input className={'pt-input margin-bottom'} id={'website'} name={'website'} type="text" style={styles.input} value={this.state.website} onChange={this.inputUpdate.bind(this, 'website')} />
 						</label>
 

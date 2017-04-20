@@ -3,8 +3,6 @@ import Radium from 'radium';
 import PreviewUser from 'components/PreviewUser/PreviewUser';
 
 import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
-
 
 let styles;
 

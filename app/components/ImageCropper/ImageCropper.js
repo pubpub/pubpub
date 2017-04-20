@@ -2,8 +2,6 @@ import React, { PropTypes } from 'react';
 import Radium from 'radium';
 import { Spinner } from '@blueprintjs/core';
 import { s3Upload } from 'utils/uploadFile';
-import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
 import ImageCropperEditor from './ImageCropperEditor';
 
 let styles = {};
@@ -87,10 +85,10 @@ export const ImageCropper = React.createClass({
 				<div style={styles.previewAndOptions}>
 					<img style={styles.preview}src={this.state.preview} />
 					<button type="button" className={'pt-button'} style={styles.option} key="userUploadCancel" onClick={this.handleCancel}>
-						<FormattedMessage {...globalMessages.Cancel} />
+						Cancel
 					</button>
 					<button type="button" className={'pt-button pt-intent-primary'} style={styles.option} key="userUploadSave" onClick={this.handleSaveImage}>
-						<FormattedMessage {...globalMessages.Save} />
+						Save
 					</button>
 				</div>
 				<div style={styles.loaderWrapper}>

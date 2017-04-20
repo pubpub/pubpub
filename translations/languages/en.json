@@ -10,8 +10,6 @@
   "createPub.Usernamealreadyused": "Pub URL already used",
   "JournalProfileEdit.journalIconDescription": "Used as the Journal's preview image in search results and throughout the site.",
   "login.ForgotPassword": "Forgot Password?",
-  "login.InvalidEmailOrPassword": "Invalid Email or Password",
-  "login.newToPubPub": "New to PubPub? Click to Sign Up!",
   "discussion.CannotPostEmptyReply": "Cannot post empty reply",
   "discussion.TitleRequired": "Title Required",
   "discussion.JournalURLalreadyused": "Journal URL already used",

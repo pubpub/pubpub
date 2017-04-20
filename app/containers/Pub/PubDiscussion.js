@@ -1,15 +1,9 @@
 import React, { PropTypes } from 'react';
 import Radium, { Style } from 'radium';
 import { Link } from 'react-router';
-import Loader from 'components/Loader/Loader';
 import RenderFile from 'components/RenderFile/RenderFile';
 import { globalStyles } from 'utils/globalStyles';
 import Textarea from 'react-textarea-autosize';
-// import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
-// import dateFormat from 'dateformat';
-// import ReactMarkdown from 'react-markdown';
-// import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider, Tooltip } from '@blueprintjs/core';
 import { Button } from '@blueprintjs/core';
 import { postDiscussion, putDiscussion, postReaction, deleteReaction, toggleCloseDiscussion, postDiscussionVersion } from './actionsDiscussions';
 import PubLabelList from './PubLabelList';
@@ -85,7 +79,7 @@ export const PubDiscussion = React.createClass({
 	validate: function(data) {
 		// Check to make sure name exists
 		if (!data.files || !data.files.length || !data.files[0].content) {
-			return { isValid: false, validationError: <FormattedMessage id="discussion.CannotPostEmptyReply" defaultMessage="Cannot post empty reply" /> };
+			return { isValid: false, validationError: 'Cannot post empty reply' };
 		}
 
 		return { isValid: true, validationError: undefined };
