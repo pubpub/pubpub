@@ -407,6 +407,21 @@ export const PubEditorFiles = React.createClass({
 
 		}, false);
 
+
+		let editorType;
+
+		if (!routeFile) {
+			editorType = null;
+		} else if (routeFile.type === 'text/markdown') {
+			editorType = 'markdown';
+		} else if (routeFile.type === 'ppub') {
+			editorType = 'ppub';
+		} else if (routeFile.name.split('.').pop() === 'bib') {
+			editorType = 'code';
+		} else {
+			editorType = 'render';
+		}
+
 		return (
 			<div style={styles.container}>
 
@@ -610,7 +625,9 @@ export const PubEditorFiles = React.createClass({
 						</div>
 						<EditingTips />
 
-						{routeFile.type === 'text/markdown' &&
+
+						{
+							(editorType === 'markdown') ?
 							<div style={{ padding: '1em 4em', minHeight: '400px' }}>
 								<FullEditor
 									initialContent={routeFile.initialContent || routeFile.content}
@@ -621,11 +638,12 @@ export const PubEditorFiles = React.createClass({
 									handleFileUpload={this.handleFileSelect}
 									handleReferenceAdd={this.handleReferenceAdd}
 									mode={this.props.editorMode} />
-								{/*<MarkdownEditor initialContent={routeFile.content} onChange={this.props.onEditChange} />*/}
 							</div>
+							: null
 						}
 
-						{routeFile.type === 'ppub' &&
+						{
+							(editorType === 'ppub') ?
 							<div style={{ padding: '1em 4em', minHeight: '400px' }}>
 								<FullEditor
 									initialContent={JSON.parse(routeFile.initialContent || routeFile.content)}
@@ -637,17 +655,34 @@ export const PubEditorFiles = React.createClass({
 									handleReferenceAdd={this.handleReferenceAdd}
 									mode={'rich'} />
 							</div>
+							: null
 						}
 
-						{routeFile.name.split('.').pop() === 'bib' &&
+						{
+							(editorType === 'code') ?
 							<div style={{ padding: '1em 4em', minHeight: '400px' }}>
 								<CodeEditor initialContent={routeFile.initialContent || routeFile.content} onChange={this.props.onEditChange}  />
 							</div>
+							: null
 						}
-						{routeFile.type !== 'text/markdown' && routeFile.name.split('.').pop() !== 'bib' &&
-							<div style={{ padding: '1em', minHeight: '400px' }}>
-								<RenderFile file={routeFile} allFiles={files} allReferences={localReferences} pubSlug={this.props.pub.slug} query={this.props.query} />
+
+						{
+							(editorType === 'render') ?
+							<div>
+								<div className="pt-callout pt-text-muted">
+									<span style={styles.infoIcon} className="pt-icon-info-sign"></span>
+									This file cannot be edited in the browser, upload a new version of the file to update it.
+								</div>
+								<div style={{ padding: '1em', minHeight: '400px' }}>
+									<RenderFile
+										file={routeFile}
+										allFiles={files}
+										allReferences={localReferences}
+										pubSlug={this.props.pub.slug}
+										query={this.props.query} />
+								</div>
 							</div>
+							: null
 						}
 
 					</div>
@@ -662,6 +697,9 @@ export const PubEditorFiles = React.createClass({
 export default Radium(PubEditorFiles);
 
 styles = {
+	infoIcon: {
+		paddingRight: '10px',
+	},
 	fileIcon: {
 		color: '#5c7080',
 		paddingRight: '10px',
