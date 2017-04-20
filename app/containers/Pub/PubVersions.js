@@ -541,49 +541,45 @@ export const PubVersions = React.createClass({
 								</a>
 							}
 
-
-							<div style={[styles.smallColumn, { padding: '0.5em' }]}>
-
-								{ !downloadReady &&
-									<Popover content={
-											<Menu>
-												{outputTypes.map((outputType, index) => {
-													const pdfOrLatex = (outputType === 'pdf' || outputType === 'latex');
-													const onClickFn = pdfOrLatex ? this.exportOptionsDialog : this.convertVersion;
-													return (
-														<MenuItem
-															key={`downloadMenuItem-${index}`}
-															onClick={onClickFn.bind(this, version, { outputType: outputType })}
-															text={
-																<div>
-																	<b>{outputType}</b>
-																</div>
-															}
-														/>
-													);
-												})
-											}
-											</Menu>
-									} position={Position.BOTTOM}>
-										<Button loading={conversionLoading} className={'pt-button p2-minimal'} onClick={''} text="Export" />
-									</Popover>
-								}
-								{
-									downloadReady &&
-									<a href={downloadReadyUrl}>
-										<Button className={'pt-button p2-minimal'} onClick={this.clearDownloadUrl.bind(this, this.state.downloadReady.indexOf(version.hash))} text='Click to Download' />
-									</a>
-								}
-
-
-
-
-							</div>
+							{false &&
+								<div style={[styles.smallColumn, { padding: '0.5em' }]}>
+									{!downloadReady &&
+										<Popover content={
+												<Menu>
+													{outputTypes.map((outputType, menuItemIndex) => {
+														const pdfOrLatex = (outputType === 'pdf' || outputType === 'latex');
+														const onClickFn = pdfOrLatex ? this.exportOptionsDialog : this.convertVersion;
+														return (
+															<MenuItem
+																key={`downloadMenuItem-${menuItemIndex}`}
+																onClick={onClickFn.bind(this, version, { outputType: outputType })}
+																text={
+																	<div>
+																		<b>{outputType}</b>
+																	</div>
+																}
+															/>
+														);
+													})
+												}
+												</Menu>
+										} position={Position.BOTTOM}>
+											<Button loading={conversionLoading} className={'pt-button p2-minimal'} onClick={''} text="Export" />
+										</Popover>
+									}
+									{
+										downloadReady &&
+										<a href={downloadReadyUrl}>
+											<Button className={'pt-button p2-minimal'} onClick={this.clearDownloadUrl.bind(this, this.state.downloadReady.indexOf(version.hash))} text='Click to Download' />
+										</a>
+									}
+								</div>
+							}
 
 							<div style={styles.smallColumn}>
 								{/* Link to pub at that version instance */}
 								<Link to={{ pathname: '/pub/' + this.props.pub.slug, query: { ...query, version: version.hash } }}>
-									<button className={'pt-button p2-minimal'}>View Pub</button>
+									<button className={'pt-button p2-minimal'}>View this Version</button>
 								</Link>
 							</div>
 
