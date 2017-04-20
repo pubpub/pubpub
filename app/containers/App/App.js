@@ -68,7 +68,7 @@ export const App = React.createClass({
 			? {}
 			: { height: '0px', overflow: 'hidden', opacity: 0 };
 		return (
-			<IntlProvider locale={'en'} messages={{}}>
+			<IntlProvider locale={'en'}>
 				<StyleRoot>
 					<Helmet 
 						title="PubPub"  

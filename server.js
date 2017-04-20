@@ -64,10 +64,6 @@ if (!process.env.NODE_ENV) {
 		}
 	}));
 	server.use(hot(compiler));
-	compiler.plugin('done', ()=> {
-		const translate = require('./translations/compileTranslations');
-		translate();
-	});
 
 	server.get('/*', function(req, res) {
 		res.sendFile(path.resolve(__dirname, 'index.html'));
