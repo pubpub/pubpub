@@ -4,7 +4,6 @@ import Highlighter from 'containers/Highlighter/Highlighter';
 import Radium from 'radium';
 import { RenderDocument } from '@pubpub/editor';
 import RenderFileDoc from './RenderFileDoc';
-import RenderFileMarkdown from './RenderFileMarkdown';
 import RenderFilePDF from './RenderFilePDF';
 import RenderFilePPT from './RenderFilePPT';
 import RenderFileSTL from './RenderFileSTL';

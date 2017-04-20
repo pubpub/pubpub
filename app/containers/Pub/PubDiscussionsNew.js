@@ -177,7 +177,7 @@ export const PubDiscussionsNew = React.createClass({
 						}	
 						{this.state.preview && 
 							<div style={{ border: '1px solid #CCC', padding: '1em', margin: '0.5em 0em' }}>
-								<RenderFile file={this.state.previewFiles[0]} allFiles={this.state.previewFiles} noHighlighter={true} />
+								<RenderFile file={this.state.previewFiles[0]} allFiles={this.state.previewFiles} allReferences={[]} noHighlighter={true} />
 							</div>
 						}
 						

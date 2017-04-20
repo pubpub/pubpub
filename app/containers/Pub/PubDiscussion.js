@@ -368,7 +368,7 @@ export const PubDiscussion = React.createClass({
 										{!editorOpen && 
 											<div style={styles.discussionText} className={'discussion-body'}>
 												{/*<ReactMarkdown source={child.description} />*/}
-												<RenderFile file={mainFile} allFiles={files} noHighlighter={true} />
+												<RenderFile file={mainFile} allFiles={files} allReferences={[]} noHighlighter={true} />
 											</div>
 										}
 										{editorOpen && 
