@@ -190,7 +190,7 @@ styles = {
 
 	},
 	headerImage: {
-		backgroundImage: 'url("https://assets.pubpub.org/_site/landingBackground.jpeg")',
+		backgroundImage: 'url("https://jake.pubpub.org/unsafe/fit-in/1500x1500/https://assets.pubpub.org/_site/landingBackground.jpeg")',
 		backgroundRepeat: 'no-repeat',
 		backgroundPosition: 'center',
 		backgroundSize: 'cover',
