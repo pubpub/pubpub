@@ -3,6 +3,7 @@ import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import Radium from 'radium';
 import RenderFile from 'components/RenderFile/RenderFile';
+import { bibtexToCSL } from '@pubpub/editor';
 import dateFormat from 'dateformat';
 import { globalStyles } from 'utils/globalStyles';
 import { putDefaultFile } from './actionsFiles';
