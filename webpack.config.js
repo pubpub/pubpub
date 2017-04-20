@@ -28,7 +28,7 @@ module.exports = {
 					path.resolve('app'),
 					path.resolve('node_modules')
 				],
-				exclude: /(node_modules)/,
+				exclude: /(node_modules|.*citeproc.*)/,
 				query: {
 					plugins: [
 						['react-transform', {
@@ -43,19 +43,19 @@ module.exports = {
 					]
 				}
 			},
-			{ 
-				test: /\.css$/, 
+			{
+				test: /\.css$/,
 				use: [
-					{ loader: 'style-loader' }, 
-					{ loader: 'css-loader' }, 
+					{ loader: 'style-loader' },
+					{ loader: 'css-loader' },
 					{ loader: 'sass-loader' }
 				]
 			},
-			{ 
-				test: /\.scss$/, 
+			{
+				test: /\.scss$/,
 				use: [
-					{ loader: 'style-loader' }, 
-					{ loader: 'css-loader' }, 
+					{ loader: 'style-loader' },
+					{ loader: 'css-loader' },
 					{ loader: 'sass-loader' }
 				]
 			},
