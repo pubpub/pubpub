@@ -7,8 +7,6 @@ import { Button } from '@blueprintjs/core';
 import Loader from 'components/Loader/Loader';
 import ImageCropper from 'components/ImageCropper/ImageCropper';
 import { globalStyles } from 'utils/globalStyles';
-// import { globalMessages } from 'utils/globalMessages';
-// import { FormattedMessage } from 'react-intl';
 
 import { getSignUpData, createAccount } from './actions';
 
@@ -187,15 +185,6 @@ export const CreateAccount = React.createClass({
 
 						<form onSubmit={this.createAccountSubmit}>
 							
-
-							{/* <label htmlFor={'username'}>
-								<FormattedMessage {...globalMessages.Username} />
-								<div style={styles.prefixedInputWrapper}>
-									<div style={styles.prefix}>pubpub.org/user/</div>
-									<input id={'username'} name={'username'} type="text" style={styles.input} value={this.state.username} onChange={this.inputUpdate.bind(this, 'username')} />
-								</div>
-							</label> */}
-
 							<label htmlFor={'firstName'}>
 								First Name
 								<input id={'firstName'} className={'pt-input margin-bottom'} name={'first name'} type="text" style={styles.input} value={this.state.firstName} onChange={this.inputUpdate.bind(this, 'firstName')} />

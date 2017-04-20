@@ -4,11 +4,8 @@ import { browserHistory } from 'react-router';
 import Radium from 'radium';
 import Helmet from 'react-helmet';
 import { Button } from '@blueprintjs/core';
-import Loader from 'components/Loader/Loader';
 import ImageCropper from 'components/ImageCropper/ImageCropper';
 import { globalStyles } from 'utils/globalStyles';
-// import { globalMessages } from 'utils/globalMessages';
-// import { FormattedMessage } from 'react-intl';
 
 import { createJournal } from './actions';
 
@@ -125,7 +122,7 @@ export const CreateJournal = React.createClass({
 		
 		const isLoading = createJournalData.loading;
 		const serverErrors = {
-			'Slug already used': <FormattedMessage id="createJournal.JournalURLalreadyused" defaultMessage="Journal URL already used" />,
+			'Slug already used': 'Journal URL already used',
 		};
 		const errorMessage = serverErrors[createJournalData.error] || this.state.validationError;
 		return (

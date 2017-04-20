@@ -1,11 +1,8 @@
 import React, { PropTypes } from 'react';
 import Radium from 'radium';
-import Loader from 'components/Loader/Loader';
 import { browserHistory } from 'react-router';
 import RenderFile from 'components/RenderFile/RenderFile';
 import { globalStyles } from 'utils/globalStyles';
-import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
 import { postDiscussion } from './actionsDiscussions';
 import PubLabelList from './PubLabelList';
 import { Checkbox, Button } from '@blueprintjs/core';
@@ -89,7 +86,7 @@ export const PubDiscussionsNew = React.createClass({
 	validate: function(data) {
 		// Check to make sure name exists
 		if (!data.title || !data.title.length) {
-			return { isValid: false, validationError: <FormattedMessage id="discussion.TitleRequired" defaultMessage="Title Required" /> };
+			return { isValid: false, validationError: 'Title Required' };
 		}
 		return { isValid: true, validationError: undefined };
 	},
@@ -156,7 +153,7 @@ export const PubDiscussionsNew = React.createClass({
 		const labelList = pub.pubLabels || [];		
 		const isLoading = this.props.isLoading;
 		const serverErrors = {
-			'Slug already used': <FormattedMessage id="discussion.JournalURLalreadyused" defaultMessage="Journal URL already used" />,
+			'Slug already used': 'Journal URL already used',
 		};
 		const errorMessage = serverErrors[this.props.error] || this.state.validationError;
 		return (

@@ -170,7 +170,7 @@ export const PubEditorHeader = React.createClass({
 							</div>
 						</form>
 						{(changeCount) ?
-							<div style={styles.saveWarning} className="pt-text-muted">Save often! Changes are lost if you close the window without saving. </div>
+							<div style={styles.saveWarning} className="pt-text-muted">Changes are lost if you close the window without saving.</div>
 						: null}
 					</div>
 

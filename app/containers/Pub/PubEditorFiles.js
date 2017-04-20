@@ -392,8 +392,6 @@ export const PubEditorFiles = React.createClass({
 			return previous;
 		}, files[0]);
 
-		console.log('Got defualt file!', mainFile);
-
 		const routeFile = files.reduce((previous, current)=> {
 			if (current.name === routeFilename) { return current; }
 			return previous;
@@ -569,16 +567,17 @@ export const PubEditorFiles = React.createClass({
 
 									let icon;
 									if (isDoc) {
-										icon = 'pt-icon-git-repo';
+										// icon = 'pt-icon-git-repo';
+										icon = 'pt-icon-document';
 									} else if (isImage) {
 										icon = 'pt-icon-media';
 									} else {
-										icon = 'pt-icon-document'
+										icon = 'pt-icon-document';
 									}
 									return (
  										<tr key={'file-' + index}>
 											<td style={styles.tableCell}><Link className={'underlineOnHover link'} to={{ pathname: `/pub/${this.props.pub.slug}/edit/${file.name}`, query: query }}>
-												<span style={styles.fileIcon} className={`pt-icon-standard ${icon}`}></span>
+												<span style={styles.fileIcon} className={`pt-icon-standard ${icon}`} />
 												{!file.isDeleted && file.isNew && <span style={[file.isNew && {backgroundColor: '#48AFF0'}, file.isNew && {backgroundColor: '#3DCC91'}, file.isDeleted && {backgroundColor: '#FF7373'}, { marginRight: '0.5em' }]} className={'pt-tag'}>new</span>}
 												{file.isDeleted && <span style={[file.isNew && {backgroundColor: '#48AFF0'}, file.isNew && {backgroundColor: '#3DCC91'}, file.isDeleted && {backgroundColor: '#FF7373'}, { marginRight: '0.5em' }]} className={'pt-tag'}>deleted</span>}
 												{!file.isNew && !file.isDeleted && (file.newName || file.newContent) && <span style={[file.isNew && {backgroundColor: '#48AFF0'}, file.isNew && {backgroundColor: '#3DCC91'}, file.isDeleted && {backgroundColor: '#FF7373'}, { marginRight: '0.5em' }]} className={'pt-tag'}>updated</span>}

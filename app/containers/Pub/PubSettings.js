@@ -6,8 +6,6 @@ import ColorPicker from 'components/ColorPicker/ColorPicker';
 import { StickyContainer, Sticky } from 'react-sticky';
 import { Button, Dialog } from '@blueprintjs/core';
 import { globalStyles } from 'utils/globalStyles';
-import { globalMessages } from 'utils/globalMessages';
-import { FormattedMessage } from 'react-intl';
 
 import { updatePub, deletePub } from './actions';
 
@@ -104,12 +102,12 @@ export const PubSettings = React.createClass({
 	validate: function(data) {
 		// Check to make sure username exists
 		if (!data.slug || !data.slug.length) {
-			return { isValid: false, validationError: <FormattedMessage id="pubSettings.PubURLrequired" defaultMessage="Pub URL required" /> };
+			return { isValid: false, validationError: 'Pub URL required' };
 		}
 
 		// Check to make sure firstName exists
 		if (!data.title || !data.title.length) {
-			return { isValid: false, validationError: <FormattedMessage id="pubSettings.Titlerequired" defaultMessage="Title required" /> };
+			return { isValid: false, validationError: 'Title required' };
 		}
 
 		return { isValid: true, validationError: undefined };
@@ -154,8 +152,8 @@ export const PubSettings = React.createClass({
 		// const pub = this.props.pub || {};
 		const isLoading = this.props.isLoading;
 		const serverErrors = {
-			'Email already used': <FormattedMessage id="pubSettings.Emailalreadyused" defaultMessage="Email already used" />,
-			'Username already used': <FormattedMessage id="pubSettings.Usernamealreadyused" defaultMessage="Username already used" />,
+			'Email already used': 'Email already used',
+			'Username already used': 'Username already used',
 		};
 		const errorMessage = serverErrors[this.props.error] || this.state.validationError;
 		return (
@@ -182,12 +180,12 @@ export const PubSettings = React.createClass({
 
 						<div style={styles.formContentWrapper}>
 							<label style={styles.label} htmlFor={'title'}>
-								<FormattedMessage {...globalMessages.Title} />
+								Title
 								<input id={'title'} className={'pt-input margin-bottom'} name={'title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
 							</label>
 
 							<label style={styles.label} htmlFor={'pubURL'}>
-								<FormattedMessage {...globalMessages.PubURL} />
+								Pub URL
 								<input id={'pubURL'} className={'pt-input margin-bottom'} name={'pubURL'} type="text" style={styles.input} value={this.state.slug} onChange={this.slugUpdate} />
 								<div className={'light-color inputSubtext'}>
 									pubpub.org/pub/<b>{this.state.slug || 'pubURL'}</b>
@@ -195,18 +193,12 @@ export const PubSettings = React.createClass({
 							</label>		
 								
 							<label htmlFor={'description'}>
-								<FormattedMessage {...globalMessages.Description} />
+								Description
 								<textarea id={'description'} className={'pt-input margin-bottom'} name={'description'} type="text" style={[styles.input, styles.description]} value={this.state.description} onChange={this.descriptionUpdate} />
 								<div className={'light-color inputSubtext'}>
 									{this.state.description.length} / 140
 								</div>
 							</label>
-
-							{/*<label htmlFor={'avatar'}>
-								<FormattedMessage {...globalMessages.Avatar} />
-								<img role="presentation" style={styles.avatar} src={this.state.avatar} />
-								<input id={'avatar'} name={'user image'} type="file" accept="image/*" onChange={this.handleFileSelect} />
-							</label>*/}
 
 							<ImageUpload 
 									defaultImage={this.state.avatar}
@@ -226,7 +218,7 @@ export const PubSettings = React.createClass({
 								canClear={true} />
 
 							<label style={styles.imageContainer}>
-								<FormattedMessage {...globalMessages.BackgroundColor} />
+								Background Color
 								<div style={{ margin:'1em 0em', display: 'block' }}>
 									<ColorPicker color={this.state.headerColor} onChange={this.headerColorChange} />	
 								</div>

@@ -271,6 +271,7 @@ export const PubEditor = React.createClass({
 		// if (!editMode) { this.enterEditMode(); }
 		// const newState = !editMode ? this.enterEditModeObject() : this.state;
 
+		const hasFiles = this.state.editorFiles.length !== 0;
 		const date = new Date();
 		const hours = ('0' + date.getHours()).slice(-2);
 		const minutes = ('0' + date.getMinutes()).slice(-2);
@@ -278,7 +279,7 @@ export const PubEditor = React.createClass({
 		const file = {
 			url: '/temp.md',
 			type: 'text/markdown',
-			name: `NewFile-${hours}-${minutes}-${seconds}.md`,
+			name: hasFiles ? `NewFile-${hours}-${minutes}-${seconds}.md` : 'main.md',
 			isNew: true,
 			content: '',
 			initialContent: '',
