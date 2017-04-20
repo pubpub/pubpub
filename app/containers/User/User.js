@@ -144,14 +144,14 @@ export const User = React.createClass({
 									userId={user.id} 
 									followData={followData} 
 									followerCount={followers.length} 
-									followersLink={{pathname: '/user/' + user.username + '/followers'}}
+									followersLink={{ pathname: '/user/' + user.username + '/followers' }}
 									dispatch={this.props.dispatch} />
 							</div>
 						}
 
 						<h1 style={styles.showOnMobile}>{name}</h1> {/* Duplicate header for cleaner Follow button rendering */}
 						
-						{/*!ownProfile &&
+						{/* !ownProfile &&
 							<FollowButton id={user._id} type={'followsUser'} isFollowing={user.isFollowing} buttonStyle={styles.followButtonStyle}/>
 						*/}
 

@@ -5,7 +5,6 @@ import Link from 'components/Link/Link';
 import { NonIdealState, Checkbox, Button } from '@blueprintjs/core';
 
 import { globalStyles } from 'utils/globalStyles';
-import { globalMessages } from 'utils/globalMessages';
 
 import { postLabel, putLabel, deleteLabel } from './actionsLabels'; 
 import { SortableContainer, SortableElement, SortableHandle, arrayMove } from 'react-sortable-hoc';

@@ -4,7 +4,6 @@ import { Link } from 'react-router';
 import { Menu, MenuDivider } from '@blueprintjs/core';
 import PreviewUser from 'components/PreviewUser/PreviewUser';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
-import { globalMessages } from 'utils/globalMessages';
 
 let styles;
 

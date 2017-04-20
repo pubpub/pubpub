@@ -7,7 +7,6 @@ import dateFormat from 'dateformat';
 import { InputGroup, NonIdealState } from '@blueprintjs/core';
 
 import { globalStyles } from 'utils/globalStyles';
-import { globalMessages } from 'utils/globalMessages';
 
 import JournalPageList from './JournalPageList';
 

@@ -6,7 +6,6 @@ import dateFormat from 'dateformat';
 import { Dialog, NonIdealState } from '@blueprintjs/core';
 
 import { globalStyles } from 'utils/globalStyles';
-import { globalMessages } from 'utils/globalMessages';
 import { putJournalSubmit, postJournalFeature } from './actionsSubmits';
 import Loader from 'components/Loader/Loader';
 

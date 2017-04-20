@@ -8,8 +8,6 @@ import PreviewPub from 'components/PreviewPub/PreviewPub';
 import { putLabel } from './actionsLabels'; 
 import Textarea from 'react-textarea-autosize';
 
-import { globalMessages } from 'utils/globalMessages';
-
 
 let styles;
 

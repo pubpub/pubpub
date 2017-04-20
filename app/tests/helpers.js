@@ -11,5 +11,5 @@ export function shallowRender(Component, props) {
 	const renderOutput = renderer.getRenderOutput();
 	const error = renderOutput.props.error;
 
-	return {renderOutput, error};
+	return { renderOutput, error };
 }
