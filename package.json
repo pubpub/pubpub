@@ -21,8 +21,8 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^1.12.0",
-    "@pubpub/editor": "^2.0.47",
-    "@pubpub/render-files": "^2.0.47",
+    "@pubpub/editor": "^2.0.48",
+    "@pubpub/render-files": "^2.0.48",
     "babel-core": "^6.24.0",
     "babel-eslint": "^6.1.2",
     "babel-loader": "^6.4.1",
