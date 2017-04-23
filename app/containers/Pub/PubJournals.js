@@ -88,7 +88,7 @@ export const PubJournals = React.createClass({
 				{pub.canEdit &&
 					<div>
 						{!canSubmit &&
-							<div className={'pt-callout pt-intent-danger'}>Pubs must have at least one published or restricted version to submit to a journal. Go to <Link to={`/pub/${pub.slug}/versions`}>Versions</Link> to update.</div>
+							<div className={'pt-callout pt-intent-danger'}>Pubs must have at least one published or restricted version to submit to a journal. You can update these settings from the <Link to={`/pub/${pub.slug}/versions`} style={{ textDecoration: 'underline' }}>Versions page</Link>.</div>
 						}
 						<div style={canSubmit ? {} : styles.disabled}>
 							<AutocompleteBar
