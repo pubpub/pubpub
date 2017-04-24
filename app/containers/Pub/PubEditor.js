@@ -375,7 +375,7 @@ export const PubEditor = React.createClass({
 				// 	newFile.content = jsonToMarkdown(newFile.newJSON);
 				// }
 
-				const extension = newFile.name.split('.').pop;
+				const extension = newFile.name.split('.').pop();
 				if (newFile.newName || newFile.newContent) {
 					// If there are updates to the file, it's a new file, so remove its id.
 					newFile.url = `/temp.${extension}`;
