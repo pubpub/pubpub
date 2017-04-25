@@ -60,6 +60,7 @@ export const RenderFile = React.createClass({
 						json={JSON.parse(file.content)}
 						allReferences={this.props.allReferences}
 						allFiles={this.props.allFiles}
+						slug={this.props.pubSlug}
 						/>
 				</div>
 			);
@@ -73,6 +74,7 @@ export const RenderFile = React.createClass({
 						markdown={file.content}
 						allReferences={this.props.allReferences}
 						allFiles={this.props.allFiles}
+						slug={this.props.pubSlug}
 						/>
 				</div>
 			);
