@@ -194,15 +194,15 @@ export const PubEditorFiles = React.createClass({
 	},
 
 	handleFileSelect: function(file, callback) { // Used for rich editor
-		this.setState({ richUploadCallback: callback });
-		this.handleFileUploads({
-			target: {
-				files: [
-					file
-				]
-			}
+		this.setState({ richUploadCallback: callback }, () => {
+			this.handleFileUploads({
+				target: {
+					files: [
+						file
+					]
+				}
+			});
 		});
-
 	},
 
 	handleReferenceAdd: function(referenceObject, callback) {
