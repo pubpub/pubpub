@@ -33,79 +33,78 @@ export const PubEditor = React.createClass({
 	},
 
 	componentWillMount() {
-		// console.log('mounting editor', this.props.pubData.pub);
 
-		const pub = this.props.pubData.pub || {};
-		const versions = pub.versions || [];
-		const currentVersion = this.getCurrentVersion(versions);
-		const files = currentVersion.files || [];
-		const localReferences = this.getLocalReferences(files);
-		const currentFileName = this.props.params.filename;
-		const defaultMode = currentFileName && currentFileName.split('.').pop() === 'md' ? 'rich' : 'code';
+		try {
+			const pub = this.props.pubData.pub || {};
+			const versions = pub.versions || [];
+			const currentVersion = this.getCurrentVersion(versions);
+			const files = currentVersion.files || [];
+			const localReferences = this.getLocalReferences(files);
+			const currentFileName = this.props.params.filename;
+			const defaultMode = currentFileName && currentFileName.split('.').pop() === 'md' ? 'rich' : 'code';
 
-		this.setState({
-			editorMode: defaultMode,
-			editorIsPublished: currentVersion.isPublished,
-			editorIsRestricted: currentVersion.isRestricted,
-			editorDefaultFile: currentVersion.defaultFile,
-			editorCurrentFile: currentFileName,
-			editorFiles: files.reduce((previous, current)=> {
-				previous[current.name] = { ...current };
-				// if (defaultMode === 'rich' && currentFileName === current.name) {
-				if (currentFileName === current.name) {
-					const initialContent = defaultMode === 'rich'
-						? markdownToJSON(current.content, localReferences)
-						: current.content;
-					previous[current.name].initialContent = initialContent;
-				}
-				return previous;
-			}, {}),
-		});
-
+			this.setState({
+				editorMode: defaultMode,
+				editorIsPublished: currentVersion.isPublished,
+				editorIsRestricted: currentVersion.isRestricted,
+				editorDefaultFile: currentVersion.defaultFile,
+				editorCurrentFile: currentFileName,
+				editorFiles: files.reduce((previous, current)=> {
+					previous[current.name] = { ...current };
+					// if (defaultMode === 'rich' && currentFileName === current.name) {
+					if (currentFileName === current.name) {
+						const initialContent = defaultMode === 'rich'
+							? markdownToJSON(current.content, localReferences)
+							: current.content;
+						previous[current.name].initialContent = initialContent;
+					}
+					return previous;
+				}, {}),
+			});
+		}
+		catch (err) {
+			if (Raven) { Raven.captureException(err);	}
+			this.setState({ editorError: 'Could not load pub.' });
+		}
 
 	},
 
 	componentWillReceiveProps(nextProps) {
-		// const lastPathname = this.props.location.pathname;
-		// const nextPathname = nextProps.location.pathname;
 
 		if (this.props.params.filename !== nextProps.params.filename && nextProps.params.filename) {
 
-			// const versions = nextProps.pubData.pub.versions || [];
-			// const currentVersion = this.getCurrentVersion(versions);
+			try {
+				const files = Object.keys(this.state.editorFiles).map((key)=> {
+					return this.state.editorFiles[key];
+				});
+				const localReferences = this.getLocalReferences(files);
 
+				const newEditorFiles = { ...this.state.editorFiles };
 
-			const files = Object.keys(this.state.editorFiles).map((key)=> {
-				return this.state.editorFiles[key];
-			});
-			const localReferences = this.getLocalReferences(files);
+				const currentFileName = nextProps.params.filename;
+				const nextMode = currentFileName && newEditorFiles[currentFileName].name.split('.').pop() === 'md' ? 'rich' : 'code';
 
-			const newEditorFiles = { ...this.state.editorFiles };
+				let initialContent = newEditorFiles[currentFileName].newContent || newEditorFiles[currentFileName].content;
+				if (nextMode === 'rich' && typeof initialContent === 'string') {
+					initialContent = markdownToJSON(initialContent, localReferences);
+				}
 
-			const currentFileName = nextProps.params.filename;
-			const nextMode = currentFileName && newEditorFiles[currentFileName].name.split('.').pop() === 'md' ? 'rich' : 'code';
+				newEditorFiles[currentFileName].initialContent = initialContent;
 
-			let initialContent = newEditorFiles[currentFileName].newContent || newEditorFiles[currentFileName].content;
-			if (nextMode === 'rich' && typeof initialContent === 'string') {
-				initialContent = markdownToJSON(initialContent, localReferences);
+				this.setState({
+					editorMode: nextMode,
+					editorFiles: newEditorFiles,
+				});
+			} catch (err) {
+				if (Raven) { Raven.captureException(err);	}
+				this.setState({ editorError: `Could not load file ${nextProps.params.filename}.` });
 			}
-
-			newEditorFiles[currentFileName].initialContent = initialContent;
-
-			this.setState({
-				editorMode: nextMode,
-				editorFiles: newEditorFiles,
-			});
-
 		}
 
 		const currentPub = this.props.pubData.pub || {};
 		const nextPub = nextProps.pubData.pub || {};
 		if (currentPub.id && this.getCurrentVersion(currentPub.versions).id !== this.getCurrentVersion(nextPub.versions).id) {
 			window.unsavedEdits = false;
-			// const currentEditorFile = this.state.editorFiles[this.state.editorCurrentFile];
-			// const nextName = currentEditorFile && (currentEditorFile.newName || currentEditorFile.name);
-
 			// This is a temporary fix for the renaming files bug
 			browserHistory.push({
 				pathname: `/pub/${nextPub.slug}`,
@@ -212,34 +211,36 @@ export const PubEditor = React.createClass({
 	},
 
 	onEditorModeChange: function(newMode) {
-		if (!this.state.editorMode) { return false; }
-		const currentFile = this.props.params.filename;
-		const newEditorFiles = { ...this.state.editorFiles };
+		try {
+			if (!this.state.editorMode) { return false; }
+			const currentFile = this.props.params.filename;
+			const newEditorFiles = { ...this.state.editorFiles };
 
-		const currentContent = newEditorFiles[currentFile].newContent || newEditorFiles[currentFile].initialContent;
-		let newContent;
-		if (newMode === 'markdown') {
-			newContent = jsonToMarkdown(currentContent);
-			// newEditorFiles[currentFile].newContent = newContent;
-			// newEditorFiles[currentFile].initialContent = newContent;
-		} else {
-			const files = Object.keys(this.state.editorFiles).map((key)=> {
-				return this.state.editorFiles[key];
+			const currentContent = newEditorFiles[currentFile].newContent || newEditorFiles[currentFile].initialContent;
+			let newContent;
+			if (newMode === 'markdown') {
+				newContent = jsonToMarkdown(currentContent);
+			} else {
+				const files = Object.keys(this.state.editorFiles).map((key)=> {
+					return this.state.editorFiles[key];
+				});
+
+				const localReferences = this.getLocalReferences(files);
+				// console.log('these references are ', localReferences)
+				newContent = markdownToJSON(currentContent, localReferences);
+				// newEditorFiles[currentFile].newMarkdown = undefined;
+				// newEditorFiles[currentFile].newJSON = newJSON;
+				// newEditorFiles[currentFile].initialContent = newContent;
+			}
+			newEditorFiles[currentFile].newContent = newContent;
+			newEditorFiles[currentFile].initialContent = newContent;
+			return this.setState({
+				editorFiles: newEditorFiles,
+				editorMode: newMode,
 			});
-
-			const localReferences = this.getLocalReferences(files);
-			// console.log('these references are ', localReferences)
-			newContent = markdownToJSON(currentContent, localReferences);
-			// newEditorFiles[currentFile].newMarkdown = undefined;
-			// newEditorFiles[currentFile].newJSON = newJSON;
-			// newEditorFiles[currentFile].initialContent = newContent;
+		} catch (err) {
+			this.setState({})
 		}
-		newEditorFiles[currentFile].newContent = newContent;
-		newEditorFiles[currentFile].initialContent = newContent;
-		return this.setState({
-			editorFiles: newEditorFiles,
-			editorMode: newMode,
-		});
 
 	},
 
@@ -391,7 +392,8 @@ export const PubEditor = React.createClass({
 				return !file.isDeleted;
 			});
 		} catch (err) {
-			console.log('Error saving', err);
+			if (Raven) { Raven.captureException(err);	}
+			Raven.captureException(err);
 			return this.setState({ editorError: 'Error saving files. Please email pubpub@media.mit.edu.' });
 		}
 
@@ -509,6 +511,14 @@ export const PubEditor = React.createClass({
 					query={query} />
 
 				<div id={'content-wrapper'} style={{ position: 'relative', width: '100%' }}>
+
+					{(this.editorError) ?
+						<div className="pt-callout">
+						  <h5>Error</h5>
+						 	{this.state.editorError}
+						</div>
+					: null
+					}
 
 
 					<PubEditorFiles
