@@ -64,6 +64,7 @@ export const User = React.createClass({
 		const metaData = {
 			title: name + ' · PubPub',
 			meta: [
+				{ name: 'description', content: user.bio },
 				{ property: 'og:title', content: name },
 				{ property: 'og:type', content: 'article' },
 				{ property: 'og:description', content: user.bio },

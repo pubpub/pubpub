@@ -94,6 +94,7 @@ export const Pub = React.createClass({
 		const metaData = {
 			title: (pub.title || this.props.params.slug) + ' · PubPub',
 			meta: [
+				{ name: 'description', content: pub.description },
 				{ property: 'og:title', content: pub.title },
 				{ property: 'og:type', content: 'article' },
 				{ property: 'og:description', content: pub.description },

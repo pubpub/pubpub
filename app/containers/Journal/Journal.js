@@ -125,6 +125,7 @@ export const Journal = React.createClass({
 		const metaData = {
 			title: journal.title + ' · PubPub',
 			meta: [
+				{ name: 'description', content: journal.description },
 				{ property: 'og:title', content: (journal.title || journal.slug) },
 				{ property: 'og:type', content: 'article' },
 				{ property: 'og:description', content: journal.description },
