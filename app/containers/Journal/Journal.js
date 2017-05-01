@@ -230,6 +230,21 @@ export const Journal = React.createClass({
 						default:
 							return (
 								<div>
+									{journal.slug === 'resci' &&
+										<div style={styles.hardcodedText}>
+											<p style={styles.hardcodedTextP}><b>Responsive Science</b> is a new way of conducting scientific research that builds on openness and transparency from the earliest stages of projects on, and features real-time interaction between researchers, citizens, stakeholders and communities. It allows for scientific and normative questions to be identified early, provides a space for those questions to be discussed, and a mechanism for feeding the results of those discussion back into research design.</p>
+											<p style={styles.hardcodedTextP}>
+												<b>Community engagement</b>
+												<br />
+												Transparency and societal accountability are of particular importance in the life sciences and critical in any research that involves the shared environment. With Responsive Science we aim to establish a new model for community engagement in applied ecological research.
+											</p>
+											<p style={styles.hardcodedTextP}>
+												<b>What you will  find on our site</b>
+												<br />
+												At this site you find more information <Link to={'/page/about'} customDomain={journal.customDomain}>about</Link> the model of Responsive Science, our <Link to={{ pathname: '/' + journal.slug, query: { ...query, view: 'people' } }} customDomain={journal.customDomain}>team</Link>, and the <Link to={'/page/about'} customDomain={journal.customDomain}>projects</Link> at various stages of development, submitted or awarded and ongoing. You will be able to view the original documents. Real-time interaction is facilitated through the unique tool of <a href={'https://www.pubpub.org'}>PubPub</a>, that enables commenting and discussion. Through comments on early stage proposals you can make a difference! 
+											</p>
+										</div>
+									}
 									<div style={styles.headerWrapper}>
 										<div style={styles.headerOptions}>
 											<div className="pt-button-group pt-minimal">
@@ -321,6 +336,14 @@ styles = {
 	},
 	editButton: {
 		marginTop: '0.5em',
+	},
+	hardcodedText: {
+		padding: '0em 0em 2em',
+		fontSize: '1.2em',
+		lineHeight: '1.4',
+	},
+	hardcodedTextP: {
+		padding: '1em 0em',
 	},
 	followButtonWrapper: {
 		// float: 'right',
