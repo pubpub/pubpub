@@ -66,7 +66,7 @@ export const ActivityItem = React.createClass({
 			return ('username' in item && '/user/' + item.username)
 				|| ('about' in item && '/' + item.slug)
 				|| ('isPublished' in item && '/pub/' + item.slug)
-				|| '/label/' + item.title;
+				|| '/label/' + item.slug;
 				// have to handle discussion links
 		};
 		const actorLink = makeLink(actor);
@@ -130,7 +130,7 @@ export const ActivityItem = React.createClass({
 							case 'featuredPub': 
 								return <div>{actorNode} featured a pub</div>;
 							case 'createdJournalLabel': 
-								return <div>{actorNode} created a new page, {buildLink(actorLink + '/page/' + target.title, targetString)}</div>;
+								return <div>{actorNode} created a new page, {buildLink(actorLink + '/page/' + target.slug, targetString)}</div>;
 							default: 
 								return <div />;
 							}

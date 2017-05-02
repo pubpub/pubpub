@@ -51,7 +51,7 @@ export const ActivityGroup = React.createClass({
 			return ('username' in item && '/user/' + item.username)
 				|| ('about' in item && '/' + item.slug)
 				|| ('isPublished' in item && '/pub/' + item.slug)
-				|| '/label/' + item.title;
+				|| '/label/' + item.slug;
 				// have to handle discussion links
 		};
 
