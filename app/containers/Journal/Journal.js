@@ -232,16 +232,18 @@ export const Journal = React.createClass({
 								<div>
 									{journal.slug === 'resci' &&
 										<div style={styles.hardcodedText}>
-											<p style={styles.hardcodedTextP}><b>Responsive Science</b> is a new way of conducting scientific research that builds on openness and transparency from the earliest stages of projects on, and features real-time interaction between researchers, citizens, stakeholders and communities. It allows for scientific and normative questions to be identified early, provides a space for those questions to be discussed, and a mechanism for feeding the results of those discussion back into research design.</p>
 											<p style={styles.hardcodedTextP}>
-												<b>Community engagement</b>
-												<br />
-												Transparency and societal accountability are of particular importance in the life sciences and critical in any research that involves the shared environment. With Responsive Science we aim to establish a new model for community engagement in applied ecological research.
+												<b>Responsive Science</b> is a way of conducting research that invites openness and community involvement from the earliest stages of each project. Real-time interaction between scientists, citizens, and broader communities allows questions and concerns to be identified before experiments are performed, fosters open discussion, and encourages research studies and new technologies to be redesigned in response to societal feedback. 
 											</p>
 											<p style={styles.hardcodedTextP}>
-												<b>What you will  find on our site</b>
+												<b>Community Involvement</b>
 												<br />
-												At this site you find more information <Link to={'/page/about'} customDomain={journal.customDomain}>about</Link> the model of Responsive Science, our <Link to={{ pathname: '/' + journal.slug, query: { ...query, view: 'people' } }} customDomain={journal.customDomain}>team</Link>, and the <Link to={'/page/about'} customDomain={journal.customDomain}>projects</Link> at various stages of development, submitted or awarded and ongoing. You will be able to view the original documents. Real-time interaction is facilitated through the unique tool of <a href={'https://www.pubpub.org'}>PubPub</a>, that enables commenting and discussion. Through comments on early stage proposals you can make a difference! 
+												Transparency and societal accountability are critical for any research that involves the shared environment. Responsive Science currently focuses on applied ecological research, including gene drive systems for altering wild populations. Discussions are facilitated by <a href={'https://www.pubpub.org'}>PubPub</a>, a unique collaborative tool for sharing and evaluating research, and our dedicated <Link to={{ pathname: '/' + journal.slug, query: { ...query, view: 'people' } }} customDomain={journal.customDomain}>team</Link>.
+											</p>
+											<p style={styles.hardcodedTextP}>
+												<b>Wise Choices</b>
+												<br />
+												Increasingly powerful technologies demand greater wisdom. Share your thoughts on early stage <Link to={'/page/projects'} customDomain={journal.customDomain}>projects</Link> to shape a better future for society and the natural world.
 											</p>
 										</div>
 									}
