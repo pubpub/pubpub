@@ -72,7 +72,7 @@ export const PubBreadcrumbs = React.createClass({
 									if (versionItem.isRestricted) { currentPrivacy = 'Restricted'; }
 									if (versionItem.isPublished) { currentPrivacy = 'Published'; }
 									return (
-										<li key={`version-menuitem-${index}`} style={versionItem.hash === version.hash ? { fontWeight: 'bold' } : {}}>
+										<li key={`version-menuitem-${index}`} style={versionItem.id === version.id ? { fontWeight: 'bold' } : {}}>
 											<Link className="pt-menu-item pt-popover-dismiss" to={{ pathname: pathname, query: { ...query, version: versionItem.hash } }}>
 												<FormattedRelative value={versionItem.createdAt} /> · {currentPrivacy}
 												{currentPrivacy === 'Private' &&
