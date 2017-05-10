@@ -2,12 +2,12 @@ import { InputGroup, NonIdealState } from '@blueprintjs/core';
 import React, { PropTypes } from 'react';
 
 import Link from 'components/Link/Link';
+import SinglePub from './LayoutSinglePub';
 import { browserHistory } from 'react-router';
 import dateFormat from 'dateformat';
 import { globalStyles } from 'utils/globalStyles';
 
 let styles = {};
-
 
 export const LayoutPubsList = React.createClass({
 	propTypes: {
@@ -56,9 +56,7 @@ export const LayoutPubsList = React.createClass({
 		const errorMessage = this.props.error;
     const n = this.props.n || pubFeatures.length;
 
-    const { showPreview = true, order = [] } = this.props;
-
-    console.log('got show Preview!', showPreview);
+    const { showPreview = true, order = [], label } = this.props;
 
 		return (
 			<div>
@@ -102,27 +100,7 @@ export const LayoutPubsList = React.createClass({
 						const pub = item.pub || {};
 						return pub.slug !== 'designandsciencej';
 					}).map((pubFeature, index)=> {
-						const pub = pubFeature.pub || {};
-						const labels = pub.labels || [];
-						return (
-							<div key={'feature-' + index} style={styles.featureWrapper}>
-								<div style={styles.featureTable}>
-                  {(showPreview) ?
-									<div style={styles.imageWrapper}>
-                      <Link to={{ pathname: '/pub/' + pub.slug, query: { context: journal.slug } }}>
-                        <img src={pub.avatar} style={styles.featureImage} />
-                      </Link>
-									</div>
-                  : null
-                  }
-									<div style={styles.featureDetails}>
-										<h4><Link to={{ pathname: '/pub/' + pub.slug, query: { context: journal.slug } }}>{pub.title}</Link></h4>
-										<p>{pub.description}</p>
-										<p>Featured on {dateFormat(pubFeature.updatedAt, 'mmmm dd, yyyy')}</p>
-									</div>
-								</div>
-							</div>
-						);
+						return (<SinglePub key={'feature-' + index}  pub={pubFeature.pub} pubFeature={pubFeature} journal={journal} showPreview={showPreview} />);
 					})
 				}
 
