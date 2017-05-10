@@ -1,45 +1,45 @@
 import React, { PropTypes } from 'react';
 
 import { CodeEditor }  from '@pubpub/editor';
-import LayoutPubsList from './LayoutPubsList'
+import LayoutPubsList from './LayoutPubsList';
+import LayoutSinglePub from './LayoutSinglePub'
 import jsx from 'jsx-transform';
-
-function RenderedPubs(props) {
-  console.log(props.n, Array(props.n));
-  return (<ul>
-    {Array(props.n).fill().map((n, index) => {
-      return <li>{props.name} {index}</li>
-    })}
-    </ul>
-  );
-}
-
-
 
 const LayoutEditor = React.createClass({
   getInitialState: function() {
     return {
-      elem: null
+      mode: 'edit'
     };
   },
 
-  getSinglePub: function() {
-
+  getSinglePub: function(slug) {
+    const journal = this.props.journalData.journal;
+    const pubFeatures = journal.pubFeatures;
+    const pub = pubFeatures.find((pubFeature) => (pubFeature.pub.slug === slug));
+    return pub.pub;
   },
-	onChange: function(item) {
+	onChange: function(codeContent) {
     try {
       const createElem = React.createElement;
 
       const PubsList = (props) => {
         return (<div>
-          <h1>{props.title}</h1>
           <LayoutPubsList journal={this.props.journalData.journal} {...props}/>
           </div>
         );
       }
 
+      const Pub = (props) => {
+        const slug = props.slug;
+        const pub = this.getSinglePub(slug);
+        return (<div>
+            <LayoutSinglePub journal={this.props.journalData.journal} pub={pub} {...props}/>
+          </div>
+        );
+      }
 
-      const compiled = jsx.fromString(item, {
+
+      const compiled = jsx.fromString(codeContent, {
         factory: 'createElem'
       });
       const elem = eval(compiled);
@@ -51,32 +51,31 @@ const LayoutEditor = React.createClass({
 
 
   handleEditModeChange: function(mode) {
-
+    this.setState({mode});
   },
 
 	render: function() {
-    const { elem } = this.state;
+    const { elem, mode } = this.state;
     const { journalData } = this.props;
 
-    console.log('Got journal!', journalData);
     const DisplayElem = elem;
-    const mode = 'rich';
+
 		return (
       <div>
 
         <div className={'pt-card pt-elevation-3'} style={{ padding: '0em', margin: '0em 0em 2em' }}>
           <div style={{ minHeight: '45px', backgroundColor: '#ebf1f5', padding: '0.5em', textAlign: 'right', borderBottom: '1px solid rgba(16, 22, 26, 0.15)' }}>
             <div className={'pt-button-group'}>
-              <div className={`pt-button${mode === 'rich' ? ' pt-active' : ''}`} onClick={this.handleEditModeChange.bind(this, 'edit')}>Edit</div>
-              <div className={`pt-button${mode === 'rich' ? ' pt-active' : ''}`} onClick={this.handleEditModeChange.bind(this, 'preview')}>Preview</div>
-              <div className={`pt-button${mode === 'rich' ? ' pt-active' : ''}`} onClick={this.handleEditModeChange.bind(this, 'side')}>Side By Side</div>
-
-              <button className={'pt-button pt-icon-trash pt-minimal'} style={{ margin: '0em 1em' }} onClick={this.props.onFileDelete} />
+              <div className={`pt-button${mode === 'edit' ? ' pt-active' : ''}`} onClick={this.handleEditModeChange.bind(this, 'edit')}>Edit</div>
+              <div className={`pt-button${mode === 'preview' ? ' pt-active' : ''}`} onClick={this.handleEditModeChange.bind(this, 'preview')}>Preview</div>
+              <div className={`pt-button${mode === 'side' ? ' pt-active' : ''}`} onClick={this.handleEditModeChange.bind(this, 'side')}>Side By Side</div>
             </div>
 
           </div>
-          <CodeEditor onChange={this.onChange} initialContent={`<div><h1>JODS</h1><PubsList title="Pub" n={2} order={['ageofentanglement','designandscience']} /></div>`} {...this.props} />
-          {(elem) ? elem : null}
+          {(mode === 'edit' || mode === 'side') ?
+          <CodeEditor onChange={this.onChange} initialContent={`<div><h1>JODS</h1><PubsList n={2} order={['ageofentanglement','designandscience']} /></div>`} {...this.props} />
+          : null }
+          {(mode === 'preview' || mode === 'side') ? elem : null }
       </div>
 
       </div>
