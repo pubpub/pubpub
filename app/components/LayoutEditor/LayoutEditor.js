@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 
 import { CodeEditor }  from '@pubpub/editor';
+import LayoutPubsList from './LayoutPubsList'
 import jsx from 'jsx-transform';
 
 function RenderedPubs(props) {
@@ -13,15 +14,31 @@ function RenderedPubs(props) {
   );
 }
 
+
+
 const LayoutEditor = React.createClass({
   getInitialState: function() {
     return {
       elem: null
     };
   },
+
+  getSinglePub: function() {
+
+  },
 	onChange: function(item) {
     try {
       const createElem = React.createElement;
+
+      const PubsList = (props) => {
+        return (<div>
+          <h1>{props.title}</h1>
+          <LayoutPubsList journal={this.props.journalData.journal} {...props}/>
+          </div>
+        );
+      }
+
+
       const compiled = jsx.fromString(item, {
         factory: 'createElem'
       });
@@ -39,6 +56,9 @@ const LayoutEditor = React.createClass({
 
 	render: function() {
     const { elem } = this.state;
+    const { journalData } = this.props;
+
+    console.log('Got journal!', journalData);
     const DisplayElem = elem;
     const mode = 'rich';
 		return (
@@ -55,7 +75,7 @@ const LayoutEditor = React.createClass({
             </div>
 
           </div>
-          <CodeEditor onChange={this.onChange} initialContent={'<div><h1>JODS</h1><RenderedPubs n={5} name="Pub"/></div>'} {...this.props} />
+          <CodeEditor onChange={this.onChange} initialContent={`<div><h1>JODS</h1><PubsList title="Pub" n={2} order={['ageofentanglement','designandscience']} /></div>`} {...this.props} />
           {(elem) ? elem : null}
       </div>
 

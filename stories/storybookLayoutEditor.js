@@ -2,7 +2,8 @@ import React, { PropTypes } from 'react';
 
 import LayoutEditor from '../app/components/LayoutEditor/LayoutEditor';
 import { connect } from 'react-redux';
-// import { getUserData } from './actions';
+import { getJournalData } from '../app/containers/Journal/actions';
+import { getPubData } from '../app/containers/Pub/actions';
 
 require('../static/blueprint.scss');
 require('../static/style.scss');
@@ -21,13 +22,23 @@ const Layout = React.createClass({
 		// this.props.dispatch(getUserData(params.username));
 	},
 
+  componentDidMount() {
+    this.getAJournal();
+  },
+
+  getAJournal() {
+    this.props.dispatch(getJournalData('jods'));
+  },
+
 	getInitialState() {
 		return { };
 	},
 
 	render() {
+    const { journalData } = this.props;
+    console.log('Got jornal data!', journalData);
 		return (
-      <LayoutEditor/>
+      <LayoutEditor journalData={journalData}/>
     );
 
 	}
@@ -35,6 +46,7 @@ const Layout = React.createClass({
 
 function mapStateToProps(state) {
 	return {
+    journalData: state.journal.toJS(),
 	};
 }
 
