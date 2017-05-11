@@ -1,11 +1,10 @@
 import { action, linkTo, storiesOf } from '@kadira/storybook';
 
-import LayoutEditor from './storybookLayoutEditor';
 import { Provider } from 'react-redux';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import configureStore from '../app/configureStore';
 import fetch from 'isomorphic-fetch';
+import journalStories from './journals/stories';
 
 const store = configureStore();
 
@@ -36,12 +35,11 @@ global.clientFetch = function(route, opts) {
 	});
 };
 
-
-storiesOf('Layout Editor', module)
-  .addDecorator((getStory) => (<Provider store={store}>
+const addDecorator = (storyModule) => {
+  return storyModule.addDecorator((getStory) => (<Provider store={store}>
     { getStory() }
    </Provider>
-  ))
-  .add('Basic', () => (
-    <LayoutEditor/>
-  ));
+ ));
+}
+
+journalStories(addDecorator(storiesOf('Journals', module)));
