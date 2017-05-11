@@ -5,6 +5,8 @@ import LayoutPubsList from './LayoutPubsList';
 import LayoutSinglePub from './LayoutSinglePub'
 import jsx from 'jsx-transform';
 
+let styles = {};
+
 const LayoutEditor = React.createClass({
   getInitialState: function() {
     return {
@@ -72,15 +74,33 @@ const LayoutEditor = React.createClass({
             </div>
 
           </div>
-          {(mode === 'edit' || mode === 'side') ?
-          <CodeEditor onChange={this.onChange} initialContent={`<div><h1>JODS</h1><PubsList n={2} order={['ageofentanglement','designandscience']} /></div>`} {...this.props} />
-          : null }
-          {(mode === 'preview' || mode === 'side') ? elem : null }
+          <div style={styles.container}>
+            {(mode === 'edit' || mode === 'side') ?
+            <div style={styles.item}>
+              <CodeEditor onChange={this.onChange} initialContent={`<div><h1>JODS</h1><PubsList n={2} order={['ageofentanglement','designandscience']} /></div>`} {...this.props} />
+            </div>
+            : null }
+            {(mode === 'preview' || mode === 'side') ? <div style={styles.item}>{elem}</div> : null }
+          </div>
       </div>
 
       </div>
 		);
 	}
 });
+
+
+styles = {
+  container: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    justifyContent: 'space-around'
+  },
+  item: {
+    width: '50%',
+    flexGrow: 2,
+  }
+}
 
 export default LayoutEditor;
