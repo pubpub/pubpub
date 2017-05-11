@@ -5,30 +5,48 @@ import dateFormat from 'dateformat';
 
 let styles = {};
 
-const SinglePub = ({ pub, showPreview, journal, pubFeature }) => {
+const SinglePub = ({ pub, showPreview, journal, pubFeature, pubStyle="preview", size=300 }) => {
 
 
   const labels = pub.labels || [];
 
-  return (
-    <div style={styles.featureWrapper}>
-      <div style={styles.featureTable}>
-        {(showPreview) ?
-        <div style={styles.imageWrapper}>
-            <Link to={{ pathname: '/pub/' + pub.slug, query: { context: journal.slug } }}>
-              <img src={pub.avatar} style={styles.featureImage} />
-            </Link>
-        </div>
-        : null
-        }
-        <div style={styles.featureDetails}>
-          <h4><Link to={{ pathname: '/pub/' + pub.slug, query: { context: journal.slug } }}>{pub.title}</Link></h4>
-          <p>{pub.description}</p>
-          {(pubFeature) ? <p>Featured on {dateFormat(pubFeature.updatedAt, 'mmmm dd, yyyy')}</p> : null }
+  if (pubStyle === 'preview') {
+    return (
+      <div style={styles.featureWrapper}>
+        <div style={styles.featureTable}>
+          {(showPreview) ?
+          <div style={styles.imageWrapper}>
+              <Link to={{ pathname: '/pub/' + pub.slug, query: { context: journal.slug } }}>
+                <img src={pub.avatar} style={styles.featureImage} />
+              </Link>
+          </div>
+          : null
+          }
+          <div style={styles.featureDetails}>
+            <h4><Link to={{ pathname: '/pub/' + pub.slug, query: { context: journal.slug } }}>{pub.title}</Link></h4>
+            <p>{pub.description}</p>
+            {(pubFeature) ? <p>Featured on {dateFormat(pubFeature.updatedAt, 'mmmm dd, yyyy')}</p> : null }
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  } else if (pubStyle === 'magazine') {
+    return (
+
+      <div style={styles.featureWrapper}>
+        <div style={styles.featureTable}>
+          <div style={{width: size}}>
+              <Link to={{ pathname: '/pub/' + pub.slug, query: { context: journal.slug } }}>
+                <img src={pub.avatar} style={styles.sizeImage} />
+              </Link>
+              <h2 style={styles.magazineDescription}><Link to={{ pathname: '/pub/' + pub.slug, query: { context: journal.slug } }}>{pub.title}</Link></h2>
+          </div>
+        </div>
+      </div>
+
+    );
+  }
+
 }
 
 export default SinglePub;
@@ -51,6 +69,15 @@ styles = {
 		width: '100px',
 		paddingRight: '1em',
 	},
+  magazineDescription: {
+    padding: '0.3em 0.15em',
+    textAlign: 'center',
+    lineHeight: 1.25,
+  },
+  sizeImage: {
+    width: '100%',
+    paddingRight: '1em',
+  },
 	featureDetails: {
 		display: 'table-cell',
 		verticalAlign: 'top',

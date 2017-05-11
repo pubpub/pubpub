@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 
 import LayoutEditor from '../app/components/LayoutEditor/LayoutEditor';
+import { SampleLayout } from './sampledata';
 import { connect } from 'react-redux';
 import { getJournalData } from '../app/containers/Journal/actions';
 import { getPubData } from '../app/containers/Pub/actions';
@@ -36,9 +37,8 @@ const Layout = React.createClass({
 
 	render() {
     const { journalData } = this.props;
-    console.log('Got jornal data!', journalData);
 		return (
-      <LayoutEditor journalData={journalData}/>
+      <LayoutEditor journalData={journalData} initialContent={SampleLayout} />
     );
 
 	}

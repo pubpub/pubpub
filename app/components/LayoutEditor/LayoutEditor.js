@@ -58,7 +58,7 @@ const LayoutEditor = React.createClass({
 
 	render: function() {
     const { elem, mode } = this.state;
-    const { journalData } = this.props;
+    const { journalData, initialContent } = this.props;
 
     const DisplayElem = elem;
 
@@ -77,7 +77,7 @@ const LayoutEditor = React.createClass({
           <div style={styles.container}>
             {(mode === 'edit' || mode === 'side') ?
             <div style={styles.item}>
-              <CodeEditor onChange={this.onChange} initialContent={`<div><h1>JODS</h1><PubsList n={2} order={['ageofentanglement','designandscience']} /></div>`} {...this.props} />
+              <CodeEditor onChange={this.onChange} initialContent={initialContent} {...this.props} />
             </div>
             : null }
             {(mode === 'preview' || mode === 'side') ? <div style={styles.item}>{elem}</div> : null }
