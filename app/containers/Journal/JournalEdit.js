@@ -1,6 +1,6 @@
+import { Checkbox, Collapse, Tab2, Tabs2 } from "@blueprintjs/core";
 import React, { PropTypes } from 'react';
 import { Sticky, StickyContainer } from 'react-sticky';
-import { Tab2, Tabs2 } from "@blueprintjs/core";
 
 import { Button } from '@blueprintjs/core';
 import ColorPicker from 'components/ColorPicker/ColorPicker';
@@ -53,7 +53,7 @@ export const JournalEdit = React.createClass({
 			twitter: journal.twitter || '',
 			facebook: journal.facebook || '',
 			style: journal.style || '',
-			frontpageHtml: journal.frontpageHtml || '',
+			frontpageHtml: journal.frontpageHtml || null,
 		});
 	},
 
@@ -143,7 +143,15 @@ export const JournalEdit = React.createClass({
 	},
 
 	handleFrontPageChange: function(frontpageHtml) {
-		this.setState({ frontpageHtml });
+		this.setState({ frontpageHtml, canSave: true });
+	},
+
+	handleEnableFrontPage: function() {
+		this.setState({ frontpageHtml: '<div>Hii</div>', canSave: true });
+	},
+
+	handleDisableFrontPage: function() {
+		this.setState({ frontpageHtml: null, canSave: true } );
 	},
 
 	render: function() {
@@ -260,11 +268,31 @@ export const JournalEdit = React.createClass({
 			</div>);
 
 		const frontpagePanel = (
-			<div style={styles.formContentWrapper}>
-				<label style={styles.label} htmlFor={'front'}>
-					Front Page
-					<LayoutEditor journal={journal} onChange={this.handleFrontPageChange} initialContent={this.state.frontpageHtml} />
-				</label>
+			<div style={styles.editorContentWrapper}>
+				{((this.state.frontpageHtml === null || this.state.frontpageHtml === undefined)) ?
+					<div>
+						<label className="pt-control pt-checkbox">
+							<Checkbox checked={this.state.frontpageHtml} label="Custom Front Page" onChange={this.handleEnableFrontPage} />
+							<div><i>You can customize the look of the frontpage underneath the banner using HTML</i></div>
+						</label>
+					</div>
+					:
+					<div>
+						<label className="pt-control pt-checkbox">
+							<Checkbox checked={this.state.frontpageHtml} label="Standard Front Page" onChange={this.handleDisableFrontPage} />
+						</label>
+						<Button onClick={this.handleClick}>
+								{this.state.isOpen ? "Hide" : "Show"} help
+						</Button>
+						<Collapse isOpen={this.state.isOpen}>
+								<pre>
+									{`<Pubs></Pubs>`}
+								</pre>
+						</Collapse>
+						<LayoutEditor journal={journal} onChange={this.handleFrontPageChange} initialContent={this.state.frontpageHtml} />
+					</div>
+				 }
+
 			</div>
 		);
 
@@ -334,6 +362,11 @@ styles = {
 		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
 			width: 'auto',
 		}
+	},
+	editorContentWrapper: {
+		width: '100%',
+		position: 'relative',
+		minWidth: '400px',
 	},
 	imageContainer: {
 		marginRight: '3em',

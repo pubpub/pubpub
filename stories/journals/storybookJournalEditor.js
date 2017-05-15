@@ -16,7 +16,9 @@ const JournalEditor = React.createClass({
 	render() {
     const { journalData } = this.props;
 		return (
-      <JournalEdit journal={journalData.journal} />
+      <div style={{margin: '0px 100px'}}>
+        <JournalEdit journal={journalData.journal} />
+      </div>
     );
 
 	}
