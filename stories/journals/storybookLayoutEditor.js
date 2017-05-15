@@ -16,7 +16,7 @@ const Layout = React.createClass({
 	render() {
     const { journalData } = this.props;
 		return (
-      <LayoutEditor journalData={journalData} initialContent={SampleLayout} />
+      <LayoutEditor journal={journalData.journal} initialContent={SampleLayout} />
     );
 
 	}

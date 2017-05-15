@@ -6,6 +6,7 @@ import { Button } from '@blueprintjs/core';
 import ColorPicker from 'components/ColorPicker/ColorPicker';
 import Helmet from 'react-helmet';
 import ImageUpload from 'components/ImageUpload/ImageUpload';
+import LayoutEditor from 'components/LayoutEditor/LayoutEditor';
 import Radium from 'radium';
 import { browserHistory } from 'react-router';
 import { globalStyles } from 'utils/globalStyles';
@@ -51,6 +52,8 @@ export const JournalEdit = React.createClass({
 			website: journal.website || '',
 			twitter: journal.twitter || '',
 			facebook: journal.facebook || '',
+			style: journal.style || '',
+			frontpageHtml: journal.frontpageHtml || '',
 		});
 	},
 
@@ -64,13 +67,15 @@ export const JournalEdit = React.createClass({
 	},
 
 	componentWillUnmount() {
-		this.props.handleHeaderUpdate({
-			logo: undefined,
-			headerColor: undefined,
-			headerMode: undefined,
-			headerAlign: undefined,
-			headerImage: undefined,
-		});
+		if (this.props.handleHeaderUpdate) {
+			this.props.handleHeaderUpdate({
+				logo: undefined,
+				headerColor: undefined,
+				headerMode: undefined,
+				headerAlign: undefined,
+				headerImage: undefined,
+			});
+		}
 	},
 
 	clearHeaderImageFinish: function() {
@@ -135,6 +140,10 @@ export const JournalEdit = React.createClass({
 	handleHeaderImageFinish: function(imageUrl) {
 		this.setState({ headerImage: imageUrl, canSave: true });
 		this.props.handleHeaderUpdate({ headerImage: imageUrl });
+	},
+
+	handleFrontPageChange: function(frontpageHtml) {
+		this.setState({ frontpageHtml });
 	},
 
 	render: function() {
@@ -250,8 +259,22 @@ export const JournalEdit = React.createClass({
 
 			</div>);
 
-		const advancedPanel = (
-			<div>Advanced Edit</div>
+		const frontpagePanel = (
+			<div style={styles.formContentWrapper}>
+				<label style={styles.label} htmlFor={'front'}>
+					Front Page
+					<LayoutEditor journal={journal} onChange={this.handleFrontPageChange} initialContent={this.state.frontpageHtml} />
+				</label>
+			</div>
+		);
+
+		const stylePanel = (
+			<div style={styles.formContentWrapper}>
+				<label style={styles.label} htmlFor={'style'}>
+					Style
+				</label>
+			</div>
+
 		);
 
 		return (
@@ -275,12 +298,11 @@ export const JournalEdit = React.createClass({
 					</div>
 					</Sticky>
 
-
 					<Tabs2 id="Tabs2Example">
-					    <Tab2 id="basic" title="Basic" panel={basicPanel} />
-							<Tab2 id="advanced" title="Advanced" panel={advancedPanel} />
+					    <Tab2 id="basic" title="Settings" panel={basicPanel} />
+							<Tab2 id="frontpage" title="Front Page" panel={frontpagePanel} />
+							<Tab2 id="style" title="Style" panel={stylePanel} />
 					</Tabs2>
-
 
 				</form>
 				</StickyContainer>
