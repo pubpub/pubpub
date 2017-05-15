@@ -81,7 +81,7 @@ const LayoutEditor = React.createClass({
           <div style={styles.container}>
             {(mode === 'edit' || mode === 'side') ?
             <div style={styles.item}>
-              <CodeEditor onChange={this.onChange} initialContent={initialContent} {...this.props} />
+              <CodeEditor onChange={this.onChange} initialContent={initialContent} />
             </div>
             : null }
             {(mode === 'preview' || mode === 'side') ? <div style={styles.item}>{elem}</div> : null }
