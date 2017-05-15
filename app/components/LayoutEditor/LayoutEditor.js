@@ -15,7 +15,7 @@ const LayoutEditor = React.createClass({
   },
 
   getSinglePub: function(slug) {
-    const journal = this.props.journalData.journal;
+    const journal = this.props.journal;
     const pubFeatures = journal.pubFeatures;
     const pub = pubFeatures.find((pubFeature) => (pubFeature.pub.slug === slug));
     return pub.pub;
@@ -26,7 +26,7 @@ const LayoutEditor = React.createClass({
 
       const PubsList = (props) => {
         return (<div>
-          <LayoutPubsList journal={this.props.journalData.journal} {...props}/>
+          <LayoutPubsList journal={this.props.journal} {...props}/>
           </div>
         );
       }
@@ -35,7 +35,7 @@ const LayoutEditor = React.createClass({
         const slug = props.slug;
         const pub = this.getSinglePub(slug);
         return (<div>
-            <LayoutSinglePub journal={this.props.journalData.journal} pub={pub} {...props}/>
+            <LayoutSinglePub journal={this.props.journal} pub={pub} {...props}/>
           </div>
         );
       }
@@ -45,6 +45,9 @@ const LayoutEditor = React.createClass({
         factory: 'createElem'
       });
       const elem = eval(compiled);
+      if (this.props.onChange) {
+        this.props.onChange(codeContent);
+      }
       this.setState({elem});
     } catch (err) {
       console.log(err);
@@ -58,7 +61,7 @@ const LayoutEditor = React.createClass({
 
 	render: function() {
     const { elem, mode } = this.state;
-    const { journalData, initialContent } = this.props;
+    const { journal, initialContent } = this.props;
 
     const DisplayElem = elem;
 
