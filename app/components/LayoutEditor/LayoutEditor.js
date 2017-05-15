@@ -10,6 +10,7 @@ let styles = {};
 const LayoutEditor = React.createClass({
   getInitialState: function() {
     return {
+      initialContent: this.props.initialContent,
       mode: 'edit'
     };
   },
@@ -60,8 +61,8 @@ const LayoutEditor = React.createClass({
   },
 
 	render: function() {
-    const { elem, mode } = this.state;
-    const { journal, initialContent } = this.props;
+    const { elem, mode, initialContent } = this.state;
+    const { journal } = this.props;
 
     const DisplayElem = elem;
 
