@@ -7,6 +7,7 @@ import ColorPicker from 'components/ColorPicker/ColorPicker';
 import Helmet from 'react-helmet';
 import ImageUpload from 'components/ImageUpload/ImageUpload';
 import LayoutEditor from 'components/LayoutEditor/LayoutEditor';
+import LayoutEditorHelp from 'components/LayoutEditor/LayoutEditorHelp';
 import Radium from 'radium';
 import { browserHistory } from 'react-router';
 import { globalStyles } from 'utils/globalStyles';
@@ -279,16 +280,9 @@ export const JournalEdit = React.createClass({
 					:
 					<div>
 						<label className="pt-control pt-checkbox">
-							<Checkbox checked={this.state.frontpageHtml} label="Standard Front Page" onChange={this.handleDisableFrontPage} />
+							<Checkbox checked={this.state.frontpageHtml} label="Custom Front Page" onChange={this.handleDisableFrontPage} />
 						</label>
-						<Button onClick={this.handleClick}>
-								{this.state.isOpen ? "Hide" : "Show"} help
-						</Button>
-						<Collapse isOpen={this.state.isOpen}>
-								<pre>
-									{`<Pubs></Pubs>`}
-								</pre>
-						</Collapse>
+						<LayoutEditorHelp/>
 						<LayoutEditor journal={journal} onChange={this.handleFrontPageChange} initialContent={this.state.frontpageHtml} />
 					</div>
 				 }
