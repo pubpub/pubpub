@@ -7,7 +7,11 @@ import jsx from 'jsx-transform';
 const getSinglePub =  function({journal, slug}) {
   const pubFeatures = journal.pubFeatures;
   const pub = pubFeatures.find((pubFeature) => (pubFeature.pub.slug === slug));
-  return pub.pub;
+  if (pub) {
+    return pub.pub;
+  } else {
+    return null;
+  }
 };
 
 
@@ -19,7 +23,7 @@ const LayoutRenderer = React.createClass({
   },
 
   componentDidMount: function() {
-    const {content, journal} = this.props;
+    const { content, journal } = this.props;
     if (content && journal) {
       this.renderContent(content, journal);
     }
@@ -56,7 +60,7 @@ const LayoutRenderer = React.createClass({
         const elem = eval(compiled);
         this.setState({elem});
       } catch (err) {
-
+        console.log('Got err!', err);
       }
   },
 	componentWillReceiveProps: function(nextProps) {
