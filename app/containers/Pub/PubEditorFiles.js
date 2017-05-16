@@ -208,7 +208,7 @@ export const PubEditorFiles = React.createClass({
 	handleReferenceAdd: function(referenceObject, callback) {
 		const referencesFilename = 'references.bib';
 		let bibtexFile;
-		if (this.props.editorFiles[referencesFilename] && this.props.editorFiles[referencesFilename].content) {
+		if (this.props.editorFiles[referencesFilename] && (this.props.editorFiles[referencesFilename].content || this.props.editorFiles[referencesFilename].newContent)) {
 			bibtexFile = this.props.editorFiles[referencesFilename];
 		} else {
 			bibtexFile = { url: './'+referencesFilename, name: referencesFilename, content: '', isNew: true, type: 'applications/x-bibtex' };
