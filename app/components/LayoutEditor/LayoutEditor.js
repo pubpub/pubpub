@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 
 import { CodeEditor }  from '@pubpub/editor';
 import LayoutPubsList from './LayoutPubsList';
+import LayoutRenderer from './LayoutRenderer';
 import LayoutSinglePub from './LayoutSinglePub'
 import jsx from 'jsx-transform';
 
@@ -23,35 +24,12 @@ const LayoutEditor = React.createClass({
   },
 	onChange: function(codeContent) {
     try {
-      const createElem = React.createElement;
-
-      const PubsList = (props) => {
-        return (<div>
-          <LayoutPubsList journal={this.props.journal} {...props}/>
-          </div>
-        );
-      }
-
-      const Pub = (props) => {
-        const slug = props.slug;
-        const pub = this.getSinglePub(slug);
-        return (<div>
-            <LayoutSinglePub journal={this.props.journal} pub={pub} {...props}/>
-          </div>
-        );
-      }
-
-
-      const compiled = jsx.fromString(codeContent, {
-        factory: 'createElem'
-      });
-      const elem = eval(compiled);
+      this.setState({ codeContent });
       if (this.props.onChange) {
         this.props.onChange(codeContent);
       }
-      this.setState({elem});
     } catch (err) {
-      console.log(err);
+      console.log('Got err', err);
     }
 	},
 
@@ -61,10 +39,8 @@ const LayoutEditor = React.createClass({
   },
 
 	render: function() {
-    const { elem, mode, initialContent } = this.state;
+    const { codeContent, mode, initialContent } = this.state;
     const { journal } = this.props;
-
-    const DisplayElem = elem;
 
 		return (
       <div>
@@ -84,7 +60,11 @@ const LayoutEditor = React.createClass({
               <CodeEditor onChange={this.onChange} initialContent={initialContent} />
             </div>
             : null }
-            {(mode === 'preview' || mode === 'side') ? <div style={styles.item}>{elem}</div> : null }
+            {(mode === 'preview' || mode === 'side') ?
+             <div style={styles.item}>
+               <LayoutRenderer content={codeContent} journal={journal} />
+             </div>
+            : null }
           </div>
       </div>
 
