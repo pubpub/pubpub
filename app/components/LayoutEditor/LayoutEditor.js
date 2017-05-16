@@ -35,7 +35,7 @@ const LayoutEditor = React.createClass({
 
 
   handleEditModeChange: function(mode) {
-    this.setState({mode});
+    this.setState({mode, initialContent: this.state.codeContent });
   },
 
 	render: function() {
