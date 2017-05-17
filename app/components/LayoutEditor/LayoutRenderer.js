@@ -17,6 +17,8 @@ const getSinglePub =  function({journal, slug}) {
 
 const LayoutRenderer = React.createClass({
   getInitialState: function() {
+    this.hasError = false;
+    this.errorTimeout = null;
     return {
       elem: null
     };
@@ -58,19 +60,42 @@ const LayoutRenderer = React.createClass({
           factory: 'createElem'
         });
         const elem = eval(compiled);
-        this.setState({elem});
+        this.setState({elem, err: null});
+        this.hasError = false;
       } catch (err) {
+        if (!this.state.elem) {
+          this.setState({err: null});
+        }
+        this.hasError = true;
+        if (this.errorTimeout) {
+          window.clearTimeout(this.errorTimeout);
+        }
+        this.errorTimeout = window.setTimeout(this.checkError, 1000);
         console.log('Got err!', err);
       }
   },
+  checkError: function() {
+    if (this.hasError) {
+      this.errorTimeout = null;
+      this.setState({ err: true });
+    }
+  },
 	componentWillReceiveProps: function(nextProps) {
     if (this.props.content !== nextProps.content) {
-      this.renderContent(nextProps.content);
+      this.renderContent(nextProps.content, nextProps.journal);
     }
 	},
   render() {
-    const { elem } = this.state;
-    return (<div>{elem}</div>)
+    const { elem, err } = this.state;
+    return (<div>
+      {(err) ?
+        <div className="pt-callout pt-intent-danger" style={{marginBottom: '20px'}}>
+          <h5>Error</h5>
+          The current HTML isn't valid, please fix it before saving.
+        </div>
+        : null}
+      {elem}
+    </div>)
   }
 
 });

@@ -15,6 +15,13 @@ import { putJournal } from './actions';
 
 let styles = {};
 
+const DEFAULT_LAYOUT = `
+	<div>
+		<h1>Issue #1</h1>
+		<PubsList showPreview={true} n={5} />
+	</div>
+`;
+
 export const JournalEdit = React.createClass({
 	propTypes: {
 		journal: PropTypes.object,
@@ -148,7 +155,7 @@ export const JournalEdit = React.createClass({
 	},
 
 	handleEnableFrontPage: function() {
-		this.setState({ frontpageHtml: '<div>Hii</div>', canSave: true });
+		this.setState({ frontpageHtml: DEFAULT_LAYOUT, canSave: true });
 	},
 
 	handleDisableFrontPage: function() {
@@ -303,9 +310,7 @@ export const JournalEdit = React.createClass({
 			<div>
 				<Helmet {...metaData} />
 
-				<StickyContainer>
 				<form onSubmit={this.saveJournal} style={styles.form}>
-					<Sticky>
 					<div style={styles.buttonWrapper}>
 						<Button
 							type="button"
@@ -318,16 +323,14 @@ export const JournalEdit = React.createClass({
 
 						<div style={styles.errorMessage}>{errorMessage}</div>
 					</div>
-					</Sticky>
 
 					<Tabs2 id="Tabs2Example">
 					    <Tab2 id="basic" title="Settings" panel={basicPanel} />
 							<Tab2 id="frontpage" title="Front Page" panel={frontpagePanel} />
-							<Tab2 id="style" title="Style" panel={stylePanel} />
+							{/*<Tab2 id="style" title="Style" panel={stylePanel} />*/}
 					</Tabs2>
 
 				</form>
-				</StickyContainer>
 
 			</div>
 		);
@@ -346,9 +349,9 @@ styles = {
 		// }
 	},
 	buttonWrapper: {
-		// float: 'right',
-		position: 'absolute',
-		right: 0,
+		float: 'right',
+		// position: 'absolute',
+		// right: 0,
 	},
 	formContentWrapper: {
 		width: '500px',

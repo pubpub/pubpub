@@ -56,7 +56,7 @@ export const LayoutPubsList = React.createClass({
 		const errorMessage = this.props.error;
     const n = this.props.n || pubFeatures.length;
 
-    const { showPreview = true, order = [], label } = this.props;
+    const { showPreview = true, order = [], label, pubStyle = 'preview' } = this.props;
 
 		return (
 			<div>
@@ -100,7 +100,7 @@ export const LayoutPubsList = React.createClass({
 						const pub = item.pub || {};
 						return pub.slug !== 'designandsciencej';
 					}).map((pubFeature, index)=> {
-						return (<SinglePub key={'feature-' + index}  pub={pubFeature.pub} pubFeature={pubFeature} journal={journal} showPreview={showPreview} />);
+						return (<SinglePub key={'feature-' + index}  pub={pubFeature.pub} pubFeature={pubFeature} journal={journal} showPreview={showPreview} pubStyle={pubStyle} />);
 					})
 				}
 
