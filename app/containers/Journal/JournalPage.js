@@ -144,7 +144,12 @@ export const JournalPage = React.createClass({
 				{!!pubs.length && page.description &&
 					<div style={styles.divider} />
 				}
-				{pubs.map((pubFeature, index)=> {
+				{pubs.sort((foo, bar)=>{
+					// Sort so that most recent is first in array
+					if (foo.createdAt > bar.createdAt) { return -1; }
+					if (foo.createdAt < bar.createdAt) { return 1; }
+					return 0;
+				}).map((pubFeature, index)=> {
 					return <PreviewPub key={'pageItem-' + index} context={journal.slug} pub={pubFeature.pub} />;
 				})}
 
