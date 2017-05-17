@@ -5,7 +5,7 @@ import dateFormat from 'dateformat';
 
 let styles = {};
 
-const SinglePub = ({ pub, showPreview, journal, pubFeature, pubStyle="preview", size=300 }) => {
+const SinglePub = ({ pub, showPreview, journal, pubFeature, pubStyle="preview", size=150 }) => {
 
 
   const labels = pub.labels || [];

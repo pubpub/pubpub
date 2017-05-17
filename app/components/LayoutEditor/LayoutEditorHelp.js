@@ -27,6 +27,7 @@ Single Pub: Displays a single (featured) pub by name with some styling options
     - slug: the slug of the pub
     - pubStyle: the default styling of the pub, current options are: 'preview' or 'magazine'
     - showPreview: true or false, if false does not show the avatar of the pub/preview image
+    - size: an integer (defaults to 150) that describes the size of the preview, used especially in the 'magazine styling'
 
   usage:
     <Pub slug='designandscience' pubStyle='magazine' showPreview={true} />
@@ -36,8 +37,7 @@ Pubs List: Displays a list of Pubs
     n - Number of pubs to show
     order - The order in which you want the pubs to appear, pubs not in this list are placed at the bototm
     of the sort
-    pubStyle - styles the pubs in the way described for the Single PubsList
-    showPreview - true or false, if false does not show avatars of pubs
+    pubStyle,, showPreview, size - as described in the "Single Pub"
 
   e.g. <PubsList showPreview={true} n={2} order={['ageofentanglement','designandscience']} />
 
