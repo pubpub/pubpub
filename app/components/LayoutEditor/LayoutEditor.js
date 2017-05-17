@@ -12,6 +12,7 @@ const LayoutEditor = React.createClass({
   getInitialState: function() {
     return {
       initialContent: this.props.initialContent,
+      codeContent: this.props.initialContent,
       mode: 'edit'
     };
   },
@@ -62,7 +63,9 @@ const LayoutEditor = React.createClass({
             : null }
             {(mode === 'preview' || mode === 'side') ?
              <div style={styles.item}>
-               <LayoutRenderer content={codeContent} journal={journal} />
+               <div style={styles.previewWrapper}>
+                 <LayoutRenderer content={codeContent} journal={journal} />
+              </div>
              </div>
             : null }
           </div>
@@ -75,6 +78,9 @@ const LayoutEditor = React.createClass({
 
 
 styles = {
+  previewWrapper: {
+    padding: '15px 15px'
+  },
   container: {
     display: 'flex',
     flexDirection: 'row',
@@ -84,6 +90,7 @@ styles = {
   item: {
     width: '50%',
     flexGrow: 2,
+    minHeight: 600,
   }
 }
 
