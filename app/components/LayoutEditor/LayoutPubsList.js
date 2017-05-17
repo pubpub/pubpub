@@ -56,7 +56,7 @@ export const LayoutPubsList = React.createClass({
 		const errorMessage = this.props.error;
     const n = this.props.n || pubFeatures.length;
 
-    const { showPreview = true, order = [], label, pubStyle = 'preview' } = this.props;
+    const { showPreview = true, order = [], label, pubStyle = 'preview', showFeatureDate } = this.props;
 
 		return (
 			<div>
@@ -97,10 +97,25 @@ export const LayoutPubsList = React.createClass({
 						if (foo.createdAt < bar.createdAt) { return 1; }
 						return 0;
 					}).filter((item)=> {
+            if (!label) {
+              return true;
+            }
 						const pub = item.pub || {};
-						return pub.slug !== 'designandsciencej';
+						const pubHasLabel = pub.labels.find((pubLabel) => {
+              if (pubLabel.slug === label) {
+                return true;
+              }
+              return false;
+            });
+            return (pubHasLabel);
 					}).map((pubFeature, index)=> {
-						return (<SinglePub key={'feature-' + index}  pub={pubFeature.pub} pubFeature={pubFeature} journal={journal} showPreview={showPreview} pubStyle={pubStyle} />);
+						return (<SinglePub key={'feature-' + index}
+              pub={pubFeature.pub}
+              pubFeature={pubFeature}
+              journal={journal}
+              showPreview={showPreview}
+              showFeatureDate={showFeatureDate}
+              pubStyle={pubStyle} />);
 					})
 				}
 

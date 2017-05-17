@@ -5,7 +5,7 @@ import dateFormat from 'dateformat';
 
 let styles = {};
 
-const SinglePub = ({ pub, showPreview, journal, pubFeature, pubStyle="preview", size=150 }) => {
+const SinglePub = ({ pub, showPreview, showFeatureDate=false, journal, pubFeature, pubStyle="preview", size=150 }) => {
 
 
   const labels = pub.labels || [];
@@ -25,7 +25,7 @@ const SinglePub = ({ pub, showPreview, journal, pubFeature, pubStyle="preview", 
           <div style={styles.featureDetails}>
             <h4><Link to={{ pathname: '/pub/' + pub.slug, query: { context: journal.slug } }}>{pub.title}</Link></h4>
             <p>{pub.description}</p>
-            {(pubFeature) ? <p>Featured on {dateFormat(pubFeature.updatedAt, 'mmmm dd, yyyy')}</p> : null }
+            {(pubFeature && showFeatureDate) ? <p>Featured on {dateFormat(pubFeature.updatedAt, 'mmmm dd, yyyy')}</p> : null }
           </div>
         </div>
       </div>
