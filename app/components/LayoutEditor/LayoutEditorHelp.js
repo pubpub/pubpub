@@ -13,12 +13,35 @@ const LayoutEditorHelp = React.createClass({
   render() {
     return (
       <div>
-      <Button onClick={this.handleClick}>
-				{this.state.isOpen ? "Hide" : "Show"} help
+      <Button style={{marginBottom: '10px'}} onClick={this.handleClick}>
+				{this.state.isOpen ? "Hide" : "Show"} Documentation
 		</Button>
 		<Collapse isOpen={this.state.isOpen}>
 				<pre>
-					{`<Pubs></Pubs>`}
+					{`
+The front page can be styled using JSX (see: http://buildwithreact.com/tutorial/jsx),
+but with a few options to display pubs inside them:
+
+Single Pub: Displays a single (featured) pub by name with some styling options
+  parameters:
+    - slug: the slug of the pub
+    - pubStyle: the default styling of the pub, current options are: 'preview' or 'magazine'
+    - showPreview: true or false, if false does not show the avatar of the pub/preview image
+
+  usage:
+    <Pub slug='designandscience' pubStyle='magazine' showPreview={true} />
+
+Pubs List: Displays a list of Pubs
+  arguments:
+    n - Number of pubs to show
+    order - The order in which you want the pubs to appear, pubs not in this list are placed at the bototm
+    of the sort
+    pubStyle - styles the pubs in the way described for the Single PubsList
+    showPreview - true or false, if false does not show avatars of pubs
+
+  e.g. <PubsList showPreview={true} n={2} order={['ageofentanglement','designandscience']} />
+
+            `}
 				</pre>
 		</Collapse>
   </div>
