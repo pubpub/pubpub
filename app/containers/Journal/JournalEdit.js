@@ -1,14 +1,16 @@
+import { Checkbox, Collapse, Tab2, Tabs2 } from "@blueprintjs/core";
 import React, { PropTypes } from 'react';
-import Radium from 'radium';
-import Helmet from 'react-helmet';
-import { browserHistory } from 'react-router';
-import ImageUpload from 'components/ImageUpload/ImageUpload';
-import ColorPicker from 'components/ColorPicker/ColorPicker';
+import { Sticky, StickyContainer } from 'react-sticky';
+
 import { Button } from '@blueprintjs/core';
-import { StickyContainer, Sticky } from 'react-sticky';
-
+import ColorPicker from 'components/ColorPicker/ColorPicker';
+import Helmet from 'react-helmet';
+import ImageUpload from 'components/ImageUpload/ImageUpload';
+import LayoutEditor from 'components/LayoutEditor/LayoutEditor';
+import LayoutEditorHelp from 'components/LayoutEditor/LayoutEditorHelp';
+import Radium from 'radium';
+import { browserHistory } from 'react-router';
 import { globalStyles } from 'utils/globalStyles';
-
 import { putJournal } from './actions';
 
 let styles = {};
@@ -51,9 +53,11 @@ export const JournalEdit = React.createClass({
 			website: journal.website || '',
 			twitter: journal.twitter || '',
 			facebook: journal.facebook || '',
+			style: journal.style || '',
+			frontpageHtml: journal.frontpageHtml || null,
 		});
 	},
-	
+
 	componentWillReceiveProps(nextProps) {
 		// If the slug changed, redirect to new slug.
 		const lastSlug = this.props.journal.slug;
@@ -64,13 +68,15 @@ export const JournalEdit = React.createClass({
 	},
 
 	componentWillUnmount() {
-		this.props.handleHeaderUpdate({
-			logo: undefined,
-			headerColor: undefined,
-			headerMode: undefined,
-			headerAlign: undefined,
-			headerImage: undefined,
-		});
+		if (this.props.handleHeaderUpdate) {
+			this.props.handleHeaderUpdate({
+				logo: undefined,
+				headerColor: undefined,
+				headerMode: undefined,
+				headerAlign: undefined,
+				headerImage: undefined,
+			});
+		}
 	},
 
 	clearHeaderImageFinish: function() {
@@ -137,6 +143,18 @@ export const JournalEdit = React.createClass({
 		this.props.handleHeaderUpdate({ headerImage: imageUrl });
 	},
 
+	handleFrontPageChange: function(frontpageHtml) {
+		this.setState({ frontpageHtml, canSave: true });
+	},
+
+	handleEnableFrontPage: function() {
+		this.setState({ frontpageHtml: '<div>Hii</div>', canSave: true });
+	},
+
+	handleDisableFrontPage: function() {
+		this.setState({ frontpageHtml: null, canSave: true } );
+	},
+
 	render: function() {
 		const journal = this.props.journal || {};
 
@@ -147,133 +165,166 @@ export const JournalEdit = React.createClass({
 		const isLoading = this.props.isLoading;
 		const errorMessage = this.props.error;
 
+		const basicPanel = (
+			<div style={styles.formContentWrapper}>
+				<label style={styles.label} htmlFor={'title'}>
+					Journal Name
+					<input className={'pt-input margin-bottom'} id={'title'} name={'title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
+				</label>
+
+				<ImageUpload
+					defaultImage={this.state.avatar}
+					userCrop={true}
+					label={'Journal Avatar'}
+					tooltip={'Used as the Journal\'s preview image in search results and throughout the site.'}
+					containerStyle={styles.imageContainer}
+					onNewImage={this.handleIconFinish} />
+
+				<ImageUpload
+					defaultImage={this.state.logo}
+					userCrop={false}
+					label={'Logo'}
+					tooltip={'Used in the Header bar for all branded Journal pages'}
+					containerStyle={styles.imageContainer}
+					onNewImage={this.handleLogoFinish}
+					canClear={true} />
+
+
+				<ImageUpload
+					defaultImage={this.state.headerImage}
+					userCrop={false}
+					label={'Background Image'}
+					tooltip={'Used for the Joural\'s header background'}
+					containerStyle={styles.imageContainer}
+					onNewImage={this.handleHeaderImageFinish}
+					canClear={true} />
+
+
+				<label htmlFor={'headerMode'} style={{ display: 'inline-block', padding: '1em 2em 1em 0em', verticalAlign: 'top'}}>
+					Header Mode
+
+					<div style={{ margin: '0.5em 0em', display: 'block' }} className={'pt-button-group'}>
+						<button className={this.state.headerMode === 'title' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'title')}>Title</button>
+						<button className={this.state.headerMode === 'logo' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'logo')}>Logo</button>
+						<button className={this.state.headerMode === 'both' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'both')}>Both</button>
+					</div>
+				</label>
+
+
+				<label htmlFor={'headerAlign'} style={{ display: 'inline-block', padding: '1em 2em 1em 0em', verticalAlign: 'top'}}>
+					Header Align
+					<div style={{margin:'0.5em', display: 'block'}} className={'pt-button-group'}>
+						<button className={this.state.headerAlign === 'left' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderAlignChange.bind(this, 'left')}>Left</button>
+						<button className={this.state.headerAlign === 'center' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderAlignChange.bind(this, 'center')}>Center</button>
+					</div>
+				</label>
+
+
+				<label style={{ display: 'inline-block', padding: '1em 2em 1em 0em', verticalAlign: 'top' }}>
+					Background Color
+					<div style={{ margin: '0.75em 0em', display: 'block' }}>
+						<ColorPicker
+							color={this.state.headerColor}
+							onChange={this.handleColorChange}
+							colors={['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50', '#ffc107', '#ff9800', '#ff5722', '#795548', '#607d8b']} />
+					</div>
+
+				</label>
+
+				<label style={styles.label} htmlFor={'slug'}>
+					Journal URL
+					<input className={'pt-input margin-bottom'} id={'slug'} name={'slug'} type="text" style={styles.input} value={this.state.slug} onChange={this.inputUpdate.bind(this, 'slug')} />
+				</label>
+
+				<label style={styles.label} htmlFor={'description'}>
+					Short Description
+					<textarea className={'pt-input margin-bottom'} id={'description'} name={'description'} type="text" style={[styles.input, styles.textarea]} onChange={this.descriptionUpdate} value={this.state.description} />
+					<div className={'light-color inputSubtext'}>
+						{this.state.description.length} / 280
+					</div>
+				</label>
+
+
+				<label style={styles.label} htmlFor={'website'}>
+					Website
+					<input className={'pt-input margin-bottom'} id={'website'} name={'website'} type="text" style={styles.input} value={this.state.website} onChange={this.inputUpdate.bind(this, 'website')} />
+				</label>
+
+				<label htmlFor={'twitter'}>
+					Twitter
+					<div className="pt-control-group prefixed-group margin-bottom">
+						<div className={'pt-button pt-disabled input-prefix'}>@</div>
+						<input className={'pt-input prefixed-input'} id={'twitter'} name={'twitter'} type="text" style={styles.input} value={this.state.twitter} onChange={this.inputUpdate.bind(this, 'twitter')} />
+					</div>
+				</label>
+
+				<label htmlFor={'facebook'}>
+					Facebook
+					<div className="pt-control-group prefixed-group margin-bottom">
+						<div className={'pt-button pt-disabled input-prefix'}>facebook.com/</div>
+						<input className={'pt-input prefixed-input'} id={'facebook'} name={'facebook'} type="text" style={styles.input} value={this.state.facebook} onChange={this.inputUpdate.bind(this, 'facebook')} />
+					</div>
+				</label>
+
+			</div>);
+
+		const frontpagePanel = (
+			<div style={styles.editorContentWrapper}>
+				{((this.state.frontpageHtml === null || this.state.frontpageHtml === undefined)) ?
+					<div>
+						<label className="pt-control pt-checkbox">
+							<Checkbox checked={this.state.frontpageHtml} label="Custom Front Page" onChange={this.handleEnableFrontPage} />
+							<div><i>You can customize the look of the frontpage underneath the banner using HTML</i></div>
+						</label>
+					</div>
+					:
+					<div>
+						<label className="pt-control pt-checkbox">
+							<Checkbox checked={this.state.frontpageHtml} label="Custom Front Page" onChange={this.handleDisableFrontPage} />
+						</label>
+						<LayoutEditorHelp/>
+						<LayoutEditor journal={journal} onChange={this.handleFrontPageChange} initialContent={this.state.frontpageHtml} />
+					</div>
+				 }
+
+			</div>
+		);
+
+		const stylePanel = (
+			<div style={styles.formContentWrapper}>
+				<label style={styles.label} htmlFor={'style'}>
+					Style
+				</label>
+			</div>
+
+		);
+
 		return (
 			<div>
 				<Helmet {...metaData} />
-
-				{/*<Style rules={{
-					'.colorPicker': { margin: '1em 0.5em', },
-					'.colorPicker > div': { boxShadow: '0px 0px 0px black !important', border: '1px solid #BBBDC0 !important' },
-				}} />*/}
 
 				<StickyContainer>
 				<form onSubmit={this.saveJournal} style={styles.form}>
 					<Sticky>
 					<div style={styles.buttonWrapper}>
-						<Button 
-							type="button" 
-							className={'pt-intent-primary'} 
-							disabled={!this.state.canSave} 
-							onClick={this.saveJournal} 
-							text={'Save Journal'} 
+						<Button
+							type="button"
+							className={'pt-intent-primary'}
+							disabled={!this.state.canSave}
+							onClick={this.saveJournal}
+							text={'Save Journal'}
 							loading={isLoading} />
-						
+
 
 						<div style={styles.errorMessage}>{errorMessage}</div>
 					</div>
 					</Sticky>
 
-					<div style={styles.formContentWrapper}>
-						<label style={styles.label} htmlFor={'title'}>
-							Journal Name
-							<input className={'pt-input margin-bottom'} id={'title'} name={'title'} type="text" style={styles.input} value={this.state.title} onChange={this.inputUpdate.bind(this, 'title')} />
-						</label>
-
-						<ImageUpload 
-							defaultImage={this.state.avatar}
-							userCrop={true}
-							label={'Journal Avatar'}
-							tooltip={'Used as the Journal\'s preview image in search results and throughout the site.'} 
-							containerStyle={styles.imageContainer}
-							onNewImage={this.handleIconFinish} />
-
-						<ImageUpload 
-							defaultImage={this.state.logo}
-							userCrop={false}
-							label={'Logo'}
-							tooltip={'Used in the Header bar for all branded Journal pages'} 
-							containerStyle={styles.imageContainer}
-							onNewImage={this.handleLogoFinish}
-							canClear={true} />
-
-
-						<ImageUpload 
-							defaultImage={this.state.headerImage}
-							userCrop={false}
-							label={'Background Image'}
-							tooltip={'Used for the Joural\'s header background'} 
-							containerStyle={styles.imageContainer}
-							onNewImage={this.handleHeaderImageFinish}
-							canClear={true} />
-
-
-						<label htmlFor={'headerMode'} style={{ display: 'inline-block', padding: '1em 2em 1em 0em', verticalAlign: 'top'}}>
-							Header Mode
-
-							<div style={{ margin: '0.5em 0em', display: 'block' }} className={'pt-button-group'}>
-								<button className={this.state.headerMode === 'title' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'title')}>Title</button>
-								<button className={this.state.headerMode === 'logo' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'logo')}>Logo</button>
-								<button className={this.state.headerMode === 'both' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderModeChange.bind(this, 'both')}>Both</button>
-							</div>
-						</label>
-						
-
-						<label htmlFor={'headerAlign'} style={{ display: 'inline-block', padding: '1em 2em 1em 0em', verticalAlign: 'top'}}>
-							Header Align
-							<div style={{margin:'0.5em', display: 'block'}} className={'pt-button-group'}>
-								<button className={this.state.headerAlign === 'left' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderAlignChange.bind(this, 'left')}>Left</button>
-								<button className={this.state.headerAlign === 'center' ? 'pt-button pt-active' : 'pt-button'} onClick={this.handleHeaderAlignChange.bind(this, 'center')}>Center</button>
-							</div>
-						</label>
-	
-
-						<label style={{ display: 'inline-block', padding: '1em 2em 1em 0em', verticalAlign: 'top' }}>
-							Background Color
-							<div style={{ margin: '0.75em 0em', display: 'block' }}>
-								<ColorPicker 
-									color={this.state.headerColor} 
-									onChange={this.handleColorChange} 
-									colors={['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50', '#ffc107', '#ff9800', '#ff5722', '#795548', '#607d8b']} />	
-							</div>
-							
-						</label>
-
-						<label style={styles.label} htmlFor={'slug'}>
-							Journal URL
-							<input className={'pt-input margin-bottom'} id={'slug'} name={'slug'} type="text" style={styles.input} value={this.state.slug} onChange={this.inputUpdate.bind(this, 'slug')} />
-						</label>
-
-						<label style={styles.label} htmlFor={'description'}>
-							Short Description
-							<textarea className={'pt-input margin-bottom'} id={'description'} name={'description'} type="text" style={[styles.input, styles.textarea]} onChange={this.descriptionUpdate} value={this.state.description} />
-							<div className={'light-color inputSubtext'}>
-								{this.state.description.length} / 280
-							</div>
-						</label>
-
-
-						<label style={styles.label} htmlFor={'website'}>
-							Website
-							<input className={'pt-input margin-bottom'} id={'website'} name={'website'} type="text" style={styles.input} value={this.state.website} onChange={this.inputUpdate.bind(this, 'website')} />
-						</label>
-
-						<label htmlFor={'twitter'}>
-							Twitter
-							<div className="pt-control-group prefixed-group margin-bottom">
-								<div className={'pt-button pt-disabled input-prefix'}>@</div>
-								<input className={'pt-input prefixed-input'} id={'twitter'} name={'twitter'} type="text" style={styles.input} value={this.state.twitter} onChange={this.inputUpdate.bind(this, 'twitter')} />
-							</div>
-						</label>
-
-						<label htmlFor={'facebook'}>
-							Facebook
-							<div className="pt-control-group prefixed-group margin-bottom">
-								<div className={'pt-button pt-disabled input-prefix'}>facebook.com/</div>
-								<input className={'pt-input prefixed-input'} id={'facebook'} name={'facebook'} type="text" style={styles.input} value={this.state.facebook} onChange={this.inputUpdate.bind(this, 'facebook')} />
-							</div>
-						</label>
-
-					</div>
+					<Tabs2 id="Tabs2Example">
+					    <Tab2 id="basic" title="Settings" panel={basicPanel} />
+							<Tab2 id="frontpage" title="Front Page" panel={frontpagePanel} />
+							<Tab2 id="style" title="Style" panel={stylePanel} />
+					</Tabs2>
 
 				</form>
 				</StickyContainer>
@@ -306,6 +357,11 @@ styles = {
 			width: 'auto',
 		}
 	},
+	editorContentWrapper: {
+		width: '100%',
+		position: 'relative',
+		minWidth: '400px',
+	},
 	imageContainer: {
 		marginRight: '3em',
 	},
@@ -326,7 +382,7 @@ styles = {
 		color: globalStyles.errorRed,
 	},
 	radioInput: {
-		margin: '0em 1em', 
+		margin: '0em 1em',
 		display: 'inline-block',
 	},
 	clear: {

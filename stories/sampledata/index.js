@@ -1,0 +1,1 @@
+export SampleLayout from './samplelayout';

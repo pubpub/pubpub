@@ -17,11 +17,13 @@
     "start": "NODE_PATH=./app node server --preserve-symlinks",
     "start-prod": "NODE_PATH=./app NODE_ENV=production node server",
     "start-prod-local": "npm run build && NODE_PATH=./app NODE_ENV=production PORT=3000 node server",
-    "test": "NODE_PATH=./app TESTING=true mocha $(find app -name '*.test.js') --compilers js:babel-register --require ./app/tests/mochaEnvInit.js --watch --watch-extensions js --reporter list"
+    "test": "NODE_PATH=./app TESTING=true mocha $(find app -name '*.test.js') --compilers js:babel-register --require ./app/tests/mochaEnvInit.js --watch --watch-extensions js --reporter list",
+    "storybook": "start-storybook -p 9001",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "@blueprintjs/core": "^1.12.0",
-    "@pubpub/editor": "^2.0.50",
+    "@pubpub/editor": "^2.0.65",
     "@pubpub/render-files": "^2.0.48",
     "babel-core": "^6.24.0",
     "babel-eslint": "^6.1.2",
@@ -61,6 +63,7 @@
     "intl": "^1.2.5",
     "isomorphic-fetch": "^2.2.1",
     "json-loader": "^0.5.4",
+    "jsx-transform": "^2.3.0",
     "katex": "^0.7.1",
     "lodash": "^3.10.1",
     "markdown-it": "^8.3.1",
@@ -110,5 +113,9 @@
   },
   "engines": {
     "node": "6.10.0"
+  },
+  "devDependencies": {
+    "@kadira/storybook": "^2.21.0",
+    "@kadira/storybook-addon-options": "^1.0.2"
   }
 }
