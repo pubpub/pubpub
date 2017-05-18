@@ -227,7 +227,7 @@ export const Journal = React.createClass({
 							return null;
 
 						default:
-							if (journal.frontpageHtml && journal.frontpageHtml.length > 0) {
+							if (journal.frontpageHtml && journal.frontpageHtml.length > 0 && !query.view) {
 								return (<LayoutRenderer content={journal.frontpageHtml} journal={journal}/>)
 							}
 							return (
