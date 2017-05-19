@@ -38,7 +38,7 @@ export const JournalProfileHeader = React.createClass({
 				<div style={styles.headerContent}>
 					{this.props.followContent}
 
-					{!hasPage &&
+					{!hasPage && journal.slug !== 'jods' &&
 						<div style={styles.headerTextWrapper}>
 							{(this.props.headerMode === 'logo' || this.props.headerMode === 'both') &&
 								<Link to={'/' + journal.slug} customDomain={journal.customDomain} style={globalStyles.link}><img style={styles.logoImage} src={this.props.logo} /></Link>
@@ -50,6 +50,12 @@ export const JournalProfileHeader = React.createClass({
 
 							<p style={{ fontSize: '1.5em', fontWeight: '200', margin: '20px 0px', letterSpacing: '1px', maxWidth: '500px' }}>{journal.description}</p>
 
+						</div>
+					}
+
+					{!hasPage && journal.slug === 'jods' &&
+						<div style={styles.headerTextWrapper}>
+							<img style={{ display: 'block', paddingBottom: '4em' }} alt={'Journal of Design and Science'} src={'https://assets.pubpub.org/ckgzyvhx/21495204691861.png'} />
 						</div>
 					}
 

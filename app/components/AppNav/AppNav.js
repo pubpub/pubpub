@@ -203,7 +203,30 @@ export const AppNav = React.createClass({
 					<div>
 						<div className={'clearfix'} />
 						<div className={'pt-button-group pt-minimal'} style={{ marginLeft: '45px' }}>
-							<Link className={'pt-button'} role={'button'} key={'journal-home'} to={'/' + headerJournal.slug} customDomain={headerJournal.customDomain}>Home</Link>
+							{/*<Link className={'pt-button'} role={'button'} key={'journal-home'} to={'/' + headerJournal.slug} customDomain={headerJournal.customDomain}>Home</Link>*/}
+
+							<Popover 
+								content={
+									<Menu>
+										<li><Link className={'pt-menu-item pt-popover-dismiss'} to={{ pathname: '/' + journal.slug, query: { ...query, view: 'featured' } }} customDomain={journal.customDomain}>Featured</Link></li>
+										<li><Link className={'pt-menu-item pt-popover-dismiss'} to={{ pathname: '/' + journal.slug, query: { ...query, view: 'submitted' } }} customDomain={journal.customDomain}>Submitted</Link></li>
+										<li><Link className={'pt-menu-item pt-popover-dismiss'} to={{ pathname: '/' + journal.slug, query: { ...query, view: 'pages' } }} customDomain={journal.customDomain}>Pages</Link></li>
+										<li><Link className={'pt-menu-item pt-popover-dismiss'} to={{ pathname: '/' + journal.slug, query: { ...query, view: 'people' } }} customDomain={journal.customDomain}>People</Link></li>
+									</Menu>
+								}
+								popoverClassName={'pt-minimal'}
+								transitionDuration={0}
+								inheritDarkTheme={false}
+								position={Position.BOTTOM_LEFT}
+								interactionKind={PopoverInteractionKind.HOVER}
+								key={'page-home'}
+							>
+								<Link className={'pt-button pt-popover-dismiss'} role={'button'} key={'journal-home'} to={'/' + headerJournal.slug} customDomain={headerJournal.customDomain}>
+									Home
+									<span className={'pt-icon-standard pt-icon-caret-down pt-align-right'} />
+								</Link>
+							</Popover>
+
 							{/*sortedPages.filter((page)=> {
 								return page.isDisplayed;
 							}).map((page)=> {
@@ -236,7 +259,7 @@ export const AppNav = React.createClass({
 										interactionKind={PopoverInteractionKind.HOVER}
 										key={'page-' + page.id}
 									>
-										<Link className={'pt-button'} role={'button'} key={'page-' + page.id} to={'/' + headerJournal.slug + '/page/' + page.slug} customDomain={headerJournal.customDomain}>
+										<Link className={'pt-button pt-popover-dismiss'} role={'button'} key={'page-' + page.id} to={'/' + headerJournal.slug + '/page/' + page.slug} customDomain={headerJournal.customDomain}>
 											{page.title}
 											<span className={'pt-icon-standard pt-icon-caret-down pt-align-right'} />
 										</Link>

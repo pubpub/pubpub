@@ -1,24 +1,23 @@
-import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
-import Link from 'components/Link/Link';
-import Radium from 'radium';
-import Helmet from 'react-helmet';
-
-import FollowButton from 'containers/FollowButton/FollowButton';
-import NoMatch from 'containers/NoMatch/NoMatch';
 import { Menu, MenuDivider, Spinner } from '@blueprintjs/core';
+import React, { PropTypes } from 'react';
+
 import DropdownButton from 'components/DropdownButton/DropdownButton';
-
-import { getJournalData } from './actions';
-
-import JournalHeader from './JournalHeader';
+import FollowButton from 'containers/FollowButton/FollowButton';
+import Helmet from 'react-helmet';
 import JournalEdit from './JournalEdit';
-import JournalSubmits from './JournalSubmits';
 import JournalFeatures from './JournalFeatures';
-import JournalPeople from './JournalPeople';
+import JournalFollowers from './JournalFollowers';
+import JournalHeader from './JournalHeader';
 import JournalPage from './JournalPage';
 import JournalPages from './JournalPages';
-import JournalFollowers from './JournalFollowers';
+import JournalPeople from './JournalPeople';
+import JournalSubmits from './JournalSubmits';
+import LayoutRenderer from 'components/LayoutEditor/LayoutRenderer';
+import Link from 'components/Link/Link';
+import NoMatch from 'containers/NoMatch/NoMatch';
+import Radium from 'radium';
+import { connect } from 'react-redux';
+import { getJournalData } from './actions';
 
 let styles;
 
@@ -53,7 +52,7 @@ export const Journal = React.createClass({
 			this.props.dispatch(getJournalData(nextParams.slug));
 		}
 	},
-	
+
 	handleHeaderUpdate: function(updateObject) {
 		this.setState(updateObject);
 	},
@@ -64,7 +63,7 @@ export const Journal = React.createClass({
 
 			const fooTitle = foo.firstName || foo.title || '';
 			const barTitle = bar.firstName || bar.title || '';
-			
+
 			const fooDate = foo.updatedAt;
 			const barDate = bar.updatedAt;
 
@@ -92,7 +91,7 @@ export const Journal = React.createClass({
 
 	render() {
 		let mode = this.props.params.mode;
-		
+
 		const query = this.props.location.query || {};
 		const view = query.view;
 		const sortList = ['Most Recent', 'Least Recent', 'A → Z', 'Z → A'];
@@ -163,18 +162,18 @@ export const Journal = React.createClass({
 		return (
 			<div style={styles.container}>
 				<Helmet {...metaData} />
-			
+
 
 				<JournalHeader
 					journal={journal}
 					page={page}
 					followContent={
 						<div style={styles.followButtonWrapper}>
-							<FollowButton 
-								journalId={journal.id} 
+							<FollowButton
+								journalId={journal.id}
 								journalCustomDomain={journal.customDomain}
-								followData={followData} 
-								followerCount={followers.length} 
+								followData={followData}
+								followerCount={followers.length}
 								followersLink={{ pathname: '/' + journal.slug + '/followers' }}
 								dispatch={this.props.dispatch} />
 							{isAdmin &&
@@ -193,7 +192,7 @@ export const Journal = React.createClass({
 				<div style={styles.content}>
 					{(() => {
 						switch (mode) {
-						case 'edit': 
+						case 'edit':
 							return (
 								<JournalEdit
 									journal={journal}
@@ -202,18 +201,18 @@ export const Journal = React.createClass({
 									error={this.props.journalData.putDataError}
 									dispatch={this.props.dispatch} />
 							);
-						
+
 						// case 'about':
 						// 	return (
-						// 		<JournalPeople 
-						// 			journal={journal} 
+						// 		<JournalPeople
+						// 			journal={journal}
 						// 			isLoading={this.props.journalData.putDataLoading}
 						// 			error={this.props.journalData.putDataError}
 						// 			dispatch={this.props.dispatch} />
 						// 	);
 						case 'page':
 							return (
-								<JournalPage 
+								<JournalPage
 									journal={journal}
 									page={page}
 									isLoading={this.props.journalData.pagesLoading}
@@ -228,12 +227,15 @@ export const Journal = React.createClass({
 							return null;
 
 						default:
+							if (journal.frontpageHtml && journal.frontpageHtml.length > 0 && !query.view) {
+								return (<LayoutRenderer content={journal.frontpageHtml} journal={journal} />);
+							}
 							return (
 								<div>
 									{journal.slug === 'resci' &&
 										<div style={styles.hardcodedText}>
 											<p style={styles.hardcodedTextP}>
-												<b>Responsive Science</b> is a way of conducting research that invites openness and community involvement from the earliest stages of each project. Real-time interaction between scientists, citizens, and broader communities allows questions and concerns to be identified before experiments are performed, fosters open discussion, and encourages research studies and new technologies to be redesigned in response to societal feedback. 
+												<b>Responsive Science</b> is a way of conducting research that invites openness and community involvement from the earliest stages of each project. Real-time interaction between scientists, citizens, and broader communities allows questions and concerns to be identified before experiments are performed, fosters open discussion, and encourages research studies and new technologies to be redesigned in response to societal feedback.
 											</p>
 											<p style={styles.hardcodedTextP}>
 												<b>Community Involvement</b>
@@ -250,14 +252,14 @@ export const Journal = React.createClass({
 									<div style={styles.headerWrapper}>
 										<div style={styles.headerOptions}>
 											<div className="pt-button-group pt-minimal">
-												<Link to={{ pathname: '/' + journal.slug, query: { ...query, view: undefined } }} customDomain={journal.customDomain} className={view === undefined || view === 'featured' ? 'pt-button pt-active' : 'pt-button'}>Featured</Link>
+												<Link to={{ pathname: '/' + journal.slug, query: { ...query, view: 'featured' } }} customDomain={journal.customDomain} className={view === undefined || view === 'featured' ? 'pt-button pt-active' : 'pt-button'}>Featured</Link>
 												<Link to={{ pathname: '/' + journal.slug, query: { ...query, view: 'submitted' } }} customDomain={journal.customDomain} className={view === 'submitted' ? 'pt-button pt-active' : 'pt-button'}>Submitted</Link>
 												<Link to={{ pathname: '/' + journal.slug, query: { ...query, view: 'pages' } }} customDomain={journal.customDomain} className={view === 'pages' ? 'pt-button pt-active' : 'pt-button'}>Pages</Link>
 												<Link to={{ pathname: '/' + journal.slug, query: { ...query, view: 'people' } }} customDomain={journal.customDomain} className={view === 'people' ? 'pt-button pt-active' : 'pt-button'}>People</Link>
 											</div>
 										</div>
 										<div style={styles.headerRight}>
-											<DropdownButton 
+											<DropdownButton
 												content={
 													<Menu>
 														<li className={'pt-menu-header'}><h6>Sort by:</h6></li>
@@ -273,7 +275,7 @@ export const Journal = React.createClass({
 														})}
 													</Menu>
 												}
-												title={'Sort'} 
+												title={'Sort'}
 												position={2} />
 										</div>
 									</div>
@@ -305,8 +307,8 @@ export const Journal = React.createClass({
 									}
 
 									{query.view === 'people' &&
-										<JournalPeople 
-											journal={journal} 
+										<JournalPeople
+											journal={journal}
 											isLoading={this.props.journalData.putDataLoading}
 											error={this.props.journalData.putDataError}
 											dispatch={this.props.dispatch} />
@@ -317,7 +319,7 @@ export const Journal = React.createClass({
 					})()}
 				</div>
 
-				
+
 			</div>
 		);
 	}
