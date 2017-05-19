@@ -4,17 +4,6 @@ import LayoutPubsList from './LayoutPubsList';
 import LayoutSinglePub from './LayoutSinglePub'
 import jsx from 'jsx-transform';
 
-const getSinglePub =  function({journal, slug}) {
-  const pubFeatures = journal.pubFeatures;
-  const pub = pubFeatures.find((pubFeature) => (pubFeature.pub.slug === slug));
-  if (pub) {
-    return pub.pub;
-  } else {
-    return null;
-  }
-};
-
-
 const LayoutRenderer = React.createClass({
   getInitialState: function() {
     this.hasError = false;
@@ -31,12 +20,14 @@ const LayoutRenderer = React.createClass({
     }
   },
 
-  getSinglePub: function(slug) {
-    const journal = this.props.journal;
+  getSinglePub: function({slug, journal}) {
     const pubFeatures = journal.pubFeatures;
     const pub = pubFeatures.find((pubFeature) => (pubFeature.pub.slug === slug));
-    return pub.pub;
-  },
+    if (pub) {
+      return pub.pub;
+    } else {
+      return null;
+    }  },
   renderContent: function(content, journal) {
       try {
         const PubsList = (props) => {
