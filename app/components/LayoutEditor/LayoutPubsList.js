@@ -65,8 +65,6 @@ export const LayoutPubsList = React.createClass({
 			orderedPubs = order;
 		}
 
-		console.log('only!', only);
-
 		return (
 			<div>
 
