@@ -21,7 +21,7 @@ class CleanPlugin {
 
 // Ideally, webpack should be generating chunks that have deterministic hashes.
 // This is documented here: https://webpack.js.org/guides/caching/#deterministic-hashes
-// Actually making it work though was a nightmare on 2/8/17. Plugins don't seem to work 
+// Actually making it work though was a nightmare on 2/8/17. Plugins don't seem to work
 // together and I couldn't ever get the chunk-manigest inlined into the HTML file correctly.
 // A whole day of code lost. Friggin webpack...
 
@@ -55,10 +55,10 @@ module.exports = {
 			compressor: {
 				warnings: false,
 				screw_ie8: true,
-				unused: true,
-				dead_code: true,
+				unused: false,
+				dead_code: false,
 			},
-			sourceMap: true,
+			sourceMap: false,
 		}),
 		new HtmlWebpackPlugin({
 			template: 'index.html',
@@ -86,19 +86,19 @@ module.exports = {
 					]
 				}
 			},
-			{ 
-				test: /\.css$/, 
+			{
+				test: /\.css$/,
 				use: [
-					{ loader: 'style-loader' }, 
-					{ loader: 'css-loader', options: { minimize: true } }, 
+					{ loader: 'style-loader' },
+					{ loader: 'css-loader', options: { minimize: true } },
 					{ loader: 'sass-loader' }
 				]
 			},
-			{ 
-				test: /\.scss$/, 
+			{
+				test: /\.scss$/,
 				use: [
-					{ loader: 'style-loader' }, 
-					{ loader: 'css-loader', options: { minimize: true } }, 
+					{ loader: 'style-loader' },
+					{ loader: 'css-loader', options: { minimize: true } },
 					{ loader: 'sass-loader' }
 				]
 			},
