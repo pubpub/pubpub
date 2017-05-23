@@ -111,6 +111,6 @@
   },
   "devDependencies": {
     "@kadira/storybook": "^2.21.0",
-    "@kadira/storybook-addon-options": "^1.0.2",
+    "@kadira/storybook-addon-options": "^1.0.2"
   }
 }
