@@ -78,7 +78,7 @@ module.exports = {
 					path.join(__dirname, 'app'),
 					path.join(__dirname, 'node_modules'),
 				],
-				exclude: /(node_modules)/,
+				exclude: /(node_modules|.*citeproc.*)/,
 				query: {
 					retainLines: true,
 					plugins: [
