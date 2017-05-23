@@ -11,6 +11,7 @@
   },
   "scripts": {
     "build": "NODE_ENV=production webpack --config ./webpack.production.config.js --progress",
+    "profile": "NODE_ENV=production webpack --config ./webpack.production.config.js --profile --json  > stats.json",
     "build-dev": "npm install; npm run build; mv _redirects-dev dist/_redirects",
     "build-prod": "npm install; npm run build; mv _redirects-prod dist/_redirects",
     "lint": "eslint app",
@@ -33,7 +34,6 @@
     "babel-preset-es2015": "^6.24.0",
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-0": "^6.22.0",
-    "bibliography": "^0.1.0",
     "bourbon": "^4.3.3",
     "chai": "^3.5.0",
     "copy-webpack-plugin": "^4.0.1",
@@ -64,12 +64,7 @@
     "isomorphic-fetch": "^2.2.1",
     "json-loader": "^0.5.4",
     "jsx-transform": "^2.3.0",
-    "katex": "^0.7.1",
     "lodash": "^3.10.1",
-    "markdown-it": "^8.3.1",
-    "markdown-it-katex": "^2.0.3",
-    "markdown-it-sub": "^1.0.0",
-    "markdown-it-sup": "^1.0.0",
     "marklib": "^0.10.0",
     "mkdirp": "^0.5.1",
     "mocha": "^3.2.0",
@@ -107,7 +102,7 @@
     "superagent": "^3.5.0",
     "testdom": "^2.0.0",
     "url-loader": "^0.5.8",
-    "webpack": "^2.2.1",
+    "webpack": "^2.6.0",
     "webpack-dev-middleware": "^1.10.1",
     "webpack-hot-middleware": "^2.17.1"
   },
@@ -116,6 +111,6 @@
   },
   "devDependencies": {
     "@kadira/storybook": "^2.21.0",
-    "@kadira/storybook-addon-options": "^1.0.2"
+    "@kadira/storybook-addon-options": "^1.0.2",
   }
 }
