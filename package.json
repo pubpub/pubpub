@@ -10,7 +10,7 @@
     "url": "https://github.com/pubpub/pubpub.git"
   },
   "scripts": {
-    "build": "NODE_ENV=production webpack --config ./webpack.production.config.js",
+    "build": "env UV_THREADPOOL_SIZE=100; NODE_ENV=production webpack --config ./webpack.production.config.js",
     "profile": "NODE_ENV=production webpack --config ./webpack.production.config.js --profile --json  > stats.json",
     "build-dev": "npm install; npm run build; mv _redirects-dev dist/_redirects",
     "build-prod": "npm install; npm run build; mv _redirects-prod dist/_redirects",
