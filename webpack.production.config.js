@@ -26,7 +26,7 @@ class CleanPlugin {
 // A whole day of code lost. Friggin webpack...
 
 module.exports = {
-	devtool: 'cheap-source-map',
+	devtool: 'eval',
 	entry: {
 		js: ['./app/index'],
 		vendor: ['react', 'react-dom', 'radium', 'crypto-js', 'redux', 'rangy', 'immutable', 'intl']
