@@ -30,7 +30,7 @@ module.exports = {
 		js: ['./app/index'],
 		vendor: ['react', 'react-dom', 'radium', 'crypto-js', 'redux', 'rangy', 'immutable', 'intl']
 	},
-	devtool: '#source-map',
+	// devtool: '#source-map',
 	output: {
 		path: path.join(__dirname, 'dist'),
 		filename: '[name].[chunkhash].js',
