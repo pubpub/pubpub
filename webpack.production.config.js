@@ -26,10 +26,10 @@ class CleanPlugin {
 // A whole day of code lost. Friggin webpack...
 
 module.exports = {
-	devtool: 'eval',
+	devtool: 'cheap-source-map',
 	entry: {
 		js: ['./app/index'],
-		vendor: ['react', 'react-dom', 'radium', 'crypto-js', 'redux', 'rangy', 'immutable', 'intl', 'pdfjs-dist']
+		vendor: ['react', 'react-dom', 'radium', 'crypto-js', 'redux', 'rangy', 'immutable', 'intl']
 	},
 	// devtool: '#source-map',
 	output: {
@@ -40,12 +40,10 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.optimize.OccurrenceOrderPlugin(),
-		/*
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'vendor',
 			minChunks: Infinity,
 		}),
-		*/
 		new CleanPlugin({
 			files: ['dist/*']
 		}),
@@ -58,10 +56,10 @@ module.exports = {
 			compressor: {
 				warnings: false,
 				screw_ie8: true,
-				unused: false,
-				dead_code: false,
+				unused: true,
+				dead_code: true,
 			},
-			sourceMap: false,
+			sourceMap: true,
 		}),
 		new HtmlWebpackPlugin({
 			template: 'index.html',
