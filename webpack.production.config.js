@@ -39,10 +39,12 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.optimize.OccurrenceOrderPlugin(),
+		/*
 		new webpack.optimize.CommonsChunkPlugin({
 			name: 'vendor',
 			minChunks: Infinity,
 		}),
+		*/
 		new CleanPlugin({
 			files: ['dist/*']
 		}),
