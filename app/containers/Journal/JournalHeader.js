@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
+
+import Link from 'components/Link/Link';
 import Radium from 'radium';
 import { globalStyles } from 'utils/globalStyles';
-import Link from 'components/Link/Link';
 
 let styles = {};
 
@@ -25,7 +26,7 @@ export const JournalProfileHeader = React.createClass({
 		const customBackgroundStyle = {
 			backgroundColor: this.props.headerColor || '#13A6EF',
 			backgroundImage: this.props.headerImage ? `url("https://jake.pubpub.org/unsafe/fit-in/1200x1000/${this.props.headerImage}")` : '',
-			
+
 			textAlign: hasPage ? 'left' : this.props.headerAlign || 'left',
 		};
 
@@ -55,11 +56,11 @@ export const JournalProfileHeader = React.createClass({
 
 					{!hasPage && journal.slug === 'jods' &&
 						<div style={styles.headerTextWrapper}>
-							<img style={{ display: 'block', paddingBottom: '4em' }} alt={'Journal of Design and Science'} src={'https://assets.pubpub.org/ckgzyvhx/21495204691861.png'} />
+							<img style={{ display: 'block', paddingBottom: '4em', maxWidth: '90vw' }} alt={'Journal of Design and Science'} src={'https://assets.pubpub.org/ckgzyvhx/21495204691861.png'} />
 						</div>
 					}
 
-					{hasPage && 
+					{hasPage &&
 						<div style={styles.headerTextWrapper}>
 							<h1 style={styles.headerTitle}>{this.props.page.title}</h1>
 						</div>
@@ -79,7 +80,7 @@ export const JournalProfileHeader = React.createClass({
 						}
 					</div>
 				}
-				
+
 
 			</div>
 		);

@@ -357,6 +357,9 @@ styles = {
 		position: 'absolute',
 		zIndex: '3',
 		textAlign: 'right',
+		'@media screen and (min-resolution: 3dppx), screen and (max-width: 767px)': {
+			display: 'none',
+		}
 	},
 	headerWrapper: {
 		display: 'table',
