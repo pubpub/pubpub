@@ -56,7 +56,14 @@ export const LayoutPubsList = React.createClass({
 		const errorMessage = this.props.error;
     const n = this.props.n || pubFeatures.length;
 
-    const { showPreview = true, order = [], label, pubStyle = 'preview', showFeatureDate } = this.props;
+    const { showPreview = true, order = [], label, pubStyle = 'preview', showFeatureDate, only = [] } = this.props;
+
+		let orderedPubs;
+		if (only.length > 0) {
+			orderedPubs = only;
+		} else {
+			orderedPubs = order;
+		}
 
 		return (
 			<div>
@@ -76,8 +83,8 @@ export const LayoutPubsList = React.createClass({
 				{
           pubFeatures.slice(0, n )
 					.sort((foo, bar)=>{
-            const orderFoo = order.indexOf(foo.pub.slug);
-            const orderBar = order.indexOf(bar.pub.slug);
+            const orderFoo = orderedPubs.indexOf(foo.pub.slug);
+            const orderBar = orderedPubs.indexOf(bar.pub.slug);
 
 
             if (orderFoo !== -1 || orderBar !== -1) {
@@ -97,17 +104,30 @@ export const LayoutPubsList = React.createClass({
 						if (foo.createdAt < bar.createdAt) { return 1; }
 						return 0;
 					}).filter((item)=> {
-            if (!label) {
+
+
+            if (!label && (!only || only.length === 0)) {
               return true;
             }
-						const pub = item.pub || {};
-						const pubHasLabel = pub.labels.find((pubLabel) => {
-              if (pubLabel.slug === label) {
+
+            if (only && only.length > 0) {
+              if (only.indexOf(item.pub.slug) !== -1) {
                 return true;
               }
               return false;
-            });
-            return (pubHasLabel);
+            }
+
+            if (label) {
+              const pub = item.pub || {};
+  						const pubHasLabel = pub.labels.find((pubLabel) => {
+                if (pubLabel.slug === label) {
+                  return true;
+                }
+                return false;
+              });
+              return (pubHasLabel);
+            }
+
 					}).map((pubFeature, index)=> {
 						return (<SinglePub key={'feature-' + index}
               pub={pubFeature.pub}
