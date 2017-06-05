@@ -48,7 +48,7 @@ export const JournalProfileHeader = React.createClass({
 								<Link to={'/' + journal.slug} customDomain={journal.customDomain} style={globalStyles.link}><h1 style={styles.headerTitle}>{journal.title}</h1></Link>
 							}
 
-							<p style={{ fontSize: '1.5em', fontWeight: '200', margin: '20px 0px', letterSpacing: '1px', maxWidth: '500px' }}>{journal.description}</p>
+							<p style={{ fontSize: '1.5em', fontWeight: '200', margin: `20px ${this.props.headerAlign === 'center' ? 'auto' : '0px'}`, letterSpacing: '1px', maxWidth: '500px' }}>{journal.description}</p>
 
 						</div>
 					}
