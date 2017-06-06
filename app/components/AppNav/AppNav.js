@@ -32,7 +32,7 @@ export const AppNav = React.createClass({
 	searchSubmited: function(evt) {
 		evt.preventDefault();
 		if (window.isJournal) {
-			window.location.href = `https://www.pubpub.org'/search?q=${this.state.search}`;
+			window.location.href = `https://www.pubpub.org/search?q=${this.state.search}`;
 		} else {
 			browserHistory.push('/search?q=' + this.state.search);
 			this.setState({ search: '' });
