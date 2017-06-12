@@ -1,14 +1,15 @@
 import React, { PropTypes } from 'react';
 
+import AuthorString from 'components/AuthorString/AuthorString'
 import Link from 'components/Link/Link';
 import dateFormat from 'dateformat';
 
 let styles = {};
 
-const SinglePub = ({ pub, showPreview, showFeatureDate=false, journal, pubFeature, pubStyle="preview", size=150 }) => {
-
+const SinglePub = ({ pub, showPreview, showAuthor=true, showFeatureDate=false, journal, pubFeature, pubStyle="preview", size=150 }) => {
 
   const labels = pub.labels || [];
+  const authorString = (pub && pub.contributors);
 
   if (pubStyle === 'preview') {
     return (
@@ -26,6 +27,7 @@ const SinglePub = ({ pub, showPreview, showFeatureDate=false, journal, pubFeatur
             <h4><Link to={{ pathname: '/pub/' + pub.slug, query: { context: journal.slug } }}>{pub.title}</Link></h4>
             <p>{pub.description}</p>
             {(pubFeature && showFeatureDate) ? <p>Featured on {dateFormat(pubFeature.updatedAt, 'mmmm dd, yyyy')}</p> : null }
+            {(showAuthor) ? <AuthorString contributors={pub.contributors}/> : null }
           </div>
         </div>
       </div>

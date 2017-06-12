@@ -20,7 +20,6 @@ const LayoutEditor = React.createClass({
   getSinglePub: function(slug) {
     const journal = this.props.journal;
     const pubFeatures = journal.pubFeatures;
-    console.log(pubFeatures);
     const pub = pubFeatures.find((pubFeature) => (pubFeature.pub.slug === slug));
     return pub.pub;
   },
