@@ -125,6 +125,7 @@ export const Pub = React.createClass({
 					meta={meta}
 					pathname={pathname}
 					query={query}
+					location={this.props.location}
 					dispatch={this.props.dispatch} />
 
 				{/* ------- */}

@@ -4,6 +4,7 @@ import React, { PropTypes } from 'react';
 // import dateFormat from 'dateformat';
 import FollowButton from 'containers/FollowButton/FollowButton';
 import { Link } from 'react-router';
+import PubExportButton from './PubExportButton';
 // import { PUBPUB_EDITOR_URL } from 'configURLs';
 import PubLabelList from './PubLabelList';
 import PubNav from './PubNav';
@@ -26,18 +27,11 @@ export const PubHeader = React.createClass({
 		dispatch: PropTypes.func,
 	},
 
-	// openEditor: function() {
-		// const { userAccessToken, userName } = this.props;
-		// const slug = this.props.pub.slug;
-		// const url = `${PUBPUB_EDITOR_URL}/user/access/${slug}/${userName}/${userAccessToken}`;
-		// window.location.href = url;
-	// },
-
-
 	render: function() {
 		const pub = this.props.pub || {};
 		const query = this.props.query;
 		const pathname = this.props.pathname;
+		const location = this.props.location;
 
 		const contributors = pub.contributors || [];
 		const versions = pub.versions || [];
@@ -68,17 +62,7 @@ export const PubHeader = React.createClass({
 			return previous;
 		}, undefined);
 
-		let headerImage;
-		// headerImage = 'http://www.hotel-r.net/im/hotel/au/naturescape-23.jpg';
-		headerImage = 'http://www.wallpaperun.com/wp-content/uploads/2016/02/Galaxy-Wallpapers-Cool-K1N.jpg';
-		// headerImage = 'http://www.jpl.nasa.gov/images/msl/20140203/pia17931-640.jpg';
-		// headerImage = 'https://i.ytimg.com/vi/LJb0VAcK6N0/maxresdefault.jpg';
-		// headerImage = 'http://wallpapercave.com/wp/fRYYDpF.jpg';
-		// headerImage = 'http://www.homebusinessandfamilylife.com/admin/slide/1474636405unnamed.jpg';
-		// headerImage = 'http://i.imgur.com/Zpx3pcV.jpg';
-		headerImage = 'http://ellarow.com/i/2017/01/elephant-black-and-white-wallpapers-picture.jpg';
-		headerImage = 'https://static.vecteezy.com/system/resources/previews/000/111/495/original/abstract-colored-cubes-background-vector.jpg';
-		headerImage = '';
+
 		const hasHeaderImage = !!pub.headerImage;
 		const useLightText = hasHeaderImage ? true : contrastText(pub.headerColor || '#f3f3f4') === '#ffffff';
 
@@ -125,6 +109,12 @@ export const PubHeader = React.createClass({
 								followersLink={{ pathname: '/pub/' + pub.slug + '/followers', query: query }}
 								dispatch={this.props.dispatch} />
 						</div>
+
+						<PubExportButton 
+							pub={pub}
+							versions={versions}
+							location={location}
+						/>
 
 						{(pub.isAuthor || pub.canEdit) &&
 							<div style={styles.buttonWrapper} className={'button-wrapper'}>
