@@ -1,19 +1,19 @@
-import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
-import Helmet from 'react-helmet';
 import { NonIdealState, Spinner } from '@blueprintjs/core';
+import React, { PropTypes } from 'react';
 
+import Helmet from 'react-helmet';
 import PubContent from './PubContent';
 import PubContributors from './PubContributors';
 import PubDiffVersions from './PubDiffVersions';
+import PubEditor from './PubEditor';
 import PubFollowers from './PubFollowers';
 import PubHeader from './PubHeader';
 import PubInvitedReviewerMessage from './PubInvitedReviewerMessage';
 import PubJournals from './PubJournals';
 import PubReviewers from './PubReviewers';
 import PubSettings from './PubSettings';
-import PubEditor from './PubEditor';
 import PubVersions from './PubVersions';
+import { connect } from 'react-redux';
 import { getPubData } from './actions';
 
 let styles;
@@ -167,7 +167,7 @@ export const Pub = React.createClass({
 							dispatch={this.props.dispatch} />
 					}
 					{meta === 'files' &&
-						<PubContent 
+						<PubContent
 							accountData={this.props.accountData}
 							highlightData={this.props.highlightData}
 							pubData={this.props.pubData}
@@ -176,7 +176,7 @@ export const Pub = React.createClass({
 							dispatch={this.props.dispatch} />
 					}
 					{meta === 'edit' &&
-						<PubEditor 
+						<PubEditor
 							accountData={this.props.accountData}
 							highlightData={this.props.highlightData}
 							pubData={this.props.pubData}

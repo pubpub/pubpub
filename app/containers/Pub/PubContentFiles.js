@@ -1,9 +1,10 @@
+import { ExportButton, bibtexToCSL } from '@pubpub/editor';
 import React, { PropTypes } from 'react';
 
 import { Link } from 'react-router';
+import { PUBPUB_CONVERSION_URL } from 'configURLs';
 import Radium from 'radium';
 import RenderFile from 'components/RenderFile/RenderFile';
-import { bibtexToCSL } from '@pubpub/editor';
 import dateFormat from 'dateformat';
 import { globalStyles } from 'utils/globalStyles';
 import { putDefaultFile } from './actionsFiles';
@@ -32,6 +33,8 @@ export const PubContentFiles = React.createClass({
 		const meta = params.meta;
 		const mode = params.mode;
 		const routeFilename = params.filename;
+		const pub = this.props.pub;
+		const authorNames = pub.contributors.map((contributor) => (contributor.user.firstName + contributor.user.lastName));
 
 		const defaultFile = version.defaultFile;
 		const mainFile = files.reduce((previous, current)=> {
@@ -53,6 +56,7 @@ export const PubContentFiles = React.createClass({
 		const localReferences = bibtexFile ? bibtexToCSL(bibtexFile.newContent || bibtexFile.content) : [];
 
 		const currentFile = meta === 'files' ? routeFile : mainFile;
+
 
 		return (
 			<div style={styles.container}>
@@ -132,6 +136,17 @@ export const PubContentFiles = React.createClass({
 				{/* Render specific File */}
 				{!!files.length && currentFile && !mode &&
 					<div style={styles.pubStyle} className={'pub-body'}>
+						{(currentFile.type === 'text/markdown') ?
+							<ExportButton
+								title={pub.title}
+								authors={authorNames}
+								content={currentFile.content}
+								allFiles={files}
+								allReferences={localReferences}
+								converterURL={PUBPUB_CONVERSION_URL}
+								/>
+							: null
+						}
 						<RenderFile file={currentFile} allFiles={files} allReferences={localReferences} pubSlug={this.props.pub.slug} query={this.props.query} />
 					</div>
 				}
