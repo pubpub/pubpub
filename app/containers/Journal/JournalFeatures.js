@@ -1,14 +1,14 @@
-import React, { PropTypes } from 'react';
-import Radium from 'radium';
-import Helmet from 'react-helmet';
-import { browserHistory } from 'react-router';
-import Link from 'components/Link/Link';
-import dateFormat from 'dateformat';
 import { InputGroup, NonIdealState } from '@blueprintjs/core';
+import React, { PropTypes } from 'react';
 
-import { globalStyles } from 'utils/globalStyles';
-
+import AuthorString from 'components/AuthorString/AuthorString';
+import Helmet from 'react-helmet';
 import JournalPageList from './JournalPageList';
+import Link from 'components/Link/Link';
+import Radium from 'radium';
+import { browserHistory } from 'react-router';
+import dateFormat from 'dateformat';
+import { globalStyles } from 'utils/globalStyles';
 
 let styles = {};
 
@@ -34,11 +34,11 @@ export const JournalFeatures = React.createClass({
 			search: '',
 		};
 	},
-	
+
 	componentWillReceiveProps(nextProps) {
 		// if (this.props.isLoading && !nextProps.isLoading && !nextProps.error) {
-		// 	this.setState({ confirmReject: undefined });	
-		// 	this.setState({ confirmFeature: undefined });	
+		// 	this.setState({ confirmReject: undefined });
+		// 	this.setState({ confirmFeature: undefined });
 		// }
 	},
 
@@ -101,22 +101,23 @@ export const JournalFeatures = React.createClass({
 											<img src={pub.avatar} style={styles.featureImage} />
 										</Link>
 									</div>
-									
+
 									<div style={styles.featureDetails}>
 										<h4><Link to={{ pathname: '/pub/' + pub.slug, query: { context: journal.slug } }}>{pub.title}</Link></h4>
-										<p>{pub.description}</p>	
-										<p>Featured on {dateFormat(pubFeature.updatedAt, 'mmmm dd, yyyy')}</p>	
+										<p>{pub.description}</p>
+										<p>Featured on {dateFormat(pubFeature.updatedAt, 'mmmm dd, yyyy')}</p>
+										{(pub.contributors && pub.contributors.length > 0) ? <AuthorString contributors={pub.contributors}/> : null }
 									</div>
 								</div>
-								<JournalPageList 
-									allLabels={journal.pages} 
-									selectedLabels={pubPages} 
-									pubId={pub.id} 
+								<JournalPageList
+									allLabels={journal.pages}
+									selectedLabels={pubPages}
+									pubId={pub.id}
 									journal={journal}
-									canEdit={journal.isAdmin} 
-									canSelect={journal.isAdmin} 
-									pathname={this.props.pathname} 
-									query={this.props.query} 
+									canEdit={journal.isAdmin}
+									canSelect={journal.isAdmin}
+									pathname={this.props.pathname}
+									query={this.props.query}
 									dispatch={this.props.dispatch} />
 							</div>
 						);
@@ -162,5 +163,5 @@ styles = {
 		display: 'inline-block',
 		margin: 'auto 0',
 	},
-	
+
 };
