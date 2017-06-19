@@ -110,11 +110,13 @@ export const PubHeader = React.createClass({
 								dispatch={this.props.dispatch} />
 						</div>
 
-						<PubExportButton 
+						{/*
+						<PubExportButton
 							pub={pub}
 							versions={versions}
 							location={location}
 						/>
+						*/}
 
 						{(pub.isAuthor || pub.canEdit) &&
 							<div style={styles.buttonWrapper} className={'button-wrapper'}>
