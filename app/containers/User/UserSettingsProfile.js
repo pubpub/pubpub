@@ -64,7 +64,8 @@ export const UserSettingsProfile = React.createClass({
 
 	bioUpdate: function(evt) {
 		const bio = evt.target.value || '';
-		this.setState({ bio: bio.substring(0, 140) });
+		// this.setState({ bio: bio.substring(0, 140) });
+		this.setState({ bio: bio });
 	},
 
 	handleFileSelect: function(evt) {
@@ -149,9 +150,9 @@ export const UserSettingsProfile = React.createClass({
 					<label htmlFor={'bio'}>
 						Bio
 						<textarea id={'bio'} className={'pt-input margin-bottom'} name={'bio'} type="text" style={[styles.input, styles.bio]} value={this.state.bio} onChange={this.bioUpdate} />
-						<div className={'light-color inputSubtext'}>
+						{/* <div className={'light-color inputSubtext'}>
 							{this.state.bio.length} / 140
-						</div>
+						</div> */}
 					</label>
 
 					<label htmlFor={'publicEmail'}>
