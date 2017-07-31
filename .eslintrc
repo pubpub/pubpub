@@ -6,86 +6,29 @@
 		"node": true,
 		"mocha": true
 	},
-	rules: {
-		"react/forbid-prop-types": 0,
-		"react/jsx-filename-extension": 0,
-		"react/jsx-uses-react": 2,
-		"react/jsx-uses-vars": 2,
-		"react/jsx-no-bind": 0,
-		"react/react-in-jsx-scope": 2,
-		"react/jsx-boolean-value": 0,
-		"react/jsx-quotes": 0,
-		"react/jsx-indent": 0,
-		"react/jsx-indent-props": 0,
-		"react/jsx-closing-bracket-location": 0,
-		"react/no-unused-prop-types": 0,
-		"react/no-danger": 0,
-		"react/sort-comp": 0,
-		"react/prefer-es6-class": 0,
-		"react/prefer-stateless-function": 0,
-		"react/no-multi-comp": 0,
-		"import/default": 0,
-		"import/no-duplicates": 0,
-		"import/imports-first": 0,
-		"import/named": 0,
-		"import/namespace": 0,
-		"import/no-unresolved": 0,
-		"import/no-named-as-default": 0,
-		"import/no-extraneous-dependencies": 0,
-		"import/prefer-default-export": 0,
-		"import/newline-after-import": 0,
-		"jsx-quotes": 2,
-		"jsx-a11y/no-static-element-interactions": 0,
-		"block-scoped-var": 0,
-		"padded-blocks": 0,
-		"comma-dangle": 0,
-		"prefer-arrow-callback": 0,
-		"array-callback-return": 0,
-		"arrow-body-style": 0,
-		"arrow-parens": 0,
-		"arrow-spacing": 0,
-		"comma-spacing": 1,
-		"no-case-declarations": 0,
-		"no-underscore-dangle": 0,
-		"global-require": 0,
-		"no-console": 0,
-		"max-len": 0,
-		"no-multiple-empty-lines": 1,
-		"no-undef": 1,
-		"no-loop-func": 0,
-		"no-plusplus": 0,
-		"no-debugger": 0,
-		"object-shorthand": 0,
-		"prefer-const": 1,
-		"no-alert": 1,
-		"func-names": 0,
-		"no-multi-spaces": 1,
-		"no-cond-assign": 0,
-		"prefer-template": 0,
-		"no-trailing-spaces": 0,
-		"no-tabs": 0,
-		"space-before-function-paren": 0,
-		"indent": [2, "tab"],
-		"new-cap": 0,
-		"no-unused-vars": [1, {"vars": "local", "args": "none"}],
-		"id-length": [2, {"exceptions": ["_"]}]
-	},
 	plugins: [
 		"react", "import"
 	],
-	settings: {
-		"import/parser": "babel-eslint",
-		"import/resolve": {
-			moduleDirectory: ["app"]
-		}
+	"settings": {
+      "import/resolver": {
+        "webpack": {
+          "config": "webpack/webpackConfigDev.js"
+        }
+      }
+    },
+	"rules": {
+		"arrow-spacing": 0,
+		"arrow-body-style": 0,
+		"comma-dangle": 0,
+		"func-names": 0,
+		"import/no-extraneous-dependencies": 0,
+		"indent": [2, "tab", { "MemberExpression": 0 }],
+		"no-tabs": 0,
+		"no-underscore-dangle": 0,
+		"react/forbid-prop-types": 0,
+		"react/jsx-filename-extension": 0,
+		"react/jsx-indent": [2, "tab"],
+		"react/jsx-indent-props": [2, "tab"],
+		"space-before-function-paren": 0,
 	},
-	globals: {
-		"__DEVELOPMENT__": true,
-		"__CLIENT__": true,
-		"__SERVER__": true,
-		"__DISABLE_SSR__": true,
-		"__DEVTOOLS__": true,
-		"socket": true,
-		"clientFetch": true
-	}
 }

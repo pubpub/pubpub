@@ -1,16 +1,13 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 
-export const NoMatch = React.createClass({
-
-	render() {
-		return (
-			<div>
-				<Helmet title="Not Found · PubPub" />
-				Page was not found
-			</div>
-		);
-	}
-});
+const NoMatch = function() {
+	return (
+		<div id={'nomatch-page'}>
+			<Helmet title="Not Found · Site" />
+			<h1>Page not found</h1>
+		</div>
+	);
+};
 
 export default NoMatch;

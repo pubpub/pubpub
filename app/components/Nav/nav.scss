@@ -1,0 +1,41 @@
+.navbar-page {
+	height: 50px;
+
+	.navbar {
+		background-color: $navBackground;
+		color: $navColor;
+		height: 50px;
+		line-height: 50px;	
+		padding: 0em 1em;
+		box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);
+		position: fixed;
+		width: 100%;
+		top: 0;
+		z-index: 1000000;
+	}
+
+	.nav-menu {
+		width: 80vw;
+		height: 100vh;
+		position: fixed;
+		top: 0;
+		left: -80vw;
+		background-color: #FFF;
+		box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+		transition: .15s linear transform;
+		will-change: transform;
+		&.open {
+			transform: translate3d(80vw, 0, 0);
+		}
+		.content {
+			padding: 2em;
+		}
+	}
+
+	a {
+		text-decoration: none;
+		color: inherit;
+		padding: 0em 1em;
+	}
+}
+
