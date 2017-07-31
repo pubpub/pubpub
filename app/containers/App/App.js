@@ -4,7 +4,7 @@ import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import { Route, withRouter, Switch } from 'react-router-dom';
 import Async from 'react-code-splitting';
-import Nav from 'components/Nav/Nav';
+import Header from 'components/Header/Header';
 import { getAppData } from 'actions/app';
 
 require('./blueprint.scss');
@@ -41,7 +41,7 @@ class App extends Component {
 				</Helmet>
 				<style>{'.accent-background { background-color: #caff00; } .accent-color { color: black; }'}</style>
 
-				<Nav />
+				<Header />
 
 				<Switch>
 					<Route exact path="/" component={isMain ? LandingMain : LandingCommunity} />
