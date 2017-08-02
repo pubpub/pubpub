@@ -1,4 +1,4 @@
-// import { apiFetch } from 'utilities';
+import { apiFetch } from 'utilities';
 
 /*--------*/
 // Define Action types
@@ -20,17 +20,12 @@ export const GET_APP_DATA_FAIL = 'app/GET_APP_DATA_FAIL';
 export function getAppData(hostname) {
 	return (dispatch) => {
 		dispatch({ type: GET_APP_DATA_LOAD });
-		const result = {
-			title: hostname !== 'www.pubpub.org' ? 'Viral Communications' : undefined,
-			description: hostname !== 'www.pubpub.org' ? 'This is about viral!' : undefined,
-		};
-		dispatch({ type: GET_APP_DATA_SUCCESS, result });
-		// return apiFetch(user)
-		// .then((result) => {
-		// 	dispatch({ type: GET_APP_DATA_SUCCESS, result });
-		// })
-		// .catch((error) => {
-		// 	dispatch({ type: GET_APP_DATA_FAIL, error });
-		// });
+		return apiFetch(`/api/app?hostname=${hostname}`)
+		.then((result) => {
+			dispatch({ type: GET_APP_DATA_SUCCESS, result });
+		})
+		.catch((error) => {
+			dispatch({ type: GET_APP_DATA_FAIL, error });
+		});
 	};
 }

@@ -9,7 +9,11 @@ import { getData } from 'actions/app';
 
 const propTypes = {
 	dispatch: PropTypes.func.isRequired,
-	appData: PropTypes.object.isRequired,
+	appData: PropTypes.object,
+};
+
+const defaultProps = {
+	appData: {}
 };
 
 class Template extends Component {
@@ -27,5 +31,6 @@ class Template extends Component {
 	}
 }
 
+Template.defaultProps = defaultProps;
 Template.propTypes = propTypes;
 export default connect(state => ({ appData: state.app }))(Template);

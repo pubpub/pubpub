@@ -6,6 +6,8 @@ const propTypes = {
 	appData: PropTypes.object, // Community Logo
 	userData: PropTypes.object, // Whether to show login data or not
 	hasBackground: PropTypes.bool, // Whether to show gradient or not
+	isHome: PropTypes.bool.isRequired,
+	logo: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
@@ -14,17 +16,19 @@ const defaultProps = {
 	hasBackground: true, // Whether to show gradient or not
 };
 
-const Header = function() {
+const Header = function(props) {
 	return (
 		<nav className={'accent-background accent-color'}>
 			<div className={'container'}>
 				<div className={'row'}>
 					<div className={'col-12'}>
 						<div style={{ height: '39px', display: 'flex', alignItems: 'center', float: 'left' }}>
-							<div className="pt-navbar-heading">PubPub</div>
+							<img alt={'header logo'} src={props.logo} height={'39px'} />
 						</div>
 						<div style={{ height: '39px', display: 'flex', alignItems: 'center', float: 'right' }}>
-							<button className="accent-color pt-intent-primary pt-button pt-minimal pt-icon-search" />
+							<button className="pt-button pt-minimal pt-icon-search" />
+							<button className="pt-button pt-minimal pt-icon-settings" />
+							<button className="pt-button pt-minimal pt-icon-person" />
 						</div>
 					</div>
 				</div>

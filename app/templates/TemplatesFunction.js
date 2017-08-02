@@ -7,7 +7,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 const propTypes = {
-	appData: PropTypes.object.isRequired,
+	appData: PropTypes.object,
+};
+
+const defaultProps = {
+	appData: {}
 };
 
 const Template = function({ appData }) {
@@ -19,5 +23,6 @@ const Template = function({ appData }) {
 	);
 };
 
+Template.defaultProps = defaultProps;
 Template.propTypes = propTypes;
 export default connect(state => ({ appData: state.app }))(Template);

@@ -13,10 +13,12 @@
     "build": "rm -rf dist && webpack --config webpack/webpackConfigProd.js && cp -R static/* dist && cp _redirects-prod dist/_redirects",
     "prod": "npm run build && serve ./dist -s",
     "lint": "eslint app webpack",
-    "start": "webpack-dev-server --env.mode=app --config webpack/webpackConfigDev.js"
+    "start": "webpack-dev-server --env.mode=app --config webpack/webpackConfigDev.js",
+    "storybook": "start-storybook -p 9001 -c .storybook -s ./static"
   },
   "dependencies": {
     "@blueprintjs/core": "^1.24.0",
+    "@storybook/react": "^3.2.3",
     "babel-core": "^6.24.1",
     "babel-eslint": "^7.2.3",
     "babel-loader": "^7.0.0",
