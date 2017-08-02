@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const propTypes = {
 	appData: PropTypes.object, // Community Logo
@@ -27,8 +27,8 @@ const Header = function(props) {
 						</div>
 						<div style={{ height: '39px', display: 'flex', alignItems: 'center', float: 'right' }}>
 							<button className="pt-button pt-minimal pt-icon-search" />
-							<button className="pt-button pt-minimal pt-icon-settings" />
-							<button className="pt-button pt-minimal pt-icon-person" />
+							<button className="pt-button pt-minimal pt-icon-page-layout" />
+							<Link to={'/about'}><button className="pt-button pt-minimal pt-icon-person" /></Link>
 						</div>
 					</div>
 				</div>

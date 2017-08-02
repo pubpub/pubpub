@@ -10,6 +10,10 @@ const LandingCommunity = function() {
 					<button className={'pt-button pt-intent-primary'}>Default</button>
 					<button className={'pt-button pt-intent-primary'}>Hover</button>
 					<button className={'pt-button pt-intent-primary pt-active'}>Active</button>
+					<span className={'pt-icon-large pt-icon-person'} />
+					<span className={'pt-icon-large pt-icon-admin'} />
+					<span className={'pt-icon-large pt-icon-dashboard'} />
+					
 				</div>
 			</div>
 		</div>

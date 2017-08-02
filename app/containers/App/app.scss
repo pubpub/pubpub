@@ -31,9 +31,23 @@ h1 {
 // While there is some elegance to having components import their own .scss files,
 // and while this compiles just fine with webpack - I choose to import all of the scss files
 // into this main app.scss so that constants (e.g. $darkColor) can be used throughout.
+@import "./blueprint.scss";
 @import "./grid.scss";
 @import "../NoMatch/nomatch.scss";
 @import "../LandingMain/landingMain.scss";
 @import "../LandingCommunity/landingCommunity.scss";
 
-// @import "../../components/Nav/nav.scss";
+// Import Custom Icon Fonts
+// ****************************
+// @font-face {
+// 	font-family: 'fontello';
+// 	src: url('/icons/fontello.eot?14194274');
+// 	src: url('/icons/fontello.eot?14194274#iefix') format('embedded-opentype'),
+// 		url('/icons/fontello.woff2?14194274') format('woff2'),
+// 		url('/icons/fontello.woff?14194274') format('woff'),
+// 		url('/icons/fontello.ttf?14194274') format('truetype'),
+// 		url('/icons/fontello.svg?14194274#fontello') format('svg');
+// }
+// 
+// .pt-icon-admin:before { font-family: 'fontello' !important; content: '\e900'; } /* '' */
+// .pt-icon-dashboard:before { font-family: 'fontello' !important; content: '\e901'; } /* '' */

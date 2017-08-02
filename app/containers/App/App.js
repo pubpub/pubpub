@@ -8,7 +8,6 @@ import Header from 'components/Header/Header';
 import { getAppData } from 'actions/app';
 import { contrastText, calculateHues } from 'utilities';
 
-require('./blueprint.scss');
 require('./app.scss');
 
 const LandingMain = () => <Async load={import('containers/LandingMain/LandingMain')} />;
