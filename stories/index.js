@@ -1,5 +1,5 @@
 import React from 'react';
-import { addDecorator } from '@storybook/react';
+import { addDecorator, configure } from '@storybook/react';
 import { BrowserRouter } from 'react-g-analytics';
 import { FocusStyleManager } from '@blueprintjs/core';
 
@@ -16,8 +16,13 @@ const RouterDecorator = (storyFn) => {
 		</BrowserRouter>
 	);
 };
-addDecorator(RouterDecorator);
 
 /* Require stories */
-require('./headerStories');
-require('./header2Stories');
+const req = require.context('./', true, /Stories\.js$/);
+function loadStories() {
+	addDecorator(RouterDecorator);
+	req.keys().forEach(req);
+}
+
+configure(loadStories, module);
+
