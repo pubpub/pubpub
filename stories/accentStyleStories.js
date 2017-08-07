@@ -4,20 +4,8 @@ import AccentStyle from 'components/AccentStyle/AccentStyle';
 import Header from 'components/Header/Header';
 import { Button, Intent, Tag } from '@blueprintjs/core';
 
-// const pageStyle = { backgroundColor: '#555' };
-const wrapperStyle = { padding: '1em', display: 'flex', alignItems: 'flex-end' };
-
-
-storiesOf('AccentStyle', module)
-.add('dark1', () => (
+const content = (
 	<div>
-		<AccentStyle
-			accentColor={'#D13232'}
-			accentTextColor={'#FFF'}
-			accentActionColor={'#A72828'}
-			accentHoverColor={'#BC2D2D'}
-			accentMinimalColor={'rgba(209, 50, 50, 0.15)'}
-		/>
 		<Header
 			userName={'Maggie Farnkrux'}
 			userSlug={'maggiefarn'}
@@ -44,7 +32,7 @@ storiesOf('AccentStyle', module)
 					<h2>Tags</h2>
 					<div className={'pt-tag'}>Plain Tag</div>
 					<span> · </span>
-					<div className={'pt-tag pt-intent-primary'}>Primary Tag!</div>
+					<div className={'pt-tag pt-intent-primary'}>Primary Tag</div>
 					<span> · </span>
 					<Tag intent={Intent.PRIMARY}>JS Primary Tag</Tag>
 				</div>
@@ -61,5 +49,31 @@ storiesOf('AccentStyle', module)
 			</div>
 
 		</div>
+	</div>
+);
+
+storiesOf('AccentStyle', module)
+.add('Dark 1', () => (
+	<div>
+		<AccentStyle
+			accentColor={'#D13232'}
+			accentTextColor={'#FFF'}
+			accentActionColor={'#A72828'}
+			accentHoverColor={'#BC2D2D'}
+			accentMinimalColor={'rgba(209, 50, 50, 0.15)'}
+		/>
+		{content}
+	</div>
+))
+.add('Light 1', () => (
+	<div>
+		<AccentStyle
+			accentColor={'#26E0D0'}
+			accentTextColor={'#000'}
+			accentActionColor={'#51E6D9'}
+			accentHoverColor={'#3BE3D4'}
+			accentMinimalColor={'rgba(38, 224, 208, 0.15)'}
+		/>
+		{content}
 	</div>
 ));

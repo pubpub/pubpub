@@ -1,6 +1,5 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
 import Header from 'components/Header/Header';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
 
@@ -57,10 +56,6 @@ const headerBars = function(logoUrl) {
 			<h4 style={titleStyle}>Home · Background (Blank)</h4>
 			<div style={wrapperStyle}>
 				<Header
-					userName={'Maggie Farnkrux'}
-					userSlug={'maggiefarn'}
-					userAvatar={'/dev/maggie.jpg'}
-					userIsAdmin={true}
 					pageSlug={''}
 					pageBackground={'/dev/homeBackground.png'}
 					appLogo={logoUrl}

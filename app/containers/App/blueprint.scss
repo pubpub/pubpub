@@ -41,6 +41,3 @@ $dark-navbar-background-color: $dark-gray2 !default;
 
 // Override rules here
 // *******************
-.accent-color .pt-button:not([class*="pt-intent-"]), .accent-color .pt-button[class*="pt-icon-"]::before {
-	color: inherit;
-}

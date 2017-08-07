@@ -1,10 +1,27 @@
-/* eslint-disable global-require*/
+import React from 'react';
+import { addDecorator, configure } from '@storybook/react';
+import { BrowserRouter } from 'react-g-analytics';
+import { FocusStyleManager } from '@blueprintjs/core';
 
-import { configure } from '@storybook/react';
+FocusStyleManager.onlyShowFocusOnTabs();
 
+/* Require default styles as done in App/App.js */
+require('containers/App/blueprint.scss');
+require('containers/App/app.scss');
+
+const RouterDecorator = (storyFn) => {
+	return (
+		<BrowserRouter id="*">
+			{ storyFn() }
+		</BrowserRouter>
+	);
+};
+
+/* Require stories */
+const req = require.context('../stories/', true, /Stories\.js$/);
 function loadStories() {
-	require('../stories/index.js');
-	// You can require as many stories as you need.
+	addDecorator(RouterDecorator);
+	req.keys().forEach(req);
 }
 
 configure(loadStories, module);

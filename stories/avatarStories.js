@@ -22,7 +22,7 @@ const border = {
 const sizes = [25, 50, 100, 250];
 const colors = ['green', 'blue', 'red', 'purple', 'cyan', 'orange', 'magenta', 'pink'];
 storiesOf('Avatar', module)
-.add('default', () => (
+.add('Default', () => (
 	<div style={pageStyle}>
 		<div style={wrapperStyle}>
 			{sizes.map((size)=> {
