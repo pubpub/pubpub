@@ -28,6 +28,11 @@ h1 {
 	word-break: break-all;
 }
 
+.subtext {
+	color: #A2A2A2;
+	font-size: 0.85em;
+}
+
 // While there is some elegance to having components import their own .scss files,
 // and while this compiles just fine with webpack - I choose to import all of the scss files
 // into this main app.scss so that constants (e.g. $darkColor) can be used throughout.
