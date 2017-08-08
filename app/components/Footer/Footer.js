@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 require('./footer.scss');
 
-const Footer = function(props) {
+const Footer = function() {
 	const links = [
 		{
 			id: 1,
