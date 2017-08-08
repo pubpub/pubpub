@@ -5,12 +5,12 @@
 		color: inherit;
 		margin-right: 2em;
 		display: inline-block;
-	    height: 40px;
-	    user-select: none;
-	    &.dropdown {
-	    	text-decoration: none;
-	    	cursor: default;
-	    }
+		height: 40px;
+		user-select: none;
+		&.dropdown {
+			text-decoration: none;
+			cursor: default;
+		}
 	}
 	.col-12 {
 		margin-top: 0em;
@@ -29,7 +29,6 @@
 	}
 	li {
 		text-transform: uppercase;
-		display: inline-block;
 		text-decoration: inherit;
 		font-weight: 500;
 	}

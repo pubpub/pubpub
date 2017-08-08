@@ -1,0 +1,28 @@
+.footer {
+	ul {
+		list-style: none;
+		margin: 0px;
+		padding: 2.5em 0px;
+		width: 100%;
+		white-space: nowrap;
+		text-align: center;
+	}
+	li {
+		text-decoration: inherit;
+	}
+	a {
+		color: inherit;
+		padding: 0em 1em;
+		display: inline-block;
+		user-select: none;
+	}
+}
+
+@media only screen and (max-width: 45em) {  /* 720px */
+	.footer {
+		a {
+			padding: 1em 0em;
+			display: block;
+		}
+	}
+}

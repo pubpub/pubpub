@@ -4,6 +4,7 @@ import AccentStyle from 'components/AccentStyle/AccentStyle';
 import { Button, Intent, Tag } from '@blueprintjs/core';
 import Header from 'components/Header/Header';
 import NavBar from 'components/NavBar/NavBar';
+import Footer from 'components/Footer/Footer';
 import { navItems, accentDataDark, accentDataLight } from './_data';
 
 const content = (
@@ -51,8 +52,9 @@ const content = (
 					<Tag className={'pt-minimal'} intent={Intent.PRIMARY}>JS Primary Tag</Tag>
 				</div>
 			</div>
-
 		</div>
+
+		<Footer />
 	</div>
 );
 
