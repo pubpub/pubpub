@@ -44,7 +44,9 @@ const Header = function(props) {
 						{/* App Logo - do not show on homepage */}
 						{!isHome &&
 							<div className={'headerItems headerItemsLeft'}>
-								<img alt={'header logo'} className={'headerLogo'} src={props.appLogo} />
+								<Link to={'/'}>
+									<img alt={'header logo'} className={'headerLogo'} src={props.appLogo} />
+								</Link>
 							</div>
 						}
 
