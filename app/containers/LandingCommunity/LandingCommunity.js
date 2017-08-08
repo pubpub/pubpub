@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+require('./landingCommunity.scss');
+
 const LandingCommunity = function() {
 	return (
 		<div className={'landing-page container'}>

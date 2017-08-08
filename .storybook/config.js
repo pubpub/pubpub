@@ -5,10 +5,6 @@ import { FocusStyleManager } from '@blueprintjs/core';
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
-/* Require default styles as done in App/App.js */
-require('containers/App/blueprint.scss');
-require('containers/App/app.scss');
-
 const RouterDecorator = (storyFn) => {
 	return (
 		<BrowserRouter id="*">
@@ -25,3 +21,6 @@ function loadStories() {
 }
 
 configure(loadStories, module);
+
+/* Require default styles as done in App/App.js */
+require('containers/App/app.scss');

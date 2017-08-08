@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+require('./landingMain.scss');
+
 const LandingMain = function() {
 	return (
 		<div className={'landing-page container'}>
@@ -15,5 +17,3 @@ const LandingMain = function() {
 };
 
 export default LandingMain;
-
-// <img width={'150px'} src={'images/waves.png'} alt={'Waves'} />

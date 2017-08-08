@@ -20,6 +20,7 @@ const AccentStyle = function(props) {
 			.pt-tag.pt-intent-primary { background: ${props.accentColor}; color: ${props.accentTextColor}; }
 			.pt-tag.pt-minimal.pt-intent-primary { background-color: ${props.accentMinimalColor}; }
 			.accent-color .pt-button:not([class*="pt-intent-"]), .accent-color .pt-button[class*="pt-icon-"]::before { color: inherit; }
+			.accent-color a, .accent-color a:hover { color: inherit; }
 		`}</style>
 	);
 };

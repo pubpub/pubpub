@@ -48,7 +48,7 @@ const DashboardSide = function(props) {
 					{communityControls.map((control)=> {
 						return (
 							<li key={`side-control-${control.id}`}>
-								<Link className={`pt-menu-item ${props.activeSlug === control.slug && 'pt-active'} ${control.icon}`} tabindex="0" to={`/dashboard/${control.slug}`}>
+								<Link className={`pt-menu-item ${props.activeSlug === control.slug && 'pt-active'} ${control.icon}`} tabIndex="0" to={`/dashboard/${control.slug}`}>
 									{control.title}
 								</Link>
 							</li>
@@ -62,7 +62,7 @@ const DashboardSide = function(props) {
 					{props.pages.map((page)=> {
 						return (
 							<li key={`side-page-${page.id}`}>
-								<Link className={`pt-menu-item ${props.activeSlug === page.slug && 'pt-active'} ${page.isPublic ? 'pt-icon-globe' : 'pt-icon-lock'}`} tabindex="0" to={`/dashboard/${page.slug}`}>
+								<Link className={`pt-menu-item ${props.activeSlug === page.slug && 'pt-active'} ${page.isPublic ? 'pt-icon-globe' : 'pt-icon-lock'}`} tabIndex="0" to={`/dashboard/${page.slug}`}>
 									{page.title}
 								</Link>
 							</li>
@@ -82,7 +82,7 @@ const DashboardSide = function(props) {
 					{props.collections.map((collection)=> {
 						return (
 							<li key={`side-collection-${collection.id}`}>
-								<Link className={`pt-menu-item ${props.activeSlug === collection.slug && 'pt-active'} ${collection.isPublic ? 'pt-icon-globe' : 'pt-icon-lock'}`} tabindex="0" to={`/dashboard/${collection.slug}`}>
+								<Link className={`pt-menu-item ${props.activeSlug === collection.slug && 'pt-active'} ${collection.isPublic ? 'pt-icon-globe' : 'pt-icon-lock'}`} tabIndex="0" to={`/dashboard/${collection.slug}`}>
 									{collection.title}
 								</Link>
 							</li>

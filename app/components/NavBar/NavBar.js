@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import { Popover, PopoverInteractionKind, Position, Menu } from '@blueprintjs/core';
 
 require('./navBar.scss');
 
@@ -27,7 +27,7 @@ const NavBar = function(props) {
 								}
 								/* Return Dropdown */
 								return (
-									<Popover 
+									<Popover
 										content={
 											<Menu>
 												{item.children.map((subitem)=> {
@@ -35,7 +35,7 @@ const NavBar = function(props) {
 														<Link className={'pt-menu-item pt-popover-dismiss'} to={subitem.slug} key={`nav-item-${subitem.id}`}>
 															<li>{subitem.title}</li>
 														</Link>
-													);	
+													);
 												})}
 											</Menu>
 										}
