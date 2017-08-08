@@ -162,13 +162,13 @@ class App extends Component {
 				{this.props.location.pathname.substring(1, this.props.location.pathname.length) === '' &&
 					<CommunityHeader
 						logo={'/dev/viralLogo.png'}
-						description={'Group publications and research docs'}
+						description={'Group publications and research docs from around the world all situated here in this little community.'}
 						backgroundImage={'/dev/homeBackground.png'}
 					/>
 				}
 
 				<NavBar navItems={navItems} />
-				<div className={'container'} style={{ padding: '3em 0em' }}>
+				<div className={'container'}>
 					<div className={'row'}>
 						<div className={'col-12'}>
 							<PubPreview

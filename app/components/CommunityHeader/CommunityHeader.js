@@ -19,6 +19,7 @@ const CommunityHeader = function(props) {
 			<div className={'container'}>
 				<div className={'row'}>
 					<div className={'col-12'}>
+						{/* <img alt={'community logo'} className={'logo'} src={`https://jake.pubpub.org/unsafe/fit-in/600x300/${props.logo}`} /> */}
 						<img alt={'community logo'} className={'logo'} src={props.logo} />
 						<div className={'description'}>{props.description}</div>
 					</div>
