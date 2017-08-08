@@ -1,0 +1,21 @@
+.community-header {
+	margin-top: -56px;
+	padding-top: 56px;
+	z-index: -1;
+	position: relative;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+	&.has-image {
+		color: white;
+	}
+	.logo {
+		height: calc(150px + 2em);
+		display: block;
+		padding-top: 2em;
+	}
+	.description {
+		padding: 1em 0em 2em;
+		font-size: 1.5em;
+	}
+}
