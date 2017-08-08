@@ -45,7 +45,7 @@ const NavBar = function(props) {
 										interactionKind={PopoverInteractionKind.HOVER}
 										key={`dropdown-${item.title}`}
 									>
-										<a>
+										<a className={'dropdown'}>
 											<li>
 												{item.title}
 												<span className={'pt-icon-standard pt-icon-caret-down pt-align-right'} />

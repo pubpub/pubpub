@@ -2,6 +2,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import Header from 'components/Header/Header';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
+import { accentDataDark, accentDataLight } from './_data';
 
 const wrapperStyle = { margin: '1em', boxShadow: '0px 0px 1px rgba(0, 0, 0, 0.25)' };
 const titleStyle = { margin: '1em 1em -0.5em' };
@@ -93,25 +94,13 @@ storiesOf('Header', module)
 ))
 .add('Styled Dark', () => (
 	<div>
-		<AccentStyle
-			accentColor={'#D13232'}
-			accentTextColor={'#FFF'}
-			accentActionColor={'#A72828'}
-			accentHoverColor={'#BC2D2D'}
-			accentMinimalColor={'rgba(209, 50, 50, 0.15)'}
-		/>
+		<AccentStyle {...accentDataDark} />
 		{headerBars('/dev/viralLogo.png')}
 	</div>
 ))
 .add('Styled Light', () => (
 	<div>
-		<AccentStyle
-			accentColor={'#26E0D0'}
-			accentTextColor={'#000'}
-			accentActionColor={'#51E6D9'}
-			accentHoverColor={'#3BE3D4'}
-			accentMinimalColor={'rgba(38, 224, 208, 0.15)'}
-		/>
+		<AccentStyle {...accentDataLight} />
 		{headerBars('/dev/cpLogo.png')}
 	</div>
 ));

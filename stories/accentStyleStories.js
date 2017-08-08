@@ -1,8 +1,10 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
-import Header from 'components/Header/Header';
 import { Button, Intent, Tag } from '@blueprintjs/core';
+import Header from 'components/Header/Header';
+import NavBar from 'components/NavBar/NavBar';
+import { navItems, accentDataDark, accentDataLight } from './_data';
 
 const content = (
 	<div>
@@ -15,6 +17,7 @@ const content = (
 			appLogo={'/dev/viralLogo.png'}
 			logoutHandler={()=>{}}
 		/>
+		<NavBar navItems={navItems} />
 
 		<div className={'container'}>
 			<div className={'row'}>
@@ -56,25 +59,13 @@ const content = (
 storiesOf('AccentStyle', module)
 .add('Dark 1', () => (
 	<div>
-		<AccentStyle
-			accentColor={'#D13232'}
-			accentTextColor={'#FFF'}
-			accentActionColor={'#A72828'}
-			accentHoverColor={'#BC2D2D'}
-			accentMinimalColor={'rgba(209, 50, 50, 0.15)'}
-		/>
+		<AccentStyle {...accentDataDark} />
 		{content}
 	</div>
 ))
 .add('Light 1', () => (
 	<div>
-		<AccentStyle
-			accentColor={'#26E0D0'}
-			accentTextColor={'#000'}
-			accentActionColor={'#51E6D9'}
-			accentHoverColor={'#3BE3D4'}
-			accentMinimalColor={'rgba(38, 224, 208, 0.15)'}
-		/>
+		<AccentStyle {...accentDataLight} />
 		{content}
 	</div>
 ));
