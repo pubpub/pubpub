@@ -40,17 +40,25 @@ const Header = function(props) {
 			<div className={'container'}>
 				<div className={'row'}>
 					<div className={'col-12'}>
+
+						{/* App Logo - do not show on homepage */}
 						{!isHome &&
 							<div className={'headerItems headerItemsLeft'}>
 								<img alt={'header logo'} className={'headerLogo'} src={props.appLogo} />
 							</div>
 						}
+
 						<div className={'headerItems headerItemsRight'}>
+
+							{/* Search button */}
 							<Link to={'/search'} className="pt-button pt-large pt-minimal pt-icon-search" />
+
+							{/* Admin panel button */}
 							{props.userIsAdmin &&
 								<Link to={'/admin'} className="pt-button pt-large pt-minimal pt-icon-page-layout" />
 							}
 
+							{/* User avatar and menu */}
 							{loggedIn &&
 								<Popover
 									content={
@@ -90,6 +98,8 @@ const Header = function(props) {
 									</button>
 								</Popover>
 							}
+
+							{/* Login or Signup button */}
 							{!loggedIn &&
 								<Link to={'/login'} className="pt-button pt-large pt-minimal">Login or Signup</Link>
 							}

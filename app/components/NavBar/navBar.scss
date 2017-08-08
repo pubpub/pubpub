@@ -1,0 +1,26 @@
+.nav-bar {
+	height: 40px;
+	overflow: hidden;
+	a {
+		color: inherit;
+		margin-right: 2em;
+	}
+	.col-12 {
+		margin: 0;
+	}
+	ul {
+		list-style: none;
+		margin: 0px;
+		padding: 0px;
+		height: 90px;
+		line-height: 40px;
+		overflow-x: scroll;
+		overflow-y: hidden;
+		width: 100%;
+		white-space: nowrap;
+	}
+	li {
+		text-transform: uppercase;
+		display: inline-block;
+	}
+}
