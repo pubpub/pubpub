@@ -4,6 +4,8 @@
 	a {
 		color: inherit;
 		margin-right: 2em;
+		display: inline-block;
+	    height: 40px;
 	}
 	.col-12 {
 		margin: 0;
@@ -22,5 +24,6 @@
 	li {
 		text-transform: uppercase;
 		display: inline-block;
+		text-decoration: inherit;
 	}
 }

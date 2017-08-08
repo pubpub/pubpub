@@ -18,6 +18,27 @@ const items = [
 		id: 2,
 	},
 	{
+		id: 3.5,
+		title: 'Issues',
+		children: [
+			{
+				slug: '/2017',
+				title: '2017',
+				id: 21,
+			},
+			{
+				slug: '/2016',
+				title: '2016',
+				id: 22,
+			},
+			{
+				slug: '/2018',
+				title: 'Super Long 2018 Edition Extravaganza',
+				id: 23,
+			},
+		]
+	},
+	{
 		slug: '/meeting-notes',
 		title: 'Meeting-Notes',
 		id: 3,
