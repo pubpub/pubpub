@@ -11,7 +11,7 @@
 		height: 150px;
 	}
 	.preview-content {
-		padding: 1em;
+		padding: 1em 1em 1em 0em;
 		margin: 0px 150px 0px 0px;
 		margin-right: 150px;
 		vertical-align: top;
@@ -25,6 +25,7 @@
 		}
 		.preview-content {
 			margin: 0px 0px 0px 60%;
+			padding: 1em;
 		}
 	}
 	.description {
@@ -61,7 +62,7 @@
 				height: 200px;
 			}
 			.preview-content {
-				padding: 2em 1em;
+				padding: 2em 0em;
 				margin: 0px 0px 0px 0px;
 			}
 		}
