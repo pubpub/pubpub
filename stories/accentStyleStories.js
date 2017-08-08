@@ -13,6 +13,7 @@ const content = (
 			userIsAdmin={true}
 			pageSlug={'about'}
 			appLogo={'/dev/viralLogo.png'}
+			logoutHandler={()=>{}}
 		/>
 
 		<div className={'container'}>

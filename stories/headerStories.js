@@ -5,6 +5,7 @@ import AccentStyle from 'components/AccentStyle/AccentStyle';
 
 const wrapperStyle = { margin: '1em', boxShadow: '0px 0px 1px rgba(0, 0, 0, 0.25)' };
 const titleStyle = { margin: '1em 1em -0.5em' };
+const logoutHandler = ()=>{};
 
 const headerBars = function(logoUrl) {
 	return (
@@ -14,6 +15,7 @@ const headerBars = function(logoUrl) {
 				<Header
 					pageSlug={'about'}
 					appLogo={logoUrl}
+					logoutHandler={logoutHandler}
 				/>
 			</div>
 
@@ -26,6 +28,7 @@ const headerBars = function(logoUrl) {
 					userIsAdmin={false}
 					pageSlug={'about'}
 					appLogo={logoUrl}
+					logoutHandler={logoutHandler}
 				/>
 			</div>
 
@@ -38,6 +41,7 @@ const headerBars = function(logoUrl) {
 					userIsAdmin={true}
 					pageSlug={'about'}
 					appLogo={logoUrl}
+					logoutHandler={logoutHandler}
 				/>
 			</div>
 
@@ -50,6 +54,7 @@ const headerBars = function(logoUrl) {
 					userIsAdmin={true}
 					pageSlug={''}
 					appLogo={logoUrl}
+					logoutHandler={logoutHandler}
 				/>
 			</div>
 
@@ -59,6 +64,7 @@ const headerBars = function(logoUrl) {
 					pageSlug={''}
 					pageBackground={'/dev/homeBackground.png'}
 					appLogo={logoUrl}
+					logoutHandler={logoutHandler}
 				/>
 			</div>
 
@@ -72,6 +78,7 @@ const headerBars = function(logoUrl) {
 					pageSlug={''}
 					pageBackground={'/dev/homeBackground.png'}
 					appLogo={logoUrl}
+					logoutHandler={logoutHandler}
 				/>
 			</div>
 		</div>

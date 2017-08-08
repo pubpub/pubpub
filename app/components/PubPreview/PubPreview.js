@@ -7,8 +7,9 @@ import Avatar from 'components/Avatar/Avatar';
 require('./pubPreview.scss');
 
 const propTypes = {
-	title: PropTypes.string,
+	title: PropTypes.string.isRequired,
 	description: PropTypes.string,
+	slug: PropTypes.string.isRequired,
 	authors: PropTypes.array,
 	contributors: PropTypes.array,
 	publicationDate: PropTypes.string,
@@ -33,10 +34,12 @@ const PubPreview = function(props) {
 	const contributorsCount = props.authors.length + props.contributors.length;
 	return (
 		<div className={`pub-preview ${props.isLarge ? 'large-preview' : ''}`}>
-			<div className={'preview-banner'} style={bannerStyle} />
+			<Link to={`/pub/${props.slug}`}>
+				<div className={'preview-banner'} style={bannerStyle} />
+			</Link>
 
 			<div className={'preview-content'}>
-				<h3 className={'title'}>{props.title}</h3>
+				<Link to={`/pub/${props.slug}`}><h3 className={'title'}>{props.title}</h3></Link>
 				<div className={'description'}>{props.description}</div>
 
 				<div className={'contributors'}>

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Avatar from 'components/Avatar/Avatar';
+import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 
 require('./header.scss');
 
@@ -16,6 +17,8 @@ const propTypes = {
 	pageBackground: PropTypes.string,
 
 	appLogo: PropTypes.string.isRequired,
+
+	logoutHandler: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -47,14 +50,45 @@ const Header = function(props) {
 							{props.userIsAdmin &&
 								<Link to={'/admin'} className="pt-button pt-large pt-minimal pt-icon-page-layout" />
 							}
+
 							{loggedIn &&
-								<button className="pt-button pt-large pt-minimal avatar-button">
-									<Avatar
-										userInitials={props.userInitials}
-										userAvatar={props.userAvatar}
-										width={30}
-									/>
-								</button>
+								<Popover
+									content={
+										<Menu>
+											<li>
+												<Link to={`/user/${props.userSlug}`} className="pt-menu-item pt-popover-dismiss">
+													<div>{props.userName}</div>
+													<div className={'subtext'}>View Profile</div>
+												</Link>
+											</li>
+											<MenuDivider />
+											<li>
+												<Link to={'/createpub'} className="pt-menu-item pt-popover-dismiss">
+													Create New Pub
+												</Link>
+											</li>
+											<li>
+												<Link to={`/user/${props.userSlug}/pubs`} className="pt-menu-item pt-popover-dismiss">
+													Your Pubs
+												</Link>
+											</li>
+											<MenuDivider />
+											<MenuItem text={'Logout'} onClick={props.logoutHandler} />
+										</Menu>
+									}
+									interactionKind={PopoverInteractionKind.CLICK}
+									position={Position.BOTTOM_RIGHT}
+									transitionDuration={-1}
+									inheritDarkTheme={false}
+								>
+									<button className="pt-button pt-large pt-minimal avatar-button">
+										<Avatar
+											userInitials={props.userInitials}
+											userAvatar={props.userAvatar}
+											width={30}
+										/>
+									</button>
+								</Popover>
 							}
 							{!loggedIn &&
 								<Link to={'/login'} className="pt-button pt-large pt-minimal">Login or Signup</Link>

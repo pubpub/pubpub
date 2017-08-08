@@ -28,9 +28,10 @@ storiesOf('Pub Preview', module)
 				<PubPreview
 					title={'Super Glue Data Engine'}
 					description={'Media data accessible through APIs to build diverse applications'}
+					slug={'my-article'}
 					bannerImage={'/dev/banner1.jpg'}
 					isLarge={true}
-					publicationDate={new Date()}
+					publicationDate={String(new Date())}
 					contributors={contributors}
 					authors={authors}
 				/>
@@ -41,9 +42,10 @@ storiesOf('Pub Preview', module)
 				<PubPreview
 					title={'Super Glue Data Engine'}
 					description={'Media data accessible through APIs to build diverse applications'}
+					slug={'my-article'}
 					bannerImage={'/dev/banner1.jpg'}
 					isLarge={false}
-					publicationDate={new Date()}
+					publicationDate={String(new Date())}
 					contributors={contributors}
 					authors={authors}
 				/>
@@ -54,9 +56,10 @@ storiesOf('Pub Preview', module)
 				<PubPreview
 					title={'Super Glue Data Engine'}
 					description={'Media data accessible through APIs to build diverse applications'}
-					bannerImage={'/dev/banner1.jpg'}
+					slug={'my-article'}
+					bannerImage={'/dev/banner2.jpg'}
 					isLarge={false}
-					publicationDate={new Date()}
+					publicationDate={String(new Date())}
 					contributors={[]}
 					authors={[authors[2]]}
 				/>
