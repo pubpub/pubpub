@@ -18,9 +18,9 @@ const NavBar = function(props) {
 						<ul>
 							{props.navItems.map((item)=> {
 								/* Return Simple Link */
-								if (item.slug) {
+								if (!item.children) {
 									return (
-										<Link to={item.slug} key={`nav-item-${item.id}`}>
+										<Link to={`/${item.slug}`} key={`nav-item-${item.id}`}>
 											<li>{item.title}</li>
 										</Link>
 									);
@@ -32,7 +32,7 @@ const NavBar = function(props) {
 											<Menu>
 												{item.children.map((subitem)=> {
 													return (
-														<Link className={'pt-menu-item pt-popover-dismiss'} to={subitem.slug} key={`nav-item-${subitem.id}`}>
+														<Link className={'pt-menu-item pt-popover-dismiss'} to={`/${subitem.slug}`} key={`nav-item-${subitem.id}`}>
 															<li>{subitem.title}</li>
 														</Link>
 													);

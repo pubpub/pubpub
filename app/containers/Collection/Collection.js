@@ -48,9 +48,9 @@ class Collection extends Component {
 		];
 
 		const activeSlug = this.props.match.params.slug || '';
-		const activeItem = this.props.appData.collections.reduce((previous, current)=> {
-			if (activeSlug === current.slug) { return current; }
-			return previous;
+		const activeItem = this.props.appData.collections.reduce((prev, curr)=> {
+			if (activeSlug === curr.slug) { return curr; }
+			return prev;
 		}, {});
 
 		return (

@@ -26,6 +26,40 @@ const viralData = {
 	largeHeaderLogo: '/dev/viralLogo.png',
 	largeHeaderBackground: '/dev/homeBackground.png',
 	collections: [
+		// title
+		// slug
+		// isPublic
+		// isPage
+		// id
+		// creationHash
+		// submissionsOpen
+		// description
+		// layout
+
+		// Trying to get collections ordered in the way they are in the nav
+		// Challenges are: 
+		// Do we force every page/collection to be in the nav? Prob not
+		// How do we save nav data so it is updated when links/title change? Prob store just id
+		// Which means we need to populate the nav with real content
+		// Then, flatten it - and use that as collections
+		// Then take any collections that aren't used and append them alphabetically
+		// Can't do the population server-side because we want titles updates as they go.
+		// Need to reorder collections as nav changes (this would require a save, though).
+
+		// console.log(appData.navItems);
+		// const flatNavItems = appData.navItems.reduce((prev, curr) => {
+		// 	return prev.concat(curr.children ? curr.children : curr, []);
+		// }, []);
+		// console.log(flatNavItems);
+		// const collectionsObject = {};
+		// appData.collections.forEach((collection)=> {
+		// 	collectionsObject[collection.slug] = collection;
+		// });
+		// console.log(collectionsObject);
+		// const orderedCollections = flatNavItems.map((item)=> {
+		// 	return collectionsObject[item.slug] || item;
+		// });
+		// console.log(orderedCollections);
 		{ title: 'Home', slug: '', isPublic: true, isPage: false, id: 3 },
 		{ title: 'About', slug: 'about', isPublic: true, isPage: true, id: 4 },
 		{ title: 'Submissions', slug: 'submissions', isPublic: true, isPage: false, id: 5 },
@@ -36,7 +70,7 @@ const viralData = {
 		{ title: 'Meeting Notes', slug: 'meeting-notes', isPublic: false, isPage: false, id: 10 },
 		{ title: 'Super Long 2018 Edition Extravaganza', slug: '2018', isPublic: true, isPage: false, id: 11 },
 	],
-	navItems: [{ slug: '/', title: 'Home', id: 1, }, { slug: '/sensors', title: 'Sensors', id: 2, }, { id: 3.5, title: 'Issues', children: [{ slug: '/2017', title: '2017', id: 21, }, { slug: '/2016', title: '2016', id: 22, }, { slug: '/2018', title: 'Super Long 2018 Edition Extravaganza', id: 23, }] }, { slug: '/meeting-notes', title: 'Meeting-Notes', id: 3, }, { slug: '/blockchain', title: 'Blockchain', id: 4, }, { slug: '/new-ideas', title: 'New Ideas', id: 5, }, { slug: '/bad-ideas', title: 'Bad-Ideas', id: 6, }, { slug: '/submissions', title: 'Submissions', id: 7, }, { slug: '/about', title: 'About', id: 8, }],
+	navItems: [{ slug: '', title: 'Home', id: 1, }, { slug: 'sensors', title: 'Sensors', id: 2, }, { id: 3.5, title: 'Issues', children: [{ slug: '2017', title: '2017', id: 21, }, { slug: '2016', title: '2016', id: 22, }, { slug: '2018', title: 'Super Long 2018 Edition Extravaganza', id: 23, }] }, { slug: 'meeting-notes', title: 'Meeting-Notes', id: 3, }, { slug: 'blockchain', title: 'Blockchain', id: 4, }, { slug: 'new-ideas', title: 'New Ideas', id: 5, }, { slug: 'bad-ideas', title: 'Bad-Ideas', id: 6, }, { slug: 'submissions', title: 'Submissions', id: 7, }, { slug: 'about', title: 'About', id: 8, }],
 	accentData: {
 		accentColor: '#D13232',
 		accentTextColor: '#FFF',
@@ -61,6 +95,12 @@ export const apiFetch = function(path, opts) {
 				return resolve(viralData);
 			}
 			return resolve({});
+		case '/api/collection/slug=':
+			return resolve({ title: 'Home', });
+		case '/api/collection/slug=about':
+			return resolve({ title: 'About', });
+		case '/api/collection/slug=sensors':
+			return resolve({ title: 'Sensors', });
 		default:
 			return reject('404');
 		}

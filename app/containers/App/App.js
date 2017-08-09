@@ -48,6 +48,7 @@ class App extends Component {
 			largeHeaderBackground: '',
 			navItems: [],
 			accentData: {},
+			collections: [],
 			...this.props.appData // Override defaults with real community data
 		};
 
@@ -59,7 +60,7 @@ class App extends Component {
 			appData.navItems &&
 			this.props.location.pathname.substring(0, 10) !== '/dashboard' &&
 			this.props.match.params.mode !== 'edit'; // This last one won't work... app doesn't see that match
-
+			
 		return (
 			<div>
 				<Helmet>

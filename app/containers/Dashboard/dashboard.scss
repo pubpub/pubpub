@@ -1,3 +1,74 @@
+// Each Side Grows
+// ----------
+// .dashboard {
+// 	$sidePanelWidth: 200px; // 200 is width of side panel
+// 	$navHeight: 56px; // 56px is height of navs
+// 	overflow: hidden;
+// 	height: calc(100vh - #{$navHeight});
+
+// 	.side-panel {
+// 		float: left;
+// 		height: 100%;
+// 		width: $sidePanelWidth;
+// 	}
+// 	.content-panel {
+// 		float: left;
+// 		width: calc( 100vw - #{$sidePanelWidth});
+// 		height: calc(100vh - #{$navHeight});
+// 		overflow: hidden;
+// 		overflow-y: scroll;
+// 		padding: 2em 0em;
+// 		background-color: white;
+// 	}
+// }
+
+// @media only screen and (min-width: 75em) { /* 1200px */
+// 	.dashboard {
+// 		// width: 75rem;
+// 		// margin: 0 auto;
+// 		.side-panel {
+// 			width: calc(50vw - 37.5rem + 200px);
+// 			padding-left: calc(50vw - 37.5rem);
+// 		}
+// 		.content-panel {
+// 			width: calc(50vw + 37.5rem - 200px);
+// 			padding-right: calc(50vw - 37.5rem);
+// 		}
+// 	}
+
+// }
+
+
+// Stuck to bounds
+// ----------
+// .dashboard {
+// 	$sidePanelWidth: 200px; // 200 is width of side panel
+// 	$navHeight: 56px; // 56px is height of navs
+// 	overflow: hidden;
+// 	max-width: 75rem;
+// 	margin: 0 auto;
+// 	height: calc(100vh - #{$navHeight});
+
+// 	.side-panel {
+// 		float: left;
+// 		height: 100%;
+// 		width: $sidePanelWidth;
+// 	}
+// 	.content-panel {
+// 		float: left;
+// 		width: calc( 100% - #{$sidePanelWidth});
+// 		height: calc(100vh - #{$navHeight});
+// 		overflow: hidden;
+// 		overflow-y: scroll;
+// 		padding: 2em 0em;
+// 		background-color: white;
+// 		border-right: 1px solid #ECECEC;
+// 	}
+// }
+
+
+// Side bar stays pinned
+// ----------
 .dashboard {
 	$sidePanelWidth: 200px; // 200 is width of side panel
 	$navHeight: 56px; // 56px is height of navs
@@ -15,6 +86,24 @@
 		height: calc(100vh - #{$navHeight});
 		overflow: hidden;
 		overflow-y: scroll;
-		padding: 2em 0em;
+		padding: 2em 200px 2em 0em;
+		background-color: white;
+		margin: 0 auto;
 	}
 }
+
+// @media only screen and (min-width: 75em) { /* 1200px */
+// 	.dashboard {
+// 		// width: 75rem;
+// 		// margin: 0 auto;
+// 		.side-panel {
+// 			width: calc(50vw - 37.5rem + 200px);
+// 			padding-left: calc(50vw - 37.5rem);
+// 		}
+// 		.content-panel {
+// 			width: calc(50vw + 37.5rem - 200px);
+// 			padding-right: calc(50vw - 37.5rem);
+// 		}
+// 	}
+
+// }
