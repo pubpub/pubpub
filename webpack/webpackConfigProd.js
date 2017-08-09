@@ -36,7 +36,10 @@ module.exports = {
 		rules: [
 			{
 				test: /\.(js|jsx)$/,
-				include: [resolve(__dirname, '../app')],
+				include: [
+					resolve(__dirname, '../app'),
+					resolve(__dirname, '../stories') // Only need this while we're using _data.js
+				],
 				use: 'babel-loader',
 			},
 			{
