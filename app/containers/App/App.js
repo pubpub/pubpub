@@ -78,17 +78,10 @@ class App extends Component {
 					smallHeaderLogo={appData.smallHeaderLogo}
 					largeHeaderLogo={appData.largeHeaderLogo}
 					largeHeaderBackground={appData.largeHeaderBackground}
+					largeHeaderDescription={appData.description}
 					isLargeHeader={isCommunity && isHome}
 					logoutHandler={App.logoutHandler}
 				/>
-
-				{this.props.location.pathname === '/' &&
-					<CommunityHeader
-						logo={appData.largeHeaderLogo}
-						description={appData.description}
-						backgroundImage={appData.largeHeaderBackground}
-					/>
-				}
 
 				{/* Nav Bar - Only show on community sites */}
 				{appData.navItems &&
