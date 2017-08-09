@@ -214,7 +214,10 @@ export const PubEditorFiles = React.createClass({
 			bibtexFile = { url: './'+referencesFilename, name: referencesFilename, content: '', isNew: true, type: 'applications/x-bibtex' };
 		}
 		const bibtexContent = (bibtexFile.newContent || bibtexFile.content);
-		const newBibtexContent = bibtexContent + csltoBibtex([referenceObject]);
+
+		const newBibtexContent = (Array.isArray(referenceObject)) ? csltoBibtex(referenceObject) : csltoBibtex([referenceObject]) ;
+		
+		const newBibtexContent = bibtexContent + newBibtexContent;
 		const newBibtexFile = { ...bibtexFile, newContent: newBibtexContent, id: undefined, hash: undefined };
 		this.props.onFileAdd(newBibtexFile);
 		if (callback) {
