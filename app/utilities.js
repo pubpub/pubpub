@@ -17,17 +17,22 @@
 
 /* DEV ONLY */
 /* -------- */
+import { navItems, accentDataDark } from '../stories/_data';
+
 const viralData = {
 	title: 'Viral Communications',
-	description: 'This is about viral!',
+	description: 'Group publications and research docs from around the world all situated here in this little community.',
 	avatar: 'http://www.fnordware.com/superpng/pnggrad16rgb.png',
-	// accentColor: '#6de85f',
-	accentColor: '#111',
-	// buttonColor
-	// activeColor
-	// isLight: use 'color' package server-side to calculate 
-	// these values each time. Don't load this library to client.
-	logo: 'https://i.imgur.com/SkiSe3E.png',
+	logo: '/dev/viralLogo.png',
+	headerBackground: '/dev/homeBackground.png',
+	navItems: navItems,
+	accentData: accentDataDark,
+	userData: {
+		fullName: 'Maggie Farnkrux',
+		slug: 'maggiefarn',
+		avatar: '/dev/maggie.jpg',
+		isAdmin: true,
+	}
 };
 
 export const apiFetch = function(path, opts) {

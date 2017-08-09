@@ -11,8 +11,7 @@ import {
 // Define Default State
 /* ------------------- */
 const defaultState = {
-	title: undefined,
-	description: undefined
+	slug: undefined,
 };
 
 /* ----------------------------------------- */
@@ -22,16 +21,13 @@ export default function reducer(state = defaultState, action) {
 	switch (action.type) {
 	case GET_APP_DATA_LOAD:
 		return {
-			title: undefined,
+			slug: undefined,
 		};
 	case GET_APP_DATA_SUCCESS:
-		return {
-			...action.result,
-			userData: undefined,
-		};
+		return action.result.userData;
 	case GET_APP_DATA_FAIL:
 		return {
-			title: 'Error',
+			slug: 'Error',
 		};
 	default:
 		return state;

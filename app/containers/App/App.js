@@ -6,10 +6,9 @@ import { Route, withRouter, Switch } from 'react-router-dom';
 import Async from 'react-code-splitting';
 import Header from 'components/Header/Header';
 import CommunityHeader from 'components/CommunityHeader/CommunityHeader';
-import PubPreview from 'components/PubPreview/PubPreview';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
 import NavBar from 'components/NavBar/NavBar';
-import Footer from 'components/Footer/Footer';
+
 import { getAppData } from 'actions/app';
 
 require('./app.scss');
@@ -17,93 +16,13 @@ require('./app.scss');
 const LandingMain = () => <Async load={import('containers/LandingMain/LandingMain')} />;
 const LandingCommunity = () => <Async load={import('containers/LandingCommunity/LandingCommunity')} />;
 const NoMatch = () => <Async load={import('containers/NoMatch/NoMatch')} />;
-
-const navItems = [
-	{
-		slug: '/home',
-		title: 'Home',
-		id: 1,
-	},
-	{
-		slug: '/sensors',
-		title: 'Sensors',
-		id: 2,
-	},
-	{
-		id: 3.5,
-		title: 'Issues',
-		children: [
-			{
-				slug: '/2017',
-				title: '2017',
-				id: 21,
-			},
-			{
-				slug: '/2016',
-				title: '2016',
-				id: 22,
-			},
-			{
-				slug: '/2018',
-				title: 'Super Long 2018 Edition Extravaganza',
-				id: 23,
-			},
-		]
-	},
-	{
-		slug: '/meeting-notes',
-		title: 'Meeting-Notes',
-		id: 3,
-	},
-	{
-		slug: '/blockchain',
-		title: 'Blockchain',
-		id: 4,
-	},
-	{
-		slug: '/new-ideas',
-		title: 'New Ideas',
-		id: 5,
-	},
-	{
-		slug: '/bad-ideas',
-		title: 'Bad-Ideas',
-		id: 6,
-	},
-	{
-		slug: '/submissions',
-		title: 'Submissions',
-		id: 7,
-	},
-	{
-		slug: '/about',
-		title: 'About',
-		id: 8,
-	},
-];
-
-const contributors = [1, 2, 3, 4, 5];
-const authors = [
-	{
-		id: 0,
-		userInitials: 'TR',
-		userAvatar: '/dev/trich.jpg',
-	},
-	{
-		id: 1,
-		userInitials: 'MW',
-	},
-	{
-		id: 2,
-		userInitials: 'TW',
-		userAvatar: '/dev/tomer.jpg',
-	},
-];
+const Collection = () => <Async load={import('containers/Collection/Collection')} />;
 
 const propTypes = {
 	dispatch: PropTypes.func.isRequired,
 	location: PropTypes.object.isRequired,
 	appData: PropTypes.object.isRequired,
+	userData: PropTypes.object.isRequired,
 };
 
 class App extends Component {
@@ -126,10 +45,15 @@ class App extends Component {
 			avatar: '/icon.png',
 			accentColor: undefined,
 			logo: 'https://assets.pubpub.org/_site/logo_dark.png',
+			headerBackground: '',
+			navItems: [],
+			accentData: {},
 			...this.props.appData // Override defaults with real community data
 		};
 
-		const isCommunity = this.hostname !== 'www.pubpub.org';
+		const userData = this.props.userData;
+
+		// const isCommunity = this.hostname !== 'www.pubpub.org';
 
 		return (
 			<div>
@@ -140,89 +64,57 @@ class App extends Component {
 					<link rel="apple-touch-icon" type="image/png" sizes="192x192" href={appData.avatar} />
 				</Helmet>
 
-				<AccentStyle
-					accentColor={'#D13232'}
-					accentTextColor={'#FFF'}
-					accentActionColor={'#A72828'}
-					accentHoverColor={'#BC2D2D'}
-					accentMinimalColor={'rgba(209, 50, 50, 0.15)'}
-				/>
+				{appData.accentData.accentColor &&
+					<AccentStyle {...appData.accentData} />
+				}
 
+				{/* Inclues logo, login, search, profile buttons */}
 				<Header
-					userName={'Maggie Farnkrux'}
-					userSlug={'maggiefarn'}
-					userAvatar={'/dev/maggie.jpg'}
-					userIsAdmin={true}
-					pageSlug={this.props.location.pathname.substring(1, this.props.location.pathname.length)}
-					pageBackground={'/dev/homeBackground.png'}
-					appLogo={'/dev/viralLogo.png'}
+					userName={userData.fullName}
+					userSlug={userData.slug}
+					userAvatar={userData.avatar}
+					userIsAdmin={userData.isAdmin}
+					pageSlug={this.props.location.pathname}
+					pageBackground={appData.headerBackground}
+					appLogo={appData.logo}
 					logoutHandler={App.logoutHandler}
 				/>
 
-				{this.props.location.pathname.substring(1, this.props.location.pathname.length) === '' &&
+				{this.props.location.pathname === '/' &&
 					<CommunityHeader
-						logo={'/dev/viralLogo.png'}
-						description={'Group publications and research docs from around the world all situated here in this little community.'}
-						backgroundImage={'/dev/homeBackground.png'}
+						logo={appData.logo}
+						description={appData.description}
+						backgroundImage={appData.headerBackground}
 					/>
 				}
 
-				<NavBar navItems={navItems} />
-				<div className={'container'}>
-					<div className={'row'}>
-						<div className={'col-12'}>
-							<PubPreview
-								title={'Super Glue Data Engine'}
-								description={'Media data accessible through APIs to build diverse applications'}
-								slug={'my-article'}
-								bannerImage={'/dev/banner1.jpg'}
-								isLarge={true}
-								publicationDate={String(new Date())}
-								contributors={contributors}
-								authors={authors}
-							/>
-						</div>
-					</div>
-					<div className={'row'}>
-						<div className={'col-12'}>
-							<PubPreview
-								title={'Super Glue Data Engine'}
-								description={'Media data accessible through APIs to build diverse applications'}
-								slug={'my-article'}
-								bannerImage={'/dev/banner1.jpg'}
-								isLarge={false}
-								publicationDate={String(new Date())}
-								contributors={contributors}
-								authors={authors}
-							/>
-						</div>
-					</div>
-					<div className={'row'}>
-						<div className={'col-12'}>
-							<PubPreview
-								title={'Super Glue Data Engine'}
-								description={'Media data accessible through APIs to build diverse applications'}
-								slug={'my-article'}
-								bannerImage={'/dev/banner2.jpg'}
-								isLarge={false}
-								publicationDate={String(new Date())}
-								contributors={[]}
-								authors={[authors[2]]}
-							/>
-						</div>
-					</div>
-				</div>
+				{/* Nav Bar - Only show on community sites */}
+				{appData.navItems &&
+					<NavBar navItems={appData.navItems} />
+				}
 
-				{/*<Switch>
-					<Route exact path="/" component={isCommunity ? LandingCommunity : LandingMain} />
+
+				<Switch>
+					<Route exact path="/" component={Collection} />
+					<Route exact path="/dashboard" component={NoMatch} />
+					<Route exact path="/dashboard/:slug" component={NoMatch} />
+					<Route exact path="/login" component={NoMatch} />
+					<Route exact path="/pub/:slug" component={NoMatch} />
+					<Route exact path="/pub-create" component={NoMatch} />
+					<Route exact path="/resetpassword" component={NoMatch} />
+					<Route exact path="/resetpassword/:resetHash/:username" component={NoMatch} />
+					<Route exact path="/search" component={NoMatch} />
+					<Route exact path="/signup" component={NoMatch} />
+					<Route exact path="/user/:slug" component={NoMatch} />
+					<Route exact path="/user-create/:hash" component={NoMatch} />
+					<Route exact path="/:slug" component={Collection} />
 					<Route path="/*" component={NoMatch} />
-				</Switch>*/}
+				</Switch>
 
-				<Footer />
 			</div>
 		);
 	}
 }
 
 App.propTypes = propTypes;
-export default withRouter(connect(state => ({ appData: state.app }))(App));
+export default withRouter(connect(state => ({ appData: state.app, userData: state.user }))(App));

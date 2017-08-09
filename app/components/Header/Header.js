@@ -32,7 +32,7 @@ const defaultProps = {
 
 const Header = function(props) {
 	const loggedIn = !!props.userSlug;
-	const isHome = props.pageSlug === '';
+	const isHome = props.pageSlug === '/';
 	const showGradient = isHome && !!props.pageBackground;
 
 	return (
@@ -55,9 +55,9 @@ const Header = function(props) {
 							{/* Search button */}
 							<Link to={'/search'} className="pt-button pt-large pt-minimal pt-icon-search" />
 
-							{/* Admin panel button */}
+							{/* Dashboard panel button */}
 							{props.userIsAdmin &&
-								<Link to={'/admin'} className="pt-button pt-large pt-minimal pt-icon-page-layout" />
+								<Link to={'/dashboard'} className="pt-button pt-large pt-minimal pt-icon-page-layout" />
 							}
 
 							{/* User avatar and menu */}
@@ -73,7 +73,7 @@ const Header = function(props) {
 											</li>
 											<MenuDivider />
 											<li>
-												<Link to={'/createpub'} className="pt-menu-item pt-popover-dismiss">
+												<Link to={'/pub-create'} className="pt-menu-item pt-popover-dismiss">
 													Create New Pub
 												</Link>
 											</li>

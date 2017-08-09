@@ -1,6 +1,6 @@
 export const navItems = [
 	{
-		slug: '/home',
+		slug: '/',
 		title: 'Home',
 		id: 1,
 	},
