@@ -6,6 +6,8 @@ import { Route, withRouter, Switch } from 'react-router-dom';
 import PubPreview from 'components/PubPreview/PubPreview';
 import Footer from 'components/Footer/Footer';
 
+require('./collection.scss');
+
 const propTypes = {
 	dispatch: PropTypes.func.isRequired,
 	match: PropTypes.object.isRequired,
@@ -27,20 +29,89 @@ class Collection extends Component {
 			console.log('On Home page');
 		}
 
+		const contributors = [1, 2, 3, 4, 5];
+		const authors = [
+			{
+				id: 0,
+				userInitials: 'TR',
+				userAvatar: '/dev/trich.jpg',
+			},
+			{
+				id: 1,
+				userInitials: 'MW',
+			},
+			{
+				id: 2,
+				userInitials: 'TW',
+				userAvatar: '/dev/tomer.jpg',
+			},
+		];
+
+		const activeSlug = this.props.match.params.slug || '';
+		const activeItem = this.props.appData.collections.reduce((previous, current)=> {
+			if (activeSlug === current.slug) { return current; }
+			return previous;
+		}, {});
+
 		return (
 			<div>
-				<Helmet>
-					{/*<title>{appData.title}</title>
-					<meta name="description" content={appData.description} />*/}
-				</Helmet>
+				<div className={'collection'}>
+					<Helmet>
+						<title>{activeItem.title || activeSlug}</title>
+					</Helmet>
 
-				<div className={'container'}>
-					<div className={'row'}>
-						<div className={'col-12'}>
-							<h1>{this.props.match.params.slug}</h1>
+					<div className={'container'}>
+						<div className={'row'}>
+							<div className={'col-12'}>
+								<h1>{activeItem.title || activeSlug}</h1>
+							</div>
+						</div>
+
+						<div className={'row'}>
+							<div className={'col-12'}>
+								<PubPreview
+									title={'Super Glue Data Engine'}
+									description={'Media data accessible through APIs to build diverse applications'}
+									slug={'my-article'}
+									bannerImage={'/dev/banner1.jpg'}
+									isLarge={true}
+									publicationDate={String(new Date())}
+									contributors={contributors}
+									authors={authors}
+								/>
+							</div>
+						</div>
+						<div className={'row'}>
+							<div className={'col-12'}>
+								<PubPreview
+									title={'Super Glue Data Engine'}
+									description={'Media data accessible through APIs to build diverse applications'}
+									slug={'my-article'}
+									bannerImage={'/dev/banner1.jpg'}
+									isLarge={false}
+									publicationDate={String(new Date())}
+									contributors={contributors}
+									authors={authors}
+								/>
+							</div>
+						</div>
+						<div className={'row'}>
+							<div className={'col-12'}>
+								<PubPreview
+									title={'Super Glue Data Engine'}
+									description={'Media data accessible through APIs to build diverse applications'}
+									slug={'my-article'}
+									bannerImage={'/dev/banner2.jpg'}
+									isLarge={false}
+									publicationDate={String(new Date())}
+									contributors={[]}
+									authors={[authors[2]]}
+								/>
+							</div>
 						</div>
 					</div>
 				</div>
+
 				<Footer />
 			</div>
 		);

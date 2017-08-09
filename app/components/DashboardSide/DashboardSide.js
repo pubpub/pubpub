@@ -54,9 +54,9 @@ const DashboardSide = function(props) {
 							</li>
 						);
 					})}
-					
+
 					<li className={'pt-menu-header'}>
-						<button type="button" className="pt-button pt-icon-plus pt-small pt-minimal" style={{float: 'right', marginTop: '7px'}} />
+						<button type="button" className="pt-button pt-icon-plus pt-small pt-minimal title-button" />
 						<h6>Pages</h6>
 					</li>
 					{props.pages.map((page)=> {
@@ -73,12 +73,12 @@ const DashboardSide = function(props) {
 							<a className={'pt-menu-item empty'}>No Pages</a>
 						</li>
 					}
-					
+
 					<li className={'pt-menu-header'}>
-						<button type="button" className="pt-button pt-icon-plus pt-small pt-minimal" style={{float: 'right', marginTop: '7px'}} />
+						<button type="button" className="pt-button pt-icon-plus pt-small pt-minimal title-button" />
 						<h6>Collections</h6>
 					</li>
-					
+
 					{props.collections.map((collection)=> {
 						return (
 							<li key={`side-collection-${collection.id}`}>
