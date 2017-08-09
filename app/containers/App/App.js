@@ -43,9 +43,9 @@ class App extends Component {
 			title: 'PubPub',
 			description: 'Collaborative Community Publishing',
 			avatar: '/icon.png',
-			accentColor: undefined,
-			logo: 'https://assets.pubpub.org/_site/logo_dark.png',
-			headerBackground: '',
+			smallHeaderLogo: 'https://assets.pubpub.org/_site/logo_dark.png',
+			largeHeaderLogo: '',
+			largeHeaderBackground: '',
 			navItems: [],
 			accentData: {},
 			...this.props.appData // Override defaults with real community data
@@ -53,8 +53,8 @@ class App extends Component {
 
 		const userData = this.props.userData;
 
-		// const isCommunity = this.hostname !== 'www.pubpub.org';
-
+		const isCommunity = this.hostname !== 'www.pubpub.org';
+		const isHome = this.props.location.pathname === '/';
 		return (
 			<div>
 				<Helmet>
@@ -71,20 +71,22 @@ class App extends Component {
 				{/* Inclues logo, login, search, profile buttons */}
 				<Header
 					userName={userData.fullName}
+					userInitials={userData.initials}
 					userSlug={userData.slug}
 					userAvatar={userData.avatar}
 					userIsAdmin={userData.isAdmin}
-					pageSlug={this.props.location.pathname}
-					pageBackground={appData.headerBackground}
-					appLogo={appData.logo}
+					smallHeaderLogo={appData.smallHeaderLogo}
+					largeHeaderLogo={appData.largeHeaderLogo}
+					largeHeaderBackground={appData.largeHeaderBackground}
+					isLargeHeader={isCommunity && isHome}
 					logoutHandler={App.logoutHandler}
 				/>
 
 				{this.props.location.pathname === '/' &&
 					<CommunityHeader
-						logo={appData.logo}
+						logo={appData.largeHeaderLogo}
 						description={appData.description}
-						backgroundImage={appData.headerBackground}
+						backgroundImage={appData.largeHeaderBackground}
 					/>
 				}
 

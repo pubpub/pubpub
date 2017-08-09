@@ -13,12 +13,13 @@ const propTypes = {
 	userAvatar: PropTypes.string,
 	userIsAdmin: PropTypes.bool,
 
-	pageSlug: PropTypes.string.isRequired,
-	pageBackground: PropTypes.string,
-
-	appLogo: PropTypes.string.isRequired,
+	smallHeaderLogo: PropTypes.string,
+	largeHeaderLogo: PropTypes.string,
+	largeHeaderBackground: PropTypes.string,
+	isLargeHeader: PropTypes.bool,
 
 	logoutHandler: PropTypes.func.isRequired,
+
 };
 
 const defaultProps = {
@@ -27,13 +28,16 @@ const defaultProps = {
 	userSlug: undefined,
 	userAvatar: undefined,
 	userIsAdmin: undefined,
-	pageBackground: undefined
+	smallHeaderLogo: undefined,
+	largeHeaderLogo: undefined,
+	largeHeaderBackground: undefined,
+	isLargeHeader: false,
 };
 
 const Header = function(props) {
 	const loggedIn = !!props.userSlug;
-	const isHome = props.pageSlug === '/';
-	const showGradient = isHome && !!props.pageBackground;
+	// const isHome = props.pageSlug === '/';
+	const showGradient = props.isLargeHeader && !!props.largeHeaderBackground;
 
 	return (
 		<nav className={`header ${showGradient ? 'header-gradient' : 'accent-background accent-color'}`}>
@@ -42,10 +46,10 @@ const Header = function(props) {
 					<div className={'col-12'}>
 
 						{/* App Logo - do not show on homepage */}
-						{!isHome &&
+						{!props.isLargeHeader &&
 							<div className={'headerItems headerItemsLeft'}>
 								<Link to={'/'}>
-									<img alt={'header logo'} className={'headerLogo'} src={props.appLogo} />
+									<img alt={'header logo'} className={'headerLogo'} src={props.smallHeaderLogo} />
 								</Link>
 							</div>
 						}
