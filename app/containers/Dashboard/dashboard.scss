@@ -1,0 +1,19 @@
+.dashboard {
+	$sidePanelWidth: 200px; // 200 is width of side panel
+	$navHeight: 56px; // 56px is height of navs
+	overflow: hidden;
+	height: calc(100vh - #{$navHeight});
+
+	.side-panel {
+		float: left;
+		height: 100%;
+		width: $sidePanelWidth;
+	}
+	.content-panel {
+		float: left;
+		width: calc( 100vw - #{$sidePanelWidth});
+		height: calc(100vh - #{$navHeight});
+		overflow: hidden;
+		overflow-y: scroll;
+	}
+}

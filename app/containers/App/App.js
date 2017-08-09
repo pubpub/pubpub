@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { Route, withRouter, Switch } from 'react-router-dom';
 import Async from 'react-code-splitting';
 import Header from 'components/Header/Header';
-import CommunityHeader from 'components/CommunityHeader/CommunityHeader';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
 import NavBar from 'components/NavBar/NavBar';
 
@@ -14,13 +13,14 @@ import { getAppData } from 'actions/app';
 require('./app.scss');
 
 const LandingMain = () => <Async load={import('containers/LandingMain/LandingMain')} />;
-const LandingCommunity = () => <Async load={import('containers/LandingCommunity/LandingCommunity')} />;
+const Dashboard = () => <Async load={import('containers/Dashboard/Dashboard')} />;
 const NoMatch = () => <Async load={import('containers/NoMatch/NoMatch')} />;
 const Collection = () => <Async load={import('containers/Collection/Collection')} />;
 
 const propTypes = {
 	dispatch: PropTypes.func.isRequired,
 	location: PropTypes.object.isRequired,
+	match: PropTypes.object.isRequired,
 	appData: PropTypes.object.isRequired,
 	userData: PropTypes.object.isRequired,
 };
@@ -55,6 +55,11 @@ class App extends Component {
 
 		const isCommunity = this.hostname !== 'www.pubpub.org';
 		const isHome = this.props.location.pathname === '/';
+		const showNav =
+			appData.navItems &&
+			this.props.location.pathname.substring(0, 10) !== '/dashboard' &&
+			this.props.match.params.mode !== 'edit'; // This last one won't work... app doesn't see that match
+
 		return (
 			<div>
 				<Helmet>
@@ -84,17 +89,18 @@ class App extends Component {
 				/>
 
 				{/* Nav Bar - Only show on community sites */}
-				{appData.navItems &&
+				{showNav &&
 					<NavBar navItems={appData.navItems} />
 				}
 
 
 				<Switch>
 					<Route exact path="/" component={Collection} />
-					<Route exact path="/dashboard" component={NoMatch} />
-					<Route exact path="/dashboard/:slug" component={NoMatch} />
+					<Route exact path="/dashboard" component={Dashboard} />
+					<Route exact path="/dashboard/:slug" component={Dashboard} />
 					<Route exact path="/login" component={NoMatch} />
 					<Route exact path="/pub/:slug" component={NoMatch} />
+					<Route exact path="/pub/:slug/:mode" component={NoMatch} />
 					<Route exact path="/pub-create" component={NoMatch} />
 					<Route exact path="/resetpassword" component={NoMatch} />
 					<Route exact path="/resetpassword/:resetHash/:username" component={NoMatch} />
