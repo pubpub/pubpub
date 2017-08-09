@@ -215,9 +215,9 @@ export const PubEditorFiles = React.createClass({
 		}
 		const bibtexContent = (bibtexFile.newContent || bibtexFile.content);
 
-		const newBibtexContent = (Array.isArray(referenceObject)) ? csltoBibtex(referenceObject) : csltoBibtex([referenceObject]) ;
-		
-		const newBibtexContent = bibtexContent + newBibtexContent;
+		// you can be either given an array of references or a single reference
+		const additionalBibtex = (Array.isArray(referenceObject)) ? csltoBibtex(referenceObject) : csltoBibtex([referenceObject]) ;
+		const newBibtexContent = bibtexContent + additionalBibtex;
 		const newBibtexFile = { ...bibtexFile, newContent: newBibtexContent, id: undefined, hash: undefined };
 		this.props.onFileAdd(newBibtexFile);
 		if (callback) {
