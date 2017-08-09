@@ -17,7 +17,6 @@
 
 /* DEV ONLY */
 /* -------- */
-import { navItems, accentDataDark } from '../stories/_data';
 
 const viralData = {
 	title: 'Viral Communications',
@@ -26,8 +25,14 @@ const viralData = {
 	smallHeaderLogo: '/dev/viralLogo.png',
 	largeHeaderLogo: '/dev/viralLogo.png',
 	largeHeaderBackground: '/dev/homeBackground.png',
-	navItems: navItems,
-	accentData: accentDataDark,
+	navItems: [{ slug: '/', title: 'Home', id: 1, }, { slug: '/sensors', title: 'Sensors', id: 2, }, { id: 3.5, title: 'Issues', children: [{ slug: '/2017', title: '2017', id: 21, }, { slug: '/2016', title: '2016', id: 22, }, { slug: '/2018', title: 'Super Long 2018 Edition Extravaganza', id: 23, }] }, { slug: '/meeting-notes', title: 'Meeting-Notes', id: 3, }, { slug: '/blockchain', title: 'Blockchain', id: 4, }, { slug: '/new-ideas', title: 'New Ideas', id: 5, }, { slug: '/bad-ideas', title: 'Bad-Ideas', id: 6, }, { slug: '/submissions', title: 'Submissions', id: 7, }, { slug: '/about', title: 'About', id: 8, }],
+	accentData: {
+		accentColor: '#D13232',
+		accentTextColor: '#FFF',
+		accentActionColor: '#A72828',
+		accentHoverColor: '#BC2D2D',
+		accentMinimalColor: 'rgba(209, 50, 50, 0.15)',
+	},
 	userData: {
 		fullName: 'Maggie Farnkrux',
 		initials: 'MF',

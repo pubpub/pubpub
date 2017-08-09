@@ -40,7 +40,7 @@ module.exports = {
 		rules: [
 			{
 				test: /\.(js|jsx)$/,
-				include: [resolve(__dirname, '../app'), resolve(__dirname), resolve(__dirname, '../stories')],
+				include: [resolve(__dirname, '../app'), resolve(__dirname)],
 				use: 'babel-loader',
 			},
 			{
