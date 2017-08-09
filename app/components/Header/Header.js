@@ -41,7 +41,7 @@ const Header = function(props) {
 	// const isHome = props.pageSlug === '/';
 	const showGradient = props.isLargeHeader && !!props.largeHeaderBackground;
 	const backgroundStyle = {};
-	if (props.largeHeaderBackground) {
+	if (showGradient) {
 		backgroundStyle.backgroundImage = `url("${props.largeHeaderBackground}")`;
 	}
 

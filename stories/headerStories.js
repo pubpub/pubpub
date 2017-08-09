@@ -52,6 +52,7 @@ const headerBars = function(logoUrl) {
 					userAvatar={data.userAvatar}
 					userIsAdmin={true}
 					smallHeaderLogo={data.smallHeaderLogo}
+					largeHeaderBackground={'/dev/homeBackground.png'}
 					logoutHandler={data.logoutHandler}
 				/>
 			</div>
