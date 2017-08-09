@@ -392,6 +392,7 @@ export const PubEditor = React.createClass({
 				return !file.isDeleted;
 			});
 		} catch (err) {
+			console.log('error saving', err);
 			if (Raven) { Raven.captureException(err);	}
 			Raven.captureException(err);
 			return this.setState({ editorError: 'Error saving files. Please email pubpub@media.mit.edu.' });
