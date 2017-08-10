@@ -4,7 +4,7 @@ import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import { Route, withRouter, Switch } from 'react-router-dom';
 import PubPreview from 'components/PubPreview/PubPreview';
-import Footer from 'components/Footer/Footer';
+
 
 require('./collection.scss');
 
@@ -111,8 +111,6 @@ class Collection extends Component {
 						</div>
 					</div>
 				</div>
-
-				<Footer />
 			</div>
 		);
 	}

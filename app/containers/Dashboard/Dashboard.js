@@ -4,6 +4,7 @@ import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import DashboardSide from 'components/DashboardSide/DashboardSide';
+import WrapperStyle from 'components/WrapperStyle/WrapperStyle';
 
 require('./dashboard.scss');
 
@@ -40,20 +41,25 @@ class Dashboard extends Component {
 		if (activeSlug === 'site') { activeItem.title = 'Site'; }
 
 		return (
-			<div style={{ backgroundColor: '#F9F9F9'}}>
 			<div className={'dashboard'}>
+
 				<Helmet>
 					<title>{activeItem.title} · Dashboard</title>
 				</Helmet>
 
+				<WrapperStyle fixHeader hideNav hideFooter />
+
+				<div className={'container'}>
+						<div className={'row'}>
+							<div className={'col-12 dashboard-col'}>
 				<div className={'side-panel'}>
 					<DashboardSide pages={pages} collections={collections} activeSlug={activeSlug} />
 				</div>
 
 				<div className={'content-panel'}>
-					<div className={'container'}>
+					{/*<div className={'container'}>
 						<div className={'row'}>
-							<div className={'col-12'}>
+							<div className={'col-12'}>*/}
 								<h1>{activeItem.title}</h1>
 								{(() => {
 									switch (activeSlug) {
@@ -70,7 +76,7 @@ class Dashboard extends Component {
 										// Return collection component
 										return (
 											<div>
-												<button type={'button'} className={'pt-button pt-intent-primary'}>Save Changes</button>
+												<button type={'button'} style={{ float: 'right' }} className={'pt-button pt-intent-primary'}>Save Changes</button>
 												<div className="pt-button-group">
 													<button type="button" className="pt-button pt-icon-globe pt-active">Public</button>
 													<button type="button" className="pt-button pt-icon-lock">Private</button>
@@ -85,11 +91,13 @@ class Dashboard extends Component {
 									}
 								})()}
 							</div>
+				{/*		</div>
+					</div>
+				</div>*/}
 						</div>
 					</div>
 				</div>
 
-			</div>
 			</div>
 		);
 	}

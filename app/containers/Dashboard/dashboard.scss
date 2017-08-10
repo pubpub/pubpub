@@ -1,4 +1,5 @@
 // Each Side Grows
+// Awkward scroll barrier on left plus awkward white space
 // ----------
 // .dashboard {
 // 	$sidePanelWidth: 200px; // 200 is width of side panel
@@ -22,7 +23,7 @@
 // 	}
 // }
 
-// @media only screen and (min-width: 75em) { /* 1200px */
+// @media only screen and (min-width: 75em) { 
 // 	.dashboard {
 // 		// width: 75rem;
 // 		// margin: 0 auto;
@@ -40,6 +41,7 @@
 
 
 // Stuck to bounds
+// awkward scroll barriers?
 // ----------
 // .dashboard {
 // 	$sidePanelWidth: 200px; // 200 is width of side panel
@@ -68,42 +70,85 @@
 
 
 // Side bar stays pinned
+// Awkward left-align
+// ----------
+// .dashboard {
+// 	$sidePanelWidth: 200px; // 200 is width of side panel
+// 	$navHeight: 56px; // 56px is height of navs
+// 	overflow: hidden;
+// 	height: calc(100vh - #{$navHeight});
+
+// 	.side-panel {
+// 		float: left;
+// 		height: 100%;
+// 		width: $sidePanelWidth;
+// 	}
+// 	.content-panel {
+// 		float: left;
+// 		width: calc( 100vw - #{$sidePanelWidth});
+// 		height: calc(100vh - #{$navHeight});
+// 		overflow: hidden;
+// 		overflow-y: scroll;
+// 		padding: 2em 0em;
+// 		background-color: white;
+// 	}
+// }
+
+// @media only screen and (min-width: 75em) { 
+// 	$sidePanelWidth: 200px; // 200 is width of side panel
+// 	$navHeight: 56px; // 56px is height of navs
+// 	.dashboard {
+// 		overflow: hidden;
+// 		height: calc(100vh - #{$navHeight});
+
+// 		.side-panel {
+// 			float: left;
+// 			height: 100%;
+// 			width: $sidePanelWidth;
+// 		}
+// 		.content-panel {
+// 			float: left;
+// 			width: calc( 100vw - #{$sidePanelWidth});
+// 			height: calc(100vh - #{$navHeight});
+// 			overflow: hidden;
+// 			overflow-y: scroll;
+// 			padding: 2em 200px 2em 0em;
+// 			background-color: white;
+// 			margin: 0 auto;
+// 		}
+// 	}
+// }
+
+
+// Defaults and page scroll
 // ----------
 .dashboard {
 	$sidePanelWidth: 200px; // 200 is width of side panel
+	background-color: #F9F9F9;
 	$navHeight: 56px; // 56px is height of navs
-	overflow: hidden;
-	height: calc(100vh - #{$navHeight});
-
+	// overflow: hidden;
+	// max-width: 75rem;
+	// margin: 0 auto;
+	// height: calc(100vh - #{$navHeight});
+	.dashboard-col {
+		margin-top: 0px;
+		margin-bottom: 0px;
+	}
 	.side-panel {
-		float: left;
-		height: 100%;
+		// float: left;
+		height: calc(100vh - #{$navHeight});
 		width: $sidePanelWidth;
+		position: fixed;
 	}
 	.content-panel {
-		float: left;
-		width: calc( 100vw - #{$sidePanelWidth});
-		height: calc(100vh - #{$navHeight});
-		overflow: hidden;
-		overflow-y: scroll;
-		padding: 2em 200px 2em 0em;
+		// float: left;
+		// width: calc( 100% - #{$sidePanelWidth});
+		// height: calc(100vh - #{$navHeight});
+		// overflow: hidden;
+		// overflow-y: scroll;
+		padding: 1em 2em;
 		background-color: white;
-		margin: 0 auto;
+		border-right: 1px solid #ECECEC;
+		margin-left: $sidePanelWidth
 	}
 }
-
-// @media only screen and (min-width: 75em) { /* 1200px */
-// 	.dashboard {
-// 		// width: 75rem;
-// 		// margin: 0 auto;
-// 		.side-panel {
-// 			width: calc(50vw - 37.5rem + 200px);
-// 			padding-left: calc(50vw - 37.5rem);
-// 		}
-// 		.content-panel {
-// 			width: calc(50vw + 37.5rem - 200px);
-// 			padding-right: calc(50vw - 37.5rem);
-// 		}
-// 	}
-
-// }
