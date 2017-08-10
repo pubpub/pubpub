@@ -4,7 +4,6 @@ import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import DashboardSide from 'components/DashboardSide/DashboardSide';
-import WrapperStyle from 'components/WrapperStyle/WrapperStyle';
 
 require('./dashboard.scss');
 
@@ -47,19 +46,15 @@ class Dashboard extends Component {
 					<title>{activeItem.title} · Dashboard</title>
 				</Helmet>
 
-				{/*<WrapperStyle fixHeader hideNav hideFooter />*/}
-
 				<div className={'container'}>
-						<div className={'row'}>
-							<div className={'col-12 dashboard-col'}>
-				<div className={'side-panel'}>
-					<DashboardSide pages={pages} collections={collections} activeSlug={activeSlug} />
-				</div>
+					<div className={'row'}>
+						<div className={'col-12'}>
 
-				<div className={'content-panel'}>
-					{/*<div className={'container'}>
-						<div className={'row'}>
-							<div className={'col-12'}>*/}
+							<div className={'side-panel'}>
+								<DashboardSide pages={pages} collections={collections} activeSlug={activeSlug} />
+							</div>
+
+							<div className={'content-panel'}>
 								<h1>{activeItem.title}</h1>
 								{(() => {
 									switch (activeSlug) {
@@ -91,13 +86,10 @@ class Dashboard extends Component {
 									}
 								})()}
 							</div>
-				{/*		</div>
-					</div>
-				</div>*/}
+
 						</div>
 					</div>
 				</div>
-
 			</div>
 		);
 	}

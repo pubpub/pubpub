@@ -1,7 +1,6 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { NonIdealState } from '@blueprintjs/core';
-// import WrapperStyle from 'components/WrapperStyle/WrapperStyle';
 
 require('./noMatch.scss');
 

@@ -31,6 +31,7 @@ const Footer = function() {
 			url: 'https://www.pubpub.org',
 		}
 	];
+
 	return (
 		<div className={'footer accent-background accent-color'}>
 			<div className={'container'}>

@@ -9,14 +9,12 @@ const propTypes = {
 
 	fixHeader: PropTypes.bool,
 	hideNav: PropTypes.bool,
-	hideFooter: PropTypes.bool,
 };
 
 const defaultProps = {
 	exact: false,
 	fixHeader: false,
 	hideNav: false,
-	hideFooter: false,
 };
 
 const WrappedRoute = function(props) {
@@ -29,9 +27,6 @@ const WrappedRoute = function(props) {
 				`}
 				{props.hideNav && `
 					.nav-bar { display: none; }
-				`}
-				{props.hideFooter && `
-					.footer { display: none; }
 				`}
 			</style>
 
