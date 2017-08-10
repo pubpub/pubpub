@@ -47,7 +47,7 @@ class Dashboard extends Component {
 					<title>{activeItem.title} · Dashboard</title>
 				</Helmet>
 
-				<WrapperStyle fixHeader hideNav hideFooter />
+				{/*<WrapperStyle fixHeader hideNav hideFooter />*/}
 
 				<div className={'container'}>
 						<div className={'row'}>

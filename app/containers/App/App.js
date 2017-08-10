@@ -6,6 +6,7 @@ import { Route, withRouter, Switch } from 'react-router-dom';
 import Async from 'react-code-splitting';
 import Header from 'components/Header/Header';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
+import WrappedRoute from 'components/WrappedRoute/WrappedRoute';
 import NavBar from 'components/NavBar/NavBar';
 import Footer from 'components/Footer/Footer';
 
@@ -57,6 +58,10 @@ class App extends Component {
 		const isCommunity = this.hostname !== 'www.pubpub.org';
 		const isHome = this.props.location.pathname === '/';
 
+		// const fullWrappers = { navItems: appData.navItems };
+		// const fixedPage = { navItems: undefined, fixHeader: true, hideFooter: true };
+		// const hideFooter = { navItems: appData.navItems, hideFooter: true };
+
 		return (
 			<div>
 				<Helmet>
@@ -85,32 +90,30 @@ class App extends Component {
 					logoutHandler={App.logoutHandler}
 				/>
 
-				{/* Nav Bar */}
 				{appData.navItems &&
 					<NavBar navItems={appData.navItems} />
 				}
 
-				<div className={'route-content'}>
-					<Switch>
-						<Route exact path="/" component={Collection} />
-						<Route exact path="/dashboard" component={Dashboard} />
-						<Route exact path="/dashboard/:slug" component={Dashboard} />
-						<Route exact path="/login" component={NoMatch} />
-						<Route exact path="/pub/:slug" component={NoMatch} />
-						<Route exact path="/pub/:slug/:mode" component={NoMatch} />
-						<Route exact path="/pub-create" component={NoMatch} />
-						<Route exact path="/resetpassword" component={NoMatch} />
-						<Route exact path="/resetpassword/:resetHash/:username" component={NoMatch} />
-						<Route exact path="/search" component={NoMatch} />
-						<Route exact path="/signup" component={NoMatch} />
-						<Route exact path="/user/:slug" component={NoMatch} />
-						<Route exact path="/user-create/:hash" component={NoMatch} />
-						<Route exact path="/:slug" component={Collection} />
-						<Route path="/*" component={NoMatch} />
-					</Switch>
-				</div>
+				<Switch>
+					<WrappedRoute exact path="/" component={Collection} />
+					<WrappedRoute exact path="/dashboard" component={Dashboard} hideNav hideFooter fixHeader />
+					<WrappedRoute exact path="/dashboard/:slug" component={Dashboard} hideNav hideFooter fixHeader />
+					<WrappedRoute exact path="/login" component={NoMatch} hideFooter />
+					<WrappedRoute exact path="/pub/:slug" component={NoMatch} />
+					<WrappedRoute exact path="/pub/:slug/edit" component={NoMatch} hideNav hideFooter fixHeader />
+					<WrappedRoute exact path="/pub-create" component={NoMatch} hideFooter />
+					<WrappedRoute exact path="/resetpassword" component={NoMatch} hideFooter />
+					<WrappedRoute exact path="/resetpassword/:resetHash/:username" component={NoMatch} hideFooter />
+					<WrappedRoute exact path="/search" component={NoMatch} />
+					<WrappedRoute exact path="/signup" component={NoMatch} hideFooter />
+					<WrappedRoute exact path="/user/:slug" component={NoMatch} />
+					<WrappedRoute exact path="/user-create" component={NoMatch} hideFooter />
+					<WrappedRoute exact path="/user-create/:hash" component={NoMatch} hideFooter />
+					<WrappedRoute exact path="/:slug" component={Collection} />
+				</Switch>
 
 				<Footer />
+
 			</div>
 		);
 	}
