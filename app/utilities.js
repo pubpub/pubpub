@@ -21,7 +21,7 @@
 const viralData = {
 	title: 'Viral Communications',
 	description: 'Group publications and research docs from around the world all situated here in this little community.',
-	avatar: 'http://www.fnordware.com/superpng/pnggrad16rgb.png',
+	avatar: 'https://i.imgur.com/JAeVwYn.png',
 	smallHeaderLogo: '/dev/viralLogo.png',
 	largeHeaderLogo: '/dev/viralLogo.png',
 	largeHeaderBackground: '/dev/homeBackground.png',
