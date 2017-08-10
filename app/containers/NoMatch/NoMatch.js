@@ -10,8 +10,6 @@ const NoMatch = function() {
 		<div className={'no-match'}>
 			<Helmet title="Not Found" />
 
-			{/*<WrapperStyle hideFooter />*/}
-
 			<NonIdealState
 				title={'Page Not Found'}
 				visual={'pt-icon-path-search'}
