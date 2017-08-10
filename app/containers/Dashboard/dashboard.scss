@@ -2,7 +2,7 @@
 	$sidePanelWidth: 200px; // 200 is width of side panel
 	$navHeight: 56px; // 56px is height of nav
 	background-color: #F9F9F9;
-
+	min-height: calc(100vh - #{$navHeight});
 	.col-12 {
 		margin-top: 0px;
 		margin-bottom: 0px;
@@ -15,6 +15,7 @@
 		padding: 1.5em 2em;
 		background-color: white;
 		border-right: 1px solid #ECECEC;
-		margin-left: $sidePanelWidth
+		margin-left: $sidePanelWidth;
+		min-height: calc(100vh - #{$navHeight});
 	}
 }

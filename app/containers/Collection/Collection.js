@@ -15,7 +15,6 @@ const propTypes = {
 };
 
 class Collection extends Component {
-
 	componentWillMount() {
 		// Check that it's a valid page slug
 		// If it's not - show 404
@@ -23,7 +22,8 @@ class Collection extends Component {
 	}
 
 	render() {
-		// On appdata load - get a list of all pages - so we can show titles and check slugs immediately.
+		// On appdata load - get a list of all pages - so 
+		// we can show titles and check slugs immediately.
 
 		if (this.props.match.params.slug === undefined) {
 			console.log('On Home page');

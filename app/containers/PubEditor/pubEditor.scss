@@ -1,0 +1,41 @@
+.pub-editor {
+	$sidePanelWidth: 350px; // 200 is width of side panel
+	$navHeight: 56px; // 56px is height of nav
+	$titlePanelHeight: 70px;
+	min-height: calc(100vh - #{$navHeight});
+	.col-12 {
+		margin-top: 0px;
+		margin-bottom: 0px;
+	}
+	.upper {
+		height: $titlePanelHeight;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+		position: fixed;
+		width: 100%;
+		background-color: white;
+		z-index: 98;
+	}
+	.title-panel {
+		padding: .25em 0em;
+	}
+
+	.lower {
+		direction: rtl;
+		background-color: #F9F9F9;
+		padding-top: $titlePanelHeight;
+	}
+	.side-panel {
+		direction: ltr;
+		position: fixed;
+		height: calc(100vh - #{$navHeight} - #{$titlePanelHeight});
+		width: $sidePanelWidth;
+	}
+	.content-panel {
+		direction: ltr;
+		padding: 1.5em 2em;
+		background-color: white;
+		border-left: 1px solid #ECECEC;
+		margin-right: $sidePanelWidth;
+		min-height: calc(100vh - #{$navHeight} - #{$titlePanelHeight});
+	}
+}

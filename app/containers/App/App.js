@@ -13,10 +13,13 @@ import { getAppData } from 'actions/app';
 
 require('./app.scss');
 
-const LandingMain = () => <Async load={import('containers/LandingMain/LandingMain')} />;
-const Dashboard = () => <Async load={import('containers/Dashboard/Dashboard')} />;
-const NoMatch = () => <Async load={import('containers/NoMatch/NoMatch')} />;
 const Collection = () => <Async load={import('containers/Collection/Collection')} />;
+const Dashboard = () => <Async load={import('containers/Dashboard/Dashboard')} />;
+const Login = () => <Async load={import('containers/Login/Login')} />;
+const NoMatch = () => <Async load={import('containers/NoMatch/NoMatch')} />;
+const PubEditor = () => <Async load={import('containers/PubEditor/PubEditor')} />;
+const PubPresentation = () => <Async load={import('containers/PubPresentation/PubPresentation')} />;
+
 
 const propTypes = {
 	dispatch: PropTypes.func.isRequired,
@@ -97,9 +100,9 @@ class App extends Component {
 					<WrappedRoute exact path="/" component={Collection} />
 					<WrappedRoute exact path="/dashboard" component={Dashboard} hideNav fixHeader />
 					<WrappedRoute exact path="/dashboard/:slug" component={Dashboard} hideNav fixHeader />
-					<WrappedRoute exact path="/login" component={NoMatch} />
-					<WrappedRoute exact path="/pub/:slug" component={NoMatch} />
-					<WrappedRoute exact path="/pub/:slug/edit" component={NoMatch} hideNav fixHeader />
+					<WrappedRoute exact path="/login" component={Login} />
+					<WrappedRoute exact path="/pub/:slug" component={PubPresentation} />
+					<WrappedRoute exact path="/pub/:slug/edit" component={PubEditor} hideNav fixHeader />
 					<WrappedRoute exact path="/pub-create" component={NoMatch} />
 					<WrappedRoute exact path="/resetpassword" component={NoMatch} />
 					<WrappedRoute exact path="/resetpassword/:resetHash/:username" component={NoMatch} />
