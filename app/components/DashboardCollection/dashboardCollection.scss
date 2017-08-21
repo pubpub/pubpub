@@ -3,17 +3,29 @@
 		width: 100%;
 		border-collapse:collapse
 	}
+	td, th {
+		padding: 0.25em 2em 0.25em 0em;
+		&:last-of-type {
+			padding-right: 0em;
+		}
+	}
 	th {
 		text-align: left;
 		color: #666;
-		border-bottom: 1px solid #777;
-		padding: 0.5em 0em;
+		border-bottom: 1px solid #CCC;
+		padding-top: 1em;
+		padding-bottom: 1em;
 		cursor: pointer;
+		text-transform: capitalize;
+		white-space: nowrap;
 		span {
 			opacity: 0;
 		}
 		&:hover span{
 			opacity: 0.5;	
+		}
+		&.not-sortable {
+			cursor: default;
 		}
 		&.active {
 			color: #222;
@@ -22,11 +34,8 @@
 			}
 		}
 	}
-	tr:nth-of-type(2) td { // First data row
+	tr:first-of-type td { // First data row
 		padding-top: 1em;
-	}
-	td {
-		padding: 0.25em 0em;
 	}
 	td.min-width {
 		width: 1px;
@@ -43,4 +52,15 @@
 			color: orange;
 		}
 	}
+	.date {
+		white-space: nowrap;
+	}
+	.activity {
+		white-space: nowrap;
+		span {
+			opacity: 0.6;
+			padding-right: 0.5em;
+		}
+	}
+
 }

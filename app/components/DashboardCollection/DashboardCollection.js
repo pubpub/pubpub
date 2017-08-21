@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 require('./dashboardCollection.scss');
 
@@ -19,7 +20,7 @@ class DashboardCollection extends Component {
 		const data = this.props.collectionData;
 
 		const pubs = data.pubs || [];
-
+		const sections = ['title', 'status', 'last modified', 'activity']
 		return (
 			<div className={'dashboard-collection'}>
 				<div className={'content-buttons'}>
@@ -47,37 +48,37 @@ class DashboardCollection extends Component {
 				
 				{pubs.length &&
 					<table>
-						<tr className={'table-header'}>
-							<th className={this.props.sortMode === 'title' ? 'active': ''}>
-								Title
-								<span className={'pt-icon-standard pt-icon-double-caret-vertical'} />
-							</th>
-							<th>
-								Status
-								<span className={'pt-icon-standard pt-icon-double-caret-vertical'} />
-							</th>
-							<th>
-								Last Modified
-								<span className={'pt-icon-standard pt-icon-double-caret-vertical'} />
-							</th>
-							<th>
-								Activity
-								<span className={'pt-icon-standard pt-icon-double-caret-vertical'} />
-							</th>
-							<th></th>
-						</tr>
-						{pubs.map((pub)=> {
-							return (
-								<tr key={`collection-pub-${pub.id}`}>
-									<td className={'title'}>{pub.title}</td>
-									<td className={`status ${pub.status}`}>{pub.status}</td>
-									<td>3 days ago</td>
-									<td>activity</td>
-									<td className={'min-width'}><button type={'button'} className={'pt-button pt-icon-edit pt-minimal'} /></td>
+						<thead className={'table-header'}>
+							<tr>
+								{sections.map((section)=> {
+									return (
+										<th key={`th-${section}`} className={this.props.sortMode === section ? 'active': ''}>
+											{section}
+											<span className={'pt-icon-standard pt-icon-double-caret-vertical'} />
+										</th>
+									);
+								})}
+								<th className={'not-sortable'}/>
+							</tr>
+						</thead>
+						<tbody>
+							{pubs.map((pub)=> {
+								return (
+									<tr key={`collection-pub-${pub.id}`}>
+										<td className={'title'}><Link to={`/pub/${pub.slug}`}>{pub.title}</Link></td>
+										<td className={`status min-width ${pub.status}`}>{pub.status}</td>
+										<td className={'date min-width'}>3 days ago</td>
+										<td className={'activity'}>
+											{pub.numContributors} <span className={'pt-icon-standard pt-icon-people'}/>
+											{pub.numDiscussions} <span className={'pt-icon-standard pt-icon-chat'}/>
+											{pub.numSuggestions} <span className={'pt-icon-standard pt-icon-manually-entered-data'}/>
+										</td>
+										<td className={'min-width'}><Link to={`/pub/${pub.slug}/edit`} className={'pt-button pt-icon-edit pt-minimal'} /></td>
 
-								</tr>
-							);
-						})}
+									</tr>
+								);
+							})}
+						</tbody>
 					</table>
 				} 
 				
