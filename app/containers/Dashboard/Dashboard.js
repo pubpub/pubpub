@@ -4,6 +4,8 @@ import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import DashboardSide from 'components/DashboardSide/DashboardSide';
+import DashboardCollection from 'components/DashboardCollection/DashboardCollection';
+import DashboardSite from 'components/DashboardSite/DashboardSite';
 
 require('./dashboard.scss');
 
@@ -55,33 +57,28 @@ class Dashboard extends Component {
 							</div>
 
 							<div className={'content-panel'}>
-								<h1>{activeItem.title}</h1>
 								{(() => {
 									switch (activeSlug) {
 									case 'activity':
 										// Return activity component
-										return <div>activity</div>;
-									case 'team':
-										// Return team component
-										return <div>team</div>;
-									case 'site':
-										// Return site component
-										return <div>site</div>;
-									default:
-										// Return collection component
 										return (
 											<div>
-												<button type={'button'} style={{ float: 'right' }} className={'pt-button pt-intent-primary'}>Save Changes</button>
-												<div className="pt-button-group">
-													<button type="button" className="pt-button pt-icon-globe pt-active">Public</button>
-													<button type="button" className="pt-button pt-icon-lock">Private</button>
-												</div>
-												<div className="pt-button-group">
-													<button type="button" className="pt-button pt-icon-add-to-artifact pt-active">Open</button>
-													<button type="button" className="pt-button pt-icon-delete">Closed</button>
-												</div>
+												<h1 className={'content-title'}>{activeItem.title}</h1>
+												<div>activity</div>
 											</div>
 										);
+									case 'team':
+										// Return team component
+										return (
+											<div>
+												<h1 className={'content-title'}>{activeItem.title}</h1>
+												<div>team</div>
+											</div>
+										);
+									case 'site':
+										return <DashboardSite appData={this.props.appData} />;
+									default:
+										return <DashboardCollection collectionData={activeItem} />;
 									}
 								})()}
 							</div>

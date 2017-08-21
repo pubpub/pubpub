@@ -1,0 +1,46 @@
+.dashboard-collection {
+	table {
+		width: 100%;
+		border-collapse:collapse
+	}
+	th {
+		text-align: left;
+		color: #666;
+		border-bottom: 1px solid #777;
+		padding: 0.5em 0em;
+		cursor: pointer;
+		span {
+			opacity: 0;
+		}
+		&:hover span{
+			opacity: 0.5;	
+		}
+		&.active {
+			color: #222;
+			span {
+				opacity: 1;
+			}
+		}
+	}
+	tr:nth-of-type(2) td { // First data row
+		padding-top: 1em;
+	}
+	td {
+		padding: 0.25em 0em;
+	}
+	td.min-width {
+		width: 1px;
+	}
+	.title {
+		font-weight: bold;
+	}
+	.status {
+		text-transform: capitalize;
+		&.published {
+			color: green;
+		}
+		&.submitted {
+			color: orange;
+		}
+	}
+}
