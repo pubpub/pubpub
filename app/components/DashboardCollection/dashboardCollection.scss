@@ -3,45 +3,58 @@
 		width: 100%;
 		border-collapse:collapse
 	}
-	td, th {
-		padding: 0.25em 2em 0.25em 0em;
-		&:last-of-type {
-			padding-right: 0em;
-		}
-	}
+	
 	th {
 		text-align: left;
 		color: #666;
 		border-bottom: 1px solid #CCC;
-		padding-top: 1em;
-		padding-bottom: 1em;
-		cursor: pointer;
-		text-transform: capitalize;
+		padding: 0;
 		white-space: nowrap;
-		span {
+		a {
+			text-decoration: none;
+			display: block;
+			padding: 0.5em 0em;
+			color: inherit;
+			&:hover .pt-icon-double-caret-vertical{
+				opacity: 0.5;	
+			}
+		}
+		.pt-icon-double-caret-vertical {
 			opacity: 0;
 		}
-		&:hover span{
-			opacity: 0.5;	
-		}
-		&.not-sortable {
-			cursor: default;
-		}
+		
 		&.active {
 			color: #222;
-			span {
+			a .pt-icon-double-caret-vertical {
 				opacity: 1;
 			}
 		}
 	}
-	tr:first-of-type td { // First data row
+	td, th {
+		padding-right: 2em;
+		&.tight {
+			padding-right: 0.5em;
+		}
+		&:last-of-type {
+			padding-right: 0em;
+		}
+	}
+
+	tr:first-of-type td {
 		padding-top: 1em;
 	}
-	td.min-width {
+	td {
 		width: 1px;
 	}
+	td.title {
+		width: auto;
+	}
+	// tbody tr:nth-of-type(2n) {
+	// 	background-color: #F9F9F9;
+	// }
 	.title {
 		font-weight: bold;
+		padding-right: 0em;
 	}
 	.status {
 		text-transform: capitalize;
@@ -52,15 +65,8 @@
 			color: orange;
 		}
 	}
-	.date {
+	.date, .activity {
 		white-space: nowrap;
-	}
-	.activity {
-		white-space: nowrap;
-		span {
-			opacity: 0.6;
-			padding-right: 0.5em;
-		}
 	}
 
 }
