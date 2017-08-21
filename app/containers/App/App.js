@@ -100,6 +100,7 @@ class App extends Component {
 					<WrappedRoute exact path="/" component={Collection} />
 					<WrappedRoute exact path="/dashboard" component={Dashboard} hideNav fixHeader />
 					<WrappedRoute exact path="/dashboard/:slug" component={Dashboard} hideNav fixHeader />
+					<WrappedRoute exact path="/dashboard/:slug/:mode" component={Dashboard} hideNav fixHeader />
 					<WrappedRoute exact path="/login" component={Login} />
 					<WrappedRoute exact path="/pub/:slug" component={PubPresentation} />
 					<WrappedRoute exact path="/pub/:slug/edit" component={PubEditor} hideNav fixHeader />

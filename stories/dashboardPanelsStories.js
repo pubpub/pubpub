@@ -1,6 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import DashboardCollection from 'components/DashboardCollection/DashboardCollection';
+import DashboardCollectionEdit from 'components/DashboardCollectionEdit/DashboardCollectionEdit';
 
 const pageStyle = { padding: '1.5em 2em', maxWidth: '951px' };
 
@@ -55,7 +56,7 @@ storiesOf('DashboardPanels', module)
 ))
 .add('Collection Edit', () => (
 	<div className={'dashboard'} style={pageStyle}>
-		<DashboardCollection collectionData={{}} />
+		<DashboardCollectionEdit collectionData={collectionData} />
 	</div>
 ))
 .add('Page', () => (

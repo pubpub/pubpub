@@ -22,43 +22,19 @@ const DashboardCollection = function(props) {
 
 	const pubs = data.pubs || [];
 	const sections = [
-		{
-			title: 'Title',
-			param: 'title',
-			className: 'title',
-		},
-		{
-			title: '',
-			param: 'edit-button',
-		},
-		{
-			title: 'Status',
-			param: 'status'
-		},
-		{
-			title: 'Last Modified',
-			param: 'modified'
-		},
-		{
-			title: <span className={'pt-icon-standard pt-icon-people'} />,
-			param: 'collaborators',
-			className: 'tight',
-		},
-		{
-			title: <span className={'pt-icon-standard pt-icon-chat'} />,
-			param: 'discussions',
-			className: 'tight',
-		},
-		{
-			title: <span className={'pt-icon-standard pt-icon-manually-entered-data'} />,
-			param: 'suggestions',
-			className: 'tight',
-		},
+		{ title: 'Title', param: 'title', className: 'title' },
+		{ title: '', param: 'edit-button' },
+		{ title: 'Status', param: 'status' },
+		{ title: 'Last Modified', param: 'modified' },
+		{ title: <span className={'pt-icon-standard pt-icon-people'} />, param: 'collaborators', className: 'tight' },
+		{ title: <span className={'pt-icon-standard pt-icon-chat'} />, param: 'discussions', className: 'tight' },
+		{ title: <span className={'pt-icon-standard pt-icon-manually-entered-data'} />, param: 'suggestions', className: 'tight' },
 	];
+
 	return (
 		<div className={'dashboard-collection'}>
 			<div className={'content-buttons'}>
-				<button type={'button'} className={'pt-button'}>Edit Collection</button>
+				<Link to={`/dashboard/${data.slug}/edit`}><button type={'button'} className={'pt-button'}>Edit Collection</button></Link>
 				<button type={'button'} className={'pt-button'}>Create Pub in Collection</button>
 			</div>
 
@@ -84,7 +60,7 @@ const DashboardCollection = function(props) {
 			</div>
 
 			
-			{pubs.length &&
+			{pubs.length && !data.isPage &&
 				<table>
 					<thead className={'table-header'}>
 						<tr>

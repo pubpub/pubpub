@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import DashboardSide from 'components/DashboardSide/DashboardSide';
 import DashboardCollection from 'components/DashboardCollection/DashboardCollection';
+import DashboardCollectionEdit from 'components/DashboardCollectionEdit/DashboardCollectionEdit';
 import DashboardSite from 'components/DashboardSite/DashboardSite';
 
 require('./dashboard.scss');
@@ -74,6 +75,7 @@ class Dashboard extends Component {
 		});
 
 		const activeSlug = this.props.match.params.slug || '';
+		const activeMode = this.props.match.params.mode || '';
 		const activeItem = this.props.appData.collections.reduce((prev, curr)=> {
 			if (activeSlug === curr.slug) { return curr; }
 			return prev;
@@ -121,6 +123,9 @@ class Dashboard extends Component {
 									case 'site':
 										return <DashboardSite appData={this.props.appData} />;
 									default:
+										if (activeMode === 'edit') {
+											return <DashboardCollectionEdit collectionData={collectionData} />;	
+										}
 										return <DashboardCollection collectionData={collectionData} sortMode={queryObject.sort} isSortReverse={queryObject.direction === 'reverse'} />;
 									}
 								})()}
