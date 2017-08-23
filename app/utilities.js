@@ -18,6 +18,8 @@
 /* DEV ONLY */
 /* -------- */
 
+import { pubData, pubVersions, pubCollaborators, pubBody } from '../stories/_data';
+
 const viralData = {
 	title: 'Viral Communications',
 	description: 'Group publications and research docs from around the world all situated here in this little community.',
@@ -108,6 +110,7 @@ const viralData = {
 };
 
 export const apiFetch = function(path, opts) {
+	console.log(path);
 	return new Promise((resolve, reject) => {
 		switch (path.split('?')[0]) {
 		case '/api/app':
@@ -121,6 +124,13 @@ export const apiFetch = function(path, opts) {
 			return resolve({ title: 'About', });
 		case '/api/collection/slug=sensors':
 			return resolve({ title: 'Sensors', });
+		case '/api/pub':
+			return resolve({
+				pub: pubData,
+				versions: pubVersions,
+				collaborators: pubCollaborators,
+				body: pubBody,
+			});
 		default:
 			return reject('404');
 		}

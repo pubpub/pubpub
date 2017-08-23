@@ -15,7 +15,7 @@ module.exports = {
 		publicPath: '/',
 	},
 	resolve: {
-		modules: [resolve(__dirname, '../app'), 'node_modules']
+		modules: [resolve(__dirname, '../app'), resolve(__dirname, '../stories'), 'node_modules']
 	},
 	context: resolve(__dirname, '../app'),
 	devtool: '#eval',
@@ -40,7 +40,7 @@ module.exports = {
 		rules: [
 			{
 				test: /\.(js|jsx)$/,
-				include: [resolve(__dirname, '../app'), resolve(__dirname)],
+				include: [resolve(__dirname, '../app'), resolve(__dirname, '../stories'), resolve(__dirname)],
 				use: 'babel-loader',
 			},
 			{
