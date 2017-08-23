@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import dateFormat from 'dateformat';
 import Avatar from 'components/Avatar/Avatar';
-import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 
 require('./pubDetails.scss');
 
@@ -31,8 +31,8 @@ const PubDetails = function(props) {
 						<div className={'details'}>
 							{authors.length && <span>by </span>}
 							{authors.map((author, index)=> {
-								const separator = index === authors.length - 1 ? '' : ', '; 
-								const prefix = index === authors.length - 1 ? ' and ' : ''
+								const separator = index === authors.length - 1 ? '' : ', ';
+								const prefix = index === authors.length - 1 ? ' and ' : '';
 								if (author.slug) {
 									return (
 										<span key={`author-${author.id}`}>
@@ -48,7 +48,7 @@ const PubDetails = function(props) {
 						<div className={'button'}>
 							<Popover
 								content={
-									<Menu>
+									<ul className={'pt-menu'}>
 										<li className={'pt-menu-header'} style={{ textAlign: 'right' }}>
 											<h6 style={{ paddingRight: '0px' }}>Published Snapshots</h6>
 										</li>
@@ -68,7 +68,7 @@ const PubDetails = function(props) {
 												</li>
 											);
 										})}
-									</Menu>
+									</ul>
 								}
 								interactionKind={PopoverInteractionKind.CLICK}
 								position={Position.BOTTOM_RIGHT}
