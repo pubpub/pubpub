@@ -3,10 +3,11 @@ import { storiesOf } from '@storybook/react';
 import PubDetails from 'components/PubDetails/PubDetails';
 import PubHeader from 'components/PubHeader/PubHeader';
 import PubBody from 'components/PubBody/PubBody';
-import PubPresentation from 'containers/PubPresentation/PubPresentation';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
 
 import { accentDataDark, accentDataLight, pubData, pubVersions, pubCollaborators, pubBody } from './_data';
+
+require('containers/PubPresentation/pubPresentation.scss');
 
 const wrapperStyle = {
 	width: 'calc(50% - 2em)',
