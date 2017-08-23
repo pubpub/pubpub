@@ -1,3 +1,19 @@
 .pub-details {
-	
+	.details {
+		float: left;
+		width: calc(100% - 200px);
+		padding-top: 6px;
+		font-size: 1.1em;
+		.pt-icon-standard {
+			opacity: 0.5;
+			padding-left: 0.25em;
+			padding-right: 1em;
+		}
+	}
+	.button {
+		width: 200px;
+		float: left;
+		text-align: right;
+	}
+
 }
