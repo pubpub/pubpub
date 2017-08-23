@@ -110,7 +110,6 @@ const viralData = {
 };
 
 export const apiFetch = function(path, opts) {
-	console.log(path);
 	return new Promise((resolve, reject) => {
 		switch (path.split('?')[0]) {
 		case '/api/app':
