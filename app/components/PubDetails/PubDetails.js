@@ -35,9 +35,9 @@ const PubDetails = function(props) {
 								const prefix = index === authors.length - 1 ? ' and ' : ''
 								if (author.slug) {
 									return (
-										<span>
+										<span key={`author-${author.id}`}>
 											{prefix}
-											<Link key={`author-${author.id}`} to={`/user/${author.slug}`}>{author.fullName}</Link>
+											<Link to={`/user/${author.slug}`}>{author.fullName}</Link>
 											{separator}
 										</span>
 									);	
