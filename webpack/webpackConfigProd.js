@@ -36,7 +36,7 @@ module.exports = {
 		rules: [
 			{
 				test: /\.(js|jsx)$/,
-				include: [resolve(__dirname, '../app')],
+				include: [resolve(__dirname, '../app'), resolve(__dirname, '../stories')], // stories can be removed once dev utilities is removed
 				use: 'babel-loader',
 			},
 			{
