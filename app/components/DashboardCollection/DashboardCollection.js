@@ -34,7 +34,7 @@ const DashboardCollection = function(props) {
 	return (
 		<div className={'dashboard-collection'}>
 			<div className={'content-buttons'}>
-				<Link to={`/dashboard/${data.slug}/edit`}><button type={'button'} className={'pt-button'}>Edit Collection</button></Link>
+				<Link to={`/dashboard/${data.slug}/edit`} className={'pt-button'}>Edit Collection</Link>
 				<button type={'button'} className={'pt-button'}>Create Pub in Collection</button>
 			</div>
 
