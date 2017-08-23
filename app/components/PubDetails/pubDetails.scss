@@ -1,4 +1,5 @@
 .pub-details {
+	padding: 2em 0em;
 	.details {
 		float: left;
 		width: calc(100% - 200px);
@@ -16,4 +17,17 @@
 		text-align: right;
 	}
 
+}
+
+@media only screen and (max-width: 45em) {  /* 720px */
+	.pub-details {
+		.details {
+			float: none;
+			width: auto;
+		}
+		.button {
+			display: none;
+		}
+
+	}
 }

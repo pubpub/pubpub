@@ -24,7 +24,7 @@ const PubHeader = function(props) {
 	return (
 		<div className={'pub-header'} style={backgroundStyle}>
 			<div className={`wrapper ${props.backgroundImage ? 'dim' : ''}`}>
-				<div className={'container'}>
+				<div className={'container pub'}>
 					<div className={'row'}>
 						<div className={'col-12'}>
 							<h1>{props.title}</h1>

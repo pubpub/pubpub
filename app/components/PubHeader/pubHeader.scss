@@ -3,8 +3,9 @@
 	background-repeat: no-repeat;
 	background-position: center center;
 	.wrapper {
-		padding: 2.5em 0em;
+		padding: 2em 0em 1em;
 		&.dim {
+			padding: 2.5em 0em;
 			background-color: rgba(0, 0, 0, 0.17);
 		}
 	}

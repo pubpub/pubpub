@@ -25,7 +25,7 @@ const PubDetails = function(props) {
 
 	return (
 		<div className={'pub-details'}>
-			<div className={'container'}>
+			<div className={'container pub'}>
 				<div className={'row'}>
 					<div className={'col-12'}>
 						<div className={'details'}>
