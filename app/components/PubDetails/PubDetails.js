@@ -40,7 +40,7 @@ const PubDetails = function(props) {
 											<Link to={`/user/${author.slug}`}>{author.fullName}</Link>
 											{separator}
 										</span>
-									);	
+									);
 								}
 								return <span key={`author-${author.id}`}>{prefix}{author.fullName}{separator}</span>
 							})}
@@ -49,6 +49,10 @@ const PubDetails = function(props) {
 							<Popover
 								content={
 									<Menu>
+										<li className={'pt-menu-header'} style={{ textAlign: 'right' }}>
+											<h6 style={{ paddingRight: '0px' }}>Published Snapshots</h6>
+										</li>
+										<li className={'pt-menu-divider'} />
 										{props.versions.sort((foo, bar)=>{
 											if (foo.date < bar.date) { return 1; }
 											if (foo.date > bar.date) { return -1; }
@@ -77,11 +81,9 @@ const PubDetails = function(props) {
 									<span className={'pt-icon-standard pt-icon-caret-down pt-align-right'} />
 								</button>
 							</Popover>
-
-
-							
 						</div>
 					</div>
+
 					<div className={'col-12'}>
 						<div className={'details'}>
 							{props.pubData.numDiscussions}

@@ -38,7 +38,7 @@ class PubPresentation extends Component {
 				<PubHeader
 					title={'Soundscapes'}
 					description={this.props.pubData.data.pub.description}
-					backgroundImage={'/dev/pubHeader3.jpg'}
+					backgroundImage={'/dev/pubHeader4.jpg'}
 				/>
 
 				<PubDetails
@@ -52,6 +52,7 @@ class PubPresentation extends Component {
 				<div className={'license-wrapper'}>
 					CCBY 4.0
 				</div>
+
 				<Footer />
 			</div>
 		);

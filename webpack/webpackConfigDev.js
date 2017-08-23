@@ -15,7 +15,7 @@ module.exports = {
 		publicPath: '/',
 	},
 	resolve: {
-		modules: [resolve(__dirname, '../app'), resolve(__dirname, '../stories'), 'node_modules']
+		modules: [resolve(__dirname, '../app'), 'node_modules']
 	},
 	context: resolve(__dirname, '../app'),
 	devtool: '#eval',
