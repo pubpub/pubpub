@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import InputField from 'components/InputField/InputField';
 
 require('./dashboardCollectionEdit.scss');
@@ -58,7 +59,7 @@ class DashboardCollectionEdit extends Component {
 		return (
 			<div className={'dashboard-collection-edit'}>
 				<div className={'content-buttons'}>
-					<button type={'button'} className={'pt-button'}>Cancel</button>
+					<Link to={`/dashboard/${data.slug}`} className={'pt-button'}>Cancel</Link>
 					<button type={'button'} className={'pt-button pt-intent-primary'}>Save Changes</button>
 				</div>
 

@@ -40,6 +40,14 @@ const DashboardCollection = function(props) {
 
 			<h1 className={'content-title'}>{data.title}</h1>
 
+			<div>
+				<Link to={'/'}>Create Pub Page</Link>
+				<span> · </span>
+				<Link to={'/'}>Customize Create Pub Page</Link>
+				<span> · </span>
+				<Link to={'/'}>Customize Layout</Link>
+			</div>
+
 			<div className={'status-bar'}>
 				<div className={'description'}>{data.description}</div>
 
@@ -56,7 +64,6 @@ const DashboardCollection = function(props) {
 					? <div><span className={'pt-icon-standard pt-icon-add-to-artifact'} /> Open Submissions</div>
 					: <div><span className={'pt-icon-standard pt-icon-delete'} /> Closed Submissions</div>
 				}
-
 			</div>
 
 			{pubs.length && !data.isPage &&

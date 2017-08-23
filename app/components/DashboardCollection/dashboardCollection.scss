@@ -1,4 +1,22 @@
 .dashboard-collection {
+	.status-bar {
+		color: #555;
+		padding-bottom: 4em;
+		div {
+			display: inline-block;
+		}
+		span {
+			opacity: 0.6;
+		}
+		.description {
+			display: block;
+			padding-bottom: 1em;
+		}
+	}
+	.status-bar-separator {
+		padding: 0em 1em;
+	}
+	
 	table {
 		width: 100%;
 		border-collapse:collapse
