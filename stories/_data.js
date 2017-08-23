@@ -156,7 +156,7 @@ export const pubBody = (
 	<div>
 		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duo Reges: constructio interrete. Eam stabilem appellas. Consequens enim est et post oritur, ut dixi. Te enim iudicem aequum puto, modo quae dicat ille bene noris. Compensabatur, inquit, cum summis doloribus laetitia. <b>Hoc simile tandem est?</b> </p>
 
-		<h1>Amicitiam autem adhibendam esse censent, quia sit ex eo genere, quae prosunt.</h1>
+		<h2>Amicitiam autem adhibendam esse censent, quia sit ex eo genere, quae prosunt.</h2>
 
 		<p>Idemne, quod iucunde? <b>Si quae forte-possumus.</b> Omnes enim iucundum motum, quo sensus hilaretur. Respondent extrema primis, media utrisque, omnia omnibus. Qua ex cognitione facilior facta est investigatio rerum occultissimarum. Respondent extrema primis, media utrisque, omnia omnibus. Laelius clamores sofòw ille so lebat Edere compellans gumias ex ordine nostros. </p>
 

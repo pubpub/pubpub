@@ -1,3 +1,40 @@
 .pub-body {
-	
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-moz-font-feature-settings: "liga" on;
+	h2, h3 {
+		margin-top: 56px;
+		margin-bottom: -25px;
+	}
+	p, li {
+		font-family: Georgia, Cambria, "Times New Roman", Times, serif; 
+		letter-spacing: .01rem;
+		font-weight: 400;
+		font-style: normal;
+		font-size: 21px;
+		line-height: 1.58;
+		letter-spacing: -.003em;
+		margin-top: 38px; 
+	}
+	pre {
+		white-space: pre-wrap;
+		background: rgba(0,0,0,.05);
+		padding: 20px;
+		box-shadow: none;
+		font-size: 16px;
+	}
+	img {
+		max-width: 100%;
+		margin-top: 38px;
+	}
+
+	ul, ol {
+		padding-left: 21px;
+		margin-top: 38px;
+	}
+	li {
+		margin: 0;
+	    margin-bottom: .65em;
+	}
 }

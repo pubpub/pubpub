@@ -3,6 +3,7 @@ import { storiesOf } from '@storybook/react';
 import PubDetails from 'components/PubDetails/PubDetails';
 import PubHeader from 'components/PubHeader/PubHeader';
 import PubBody from 'components/PubBody/PubBody';
+import PubPresentation from 'containers/PubPresentation/PubPresentation';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
 
 import { accentDataDark, accentDataLight, pubData, pubVersions, pubCollaborators, pubBody } from './_data';
@@ -15,7 +16,7 @@ const wrapperStyle = {
 };
 
 const content = (
-	<div>
+	<div className={'pub-presentation'}>
 		<div style={wrapperStyle}>
 			<PubHeader
 				title={'Soundscapes'}
