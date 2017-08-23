@@ -39,7 +39,7 @@ const DashboardCollection = function(props) {
 			</div>
 
 			<h1 className={'content-title'}>{data.title}</h1>
-			
+
 			<div className={'status-bar'}>
 				<div className={'description'}>{data.description}</div>
 
@@ -56,10 +56,9 @@ const DashboardCollection = function(props) {
 					? <div><span className={'pt-icon-standard pt-icon-add-to-artifact'} /> Open Submissions</div>
 					: <div><span className={'pt-icon-standard pt-icon-delete'} /> Closed Submissions</div>
 				}
-				
+
 			</div>
 
-			
 			{pubs.length && !data.isPage &&
 				<table>
 					<thead className={'table-header'}>
@@ -69,7 +68,7 @@ const DashboardCollection = function(props) {
 									return <th key={'th-empty'} />;
 								}
 								return (
-									<th key={`th-${section.param}`} className={props.sortMode === section.param ? `active ${section.className}`: section.className}>
+									<th key={`th-${section.param}`} className={props.sortMode === section.param ? `active ${section.className}` : section.className}>
 										<Link to={`/dashboard/${data.slug}?sort=${section.param}${props.sortMode === section.param && !props.isSortReverse ? '&direction=reverse' : ''}`} replace>
 											{section.title}
 											<span className={'pt-icon-standard pt-icon-double-caret-vertical'} />
@@ -90,8 +89,7 @@ const DashboardCollection = function(props) {
 							const direction = props.isSortReverse ? -1 : 1;
 							if (foo[key] > bar[key]) { return 1 * direction; }
 							if (foo[key] < bar[key]) { return -1 * direction; }
-							return 0
-
+							return 0;
 						}).map((pub)=> {
 							return (
 								<tr key={`collection-pub-${pub.id}`}>
@@ -107,17 +105,7 @@ const DashboardCollection = function(props) {
 						})}
 					</tbody>
 				</table>
-			} 
-			
-			{/*<div className="pt-button-group">
-				<button type="button" className="pt-button pt-icon-globe pt-active">Public</button>
-				<button type="button" className="pt-button pt-icon-lock">Private</button>
-			</div>
-
-			<div className="pt-button-group">
-				<button type="button" className="pt-button pt-icon-add-to-artifact pt-active">Open</button>
-				<button type="button" className="pt-button pt-icon-delete">Closed</button>
-			</div>*/}
+			}
 		</div>
 	);
 };
