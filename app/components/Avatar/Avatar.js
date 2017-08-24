@@ -8,6 +8,7 @@ const propTypes = {
 	userAvatar: PropTypes.string,
 
 	borderColor: PropTypes.string,
+	borderWidth: PropTypes.string,
 	width: PropTypes.number.isRequired, // Integer number of pixels for avatar
 	doesOverlap: PropTypes.bool, // Boolean on whether a lisst of avatars will be overlapping
 };
@@ -16,6 +17,7 @@ const defaultProps = {
 	userAvatar: undefined,
 	userInitials: '?',
 	borderColor: undefined,
+	borderWidth: undefined,
 	doesOverlap: false,
 };
 
@@ -24,7 +26,7 @@ const Avatar = function(props) {
 		width: props.width,
 		height: props.width,
 		borderColor: props.borderColor,
-		borderWidth: props.borderColor ? Math.floor(props.width / 50) + 1 : 0,
+		borderWidth: props.borderColor ? (props.borderWidth || Math.floor(props.width / 50) + 1) : 0,
 		fontSize: Math.floor(props.width / 2.5),
 	};
 

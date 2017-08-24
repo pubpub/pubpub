@@ -82,11 +82,30 @@ export const accentDataLight = {
 };
 
 export const pubData = {
-	slug: 'myslug',
+	title: 'Soundscapes',
+	slug: 'my-article',
 	description: 'A virtual representation of the space of an event and provide tools by which a producer can draw upon images, graphics, data, and live cameras to create a video stream equivalent to a broadcast',
 	numDiscussions: '3',
 	numCollaborators: '6',
 	numSuggestions: '11',
+	collections: [
+		{
+			id: 0,
+			title: 'Submissions',
+			slug: 'submissions',
+		},
+		{
+			id: 1,
+			title: 'Meeting Notes',
+			slug: 'meeting-notes',
+			isPrivate: true,
+		},
+		{
+			id: 2,
+			title: 'Senors',
+			slug: 'sensors',
+		},
+	],
 };
 
 export const pubVersions = [
@@ -117,6 +136,7 @@ export const pubCollaborators = [
 		userAvatar: '/dev/trich.jpg',
 		fullName: 'Travis Rich',
 		isAuthor: true,
+		color: 'red',
 	},
 	{
 		id: 1,
@@ -130,6 +150,7 @@ export const pubCollaborators = [
 		userAvatar: '/dev/tomer.jpg',
 		fullName: 'Tomer Weller',
 		isAuthor: true,
+		color: 'green',
 	},
 	{
 		id: 3,
@@ -149,6 +170,7 @@ export const pubCollaborators = [
 		slug: 'userslug',
 		userInitials: 'PL',
 		userAvatar: '/dev/lip.jpg',
+		color: 'purple',
 	},
 ];
 

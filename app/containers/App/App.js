@@ -17,7 +17,7 @@ const Collection = () => <Async load={import('containers/Collection/Collection')
 const Dashboard = () => <Async load={import('containers/Dashboard/Dashboard')} />;
 const Login = () => <Async load={import('containers/Login/Login')} />;
 const NoMatch = () => <Async load={import('containers/NoMatch/NoMatch')} />;
-const PubEditor = () => <Async load={import('containers/PubEditor/PubEditor')} />;
+const PubCollaboration = () => <Async load={import('containers/PubCollaboration/PubCollaboration')} />;
 const PubPresentation = () => <Async load={import('containers/PubPresentation/PubPresentation')} />;
 
 
@@ -103,7 +103,7 @@ class App extends Component {
 					<WrappedRoute exact path="/dashboard/:slug/:mode" component={Dashboard} hideNav fixHeader />
 					<WrappedRoute exact path="/login" component={Login} />
 					<WrappedRoute exact path="/pub/:slug" component={PubPresentation} />
-					<WrappedRoute exact path="/pub/:slug/edit" component={PubEditor} hideNav fixHeader />
+					<WrappedRoute exact path="/pub/:slug/collaborate" component={PubCollaboration} hideNav fixHeader />
 					<WrappedRoute exact path="/pub-create" component={NoMatch} />
 					<WrappedRoute exact path="/resetpassword" component={NoMatch} />
 					<WrappedRoute exact path="/resetpassword/:resetHash/:username" component={NoMatch} />

@@ -1,4 +1,4 @@
-.pub-editor {
+.pub-collaboration {
 	$sidePanelWidth: 350px; // 200 is width of side panel
 	$navHeight: 56px; // 56px is height of nav
 	$titlePanelHeight: 70px;
@@ -15,10 +15,6 @@
 		background-color: white;
 		z-index: 98;
 	}
-	.title-panel {
-		padding: .25em 0em;
-	}
-
 	.lower {
 		direction: rtl;
 		background-color: #F9F9F9;
@@ -29,13 +25,23 @@
 		position: fixed;
 		height: calc(100vh - #{$navHeight} - #{$titlePanelHeight});
 		width: $sidePanelWidth;
+		overflow: hidden;
+		.side-panel-content {
+			overflow: hidden;
+			overflow-y: scroll;
+			width: calc(#{$sidePanelWidth} + 50px);
+			padding: 1em calc(1em + 50px) 1em 1em;
+			height: 100%;
+		}
 	}
 	.content-panel {
 		direction: ltr;
 		padding: 1.5em 2em;
 		background-color: white;
 		border-left: 1px solid #ECECEC;
+		border-right: 1px solid #ECECEC;
 		margin-right: $sidePanelWidth;
 		min-height: calc(100vh - #{$navHeight} - #{$titlePanelHeight});
+		overflow: hidden;
 	}
 }

@@ -106,7 +106,7 @@ const PubDetails = function(props) {
 							})}
 						</div>
 						<div className={'button'}>
-							<Link to={'/'} className={'pt-button pt-intent-primary'}>Collaborate</Link>
+							<Link to={`/pub/${props.pubData.slug}/collaborate`} className={'pt-button pt-intent-primary'}>Collaborate</Link>
 						</div>
 					</div>
 				</div>
