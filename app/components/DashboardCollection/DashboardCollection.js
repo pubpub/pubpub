@@ -101,7 +101,7 @@ const DashboardCollection = function(props) {
 							return (
 								<tr key={`collection-pub-${pub.id}`}>
 									<td className={'title'}><Link to={`/pub/${pub.slug}`}>{pub.title}</Link></td>
-									<td><Link to={`/pub/${pub.slug}/edit`} className={'pt-button pt-icon-edit pt-minimal'} /></td>
+									<td><Link to={`/pub/${pub.slug}/collaborate`} className={'pt-button pt-icon-edit pt-minimal'} /></td>
 									<td className={`status ${pub.status}`}>{pub.status}</td>
 									<td className={'date'}>3 days ago</td>
 									<td className={'tight'}>{pub.numCollaborators}</td>

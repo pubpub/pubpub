@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { Route, withRouter, Switch } from 'react-router-dom';
 import PubPreview from 'components/PubPreview/PubPreview';
 import Footer from 'components/Footer/Footer';
+import Image from 'components/Image/Image';
 
 require('./collection.scss');
 
@@ -63,6 +64,7 @@ class Collection extends Component {
 					<div className={'container'}>
 						<div className={'row'}>
 							<div className={'col-12'}>
+								<Image src={'http://revelwallpapers.net/d/774A6C6D67335858304C62586771575230594230324C53747937536869413D3D/baby-duck-in-spring-field.jpg'} alt={'hey there'} />
 								<h1>{activeItem.title || activeSlug}</h1>
 							</div>
 						</div>

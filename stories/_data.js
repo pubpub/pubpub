@@ -131,7 +131,7 @@ export const pubVersions = [
 export const pubCollaborators = [
 	{
 		id: 0,
-		slug: 'userslug',
+		slug: 'trich',
 		userInitials: 'TR',
 		userAvatar: '/dev/trich.jpg',
 		fullName: 'Travis Rich',
@@ -140,12 +140,12 @@ export const pubCollaborators = [
 	},
 	{
 		id: 1,
-		slug: 'userslug',
+		slug: 'mw',
 		userInitials: 'MW',
 	},
 	{
 		id: 2,
-		slug: 'userslug',
+		slug: 'tomer',
 		userInitials: 'TW',
 		userAvatar: '/dev/tomer.jpg',
 		fullName: 'Tomer Weller',
@@ -154,7 +154,7 @@ export const pubCollaborators = [
 	},
 	{
 		id: 3,
-		slug: 'userslug',
+		slug: 'danny',
 		userInitials: 'FF',
 		userAvatar: '/dev/danny.jpg',
 		fullName: 'Danny Hillis',
@@ -162,12 +162,12 @@ export const pubCollaborators = [
 	},
 	{
 		id: 4,
-		slug: 'userslug',
+		slug: 'wl',
 		userInitials: 'WL',
 	},
 	{
 		id: 5,
-		slug: 'userslug',
+		slug: 'lip',
 		userInitials: 'PL',
 		userAvatar: '/dev/lip.jpg',
 		color: 'purple',
