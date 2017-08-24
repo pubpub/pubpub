@@ -2,7 +2,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
-import { accentDataDark, accentDataLight, pubData, pubVersions, pubCollaborators } from './_data';
+import { accentDataDark, accentDataLight, pubData, pubCollaborators } from './_data';
 
 const wrapperStyle = { margin: '1em', boxShadow: '0px 0px 1px rgba(0, 0, 0, 0.25)' };
 

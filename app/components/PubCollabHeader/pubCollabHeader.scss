@@ -1,13 +1,17 @@
 .pub-collab-header {
-	height: 69px; // This is set in pubCollaboration.scss as $titlePanelHeight. Minus 1px for border
+	height: 74px; // This is set in pubCollaboration.scss as $titlePanelHeight. Minus 1px for border
 	// overflow: hidden;
+	padding: 8px 0px;
 	.flex-parent {
 		width: 100%;
 		display: flex;
 		align-items: center;
-		height: 34px;
+		height: 24px;
+		// background-color: red;
 		&:first-of-type {
-			height: 35px;
+			height: 30px;
+			// background-color: fuchsia;
+			margin-bottom: 4px;
 		}
 	}
 	.flex-left {

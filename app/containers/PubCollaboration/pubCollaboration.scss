@@ -1,7 +1,7 @@
 .pub-collaboration {
 	$sidePanelWidth: 350px; // 200 is width of side panel
 	$navHeight: 56px; // 56px is height of nav
-	$titlePanelHeight: 70px;
+	$titlePanelHeight: 75px;
 	min-height: calc(100vh - #{$navHeight});
 	.col-12 {
 		margin-top: 0px;

@@ -5,8 +5,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
-
-import { pubBody } from '../../../stories/_data.js';
+import { pubBody, pubData, pubCollaborators } from '../../../stories/_data.js';
 
 require('./pubCollaboration.scss');
 
@@ -35,7 +34,11 @@ class PubEditor extends Component {
 					<div className={'container'}>
 						<div className={'row'}>
 							<div className={'col-12'}>
-								<PubCollabHeader />
+								<PubCollabHeader
+									pubData={pubData}
+									collaborators={pubCollaborators}
+									activeCollaborators={[pubCollaborators[0], pubCollaborators[2], pubCollaborators[5]]}
+								/>
 							</div>
 						</div>
 					</div>
