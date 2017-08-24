@@ -25,9 +25,9 @@ class Collection extends Component {
 		// On appdata load - get a list of all pages - so 
 		// we can show titles and check slugs immediately.
 
-		if (this.props.match.params.slug === undefined) {
-			console.log('On Home page');
-		}
+		// if (this.props.match.params.slug === undefined) {
+		// 	console.log('On Home page');
+		// }
 
 		const contributors = [1, 2, 3, 4, 5];
 		const authors = [
