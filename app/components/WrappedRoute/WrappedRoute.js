@@ -22,7 +22,7 @@ const WrappedRoute = function(props) {
 		<div>
 			<style>
 				{props.fixHeader && `
-					.header { position: fixed; width: 100%; z-index: 99; }
+					.header { position: fixed; width: 100%; z-index: 19; }
 					.route-content { padding-top: 56px; }
 				`}
 				{props.hideNav && `

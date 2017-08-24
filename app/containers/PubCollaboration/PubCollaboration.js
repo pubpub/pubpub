@@ -5,6 +5,9 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
+
+import PubBody from 'components/PubBody/PubBody';
+import Overlay from 'components/Overlay/Overlay';
 import { pubBody, pubData, pubCollaborators } from '../../../stories/_data.js';
 
 require('./pubCollaboration.scss');
@@ -16,10 +19,31 @@ const propTypes = {
 };
 
 class PubEditor extends Component {
-	componentWillMount() {
-		// Check that it's a valid page slug
-		// If it's not - show 404
-		// Grab the data for the page
+	constructor(props) {
+		super(props);
+		this.state = {
+			isPublishOpen: false,
+			isShareOpen: false,
+			isMetadataOpen: false,
+			isAuthorsOpen: false,
+		};
+		this.togglePublish = this.togglePublish.bind(this);
+		this.toggleShare = this.toggleShare.bind(this);
+		this.toggleMetadata = this.toggleMetadata.bind(this);
+		this.toggleAuthors = this.toggleAuthors.bind(this);
+	}
+
+	togglePublish() {
+		this.setState({ isPublishOpen: !this.state.isPublishOpen });
+	}
+	toggleShare() {
+		this.setState({ isShareOpen: !this.state.isShareOpen });
+	}
+	toggleMetadata() {
+		this.setState({ isMetadataOpen: !this.state.isMetadataOpen });
+	}
+	toggleAuthors() {
+		this.setState({ isAuthorsOpen: !this.state.isAuthorsOpen });
 	}
 
 	render() {
@@ -38,6 +62,8 @@ class PubEditor extends Component {
 									pubData={pubData}
 									collaborators={pubCollaborators}
 									activeCollaborators={[pubCollaborators[0], pubCollaborators[2], pubCollaborators[5]]}
+									onPublishClick={this.togglePublish}
+									onShareClick={this.toggleShare}
 								/>
 							</div>
 						</div>
@@ -52,20 +78,42 @@ class PubEditor extends Component {
 									<div className={'side-panel-content'}>
 										<div className={'pt-card pt-elevation-2'} style={{ marginBottom: '1em' }}>
 											Hello, I wonder how this comment size dictates the
-											 functionality of longer forms of text and other
-											 things like the such.
+											functionality of longer forms of text and other
+											things like the such.
 										</div>
 									</div>
 								</div>
 
 								<div className={'content-panel'}>
-									{pubBody}
+									<div className={'pub-body'} contentEditable="true">
+										{pubBody}
+									</div>
 								</div>
 
 							</div>
 						</div>
 					</div>
 				</div>
+
+				<Overlay isOpen={this.state.isPublishOpen} onClose={this.togglePublish}>
+					<h5>Publish Snapshot</h5>
+					<p>Publishing a snapshot creates a publicly available version of your document at its current state.</p>
+					<p>Publishing a snapshot creates a publicly available version of your document at its current state.</p>
+					<p>Publishing a snapshot creates a publicly available version of your document at its current state.</p>
+					<p>Publishing a snapshot creates a publicly available version of your document at its current state.</p>
+					<p>Publishing a snapshot creates a publicly available version of your document at its current state.</p>
+					<p>Publishing a snapshot creates a publicly available version of your document at its current state.</p>
+					<button type={'button'} className={'pt-button pt-intent-primary'}>Publish Snapshot</button>
+				</Overlay>
+				<Overlay isOpen={this.state.isShareOpen} onClose={this.toggleShare}>
+					<h5>Share</h5>
+				</Overlay>
+				<Overlay isOpen={this.state.isAuthorsOpen} onClose={this.toggleAuthors}>
+					<h5>Authors</h5>
+				</Overlay>
+				<Overlay isOpen={this.state.isMetadataOpen} onClose={this.toggleMetadata}>
+					<h5>Metadata</h5>
+				</Overlay>
 			</div>
 		);
 	}

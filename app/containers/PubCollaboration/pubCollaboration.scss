@@ -13,7 +13,7 @@
 		position: fixed;
 		width: 100%;
 		background-color: white;
-		z-index: 98;
+		z-index: 18;
 	}
 	.lower {
 		direction: rtl;
@@ -38,8 +38,8 @@
 		direction: ltr;
 		padding: 1.5em 2em;
 		background-color: white;
-		border-left: 1px solid #ECECEC;
-		border-right: 1px solid #ECECEC;
+		border: 1px solid #ECECEC;
+		border-top: 0px solid #ECECEC;
 		margin-right: $sidePanelWidth;
 		min-height: calc(100vh - #{$navHeight} - #{$titlePanelHeight});
 		overflow: hidden;

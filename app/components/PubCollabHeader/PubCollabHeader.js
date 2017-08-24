@@ -8,6 +8,13 @@ const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	collaborators: PropTypes.array.isRequired,
 	activeCollaborators: PropTypes.array.isRequired,
+	onPublishClick: PropTypes.func,
+	onShareClick: PropTypes.func,
+};
+
+const defaultProps = {
+	onPublishClick: ()=>{},
+	onShareClick: ()=>{},
 };
 
 const PubCollabHeader = function(props) {
@@ -36,8 +43,8 @@ const PubCollabHeader = function(props) {
 					</div>
 				</div>
 				<div className={'flex-right'}>
-					<button type={'button'} className={'pt-button pt-intent-primary'}>Share</button>
-					<button type={'button'} className={'pt-button pt-intent-primary'}>Publish Snapshot</button>
+					<button type={'button'} className={'pt-button pt-intent-primary'} onClick={props.onShareClick}>Share</button>
+					<button type={'button'} className={'pt-button pt-intent-primary'} onClick={props.onPublishClick}>Publish Snapshot</button>
 					{/* <button type={'button'} className={'pt-button pt-intent-primary'}>Submit for Publication</button> */}
 				</div>
 			</div>
@@ -65,9 +72,8 @@ const PubCollabHeader = function(props) {
 				<div className={'flex-right avatars'}>
 					{props.activeCollaborators.map((collaborator)=> {
 						return (
-							<div className={'avatar-wrapper'}>
+							<div className={'avatar-wrapper'} key={`avatar-${collaborator.id}`}>
 								<Avatar
-									key={`avatar-${collaborator.id}`}
 									userInitials={collaborator.userInitials}
 									userAvatar={collaborator.userAvatar}
 									borderColor={collaborator.color}
@@ -81,10 +87,10 @@ const PubCollabHeader = function(props) {
 				</div>
 			</div>
 
-			
 		</div>
 	);
 };
 
+PubCollabHeader.defaultProps = defaultProps;
 PubCollabHeader.propTypes = propTypes;
 export default PubCollabHeader;

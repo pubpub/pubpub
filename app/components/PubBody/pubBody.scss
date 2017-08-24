@@ -3,6 +3,9 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	-moz-font-feature-settings: "liga" on;
+	.article-content *:first-child {
+		margin-top: 0px;
+	}
 	h2, h3 {
 		margin-top: 56px;
 		margin-bottom: -25px;
