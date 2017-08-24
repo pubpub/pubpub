@@ -3,6 +3,7 @@
 	width: 86vw;
 	top: 50px;
 	overflow: hidden;
+	max-width: 940px;
 	&.pt-overlay-enter, &.pt-overlay-appear {
 		opacity: 0;
 	}
@@ -17,8 +18,11 @@
 		opacity: 0;
 		transition: 200ms cubic-bezier(0.4, 1, 0.75, 0.9) opacity;
 	}
-	.pt-card {
-		max-width: 940px;
-		margin: 0 auto;
+}
+
+@media only screen and (min-width: 1092px) {  /* 720px */
+	.overlay-wrapper {
+		left: calc(50vw - 470px);
+		width: 940px;
 	}
 }

@@ -64,6 +64,8 @@ class PubEditor extends Component {
 									activeCollaborators={[pubCollaborators[0], pubCollaborators[2], pubCollaborators[5]]}
 									onPublishClick={this.togglePublish}
 									onShareClick={this.toggleShare}
+									onMetadataClick={this.toggleMetadata}
+									onAuthorsClick={this.toggleAuthors}
 								/>
 							</div>
 						</div>

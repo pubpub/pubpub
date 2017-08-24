@@ -19,6 +19,11 @@
 		white-space: nowrap;
 		overflow-x: hidden;
 		text-overflow: ellipsis;
+		cursor: pointer;
+		&:hover {
+			text-decoration: underline;
+			text-decoration-color: #AAA;	
+		}
 	}
 	.flex-center {
 		flex-grow: 1;
@@ -51,8 +56,9 @@
 			padding-bottom: 50px;
 			padding: 0em 1em;
 			.pt-tag {
+				cursor: pointer;
 				margin-right: 0.5em;
-				.pt-icon-standard {
+				span {
 					opacity: .5;
 					font-size: 10px;
 					padding-left: 0.5em;
@@ -65,7 +71,13 @@
 	.edit {
 		flex-shrink: 0;
 		padding-left: 0.5em;
-		opacity: 0.5;
+		.pt-icon-standard {
+			opacity: 0.5;
+			cursor: pointer;
+			&:hover {
+				opacity: 0.75;
+			}
+		}
 	}
 	.avatars {
 		padding-left: 1em;

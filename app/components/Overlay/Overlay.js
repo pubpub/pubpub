@@ -14,10 +14,8 @@ const propTypes = {
 const Overlay = function(props) {
 	return (
 		<BlueprintOverlay className="pt-overlay-scroll-container" isOpen={props.isOpen} onClose={props.onClose}>
-			<div className={'overlay-wrapper'}>
-				<div className={'pt-card pt-elevation-2'}>
-					{props.children}
-				</div>
+			<div className={'overlay-wrapper pt-card pt-elevation-2'}>
+				{props.children}
 			</div>
 		</BlueprintOverlay>
 	);

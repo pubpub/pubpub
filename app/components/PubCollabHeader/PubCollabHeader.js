@@ -10,11 +10,15 @@ const propTypes = {
 	activeCollaborators: PropTypes.array.isRequired,
 	onPublishClick: PropTypes.func,
 	onShareClick: PropTypes.func,
+	onMetadataClick: PropTypes.func,
+	onAuthorsClick: PropTypes.func,
 };
 
 const defaultProps = {
 	onPublishClick: ()=>{},
 	onShareClick: ()=>{},
+	onMetadataClick: ()=>{},
+	onAuthorsClick: ()=>{},
 };
 
 const PubCollabHeader = function(props) {
@@ -25,14 +29,14 @@ const PubCollabHeader = function(props) {
 	return (
 		<div className={'pub-collab-header'} >
 			<div className={'flex-parent'}>
-				<div className={'flex-left title'}>
+				<div className={'flex-left title'} onClick={props.onMetadataClick}>
 					{props.pubData.title}
 				</div>
 				<div className={'flex-center tags'}>
 					<div className={'tags-wrapper'}>
 						{props.pubData.collections.map((collection)=> {
 							return (
-								<div key={`collection-${collection.id}`} className={'pt-tag pt-minimal pt-intent-primary'}>
+								<div key={`collection-${collection.id}`} className={'pt-tag pt-minimal pt-intent-primary'} onClick={props.onMetadataClick}>
 									{collection.title}
 									{collection.isPrivate &&
 										<span className={'pt-icon-standard pt-icon-lock'} />
@@ -50,7 +54,7 @@ const PubCollabHeader = function(props) {
 			</div>
 
 			<div className={'flex-parent'}>
-				<div className={'flex-left'}>
+				<div className={'flex-left'} onClick={props.onAuthorsClick}>
 					{authors.map((author, index)=> {
 						const separator = index === authors.length - 1 ? '' : ', ';
 						const prefix = index === authors.length - 1 ? ' and ' : '';
@@ -67,7 +71,7 @@ const PubCollabHeader = function(props) {
 					})}
 				</div>
 				<div className={'flex-center edit'}>
-					<span className={'pt-icon-standard pt-icon-edit'} />
+					<span className={'pt-icon-standard pt-icon-edit'} onClick={props.onAuthorsClick} />
 				</div>
 				<div className={'flex-right avatars'}>
 					{props.activeCollaborators.map((collaborator)=> {
