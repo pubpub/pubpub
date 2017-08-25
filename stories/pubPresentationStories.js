@@ -45,7 +45,7 @@ const content = (
 		</div>
 	</div>
 );
-storiesOf('Pub Presentation', module)
+storiesOf('PubPresentation', module)
 .add('Default', () => (
 	<div>
 		{content}

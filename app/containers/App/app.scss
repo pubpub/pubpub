@@ -1,10 +1,13 @@
 @import "~normalize.css";
+@import "./blueprint.scss";
+@import "./grid.scss";
 
 body {
 	margin: 0;
 	padding: 0;
 	width: 100vw;
 	overflow-x: hidden;
+	color: #333;
 	font-family: -apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Open Sans", "Helvetica Neue", sans-serif;
 }
 
@@ -14,29 +17,29 @@ body {
 	text-align: center;
 }
 
-h1 {
-	font-size: 2em;
-}
-
 .subtext {
 	color: #555;
 	font-size: 0.85em;
 }
 
-@import "./blueprint.scss";
-@import "./grid.scss";
+.no-click {
+	pointer-events: none;
+}
 
 // Import Custom Icon Fonts
 // ****************************
-// @font-face {
-// 	font-family: 'fontello';
-// 	src: url('/icons/fontello.eot?14194274');
-// 	src: url('/icons/fontello.eot?14194274#iefix') format('embedded-opentype'),
-// 		url('/icons/fontello.woff2?14194274') format('woff2'),
-// 		url('/icons/fontello.woff?14194274') format('woff'),
-// 		url('/icons/fontello.ttf?14194274') format('truetype'),
-// 		url('/icons/fontello.svg?14194274#fontello') format('svg');
-// }
-// 
-// .pt-icon-admin:before { font-family: 'fontello' !important; content: '\e900'; } /* '' */
-// .pt-icon-dashboard:before { font-family: 'fontello' !important; content: '\e901'; } /* '' */
+@font-face {
+	font-family: 'pubpub-icons';
+	src:  url('/icons/pubpub-icons.eot');
+	src:  url('/icons/pubpub-icons.eot#iefix') format('embedded-opentype'),
+		url('/icons/pubpub-icons.ttf') format('truetype'),
+		url('/icons/pubpub-icons.woff') format('woff'),
+		url('/icons/pubpub-icons.svg#pubpub-icons') format('svg');
+}
+
+.pt-icon-admin:before { font-family: 'pubpub-icons' !important; content: "\e900"; }
+.pt-icon-lock2:before { font-family: 'pubpub-icons' !important; content: "\e901"; }
+.pt-icon-google-scholar:before { font-family: 'pubpub-icons' !important; content: "\e828"; }
+.pt-icon-orcid:before { font-family: 'pubpub-icons' !important; content: "\e840"; }
+.pt-icon-facebook:before { font-family: 'pubpub-icons' !important; content: "\ea90"; }
+.pt-icon-twitter:before { font-family: 'pubpub-icons' !important; content: "\ea96"; }

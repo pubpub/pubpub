@@ -2,7 +2,6 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import Avatar from 'components/Avatar/Avatar';
 
-const pageStyle = { backgroundColor: '#555' };
 const wrapperStyle = { padding: '1em', display: 'flex', alignItems: 'flex-end' };
 
 const plain = {
@@ -23,7 +22,7 @@ const sizes = [25, 50, 100, 250];
 const colors = ['green', 'blue', 'red', 'purple', 'cyan', 'orange', 'magenta', 'pink'];
 storiesOf('Avatar', module)
 .add('Default', () => (
-	<div style={pageStyle}>
+	<div>
 		<div style={wrapperStyle}>
 			{sizes.map((size)=> {
 				return <Avatar key={`plain-${size}`} {...plain} width={size} />;

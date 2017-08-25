@@ -15,7 +15,7 @@ const content = (
 		/>
 	</div>
 );
-storiesOf('Pub Collab Header', module)
+storiesOf('PubCollabHeader', module)
 .add('Default', () => (
 	<div>
 		{content}

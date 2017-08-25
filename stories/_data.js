@@ -1,6 +1,22 @@
 /* eslint-disable max-len */
 import React from 'react';
 
+export const userData = {
+	slug: 'maggie',
+	initials: 'MF',
+	firstName: 'Maggie',
+	lastName: 'Farnkrux',
+	fullName: 'Maggie Farnkrux',
+	avatar: '/dev/maggie.jpg',
+	bio: 'Maggie is based in Canada and has over 90 runs servicing millions of skiers each year. With 13 state-of-the-art ski lifts and a selection of choices for both snowboarders and skiers Maggie attained her reputation through daring, varied runs catering for a selection of abilities and preferences.',
+	facebook: 'maggie',
+	personalSite: 'https://wwww.me.com',
+	twitter: 'mFarn',
+	orcid: '00-123-002-4123',
+	googleScholar: 'farnkrux',
+	location: 'Calgary, Canada',
+};
+
 export const navItems = [
 	{
 		slug: '/',
@@ -173,6 +189,47 @@ export const pubCollaborators = [
 		color: 'purple',
 	},
 ];
+
+export const collectionData = {
+	title: 'Sensor Hardware',
+	slug: 'sensors',
+	description: 'An open collection dedicated to the free discussion of new topics relating to elephants and whales that create hardware.',
+	isPrivate: true,
+	isOpenSubmissions: true,
+	isPage: false,
+	pubs: [
+		{
+			id: 0,
+			title: 'Open Schematics',
+			slug: 'open-schematics',
+			lastModified: String(new Date()),
+			status: 'published',
+			numCollaborators: 12,
+			numSuggestions: 8,
+			numDiscussions: 4,
+		},
+		{
+			id: 1,
+			title: 'Regulatory Endeavors of Mammals',
+			slug: 'regulatory',
+			lastModified: String(new Date()),
+			status: 'unpublished',
+			numCollaborators: 7,
+			numSuggestions: 0,
+			numDiscussions: 13,
+		},
+		{
+			id: 2,
+			title: 'A Lesson in Pedagogy',
+			slug: 'pedagogy',
+			lastModified: String(new Date()),
+			status: 'submitted',
+			numCollaborators: 8,
+			numSuggestions: 24,
+			numDiscussions: 1,
+		},
+	],
+};
 
 export const pubBody = (
 	<div className={'article-content'}>

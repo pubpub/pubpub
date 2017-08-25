@@ -20,7 +20,7 @@ const authors = [
 	},
 ];
 
-storiesOf('Pub Preview', module)
+storiesOf('PubPreview', module)
 .add('Default', () => (
 	<div className={'container'}>
 		<div className={'row'}>
