@@ -12,7 +12,6 @@ import DashboardSite from 'components/DashboardSite/DashboardSite';
 require('./dashboard.scss');
 
 const propTypes = {
-	dispatch: PropTypes.func.isRequired,
 	location: PropTypes.object.isRequired,
 	match: PropTypes.object.isRequired,
 	appData: PropTypes.object.isRequired,

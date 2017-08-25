@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import Avatar from 'components/Avatar/Avatar';
 
 require('./userNav.scss');
 
@@ -27,13 +26,13 @@ const UserNav = function(props) {
 				<div className="pt-tab-list pt-large" role="tablist">
 					{tabs.map((tab)=> {
 						return (
-							<Link 
+							<Link
 								key={`tab-${tab.id}`}
-								to={`/user/${props.userSlug}${tab.path}`} 
-								className={'pt-tab'} 
-								role={'tab'} 
+								to={`/user/${props.userSlug}${tab.path}`}
+								className={'pt-tab'}
+								role={'tab'}
 								aria-selected={(tab.path.indexOf(props.activeTab) > -1 || (!tab.path && !props.activeTab)) ? 'true' : 'false'}
-								>
+							>
 								{tab.label}
 							</Link>
 						);

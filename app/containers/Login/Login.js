@@ -5,17 +5,19 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
 const propTypes = {
-	dispatch: PropTypes.func.isRequired,
-	match: PropTypes.object.isRequired,
 	appData: PropTypes.object.isRequired,
 };
 
 class Login extends Component {
-
+	constructor(props) {
+		super(props);
+		this.state = {
+			email: '',
+		};
+	}
 	render() {
 		return (
 			<div className={'pub-presentation'}>
-
 				<Helmet>
 					<title>Login</title>
 				</Helmet>
@@ -25,6 +27,8 @@ class Login extends Component {
 						<div className={'col-12'}>
 
 							<h1>Login</h1>
+							<p>{this.props.appData.title} is powered by PubPub.</p>
+							<p>Use your PubPub login</p>
 							{/*
 								Pub Header
 								Pub Contributors

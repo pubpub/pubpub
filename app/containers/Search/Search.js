@@ -3,16 +3,25 @@ import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
+import queryString from 'query-string';
 
 require('./search.scss');
 
 const propTypes = {
-	dispatch: PropTypes.func.isRequired,
-	match: PropTypes.object.isRequired,
-	appData: PropTypes.object.isRequired,
+	// dispatch: PropTypes.func.isRequired,
+	location: PropTypes.object.isRequired,
+	searchData: PropTypes.object.isRequired,
 };
 
 class Search extends Component {
+	constructor(props) {
+		super(props);
+		const queryObject = queryString.parse(this.props.location.search);
+		this.state = {
+			searchQuery: queryObject.q,
+		};
+	}
+
 	render() {
 		return (
 			<div className={'search'}>
@@ -25,6 +34,7 @@ class Search extends Component {
 					<div className={'row'}>
 						<div className={'col-12'}>
 							<h1>Search</h1>
+							{JSON.stringify(this.props.searchData.results)}
 						</div>
 					</div>
 				</div>
@@ -36,5 +46,5 @@ class Search extends Component {
 
 Search.propTypes = propTypes;
 export default withRouter(connect(state => ({
-	appData: state.app
+	searchData: state.search
 }))(Search));

@@ -12,12 +12,16 @@ import { userData } from '../../../stories/_data';
 require('./user.scss');
 
 const propTypes = {
-	dispatch: PropTypes.func.isRequired,
+	// dispatch: PropTypes.func.isRequired,
 	match: PropTypes.object.isRequired,
-	appData: PropTypes.object.isRequired,
+	// appData: PropTypes.object.isRequired,
 };
 
 class User extends Component {
+	componentWillMount() {
+		// Dispatch and get userData
+	}
+
 	render() {
 		const contributors = [1, 2, 3, 4, 5];
 		const authors = [

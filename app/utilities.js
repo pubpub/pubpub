@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 // export const apiFetch = function(path, opts) {
 // 	const urlPrefix = 'https://api.github.com/users';
 // 	const finalRoute = `${urlPrefix}/${path}/orgs`;
@@ -16,6 +18,7 @@
 
 
 /* DEV ONLY */
+/* This will be removed once connected to API */
 /* -------- */
 
 import { pubData, pubVersions, pubCollaborators, pubBody } from '../stories/_data';

@@ -16,7 +16,6 @@ require('./pubPresentation.scss');
 const propTypes = {
 	dispatch: PropTypes.func.isRequired,
 	match: PropTypes.object.isRequired,
-	appData: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
 };
 
@@ -61,6 +60,5 @@ class PubPresentation extends Component {
 
 PubPresentation.propTypes = propTypes;
 export default withRouter(connect(state => ({
-	appData: state.app,
 	pubData: state.pub
 }))(PubPresentation));

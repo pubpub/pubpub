@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
@@ -12,9 +12,9 @@ import { pubBody, pubData, pubCollaborators } from '../../../stories/_data';
 require('./pubCollaboration.scss');
 
 const propTypes = {
-	dispatch: PropTypes.func.isRequired,
-	match: PropTypes.object.isRequired,
-	appData: PropTypes.object.isRequired,
+	// dispatch: PropTypes.func.isRequired,
+	// match: PropTypes.object.isRequired,
+	// appData: PropTypes.object.isRequired,
 };
 
 class PubEditor extends Component {

@@ -9,7 +9,6 @@ import Footer from 'components/Footer/Footer';
 require('./collection.scss');
 
 const propTypes = {
-	dispatch: PropTypes.func.isRequired,
 	match: PropTypes.object.isRequired,
 	appData: PropTypes.object.isRequired,
 };
