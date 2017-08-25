@@ -4,8 +4,8 @@ import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
-import PubHeader from 'components/PubHeader/PubHeader';
-import PubDetails from 'components/PubDetails/PubDetails';
+import PubPresHeader from 'components/PubPresHeader/PubPresHeader';
+import PubPresDetails from 'components/PubPresDetails/PubPresDetails';
 import PubBody from 'components/PubBody/PubBody';
 import Footer from 'components/Footer/Footer';
 
@@ -35,13 +35,13 @@ class PubPresentation extends Component {
 					<title>Pub</title>
 				</Helmet>
 
-				<PubHeader
+				<PubPresHeader
 					title={'Soundscapes'}
 					description={this.props.pubData.data.pub.description}
 					backgroundImage={'/dev/pubHeader4.jpg'}
 				/>
 
-				<PubDetails
+				<PubPresDetails
 					collaborators={this.props.pubData.data.collaborators}
 					pubData={this.props.pubData.data.pub}
 					versions={this.props.pubData.data.versions}

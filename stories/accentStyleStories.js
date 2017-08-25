@@ -52,6 +52,19 @@ const content = (
 					<Tag className={'pt-minimal'} intent={Intent.PRIMARY}>JS Primary Tag</Tag>
 				</div>
 			</div>
+
+			<div className={'row'}>
+				<div className={'col-12'}>
+					<h2>Tabs</h2>
+					<div className="pt-tabs">
+						<div className="pt-tab-list .modifier" role="tablist">
+							<div className="pt-tab" role="tab">Selected tab</div>
+							<div className="pt-tab" role="tab" aria-selected="true">Another tab</div>
+							<div className="pt-tab" role="tab">Disabled tab</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<Footer />

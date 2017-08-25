@@ -9,12 +9,12 @@ storiesOf('UserHeader', module)
 .add('Default', () => (
 	<div>
 		<div style={wrapperStyle}>
-			<UserHeader 
+			<UserHeader
 				userData={userData}
 			/>
 		</div>
 		<div style={wrapperStyle}>
-			<UserHeader 
+			<UserHeader
 				userData={userData}
 				isUser={true}
 			/>

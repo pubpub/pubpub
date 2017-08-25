@@ -21,7 +21,7 @@
 			font-size: 1.2em;
 		}
 		.links {
-			margin: 20px 0px;
+			margin: 20px 0px 0px -10px;
 		}
 	}
 	
@@ -33,7 +33,7 @@
 			float: none;
 			width: 100%;
 			padding-left: 0em;
-			margin: 20px 0px;
+			margin-bottom: 20px;
 			a {
 				margin-bottom: 0px;
 			}
@@ -41,6 +41,9 @@
 		.details {
 			margin-right: 0px;
 			text-align: center;
+			.links {
+				margin: 20px 0px 0px;
+			}
 		}
 	}
 }

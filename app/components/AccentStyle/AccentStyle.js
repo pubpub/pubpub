@@ -21,6 +21,8 @@ const AccentStyle = function(props) {
 			.pt-tag.pt-minimal.pt-intent-primary { background-color: ${props.accentMinimalColor}; }
 			.accent-color .pt-button:not([class*="pt-intent-"]), .accent-color .pt-button[class*="pt-icon-"]::before { color: inherit; }
 			.accent-color a, .accent-color a:hover { color: inherit; }
+			.pt-tab[aria-selected="true"], .pt-tab:not([aria-selected="true"]):hover { box-shadow: inset 0 -3px 0 ${props.accentMinimalColor}; }
+			.pt-tab[aria-selected="true"] { box-shadow: inset 0 -3px 0 ${props.accentColor}; }
 		`}</style>
 	);
 };
