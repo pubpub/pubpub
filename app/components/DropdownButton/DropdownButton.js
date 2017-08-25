@@ -25,9 +25,12 @@ const DropdownButton = function(props) {
 			transitionDuration={-1}
 			inheritDarkTheme={false}
 		>
-			{props.icon
+			{props.icon && !props.label
 				? <button type="button" className={`pt-button ${props.icon}`} />
 				: <button type="button" className="pt-button">
+					{props.icon &&
+						<span className={`pt-icon-standard ${props.icon}`} />
+					}
 					{props.label}
 					<span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
 				</button>

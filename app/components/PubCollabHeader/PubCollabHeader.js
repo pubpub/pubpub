@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 import Avatar from 'components/Avatar/Avatar';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
 

@@ -89,9 +89,10 @@ const PubPresDetails = function(props) {
 							{props.pubData.numDiscussions}
 							<span className={'pt-icon-standard pt-icon-chat'} />
 							{props.pubData.numSuggestions}
-							<span className={'pt-icon-standard pt-icon-manually-entered-data'} />
+							{/* <span className={'pt-icon-standard pt-icon-manually-entered-data'} /> */}
+							<span className={'pt-icon-standard pt-icon-doc'} />
 							{props.pubData.numCollaborators}
-							<span className={'pt-icon-standard pt-icon-people'} />
+							<span className={'pt-icon-standard pt-icon-team'} />
 							{props.collaborators.map((collaborator)=> {
 								return (
 									<Avatar
