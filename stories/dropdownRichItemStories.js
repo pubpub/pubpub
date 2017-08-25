@@ -12,34 +12,6 @@ const wrapperStyle = {
 storiesOf('DropdownRichItem', module)
 .add('Default', () => (
 	<div>
-		{/*<div style={{ margin: '1em', }}>
-			<DropdownButton label={'Can Suggest'} icon={'pt-icon-doc'}>
-				<div className={'pt-menu'}>
-					<DropdownRichItem
-						title={'None'}
-						description={'Cannot view the working draft or discussions.'}
-						icon={'pt-icon-lock2'}
-					/>
-					<DropdownRichItem
-						title={'Can Suggest'}
-						description={'Can participate in discussions and suggest updates to the working draft.'}
-						icon={'pt-icon-doc'}
-					/>
-					<DropdownRichItem
-						title={'Can Edit'}
-						description={'Can directly edit the working draft and participate in discussions.'}
-						icon={'pt-icon-edit2'}
-					/>
-					<DropdownRichItem
-						title={'Can Manage'}
-						description={'Can edit and manage contributors, metadata, and publishing.'}
-						icon={'pt-icon-admin'}
-						hideBottomBorder={true}
-					/>
-				</div>
-			</DropdownButton>
-		</div>*/}
-
 		<div style={wrapperStyle}>
 			<DropdownRichItem
 				title={'Private Collaboration'}

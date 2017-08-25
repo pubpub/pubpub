@@ -5,6 +5,7 @@ import Helmet from 'react-helmet';
 import { withRouter } from 'react-router-dom';
 
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
+import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 
 import Overlay from 'components/Overlay/Overlay';
 import { pubBody, pubData, pubCollaborators } from '../../../stories/_data';
@@ -105,7 +106,7 @@ class PubEditor extends Component {
 					<button type={'button'} className={'pt-button pt-intent-primary'}>Publish Snapshot</button>
 				</Overlay>
 				<Overlay isOpen={this.state.isShareOpen} onClose={this.toggleShare}>
-					<h5>Share</h5>
+					<PubCollabShare />
 				</Overlay>
 				<Overlay isOpen={this.state.isAuthorsOpen} onClose={this.toggleAuthors}>
 					<h5>Authors</h5>

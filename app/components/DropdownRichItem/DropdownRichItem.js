@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 
 require('./dropdownRichItem.scss');
 
@@ -12,7 +11,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-	label: undefined,
+	icon: undefined,
 	description: undefined,
 	hideBottomBorder: false,
 };
@@ -25,11 +24,11 @@ const DropdownRichItem = function(props) {
 			}
 
 			<div className={'title'}>{props.title}</div>
-			
+
 			{props.description &&
 				<div className={'description'}>{props.description}</div>
 			}
-			
+
 		</div>
 	);
 };
