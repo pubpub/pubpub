@@ -1,5 +1,6 @@
 import React from 'react';
 import { addDecorator, configure } from '@storybook/react';
+import { setOptions } from '@storybook/addon-options';
 import { BrowserRouter } from 'react-g-analytics';
 import { FocusStyleManager } from '@blueprintjs/core';
 
@@ -19,6 +20,10 @@ function loadStories() {
 	addDecorator(RouterDecorator);
 	req.keys().forEach(req);
 }
+/* Set Storybook options */
+setOptions({
+	showDownPanel: false,
+});
 
 configure(loadStories, module);
 

@@ -11,11 +11,6 @@ const propTypes = {
 };
 
 class Login extends Component {
-	componentWillMount() {
-		// Check that it's a valid page slug
-		// If it's not - show 404
-		// Grab the data for the page
-	}
 
 	render() {
 		return (
@@ -45,4 +40,6 @@ class Login extends Component {
 }
 
 Login.propTypes = propTypes;
-export default withRouter(connect(state => ({ appData: state.app }))(Login));
+export default withRouter(connect(state => ({
+	appData: state.app
+}))(Login));

@@ -5,7 +5,7 @@ import dateFormat from 'dateformat';
 import Avatar from 'components/Avatar/Avatar';
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 
-require('./pubDetails.scss');
+require('./pubPresDetails.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
@@ -13,7 +13,7 @@ const propTypes = {
 	versions: PropTypes.array.isRequired,
 };
 
-const PubDetails = function(props) {
+const PubPresDetails = function(props) {
 	const authors = props.collaborators.filter((collaborator)=> {
 		return collaborator.isAuthor;
 	});
@@ -24,7 +24,7 @@ const PubDetails = function(props) {
 	}, undefined);
 
 	return (
-		<div className={'pub-details'}>
+		<div className={'pub-pres-details'}>
 			<div className={'container pub'}>
 				<div className={'row'}>
 					<div className={'col-12'}>
@@ -115,5 +115,5 @@ const PubDetails = function(props) {
 	);
 };
 
-PubDetails.propTypes = propTypes;
-export default PubDetails;
+PubPresDetails.propTypes = propTypes;
+export default PubPresDetails;

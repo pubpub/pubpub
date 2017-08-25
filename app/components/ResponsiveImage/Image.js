@@ -13,7 +13,7 @@ const defaultProps = {
 	className: '',
 };
 
-const Image = function(props) {
+const ResponsiveImage = function(props) {
 	// https://ericportis.com/posts/2014/srcset-sizes/
 	const sizes = [50, 256, 512, 1024, 2048];
 	const srcSet = sizes.reduce((prev, curr)=> {
@@ -31,6 +31,6 @@ const Image = function(props) {
 	);
 };
 
-Image.defaultProps = defaultProps;
-Image.propTypes = propTypes;
-export default Image;
+ResponsiveImage.defaultProps = defaultProps;
+ResponsiveImage.propTypes = propTypes;
+export default ResponsiveImage;

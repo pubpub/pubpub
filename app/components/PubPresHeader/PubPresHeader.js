@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-require('./pubHeader.scss');
+require('./pubPresHeader.scss');
 
 const propTypes = {
 	title: PropTypes.string.isRequired,
@@ -14,7 +14,7 @@ const defaultProps = {
 	backgroundImage: undefined,
 };
 
-const PubHeader = function(props) {
+const PubPresHeader = function(props) {
 	const backgroundStyle = {};
 	if (props.backgroundImage) {
 		backgroundStyle.backgroundImage = `url("${props.backgroundImage}")`;
@@ -22,7 +22,7 @@ const PubHeader = function(props) {
 	}
 
 	return (
-		<div className={'pub-header'} style={backgroundStyle}>
+		<div className={'pub-pres-header'} style={backgroundStyle}>
 			<div className={`wrapper ${props.backgroundImage ? 'dim' : ''}`}>
 				<div className={'container pub'}>
 					<div className={'row'}>
@@ -39,6 +39,6 @@ const PubHeader = function(props) {
 	);
 };
 
-PubHeader.defaultProps = defaultProps;
-PubHeader.propTypes = propTypes;
-export default PubHeader;
+PubPresHeader.defaultProps = defaultProps;
+PubPresHeader.propTypes = propTypes;
+export default PubPresHeader;

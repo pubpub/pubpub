@@ -1,4 +1,4 @@
-.pub-details {
+.pub-pres-details {
 	padding: 2em 0em;
 	.details {
 		float: left;
@@ -20,7 +20,7 @@
 }
 
 @media only screen and (max-width: 45em) {  /* 720px */
-	.pub-details {
+	.pub-pres-details {
 		.details {
 			float: none;
 			width: auto;
