@@ -17,11 +17,11 @@ const defaultProps = {
 const UserHeader = function(props) {
 	const links = [
 		{ id: 0, value: props.userData.location, icon: 'pt-icon-map-marker no-click' },
-		{ id: 1, value: props.userData.personalSite, icon: 'pt-icon-link' },
-		{ id: 2, value: props.userData.facebook, icon: 'pt-icon-facebook' },
-		{ id: 3, value: props.userData.twitter, icon: 'pt-icon-twitter' },
-		{ id: 4, value: props.userData.orcid, icon: 'pt-icon-orcid' },
-		{ id: 5, value: props.userData.googleScholar, icon: 'pt-icon-google-scholar' },
+		{ id: 1, value: props.userData.personalSite, icon: 'pt-icon-link', href: props.userData.personalSite },
+		{ id: 2, value: props.userData.facebook, icon: 'pt-icon-facebook', href: `https://www.facebook.com/${props.userData.facebook}` },
+		{ id: 3, value: props.userData.twitter, icon: 'pt-icon-twitter', href: `https://www.twitter.com/${props.userData.twitter}` },
+		{ id: 4, value: props.userData.orcid, icon: 'pt-icon-orcid', href: `https://www.orcid.org/${props.userData.orcid}` },
+		{ id: 5, value: props.userData.googleScholar, icon: 'pt-icon-google-scholar', href: `https://scholar.google.com/${props.userData.googleScholar}` },
 
 	];
 	return (
@@ -46,7 +46,7 @@ const UserHeader = function(props) {
 					{links.filter((link)=> {
 						return link.value;
 					}).map((link)=> {
-						return <a key={`link-${link.id}`} className={`pt-button pt-minimal ${link.icon}`}>{link.value}</a>;
+						return <a key={`link-${link.id}`} className={`pt-button pt-minimal ${link.icon}`} href={link.href}>{link.value}</a>;
 					})}
 				</div>
 			</div>

@@ -19,6 +19,7 @@ const Login = () => <Async load={import('containers/Login/Login')} />;
 const NoMatch = () => <Async load={import('containers/NoMatch/NoMatch')} />;
 const PubCollaboration = () => <Async load={import('containers/PubCollaboration/PubCollaboration')} />;
 const PubPresentation = () => <Async load={import('containers/PubPresentation/PubPresentation')} />;
+const Search = () => <Async load={import('containers/Search/Search')} />;
 const User = () => <Async load={import('containers/User/User')} />;
 
 const propTypes = {
@@ -107,7 +108,7 @@ class App extends Component {
 					<WrappedRoute exact path="/pub-create" component={NoMatch} />
 					<WrappedRoute exact path="/resetpassword" component={NoMatch} />
 					<WrappedRoute exact path="/resetpassword/:resetHash/:username" component={NoMatch} />
-					<WrappedRoute exact path="/search" component={NoMatch} />
+					<WrappedRoute exact path="/search" component={Search} />
 					<WrappedRoute exact path="/signup" component={NoMatch} />
 					<WrappedRoute exact path="/user/:slug" component={User} />
 					<WrappedRoute exact path="/user/:slug/:mode" component={User} />
