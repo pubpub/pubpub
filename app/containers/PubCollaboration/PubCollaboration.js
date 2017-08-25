@@ -6,9 +6,8 @@ import { withRouter } from 'react-router-dom';
 
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
 
-import PubBody from 'components/PubBody/PubBody';
 import Overlay from 'components/Overlay/Overlay';
-import { pubBody, pubData, pubCollaborators } from '../../../stories/_data.js';
+import { pubBody, pubData, pubCollaborators } from '../../../stories/_data';
 
 require('./pubCollaboration.scss');
 
@@ -61,7 +60,11 @@ class PubEditor extends Component {
 								<PubCollabHeader
 									pubData={pubData}
 									collaborators={pubCollaborators}
-									activeCollaborators={[pubCollaborators[0], pubCollaborators[2], pubCollaborators[5]]}
+									activeCollaborators={[
+										pubCollaborators[0],
+										pubCollaborators[2],
+										pubCollaborators[5]
+									]}
 									onPublishClick={this.togglePublish}
 									onShareClick={this.toggleShare}
 									onMetadataClick={this.toggleMetadata}
@@ -99,12 +102,6 @@ class PubEditor extends Component {
 
 				<Overlay isOpen={this.state.isPublishOpen} onClose={this.togglePublish}>
 					<h5>Publish Snapshot</h5>
-					<p>Publishing a snapshot creates a publicly available version of your document at its current state.</p>
-					<p>Publishing a snapshot creates a publicly available version of your document at its current state.</p>
-					<p>Publishing a snapshot creates a publicly available version of your document at its current state.</p>
-					<p>Publishing a snapshot creates a publicly available version of your document at its current state.</p>
-					<p>Publishing a snapshot creates a publicly available version of your document at its current state.</p>
-					<p>Publishing a snapshot creates a publicly available version of your document at its current state.</p>
 					<button type={'button'} className={'pt-button pt-intent-primary'}>Publish Snapshot</button>
 				</Overlay>
 				<Overlay isOpen={this.state.isShareOpen} onClose={this.toggleShare}>

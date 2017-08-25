@@ -7,16 +7,13 @@ const propTypes = {
 	appData: PropTypes.object.isRequired,
 };
 
-class DashboardSite extends Component {	
-
+class DashboardSite extends Component {
 	render() {
-		const data = this.props.appData;
-
 		return (
 			<div>
 
 				<h1 className={'content-title'}>Site</h1>
-				
+
 				<div>Link:</div>
 				<div>Description:</div>
 				<div>Privacy:</div>

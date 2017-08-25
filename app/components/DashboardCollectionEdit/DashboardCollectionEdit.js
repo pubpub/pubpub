@@ -19,24 +19,22 @@ class DashboardCollectionEdit extends Component {
 			isPrivate: props.collectionData.isPrivate,
 			isOpenSubmissions: props.collectionData.isOpenSubmissions,
 		};
-		this.changeTitle = this.changeTitle.bind(this);
-		this.changeDescription = this.changeDescription.bind(this);
-		this.changeSlug = this.changeSlug.bind(this);
+		this.setTitle = this.setTitle.bind(this);
+		this.setDescription = this.setDescription.bind(this);
+		this.setSlug = this.setSlug.bind(this);
 		this.setPublic = this.setPublic.bind(this);
 		this.setPrivate = this.setPrivate.bind(this);
 		this.setOpen = this.setOpen.bind(this);
 		this.setClosed = this.setClosed.bind(this);
 	}
 
-	changeTitle(evt) {
+	setTitle(evt) {
 		this.setState({ title: evt.target.value });
 	}
-
-	changeDescription(evt) {
+	setDescription(evt) {
 		this.setState({ description: evt.target.value });
 	}
-
-	changeSlug(evt) {
+	setSlug(evt) {
 		this.setState({ slug: evt.target.value });
 	}
 	setPublic() {
@@ -54,7 +52,6 @@ class DashboardCollectionEdit extends Component {
 
 	render() {
 		const data = this.props.collectionData;
-		const pubs = data.pubs || [];
 
 		return (
 			<div className={'dashboard-collection-edit'}>
@@ -68,7 +65,7 @@ class DashboardCollectionEdit extends Component {
 					placeholder={'Enter title'}
 					isRequired={true}
 					value={this.state.title}
-					onChange={this.changeTitle}
+					onChange={this.setTitle}
 					error={undefined}
 				/>
 				<InputField
@@ -76,14 +73,14 @@ class DashboardCollectionEdit extends Component {
 					placeholder={'Enter description'}
 					helperText={'Used for search engines. Max 180 characters'}
 					value={this.state.description}
-					onChange={this.changeDescription}
+					onChange={this.setDescription}
 					error={undefined}
 				/>
 				<InputField
 					label={'Link'}
 					placeholder={'Enter link'}
 					value={this.state.slug}
-					onChange={this.changeSlug}
+					onChange={this.setSlug}
 					error={undefined}
 				/>
 
@@ -102,13 +99,13 @@ class DashboardCollectionEdit extends Component {
 				</InputField>
 
 				<InputField label={'Layout'}>
-					<div></div>
+					<div>Layout Component</div>
 				</InputField>
 
 			</div>
 		);
 	}
-};
+}
 
 
 DashboardCollectionEdit.propTypes = propTypes;

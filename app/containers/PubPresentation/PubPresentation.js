@@ -60,4 +60,7 @@ class PubPresentation extends Component {
 }
 
 PubPresentation.propTypes = propTypes;
-export default withRouter(connect(state => ({ appData: state.app, pubData: state.pub }))(PubPresentation));
+export default withRouter(connect(state => ({
+	appData: state.app,
+	pubData: state.pub
+}))(PubPresentation));

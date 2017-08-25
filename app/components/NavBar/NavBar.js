@@ -53,7 +53,6 @@ const NavBar = function(props) {
 										</a>
 									</Popover>
 								);
-								
 							})}
 						</ul>
 					</div>

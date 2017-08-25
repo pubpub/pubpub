@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import dateFormat from 'dateformat';
-import Avatar from 'components/Avatar/Avatar';
 
 require('./dashboardSide.scss');
 

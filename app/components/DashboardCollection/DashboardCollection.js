@@ -8,13 +8,11 @@ const propTypes = {
 	collectionData: PropTypes.object.isRequired,
 	sortMode: PropTypes.string,
 	isSortReverse: PropTypes.bool,
-	isEditMode: PropTypes.bool,
 };
 
 const defaultProps = {
 	sortMode: 'title',
 	isSortReverse: false,
-	isEditMode: false,
 };
 
 const DashboardCollection = function(props) {

@@ -30,7 +30,7 @@ const propTypes = {
 
 class App extends Component {
 	static logoutHandler() {
-		console.log('Logout');
+		// console.log('Logout');
 	}
 
 	componentWillMount() {

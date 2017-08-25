@@ -124,7 +124,7 @@ class Dashboard extends Component {
 										return <DashboardSite appData={this.props.appData} />;
 									default:
 										if (activeMode === 'edit') {
-											return <DashboardCollectionEdit collectionData={collectionData} />;	
+											return <DashboardCollectionEdit collectionData={collectionData} />;
 										}
 										return <DashboardCollection collectionData={collectionData} sortMode={queryObject.sort} isSortReverse={queryObject.direction === 'reverse'} />;
 									}

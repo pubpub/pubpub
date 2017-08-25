@@ -203,7 +203,7 @@ export const pubBody = (
 
 		<h2>Ipse Epicurus fortasse redderet, ut Sextus Peducaeus, Sex.</h2>
 
-		<p>Summum ením bonum exposuit vacuitatem doloris; Quorum sine causa fieri nihil putandum est. Itaque his sapiens semper vacabit. Ergo, si semel tristior effectus est, hilara vita amissa est? <a href='http://loripsum.net/' target='_blank'>Summus dolor plures dies manere non potest?</a> Itaque dicunt nec dubitant: mihi sic usus est, tibi ut opus est facto, fac. Qui ita affectus, beatum esse numquam probabis; Memini vero, inquam; Omnia contraria, quos etiam insanos esse vultis. Quae qui non vident, nihil umquam magnum ac cognitione dignum amaverunt. Nunc haec primum fortasse audientis servire debemus. </p>
+		<p>Summum ením bonum exposuit vacuitatem doloris; Quorum sine causa fieri nihil putandum est. Itaque his sapiens semper vacabit. Ergo, si semel tristior effectus est, hilara vita amissa est? <a href="http://loripsum.net/" target="_blank" rel="noopener noreferrer">Summus dolor plures dies manere non potest?</a> Itaque dicunt nec dubitant: mihi sic usus est, tibi ut opus est facto, fac. Qui ita affectus, beatum esse numquam probabis; Memini vero, inquam; Omnia contraria, quos etiam insanos esse vultis. Quae qui non vident, nihil umquam magnum ac cognitione dignum amaverunt. Nunc haec primum fortasse audientis servire debemus. </p>
 
 		<ul>
 			<li>Minime vero istorum quidem, inquit.</li>
@@ -221,7 +221,7 @@ export const pubBody = (
 
 		<img src="/dev/tomer.jpg" alt="Hello" />
 
-		<p>Itaque haec cum illis est dissensio, cum Peripateticis nulla sane. Sed quia studebat laudi et dignitati, multum in virtute processerat. Gerendus est mos, modo recte sentiat. Cur post Tarentum ad Archytam? Hanc quoque iucunditatem, si vis, transfer in animum; <a href="http://loripsum.net/" target="_blank">Laboro autem non sine causa;</a> Collatio igitur ista te nihil iuvat. Qui-vere falsone, quaerere mittimus-dicitur oculis se privasse; </p>
+		<p>Itaque haec cum illis est dissensio, cum Peripateticis nulla sane. Sed quia studebat laudi et dignitati, multum in virtute processerat. Gerendus est mos, modo recte sentiat. Cur post Tarentum ad Archytam? Hanc quoque iucunditatem, si vis, transfer in animum; <a href="http://loripsum.net/" target="_blank" rel="noopener noreferrer">Laboro autem non sine causa;</a> Collatio igitur ista te nihil iuvat. Qui-vere falsone, quaerere mittimus-dicitur oculis se privasse; </p>
 
 		<pre>
 		Quae mihi ipsi, qui volo et esse et haberi gratus, grata non
@@ -244,7 +244,7 @@ export const pubBody = (
 		</ol>
 
 
-		<p>Portenta haec esse dicit, neque ea ratione ullo modo posse vivi; Quamquam te quidem video minime esse deterritum. Sint modo partes vitae beatae. Audeo dicere, inquit. Immo videri fortasse. Ad quorum et cognitionem et usum iam corroborati natura ipsa praeeunte deducimur. <a href="http://loripsum.net/" target="_blank">Age, inquies, ista parva sunt.</a> <a href="http://loripsum.net/" target="_blank">Comprehensum, quod cognitum non habet?</a> Quid enim est a Chrysippo praetermissum in Stoicis? Nam de isto magna dissensio est. </p>
+		<p>Portenta haec esse dicit, neque ea ratione ullo modo posse vivi; Quamquam te quidem video minime esse deterritum. Sint modo partes vitae beatae. Audeo dicere, inquit. Immo videri fortasse. Ad quorum et cognitionem et usum iam corroborati natura ipsa praeeunte deducimur. <a href="http://loripsum.net/" target="_blank" rel="noopener noreferrer">Age, inquies, ista parva sunt.</a> <a href="http://loripsum.net/" target="_blank" rel="noopener noreferrer">Comprehensum, quod cognitum non habet?</a> Quid enim est a Chrysippo praetermissum in Stoicis? Nam de isto magna dissensio est. </p>
 
 		<h5>Quid autem habent admirationis, cum prope accesseris?</h5>
 
@@ -269,7 +269,7 @@ export const pubBody = (
 		</ul>
 
 
-		<p>Quis enim redargueret? Ita prorsus, inquam; Cur ipse Pythagoras et Aegyptum lustravit et Persarum magos adiit? Tum Quintus: Est plane, Piso, ut dicis, inquit. Si longus, levis; <a href="http://loripsum.net/" target="_blank">Explanetur igitur.</a> </p>
+		<p>Quis enim redargueret? Ita prorsus, inquam; Cur ipse Pythagoras et Aegyptum lustravit et Persarum magos adiit? Tum Quintus: Est plane, Piso, ut dicis, inquit. Si longus, levis; <a href="http://loripsum.net/" target="_blank" rel="noopener noreferrer">Explanetur igitur.</a> </p>
 
 		<blockquote cite="http://loripsum.net">
 			Attica pubes reliquique Graeci, qui hoc anapaesto citantur, hoc non dolere solum voluptatis nomine appellaret, illud Aristippeum contemneret, aut, si utrumque probaret, ut probat, coniungeret doloris vacuitatem cum voluptate et duobus ultimis uteretur.
@@ -278,7 +278,7 @@ export const pubBody = (
 
 		<h3>Si longus, levis dictata sunt.</h3>
 
-		<p>Qua igitur re ab deo vincitur, si aeternitate non vincitur? Iam quae corporis sunt, ea nec auctoritatem cum animi partibus, comparandam et cognitionem habent faciliorem. <i>Quid ergo?</i> Ergo hoc quidem apparet, nos ad agendum esse natos. <a href="http://loripsum.net/" target="_blank">A mene tu?</a> </p>
+		<p>Qua igitur re ab deo vincitur, si aeternitate non vincitur? Iam quae corporis sunt, ea nec auctoritatem cum animi partibus, comparandam et cognitionem habent faciliorem. <i>Quid ergo?</i> Ergo hoc quidem apparet, nos ad agendum esse natos. <a href="http://loripsum.net/" target="_blank" rel="noopener noreferrer">A mene tu?</a> </p>
 
 		<p>Age nunc isti doceant, vel tu potius quis enim ista melius? Eaedem enim utilitates poterunt eas labefactare atque pervertere. Nummus in Croesi divitiis obscuratur, pars est tamen divitiarum. Quo modo autem optimum, si bonum praeterea nullum est? Quo modo autem philosophus loquitur? <i>Tu quidem reddes;</i> </p>
 

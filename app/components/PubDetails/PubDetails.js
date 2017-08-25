@@ -42,7 +42,7 @@ const PubDetails = function(props) {
 										</span>
 									);
 								}
-								return <span key={`author-${author.id}`}>{prefix}{author.fullName}{separator}</span>
+								return <span key={`author-${author.id}`}>{prefix}{author.fullName}{separator}</span>;
 							})}
 						</div>
 						<div className={'button'}>
