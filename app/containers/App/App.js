@@ -61,10 +61,6 @@ class App extends Component {
 		const isCommunity = this.hostname !== 'www.pubpub.org';
 		const isHome = this.props.location.pathname === '/';
 
-		// const fullWrappers = { navItems: appData.navItems };
-		// const fixedPage = { navItems: undefined, fixHeader: true, hideFooter: true };
-		// const hideFooter = { navItems: appData.navItems, hideFooter: true };
-
 		return (
 			<div>
 				<Helmet>
