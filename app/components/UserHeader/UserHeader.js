@@ -33,7 +33,9 @@ const UserHeader = function(props) {
 					width={150} 
 				/>
 				{props.isUser &&
-					<Link to={`/user/${props.userData.slug}/edit`} className={'pt-button pt-intent-primary'}>Edit Profile</Link>
+					<div>
+						<Link to={`/user/${props.userData.slug}/edit`} className={'pt-button pt-intent-primary'}>Edit Profile</Link>	
+					</div>
 				}
 			</div>
 			<div className={'details'}>

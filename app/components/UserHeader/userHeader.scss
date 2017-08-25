@@ -26,3 +26,21 @@
 	}
 	
 }
+
+@media only screen and (max-width: 45em) {  /* 720px */
+	.user-header {
+		.avatar-wrapper {
+			float: none;
+			width: 100%;
+			padding-left: 0em;
+			margin: 20px 0px;
+			a {
+				margin-bottom: 0px;
+			}
+		}
+		.details {
+			margin-right: 0px;
+			text-align: center;
+		}
+	}
+}
