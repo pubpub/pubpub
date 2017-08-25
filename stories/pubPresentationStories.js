@@ -1,7 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import PubDetails from 'components/PubDetails/PubDetails';
-import PubHeader from 'components/PubHeader/PubHeader';
+import PubPresDetails from 'components/PubPresDetails/PubPresDetails';
+import PubPresHeader from 'components/PubPresHeader/PubPresHeader';
 import PubBody from 'components/PubBody/PubBody';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
 
@@ -19,12 +19,12 @@ const wrapperStyle = {
 const content = (
 	<div className={'pub-presentation'}>
 		<div style={wrapperStyle}>
-			<PubHeader
+			<PubPresHeader
 				title={'Soundscapes'}
 				description={pubData.description}
 				backgroundImage={'/dev/pubHeader3.jpg'}
 			/>
-			<PubDetails
+			<PubPresDetails
 				collaborators={pubCollaborators}
 				pubData={pubData}
 				versions={pubVersions}
@@ -32,11 +32,11 @@ const content = (
 			<PubBody content={pubBody} />
 		</div>
 		<div style={wrapperStyle}>
-			<PubHeader
+			<PubPresHeader
 				title={'Soundscapes'}
 				description={pubData.description}
 			/>
-			<PubDetails
+			<PubPresDetails
 				collaborators={pubCollaborators}
 				pubData={pubData}
 				versions={pubVersions}

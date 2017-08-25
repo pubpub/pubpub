@@ -27,14 +27,14 @@ const UserHeader = function(props) {
 	return (
 		<div className={'user-header'}>
 			<div className={'avatar-wrapper'}>
-				<Avatar 
-					userAvatar={props.userData.avatar} 
-					userInitials={props.userData.intials} 
-					width={150} 
+				<Avatar
+					userAvatar={props.userData.avatar}
+					userInitials={props.userData.intias}
+					width={150}
 				/>
 				{props.isUser &&
 					<div>
-						<Link to={`/user/${props.userData.slug}/edit`} className={'pt-button pt-intent-primary'}>Edit Profile</Link>	
+						<Link to={`/user/${props.userData.slug}/edit`} className={'pt-button pt-intent-primary'}>Edit Profile</Link>
 					</div>
 				}
 			</div>
@@ -46,7 +46,7 @@ const UserHeader = function(props) {
 					{links.filter((link)=> {
 						return link.value;
 					}).map((link)=> {
-						return <a key={`link-${link.id}`} className={`pt-button pt-minimal ${link.icon}`} href={link.href}>{link.value}</a>;
+						return <a key={`link-${link.id}`} className={`pt-button pt-minimal ${link.icon}`} href={link.href} rel={'noopener noreferrer'}>{link.value}</a>;
 					})}
 				</div>
 			</div>
