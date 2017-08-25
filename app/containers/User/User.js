@@ -44,7 +44,7 @@ class User extends Component {
 					<meta name="description" content={userData.bio} />
 				</Helmet>
 
-				<div className={'container header'}>
+				<div className={'container narrow header'}>
 					<div className={'row'}>
 						<div className={'col-12'}>
 							<UserHeader userData={userData} />
@@ -52,7 +52,7 @@ class User extends Component {
 					</div>
 				</div>
 
-				<div className={'container nav'}>
+				<div className={'container narrow nav'}>
 					<div className={'row'}>
 						<div className={'col-12'}>
 							<UserNav userSlug={userData.slug} activeTab={this.props.match.params.mode} />
@@ -60,7 +60,7 @@ class User extends Component {
 					</div>
 				</div>
 
-				<div className={'container content'}>
+				<div className={'container narrow content'}>
 					<div className={'row'}>
 						<div className={'col-12'}>
 							<PubPreview

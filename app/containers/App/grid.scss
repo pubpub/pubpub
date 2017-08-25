@@ -1,69 +1,72 @@
 h1 {
-  font-size: 2.5rem;
+	font-size: 2.5rem;
 }
 
 h2 {
-  font-size: 2rem;
+	font-size: 2rem;
 }
 
 h3 {
-  font-size: 1.375rem;
+	font-size: 1.375rem;
 }
 
 h4 {
-  font-size: 1.125rem;
+	font-size: 1.125rem;
 }
 
 h5 {
-  font-size: 1rem;
+	font-size: 1rem;
 }
 
 h6 {
-  font-size: 0.875rem;
+	font-size: 0.875rem;
 }
 
 p {
-  font-size: 1.125rem;
-  line-height: 1.8;
+	font-size: 1.125rem;
+	line-height: 1.8;
 }
 
 /* POSITIONING */
 
 .left {
-  text-align: left;
+	text-align: left;
 }
 
 .right {
-  text-align: right;
+	text-align: right;
 }
 
 .center {
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .justify {
-  text-align: justify;
+	text-align: justify;
 }
 
 /* ==== GRID SYSTEM ==== */
 
 .container {
-  width: 90%;
-  margin-left: auto;
-  margin-right: auto;
+	width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+	&.narrow {
+		max-width: 800px;
+	}
 }
 
 .row {
-  position: relative;
-  width: 100%;
+	position: relative;
+	width: 100%;
 }
 
 .row [class^="col"] {
-  float: left;
-  margin: 0.5rem 2%;
-  min-height: 0.125rem;
+	float: left;
+	margin: 0.5rem 2%;
+	min-height: 0.125rem;
 }
 
 .col-1,
@@ -78,55 +81,55 @@ p {
 .col-10,
 .col-11,
 .col-12 {
-  width: 96%;
+	width: 96%;
 }
 
 .col-1-sm {
-  width: 4.33%;
+	width: 4.33%;
 }
 
 .col-2-sm {
-  width: 12.66%;
+	width: 12.66%;
 }
 
 .col-3-sm {
-  width: 21%;
+	width: 21%;
 }
 
 .col-4-sm {
-  width: 29.33%;
+	width: 29.33%;
 }
 
 .col-5-sm {
-  width: 37.66%;
+	width: 37.66%;
 }
 
 .col-6-sm {
-  width: 46%;
+	width: 46%;
 }
 
 .col-7-sm {
-  width: 54.33%;
+	width: 54.33%;
 }
 
 .col-8-sm {
-  width: 62.66%;
+	width: 62.66%;
 }
 
 .col-9-sm {
-  width: 71%;
+	width: 71%;
 }
 
 .col-10-sm {
-  width: 79.33%;
+	width: 79.33%;
 }
 
 .col-11-sm {
-  width: 87.66%;
+	width: 87.66%;
 }
 
 .col-12-sm {
-  width: 96%;
+	width: 96%;
 }
 
 .row::after {
@@ -136,67 +139,67 @@ p {
 }
 
 .hidden-sm {
-  display: none;
+	display: none;
 }
 
 @media only screen and (min-width: 33.75em) {  /* 540px */
-  .container {
-    // width: 80%;
-  }
+	.container {
+		// width: 80%;
+	}
 }
 
 @media only screen and (min-width: 45em) {  /* 720px */
-  .col-1 {
-    width: 4.33%;
-  }
+	.col-1 {
+		width: 4.33%;
+	}
 
-  .col-2 {
-    width: 12.66%;
-  }
+	.col-2 {
+		width: 12.66%;
+	}
 
-  .col-3 {
-    width: 21%;
-  }
+	.col-3 {
+		width: 21%;
+	}
 
-  .col-4 {
-    width: 29.33%;
-  }
+	.col-4 {
+		width: 29.33%;
+	}
 
-  .col-5 {
-    width: 37.66%;
-  }
+	.col-5 {
+		width: 37.66%;
+	}
 
-  .col-6 {
-    width: 46%;
-  }
+	.col-6 {
+		width: 46%;
+	}
 
-  .col-7 {
-    width: 54.33%;
-  }
+	.col-7 {
+		width: 54.33%;
+	}
 
-  .col-8 {
-    width: 62.66%;
-  }
+	.col-8 {
+		width: 62.66%;
+	}
 
-  .col-9 {
-    width: 71%;
-  }
+	.col-9 {
+		width: 71%;
+	}
 
-  .col-10 {
-    width: 79.33%;
-  }
+	.col-10 {
+		width: 79.33%;
+	}
 
-  .col-11 {
-    width: 87.66%;
-  }
+	.col-11 {
+		width: 87.66%;
+	}
 
-  .col-12 {
-    width: 96%;
-  }
+	.col-12 {
+		width: 96%;
+	}
 
-  .hidden-sm {
-    display: block;
-  }
+	.hidden-sm {
+		display: block;
+	}
 }
 
 // @media only screen and (min-width: 60em) { /* 960px */
@@ -207,8 +210,8 @@ p {
 // }
 
 @media only screen and (min-width: 75em) { /* 1200px */
-  .container {
-    // width: 75%;
-    max-width: 75rem;
-  }
+	.container {
+		// width: 75%;
+		max-width: 75rem;
+	}
 }
