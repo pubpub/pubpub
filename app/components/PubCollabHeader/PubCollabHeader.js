@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 import Avatar from 'components/Avatar/Avatar';
+import DropdownButton from 'components/DropdownButton/DropdownButton';
 
 require('./pubCollabHeader.scss');
 
@@ -92,30 +93,21 @@ const PubCollabHeader = function(props) {
 							</div>
 						);
 					})}
-					<Popover
-						content={
-							<ul className={'pt-menu'}>
-								<li style={{ textAlign: 'right' }}>
-									<div className="pt-menu-item pt-popover-dismiss">
-										Hello
-									</div>
-									<div className="pt-menu-item pt-popover-dismiss">
-										Option 1
-									</div>
-									<div className="pt-menu-item pt-popover-dismiss">
-										Option 2
-									</div>
-								</li>
-							</ul>
-						}
-						interactionKind={PopoverInteractionKind.CLICK}
-						position={Position.BOTTOM_RIGHT}
-						popoverClassName={'pt-minimal'}
-						transitionDuration={-1}
-						inheritDarkTheme={false}
-					>
-						<button type="button" className={'pt-button pt-icon-more pt-small'} />
-					</Popover>
+					<DropdownButton icon={'pt-icon-more pt-small'} isRightAligned={true}>
+						<ul className={'pt-menu'}>
+							<li style={{ textAlign: 'right' }}>
+								<div className="pt-menu-item pt-popover-dismiss">
+									Hello
+								</div>
+								<div className="pt-menu-item pt-popover-dismiss">
+									Option 1
+								</div>
+								<div className="pt-menu-item pt-popover-dismiss">
+									Option 2
+								</div>
+							</li>
+						</ul>
+					</DropdownButton>
 				</div>
 			</div>
 
