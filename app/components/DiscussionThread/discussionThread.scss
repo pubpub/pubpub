@@ -1,7 +1,14 @@
 .discussion-thread {
+	.back {
+		position: relative;
+		display: block;
+		top: -1em;
+		border-bottom: 1px solid #E0E0E0;
+	}
 	.title {
 		font-weight: bold;
 		margin-bottom: 2em;
+		line-height: 24px;
 	}
 	.thread-buttons {
 		float: right;
@@ -31,7 +38,7 @@
 				}
 				.name {
 					font-weight: bold;
-					text-decoration: none;
+					// text-decoration: none;
 				}
 				.date {
 					opacity: 0.75;
@@ -44,5 +51,6 @@
 	}
 	.pt-input {
 		width: 100%;
+		margin-bottom: 2em;
 	}
 }

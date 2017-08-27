@@ -9,6 +9,7 @@ require('./discussionThread.scss');
 
 const propTypes = {
 	discussions: PropTypes.array.isRequired,
+	slug: PropTypes.string.isRequired,
 };
 
 const DiscussionThread = function(props) {
@@ -20,23 +21,31 @@ const DiscussionThread = function(props) {
 
 	return (
 		<div className={'discussion-thread'}>
+			<Link to={`/pub/${props.slug}/collaborate`} className={'back pt-button pt-minimal'}>
+				Show all threads
+			</Link>
+
 			<div className={'thread-buttons pt-button-group pt-minimal pt-small'}>
 				<button type={'button'} className={'pt-button pt-icon-edit2'} />
 				<button type={'button'} className={'pt-button pt-icon-compressed'} />
 			</div>
-			<div className={'title'}>{sortedDiscussions[0].title}</div>
 
+
+			<div className={'title'}>{sortedDiscussions[0].title}</div>
 			<div>
 				{sortedDiscussions.map((discussion)=> {
 					return (
 						<div className={'discussion'} key={`discussion-${discussion.id}`}>
 
 							<div className={'item-header'}>
-								<Avatar
-									width={30}
-									userInitials={discussion.author.userInitials}
-									userAvatar={discussion.author.userAvatar}
-								/>
+								<Link to={`/user/${discussion.author.slug}`}>
+									<Avatar
+										width={30}
+										userInitials={discussion.author.userInitials}
+										userAvatar={discussion.author.userAvatar}
+									/>
+								</Link>
+
 								<div className={'details'}>
 									<Link to={`/user/${discussion.author.slug}`} className={'name'}>{discussion.author.fullName || discussion.author.userInitials}</Link>
 									<TimeAgo date={discussion.date} className={'date'} />
@@ -55,8 +64,8 @@ const DiscussionThread = function(props) {
 										</div>
 									</DropdownButton>
 								</div>
-							</div>
 
+							</div>
 							<div className={'text'}>{discussion.text}</div>
 						</div>
 					);

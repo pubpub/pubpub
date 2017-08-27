@@ -1,24 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import DropdownButton from 'components/DropdownButton/DropdownButton';
-import DropdownRichItem from 'components/DropdownRichItem/DropdownRichItem';
+// import PropTypes from 'prop-types';
 import PubCollabDropdownPermissions from 'components/PubCollabDropdownPermissions/PubCollabDropdownPermissions';
 import PubCollabDropdownPrivacy from 'components/PubCollabDropdownPrivacy/PubCollabDropdownPrivacy';
 
 // require('./pubCollabShare.scss');
 
-const propTypes = {
-	title: PropTypes.string.isRequired,
-	icon: PropTypes.string,
-	description: PropTypes.string,
-	hideBottomBorder: PropTypes.bool,
-};
-
-const defaultProps = {
-	icon: undefined,
-	description: undefined,
-	hideBottomBorder: false,
-};
+// const propTypes = {
+// 	title: PropTypes.string.isRequired,
+// 	icon: PropTypes.string,
+// 	description: PropTypes.string,
+// 	hideBottomBorder: PropTypes.bool,
+// };
 
 const PubCollabShare = function(props) {
 	return (
@@ -31,6 +23,5 @@ const PubCollabShare = function(props) {
 	);
 };
 
-PubCollabShare.defaultProps = defaultProps;
-PubCollabShare.propTypes = propTypes;
+// PubCollabShare.propTypes = propTypes;
 export default PubCollabShare;

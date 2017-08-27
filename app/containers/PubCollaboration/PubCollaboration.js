@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
+import queryString from 'query-string';
 
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 import DiscussionPreviewPanel from 'components/DiscussionPreviewPanel/DiscussionPreviewPanel';
+import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 
 import Overlay from 'components/Overlay/Overlay';
 import { pubBody, pubData, pubCollaborators, discussions } from '../../../stories/_data';
@@ -15,11 +17,11 @@ require('./pubCollaboration.scss');
 
 const propTypes = {
 	// dispatch: PropTypes.func.isRequired,
-	// match: PropTypes.object.isRequired,
+	location: PropTypes.object.isRequired,
 	// appData: PropTypes.object.isRequired,
 };
 
-class PubEditor extends Component {
+class PubCollaboration extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -48,6 +50,12 @@ class PubEditor extends Component {
 	}
 
 	render() {
+		const queryObject = queryString.parse(this.props.location.search);
+		const activeThread = discussions.reduce((prev, curr)=> {
+			if (curr[0].threadNumber === Number(queryObject.thread)) { return curr; }
+			return prev;
+		}, undefined);
+
 		return (
 			<div className={'pub-collaboration'}>
 
@@ -83,7 +91,10 @@ class PubEditor extends Component {
 
 								<div className={'side-panel'}>
 									<div className={'side-panel-content'}>
-										<DiscussionPreviewPanel threads={discussions} slug={pubData.slug}/>
+										{activeThread
+											? <DiscussionThread discussions={activeThread} slug={pubData.slug} />
+											: <DiscussionPreviewPanel threads={discussions} slug={pubData.slug} />
+										}
 									</div>
 								</div>
 
@@ -116,5 +127,5 @@ class PubEditor extends Component {
 	}
 }
 
-PubEditor.propTypes = propTypes;
-export default withRouter(connect(state => ({ appData: state.app }))(PubEditor));
+PubCollaboration.propTypes = propTypes;
+export default withRouter(connect(state => ({ appData: state.app }))(PubCollaboration));
