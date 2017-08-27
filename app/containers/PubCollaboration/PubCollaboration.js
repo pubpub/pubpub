@@ -6,9 +6,10 @@ import { withRouter } from 'react-router-dom';
 
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
+import DiscussionPreviewPanel from 'components/DiscussionPreviewPanel/DiscussionPreviewPanel';
 
 import Overlay from 'components/Overlay/Overlay';
-import { pubBody, pubData, pubCollaborators } from '../../../stories/_data';
+import { pubBody, pubData, pubCollaborators, discussions } from '../../../stories/_data';
 
 require('./pubCollaboration.scss');
 
@@ -82,11 +83,7 @@ class PubEditor extends Component {
 
 								<div className={'side-panel'}>
 									<div className={'side-panel-content'}>
-										<div className={'pt-card pt-elevation-2'} style={{ marginBottom: '1em' }}>
-											Hello, I wonder how this comment size dictates the
-											functionality of longer forms of text and other
-											things like the such.
-										</div>
+										<DiscussionPreviewPanel threads={discussions} slug={pubData.slug}/>
 									</div>
 								</div>
 

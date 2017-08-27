@@ -1,4 +1,5 @@
 .discussion-preview {
+	display: block;
 	.title {
 		font-weight: bold;
 		padding-bottom: 0.5em;
@@ -27,5 +28,9 @@
 			text-overflow: ellipsis;
 			white-space: nowrap;
 		}
+	}
+	.more {
+		padding-left: 28px;
+		opacity: 0.75;
 	}
 }

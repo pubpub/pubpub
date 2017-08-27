@@ -24,7 +24,7 @@ const DiscussionPreview = function(props) {
 		if (foo.date < bar.date) { return -1; }
 		return 0;
 	});
-	
+
 	return (
 		<div className={'discussion-preview'}>
 			<div className={'icons'}>
@@ -42,7 +42,7 @@ const DiscussionPreview = function(props) {
 			<div className={'title'}>{sortedDiscussions[0].title}</div>
 
 			<div>
-				{sortedDiscussions.map((discussion)=> {
+				{sortedDiscussions.slice(0, 3).map((discussion)=> {
 					return (
 						<div className={'discussion'} key={`discussion-preview-${discussion.id}`}>
 							<Avatar
@@ -55,6 +55,11 @@ const DiscussionPreview = function(props) {
 					);
 				})}
 			</div>
+			{sortedDiscussions.length > 3 &&
+				<div className={'more'}>
+					{sortedDiscussions.length - 3} more...
+				</div>
+			}
 		</div>
 	);
 };

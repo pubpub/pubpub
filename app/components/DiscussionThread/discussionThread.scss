@@ -1,0 +1,46 @@
+.discussion-thread {
+	.title {
+		font-weight: bold;
+	}
+
+	.discussion {
+		margin: 1em 0em 2em;
+		.item-header {
+			display: flex;
+			align-items: center;
+			.avatar {
+				flex-shrink: 0;
+			}
+			.details {
+				flex-grow: 1;
+				flex-shrink: 1;
+				min-width: 0;
+				margin: 0em 0.5em;
+				height: 30px;
+				.name, .date {
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					font-size: 12px;
+					line-height: 14px;
+					padding-bottom: 2px;
+					display: block;
+				}
+				.name {
+					font-weight: bold;
+					text-decoration: none;
+				}
+				.date {
+					opacity: 0.75;
+				}
+			}
+			.pt-button-group {
+				flex-shrink: 0;
+				white-space: nowrap;
+			}
+		}
+		.text {
+			margin-top: 0.5em;
+		}
+	}
+}

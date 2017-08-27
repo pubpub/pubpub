@@ -193,6 +193,7 @@ export const pubCollaborators = [
 export const discussions = [
 	[
 		{
+			threadNumber: 1,
 			id: 1,
 			title: undefined,
 			text: 'That is an interesting thought but begs the question about non-linearities that exist within the normal time range.',
@@ -201,7 +202,6 @@ export const discussions = [
 			attachment: undefined,
 			highlight: undefined,
 			suggestions: undefined,
-			parent: 0
 		},
 		{
 			id: 0,
@@ -218,7 +218,7 @@ export const discussions = [
 			suggestions: {
 				firebaseId: 'hsa9z821m2j1',
 			},
-			parent: undefined,
+			threadNumber: 1,
 		},
 		{
 			id: 2,
@@ -233,7 +233,7 @@ export const discussions = [
 			},
 			highlight: undefined,
 			suggestions: undefined,
-			parent: 0
+			threadNumber: 1,
 		},
 	],
 	[
@@ -246,7 +246,7 @@ export const discussions = [
 			attachment: undefined,
 			highlight: undefined,
 			suggestions: undefined,
-			parent: 0
+			threadNumber: 2,
 		},
 		{
 			id: 3,
@@ -254,19 +254,6 @@ export const discussions = [
 			text: 'What is important about elephants that can\'t be said about lions!?',
 			date: new Date() - 4000000000,
 			author: pubCollaborators[3],
-			attachment: undefined,
-			highlight: undefined,
-			suggestions: {
-				firebaseId: 'hsa9z821m2j1',
-			},
-			parent: undefined,
-		},
-		{
-			id: 5,
-			title: undefined,
-			text: 'Fanciful words is all you present. You have no idea what you are saying, not to mention have a silly haircut!',
-			date: new Date() - 300000000,
-			author: pubCollaborators[5],
 			attachment: {
 				fileName: 'bugs.xls',
 				url: 'http://www.file.com',
@@ -274,9 +261,92 @@ export const discussions = [
 			},
 			highlight: undefined,
 			suggestions: undefined,
-			parent: 0
+			threadNumber: 2,
 		},
-	]
+	],
+	[
+		{
+			id: 8,
+			title: undefined,
+			text: 'That is an interesting thought but begs the question about non-linearities that exist within the normal time range.',
+			date: new Date() - 350000000,
+			author: pubCollaborators[2],
+			attachment: undefined,
+			highlight: undefined,
+			suggestions: undefined,
+			threadNumber: 3,
+		},
+		{
+			id: 5,
+			title: 'Review From Piers',
+			text: 'What is important about elephants that can\'t be said about lions!?',
+			date: new Date() - 4000000000,
+			author: pubCollaborators[1],
+			attachment: undefined,
+			highlight: undefined,
+			suggestions: {
+				firebaseId: 'hsa9z821m2j1',
+			},
+			threadNumber: 3,
+		},
+		{
+			id: 7,
+			title: undefined,
+			text: 'Fanciful words is all you present. You have no idea what you are saying, not to mention have a silly haircut!',
+			date: new Date() - 300000000,
+			author: pubCollaborators[4],
+			attachment: undefined,
+			highlight: undefined,
+			suggestions: undefined,
+			threadNumber: 3,
+		},
+		{
+			id: 6,
+			title: undefined,
+			text: 'Fanciful words is all you present. You have no idea what you are saying, not to mention have a silly haircut!',
+			date: new Date() - 310000000,
+			author: pubCollaborators[5],
+			attachment: undefined,
+			highlight: undefined,
+			suggestions: undefined,
+			threadNumber: 3,
+		},
+	],
+	[
+		{
+			id: 11,
+			title: undefined,
+			text: 'That is an interesting thought but begs the question about non-linearities that exist within the normal time range.',
+			date: new Date() - 350000000,
+			author: pubCollaborators[0],
+			attachment: undefined,
+			highlight: undefined,
+			suggestions: undefined,
+			threadNumber: 4,
+		},
+		{
+			id: 9,
+			title: 'Methods Section Help',
+			text: 'What is important about elephants that can\'t be said about lions!?',
+			date: new Date() - 4000000000,
+			author: pubCollaborators[3],
+			attachment: undefined,
+			highlight: undefined,
+			suggestions: undefined,
+			threadNumber: 4,
+		},
+		{
+			id: 10,
+			title: undefined,
+			text: 'Fanciful words is all you present. You have no idea what you are saying, not to mention have a silly haircut!',
+			date: new Date() - 300000000,
+			author: pubCollaborators[5],
+			attachment: undefined,
+			highlight: undefined,
+			suggestions: undefined,
+			threadNumber: 4,
+		},
+	],
 ];
 
 export const collectionData = {

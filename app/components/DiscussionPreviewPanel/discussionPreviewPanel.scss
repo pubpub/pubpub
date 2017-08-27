@@ -1,0 +1,40 @@
+.discussion-preview-panel {
+	.thread {
+		display: block;
+		text-decoration: none;
+		position: relative;
+		padding-bottom: 1em;
+		margin-bottom: 1em;
+		cursor: pointer;
+		&:hover:not(:last-of-type) {
+			border-bottom: 1px solid transparent;
+		}
+		&:not(:last-of-type) {
+			border-bottom: 1px solid #E0E0E0;
+		}
+		// &:hover {
+		// 	.title {
+		// 		text-decoration: underline;
+		// 	} 
+		// }
+		// &:hover:after {
+		// 	content: "";
+		// 	position: absolute;
+		// 	height: calc(100% - 1em);
+		// 	width: 3px;
+		// 	right: -10px;
+		// 	top: 0;
+		// 	opacity: 0.75;
+		// }
+		&:hover:after {
+			content: "";
+			position: absolute;
+			height: calc(100% + 1em + 1px;);
+			width: calc(100% + 2em);
+			left: -1em;
+			top: calc(-1em - 1px);
+			background-color: #E0E0E0 !important;
+			z-index: -1;
+		}
+	}
+}

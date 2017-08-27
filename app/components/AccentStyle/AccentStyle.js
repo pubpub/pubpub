@@ -23,6 +23,7 @@ const AccentStyle = function(props) {
 			.accent-color a, .accent-color a:hover { color: inherit; }
 			.pt-tab[aria-selected="true"], .pt-tab:not([aria-selected="true"]):hover { box-shadow: inset 0 -3px 0 ${props.accentMinimalColor}; }
 			.pt-tab[aria-selected="true"] { box-shadow: inset 0 -3px 0 ${props.accentColor}; }
+			.thread:hover:after { background-color: ${props.accentColor}; }
 		`}</style>
 	);
 };

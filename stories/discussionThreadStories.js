@@ -1,21 +1,21 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
+import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import { discussions } from './_data';
 
-const wrapperStyle = { margin: '1em', boxShadow: '0px 0px 1px rgba(0, 0, 0, 0.25)' };
+const wrapperStyle = { width: 'calc(100% - 2em)', maxWidth: '350px', margin: '1em', boxShadow: '0px 0px 1px rgba(0, 0, 0, 0.25)', float: 'left', };
 
-storiesOf('DiscussionPreview', module)
+storiesOf('DiscussionThread', module)
 .add('Default', () => (
 	<div>
 		<div style={wrapperStyle}>
-			<DiscussionPreview
+			<DiscussionThread
 				discussions={discussions[0]}
 				slug={'my-article'}
 			/>
 		</div>
 		<div style={wrapperStyle}>
-			<DiscussionPreview
+			<DiscussionThread
 				discussions={discussions[1]}
 				slug={'my-article'}
 			/>
