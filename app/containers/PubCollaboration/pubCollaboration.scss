@@ -25,12 +25,12 @@
 		position: fixed;
 		height: calc(100vh - #{$navHeight} - #{$titlePanelHeight});
 		width: $sidePanelWidth;
-		overflow: hidden;
+		// overflow: hidden;
 		.side-panel-content {
 			overflow: hidden;
 			overflow-y: scroll;
 			width: calc(#{$sidePanelWidth} + 50px);
-			padding: 1em calc(1em + 50px) 1em 1em;
+			padding: 1em calc(0em + 50px) 1em 1.5em;
 			height: 100%;
 		}
 	}

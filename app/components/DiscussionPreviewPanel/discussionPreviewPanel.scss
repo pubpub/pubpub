@@ -10,7 +10,7 @@
 			border-bottom: 1px solid transparent;
 		}
 		&:not(:last-of-type) {
-			border-bottom: 1px solid #E0E0E0;
+			border-bottom: 1px solid #F0F0F0;
 		}
 		// &:hover {
 		// 	.title {
@@ -33,7 +33,7 @@
 			width: calc(100% + 2em);
 			left: -1em;
 			top: calc(-1em - 1px);
-			background-color: #E0E0E0 !important;
+			background-color: #F0F0F0 !important;
 			z-index: -1;
 		}
 	}

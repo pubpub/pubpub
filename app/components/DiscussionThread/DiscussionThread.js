@@ -47,7 +47,9 @@ const DiscussionThread = function(props) {
 								</Link>
 
 								<div className={'details'}>
-									<Link to={`/user/${discussion.author.slug}`} className={'name'}>{discussion.author.fullName || discussion.author.userInitials}</Link>
+									<div className={'name'}>
+										<Link to={`/user/${discussion.author.slug}`}>{discussion.author.fullName || discussion.author.userInitials}</Link>
+									</div>
 									<TimeAgo date={discussion.date} className={'date'} />
 								</div>
 
