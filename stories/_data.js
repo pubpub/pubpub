@@ -190,6 +190,95 @@ export const pubCollaborators = [
 	},
 ];
 
+export const discussions = [
+	[
+		{
+			id: 1,
+			title: undefined,
+			text: 'That is an interesting thought but begs the question about non-linearities that exist within the normal time range.',
+			date: new Date() - 250000000,
+			author: pubCollaborators[1],
+			attachment: undefined,
+			highlight: undefined,
+			suggestions: undefined,
+			parent: 0
+		},
+		{
+			id: 0,
+			title: 'A discussion about qualities',
+			text: 'What is important about elephants that can\'t be said about lions!?',
+			date: new Date() - 3000000000,
+			author: pubCollaborators[0],
+			attachment: undefined,
+			highlight: {
+				text: 'a note about',
+				prefix: 'This is ',
+				suffix: ' elephants and silly things',
+			},
+			suggestions: {
+				firebaseId: 'hsa9z821m2j1',
+			},
+			parent: undefined,
+		},
+		{
+			id: 2,
+			title: undefined,
+			text: 'Fanciful words is all you present. You have no idea what you are saying, not to mention have a silly haircut!',
+			date: new Date() - 200000000,
+			author: pubCollaborators[2],
+			attachment: {
+				fileName: 'bugs.xls',
+				url: 'http://www.file.com',
+				type: 'xls',
+			},
+			highlight: undefined,
+			suggestions: undefined,
+			parent: 0
+		},
+	],
+	[
+		{
+			id: 4,
+			title: undefined,
+			text: 'That is an interesting thought but begs the question about non-linearities that exist within the normal time range.',
+			date: new Date() - 350000000,
+			author: pubCollaborators[4],
+			attachment: undefined,
+			highlight: undefined,
+			suggestions: undefined,
+			parent: 0
+		},
+		{
+			id: 3,
+			title: 'Discussion on Jun 5',
+			text: 'What is important about elephants that can\'t be said about lions!?',
+			date: new Date() - 4000000000,
+			author: pubCollaborators[3],
+			attachment: undefined,
+			highlight: undefined,
+			suggestions: {
+				firebaseId: 'hsa9z821m2j1',
+			},
+			parent: undefined,
+		},
+		{
+			id: 5,
+			title: undefined,
+			text: 'Fanciful words is all you present. You have no idea what you are saying, not to mention have a silly haircut!',
+			date: new Date() - 300000000,
+			author: pubCollaborators[5],
+			attachment: {
+				fileName: 'bugs.xls',
+				url: 'http://www.file.com',
+				type: 'xls',
+			},
+			highlight: undefined,
+			suggestions: undefined,
+			parent: 0
+		},
+	]
+];
+
 export const collectionData = {
 	title: 'Sensor Hardware',
 	slug: 'sensors',

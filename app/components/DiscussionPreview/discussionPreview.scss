@@ -1,0 +1,31 @@
+.discussion-preview {
+	.title {
+		font-weight: bold;
+		padding-bottom: 0.5em;
+	}
+	.icons {
+		float: right;
+		opacity: 0.5;
+		span {
+			padding-left: 0.25em;
+		}
+
+	}
+	.discussion {
+		margin: 0.25em 0em;
+		&:not(:first-of-type) {
+			padding-left: 28px;
+		}
+		.avatar {
+			margin-right: 1em;
+		}
+		.text {
+			vertical-align: middle;
+			display: inline-block;
+			width: calc(100% - 1em - 20px);
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+	}
+}
