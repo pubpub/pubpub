@@ -1,14 +1,17 @@
 .discussion-thread {
 	.title {
 		font-weight: bold;
+		margin-bottom: 2em;
 	}
-
+	.thread-buttons {
+		float: right;
+	}
 	.discussion {
 		margin: 1em 0em 2em;
 		.item-header {
 			display: flex;
 			align-items: center;
-			.avatar {
+			.avatar, .pt-button-group {
 				flex-shrink: 0;
 			}
 			.details {
@@ -34,13 +37,12 @@
 					opacity: 0.75;
 				}
 			}
-			.pt-button-group {
-				flex-shrink: 0;
-				white-space: nowrap;
-			}
 		}
 		.text {
 			margin-top: 0.5em;
 		}
+	}
+	.pt-input {
+		width: 100%;
 	}
 }
