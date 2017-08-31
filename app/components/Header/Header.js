@@ -46,7 +46,7 @@ const Header = function(props) {
 	}
 
 	return (
-		<nav className={`header accent-background accent-color ${props.largeHeaderBackground ? 'has-image' : ''}`} style={backgroundStyle} >
+		<nav className={`header accent-background accent-color ${props.largeHeaderBackground && window.location.pathname === '/' ? 'has-image' : ''}`} style={backgroundStyle} >
 			<div className={showGradient ? 'header-gradient' : ''}>
 				<div className={'container'}>
 					<div className={'row'}>

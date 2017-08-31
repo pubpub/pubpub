@@ -25,7 +25,7 @@
 		position: fixed;
 		height: calc(100vh - #{$navHeight} - #{$titlePanelHeight});
 		width: $sidePanelWidth;
-		// overflow: hidden;
+		overflow: hidden;
 		.side-panel-content {
 			overflow: hidden;
 			overflow-y: scroll;

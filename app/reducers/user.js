@@ -11,7 +11,9 @@ import {
 // Define Default State
 /* ------------------- */
 const defaultState = {
-	slug: undefined,
+	data: undefined,
+	loading: false,
+	error: undefined,
 };
 
 /* ----------------------------------------- */
@@ -21,13 +23,23 @@ export default function reducer(state = defaultState, action) {
 	switch (action.type) {
 	case GET_APP_DATA_LOAD:
 		return {
-			slug: undefined,
+			data: undefined,
+			loading: true,
+			error: undefined,
 		};
 	case GET_APP_DATA_SUCCESS:
-		return action.result.userData;
+		return {
+			data: {
+				...action.result.userData
+			},
+			loading: false,
+			error: undefined,
+		};
 	case GET_APP_DATA_FAIL:
 		return {
-			slug: 'Error',
+			data: undefined,
+			loading: false,
+			error: action.error,
 		};
 	default:
 		return state;

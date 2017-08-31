@@ -20,7 +20,7 @@ export const GET_PUB_DATA_FAIL = 'pub/GET_PUB_DATA_FAIL';
 export function getPubData(slug) {
 	return (dispatch) => {
 		dispatch({ type: GET_PUB_DATA_LOAD });
-		return apiFetch(`/api/pub?slug=${slug}`)
+		return apiFetch(`/pub?slug=${slug}`)
 		.then((result) => {
 			dispatch({ type: GET_PUB_DATA_SUCCESS, result });
 		})

@@ -18,6 +18,9 @@
 		.item-header {
 			display: flex;
 			align-items: center;
+			a {
+				text-decoration: none;
+			}
 			.avatar, .pt-button-group {
 				flex-shrink: 0;
 			}
@@ -35,9 +38,13 @@
 					line-height: 14px;
 					padding-bottom: 2px;
 					display: block;
+
 				}
 				.name {
 					font-weight: bold;
+					&:hover {
+						text-decoration: underline;
+					}
 				}
 				.date {
 					opacity: 0.75;

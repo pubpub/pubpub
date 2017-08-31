@@ -2,10 +2,10 @@
 // Load Actions
 /* ---------- */
 import {
-	GET_APP_DATA_LOAD,
-	GET_APP_DATA_SUCCESS,
-	GET_APP_DATA_FAIL,
-} from 'actions/app';
+	GET_COLLECTION_DATA_LOAD,
+	GET_COLLECTION_DATA_SUCCESS,
+	GET_COLLECTION_DATA_FAIL,
+} from 'actions/collection';
 
 /* ------------------- */
 // Define Default State
@@ -21,26 +21,23 @@ const defaultState = {
 /* ----------------------------------------- */
 export default function reducer(state = defaultState, action) {
 	switch (action.type) {
-	case GET_APP_DATA_LOAD:
+	case GET_COLLECTION_DATA_LOAD:
 		return {
 			data: undefined,
-			loading: true,
-			error: undefined,
+			isLoading: true,
+			error: undefined
 		};
-	case GET_APP_DATA_SUCCESS:
+	case GET_COLLECTION_DATA_SUCCESS:
 		return {
-			data: {
-				...action.result,
-				userData: undefined,
-			},
-			loading: false,
+			data: action.result,
+			isLoading: false,
 			error: undefined,
 		};
-	case GET_APP_DATA_FAIL:
+	case GET_COLLECTION_DATA_FAIL:
 		return {
 			data: undefined,
-			loading: false,
-			error: action.err,
+			isLoading: false,
+			error: 'Error',
 		};
 	default:
 		return state;

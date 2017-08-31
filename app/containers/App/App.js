@@ -35,32 +35,39 @@ class App extends Component {
 	}
 
 	componentWillMount() {
-		this.hostname = window.location.hostname === 'localhost' || window.location.hostname === 'v4test.netlify.com'
-			? 'viral.pubpub.org' // Set whatever hostname you want to develop with
-			: window.location.hostname; // In production, use the real hostname
+		// this.hostname = window.location.hostname === 'localhost' || window.location.hostname === 'v4test.netlify.com'
+		// 	? 'viral.pubpub.org' // Set whatever hostname you want to develop with
+		// 	: window.location.hostname; // In production, use the real hostname
 
+		this.hostname = 'chanelle6705.pubpub.org';
 		this.props.dispatch(getAppData(this.hostname));
 	}
 
 	render() {
-		const appData = {
-			title: 'PubPub',
-			description: 'Collaborative Community Publishing',
-			avatar: '/icon.png',
-			smallHeaderLogo: 'https://assets.pubpub.org/_site/logo_dark.png',
-			largeHeaderLogo: '',
-			largeHeaderBackground: '',
-			navItems: [],
-			accentData: {},
-			collections: [],
-			...this.props.appData // Override defaults with real community data
-		};
+		const appData = this.props.appData.data || {};
+		const userData = this.props.userData.data || {};
 
-		const userData = this.props.userData;
+		if (!appData.id) { return <div />; }
 
-		const isCommunity = this.hostname !== 'www.pubpub.org';
 		const isHome = this.props.location.pathname === '/';
 
+		const collections = appData.collections || [];
+		const navigation = appData.navigation || [];
+		const collectionsObject = {};
+		collections.forEach((item)=> {
+			collectionsObject[item.id] = item;
+		});
+		const navItems = navigation.map((item)=> {
+			if (item.children) {
+				return {
+					...item,
+					children: item.children.map((child)=> {
+						return collectionsObject[child];
+					})
+				};
+			}
+			return collectionsObject[item];
+		});
 		return (
 			<div>
 				<Helmet>
@@ -70,8 +77,14 @@ class App extends Component {
 					<link rel="apple-touch-icon" type="image/png" sizes="192x192" href={appData.avatar} />
 				</Helmet>
 
-				{appData.accentData.accentColor &&
-					<AccentStyle {...appData.accentData} />
+				{appData.accentColor &&
+					<AccentStyle
+						accentColor={appData.accentColor}
+						accentTextColor={appData.accentTextColor}
+						accentActionColor={appData.accentActionColor}
+						accentHoverColor={appData.accentHoverColor}
+						accentMinimalColor={appData.accentMinimalColor}
+					/>
 				}
 
 				{/* Inclues logo, login, search, profile buttons */}
@@ -85,12 +98,12 @@ class App extends Component {
 					largeHeaderLogo={appData.largeHeaderLogo}
 					largeHeaderBackground={appData.largeHeaderBackground}
 					largeHeaderDescription={appData.description}
-					isLargeHeader={isCommunity && isHome}
+					isLargeHeader={isHome}
 					logoutHandler={App.logoutHandler}
 				/>
 
-				{appData.navItems &&
-					<NavBar navItems={appData.navItems} />
+				{navItems.length > 0 &&
+					<NavBar navItems={navItems} />
 				}
 
 				<Switch>

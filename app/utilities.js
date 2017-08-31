@@ -1,20 +1,20 @@
 /* eslint-disable */
 
-// export const apiFetch = function(path, opts) {
-// 	const urlPrefix = 'https://api.github.com/users';
-// 	const finalRoute = `${urlPrefix}/${path}/orgs`;
+export const apiRealFetch = function(path, opts) {
+	const urlPrefix = 'http://localhost:9876';
+	const finalRoute = `${urlPrefix}${path}`;
 
-// 	return fetch(finalRoute, {
-// 		...opts,
-// 		// credentials: 'include',
-// 	})
-// 	.then((response)=> {
-// 		if (!response.ok) {
-// 			return response.json().then((err)=> { throw err; });
-// 		}
-// 		return response.json();
-// 	});
-// };
+	return fetch(finalRoute, {
+		...opts,
+		credentials: 'include',
+	})
+	.then((response)=> {
+		if (!response.ok) {
+			return response.json().then((err)=> { throw err; });
+		}
+		return response.json();
+	});
+};
 
 
 /* DEV ONLY */
@@ -115,18 +115,18 @@ const viralData = {
 export const apiFetch = function(path, opts) {
 	return new Promise((resolve, reject) => {
 		switch (path.split('?')[0]) {
-		case '/api/app':
+		case '/app':
 			if (path.indexOf('viral.pubpub') > -1) {
 				return resolve(viralData);
 			}
 			return resolve({});
-		case '/api/collection/slug=':
+		case '/collection/slug=':
 			return resolve({ title: 'Home', });
-		case '/api/collection/slug=about':
+		case '/collection/slug=about':
 			return resolve({ title: 'About', });
-		case '/api/collection/slug=sensors':
+		case '/collection/slug=sensors':
 			return resolve({ title: 'Sensors', });
-		case '/api/pub':
+		case '/pub':
 			return resolve({
 				pub: pubData,
 				versions: pubVersions,

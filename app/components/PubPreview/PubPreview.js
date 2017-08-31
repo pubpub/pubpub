@@ -51,8 +51,8 @@ const PubPreview = function(props) {
 									width={35}
 									doesOverlap={index !== props.authors.length - 1}
 									borderColor={'#FFF'}
-									userAvatar={author.userAvatar}
-									userInitials={author.userInitials}
+									userAvatar={author.avatar}
+									userInitials={author.initials}
 								/>
 							);
 						})}

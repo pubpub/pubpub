@@ -6,9 +6,9 @@ import { apiRealFetch } from 'utilities';
 // All action types are defined as constants. Do not manually pass action
 // types as strings in action creators
 /*--------*/
-export const GET_APP_DATA_LOAD = 'app/GET_APP_DATA_LOAD';
-export const GET_APP_DATA_SUCCESS = 'app/GET_APP_DATA_SUCCESS';
-export const GET_APP_DATA_FAIL = 'app/GET_APP_DATA_FAIL';
+export const GET_COLLECTION_DATA_LOAD = 'collection/GET_COLLECTION_DATA_LOAD';
+export const GET_COLLECTION_DATA_SUCCESS = 'collection/GET_COLLECTION_DATA_SUCCESS';
+export const GET_COLLECTION_DATA_FAIL = 'collection/GET_COLLECTION_DATA_FAIL';
 
 /*--------*/
 // Define Action creators
@@ -17,15 +17,15 @@ export const GET_APP_DATA_FAIL = 'app/GET_APP_DATA_FAIL';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function getAppData(hostname) {
+export function getCollectionData(collectionId) {
 	return (dispatch) => {
-		dispatch({ type: GET_APP_DATA_LOAD });
-		return apiRealFetch(`/communities/${hostname}`)
+		dispatch({ type: GET_COLLECTION_DATA_LOAD });
+		return apiRealFetch(`/collection/${collectionId}`)
 		.then((result) => {
-			dispatch({ type: GET_APP_DATA_SUCCESS, result });
+			dispatch({ type: GET_COLLECTION_DATA_SUCCESS, result });
 		})
 		.catch((error) => {
-			dispatch({ type: GET_APP_DATA_FAIL, error });
+			dispatch({ type: GET_COLLECTION_DATA_FAIL, error });
 		});
 	};
 }

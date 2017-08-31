@@ -20,7 +20,7 @@ export const GET_SEARCH_RESULTS_FAIL = 'pub/GET_SEARCH_RESULTS_FAIL';
 export function getSearch(query) {
 	return (dispatch) => {
 		dispatch({ type: GET_SEARCH_RESULTS_LOAD });
-		return apiFetch(`/api/search?q=${query}`)
+		return apiFetch(`/search?q=${query}`)
 		.then((result) => {
 			dispatch({ type: GET_SEARCH_RESULTS_SUCCESS, result });
 		})
