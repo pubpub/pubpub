@@ -19,327 +19,79 @@ export const accentDataLight = {
 
 // The following data should match the API routes they are associated with. 
 
-/*  api.pubpub.org/user/:slug  */
+/*  api.pubpub.org/communities/:hostname  */
+export const communityData = require('./_dataCommunity.js').default;
+
+/*  api.pubpub.org/users/:slug  */
 export const userData = require('./_dataUser.js').default;
 
-/*  api.pubpub.org/pub/:slug  */
+/*  api.pubpub.org/pubs/:slug  */
 export const pubData = require('./_dataPub.js').default;
 
-export const navItems = [
-	{
-		slug: '/',
-		title: 'Home',
-		id: 1,
-	},
-	{
-		slug: '/sensors',
-		title: 'Sensors',
-		id: 2,
-	},
-	{
-		id: 3.5,
-		title: 'Issues',
-		children: [
-			{
-				slug: '/2017',
-				title: '2017',
-				id: 21,
-			},
-			{
-				slug: '/2016',
-				title: '2016',
-				id: 22,
-			},
-			{
-				slug: '/2018',
-				title: 'Super Long 2018 Edition Extravaganza',
-				id: 23,
-			},
-		]
-	},
-	{
-		slug: '/meeting-notes',
-		title: 'Meeting-Notes',
-		id: 3,
-	},
-	{
-		slug: '/blockchain',
-		title: 'Blockchain',
-		id: 4,
-	},
-	{
-		slug: '/new-ideas',
-		title: 'New Ideas',
-		id: 5,
-	},
-	{
-		slug: '/bad-ideas',
-		title: 'Bad-Ideas',
-		id: 6,
-	},
-	{
-		slug: '/submissions',
-		title: 'Submissions',
-		id: 7,
-	},
-	{
-		slug: '/about',
-		title: 'About',
-		id: 8,
-	},
-];
-
-// export const pubData = {
-// 	title: 'Soundscapes',
-// 	slug: 'my-article',
-// 	description: 'A virtual representation of the space of an event and provide tools by which a producer can draw upon images, graphics, data, and live cameras to create a video stream equivalent to a broadcast',
-// 	numDiscussions: '3',
-// 	numCollaborators: '6',
-// 	numSuggestions: '11',
-// 	collections: [
-// 		{
-// 			id: 0,
-// 			title: 'Submissions',
-// 			slug: 'submissions',
-// 		},
-// 		{
-// 			id: 1,
-// 			title: 'Meeting Notes',
-// 			slug: 'meeting-notes',
-// 			isPrivate: true,
-// 		},
-// 		{
-// 			id: 2,
-// 			title: 'Senors',
-// 			slug: 'sensors',
-// 		},
-// 	],
-// };
-
-// export const pubVersions = [
+// export const navItems = [
 // 	{
-// 		id: 0,
-// 		date: new Date() - 1000000000,
-// 		active: true,
-// 	},
-// 	{
+// 		slug: '/',
+// 		title: 'Home',
 // 		id: 1,
-// 		date: new Date() - 2000000000,
 // 	},
 // 	{
-// 		id: 3,
-// 		date: new Date() - 5000000000,
-// 	},
-// 	{
+// 		slug: '/sensors',
+// 		title: 'Sensors',
 // 		id: 2,
-// 		date: new Date() - 3000000000,
-// 	},
-// ];
-
-// export const pubCollaborators = [
-// 	{
-// 		id: 0,
-// 		slug: 'trich',
-// 		userInitials: 'TR',
-// 		userAvatar: '/dev/trich.jpg',
-// 		fullName: 'Travis Rich',
-// 		isAuthor: true,
-// 		color: 'red',
 // 	},
 // 	{
-// 		id: 1,
-// 		slug: 'mw',
-// 		userInitials: 'MW',
+// 		id: 3.5,
+// 		title: 'Issues',
+// 		children: [
+// 			{
+// 				slug: '/2017',
+// 				title: '2017',
+// 				id: 21,
+// 			},
+// 			{
+// 				slug: '/2016',
+// 				title: '2016',
+// 				id: 22,
+// 			},
+// 			{
+// 				slug: '/2018',
+// 				title: 'Super Long 2018 Edition Extravaganza',
+// 				id: 23,
+// 			},
+// 		]
 // 	},
 // 	{
-// 		id: 2,
-// 		slug: 'tomer',
-// 		userInitials: 'TW',
-// 		userAvatar: '/dev/tomer.jpg',
-// 		fullName: 'Tomer Weller',
-// 		isAuthor: true,
-// 		color: 'green',
-// 	},
-// 	{
+// 		slug: '/meeting-notes',
+// 		title: 'Meeting-Notes',
 // 		id: 3,
-// 		slug: 'danny',
-// 		userInitials: 'FF',
-// 		userAvatar: '/dev/danny.jpg',
-// 		fullName: 'Danny Hillis',
-// 		isAuthor: true,
 // 	},
 // 	{
+// 		slug: '/blockchain',
+// 		title: 'Blockchain',
 // 		id: 4,
-// 		slug: 'wl',
-// 		userInitials: 'WL',
 // 	},
 // 	{
+// 		slug: '/new-ideas',
+// 		title: 'New Ideas',
 // 		id: 5,
-// 		slug: 'lip',
-// 		userInitials: 'PL',
-// 		userAvatar: '/dev/lip.jpg',
-// 		color: 'purple',
+// 	},
+// 	{
+// 		slug: '/bad-ideas',
+// 		title: 'Bad-Ideas',
+// 		id: 6,
+// 	},
+// 	{
+// 		slug: '/submissions',
+// 		title: 'Submissions',
+// 		id: 7,
+// 	},
+// 	{
+// 		slug: '/about',
+// 		title: 'About',
+// 		id: 8,
 // 	},
 // ];
 
-export const discussions = [
-	[
-		{
-			threadNumber: 1,
-			id: 1,
-			title: undefined,
-			text: 'That is an interesting thought but begs the question about non-linearities that exist within the normal time range.',
-			date: new Date() - 250000000,
-			author: pubData.contributors[0],
-			attachment: undefined,
-			highlight: undefined,
-			suggestions: undefined,
-		},
-		{
-			id: 0,
-			title: 'A discussion about qualities',
-			text: 'What is important about elephants that can\'t be said about lions!?',
-			date: new Date() - 3000000000,
-			author: pubData.contributors[1],
-			attachment: undefined,
-			highlight: {
-				text: 'a note about',
-				prefix: 'This is ',
-				suffix: ' elephants and silly things',
-			},
-			suggestions: {
-				firebaseId: 'hsa9z821m2j1',
-			},
-			threadNumber: 1,
-		},
-		{
-			id: 2,
-			title: undefined,
-			text: 'Fanciful words is all you present. You have no idea what you are saying, not to mention have a silly haircut!',
-			date: new Date() - 200000000,
-			author: pubData.contributors[2],
-			attachment: {
-				fileName: 'bugs.xls',
-				url: 'http://www.file.com',
-				type: 'xls',
-			},
-			highlight: undefined,
-			suggestions: undefined,
-			threadNumber: 1,
-		},
-	],
-	[
-		{
-			id: 4,
-			title: undefined,
-			text: 'That is an interesting thought but begs the question about non-linearities that exist within the normal time range.',
-			date: new Date() - 350000000,
-			author: pubData.contributors[3],
-			attachment: undefined,
-			highlight: undefined,
-			suggestions: undefined,
-			threadNumber: 2,
-		},
-		{
-			id: 3,
-			title: 'Discussion on Jun 5',
-			text: 'What is important about elephants that can\'t be said about lions!?',
-			date: new Date() - 4000000000,
-			author: pubData.contributors[2],
-			attachment: {
-				fileName: 'bugs.xls',
-				url: 'http://www.file.com',
-				type: 'xls',
-			},
-			highlight: undefined,
-			suggestions: undefined,
-			threadNumber: 2,
-		},
-	],
-	[
-		{
-			id: 8,
-			title: undefined,
-			text: 'That is an interesting thought but begs the question about non-linearities that exist within the normal time range.',
-			date: new Date() - 350000000,
-			author: pubData.contributors[0],
-			attachment: undefined,
-			highlight: undefined,
-			suggestions: undefined,
-			threadNumber: 3,
-		},
-		{
-			id: 5,
-			title: 'Review From Piers',
-			text: 'What is important about elephants that can\'t be said about lions!?',
-			date: new Date() - 4000000000,
-			author: pubData.contributors[3],
-			attachment: undefined,
-			highlight: undefined,
-			suggestions: {
-				firebaseId: 'hsa9z821m2j1',
-			},
-			threadNumber: 3,
-		},
-		{
-			id: 7,
-			title: undefined,
-			text: 'Fanciful words is all you present. You have no idea what you are saying, not to mention have a silly haircut!',
-			date: new Date() - 300000000,
-			author: pubData.contributors[4],
-			attachment: undefined,
-			highlight: undefined,
-			suggestions: undefined,
-			threadNumber: 3,
-		},
-		{
-			id: 6,
-			title: undefined,
-			text: 'Fanciful words is all you present. You have no idea what you are saying, not to mention have a silly haircut!',
-			date: new Date() - 310000000,
-			author: pubData.contributors[1],
-			attachment: undefined,
-			highlight: undefined,
-			suggestions: undefined,
-			threadNumber: 3,
-		},
-	],
-	[
-		{
-			id: 11,
-			title: undefined,
-			text: 'That is an interesting thought but begs the question about non-linearities that exist within the normal time range.',
-			date: new Date() - 350000000,
-			author: pubData.contributors[1],
-			attachment: undefined,
-			highlight: undefined,
-			suggestions: undefined,
-			threadNumber: 4,
-		},
-		{
-			id: 9,
-			title: 'Methods Section Help',
-			text: 'What is important about elephants that can\'t be said about lions!?',
-			date: new Date() - 4000000000,
-			author: pubData.contributors[2],
-			attachment: undefined,
-			highlight: undefined,
-			suggestions: undefined,
-			threadNumber: 4,
-		},
-		{
-			id: 10,
-			title: undefined,
-			text: 'Fanciful words is all you present. You have no idea what you are saying, not to mention have a silly haircut!',
-			date: new Date() - 300000000,
-			author: pubData.contributors[4],
-			attachment: undefined,
-			highlight: undefined,
-			suggestions: undefined,
-			threadNumber: 4,
-		},
-	],
-];
 
 export const collectionData = {
 	title: 'Sensor Hardware',

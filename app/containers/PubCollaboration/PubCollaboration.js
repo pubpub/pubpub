@@ -69,11 +69,11 @@ class PubCollaboration extends Component {
 							<div className={'col-12'}>
 								<PubCollabHeader
 									pubData={pubData}
-									collaborators={pubCollaborators}
+									collaborators={pubData.contributors}
 									activeCollaborators={[
-										pubCollaborators[0],
-										pubCollaborators[2],
-										pubCollaborators[5]
+										contributors[0],
+										contributors[1],
+										contributors[2]
 									]}
 									onPublishClick={this.togglePublish}
 									onShareClick={this.toggleShare}

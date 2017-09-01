@@ -29,6 +29,24 @@ export const nestDiscussionsToThreads = function(discussions) {
 	return tempThreads.filter((item)=> { return item.length; });
 };
 
+export const populateNavigationIds = function(collections, navigation) {
+	const collectionsObject = {};
+	collections.forEach((item)=> {
+		collectionsObject[item.id] = item;
+	});
+	return navigation.map((item)=> {
+		if (item.children) {
+			return {
+				...item,
+				children: item.children.map((child)=> {
+					return collectionsObject[child];
+				})
+			};
+		}
+		return collectionsObject[item];
+	});
+};
+
 /* DEV ONLY */
 /* This will be removed once connected to API */
 /* -------- */

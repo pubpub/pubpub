@@ -8,6 +8,7 @@ import Header from 'components/Header/Header';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
 import WrappedRoute from 'components/WrappedRoute/WrappedRoute';
 import NavBar from 'components/NavBar/NavBar';
+import { populateNavigationIds } from 'utilities';
 
 import { getAppData } from 'actions/app';
 
@@ -40,7 +41,7 @@ class App extends Component {
 		// 	: window.location.hostname; // In production, use the real hostname
 
 		// this.hostname = 'stewart3756.pubpub.org';
-		this.hostname = 'audreanne6852.pubpub.org';
+		this.hostname = 'mertie2727.pubpub.org';
 		this.props.dispatch(getAppData(this.hostname));
 	}
 
@@ -54,21 +55,8 @@ class App extends Component {
 
 		const collections = appData.collections || [];
 		const navigation = appData.navigation || [];
-		const collectionsObject = {};
-		collections.forEach((item)=> {
-			collectionsObject[item.id] = item;
-		});
-		const navItems = navigation.map((item)=> {
-			if (item.children) {
-				return {
-					...item,
-					children: item.children.map((child)=> {
-						return collectionsObject[child];
-					})
-				};
-			}
-			return collectionsObject[item];
-		});
+		const navItems = populateNavigationIds(collections, navigation);
+
 		return (
 			<div>
 				<Helmet>

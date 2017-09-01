@@ -2,7 +2,10 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import NavBar from 'components/NavBar/NavBar';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
-import { navItems, accentDataDark, accentDataLight } from './_data';
+import { populateNavigationIds } from 'utilities';
+import { communityData, accentDataDark, accentDataLight } from './_data';
+
+const navItems = populateNavigationIds(communityData.collections, communityData.navigation);
 
 const wrapperStyle = { margin: '1em', boxShadow: '0px 0px 1px rgba(0, 0, 0, 0.25)' };
 const titleStyle = { margin: '1em 1em -0.5em' };

@@ -5,8 +5,10 @@ import { Button, Intent, Tag } from '@blueprintjs/core';
 import Header from 'components/Header/Header';
 import NavBar from 'components/NavBar/NavBar';
 import Footer from 'components/Footer/Footer';
-import { navItems, accentDataDark, accentDataLight } from './_data';
+import { populateNavigationIds } from 'utilities';
+import { communityData, accentDataDark, accentDataLight } from './_data';
 
+const navItems = populateNavigationIds(communityData.collections, communityData.navigation);
 const content = (
 	<div>
 		<Header
