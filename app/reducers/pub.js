@@ -35,7 +35,7 @@ export default function reducer(state = defaultState, action) {
 	case GET_PUB_DATA_FAIL:
 		return {
 			isLoading: false,
-			error: 'Error',
+			error: action.error,
 		};
 	default:
 		return state;

@@ -5,7 +5,7 @@ import PubPresHeader from 'components/PubPresHeader/PubPresHeader';
 import PubBody from 'components/PubBody/PubBody';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
 
-import { accentDataDark, accentDataLight, pubData, pubVersions, pubCollaborators, pubBody } from './_data';
+import { accentDataDark, accentDataLight, pubData, pubVersions, pubBody } from './_data';
 
 require('containers/PubPresentation/pubPresentation.scss');
 
@@ -25,8 +25,10 @@ const content = (
 				backgroundImage={'/dev/pubHeader3.jpg'}
 			/>
 			<PubPresDetails
-				collaborators={pubCollaborators}
-				pubData={pubData}
+				collaborators={pubData.contributors}
+				slug={pubData.slug}
+				numDiscussions={10}
+				numSuggestions={8}
 				versions={pubVersions}
 			/>
 			<PubBody content={pubBody} />
@@ -37,8 +39,10 @@ const content = (
 				description={pubData.description}
 			/>
 			<PubPresDetails
-				collaborators={pubCollaborators}
-				pubData={pubData}
+				collaborators={pubData.contributors}
+				slug={pubData.slug}
+				numDiscussions={10}
+				numSuggestions={8}
 				versions={pubVersions}
 			/>
 			<PubBody content={pubBody} />

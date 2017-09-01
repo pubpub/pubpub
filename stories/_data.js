@@ -22,6 +22,9 @@ export const accentDataLight = {
 /*  api.pubpub.org/user/:slug  */
 export const userData = require('./_dataUser.js').default;
 
+/*  api.pubpub.org/pub/:slug  */
+export const pubData = require('./_dataPub.js').default;
+
 
 export const navItems = [
 	{
@@ -87,32 +90,32 @@ export const navItems = [
 	},
 ];
 
-export const pubData = {
-	title: 'Soundscapes',
-	slug: 'my-article',
-	description: 'A virtual representation of the space of an event and provide tools by which a producer can draw upon images, graphics, data, and live cameras to create a video stream equivalent to a broadcast',
-	numDiscussions: '3',
-	numCollaborators: '6',
-	numSuggestions: '11',
-	collections: [
-		{
-			id: 0,
-			title: 'Submissions',
-			slug: 'submissions',
-		},
-		{
-			id: 1,
-			title: 'Meeting Notes',
-			slug: 'meeting-notes',
-			isPrivate: true,
-		},
-		{
-			id: 2,
-			title: 'Senors',
-			slug: 'sensors',
-		},
-	],
-};
+// export const pubData = {
+// 	title: 'Soundscapes',
+// 	slug: 'my-article',
+// 	description: 'A virtual representation of the space of an event and provide tools by which a producer can draw upon images, graphics, data, and live cameras to create a video stream equivalent to a broadcast',
+// 	numDiscussions: '3',
+// 	numCollaborators: '6',
+// 	numSuggestions: '11',
+// 	collections: [
+// 		{
+// 			id: 0,
+// 			title: 'Submissions',
+// 			slug: 'submissions',
+// 		},
+// 		{
+// 			id: 1,
+// 			title: 'Meeting Notes',
+// 			slug: 'meeting-notes',
+// 			isPrivate: true,
+// 		},
+// 		{
+// 			id: 2,
+// 			title: 'Senors',
+// 			slug: 'sensors',
+// 		},
+// 	],
+// };
 
 export const pubVersions = [
 	{

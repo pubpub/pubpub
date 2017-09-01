@@ -8,20 +8,27 @@ import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 require('./pubPresDetails.scss');
 
 const propTypes = {
-	pubData: PropTypes.object.isRequired,
+	slug: PropTypes.string.isRequired,
+	numDiscussions: PropTypes.number,
+	numSuggestions: PropTypes.number,
 	collaborators: PropTypes.array.isRequired,
 	versions: PropTypes.array.isRequired,
 };
 
+const defaultProps = {
+	numDiscussions: 0,
+	numSuggestions: 0,
+};
+
 const PubPresDetails = function(props) {
 	const authors = props.collaborators.filter((collaborator)=> {
-		return collaborator.isAuthor;
+		return collaborator.Contributor.isAuthor;
 	});
 
 	const activeVersion = props.versions.reduce((prev, curr)=> {
 		if (curr.active) { return curr; }
 		return prev;
-	}, undefined);
+	}, {});
 
 	return (
 		<div className={'pub-pres-details'}>
@@ -60,7 +67,7 @@ const PubPresDetails = function(props) {
 										}).map((version)=> {
 											return (
 												<li key={`version-${version.id}`} style={{ textAlign: 'right' }}>
-													<Link to={`/pub/${props.pubData.slug}`} className="pt-menu-item pt-popover-dismiss">
+													<Link to={`/pub/${props.slug}`} className="pt-menu-item pt-popover-dismiss">
 														<span style={{ fontWeight: version.active ? '600' : 'normal' }}>
 															{dateFormat(version.date, 'mmm dd, yyyy · HH:MM')}
 														</span>
@@ -86,12 +93,12 @@ const PubPresDetails = function(props) {
 
 					<div className={'col-12'}>
 						<div className={'details'}>
-							{props.pubData.numDiscussions}
+							{props.numDiscussions}
 							<span className={'pt-icon-standard pt-icon-chat'} />
-							{props.pubData.numSuggestions}
+							{props.numSuggestions}
 							{/* <span className={'pt-icon-standard pt-icon-manually-entered-data'} /> */}
 							<span className={'pt-icon-standard pt-icon-doc'} />
-							{props.pubData.numCollaborators}
+							{props.collaborators.length}
 							<span className={'pt-icon-standard pt-icon-team'} />
 							{props.collaborators.map((collaborator)=> {
 								return (
@@ -107,7 +114,7 @@ const PubPresDetails = function(props) {
 							})}
 						</div>
 						<div className={'button'}>
-							<Link to={`/pub/${props.pubData.slug}/collaborate`} className={'pt-button pt-intent-primary'}>Collaborate</Link>
+							<Link to={`/pub/${props.slug}/collaborate`} className={'pt-button pt-intent-primary'}>Collaborate</Link>
 						</div>
 					</div>
 				</div>
@@ -116,5 +123,6 @@ const PubPresDetails = function(props) {
 	);
 };
 
+PubPresDetails.defaultProps = defaultProps;
 PubPresDetails.propTypes = propTypes;
 export default PubPresDetails;

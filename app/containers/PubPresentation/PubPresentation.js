@@ -25,28 +25,34 @@ class PubPresentation extends Component {
 	}
 
 	render() {
-		if (!this.props.pubData.data) { return <p>Loading</p>; }
+		const pubData = this.props.pubData.data || {};
+		if (!pubData.id) { return <p>Loading</p>; }
 
 		return (
 			<div className={'pub-presentation'}>
 
 				<Helmet>
-					<title>Pub</title>
+					<title>{pubData.title}</title>
 				</Helmet>
 
 				<PubPresHeader
-					title={'Soundscapes'}
-					description={this.props.pubData.data.pub.description}
-					backgroundImage={'/dev/pubHeader4.jpg'}
+					title={pubData.title}
+					description={pubData.description}
+					backgroundImage={pubData.headerImage}
 				/>
+
 
 				<PubPresDetails
-					collaborators={this.props.pubData.data.collaborators}
-					pubData={this.props.pubData.data.pub}
-					versions={this.props.pubData.data.versions}
+					slug={pubData.slug}
+					numDiscussions={12}
+					numSuggestions={3}
+					collaborators={pubData.contributors}
+					// versions={pubData.versions}
+					versions={[]}
 				/>
 
-				<PubBody content={this.props.pubData.data.body} />
+				{/* <PubBody content={this.props.pubData.data.body} /> */}
+				<PubBody content={<div>this.props.pubData.data.body</div>} />
 
 				<div className={'license-wrapper'}>
 					CCBY 4.0
