@@ -1,21 +1,27 @@
-/* eslint-disable max-len */
+/* eslint-disable global-require */
 import React from 'react';
 
-export const userData = {
-	slug: 'maggie',
-	initials: 'MF',
-	firstName: 'Maggie',
-	lastName: 'Farnkrux',
-	fullName: 'Maggie Farnkrux',
-	avatar: '/dev/maggie.jpg',
-	bio: 'Maggie is based in Canada and has over 90 runs servicing millions of skiers each year. With 13 state-of-the-art ski lifts and a selection of choices for both snowboarders and skiers Maggie attained her reputation through daring, varied runs catering for a selection of abilities and preferences.',
-	facebook: 'maggie',
-	personalSite: 'https://wwww.me.com',
-	twitter: 'mFarn',
-	orcid: '00-123-002-4123',
-	googleScholar: 'farnkrux',
-	location: 'Calgary, Canada',
+export const accentDataDark = {
+	accentColor: '#D13232',
+	accentTextColor: '#FFF',
+	accentActionColor: '#A72828',
+	accentHoverColor: '#BC2D2D',
+	accentMinimalColor: 'rgba(209, 50, 50, 0.15)',
 };
+
+export const accentDataLight = {
+	accentColor: '#26E0D0',
+	accentTextColor: '#000',
+	accentActionColor: '#51E6D9',
+	accentHoverColor: '#3BE3D4',
+	accentMinimalColor: 'rgba(38, 224, 208, 0.15)',
+};
+
+// The following data should match the API routes they are associated with. 
+
+/*  api.pubpub.org/user/:slug  */
+export const userData = require('./_dataUser.js').default;
+
 
 export const navItems = [
 	{
@@ -80,22 +86,6 @@ export const navItems = [
 		id: 8,
 	},
 ];
-
-export const accentDataDark = {
-	accentColor: '#D13232',
-	accentTextColor: '#FFF',
-	accentActionColor: '#A72828',
-	accentHoverColor: '#BC2D2D',
-	accentMinimalColor: 'rgba(209, 50, 50, 0.15)',
-};
-
-export const accentDataLight = {
-	accentColor: '#26E0D0',
-	accentTextColor: '#000',
-	accentActionColor: '#51E6D9',
-	accentHoverColor: '#3BE3D4',
-	accentMinimalColor: 'rgba(38, 224, 208, 0.15)',
-};
 
 export const pubData = {
 	title: 'Soundscapes',

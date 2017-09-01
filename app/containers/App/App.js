@@ -26,7 +26,7 @@ const propTypes = {
 	dispatch: PropTypes.func.isRequired,
 	location: PropTypes.object.isRequired,
 	appData: PropTypes.object.isRequired,
-	userData: PropTypes.object.isRequired,
+	loginData: PropTypes.object.isRequired,
 };
 
 class App extends Component {
@@ -39,13 +39,14 @@ class App extends Component {
 		// 	? 'viral.pubpub.org' // Set whatever hostname you want to develop with
 		// 	: window.location.hostname; // In production, use the real hostname
 
-		this.hostname = 'chanelle6705.pubpub.org';
+		// this.hostname = 'stewart3756.pubpub.org';
+		this.hostname = 'jalyn7060.pubpub.org';
 		this.props.dispatch(getAppData(this.hostname));
 	}
 
 	render() {
 		const appData = this.props.appData.data || {};
-		const userData = this.props.userData.data || {};
+		const loginData = this.props.loginData.data || {};
 
 		if (!appData.id) { return <div />; }
 
@@ -89,11 +90,11 @@ class App extends Component {
 
 				{/* Inclues logo, login, search, profile buttons */}
 				<Header
-					userName={userData.fullName}
-					userInitials={userData.initials}
-					userSlug={userData.slug}
-					userAvatar={userData.avatar}
-					userIsAdmin={userData.isAdmin}
+					userName={loginData.fullName}
+					userInitials={loginData.initials}
+					userSlug={loginData.slug}
+					userAvatar={loginData.avatar}
+					userIsAdmin={loginData.isAdmin}
 					smallHeaderLogo={appData.smallHeaderLogo}
 					largeHeaderLogo={appData.largeHeaderLogo}
 					largeHeaderBackground={appData.largeHeaderBackground}
@@ -132,4 +133,7 @@ class App extends Component {
 }
 
 App.propTypes = propTypes;
-export default withRouter(connect(state => ({ appData: state.app, userData: state.user }))(App));
+export default withRouter(connect(state => ({
+	appData: state.app,
+	loginData: state.login
+}))(App));

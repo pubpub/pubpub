@@ -17,7 +17,7 @@ const defaultProps = {
 const UserHeader = function(props) {
 	const links = [
 		{ id: 0, value: props.userData.location, icon: 'pt-icon-map-marker no-click' },
-		{ id: 1, value: props.userData.personalSite, icon: 'pt-icon-link', href: props.userData.personalSite },
+		{ id: 1, value: props.userData.website, icon: 'pt-icon-link', href: props.userData.website },
 		{ id: 2, value: props.userData.facebook, icon: 'pt-icon-facebook', href: `https://www.facebook.com/${props.userData.facebook}` },
 		{ id: 3, value: props.userData.twitter, icon: 'pt-icon-twitter', href: `https://www.twitter.com/${props.userData.twitter}` },
 		{ id: 4, value: props.userData.orcid, icon: 'pt-icon-orcid', href: `https://www.orcid.org/${props.userData.orcid}` },

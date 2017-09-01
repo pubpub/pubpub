@@ -2,17 +2,17 @@
 // Load Actions
 /* ---------- */
 import {
-	GET_USER_DATA_LOAD,
-	GET_USER_DATA_SUCCESS,
-	GET_USER_DATA_FAIL,
-} from 'actions/user';
+	GET_APP_DATA_LOAD,
+	GET_APP_DATA_SUCCESS,
+	GET_APP_DATA_FAIL,
+} from 'actions/app';
 
 /* ------------------- */
 // Define Default State
 /* ------------------- */
 const defaultState = {
 	data: undefined,
-	isLoading: false,
+	loading: false,
 	error: undefined,
 };
 
@@ -21,23 +21,25 @@ const defaultState = {
 /* ----------------------------------------- */
 export default function reducer(state = defaultState, action) {
 	switch (action.type) {
-	case GET_USER_DATA_LOAD:
+	case GET_APP_DATA_LOAD:
 		return {
 			data: undefined,
-			isLoading: true,
-			error: undefined
-		};
-	case GET_USER_DATA_SUCCESS:
-		return {
-			data: action.result,
-			isLoading: false,
+			loading: true,
 			error: undefined,
 		};
-	case GET_USER_DATA_FAIL:
+	case GET_APP_DATA_SUCCESS:
+		return {
+			data: {
+				...action.result.loginData
+			},
+			loading: false,
+			error: undefined,
+		};
+	case GET_APP_DATA_FAIL:
 		return {
 			data: undefined,
-			isLoading: false,
-			error: 'Error',
+			loading: false,
+			error: action.error,
 		};
 	default:
 		return state;

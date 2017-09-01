@@ -1,4 +1,4 @@
-import { apiRealFetch } from 'utilities';
+import { apiFetch } from 'utilities';
 
 /*--------*/
 // Define Action types
@@ -20,7 +20,7 @@ export const GET_COLLECTION_DATA_FAIL = 'collection/GET_COLLECTION_DATA_FAIL';
 export function getCollectionData(collectionId) {
 	return (dispatch) => {
 		dispatch({ type: GET_COLLECTION_DATA_LOAD });
-		return apiRealFetch(`/collection/${collectionId}`)
+		return apiFetch(`/collection/${collectionId}`)
 		.then((result) => {
 			dispatch({ type: GET_COLLECTION_DATA_SUCCESS, result });
 		})

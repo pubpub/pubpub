@@ -2,44 +2,36 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
+import dateFormat from 'dateformat';
 import { withRouter } from 'react-router-dom';
+import { Spinner } from '@blueprintjs/core';
 import UserHeader from 'components/UserHeader/UserHeader';
 import UserNav from 'components/UserNav/UserNav';
 import PubPreview from 'components/PubPreview/PubPreview';
-
-import { userData } from '../../../stories/_data';
+import { getUserData } from 'actions/user';
 
 require('./user.scss');
 
 const propTypes = {
-	// dispatch: PropTypes.func.isRequired,
+	dispatch: PropTypes.func.isRequired,
 	match: PropTypes.object.isRequired,
-	// appData: PropTypes.object.isRequired,
+	userData: PropTypes.object.isRequired,
 };
 
 class User extends Component {
 	componentWillMount() {
-		// Dispatch and get userData
+		this.props.dispatch(getUserData(this.props.match.params.slug));
+	}
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.match.params.slug !== this.props.match.params.slug) {
+			this.props.dispatch(getUserData(nextProps.match.params.slug));
+		}
 	}
 
 	render() {
-		const contributors = [1, 2, 3, 4, 5];
-		const authors = [
-			{
-				id: 0,
-				userInitials: 'TR',
-				userAvatar: '/dev/trich.jpg',
-			},
-			{
-				id: 1,
-				userInitials: 'MW',
-			},
-			{
-				id: 2,
-				userInitials: 'TW',
-				userAvatar: '/dev/tomer.jpg',
-			},
-		];
+		const userData = this.props.userData.data || {};
+
+		if (!userData.id) { return <Spinner />; }
 		return (
 			<div className={'user'}>
 
@@ -65,48 +57,28 @@ class User extends Component {
 				</div>
 
 				<div className={'container narrow content'}>
-					<div className={'row'}>
-						<div className={'col-12'}>
-							<PubPreview
-								title={'Super Glue Data Engine'}
-								description={'Media data accessible through APIs to build diverse applications'}
-								slug={'my-article'}
-								bannerImage={'/dev/banner1.jpg'}
-								isLarge={true}
-								publicationDate={String(new Date())}
-								contributors={contributors}
-								authors={authors}
-							/>
-						</div>
-					</div>
-					<div className={'row'}>
-						<div className={'col-12'}>
-							<PubPreview
-								title={'Super Glue Data Engine'}
-								description={'Media data accessible through APIs to build diverse applications'}
-								slug={'my-article'}
-								bannerImage={'/dev/banner1.jpg'}
-								isLarge={false}
-								publicationDate={String(new Date())}
-								contributors={contributors}
-								authors={authors}
-							/>
-						</div>
-					</div>
-					<div className={'row'}>
-						<div className={'col-12'}>
-							<PubPreview
-								title={'Super Glue Data Engine'}
-								description={'Media data accessible through APIs to build diverse applications'}
-								slug={'my-article'}
-								bannerImage={'/dev/banner2.jpg'}
-								isLarge={false}
-								publicationDate={String(new Date())}
-								contributors={[]}
-								authors={[authors[2]]}
-							/>
-						</div>
-					</div>
+					{userData.pubs.map((pub)=> {
+						return (
+							<div key={`pub-${pub.id}`} className={'row'}>
+								<div className={'col-12'}>
+									<PubPreview
+										title={pub.title}
+										description={pub.description}
+										slug={pub.slug}
+										bannerImage={pub.headerImage}
+										isLarge={true}
+										publicationDate={dateFormat(pub.updatedAt, 'mmm dd, yyyy')}
+										contributors={pub.contributors.filter((item)=> {
+											return !item.Contributor.isAuthor;
+										})}
+										authors={pub.contributors.filter((item)=> {
+											return !item.Contributor.isAuthor;
+										})}
+									/>
+								</div>
+							</div>
+						);
+					})}
 				</div>
 			</div>
 		);
@@ -115,5 +87,5 @@ class User extends Component {
 
 User.propTypes = propTypes;
 export default withRouter(connect(state => ({
-	appData: state.app
+	userData: state.user
 }))(User));

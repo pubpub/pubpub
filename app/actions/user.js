@@ -6,9 +6,9 @@ import { apiFetch } from 'utilities';
 // All action types are defined as constants. Do not manually pass action
 // types as strings in action creators
 /*--------*/
-export const GET_APP_DATA_LOAD = 'app/GET_APP_DATA_LOAD';
-export const GET_APP_DATA_SUCCESS = 'app/GET_APP_DATA_SUCCESS';
-export const GET_APP_DATA_FAIL = 'app/GET_APP_DATA_FAIL';
+export const GET_USER_DATA_LOAD = 'user/GET_USER_DATA_LOAD';
+export const GET_USER_DATA_SUCCESS = 'user/GET_USER_DATA_SUCCESS';
+export const GET_USER_DATA_FAIL = 'user/GET_USER_DATA_FAIL';
 
 /*--------*/
 // Define Action creators
@@ -17,15 +17,15 @@ export const GET_APP_DATA_FAIL = 'app/GET_APP_DATA_FAIL';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function getAppData(hostname) {
+export function getUserData(slug) {
 	return (dispatch) => {
-		dispatch({ type: GET_APP_DATA_LOAD });
-		return apiFetch(`/communities/${hostname}`)
+		dispatch({ type: GET_USER_DATA_LOAD });
+		return apiFetch(`/user/${slug}`)
 		.then((result) => {
-			dispatch({ type: GET_APP_DATA_SUCCESS, result });
+			dispatch({ type: GET_USER_DATA_SUCCESS, result });
 		})
 		.catch((error) => {
-			dispatch({ type: GET_APP_DATA_FAIL, error });
+			dispatch({ type: GET_USER_DATA_FAIL, error });
 		});
 	};
 }

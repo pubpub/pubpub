@@ -15,9 +15,10 @@ class Login extends Component {
 			email: '',
 		};
 	}
+
 	render() {
 		return (
-			<div className={'pub-presentation'}>
+			<div className={'login'}>
 				<Helmet>
 					<title>Login</title>
 				</Helmet>
@@ -25,16 +26,11 @@ class Login extends Component {
 				<div className={'container'}>
 					<div className={'row'}>
 						<div className={'col-12'}>
-
-							<h1>Login</h1>
-							<p>{this.props.appData.title} is powered by PubPub.</p>
-							<p>Use your PubPub login</p>
-							{/*
-								Pub Header
-								Pub Contributors
-								Pub Content
-								Pub License
-							*/}
+							<div className={'pt-card pt-elevation-2'} style={{ maxWidth: '550px', margin: '0 auto' }}>
+								<h1>Login</h1>
+								<p>{this.props.appData.title} is powered by PubPub.</p>
+								<p>Use your PubPub login</p>
+							</div>
 						</div>
 					</div>
 				</div>
