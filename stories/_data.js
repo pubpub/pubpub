@@ -25,7 +25,6 @@ export const userData = require('./_dataUser.js').default;
 /*  api.pubpub.org/pub/:slug  */
 export const pubData = require('./_dataPub.js').default;
 
-
 export const navItems = [
 	{
 		slug: '/',
@@ -117,71 +116,71 @@ export const navItems = [
 // 	],
 // };
 
-export const pubVersions = [
-	{
-		id: 0,
-		date: new Date() - 1000000000,
-		active: true,
-	},
-	{
-		id: 1,
-		date: new Date() - 2000000000,
-	},
-	{
-		id: 3,
-		date: new Date() - 5000000000,
-	},
-	{
-		id: 2,
-		date: new Date() - 3000000000,
-	},
-];
+// export const pubVersions = [
+// 	{
+// 		id: 0,
+// 		date: new Date() - 1000000000,
+// 		active: true,
+// 	},
+// 	{
+// 		id: 1,
+// 		date: new Date() - 2000000000,
+// 	},
+// 	{
+// 		id: 3,
+// 		date: new Date() - 5000000000,
+// 	},
+// 	{
+// 		id: 2,
+// 		date: new Date() - 3000000000,
+// 	},
+// ];
 
-export const pubCollaborators = [
-	{
-		id: 0,
-		slug: 'trich',
-		userInitials: 'TR',
-		userAvatar: '/dev/trich.jpg',
-		fullName: 'Travis Rich',
-		isAuthor: true,
-		color: 'red',
-	},
-	{
-		id: 1,
-		slug: 'mw',
-		userInitials: 'MW',
-	},
-	{
-		id: 2,
-		slug: 'tomer',
-		userInitials: 'TW',
-		userAvatar: '/dev/tomer.jpg',
-		fullName: 'Tomer Weller',
-		isAuthor: true,
-		color: 'green',
-	},
-	{
-		id: 3,
-		slug: 'danny',
-		userInitials: 'FF',
-		userAvatar: '/dev/danny.jpg',
-		fullName: 'Danny Hillis',
-		isAuthor: true,
-	},
-	{
-		id: 4,
-		slug: 'wl',
-		userInitials: 'WL',
-	},
-	{
-		id: 5,
-		slug: 'lip',
-		userInitials: 'PL',
-		userAvatar: '/dev/lip.jpg',
-		color: 'purple',
-	},
-];
+// export const pubCollaborators = [
+// 	{
+// 		id: 0,
+// 		slug: 'trich',
+// 		userInitials: 'TR',
+// 		userAvatar: '/dev/trich.jpg',
+// 		fullName: 'Travis Rich',
+// 		isAuthor: true,
+// 		color: 'red',
+// 	},
+// 	{
+// 		id: 1,
+// 		slug: 'mw',
+// 		userInitials: 'MW',
+// 	},
+// 	{
+// 		id: 2,
+// 		slug: 'tomer',
+// 		userInitials: 'TW',
+// 		userAvatar: '/dev/tomer.jpg',
+// 		fullName: 'Tomer Weller',
+// 		isAuthor: true,
+// 		color: 'green',
+// 	},
+// 	{
+// 		id: 3,
+// 		slug: 'danny',
+// 		userInitials: 'FF',
+// 		userAvatar: '/dev/danny.jpg',
+// 		fullName: 'Danny Hillis',
+// 		isAuthor: true,
+// 	},
+// 	{
+// 		id: 4,
+// 		slug: 'wl',
+// 		userInitials: 'WL',
+// 	},
+// 	{
+// 		id: 5,
+// 		slug: 'lip',
+// 		userInitials: 'PL',
+// 		userAvatar: '/dev/lip.jpg',
+// 		color: 'purple',
+// 	},
+// ];
 
 export const discussions = [
 	[
@@ -191,7 +190,7 @@ export const discussions = [
 			title: undefined,
 			text: 'That is an interesting thought but begs the question about non-linearities that exist within the normal time range.',
 			date: new Date() - 250000000,
-			author: pubCollaborators[1],
+			author: pubData.contributors[0],
 			attachment: undefined,
 			highlight: undefined,
 			suggestions: undefined,
@@ -201,7 +200,7 @@ export const discussions = [
 			title: 'A discussion about qualities',
 			text: 'What is important about elephants that can\'t be said about lions!?',
 			date: new Date() - 3000000000,
-			author: pubCollaborators[0],
+			author: pubData.contributors[1],
 			attachment: undefined,
 			highlight: {
 				text: 'a note about',
@@ -218,7 +217,7 @@ export const discussions = [
 			title: undefined,
 			text: 'Fanciful words is all you present. You have no idea what you are saying, not to mention have a silly haircut!',
 			date: new Date() - 200000000,
-			author: pubCollaborators[2],
+			author: pubData.contributors[2],
 			attachment: {
 				fileName: 'bugs.xls',
 				url: 'http://www.file.com',
@@ -235,7 +234,7 @@ export const discussions = [
 			title: undefined,
 			text: 'That is an interesting thought but begs the question about non-linearities that exist within the normal time range.',
 			date: new Date() - 350000000,
-			author: pubCollaborators[4],
+			author: pubData.contributors[3],
 			attachment: undefined,
 			highlight: undefined,
 			suggestions: undefined,
@@ -246,7 +245,7 @@ export const discussions = [
 			title: 'Discussion on Jun 5',
 			text: 'What is important about elephants that can\'t be said about lions!?',
 			date: new Date() - 4000000000,
-			author: pubCollaborators[3],
+			author: pubData.contributors[2],
 			attachment: {
 				fileName: 'bugs.xls',
 				url: 'http://www.file.com',
@@ -263,7 +262,7 @@ export const discussions = [
 			title: undefined,
 			text: 'That is an interesting thought but begs the question about non-linearities that exist within the normal time range.',
 			date: new Date() - 350000000,
-			author: pubCollaborators[2],
+			author: pubData.contributors[0],
 			attachment: undefined,
 			highlight: undefined,
 			suggestions: undefined,
@@ -274,7 +273,7 @@ export const discussions = [
 			title: 'Review From Piers',
 			text: 'What is important about elephants that can\'t be said about lions!?',
 			date: new Date() - 4000000000,
-			author: pubCollaborators[1],
+			author: pubData.contributors[3],
 			attachment: undefined,
 			highlight: undefined,
 			suggestions: {
@@ -287,7 +286,7 @@ export const discussions = [
 			title: undefined,
 			text: 'Fanciful words is all you present. You have no idea what you are saying, not to mention have a silly haircut!',
 			date: new Date() - 300000000,
-			author: pubCollaborators[4],
+			author: pubData.contributors[4],
 			attachment: undefined,
 			highlight: undefined,
 			suggestions: undefined,
@@ -298,7 +297,7 @@ export const discussions = [
 			title: undefined,
 			text: 'Fanciful words is all you present. You have no idea what you are saying, not to mention have a silly haircut!',
 			date: new Date() - 310000000,
-			author: pubCollaborators[5],
+			author: pubData.contributors[1],
 			attachment: undefined,
 			highlight: undefined,
 			suggestions: undefined,
@@ -311,7 +310,7 @@ export const discussions = [
 			title: undefined,
 			text: 'That is an interesting thought but begs the question about non-linearities that exist within the normal time range.',
 			date: new Date() - 350000000,
-			author: pubCollaborators[0],
+			author: pubData.contributors[1],
 			attachment: undefined,
 			highlight: undefined,
 			suggestions: undefined,
@@ -322,7 +321,7 @@ export const discussions = [
 			title: 'Methods Section Help',
 			text: 'What is important about elephants that can\'t be said about lions!?',
 			date: new Date() - 4000000000,
-			author: pubCollaborators[3],
+			author: pubData.contributors[2],
 			attachment: undefined,
 			highlight: undefined,
 			suggestions: undefined,
@@ -333,7 +332,7 @@ export const discussions = [
 			title: undefined,
 			text: 'Fanciful words is all you present. You have no idea what you are saying, not to mention have a silly haircut!',
 			date: new Date() - 300000000,
-			author: pubCollaborators[5],
+			author: pubData.contributors[4],
 			attachment: undefined,
 			highlight: undefined,
 			suggestions: undefined,

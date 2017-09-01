@@ -26,7 +26,7 @@ const defaultProps = {
 
 const PubCollabHeader = function(props) {
 	const authors = props.collaborators.filter((collaborator)=> {
-		return collaborator.isAuthor;
+		return collaborator.Contributor.isAuthor;
 	});
 	const isAuthor = true;
 	return (

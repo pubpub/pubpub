@@ -41,8 +41,8 @@ const DiscussionThread = function(props) {
 								<Link to={`/user/${discussion.author.slug}`}>
 									<Avatar
 										width={30}
-										userInitials={discussion.author.userInitials}
-										userAvatar={discussion.author.userAvatar}
+										userInitials={discussion.author.initials}
+										userAvatar={discussion.author.avatar}
 									/>
 								</Link>
 

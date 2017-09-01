@@ -44,8 +44,11 @@ class PubPresentation extends Component {
 
 				<PubPresDetails
 					slug={pubData.slug}
-					numDiscussions={12}
-					numSuggestions={3}
+					numDiscussions={pubData.discussions.length}
+					numSuggestions={pubData.discussions.reduce((prev, curr)=> {
+						if (curr.suggestions) { return prev + 1; }
+						return prev;
+					}, 0)}
 					collaborators={pubData.contributors}
 					// versions={pubData.versions}
 					versions={[]}

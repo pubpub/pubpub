@@ -4,8 +4,7 @@ import PubPresDetails from 'components/PubPresDetails/PubPresDetails';
 import PubPresHeader from 'components/PubPresHeader/PubPresHeader';
 import PubBody from 'components/PubBody/PubBody';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
-
-import { accentDataDark, accentDataLight, pubData, pubVersions, pubBody } from './_data';
+import { accentDataDark, accentDataLight, pubData, pubBody } from './_data';
 
 require('containers/PubPresentation/pubPresentation.scss');
 
@@ -29,7 +28,7 @@ const content = (
 				slug={pubData.slug}
 				numDiscussions={10}
 				numSuggestions={8}
-				versions={pubVersions}
+				versions={pubData.versions}
 			/>
 			<PubBody content={pubBody} />
 		</div>
@@ -43,7 +42,7 @@ const content = (
 				slug={pubData.slug}
 				numDiscussions={10}
 				numSuggestions={8}
-				versions={pubVersions}
+				versions={pubData.versions}
 			/>
 			<PubBody content={pubBody} />
 		</div>

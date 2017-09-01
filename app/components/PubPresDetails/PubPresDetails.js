@@ -26,7 +26,7 @@ const PubPresDetails = function(props) {
 	});
 
 	const activeVersion = props.versions.reduce((prev, curr)=> {
-		if (curr.active) { return curr; }
+		if (curr.isActive) { return curr; }
 		return prev;
 	}, {});
 
@@ -61,15 +61,15 @@ const PubPresDetails = function(props) {
 										</li>
 										<li className={'pt-menu-divider'} />
 										{props.versions.sort((foo, bar)=>{
-											if (foo.date < bar.date) { return 1; }
-											if (foo.date > bar.date) { return -1; }
+											if (foo.createdAt < bar.createdAt) { return 1; }
+											if (foo.createdAt > bar.createdAt) { return -1; }
 											return 0;
 										}).map((version)=> {
 											return (
 												<li key={`version-${version.id}`} style={{ textAlign: 'right' }}>
 													<Link to={`/pub/${props.slug}`} className="pt-menu-item pt-popover-dismiss">
-														<span style={{ fontWeight: version.active ? '600' : 'normal' }}>
-															{dateFormat(version.date, 'mmm dd, yyyy · HH:MM')}
+														<span style={{ fontWeight: version.isActive ? '600' : 'normal' }}>
+															{dateFormat(version.createdAt, 'mmm dd, yyyy · HH:MM')}
 														</span>
 													</Link>
 												</li>
@@ -84,7 +84,7 @@ const PubPresDetails = function(props) {
 								inheritDarkTheme={false}
 							>
 								<button className={'pt-button pt-minimal'}>
-									{dateFormat(activeVersion.date, 'mmm dd, yyyy')}
+									{dateFormat(activeVersion.createdAt, 'mmm dd, yyyy')}
 									<span className={'pt-icon-standard pt-icon-caret-down pt-align-right'} />
 								</button>
 							</Popover>
