@@ -57,7 +57,13 @@ const DashboardSide = function(props) {
 						<button type="button" className="pt-button pt-icon-plus pt-small pt-minimal title-button" />
 						<h6>Pages</h6>
 					</li>
-					{props.pages.map((page)=> {
+					{props.pages.sort((foo, bar)=> {
+						const fooTitle = foo.title.toLowerCase();
+						const barTitle = bar.title.toLowerCase();
+						if (fooTitle > barTitle) { return 1; }
+						if (fooTitle < barTitle) { return -1; }
+						return 0;
+					}).map((page)=> {
 						return (
 							<li key={`side-page-${page.id}`}>
 								<Link className={`pt-menu-item ${props.activeSlug === page.slug && 'pt-active'} ${page.isPublic ? 'pt-icon-globe' : 'pt-icon-lock'}`} tabIndex="0" to={`/dashboard/${page.slug}`}>
@@ -77,7 +83,13 @@ const DashboardSide = function(props) {
 						<h6>Collections</h6>
 					</li>
 
-					{props.collections.map((collection)=> {
+					{props.collections.sort((foo, bar)=> {
+						const fooTitle = foo.title.toLowerCase();
+						const barTitle = bar.title.toLowerCase();
+						if (fooTitle > barTitle) { return 1; }
+						if (fooTitle < barTitle) { return -1; }
+						return 0;
+					}).map((collection)=> {
 						return (
 							<li key={`side-collection-${collection.id}`}>
 								<Link className={`pt-menu-item ${props.activeSlug === collection.slug && 'pt-active'} ${collection.isPublic ? 'pt-icon-globe' : 'pt-icon-lock'}`} tabIndex="0" to={`/dashboard/${collection.slug}`}>

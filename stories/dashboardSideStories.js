@@ -1,6 +1,8 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import DashboardSide from 'components/DashboardSide/DashboardSide';
+import { populateNavigationIds } from 'utilities';
+import { communityData } from './_data';
 
 const storyStyle = {
 	float: 'left',
@@ -13,89 +15,13 @@ const wrapperStyle = {
 };
 const titleStyle = { marginBottom: '2px' };
 
-const pages = [
-	{
-		title: 'About',
-		slug: 'about',
-		isPublic: true,
-		id: 0,
-	},
-	{
-		title: 'Guidelines',
-		slug: 'guidelines',
-		isPublic: true,
-		id: 1,
-	},
-	{
-		title: 'Pending Authors',
-		slug: 'pending',
-		isPublic: false,
-		id: 2,
-	}
-];
-
-const collections = [
-	{
-		title: 'Home',
-		slug: 'home',
-		isPublic: true,
-		id: 3,
-	},
-	{
-		title: 'Sensors',
-		slug: 'sensors',
-		isPublic: true,
-		id: 4,
-	},
-	{
-		title: 'Blockchain',
-		slug: 'blockchain',
-		isPublic: true,
-		id: 5,
-	},
-	{
-		title: 'Meeting Notes',
-		slug: 'meeting-notes',
-		isPublic: false,
-		id: 6,
-	},
-	{
-		title: 'Issue 2017',
-		slug: '2017',
-		isPublic: true,
-		id: 7,
-	},
-	{
-		title: 'Issue 2016',
-		slug: '2016',
-		isPublic: true,
-		id: 8,
-	},
-	{
-		title: 'Issue 2015',
-		slug: '2015',
-		isPublic: true,
-		id: 9,
-	},
-	{
-		title: 'Private Submissions',
-		slug: 'private-submissions',
-		isPublic: false,
-		id: 10,
-	},
-	{
-		title: 'Ideas',
-		slug: 'ideas',
-		isPublic: false,
-		id: 11,
-	},
-	{
-		title: 'Fresh Content',
-		slug: 'fresh-content',
-		isPublic: false,
-		id: 12,
-	},
-];
+const navItems = populateNavigationIds(communityData.collections, communityData.navigation);
+const pages = navItems.filter((item)=> {
+	return item.isPage;
+});
+const collections = navItems.filter((item)=> {
+	return !item.isPage;
+});
 
 storiesOf('DashboardSide', module)
 .add('Default', () => (
