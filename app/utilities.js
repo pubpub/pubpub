@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 export const apiFetch = function(path, opts) {
 	// const urlPrefix = 'https://pubpub-api-v4-dev.herokuapp.com';
 	const urlPrefix = 'http://localhost:9876';
@@ -17,6 +15,19 @@ export const apiFetch = function(path, opts) {
 	});
 };
 
+export const nestDiscussionsToThreads = function(discussions) {
+	const maxThreadNumber = discussions.reduce((prev, curr)=> {
+		if (curr.threadNumber > prev) { return curr.threadNumber; }
+		return prev;
+	}, 0);
+
+	const tempThreads = new Array(maxThreadNumber).fill([]);
+	discussions.forEach((item)=> {
+		tempThreads[item.threadNumber - 1] = [...tempThreads[item.threadNumber - 1], item];
+	});
+
+	return tempThreads.filter((item)=> { return item.length; });
+};
 
 /* DEV ONLY */
 /* This will be removed once connected to API */

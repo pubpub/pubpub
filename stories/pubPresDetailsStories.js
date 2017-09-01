@@ -12,8 +12,11 @@ storiesOf('PubPresDetails', module)
 			<PubPresDetails
 				collaborators={pubData.contributors}
 				slug={pubData.slug}
-				numDiscussions={10}
-				numSuggestions={8}
+				numDiscussions={pubData.discussions.length}
+				numSuggestions={pubData.discussions.reduce((prev, curr)=> {
+					if (curr.suggestions) { return prev + 1; }
+					return prev;
+				}, 0)}
 				versions={pubData.versions}
 			/>
 		</div>

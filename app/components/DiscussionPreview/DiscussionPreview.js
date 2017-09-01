@@ -10,7 +10,7 @@ const propTypes = {
 
 const DiscussionPreview = function(props) {
 	const hasAttachments = props.discussions.reduce((prev, curr)=> {
-		return prev || curr.attachment;
+		return prev || curr.attachments;
 	}, false);
 	const hasSuggestions = props.discussions.reduce((prev, curr)=> {
 		return prev || curr.suggestions;
