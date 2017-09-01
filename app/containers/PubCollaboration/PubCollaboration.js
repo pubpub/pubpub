@@ -9,16 +9,19 @@ import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 import DiscussionPreviewPanel from 'components/DiscussionPreviewPanel/DiscussionPreviewPanel';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
-
 import Overlay from 'components/Overlay/Overlay';
-import { pubBody, pubData, pubCollaborators, discussions } from '../../../stories/_data';
+
+import { getPubData } from 'actions/pub';
+import { nestDiscussionsToThreads } from 'utilities';
+import { pubBody } from '../../../stories/_data';
 
 require('./pubCollaboration.scss');
 
 const propTypes = {
-	// dispatch: PropTypes.func.isRequired,
+	dispatch: PropTypes.func.isRequired,
 	location: PropTypes.object.isRequired,
-	// appData: PropTypes.object.isRequired,
+	match: PropTypes.object.isRequired,
+	pubData: PropTypes.object.isRequired,
 };
 
 class PubCollaboration extends Component {
@@ -34,6 +37,9 @@ class PubCollaboration extends Component {
 		this.toggleShare = this.toggleShare.bind(this);
 		this.toggleMetadata = this.toggleMetadata.bind(this);
 		this.toggleAuthors = this.toggleAuthors.bind(this);
+	}
+	componentWillMount() {
+		this.props.dispatch(getPubData(this.props.match.params.slug));
 	}
 
 	togglePublish() {
@@ -51,10 +57,17 @@ class PubCollaboration extends Component {
 
 	render() {
 		const queryObject = queryString.parse(this.props.location.search);
-		const activeThread = discussions.reduce((prev, curr)=> {
+
+		const pubData = this.props.pubData.data || {};
+		const discussions = pubData.discussions || [];
+		const threads = nestDiscussionsToThreads(discussions);
+
+		const activeThread = threads.reduce((prev, curr)=> {
 			if (curr[0].threadNumber === Number(queryObject.thread)) { return curr; }
 			return prev;
 		}, undefined);
+
+		if (!pubData.id) { return <p>Loading</p>; }
 
 		return (
 			<div className={'pub-collaboration'}>
@@ -71,9 +84,9 @@ class PubCollaboration extends Component {
 									pubData={pubData}
 									collaborators={pubData.contributors}
 									activeCollaborators={[
-										contributors[0],
-										contributors[1],
-										contributors[2]
+										pubData.contributors[0],
+										pubData.contributors[1],
+										pubData.contributors[2]
 									]}
 									onPublishClick={this.togglePublish}
 									onShareClick={this.toggleShare}
@@ -93,7 +106,7 @@ class PubCollaboration extends Component {
 									<div className={'side-panel-content'}>
 										{activeThread
 											? <DiscussionThread discussions={activeThread} slug={pubData.slug} />
-											: <DiscussionPreviewPanel threads={discussions} slug={pubData.slug} />
+											: <DiscussionPreviewPanel threads={threads} slug={pubData.slug} />
 										}
 									</div>
 								</div>
@@ -128,4 +141,4 @@ class PubCollaboration extends Component {
 }
 
 PubCollaboration.propTypes = propTypes;
-export default withRouter(connect(state => ({ appData: state.app }))(PubCollaboration));
+export default withRouter(connect(state => ({ pubData: state.pub }))(PubCollaboration));
