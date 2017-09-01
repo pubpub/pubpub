@@ -20,7 +20,7 @@ export const GET_COLLECTION_DATA_FAIL = 'collection/GET_COLLECTION_DATA_FAIL';
 export function getCollectionData(collectionId) {
 	return (dispatch) => {
 		dispatch({ type: GET_COLLECTION_DATA_LOAD });
-		return apiFetch(`/collection/${collectionId}`)
+		return apiFetch(`/collections/${collectionId}`)
 		.then((result) => {
 			dispatch({ type: GET_COLLECTION_DATA_SUCCESS, result });
 		})

@@ -25,6 +25,9 @@ export const communityData = require('./_dataCommunity.js').default;
 /*  api.pubpub.org/users/:slug  */
 export const userData = require('./_dataUser.js').default;
 
+/*  api.pubpub.org/collections/:collectionId  */
+export const collectionData = require('./_dataCollection.js').default;
+
 /*  api.pubpub.org/pubs/:slug  */
 export const pubData = require('./_dataPub.js').default;
 
@@ -93,46 +96,46 @@ export const pubData = require('./_dataPub.js').default;
 // ];
 
 
-export const collectionData = {
-	title: 'Sensor Hardware',
-	slug: 'sensors',
-	description: 'An open collection dedicated to the free discussion of new topics relating to elephants and whales that create hardware.',
-	isPrivate: true,
-	isOpenSubmissions: true,
-	isPage: false,
-	pubs: [
-		{
-			id: 0,
-			title: 'Open Schematics',
-			slug: 'open-schematics',
-			lastModified: String(new Date()),
-			status: 'published',
-			numCollaborators: 12,
-			numSuggestions: 8,
-			numDiscussions: 4,
-		},
-		{
-			id: 1,
-			title: 'Regulatory Endeavors of Mammals',
-			slug: 'regulatory',
-			lastModified: String(new Date()),
-			status: 'unpublished',
-			numCollaborators: 7,
-			numSuggestions: 0,
-			numDiscussions: 13,
-		},
-		{
-			id: 2,
-			title: 'A Lesson in Pedagogy',
-			slug: 'pedagogy',
-			lastModified: String(new Date()),
-			status: 'submitted',
-			numCollaborators: 8,
-			numSuggestions: 24,
-			numDiscussions: 1,
-		},
-	],
-};
+// export const collectionData = {
+// 	title: 'Sensor Hardware',
+// 	slug: 'sensors',
+// 	description: 'An open collection dedicated to the free discussion of new topics relating to elephants and whales that create hardware.',
+// 	isPrivate: true,
+// 	isOpenSubmissions: true,
+// 	isPage: false,
+// 	pubs: [
+// 		{
+// 			id: 0,
+// 			title: 'Open Schematics',
+// 			slug: 'open-schematics',
+// 			lastModified: String(new Date()),
+// 			status: 'published',
+// 			numCollaborators: 12,
+// 			numSuggestions: 8,
+// 			numDiscussions: 4,
+// 		},
+// 		{
+// 			id: 1,
+// 			title: 'Regulatory Endeavors of Mammals',
+// 			slug: 'regulatory',
+// 			lastModified: String(new Date()),
+// 			status: 'unpublished',
+// 			numCollaborators: 7,
+// 			numSuggestions: 0,
+// 			numDiscussions: 13,
+// 		},
+// 		{
+// 			id: 2,
+// 			title: 'A Lesson in Pedagogy',
+// 			slug: 'pedagogy',
+// 			lastModified: String(new Date()),
+// 			status: 'submitted',
+// 			numCollaborators: 8,
+// 			numSuggestions: 24,
+// 			numDiscussions: 1,
+// 		},
+// 	],
+// };
 
 export const pubBody = (
 	<div className={'article-content'}>

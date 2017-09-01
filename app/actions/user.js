@@ -20,7 +20,7 @@ export const GET_USER_DATA_FAIL = 'user/GET_USER_DATA_FAIL';
 export function getUserData(slug) {
 	return (dispatch) => {
 		dispatch({ type: GET_USER_DATA_LOAD });
-		return apiFetch(`/user/${slug}`)
+		return apiFetch(`/users/${slug}`)
 		.then((result) => {
 			dispatch({ type: GET_USER_DATA_SUCCESS, result });
 		})
