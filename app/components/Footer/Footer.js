@@ -40,12 +40,14 @@ const Footer = function() {
 						<ul>
 							{links.map((link)=> {
 								if (link.url.indexOf('https:') > -1) {
-									return <a key={`footer-item-${link.id}`} href={link.url}><li>{link.title}</li></a>;
+									return <li key={`footer-item-${link.id}`}><a href={link.url}>{link.title}</a></li>;
 								}
 								return (
-									<Link to={link.url} key={`footer-item-${link.id}`}>
-										<li>{link.title}</li>
-									</Link>
+									<li key={`footer-item-${link.id}`}>
+										<Link to={link.url}>
+											{link.title}
+										</Link>
+									</li>
 								);
 							})}
 						</ul>

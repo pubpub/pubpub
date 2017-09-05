@@ -9,18 +9,18 @@
 	}
 	li {
 		text-decoration: inherit;
+		padding: 0em 1em;
+		display: inline-block;
 	}
 	a {
 		color: inherit;
-		padding: 0em 1em;
-		display: inline-block;
 		user-select: none;
 	}
 }
 
 @media only screen and (max-width: 45em) {  /* 720px */
 	.footer {
-		a {
+		li {
 			padding: 1em 0em;
 			display: block;
 		}
