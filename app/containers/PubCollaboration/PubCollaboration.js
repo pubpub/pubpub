@@ -127,7 +127,32 @@ class PubCollaboration extends Component {
 									<div className={'pub-body'}>
 										{/* pubBody */}
 										<Editor ref={(editor) => { this.editor = editor; }} mode={'rich'}>
-											
+											{/* <Autocomplete
+												onSelection={this.onMentionSelection}
+												localUsers={this.props.localUsers}
+												localPubs={this.props.localPubs}
+												localFiles={this.props.localFiles}
+												localReferences={this.props.localReferences}
+												localHighlights={this.props.localHighlights}
+												localPages={this.props.localPages}
+												globalCategories={['pubs', 'users']} 
+											/> */}
+											<InsertMenu
+												allReferences={[]}
+												handleFileUpload={()=>{}}
+												handleReferenceAdd={()=>{}}
+											/>
+											<TableMenu />
+											<FormattingMenu />
+											{/* What happens if a collaborative= plugin is removed? */}
+											<CollaborativeAddon
+												ref={(collab) => { this.collab = collab; }}
+												firebaseConfig={firebaseConfig}
+												// clientID={this.props.clientID}
+												// editorKey={this.props.editorKey}
+												clientID={'travis-test-clientid'}
+												editorKey={'travis-test-editorkey'}
+											/>
 										</Editor>
 									</div>
 								</div>
