@@ -31,7 +31,6 @@ class User extends Component {
 	render() {
 		const userData = this.props.userData.data || {};
 
-		if (!userData.id) { return <Spinner />; }
 		return (
 			<div className={'user'}>
 
@@ -57,7 +56,7 @@ class User extends Component {
 				</div>
 
 				<div className={'container narrow content'}>
-					{userData.pubs.map((pub)=> {
+					{userData.pubs && userData.pubs.map((pub)=> {
 						return (
 							<div key={`pub-${pub.id}`} className={'row'}>
 								<div className={'col-12'}>

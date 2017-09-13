@@ -11,6 +11,9 @@ import DiscussionPreviewPanel from 'components/DiscussionPreviewPanel/Discussion
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import Overlay from 'components/Overlay/Overlay';
 
+import { Editor } from '@pubpub/editor';
+import { Autocomplete, CollaborativeAddon, FormattingMenu, InsertMenu, TableMenu } from '@pubpub/editor/addons';
+
 import { getPubData } from 'actions/pub';
 import { nestDiscussionsToThreads } from 'utilities';
 import { pubBody } from '../../../stories/_data';
@@ -69,6 +72,14 @@ class PubCollaboration extends Component {
 
 		if (!pubData.id) { return <p>Loading</p>; }
 
+		const firebaseConfig = {
+			apiKey: 'AIzaSyBpE1sz_-JqtcIm2P4bw4aoMEzwGITfk0U',
+			authDomain: 'pubpub-rich.firebaseapp.com',
+			databaseURL: 'https://pubpub-rich.firebaseio.com',
+			projectId: 'pubpub-rich',
+			storageBucket: 'pubpub-rich.appspot.com',
+			messagingSenderId: '543714905893',
+		};
 		return (
 			<div className={'pub-collaboration'}>
 
@@ -112,8 +123,12 @@ class PubCollaboration extends Component {
 								</div>
 
 								<div className={'content-panel'}>
-									<div className={'pub-body'} contentEditable="true">
-										{pubBody}
+									{/*<div className={'pub-body'} contentEditable="true">*/}
+									<div className={'pub-body'}>
+										{/* pubBody */}
+										<Editor ref={(editor) => { this.editor = editor; }} mode={'rich'}>
+											
+										</Editor>
 									</div>
 								</div>
 
