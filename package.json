@@ -17,7 +17,7 @@
     "storybook": "start-storybook -p 9001 -c .storybook -s ./static"
   },
   "dependencies": {
-    "@blueprintjs/core": "^1.25.1",
+    "@blueprintjs/core": "^1.27.0",
     "@storybook/addon-options": "^3.2.6",
     "@storybook/react": "^3.2.8",
     "babel-core": "^6.26.0",
@@ -30,9 +30,9 @@
     "babel-runtime": "^6.26.0",
     "bourbon": "^4.3.4",
     "copy-webpack-plugin": "^4.0.1",
-    "css-loader": "^0.28.5",
+    "css-loader": "^0.28.7",
     "dateformat": "^2.0.0",
-    "eslint": "^4.5.0",
+    "eslint": "^4.6.1",
     "eslint-config-airbnb": "^15.0.1",
     "eslint-import-resolver-webpack": "^0.8.1",
     "eslint-plugin-babel": "^4.1.1",
@@ -51,9 +51,9 @@
     "react-code-splitting": "^1.2.0",
     "react-dom": "^15.5.4",
     "react-g-analytics": "^0.4.2",
-    "react-helmet": "^5.0.3",
+    "react-helmet": "^5.2.0",
     "react-redux": "^5.0.6",
-    "react-router-dom": "^4.1.1",
+    "react-router-dom": "^4.2.2",
     "react-timeago": "^3.4.3",
     "redux": "^3.5.2",
     "redux-thunk": "^2.2.0",
@@ -62,8 +62,8 @@
     "style-loader": "^0.18.2",
     "sw-precache-webpack-plugin": "^0.11.0",
     "url-loader": "^0.5.9",
-    "webpack": "^3.5.5",
-    "webpack-dev-server": "^2.7.1"
+    "webpack": "^3.5.6",
+    "webpack-dev-server": "^2.8.1"
   },
   "engines": {
     "node": "8.2.1"
