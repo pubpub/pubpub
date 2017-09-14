@@ -1,0 +1,10 @@
+[
+  {
+    "id": "signup.Emailalreadyused",
+    "defaultMessage": "Email already used"
+  },
+  {
+    "id": "signup.Usernamealreadyused",
+    "defaultMessage": "Username already used"
+  }
+]

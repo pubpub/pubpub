@@ -1,0 +1,14 @@
+[
+  {
+    "id": "JournalProfileDetails.shortDescription",
+    "defaultMessage": "Used as the Journal's preview image in search results and throughout the site."
+  },
+  {
+    "id": "JournalProfileDetails.shortDescription2",
+    "defaultMessage": "Use to describe longer details about this journal. This text will appear at pubpub.org/{slug}/about."
+  },
+  {
+    "id": "JournalProfileDetails.shortDescription3",
+    "defaultMessage": "Use to describe the review process and featuring standards of this journal. This text will appear at pubpub.org/{slug}/about."
+  }
+]

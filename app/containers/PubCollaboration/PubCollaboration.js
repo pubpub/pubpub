@@ -1,24 +1,24 @@
+import { Autocomplete, CollaborativeAddon, FormattingMenu, InsertMenu, TableMenu } from '@pubpub/editor/addons';
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import Helmet from 'react-helmet';
-import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
-import queryString from 'query-string';
 
-import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
-import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 import DiscussionPreviewPanel from 'components/DiscussionPreviewPanel/DiscussionPreviewPanel';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
-import Overlay from 'components/Overlay/Overlay';
-
 import { Editor } from '@pubpub/editor';
-import { Autocomplete, CollaborativeAddon, FormattingMenu, InsertMenu, TableMenu } from '@pubpub/editor/addons';
-
+import Helmet from 'react-helmet';
+import Overlay from 'components/Overlay/Overlay';
+import PropTypes from 'prop-types';
+import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
+import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
+import { connect } from 'react-redux';
 import { getPubData } from 'actions/pub';
 import { nestDiscussionsToThreads } from 'utilities';
 import { pubBody } from '../../../stories/_data';
+import queryString from 'query-string';
+import { withRouter } from 'react-router-dom';
 
 require('./pubCollaboration.scss');
+require('@pubpub/editor/style/base.scss');
+require('@pubpub/editor/style/fonts.scss');
 
 const propTypes = {
 	dispatch: PropTypes.func.isRequired,
@@ -135,7 +135,7 @@ class PubCollaboration extends Component {
 												localReferences={this.props.localReferences}
 												localHighlights={this.props.localHighlights}
 												localPages={this.props.localPages}
-												globalCategories={['pubs', 'users']} 
+												globalCategories={['pubs', 'users']}
 											/> */}
 											<InsertMenu
 												allReferences={[]}

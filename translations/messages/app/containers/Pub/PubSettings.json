@@ -1,0 +1,18 @@
+[
+  {
+    "id": "pubSettings.PubURLrequired",
+    "defaultMessage": "Pub URL required"
+  },
+  {
+    "id": "pubSettings.Titlerequired",
+    "defaultMessage": "Title required"
+  },
+  {
+    "id": "pubSettings.Emailalreadyused",
+    "defaultMessage": "Email already used"
+  },
+  {
+    "id": "pubSettings.Usernamealreadyused",
+    "defaultMessage": "Username already used"
+  }
+]
