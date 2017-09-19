@@ -14,6 +14,7 @@ storiesOf('DiscussionThread', module)
 			<DiscussionThread
 				discussions={threads[0]}
 				slug={'my-article'}
+				pathname={'/pub/blah/collaborate'}
 			/>
 		</div>
 		<div style={wrapperStyle}>
@@ -39,6 +40,7 @@ storiesOf('DiscussionThread', module)
 				discussions={threads[1]}
 				slug={'my-article'}
 				loginData={{
+					id: '12312412',
 					canAdmin: true
 				}}
 			/>

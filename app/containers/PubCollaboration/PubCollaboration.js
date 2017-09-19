@@ -121,6 +121,7 @@ class PubCollaboration extends Component {
 												discussions={activeThread}
 												slug={pubData.slug}
 												loginData={this.props.loginData.data}
+												pathname={`${this.props.location.pathname}${this.props.location.search}`}
 											/>
 											: threads.map((thread)=> {
 												return (

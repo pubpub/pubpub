@@ -8,7 +8,7 @@ import encHex from 'crypto-js/enc-hex';
 import { Button } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
 import { postLogin } from 'actions/login';
-
+import queryString from 'query-string';
 
 require('./login.scss');
 
@@ -16,6 +16,7 @@ const propTypes = {
 	loginData: PropTypes.object.isRequired,
 	dispatch: PropTypes.func.isRequired,
 	history: PropTypes.object.isRequired,
+	location: PropTypes.object.isRequired,
 };
 
 class Login extends Component {
@@ -31,8 +32,9 @@ class Login extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
+		const queryObject = queryString.parse(this.props.location.search);
 		if (!this.props.loginData.data && nextProps.loginData.data) {
-			this.props.history.push('/');
+			this.props.history.push(queryObject.redirect || '/');
 		}
 	}
 

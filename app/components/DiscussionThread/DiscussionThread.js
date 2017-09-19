@@ -11,6 +11,7 @@ const propTypes = {
 	discussions: PropTypes.array.isRequired,
 	slug: PropTypes.string.isRequired,
 	loginData: PropTypes.object,
+	pathname: PropTypes.string.isRequired,
 };
 const defaultProps = {
 	loginData: {},
@@ -79,16 +80,24 @@ const DiscussionThread = function(props) {
 								</div>
 
 							</div>
+
 							<div className={'text'}>{discussion.text}</div>
+
 						</div>
 					);
 				})}
 			</div>
 
-			<input
-				className="pt-input"
-				placeholder={'Reply...'}
-			/>
+			{props.loginData.id
+				? <input
+					className="pt-input"
+					placeholder={'Reply...'}
+				/>
+				: <Link to={`/login${props.pathname ? `?redirect=${props.pathname}` : ''}`} className={'pt-button pt-fill'}>
+					Login to Reply
+				</Link>
+			}
+
 		</div>
 	);
 };
