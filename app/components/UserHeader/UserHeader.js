@@ -29,7 +29,7 @@ const UserHeader = function(props) {
 			<div className={'avatar-wrapper'}>
 				<Avatar
 					userAvatar={props.userData.avatar}
-					userInitials={props.userData.intias}
+					userInitials={props.userData.initials}
 					width={150}
 				/>
 				{props.isUser &&

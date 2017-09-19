@@ -39,7 +39,7 @@ class User extends Component {
 					<meta name="description" content={userData.bio} />
 				</Helmet>
 
-				<div className={'container narrow header'}>
+				<div className={'container narrow user-header-wrapper'}>
 					<div className={'row'}>
 						<div className={'col-12'}>
 							<UserHeader userData={userData} />

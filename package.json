@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^1.25.1",
-    "@pubpub/editor": "^3.0.7",
+    "@pubpub/editor": "^3.0.8",
     "@storybook/addon-options": "^3.2.6",
     "@storybook/react": "^3.2.8",
     "babel-core": "^6.26.0",

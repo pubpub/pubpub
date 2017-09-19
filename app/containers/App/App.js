@@ -41,7 +41,7 @@ class App extends Component {
 		// 	: window.location.hostname; // In production, use the real hostname
 
 		// this.hostname = 'stewart3756.pubpub.org';
-		this.hostname = 'lilian8430.pubpub.org';
+		this.hostname = 'angela1367.pubpub.org';
 		this.props.dispatch(getAppData(this.hostname));
 	}
 
