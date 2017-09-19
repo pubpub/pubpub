@@ -1,11 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import Avatar from 'components/Avatar/Avatar';
 
 require('./discussionPreview.scss');
 
 const propTypes = {
 	discussions: PropTypes.array.isRequired,
+	slug: PropTypes.string.isRequired,
+	isPresentation: PropTypes.bool,
+};
+
+const defaultProps = {
+	isPresentation: false,
 };
 
 const DiscussionPreview = function(props) {
@@ -25,8 +32,12 @@ const DiscussionPreview = function(props) {
 		return 0;
 	});
 
+	const toUrl = props.isPresentation
+		? `/pub/${props.slug}?thread=${props.discussions[0].threadNumber}`
+		: `/pub/${props.slug}/collaborate?thread=${props.discussions[0].threadNumber}`;
+
 	return (
-		<div className={'discussion-preview'}>
+		<Link className={'discussion-preview'} to={toUrl}>
 			<div className={'icons'}>
 				{hasAttachments &&
 					<span className={'pt-icon-standard pt-icon-paperclip'} />
@@ -60,9 +71,11 @@ const DiscussionPreview = function(props) {
 					{sortedDiscussions.length - 3} more...
 				</div>
 			}
-		</div>
+			<div className={'bottom-border'} />
+		</Link>
 	);
 };
 
 DiscussionPreview.propTypes = propTypes;
+DiscussionPreview.defaultProps = defaultProps;
 export default DiscussionPreview;

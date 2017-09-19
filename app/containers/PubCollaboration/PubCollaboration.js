@@ -1,7 +1,7 @@
 import { Autocomplete, CollaborativeAddon, FormattingMenu, InsertMenu, TableMenu } from '@pubpub/editor/addons';
 import React, { Component } from 'react';
 
-import DiscussionPreviewPanel from 'components/DiscussionPreviewPanel/DiscussionPreviewPanel';
+import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import { Editor } from '@pubpub/editor';
 import Helmet from 'react-helmet';
@@ -117,7 +117,16 @@ class PubCollaboration extends Component {
 									<div className={'side-panel-content'}>
 										{activeThread
 											? <DiscussionThread discussions={activeThread} slug={pubData.slug} />
-											: <DiscussionPreviewPanel threads={threads} slug={pubData.slug} />
+											: threads.map((thread)=> {
+												return (
+													<DiscussionPreview
+														key={`thread-${thread[0].id}`}
+														discussions={thread}
+														slug={pubData.slug}
+														isPresentation={false}
+													/>
+												);
+											})
 										}
 									</div>
 								</div>

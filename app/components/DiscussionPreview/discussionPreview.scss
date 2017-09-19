@@ -1,5 +1,23 @@
 .discussion-preview {
 	display: block;
+	position: relative;
+	padding: 1em;
+	cursor: pointer;
+	.bottom-border {
+		position: absolute;
+		bottom: -1px;
+		width: calc(100% - 2em);
+	}
+	&:hover:not(:last-of-type) .bottom-border {
+		border-bottom: 1px solid transparent;
+	}
+	&:not(:last-of-type) .bottom-border {
+		border-bottom: 1px solid #F0F0F0;
+	}
+	&:hover {
+		background-color: #F0F0F0;
+		text-decoration: none;
+	}
 	.title {
 		font-weight: bold;
 		padding-bottom: 0.5em;

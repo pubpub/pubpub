@@ -15,10 +15,23 @@ storiesOf('DiscussionPreview', module)
 				discussions={threads[0]}
 				slug={'my-article'}
 			/>
+
 		</div>
 		<div style={wrapperStyle}>
 			<DiscussionPreview
 				discussions={threads[1]}
+				slug={'my-article'}
+			/>
+			<DiscussionPreview
+				discussions={threads[0]}
+				slug={'my-article'}
+			/>
+			<DiscussionPreview
+				discussions={threads[1]}
+				slug={'my-article'}
+			/>
+			<DiscussionPreview
+				discussions={threads[0]}
 				slug={'my-article'}
 			/>
 		</div>
