@@ -1,9 +1,11 @@
-import { Autocomplete, CollaborativeAddon, FormattingMenu, InsertMenu, TableMenu } from '@pubpub/editor/addons';
 import React, { Component } from 'react';
 
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import { Editor } from '@pubpub/editor';
+import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
+import Collaborative from '@pubpub/editor/addons/Collaborative';
+
 import Helmet from 'react-helmet';
 import Overlay from 'components/Overlay/Overlay';
 import PropTypes from 'prop-types';
@@ -12,13 +14,14 @@ import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 import { connect } from 'react-redux';
 import { getPubData } from 'actions/pub';
 import { nestDiscussionsToThreads } from 'utilities';
-import { pubBody } from '../../../stories/_data';
+// import { pubBody } from '../../../stories/_data';
 import queryString from 'query-string';
 import { withRouter } from 'react-router-dom';
 
 require('./pubCollaboration.scss');
-require('@pubpub/editor/style/base.scss');
-require('@pubpub/editor/style/fonts.scss');
+require('components/PubBody/pubBody.scss');
+// require('@pubpub/editor/style/base.scss');
+// require('@pubpub/editor/style/fonts.scss');
 
 const propTypes = {
 	dispatch: PropTypes.func.isRequired,
@@ -146,32 +149,20 @@ class PubCollaboration extends Component {
 								<div className={'content-panel'}>
 									<div className={'pub-body'}>
 										{/* pubBody */}
-										<Editor ref={(editor) => { this.editor = editor; }} mode={'rich'}>
-											{/* <Autocomplete
-												onSelection={this.onMentionSelection}
-												localUsers={this.props.localUsers}
-												localPubs={this.props.localPubs}
-												localFiles={this.props.localFiles}
-												localReferences={this.props.localReferences}
-												localHighlights={this.props.localHighlights}
-												localPages={this.props.localPages}
-												globalCategories={['pubs', 'users']}
-											/> */}
-											<InsertMenu
-												allReferences={[]}
-												handleFileUpload={()=>{}}
-												handleReferenceAdd={()=>{}}
-											/>
-											<TableMenu />
+										<Editor placeholder={'Begin writing here'}>
 											<FormattingMenu />
-											{/* What happens if a collaborative= plugin is removed? */}
-											<CollaborativeAddon
-												ref={(collab) => { this.collab = collab; }}
-												firebaseConfig={firebaseConfig}
-												// clientID={this.props.clientID}
-												// editorKey={this.props.editorKey}
-												clientID={'travis-test-clientid'}
-												editorKey={'travis-test-editorkey'}
+											<Collaborative
+												// ref={(collab) => { this.collab = collab; }}
+												firebaseConfig={{
+													apiKey: 'AIzaSyBpE1sz_-JqtcIm2P4bw4aoMEzwGITfk0U',
+													authDomain: 'pubpub-rich.firebaseapp.com',
+													databaseURL: 'https://pubpub-rich.firebaseio.com',
+													projectId: 'pubpub-rich',
+													storageBucket: 'pubpub-rich.appspot.com',
+													messagingSenderId: '543714905893',
+												}}
+												clientID={`doc-test-clientid-${Math.ceil(Math.random() * 25000)}`}
+												editorKey={'doc-test-editorkey'}
 											/>
 										</Editor>
 									</div>

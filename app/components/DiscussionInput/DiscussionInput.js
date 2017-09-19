@@ -82,7 +82,7 @@ class DiscussionInput extends Component {
 						ref={(ref)=> { this.editorRef = ref; }}
 						placeholder={'Reply...'}
 						onChange={this.onReplyChange}
-						initialContent={stuff}
+						// initialContent={stuff}
 					/>
 				</div>
 				<div className={'buttons'}>

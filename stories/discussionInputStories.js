@@ -9,7 +9,7 @@ const wrapperStyle = { margin: '1em', padding: '2em', boxShadow: '0px 0px 1px rg
 
 const handleSubmit = (content)=> {
 	console.log(content);
-}
+};
 
 storiesOf('DiscussionInput', module)
 .add('Default', () => (

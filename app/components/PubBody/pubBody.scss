@@ -3,7 +3,7 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	-moz-font-feature-settings: "liga" on;
-	.article-content *:first-child {
+	.article-content *:first-child, .pubpub-editor *:first-child {
 		margin-top: 0px;
 	}
 	h2, h3 {
