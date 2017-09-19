@@ -7,7 +7,7 @@ import { Button } from '@blueprintjs/core';
 require('./discussionInput.scss');
 
 const propTypes = {
-	handleReplySubmit: PropTypes.func.isRequired,
+	handleSubmit: PropTypes.func.isRequired,
 	showTitle: PropTypes.bool,
 };
 
@@ -19,28 +19,40 @@ class DiscussionInput extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			content: undefined,
+			title: '',
+			content: '',
 		};
+		this.onTitleChange = this.onTitleChange.bind(this);
 		this.onReplyChange = this.onReplyChange.bind(this);
-		this.onReplySubmit = this.onReplySubmit.bind(this);
+		this.onSubmit = this.onSubmit.bind(this);
+	}
+
+	onTitleChange(evt) {
+		this.setState({ title: evt.target.value });
 	}
 
 	onReplyChange(evt) {
 		this.setState({ content: evt.target.value });
 	}
 
-	onReplySubmit(evt) {
+	onSubmit(evt) {
 		evt.preventDefault();
-		this.props.handleReplySubmit(this.state.content);
+		this.props.handleSubmit({
+			content: this.state.content,
+			title: this.state.title
+		});
 	}
 
 	render() {
 		return (
 			<div className={'discussion-input'}>
 				{this.props.showTitle &&
-					<div className={'title-input'}>
-						New Discussion
-					</div>
+					<input
+						className="title-input"
+						placeholder={'New Discussion Title...'}
+						value={this.state.title}
+						onChange={this.onTitleChange}
+					/>
 				}
 				<textarea
 					className="input"
@@ -59,7 +71,7 @@ class DiscussionInput extends Component {
 							name={'submit'}
 							type={'submit'}
 							className={'pt-button pt-intent-primary pt-small'}
-							onClick={this.onReplySubmit}
+							onClick={this.onSubmit}
 							text={'Submit Reply'}
 							disabled={!this.state.content}
 							loading={false}

@@ -7,7 +7,7 @@ import { pubData } from './_data';
 const threads = nestDiscussionsToThreads(pubData.discussions);
 const wrapperStyle = { margin: '1em', padding: '2em', boxShadow: '0px 0px 1px rgba(0, 0, 0, 0.25)', maxWidth: 500 };
 
-const handleReplySubmit = (content)=> {
+const handleSubmit = (content)=> {
 	console.log(content);
 }
 
@@ -16,12 +16,12 @@ storiesOf('DiscussionInput', module)
 	<div>
 		<div style={wrapperStyle}>
 			<DiscussionInput
-				handleReplySubmit={handleReplySubmit}
+				handleSubmit={handleSubmit}
 			/>
 		</div>
 		<div style={wrapperStyle}>
 			<DiscussionInput
-				handleReplySubmit={handleReplySubmit}
+				handleSubmit={handleSubmit}
 				showTitle={true}
 			/>
 		</div>

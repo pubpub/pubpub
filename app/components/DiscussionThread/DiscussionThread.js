@@ -100,7 +100,7 @@ const DiscussionThread = function(props) {
 			</div>
 
 			{props.loginData.id
-				? <DiscussionInput handleReplySubmit={onReplySubmit} />
+				? <DiscussionInput handleSubmit={onReplySubmit} />
 				: <Link to={`/login?redirect=${props.pathname}`} className={'pt-button pt-fill'}>
 					Login to Reply
 				</Link>

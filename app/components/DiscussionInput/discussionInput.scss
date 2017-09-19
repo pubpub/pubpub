@@ -3,7 +3,10 @@
 	border: 1px solid $border-color;
 	.title-input {
 		padding: 0.25em 0.5em;
+		border: 0px solid white;
 		border-bottom: 1px solid $border-color;
+		display: block;
+		width: 100%;
 	}
 	.input {
 		width: 100%;
