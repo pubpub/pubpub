@@ -56,6 +56,9 @@ p {
 	&.narrow {
 		max-width: 800px;
 	}
+	&.small {
+		max-width: 500px;
+	}
 }
 
 .row {

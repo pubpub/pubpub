@@ -19,7 +19,7 @@ const propTypes = {
 	largeHeaderBackground: PropTypes.string,
 	isLargeHeader: PropTypes.bool,
 
-	logoutHandler: PropTypes.func.isRequired,
+	onLogout: PropTypes.func.isRequired,
 
 };
 
@@ -94,7 +94,7 @@ const Header = function(props) {
 													</Link>
 												</li>
 												<MenuDivider />
-												<MenuItem text={'Logout'} onClick={props.logoutHandler} />
+												<MenuItem text={'Logout'} onClick={props.onLogout} />
 											</Menu>
 										}
 										interactionKind={PopoverInteractionKind.CLICK}

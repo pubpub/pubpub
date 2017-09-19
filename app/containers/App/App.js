@@ -11,6 +11,7 @@ import NavBar from 'components/NavBar/NavBar';
 import { populateNavigationIds } from 'utilities';
 
 import { getAppData } from 'actions/app';
+import { getLogout } from 'actions/login';
 
 require('./app.scss');
 
@@ -21,7 +22,9 @@ const NoMatch = () => <Async load={import('containers/NoMatch/NoMatch')} />;
 const PubCollaboration = () => <Async load={import('containers/PubCollaboration/PubCollaboration')} />;
 const PubPresentation = () => <Async load={import('containers/PubPresentation/PubPresentation')} />;
 const Search = () => <Async load={import('containers/Search/Search')} />;
+const Signup = () => <Async load={import('containers/Signup/Signup')} />;
 const User = () => <Async load={import('containers/User/User')} />;
+const UserCreate = () => <Async load={import('containers/UserCreate/UserCreate')} />;
 
 const propTypes = {
 	dispatch: PropTypes.func.isRequired,
@@ -31,8 +34,9 @@ const propTypes = {
 };
 
 class App extends Component {
-	static logoutHandler() {
-		// console.log('Logout');
+	constructor(props) {
+		super(props);
+		this.handleLogout = this.handleLogout.bind(this);
 	}
 
 	componentWillMount() {
@@ -43,6 +47,11 @@ class App extends Component {
 		// this.hostname = 'stewart3756.pubpub.org';
 		this.hostname = 'angela1367.pubpub.org';
 		this.props.dispatch(getAppData(this.hostname));
+	}
+
+	handleLogout() {
+		this.props.dispatch(getLogout());
+		window.location.href = window.location.origin;
 	}
 
 	render() {
@@ -88,7 +97,7 @@ class App extends Component {
 					largeHeaderBackground={appData.largeHeaderBackground}
 					largeHeaderDescription={appData.description}
 					isLargeHeader={isHome}
-					logoutHandler={App.logoutHandler}
+					onLogout={this.handleLogout}
 				/>
 
 				{navItems.length > 0 &&
@@ -107,11 +116,10 @@ class App extends Component {
 					<WrappedRoute exact path="/resetpassword" component={NoMatch} />
 					<WrappedRoute exact path="/resetpassword/:resetHash/:username" component={NoMatch} />
 					<WrappedRoute exact path="/search" component={Search} />
-					<WrappedRoute exact path="/signup" component={NoMatch} />
+					<WrappedRoute exact path="/signup" component={Signup} />
+					<WrappedRoute exact path="/user/create/:hash" component={UserCreate} />
 					<WrappedRoute exact path="/user/:slug" component={User} />
 					<WrappedRoute exact path="/user/:slug/:mode" component={User} />
-					<WrappedRoute exact path="/user-create" component={NoMatch} />
-					<WrappedRoute exact path="/user-create/:hash" component={NoMatch} />
 					<WrappedRoute exact path="/:slug" component={Collection} />
 				</Switch>
 
