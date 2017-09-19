@@ -10,6 +10,10 @@ require('./discussionThread.scss');
 const propTypes = {
 	discussions: PropTypes.array.isRequired,
 	slug: PropTypes.string.isRequired,
+	loginData: PropTypes.object,
+};
+const defaultProps = {
+	loginData: {},
 };
 
 const DiscussionThread = function(props) {
@@ -18,6 +22,9 @@ const DiscussionThread = function(props) {
 		if (foo.date < bar.date) { return -1; }
 		return 0;
 	});
+	const canAdminThread =
+		sortedDiscussions[0].userId === props.loginData.id || // User is author of thread
+		props.loginData.canAdmin; // User has pub-level admin permissions
 
 	return (
 		<div className={'discussion-thread'}>
@@ -25,11 +32,12 @@ const DiscussionThread = function(props) {
 				Show all threads
 			</Link>
 
-			<div className={'thread-buttons pt-button-group pt-minimal pt-small'}>
-				<button type={'button'} className={'pt-button pt-icon-edit2'} />
-				<button type={'button'} className={'pt-button pt-icon-compressed'} />
-			</div>
-
+			{canAdminThread &&
+				<div className={'thread-buttons pt-button-group pt-minimal pt-small'}>
+					<button type={'button'} className={'pt-button pt-icon-edit2'} />
+					<button type={'button'} className={'pt-button pt-icon-compressed'} />
+				</div>
+			}
 
 			<div className={'title'}>{sortedDiscussions[0].title}</div>
 			<div>
@@ -54,7 +62,10 @@ const DiscussionThread = function(props) {
 								</div>
 
 								<div className={'pt-button-group pt-minimal pt-small'}>
-									<button type={'button'} className={'pt-button pt-icon-edit2'} />
+									{discussion.userId === props.loginData.id &&
+										<button type={'button'} className={'pt-button pt-icon-edit2'} />
+									}
+
 									<DropdownButton icon={'pt-icon-more'} isRightAligned={true}>
 										<div className={'pt-menu'}>
 											<div className="pt-menu-item pt-popover-dismiss">
@@ -83,4 +94,5 @@ const DiscussionThread = function(props) {
 };
 
 DiscussionThread.propTypes = propTypes;
+DiscussionThread.defaultProps = defaultProps;
 export default DiscussionThread;

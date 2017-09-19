@@ -25,6 +25,7 @@ const propTypes = {
 	location: PropTypes.object.isRequired,
 	match: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
+	loginData: PropTypes.object.isRequired,
 };
 
 class PubCollaboration extends Component {
@@ -116,7 +117,11 @@ class PubCollaboration extends Component {
 								<div className={'side-panel'}>
 									<div className={'side-panel-content'}>
 										{activeThread
-											? <DiscussionThread discussions={activeThread} slug={pubData.slug} />
+											? <DiscussionThread
+												discussions={activeThread}
+												slug={pubData.slug}
+												loginData={this.props.loginData.data}
+											/>
 											: threads.map((thread)=> {
 												return (
 													<DiscussionPreview
@@ -190,4 +195,7 @@ class PubCollaboration extends Component {
 }
 
 PubCollaboration.propTypes = propTypes;
-export default withRouter(connect(state => ({ pubData: state.pub }))(PubCollaboration));
+export default withRouter(connect(state => ({ 
+	pubData: state.pub,
+	loginData: state.login,
+}))(PubCollaboration));

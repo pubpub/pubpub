@@ -20,6 +20,27 @@ storiesOf('DiscussionThread', module)
 			<DiscussionThread
 				discussions={threads[1]}
 				slug={'my-article'}
+				loginData={{
+					id: threads[1][0].userId
+				}}
+			/>
+		</div>
+		<div style={wrapperStyle}>
+			<DiscussionThread
+				discussions={threads[0]}
+				slug={'my-article'}
+				loginData={{
+					id: threads[0][1].userId
+				}}
+			/>
+		</div>
+		<div style={wrapperStyle}>
+			<DiscussionThread
+				discussions={threads[1]}
+				slug={'my-article'}
+				loginData={{
+					canAdmin: true
+				}}
 			/>
 		</div>
 	</div>
