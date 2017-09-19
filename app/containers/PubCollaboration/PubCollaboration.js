@@ -138,7 +138,6 @@ class PubCollaboration extends Component {
 								</div>
 
 								<div className={'content-panel'}>
-									{/*<div className={'pub-body'} contentEditable="true">*/}
 									<div className={'pub-body'}>
 										{/* pubBody */}
 										<Editor ref={(editor) => { this.editor = editor; }} mode={'rich'}>

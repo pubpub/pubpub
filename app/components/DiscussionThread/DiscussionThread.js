@@ -4,6 +4,7 @@ import TimeAgo from 'react-timeago';
 import { Link } from 'react-router-dom';
 import Avatar from 'components/Avatar/Avatar';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
+import DiscussionInput from 'components/DiscussionInput/DiscussionInput';
 
 require('./discussionThread.scss');
 
@@ -12,6 +13,7 @@ const propTypes = {
 	slug: PropTypes.string.isRequired,
 	loginData: PropTypes.object,
 	pathname: PropTypes.string.isRequired,
+	handleReplySubmit: PropTypes.func.isRequired,
 };
 const defaultProps = {
 	loginData: {},
@@ -19,13 +21,22 @@ const defaultProps = {
 
 const DiscussionThread = function(props) {
 	const sortedDiscussions = props.discussions.sort((foo, bar)=> {
-		if (foo.date > bar.date) { return 1; }
-		if (foo.date < bar.date) { return -1; }
+		if (foo.createdAt > bar.createdAt) { return 1; }
+		if (foo.createdAt < bar.createdAt) { return -1; }
 		return 0;
 	});
 	const canAdminThread =
 		sortedDiscussions[0].userId === props.loginData.id || // User is author of thread
 		props.loginData.canAdmin; // User has pub-level admin permissions
+
+	function onReplySubmit(content) {
+		props.handleReplySubmit({
+			userId: props.loginData.id,
+			threadNumber: props.discussions[0].threadNumber,
+			pubId: props.discussions[0].pubId,
+			content: content,
+		});
+	}
 
 	return (
 		<div className={'discussion-thread'}>
@@ -59,7 +70,7 @@ const DiscussionThread = function(props) {
 									<div className={'name'}>
 										<Link to={`/user/${discussion.author.slug}`}>{discussion.author.fullName || discussion.author.userInitials}</Link>
 									</div>
-									<TimeAgo date={discussion.date} className={'date'} />
+									<TimeAgo date={discussion.createdAt} className={'date'} />
 								</div>
 
 								<div className={'pt-button-group pt-minimal pt-small'}>
@@ -89,15 +100,11 @@ const DiscussionThread = function(props) {
 			</div>
 
 			{props.loginData.id
-				? <input
-					className="pt-input"
-					placeholder={'Reply...'}
-				/>
-				: <Link to={`/login${props.pathname ? `?redirect=${props.pathname}` : ''}`} className={'pt-button pt-fill'}>
+				? <DiscussionInput handleReplySubmit={onReplySubmit}/>
+				: <Link to={`/login?redirect=${props.pathname}`} className={'pt-button pt-fill'}>
 					Login to Reply
 				</Link>
 			}
-
 		</div>
 	);
 };

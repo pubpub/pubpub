@@ -19,7 +19,7 @@ const headerBars = function(logoUrl) {
 		largeHeaderDescription: 'Group publications and research docs from around the world all situated here in this little community.',
 		largeHeaderBackground: '/dev/homeBackground.png',
 		isLargeHeader: true,
-		logoutHandler: ()=> {},
+		onLogout: ()=> {},
 	};
 	return (
 		<div>
@@ -27,7 +27,7 @@ const headerBars = function(logoUrl) {
 			<div style={wrapperStyle}>
 				<Header
 					smallHeaderLogo={data.smallHeaderLogo}
-					logoutHandler={data.logoutHandler}
+					onLogout={data.onLogout}
 				/>
 			</div>
 
@@ -39,7 +39,7 @@ const headerBars = function(logoUrl) {
 					userSlug={data.userSlug}
 					userIsAdmin={false}
 					smallHeaderLogo={data.smallHeaderLogo}
-					logoutHandler={data.logoutHandler}
+					onLogout={data.onLogout}
 				/>
 			</div>
 
@@ -53,7 +53,7 @@ const headerBars = function(logoUrl) {
 					userIsAdmin={true}
 					smallHeaderLogo={data.smallHeaderLogo}
 					largeHeaderBackground={'/dev/homeBackground.png'}
-					logoutHandler={data.logoutHandler}
+					onLogout={data.onLogout}
 				/>
 			</div>
 
@@ -69,7 +69,7 @@ const headerBars = function(logoUrl) {
 					largeHeaderLogo={data.largeHeaderLogo}
 					largeHeaderDescription={data.largeHeaderDescription}
 					isLargeHeader={logoUrl !== '/dev/pubpubLogo.png'}
-					logoutHandler={data.logoutHandler}
+					onLogout={data.onLogout}
 				/>
 			</div>
 
@@ -86,7 +86,7 @@ const headerBars = function(logoUrl) {
 					largeHeaderDescription={data.largeHeaderDescription}
 					largeHeaderBackground={'/dev/whiteBackground.png'}
 					isLargeHeader={logoUrl !== '/dev/pubpubLogo.png'}
-					logoutHandler={data.logoutHandler}
+					onLogout={data.onLogout}
 				/>
 			</div>
 
@@ -103,7 +103,7 @@ const headerBars = function(logoUrl) {
 					largeHeaderDescription={data.largeHeaderDescription}
 					largeHeaderBackground={'/dev/homeBackground.png'}
 					isLargeHeader={logoUrl !== '/dev/pubpubLogo.png'}
-					logoutHandler={data.logoutHandler}
+					onLogout={data.onLogout}
 				/>
 			</div>
 		</div>

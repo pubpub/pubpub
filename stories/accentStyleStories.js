@@ -18,7 +18,7 @@ const content = (
 			userIsAdmin={true}
 			pageSlug={'about'}
 			appLogo={'/dev/viralLogo.png'}
-			logoutHandler={()=>{}}
+			onLogout={()=>{}}
 		/>
 		<NavBar navItems={navItems} />
 
