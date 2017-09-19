@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 // import { Link } from 'react-router-dom';
 // import Avatar from 'components/Avatar/Avatar';
+import { Editor } from '@pubpub/editor';
+import Latex from '@pubpub/editor/addons/Latex';
 
 require('./discussionInput.scss');
 
@@ -25,14 +27,16 @@ class DiscussionInput extends Component {
 		this.onTitleChange = this.onTitleChange.bind(this);
 		this.onReplyChange = this.onReplyChange.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
+		this.focusEditor = this.focusEditor.bind(this);
+		this.editorRef = undefined;
 	}
 
 	onTitleChange(evt) {
 		this.setState({ title: evt.target.value });
 	}
 
-	onReplyChange(evt) {
-		this.setState({ content: evt.target.value });
+	onReplyChange(val) {
+		this.setState({ content: val });
 	}
 
 	onSubmit(evt) {
@@ -43,7 +47,26 @@ class DiscussionInput extends Component {
 		});
 	}
 
+	focusEditor() {
+		this.editorRef.focus();
+	}
+
 	render() {
+		const stuff = {
+			type: 'doc',
+			attrs: { meta: {} },
+			content: [
+				{
+					type: 'paragraph',
+					content: [
+						{
+							type: 'text',
+							text: 'Hello everyone!'
+						}
+					]
+				}
+			]
+		};
 		return (
 			<div className={'discussion-input'}>
 				{this.props.showTitle &&
@@ -54,12 +77,14 @@ class DiscussionInput extends Component {
 						onChange={this.onTitleChange}
 					/>
 				}
-				<textarea
-					className="input"
-					placeholder={'Reply...'}
-					value={this.state.content}
-					onChange={this.onReplyChange}
-				/>
+				<div className={'input-text'} onClick={this.focusEditor} tabIndex={-1} role={'textbox'}>
+					<Editor
+						ref={(ref)=> { this.editorRef = ref; }}
+						placeholder={'Reply...'}
+						onChange={this.onReplyChange}
+						initialContent={stuff}
+					/>
+				</div>
 				<div className={'buttons'}>
 					<div className={'buttons-left'}>
 						<button type={'button'} className={'pt-button pt-minimal pt-small'}>Attach</button>

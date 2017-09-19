@@ -8,14 +8,16 @@
 		display: block;
 		width: 100%;
 	}
-	.input {
-		width: 100%;
-		display: block;
-		resize: vertical;
+	.input-text {
 		padding: 0.5em;
 		border: 0px solid black;
 		border-bottom: 1px solid $border-color;
 		min-height: 100px;
+		cursor: text;
+		p {
+			font-size: 1em;
+			line-height: 1.2;
+		}
 	}
 	.buttons {
 		padding: 0.25em;
