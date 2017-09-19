@@ -1,54 +1,36 @@
-.discussion-preview {
-	display: block;
-	position: relative;
-	padding: 1em;
-	cursor: pointer;
-	.bottom-border {
-		position: absolute;
-		bottom: -1px;
-		width: calc(100% - 2em);
+.discussion-input {
+	$border-color: #CCC;
+	border: 1px solid $border-color;
+	.title-input {
+		padding: 0.25em 0.5em;
+		border-bottom: 1px solid $border-color;
 	}
-	&:hover:not(:last-of-type) .bottom-border {
-		border-bottom: 1px solid transparent;
+	.input {
+		width: 100%;
+		display: block;
+		resize: vertical;
+		padding: 0.5em;
+		border: 0px solid black;
+		border-bottom: 1px solid $border-color;
+		min-height: 100px;
 	}
-	&:not(:last-of-type) .bottom-border {
-		border-bottom: 1px solid #F0F0F0;
+	.buttons {
+		padding: 0.25em;
+		display: flex;
+		white-space: nowrap;
 	}
-	&:hover {
-		background-color: #F0F0F0;
-		text-decoration: none;
+	.buttons-left {
+		flex-grow: 1;
+		flex-shrink: 1;	
+		min-width: 0px;
 	}
-	.title {
-		font-weight: bold;
-		padding-bottom: 0.5em;
+	.buttons-right {
+		background-color: white;
 	}
-	.icons {
+	.pt-intent-primary {
+		margin-left: 0.25em;
+	}
+	.right {
 		float: right;
-		opacity: 0.5;
-		span {
-			padding-left: 0.25em;
-		}
-
-	}
-	.discussion {
-		margin: 0.25em 0em;
-		&:not(:first-of-type) {
-			padding-left: 28px;
-		}
-		.avatar {
-			margin-right: 1em;
-		}
-		.text {
-			vertical-align: middle;
-			display: inline-block;
-			width: calc(100% - 1em - 20px);
-			overflow: hidden;
-			text-overflow: ellipsis;
-			white-space: nowrap;
-		}
-	}
-	.more {
-		padding-left: 28px;
-		opacity: 0.75;
 	}
 }

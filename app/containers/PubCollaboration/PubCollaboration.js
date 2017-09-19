@@ -41,6 +41,7 @@ class PubCollaboration extends Component {
 		this.toggleShare = this.toggleShare.bind(this);
 		this.toggleMetadata = this.toggleMetadata.bind(this);
 		this.toggleAuthors = this.toggleAuthors.bind(this);
+		this.handleReplySubmit = this.handleReplySubmit.bind(this);
 	}
 	componentWillMount() {
 		this.props.dispatch(getPubData(this.props.match.params.slug));
@@ -57,6 +58,10 @@ class PubCollaboration extends Component {
 	}
 	toggleAuthors() {
 		this.setState({ isAuthorsOpen: !this.state.isAuthorsOpen });
+	}
+
+	handleReplySubmit(content) {
+		console.log(content);
 	}
 
 	render() {
@@ -122,6 +127,7 @@ class PubCollaboration extends Component {
 												slug={pubData.slug}
 												loginData={this.props.loginData.data}
 												pathname={`${this.props.location.pathname}${this.props.location.search}`}
+												handleReplySubmit={this.handleReplySubmit}
 											/>
 											: threads.map((thread)=> {
 												return (
@@ -195,7 +201,7 @@ class PubCollaboration extends Component {
 }
 
 PubCollaboration.propTypes = propTypes;
-export default withRouter(connect(state => ({ 
+export default withRouter(connect(state => ({
 	pubData: state.pub,
 	loginData: state.login,
 }))(PubCollaboration));
