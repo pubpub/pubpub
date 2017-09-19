@@ -1,0 +1,14 @@
+[
+  {
+    "id": "createPub.PubURLrequired",
+    "defaultMessage": "Pub URL required"
+  },
+  {
+    "id": "createPub.Titlerequired",
+    "defaultMessage": "Title required"
+  },
+  {
+    "id": "createPub.Usernamealreadyused",
+    "defaultMessage": "Pub URL already used"
+  }
+]

@@ -14,10 +14,12 @@
     "prod": "npm run build && serve ./dist -s",
     "lint": "eslint app webpack stories .storybook",
     "start": "webpack-dev-server --env.mode=app --config webpack/webpackConfigDev.js",
-    "storybook": "start-storybook -p 9001 -c .storybook -s ./static"
+    "storybook": "start-storybook -p 9001 -c .storybook -s ./static",
+    "profile": "webpack --config webpack/webpackConfigProd.js --profile --json > stats.json"
   },
   "dependencies": {
     "@blueprintjs/core": "^1.27.0",
+    "@pubpub/editor": "^3.0.8",
     "@storybook/addon-options": "^3.2.6",
     "@storybook/react": "^3.2.8",
     "babel-core": "^6.26.0",

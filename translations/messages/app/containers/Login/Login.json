@@ -1,0 +1,14 @@
+[
+  {
+    "id": "login.ForgotPassword",
+    "defaultMessage": "Forgot Password?"
+  },
+  {
+    "id": "login.InvalidEmailOrPassword",
+    "defaultMessage": "Invalid Email or Password"
+  },
+  {
+    "id": "login.newToPubPub",
+    "defaultMessage": "New to PubPub? Click to Sign Up!"
+  }
+]

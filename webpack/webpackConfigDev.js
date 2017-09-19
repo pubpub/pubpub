@@ -77,4 +77,10 @@ module.exports = {
 		]),
 	],
 	performance: { hints: false },
+	node: {
+		net: 'empty',
+		tls: 'empty',
+		dns: 'empty',
+		fs: 'empty',
+	},
 };

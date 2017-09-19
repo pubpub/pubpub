@@ -50,8 +50,7 @@ class PubPresentation extends Component {
 						return prev;
 					}, 0)}
 					collaborators={pubData.contributors}
-					// versions={pubData.versions}
-					versions={[]}
+					versions={pubData.versions}
 				/>
 
 				{/* <PubBody content={this.props.pubData.data.body} /> */}

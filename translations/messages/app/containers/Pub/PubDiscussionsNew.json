@@ -1,0 +1,10 @@
+[
+  {
+    "id": "discussion.TitleRequired",
+    "defaultMessage": "Title Required"
+  },
+  {
+    "id": "discussion.JournalURLalreadyused",
+    "defaultMessage": "Journal URL already used"
+  }
+]

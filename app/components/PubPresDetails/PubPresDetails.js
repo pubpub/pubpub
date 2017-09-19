@@ -39,7 +39,7 @@ const PubPresDetails = function(props) {
 							{authors.length && <span>by </span>}
 							{authors.map((author, index)=> {
 								const separator = index === authors.length - 1 ? '' : ', ';
-								const prefix = index === authors.length - 1 ? ' and ' : '';
+								const prefix = index === authors.length - 1 && index !== 0 ? ' and ' : '';
 								if (author.slug) {
 									return (
 										<span key={`author-${author.id}`}>
@@ -104,8 +104,8 @@ const PubPresDetails = function(props) {
 								return (
 									<Avatar
 										key={`avatar-${collaborator.id}`}
-										userInitials={collaborator.userInitials}
-										userAvatar={collaborator.userAvatar}
+										userInitials={collaborator.initials}
+										userAvatar={collaborator.avatar}
 										borderColor={'rgba(255, 255, 255, 0.5)'}
 										width={20}
 										doesOverlap={true}
