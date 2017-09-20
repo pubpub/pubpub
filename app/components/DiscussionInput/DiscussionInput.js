@@ -4,17 +4,18 @@ import { Button } from '@blueprintjs/core';
 // import { Link } from 'react-router-dom';
 // import Avatar from 'components/Avatar/Avatar';
 import { Editor } from '@pubpub/editor';
-import Latex from '@pubpub/editor/addons/Latex';
 
 require('./discussionInput.scss');
 
 const propTypes = {
 	handleSubmit: PropTypes.func.isRequired,
 	showTitle: PropTypes.bool,
+	initialContent: PropTypes.object,
 };
 
 const defaultProps = {
 	showTitle: false,
+	initialContent: undefined,
 };
 
 class DiscussionInput extends Component {
@@ -22,10 +23,11 @@ class DiscussionInput extends Component {
 		super(props);
 		this.state = {
 			title: '',
-			content: '',
+			body: '',
+			submitDisabled: true,
 		};
 		this.onTitleChange = this.onTitleChange.bind(this);
-		this.onReplyChange = this.onReplyChange.bind(this);
+		this.onBodyChange = this.onBodyChange.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
 		this.focusEditor = this.focusEditor.bind(this);
 		this.editorRef = undefined;
@@ -35,15 +37,19 @@ class DiscussionInput extends Component {
 		this.setState({ title: evt.target.value });
 	}
 
-	onReplyChange(val) {
-		this.setState({ content: val });
+	onBodyChange(val) {
+		this.setState({
+			body: val,
+			submitDisabled: !this.editorRef.view.state.doc.textContent,
+		});
 	}
 
 	onSubmit(evt) {
 		evt.preventDefault();
 		this.props.handleSubmit({
-			content: this.state.content,
-			title: this.state.title
+			title: this.state.title,
+			content: this.state.body,
+			text: this.editorRef.view.state.doc.textContent,
 		});
 	}
 
@@ -52,21 +58,6 @@ class DiscussionInput extends Component {
 	}
 
 	render() {
-		const stuff = {
-			type: 'doc',
-			attrs: { meta: {} },
-			content: [
-				{
-					type: 'paragraph',
-					content: [
-						{
-							type: 'text',
-							text: 'Hello everyone!'
-						}
-					]
-				}
-			]
-		};
 		return (
 			<div className={'discussion-input'}>
 				{this.props.showTitle &&
@@ -81,8 +72,8 @@ class DiscussionInput extends Component {
 					<Editor
 						ref={(ref)=> { this.editorRef = ref; }}
 						placeholder={'Reply...'}
-						onChange={this.onReplyChange}
-						// initialContent={stuff}
+						onChange={this.onBodyChange}
+						initialContent={this.props.initialContent}
 					/>
 				</div>
 				<div className={'buttons'}>
@@ -98,7 +89,7 @@ class DiscussionInput extends Component {
 							className={'pt-button pt-intent-primary pt-small'}
 							onClick={this.onSubmit}
 							text={'Submit Reply'}
-							disabled={!this.state.content}
+							disabled={this.state.submitDisabled}
 							loading={false}
 						/>
 					</div>

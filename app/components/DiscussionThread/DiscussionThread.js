@@ -29,18 +29,19 @@ const DiscussionThread = function(props) {
 		sortedDiscussions[0].userId === props.loginData.id || // User is author of thread
 		props.loginData.canAdmin; // User has pub-level admin permissions
 
-	function onReplySubmit(content) {
+	function onReplySubmit(replyObject) {
 		props.handleReplySubmit({
 			userId: props.loginData.id,
 			threadNumber: props.discussions[0].threadNumber,
 			pubId: props.discussions[0].pubId,
-			content: content,
+			content: replyObject.content,
+			text: replyObject.text
 		});
 	}
 
 	return (
 		<div className={'discussion-thread'}>
-			<Link to={`/pub/${props.slug}/collaborate`} className={'back pt-button pt-minimal'}>
+			<Link to={`/pub/${props.slug}/collaborate`} className={'top-button pt-button pt-minimal'}>
 				Show all threads
 			</Link>
 

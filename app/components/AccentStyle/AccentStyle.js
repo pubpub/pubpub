@@ -15,8 +15,8 @@ const AccentStyle = function(props) {
 			.accent-background { background-color: ${props.accentColor}; } 
 			.accent-color { color: ${props.accentTextColor}; }
 			.pt-button.pt-intent-primary { background-color: ${props.accentActionColor}; color: ${props.accentTextColor}; }
-			.pt-button.pt-intent-primary:hover { background-color: ${props.accentHoverColor}; color: ${props.accentTextColor}; }
-			.pt-button.pt-intent-primary:active, .pt-button.pt-intent-primary.pt-active { background-color: ${props.accentColor}; color: ${props.accentTextColor}; }
+			.pt-button.pt-intent-primary:hover:not(.pt-disabled) { background-color: ${props.accentHoverColor}; color: ${props.accentTextColor}; }
+			.pt-button.pt-intent-primary:active:not(.pt-disabled), .pt-button.pt-intent-primary.pt-active:not(.pt-disabled) { background-color: ${props.accentColor}; color: ${props.accentTextColor}; }
 			.pt-tag.pt-intent-primary { background: ${props.accentColor}; color: ${props.accentTextColor}; }
 			.pt-tag.pt-minimal.pt-intent-primary { background-color: ${props.accentMinimalColor}; }
 			.accent-color .pt-button:not([class*="pt-intent-"]), .accent-color .pt-button[class*="pt-icon-"]::before { color: inherit; }

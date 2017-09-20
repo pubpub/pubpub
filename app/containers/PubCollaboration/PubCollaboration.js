@@ -11,12 +11,14 @@ import Overlay from 'components/Overlay/Overlay';
 import PropTypes from 'prop-types';
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
+import DiscussionNew from 'components/DiscussionNew/DiscussionNew';
 import { connect } from 'react-redux';
 import { getPubData } from 'actions/pub';
 import { nestDiscussionsToThreads } from 'utilities';
 // import { pubBody } from '../../../stories/_data';
 import queryString from 'query-string';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
+// import { postDiscussion } from 'actions/discussions';
 
 require('./pubCollaboration.scss');
 require('components/PubBody/pubBody.scss');
@@ -44,7 +46,7 @@ class PubCollaboration extends Component {
 		this.toggleShare = this.toggleShare.bind(this);
 		this.toggleMetadata = this.toggleMetadata.bind(this);
 		this.toggleAuthors = this.toggleAuthors.bind(this);
-		this.handleReplySubmit = this.handleReplySubmit.bind(this);
+		this.handlePostDiscussion = this.handlePostDiscussion.bind(this);
 	}
 	componentWillMount() {
 		this.props.dispatch(getPubData(this.props.match.params.slug));
@@ -63,14 +65,16 @@ class PubCollaboration extends Component {
 		this.setState({ isAuthorsOpen: !this.state.isAuthorsOpen });
 	}
 
-	handleReplySubmit(content) {
-		console.log(content);
+	handlePostDiscussion(discussionObject) {
+		// this.props.dispatch(postDiscussion(discussionObject));
+		console.log(discussionObject);
 	}
 
 	render() {
 		const queryObject = queryString.parse(this.props.location.search);
 
 		const pubData = this.props.pubData.data || {};
+		const loginData = this.props.loginData.data || {};
 		const discussions = pubData.discussions || [];
 		const threads = nestDiscussionsToThreads(discussions);
 
@@ -81,14 +85,6 @@ class PubCollaboration extends Component {
 
 		if (!pubData.id) { return <p>Loading</p>; }
 
-		const firebaseConfig = {
-			apiKey: 'AIzaSyBpE1sz_-JqtcIm2P4bw4aoMEzwGITfk0U',
-			authDomain: 'pubpub-rich.firebaseapp.com',
-			databaseURL: 'https://pubpub-rich.firebaseio.com',
-			projectId: 'pubpub-rich',
-			storageBucket: 'pubpub-rich.appspot.com',
-			messagingSenderId: '543714905893',
-		};
 		return (
 			<div className={'pub-collaboration'}>
 
@@ -120,15 +116,24 @@ class PubCollaboration extends Component {
 
 								<div className={'side-panel'}>
 									<div className={'side-panel-content'}>
-										{activeThread
-											? <DiscussionThread
-												discussions={activeThread}
+										{!queryObject.thread &&
+											<div className={'new-discussion-wrapper'}>
+												<Link to={`${this.props.location.pathname}?thread=new`} className={'pt-button pt-minimal pt-icon-add top-button'}>
+													New Discussion
+												</Link>
+											</div>
+										}
+										{queryObject.thread === 'new' &&
+											<DiscussionNew
+												pubId={pubData.id}
 												slug={pubData.slug}
 												loginData={this.props.loginData.data}
 												pathname={`${this.props.location.pathname}${this.props.location.search}`}
-												handleReplySubmit={this.handleReplySubmit}
+												handleDiscussionSubmit={this.handlePostDiscussion}
 											/>
-											: threads.map((thread)=> {
+										}
+										{queryObject.thread !== 'new' && !activeThread &&
+											threads.map((thread)=> {
 												return (
 													<DiscussionPreview
 														key={`thread-${thread[0].id}`}
@@ -138,6 +143,15 @@ class PubCollaboration extends Component {
 													/>
 												);
 											})
+										}
+										{activeThread &&
+											<DiscussionThread
+												discussions={activeThread}
+												slug={pubData.slug}
+												loginData={this.props.loginData.data}
+												pathname={`${this.props.location.pathname}${this.props.location.search}`}
+												handleReplySubmit={this.handlePostDiscussion}
+											/>
 										}
 									</div>
 								</div>
@@ -157,8 +171,8 @@ class PubCollaboration extends Component {
 													storageBucket: 'pubpub-rich.appspot.com',
 													messagingSenderId: '543714905893',
 												}}
-												clientID={`doc-test-clientid-${Math.ceil(Math.random() * 25000)}`}
-												editorKey={'doc-test-editorkey'}
+												clientID={`user-${loginData.id}-${Math.ceil(Math.random() * 2500)}`}
+												editorKey={`pub-${pubData.id}`}
 											/>
 										</Editor>
 									</div>
