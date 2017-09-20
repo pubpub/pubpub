@@ -35,11 +35,19 @@
 		}
 		.new-discussion-wrapper {
 			padding: 0em 1em;
+			z-index: 1;
+			background-color: #F9F9F9;
+			position: relative;
 		}
 		.top-button {
 			display: block;
 			border-bottom: 1px solid #E0E0E0;
 			margin-bottom: 1em;
+
+		}
+		.pt-non-ideal-state {
+			max-height: 400px;
+			height: calc(100% - 50px);
 		}
 	}
 	.content-panel {

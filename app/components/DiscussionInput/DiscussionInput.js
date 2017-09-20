@@ -89,7 +89,7 @@ class DiscussionInput extends Component {
 				</div>
 				<div className={'buttons'}>
 					<div className={'buttons-left'}>
-						<button type={'button'} className={'pt-button pt-minimal pt-small'}>Attach</button>
+						{/* <button type={'button'} className={'pt-button pt-minimal pt-small'}>Attach</button> */}
 						<button type={'button'} className={'pt-button pt-minimal pt-small'}>Format</button>
 					</div>
 					<div className={'buttons-right'}>

@@ -82,6 +82,7 @@ const DiscussionThread = function(props) {
 										<button type={'button'} className={'pt-button pt-icon-edit2'} />
 									}
 
+									{/*
 									<DropdownButton icon={'pt-icon-more'} isRightAligned={true}>
 										<div className={'pt-menu'}>
 											<div className="pt-menu-item pt-popover-dismiss">
@@ -92,6 +93,7 @@ const DiscussionThread = function(props) {
 											</div>
 										</div>
 									</DropdownButton>
+									*/}
 								</div>
 
 							</div>

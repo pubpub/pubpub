@@ -5,7 +5,7 @@ import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import { Editor } from '@pubpub/editor';
 import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
 import Collaborative from '@pubpub/editor/addons/Collaborative';
-
+import { NonIdealState } from '@blueprintjs/core';
 import Helmet from 'react-helmet';
 import queryString from 'query-string';
 import { withRouter, Link } from 'react-router-dom';
@@ -168,6 +168,17 @@ class PubCollaboration extends Component {
 												pathname={`${this.props.location.pathname}${this.props.location.search}`}
 												handleReplySubmit={this.handlePostDiscussion}
 												submitLoading={this.props.pubData.postDiscussionIsLoading}
+											/>
+										}
+										{threads.length === 0 && !queryObject.thread &&
+											<NonIdealState
+												title={'Start the Conversation'}
+												visual={'pt-icon-chat'}
+												action={
+													<Link to={`${this.props.location.pathname}?thread=new`} className={'pt-button'}>
+														Create New Discussion
+													</Link>
+												}
 											/>
 										}
 									</div>
