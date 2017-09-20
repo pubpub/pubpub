@@ -62,7 +62,7 @@ const PubCollabHeader = function(props) {
 				<div tabIndex={0} role={'button'} className={'flex-left'} onClick={props.onAuthorsClick}>
 					{authors.map((author, index)=> {
 						const separator = index === authors.length - 1 ? '' : ', ';
-						const prefix = index === authors.length - 1 ? ' and ' : '';
+						const prefix = (index === authors.length - 1 && index > 0) ? ' and ' : '';
 						if (author.slug) {
 							return (
 								<span key={`author-${author.id}`}>
