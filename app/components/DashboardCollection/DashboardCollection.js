@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { Spinner } from '@blueprintjs/core';
 
 require('./dashboardCollection.scss');
 
@@ -29,6 +30,18 @@ const DashboardCollection = function(props) {
 		{ title: <span className={'pt-icon-standard pt-icon-manually-entered-data'} />, param: 'suggestions', className: 'tight' },
 	];
 
+	if (!data.id) {
+		return (
+			<div className={'dashboard-collection'}>
+				<div className={'content-buttons'}>
+					<a className={'pt-button'}>Edit Collection</a>
+					<button type={'button'} className={'pt-button'}>Create Pub in Collection</button>
+				</div>
+				<h1 className={'content-title'}>{data.title}</h1>
+				<Spinner />
+			</div>
+		);
+	}
 	return (
 		<div className={'dashboard-collection'}>
 			<div className={'content-buttons'}>
@@ -38,6 +51,7 @@ const DashboardCollection = function(props) {
 
 			<h1 className={'content-title'}>{data.title}</h1>
 
+			{/*
 			<div>
 				<Link to={'/'}>Create Pub Page</Link>
 				<span> · </span>
@@ -45,12 +59,15 @@ const DashboardCollection = function(props) {
 				<span> · </span>
 				<Link to={'/'}>Customize Layout</Link>
 			</div>
+			*/}
 
 			<div className={'status-bar'}>
 				<div className={'description'}>{data.description}</div>
 
 				<div>
-					<span className={'pt-icon-standard pt-icon-link'} /> {window.location.origin}/{data.slug}
+					<Link to={`/${data.slug}`}>
+						<span className={'pt-icon-standard pt-icon-link'} /> {window.location.origin}/{data.slug}
+					</Link>
 				</div>
 				<div className={'status-bar-separator'}>·</div>
 				{data.isPublic
@@ -87,9 +104,9 @@ const DashboardCollection = function(props) {
 						{pubs.sort((foo, bar)=> {
 							let key = props.sortMode;
 							if (props.sortMode === 'modified') { key = 'lastModified'; }
-							if (props.sortMode === 'collaborators') { key = 'numCollaborators'; }
-							if (props.sortMode === 'discussions') { key = 'numDiscussions'; }
-							if (props.sortMode === 'suggestions') { key = 'numSuggestions'; }
+							if (props.sortMode === 'collaborators') { key = 'collaboratorCount'; }
+							if (props.sortMode === 'discussions') { key = 'discussionCount'; }
+							if (props.sortMode === 'suggestions') { key = 'suggestionCount'; }
 
 							const direction = props.isSortReverse ? -1 : 1;
 							if (foo[key] > bar[key]) { return 1 * direction; }
@@ -100,11 +117,11 @@ const DashboardCollection = function(props) {
 								<tr key={`collection-pub-${pub.id}`}>
 									<td className={'title'}><Link to={`/pub/${pub.slug}`}>{pub.title}</Link></td>
 									<td><Link to={`/pub/${pub.slug}/collaborate`} className={'pt-button pt-icon-edit pt-minimal'} /></td>
-									<td className={`status ${pub.status}`}>{pub.status}</td>
+									<td className={`status ${pub.status}`}>{pub.isPublished ? 'Published' : 'Unpublished'}</td>
 									<td className={'date'}>3 days ago</td>
-									<td className={'tight'}>{pub.numCollaborators}</td>
-									<td className={'tight'}>{pub.numDiscussions}</td>
-									<td className={'tight'}>{pub.numSuggestions}</td>
+									<td className={'tight'}>{pub.collaboratorCount}</td>
+									<td className={'tight'}>{pub.discussionCount}</td>
+									<td className={'tight'}>{pub.suggestionCount}</td>
 								</tr>
 							);
 						})}

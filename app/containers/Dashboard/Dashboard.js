@@ -109,7 +109,7 @@ class Dashboard extends Component {
 		if (activeSlug === 'activity') { activeItem.title = 'Activity'; }
 		if (activeSlug === 'team') { activeItem.title = 'Team'; }
 		if (activeSlug === 'site') { activeItem.title = 'Site'; }
-
+		collectionData.title = activeItem.title;
 		return (
 			<div className={'dashboard'}>
 
