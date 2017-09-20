@@ -89,7 +89,7 @@ class PubCollaboration extends Component {
 			return prev;
 		}, undefined);
 
-		if (!pubData.id) { 
+		if (!pubData.id) {
 			return (
 				<div className={'pub-collaboration'}>
 					<div className={'upper'}>

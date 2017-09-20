@@ -1,5 +1,5 @@
 export const apiFetch = function(path, opts) {
-	const urlPrefix = window.location.origin.indexOf('localhost:')
+	const urlPrefix = window.location.origin.indexOf('localhost:') > -1
 		? 'http://localhost:9876'
 		: 'https://pubpub-api-v4-dev.herokuapp.com';
 	// const urlPrefix = 'https://pubpub-api-v4-dev.herokuapp.com';
