@@ -7,18 +7,18 @@ import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
 import Collaborative from '@pubpub/editor/addons/Collaborative';
 
 import Helmet from 'react-helmet';
+import queryString from 'query-string';
+import { withRouter, Link } from 'react-router-dom';
 import Overlay from 'components/Overlay/Overlay';
 import PropTypes from 'prop-types';
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 import DiscussionNew from 'components/DiscussionNew/DiscussionNew';
 import { connect } from 'react-redux';
-import { getPubData } from 'actions/pub';
+import { getPubData, postDiscussion } from 'actions/pub';
 import { nestDiscussionsToThreads } from 'utilities';
 // import { pubBody } from '../../../stories/_data';
-import queryString from 'query-string';
-import { withRouter, Link } from 'react-router-dom';
-// import { postDiscussion } from 'actions/discussions';
+
 
 require('./pubCollaboration.scss');
 require('components/PubBody/pubBody.scss');
@@ -31,6 +31,7 @@ const propTypes = {
 	match: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
 	loginData: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired,
 };
 
 class PubCollaboration extends Component {
@@ -51,6 +52,14 @@ class PubCollaboration extends Component {
 	componentWillMount() {
 		this.props.dispatch(getPubData(this.props.match.params.slug));
 	}
+	componentWillReceiveProps(nextProps) {
+		if (this.props.pubData.postDiscussionIsLoading
+			&& !nextProps.pubData.postDiscussionIsLoading
+			&& nextProps.location.search.indexOf('thread=new') > -1
+		) {
+			this.props.history.push(nextProps.location.pathname);
+		}
+	}
 
 	togglePublish() {
 		this.setState({ isPublishOpen: !this.state.isPublishOpen });
@@ -66,8 +75,10 @@ class PubCollaboration extends Component {
 	}
 
 	handlePostDiscussion(discussionObject) {
-		// this.props.dispatch(postDiscussion(discussionObject));
-		console.log(discussionObject);
+		this.props.dispatch(postDiscussion({
+			...discussionObject,
+			communityId: this.props.pubData.data.communityId,
+		}));
 	}
 
 	render() {
@@ -130,10 +141,15 @@ class PubCollaboration extends Component {
 												loginData={this.props.loginData.data}
 												pathname={`${this.props.location.pathname}${this.props.location.search}`}
 												handleDiscussionSubmit={this.handlePostDiscussion}
+												submitLoading={this.props.pubData.postDiscussionIsLoading}
 											/>
 										}
 										{queryObject.thread !== 'new' && !activeThread &&
-											threads.map((thread)=> {
+											threads.sort((foo, bar)=> {
+												if (foo[0].threadNumber > bar[0].threadNumber) { return -1; }
+												if (foo[0].threadNumber < bar[0].threadNumber) { return 1; }
+												return 0;
+											}).map((thread)=> {
 												return (
 													<DiscussionPreview
 														key={`thread-${thread[0].id}`}
@@ -151,6 +167,7 @@ class PubCollaboration extends Component {
 												loginData={this.props.loginData.data}
 												pathname={`${this.props.location.pathname}${this.props.location.search}`}
 												handleReplySubmit={this.handlePostDiscussion}
+												submitLoading={this.props.pubData.postDiscussionIsLoading}
 											/>
 										}
 									</div>

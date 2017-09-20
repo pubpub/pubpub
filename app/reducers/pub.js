@@ -5,6 +5,10 @@ import {
 	GET_PUB_DATA_LOAD,
 	GET_PUB_DATA_SUCCESS,
 	GET_PUB_DATA_FAIL,
+
+	POST_DISCUSSION_LOAD,
+	POST_DISCUSSION_SUCCESS,
+	POST_DISCUSSION_FAIL,
 } from 'actions/pub';
 
 /* ------------------- */
@@ -13,6 +17,7 @@ import {
 const defaultState = {
 	data: undefined,
 	isLoading: undefined,
+	postDiscussionIsLoading: undefined,
 	error: undefined,
 };
 
@@ -36,6 +41,28 @@ export default function reducer(state = defaultState, action) {
 		return {
 			isLoading: false,
 			error: action.error,
+		};
+	case POST_DISCUSSION_LOAD:
+		return {
+			...state,
+			postDiscussionIsLoading: true,
+		};
+	case POST_DISCUSSION_SUCCESS:
+		return {
+			...state,
+			postDiscussionIsLoading: false,
+			data: {
+				...state.data,
+				discussions: [
+					...state.data.discussions,
+					action.result,
+				]
+			}
+		};
+	case POST_DISCUSSION_FAIL:
+		return {
+			...state,
+			postDiscussionIsLoading: false,
 		};
 	default:
 		return state;

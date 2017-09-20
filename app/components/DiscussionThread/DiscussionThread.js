@@ -14,9 +14,11 @@ const propTypes = {
 	loginData: PropTypes.object,
 	pathname: PropTypes.string.isRequired,
 	handleReplySubmit: PropTypes.func.isRequired,
+	submitLoading: PropTypes.bool,
 };
 const defaultProps = {
 	loginData: {},
+	submitLoading: false,
 };
 
 const DiscussionThread = function(props) {
@@ -25,6 +27,7 @@ const DiscussionThread = function(props) {
 		if (foo.createdAt < bar.createdAt) { return -1; }
 		return 0;
 	});
+
 	const canAdminThread =
 		sortedDiscussions[0].userId === props.loginData.id || // User is author of thread
 		props.loginData.canAdmin; // User has pub-level admin permissions
@@ -101,7 +104,7 @@ const DiscussionThread = function(props) {
 			</div>
 
 			{props.loginData.id
-				? <DiscussionInput handleSubmit={onReplySubmit} />
+				? <DiscussionInput handleSubmit={onReplySubmit} submitLoading={props.submitLoading} />
 				: <Link to={`/login?redirect=${props.pathname}`} className={'pt-button pt-fill'}>
 					Login to Reply
 				</Link>

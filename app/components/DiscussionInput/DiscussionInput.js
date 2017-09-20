@@ -11,11 +11,13 @@ const propTypes = {
 	handleSubmit: PropTypes.func.isRequired,
 	showTitle: PropTypes.bool,
 	initialContent: PropTypes.object,
+	submitLoading: PropTypes.bool,
 };
 
 const defaultProps = {
 	showTitle: false,
 	initialContent: undefined,
+	submitLoading: false,
 };
 
 class DiscussionInput extends Component {
@@ -25,6 +27,7 @@ class DiscussionInput extends Component {
 			title: '',
 			body: '',
 			submitDisabled: true,
+			key: new Date().getTime(),
 		};
 		this.onTitleChange = this.onTitleChange.bind(this);
 		this.onBodyChange = this.onBodyChange.bind(this);
@@ -33,6 +36,13 @@ class DiscussionInput extends Component {
 		this.editorRef = undefined;
 	}
 
+	componentWillReceiveProps(nextProps) {
+		if (this.props.submitLoading && !nextProps.submitLoading) {
+			this.setState({
+				key: new Date().getTime()
+			});
+		}
+	}
 	onTitleChange(evt) {
 		this.setState({ title: evt.target.value });
 	}
@@ -70,6 +80,7 @@ class DiscussionInput extends Component {
 				}
 				<div className={'input-text'} onClick={this.focusEditor} tabIndex={-1} role={'textbox'}>
 					<Editor
+						key={this.state.key}
 						ref={(ref)=> { this.editorRef = ref; }}
 						placeholder={'Reply...'}
 						onChange={this.onBodyChange}
@@ -90,7 +101,7 @@ class DiscussionInput extends Component {
 							onClick={this.onSubmit}
 							text={'Submit Reply'}
 							disabled={this.state.submitDisabled}
-							loading={false}
+							loading={this.props.submitLoading}
 						/>
 					</div>
 				</div>

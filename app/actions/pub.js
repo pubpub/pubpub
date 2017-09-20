@@ -10,6 +10,10 @@ export const GET_PUB_DATA_LOAD = 'pub/GET_PUB_DATA_LOAD';
 export const GET_PUB_DATA_SUCCESS = 'pub/GET_PUB_DATA_SUCCESS';
 export const GET_PUB_DATA_FAIL = 'pub/GET_PUB_DATA_FAIL';
 
+export const POST_DISCUSSION_LOAD = 'pub/POST_DISCUSSION_DATA_LOAD';
+export const POST_DISCUSSION_SUCCESS = 'pub/POST_DISCUSSION_DATA_SUCCESS';
+export const POST_DISCUSSION_FAIL = 'pub/POST_DISCUSSION_DATA_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -26,6 +30,34 @@ export function getPubData(slug) {
 		})
 		.catch((error) => {
 			dispatch({ type: GET_PUB_DATA_FAIL, error });
+		});
+	};
+}
+
+export function postDiscussion({ title, content, text, userId, pubId, communityId, threadNumber }) {
+	return (dispatch) => {
+		dispatch({ type: POST_DISCUSSION_LOAD });
+		return apiFetch('/discussions', {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				title: title,
+				content: content,
+				text: text,
+				userId: userId,
+				pubId: pubId,
+				communityId: communityId,
+				threadNumber: threadNumber,
+			})
+		})
+		.then((result) => {
+			dispatch({ type: POST_DISCUSSION_SUCCESS, result });
+		})
+		.catch((error) => {
+			dispatch({ type: POST_DISCUSSION_FAIL, error });
 		});
 	};
 }

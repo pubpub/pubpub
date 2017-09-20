@@ -39,6 +39,7 @@ storiesOf('DiscussionInput', module)
 			<DiscussionInput
 				handleSubmit={handleSubmit}
 				showTitle={true}
+				submitLoading={true}
 			/>
 		</div>
 		<div style={wrapperStyle}>
