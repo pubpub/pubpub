@@ -34,7 +34,8 @@ class Login extends Component {
 	componentWillReceiveProps(nextProps) {
 		const queryObject = queryString.parse(this.props.location.search);
 		if (!this.props.loginData.data && nextProps.loginData.data) {
-			this.props.history.push(queryObject.redirect || '/');
+			// this.props.history.push(queryObject.redirect || '/');
+			window.location.href= queryObject.redirect || '/';
 		}
 	}
 
