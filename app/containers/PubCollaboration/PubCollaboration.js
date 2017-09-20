@@ -1,29 +1,24 @@
 import React, { Component } from 'react';
-
-import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
-import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import Helmet from 'react-helmet';
+import queryString from 'query-string';
+import { withRouter, Link } from 'react-router-dom';
 import { Editor } from '@pubpub/editor';
 import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
 import Collaborative from '@pubpub/editor/addons/Collaborative';
 import { NonIdealState } from '@blueprintjs/core';
-import Helmet from 'react-helmet';
-import queryString from 'query-string';
-import { withRouter, Link } from 'react-router-dom';
 import Overlay from 'components/Overlay/Overlay';
-import PropTypes from 'prop-types';
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 import DiscussionNew from 'components/DiscussionNew/DiscussionNew';
-import { connect } from 'react-redux';
+import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
+import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import { getPubData, postDiscussion } from 'actions/pub';
 import { nestDiscussionsToThreads } from 'utilities';
-// import { pubBody } from '../../../stories/_data';
-
 
 require('./pubCollaboration.scss');
 require('components/PubBody/pubBody.scss');
-// require('@pubpub/editor/style/base.scss');
-// require('@pubpub/editor/style/fonts.scss');
 
 const propTypes = {
 	dispatch: PropTypes.func.isRequired,
@@ -94,7 +89,29 @@ class PubCollaboration extends Component {
 			return prev;
 		}, undefined);
 
-		if (!pubData.id) { return <p>Loading</p>; }
+		if (!pubData.id) { 
+			return (
+				<div className={'pub-collaboration'}>
+					<div className={'upper'}>
+						<div className={'container'}>
+							<div className={'row'}>
+								<div className={'col-12'} />
+							</div>
+						</div>
+					</div>
+					<div className={'lower'}>
+						<div className={'container'}>
+							<div className={'row'}>
+								<div className={'col-12'}>
+									<div className={'side-panel'} />
+									<div className={'content-panel'} />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			);
+		}
 
 		return (
 			<div className={'pub-collaboration'}>

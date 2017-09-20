@@ -67,46 +67,6 @@ class Dashboard extends Component {
 		const appData = this.props.appData.data || {};
 		const collectionData = this.props.collectionData.data || {};
 		const queryObject = queryString.parse(this.props.location.search);
-		// const collectionData = {
-		// 	title: 'Sensor Hardware',
-		// 	slug: 'sensors',
-		// 	description: 'An open collection dedicated to the free discussion of new topics relating to elephants and whales that create hardware.',
-		// 	isPrivate: true,
-		// 	isOpenSubmissions: true,
-		// 	isPage: false,
-		// 	pubs: [
-		// 		{
-		// 			id: 0,
-		// 			title: 'Open Schematics',
-		// 			slug: 'open-schematics',
-		// 			lastModified: String(new Date()),
-		// 			status: 'published',
-		// 			numCollaborators: 12,
-		// 			numSuggestions: 8,
-		// 			numDiscussions: 4,
-		// 		},
-		// 		{
-		// 			id: 1,
-		// 			title: 'Regulatory Endeavors of Mammals',
-		// 			slug: 'regulatory',
-		// 			lastModified: String(new Date()),
-		// 			status: 'unpublished',
-		// 			numCollaborators: 7,
-		// 			numSuggestions: 0,
-		// 			numDiscussions: 13,
-		// 		},
-		// 		{
-		// 			id: 2,
-		// 			title: 'A Lesson in Pedagogy',
-		// 			slug: 'pedagogy',
-		// 			lastModified: String(new Date()),
-		// 			status: 'submitted',
-		// 			numCollaborators: 8,
-		// 			numSuggestions: 24,
-		// 			numDiscussions: 1,
-		// 		},
-		// 	],
-		// };
 		const pages = appData.collections.filter((item)=> {
 			return item.isPage;
 		});
