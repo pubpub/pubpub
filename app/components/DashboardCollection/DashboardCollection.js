@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Spinner } from '@blueprintjs/core';
+import { Spinner, Button } from '@blueprintjs/core';
 
 require('./dashboardCollection.scss');
 
@@ -9,11 +9,14 @@ const propTypes = {
 	collectionData: PropTypes.object.isRequired,
 	sortMode: PropTypes.string,
 	isSortReverse: PropTypes.bool,
+	onCreatePub: PropTypes.func.isRequired,
+	createPubLoading: PropTypes.bool,
 };
 
 const defaultProps = {
 	sortMode: 'title',
 	isSortReverse: false,
+	createPubLoading: false,
 };
 
 const DashboardCollection = function(props) {
@@ -30,6 +33,11 @@ const DashboardCollection = function(props) {
 		{ title: <span className={'pt-icon-standard pt-icon-manually-entered-data'} />, param: 'suggestions', className: 'tight' },
 	];
 
+	const handleCreatePub = ()=> {
+		if (props.collectionData.id) {
+			props.onCreatePub(props.collectionData.id);
+		}
+	};
 	if (!data.id) {
 		return (
 			<div className={'dashboard-collection'}>
@@ -46,7 +54,13 @@ const DashboardCollection = function(props) {
 		<div className={'dashboard-collection'}>
 			<div className={'content-buttons'}>
 				<Link to={`/dashboard/${data.slug}/edit`} className={'pt-button'}>Edit Collection</Link>
-				<button type={'button'} className={'pt-button'}>Create Pub in Collection</button>
+				<Button
+					type={'button'}
+					className={'pt-button'}
+					loading={props.createPubLoading}
+					onClick={handleCreatePub}
+					text={'Create Pub in Collection'}
+				/>
 			</div>
 
 			<h1 className={'content-title'}>{data.title}</h1>

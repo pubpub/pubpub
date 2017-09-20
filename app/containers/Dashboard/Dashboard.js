@@ -9,6 +9,7 @@ import DashboardCollection from 'components/DashboardCollection/DashboardCollect
 import DashboardCollectionEdit from 'components/DashboardCollectionEdit/DashboardCollectionEdit';
 import DashboardSite from 'components/DashboardSite/DashboardSite';
 import { getCollectionData } from 'actions/collection';
+import { createPub } from 'actions/pubCreate';
 
 require('./dashboard.scss');
 
@@ -17,15 +18,25 @@ const propTypes = {
 	match: PropTypes.object.isRequired,
 	appData: PropTypes.object.isRequired,
 	collectionData: PropTypes.object.isRequired,
+	pubCreateData: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired,
+	dispatch: PropTypes.func.isRequired,
 };
 
 class Dashboard extends Component {
+	constructor(props) {
+		super(props);
+		this.handleCreatePub = this.handleCreatePub.bind(this);
+	}
 	componentWillMount() {
 		this.dispatchGetCollectionData(this.props);
 	}
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.match.params.slug !== this.props.match.params.slug) {
 			this.dispatchGetCollectionData(nextProps);
+		}
+		if (!this.props.pubCreateData.data && nextProps.pubCreateData.data) {
+			this.props.history.push(`/pub/${nextProps.pubCreateData.data.newPubSlug}/collaborate`);
 		}
 	}
 
@@ -45,6 +56,11 @@ class Dashboard extends Component {
 				this.props.dispatch(getCollectionData(collectionId));
 			}
 		}
+	}
+
+	handleCreatePub(collectionId) {
+		const communityId = this.props.appData.data.id;
+		this.props.dispatch(createPub(collectionId, communityId));
 	}
 
 	render() {
@@ -150,7 +166,15 @@ class Dashboard extends Component {
 										if (activeMode === 'edit') {
 											return <DashboardCollectionEdit collectionData={collectionData} />;
 										}
-										return <DashboardCollection collectionData={collectionData} sortMode={queryObject.sort} isSortReverse={queryObject.direction === 'reverse'} />;
+										return (
+											<DashboardCollection
+												collectionData={collectionData}
+												sortMode={queryObject.sort}
+												isSortReverse={queryObject.direction === 'reverse'}
+												onCreatePub={this.handleCreatePub}
+												createPubLoading={this.props.pubCreateData.isLoading}
+											/>
+										);
 									}
 								})()}
 							</div>
@@ -164,7 +188,8 @@ class Dashboard extends Component {
 }
 
 Dashboard.propTypes = propTypes;
-export default withRouter(connect(state => ({ 
+export default withRouter(connect(state => ({
 	appData: state.app,
 	collectionData: state.collection,
+	pubCreateData: state.pubCreate,
 }))(Dashboard));

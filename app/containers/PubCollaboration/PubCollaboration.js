@@ -103,11 +103,7 @@ class PubCollaboration extends Component {
 								<PubCollabHeader
 									pubData={pubData}
 									collaborators={pubData.contributors}
-									activeCollaborators={[
-										pubData.contributors[0],
-										pubData.contributors[1],
-										pubData.contributors[2]
-									]}
+									activeCollaborators={pubData.contributors.slice(0,3)}
 									onPublishClick={this.togglePublish}
 									onShareClick={this.toggleShare}
 									onMetadataClick={this.toggleMetadata}

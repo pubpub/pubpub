@@ -15,7 +15,6 @@ require('./login.scss');
 const propTypes = {
 	loginData: PropTypes.object.isRequired,
 	dispatch: PropTypes.func.isRequired,
-	history: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
 };
 
