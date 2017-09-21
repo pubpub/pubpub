@@ -91,8 +91,12 @@ class Collection extends Component {
 													bannerImage={`${pub.avatar}?rand=${Math.ceil(Math.random() * 10000)}`}
 													isLarge={false}
 													publicationDate={pub.updatedAt}
-													contributors={[]}
-													authors={pub.contributors}
+													contributors={pub.contributors.filter((item)=> {
+														return !item.Contributor.isAuthor;
+													})}
+													authors={pub.contributors.filter((item)=> {
+														return item.Contributor.isAuthor;
+													})}
 												/>
 											</div>
 										</div>
@@ -106,7 +110,7 @@ class Collection extends Component {
 				{!this.props.collectionData.isLoading &&
 					<Footer />
 				}
-				
+
 			</div>
 		);
 	}

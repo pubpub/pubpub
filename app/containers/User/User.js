@@ -78,7 +78,7 @@ class User extends Component {
 											return !item.Contributor.isAuthor;
 										})}
 										authors={pub.contributors.filter((item)=> {
-											return !item.Contributor.isAuthor;
+											return item.Contributor.isAuthor;
 										})}
 									/>
 								</div>
