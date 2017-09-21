@@ -4,6 +4,7 @@ import TimeAgo from 'react-timeago';
 import { Link } from 'react-router-dom';
 import Avatar from 'components/Avatar/Avatar';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
+import { Editor } from '@pubpub/editor';
 import DiscussionInput from 'components/DiscussionInput/DiscussionInput';
 
 require('./discussionThread.scss');
@@ -98,7 +99,7 @@ const DiscussionThread = function(props) {
 
 							</div>
 
-							<div className={'text'}>{discussion.text}</div>
+							<div className={'text'}><Editor initialContent={discussion.content} /></div>
 
 						</div>
 					);

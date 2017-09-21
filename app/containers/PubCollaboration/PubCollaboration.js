@@ -58,6 +58,9 @@ class PubCollaboration extends Component {
 		}
 		if (this.props.pubData.putPubIsLoading && !nextProps.pubData.putPubIsLoading) {
 			this.setState({ isDetailsOpen: false });
+			const oldSlug = this.props.match.params.slug;
+			const newSlug = nextProps.pubData.data.slug;
+			this.props.history.replace(`${nextProps.location.pathname.replace(`/pub/${oldSlug}`, `/pub/${newSlug}`)}${nextProps.location.search}`);
 		}
 	}
 

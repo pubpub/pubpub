@@ -27,8 +27,8 @@ const DiscussionPreview = function(props) {
 	}, false);
 
 	const sortedDiscussions = props.discussions.sort((foo, bar)=> {
-		if (foo.date > bar.date) { return 1; }
-		if (foo.date < bar.date) { return -1; }
+		if (foo.createdAt > bar.createdAt) { return 1; }
+		if (foo.createdAt < bar.createdAt) { return -1; }
 		return 0;
 	});
 
