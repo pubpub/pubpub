@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import dateFormat from 'dateformat';
-import { withRouter } from 'react-router-dom';
-import { Spinner } from '@blueprintjs/core';
+import { withRouter, Link } from 'react-router-dom';
+import { Spinner, NonIdealState } from '@blueprintjs/core';
 import UserHeader from 'components/UserHeader/UserHeader';
 import UserNav from 'components/UserNav/UserNav';
 import PubPreview from 'components/PubPreview/PubPreview';
@@ -16,6 +16,7 @@ const propTypes = {
 	dispatch: PropTypes.func.isRequired,
 	match: PropTypes.object.isRequired,
 	userData: PropTypes.object.isRequired,
+	loginData: PropTypes.object.isRequired,
 };
 
 class User extends Component {
@@ -30,6 +31,8 @@ class User extends Component {
 
 	render() {
 		const userData = this.props.userData.data || {};
+		const loginData = this.props.loginData.data || {};
+		const selfProfile = userData.id === loginData.id;
 
 		return (
 			<div className={'user'}>
@@ -78,6 +81,13 @@ class User extends Component {
 							</div>
 						);
 					})}
+					{userData.pubs && !userData.pubs.length &&
+						<NonIdealState
+							visual={'widget'}
+							title={'No Pubs'}
+							action={selfProfile ? <Link to={'/pubs/create'} className={'pt-button'}>Create New pub</Link> : undefined}
+						/>
+					}
 				</div>
 			</div>
 		);
@@ -86,5 +96,6 @@ class User extends Component {
 
 User.propTypes = propTypes;
 export default withRouter(connect(state => ({
-	userData: state.user
+	userData: state.user,
+	loginData: state.login,
 }))(User));

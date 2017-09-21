@@ -17,8 +17,8 @@ const defaultProps = {
 const UserNav = function(props) {
 	const tabs = [
 		{ id: 0, label: 'Featured Pubs', path: '' },
-		{ id: 1, label: 'All Pubs', path: '/pubs' },
-		{ id: 2, label: 'Discussions', path: '/discussions' },
+		// { id: 1, label: 'All Pubs', path: '/pubs' },
+		// { id: 2, label: 'Discussions', path: '/discussions' },
 	];
 	return (
 		<div className={'user-nav'}>
