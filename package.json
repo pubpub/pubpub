@@ -51,6 +51,7 @@
     "query-string": "^5.0.0",
     "react": "^15.5.4",
     "react-addons-css-transition-group": "^15.6.0",
+    "react-avatar-editor": "^10.2.1",
     "react-code-splitting": "^1.2.0",
     "react-dom": "^15.5.4",
     "react-g-analytics": "^0.4.2",

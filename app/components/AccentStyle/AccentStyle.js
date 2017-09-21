@@ -24,6 +24,8 @@ const AccentStyle = function(props) {
 			.pt-tab[aria-selected="true"], .pt-tab:not([aria-selected="true"]):hover { box-shadow: inset 0 -3px 0 ${props.accentMinimalColor}; }
 			.pt-tab[aria-selected="true"] { box-shadow: inset 0 -3px 0 ${props.accentColor}; }
 			.thread:hover:after { background-color: ${props.accentColor}; }
+			.pt-slider-progress, .pt-dark .pt-slider-progress { background: ${props.accentColor}; }
+			.pt-slider-handle .pt-slider-label { background: ${props.accentColor}; color: ${props.accentTextColor}; }
 		`}</style>
 	);
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
-import { Button, Intent, Tag } from '@blueprintjs/core';
+import { Button, Intent, Tag, Slider } from '@blueprintjs/core';
 import Header from 'components/Header/Header';
 import NavBar from 'components/NavBar/NavBar';
 import Footer from 'components/Footer/Footer';
@@ -65,6 +65,17 @@ const content = (
 							<div className="pt-tab" role="tab">Disabled tab</div>
 						</div>
 					</div>
+				</div>
+			</div>
+			<div className={'row'}>
+				<div className={'col-12'}>
+					<h2>Slider</h2>
+					<Slider
+						value={5}
+						min={1}
+						max={10}
+						stepSize={0.1}
+					/>
 				</div>
 			</div>
 		</div>
