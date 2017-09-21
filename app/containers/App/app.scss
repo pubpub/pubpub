@@ -26,7 +26,11 @@ body {
 .no-click {
 	pointer-events: none;
 }
-
+.clearfix:after {
+	content: "";
+	display: table;
+	clear: both;
+}
 // Import Custom Icon Fonts
 // ****************************
 @font-face {

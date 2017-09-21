@@ -1,6 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import PubPreview from 'components/PubPreview/PubPreview';
+import PubPreviewLoading from 'components/PubPreview/PubPreviewLoading';
 
 const contributors = [1, 2, 3, 4, 5];
 const authors = [
@@ -63,6 +64,11 @@ storiesOf('PubPreview', module)
 					contributors={[]}
 					authors={[authors[2]]}
 				/>
+			</div>
+		</div>
+		<div className={'row'}>
+			<div className={'col-12'}>
+				<PubPreviewLoading />
 			</div>
 		</div>
 	</div>

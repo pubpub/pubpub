@@ -9,9 +9,9 @@ const propTypes = {
 	float: PropTypes.string,
 };
 const defaultProps = {
-	width: 300,
-	height: 25,
-	borderRadius: 2,
+	width: '300px',
+	height: '25px',
+	borderRadius: '2px',
 	margin: '0em 0em 1em',
 	float: 'none',
 };

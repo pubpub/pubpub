@@ -4,10 +4,10 @@ import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import PubPreview from 'components/PubPreview/PubPreview';
+import PubPreviewLoading from 'components/PubPreview/PubPreviewLoading';
 import Footer from 'components/Footer/Footer';
 import NoMatch from 'containers/NoMatch/NoMatch';
 import { getCollectionData } from 'actions/collection';
-import { Spinner } from '@blueprintjs/core';
 
 require('./collection.scss');
 
@@ -70,50 +70,12 @@ class Collection extends Component {
 						</div>
 
 						{!collectionData.id &&
-							<div>
-								<Spinner />
-								{/* <div className={'row'}>
-									<div className={'col-12'}>
-										<PubPreview
-											title={'Super Glue Data Engine'}
-											description={'Media data accessible through APIs to build diverse applications'}
-											slug={'my-article'}
-											bannerImage={'/dev/banner1.jpg'}
-											isLarge={true}
-											publicationDate={String(new Date())}
-											contributors={contributors}
-											authors={authors}
-										/>
-									</div>
+							<div className={'row'}>
+								<div className={'col-12'}>
+									<PubPreviewLoading />
+									<PubPreviewLoading />
+									<PubPreviewLoading />
 								</div>
-								<div className={'row'}>
-									<div className={'col-12'}>
-										<PubPreview
-											title={'Super Glue Data Engine'}
-											description={'Media data accessible through APIs to build diverse applications'}
-											slug={'my-article'}
-											bannerImage={'/dev/banner1.jpg'}
-											isLarge={false}
-											publicationDate={String(new Date())}
-											contributors={contributors}
-											authors={authors}
-										/>
-									</div>
-								</div>
-								<div className={'row'}>
-									<div className={'col-12'}>
-										<PubPreview
-											title={'Super Glue Data Engine'}
-											description={'Media data accessible through APIs to build diverse applications'}
-											slug={'my-article'}
-											bannerImage={'/dev/banner2.jpg'}
-											isLarge={false}
-											publicationDate={String(new Date())}
-											contributors={[]}
-											authors={[authors[2]]}
-										/>
-									</div>
-								</div> */}
 							</div>
 						}
 						{!!collectionData.id &&

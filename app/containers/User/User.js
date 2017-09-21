@@ -7,9 +7,9 @@ import { withRouter, Link } from 'react-router-dom';
 import { NonIdealState } from '@blueprintjs/core';
 import UserHeader from 'components/UserHeader/UserHeader';
 import UserNav from 'components/UserNav/UserNav';
-import Loading from 'components/Loading/Loading';
 import PubPreview from 'components/PubPreview/PubPreview';
 import { getUserData } from 'actions/user';
+import UserLoading from './UserLoading';
 
 require('./user.scss');
 
@@ -36,28 +36,7 @@ class User extends Component {
 		const selfProfile = loginData.id && userData.id === loginData.id;
 
 		if (!userData.id) {
-			return (
-				<div className={'user'}>
-					<div className={'container narrow user-header-wrapper'}>
-						<div className={'row'}>
-							<div className={'col-12'}>
-								<Loading float={'right'} width={150} height={150} borderRadius={150} />
-								<Loading height={32} width={'calc(80% - 150px)'} />
-								<Loading width={'calc(60% - 150px)'} />
-								<Loading margin={'2.5em 0em 0.25em'} width={'calc(90% - 150px)'} height={10} />
-								<Loading margin={'0.25em 0em 0.25em'} width={'calc(90% - 150px)'} height={10} />
-							</div>
-						</div>
-					</div>
-					<div className={'container narrow nav'}>
-						<div className={'row'}>
-							<div className={'col-12'}>
-								<hr />
-							</div>
-						</div>
-					</div>
-				</div>
-			);
+			return <UserLoading />;
 		}
 		return (
 			<div className={'user'}>
