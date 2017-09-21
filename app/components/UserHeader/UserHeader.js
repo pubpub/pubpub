@@ -18,10 +18,11 @@ const UserHeader = function(props) {
 	const links = [
 		{ id: 0, value: props.userData.location, icon: 'pt-icon-map-marker no-click' },
 		{ id: 1, value: props.userData.website, icon: 'pt-icon-link', href: props.userData.website },
-		{ id: 2, value: props.userData.facebook, icon: 'pt-icon-facebook', href: `https://www.facebook.com/${props.userData.facebook}` },
-		{ id: 3, value: props.userData.twitter, icon: 'pt-icon-twitter', href: `https://www.twitter.com/${props.userData.twitter}` },
-		{ id: 4, value: props.userData.orcid, icon: 'pt-icon-orcid', href: `https://www.orcid.org/${props.userData.orcid}` },
-		{ id: 5, value: props.userData.googleScholar, icon: 'pt-icon-google-scholar', href: `https://scholar.google.com/${props.userData.googleScholar}` },
+		{ id: 2, value: props.userData.orcid, icon: 'pt-icon-orcid', href: `https://www.orcid.org/${props.userData.orcid}` },
+		{ id: 3, value: props.userData.github, icon: 'pt-icon-github', href: `https://github.com/${props.userData.github}` },
+		{ id: 4, value: props.userData.facebook, icon: 'pt-icon-facebook', href: `https://www.facebook.com/${props.userData.facebook}` },
+		{ id: 5, value: props.userData.twitter, icon: 'pt-icon-twitter', href: `https://twitter.com/${props.userData.twitter}` },
+		{ id: 6, value: props.userData.googleScholar, icon: 'pt-icon-google-scholar', href: `https://scholar.google.com/${props.userData.googleScholar}` },
 
 	];
 	return (

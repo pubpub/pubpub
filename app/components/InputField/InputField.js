@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 require('./inputField.scss');
 
 const propTypes = {
-	label: PropTypes.string.isRequired,
+	label: PropTypes.string,
 	placeholder: PropTypes.string,
 	isRequired: PropTypes.bool,
 	isDisabled: PropTypes.bool,
@@ -19,6 +19,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+	label: undefined,
 	placeholder: undefined,
 	isRequired: false,
 	isDisabled: false,
