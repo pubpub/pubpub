@@ -7,6 +7,7 @@ import SHA3 from 'crypto-js/sha3';
 import encHex from 'crypto-js/enc-hex';
 import { Button, NonIdealState } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
+import ImageUpload from 'components/ImageUpload/ImageUpload';
 import { getSignupData, postUser } from 'actions/userCreate';
 
 require('./userCreate.scss');
@@ -25,11 +26,15 @@ class UserCreate extends Component {
 			firstName: '',
 			lastName: '',
 			password: '',
+			bio: '',
+			avatar: undefined,
 		};
 		this.onCreateSubmit = this.onCreateSubmit.bind(this);
 		this.onFirstNameChange = this.onFirstNameChange.bind(this);
 		this.onLastNameChange = this.onLastNameChange.bind(this);
 		this.onPasswordChange = this.onPasswordChange.bind(this);
+		this.onBioChange = this.onBioChange.bind(this);
+		this.onAvatarChange = this.onAvatarChange.bind(this);
 	}
 
 	componentWillMount() {
@@ -63,6 +68,12 @@ class UserCreate extends Component {
 	}
 	onPasswordChange(evt) {
 		this.setState({ password: evt.target.value });
+	}
+	onBioChange(evt) {
+		this.setState({ bio: evt.target.value });
+	}
+	onAvatarChange(val) {
+		this.setState({ avatar: val });
 	}
 
 	render() {
@@ -115,6 +126,18 @@ class UserCreate extends Component {
 										isRequired={true}
 										value={this.state.password}
 										onChange={this.onPasswordChange}
+									/>
+									<ImageUpload
+										htmlFor={'avatar-upload'}
+										label={'Avatar Image'}
+										onNewImage={this.onAvatarChange}
+										useCrop={true}
+									/>
+									<InputField
+										label={'Bio'}
+										isTextarea={true}
+										value={this.state.bio}
+										onChange={this.onBioChange}
 										error={this.props.userCreateData.error && 'Error Creating User'}
 									/>
 									<Button

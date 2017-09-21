@@ -33,7 +33,7 @@ storiesOf('ImageUpload', module)
 			/>
 			<ImageUpload
 				htmlFor={'input3'}
-				label={'Avatar Image'}
+				label={'Header Image'}
 				defaultImage={'https://assets.pubpub.org/_testing/51505996842023.jpg'}
 				canClear={true}
 				width={150}

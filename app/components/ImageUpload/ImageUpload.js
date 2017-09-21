@@ -10,7 +10,7 @@ require('./imageUpload.scss');
 
 const propTypes = {
 	defaultImage: PropTypes.string,
-	userCrop: PropTypes.bool,
+	useCrop: PropTypes.bool,
 	width: PropTypes.number,
 	height: PropTypes.number,
 	label: PropTypes.node,
@@ -22,7 +22,7 @@ const propTypes = {
 
 const defaultProps = {
 	defaultImage: undefined,
-	userCrop: false,
+	useCrop: false,
 	width: 75,
 	height: 75,
 	label: undefined,
@@ -77,11 +77,11 @@ class ImageUpload extends Component {
 	}
 
 	handleImageSelect(evt) {
-		if (evt.target.files.length && this.props.userCrop) {
+		if (evt.target.files.length && this.props.useCrop) {
 			this.setState({ imageFile: evt.target.files[0] });
 		}
 
-		if (evt.target.files.length && !this.props.userCrop) {
+		if (evt.target.files.length && !this.props.useCrop) {
 			s3Upload(evt.target.files[0], ()=>{}, this.onUploadFinish, 0);
 			this.setState({
 				uploading: true,

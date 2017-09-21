@@ -8,7 +8,7 @@ const propTypes = {
 	isOpen: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
 	children: PropTypes.node.isRequired,
-	maxWidth: PropTypes.string,
+	maxWidth: PropTypes.number,
 };
 
 const defaultProps = {
@@ -18,7 +18,7 @@ const defaultProps = {
 const Overlay = function(props) {
 	const cardStyle = props.maxWidth
 		? {
-			maxWidth: props.maxWidth,
+			maxWidth: `${props.maxWidth}px`,
 			left: `calc(50vw - ${props.maxWidth / 2}px)`
 		}
 		: {};
