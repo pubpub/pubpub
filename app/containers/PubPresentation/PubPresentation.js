@@ -8,6 +8,7 @@ import PubPresHeader from 'components/PubPresHeader/PubPresHeader';
 import PubPresDetails from 'components/PubPresDetails/PubPresDetails';
 import PubBody from 'components/PubBody/PubBody';
 import Footer from 'components/Footer/Footer';
+import PubPresentationLoading from './PubPresentationLoading';
 
 import { getPubData } from 'actions/pub';
 
@@ -26,7 +27,7 @@ class PubPresentation extends Component {
 
 	render() {
 		const pubData = this.props.pubData.data || {};
-		if (!pubData.id) { return <p>Loading</p>; }
+		if (!pubData.id) { return <PubPresentationLoading />; }
 
 		return (
 			<div className={'pub-presentation'}>
