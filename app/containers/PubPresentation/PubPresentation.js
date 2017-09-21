@@ -39,7 +39,7 @@ class PubPresentation extends Component {
 				<PubPresHeader
 					title={pubData.title}
 					description={pubData.description}
-					backgroundImage={pubData.headerImage}
+					backgroundImage={pubData.useHeaderImage ? pubData.avatar : undefined}
 				/>
 
 

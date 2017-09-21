@@ -71,7 +71,7 @@ class User extends Component {
 										title={pub.title}
 										description={pub.description}
 										slug={pub.slug}
-										bannerImage={pub.headerImage}
+										bannerImage={pub.avatar}
 										isLarge={true}
 										publicationDate={dateFormat(pub.updatedAt, 'mmm dd, yyyy')}
 										contributors={pub.contributors.filter((item)=> {

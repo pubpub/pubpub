@@ -38,7 +38,7 @@ export function getPubData(slug) {
 	};
 }
 
-export function putPubData({ pubId, title, slug, description }) {
+export function putPubData({ pubId, title, slug, description, avatar, useHeaderImage }) {
 	return (dispatch) => {
 		dispatch({ type: PUT_PUB_DATA_LOAD });
 		return apiFetch('/pubs', {
@@ -52,6 +52,8 @@ export function putPubData({ pubId, title, slug, description }) {
 				title: title,
 				slug: slug,
 				description: description,
+				avatar: avatar,
+				useHeaderImage: useHeaderImage,
 			})
 		})
 		.then((result) => {
