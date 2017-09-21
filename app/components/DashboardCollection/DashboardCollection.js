@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Spinner, Button } from '@blueprintjs/core';
+import DashboardCollectionLoading from './DashboardCollectionLoading';
 
 require('./dashboardCollection.scss');
 
@@ -46,7 +47,7 @@ const DashboardCollection = function(props) {
 					<button type={'button'} className={'pt-button'}>Create Pub in Collection</button>
 				</div>
 				<h1 className={'content-title'}>{data.title}</h1>
-				<Spinner />
+				<DashboardCollectionLoading />
 			</div>
 		);
 	}
