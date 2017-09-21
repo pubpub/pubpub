@@ -8,6 +8,7 @@ const propTypes = {
 	placeholder: PropTypes.string,
 	isRequired: PropTypes.bool,
 	isDisabled: PropTypes.bool,
+	isTextarea: PropTypes.bool,
 	helperText: PropTypes.string,
 	error: PropTypes.string,
 	value: PropTypes.string,
@@ -21,6 +22,7 @@ const defaultProps = {
 	placeholder: undefined,
 	isRequired: false,
 	isDisabled: false,
+	isTextarea: false,
 	helperText: '',
 	error: undefined,
 	value: undefined,
@@ -41,8 +43,20 @@ const InputField = function(props) {
 			<div className="pt-form-content">
 				{props.children}
 				<div className={`pt-input-group ${props.error ? 'pt-intent-danger' : ''}`}>
-					{!props.children &&
+					{!props.children && !props.isTextarea &&
 						<input
+							id={`input-${props.label}`}
+							className={'pt-input'}
+							disabled={props.isDisabled}
+							placeholder={props.placeholder}
+							value={props.value}
+							onChange={props.onChange}
+							type={props.type}
+							dir="auto"
+						/>
+					}
+					{!props.children && props.isTextarea &&
+						<textarea
 							id={`input-${props.label}`}
 							className={'pt-input'}
 							disabled={props.isDisabled}

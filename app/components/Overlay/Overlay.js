@@ -8,13 +8,20 @@ const propTypes = {
 	isOpen: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
 	children: PropTypes.node.isRequired,
+	maxWidth: PropTypes.string,
+};
 
+const defaultProps = {
+	maxWidth: undefined,
 };
 
 const Overlay = function(props) {
+	const cardStyle = {
+		maxWidth: props.maxWidth || 'none',
+	};
 	return (
 		<BlueprintOverlay className="pt-overlay-scroll-container" isOpen={props.isOpen} onClose={props.onClose}>
-			<div className={'overlay-wrapper pt-card pt-elevation-2'}>
+			<div className={'overlay-wrapper pt-card pt-elevation-2'} style={cardStyle}>
 				{props.children}
 			</div>
 		</BlueprintOverlay>
@@ -22,4 +29,5 @@ const Overlay = function(props) {
 };
 
 Overlay.propTypes = propTypes;
+Overlay.defaultProps = defaultProps;
 export default Overlay;

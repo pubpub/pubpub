@@ -11,10 +11,11 @@ import { NonIdealState } from '@blueprintjs/core';
 import Overlay from 'components/Overlay/Overlay';
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
+import PubCollabDetails from 'components/PubCollabDetails/PubCollabDetails';
 import DiscussionNew from 'components/DiscussionNew/DiscussionNew';
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
-import { getPubData, postDiscussion } from 'actions/pub';
+import { getPubData, putPubData, postDiscussion } from 'actions/pub';
 import { nestDiscussionsToThreads } from 'utilities';
 
 require('./pubCollaboration.scss');
@@ -35,13 +36,14 @@ class PubCollaboration extends Component {
 		this.state = {
 			isPublishOpen: false,
 			isShareOpen: false,
-			isMetadataOpen: false,
+			isDetailsOpen: false,
 			isAuthorsOpen: false,
 		};
 		this.togglePublish = this.togglePublish.bind(this);
 		this.toggleShare = this.toggleShare.bind(this);
-		this.toggleMetadata = this.toggleMetadata.bind(this);
+		this.toggleDetails = this.toggleDetails.bind(this);
 		this.toggleAuthors = this.toggleAuthors.bind(this);
+		this.handleDetailsSave = this.handleDetailsSave.bind(this);
 		this.handlePostDiscussion = this.handlePostDiscussion.bind(this);
 	}
 	componentWillMount() {
@@ -54,6 +56,9 @@ class PubCollaboration extends Component {
 		) {
 			this.props.history.push(nextProps.location.pathname);
 		}
+		if (this.props.pubData.putPubIsLoading && !nextProps.pubData.putPubIsLoading) {
+			this.setState({ isDetailsOpen: false });
+		}
 	}
 
 	togglePublish() {
@@ -62,13 +67,18 @@ class PubCollaboration extends Component {
 	toggleShare() {
 		this.setState({ isShareOpen: !this.state.isShareOpen });
 	}
-	toggleMetadata() {
-		this.setState({ isMetadataOpen: !this.state.isMetadataOpen });
+	toggleDetails() {
+		this.setState({ isDetailsOpen: !this.state.isDetailsOpen });
 	}
 	toggleAuthors() {
 		this.setState({ isAuthorsOpen: !this.state.isAuthorsOpen });
 	}
-
+	handleDetailsSave(detailsObject) {
+		this.props.dispatch(putPubData({
+			...detailsObject,
+			pubId: this.props.pubData.data.id,
+		}));
+	}
 	handlePostDiscussion(discussionObject) {
 		this.props.dispatch(postDiscussion({
 			...discussionObject,
@@ -130,7 +140,7 @@ class PubCollaboration extends Component {
 									activeCollaborators={pubData.contributors.slice(0,3)}
 									onPublishClick={this.togglePublish}
 									onShareClick={this.toggleShare}
-									onMetadataClick={this.toggleMetadata}
+									onDetailsClick={this.toggleDetails}
 									onAuthorsClick={this.toggleAuthors}
 								/>
 							</div>
@@ -238,8 +248,12 @@ class PubCollaboration extends Component {
 				<Overlay isOpen={this.state.isAuthorsOpen} onClose={this.toggleAuthors}>
 					<h5>Authors</h5>
 				</Overlay>
-				<Overlay isOpen={this.state.isMetadataOpen} onClose={this.toggleMetadata}>
-					<h5>Metadata</h5>
+				<Overlay isOpen={this.state.isDetailsOpen} onClose={this.toggleDetails}>
+					<PubCollabDetails
+						pubData={pubData}
+						onSave={this.handleDetailsSave}
+						isLoading={this.props.pubData.putPubIsLoading}
+					/>
 				</Overlay>
 			</div>
 		);

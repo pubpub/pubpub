@@ -10,6 +10,10 @@ export const GET_PUB_DATA_LOAD = 'pub/GET_PUB_DATA_LOAD';
 export const GET_PUB_DATA_SUCCESS = 'pub/GET_PUB_DATA_SUCCESS';
 export const GET_PUB_DATA_FAIL = 'pub/GET_PUB_DATA_FAIL';
 
+export const PUT_PUB_DATA_LOAD = 'pub/PUT_PUB_DATA_LOAD';
+export const PUT_PUB_DATA_SUCCESS = 'pub/PUT_PUB_DATA_SUCCESS';
+export const PUT_PUB_DATA_FAIL = 'pub/PUT_PUB_DATA_FAIL';
+
 export const POST_DISCUSSION_LOAD = 'pub/POST_DISCUSSION_DATA_LOAD';
 export const POST_DISCUSSION_SUCCESS = 'pub/POST_DISCUSSION_DATA_SUCCESS';
 export const POST_DISCUSSION_FAIL = 'pub/POST_DISCUSSION_DATA_FAIL';
@@ -30,6 +34,31 @@ export function getPubData(slug) {
 		})
 		.catch((error) => {
 			dispatch({ type: GET_PUB_DATA_FAIL, error });
+		});
+	};
+}
+
+export function putPubData({ pubId, title, slug, description }) {
+	return (dispatch) => {
+		dispatch({ type: PUT_PUB_DATA_LOAD });
+		return apiFetch('/pubs', {
+			method: 'PUT',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				pubId: pubId,
+				title: title,
+				slug: slug,
+				description: description,
+			})
+		})
+		.then((result) => {
+			dispatch({ type: PUT_PUB_DATA_SUCCESS, result });
+		})
+		.catch((error) => {
+			dispatch({ type: PUT_PUB_DATA_FAIL, error });
 		});
 	};
 }

@@ -11,7 +11,7 @@ const propTypes = {
 	activeCollaborators: PropTypes.array.isRequired,
 	onPublishClick: PropTypes.func,
 	onShareClick: PropTypes.func,
-	onMetadataClick: PropTypes.func,
+	onDetailsClick: PropTypes.func,
 	onAuthorsClick: PropTypes.func,
 	onSubmitClick: PropTypes.func,
 };
@@ -19,7 +19,7 @@ const propTypes = {
 const defaultProps = {
 	onPublishClick: ()=>{},
 	onShareClick: ()=>{},
-	onMetadataClick: ()=>{},
+	onDetailsClick: ()=>{},
 	onAuthorsClick: ()=>{},
 	onSubmitClick: ()=> {},
 };
@@ -32,14 +32,14 @@ const PubCollabHeader = function(props) {
 	return (
 		<div className={'pub-collab-header'} >
 			<div className={'flex-parent'}>
-				<div tabIndex={0} role={'button'} className={'flex-left title'} onClick={props.onMetadataClick}>
+				<div tabIndex={0} role={'button'} className={'flex-left title'} onClick={props.onDetailsClick}>
 					{props.pubData.title}
 				</div>
 				<div className={'flex-center tags'}>
 					<div className={'tags-wrapper'}>
 						{props.pubData.collections.map((collection)=> {
 							return (
-								<div tabIndex={0} role={'button'} key={`collection-${collection.id}`} className={'pt-tag pt-minimal pt-intent-primary'} onClick={props.onMetadataClick}>
+								<div tabIndex={0} role={'button'} key={`collection-${collection.id}`} className={'pt-tag pt-minimal pt-intent-primary'} onClick={props.onDetailsClick}>
 									{collection.title}
 									{collection.isPrivate &&
 										<span className={'pt-icon-standard pt-icon-lock'} />
