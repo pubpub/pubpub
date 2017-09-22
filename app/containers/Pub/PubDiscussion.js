@@ -514,7 +514,8 @@ styles = {
 		paddingTop: '1em',
 		marginTop: '1em',
 		borderTop: '1px solid #EBF1F5',
-		display: 'table',
+		// display: 'table',
+		display: 'flex',
 		width: '100%',
 	},
 	lastDiscussionItem: (isExpanded)=> {
@@ -523,18 +524,21 @@ styles = {
 		};
 	},
 	discussionImageWrapper: {
-		display: 'table-cell',
+		// display: 'table-cell',
 		verticalAlign: 'top',
-		width: '1%',
+		// width: '1%',
 	},
 	discussionImage: {
 		width: '35px',
 		borderRadius: '35px',
 	},
 	discussionContentWrapper: {
-		display: 'table-cell',
+		// display: 'table-cell',
 		verticalAlign: 'top',
 		paddingLeft: '0.5em',
+		flexShrink: '1',
+		flexGrow: '1',
+		maxWidth: 'calc(100% - 35px)',
 	},
 	discussionButtons: {
 		float: 'right',
