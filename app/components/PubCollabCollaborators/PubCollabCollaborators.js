@@ -5,14 +5,12 @@ import { Link } from 'react-router-dom';
 import Avatar from 'components/Avatar/Avatar';
 import UserAutocomplete from 'components/UserAutocomplete/UserAutocomplete';
 import PubCollaboratorDetails from 'components/PubCollaboratorDetails/PubCollaboratorDetails';
-import PubCollabDropdownPermissions from 'components/PubCollabDropdownPermissions/PubCollabDropdownPermissions';
-import PubCollabDropdownPrivacy from 'components/PubCollabDropdownPrivacy/PubCollabDropdownPrivacy';
 
-require('./pubCollabShare.scss');
+require('./pubCollabCollaborators.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
-	onOpenCollaborators: PropTypes.func,
+	onOpenShare: PropTypes.func,
 	onCollaboratorAdd: PropTypes.func,
 	onCollaboratorUpdate: PropTypes.func,
 	onCollaboratorDelete: PropTypes.func,
@@ -20,14 +18,14 @@ const propTypes = {
 };
 
 const defaultProps = {
-	onOpenCollaborators: ()=>{},
+	onOpenShare: ()=>{},
 	onCollaboratorAdd: ()=>{},
 	onCollaboratorUpdate: ()=>{},
 	onCollaboratorDelete: ()=>{},
 	isLoading: false,
 };
 
-class PubCollabShare extends Component {
+class PubCollabCollaborators extends Component {
 	constructor(props) {
 		super(props);
 		this.handleUserSelect = this.handleUserSelect.bind(this);
@@ -45,12 +43,9 @@ class PubCollabShare extends Component {
 
 	render() {
 		return (
-			<div className={'pub-collab-share'}>
-				<h5>Share Pub</h5>
-				<div className={'intro'}>Use this panel to manage permissions and access to the pub. To edit who is recognized and listed for working on this pub open the <span onClick={this.props.onOpenCollaborators}>Collaborators Panel</span>.</div>
-				<PubCollabDropdownPrivacy />
-			<PubCollabDropdownPermissions />
-
+			<div className={'pub-collab-collaborators'}>
+				<h5>Pub Collaborators</h5>
+				<div className={'intro'}>Use this panel to manage who is recognized and listed for working on this pub. To manage permissions and access to the pub, open the <span onClick={this.props.onOpenShare}>Share Panel</span>.</div>
 				<UserAutocomplete onSelect={this.handleUserSelect} allowCustomUser={true}/>
 				<div className={'collaborators-wrapper'}>
 					{this.props.pubData.contributors.sort((foo, bar)=> {
@@ -71,12 +66,11 @@ class PubCollabShare extends Component {
 						);
 					})}
 				</div>
-
 			</div>
 		);
 	}
 }
 
-PubCollabShare.propTypes = propTypes;
-PubCollabShare.defaultProps = defaultProps;
-export default PubCollabShare;
+PubCollabCollaborators.propTypes = propTypes;
+PubCollabCollaborators.defaultProps = defaultProps;
+export default PubCollabCollaborators;

@@ -19,7 +19,7 @@ storiesOf('PubCollabDetails', module)
 					title: 'My Title',
 					slug: 'snails',
 				}}
-				onDetailsSave={handleDetailsSave}
+				onSave={handleDetailsSave}
 			/>
 		</div>
 	</div>

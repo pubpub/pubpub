@@ -12,7 +12,7 @@ const propTypes = {
 	onPublishClick: PropTypes.func,
 	onShareClick: PropTypes.func,
 	onDetailsClick: PropTypes.func,
-	onAuthorsClick: PropTypes.func,
+	onCollaboratorsClick: PropTypes.func,
 	onSubmitClick: PropTypes.func,
 };
 
@@ -20,7 +20,7 @@ const defaultProps = {
 	onPublishClick: ()=>{},
 	onShareClick: ()=>{},
 	onDetailsClick: ()=>{},
-	onAuthorsClick: ()=>{},
+	onCollaboratorsClick: ()=>{},
 	onSubmitClick: ()=> {},
 };
 
@@ -59,7 +59,7 @@ const PubCollabHeader = function(props) {
 			</div>
 
 			<div className={'flex-parent'}>
-				<div tabIndex={0} role={'button'} className={'flex-left'} onClick={props.onAuthorsClick}>
+				<div tabIndex={0} role={'button'} className={'flex-left'} onClick={props.onCollaboratorsClick}>
 					{authors.map((author, index)=> {
 						const separator = index === authors.length - 1 ? '' : ', ';
 						const prefix = (index === authors.length - 1 && index > 0) ? ' and ' : '';
@@ -76,7 +76,7 @@ const PubCollabHeader = function(props) {
 					})}
 				</div>
 				<div className={'flex-center edit'}>
-					<span tabIndex={0} role={'button'} className={'pt-icon-standard pt-icon-edit'} onClick={props.onAuthorsClick} />
+					<span tabIndex={0} role={'button'} className={'pt-icon-standard pt-icon-edit'} onClick={props.onCollaboratorsClick} />
 				</div>
 				<div className={'flex-right avatars'}>
 					{props.activeCollaborators.map((collaborator)=> {

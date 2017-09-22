@@ -12,10 +12,11 @@ import Overlay from 'components/Overlay/Overlay';
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 import PubCollabDetails from 'components/PubCollabDetails/PubCollabDetails';
+import PubCollabCollaborators from 'components/PubCollabCollaborators/PubCollabCollaborators';
 import DiscussionNew from 'components/DiscussionNew/DiscussionNew';
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
-import { getPubData, putPubData, postDiscussion } from 'actions/pub';
+import { getPubData, putPubData, postDiscussion, postCollaborator, putCollaborator, deleteCollaborator } from 'actions/pub';
 import { nestDiscussionsToThreads } from 'utilities';
 
 require('./pubCollaboration.scss');
@@ -37,14 +38,19 @@ class PubCollaboration extends Component {
 			isPublishOpen: false,
 			isShareOpen: false,
 			isDetailsOpen: false,
-			isAuthorsOpen: false,
+			isCollaboratorsOpen: false,
 		};
 		this.togglePublish = this.togglePublish.bind(this);
 		this.toggleShare = this.toggleShare.bind(this);
 		this.toggleDetails = this.toggleDetails.bind(this);
-		this.toggleAuthors = this.toggleAuthors.bind(this);
+		this.toggleCollaborators = this.toggleCollaborators.bind(this);
 		this.handleDetailsSave = this.handleDetailsSave.bind(this);
 		this.handlePostDiscussion = this.handlePostDiscussion.bind(this);
+		this.handleCollaboratorAdd = this.handleCollaboratorAdd.bind(this);
+		this.handleCollaboratorUpdate = this.handleCollaboratorUpdate.bind(this);
+		this.handleCollaboratorDelete = this.handleCollaboratorDelete.bind(this);
+		this.onOpenShare = this.onOpenShare.bind(this);
+		this.onOpenCollaborators = this.onOpenCollaborators.bind(this);
 	}
 	componentWillMount() {
 		this.props.dispatch(getPubData(this.props.match.params.slug));
@@ -73,8 +79,8 @@ class PubCollaboration extends Component {
 	toggleDetails() {
 		this.setState({ isDetailsOpen: !this.state.isDetailsOpen });
 	}
-	toggleAuthors() {
-		this.setState({ isAuthorsOpen: !this.state.isAuthorsOpen });
+	toggleCollaborators() {
+		this.setState({ isCollaboratorsOpen: !this.state.isCollaboratorsOpen });
 	}
 	handleDetailsSave(detailsObject) {
 		this.props.dispatch(putPubData({
@@ -88,7 +94,31 @@ class PubCollaboration extends Component {
 			communityId: this.props.pubData.data.communityId,
 		}));
 	}
-
+	handleCollaboratorAdd(collaboratorObject) {
+		this.props.dispatch(postCollaborator(collaboratorObject));
+	}
+	handleCollaboratorUpdate(collaboratorObject) {
+		this.props.dispatch(putCollaborator(collaboratorObject));
+	}
+	handleCollaboratorDelete(collaboratorObject) {
+		this.props.dispatch(deleteCollaborator(collaboratorObject));
+	}
+	onOpenShare() {
+		this.setState({
+			isShareOpen: true,
+			isDetailsOpen: false,
+			isCollaboratorsOpen: false,
+			isPublishOpen: false,
+		});
+	}
+	onOpenCollaborators() {
+		this.setState({
+			isShareOpen: false,
+			isDetailsOpen: false,
+			isCollaboratorsOpen: true,
+			isPublishOpen: false,
+		});
+	}
 	render() {
 		const queryObject = queryString.parse(this.props.location.search);
 
@@ -144,7 +174,7 @@ class PubCollaboration extends Component {
 									onPublishClick={this.togglePublish}
 									onShareClick={this.toggleShare}
 									onDetailsClick={this.toggleDetails}
-									onAuthorsClick={this.toggleAuthors}
+									onCollaboratorsClick={this.toggleCollaborators}
 								/>
 							</div>
 						</div>
@@ -246,10 +276,22 @@ class PubCollaboration extends Component {
 					<button type={'button'} className={'pt-button pt-intent-primary'}>Publish Snapshot</button>
 				</Overlay>
 				<Overlay isOpen={this.state.isShareOpen} onClose={this.toggleShare}>
-					<PubCollabShare />
+					<PubCollabShare
+						pubData={pubData}
+						onOpenCollaborators={this.onOpenCollaborators}
+						onCollaboratorAdd={this.handleCollaboratorAdd}
+						onCollaboratorUpdate={this.handleCollaboratorUpdate}
+						onCollaboratorDelete={this.handleCollaboratorDelete}
+					/>
 				</Overlay>
-				<Overlay isOpen={this.state.isAuthorsOpen} onClose={this.toggleAuthors}>
-					<h5>Authors</h5>
+				<Overlay isOpen={this.state.isCollaboratorsOpen} onClose={this.toggleCollaborators}>
+					<PubCollabCollaborators
+						pubData={pubData}
+						onOpenShare={this.onOpenShare}
+						onCollaboratorAdd={this.handleCollaboratorAdd}
+						onCollaboratorUpdate={this.handleCollaboratorUpdate}
+						onCollaboratorDelete={this.handleCollaboratorDelete}
+					/>
 				</Overlay>
 				<Overlay isOpen={this.state.isDetailsOpen} onClose={this.toggleDetails}>
 					<PubCollabDetails
