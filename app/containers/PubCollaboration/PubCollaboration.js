@@ -54,6 +54,7 @@ class PubCollaboration extends Component {
 		this.onOpenShare = this.onOpenShare.bind(this);
 		this.onOpenCollaborators = this.onOpenCollaborators.bind(this);
 		this.handlePublish = this.handlePublish.bind(this);
+		this.focusEditor = this.focusEditor.bind(this);
 	}
 	componentWillMount() {
 		this.props.dispatch(getPubData(this.props.match.params.slug));
@@ -131,6 +132,10 @@ class PubCollaboration extends Component {
 			content: this.editorRef.view.state.doc.toJSON(),
 		})));
 	}
+	focusEditor() {
+		this.editorRef.focus();
+	}
+
 	render() {
 		const queryObject = queryString.parse(this.props.location.search);
 
@@ -256,10 +261,10 @@ class PubCollaboration extends Component {
 									</div>
 								</div>
 
-								<div className={'content-panel'}>
+								<div className={'content-panel'} onClick={this.focusEditor} tabIndex={-1} role={'textbox'}>
 									<div className={'pub-body'}>
 										{/* pubBody */}
-										<Editor placeholder={'Begin writing here'} ref={(ref)=> { this.editorRef = ref; }}>
+										<Editor placeholder={'Begin writing here...'} ref={(ref)=> { this.editorRef = ref; }}>
 											<FormattingMenu />
 											<Collaborative
 												// ref={(collab) => { this.collab = collab; }}

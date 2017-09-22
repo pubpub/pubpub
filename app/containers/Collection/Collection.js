@@ -80,7 +80,8 @@ class Collection extends Component {
 						}
 						{!!collectionData.id &&
 							<div>
-								{collectionData.pubs.map((pub)=> {
+								{collectionData.pubs.map((pub, index)=> {
+									console.log(pub);
 									return (
 										<div className={'row'} key={`pub-${pub.id}`}>
 											<div className={'col-12'}>
@@ -89,7 +90,7 @@ class Collection extends Component {
 													description={pub.description}
 													slug={pub.slug}
 													bannerImage={`${pub.avatar}?rand=${Math.ceil(Math.random() * 10000)}`}
-													isLarge={false}
+													isLarge={[0, 3, 6, 8].indexOf(index) > -1}
 													publicationDate={pub.updatedAt}
 													contributors={pub.contributors.filter((item)=> {
 														return !item.Contributor.isAuthor;

@@ -65,7 +65,7 @@ class PubPresentation extends Component {
 				/>
 
 				{/* <PubBody content={this.props.pubData.data.body} /> */}
-				<PubBody content={activeVersion.content} />
+				<PubBody content={activeVersion.content}/>
 
 				<div className={'license-wrapper'}>
 					CCBY 4.0

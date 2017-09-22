@@ -59,5 +59,6 @@
 		margin-right: $sidePanelWidth;
 		min-height: calc(100vh - #{$navHeight} - #{$titlePanelHeight});
 		overflow: hidden;
+		cursor: text;
 	}
 }

@@ -5,6 +5,10 @@ import {
 	GET_APP_DATA_LOAD,
 	GET_APP_DATA_SUCCESS,
 	GET_APP_DATA_FAIL,
+
+	PUT_APP_DATA_LOAD,
+	PUT_APP_DATA_SUCCESS,
+	PUT_APP_DATA_FAIL,
 } from 'actions/app';
 
 /* ------------------- */
@@ -14,6 +18,8 @@ const defaultState = {
 	data: undefined,
 	isLoading: false,
 	error: undefined,
+	putIsLoading: false,
+	putError: undefined,
 };
 
 /* ----------------------------------------- */
@@ -41,6 +47,28 @@ export default function reducer(state = defaultState, action) {
 			data: undefined,
 			loading: false,
 			error: action.err,
+		};
+	/* PUT App Data */
+	case PUT_APP_DATA_LOAD:
+		return {
+			...state,
+			putIsLoading: true,
+			putError: undefined,
+		};
+	case PUT_APP_DATA_SUCCESS:
+		return {
+			data: {
+				...state.data,
+				...action.result,
+			},
+			putIsLoading: false,
+			putError: undefined,
+		};
+	case PUT_APP_DATA_FAIL:
+		return {
+			...state,
+			putIsLoading: false,
+			putError: action.error,
 		};
 	default:
 		return state;

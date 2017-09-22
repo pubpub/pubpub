@@ -9,6 +9,7 @@ import DashboardCollection from 'components/DashboardCollection/DashboardCollect
 import DashboardCollectionEdit from 'components/DashboardCollectionEdit/DashboardCollectionEdit';
 import DashboardSite from 'components/DashboardSite/DashboardSite';
 import { getCollectionData } from 'actions/collection';
+import { putAppData } from 'actions/app';
 import { createPub } from 'actions/pubCreate';
 
 require('./dashboard.scss');
@@ -27,6 +28,7 @@ class Dashboard extends Component {
 	constructor(props) {
 		super(props);
 		this.handleCreatePub = this.handleCreatePub.bind(this);
+		this.handleSiteSave = this.handleSiteSave.bind(this);
 	}
 	componentWillMount() {
 		this.dispatchGetCollectionData(this.props);
@@ -61,6 +63,9 @@ class Dashboard extends Component {
 	handleCreatePub(collectionId) {
 		const communityId = this.props.appData.data.id;
 		this.props.dispatch(createPub(collectionId, communityId));
+	}
+	handleSiteSave(siteObject) {
+		this.props.dispatch(putAppData(siteObject));
 	}
 
 	render() {
@@ -121,7 +126,14 @@ class Dashboard extends Component {
 											</div>
 										);
 									case 'site':
-										return <DashboardSite appData={appData} />;
+										return (
+											<DashboardSite
+												appData={appData}
+												onSave={this.handleSiteSave}
+												isLoading={this.props.appData.putIsLoading}
+												error={this.props.appData.putError}
+											/>
+										);
 									default:
 										if (activeMode === 'edit') {
 											return <DashboardCollectionEdit collectionData={collectionData} />;
