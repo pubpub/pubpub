@@ -22,7 +22,6 @@ const defaultProps = {
 
 const DashboardCollection = function(props) {
 	const data = props.collectionData;
-
 	const pubs = data.pubs || [];
 	const sections = [
 		{ title: 'Title', param: 'title', className: 'title' },
@@ -43,8 +42,10 @@ const DashboardCollection = function(props) {
 		return (
 			<div className={'dashboard-collection'}>
 				<div className={'content-buttons'}>
-					<a className={'pt-button'}>Edit Collection</a>
-					<button type={'button'} className={'pt-button'}>Create Pub in Collection</button>
+					<a className={'pt-button'}>Edit {data.isPage ? 'Page' : 'Collection'}</a>
+					{!data.isPage &&
+						<button type={'button'} className={'pt-button'}>Create Pub in Collection</button>
+					}
 				</div>
 				<h1 className={'content-title'}>{data.title}</h1>
 				<DashboardCollectionLoading />
@@ -54,14 +55,16 @@ const DashboardCollection = function(props) {
 	return (
 		<div className={'dashboard-collection'}>
 			<div className={'content-buttons'}>
-				<Link to={`/dashboard/${data.slug}/edit`} className={'pt-button'}>Edit Collection</Link>
-				<Button
-					type={'button'}
-					className={'pt-button'}
-					loading={props.createPubLoading}
-					onClick={handleCreatePub}
-					text={'Create Pub in Collection'}
-				/>
+				<Link to={`/dashboard/${data.slug}/edit`} className={'pt-button'}>Edit {data.isPage ? 'Page' : 'Collection'}</Link>
+				{!data.isPage &&
+					<Button
+						type={'button'}
+						className={'pt-button'}
+						loading={props.createPubLoading}
+						onClick={handleCreatePub}
+						text={'Create Pub in Collection'}
+					/>
+				}
 			</div>
 
 			<h1 className={'content-title'}>{data.title}</h1>
@@ -96,7 +99,7 @@ const DashboardCollection = function(props) {
 				}
 			</div>
 
-			{pubs.length && !data.isPage &&
+			{!!pubs.length && !data.isPage &&
 				<table>
 					<thead className={'table-header'}>
 						<tr>

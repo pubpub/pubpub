@@ -4,6 +4,8 @@ import { Button } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
 import ImageUpload from 'components/ImageUpload/ImageUpload';
 
+require('./dashboardSite.scss');
+
 const propTypes = {
 	appData: PropTypes.object.isRequired,
 	error: PropTypes.string,
@@ -23,7 +25,7 @@ class DashboardSite extends Component {
 			title: props.appData.title,
 			subdomain: props.appData.subdomain,
 			description: props.appData.description,
-			avatar: props.appData.avatar,
+			// avatar: props.appData.avatar,
 			favicon: props.appData.favicon,
 			smallHeaderLogo: props.appData.smallHeaderLogo,
 			largeHeaderLogo: props.appData.largeHeaderLogo,
@@ -33,7 +35,7 @@ class DashboardSite extends Component {
 		this.handleTitleChange = this.handleTitleChange.bind(this);
 		this.handleSubdomainChange = this.handleSubdomainChange.bind(this);
 		this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
-		this.handleAvatarChange = this.handleAvatarChange.bind(this);
+		// this.handleAvatarChange = this.handleAvatarChange.bind(this);
 		this.handleFaviconChange = this.handleFaviconChange.bind(this);
 		this.handleSmallHeaderLogoChange = this.handleSmallHeaderLogoChange.bind(this);
 		this.handleLargeHeaderLogoChange = this.handleLargeHeaderLogoChange.bind(this);
@@ -50,9 +52,9 @@ class DashboardSite extends Component {
 	handleDescriptionChange(evt) {
 		this.setState({ description: evt.target.value.substring(0, 280).replace(/\n/g, ' ') });
 	}
-	handleAvatarChange(val) {
-		this.setState({ avatar: val });
-	}
+	// handleAvatarChange(val) {
+	// 	this.setState({ avatar: val });
+	// }
 	handleFaviconChange(val) {
 		this.setState({ favicon: val });
 	}
@@ -77,7 +79,7 @@ class DashboardSite extends Component {
 	}
 	render() {
 		return (
-			<div>
+			<div className={'dashboard-site'}>
 				<h1 className={'content-title'}>Site</h1>
 				<InputField
 					label={'Title'}
@@ -100,30 +102,37 @@ class DashboardSite extends Component {
 					value={this.state.description}
 					onChange={this.handleDescriptionChange}
 				/>
-				<ImageUpload
+				{/* <ImageUpload
 					htmlFor={'avatar-upload'}
 					label={'Avatar Image'}
 					defaultImage={this.state.avatar}
 					onNewImage={this.handleAvatarChange}
 					useCrop={true}
-				/>
+				/> */}
 				<ImageUpload
 					htmlFor={'favicon-upload'}
 					label={'Favicon'}
 					defaultImage={this.state.favicon}
 					onNewImage={this.handleFaviconChange}
+					helperText={'Used for browser icons. Must be square.'}
 				/>
 				<ImageUpload
 					htmlFor={'small-header-logo-upload'}
 					label={'Small Header Logo'}
 					defaultImage={this.state.smallHeaderLogo}
+					height={50}
+					width={125}
 					onNewImage={this.handleSmallHeaderLogoChange}
+					helperText={'Used in the header bar. Suggested height: 40px'}
 				/>
 				<ImageUpload
 					htmlFor={'large-header-logo-upload'}
 					label={'Large Header Logo'}
 					defaultImage={this.state.largeHeaderLogo}
+					height={60}
+					width={150}
 					onNewImage={this.handleLargeHeaderLogoChange}
+					helperText={'Used on the landing page. Suggested height: 200px'}
 				/>
 				<ImageUpload
 					htmlFor={'large-header-background-upload'}
@@ -131,7 +140,7 @@ class DashboardSite extends Component {
 					defaultImage={this.state.largeHeaderBackground}
 					onNewImage={this.handleLargeHeaderBackgroundChange}
 					width={150}
-					helperText={'Suggested minimum dimensions: 1200px x 800px.'}
+					helperText={'Used on the landing page. Suggested minimum dimensions: 1200px x 800px.'}
 				/>
 				<InputField
 					label={'Accent Color'}

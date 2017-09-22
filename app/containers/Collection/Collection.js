@@ -59,7 +59,9 @@ class Collection extends Component {
 			<div>
 				<div className={'collection'}>
 					<Helmet>
-						<title>{title}</title>
+						{title !== 'Home' &&
+							<title>{title}</title>
+						}
 					</Helmet>
 
 					<div className={'container'}>
@@ -81,7 +83,6 @@ class Collection extends Component {
 						{!!collectionData.id &&
 							<div>
 								{collectionData.pubs.map((pub, index)=> {
-									console.log(pub);
 									return (
 										<div className={'row'} key={`pub-${pub.id}`}>
 											<div className={'col-12'}>

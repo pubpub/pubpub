@@ -11,6 +11,12 @@ import {
 	PUT_APP_DATA_FAIL,
 } from 'actions/app';
 
+import {
+	POST_COLLECTION_LOAD,
+	POST_COLLECTION_SUCCESS,
+	POST_COLLECTION_FAIL,
+} from 'actions/collection';
+
 /* ------------------- */
 // Define Default State
 /* ------------------- */
@@ -20,6 +26,8 @@ const defaultState = {
 	error: undefined,
 	putIsLoading: false,
 	putError: undefined,
+	postCollectionIsLoading: false,
+	postCollectionError: undefined,
 };
 
 /* ----------------------------------------- */
@@ -69,6 +77,31 @@ export default function reducer(state = defaultState, action) {
 			...state,
 			putIsLoading: false,
 			putError: action.error,
+		};
+	/* POST Collection*/
+	case POST_COLLECTION_LOAD:
+		return {
+			...state,
+			postCollectionIsLoading: true,
+		};
+	case POST_COLLECTION_SUCCESS:
+		return {
+			data: {
+				...state.data,
+				navigation: action.result.navigation,
+				collections: [
+					...state.data.collections,
+					action.result.collection,
+				]
+			},
+			postCollectionIsLoading: false,
+			postCollectionError: undefined
+		};
+	case POST_COLLECTION_FAIL:
+		return {
+			...state,
+			postCollectionIsLoading: false,
+			postCollectionError: action.error
 		};
 	default:
 		return state;

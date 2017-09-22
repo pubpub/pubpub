@@ -10,6 +10,10 @@ export const GET_COLLECTION_DATA_LOAD = 'collection/GET_COLLECTION_DATA_LOAD';
 export const GET_COLLECTION_DATA_SUCCESS = 'collection/GET_COLLECTION_DATA_SUCCESS';
 export const GET_COLLECTION_DATA_FAIL = 'collection/GET_COLLECTION_DATA_FAIL';
 
+export const POST_COLLECTION_LOAD = 'collection/POST_COLLECTION_LOAD';
+export const POST_COLLECTION_SUCCESS = 'collection/POST_COLLECTION_SUCCESS';
+export const POST_COLLECTION_FAIL = 'collection/POST_COLLECTION_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -26,6 +30,32 @@ export function getCollectionData(collectionId) {
 		})
 		.catch((error) => {
 			dispatch({ type: GET_COLLECTION_DATA_FAIL, error });
+		});
+	};
+}
+
+export function postCollection({ communityId, title, slug, isPage, description }) {
+	return (dispatch) => {
+		dispatch({ type: POST_COLLECTION_LOAD });
+		return apiFetch('/collections', {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				communityId,
+				title,
+				slug,
+				isPage,
+				description,
+			})
+		})
+		.then((result) => {
+			dispatch({ type: POST_COLLECTION_SUCCESS, result });
+		})
+		.catch((error) => {
+			dispatch({ type: POST_COLLECTION_FAIL, error });
 		});
 	};
 }

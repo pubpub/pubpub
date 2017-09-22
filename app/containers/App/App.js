@@ -71,8 +71,8 @@ class App extends Component {
 				<Helmet>
 					<title>{appData.title}</title>
 					<meta name="description" content={appData.description} />
-					<link rel="icon" type="image/png" sizes="192x192" href={appData.avatar} />
-					<link rel="apple-touch-icon" type="image/png" sizes="192x192" href={appData.avatar} />
+					<link rel="icon" type="image/png" sizes="192x192" href={appData.favicon} />
+					<link rel="apple-touch-icon" type="image/png" sizes="192x192" href={appData.favicon} />
 				</Helmet>
 
 				{appData.accentColor &&

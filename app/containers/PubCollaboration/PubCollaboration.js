@@ -7,6 +7,8 @@ import { withRouter, Link } from 'react-router-dom';
 import { Editor } from '@pubpub/editor';
 import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
 import Collaborative from '@pubpub/editor/addons/Collaborative';
+import Image from '@pubpub/editor/addons/Image';
+import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import { NonIdealState } from '@blueprintjs/core';
 import Overlay from 'components/Overlay/Overlay';
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
@@ -19,6 +21,7 @@ import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import { getPubData, putPubData, postDiscussion, postCollaborator, putCollaborator, deleteCollaborator, postVersion } from 'actions/pub';
 import { nestDiscussionsToThreads } from 'utilities';
+import { s3Upload } from 'utilities';
 
 require('./pubCollaboration.scss');
 require('components/PubBody/pubBody.scss');
@@ -266,6 +269,7 @@ class PubCollaboration extends Component {
 										{/* pubBody */}
 										<Editor placeholder={'Begin writing here...'} ref={(ref)=> { this.editorRef = ref; }}>
 											<FormattingMenu />
+											<InsertMenu />
 											<Collaborative
 												// ref={(collab) => { this.collab = collab; }}
 												firebaseConfig={{
@@ -279,6 +283,7 @@ class PubCollaboration extends Component {
 												clientID={`user-${loginData.id}-${Math.ceil(Math.random() * 2500)}`}
 												editorKey={`pub-${pubData.id}`}
 											/>
+											<Image handleFileUpload={s3Upload} />
 										</Editor>
 									</div>
 								</div>

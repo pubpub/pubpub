@@ -7,8 +7,9 @@ import { withRouter } from 'react-router-dom';
 import DashboardSide from 'components/DashboardSide/DashboardSide';
 import DashboardCollection from 'components/DashboardCollection/DashboardCollection';
 import DashboardCollectionEdit from 'components/DashboardCollectionEdit/DashboardCollectionEdit';
+import DashboardCreateCollection from 'components/DashboardCreateCollection/DashboardCreateCollection';
 import DashboardSite from 'components/DashboardSite/DashboardSite';
-import { getCollectionData } from 'actions/collection';
+import { getCollectionData, postCollection } from 'actions/collection';
 import { putAppData } from 'actions/app';
 import { createPub } from 'actions/pubCreate';
 
@@ -29,6 +30,7 @@ class Dashboard extends Component {
 		super(props);
 		this.handleCreatePub = this.handleCreatePub.bind(this);
 		this.handleSiteSave = this.handleSiteSave.bind(this);
+		this.handleCollectionCreate = this.handleCollectionCreate.bind(this);
 	}
 	componentWillMount() {
 		this.dispatchGetCollectionData(this.props);
@@ -39,6 +41,9 @@ class Dashboard extends Component {
 		}
 		if (!this.props.pubCreateData.data && nextProps.pubCreateData.data) {
 			this.props.history.push(`/pub/${nextProps.pubCreateData.data.newPubSlug}/collaborate`);
+		}
+		if (this.props.appData.data && this.props.appData.data.subdomain !== nextProps.appData.data.subdomain) {
+			window.location.href = window.location.href.replace(this.props.appData.data.subdomain, nextProps.appData.data.subdomain);
 		}
 	}
 
@@ -67,7 +72,14 @@ class Dashboard extends Component {
 	handleSiteSave(siteObject) {
 		this.props.dispatch(putAppData(siteObject));
 	}
-
+	handleCollectionCreate(collectionObject) {
+		console.log(collectionObject);
+		const communityId = this.props.appData.data.id;
+		this.props.dispatch(postCollection({
+			...collectionObject,
+			communityId: communityId,
+		}));
+	}
 	render() {
 		const appData = this.props.appData.data || {};
 		const collectionData = this.props.collectionData.data || {};
@@ -90,7 +102,10 @@ class Dashboard extends Component {
 		if (activeSlug === 'activity') { activeItem.title = 'Activity'; }
 		if (activeSlug === 'team') { activeItem.title = 'Team'; }
 		if (activeSlug === 'site') { activeItem.title = 'Site'; }
+		if (activeSlug === 'page') { activeItem.title = 'New Page'; }
+		if (activeSlug === 'collection') { activeItem.title = 'New Collection'; }
 		collectionData.title = activeItem.title;
+		collectionData.isPage = activeItem.isPage;
 		return (
 			<div className={'dashboard'}>
 
@@ -134,6 +149,30 @@ class Dashboard extends Component {
 												error={this.props.appData.putError}
 											/>
 										);
+									case 'page':
+										if (activeMode === 'create') {
+											return (
+												<DashboardCreateCollection
+													isPage={true}
+													onCreate={this.handleCollectionCreate}
+													isLoading={this.props.appData.postCollectionIsLoading}
+													error={this.props.appData.postCollectionError}
+												/>
+											);
+										}
+										break;
+									case 'collection':
+										if (activeMode === 'create') {
+											return (
+												<DashboardCreateCollection
+													isPage={false}
+													onCreate={this.handleCollectionCreate}
+													isLoading={this.props.appData.postCollectionIsLoading}
+													error={this.props.appData.postCollectionError}
+												/>
+											);
+										}
+										break;
 									default:
 										if (activeMode === 'edit') {
 											return <DashboardCollectionEdit collectionData={collectionData} />;

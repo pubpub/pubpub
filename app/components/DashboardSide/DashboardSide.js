@@ -20,12 +20,12 @@ const defaultProps = {
 // Empty set
 const DashboardSide = function(props) {
 	const communityControls = [
-		{
-			title: 'Activity',
-			icon: 'pt-icon-pulse',
-			slug: 'activity',
-			id: 0,
-		},
+		// {
+		// 	title: 'Activity',
+		// 	icon: 'pt-icon-pulse',
+		// 	slug: 'activity',
+		// 	id: 0,
+		// },
 		{
 			title: 'Site',
 			icon: 'pt-icon-application',
@@ -54,7 +54,7 @@ const DashboardSide = function(props) {
 					})}
 
 					<li className={'pt-menu-header'}>
-						<button type="button" className="pt-button pt-icon-plus pt-small pt-minimal title-button" />
+						<Link to={'/dashboard/page/create'} className="pt-button pt-icon-plus pt-small pt-minimal title-button" />
 						<h6>Pages</h6>
 					</li>
 					{props.pages.sort((foo, bar)=> {
@@ -79,7 +79,7 @@ const DashboardSide = function(props) {
 					}
 
 					<li className={'pt-menu-header'}>
-						<button type="button" className="pt-button pt-icon-plus pt-small pt-minimal title-button" />
+						<Link to={'/dashboard/collection/create'} className="pt-button pt-icon-plus pt-small pt-minimal title-button" />
 						<h6>Collections</h6>
 					</li>
 
