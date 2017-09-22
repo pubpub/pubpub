@@ -11,12 +11,13 @@ import { NonIdealState } from '@blueprintjs/core';
 import Overlay from 'components/Overlay/Overlay';
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
+import PubCollabPublish from 'components/PubCollabPublish/PubCollabPublish';
 import PubCollabDetails from 'components/PubCollabDetails/PubCollabDetails';
 import PubCollabCollaborators from 'components/PubCollabCollaborators/PubCollabCollaborators';
 import DiscussionNew from 'components/DiscussionNew/DiscussionNew';
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
-import { getPubData, putPubData, postDiscussion, postCollaborator, putCollaborator, deleteCollaborator } from 'actions/pub';
+import { getPubData, putPubData, postDiscussion, postCollaborator, putCollaborator, deleteCollaborator, postVersion } from 'actions/pub';
 import { nestDiscussionsToThreads } from 'utilities';
 
 require('./pubCollaboration.scss');
@@ -40,6 +41,7 @@ class PubCollaboration extends Component {
 			isDetailsOpen: false,
 			isCollaboratorsOpen: false,
 		};
+		this.editorRef = undefined;
 		this.togglePublish = this.togglePublish.bind(this);
 		this.toggleShare = this.toggleShare.bind(this);
 		this.toggleDetails = this.toggleDetails.bind(this);
@@ -51,6 +53,7 @@ class PubCollaboration extends Component {
 		this.handleCollaboratorDelete = this.handleCollaboratorDelete.bind(this);
 		this.onOpenShare = this.onOpenShare.bind(this);
 		this.onOpenCollaborators = this.onOpenCollaborators.bind(this);
+		this.handlePublish = this.handlePublish.bind(this);
 	}
 	componentWillMount() {
 		this.props.dispatch(getPubData(this.props.match.params.slug));
@@ -67,6 +70,9 @@ class PubCollaboration extends Component {
 			const oldSlug = this.props.match.params.slug;
 			const newSlug = nextProps.pubData.data.slug;
 			this.props.history.replace(`${nextProps.location.pathname.replace(`/pub/${oldSlug}`, `/pub/${newSlug}`)}${nextProps.location.search}`);
+		}
+		if (this.props.pubData.postVersionIsLoading && !nextProps.pubData.postVersionIsLoading) {
+			this.props.history.push(nextProps.location.pathname.replace('/collaborate', ''));
 		}
 	}
 
@@ -118,6 +124,12 @@ class PubCollaboration extends Component {
 			isCollaboratorsOpen: true,
 			isPublishOpen: false,
 		});
+	}
+	handlePublish() {
+		this.props.dispatch((postVersion({
+			pubId: this.props.pubData.data.id,
+			content: this.editorRef.view.state.doc.toJSON(),
+		})));
 	}
 	render() {
 		const queryObject = queryString.parse(this.props.location.search);
@@ -247,7 +259,7 @@ class PubCollaboration extends Component {
 								<div className={'content-panel'}>
 									<div className={'pub-body'}>
 										{/* pubBody */}
-										<Editor placeholder={'Begin writing here'}>
+										<Editor placeholder={'Begin writing here'} ref={(ref)=> { this.editorRef = ref; }}>
 											<FormattingMenu />
 											<Collaborative
 												// ref={(collab) => { this.collab = collab; }}
@@ -272,8 +284,11 @@ class PubCollaboration extends Component {
 				</div>
 
 				<Overlay isOpen={this.state.isPublishOpen} onClose={this.togglePublish}>
-					<h5>Publish Snapshot</h5>
-					<button type={'button'} className={'pt-button pt-intent-primary'}>Publish Snapshot</button>
+					<PubCollabPublish
+						pubData={pubData}
+						onPublish={this.handlePublish}
+						isLoading={this.props.pubData.postVersionIsLoading}
+					/>
 				</Overlay>
 				<Overlay isOpen={this.state.isShareOpen} onClose={this.toggleShare}>
 					<PubCollabShare

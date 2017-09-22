@@ -28,7 +28,17 @@ class PubPresentation extends Component {
 	render() {
 		const pubData = this.props.pubData.data || {};
 		if (!pubData.id) { return <PubPresentationLoading />; }
-
+		const versionQuery = undefined;
+		let activeVersion;
+		pubData.versions.sort((foo, bar)=> {
+			if (foo.createdAt < bar.createdAt) { return 1; }
+			if (foo.createdAt > bar.createdAt) { return -1; }
+			return 0;
+		}).forEach((item, index)=> {
+			if (!versionQuery && index === 0) { item.isActive = true; activeVersion = item; }
+			if (versionQuery && versionQuery === item.id) { item.isActive = true; activeVersion = item; }
+		});
+		
 		return (
 			<div className={'pub-presentation'}>
 
@@ -55,7 +65,7 @@ class PubPresentation extends Component {
 				/>
 
 				{/* <PubBody content={this.props.pubData.data.body} /> */}
-				<PubBody content={<div>this.props.pubData.data.body</div>} />
+				<PubBody content={activeVersion.content} />
 
 				<div className={'license-wrapper'}>
 					CCBY 4.0

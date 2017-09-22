@@ -25,6 +25,10 @@ import {
 	DELETE_COLLABORATOR_LOAD,
 	DELETE_COLLABORATOR_SUCCESS,
 	DELETE_COLLABORATOR_FAIL,
+
+	POST_VERSION_LOAD,
+	POST_VERSION_SUCCESS,
+	POST_VERSION_FAIL,
 } from 'actions/pub';
 
 /* ------------------- */
@@ -35,6 +39,7 @@ const defaultState = {
 	isLoading: undefined,
 	putPubIsLoading: undefined,
 	postDiscussionIsLoading: undefined,
+	postVersionIsLoading: undefined,
 	error: undefined,
 };
 
@@ -106,6 +111,23 @@ export default function reducer(state = defaultState, action) {
 			...state,
 			postDiscussionIsLoading: false,
 		};
+	/* POST Collaborator Data */
+	/* -------------------- */
+	case POST_COLLABORATOR_LOAD:
+		return state;
+	case POST_COLLABORATOR_SUCCESS:
+		return {
+			...state,
+			data: {
+				...state.data,
+				contributors: [
+					...state.data.contributors,
+					action.result,
+				]
+			}
+		};
+	case POST_COLLABORATOR_FAIL:
+		return state;
 	/* PUT Collaborator Data */
 	/* -------------------- */
 	case PUT_COLLABORATOR_LOAD:
@@ -149,6 +171,23 @@ export default function reducer(state = defaultState, action) {
 		};
 	case DELETE_COLLABORATOR_FAIL:
 		return state;
+	/* POST Version Data */
+	/* -------------------- */
+	case POST_VERSION_LOAD:
+		return {
+			...state,
+			postVersionIsLoading: true,
+		};
+	case POST_VERSION_SUCCESS:
+		return {
+			...state,
+			postVersionIsLoading: false,
+		};
+	case POST_VERSION_FAIL:
+		return {
+			...state,
+			postVersionIsLoading: false,
+		};
 	default:
 		return state;
 	}

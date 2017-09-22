@@ -49,7 +49,7 @@ class PubCollabShare extends Component {
 				<h5>Share Pub</h5>
 				<div className={'intro'}>Use this panel to manage permissions and access to the pub. To edit who is recognized and listed for working on this pub open the <span onClick={this.props.onOpenCollaborators}>Collaborators Panel</span>.</div>
 				<PubCollabDropdownPrivacy />
-			<PubCollabDropdownPermissions />
+				<PubCollabDropdownPermissions />
 
 				<UserAutocomplete onSelect={this.handleUserSelect} allowCustomUser={true}/>
 				<div className={'collaborators-wrapper'}>

@@ -14,21 +14,25 @@ export const PUT_PUB_DATA_LOAD = 'pub/PUT_PUB_DATA_LOAD';
 export const PUT_PUB_DATA_SUCCESS = 'pub/PUT_PUB_DATA_SUCCESS';
 export const PUT_PUB_DATA_FAIL = 'pub/PUT_PUB_DATA_FAIL';
 
-export const POST_DISCUSSION_LOAD = 'pub/POST_DISCUSSION_DATA_LOAD';
-export const POST_DISCUSSION_SUCCESS = 'pub/POST_DISCUSSION_DATA_SUCCESS';
-export const POST_DISCUSSION_FAIL = 'pub/POST_DISCUSSION_DATA_FAIL';
+export const POST_DISCUSSION_LOAD = 'pub/POST_DISCUSSION_LOAD';
+export const POST_DISCUSSION_SUCCESS = 'pub/POST_DISCUSSION_SUCCESS';
+export const POST_DISCUSSION_FAIL = 'pub/POST_DISCUSSION_FAIL';
 
-export const POST_COLLABORATOR_LOAD = 'pub/POST_COLLABORATOR_DATA_LOAD';
-export const POST_COLLABORATOR_SUCCESS = 'pub/POST_COLLABORATOR_DATA_SUCCESS';
-export const POST_COLLABORATOR_FAIL = 'pub/POST_COLLABORATOR_DATA_FAIL';
+export const POST_COLLABORATOR_LOAD = 'pub/POST_COLLABORATOR_LOAD';
+export const POST_COLLABORATOR_SUCCESS = 'pub/POST_COLLABORATOR_SUCCESS';
+export const POST_COLLABORATOR_FAIL = 'pub/POST_COLLABORATOR_FAIL';
 
-export const PUT_COLLABORATOR_LOAD = 'pub/PUT_COLLABORATOR_DATA_LOAD';
-export const PUT_COLLABORATOR_SUCCESS = 'pub/PUT_COLLABORATOR_DATA_SUCCESS';
-export const PUT_COLLABORATOR_FAIL = 'pub/PUT_COLLABORATOR_DATA_FAIL';
+export const PUT_COLLABORATOR_LOAD = 'pub/PUT_COLLABORATOR_LOAD';
+export const PUT_COLLABORATOR_SUCCESS = 'pub/PUT_COLLABORATOR_SUCCESS';
+export const PUT_COLLABORATOR_FAIL = 'pub/PUT_COLLABORATOR_FAIL';
 
-export const DELETE_COLLABORATOR_LOAD = 'pub/DELETE_COLLABORATOR_DATA_LOAD';
-export const DELETE_COLLABORATOR_SUCCESS = 'pub/DELETE_COLLABORATOR_DATA_SUCCESS';
-export const DELETE_COLLABORATOR_FAIL = 'pub/DELETE_COLLABORATOR_DATA_FAIL';
+export const DELETE_COLLABORATOR_LOAD = 'pub/DELETE_COLLABORATOR_LOAD';
+export const DELETE_COLLABORATOR_SUCCESS = 'pub/DELETE_COLLABORATOR_SUCCESS';
+export const DELETE_COLLABORATOR_FAIL = 'pub/DELETE_COLLABORATOR_FAIL';
+
+export const POST_VERSION_LOAD = 'pub/POST_VERSION_LOAD';
+export const POST_VERSION_SUCCESS = 'pub/POST_VERSION_SUCCESS';
+export const POST_VERSION_FAIL = 'pub/POST_VERSION_FAIL';
 
 /*--------*/
 // Define Action creators
@@ -176,6 +180,29 @@ export function deleteCollaborator({ collaboratorId, pubId }) {
 		})
 		.catch((error) => {
 			dispatch({ type: DELETE_COLLABORATOR_FAIL, error });
+		});
+	};
+}
+
+export function postVersion({ pubId, content }) {
+	return (dispatch) => {
+		dispatch({ type: POST_VERSION_LOAD });
+		return apiFetch('/versions', {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				pubId,
+				content,
+			})
+		})
+		.then((result) => {
+			dispatch({ type: POST_VERSION_SUCCESS, result });
+		})
+		.catch((error) => {
+			dispatch({ type: POST_VERSION_FAIL, error });
 		});
 	};
 }

@@ -99,7 +99,9 @@ const DiscussionThread = function(props) {
 
 							</div>
 
-							<div className={'text'}><Editor initialContent={discussion.content} /></div>
+							<div className={'text'}>
+								<Editor initialContent={discussion.content} isReadOnly={true} />
+							</div>
 
 						</div>
 					);
