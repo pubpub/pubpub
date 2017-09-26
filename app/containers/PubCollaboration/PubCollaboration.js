@@ -31,6 +31,7 @@ const propTypes = {
 	dispatch: PropTypes.func.isRequired,
 	location: PropTypes.object.isRequired,
 	match: PropTypes.object.isRequired,
+	appData: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
 	loginData: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
@@ -56,6 +57,7 @@ class PubCollaboration extends Component {
 		this.handleCollaboratorUpdate = this.handleCollaboratorUpdate.bind(this);
 		this.handleCollaboratorDelete = this.handleCollaboratorDelete.bind(this);
 		this.onOpenShare = this.onOpenShare.bind(this);
+		this.onOpenDetails = this.onOpenDetails.bind(this);
 		this.onOpenCollaborators = this.onOpenCollaborators.bind(this);
 		this.handlePublish = this.handlePublish.bind(this);
 		this.focusEditor = this.focusEditor.bind(this);
@@ -118,6 +120,14 @@ class PubCollaboration extends Component {
 		this.setState({
 			isShareOpen: true,
 			isDetailsOpen: false,
+			isCollaboratorsOpen: false,
+			isPublishOpen: false,
+		});
+	}
+	onOpenDetails() {
+		this.setState({
+			isShareOpen: false,
+			isDetailsOpen: true,
 			isCollaboratorsOpen: false,
 			isPublishOpen: false,
 		});
@@ -302,11 +312,14 @@ class PubCollaboration extends Component {
 					<PubCollabPublish
 						pubData={pubData}
 						onPublish={this.handlePublish}
+						onPutPub={this.handleDetailsSave}
 						isLoading={this.props.pubData.postVersionIsLoading}
+						onOpenDetails={this.onOpenDetails}
 					/>
 				</Overlay>
 				<Overlay isOpen={this.state.isShareOpen} onClose={this.toggleShare}>
 					<PubCollabShare
+						appData={this.props.appData.data}
 						pubData={pubData}
 						onPutPub={this.handleDetailsSave}
 						onOpenCollaborators={this.onOpenCollaborators}
@@ -338,6 +351,7 @@ class PubCollaboration extends Component {
 
 PubCollaboration.propTypes = propTypes;
 export default withRouter(connect(state => ({
+	appData: state.app,
 	pubData: state.pub,
 	loginData: state.login,
 }))(PubCollaboration));

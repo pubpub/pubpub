@@ -15,11 +15,15 @@ storiesOf('PubCollabShare', module)
 		<div className={'pt-card pt-elevation-2'} style={wrapperStyle}>
 			<AccentStyle {...accentDataDark} />
 			<PubCollabShare
+				appData={{
+					title: 'Viral Communications',
+				}}
 				pubData={{
 					id: '1d463b1a-95f9-4dcf-bedc-785f9b1e4728',
 					editHash: '7tojd6d7',
 					suggestHash: '9x33d2l9',
 					slug: 'article-slug',
+					adminPermissions: 'suggest',
 					contributors: [
 						{
 							id: '105dd033-446a-4abe-9243-d1289b944af6',

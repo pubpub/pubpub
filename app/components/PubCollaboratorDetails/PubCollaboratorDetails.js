@@ -28,6 +28,7 @@ class PubCollaboratorDetails extends Component {
 		this.state = {
 			name: props.collaboratorData.name,
 			isAuthor: props.collaboratorData.Contributor.isAuthor,
+			permissions: props.collaboratorData.Contributor.permissions,
 		};
 		this.handleChecked = this.handleChecked.bind(this);
 		this.handleRemoveClick = this.handleRemoveClick.bind(this);
@@ -51,6 +52,7 @@ class PubCollaboratorDetails extends Component {
 	}
 
 	handlePermissionsChange(permissionsValue) {
+		this.setState({ permissions: permissionsValue });
 		this.props.onCollaboratorUpdate({
 			collaboratorId: this.props.collaboratorData.Contributor.id,
 			pubId: this.props.pubId,
@@ -65,7 +67,7 @@ class PubCollaboratorDetails extends Component {
 		const avatar = <Avatar width={50} userInitials={data.initials} userAvatar={data.avatar} />;
 		const name = <span className={'name'}>{data.Contributor.name || data.fullName}</span>;
 		return (
-			<div className={'pub-collaborator-details'}>
+			<div className={`pub-collaborator-details ${this.props.isPermissionsMode ? 'permission-mode' : ''}`}>
 				<div className={'avatar-wrapper'}>
 					{data.slug
 						? <Link to={`/user/${data.slug}`}>
@@ -92,16 +94,16 @@ class PubCollaboratorDetails extends Component {
 							List as Author
 						</Checkbox>
 					}
-					{this.props.isPermissionsMode &&
-						<PubCollabDropdownPermissions
-							value={data.Contributor.permissions}
-							onChange={this.handlePermissionsChange}
-						/>
-					}
 
 				</div>
 				<div className={'remove-wrapper'}>
 					<button className={'pt-button pt-minimal'} role={'button'} onClick={this.handleRemoveClick}>Remove</button>
+					{this.props.isPermissionsMode &&
+						<PubCollabDropdownPermissions
+							value={this.state.permissions}
+							onChange={this.handlePermissionsChange}
+						/>
+					}
 				</div>
 			</div>
 		);

@@ -46,7 +46,7 @@ const PubCollabDropdownPermissions = function(props) {
 	};
 
 	return (
-		<DropdownButton label={items[props.value].title} icon={items[props.value].icon}>
+		<DropdownButton label={items[props.value].title} icon={items[props.value].icon} isRightAligned={true}>
 			<div className={'pt-menu'}>
 				{Object.keys(items).map((key, index, array)=> {
 					const item = items[key];

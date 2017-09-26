@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
 import DropdownRichItem from 'components/DropdownRichItem/DropdownRichItem';
 
+require('./pubCollabDropdownPrivacy.scss');
+
 const propTypes = {
 	value: PropTypes.string,
 	onChange: PropTypes.func
@@ -38,23 +40,27 @@ const PubCollabDropdownPrivacy = function(props) {
 		},
 	};
 	return (
-		<DropdownButton label={items[props.value].title} icon={items[props.value].icon}>
-			<div className={'pt-menu'}>
-				{Object.keys(items).map((key, index, array)=> {
-					const item = items[key];
-					return (
-						<DropdownRichItem
-							key={`${item.value}-option-${keySuffix}`}
-							title={item.title}
-							description={item.description}
-							icon={item.icon}
-							onClick={item.onClick}
-							hideBottomBorder={index === array.length - 1}
-						/>
-					);
-				})}
-			</div>
-		</DropdownButton>
+		<div className={'pub-collab-dropdown-privacy'}>
+			<h6>Collaboration Mode</h6>
+			<DropdownButton label={items[props.value].title} icon={items[props.value].icon}>
+				<div className={'pt-menu'}>
+					{Object.keys(items).map((key, index, array)=> {
+						const item = items[key];
+						return (
+							<DropdownRichItem
+								key={`${item.value}-option-${keySuffix}`}
+								title={item.title}
+								description={item.description}
+								icon={item.icon}
+								onClick={item.onClick}
+								hideBottomBorder={index === array.length - 1}
+							/>
+						);
+					})}
+				</div>
+			</DropdownButton>
+			<div className={'description'}>{items[props.value].description}</div>
+		</div>
 	);
 };
 

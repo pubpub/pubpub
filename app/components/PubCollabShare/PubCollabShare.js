@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import UserAutocomplete from 'components/UserAutocomplete/UserAutocomplete';
+import PubAdminPermissions from 'components/PubAdminPermissions/PubAdminPermissions';
 import PubCollaboratorDetails from 'components/PubCollaboratorDetails/PubCollaboratorDetails';
 import PubCollabDropdownPrivacy from 'components/PubCollabDropdownPrivacy/PubCollabDropdownPrivacy';
 
 require('./pubCollabShare.scss');
 
 const propTypes = {
+	appData: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
 	onOpenCollaborators: PropTypes.func,
 	onCollaboratorAdd: PropTypes.func,
@@ -58,7 +60,7 @@ class PubCollabShare extends Component {
 		return (
 			<div className={'pub-collab-share'}>
 				<h5>Share Pub</h5>
-				<div className={'intro'}>Use this panel to manage permissions and access to the pub. To edit who is recognized and listed for working on this pub open the <span role={'button'} onClick={this.props.onOpenCollaborators}>Collaborators Panel</span>.</div>
+				<div className={'intro'}>Use this panel to manage permissions and access to the pub. To edit who is recognized and listed for working on this pub open the <span tabIndex={-1} role={'button'} onClick={this.props.onOpenCollaborators}>Collaborators Panel</span>.</div>
 
 				<div className={'wrapper'}>
 					<div className={'share-link'}>
@@ -82,30 +84,37 @@ class PubCollabShare extends Component {
 					/>
 				</div>
 
-				<div className={'wrapper'}>
+				<div>
+					<h6>Add Collaborators</h6>
 					<UserAutocomplete onSelect={this.handleUserSelect} allowCustomUser={true} />
-				</div>
-				<div className={'collaborators-wrapper'}>
-					{this.props.pubData.contributors.filter((item)=> {
-						return item.slug;
-					}).sort((foo, bar)=> {
-						if (foo.Contributor.order < bar.Contributor.order) { return 1; }
-						if (foo.Contributor.order > bar.Contributor.order) { return -1; }
-						if (foo.id < bar.id) { return 1; }
-						if (foo.id > bar.id) { return -1; }
-						return 0;
-					}).map((item)=> {
-						return (
-							<PubCollaboratorDetails
-								key={`details-${item.id}`}
-								pubId={this.props.pubData.id}
-								collaboratorData={item}
-								onCollaboratorUpdate={this.props.onCollaboratorUpdate}
-								onCollaboratorDelete={this.props.onCollaboratorDelete}
-								isPermissionsMode={true}
-							/>
-						);
-					})}
+
+					<div className={'collaborators-wrapper'}>
+						<PubAdminPermissions
+							appData={this.props.appData}
+							onSave={this.props.onPutPub}
+							pubData={pubData}
+						/>
+						{this.props.pubData.contributors.filter((item)=> {
+							return item.slug;
+						}).sort((foo, bar)=> {
+							if (foo.Contributor.order < bar.Contributor.order) { return 1; }
+							if (foo.Contributor.order > bar.Contributor.order) { return -1; }
+							if (foo.Contributor.createdAt < bar.Contributor.createdAt) { return 1; }
+							if (foo.Contributor.createdAt > bar.Contributor.createdAt) { return -1; }
+							return 0;
+						}).map((item)=> {
+							return (
+								<PubCollaboratorDetails
+									key={`details-${item.id}`}
+									pubId={this.props.pubData.id}
+									collaboratorData={item}
+									onCollaboratorUpdate={this.props.onCollaboratorUpdate}
+									onCollaboratorDelete={this.props.onCollaboratorDelete}
+									isPermissionsMode={true}
+								/>
+							);
+						})}
+					</div>
 				</div>
 
 			</div>
