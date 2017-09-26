@@ -308,6 +308,7 @@ class PubCollaboration extends Component {
 				<Overlay isOpen={this.state.isShareOpen} onClose={this.toggleShare}>
 					<PubCollabShare
 						pubData={pubData}
+						onPutPub={this.handleDetailsSave}
 						onOpenCollaborators={this.onOpenCollaborators}
 						onCollaboratorAdd={this.handleCollaboratorAdd}
 						onCollaboratorUpdate={this.handleCollaboratorUpdate}

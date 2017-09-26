@@ -12,6 +12,7 @@ const propTypes = {
 	onCollaboratorAdd: PropTypes.func,
 	onCollaboratorUpdate: PropTypes.func,
 	onCollaboratorDelete: PropTypes.func,
+	onPutPub: PropTypes.func,
 	// isLoading: PropTypes.bool,
 };
 
@@ -20,6 +21,7 @@ const defaultProps = {
 	onCollaboratorAdd: ()=>{},
 	onCollaboratorUpdate: ()=>{},
 	onCollaboratorDelete: ()=>{},
+	onPutPub: ()=>{},
 	// isLoading: false,
 };
 
@@ -45,6 +47,9 @@ class PubCollabShare extends Component {
 	}
 	handleCollaborationModeChange(value) {
 		this.setState({ collaborationMode: value });
+		this.props.onPutPub({
+			collaborationMode: value,
+		});
 	}
 
 	render() {

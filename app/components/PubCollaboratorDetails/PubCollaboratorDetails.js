@@ -63,7 +63,7 @@ class PubCollaboratorDetails extends Component {
 		if (!data) { return null; }
 
 		const avatar = <Avatar width={50} userInitials={data.initials} userAvatar={data.avatar} />;
-		const name = <div className={'name'}>{data.Contributor.name || data.fullName}</div>;
+		const name = <span className={'name'}>{data.Contributor.name || data.fullName}</span>;
 		return (
 			<div className={'pub-collaborator-details'}>
 				<div className={'avatar-wrapper'}>
