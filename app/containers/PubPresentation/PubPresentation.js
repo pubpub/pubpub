@@ -7,6 +7,7 @@ import { withRouter } from 'react-router-dom';
 import PubPresHeader from 'components/PubPresHeader/PubPresHeader';
 import PubPresDetails from 'components/PubPresDetails/PubPresDetails';
 import PubBody from 'components/PubBody/PubBody';
+import License from 'components/License/License';
 import Footer from 'components/Footer/Footer';
 import PubPresentationLoading from './PubPresentationLoading';
 
@@ -38,7 +39,7 @@ class PubPresentation extends Component {
 			if (!versionQuery && index === 0) { item.isActive = true; activeVersion = item; }
 			if (versionQuery && versionQuery === item.id) { item.isActive = true; activeVersion = item; }
 		});
-		
+
 		return (
 			<div className={'pub-presentation'}>
 
@@ -65,10 +66,10 @@ class PubPresentation extends Component {
 				/>
 
 				{/* <PubBody content={this.props.pubData.data.body} /> */}
-				<PubBody content={activeVersion.content}/>
+				<PubBody content={activeVersion.content} />
 
 				<div className={'license-wrapper'}>
-					CCBY 4.0
+					<License />
 				</div>
 
 				<Footer />
