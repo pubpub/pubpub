@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Checkbox } from '@blueprintjs/core';
+import { Checkbox } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import Avatar from 'components/Avatar/Avatar';
-import UserAutocomplete from 'components/UserAutocomplete/UserAutocomplete';
+import PubCollabDropdownPermissions from 'components/PubCollabDropdownPermissions/PubCollabDropdownPermissions';
 
 require('./pubCollaboratorDetails.scss');
 
@@ -12,15 +12,17 @@ const propTypes = {
 	pubId: PropTypes.string,
 	onCollaboratorUpdate: PropTypes.func,
 	onCollaboratorDelete: PropTypes.func,
+	isPermissionsMode: PropTypes.bool,
 };
 
 const defaultProps = {
 	pubId: '00-00',
 	onCollaboratorUpdate: ()=>{},
 	onCollaboratorDelete: ()=>{},
+	isPermissionsMode: false,
 };
 
-class pubCollaboratorDetails extends Component {
+class PubCollaboratorDetails extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -29,6 +31,7 @@ class pubCollaboratorDetails extends Component {
 		};
 		this.handleChecked = this.handleChecked.bind(this);
 		this.handleRemoveClick = this.handleRemoveClick.bind(this);
+		this.handlePermissionsChange = this.handlePermissionsChange.bind(this);
 	}
 
 	handleChecked(evt) {
@@ -44,6 +47,14 @@ class pubCollaboratorDetails extends Component {
 		this.props.onCollaboratorDelete({
 			collaboratorId: this.props.collaboratorData.Contributor.id,
 			pubId: this.props.pubId,
+		});
+	}
+
+	handlePermissionsChange(permissionsValue) {
+		this.props.onCollaboratorUpdate({
+			collaboratorId: this.props.collaboratorData.Contributor.id,
+			pubId: this.props.pubId,
+			permissions: permissionsValue,
 		});
 	}
 
@@ -73,7 +84,21 @@ class pubCollaboratorDetails extends Component {
 							: name
 						}
 					</div>
-					<Checkbox checked={this.state.isAuthor} onChange={this.handleChecked}>List as Author</Checkbox>
+					{!this.props.isPermissionsMode &&
+						<Checkbox
+							checked={this.state.isAuthor}
+							onChange={this.handleChecked}
+						>
+							List as Author
+						</Checkbox>
+					}
+					{this.props.isPermissionsMode &&
+						<PubCollabDropdownPermissions
+							value={data.Contributor.permissions}
+							onChange={this.handlePermissionsChange}
+						/>
+					}
+
 				</div>
 				<div className={'remove-wrapper'}>
 					<button className={'pt-button pt-minimal'} role={'button'} onClick={this.handleRemoveClick}>Remove</button>
@@ -83,6 +108,6 @@ class pubCollaboratorDetails extends Component {
 	}
 }
 
-pubCollaboratorDetails.propTypes = propTypes;
-pubCollaboratorDetails.defaultProps = defaultProps;
-export default pubCollaboratorDetails;
+PubCollaboratorDetails.propTypes = propTypes;
+PubCollaboratorDetails.defaultProps = defaultProps;
+export default PubCollaboratorDetails;

@@ -5,7 +5,7 @@ import PubCollaboratorDetails from 'components/PubCollaboratorDetails/PubCollabo
 const handleSelection = (val)=> {
 	console.log(val);
 };
-const wrapperStyle = { margin: '1em' };
+const wrapperStyle = { margin: '1em 1em 5em' };
 
 const userData1 = {
 	id: '2f6915fe-1f41-4428-ba64-937db6cca033',
@@ -46,6 +46,21 @@ storiesOf('PubCollaboratorDetails', module)
 			/>
 			<PubCollaboratorDetails
 				collaboratorData={userData1}
+			/>
+		</div>
+
+		<div style={wrapperStyle}>
+			<PubCollaboratorDetails
+				collaboratorData={userData1}
+				isPermissionsMode={true}
+			/>
+			<PubCollaboratorDetails
+				collaboratorData={userData2}
+				isPermissionsMode={true}
+			/>
+			<PubCollaboratorDetails
+				collaboratorData={userData1}
+				isPermissionsMode={true}
 			/>
 		</div>
 	</div>

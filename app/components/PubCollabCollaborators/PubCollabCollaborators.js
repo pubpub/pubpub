@@ -14,7 +14,7 @@ const propTypes = {
 	onCollaboratorAdd: PropTypes.func,
 	onCollaboratorUpdate: PropTypes.func,
 	onCollaboratorDelete: PropTypes.func,
-	isLoading: PropTypes.bool,
+	// isLoading: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -22,7 +22,7 @@ const defaultProps = {
 	onCollaboratorAdd: ()=>{},
 	onCollaboratorUpdate: ()=>{},
 	onCollaboratorDelete: ()=>{},
-	isLoading: false,
+	// isLoading: false,
 };
 
 class PubCollabCollaborators extends Component {

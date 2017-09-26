@@ -8,17 +8,19 @@ const propTypes = {
 	icon: PropTypes.string,
 	description: PropTypes.string,
 	hideBottomBorder: PropTypes.bool,
+	onClick: PropTypes.func,
 };
 
 const defaultProps = {
 	icon: undefined,
 	description: undefined,
 	hideBottomBorder: false,
+	onClick: ()=>{},
 };
 
 const DropdownRichItem = function(props) {
 	return (
-		<div className={`dropdown-rich-item ${props.hideBottomBorder ? 'no-border' : ''} pt-menu-item pt-popover-dismiss`}>
+		<div className={`dropdown-rich-item ${props.hideBottomBorder ? 'no-border' : ''} pt-menu-item pt-popover-dismiss`} onClick={props.onClick}>
 			{props.icon &&
 				<span className={`pt-icon-standard ${props.icon}`} />
 			}

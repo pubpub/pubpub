@@ -53,7 +53,9 @@ class PubCollabShare extends Component {
 
 				<UserAutocomplete onSelect={this.handleUserSelect} allowCustomUser={true}/>
 				<div className={'collaborators-wrapper'}>
-					{this.props.pubData.contributors.sort((foo, bar)=> {
+					{this.props.pubData.contributors.filter((item)=> {
+						return item.slug;
+					}).sort((foo, bar)=> {
 						if (foo.Contributor.order < bar.Contributor.order) { return 1; }
 						if (foo.Contributor.order > bar.Contributor.order) { return -1; }
 						if (foo.id < bar.id) { return 1; }
@@ -67,6 +69,7 @@ class PubCollabShare extends Component {
 								collaboratorData={item}
 								onCollaboratorUpdate={this.props.onCollaboratorUpdate}
 								onCollaboratorDelete={this.props.onCollaboratorDelete}
+								isPermissionsMode={true}
 							/>
 						);
 					})}
