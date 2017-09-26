@@ -84,7 +84,7 @@ const Header = function(props) {
 												</li>
 												<MenuDivider />
 												<li>
-													<Link to={'/pub-create'} className="pt-menu-item pt-popover-dismiss">
+													<Link to={'/pub/create'} className="pt-menu-item pt-popover-dismiss">
 														Create New Pub
 													</Link>
 												</li>

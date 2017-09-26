@@ -24,7 +24,7 @@ export default function reducer(state = defaultState, action) {
 	case POST_PUB_LOAD:
 		return {
 			data: undefined,
-			isLoading: true,
+			isLoading: action.collectionId,
 			error: undefined,
 		};
 	case POST_PUB_SUCCESS:

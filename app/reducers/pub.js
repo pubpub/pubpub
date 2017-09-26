@@ -139,7 +139,6 @@ export default function reducer(state = defaultState, action) {
 				...state.data,
 				contributors: state.data.contributors.map((item)=> {
 					if (item.Contributor.id === action.result.Contributor.id) {
-						console.log(item, action.result);
 						return {
 							...item,
 							fullName: action.result.fullName || item.fullName,

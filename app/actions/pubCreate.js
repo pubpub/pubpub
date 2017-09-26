@@ -19,7 +19,7 @@ export const POST_PUB_FAIL = 'pubCreate/POST_PUB_FAIL';
 /*--------*/
 export function createPub(collectionId, communityId) {
 	return (dispatch) => {
-		dispatch({ type: POST_PUB_LOAD });
+		dispatch({ type: POST_PUB_LOAD, collectionId: collectionId });
 		return apiFetch('/pubs', {
 			method: 'POST',
 			headers: {
