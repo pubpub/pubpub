@@ -48,7 +48,7 @@ const PubCollabDropdownPermissions = function(props) {
 	return (
 		<DropdownButton label={items[props.value].title} icon={items[props.value].icon}>
 			<div className={'pt-menu'}>
-				{Object.keys(items).map((key)=> {
+				{Object.keys(items).map((key, index, array)=> {
 					const item = items[key];
 					return (
 						<DropdownRichItem
@@ -57,6 +57,7 @@ const PubCollabDropdownPermissions = function(props) {
 							description={item.description}
 							icon={item.icon}
 							onClick={item.onClick}
+							hideBottomBorder={index === array.length - 1}
 						/>
 					);
 				})}

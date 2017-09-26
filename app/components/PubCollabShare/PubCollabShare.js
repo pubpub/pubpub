@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Checkbox } from '@blueprintjs/core';
-import { Link } from 'react-router-dom';
-import Avatar from 'components/Avatar/Avatar';
 import UserAutocomplete from 'components/UserAutocomplete/UserAutocomplete';
 import PubCollaboratorDetails from 'components/PubCollaboratorDetails/PubCollaboratorDetails';
-import PubCollabDropdownPermissions from 'components/PubCollabDropdownPermissions/PubCollabDropdownPermissions';
 import PubCollabDropdownPrivacy from 'components/PubCollabDropdownPrivacy/PubCollabDropdownPrivacy';
 
 require('./pubCollabShare.scss');
@@ -16,7 +12,7 @@ const propTypes = {
 	onCollaboratorAdd: PropTypes.func,
 	onCollaboratorUpdate: PropTypes.func,
 	onCollaboratorDelete: PropTypes.func,
-	isLoading: PropTypes.bool,
+	// isLoading: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -24,13 +20,18 @@ const defaultProps = {
 	onCollaboratorAdd: ()=>{},
 	onCollaboratorUpdate: ()=>{},
 	onCollaboratorDelete: ()=>{},
-	isLoading: false,
+	// isLoading: false,
 };
 
 class PubCollabShare extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			collaborationMode: this.props.pubData.collaborationMode,
+			adminPermissions: this.props.pubData.adminPermissions,
+		};
 		this.handleUserSelect = this.handleUserSelect.bind(this);
+		this.handleCollaborationModeChange = this.handleCollaborationModeChange.bind(this);
 	}
 
 	handleUserSelect(user) {
@@ -42,16 +43,43 @@ class PubCollabShare extends Component {
 			pubId: this.props.pubData.id,
 		});
 	}
+	handleCollaborationModeChange(value) {
+		this.setState({ collaborationMode: value });
+	}
 
 	render() {
+		const pubData = this.props.pubData;
+
 		return (
 			<div className={'pub-collab-share'}>
 				<h5>Share Pub</h5>
-				<div className={'intro'}>Use this panel to manage permissions and access to the pub. To edit who is recognized and listed for working on this pub open the <span onClick={this.props.onOpenCollaborators}>Collaborators Panel</span>.</div>
-				<PubCollabDropdownPrivacy />
-				<PubCollabDropdownPermissions />
+				<div className={'intro'}>Use this panel to manage permissions and access to the pub. To edit who is recognized and listed for working on this pub open the <span role={'button'} onClick={this.props.onOpenCollaborators}>Collaborators Panel</span>.</div>
 
-				<UserAutocomplete onSelect={this.handleUserSelect} allowCustomUser={true}/>
+				<div className={'wrapper'}>
+					<div className={'share-link'}>
+						<div className={'input-name'}>
+							Anyone with this link <b>Can Edit</b>
+						</div>
+						<input className={'pt-input'} type={'text'} value={`https://www.pubpub.org/pub/${pubData.slug}/collaborate/${pubData.editHash}`} onChange={()=>{}} />
+					</div>
+					<div className={'share-link'}>
+						<div className={'input-name'}>
+							Anyone with this link <b>Can Suggest</b>
+						</div>
+						<input className={'pt-input'} type={'text'} value={`https://www.pubpub.org/pub/${pubData.slug}/collaborate/${pubData.suggestHash}`} onChange={()=>{}} />
+					</div>
+				</div>
+
+				<div className={'wrapper'}>
+					<PubCollabDropdownPrivacy
+						value={this.state.collaborationMode}
+						onChange={this.handleCollaborationModeChange}
+					/>
+				</div>
+
+				<div className={'wrapper'}>
+					<UserAutocomplete onSelect={this.handleUserSelect} allowCustomUser={true} />
+				</div>
 				<div className={'collaborators-wrapper'}>
 					{this.props.pubData.contributors.filter((item)=> {
 						return item.slug;

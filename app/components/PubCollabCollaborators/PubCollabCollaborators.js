@@ -45,7 +45,7 @@ class PubCollabCollaborators extends Component {
 		return (
 			<div className={'pub-collab-collaborators'}>
 				<h5>Pub Collaborators</h5>
-				<div className={'intro'}>Use this panel to manage who is recognized and listed for working on this pub. To manage permissions and access to the pub, open the <span onClick={this.props.onOpenShare}>Share Panel</span>.</div>
+				<div className={'intro'}>Use this panel to manage who is recognized and listed for working on this pub. To manage permissions and access to the pub, open the <span role={'button'} onClick={this.props.onOpenShare}>Share Panel</span>.</div>
 				<UserAutocomplete onSelect={this.handleUserSelect} allowCustomUser={true}/>
 				<div className={'collaborators-wrapper'}>
 					{this.props.pubData.contributors.sort((foo, bar)=> {

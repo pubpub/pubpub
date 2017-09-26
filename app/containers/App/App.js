@@ -114,6 +114,7 @@ class App extends Component {
 					<WrappedRoute exact path="/pub/create" component={PubCreate} />
 					<WrappedRoute exact path="/pub/:slug" component={PubPresentation} />
 					<WrappedRoute exact path="/pub/:slug/collaborate" component={PubCollaboration} hideNav fixHeader />
+					<WrappedRoute exact path="/pub/:slug/collaborate/:hash" component={PubCollaboration} hideNav fixHeader />
 					<WrappedRoute exact path="/resetpassword" component={NoMatch} />
 					<WrappedRoute exact path="/resetpassword/:resetHash/:username" component={NoMatch} />
 					<WrappedRoute exact path="/search" component={Search} />

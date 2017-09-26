@@ -54,7 +54,7 @@ export function getPubData(slug) {
 	};
 }
 
-export function putPubData({ pubId, title, slug, description, avatar, useHeaderImage }) {
+export function putPubData({ pubId, title, slug, description, avatar, useHeaderImage, collaborationMode, adminPermissions }) {
 	return (dispatch) => {
 		dispatch({ type: PUT_PUB_DATA_LOAD });
 		return apiFetch('/pubs', {
@@ -64,12 +64,14 @@ export function putPubData({ pubId, title, slug, description, avatar, useHeaderI
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-				pubId: pubId,
-				title: title,
-				slug: slug,
-				description: description,
-				avatar: avatar,
-				useHeaderImage: useHeaderImage,
+				pubId,
+				title,
+				slug,
+				description,
+				avatar,
+				useHeaderImage,
+				collaborationMode,
+				adminPermissions,
 			})
 		})
 		.then((result) => {

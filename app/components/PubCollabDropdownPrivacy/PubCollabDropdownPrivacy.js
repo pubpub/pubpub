@@ -1,36 +1,63 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
 import DropdownRichItem from 'components/DropdownRichItem/DropdownRichItem';
 
 const propTypes = {
-	// title: PropTypes.string.isRequired,
+	value: PropTypes.string,
+	onChange: PropTypes.func
+};
+const defaultProps = {
+	value: 'private',
+	onChange: ()=>{},
 };
 
 const PubCollabDropdownPrivacy = function(props) {
+	const keySuffix = Math.round(Math.random() * 25000);
+	const items = {
+		private: {
+			value: 'private',
+			title: 'Private Collaboration',
+			icon: 'pt-icon-lock2',
+			onClick: ()=>{ props.onChange('private'); },
+			description: 'Collaborators must be invited. The public can view and make suggestions on published snapshots.',
+		},
+		publicSuggest: {
+			value: 'publicSuggest',
+			title: 'Public Suggestions',
+			icon: 'pt-icon-team',
+			onClick: ()=>{ props.onChange('publicSuggest'); },
+			description: 'The working draft will be visible to all and suggestions can be made.',
+		},
+		publicEdit: {
+			value: 'publicEdit',
+			title: 'Public Collaboration',
+			icon: 'pt-icon-globe',
+			onClick: ()=>{ props.onChange('publicEdit'); },
+			description: 'The working draft will be editable by anyone.',
+		},
+	};
 	return (
-		<DropdownButton label={'Public Collaboration'} icon={'pt-icon-globe'}>
+		<DropdownButton label={items[props.value].title} icon={items[props.value].icon}>
 			<div className={'pt-menu'}>
-				<DropdownRichItem
-					title={'Private Collaboration'}
-					description={'Collaborators must be invited. The public can view and make suggestions on published snapshots.'}
-					icon={'pt-icon-lock2'}
-				/>
-				<DropdownRichItem
-					title={'Public Suggestions'}
-					description={'The working draft will be visible to all and suggestions can be made.'}
-					icon={'pt-icon-team'}
-				/>
-				<DropdownRichItem
-					title={'Public Collaboration'}
-					description={'The working draft will be editable by anyone.'}
-					icon={'pt-icon-globe'}
-					hideBottomBorder={true}
-				/>
+				{Object.keys(items).map((key, index, array)=> {
+					const item = items[key];
+					return (
+						<DropdownRichItem
+							key={`${item.value}-option-${keySuffix}`}
+							title={item.title}
+							description={item.description}
+							icon={item.icon}
+							onClick={item.onClick}
+							hideBottomBorder={index === array.length - 1}
+						/>
+					);
+				})}
 			</div>
 		</DropdownButton>
 	);
 };
 
-// PubCollabDropdownPrivacy.propTypes = propTypes;
+PubCollabDropdownPrivacy.propTypes = propTypes;
+PubCollabDropdownPrivacy.defaultProps = defaultProps;
 export default PubCollabDropdownPrivacy;

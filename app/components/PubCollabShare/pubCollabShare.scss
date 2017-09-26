@@ -1,12 +1,32 @@
 .pub-collab-share {
 	h5 {
-		margin-bottom: 2em;
+		margin-bottom: 1em;
 	}
 	.intro {
-		padding-bottom: 1em;
+		padding-bottom: 2em;
 		span {
 			text-decoration: underline;
 			cursor: pointer;
 		}
+	}
+	.share-link {
+		display: flex;
+		align-items: center;
+		&:not(:last-of-type) {
+			padding-bottom: 0.5em;
+		}
+		b {
+			width: 15em;
+			display: inline-block;
+		}
+		input {
+			display: block;
+			flex-shrink: 1;
+			flex-grow: 1;
+			text-align: center;
+		}
+	}
+	.wrapper {
+		padding-bottom: 2em;
 	}
 }
