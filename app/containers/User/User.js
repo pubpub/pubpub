@@ -7,8 +7,9 @@ import { withRouter, Link } from 'react-router-dom';
 import { NonIdealState } from '@blueprintjs/core';
 import UserHeader from 'components/UserHeader/UserHeader';
 import UserNav from 'components/UserNav/UserNav';
+import UserEdit from 'components/UserEdit/UserEdit';
 import PubPreview from 'components/PubPreview/PubPreview';
-import { getUserData } from 'actions/user';
+import { getUserData, putUserData } from 'actions/user';
 import UserLoading from './UserLoading';
 
 require('./user.scss');
@@ -18,9 +19,15 @@ const propTypes = {
 	match: PropTypes.object.isRequired,
 	userData: PropTypes.object.isRequired,
 	loginData: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired,
 };
 
 class User extends Component {
+	constructor(props) {
+		super(props);
+		this.handleUserEditSave = this.handleUserEditSave.bind(this);
+	}
+
 	componentWillMount() {
 		this.props.dispatch(getUserData(this.props.match.params.slug));
 	}
@@ -28,15 +35,34 @@ class User extends Component {
 		if (nextProps.match.params.slug !== this.props.match.params.slug) {
 			this.props.dispatch(getUserData(nextProps.match.params.slug));
 		}
+		if (this.props.userData.putUserIsLoading
+			&& !nextProps.userData.putUserIsLoading
+			&& !nextProps.userData.putUserError)
+		{
+			this.props.history.push(`/user/${nextProps.userData.data.slug}`);
+		}
 	}
-
+	handleUserEditSave(userObject) {
+		this.props.dispatch(putUserData(userObject));
+	}
 	render() {
 		const userData = this.props.userData.data || {};
 		const loginData = this.props.loginData.data || {};
 		const selfProfile = loginData.id && userData.id === loginData.id;
+		const mode = this.props.match.params.mode;
 
 		if (!userData.id) {
 			return <UserLoading />;
+		}
+		if (mode === 'edit') {
+			return (
+				<UserEdit
+					userData={userData}
+					onSave={this.handleUserEditSave}
+					error={this.props.userData.putUserError}
+					isLoading={this.props.userData.putUserIsLoading}
+				/>
+			);
 		}
 		return (
 			<div className={'user'}>
@@ -46,7 +72,7 @@ class User extends Component {
 					<meta name="description" content={userData.bio} />
 				</Helmet>
 
-				<div className={'container narrow user-header-wrapper'}>
+				<div className={'container narrow'}>
 					<div className={'row'}>
 						<div className={'col-12'}>
 							<UserHeader userData={userData} isUser={selfProfile} />
@@ -57,7 +83,7 @@ class User extends Component {
 				<div className={'container narrow nav'}>
 					<div className={'row'}>
 						<div className={'col-12'}>
-							<UserNav userSlug={userData.slug} activeTab={this.props.match.params.mode} />
+							<UserNav userSlug={userData.slug} activeTab={mode} />
 						</div>
 					</div>
 				</div>

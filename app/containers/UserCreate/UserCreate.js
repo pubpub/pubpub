@@ -42,7 +42,6 @@ class UserCreate extends Component {
 		this.onPasswordChange = this.onPasswordChange.bind(this);
 		this.onBioChange = this.onBioChange.bind(this);
 		this.onAvatarChange = this.onAvatarChange.bind(this);
-		this.onLocationChange = this.onLocationChange.bind(this);
 	}
 
 	componentWillMount() {
@@ -73,7 +72,7 @@ class UserCreate extends Component {
 			github: this.state.github,
 			twitter: this.state.twitter,
 			facebook: this.state.facebook,
-			gooleScholar: this.state.gooleScholar,
+			googleScholar: this.state.googleScholar,
 		}));
 	}
 
@@ -91,9 +90,6 @@ class UserCreate extends Component {
 	}
 	onAvatarChange(val) {
 		this.setState({ avatar: val });
-	}
-	onLocationChange(val) {
-		this.setState({ location: val });
 	}
 
 	render() {

@@ -5,6 +5,10 @@ import {
 	GET_USER_DATA_LOAD,
 	GET_USER_DATA_SUCCESS,
 	GET_USER_DATA_FAIL,
+
+	PUT_USER_DATA_LOAD,
+	PUT_USER_DATA_SUCCESS,
+	PUT_USER_DATA_FAIL,
 } from 'actions/user';
 
 /* ------------------- */
@@ -14,6 +18,8 @@ const defaultState = {
 	data: undefined,
 	isLoading: false,
 	error: undefined,
+	putUserIsLoading: false,
+	putUserError: undefined,
 };
 
 /* ----------------------------------------- */
@@ -38,6 +44,28 @@ export default function reducer(state = defaultState, action) {
 			data: undefined,
 			isLoading: false,
 			error: action.error,
+		};
+	/* PUT User Data */
+	/* ------------ */
+	case PUT_USER_DATA_LOAD:
+		return {
+			...state,
+			putUserIsLoading: true,
+		};
+	case PUT_USER_DATA_SUCCESS:
+		return {
+			...state,
+			data: {
+				...state.data,
+				...action.result
+			},
+			putUserIsLoading: false,
+		};
+	case PUT_USER_DATA_FAIL:
+		return {
+			...state,
+			putUserIsLoading: false,
+			putUserError: action.error
 		};
 	default:
 		return state;

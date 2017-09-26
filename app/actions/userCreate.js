@@ -34,7 +34,7 @@ export function getSignupData(hash) {
 	};
 }
 
-export function postUser({ email, hash, firstName, lastName, password, avatar, bio, location, website, orcid, github, twitter, facebook, gooleScholar }) {
+export function postUser({ email, hash, firstName, lastName, password, avatar, bio, location, website, orcid, github, twitter, facebook, googleScholar }) {
 	return (dispatch) => {
 		dispatch({ type: POST_USER_LOAD });
 		return apiFetch('/users', {
@@ -57,7 +57,7 @@ export function postUser({ email, hash, firstName, lastName, password, avatar, b
 				github,
 				twitter,
 				facebook,
-				gooleScholar,
+				googleScholar,
 			})
 		})
 		.then((result) => {

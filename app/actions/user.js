@@ -10,6 +10,10 @@ export const GET_USER_DATA_LOAD = 'user/GET_USER_DATA_LOAD';
 export const GET_USER_DATA_SUCCESS = 'user/GET_USER_DATA_SUCCESS';
 export const GET_USER_DATA_FAIL = 'user/GET_USER_DATA_FAIL';
 
+export const PUT_USER_DATA_LOAD = 'user/PUT_USER_DATA_LOAD';
+export const PUT_USER_DATA_SUCCESS = 'user/PUT_USER_DATA_SUCCESS';
+export const PUT_USER_DATA_FAIL = 'user/PUT_USER_DATA_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -26,6 +30,39 @@ export function getUserData(slug) {
 		})
 		.catch((error) => {
 			dispatch({ type: GET_USER_DATA_FAIL, error });
+		});
+	};
+}
+
+export function putUserData({ userId, firstName, lastName, avatar, bio, location, website, orcid, github, twitter, facebook, googleScholar }) {
+	return (dispatch) => {
+		dispatch({ type: PUT_USER_DATA_LOAD });
+		return apiFetch('/users', {
+			method: 'PUT',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				userId,
+				firstName,
+				lastName,
+				avatar,
+				bio,
+				location,
+				website,
+				orcid,
+				github,
+				twitter,
+				facebook,
+				googleScholar
+			})
+		})
+		.then((result) => {
+			dispatch({ type: PUT_USER_DATA_SUCCESS, result });
+		})
+		.catch((error) => {
+			dispatch({ type: PUT_USER_DATA_FAIL, error });
 		});
 	};
 }
