@@ -5,6 +5,7 @@ import { Editor } from '@pubpub/editor';
 require('./pubBody.scss');
 
 const propTypes = {
+	versionId: PropTypes.string.isRequired,
 	content: PropTypes.object.isRequired,
 };
 
@@ -14,7 +15,11 @@ const PubBody = function(props) {
 			<div className={'container pub'}>
 				<div className={'row'}>
 					<div className={'col-12'}>
-						<Editor initialContent={props.content} isReadOnly={true} />
+						<Editor
+							key={`render-${props.versionId}`}
+							initialContent={props.content}
+							isReadOnly={true}
+						/>
 					</div>
 				</div>
 			</div>

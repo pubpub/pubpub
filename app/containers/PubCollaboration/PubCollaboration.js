@@ -10,6 +10,7 @@ import Collaborative from '@pubpub/editor/addons/Collaborative';
 import Image from '@pubpub/editor/addons/Image';
 import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import { NonIdealState } from '@blueprintjs/core';
+import NoMatch from 'containers/NoMatch/NoMatch';
 import Overlay from 'components/Overlay/Overlay';
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
@@ -152,7 +153,7 @@ class PubCollaboration extends Component {
 			return prev;
 		}, undefined);
 
-		if (!pubData.id) {
+		if (this.props.pubData.isLoading) {
 			return (
 				<div className={'pub-collaboration'}>
 					<div className={'upper'}>
@@ -174,6 +175,10 @@ class PubCollaboration extends Component {
 					</div>
 				</div>
 			);
+		}
+
+		if (!pubData.id) {
+			return <NoMatch />;
 		}
 
 		return (

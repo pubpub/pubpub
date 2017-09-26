@@ -67,7 +67,7 @@ const PubPresDetails = function(props) {
 										}).map((version)=> {
 											return (
 												<li key={`version-${version.id}`} style={{ textAlign: 'right' }}>
-													<Link to={`/pub/${props.slug}`} className="pt-menu-item pt-popover-dismiss">
+													<Link to={`/pub/${props.slug}?version=${version.id}`} className="pt-menu-item pt-popover-dismiss">
 														<span style={{ fontWeight: version.isActive ? '600' : 'normal' }}>
 															{dateFormat(version.createdAt, 'mmm dd, yyyy · HH:MM')}
 														</span>

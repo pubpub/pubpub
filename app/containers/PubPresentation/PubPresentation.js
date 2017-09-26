@@ -4,6 +4,7 @@ import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { NonIdealState } from '@blueprintjs/core';
+import queryString from 'query-string';
 
 import NoMatch from 'containers/NoMatch/NoMatch';
 import PubPresHeader from 'components/PubPresHeader/PubPresHeader';
@@ -20,6 +21,7 @@ require('./pubPresentation.scss');
 const propTypes = {
 	dispatch: PropTypes.func.isRequired,
 	match: PropTypes.object.isRequired,
+	location: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
 };
 
@@ -46,16 +48,18 @@ class PubPresentation extends Component {
 			);
 		}
 
-		const versionQuery = undefined;
-		let activeVersion;
-		pubData.versions.sort((foo, bar)=> {
+		const queryObject = queryString.parse(this.props.location.search);
+		const versionQuery = queryObject.version;
+		const activeVersion = pubData.versions.sort((foo, bar)=> {
 			if (foo.createdAt < bar.createdAt) { return 1; }
 			if (foo.createdAt > bar.createdAt) { return -1; }
 			return 0;
-		}).forEach((item, index)=> {
-			if (!versionQuery && index === 0) { item.isActive = true; activeVersion = item; }
-			if (versionQuery && versionQuery === item.id) { item.isActive = true; activeVersion = item; }
-		});
+		}).reduce((prev, curr, index)=> {
+			if (!versionQuery && index === 0) { curr.isActive = true; return curr; }
+			if (versionQuery && versionQuery === curr.id) { curr.isActive = true; return curr; }
+			curr.isActive = false;
+			return prev;
+		}, undefined);
 
 		return (
 			<div className={'pub-presentation'}>
@@ -83,7 +87,7 @@ class PubPresentation extends Component {
 				/>
 
 				{/* <PubBody content={this.props.pubData.data.body} /> */}
-				<PubBody content={activeVersion.content} />
+				<PubBody versionId={activeVersion.id} content={activeVersion.content} />
 
 				<div className={'license-wrapper'}>
 					<License />
