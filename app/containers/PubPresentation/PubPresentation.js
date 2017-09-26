@@ -2,16 +2,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
+import { NonIdealState } from '@blueprintjs/core';
 
+import NoMatch from 'containers/NoMatch/NoMatch';
 import PubPresHeader from 'components/PubPresHeader/PubPresHeader';
 import PubPresDetails from 'components/PubPresDetails/PubPresDetails';
 import PubBody from 'components/PubBody/PubBody';
 import License from 'components/License/License';
 import Footer from 'components/Footer/Footer';
-import PubPresentationLoading from './PubPresentationLoading';
-
 import { getPubData } from 'actions/pub';
+
+import PubPresentationLoading from './PubPresentationLoading';
 
 require('./pubPresentation.scss');
 
@@ -27,8 +29,23 @@ class PubPresentation extends Component {
 	}
 
 	render() {
-		const pubData = this.props.pubData.data || {};
-		if (!pubData.id) { return <PubPresentationLoading />; }
+		const pubData = this.props.pubData.data || { versions: [] };
+		if (this.props.pubData.isLoading) { return <PubPresentationLoading />; }
+
+		if (!pubData.id) { return <NoMatch />; }
+		if (!pubData.versions.length) {
+			return (
+				<div className={'no-snapshots-wrapper'}>
+					<NonIdealState
+						title={'No Published Snapshots'}
+						visual={'pt-icon-issue'}
+						description={'This URL presents published snapshots. Go to Collaborate mode to continue.'}
+						action={<Link to={`/pub/${this.props.match.params.slug}/collaborate`} className={'pt-button pt-intent-primary'}>Collaborate</Link>}
+					/>
+				</div>
+			);
+		}
+
 		const versionQuery = undefined;
 		let activeVersion;
 		pubData.versions.sort((foo, bar)=> {
