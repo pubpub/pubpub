@@ -21,8 +21,7 @@ import DiscussionNew from 'components/DiscussionNew/DiscussionNew';
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import { getPubData, putPubData, postDiscussion, postCollaborator, putCollaborator, deleteCollaborator, postVersion } from 'actions/pub';
-import { nestDiscussionsToThreads } from 'utilities';
-import { s3Upload } from 'utilities';
+import { s3Upload, nestDiscussionsToThreads } from 'utilities';
 
 require('./pubCollaboration.scss');
 require('components/PubBody/pubBody.scss');
