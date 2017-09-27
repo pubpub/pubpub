@@ -48,6 +48,7 @@ class DiscussionThreadItem extends Component {
 			})
 		}
 	}
+
 	onEditToggle() {
 		this.setState({ isEditing: !this.state.isEditing });
 	}

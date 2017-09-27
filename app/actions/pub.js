@@ -115,7 +115,7 @@ export function postDiscussion({ title, content, text, userId, pubId, communityI
 	};
 }
 
-export function putDiscussion({ content, text, pubId, communityId, discussionId, userId }) {
+export function putDiscussion({ title, content, text, isArchived, pubId, communityId, discussionId, userId }) {
 	return (dispatch) => {
 		dispatch({ type: PUT_DISCUSSION_LOAD });
 		return apiFetch('/discussions', {
@@ -125,8 +125,10 @@ export function putDiscussion({ content, text, pubId, communityId, discussionId,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
+				title,
 				content,
 				text,
+				isArchived,
 				pubId,
 				communityId,
 				discussionId,

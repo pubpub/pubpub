@@ -1,0 +1,54 @@
+.discussion-preview-archived {
+	display: block;
+	position: relative;
+	padding: 0.5em 1em;
+	cursor: pointer;
+	opacity: 0.75;
+	.bottom-border {
+		position: absolute;
+		bottom: -1px;
+		width: calc(100% - 2em);
+	}
+	&:hover:not(:last-of-type) .bottom-border {
+		border-bottom: 1px solid transparent;
+	}
+	&:not(:last-of-type) .bottom-border {
+		border-bottom: 1px solid #F0F0F0;
+	}
+	&:hover {
+		background-color: #F0F0F0;
+		text-decoration: none;
+	}
+	.title {
+		font-weight: bold;
+	}
+	.icons {
+		float: right;
+		opacity: 0.5;
+		span {
+			padding-left: 0.25em;
+		}
+
+	}
+	.discussion {
+		margin: 0.25em 0em;
+		&:not(:first-of-type) {
+			padding-left: 28px;
+		}
+		.avatar {
+			margin-right: 1em;
+		}
+		.text {
+			vertical-align: middle;
+			display: inline-block;
+			width: calc(100% - 1em - 20px);
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+	}
+	.more {
+		padding-left: 28px;
+		opacity: 0.75;
+	}
+}

@@ -19,6 +19,7 @@ import PubCollabDetails from 'components/PubCollabDetails/PubCollabDetails';
 import PubCollabCollaborators from 'components/PubCollabCollaborators/PubCollabCollaborators';
 import DiscussionNew from 'components/DiscussionNew/DiscussionNew';
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
+import DiscussionPreviewArchived from 'components/DiscussionPreviewArchived/DiscussionPreviewArchived';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import { getPubData, putPubData, postDiscussion, putDiscussion, postCollaborator, putCollaborator, deleteCollaborator, postVersion } from 'actions/pub';
 import { s3Upload, nestDiscussionsToThreads } from 'utilities';
@@ -44,12 +45,14 @@ class PubCollaboration extends Component {
 			isShareOpen: false,
 			isDetailsOpen: false,
 			isCollaboratorsOpen: false,
+			isArchivedVisible: false,
 		};
 		this.editorRef = undefined;
 		this.togglePublish = this.togglePublish.bind(this);
 		this.toggleShare = this.toggleShare.bind(this);
 		this.toggleDetails = this.toggleDetails.bind(this);
 		this.toggleCollaborators = this.toggleCollaborators.bind(this);
+		this.toggleArchivedVisible = this.toggleArchivedVisible.bind(this);
 		this.handleDetailsSave = this.handleDetailsSave.bind(this);
 		this.handlePostDiscussion = this.handlePostDiscussion.bind(this);
 		this.handlePutDiscussion = this.handlePutDiscussion.bind(this);
@@ -94,6 +97,9 @@ class PubCollaboration extends Component {
 	}
 	toggleCollaborators() {
 		this.setState({ isCollaboratorsOpen: !this.state.isCollaboratorsOpen });
+	}
+	toggleArchivedVisible() {
+		this.setState({ isArchivedVisible: !this.state.isArchivedVisible });
 	}
 	handleDetailsSave(detailsObject) {
 		this.props.dispatch(putPubData({
@@ -168,6 +174,28 @@ class PubCollaboration extends Component {
 			if (curr[0].threadNumber === Number(queryObject.thread)) { return curr; }
 			return prev;
 		}, undefined);
+
+		const activeThreads = threads.filter((items)=> {
+			return items.reduce((prev, curr)=> {
+				if (curr.isArchived) { return false; }
+				return prev;
+			}, true);
+		}).sort((foo, bar)=> {
+			if (foo[0].threadNumber > bar[0].threadNumber) { return -1; }
+			if (foo[0].threadNumber < bar[0].threadNumber) { return 1; }
+			return 0;
+		});
+
+		const archivedThreads = threads.filter((items)=> {
+			return items.reduce((prev, curr)=> {
+				if (curr.isArchived) { return true; }
+				return prev;
+			}, false);
+		}).sort((foo, bar)=> {
+			if (foo[0].threadNumber > bar[0].threadNumber) { return -1; }
+			if (foo[0].threadNumber < bar[0].threadNumber) { return 1; }
+			return 0;
+		});
 
 		if (this.props.pubData.isLoading) {
 			return (
@@ -246,24 +274,43 @@ class PubCollaboration extends Component {
 											/>
 										}
 										{queryObject.thread !== 'new' && !activeThread &&
-											threads.sort((foo, bar)=> {
-												if (foo[0].threadNumber > bar[0].threadNumber) { return -1; }
-												if (foo[0].threadNumber < bar[0].threadNumber) { return 1; }
-												return 0;
-											}).map((thread)=> {
-												return (
-													<DiscussionPreview
-														key={`thread-${thread[0].id}`}
-														discussions={thread}
-														slug={pubData.slug}
-														isPresentation={false}
-													/>
-												);
-											})
+											<div>
+												{activeThreads.map((thread)=> {
+													return (
+														<DiscussionPreview
+															key={`thread-${thread[0].id}`}
+															discussions={thread}
+															slug={pubData.slug}
+															isPresentation={false}
+														/>
+													);
+												})}
+												{archivedThreads.length &&
+													<div className={'archived-threads'}>
+														<button className={'pt-button pt-minimal pt-large pt-fill archive-title-button'} onClick={this.toggleArchivedVisible}>
+															{this.state.isArchivedVisible ? 'Hide ' : 'Show '}
+															Archived Thread{archivedThreads.length === 1 ? '' : 's'} ({archivedThreads.length})
+															
+															
+														</button>
+														{this.state.isArchivedVisible && archivedThreads.map((thread)=> {
+															return (
+																<DiscussionPreviewArchived
+																	key={`thread-${thread[0].id}`}
+																	discussions={thread}
+																	slug={pubData.slug}
+																	isPresentation={false}
+																/>
+															);
+														})}
+													</div>
+												}
+											</div>
 										}
 										{activeThread &&
 											<DiscussionThread
 												discussions={activeThread}
+												canAdmin={pubData.isAdmin || (this.props.loginData.data.isAdmin && pubData.adminPermissions === 'admin')}
 												slug={pubData.slug}
 												loginData={this.props.loginData.data}
 												pathname={`${this.props.location.pathname}${this.props.location.search}`}

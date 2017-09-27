@@ -13,4 +13,19 @@
 	.thread-buttons {
 		float: right;
 	}
+	.pt-callout {
+		margin-bottom: 1em;
+		.pt-button {
+			float: right;
+			position: relative;
+			top: -1px;
+		}
+	}
+	.editing-buttons {
+		text-align: right;
+		padding-top: 0.5em;
+		.pt-button {
+			margin-left: 0.5em;
+		}
+	}
 }
