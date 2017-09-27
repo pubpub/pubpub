@@ -280,7 +280,6 @@ class PubCollaboration extends Component {
 
 								<div className={'content-panel'} onClick={this.focusEditor} tabIndex={-1} role={'textbox'}>
 									<div className={'pub-body'}>
-										{/* pubBody */}
 										<Editor placeholder={'Begin writing here...'} ref={(ref)=> { this.editorRef = ref; }}>
 											<FormattingMenu />
 											<InsertMenu />
@@ -297,7 +296,7 @@ class PubCollaboration extends Component {
 												clientID={`user-${loginData.id}-${Math.ceil(Math.random() * 2500)}`}
 												editorKey={`pub-${pubData.id}`}
 											/>
-											<Image handleFileUpload={s3Upload} />
+											{/*<Image handleFileUpload={s3Upload} />*/}
 										</Editor>
 									</div>
 								</div>

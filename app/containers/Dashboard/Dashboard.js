@@ -60,7 +60,8 @@ class Dashboard extends Component {
 				return prev;
 			}, undefined);
 			if (collectionId) {
-				this.props.dispatch(getCollectionData(collectionId));
+				const communityId = props.appData.data.id;
+				this.props.dispatch(getCollectionData(collectionId, communityId));
 			}
 		}
 	}

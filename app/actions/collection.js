@@ -21,10 +21,10 @@ export const POST_COLLECTION_FAIL = 'collection/POST_COLLECTION_FAIL';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function getCollectionData(collectionId) {
+export function getCollectionData(collectionId, communityId) {
 	return (dispatch) => {
 		dispatch({ type: GET_COLLECTION_DATA_LOAD });
-		return apiFetch(`/collections/${collectionId}`)
+		return apiFetch(`/collections/${collectionId}?communityId=${communityId}`)
 		.then((result) => {
 			dispatch({ type: GET_COLLECTION_DATA_SUCCESS, result });
 		})

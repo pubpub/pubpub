@@ -20,6 +20,7 @@ const propTypes = {
 
 class Collection extends Component {
 	componentWillMount() {
+		// console.log(this.props.appData.data.id);
 		this.dispatchGetCollectionData(this.props);
 	}
 	componentWillReceiveProps(nextProps) {
@@ -41,7 +42,8 @@ class Collection extends Component {
 				return prev;
 			}, undefined);
 			if (collectionId) {
-				this.props.dispatch(getCollectionData(collectionId));
+				const communityId = props.appData.data.id;
+				this.props.dispatch(getCollectionData(collectionId, communityId));
 			}
 		}
 	}
