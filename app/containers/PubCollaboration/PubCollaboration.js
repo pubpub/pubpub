@@ -7,7 +7,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { Editor } from '@pubpub/editor';
 import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
 import Collaborative from '@pubpub/editor/addons/Collaborative';
-import Image from '@pubpub/editor/addons/Image';
+// import Image from '@pubpub/editor/addons/Image';
 import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import { NonIdealState } from '@blueprintjs/core';
 import NoMatch from 'containers/NoMatch/NoMatch';
@@ -20,7 +20,7 @@ import PubCollabCollaborators from 'components/PubCollabCollaborators/PubCollabC
 import DiscussionNew from 'components/DiscussionNew/DiscussionNew';
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
-import { getPubData, putPubData, postDiscussion, postCollaborator, putCollaborator, deleteCollaborator, postVersion } from 'actions/pub';
+import { getPubData, putPubData, postDiscussion, putDiscussion, postCollaborator, putCollaborator, deleteCollaborator, postVersion } from 'actions/pub';
 import { s3Upload, nestDiscussionsToThreads } from 'utilities';
 
 require('./pubCollaboration.scss');
@@ -52,6 +52,7 @@ class PubCollaboration extends Component {
 		this.toggleCollaborators = this.toggleCollaborators.bind(this);
 		this.handleDetailsSave = this.handleDetailsSave.bind(this);
 		this.handlePostDiscussion = this.handlePostDiscussion.bind(this);
+		this.handlePutDiscussion = this.handlePutDiscussion.bind(this);
 		this.handleCollaboratorAdd = this.handleCollaboratorAdd.bind(this);
 		this.handleCollaboratorUpdate = this.handleCollaboratorUpdate.bind(this);
 		this.handleCollaboratorDelete = this.handleCollaboratorDelete.bind(this);
@@ -102,6 +103,12 @@ class PubCollaboration extends Component {
 	}
 	handlePostDiscussion(discussionObject) {
 		this.props.dispatch(postDiscussion({
+			...discussionObject,
+			communityId: this.props.pubData.data.communityId,
+		}));
+	}
+	handlePutDiscussion(discussionObject) {
+		this.props.dispatch(putDiscussion({
 			...discussionObject,
 			communityId: this.props.pubData.data.communityId,
 		}));
@@ -261,6 +268,7 @@ class PubCollaboration extends Component {
 												loginData={this.props.loginData.data}
 												pathname={`${this.props.location.pathname}${this.props.location.search}`}
 												handleReplySubmit={this.handlePostDiscussion}
+												handleReplyEdit={this.handlePutDiscussion}
 												submitLoading={this.props.pubData.postDiscussionIsLoading}
 											/>
 										}

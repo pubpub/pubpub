@@ -14,6 +14,10 @@ import {
 	POST_DISCUSSION_SUCCESS,
 	POST_DISCUSSION_FAIL,
 
+	PUT_DISCUSSION_LOAD,
+	PUT_DISCUSSION_SUCCESS,
+	PUT_DISCUSSION_FAIL,
+
 	POST_COLLABORATOR_LOAD,
 	POST_COLLABORATOR_SUCCESS,
 	POST_COLLABORATOR_FAIL,
@@ -111,6 +115,26 @@ export default function reducer(state = defaultState, action) {
 			...state,
 			postDiscussionIsLoading: false,
 		};
+	/* Put Discussion Data */
+	/* -------------------- */
+	case PUT_DISCUSSION_LOAD:
+		return state;
+	case PUT_DISCUSSION_SUCCESS:
+		return {
+			...state,
+			data: {
+				...state.data,
+				discussions: state.data.discussions.map((item)=> {
+					if (item.id !== action.result.id) { return item; }
+					return {
+						...item,
+						...action.result,
+					}
+				})
+			}
+		};
+	case PUT_DISCUSSION_FAIL:
+		return state;
 	/* POST Collaborator Data */
 	/* -------------------- */
 	case POST_COLLABORATOR_LOAD:

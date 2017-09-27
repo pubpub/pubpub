@@ -6,6 +6,7 @@ import Avatar from 'components/Avatar/Avatar';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
 import { Editor } from '@pubpub/editor';
 import DiscussionInput from 'components/DiscussionInput/DiscussionInput';
+import DiscussionThreadItem from 'components/DiscussionThreadItem/DiscussionThreadItem';
 
 require('./discussionThread.scss');
 
@@ -15,6 +16,7 @@ const propTypes = {
 	loginData: PropTypes.object,
 	pathname: PropTypes.string.isRequired,
 	handleReplySubmit: PropTypes.func.isRequired,
+	handleReplyEdit: PropTypes.func.isRequired,
 	submitLoading: PropTypes.bool,
 };
 const defaultProps = {
@@ -60,50 +62,12 @@ const DiscussionThread = function(props) {
 			<div>
 				{sortedDiscussions.map((discussion)=> {
 					return (
-						<div className={'discussion'} key={`discussion-${discussion.id}`}>
-
-							<div className={'item-header'}>
-								<Link to={`/user/${discussion.author.slug}`}>
-									<Avatar
-										width={30}
-										userInitials={discussion.author.initials}
-										userAvatar={discussion.author.avatar}
-									/>
-								</Link>
-
-								<div className={'details'}>
-									<div className={'name'}>
-										<Link to={`/user/${discussion.author.slug}`}>{discussion.author.fullName || discussion.author.userInitials}</Link>
-									</div>
-									<TimeAgo date={discussion.createdAt} className={'date'} />
-								</div>
-
-								<div className={'pt-button-group pt-minimal pt-small'}>
-									{discussion.userId === props.loginData.id &&
-										<button type={'button'} className={'pt-button pt-icon-edit2'} />
-									}
-
-									{/*
-									<DropdownButton icon={'pt-icon-more'} isRightAligned={true}>
-										<div className={'pt-menu'}>
-											<div className="pt-menu-item pt-popover-dismiss">
-												Flag
-											</div>
-											<div className="pt-menu-item pt-popover-dismiss">
-												Link To...
-											</div>
-										</div>
-									</DropdownButton>
-									*/}
-								</div>
-
-							</div>
-
-							<div className={'text'}>
-								<Editor initialContent={discussion.content} isReadOnly={true} />
-							</div>
-
-						</div>
+						<DiscussionThreadItem
+							key={`discussion-${discussion.id}`}
+							discussion={discussion}
+							isAuthor={discussion.userId === props.loginData.id}
+							onReplyEdit={props.handleReplyEdit}
+						/>
 					);
 				})}
 			</div>

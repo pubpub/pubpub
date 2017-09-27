@@ -18,6 +18,10 @@ export const POST_DISCUSSION_LOAD = 'pub/POST_DISCUSSION_LOAD';
 export const POST_DISCUSSION_SUCCESS = 'pub/POST_DISCUSSION_SUCCESS';
 export const POST_DISCUSSION_FAIL = 'pub/POST_DISCUSSION_FAIL';
 
+export const PUT_DISCUSSION_LOAD = 'pub/PUT_DISCUSSION_LOAD';
+export const PUT_DISCUSSION_SUCCESS = 'pub/PUT_DISCUSSION_SUCCESS';
+export const PUT_DISCUSSION_FAIL = 'pub/PUT_DISCUSSION_FAIL';
+
 export const POST_COLLABORATOR_LOAD = 'pub/POST_COLLABORATOR_LOAD';
 export const POST_COLLABORATOR_SUCCESS = 'pub/POST_COLLABORATOR_SUCCESS';
 export const POST_COLLABORATOR_FAIL = 'pub/POST_COLLABORATOR_FAIL';
@@ -107,6 +111,33 @@ export function postDiscussion({ title, content, text, userId, pubId, communityI
 		})
 		.catch((error) => {
 			dispatch({ type: POST_DISCUSSION_FAIL, error });
+		});
+	};
+}
+
+export function putDiscussion({ content, text, pubId, communityId, discussionId, userId }) {
+	return (dispatch) => {
+		dispatch({ type: PUT_DISCUSSION_LOAD });
+		return apiFetch('/discussions', {
+			method: 'PUT',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				content,
+				text,
+				pubId,
+				communityId,
+				discussionId,
+				userId,
+			})
+		})
+		.then((result) => {
+			dispatch({ type: PUT_DISCUSSION_SUCCESS, result });
+		})
+		.catch((error) => {
+			dispatch({ type: PUT_DISCUSSION_FAIL, error });
 		});
 	};
 }
