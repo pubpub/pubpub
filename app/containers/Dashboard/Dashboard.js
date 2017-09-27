@@ -7,9 +7,10 @@ import { withRouter } from 'react-router-dom';
 import DashboardSide from 'components/DashboardSide/DashboardSide';
 import DashboardCollection from 'components/DashboardCollection/DashboardCollection';
 import DashboardCollectionEdit from 'components/DashboardCollectionEdit/DashboardCollectionEdit';
+import DashboardCollectionLoading from 'components/DashboardCollection/DashboardCollectionLoading';
 import DashboardCreateCollection from 'components/DashboardCreateCollection/DashboardCreateCollection';
 import DashboardSite from 'components/DashboardSite/DashboardSite';
-import { getCollectionData, postCollection } from 'actions/collection';
+import { getCollectionData, postCollection, putCollection } from 'actions/collection';
 import { putAppData } from 'actions/app';
 import { createPub } from 'actions/pubCreate';
 
@@ -31,19 +32,27 @@ class Dashboard extends Component {
 		this.handleCreatePub = this.handleCreatePub.bind(this);
 		this.handleSiteSave = this.handleSiteSave.bind(this);
 		this.handleCollectionCreate = this.handleCollectionCreate.bind(this);
+		this.handleCollectionSave = this.handleCollectionSave.bind(this);
 	}
 	componentWillMount() {
 		this.dispatchGetCollectionData(this.props);
 	}
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.match.params.slug !== this.props.match.params.slug) {
-			this.dispatchGetCollectionData(nextProps);
+			if (nextProps.match.params.slug !== nextProps.collectionData.data.slug) {
+				this.dispatchGetCollectionData(nextProps);	
+			}
 		}
 		if (!this.props.pubCreateData.data && nextProps.pubCreateData.data) {
 			this.props.history.push(`/pub/${nextProps.pubCreateData.data.newPubSlug}/collaborate`);
 		}
 		if (this.props.appData.data && this.props.appData.data.subdomain !== nextProps.appData.data.subdomain) {
 			window.location.href = window.location.href.replace(this.props.appData.data.subdomain, nextProps.appData.data.subdomain);
+		}
+		if (this.props.appData.putCollectionIsLoading && !nextProps.appData.putCollectionIsLoading) {
+			const oldSlug = this.props.match.params.slug;
+			const newSlug = nextProps.collectionData.data.slug;
+			this.props.history.push(`${nextProps.location.pathname.replace(`/dashboard/${oldSlug}`, `/dashboard/${newSlug}`).replace('/edit', '')}${nextProps.location.search}`);
 		}
 	}
 
@@ -74,9 +83,15 @@ class Dashboard extends Component {
 		this.props.dispatch(putAppData(siteObject));
 	}
 	handleCollectionCreate(collectionObject) {
-		console.log(collectionObject);
 		const communityId = this.props.appData.data.id;
 		this.props.dispatch(postCollection({
+			...collectionObject,
+			communityId: communityId,
+		}));
+	}
+	handleCollectionSave(collectionObject) {
+		const communityId = this.props.appData.data.id;
+		this.props.dispatch(putCollection({
 			...collectionObject,
 			communityId: communityId,
 		}));
@@ -96,6 +111,7 @@ class Dashboard extends Component {
 		const activeMode = this.props.match.params.mode || '';
 		const activeItem = appData.collections.reduce((prev, curr)=> {
 			if (activeSlug === curr.slug) { return curr; }
+			if (activeSlug === 'home' && !curr.slug) { return curr; }
 			return prev;
 		}, {});
 
@@ -107,6 +123,7 @@ class Dashboard extends Component {
 		if (activeSlug === 'collection') { activeItem.title = 'New Collection'; }
 		collectionData.title = activeItem.title;
 		collectionData.isPage = activeItem.isPage;
+		if (!activeItem.title) { activeItem.title = 'Not Found'; }
 		return (
 			<div className={'dashboard'}>
 
@@ -176,7 +193,17 @@ class Dashboard extends Component {
 										break;
 									default:
 										if (activeMode === 'edit') {
-											return <DashboardCollectionEdit collectionData={collectionData} />;
+											if (collectionData.id) {
+												return (
+													<DashboardCollectionEdit
+														collectionData={collectionData}
+														isLoading={this.props.appData.putCollectionIsLoading}
+														error={this.props.appData.putCollectionError}
+														onSave={this.handleCollectionSave}
+													/>
+												);
+											}
+											return <DashboardCollectionLoading />;
 										}
 										return (
 											<DashboardCollection

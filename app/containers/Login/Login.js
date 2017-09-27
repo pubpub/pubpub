@@ -77,17 +77,18 @@ class Login extends Component {
 									type={'password'}
 									value={this.state.password}
 									onChange={this.onPasswordChange}
-									error={this.props.loginData.error}
 								/>
-								<Button
-									name={'login'}
-									type={'submit'}
-									className={'pt-button pt-intent-primary'}
-									onClick={this.onLoginSubmit}
-									text={'Login'}
-									disabled={!this.state.email || !this.state.password}
-									loading={this.props.loginData.isLoading}
-								/>
+								<InputField error={this.props.loginData.error}>
+									<Button
+										name={'login'}
+										type={'submit'}
+										className={'pt-button pt-intent-primary'}
+										onClick={this.onLoginSubmit}
+										text={'Login'}
+										disabled={!this.state.email || !this.state.password}
+										loading={this.props.loginData.isLoading}
+									/>
+								</InputField>
 							</form>
 
 							<Link to={'/signup'} className={'switch-message'}>Don't have an account? Click to Signup</Link>

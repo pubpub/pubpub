@@ -15,6 +15,10 @@ import {
 	POST_COLLECTION_LOAD,
 	POST_COLLECTION_SUCCESS,
 	POST_COLLECTION_FAIL,
+
+	PUT_COLLECTION_LOAD,
+	PUT_COLLECTION_SUCCESS,
+	PUT_COLLECTION_FAIL,
 } from 'actions/collection';
 
 /* ------------------- */
@@ -28,6 +32,8 @@ const defaultState = {
 	putError: undefined,
 	postCollectionIsLoading: false,
 	postCollectionError: undefined,
+	putCollectionIsLoading: false,
+	putCollectionError: undefined,
 };
 
 /* ----------------------------------------- */
@@ -78,7 +84,7 @@ export default function reducer(state = defaultState, action) {
 			putIsLoading: false,
 			putError: action.error,
 		};
-	/* POST Collection*/
+	/* POST Collection */
 	case POST_COLLECTION_LOAD:
 		return {
 			...state,
@@ -102,6 +108,33 @@ export default function reducer(state = defaultState, action) {
 			...state,
 			postCollectionIsLoading: false,
 			postCollectionError: action.error
+		};
+	/* PUT Collection */
+	case PUT_COLLECTION_LOAD:
+		return {
+			...state,
+			putCollectionIsLoading: true,
+		};
+	case PUT_COLLECTION_SUCCESS:
+		return {
+			data: {
+				...state.data,
+				collections: state.data.collections.map((item)=> {
+					if (item.id !== action.result.id) { return item; }
+					return {
+						...item,
+						...action.result,
+					};
+				})
+			},
+			putCollectionIsLoading: false,
+			putCollectionError: undefined
+		};
+	case PUT_COLLECTION_FAIL:
+		return {
+			...state,
+			putCollectionIsLoading: false,
+			putCollectionError: action.error
 		};
 	default:
 		return state;

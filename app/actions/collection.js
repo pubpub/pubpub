@@ -14,6 +14,10 @@ export const POST_COLLECTION_LOAD = 'collection/POST_COLLECTION_LOAD';
 export const POST_COLLECTION_SUCCESS = 'collection/POST_COLLECTION_SUCCESS';
 export const POST_COLLECTION_FAIL = 'collection/POST_COLLECTION_FAIL';
 
+export const PUT_COLLECTION_LOAD = 'collection/PUT_COLLECTION_LOAD';
+export const PUT_COLLECTION_SUCCESS = 'collection/PUT_COLLECTION_SUCCESS';
+export const PUT_COLLECTION_FAIL = 'collection/PUT_COLLECTION_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -56,6 +60,34 @@ export function postCollection({ communityId, title, slug, isPage, description }
 		})
 		.catch((error) => {
 			dispatch({ type: POST_COLLECTION_FAIL, error });
+		});
+	};
+}
+
+export function putCollection({ communityId, collectionId, title, slug, description, isPublic, isOpenSubmissions }) {
+	return (dispatch) => {
+		dispatch({ type: PUT_COLLECTION_LOAD });
+		return apiFetch('/collections', {
+			method: 'PUT',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				communityId,
+				collectionId,
+				title,
+				slug,
+				description,
+				isPublic,
+				isOpenSubmissions,
+			})
+		})
+		.then((result) => {
+			dispatch({ type: PUT_COLLECTION_SUCCESS, result });
+		})
+		.catch((error) => {
+			dispatch({ type: PUT_COLLECTION_FAIL, error });
 		});
 	};
 }

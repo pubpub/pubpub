@@ -55,7 +55,7 @@ const DashboardCollection = function(props) {
 	return (
 		<div className={'dashboard-collection'}>
 			<div className={'content-buttons'}>
-				<Link to={`/dashboard/${data.slug}/edit`} className={'pt-button'}>Edit {data.isPage ? 'Page' : 'Collection'}</Link>
+				<Link to={`/dashboard/${data.slug || 'home'}/edit`} className={'pt-button'}>Edit {data.isPage ? 'Page' : 'Collection'}</Link>
 				{!data.isPage &&
 					<Button
 						type={'button'}
@@ -92,10 +92,14 @@ const DashboardCollection = function(props) {
 					? <div><span className={'pt-icon-standard pt-icon-globe'} /> Public</div>
 					: <div><span className={'pt-icon-standard pt-icon-lock'} /> Private</div>
 				}
-				<div className={'status-bar-separator'}>·</div>
-				{data.isOpenSubmissions
-					? <div><span className={'pt-icon-standard pt-icon-add-to-artifact'} /> Open Submissions</div>
-					: <div><span className={'pt-icon-standard pt-icon-delete'} /> Closed Submissions</div>
+				{!data.isPage &&
+					<div>
+						<div className={'status-bar-separator'}>·</div>
+						{data.isOpenSubmissions
+							? <div><span className={'pt-icon-standard pt-icon-add-to-artifact'} /> Open Submissions</div>
+							: <div><span className={'pt-icon-standard pt-icon-delete'} /> Closed Submissions</div>
+						}
+					</div>
 				}
 			</div>
 

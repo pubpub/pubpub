@@ -5,6 +5,10 @@ import {
 	GET_COLLECTION_DATA_LOAD,
 	GET_COLLECTION_DATA_SUCCESS,
 	GET_COLLECTION_DATA_FAIL,
+
+	PUT_COLLECTION_LOAD,
+	PUT_COLLECTION_SUCCESS,
+	PUT_COLLECTION_FAIL,
 } from 'actions/collection';
 
 /* ------------------- */
@@ -39,6 +43,18 @@ export default function reducer(state = defaultState, action) {
 			isLoading: false,
 			error: action.error,
 		};
+	case PUT_COLLECTION_LOAD:
+		return state;
+	case PUT_COLLECTION_SUCCESS:
+		return {
+			...state,
+			data: {
+				...state.data,
+				...action.result,
+			}
+		};
+	case PUT_COLLECTION_FAIL:
+		return state;
 	default:
 		return state;
 	}
