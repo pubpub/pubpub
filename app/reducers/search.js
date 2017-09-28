@@ -11,8 +11,8 @@ import {
 // Define Default State
 /* ------------------- */
 const defaultState = {
-	results: [],
-	loading: false,
+	data: undefined,
+	isLoading: false,
 	error: undefined,
 };
 
@@ -23,18 +23,18 @@ export default function reducer(state = defaultState, action) {
 	switch (action.type) {
 	case GET_SEARCH_RESULTS_LOAD:
 		return {
-			loading: true,
+			isLoading: true,
 			error: undefined,
 		};
 	case GET_SEARCH_RESULTS_SUCCESS:
 		return {
-			results: action.result,
-			loading: false,
+			data: action.result,
+			isLoading: false,
 			error: undefined,
 		};
 	case GET_SEARCH_RESULTS_FAIL:
 		return {
-			loading: false,
+			isLoading: false,
 			error: action.error,
 		};
 	default:

@@ -144,7 +144,7 @@ class Dashboard extends Component {
 							</div>
 
 							<div className={'content-panel'}>
-								{(() => {
+								{(()=> {
 									switch (activeSlug) {
 									case 'activity':
 										// Return activity component

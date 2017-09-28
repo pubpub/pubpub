@@ -6,9 +6,9 @@ import { apiFetch } from 'utilities';
 // All action types are defined as constants. Do not manually pass action
 // types as strings in action creators
 /*--------*/
-export const GET_SEARCH_RESULTS_LOAD = 'pub/GET_SEARCH_RESULTS_LOAD';
-export const GET_SEARCH_RESULTS_SUCCESS = 'pub/GET_SEARCH_RESULTS_SUCCESS';
-export const GET_SEARCH_RESULTS_FAIL = 'pub/GET_SEARCH_RESULTS_FAIL';
+export const GET_SEARCH_RESULTS_LOAD = 'search/GET_SEARCH_RESULTS_LOAD';
+export const GET_SEARCH_RESULTS_SUCCESS = 'search/GET_SEARCH_RESULTS_SUCCESS';
+export const GET_SEARCH_RESULTS_FAIL = 'search/GET_SEARCH_RESULTS_FAIL';
 
 /*--------*/
 // Define Action creators
@@ -18,9 +18,15 @@ export const GET_SEARCH_RESULTS_FAIL = 'pub/GET_SEARCH_RESULTS_FAIL';
 // function calls
 /*--------*/
 export function getSearch(query) {
+	if (!query) {
+		return (dispatch)=> {
+			dispatch({ type: GET_SEARCH_RESULTS_SUCCESS, result: undefined });
+		};
+	}
+
 	return (dispatch) => {
 		dispatch({ type: GET_SEARCH_RESULTS_LOAD });
-		return apiFetch(`/search?q=${query}`)
+		return apiFetch(`/search/pubs?q=${query}`)
 		.then((result) => {
 			dispatch({ type: GET_SEARCH_RESULTS_SUCCESS, result });
 		})
