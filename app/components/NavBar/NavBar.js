@@ -21,7 +21,12 @@ const NavBar = function(props) {
 								if (!item.children) {
 									return (
 										<Link to={`/${item.slug}`} key={`nav-item-${item.id}`}>
-											<li>{item.title}</li>
+											<li>
+												{!item.isPublic &&
+													<span className={'pt-icon-standard pt-icon-lock2 pt-align-left'} />
+												}
+												{item.title}
+											</li>
 										</Link>
 									);
 								}
@@ -33,13 +38,18 @@ const NavBar = function(props) {
 												{item.children.map((subitem)=> {
 													return (
 														<Link className={'pt-menu-item pt-popover-dismiss'} to={`/${subitem.slug}`} key={`nav-item-${subitem.id}`}>
-															<li>{subitem.title}</li>
+															<li>
+																{!item.isPublic &&
+																	<span className={'pt-icon-standard pt-icon-lock2 pt-align-left'} />
+																}
+																{subitem.title}
+															</li>
 														</Link>
 													);
 												})}
 											</Menu>
 										}
-										popoverClassName={'pt-minimal'}
+										popoverClassName={'pt-minimal nav-bar-popover'}
 										inheritDarkTheme={false}
 										position={Position.BOTTOM_LEFT}
 										interactionKind={PopoverInteractionKind.HOVER}

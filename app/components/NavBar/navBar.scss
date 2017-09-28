@@ -30,5 +30,19 @@
 		text-transform: uppercase;
 		text-decoration: inherit;
 		font-weight: 500;
+		.pt-icon-lock2 {
+			font-size: 14px;
+			padding-right: 0.15em;
+			position: relative;
+			top: -1px;
+		}
+	}
+}
+.nav-bar-popover {
+	.pt-icon-lock2 {
+		font-size: 14px;
+		padding-right: 0.15em;
+		position: relative;
+		top: -1px;
 	}
 }

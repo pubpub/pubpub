@@ -285,7 +285,7 @@ class PubCollaboration extends Component {
 														/>
 													);
 												})}
-												{archivedThreads.length &&
+												{!!archivedThreads.length &&
 													<div className={'archived-threads'}>
 														<button className={'pt-button pt-minimal pt-large pt-fill archive-title-button'} onClick={this.toggleArchivedVisible}>
 															{this.state.isArchivedVisible ? 'Hide ' : 'Show '}

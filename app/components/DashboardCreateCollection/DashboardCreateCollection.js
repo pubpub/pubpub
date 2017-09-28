@@ -10,11 +10,13 @@ const propTypes = {
 	isLoading: PropTypes.bool,
 	error: PropTypes.string,
 	onCreate: PropTypes.func,
+	updatePath: PropTypes.func,
 };
 const defaultProps = {
 	isLoading: false,
 	error: undefined,
 	onCreate: ()=>{},
+	updatePath: ()=>{},
 };
 
 class DashboardCreateCollection extends Component {
@@ -30,7 +32,11 @@ class DashboardCreateCollection extends Component {
 		this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
 		this.handleCreateSubmit = this.handleCreateSubmit.bind(this);
 	}
-
+	componentWillReceiveProps(nextProps) {
+		if (this.props.isLoading && !nextProps.isLoading && !nextProps.error) {
+			nextProps.updatePath(`/dashboard/${this.state.slug}`);
+		}
+	}
 	handleTitleChange(evt) {
 		this.setState({ title: evt.target.value });
 	}

@@ -28,9 +28,17 @@ const defaultProps = {
 };
 
 const PubPreview = function(props) {
-	const bannerStyle = {
-		backgroundImage: `url("${props.bannerImage}")`
-	};
+	const gradients = [
+		'linear-gradient(to right, rgba(116, 235, 213, 0.5), rgba(172, 182, 229, 0.5))',
+		'linear-gradient(to right, rgba(225, 238, 195, 0.5), rgba(240, 80, 83, 0.5))',
+		'linear-gradient(to right, rgba(34, 193, 195, 0.5), rgba(253, 187, 45, 0.5))',
+		'linear-gradient(to right, rgba(217, 167, 199, 0.5), rgba(255, 252, 220, 0.5))',
+		'linear-gradient(to right, rgba(201, 214, 255, 0.5), rgba(226, 226, 226, 0.5))'
+	];
+	const bannerStyle = props.bannerImage
+		? { backgroundImage: `url("${props.bannerImage}")` }
+		: { background: gradients[props.title.charCodeAt(0) % 4] };
+
 	const contributorsCount = props.authors.length + props.contributors.length;
 	return (
 		<div className={`pub-preview ${props.isLarge ? 'large-preview' : ''}`}>

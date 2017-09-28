@@ -33,6 +33,7 @@ class Dashboard extends Component {
 		this.handleSiteSave = this.handleSiteSave.bind(this);
 		this.handleCollectionCreate = this.handleCollectionCreate.bind(this);
 		this.handleCollectionSave = this.handleCollectionSave.bind(this);
+		this.updatePath = this.updatePath.bind(this);
 	}
 	componentWillMount() {
 		this.dispatchGetCollectionData(this.props);
@@ -95,6 +96,9 @@ class Dashboard extends Component {
 			...collectionObject,
 			communityId: communityId,
 		}));
+	}
+	updatePath(updatedPath) {
+		this.props.history.push(updatedPath);
 	}
 	render() {
 		const appData = this.props.appData.data || {};
@@ -175,6 +179,7 @@ class Dashboard extends Component {
 													onCreate={this.handleCollectionCreate}
 													isLoading={this.props.appData.postCollectionIsLoading}
 													error={this.props.appData.postCollectionError}
+													updatePath={this.updatePath}
 												/>
 											);
 										}
@@ -187,6 +192,7 @@ class Dashboard extends Component {
 													onCreate={this.handleCollectionCreate}
 													isLoading={this.props.appData.postCollectionIsLoading}
 													error={this.props.appData.postCollectionError}
+													updatePath={this.updatePath}
 												/>
 											);
 										}
