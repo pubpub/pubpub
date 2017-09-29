@@ -97,3 +97,26 @@ export function s3Upload(file, progressEvent, finishEvent, index) {
 	getPolicy.open('GET', `${urlPrefix}/uploadPolicy?contentType=${file.type}`);
 	getPolicy.send();
 }
+
+export function getRandomColor() {
+	const colors = [
+		'244,67,54',
+		'63,81,181',
+		'0,150,136',
+		'255,152,0',
+		'96,125,139',
+		'233,30,99',
+		'3,169,244',
+		'156,39,176',
+		'139,195,74',
+		'103,58,183',
+		'121,85,72',
+		'33,150,243',
+		'255,193,7',
+		'0,188,212',
+		'76,175,80',
+		'205,220,57',
+		'255,87,34',
+	];
+	return colors[Math.floor(Math.random() * colors.length)];
+}

@@ -22,7 +22,7 @@ import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionPreviewArchived from 'components/DiscussionPreviewArchived/DiscussionPreviewArchived';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import { getPubData, putPubData, postDiscussion, putDiscussion, postCollaborator, putCollaborator, deleteCollaborator, postVersion } from 'actions/pub';
-import { s3Upload, nestDiscussionsToThreads } from 'utilities';
+import { s3Upload, nestDiscussionsToThreads, getRandomColor } from 'utilities';
 
 require('./pubCollaboration.scss');
 require('components/PubBody/pubBody.scss');
@@ -40,12 +40,24 @@ const propTypes = {
 class PubCollaboration extends Component {
 	constructor(props) {
 		super(props);
+		const loginData = props.loginData.data || {};
+		const userColor = getRandomColor();
+		this.localUser = {
+			id: loginData.id || 'anon',
+			backgroundColor: `rgba(${userColor}, 0.2)`,
+			cursorColor: `rgba(${userColor}, 1.0)`,
+			image: loginData.avatar || null,
+			name: loginData.fullName || 'Anonymous',
+			intitials: loginData.initials || '?',
+		};
+
 		this.state = {
 			isPublishOpen: false,
 			isShareOpen: false,
 			isDetailsOpen: false,
 			isCollaboratorsOpen: false,
 			isArchivedVisible: false,
+			activeCollaborators: [this.localUser],
 		};
 		this.editorRef = undefined;
 		this.togglePublish = this.togglePublish.bind(this);
@@ -63,6 +75,7 @@ class PubCollaboration extends Component {
 		this.onOpenDetails = this.onOpenDetails.bind(this);
 		this.onOpenCollaborators = this.onOpenCollaborators.bind(this);
 		this.handlePublish = this.handlePublish.bind(this);
+		this.handleClientChange = this.handleClientChange.bind(this);
 		this.focusEditor = this.focusEditor.bind(this);
 	}
 	componentWillMount() {
@@ -161,7 +174,12 @@ class PubCollaboration extends Component {
 	focusEditor() {
 		this.editorRef.focus();
 	}
-
+	handleClientChange(clients) {
+		this.setState({
+			activeCollaborators: [this.localUser, ...clients]
+		});
+		console.log([this.localUser, ...clients]);
+	}
 	render() {
 		const queryObject = queryString.parse(this.props.location.search);
 
@@ -227,7 +245,6 @@ class PubCollaboration extends Component {
 
 		return (
 			<div className={'pub-collaboration'}>
-
 				<Helmet>
 					<title>Edit</title>
 				</Helmet>
@@ -239,7 +256,7 @@ class PubCollaboration extends Component {
 								<PubCollabHeader
 									pubData={pubData}
 									collaborators={pubData.contributors}
-									activeCollaborators={pubData.contributors.slice(0,3)}
+									activeCollaborators={this.state.activeCollaborators}
 									onPublishClick={this.togglePublish}
 									onShareClick={this.toggleShare}
 									onDetailsClick={this.toggleDetails}
@@ -348,8 +365,9 @@ class PubCollaboration extends Component {
 													storageBucket: 'pubpub-rich.appspot.com',
 													messagingSenderId: '543714905893',
 												}}
-												clientID={`user-${loginData.id}-${Math.ceil(Math.random() * 2500)}`}
+												clientData={this.state.activeCollaborators[0]}
 												editorKey={`pub-${pubData.id}`}
+												onClientChange={this.handleClientChange}
 											/>
 											{/*<Image handleFileUpload={s3Upload} />*/}
 										</Editor>

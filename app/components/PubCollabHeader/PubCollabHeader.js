@@ -79,13 +79,15 @@ const PubCollabHeader = function(props) {
 					<span tabIndex={0} role={'button'} className={'pt-icon-standard pt-icon-edit'} onClick={props.onCollaboratorsClick} />
 				</div>
 				<div className={'flex-right avatars'}>
-					{props.activeCollaborators.map((collaborator)=> {
+					{props.activeCollaborators.filter((item)=> {
+						return item;
+					}).map((collaborator)=> {
 						return (
 							<div className={'avatar-wrapper'} key={`avatar-${collaborator.id}`}>
 								<Avatar
-									userInitials={collaborator.userInitials}
-									userAvatar={collaborator.userAvatar}
-									borderColor={collaborator.color}
+									userInitials={collaborator.initials}
+									userAvatar={collaborator.image}
+									borderColor={collaborator.cursorColor}
 									borderWidth={'2px'}
 									width={24}
 								/>
