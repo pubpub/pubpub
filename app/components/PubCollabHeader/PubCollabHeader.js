@@ -29,6 +29,10 @@ const PubCollabHeader = function(props) {
 		return collaborator.Contributor.isAuthor;
 	});
 	const isAuthor = true;
+	const uniqueActiveCollaborators = {};
+	props.activeCollaborators.forEach((item)=> {
+		uniqueActiveCollaborators[item.id] = item;
+	});
 	return (
 		<div className={'pub-collab-header'} >
 			<div className={'flex-parent'}>
@@ -79,11 +83,13 @@ const PubCollabHeader = function(props) {
 					<span tabIndex={0} role={'button'} className={'pt-icon-standard pt-icon-edit'} onClick={props.onCollaboratorsClick} />
 				</div>
 				<div className={'flex-right avatars'}>
-					{props.activeCollaborators.filter((item)=> {
+					{Object.keys(uniqueActiveCollaborators).map((key)=> {
+						return uniqueActiveCollaborators[key];
+					}).filter((item)=> {
 						return item;
 					}).map((collaborator)=> {
 						return (
-							<div className={'avatar-wrapper'} key={`avatar-${collaborator.id}`}>
+							<div className={'avatar-wrapper'} key={`present-avatar-${collaborator.id}`}>
 								<Avatar
 									userInitials={collaborator.initials}
 									userAvatar={collaborator.image}

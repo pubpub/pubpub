@@ -50,17 +50,21 @@ export const populateNavigationIds = function(collections, navigation) {
 	});
 };
 
-function generateFolderName() {
-	let folderName = '';
-	const possible = 'abcdefghijklmnopqrstuvwxyz';
-	for (let charIndex = 0; charIndex < 8; charIndex++) { folderName += possible.charAt(Math.floor(Math.random() * possible.length)); }	
-	return folderName;
+export function generateHash(length) {
+	const tokenLength = length || 32;
+	const possible = 'abcdefghijklmnopqrstuvwxyz0123456789';
+
+	let hash = '';
+	for (let index = 0; index < tokenLength; index++) {
+		hash += possible.charAt(Math.floor(Math.random() * possible.length));
+	}
+	return hash;
 }
 
 export function s3Upload(file, progressEvent, finishEvent, index) {
 	function beginUpload() {
 		const folderName = window.location.hostname !== 'localhost' && window.location.hostname !== 'dev.pubpub.org'
-			? generateFolderName()
+			? generateHash(8)
 			: '_testing';
 
 		const extension = file.name !== undefined ? file.name.substr((~-file.name.lastIndexOf('.') >>> 0) + 2) : 'jpg';

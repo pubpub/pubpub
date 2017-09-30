@@ -33,6 +33,8 @@ import {
 	POST_VERSION_LOAD,
 	POST_VERSION_SUCCESS,
 	POST_VERSION_FAIL,
+
+	CLEAR_PUB_DATA,
 } from 'actions/pub';
 
 /* ------------------- */
@@ -211,6 +213,8 @@ export default function reducer(state = defaultState, action) {
 			...state,
 			postVersionIsLoading: false,
 		};
+	case CLEAR_PUB_DATA:
+		return defaultState;
 	default:
 		return state;
 	}

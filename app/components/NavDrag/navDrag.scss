@@ -1,0 +1,19 @@
+.nav-drag {
+	.list-style {
+		background: lightgrey;
+		padding: 8px;
+		width: 250px;
+		&.dragging {
+			background: lightblue;
+		}
+	}
+	.item-style {
+		user-select: none;
+		padding: 16px;
+		margin-bottom: 8px;
+		background: grey;
+		&.dragging {
+			background: lightgreen;
+		}
+	}
+}

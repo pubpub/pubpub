@@ -21,7 +21,7 @@ import DiscussionNew from 'components/DiscussionNew/DiscussionNew';
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionPreviewArchived from 'components/DiscussionPreviewArchived/DiscussionPreviewArchived';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
-import { getPubData, putPubData, postDiscussion, putDiscussion, postCollaborator, putCollaborator, deleteCollaborator, postVersion } from 'actions/pub';
+import { getPubData, putPubData, postDiscussion, putDiscussion, postCollaborator, putCollaborator, deleteCollaborator, postVersion, clearPubData } from 'actions/pub';
 import { s3Upload, nestDiscussionsToThreads, getRandomColor } from 'utilities';
 
 require('./pubCollaboration.scss');
@@ -43,7 +43,7 @@ class PubCollaboration extends Component {
 		const loginData = props.loginData.data || {};
 		const userColor = getRandomColor();
 		this.localUser = {
-			id: loginData.id || 'anon',
+			id: loginData.id || `anon-${Math.floor(Math.random() * 9999)}`,
 			backgroundColor: `rgba(${userColor}, 0.2)`,
 			cursorColor: `rgba(${userColor}, 1.0)`,
 			image: loginData.avatar || null,
@@ -98,7 +98,9 @@ class PubCollaboration extends Component {
 			this.props.history.push(nextProps.location.pathname.replace('/collaborate', ''));
 		}
 	}
-
+	componentWillUnmount() {
+		// this.props.dispatch(clearPubData());
+	}
 	togglePublish() {
 		this.setState({ isPublishOpen: !this.state.isPublishOpen });
 	}
@@ -178,7 +180,6 @@ class PubCollaboration extends Component {
 		this.setState({
 			activeCollaborators: [this.localUser, ...clients]
 		});
-		console.log([this.localUser, ...clients]);
 	}
 	render() {
 		const queryObject = queryString.parse(this.props.location.search);

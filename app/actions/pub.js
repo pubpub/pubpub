@@ -38,6 +38,8 @@ export const POST_VERSION_LOAD = 'pub/POST_VERSION_LOAD';
 export const POST_VERSION_SUCCESS = 'pub/POST_VERSION_SUCCESS';
 export const POST_VERSION_FAIL = 'pub/POST_VERSION_FAIL';
 
+export const CLEAR_PUB_DATA = 'pub/CLEAR_PUB_DATA';
+
 /*--------*/
 // Define Action creators
 //
@@ -241,3 +243,10 @@ export function postVersion({ pubId, content }) {
 		});
 	};
 }
+
+export function clearPubData() {
+	return (dispatch) => {
+		dispatch({ type: CLEAR_PUB_DATA });
+	}
+}
+

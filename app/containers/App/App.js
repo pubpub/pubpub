@@ -66,7 +66,8 @@ class App extends Component {
 		const collections = appData.collections || [];
 		const navigation = appData.navigation || [];
 		const navItems = populateNavigationIds(collections, navigation);
-
+		// console.log(JSON.stringify(navItems, null, 2));
+		console.log(JSON.stringify(collections, null, 4));
 		return (
 			<div>
 				<Helmet>
