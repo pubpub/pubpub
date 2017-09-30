@@ -1,14 +1,18 @@
 .nav-drag {
-	.list-style {
+	.main-list-style {
 		background: lightgrey;
+		width: 100%;
+		overflow: hidden;
+		overflow-x: scroll;
+		display: inline-flex;
 		padding: 8px;
-		width: 250px;
 		&.dragging {
 			background: lightblue;
 		}
 	}
 	.item-style {
 		user-select: none;
+		white-space: nowrap;
 		padding: 16px;
 		margin-bottom: 8px;
 		background: grey;

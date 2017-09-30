@@ -48,6 +48,10 @@ class CollectionAutocomplete extends Component {
 			const fuzzyMatchSlug = fuzzysearch(query, item.slug);
 			const alreadyUsed = usedIndexes.indexOf(item.id) > -1;
 			return item.slug && !alreadyUsed && (fuzzyMatchName || fuzzyMatchSlug);
+		}).sort((foo, bar)=> {
+			if (foo.title < bar.title) { return -1; }
+			if (foo.title > bar.title) { return 1; }
+			return 0;
 		});
 	}
 
@@ -59,7 +63,7 @@ class CollectionAutocomplete extends Component {
 			children: [],
 			id: generateHash(8),
 		};
-		const outputItems = query
+		const outputItems = query && this.props.allowCustom
 			? [createOption, ...filteredItems]
 			: filteredItems;
 		this.setState({ 
