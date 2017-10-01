@@ -4,7 +4,7 @@ import { MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/labs';
 import fuzzysearch from 'fuzzysearch';
 import { generateHash } from 'utilities';
-// require('./collectionAutocomplete.scss');
+require('./collectionAutocomplete.scss');
 
 const propTypes = {
 	collections: PropTypes.array.isRequired,
@@ -80,7 +80,7 @@ class CollectionAutocomplete extends Component {
 
 	render() {
 		return (
-			<div className={'user-autocomplete'}>
+			<div className={'collection-autocomplete'}>
 				<Suggest
 					className={'input'}
 					items={this.state.items}
@@ -88,14 +88,13 @@ class CollectionAutocomplete extends Component {
 						value: this.state.value,
 						onChange: this.filterItems,
 						placeholder: this.props.placeholder,
-						// className: 'pt-large',
 					}}
 					inputValueRenderer={(item) => { return item.title; }}
 					itemRenderer={({ item, handleClick, isActive })=> {
 						return (
 							<li key={item.id || 'empty-user-create'}>
 								<a role={'button'} tabIndex={-1} onClick={handleClick} className={isActive ? 'pt-menu-item pt-active' : 'pt-menu-item'}>
-									{item.children && <span className={'new-title'}>Create dropdown group: </span>}
+									{item.children && <span className={'new-title'}>Create dropdown group:</span>}
 									<span className={'title'}>{item.title}</span>
 								</a>
 							</li>
@@ -103,7 +102,7 @@ class CollectionAutocomplete extends Component {
 					}}
 					onItemSelect={this.handleSelect}
 					noResults={<MenuItem disabled text="No results" />}
-					popoverProps={{ popoverClassName: 'pt-minimal user-autocomplete-popover' }}
+					popoverProps={{ popoverClassName: 'pt-minimal collection-autocomplete-popover' }}
 				/>
 			</div>
 		);

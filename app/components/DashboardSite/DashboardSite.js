@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
 import ImageUpload from 'components/ImageUpload/ImageUpload';
+import NavDrag from 'components/NavDrag/NavDrag';
+import { populateNavigationIds } from 'utilities';
 
 require('./dashboardSite.scss');
 
@@ -31,6 +33,7 @@ class DashboardSite extends Component {
 			largeHeaderLogo: props.appData.largeHeaderLogo,
 			largeHeaderBackground: props.appData.largeHeaderBackground,
 			accentColor: props.appData.accentColor,
+			navigation: props.appData.navigation,
 		};
 		this.handleTitleChange = this.handleTitleChange.bind(this);
 		this.handleSubdomainChange = this.handleSubdomainChange.bind(this);
@@ -41,6 +44,7 @@ class DashboardSite extends Component {
 		this.handleLargeHeaderLogoChange = this.handleLargeHeaderLogoChange.bind(this);
 		this.handleLargeHeaderBackgroundChange = this.handleLargeHeaderBackgroundChange.bind(this);
 		this.handleAccentColorChange = this.handleAccentColorChange.bind(this);
+		this.handleNavigationChange = this.handleNavigationChange.bind(this);
 		this.handleSaveClick = this.handleSaveClick.bind(this);
 	}
 	handleTitleChange(evt) {
@@ -70,6 +74,9 @@ class DashboardSite extends Component {
 	handleAccentColorChange(evt) {
 		this.setState({ accentColor: evt.target.value });
 	}
+	handleNavigationChange(val) {
+		this.setState({ navigation: val });
+	}
 	handleSaveClick(evt) {
 		evt.preventDefault();
 		this.props.onSave({
@@ -78,6 +85,10 @@ class DashboardSite extends Component {
 		});
 	}
 	render() {
+		const collections = this.props.appData.collections || [];
+		const navigation = this.props.appData.navigation || [];
+		const initialNav = populateNavigationIds(collections, navigation);
+
 		return (
 			<div className={'dashboard-site'}>
 				<h1 className={'content-title'}>Site</h1>
@@ -149,6 +160,13 @@ class DashboardSite extends Component {
 					helperText={'e.g. #FF9944'}
 					onChange={this.handleAccentColorChange}
 				/>
+				<InputField label={'Navigation'}>
+					<NavDrag
+						initialNav={initialNav}
+						collections={collections}
+						onChange={this.handleNavigationChange}
+					/>
+				</InputField>
 				<InputField error={this.props.error}>
 					<Button
 						name={'create'}

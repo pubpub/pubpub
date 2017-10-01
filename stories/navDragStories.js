@@ -2,11 +2,12 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import NavDrag from 'components/NavDrag/NavDrag';
 import { generateHash } from 'utilities';
+import AccentStyle from 'components/AccentStyle/AccentStyle';
+import { accentDataDark, accentDataLight } from './_data';
+
 const onChange = (newArray) => {
 	console.log(newArray);
 };
-
-// const initialList = [1, 2, 3, { title: 'cat', children: [4, 5]}, 6, { title: 'dog', children: [7, 8]},];
 
 const collections = [
 	{
@@ -250,6 +251,7 @@ const initialNav = [
 storiesOf('NavDrag', module)
 .add('Default', () => (
 	<div>
+		<AccentStyle {...accentDataDark} />
 		<NavDrag
 			initialNav={initialNav}
 			collections={collections}

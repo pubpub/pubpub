@@ -33,7 +33,7 @@ export function getAppData(hostname) {
 	};
 }
 
-export function putAppData({ communityId, title, subdomain, description, avatar, favicon, smallHeaderLogo, largeHeaderLogo, largeHeaderBackground, accentColor }) {
+export function putAppData({ communityId, title, subdomain, description, avatar, favicon, smallHeaderLogo, largeHeaderLogo, largeHeaderBackground, accentColor, navigation }) {
 	return (dispatch) => {
 		dispatch({ type: PUT_APP_DATA_LOAD });
 		return apiFetch('/communities', {
@@ -53,6 +53,7 @@ export function putAppData({ communityId, title, subdomain, description, avatar,
 				largeHeaderLogo,
 				largeHeaderBackground,
 				accentColor,
+				navigation,
 			})
 		})
 		.then((result) => {
