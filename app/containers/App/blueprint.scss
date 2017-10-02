@@ -38,6 +38,7 @@ $dark-navbar-background-color: $dark-gray2 !default;
 // Import Core Blueprint sass
 // ****************************
 @import "~@blueprintjs/core/src/blueprint.scss";
+@import "~@blueprintjs/labs/src/blueprint-labs.scss";
 
 // Override rules here
 // *******************

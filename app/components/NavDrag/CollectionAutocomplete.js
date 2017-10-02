@@ -58,7 +58,7 @@ class CollectionAutocomplete extends Component {
 	filterItems(evt) {
 		const query = evt.target.value;
 		const filteredItems = this.getFilteredItems(this.props, query);
-		const createOption = { 
+		const createOption = {
 			title: query,
 			children: [],
 			id: generateHash(8),
@@ -66,7 +66,7 @@ class CollectionAutocomplete extends Component {
 		const outputItems = query && this.props.allowCustom
 			? [createOption, ...filteredItems]
 			: filteredItems;
-		this.setState({ 
+		this.setState({
 			value: query,
 			items: outputItems,
 		});

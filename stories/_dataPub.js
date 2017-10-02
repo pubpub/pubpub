@@ -62,47 +62,29 @@ export default {
 	],
 	collections: [
 		{
-			id: 'dbcb8d75-1287-479e-8a57-5ca0559d36dc',
-			title: 'help-desk',
-			slug: 'help-desk5448',
-			isPublic: true
-		},
-		{
-			id: '6c4780e5-e227-49fd-9735-ffe87f95570c',
-			title: 'protocol',
-			slug: 'protocol8460',
-			isPublic: false
-		},
-		{
-			id: '6722e4d8-e51e-4d83-8fa5-9247e4ab7418',
+			id: 'b6bcfc24-c0d0-4cb5-9181-00f33b0c8777',
 			title: 'Home',
+			description: 'Et voluptas dolorem. Possimus dicta impedit odit sunt minima a. In quia quis corrupti. Ipsa qui iste inventore quae sed non odit tenetur.',
 			slug: '',
-			isPublic: true
+			isPage: false,
+			isPublic: true,
+			isOpenSubmissions: false,
+			communityId: '041a0ddd-5737-43ee-840b-054e2d88747b',
+			createdAt: '2017-09-01T15:28:24.136Z',
+			updatedAt: '2017-09-01T15:28:24.136Z'
 		},
 		{
-			id: '5a13ebdf-09e9-4955-bde8-a01e4cdad7b8',
-			title: 'knowledge base',
-			slug: 'knowledge-base1674',
-			isPublic: false
+			id: '0fa32f17-3535-4d05-8fb7-805590a6591a',
+			title: 'Graphic Interface',
+			description: 'Assumenda rerum ut asperiores ipsum voluptatum rem. Commodi nostrum magnam eaque recusandae. Sunt et omnis dolor rerum et aspernatur expedita. Voluptas sequi doloremque sapiente consequatur non voluptas eaque. Nam molestiae quia omnis blanditiis provident voluptates est dolores.',
+			slug: 'graphic-interface3551',
+			isPage: false,
+			isPublic: true,
+			isOpenSubmissions: true,
+			communityId: '041a0ddd-5737-43ee-840b-054e2d88747b',
+			createdAt: '2017-09-01T15:28:24.136Z',
+			updatedAt: '2017-09-01T15:28:24.136Z'
 		},
-		{
-			id: '41be4f44-5a4b-42a2-85ae-cdf779c417bf',
-			title: 'conglomeration',
-			slug: 'conglomeration5034',
-			isPublic: false
-		},
-		{
-			id: 'ae02a469-d32b-495b-baa4-10b121208ecf',
-			title: 'utilisation',
-			slug: 'utilisation1182',
-			isPublic: true
-		},
-		{
-			id: 'a259ca36-d460-4cd5-97c8-0f656f1bf30c',
-			title: 'Home',
-			slug: '',
-			isPublic: true
-		}
 	],
 	discussions: [
 		{

@@ -13,6 +13,7 @@ const propTypes = {
 	onShareClick: PropTypes.func,
 	onDetailsClick: PropTypes.func,
 	onCollaboratorsClick: PropTypes.func,
+	onCollectionsClick: PropTypes.func,
 	onSubmitClick: PropTypes.func,
 };
 
@@ -21,6 +22,7 @@ const defaultProps = {
 	onShareClick: ()=>{},
 	onDetailsClick: ()=>{},
 	onCollaboratorsClick: ()=>{},
+	onCollectionsClick: ()=>{},
 	onSubmitClick: ()=> {},
 };
 
@@ -43,7 +45,7 @@ const PubCollabHeader = function(props) {
 					<div className={'tags-wrapper'}>
 						{props.pubData.collections.map((collection)=> {
 							return (
-								<div tabIndex={0} role={'button'} key={`collection-${collection.id}`} className={'pt-tag pt-minimal pt-intent-primary'} onClick={props.onDetailsClick}>
+								<div tabIndex={0} role={'button'} key={`collection-${collection.id}`} className={'pt-tag pt-minimal pt-intent-primary'} onClick={props.onCollectionsClick}>
 									{collection.title}
 									{collection.isPrivate &&
 										<span className={'pt-icon-standard pt-icon-lock'} />

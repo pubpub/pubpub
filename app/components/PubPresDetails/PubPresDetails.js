@@ -36,7 +36,7 @@ const PubPresDetails = function(props) {
 				<div className={'row'}>
 					<div className={'col-12'}>
 						<div className={'details'}>
-							{authors.length && <span>by </span>}
+							{!!authors.length && <span>by </span>}
 							{authors.map((author, index)=> {
 								const separator = index === authors.length - 1 ? '' : ', ';
 								const prefix = index === authors.length - 1 && index !== 0 ? ' and ' : '';

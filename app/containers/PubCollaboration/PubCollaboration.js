@@ -16,12 +16,13 @@ import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 import PubCollabPublish from 'components/PubCollabPublish/PubCollabPublish';
 import PubCollabDetails from 'components/PubCollabDetails/PubCollabDetails';
+import PubCollabCollections from 'components/PubCollabCollections/PubCollabCollections';
 import PubCollabCollaborators from 'components/PubCollabCollaborators/PubCollabCollaborators';
 import DiscussionNew from 'components/DiscussionNew/DiscussionNew';
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionPreviewArchived from 'components/DiscussionPreviewArchived/DiscussionPreviewArchived';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
-import { getPubData, putPubData, postDiscussion, putDiscussion, postCollaborator, putCollaborator, deleteCollaborator, postVersion, clearPubData } from 'actions/pub';
+import { getPubData, putPubData, postDiscussion, putDiscussion, postCollaborator, putCollaborator, deleteCollaborator, postVersion, postCollectionPub, deleteCollectionPub } from 'actions/pub';
 import { s3Upload, nestDiscussionsToThreads, getRandomColor } from 'utilities';
 
 require('./pubCollaboration.scss');
@@ -56,6 +57,7 @@ class PubCollaboration extends Component {
 			isShareOpen: false,
 			isDetailsOpen: false,
 			isCollaboratorsOpen: false,
+			isCollectionsOpen: false,
 			isArchivedVisible: false,
 			activeCollaborators: [this.localUser],
 		};
@@ -64,6 +66,7 @@ class PubCollaboration extends Component {
 		this.toggleShare = this.toggleShare.bind(this);
 		this.toggleDetails = this.toggleDetails.bind(this);
 		this.toggleCollaborators = this.toggleCollaborators.bind(this);
+		this.toggleCollections = this.toggleCollections.bind(this);
 		this.toggleArchivedVisible = this.toggleArchivedVisible.bind(this);
 		this.handleDetailsSave = this.handleDetailsSave.bind(this);
 		this.handlePostDiscussion = this.handlePostDiscussion.bind(this);
@@ -76,6 +79,8 @@ class PubCollaboration extends Component {
 		this.onOpenCollaborators = this.onOpenCollaborators.bind(this);
 		this.handlePublish = this.handlePublish.bind(this);
 		this.handleClientChange = this.handleClientChange.bind(this);
+		this.handleAddCollection = this.handleAddCollection.bind(this);
+		this.handleRemoveCollection = this.handleRemoveCollection.bind(this);
 		this.focusEditor = this.focusEditor.bind(this);
 	}
 	componentWillMount() {
@@ -113,6 +118,9 @@ class PubCollaboration extends Component {
 	toggleCollaborators() {
 		this.setState({ isCollaboratorsOpen: !this.state.isCollaboratorsOpen });
 	}
+	toggleCollections() {
+		this.setState({ isCollectionsOpen: !this.state.isCollectionsOpen });
+	}
 	toggleArchivedVisible() {
 		this.setState({ isArchivedVisible: !this.state.isArchivedVisible });
 	}
@@ -142,6 +150,18 @@ class PubCollaboration extends Component {
 	}
 	handleCollaboratorDelete(collaboratorObject) {
 		this.props.dispatch(deleteCollaborator(collaboratorObject));
+	}
+	handleAddCollection(addCollectionObject) {
+		this.props.dispatch(postCollectionPub({
+			...addCollectionObject,
+			communityId: this.props.pubData.data.communityId,
+		}));
+	}
+	handleRemoveCollection(removeCollectionObject) {
+		this.props.dispatch(deleteCollectionPub({
+			...removeCollectionObject,
+			communityId: this.props.pubData.data.communityId,
+		}));
 	}
 	onOpenShare() {
 		this.setState({
@@ -262,6 +282,7 @@ class PubCollaboration extends Component {
 									onShareClick={this.toggleShare}
 									onDetailsClick={this.toggleDetails}
 									onCollaboratorsClick={this.toggleCollaborators}
+									onCollectionsClick={this.toggleCollections}
 								/>
 							</div>
 						</div>
@@ -387,6 +408,14 @@ class PubCollaboration extends Component {
 						onPutPub={this.handleDetailsSave}
 						isLoading={this.props.pubData.postVersionIsLoading}
 						onOpenDetails={this.onOpenDetails}
+					/>
+				</Overlay>
+				<Overlay isOpen={this.state.isCollectionsOpen} onClose={this.toggleCollections}>
+					<PubCollabCollections
+						pubData={pubData}
+						collections={this.props.appData.data.collections}
+						onAddCollection={this.handleAddCollection}
+						onRemoveCollection={this.handleRemoveCollection}
 					/>
 				</Overlay>
 				<Overlay isOpen={this.state.isShareOpen} onClose={this.toggleShare}>

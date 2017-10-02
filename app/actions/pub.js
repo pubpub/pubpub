@@ -38,8 +38,13 @@ export const POST_VERSION_LOAD = 'pub/POST_VERSION_LOAD';
 export const POST_VERSION_SUCCESS = 'pub/POST_VERSION_SUCCESS';
 export const POST_VERSION_FAIL = 'pub/POST_VERSION_FAIL';
 
-export const CLEAR_PUB_DATA = 'pub/CLEAR_PUB_DATA';
+export const POST_COLLECTION_PUB_LOAD = 'pub/POST_COLLECTION_PUB_LOAD';
+export const POST_COLLECTION_PUB_SUCCESS = 'pub/POST_COLLECTION_PUB_SUCCESS';
+export const POST_COLLECTION_PUB_FAIL = 'pub/POST_COLLECTION_PUB_FAIL';
 
+export const DELETE_COLLECTION_PUB_LOAD = 'pub/DELETE_COLLECTION_PUB_LOAD';
+export const DELETE_COLLECTION_PUB_SUCCESS = 'pub/DELETE_COLLECTION_PUB_SUCCESS';
+export const DELETE_COLLECTION_PUB_FAIL = 'pub/DELETE_COLLECTION_PUB_FAIL';
 /*--------*/
 // Define Action creators
 //
@@ -244,9 +249,50 @@ export function postVersion({ pubId, content }) {
 	};
 }
 
-export function clearPubData() {
+export function postCollectionPub({ pubId, collectionId, communityId }) {
 	return (dispatch) => {
-		dispatch({ type: CLEAR_PUB_DATA });
-	}
+		dispatch({ type: POST_COLLECTION_PUB_LOAD });
+		return apiFetch('/collectionPubs', {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				pubId,
+				collectionId,
+				communityId,
+			})
+		})
+		.then((result) => {
+			dispatch({ type: POST_COLLECTION_PUB_SUCCESS, result });
+		})
+		.catch((error) => {
+			dispatch({ type: POST_COLLECTION_PUB_FAIL, error });
+		});
+	};
 }
 
+export function deleteCollectionPub({ pubId, collectionId, communityId }) {
+	return (dispatch) => {
+		dispatch({ type: DELETE_COLLECTION_PUB_LOAD });
+		return apiFetch('/collectionPubs', {
+			method: 'DELETE',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				pubId,
+				collectionId,
+				communityId,
+			})
+		})
+		.then((result) => {
+			dispatch({ type: DELETE_COLLECTION_PUB_SUCCESS, result });
+		})
+		.catch((error) => {
+			dispatch({ type: DELETE_COLLECTION_PUB_FAIL, error });
+		});
+	};
+}

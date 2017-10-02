@@ -34,7 +34,13 @@ import {
 	POST_VERSION_SUCCESS,
 	POST_VERSION_FAIL,
 
-	CLEAR_PUB_DATA,
+	POST_COLLECTION_PUB_LOAD,
+	POST_COLLECTION_PUB_SUCCESS,
+	POST_COLLECTION_PUB_FAIL,
+
+	DELETE_COLLECTION_PUB_LOAD,
+	DELETE_COLLECTION_PUB_SUCCESS,
+	DELETE_COLLECTION_PUB_FAIL,
 } from 'actions/pub';
 
 /* ------------------- */
@@ -213,8 +219,39 @@ export default function reducer(state = defaultState, action) {
 			...state,
 			postVersionIsLoading: false,
 		};
-	case CLEAR_PUB_DATA:
-		return defaultState;
+	/* POST CollectionPub Data */
+	/* -------------------- */
+	case POST_COLLECTION_PUB_LOAD:
+		return state;
+	case POST_COLLECTION_PUB_SUCCESS:
+		return {
+			...state,
+			data: {
+				...state.data,
+				collections: [
+					...state.data.collections,
+					action.result,
+				]
+			}
+		};
+	case POST_COLLECTION_PUB_FAIL:
+		return state;
+	/* DELETE CollectionPub Data */
+	/* -------------------- */
+	case DELETE_COLLECTION_PUB_LOAD:
+		return state;
+	case DELETE_COLLECTION_PUB_SUCCESS:
+		return {
+			...state,
+			data: {
+				...state.data,
+				collections: state.data.collections.filter((item)=> {
+					return item.id !== action.result;
+				})
+			}
+		};
+	case DELETE_COLLECTION_PUB_FAIL:
+		return state;
 	default:
 		return state;
 	}
