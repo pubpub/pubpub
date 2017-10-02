@@ -11,8 +11,8 @@ import DashboardCollectionLoading from 'components/DashboardCollection/Dashboard
 import DashboardCreateCollection from 'components/DashboardCreateCollection/DashboardCreateCollection';
 import DashboardSite from 'components/DashboardSite/DashboardSite';
 import DashboardTeam from 'components/DashboardTeam/DashboardTeam';
-import { getCollectionData, postCollection, putCollection } from 'actions/collection';
-import { putAppData } from 'actions/app';
+import { getCollectionData, postCollection, putCollection} from 'actions/collection';
+import { putAppData, postCommunityAdmin, deleteCommunityAdmin } from 'actions/app';
 import { createPub } from 'actions/pubCreate';
 
 require('./dashboard.scss');
@@ -101,10 +101,10 @@ class Dashboard extends Component {
 		}));
 	}
 	handleAddAdmin(adminObject) {
-		console.log('Adding', adminObject);
+		this.props.dispatch(postCommunityAdmin(adminObject));
 	}
 	handleRemoveAdmin(adminObject) {
-		console.log('Removing', adminObject);	
+		this.props.dispatch(deleteCommunityAdmin(adminObject));
 	}
 	updatePath(updatedPath) {
 		this.props.history.push(updatedPath);

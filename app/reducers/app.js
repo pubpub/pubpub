@@ -9,6 +9,14 @@ import {
 	PUT_APP_DATA_LOAD,
 	PUT_APP_DATA_SUCCESS,
 	PUT_APP_DATA_FAIL,
+
+	POST_COMMUNITY_ADMIN_LOAD,
+	POST_COMMUNITY_ADMIN_SUCCESS,
+	POST_COMMUNITY_ADMIN_FAIL,
+
+	DELETE_COMMUNITY_ADMIN_LOAD,
+	DELETE_COMMUNITY_ADMIN_SUCCESS,
+	DELETE_COMMUNITY_ADMIN_FAIL,
 } from 'actions/app';
 
 import {
@@ -136,6 +144,39 @@ export default function reducer(state = defaultState, action) {
 			putCollectionIsLoading: false,
 			putCollectionError: action.error
 		};
+	/* POST Community Admin Data */
+	/* -------------------- */
+	case POST_COMMUNITY_ADMIN_LOAD:
+		return state;
+	case POST_COMMUNITY_ADMIN_SUCCESS:
+		return {
+			...state,
+			data: {
+				...state.data,
+				admins: [
+					...state.data.admins,
+					action.result,
+				]
+			}
+		};
+	case POST_COMMUNITY_ADMIN_FAIL:
+		return state;
+	/* DELETE Community Admin Data */
+	/* -------------------- */
+	case DELETE_COMMUNITY_ADMIN_LOAD:
+		return state;
+	case DELETE_COMMUNITY_ADMIN_SUCCESS:
+		return {
+			...state,
+			data: {
+				...state.data,
+				admins: state.data.admins.filter((item)=> {
+					return item.id !== action.result;
+				})
+			}
+		};
+	case DELETE_COMMUNITY_ADMIN_FAIL:
+		return state;
 	default:
 		return state;
 	}
