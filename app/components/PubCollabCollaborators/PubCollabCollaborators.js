@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Checkbox } from '@blueprintjs/core';
-import { Link } from 'react-router-dom';
-import Avatar from 'components/Avatar/Avatar';
 import UserAutocomplete from 'components/UserAutocomplete/UserAutocomplete';
 import PubCollaboratorDetails from 'components/PubCollaboratorDetails/PubCollaboratorDetails';
 
@@ -46,7 +43,7 @@ class PubCollabCollaborators extends Component {
 			<div className={'pub-collab-collaborators'}>
 				<h5>Pub Collaborators</h5>
 				<div className={'intro'}>Use this panel to manage who is recognized and listed for working on this pub. To manage permissions and access to the pub, open the <span tabIndex={-1} role={'button'} onClick={this.props.onOpenShare}>Share Panel</span>.</div>
-				<UserAutocomplete onSelect={this.handleUserSelect} allowCustomUser={true}/>
+				<UserAutocomplete onSelect={this.handleUserSelect} allowCustomUser={true} />
 				<div className={'collaborators-wrapper'}>
 					{this.props.pubData.contributors.sort((foo, bar)=> {
 						if (foo.Contributor.order < bar.Contributor.order) { return 1; }

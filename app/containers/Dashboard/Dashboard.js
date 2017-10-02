@@ -34,6 +34,8 @@ class Dashboard extends Component {
 		this.handleSiteSave = this.handleSiteSave.bind(this);
 		this.handleCollectionCreate = this.handleCollectionCreate.bind(this);
 		this.handleCollectionSave = this.handleCollectionSave.bind(this);
+		this.handleAddAdmin = this.handleAddAdmin.bind(this);
+		this.handleRemoveAdmin = this.handleRemoveAdmin.bind(this);
 		this.updatePath = this.updatePath.bind(this);
 	}
 	componentWillMount() {
@@ -98,6 +100,12 @@ class Dashboard extends Component {
 			communityId: communityId,
 		}));
 	}
+	handleAddAdmin(adminObject) {
+		console.log('Adding', adminObject);
+	}
+	handleRemoveAdmin(adminObject) {
+		console.log('Removing', adminObject);	
+	}
 	updatePath(updatedPath) {
 		this.props.history.push(updatedPath);
 	}
@@ -161,8 +169,8 @@ class Dashboard extends Component {
 											<div>
 												<DashboardTeam
 													appData={appData}
-													onAddAdmin={()=>{}}
-													onRemoveAdmin={()=>{}}
+													onAddAdmin={this.handleAddAdmin}
+													onRemoveAdmin={this.handleRemoveAdmin}
 												/>
 											</div>
 										);
