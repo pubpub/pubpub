@@ -10,6 +10,7 @@ import DashboardCollectionEdit from 'components/DashboardCollectionEdit/Dashboar
 import DashboardCollectionLoading from 'components/DashboardCollection/DashboardCollectionLoading';
 import DashboardCreateCollection from 'components/DashboardCreateCollection/DashboardCreateCollection';
 import DashboardSite from 'components/DashboardSite/DashboardSite';
+import DashboardTeam from 'components/DashboardTeam/DashboardTeam';
 import { getCollectionData, postCollection, putCollection } from 'actions/collection';
 import { putAppData } from 'actions/app';
 import { createPub } from 'actions/pubCreate';
@@ -158,8 +159,11 @@ class Dashboard extends Component {
 										// Return team component
 										return (
 											<div>
-												<h1 className={'content-title'}>{activeItem.title}</h1>
-												<div>team</div>
+												<DashboardTeam
+													appData={appData}
+													onAddAdmin={()=>{}}
+													onRemoveAdmin={()=>{}}
+												/>
 											</div>
 										);
 									case 'site':
