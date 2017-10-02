@@ -376,7 +376,7 @@ class PubCollaboration extends Component {
 									<div className={'pub-body'}>
 										<Editor placeholder={'Begin writing here...'} ref={(ref)=> { this.editorRef = ref; }}>
 											<FormattingMenu />
-											<InsertMenu />
+											{/* <InsertMenu /> */}
 											<Collaborative
 												// ref={(collab) => { this.collab = collab; }}
 												firebaseConfig={{
