@@ -99,7 +99,10 @@ class Collection extends Component {
 										text={'Create Pub in Collection'}
 									/>
 								}
-								<h1>{title}</h1>
+								{collectionData.slug &&
+									<h1>{title}</h1>
+								}
+								
 								<p className={'description'}>{collectionData.description}</p>
 							</div>
 						</div>
