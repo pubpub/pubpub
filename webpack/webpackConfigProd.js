@@ -99,13 +99,13 @@ module.exports = {
 			stripPrefix: 'static/',
 			mergeStaticsConfig: true, // Merge webpacks static outputs with the globs described above.
 			runtimeCaching: [{
-				urlPattern: /^https:\/\/api\.github\.com\//,
-				handler: 'fastest',
+				urlPattern: /^https:\/\/pubpub-api-v4-dev\.herokuapp\.com\//,
+				handler: 'networkFirst',
 				networkTimeoutSeconds: 5000,
 				options: {
 					cache: {
-						maxEntries: 10,
-						name: 'github-api-cache'
+						maxEntries: 50,
+						name: 'pubpub-v4-api-cache'
 					}
 				}
 			}]
