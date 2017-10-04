@@ -144,7 +144,7 @@ class Collection extends Component {
 								})}
 							</div>
 						}
-						{!numPublished && !collectionData.isPage &&
+						{!!collectionData.id && !numPublished && !collectionData.isPage &&
 							<NonIdealState
 								title={'Empty Collection'}
 								description={'This collection has no published Pubs.'}
