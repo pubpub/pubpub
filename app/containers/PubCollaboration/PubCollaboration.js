@@ -7,7 +7,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { Editor } from '@pubpub/editor';
 import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
 import Collaborative from '@pubpub/editor/addons/Collaborative';
-// import Image from '@pubpub/editor/addons/Image';
+import Image from '@pubpub/editor/addons/Image';
 import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import { NonIdealState } from '@blueprintjs/core';
 import NoMatch from 'containers/NoMatch/NoMatch';
@@ -81,7 +81,7 @@ class PubCollaboration extends Component {
 		this.handleClientChange = this.handleClientChange.bind(this);
 		this.handleAddCollection = this.handleAddCollection.bind(this);
 		this.handleRemoveCollection = this.handleRemoveCollection.bind(this);
-		this.focusEditor = this.focusEditor.bind(this);
+		// this.focusEditor = this.focusEditor.bind(this);
 	}
 	componentWillMount() {
 		this.props.dispatch(getPubData(this.props.match.params.slug));
@@ -193,9 +193,10 @@ class PubCollaboration extends Component {
 			content: this.editorRef.view.state.doc.toJSON(),
 		})));
 	}
-	focusEditor() {
-		this.editorRef.focus();
-	}
+	// focusEditor() {
+	// 	console.log(this.editorRef);
+	// 	this.editorRef.focus();
+	// }
 	handleClientChange(clients) {
 		this.setState({
 			activeCollaborators: [this.localUser, ...clients]
@@ -372,11 +373,16 @@ class PubCollaboration extends Component {
 									</div>
 								</div>
 
-								<div className={'content-panel'} onClick={this.focusEditor} tabIndex={-1} role={'textbox'}>
+								<div 
+									className={'content-panel'}
+									// onClick={this.focusEditor}
+									tabIndex={-1}
+									role={'textbox'}
+								>
 									<div className={'pub-body'}>
 										<Editor placeholder={'Begin writing here...'} ref={(ref)=> { this.editorRef = ref; }}>
 											<FormattingMenu />
-											{/* <InsertMenu /> */}
+											<InsertMenu />
 											<Collaborative
 												// ref={(collab) => { this.collab = collab; }}
 												firebaseConfig={{
@@ -391,7 +397,7 @@ class PubCollaboration extends Component {
 												editorKey={`pub-${pubData.id}`}
 												onClientChange={this.handleClientChange}
 											/>
-											{/*<Image handleFileUpload={s3Upload} />*/}
+											<Image handleFileUpload={s3Upload} />
 										</Editor>
 									</div>
 								</div>

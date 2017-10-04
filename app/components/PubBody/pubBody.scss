@@ -29,7 +29,7 @@
 	}
 	img {
 		max-width: 100%;
-		margin-top: 38px;
+		// margin-top: 38px;
 	}
 
 	ul, ol {
@@ -39,5 +39,12 @@
 	li {
 		margin: 0;
 	    margin-bottom: .65em;
+	}
+	.insert-menu {
+		p {
+			transform: translateY(-4px);
+			margin-top: 0px;	
+		}
+		
 	}
 }
