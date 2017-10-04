@@ -21,15 +21,9 @@ class PubCollabEditor extends Component {
 		this.state = {
 			error: undefined,
 		};
-		this.reload = this.reload.bind(this);
 	}
 	componentDidCatch(error, info) {
-		// Display fallback UI
 		this.setState({ error: true });
-		console.log(error, info);
-	}
-	reload() {
-		window.location.reload();
 	}
 	render() {
 		if (this.state.error) {
@@ -38,7 +32,14 @@ class PubCollabEditor extends Component {
 					title={'Uh Oh'}
 					visual={'error'}
 					description={'An error has occured. We\'ve logged the bug and have notified our development team. Please reload the page to continue.'}
-					action={<button className={'pt-button'} onClick={this.reload}>Reload Page</button>}
+					action={
+						<button
+							className={'pt-button'}
+							onClick={()=>{ window.location.reload(); }}
+						>
+							Reload Page
+						</button>
+					}
 				/>
 			);
 		}
