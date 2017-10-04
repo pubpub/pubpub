@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Editor } from '@pubpub/editor';
+import Image from '@pubpub/editor/addons/Image';
 
 require('./pubBody.scss');
 
@@ -19,7 +20,9 @@ const PubBody = function(props) {
 							key={`render-${props.versionId}`}
 							initialContent={props.content}
 							isReadOnly={true}
-						/>
+						>
+							<Image />
+						</Editor>
 					</div>
 				</div>
 			</div>
