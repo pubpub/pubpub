@@ -4,14 +4,10 @@ import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import queryString from 'query-string';
 import { withRouter, Link } from 'react-router-dom';
-import { Editor } from '@pubpub/editor';
-import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
-import Collaborative from '@pubpub/editor/addons/Collaborative';
-import Image from '@pubpub/editor/addons/Image';
-import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import { NonIdealState } from '@blueprintjs/core';
 import NoMatch from 'containers/NoMatch/NoMatch';
 import Overlay from 'components/Overlay/Overlay';
+import PubCollabEditor from 'components/PubCollabEditor/PubCollabEditor';
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 import PubCollabPublish from 'components/PubCollabPublish/PubCollabPublish';
@@ -23,7 +19,7 @@ import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionPreviewArchived from 'components/DiscussionPreviewArchived/DiscussionPreviewArchived';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import { getPubData, putPubData, postDiscussion, putDiscussion, postCollaborator, putCollaborator, deleteCollaborator, postVersion, postCollectionPub, deleteCollectionPub } from 'actions/pub';
-import { s3Upload, nestDiscussionsToThreads, getRandomColor } from 'utilities';
+import { nestDiscussionsToThreads, getRandomColor } from 'utilities';
 
 require('./pubCollaboration.scss');
 require('components/PubBody/pubBody.scss');
@@ -373,32 +369,19 @@ class PubCollaboration extends Component {
 									</div>
 								</div>
 
-								<div 
+								<div
 									className={'content-panel'}
 									// onClick={this.focusEditor}
 									tabIndex={-1}
 									role={'textbox'}
 								>
 									<div className={'pub-body'}>
-										<Editor placeholder={'Begin writing here...'} ref={(ref)=> { this.editorRef = ref; }}>
-											<FormattingMenu />
-											<InsertMenu />
-											<Collaborative
-												// ref={(collab) => { this.collab = collab; }}
-												firebaseConfig={{
-													apiKey: 'AIzaSyBpE1sz_-JqtcIm2P4bw4aoMEzwGITfk0U',
-													authDomain: 'pubpub-rich.firebaseapp.com',
-													databaseURL: 'https://pubpub-rich.firebaseio.com',
-													projectId: 'pubpub-rich',
-													storageBucket: 'pubpub-rich.appspot.com',
-													messagingSenderId: '543714905893',
-												}}
-												clientData={this.state.activeCollaborators[0]}
-												editorKey={`pub-${pubData.id}`}
-												onClientChange={this.handleClientChange}
-											/>
-											<Image handleFileUpload={s3Upload} />
-										</Editor>
+										<PubCollabEditor
+											onRef={(ref)=> { this.editorRef = ref; }}
+											editorKey={`pub-${pubData.id}`}
+											clientData={this.state.activeCollaborators[0]}
+											onClientChange={this.handleClientChange}
+										/>
 									</div>
 								</div>
 

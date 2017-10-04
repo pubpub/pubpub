@@ -44,8 +44,8 @@ class CollectionAutocomplete extends Component {
 			return item.id;
 		});
 		return props.collections.filter((item)=> {
-			const fuzzyMatchName = fuzzysearch(query, item.title);
-			const fuzzyMatchSlug = fuzzysearch(query, item.slug);
+			const fuzzyMatchName = fuzzysearch(query.toLowerCase(), item.title.toLowerCase());
+			const fuzzyMatchSlug = fuzzysearch(query.toLowerCase(), item.slug.toLowerCase());
 			const alreadyUsed = usedIndexes.indexOf(item.id) > -1;
 			return item.slug && !alreadyUsed && (fuzzyMatchName || fuzzyMatchSlug);
 		}).sort((foo, bar)=> {
