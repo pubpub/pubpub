@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Avatar from 'components/Avatar/Avatar';
+import { Link } from 'react-router-dom';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
 
 require('./pubCollabHeader.scss');
@@ -105,15 +106,9 @@ const PubCollabHeader = function(props) {
 					<DropdownButton icon={'pt-icon-more pt-small'} isRightAligned={true}>
 						<ul className={'pt-menu'}>
 							<li style={{ textAlign: 'right' }}>
-								<div className="pt-menu-item pt-popover-dismiss">
-									Hello
-								</div>
-								<div className="pt-menu-item pt-popover-dismiss">
-									Option 1
-								</div>
-								<div className="pt-menu-item pt-popover-dismiss">
-									Option 2
-								</div>
+								<Link to={`/pub/${props.pubData.slug}`} className="pt-menu-item pt-popover-dismiss">
+									Go to published URL
+								</Link>
 							</li>
 						</ul>
 					</DropdownButton>

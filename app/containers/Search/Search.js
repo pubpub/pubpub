@@ -14,6 +14,7 @@ require('./search.scss');
 const propTypes = {
 	dispatch: PropTypes.func.isRequired,
 	location: PropTypes.object.isRequired,
+	appData: PropTypes.object.isRequired,
 	searchData: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
 };
@@ -42,7 +43,7 @@ class Search extends Component {
 	getSearchData(props) {
 		const queryObject = queryString.parse(props.location.search);
 		const searchTerm = queryObject.q;
-		this.props.dispatch(getSearch(searchTerm));
+		this.props.dispatch(getSearch(searchTerm, this.props.appData.data.id));
 	}
 	handleSearchChange(evt) {
 		this.setState({ searchQuery: evt.target.value });
@@ -124,5 +125,6 @@ class Search extends Component {
 
 Search.propTypes = propTypes;
 export default withRouter(connect(state => ({
+	appData: state.app,
 	searchData: state.search
 }))(Search));

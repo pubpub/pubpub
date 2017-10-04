@@ -17,6 +17,7 @@ require('./user.scss');
 const propTypes = {
 	dispatch: PropTypes.func.isRequired,
 	match: PropTypes.object.isRequired,
+	appData: PropTypes.object.isRequired,
 	userData: PropTypes.object.isRequired,
 	loginData: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
@@ -50,6 +51,11 @@ class User extends Component {
 		const loginData = this.props.loginData.data || {};
 		const selfProfile = loginData.id && userData.id === loginData.id;
 		const mode = this.props.match.params.mode;
+		const communityPubs = userData.pubs
+			? userData.pubs.filter((pub)=> {
+				return pub.communityId === this.props.appData.data.id;
+			})
+			: [];
 
 		if (!userData.id) {
 			return <UserLoading />;
@@ -89,7 +95,7 @@ class User extends Component {
 				</div>
 
 				<div className={'container narrow content'}>
-					{userData.pubs && userData.pubs.map((pub)=> {
+					{communityPubs.map((pub)=> {
 						return (
 							<div key={`pub-${pub.id}`} className={'row'}>
 								<div className={'col-12'}>
@@ -111,7 +117,7 @@ class User extends Component {
 							</div>
 						);
 					})}
-					{userData.pubs && !userData.pubs.length &&
+					{!communityPubs.length &&
 						<NonIdealState
 							visual={'widget'}
 							title={'No Pubs'}
@@ -126,6 +132,7 @@ class User extends Component {
 
 User.propTypes = propTypes;
 export default withRouter(connect(state => ({
+	appData: state.app,
 	userData: state.user,
 	loginData: state.login,
 }))(User));
