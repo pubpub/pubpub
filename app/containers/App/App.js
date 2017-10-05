@@ -57,12 +57,14 @@ class App extends Component {
 		const appData = this.props.appData.data || {};
 		const loginData = this.props.loginData.data || {};
 
-		/* Display base PubPub Site*/
+		/* Display base PubPub Site */
 		if (this.isBasePubPub) { return <div>PubPub!</div>; }
+
+		/* If fetch is done, but no Community */
+		if (this.props.appData.data && !appData.id) { return <NoMatch />; }
 
 		/* Display nothing - or could be loading status */
 		if (!appData.id) { return <div />; }
-		if (this.props.loginData.data && !appData.id) { return <NoMatch />; }
 
 		const isHome = this.props.location.pathname === '/';
 
