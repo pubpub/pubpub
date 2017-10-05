@@ -59,7 +59,7 @@ const PubCollabHeader = function(props) {
 				<div className={'flex-right'}>
 					<button type={'button'} className={'pt-button pt-intent-primary'} onClick={props.onShareClick}>Share</button>
 					{isAuthor
-						? <button type={'button'} className={'pt-button pt-intent-primary'} onClick={props.onPublishClick}>Publish Snapshot</button>
+						? <button type={'button'} className={'pt-button pt-intent-primary'} onClick={props.onPublishClick}>Publish</button>
 						: <button type={'button'} className={'pt-button pt-intent-primary'} onClick={props.onSubmitClick}>Submit for Publication</button>
 					}
 				</div>

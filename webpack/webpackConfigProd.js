@@ -95,11 +95,13 @@ module.exports = {
 			staticFileGlobs: [
 				'static/**.*',
 				'static/images/**.*',
+				'static/icons/**.*',
+				'static/fonts/**.*',
 			],
 			stripPrefix: 'static/',
 			mergeStaticsConfig: true, // Merge webpacks static outputs with the globs described above.
 			runtimeCaching: [{
-				urlPattern: /^https:\/\/pubpub-api-v4-dev\.herokuapp\.com\//,
+				urlPattern: /^https:\/\/v4-api\.pubpub\.org\//,
 				handler: 'networkFirst',
 				networkTimeoutSeconds: 5000,
 				options: {

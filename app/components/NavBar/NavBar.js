@@ -16,7 +16,9 @@ const NavBar = function(props) {
 				<div className={'row'}>
 					<div className={'col-12'}>
 						<ul>
-							{props.navItems.map((item)=> {
+							{props.navItems.filter((item)=> {
+								return !!item;
+							}).map((item)=> {
 								/* Return Simple Link */
 								if (!item.children) {
 									return (
