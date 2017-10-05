@@ -62,6 +62,7 @@ class App extends Component {
 
 		/* Display nothing - or could be loading status */
 		if (!appData.id) { return <div />; }
+		if (this.props.loginData.data && !appData.id) { return <NoMatch />; }
 
 		const isHome = this.props.location.pathname === '/';
 
