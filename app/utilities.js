@@ -1,7 +1,11 @@
 export const apiFetch = function(path, opts) {
-	const urlPrefix = window.location.origin.indexOf('localhost:') > -1
-		? 'http://localhost:9876'
-		: 'https://pubpub-api-v4-dev.herokuapp.com';
+	let urlPrefix = 'https://v4-api.pubpub.org';
+	if (window.location.origin.indexOf('dev.pubpub.org') > -1) {
+		urlPrefix = 'https://pubpub-api-v4-dev.herokuapp.com';
+	}
+	if (window.location.origin.indexOf('localhost:') > -1) {
+		urlPrefix = 'http://localhost:9876';
+	}
 	// const urlPrefix = 'https://pubpub-api-v4-dev.herokuapp.com';
 	// const urlPrefix = 'http://localhost:9876';
 	const finalRoute = `${urlPrefix}${path}`;

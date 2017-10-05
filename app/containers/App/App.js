@@ -38,15 +38,13 @@ class App extends Component {
 	constructor(props) {
 		super(props);
 		this.handleLogout = this.handleLogout.bind(this);
+		this.hostname = window.location.hostname === 'localhost'
+			? 'dev.pubpub.org' // Set whatever hostname you want to develop with
+			: window.location.hostname; // In production, use the real hostname
+		this.isBasePubPub = this.hostname === 'v4.pubpub.org';
 	}
 
 	componentWillMount() {
-		// this.hostname = window.location.hostname === 'localhost' || window.location.hostname === 'v4test.netlify.com'
-		// 	? 'viral.pubpub.org' // Set whatever hostname you want to develop with
-		// 	: window.location.hostname; // In production, use the real hostname
-
-		// this.hostname = 'stewart3756.pubpub.org';
-		this.hostname = 'testing-sub.pubpub.org';
 		this.props.dispatch(getAppData(this.hostname));
 	}
 
@@ -59,6 +57,10 @@ class App extends Component {
 		const appData = this.props.appData.data || {};
 		const loginData = this.props.loginData.data || {};
 
+		/* Display base PubPub Site*/
+		if (this.isBasePubPub) { return <div>PubPub!</div>; }
+
+		/* Display nothing - or could be loading status */
 		if (!appData.id) { return <div />; }
 
 		const isHome = this.props.location.pathname === '/';
