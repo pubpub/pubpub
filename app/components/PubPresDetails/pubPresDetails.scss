@@ -1,5 +1,9 @@
 .pub-pres-details {
 	padding: 2em 0em;
+	.container.no-header-image {
+		border-top: 1px solid #E0E0E0;
+		border-bottom: 1px solid #E0E0E0;
+	}
 	.details {
 		float: left;
 		width: calc(100% - 200px);

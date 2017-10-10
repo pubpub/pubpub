@@ -86,6 +86,7 @@ class PubPresentation extends Component {
 					}, 0)}
 					collaborators={pubData.collaborators}
 					versions={pubData.versions}
+					hasHeadImage={pubData.useHeaderImage && pubData.avatar}
 				/>
 
 				{/* <PubBody content={this.props.pubData.data.body} /> */}

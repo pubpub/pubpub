@@ -13,11 +13,13 @@ const propTypes = {
 	numSuggestions: PropTypes.number,
 	collaborators: PropTypes.array.isRequired,
 	versions: PropTypes.array.isRequired,
+	hasHeaderImage: PropTypes.bool,
 };
 
 const defaultProps = {
 	numDiscussions: 0,
 	numSuggestions: 0,
+	hasHeaderImage: false,
 };
 
 const PubPresDetails = function(props) {
@@ -32,7 +34,7 @@ const PubPresDetails = function(props) {
 
 	return (
 		<div className={'pub-pres-details'}>
-			<div className={'container pub'}>
+			<div className={`container pub ${props.hasHeaderImage ? '' : 'no-header-image'}`}>
 				<div className={'row'}>
 					<div className={'col-12'}>
 						<div className={'details'}>
