@@ -46,6 +46,7 @@ class DiscussionThread extends Component {
 		this.handleTitleChange = this.handleTitleChange.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
 		this.archiveDiscussion = this.archiveDiscussion.bind(this);
+		this.onReplySubmit = this.onReplySubmit.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -115,6 +116,16 @@ class DiscussionThread extends Component {
 		});
 	}
 
+	onReplySubmit(replyObject) {
+		this.props.handleReplySubmit({
+			userId: this.props.loginData.id,
+			threadNumber: this.props.discussions[0].threadNumber,
+			pubId: this.props.discussions[0].pubId,
+			content: replyObject.content,
+			text: replyObject.text
+		});
+	}
+
 	render() {
 		const sortedDiscussions = this.props.discussions.sort((foo, bar)=> {
 			if (foo.createdAt > bar.createdAt) { return 1; }
@@ -126,15 +137,6 @@ class DiscussionThread extends Component {
 			sortedDiscussions[0].userId === this.props.loginData.id || // User is author of thread
 			this.props.canAdmin; // User has pub-level admin permissions (individual or community)
 
-		function onReplySubmit(replyObject) {
-			this.props.handleReplySubmit({
-				userId: this.props.loginData.id,
-				threadNumber: this.props.discussions[0].threadNumber,
-				pubId: this.props.discussions[0].pubId,
-				content: replyObject.content,
-				text: replyObject.text
-			});
-		}
 		const isArchived = sortedDiscussions[0].isArchived;
 
 		return (
@@ -217,7 +219,7 @@ class DiscussionThread extends Component {
 				{!isArchived &&
 					<div>
 						{this.props.loginData.id
-							? <DiscussionInput handleSubmit={onReplySubmit} submitLoading={this.props.submitLoading} />
+							? <DiscussionInput handleSubmit={this.onReplySubmit} submitLoading={this.props.submitLoading} />
 							: <Link to={`/login?redirect=${this.props.pathname}`} className={'pt-button pt-fill'}>
 								Login to Reply
 							</Link>
