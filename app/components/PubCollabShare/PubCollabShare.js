@@ -78,7 +78,7 @@ class PubCollabShare extends Component {
 						<div className={'input-name'}>
 							Anyone with this link <b>Can Suggest</b>
 						</div>
-						<input className={'pt-input'} type={'text'} value={`https://www.pubpub.org/pub/${pubData.slug}/collaborate/${pubData.suggestHash}`} onChange={()=>{}} />
+						<input className={'pt-input'} type={'text'} value={`https://www.pubpub.org/pub/${pubData.slug}/collaborate/${pubData.viewHash}`} onChange={()=>{}} />
 					</div>
 				</div>
 

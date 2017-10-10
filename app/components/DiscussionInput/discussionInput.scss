@@ -15,6 +15,9 @@
 		border: 0px solid black;
 		border-bottom: 1px solid $border-color;
 		min-height: 100px;
+		.ProseMirror {
+			min-height: calc(100px - 1em - 1px);
+		}
 		cursor: text;
 		p {
 			font-size: 1em;

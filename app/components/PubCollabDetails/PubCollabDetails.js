@@ -8,6 +8,7 @@ require('./pubCollabDetails.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
+	canDelete: PropTypes.bool,
 	onSave: PropTypes.func.isRequired,
 	onDelete: PropTypes.func.isRequired,
 	putIsLoading: PropTypes.bool,
@@ -15,7 +16,9 @@ const propTypes = {
 };
 
 const defaultProps = {
+	canDelete: false,
 	putIsLoading: false,
+	deleteIsLoading: false,
 };
 
 class PubCollabDetails extends Component {
@@ -130,20 +133,22 @@ class PubCollabDetails extends Component {
 					</Checkbox>
 				</InputField>
 
-				<div className="pt-callout pt-intent-danger">
-					<h5>Delete Pub</h5>
-					<div>Deleting a Pub is permanent.</div>
+				{this.props.canDelete &&
+					<div className="pt-callout pt-intent-danger">
+						<h5>Delete Pub</h5>
+						<div>Deleting a Pub is permanent.</div>
 
-					<div className={'delete-button-wrapper'}>
-						<Button
-							type={'button'}
-							className={'pt-intent-danger'}
-							text={'Delete Pub'}
-							loading={this.props.deleteIsLoading}
-							onClick={this.handleDelete}
-						/>
+						<div className={'delete-button-wrapper'}>
+							<Button
+								type={'button'}
+								className={'pt-intent-danger'}
+								text={'Delete Pub'}
+								loading={this.props.deleteIsLoading}
+								onClick={this.handleDelete}
+							/>
+						</div>
 					</div>
-				</div>
+				}
 			</div>
 		);
 	}

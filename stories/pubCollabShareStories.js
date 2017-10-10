@@ -21,7 +21,7 @@ storiesOf('PubCollabShare', module)
 				pubData={{
 					id: '1d463b1a-95f9-4dcf-bedc-785f9b1e4728',
 					editHash: '7tojd6d7',
-					suggestHash: '9x33d2l9',
+					viewHash: '9x33d2l9',
 					slug: 'article-slug',
 					adminPermissions: 'suggest',
 					contributors: [

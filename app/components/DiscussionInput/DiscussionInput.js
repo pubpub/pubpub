@@ -64,6 +64,7 @@ class DiscussionInput extends Component {
 
 	focusEditor() {
 		this.editorRef.focus();
+		console.log(this.editorRef);
 	}
 
 	render() {

@@ -253,6 +253,10 @@ class PubCollaboration extends Component {
 		if (localUserCollaboratorData.Contributor.permissions === 'admin') { canAdmin = true; }
 		if (pubData.adminPermissions === 'admin' && loginData.isAdmin) { canAdmin = true; }
 
+		let canDelete = false;
+		if (canAdmin && !pubData.isPublished) { canDelete = true; }
+		if (pubData.adminPermissions === 'admin' && loginData.isAdmin) { canDelete = true; }
+
 		if (this.props.pubData.isLoading) {
 			return (
 				<div className={'pub-collaboration'}>
@@ -453,6 +457,7 @@ class PubCollaboration extends Component {
 				<Overlay isOpen={this.state.isDetailsOpen} onClose={this.toggleDetails}>
 					<PubCollabDetails
 						pubData={pubData}
+						canDelete={canDelete}
 						onSave={this.handleDetailsSave}
 						onDelete={this.handlePubDelete}
 						putIsLoading={this.props.pubData.putPubIsLoading}
