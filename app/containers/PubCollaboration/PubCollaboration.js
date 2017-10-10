@@ -213,7 +213,7 @@ class PubCollaboration extends Component {
 		const queryObject = queryString.parse(this.props.location.search);
 
 		const pubData = this.props.pubData.data || {};
-		const contributors = pubData.contributors || [];
+		const collaborators = pubData.collaborators || [];
 		const loginData = this.props.loginData.data || {};
 		const discussions = pubData.discussions || [];
 		const threads = nestDiscussionsToThreads(discussions);
@@ -245,12 +245,12 @@ class PubCollaboration extends Component {
 			return 0;
 		});
 
-		const localUserCollaboratorData = contributors.reduce((prev, curr)=> {
+		const localUserCollaboratorData = collaborators.reduce((prev, curr)=> {
 			if (curr.id === loginData.id) { return curr; }
 			return prev;
-		}, { Contributor: {} });
+		}, { Collaborator: {} });
 		let canAdmin = false;
-		if (localUserCollaboratorData.Contributor.permissions === 'admin') { canAdmin = true; }
+		if (localUserCollaboratorData.Collaborator.permissions === 'admin') { canAdmin = true; }
 		if (pubData.adminPermissions === 'admin' && loginData.isAdmin) { canAdmin = true; }
 
 		let canDelete = false;
@@ -297,7 +297,7 @@ class PubCollaboration extends Component {
 							<div className={'col-12'}>
 								<PubCollabHeader
 									pubData={pubData}
-									collaborators={pubData.contributors}
+									collaborators={pubData.collaborators}
 									canAdmin={canAdmin}
 									activeCollaborators={this.state.activeCollaborators}
 									onPublishClick={this.togglePublish}

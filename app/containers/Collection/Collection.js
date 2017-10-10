@@ -139,11 +139,11 @@ class Collection extends Component {
 													bannerImage={pub.avatar}
 													isLarge={[0, 3, 6, 8].indexOf(index) > -1}
 													publicationDate={pub.updatedAt}
-													contributors={pub.contributors.filter((item)=> {
-														return !item.Contributor.isAuthor;
+													collaborators={pub.collaborators.filter((item)=> {
+														return !item.Collaborator.isAuthor;
 													})}
-													authors={pub.contributors.filter((item)=> {
-														return item.Contributor.isAuthor;
+													authors={pub.collaborators.filter((item)=> {
+														return item.Collaborator.isAuthor;
 													})}
 												/>
 											</div>

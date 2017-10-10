@@ -58,8 +58,8 @@ class PubCollabShare extends Component {
 
 	render() {
 		const pubData = this.props.pubData;
-		const numPubAdmins = this.props.pubData.contributors.reduce((prev, curr)=> {
-			if (curr.Contributor.permissions === 'admin') { return prev + 1;}
+		const numPubAdmins = this.props.pubData.collaborators.reduce((prev, curr)=> {
+			if (curr.Collaborator.permissions === 'admin') { return prev + 1;}
 			return prev;
 		}, 0);
 		return (
@@ -99,13 +99,13 @@ class PubCollabShare extends Component {
 							onSave={this.props.onPutPub}
 							pubData={pubData}
 						/>
-						{this.props.pubData.contributors.filter((item)=> {
+						{this.props.pubData.collaborators.filter((item)=> {
 							return item.slug;
 						}).sort((foo, bar)=> {
-							if (foo.Contributor.order < bar.Contributor.order) { return 1; }
-							if (foo.Contributor.order > bar.Contributor.order) { return -1; }
-							if (foo.Contributor.createdAt < bar.Contributor.createdAt) { return 1; }
-							if (foo.Contributor.createdAt > bar.Contributor.createdAt) { return -1; }
+							if (foo.Collaborator.order < bar.Collaborator.order) { return 1; }
+							if (foo.Collaborator.order > bar.Collaborator.order) { return -1; }
+							if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
+							if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
 							return 0;
 						}).map((item)=> {
 							return (
@@ -113,7 +113,7 @@ class PubCollabShare extends Component {
 									key={`details-${item.id}`}
 									pubId={this.props.pubData.id}
 									canAdmin={this.props.canAdmin}
-									lastAdmin={item.Contributor.permissions === 'admin' && numPubAdmins === 1}
+									lastAdmin={item.Collaborator.permissions === 'admin' && numPubAdmins === 1}
 									collaboratorData={item}
 									onCollaboratorUpdate={this.props.onCollaboratorUpdate}
 									onCollaboratorDelete={this.props.onCollaboratorDelete}

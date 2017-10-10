@@ -13,7 +13,7 @@ const userData1 = {
 	initials: 'LF',
 	fullName: 'Lavonne Franecki',
 	slug: 'lavonne-franecki5766',
-	Contributor: {
+	Collaborator: {
 		id: 'f7c4a81c-7202-4550-8fef-46d080458c42',
 		name: null,
 		order: null,
@@ -27,7 +27,7 @@ const userData2 = {
 	id: 'fcea297d-915d-4c2b-98b0-ab3a7bc2c2db',
 	initials: 'E',
 	fullName: 'Elmer Collins',
-	Contributor: {
+	Collaborator: {
 		isAuthor: false,
 		permissions: 'none',
 		order: null

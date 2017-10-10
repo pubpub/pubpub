@@ -25,12 +25,12 @@ export default {
 			headerImage: 'http://lorempixel.com/1200/480/?rand=2228',
 			createdAt: '2017-09-01T12:55:21.886Z',
 			updatedAt: '2017-09-01T12:55:21.886Z',
-			contributors: [
+			collaborators: [
 				{
 					id: '075999ab-613e-4cb7-b6cd-c62557582fd6',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/kostaspt/128.jpg',
 					initials: 'FP',
-					Contributor: {
+					Collaborator: {
 						isAuthor: true
 					}
 				},
@@ -38,7 +38,7 @@ export default {
 					id: '2be72117-6bc7-4741-9c51-96799149f354',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/danthms/128.jpg',
 					initials: 'AL',
-					Contributor: {
+					Collaborator: {
 						isAuthor: true
 					}
 				},
@@ -46,7 +46,7 @@ export default {
 					id: '5a9b36cd-287b-4f2d-abc8-fb6792815da8',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/puzik/128.jpg',
 					initials: 'CH',
-					Contributor: {
+					Collaborator: {
 						isAuthor: false
 					}
 				},
@@ -54,7 +54,7 @@ export default {
 					id: '8b7ef2b6-4643-491e-99c6-b6c1cbdb7067',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/LucasPerdidao/128.jpg',
 					initials: 'TG',
-					Contributor: {
+					Collaborator: {
 						isAuthor: true
 					}
 				},
@@ -62,7 +62,7 @@ export default {
 					id: 'af81032d-f087-4272-8f5c-60acd29eca78',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/vm_f/128.jpg',
 					initials: 'LC',
-					Contributor: {
+					Collaborator: {
 						isAuthor: true
 					}
 				},
@@ -70,7 +70,7 @@ export default {
 					id: 'b96efa4b-d5f6-4126-90f5-db64f12788e8',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/depaulawagner/128.jpg',
 					initials: 'AY',
-					Contributor: {
+					Collaborator: {
 						isAuthor: false
 					}
 				},
@@ -78,7 +78,7 @@ export default {
 					id: 'e78119c4-d6d8-44f6-9089-3e4ebb8e3cb4',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/d00maz/128.jpg',
 					initials: 'EE',
-					Contributor: {
+					Collaborator: {
 						isAuthor: false
 					}
 				},
@@ -86,7 +86,7 @@ export default {
 					id: 'fe2d21b7-3647-4f05-b54c-8eeb58f79b70',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/cggaurav/128.jpg',
 					initials: 'LG',
-					Contributor: {
+					Collaborator: {
 						isAuthor: false
 					}
 				}
@@ -102,12 +102,12 @@ export default {
 			headerImage: 'http://lorempixel.com/1200/480/?rand=8315',
 			createdAt: '2017-09-01T12:55:21.886Z',
 			updatedAt: '2017-09-01T12:55:21.886Z',
-			contributors: [
+			collaborators: [
 				{
 					id: '71c90472-2698-44c9-b3f0-295a4c991080',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/kevka/128.jpg',
 					initials: 'RC',
-					Contributor: {
+					Collaborator: {
 						isAuthor: false
 					}
 				},
@@ -115,7 +115,7 @@ export default {
 					id: '72ef9ace-2eed-4199-9e60-3c0eee619afa',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/byryan/128.jpg',
 					initials: 'LB',
-					Contributor: {
+					Collaborator: {
 						isAuthor: false
 					}
 				},
@@ -123,7 +123,7 @@ export default {
 					id: '88f391c5-40fb-4c2a-91ab-d993e8a21213',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/spbroma/128.jpg',
 					initials: 'LB',
-					Contributor: {
+					Collaborator: {
 						isAuthor: true
 					}
 				},
@@ -131,7 +131,7 @@ export default {
 					id: '8b7ef2b6-4643-491e-99c6-b6c1cbdb7067',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/LucasPerdidao/128.jpg',
 					initials: 'TG',
-					Contributor: {
+					Collaborator: {
 						isAuthor: false
 					}
 				},
@@ -139,7 +139,7 @@ export default {
 					id: 'd43e0727-97df-4b41-9b44-829147b46ade',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/notbadart/128.jpg',
 					initials: 'WL',
-					Contributor: {
+					Collaborator: {
 						isAuthor: true
 					}
 				},
@@ -147,7 +147,7 @@ export default {
 					id: 'f9d768c1-7a63-45f7-9862-d2fd1a302cc2',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/yalozhkin/128.jpg',
 					initials: 'HM',
-					Contributor: {
+					Collaborator: {
 						isAuthor: true
 					}
 				}
@@ -163,12 +163,12 @@ export default {
 			headerImage: 'http://lorempixel.com/1200/480/?rand=5903',
 			createdAt: '2017-09-01T12:55:21.886Z',
 			updatedAt: '2017-09-01T12:55:21.886Z',
-			contributors: [
+			collaborators: [
 				{
 					id: '04cd3755-fbc5-4fb2-88ac-149d71217385',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/curiousonaut/128.jpg',
 					initials: 'TJ',
-					Contributor: {
+					Collaborator: {
 						isAuthor: true
 					}
 				},
@@ -176,7 +176,7 @@ export default {
 					id: '32c5fa71-15f4-4a31-be48-5b32c732d56a',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/isaacfifth/128.jpg',
 					initials: 'CB',
-					Contributor: {
+					Collaborator: {
 						isAuthor: false
 					}
 				},
@@ -184,7 +184,7 @@ export default {
 					id: '49c7a4be-280b-4560-980b-32b984b1bd63',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/pyronite/128.jpg',
 					initials: 'DL',
-					Contributor: {
+					Collaborator: {
 						isAuthor: true
 					}
 				},
@@ -192,7 +192,7 @@ export default {
 					id: '8b7ef2b6-4643-491e-99c6-b6c1cbdb7067',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/LucasPerdidao/128.jpg',
 					initials: 'TG',
-					Contributor: {
+					Collaborator: {
 						isAuthor: false
 					}
 				},
@@ -200,7 +200,7 @@ export default {
 					id: 'a54641f0-ef6c-47d4-abd5-137d3f07c8c1',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/croakx/128.jpg',
 					initials: 'MC',
-					Contributor: {
+					Collaborator: {
 						isAuthor: true
 					}
 				},
@@ -208,7 +208,7 @@ export default {
 					id: 'bf59e26d-420f-49e1-9d7f-cab6f57eec6a',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/vitorleal/128.jpg',
 					initials: 'EC',
-					Contributor: {
+					Collaborator: {
 						isAuthor: true
 					}
 				},
@@ -216,7 +216,7 @@ export default {
 					id: 'dbc7356e-62db-4ba0-972d-a5d5469c24cc',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/edhenderson/128.jpg',
 					initials: 'KB',
-					Contributor: {
+					Collaborator: {
 						isAuthor: true
 					}
 				}

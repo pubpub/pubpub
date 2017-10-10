@@ -11,23 +11,23 @@ const content = (
 		<div style={wrapperStyle}>
 			<PubCollabHeader
 				pubData={pubData}
-				collaborators={pubData.contributors}
+				collaborators={pubData.collaborators}
 				canAdmin={true}
 				activeCollaborators={[
-					pubData.contributors[0],
-					pubData.contributors[1],
-					pubData.contributors[2],
+					pubData.collaborators[0],
+					pubData.collaborators[1],
+					pubData.collaborators[2],
 				]}
 			/>
 		</div>
 		<div style={wrapperStyle}>
 			<PubCollabHeader
 				pubData={pubData}
-				collaborators={pubData.contributors}
+				collaborators={pubData.collaborators}
 				activeCollaborators={[
-					pubData.contributors[0],
-					pubData.contributors[1],
-					pubData.contributors[2],
+					pubData.collaborators[0],
+					pubData.collaborators[1],
+					pubData.collaborators[2],
 				]}
 			/>
 		</div>

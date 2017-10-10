@@ -178,8 +178,8 @@ export default function reducer(state = defaultState, action) {
 			...state,
 			data: {
 				...state.data,
-				contributors: [
-					...state.data.contributors,
+				collaborators: [
+					...state.data.collaborators,
 					action.result,
 				]
 			}
@@ -195,14 +195,14 @@ export default function reducer(state = defaultState, action) {
 			...state,
 			data: {
 				...state.data,
-				contributors: state.data.contributors.map((item)=> {
-					if (item.Contributor.id === action.result.Contributor.id) {
+				collaborators: state.data.collaborators.map((item)=> {
+					if (item.Collaborator.id === action.result.Collaborator.id) {
 						return {
 							...item,
 							fullName: action.result.fullName || item.fullName,
-							Contributor: {
-								...item.Contributor,
-								...action.result.Contributor,
+							Collaborator: {
+								...item.Collaborator,
+								...action.result.Collaborator,
 							}
 						};
 					}
@@ -221,8 +221,8 @@ export default function reducer(state = defaultState, action) {
 			...state,
 			data: {
 				...state.data,
-				contributors: state.data.contributors.filter((item)=> {
-					return item.Contributor.id !== action.result;
+				collaborators: state.data.collaborators.filter((item)=> {
+					return item.Collaborator.id !== action.result;
 				})
 			}
 		};

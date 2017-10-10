@@ -8,14 +8,14 @@ export default {
 	headerImage: 'http://lorempixel.com/1200/480/?rand=5488',
 	createdAt: '2017-09-01T13:45:13.147Z',
 	updatedAt: '2017-09-01T13:45:13.147Z',
-	contributors: [
+	collaborators: [
 		{
 			id: '02c4c6d2-69c7-4f8b-b966-1bc0cf5d6325',
 			avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/nilshelmersson/128.jpg',
 			initials: 'LK',
 			fullName: 'Lorenz Kling',
 			slug: 'lorenz-kling8841',
-			Contributor: {
+			Collaborator: {
 				isAuthor: false
 			}
 		},
@@ -25,7 +25,7 @@ export default {
 			initials: 'JB',
 			fullName: 'Jordon Bailey',
 			slug: 'jordon-bailey6528',
-			Contributor: {
+			Collaborator: {
 				isAuthor: true
 			}
 		},
@@ -35,7 +35,7 @@ export default {
 			initials: 'CH',
 			fullName: 'Crystal Hane',
 			slug: 'crystal-hane9024',
-			Contributor: {
+			Collaborator: {
 				isAuthor: true
 			}
 		},
@@ -45,7 +45,7 @@ export default {
 			initials: 'GD',
 			fullName: 'Guillermo Dooley',
 			slug: 'guillermo-dooley6107',
-			Contributor: {
+			Collaborator: {
 				isAuthor: true
 			}
 		},
@@ -55,7 +55,7 @@ export default {
 			initials: 'GS',
 			fullName: 'Gloria Schultz',
 			slug: 'gloria-schultz3649',
-			Contributor: {
+			Collaborator: {
 				isAuthor: false
 			}
 		}

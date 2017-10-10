@@ -23,15 +23,15 @@ storiesOf('PubCollabShare', module)
 					editHash: '7tojd6d7',
 					viewHash: '9x33d2l9',
 					slug: 'article-slug',
-					adminPermissions: 'suggest',
-					contributors: [
+					adminPermissions: 'view',
+					collaborators: [
 						{
 							id: '105dd033-446a-4abe-9243-d1289b944af6',
 							avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/antonyzotov/128.jpg',
 							initials: 'KH',
 							fullName: 'Keyon Haag',
 							slug: 'keyon-haag8383',
-							Contributor: {
+							Collaborator: {
 								id: '9a50f2a8-e873-472f-876d-166ba68b5e5a',
 								name: null,
 								order: null,
@@ -47,7 +47,7 @@ storiesOf('PubCollabShare', module)
 							initials: 'AK',
 							fullName: 'Alize Kozey',
 							slug: 'alize-kozey8728',
-							Contributor: {
+							Collaborator: {
 								id: 'e0675e78-c00c-44de-b2bc-0989de2d451a',
 								name: null,
 								order: null,
@@ -63,7 +63,7 @@ storiesOf('PubCollabShare', module)
 							initials: 'PS',
 							fullName: 'Payton Stanton',
 							slug: 'payton-stanton1847',
-							Contributor: {
+							Collaborator: {
 								id: '474853c6-e6e5-4575-a417-5f085a808f70',
 								name: null,
 								order: null,
@@ -79,7 +79,7 @@ storiesOf('PubCollabShare', module)
 							initials: 'LF',
 							fullName: 'Lavonne Franecki',
 							slug: 'lavonne-franecki5766',
-							Contributor: {
+							Collaborator: {
 								id: 'f7c4a81c-7202-4550-8fef-46d080458c42',
 								name: null,
 								order: null,
@@ -95,7 +95,7 @@ storiesOf('PubCollabShare', module)
 							initials: 'MW',
 							fullName: 'Mozelle Walker',
 							slug: 'mozelle-walker321',
-							Contributor: {
+							Collaborator: {
 								id: 'f802af73-4977-4940-9ab5-9fc1efb78261',
 								name: null,
 								order: null,
@@ -109,7 +109,7 @@ storiesOf('PubCollabShare', module)
 							id: 'cdeb68a5-3410-4d47-bcf2-e2a9fe58c7f4',
 							initials: 'K',
 							fullName: 'Kamille McClure',
-							Contributor: {
+							Collaborator: {
 								isAuthor: true,
 								permissions: 'none',
 								order: null
@@ -119,7 +119,7 @@ storiesOf('PubCollabShare', module)
 							id: 'fcea297d-915d-4c2b-98b0-ab3a7bc2c2db',
 							initials: 'E',
 							fullName: 'Elmer Collins',
-							Contributor: {
+							Collaborator: {
 								isAuthor: false,
 								permissions: 'none',
 								order: null

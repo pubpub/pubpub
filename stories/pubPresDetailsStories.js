@@ -10,7 +10,7 @@ storiesOf('PubPresDetails', module)
 	<div>
 		<div style={wrapperStyle}>
 			<PubPresDetails
-				collaborators={pubData.contributors}
+				collaborators={pubData.collaborators}
 				slug={pubData.slug}
 				numDiscussions={pubData.discussions.length}
 				numSuggestions={pubData.discussions.reduce((prev, curr)=> {

@@ -20,12 +20,12 @@ export default {
 			headerImage: 'http://lorempixel.com/1200/480/?rand=4624',
 			createdAt: '2017-09-01T15:28:08.013Z',
 			updatedAt: '2017-09-01T15:28:08.013Z',
-			contributors: [
+			collaborators: [
 				{
 					id: 'c7108bcd-b41e-41fd-8fc0-152f394785a4',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/baires/128.jpg',
 					initials: 'AC',
-					Contributor: {
+					Collaborator: {
 						isAuthor: true
 					}
 				},
@@ -33,7 +33,7 @@ export default {
 					id: 'd338c8ba-cd9c-47d6-91b0-f3e0534a502a',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/allagringaus/128.jpg',
 					initials: 'NW',
-					Contributor: {
+					Collaborator: {
 						isAuthor: true
 					}
 				},
@@ -41,7 +41,7 @@ export default {
 					id: 'f562c52b-bd26-4b87-af35-491320a6be6e',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/thomasschrijer/128.jpg',
 					initials: 'SW',
-					Contributor: {
+					Collaborator: {
 						isAuthor: true
 					}
 				}
@@ -57,12 +57,12 @@ export default {
 			headerImage: 'http://lorempixel.com/1200/480/?rand=7982',
 			createdAt: '2017-09-01T15:28:08.013Z',
 			updatedAt: '2017-09-01T15:28:08.013Z',
-			contributors: [
+			collaborators: [
 				{
 					id: '2e49911d-d05b-4402-a4a6-791fd1df48d5',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/anatolinicolae/128.jpg',
 					initials: 'VL',
-					Contributor: {
+					Collaborator: {
 						isAuthor: false
 					}
 				},
@@ -70,7 +70,7 @@ export default {
 					id: 'ca2664d0-17a3-45d5-871c-f51e41a4719c',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/davecraige/128.jpg',
 					initials: 'AB',
-					Contributor: {
+					Collaborator: {
 						isAuthor: true
 					}
 				}
@@ -86,12 +86,12 @@ export default {
 			headerImage: 'http://lorempixel.com/1200/480/?rand=9371',
 			createdAt: '2017-09-01T15:28:08.013Z',
 			updatedAt: '2017-09-01T15:28:08.013Z',
-			contributors: [
+			collaborators: [
 				{
 					id: '01d01541-aae3-4a51-9508-f3eedf8d867d',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/jordyvdboom/128.jpg',
 					initials: 'DC',
-					Contributor: {
+					Collaborator: {
 						isAuthor: false
 					}
 				},
@@ -99,7 +99,7 @@ export default {
 					id: '0830a47b-28bd-40be-baeb-4208d4bfa142',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/nathalie_fs/128.jpg',
 					initials: 'HB',
-					Contributor: {
+					Collaborator: {
 						isAuthor: true
 					}
 				},
@@ -107,7 +107,7 @@ export default {
 					id: '09cb783b-2b8c-4d0a-b778-fba820315e7f',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/madebybrenton/128.jpg',
 					initials: 'RW',
-					Contributor: {
+					Collaborator: {
 						isAuthor: true
 					}
 				},
@@ -115,7 +115,7 @@ export default {
 					id: '22d4dbe1-07bb-4649-9b63-540d5b5166b2',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/vj_demien/128.jpg',
 					initials: 'AT',
-					Contributor: {
+					Collaborator: {
 						isAuthor: false
 					}
 				},
@@ -123,7 +123,7 @@ export default {
 					id: '23397240-f1cf-498d-9294-db4c847a7fd7',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/malgordon/128.jpg',
 					initials: 'AM',
-					Contributor: {
+					Collaborator: {
 						isAuthor: false
 					}
 				},
@@ -131,7 +131,7 @@ export default {
 					id: '8e8e3124-d434-48a5-9c8d-01fbcf05084b',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/rtyukmaev/128.jpg',
 					initials: 'VM',
-					Contributor: {
+					Collaborator: {
 						isAuthor: false
 					}
 				},
@@ -139,7 +139,7 @@ export default {
 					id: 'dc729a85-a18f-46dd-a9be-c52e02002588',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/shoaib253/128.jpg',
 					initials: 'SL',
-					Contributor: {
+					Collaborator: {
 						isAuthor: false
 					}
 				},
@@ -147,7 +147,7 @@ export default {
 					id: 'eec4b4d0-a243-46fc-8167-7022414d0388',
 					avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/okansurreel/128.jpg',
 					initials: 'NG',
-					Contributor: {
+					Collaborator: {
 						isAuthor: false
 					}
 				}

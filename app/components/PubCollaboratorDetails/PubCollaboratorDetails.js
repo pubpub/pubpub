@@ -31,8 +31,8 @@ class PubCollaboratorDetails extends Component {
 		super(props);
 		this.state = {
 			name: props.collaboratorData.name,
-			isAuthor: props.collaboratorData.Contributor.isAuthor,
-			permissions: props.collaboratorData.Contributor.permissions,
+			isAuthor: props.collaboratorData.Collaborator.isAuthor,
+			permissions: props.collaboratorData.Collaborator.permissions,
 		};
 		this.handleChecked = this.handleChecked.bind(this);
 		this.handleRemoveClick = this.handleRemoveClick.bind(this);
@@ -42,7 +42,7 @@ class PubCollaboratorDetails extends Component {
 	handleChecked(evt) {
 		this.setState({ isAuthor: evt.target.checked });
 		this.props.onCollaboratorUpdate({
-			collaboratorId: this.props.collaboratorData.Contributor.id,
+			collaboratorId: this.props.collaboratorData.Collaborator.id,
 			pubId: this.props.pubId,
 			isAuthor: evt.target.checked,
 		});
@@ -50,7 +50,7 @@ class PubCollaboratorDetails extends Component {
 
 	handleRemoveClick() {
 		this.props.onCollaboratorDelete({
-			collaboratorId: this.props.collaboratorData.Contributor.id,
+			collaboratorId: this.props.collaboratorData.Collaborator.id,
 			pubId: this.props.pubId,
 		});
 	}
@@ -58,7 +58,7 @@ class PubCollaboratorDetails extends Component {
 	handlePermissionsChange(permissionsValue) {
 		this.setState({ permissions: permissionsValue });
 		this.props.onCollaboratorUpdate({
-			collaboratorId: this.props.collaboratorData.Contributor.id,
+			collaboratorId: this.props.collaboratorData.Collaborator.id,
 			pubId: this.props.pubId,
 			permissions: permissionsValue,
 		});
@@ -69,7 +69,7 @@ class PubCollaboratorDetails extends Component {
 		if (!data) { return null; }
 
 		const avatar = <Avatar width={50} userInitials={data.initials} userAvatar={data.avatar} />;
-		const name = <span className={'name'}>{data.Contributor.name || data.fullName}</span>;
+		const name = <span className={'name'}>{data.Collaborator.name || data.fullName}</span>;
 		return (
 			<div className={`pub-collaborator-details ${this.props.isPermissionsMode ? 'permission-mode' : ''}`}>
 				<div className={'avatar-wrapper'}>

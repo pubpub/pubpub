@@ -25,12 +25,12 @@ const PubCollabDropdownPermissions = function(props) {
 			onClick: ()=>{ props.onChange('none'); },
 			description: 'Cannot view the working draft or discussions.',
 		},
-		suggest: {
-			value: 'suggest',
-			title: 'Can Suggest',
+		view: {
+			value: 'view',
+			title: 'Can View',
 			icon: 'pt-icon-doc',
-			onClick: ()=>{ props.onChange('suggest'); },
-			description: 'Can participate in discussions and suggest updates to the working draft.',
+			onClick: ()=>{ props.onChange('view'); },
+			description: 'Can participate in discussions and view updates to the working draft.',
 		},
 		edit: {
 			value: 'edit',
@@ -44,7 +44,7 @@ const PubCollabDropdownPermissions = function(props) {
 			title: 'Can Manage',
 			icon: 'pt-icon-admin',
 			onClick: ()=>{ props.onChange('admin'); },
-			description: 'Can edit and manage contributors, metadata, and publishing.',
+			description: 'Can edit and manage collaborators, metadata, and publishing.',
 		},
 	};
 

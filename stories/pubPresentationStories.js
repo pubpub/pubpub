@@ -24,7 +24,7 @@ const content = (
 				backgroundImage={'/dev/pubHeader3.jpg'}
 			/>
 			<PubPresDetails
-				collaborators={pubData.contributors}
+				collaborators={pubData.collaborators}
 				slug={pubData.slug}
 				numDiscussions={10}
 				numSuggestions={8}
@@ -38,7 +38,7 @@ const content = (
 				description={pubData.description}
 			/>
 			<PubPresDetails
-				collaborators={pubData.contributors}
+				collaborators={pubData.collaborators}
 				slug={pubData.slug}
 				numDiscussions={10}
 				numSuggestions={8}

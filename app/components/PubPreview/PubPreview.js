@@ -11,7 +11,7 @@ const propTypes = {
 	description: PropTypes.string,
 	slug: PropTypes.string.isRequired,
 	authors: PropTypes.array,
-	contributors: PropTypes.array,
+	collaborators: PropTypes.array,
 	publicationDate: PropTypes.string,
 	bannerImage: PropTypes.string,
 	isLarge: PropTypes.bool,
@@ -21,7 +21,7 @@ const defaultProps = {
 	title: undefined,
 	description: undefined,
 	authors: [],
-	contributors: [],
+	collaborators: [],
 	publicationDate: undefined,
 	bannerImage: undefined,
 	isLarge: false,
@@ -39,7 +39,7 @@ const PubPreview = function(props) {
 		? { backgroundImage: `url("${props.bannerImage}")` }
 		: { background: gradients[props.title.charCodeAt(0) % 4] };
 
-	const contributorsCount = props.authors.length + props.contributors.length;
+	const collaboratorsCount = props.authors.length + props.collaborators.length;
 	return (
 		<div className={`pub-preview ${props.isLarge ? 'large-preview' : ''}`}>
 			<Link to={`/pub/${props.slug}`}>
@@ -50,7 +50,7 @@ const PubPreview = function(props) {
 				<Link to={`/pub/${props.slug}`}><h3 className={'title'}>{props.title}</h3></Link>
 				<div className={'description'}>{props.description}</div>
 
-				<div className={'contributors'}>
+				<div className={'collaborators'}>
 					<div className={'avatars'}>
 						{props.authors.map((author, index)=> {
 							return (
@@ -66,7 +66,7 @@ const PubPreview = function(props) {
 						})}
 					</div>
 					<div className={'details'}>
-						<div className={'subtext'}>{contributorsCount} contributor{contributorsCount === 1 ? '' : 's'}</div>
+						<div className={'subtext'}>{collaboratorsCount} collaborator{collaboratorsCount === 1 ? '' : 's'}</div>
 						<div className={'subtext'}>{dateFormat(props.publicationDate, 'mmm dd, yyyy')}</div>
 					</div>
 				</div>

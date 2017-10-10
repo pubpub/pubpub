@@ -24,11 +24,11 @@ const PubCollabDropdownPrivacy = function(props) {
 			onClick: ()=>{ props.onChange('private'); },
 			description: 'Collaborators must be invited to edit. The public can view and make suggestions on published snapshots.',
 		},
-		publicSuggest: {
-			value: 'publicSuggest',
-			title: 'Public Suggestions',
+		publicView: {
+			value: 'publicView',
+			title: 'Public View',
 			icon: 'pt-icon-team',
-			onClick: ()=>{ props.onChange('publicSuggest'); },
+			onClick: ()=>{ props.onChange('publicView'); },
 			description: 'The working draft will be visible to all and suggestions can be made.',
 		},
 		publicEdit: {

@@ -22,7 +22,7 @@ const defaultProps = {
 
 const PubPresDetails = function(props) {
 	const authors = props.collaborators.filter((collaborator)=> {
-		return collaborator.Contributor.isAuthor;
+		return collaborator.Collaborator.isAuthor;
 	});
 
 	const activeVersion = props.versions.reduce((prev, curr)=> {

@@ -14,7 +14,7 @@ storiesOf('PubAdminPermissions', module)
 			<PubAdminPermissions
 				appData={{
 					title: 'Viral Communications',
-					permissions: 'suggest',
+					permissions: 'view',
 				}}
 				pubId={'234-123512-fasdf-232'}
 				onSave={handleSelection}

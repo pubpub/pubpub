@@ -106,11 +106,11 @@ class User extends Component {
 										bannerImage={pub.avatar}
 										isLarge={true}
 										publicationDate={dateFormat(pub.updatedAt, 'mmm dd, yyyy')}
-										contributors={pub.contributors.filter((item)=> {
-											return !item.Contributor.isAuthor;
+										collaborators={pub.collaborators.filter((item)=> {
+											return !item.Collaborator.isAuthor;
 										})}
-										authors={pub.contributors.filter((item)=> {
-											return item.Contributor.isAuthor;
+										authors={pub.collaborators.filter((item)=> {
+											return item.Collaborator.isAuthor;
 										})}
 									/>
 								</div>

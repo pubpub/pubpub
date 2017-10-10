@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react';
 import PubPreview from 'components/PubPreview/PubPreview';
 import PubPreviewLoading from 'components/PubPreview/PubPreviewLoading';
 
-const contributors = [1, 2, 3, 4, 5];
+const collaborators = [1, 2, 3, 4, 5];
 const authors = [
 	{
 		id: 0,
@@ -33,7 +33,7 @@ storiesOf('PubPreview', module)
 					bannerImage={'/dev/banner1.jpg'}
 					isLarge={true}
 					publicationDate={String(new Date())}
-					contributors={contributors}
+					collaborators={collaborators}
 					authors={authors}
 				/>
 			</div>
@@ -47,7 +47,7 @@ storiesOf('PubPreview', module)
 					bannerImage={'/dev/banner1.jpg'}
 					isLarge={false}
 					publicationDate={String(new Date())}
-					contributors={contributors}
+					collaborators={collaborators}
 					authors={authors}
 				/>
 			</div>
@@ -61,7 +61,7 @@ storiesOf('PubPreview', module)
 					bannerImage={'/dev/banner2.jpg'}
 					isLarge={false}
 					publicationDate={String(new Date())}
-					contributors={[]}
+					collaborators={[]}
 					authors={[authors[2]]}
 				/>
 			</div>

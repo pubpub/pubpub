@@ -84,7 +84,7 @@ class PubPresentation extends Component {
 						if (curr.suggestions) { return prev + 1; }
 						return prev;
 					}, 0)}
-					collaborators={pubData.contributors}
+					collaborators={pubData.collaborators}
 					versions={pubData.versions}
 				/>
 

@@ -51,9 +51,9 @@ class PubCollabCollaborators extends Component {
 					</div>
 				}
 				<div className={'collaborators-wrapper'}>
-					{this.props.pubData.contributors.sort((foo, bar)=> {
-						if (foo.Contributor.order < bar.Contributor.order) { return 1; }
-						if (foo.Contributor.order > bar.Contributor.order) { return -1; }
+					{this.props.pubData.collaborators.sort((foo, bar)=> {
+						if (foo.Collaborator.order < bar.Collaborator.order) { return 1; }
+						if (foo.Collaborator.order > bar.Collaborator.order) { return -1; }
 						if (foo.id < bar.id) { return 1; }
 						if (foo.id > bar.id) { return -1; }
 						return 0;
