@@ -9,6 +9,10 @@ import {
 	PUT_COLLECTION_LOAD,
 	PUT_COLLECTION_SUCCESS,
 	PUT_COLLECTION_FAIL,
+
+	DELETE_COLLECTION_LOAD,
+	DELETE_COLLECTION_SUCCESS,
+	DELETE_COLLECTION_FAIL,
 } from 'actions/collection';
 
 /* ------------------- */
@@ -54,6 +58,12 @@ export default function reducer(state = defaultState, action) {
 			}
 		};
 	case PUT_COLLECTION_FAIL:
+		return state;
+	case DELETE_COLLECTION_LOAD:
+		return state;
+	case DELETE_COLLECTION_SUCCESS:
+		return state;
+	case DELETE_COLLECTION_FAIL:
 		return state;
 	default:
 		return state;

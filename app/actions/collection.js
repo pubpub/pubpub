@@ -18,6 +18,10 @@ export const PUT_COLLECTION_LOAD = 'collection/PUT_COLLECTION_LOAD';
 export const PUT_COLLECTION_SUCCESS = 'collection/PUT_COLLECTION_SUCCESS';
 export const PUT_COLLECTION_FAIL = 'collection/PUT_COLLECTION_FAIL';
 
+export const DELETE_COLLECTION_LOAD = 'collection/DELETE_COLLECTION_LOAD';
+export const DELETE_COLLECTION_SUCCESS = 'collection/DELETE_COLLECTION_SUCCESS';
+export const DELETE_COLLECTION_FAIL = 'collection/DELETE_COLLECTION_FAIL';
+
 /*--------*/
 // Define Action creators
 //
@@ -89,6 +93,29 @@ export function putCollection({ communityId, collectionId, title, slug, descript
 		})
 		.catch((error) => {
 			dispatch({ type: PUT_COLLECTION_FAIL, error });
+		});
+	};
+}
+
+export function deleteCollection({ communityId, collectionId }) {
+	return (dispatch) => {
+		dispatch({ type: DELETE_COLLECTION_LOAD });
+		return apiFetch('/collections', {
+			method: 'DELETE',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				communityId,
+				collectionId,
+			})
+		})
+		.then((result) => {
+			dispatch({ type: DELETE_COLLECTION_SUCCESS, result });
+		})
+		.catch((error) => {
+			dispatch({ type: DELETE_COLLECTION_FAIL, error });
 		});
 	};
 }

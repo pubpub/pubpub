@@ -27,6 +27,10 @@ import {
 	PUT_COLLECTION_LOAD,
 	PUT_COLLECTION_SUCCESS,
 	PUT_COLLECTION_FAIL,
+
+	DELETE_COLLECTION_LOAD,
+	DELETE_COLLECTION_SUCCESS,
+	DELETE_COLLECTION_FAIL,
 } from 'actions/collection';
 
 /* ------------------- */
@@ -42,6 +46,8 @@ const defaultState = {
 	postCollectionError: undefined,
 	putCollectionIsLoading: false,
 	putCollectionError: undefined,
+	deleteCollectionIsLoading: false,
+	deleteCollectionError: undefined,
 };
 
 /* ----------------------------------------- */
@@ -122,6 +128,7 @@ export default function reducer(state = defaultState, action) {
 		return {
 			...state,
 			putCollectionIsLoading: true,
+			putCollectionError: undefined
 		};
 	case PUT_COLLECTION_SUCCESS:
 		return {
@@ -143,6 +150,31 @@ export default function reducer(state = defaultState, action) {
 			...state,
 			putCollectionIsLoading: false,
 			putCollectionError: action.error
+		};
+	/* DELETE Collection */
+	case DELETE_COLLECTION_LOAD:
+		return {
+			...state,
+			deleteCollectionIsLoading: true,
+			deleteCollectionError: undefined
+		};
+	case DELETE_COLLECTION_SUCCESS:
+		return {
+			data: {
+				...state.data,
+				collections: state.data.collections.filter((item)=> {
+					return item.id !== action.result.collectionId;
+				}),
+				navigation: action.result.navigation,
+			},
+			deleteCollectionIsLoading: false,
+			deleteCollectionError: undefined
+		};
+	case DELETE_COLLECTION_FAIL:
+		return {
+			...state,
+			deleteCollectionIsLoading: false,
+			deleteCollectionError: action.error
 		};
 	/* POST Community Admin Data */
 	/* -------------------- */

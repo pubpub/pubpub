@@ -11,7 +11,7 @@ import DashboardCollectionLoading from 'components/DashboardCollection/Dashboard
 import DashboardCreateCollection from 'components/DashboardCreateCollection/DashboardCreateCollection';
 import DashboardSite from 'components/DashboardSite/DashboardSite';
 import DashboardTeam from 'components/DashboardTeam/DashboardTeam';
-import { getCollectionData, postCollection, putCollection} from 'actions/collection';
+import { getCollectionData, postCollection, putCollection, deleteCollection } from 'actions/collection';
 import { putAppData, postCommunityAdmin, deleteCommunityAdmin } from 'actions/app';
 import { createPub } from 'actions/pubCreate';
 
@@ -34,6 +34,7 @@ class Dashboard extends Component {
 		this.handleSiteSave = this.handleSiteSave.bind(this);
 		this.handleCollectionCreate = this.handleCollectionCreate.bind(this);
 		this.handleCollectionSave = this.handleCollectionSave.bind(this);
+		this.handleCollectionDelete = this.handleCollectionDelete.bind(this);
 		this.handleAddAdmin = this.handleAddAdmin.bind(this);
 		this.handleRemoveAdmin = this.handleRemoveAdmin.bind(this);
 		this.updatePath = this.updatePath.bind(this);
@@ -43,7 +44,7 @@ class Dashboard extends Component {
 	}
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.match.params.slug !== this.props.match.params.slug) {
-			if (nextProps.match.params.slug !== nextProps.collectionData.data.slug) {
+			if (nextProps.collectionData.data && nextProps.match.params.slug !== nextProps.collectionData.data.slug) {
 				this.dispatchGetCollectionData(nextProps);
 			}
 		}
@@ -57,6 +58,9 @@ class Dashboard extends Component {
 			const oldSlug = this.props.match.params.slug;
 			const newSlug = nextProps.collectionData.data.slug;
 			this.props.history.push(`${nextProps.location.pathname.replace(`/dashboard/${oldSlug}`, `/dashboard/${newSlug}`).replace('/edit', '')}${nextProps.location.search}`);
+		}
+		if (this.props.appData.deleteCollectionIsLoading && !nextProps.appData.deleteCollectionIsLoading) {
+			this.props.history.push('/dashboard');
 		}
 	}
 
@@ -98,6 +102,13 @@ class Dashboard extends Component {
 		const communityId = this.props.appData.data.id;
 		this.props.dispatch(putCollection({
 			...collectionObject,
+			communityId: communityId,
+		}));
+	}
+	handleCollectionDelete(collectionId) {
+		const communityId = this.props.appData.data.id;
+		this.props.dispatch(deleteCollection({
+			collectionId: collectionId,
 			communityId: communityId,
 		}));
 	}
@@ -216,9 +227,11 @@ class Dashboard extends Component {
 												return (
 													<DashboardCollectionEdit
 														collectionData={collectionData}
-														isLoading={this.props.appData.putCollectionIsLoading}
+														putIsLoading={this.props.appData.putCollectionIsLoading}
+														deleteIsLoading={this.props.appData.deleteCollectionIsLoading}
 														error={this.props.appData.putCollectionError}
 														onSave={this.handleCollectionSave}
+														onDelete={this.handleCollectionDelete}
 													/>
 												);
 											}

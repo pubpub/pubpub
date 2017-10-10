@@ -87,6 +87,7 @@ class DashboardSite extends Component {
 	render() {
 		const collections = this.props.appData.collections || [];
 		const navigation = this.props.appData.navigation || [];
+		console.log(collections, navigation);
 		const initialNav = populateNavigationIds(collections, navigation);
 
 		return (

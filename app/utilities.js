@@ -51,6 +51,8 @@ export const populateNavigationIds = function(collections, navigation) {
 			};
 		}
 		return collectionsObject[item];
+	}).filter((item)=> {
+		return !!item;
 	});
 };
 

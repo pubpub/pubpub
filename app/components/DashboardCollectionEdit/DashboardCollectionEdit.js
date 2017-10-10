@@ -8,15 +8,19 @@ require('./dashboardCollectionEdit.scss');
 
 const propTypes = {
 	collectionData: PropTypes.object.isRequired,
-	isLoading: PropTypes.bool,
+	putIsLoading: PropTypes.bool,
+	deleteIsLoading: PropTypes.bool,
 	error: PropTypes.string,
 	onSave: PropTypes.func,
+	onDelete: PropTypes.func,
 };
 
 const defaultProps = {
-	isLoading: false,
+	putIsLoading: false,
+	deleteIsLoading: false,
 	error: undefined,
 	onSave: ()=>{},
+	onDelete: ()=> {},
 };
 
 class DashboardCollectionEdit extends Component {
@@ -40,6 +44,7 @@ class DashboardCollectionEdit extends Component {
 		this.setClosed = this.setClosed.bind(this);
 		this.setLayout = this.setLayout.bind(this);
 		this.handleSaveChanges = this.handleSaveChanges.bind(this);
+		this.handleDelete = this.handleDelete.bind(this);
 	}
 
 	setTitle(evt) {
@@ -77,10 +82,13 @@ class DashboardCollectionEdit extends Component {
 			layout: this.state.layout,
 		});
 	}
+	handleDelete() {
+		this.props.onDelete(this.props.collectionData.id);
+	}
 
 	render() {
 		const data = this.props.collectionData;
-
+		const pubs = data.pubs || [];
 		return (
 			<div className={'dashboard-collection-edit'}>
 				<div className={'content-buttons'}>
@@ -90,7 +98,7 @@ class DashboardCollectionEdit extends Component {
 						className={'pt-intent-primary'}
 						text={'Save Changes'}
 						disabled={!this.state.hasChanged || !this.state.title || (data.slug && !this.state.slug)}
-						loading={this.props.isLoading}
+						loading={this.props.putIsLoading}
 						onClick={this.handleSaveChanges}
 					/>
 					{this.props.error &&
@@ -155,6 +163,26 @@ class DashboardCollectionEdit extends Component {
 					onChange={this.setLayout}
 					error={undefined}
 				/>
+
+				{this.props.collectionData.slug &&
+					<div className="pt-callout pt-intent-danger">
+						<h5>Delete {this.props.collectionData.isPage ? 'Page' : 'Collection'} from Community</h5>
+						<div>Deleting a {this.props.collectionData.isPage ? 'page' : 'collection'} is permanent.</div>
+						{!!pubs.length &&
+							<div>Before deleting, you must remove all pubs from this collection.</div>
+						}
+						<div className={'delete-button-wrapper'}>
+							<Button
+								type={'button'}
+								className={'pt-intent-danger'}
+								text={`Delete ${this.props.collectionData.isPage ? 'Page' : 'Collection'}`}
+								disabled={pubs.length}
+								loading={this.props.deleteIsLoading}
+								onClick={this.handleDelete}
+							/>
+						</div>
+					</div>
+				}
 
 			</div>
 		);
