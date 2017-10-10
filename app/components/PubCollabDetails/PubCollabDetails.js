@@ -9,11 +9,13 @@ require('./pubCollabDetails.scss');
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	onSave: PropTypes.func.isRequired,
-	isLoading: PropTypes.bool,
+	onDelete: PropTypes.func.isRequired,
+	putIsLoading: PropTypes.bool,
+	deleteIsLoading: PropTypes.bool,
 };
 
 const defaultProps = {
-	isLoading: false,
+	putIsLoading: false,
 };
 
 class PubCollabDetails extends Component {
@@ -33,6 +35,7 @@ class PubCollabDetails extends Component {
 		this.onAvatarChange = this.onAvatarChange.bind(this);
 		this.onUseHeaderImageChange = this.onUseHeaderImageChange.bind(this);
 		this.handleSave = this.handleSave.bind(this);
+		this.handleDelete = this.handleDelete.bind(this);
 	}
 
 	updateTitle(evt) {
@@ -74,6 +77,9 @@ class PubCollabDetails extends Component {
 			useHeaderImage: this.state.useHeaderImage,
 		});
 	}
+	handleDelete() {
+		this.props.onDelete(this.props.pubData.id);
+	}
 
 	render() {
 		return (
@@ -83,7 +89,7 @@ class PubCollabDetails extends Component {
 						text={'Save Details'}
 						className={'pt-intent-primary'}
 						onClick={this.handleSave}
-						loading={this.props.isLoading}
+						loading={this.props.putIsLoading}
 						disabled={!this.state.hasUpdated || !this.state.title || !this.state.slug}
 					/>
 				</div>
@@ -123,6 +129,21 @@ class PubCollabDetails extends Component {
 						Set to use the pub image at the top of published snapshots.
 					</Checkbox>
 				</InputField>
+
+				<div className="pt-callout pt-intent-danger">
+					<h5>Delete Pub</h5>
+					<div>Deleting a Pub is permanent.</div>
+
+					<div className={'delete-button-wrapper'}>
+						<Button
+							type={'button'}
+							className={'pt-intent-danger'}
+							text={'Delete Pub'}
+							loading={this.props.deleteIsLoading}
+							onClick={this.handleDelete}
+						/>
+					</div>
+				</div>
 			</div>
 		);
 	}

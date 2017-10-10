@@ -10,6 +10,10 @@ import {
 	PUT_PUB_DATA_SUCCESS,
 	PUT_PUB_DATA_FAIL,
 
+	DELETE_PUB_LOAD,
+	DELETE_PUB_SUCCESS,
+	DELETE_PUB_FAIL,
+
 	POST_DISCUSSION_LOAD,
 	POST_DISCUSSION_SUCCESS,
 	POST_DISCUSSION_FAIL,
@@ -48,10 +52,11 @@ import {
 /* ------------------- */
 const defaultState = {
 	data: undefined,
-	isLoading: undefined,
-	putPubIsLoading: undefined,
-	postDiscussionIsLoading: undefined,
-	postVersionIsLoading: undefined,
+	isLoading: false,
+	putPubIsLoading: false,
+	deletePubIsLoading: false,
+	postDiscussionIsLoading: false,
+	postVersionIsLoading: false,
 	error: undefined,
 };
 
@@ -98,6 +103,27 @@ export default function reducer(state = defaultState, action) {
 		return {
 			...state,
 			putPubIsLoading: false,
+		};
+	/* DELETE Pub Data */
+	/* ------------ */
+	case DELETE_PUB_LOAD:
+		return {
+			...state,
+			deletePubIsLoading: true,
+		};
+	case DELETE_PUB_SUCCESS:
+		return {
+			...state,
+			data: {
+				...state.data,
+				...action.result
+			},
+			deletePubIsLoading: false,
+		};
+	case DELETE_PUB_FAIL:
+		return {
+			...state,
+			deletePubIsLoading: false,
 		};
 	/* Post Discussion Data */
 	/* -------------------- */

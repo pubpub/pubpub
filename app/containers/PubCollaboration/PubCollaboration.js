@@ -18,7 +18,7 @@ import DiscussionNew from 'components/DiscussionNew/DiscussionNew';
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionPreviewArchived from 'components/DiscussionPreviewArchived/DiscussionPreviewArchived';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
-import { getPubData, putPubData, postDiscussion, putDiscussion, postCollaborator, putCollaborator, deleteCollaborator, postVersion, postCollectionPub, deleteCollectionPub } from 'actions/pub';
+import { getPubData, putPubData, deletePub, postDiscussion, putDiscussion, postCollaborator, putCollaborator, deleteCollaborator, postVersion, postCollectionPub, deleteCollectionPub } from 'actions/pub';
 import { nestDiscussionsToThreads, getRandomColor } from 'utilities';
 
 require('./pubCollaboration.scss');
@@ -65,6 +65,7 @@ class PubCollaboration extends Component {
 		this.toggleCollections = this.toggleCollections.bind(this);
 		this.toggleArchivedVisible = this.toggleArchivedVisible.bind(this);
 		this.handleDetailsSave = this.handleDetailsSave.bind(this);
+		this.handlePubDelete = this.handlePubDelete.bind(this);
 		this.handlePostDiscussion = this.handlePostDiscussion.bind(this);
 		this.handlePutDiscussion = this.handlePutDiscussion.bind(this);
 		this.handleCollaboratorAdd = this.handleCollaboratorAdd.bind(this);
@@ -98,6 +99,9 @@ class PubCollaboration extends Component {
 		if (this.props.pubData.postVersionIsLoading && !nextProps.pubData.postVersionIsLoading) {
 			this.props.history.push(nextProps.location.pathname.replace('/collaborate', ''));
 		}
+		if (this.props.pubData.deletePubIsLoading && !nextProps.pubData.deletePubIsLoading) {
+			this.props.history.push('/');
+		}
 	}
 	componentWillUnmount() {
 		// this.props.dispatch(clearPubData());
@@ -124,6 +128,13 @@ class PubCollaboration extends Component {
 		this.props.dispatch(putPubData({
 			...detailsObject,
 			pubId: this.props.pubData.data.id,
+			communityId: this.props.appData.data.id,
+		}));
+	}
+	handlePubDelete(pubId) {
+		this.props.dispatch(deletePub({
+			pubId: pubId,
+			communityId: this.props.appData.data.id,
 		}));
 	}
 	handlePostDiscussion(discussionObject) {
@@ -443,7 +454,9 @@ class PubCollaboration extends Component {
 					<PubCollabDetails
 						pubData={pubData}
 						onSave={this.handleDetailsSave}
-						isLoading={this.props.pubData.putPubIsLoading}
+						onDelete={this.handlePubDelete}
+						putIsLoading={this.props.pubData.putPubIsLoading}
+						deleteIsLoading={this.props.pubData.deletePubIsLoading}
 					/>
 				</Overlay>
 			</div>

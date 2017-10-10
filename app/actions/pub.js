@@ -14,6 +14,10 @@ export const PUT_PUB_DATA_LOAD = 'pub/PUT_PUB_DATA_LOAD';
 export const PUT_PUB_DATA_SUCCESS = 'pub/PUT_PUB_DATA_SUCCESS';
 export const PUT_PUB_DATA_FAIL = 'pub/PUT_PUB_DATA_FAIL';
 
+export const DELETE_PUB_LOAD = 'pub/DELETE_PUB_LOAD';
+export const DELETE_PUB_SUCCESS = 'pub/DELETE_PUB_SUCCESS';
+export const DELETE_PUB_FAIL = 'pub/DELETE_PUB_FAIL';
+
 export const POST_DISCUSSION_LOAD = 'pub/POST_DISCUSSION_LOAD';
 export const POST_DISCUSSION_SUCCESS = 'pub/POST_DISCUSSION_SUCCESS';
 export const POST_DISCUSSION_FAIL = 'pub/POST_DISCUSSION_FAIL';
@@ -65,7 +69,7 @@ export function getPubData(slug, communityId) {
 	};
 }
 
-export function putPubData({ pubId, title, slug, description, avatar, useHeaderImage, collaborationMode, adminPermissions }) {
+export function putPubData({ pubId, communityId, title, slug, description, avatar, useHeaderImage, collaborationMode, adminPermissions }) {
 	return (dispatch) => {
 		dispatch({ type: PUT_PUB_DATA_LOAD });
 		return apiFetch('/pubs', {
@@ -76,6 +80,7 @@ export function putPubData({ pubId, title, slug, description, avatar, useHeaderI
 			},
 			body: JSON.stringify({
 				pubId,
+				communityId,
 				title,
 				slug,
 				description,
@@ -90,6 +95,29 @@ export function putPubData({ pubId, title, slug, description, avatar, useHeaderI
 		})
 		.catch((error) => {
 			dispatch({ type: PUT_PUB_DATA_FAIL, error });
+		});
+	};
+}
+
+export function deletePub({ pubId, communityId }) {
+	return (dispatch) => {
+		dispatch({ type: DELETE_PUB_LOAD });
+		return apiFetch('/pubs', {
+			method: 'DELETE',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				pubId,
+				communityId
+			})
+		})
+		.then((result) => {
+			dispatch({ type: DELETE_PUB_SUCCESS, result });
+		})
+		.catch((error) => {
+			dispatch({ type: DELETE_PUB_FAIL, error });
 		});
 	};
 }

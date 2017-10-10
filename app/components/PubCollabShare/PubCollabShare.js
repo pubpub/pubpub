@@ -62,7 +62,6 @@ class PubCollabShare extends Component {
 			if (curr.Contributor.permissions === 'admin') { return prev + 1;}
 			return prev;
 		}, 0);
-		console.log('numPubAdmins', numPubAdmins);
 		return (
 			<div className={'pub-collab-share'}>
 				<h5>Share Pub</h5>
