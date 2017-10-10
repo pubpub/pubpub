@@ -26,6 +26,7 @@ const DiscussionNew = function(props) {
 			title: replyObject.title,
 			content: replyObject.content,
 			text: replyObject.text,
+			isPublic: replyObject.isPublic,
 		});
 	}
 
