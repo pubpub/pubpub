@@ -250,12 +250,12 @@ class PubCollaboration extends Component {
 			return prev;
 		}, { Collaborator: {} });
 		let canAdmin = false;
-		if (localUserCollaboratorData.Collaborator.permissions === 'admin') { canAdmin = true; }
-		if (pubData.adminPermissions === 'admin' && loginData.isAdmin) { canAdmin = true; }
+		if (localUserCollaboratorData.Collaborator.permissions === 'manage') { canAdmin = true; }
+		if (pubData.adminPermissions === 'manage' && loginData.isAdmin) { canAdmin = true; }
 
 		let canDelete = false;
 		if (canAdmin && !pubData.isPublished) { canDelete = true; }
-		if (pubData.adminPermissions === 'admin' && loginData.isAdmin) { canDelete = true; }
+		if (pubData.adminPermissions === 'manage' && loginData.isAdmin) { canDelete = true; }
 
 		if (this.props.pubData.isLoading) {
 			return (
@@ -371,7 +371,7 @@ class PubCollaboration extends Component {
 										{activeThread &&
 											<DiscussionThread
 												discussions={activeThread}
-												canAdmin={pubData.isAdmin || (this.props.loginData.data.isAdmin && pubData.adminPermissions === 'admin')}
+												canAdmin={pubData.isAdmin || (this.props.loginData.data.isAdmin && pubData.adminPermissions === 'manage')}
 												slug={pubData.slug}
 												loginData={this.props.loginData.data}
 												pathname={`${this.props.location.pathname}${this.props.location.search}`}

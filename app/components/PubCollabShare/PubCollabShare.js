@@ -59,7 +59,7 @@ class PubCollabShare extends Component {
 	render() {
 		const pubData = this.props.pubData;
 		const numPubAdmins = this.props.pubData.collaborators.reduce((prev, curr)=> {
-			if (curr.Collaborator.permissions === 'admin') { return prev + 1;}
+			if (curr.Collaborator.permissions === 'manage') { return prev + 1;}
 			return prev;
 		}, 0);
 		return (
@@ -113,7 +113,7 @@ class PubCollabShare extends Component {
 									key={`details-${item.id}`}
 									pubId={this.props.pubData.id}
 									canAdmin={this.props.canAdmin}
-									lastAdmin={item.Collaborator.permissions === 'admin' && numPubAdmins === 1}
+									lastAdmin={item.Collaborator.permissions === 'manage' && numPubAdmins === 1}
 									collaboratorData={item}
 									onCollaboratorUpdate={this.props.onCollaboratorUpdate}
 									onCollaboratorDelete={this.props.onCollaboratorDelete}

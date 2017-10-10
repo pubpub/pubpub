@@ -39,11 +39,11 @@ const PubCollabDropdownPermissions = function(props) {
 			onClick: ()=>{ props.onChange('edit'); },
 			description: 'Can directly edit the working draft and participate in discussions.',
 		},
-		admin: {
-			value: 'admin',
+		manage: {
+			value: 'manage',
 			title: 'Can Manage',
 			icon: 'pt-icon-admin',
-			onClick: ()=>{ props.onChange('admin'); },
+			onClick: ()=>{ props.onChange('manage'); },
 			description: 'Can edit and manage collaborators, metadata, and publishing.',
 		},
 	};
