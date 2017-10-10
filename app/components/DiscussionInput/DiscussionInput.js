@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button } from '@blueprintjs/core';
-// import { Link } from 'react-router-dom';
-// import Avatar from 'components/Avatar/Avatar';
+import { Button, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 import { Editor } from '@pubpub/editor';
+import FormattingHelp from 'components/FormattingHelp/FormattingHelp';
 
 require('./discussionInput.scss');
 
@@ -90,7 +89,17 @@ class DiscussionInput extends Component {
 				<div className={'buttons'}>
 					<div className={'buttons-left'}>
 						{/* <button type={'button'} className={'pt-button pt-minimal pt-small'}>Attach</button> */}
-						<button type={'button'} className={'pt-button pt-minimal pt-small'}>Format</button>
+						<Popover
+							content={<FormattingHelp />}
+							interactionKind={PopoverInteractionKind.CLICK}
+							position={Position.TOP_LEFT}
+							popoverClassName={'pt-minimal'}
+							transitionDuration={-1}
+							inheritDarkTheme={false}
+						>
+							<button type={'button'} className={'pt-button pt-minimal pt-small'}>Format</button>
+						</Popover>
+						
 					</div>
 					<div className={'buttons-right'}>
 						<button type={'button'} className={'pt-button pt-minimal pt-small pt-icon-globe'} />
