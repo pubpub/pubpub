@@ -29,6 +29,7 @@ class DashboardCollectionEdit extends Component {
 			slug: props.collectionData.slug,
 			isPublic: props.collectionData.isPublic,
 			isOpenSubmissions: props.collectionData.isOpenSubmissions,
+			layout: props.collectionData.layout || {},
 		};
 		this.setTitle = this.setTitle.bind(this);
 		this.setDescription = this.setDescription.bind(this);
@@ -37,6 +38,7 @@ class DashboardCollectionEdit extends Component {
 		this.setPrivate = this.setPrivate.bind(this);
 		this.setOpen = this.setOpen.bind(this);
 		this.setClosed = this.setClosed.bind(this);
+		this.setLayout = this.setLayout.bind(this);
 		this.handleSaveChanges = this.handleSaveChanges.bind(this);
 	}
 
@@ -61,6 +63,9 @@ class DashboardCollectionEdit extends Component {
 	setClosed() {
 		this.setState({ hasChanged: true, isOpenSubmissions: false });
 	}
+	setLayout(evt) {
+		this.setState({ hasChanged: true, layout: { html: evt.target.value } });
+	}
 	handleSaveChanges() {
 		this.props.onSave({
 			collectionId: this.props.collectionData.id,
@@ -69,6 +74,7 @@ class DashboardCollectionEdit extends Component {
 			description: this.state.description,
 			isPublic: this.state.isPublic,
 			isOpenSubmissions: this.state.isOpenSubmissions,
+			layout: this.state.layout,
 		});
 	}
 
@@ -139,6 +145,16 @@ class DashboardCollectionEdit extends Component {
 						</div>
 					</InputField>
 				}
+				<InputField
+					label={'Layout'}
+					placeholder={'Enter HTML'}
+					isTextarea={true}
+					wrapperClassName={'html-input'}
+					value={this.state.layout.html || ''}
+					helperText={'This basic HTML input is a placeholder until the full-featured visual layout editor is ready.'}
+					onChange={this.setLayout}
+					error={undefined}
+				/>
 
 			</div>
 		);

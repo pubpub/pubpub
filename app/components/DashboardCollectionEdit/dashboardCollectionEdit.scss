@@ -2,6 +2,12 @@
 	.pt-form-content {
 		max-width: 500px;
 	}
+	.html-input {
+		textarea {
+			font-family: 'Courier', monospace;
+			pre: nowrap;	
+		}
+	}
 	.error {
 		color: #c23030;
 		text-align: right;

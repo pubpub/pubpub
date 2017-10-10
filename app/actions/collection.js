@@ -64,7 +64,7 @@ export function postCollection({ communityId, title, slug, isPage, description }
 	};
 }
 
-export function putCollection({ communityId, collectionId, title, slug, description, isPublic, isOpenSubmissions }) {
+export function putCollection({ communityId, collectionId, title, slug, description, isPublic, isOpenSubmissions, layout }) {
 	return (dispatch) => {
 		dispatch({ type: PUT_COLLECTION_LOAD });
 		return apiFetch('/collections', {
@@ -81,6 +81,7 @@ export function putCollection({ communityId, collectionId, title, slug, descript
 				description,
 				isPublic,
 				isOpenSubmissions,
+				layout
 			})
 		})
 		.then((result) => {

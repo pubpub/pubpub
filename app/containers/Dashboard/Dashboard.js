@@ -44,7 +44,7 @@ class Dashboard extends Component {
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.match.params.slug !== this.props.match.params.slug) {
 			if (nextProps.match.params.slug !== nextProps.collectionData.data.slug) {
-				this.dispatchGetCollectionData(nextProps);	
+				this.dispatchGetCollectionData(nextProps);
 			}
 		}
 		if (!this.props.pubCreateData.data && nextProps.pubCreateData.data) {
@@ -69,6 +69,7 @@ class Dashboard extends Component {
 		if (props.appData.data) {
 			const collectionId = props.appData.data.collections.reduce((prev, curr)=> {
 				if (curr.slug === '' && props.match.params.slug === undefined) { return curr.id; }
+				if (curr.slug === '' && props.match.params.slug === 'home') { return curr.id; }
 				if (curr.slug === props.match.params.slug) { return curr.id; }
 				return prev;
 			}, undefined);

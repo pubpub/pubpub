@@ -13,9 +13,9 @@ const propTypes = {
 	error: PropTypes.string,
 	value: PropTypes.string,
 	type: PropTypes.string,
+	wrapperClassName: PropTypes.string,
 	onChange: PropTypes.func,
 	children: PropTypes.node,
-
 };
 
 const defaultProps = {
@@ -28,13 +28,14 @@ const defaultProps = {
 	error: undefined,
 	value: undefined,
 	type: 'text',
+	wrapperClassName: '',
 	onChange: undefined,
 	children: undefined,
 };
 
 const InputField = function(props) {
 	return (
-		<div className={`input-field pt-form-group ${props.error ? 'pt-intent-danger' : ''}`}>
+		<div className={`input-field pt-form-group ${props.error ? 'pt-intent-danger' : ''} ${props.wrapperClassName}`}>
 			<label className="pt-lablel" htmlFor={`input-${props.label}`}>
 				{props.label}
 				{props.isRequired &&
