@@ -10,6 +10,7 @@ require('./pubCollabShare.scss');
 const propTypes = {
 	appData: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
+	canAdmin: PropTypes.bool,
 	onOpenCollaborators: PropTypes.func,
 	onCollaboratorAdd: PropTypes.func,
 	onCollaboratorUpdate: PropTypes.func,
@@ -19,6 +20,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+	canAdmin: false,
 	onOpenCollaborators: ()=>{},
 	onCollaboratorAdd: ()=>{},
 	onCollaboratorUpdate: ()=>{},
@@ -56,7 +58,11 @@ class PubCollabShare extends Component {
 
 	render() {
 		const pubData = this.props.pubData;
-
+		const numPubAdmins = this.props.pubData.contributors.reduce((prev, curr)=> {
+			if (curr.Contributor.permissions === 'admin') { return prev + 1;}
+			return prev;
+		}, 0);
+		console.log('numPubAdmins', numPubAdmins);
 		return (
 			<div className={'pub-collab-share'}>
 				<h5>Share Pub</h5>
@@ -107,6 +113,8 @@ class PubCollabShare extends Component {
 								<PubCollaboratorDetails
 									key={`details-${item.id}`}
 									pubId={this.props.pubData.id}
+									canAdmin={this.props.canAdmin}
+									lastAdmin={item.Contributor.permissions === 'admin' && numPubAdmins === 1}
 									collaboratorData={item}
 									onCollaboratorUpdate={this.props.onCollaboratorUpdate}
 									onCollaboratorDelete={this.props.onCollaboratorDelete}

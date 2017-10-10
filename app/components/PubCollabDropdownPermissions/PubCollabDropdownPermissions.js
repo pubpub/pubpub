@@ -5,11 +5,14 @@ import DropdownRichItem from 'components/DropdownRichItem/DropdownRichItem';
 
 const propTypes = {
 	value: PropTypes.string,
-	onChange: PropTypes.func
+	onChange: PropTypes.func,
+	isDisabled: PropTypes.bool,
+
 };
 const defaultProps = {
 	value: 'none',
 	onChange: ()=>{},
+	isDisabled: false,
 };
 
 const PubCollabDropdownPermissions = function(props) {
@@ -46,7 +49,12 @@ const PubCollabDropdownPermissions = function(props) {
 	};
 
 	return (
-		<DropdownButton label={items[props.value].title} icon={items[props.value].icon} isRightAligned={true}>
+		<DropdownButton
+			label={items[props.value].title}
+			icon={items[props.value].icon}
+			isRightAligned={true}
+			isDisabled={props.isDisabled}
+		>
 			<div className={'pt-menu'}>
 				{Object.keys(items).map((key, index, array)=> {
 					const item = items[key];

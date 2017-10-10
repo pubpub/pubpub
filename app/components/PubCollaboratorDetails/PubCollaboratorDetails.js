@@ -10,6 +10,8 @@ require('./pubCollaboratorDetails.scss');
 const propTypes = {
 	collaboratorData: PropTypes.object.isRequired,
 	pubId: PropTypes.string,
+	canAdmin: PropTypes.bool,
+	lastAdmin: PropTypes.bool,
 	onCollaboratorUpdate: PropTypes.func,
 	onCollaboratorDelete: PropTypes.func,
 	isPermissionsMode: PropTypes.bool,
@@ -17,6 +19,8 @@ const propTypes = {
 
 const defaultProps = {
 	pubId: '00-00',
+	canAdmin: false,
+	lastAdmin: false,
 	onCollaboratorUpdate: ()=>{},
 	onCollaboratorDelete: ()=>{},
 	isPermissionsMode: false,
@@ -86,7 +90,7 @@ class PubCollaboratorDetails extends Component {
 							: name
 						}
 					</div>
-					{!this.props.isPermissionsMode &&
+					{!this.props.isPermissionsMode && this.props.canAdmin &&
 						<Checkbox
 							checked={this.state.isAuthor}
 							onChange={this.handleChecked}
@@ -96,15 +100,20 @@ class PubCollaboratorDetails extends Component {
 					}
 
 				</div>
-				<div className={'remove-wrapper'}>
-					<button className={'pt-button pt-minimal'} role={'button'} onClick={this.handleRemoveClick}>Remove</button>
-					{this.props.isPermissionsMode &&
-						<PubCollabDropdownPermissions
-							value={this.state.permissions}
-							onChange={this.handlePermissionsChange}
-						/>
-					}
-				</div>
+				{this.props.canAdmin &&
+					<div className={'remove-wrapper'}>
+						{!this.props.lastAdmin &&
+							<button className={'pt-button pt-minimal'} onClick={this.handleRemoveClick}>Remove</button>
+						}
+						{this.props.isPermissionsMode &&
+							<PubCollabDropdownPermissions
+								value={this.state.permissions}
+								onChange={this.handlePermissionsChange}
+								isDisabled={this.props.lastAdmin}
+							/>
+						}
+					</div>
+				}
 			</div>
 		);
 	}

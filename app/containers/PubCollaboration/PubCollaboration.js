@@ -202,6 +202,7 @@ class PubCollaboration extends Component {
 		const queryObject = queryString.parse(this.props.location.search);
 
 		const pubData = this.props.pubData.data || {};
+		const contributors = pubData.contributors || [];
 		const loginData = this.props.loginData.data || {};
 		const discussions = pubData.discussions || [];
 		const threads = nestDiscussionsToThreads(discussions);
@@ -232,6 +233,14 @@ class PubCollaboration extends Component {
 			if (foo[0].threadNumber < bar[0].threadNumber) { return 1; }
 			return 0;
 		});
+
+		const localUserCollaboratorData = contributors.reduce((prev, curr)=> {
+			if (curr.id === loginData.id) { return curr; }
+			return prev;
+		}, { Contributor: {} });
+		let canAdmin = false;
+		if (localUserCollaboratorData.Contributor.permissions === 'admin') { canAdmin = true; }
+		if (pubData.adminPermissions === 'admin' && loginData.isAdmin) { canAdmin = true; }
 
 		if (this.props.pubData.isLoading) {
 			return (
@@ -274,6 +283,7 @@ class PubCollaboration extends Component {
 								<PubCollabHeader
 									pubData={pubData}
 									collaborators={pubData.contributors}
+									canAdmin={canAdmin}
 									activeCollaborators={this.state.activeCollaborators}
 									onPublishClick={this.togglePublish}
 									onShareClick={this.toggleShare}
@@ -411,6 +421,7 @@ class PubCollaboration extends Component {
 					<PubCollabShare
 						appData={this.props.appData.data}
 						pubData={pubData}
+						canAdmin={canAdmin}
 						onPutPub={this.handleDetailsSave}
 						onOpenCollaborators={this.onOpenCollaborators}
 						onCollaboratorAdd={this.handleCollaboratorAdd}
@@ -421,6 +432,7 @@ class PubCollaboration extends Component {
 				<Overlay isOpen={this.state.isCollaboratorsOpen} onClose={this.toggleCollaborators}>
 					<PubCollabCollaborators
 						pubData={pubData}
+						canAdmin={canAdmin}
 						onOpenShare={this.onOpenShare}
 						onCollaboratorAdd={this.handleCollaboratorAdd}
 						onCollaboratorUpdate={this.handleCollaboratorUpdate}

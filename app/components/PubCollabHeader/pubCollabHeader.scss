@@ -19,8 +19,8 @@
 		white-space: nowrap;
 		overflow-x: hidden;
 		text-overflow: ellipsis;
-		cursor: pointer;
-		&:hover {
+		&:not(.static):hover {
+			cursor: pointer;
 			text-decoration: underline;
 			text-decoration-color: #AAA;	
 		}
@@ -64,6 +64,9 @@
 					padding-left: 0.5em;
 					position: relative;
 					top: -1px;
+				}
+				&:hover {
+					text-decoration: none;
 				}
 			}
 		}

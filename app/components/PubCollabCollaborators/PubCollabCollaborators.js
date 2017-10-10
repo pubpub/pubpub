@@ -7,6 +7,7 @@ require('./pubCollabCollaborators.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
+	canAdmin: PropTypes.bool,
 	onOpenShare: PropTypes.func,
 	onCollaboratorAdd: PropTypes.func,
 	onCollaboratorUpdate: PropTypes.func,
@@ -15,6 +16,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+	canAdmin: false,
 	onOpenShare: ()=>{},
 	onCollaboratorAdd: ()=>{},
 	onCollaboratorUpdate: ()=>{},
@@ -42,8 +44,12 @@ class PubCollabCollaborators extends Component {
 		return (
 			<div className={'pub-collab-collaborators'}>
 				<h5>Pub Collaborators</h5>
-				<div className={'intro'}>Use this panel to manage who is recognized and listed for working on this pub. To manage permissions and access to the pub, open the <span tabIndex={-1} role={'button'} onClick={this.props.onOpenShare}>Share Panel</span>.</div>
-				<UserAutocomplete onSelect={this.handleUserSelect} allowCustomUser={true} />
+				{this.props.canAdmin &&
+					<div>
+						<div className={'intro'}>Use this panel to manage who is recognized and listed for working on this pub. To manage permissions and access to the pub, open the <span tabIndex={-1} role={'button'} onClick={this.props.onOpenShare}>Share Panel</span>.</div>
+						<UserAutocomplete onSelect={this.handleUserSelect} allowCustomUser={true} />
+					</div>
+				}
 				<div className={'collaborators-wrapper'}>
 					{this.props.pubData.contributors.sort((foo, bar)=> {
 						if (foo.Contributor.order < bar.Contributor.order) { return 1; }
@@ -57,6 +63,7 @@ class PubCollabCollaborators extends Component {
 								key={`details-${item.id}`}
 								pubId={this.props.pubData.id}
 								collaboratorData={item}
+								canAdmin={this.props.canAdmin}
 								onCollaboratorUpdate={this.props.onCollaboratorUpdate}
 								onCollaboratorDelete={this.props.onCollaboratorDelete}
 							/>

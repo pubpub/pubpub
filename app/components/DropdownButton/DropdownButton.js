@@ -2,16 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 
+require('./dropdownButton.scss');
+
 const propTypes = {
 	label: PropTypes.string,
 	icon: PropTypes.string,
 	isRightAligned: PropTypes.bool,
+	isDisabled: PropTypes.bool,
 	children: PropTypes.node.isRequired,
 };
 
 const defaultProps = {
 	label: undefined,
 	icon: undefined,
+	isDisabled: false,
 	isRightAligned: false,
 };
 
@@ -26,8 +30,8 @@ const DropdownButton = function(props) {
 			inheritDarkTheme={false}
 		>
 			{props.icon && !props.label
-				? <button type="button" className={`pt-button ${props.icon}`} />
-				: <button type="button" className="pt-button">
+				? <button disabled={props.isDisabled} type="button" className={`dropdown-button pt-button ${props.icon}`} />
+				: <button disabled={props.isDisabled} type="button" className="dropdown-button pt-button">
 					{props.icon &&
 						<span className={`pt-icon-standard ${props.icon}`} />
 					}

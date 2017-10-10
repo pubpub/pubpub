@@ -121,7 +121,7 @@ class User extends Component {
 						<NonIdealState
 							visual={'widget'}
 							title={'No Pubs'}
-							action={selfProfile ? <Link to={'/pubs/create'} className={'pt-button'}>Create New pub</Link> : undefined}
+							action={selfProfile ? <Link to={'/pub/create'} className={'pt-button'}>Create New pub</Link> : undefined}
 						/>
 					}
 				</div>
