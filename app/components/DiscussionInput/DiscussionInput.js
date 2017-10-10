@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 import { Editor } from '@pubpub/editor';
+import DropdownRichItem from 'components/DropdownRichItem/DropdownRichItem';
 import FormattingHelp from 'components/FormattingHelp/FormattingHelp';
 
 require('./discussionInput.scss');
@@ -25,6 +26,7 @@ class DiscussionInput extends Component {
 		this.state = {
 			title: '',
 			body: '',
+			isPublic: true,
 			submitDisabled: true,
 			key: new Date().getTime(),
 		};
@@ -59,12 +61,12 @@ class DiscussionInput extends Component {
 			title: this.state.title,
 			content: this.state.body,
 			text: this.editorRef.view.state.doc.textContent,
+			isPublic: this.state.isPublic,
 		});
 	}
 
 	focusEditor() {
 		this.editorRef.focus();
-		console.log(this.editorRef);
 	}
 
 	render() {
@@ -100,10 +102,39 @@ class DiscussionInput extends Component {
 						>
 							<button type={'button'} className={'pt-button pt-minimal pt-small'}>Format</button>
 						</Popover>
-						
+
 					</div>
 					<div className={'buttons-right'}>
-						<button type={'button'} className={'pt-button pt-minimal pt-small pt-icon-globe'} />
+						{this.props.showTitle &&
+							<Popover
+								content={
+									<div className={'pt-menu'}>
+										<DropdownRichItem
+											title={'Public'}
+											description={'Visible to the public.'}
+											icon={'pt-icon-globe'}
+											onClick={()=>{ this.setState({ isPublic: true }); }}
+											hideBottomBorder={false}
+										/>
+										<DropdownRichItem
+											title={'Private'}
+											description={'Visible to those with view, edit, or manage permissions.'}
+											icon={'pt-icon-lock2'}
+											onClick={()=>{ this.setState({ isPublic: false }); }}
+											hideBottomBorder={true}
+										/>
+									</div>
+								}
+								interactionKind={PopoverInteractionKind.CLICK}
+								position={Position.TOP_RIGHT}
+								popoverClassName={'pt-minimal'}
+								transitionDuration={-1}
+								inheritDarkTheme={false}
+							>
+								<button type={'button'} className={`pt-button pt-minimal pt-small ${this.state.isPublic ? 'pt-icon-globe' : 'pt-icon-lock2'}`} />
+							</Popover>
+						}
+
 						<Button
 							name={'submit'}
 							type={'submit'}

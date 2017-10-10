@@ -120,6 +120,7 @@ class DiscussionThread extends Component {
 		this.props.handleReplySubmit({
 			userId: this.props.loginData.id,
 			threadNumber: this.props.discussions[0].threadNumber,
+			isPublic: this.props.discussions[0].isPublic,
 			pubId: this.props.discussions[0].pubId,
 			content: replyObject.content,
 			text: replyObject.text
@@ -138,6 +139,7 @@ class DiscussionThread extends Component {
 			this.props.canManage; // User has pub-level admin permissions (individual or community)
 
 		const isArchived = sortedDiscussions[0].isArchived;
+		const isPublic = sortedDiscussions[0].isPublic;
 
 		return (
 			<div className={'discussion-thread'}>
@@ -157,6 +159,13 @@ class DiscussionThread extends Component {
 								onClick={this.archiveDiscussion}
 							/>
 						}
+					</div>
+				}
+
+				{!isPublic &&
+					<div className={'pt-callout'}>
+						<h5>Thread is Private</h5>
+						<div>Visible to those with view, edit, or manage permissions.</div>
 					</div>
 				}
 

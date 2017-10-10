@@ -26,6 +26,10 @@ const DiscussionPreview = function(props) {
 		return prev || curr.highlight;
 	}, false);
 
+	const isPublic = props.discussions.reduce((prev, curr)=> {
+		return prev || curr.isPublic;
+	}, false);
+
 	const sortedDiscussions = props.discussions.sort((foo, bar)=> {
 		if (foo.createdAt > bar.createdAt) { return 1; }
 		if (foo.createdAt < bar.createdAt) { return -1; }
@@ -50,7 +54,10 @@ const DiscussionPreview = function(props) {
 				}
 			</div>
 
-			<div className={'title'}>{sortedDiscussions[0].title}</div>
+			<div className={'title'}>
+				{sortedDiscussions[0].title}
+				{!isPublic && <span className={'pt-icon-standard pt-icon-lock2'} />}
+			</div>
 
 			<div>
 				{sortedDiscussions.slice(0, 3).map((discussion)=> {
