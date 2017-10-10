@@ -23,11 +23,13 @@ const propTypes = {
 	match: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
+	loginData: PropTypes.object.isRequired,
+	appData: PropTypes.object.isRequired,
 };
 
 class PubPresentation extends Component {
 	componentWillMount() {
-		this.props.dispatch(getPubData(this.props.match.params.slug));
+		this.props.dispatch(getPubData(this.props.match.params.slug, this.props.appData.data.id));
 	}
 
 	render() {
@@ -93,7 +95,7 @@ class PubPresentation extends Component {
 					<License />
 				</div>
 
-				<Footer />
+				<Footer isAdmin={this.props.loginData.data.isAdmin} />
 			</div>
 		);
 	}
@@ -101,5 +103,7 @@ class PubPresentation extends Component {
 
 PubPresentation.propTypes = propTypes;
 export default withRouter(connect(state => ({
-	pubData: state.pub
+	pubData: state.pub,
+	loginData: state.login,
+	appData: state.app
 }))(PubPresentation));

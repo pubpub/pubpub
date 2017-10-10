@@ -8,7 +8,7 @@ storiesOf('Footer', module)
 .add('Styled Dark', () => (
 	<div>
 		<AccentStyle {...accentDataDark} />
-		<Footer />
+		<Footer isAdmin={true} />
 	</div>
 ))
 .add('Styled Light', () => (

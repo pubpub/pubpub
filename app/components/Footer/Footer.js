@@ -1,24 +1,24 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 require('./footer.scss');
 
-const Footer = function() {
+const propTypes = {
+	isAdmin: PropTypes.bool,
+};
+
+const defaultProps = {
+	isAdmin: false,
+};
+
+const Footer = function(props) {
 	const links = [
 		{
 			id: 1,
 			title: 'Dashboard',
-			url: '/dashboard'
-		},
-		{
-			id: 2,
-			title: 'Latest',
-			url: '/latest'
-		},
-		{
-			id: 3,
-			title: 'Archive',
-			url: '/archive'
+			url: '/dashboard',
+			adminOnly: true,
 		},
 		{
 			id: 4,
@@ -38,7 +38,9 @@ const Footer = function() {
 				<div className={'row'}>
 					<div className={'col-12'}>
 						<ul>
-							{links.map((link)=> {
+							{links.filter((item)=> {
+								return !item.adminOnly || props.isAdmin;
+							}).map((link)=> {
 								if (link.url.indexOf('https:') > -1) {
 									return <li key={`footer-item-${link.id}`}><a href={link.url}>{link.title}</a></li>;
 								}
@@ -58,4 +60,6 @@ const Footer = function() {
 	);
 };
 
+Footer.propTypes = propTypes;
+Footer.defaultProps = defaultProps;
 export default Footer;

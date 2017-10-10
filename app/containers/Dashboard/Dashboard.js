@@ -4,6 +4,7 @@ import Helmet from 'react-helmet';
 import queryString from 'query-string';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
+import NoMatch from 'containers/NoMatch/NoMatch';
 import DashboardSide from 'components/DashboardSide/DashboardSide';
 import DashboardCollection from 'components/DashboardCollection/DashboardCollection';
 import DashboardCollectionEdit from 'components/DashboardCollectionEdit/DashboardCollectionEdit';
@@ -21,6 +22,7 @@ const propTypes = {
 	location: PropTypes.object.isRequired,
 	match: PropTypes.object.isRequired,
 	appData: PropTypes.object.isRequired,
+	loginData: PropTypes.object.isRequired,
 	collectionData: PropTypes.object.isRequired,
 	pubCreateData: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
@@ -70,7 +72,7 @@ class Dashboard extends Component {
 		// the slug (available from url immediately) to the API, and use the origin
 		// to do a Community query to identify which communityId we need to restrict
 		// by. This is all because collection slugs are not unique.
-		if (props.appData.data) {
+		if (props.appData.data && props.loginData.data.isAdmin) {
 			const collectionId = props.appData.data.collections.reduce((prev, curr)=> {
 				if (curr.slug === '' && props.match.params.slug === undefined) { return curr.id; }
 				if (curr.slug === '' && props.match.params.slug === 'home') { return curr.id; }
@@ -122,6 +124,8 @@ class Dashboard extends Component {
 		this.props.history.push(updatedPath);
 	}
 	render() {
+		if (!this.props.loginData.data.isAdmin) { return <NoMatch />; }
+
 		const appData = this.props.appData.data || {};
 		const collectionData = this.props.collectionData.data || {};
 		const queryObject = queryString.parse(this.props.location.search);
@@ -261,6 +265,7 @@ class Dashboard extends Component {
 Dashboard.propTypes = propTypes;
 export default withRouter(connect(state => ({
 	appData: state.app,
+	loginData: state.login,
 	collectionData: state.collection,
 	pubCreateData: state.pubCreate,
 }))(Dashboard));

@@ -47,12 +47,16 @@ export const populateNavigationIds = function(collections, navigation) {
 				...item,
 				children: item.children.map((child)=> {
 					return collectionsObject[child];
+				}).filter((child)=> {
+					return !!child;
 				})
 			};
 		}
 		return collectionsObject[item];
 	}).filter((item)=> {
-		return !!item;
+		if (!item) { return false; }
+		if (item.children && !item.children.length) { return false; }
+		return true;
 	});
 };
 

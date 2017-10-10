@@ -80,7 +80,7 @@ class PubCollaboration extends Component {
 		// this.focusEditor = this.focusEditor.bind(this);
 	}
 	componentWillMount() {
-		this.props.dispatch(getPubData(this.props.match.params.slug));
+		this.props.dispatch(getPubData(this.props.match.params.slug, this.props.appData.data.id));
 	}
 	componentWillReceiveProps(nextProps) {
 		if (this.props.pubData.postDiscussionIsLoading

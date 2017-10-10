@@ -16,6 +16,7 @@ require('./collection.scss');
 const propTypes = {
 	match: PropTypes.object.isRequired,
 	appData: PropTypes.object.isRequired,
+	loginData: PropTypes.object.isRequired,
 	pubCreateData: PropTypes.object.isRequired,
 	collectionData: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
@@ -162,7 +163,7 @@ class Collection extends Component {
 				</div>
 
 				{!this.props.collectionData.isLoading &&
-					<Footer />
+					<Footer isAdmin={this.props.loginData.data.isAdmin} />
 				}
 
 			</div>
@@ -173,6 +174,7 @@ class Collection extends Component {
 Collection.propTypes = propTypes;
 export default withRouter(connect(state => ({
 	appData: state.app,
+	loginData: state.login,
 	pubCreateData: state.pubCreate,
 	collectionData: state.collection,
 }))(Collection));

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Button } from '@blueprintjs/core';
+import { Button, NonIdealState } from '@blueprintjs/core';
 import DashboardCollectionLoading from './DashboardCollectionLoading';
 
 require('./dashboardCollection.scss');
@@ -149,6 +149,14 @@ const DashboardCollection = function(props) {
 						})}
 					</tbody>
 				</table>
+			}
+
+			{!data.isPage && !pubs.length &&
+				<NonIdealState
+					title={'Empty Collection'}
+					description={'Add Pubs to this collection from a Pub\'s Collaborate page.'}
+					visual={'pt-icon-duplicate'}
+				/>
 			}
 		</div>
 	);
