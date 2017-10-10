@@ -13,6 +13,10 @@ const propTypes = {
 	clientData: PropTypes.object.isRequired,
 	editorKey: PropTypes.string.isRequired,
 	onClientChange: PropTypes.func.isRequired,
+	isReadOnly: PropTypes.bool,
+};
+const defaultProps = {
+	isReadOnly: false,
 };
 
 class PubCollabEditor extends Component {
@@ -44,27 +48,44 @@ class PubCollabEditor extends Component {
 			);
 		}
 		return (
-			<Editor placeholder={'Begin writing here...'} ref={this.props.onRef}>
-				<FormattingMenu />
-				<InsertMenu />
-				<Collaborative
-					firebaseConfig={{
-						apiKey: 'AIzaSyBpE1sz_-JqtcIm2P4bw4aoMEzwGITfk0U',
-						authDomain: 'pubpub-rich.firebaseapp.com',
-						databaseURL: 'https://pubpub-rich.firebaseio.com',
-						projectId: 'pubpub-rich',
-						storageBucket: 'pubpub-rich.appspot.com',
-						messagingSenderId: '543714905893',
-					}}
-					clientData={this.props.clientData}
-					editorKey={this.props.editorKey}
-					onClientChange={this.props.onClientChange}
-				/>
-				<Image handleFileUpload={s3Upload} />
-			</Editor>
+			<div>
+				{this.props.isReadOnly &&
+					<div className={'pt-callout'}>
+						<h5>Read Only</h5>
+						Track changes and suggestions coming to this beta shortly...
+					</div>
+				}
+				<Editor
+					placeholder={'Begin writing here...'}
+					ref={this.props.onRef}
+					isReadOnly={this.props.isReadOnly}
+				>
+					{!this.props.isReadOnly &&
+						<FormattingMenu />
+					}
+					{!this.props.isReadOnly &&
+						<InsertMenu />
+					}
+					<Collaborative
+						firebaseConfig={{
+							apiKey: 'AIzaSyBpE1sz_-JqtcIm2P4bw4aoMEzwGITfk0U',
+							authDomain: 'pubpub-rich.firebaseapp.com',
+							databaseURL: 'https://pubpub-rich.firebaseio.com',
+							projectId: 'pubpub-rich',
+							storageBucket: 'pubpub-rich.appspot.com',
+							messagingSenderId: '543714905893',
+						}}
+						clientData={this.props.clientData}
+						editorKey={this.props.editorKey}
+						onClientChange={this.props.onClientChange}
+					/>
+					<Image handleFileUpload={s3Upload} />
+				</Editor>
+			</div>
 		);
 	}
 }
 
 PubCollabEditor.propTypes = propTypes;
+PubCollabEditor.defaultProps = defaultProps;
 export default PubCollabEditor;

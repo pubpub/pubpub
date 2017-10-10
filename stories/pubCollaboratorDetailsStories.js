@@ -40,32 +40,32 @@ storiesOf('PubCollaboratorDetails', module)
 		<div style={wrapperStyle}>
 			<PubCollaboratorDetails
 				collaboratorData={userData1}
-				canAdmin={true}
+				canManage={true}
 			/>
 			<PubCollaboratorDetails
 				collaboratorData={userData2}
-				canAdmin={true}
+				canManage={true}
 			/>
 			<PubCollaboratorDetails
 				collaboratorData={userData1}
-				canAdmin={true}
+				canManage={true}
 			/>
 		</div>
 
 		<div style={wrapperStyle}>
 			<PubCollaboratorDetails
 				collaboratorData={userData1}
-				canAdmin={true}
+				canManage={true}
 				isPermissionsMode={true}
 			/>
 			<PubCollaboratorDetails
 				collaboratorData={userData2}
-				canAdmin={true}
+				canManage={true}
 				isPermissionsMode={true}
 			/>
 			<PubCollaboratorDetails
 				collaboratorData={userData1}
-				canAdmin={true}
+				canManage={true}
 				isPermissionsMode={true}
 			/>
 		</div>

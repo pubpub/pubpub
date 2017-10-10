@@ -249,12 +249,12 @@ class PubCollaboration extends Component {
 			if (curr.id === loginData.id) { return curr; }
 			return prev;
 		}, { Collaborator: {} });
-		let canAdmin = false;
-		if (localUserCollaboratorData.Collaborator.permissions === 'manage') { canAdmin = true; }
-		if (pubData.adminPermissions === 'manage' && loginData.isAdmin) { canAdmin = true; }
+		let canManage = false;
+		if (localUserCollaboratorData.Collaborator.permissions === 'manage') { canManage = true; }
+		if (pubData.adminPermissions === 'manage' && loginData.isAdmin) { canManage = true; }
 
 		let canDelete = false;
-		if (canAdmin && !pubData.isPublished) { canDelete = true; }
+		if (canManage && !pubData.isPublished) { canDelete = true; }
 		if (pubData.adminPermissions === 'manage' && loginData.isAdmin) { canDelete = true; }
 
 		if (this.props.pubData.isLoading) {
@@ -298,7 +298,7 @@ class PubCollaboration extends Component {
 								<PubCollabHeader
 									pubData={pubData}
 									collaborators={pubData.collaborators}
-									canAdmin={canAdmin}
+									canManage={canManage}
 									activeCollaborators={this.state.activeCollaborators}
 									onPublishClick={this.togglePublish}
 									onShareClick={this.toggleShare}
@@ -371,7 +371,7 @@ class PubCollaboration extends Component {
 										{activeThread &&
 											<DiscussionThread
 												discussions={activeThread}
-												canAdmin={pubData.isAdmin || (this.props.loginData.data.isAdmin && pubData.adminPermissions === 'manage')}
+												canManage={localUserCollaboratorData.permissions === 'manage' || (this.props.loginData.data.isAdmin && pubData.adminPermissions === 'manage')}
 												slug={pubData.slug}
 												loginData={this.props.loginData.data}
 												pathname={`${this.props.location.pathname}${this.props.location.search}`}
@@ -404,6 +404,7 @@ class PubCollaboration extends Component {
 										<PubCollabEditor
 											onRef={(ref)=> { this.editorRef = ref; }}
 											editorKey={`pub-${pubData.id}`}
+											isReadOnly={!canManage && localUserCollaboratorData.permissions !== 'edit'}
 											clientData={this.state.activeCollaborators[0]}
 											onClientChange={this.handleClientChange}
 										/>
@@ -436,7 +437,7 @@ class PubCollaboration extends Component {
 					<PubCollabShare
 						appData={this.props.appData.data}
 						pubData={pubData}
-						canAdmin={canAdmin}
+						canManage={canManage}
 						onPutPub={this.handleDetailsSave}
 						onOpenCollaborators={this.onOpenCollaborators}
 						onCollaboratorAdd={this.handleCollaboratorAdd}
@@ -447,7 +448,7 @@ class PubCollaboration extends Component {
 				<Overlay isOpen={this.state.isCollaboratorsOpen} onClose={this.toggleCollaborators}>
 					<PubCollabCollaborators
 						pubData={pubData}
-						canAdmin={canAdmin}
+						canManage={canManage}
 						onOpenShare={this.onOpenShare}
 						onCollaboratorAdd={this.handleCollaboratorAdd}
 						onCollaboratorUpdate={this.handleCollaboratorUpdate}

@@ -10,7 +10,7 @@ require('./pubCollaboratorDetails.scss');
 const propTypes = {
 	collaboratorData: PropTypes.object.isRequired,
 	pubId: PropTypes.string,
-	canAdmin: PropTypes.bool,
+	canManage: PropTypes.bool,
 	lastAdmin: PropTypes.bool,
 	onCollaboratorUpdate: PropTypes.func,
 	onCollaboratorDelete: PropTypes.func,
@@ -19,7 +19,7 @@ const propTypes = {
 
 const defaultProps = {
 	pubId: '00-00',
-	canAdmin: false,
+	canManage: false,
 	lastAdmin: false,
 	onCollaboratorUpdate: ()=>{},
 	onCollaboratorDelete: ()=>{},
@@ -90,7 +90,7 @@ class PubCollaboratorDetails extends Component {
 							: name
 						}
 					</div>
-					{!this.props.isPermissionsMode && this.props.canAdmin &&
+					{!this.props.isPermissionsMode && this.props.canManage &&
 						<Checkbox
 							checked={this.state.isAuthor}
 							onChange={this.handleChecked}
@@ -100,7 +100,7 @@ class PubCollaboratorDetails extends Component {
 					}
 
 				</div>
-				{this.props.canAdmin &&
+				{this.props.canManage &&
 					<div className={'remove-wrapper'}>
 						{!this.props.lastAdmin &&
 							<button className={'pt-button pt-minimal'} onClick={this.handleRemoveClick}>Remove</button>

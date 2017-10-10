@@ -12,7 +12,7 @@ const content = (
 			<PubCollabHeader
 				pubData={pubData}
 				collaborators={pubData.collaborators}
-				canAdmin={true}
+				canManage={true}
 				activeCollaborators={[
 					pubData.collaborators[0],
 					pubData.collaborators[1],

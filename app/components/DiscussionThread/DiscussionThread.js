@@ -9,7 +9,7 @@ require('./discussionThread.scss');
 
 const propTypes = {
 	discussions: PropTypes.array.isRequired,
-	canAdmin: PropTypes.bool,
+	canManage: PropTypes.bool,
 	slug: PropTypes.string.isRequired,
 	loginData: PropTypes.object,
 	pathname: PropTypes.string.isRequired,
@@ -18,7 +18,7 @@ const propTypes = {
 	submitLoading: PropTypes.bool,
 };
 const defaultProps = {
-	canAdmin: false,
+	canManage: false,
 	loginData: {},
 	submitLoading: false,
 };
@@ -133,9 +133,9 @@ class DiscussionThread extends Component {
 			return 0;
 		});
 
-		const canAdminThread =
+		const canManageThread =
 			sortedDiscussions[0].userId === this.props.loginData.id || // User is author of thread
-			this.props.canAdmin; // User has pub-level admin permissions (individual or community)
+			this.props.canManage; // User has pub-level admin permissions (individual or community)
 
 		const isArchived = sortedDiscussions[0].isArchived;
 
@@ -148,7 +148,7 @@ class DiscussionThread extends Component {
 				{isArchived &&
 					<div className={'pt-callout pt-intent-danger'}>
 						Thread is Archived
-						{canAdminThread &&
+						{canManageThread &&
 							<Button
 								type={'button'}
 								text={'Unarchive'}
@@ -160,7 +160,7 @@ class DiscussionThread extends Component {
 					</div>
 				}
 
-				{canAdminThread && !this.state.isEditing && !isArchived &&
+				{canManageThread && !this.state.isEditing && !isArchived &&
 					<div className={'thread-buttons pt-button-group pt-minimal pt-small'}>
 						<button type={'button'} className={'pt-button pt-icon-edit2'} onClick={this.onEditToggle} />
 						<Button

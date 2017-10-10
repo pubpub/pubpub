@@ -10,7 +10,7 @@ const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	collaborators: PropTypes.array.isRequired,
 	activeCollaborators: PropTypes.array.isRequired,
-	canAdmin: PropTypes.bool,
+	canManage: PropTypes.bool,
 	onPublishClick: PropTypes.func,
 	onShareClick: PropTypes.func,
 	onDetailsClick: PropTypes.func,
@@ -20,7 +20,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-	canAdmin: false,
+	canManage: false,
 	onPublishClick: ()=>{},
 	onShareClick: ()=>{},
 	onDetailsClick: ()=>{},
@@ -44,15 +44,15 @@ const PubCollabHeader = function(props) {
 				<div
 					tabIndex={0}
 					role={'button'}
-					className={`flex-left title ${props.canAdmin ? '' : 'static'}`}
-					onClick={props.canAdmin ? props.onDetailsClick : ()=>{}}
+					className={`flex-left title ${props.canManage ? '' : 'static'}`}
+					onClick={props.canManage ? props.onDetailsClick : ()=>{}}
 				>
 					{props.pubData.title}
 				</div>
 				<div className={'flex-center tags'}>
 					<div className={'tags-wrapper'}>
 						{props.pubData.collections.map((collection)=> {
-							if (!props.canAdmin) {
+							if (!props.canManage) {
 								return (
 									<Link to={`/${collection.slug}`} key={`collection-${collection.id}`} className={'pt-tag pt-minimal pt-intent-primary'}>
 										{collection.title}
@@ -73,7 +73,7 @@ const PubCollabHeader = function(props) {
 						})}
 					</div>
 				</div>
-				{props.canAdmin &&
+				{props.canManage &&
 					<div className={'flex-right'}>
 						<button type={'button'} className={'pt-button pt-intent-primary'} onClick={props.onShareClick}>Share</button>
 						{isAuthor
@@ -102,7 +102,7 @@ const PubCollabHeader = function(props) {
 					})}
 				</div>
 				<div className={'flex-center edit'}>
-					{props.canAdmin &&
+					{props.canManage &&
 						<span tabIndex={0} role={'button'} className={'pt-icon-standard pt-icon-edit'} onClick={props.onCollaboratorsClick} />
 					}
 				</div>

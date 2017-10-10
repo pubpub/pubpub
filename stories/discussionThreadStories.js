@@ -50,7 +50,7 @@ storiesOf('DiscussionThread', module)
 				slug={'my-article'}
 				loginData={{
 					id: '12312412',
-					canAdmin: true
+					canManage: true
 				}}
 				pathname={'/pub/blah/collaborate?thread=2'}
 				handleReplySubmit={handleReplySubmit}

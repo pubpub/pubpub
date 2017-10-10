@@ -10,7 +10,7 @@ require('./pubCollabShare.scss');
 const propTypes = {
 	appData: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
-	canAdmin: PropTypes.bool,
+	canManage: PropTypes.bool,
 	onOpenCollaborators: PropTypes.func,
 	onCollaboratorAdd: PropTypes.func,
 	onCollaboratorUpdate: PropTypes.func,
@@ -20,7 +20,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-	canAdmin: false,
+	canManage: false,
 	onOpenCollaborators: ()=>{},
 	onCollaboratorAdd: ()=>{},
 	onCollaboratorUpdate: ()=>{},
@@ -76,7 +76,7 @@ class PubCollabShare extends Component {
 					</div>
 					<div className={'share-link'}>
 						<div className={'input-name'}>
-							Anyone with this link <b>Can Suggest</b>
+							Anyone with this link <b>Can View</b>
 						</div>
 						<input className={'pt-input'} type={'text'} value={`https://www.pubpub.org/pub/${pubData.slug}/collaborate/${pubData.viewHash}`} onChange={()=>{}} />
 					</div>
@@ -112,7 +112,7 @@ class PubCollabShare extends Component {
 								<PubCollaboratorDetails
 									key={`details-${item.id}`}
 									pubId={this.props.pubData.id}
-									canAdmin={this.props.canAdmin}
+									canManage={this.props.canManage}
 									lastAdmin={item.Collaborator.permissions === 'manage' && numPubAdmins === 1}
 									collaboratorData={item}
 									onCollaboratorUpdate={this.props.onCollaboratorUpdate}
