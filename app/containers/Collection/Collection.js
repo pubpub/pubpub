@@ -102,10 +102,17 @@ class Collection extends Component {
 								{collectionData.slug &&
 									<h1>{title}</h1>
 								}
-								
 								<p className={'description'}>{collectionData.description}</p>
 							</div>
 						</div>
+
+						{collectionData.layout && collectionData.layout.html &&
+							<div className={'row'}>
+								<div className={'col-12'}>
+									<div dangerouslySetInnerHTML={{ __html: collectionData.layout.html }} />
+								</div>
+							</div>
+						}
 
 						{!collectionData.id &&
 							<div className={'row'}>
