@@ -140,7 +140,7 @@ class DiscussionInput extends Component {
 							type={'submit'}
 							className={'pt-button pt-intent-primary pt-small'}
 							onClick={this.onSubmit}
-							text={'Submit Reply'}
+							text={this.props.showTitle ? 'Submit Discussion' : 'Submit Reply'}
 							disabled={this.state.submitDisabled}
 							loading={this.props.submitLoading}
 						/>

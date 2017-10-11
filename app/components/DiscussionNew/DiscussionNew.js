@@ -39,7 +39,7 @@ const DiscussionNew = function(props) {
 			{!props.loginData.id &&
 				<div className={'login-wrapper'}>
 					<Link to={`/login?redirect=${props.pathname}`} className={'pt-button pt-fill'}>
-						Login to Reply
+						Login to Add Discussion
 					</Link>
 				</div>
 			}
