@@ -404,6 +404,7 @@ class PubCollaboration extends Component {
 											isReadOnly={!canManage && pubData.localPermissions !== 'edit'}
 											clientData={this.state.activeCollaborators[0]}
 											onClientChange={this.handleClientChange}
+											threads={threads}
 										/>
 									</div>
 								</div>

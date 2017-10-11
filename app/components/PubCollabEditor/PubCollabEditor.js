@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { NonIdealState } from '@blueprintjs/core';
 import { Editor } from '@pubpub/editor';
 import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
 import Collaborative from '@pubpub/editor/addons/Collaborative';
 import Image from '@pubpub/editor/addons/Image';
 import Video from '@pubpub/editor/addons/Video';
 import InsertMenu from '@pubpub/editor/addons/InsertMenu';
-import { NonIdealState } from '@blueprintjs/core';
+import Discussion from 'components/DiscussionAddon/DiscussionAddon';
 import { s3Upload, getFirebaseConfig } from 'utilities';
 
 const propTypes = {
@@ -15,9 +16,15 @@ const propTypes = {
 	editorKey: PropTypes.string.isRequired,
 	onClientChange: PropTypes.func.isRequired,
 	isReadOnly: PropTypes.bool,
+	threads: PropTypes.array,
 };
 const defaultProps = {
 	isReadOnly: false,
+	threads: [],
+};
+
+const contextTypes = {
+	router: PropTypes.object,
 };
 
 class PubCollabEditor extends Component {
@@ -75,6 +82,7 @@ class PubCollabEditor extends Component {
 					/>
 					<Image handleFileUpload={s3Upload} />
 					<Video handleFileUpload={s3Upload} />
+					<Discussion threads={this.props.threads} routerContext={this.context.router} />
 				</Editor>
 			</div>
 		);
@@ -83,4 +91,5 @@ class PubCollabEditor extends Component {
 
 PubCollabEditor.propTypes = propTypes;
 PubCollabEditor.defaultProps = defaultProps;
+PubCollabEditor.contextTypes = contextTypes;
 export default PubCollabEditor;

@@ -13,6 +13,7 @@ import PubBody from 'components/PubBody/PubBody';
 import License from 'components/License/License';
 import Footer from 'components/Footer/Footer';
 import { getPubData } from 'actions/pub';
+import { nestDiscussionsToThreads } from 'utilities';
 
 import PubPresentationLoading from './PubPresentationLoading';
 
@@ -63,6 +64,8 @@ class PubPresentation extends Component {
 			return prev;
 		}, undefined);
 
+		const discussions = pubData.discussions || [];
+		const threads = nestDiscussionsToThreads(discussions);
 		return (
 			<div className={'pub-presentation'}>
 
@@ -91,7 +94,11 @@ class PubPresentation extends Component {
 				/>
 
 				{/* <PubBody content={this.props.pubData.data.body} /> */}
-				<PubBody versionId={activeVersion.id} content={activeVersion.content} />
+				<PubBody
+					versionId={activeVersion.id}
+					content={activeVersion.content}
+					threads={threads}
+				/>
 
 				<div className={'license-wrapper'}>
 					<License />

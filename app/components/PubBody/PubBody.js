@@ -3,15 +3,23 @@ import PropTypes from 'prop-types';
 import { Editor } from '@pubpub/editor';
 import Image from '@pubpub/editor/addons/Image';
 import Video from '@pubpub/editor/addons/Video';
+import Discussion from 'components/DiscussionAddon/DiscussionAddon';
 
 require('./pubBody.scss');
 
 const propTypes = {
 	versionId: PropTypes.string.isRequired,
 	content: PropTypes.object.isRequired,
+	threads: PropTypes.array,
+};
+const defaultProps = {
+	threads: [],
+};
+const contextTypes = {
+	router: PropTypes.object,
 };
 
-const PubBody = function(props) {
+const PubBody = function(props, context) {
 	return (
 		<div className={'pub-body'}>
 			<div className={'container pub'}>
@@ -24,6 +32,7 @@ const PubBody = function(props) {
 						>
 							<Image />
 							<Video />
+							<Discussion threads={props.threads} routerContext={context.router} />
 						</Editor>
 					</div>
 				</div>
@@ -33,4 +42,6 @@ const PubBody = function(props) {
 };
 
 PubBody.propTypes = propTypes;
+PubBody.defaultProps = defaultProps;
+PubBody.contextTypes = contextTypes;
 export default PubBody;
