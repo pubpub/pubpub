@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Editor } from '@pubpub/editor';
 import Image from '@pubpub/editor/addons/Image';
+import Video from '@pubpub/editor/addons/Video';
 
 require('./pubBody.scss');
 
@@ -22,6 +23,7 @@ const PubBody = function(props) {
 							isReadOnly={true}
 						>
 							<Image />
+							<Video />
 						</Editor>
 					</div>
 				</div>
