@@ -6,7 +6,7 @@ import Collaborative from '@pubpub/editor/addons/Collaborative';
 import Image from '@pubpub/editor/addons/Image';
 import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import { NonIdealState } from '@blueprintjs/core';
-import { s3Upload } from 'utilities';
+import { s3Upload, getFirebaseConfig } from 'utilities';
 
 const propTypes = {
 	onRef: PropTypes.func.isRequired,
@@ -67,14 +67,7 @@ class PubCollabEditor extends Component {
 						<InsertMenu />
 					}
 					<Collaborative
-						firebaseConfig={{
-							apiKey: 'AIzaSyBpE1sz_-JqtcIm2P4bw4aoMEzwGITfk0U',
-							authDomain: 'pubpub-rich.firebaseapp.com',
-							databaseURL: 'https://pubpub-rich.firebaseio.com',
-							projectId: 'pubpub-rich',
-							storageBucket: 'pubpub-rich.appspot.com',
-							messagingSenderId: '543714905893',
-						}}
+						firebaseConfig={getFirebaseConfig()}
 						clientData={this.props.clientData}
 						editorKey={this.props.editorKey}
 						onClientChange={this.props.onClientChange}

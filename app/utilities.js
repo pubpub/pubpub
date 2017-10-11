@@ -1,3 +1,26 @@
+export const getFirebaseConfig = function() {
+	const prodConfig = {
+		apiKey: 'AIzaSyAkqGZZVlMiRzVyROlOwMUSbtbdHFPza7o',
+		authDomain: 'pubpub-v4-prod.firebaseapp.com',
+		databaseURL: 'https://pubpub-v4-prod.firebaseio.com',
+		projectId: 'pubpub-v4-prod',
+		storageBucket: 'pubpub-v4-prod.appspot.com',
+		messagingSenderId: '955699971712'
+	};
+	const devConfig = {
+		apiKey: 'AIzaSyDGttY0gbzGUhrrUD9f9bllMxmYWl3WWoc',
+		authDomain: 'pubpub-v4-dev.firebaseapp.com',
+		databaseURL: 'https://pubpub-v4-dev.firebaseio.com',
+		projectId: 'pubpub-v4-dev',
+		storageBucket: 'pubpub-v4-dev.appspot.com',
+		messagingSenderId: '175246944410'
+	};
+
+	if (window.location.origin.indexOf('dev.pubpub.org') > -1) { return devConfig; }
+	if (window.location.origin.indexOf('localhost:') > -1) { return devConfig; }
+	return prodConfig;
+};
+
 export const apiFetch = function(path, opts) {
 	let urlPrefix = 'https://v4-api.pubpub.org';
 	if (window.location.origin.indexOf('dev.pubpub.org') > -1) {
