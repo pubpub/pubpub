@@ -81,7 +81,8 @@ class PubCollaboration extends Component {
 		// this.focusEditor = this.focusEditor.bind(this);
 	}
 	componentWillMount() {
-		this.props.dispatch(getPubData(this.props.match.params.slug, this.props.appData.data.id));
+		const queryObject = queryString.parse(this.props.location.search);
+		this.props.dispatch(getPubData(this.props.match.params.slug, this.props.appData.data.id, queryObject.access));
 	}
 	componentWillReceiveProps(nextProps) {
 		if (this.props.pubData.postDiscussionIsLoading
@@ -245,12 +246,8 @@ class PubCollaboration extends Component {
 			return 0;
 		});
 
-		const localUserCollaboratorData = collaborators.reduce((prev, curr)=> {
-			if (curr.id === loginData.id) { return curr; }
-			return prev;
-		}, { Collaborator: {} });
 		let canManage = false;
-		if (localUserCollaboratorData.Collaborator.permissions === 'manage') { canManage = true; }
+		if (pubData.localPermissions === 'manage') { canManage = true; }
 		if (pubData.adminPermissions === 'manage' && loginData.isAdmin) { canManage = true; }
 
 		let canDelete = false;
@@ -371,7 +368,7 @@ class PubCollaboration extends Component {
 										{activeThread &&
 											<DiscussionThread
 												discussions={activeThread}
-												canManage={localUserCollaboratorData.permissions === 'manage' || (this.props.loginData.data.isAdmin && pubData.adminPermissions === 'manage')}
+												canManage={pubData.localPermissions === 'manage' || (this.props.loginData.data.isAdmin && pubData.adminPermissions === 'manage')}
 												slug={pubData.slug}
 												loginData={this.props.loginData.data}
 												pathname={`${this.props.location.pathname}${this.props.location.search}`}
@@ -404,7 +401,7 @@ class PubCollaboration extends Component {
 										<PubCollabEditor
 											onRef={(ref)=> { this.editorRef = ref; }}
 											editorKey={`pub-${pubData.id}`}
-											isReadOnly={!canManage && localUserCollaboratorData.permissions !== 'edit'}
+											isReadOnly={!canManage && pubData.localPermissions !== 'edit'}
 											clientData={this.state.activeCollaborators[0]}
 											onClientChange={this.handleClientChange}
 										/>

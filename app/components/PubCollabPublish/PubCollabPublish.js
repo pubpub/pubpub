@@ -37,12 +37,12 @@ class PubCollabPublish extends Component {
 	render() {
 		return (
 			<div className={'pub-collab-publish'}>
-				<h5>Publish Snapshot</h5>
-				<div>Publishing a snapshot creates a publicly available version of your document at its current state.</div>
+				<h5>Publish</h5>
+				<div>Publishing creates a snapshot of the current working draft. This snapshot will be publicly available.</div>
 
 				<h6>Publication URL</h6>
 				<div className={'input'}>https://{window.location.hostname}/pub/{this.props.pubData.slug}</div>
-				<div className={'details'}>Use the <span tabIndex={-1} role={'button'} onClick={this.props.onOpenDetails}>details panel</span> to change this url</div>
+				<div className={'details'}>Use the <span tabIndex={-1} role={'button'} onClick={this.props.onOpenDetails}>details panel</span> to change this URL.</div>
 
 				<div className={'wrapper'}>
 					<PubCollabDropdownPrivacy

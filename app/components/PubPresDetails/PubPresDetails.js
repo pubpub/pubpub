@@ -13,12 +13,14 @@ const propTypes = {
 	numSuggestions: PropTypes.number,
 	collaborators: PropTypes.array.isRequired,
 	versions: PropTypes.array.isRequired,
+	localPermissions: PropTypes.string,
 	hasHeaderImage: PropTypes.bool,
 };
 
 const defaultProps = {
 	numDiscussions: 0,
 	numSuggestions: 0,
+	localPermissions: 'none',
 	hasHeaderImage: false,
 };
 
@@ -115,9 +117,12 @@ const PubPresDetails = function(props) {
 								);
 							})}
 						</div>
-						<div className={'button'}>
-							<Link to={`/pub/${props.slug}/collaborate`} className={'pt-button pt-intent-primary'}>Collaborate</Link>
-						</div>
+						{props.localPermissions !== 'none' &&
+							<div className={'button'}>
+								<Link to={`/pub/${props.slug}/collaborate`} className={'pt-button pt-intent-primary'}>Collaborate</Link>
+							</div>
+						}
+						
 					</div>
 				</div>
 			</div>

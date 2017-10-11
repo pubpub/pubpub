@@ -59,7 +59,7 @@ class PubCollabShare extends Component {
 	render() {
 		const pubData = this.props.pubData;
 		const numPubAdmins = this.props.pubData.collaborators.reduce((prev, curr)=> {
-			if (curr.Collaborator.permissions === 'manage') { return prev + 1;}
+			if (curr.Collaborator.permissions === 'manage') { return prev + 1; }
 			return prev;
 		}, 0);
 		return (
@@ -72,13 +72,13 @@ class PubCollabShare extends Component {
 						<div className={'input-name'}>
 							Anyone with this link <b>Can Edit</b>
 						</div>
-						<input className={'pt-input'} type={'text'} value={`https://www.pubpub.org/pub/${pubData.slug}/collaborate/${pubData.editHash}`} onChange={()=>{}} />
+						<input className={'pt-input'} type={'text'} value={`${window.location.origin}/pub/${pubData.slug}/collaborate?access=${pubData.editHash}`} onChange={()=>{}} />
 					</div>
 					<div className={'share-link'}>
 						<div className={'input-name'}>
 							Anyone with this link <b>Can View</b>
 						</div>
-						<input className={'pt-input'} type={'text'} value={`https://www.pubpub.org/pub/${pubData.slug}/collaborate/${pubData.viewHash}`} onChange={()=>{}} />
+						<input className={'pt-input'} type={'text'} value={`${window.location.origin}/pub/${pubData.slug}/collaborate?access=${pubData.viewHash}`} onChange={()=>{}} />
 					</div>
 				</div>
 

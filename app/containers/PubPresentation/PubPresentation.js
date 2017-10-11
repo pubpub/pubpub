@@ -86,6 +86,7 @@ class PubPresentation extends Component {
 					}, 0)}
 					collaborators={pubData.collaborators}
 					versions={pubData.versions}
+					localPermissions={pubData.localPermissions}
 					hasHeaderImage={pubData.useHeaderImage && pubData.avatar}
 				/>
 
