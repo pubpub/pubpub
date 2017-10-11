@@ -26,6 +26,7 @@ const AccentStyle = function(props) {
 			.thread:hover:after { background-color: ${props.accentColor}; }
 			.pt-slider-progress, .pt-dark .pt-slider-progress { background: ${props.accentColor}; }
 			.pt-slider-handle .pt-slider-label { background: ${props.accentColor}; color: ${props.accentTextColor}; }
+			.pub-body a { color: ${props.accentActionColor}; }
 		`}</style>
 	);
 };
