@@ -6,6 +6,7 @@ import DiscussionStatic from './DiscussionStatic';
 const propTypes = {
 	threads: PropTypes.array,
 	routerContext: PropTypes.object,
+	slug: PropTypes.string,
 	/* All addons get the following props,
 	but certain schema-based addons may not need them */
 	// containerId: PropTypes.string.isRequired,
@@ -15,6 +16,7 @@ const propTypes = {
 const defaultProps = {
 	threads: [],
 	routerContext: {},
+	slug: '',
 };
 
 class DiscussionAddon extends Component {
@@ -51,6 +53,7 @@ class DiscussionAddon extends Component {
 								view={view}
 								{...helperFunctions}
 								threads={props.threads}
+								slug={props.slug}
 								routerContext={props.routerContext}
 							/>
 						);
@@ -61,6 +64,7 @@ class DiscussionAddon extends Component {
 								align={node.attrs.align}
 								threadNumber={node.attrs.threadNumber}
 								threads={props.threads}
+								slug={props.slug}
 								routerContext={props.routerContext}
 							/>
 						);

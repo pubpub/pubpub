@@ -4,6 +4,8 @@ import { MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/labs';
 import fuzzysearch from 'fuzzysearch';
 import { generateHash } from 'utilities';
+import Avatar from 'components/Avatar/Avatar';
+
 require('./discussionAutocomplete.scss');
 
 const propTypes = {
@@ -38,7 +40,8 @@ class DiscussionAutocomplete extends Component {
 	getFilteredItems(props, query) {
 		return props.threads.filter((item)=> {
 			const fuzzyMatchTitle = fuzzysearch(query.toLowerCase(), item[0].title.toLowerCase());
-			return fuzzyMatchTitle;
+			const fuzzyMatchAuthor = fuzzysearch(query.toLowerCase(), item[0].author.fullName.toLowerCase());
+			return fuzzyMatchTitle || fuzzyMatchAuthor;
 		}).sort((foo, bar)=> {
 			if (foo.title < bar.title) { return -1; }
 			if (foo.title > bar.title) { return 1; }
@@ -75,10 +78,22 @@ class DiscussionAutocomplete extends Component {
 					}}
 					inputValueRenderer={(item) => { return item.title; }}
 					itemRenderer={({ item, handleClick, isActive })=> {
+						const discussion = item[0];
 						return (
-							<li key={item[0].id || 'empty-user-create'}>
+							<li key={item[0].id}>
 								<a role={'button'} tabIndex={-1} onClick={handleClick} className={isActive ? 'pt-menu-item pt-active' : 'pt-menu-item'}>
-									<span className={'title'}>{item[0].title}</span>
+									<div className={'avatar-wrapper'}>
+										<Avatar
+											width={20}
+											userInitials={discussion.author.intials}
+											userAvatar={discussion.author.avatar}
+										/>
+									</div>
+									
+									<div className={'details'}>
+										<div className={'title'}>{discussion.title}</div>
+										<div className={'count'}>{item.length} repl{item.length === 1 ? 'y' : 'ies'}</div>
+									</div>
 								</a>
 							</li>
 						);

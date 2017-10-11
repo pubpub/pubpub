@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { AnchorButton } from '@blueprintjs/core';
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionAutocomplete from './DiscussionAutocomplete';
 
@@ -12,6 +11,7 @@ const propTypes = {
 	align: PropTypes.oneOf(['full', 'left', 'right', 'center']).isRequired,
 	isSelected: PropTypes.bool,
 	threads: PropTypes.array,
+	slug: PropTypes.string.isRequired,
 	threadNumber: PropTypes.number,
 	updateAttrs: PropTypes.func.isRequired,
 	routerContext: PropTypes.object,
@@ -40,76 +40,19 @@ class DiscussionEditable extends Component {
 			localURL: null,
 		};
 		this.randKey = Math.round(Math.random() * 99999);
-		// this.onDragMouseDown = this.onDragMouseDown.bind(this);
-		// this.onDragMouseUp = this.onDragMouseUp.bind(this);
-		// this.onMouseMove = this.onMouseMove.bind(this);
-		// this.updateCaption = this.updateCaption.bind(this);
 		this.updateAlign = this.updateAlign.bind(this);
 		this.handleDiscussionSelect = this.handleDiscussionSelect.bind(this);
-		// this.setBlob = this.setBlob.bind(this);
-		// this.onUploadFinish = this.onUploadFinish.bind(this);
 	}
 
 	getChildContext() {
 		return { router: this.props.routerContext };
 	}
-
-	// onDragMouseDown(evt) {
-	// 	const handle = evt.target.className.replace('drag-handle ', '');
-	// 	this.setState({ isResizing: handle });
-	// 	document.addEventListener('mousemove', this.onMouseMove);
-	// 	document.addEventListener('mouseup', this.onDragMouseUp);
-	// }
-	// onDragMouseUp() {
-	// 	this.setState({ isResizing: false });
-	// 	document.removeEventListener('mousemove', this.onMouseMove);
-	// 	document.removeEventListener('mouseup', this.onDragMouseUp);
-	// }
-	// onMouseMove(evt) {
-	// 	const videoBounding = this.videoElem.getBoundingClientRect();
-	// 	const delta = this.state.isResizing === 'left'
-	// 		? videoBounding.left - evt.clientX
-	// 		: evt.clientX - videoBounding.right;
-	// 	const maxWidth = this.rootElem.clientWidth;
-	// 	const currentWidth = videoBounding.width;
-	// 	const nextSize = Math.min(
-	// 		Math.max(
-	// 			Math.round(((currentWidth + delta) / maxWidth) * 100),
-	// 			20
-	// 		),
-	// 		100
-	// 	);
-	// 	this.props.updateAttrs({ size: nextSize });
-	// }
-	// updateCaption(evt) {
-	// 	this.props.updateAttrs({ caption: evt.target.value });
-	// }
 	updateAlign(val) {
 		this.props.updateAttrs({ align: val });
 	}
 	handleDiscussionSelect(thread) {
-		// if (evt.target.files.length) {
-		// 	this.props.onFileUpload(evt.target.files[0], ()=>{}, this.onUploadFinish, 0);
-		// 	this.setState({
-		// 		uploading: true,
-		// 	});
-		// 	this.setBlob(evt.target.files[0]);
-		// }
-		// console.log('Selected', thread);
 		this.props.updateAttrs({ threadNumber: thread[0].threadNumber });
 	}
-	// setBlob(video) {
-	// 	// const reader = new FileReader();
-	// 	// reader.onload = (localURL)=> {
-	// 		// this.setState({ localURL: localURL.target.result });
-	// 	// };
-	// 	// reader.readAsDataURL(image);
-	// 	this.setState({ localURL: URL.createObjectURL(video) });
-	// }
-	// onUploadFinish(evt, index, type, filename) {
-	// 	this.setState({ uploading: false });
-	// 	this.props.updateAttrs({ url: `https://assets.pubpub.org/${filename}` });
-	// }
 	render() {
 		const alignOptions = [
 			{ key: 'left', icon: 'pt-icon-align-left' },
@@ -142,17 +85,12 @@ class DiscussionEditable extends Component {
 						<DiscussionPreview
 							key={`thread-${activeThread[0].id}`}
 							discussions={activeThread}
-							slug={'pubData.slug'}
-							isPresentation={false}
+							slug={this.props.slug}
+							isPresentation={true}
 						/>
 					}
 					{!activeThread &&
-						<label htmlFor={`new-${this.randKey}`} className={'empty-video pt-elevation-0'}>
-							<AnchorButton
-								className={'pt-large pt-icon-chat pt-minimal'}
-								text={'Click to choose discussion'}
-								loading={this.state.uploading}
-							/>
+						<label htmlFor={`new-${this.randKey}`} className={'empty-discussion pt-elevation-0'}>
 							<DiscussionAutocomplete
 								threads={this.props.threads}
 								onSelect={this.handleDiscussionSelect}
@@ -173,18 +111,11 @@ class DiscussionEditable extends Component {
 										);
 									})}
 								</div>
-								{/*<div className={'right-wrapper'}>
-																	<label htmlFor={this.randKey} className={'file-select'}>
-																		<AnchorButton
-																			text={'Choose new discussion'}
-																			loading={this.state.uploading}
-																		/>
-																	</label>
-																</div>*/}
 							</div>
 							<DiscussionAutocomplete
 								threads={this.props.threads}
 								onSelect={this.handleDiscussionSelect}
+								placeholder={'Change discussion thread'}
 							/>
 						</div>
 					}

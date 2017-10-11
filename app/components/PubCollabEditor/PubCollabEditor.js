@@ -17,10 +17,12 @@ const propTypes = {
 	onClientChange: PropTypes.func.isRequired,
 	isReadOnly: PropTypes.bool,
 	threads: PropTypes.array,
+	slug: PropTypes.string,
 };
 const defaultProps = {
 	isReadOnly: false,
 	threads: [],
+	slug: '',
 };
 
 const contextTypes = {
@@ -82,7 +84,11 @@ class PubCollabEditor extends Component {
 					/>
 					<Image handleFileUpload={s3Upload} />
 					<Video handleFileUpload={s3Upload} />
-					<Discussion threads={this.props.threads} routerContext={this.context.router} />
+					<Discussion
+						threads={this.props.threads}
+						routerContext={this.context.router}
+						slug={this.props.slug}
+					/>
 				</Editor>
 			</div>
 		);

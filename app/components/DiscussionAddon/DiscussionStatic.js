@@ -7,6 +7,7 @@ require('./discussionAddon.scss');
 const propTypes = {
 	threads: PropTypes.array,
 	threadNumber: PropTypes.number,
+	slug: PropTypes.string.isRequired,
 	align: PropTypes.oneOf(['full', 'left', 'right', 'center']),
 	routerContext: PropTypes.object,
 };
@@ -42,15 +43,14 @@ class DiscussionStatic extends Component {
 			return prev;
 		}, undefined);
 		if (!activeThread) { return null; }
-
 		return (
 			<div className={'discussion-figure-wrapper'}>
 				<figure className={'discussion pt-card pt-elevation-2'} style={figStyle}>
 					<DiscussionPreview
 						key={`thread-${activeThread[0].id}`}
 						discussions={activeThread}
-						slug={'pubData.slug'}
-						isPresentation={false}
+						slug={this.props.slug}
+						isPresentation={true}
 					/>
 				</figure>
 			</div>

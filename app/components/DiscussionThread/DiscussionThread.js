@@ -16,11 +16,13 @@ const propTypes = {
 	handleReplySubmit: PropTypes.func.isRequired,
 	handleReplyEdit: PropTypes.func.isRequired,
 	submitLoading: PropTypes.bool,
+	isPresentation: PropTypes.bool,
 };
 const defaultProps = {
 	canManage: false,
 	loginData: {},
 	submitLoading: false,
+	isPresentation: false,
 };
 
 class DiscussionThread extends Component {
@@ -143,9 +145,11 @@ class DiscussionThread extends Component {
 
 		return (
 			<div className={'discussion-thread'}>
-				<Link to={`/pub/${this.props.slug}/collaborate`} className={'top-button pt-button pt-minimal'}>
-					Show all threads
-				</Link>
+				{!this.props.isPresentation &&
+					<Link to={`/pub/${this.props.slug}/collaborate`} className={'top-button pt-button pt-minimal'}>
+						Show all threads
+					</Link>
+				}
 
 				{isArchived &&
 					<div className={'pt-callout pt-intent-danger'}>

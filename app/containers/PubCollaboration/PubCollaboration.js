@@ -13,7 +13,7 @@ import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 import PubCollabPublish from 'components/PubCollabPublish/PubCollabPublish';
 import PubCollabDetails from 'components/PubCollabDetails/PubCollabDetails';
 import PubCollabCollections from 'components/PubCollabCollections/PubCollabCollections';
-import PubCollabCollaborators from 'components/PubCollabCollaborators/PubCollabCollaborators';
+// import PubCollabCollaborators from 'components/PubCollabCollaborators/PubCollabCollaborators';
 import DiscussionNew from 'components/DiscussionNew/DiscussionNew';
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionPreviewArchived from 'components/DiscussionPreviewArchived/DiscussionPreviewArchived';
@@ -405,6 +405,7 @@ class PubCollaboration extends Component {
 											clientData={this.state.activeCollaborators[0]}
 											onClientChange={this.handleClientChange}
 											threads={threads}
+											slug={pubData.slug}
 										/>
 									</div>
 								</div>

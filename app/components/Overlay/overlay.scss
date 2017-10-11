@@ -1,9 +1,10 @@
 .overlay-wrapper {
-	left: 7vw;
-	width: 86vw;
+	left: 5vw;
+	width: 90vw;
 	top: 50px;
 	overflow: hidden;
-	max-width: 940px;
+	margin-bottom: 50px;
+	// max-width: 940px;
 	&.pt-overlay-enter, &.pt-overlay-appear {
 		opacity: 0;
 	}
@@ -20,9 +21,9 @@
 	}
 }
 
-@media only screen and (min-width: 1092px) {  /* 720px */
-	.overlay-wrapper {
-		left: calc(50vw - 470px);
-		width: 940px;
-	}
-}
+// @media only screen and (min-width: 1044px) { // 940px / 0.90
+// 	.overlay-wrapper {
+// 		left: calc(50vw - 470px);
+// 		width: 940px; // Effectively it's max width
+// 	}
+// }

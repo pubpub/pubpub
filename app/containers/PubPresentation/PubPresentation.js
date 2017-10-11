@@ -6,13 +6,15 @@ import { withRouter, Link } from 'react-router-dom';
 import { NonIdealState } from '@blueprintjs/core';
 import queryString from 'query-string';
 
+import Overlay from 'components/Overlay/Overlay';
+import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import NoMatch from 'containers/NoMatch/NoMatch';
 import PubPresHeader from 'components/PubPresHeader/PubPresHeader';
 import PubPresDetails from 'components/PubPresDetails/PubPresDetails';
 import PubBody from 'components/PubBody/PubBody';
 import License from 'components/License/License';
 import Footer from 'components/Footer/Footer';
-import { getPubData } from 'actions/pub';
+import { getPubData, postDiscussion, putDiscussion } from 'actions/pub';
 import { nestDiscussionsToThreads } from 'utilities';
 
 import PubPresentationLoading from './PubPresentationLoading';
@@ -26,13 +28,38 @@ const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	loginData: PropTypes.object.isRequired,
 	appData: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired,
 };
 
 class PubPresentation extends Component {
+	constructor(props) {
+		super(props);
+		this.closeThreadOverlay = this.closeThreadOverlay.bind(this);
+		this.handlePostDiscussion = this.handlePostDiscussion.bind(this);
+		this.handlePutDiscussion = this.handlePutDiscussion.bind(this);
+	}
 	componentWillMount() {
 		this.props.dispatch(getPubData(this.props.match.params.slug, this.props.appData.data.id));
 	}
 
+	closeThreadOverlay() {
+		const queryObject = queryString.parse(this.props.location.search);
+		queryObject.thread = undefined;
+		const newSearch = queryString.stringify(queryObject);
+		this.props.history.replace(`/pub/${this.props.match.params.slug}${newSearch}`);
+	}
+	handlePostDiscussion(discussionObject) {
+		this.props.dispatch(postDiscussion({
+			...discussionObject,
+			communityId: this.props.pubData.data.communityId,
+		}));
+	}
+	handlePutDiscussion(discussionObject) {
+		this.props.dispatch(putDiscussion({
+			...discussionObject,
+			communityId: this.props.pubData.data.communityId,
+		}));
+	}
 	render() {
 		const pubData = this.props.pubData.data || { versions: [] };
 		if (this.props.pubData.isLoading) { return <PubPresentationLoading />; }
@@ -66,6 +93,12 @@ class PubPresentation extends Component {
 
 		const discussions = pubData.discussions || [];
 		const threads = nestDiscussionsToThreads(discussions);
+		const activeThread = threads.reduce((prev, curr)=> {
+			if (String(curr[0].threadNumber) === queryObject.thread) {
+				return curr;
+			}
+			return prev;
+		}, undefined);
 		return (
 			<div className={'pub-presentation'}>
 
@@ -90,7 +123,7 @@ class PubPresentation extends Component {
 					collaborators={pubData.collaborators}
 					versions={pubData.versions}
 					localPermissions={pubData.localPermissions}
-					hasHeaderImage={pubData.useHeaderImage && pubData.avatar}
+					hasHeaderImage={pubData.useHeaderImage && !!pubData.avatar}
 				/>
 
 				{/* <PubBody content={this.props.pubData.data.body} /> */}
@@ -98,6 +131,7 @@ class PubPresentation extends Component {
 					versionId={activeVersion.id}
 					content={activeVersion.content}
 					threads={threads}
+					slug={pubData.slug}
 				/>
 
 				<div className={'license-wrapper'}>
@@ -105,6 +139,20 @@ class PubPresentation extends Component {
 				</div>
 
 				<Footer isAdmin={this.props.loginData.data.isAdmin} />
+
+				<Overlay isOpen={!!activeThread} onClose={this.closeThreadOverlay} maxWidth={728}>
+					<DiscussionThread
+						discussions={activeThread || []}
+						canManage={pubData.localPermissions === 'manage' || (this.props.loginData.data.isAdmin && pubData.adminPermissions === 'manage')}
+						slug={pubData.slug}
+						loginData={this.props.loginData.data}
+						pathname={`${this.props.location.pathname}${this.props.location.search}`}
+						handleReplySubmit={this.handlePostDiscussion}
+						handleReplyEdit={this.handlePutDiscussion}
+						submitLoading={this.props.pubData.postDiscussionIsLoading}
+						isPresentation={true}
+					/>
+				</Overlay>
 			</div>
 		);
 	}

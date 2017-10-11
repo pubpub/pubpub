@@ -12,19 +12,21 @@ const propTypes = {
 };
 
 const defaultProps = {
-	maxWidth: undefined,
+	maxWidth: 940,
 };
 
 const Overlay = function(props) {
-	const cardStyle = props.maxWidth
-		? {
-			maxWidth: `${props.maxWidth}px`,
-			left: `calc(50vw - ${props.maxWidth / 2}px)`
-		}
-		: {};
 	return (
 		<BlueprintOverlay className="pt-overlay-scroll-container" isOpen={props.isOpen} onClose={props.onClose}>
-			<div className={'overlay-wrapper pt-card pt-elevation-2'} style={cardStyle}>
+			<style>{`
+				@media only screen and (min-width: ${props.maxWidth / 0.90}px) {
+					.overlay-wrapper {
+						left: calc(50vw - ${props.maxWidth / 2}px);
+						width: ${props.maxWidth}px; // Effectively it's max width
+					}
+				}
+			`}</style>
+			<div className={'overlay-wrapper pt-card pt-elevation-2'}>
 				{props.children}
 			</div>
 		</BlueprintOverlay>

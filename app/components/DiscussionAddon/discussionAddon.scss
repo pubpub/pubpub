@@ -19,40 +19,18 @@
 		padding: 0px;
 		&.isSelected {
 			outline: 3px solid #BBBDC0;
-			background-color: #F0F0F0;
+			// background-color: #F0F0F0;
 		}
 		.empty-discussion {
 			background-color: #F0F0F0;
 			border-radius: 2px;
 			display: block;
+			padding: 2em;
 			.pt-button {
 				padding: 2em 0em;
 				width: 100%;
 			}
 		}
-		// .drag-handle {
-		// 	width: 8px;
-		// 	height: 30px;
-		// 	border-radius: 5px;
-		// 	position: absolute;
-		// 	top: calc(50% - 20px);
-		// 	background-color: rgba(0, 0, 0, 0.25);
-		// 	cursor: ew-resize;
-		// 	&.left {
-		// 		left: -15px
-		// 	}
-		// 	&.right {
-		// 		right: -15px
-		// 	}
-		// }
-		// video {
-		// 	user-select: none;
-		// 	display: block;
-		// 	width: 100%;
-		// }
-		// figcaption {
-		// 	opacity: 0.75;
-		// }
 		.options-wrapper {
 			width: 100%;
 			border-top: 1px solid #CCC;

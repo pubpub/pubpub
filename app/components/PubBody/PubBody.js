@@ -11,9 +11,11 @@ const propTypes = {
 	versionId: PropTypes.string.isRequired,
 	content: PropTypes.object.isRequired,
 	threads: PropTypes.array,
+	slug: PropTypes.string,
 };
 const defaultProps = {
 	threads: [],
+	slug: '',
 };
 const contextTypes = {
 	router: PropTypes.object,
@@ -32,7 +34,11 @@ const PubBody = function(props, context) {
 						>
 							<Image />
 							<Video />
-							<Discussion threads={props.threads} routerContext={context.router} />
+							<Discussion
+								threads={props.threads}
+								routerContext={context.router}
+								slug={props.slug}
+							/>
 						</Editor>
 					</div>
 				</div>
