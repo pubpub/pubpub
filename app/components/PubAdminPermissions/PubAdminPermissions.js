@@ -38,18 +38,22 @@ class PubAdminPermissions extends Component {
 	render() {
 		return (
 			<div className={'pub-admin-permissions'}>
-				<div className={'content'}>
-					<div className={'name'}>
+				{/*<div className={'content'}>*/}
+					{/*<div className={'name'}>
 						{this.props.appData.title} Team
+					</div>*/}
+				{/*</div>*/}
+				{/*<div className={'remove-wrapper'}>*/}
+					<div style={{ float: 'left', marginRight: '1em' }}>
+						<PubCollabDropdownPermissions
+							value={this.state.permissions}
+							onChange={this.handlePermissionsChange}
+							leftAligned={true}
+						/>
 					</div>
-					<div>Permissions for community editors and administrators</div>
-				</div>
-				<div className={'remove-wrapper'}>
-					<PubCollabDropdownPermissions
-						value={this.state.permissions}
-						onChange={this.handlePermissionsChange}
-					/>
-				</div>
+					<div>Permissions for the {this.props.appData.title} team.</div>
+					
+				{/*</div>*/}
 			</div>
 		);
 	}

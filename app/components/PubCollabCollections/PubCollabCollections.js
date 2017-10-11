@@ -40,7 +40,7 @@ class PubCollabCollections extends Component {
 			const fuzzyMatchName = fuzzysearch(query, item.title);
 			const fuzzyMatchSlug = fuzzysearch(query, item.slug);
 			const alreadyUsed = usedIndexes.indexOf(item.id) > -1;
-			return !alreadyUsed && (fuzzyMatchName || fuzzyMatchSlug);
+			return !alreadyUsed && (fuzzyMatchName || fuzzyMatchSlug) && !item.isPage;
 		}).sort((foo, bar)=> {
 			if (foo.title.toLowerCase() < bar.title.toLowerCase()) { return -1; }
 			if (foo.title.toLowerCase() > bar.title.toLowerCase()) { return 1; }

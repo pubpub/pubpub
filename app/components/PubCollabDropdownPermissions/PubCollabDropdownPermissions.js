@@ -7,12 +7,14 @@ const propTypes = {
 	value: PropTypes.string,
 	onChange: PropTypes.func,
 	isDisabled: PropTypes.bool,
+	leftAligned: PropTypes.bool,
 
 };
 const defaultProps = {
 	value: 'none',
 	onChange: ()=>{},
 	isDisabled: false,
+	leftAligned: false,
 };
 
 const PubCollabDropdownPermissions = function(props) {
@@ -52,7 +54,7 @@ const PubCollabDropdownPermissions = function(props) {
 		<DropdownButton
 			label={items[props.value].title}
 			icon={items[props.value].icon}
-			isRightAligned={true}
+			isRightAligned={!props.leftAligned}
 			isDisabled={props.isDisabled}
 		>
 			<div className={'pt-menu'}>

@@ -15,6 +15,7 @@ storiesOf('PubCollabShare', module)
 		<div className={'pt-card pt-elevation-2'} style={wrapperStyle}>
 			<AccentStyle {...accentDataDark} />
 			<PubCollabShare
+				canManage={true}
 				appData={{
 					title: 'Viral Communications',
 				}}

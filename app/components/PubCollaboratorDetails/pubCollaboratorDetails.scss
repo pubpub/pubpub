@@ -1,8 +1,10 @@
 .pub-collaborator-details {
 	display: flex;
 	align-items: flex-start;
-	padding-bottom: 1em;
-	margin-bottom: 1em;
+	// padding-bottom: 1em;
+	// margin-bottom: 1em;
+	padding: 1em 0em;
+	width: 100%;
 	border-bottom: 1px solid #CCC;
 	&.permission-mode {
 		align-items: center;

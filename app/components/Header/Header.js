@@ -88,12 +88,12 @@ const Header = function(props) {
 														Create New Pub
 													</Link>
 												</li>
-												<li>
+												{/* <li>
 													<Link to={`/user/${props.userSlug}/pubs`} className="pt-menu-item pt-popover-dismiss">
 														Your Pubs
 													</Link>
 												</li>
-												<MenuDivider />
+												<MenuDivider /> */}
 												<MenuItem text={'Logout'} onClick={props.onLogout} />
 											</Menu>
 										}

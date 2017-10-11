@@ -86,7 +86,13 @@ const PubCollabHeader = function(props) {
 
 			<div className={'flex-parent'}>
 				<div tabIndex={0} role={'button'} className={'flex-left'} onClick={props.onCollaboratorsClick}>
-					{authors.map((author, index)=> {
+					{authors.sort((foo, bar)=> {
+						if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
+						if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
+						if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
+						if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
+						return 0;
+					}).map((author, index)=> {
 						const separator = index === authors.length - 1 ? '' : ', ';
 						const prefix = (index === authors.length - 1 && index > 0) ? ' and ' : '';
 						if (author.slug) {

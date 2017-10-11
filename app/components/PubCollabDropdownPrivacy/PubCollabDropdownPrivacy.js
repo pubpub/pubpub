@@ -41,7 +41,6 @@ const PubCollabDropdownPrivacy = function(props) {
 	};
 	return (
 		<div className={'pub-collab-dropdown-privacy'}>
-			<h6>Collaboration Mode</h6>
 			<DropdownButton label={items[props.value].title} icon={items[props.value].icon}>
 				<div className={'pt-menu'}>
 					{Object.keys(items).map((key, index, array)=> {

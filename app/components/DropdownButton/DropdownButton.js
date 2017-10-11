@@ -28,6 +28,10 @@ const DropdownButton = function(props) {
 			popoverClassName={'pt-minimal'}
 			transitionDuration={-1}
 			inheritDarkTheme={false}
+			tetherOptions={{
+				constraints: [{ attachment: 'together', to: 'window' }]
+			}}
+
 		>
 			{props.icon && !props.label
 				? <button disabled={props.isDisabled} type="button" className={`dropdown-button pt-button ${props.icon}`} />

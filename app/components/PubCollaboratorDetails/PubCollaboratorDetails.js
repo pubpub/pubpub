@@ -14,7 +14,8 @@ const propTypes = {
 	lastAdmin: PropTypes.bool,
 	onCollaboratorUpdate: PropTypes.func,
 	onCollaboratorDelete: PropTypes.func,
-	isPermissionsMode: PropTypes.bool,
+	handle: PropTypes.node,
+	// isPermissionsMode: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -23,7 +24,8 @@ const defaultProps = {
 	lastAdmin: false,
 	onCollaboratorUpdate: ()=>{},
 	onCollaboratorDelete: ()=>{},
-	isPermissionsMode: false,
+	handle: undefined,
+	// isPermissionsMode: false,
 };
 
 class PubCollaboratorDetails extends Component {
@@ -71,7 +73,7 @@ class PubCollaboratorDetails extends Component {
 		const avatar = <Avatar width={50} userInitials={data.initials} userAvatar={data.avatar} />;
 		const name = <span className={'name'}>{data.Collaborator.name || data.fullName}</span>;
 		return (
-			<div className={`pub-collaborator-details ${this.props.isPermissionsMode ? 'permission-mode' : ''}`}>
+			<div className={'pub-collaborator-details'}>
 				<div className={'avatar-wrapper'}>
 					{data.slug
 						? <Link to={`/user/${data.slug}`}>
@@ -88,15 +90,18 @@ class PubCollaboratorDetails extends Component {
 								{name}
 							</Link>
 							: name
-						}
+						} {this.props.canManage && this.props.handle}
 					</div>
-					{!this.props.isPermissionsMode && this.props.canManage &&
+					{this.props.canManage &&
 						<Checkbox
 							checked={this.state.isAuthor}
 							onChange={this.handleChecked}
 						>
 							List as Author
 						</Checkbox>
+					}
+					{!this.props.canManage && this.state.isAuthor &&
+						<div className={'pt-tag pt-minimal pt-intent-primary'}>Author</div>
 					}
 
 				</div>
@@ -105,7 +110,7 @@ class PubCollaboratorDetails extends Component {
 						{!this.props.lastAdmin &&
 							<button className={'pt-button pt-minimal'} onClick={this.handleRemoveClick}>Remove</button>
 						}
-						{this.props.isPermissionsMode &&
+						{data.slug &&
 							<PubCollabDropdownPermissions
 								value={this.state.permissions}
 								onChange={this.handlePermissionsChange}
