@@ -65,6 +65,7 @@ class PubCollabEditor extends Component {
 						Track changes and suggestions coming to this beta shortly...
 					</div>
 				}
+
 				<Editor
 					placeholder={'Begin writing here...'}
 					ref={this.props.onRef}

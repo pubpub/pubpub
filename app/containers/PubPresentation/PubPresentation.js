@@ -46,7 +46,7 @@ class PubPresentation extends Component {
 		const queryObject = queryString.parse(this.props.location.search);
 		queryObject.thread = undefined;
 		const newSearch = queryString.stringify(queryObject);
-		this.props.history.replace(`/pub/${this.props.match.params.slug}${newSearch}`);
+		this.props.history.push(`/pub/${this.props.match.params.slug}${newSearch}`);
 	}
 	handlePostDiscussion(discussionObject) {
 		this.props.dispatch(postDiscussion({
@@ -126,7 +126,6 @@ class PubPresentation extends Component {
 					hasHeaderImage={pubData.useHeaderImage && !!pubData.avatar}
 				/>
 
-				{/* <PubBody content={this.props.pubData.data.body} /> */}
 				<PubBody
 					versionId={activeVersion.id}
 					content={activeVersion.content}
