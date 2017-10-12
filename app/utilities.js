@@ -1,3 +1,5 @@
+import fetch from 'isomorphic-fetch';
+
 export const getFirebaseConfig = function() {
 	const prodConfig = {
 		apiKey: 'AIzaSyAkqGZZVlMiRzVyROlOwMUSbtbdHFPza7o',
