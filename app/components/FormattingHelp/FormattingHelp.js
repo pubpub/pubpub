@@ -2,7 +2,7 @@ import React from 'react';
 
 const FormattingHelp = function() {
 	const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-	const actionKey = isMac ? '⌘' : 'Ctrl';
+	const actionKey = isMac ? '⌘' : 'Ctrl+';
 	const items = [
 		{ id: 0, title: 'Bold', shortcut: `${actionKey}B` },
 		{ id: 1, title: 'Italic', shortcut: `${actionKey}I` },
