@@ -29,9 +29,9 @@ export const apiFetch = function(path, opts) {
 	if (window.location.origin.indexOf('localhost:') > -1) {
 		urlPrefix = 'http://localhost:9876';
 	}
-	if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
-		urlPrefix = `${window.location.origin}/api`;
-	}
+	// if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+	// 	urlPrefix = `${window.location.origin}/api`;
+	// }
 
 	const finalRoute = `${urlPrefix}${path}`;
 
