@@ -10,8 +10,7 @@
     "url": "https://github.com/pubpub/pubpub.git"
   },
   "scripts": {
-    "build": "rm -rf dist && webpack --config webpack/webpackConfigProd.js && cp -R static/* dist && cp _redirects-prod dist/_redirects",
-    "build-dev": "rm -rf dist && webpack --config webpack/webpackConfigProd.js && cp -R static/* dist && cp _redirects-dev dist/_redirects",
+    "build": "rm -rf dist && webpack --config webpack/webpackConfigProd.js && cp -R static/* dist",
     "prod": "npm run build && serve ./dist -s",
     "lint": "eslint app webpack stories .storybook",
     "start": "webpack-dev-server --env.mode=app --config webpack/webpackConfigDev.js",
