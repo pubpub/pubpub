@@ -59,7 +59,8 @@ export const DELETE_COLLECTION_PUB_FAIL = 'pub/DELETE_COLLECTION_PUB_FAIL';
 export function getPubData(slug, communityId, accessHash) {
 	return (dispatch) => {
 		dispatch({ type: GET_PUB_DATA_LOAD });
-		return apiFetch(`/pubs/${slug}?communityId=${communityId}&access=${accessHash}`)
+		const accessHashString = accessHash ? `&access=${accessHash}` : '';
+		return apiFetch(`/pubs/${slug}?communityId=${communityId}${accessHashString}`)
 		.then((result) => {
 			dispatch({ type: GET_PUB_DATA_SUCCESS, result });
 		})

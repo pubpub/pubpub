@@ -4,6 +4,7 @@ import { MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/labs';
 import fuzzysearch from 'fuzzysearch';
 import { generateHash } from 'utilities';
+
 require('./collectionAutocomplete.scss');
 
 const propTypes = {

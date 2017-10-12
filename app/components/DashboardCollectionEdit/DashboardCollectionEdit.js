@@ -33,7 +33,7 @@ class DashboardCollectionEdit extends Component {
 			slug: props.collectionData.slug,
 			isPublic: props.collectionData.isPublic,
 			isOpenSubmissions: props.collectionData.isOpenSubmissions,
-			layout: props.collectionData.layout || {},
+			layout: props.collectionData.layout,
 		};
 		this.setTitle = this.setTitle.bind(this);
 		this.setDescription = this.setDescription.bind(this);
@@ -158,7 +158,7 @@ class DashboardCollectionEdit extends Component {
 					placeholder={'Enter HTML'}
 					isTextarea={true}
 					wrapperClassName={'html-input'}
-					value={this.state.layout.html || ''}
+					value={this.state.layout ? this.sate.layout.html : ''}
 					helperText={'This basic HTML input is a placeholder until the full-featured visual layout editor is ready.'}
 					onChange={this.setLayout}
 					error={undefined}
