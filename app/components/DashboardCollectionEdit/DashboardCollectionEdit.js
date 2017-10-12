@@ -29,11 +29,11 @@ class DashboardCollectionEdit extends Component {
 		this.state = {
 			hasChanged: false,
 			title: props.collectionData.title,
-			description: props.collectionData.description,
+			description: props.collectionData.description || '',
 			slug: props.collectionData.slug,
 			isPublic: props.collectionData.isPublic,
 			isOpenSubmissions: props.collectionData.isOpenSubmissions,
-			layout: props.collectionData.layout,
+			layout: props.collectionData.layout || '',
 		};
 		this.setTitle = this.setTitle.bind(this);
 		this.setDescription = this.setDescription.bind(this);
