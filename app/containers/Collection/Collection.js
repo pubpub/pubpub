@@ -107,7 +107,7 @@ class Collection extends Component {
 							</div>
 						</div>
 
-						{collectionData.layout && collectionData.layout.html &&
+						{!!collectionData.layout && !!collectionData.layout.html &&
 							<div className={'row'}>
 								<div className={'col-12'}>
 									<div dangerouslySetInnerHTML={{ __html: collectionData.layout.html }} />
