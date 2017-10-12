@@ -7,6 +7,7 @@ import Collaborative from '@pubpub/editor/addons/Collaborative';
 import Image from '@pubpub/editor/addons/Image';
 import Video from '@pubpub/editor/addons/Video';
 import Iframe from '@pubpub/editor/addons/Iframe';
+import Latex from '@pubpub/editor/addons/Latex';
 import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import Discussion from 'components/DiscussionAddon/DiscussionAddon';
 import { s3Upload, getFirebaseConfig } from 'utilities';
@@ -87,6 +88,7 @@ class PubCollabEditor extends Component {
 					<Image handleFileUpload={s3Upload} />
 					<Video handleFileUpload={s3Upload} />
 					<Iframe />
+					<Latex />
 					<Discussion
 						threads={this.props.threads}
 						routerContext={this.context.router}
