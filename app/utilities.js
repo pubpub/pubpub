@@ -24,7 +24,8 @@ export const getFirebaseConfig = function() {
 export const apiFetch = function(path, opts) {
 	let urlPrefix = 'https://v4-api.pubpub.org';
 	if (window.location.origin.indexOf('dev.pubpub.org') > -1) {
-		urlPrefix = 'https://pubpub-api-v4-dev.herokuapp.com';
+		// urlPrefix = 'https://pubpub-api-v4-dev.herokuapp.com';
+		urlPrefix = 'https://v4-api-dev.pubpub.org';
 	}
 	if (window.location.origin.indexOf('localhost:') > -1) {
 		urlPrefix = 'http://localhost:9876';
