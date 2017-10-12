@@ -30,7 +30,7 @@ export const apiFetch = function(path, opts) {
 		urlPrefix = 'http://localhost:9876';
 	}
 	if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
-		urlPrefix = '/api';
+		urlPrefix = `${window.location.origin}/api`;
 	}
 	// const urlPrefix = 'https://pubpub-api-v4-dev.herokuapp.com';
 	// const urlPrefix = 'http://localhost:9876';
