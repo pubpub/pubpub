@@ -29,9 +29,12 @@ export const apiFetch = function(path, opts) {
 	if (window.location.origin.indexOf('localhost:') > -1) {
 		urlPrefix = 'http://localhost:9876';
 	}
-	// if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
-	// 	urlPrefix = `${window.location.origin}/api`;
-	// }
+	// Safari has to use a redirect since it doesn't allow 3rd party cookies
+	// This means they'll have to login to every pubpub community.
+	// Not sure why this is working with v3 despite the non-local urls...
+	if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+		urlPrefix = `${window.location.origin}/api`;
+	}
 
 	const finalRoute = `${urlPrefix}${path}`;
 
