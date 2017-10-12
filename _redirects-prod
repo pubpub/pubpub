@@ -1,2 +1,2 @@
-/api/*  https://v4-api.pubpub.org/:splat  200
+/api/*  https://pubpub-api-v4-production.herokuapp.com/:splat  200
 /*    /index.html   200
