@@ -33,7 +33,7 @@ class DashboardCollectionEdit extends Component {
 			slug: props.collectionData.slug,
 			isPublic: props.collectionData.isPublic,
 			isOpenSubmissions: props.collectionData.isOpenSubmissions,
-			layout: props.collectionData.layout || '',
+			layout: props.collectionData.layout ? props.collectionData.layout.html : '',
 		};
 		this.setTitle = this.setTitle.bind(this);
 		this.setDescription = this.setDescription.bind(this);
@@ -69,7 +69,7 @@ class DashboardCollectionEdit extends Component {
 		this.setState({ hasChanged: true, isOpenSubmissions: false });
 	}
 	setLayout(evt) {
-		this.setState({ hasChanged: true, layout: { html: evt.target.value } });
+		this.setState({ hasChanged: true, layout: evt.target.value });
 	}
 	handleSaveChanges() {
 		this.props.onSave({
@@ -79,7 +79,7 @@ class DashboardCollectionEdit extends Component {
 			description: this.state.description,
 			isPublic: this.state.isPublic,
 			isOpenSubmissions: this.state.isOpenSubmissions,
-			layout: this.state.layout,
+			layout: { html: this.state.layout },
 		});
 	}
 	handleDelete() {
@@ -158,7 +158,7 @@ class DashboardCollectionEdit extends Component {
 					placeholder={'Enter HTML'}
 					isTextarea={true}
 					wrapperClassName={'html-input'}
-					value={this.state.layout ? this.sate.layout.html : ''}
+					value={this.state.layout}
 					helperText={'This basic HTML input is a placeholder until the full-featured visual layout editor is ready.'}
 					onChange={this.setLayout}
 					error={undefined}
