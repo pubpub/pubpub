@@ -34,6 +34,7 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
 							const button = document.createElement('div');
 							button.className = 'pt-button pt-intent-primary';
 							button.innerHTML = 'Reload to Update';
+							button.onClick = function() { window.location.reload(); };
 							note.appendChild(text);
 							note.appendChild(button);
 							document.body.appendChild(note);
