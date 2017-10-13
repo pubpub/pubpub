@@ -27,6 +27,16 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
 							// It's the perfect time to display a "New content is available; please refresh."
 							// message in the page's interface.
 							console.log('New or updated content is available.');
+							const note = document.createElement('div');
+							note.className = 'updates-available-note pt-card pt-elevation-4';
+							const text = document.createElement('p');
+							text.innerHTML = 'An updated version of the site is available.';
+							const button = document.createElement('div');
+							button.className = 'pt-button pt-intent-primary';
+							button.innerHTML = 'Reload to Update';
+							note.appendChild(text);
+							note.appendChild(button);
+							document.body.appendChild(note);
 						} else {
 							// At this point, everything has been precached.
 							// It's the perfect time to display a "Content is cached for offline use." message.

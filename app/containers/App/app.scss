@@ -31,6 +31,17 @@ body {
 	display: table;
 	clear: both;
 }
+
+.updates-available-note {
+	position: fixed;
+	top: 10px;
+	right: 10px;
+	text-align: right;
+	max-width: 400px;
+	p {
+		text-align: left;
+	}
+}
 // Import Custom Icon Fonts
 // ****************************
 @font-face {
