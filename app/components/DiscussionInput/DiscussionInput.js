@@ -34,7 +34,6 @@ class DiscussionInput extends Component {
 		this.onTitleChange = this.onTitleChange.bind(this);
 		this.onBodyChange = this.onBodyChange.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
-		this.focusEditor = this.focusEditor.bind(this);
 		this.editorRef = undefined;
 	}
 
@@ -66,10 +65,6 @@ class DiscussionInput extends Component {
 		});
 	}
 
-	focusEditor() {
-		this.editorRef.focus();
-	}
-
 	render() {
 		return (
 			<div className={'discussion-input'}>
@@ -81,7 +76,7 @@ class DiscussionInput extends Component {
 						onChange={this.onTitleChange}
 					/>
 				}
-				<div className={'input-text'} onClick={this.focusEditor} tabIndex={-1} role={'textbox'}>
+				<div className={'input-text'} tabIndex={-1} role={'textbox'}>
 					<Editor
 						key={this.state.key}
 						ref={(ref)=> { this.editorRef = ref; }}

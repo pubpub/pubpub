@@ -16,7 +16,8 @@
 		border-bottom: 1px solid $border-color;
 		min-height: 100px;
 		.ProseMirror {
-			min-height: calc(100px - 1em - 1px);
+			min-height: 100px;
+			overflow: hidden; // There was a strange 10px offset that make clicking tricky sometimes.
 		}
 		cursor: text;
 		p {
