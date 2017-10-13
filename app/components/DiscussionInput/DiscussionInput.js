@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 import { Editor } from '@pubpub/editor';
+import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
 import DropdownRichItem from 'components/DropdownRichItem/DropdownRichItem';
 import FormattingHelp from 'components/FormattingHelp/FormattingHelp';
 
@@ -87,7 +88,9 @@ class DiscussionInput extends Component {
 						placeholder={'Reply...'}
 						onChange={this.onBodyChange}
 						initialContent={this.props.initialContent}
-					/>
+					>
+						<FormattingMenu include={['link']}/>
+					</Editor>
 				</div>
 				<div className={'buttons'}>
 					<div className={'buttons-left'}>

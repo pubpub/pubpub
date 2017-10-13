@@ -6,6 +6,7 @@ import Video from '@pubpub/editor/addons/Video';
 import File from '@pubpub/editor/addons/File';
 import Iframe from '@pubpub/editor/addons/Iframe';
 import Latex from '@pubpub/editor/addons/Latex';
+import Footnote from '@pubpub/editor/addons/Footnote';
 import Discussion from 'components/DiscussionAddon/DiscussionAddon';
 
 require('./pubBody.scss');
@@ -40,6 +41,7 @@ const PubBody = function(props, context) {
 							<File />
 							<Iframe />
 							<Latex />
+							<Footnote />
 							<Discussion
 								threads={props.threads}
 								routerContext={context.router}

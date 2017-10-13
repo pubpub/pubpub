@@ -4,6 +4,7 @@ import TimeAgo from 'react-timeago';
 import { Link } from 'react-router-dom';
 import { Button } from '@blueprintjs/core';
 import Avatar from 'components/Avatar/Avatar';
+import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
 import { Editor } from '@pubpub/editor';
 import DiscussionInput from 'components/DiscussionInput/DiscussionInput';
@@ -79,13 +80,13 @@ class DiscussionThreadItem extends Component {
 	render() {
 		const discussion = this.props.discussion;
 		const editingProps = this.state.isEditing
-		? {
-			onClick: this.focusEditor,
-			tabIndex: -1, 
-			role: 'textbox',
-			className: 'text editing',
-		}
-		: {};
+			? {
+				onClick: this.focusEditor,
+				tabIndex: -1,
+				role: 'textbox',
+				className: 'text editing',
+			}
+			: {};
 
 		return (
 			<div className={'discussion-thread-item'}>
@@ -109,7 +110,6 @@ class DiscussionThreadItem extends Component {
 								<span> (edited)</span>
 							}
 						</span>
-						
 					</div>
 
 					{!this.state.isEditing &&
@@ -135,7 +135,7 @@ class DiscussionThreadItem extends Component {
 
 				</div>
 
-				<div className={'text'} { ...editingProps }>
+				<div className={'text'} {...editingProps}>
 					<Editor
 						key={this.state.isEditing ? `discussion-${discussion.id}-editing` : `discussion-${discussion.id}`}
 						ref={(ref)=> { this.editorRef = ref; }}
@@ -143,7 +143,11 @@ class DiscussionThreadItem extends Component {
 						isReadOnly={!this.state.isEditing}
 						placeholder={'Reply...'}
 						onChange={this.onBodyChange}
-					/>
+					>
+						{this.state.isEditing &&
+							<FormattingMenu include={['link']}/>
+						}
+					</Editor>
 				</div>
 				{this.state.isEditing &&
 					<div className={'editing-buttons'}>

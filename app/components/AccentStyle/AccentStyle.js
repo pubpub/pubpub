@@ -27,6 +27,8 @@ const AccentStyle = function(props) {
 			.pt-slider-progress, .pt-dark .pt-slider-progress { background: ${props.accentColor}; }
 			.pt-slider-handle .pt-slider-label { background: ${props.accentColor}; color: ${props.accentTextColor}; }
 			.pub-body a { color: ${props.accentActionColor}; }
+			.pub-body sup.footnote { color: ${props.accentColor}; }
+			.footnote-text a { color: ${props.accentActionColor}; text-decoration: underline; }
 		`}</style>
 	);
 };
