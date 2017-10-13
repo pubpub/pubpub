@@ -6,6 +6,7 @@ import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
 import Collaborative from '@pubpub/editor/addons/Collaborative';
 import Image from '@pubpub/editor/addons/Image';
 import Video from '@pubpub/editor/addons/Video';
+import File from '@pubpub/editor/addons/File';
 import Iframe from '@pubpub/editor/addons/Iframe';
 import Latex from '@pubpub/editor/addons/Latex';
 import InsertMenu from '@pubpub/editor/addons/InsertMenu';
@@ -87,6 +88,7 @@ class PubCollabEditor extends Component {
 					/>
 					<Image handleFileUpload={s3Upload} />
 					<Video handleFileUpload={s3Upload} />
+					<File handleFileUpload={s3Upload} />
 					<Iframe />
 					<Latex />
 					<Discussion
