@@ -103,7 +103,7 @@ const DashboardCollection = function(props) {
 				}
 			</div>
 
-			{!!data.layout && !!data.layout.html &&
+			{data.isPage && !!data.layout && !!data.layout.html &&
 				<div className={'layout-preview'}>
 					<div dangerouslySetInnerHTML={{ __html: data.layout.html }} />
 				</div>

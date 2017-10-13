@@ -61,21 +61,22 @@ class DashboardCreateCollection extends Component {
 	}
 
 	render() {
+		const itemString = this.props.isPage ? 'Page' : 'Collection'
 		return (
 			<div className={'dashboard-create-collection'}>
-				<h1 className={'content-title'}>Create New {this.props.isPage ? 'Page' : 'Collection'}</h1>
+				<h1 className={'content-title'}>Create New {itemString}</h1>
 
 				<form onSubmit={this.handleCreateSubmit}>
 					<InputField
-						label={'Collection Title'}
-						placeholder={'Brand New Collection'}
+						label={`${itemString} Title`}
+						placeholder={`Brand New ${itemString}`}
 						isRequired={true}
 						value={this.state.title}
 						onChange={this.handleTitleChange}
 					/>
 					<InputField
-						label={'Collection URL'}
-						placeholder={'my-collection'}
+						label={`${itemString} URL`}
+						placeholder={`my-${itemString.toLowerCase()}`}
 						isRequired={true}
 						helperText={`${window.location.origin}/${this.state.slug}`}
 						value={this.state.slug}
@@ -87,13 +88,13 @@ class DashboardCreateCollection extends Component {
 						value={this.state.description}
 						onChange={this.handleDescriptionChange}
 					/>
-					<InputField error={this.props.error && 'Error Creating Collection'}>
+					<InputField error={this.props.error && `Error Creating ${itemString}`}>
 						<Button
 							name={'login'}
 							type={'submit'}
 							className={'pt-button pt-intent-primary'}
 							onClick={this.handleCreateSubmit}
-							text={`Create ${this.props.isPage ? 'Page' : 'Collection'}`}
+							text={`Create ${itemString}`}
 							disabled={!this.state.title || !this.state.slug}
 							loading={this.props.isLoading}
 						/>
