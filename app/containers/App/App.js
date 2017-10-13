@@ -9,7 +9,6 @@ import AccentStyle from 'components/AccentStyle/AccentStyle';
 import WrappedRoute from 'components/WrappedRoute/WrappedRoute';
 import NavBar from 'components/NavBar/NavBar';
 import { populateNavigationIds } from 'utilities';
-
 import { getAppData } from 'actions/app';
 import { getLogout } from 'actions/login';
 
