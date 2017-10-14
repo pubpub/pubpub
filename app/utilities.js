@@ -29,14 +29,12 @@ export const getResizedUrl = function(url, type, dimensions) {
 	/* http://docs.aws.amazon.com/solutions/latest/serverless-image-handler/welcome.html */
 	/* It does not have .gif support, but should scale much better */
 	/* and saves its cache on cloudfront */
-
 	if (!url || url.indexOf('https://assets.pubpub.org/') === -1) { return url; }
 	const extension = url.split('.').pop().toLowerCase();
 	const validExtensions = ['jpg', 'jpeg', 'png', 'gif'];
 	if (validExtensions.indexOf(extension) === -1) { return 'url'; }
 
 	const prefix = type ? `${type}/` : '';
-
 	if (extension === 'gif') {
 		return `https://jake.pubpub.org/unsafe/${prefix}${dimensions}/${url}`;
 	}

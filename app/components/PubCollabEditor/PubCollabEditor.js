@@ -12,7 +12,7 @@ import Latex from '@pubpub/editor/addons/Latex';
 import Footnote from '@pubpub/editor/addons/Footnote';
 import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import Discussion from 'components/DiscussionAddon/DiscussionAddon';
-import { s3Upload, getFirebaseConfig } from 'utilities';
+import { s3Upload, getFirebaseConfig, getResizedUrl } from 'utilities';
 
 const propTypes = {
 	onRef: PropTypes.func.isRequired,
@@ -87,7 +87,10 @@ class PubCollabEditor extends Component {
 						editorKey={this.props.editorKey}
 						onClientChange={this.props.onClientChange}
 					/>
-					<Image handleFileUpload={s3Upload} />
+					<Image
+						handleFileUpload={s3Upload}
+						handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }}
+					/>
 					<Video handleFileUpload={s3Upload} />
 					<File handleFileUpload={s3Upload} />
 					<Iframe />

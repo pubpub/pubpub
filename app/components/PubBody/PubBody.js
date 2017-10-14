@@ -8,6 +8,7 @@ import Iframe from '@pubpub/editor/addons/Iframe';
 import Latex from '@pubpub/editor/addons/Latex';
 import Footnote from '@pubpub/editor/addons/Footnote';
 import Discussion from 'components/DiscussionAddon/DiscussionAddon';
+import { getResizedUrl } from 'utilities';
 
 require('./pubBody.scss');
 
@@ -36,7 +37,7 @@ const PubBody = function(props, context) {
 							initialContent={props.content}
 							isReadOnly={true}
 						>
-							<Image />
+							<Image handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }} />
 							<Video />
 							<File />
 							<Iframe />
