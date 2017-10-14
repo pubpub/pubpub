@@ -89,7 +89,7 @@ class PubCollabEditor extends Component {
 					/>
 					<Image handleFileUpload={s3Upload} />
 					<Video handleFileUpload={s3Upload} />
-					{/*<File handleFileUpload={s3Upload} />*/}
+					<File handleFileUpload={s3Upload} />
 					<Iframe />
 					<Latex />
 					{/*<Footnote />*/}
