@@ -285,7 +285,7 @@ class PubCollaboration extends Component {
 		return (
 			<div className={'pub-collaboration'}>
 				<Helmet>
-					<title>Edit</title>
+					<title>Collaborate · {pubData.title}</title>
 				</Helmet>
 
 				<div className={'upper'}>

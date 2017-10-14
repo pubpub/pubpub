@@ -56,6 +56,9 @@ const DiscussionPreview = function(props) {
 
 			<div className={'title'}>
 				{sortedDiscussions[0].title}
+				{!sortedDiscussions[0].title &&
+					<span>Discussion by {sortedDiscussions[0].author.fullName}</span>
+				}
 				{!isPublic && <span className={'pt-icon-standard pt-icon-lock2'} />}
 			</div>
 
