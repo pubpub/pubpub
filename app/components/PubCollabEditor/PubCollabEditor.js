@@ -64,7 +64,7 @@ class PubCollabEditor extends Component {
 		return (
 			<div>
 				{this.props.isReadOnly &&
-					<div className={'pt-callout'}>
+					<div className={'pt-callout'} style={{ marginBottom: '2em' }}>
 						<h5>Read Only</h5>
 						Track changes and suggestions coming to this beta shortly...
 					</div>
