@@ -6,10 +6,10 @@ import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
 import Collaborative from '@pubpub/editor/addons/Collaborative';
 import Image from '@pubpub/editor/addons/Image';
 import Video from '@pubpub/editor/addons/Video';
-// import File from '@pubpub/editor/addons/File';
+import File from '@pubpub/editor/addons/File';
 import Iframe from '@pubpub/editor/addons/Iframe';
 import Latex from '@pubpub/editor/addons/Latex';
-// import Footnote from '@pubpub/editor/addons/Footnote';
+import Footnote from '@pubpub/editor/addons/Footnote';
 import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import Discussion from 'components/DiscussionAddon/DiscussionAddon';
 import { s3Upload, getFirebaseConfig } from 'utilities';
@@ -92,7 +92,7 @@ class PubCollabEditor extends Component {
 					<File handleFileUpload={s3Upload} />
 					<Iframe />
 					<Latex />
-					{/*<Footnote />*/}
+					<Footnote />
 					<Discussion
 						threads={this.props.threads}
 						routerContext={this.context.router}
