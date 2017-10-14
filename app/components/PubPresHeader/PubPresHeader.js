@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { getResizedUrl } from 'utilities';
 
 require('./pubPresHeader.scss');
 
@@ -17,7 +18,8 @@ const defaultProps = {
 const PubPresHeader = function(props) {
 	const backgroundStyle = {};
 	if (props.backgroundImage) {
-		backgroundStyle.backgroundImage = `url("${props.backgroundImage}")`;
+		const resizedBackground = getResizedUrl(props.backgroundImage, 'fit-in', '1500x600');
+		backgroundStyle.backgroundImage = `url("${resizedBackground}")`;
 		backgroundStyle.color = 'white';
 	}
 

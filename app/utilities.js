@@ -21,6 +21,29 @@ export const getFirebaseConfig = function() {
 	return prodConfig;
 };
 
+export const getResizedUrl = function(url, type, dimensions) {
+	/* jake.pubpub.org is our original resizing service */
+	/* hosted on Heroku with .gif support. More expensive, but works. */
+	/* Unsure of how well it scales since its caching is memory-based */
+	/* jakejr.pubpub.org is an AWS cloudformation distribution. */
+	/* http://docs.aws.amazon.com/solutions/latest/serverless-image-handler/welcome.html */
+	/* It does not have .gif support, but should scale much better */
+	/* and saves its cache on cloudfront */
+
+	if (!url || url.indexOf('https://assets.pubpub.org/') === -1) { return url; }
+	const extension = url.split('.').pop().toLowerCase();
+	const validExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+	if (validExtensions.indexOf(extension) === -1) { return 'url'; }
+
+	const prefix = type ? `${type}/` : '';
+
+	if (extension === 'gif') {
+		return `https://jake.pubpub.org/unsafe/${prefix}${dimensions}/${url}`;
+	}
+	const filepath = url.replace('https://assets.pubpub.org/', '');
+	return `https://jakejr.pubpub.org/${prefix}${dimensions}/${filepath}`;
+};
+
 export const apiFetch = function(path, opts) {
 	let urlPrefix = 'https://v4-api.pubpub.org';
 	if (window.location.origin.indexOf('dev.pubpub.org') > -1) {

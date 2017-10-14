@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import dateFormat from 'dateformat';
 import Avatar from 'components/Avatar/Avatar';
+import { getResizedUrl } from 'utilities';
 
 require('./pubPreview.scss');
 
@@ -35,8 +36,9 @@ const PubPreview = function(props) {
 		'linear-gradient(to right, rgba(217, 167, 199, 0.5), rgba(255, 252, 220, 0.5))',
 		'linear-gradient(to right, rgba(201, 214, 255, 0.5), rgba(226, 226, 226, 0.5))'
 	];
+	const resizedBannerImage = getResizedUrl(props.bannerImage, 'fit-in', '800x0');
 	const bannerStyle = props.bannerImage
-		? { backgroundImage: `url("${props.bannerImage}")` }
+		? { backgroundImage: `url("${resizedBannerImage}")` }
 		: { background: gradients[props.title.charCodeAt(0) % 4] };
 
 	const collaboratorsCount = props.authors.length + props.collaborators.length;

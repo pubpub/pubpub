@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Avatar from 'components/Avatar/Avatar';
 import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import { getResizedUrl } from 'utilities';
 
 require('./header.scss');
 
@@ -42,9 +43,14 @@ const Header = function(props) {
 	const showGradient = props.isLargeHeader && !!props.largeHeaderBackground;
 	const backgroundStyle = {};
 	if (showGradient) {
-		backgroundStyle.backgroundImage = `url("${props.largeHeaderBackground}")`;
+		const resizedBackground = getResizedUrl(props.largeHeaderBackground, 'fit-in', '1500x600');
+		// const resizedBackground = `https://jake.pubpub.org/unsafe/fit-in/1500x600/${props.largeHeaderBackground}`;
+		// const resizedBackground = `https://d33m48ptq4lpu7.cloudfront.net/fit-in/1500x600/${props.largeHeaderBackground}`;
+		// /fit-in/300x300/serverless-image-handler-ui/img/balloon.jpg
+		backgroundStyle.backgroundImage = `url("${resizedBackground}")`;
 	}
 
+	const resizedSmallHeaderLogo = getResizedUrl(props.smallHeaderLogo, 'fit-in', '0x50');
 	return (
 		<nav className={`header accent-background accent-color ${props.largeHeaderBackground && window.location.pathname === '/' ? 'has-image' : ''}`} style={backgroundStyle} >
 			<div className={showGradient ? 'header-gradient' : ''}>
@@ -56,7 +62,7 @@ const Header = function(props) {
 							{!props.isLargeHeader &&
 								<div className={'headerItems headerItemsLeft'}>
 									<Link to={'/'}>
-										<img alt={'header logo'} className={'headerLogo'} src={props.smallHeaderLogo} />
+										<img alt={'header logo'} className={'headerLogo'} src={resizedSmallHeaderLogo} />
 									</Link>
 								</div>
 							}
