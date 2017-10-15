@@ -23,12 +23,12 @@ const Footer = function(props) {
 		{
 			id: 4,
 			title: 'Terms',
-			url: 'https://www.pubpub.org/terms',
+			url: 'https://v4.pubpub.org/terms',
 		},
 		{
 			id: 5,
 			title: 'PubPub',
-			url: 'https://www.pubpub.org',
+			url: 'https://v4.pubpub.org',
 		}
 	];
 

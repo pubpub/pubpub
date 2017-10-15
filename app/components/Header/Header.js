@@ -21,6 +21,7 @@ const propTypes = {
 	isLargeHeader: PropTypes.bool,
 
 	onLogout: PropTypes.func.isRequired,
+	isBasePubPub: PropTypes.bool,
 
 };
 
@@ -35,6 +36,7 @@ const defaultProps = {
 	largeHeaderDescription: undefined,
 	largeHeaderBackground: undefined,
 	isLargeHeader: false,
+	isBasePubPub: false,
 };
 
 const Header = function(props) {
@@ -51,8 +53,9 @@ const Header = function(props) {
 	}
 
 	const resizedSmallHeaderLogo = getResizedUrl(props.smallHeaderLogo, 'fit-in', '0x50');
+	const useAccentsString = props.isBasePubPub ? '' : 'accent-background accent-color';
 	return (
-		<nav className={`header accent-background accent-color ${props.largeHeaderBackground && window.location.pathname === '/' ? 'has-image' : ''}`} style={backgroundStyle} >
+		<nav className={`header ${useAccentsString} ${props.largeHeaderBackground && window.location.pathname === '/' ? 'has-image' : ''}`} style={backgroundStyle} >
 			<div className={showGradient ? 'header-gradient' : ''}>
 				<div className={'container'}>
 					<div className={'row'}>
@@ -70,7 +73,9 @@ const Header = function(props) {
 							<div className={'headerItems headerItemsRight'}>
 
 								{/* Search button */}
-								<Link to={'/search'} className="pt-button pt-large pt-minimal pt-icon-search" />
+								{!props.isBasePubPub && 
+									<Link to={'/search'} className="pt-button pt-large pt-minimal pt-icon-search" />
+								}
 
 								{/* Dashboard panel button */}
 								{props.userIsAdmin &&

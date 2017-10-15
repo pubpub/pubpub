@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
-import { withRouter, Switch } from 'react-router-dom';
+import { withRouter, Switch, Route } from 'react-router-dom';
 import Async from 'react-code-splitting';
 import Header from 'components/Header/Header';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
@@ -16,6 +16,7 @@ require('./app.scss');
 
 const Collection = () => <Async load={import('containers/Collection/Collection')} />;
 const Dashboard = () => <Async load={import('containers/Dashboard/Dashboard')} />;
+const Landing = () => <Async load={import('containers/Landing/Landing')} />;
 const Login = () => <Async load={import('containers/Login/Login')} />;
 const NoMatch = () => <Async load={import('containers/NoMatch/NoMatch')} />;
 const PubCreate = () => <Async load={import('containers/PubCreate/PubCreate')} />;
@@ -38,7 +39,7 @@ class App extends Component {
 		super(props);
 		this.handleLogout = this.handleLogout.bind(this);
 		this.hostname = window.location.hostname === 'localhost'
-			? 'dev.pubpub.org' // Set whatever hostname you want to develop with
+			? 'v4.pubpub.org' // Set whatever hostname you want to develop with
 			: window.location.hostname; // In production, use the real hostname
 		this.isBasePubPub = this.hostname === 'v4.pubpub.org';
 	}
@@ -57,7 +58,46 @@ class App extends Component {
 		const loginData = this.props.loginData.data || {};
 
 		/* Display base PubPub Site */
-		if (this.isBasePubPub) { return <div>PubPub!</div>; }
+		if (this.isBasePubPub) {
+			return (
+				<div>
+					<Helmet>
+						<title>PubPub</title>
+						<meta name="description" content={'Collaborative Community Publishing'} />
+						<link rel="icon" type="image/png" sizes="192x192" href={'/icon.png'} />
+						<link rel="apple-touch-icon" type="image/png" sizes="192x192" href={'/icon.png'} />
+					</Helmet>
+					<AccentStyle
+						accentColor={'#00718B'}
+						accentTextColor={'white'}
+						accentActionColor={'#00A9D7'}
+						accentHoverColor={'#007B98'}
+						accentMinimalColor={'blue'}
+					/>
+					<Header
+						userName={loginData.fullName}
+						userInitials={loginData.initials}
+						userSlug={loginData.slug}
+						userAvatar={loginData.avatar}
+						smallHeaderLogo={'/icon.png'}
+						onLogout={this.handleLogout}
+						isBasePubPub={true}
+					/>
+					<Switch>
+						<Route exact path="/" component={Landing} />
+						<Route exact path="/login" component={Login} />
+						<Route exact path="/resetpassword" component={NoMatch} />
+						<Route exact path="/resetpassword/:resetHash/:username" component={NoMatch} />
+						<Route exact path="/search" component={Search} />
+						<Route exact path="/signup" component={Signup} />
+						<Route exact path="/user/create/:hash" component={UserCreate} />
+						<Route exact path="/user/:slug" component={User} />
+						<Route exact path="/user/:slug/:mode" component={User} />
+						<Route component={NoMatch} />
+					</Switch>
+				</div>
+			);
+		}
 
 		/* If fetch is done, but no Community */
 		if (this.props.appData.data && !appData.id) { return <NoMatch />; }
@@ -125,7 +165,6 @@ class App extends Component {
 					<WrappedRoute exact path="/user/create/:hash" component={UserCreate} />
 					<WrappedRoute exact path="/user/:slug" component={User} />
 					<WrappedRoute exact path="/user/:slug/:mode" component={User} />
-					<WrappedRoute exact path="/:slug" component={Collection} />
 				</Switch>
 
 			</div>
