@@ -34,7 +34,7 @@ class Landing extends Component {
 							</div>
 
 							<h2>Empowered Publishing</h2>
-							<div className={'subtitle'}>Take control of your research and how it's communicated. Powerful tools to let you publish with and for your community. Free to write, free to review, free to publish.</div>
+							<div className={'subtitle'}>Take control of your research and how it's communicated. Powerful tools to let you publish with and for your community.<br />Free to write, free to review, free to publish.</div>
 						</div>
 					</div>
 				</div>

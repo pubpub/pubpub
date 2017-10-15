@@ -95,11 +95,13 @@ const Header = function(props) {
 													</Link>
 												</li>
 												<MenuDivider />
-												<li>
-													<Link to={'/pub/create'} className="pt-menu-item pt-popover-dismiss">
-														Create New Pub
-													</Link>
-												</li>
+												{!props.isBasePubPub &&
+													<li>
+														<Link to={'/pub/create'} className="pt-menu-item pt-popover-dismiss">
+															Create New Pub
+														</Link>
+													</li>
+												}
 												{/* <li>
 													<Link to={`/user/${props.userSlug}/pubs`} className="pt-menu-item pt-popover-dismiss">
 														Your Pubs

@@ -23,6 +23,11 @@ const Footer = function(props) {
 				url: 'mailto:pubpub@media.mit.edu',
 			},
 			{
+				id: 2,
+				title: 'Github',
+				url: 'https://github.com/pubpub',
+			},
+			{
 				id: 4,
 				title: 'Terms',
 				url: '/terms',
