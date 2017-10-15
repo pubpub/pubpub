@@ -6,34 +6,53 @@ require('./footer.scss');
 
 const propTypes = {
 	isAdmin: PropTypes.bool,
+	isBasePubPub: PropTypes.bool,
 };
 
 const defaultProps = {
 	isAdmin: false,
+	isBasePubPub: false,
 };
 
 const Footer = function(props) {
-	const links = [
-		{
-			id: 1,
-			title: 'Dashboard',
-			url: '/dashboard',
-			adminOnly: true,
-		},
-		{
-			id: 4,
-			title: 'Terms',
-			url: 'https://v4.pubpub.org/terms',
-		},
-		{
-			id: 5,
-			title: 'PubPub',
-			url: 'https://v4.pubpub.org',
-		}
-	];
+	const links = props.isBasePubPub
+		? [
+			{
+				id: 1,
+				title: 'pubpub@media.mit.edu',
+				url: 'mailto:pubpub@media.mit.edu',
+			},
+			{
+				id: 4,
+				title: 'Terms',
+				url: '/terms',
+			},
 
+		]
+		: [
+			{
+				id: 1,
+				title: 'Dashboard',
+				url: '/dashboard',
+				adminOnly: true,
+			},
+			{
+				id: 4,
+				title: 'Terms',
+				url: '/terms',
+			},
+			{
+				id: 5,
+				title: 'PubPub',
+				url: 'https://v4.pubpub.org',
+			}
+		];
+
+	const wrapperClasses = props.isBasePubPub
+		? 'base-pubpub'
+		: 'accent-background accent-color';
 	return (
-		<div className={'footer accent-background accent-color'}>
+		<div className={`footer ${wrapperClasses}`}>
 			<div className={'container'}>
 				<div className={'row'}>
 					<div className={'col-12'}>
@@ -41,7 +60,7 @@ const Footer = function(props) {
 							{links.filter((item)=> {
 								return !item.adminOnly || props.isAdmin;
 							}).map((link)=> {
-								if (link.url.indexOf('https:') > -1) {
+								if (link.url.indexOf('https:') > -1 || link.url.indexOf('mailto:') > -1) {
 									return <li key={`footer-item-${link.id}`}><a href={link.url}>{link.title}</a></li>;
 								}
 								return (

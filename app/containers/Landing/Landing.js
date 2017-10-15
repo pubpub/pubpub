@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
+import Footer from 'components/Footer/Footer';
 
 require('./landing.scss');
 
@@ -19,13 +20,17 @@ class Landing extends Component {
 					<div className={'row'}>
 						<div className={'col-12'}>
 							<h1>Collaborative Community Publishing</h1>
-							<div className={'subtitle'}>Build empowered communities of researchers to publish, review, and organize towards discovery and progress.</div>
+							<div className={'subtitle'}>Build empowered communities of researchers to publish, review, organize, and progress towards discovery.</div>
 							<div className={'action'}>
 								<Link className={'pt-button pt-intent-primary pt-large'} to={'/signup'}>Join to Collaborate</Link>
 							</div>
 
 							<div className={'image-wrapper pt-elevation-3'}>
-								<img src={'https://i.imgur.com/h20M7Ui.jpg'} alt={'PubPub Community'} />
+								<img src={'https://jakejr.pubpub.org/fit-in/800x0/_site/landing-responsive-framed.png'} alt={'PubPub Community'} />
+								<img src={'https://jakejr.pubpub.org/fit-in/800x0/_site/landing-viral-framed.png'} alt={'PubPub Community'} />
+								<img src={'https://jakejr.pubpub.org/fit-in/800x0/_site/landing-joi-framed.png'} alt={'PubPub Community'} />
+								<img src={'https://jakejr.pubpub.org/fit-in/800x0/_site/landing-plix-framed.png'} alt={'PubPub Community'} />
+								
 							</div>
 
 							<h2>Empowered Publishing</h2>
@@ -33,6 +38,7 @@ class Landing extends Component {
 						</div>
 					</div>
 				</div>
+				<Footer isBasePubPub={true} />
 			</div>
 		);
 	}
