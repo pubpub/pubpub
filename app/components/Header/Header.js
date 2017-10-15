@@ -53,6 +53,7 @@ const Header = function(props) {
 	}
 
 	const resizedSmallHeaderLogo = getResizedUrl(props.smallHeaderLogo, 'fit-in', '0x50');
+	const resizedLargeHeaderLogo = getResizedUrl(props.largeHeaderLogo, 'fit-in', '0x200');
 	const useAccentsString = props.isBasePubPub ? '' : 'accent-background accent-color';
 	return (
 		<nav className={`header ${useAccentsString} ${props.largeHeaderBackground && window.location.pathname === '/' ? 'has-image' : ''}`} style={backgroundStyle} >
@@ -138,7 +139,7 @@ const Header = function(props) {
 						<div className={'row'}>
 							<div className={'col-12'}>
 								{/* <img alt={'community logo'} className={'logo'} src={`https://jake.pubpub.org/unsafe/fit-in/600x300/${props.logo}`} /> */}
-								<img alt={'community logo'} className={'logo'} src={props.largeHeaderLogo} />
+								<img alt={'community logo'} className={'logo'} src={resizedLargeHeaderLogo} />
 								<div className={'description'}>{props.largeHeaderDescription}</div>
 							</div>
 						</div>

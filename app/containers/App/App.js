@@ -64,8 +64,8 @@ class App extends Component {
 					<Helmet>
 						<title>PubPub</title>
 						<meta name="description" content={'Collaborative Community Publishing'} />
-						<link rel="icon" type="image/png" sizes="192x192" href={'/icon.png'} />
-						<link rel="apple-touch-icon" type="image/png" sizes="192x192" href={'/icon.png'} />
+						<link rel="icon" type="image/png" sizes="192x192" href={'/favicon.png'} />
+						<link rel="apple-touch-icon" type="image/png" sizes="192x192" href={'/favicon.png'} />
 					</Helmet>
 					<AccentStyle
 						accentColor={'#00718B'}

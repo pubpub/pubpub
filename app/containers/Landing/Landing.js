@@ -21,10 +21,10 @@ class Landing extends Component {
 							<h1>Collaborative Community Publishing</h1>
 							<div className={'subtitle'}>Build empowered communities of researchers to publish, review, and organize towards discovery and progress.</div>
 							<div className={'action'}>
-								<button className={'pt-button pt-intent-primary pt-large'}>Join to Collaborate</button>
+								<Link className={'pt-button pt-intent-primary pt-large'} to={'/signup'}>Join to Collaborate</Link>
 							</div>
 
-							<div className={'image-wrapper pt-elevation-2'}>
+							<div className={'image-wrapper pt-elevation-3'}>
 								<img src={'https://i.imgur.com/h20M7Ui.jpg'} alt={'PubPub Community'} />
 							</div>
 
