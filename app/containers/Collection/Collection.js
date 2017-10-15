@@ -128,6 +128,10 @@ class Collection extends Component {
 							<div>
 								{collectionData.pubs.filter((item)=> {
 									return item.isPublished;
+								}).sort((foo, bar)=> {
+									if (foo.updatedAt > bar.updatedAt) { return -1; }
+									if (foo.updatedAt < bar.updatedAt) { return 1; }
+									return 0;
 								}).map((pub, index)=> {
 									return (
 										<div className={'row'} key={`pub-${pub.id}`}>
