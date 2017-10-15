@@ -27,9 +27,11 @@ class Landing extends Component {
 
 							<div className={'image-wrapper pt-elevation-3'}>
 								<img src={'https://jakejr.pubpub.org/fit-in/800x0/_site/landing-responsive-framed.png'} alt={'PubPub Community'} />
+								{/*
 								<img src={'https://jakejr.pubpub.org/fit-in/800x0/_site/landing-viral-framed.png'} alt={'PubPub Community'} />
 								<img src={'https://jakejr.pubpub.org/fit-in/800x0/_site/landing-joi-framed.png'} alt={'PubPub Community'} />
 								<img src={'https://jakejr.pubpub.org/fit-in/800x0/_site/landing-plix-framed.png'} alt={'PubPub Community'} />
+								*/}
 								
 							</div>
 
