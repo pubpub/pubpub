@@ -47,7 +47,13 @@ class PubCollabCollaborators extends Component {
 				{this.props.canManage &&
 					<div>
 						<div className={'intro'}>Use this panel to manage who is recognized and listed for working on this pub. To manage permissions and access to the pub, open the <span tabIndex={-1} role={'button'} onClick={this.props.onOpenShare}>Share Panel</span>.</div>
-						<UserAutocomplete onSelect={this.handleUserSelect} allowCustomUser={true} />
+						<UserAutocomplete
+							onSelect={this.handleUserSelect}
+							allowCustomUser={true}
+							usedUserIds={this.props.pubData.collaborators.map((item)=> {
+								return item.id;
+							})}
+						/>
 					</div>
 				}
 				<div className={'collaborators-wrapper'}>

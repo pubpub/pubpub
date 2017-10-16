@@ -48,6 +48,9 @@ class DashboardTeam extends Component {
 					<UserAutocomplete
 						onSelect={this.handleAdminAdd}
 						placeholder={'Add new administrator...'}
+						usedUserIds={this.props.appData.admins.map((item)=> {
+							return item.id;
+						})}
 					/>
 				</div>
 

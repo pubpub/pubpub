@@ -10,12 +10,14 @@ require('./userAutocomplete.scss');
 const propTypes = {
 	onSelect: PropTypes.func,
 	placeholder: PropTypes.string,
+	usedUserIds: PropTypes.array,
 	allowCustomUser: PropTypes.bool,
 };
 
 const defaultProps = {
 	onSelect: ()=>{},
 	placeholder: 'Search for users...',
+	usedUserIds: [],
 	allowCustomUser: false,
 };
 
@@ -43,7 +45,11 @@ class UserAutocomplete extends Component {
 					...result,
 				]
 				: result;
-			this.setState({ items: appendedResult });
+			this.setState({
+				items: appendedResult.filter((item)=> {
+					return this.props.usedUserIds.indexOf(item.id) === -1;
+				})
+			});
 		})
 		.catch((error) => {
 			console.log(error);

@@ -181,6 +181,9 @@ class PubCollabShare extends Component {
 							onSelect={this.handleUserSelect}
 							allowCustomUser={true}
 							placeholder={'Add new Collaborator...'}
+							usedUserIds={this.state.collaborators.map((item)=> {
+								return item.id;
+							})}
 						/>
 					}
 					
