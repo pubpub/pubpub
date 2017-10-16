@@ -103,25 +103,37 @@ const PubPresDetails = function(props) {
 
 					<div className={'col-12'}>
 						<div className={'details'}>
-							{props.numDiscussions}
-							<span className={'pt-icon-standard pt-icon-chat'} />
-							{props.numSuggestions}
-							{/* <span className={'pt-icon-standard pt-icon-manually-entered-data'} /> */}
-							<span className={'pt-icon-standard pt-icon-doc'} />
-							{props.collaborators.length}
-							<span className={'pt-icon-standard pt-icon-team'} />
-							{props.collaborators.map((collaborator)=> {
-								return (
-									<Avatar
-										key={`avatar-${collaborator.id}`}
-										userInitials={collaborator.initials}
-										userAvatar={collaborator.avatar}
-										borderColor={'rgba(255, 255, 255, 0.5)'}
-										width={20}
-										doesOverlap={true}
-									/>
-								);
-							})}
+							{props.localPermissions !== 'none' &&
+								<span>
+									<Link to={`/pub/${props.slug}/collaborate`} className={'pt-button pt-minimal'}>
+										{props.numDiscussions}
+										<span className={'pt-icon-standard pt-align-right pt-icon-chat'} />
+									</Link>
+									<Link to={`/pub/${props.slug}/collaborate`} className={'pt-button pt-minimal'}>
+										{props.numSuggestions}
+										{/* <span className={'pt-icon-standard pt-icon-manually-entered-data'} /> */}
+										<span className={'pt-icon-standard pt-align-right pt-icon-doc'} />
+									</Link>
+								</span>
+							}
+							<Link to={`/pub/${props.slug}?panel=collaborators`} className={'pt-button pt-minimal'}>
+								{props.collaborators.length}
+								<span className={'pt-icon-standard pt-icon-team'} />
+								<span className={'avatars'}>
+									{props.collaborators.map((collaborator)=> {
+										return (
+											<Avatar
+												key={`avatar-${collaborator.id}`}
+												userInitials={collaborator.initials}
+												userAvatar={collaborator.avatar}
+												borderColor={'rgba(255, 255, 255, 0.5)'}
+												width={20}
+												doesOverlap={true}
+											/>
+										);
+									})}
+								</span>
+							</Link>
 						</div>
 						{props.localPermissions !== 'none' &&
 							<div className={'button'}>

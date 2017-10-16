@@ -11,6 +11,8 @@ import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import NoMatch from 'containers/NoMatch/NoMatch';
 import PubPresHeader from 'components/PubPresHeader/PubPresHeader';
 import PubPresDetails from 'components/PubPresDetails/PubPresDetails';
+import PubPresFooter from 'components/PubPresFooter/PubPresFooter';
+import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 import PubBody from 'components/PubBody/PubBody';
 import License from 'components/License/License';
 import Footer from 'components/Footer/Footer';
@@ -35,6 +37,7 @@ class PubPresentation extends Component {
 	constructor(props) {
 		super(props);
 		this.closeThreadOverlay = this.closeThreadOverlay.bind(this);
+		this.closeDiscussionOverlay = this.closeDiscussionOverlay.bind(this);
 		this.handlePostDiscussion = this.handlePostDiscussion.bind(this);
 		this.handlePutDiscussion = this.handlePutDiscussion.bind(this);
 	}
@@ -48,6 +51,14 @@ class PubPresentation extends Component {
 		const newSearch = queryString.stringify(queryObject);
 		this.props.history.push(`/pub/${this.props.match.params.slug}${newSearch}`);
 	}
+
+	closeDiscussionOverlay() {
+		const queryObject = queryString.parse(this.props.location.search);
+		queryObject.panel = undefined;
+		const newSearch = queryString.stringify(queryObject);
+		this.props.history.push(`/pub/${this.props.match.params.slug}${newSearch}`);
+	}
+
 	handlePostDiscussion(discussionObject) {
 		this.props.dispatch(postDiscussion({
 			...discussionObject,
@@ -133,6 +144,13 @@ class PubPresentation extends Component {
 					slug={pubData.slug}
 				/>
 
+				<PubPresFooter
+					slug={pubData.slug}
+					collections={pubData.collections}
+					numDiscussions={pubData.discussions.length}
+					localPermissions={pubData.localPermissions}
+				/>
+
 				<div className={'license-wrapper'}>
 					<License />
 				</div>
@@ -150,6 +168,15 @@ class PubPresentation extends Component {
 						handleReplyEdit={this.handlePutDiscussion}
 						submitLoading={this.props.pubData.postDiscussionIsLoading}
 						isPresentation={true}
+					/>
+				</Overlay>
+
+				<Overlay isOpen={queryObject.panel === 'collaborators'} onClose={this.closeDiscussionOverlay} maxWidth={728}>
+					<PubCollabShare
+						appData={this.props.appData.data}
+						pubData={pubData}
+						canManage={false}
+						collaboratorsOnly={true}
 					/>
 				</Overlay>
 			</div>
