@@ -162,7 +162,7 @@ class Collection extends Component {
 								})}
 							</div>
 						}
-						{!!collectionData.id && !numPublished && !collectionData.isPage &&
+						{!publicDrafts.length && !!collectionData.id && !numPublished && !collectionData.isPage &&
 							<NonIdealState
 								title={'Empty Collection'}
 								description={'This collection has no published Pubs.'}
@@ -174,7 +174,7 @@ class Collection extends Component {
 								<div className={'row'}>
 									<div className={'col-12 working-drafts-header'}>
 										<h2>Working Drafts</h2>
-										<div>The following are unpublished works that are open to collaboration.</div>
+										<div>The following are unpublished pubs that are open to collaboration.</div>
 									</div>
 								</div>
 								{publicDrafts.map((pub, index)=> {

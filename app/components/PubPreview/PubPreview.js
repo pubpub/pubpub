@@ -54,7 +54,9 @@ const PubPreview = function(props) {
 
 			<div className={'preview-content'}>
 				<Link to={`/pub/${props.slug}`}><h3 className={'title'}>{props.title}</h3></Link>
-				<div className={'description'}>{props.description}</div>
+				{props.description &&
+					<div className={'description'}>{props.description}</div>
+				}
 
 				<div className={'collaborators'}>
 					<div className={'avatars'}>
