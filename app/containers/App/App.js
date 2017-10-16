@@ -15,6 +15,7 @@ import { getLogout } from 'actions/login';
 require('./app.scss');
 
 const Collection = () => <Async load={import('containers/Collection/Collection')} />;
+const CollectionSubmit = () => <Async load={import('containers/CollectionSubmit/CollectionSubmit')} />;
 const Dashboard = () => <Async load={import('containers/Dashboard/Dashboard')} />;
 const Landing = () => <Async load={import('containers/Landing/Landing')} />;
 const Login = () => <Async load={import('containers/Login/Login')} />;
@@ -166,6 +167,9 @@ class App extends Component {
 					<WrappedRoute exact path="/user/:slug" component={User} />
 					<WrappedRoute exact path="/user/:slug/:mode" component={User} />
 					<WrappedRoute exact path="/:slug" component={Collection} />
+					<WrappedRoute exact path="/:slug/submit" component={CollectionSubmit} />
+					<WrappedRoute exact path="/:slug/submit/:hash" component={CollectionSubmit} />
+
 				</Switch>
 
 			</div>

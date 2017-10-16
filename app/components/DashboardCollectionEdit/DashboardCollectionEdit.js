@@ -3,6 +3,13 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Button } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
+import { Editor } from '@pubpub/editor';
+import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
+import Image from '@pubpub/editor/addons/Image';
+import Video from '@pubpub/editor/addons/Video';
+import File from '@pubpub/editor/addons/File';
+import InsertMenu from '@pubpub/editor/addons/InsertMenu';
+import { s3Upload, getResizedUrl } from 'utilities';
 
 require('./dashboardCollectionEdit.scss');
 
@@ -33,6 +40,7 @@ class DashboardCollectionEdit extends Component {
 			slug: props.collectionData.slug,
 			isPublic: props.collectionData.isPublic,
 			isOpenSubmissions: props.collectionData.isOpenSubmissions,
+			createPubMessage: props.collectionData.createPubMessage,
 			layout: props.collectionData.layout ? props.collectionData.layout.html : '',
 		};
 		this.setTitle = this.setTitle.bind(this);
@@ -43,6 +51,7 @@ class DashboardCollectionEdit extends Component {
 		this.setOpen = this.setOpen.bind(this);
 		this.setClosed = this.setClosed.bind(this);
 		this.setLayout = this.setLayout.bind(this);
+		this.setCreatePubMessage = this.setCreatePubMessage.bind(this);
 		this.handleSaveChanges = this.handleSaveChanges.bind(this);
 		this.handleDelete = this.handleDelete.bind(this);
 	}
@@ -71,6 +80,9 @@ class DashboardCollectionEdit extends Component {
 	setLayout(evt) {
 		this.setState({ hasChanged: true, layout: evt.target.value });
 	}
+	setCreatePubMessage(val) {
+		this.setState({ hasChanged: true, createPubMessage: val });
+	}
 	handleSaveChanges() {
 		this.props.onSave({
 			collectionId: this.props.collectionData.id,
@@ -80,6 +92,7 @@ class DashboardCollectionEdit extends Component {
 			isPublic: this.state.isPublic,
 			isOpenSubmissions: this.state.isOpenSubmissions,
 			layout: { html: this.state.layout },
+			createPubMessage: this.state.createPubMessage,
 		});
 	}
 	handleDelete() {
@@ -163,6 +176,27 @@ class DashboardCollectionEdit extends Component {
 					onChange={this.setLayout}
 					error={undefined}
 				/>
+
+				{!this.props.collectionData.isPage &&
+					<InputField label={'Submission Instructions'}>
+						<div className={'editor-wrapper'}>
+							<Editor
+								placeholder={'Instructions for submitting to this collection...'}
+								onChange={this.setCreatePubMessage}
+								initialContent={this.props.collectionData.createPubMessage || undefined}
+							>
+								<FormattingMenu />
+								<InsertMenu />
+								<Image
+									handleFileUpload={s3Upload}
+									handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }}
+								/>
+								<Video handleFileUpload={s3Upload} />
+								<File handleFileUpload={s3Upload} />
+							</Editor>
+						</div>
+					</InputField>
+				}
 
 				{this.props.collectionData.slug &&
 					<div className="pt-callout pt-intent-danger">

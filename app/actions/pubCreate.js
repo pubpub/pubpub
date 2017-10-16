@@ -17,7 +17,7 @@ export const POST_PUB_FAIL = 'pubCreate/POST_PUB_FAIL';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function createPub(collectionId, communityId) {
+export function createPub(collectionId, communityId, createPubHash) {
 	return (dispatch) => {
 		dispatch({ type: POST_PUB_LOAD, collectionId: collectionId });
 		return apiFetch('/pubs', {
@@ -29,6 +29,7 @@ export function createPub(collectionId, communityId) {
 			body: JSON.stringify({
 				collectionId: collectionId,
 				communityId: communityId,
+				createPubHash: createPubHash,
 			})
 		})
 		.then((result) => {
