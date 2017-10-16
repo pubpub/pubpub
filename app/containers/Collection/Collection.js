@@ -79,7 +79,7 @@ class Collection extends Component {
 			return prev;
 		}, 0);
 		const publicDrafts = collectionData.pubs.filter((item)=> {
-			return !item.isPublished && item.collaborationMode !== 'private';
+			return !item.isPublished;
 		}).sort((foo, bar)=> {
 			if (foo.updatedAt > bar.updatedAt) { return -1; }
 			if (foo.updatedAt < bar.updatedAt) { return 1; }

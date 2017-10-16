@@ -57,7 +57,7 @@ class CollectionSubmit extends Component {
 			}, undefined);
 			if (collectionId) {
 				const communityId = props.appData.data.id;
-				this.props.dispatch(getCollectionData(collectionId, communityId));
+				this.props.dispatch(getCollectionData(collectionId, communityId, this.props.match.params.hash));
 			}
 		}
 	}

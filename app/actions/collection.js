@@ -29,10 +29,10 @@ export const DELETE_COLLECTION_FAIL = 'collection/DELETE_COLLECTION_FAIL';
 // action objects (e.g. {type:example, payload:data} ) within dispatch()
 // function calls
 /*--------*/
-export function getCollectionData(collectionId, communityId) {
+export function getCollectionData(collectionId, communityId, createPubHash) {
 	return (dispatch) => {
 		dispatch({ type: GET_COLLECTION_DATA_LOAD });
-		return apiFetch(`/collections/${collectionId}?communityId=${communityId}`)
+		return apiFetch(`/collections/${collectionId}?communityId=${communityId}${createPubHash ? `&createPubHash=${createPubHash}` : ''}`)
 		.then((result) => {
 			dispatch({ type: GET_COLLECTION_DATA_SUCCESS, result });
 		})
