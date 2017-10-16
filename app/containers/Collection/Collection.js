@@ -73,12 +73,18 @@ class Collection extends Component {
 			if (curr.slug === this.props.match.params.slug) { return curr.title; }
 			return prev;
 		}, undefined);
-
 		if (!title) { return <NoMatch />; }
 		const numPublished = collectionData.pubs.reduce((prev, curr)=> {
 			if (curr.isPublished) { return prev + 1; }
 			return prev;
 		}, 0);
+		const publicDrafts = collectionData.pubs.filter((item)=> {
+			return !item.isPublished && item.collaborationMode !== 'private';
+		}).sort((foo, bar)=> {
+			if (foo.updatedAt > bar.updatedAt) { return -1; }
+			if (foo.updatedAt < bar.updatedAt) { return 1; }
+			return 0;
+		});
 		return (
 			<div>
 				<div className={'collection'}>
@@ -162,6 +168,38 @@ class Collection extends Component {
 								description={'This collection has no published Pubs.'}
 								visual={'pt-icon-applications'}
 							/>
+						}
+						{!!publicDrafts.length &&
+							<div className={'working-drafts-wrapper'}>
+								<div className={'row'}>
+									<div className={'col-12 working-drafts-header'}>
+										<h2>Working Drafts</h2>
+										<div>The following are unpublished works that are open to collaboration.</div>
+									</div>
+								</div>
+								{publicDrafts.map((pub, index)=> {
+									return (
+										<div className={'row'} key={`pub-${pub.id}`}>
+											<div className={'col-12'}>
+												<PubPreview
+													title={pub.title}
+													description={pub.description}
+													slug={pub.slug}
+													bannerImage={pub.avatar}
+													publicationDate={pub.updatedAt}
+													collaborators={pub.collaborators.filter((item)=> {
+														return !item.Collaborator.isAuthor;
+													})}
+													authors={pub.collaborators.filter((item)=> {
+														return item.Collaborator.isAuthor;
+													})}
+													isMinimal={true}
+												/>
+											</div>
+										</div>
+									);
+								})}
+							</div>
 						}
 					</div>
 				</div>

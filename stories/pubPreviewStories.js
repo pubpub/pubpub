@@ -68,6 +68,21 @@ storiesOf('PubPreview', module)
 		</div>
 		<div className={'row'}>
 			<div className={'col-12'}>
+				<PubPreview
+					title={'Super Glue Data Engine'}
+					description={'Media data accessible through APIs to build diverse applications. Media data accessible through APIs to build diverse applications. Media data accessible through APIs to build diverse applications. Media data accessible through APIs to build diverse applications'}
+					slug={'my-article'}
+					bannerImage={'/dev/banner2.jpg'}
+					isLarge={false}
+					publicationDate={String(new Date())}
+					collaborators={[]}
+					authors={[authors[2]]}
+					isMinimal={true}
+				/>
+			</div>
+		</div>
+		<div className={'row'}>
+			<div className={'col-12'}>
 				<PubPreviewLoading />
 			</div>
 		</div>

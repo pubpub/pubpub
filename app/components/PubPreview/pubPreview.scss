@@ -27,6 +27,14 @@
 			padding: 1em;
 		}
 	}
+	&.minimal-preview {
+		.preview-content {
+			margin: 0px 0px 0px 0px;
+			margin-right: 0px;
+			padding: 1em 0em;
+		}
+		
+	}
 	.description {
 		padding-bottom: 1em;
 	}

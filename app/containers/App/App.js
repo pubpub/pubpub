@@ -165,6 +165,7 @@ class App extends Component {
 					<WrappedRoute exact path="/user/create/:hash" component={UserCreate} />
 					<WrappedRoute exact path="/user/:slug" component={User} />
 					<WrappedRoute exact path="/user/:slug/:mode" component={User} />
+					<WrappedRoute exact path="/:slug" component={Collection} />
 				</Switch>
 
 			</div>

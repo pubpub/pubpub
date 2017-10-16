@@ -16,6 +16,7 @@ const propTypes = {
 	publicationDate: PropTypes.string,
 	bannerImage: PropTypes.string,
 	isLarge: PropTypes.bool,
+	isMinimal: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -26,6 +27,7 @@ const defaultProps = {
 	publicationDate: undefined,
 	bannerImage: undefined,
 	isLarge: false,
+	isMinimal: false,
 };
 
 const PubPreview = function(props) {
@@ -43,10 +45,12 @@ const PubPreview = function(props) {
 
 	const collaboratorsCount = props.authors.length + props.collaborators.length;
 	return (
-		<div className={`pub-preview ${props.isLarge ? 'large-preview' : ''}`}>
-			<Link to={`/pub/${props.slug}`}>
-				<div className={'preview-banner'} style={bannerStyle} />
-			</Link>
+		<div className={`pub-preview ${props.isLarge ? 'large-preview' : ''} ${props.isMinimal ? 'minimal-preview' : ''}`}>
+			{!props.isMinimal &&
+				<Link to={`/pub/${props.slug}`}>
+					<div className={'preview-banner'} style={bannerStyle} />
+				</Link>
+			}
 
 			<div className={'preview-content'}>
 				<Link to={`/pub/${props.slug}`}><h3 className={'title'}>{props.title}</h3></Link>
