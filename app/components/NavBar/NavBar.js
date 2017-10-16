@@ -41,7 +41,7 @@ const NavBar = function(props) {
 													return (
 														<Link className={'pt-menu-item pt-popover-dismiss'} to={`/${subitem.slug}`} key={`nav-item-${subitem.id}`}>
 															<li>
-																{!item.isPublic &&
+																{!subitem.isPublic &&
 																	<span className={'pt-icon-standard pt-icon-lock2 pt-align-left'} />
 																}
 																{subitem.title}

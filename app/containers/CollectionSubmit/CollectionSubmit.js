@@ -96,12 +96,12 @@ class CollectionSubmit extends Component {
 		return (
 			<div className={'collection-submit'}>
 				<Helmet>
-					<title>{title} Submit</title>
+					<title>{title || 'Home'} Submit</title>
 				</Helmet>
 				<div className={'container narrow'}>
 					<div className={'row'}>
 						<div className={'col-12'}>
-							<h1>Create Pub in {title}</h1>
+							<h1>Create Pub in {title || 'Home'}</h1>
 
 							{!collectionData.createPubMessage &&
 								<div className={'message'}>
