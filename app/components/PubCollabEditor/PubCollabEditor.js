@@ -63,7 +63,7 @@ class PubCollabEditor extends Component {
 			);
 		}
 		return (
-			<div>
+			<div className={'pub-collab-editor'}>
 				{this.props.isReadOnly &&
 					<div className={'pt-callout'} style={{ marginBottom: '2em' }}>
 						<h5>Read Only</h5>
