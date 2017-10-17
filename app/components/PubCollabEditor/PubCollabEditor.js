@@ -97,7 +97,7 @@ class PubCollabEditor extends Component {
 					<Iframe />
 					<Latex />
 					<Footnote />
-					<Citation formatFunction={formatCitationString}/>
+					<Citation formatFunction={formatCitationString} />
 					<Discussion
 						threads={this.props.threads}
 						routerContext={this.context.router}
