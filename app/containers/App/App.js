@@ -20,11 +20,13 @@ const Dashboard = () => <Async load={import('containers/Dashboard/Dashboard')} /
 const Landing = () => <Async load={import('containers/Landing/Landing')} />;
 const Login = () => <Async load={import('containers/Login/Login')} />;
 const NoMatch = () => <Async load={import('containers/NoMatch/NoMatch')} />;
+const Privacy = () => <Async load={import('containers/Privacy/Privacy')} />;
 const PubCreate = () => <Async load={import('containers/PubCreate/PubCreate')} />;
 const PubCollaboration = () => <Async load={import('containers/PubCollaboration/PubCollaboration')} />;
 const PubPresentation = () => <Async load={import('containers/PubPresentation/PubPresentation')} />;
 const Search = () => <Async load={import('containers/Search/Search')} />;
 const Signup = () => <Async load={import('containers/Signup/Signup')} />;
+const Terms = () => <Async load={import('containers/Terms/Terms')} />;
 const User = () => <Async load={import('containers/User/User')} />;
 const UserCreate = () => <Async load={import('containers/UserCreate/UserCreate')} />;
 
@@ -89,8 +91,10 @@ class App extends Component {
 						<Route exact path="/login" component={Login} />
 						<Route exact path="/resetpassword" component={NoMatch} />
 						<Route exact path="/resetpassword/:resetHash/:username" component={NoMatch} />
+						<Route exact path="/privacy" component={Privacy} />
 						<Route exact path="/search" component={Search} />
 						<Route exact path="/signup" component={Signup} />
+						<Route exact path="/tos" component={Terms} />
 						<Route exact path="/user/create/:hash" component={UserCreate} />
 						<Route exact path="/user/:slug" component={User} />
 						<Route exact path="/user/:slug/:mode" component={User} />
@@ -155,6 +159,7 @@ class App extends Component {
 					<WrappedRoute exact path="/dashboard/:slug" component={Dashboard} hideNav fixHeader />
 					<WrappedRoute exact path="/dashboard/:slug/:mode" component={Dashboard} hideNav fixHeader />
 					<WrappedRoute exact path="/login" component={Login} />
+					<WrappedRoute exact path="/privacy" component={Privacy} />
 					<WrappedRoute exact path="/pub/create" component={PubCreate} />
 					<WrappedRoute exact path="/pub/:slug" component={PubPresentation} />
 					<WrappedRoute exact path="/pub/:slug/collaborate" component={PubCollaboration} hideNav fixHeader />
@@ -163,6 +168,7 @@ class App extends Component {
 					<WrappedRoute exact path="/resetpassword/:resetHash/:username" component={NoMatch} />
 					<WrappedRoute exact path="/search" component={Search} />
 					<WrappedRoute exact path="/signup" component={Signup} />
+					<WrappedRoute exact path="/tos" component={Terms} />
 					<WrappedRoute exact path="/user/create/:hash" component={UserCreate} />
 					<WrappedRoute exact path="/user/:slug" component={User} />
 					<WrappedRoute exact path="/user/:slug/:mode" component={User} />
