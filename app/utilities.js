@@ -42,7 +42,7 @@ export const getResizedUrl = function(url, type, dimensions) {
 	return `https://jakejr.pubpub.org/${prefix}${dimensions}/${filepath}`;
 };
 
-export const apiFetch = function(path, opts) {
+export const apiUrlPrefix = function() {
 	let urlPrefix = 'https://v4-api.pubpub.org';
 	if (window.location.origin.indexOf('dev.pubpub.org') > -1) {
 		// urlPrefix = 'https://pubpub-api-v4-dev.herokuapp.com';
@@ -51,6 +51,11 @@ export const apiFetch = function(path, opts) {
 	if (window.location.origin.indexOf('localhost:') > -1) {
 		urlPrefix = 'http://localhost:9876';
 	}
+	return urlPrefix;
+};
+
+export const apiFetch = function(path, opts) {
+	const urlPrefix = apiUrlPrefix();
 	// The below is no longer an issue, as long as 
 	// the site is not a custom domain or Safari has been to pubpub before.
 	// We will have a problem if a user goes to a custom domain and
@@ -133,6 +138,33 @@ export function generateHash(length) {
 	return hash;
 }
 
+export function formatCitationString(item, callback) {
+	const urlPrefix = apiUrlPrefix();
+	const finalRoute = `${urlPrefix}/citations/format`;
+	fetch(finalRoute, {
+		method: 'POST',
+		headers: {
+			Accept: 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			input: item
+		}),
+		credentials: 'include',
+	})
+	.then((response)=> {
+		if (!response.ok) {
+			return response.json().then((err)=> { throw err; });
+		}
+		return response.json();
+	})
+	.then((result) => {
+		callback(result);
+	})
+	.catch((error) => {
+		callback(error);
+	});
+}
 export function s3Upload(file, progressEvent, finishEvent, index) {
 	function beginUpload() {
 		const folderName = window.location.hostname !== 'localhost' && window.location.hostname !== 'dev.pubpub.org'
@@ -166,9 +198,7 @@ export function s3Upload(file, progressEvent, finishEvent, index) {
 	}
 
 	const getPolicy = new XMLHttpRequest();
-	const urlPrefix = window.location.origin.indexOf('localhost:') > -1
-		? 'http://localhost:9876'
-		: 'https://pubpub-api-v4-dev.herokuapp.com';
+	const urlPrefix = apiUrlPrefix();
 	getPolicy.addEventListener('load', beginUpload);
 	getPolicy.open('GET', `${urlPrefix}/uploadPolicy?contentType=${file.type}`);
 	getPolicy.send();

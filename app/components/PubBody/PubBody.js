@@ -7,6 +7,7 @@ import File from '@pubpub/editor/addons/File';
 import Iframe from '@pubpub/editor/addons/Iframe';
 import Latex from '@pubpub/editor/addons/Latex';
 import Footnote from '@pubpub/editor/addons/Footnote';
+import Citation from '@pubpub/editor/addons/Citation';
 import Discussion from 'components/DiscussionAddon/DiscussionAddon';
 import { getResizedUrl } from 'utilities';
 
@@ -43,6 +44,7 @@ const PubBody = function(props, context) {
 							<Iframe />
 							<Latex />
 							<Footnote />
+							<Citation />
 							<Discussion
 								threads={props.threads}
 								routerContext={context.router}

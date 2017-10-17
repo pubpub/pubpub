@@ -10,9 +10,10 @@ import File from '@pubpub/editor/addons/File';
 import Iframe from '@pubpub/editor/addons/Iframe';
 import Latex from '@pubpub/editor/addons/Latex';
 import Footnote from '@pubpub/editor/addons/Footnote';
+import Citation from '@pubpub/editor/addons/Citation';
 import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import Discussion from 'components/DiscussionAddon/DiscussionAddon';
-import { s3Upload, getFirebaseConfig, getResizedUrl } from 'utilities';
+import { s3Upload, getFirebaseConfig, getResizedUrl, formatCitationString } from 'utilities';
 
 const propTypes = {
 	onRef: PropTypes.func.isRequired,
@@ -96,6 +97,7 @@ class PubCollabEditor extends Component {
 					<Iframe />
 					<Latex />
 					<Footnote />
+					<Citation formatFunction={formatCitationString}/>
 					<Discussion
 						threads={this.props.threads}
 						routerContext={this.context.router}
