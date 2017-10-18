@@ -11,29 +11,34 @@ const propTypes = {
 	collaborators: PropTypes.array.isRequired,
 	activeCollaborators: PropTypes.array.isRequired,
 	canManage: PropTypes.bool,
+	isAdmin: PropTypes.bool,
+	submissionThreadNumber: PropTypes.number,
+	activeThread: PropTypes.array,
 	onPublishClick: PropTypes.func,
+	onSubmitClick: PropTypes.func,
 	onShareClick: PropTypes.func,
 	onDetailsClick: PropTypes.func,
 	onCollaboratorsClick: PropTypes.func,
 	onCollectionsClick: PropTypes.func,
-	onSubmitClick: PropTypes.func,
 };
 
 const defaultProps = {
 	canManage: false,
+	isAdmin: false,
+	submissionThreadNumber: undefined,
+	activeThread: [{}],
 	onPublishClick: ()=>{},
+	onSubmitClick: ()=>{},
 	onShareClick: ()=>{},
 	onDetailsClick: ()=>{},
 	onCollaboratorsClick: ()=>{},
 	onCollectionsClick: ()=>{},
-	onSubmitClick: ()=> {},
 };
 
 const PubCollabHeader = function(props) {
 	const authors = props.collaborators.filter((collaborator)=> {
 		return collaborator.Collaborator.isAuthor;
 	});
-	const isAuthor = true;
 	const uniqueActiveCollaborators = {};
 	props.activeCollaborators.forEach((item)=> {
 		uniqueActiveCollaborators[item.id] = item;
@@ -76,9 +81,16 @@ const PubCollabHeader = function(props) {
 				{props.canManage &&
 					<div className={'flex-right'}>
 						<button type={'button'} className={'pt-button pt-intent-primary'} onClick={props.onShareClick}>Share</button>
-						{isAuthor
+						{props.isAdmin
 							? <button type={'button'} className={'pt-button pt-intent-primary'} onClick={props.onPublishClick}>Publish</button>
-							: <button type={'button'} className={'pt-button pt-intent-primary'} onClick={props.onSubmitClick}>Submit for Publication</button>
+							/* TODO - if there is already a submit discussion, need to redirect to that one! */
+							: <span>
+								{props.submissionThreadNumber
+									? <Link className={`pt-button pt-intent-primary ${props.activeThread[0].threadNumber === props.submissionThreadNumber ? 'pt-disabled' : ''}`} to={`/pub/${props.pubData.slug}/collaborate?thread=${props.submissionThreadNumber}`}>Submit for Publication</Link>
+									: <button type={'button'} className={'pt-button pt-intent-primary'} onClick={props.onSubmitClick}>Submit for Publication</button>
+								}
+							</span>
+							
 						}
 					</div>
 				}

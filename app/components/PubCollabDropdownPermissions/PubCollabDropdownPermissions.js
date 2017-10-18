@@ -7,6 +7,7 @@ const propTypes = {
 	value: PropTypes.string,
 	onChange: PropTypes.func,
 	isDisabled: PropTypes.bool,
+	hideNone: PropTypes.bool,
 	leftAligned: PropTypes.bool,
 
 };
@@ -14,6 +15,7 @@ const defaultProps = {
 	value: 'none',
 	onChange: ()=>{},
 	isDisabled: false,
+	hideNone: false,
 	leftAligned: false,
 };
 
@@ -49,6 +51,8 @@ const PubCollabDropdownPermissions = function(props) {
 			description: 'Can edit and manage collaborators, metadata, and publishing.',
 		},
 	};
+
+	if (props.hideNone) { delete items.none; }
 
 	return (
 		<DropdownButton

@@ -11,12 +11,14 @@ const propTypes = {
 	appData: PropTypes.object,
 	pubData: PropTypes.object,
 	onSave: PropTypes.func,
+	hideNone: PropTypes.bool,
 };
 
 const defaultProps = {
 	appTitle: {},
 	pubData: {},
 	onSave: ()=>{},
+	hideNone: false,
 };
 
 class PubAdminPermissions extends Component {
@@ -44,14 +46,15 @@ class PubAdminPermissions extends Component {
 					</div>*/}
 				{/*</div>*/}
 				{/*<div className={'remove-wrapper'}>*/}
-					<div style={{ float: 'left', marginRight: '1em' }}>
+					<div className={'dropdown'}>
 						<PubCollabDropdownPermissions
 							value={this.state.permissions}
 							onChange={this.handlePermissionsChange}
+							hideNone={this.props.hideNone}
 							leftAligned={true}
 						/>
 					</div>
-					<div>Permissions for the {this.props.appData.title} team.</div>
+					<div className={'details'}>Permissions for the {this.props.appData.title} team.</div>
 					
 				{/*</div>*/}
 			</div>

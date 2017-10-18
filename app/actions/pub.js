@@ -123,7 +123,7 @@ export function deletePub({ pubId, communityId }) {
 	};
 }
 
-export function postDiscussion({ title, content, text, userId, pubId, communityId, threadNumber, isPublic }) {
+export function postDiscussion({ title, content, text, userId, pubId, communityId, threadNumber, isPublic, submitHash }) {
 	return (dispatch) => {
 		dispatch({ type: POST_DISCUSSION_LOAD });
 		return apiFetch('/discussions', {
@@ -141,6 +141,7 @@ export function postDiscussion({ title, content, text, userId, pubId, communityI
 				communityId: communityId,
 				threadNumber: threadNumber,
 				isPublic: isPublic,
+				submitHash: submitHash
 			})
 		})
 		.then((result) => {

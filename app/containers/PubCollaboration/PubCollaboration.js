@@ -11,6 +11,7 @@ import PubCollabEditor from 'components/PubCollabEditor/PubCollabEditor';
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 import PubCollabPublish from 'components/PubCollabPublish/PubCollabPublish';
+import PubCollabSubmit from 'components/PubCollabSubmit/PubCollabSubmit';
 import PubCollabDetails from 'components/PubCollabDetails/PubCollabDetails';
 import PubCollabCollections from 'components/PubCollabCollections/PubCollabCollections';
 // import PubCollabCollaborators from 'components/PubCollabCollaborators/PubCollabCollaborators';
@@ -50,6 +51,7 @@ class PubCollaboration extends Component {
 
 		this.state = {
 			isPublishOpen: false,
+			isSubmitOpen: false,
 			isShareOpen: false,
 			isDetailsOpen: false,
 			isCollaboratorsOpen: false,
@@ -59,6 +61,7 @@ class PubCollaboration extends Component {
 		};
 		this.editorRef = undefined;
 		this.togglePublish = this.togglePublish.bind(this);
+		this.toggleSubmit = this.toggleSubmit.bind(this);
 		this.toggleShare = this.toggleShare.bind(this);
 		this.toggleDetails = this.toggleDetails.bind(this);
 		this.toggleCollaborators = this.toggleCollaborators.bind(this);
@@ -109,6 +112,9 @@ class PubCollaboration extends Component {
 	}
 	togglePublish() {
 		this.setState({ isPublishOpen: !this.state.isPublishOpen });
+	}
+	toggleSubmit() {
+		this.setState({ isSubmitOpen: !this.state.isSubmitOpen });
 	}
 	toggleShare() {
 		this.setState({ isShareOpen: !this.state.isShareOpen });
@@ -219,6 +225,10 @@ class PubCollaboration extends Component {
 		const discussions = pubData.discussions || [];
 		const threads = nestDiscussionsToThreads(discussions);
 
+		const submissionThreadNumber = threads.reduce((prev, curr)=> {
+			if (curr[0].submitHash && !curr[0].isArchived) { return curr[0].threadNumber; }
+			return prev;
+		}, undefined);
 		const activeThread = threads.reduce((prev, curr)=> {
 			if (curr[0].threadNumber === Number(queryObject.thread)) { return curr; }
 			return prev;
@@ -296,8 +306,12 @@ class PubCollaboration extends Component {
 									pubData={pubData}
 									collaborators={pubData.collaborators}
 									canManage={canManage}
+									isAdmin={loginData.isAdmin}
 									activeCollaborators={this.state.activeCollaborators}
+									submissionThreadNumber={submissionThreadNumber}
+									activeThread={activeThread}
 									onPublishClick={this.togglePublish}
+									onSubmitClick={this.toggleSubmit}
 									onShareClick={this.toggleShare}
 									onDetailsClick={this.toggleDetails}
 									onCollaboratorsClick={this.toggleCollaborators}
@@ -422,6 +436,17 @@ class PubCollaboration extends Component {
 						onPutPub={this.handleDetailsSave}
 						isLoading={this.props.pubData.postVersionIsLoading}
 						onOpenDetails={this.onOpenDetails}
+					/>
+				</Overlay>
+				<Overlay isOpen={this.state.isSubmitOpen} onClose={this.toggleSubmit}>
+					<PubCollabSubmit
+						appData={this.props.appData.data}
+						pubData={pubData}
+						loginData={this.props.loginData.data}
+						pubId={pubData.id}
+						onSubmit={this.handlePostDiscussion}
+						onPutPub={this.handleDetailsSave}
+						isLoading={this.props.pubData.postDiscussionIsLoading}
 					/>
 				</Overlay>
 				<Overlay isOpen={this.state.isCollectionsOpen} onClose={this.toggleCollections}>

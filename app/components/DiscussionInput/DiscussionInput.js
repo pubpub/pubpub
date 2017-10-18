@@ -84,7 +84,7 @@ class DiscussionInput extends Component {
 						onChange={this.onBodyChange}
 						initialContent={this.props.initialContent}
 					>
-						<FormattingMenu include={['link']}/>
+						<FormattingMenu include={['link']} />
 					</Editor>
 				</div>
 				<div className={'buttons'}>
