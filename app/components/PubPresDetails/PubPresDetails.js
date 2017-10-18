@@ -62,7 +62,7 @@ const PubPresDetails = function(props) {
 								return <span key={`author-${author.id}`}>{prefix}{author.fullName}{separator}</span>;
 							})}
 						</div>
-						<div className={'button'}>
+						<div className={'button upper'}>
 							<Popover
 								content={
 									<ul className={'pt-menu'}>
@@ -102,7 +102,7 @@ const PubPresDetails = function(props) {
 					</div>
 
 					<div className={'col-12'}>
-						<div className={'details'}>
+						<div className={'details lower'}>
 							{props.localPermissions !== 'none' &&
 								<span>
 									<Link to={`/pub/${props.slug}/collaborate`} className={'pt-button pt-minimal'}>

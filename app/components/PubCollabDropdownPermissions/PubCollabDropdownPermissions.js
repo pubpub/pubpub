@@ -53,11 +53,11 @@ const PubCollabDropdownPermissions = function(props) {
 	};
 
 	if (props.hideNone) { delete items.none; }
-
+	const selectedKey = props.value === 'none' && props.hideNone ? 'view' : props.value;
 	return (
 		<DropdownButton
-			label={items[props.value].title}
-			icon={items[props.value].icon}
+			label={items[selectedKey].title}
+			icon={items[selectedKey].icon}
 			isRightAligned={!props.leftAligned}
 			isDisabled={props.isDisabled}
 		>

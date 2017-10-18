@@ -142,11 +142,16 @@ const DashboardCollection = function(props) {
 							if (foo[key] < bar[key]) { return -1 * direction; }
 							return 0;
 						}).map((pub)=> {
+							let status = 'unpublished';
+							if (pub.isPublished) { status = 'published'; }
+							if (pub.hasOpenSubmission) { status = 'submitted'; }
 							return (
 								<tr key={`collection-pub-${pub.id}`}>
 									<td className={'title'}><Link to={`/pub/${pub.slug}`}>{pub.title}</Link></td>
 									<td><Link to={`/pub/${pub.slug}/collaborate`} className={'pt-button pt-icon-edit pt-minimal'} /></td>
-									<td className={`status ${pub.status}`}>{pub.isPublished ? 'Published' : 'Unpublished'}</td>
+									<td className={`status ${status}`}>
+										{status}
+									</td>
 									<td className={'date'}>3 days ago</td>
 									<td className={'tight'}>{pub.collaboratorCount}</td>
 									<td className={'tight'}>{pub.discussionCount}</td>
