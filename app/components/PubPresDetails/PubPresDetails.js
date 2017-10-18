@@ -93,7 +93,7 @@ const PubPresDetails = function(props) {
 								transitionDuration={-1}
 								inheritDarkTheme={false}
 							>
-								<button className={'pt-button pt-minimal'}>
+								<button className={'pt-button pt-minimal date'}>
 									{dateFormat(activeVersion.createdAt, 'mmm dd, yyyy')}
 									<span className={'pt-icon-standard pt-icon-caret-down pt-align-right'} />
 								</button>
@@ -126,7 +126,7 @@ const PubPresDetails = function(props) {
 												key={`avatar-${collaborator.id}`}
 												userInitials={collaborator.initials}
 												userAvatar={collaborator.avatar}
-												borderColor={'rgba(255, 255, 255, 0.5)'}
+												borderColor={'rgba(255, 255, 255, 1.0)'}
 												width={20}
 												doesOverlap={true}
 											/>

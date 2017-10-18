@@ -9,12 +9,12 @@ const plain = {
 };
 
 const image = {
-	userAvatar: '/dev/maggie.jpg',
+	userAvatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/xalionmalik/128.jpg',
 	width: 50,
 };
 
 const border = {
-	userAvatar: '/dev/maggie.jpg',
+	userAvatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/xalionmalik/128.jpg',
 	borderColor: 'red',
 };
 
