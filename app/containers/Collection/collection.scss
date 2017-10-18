@@ -1,8 +1,16 @@
 .collection {
 	padding: 2em 0em;
-	.create-pub-button {
+	.create-pub-wrapper {
 		float: right;
+		text-align: right;
+		margin-bottom: 2em;
+		.instructions-link {
+			display: block;
+			opacity: 0.85;
+			padding-top: 0.25em;
+		}
 	}
+	
 	.pub-preview {
 		margin-bottom: 2em;
 	}

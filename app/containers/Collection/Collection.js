@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { Button, NonIdealState } from '@blueprintjs/core';
 import PubPreview from 'components/PubPreview/PubPreview';
 import PubPreviewLoading from 'components/PubPreview/PubPreviewLoading';
@@ -98,13 +98,20 @@ class Collection extends Component {
 						<div className={'row'}>
 							<div className={'col-12'}>
 								{!collectionData.isPage && collectionData.isOpenSubmissions &&
-									<Button
-										type={'button'}
-										className={'pt-button pt-intent-primary create-pub-button'}
-										loading={this.props.pubCreateData.isLoading}
-										onClick={this.handleCreatePub}
-										text={'Create Pub in Collection'}
-									/>
+									<div className={'create-pub-wrapper'}>
+										<Button
+											type={'button'}
+											className={'pt-button pt-intent-primary'}
+											loading={this.props.pubCreateData.isLoading}
+											onClick={this.handleCreatePub}
+											text={'Create Pub in Collection'}
+										/>
+										{collectionData.createPubMessage &&
+											<Link to={`/${collectionData.slug}/submit`} className={'instructions-link'}>
+												Submission Instructions
+											</Link>
+										}
+									</div>
 								}
 								{collectionData.slug &&
 									<h1>{title}</h1>
@@ -131,7 +138,7 @@ class Collection extends Component {
 							</div>
 						}
 						{!!collectionData.id &&
-							<div>
+							<div className={'published-pubs-wrapper'}>
 								{collectionData.pubs.filter((item)=> {
 									return item.isPublished;
 								}).sort((foo, bar)=> {
