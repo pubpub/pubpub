@@ -27,12 +27,16 @@ class PubCollabPublish extends Component {
 			collaborationMode: props.pubData.collaborationMode,
 		};
 		this.handleCollaborationModeChange = this.handleCollaborationModeChange.bind(this);
+		this.handlePublish = this.handlePublish.bind(this);
 	}
 	handleCollaborationModeChange(value) {
 		this.setState({ collaborationMode: value });
 		this.props.onPutPub({
 			collaborationMode: value,
 		});
+	}
+	handlePublish() {
+		this.props.onPublish();
 	}
 	render() {
 		return (
@@ -53,7 +57,7 @@ class PubCollabPublish extends Component {
 
 				<div className={'button-wrapper'}>
 					<Button
-						onClick={this.props.onPublish}
+						onClick={this.handlePublish}
 						className={'pt-intent-primary'}
 						text={'Publish Snapshot'}
 						loading={this.props.isLoading}
