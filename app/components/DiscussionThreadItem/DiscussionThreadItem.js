@@ -105,7 +105,7 @@ class DiscussionThreadItem extends Component {
 							<Link to={`/user/${discussion.author.slug}`}>{discussion.author.fullName || discussion.author.userInitials}</Link>
 						</div>
 						<span className={'date'}>
-							<TimeAgo date={discussion.createdAt} />	
+							<TimeAgo date={discussion.createdAt} />
 							{discussion.createdAt !== discussion.updatedAt &&
 								<span> (edited)</span>
 							}

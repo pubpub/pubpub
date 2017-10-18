@@ -56,6 +56,8 @@ const defaultState = {
 	putPubIsLoading: false,
 	deletePubIsLoading: false,
 	postDiscussionIsLoading: false,
+	postVersionSuccess: false,
+	newThreadNumber: undefined,
 	postVersionIsLoading: false,
 	error: undefined,
 };
@@ -136,6 +138,7 @@ export default function reducer(state = defaultState, action) {
 		return {
 			...state,
 			postDiscussionIsLoading: false,
+			newThreadNumber: action.result.threadNumber,
 			data: {
 				...state.data,
 				discussions: [
@@ -234,16 +237,19 @@ export default function reducer(state = defaultState, action) {
 		return {
 			...state,
 			postVersionIsLoading: true,
+			postVersionSuccess: false,
 		};
 	case POST_VERSION_SUCCESS:
 		return {
 			...state,
 			postVersionIsLoading: false,
+			postVersionSuccess: true,
 		};
 	case POST_VERSION_FAIL:
 		return {
 			...state,
 			postVersionIsLoading: false,
+			postVersionSuccess: false,
 		};
 	/* POST CollectionPub Data */
 	/* -------------------- */

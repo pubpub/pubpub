@@ -257,7 +257,7 @@ export function deleteCollaborator({ collaboratorId, pubId }) {
 	};
 }
 
-export function postVersion({ pubId, content }) {
+export function postVersion({ pubId, communityId, content, submitHash }) {
 	return (dispatch) => {
 		dispatch({ type: POST_VERSION_LOAD });
 		return apiFetch('/versions', {
@@ -268,7 +268,9 @@ export function postVersion({ pubId, content }) {
 			},
 			body: JSON.stringify({
 				pubId,
+				communityId,
 				content,
+				submitHash,
 			})
 		})
 		.then((result) => {

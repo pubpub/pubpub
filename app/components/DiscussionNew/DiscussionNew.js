@@ -11,11 +11,11 @@ const propTypes = {
 	loginData: PropTypes.object,
 	pathname: PropTypes.string.isRequired,
 	handleDiscussionSubmit: PropTypes.func.isRequired,
-	submitLoading: PropTypes.bool,
+	submitIsLoading: PropTypes.bool,
 };
 const defaultProps = {
 	loginData: {},
-	submitLoading: false,
+	submitIsLoading: false,
 };
 
 const DiscussionNew = function(props) {
@@ -48,7 +48,7 @@ const DiscussionNew = function(props) {
 				<DiscussionInput
 					handleSubmit={onDiscussionSubmit}
 					showTitle={true}
-					submitLoading={props.submitLoading}
+					submitIsLoading={props.submitIsLoading}
 				/>
 			</div>
 

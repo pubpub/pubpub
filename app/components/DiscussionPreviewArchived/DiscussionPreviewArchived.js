@@ -25,6 +25,12 @@ const DiscussionPreviewArchived = function(props) {
 	const hasHighlight = props.discussions.reduce((prev, curr)=> {
 		return prev || curr.highlight;
 	}, false);
+	let submissionStatus = '';
+	const hasSubmission = props.discussions.reduce((prev, curr)=> {
+		if (curr.submitHash && curr.submitApprovedAt) { submissionStatus = 'pt-intent-success'; }
+		if (curr.submitHash && curr.isArchived && !curr.submitApprovedAt) { submissionStatus = 'pt-intent-danger'; }
+		return prev || curr.submitHash;
+	}, false);
 	const isPublic = props.discussions.reduce((prev, curr)=> {
 		return prev || curr.isPublic;
 	}, false);
@@ -50,6 +56,9 @@ const DiscussionPreviewArchived = function(props) {
 				}
 				{hasHighlight &&
 					<span className={'pt-icon-standard pt-icon-highlight'} />
+				}
+				{hasSubmission &&
+					<span className={`pt-icon-standard pt-icon-endorsed ${submissionStatus}`} />
 				}
 			</div>
 

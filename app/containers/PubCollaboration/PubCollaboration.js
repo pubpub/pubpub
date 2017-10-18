@@ -90,9 +90,10 @@ class PubCollaboration extends Component {
 	componentWillReceiveProps(nextProps) {
 		if (this.props.pubData.postDiscussionIsLoading
 			&& !nextProps.pubData.postDiscussionIsLoading
-			&& nextProps.location.search.indexOf('thread=new') > -1
+			&& (nextProps.location.search.indexOf('thread=new') > -1 || this.state.isSubmitOpen)
 		) {
-			this.props.history.push(nextProps.location.pathname);
+			this.setState({ isSubmitOpen: false });
+			this.props.history.push(`${nextProps.location.pathname}?thread=${nextProps.pubData.newThreadNumber}`);
 		}
 		if (this.props.pubData.putPubIsLoading && !nextProps.pubData.putPubIsLoading) {
 			this.setState({ isDetailsOpen: false });
@@ -100,7 +101,7 @@ class PubCollaboration extends Component {
 			const newSlug = nextProps.pubData.data.slug;
 			this.props.history.replace(`${nextProps.location.pathname.replace(`/pub/${oldSlug}`, `/pub/${newSlug}`)}${nextProps.location.search}`);
 		}
-		if (this.props.pubData.postVersionIsLoading && !nextProps.pubData.postVersionIsLoading) {
+		if (this.props.pubData.postVersionIsLoading && !nextProps.pubData.postVersionIsLoading && nextProps.pubData.postVersionSuccess) {
 			this.props.history.push(nextProps.location.pathname.replace('/collaborate', ''));
 		}
 		if (this.props.pubData.deletePubIsLoading && !nextProps.pubData.deletePubIsLoading) {
@@ -201,10 +202,12 @@ class PubCollaboration extends Component {
 			isPublishOpen: false,
 		});
 	}
-	handlePublish() {
+	handlePublish(submitHash) {
 		this.props.dispatch((postVersion({
 			pubId: this.props.pubData.data.id,
+			communityId: this.props.appData.data.id,
 			content: this.editorRef.view.state.doc.toJSON(),
+			submitHash: submitHash,
 		})));
 	}
 	// focusEditor() {
@@ -342,7 +345,7 @@ class PubCollaboration extends Component {
 												loginData={this.props.loginData.data}
 												pathname={`${this.props.location.pathname}${this.props.location.search}`}
 												handleDiscussionSubmit={this.handlePostDiscussion}
-												submitLoading={this.props.pubData.postDiscussionIsLoading}
+												submitIsLoading={this.props.pubData.postDiscussionIsLoading}
 											/>
 										}
 										{queryObject.thread !== 'new' && !activeThread &&
@@ -388,7 +391,9 @@ class PubCollaboration extends Component {
 												pathname={`${this.props.location.pathname}${this.props.location.search}`}
 												handleReplySubmit={this.handlePostDiscussion}
 												handleReplyEdit={this.handlePutDiscussion}
-												submitLoading={this.props.pubData.postDiscussionIsLoading}
+												submitIsLoading={this.props.pubData.postDiscussionIsLoading}
+												onPublish={this.handlePublish}
+												publishIsLoading={this.props.pubData.postVersionIsLoading}
 											/>
 										}
 										{threads.length === 0 && !queryObject.thread &&

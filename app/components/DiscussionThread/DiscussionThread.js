@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import TimeAgo from 'react-timeago';
 import { Button } from '@blueprintjs/core';
 import DiscussionInput from 'components/DiscussionInput/DiscussionInput';
 import DiscussionThreadItem from 'components/DiscussionThreadItem/DiscussionThreadItem';
@@ -15,14 +16,18 @@ const propTypes = {
 	pathname: PropTypes.string.isRequired,
 	handleReplySubmit: PropTypes.func.isRequired,
 	handleReplyEdit: PropTypes.func.isRequired,
-	submitLoading: PropTypes.bool,
+	submitIsLoading: PropTypes.bool,
 	isPresentation: PropTypes.bool,
+	onPublish: PropTypes.func,
+	publishIsLoading: PropTypes.bool,
 };
 const defaultProps = {
 	canManage: false,
 	loginData: {},
-	submitLoading: false,
+	submitIsLoading: false,
 	isPresentation: false,
+	onPublish: ()=>{},
+	publishIsLoading: false,
 };
 
 class DiscussionThread extends Component {
@@ -46,6 +51,7 @@ class DiscussionThread extends Component {
 		this.editorRef = undefined;
 		this.onEditToggle = this.onEditToggle.bind(this);
 		this.handleTitleChange = this.handleTitleChange.bind(this);
+		this.handlePublish = this.handlePublish.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
 		this.archiveDiscussion = this.archiveDiscussion.bind(this);
 		this.onReplySubmit = this.onReplySubmit.bind(this);
@@ -128,7 +134,15 @@ class DiscussionThread extends Component {
 			text: replyObject.text
 		});
 	}
-
+	handlePublish() {
+		const sortedDiscussions = this.props.discussions.sort((foo, bar)=> {
+			if (foo.createdAt > bar.createdAt) { return 1; }
+			if (foo.createdAt < bar.createdAt) { return -1; }
+			return 0;
+		});
+		const submitHash = sortedDiscussions[0].submitHash;
+		this.props.onPublish(submitHash);
+	}
 	render() {
 		const sortedDiscussions = this.props.discussions.sort((foo, bar)=> {
 			if (foo.createdAt > bar.createdAt) { return 1; }
@@ -152,9 +166,16 @@ class DiscussionThread extends Component {
 				}
 
 				{isArchived &&
-					<div className={'pt-callout pt-intent-danger'}>
-						Thread is Archived
-						{canManageThread &&
+					<div className={`pt-callout ${sortedDiscussions[0].submitApprovedAt ? 'pt-intent-success' : 'pt-intent-danger'}`}>
+						{!sortedDiscussions[0].submitHash && 'Thread is Archived'}
+						{sortedDiscussions[0].submitHash && !sortedDiscussions[0].submitApprovedAt && 'Submission Cancelled'}
+						{sortedDiscussions[0].submitHash && sortedDiscussions[0].submitApprovedAt &&
+							<div>
+								<div>Submission Approved and Published</div>
+								<TimeAgo date={sortedDiscussions[0].submitApprovedAt} />
+							</div>
+						}
+						{canManageThread && !sortedDiscussions[0].submitHash &&
 							<Button
 								type={'button'}
 								text={'Unarchive'}
@@ -173,7 +194,7 @@ class DiscussionThread extends Component {
 					</div>
 				}
 
-				{canManageThread && !this.state.isEditing && !isArchived &&
+				{!sortedDiscussions[0].submitHash && canManageThread && !this.state.isEditing && !isArchived &&
 					<div className={'thread-buttons pt-button-group pt-minimal pt-small'}>
 						<button type={'button'} className={'pt-button pt-icon-edit2'} onClick={this.onEditToggle} />
 						<Button
@@ -216,6 +237,29 @@ class DiscussionThread extends Component {
 					<div className={'title'}>{sortedDiscussions[0].title}</div>
 				}
 
+				{sortedDiscussions[0].submitHash && !isArchived &&
+					<div className={'submission-buttons'}>
+						{this.props.loginData.isAdmin &&
+							<Button
+								type={'button'}
+								className={'pt-intent-primary pt-small'}
+								text={'Accept and Publish'}
+								loading={this.props.publishIsLoading}
+								onClick={this.handlePublish}
+							/>
+						}
+						{(this.props.loginData.isAdmin || this.props.canManage) &&
+							<Button
+								type={'button'}
+								className={'pt-small'}
+								text={'Cancel Submission'}
+								loading={this.state.archiveIsLoading}
+								onClick={this.archiveDiscussion}
+							/>
+						}
+					</div>
+				}
+
 				<div>
 					{sortedDiscussions.map((discussion)=> {
 						return (
@@ -232,7 +276,7 @@ class DiscussionThread extends Component {
 				{!isArchived &&
 					<div>
 						{this.props.loginData.id
-							? <DiscussionInput handleSubmit={this.onReplySubmit} submitLoading={this.props.submitLoading} />
+							? <DiscussionInput handleSubmit={this.onReplySubmit} submitIsLoading={this.props.submitIsLoading} />
 							: <Link to={`/login?redirect=${this.props.pathname}`} className={'pt-button pt-fill'}>
 								Login to Reply
 							</Link>

@@ -12,13 +12,13 @@ const propTypes = {
 	handleSubmit: PropTypes.func.isRequired,
 	showTitle: PropTypes.bool,
 	initialContent: PropTypes.object,
-	submitLoading: PropTypes.bool,
+	submitIsLoading: PropTypes.bool,
 };
 
 const defaultProps = {
 	showTitle: false,
 	initialContent: undefined,
-	submitLoading: false,
+	submitIsLoading: false,
 };
 
 class DiscussionInput extends Component {
@@ -38,7 +38,7 @@ class DiscussionInput extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (this.props.submitLoading && !nextProps.submitLoading) {
+		if (this.props.submitIsLoading && !nextProps.submitIsLoading) {
 			this.setState({
 				key: new Date().getTime()
 			});
@@ -140,7 +140,7 @@ class DiscussionInput extends Component {
 							onClick={this.onSubmit}
 							text={this.props.showTitle ? 'Submit Discussion' : 'Submit Reply'}
 							disabled={this.state.submitDisabled}
-							loading={this.props.submitLoading}
+							loading={this.props.submitIsLoading}
 						/>
 					</div>
 				</div>
