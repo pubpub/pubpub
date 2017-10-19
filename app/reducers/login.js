@@ -1,3 +1,5 @@
+/* global Raven */
+
 /* ---------- */
 // Load Actions
 /* ---------- */
@@ -32,6 +34,8 @@ const defaultState = {
 	error: undefined,
 };
 
+const isDev = window.location.origin.indexOf('localhost:') > -1;
+
 /* ----------------------------------------- */
 // Bind actions to specific reducing functions
 /* ----------------------------------------- */
@@ -41,6 +45,9 @@ export default function reducer(state = defaultState, action) {
 	case GET_APP_DATA_FAIL:
 		return state;
 	case GET_APP_DATA_SUCCESS:
+		if (!isDev && action.result.loginData) {
+			Raven.setUserContext({ username: action.result.loginData.slug });
+		}
 		return {
 			data: action.result.loginData,
 			isLoading: false,
@@ -50,6 +57,9 @@ export default function reducer(state = defaultState, action) {
 	case POST_USER_FAIL:
 		return state;
 	case POST_USER_SUCCESS:
+		if (!isDev) {
+			Raven.setUserContext({ username: action.result.slug });
+		}
 		return {
 			data: action.result,
 			isLoading: false,
@@ -62,6 +72,9 @@ export default function reducer(state = defaultState, action) {
 			error: undefined,
 		};
 	case POST_LOGIN_SUCCESS:
+		if (!isDev) {
+			Raven.setUserContext({ username: action.result.slug });
+		}
 		return {
 			data: action.result,
 			isLoading: false,
@@ -77,6 +90,9 @@ export default function reducer(state = defaultState, action) {
 	case GET_LOGOUT_FAIL:
 		return state;
 	case GET_LOGOUT_SUCCESS:
+		if (!isDev) {
+			Raven.setUserContext();
+		}
 		return defaultState;
 	default:
 		return state;
