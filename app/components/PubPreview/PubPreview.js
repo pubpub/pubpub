@@ -50,7 +50,7 @@ const PubPreview = function(props) {
 	const pubLink = props.communityData ? `https://${communityHostname}/pub/${props.slug}` : `/pub/${props.slug}`;
 	return (
 		<div className={`pub-preview ${props.isLarge ? 'large-preview' : ''} ${props.isMinimal ? 'minimal-preview' : ''}`}>
-			{!props.isMinimal && props.communityData &&
+			{!props.isMinimal &&
 				<Link to={pubLink}>
 					<div className={'preview-banner'} style={bannerStyle} />
 				</Link>
