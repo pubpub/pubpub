@@ -57,23 +57,23 @@ const PubCollabHeader = function(props) {
 				<div className={'flex-center tags'}>
 					<div className={'tags-wrapper'}>
 						{props.pubData.collections.map((collection)=> {
-							if (!props.canManage) {
+							if (props.isAdmin) {
 								return (
-									<Link to={`/${collection.slug}`} key={`collection-${collection.id}`} className={'pt-tag pt-minimal pt-intent-primary'}>
+									<div tabIndex={0} role={'button'} key={`collection-${collection.id}`} className={'pt-tag pt-minimal pt-intent-primary'} onClick={props.onCollectionsClick}>
 										{collection.title}
 										{!collection.isPublic &&
 											<span className={'pt-icon-standard pt-icon-lock'} />
 										}
-									</Link>
+									</div>
 								);
 							}
 							return (
-								<div tabIndex={0} role={'button'} key={`collection-${collection.id}`} className={'pt-tag pt-minimal pt-intent-primary'} onClick={props.onCollectionsClick}>
+								<Link to={`/${collection.slug}`} key={`collection-${collection.id}`} className={'pt-tag pt-minimal pt-intent-primary'}>
 									{collection.title}
 									{!collection.isPublic &&
 										<span className={'pt-icon-standard pt-icon-lock'} />
 									}
-								</div>
+								</Link>
 							);
 						})}
 					</div>
