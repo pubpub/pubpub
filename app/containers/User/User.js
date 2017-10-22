@@ -48,14 +48,17 @@ class User extends Component {
 	}
 	render() {
 		const userData = this.props.userData.data || {};
+		const pubs = userData.pubs || [];
 		const loginData = this.props.loginData.data || {};
 		const selfProfile = loginData.id && userData.id === loginData.id;
 		const mode = this.props.match.params.mode;
-		const communityPubs = userData.pubs
-			? userData.pubs.filter((pub)=> {
-				return pub.communityId === this.props.appData.data.id;
-			})
-			: [];
+		const localCommunityId = this.props.appData.data.id;
+		const communityPubs = pubs.filter((pub)=> {
+			return !localCommunityId || pub.communityId === localCommunityId;
+		});
+		const externalPubs = pubs.filter((pub)=> {
+			return localCommunityId && pub.communityId !== localCommunityId;
+		});
 
 		if (!userData.id) {
 			return <UserLoading />;
@@ -93,13 +96,26 @@ class User extends Component {
 						</div>
 					</div>
 				</div>
-
+				{!!externalPubs.length &&
+					<div className={'container narrow nav'}>
+						<div className={'row'}>
+							<div className={'col-12'}>
+								<div className={'pt-callout external-pubs-wrapper'}>
+									<Link to={'/'} className={'pt-button pt-intent-primary'}>Go to Full Profile</Link>
+									<h5>{externalPubs.length} pub{externalPubs.length === 1 ? '' : 's'} in other communities.</h5>
+									<div>{userData.firstName} has published in other PubPub communities. Click to go to their full profile.</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				}
 				<div className={'container narrow content'}>
 					{communityPubs.map((pub)=> {
 						return (
 							<div key={`pub-${pub.id}`} className={'row'}>
 								<div className={'col-12'}>
 									<PubPreview
+										communityData={localCommunityId ? undefined : pub.community}
 										title={pub.title}
 										description={pub.description}
 										slug={pub.slug}
