@@ -264,7 +264,7 @@ class PubCollaboration extends Component {
 		if (pubData.adminPermissions === 'manage' && loginData.isAdmin) { canManage = true; }
 
 		let canDelete = false;
-		if (canManage && !pubData.isPublished) { canDelete = true; }
+		if (canManage && !pubData.publishedAt) { canDelete = true; }
 		if (pubData.adminPermissions === 'manage' && loginData.isAdmin) { canDelete = true; }
 
 		if (this.props.pubData.isLoading) {

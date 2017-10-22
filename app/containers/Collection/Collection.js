@@ -75,11 +75,11 @@ class Collection extends Component {
 		}, undefined);
 		if (!title) { return <NoMatch />; }
 		const numPublished = collectionData.pubs.reduce((prev, curr)=> {
-			if (curr.isPublished) { return prev + 1; }
+			if (!!curr.publishedAt) { return prev + 1; }
 			return prev;
 		}, 0);
 		const publicDrafts = collectionData.pubs.filter((item)=> {
-			return !item.isPublished;
+			return !item.publishedAt;
 		}).sort((foo, bar)=> {
 			if (foo.updatedAt > bar.updatedAt) { return -1; }
 			if (foo.updatedAt < bar.updatedAt) { return 1; }
@@ -140,7 +140,7 @@ class Collection extends Component {
 						{!!collectionData.id &&
 							<div className={'published-pubs-wrapper'}>
 								{collectionData.pubs.filter((item)=> {
-									return item.isPublished;
+									return !!item.publishedAt;
 								}).sort((foo, bar)=> {
 									if (foo.updatedAt > bar.updatedAt) { return -1; }
 									if (foo.updatedAt < bar.updatedAt) { return 1; }

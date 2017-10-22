@@ -4,7 +4,7 @@ export default {
 	title: 'Persevering scalable extranet',
 	description: 'Eveniet non quae inventore asperiores qui eius. Voluptatem nulla natus ad. Qui totam sunt nesciunt aut suscipit quibusdam officiis illum aspernatur. Non voluptas sed quisquam distinctio. Aliquam excepturi dolores dolorem excepturi occaecati. Consequatur voluptas asperiores libero',
 	avatar: 'http://lorempixel.com/480/480/?rand=7692',
-	isPublished: true,
+	publishedAt: '2017-09-01T13:45:13.147Z',
 	headerImage: 'http://lorempixel.com/1200/480/?rand=5488',
 	createdAt: '2017-09-01T13:45:13.147Z',
 	updatedAt: '2017-09-01T13:45:13.147Z',
