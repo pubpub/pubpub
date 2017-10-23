@@ -1,0 +1,30 @@
+@media print {
+	body {
+		font-size: 12px;
+		.header,
+		.nav-bar,
+		.pub-pres-footer,
+		.footer {
+			display: none;
+		}
+		.pub-pres-header {
+			background-image: none !important;
+			color: #333 !important;
+			.wrapper {
+				padding: 2em 0em 1em !important;
+				&.dim {
+					background-color: transparent;
+				}
+			}
+		}
+		.pub-pres-details {
+			.container {
+				border-top: 1px solid #E0E0E0;
+				border-bottom: 1px solid #E0E0E0;	
+			}
+		}
+		.pub-body {
+			font-size: 12px;
+		}
+	}
+}
