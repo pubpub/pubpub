@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import app from './app';
 import collection from './collection';
 import login from './login';
+import passwordReset from './passwordReset';
 import pub from './pub';
 import pubCreate from './pubCreate';
 import search from './search';
@@ -13,6 +14,7 @@ export default combineReducers({
 	app,
 	collection,
 	login,
+	passwordReset,
 	pub,
 	pubCreate,
 	search,
