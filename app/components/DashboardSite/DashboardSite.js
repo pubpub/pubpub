@@ -51,7 +51,7 @@ class DashboardSite extends Component {
 		this.setState({ title: evt.target.value });
 	}
 	handleSubdomainChange(evt) {
-		this.setState({ subdomain: evt.target.value.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase() });
+		this.setState({ subdomain: evt.target.value.replace(/[^a-zA-Z0-9-]/gi, '').replace(/ /g, '-').toLowerCase() });
 	}
 	handleDescriptionChange(evt) {
 		this.setState({ description: evt.target.value.substring(0, 280).replace(/\n/g, ' ') });

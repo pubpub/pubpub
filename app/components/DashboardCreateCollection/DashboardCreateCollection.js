@@ -42,7 +42,7 @@ class DashboardCreateCollection extends Component {
 	}
 	handleSlugChange(evt) {
 		this.setState({
-			slug: evt.target.value.replace(/[^\w\s-]/gi, '').replace(/ /g, '-').toLowerCase()
+			slug: evt.target.value.replace(/[^a-zA-Z0-9-]/gi, '').replace(/ /g, '-').toLowerCase()
 		});
 	}
 	handleDescriptionChange(evt) {
