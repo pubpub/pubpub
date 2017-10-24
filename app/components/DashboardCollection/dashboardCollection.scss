@@ -89,9 +89,12 @@
 	.date, .activity {
 		white-space: nowrap;
 	}
-	.layout-preview {
+	.layout {
 		padding-top: 4em;
 		border-top: 1px solid #CCC;
+		a {
+			text-decoration: underline;
+		}
 	}
 
 }

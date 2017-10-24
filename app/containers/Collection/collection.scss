@@ -21,6 +21,11 @@
 		max-width: 800px;
 		line-height: 1.4;
 	}
+	.layout {
+		a {
+			text-decoration: underline;
+		}
+	}
 	.working-drafts-wrapper {
 		margin: 2em 0em;
 		.working-drafts-header {
