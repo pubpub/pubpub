@@ -7,6 +7,9 @@
 		.footer {
 			display: none;
 		}
+		.route-content {
+			padding-top: 0px;
+		}
 		.pub-pres-header {
 			background-image: none !important;
 			color: #333 !important;
@@ -23,8 +26,30 @@
 				border-bottom: 1px solid #E0E0E0;	
 			}
 		}
-		.pub-body {
+		.pub-body, .pub-body .pub-collab-editor {
 			font-size: 12px;
 		}
+		.container {
+			max-width: none !important;
+		}
+		.pub-collaboration {
+			.upper {
+				position: static;
+			}
+			.lower {
+				padding-top: 0px;
+				background-color: transparent;
+			}
+			.side-panel {
+				display: none;
+			}
+			.content-panel {
+				margin-right: 0px;
+				padding-left: 0px;
+				padding-right: 0px;
+				border: 0px solid transparent;
+			}
+		}
+		
 	}
 }
