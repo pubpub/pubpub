@@ -77,6 +77,7 @@ class Login extends Component {
 									type={'password'}
 									value={this.state.password}
 									onChange={this.onPasswordChange}
+									helperText={<Link to={'/password-reset'}>Forgot Password</Link>}
 								/>
 								<InputField error={this.props.loginData.error}>
 									<Button

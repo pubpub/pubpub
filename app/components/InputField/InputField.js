@@ -9,7 +9,7 @@ const propTypes = {
 	isRequired: PropTypes.bool,
 	isDisabled: PropTypes.bool,
 	isTextarea: PropTypes.bool,
-	helperText: PropTypes.string,
+	helperText: PropTypes.node,
 	error: PropTypes.string,
 	value: PropTypes.string,
 	type: PropTypes.string,
