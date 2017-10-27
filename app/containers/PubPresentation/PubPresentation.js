@@ -115,6 +115,22 @@ class PubPresentation extends Component {
 
 				<Helmet>
 					<title>{pubData.title}</title>
+					<meta name={'description'} content={pubData.description} />
+					<meta name={'og:title'} content={pubData.title} />
+					<meta property={'og:type'} content={'article'} />
+					<meta property={'og:description'} content={pubData.description} />
+					<meta property={'og:url'} content={`${window.location.origin}/pub/${pubData.slug}`} />
+					<meta property={'og:image'} content={pubData.avatar} />
+					<meta property={'og:image:url'} content={pubData.avatar} />
+					<meta property={'og:image:width'} content={'500'} />
+					<meta property={'article:published_time'} content={pubData.publishedAt} />
+					<meta property={'article:modified_time'} content={pubData.publishedAt} />
+					<meta name={'twitter:card'} content={'summary'} />
+					<meta name={'twitter:site'} content={'@pubpub'} />
+					<meta name={'twitter:title'} content={pubData.title} />
+					<meta name={'twitter:description'} content={pubData.description} />
+					<meta name={'twitter:image'} content={pubData.avatar} />
+					<meta name={'twitter:image:alt'} content={`Avatar for ${pubData.title}`} />
 				</Helmet>
 
 				<PubPresHeader

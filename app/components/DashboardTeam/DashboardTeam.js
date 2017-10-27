@@ -26,10 +26,12 @@ class DashboardTeam extends Component {
 		this.handleAdminRemove = this.handleAdminRemove.bind(this);
 	}
 	handleAdminAdd(user) {
-		this.props.onAddAdmin({
-			userId: user.id,
-			communityId: this.props.appData.id,
-		});
+		if (user) {
+			this.props.onAddAdmin({
+				userId: user.id,
+				communityId: this.props.appData.id,
+			});
+		}
 	}
 	handleAdminRemove(userId) {
 		this.props.onRemoveAdmin({
