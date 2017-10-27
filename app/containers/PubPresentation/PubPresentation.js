@@ -75,6 +75,7 @@ class PubPresentation extends Component {
 		const pubData = this.props.pubData.data || { versions: [] };
 		if (this.props.pubData.isLoading) { return <PubPresentationLoading />; }
 
+		window.prerenderReady = true;
 		if (!pubData.id) { return <NoMatch />; }
 		if (!pubData.versions.length) {
 			return (
@@ -125,6 +126,7 @@ class PubPresentation extends Component {
 					<meta property={'og:image:width'} content={'500'} />
 					<meta property={'article:published_time'} content={pubData.publishedAt} />
 					<meta property={'article:modified_time'} content={pubData.publishedAt} />
+					<meta property={'fb:app_id'} content={'924988584221879'} />
 					<meta name={'twitter:card'} content={'summary'} />
 					<meta name={'twitter:site'} content={'@pubpub'} />
 					<meta name={'twitter:title'} content={pubData.title} />
