@@ -5,6 +5,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="fragment" content="!">
 		<script src="https://cdn.ravenjs.com/3.15.0/raven.min.js"></script>
+		<script>window.prerenderReady = false;</script>
+		<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=fetch,Object.entries"></script>
+		<!-- Object.entries polyfill is needed because prosemirror-compress uses it. Fix that and remove poly -->
 	</head>
 	<body>
 		<noscript>
@@ -13,9 +16,6 @@
 		
 		<react />
 		
-		<script>window.prerenderReady = false;</script>
-		<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=fetch,Object.entries"></script>
-		<!-- Object.entries polyfill is needed because prosemirror-compress uses it. Fix that and remove poly -->
 	</body>
 </html>
 

@@ -113,7 +113,7 @@ class PubPresentation extends Component {
 		return (
 			<div className={'pub-presentation'}>
 
-				<Helmet ref={()=>{ setTimeout(()=>{ window.prerenderReady = true; }, 1) }}>
+				<Helmet ref={()=>{ setTimeout(()=>{ window.prerenderReady = true; }, 1); }}>
 					<title>{pubData.title}</title>
 					<meta name={'description'} content={pubData.description} />
 					<meta name={'og:title'} content={pubData.title} />
