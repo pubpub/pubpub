@@ -75,7 +75,6 @@ class PubPresentation extends Component {
 		const pubData = this.props.pubData.data || { versions: [] };
 		if (this.props.pubData.isLoading) { return <PubPresentationLoading />; }
 
-		window.prerenderReady = true;
 		if (!pubData.id) { return <NoMatch />; }
 		if (!pubData.versions.length) {
 			return (
@@ -114,7 +113,7 @@ class PubPresentation extends Component {
 		return (
 			<div className={'pub-presentation'}>
 
-				<Helmet>
+				<Helmet ref={()=>{setTimeout(()=>{window.prerenderReady = true; debugger;}, 1)}}>
 					<title>{pubData.title}</title>
 					<meta name={'description'} content={pubData.description} />
 					<meta name={'og:title'} content={pubData.title} />
