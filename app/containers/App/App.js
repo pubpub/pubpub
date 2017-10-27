@@ -49,6 +49,7 @@ class App extends Component {
 	}
 
 	componentWillMount() {
+		window.prerenderReady = false;
 		this.props.dispatch(getAppData(this.hostname));
 	}
 
