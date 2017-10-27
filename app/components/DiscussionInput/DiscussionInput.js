@@ -65,7 +65,6 @@ class DiscussionInput extends Component {
 		}).map((item)=> {
 			return item.attrs;
 		});
-		console.log(highlights);
 		this.props.handleSubmit({
 			title: this.state.title,
 			content: this.state.body,

@@ -174,7 +174,6 @@ class PubCollaboration extends Component {
 		});
 	}
 	handleHighlightClick(threadNumber) {
-		console.log(threadNumber);
 		if (threadNumber) {
 			this.props.history.push(`${this.props.location.pathname}?thread=${threadNumber}`);
 		}
@@ -193,7 +192,6 @@ class PubCollaboration extends Component {
 		}));
 	}
 	handlePostDiscussion(discussionObject) {
-		console.log('in post', discussionObject);
 		this.props.dispatch(postDiscussion({
 			...discussionObject,
 			communityId: this.props.pubData.data.communityId,
