@@ -5,9 +5,10 @@ import { Link } from 'react-router-dom';
 import { Button } from '@blueprintjs/core';
 import Avatar from 'components/Avatar/Avatar';
 import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
-import DropdownButton from 'components/DropdownButton/DropdownButton';
+// import DropdownButton from 'components/DropdownButton/DropdownButton';
 import { Editor } from '@pubpub/editor';
-import DiscussionInput from 'components/DiscussionInput/DiscussionInput';
+import HighlightQuote from '@pubpub/editor/addons/HighlightQuote';
+// import DiscussionInput from 'components/DiscussionInput/DiscussionInput';
 
 require('./discussionThreadItem.scss');
 
@@ -15,11 +16,13 @@ const propTypes = {
 	discussion: PropTypes.object.isRequired,
 	isAuthor: PropTypes.bool,
 	onReplyEdit: PropTypes.func,
+	getHighlightContent: PropTypes.func,
 	
 };
 const defaultProps = {
 	isAuthor: false,
 	onReplyEdit: ()=> {},
+	getHighlightContent: undefined,
 };
 
 class DiscussionThreadItem extends Component {
@@ -46,7 +49,7 @@ class DiscussionThreadItem extends Component {
 				isEditing: false,
 				body: nextProps.discussion.content,
 				isLoading: false,
-			})
+			});
 		}
 	}
 
@@ -68,12 +71,18 @@ class DiscussionThreadItem extends Component {
 	onSubmit(evt) {
 		evt.preventDefault();
 		this.setState({ isLoading: true });
+		const highlights = this.editorRef.view.state.doc.content.content.filter((item)=> {
+			return item.type.name === 'highlightQuote';
+		}).map((item)=> {
+			return item.attrs;
+		});
 		this.props.onReplyEdit({
 			content: this.state.body,
 			text: this.editorRef.view.state.doc.textContent,
 			pubId: this.props.discussion.pubId,
 			discussionId: this.props.discussion.id,
 			userId: this.props.discussion.userId,
+			highlights: highlights.length ? highlights : undefined,
 		});
 	}
 
@@ -147,6 +156,9 @@ class DiscussionThreadItem extends Component {
 						{this.state.isEditing &&
 							<FormattingMenu include={['link']}/>
 						}
+						<HighlightQuote
+							getHighlightContent={this.props.getHighlightContent}
+						/>
 					</Editor>
 				</div>
 				{this.state.isEditing &&

@@ -10,6 +10,7 @@ import File from '@pubpub/editor/addons/File';
 import Iframe from '@pubpub/editor/addons/Iframe';
 import Latex from '@pubpub/editor/addons/Latex';
 import Footnote from '@pubpub/editor/addons/Footnote';
+import HighlightMenu from '@pubpub/editor/addons/HighlightMenu';
 import Citation from '@pubpub/editor/addons/Citation';
 import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import Discussion from 'components/DiscussionAddon/DiscussionAddon';
@@ -20,14 +21,18 @@ const propTypes = {
 	clientData: PropTypes.object.isRequired,
 	editorKey: PropTypes.string.isRequired,
 	onClientChange: PropTypes.func.isRequired,
+	onNewHighlightDiscussion: PropTypes.func.isRequired,
+	onHighlightClick: PropTypes.func.isRequired,
 	isReadOnly: PropTypes.bool,
 	threads: PropTypes.array,
+	highlights: PropTypes.array,
 	slug: PropTypes.string,
 };
 const defaultProps = {
 	isReadOnly: false,
 	threads: [],
 	slug: '',
+	highlights: undefined,
 };
 
 const contextTypes = {
@@ -40,9 +45,19 @@ class PubCollabEditor extends Component {
 		this.state = {
 			error: undefined,
 		};
+		this.findThreadNumberFromHighlightId = this.findThreadNumberFromHighlightId.bind(this);
 	}
 	componentDidCatch(error, info) {
 		this.setState({ error: true });
+	}
+	findThreadNumberFromHighlightId(highlightId) {
+		const threadNumber = this.props.highlights.reduce((prev, curr)=> {
+			console.log(curr);
+			if (curr.id === highlightId) { return curr.threadNumber; }
+			return prev;
+		}, undefined);
+		this.props.onHighlightClick(threadNumber);
+
 	}
 	render() {
 		if (this.state.error) {
@@ -97,6 +112,12 @@ class PubCollabEditor extends Component {
 					<Iframe />
 					<Latex />
 					<Footnote />
+					<HighlightMenu
+						highlights={this.props.highlights}
+						primaryEditorClassName={'pub-collab-editor'}
+						onNewDiscussion={this.props.onNewHighlightDiscussion}
+						onSelectionClick={this.findThreadNumberFromHighlightId}
+					/>
 					<Citation formatFunction={formatCitationString} />
 					<Discussion
 						threads={this.props.threads}

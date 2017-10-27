@@ -9,11 +9,15 @@ const propTypes = {
 	pubId: PropTypes.string.isRequired,
 	slug: PropTypes.string.isRequired,
 	loginData: PropTypes.object,
+	initialContent: PropTypes.object,
+	getHighlightContent: PropTypes.func,
 	pathname: PropTypes.string.isRequired,
 	handleDiscussionSubmit: PropTypes.func.isRequired,
 	submitIsLoading: PropTypes.bool,
 };
 const defaultProps = {
+	initialContent: undefined,
+	getHighlightContent: undefined,
 	loginData: {},
 	submitIsLoading: false,
 };
@@ -27,6 +31,7 @@ const DiscussionNew = function(props) {
 			content: replyObject.content,
 			text: replyObject.text,
 			isPublic: replyObject.isPublic,
+			highlights: replyObject.highlights,
 		});
 	}
 
@@ -46,9 +51,11 @@ const DiscussionNew = function(props) {
 
 			<div className={props.loginData.id ? '' : 'disabled'}>
 				<DiscussionInput
+					initialContent={props.initialContent}
 					handleSubmit={onDiscussionSubmit}
 					showTitle={true}
 					submitIsLoading={props.submitIsLoading}
+					getHighlightContent={props.getHighlightContent}
 				/>
 			</div>
 

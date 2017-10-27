@@ -30,6 +30,8 @@ const AccentStyle = function(props) {
 			.pub-body sup.footnote { color: ${props.accentColor}; }
 			.pub-body span.citation { color: ${props.accentColor}; }
 			.footnote-text a { color: ${props.accentActionColor}; text-decoration: underline; }
+			.cite-deco:before, .highlight-quote .highlight-text { background-color: ${props.accentMinimalColor}; }
+			.things-wrapper .thing { background-color: ${props.accentColor}; }
 		`}</style>
 	);
 };

@@ -20,6 +20,7 @@ const propTypes = {
 	isPresentation: PropTypes.bool,
 	onPublish: PropTypes.func,
 	publishIsLoading: PropTypes.bool,
+	getHighlightContent: PropTypes.func,
 };
 const defaultProps = {
 	canManage: false,
@@ -28,6 +29,7 @@ const defaultProps = {
 	isPresentation: false,
 	onPublish: ()=>{},
 	publishIsLoading: false,
+	getHighlightContent: undefined,
 };
 
 class DiscussionThread extends Component {
@@ -131,7 +133,8 @@ class DiscussionThread extends Component {
 			isPublic: this.props.discussions[0].isPublic,
 			pubId: this.props.discussions[0].pubId,
 			content: replyObject.content,
-			text: replyObject.text
+			text: replyObject.text,
+			highlights: replyObject.highlights,
 		});
 	}
 	handlePublish() {
@@ -268,6 +271,7 @@ class DiscussionThread extends Component {
 								discussion={discussion}
 								isAuthor={isArchived ? false : discussion.userId === this.props.loginData.id}
 								onReplyEdit={this.props.handleReplyEdit}
+								getHighlightContent={this.props.getHighlightContent}
 							/>
 						);
 					})}
@@ -276,7 +280,11 @@ class DiscussionThread extends Component {
 				{!isArchived &&
 					<div>
 						{this.props.loginData.id
-							? <DiscussionInput handleSubmit={this.onReplySubmit} submitIsLoading={this.props.submitIsLoading} />
+							? <DiscussionInput
+								handleSubmit={this.onReplySubmit}
+								submitIsLoading={this.props.submitIsLoading}
+								getHighlightContent={this.props.getHighlightContent}
+							/>
 							: <Link to={`/login?redirect=${this.props.pathname}`} className={'pt-button pt-fill'}>
 								Login to Reply
 							</Link>

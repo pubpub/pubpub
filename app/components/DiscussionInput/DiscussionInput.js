@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 import { Editor } from '@pubpub/editor';
 import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
+import HighlightQuote from '@pubpub/editor/addons/HighlightQuote';
 import DropdownRichItem from 'components/DropdownRichItem/DropdownRichItem';
 import FormattingHelp from 'components/FormattingHelp/FormattingHelp';
 
@@ -13,12 +14,14 @@ const propTypes = {
 	showTitle: PropTypes.bool,
 	initialContent: PropTypes.object,
 	submitIsLoading: PropTypes.bool,
+	getHighlightContent: PropTypes.func,
 };
 
 const defaultProps = {
 	showTitle: false,
 	initialContent: undefined,
 	submitIsLoading: false,
+	getHighlightContent: undefined,
 };
 
 class DiscussionInput extends Component {
@@ -57,11 +60,18 @@ class DiscussionInput extends Component {
 
 	onSubmit(evt) {
 		evt.preventDefault();
+		const highlights = this.editorRef.view.state.doc.content.content.filter((item)=> {
+			return item.type.name === 'highlightQuote';
+		}).map((item)=> {
+			return item.attrs;
+		});
+		console.log(highlights);
 		this.props.handleSubmit({
 			title: this.state.title,
 			content: this.state.body,
 			text: this.editorRef.view.state.doc.textContent,
 			isPublic: this.state.isPublic,
+			highlights: highlights.length ? highlights : undefined,
 		});
 	}
 
@@ -85,6 +95,9 @@ class DiscussionInput extends Component {
 						initialContent={this.props.initialContent}
 					>
 						<FormattingMenu include={['link']} />
+						<HighlightQuote
+							getHighlightContent={this.props.getHighlightContent}
+						/>
 					</Editor>
 				</div>
 				<div className={'buttons'}>

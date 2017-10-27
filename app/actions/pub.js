@@ -123,7 +123,7 @@ export function deletePub({ pubId, communityId }) {
 	};
 }
 
-export function postDiscussion({ title, content, text, userId, pubId, communityId, threadNumber, isPublic, submitHash }) {
+export function postDiscussion({ title, content, text, userId, pubId, communityId, threadNumber, isPublic, submitHash, highlights }) {
 	return (dispatch) => {
 		dispatch({ type: POST_DISCUSSION_LOAD });
 		return apiFetch('/discussions', {
@@ -141,7 +141,8 @@ export function postDiscussion({ title, content, text, userId, pubId, communityI
 				communityId: communityId,
 				threadNumber: threadNumber,
 				isPublic: isPublic,
-				submitHash: submitHash
+				submitHash: submitHash,
+				highlights: highlights
 			})
 		})
 		.then((result) => {
@@ -153,7 +154,7 @@ export function postDiscussion({ title, content, text, userId, pubId, communityI
 	};
 }
 
-export function putDiscussion({ title, content, text, isArchived, pubId, communityId, discussionId, userId }) {
+export function putDiscussion({ title, content, text, isArchived, pubId, communityId, discussionId, userId, highlights }) {
 	return (dispatch) => {
 		dispatch({ type: PUT_DISCUSSION_LOAD });
 		return apiFetch('/discussions', {
@@ -171,6 +172,7 @@ export function putDiscussion({ title, content, text, isArchived, pubId, communi
 				communityId,
 				discussionId,
 				userId,
+				highlights
 			})
 		})
 		.then((result) => {

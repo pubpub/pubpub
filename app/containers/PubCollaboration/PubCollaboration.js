@@ -20,7 +20,7 @@ import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionPreviewArchived from 'components/DiscussionPreviewArchived/DiscussionPreviewArchived';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import { getPubData, putPubData, deletePub, postDiscussion, putDiscussion, postCollaborator, putCollaborator, deleteCollaborator, postVersion, postCollectionPub, deleteCollectionPub } from 'actions/pub';
-import { nestDiscussionsToThreads, getRandomColor } from 'utilities';
+import { nestDiscussionsToThreads, getRandomColor, generateHash } from 'utilities';
 
 require('./pubCollaboration.scss');
 require('components/PubBody/pubBody.scss');
@@ -58,6 +58,7 @@ class PubCollaboration extends Component {
 			isCollectionsOpen: false,
 			isArchivedVisible: false,
 			activeCollaborators: [this.localUser],
+			initNewDoc: undefined,
 		};
 		this.editorRef = undefined;
 		this.togglePublish = this.togglePublish.bind(this);
@@ -80,7 +81,10 @@ class PubCollaboration extends Component {
 		this.handlePublish = this.handlePublish.bind(this);
 		this.handleClientChange = this.handleClientChange.bind(this);
 		this.handleAddCollection = this.handleAddCollection.bind(this);
+		this.handleNewHighlightDiscussion = this.handleNewHighlightDiscussion.bind(this);
 		this.handleRemoveCollection = this.handleRemoveCollection.bind(this);
+		this.handleHighlightClick = this.handleHighlightClick.bind(this);
+		this.getHighlightContent = this.getHighlightContent.bind(this);
 		// this.focusEditor = this.focusEditor.bind(this);
 	}
 	componentWillMount() {
@@ -107,6 +111,11 @@ class PubCollaboration extends Component {
 		if (this.props.pubData.deletePubIsLoading && !nextProps.pubData.deletePubIsLoading) {
 			this.props.history.push('/');
 		}
+		const queryObject = queryString.parse(this.props.location.search);
+		const nextQueryObject = queryString.parse(nextProps.location.search);
+		if (queryObject.thread === 'new' && nextQueryObject.thread !== 'new') {
+			this.setState({ initNewDoc: undefined });
+		}
 	}
 	componentWillUnmount() {
 		// this.props.dispatch(clearPubData());
@@ -132,6 +141,43 @@ class PubCollaboration extends Component {
 	toggleArchivedVisible() {
 		this.setState({ isArchivedVisible: !this.state.isArchivedVisible });
 	}
+	getHighlightContent(from, to) {
+		const primaryEditorState = this.editorRef.state.editorState;
+		let exact = '';
+		primaryEditorState.doc.slice(from, to).content.forEach((sliceNode)=>{ exact += sliceNode.textContent; });
+		let prefix = '';
+		primaryEditorState.doc.slice(Math.max(0, from - 10), Math.max(0, from)).content.forEach((sliceNode)=>{ prefix += sliceNode.textContent; });
+		let suffix = '';
+		primaryEditorState.doc.slice(Math.min(primaryEditorState.doc.nodeSize - 2, to), Math.min(primaryEditorState.doc.nodeSize - 2, to + 10)).content.forEach((sliceNode)=>{ suffix += sliceNode.textContent; });
+		return {
+			exact: exact,
+			prefix: prefix,
+			suffix: suffix,
+			from: from,
+			to: to,
+			version: undefined,
+			id: `h${generateHash(8)}`, // Has to start with letter since it's a classname
+		};
+	}
+	handleNewHighlightDiscussion(highlightObject) {
+		this.props.history.push(`${this.props.location.pathname}?thread=new`);
+		this.setState({
+			initNewDoc: {
+				type: 'doc',
+				attrs: { meta: {} },
+				content: [
+					{ type: 'highlightQuote', attrs: { ...highlightObject, id: `h${generateHash(8)}` } },
+					{ type: 'paragraph', content: [] },
+				]
+			}
+		});
+	}
+	handleHighlightClick(threadNumber) {
+		console.log(threadNumber);
+		if (threadNumber) {
+			this.props.history.push(`${this.props.location.pathname}?thread=${threadNumber}`);	
+		}
+	}
 	handleDetailsSave(detailsObject) {
 		this.props.dispatch(putPubData({
 			...detailsObject,
@@ -146,6 +192,7 @@ class PubCollaboration extends Component {
 		}));
 	}
 	handlePostDiscussion(discussionObject) {
+		console.log('in post', discussionObject);
 		this.props.dispatch(postDiscussion({
 			...discussionObject,
 			communityId: this.props.pubData.data.communityId,
@@ -294,7 +341,16 @@ class PubCollaboration extends Component {
 		if (!pubData.id) {
 			return <NoMatch />;
 		}
-
+		const highlights = discussions.filter((item)=> {
+			return !item.isArchived && item.highlights;
+		}).reduce((prev, curr)=> {
+			const highlightsWithThread = curr.highlights.map((item)=> {
+				return { ...item, threadNumber: curr.threadNumber };
+			});
+			// console.log(curr, highlightsWithThread);
+			return [...prev, ...highlightsWithThread];
+		}, []);
+		console.log(highlights);
 		return (
 			<div className={'pub-collaboration'}>
 				<Helmet>
@@ -344,7 +400,9 @@ class PubCollaboration extends Component {
 												slug={pubData.slug}
 												loginData={this.props.loginData.data}
 												pathname={`${this.props.location.pathname}${this.props.location.search}`}
+												initialContent={this.state.initNewDoc}
 												handleDiscussionSubmit={this.handlePostDiscussion}
+												getHighlightContent={this.getHighlightContent}
 												submitIsLoading={this.props.pubData.postDiscussionIsLoading}
 											/>
 										}
@@ -394,6 +452,7 @@ class PubCollaboration extends Component {
 												submitIsLoading={this.props.pubData.postDiscussionIsLoading}
 												onPublish={this.handlePublish}
 												publishIsLoading={this.props.pubData.postVersionIsLoading}
+												getHighlightContent={this.getHighlightContent}
 											/>
 										}
 										{threads.length === 0 && !queryObject.thread &&
@@ -423,6 +482,9 @@ class PubCollaboration extends Component {
 											isReadOnly={!canManage && pubData.localPermissions !== 'edit'}
 											clientData={this.state.activeCollaborators[0]}
 											onClientChange={this.handleClientChange}
+											onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
+											onHighlightClick={this.handleHighlightClick}
+											highlights={highlights}
 											threads={threads}
 											slug={pubData.slug}
 										/>
