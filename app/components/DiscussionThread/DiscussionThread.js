@@ -21,6 +21,7 @@ const propTypes = {
 	onPublish: PropTypes.func,
 	publishIsLoading: PropTypes.bool,
 	getHighlightContent: PropTypes.func,
+	hoverBackgroundColor: PropTypes.string,
 };
 const defaultProps = {
 	canManage: false,
@@ -30,6 +31,7 @@ const defaultProps = {
 	onPublish: ()=>{},
 	publishIsLoading: false,
 	getHighlightContent: undefined,
+	hoverBackgroundColor: undefined,
 };
 
 class DiscussionThread extends Component {
@@ -272,6 +274,7 @@ class DiscussionThread extends Component {
 								isAuthor={isArchived ? false : discussion.userId === this.props.loginData.id}
 								onReplyEdit={this.props.handleReplyEdit}
 								getHighlightContent={this.props.getHighlightContent}
+								hoverBackgroundColor={this.props.hoverBackgroundColor}
 							/>
 						);
 					})}

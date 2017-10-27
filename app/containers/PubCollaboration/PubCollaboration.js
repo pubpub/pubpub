@@ -143,6 +143,7 @@ class PubCollaboration extends Component {
 	}
 	getHighlightContent(from, to) {
 		const primaryEditorState = this.editorRef.state.editorState;
+		if (primaryEditorState.nodeSize < from || primaryEditorState.nodeSize < to) { return {}; }
 		let exact = '';
 		primaryEditorState.doc.slice(from, to).content.forEach((sliceNode)=>{ exact += sliceNode.textContent; });
 		let prefix = '';
@@ -175,7 +176,7 @@ class PubCollaboration extends Component {
 	handleHighlightClick(threadNumber) {
 		console.log(threadNumber);
 		if (threadNumber) {
-			this.props.history.push(`${this.props.location.pathname}?thread=${threadNumber}`);	
+			this.props.history.push(`${this.props.location.pathname}?thread=${threadNumber}`);
 		}
 	}
 	handleDetailsSave(detailsObject) {
@@ -350,7 +351,20 @@ class PubCollaboration extends Component {
 			// console.log(curr, highlightsWithThread);
 			return [...prev, ...highlightsWithThread];
 		}, []);
-		console.log(highlights);
+
+		if (this.editorRef && queryObject.from && queryObject.to) {
+			highlights.push({
+				...this.getHighlightContent(Number(queryObject.from), Number(queryObject.to)),
+				permanent: true,
+			});
+			setTimeout(()=> {
+				const thing = document.getElementsByClassName('permanent')[0];
+				if (thing) {
+					window.scrollTo(0, thing.getBoundingClientRect().top - 135);
+				}
+			}, 100);
+		}
+		
 		return (
 			<div className={'pub-collaboration'}>
 				<Helmet>
@@ -453,6 +467,7 @@ class PubCollaboration extends Component {
 												onPublish={this.handlePublish}
 												publishIsLoading={this.props.pubData.postVersionIsLoading}
 												getHighlightContent={this.getHighlightContent}
+												hoverBackgroundColor={this.props.appData.data.accentMinimalColor}
 											/>
 										}
 										{threads.length === 0 && !queryObject.thread &&

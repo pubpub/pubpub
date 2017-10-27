@@ -52,12 +52,10 @@ class PubCollabEditor extends Component {
 	}
 	findThreadNumberFromHighlightId(highlightId) {
 		const threadNumber = this.props.highlights.reduce((prev, curr)=> {
-			console.log(curr);
 			if (curr.id === highlightId) { return curr.threadNumber; }
 			return prev;
 		}, undefined);
 		this.props.onHighlightClick(threadNumber);
-
 	}
 	render() {
 		if (this.state.error) {

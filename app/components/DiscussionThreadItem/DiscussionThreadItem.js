@@ -17,12 +17,13 @@ const propTypes = {
 	isAuthor: PropTypes.bool,
 	onReplyEdit: PropTypes.func,
 	getHighlightContent: PropTypes.func,
-	
+	hoverBackgroundColor: PropTypes.string,
 };
 const defaultProps = {
 	isAuthor: false,
 	onReplyEdit: ()=> {},
 	getHighlightContent: undefined,
+	hoverBackgroundColor: undefined,
 };
 
 class DiscussionThreadItem extends Component {
@@ -154,10 +155,11 @@ class DiscussionThreadItem extends Component {
 						onChange={this.onBodyChange}
 					>
 						{this.state.isEditing &&
-							<FormattingMenu include={['link']}/>
+							<FormattingMenu include={['link']} />
 						}
 						<HighlightQuote
 							getHighlightContent={this.props.getHighlightContent}
+							hoverBackgroundColor={this.props.hoverBackgroundColor}
 						/>
 					</Editor>
 				</div>
