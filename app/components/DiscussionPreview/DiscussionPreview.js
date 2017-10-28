@@ -22,8 +22,8 @@ const DiscussionPreview = function(props) {
 	const hasSuggestions = props.discussions.reduce((prev, curr)=> {
 		return prev || curr.suggestions;
 	}, false);
-	const hasHighlight = props.discussions.reduce((prev, curr)=> {
-		return prev || curr.highlight;
+	const hasHighlights = props.discussions.reduce((prev, curr)=> {
+		return prev || curr.highlights;
 	}, false);
 	let submissionStatus = '';
 	const hasSubmission = props.discussions.reduce((prev, curr)=> {
@@ -54,7 +54,7 @@ const DiscussionPreview = function(props) {
 				{hasSuggestions &&
 					<span className={'pt-icon-standard pt-icon-doc'} />
 				}
-				{hasHighlight &&
+				{hasHighlights &&
 					<span className={'pt-icon-standard pt-icon-highlight'} />
 				}
 				{hasSubmission &&

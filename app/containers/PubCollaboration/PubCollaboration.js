@@ -144,12 +144,9 @@ class PubCollaboration extends Component {
 	getHighlightContent(from, to) {
 		const primaryEditorState = this.editorRef.state.editorState;
 		if (primaryEditorState.nodeSize < from || primaryEditorState.nodeSize < to) { return {}; }
-		let exact = '';
-		primaryEditorState.doc.slice(from, to).content.forEach((sliceNode)=>{ exact += sliceNode.textContent; });
-		let prefix = '';
-		primaryEditorState.doc.slice(Math.max(0, from - 10), Math.max(0, from)).content.forEach((sliceNode)=>{ prefix += sliceNode.textContent; });
-		let suffix = '';
-		primaryEditorState.doc.slice(Math.min(primaryEditorState.doc.nodeSize - 2, to), Math.min(primaryEditorState.doc.nodeSize - 2, to + 10)).content.forEach((sliceNode)=>{ suffix += sliceNode.textContent; });
+		const exact = primaryEditorState.doc.textBetween(from, to);
+		const prefix = primaryEditorState.doc.textBetween(Math.max(0, from - 10), Math.max(0, from));
+		const suffix = primaryEditorState.doc.textBetween(Math.min(primaryEditorState.doc.nodeSize - 2, to), Math.min(primaryEditorState.doc.nodeSize - 2, to + 10));
 		return {
 			exact: exact,
 			prefix: prefix,
@@ -362,7 +359,7 @@ class PubCollaboration extends Component {
 				}
 			}, 100);
 		}
-		
+
 		return (
 			<div className={'pub-collaboration'}>
 				<Helmet>
