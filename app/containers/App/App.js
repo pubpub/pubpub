@@ -49,10 +49,8 @@ class App extends Component {
 	}
 
 	componentWillMount() {
-		window.prerenderReady = false;
 		this.props.dispatch(getAppData(this.hostname));
 	}
-
 	handleLogout() {
 		this.props.dispatch(getLogout());
 		window.location.href = window.location.origin;

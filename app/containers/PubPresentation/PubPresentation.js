@@ -44,7 +44,6 @@ class PubPresentation extends Component {
 	componentWillMount() {
 		this.props.dispatch(getPubData(this.props.match.params.slug, this.props.appData.data.id));
 	}
-
 	closeThreadOverlay() {
 		const queryObject = queryString.parse(this.props.location.search);
 		queryObject.thread = undefined;
@@ -74,7 +73,6 @@ class PubPresentation extends Component {
 	render() {
 		const pubData = this.props.pubData.data || { versions: [] };
 		if (this.props.pubData.isLoading) { return <PubPresentationLoading />; }
-
 		if (!pubData.id) { return <NoMatch />; }
 		if (!pubData.versions.length) {
 			return (
@@ -113,7 +111,7 @@ class PubPresentation extends Component {
 		return (
 			<div className={'pub-presentation'}>
 
-				<Helmet ref={()=>{ setTimeout(()=>{ window.prerenderReady = true; }, 1); }}>
+				<Helmet>
 					<title>{pubData.title}</title>
 					<meta name={'description'} content={pubData.description} />
 					<meta name={'og:title'} content={pubData.title} />
