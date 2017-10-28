@@ -29,7 +29,6 @@ class Collection extends Component {
 		this.handleCreatePub = this.handleCreatePub.bind(this);
 	}
 	componentWillMount() {
-		// console.log(this.props.appData.data.id);
 		this.dispatchGetCollectionData(this.props);
 	}
 	componentWillReceiveProps(nextProps) {
@@ -75,7 +74,7 @@ class Collection extends Component {
 		}, undefined);
 		if (!title) { return <NoMatch />; }
 		const numPublished = collectionData.pubs.reduce((prev, curr)=> {
-			if (!!curr.publishedAt) { return prev + 1; }
+			if (curr.publishedAt) { return prev + 1; }
 			return prev;
 		}, 0);
 		const publicDrafts = collectionData.pubs.filter((item)=> {
@@ -92,6 +91,7 @@ class Collection extends Component {
 						{title !== 'Home' &&
 							<title>{title}</title>
 						}
+						<meta name={'description'} content={collectionData.description} />
 					</Helmet>
 
 					<div className={'container'}>
@@ -184,7 +184,7 @@ class Collection extends Component {
 										<div>The following are unpublished pubs that are open to collaboration.</div>
 									</div>
 								</div>
-								{publicDrafts.map((pub, index)=> {
+								{publicDrafts.map((pub)=> {
 									return (
 										<div className={'row'} key={`pub-${pub.id}`}>
 											<div className={'col-12'}>
