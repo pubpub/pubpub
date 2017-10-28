@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const extractSass = new ExtractTextPlugin({
 	filename: '[name].[contenthash].css',
@@ -13,6 +14,21 @@ module.exports = {
 	entry: {
 		main: resolve(__dirname, '../app'),
 		vendor: [
+			'@blueprintjs/core',
+			'@blueprintjs/labs',
+			'prosemirror-collab',
+			'prosemirror-commands',
+			'prosemirror-compre',
+			'prosemirror-gapcursor',
+			'prosemirror-history',
+			'prosemirror-inputrules',
+			'prosemirror-keymap',
+			'prosemirror-model',
+			'prosemirror-schema-list',
+			'prosemirror-schema-table',
+			'prosemirror-state',
+			'prosemirror-transform',
+			'prosemirror-view',
 			'react',
 			'react-code-splitting',
 			'react-dom',
@@ -63,6 +79,7 @@ module.exports = {
 		],
 	},
 	plugins: [
+		// new BundleAnalyzerPlugin(),
 		new webpack.DefinePlugin({
 			'process.env': {
 				NODE_ENV: JSON.stringify('production'),

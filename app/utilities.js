@@ -140,7 +140,7 @@ export function generateHash(length) {
 
 export function formatCitationString(item, callback) {
 	const urlPrefix = apiUrlPrefix();
-	const finalRoute = `${urlPrefix}/citations/format`;
+	const finalRoute = `${urlPrefix}/editor/citation-format`;
 	fetch(finalRoute, {
 		method: 'POST',
 		headers: {
@@ -149,6 +149,34 @@ export function formatCitationString(item, callback) {
 		},
 		body: JSON.stringify({
 			input: item
+		}),
+		credentials: 'include',
+	})
+	.then((response)=> {
+		if (!response.ok) {
+			return response.json().then((err)=> { throw err; });
+		}
+		return response.json();
+	})
+	.then((result) => {
+		callback(result);
+	})
+	.catch((error) => {
+		callback(error);
+	});
+}
+export function renderLatexString(value, isBlock, callback) {
+	const urlPrefix = apiUrlPrefix();
+	const finalRoute = `${urlPrefix}/editor/latex-render`;
+	fetch(finalRoute, {
+		method: 'POST',
+		headers: {
+			Accept: 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			value: value,
+			isBlock: isBlock,
 		}),
 		credentials: 'include',
 	})
