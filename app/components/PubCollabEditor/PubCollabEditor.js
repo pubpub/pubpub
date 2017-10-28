@@ -14,7 +14,7 @@ import HighlightMenu from '@pubpub/editor/addons/HighlightMenu';
 import Citation from '@pubpub/editor/addons/Citation';
 import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import Discussion from 'components/DiscussionAddon/DiscussionAddon';
-import { s3Upload, getFirebaseConfig, getResizedUrl, formatCitationString } from 'utilities';
+import { s3Upload, getFirebaseConfig, getResizedUrl, formatCitationString, renderLatexString  } from 'utilities';
 
 const propTypes = {
 	onRef: PropTypes.func.isRequired,
@@ -108,7 +108,7 @@ class PubCollabEditor extends Component {
 					<Video handleFileUpload={s3Upload} />
 					<File handleFileUpload={s3Upload} />
 					<Iframe />
-					<Latex />
+					<Latex renderFunction={renderLatexString} />
 					<Footnote />
 					<HighlightMenu
 						highlights={this.props.highlights}
