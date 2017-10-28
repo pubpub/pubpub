@@ -39,7 +39,7 @@ const PubPreview = function(props) {
 		'linear-gradient(to right, rgba(217, 167, 199, 0.5), rgba(255, 252, 220, 0.5))',
 		'linear-gradient(to right, rgba(201, 214, 255, 0.5), rgba(226, 226, 226, 0.5))'
 	];
-	const resizedBannerImage = getResizedUrl(props.bannerImage, 'fit-in', '800x0');
+	const resizedBannerImage = getResizedUrl(props.bannerImage, 'fit-in', '1200x0');
 	const bannerStyle = props.bannerImage
 		? { backgroundImage: `url("${resizedBannerImage}")` }
 		: { background: gradients[props.title.charCodeAt(0) % 4] };

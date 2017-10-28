@@ -32,8 +32,13 @@ const Avatar = function(props) {
 	};
 
 	const resizedImageUrl = props.width <= 50
-		? getResizedUrl(props.userAvatar, null, '50x50')
+		? getResizedUrl(props.userAvatar, null, '100x100')
 		: getResizedUrl(props.userAvatar, null, '250x250');
+		/* The default config on AWS thumbor seems to have */
+		/* the quality value a bit low. Small jpegs come out blurry. */
+		/* Request larger size for sharpness */
+		// ? getResizedUrl(props.userAvatar, null, '50x50')
+		// : getResizedUrl(props.userAvatar, null, '250x250');
 
 	if (props.doesOverlap) {
 		avatarStyle.marginRight = `${props.width * 0.45 * -1}px`;
