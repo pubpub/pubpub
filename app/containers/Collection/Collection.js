@@ -74,7 +74,7 @@ class Collection extends Component {
 		}, undefined);
 		if (!title) { return <NoMatch />; }
 		const numPublished = collectionData.pubs.reduce((prev, curr)=> {
-			if (curr.publishedAt) { return prev + 1; }
+			if (!!curr.publishedAt) { return prev + 1; }
 			return prev;
 		}, 0);
 		const publicDrafts = collectionData.pubs.filter((item)=> {

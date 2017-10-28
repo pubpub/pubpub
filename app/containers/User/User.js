@@ -38,8 +38,8 @@ class User extends Component {
 		}
 		if (this.props.userData.putUserIsLoading
 			&& !nextProps.userData.putUserIsLoading
-			&& !nextProps.userData.putUserError)
-		{
+			&& !nextProps.userData.putUserError
+		) {
 			this.props.history.push(`/user/${nextProps.userData.data.slug}`);
 		}
 	}

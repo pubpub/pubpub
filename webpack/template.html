@@ -13,9 +13,9 @@
 		
 		<react />
 		
-		<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=fetch,Object.entries,Promise,Array.prototype.fill"></script>
+		<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=fetch,Object.entries,default"></script>
 		<!-- Object.entries polyfill is needed because prosemirror-compress uses it. Fix that and remove poly -->
-		<!-- Array.protoype.fill and Promise polyfill needed for PhantomJS prerendering -->
+		<!-- default needed for PhantomJS prerendering -->
 	</body>
 </html>
 
