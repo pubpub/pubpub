@@ -200,11 +200,15 @@ class DiscussionThread extends Component {
 				}
 
 				{!sortedDiscussions[0].submitHash && canManageThread && !this.state.isEditing && !isArchived &&
-					<div className={'thread-buttons pt-button-group pt-minimal pt-small'}>
-						<button type={'button'} className={'pt-button pt-icon-edit2'} onClick={this.onEditToggle} />
+					<div className={'thread-buttons pt-button-group pt-small'}>
+						{/*<button type={'button'} className={'pt-button pt-icon-edit2'} onClick={this.onEditToggle} />*/}
+						<button type={'button'} className={'pt-button'} onClick={this.onEditToggle}>
+							Edit
+						</button>
 						<Button
 							type={'button'}
-							iconName={'compressed'}
+							// iconName={'compressed'}
+							text={'Archive'}
 							loading={this.state.archiveIsLoading}
 							onClick={this.archiveDiscussion}
 						/>

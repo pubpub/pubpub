@@ -2,7 +2,8 @@
 	margin: 1em 0em 2em;
 	.item-header {
 		display: flex;
-		align-items: center;
+		// align-items: center;
+		align-items: flex-start;
 		a {
 			text-decoration: none;
 		}

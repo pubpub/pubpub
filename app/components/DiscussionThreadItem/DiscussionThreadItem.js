@@ -123,9 +123,11 @@ class DiscussionThreadItem extends Component {
 					</div>
 
 					{!this.state.isEditing &&
-						<div className={'pt-button-group pt-minimal pt-small'}>
+						<div className={'pt-button-group pt-small'}>
 							{this.props.isAuthor &&
-								<button type={'button'} className={'pt-button pt-icon-edit2'} onClick={this.onEditToggle} />
+								<button type={'button'} className={'pt-button'} onClick={this.onEditToggle}>
+									Edit
+								</button>
 							}
 
 							{/*
