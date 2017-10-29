@@ -81,7 +81,7 @@ class PubPresentation extends Component {
 						title={'No Published Snapshots'}
 						visual={'pt-icon-issue'}
 						description={'This URL presents published snapshots. Go to Collaborate mode to continue.'}
-						action={<Link to={`/pub/${this.props.match.params.slug}/collaborate`} className={'pt-button pt-intent-primary'}>Collaborate</Link>}
+						action={<Link to={`/pub/${this.props.match.params.slug}/collaborate`} className={'pt-button pt-intent-primary'}>Go to Collaboration Mode</Link>}
 					/>
 				</div>
 			);
