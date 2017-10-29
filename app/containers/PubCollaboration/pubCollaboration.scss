@@ -67,7 +67,7 @@
 		border-top: 0px solid #ECECEC;
 		margin-right: $sidePanelWidth;
 		min-height: calc(100vh - #{$navHeight} - #{$titlePanelHeight});
-		overflow: hidden;
+		// overflow: hidden;
 		cursor: text;
 	}
 }
