@@ -18,7 +18,7 @@ module.exports = {
 			'@blueprintjs/labs',
 			'prosemirror-collab',
 			'prosemirror-commands',
-			'prosemirror-compre',
+			'prosemirror-compress',
 			'prosemirror-gapcursor',
 			'prosemirror-history',
 			'prosemirror-inputrules',
