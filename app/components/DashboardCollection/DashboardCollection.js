@@ -80,9 +80,11 @@ const DashboardCollection = function(props) {
 			*/}
 			<div className={'status-bar'}>
 				<div className={'description'}>{data.description}</div>
-				<div className={'description'}>
-					Submissions can be made at <Link to={`/${data.slug || 'home'}/submit${data.isOpenSubmissions ? '' : `/${data.createPubHash}`}`}>{window.location.origin}/{data.slug || 'home'}/submit{data.isOpenSubmissions ? '' : `/${data.createPubHash}`}</Link>
-				</div>
+				{!data.isPage &&
+					<div className={'description'}>
+						Submissions can be made at <Link to={`/${data.slug || 'home'}/submit${data.isOpenSubmissions ? '' : `/${data.createPubHash}`}`}>{window.location.origin}/{data.slug || 'home'}/submit{data.isOpenSubmissions ? '' : `/${data.createPubHash}`}</Link>
+					</div>
+				}
 				<div>
 					<Link to={`/${data.slug}`}>
 						<span className={'pt-icon-standard pt-icon-link'} /> {window.location.origin}/{data.slug}
