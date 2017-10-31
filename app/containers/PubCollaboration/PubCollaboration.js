@@ -143,7 +143,7 @@ class PubCollaboration extends Component {
 	}
 	getHighlightContent(from, to) {
 		const primaryEditorState = this.editorRef.state.editorState;
-		if (primaryEditorState.nodeSize < from || primaryEditorState.nodeSize < to) { return {}; }
+		if (primaryEditorState.doc.nodeSize < from || primaryEditorState.doc.nodeSize < to) { return {}; }
 		const exact = primaryEditorState.doc.textBetween(from, to);
 		const prefix = primaryEditorState.doc.textBetween(Math.max(0, from - 10), Math.max(0, from));
 		const suffix = primaryEditorState.doc.textBetween(Math.min(primaryEditorState.doc.nodeSize - 2, to), Math.min(primaryEditorState.doc.nodeSize - 2, to + 10));
