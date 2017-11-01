@@ -121,8 +121,8 @@ class PubPresentation extends Component {
 					<meta property={'og:image'} content={pubData.avatar} />
 					<meta property={'og:image:url'} content={pubData.avatar} />
 					<meta property={'og:image:width'} content={'500'} />
-					<meta property={'article:published_time'} content={pubData.publishedAt} />
-					<meta property={'article:modified_time'} content={pubData.publishedAt} />
+					<meta property={'article:published_time'} content={pubData.firstPublishedAt} />
+					<meta property={'article:modified_time'} content={pubData.lastPublishedAt} />
 					<meta property={'fb:app_id'} content={'924988584221879'} />
 					<meta name={'twitter:card'} content={'summary'} />
 					<meta name={'twitter:site'} content={'@pubpub'} />

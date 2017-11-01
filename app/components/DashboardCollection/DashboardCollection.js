@@ -145,7 +145,7 @@ const DashboardCollection = function(props) {
 							return 0;
 						}).map((pub)=> {
 							let status = 'unpublished';
-							if (!!pub.publishedAt) { status = 'published'; }
+							if (!!pub.firstPublishedAt) { status = 'published'; }
 							if (pub.hasOpenSubmission) { status = 'submitted'; }
 							return (
 								<tr key={`collection-pub-${pub.id}`}>

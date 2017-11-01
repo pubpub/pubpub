@@ -50,7 +50,7 @@ class PubCollabDetails extends Component {
 	updateSlug(evt) {
 		this.setState({
 			hasUpdated: true,
-			slug: evt.target.value.replace(/[^a-zA-Z0-9-]/gi, '').replace(/ /g, '-').toLowerCase()
+			slug: evt.target.value.replace(/ /g, '-').replace(/[^a-zA-Z0-9-]/gi, '').toLowerCase()
 		});
 	}
 	updateDescription(evt) {

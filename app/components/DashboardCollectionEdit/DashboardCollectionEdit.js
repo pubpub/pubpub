@@ -63,7 +63,7 @@ class DashboardCollectionEdit extends Component {
 		this.setState({ hasChanged: true, description: evt.target.value.substring(0, 280).replace(/\n/g, ' ') });
 	}
 	setSlug(evt) {
-		this.setState({ hasChanged: true, slug: evt.target.value.replace(/[^a-zA-Z0-9-]/gi, '').replace(/ /g, '-').toLowerCase() });
+		this.setState({ hasChanged: true, slug: evt.target.value.replace(/ /g, '-').replace(/[^a-zA-Z0-9-]/gi, '').toLowerCase() });
 	}
 	setPublic() {
 		this.setState({ hasChanged: true, isPublic: true });
