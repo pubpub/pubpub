@@ -22,7 +22,7 @@ const UserHeader = function(props) {
 		{ id: 3, value: props.userData.github, icon: 'pt-icon-github', href: `https://github.com/${props.userData.github}` },
 		{ id: 4, value: props.userData.facebook, icon: 'pt-icon-facebook', href: `https://www.facebook.com/${props.userData.facebook}` },
 		{ id: 5, value: props.userData.twitter, icon: 'pt-icon-twitter', href: `https://twitter.com/${props.userData.twitter}` },
-		{ id: 6, value: props.userData.googleScholar, icon: 'pt-icon-google-scholar', href: `https://scholar.google.com/${props.userData.googleScholar}` },
+		{ id: 6, value: props.userData.googleScholar, icon: 'pt-icon-google-scholar', href: `https://scholar.google.com/citations?user=${props.userData.googleScholar}` },
 
 	];
 	return (
