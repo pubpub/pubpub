@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Avatar from 'components/Avatar/Avatar';
 import { Link } from 'react-router-dom';
+import { Tooltip } from '@blueprintjs/core';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
 
 require('./pubCollabHeader.scss');
@@ -41,8 +42,23 @@ const PubCollabHeader = function(props) {
 	});
 	const uniqueActiveCollaborators = {};
 	props.activeCollaborators.forEach((item)=> {
-		uniqueActiveCollaborators[item.id] = item;
+		if (item.initials !== '?') {
+			uniqueActiveCollaborators[item.id] = item;
+		}
 	});
+	const numAnonymous = props.activeCollaborators.reduce((prev, curr)=> {
+		if (curr.initials === '?') { return prev + 1; }
+		return prev;
+	}, 0);
+	if (numAnonymous) {
+		uniqueActiveCollaborators.anon = {
+			backgroundColor: 'rgba(96,96,96, 0.2)',
+			cursorColor: 'rgba(96,96,96, 1.0)',
+			id: 'anon',
+			initials: numAnonymous,
+			name: `${numAnonymous} anonymous user${numAnonymous === 1 ? '' : 's'}`,
+		};
+	}
 	return (
 		<div className={'pub-collab-header'} >
 			<div className={'flex-parent'}>
@@ -132,13 +148,18 @@ const PubCollabHeader = function(props) {
 					}).map((collaborator)=> {
 						return (
 							<div className={'avatar-wrapper'} key={`present-avatar-${collaborator.id}`}>
-								<Avatar
-									userInitials={collaborator.initials}
-									userAvatar={collaborator.image}
-									borderColor={collaborator.cursorColor}
-									borderWidth={'2px'}
-									width={24}
-								/>
+								<Tooltip
+									content={collaborator.name}
+									tooltipClassName={'pt-dark'}
+								>
+									<Avatar
+										userInitials={collaborator.initials}
+										userAvatar={collaborator.image}
+										borderColor={collaborator.cursorColor}
+										borderWidth={'2px'}
+										width={24}
+									/>
+								</Tooltip>
 							</div>
 						);
 					})}

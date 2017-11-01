@@ -76,7 +76,7 @@ const DiscussionPreview = function(props) {
 						<div className={'discussion'} key={`discussion-preview-${discussion.id}`}>
 							<Avatar
 								width={20}
-								userInitials={discussion.author.intials}
+								userInitials={discussion.author.initials}
 								userAvatar={discussion.author.avatar}
 							/>
 							<div className={'text'}>{discussion.text}</div>

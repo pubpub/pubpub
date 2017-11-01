@@ -46,7 +46,7 @@ class PubCollaboration extends Component {
 			cursorColor: `rgba(${userColor}, 1.0)`,
 			image: loginData.avatar || null,
 			name: loginData.fullName || 'Anonymous',
-			intitials: loginData.initials || '?',
+			initials: loginData.initials || '?',
 		};
 
 		this.state = {
