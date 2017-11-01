@@ -277,6 +277,7 @@ class DiscussionThread extends Component {
 								discussion={discussion}
 								isAuthor={isArchived ? false : discussion.userId === this.props.loginData.id || this.props.loginData.id === 'b242f616-7aaa-479c-8ee5-3933dcf70859'}
 								onReplyEdit={this.props.handleReplyEdit}
+								isPresentation={this.props.isPresentation}
 								getHighlightContent={this.props.getHighlightContent}
 								hoverBackgroundColor={this.props.hoverBackgroundColor}
 							/>

@@ -17,7 +17,7 @@ import PubBody from 'components/PubBody/PubBody';
 import License from 'components/License/License';
 import Footer from 'components/Footer/Footer';
 import { getPubData, postDiscussion, putDiscussion } from 'actions/pub';
-import { nestDiscussionsToThreads } from 'utilities';
+import { nestDiscussionsToThreads, generateHash } from 'utilities';
 
 import PubPresentationLoading from './PubPresentationLoading';
 
@@ -36,10 +36,15 @@ const propTypes = {
 class PubPresentation extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			editorRef: undefined,
+		};
 		this.closeThreadOverlay = this.closeThreadOverlay.bind(this);
 		this.closeDiscussionOverlay = this.closeDiscussionOverlay.bind(this);
 		this.handlePostDiscussion = this.handlePostDiscussion.bind(this);
 		this.handlePutDiscussion = this.handlePutDiscussion.bind(this);
+		this.getHighlightContent = this.getHighlightContent.bind(this);
+		this.handleEditorRef = this.handleEditorRef.bind(this);
 	}
 	componentWillMount() {
 		this.props.dispatch(getPubData(this.props.match.params.slug, this.props.appData.data.id));
@@ -69,6 +74,30 @@ class PubPresentation extends Component {
 			...discussionObject,
 			communityId: this.props.pubData.data.communityId,
 		}));
+	}
+	getHighlightContent(from, to) {
+		const primaryEditorState = this.state.editorRef.state.editorState;
+		if (!primaryEditorState || primaryEditorState.doc.nodeSize < from || primaryEditorState.doc.nodeSize < to) { return {}; }
+		const exact = primaryEditorState.doc.textBetween(from, to);
+		const prefix = primaryEditorState.doc.textBetween(Math.max(0, from - 10), Math.max(0, from));
+		const suffix = primaryEditorState.doc.textBetween(Math.min(primaryEditorState.doc.nodeSize - 2, to), Math.min(primaryEditorState.doc.nodeSize - 2, to + 10));
+		return {
+			exact: exact,
+			prefix: prefix,
+			suffix: suffix,
+			from: from,
+			to: to,
+			version: undefined,
+			id: `h${generateHash(8)}`, // Has to start with letter since it's a classname
+		};
+	}
+	handleEditorRef(ref) {
+		if (!this.state.editorRef) {
+			/* Need to set timeout so DOM can render */
+			setTimeout(()=> {
+				this.setState({ editorRef: ref });
+			}, 0);
+		}
 	}
 	render() {
 		const pubData = this.props.pubData.data || { versions: [] };
@@ -108,6 +137,19 @@ class PubPresentation extends Component {
 			}
 			return prev;
 		}, undefined);
+		const highlights = [];
+		if (this.state.editorRef && queryObject.from && queryObject.to && queryObject.version) {
+			highlights.push({
+				...this.getHighlightContent(Number(queryObject.from), Number(queryObject.to)),
+				permanent: true,
+			});
+			setTimeout(()=> {
+				const thing = document.getElementsByClassName('permanent')[0];
+				if (thing) {
+					window.scrollTo(0, thing.getBoundingClientRect().top - 135);
+				}
+			}, 100);
+		}
 		return (
 			<div className={'pub-presentation'}>
 
@@ -153,10 +195,13 @@ class PubPresentation extends Component {
 				/>
 
 				<PubBody
+					onRef={this.handleEditorRef}
 					versionId={activeVersion.id}
 					content={activeVersion.content}
 					threads={threads}
 					slug={pubData.slug}
+					highlights={highlights}
+					hoverBackgroundColor={this.props.appData.data.accentMinimalColor}
 				/>
 
 				<PubPresFooter
@@ -181,8 +226,10 @@ class PubPresentation extends Component {
 						pathname={`${this.props.location.pathname}${this.props.location.search}`}
 						handleReplySubmit={this.handlePostDiscussion}
 						handleReplyEdit={this.handlePutDiscussion}
-						submitLoading={this.props.pubData.postDiscussionIsLoading}
+						submitIsLoading={this.props.pubData.postDiscussionIsLoading}
 						isPresentation={true}
+						getHighlightContent={this.getHighlightContent}
+						hoverBackgroundColor={this.props.appData.data.accentMinimalColor}
 					/>
 				</Overlay>
 

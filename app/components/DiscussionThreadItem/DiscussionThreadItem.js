@@ -15,12 +15,14 @@ require('./discussionThreadItem.scss');
 const propTypes = {
 	discussion: PropTypes.object.isRequired,
 	isAuthor: PropTypes.bool,
+	isPresentation: PropTypes.bool,
 	onReplyEdit: PropTypes.func,
 	getHighlightContent: PropTypes.func,
 	hoverBackgroundColor: PropTypes.string,
 };
 const defaultProps = {
 	isAuthor: false,
+	isPresentation: false,
 	onReplyEdit: ()=> {},
 	getHighlightContent: undefined,
 	hoverBackgroundColor: undefined,
@@ -160,6 +162,7 @@ class DiscussionThreadItem extends Component {
 							<FormattingMenu include={['link']} />
 						}
 						<HighlightQuote
+							hideScrollButton={this.props.isPresentation}
 							getHighlightContent={this.props.getHighlightContent}
 							hoverBackgroundColor={this.props.hoverBackgroundColor}
 						/>

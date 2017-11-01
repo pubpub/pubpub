@@ -23,6 +23,7 @@ const propTypes = {
 	onClientChange: PropTypes.func.isRequired,
 	onNewHighlightDiscussion: PropTypes.func.isRequired,
 	onHighlightClick: PropTypes.func.isRequired,
+	hoverBackgroundColor: PropTypes.string.isRequired,
 	isReadOnly: PropTypes.bool,
 	threads: PropTypes.array,
 	highlights: PropTypes.array,
@@ -114,7 +115,8 @@ class PubCollabEditor extends Component {
 						highlights={this.props.highlights}
 						primaryEditorClassName={'pub-collab-editor'}
 						onNewDiscussion={this.props.onNewHighlightDiscussion}
-						onSelectionClick={this.findThreadNumberFromHighlightId}
+						onDotClick={this.findThreadNumberFromHighlightId}
+						hoverBackgroundColor={this.props.hoverBackgroundColor}
 					/>
 					<Citation formatFunction={formatCitationString} />
 					<Discussion

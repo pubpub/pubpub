@@ -8,18 +8,24 @@ import Iframe from '@pubpub/editor/addons/Iframe';
 import Latex from '@pubpub/editor/addons/Latex';
 import Footnote from '@pubpub/editor/addons/Footnote';
 import Citation from '@pubpub/editor/addons/Citation';
+import HighlightMenu from '@pubpub/editor/addons/HighlightMenu';
 import Discussion from 'components/DiscussionAddon/DiscussionAddon';
 import { getResizedUrl } from 'utilities';
 
 require('./pubBody.scss');
 
 const propTypes = {
+	onRef: PropTypes.func,
 	versionId: PropTypes.string.isRequired,
 	content: PropTypes.object.isRequired,
 	threads: PropTypes.array,
 	slug: PropTypes.string,
+	highlights: PropTypes.array,
+	hoverBackgroundColor: PropTypes.string.isRequired,
 };
 const defaultProps = {
+	onRef: ()=>{},
+	highlights: [],
 	threads: [],
 	slug: '',
 };
@@ -37,6 +43,7 @@ const PubBody = function(props, context) {
 							key={`render-${props.versionId}`}
 							initialContent={props.content}
 							isReadOnly={true}
+							ref={props.onRef}
 						>
 							<Image handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }} />
 							<Video />
@@ -44,6 +51,12 @@ const PubBody = function(props, context) {
 							<Iframe />
 							<Latex />
 							<Footnote />
+							<HighlightMenu
+								versionId={props.versionId}
+								highlights={props.highlights}
+								primaryEditorClassName={'pub-body'}
+								hoverBackgroundColor={props.hoverBackgroundColor}
+							/>
 							<Citation />
 							<Discussion
 								threads={props.threads}

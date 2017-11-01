@@ -494,6 +494,7 @@ class PubCollaboration extends Component {
 											onClientChange={this.handleClientChange}
 											onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
 											onHighlightClick={this.handleHighlightClick}
+											hoverBackgroundColor={this.props.appData.data.accentMinimalColor}
 											highlights={highlights}
 											threads={threads}
 											slug={pubData.slug}
