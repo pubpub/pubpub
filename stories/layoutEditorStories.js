@@ -8,6 +8,11 @@ storiesOf('LayoutEditor', module)
 .add('Default', () => (
 	<div>
 		<AccentStyle {...accentDataDark} />
-		<LayoutEditor onSave={(data)=>{ console.log(data); }} />
+		<LayoutEditor
+			onSave={(data)=>{ console.log(data); }}
+			initialLayout={[
+				{ id: 'as8dj4', type: 'pubs', content: { title: '', size: 'medium', limit: 0, pubIds: [] } },
+			]}
+		/>
 	</div>
 ));

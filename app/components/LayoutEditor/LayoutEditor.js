@@ -25,6 +25,7 @@ class LayoutEditor extends Component {
 		this.handleInsert = this.handleInsert.bind(this);
 		this.getComponentFromType = this.getComponentFromType.bind(this);
 		this.handleChange = this.handleChange.bind(this);
+		this.handleRemove = this.handleRemove.bind(this);
 	}
 
 	getComponentFromType(item, index) {
@@ -33,6 +34,7 @@ class LayoutEditor extends Component {
 				<LayoutEditorPubs
 					key={`item-${item.id}`}
 					onChange={this.handleChange}
+					onRemove={this.handleRemove}
 					layoutIndex={index}
 					content={item.content}
 				/>
@@ -49,18 +51,32 @@ class LayoutEditor extends Component {
 
 	handleInsert(index, type) {
 		const newLayout = this.state.layout;
+		const defaultContents = {
+			pubs: {
+				title: '',
+				size: 'small',
+				limit: 0,
+				pubIds: [],
+			},
+			text: {
+				contentJSON: {},
+			}
+		};
 		newLayout.splice(index, 0, {
 			id: generateHash(8),
 			type: type,
-			content: {
-				text: 'Hello',
-			},
+			content: defaultContents[type],
 		});
 		this.setState({ layout: newLayout });
 	}
 	handleChange(index, newContent) {
 		const newLayout = this.state.layout;
 		newLayout[index].content = newContent;
+		this.setState({ layout: newLayout });
+	}
+	handleRemove(index) {
+		const newLayout = this.state.layout;
+		newLayout.splice(index, 1);
 		this.setState({ layout: newLayout });
 	}
 
