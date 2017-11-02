@@ -52,7 +52,7 @@ class User extends Component {
 		const loginData = this.props.loginData.data || {};
 		const selfProfile = loginData.id && userData.id === loginData.id;
 		const mode = this.props.match.params.mode;
-		const localCommunityId = this.props.appData.data.id;
+		const localCommunityId = this.props.appData.data && this.props.appData.data.id;
 		const communityPubs = pubs.filter((pub)=> {
 			return !localCommunityId || pub.communityId === localCommunityId;
 		});
@@ -101,7 +101,7 @@ class User extends Component {
 						<div className={'row'}>
 							<div className={'col-12'}>
 								<div className={'pt-callout external-pubs-wrapper'}>
-									<Link to={'/'} className={'pt-button pt-intent-primary'}>Go to Full Profile</Link>
+									<a href={`https://v4.pubpub.org/user/${userData.slug}`} className={'pt-button pt-intent-primary'}>Go to Full Profile</a>
 									<h5>{externalPubs.length} pub{externalPubs.length === 1 ? '' : 's'} in other communities.</h5>
 									<div>{userData.firstName} has published in other PubPub communities. Click to go to their full profile.</div>
 								</div>
