@@ -1,0 +1,14 @@
+.layout-editor {
+	.block-header {
+		display: flex;
+		align-items: flex-start;
+		padding: 1em 0em;
+		.spacer {
+			flex-shrink: 1;
+			flex-grow: 1;
+		}
+		.pt-button-group {
+			padding-left: 1em;
+		}
+	}
+}
