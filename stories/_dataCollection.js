@@ -52,7 +52,7 @@ export default {
 			id: '36799ee0-168c-4e8a-91d8-391d08699060',
 			slug: 'multi-tiered-national-strategy1535',
 			title: 'Multi-tiered national strategy',
-			description: 'Impedit odio ex adipisci. Aliquid eveniet error numquam dicta. Libero amet cupiditate autem minima ullam velit rerum architecto. Iusto rem inventore quis quo qui repellat et atque. Dolore eos perspiciatis. Molestiae voluptatem ut pariatur aliquam est eos quidem.',
+			description: 'Impedit odio ex adipisci. Aliquid eveniet error numquam dicta. Libero amet cupiditate autem minima ullam velit rerum architecto. Iusto rem inventore quis quo qui repellat et atque. Dolore eos perspiciatis. Molestiae voluptatem ut pariatur aliquam est eos quidem. aasd sd de sijf8.',
 			avatar: 'http://lorempixel.com/480/480/?rand=202',
 			firstPublishedAt: '2017-09-01T15:28:08.013Z',
 			lastPublishedAt: '2017-09-01T15:28:08.013Z',

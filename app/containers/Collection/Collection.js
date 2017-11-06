@@ -139,34 +139,35 @@ class Collection extends Component {
 						}
 						{!!collectionData.id &&
 							<div className={'published-pubs-wrapper'}>
-								{collectionData.pubs.filter((item)=> {
-									return !!item.firstPublishedAt;
-								}).sort((foo, bar)=> {
-									if (foo.updatedAt > bar.updatedAt) { return -1; }
-									if (foo.updatedAt < bar.updatedAt) { return 1; }
-									return 0;
-								}).map((pub, index)=> {
-									return (
-										<div className={'row'} key={`pub-${pub.id}`}>
-											<div className={'col-12'}>
-												<PubPreview
-													title={pub.title}
-													description={pub.description}
-													slug={pub.slug}
-													bannerImage={pub.avatar}
-													isLarge={[0, 3, 6, 8].indexOf(index) > -1}
-													publicationDate={pub.updatedAt}
-													collaborators={pub.collaborators.filter((item)=> {
-														return !item.Collaborator.isAuthor;
-													})}
-													authors={pub.collaborators.filter((item)=> {
-														return item.Collaborator.isAuthor;
-													})}
-												/>
-											</div>
-										</div>
-									);
-								})}
+								<div className={'row'}>
+									{collectionData.pubs.filter((item)=> {
+										return !!item.firstPublishedAt;
+									}).sort((foo, bar)=> {
+										if (foo.updatedAt > bar.updatedAt) { return -1; }
+										if (foo.updatedAt < bar.updatedAt) { return 1; }
+										return 0;
+									}).map((pub, index)=> {
+										const size = [0, 4, 6, 8].indexOf(index) > -1 ? 'large' : 'medium';
+										return (
+												<div className={size === 'large' ? 'col-12' : 'col-6'}>
+													<PubPreview
+														title={pub.title}
+														description={pub.description}
+														slug={pub.slug}
+														bannerImage={pub.avatar}
+														size={size}
+														publicationDate={pub.updatedAt}
+														collaborators={pub.collaborators.filter((item)=> {
+															return !item.Collaborator.isAuthor;
+														})}
+														authors={pub.collaborators.filter((item)=> {
+															return item.Collaborator.isAuthor;
+														})}
+													/>
+												</div>
+										);
+									})}
+								</div>
 							</div>
 						}
 						{!publicDrafts.length && !!collectionData.id && !numPublished && !collectionData.isPage &&
@@ -200,7 +201,7 @@ class Collection extends Component {
 													authors={pub.collaborators.filter((item)=> {
 														return item.Collaborator.isAuthor;
 													})}
-													isMinimal={true}
+													size={'small'}
 												/>
 											</div>
 										</div>

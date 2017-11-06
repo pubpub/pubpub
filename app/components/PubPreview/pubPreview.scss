@@ -1,49 +1,100 @@
 .pub-preview {
-	min-height: 150px;
 	width: 100%;
-	.preview-banner {
+	box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.5);
+	.banner-image {
 		background-size: cover;
 		background-repeat: no-repeat;
 		background-position: center center;
-		float: right;
-		width: 150px;
-		height: 150px;
 	}
-	.preview-content {
-		padding: 1em 1em 1em 0em;
-		margin: 0px 150px 0px 0px;
-		margin-right: 150px;
+	.content {
+		padding: 1em;
 		vertical-align: top;
+	}
+	.content-text {
+		margin-bottom: 1em;
+	}
+	&:after {
+		content: "";
+		clear: both;
+		display: table;
+	}
+	&.large-preview {
+		height: 350px;
+		
+		.banner-image {
+			width: 65%;
+			height: 100%;
+			float: left;
+			border-right: 1px solid #F0F0F0;
+		}
+		.content {
+			float: left; 
+			width: 35%;
+		}
+		.content-text {
+			max-height: 273px;
+			overflow: hidden;
+		}
+	}
+	&.medium-preview {
+		height: 225px;
+		.banner-image {
+			width: 35%;
+			height: 100%;
+			float: left;
+			border-right: 1px solid #F0F0F0;
+		}
+		.content {
+			float: left; 
+			width: 65%;
+		}
+		.content-text {
+			max-height: 148px;
+			overflow: hidden;
+		}
+	}
+	&.small-preview {
+		box-shadow: 0px 0px 0px transparent;
+		.banner-image {
+			display: none;
+		}
+		.content {
+			padding: 0em;
+		}
+	}
+	&.skeleton {
+		.title {
+			&.pt-skeleton {
+				height: 1.5em;
+				width: 85%;	
+			}
+			margin-bottom: 20px;
+		}
+		.description {
+			height: 1em;
+			margin-bottom: 8px;
+		}
+		.input-wrapper {
+			height: 50px;
+		}
+	}
+	&.placeholder {
+		.pt-skeleton {
+			animation: none;
+			background-color: rgba(100, 100, 100, 0.2) !important;
+		}
 	}
 	.community-logo {
 		max-height: 40px;
 		max-width: 100%;
 	}
-	&.large-preview {
-		height: 300px;
-		.preview-banner {
-			float: left;
-			width: 60%;
-			height: 100%;
-		}
-		.preview-content {
-			margin: 0px 0px 0px 60%;
-			padding: 1em;
-		}
-	}
-	&.minimal-preview {
-		.preview-content {
-			margin: 0px 0px 0px 0px;
-			margin-right: 0px;
-			padding: 1em 0em;
-		}
 		
-	}
 	.title {
 		line-height: 1em;
 	}
 	.description {
-		padding-bottom: 1em;
+		line-height: 1.2;
+		font-size: 1.1em;
 	}
 	.collaborators {
 		display: table;
@@ -57,27 +108,20 @@
 
 @media only screen and (max-width: 720px) {  /* Used to be 45em */
 	.pub-preview {
-		min-height: 100px;
-
-		.preview-banner {
-			float: right;
-			width: 100px;
-			height: 100px;
-		}
-		.preview-content {
-			margin: 0px 100px 0px 0px;
-			margin-right: 100px;
-		}
-		&.large-preview {
+		&.large-preview, &.medium-preview {
 			height: auto;
-			.preview-banner {
-				float: none;
+			.banner-image {
 				width: 100%;
 				height: 200px;
+				float: none;
 			}
-			.preview-content {
-				padding: 2em 0em;
-				margin: 0px 0px 0px 0px;
+			.content {
+				float: none; 
+				width: 100%;
+			}
+			.content-text {
+				max-height: none;
+				overflow: auto;
 			}
 		}
 	}
