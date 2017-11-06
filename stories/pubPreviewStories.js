@@ -1,7 +1,6 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import PubPreview from 'components/PubPreview/PubPreview';
-import PubPreviewLoading from 'components/PubPreview/PubPreviewLoading';
 import { collectionData } from './_data';
 
 // const collaborators = [1, 2, 3, 4, 5];

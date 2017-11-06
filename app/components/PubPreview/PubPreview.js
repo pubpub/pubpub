@@ -8,9 +8,9 @@ import { getResizedUrl } from 'utilities';
 require('./pubPreview.scss');
 
 const propTypes = {
-	title: PropTypes.string.isRequired,
+	title: PropTypes.string,
 	description: PropTypes.string,
-	slug: PropTypes.string.isRequired,
+	slug: PropTypes.string,
 	authors: PropTypes.array,
 	collaborators: PropTypes.array,
 	publicationDate: PropTypes.string,
@@ -24,6 +24,8 @@ const propTypes = {
 };
 
 const defaultProps = {
+	title: undefined,
+	slug: undefined,
 	description: undefined,
 	authors: [],
 	collaborators: [],

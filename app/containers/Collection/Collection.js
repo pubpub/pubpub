@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { Button, NonIdealState } from '@blueprintjs/core';
 import PubPreview from 'components/PubPreview/PubPreview';
-import PubPreviewLoading from 'components/PubPreview/PubPreviewLoading';
 import Footer from 'components/Footer/Footer';
 import NoMatch from 'containers/NoMatch/NoMatch';
 import { getCollectionData } from 'actions/collection';
@@ -131,9 +130,7 @@ class Collection extends Component {
 						{!collectionData.id &&
 							<div className={'row'}>
 								<div className={'col-12'}>
-									<PubPreviewLoading />
-									<PubPreviewLoading />
-									<PubPreviewLoading />
+									<PubPreview size={'medium'} />
 								</div>
 							</div>
 						}

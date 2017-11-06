@@ -6,7 +6,6 @@ import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
 import { NonIdealState } from '@blueprintjs/core';
 import PubPreview from 'components/PubPreview/PubPreview';
-import PubPreviewLoading from 'components/PubPreview/PubPreviewLoading';
 import { getSearch } from 'actions/search';
 
 require('./search.scss');
@@ -80,9 +79,9 @@ class Search extends Component {
 						<div className={'col-12'}>
 							{this.props.searchData.isLoading &&
 								<div>
-									<PubPreviewLoading />
-									<PubPreviewLoading />
-									<PubPreviewLoading />
+									<div className={'preview-wrapper'}><PubPreview size={'medium'} /></div>
+									<div className={'preview-wrapper'}><PubPreview size={'medium'} /></div>
+									<div className={'preview-wrapper'}><PubPreview size={'medium'} /></div>
 								</div>
 							}
 							{!this.props.searchData.isLoading && this.props.searchData.data && this.props.searchData.data.length === 0 &&
