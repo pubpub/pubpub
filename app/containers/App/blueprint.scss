@@ -42,3 +42,6 @@ $dark-navbar-background-color: $dark-gray2 !default;
 
 // Override rules here
 // *******************
+.pt-select, select {
+	max-width: 100%;
+}

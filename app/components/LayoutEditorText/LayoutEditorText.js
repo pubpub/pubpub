@@ -8,7 +8,7 @@ import File from '@pubpub/editor/addons/File';
 import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import { s3Upload, getResizedUrl } from 'utilities';
 
-// require('./layoutEditorText.scss');
+require('./layoutEditorText.scss');
 
 const propTypes = {
 	onChange: PropTypes.func.isRequired,
@@ -70,45 +70,74 @@ class LayoutEditorText extends Component {
 		});
 	}
 	render() {
+		console.log(this.props.content);
 		const wrapperStyle = {
 			textAlign: this.props.content.align || 'left',
-			maxWidth: this.props.content.width === 'narrow' ? '800px' : 'auto',
+			maxWidth: this.props.content.width === 'narrow' ? '800px' : 'none',
 			margin: this.props.content.align === 'center' && this.props.content.width === 'narrow' ? '0 auto' : '0',
-		}
+		};
+		console.log(wrapperStyle);
 		return (
 			<div className={'layout-editor-text'}>
 				<div className={'block-header'}>
-					<input type={'text'} className={`pt-input`} value={this.props.content.title} onChange={this.changeTitle} />
-					<div className={'pt-button-group'}>
-						<button className={`pt-button ${this.props.content.align === 'left' ? 'pt-active' : ''}`} onClick={this.setAlignLeft}>Left</button>
-						<button className={`pt-button ${this.props.content.align === 'center' ? 'pt-active' : ''}`} onClick={this.setAlignCenter}>Center</button>
+					<div className={'pt-form-group'}>
+						<label htmlFor={`section-title-${this.props.layoutIndex}`}>Section Title</label>
+						<input id={`section-title-${this.props.layoutIndex}`} type={'text'} className={'pt-input'} value={this.props.content.title} onChange={this.changeTitle} />
 					</div>
-					<div className={'pt-button-group'}>
-						<button className={`pt-button ${this.props.content.width === 'narrow' ? 'pt-active' : ''}`} onClick={this.setWidthNarrow}>Narrow</button>
-						<button className={`pt-button ${this.props.content.width === 'wide' ? 'pt-active' : ''}`} onClick={this.setWidthWide}>Wide</button>
+					<div className={'spacer'} />
+					<div className={'pt-form-group'}>
+						<label htmlFor={`section-size-${this.props.layoutIndex}`}>Align</label>
+						<div className={'pt-button-group'}>
+							<button className={`pt-button ${this.props.content.align === 'left' ? 'pt-active' : ''}`} onClick={this.setAlignLeft}>Left</button>
+							<button className={`pt-button ${this.props.content.align === 'center' ? 'pt-active' : ''}`} onClick={this.setAlignCenter}>Center</button>
+						</div>
 					</div>
-					<button className={`pt-button pt-icon-trash`} onClick={this.handleRemove} />
+					<div className={'pt-form-group'}>
+						<label htmlFor={`section-limit-${this.props.layoutIndex}`}>Width</label>
+						<div className={'pt-button-group'}>
+							<button className={`pt-button ${this.props.content.width === 'narrow' ? 'pt-active' : ''}`} onClick={this.setWidthNarrow}>Narrow</button>
+							<button className={`pt-button ${this.props.content.width === 'wide' ? 'pt-active' : ''}`} onClick={this.setWidthWide}>Wide</button>
+						</div>
+					</div>
+					<div className={'pt-form-group'}>
+						<div className={'pt-button-group'}>
+							<button className={'pt-button pt-icon-trash'} onClick={this.handleRemove} />
+						</div>
+					</div>
 				</div>
 
 				<div className={'block-content'}>
-					<div style={wrapperStyle}>
-						<Editor
-							placeholder={'Enter text...'}
-							onChange={this.setText}
-							initialContent={this.props.content.text || undefined}
-						>
-							<FormattingMenu />
-							<InsertMenu />
-							<Image
-								handleFileUpload={s3Upload}
-								handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '1200x0'); }}
-							/>
-							<Video handleFileUpload={s3Upload} />
-							<File handleFileUpload={s3Upload} />
-						</Editor>
+					<div className={'container'}>
+						{this.props.content.title &&
+							<div className={'row'}>
+								<div className={'col-12'}>
+									<h3>{this.props.content.title}</h3>
+								</div>
+							</div>
+						}
+
+						<div className={'row'}>
+							<div className={'col-12'}>
+								<div style={wrapperStyle}>
+									<Editor
+										placeholder={'Enter text...'}
+										onChange={this.setText}
+										initialContent={this.props.content.text || undefined}
+									>
+										<FormattingMenu />
+										<InsertMenu />
+										<Image
+											handleFileUpload={s3Upload}
+											handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '1200x0'); }}
+										/>
+										<Video handleFileUpload={s3Upload} />
+										<File handleFileUpload={s3Upload} />
+									</Editor>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
-				
 			</div>
 		);	
 	}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import PubPreview from 'components/PubPreview/PubPreview'
 // require('./layoutEditorPubs.scss');
 
 const propTypes = {
@@ -22,8 +22,6 @@ class LayoutEditorPubs extends Component {
 		this.setMedium = this.setMedium.bind(this);
 		this.setLarge = this.setLarge.bind(this);
 		this.setLimit = this.setLimit.bind(this);
-		// this.decreaseLimit = this.decreaseLimit.bind(this);
-		// this.increaseLimit = this.increaseLimit.bind(this);
 		this.changeTitle = this.changeTitle.bind(this);
 		this.changePubId = this.changePubId.bind(this);
 	}
@@ -54,18 +52,6 @@ class LayoutEditorPubs extends Component {
 			limit: Number(evt.target.value)
 		});
 	}
-	// decreaseLimit() {
-	// 	this.props.onChange(this.props.layoutIndex, {
-	// 		...this.props.content,
-	// 		limit: Math.max(this.props.content.limit - 1, 0)
-	// 	});
-	// }
-	// increaseLimit() {
-	// 	this.props.onChange(this.props.layoutIndex, {
-	// 		...this.props.content,
-	// 		limit: this.props.content.limit + 1
-	// 	});
-	// }
 	changeTitle(evt) {
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
@@ -90,48 +76,83 @@ class LayoutEditorPubs extends Component {
 		const previews = [...this.props.content.pubIds, ...emptyPreviews].slice(0, displayLimit);
 		const selectOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 		console.log('Render List', this.props.pubRenderList);
-		/* Need to make pubpreview that can take title, can take input field */
-		/* Update pubpreview to have 3 sizes, and to be new design */
 		return (
 			<div className={'layout-editor-pubs'}>
 				<div className={'block-header'}>
-					<input type={'text'} className={`pt-input`} value={this.props.content.title} onChange={this.changeTitle} />
+					<div className={'pt-form-group'}>
+						<label htmlFor={`section-title-${this.props.layoutIndex}`}>Section Title</label>
+						<input id={`section-title-${this.props.layoutIndex}`} type={'text'} className={'pt-input'} value={this.props.content.title} onChange={this.changeTitle} />
+					</div>
 					<div className={'spacer'} />
-					<div className={'pt-button-group'}>
-						<button className={`pt-button ${size === 'small' ? 'pt-active' : ''}`} onClick={this.setSmall}>Small</button>
-						<button className={`pt-button ${size === 'medium' ? 'pt-active' : ''}`} onClick={this.setMedium}>Medium</button>
-						<button className={`pt-button ${size === 'large' ? 'pt-active' : ''}`} onClick={this.setLarge}>Large</button>
+					<div className={'pt-form-group'}>
+						<label htmlFor={`section-size-${this.props.layoutIndex}`}>Size</label>
+						<div className={'pt-button-group'}>
+							<button className={`pt-button ${size === 'large' ? 'pt-active' : ''}`} onClick={this.setLarge}>Large</button>
+							<button className={`pt-button ${size === 'medium' ? 'pt-active' : ''}`} onClick={this.setMedium}>Medium</button>
+							<button className={`pt-button ${size === 'small' ? 'pt-active' : ''}`} onClick={this.setSmall}>Small</button>
+						</div>
 					</div>
-					<div className={'pt-button-group pt-select'}>
-						<select value={this.props.content.limit} onChange={this.setLimit}>
-							<option value={0}>Show All pubs</option>
-							{selectOptions.map((item)=> {
-								return <option value={item} key={`option-${item}`}>Show {item} pub{item === 1 ? '' : 's'}</option>
-							})}
-
-							
-						</select>
+					<div className={'pt-form-group'}>
+						<label htmlFor={`section-limit-${this.props.layoutIndex}`}>Limit</label>
+						<div className={'pt-button-group pt-select'}>
+							<select value={this.props.content.limit} onChange={this.setLimit}>
+								<option value={0}>Show All pubs</option>
+								{selectOptions.map((item)=> {
+									return <option value={item} key={`option-${item}`}>Show {item} pub{item === 1 ? '' : 's'}</option>
+								})}
+							</select>
+						</div>
 					</div>
-					<div className={'pt-button-group'}>
-						<button className={`pt-button pt-icon-trash`} onClick={this.handleRemove} />
+					<div className={'pt-form-group'}>
+						<div className={'pt-button-group'}>
+							<button className={'pt-button pt-icon-trash'} onClick={this.handleRemove} />
+						</div>
 					</div>
 				</div>
 
 				<div className={'block-content'}>
-					<div>Preview of things go here. Need interface to enable setting content.pubIds</div>
-					{previews.map((item, index)=> {
-						return (
-							<div>
-								Preview
-								{this.props.content.pubIds.length >= index &&
-									<input className={'pt-input'} onChange={(evt)=> { this.changePubId(index, evt.target.value); }} value={this.props.content.pubIds[index] || ''} />
-								}
+					<div className={'container'}>
+						{this.props.content.title &&
+							<div className={'row'}>
+								<div className={'col-12'}>
+									<h3>{this.props.content.title}</h3>
+								</div>
 							</div>
-						);
-					})}
+						}
+
+						<div className={'row'}>
+							{previews.map((item, index)=> {
+								const selectPub = this.props.pubRenderList[index] || {};
+								return (
+									<div className={size === 'medium' ? 'col-6' : 'col-12'}>
+										<PubPreview
+											size={size}
+											isPlaceholder={true}
+											title={this.props.content.pubIds[index] ? selectPub.title : undefined}
+											inputContent={this.props.content.pubIds.length >= index
+												? <div className={'pt-select'}>
+													<select value={this.props.content.pubIds[index] || ''} onChange={(evt)=> { this.changePubId(index, evt.target.value); }}>
+														<option value={''}>Choose specific Pub</option>
+														{this.props.pubs.sort((foo, bar)=> {
+															if (foo.title < bar.title) { return -1; }
+															if (foo.title > bar.title) { return 1; }
+															return 0;
+														}).map((pub)=> {
+															return <option value={pub.id} key={`option-${pub.id}`}>{pub.title}</option>;
+														})}
+													</select>
+												</div>
+												: null
+											}
+										/>
+									</div>
+								);
+							})}
+						</div>
+					</div>
 				</div>
 			</div>
-		);	
+		);
 	}
 }
 

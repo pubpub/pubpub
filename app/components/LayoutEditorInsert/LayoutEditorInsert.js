@@ -16,7 +16,7 @@ const LayoutEditorInsert = function(props) {
 		{ title: 'Add HTML Block', type: 'html'},
 	];
 	return (
-		<div className={'layout-editor-insert pt-callout'}>
+		<div className={'layout-editor-insert'}>
 			<Popover
 				content={
 					<div className={'pt-menu'}>
@@ -41,7 +41,7 @@ const LayoutEditorInsert = function(props) {
 			>
 				<button className={'pt-button pt-icon-add'}>Add Section</button>
 			</Popover>
-
+			<div className={'center-line'} />
 		</div>
 	);
 };

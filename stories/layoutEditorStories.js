@@ -6,7 +6,7 @@ import { accentDataDark, collectionData } from './_data';
 
 storiesOf('LayoutEditor', module)
 .add('Default', () => (
-	<div>
+	<div style={{ margin: '2em' }}>
 		<AccentStyle {...accentDataDark} />
 		<LayoutEditor
 			onSave={(data)=>{ console.log(data); }}

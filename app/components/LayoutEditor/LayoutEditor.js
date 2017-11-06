@@ -68,7 +68,7 @@ class LayoutEditor extends Component {
 		const defaultContents = {
 			pubs: {
 				title: '',
-				size: 'small',
+				size: 'medium',
 				limit: 0,
 				pubIds: [],
 			},
@@ -117,11 +117,8 @@ class LayoutEditor extends Component {
 				});
 			}
 		});
-		// ead5a604-d8b0-4dec-837b-fcdff88264f1
 		newLayout.forEach((block, index)=> {
 			if (block.type === 'pubs') {
-				
-				
 				const pubsById = this.props.pubs.reduce((prev, curr)=> {
 					const output = prev;
 					output[curr.id] = curr;
@@ -149,7 +146,7 @@ class LayoutEditor extends Component {
 	}
 
 	render() {
-		console.log('--------')
+		console.log('--------');
 		return (
 			<div className={'layout-editor'}>
 				<LayoutEditorInsert insertIndex={0} onInsert={this.handleInsert} />
@@ -157,7 +154,7 @@ class LayoutEditor extends Component {
 					const editorTypeComponent = this.getComponentFromType(item, index);
 					if (!editorTypeComponent) { return null; }
 					return [
-						editorTypeComponent,
+						<div className={'component-wrapper'}>{editorTypeComponent}</div>,
 						<LayoutEditorInsert key={`insert-${item.id}`} insertIndex={index + 1} onInsert={this.handleInsert} />
 					];
 				})}
