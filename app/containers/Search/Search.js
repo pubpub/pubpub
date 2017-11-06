@@ -101,7 +101,8 @@ class Search extends Component {
 													description={pub.description}
 													slug={pub.slug}
 													bannerImage={pub.avatar}
-													isLarge={false}
+													// isLarge={false}
+													size={'medium'}
 													publicationDate={pub.updatedAt}
 													collaborators={pub.collaborators.filter((item)=> {
 														return !item.Collaborator.isAuthor;
