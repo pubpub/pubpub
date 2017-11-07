@@ -9,6 +9,7 @@ import UserHeader from 'components/UserHeader/UserHeader';
 import UserNav from 'components/UserNav/UserNav';
 import UserEdit from 'components/UserEdit/UserEdit';
 import PubPreview from 'components/PubPreview/PubPreview';
+import NoMatch from 'containers/NoMatch/NoMatch';
 import { getUserData, putUserData } from 'actions/user';
 import UserLoading from './UserLoading';
 
@@ -71,8 +72,11 @@ class User extends Component {
 		});
 		const pubsToRender = mode === 'authored' ? authoredPubs : communityPubs;
 
-		if (!userData.id) {
+		if (this.props.userData.isLoading) {
 			return <UserLoading />;
+		}
+		if (!this.props.userData.isLoading && !userData.id) {
+			return <NoMatch />;
 		}
 		if (mode === 'edit') {
 			return (
