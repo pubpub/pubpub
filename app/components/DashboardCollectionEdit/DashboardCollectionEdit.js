@@ -45,7 +45,7 @@ class DashboardCollectionEdit extends Component {
 			isOpenSubmissions: props.collectionData.isOpenSubmissions,
 			createPubMessage: props.collectionData.createPubMessage,
 			// layout: props.collectionData.layout || getDefaultLayout(props.collectionData.isPage),
-			layout: typeof props.collectionData.layout === 'string' ? getDefaultLayout(props.collectionData.isPage) : props.collectionData.layout || getDefaultLayout(props.collectionData.isPage),
+			layout: props.collectionData.layout && props.collectionData.layout.html ? getDefaultLayout(props.collectionData.isPage) : props.collectionData.layout || getDefaultLayout(props.collectionData.isPage),
 		};
 		this.setTitle = this.setTitle.bind(this);
 		this.setDescription = this.setDescription.bind(this);

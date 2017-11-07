@@ -4,7 +4,6 @@ import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import { withRouter, Link } from 'react-router-dom';
 import { Button, NonIdealState } from '@blueprintjs/core';
-import PubPreview from 'components/PubPreview/PubPreview';
 import Footer from 'components/Footer/Footer';
 import LayoutPubs from 'components/LayoutPubs/LayoutPubs';
 import LayoutHtml from 'components/LayoutHtml/LayoutHtml';
@@ -106,8 +105,8 @@ class Collection extends Component {
 				<LayoutDrafts
 					key={`item-${item.id}`}
 					content={item.content}
-					pubs={pubs.filter((item)=> {
-						return !item.firstPublishedAt;
+					pubs={pubs.filter((pub)=> {
+						return !pub.firstPublishedAt;
 					})}
 				/>
 			);
@@ -178,7 +177,8 @@ class Collection extends Component {
 			if (foo.updatedAt < bar.updatedAt) { return 1; }
 			return 0;
 		});
-		const layout = collectionData.layout || getDefaultLayout(collectionData.isPage);
+		// const layout = collectionData.layout || getDefaultLayout(collectionData.isPage);
+		const layout = collectionData.layout && collectionData.layout.html ? getDefaultLayout(collectionData.isPage) : collectionData.layout || getDefaultLayout(collectionData.isPage);
 		const pubRenderLists = this.generateRenderList(layout);
 		return (
 			<div>
