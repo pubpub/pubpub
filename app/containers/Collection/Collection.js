@@ -208,7 +208,7 @@ class Collection extends Component {
 										}
 									</div>
 								}
-								{collectionData.slug &&
+								{title &&
 									<h1>{title}</h1>
 								}
 								{/*<p className={'description'}>{collectionData.description}</p>*/}
