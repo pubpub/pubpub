@@ -44,8 +44,7 @@ class DashboardCollectionEdit extends Component {
 			isPublic: props.collectionData.isPublic,
 			isOpenSubmissions: props.collectionData.isOpenSubmissions,
 			createPubMessage: props.collectionData.createPubMessage,
-			// layout: props.collectionData.layout || getDefaultLayout(props.collectionData.isPage),
-			layout: props.collectionData.layout && props.collectionData.layout.html ? getDefaultLayout(props.collectionData.isPage) : props.collectionData.layout || getDefaultLayout(props.collectionData.isPage),
+			layout: props.collectionData.layout || getDefaultLayout(props.collectionData.isPage),
 		};
 		this.setTitle = this.setTitle.bind(this);
 		this.setDescription = this.setDescription.bind(this);
@@ -207,16 +206,6 @@ class DashboardCollectionEdit extends Component {
 								</div>
 							</InputField>
 						}
-						{/* <InputField
-							label={'Layout'}
-							placeholder={'Enter HTML'}
-							isTextarea={true}
-							wrapperClassName={'html-input'}
-							value={this.state.layout}
-							helperText={'This basic HTML input is a placeholder until the full-featured visual layout editor is ready.'}
-							onChange={this.setLayout}
-							error={undefined}
-						/> */}
 
 						{!this.props.collectionData.isPage &&
 							<InputField label={'Submission Instructions'}>

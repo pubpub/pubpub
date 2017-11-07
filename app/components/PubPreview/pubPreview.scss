@@ -11,7 +11,19 @@
 		vertical-align: top;
 	}
 	.content-text {
-		margin-bottom: 1em;
+		padding-bottom: 1em;
+		position: relative;
+		&:after {
+			content: "";
+			display: block;
+			background: white;
+			background: linear-gradient(transparent, rgba(255, 255, 255, 0.95), white);
+			width: 100%;
+			height: 1em;
+			position: absolute;
+			bottom: 0em;
+			left: 0;
+		}
 	}
 	&:after {
 		content: "";
@@ -32,8 +44,11 @@
 			width: 35%;
 		}
 		.content-text {
-			max-height: 273px;
+			max-height: 287px;
 			overflow: hidden;
+			// &:before {
+			// 	top: 273px;
+			// }
 		}
 	}
 	&.medium-preview {
@@ -49,8 +64,11 @@
 			width: 65%;
 		}
 		.content-text {
-			max-height: 148px;
+			max-height: 162px;
 			overflow: hidden;
+			// &:before {
+			// 	top: 148px;
+			// }
 		}
 	}
 	&.small-preview {

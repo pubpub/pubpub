@@ -177,8 +177,7 @@ class Collection extends Component {
 			if (foo.updatedAt < bar.updatedAt) { return 1; }
 			return 0;
 		});
-		// const layout = collectionData.layout || getDefaultLayout(collectionData.isPage);
-		const layout = collectionData.layout && collectionData.layout.html ? getDefaultLayout(collectionData.isPage) : collectionData.layout || getDefaultLayout(collectionData.isPage);
+		const layout = collectionData.layout || getDefaultLayout(collectionData.isPage);
 		const pubRenderLists = this.generateRenderList(layout);
 		return (
 			<div>
@@ -213,7 +212,6 @@ class Collection extends Component {
 									{title && title !== 'Home' &&
 										<h1>{title}</h1>
 									}
-									{/*<p className={'description'}>{collectionData.description}</p>*/}
 								</div>
 							</div>
 						}
@@ -229,54 +227,6 @@ class Collection extends Component {
 							return <div key={`block-${item.id}`} className={'component-wrapper'}>{editorTypeComponent}</div>;
 						})}
 
-						{/*!!collectionData.layout && !!collectionData.layout.html &&
-							<div className={'row'}>
-								<div className={'col-12 layout'}>
-									<div dangerouslySetInnerHTML={{ __html: collectionData.layout.html }} />
-								</div>
-							</div>
-						*/}
-
-						{/*!collectionData.id &&
-							<div className={'row'}>
-								<div className={'col-12'}>
-									<PubPreview size={'medium'} />
-								</div>
-							</div>
-						*/}
-						{/*!!collectionData.id &&
-							<div className={'published-pubs-wrapper'}>
-								<div className={'row'}>
-									{collectionData.pubs.filter((item)=> {
-										return !!item.firstPublishedAt;
-									}).sort((foo, bar)=> {
-										if (foo.updatedAt > bar.updatedAt) { return -1; }
-										if (foo.updatedAt < bar.updatedAt) { return 1; }
-										return 0;
-									}).map((pub, index)=> {
-										const size = [0, 4, 6, 8].indexOf(index) > -1 ? 'large' : 'medium';
-										return (
-												<div className={size === 'large' ? 'col-12' : 'col-6'}>
-													<PubPreview
-														title={pub.title}
-														description={pub.description}
-														slug={pub.slug}
-														bannerImage={pub.avatar}
-														size={size}
-														publicationDate={pub.updatedAt}
-														collaborators={pub.collaborators.filter((item)=> {
-															return !item.Collaborator.isAuthor;
-														})}
-														authors={pub.collaborators.filter((item)=> {
-															return item.Collaborator.isAuthor;
-														})}
-													/>
-												</div>
-										);
-									})}
-								</div>
-							</div>
-						*/}
 						{!publicDrafts.length && !!collectionData.id && !numPublished && !collectionData.isPage &&
 							<NonIdealState
 								title={'Empty Collection'}
@@ -284,38 +234,6 @@ class Collection extends Component {
 								visual={'pt-icon-applications'}
 							/>
 						}
-						{/*!!publicDrafts.length &&
-							<div className={'working-drafts-wrapper'}>
-								<div className={'row'}>
-									<div className={'col-12 working-drafts-header'}>
-										<h2>Working Drafts</h2>
-										<div>The following are unpublished pubs that are open to collaboration.</div>
-									</div>
-								</div>
-								{publicDrafts.map((pub)=> {
-									return (
-										<div className={'row'} key={`pub-${pub.id}`}>
-											<div className={'col-12'}>
-												<PubPreview
-													title={pub.title}
-													description={pub.description}
-													slug={pub.slug}
-													bannerImage={pub.avatar}
-													publicationDate={pub.updatedAt}
-													collaborators={pub.collaborators.filter((item)=> {
-														return !item.Collaborator.isAuthor;
-													})}
-													authors={pub.collaborators.filter((item)=> {
-														return item.Collaborator.isAuthor;
-													})}
-													size={'small'}
-												/>
-											</div>
-										</div>
-									);
-								})}
-							</div>
-						*/}
 					</div>
 				</div>
 
