@@ -52,7 +52,7 @@ const PubPreview = function(props) {
 	const resizedBannerImage = getResizedUrl(props.bannerImage, 'fit-in', '1200x0');
 	const bannerStyle = props.bannerImage || !props.slug
 		? { backgroundImage: `url("${resizedBannerImage}")` }
-		: { background: gradients[props.title.charCodeAt(0) % 4] };
+		: { background: gradients[props.title.charCodeAt(props.title.length - 1) % 4] };
 
 	const collaboratorsCount = props.authors.length + props.collaborators.length;
 	const resizedSmallHeaderLogo = props.communityData && getResizedUrl(props.communityData.smallHeaderLogo, 'fit-in', '0x50');

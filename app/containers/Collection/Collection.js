@@ -81,6 +81,7 @@ class Collection extends Component {
 					layoutIndex={index}
 					content={item.content}
 					pubRenderList={pubRenderLists[index]}
+					isLoading={!collectionData.id}
 				/>
 			);
 		}
@@ -277,7 +278,7 @@ class Collection extends Component {
 						{!publicDrafts.length && !!collectionData.id && !numPublished && !collectionData.isPage &&
 							<NonIdealState
 								title={'Empty Collection'}
-								description={'This collection has no published Pubs.'}
+								description={'This collection has no Pubs.'}
 								visual={'pt-icon-applications'}
 							/>
 						}
