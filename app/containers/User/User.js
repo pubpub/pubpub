@@ -59,6 +59,17 @@ class User extends Component {
 		const externalPubs = pubs.filter((pub)=> {
 			return localCommunityId && pub.communityId !== localCommunityId;
 		});
+		const authoredPubs = communityPubs.filter((pub)=> {
+			const collaborators = pub.collaborators || [];
+			const isAuthor = collaborators.reduce((prev, curr)=> {
+				if (curr.id === loginData.id && curr.Collaborator.isAuthor) {
+					return true;
+				}
+				return prev;
+			}, false);
+			return isAuthor;
+		});
+		const pubsToRender = mode === 'authored' ? authoredPubs : communityPubs;
 
 		if (!userData.id) {
 			return <UserLoading />;
@@ -92,7 +103,12 @@ class User extends Component {
 				<div className={'container narrow nav'}>
 					<div className={'row'}>
 						<div className={'col-12'}>
-							<UserNav userSlug={userData.slug} activeTab={mode} />
+							<UserNav
+								userSlug={userData.slug}
+								activeTab={mode}
+								allPubsCount={communityPubs.length}
+								authoredPubsCount={authoredPubs.length}
+							/>
 						</div>
 					</div>
 				</div>
@@ -110,7 +126,7 @@ class User extends Component {
 					</div>
 				}
 				<div className={'container narrow content'}>
-					{communityPubs.map((pub)=> {
+					{pubsToRender.map((pub)=> {
 						return (
 							<div key={`pub-${pub.id}`} className={'row'}>
 								<div className={'col-12'}>

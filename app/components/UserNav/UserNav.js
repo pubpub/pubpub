@@ -7,16 +7,21 @@ require('./userNav.scss');
 const propTypes = {
 	userSlug: PropTypes.string,
 	activeTab: PropTypes.string,
+	allPubsCount: PropTypes.number,
+	authoredPubsCount: PropTypes.number,
 };
 
 const defaultProps = {
 	activeTab: undefined,
 	userSlug: '',
+	allPubsCount: 0,
+	authoredPubsCount: 0,
 };
 
 const UserNav = function(props) {
 	const tabs = [
-		{ id: 0, label: 'Featured Pubs', path: '' },
+		{ id: 0, label: `All Pubs (${props.allPubsCount})`, path: '' },
+		{ id: 1, label: `Authored Pubs (${props.authoredPubsCount})`, path: '/authored' },
 		// { id: 1, label: 'All Pubs', path: '/pubs' },
 		// { id: 2, label: 'Discussions', path: '/discussions' },
 	];

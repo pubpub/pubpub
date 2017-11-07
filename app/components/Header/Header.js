@@ -51,6 +51,9 @@ const Header = function(props) {
 		// /fit-in/300x300/serverless-image-handler-ui/img/balloon.jpg
 		backgroundStyle.backgroundImage = `url("${resizedBackground}")`;
 	}
+	if (props.isBasePubPub && window.location.pathname !== '/') {
+		backgroundStyle.boxShadow = '0 0 0 1px rgba(16, 22, 26, 0.1), 0 0 0 rgba(16, 22, 26, 0), 0 1px 1px rgba(16, 22, 26, 0.2)';
+	}
 
 	const resizedSmallHeaderLogo = getResizedUrl(props.smallHeaderLogo, 'fit-in', '0x50');
 	const resizedLargeHeaderLogo = getResizedUrl(props.largeHeaderLogo, 'fit-in', '0x200');

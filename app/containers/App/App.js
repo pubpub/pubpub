@@ -71,11 +71,11 @@ class App extends Component {
 						<link rel="apple-touch-icon" type="image/png" sizes="192x192" href={'/favicon.png'} />
 					</Helmet>
 					<AccentStyle
-						accentColor={'#00718B'}
-						accentTextColor={'white'}
-						accentActionColor={'#00A9D7'}
-						accentHoverColor={'#007B98'}
-						accentMinimalColor={'blue'}
+						accentColor={'#456888'}
+						accentTextColor={'#FFFFFF'}
+						accentActionColor={'rgba(69, 104, 136, 0.6)'}
+						accentHoverColor={'rgba(69, 104, 136, 0.8)'}
+						accentMinimalColor={'rgba(69, 104, 136, 0.19999999999999996)'}
 					/>
 					<Header
 						userName={loginData.fullName}

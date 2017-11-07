@@ -3,6 +3,7 @@
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center center;
+	transition: .2s linear box-shadow;
 	&.has-image {
 		color: white;
 	}

@@ -55,8 +55,9 @@ const PubPreview = function(props) {
 		: { background: gradients[props.title.charCodeAt(props.title.length - 1) % 4] };
 
 	const collaboratorsCount = props.authors.length + props.collaborators.length;
-	const resizedSmallHeaderLogo = props.communityData && getResizedUrl(props.communityData.smallHeaderLogo, 'fit-in', '0x50');
+	const resizedSmallHeaderLogo = props.communityData && getResizedUrl(props.communityData.smallHeaderLogo, 'fit-in', '125x35');
 	const communityHostname = props.communityData && (props.communityData.domain || `${props.communityData.subdomain}.pubpub.org`);
+	const communityUrl = props.communityData && (props.communityData.domain ? `https://${props.communityData.domain}` : `https://${props.communityData.subdomain}.pubpub.org`);
 	const pubLink = props.communityData ? `https://${communityHostname}/pub/${props.slug}` : `/pub/${props.slug}`;
 
 	/* Loading and Placeholder state */
@@ -85,23 +86,22 @@ const PubPreview = function(props) {
 					<div className={'banner-image'} style={bannerStyle} />
 				</Link>
 			}
-
 			<div className={'content'}>
 				<div className={'content-text'}>
+					{props.communityData &&
+						<Link to={communityUrl} className={'community-banner'} style={{ backgroundColor: props.communityData.accentColor }}>
+							<img
+								alt={`${props.communityData.title} logo`}
+								src={resizedSmallHeaderLogo}
+							/>
+						</Link>
+					}
 					<Link to={pubLink}><h3 className={'title'}>{props.title}</h3></Link>
 					{props.description &&
 						<div className={'description'}>{props.description}</div>
 					}
 				</div>
-				{props.communityData &&
-					<div className={'community-banner'} style={{ backgroundColor: props.communityData.accentColor }}>
-						<img
-							alt={`${props.communityData.title} logo`}
-							src={resizedSmallHeaderLogo}
-							className={'community-logo'}
-						/>
-					</div>
-				}
+				
 				<div className={'collaborators'}>
 					{!!props.authors.length &&
 						<div className={'avatars'}>
