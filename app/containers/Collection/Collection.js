@@ -6,9 +6,14 @@ import { withRouter, Link } from 'react-router-dom';
 import { Button, NonIdealState } from '@blueprintjs/core';
 import PubPreview from 'components/PubPreview/PubPreview';
 import Footer from 'components/Footer/Footer';
+import LayoutPubs from 'components/LayoutPubs/LayoutPubs';
+import LayoutHtml from 'components/LayoutHtml/LayoutHtml';
+import LayoutDrafts from 'components/LayoutDrafts/LayoutDrafts';
+import LayoutText from 'components/LayoutText/LayoutText';
 import NoMatch from 'containers/NoMatch/NoMatch';
 import { getCollectionData } from 'actions/collection';
 import { createPub } from 'actions/pubCreate';
+import { getDefaultLayout } from 'utilities';
 
 require('./collection.scss');
 
@@ -26,6 +31,8 @@ class Collection extends Component {
 	constructor(props) {
 		super(props);
 		this.handleCreatePub = this.handleCreatePub.bind(this);
+		this.getComponentFromType = this.getComponentFromType.bind(this);
+		this.generateRenderList = this.generateRenderList.bind(this);
 	}
 	componentWillMount() {
 		this.dispatchGetCollectionData(this.props);
@@ -63,6 +70,93 @@ class Collection extends Component {
 		const collectionId = this.props.collectionData.data.id;
 		this.props.dispatch(createPub(collectionId, communityId));
 	}
+	getComponentFromType(item, index, pubRenderLists) {
+		const collectionData = this.props.collectionData.data || {};
+		const pubs = collectionData.pubs || [];
+
+		if (item.type === 'pubs') {
+			return (
+				<LayoutPubs
+					key={`item-${item.id}`}
+					layoutIndex={index}
+					content={item.content}
+					pubRenderList={pubRenderLists[index]}
+				/>
+			);
+		}
+		if (item.type === 'text') {
+			return (
+				<LayoutText
+					key={`item-${item.id}`}
+					content={item.content}
+				/>
+			);
+		}
+		if (item.type === 'html') {
+			return (
+				<LayoutHtml
+					key={`item-${item.id}`}
+					content={item.content}
+				/>
+			);
+		}
+		if (item.type === 'drafts') {
+			return (
+				<LayoutDrafts
+					key={`item-${item.id}`}
+					content={item.content}
+					pubs={pubs.filter((item)=> {
+						return !item.firstPublishedAt;
+					})}
+				/>
+			);
+		}
+		return null;
+	}
+	generateRenderList(layout) {
+		const collectionData = this.props.collectionData.data || {};
+		const pubs = collectionData.pubs || [];
+		const allPubs = pubs.filter((item)=> {
+			return item.firstPublishedAt;
+		}).sort((foo, bar)=> {
+			if (foo.firstPublishedAt < bar.firstPublishedAt) { return 1; }
+			if (foo.firstPublishedAt > bar.firstPublishedAt) { return -1; }
+			return 0;
+		});
+		const nonSpecifiedPubs = [...allPubs];
+		const pubRenderLists = {};
+		layout.forEach((block)=> {
+			if (block.type === 'pubs') {
+				const specifiedPubs = block.content.pubIds;
+				nonSpecifiedPubs.forEach((pub, index)=> {
+					if (specifiedPubs.indexOf(pub.id) > -1) {
+						nonSpecifiedPubs.splice(index, 1);
+					}
+				});
+			}
+		});
+		layout.forEach((block, index)=> {
+			if (block.type === 'pubs') {
+				const pubsById = pubs.reduce((prev, curr)=> {
+					const output = prev;
+					output[curr.id] = curr;
+					return output;
+				}, {});
+				const renderList = block.content.pubIds.map((id)=> {
+					return pubsById[id];
+				});
+				const limit = block.content.limit || (nonSpecifiedPubs.length + renderList.length);
+				for (let pubIndex = renderList.length; pubIndex < limit; pubIndex++) {
+					if (nonSpecifiedPubs.length) {
+						renderList.push(nonSpecifiedPubs[0]);
+						nonSpecifiedPubs.splice(0, 1);
+					}
+				}
+				pubRenderLists[index] = renderList;
+			}
+		});
+		return pubRenderLists;
+	}
 
 	render() {
 		const collectionData = this.props.collectionData.data || { pubs: [] };
@@ -73,7 +167,7 @@ class Collection extends Component {
 		}, undefined);
 		if (!title) { return <NoMatch />; }
 		const numPublished = collectionData.pubs.reduce((prev, curr)=> {
-			if (!!curr.firstPublishedAt) { return prev + 1; }
+			if (curr.firstPublishedAt) { return prev + 1; }
 			return prev;
 		}, 0);
 		const publicDrafts = collectionData.pubs.filter((item)=> {
@@ -83,6 +177,8 @@ class Collection extends Component {
 			if (foo.updatedAt < bar.updatedAt) { return 1; }
 			return 0;
 		});
+		const layout = collectionData.layout || getDefaultLayout(collectionData.isPage);
+		const pubRenderLists = this.generateRenderList(layout);
 		return (
 			<div>
 				<div className={'collection'}>
@@ -115,26 +211,37 @@ class Collection extends Component {
 								{collectionData.slug &&
 									<h1>{title}</h1>
 								}
-								<p className={'description'}>{collectionData.description}</p>
+								{/*<p className={'description'}>{collectionData.description}</p>*/}
 							</div>
 						</div>
 
-						{!!collectionData.layout && !!collectionData.layout.html &&
+						{layout.filter((item)=> {
+							if (collectionData.id && !numPublished && item.type === 'pubs') {
+								return false;
+							}
+							return true;
+						}).map((item, index)=> {
+							const editorTypeComponent = this.getComponentFromType(item, index, pubRenderLists);
+							if (!editorTypeComponent) { return null; }
+							return <div key={`block-${item.id}`} className={'component-wrapper'}>{editorTypeComponent}</div>;
+						})}
+
+						{/*!!collectionData.layout && !!collectionData.layout.html &&
 							<div className={'row'}>
 								<div className={'col-12 layout'}>
 									<div dangerouslySetInnerHTML={{ __html: collectionData.layout.html }} />
 								</div>
 							</div>
-						}
+						*/}
 
-						{!collectionData.id &&
+						{/*!collectionData.id &&
 							<div className={'row'}>
 								<div className={'col-12'}>
 									<PubPreview size={'medium'} />
 								</div>
 							</div>
-						}
-						{!!collectionData.id &&
+						*/}
+						{/*!!collectionData.id &&
 							<div className={'published-pubs-wrapper'}>
 								<div className={'row'}>
 									{collectionData.pubs.filter((item)=> {
@@ -166,7 +273,7 @@ class Collection extends Component {
 									})}
 								</div>
 							</div>
-						}
+						*/}
 						{!publicDrafts.length && !!collectionData.id && !numPublished && !collectionData.isPage &&
 							<NonIdealState
 								title={'Empty Collection'}
@@ -174,7 +281,7 @@ class Collection extends Component {
 								visual={'pt-icon-applications'}
 							/>
 						}
-						{!!publicDrafts.length &&
+						{/*!!publicDrafts.length &&
 							<div className={'working-drafts-wrapper'}>
 								<div className={'row'}>
 									<div className={'col-12 working-drafts-header'}>
@@ -205,7 +312,7 @@ class Collection extends Component {
 									);
 								})}
 							</div>
-						}
+						*/}
 					</div>
 				</div>
 

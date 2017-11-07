@@ -7,6 +7,7 @@ require('./layoutEditorInsert.scss');
 const propTypes = {
 	insertIndex: PropTypes.number.isRequired,
 	onInsert: PropTypes.func.isRequired,
+	isPage: PropTypes.bool.isRequired,
 };
 
 const LayoutEditorInsert = function(props) {
@@ -16,6 +17,10 @@ const LayoutEditorInsert = function(props) {
 		{ title: 'Add HTML Block', type: 'html' },
 		{ title: 'Add Open Drafts Block', type: 'drafts' },
 	];
+	if (props.isPage) {
+		types.splice(3, 1);
+		types.splice(0, 1);
+	}
 	return (
 		<div className={'layout-editor-insert'}>
 			<Popover

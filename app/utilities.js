@@ -138,7 +138,18 @@ export function generateHash(length) {
 	return hash;
 }
 
-export function getDefaultLayout() {
+export function getDefaultLayout(isPage) {
+	if (isPage) {
+		return [
+			{
+				id: 'kruw36cv',
+				type: 'text',
+				content: {
+					text: undefined,
+				},
+			}
+		];
+	}
 	return [
 		{
 			id: '0kyj32ay',

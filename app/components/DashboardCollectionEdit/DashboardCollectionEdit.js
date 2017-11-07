@@ -44,7 +44,7 @@ class DashboardCollectionEdit extends Component {
 			isPublic: props.collectionData.isPublic,
 			isOpenSubmissions: props.collectionData.isOpenSubmissions,
 			createPubMessage: props.collectionData.createPubMessage,
-			layout: props.collectionData.layout || getDefaultLayout(),
+			layout: props.collectionData.layout || getDefaultLayout(props.collectionData.isPage),
 		};
 		this.setTitle = this.setTitle.bind(this);
 		this.setDescription = this.setDescription.bind(this);
@@ -153,6 +153,7 @@ class DashboardCollectionEdit extends Component {
 						onChange={this.setLayout}
 						initialLayout={this.state.layout}
 						pubs={data.pubs}
+						isPage={data.isPage}
 					/>
 				}
 
@@ -172,7 +173,7 @@ class DashboardCollectionEdit extends Component {
 							label={'Description'}
 							placeholder={'Enter description'}
 							isTextarea={true}
-							helperText={'Used for search engines. Max 180 characters'}
+							helperText={'Used for search results. Max 180 characters'}
 							value={this.state.description}
 							onChange={this.setDescription}
 							error={undefined}

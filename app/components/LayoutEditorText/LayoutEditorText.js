@@ -5,6 +5,7 @@ import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
 import Image from '@pubpub/editor/addons/Image';
 import Video from '@pubpub/editor/addons/Video';
 import File from '@pubpub/editor/addons/File';
+import Iframe from '@pubpub/editor/addons/Iframe';
 import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import { s3Upload, getResizedUrl } from 'utilities';
 
@@ -124,12 +125,14 @@ class LayoutEditorText extends Component {
 									>
 										<FormattingMenu />
 										<InsertMenu />
+										<Iframe />
 										<Image
 											handleFileUpload={s3Upload}
 											handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '1200x0'); }}
 										/>
 										<Video handleFileUpload={s3Upload} />
 										<File handleFileUpload={s3Upload} />
+
 									</Editor>
 								</div>
 							</div>

@@ -13,10 +13,12 @@ const propTypes = {
 	onChange: PropTypes.func,
 	initialLayout: PropTypes.array.isRequired,
 	pubs: PropTypes.array.isRequired,
+	isPage: PropTypes.bool,
 };
 
 const defaultProps = {
 	onChange: ()=>{},
+	isPage: false,
 };
 
 class LayoutEditor extends Component {
@@ -129,7 +131,9 @@ class LayoutEditor extends Component {
 		this.props.onChange(newLayout);
 	}
 	generateRenderList(newLayout) {
-		const allPubs = this.props.pubs.sort((foo, bar)=> {
+		const allPubs = this.props.pubs.filter((item)=> {
+			return item.firstPublishedAt;
+		}).sort((foo, bar)=> {
 			if (foo.firstPublishedAt < bar.firstPublishedAt) { return 1; }
 			if (foo.firstPublishedAt > bar.firstPublishedAt) { return -1; }
 			return 0;
@@ -178,13 +182,13 @@ class LayoutEditor extends Component {
 	render() {
 		return (
 			<div className={'layout-editor'}>
-				<LayoutEditorInsert insertIndex={0} onInsert={this.handleInsert} />
+				<LayoutEditorInsert insertIndex={0} onInsert={this.handleInsert} isPage={this.props.isPage} />
 				{this.state.layout.map((item, index)=> {
 					const editorTypeComponent = this.getComponentFromType(item, index);
 					if (!editorTypeComponent) { return null; }
 					return [
 						<div key={`block-${item.id}`} className={'component-wrapper'}>{editorTypeComponent}</div>,
-						<LayoutEditorInsert key={`insert-${item.id}`} insertIndex={index + 1} onInsert={this.handleInsert} />
+						<LayoutEditorInsert key={`insert-${item.id}`} insertIndex={index + 1} onInsert={this.handleInsert} isPage={this.props.isPage} />
 					];
 				})}
 			</div>

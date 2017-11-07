@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import PubPreview from 'components/PubPreview/PubPreview'
+import PubPreview from 'components/PubPreview/PubPreview';
 // require('./layoutEditorPubs.scss');
 
 const propTypes = {
@@ -132,7 +132,9 @@ class LayoutEditorPubs extends Component {
 												? <div className={'pt-select'}>
 													<select value={this.props.content.pubIds[index] || ''} onChange={(evt)=> { this.changePubId(index, evt.target.value); }}>
 														<option value={''}>Choose specific Pub</option>
-														{this.props.pubs.sort((foo, bar)=> {
+														{this.props.pubs.filter((pub)=> {
+															return pub.firstPublishedAt;
+														}).sort((foo, bar)=> {
 															if (foo.title < bar.title) { return -1; }
 															if (foo.title > bar.title) { return 1; }
 															return 0;

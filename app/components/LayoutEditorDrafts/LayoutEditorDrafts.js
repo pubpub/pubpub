@@ -47,9 +47,9 @@ class LayoutEditorDrafts extends Component {
 
 				<div className={'block-content'}>
 					<div className={'container'}>
-						<div className={'working-drafts-wrapper'}>
+						<div className={'drafts-wrapper'}>
 							<div className={'row'}>
-								<div className={'col-12 working-drafts-header'}>
+								<div className={'col-12 drafts-header'}>
 									<h2>{this.props.content.title}</h2>
 									<div>The following are unpublished pubs that are open to collaboration.</div>
 								</div>

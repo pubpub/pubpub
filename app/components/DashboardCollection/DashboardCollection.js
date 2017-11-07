@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Button, NonIdealState } from '@blueprintjs/core';
+import LayoutHtml from 'components/LayoutHtml/LayoutHtml';
+import LayoutText from 'components/LayoutText/LayoutText';
 import DashboardCollectionLoading from './DashboardCollectionLoading';
 
 require('./dashboardCollection.scss');
@@ -106,9 +108,31 @@ const DashboardCollection = function(props) {
 				}
 			</div>
 
-			{data.isPage && !!data.layout && !!data.layout.html &&
+			{data.isPage && !!data.layout &&
 				<div className={'layout'}>
-					<div dangerouslySetInnerHTML={{ __html: data.layout.html }} />
+					{data.layout.map((item)=> {
+						if (item.type === 'text') {
+							return (
+								<div key={`block-${item.id}`} className={'component-wrapper'}>
+									<LayoutText
+										key={`item-${item.id}`}
+										content={item.content}
+									/>
+								</div>
+							);
+						}
+						if (item.type === 'html') {
+							return (
+								<div key={`block-${item.id}`} className={'component-wrapper'}>
+									<LayoutHtml
+										key={`item-${item.id}`}
+										content={item.content}
+									/>
+								</div>
+							);
+						}
+						return null;
+					})}
 				</div>
 			}
 
