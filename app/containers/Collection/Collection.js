@@ -191,30 +191,32 @@ class Collection extends Component {
 					</Helmet>
 
 					<div className={'container'}>
-						<div className={'row'}>
-							<div className={'col-12'}>
-								{!collectionData.isPage && collectionData.isOpenSubmissions &&
-									<div className={'create-pub-wrapper'}>
-										<Button
-											type={'button'}
-											className={'pt-button pt-intent-primary'}
-											loading={this.props.pubCreateData.isLoading}
-											onClick={this.handleCreatePub}
-											text={'Create Pub in Collection'}
-										/>
-										{collectionData.createPubMessage &&
-											<Link to={`/${collectionData.slug}/submit`} className={'instructions-link'}>
-												Submission Instructions
-											</Link>
-										}
-									</div>
-								}
-								{title && title !== 'Home' &&
-									<h1>{title}</h1>
-								}
-								{/*<p className={'description'}>{collectionData.description}</p>*/}
+						{((!collectionData.isPage && collectionData.isOpenSubmissions) || (title && title !== 'Home')) &&
+							<div className={'row'}>
+								<div className={'col-12'}>
+									{!collectionData.isPage && collectionData.isOpenSubmissions &&
+										<div className={'create-pub-wrapper'}>
+											<Button
+												type={'button'}
+												className={'pt-button pt-intent-primary'}
+												loading={this.props.pubCreateData.isLoading}
+												onClick={this.handleCreatePub}
+												text={'Create Pub in Collection'}
+											/>
+											{collectionData.createPubMessage &&
+												<Link to={`/${collectionData.slug}/submit`} className={'instructions-link'}>
+													Submission Instructions
+												</Link>
+											}
+										</div>
+									}
+									{title && title !== 'Home' &&
+										<h1>{title}</h1>
+									}
+									{/*<p className={'description'}>{collectionData.description}</p>*/}
+								</div>
 							</div>
-						</div>
+						}
 
 						{layout.filter((item)=> {
 							if (collectionData.id && !numPublished && item.type === 'pubs') {
