@@ -44,7 +44,7 @@ class LayoutEditor extends Component {
 					onRemove={this.handleRemove}
 					layoutIndex={index}
 					content={item.content}
-					pubRenderList={this.state.pubRenderLists[index]}
+					pubRenderList={this.state.pubRenderLists[index] || []}
 					pubs={this.props.pubs}
 				/>
 			);

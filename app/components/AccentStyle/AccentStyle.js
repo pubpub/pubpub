@@ -26,7 +26,7 @@ const AccentStyle = function(props) {
 			.thread:hover:after { background-color: ${props.accentColor}; }
 			.pt-slider-progress, .pt-dark .pt-slider-progress { background: ${props.accentColor}; }
 			.pt-slider-handle .pt-slider-label { background: ${props.accentColor}; color: ${props.accentTextColor}; }
-			.pub-body a, .layout a { color: ${props.accentActionColor}; }
+			.pub-body a, .layout-html a, .layout-text a, .layout-editor-text a { color: ${props.accentActionColor}; }
 			.pub-body sup.footnote { color: ${props.accentColor}; }
 			.pub-body span.citation { color: ${props.accentColor}; }
 			.footnote-text a { color: ${props.accentActionColor}; text-decoration: underline; }

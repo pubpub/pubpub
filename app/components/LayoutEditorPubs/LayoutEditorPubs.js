@@ -63,7 +63,7 @@ class LayoutEditorPubs extends Component {
 		newPubIds[index] = string;
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
-			pubIds: newPubIds,
+			pubIds: newPubIds.filter((item)=> { return item; }),
 		});
 	}
 	render() {
@@ -121,7 +121,7 @@ class LayoutEditorPubs extends Component {
 
 						<div className={'row'}>
 							{previews.map((item, index)=> {
-								const selectPub = this.props.pubRenderList[index] || {};
+								const selectPub = (this.props.pubRenderList && this.props.pubRenderList[index]) || {};
 								return (
 									<div key={`preview-${this.props.layoutIndex}-${index}`} className={size === 'medium' ? 'col-6' : 'col-12'}>
 										<PubPreview

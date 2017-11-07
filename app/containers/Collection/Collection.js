@@ -209,7 +209,7 @@ class Collection extends Component {
 										}
 									</div>
 								}
-								{title &&
+								{title && title !== 'Home' &&
 									<h1>{title}</h1>
 								}
 								{/*<p className={'description'}>{collectionData.description}</p>*/}
