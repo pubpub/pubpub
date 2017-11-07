@@ -176,9 +176,6 @@ class LayoutEditor extends Component {
 	}
 
 	render() {
-		console.log('--------');
-		console.log(this.props.initialLayout);
-		console.log(JSON.stringify(this.state.layout, null, 2));
 		return (
 			<div className={'layout-editor'}>
 				<LayoutEditorInsert insertIndex={0} onInsert={this.handleInsert} />

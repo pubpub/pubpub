@@ -70,13 +70,11 @@ class LayoutEditorText extends Component {
 		});
 	}
 	render() {
-		console.log(this.props.content);
 		const wrapperStyle = {
 			textAlign: this.props.content.align || 'left',
 			maxWidth: this.props.content.width === 'narrow' ? '800px' : 'none',
 			margin: this.props.content.align === 'center' && this.props.content.width === 'narrow' ? '0 auto' : '0',
 		};
-		console.log(wrapperStyle);
 		return (
 			<div className={'layout-editor-text'}>
 				<div className={'block-header'}>

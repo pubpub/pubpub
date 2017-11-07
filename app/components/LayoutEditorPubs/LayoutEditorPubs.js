@@ -75,7 +75,6 @@ class LayoutEditorPubs extends Component {
 		}
 		const previews = [...this.props.content.pubIds, ...emptyPreviews].slice(0, displayLimit);
 		const selectOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-		console.log('Render List', this.props.pubRenderList);
 		return (
 			<div className={'layout-editor-pubs'}>
 				<div className={'block-header'}>
