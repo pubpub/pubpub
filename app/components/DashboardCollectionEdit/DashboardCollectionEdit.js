@@ -9,11 +9,14 @@ import Image from '@pubpub/editor/addons/Image';
 import Video from '@pubpub/editor/addons/Video';
 import File from '@pubpub/editor/addons/File';
 import InsertMenu from '@pubpub/editor/addons/InsertMenu';
-import { s3Upload, getResizedUrl } from 'utilities';
+import queryString from 'query-string';
+import LayoutEditor from 'components/LayoutEditor/LayoutEditor';
+import { s3Upload, getResizedUrl, getDefaultLayout } from 'utilities';
 
 require('./dashboardCollectionEdit.scss');
 
 const propTypes = {
+	location: PropTypes.object.isRequired,
 	collectionData: PropTypes.object.isRequired,
 	putIsLoading: PropTypes.bool,
 	deleteIsLoading: PropTypes.bool,
@@ -41,7 +44,7 @@ class DashboardCollectionEdit extends Component {
 			isPublic: props.collectionData.isPublic,
 			isOpenSubmissions: props.collectionData.isOpenSubmissions,
 			createPubMessage: props.collectionData.createPubMessage,
-			layout: props.collectionData.layout ? props.collectionData.layout.html : '',
+			layout: props.collectionData.layout || getDefaultLayout(),
 		};
 		this.setTitle = this.setTitle.bind(this);
 		this.setDescription = this.setDescription.bind(this);
@@ -77,8 +80,8 @@ class DashboardCollectionEdit extends Component {
 	setClosed() {
 		this.setState({ hasChanged: true, isOpenSubmissions: false });
 	}
-	setLayout(evt) {
-		this.setState({ hasChanged: true, layout: evt.target.value });
+	setLayout(newLayout) {
+		this.setState({ hasChanged: true, layout: newLayout });
 	}
 	setCreatePubMessage(val) {
 		this.setState({ hasChanged: true, createPubMessage: val });
@@ -91,7 +94,7 @@ class DashboardCollectionEdit extends Component {
 			description: this.state.description,
 			isPublic: this.state.isPublic,
 			isOpenSubmissions: this.state.isOpenSubmissions,
-			layout: { html: this.state.layout },
+			layout: this.state.layout,
 			createPubMessage: this.state.createPubMessage,
 		});
 	}
@@ -100,8 +103,10 @@ class DashboardCollectionEdit extends Component {
 	}
 
 	render() {
+		const queryObject = queryString.parse(this.props.location.search);
 		const data = this.props.collectionData;
 		const pubs = data.pubs || [];
+
 		return (
 			<div className={'dashboard-collection-edit'}>
 				<div className={'content-buttons'}>
@@ -119,105 +124,140 @@ class DashboardCollectionEdit extends Component {
 					}
 				</div>
 
-				{this.props.collectionData.slug &&
-					<InputField
-						label={'Title'}
-						placeholder={'Enter title'}
-						isRequired={true}
-						value={this.state.title}
-						onChange={this.setTitle}
-						error={undefined}
-					/>
-				}
-				<InputField
-					label={'Description'}
-					placeholder={'Enter description'}
-					isTextarea={true}
-					helperText={'Used for search engines. Max 180 characters'}
-					value={this.state.description}
-					onChange={this.setDescription}
-					error={undefined}
-				/>
-				{this.props.collectionData.slug &&
-					<InputField
-						label={'Link'}
-						placeholder={'Enter link'}
-						isRequired={true}
-						value={this.state.slug}
-						onChange={this.setSlug}
-						error={undefined}
-					/>
-				}
+				<h1>Edit: {this.state.title}</h1>
 
-				{this.props.collectionData.slug &&
-					<InputField label={'Privacy'}>
-						<div className="pt-button-group">
-							<button type="button" className={`pt-button pt-icon-globe ${this.state.isPublic ? 'pt-active' : ''}`} onClick={this.setPublic}>Public</button>
-							<button type="button" className={`pt-button pt-icon-lock ${this.state.isPublic ? '' : 'pt-active'}`} onClick={this.setPrivate}>Private</button>
-						</div>
-					</InputField>
-				}
-
-				{!this.props.collectionData.isPage &&
-					<InputField label={'Submissions'}>
-						<div className="pt-button-group">
-							<button type="button" className={`pt-button pt-icon-add-to-artifact ${this.state.isOpenSubmissions ? 'pt-active' : ''}`} onClick={this.setOpen}>Open</button>
-							<button type="button" className={`pt-button pt-icon-delete ${!this.state.isOpenSubmissions ? 'pt-active' : ''}`} onClick={this.setClosed}>Closed</button>
-						</div>
-					</InputField>
-				}
-				<InputField
-					label={'Layout'}
-					placeholder={'Enter HTML'}
-					isTextarea={true}
-					wrapperClassName={'html-input'}
-					value={this.state.layout}
-					helperText={'This basic HTML input is a placeholder until the full-featured visual layout editor is ready.'}
-					onChange={this.setLayout}
-					error={undefined}
-				/>
-
-				{!this.props.collectionData.isPage &&
-					<InputField label={'Submission Instructions'}>
-						<div className={'editor-wrapper'}>
-							<Editor
-								placeholder={'Instructions for submitting to this collection...'}
-								onChange={this.setCreatePubMessage}
-								initialContent={this.props.collectionData.createPubMessage || undefined}
+				<div className={'edit-nav'}>
+					<div className="pt-tabs">
+						<div className="pt-tab-list pt-large" role="tablist">
+							<Link
+								to={`${this.props.location.pathname}`}
+								className={'pt-tab'}
+								role={'tab'}
+								aria-selected={!queryObject.tab}
 							>
-								<FormattingMenu />
-								<InsertMenu />
-								<Image
-									handleFileUpload={s3Upload}
-									handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }}
-								/>
-								<Video handleFileUpload={s3Upload} />
-								<File handleFileUpload={s3Upload} />
-							</Editor>
-						</div>
-					</InputField>
-				}
-
-				{this.props.collectionData.slug &&
-					<div className="pt-callout pt-intent-danger">
-						<h5>Delete {this.props.collectionData.isPage ? 'Page' : 'Collection'} from Community</h5>
-						<div>Deleting a {this.props.collectionData.isPage ? 'page' : 'collection'} is permanent.</div>
-						{!!pubs.length &&
-							<div>Before deleting, you must remove all pubs from this collection.</div>
-						}
-						<div className={'delete-button-wrapper'}>
-							<Button
-								type={'button'}
-								className={'pt-intent-danger'}
-								text={`Delete ${this.props.collectionData.isPage ? 'Page' : 'Collection'}`}
-								disabled={pubs.length}
-								loading={this.props.deleteIsLoading}
-								onClick={this.handleDelete}
-							/>
+								Details
+							</Link>
+							<Link
+								to={`${this.props.location.pathname}?tab=layout`}
+								className={'pt-tab'}
+								role={'tab'}
+								aria-selected={queryObject.tab === 'layout'}
+							>
+								Layout
+							</Link>
 						</div>
 					</div>
+				</div>
+				{queryObject.tab === 'layout' &&
+					<LayoutEditor
+						onChange={this.setLayout}
+						initialLayout={this.state.layout}
+						pubs={data.pubs}
+					/>
 				}
 
+				{!queryObject.tab &&
+					<div>
+						{this.props.collectionData.slug &&
+							<InputField
+								label={'Title'}
+								placeholder={'Enter title'}
+								isRequired={true}
+								value={this.state.title}
+								onChange={this.setTitle}
+								error={undefined}
+							/>
+						}
+						<InputField
+							label={'Description'}
+							placeholder={'Enter description'}
+							isTextarea={true}
+							helperText={'Used for search engines. Max 180 characters'}
+							value={this.state.description}
+							onChange={this.setDescription}
+							error={undefined}
+						/>
+						{this.props.collectionData.slug &&
+							<InputField
+								label={'Link'}
+								placeholder={'Enter link'}
+								isRequired={true}
+								value={this.state.slug}
+								onChange={this.setSlug}
+								error={undefined}
+							/>
+						}
+
+						{this.props.collectionData.slug &&
+							<InputField label={'Privacy'}>
+								<div className="pt-button-group">
+									<button type="button" className={`pt-button pt-icon-globe ${this.state.isPublic ? 'pt-active' : ''}`} onClick={this.setPublic}>Public</button>
+									<button type="button" className={`pt-button pt-icon-lock ${this.state.isPublic ? '' : 'pt-active'}`} onClick={this.setPrivate}>Private</button>
+								</div>
+							</InputField>
+						}
+
+						{!this.props.collectionData.isPage &&
+							<InputField label={'Submissions'}>
+								<div className="pt-button-group">
+									<button type="button" className={`pt-button pt-icon-add-to-artifact ${this.state.isOpenSubmissions ? 'pt-active' : ''}`} onClick={this.setOpen}>Open</button>
+									<button type="button" className={`pt-button pt-icon-delete ${!this.state.isOpenSubmissions ? 'pt-active' : ''}`} onClick={this.setClosed}>Closed</button>
+								</div>
+							</InputField>
+						}
+						{/* <InputField
+							label={'Layout'}
+							placeholder={'Enter HTML'}
+							isTextarea={true}
+							wrapperClassName={'html-input'}
+							value={this.state.layout}
+							helperText={'This basic HTML input is a placeholder until the full-featured visual layout editor is ready.'}
+							onChange={this.setLayout}
+							error={undefined}
+						/> */}
+
+						{!this.props.collectionData.isPage &&
+							<InputField label={'Submission Instructions'}>
+								<div className={'editor-wrapper'}>
+									<Editor
+										placeholder={'Instructions for submitting to this collection...'}
+										onChange={this.setCreatePubMessage}
+										initialContent={this.props.collectionData.createPubMessage || undefined}
+									>
+										<FormattingMenu />
+										<InsertMenu />
+										<Image
+											handleFileUpload={s3Upload}
+											handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }}
+										/>
+										<Video handleFileUpload={s3Upload} />
+										<File handleFileUpload={s3Upload} />
+									</Editor>
+								</div>
+							</InputField>
+						}
+
+						{this.props.collectionData.slug &&
+							<div className="pt-callout pt-intent-danger">
+								<h5>Delete {this.props.collectionData.isPage ? 'Page' : 'Collection'} from Community</h5>
+								<div>Deleting a {this.props.collectionData.isPage ? 'page' : 'collection'} is permanent.</div>
+								{!!pubs.length &&
+									<div>Before deleting, you must remove all pubs from this collection.</div>
+								}
+								<div className={'delete-button-wrapper'}>
+									<Button
+										type={'button'}
+										className={'pt-intent-danger'}
+										text={`Delete ${this.props.collectionData.isPage ? 'Page' : 'Collection'}`}
+										disabled={pubs.length}
+										loading={this.props.deleteIsLoading}
+										onClick={this.handleDelete}
+									/>
+								</div>
+							</div>
+						}
+					</div>
+				}
 			</div>
 		);
 	}

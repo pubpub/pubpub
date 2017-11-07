@@ -11,9 +11,10 @@ const propTypes = {
 
 const LayoutEditorInsert = function(props) {
 	const types = [
-		{ title: 'Add Pub List', type: 'pubs'},
-		{ title: 'Add Text Block', type: 'text'},
-		{ title: 'Add HTML Block', type: 'html'},
+		{ title: 'Add Pub List', type: 'pubs' },
+		{ title: 'Add Text Block', type: 'text' },
+		{ title: 'Add HTML Block', type: 'html' },
+		{ title: 'Add Open Drafts Block', type: 'drafts' },
 	];
 	return (
 		<div className={'layout-editor-insert'}>
@@ -23,6 +24,8 @@ const LayoutEditorInsert = function(props) {
 						{types.map((item)=> {
 							return (
 								<div
+									role={'button'}
+									tabIndex={-1}
 									key={`insert-${item.type}`}
 									className={'pt-menu-item pt-popover-dismiss'}
 									onClick={()=>{ props.onInsert(props.insertIndex, item.type); }}

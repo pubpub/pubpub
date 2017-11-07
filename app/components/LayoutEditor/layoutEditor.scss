@@ -27,6 +27,14 @@
 		h3 {
 			margin: 0px;
 		}
+		textarea {
+			width: 100%;
+			resize: vertical;
+			min-height: 150px;
+			font-family: 'Courier', monospace;
+			white-space: nowrap;
+			padding: 0.5em;
+		}
 	}
 }
 

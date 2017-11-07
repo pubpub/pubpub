@@ -80,7 +80,7 @@ class LayoutEditorPubs extends Component {
 			<div className={'layout-editor-pubs'}>
 				<div className={'block-header'}>
 					<div className={'pt-form-group'}>
-						<label htmlFor={`section-title-${this.props.layoutIndex}`}>Section Title</label>
+						<label htmlFor={`section-title-${this.props.layoutIndex}`}>Pubs Section Title</label>
 						<input id={`section-title-${this.props.layoutIndex}`} type={'text'} className={'pt-input'} value={this.props.content.title} onChange={this.changeTitle} />
 					</div>
 					<div className={'spacer'} />
@@ -124,7 +124,7 @@ class LayoutEditorPubs extends Component {
 							{previews.map((item, index)=> {
 								const selectPub = this.props.pubRenderList[index] || {};
 								return (
-									<div className={size === 'medium' ? 'col-6' : 'col-12'}>
+									<div key={`preview-${this.props.layoutIndex}-${index}`} className={size === 'medium' ? 'col-6' : 'col-12'}>
 										<PubPreview
 											size={size}
 											isPlaceholder={true}

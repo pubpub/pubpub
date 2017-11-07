@@ -3,7 +3,7 @@
 	$navHeight: 56px; // 56px is height of nav
 	background-color: #F9F9F9;
 	min-height: calc(100vh - #{$navHeight});
-	.col-12 {
+	.no-margin {
 		margin-top: 0px;
 		margin-bottom: 0px;
 	}

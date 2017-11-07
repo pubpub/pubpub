@@ -8,7 +8,7 @@ import File from '@pubpub/editor/addons/File';
 import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import { s3Upload, getResizedUrl } from 'utilities';
 
-require('./layoutEditorText.scss');
+// require('./layoutEditorText.scss');
 
 const propTypes = {
 	onChange: PropTypes.func.isRequired,
@@ -81,7 +81,7 @@ class LayoutEditorText extends Component {
 			<div className={'layout-editor-text'}>
 				<div className={'block-header'}>
 					<div className={'pt-form-group'}>
-						<label htmlFor={`section-title-${this.props.layoutIndex}`}>Section Title</label>
+						<label htmlFor={`section-title-${this.props.layoutIndex}`}>Text Section Title</label>
 						<input id={`section-title-${this.props.layoutIndex}`} type={'text'} className={'pt-input'} value={this.props.content.title} onChange={this.changeTitle} />
 					</div>
 					<div className={'spacer'} />

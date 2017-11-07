@@ -3,19 +3,20 @@ import PropTypes from 'prop-types';
 import LayoutEditorInsert from 'components/LayoutEditorInsert/LayoutEditorInsert';
 import LayoutEditorPubs from 'components/LayoutEditorPubs/LayoutEditorPubs';
 import LayoutEditorText from 'components/LayoutEditorText/LayoutEditorText';
+import LayoutEditorHtml from 'components/LayoutEditorHtml/LayoutEditorHtml';
+import LayoutEditorDrafts from 'components/LayoutEditorDrafts/LayoutEditorDrafts';
 import { generateHash } from 'utilities';
 
 require('./layoutEditor.scss');
 
 const propTypes = {
-	onSave: PropTypes.func,
-	initialLayout: PropTypes.array,
+	onChange: PropTypes.func,
+	initialLayout: PropTypes.array.isRequired,
 	pubs: PropTypes.array.isRequired,
 };
 
 const defaultProps = {
-	onSave: ()=>{},
-	initialLayout: [],
+	onChange: ()=>{},
 };
 
 class LayoutEditor extends Component {
@@ -58,7 +59,26 @@ class LayoutEditor extends Component {
 			);
 		}
 		if (item.type === 'html') {
-			return <div key={`item-${item.id}`}>html {item.id}</div>;
+			return (
+				<LayoutEditorHtml
+					key={`item-${item.id}`}
+					onChange={this.handleChange}
+					onRemove={this.handleRemove}
+					layoutIndex={index}
+					content={item.content}
+				/>
+			);
+		}
+		if (item.type === 'drafts') {
+			return (
+				<LayoutEditorDrafts
+					key={`item-${item.id}`}
+					onChange={this.handleChange}
+					onRemove={this.handleRemove}
+					layoutIndex={index}
+					content={item.content}
+				/>
+			);
 		}
 		return null;
 	}
@@ -77,7 +97,14 @@ class LayoutEditor extends Component {
 				align: 'left',
 				width: 'wide',
 				text: undefined,
-			}
+			},
+			html: {
+				title: '',
+				html: '',
+			},
+			drafts: {
+				title: 'Open Drafts'
+			},
 		};
 		newLayout.splice(index, 0, {
 			id: generateHash(8),
@@ -89,6 +116,7 @@ class LayoutEditor extends Component {
 			layout: newLayout,
 			pubRenderLists: newPubRenderList,
 		});
+		this.props.onChange(newLayout);
 	}
 	handleChange(index, newContent) {
 		const newLayout = this.state.layout;
@@ -98,6 +126,7 @@ class LayoutEditor extends Component {
 			layout: newLayout,
 			pubRenderLists: newPubRenderList,
 		});
+		this.props.onChange(newLayout);
 	}
 	generateRenderList(newLayout) {
 		const allPubs = this.props.pubs.sort((foo, bar)=> {
@@ -143,10 +172,13 @@ class LayoutEditor extends Component {
 		const newLayout = this.state.layout;
 		newLayout.splice(index, 1);
 		this.setState({ layout: newLayout });
+		this.props.onChange(newLayout);
 	}
 
 	render() {
 		console.log('--------');
+		console.log(this.props.initialLayout);
+		console.log(JSON.stringify(this.state.layout, null, 2));
 		return (
 			<div className={'layout-editor'}>
 				<LayoutEditorInsert insertIndex={0} onInsert={this.handleInsert} />
@@ -154,7 +186,7 @@ class LayoutEditor extends Component {
 					const editorTypeComponent = this.getComponentFromType(item, index);
 					if (!editorTypeComponent) { return null; }
 					return [
-						<div className={'component-wrapper'}>{editorTypeComponent}</div>,
+						<div key={`block-${item.id}`} className={'component-wrapper'}>{editorTypeComponent}</div>,
 						<LayoutEditorInsert key={`insert-${item.id}`} insertIndex={index + 1} onInsert={this.handleInsert} />
 					];
 				})}

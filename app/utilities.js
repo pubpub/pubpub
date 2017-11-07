@@ -138,6 +138,38 @@ export function generateHash(length) {
 	return hash;
 }
 
+export function getDefaultLayout() {
+	return [
+		{
+			id: '0kyj32ay',
+			type: 'pubs',
+			content: {
+				title: '',
+				size: 'large',
+				limit: 1,
+				pubIds: []
+			}
+		},
+		{
+			id: 'gruw36cv',
+			type: 'pubs',
+			content: {
+				title: '',
+				size: 'medium',
+				limit: 0,
+				pubIds: []
+			}
+		},
+		{
+			id: 'kruw36cv',
+			type: 'drafts',
+			content: {
+				title: 'Open Drafts',
+			},
+		}
+	];
+}
+
 export function formatCitationString(item, callback) {
 	const urlPrefix = apiUrlPrefix();
 	const finalRoute = `${urlPrefix}/editor/citation-format`;

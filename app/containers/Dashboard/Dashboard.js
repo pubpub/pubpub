@@ -162,7 +162,7 @@ class Dashboard extends Component {
 
 				<div className={'container'}>
 					<div className={'row'}>
-						<div className={'col-12'}>
+						<div className={'col-12 no-margin'}>
 
 							<div className={'side-panel'}>
 								<DashboardSide pages={pages} collections={collections} activeSlug={activeSlug} />
@@ -230,6 +230,7 @@ class Dashboard extends Component {
 											if (collectionData.id) {
 												return (
 													<DashboardCollectionEdit
+														location={this.props.location}
 														collectionData={collectionData}
 														putIsLoading={this.props.appData.putCollectionIsLoading}
 														deleteIsLoading={this.props.appData.deleteCollectionIsLoading}
