@@ -14,6 +14,7 @@ const propTypes = {
 	width: PropTypes.number,
 	height: PropTypes.number,
 	label: PropTypes.node,
+	isRequired: PropTypes.bool,
 	helperText: PropTypes.node,
 	htmlFor: PropTypes.string,
 	onNewImage: PropTypes.func,
@@ -26,6 +27,7 @@ const defaultProps = {
 	width: 75,
 	height: 75,
 	label: undefined,
+	isRequired: false,
 	helperText: undefined,
 	htmlFor: String(new Date().getTime()),
 	onNewImage: ()=> {},
@@ -118,6 +120,9 @@ class ImageUpload extends Component {
 			<div className={'image-upload'}>
 				<label htmlFor={`input-${this.props.htmlFor}`}>
 					{this.props.label}
+					{this.props.isRequired &&
+						<span className="pt-text-muted required-text"> (required)</span>
+					}
 					<br />
 
 					{(this.state.uploading || !this.state.imageBlob) &&

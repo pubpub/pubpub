@@ -16,6 +16,7 @@ require('./app.scss');
 
 const Collection = () => <Async load={import('containers/Collection/Collection')} />;
 const CollectionSubmit = () => <Async load={import('containers/CollectionSubmit/CollectionSubmit')} />;
+const CommunityCreate = () => <Async load={import('containers/CommunityCreate/CommunityCreate')} />;
 const Dashboard = () => <Async load={import('containers/Dashboard/Dashboard')} />;
 const Landing = () => <Async load={import('containers/Landing/Landing')} />;
 const Login = () => <Async load={import('containers/Login/Login')} />;
@@ -88,6 +89,7 @@ class App extends Component {
 					/>
 					<Switch>
 						<Route exact path="/" component={Landing} />
+						<Route exact path="/community/create" component={CommunityCreate} />
 						<Route exact path="/login" component={Login} />
 						<Route exact path="/password-reset" component={PasswordReset} />
 						<Route exact path="/password-reset/:resetHash/:slug" component={PasswordReset} />

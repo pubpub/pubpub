@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import app from './app';
 import collection from './collection';
+import communityCreate from './communityCreate';
 import login from './login';
 import passwordReset from './passwordReset';
 import pub from './pub';
@@ -13,6 +14,7 @@ import userCreate from './userCreate';
 export default combineReducers({
 	app,
 	collection,
+	communityCreate,
 	login,
 	passwordReset,
 	pub,
