@@ -21,9 +21,23 @@
 	.title {
 		font-weight: bold;
 		padding-bottom: 0.5em;
-		span {
-			padding-left: 0.25em;
-		}
+		// span {
+		// 	padding-left: 0.25em;
+		// }
+	}
+	.authors {
+		/* These lines are just so we can simply remove this without mucking with other css class */
+		margin-top: -0.5em; 
+		padding-bottom: 0.5em;
+		/* ------ */
+		width: 100%;
+		// font-style: italic;
+		opacity: 0.75;
+		font-size: 0.9em;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+
 	}
 	.icons {
 		float: right;

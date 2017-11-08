@@ -40,7 +40,18 @@ const DiscussionPreview = function(props) {
 		if (foo.createdAt < bar.createdAt) { return -1; }
 		return 0;
 	});
-
+	const usedAuthorNames = {};
+	const uniqueAuthors = sortedDiscussions.filter((item)=> {
+		if (usedAuthorNames[item.author.id]) { return false; }
+		usedAuthorNames[item.author.id] = true;
+		return true;
+	});
+	const discussionAuthors = uniqueAuthors.reduce((prev, curr, index)=> {
+		if (index === uniqueAuthors.length - 1 && uniqueAuthors.length > 2) { return `${prev}, and ${curr.author.fullName}`; }
+		if (index === uniqueAuthors.length - 1 && uniqueAuthors.length === 2) { return `${prev} and ${curr.author.fullName}`; }
+		if (index === 0) { return `${curr.author.fullName}`; }
+		return `${prev}, ${curr.author.fullName}`;
+	}, '');
 	const toUrl = props.isPresentation
 		? `/pub/${props.slug}?thread=${props.discussions[0].threadNumber}`
 		: `/pub/${props.slug}/collaborate?thread=${props.discussions[0].threadNumber}`;
@@ -69,7 +80,9 @@ const DiscussionPreview = function(props) {
 				}
 				{!isPublic && <span className={'pt-icon-standard pt-icon-lock2'} />}
 			</div>
-
+			<div className={'authors'}>
+				{discussionAuthors}
+			</div>
 			<div>
 				{sortedDiscussions.slice(0, 3).map((discussion)=> {
 					return (
