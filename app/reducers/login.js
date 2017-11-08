@@ -25,6 +25,12 @@ import {
 	POST_USER_FAIL,
 } from 'actions/userCreate';
 
+import {
+	PUT_USER_DATA_LOAD,
+	PUT_USER_DATA_SUCCESS,
+	PUT_USER_DATA_FAIL,
+} from 'actions/user';
+
 /* ------------------- */
 // Define Default State
 /* ------------------- */
@@ -65,6 +71,19 @@ export default function reducer(state = defaultState, action) {
 			isLoading: false,
 			error: undefined,
 		};
+	/* User Data Updated*/
+	case PUT_USER_DATA_LOAD:
+		return state;
+	case PUT_USER_DATA_SUCCESS:
+		return {
+			...state,
+			data: {
+				...state.data,
+				...action.result
+			},
+		};
+	case PUT_USER_DATA_FAIL:
+		return state;
 	case POST_LOGIN_LOAD:
 		return {
 			data: undefined,
