@@ -81,7 +81,7 @@ class PubCollabEditor extends Component {
 				{this.props.isReadOnly &&
 					<div className={'pt-callout'} style={{ marginBottom: '2em' }}>
 						<h5>Read Only</h5>
-						You have view permissions, so you can see the working draft but cannot edit it.
+						You have view permissions. You can see the working draft but cannot edit it.
 					</div>
 				}
 
