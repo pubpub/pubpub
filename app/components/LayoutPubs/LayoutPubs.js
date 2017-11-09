@@ -53,7 +53,7 @@ const LayoutPubs = function(props) {
 									slug={selectedPub.slug}
 									bannerImage={selectedPub.avatar}
 									size={size}
-									publicationDate={selectedPub.updatedAt}
+									publicationDate={selectedPub.firstPublishedAt}
 									collaborators={selectedPub.collaborators.filter((item)=> {
 										return !item.Collaborator.isAuthor;
 									})}

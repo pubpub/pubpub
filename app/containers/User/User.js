@@ -141,7 +141,7 @@ class User extends Component {
 										slug={pub.slug}
 										bannerImage={pub.avatar}
 										size={'medium'}
-										publicationDate={dateFormat(pub.updatedAt, 'mmm dd, yyyy')}
+										publicationDate={dateFormat(pub.firstPublishedAt, 'mmm dd, yyyy')}
 										collaborators={pub.collaborators.filter((item)=> {
 											return !item.Collaborator.isAuthor;
 										})}
