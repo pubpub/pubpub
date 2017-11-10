@@ -119,6 +119,9 @@ class PubCollaboration extends Component {
 		if (queryObject.thread === 'new' && nextQueryObject.thread !== 'new') {
 			this.setState({ initNewDoc: undefined });
 		}
+		if (queryObject.thread !== nextQueryObject.thread) {
+			document.getElementsByClassName('side-panel-content')[0].scrollTop = 0
+		}
 	}
 	componentWillUnmount() {
 		// this.props.dispatch(clearPubData());
