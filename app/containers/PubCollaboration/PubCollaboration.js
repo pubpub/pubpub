@@ -249,8 +249,9 @@ class PubCollaboration extends Component {
 		});
 	}
 	handleStatusChange(status) {
-		// If loading, wait until 'connected'
 		clearTimeout(this.setSavingTimeout);
+
+		/* If loading, wait until 'connected' */
 		if (this.state.collabStatus === 'loading' && status === 'connected') {
 			this.setState({ collabStatus: status });
 		}
@@ -263,7 +264,7 @@ class PubCollaboration extends Component {
 				this.setState({ collabStatus: status });
 			}
 		}
-		// If disconnected, only set state if the new status is 'connected'
+		/* If disconnected, only set state if the new status is 'connected' */
 		if (this.state.collabStatus === 'disconnected' && status === 'connected') {
 			this.setState({ collabStatus: status });
 		}

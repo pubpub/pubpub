@@ -144,6 +144,7 @@ const PubCollabHeader = function(props) {
 				<div className={'flex-right avatars'}>
 					<div className={`pt-tag pt-minimal ${props.collabStatus === 'disconnected' ? 'pt-intent-danger' : ''}`}>
 						{props.collabStatus}
+						{props.collabStatus === 'saving' ? '...' : ''}
 					</div>
 					{Object.keys(uniqueActiveCollaborators).map((key)=> {
 						return uniqueActiveCollaborators[key];
