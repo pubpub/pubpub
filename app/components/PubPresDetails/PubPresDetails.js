@@ -137,7 +137,7 @@ const PubPresDetails = function(props) {
 						</div>
 						{props.localPermissions !== 'none' &&
 							<div className={'button'}>
-								<Link to={`/pub/${props.slug}/collaborate`} className={'pt-button pt-intent-primary'}>Go to Collaboration Mode</Link>
+								<Link to={`/pub/${props.slug}/collaborate`} className={'pt-button pt-intent-primary'}>Edit, Review, Dicuss</Link>
 							</div>
 						}
 						
