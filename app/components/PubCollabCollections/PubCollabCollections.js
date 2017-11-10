@@ -128,11 +128,11 @@ class PubCollabCollections extends Component {
 								className: 'pt-minimal pt-intent-primary'
 							},
 							inputProps: {
-								value: this.state.value,
 								onChange: this.handleInputChange,
 							}
 						}}
 						// itemListPredicate={this.handleInputChange}
+						resetOnSelect={true}
 						onItemSelect={this.handleAddCollection}
 						noResults={<div className={'pt-menu-item'}>No Matching Collections</div>}
 						popoverProps={{ popoverClassName: 'pt-minimal pub-collab-collection-overlay' }}
