@@ -7,6 +7,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { NonIdealState } from '@blueprintjs/core';
 import NoMatch from 'containers/NoMatch/NoMatch';
 import Overlay from 'components/Overlay/Overlay';
+import Loading from 'components/Loading/Loading';
 import PubCollabEditor from 'components/PubCollabEditor/PubCollabEditor';
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
@@ -59,6 +60,7 @@ class PubCollaboration extends Component {
 			isArchivedVisible: false,
 			activeCollaborators: [this.localUser],
 			initNewDoc: undefined,
+			collabStatus: 'loading',
 		};
 		this.editorRef = undefined;
 		this.togglePublish = this.togglePublish.bind(this);
@@ -85,6 +87,7 @@ class PubCollaboration extends Component {
 		this.handleRemoveCollection = this.handleRemoveCollection.bind(this);
 		this.handleHighlightClick = this.handleHighlightClick.bind(this);
 		this.getHighlightContent = this.getHighlightContent.bind(this);
+		this.handleStatusChange = this.handleStatusChange.bind(this);
 		// this.focusEditor = this.focusEditor.bind(this);
 	}
 	componentWillMount() {
@@ -245,6 +248,26 @@ class PubCollaboration extends Component {
 			isPublishOpen: false,
 		});
 	}
+	handleStatusChange(status) {
+		// If loading, wait until 'connected'
+		clearTimeout(this.setSavingTimeout);
+		if (this.state.collabStatus === 'loading' && status === 'connected') {
+			this.setState({ collabStatus: status });
+		}
+		if (this.state.collabStatus !== 'loading' && this.state.collabStatus !== 'disconnected') {
+			if (status === 'saving') {
+				this.setSavingTimeout = setTimeout(()=> {
+					this.setState({ collabStatus: status });
+				}, 250);
+			} else {
+				this.setState({ collabStatus: status });
+			}
+		}
+		// If disconnected, only set state if the new status is 'connected'
+		if (this.state.collabStatus === 'disconnected' && status === 'connected') {
+			this.setState({ collabStatus: status });
+		}
+	}
 	handlePublish(submitHash) {
 		this.props.dispatch((postVersion({
 			pubId: this.props.pubData.data.id,
@@ -378,6 +401,7 @@ class PubCollaboration extends Component {
 									activeCollaborators={this.state.activeCollaborators}
 									submissionThreadNumber={submissionThreadNumber}
 									activeThread={activeThread}
+									collabStatus={this.state.collabStatus}
 									onPublishClick={this.togglePublish}
 									onSubmitClick={this.toggleSubmit}
 									onShareClick={this.toggleShare}
@@ -485,7 +509,16 @@ class PubCollaboration extends Component {
 									tabIndex={-1}
 									role={'textbox'}
 								>
-									<div className={'pub-body'}>
+									{this.state.collabStatus === 'loading' &&
+										<div className={'collaborative-loading'}>
+											<Loading width={'95%'} height={'1.2em'} />
+											<Loading width={'85%'} height={'1.2em'} />
+											<Loading width={'90%'} height={'1.2em'} />
+											<Loading width={'80%'} height={'1.2em'} />
+											<Loading width={'82%'} height={'1.2em'} />
+										</div>
+									}
+									<div className={`pub-body ${this.state.collabStatus === 'loading' ? 'loading' : ''}`}>
 										<PubCollabEditor
 											onRef={(ref)=> { this.editorRef = ref; }}
 											editorKey={`pub-${pubData.id}`}
@@ -498,6 +531,7 @@ class PubCollaboration extends Component {
 											highlights={highlights}
 											threads={threads}
 											slug={pubData.slug}
+											onStatusChange={this.handleStatusChange}
 										/>
 									</div>
 								</div>

@@ -32,6 +32,8 @@
 	}
 	.flex-right {
 		white-space: nowrap;
+		display: flex;
+		align-items: center;
 		.pt-button {
 			margin-left: 1em;
 		}
@@ -85,8 +87,11 @@
 	.avatars {
 		padding-left: 1em;
 		.avatar-wrapper {
-			padding-left: 0.25em;
+			padding-left: 1em;
 			display: inline-block;
+		}
+		.pt-tag {
+			text-transform: capitalize;
 		}
 	}
 }

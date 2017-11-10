@@ -15,6 +15,7 @@ const propTypes = {
 	isAdmin: PropTypes.bool,
 	submissionThreadNumber: PropTypes.number,
 	activeThread: PropTypes.array,
+	collabStatus: PropTypes.string.isRequired,
 	onPublishClick: PropTypes.func,
 	onSubmitClick: PropTypes.func,
 	onShareClick: PropTypes.func,
@@ -141,6 +142,9 @@ const PubCollabHeader = function(props) {
 					}
 				</div>
 				<div className={'flex-right avatars'}>
+					<div className={`pt-tag pt-minimal ${props.collabStatus === 'disconnected' ? 'pt-intent-danger' : ''}`}>
+						{props.collabStatus}
+					</div>
 					{Object.keys(uniqueActiveCollaborators).map((key)=> {
 						return uniqueActiveCollaborators[key];
 					}).filter((item)=> {

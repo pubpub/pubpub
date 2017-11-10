@@ -28,12 +28,14 @@ const propTypes = {
 	threads: PropTypes.array,
 	highlights: PropTypes.array,
 	slug: PropTypes.string,
+	onStatusChange: PropTypes.func,
 };
 const defaultProps = {
 	isReadOnly: false,
 	threads: [],
 	slug: '',
 	highlights: undefined,
+	onStatusChange: ()=>{},
 };
 
 const contextTypes = {
@@ -101,6 +103,7 @@ class PubCollabEditor extends Component {
 						clientData={this.props.clientData}
 						editorKey={this.props.editorKey}
 						onClientChange={this.props.onClientChange}
+						onStatusChange={this.props.onStatusChange}
 					/>
 					<Image
 						handleFileUpload={s3Upload}

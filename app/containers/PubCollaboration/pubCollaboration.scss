@@ -69,5 +69,11 @@
 		min-height: calc(100vh - #{$navHeight} - #{$titlePanelHeight});
 		// overflow: hidden;
 		cursor: text;
+		.collaborative-loading {
+			
+		}
+		.pub-body.loading {
+			opacity: 0;
+		}
 	}
 }
