@@ -1,2 +1,2 @@
-/rss.xml   http://pubpub-api-v4-dev.herokuapp.com/rss.xml   200
+/rss/*   http://pubpub-api-v4-dev.herokuapp.com/rss/:splat   200
 /*    /index.html   200
