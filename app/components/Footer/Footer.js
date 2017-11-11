@@ -10,7 +10,7 @@ const propTypes = {
 	loginData: PropTypes.object.isRequired,
 };
 
-/* This is a rare case of a connected component that isn't a container. */
+/* This is a rare case of a connected component that isn't a route container. */
 /* It is used in too many places where passing props becomes cumbersome */
 const Footer = function(props) {
 	const subdomain = props.appData.data.subdomain;
