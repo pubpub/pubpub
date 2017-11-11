@@ -65,7 +65,7 @@ const Terms = function(props) {
 				</div>
 			</div>
 
-			<Footer isBasePubPub={window.location.origin === 'https://v4.pubpub.org'} />
+			<Footer />
 		</div>
 	);
 };

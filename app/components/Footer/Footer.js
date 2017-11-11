@@ -1,21 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import Link from 'components/Link/Link';
 
 require('./footer.scss');
 
 const propTypes = {
-	isAdmin: PropTypes.bool,
-	isBasePubPub: PropTypes.bool,
+	appData: PropTypes.object.isRequired,
+	loginData: PropTypes.object.isRequired,
 };
 
-const defaultProps = {
-	isAdmin: false,
-	isBasePubPub: false,
-};
-
+/* This is a rare case of a connected component that isn't a container. */
+/* It is used in too many places where passing props becomes cumbersome */
 const Footer = function(props) {
-	const links = props.isBasePubPub
+	const subdomain = props.appData.data.subdomain;
+	const isBasePubPub = window.location.origin === 'https://v4.pubpub.org';
+	const isAdmin = props.loginData.data.isAdmin;
+	const links = isBasePubPub
 		? [
 			{
 				id: 1,
@@ -42,6 +43,11 @@ const Footer = function(props) {
 				adminOnly: true,
 			},
 			{
+				id: 2,
+				title: 'RSS',
+				url: `${window.location.origin}/rss/${subdomain}.xml`
+			},
+			{
 				id: 4,
 				title: 'Terms',
 				url: '/terms',
@@ -53,7 +59,7 @@ const Footer = function(props) {
 			}
 		];
 
-	const wrapperClasses = props.isBasePubPub
+	const wrapperClasses = isBasePubPub
 		? 'base-pubpub'
 		: 'accent-background accent-color';
 	return (
@@ -63,7 +69,7 @@ const Footer = function(props) {
 					<div className={'col-12'}>
 						<ul>
 							{links.filter((item)=> {
-								return !item.adminOnly || props.isAdmin;
+								return !item.adminOnly || isAdmin;
 							}).map((link)=> {
 								if (link.url.indexOf('https:') > -1 || link.url.indexOf('mailto:') > -1) {
 									return <li key={`footer-item-${link.id}`}><a href={link.url}>{link.title}</a></li>;
@@ -85,5 +91,7 @@ const Footer = function(props) {
 };
 
 Footer.propTypes = propTypes;
-Footer.defaultProps = defaultProps;
-export default Footer;
+export default connect(state => ({
+	appData: state.app,
+	loginData: state.login,
+}))(Footer);

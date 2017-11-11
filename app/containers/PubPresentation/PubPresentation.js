@@ -215,7 +215,7 @@ class PubPresentation extends Component {
 					<License />
 				</div>
 
-				<Footer isAdmin={this.props.loginData.data.isAdmin} />
+				<Footer />
 
 				<Overlay isOpen={!!activeThread} onClose={this.closeThreadOverlay} maxWidth={728}>
 					<DiscussionThread

@@ -238,7 +238,7 @@ class Collection extends Component {
 				</div>
 
 				{!this.props.collectionData.isLoading &&
-					<Footer isAdmin={this.props.loginData.data.isAdmin} />
+					<Footer />
 				}
 
 			</div>

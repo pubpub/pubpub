@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import Footer from 'components/Footer/Footer';
 
 const Privacy = function(props) {
@@ -59,7 +58,7 @@ const Privacy = function(props) {
 				</div>
 			</div>
 
-			<Footer isBasePubPub={window.location.origin === 'https://v4.pubpub.org'} />
+			<Footer />
 		</div>
 	);
 };

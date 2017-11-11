@@ -116,7 +116,7 @@ module.exports = {
 				'static/fonts/**.*',
 			],
 			staticFileGlobsIgnorePatterns: [
-				/\/rss\.xml$/
+				/rss\//
 			],
 			stripPrefix: 'static/',
 			mergeStaticsConfig: true, // Merge webpacks static outputs with the globs described above.
