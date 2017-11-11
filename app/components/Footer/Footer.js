@@ -45,7 +45,7 @@ const Footer = function(props) {
 			{
 				id: 2,
 				title: 'RSS',
-				url: `${window.location.origin}/rss/${subdomain}.xml`
+				url: `https://v4.pubpub.org/rss/${subdomain}.xml`
 			},
 			{
 				id: 4,
