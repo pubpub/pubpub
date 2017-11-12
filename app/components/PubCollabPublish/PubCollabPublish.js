@@ -39,6 +39,11 @@ class PubCollabPublish extends Component {
 		this.props.onPublish();
 	}
 	render() {
+		const isUnlisted = this.props.pubData.collections.reduce((prev, curr)=> {
+			if (curr.isPublic) { return false; }
+			return prev;
+		}, true);
+
 		return (
 			<div className={'pub-collab-publish'}>
 				<h5>Publish</h5>
@@ -55,6 +60,13 @@ class PubCollabPublish extends Component {
 					/>
 				</div>
 
+				{isUnlisted &&
+					<div className={'pt-callout pt-intent-danger'}>
+						<h5>Pub will be Unlisted</h5>
+						<div>This pub is only included in Private collections. When published, it will be publicly available but will be unlisted.</div>
+						<div>Anyone with the link will be able to view the published snapshot, but it will not show up in search results, rss feds, or search engines.</div>
+					</div>
+				}
 				<div className={'button-wrapper'}>
 					<Button
 						onClick={this.handlePublish}

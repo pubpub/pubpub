@@ -150,6 +150,10 @@ class PubPresentation extends Component {
 				}
 			}, 100);
 		}
+		const isUnlisted = pubData.collections.reduce((prev, curr)=> {
+			if (curr.isPublic) { return false; }
+			return prev;
+		}, true);
 		return (
 			<div className={'pub-presentation'}>
 
@@ -172,6 +176,9 @@ class PubPresentation extends Component {
 					<meta name={'twitter:description'} content={pubData.description} />
 					<meta name={'twitter:image'} content={pubData.avatar} />
 					<meta name={'twitter:image:alt'} content={`Avatar for ${pubData.title}`} />
+					{isUnlisted &&
+						<meta name="robots" content="noindex,nofollow" />
+					}
 				</Helmet>
 
 				<PubPresHeader

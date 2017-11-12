@@ -158,6 +158,7 @@ class Dashboard extends Component {
 
 				<Helmet>
 					<title>{activeItem.title} · Dashboard</title>
+					<meta name="robots" content="noindex,nofollow" />
 				</Helmet>
 
 				<div className={'container'}>

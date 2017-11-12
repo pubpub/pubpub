@@ -391,6 +391,7 @@ class PubCollaboration extends Component {
 			<div className={'pub-collaboration'}>
 				<Helmet>
 					<title>Collaborate · {pubData.title}</title>
+					<meta name="robots" content="noindex,nofollow" />
 				</Helmet>
 
 				<div className={'upper'}>
