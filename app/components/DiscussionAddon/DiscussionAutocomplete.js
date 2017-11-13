@@ -38,7 +38,12 @@ class DiscussionAutocomplete extends Component {
 	}
 
 	getFilteredItems(props, query) {
-		return props.threads.filter((item)=> {
+		return props.threads.map((item)=> {
+			if (item[0].title) { return item; }
+			const outputItem = [...item];
+			outputItem[0].title = `Discussion by ${item[0].author.fullName}`;
+			return outputItem;
+		}).filter((item)=> {
 			const fuzzyMatchTitle = fuzzysearch(query.toLowerCase(), item[0].title.toLowerCase());
 			const fuzzyMatchAuthor = fuzzysearch(query.toLowerCase(), item[0].author.fullName.toLowerCase());
 			return fuzzyMatchTitle || fuzzyMatchAuthor;
