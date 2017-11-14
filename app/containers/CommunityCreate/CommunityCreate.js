@@ -136,7 +136,7 @@ class CommunityCreate extends Component {
 											type={'submit'}
 											className={'pt-button pt-intent-primary create-account-button'}
 											onClick={this.onCreateSubmit}
-											text={'Create Account'}
+											text={'Create Community'}
 											disabled={!this.state.subdomain || !this.state.title || !this.state.largeHeaderLogo || !colorRegex.test(this.state.accentColor)}
 											loading={this.props.communityCreateData.isLoading || this.props.communityCreateData.data}
 										/>
