@@ -13,9 +13,11 @@ const propTypes = {
 /* This is a rare case of a connected component that isn't a route container. */
 /* It is used in too many places where passing props becomes cumbersome */
 const Footer = function(props) {
-	const subdomain = props.appData.data.subdomain;
+	const appData = props.appData.data || {};
+	const loginData = props.loginData.data || {};
+	const subdomain = appData.subdomain;
 	const isBasePubPub = window.location.origin === 'https://v4.pubpub.org';
-	const isAdmin = props.loginData.data.isAdmin;
+	const isAdmin =loginData.isAdmin;
 	const links = isBasePubPub
 		? [
 			{
