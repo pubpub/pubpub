@@ -29,7 +29,9 @@ class DiscussionStatic extends Component {
 
 	render() {
 		const figFloat = this.props.align === 'left' || this.props.align === 'right' ? this.props.align : 'none';
-		const figMargin = this.props.align === 'left' || this.props.align === 'right' ? '10px' : '0em auto 1em';
+		let figMargin = '0em auto 1em';
+		if (this.props.align === 'left') { figMargin = '1em 1em 1em 0px'; }
+		if (this.props.align === 'right') { figMargin = '1em 0px 1em 1em'; }
 		const figWidth = this.props.align === 'full' ? '100%' : '60%';
 		const figStyle = {
 			width: figWidth,
