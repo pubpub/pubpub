@@ -45,6 +45,9 @@ body {
 		text-decoration: underline;
 	}
 }
+h1, h2, h3 {
+	clear: both;
+}
 .updates-available-note {
 	position: fixed;
 	top: 0px;
