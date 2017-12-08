@@ -59,7 +59,7 @@ class Dashboard extends Component {
 		if (this.props.appData.putCollectionIsLoading && !nextProps.appData.putCollectionIsLoading) {
 			const oldSlug = this.props.match.params.slug;
 			const newSlug = nextProps.collectionData.data.slug;
-			this.props.history.push(`${nextProps.location.pathname.replace(`/dashboard/${oldSlug}`, `/dashboard/${newSlug}`).replace('/edit', '')}${nextProps.location.search}`);
+			this.props.history.push(`${nextProps.location.pathname.replace(`/dashboard/${oldSlug}`, `/dashboard/${newSlug}`).replace(/\/edit$/, '')}${nextProps.location.search}`);
 		}
 		if (this.props.appData.deleteCollectionIsLoading && !nextProps.appData.deleteCollectionIsLoading) {
 			this.props.history.push('/dashboard');
