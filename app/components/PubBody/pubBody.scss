@@ -47,11 +47,16 @@
 		margin: 1em 0em;
 	}
 	pre {
-		white-space: pre-wrap;
 		background: rgba(0,0,0,.05);
 		padding: 20px;
 		box-shadow: none;
 		font-size: 16px;
+		white-space: pre;
+		overflow: hidden;
+		overflow-x: scroll;
+		code {
+			white-space: pre;
+		}
 	}
 	blockquote {
 		line-height: inherit;
