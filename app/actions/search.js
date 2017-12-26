@@ -23,10 +23,10 @@ export function getSearch(query, communityId) {
 			dispatch({ type: GET_SEARCH_RESULTS_SUCCESS, result: undefined });
 		};
 	}
-
+	const communityIdParam = communityId ? `&communityId={${communityId}}` : '';
 	return (dispatch) => {
 		dispatch({ type: GET_SEARCH_RESULTS_LOAD });
-		return apiFetch(`/search/pubs?q=${query}&communityId={${communityId}}`)
+		return apiFetch(`/search/pubs?q=${query}${communityIdParam}`)
 		.then((result) => {
 			dispatch({ type: GET_SEARCH_RESULTS_SUCCESS, result });
 		})

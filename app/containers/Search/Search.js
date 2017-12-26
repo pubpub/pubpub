@@ -42,7 +42,8 @@ class Search extends Component {
 	getSearchData(props) {
 		const queryObject = queryString.parse(props.location.search);
 		const searchTerm = queryObject.q;
-		this.props.dispatch(getSearch(searchTerm, this.props.appData.data.id));
+		const appData = this.props.appData.data || {};
+		this.props.dispatch(getSearch(searchTerm, appData.id));
 	}
 	handleSearchChange(evt) {
 		this.setState({ searchQuery: evt.target.value });
@@ -96,6 +97,7 @@ class Search extends Component {
 										return (
 											<div className={'preview-wrapper'} key={`result-${pub.id}`}>
 												<PubPreview
+													communityData={pub.community}
 													title={pub.title}
 													description={pub.description}
 													slug={pub.slug}

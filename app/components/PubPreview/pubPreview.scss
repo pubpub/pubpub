@@ -113,8 +113,10 @@
 	}
 	.title {
 		line-height: 1em;
+		display: inline;
 	}
 	.description {
+		margin-top: 10px;
 		line-height: 1.2;
 		font-size: 1.1em;
 	}

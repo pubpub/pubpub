@@ -101,7 +101,7 @@ const PubPreview = function(props) {
 						<div className={'description'}>{props.description}</div>
 					}
 				</div>
-				
+
 				<div className={'collaborators'}>
 					{!!props.authors.length &&
 						<div className={'avatars'}>
