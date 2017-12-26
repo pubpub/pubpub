@@ -28,7 +28,7 @@ const Footer = function(props) {
 			},
 			{
 				id: 2,
-				title: 'Github',
+				title: 'Code',
 				url: 'https://github.com/pubpub',
 			},
 			{

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import CommunityPreview from 'components/CommunityPreview/CommunityPreview';
+import LandingFeature from 'components/LandingFeature/LandingFeature';
 import Footer from 'components/Footer/Footer';
 import { getActiveCommunities } from 'actions/explore';
 
@@ -22,6 +23,38 @@ class Landing extends Component {
 		const exploreData = this.props.exploreData.data || {};
 		const activeCommunities = exploreData.activeCommunities || [
 			{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }
+		];
+		const features = [
+			{
+				title: 'Collaborative Editing',
+				description: 'Edit documents in real-time with your team',
+				icon: 'edit',
+			},
+			{
+				title: 'Rich Media Documents',
+				description: 'Embed videos, LaTeX equations, references, interactive frames, and more with the PubPub editor plugin system.',
+				icon: 'media',
+			},
+			{
+				title: 'Continuous, Structured Review',
+				description: '',
+				icon: 'endorsed',
+			},
+			{
+				title: 'Empowered Communities',
+				description: '',
+				icon: 'globe',
+			},
+			{
+				title: 'Dedicated to Longevity',
+				description: 'We\'re focused on long-term stable solutions for authors, reviewers, and publishers. Business models for the good of research, rather than the good of advertisers.',
+				icon: 'time',
+			},
+			{
+				title: 'Open Source',
+				description: 'We\'re focused on long-term stable solutions for authors, reviewers, and publishers. Business models for the good of research, rather than the good of advertisers.',
+				icon: 'code',
+			},
 		];
 		return (
 			<div className={'landing'}>
@@ -43,11 +76,6 @@ class Landing extends Component {
 								<img src={'https://jakejr.pubpub.org/fit-in/800x0/_site/landing-plix-framed.png'} alt={'PubPub Community'} />
 								*/}
 							</div>
-
-							<h2>Empowered Publishing</h2>
-							<div className={'subtitle'}>Take control of your research and how it's communicated. Powerful tools to let you publish with and for your community.<br />Free to write, free to review, free to publish.</div>
-
-
 						</div>
 
 						<div className={'col-12'}>
@@ -75,6 +103,23 @@ class Landing extends Component {
 						<div className={'col-12 explore-all-button'}>
 							<Link to={'/explore'} className={'pt-button pt-intent-primary pt-large'}>Explore All Communities</Link>
 						</div>
+
+						<div className={'col-12'}>
+							<h2>Empowered Publishing</h2>
+							<div className={'subtitle'}>Take control of your research and how it's communicated. Powerful tools to let you publish with and for your community.</div>
+						</div>
+
+						{features.map((item)=> {
+							return (
+								<div className={'col-6'} key={`feature-${item.icon}`}>
+									<LandingFeature
+										title={item.title}
+										icon={item.icon}
+										description={item.description}
+									/>
+								</div>
+							);
+						})}
 					</div>
 				</div>
 				<Footer />
