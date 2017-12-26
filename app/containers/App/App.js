@@ -27,6 +27,7 @@ const Privacy = () => <Async load={import('containers/Privacy/Privacy')} />;
 const PubCreate = () => <Async load={import('containers/PubCreate/PubCreate')} />;
 const PubCollaboration = () => <Async load={import('containers/PubCollaboration/PubCollaboration')} />;
 const PubPresentation = () => <Async load={import('containers/PubPresentation/PubPresentation')} />;
+const PubRedirect = () => <Async load={import('containers/PubRedirect/PubRedirect')} />;
 const Search = () => <Async load={import('containers/Search/Search')} />;
 const Signup = () => <Async load={import('containers/Signup/Signup')} />;
 const Terms = () => <Async load={import('containers/Terms/Terms')} />;
@@ -96,6 +97,7 @@ class App extends Component {
 						<Route exact path="/password-reset" component={PasswordReset} />
 						<Route exact path="/password-reset/:resetHash/:slug" component={PasswordReset} />
 						<Route exact path="/privacy" component={Privacy} />
+						<Route exact path="/pub/:slug" component={PubRedirect} />
 						<Route exact path="/search" component={Search} />
 						<Route exact path="/signup" component={Signup} />
 						<Route exact path="/tos" component={Terms} />

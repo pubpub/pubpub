@@ -7,6 +7,7 @@ import login from './login';
 import passwordReset from './passwordReset';
 import pub from './pub';
 import pubCreate from './pubCreate';
+import redirect from './redirect';
 import search from './search';
 import signup from './signup';
 import user from './user';
@@ -21,6 +22,7 @@ export default combineReducers({
 	passwordReset,
 	pub,
 	pubCreate,
+	redirect,
 	search,
 	signup,
 	user,

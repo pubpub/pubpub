@@ -77,9 +77,7 @@ const Header = function(props) {
 							<div className={'headerItems headerItemsRight'}>
 
 								{/* Search button */}
-								{!props.isBasePubPub && 
-									<Link to={'/search'} className="pt-button pt-large pt-minimal pt-icon-search" />
-								}
+								<Link to={'/search'} className="pt-button pt-large pt-minimal pt-icon-search" />
 
 								{/* Dashboard panel button */}
 								{props.userIsAdmin &&

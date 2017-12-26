@@ -28,27 +28,8 @@
 		margin: 100px 0px;
 		position: relative;
 		img {
-			// &:first-of-type {
-			// 	position: relative;
-			// }
-			// position: absolute;
 			display: block;
-			// top: 0;
-			// left: 0;
 			width: 100%;
-			// opacity: 0;
-			// animation: crossfade 24s 0s infinite;
-			// backface-visibility: hidden;
-			// background-blend-mode: darken;
-			// &:nth-child(2)  { 
-			// 	animation-delay: 6s;
-			// }
-			// &:nth-child(3) { 
-			// 	animation-delay: 12s;
-			// }
-			// &:nth-child(4) { 
-			// 	animation-delay: 18s;
-			// }
 		}
 	}
 	.explore-all-button {
@@ -56,21 +37,3 @@
 		margin-bottom: 100px;
 	}
 }
-
-// @keyframes crossfade{
-//   	0%{
-//     	opacity: 1;
-// 	}
-// 	15% {
-// 		opacity:1;
-// 	}
-// 	25%{
-// 		opacity: 0;
-// 	}
-// 	90% {
-// 		opacity:0;
-// 	}
-// 	100% {
-// 		opacity:1;
-// 	}
-// }
