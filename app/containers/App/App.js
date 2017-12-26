@@ -18,6 +18,7 @@ const Collection = () => <Async load={import('containers/Collection/Collection')
 const CollectionSubmit = () => <Async load={import('containers/CollectionSubmit/CollectionSubmit')} />;
 const CommunityCreate = () => <Async load={import('containers/CommunityCreate/CommunityCreate')} />;
 const Dashboard = () => <Async load={import('containers/Dashboard/Dashboard')} />;
+const Explore = () => <Async load={import('containers/Explore/Explore')} />;
 const Landing = () => <Async load={import('containers/Landing/Landing')} />;
 const Login = () => <Async load={import('containers/Login/Login')} />;
 const NoMatch = () => <Async load={import('containers/NoMatch/NoMatch')} />;
@@ -44,7 +45,7 @@ class App extends Component {
 		super(props);
 		this.handleLogout = this.handleLogout.bind(this);
 		this.hostname = window.location.hostname === 'localhost'
-			? 'dev.pubpub.org' // Set whatever hostname you want to develop with
+			? 'v4.pubpub.org' // Set whatever hostname you want to develop with
 			: window.location.hostname; // In production, use the real hostname
 		this.isBasePubPub = this.hostname === 'v4.pubpub.org';
 	}
@@ -72,11 +73,11 @@ class App extends Component {
 						<link rel="apple-touch-icon" type="image/png" sizes="192x192" href={'/favicon.png'} />
 					</Helmet>
 					<AccentStyle
-						accentColor={'#456888'}
+						accentColor={'#112233'}
 						accentTextColor={'#FFFFFF'}
-						accentActionColor={'rgba(69, 104, 136, 0.6)'}
-						accentHoverColor={'rgba(69, 104, 136, 0.8)'}
-						accentMinimalColor={'rgba(69, 104, 136, 0.19999999999999996)'}
+						accentActionColor={'rgba(17, 34, 51, 0.6)'}
+						accentHoverColor={'rgba(17, 34, 51, 0.8)'}
+						accentMinimalColor={'rgba(17, 34, 51, 0.2)'}
 					/>
 					<Header
 						userName={loginData.fullName}
@@ -90,6 +91,7 @@ class App extends Component {
 					<Switch>
 						<Route exact path="/" component={Landing} />
 						<Route exact path="/community/create" component={CommunityCreate} />
+						<Route exact path="/explore" component={Explore} />
 						<Route exact path="/login" component={Login} />
 						<Route exact path="/password-reset" component={PasswordReset} />
 						<Route exact path="/password-reset/:resetHash/:slug" component={PasswordReset} />

@@ -16,8 +16,9 @@ const Footer = function(props) {
 	const appData = props.appData.data || {};
 	const loginData = props.loginData.data || {};
 	const subdomain = appData.subdomain;
-	const isBasePubPub = window.location.origin === 'https://v4.pubpub.org';
-	const isAdmin =loginData.isAdmin;
+	// const isBasePubPub = window.location.origin === 'https://v4.pubpub.org';
+	const isBasePubPub = true;
+	const isAdmin = loginData.isAdmin;
 	const links = isBasePubPub
 		? [
 			{

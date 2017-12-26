@@ -110,6 +110,7 @@ module.exports = {
 			minify: true,
 			navigateFallback: '/index.html',
 			staticFileGlobs: [
+				'rss/**.*',
 				'static/**.*',
 				'static/images/**.*',
 				'static/icons/**.*',
