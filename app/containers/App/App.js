@@ -46,7 +46,7 @@ class App extends Component {
 		super(props);
 		this.handleLogout = this.handleLogout.bind(this);
 		this.hostname = window.location.hostname === 'localhost'
-			? 'v4.pubpub.org' // Set whatever hostname you want to develop with
+			? 'dev.pubpub.org' // Set whatever hostname you want to develop with
 			: window.location.hostname; // In production, use the real hostname
 		this.isBasePubPub = this.hostname === 'v4.pubpub.org';
 	}
