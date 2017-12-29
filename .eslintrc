@@ -28,6 +28,7 @@
         "indent": [2, "tab", { "MemberExpression": 0 }],
         "object-shorthand": 0,
         "object-curly-newline": 0,
+        "prefer-destructuring": 0,
         "no-tabs": 0,
         "no-underscore-dangle": 0,
         "react/jsx-boolean-value": 0,

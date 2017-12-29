@@ -1,14 +1,20 @@
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
+import Promise from 'bluebird';
 import Landing from 'containers/Landing/Landing';
 import Html from '../Html';
 import app from '../server';
+import { User } from '../models';
 import { getCommunity } from '../utilities';
 
 app.get('/', (req, res)=> {
-	return getCommunity(req)
-	.then((community)=> {
-		const initialData = { community: community };
+	return Promise.all([getCommunity(req), User.findOne()])
+	.then(([communityData, loginData])=> {
+		const initialData = {
+			loginData: loginData,
+			communityData: communityData,
+			isBasePubPub: false,
+		};
 		return ReactDOMServer.renderToStaticNodeStream(
 			<Html
 				chunkName="Landing"

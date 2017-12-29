@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Avatar from 'components/Avatar/Avatar';
-import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider, Button } from '@blueprintjs/core';
 import { getResizedUrl } from 'utilities';
 
 if (typeof require.ensure === 'function') {
@@ -74,7 +74,7 @@ const Header = function(props) {
 							<div className="headerItems headerItemsRight">
 
 								{/* Search button */}
-								<a href="/search" className="pt-button pt-large pt-minimal pt-icon-search" />
+								<a href="/search" role="button" tabIndex="0" className="pt-button pt-large pt-minimal pt-icon-search" />
 
 								{/* Dashboard panel button */}
 								{props.userIsAdmin &&
