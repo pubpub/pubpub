@@ -5,6 +5,7 @@ export const getCommunity = (req)=> {
 		? 'joi.pubpub.org'
 		: req.get('host');
 
+	console.log('Using hostname', hostname);
 	return Community.findOne({
 		where: {
 			$or: [

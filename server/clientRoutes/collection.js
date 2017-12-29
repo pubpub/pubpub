@@ -62,12 +62,15 @@ app.get('/', (req, res)=> {
 			isBasePubPub: false,
 			slug: req.params.slug,
 		};
+		const pageTitle = collectionData.title === 'Home'
+			? communityData.title
+			: collectionData.title;
 		return ReactDOMServer.renderToNodeStream(
 			<Html
 				chunkName="Collection"
 				initialData={initialData}
 				headerComponents={[
-					<title key="meta-title">{collectionData.title}</title>,
+					<title key="meta-title">{pageTitle}</title>,
 					<meta key="meta-desc" name="description" content={collectionData.description} />,
 				]}
 			>
