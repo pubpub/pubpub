@@ -9,7 +9,7 @@ app.get('/about', (req, res)=> {
 	return Pub.findOne()
 	.then((pub)=> {
 		const initialData = { text: pub.title };
-		return ReactDOMServer.renderToStaticNodeStream(
+		return ReactDOMServer.renderToNodeStream(
 			<Html
 				chunkName="About"
 				initialData={initialData}

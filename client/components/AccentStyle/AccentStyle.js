@@ -11,30 +11,28 @@ const propTypes = {
 
 const AccentStyle = function(props) {
 	return (
-		<style>
-			{`
-				.accent-background { background-color: ${props.accentColor}; } 
-				.accent-color { color: ${props.accentTextColor}; }
-				.pt-button.pt-intent-primary { background-color: ${props.accentActionColor}; color: ${props.accentTextColor}; }
-				.pt-button.pt-intent-primary:hover:not(.pt-disabled) { background-color: ${props.accentHoverColor}; color: ${props.accentTextColor}; }
-				.pt-button.pt-intent-primary:active:not(.pt-disabled), .pt-button.pt-intent-primary.pt-active:not(.pt-disabled) { background-color: ${props.accentColor}; color: ${props.accentTextColor}; }
-				.pt-tag.pt-intent-primary { background: ${props.accentColor}; color: ${props.accentTextColor}; }
-				.pt-tag.pt-minimal.pt-intent-primary { background-color: ${props.accentMinimalColor}; color: inherit; }
-				.accent-color .pt-button:not([class*="pt-intent-"]), .accent-color .pt-button[class*="pt-icon-"]::before { color: inherit; }
-				.accent-color a, .accent-color a:hover { color: inherit; }
-				.pt-tab[aria-selected="true"], .pt-tab:not([aria-selected="true"]):hover { box-shadow: inset 0 -3px 0 ${props.accentMinimalColor}; }
-				.pt-tab[aria-selected="true"] { box-shadow: inset 0 -3px 0 ${props.accentColor}; }
-				.thread:hover:after { background-color: ${props.accentColor}; }
-				.pt-slider-progress, .pt-dark .pt-slider-progress { background: ${props.accentColor}; }
-				.pt-slider-handle .pt-slider-label { background: ${props.accentColor}; color: ${props.accentTextColor}; }
-				.pub-body a, .layout-html a, .layout-text a, .layout-editor-text a { color: ${props.accentActionColor}; }
-				.pub-body sup.footnote { color: ${props.accentColor}; }
-				.pub-body span.citation { color: ${props.accentColor}; }
-				.footnote-text a { color: ${props.accentActionColor}; text-decoration: underline; }
-				.highlight-background:before, .highlight-quote .highlight-text { background-color: ${props.accentMinimalColor}; }
-				.highlight-dot-wrapper .highlight-dot { background-color: ${props.accentColor}; }
-			`}
-		</style>
+		<style dangerouslySetInnerHTML={{ __html: `
+			.accent-background { background-color: ${props.accentColor}; } 
+			.accent-color { color: ${props.accentTextColor}; }
+			.pt-button.pt-intent-primary { background-color: ${props.accentActionColor}; color: ${props.accentTextColor}; }
+			.pt-button.pt-intent-primary:hover:not(.pt-disabled) { background-color: ${props.accentHoverColor}; color: ${props.accentTextColor}; }
+			.pt-button.pt-intent-primary:active:not(.pt-disabled), .pt-button.pt-intent-primary.pt-active:not(.pt-disabled) { background-color: ${props.accentColor}; color: ${props.accentTextColor}; }
+			.pt-tag.pt-intent-primary { background: ${props.accentColor}; color: ${props.accentTextColor}; }
+			.pt-tag.pt-minimal.pt-intent-primary { background-color: ${props.accentMinimalColor}; color: inherit; }
+			.accent-color .pt-button:not([class*="pt-intent-"]), .accent-color .pt-button[class*="pt-icon-"]::before { color: inherit; }
+			.accent-color a, .accent-color a:hover { color: inherit; }
+			.pt-tab[aria-selected="true"], .pt-tab:not([aria-selected="true"]):hover { box-shadow: inset 0 -3px 0 ${props.accentMinimalColor}; }
+			.pt-tab[aria-selected="true"] { box-shadow: inset 0 -3px 0 ${props.accentColor}; }
+			.thread:hover:after { background-color: ${props.accentColor}; }
+			.pt-slider-progress, .pt-dark .pt-slider-progress { background: ${props.accentColor}; }
+			.pt-slider-handle .pt-slider-label { background: ${props.accentColor}; color: ${props.accentTextColor}; }
+			.pub-body a, .layout-html a, .layout-text a, .layout-editor-text a { color: ${props.accentActionColor}; }
+			.pub-body sup.footnote { color: ${props.accentColor}; }
+			.pub-body span.citation { color: ${props.accentColor}; }
+			.footnote-text a { color: ${props.accentActionColor}; text-decoration: underline; }
+			.highlight-background:before, .highlight-quote .highlight-text { background-color: ${props.accentMinimalColor}; }
+			.highlight-dot-wrapper .highlight-dot { background-color: ${props.accentColor}; }
+		` }} />
 	);
 };
 

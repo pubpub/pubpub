@@ -14,6 +14,7 @@ module.exports = {
 	entry: {
 		About: resolve(__dirname, '../containers/About/About'),
 		Landing: resolve(__dirname, '../containers/Landing/Landing'),
+		Collection: resolve(__dirname, '../containers/Collection/Collection'),
 		baseStyle: resolve(__dirname, '../baseStyle.scss'),
 		vendor: [
 			'@blueprintjs/core',

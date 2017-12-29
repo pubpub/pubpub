@@ -1,7 +1,7 @@
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 import Promise from 'bluebird';
-import Landing from 'containers/Landing/Landing';
+import Collection from 'containers/Collection/Collection';
 import Html from '../Html';
 import app from '../server';
 import { User } from '../models';
@@ -17,13 +17,13 @@ app.get('/', (req, res)=> {
 		};
 		return ReactDOMServer.renderToNodeStream(
 			<Html
-				chunkName="Landing"
+				chunkName="Collection"
 				initialData={initialData}
 				headerComponents={[
-					<title key="meta-title">Landing Test</title>,
+					<title key="meta-title">{communityData.title}</title>,
 				]}
 			>
-				<Landing {...initialData} />
+				<Collection {...initialData} />
 			</Html>
 		)
 		.pipe(res);

@@ -1,3 +1,3 @@
-require('./landing'); 	/* / */
-require('./about'); 	/* /about */
+require('./collection'); 	/* / */
+require('./about'); 		/* /about */
 
