@@ -1,0 +1,29 @@
+.pub-pres-footer-component {
+	margin: 1em 0em;
+	.col-12 {
+		display: flex;	
+		padding: 2em 0em 1em;
+		border-top: 1px solid #F0F0F0;
+		border-bottom: 1px solid #F0F0F0;
+	}
+	.details {
+		flex-grow: 1;
+		flex-shrink: 1;
+		.pt-tag {
+			margin-right: 1em;
+			margin-bottom: 1em;
+			&:hover {
+				text-decoration: none;
+			}
+		}
+	}
+	.button {
+
+	}
+}
+
+@media only screen and (max-width: 720px) {  /* Used to be 45em */
+	.pub-pres-footer-component {
+	
+	}
+}

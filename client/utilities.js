@@ -10,6 +10,30 @@ export const hydrateWrapper = (Component)=> {
 	}
 };
 
+export const getFirebaseConfig = function() {
+	const prodConfig = {
+		apiKey: 'AIzaSyAkqGZZVlMiRzVyROlOwMUSbtbdHFPza7o',
+		authDomain: 'pubpub-v4-prod.firebaseapp.com',
+		databaseURL: 'https://pubpub-v4-prod.firebaseio.com',
+		projectId: 'pubpub-v4-prod',
+		storageBucket: 'pubpub-v4-prod.appspot.com',
+		messagingSenderId: '955699971712'
+	};
+	const devConfig = {
+		apiKey: 'AIzaSyDGttY0gbzGUhrrUD9f9bllMxmYWl3WWoc',
+		authDomain: 'pubpub-v4-dev.firebaseapp.com',
+		databaseURL: 'https://pubpub-v4-dev.firebaseio.com',
+		projectId: 'pubpub-v4-dev',
+		storageBucket: 'pubpub-v4-dev.appspot.com',
+		messagingSenderId: '175246944410'
+	};
+
+	if (typeof window === 'undefined') { return devConfig; }
+	if (window.location.origin.indexOf('dev.pubpub.org') > -1) { return devConfig; }
+	if (window.location.origin.indexOf('localhost:') > -1) { return devConfig; }
+	return prodConfig;
+};
+
 export const getResizedUrl = function(url, type, dimensions) {
 	if (!url || url.indexOf('https://assets.pubpub.org/') === -1) { return url; }
 	const extension = url.split('.').pop().toLowerCase();

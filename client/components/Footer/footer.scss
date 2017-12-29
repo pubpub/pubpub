@@ -1,4 +1,4 @@
-.footer {
+.footer-component {
 	ul {
 		text-align: right;
 		list-style: none;
@@ -26,7 +26,7 @@
 }
 
 @media only screen and (max-width: 720px) {  /* Used to be 45em */
-	.footer {
+	.footer-component {
 		ul {
 			text-align: center;
 		}

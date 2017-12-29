@@ -1,0 +1,29 @@
+.overlay-wrapper {
+	left: 5vw;
+	width: 90vw;
+	top: 50px;
+	overflow: hidden;
+	margin-bottom: 50px;
+	// max-width: 940px;
+	&.pt-overlay-enter, &.pt-overlay-appear {
+		opacity: 0;
+	}
+	&.pt-overlay-enter-active, &.pt-overlay-appear-active {
+		opacity: 1;
+		transition: 200ms cubic-bezier(0.4, 1, 0.75, 0.9) opacity;
+	}
+	&.pt-overlay-leave {
+		opacity: 1;
+	}
+	&.pt-overlay-leave-active {
+		opacity: 0;
+		transition: 200ms cubic-bezier(0.4, 1, 0.75, 0.9) opacity;
+	}
+}
+
+// @media only screen and (min-width: 1044px) { // 940px / 0.90
+// 	.overlay-wrapper {
+// 		left: calc(50vw - 470px);
+// 		width: 940px; // Effectively it's max width
+// 	}
+// }

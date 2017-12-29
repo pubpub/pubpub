@@ -29,7 +29,7 @@ const Footer = function(props) {
 		? 'base-pubpub'
 		: 'accent-background accent-color';
 	return (
-		<div className={`footer ${wrapperClasses}`}>
+		<div className={`footer-component ${wrapperClasses}`}>
 			<div className="container">
 				<div className="row">
 					<div className="col-12">

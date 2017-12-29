@@ -56,7 +56,7 @@ const Header = function(props) {
 	const resizedLargeHeaderLogo = getResizedUrl(props.largeHeaderLogo, 'fit-in', '0x200');
 	const useAccentsString = props.isBasePubPub ? '' : 'accent-background accent-color';
 	return (
-		<nav className={`header ${useAccentsString} ${props.largeHeaderBackground && props.isLandingPage ? 'has-image' : ''}`} style={backgroundStyle} >
+		<nav className={`header-component ${useAccentsString} ${props.largeHeaderBackground && props.isLandingPage ? 'has-image' : ''}`} style={backgroundStyle} >
 			<div className={showGradient ? 'header-gradient' : ''}>
 				<div className="container">
 					<div className="row">
