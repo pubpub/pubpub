@@ -2,7 +2,7 @@ import { Community, Collection, User } from './models';
 
 export const getCommunity = (req)=> {
 	const hostname = req.get('host').indexOf('localhost') > -1 || req.get('host').indexOf('ssl.pubpub.org') > -1
-		? 'dev.pubpub.org'
+		? 'joi.pubpub.org'
 		: req.get('host');
 
 	return Community.findOne({

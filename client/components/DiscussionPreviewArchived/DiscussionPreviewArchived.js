@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-if (typeof require.ensure === 'function') {
-	require('./discussionPreviewArchived.scss');
-}
+require('./discussionPreviewArchived.scss');
 
 const propTypes = {
 	discussions: PropTypes.array.isRequired,

@@ -15,7 +15,11 @@ const propTypes = {
 	communityData: PropTypes.object.isRequired,
 	collectionData: PropTypes.object.isRequired,
 	isBasePubPub: PropTypes.bool.isRequired,
-	slug: PropTypes.string.isRequired
+	slug: PropTypes.string
+};
+
+const defaultProps = {
+	slug: undefined,
 };
 
 class Collection extends Component {
@@ -26,7 +30,7 @@ class Collection extends Component {
 		this.generateRenderList = this.generateRenderList.bind(this);
 	}
 	getComponentFromType(item, index, pubRenderLists) {
-		const collectionData = this.props.collectionData.data || {};
+		const collectionData = this.props.collectionData || {};
 		const pubs = collectionData.pubs || [];
 
 		if (item.type === 'pubs') {
@@ -70,7 +74,7 @@ class Collection extends Component {
 		return null;
 	}
 	generateRenderList(layout) {
-		const collectionData = this.props.collectionData.data || {};
+		const collectionData = this.props.collectionData || {};
 		const pubs = collectionData.pubs || [];
 		const allPubs = pubs.filter((item)=> {
 			return item.firstPublishedAt;
@@ -195,6 +199,7 @@ class Collection extends Component {
 }
 
 Collection.propTypes = propTypes;
+Collection.defaultProps = defaultProps;
 export default Collection;
 
 hydrateWrapper(Collection);

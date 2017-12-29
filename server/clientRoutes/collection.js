@@ -15,7 +15,6 @@ app.get('/', (req, res)=> {
 			if (curr.slug === req.params.slug) { return curr.id; }
 			return prev;
 		}, undefined);
-		console.log(collectionId);
 		const findCollection = Collection.findOne({
 			where: {
 				id: collectionId
