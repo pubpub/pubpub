@@ -1,0 +1,37 @@
+.discussion-thread-component {
+	padding: 0em 1em;
+	.back {
+		display: block;
+		border-bottom: 1px solid #E0E0E0;
+		margin-bottom: 1em;
+	}
+	.title {
+		font-weight: bold;
+		margin-bottom: 2em;
+		line-height: 24px;
+	}
+	.thread-buttons {
+		float: right;
+	}
+	.pt-callout {
+		margin-bottom: 1em;
+		.pt-button {
+			float: right;
+			position: relative;
+			top: -1px;
+		}
+	}
+	.editing-buttons {
+		text-align: right;
+		padding-top: 0.5em;
+		.pt-button {
+			margin-left: 0.5em;
+		}
+	}
+	.submission-buttons {
+		margin: -2em 0em 2em;
+		.pt-intent-primary {
+			margin-right: 1em;
+		}
+	}
+}

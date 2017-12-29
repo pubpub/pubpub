@@ -74,6 +74,7 @@
     "react": "^16.2.0",
     "react-addons-css-transition-group": "^15.6.2",
     "react-dom": "^16.2.0",
+    "react-timeago": "^3.4.3",
     "request": "^2.79.0",
     "request-promise": "^4.1.1",
     "sanitize-html": "^1.14.1",
