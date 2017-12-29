@@ -1,7 +1,13 @@
 {
-  "name": "ssr-test",
-  "version": "0.0.1",
-  "author": "Travis Rich <trich@media.mit.edu>",
+  "name": "pubpub",
+  "version": "4.1.0",
+  "description": "Collaborative Community Publishing",
+  "author": "PubPub Team <pubpub@media.mit.edu>",
+  "license": "GPL-2.0+",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pubpub/pubpub.git"
+  },
   "main": "init.js",
   "scripts": {
     "api-dev": "NODE_PATH=./client nodemon --delay 250ms --watch ./server --watch ./dist init.js",
