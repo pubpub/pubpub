@@ -13,19 +13,45 @@ const data = {
 	largeHeaderLogo: 'https://assets.pubpub.org/m4i28ev7/51514322606636.png',
 	accentColor: '#222222',
 	accentTextColor: '#FFFFFF',
-	numPubs: 23,
-	numDiscussions: 49,
+	numPubs: '23',
+	numDiscussions: '49',
 };
 
 storiesOf('Components/CommunityPreview', module)
 .add('Default', () => (
 	<div>
-		<div style={{ padding: '1em', width: '300px' }}>
-			<CommunityPreview { ...data } />
+		<div className="container">
+			<div className="row">
+				<div className="col-4">
+					<CommunityPreview {...data} />
+				</div>
+				<div className="col-4">
+					<CommunityPreview {...data} />
+				</div>
+				<div className="col-4">
+					<CommunityPreview {...data} />
+				</div>
+			</div>
 		</div>
 
-		<div style={{ padding: '1em' }}>
-			<CommunityPreview { ...data } />
+		<div className="container">
+			<div className="row">
+				<div className="col-6">
+					<CommunityPreview {...data} />
+				</div>
+				<div className="col-6">
+					<CommunityPreview {...data} />
+				</div>
+			</div>
 		</div>
+
+		<div className="container">
+			<div className="row">
+				<div className="col-12">
+					<CommunityPreview {...data} />
+				</div>
+			</div>
+		</div>
+		
 	</div>
 ));

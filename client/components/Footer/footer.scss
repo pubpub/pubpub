@@ -1,0 +1,38 @@
+.footer {
+	ul {
+		text-align: right;
+		list-style: none;
+		margin: 0px;
+		padding: 2.5em 0px;
+		width: 100%;
+		white-space: nowrap;
+	}
+	li {
+		text-decoration: inherit;
+		padding: 0em 0em 0em 2em;
+		display: inline-block;
+	}
+	a {
+		color: inherit;
+		user-select: none;
+	}
+	&.base-pubpub {
+		
+		ul {
+			border-top: 1px solid #CCC;
+			padding: 1em 0em;
+		}
+	}
+}
+
+@media only screen and (max-width: 720px) {  /* Used to be 45em */
+	.footer {
+		ul {
+			text-align: center;
+		}
+		li {
+			padding: 1em 0em;
+			display: block;
+		}
+	}
+}

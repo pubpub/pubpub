@@ -1,11 +1,23 @@
+// Import Core Blueprint sass
+// ****************************
 $icon-font-path: "~@blueprintjs/core/resources/icons";
 @import "~@blueprintjs/core/src/common/_colors.scss";
 @import "~@blueprintjs/core/src/common/_variables.scss";
+
+// Override Blueprint sass variables here
+// ****************************
+$pt-border-radius: floor($pt-grid-size / 5);
 
 // Import Core Blueprint sass
 // ****************************
 @import "~@blueprintjs/core/src/blueprint.scss";
 
+// Import Grid
+// ****************************
+@import "./grid.scss";
+
+// Set global styles
+// ****************************
 body {
 	margin: 0;
 }
