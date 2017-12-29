@@ -1,0 +1,17 @@
+#header-component {
+	height: calc(40px + 2em);
+	line-height: 40px;
+	background-color: #FFE41C;
+	margin-bottom: 20px;
+	padding: 1em;
+	&:after {
+		clear: both;
+	}
+	.left {
+		float: left;
+		font-size: 1.2em;
+	}
+	.right {
+		float: right;
+	}
+}

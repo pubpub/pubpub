@@ -1,0 +1,16 @@
+$icon-font-path: "~@blueprintjs/core/resources/icons";
+@import "~@blueprintjs/core/src/common/_colors.scss";
+@import "~@blueprintjs/core/src/common/_variables.scss";
+
+// Import Core Blueprint sass
+// ****************************
+@import "~@blueprintjs/core/src/blueprint.scss";
+
+body {
+	margin: 0;
+}
+
+.page-content {
+	max-width: 1024px;
+	margin: 0 auto;
+}

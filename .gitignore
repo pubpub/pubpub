@@ -1,8 +1,10 @@
-dist
 node_modules
-misc
 .DS_Store
-*.log
+.atomignore
+.info
+*.swp
+*.swo
 npm-debug.log
-stats.json
-webpack-stats.json
+config.js
+migrate
+dist

@@ -10,11 +10,11 @@ module.exports = (baseConfig, env) => {
 			use: [
 				{ loader: 'style-loader' }, // creates style nodes from JS strings
 				{ loader: 'css-loader' }, // translates CSS into CommonJS
-				{ loader: 'sass-loader', options: { includePaths: [resolve(__dirname, '../app')] } } // compiles Sass to CSS
+				{ loader: 'sass-loader', options: { includePaths: [resolve(__dirname, '../client')] } } // compiles Sass to CSS
 			]
 		}
 	);
 
-	config.resolve.modules = [resolve(__dirname, '../app'), 'node_modules'];
+	config.resolve.modules = [resolve(__dirname, '../client'), 'node_modules'];
 	return config;
 };
