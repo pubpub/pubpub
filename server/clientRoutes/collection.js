@@ -7,7 +7,7 @@ import app from '../server';
 import { User, Collection, Pub, Collaborator, Discussion } from '../models';
 import { getCommunity } from '../utilities';
 
-app.get('/', (req, res)=> {
+const renderCollection = (req, res, next)=> {
 	return Promise.all([getCommunity(req), User.findOne()])
 	.then(([communityData, loginData])=> {
 		const collectionId = communityData.collections.reduce((prev, curr)=> {
@@ -15,6 +15,9 @@ app.get('/', (req, res)=> {
 			if (curr.slug === req.params.slug) { return curr.id; }
 			return prev;
 		}, undefined);
+
+		if (!collectionId) { throw new Error('Collection Not Found'); }
+
 		const findCollection = Collection.findOne({
 			where: {
 				id: collectionId
@@ -80,7 +83,13 @@ app.get('/', (req, res)=> {
 		.pipe(res);
 	})
 	.catch((err)=> {
+		if (err.message === 'Collection Not Found') {
+			return next();
+		}
 		console.log('Err', err);
 		return res.status(500).json('Error');
 	});
-});
+};
+
+app.get('/', renderCollection);
+app.get('/:slug', renderCollection);

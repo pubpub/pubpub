@@ -4,19 +4,21 @@ import Header from 'components/Header/Header';
 import Footer from 'components/Footer/Footer';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
 import NavBar from 'components/NavBar/NavBar';
-import {populateNavigationIds } from 'utilities';
+import { populateNavigationIds } from 'utilities';
 
 const propTypes = {
 	children: PropTypes.node.isRequired,
 	loginData: PropTypes.object.isRequired,
 	communityData: PropTypes.object.isRequired,
 	isBasePubPub: PropTypes.bool.isRequired,
+	isLandingPage: PropTypes.bool,
 	fixHeader: PropTypes.bool,
 	hideNav: PropTypes.bool,
 	hideFooter: PropTypes.bool,
 };
 
 const defaultProps = {
+	isLandingPage: false,
 	fixHeader: false,
 	hideNav: false,
 	hideFooter: false,
@@ -51,7 +53,7 @@ class PageWrapper extends Component {
 				/>
 
 				<Header
-					userName={loginData.name}
+					userName={loginData.fullName}
 					userInitials={loginData.initials}
 					userSlug={loginData.slug}
 					userAvatar={loginData.avatar}
@@ -62,7 +64,7 @@ class PageWrapper extends Component {
 					largeHeaderBackground={communityData.largeHeaderBackground}
 					onLogout={()=> {}}
 					isBasePubPub={this.props.isBasePubPub}
-					isLandingPage={true}
+					isLandingPage={this.props.isLandingPage}
 				/>
 
 				{!this.props.hideNav &&

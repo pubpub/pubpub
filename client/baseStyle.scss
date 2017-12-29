@@ -24,3 +24,53 @@ $pt-border-radius: floor($pt-grid-size / 5);
 body {
 	margin: 0;
 }
+.subtext {
+	color: #555;
+	font-size: 0.85em;
+}
+.pt-non-ideal-state {
+	height: auto;
+}
+.no-click {
+	pointer-events: none;
+}
+.clearfix:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+.legal-wrapper {
+	margin: 1em 0em 2em;
+	h1 {
+		margin: 1em 0em;
+	}
+	ul, ol {
+		font-size: 1.125rem;
+		line-height: 1.5;
+	}
+	a {
+		text-decoration: underline;
+	}
+}
+
+// Import Custom Icon Fonts
+// ****************************
+@font-face {
+	font-family: 'pubpub-icons';
+	src:  url('/static/icons/pubpub-icons.eot');
+	src:  url('/static/icons/pubpub-icons.eot#iefix') format('embedded-opentype'),
+		url('/static/icons/pubpub-icons.ttf') format('truetype'),
+		url('/static/icons/pubpub-icons.woff') format('woff'),
+		url('/static/icons/pubpub-icons.svg#pubpub-icons') format('svg');
+}
+
+.pt-icon-team:before { font-family: 'pubpub-icons' !important; content: "\e903"; }
+.pt-icon-edit2:before { font-family: 'pubpub-icons' !important; content: "\e904"; }
+.pt-icon-doc:before { font-family: 'pubpub-icons' !important; content: "\e902"; }
+.pt-icon-admin:before { font-family: 'pubpub-icons' !important; content: "\e900"; }
+.pt-icon-lock2:before { font-family: 'pubpub-icons' !important; content: "\e901"; }
+.pt-icon-google-scholar:before { font-family: 'pubpub-icons' !important; content: "\e828"; }
+.pt-icon-orcid:before { font-family: 'pubpub-icons' !important; content: "\e840"; }
+.pt-icon-facebook:before { font-family: 'pubpub-icons' !important; content: "\ea90"; }
+.pt-icon-twitter:before { font-family: 'pubpub-icons' !important; content: "\ea96"; }
+.pt-icon-github:before { font-family: 'pubpub-icons' !important; content: "\eab0"; }

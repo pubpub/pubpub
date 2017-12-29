@@ -145,6 +145,7 @@ class Collection extends Component {
 					loginData={this.props.loginData}
 					communityData={this.props.communityData}
 					isBasePubPub={this.props.isBasePubPub}
+					isLandingPage={!this.props.slug}
 				>
 					<div className="container">
 						{((!collectionData.isPage && collectionData.isOpenSubmissions) || (title && title !== 'Home')) &&
@@ -152,7 +153,7 @@ class Collection extends Component {
 								<div className="col-12">
 									{!collectionData.isPage && collectionData.isOpenSubmissions &&
 										<div className="create-pub-wrapper">
-											{/*<Button
+											{/* TODO - Add this Back! <Button
 												type="button"
 												className="pt-button pt-intent-primary"
 												loading={this.props.pubCreateData.isLoading}
