@@ -13,6 +13,7 @@ $pt-border-radius: floor($pt-grid-size / 5);
 // Import Core Blueprint sass
 // ****************************
 @import "~@blueprintjs/core/src/blueprint.scss";
+@import "~@blueprintjs/labs/src/blueprint-labs.scss";
 
 // Import Grid
 // ****************************

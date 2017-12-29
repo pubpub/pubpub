@@ -34,6 +34,8 @@ class About extends Component {
 				<div className="page-content">
 					<h2>About Page*!69!?</h2>
 					<h4>{this.props.text}</h4>
+					<p><a href={'/about?cat=0'}>cat</a></p>
+					<p><a href={'/about?dog=1'}>dog</a></p>
 					<noscript>Buttons will not work without javascript</noscript>
 					<Button
 						onClick={()=> { this.setState({ active: !this.state.active }); }}

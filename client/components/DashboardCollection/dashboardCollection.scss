@@ -1,0 +1,100 @@
+.dashboard-collection-component {
+	.status-bar {
+		color: #555;
+		padding-bottom: 4em;
+		div {
+			display: inline-block;
+		}
+		a { 
+			color: inherit;
+		}
+		span {
+			opacity: 0.6;
+		}
+		.description {
+			display: block;
+			padding-bottom: 1em;
+		}
+	}
+	.status-bar-separator {
+		padding: 0em 1em;
+	}
+	
+	table {
+		width: 100%;
+		border-collapse:collapse
+	}
+	
+	th {
+		text-align: left;
+		color: #666;
+		border-bottom: 1px solid #CCC;
+		padding: 0;
+		white-space: nowrap;
+		a {
+			text-decoration: none;
+			display: block;
+			padding: 0.5em 0em;
+			color: inherit;
+			&:hover .pt-icon-double-caret-vertical{
+				opacity: 0.5;	
+			}
+		}
+		.pt-icon-double-caret-vertical {
+			opacity: 0;
+		}
+		
+		&.active {
+			color: #222;
+			a .pt-icon-double-caret-vertical {
+				opacity: 1;
+			}
+		}
+	}
+	td, th {
+		padding-right: 2em;
+		&.tight {
+			padding-right: 0.5em;
+		}
+		&:last-of-type {
+			padding-right: 0em;
+		}
+	}
+
+	tr:first-of-type td {
+		padding-top: 1em;
+	}
+	td {
+		width: 1px;
+	}
+	td.title {
+		width: auto;
+	}
+	// tbody tr:nth-of-type(2n) {
+	// 	background-color: #F9F9F9;
+	// }
+	.title {
+		font-weight: bold;
+		padding-right: 0em;
+	}
+	.status {
+		text-transform: capitalize;
+		&.published {
+			color: green;
+		}
+		&.submitted {
+			color: orange;
+		}
+	}
+	.date, .activity {
+		white-space: nowrap;
+	}
+	.layout {
+		padding-top: 4em;
+		border-top: 1px solid #CCC;
+		a {
+			text-decoration: underline;
+		}
+	}
+
+}

@@ -100,14 +100,14 @@ const headerBars = function(isBasePubPub) {
 							isBasePubPub={data.isBasePubPub}
 							isLandingPage={true}
 						/>
-					</div>		
+					</div>
 				</div>
 			}
 		</div>
 	);
 };
 
-storiesOf('Header', module)
+storiesOf('Components/Header', module)
 .add('PubPub', () => (
 	<div>
 		{headerBars(true)}

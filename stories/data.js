@@ -13,3 +13,5 @@ export const accentDataLight = {
 	accentHoverColor: '#3BE3D4',
 	accentMinimalColor: 'rgba(38, 224, 208, 0.15)',
 };
+
+export const communityData = require('./dataCommunity.js');

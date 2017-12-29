@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import Header from 'components/Header/Header';
 import Footer from 'components/Footer/Footer';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
-import { hydrateWrapper } from 'utilities';
+import NavBar from 'components/NavBar/NavBar';
+import { hydrateWrapper, populateNavigationIds } from 'utilities';
 
 if (typeof require.ensure === 'function') {
 	require('./landing.scss');
@@ -20,6 +21,9 @@ class Landing extends Component {
 		const loginData = this.props.loginData;
 		const communityData = this.props.communityData;
 
+		const collections = communityData.collections || [];
+		const navigation = communityData.navigation || [];
+		const navItems = populateNavigationIds(collections, navigation);
 		return (
 			<div id="landing-container">
 				<AccentStyle
@@ -43,6 +47,7 @@ class Landing extends Component {
 					isBasePubPub={this.props.isBasePubPub}
 					isLandingPage={true}
 				/>
+				<NavBar navItems={navItems} />
 
 				<div className="page-content">
 					<h2>Landing!!</h2>
