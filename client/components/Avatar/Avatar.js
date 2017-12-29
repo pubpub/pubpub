@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { getResizedUrl } from 'utilities';
 
-if (typeof require.ensure === 'function') {
-	require('./avatar.scss');
-}
+require('./avatar.scss');
 
 const propTypes = {
 	userInitials: PropTypes.string,

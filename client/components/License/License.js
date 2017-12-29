@@ -1,8 +1,6 @@
 import React from 'react';
 
-if (typeof require.ensure === 'function') {
-	require('./license.scss');
-}
+require('./license.scss');
 
 const License = function() {
 	return (

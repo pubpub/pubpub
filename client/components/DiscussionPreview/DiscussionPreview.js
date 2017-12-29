@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Avatar from 'components/Avatar/Avatar';
 
-if (typeof require.ensure === 'function') {
-	require('./discussionPreview.scss');
-}
+require('./discussionPreview.scss');
 
 const propTypes = {
 	discussions: PropTypes.array.isRequired,

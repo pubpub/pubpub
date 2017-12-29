@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import DiscussionInput from 'components/DiscussionInput/DiscussionInput';
 
-if (typeof require.ensure === 'function') {
-	require('./discussionNew.scss');
-}
+require('./discussionNew.scss');
 
 const propTypes = {
 	pubId: PropTypes.string.isRequired,

@@ -5,9 +5,7 @@ import { Suggest } from '@blueprintjs/labs';
 import Avatar from 'components/Avatar/Avatar';
 import { apiFetch } from 'utilities';
 
-if (typeof require.ensure === 'function') {
-	require('./userAutocomplete.scss');
-}
+require('./userAutocomplete.scss');
 
 const propTypes = {
 	onSelect: PropTypes.func,

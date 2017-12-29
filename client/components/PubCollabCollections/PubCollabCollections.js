@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import { MultiSelect } from '@blueprintjs/labs';
 import fuzzysearch from 'fuzzysearch';
 
-if (typeof require.ensure === 'function') {
-	require('./pubCollabCollections.scss');
-}
+require('./pubCollabCollections.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,

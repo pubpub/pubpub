@@ -4,9 +4,7 @@ import { Button, Checkbox } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
 import ImageUpload from 'components/ImageUpload/ImageUpload';
 
-if (typeof require.ensure === 'function') {
-	require('./pubCollabDetails.scss');
-}
+require('./pubCollabDetails.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,

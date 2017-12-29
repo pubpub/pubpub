@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { getResizedUrl } from 'utilities';
 
-if (typeof require.ensure === 'function') {
-	require('./communityPreview.scss');
-}
+require('./communityPreview.scss');
 
 const propTypes = {
 	title: PropTypes.string,

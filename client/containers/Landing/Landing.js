@@ -6,9 +6,7 @@ import AccentStyle from 'components/AccentStyle/AccentStyle';
 import NavBar from 'components/NavBar/NavBar';
 import { hydrateWrapper, populateNavigationIds } from 'utilities';
 
-if (typeof require.ensure === 'function') {
-	require('./landing.scss');
-}
+require('./landing.scss');
 
 const propTypes = {
 	loginData: PropTypes.object.isRequired,

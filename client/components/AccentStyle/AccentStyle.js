@@ -32,7 +32,8 @@ const AccentStyle = function(props) {
 			.footnote-text a { color: ${props.accentActionColor}; text-decoration: underline; }
 			.highlight-background:before, .highlight-quote .highlight-text { background-color: ${props.accentMinimalColor}; }
 			.highlight-dot-wrapper .highlight-dot { background-color: ${props.accentColor}; }
-		` }} />
+		` }}
+		/>
 	);
 };
 

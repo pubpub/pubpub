@@ -7,9 +7,7 @@ import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
 import { Editor } from '@pubpub/editor';
 import HighlightQuote from '@pubpub/editor/addons/HighlightQuote';
 
-if (typeof require.ensure === 'function') {
-	require('./discussionThreadItem.scss');
-}
+require('./discussionThreadItem.scss');
 
 const propTypes = {
 	discussion: PropTypes.object.isRequired,

@@ -7,9 +7,7 @@ import DropdownRichItem from 'components/DropdownRichItem/DropdownRichItem';
 import PubAdminPermissions from 'components/PubAdminPermissions/PubAdminPermissions';
 import { generateHash } from 'utilities';
 
-if (typeof require.ensure === 'function') {
-	require('./pubCollabSubmit.scss');
-}
+require('./pubCollabSubmit.scss');
 
 const propTypes = {
 	appData: PropTypes.object.isRequired,

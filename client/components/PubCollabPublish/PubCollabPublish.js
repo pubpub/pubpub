@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 import PubCollabDropdownPrivacy from 'components/PubCollabDropdownPrivacy/PubCollabDropdownPrivacy';
 
-if (typeof require.ensure === 'function') {
-	require('./pubCollabPublish.scss');
-}
+require('./pubCollabPublish.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,

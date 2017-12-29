@@ -4,9 +4,7 @@ import { Button } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
 import ImageUpload from 'components/ImageUpload/ImageUpload';
 
-if (typeof require.ensure === 'function') {
-	require('./userEdit.scss');
-}
+require('./userEdit.scss');
 
 const propTypes = {
 	userData: PropTypes.object.isRequired,

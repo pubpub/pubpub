@@ -4,9 +4,7 @@ import dateFormat from 'dateformat';
 import Avatar from 'components/Avatar/Avatar';
 import { getResizedUrl } from 'utilities';
 
-if (typeof require.ensure === 'function') {
-	require('./pubPreview.scss');
-}
+require('./pubPreview.scss');
 
 const propTypes = {
 	title: PropTypes.string,

@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
 import DropdownRichItem from 'components/DropdownRichItem/DropdownRichItem';
 
-if (typeof require.ensure === 'function') {
-	require('./pubCollabDropdownPrivacy.scss');
-}
+require('./pubCollabDropdownPrivacy.scss');
 
 const propTypes = {
 	value: PropTypes.string,

@@ -19,13 +19,14 @@ const containerEntries = readdirSync(resolve(__dirname, '../containers')).filter
 	};
 }, {});
 
-
 module.exports = {
 	entry: {
 		...containerEntries,
 		baseStyle: resolve(__dirname, '../baseStyle.scss'),
 		vendor: [
 			'@blueprintjs/core',
+			'@blueprintjs/labs',
+			'@pubpub/editor',
 			'react',
 			'react-dom',
 			'react-addons-css-transition-group',

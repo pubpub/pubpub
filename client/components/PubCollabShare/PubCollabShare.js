@@ -6,9 +6,7 @@ import PubCollaboratorDetails from 'components/PubCollaboratorDetails/PubCollabo
 import PubCollabDropdownPrivacy from 'components/PubCollabDropdownPrivacy/PubCollabDropdownPrivacy';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-if (typeof require.ensure === 'function') {
-	require('./pubCollabShare.scss');
-}
+require('./pubCollabShare.scss');
 
 const propTypes = {
 	appData: PropTypes.object.isRequired,

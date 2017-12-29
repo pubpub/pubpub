@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
 
-if (typeof require.ensure === 'function') {
-	require('./dashboardCreateCollection.scss');
-}
+require('./dashboardCreateCollection.scss');
 
 const propTypes = {
 	isPage: PropTypes.bool.isRequired,

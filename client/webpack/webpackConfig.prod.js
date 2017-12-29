@@ -1,20 +1,28 @@
 const { resolve } = require('path');
+const { readdirSync } = require('fs');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
 
 const extractSass = new ExtractTextPlugin({
 	filename: '[name].[contenthash].css',
 	allChunks: true,
 });
 
+const containerEntries = readdirSync(resolve(__dirname, '../containers')).filter((item)=> {
+	if (item === '.DS_Store') { return false; }
+	return true;
+}).reduce((prev, curr)=> {
+	return {
+		...prev,
+		[curr]: resolve(__dirname, `../containers/${curr}/${curr}`)
+	};
+}, {});
+
 module.exports = {
 	entry: {
-		About: resolve(__dirname, '../containers/About/About'),
-		Landing: resolve(__dirname, '../containers/Landing/Landing'),
-		Collection: resolve(__dirname, '../containers/Collection/Collection'),
+		...containerEntries,
 		baseStyle: resolve(__dirname, '../baseStyle.scss'),
 		vendor: [
 			'@blueprintjs/core',

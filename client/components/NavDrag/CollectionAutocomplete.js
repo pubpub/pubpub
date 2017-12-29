@@ -5,9 +5,7 @@ import { Suggest } from '@blueprintjs/labs';
 import fuzzysearch from 'fuzzysearch';
 import { generateHash } from 'utilities';
 
-if (typeof require.ensure === 'function') {
-	require('./collectionAutocomplete.scss');
-}
+require('./collectionAutocomplete.scss');
 
 const propTypes = {
 	collections: PropTypes.array.isRequired,

@@ -12,9 +12,7 @@ import LayoutEditor from 'components/LayoutEditor/LayoutEditor';
 import InputField from 'components/InputField/InputField';
 import { s3Upload, getResizedUrl, getDefaultLayout } from 'utilities';
 
-if (typeof require.ensure === 'function') {
-	require('./dashboardCollectionEdit.scss');
-}
+require('./dashboardCollectionEdit.scss');
 
 const propTypes = {
 	location: PropTypes.object.isRequired,

@@ -4,9 +4,7 @@ import { Button, NonIdealState } from '@blueprintjs/core';
 import LayoutHtml from 'components/LayoutHtml/LayoutHtml';
 import LayoutText from 'components/LayoutText/LayoutText';
 
-if (typeof require.ensure === 'function') {
-	require('./dashboardCollection.scss');
-}
+require('./dashboardCollection.scss');
 
 const propTypes = {
 	collectionData: PropTypes.object.isRequired,

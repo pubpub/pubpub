@@ -5,9 +5,7 @@ import { Suggest } from '@blueprintjs/labs';
 import fuzzysearch from 'fuzzysearch';
 import Avatar from 'components/Avatar/Avatar';
 
-if (typeof require.ensure === 'function') {
-	require('./discussionAutocomplete.scss');
-}
+require('./discussionAutocomplete.scss');
 
 const propTypes = {
 	threads: PropTypes.array.isRequired,

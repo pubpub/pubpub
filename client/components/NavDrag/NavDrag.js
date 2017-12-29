@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import CollectionAutocomplete from './CollectionAutocomplete';
 
-if (typeof require.ensure === 'function') {
-	require('./navDrag.scss');
-}
+require('./navDrag.scss');
 
 const propTypes = {
 	initialNav: PropTypes.array.isRequired,

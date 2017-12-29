@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-if (typeof require.ensure === 'function') {
-	require('./pubPresFooter.scss');
-}
+require('./pubPresFooter.scss');
 
 const propTypes = {
 	slug: PropTypes.string.isRequired,

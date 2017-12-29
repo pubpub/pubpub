@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Popover, PopoverInteractionKind, Position, Menu } from '@blueprintjs/core';
 
-if (typeof require.ensure === 'function') {
-	require('./navBar.scss');
-}
+require('./navBar.scss');
 
 const propTypes = {
 	navItems: PropTypes.array.isRequired,

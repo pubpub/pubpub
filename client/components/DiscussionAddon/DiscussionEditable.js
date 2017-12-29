@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionAutocomplete from './DiscussionAutocomplete';
 
-if (typeof require.ensure === 'function') {
-	require('./discussionAddon.scss');
-}
+require('./discussionAddon.scss');
 
 const propTypes = {
 	// node: PropTypes.object,

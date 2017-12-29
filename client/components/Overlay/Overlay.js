@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Overlay as BlueprintOverlay } from '@blueprintjs/core';
 
-if (typeof require.ensure === 'function') {
-	require('./overlay.scss');
-}
+require('./overlay.scss');
 
 const propTypes = {
 	isOpen: PropTypes.bool.isRequired,

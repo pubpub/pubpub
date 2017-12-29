@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 
-if (typeof require.ensure === 'function') {
-	require('./discussionAddon.scss');
-}
+require('./discussionAddon.scss');
 
 const propTypes = {
 	threads: PropTypes.array,

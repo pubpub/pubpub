@@ -6,9 +6,7 @@ import ImageUpload from 'components/ImageUpload/ImageUpload';
 import NavDrag from 'components/NavDrag/NavDrag';
 import { populateNavigationIds } from 'utilities';
 
-if (typeof require.ensure === 'function') {
-	require('./dashboardSite.scss');
-}
+require('./dashboardSite.scss');
 
 const propTypes = {
 	appData: PropTypes.object.isRequired,

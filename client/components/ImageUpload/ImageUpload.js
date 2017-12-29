@@ -5,9 +5,7 @@ import Overlay from 'components/Overlay/Overlay';
 import ImageCropper from 'components/ImageCropper/ImageCropper';
 import { s3Upload } from 'utilities';
 
-if (typeof require.ensure === 'function') {
-	require('./imageUpload.scss');
-}
+require('./imageUpload.scss');
 
 const propTypes = {
 	defaultImage: PropTypes.string,

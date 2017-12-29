@@ -4,11 +4,24 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import compression from 'compression';
 import enforce from 'express-sslify';
+import Module from 'module';
+
+/* Since we are server-rendering components, we 	*/
+/* need to ensure we don't require things intended 	*/
+/* for webpack. Namely, .scss files 				*/
+
+const originalRequire = Module.prototype.require;
+Module.prototype.require = function(...args) {
+	if (args[0].indexOf('.scss') > -1) {
+		return ()=>{};
+	}
+	return originalRequire.apply(this, args);
+};
+
 
 // import passport from 'passport';
 
 // import { sequelize, User } from './models';
-
 
 const app = express();
 export default app;

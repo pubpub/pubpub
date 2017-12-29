@@ -5,9 +5,7 @@ import { Button } from '@blueprintjs/core';
 import DiscussionInput from 'components/DiscussionInput/DiscussionInput';
 import DiscussionThreadItem from 'components/DiscussionThreadItem/DiscussionThreadItem';
 
-if (typeof require.ensure === 'function') {
-	require('./discussionThread.scss');
-}
+require('./discussionThread.scss');
 
 const propTypes = {
 	discussions: PropTypes.array.isRequired,

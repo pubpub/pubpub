@@ -7,9 +7,7 @@ import LayoutEditorHtml from 'components/LayoutEditorHtml/LayoutEditorHtml';
 import LayoutEditorDrafts from 'components/LayoutEditorDrafts/LayoutEditorDrafts';
 import { generateHash } from 'utilities';
 
-if (typeof require.ensure === 'function') {
-	require('./layoutEditor.scss');
-}
+require('./layoutEditor.scss');
 
 const propTypes = {
 	onChange: PropTypes.func,

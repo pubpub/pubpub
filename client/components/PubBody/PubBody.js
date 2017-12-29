@@ -12,9 +12,7 @@ import HighlightMenu from '@pubpub/editor/addons/HighlightMenu';
 import Discussion from 'components/DiscussionAddon/DiscussionAddon';
 import { getResizedUrl } from 'utilities';
 
-if (typeof require.ensure === 'function') {
-	require('./pubBody.scss');
-}
+require('./pubBody.scss');
 
 const propTypes = {
 	onRef: PropTypes.func,

@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import Avatar from 'components/Avatar/Avatar';
 import UserAutocomplete from 'components/UserAutocomplete/UserAutocomplete';
 
-if (typeof require.ensure === 'function') {
-	require('./dashboardTeam.scss');
-}
+require('./dashboardTeam.scss');
 
 const propTypes = {
 	appData: PropTypes.object.isRequired,

@@ -7,9 +7,7 @@ import HighlightQuote from '@pubpub/editor/addons/HighlightQuote';
 import DropdownRichItem from 'components/DropdownRichItem/DropdownRichItem';
 import FormattingHelp from 'components/FormattingHelp/FormattingHelp';
 
-if (typeof require.ensure === 'function') {
-	require('./discussionInput.scss');
-}
+require('./discussionInput.scss');
 
 const propTypes = {
 	handleSubmit: PropTypes.func.isRequired,

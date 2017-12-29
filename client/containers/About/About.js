@@ -4,9 +4,7 @@ import { Button } from '@blueprintjs/core';
 import Header from 'components/Header/Header';
 import { hydrateWrapper } from 'utilities';
 
-if (typeof require.ensure === 'function') {
-	require('./about.scss');
-}
+require('./about.scss');
 
 const propTypes = {
 	text: PropTypes.string.isRequired,

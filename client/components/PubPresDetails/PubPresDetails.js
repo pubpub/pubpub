@@ -4,9 +4,7 @@ import dateFormat from 'dateformat';
 import Avatar from 'components/Avatar/Avatar';
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 
-if (typeof require.ensure === 'function') {
-	require('./pubPresDetails.scss');
-}
+require('./pubPresDetails.scss');
 
 const propTypes = {
 	slug: PropTypes.string.isRequired,

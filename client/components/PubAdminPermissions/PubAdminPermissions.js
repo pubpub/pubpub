@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import PubCollabDropdownPermissions from 'components/PubCollabDropdownPermissions/PubCollabDropdownPermissions';
 
-if (typeof require.ensure === 'function') {
-	require('./pubAdminPermissions.scss');
-}
+require('./pubAdminPermissions.scss');
 
 const propTypes = {
 	appData: PropTypes.object,

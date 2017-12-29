@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-if (typeof require.ensure === 'function') {
-	require('./dropdownRichItem.scss');
-}
+require('./dropdownRichItem.scss');
 
 const propTypes = {
 	title: PropTypes.string.isRequired,

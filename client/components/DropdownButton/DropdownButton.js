@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 
-if (typeof require.ensure === 'function') {
-	require('./dropdownButton.scss');
-}
+require('./dropdownButton.scss');
 
 const propTypes = {
 	label: PropTypes.string,

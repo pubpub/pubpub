@@ -4,9 +4,7 @@ import { Button, Slider } from '@blueprintjs/core';
 import AvatarEditor from 'react-avatar-editor';
 import { s3Upload } from 'utilities';
 
-if (typeof require.ensure === 'function') {
-	require('./imageCropper.scss');
-}
+require('./imageCropper.scss');
 
 const propTypes = {
 	height: PropTypes.number,

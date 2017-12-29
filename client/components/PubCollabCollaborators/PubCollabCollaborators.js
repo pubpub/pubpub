@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import UserAutocomplete from 'components/UserAutocomplete/UserAutocomplete';
 import PubCollaboratorDetails from 'components/PubCollaboratorDetails/PubCollaboratorDetails';
 
-if (typeof require.ensure === 'function') {
-	require('./pubCollabCollaborators.scss');
-}
+require('./pubCollabCollaborators.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,

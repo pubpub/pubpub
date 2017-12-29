@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-if (typeof require.ensure === 'function') {
-	require('./footer.scss');
-}
+require('./footer.scss');
 
 const propTypes = {
 	isBasePubPub: PropTypes.bool.isRequired,

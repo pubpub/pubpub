@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Avatar from 'components/Avatar/Avatar';
 
-if (typeof require.ensure === 'function') {
-	require('./userHeader.scss');
-}
+require('./userHeader.scss');
 
 const propTypes = {
 	userData: PropTypes.object.isRequired,

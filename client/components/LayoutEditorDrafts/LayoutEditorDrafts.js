@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import PubPreview from 'components/PubPreview/PubPreview';
 
-if (typeof require.ensure === 'function') {
-	require('./layoutEditorDrafts.scss');
-}
+require('./layoutEditorDrafts.scss');
 
 const propTypes = {
 	onChange: PropTypes.func.isRequired,

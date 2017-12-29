@@ -4,9 +4,7 @@ import Avatar from 'components/Avatar/Avatar';
 import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider, Button } from '@blueprintjs/core';
 import { getResizedUrl } from 'utilities';
 
-if (typeof require.ensure === 'function') {
-	require('./header.scss');
-}
+require('./header.scss');
 
 const propTypes = {
 	userName: PropTypes.string,

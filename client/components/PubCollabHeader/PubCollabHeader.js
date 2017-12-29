@@ -4,9 +4,7 @@ import Avatar from 'components/Avatar/Avatar';
 import { Tooltip } from '@blueprintjs/core';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
 
-if (typeof require.ensure === 'function') {
-	require('./pubCollabHeader.scss');
-}
+require('./pubCollabHeader.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,

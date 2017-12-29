@@ -4,9 +4,7 @@ import { Checkbox } from '@blueprintjs/core';
 import Avatar from 'components/Avatar/Avatar';
 import PubCollabDropdownPermissions from 'components/PubCollabDropdownPermissions/PubCollabDropdownPermissions';
 
-if (typeof require.ensure === 'function') {
-	require('./pubCollaboratorDetails.scss');
-}
+require('./pubCollaboratorDetails.scss');
 
 const propTypes = {
 	collaboratorData: PropTypes.object.isRequired,
