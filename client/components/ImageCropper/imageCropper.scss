@@ -1,0 +1,15 @@
+.image-cropper-component {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	.editor-wrapper {
+		cursor: move;
+		padding: 1em 0em;
+	}
+	.buttons {
+		padding-top: 1em;
+	}
+	.pt-button {
+		margin: 0em 0.5em;
+	}
+}

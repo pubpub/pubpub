@@ -73,6 +73,7 @@
     "pg": "^7.3.0",
     "react": "^16.2.0",
     "react-addons-css-transition-group": "^15.6.2",
+    "react-avatar-editor": "^10.3.0",
     "react-dom": "^16.2.0",
     "react-timeago": "^3.4.3",
     "request": "^2.79.0",

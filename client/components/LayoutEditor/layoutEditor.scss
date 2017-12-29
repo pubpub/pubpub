@@ -1,0 +1,44 @@
+.layout-editor-component {	
+	.component-wrapper {
+		margin: 1em 0em;
+		border: 1px solid #CCC;	
+	}
+	.block-header {
+		display: flex;
+		align-items: flex-end;
+		padding: 1em;
+		// margin: 1em 0em;
+		background-color: #F0F0F0;
+		border-bottom: 1px solid #CCC;
+		.spacer {
+			flex-shrink: 1;
+			flex-grow: 1;
+		}
+		.pt-form-group {
+			margin-bottom: 0px;
+		}
+		.pt-form-group:not(:first-child) {
+			padding-left: 1em;
+		}
+	}
+	.block-content {
+		padding: 1em 0em;
+		h3 {
+			margin: 0px;
+		}
+		.layout-editor-text {
+			a {
+				text-decoration: underline;
+			}
+		}
+		textarea {
+			width: 100%;
+			resize: vertical;
+			min-height: 150px;
+			font-family: 'Courier', monospace;
+			white-space: nowrap;
+			padding: 0.5em;
+		}
+	}
+}
+
