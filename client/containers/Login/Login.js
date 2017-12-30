@@ -30,21 +30,29 @@ class Login extends Component {
 	}
 	onLoginSubmit(evt) {
 		evt.preventDefault();
-		this.setState({ loginLoading: true });
+		this.setState({
+			loginLoading: true
+		});
 
 		return apiFetch('/api/login', {
 			method: 'POST',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json'
-			},
 			body: JSON.stringify({
 				email: this.state.email.toLowerCase(),
 				password: SHA3(this.state.password).toString(encHex),
 			})
 		})
 		.then((result)=> {
-			console.log(result);
+			this.setState({
+				loginLoading: false
+			});
+			const queryObject = queryString.parse(window.location.search);
+			window.location.href = queryObject.redirect || '/';
+		})
+		.catch((err)=> {
+			this.setState({
+				loginLoading: false,
+				loginError: err,
+			});
 		});
 	}
 
@@ -55,6 +63,7 @@ class Login extends Component {
 	onPasswordChange(evt) {
 		this.setState({ password: evt.target.value });
 	}
+
 	render() {
 		return (
 			<div id="login-container">
@@ -75,12 +84,14 @@ class Login extends Component {
 										placeholder="example@email.com"
 										value={this.state.email}
 										onChange={this.onEmailChange}
+										autocomplete="username"
 									/>
 									<InputField
 										label="Password"
 										type="password"
 										value={this.state.password}
 										onChange={this.onPasswordChange}
+										autocomplete="current-password"
 										helperText={<a href="/password-reset">Forgot Password</a>}
 									/>
 									<InputField error={this.props.loginData.error}>
@@ -91,7 +102,7 @@ class Login extends Component {
 											onClick={this.onLoginSubmit}
 											text="Login"
 											disabled={!this.state.email || !this.state.password}
-											loading={this.state.loading}
+											loading={this.state.loginLoading}
 										/>
 									</InputField>
 								</form>

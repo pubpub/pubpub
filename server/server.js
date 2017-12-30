@@ -116,20 +116,17 @@ app.use((err, req, res, next)=> {
 	next();
 });
 
+/* ------------------- */
+/* Server Endpoints */
+/* ------------------- */
 app.use('/dist', express.static('dist'));
 app.use('/fonts', express.static('dist/fonts'));
 app.use('/static', express.static('static'));
 app.use('/favicon.png', express.static('static/favicon.png'));
 app.use('/robots.txt', express.static('static/robots.txt'));
 
-/* ------------------- */
-/* API Endpoints */
-/* ------------------- */
 require('./apiRoutes');
 require('./clientRoutes');
-
-
-
 /* ------------------- */
 /* ------------------- */
 

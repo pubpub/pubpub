@@ -10,6 +10,7 @@ const propTypes = {
 	children: PropTypes.node.isRequired,
 	loginData: PropTypes.object.isRequired,
 	communityData: PropTypes.object.isRequired,
+	locationData: PropTypes.object.isRequired,
 	isBasePubPub: PropTypes.bool.isRequired,
 	isLandingPage: PropTypes.bool,
 	fixHeader: PropTypes.bool,
@@ -53,6 +54,7 @@ class PageWrapper extends Component {
 				/>
 
 				<Header
+					locationData={this.props.locationData}
 					userName={loginData.fullName}
 					userInitials={loginData.initials}
 					userSlug={loginData.slug}
@@ -62,7 +64,7 @@ class PageWrapper extends Component {
 					largeHeaderLogo={communityData.largeHeaderLogo}
 					largeHeaderDescription={communityData.largeHeaderDescription}
 					largeHeaderBackground={communityData.largeHeaderBackground}
-					onLogout={()=> {}}
+					// onLogout={()=> {}}
 					isBasePubPub={this.props.isBasePubPub}
 					isLandingPage={this.props.isLandingPage}
 				/>

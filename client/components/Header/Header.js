@@ -7,6 +7,7 @@ import { apiFetch, getResizedUrl } from 'utilities';
 require('./header.scss');
 
 const propTypes = {
+	locationData: PropTypes.object.isRequired,
 	userName: PropTypes.string,
 	userInitials: PropTypes.string,
 	userSlug: PropTypes.string,
@@ -41,9 +42,17 @@ const defaultProps = {
 class Header extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			redirect: '',
+		};
 		this.handleLogout = this.handleLogout.bind(this);
 	}
 
+	componentDidMount() {
+		this.setState({
+			redirect: `?redirect=${window.location.pathname}${window.location.search}`
+		});
+	}
 	handleLogout() {
 		apiFetch('/api/logout');
 	}
@@ -128,7 +137,7 @@ class Header extends Component {
 
 									{/* Login or Signup button */}
 									{!loggedIn &&
-										<a href="/login" className="pt-button pt-large pt-minimal">Login or Signup</a>
+										<a href={`/login${this.state.redirect}`} className="pt-button pt-large pt-minimal">Login or Signup</a>
 									}
 								</div>
 							</div>

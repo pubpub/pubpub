@@ -8,6 +8,7 @@ import { User, Collection, Pub, Collaborator, Discussion } from '../models';
 import { getCommunity } from '../utilities';
 
 const renderCollection = (req, res, next)=> {
+	console.log(req.query, req.path)
 	return getCommunity(req)
 	.then((communityData)=> {
 		const collectionId = communityData.collections.reduce((prev, curr)=> {
@@ -62,6 +63,7 @@ const renderCollection = (req, res, next)=> {
 			loginData: req.user || {},
 			communityData: communityData,
 			collectionData: collectionData,
+			locationData: { pathname: req.path, query: req.query },
 			isBasePubPub: false,
 			slug: req.params.slug,
 		};

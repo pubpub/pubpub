@@ -46,6 +46,10 @@ export const apiFetch = function(path, opts) {
 	// const finalRoute = `${urlPrefix}${path}`;
 	return fetch(path, {
 		...opts,
+		headers: {
+			Accept: 'application/json',
+			'Content-Type': 'application/json'
+		},
 		credentials: 'include',
 	})
 	.then((response)=> {

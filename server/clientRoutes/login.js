@@ -1,28 +1,21 @@
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
-import Promise from 'bluebird';
 import Login from 'containers/Login/Login';
 import Html from '../Html';
 import app from '../server';
-import { User } from '../models';
-import { getCommunity } from '../utilities';
+import { getInitialData } from '../utilities';
 
-app.use((req, res)=> {
-	res.status(404);
-
-	return Promise.all([getCommunity(req), User.findOne()])
-	.then(([communityData, loginData])=> {
-		const initialData = {
-			loginData: loginData,
-			communityData: communityData,
-			isBasePubPub: false,
-		};
+app.get('/login', (req, res)=> {
+	console.time('initDataGet');
+	return getInitialData(req)
+	.then((initialData)=> {
+		console.timeEnd('initDataGet');
 		return ReactDOMServer.renderToNodeStream(
 			<Html
 				chunkName="Login"
 				initialData={initialData}
 				headerComponents={[
-					<title key="meta-title">{`Login · ${communityData.title}`}</title>,
+					<title key="meta-title">{`Login · ${initialData.communityData.title}`}</title>,
 				]}
 			>
 				<Login {...initialData} />

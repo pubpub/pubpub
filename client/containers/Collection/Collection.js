@@ -14,6 +14,7 @@ const propTypes = {
 	loginData: PropTypes.object.isRequired,
 	communityData: PropTypes.object.isRequired,
 	collectionData: PropTypes.object.isRequired,
+	locationData: PropTypes.object.isRequired,
 	isBasePubPub: PropTypes.bool.isRequired,
 	slug: PropTypes.string
 };
@@ -144,6 +145,7 @@ class Collection extends Component {
 				<PageWrapper
 					loginData={this.props.loginData}
 					communityData={this.props.communityData}
+					locationData={this.props.locationData}
 					isBasePubPub={this.props.isBasePubPub}
 					isLandingPage={!this.props.slug}
 				>

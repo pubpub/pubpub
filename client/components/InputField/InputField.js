@@ -13,6 +13,7 @@ const propTypes = {
 	error: PropTypes.string,
 	value: PropTypes.string,
 	type: PropTypes.string,
+	autocomplete: PropTypes.string,
 	wrapperClassName: PropTypes.string,
 	onChange: PropTypes.func,
 	children: PropTypes.node,
@@ -28,6 +29,7 @@ const defaultProps = {
 	error: undefined,
 	value: undefined,
 	type: 'text',
+	autocomplete: undefined,
 	wrapperClassName: '',
 	onChange: undefined,
 	children: undefined,
@@ -54,6 +56,7 @@ const InputField = function(props) {
 							value={props.value}
 							onChange={props.onChange}
 							type={props.type}
+							autoComplete={props.autocomplete}
 							dir="auto"
 						/>
 					}
