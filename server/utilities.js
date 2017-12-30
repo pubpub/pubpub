@@ -100,7 +100,7 @@ export const generateMetaComponents = ({ title, siteName, url, description, favi
 		outputComponents = [
 			...outputComponents,
 			<title key="t1">{title}</title>,
-			<meta key="t2" name="og:title" content={title} />,
+			<meta key="t2" property="og:title" content={title} />,
 			<meta key="t3" name="twitter:title" content={title} />,
 			<meta name="twitter:image:alt" content={title} />
 		];
