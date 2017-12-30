@@ -5,11 +5,12 @@ import cors from 'cors';
 import compression from 'compression';
 import enforce from 'express-sslify';
 import Module from 'module';
+import passport from 'passport';
+import { sequelize, User } from './models';
 
 /* Since we are server-rendering components, we 	*/
 /* need to ensure we don't require things intended 	*/
 /* for webpack. Namely, .scss files 				*/
-
 const originalRequire = Module.prototype.require;
 Module.prototype.require = function(...args) {
 	if (args[0].indexOf('.scss') > -1) {
@@ -18,11 +19,9 @@ Module.prototype.require = function(...args) {
 	return originalRequire.apply(this, args);
 };
 
-
-// import passport from 'passport';
-
-// import { sequelize, User } from './models';
-
+/* ---------------------- */
+/* Initialize express app */
+/* ---------------------- */
 const app = express();
 export default app;
 
@@ -38,72 +37,72 @@ if (process.env.NODE_ENV === 'production') {
 /* -------- */
 /* Configure app session */
 /* -------- */
-// const session = require('express-session');
-// const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const session = require('express-session');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
-// app.use(session({
-// 	secret: 'sessionsecret',
-// 	resave: false,
-// 	saveUninitialized: false,
-// 	store: new SequelizeStore({
-// 		db: sequelize
-// 	}),
-// 	cookie: {
-// 		path: '/',
-// 		/* These are necessary for */
-// 		/* the api cookie to set */
-// 		/* ------- */
-// 		httpOnly: false,
-// 		secure: false,
-// 		/* ------- */
-// 		maxAge: 30 * 24 * 60 * 60 * 1000// = 30 days.
-// 	},
-// }));
+app.use(session({
+	secret: 'sessionsecret',
+	resave: false,
+	saveUninitialized: false,
+	store: new SequelizeStore({
+		db: sequelize
+	}),
+	cookie: {
+		path: '/',
+		/* These are necessary for */
+		/* the api cookie to set */
+		/* ------- */
+		httpOnly: false,
+		secure: false,
+		/* ------- */
+		maxAge: 30 * 24 * 60 * 60 * 1000// = 30 days.
+	},
+}));
 
 /* -------- */
 /* Configure app CORS */
 /* -------- */
-// const whitelist = [
-// 	/* Localhost */
-// 	/http:\/\/localhost:([0-9]+)*/i,
-// 	/* PubPub Subdomains */
-// 	/https:\/\/([a-z0-9-]+)*.pubpub.org/i,
-// 	/* Custom domains */
-// 	'https://pub.fiftynifty.org',
-// 	'https://pubpub.ito.com',
-// 	'https://www.responsivescience.org',
-// 	'https://www.reclamationsci.com',
-// 	'https://jods.mitpress.mit.edu',
-// 	'https://contemporaryarts.mit.edu',
-// 	'https://www.tjoe.org',
-// ];
+const whitelist = [
+	/* Localhost */
+	/http:\/\/localhost:([0-9]+)*/i,
+	/* PubPub Subdomains */
+	/https:\/\/([a-z0-9-]+)*.pubpub.org/i,
+	/* Custom domains */
+	'https://pub.fiftynifty.org',
+	'https://pubpub.ito.com',
+	'https://www.responsivescience.org',
+	'https://www.reclamationsci.com',
+	'https://jods.mitpress.mit.edu',
+	'https://contemporaryarts.mit.edu',
+	'https://www.tjoe.org',
+];
 
-// const corsOptions = {
-// 	origin: function (origin, callback) {
-// 		// This assumes the browser implements CORS.
-// 		// origin being undefined means the request is made on a local route
-// 		const originIsWhitelisted = whitelist.reduce((prev, curr)=> {
-// 			if (curr.test && curr.test(origin)) { return true; }
-// 			if (curr === origin) { return true; }
-// 			return prev;
-// 		}, false) || origin === undefined;
-// 		callback(originIsWhitelisted ? null : 'Bad Request', originIsWhitelisted);
-// 	},
-// 	methods: 'POST, GET, PUT, DELETE, OPTIONS',
-// 	allowHeaders: 'X-Requested-With, Content-Type',
-// 	credentials: true,
-// };
-// app.use(cors(corsOptions));
+const corsOptions = {
+	origin: function (origin, callback) {
+		// This assumes the browser implements CORS.
+		// origin being undefined means the request is made on a local route
+		const originIsWhitelisted = whitelist.reduce((prev, curr)=> {
+			if (curr.test && curr.test(origin)) { return true; }
+			if (curr === origin) { return true; }
+			return prev;
+		}, false) || origin === undefined;
+		callback(originIsWhitelisted ? null : 'Bad Request', originIsWhitelisted);
+	},
+	methods: 'POST, GET, PUT, DELETE, OPTIONS',
+	allowHeaders: 'X-Requested-With, Content-Type',
+	credentials: true,
+};
+app.use(cors(corsOptions));
 
 /* ------------------- */
 /* Configure app login */
 /* ------------------- */
-// app.use(passport.initialize());
-// app.use(passport.session());
-// passport.use(User.createStrategy());
-// // Use static serialize and deserialize of model for passport session support
-// passport.serializeUser(User.serializeUser());
-// passport.deserializeUser(User.deserializeUser());
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(User.createStrategy());
+// Use static serialize and deserialize of model for passport session support
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 /* -------------------- */
 /* -------------------- */
 
@@ -126,7 +125,10 @@ app.use('/robots.txt', express.static('static/robots.txt'));
 /* ------------------- */
 /* API Endpoints */
 /* ------------------- */
+require('./apiRoutes');
 require('./clientRoutes');
+
+
 
 /* ------------------- */
 /* ------------------- */

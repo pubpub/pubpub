@@ -8,8 +8,8 @@ import { User, Collection, Pub, Collaborator, Discussion } from '../models';
 import { getCommunity } from '../utilities';
 
 const renderCollection = (req, res, next)=> {
-	return Promise.all([getCommunity(req), User.findOne()])
-	.then(([communityData, loginData])=> {
+	return getCommunity(req)
+	.then((communityData)=> {
 		const collectionId = communityData.collections.reduce((prev, curr)=> {
 			if (curr.slug === '' && req.params.slug === undefined) { return curr.id; }
 			if (curr.slug === req.params.slug) { return curr.id; }
@@ -55,11 +55,11 @@ const renderCollection = (req, res, next)=> {
 				}
 			],
 		});
-		return Promise.all([communityData, loginData, findCollection]);
+		return Promise.all([communityData, findCollection]);
 	})
-	.then(([communityData, loginData, collectionData])=> {
+	.then(([communityData, collectionData])=> {
 		const initialData = {
-			loginData: loginData,
+			loginData: req.user || {},
 			communityData: communityData,
 			collectionData: collectionData,
 			isBasePubPub: false,

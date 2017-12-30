@@ -1,0 +1,40 @@
+// Override Default blueprint colors here
+// ****************************
+$dark-gray1: desaturate(#182026, 100%) ;
+$dark-gray2: desaturate(#202b33, 100%) ;
+$dark-gray3: desaturate(#293742, 100%) ;
+$dark-gray4: desaturate(#30404d, 100%) ;
+$dark-gray5: desaturate(#394b59, 100%) ;
+
+$gray1: desaturate(#5c7080, 100%) ;
+$gray2: desaturate(#738694, 100%) ;
+$gray3: desaturate(#8a9ba8, 100%) ;
+$gray4: desaturate(#a7b6c2, 100%) ;
+$gray5: desaturate(#bfccd6, 100%) ;
+
+$light-gray1: desaturate(#ced9e0, 100%) ;
+$light-gray2: desaturate(#d8e1e8, 100%) ;
+$light-gray3: desaturate(#e1e8ed, 100%) ;
+$light-gray4: desaturate(#ebf1f5, 100%) ;
+$light-gray5: desaturate(#f5f8fa, 100%) ;
+
+$blue1: $dark-gray1;
+$blue2: $dark-gray2;
+$blue3: $dark-gray3;
+$blue4: $dark-gray4;
+$blue5: $dark-gray5;
+
+// Import Core Blueprint sass
+// ****************************
+$icon-font-path: "~@blueprintjs/core/resources/icons";
+@import "~@blueprintjs/core/src/common/_colors.scss";
+@import "~@blueprintjs/core/src/common/_variables.scss";
+
+// Override Blueprint sass variables here
+// ****************************
+$pt-border-radius: floor($pt-grid-size / 5);
+
+// Import Core Blueprint sass
+// ****************************
+@import "~@blueprintjs/core/src/blueprint.scss";
+@import "~@blueprintjs/labs/src/blueprint-labs.scss";
