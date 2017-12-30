@@ -1,15 +1,56 @@
+import React from 'react';
+import { resolve } from 'path';
 import queryString from 'query-string';
 import { Community, Collection, User } from './models';
 
 export const getInitialData = (req)=> {
-	const hostname = req.get('host').indexOf('localhost') > -1 || req.get('host').indexOf('ssl.pubpub.org') > -1
+	const hostname = req.hostname.indexOf('localhost') > -1 || req.hostname.indexOf('ssl.pubpub.org') > -1
 		? 'joi.pubpub.org'
-		: req.get('host');
+		: req.hostname;
 	const whereQuery = hostname.indexOf('.pubpub.org')
 		? { subdomain: hostname.replace('.pubpub.org', '') }
 		: { domain: hostname };
 
-	console.time('query');
+	/* Gather user data */
+	const user = req.user || {};
+	const loginData = {
+		id: user.id,
+		initials: user.initials,
+		slug: user.slug,
+		fullName: user.fullName,
+		avatar: user.avatar,
+	};
+
+	/* Gather location data */
+	const locationData = {
+		hostname: req.hostname,
+		path: req.path,
+		query: req.query,
+		queryString: queryString.stringify(req.query),
+		isBasePubPub: hostname === 'www.pubpub.org' || hostname === 'v4.pubpub.org',
+	};
+
+	/* If basePubPub - return fixed data */
+	if (locationData.isBasePubPub) {
+		return new Promise((resolvePromise)=> {
+			resolvePromise({
+				communityData: {
+					title: 'PubPub',
+					description: 'Collaborative Community Publishing',
+					favicon: '/favicon.png',
+					accentColor: '#112233',
+					accentTextColor: '#FFFFFF',
+					accentActionColor: 'rgba(17, 34, 51, 0.6)',
+					accentHoverColor: 'rgba(17, 34, 51, 0.8)',
+					accentMinimalColor: 'rgba(17, 34, 51, 0.2)',
+				},
+				loginData: loginData,
+				locationData: locationData,
+			});
+		});
+	}
+
+	/* If we have a community to find, search, and then return */
 	return Community.findOne({
 		where: whereQuery,
 		attributes: {
@@ -32,36 +73,18 @@ export const getInitialData = (req)=> {
 		],
 	})
 	.then((communityResult)=> {
-		console.timeEnd('query');
-		console.time('process');
-		const communityData = communityResult && communityResult.toJSON();
-		const user = req.user || {};
+		if (!communityResult) { throw new Error('Community Not Found'); }
 
-		const loginData = {
-			id: user.id,
-			initials: user.initials,
-			slug: user.slug,
-			fullName: user.fullName,
-			avatar: user.avatar,
-			isAdmin: communityData && communityData.admins.reduce((prev, curr)=> {
-				if (curr.id === user.id) { return true; }
-				return prev;
-			}, false)
-		};
+		const communityData = communityResult.toJSON();
+		communityData.collections = communityData.collections.filter((item)=> {
+			return loginData.isAdmin || item.isPublic;
+		});
 
-		const locationData = {
-			host: req.get('host'),
-			path: req.get('path'),
-			query: req.get('query'),
-			queryString: queryString.stringify(req.get('query')),
-		};
+		loginData.isAdmin = communityData.admins.reduce((prev, curr)=> {
+			if (curr.id === user.id) { return true; }
+			return prev;
+		}, false);
 
-		if (communityData) {
-			communityData.collections = communityData.collections.filter((item)=> {
-				return loginData.isAdmin || item.isPublic;
-			});
-		}
-		console.timeEnd('process');
 		return {
 			communityData: communityData,
 			loginData: loginData,
@@ -70,29 +93,93 @@ export const getInitialData = (req)=> {
 	});
 };
 
-export const getCommunity = (req)=> {
-	const hostname = req.get('host').indexOf('localhost') > -1 || req.get('host').indexOf('ssl.pubpub.org') > -1
-		? 'joi.pubpub.org'
-		: req.get('host');
+export const generateMetaComponents = ({ title, siteName, url, description, favicon, image, publishedAt, unlisted })=> {
+	let outputComponents = [];
 
-	return Community.findOne({
-		where: {
-			$or: [
-				{ subdomain: hostname.replace('.pubpub.org', '') },
-				{ domain: hostname }
-			]
-		},
-		include: [
-			{
-				model: Collection,
-				as: 'collections',
-			},
-			{
-				model: User,
-				as: 'admins',
-				through: { attributes: [] },
-				attributes: ['id', 'slug', 'fullName', 'initials', 'avatar'],
-			}
-		],
-	});
+	if (title) {
+		outputComponents = [
+			...outputComponents,
+			<title key="t1">{title}</title>,
+			<meta key="t2" name="og:title" content={title} />,
+			<meta key="t3" name="twitter:title" content={title} />,
+			<meta name="twitter:image:alt" content={title} />
+		];
+	}
+
+	if (siteName) {
+		outputComponents = [
+			...outputComponents,
+			<meta key="sn1" property="og:site_name" content={siteName} />,
+		];
+	}
+
+	if (url) {
+		outputComponents = [
+			...outputComponents,
+			<meta key="u1" property="og:url" content={url} />,
+			<meta key="u2" property="og:type" content={url.indexOf('/pub/') > -1 ? 'article' : 'website'} />,
+		];
+	}
+
+	if (description) {
+		outputComponents = [
+			...outputComponents,
+			<meta key="d1" name="description" content={description} />,
+			<meta key="d2" property="og:description" content={description} />,
+			<meta key="d3" name="twitter:description" content={description} />,
+		];
+	}
+
+	if (image) {
+		outputComponents = [
+			...outputComponents,
+			<meta key="i1" property="og:image" content={image} />,
+			<meta key="i2" property="og:image:url" content={image} />,
+			<meta key="i3" property="og:image:width" content="500" />,
+			<meta name="twitter:image" content={image} />
+		];
+	}
+
+	if (favicon) {
+		outputComponents = [
+			...outputComponents,
+			<link key="f1" rel="icon" type="image/png" sizes="256x256" href={favicon} />,
+		];
+	}
+
+	if (publishedAt) {
+		outputComponents = [
+			...outputComponents,
+			<meta key="pa1" property="article:published_time" content={publishedAt} />
+		];
+	}
+
+	if (unlisted) {
+		outputComponents = [
+			...outputComponents,
+			<meta key="un1" name="robots" content="noindex,nofollow" />
+		];
+	}
+
+	outputComponents = [
+		...outputComponents,
+		<meta key="misc1" property="fb:app_id" content="924988584221879" />,
+		<meta name="twitter:card" content="summary" />,
+		<meta name="twitter:site" content="@pubpub" />,
+	];
+
+	return outputComponents;
+};
+
+export const handleErrors = (req, res, next)=> {
+	return (err) => {
+		if (err.message === 'Community Not Found') {
+			return res.status(404).sendFile(resolve(__dirname, './errorPages/communityNotFound.html'));
+		}
+		if (err.message === 'Collection Not Found') {
+			return next();
+		}
+		console.log('Err', err);
+		return res.status(500).json('Error');
+	};
 };

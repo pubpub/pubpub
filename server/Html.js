@@ -29,7 +29,6 @@ const Html = (props) => {
 				{props.headerComponents}
 				<meta charSet="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-				<link rel="icon" type="image/png" sizes="256x256" href="/favicon.png" />
 				<link rel="stylesheet" type="text/css" href={getPath('baseStyle', 'css')} />
 				<link rel="stylesheet" type="text/css" href={getPath(props.chunkName, 'css')} />
 			</head>

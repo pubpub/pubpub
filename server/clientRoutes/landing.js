@@ -5,10 +5,10 @@ import Landing from 'containers/Landing/Landing';
 import Html from '../Html';
 import app from '../server';
 import { User } from '../models';
-import { getCommunity } from '../utilities';
+import { getInitialData } from '../utilities';
 
 app.get('/', (req, res)=> {
-	return Promise.all([getCommunity(req), User.findOne()])
+	return Promise.all([getInitialData(req), User.findOne()])
 	.then(([communityData, loginData])=> {
 		const initialData = {
 			loginData: loginData,

@@ -5,11 +5,10 @@ import CollectionContainer from 'containers/Collection/Collection';
 import Html from '../Html';
 import app from '../server';
 import { User, Collection, Pub, Collaborator, Discussion } from '../models';
-import { getCommunity } from '../utilities';
+import { getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 
 const renderCollection = (req, res, next)=> {
-	console.log(req.query, req.path)
-	return getCommunity(req)
+	return getInitialData(req)
 	.then((communityData)=> {
 		const collectionId = communityData.collections.reduce((prev, curr)=> {
 			if (curr.slug === '' && req.params.slug === undefined) { return curr.id; }
@@ -84,13 +83,7 @@ const renderCollection = (req, res, next)=> {
 		)
 		.pipe(res);
 	})
-	.catch((err)=> {
-		if (err.message === 'Collection Not Found') {
-			return next();
-		}
-		console.log('Err', err);
-		return res.status(500).json('Error');
-	});
+	.catch(handleErrors(req, res, next));
 };
 
 app.get('/', renderCollection);
