@@ -7,7 +7,7 @@ import app from '../server';
 import { User, Collection, Pub, Collaborator, Discussion } from '../models';
 import { getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 
-const renderCollection = (req, res, next)=> {
+app.get(['/', '/:slug'], (req, res, next)=> {
 	return getInitialData(req)
 	.then((initialData)=> {
 		const collectionId = initialData.communityData.collections.reduce((prev, curr)=> {
@@ -81,7 +81,4 @@ const renderCollection = (req, res, next)=> {
 		.pipe(res);
 	})
 	.catch(handleErrors(req, res, next));
-};
-
-app.get('/', renderCollection);
-app.get('/:slug', renderCollection);
+});
