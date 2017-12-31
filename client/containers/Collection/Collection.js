@@ -11,16 +11,10 @@ import { hydrateWrapper, getDefaultLayout } from 'utilities';
 require('./collection.scss');
 
 const propTypes = {
-	loginData: PropTypes.object.isRequired,
 	communityData: PropTypes.object.isRequired,
-	collectionData: PropTypes.object.isRequired,
+	loginData: PropTypes.object.isRequired,
 	locationData: PropTypes.object.isRequired,
-	isBasePubPub: PropTypes.bool.isRequired,
-	slug: PropTypes.string
-};
-
-const defaultProps = {
-	slug: undefined,
+	collectionData: PropTypes.object.isRequired,
 };
 
 class Collection extends Component {
@@ -119,10 +113,11 @@ class Collection extends Component {
 		return pubRenderLists;
 	}
 	render() {
-		const collectionData = this.props.collectionData || { pubs: [] };
+		const collectionData = this.props.collectionData;
+		const slug = this.props.locationData.params.slug;
 		const title = this.props.communityData.collections.reduce((prev, curr)=> {
-			if (curr.slug === '' && this.props.slug === undefined) { return curr.title; }
-			if (curr.slug === this.props.slug) { return curr.title; }
+			if (curr.slug === '' && slug === undefined) { return curr.title; }
+			if (curr.slug === slug) { return curr.title; }
 			return prev;
 		}, undefined);
 		// if (!title) { return <NoMatch />; }
@@ -146,8 +141,6 @@ class Collection extends Component {
 					loginData={this.props.loginData}
 					communityData={this.props.communityData}
 					locationData={this.props.locationData}
-					isBasePubPub={this.props.isBasePubPub}
-					isLandingPage={!this.props.slug}
 				>
 					<div className="container">
 						{((!collectionData.isPage && collectionData.isOpenSubmissions) || (title && title !== 'Home')) &&
@@ -202,7 +195,6 @@ class Collection extends Component {
 }
 
 Collection.propTypes = propTypes;
-Collection.defaultProps = defaultProps;
 export default Collection;
 
 hydrateWrapper(Collection);

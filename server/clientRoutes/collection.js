@@ -9,8 +9,8 @@ import { getInitialData, handleErrors, generateMetaComponents } from '../utiliti
 
 const renderCollection = (req, res, next)=> {
 	return getInitialData(req)
-	.then((communityData)=> {
-		const collectionId = communityData.collections.reduce((prev, curr)=> {
+	.then((initialData)=> {
+		const collectionId = initialData.communityData.collections.reduce((prev, curr)=> {
 			if (curr.slug === '' && req.params.slug === undefined) { return curr.id; }
 			if (curr.slug === req.params.slug) { return curr.id; }
 			return prev;
@@ -55,30 +55,27 @@ const renderCollection = (req, res, next)=> {
 				}
 			],
 		});
-		return Promise.all([communityData, findCollection]);
+		return Promise.all([initialData, findCollection]);
 	})
-	.then(([communityData, collectionData])=> {
-		const initialData = {
-			loginData: req.user || {},
-			communityData: communityData,
+	.then(([initialData, collectionData])=> {
+		const newInitialData = {
+			...initialData,
 			collectionData: collectionData,
-			locationData: { pathname: req.path, query: req.query },
-			isBasePubPub: false,
-			slug: req.params.slug,
 		};
 		const pageTitle = collectionData.title === 'Home'
-			? communityData.title
+			? newInitialData.communityData.title
 			: collectionData.title;
 		return ReactDOMServer.renderToNodeStream(
 			<Html
 				chunkName="Collection"
-				initialData={initialData}
-				headerComponents={[
-					<title key="meta-title">{pageTitle}</title>,
-					<meta key="meta-desc" name="description" content={collectionData.description} />,
-				]}
+				initialData={newInitialData}
+				headerComponents={generateMetaComponents({
+					initialData: initialData,
+					title: pageTitle,
+					description: collectionData.description,
+				})}
 			>
-				<CollectionContainer {...initialData} />
+				<CollectionContainer {...newInitialData} />
 			</Html>
 		)
 		.pipe(res);

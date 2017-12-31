@@ -1,4 +1,3 @@
-require('./about'); 		/* /about */
-require('./login'); 		/* /login */
-require('./collection'); 	/* / and /:slug*/
-require('./noMatch');		/* 404 catch-call */
+require('./login'); 		// Route: /login
+require('./collection'); 	// Route: / and /:slug
+require('./noMatch');		// Route: /*

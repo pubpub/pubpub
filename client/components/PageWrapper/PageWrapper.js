@@ -7,19 +7,16 @@ import NavBar from 'components/NavBar/NavBar';
 import { populateNavigationIds } from 'utilities';
 
 const propTypes = {
-	children: PropTypes.node.isRequired,
-	loginData: PropTypes.object.isRequired,
 	communityData: PropTypes.object.isRequired,
+	loginData: PropTypes.object.isRequired,
 	locationData: PropTypes.object.isRequired,
-	isBasePubPub: PropTypes.bool.isRequired,
-	isLandingPage: PropTypes.bool,
+	children: PropTypes.node.isRequired,
 	fixHeader: PropTypes.bool,
 	hideNav: PropTypes.bool,
 	hideFooter: PropTypes.bool,
 };
 
 const defaultProps = {
-	isLandingPage: false,
 	fixHeader: false,
 	hideNav: false,
 	hideFooter: false,
@@ -65,8 +62,8 @@ class PageWrapper extends Component {
 					largeHeaderDescription={communityData.largeHeaderDescription}
 					largeHeaderBackground={communityData.largeHeaderBackground}
 					// onLogout={()=> {}}
-					isBasePubPub={this.props.isBasePubPub}
-					isLandingPage={this.props.isLandingPage}
+					isBasePubPub={this.props.locationData.isBasePubPub}
+					isLandingPage={this.props.locationData.path === '/'}
 				/>
 
 				{!this.props.hideNav &&
@@ -80,7 +77,7 @@ class PageWrapper extends Component {
 				{!this.props.hideFooter &&
 					<Footer
 						isAdmin={loginData.isAdmin}
-						isBasePubPub={this.props.isBasePubPub}
+						isBasePubPub={this.props.locationData.isBasePubPub}
 					/>
 				}
 			</div>

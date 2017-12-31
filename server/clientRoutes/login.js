@@ -13,11 +13,9 @@ app.get('/login', (req, res, next)=> {
 				chunkName="Login"
 				initialData={initialData}
 				headerComponents={generateMetaComponents({
+					initialData: initialData,
 					title: `Login · ${initialData.communityData.title}`,
 					description: initialData.communityData.description,
-					siteName: initialData.communityData.title,
-					url: `https://${initialData.locationData.hostname}${initialData.locationData.path}`,
-					favicon: initialData.communityData.favicon,
 				})}
 			>
 				<Login {...initialData} />

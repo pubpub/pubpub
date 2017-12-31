@@ -11,9 +11,9 @@ import { apiFetch, hydrateWrapper } from 'utilities';
 require('./login.scss');
 
 const propTypes = {
-	loginData: PropTypes.object.isRequired,
 	communityData: PropTypes.object.isRequired,
-	isBasePubPub: PropTypes.bool.isRequired,
+	loginData: PropTypes.object.isRequired,
+	locationData: PropTypes.object.isRequired,
 };
 
 class Login extends Component {
@@ -70,7 +70,7 @@ class Login extends Component {
 				<PageWrapper
 					loginData={this.props.loginData}
 					communityData={this.props.communityData}
-					isBasePubPub={this.props.isBasePubPub}
+					locationData={this.props.locationData}
 					hideFooter={true}
 				>
 					<div className="container small">

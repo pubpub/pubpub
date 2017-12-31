@@ -7,9 +7,9 @@ import { hydrateWrapper } from 'utilities';
 require('./noMatch.scss');
 
 const propTypes = {
-	loginData: PropTypes.object.isRequired,
 	communityData: PropTypes.object.isRequired,
-	isBasePubPub: PropTypes.bool.isRequired,
+	loginData: PropTypes.object.isRequired,
+	locationData: PropTypes.object.isRequired,
 };
 
 class NoMatch extends Component {
@@ -19,12 +19,12 @@ class NoMatch extends Component {
 				<PageWrapper
 					loginData={this.props.loginData}
 					communityData={this.props.communityData}
-					isBasePubPub={this.props.isBasePubPub}
+					locationData={this.props.locationData}
 					hideFooter={true}
 				>
 					<NonIdealState
-						title={'Page Not Found'}
-						visual={'pt-icon-path-search'}
+						title="Page Not Found"
+						visual="pt-icon-path-search"
 					/>
 				</PageWrapper>
 			</div>

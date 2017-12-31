@@ -25,9 +25,11 @@ export const getInitialData = (req)=> {
 	const locationData = {
 		hostname: req.hostname,
 		path: req.path,
+		params: req.params,
 		query: req.query,
 		queryString: queryString.stringify(req.query),
 		isBasePubPub: hostname === 'www.pubpub.org' || hostname === 'v4.pubpub.org',
+
 	};
 
 	/* If basePubPub - return fixed data */
@@ -93,7 +95,11 @@ export const getInitialData = (req)=> {
 	});
 };
 
-export const generateMetaComponents = ({ title, siteName, url, description, favicon, image, publishedAt, unlisted })=> {
+export const generateMetaComponents = ({ initialData, title, description, image, publishedAt, unlisted })=> {
+	const siteName = initialData.communityData.title;
+	const url = `https://${initialData.locationData.hostname}${initialData.locationData.path}`;
+	const favicon = initialData.communityData.favicon;
+
 	let outputComponents = [];
 
 	if (title) {
@@ -164,8 +170,8 @@ export const generateMetaComponents = ({ title, siteName, url, description, favi
 	outputComponents = [
 		...outputComponents,
 		<meta key="misc1" property="fb:app_id" content="924988584221879" />,
-		<meta name="twitter:card" content="summary" />,
-		<meta name="twitter:site" content="@pubpub" />,
+		<meta key="misc2" name="twitter:card" content="summary" />,
+		<meta key="misc3" name="twitter:site" content="@pubpub" />,
 	];
 
 	return outputComponents;
