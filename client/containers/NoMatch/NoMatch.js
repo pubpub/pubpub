@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { NonIdealState } from '@blueprintjs/core';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
@@ -12,25 +12,23 @@ const propTypes = {
 	locationData: PropTypes.object.isRequired,
 };
 
-class NoMatch extends Component {
-	render() {
-		return (
-			<div id="no-match-container">
-				<PageWrapper
-					loginData={this.props.loginData}
-					communityData={this.props.communityData}
-					locationData={this.props.locationData}
-					hideFooter={true}
-				>
-					<NonIdealState
-						title="Page Not Found"
-						visual="pt-icon-path-search"
-					/>
-				</PageWrapper>
-			</div>
-		);
-	}
-}
+const NoMatch = (props)=> {
+	return (
+		<div id="no-match-container">
+			<PageWrapper
+				loginData={props.loginData}
+				communityData={props.communityData}
+				locationData={props.locationData}
+				hideFooter={true}
+			>
+				<NonIdealState
+					title="Page Not Found"
+					visual="pt-icon-path-search"
+				/>
+			</PageWrapper>
+		</div>
+	);
+};
 
 NoMatch.propTypes = propTypes;
 export default NoMatch;

@@ -11,11 +11,11 @@ storiesOf('Components/Footer', module)
 		<AccentStyle {...accentDataDark} />
 
 		<div style={wrapperStyle}>
-			<Footer isAdmin={true} isBasePubPub={false}/>
+			<Footer isAdmin={true} isBasePubPub={false} />
 		</div>
 
 		<div style={wrapperStyle}>
-			<Footer isAdmin={false} isBasePubPub={false}/>
+			<Footer isAdmin={false} isBasePubPub={false} />
 		</div>
 
 		<div style={wrapperStyle}>
@@ -27,7 +27,7 @@ storiesOf('Components/Footer', module)
 	<div>
 		<AccentStyle {...accentDataLight} />
 		<div style={wrapperStyle}>
-			<Footer isAdmin={true} isBasePubPub={false}/>
+			<Footer isAdmin={true} isBasePubPub={false} />
 		</div>
 	</div>
 ));

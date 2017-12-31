@@ -133,5 +133,5 @@ export default {
 			createdAt: '2017-09-01T15:28:24.136Z',
 			updatedAt: '2017-09-01T15:28:24.136Z'
 		}
-	],	
+	],
 };

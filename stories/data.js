@@ -14,4 +14,5 @@ export const accentDataLight = {
 	accentMinimalColor: 'rgba(38, 224, 208, 0.15)',
 };
 
+export const initialData = require('./dataInitial.js');
 export const communityData = require('./dataCommunity.js');

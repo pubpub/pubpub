@@ -5,7 +5,7 @@ let manifest;
 try {
 	manifest = require('../dist/manifest.json');
 } catch (err) {
-	console.log('No Manifest file');
+	// No Manifest file. Must be dev mode.
 }
 
 
