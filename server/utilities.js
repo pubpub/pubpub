@@ -12,7 +12,7 @@ export const renderToNodeStream = (res, reactElement)=> {
 
 export const getInitialData = (req)=> {
 	const hostname = req.hostname.indexOf('localhost') > -1 || req.hostname.indexOf('ssl.pubpub.org') > -1
-		? 'dev.pubpub.org'
+		? 'www.pubpub.org'
 		: req.hostname;
 	const whereQuery = hostname.indexOf('.pubpub.org')
 		? { subdomain: hostname.replace('.pubpub.org', '') }
@@ -49,6 +49,7 @@ export const getInitialData = (req)=> {
 					title: 'PubPub',
 					description: 'Collaborative Community Publishing',
 					favicon: '/favicon.png',
+					smallHeaderLogo: '/static/icon.png',
 					accentColor: '#112233',
 					accentTextColor: '#FFFFFF',
 					accentActionColor: 'rgba(17, 34, 51, 0.6)',

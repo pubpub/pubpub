@@ -17,14 +17,12 @@ export const apiFetch = function(path, opts) {
 			Accept: 'application/json',
 			'Content-Type': 'application/json'
 		},
+		redirect: 'follow',
 		credentials: 'include',
 	})
 	.then((response)=> {
 		if (!response.ok) {
 			return response.json().then((err)=> { throw err; });
-		}
-		if (response.redirected) {
-			window.location.href = response.url;
 		}
 		return response.json();
 	});

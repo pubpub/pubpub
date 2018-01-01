@@ -36,6 +36,8 @@ const Html = (props) => {
 				<div id="root">
 					{props.children}
 				</div>
+				<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=fetch,default,HTMLCanvasElement.prototype.toBlob" />
+				<script src="/static/objectEntriesPolyfill.js" />
 				<script id="initial-data" type="text/plain" data-json={JSON.stringify(props.initialData)} />
 				<script src={getPath('vendor', 'js')} />
 				<script src={getPath(props.chunkName, 'js')} />

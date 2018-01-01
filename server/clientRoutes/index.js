@@ -1,3 +1,4 @@
+require('./communityCreate');	// Route: /community/create (pubpub-only)
 require('./login'); 			// Route: /login
 require('./pub'); 				// Route: /pub/:slug
 require('./collection'); 		// Route: / and /:slug

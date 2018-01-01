@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import app from '../server';
 import { Collection, Pub, Collaborator, CollectionPub, CommunityAdmin } from '../models';
 import { generateHash } from '../utilities';
