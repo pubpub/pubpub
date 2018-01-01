@@ -1,4 +1,5 @@
-require('./login'); 		// Route: /login
-require('./pub'); 			// Route: /pub/:slug
-require('./collection'); 	// Route: / and /:slug
-require('./noMatch');		// Route: /*
+require('./login'); 			// Route: /login
+require('./pub'); 				// Route: /pub/:slug
+require('./collection'); 		// Route: / and /:slug
+require('./collectionSubmit'); 	// Route: /:slug/submit and /:slug/submit/:hash
+require('./noMatch');			// Route: /*

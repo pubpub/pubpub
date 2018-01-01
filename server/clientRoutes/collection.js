@@ -3,7 +3,7 @@ import Promise from 'bluebird';
 import CollectionContainer from 'containers/Collection/Collection';
 import Html from '../Html';
 import app from '../server';
-import { User, Collection, Pub, Collaborator, Discussion } from '../models';
+import { User, Collection, Pub, Collaborator, Discussion, CommunityAdmin } from '../models';
 import { renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 
 app.get(['/', '/:slug'], (req, res, next)=> {
@@ -54,16 +54,61 @@ app.get(['/', '/:slug'], (req, res, next)=> {
 				}
 			],
 		});
-		return Promise.all([initialData, findCollection]);
+		const findCommunityAdmin = CommunityAdmin.findOne({
+			where: {
+				userId: initialData.loginData.id,
+				communityId: initialData.communityData.communityId,
+			}
+		});
+		return Promise.all([initialData, findCollection, findCommunityAdmin]);
 	})
-	.then(([initialData, collectionData])=> {
+	.then(([initialData, collectionData, communityAdminData])=> {
+		const collectionDataJson = collectionData.toJSON();
+		collectionDataJson.pubs = collectionDataJson.pubs.map((pub)=> {
+			return {
+				...pub,
+				discussionCount: pub.discussions ? pub.discussions.length : 0,
+				suggestionCount: pub.discussions ? pub.discussions.reduce((prev, curr)=> {
+					if (curr.suggestions) { return prev + 1; }
+					return prev;
+				}, 0) : 0,
+				collaboratorCount: pub.collaborators.length + pub.emptyCollaborators.length,
+				hasOpenSubmission: pub.discussions ? pub.discussions.reduce((prev, curr)=> {
+					if (curr.submitHash && !curr.isArchived) { return true; }
+					return prev;
+				}, false) : false,
+				discussions: undefined,
+				collaborators: [
+					...pub.collaborators,
+					...pub.emptyCollaborators.map((item)=> {
+						return {
+							id: item.id,
+							initials: item.name ? item.name[0] : '',
+							fullName: item.name,
+							Collaborator: {
+								id: item.id,
+								isAuthor: item.isAuthor,
+								permissions: item.permissions,
+								order: item.order,
+							}
+						};
+					})
+				],
+				emptyCollaborators: undefined,
+			};
+		}).filter((item)=> {
+			const adminCanCollab = item.adminPermissions !== 'none' && !!communityAdminData;
+			const publicCanCollab = item.collaborationMode !== 'private';
+			return !!item.firstPublishedAt || publicCanCollab || adminCanCollab;
+		});
+
 		const newInitialData = {
 			...initialData,
-			collectionData: collectionData,
+			collectionData: collectionDataJson,
 		};
-		const pageTitle = collectionData.title === 'Home'
+		const pageTitle = collectionDataJson.title === 'Home'
 			? newInitialData.communityData.title
-			: collectionData.title;
+			: collectionDataJson.title;
 		return renderToNodeStream(res,
 			<Html
 				chunkName="Collection"
@@ -71,7 +116,7 @@ app.get(['/', '/:slug'], (req, res, next)=> {
 				headerComponents={generateMetaComponents({
 					initialData: initialData,
 					title: pageTitle,
-					description: collectionData.description,
+					description: collectionDataJson.description,
 				})}
 			>
 				<CollectionContainer {...newInitialData} />

@@ -9,7 +9,6 @@ import { renderToNodeStream, getInitialData, handleErrors, generateMetaComponent
 app.get('/pub/:slug', (req, res, next)=> {
 	return getInitialData(req)
 	.then((initialData)=> {
-
 		const versionParameters = req.query.version
 			? {
 				where: { id: req.query.version },
