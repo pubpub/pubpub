@@ -106,7 +106,7 @@ class Landing extends Component {
 
 						<div className={'col-12'}>
 							<h2>Empowered Publishing</h2>
-							<div className={'subtitle'}>Take control of your research and how it's communicated. Powerful tools to let you publish with and for your community.</div>
+							<div className={'subtitle'}>Take control of your research and how it's communicated. PubPub lets you publish with and for your community.</div>
 						</div>
 
 						{features.map((item)=> {
