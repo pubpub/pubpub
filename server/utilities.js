@@ -5,7 +5,7 @@ import { Community, Collection, User } from './models';
 
 export const getInitialData = (req)=> {
 	const hostname = req.hostname.indexOf('localhost') > -1 || req.hostname.indexOf('ssl.pubpub.org') > -1
-		? 'joi.pubpub.org'
+		? 'cursor.pubpub.org'
 		: req.hostname;
 	const whereQuery = hostname.indexOf('.pubpub.org')
 		? { subdomain: hostname.replace('.pubpub.org', '') }
@@ -27,7 +27,9 @@ export const getInitialData = (req)=> {
 		path: req.path,
 		params: req.params,
 		query: req.query,
-		queryString: queryString.stringify(req.query),
+		queryString: req.query
+			? `?${queryString.stringify(req.query)}`
+			: '',
 		isBasePubPub: hostname === 'www.pubpub.org' || hostname === 'v4.pubpub.org',
 
 	};

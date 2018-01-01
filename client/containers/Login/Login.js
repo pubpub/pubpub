@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SHA3 from 'crypto-js/sha3';
 import encHex from 'crypto-js/enc-hex';
+// TODO - we don't need query string anymore
 import queryString from 'query-string';
 import { Button } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';

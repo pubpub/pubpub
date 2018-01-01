@@ -1,7 +1,7 @@
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 import Promise from 'bluebird';
-import Login from 'containers/Login/Login';
+import PubPresentation from 'containers/PubPresentation/PubPresentation';
 import Html from '../Html';
 import app from '../server';
 import { User, Collection, Pub, Collaborator, Discussion, Version, CommunityAdmin } from '../models';
@@ -151,7 +151,10 @@ app.get('/pub/:slug', (req, res, next)=> {
 		}
 		if (!formattedPubData.versions.length && formattedPubData.localPermissions === 'none') { throw new Error('Pub Not Found'); }
 
-
+		const isUnlisted = formattedPubData.collections.reduce((prev, curr)=> {
+			if (curr.isPublic) { return false; }
+			return prev;
+		}, true);
 
 
 		console.timeEnd('pubProcess');
@@ -161,17 +164,18 @@ app.get('/pub/:slug', (req, res, next)=> {
 		};
 		return ReactDOMServer.renderToNodeStream(
 			<Html
-				chunkName="Login"
+				chunkName="PubPresentation"
 				initialData={newInitialData}
 				headerComponents={generateMetaComponents({
 					initialData: initialData,
 					title: pubData.title,
 					description: pubData.description,
 					image: pubData.avatar,
-					publishedAt: pubData.firstPublishedAt
+					publishedAt: pubData.firstPublishedAt,
+					unlisted: isUnlisted,
 				})}
 			>
-				<Login {...newInitialData} />
+				<PubPresentation {...newInitialData} />
 			</Html>
 		)
 		.pipe(res);

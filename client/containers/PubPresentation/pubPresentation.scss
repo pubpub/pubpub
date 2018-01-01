@@ -1,0 +1,19 @@
+#pub-presentation-container {
+	.container.pub {
+		max-width: 728px;
+	}
+	.license-wrapper {
+		padding: 4em 0em;
+	}
+	.no-snapshots-wrapper {
+		padding: 10em 0em;
+	}
+}
+
+@media only screen and (max-width: 720px) {
+	#pub-presentation-container {
+		.container.pub {
+			max-width: 100%;
+		}
+	}
+}	
