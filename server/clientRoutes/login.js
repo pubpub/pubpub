@@ -1,14 +1,13 @@
-import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 import Login from 'containers/Login/Login';
 import Html from '../Html';
 import app from '../server';
-import { getInitialData, handleErrors, generateMetaComponents } from '../utilities';
+import { renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 
 app.get('/login', (req, res, next)=> {
 	return getInitialData(req)
 	.then((initialData)=> {
-		return ReactDOMServer.renderToNodeStream(
+		return renderToNodeStream(res,
 			<Html
 				chunkName="Login"
 				initialData={initialData}
@@ -20,8 +19,7 @@ app.get('/login', (req, res, next)=> {
 			>
 				<Login {...initialData} />
 			</Html>
-		)
-		.pipe(res);
+		);
 	})
 	.catch(handleErrors(req, res, next));
 });

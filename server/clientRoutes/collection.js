@@ -1,11 +1,10 @@
-import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 import Promise from 'bluebird';
 import CollectionContainer from 'containers/Collection/Collection';
 import Html from '../Html';
 import app from '../server';
 import { User, Collection, Pub, Collaborator, Discussion } from '../models';
-import { getInitialData, handleErrors, generateMetaComponents } from '../utilities';
+import { renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 
 app.get(['/', '/:slug'], (req, res, next)=> {
 	return getInitialData(req)
@@ -65,7 +64,7 @@ app.get(['/', '/:slug'], (req, res, next)=> {
 		const pageTitle = collectionData.title === 'Home'
 			? newInitialData.communityData.title
 			: collectionData.title;
-		return ReactDOMServer.renderToNodeStream(
+		return renderToNodeStream(res,
 			<Html
 				chunkName="Collection"
 				initialData={newInitialData}
@@ -77,8 +76,7 @@ app.get(['/', '/:slug'], (req, res, next)=> {
 			>
 				<CollectionContainer {...newInitialData} />
 			</Html>
-		)
-		.pipe(res);
+		);
 	})
 	.catch(handleErrors(req, res, next));
 });
