@@ -158,6 +158,7 @@ app.get('/pub/:slug', (req, res, next)=> {
 			...initialData,
 			pubData: formattedPubData,
 		};
+		res.setHeader('content-type', 'text/html');
 		return ReactDOMServer.renderToNodeStream(
 			<Html
 				chunkName="PubPresentation"
