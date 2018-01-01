@@ -4,9 +4,11 @@ import PubPresentation from 'containers/PubPresentation/PubPresentation';
 import Html from '../Html';
 import app from '../server';
 import { User, Collection, Pub, Collaborator, Discussion, Version, CommunityAdmin } from '../models';
-import { renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
+import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 
 app.get('/pub/:slug', (req, res, next)=> {
+	if (!hostIsValid(req, 'community')) { return next(); }
+
 	return getInitialData(req)
 	.then((initialData)=> {
 		const versionParameters = req.query.version

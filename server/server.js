@@ -106,10 +106,6 @@ passport.deserializeUser(User.deserializeUser());
 /* -------------------- */
 /* -------------------- */
 
-// require('./generateData.js');
-// require('./migrate/migrateUsers.js');
-// require('./migrate/migrateItems.js');
-
 // Handle errors.
 app.use((err, req, res, next)=> {
 	console.log(`Error!  ${err}`);
@@ -124,6 +120,17 @@ app.use('/fonts', express.static('dist/fonts'));
 app.use('/static', express.static('static'));
 app.use('/favicon.png', express.static('static/favicon.png'));
 app.use('/robots.txt', express.static('static/robots.txt'));
+
+/* Set Hostname for Dev */
+app.use((req, res, next)=> {
+	if (req.hostname.indexOf('localhost') > -1) {
+		req.headers.host = 'dev.pubpub.org';
+	}
+	if (req.hostname.indexOf('ssl.pubpub.org') > -1) {
+		req.headers.host = 'joi.pubpub.org';
+	}
+	next();
+});
 
 require('./apiRoutes');
 require('./clientRoutes');

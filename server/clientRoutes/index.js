@@ -1,6 +1,11 @@
-require('./communityCreate');	// Route: /community/create (pubpub-only)
-require('./login'); 			// Route: /login
+/* Routes for PubPub */
+require('./communityCreate');	// Route: /community/create
+
+/* Routes for Communities */
 require('./pub'); 				// Route: /pub/:slug
 require('./collection'); 		// Route: / and /:slug
 require('./collectionSubmit'); 	// Route: /:slug/submit and /:slug/submit/:hash
+
+/* Routes for all */
+require('./login'); 			// Route: /login
 require('./noMatch');			// Route: /*

@@ -20,6 +20,7 @@ const NoMatch = (props)=> {
 				communityData={props.communityData}
 				locationData={props.locationData}
 				hideFooter={true}
+				hideNav={props.locationData.isBasePubPub}
 			>
 				<NonIdealState
 					title="Page Not Found"

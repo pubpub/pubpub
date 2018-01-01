@@ -4,6 +4,13 @@ import { resolve } from 'path';
 import queryString from 'query-string';
 import { Community, Collection, User } from './models';
 
+export const hostIsValid = (req, access)=> {
+	const isBasePubPub = req.hostname === 'www.pubpub.org' || req.hostname === 'v4.pubpub.org';
+	if (!isBasePubPub && access !== 'community') { return false; }
+	if (isBasePubPub && access !== 'pubpub') { return false; }
+	return true;
+};
+
 export const renderToNodeStream = (res, reactElement)=> {
 	res.setHeader('content-type', 'text/html');
 	return ReactDOMServer.renderToNodeStream(reactElement)
@@ -11,9 +18,7 @@ export const renderToNodeStream = (res, reactElement)=> {
 };
 
 export const getInitialData = (req)=> {
-	const hostname = req.hostname.indexOf('localhost') > -1 || req.hostname.indexOf('ssl.pubpub.org') > -1
-		? 'www.pubpub.org'
-		: req.hostname;
+	const hostname = req.hostname;
 	const whereQuery = hostname.indexOf('.pubpub.org')
 		? { subdomain: hostname.replace('.pubpub.org', '') }
 		: { domain: hostname };

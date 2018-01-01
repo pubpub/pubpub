@@ -4,9 +4,11 @@ import CollectionContainer from 'containers/Collection/Collection';
 import Html from '../Html';
 import app from '../server';
 import { User, Collection, Pub, Collaborator, Discussion, CommunityAdmin } from '../models';
-import { renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
+import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 
 app.get(['/', '/:slug'], (req, res, next)=> {
+	if (!hostIsValid(req, 'community')) { return next(); }
+
 	return getInitialData(req)
 	.then((initialData)=> {
 		const collectionId = initialData.communityData.collections.reduce((prev, curr)=> {
