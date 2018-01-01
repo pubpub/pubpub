@@ -15,7 +15,7 @@ const LayoutPubs = function(props) {
 	const size = props.content.size;
 	const displayLimit = props.content.limit || Math.max(4, props.pubRenderList.length);
 	const emptyPreviews = [];
-	for (let index = 0; index < displayLimit; index++) {
+	for (let index = 0; index < displayLimit; index += 1) {
 		emptyPreviews.push(null);
 	}
 	const previews = [...props.content.pubIds, ...emptyPreviews].slice(0, displayLimit);

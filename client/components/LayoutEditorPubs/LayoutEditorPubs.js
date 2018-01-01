@@ -69,7 +69,7 @@ class LayoutEditorPubs extends Component {
 		const size = this.props.content.size;
 		const displayLimit = this.props.content.limit || Math.max(4, this.props.pubRenderList.length);
 		const emptyPreviews = [];
-		for (let index = 0; index < displayLimit; index++) {
+		for (let index = 0; index < displayLimit; index += 1) {
 			emptyPreviews.push(null);
 		}
 		const previews = [...this.props.content.pubIds, ...emptyPreviews].slice(0, displayLimit);

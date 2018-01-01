@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* Polyfill for Object.entries which prosemirror-compress requires */
 /* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries */
 if (!Object.entries)

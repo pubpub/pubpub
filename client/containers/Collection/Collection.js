@@ -105,7 +105,7 @@ class Collection extends Component {
 					return pubsById[id];
 				});
 				const limit = block.content.limit || (nonSpecifiedPubs.length + renderList.length);
-				for (let pubIndex = renderList.length; pubIndex < limit; pubIndex++) {
+				for (let pubIndex = renderList.length; pubIndex < limit; pubIndex += 1) {
 					if (nonSpecifiedPubs.length) {
 						renderList.push(nonSpecifiedPubs[0]);
 						nonSpecifiedPubs.splice(0, 1);

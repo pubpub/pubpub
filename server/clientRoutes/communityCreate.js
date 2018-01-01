@@ -15,7 +15,7 @@ app.get('/community/create', (req, res, next)=> {
 				initialData={initialData}
 				headerComponents={generateMetaComponents({
 					initialData: initialData,
-					title: `Create New Community · PubPub`,
+					title: 'Create New Community · PubPub',
 				})}
 			>
 				<CommunityCreate {...initialData} />
