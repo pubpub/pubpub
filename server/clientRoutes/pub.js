@@ -10,7 +10,6 @@ import { getInitialData, handleErrors, generateMetaComponents } from '../utiliti
 app.get('/pub/:slug', (req, res, next)=> {
 	return getInitialData(req)
 	.then((initialData)=> {
-		console.time('pubQuery');
 
 		const versionParameters = req.query.version
 			? {
@@ -71,8 +70,6 @@ app.get('/pub/:slug', (req, res, next)=> {
 		return Promise.all([initialData, findPub, findCommunityAdmin]);
 	})
 	.then(([initialData, pubData, communityAdminData])=> {
-		console.timeEnd('pubQuery');
-		console.time('pubProcess');
 		if (!pubData) { throw new Error('Pub Not Found'); }
 
 		const pubDataJson = pubData.toJSON();
@@ -157,12 +154,10 @@ app.get('/pub/:slug', (req, res, next)=> {
 		}, true);
 
 
-		console.timeEnd('pubProcess');
 		const newInitialData = {
 			...initialData,
 			pubData: formattedPubData,
 		};
-		console.time('pubRender');
 		return ReactDOMServer.renderToNodeStream(
 			<Html
 				chunkName="PubPresentation"
@@ -179,10 +174,7 @@ app.get('/pub/:slug', (req, res, next)=> {
 				<PubPresentation {...newInitialData} />
 			</Html>
 		)
-		.pipe(res)
-		.on('finish', ()=> {
-			console.timeEnd('pubRender');
-		});
+		.pipe(res);
 	})
 	.catch(handleErrors(req, res, next));
 });

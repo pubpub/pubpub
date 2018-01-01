@@ -41,6 +41,7 @@ const PubBody = function(props, context) {
 					<div className="col-12">
 						<Editor
 							key={`render-${props.versionId}`}
+							editorId={props.slug}
 							initialContent={props.content}
 							isReadOnly={true}
 							ref={props.onRef}
