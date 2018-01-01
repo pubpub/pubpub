@@ -6,7 +6,7 @@ import LayoutPubs from 'components/LayoutPubs/LayoutPubs';
 import LayoutHtml from 'components/LayoutHtml/LayoutHtml';
 import LayoutDrafts from 'components/LayoutDrafts/LayoutDrafts';
 import LayoutText from 'components/LayoutText/LayoutText';
-import { hydrateWrapper, getDefaultLayout } from 'utilities';
+import { hydrateWrapper, apiFetch, getDefaultLayout } from 'utilities';
 
 require('./collection.scss');
 
@@ -20,10 +20,14 @@ const propTypes = {
 class Collection extends Component {
 	constructor(props) {
 		super(props);
-		// this.handleCreatePub = this.handleCreatePub.bind(this);
+		this.state = {
+			createPubIsLoading: false,
+		};
 		this.getComponentFromType = this.getComponentFromType.bind(this);
 		this.generateRenderList = this.generateRenderList.bind(this);
+		this.handleCreatePub = this.handleCreatePub.bind(this);
 	}
+
 	getComponentFromType(item, index, pubRenderLists) {
 		const collectionData = this.props.collectionData || {};
 		const pubs = collectionData.pubs || [];
@@ -112,6 +116,26 @@ class Collection extends Component {
 		});
 		return pubRenderLists;
 	}
+
+	handleCreatePub() {
+		this.setState({ createPubIsLoading: true });
+		return apiFetch('/pubs', {
+			method: 'POST',
+			body: JSON.stringify({
+				collectionId: this.props.collectionData.id,
+				communityId: this.props.communityData.id,
+				createPubHash: undefined,
+			})
+		})
+		.then(()=> {
+			this.setState({ createPubIsLoading: false });
+		})
+		.catch((err)=> {
+			console.error(err);
+			this.setState({ createPubIsLoading: false });
+		});
+	}
+
 	render() {
 		const collectionData = this.props.collectionData;
 		const slug = this.props.locationData.params.slug;
@@ -148,13 +172,13 @@ class Collection extends Component {
 								<div className="col-12">
 									{!collectionData.isPage && collectionData.isOpenSubmissions &&
 										<div className="create-pub-wrapper">
-											{/* TODO - Add this Back! <Button
+											<Button
 												type="button"
 												className="pt-button pt-intent-primary"
-												loading={this.props.pubCreateData.isLoading}
+												loading={this.state.createPubIsLoading}
 												onClick={this.handleCreatePub}
 												text="Create Pub in Collection"
-											/>*/}
+											/>
 											{collectionData.createPubMessage &&
 												<a href={`/${collectionData.slug}/submit`} className="instructions-link">
 													Submission Instructions

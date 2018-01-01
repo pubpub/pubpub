@@ -10,40 +10,7 @@ export const hydrateWrapper = (Component)=> {
 	}
 };
 
-// export const apiUrlPrefix = function() {
-// 	let urlPrefix = 'https://v4-api.pubpub.org';
-// 	if (window.location.origin.indexOf('dev.pubpub.org') > -1) {
-// 		// urlPrefix = 'https://pubpub-api-v4-dev.herokuapp.com';
-// 		urlPrefix = 'https://v4-api-dev.pubpub.org';
-// 	}
-// 	if (window.location.origin.indexOf('localhost:') > -1) {
-// 		urlPrefix = 'http://localhost:9876';
-// 	}
-// 	return urlPrefix;
-// };
-
 export const apiFetch = function(path, opts) {
-	// const urlPrefix = apiUrlPrefix();
-	// The below is no longer an issue, as long as 
-	// the site is not a custom domain or Safari has been to pubpub before.
-	// We will have a problem if a user goes to a custom domain and
-	// logs in without ever having visited a pubpub.org subdomain before.
-	// Here's what I suggest:
-	// Login on the custom domain (we can check for custom and only do this then)
-	// if succesful, redirect to a pubpub.org/loginwithcookie that includes the
-	// password hash, email, and redirect url. 
-	// Login again from that pubpub.org url - now the cookie is set.
-	// Redirect to the custom domain, and the cookie being set, should let the login
-	// persist.
-	// ----
-	// Safari has to use a redirect since it doesn't allow 3rd party cookies
-	// This means they'll have to login to every pubpub community.
-	// Not sure why this is working with v3 despite the non-local urls...
-	// if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
-	// 	urlPrefix = `${window.location.origin}/api`;
-	// }
-
-	// const finalRoute = `${urlPrefix}${path}`;
 	return fetch(path, {
 		...opts,
 		headers: {
@@ -210,10 +177,7 @@ export function getDefaultLayout(isPage) {
 }
 
 export function formatCitationString(item, callback) {
-	// const urlPrefix = apiUrlPrefix();
-	const urlPrefix = '';
-	const finalRoute = `${urlPrefix}/editor/citation-format`;
-	fetch(finalRoute, {
+	fetch('/editor/citation-format', {
 		method: 'POST',
 		headers: {
 			Accept: 'application/json',
@@ -238,10 +202,7 @@ export function formatCitationString(item, callback) {
 	});
 }
 export function renderLatexString(value, isBlock, callback) {
-	// const urlPrefix = apiUrlPrefix();
-	const urlPrefix = '';
-	const finalRoute = `${urlPrefix}/editor/latex-render`;
-	fetch(finalRoute, {
+	fetch('/editor/latex-render', {
 		method: 'POST',
 		headers: {
 			Accept: 'application/json',
@@ -299,10 +260,9 @@ export function s3Upload(file, progressEvent, finishEvent, index) {
 	}
 
 	const getPolicy = new XMLHttpRequest();
-	// const urlPrefix = apiUrlPrefix();
 	const urlPrefix = '';
 	getPolicy.addEventListener('load', beginUpload);
-	getPolicy.open('GET', `${urlPrefix}/uploadPolicy?contentType=${file.type}`);
+	getPolicy.open('GET', `/uploadPolicy?contentType=${file.type}`);
 	getPolicy.send();
 }
 

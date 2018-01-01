@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SHA3 from 'crypto-js/sha3';
 import encHex from 'crypto-js/enc-hex';
-// TODO - we don't need query string anymore
-import queryString from 'query-string';
 import { Button } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
@@ -24,6 +22,7 @@ class Login extends Component {
 			email: '',
 			password: '',
 			loginLoading: false,
+			loginError: undefined,
 		};
 		this.onLoginSubmit = this.onLoginSubmit.bind(this);
 		this.onEmailChange = this.onEmailChange.bind(this);
@@ -31,10 +30,8 @@ class Login extends Component {
 	}
 	onLoginSubmit(evt) {
 		evt.preventDefault();
-		this.setState({
-			loginLoading: true
-		});
-
+		
+		this.setState({ loginLoading: true, loginError: undefined, });
 		return apiFetch('/api/login', {
 			method: 'POST',
 			body: JSON.stringify({
@@ -42,18 +39,12 @@ class Login extends Component {
 				password: SHA3(this.state.password).toString(encHex),
 			})
 		})
-		.then((result)=> {
-			this.setState({
-				loginLoading: false
-			});
-			const queryObject = queryString.parse(window.location.search);
-			window.location.href = queryObject.redirect || '/';
+		.then(()=> {
+			this.setState({ loginLoading: false, loginError: undefined });
+			window.location.href = this.props.locationData.query.redirect || '/';
 		})
 		.catch((err)=> {
-			this.setState({
-				loginLoading: false,
-				loginError: err,
-			});
+			this.setState({ loginLoading: false, loginError: err });
 		});
 	}
 
@@ -95,7 +86,7 @@ class Login extends Component {
 										autocomplete="current-password"
 										helperText={<a href="/password-reset">Forgot Password</a>}
 									/>
-									<InputField error={this.props.loginData.error}>
+									<InputField error={this.state.loginError}>
 										<Button
 											name="login"
 											type="submit"
