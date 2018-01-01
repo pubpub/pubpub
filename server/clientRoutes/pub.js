@@ -109,7 +109,7 @@ app.get('/pub/:slug', (req, res, next)=> {
 				return item;
 			}),
 			collections: pubDataJson.collections.filter((item)=> {
-				return item.isPublic || communityAdmin;
+				return item.isPublic || communityAdminData;
 			}),
 			// Add submit for publication button that creates discussion with submitHash
 			// Need to add a map to remove the submitHash if not communityAdmin
@@ -162,6 +162,7 @@ app.get('/pub/:slug', (req, res, next)=> {
 			...initialData,
 			pubData: formattedPubData,
 		};
+		console.time('pubRender');
 		return ReactDOMServer.renderToNodeStream(
 			<Html
 				chunkName="PubPresentation"
@@ -178,7 +179,10 @@ app.get('/pub/:slug', (req, res, next)=> {
 				<PubPresentation {...newInitialData} />
 			</Html>
 		)
-		.pipe(res);
+		.pipe(res)
+		.on('finish', ()=> {
+			console.timeEnd('pubRender');
+		});
 	})
 	.catch(handleErrors(req, res, next));
 });
