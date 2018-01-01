@@ -1,7 +1,14 @@
 import React from 'react';
+import ReactDOMServer from 'react-dom/server';
 import { resolve } from 'path';
 import queryString from 'query-string';
 import { Community, Collection, User } from './models';
+
+export const renderToNodeStream = (res, reactElement)=> {
+	res.setHeader('content-type', 'text/html');
+	return ReactDOMServer.renderToNodeStream(reactElement)
+	.pipe(res);
+};
 
 export const getInitialData = (req)=> {
 	const hostname = req.hostname.indexOf('localhost') > -1 || req.hostname.indexOf('ssl.pubpub.org') > -1

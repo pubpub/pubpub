@@ -1,11 +1,10 @@
-import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 import Promise from 'bluebird';
 import PubPresentation from 'containers/PubPresentation/PubPresentation';
 import Html from '../Html';
 import app from '../server';
 import { User, Collection, Pub, Collaborator, Discussion, Version, CommunityAdmin } from '../models';
-import { getInitialData, handleErrors, generateMetaComponents } from '../utilities';
+import { renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 
 app.get('/pub/:slug', (req, res, next)=> {
 	return getInitialData(req)
@@ -158,8 +157,7 @@ app.get('/pub/:slug', (req, res, next)=> {
 			...initialData,
 			pubData: formattedPubData,
 		};
-		res.setHeader('content-type', 'text/html');
-		return ReactDOMServer.renderToNodeStream(
+		return renderToNodeStream(res,
 			<Html
 				chunkName="PubPresentation"
 				initialData={newInitialData}
@@ -174,8 +172,7 @@ app.get('/pub/:slug', (req, res, next)=> {
 			>
 				<PubPresentation {...newInitialData} />
 			</Html>
-		)
-		.pipe(res);
+		);
 	})
 	.catch(handleErrors(req, res, next));
 });
