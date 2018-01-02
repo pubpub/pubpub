@@ -51,6 +51,7 @@ class CommunityCreate extends Component {
 		})
 		.then(()=> {
 			this.setState({ createIsLoading: false, createError: undefined });
+			window.location.href = `https://${this.state.subdomain}.pubpub.org`;
 		})
 		.catch((err)=> {
 			this.setState({ createIsLoading: false, createError: err });

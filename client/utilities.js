@@ -17,7 +17,6 @@ export const apiFetch = function(path, opts) {
 			Accept: 'application/json',
 			'Content-Type': 'application/json'
 		},
-		redirect: 'follow',
 		credentials: 'include',
 	})
 	.then((response)=> {

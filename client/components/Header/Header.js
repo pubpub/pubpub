@@ -54,7 +54,8 @@ class Header extends Component {
 		});
 	}
 	handleLogout() {
-		apiFetch('/api/logout');
+		apiFetch('/api/logout')
+		.then(()=> { window.location.href = '/'; });
 	}
 
 	render() {

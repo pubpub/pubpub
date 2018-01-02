@@ -50,13 +50,13 @@ class Dashboard extends Component {
 			putCollectionError: undefined,
 			postPubIsLoading: false,
 		};
-		// this.handleCreatePub = this.handleCreatePub.bind(this);
-		// this.handleSiteSave = this.handleSiteSave.bind(this);
-		// this.handleCollectionCreate = this.handleCollectionCreate.bind(this);
-		// this.handleCollectionSave = this.handleCollectionSave.bind(this);
-		// this.handleCollectionDelete = this.handleCollectionDelete.bind(this);
-		// this.handleAddAdmin = this.handleAddAdmin.bind(this);
-		// this.handleRemoveAdmin = this.handleRemoveAdmin.bind(this);
+		this.handleCreatePub = this.handleCreatePub.bind(this);
+		this.handleSiteSave = this.handleSiteSave.bind(this);
+		this.handleCollectionCreate = this.handleCollectionCreate.bind(this);
+		this.handleCollectionSave = this.handleCollectionSave.bind(this);
+		this.handleCollectionDelete = this.handleCollectionDelete.bind(this);
+		this.handleAddAdmin = this.handleAddAdmin.bind(this);
+		this.handleRemoveAdmin = this.handleRemoveAdmin.bind(this);
 		// this.updatePath = this.updatePath.bind(this);
 	}
 	// componentWillMount() {
@@ -105,13 +105,45 @@ class Dashboard extends Component {
 	// }
 
 	handleCreatePub(collectionId) {
-		console.log('Create pub');
 		// const communityId = this.props.appData.data.id;
 		// this.props.dispatch(createPub(collectionId, communityId));
+		this.setState({ postPubIsLoading: true });
+		return apiFetch('/pubs', {
+			method: 'POST',
+			body: JSON.stringify({
+				collectionId: collectionId,
+				communityId: this.props.communityData.id,
+				createPubHash: undefined,
+			})
+		})
+		.then((result)=> {
+			// this.setState({ postPubIsLoading: false });
+			window.location.href = result;
+		})
+		.catch((err)=> {
+			console.error(err);
+			this.setState({ postPubIsLoading: false });
+		});
 	}
 	handleSiteSave(siteObject) {
-		console.log('Save site');
 		// this.props.dispatch(putAppData(siteObject));
+		this.setState({ putCommunityIsLoading: true, putCommunityError: undefined });
+		return apiFetch('/communities', {
+			method: 'PUT',
+			body: JSON.stringify(siteObject)
+		})
+		.then(()=> {
+			// this.setState({ putCommunityIsLoading: false, putCommunityError: undefined });
+			if (!this.props.communityData.domain) {
+				window.location.replace(`https://${siteObject.subdomain}.pubpub.org/dashboard/site`);
+			} else {
+				window.location.reload();
+			}
+		})
+		.catch((err)=> {
+			console.error(err);
+			this.setState({ putCommunityIsLoading: false, putCommunityError: err });
+		});
 	}
 	handleCollectionCreate(collectionObject) {
 		console.log('Create collection');
@@ -120,6 +152,23 @@ class Dashboard extends Component {
 		// 	...collectionObject,
 		// 	communityId: communityId,
 		// }));
+
+		this.setState({ postCollectionIsLoading: true, postCollectionError: undefined });
+		return apiFetch('/collections', {
+			method: 'POST',
+			body: JSON.stringify({
+				...collectionObject,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then(()=> {
+			// this.setState({ postCollectionIsLoading: false, postCollectionError: undefined });
+			window.location.href = `/dashboard/${collectionObject.slug}`;
+		})
+		.catch((err)=> {
+			console.error(err);
+			this.setState({ postCollectionIsLoading: false, postCollectionError: err });
+		});
 	}
 	handleCollectionSave(collectionObject) {
 		console.log('save collection');
@@ -128,6 +177,22 @@ class Dashboard extends Component {
 		// 	...collectionObject,
 		// 	communityId: communityId,
 		// }));
+		this.setState({ putCollectionIsLoading: true, putCollectionError: undefined });
+		return apiFetch('/collections', {
+			method: 'PUT',
+			body: JSON.stringify({
+				...collectionObject,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then(()=> {
+			// this.setState({ putCollectionIsLoading: false, putCollectionError: undefined });
+			window.location.href = `/dashboard/${collectionObject.slug}`;
+		})
+		.catch((err)=> {
+			console.error(err);
+			this.setState({ putCollectionIsLoading: false, putCollectionError: err });
+		});
 	}
 	handleCollectionDelete(collectionId) {
 		console.log('delete coll');
@@ -136,18 +201,56 @@ class Dashboard extends Component {
 		// 	collectionId: collectionId,
 		// 	communityId: communityId,
 		// }));
+		this.setState({ deleteCollectionIsLoading: true });
+		return apiFetch('/collections', {
+			method: 'DELETE',
+			body: JSON.stringify({
+				collectionId: collectionId,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then(()=> {
+			// this.setState({ deleteCollectionIsLoading: false });
+			window.location.href = '/dashboard';
+		})
+		.catch((err)=> {
+			console.error(err);
+			this.setState({ deleteCollectionIsLoading: false });
+		});
 	}
 	handleAddAdmin(adminObject) {
 		console.log('add admin');
 		// this.props.dispatch(postCommunityAdmin(adminObject));
+		// this.setState({ postCommunityAdmin: true, postcom: undefined });
+		return apiFetch('/communityAdmins', {
+			method: 'POST',
+			body: JSON.stringify(adminObject)
+		})
+		.then(()=> {
+			// this.setState({ postCommunityAdmin: false, postcom: undefined });
+			window.location.reload();
+		});
+		// .catch((err)=> {
+			// console.error(err);
+			// this.setState({ postCommunityAdmin: false, postcom: err });
+		// });
 	}
 	handleRemoveAdmin(adminObject) {
 		console.log('del admin');
 		// this.props.dispatch(deleteCommunityAdmin(adminObject));
+		return apiFetch('/communityAdmins', {
+			method: 'DELETE',
+			body: JSON.stringify(adminObject)
+		})
+		.then(()=> {
+			// this.setState({ postCommunityAdmin: false, postcom: undefined });
+			window.location.reload();
+		});
 	}
 	// updatePath(updatedPath) {
 	// 	this.props.history.push(updatedPath);
 	// }
+
 	render() {
 		// if (!this.props.loginData.data.isAdmin) { return <NoMatch />; }
 
@@ -234,7 +337,7 @@ class Dashboard extends Component {
 														onCreate={this.handleCollectionCreate}
 														isLoading={this.state.postCollectionIsLoading}
 														error={this.state.postCollectionError}
-														updatePath={this.updatePath}
+														// updatePath={this.updatePath}
 														hostname={this.props.locationData.hostname}
 													/>
 												);
@@ -248,7 +351,7 @@ class Dashboard extends Component {
 														onCreate={this.handleCollectionCreate}
 														isLoading={this.state.postCollectionIsLoading}
 														error={this.state.postCollectionError}
-														updatePath={this.updatePath}
+														// updatePath={this.updatePath}
 														hostname={this.props.locationData.hostname}
 													/>
 												);

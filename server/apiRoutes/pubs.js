@@ -62,7 +62,7 @@ app.post('/pubs', (req, res)=> {
 		});
 	})
 	.then(()=> {
-		return res.redirect(`/pub/${newPubSlug}/collaborate`);
+		return res.status(201).json(`/pub/${newPubSlug}/collaborate`);
 	})
 	.catch((err)=> {
 		console.log('Error creating Pub', err);

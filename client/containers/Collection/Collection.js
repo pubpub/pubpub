@@ -127,8 +127,9 @@ class Collection extends Component {
 				createPubHash: undefined,
 			})
 		})
-		.then(()=> {
-			this.setState({ createPubIsLoading: false });
+		.then((result)=> {
+			// this.setState({ createPubIsLoading: false });
+			window.location.href = result;
 		})
 		.catch((err)=> {
 			console.error(err);

@@ -8,7 +8,8 @@ const Sequelize = require('sequelize');
 const passportLocalSequelize = require('passport-local-sequelize');
 
 const operatorsAliases = {
-	$or: Sequelize.Op.or
+	$or: Sequelize.Op.or,
+	$ilike: Sequelize.Op.iLike,
 };
 const useSSL = process.env.DATABASE_URL.indexOf('localhost:') === -1;
 const sequelize = new Sequelize(process.env.DATABASE_URL, {

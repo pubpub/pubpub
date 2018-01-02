@@ -36,8 +36,9 @@ class CollectionSubmit extends Component {
 				createPubHash: this.props.locationData.params.hash,
 			})
 		})
-		.then(()=> {
-			this.setState({ createPubIsLoading: false });
+		.then((result)=> {
+			// this.setState({ createPubIsLoading: false });
+			window.location.href = result;
 		})
 		.catch((err)=> {
 			console.error(err);

@@ -82,7 +82,7 @@ app.post('/communities', (req, res)=> {
 		});
 	})
 	.then(()=> {
-		return res.redirect(`https://${subdomain}.pubpub.org`);
+		return res.status(201).json(`https://${subdomain}.pubpub.org`);
 	})
 	.catch((err)=> {
 		if (err.message === 'URL already used') {
@@ -94,55 +94,55 @@ app.post('/communities', (req, res)=> {
 });
 
 
-// app.put('/communities', (req, res)=> {
-// 	const user = req.user || {};
+app.put('/communities', (req, res)=> {
+	const user = req.user || {};
 
-// 	// Filter to only allow certain fields to be updated
-// 	const updatedCommunity = {};
-// 	Object.keys(req.body).forEach((key)=> {
-// 		if ([
-// 			'title',
-// 			'subdomain',
-// 			'description',
-// 			'avatar',
-// 			'favicon',
-// 			'smallHeaderLogo',
-// 			'largeHeaderLogo',
-// 			'largeHeaderBackground',
-// 			'accentColor',
-// 			'navigation',
-// 		].indexOf(key) > -1) {
-// 			updatedCommunity[key] = req.body[key] && req.body[key].trim ? req.body[key].trim() : req.body[key];
-// 		}
-// 	});
-// 	if (updatedCommunity.subdomain) {
-// 		updatedCommunity.subdomain = updatedCommunity.subdomain.replace(/[^a-zA-Z0-9-]/gi, '').replace(/ /g, '-').toLowerCase();
-// 	}
-// 	if (updatedCommunity.accentColor) {
-// 		const accentColor = updatedCommunity.accentColor;
-// 		updatedCommunity.accentTextColor = Color(accentColor).light() ? '#000000' : '#FFFFFF';
-// 		updatedCommunity.accentHoverColor = Color(accentColor).fade(0.2).rgb().string();
-// 		updatedCommunity.accentActionColor = Color(accentColor).fade(0.4).rgb().string();
-// 		updatedCommunity.accentMinimalColor = Color(accentColor).fade(0.8).rgb().string();
-// 	}
+	// Filter to only allow certain fields to be updated
+	const updatedCommunity = {};
+	Object.keys(req.body).forEach((key)=> {
+		if ([
+			'title',
+			'subdomain',
+			'description',
+			'avatar',
+			'favicon',
+			'smallHeaderLogo',
+			'largeHeaderLogo',
+			'largeHeaderBackground',
+			'accentColor',
+			'navigation',
+		].indexOf(key) > -1) {
+			updatedCommunity[key] = req.body[key] && req.body[key].trim ? req.body[key].trim() : req.body[key];
+		}
+	});
+	if (updatedCommunity.subdomain) {
+		updatedCommunity.subdomain = updatedCommunity.subdomain.replace(/[^a-zA-Z0-9-]/gi, '').replace(/ /g, '-').toLowerCase();
+	}
+	if (updatedCommunity.accentColor) {
+		const accentColor = updatedCommunity.accentColor;
+		updatedCommunity.accentTextColor = Color(accentColor).light() ? '#000000' : '#FFFFFF';
+		updatedCommunity.accentHoverColor = Color(accentColor).fade(0.2).rgb().string();
+		updatedCommunity.accentActionColor = Color(accentColor).fade(0.4).rgb().string();
+		updatedCommunity.accentMinimalColor = Color(accentColor).fade(0.8).rgb().string();
+	}
 
-// 	CommunityAdmin.findOne({
-// 		where: { userId: user.id, communityId: req.body.communityId },
-// 		raw: true,
-// 	})
-// 	.then((collaboratorData)=> {
-// 		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859' && !collaboratorData) {
-// 			throw new Error('Not Authorized to update this community');
-// 		}
-// 		return Community.update(updatedCommunity, {
-// 			where: { id: req.body.communityId }
-// 		});
-// 	})
-// 	.then(()=> {
-// 		return res.status(201).json(updatedCommunity);
-// 	})
-// 	.catch((err)=> {
-// 		console.log('Error putting Pub', err);
-// 		return res.status(500).json(err);
-// 	});
-// });
+	CommunityAdmin.findOne({
+		where: { userId: user.id, communityId: req.body.communityId },
+		raw: true,
+	})
+	.then((collaboratorData)=> {
+		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859' && !collaboratorData) {
+			throw new Error('Not Authorized to update this community');
+		}
+		return Community.update(updatedCommunity, {
+			where: { id: req.body.communityId }
+		});
+	})
+	.then(()=> {
+		return res.status(201).json(updatedCommunity);
+	})
+	.catch((err)=> {
+		console.log('Error putting Pub', err);
+		return res.status(500).json(err);
+	});
+});
