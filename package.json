@@ -74,6 +74,7 @@
     "passport-local": "^1.0.0",
     "passport-local-sequelize": "^0.8.0",
     "pg": "^7.3.0",
+    "postmark": "^1.5.0",
     "react": "^16.2.0",
     "react-addons-css-transition-group": "^15.6.2",
     "react-avatar-editor": "^10.3.0",

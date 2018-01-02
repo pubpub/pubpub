@@ -1,3 +1,4 @@
+import Promise from 'bluebird';
 import React from 'react';
 import Landing from 'containers/Landing/Landing';
 import Html from '../Html';

@@ -11,4 +11,5 @@ require('./collectionSubmit'); 	// Route: ['/:slug/submit', '/:slug/submit/:hash
 
 /* Routes for all */
 require('./login'); 			// Route: '/login'
+require('./passwordReset'); 	// Route: ['/password-reset', '/password-reset/:resetHash/:slug']
 require('./noMatch');			// Route: '/*'

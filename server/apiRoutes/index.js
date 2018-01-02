@@ -3,6 +3,7 @@ require('./communities');
 require('./communityAdmins');
 require('./logout');
 require('./login');
+require('./passwordReset');
 require('./pubs');
 require('./search');
 require('./uploadPolicy.js');
