@@ -11,7 +11,7 @@ const propTypes = {
 	error: PropTypes.string,
 	onCreate: PropTypes.func,
 	updatePath: PropTypes.func,
-	localUrl: PropTypes.string.required,
+	hostname: PropTypes.string.required,
 };
 const defaultProps = {
 	isLoading: false,
@@ -79,7 +79,7 @@ class DashboardCreateCollection extends Component {
 						label={`${itemString} URL`}
 						placeholder={`my-${itemString.toLowerCase()}`}
 						isRequired={true}
-						helperText={`${this.props.localUrl}/${this.state.slug}`}
+						helperText={`${this.props.hostname}/${this.state.slug}`}
 						value={this.state.slug}
 						onChange={this.handleSlugChange}
 					/>

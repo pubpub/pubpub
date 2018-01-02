@@ -235,6 +235,7 @@ class Dashboard extends Component {
 														isLoading={this.state.postCollectionIsLoading}
 														error={this.state.postCollectionError}
 														updatePath={this.updatePath}
+														hostname={this.props.locationData.hostname}
 													/>
 												);
 											}
@@ -248,13 +249,13 @@ class Dashboard extends Component {
 														isLoading={this.state.postCollectionIsLoading}
 														error={this.state.postCollectionError}
 														updatePath={this.updatePath}
+														hostname={this.props.locationData.hostname}
 													/>
 												);
 											}
 											break;
 										default:
 											if (activeMode === 'edit') {
-												// if (collectionData.id) {
 												return (
 													<DashboardCollectionEdit
 														location={this.props.locationData}
@@ -266,14 +267,10 @@ class Dashboard extends Component {
 														onDelete={this.handleCollectionDelete}
 													/>
 												);
-												// }
-												// return <DashboardCollectionLoading />;
 											}
 											return (
 												<DashboardCollection
 													collectionData={collectionData}
-													// sortMode={this.props.locationData.query.sort}
-													// isSortReverse={this.props.locationData.query.direction === 'reverse'}
 													onCreatePub={this.handleCreatePub}
 													createPubLoading={this.state.postPubIsLoading}
 													hostname={this.props.locationData.hostname}

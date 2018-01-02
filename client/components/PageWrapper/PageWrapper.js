@@ -34,8 +34,8 @@ const PageWrapper = (props)=> {
 			{props.fixHeader &&
 				<style>
 					{`
-						.header { position: fixed; width: 100%; z-index: 19; }
-						.route-content { padding-top: 56px; }
+						.header-component { position: fixed; width: 100%; z-index: 19; }
+						.page-content { padding-top: 56px; }
 					`}
 				</style>
 			}

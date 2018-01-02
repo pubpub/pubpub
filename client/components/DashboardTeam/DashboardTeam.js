@@ -6,7 +6,7 @@ import UserAutocomplete from 'components/UserAutocomplete/UserAutocomplete';
 require('./dashboardTeam.scss');
 
 const propTypes = {
-	appData: PropTypes.object.isRequired,
+	communityData: PropTypes.object.isRequired,
 	onAddAdmin: PropTypes.func,
 	onRemoveAdmin: PropTypes.func,
 };
@@ -18,9 +18,6 @@ const defaultProps = {
 class DashboardTeam extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-
-		};
 		this.handleAdminAdd = this.handleAdminAdd.bind(this);
 		this.handleAdminRemove = this.handleAdminRemove.bind(this);
 	}
@@ -28,14 +25,14 @@ class DashboardTeam extends Component {
 		if (user) {
 			this.props.onAddAdmin({
 				userId: user.id,
-				communityId: this.props.appData.id,
+				communityId: this.props.communityData.id,
 			});
 		}
 	}
 	handleAdminRemove(userId) {
 		this.props.onRemoveAdmin({
 			userId: userId,
-			communityId: this.props.appData.id,
+			communityId: this.props.communityData.id,
 		});
 	}
 
@@ -49,13 +46,13 @@ class DashboardTeam extends Component {
 					<UserAutocomplete
 						onSelect={this.handleAdminAdd}
 						placeholder="Add new administrator..."
-						usedUserIds={this.props.appData.admins.map((item)=> {
+						usedUserIds={this.props.communityData.admins.map((item)=> {
 							return item.id;
 						})}
 					/>
 				</div>
 
-				{this.props.appData.admins.sort((foo, bar)=> {
+				{this.props.communityData.admins.sort((foo, bar)=> {
 					if (foo.fullName < bar.fullName) { return -1; }
 					if (foo.fullName > bar.fullName) { return 1; }
 					return 0;

@@ -9,7 +9,7 @@ import { populateNavigationIds } from 'utilities';
 require('./dashboardSite.scss');
 
 const propTypes = {
-	appData: PropTypes.object.isRequired,
+	communityData: PropTypes.object.isRequired,
 	error: PropTypes.string,
 	isLoading: PropTypes.bool,
 	onSave: PropTypes.func,
@@ -24,16 +24,16 @@ class DashboardSite extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			title: props.appData.title,
-			subdomain: props.appData.subdomain,
-			description: props.appData.description,
-			// avatar: props.appData.avatar,
-			favicon: props.appData.favicon,
-			smallHeaderLogo: props.appData.smallHeaderLogo,
-			largeHeaderLogo: props.appData.largeHeaderLogo,
-			largeHeaderBackground: props.appData.largeHeaderBackground,
-			accentColor: props.appData.accentColor,
-			navigation: props.appData.navigation,
+			title: props.communityData.title,
+			subdomain: props.communityData.subdomain,
+			description: props.communityData.description,
+			// avatar: props.communityData.avatar,
+			favicon: props.communityData.favicon,
+			smallHeaderLogo: props.communityData.smallHeaderLogo,
+			largeHeaderLogo: props.communityData.largeHeaderLogo,
+			largeHeaderBackground: props.communityData.largeHeaderBackground,
+			accentColor: props.communityData.accentColor,
+			navigation: props.communityData.navigation,
 		};
 		this.handleTitleChange = this.handleTitleChange.bind(this);
 		this.handleSubdomainChange = this.handleSubdomainChange.bind(this);
@@ -80,13 +80,13 @@ class DashboardSite extends Component {
 	handleSaveClick(evt) {
 		evt.preventDefault();
 		this.props.onSave({
-			communityId: this.props.appData.id,
+			communityId: this.props.communityData.id,
 			...this.state
 		});
 	}
 	render() {
-		const collections = this.props.appData.collections || [];
-		const navigation = this.props.appData.navigation || [];
+		const collections = this.props.communityData.collections || [];
+		const navigation = this.props.communityData.navigation || [];
 		const initialNav = populateNavigationIds(collections, navigation);
 
 		return (
