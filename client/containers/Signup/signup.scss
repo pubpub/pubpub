@@ -1,0 +1,21 @@
+#signup-container {
+	.page-content {
+		.container {
+			padding-top: 2em;
+		}
+		form {
+			margin-top: 40px;
+			font-size: 1.25em;
+		}
+		.success p {
+			font-size: 1em;
+			line-height: 1.5;
+			margin: 0px;
+		}
+		.switch-message {
+			margin: 25px 0em;
+			opacity: 0.8;
+			display: block;
+		}
+	}
+}

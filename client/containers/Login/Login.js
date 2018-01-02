@@ -30,8 +30,8 @@ class Login extends Component {
 	}
 	onLoginSubmit(evt) {
 		evt.preventDefault();
-		
-		this.setState({ loginLoading: true, loginError: undefined, });
+
+		this.setState({ loginLoading: true, loginError: undefined });
 		return apiFetch('/api/login', {
 			method: 'POST',
 			body: JSON.stringify({
@@ -63,6 +63,7 @@ class Login extends Component {
 					loginData={this.props.loginData}
 					communityData={this.props.communityData}
 					locationData={this.props.locationData}
+					hideNav={this.props.locationData.isBasePubPub}
 					hideFooter={true}
 				>
 					<div className="container small">

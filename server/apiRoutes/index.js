@@ -6,4 +6,5 @@ require('./login');
 require('./passwordReset');
 require('./pubs');
 require('./search');
+require('./signup');
 require('./uploadPolicy.js');

@@ -81,6 +81,7 @@ class PasswordReset extends Component {
 					loginData={this.props.loginData}
 					communityData={this.props.communityData}
 					locationData={this.props.locationData}
+					hideNav={this.props.locationData.isBasePubPub}
 					hideFooter={true}
 				>
 					<div className="container small">
