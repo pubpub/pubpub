@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Button, NonIdealState } from '@blueprintjs/core';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
 import { hydrateWrapper, apiFetch } from 'utilities';
-// import { createPub } from 'actions/pubCreate';
 
 require('./pubCreate.scss');
 
@@ -11,13 +10,6 @@ const propTypes = {
 	communityData: PropTypes.object.isRequired,
 	loginData: PropTypes.object.isRequired,
 	locationData: PropTypes.object.isRequired,
-
-	// appData: PropTypes.object.isRequired,
-	// loginData: PropTypes.object.isRequired,
-	// pubCreateData: PropTypes.object.isRequired,
-	// match: PropTypes.object.isRequired,
-	// history: PropTypes.object.isRequired,
-	// dispatch: PropTypes.func.isRequired,
 };
 
 class PubCreate extends Component {
@@ -28,14 +20,8 @@ class PubCreate extends Component {
 		};
 		this.handleCreatePub = this.handleCreatePub.bind(this);
 	}
-	// componentWillReceiveProps(nextProps) {
-	// 	if (!this.props.pubCreateData.data && nextProps.pubCreateData.data) {
-	// 		this.props.history.push(`/pub/${nextProps.pubCreateData.data.newPubSlug}/collaborate`);
-	// 	}
-	// }
 
 	handleCreatePub(collectionId) {
-		// this.props.dispatch(createPub(collectionId, this.props.appData.data.id));
 		this.setState({ postPubIsLoading: collectionId });
 		return apiFetch('/pubs', {
 			method: 'POST',
