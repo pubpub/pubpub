@@ -1,3 +1,4 @@
+import Promise from 'bluebird';
 import React from 'react';
 import Explore from 'containers/Explore/Explore';
 import Html from '../Html';
