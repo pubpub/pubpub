@@ -24,7 +24,7 @@ app.post('/communityAdmins', (req, res)=> {
 			attributes: ['id', 'slug', 'fullName', 'initials', 'avatar'],
 		});
 	})
-	.then((newAdminData)=> {
+	.then(()=> {
 		return res.status(201).json('success');
 	})
 	.catch((err)=> {

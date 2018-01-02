@@ -28,7 +28,7 @@ app.get(['/dashboard', '/dashboard/:slug', '/dashboard/:slug/:mode'], (req, res,
 		}, undefined);
 
 		if (!collectionId && !activeItem.title) { throw new Error('Collection Not Found'); }
-		
+
 		const findCollectionData = activeItem.title
 			? activeItem
 			: findCollection(collectionId, true, initialData);

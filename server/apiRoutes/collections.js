@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import sanitizeHtml from 'sanitize-html';
 import app from '../server';
-import { Collection, Pub, User, Discussion, Collaborator, Community, CommunityAdmin } from '../models';
+import { Collection, Community, CommunityAdmin } from '../models';
 import { generateHash } from '../utilities';
 
 
