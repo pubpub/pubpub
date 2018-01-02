@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import queryString from 'query-string';
 import { Button } from '@blueprintjs/core';
 import { Editor } from '@pubpub/editor';
 import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
@@ -15,7 +14,6 @@ import { s3Upload, getResizedUrl, getDefaultLayout } from 'utilities';
 require('./dashboardCollectionEdit.scss');
 
 const propTypes = {
-	location: PropTypes.object.isRequired,
 	collectionData: PropTypes.object.isRequired,
 	putIsLoading: PropTypes.bool,
 	deleteIsLoading: PropTypes.bool,
@@ -36,6 +34,7 @@ class DashboardCollectionEdit extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			editMode: 'details',
 			hasChanged: false,
 			title: props.collectionData.title,
 			description: props.collectionData.description || '',
@@ -45,6 +44,7 @@ class DashboardCollectionEdit extends Component {
 			createPubMessage: props.collectionData.createPubMessage,
 			layout: props.collectionData.layout || getDefaultLayout(props.collectionData.isPage),
 		};
+		this.setEditMode = this.setEditMode.bind(this);
 		this.setTitle = this.setTitle.bind(this);
 		this.setDescription = this.setDescription.bind(this);
 		this.setSlug = this.setSlug.bind(this);
@@ -58,6 +58,9 @@ class DashboardCollectionEdit extends Component {
 		this.handleDelete = this.handleDelete.bind(this);
 	}
 
+	setEditMode(mode) {
+		this.setState({ editMode: mode });
+	}
 	setTitle(evt) {
 		this.setState({ hasChanged: true, title: evt.target.value });
 	}
@@ -102,7 +105,6 @@ class DashboardCollectionEdit extends Component {
 	}
 
 	render() {
-		const queryObject = queryString.parse(this.props.location.search);
 		const data = this.props.collectionData;
 		const pubs = data.pubs || [];
 
@@ -129,25 +131,25 @@ class DashboardCollectionEdit extends Component {
 					<div className="pt-tabs">
 						<div className="pt-tab-list pt-large" role="tablist">
 							<a
-								href={`${this.props.location.pathname}`}
+								onClick={()=> { this.setEditMode('details'); }}
 								className="pt-tab"
 								role="tab"
-								aria-selected={!queryObject.tab}
+								aria-selected={this.state.editMode === 'details'}
 							>
 								Details
 							</a>
 							<a
-								href={`${this.props.location.pathname}?tab=layout`}
+								onClick={()=> { this.setEditMode('layout'); }}
 								className="pt-tab"
 								role="tab"
-								aria-selected={queryObject.tab === 'layout'}
+								aria-selected={this.state.editMode === 'layout'}
 							>
 								Layout
 							</a>
 						</div>
 					</div>
 				</div>
-				{queryObject.tab === 'layout' &&
+				{this.state.editMode === 'layout' &&
 					<LayoutEditor
 						onChange={this.setLayout}
 						initialLayout={this.state.layout}
@@ -156,7 +158,7 @@ class DashboardCollectionEdit extends Component {
 					/>
 				}
 
-				{!queryObject.tab &&
+				{this.state.editMode === 'details' &&
 					<div>
 						{this.props.collectionData.slug &&
 							<InputField

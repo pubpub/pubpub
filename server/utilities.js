@@ -93,14 +93,15 @@ export const getInitialData = (req)=> {
 		if (!communityResult) { throw new Error('Community Not Found'); }
 
 		const communityData = communityResult.toJSON();
-		communityData.collections = communityData.collections.filter((item)=> {
-			return loginData.isAdmin || item.isPublic;
-		});
 
 		loginData.isAdmin = communityData.admins.reduce((prev, curr)=> {
 			if (curr.id === user.id) { return true; }
 			return prev;
 		}, false);
+
+		communityData.collections = communityData.collections.filter((item)=> {
+			return loginData.isAdmin || item.isPublic;
+		});
 
 		return {
 			communityData: communityData,
@@ -198,7 +199,8 @@ export const handleErrors = (req, res, next)=> {
 			return res.status(404).sendFile(resolve(__dirname, './errorPages/communityNotFound.html'));
 		}
 		if (err.message === 'Collection Not Found' ||
-			err.message === 'Pub Not Found'
+			err.message === 'Pub Not Found' ||
+			err.message === 'User Not Admin'
 		) {
 			return next();
 		}

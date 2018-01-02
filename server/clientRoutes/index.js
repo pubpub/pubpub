@@ -2,6 +2,7 @@
 require('./communityCreate');	// Route: '/community/create'
 
 /* Routes for Communities */
+require('./dashboard');			// Route: ['/dashboard', '/dashboard/:slug', '/dashboard/:slug/:mode']
 require('./pubPresentation');	// Route: '/pub/:slug'
 require('./collection'); 		// Route: ['/', '/:slug']
 require('./collectionSubmit'); 	// Route: ['/:slug/submit', '/:slug/submit/:hash']

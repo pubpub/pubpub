@@ -38,3 +38,7 @@ $pt-border-radius: floor($pt-grid-size / 5);
 // ****************************
 @import "~@blueprintjs/core/src/blueprint.scss";
 @import "~@blueprintjs/labs/src/blueprint-labs.scss";
+
+.pt-button[class*="pt-icon-"]::before {
+	line-height: inherit;
+}

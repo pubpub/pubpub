@@ -1,7 +1,7 @@
 #dashboard-container {
+	$sidePanelWidth: 200px; // 200 is width of side panel
+	$navHeight: 56px; // 56px is height of nav
 	.page-content {
-		$sidePanelWidth: 200px; // 200 is width of side panel
-		$navHeight: 56px; // 56px is height of nav
 		background-color: #F9F9F9;
 		min-height: calc(100vh - #{$navHeight});	
 	}

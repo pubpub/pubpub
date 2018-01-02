@@ -45,10 +45,9 @@ export const findCollection = (collectionId, useIncludes, initialData)=> {
 	const communityAdminQuery = CommunityAdmin.findOne({
 		where: {
 			userId: initialData.loginData.id,
-			communityId: initialData.communityData.communityId,
+			communityId: initialData.communityData.id,
 		}
 	});
-
 	return Promise.all([collectionQuery, communityAdminQuery])
 	.then(([collectionData, communityAdminData])=> {
 		const collectionDataJson = collectionData.toJSON();

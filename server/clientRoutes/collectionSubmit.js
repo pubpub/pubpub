@@ -20,26 +20,12 @@ app.get(['/:slug/submit', '/:slug/submit/:hash'], (req, res, next)=> {
 
 		if (!collectionId) { throw new Error('Collection Not Found'); }
 
-		return Promise.all([initialData, findCollection(collectionId, false, initialData)]);
-		// const findCollection = Collection.findOne({
-		// 	where: {
-		// 		id: collectionId
-		// 	}
-		// });
-		// const findCommunityAdmin = CommunityAdmin.findOne({
-		// 	where: {
-		// 		userId: initialData.loginData.id,
-		// 		communityId: initialData.communityData.communityId,
-		// 	}
-		// });
-		// return Promise.all([initialData, findCollection, findCommunityAdmin]);
+		return Promise.all([
+			initialData,
+			findCollection(collectionId, false, initialData)
+		]);
 	})
 	.then(([initialData, collectionData])=> {
-		// const collectionDataJson = collectionData.toJSON();
-		// if (!communityAdminData && req.params.hash !== collectionDataJson.createPubHash) {
-		// 	collectionDataJson.createPubHash = undefined;
-		// }
-
 		const newInitialData = {
 			...initialData,
 			collectionData: collectionData,
