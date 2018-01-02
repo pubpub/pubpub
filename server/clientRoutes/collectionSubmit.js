@@ -3,8 +3,9 @@ import Promise from 'bluebird';
 import CollectionSubmit from 'containers/CollectionSubmit/CollectionSubmit';
 import Html from '../Html';
 import app from '../server';
-import { Collection, CommunityAdmin } from '../models';
+// import { Collection, CommunityAdmin } from '../models';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
+import { findCollection } from '../queryHelpers';
 
 app.get(['/:slug/submit', '/:slug/submit/:hash'], (req, res, next)=> {
 	if (!hostIsValid(req, 'community')) { return next(); }
@@ -19,28 +20,29 @@ app.get(['/:slug/submit', '/:slug/submit/:hash'], (req, res, next)=> {
 
 		if (!collectionId) { throw new Error('Collection Not Found'); }
 
-		const findCollection = Collection.findOne({
-			where: {
-				id: collectionId
-			}
-		});
-		const findCommunityAdmin = CommunityAdmin.findOne({
-			where: {
-				userId: initialData.loginData.id,
-				communityId: initialData.communityData.communityId,
-			}
-		});
-		return Promise.all([initialData, findCollection, findCommunityAdmin]);
+		return Promise.all([initialData, findCollection(collectionId, false, initialData)]);
+		// const findCollection = Collection.findOne({
+		// 	where: {
+		// 		id: collectionId
+		// 	}
+		// });
+		// const findCommunityAdmin = CommunityAdmin.findOne({
+		// 	where: {
+		// 		userId: initialData.loginData.id,
+		// 		communityId: initialData.communityData.communityId,
+		// 	}
+		// });
+		// return Promise.all([initialData, findCollection, findCommunityAdmin]);
 	})
-	.then(([initialData, collectionData, communityAdminData])=> {
-		const collectionDataJson = collectionData.toJSON();
-		if (!communityAdminData && req.params.hash !== collectionDataJson.createPubHash) {
-			collectionDataJson.createPubHash = undefined;
-		}
+	.then(([initialData, collectionData])=> {
+		// const collectionDataJson = collectionData.toJSON();
+		// if (!communityAdminData && req.params.hash !== collectionDataJson.createPubHash) {
+		// 	collectionDataJson.createPubHash = undefined;
+		// }
 
 		const newInitialData = {
 			...initialData,
-			collectionData: collectionDataJson,
+			collectionData: collectionData,
 		};
 		return renderToNodeStream(res,
 			<Html

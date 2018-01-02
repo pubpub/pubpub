@@ -1,0 +1,33 @@
+#dashboard-container {
+	.page-content {
+		$sidePanelWidth: 200px; // 200 is width of side panel
+		$navHeight: 56px; // 56px is height of nav
+		background-color: #F9F9F9;
+		min-height: calc(100vh - #{$navHeight});	
+	}
+	.no-margin {
+		margin-top: 0px;
+		margin-bottom: 0px;
+	}
+	.side-panel {
+		position: fixed;
+		height: calc(100vh - #{$navHeight});
+	}
+	.content-panel {
+		padding: 1.5em 2em;
+		background-color: white;
+		border-right: 1px solid #ECECEC;
+		margin-left: $sidePanelWidth;
+		min-height: calc(100vh - #{$navHeight});
+	}
+
+	.content-title {
+		margin-bottom: 1em;
+	}
+	.content-buttons {
+		float: right;
+		button {
+			margin-left: 1em;
+		}
+	}
+}
