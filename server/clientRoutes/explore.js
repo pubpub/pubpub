@@ -8,7 +8,7 @@ import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generate
 app.get('/explore', (req, res, next)=> {
 	if (!hostIsValid(req, 'pubpub')) { return next(); }
 
-	const getExploreData = Community.findAll({
+	const getActiveCommunities = Community.findAll({
 		attributes: [
 			'id', 'subdomain', 'domain', 'title', 'description', 'largeHeaderBackground',
 			'largeHeaderLogo', 'accentColor', 'accentTextColor',
@@ -22,11 +22,11 @@ app.get('/explore', (req, res, next)=> {
 		],
 	});
 
-	return Promise.all([getInitialData(req), getExploreData])
-	.then(([initialData, exploreData])=> {
+	return Promise.all([getInitialData(req), getActiveCommunities])
+	.then(([initialData, activeCommunitiesData])=> {
 		const newInitialData = {
 			...initialData,
-			exploreData: exploreData,
+			exploreData: { activeCommunities: activeCommunitiesData },
 		};
 		return renderToNodeStream(res,
 			<Html

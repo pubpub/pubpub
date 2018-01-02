@@ -10,7 +10,7 @@ const propTypes = {
 	communityData: PropTypes.object.isRequired,
 	loginData: PropTypes.object.isRequired,
 	locationData: PropTypes.object.isRequired,
-	exploreData: PropTypes.array.isRequired,
+	exploreData: PropTypes.object.isRequired,
 };
 
 const Explore = (props)=> {
@@ -32,7 +32,7 @@ const Explore = (props)=> {
 						</div>
 
 
-						{exploreData.filter((item)=> {
+						{exploreData.activeCommunities.filter((item)=> {
 							return item.numDiscussions;
 						}).sort((foo, bar)=> {
 							if (foo.title < bar.title) { return -1; }

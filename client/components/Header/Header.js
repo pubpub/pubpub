@@ -81,7 +81,7 @@ class Header extends Component {
 							<div className="col-12">
 
 								{/* App Logo - do not show on homepage */}
-								{!this.props.isLandingPage &&
+								{(!this.props.isLandingPage || this.props.isBasePubPub) &&
 									<div className="headerItems headerItemsLeft">
 										<a href="/">
 											<img alt="header logo" className="headerLogo" src={resizedSmallHeaderLogo} />
@@ -145,7 +145,7 @@ class Header extends Component {
 						</div>
 					</div>
 				</div>
-				{this.props.isLandingPage &&
+				{this.props.isLandingPage && !this.props.isBasePubPub &&
 					<div className="community-header">
 						<div className="container">
 							<div className="row">
