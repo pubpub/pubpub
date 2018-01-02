@@ -22,7 +22,7 @@ app.get(['/dashboard', '/dashboard/:slug', '/dashboard/:slug/:mode'], (req, res,
 		if (slug === 'collection') { activeItem.title = 'New Collection'; }
 
 		const collectionId = initialData.communityData.collections.reduce((prev, curr)=> {
-			if (curr.slug === '' && req.params.slug === undefined) { return curr.id; }
+			if (curr.slug === '' && (req.params.slug === undefined || req.params.slug === 'home')) { return curr.id; }
 			if (curr.slug === req.params.slug) { return curr.id; }
 			return prev;
 		}, undefined);
