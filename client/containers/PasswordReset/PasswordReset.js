@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-// import { connect } from 'react-redux';
-// import Helmet from 'react-helmet';
-// import { withRouter, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import SHA3 from 'crypto-js/sha3';
 import encHex from 'crypto-js/enc-hex';
@@ -9,8 +6,6 @@ import { Button, NonIdealState } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
 import { hydrateWrapper, apiFetch } from 'utilities';
-// import Loading from 'components/Loading/Loading';
-// import { getPasswordReset, postPasswordReset, putPasswordReset } from 'actions/passwordReset';
 
 require('./passwordReset.scss');
 
@@ -19,8 +14,6 @@ const propTypes = {
 	loginData: PropTypes.object.isRequired,
 	locationData: PropTypes.object.isRequired,
 	passwordResetData: PropTypes.object.isRequired,
-	// match: PropTypes.object.isRequired,
-	// dispatch: PropTypes.func.isRequired,
 };
 
 class PasswordReset extends Component {
@@ -29,7 +22,6 @@ class PasswordReset extends Component {
 		this.state = {
 			email: '',
 			password: '',
-			// validationError: undefined,
 			showConfirmation: false,
 		};
 		this.onEmailChange = this.onEmailChange.bind(this);
@@ -37,29 +29,6 @@ class PasswordReset extends Component {
 		this.handlePostPasswordReset = this.handlePostPasswordReset.bind(this);
 		this.handlePutPasswordReset = this.handlePutPasswordReset.bind(this);
 	}
-	// componentWillMount() {
-	// 	const params = this.props.match.params;
-	// 	const slug = params.slug;
-	// 	const resetHash = params.resetHash;
-	// 	if (slug && resetHash) {
-	// 		this.props.dispatch(getPasswordReset(slug, resetHash));
-	// 	}
-	// }
-	// componentWillReceiveProps(nextProps) {
-	// 	const oldPostLoading = this.props.passwordResetData.postIsLoading;
-	// 	const nextPostLoading = nextProps.passwordResetData.postIsLoading;
-	// 	const nextPostError = nextProps.passwordResetData.postError;
-
-	// 	const oldPutLoading = this.props.passwordResetData.putIsLoading;
-	// 	const nextPutLoading = nextProps.passwordResetData.putIsLoading;
-	// 	const nextPutError = nextProps.passwordResetData.putError;
-
-	// 	if ((oldPostLoading && !nextPostLoading && !nextPostError)
-	// 		|| (oldPutLoading && !nextPutLoading && !nextPutError)
-	// 	) {
-	// 		this.setState({ showConfirmation: true });
-	// 	}
-	// }
 
 	onEmailChange(evt) {
 		this.setState({ email: evt.target.value });
@@ -106,12 +75,6 @@ class PasswordReset extends Component {
 
 	render() {
 		const resetHash = this.props.locationData.params.resetHash;
-		// const getIsLoading = this.props.passwordResetData.getIsLoading;
-		// const getError = this.props.passwordResetData.getError;
-		// const postIsLoading = this.props.passwordResetData.postIsLoading;
-		// const postError = this.props.passwordResetData.postError;
-		// const putIsLoading = this.props.passwordResetData.putIsLoading;
-		// const putError = this.props.passwordResetData.putError;
 		return (
 			<div id="password-reset-container">
 				<PageWrapper
@@ -120,10 +83,6 @@ class PasswordReset extends Component {
 					locationData={this.props.locationData}
 					hideFooter={true}
 				>
-					{/*<Helmet>
-						<title>Password Reset</title>
-					</Helmet>*/}
-
 					<div className="container small">
 						<div className="row">
 							<div className="col-12">
@@ -167,11 +126,6 @@ class PasswordReset extends Component {
 										visual="envelope"
 									/>
 								}
-
-								{/* Show Loading screen to verify Hash */}
-								{/*resetHash && getIsLoading &&
-									<Loading width="100%" height="40px" margin="4em 0em 1em" />
-								*/}
 
 								{/* Show Error message if invalid hash */}
 								{resetHash && !this.props.passwordResetData.hashIsValid &&
