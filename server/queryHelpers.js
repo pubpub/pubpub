@@ -1,5 +1,5 @@
 import Promise from 'bluebird';
-import { User, Collection, Pub, Collaborator, Discussion, CommunityAdmin } from './models';
+import { User, Collection, Pub, Collaborator, Discussion, CommunityAdmin, Community } from './models';
 
 export const findCollection = (collectionId, useIncludes, initialData)=> {
 	const includes = useIncludes
@@ -94,5 +94,107 @@ export const findCollection = (collectionId, useIncludes, initialData)=> {
 			collectionDataJson.createPubHash = undefined;
 		}
 		return collectionDataJson;
+	});
+};
+
+export const getPubSearch = (query, initialData)=> {
+	const searchTerms = [
+		{
+			$or: [
+				{ title: { $ilike: `%${query.q}%` } },
+				{ description: { $ilike: `%${query.q}%` } },
+			]
+		},
+		{
+			$or: [
+				{ firstPublishedAt: { $ne: null } },
+				{ collaborationMode: 'publicView' },
+				{ collaborationMode: 'publicEdit' },
+			]
+		}
+	];
+
+	const includes = [
+		{
+			model: Collection,
+			as: 'collections',
+			where: { isPublic: true },
+			attributes: ['id', 'isPublic'],
+			through: { attributes: [] },
+		},
+		{
+			model: User,
+			as: 'collaborators',
+			attributes: ['id', 'avatar', 'initials'],
+			through: { attributes: ['isAuthor'] },
+		},
+		{
+			required: false,
+			model: Collaborator,
+			as: 'emptyCollaborators',
+			where: { userId: null },
+			attributes: { exclude: ['createdAt', 'updatedAt'] },
+		},
+		{
+			required: false,
+			separate: true,
+			model: Discussion,
+			as: 'discussions',
+			attributes: ['suggestions', 'pubId']
+		},
+	];
+	if (initialData.communityData.id) {
+		searchTerms.push({ communityId: initialData.communityData.id });
+	}
+	if (!initialData.communityData.id) {
+		includes.push({
+			model: Community,
+			as: 'community',
+			attributes: ['id', 'subdomain', 'domain', 'title', 'smallHeaderLogo', 'accentColor'],
+		});
+	}
+
+	return Pub.findAll({
+		where: {
+			$and: searchTerms
+		},
+		attributes: {
+			exclude: ['editHash', 'viewHash'],
+		},
+		limit: 10,
+		include: includes
+	})
+	.then((results)=> {
+		const output = results.map((pubObject)=> {
+			const pub = pubObject.toJSON();
+			return {
+				...pub,
+				discussionCount: pub.discussions ? pub.discussions.length : 0,
+				suggestionCount: pub.discussions ? pub.discussions.reduce((prev, curr)=> {
+					if (curr.suggestions) { return prev + 1; }
+					return prev;
+				}, 0) : 0,
+				collaboratorCount: pub.collaborators.length + pub.emptyCollaborators.length,
+				discussions: undefined,
+				collaborators: [
+					...pub.collaborators,
+					...pub.emptyCollaborators.map((item)=> {
+						return {
+							id: item.id,
+							initials: item.name[0],
+							fullName: item.name,
+							Collaborator: {
+								id: item.id,
+								isAuthor: item.isAuthor,
+								permissions: item.permissions,
+								order: item.order,
+							}
+						};
+					})
+				],
+				emptyCollaborators: undefined,
+			};
+		});
+		return output;
 	});
 };

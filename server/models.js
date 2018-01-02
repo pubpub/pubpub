@@ -9,6 +9,7 @@ const passportLocalSequelize = require('passport-local-sequelize');
 
 const operatorsAliases = {
 	$or: Sequelize.Op.or,
+	$and: Sequelize.Op.and,
 	$ilike: Sequelize.Op.iLike,
 	$in: Sequelize.Op.in,
 };
