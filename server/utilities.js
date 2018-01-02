@@ -200,7 +200,8 @@ export const handleErrors = (req, res, next)=> {
 		}
 		if (err.message === 'Collection Not Found' ||
 			err.message === 'Pub Not Found' ||
-			err.message === 'User Not Admin'
+			err.message === 'User Not Admin' ||
+			err.message === 'User Not Found'
 		) {
 			return next();
 		}

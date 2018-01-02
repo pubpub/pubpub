@@ -65,36 +65,36 @@ app.post('/users', (req, res)=> {
 	});
 });
 
-// app.put('/users', (req, res)=> {
-// 	const user = req.user || {};
-// 	const authenticated = req.user && req.user.id === user.id;
-// 	if (!authenticated) { return res.status(500).json('Unauthorized'); }
+app.put('/users', (req, res)=> {
+	const user = req.user || {};
+	const authenticated = req.user && req.user.id === user.id;
+	if (!authenticated) { return res.status(500).json('Unauthorized'); }
 
-// 	// Filter to only allow certain fields to be updated
-// 	const updatedUser = {};
-// 	Object.keys(req.body).forEach((key)=> {
-// 		if (['slug', 'firstName', 'lastName', 'avatar', 'bio', 'location', 'website', 'orcid', 'github', 'twitter', 'facebook', 'googleScholar'].indexOf(key) > -1) {
-// 			updatedUser[key] = req.body[key] && req.body[key].trim ? req.body[key].trim() : req.body[key];
-// 			if (key === 'slug') {
-// 				updatedUser.slug = updatedUser.slug.toLowerCase();
-// 			}
-// 			if (key === 'firstName' || key === 'lastName') {
-// 				updatedUser[key] = updatedUser[key].trim();
-// 			}
-// 		}
-// 	});
+	// Filter to only allow certain fields to be updated
+	const updatedUser = {};
+	Object.keys(req.body).forEach((key)=> {
+		if (['slug', 'firstName', 'lastName', 'avatar', 'bio', 'location', 'website', 'orcid', 'github', 'twitter', 'facebook', 'googleScholar'].indexOf(key) > -1) {
+			updatedUser[key] = req.body[key] && req.body[key].trim ? req.body[key].trim() : req.body[key];
+			if (key === 'slug') {
+				updatedUser.slug = updatedUser.slug.toLowerCase();
+			}
+			if (key === 'firstName' || key === 'lastName') {
+				updatedUser[key] = updatedUser[key].trim();
+			}
+		}
+	});
 
-// 	updatedUser.fullName = `${updatedUser.firstName} ${updatedUser.lastName}`;
-// 	updatedUser.initials = `${updatedUser.firstName[0]}${updatedUser.lastName[0]}`;
+	updatedUser.fullName = `${updatedUser.firstName} ${updatedUser.lastName}`;
+	updatedUser.initials = `${updatedUser.firstName[0]}${updatedUser.lastName[0]}`;
 
-// 	return User.update(updatedUser, {
-// 		where: { id: req.body.userId }
-// 	})
-// 	.then(()=> {
-// 		return res.status(201).json(updatedUser);
-// 	})
-// 	.catch((err)=> {
-// 		console.log('Error putting User', err);
-// 		return res.status(500).json(err);
-// 	});
-// });
+	return User.update(updatedUser, {
+		where: { id: req.body.userId }
+	})
+	.then(()=> {
+		return res.status(201).json('success');
+	})
+	.catch((err)=> {
+		console.log('Error putting User', err);
+		return res.status(500).json(err);
+	});
+});
