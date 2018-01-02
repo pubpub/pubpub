@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, NonIdealState } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
-// import { postSignup } from 'actions/signup';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
 import { hydrateWrapper, apiFetch } from 'utilities';
 
@@ -25,15 +24,9 @@ class Signup extends Component {
 		this.onEmailChange = this.onEmailChange.bind(this);
 	}
 
-	// componentWillReceiveProps(nextProps) {
-	// 	if (!this.props.signupData.data && nextProps.signupData.data) {
-	// 		this.setState({ isSuccessful: true });
-	// 	}
-	// }
-
 	onSignupSubmit(evt) {
 		evt.preventDefault();
-		// this.props.dispatch(postSignup(this.state.email));
+
 		this.setState({ postSignupIsLoading: true, postSignupError: undefined });
 		return apiFetch('/signup', {
 			method: 'POST',
@@ -48,7 +41,6 @@ class Signup extends Component {
 			this.setState({ postSignupIsLoading: false, postSignupError: err });
 		});
 	}
-
 	onEmailChange(evt) {
 		this.setState({ email: evt.target.value });
 	}
@@ -113,7 +105,6 @@ class Signup extends Component {
 										}
 									/>
 								}
-
 							</div>
 						</div>
 					</div>
