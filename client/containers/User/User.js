@@ -1,17 +1,11 @@
 import React, { Component } from 'react';
-// import { connect } from 'react-redux';
-// import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import dateFormat from 'dateformat';
-// import { withRouter, Link } from 'react-router-dom';
 import { NonIdealState } from '@blueprintjs/core';
 import UserHeader from 'components/UserHeader/UserHeader';
 import UserNav from 'components/UserNav/UserNav';
 import UserEdit from 'components/UserEdit/UserEdit';
 import PubPreview from 'components/PubPreview/PubPreview';
-// import NoMatch from 'containers/NoMatch/NoMatch';
-// import { getUserData, putUserData } from 'actions/user';
-// import UserLoading from './UserLoading';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
 import { hydrateWrapper, apiFetch } from 'utilities';
 
@@ -22,12 +16,6 @@ const propTypes = {
 	loginData: PropTypes.object.isRequired,
 	locationData: PropTypes.object.isRequired,
 	userData: PropTypes.object.isRequired,
-	// dispatch: PropTypes.func.isRequired,
-	// match: PropTypes.object.isRequired,
-	// appData: PropTypes.object.isRequired,
-	// userData: PropTypes.object.isRequired,
-	// loginData: PropTypes.object.isRequired,
-	// history: PropTypes.object.isRequired,
 };
 
 class User extends Component {
@@ -40,22 +28,7 @@ class User extends Component {
 		this.handleUserEditSave = this.handleUserEditSave.bind(this);
 	}
 
-	// componentWillMount() {
-	// 	this.props.dispatch(getUserData(this.props.match.params.slug));
-	// }
-	// componentWillReceiveProps(nextProps) {
-	// 	if (nextProps.match.params.slug !== this.props.match.params.slug) {
-	// 		this.props.dispatch(getUserData(nextProps.match.params.slug));
-	// 	}
-	// 	if (this.props.userData.putUserIsLoading
-	// 		&& !nextProps.userData.putUserIsLoading
-	// 		&& !nextProps.userData.putUserError
-	// 	) {
-	// 		this.props.history.push(`/user/${nextProps.userData.data.slug}`);
-	// 	}
-	// }
 	handleUserEditSave(userObject) {
-		// this.props.dispatch(putUserData(userObject));
 		this.setState({ putUserIsLoading: true, putUserError: undefined });
 		return apiFetch('/users', {
 			method: 'PUT',
@@ -68,6 +41,7 @@ class User extends Component {
 			this.setState({ putUserIsLoading: false, putUserError: err });
 		});
 	}
+
 	render() {
 		const userData = this.props.userData;
 		const pubs = userData.pubs || [];
@@ -84,32 +58,15 @@ class User extends Component {
 		const authoredPubs = communityPubs.filter((pub)=> {
 			const collaborators = pub.collaborators || [];
 			const isAuthor = collaborators.reduce((prev, curr)=> {
-				if (curr.id === loginData.id && curr.Collaborator.isAuthor) {
-					return true;
-				}
+				if (curr.id === loginData.id && curr.Collaborator.isAuthor) { return true; }
 				return prev;
 			}, false);
 			return isAuthor;
 		});
 		const pubsToRender = mode === 'authored' ? authoredPubs : communityPubs;
 
-		// if (mode === 'edit') {
-		// 	return (
-		// 		<UserEdit
-		// 			userData={userData}
-		// 			onSave={this.handleUserEditSave}
-		// 			error={this.props.userData.putUserError}
-		// 			isLoading={this.props.userData.putUserIsLoading}
-		// 		/>
-		// 	);
-		// }
 		return (
 			<div id="user-container">
-
-				{/*<Helmet>
-					<title>{userData.fullName}</title>
-					<meta name="description" content={userData.bio} />
-				</Helmet>*/}
 				<PageWrapper
 					loginData={this.props.loginData}
 					communityData={this.props.communityData}
