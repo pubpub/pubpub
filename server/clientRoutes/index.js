@@ -1,6 +1,7 @@
 /* Routes for PubPub */
 require('./communityCreate');	// Route: '/community/create'
 require('./explore');			// Route: '/explore'
+require('./pubRedirect');	// Route: '/pub/:slug'
 require('./landing');			// Route: '/'
 
 /* Routes for Communities */
