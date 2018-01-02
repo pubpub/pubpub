@@ -1,0 +1,22 @@
+#user-create-container {
+	.page-content {
+		.container {
+			padding: 2em 0em;
+		}
+		form {
+			margin-top: 40px;
+			font-size: 1.25em;
+		}
+		.pt-non-ideal-state {
+			padding-top: 2em;
+			.success p {
+				font-size: 1em;
+				line-height: 1.5;
+				margin: 0px;
+			}	
+		}
+		.pt-button-group {
+			display: block;
+		}
+	}
+}

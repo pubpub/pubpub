@@ -8,3 +8,4 @@ require('./pubs');
 require('./search');
 require('./signup');
 require('./uploadPolicy.js');
+require('./users');

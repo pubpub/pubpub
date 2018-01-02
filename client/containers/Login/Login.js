@@ -40,7 +40,6 @@ class Login extends Component {
 			})
 		})
 		.then(()=> {
-			this.setState({ loginLoading: false, loginError: undefined });
 			window.location.href = this.props.locationData.query.redirect || '/';
 		})
 		.catch((err)=> {
