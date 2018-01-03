@@ -99,7 +99,6 @@ class DiscussionThreadItem extends Component {
 
 		return (
 			<div className="discussion-thread-item-component">
-
 				<div className="item-header">
 					<a href={`/user/${discussion.author.slug}`}>
 						<Avatar
@@ -146,7 +145,7 @@ class DiscussionThreadItem extends Component {
 
 				</div>
 
-				<div className="text" {...editingProps}>
+				<div className="text" {...editingProps} key="editor-wrapper">
 					<Editor
 						key={this.state.isEditing ? `discussion-${discussion.id}-editing` : `discussion-${discussion.id}`}
 						ref={(ref)=> { this.editorRef = ref; }}
