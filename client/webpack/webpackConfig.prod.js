@@ -26,6 +26,7 @@ module.exports = {
 		baseStyle: resolve(__dirname, '../baseStyle.scss'),
 		vendor: [
 			resolve(__dirname, '../../static/objectEntriesPolyfill.js'),
+			'raven-js',
 			'@blueprintjs/core',
 			'@blueprintjs/labs',
 			'@pubpub/editor',

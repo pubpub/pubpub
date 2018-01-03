@@ -1,11 +1,19 @@
 import React from 'react';
+import Raven from 'raven-js';
 import { hydrate } from 'react-dom';
 import { FocusStyleManager } from '@blueprintjs/core';
 
 export const hydrateWrapper = (Component)=> {
 	if (typeof window !== 'undefined' && window.location.origin !== 'http://localhost:9001') {
 		FocusStyleManager.onlyShowFocusOnTabs();
+
 		const initialData = JSON.parse(document.getElementById('initial-data').getAttribute('data-json'));
+		const isDev = window.location.origin.indexOf('localhost:') > -1;
+		if (!isDev) {
+			Raven.config('https://b4764efd07c240488d390c8343193208@sentry.io/197897').install();
+			Raven.setUserContext({ username: initialData.loginData.slug });
+		}
+
 		hydrate(<Component {...initialData} />, document.getElementById('root'));
 	}
 };
