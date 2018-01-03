@@ -27,9 +27,9 @@ const Html = (props) => {
 			manifestUrl = manifestUrl.replace('https://static.pubpub.org', '');
 		}
 		/* If we're on localhost with webpack.dev, prepend '/dist/' */
-		if (manifestUrl.indexOf('https://') === -1) {
-			manifestUrl = `/dist/${manifestUrl}`;
-		}
+		// if (manifestUrl.indexOf('https://') === -1) {
+		// 	manifestUrl = `/dist/${manifestUrl}`;
+		// }
 		return manifestUrl;
 	};
 

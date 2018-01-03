@@ -116,7 +116,6 @@ app.use((err, req, res, next)=> {
 /* Server Endpoints */
 /* ------------------- */
 app.use('/dist', express.static('dist'));
-app.use('/fonts', express.static('dist/fonts'));
 app.use('/static', express.static('static'));
 app.use('/favicon.png', express.static('static/favicon.png'));
 app.use('/favicon.ico', express.static('static/favicon.png'));
@@ -127,7 +126,6 @@ app.use((req, res, next)=> {
 	if (req.hostname.indexOf('localhost') > -1) { req.headers.host = 'dev.pubpub.org'; }
 	if (req.hostname.indexOf('ssl.pubpub.org') > -1) { req.headers.host = 'dev.pubpub.org'; }
 	if (req.hostname.indexOf('dev2.pubpub.org') > -1) { req.headers.host = 'dev.pubpub.org'; }
-	if (req.hostname.indexOf('www2.pubpub.org') > -1) { req.headers.host = 'dev.pubpub.org'; }
 	next();
 });
 

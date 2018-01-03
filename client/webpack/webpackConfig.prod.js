@@ -81,7 +81,7 @@ module.exports = {
 			{
 				test: /\.(ttf|eot|svg|woff|woff2)$/,
 				use: [
-					{ loader: 'file-loader', query: { name: 'fonts/[hash].[ext]', publicPath: 'https://static.pubpub.org/' } }
+					{ loader: 'file-loader', query: { name: 'fonts/[hash].[ext]', publicPath: 'https://static.pubpub.org/dist/' } }
 				]
 			}
 		],

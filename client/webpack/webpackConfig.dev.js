@@ -90,7 +90,7 @@ module.exports = {
 			{
 				test: /\.(ttf|eot|svg|woff|woff2)$/,
 				use: [
-					{ loader: 'file-loader', query: { name: 'fonts/[hash].[ext]' } }
+					{ loader: 'file-loader', query: { name: '/fonts/[hash].[ext]' } }
 				]
 			}
 		],
@@ -101,7 +101,7 @@ module.exports = {
 			names: ['vendor'],
 			minChunks: Infinity,
 		}),
-		new ManifestPlugin(),
+		new ManifestPlugin({ publicPath: '/dist/' }),
 	],
 	node: {
 		net: 'empty',
