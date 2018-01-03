@@ -47,6 +47,7 @@ export const getFirebaseConfig = function() {
 
 	if (typeof window === 'undefined') { return devConfig; }
 	if (window.location.origin.indexOf('dev.pubpub.org') > -1) { return devConfig; }
+	if (window.location.origin.indexOf('ssl.pubpub.org') > -1) { return devConfig; }
 	if (window.location.origin.indexOf('localhost:') > -1) { return devConfig; }
 	return prodConfig;
 };

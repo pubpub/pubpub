@@ -1,0 +1,81 @@
+#pub-collaboration-container {
+	$sidePanelWidth: 350px; // 200 is width of side panel
+	$navHeight: 56px; // 56px is height of nav
+	$titlePanelHeight: 75px;
+	.page-content {
+		min-height: calc(100vh - #{$navHeight});
+		.col-12 {
+			margin-top: 0px;
+			margin-bottom: 0px;
+		}
+		.upper {
+			height: $titlePanelHeight;
+			border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+			position: fixed;
+			width: 100%;
+			background-color: white;
+			z-index: 18;
+		}
+		.lower {
+			direction: rtl;
+			background-color: #F9F9F9;
+			padding-top: $titlePanelHeight;
+		}
+		.side-panel {
+			direction: ltr;
+			position: fixed;
+			height: calc(100vh - #{$navHeight} - #{$titlePanelHeight});
+			width: $sidePanelWidth;
+			overflow: hidden;
+			.side-panel-content {
+				overflow: hidden;
+				overflow-y: scroll;
+				width: calc(#{$sidePanelWidth} + 50px);
+				padding-right: calc(0em + 50px);
+				height: 100%;
+			}
+			.new-discussion-wrapper {
+				padding: 0em 1em;
+				z-index: 1;
+				background-color: #F9F9F9;
+				position: relative;
+			}
+			.top-button {
+				display: block;
+				border-bottom: 1px solid #E0E0E0;
+				margin-bottom: 1em;
+
+			}
+			.pt-non-ideal-state {
+				max-height: 400px;
+				height: calc(100% - 50px);
+			}
+			.archived-threads {
+				padding: 0em 1em;
+			}
+			.archive-title-button {
+				font-weight: bold;
+				font-size: 1em;
+				color: #6e6e6e;
+				margin: 2em 0em 1em;
+			}
+		}
+		.content-panel {
+			direction: ltr;
+			padding: 1.5em 2em 10em;
+			background-color: white;
+			border: 1px solid #ECECEC;
+			border-top: 0px solid #ECECEC;
+			margin-right: $sidePanelWidth;
+			min-height: calc(100vh - #{$navHeight} - #{$titlePanelHeight});
+			// overflow: hidden;
+			cursor: text;
+			.collaborative-loading {
+				
+			}
+			.pub-body-component.loading {
+				opacity: 0;
+			}
+		}
+	}
+}

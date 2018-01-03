@@ -9,7 +9,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 require('./pubCollabShare.scss');
 
 const propTypes = {
-	appData: PropTypes.object.isRequired,
+	communityData: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
 	canManage: PropTypes.bool,
 	onOpenCollaborators: PropTypes.func,
@@ -157,7 +157,7 @@ class PubCollabShare extends Component {
 						<div className="wrapper">
 							<h5>Community Admin Permissions</h5>
 							<PubAdminPermissions
-								appData={this.props.appData}
+								communityData={this.props.communityData}
 								onSave={this.props.onPutPub}
 								pubData={pubData}
 							/>

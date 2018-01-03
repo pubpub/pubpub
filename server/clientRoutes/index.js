@@ -8,6 +8,7 @@ require('./landing');			// Route: '/'
 require('./dashboard');			// Route: ['/dashboard', '/dashboard/:slug', '/dashboard/:slug/:mode']
 require('./pubCreate');			// Route: '/pub/create'
 require('./pubPresentation');	// Route: '/pub/:slug'
+require('./pubCollaboration');	// Route: '/pub/:slug/collaborate'
 require('./collection'); 		// Route: ['/', '/:slug']
 require('./collectionSubmit'); 	// Route: ['/:slug/submit', '/:slug/submit/:hash']
 

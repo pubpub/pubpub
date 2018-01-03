@@ -10,7 +10,7 @@ import { generateHash } from 'utilities';
 require('./pubCollabSubmit.scss');
 
 const propTypes = {
-	appData: PropTypes.object.isRequired,
+	communityData: PropTypes.object.isRequired,
 	loginData: PropTypes.object.isRequired,
 	pubId: PropTypes.string.isRequired,
 	pubData: PropTypes.object.isRequired,
@@ -65,13 +65,13 @@ class PubCollabSubmit extends Component {
 		return (
 			<div className="pub-collab-submit-component">
 				<h5>Submit for Publication</h5>
-				<div>Only members of the {this.props.appData.title} Team can publish snapshots. Submitting for publication will create a new discussion thread and notify community admins of your intent to publish.</div>
+				<div>Only members of the {this.props.communityData.title} Team can publish snapshots. Submitting for publication will create a new discussion thread and notify community admins of your intent to publish.</div>
 				<div style={{ paddingTop: '1em' }}>To submit for publication, community admins must have permission to view, edit, or manage your document.</div>
 
 				<div className="wrapper">
 					<h5>Community Admin Permissions</h5>
 					<PubAdminPermissions
-						appData={this.props.appData}
+						communityData={this.props.communityData}
 						onSave={this.props.onPutPub}
 						pubData={this.props.pubData}
 						hideNone={true}

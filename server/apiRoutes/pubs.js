@@ -2,10 +2,6 @@ import app from '../server';
 import { Collection, Pub, Collaborator, CollectionPub, CommunityAdmin } from '../models';
 import { generateHash } from '../utilities';
 
-app.get('/pub/:slug/collaborate', (req, res)=> {
-	return res.status(201).json('All good');
-});
-
 app.post('/pubs', (req, res)=> {
 	const user = req.user || {};
 	const newPubSlug = generateHash(8);
