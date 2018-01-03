@@ -23,7 +23,7 @@ const Html = (props) => {
 			: `${chunkName}.${extension}`;
 
 		/* If we're on a dev server, remove the static path */
-		if (props.initialData.locationData.hostname === 'dev2.pubpub.org') {
+		if (props.initialData.locationData.hostname === 'dev.pubpub.org') {
 			manifestUrl = manifestUrl.replace('https://static.pubpub.org', '');
 		}
 		/* If we're on localhost with webpack.dev, prepend '/dist/' */
