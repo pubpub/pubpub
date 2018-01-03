@@ -7,7 +7,7 @@ const awsDetails = {
 	secretKeyAws: process.env.AWS_SECRET_ACCESS_KEY,
 };
 
-app.get('/uploadPolicy', (req, res)=> {
+app.get('/api/uploadPolicy', (req, res)=> {
 	const s3 = {
 		access_key: awsDetails.accessKeyAws,
 		secret_key: awsDetails.secretKeyAws,

@@ -175,7 +175,7 @@ export function getDefaultLayout(isPage) {
 }
 
 export function formatCitationString(item, callback) {
-	fetch('/editor/citation-format', {
+	fetch('/api/editor/citation-format', {
 		method: 'POST',
 		headers: {
 			Accept: 'application/json',
@@ -200,7 +200,7 @@ export function formatCitationString(item, callback) {
 	});
 }
 export function renderLatexString(value, isBlock, callback) {
-	fetch('/editor/latex-render', {
+	fetch('/api/editor/latex-render', {
 		method: 'POST',
 		headers: {
 			Accept: 'application/json',
@@ -259,7 +259,7 @@ export function s3Upload(file, progressEvent, finishEvent, index) {
 
 	const getPolicy = new XMLHttpRequest();
 	getPolicy.addEventListener('load', beginUpload);
-	getPolicy.open('GET', `/uploadPolicy?contentType=${file.type}`);
+	getPolicy.open('GET', `/api/uploadPolicy?contentType=${file.type}`);
 	getPolicy.send();
 }
 
