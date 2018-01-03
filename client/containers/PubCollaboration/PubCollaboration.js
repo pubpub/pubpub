@@ -47,9 +47,10 @@ class PubCollaboration extends Component {
 	constructor(props) {
 		super(props);
 		const loginData = props.loginData;
-		const userColor = getRandomColor();
+		const loginId = loginData.id || `anon-${Math.floor(Math.random() * 9999)}`
+		const userColor = getRandomColor(loginId);
 		this.localUser = {
-			id: loginData.id || `anon-${Math.floor(Math.random() * 9999)}`,
+			id: loginId,
 			backgroundColor: `rgba(${userColor}, 0.2)`,
 			cursorColor: `rgba(${userColor}, 1.0)`,
 			image: loginData.avatar || null,

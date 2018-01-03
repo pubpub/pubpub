@@ -157,7 +157,9 @@ const PubCollabHeader = function(props) {
 									tooltipClassName="pt-dark"
 								>
 									<Avatar
-										userInitials={collaborator.initials}
+										/* Cast userInitials to string since 
+										the anonymous Avatar is a int count */
+										userInitials={String(collaborator.initials)}
 										userAvatar={collaborator.image}
 										borderColor={collaborator.cursorColor}
 										borderWidth="2px"

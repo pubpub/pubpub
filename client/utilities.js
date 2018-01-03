@@ -258,13 +258,12 @@ export function s3Upload(file, progressEvent, finishEvent, index) {
 	}
 
 	const getPolicy = new XMLHttpRequest();
-	const urlPrefix = '';
 	getPolicy.addEventListener('load', beginUpload);
 	getPolicy.open('GET', `/uploadPolicy?contentType=${file.type}`);
 	getPolicy.send();
 }
 
-export function getRandomColor() {
+export function getRandomColor(loginId) {
 	const colors = [
 		'244,67,54',
 		'63,81,181',
@@ -284,5 +283,5 @@ export function getRandomColor() {
 		'205,220,57',
 		'255,87,34',
 	];
-	return colors[Math.floor(Math.random() * colors.length)];
+	return colors[loginId.charCodeAt(loginId.length - 1) % colors.length];
 }

@@ -88,6 +88,7 @@ class PubCollabEditor extends Component {
 					placeholder="Begin writing here..."
 					ref={this.props.onRef}
 					isReadOnly={this.props.isReadOnly}
+					key="pub-collab-editor"
 				>
 					{!this.props.isReadOnly &&
 						<FormattingMenu />
