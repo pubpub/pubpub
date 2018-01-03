@@ -22,14 +22,14 @@ const Html = (props) => {
 			? `${manifest[`${chunkName}.${extension}`]}`
 			: `${chunkName}.${extension}`;
 
-		/* If we're on a dev server, remove the static path */
+		/* If we're on a hosted dev server, remove the static path */
+		/* Note that fonts will still be sourced from static.pubpub */
+		/* so if viewing those needs to be tested, the webpack config */
+		/* needs to change. */
 		if (props.initialData.locationData.hostname === 'dev.pubpub.org') {
 			manifestUrl = manifestUrl.replace('https://static.pubpub.org', '');
 		}
-		/* If we're on localhost with webpack.dev, prepend '/dist/' */
-		// if (manifestUrl.indexOf('https://') === -1) {
-		// 	manifestUrl = `/dist/${manifestUrl}`;
-		// }
+
 		return manifestUrl;
 	};
 

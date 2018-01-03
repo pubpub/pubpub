@@ -62,37 +62,37 @@ app.use(session({
 /* -------- */
 /* Configure app CORS */
 /* -------- */
-const whitelist = [
-	/* Localhost */
-	/http:\/\/localhost:([0-9]+)*/i,
-	/* PubPub Subdomains */
-	/https:\/\/([a-z0-9-]+)*.pubpub.org/i,
-	/* Custom domains */
-	'https://pub.fiftynifty.org',
-	'https://pubpub.ito.com',
-	'https://www.responsivescience.org',
-	'https://www.reclamationsci.com',
-	'https://jods.mitpress.mit.edu',
-	'https://contemporaryarts.mit.edu',
-	'https://www.tjoe.org',
-];
+// const whitelist = [
+// 	/* Localhost */
+// 	/http:\/\/localhost:([0-9]+)*/i,
+// 	/* PubPub Subdomains */
+// 	/https:\/\/([a-z0-9-]+)*.pubpub.org/i,
+// 	/* Custom domains */
+// 	'https://pub.fiftynifty.org',
+// 	'https://pubpub.ito.com',
+// 	'https://www.responsivescience.org',
+// 	'https://www.reclamationsci.com',
+// 	'https://jods.mitpress.mit.edu',
+// 	'https://contemporaryarts.mit.edu',
+// 	'https://www.tjoe.org',
+// ];
 
-const corsOptions = {
-	origin: function (origin, callback) {
-		// This assumes the browser implements CORS.
-		// origin being undefined means the request is made on a local route
-		const originIsWhitelisted = whitelist.reduce((prev, curr)=> {
-			if (curr.test && curr.test(origin)) { return true; }
-			if (curr === origin) { return true; }
-			return prev;
-		}, false) || origin === undefined;
-		callback(originIsWhitelisted ? null : 'Bad Request', originIsWhitelisted);
-	},
-	methods: 'POST, GET, PUT, DELETE, OPTIONS',
-	allowHeaders: 'X-Requested-With, Content-Type',
-	credentials: true,
-};
-app.use(cors(corsOptions));
+// const corsOptions = {
+// 	origin: function (origin, callback) {
+// 		// This assumes the browser implements CORS.
+// 		// origin being undefined means the request is made on a local route
+// 		const originIsWhitelisted = whitelist.reduce((prev, curr)=> {
+// 			if (curr.test && curr.test(origin)) { return true; }
+// 			if (curr === origin) { return true; }
+// 			return prev;
+// 		}, false) || origin === undefined;
+// 		callback(originIsWhitelisted ? null : 'Bad Request', originIsWhitelisted);
+// 	},
+// 	methods: 'POST, GET, PUT, DELETE, OPTIONS',
+// 	allowHeaders: 'X-Requested-With, Content-Type',
+// 	credentials: true,
+// };
+// app.use(cors(corsOptions));
 
 /* ------------------- */
 /* Configure app login */
