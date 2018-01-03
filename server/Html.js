@@ -18,13 +18,19 @@ const propTypes = {
 
 const Html = (props) => {
 	const getPath = (chunkName, extension)=> {
-		const manifestUrl = manifest
-			? `/dist/${manifest[`${chunkName}.${extension}`]}`
-			: `/dist/${chunkName}.${extension}`;
+		let manifestUrl = manifest
+			? `${manifest[`${chunkName}.${extension}`]}`
+			: `${chunkName}.${extension}`;
 
-		return manifestUrl.indexOf('https://') > -1
-			? manifestUrl
-			: `/dist/${manifestUrl}`;
+		/* If we're on a dev server, remove the static path */
+		if (props.initialData.locationData.hostname === 'dev2.pubpub.org') {
+			manifestUrl = manifestUrl.replace('https://static.pubpub.org', '');
+		}
+		/* If we're on localhost with webpack.dev, prepend '/dist/' */
+		if (manifestUrl.indexOf('https://') === -1) {
+			manifestUrl = `/dist/${manifestUrl}`;
+		}
+		return manifestUrl;
 	};
 
 	return (
