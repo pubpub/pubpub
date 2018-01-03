@@ -6,13 +6,14 @@ require('./discussionPreview.scss');
 
 const propTypes = {
 	discussions: PropTypes.array.isRequired,
-	slug: PropTypes.string.isRequired,
-	isPresentation: PropTypes.bool,
+	// slug: PropTypes.string.isRequired,
+	// isPresentation: PropTypes.bool,
+	onPreviewClick: PropTypes.func.isRequired,
 };
 
-const defaultProps = {
-	isPresentation: false,
-};
+// const defaultProps = {
+// 	isPresentation: false,
+// };
 
 const DiscussionPreview = function(props) {
 	const hasAttachments = props.discussions.reduce((prev, curr)=> {
@@ -51,12 +52,16 @@ const DiscussionPreview = function(props) {
 		if (index === 0) { return `${curr.author.fullName}`; }
 		return `${prev}, ${curr.author.fullName}`;
 	}, '');
-	const toUrl = props.isPresentation
-		? `/pub/${props.slug}?thread=${props.discussions[0].threadNumber}`
-		: `/pub/${props.slug}/collaborate?thread=${props.discussions[0].threadNumber}`;
+	// const toUrl = props.isPresentation
+	// 	? `/pub/${props.slug}?thread=${props.discussions[0].threadNumber}`
+	// 	: `/pub/${props.slug}/collaborate?thread=${props.discussions[0].threadNumber}`;
 
 	return (
-		<a href={toUrl} className="discussion-preview-component">
+		<a
+			// href={toUrl}
+			onClick={()=> { props.onPreviewClick(props.discussions[0].threadNumber); }}
+			className="discussion-preview-component"
+		>
 			<div className="icons">
 				{hasAttachments &&
 					<span className="pt-icon-standard pt-icon-paperclip" />
@@ -107,5 +112,5 @@ const DiscussionPreview = function(props) {
 };
 
 DiscussionPreview.propTypes = propTypes;
-DiscussionPreview.defaultProps = defaultProps;
+// DiscussionPreview.defaultProps = defaultProps;
 export default DiscussionPreview;

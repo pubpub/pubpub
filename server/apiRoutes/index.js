@@ -1,6 +1,9 @@
+require('./collaborators');
 require('./collections');
+require('./collectionPubs');
 require('./communities');
 require('./communityAdmins');
+require('./discussions');
 require('./logout');
 require('./login');
 require('./passwordReset');
@@ -9,3 +12,4 @@ require('./search');
 require('./signup');
 require('./uploadPolicy.js');
 require('./users');
+require('./versions');

@@ -22,7 +22,7 @@ import DiscussionPreviewArchived from 'components/DiscussionPreviewArchived/Disc
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
 // import { getPubData, putPubData, deletePub, postDiscussion, putDiscussion, postCollaborator, putCollaborator, deleteCollaborator, postVersion, postCollectionPub, deleteCollectionPub } from 'actions/pub';
-import { hydrateWrapper, nestDiscussionsToThreads, getRandomColor, generateHash } from 'utilities';
+import { apiFetch, hydrateWrapper, nestDiscussionsToThreads, getRandomColor, generateHash } from 'utilities';
 
 
 require('./pubCollaboration.scss');
@@ -47,7 +47,7 @@ class PubCollaboration extends Component {
 	constructor(props) {
 		super(props);
 		const loginData = props.loginData;
-		const loginId = loginData.id || `anon-${Math.floor(Math.random() * 9999)}`
+		const loginId = loginData.id || `anon-${Math.floor(Math.random() * 9999)}`;
 		const userColor = getRandomColor(loginId);
 		this.localUser = {
 			id: loginId,
@@ -69,6 +69,13 @@ class PubCollaboration extends Component {
 			activeCollaborators: [this.localUser],
 			initNewDoc: undefined,
 			collabStatus: 'connecting',
+
+			thread: undefined,
+			pubData: this.props.pubData,
+			putPubIsLoading: false,
+			deletePubIsLoading: false,
+			postDiscussionIsLoading: false,
+			postVersionIsLoading: false,
 		};
 		this.editorRef = undefined;
 		this.togglePublish = this.togglePublish.bind(this);
@@ -96,6 +103,7 @@ class PubCollaboration extends Component {
 		this.handleHighlightClick = this.handleHighlightClick.bind(this);
 		this.getHighlightContent = this.getHighlightContent.bind(this);
 		this.handleStatusChange = this.handleStatusChange.bind(this);
+		this.handleThreadClick = this.handleThreadClick.bind(this);
 		// this.focusEditor = this.focusEditor.bind(this);
 	}
 	// componentWillMount() {
@@ -103,34 +111,35 @@ class PubCollaboration extends Component {
 	// 	this.props.dispatch(getPubData(this.props.match.params.slug, this.props.appData.data.id, queryObject.access));
 	// }
 	// componentWillReceiveProps(nextProps) {
-	// 	if (this.props.pubData.postDiscussionIsLoading
-	// 		&& !nextProps.pubData.postDiscussionIsLoading
-	// 		&& (nextProps.locationData.search.indexOf('thread=new') > -1 || this.state.isSubmitOpen)
-	// 	) {
-	// 		this.setState({ isSubmitOpen: false });
-	// 		this.props.history.push(`${nextProps.locationData.pathname}?thread=${nextProps.pubData.newThreadNumber}`);
-	// 	}
-	// 	if (this.props.pubData.putPubIsLoading && !nextProps.pubData.putPubIsLoading) {
-	// 		this.setState({ isDetailsOpen: false });
-	// 		const oldSlug = this.props.match.params.slug;
-	// 		const newSlug = nextProps.pubData.data.slug;
-	// 		this.props.history.replace(`${nextProps.locationData.pathname.replace(`/pub/${oldSlug}`, `/pub/${newSlug}`)}${nextProps.locationData.search}`);
-	// 	}
-	// 	if (this.props.pubData.postVersionIsLoading && !nextProps.pubData.postVersionIsLoading && nextProps.pubData.postVersionSuccess) {
-	// 		this.props.history.push(nextProps.locationData.pathname.replace('/collaborate', ''));
-	// 	}
-	// 	if (this.props.pubData.deletePubIsLoading && !nextProps.pubData.deletePubIsLoading) {
-	// 		this.props.history.push('/');
-	// 	}
-	// 	const queryObject = queryString.parse(this.props.locationData.search);
-	// 	const nextQueryObject = queryString.parse(nextProps.locationData.search);
-	// 	if (queryObject.thread === 'new' && nextQueryObject.thread !== 'new') {
-	// 		this.setState({ initNewDoc: undefined });
-	// 	}
-	// 	if (queryObject.thread !== nextQueryObject.thread) {
-	// 		document.getElementsByClassName('side-panel-content')[0].scrollTop = 0
-	// 	}
+			// 	if (this.props.pubData.postDiscussionIsLoading
+			// 		&& !nextProps.pubData.postDiscussionIsLoading
+			// 		&& (nextProps.locationData.search.indexOf('thread=new') > -1 || this.state.isSubmitOpen)
+			// 	) {
+			// 		this.setState({ isSubmitOpen: false });
+			// 		this.props.history.push(`${nextProps.locationData.pathname}?thread=${nextProps.pubData.newThreadNumber}`);
+			// 	}
+			// 	if (this.props.pubData.putPubIsLoading && !nextProps.pubData.putPubIsLoading) {
+			// 		this.setState({ isDetailsOpen: false });
+			// 		const oldSlug = this.props.match.params.slug;
+			// 		const newSlug = nextProps.pubData.data.slug;
+			// 		this.props.history.replace(`${nextProps.locationData.pathname.replace(`/pub/${oldSlug}`, `/pub/${newSlug}`)}${nextProps.locationData.search}`);
+			// 	}
+			// 	if (this.props.pubData.postVersionIsLoading && !nextProps.pubData.postVersionIsLoading && nextProps.pubData.postVersionSuccess) {
+			// 		this.props.history.push(nextProps.locationData.pathname.replace('/collaborate', ''));
+			// 	}
+			// 	if (this.props.pubData.deletePubIsLoading && !nextProps.pubData.deletePubIsLoading) {
+			// 		this.props.history.push('/');
+			// 	}
+			// 	const queryObject = queryString.parse(this.props.locationData.search);
+			// 	const nextQueryObject = queryString.parse(nextProps.locationData.search);
+			// 	if (queryObject.thread === 'new' && nextQueryObject.thread !== 'new') {
+			// 		this.setState({ initNewDoc: undefined });
+			// 	}
+			// 	if (queryObject.thread !== nextQueryObject.thread) {
+			// 		document.getElementsByClassName('side-panel-content')[0].scrollTop = 0
+			// 	}
 	// }
+
 	// componentWillUnmount() {
 		// this.props.dispatch(clearPubData());
 	// }
@@ -174,6 +183,7 @@ class PubCollaboration extends Component {
 	handleNewHighlightDiscussion(highlightObject) {
 		// this.props.history.push(`${this.props.locationData.pathname}?thread=new`);
 		this.setState({
+			thread: 'new',
 			initNewDoc: {
 				type: 'doc',
 				attrs: { meta: {} },
@@ -185,6 +195,7 @@ class PubCollaboration extends Component {
 		});
 	}
 	handleHighlightClick(threadNumber) {
+		this.setState({ thread: threadNumber });
 		// if (threadNumber) {
 			// this.props.history.push(`${this.props.locationData.pathname}?thread=${threadNumber}`);
 		// }
@@ -195,45 +206,237 @@ class PubCollaboration extends Component {
 		// 	pubId: this.props.pubData.data.id,
 		// 	communityId: this.props.appData.data.id,
 		// }));
+		this.setState({ putPubIsLoading: true });
+		return apiFetch('/api/pubs', {
+			method: 'PUT',
+			body: JSON.stringify({
+				...detailsObject,
+				pubId: this.props.pubData.id,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then((result)=> {
+			/* Load new URL if slug changes */
+			if (detailsObject.slug && detailsObject.slug !== this.props.locationData.params.slug) {
+				window.location.href = `/pub/${detailsObject.slug}/collaborate`;
+			} else {
+				this.setState({
+					isDetailsOpen: false,
+					putPubIsLoading: false,
+					pubData: { ...this.state.pubData, ...result },
+				});
+			}
+		})
+		.catch(()=> {
+			this.setState({ putPubIsLoading: false });
+		});
 	}
 	handlePubDelete(pubId) {
 		// this.props.dispatch(deletePub({
 		// 	pubId: pubId,
 		// 	communityId: this.props.appData.data.id,
 		// }));
+		this.setState({ deletePubIsLoading: true });
+		return apiFetch('/api/pubs', {
+			method: 'DELETE',
+			body: JSON.stringify({
+				pubId: pubId,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then(()=> {
+			window.location.href = '/';
+		})
+		.catch(()=> {
+			this.setState({ deletePubIsLoading: false });
+		});
 	}
 	handlePostDiscussion(discussionObject) {
 		// this.props.dispatch(postDiscussion({
 		// 	...discussionObject,
 		// 	communityId: this.props.pubData.data.communityId,
 		// }));
+		this.setState({ postDiscussionIsLoading: true });
+		return apiFetch('/api/discussions', {
+			method: 'POST',
+			body: JSON.stringify({
+				...discussionObject,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then((result)=> {
+			if (this.state.thread !== result.threadNumber) {
+				document.getElementsByClassName('side-panel-content')[0].scrollTop = 0;
+			}
+			this.setState({
+				postDiscussionIsLoading: false,
+				isSubmitOpen: false,
+				thread: result.threadNumber,
+				initNewDoc: undefined,
+				pubData: {
+					...this.state.pubData,
+					discussions: [
+						...this.state.pubData.discussions,
+						result,
+					],
+				},
+			});
+		})
+		.catch(()=> {
+			this.setState({ postDiscussionIsLoading: false });
+		});
 	}
 	handlePutDiscussion(discussionObject) {
 		// this.props.dispatch(putDiscussion({
 		// 	...discussionObject,
 		// 	communityId: this.props.pubData.data.communityId,
 		// }));
+		// this.setState({ putDiscussionIsLoading: true });
+		return apiFetch('/api/discussions', {
+			method: 'PUT',
+			body: JSON.stringify({
+				...discussionObject,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then((result)=> {
+			this.setState({
+				// putDiscussionIsLoading: false,
+				pubData: {
+					...this.state.pubData,
+					discussions: this.state.pubData.discussions.map((item)=> {
+						if (item.id !== result.id) { return item; }
+						return {
+							...item,
+							...result,
+						};
+					}),
+				},
+			});
+		});
+		// .catch(()=> {
+			// this.setState({ putDiscussionIsLoading: false });
+		// });
 	}
 	handleCollaboratorAdd(collaboratorObject) {
 		// this.props.dispatch(postCollaborator(collaboratorObject));
+		return apiFetch('/api/collaborators', {
+			method: 'POST',
+			body: JSON.stringify({
+				...collaboratorObject,
+			})
+		})
+		.then((result)=> {
+			this.setState({
+				// putDiscussionIsLoading: false,
+				pubData: {
+					...this.state.pubData,
+					collaborators: [
+						...this.state.pubData.collaborators,
+						result,
+					]
+				},
+			});
+		});
 	}
 	handleCollaboratorUpdate(collaboratorObject) {
 		// this.props.dispatch(putCollaborator(collaboratorObject));
+		return apiFetch('/api/collaborators', {
+			method: 'PUT',
+			body: JSON.stringify({
+				...collaboratorObject,
+			})
+		})
+		.then((result)=> {
+			this.setState({
+				// putDiscussionIsLoading: false,
+				pubData: {
+					...this.state.pubData,
+					collaborators: this.state.pubData.collaborators.map((item)=> {
+						if (item.Collaborator.id === result.Collaborator.id) {
+							return {
+								...item,
+								fullName: result.fullName || item.fullName,
+								Collaborator: {
+									...item.Collaborator,
+									...result.Collaborator,
+								}
+							};
+						}
+						return item;
+					})
+				},
+			});
+		});
 	}
 	handleCollaboratorDelete(collaboratorObject) {
 		// this.props.dispatch(deleteCollaborator(collaboratorObject));
+		return apiFetch('/api/collaborators', {
+			method: 'DELETE',
+			body: JSON.stringify({
+				...collaboratorObject,
+			})
+		})
+		.then((result)=> {
+			this.setState({
+				// putDiscussionIsLoading: false,
+				pubData: {
+					...this.state.pubData,
+					collaborators: this.state.pubData.collaborators.filter((item)=> {
+						return item.Collaborator.id !== result;
+					})
+				},
+			});
+		});
 	}
 	handleAddCollection(addCollectionObject) {
 		// this.props.dispatch(postCollectionPub({
 		// 	...addCollectionObject,
 		// 	communityId: this.props.pubData.data.communityId,
 		// }));
+		return apiFetch('/api/collectionPubs', {
+			method: 'POST',
+			body: JSON.stringify({
+				...addCollectionObject,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then((result)=> {
+			this.setState({
+				// putDiscussionIsLoading: false,
+				pubData: {
+					...this.state.pubData,
+					collections: [
+						...this.state.pubData.collections,
+						result,
+					]
+				},
+			});
+		});
 	}
 	handleRemoveCollection(removeCollectionObject) {
 		// this.props.dispatch(deleteCollectionPub({
 		// 	...removeCollectionObject,
 		// 	communityId: this.props.pubData.data.communityId,
 		// }));
+		return apiFetch('/api/collectionPubs', {
+			method: 'DELETE',
+			body: JSON.stringify({
+				...removeCollectionObject,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then((result)=> {
+			this.setState({
+				// putDiscussionIsLoading: false,
+				pubData: {
+					...this.state.pubData,
+					collections: this.state.pubData.collections.filter((item)=> {
+						return item.id !== result;
+					})
+				},
+			});
+		});
 	}
 	onOpenShare() {
 		this.setState({
@@ -287,6 +490,23 @@ class PubCollaboration extends Component {
 		// 	content: this.editorRef.view.state.doc.toJSON(),
 		// 	submitHash: submitHash,
 		// })));
+
+		this.setState({ postVersionIsLoading: true });
+		return apiFetch('/api/versions', {
+			method: 'POST',
+			body: JSON.stringify({
+				pubId: this.props.pubData.id,
+				communityId: this.props.communityData.id,
+				content: this.editorRef.view.state.doc.toJSON(),
+				submitHash: submitHash,
+			})
+		})
+		.then(()=> {
+			window.location.href = `/pub/${this.props.locationData.params.slug}`;
+		})
+		.catch(()=> {
+			this.setState({ postVersionIsLoading: false });
+		});
 	}
 	// focusEditor() {
 	// 	console.log(this.editorRef);
@@ -297,11 +517,17 @@ class PubCollaboration extends Component {
 			activeCollaborators: [this.localUser, ...clients]
 		});
 	}
+	handleThreadClick(threadNumber) {
+		document.getElementsByClassName('side-panel-content')[0].scrollTop = 0;
+		this.setState({
+			thread: threadNumber,
+		});
+	}
 	render() {
 		// const queryObject = queryString.parse(this.props.locationData.search);
 		const queryObject = this.props.locationData.query;
 
-		const pubData = this.props.pubData;
+		const pubData = this.state.pubData;
 		// const collaborators = pubData.collaborators || [];
 		const loginData = this.props.loginData;
 		const discussions = pubData.discussions || [];
@@ -312,7 +538,7 @@ class PubCollaboration extends Component {
 			return prev;
 		}, undefined);
 		const activeThread = threads.reduce((prev, curr)=> {
-			if (curr[0].threadNumber === Number(queryObject.thread)) { return curr; }
+			if (curr[0].threadNumber === Number(this.state.thread)) { return curr; }
 			return prev;
 		}, undefined);
 
@@ -346,40 +572,12 @@ class PubCollaboration extends Component {
 		if (canManage && !pubData.firstPublishedAt) { canDelete = true; }
 		if (pubData.adminPermissions === 'manage' && loginData.isAdmin) { canDelete = true; }
 
-		// if (this.props.pubData.isLoading) {
-		// 	return (
-		// 		<div id="pub-collaboration-container">
-		// 			<div className="upper">
-		// 				<div className="container">
-		// 					<div className="row">
-		// 						<div className="col-12" />
-		// 					</div>
-		// 				</div>
-		// 			</div>
-		// 			<div className="lower">
-		// 				<div className="container">
-		// 					<div className="row">
-		// 						<div className="col-12">
-		// 							<div className="side-panel" />
-		// 							<div className="content-panel" />
-		// 						</div>
-		// 					</div>
-		// 				</div>
-		// 			</div>
-		// 		</div>
-		// 	);
-		// }
-
-		// if (!pubData.id) {
-		// 	return <NoMatch />;
-		// }
 		const highlights = discussions.filter((item)=> {
 			return !item.isArchived && item.highlights;
 		}).reduce((prev, curr)=> {
 			const highlightsWithThread = curr.highlights.map((item)=> {
 				return { ...item, threadNumber: curr.threadNumber };
 			});
-			// console.log(curr, highlightsWithThread);
 			return [...prev, ...highlightsWithThread];
 		}, []);
 
@@ -398,10 +596,6 @@ class PubCollaboration extends Component {
 
 		return (
 			<div id="pub-collaboration-container">
-				{/*<Helmet>
-					<title>Collaborate · {pubData.title}</title>
-					<meta name="robots" content="noindex,nofollow" />
-				</Helmet>*/}
 				<PageWrapper
 					loginData={this.props.loginData}
 					communityData={this.props.communityData}
@@ -430,6 +624,7 @@ class PubCollaboration extends Component {
 											onDetailsClick={this.toggleDetails}
 											onCollaboratorsClick={this.toggleCollaborators}
 											onCollectionsClick={this.toggleCollections}
+											onThreadClick={this.handleThreadClick}
 										/>
 									</div>
 								</div>
@@ -442,14 +637,18 @@ class PubCollaboration extends Component {
 
 										<div className="side-panel">
 											<div className="side-panel-content">
-												{!queryObject.thread &&
+												{!this.state.thread &&
 													<div className="new-discussion-wrapper">
-														<a href={`${this.props.locationData.pathname}?thread=new`} className="pt-button pt-minimal pt-icon-add top-button">
+														<a
+															// href={`${this.props.locationData.pathname}?thread=new`}
+															onClick={()=> { this.handleThreadClick('new'); }}
+															className="pt-button pt-minimal pt-icon-add top-button"
+														>
 															New Discussion
 														</a>
 													</div>
 												}
-												{queryObject.thread === 'new' &&
+												{this.state.thread === 'new' &&
 													<DiscussionNew
 														pubId={pubData.id}
 														slug={pubData.slug}
@@ -458,18 +657,20 @@ class PubCollaboration extends Component {
 														initialContent={this.state.initNewDoc}
 														handleDiscussionSubmit={this.handlePostDiscussion}
 														getHighlightContent={this.getHighlightContent}
-														submitIsLoading={this.props.pubData.postDiscussionIsLoading}
+														submitIsLoading={this.state.postDiscussionIsLoading}
+														setThread={this.handleThreadClick}
 													/>
 												}
-												{queryObject.thread !== 'new' && !activeThread &&
+												{this.state.thread !== 'new' && !activeThread &&
 													<div>
 														{activeThreads.map((thread)=> {
 															return (
 																<DiscussionPreview
 																	key={`thread-${thread[0].id}`}
 																	discussions={thread}
-																	slug={pubData.slug}
-																	isPresentation={false}
+																	onPreviewClick={this.handleThreadClick}
+																	// slug={pubData.slug}
+																	// isPresentation={false}
 																/>
 															);
 														})}
@@ -484,8 +685,9 @@ class PubCollaboration extends Component {
 																		<DiscussionPreviewArchived
 																			key={`thread-${thread[0].id}`}
 																			discussions={thread}
-																			slug={pubData.slug}
-																			isPresentation={false}
+																			onPreviewClick={this.handleThreadClick}
+																			// slug={pubData.slug}
+																			// isPresentation={false}
 																		/>
 																	);
 																})}
@@ -502,19 +704,24 @@ class PubCollaboration extends Component {
 														pathname={`${this.props.locationData.pathname}${this.props.locationData.search}`}
 														handleReplySubmit={this.handlePostDiscussion}
 														handleReplyEdit={this.handlePutDiscussion}
-														submitIsLoading={this.props.pubData.postDiscussionIsLoading}
+														submitIsLoading={this.state.postDiscussionIsLoading}
 														onPublish={this.handlePublish}
-														publishIsLoading={this.props.pubData.postVersionIsLoading}
+														publishIsLoading={this.state.postVersionIsLoading}
 														getHighlightContent={this.getHighlightContent}
 														hoverBackgroundColor={this.props.communityData.accentMinimalColor}
+														setThread={this.handleThreadClick}
 													/>
 												}
-												{threads.length === 0 && !queryObject.thread &&
+												{threads.length === 0 && !this.state.thread &&
 													<NonIdealState
 														title="Start the Conversation"
 														visual="pt-icon-chat"
 														action={
-															<a href={`${this.props.locationData.pathname}?thread=new`} className="pt-button">
+															<a
+																// href={`${this.props.locationData.pathname}?thread=new`}
+																onClick={()=> { this.handleThreadClick('new'); }}
+																className="pt-button"
+															>
 																Create New Discussion
 															</a>
 														}
@@ -568,7 +775,7 @@ class PubCollaboration extends Component {
 						pubData={pubData}
 						onPublish={this.handlePublish}
 						onPutPub={this.handleDetailsSave}
-						isLoading={this.props.pubData.postVersionIsLoading}
+						isLoading={this.state.postVersionIsLoading}
 						onOpenDetails={this.onOpenDetails}
 					/>
 				</Overlay>
@@ -580,7 +787,7 @@ class PubCollaboration extends Component {
 						pubId={pubData.id}
 						onSubmit={this.handlePostDiscussion}
 						onPutPub={this.handleDetailsSave}
-						isLoading={this.props.pubData.postDiscussionIsLoading}
+						isLoading={this.state.postDiscussionIsLoading}
 					/>
 				</Overlay>
 				<Overlay isOpen={this.state.isCollectionsOpen} onClose={this.toggleCollections}>
@@ -631,8 +838,8 @@ class PubCollaboration extends Component {
 						canDelete={canDelete}
 						onSave={this.handleDetailsSave}
 						onDelete={this.handlePubDelete}
-						putIsLoading={this.props.pubData.putPubIsLoading}
-						deleteIsLoading={this.props.pubData.deletePubIsLoading}
+						putIsLoading={this.state.putPubIsLoading}
+						deleteIsLoading={this.state.deletePubIsLoading}
 					/>
 				</Overlay>
 			</div>

@@ -114,7 +114,7 @@ class PubCollabEditor extends Component {
 					<Footnote />
 					<HighlightMenu
 						highlights={this.props.highlights}
-						primaryEditorClassName="pub-collab-editor"
+						primaryEditorClassName="pub-collab-editor-component"
 						onNewDiscussion={this.props.onNewHighlightDiscussion}
 						onDotClick={this.findThreadNumberFromHighlightId}
 						hoverBackgroundColor={this.props.hoverBackgroundColor}

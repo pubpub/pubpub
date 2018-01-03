@@ -13,6 +13,7 @@ const propTypes = {
 	pathname: PropTypes.string.isRequired,
 	handleDiscussionSubmit: PropTypes.func.isRequired,
 	submitIsLoading: PropTypes.bool,
+	setThread: PropTypes.func.isRequired,
 };
 const defaultProps = {
 	initialContent: undefined,
@@ -36,7 +37,11 @@ const DiscussionNew = function(props) {
 
 	return (
 		<div className="discussion-new-component">
-			<a href={`/pub/${props.slug}/collaborate`} className="top-button pt-button pt-minimal">
+			<a
+				// href={`/pub/${props.slug}/collaborate`}
+				onClick={()=> { props.setThread(undefined); }}
+				className="top-button pt-button pt-minimal"
+			>
 				Cancel
 			</a>
 

@@ -55,11 +55,11 @@ export const findPub = (req, initialData)=> {
 	const getCommunityAdminData = CommunityAdmin.findOne({
 		where: {
 			userId: initialData.loginData.id,
-			communityId: initialData.communityData.communityId,
+			communityId: initialData.communityData.id,
 		}
 	});
-	return Promise.all([initialData, getPubData, getCommunityAdminData])
-	.then(([initialData, pubData, communityAdminData])=> {
+	return Promise.all([getPubData, getCommunityAdminData])
+	.then(([pubData, communityAdminData])=> {
 		if (!pubData) { throw new Error('Pub Not Found'); }
 
 		const pubDataJson = pubData.toJSON();

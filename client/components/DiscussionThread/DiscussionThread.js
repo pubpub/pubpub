@@ -21,6 +21,7 @@ const propTypes = {
 	publishIsLoading: PropTypes.bool,
 	getHighlightContent: PropTypes.func,
 	hoverBackgroundColor: PropTypes.string,
+	setThread: PropTypes.func.isRequired,
 };
 const defaultProps = {
 	canManage: false,
@@ -164,7 +165,11 @@ class DiscussionThread extends Component {
 		return (
 			<div className="discussion-thread-component">
 				{!this.props.isPresentation &&
-					<a href={`/pub/${this.props.slug}/collaborate`} className="top-button pt-button pt-minimal">
+					<a
+						// href={`/pub/${this.props.slug}/collaborate`}
+						onClick={()=> { this.props.setThread(undefined); }}
+						className="top-button pt-button pt-minimal"
+					>
 						Show all threads
 					</a>
 				}

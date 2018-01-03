@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import app from '../server';
 import { CommunityAdmin, User } from '../models';
 

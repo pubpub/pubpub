@@ -5,13 +5,14 @@ require('./discussionPreviewArchived.scss');
 
 const propTypes = {
 	discussions: PropTypes.array.isRequired,
-	slug: PropTypes.string.isRequired,
-	isPresentation: PropTypes.bool,
+	// slug: PropTypes.string.isRequired,
+	// isPresentation: PropTypes.bool,
+	onPreviewClick: PropTypes.func.isRequired,
 };
 
-const defaultProps = {
-	isPresentation: false,
-};
+// const defaultProps = {
+// 	isPresentation: false,
+// };
 
 const DiscussionPreviewArchived = function(props) {
 	const hasAttachments = props.discussions.reduce((prev, curr)=> {
@@ -39,12 +40,16 @@ const DiscussionPreviewArchived = function(props) {
 		return 0;
 	});
 
-	const toUrl = props.isPresentation
-		? `/pub/${props.slug}?thread=${props.discussions[0].threadNumber}`
-		: `/pub/${props.slug}/collaborate?thread=${props.discussions[0].threadNumber}`;
+	// const toUrl = props.isPresentation
+	// 	? `/pub/${props.slug}?thread=${props.discussions[0].threadNumber}`
+	// 	: `/pub/${props.slug}/collaborate?thread=${props.discussions[0].threadNumber}`;
 
 	return (
-		<a href={toUrl} className="discussion-preview-archived-component">
+		<a
+			// href={toUrl}
+			onClick={()=> { props.onPreviewClick(props.discussions[0].threadNumber); }}
+			className="discussion-preview-archived-component"
+		>
 			<div className="icons">
 				{hasAttachments &&
 					<span className="pt-icon-standard pt-icon-paperclip" />
@@ -72,5 +77,5 @@ const DiscussionPreviewArchived = function(props) {
 };
 
 DiscussionPreviewArchived.propTypes = propTypes;
-DiscussionPreviewArchived.defaultProps = defaultProps;
+// DiscussionPreviewArchived.defaultProps = defaultProps;
 export default DiscussionPreviewArchived;

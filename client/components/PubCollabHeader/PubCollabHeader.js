@@ -21,6 +21,7 @@ const propTypes = {
 	onDetailsClick: PropTypes.func,
 	onCollaboratorsClick: PropTypes.func,
 	onCollectionsClick: PropTypes.func,
+	onThreadClick: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -102,11 +103,11 @@ const PubCollabHeader = function(props) {
 							/* TODO - if there is already a submit discussion, need to redirect to that one! */
 							: <span>
 								{props.submissionThreadNumber
-									? <a href={`/pub/${props.pubData.slug}/collaborate?thread=${props.submissionThreadNumber}`} className={`pt-button pt-intent-primary ${props.activeThread[0].threadNumber === props.submissionThreadNumber ? 'pt-disabled' : ''}`}>Submit for Publication</a>
+									/*? <a href={`/pub/${props.pubData.slug}/collaborate?thread=${props.submissionThreadNumber}`} className={`pt-button pt-intent-primary ${props.activeThread[0].threadNumber === props.submissionThreadNumber ? 'pt-disabled' : ''}`}>Submit for Publication</a>*/
+									? <button type="button" className={`pt-button pt-intent-primary ${props.activeThread[0].threadNumber === props.submissionThreadNumber ? 'pt-disabled' : ''}`} onClick={()=> { props.onThreadClick(props.submissionThreadNumber); }}>Submit for Publication</button>
 									: <button type="button" className="pt-button pt-intent-primary" onClick={props.onSubmitClick}>Submit for Publication</button>
 								}
 							</span>
-							
 						}
 					</div>
 				}
