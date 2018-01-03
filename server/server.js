@@ -126,6 +126,8 @@ app.use('/robots.txt', express.static('static/robots.txt'));
 app.use((req, res, next)=> {
 	if (req.hostname.indexOf('localhost') > -1) { req.headers.host = 'dev.pubpub.org'; }
 	if (req.hostname.indexOf('ssl.pubpub.org') > -1) { req.headers.host = 'dev.pubpub.org'; }
+	if (req.hostname.indexOf('dev2.pubpub.org') > -1) { req.headers.host = 'dev.pubpub.org'; }
+	if (req.hostname.indexOf('www2.pubpub.org') > -1) { req.headers.host = 'dev.pubpub.org'; }
 	next();
 });
 
