@@ -108,7 +108,7 @@ class User extends Component {
 									<div className="row">
 										<div className="col-12">
 											<div className="pt-callout external-pubs-wrapper">
-												<a href={`https://v4.pubpub.org/user/${userData.slug}`} className="pt-button pt-intent-primary">Go to Full Profile</a>
+												<a href={`https://www.pubpub.org/user/${userData.slug}`} className="pt-button pt-intent-primary">Go to Full Profile</a>
 												<h5>{externalPubs.length} pub{externalPubs.length === 1 ? '' : 's'} in other communities.</h5>
 												<div>{userData.firstName} has published in other PubPub communities. Click to go to their full profile.</div>
 											</div>
