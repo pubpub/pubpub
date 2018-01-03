@@ -4,7 +4,7 @@ import app from '../server';
 import { Community, Collection, CommunityAdmin } from '../models';
 import { generateHash } from '../utilities';
 
-app.post('/communities', (req, res)=> {
+app.post('/api/communities', (req, res)=> {
 	const user = req.user || {};
 	if (!user.id) { return res.status(500).json('Must be logged in to create a community'); }
 
@@ -94,7 +94,7 @@ app.post('/communities', (req, res)=> {
 });
 
 
-app.put('/communities', (req, res)=> {
+app.put('/api/communities', (req, res)=> {
 	const user = req.user || {};
 
 	// Filter to only allow certain fields to be updated

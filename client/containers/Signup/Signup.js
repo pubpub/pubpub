@@ -28,7 +28,7 @@ class Signup extends Component {
 		evt.preventDefault();
 
 		this.setState({ postSignupIsLoading: true, postSignupError: undefined });
-		return apiFetch('/signup', {
+		return apiFetch('/api/signup', {
 			method: 'POST',
 			body: JSON.stringify({
 				email: this.state.email.toLowerCase(),

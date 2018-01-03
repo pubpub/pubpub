@@ -1,7 +1,7 @@
 import app from '../server';
 import { User, Pub, Discussion, Collaborator, Collection, Community } from '../models';
 
-app.get('/search/users', (req, res)=> {
+app.get('/api/search/users', (req, res)=> {
 	User.findAll({
 		where: {
 			$or: [
@@ -21,7 +21,7 @@ app.get('/search/users', (req, res)=> {
 	});
 });
 
-app.get('/search/pubs', (req, res)=> {
+app.get('/api/search/pubs', (req, res)=> {
 	console.time('PubSearch');
 	const searchTerms = [
 		{

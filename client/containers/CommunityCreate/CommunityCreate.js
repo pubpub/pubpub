@@ -38,7 +38,7 @@ class CommunityCreate extends Component {
 		evt.preventDefault();
 
 		this.setState({ createIsLoading: true, createError: undefined });
-		return apiFetch('/communities', {
+		return apiFetch('/api/communities', {
 			method: 'POST',
 			body: JSON.stringify({
 				subdomain: this.state.subdomain,

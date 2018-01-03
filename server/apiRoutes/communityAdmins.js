@@ -1,7 +1,7 @@
 import app from '../server';
 import { CommunityAdmin, User } from '../models';
 
-app.post('/communityAdmins', (req, res)=> {
+app.post('/api/communityAdmins', (req, res)=> {
 	const user = req.user || {};
 
 	CommunityAdmin.findOne({
@@ -32,7 +32,7 @@ app.post('/communityAdmins', (req, res)=> {
 	});
 });
 
-app.delete('/communityAdmins', (req, res)=> {
+app.delete('/api/communityAdmins', (req, res)=> {
 	const user = req.user || {};
 
 	CommunityAdmin.findOne({

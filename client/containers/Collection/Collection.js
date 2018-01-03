@@ -119,7 +119,7 @@ class Collection extends Component {
 
 	handleCreatePub() {
 		this.setState({ createPubIsLoading: true });
-		return apiFetch('/pubs', {
+		return apiFetch('/api/pubs', {
 			method: 'POST',
 			body: JSON.stringify({
 				collectionId: this.props.collectionData.id,

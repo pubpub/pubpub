@@ -3,7 +3,7 @@ import passport from 'passport';
 import app from '../server';
 import { User, Pub, Signup, Community } from '../models';
 
-app.post('/users', (req, res)=> {
+app.post('/api/users', (req, res)=> {
 	// Check that hash and email sync up
 	// Create user
 	// Update SignUp to 'completed'
@@ -65,7 +65,7 @@ app.post('/users', (req, res)=> {
 	});
 });
 
-app.put('/users', (req, res)=> {
+app.put('/api/users', (req, res)=> {
 	const user = req.user || {};
 	const authenticated = req.user && req.user.id === user.id;
 	if (!authenticated) { return res.status(500).json('Unauthorized'); }

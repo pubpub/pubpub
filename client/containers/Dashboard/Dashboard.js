@@ -43,7 +43,7 @@ class Dashboard extends Component {
 
 	handleCreatePub(collectionId) {
 		this.setState({ postPubIsLoading: true });
-		return apiFetch('/pubs', {
+		return apiFetch('/api/pubs', {
 			method: 'POST',
 			body: JSON.stringify({
 				collectionId: collectionId,
@@ -61,7 +61,7 @@ class Dashboard extends Component {
 	}
 	handleSiteSave(siteObject) {
 		this.setState({ putCommunityIsLoading: true, putCommunityError: undefined });
-		return apiFetch('/communities', {
+		return apiFetch('/api/communities', {
 			method: 'PUT',
 			body: JSON.stringify(siteObject)
 		})
@@ -79,7 +79,7 @@ class Dashboard extends Component {
 	}
 	handleCollectionCreate(collectionObject) {
 		this.setState({ postCollectionIsLoading: true, postCollectionError: undefined });
-		return apiFetch('/collections', {
+		return apiFetch('/api/collections', {
 			method: 'POST',
 			body: JSON.stringify({
 				...collectionObject,
@@ -96,7 +96,7 @@ class Dashboard extends Component {
 	}
 	handleCollectionSave(collectionObject) {
 		this.setState({ putCollectionIsLoading: true, putCollectionError: undefined });
-		return apiFetch('/collections', {
+		return apiFetch('/api/collections', {
 			method: 'PUT',
 			body: JSON.stringify({
 				...collectionObject,
@@ -113,7 +113,7 @@ class Dashboard extends Component {
 	}
 	handleCollectionDelete(collectionId) {
 		this.setState({ deleteCollectionIsLoading: true });
-		return apiFetch('/collections', {
+		return apiFetch('/api/collections', {
 			method: 'DELETE',
 			body: JSON.stringify({
 				collectionId: collectionId,
@@ -129,7 +129,7 @@ class Dashboard extends Component {
 		});
 	}
 	handleAddAdmin(adminObject) {
-		return apiFetch('/communityAdmins', {
+		return apiFetch('/api/communityAdmins', {
 			method: 'POST',
 			body: JSON.stringify(adminObject)
 		})
@@ -138,7 +138,7 @@ class Dashboard extends Component {
 		});
 	}
 	handleRemoveAdmin(adminObject) {
-		return apiFetch('/communityAdmins', {
+		return apiFetch('/api/communityAdmins', {
 			method: 'DELETE',
 			body: JSON.stringify(adminObject)
 		})

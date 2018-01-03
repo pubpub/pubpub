@@ -23,7 +23,7 @@ class PubCreate extends Component {
 
 	handleCreatePub(collectionId) {
 		this.setState({ postPubIsLoading: collectionId });
-		return apiFetch('/pubs', {
+		return apiFetch('/api/pubs', {
 			method: 'POST',
 			body: JSON.stringify({
 				collectionId: collectionId,

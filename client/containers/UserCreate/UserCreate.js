@@ -48,7 +48,7 @@ class UserCreate extends Component {
 		evt.preventDefault();
 
 		this.setState({ postUserIsLoading: true, postUserError: undefined });
-		return apiFetch('/users', {
+		return apiFetch('/api/users', {
 			method: 'POST',
 			body: JSON.stringify({
 				email: this.props.signupData.email,

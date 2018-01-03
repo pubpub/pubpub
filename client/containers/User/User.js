@@ -30,7 +30,7 @@ class User extends Component {
 
 	handleUserEditSave(userObject) {
 		this.setState({ putUserIsLoading: true, putUserError: undefined });
-		return apiFetch('/users', {
+		return apiFetch('/api/users', {
 			method: 'PUT',
 			body: JSON.stringify(userObject)
 		})

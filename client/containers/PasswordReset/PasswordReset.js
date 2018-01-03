@@ -40,7 +40,7 @@ class PasswordReset extends Component {
 		evt.preventDefault();
 
 		this.setState({ postIsLoading: true });
-		return apiFetch('/password-reset', {
+		return apiFetch('/api/password-reset', {
 			method: 'POST',
 			body: JSON.stringify({
 				email: this.state.email.toLowerCase(),
@@ -57,7 +57,7 @@ class PasswordReset extends Component {
 		evt.preventDefault();
 
 		this.setState({ putIsLoading: true });
-		return apiFetch('/password-reset', {
+		return apiFetch('/api/password-reset', {
 			method: 'PUT',
 			body: JSON.stringify({
 				password: SHA3(this.state.password).toString(encHex),

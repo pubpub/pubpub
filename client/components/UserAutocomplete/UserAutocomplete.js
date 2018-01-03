@@ -35,7 +35,7 @@ class UserAutocomplete extends Component {
 	filterItems(evt) {
 		const query = evt.target.value;
 		this.setState({ value: query });
-		apiFetch(`/search/users?q=${query}`)
+		apiFetch(`/api/search/users?q=${query}`)
 		.then((result) => {
 			const appendedResult = this.props.allowCustomUser && query
 				? [

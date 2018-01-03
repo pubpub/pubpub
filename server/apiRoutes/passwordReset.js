@@ -6,7 +6,7 @@ import { generateHash } from '../utilities';
 
 const client = new postmark.Client(process.env.POSTMARK_API_KEY);
 
-app.post('/password-reset', (req, res)=> {
+app.post('/api/password-reset', (req, res)=> {
 	User.findOne({
 		where: { email: req.body.email }
 	}).then((user)=> {
@@ -41,7 +41,7 @@ app.post('/password-reset', (req, res)=> {
 	});
 });
 
-app.put('/password-reset', (req, res)=> {
+app.put('/api/password-reset', (req, res)=> {
 	const user = req.user || {};
 	const resetHash = req.body.resetHash;
 	const slug = req.body.slug;

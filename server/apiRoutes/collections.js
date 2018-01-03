@@ -5,7 +5,7 @@ import { Collection, Community, CommunityAdmin } from '../models';
 import { generateHash } from '../utilities';
 
 
-app.post('/collections', (req, res)=> {
+app.post('/api/collections', (req, res)=> {
 	// Authenticate user. Make sure they have manage permissions on the given pub.
 
 	const user = req.user || {};
@@ -58,7 +58,7 @@ app.post('/collections', (req, res)=> {
 	});
 });
 
-app.put('/collections', (req, res)=> {
+app.put('/api/collections', (req, res)=> {
 	const user = req.user || {};
 
 	// Filter to only allow certain fields to be updated
@@ -111,7 +111,7 @@ app.put('/collections', (req, res)=> {
 	});
 });
 
-app.delete('/collections', (req, res)=> {
+app.delete('/api/collections', (req, res)=> {
 	// Authenticate user. Make sure they have manage permissions on the given pub.
 
 	const user = req.user || {};

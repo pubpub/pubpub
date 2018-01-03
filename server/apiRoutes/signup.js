@@ -5,7 +5,7 @@ import { sequelize, Signup, User } from '../models';
 
 const client = new postmark.Client(process.env.POSTMARK_API_KEY);
 
-app.post('/signup', (req, res)=> {
+app.post('/api/signup', (req, res)=> {
 	// First, try to update the emailSentCount.
 	// If there are no records to update, then we create a new one.
 	// If this fails, it is because the email must be unique and it is already used
