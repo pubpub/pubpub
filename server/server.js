@@ -115,7 +115,7 @@ app.use((err, req, res, next)=> {
 /* ------------------- */
 /* Server Endpoints */
 /* ------------------- */
-app.use('/dist', express.static('dist'));
+app.use('/dist', [cors(), express.static('dist')]);
 app.use('/static', express.static('static'));
 app.use('/favicon.png', express.static('static/favicon.png'));
 app.use('/favicon.ico', express.static('static/favicon.png'));
