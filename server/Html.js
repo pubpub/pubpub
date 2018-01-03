@@ -18,9 +18,13 @@ const propTypes = {
 
 const Html = (props) => {
 	const getPath = (chunkName, extension)=> {
-		return manifest
+		const manifestUrl = manifest
 			? `/dist/${manifest[`${chunkName}.${extension}`]}`
 			: `/dist/${chunkName}.${extension}`;
+
+		return manifestUrl.indexOf('https://') > -1
+			? manifestUrl
+			: `/dist/${manifestUrl}`;
 	};
 
 	return (

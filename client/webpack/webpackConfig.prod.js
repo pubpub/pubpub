@@ -110,7 +110,7 @@ module.exports = {
 			},
 			sourceMap: true,
 		}),
-		new ManifestPlugin({ publicPath: 'https://static.pubpub.org/' }),
+		new ManifestPlugin({ publicPath: 'https://static.pubpub.org/dist/' }),
 	],
 	node: {
 		net: 'empty',
