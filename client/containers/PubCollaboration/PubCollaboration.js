@@ -76,6 +76,7 @@ class PubCollaboration extends Component {
 			deletePubIsLoading: false,
 			postDiscussionIsLoading: false,
 			postVersionIsLoading: false,
+			docReadyForHighlights: false,
 		};
 		this.editorRef = undefined;
 		this.togglePublish = this.togglePublish.bind(this);
@@ -104,6 +105,7 @@ class PubCollaboration extends Component {
 		this.getHighlightContent = this.getHighlightContent.bind(this);
 		this.handleStatusChange = this.handleStatusChange.bind(this);
 		this.handleThreadClick = this.handleThreadClick.bind(this);
+		this.handleEditorRef = this.handleEditorRef.bind(this);
 		// this.focusEditor = this.focusEditor.bind(this);
 	}
 	// componentWillMount() {
@@ -523,6 +525,16 @@ class PubCollaboration extends Component {
 			thread: threadNumber,
 		});
 	}
+	handleEditorRef(ref) {
+		this.editorRef = ref;
+		/* This timeout is how long we think */
+		/* it will take the firebase server to */
+		/* initalize the most recent doc and steps. */
+		/* It doesn't hurt to be a bit conservative here */
+		setTimeout(()=> {
+			this.setState({ docReadyForHighlights: true });
+		}, 2500);
+	}
 	render() {
 		// const queryObject = queryString.parse(this.props.locationData.search);
 		const queryObject = this.props.locationData.query;
@@ -580,7 +592,6 @@ class PubCollaboration extends Component {
 			});
 			return [...prev, ...highlightsWithThread];
 		}, []);
-
 		if (this.editorRef && queryObject.from && queryObject.to) {
 			highlights.push({
 				...this.getHighlightContent(Number(queryObject.from), Number(queryObject.to)),
@@ -747,7 +758,7 @@ class PubCollaboration extends Component {
 											}
 											<div className={`pub-body-component ${this.state.collabStatus === 'connecting' ? 'loading' : ''}`}>
 												<PubCollabEditor
-													onRef={(ref)=> { this.editorRef = ref; }}
+													onRef={this.handleEditorRef}
 													editorKey={`pub-${pubData.id}`}
 													isReadOnly={!canManage && pubData.localPermissions !== 'edit'}
 													clientData={this.state.activeCollaborators[0]}
@@ -755,7 +766,7 @@ class PubCollaboration extends Component {
 													onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
 													onHighlightClick={this.handleHighlightClick}
 													hoverBackgroundColor={this.props.communityData.accentMinimalColor}
-													highlights={highlights}
+													highlights={this.state.docReadyForHighlights ? highlights : []}
 													threads={threads}
 													slug={pubData.slug}
 													onStatusChange={this.handleStatusChange}
