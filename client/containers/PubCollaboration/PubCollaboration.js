@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import { connect } from 'react-redux';
-// import Helmet from 'react-helmet';
-// import queryString from 'query-string';
-// import { withRouter, Link } from 'react-router-dom';
 import { NonIdealState } from '@blueprintjs/core';
-// import NoMatch from 'containers/NoMatch/NoMatch';
 import Overlay from 'components/Overlay/Overlay';
-// import Loading from 'components/Loading/Loading';
 import PubCollabEditor from 'components/PubCollabEditor/PubCollabEditor';
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
@@ -15,13 +9,11 @@ import PubCollabPublish from 'components/PubCollabPublish/PubCollabPublish';
 import PubCollabSubmit from 'components/PubCollabSubmit/PubCollabSubmit';
 import PubCollabDetails from 'components/PubCollabDetails/PubCollabDetails';
 import PubCollabCollections from 'components/PubCollabCollections/PubCollabCollections';
-// import PubCollabCollaborators from 'components/PubCollabCollaborators/PubCollabCollaborators';
 import DiscussionNew from 'components/DiscussionNew/DiscussionNew';
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionPreviewArchived from 'components/DiscussionPreviewArchived/DiscussionPreviewArchived';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
-// import { getPubData, putPubData, deletePub, postDiscussion, putDiscussion, postCollaborator, putCollaborator, deleteCollaborator, postVersion, postCollectionPub, deleteCollectionPub } from 'actions/pub';
 import { apiFetch, hydrateWrapper, nestDiscussionsToThreads, getRandomColor, generateHash } from 'utilities';
 
 
@@ -34,13 +26,6 @@ const propTypes = {
 	locationData: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
 
-	// dispatch: PropTypes.func.isRequired,
-	// location: PropTypes.object.isRequired,
-	// match: PropTypes.object.isRequired,
-	// appData: PropTypes.object.isRequired,
-	// pubData: PropTypes.object.isRequired,
-	// loginData: PropTypes.object.isRequired,
-	// history: PropTypes.object.isRequired,
 };
 
 class PubCollaboration extends Component {
@@ -106,45 +91,48 @@ class PubCollaboration extends Component {
 		this.handleStatusChange = this.handleStatusChange.bind(this);
 		this.handleThreadClick = this.handleThreadClick.bind(this);
 		this.handleEditorRef = this.handleEditorRef.bind(this);
-		// this.focusEditor = this.focusEditor.bind(this);
 	}
-	// componentWillMount() {
-	// 	const queryObject = queryString.parse(this.props.locationData.search);
-	// 	this.props.dispatch(getPubData(this.props.match.params.slug, this.props.appData.data.id, queryObject.access));
-	// }
-	// componentWillReceiveProps(nextProps) {
-			// 	if (this.props.pubData.postDiscussionIsLoading
-			// 		&& !nextProps.pubData.postDiscussionIsLoading
-			// 		&& (nextProps.locationData.search.indexOf('thread=new') > -1 || this.state.isSubmitOpen)
-			// 	) {
-			// 		this.setState({ isSubmitOpen: false });
-			// 		this.props.history.push(`${nextProps.locationData.pathname}?thread=${nextProps.pubData.newThreadNumber}`);
-			// 	}
-			// 	if (this.props.pubData.putPubIsLoading && !nextProps.pubData.putPubIsLoading) {
-			// 		this.setState({ isDetailsOpen: false });
-			// 		const oldSlug = this.props.match.params.slug;
-			// 		const newSlug = nextProps.pubData.data.slug;
-			// 		this.props.history.replace(`${nextProps.locationData.pathname.replace(`/pub/${oldSlug}`, `/pub/${newSlug}`)}${nextProps.locationData.search}`);
-			// 	}
-			// 	if (this.props.pubData.postVersionIsLoading && !nextProps.pubData.postVersionIsLoading && nextProps.pubData.postVersionSuccess) {
-			// 		this.props.history.push(nextProps.locationData.pathname.replace('/collaborate', ''));
-			// 	}
-			// 	if (this.props.pubData.deletePubIsLoading && !nextProps.pubData.deletePubIsLoading) {
-			// 		this.props.history.push('/');
-			// 	}
-			// 	const queryObject = queryString.parse(this.props.locationData.search);
-			// 	const nextQueryObject = queryString.parse(nextProps.locationData.search);
-			// 	if (queryObject.thread === 'new' && nextQueryObject.thread !== 'new') {
-			// 		this.setState({ initNewDoc: undefined });
-			// 	}
-			// 	if (queryObject.thread !== nextQueryObject.thread) {
-			// 		document.getElementsByClassName('side-panel-content')[0].scrollTop = 0
-			// 	}
-	// }
 
-	// componentWillUnmount() {
-		// this.props.dispatch(clearPubData());
-	// }
+	onOpenShare() {
+		this.setState({
+			isShareOpen: true,
+			isDetailsOpen: false,
+			isCollaboratorsOpen: false,
+			isPublishOpen: false,
+		});
+	}
+	onOpenDetails() {
+		this.setState({
+			isShareOpen: false,
+			isDetailsOpen: true,
+			isCollaboratorsOpen: false,
+			isPublishOpen: false,
+		});
+	}
+	onOpenCollaborators() {
+		this.setState({
+			isShareOpen: false,
+			isDetailsOpen: false,
+			isCollaboratorsOpen: true,
+			isPublishOpen: false,
+		});
+	}
+	getHighlightContent(from, to) {
+		const primaryEditorState = this.editorRef.state.editorState;
+		if (primaryEditorState.doc.nodeSize < from || primaryEditorState.doc.nodeSize < to) { return {}; }
+		const exact = primaryEditorState.doc.textBetween(from, to);
+		const prefix = primaryEditorState.doc.textBetween(Math.max(0, from - 10), Math.max(0, from));
+		const suffix = primaryEditorState.doc.textBetween(Math.min(primaryEditorState.doc.nodeSize - 2, to), Math.min(primaryEditorState.doc.nodeSize - 2, to + 10));
+		return {
+			exact: exact,
+			prefix: prefix,
+			suffix: suffix,
+			from: from,
+			to: to,
+			version: undefined,
+			id: `h${generateHash(8)}`, /* Has to start with letter since it's a classname */
+		};
+	}
 	togglePublish() {
 		this.setState({ isPublishOpen: !this.state.isPublishOpen });
 	}
@@ -166,24 +154,7 @@ class PubCollaboration extends Component {
 	toggleArchivedVisible() {
 		this.setState({ isArchivedVisible: !this.state.isArchivedVisible });
 	}
-	getHighlightContent(from, to) {
-		const primaryEditorState = this.editorRef.state.editorState;
-		if (primaryEditorState.doc.nodeSize < from || primaryEditorState.doc.nodeSize < to) { return {}; }
-		const exact = primaryEditorState.doc.textBetween(from, to);
-		const prefix = primaryEditorState.doc.textBetween(Math.max(0, from - 10), Math.max(0, from));
-		const suffix = primaryEditorState.doc.textBetween(Math.min(primaryEditorState.doc.nodeSize - 2, to), Math.min(primaryEditorState.doc.nodeSize - 2, to + 10));
-		return {
-			exact: exact,
-			prefix: prefix,
-			suffix: suffix,
-			from: from,
-			to: to,
-			version: undefined,
-			id: `h${generateHash(8)}`, // Has to start with letter since it's a classname
-		};
-	}
 	handleNewHighlightDiscussion(highlightObject) {
-		// this.props.history.push(`${this.props.locationData.pathname}?thread=new`);
 		this.setState({
 			thread: 'new',
 			initNewDoc: {
@@ -198,16 +169,8 @@ class PubCollaboration extends Component {
 	}
 	handleHighlightClick(threadNumber) {
 		this.setState({ thread: threadNumber });
-		// if (threadNumber) {
-			// this.props.history.push(`${this.props.locationData.pathname}?thread=${threadNumber}`);
-		// }
 	}
 	handleDetailsSave(detailsObject) {
-		// this.props.dispatch(putPubData({
-		// 	...detailsObject,
-		// 	pubId: this.props.pubData.data.id,
-		// 	communityId: this.props.appData.data.id,
-		// }));
 		this.setState({ putPubIsLoading: true });
 		return apiFetch('/api/pubs', {
 			method: 'PUT',
@@ -234,10 +197,6 @@ class PubCollaboration extends Component {
 		});
 	}
 	handlePubDelete(pubId) {
-		// this.props.dispatch(deletePub({
-		// 	pubId: pubId,
-		// 	communityId: this.props.appData.data.id,
-		// }));
 		this.setState({ deletePubIsLoading: true });
 		return apiFetch('/api/pubs', {
 			method: 'DELETE',
@@ -254,10 +213,6 @@ class PubCollaboration extends Component {
 		});
 	}
 	handlePostDiscussion(discussionObject) {
-		// this.props.dispatch(postDiscussion({
-		// 	...discussionObject,
-		// 	communityId: this.props.pubData.data.communityId,
-		// }));
 		this.setState({ postDiscussionIsLoading: true });
 		return apiFetch('/api/discussions', {
 			method: 'POST',
@@ -289,11 +244,6 @@ class PubCollaboration extends Component {
 		});
 	}
 	handlePutDiscussion(discussionObject) {
-		// this.props.dispatch(putDiscussion({
-		// 	...discussionObject,
-		// 	communityId: this.props.pubData.data.communityId,
-		// }));
-		// this.setState({ putDiscussionIsLoading: true });
 		return apiFetch('/api/discussions', {
 			method: 'PUT',
 			body: JSON.stringify({
@@ -303,7 +253,6 @@ class PubCollaboration extends Component {
 		})
 		.then((result)=> {
 			this.setState({
-				// putDiscussionIsLoading: false,
 				pubData: {
 					...this.state.pubData,
 					discussions: this.state.pubData.discussions.map((item)=> {
@@ -316,12 +265,8 @@ class PubCollaboration extends Component {
 				},
 			});
 		});
-		// .catch(()=> {
-			// this.setState({ putDiscussionIsLoading: false });
-		// });
 	}
 	handleCollaboratorAdd(collaboratorObject) {
-		// this.props.dispatch(postCollaborator(collaboratorObject));
 		return apiFetch('/api/collaborators', {
 			method: 'POST',
 			body: JSON.stringify({
@@ -330,7 +275,6 @@ class PubCollaboration extends Component {
 		})
 		.then((result)=> {
 			this.setState({
-				// putDiscussionIsLoading: false,
 				pubData: {
 					...this.state.pubData,
 					collaborators: [
@@ -342,7 +286,6 @@ class PubCollaboration extends Component {
 		});
 	}
 	handleCollaboratorUpdate(collaboratorObject) {
-		// this.props.dispatch(putCollaborator(collaboratorObject));
 		return apiFetch('/api/collaborators', {
 			method: 'PUT',
 			body: JSON.stringify({
@@ -351,7 +294,6 @@ class PubCollaboration extends Component {
 		})
 		.then((result)=> {
 			this.setState({
-				// putDiscussionIsLoading: false,
 				pubData: {
 					...this.state.pubData,
 					collaborators: this.state.pubData.collaborators.map((item)=> {
@@ -372,7 +314,6 @@ class PubCollaboration extends Component {
 		});
 	}
 	handleCollaboratorDelete(collaboratorObject) {
-		// this.props.dispatch(deleteCollaborator(collaboratorObject));
 		return apiFetch('/api/collaborators', {
 			method: 'DELETE',
 			body: JSON.stringify({
@@ -381,7 +322,6 @@ class PubCollaboration extends Component {
 		})
 		.then((result)=> {
 			this.setState({
-				// putDiscussionIsLoading: false,
 				pubData: {
 					...this.state.pubData,
 					collaborators: this.state.pubData.collaborators.filter((item)=> {
@@ -392,10 +332,6 @@ class PubCollaboration extends Component {
 		});
 	}
 	handleAddCollection(addCollectionObject) {
-		// this.props.dispatch(postCollectionPub({
-		// 	...addCollectionObject,
-		// 	communityId: this.props.pubData.data.communityId,
-		// }));
 		return apiFetch('/api/collectionPubs', {
 			method: 'POST',
 			body: JSON.stringify({
@@ -405,7 +341,6 @@ class PubCollaboration extends Component {
 		})
 		.then((result)=> {
 			this.setState({
-				// putDiscussionIsLoading: false,
 				pubData: {
 					...this.state.pubData,
 					collections: [
@@ -417,10 +352,6 @@ class PubCollaboration extends Component {
 		});
 	}
 	handleRemoveCollection(removeCollectionObject) {
-		// this.props.dispatch(deleteCollectionPub({
-		// 	...removeCollectionObject,
-		// 	communityId: this.props.pubData.data.communityId,
-		// }));
 		return apiFetch('/api/collectionPubs', {
 			method: 'DELETE',
 			body: JSON.stringify({
@@ -430,7 +361,6 @@ class PubCollaboration extends Component {
 		})
 		.then((result)=> {
 			this.setState({
-				// putDiscussionIsLoading: false,
 				pubData: {
 					...this.state.pubData,
 					collections: this.state.pubData.collections.filter((item)=> {
@@ -438,30 +368,6 @@ class PubCollaboration extends Component {
 					})
 				},
 			});
-		});
-	}
-	onOpenShare() {
-		this.setState({
-			isShareOpen: true,
-			isDetailsOpen: false,
-			isCollaboratorsOpen: false,
-			isPublishOpen: false,
-		});
-	}
-	onOpenDetails() {
-		this.setState({
-			isShareOpen: false,
-			isDetailsOpen: true,
-			isCollaboratorsOpen: false,
-			isPublishOpen: false,
-		});
-	}
-	onOpenCollaborators() {
-		this.setState({
-			isShareOpen: false,
-			isDetailsOpen: false,
-			isCollaboratorsOpen: true,
-			isPublishOpen: false,
 		});
 	}
 	handleStatusChange(status) {
@@ -486,13 +392,6 @@ class PubCollaboration extends Component {
 		}
 	}
 	handlePublish(submitHash) {
-		// this.props.dispatch((postVersion({
-		// 	pubId: this.props.pubData.data.id,
-		// 	communityId: this.props.appData.data.id,
-		// 	content: this.editorRef.view.state.doc.toJSON(),
-		// 	submitHash: submitHash,
-		// })));
-
 		this.setState({ postVersionIsLoading: true });
 		return apiFetch('/api/versions', {
 			method: 'POST',
@@ -510,10 +409,6 @@ class PubCollaboration extends Component {
 			this.setState({ postVersionIsLoading: false });
 		});
 	}
-	// focusEditor() {
-	// 	console.log(this.editorRef);
-	// 	this.editorRef.focus();
-	// }
 	handleClientChange(clients) {
 		this.setState({
 			activeCollaborators: [this.localUser, ...clients]
@@ -536,11 +431,9 @@ class PubCollaboration extends Component {
 		}, 2500);
 	}
 	render() {
-		// const queryObject = queryString.parse(this.props.locationData.search);
 		const queryObject = this.props.locationData.query;
 
 		const pubData = this.state.pubData;
-		// const collaborators = pubData.collaborators || [];
 		const loginData = this.props.loginData;
 		const discussions = pubData.discussions || [];
 		const threads = nestDiscussionsToThreads(discussions);
@@ -650,13 +543,12 @@ class PubCollaboration extends Component {
 											<div className="side-panel-content">
 												{!this.state.thread &&
 													<div className="new-discussion-wrapper">
-														<a
-															// href={`${this.props.locationData.pathname}?thread=new`}
+														<button
 															onClick={()=> { this.handleThreadClick('new'); }}
 															className="pt-button pt-minimal pt-icon-add top-button"
 														>
 															New Discussion
-														</a>
+														</button>
 													</div>
 												}
 												{this.state.thread === 'new' &&
@@ -680,8 +572,6 @@ class PubCollaboration extends Component {
 																	key={`thread-${thread[0].id}`}
 																	discussions={thread}
 																	onPreviewClick={this.handleThreadClick}
-																	// slug={pubData.slug}
-																	// isPresentation={false}
 																/>
 															);
 														})}
@@ -697,8 +587,6 @@ class PubCollaboration extends Component {
 																			key={`thread-${thread[0].id}`}
 																			discussions={thread}
 																			onPreviewClick={this.handleThreadClick}
-																			// slug={pubData.slug}
-																			// isPresentation={false}
 																		/>
 																	);
 																})}
@@ -728,13 +616,12 @@ class PubCollaboration extends Component {
 														title="Start the Conversation"
 														visual="pt-icon-chat"
 														action={
-															<a
-																// href={`${this.props.locationData.pathname}?thread=new`}
+															<button
 																onClick={()=> { this.handleThreadClick('new'); }}
 																className="pt-button"
 															>
 																Create New Discussion
-															</a>
+															</button>
 														}
 													/>
 												}
@@ -743,7 +630,6 @@ class PubCollaboration extends Component {
 
 										<div
 											className="content-panel"
-											// onClick={this.focusEditor}
 											tabIndex={-1}
 											role="textbox"
 										>
@@ -822,14 +708,6 @@ class PubCollaboration extends Component {
 					/>
 				</Overlay>
 				<Overlay isOpen={this.state.isCollaboratorsOpen} onClose={this.toggleCollaborators}>
-					{/* <PubCollabCollaborators
-						pubData={pubData}
-						canManage={canManage}
-						onOpenShare={this.onOpenShare}
-						onCollaboratorAdd={this.handleCollaboratorAdd}
-						onCollaboratorUpdate={this.handleCollaboratorUpdate}
-						onCollaboratorDelete={this.handleCollaboratorDelete}
-					/> */}
 					<PubCollabShare
 						communityData={this.props.communityData}
 						pubData={pubData}

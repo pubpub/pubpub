@@ -10,7 +10,6 @@ import PubPresFooter from 'components/PubPresFooter/PubPresFooter';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 import PubBody from 'components/PubBody/PubBody';
 import License from 'components/License/License';
-
 import { apiFetch, hydrateWrapper, nestDiscussionsToThreads, generateHash } from 'utilities';
 
 require('./pubPresentation.scss');
@@ -43,29 +42,35 @@ class PubPresentation extends Component {
 		this.handleEditorRef = this.handleEditorRef.bind(this);
 	}
 
+	getHighlightContent(from, to) {
+		const primaryEditorState = this.state.editorRef.state.editorState;
+		if (!primaryEditorState || primaryEditorState.doc.nodeSize < from || primaryEditorState.doc.nodeSize < to) { return {}; }
+		const exact = primaryEditorState.doc.textBetween(from, to);
+		const prefix = primaryEditorState.doc.textBetween(Math.max(0, from - 10), Math.max(0, from));
+		const suffix = primaryEditorState.doc.textBetween(Math.min(primaryEditorState.doc.nodeSize - 2, to), Math.min(primaryEditorState.doc.nodeSize - 2, to + 10));
+		return {
+			exact: exact,
+			prefix: prefix,
+			suffix: suffix,
+			from: from,
+			to: to,
+			version: undefined,
+			id: `h${generateHash(8)}`, // Has to start with letter since it's a classname
+		};
+	}
+	setOverlayPanel(panel) {
+		this.setState({ activePanel: panel });
+	}
+	setActiveThread(threadNumber) {
+		this.setState({ activeThreadNumber: threadNumber });
+	}
 	closeThreadOverlay() {
 		this.setState({ activeThreadNumber: undefined });
-		// const queryObject = queryString.parse(this.props.location.search);
-		// queryObject.thread = undefined;
-		// const newSearch = queryString.stringify(queryObject);
-		// this.props.history.push(`/pub/${this.props.match.params.slug}${newSearch}`);
 	}
-
 	closeDiscussionOverlay() {
 		this.setState({ activePanel: undefined });
-		// const queryObject = queryString.parse(this.props.location.search);
-		// queryObject.panel = undefined;
-		// const newSearch = queryString.stringify(queryObject);
-		// this.props.history.push(`/pub/${this.props.match.params.slug}${newSearch}`);
 	}
-
 	handlePostDiscussion(discussionObject) {
-		// TODO
-		// console.log('Gotta post discussion!')
-		// this.props.dispatch(postDiscussion({
-		// 	...discussionObject,
-		// 	communityId: this.props.pubData.data.communityId,
-		// }));
 		this.setState({ postDiscussionIsLoading: true });
 		return apiFetch('/api/discussions', {
 			method: 'POST',
@@ -91,12 +96,6 @@ class PubPresentation extends Component {
 		});
 	}
 	handlePutDiscussion(discussionObject) {
-		// TODO
-		// console.log('Gotta put discussion!')
-		// this.props.dispatch(putDiscussion({
-		// 	...discussionObject,
-		// 	communityId: this.props.pubData.data.communityId,
-		// }));
 		return apiFetch('/api/discussions', {
 			method: 'PUT',
 			body: JSON.stringify({
@@ -106,7 +105,6 @@ class PubPresentation extends Component {
 		})
 		.then((result)=> {
 			this.setState({
-				// putDiscussionIsLoading: false,
 				pubData: {
 					...this.state.pubData,
 					discussions: this.state.pubData.discussions.map((item)=> {
@@ -120,28 +118,6 @@ class PubPresentation extends Component {
 			});
 		});
 	}
-	setOverlayPanel(panel) {
-		this.setState({ activePanel: panel });
-	}
-	setActiveThread(threadNumber) {
-		this.setState({ activeThreadNumber: threadNumber });
-	}
-	getHighlightContent(from, to) {
-		const primaryEditorState = this.state.editorRef.state.editorState;
-		if (!primaryEditorState || primaryEditorState.doc.nodeSize < from || primaryEditorState.doc.nodeSize < to) { return {}; }
-		const exact = primaryEditorState.doc.textBetween(from, to);
-		const prefix = primaryEditorState.doc.textBetween(Math.max(0, from - 10), Math.max(0, from));
-		const suffix = primaryEditorState.doc.textBetween(Math.min(primaryEditorState.doc.nodeSize - 2, to), Math.min(primaryEditorState.doc.nodeSize - 2, to + 10));
-		return {
-			exact: exact,
-			prefix: prefix,
-			suffix: suffix,
-			from: from,
-			to: to,
-			version: undefined,
-			id: `h${generateHash(8)}`, // Has to start with letter since it's a classname
-		};
-	}
 	handleEditorRef(ref) {
 		if (!this.state.editorRef) {
 			/* Need to set timeout so DOM can render */
@@ -150,6 +126,7 @@ class PubPresentation extends Component {
 			}, 0);
 		}
 	}
+
 	render() {
 		const pubData = this.state.pubData;
 		const activeVersion = pubData.versions[0];

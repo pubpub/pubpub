@@ -6,14 +6,9 @@ require('./discussionPreview.scss');
 
 const propTypes = {
 	discussions: PropTypes.array.isRequired,
-	// slug: PropTypes.string.isRequired,
-	// isPresentation: PropTypes.bool,
 	onPreviewClick: PropTypes.func.isRequired,
 };
 
-// const defaultProps = {
-// 	isPresentation: false,
-// };
 
 const DiscussionPreview = function(props) {
 	const hasAttachments = props.discussions.reduce((prev, curr)=> {
@@ -112,5 +107,4 @@ const DiscussionPreview = function(props) {
 };
 
 DiscussionPreview.propTypes = propTypes;
-// DiscussionPreview.defaultProps = defaultProps;
 export default DiscussionPreview;

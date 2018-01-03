@@ -16,9 +16,6 @@ const propTypes = {
 	bannerImage: PropTypes.string,
 	size: PropTypes.string,
 	communityData: PropTypes.object,
-	inputContent: PropTypes.node,
-	// isLarge: PropTypes.bool,
-	// isMinimal: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -31,13 +28,8 @@ const defaultProps = {
 	bannerImage: undefined,
 	size: 'large',
 	communityData: undefined,
-	inputContent: null,
-	// isLarge: false,
-	// isMinimal: false,
 };
 
-// Have space for input
-// Set title if given
 const PubPreview = function(props) {
 	const gradients = [
 		'linear-gradient(to right, rgba(116, 235, 213, 0.5), rgba(172, 182, 229, 0.5))',
