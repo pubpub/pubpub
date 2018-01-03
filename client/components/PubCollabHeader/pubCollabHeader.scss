@@ -92,6 +92,7 @@
 		}
 		.pt-tag {
 			text-transform: capitalize;
+			flex-shrink: 0;
 		}
 	}
 }

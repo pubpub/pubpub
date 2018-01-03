@@ -42,3 +42,6 @@ $pt-border-radius: floor($pt-grid-size / 5);
 .pt-button[class*="pt-icon-"]::before {
 	line-height: inherit;
 }
+.pt-popover-target {
+	width: 100%;
+}

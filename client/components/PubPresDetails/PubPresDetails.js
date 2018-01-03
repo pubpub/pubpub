@@ -14,6 +14,7 @@ const propTypes = {
 	versions: PropTypes.array.isRequired,
 	localPermissions: PropTypes.string,
 	hasHeaderImage: PropTypes.bool,
+	setOverlayPanel: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -108,14 +109,17 @@ const PubPresDetails = function(props) {
 										{props.numDiscussions}
 										<span className="pt-icon-standard pt-align-right pt-icon-chat" />
 									</a>
-									<a href={`/pub/${props.slug}/collaborate`} className="pt-button pt-minimal">
+									{/* <a href={`/pub/${props.slug}/collaborate`} className="pt-button pt-minimal">
 										{props.numSuggestions}
-										{/* <span className="pt-icon-standard pt-icon-manually-entered-data" /> */}
 										<span className="pt-icon-standard pt-align-right pt-icon-doc" />
-									</a>
+									</a> */}
 								</span>
 							}
-							<a href={`/pub/${props.slug}?panel=collaborators`} className="pt-button pt-minimal">
+							<a
+								// href={`/pub/${props.slug}?panel=collaborators`}
+								onClick={()=> { props.setOverlayPanel('collaborators'); }}
+								className="pt-button pt-minimal"
+							>
 								{props.collaborators.length}
 								<span className="pt-icon-standard pt-icon-team" />
 								<span className="avatars">

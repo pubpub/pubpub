@@ -9,6 +9,7 @@ const propTypes = {
 	threadNumber: PropTypes.number,
 	slug: PropTypes.string.isRequired,
 	align: PropTypes.oneOf(['full', 'left', 'right', 'center']),
+	setActiveThread: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -44,6 +45,7 @@ class DiscussionStatic extends Component {
 						discussions={activeThread}
 						slug={this.props.slug}
 						isPresentation={true}
+						onPreviewClick={()=> { this.props.setActiveThread(activeThread[0].threadNumber); }}
 					/>
 				</figure>
 			</div>

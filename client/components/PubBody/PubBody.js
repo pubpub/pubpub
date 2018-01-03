@@ -22,12 +22,14 @@ const propTypes = {
 	slug: PropTypes.string,
 	highlights: PropTypes.array,
 	hoverBackgroundColor: PropTypes.string.isRequired,
+	setActiveThread: PropTypes.func,
 };
 const defaultProps = {
 	onRef: ()=>{},
 	highlights: [],
 	threads: [],
 	slug: '',
+	setActiveThread: ()=>{},
 };
 const contextTypes = {
 	router: PropTypes.object,
@@ -63,6 +65,7 @@ const PubBody = function(props, context) {
 								threads={props.threads}
 								routerContext={context.router}
 								slug={props.slug}
+								setActiveThread={props.setActiveThread}
 							/>
 						</Editor>
 					</div>

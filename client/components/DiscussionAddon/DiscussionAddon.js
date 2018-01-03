@@ -6,6 +6,7 @@ import DiscussionStatic from './DiscussionStatic';
 const propTypes = {
 	threads: PropTypes.array,
 	slug: PropTypes.string,
+	setActiveThread: PropTypes.func,
 	/* All addons get the following props,
 	but certain schema-based addons may not need them */
 	// containerId: PropTypes.string.isRequired,
@@ -15,6 +16,7 @@ const propTypes = {
 const defaultProps = {
 	threads: [],
 	slug: '',
+	setActiveThread: ()=>{},
 };
 
 class DiscussionAddon extends Component {
@@ -62,6 +64,7 @@ class DiscussionAddon extends Component {
 								threadNumber={node.attrs.threadNumber}
 								threads={props.threads}
 								slug={props.slug}
+								setActiveThread={props.setActiveThread}
 							/>
 						);
 					},

@@ -11,7 +11,7 @@ import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 import PubBody from 'components/PubBody/PubBody';
 import License from 'components/License/License';
 
-import { hydrateWrapper, nestDiscussionsToThreads } from 'utilities';
+import { apiFetch, hydrateWrapper, nestDiscussionsToThreads, generateHash } from 'utilities';
 
 require('./pubPresentation.scss');
 
@@ -26,14 +26,21 @@ class PubPresentation extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			editorRef: undefined,
 			activeThreadNumber: undefined,
 			activePanel: undefined,
+			pubData: this.props.pubData,
+			postDiscussionIsLoading: false,
 		};
 
 		this.closeThreadOverlay = this.closeThreadOverlay.bind(this);
 		this.closeDiscussionOverlay = this.closeDiscussionOverlay.bind(this);
 		this.handlePostDiscussion = this.handlePostDiscussion.bind(this);
 		this.handlePutDiscussion = this.handlePutDiscussion.bind(this);
+		this.setOverlayPanel = this.setOverlayPanel.bind(this);
+		this.setActiveThread = this.setActiveThread.bind(this);
+		this.getHighlightContent = this.getHighlightContent.bind(this);
+		this.handleEditorRef = this.handleEditorRef.bind(this);
 	}
 
 	closeThreadOverlay() {
@@ -54,32 +61,122 @@ class PubPresentation extends Component {
 
 	handlePostDiscussion(discussionObject) {
 		// TODO
-		console.log('Gotta post discussion!')
+		// console.log('Gotta post discussion!')
 		// this.props.dispatch(postDiscussion({
 		// 	...discussionObject,
 		// 	communityId: this.props.pubData.data.communityId,
 		// }));
+		this.setState({ postDiscussionIsLoading: true });
+		return apiFetch('/api/discussions', {
+			method: 'POST',
+			body: JSON.stringify({
+				...discussionObject,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then((result)=> {
+			this.setState({
+				postDiscussionIsLoading: false,
+				pubData: {
+					...this.state.pubData,
+					discussions: [
+						...this.state.pubData.discussions,
+						result,
+					],
+				},
+			});
+		})
+		.catch(()=> {
+			this.setState({ postDiscussionIsLoading: false });
+		});
 	}
 	handlePutDiscussion(discussionObject) {
 		// TODO
-		console.log('Gotta put discussion!')
+		// console.log('Gotta put discussion!')
 		// this.props.dispatch(putDiscussion({
 		// 	...discussionObject,
 		// 	communityId: this.props.pubData.data.communityId,
 		// }));
+		return apiFetch('/api/discussions', {
+			method: 'PUT',
+			body: JSON.stringify({
+				...discussionObject,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then((result)=> {
+			this.setState({
+				// putDiscussionIsLoading: false,
+				pubData: {
+					...this.state.pubData,
+					discussions: this.state.pubData.discussions.map((item)=> {
+						if (item.id !== result.id) { return item; }
+						return {
+							...item,
+							...result,
+						};
+					}),
+				},
+			});
+		});
 	}
-
+	setOverlayPanel(panel) {
+		this.setState({ activePanel: panel });
+	}
+	setActiveThread(threadNumber) {
+		this.setState({ activeThreadNumber: threadNumber });
+	}
+	getHighlightContent(from, to) {
+		const primaryEditorState = this.state.editorRef.state.editorState;
+		if (!primaryEditorState || primaryEditorState.doc.nodeSize < from || primaryEditorState.doc.nodeSize < to) { return {}; }
+		const exact = primaryEditorState.doc.textBetween(from, to);
+		const prefix = primaryEditorState.doc.textBetween(Math.max(0, from - 10), Math.max(0, from));
+		const suffix = primaryEditorState.doc.textBetween(Math.min(primaryEditorState.doc.nodeSize - 2, to), Math.min(primaryEditorState.doc.nodeSize - 2, to + 10));
+		return {
+			exact: exact,
+			prefix: prefix,
+			suffix: suffix,
+			from: from,
+			to: to,
+			version: undefined,
+			id: `h${generateHash(8)}`, // Has to start with letter since it's a classname
+		};
+	}
+	handleEditorRef(ref) {
+		if (!this.state.editorRef) {
+			/* Need to set timeout so DOM can render */
+			setTimeout(()=> {
+				this.setState({ editorRef: ref });
+			}, 0);
+		}
+	}
 	render() {
-		const pubData = this.props.pubData;
+		const pubData = this.state.pubData;
 		const activeVersion = pubData.versions[0];
 		const discussions = pubData.discussions || [];
 		const threads = nestDiscussionsToThreads(discussions);
 		const activeThread = threads.reduce((prev, curr)=> {
-			if (String(curr[0].threadNumber) === this.state.activeThreadNumber) {
+			if (curr[0].threadNumber === this.state.activeThreadNumber) {
 				return curr;
 			}
 			return prev;
 		}, undefined);
+
+		const highlights = [];
+		const queryObject = this.props.locationData.query;
+		if (typeof window !== 'undefined' && this.state.editorRef && queryObject.from && queryObject.to && queryObject.version) {
+			highlights.push({
+				...this.getHighlightContent(Number(queryObject.from), Number(queryObject.to)),
+				permanent: true,
+			});
+			setTimeout(()=> {
+				const thing = document.getElementsByClassName('permanent')[0];
+				if (thing) {
+					window.scrollTo(0, thing.getBoundingClientRect().top - 135);
+				}
+			}, 100);
+		}
+
 		return (
 			<div id="pub-presentation-container">
 				<PageWrapper
@@ -117,16 +214,18 @@ class PubPresentation extends Component {
 								versions={pubData.versions}
 								localPermissions={pubData.localPermissions}
 								hasHeaderImage={pubData.useHeaderImage && !!pubData.avatar}
+								setOverlayPanel={this.setOverlayPanel}
 							/>
 
 							<PubBody
-								// TODO onRef={this.handleEditorRef}
+								onRef={this.handleEditorRef}
 								versionId={activeVersion.id}
 								content={activeVersion.content}
 								threads={threads}
 								slug={pubData.slug}
-								// TODO highlights={highlights}
+								highlights={highlights}
 								hoverBackgroundColor={this.props.communityData.accentMinimalColor}
+								setActiveThread={this.setActiveThread}
 							/>
 
 							<PubPresFooter
@@ -149,9 +248,9 @@ class PubPresentation extends Component {
 									pathname={`${this.props.locationData.path}${this.props.locationData.queryString}`}
 									handleReplySubmit={this.handlePostDiscussion}
 									handleReplyEdit={this.handlePutDiscussion}
-									submitIsLoading={this.props.pubData.postDiscussionIsLoading}
+									submitIsLoading={this.state.postDiscussionIsLoading}
 									isPresentation={true}
-									// TODO getHighlightContent={this.getHighlightContent}
+									getHighlightContent={this.getHighlightContent}
 									hoverBackgroundColor={this.props.communityData.accentMinimalColor}
 								/>
 							</Overlay>
