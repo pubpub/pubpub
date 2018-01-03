@@ -52,16 +52,29 @@ export const findPub = (req, initialData)=> {
 			}
 		]
 	});
+	// const getVersionsList = 5;
+	const getVersionsList = Pub.findOne({
+		where: {
+			slug: req.params.slug.toLowerCase(),
+			communityId: initialData.communityData.id,
+		},
+		attributes: ['id'],
+		include: [{
+			required: false,
+			model: Version,
+			as: 'versions',
+			attributes: ['createdAt', 'id']
+		}]
+	});
 	const getCommunityAdminData = CommunityAdmin.findOne({
 		where: {
 			userId: initialData.loginData.id,
 			communityId: initialData.communityData.id,
 		}
 	});
-	return Promise.all([getPubData, getCommunityAdminData])
-	.then(([pubData, communityAdminData])=> {
+	return Promise.all([getPubData, getVersionsList, getCommunityAdminData])
+	.then(([pubData, versionsListData, communityAdminData])=> {
 		if (!pubData) { throw new Error('Pub Not Found'); }
-
 		const pubDataJson = pubData.toJSON();
 		const userPermissions = pubDataJson.collaborators.reduce((prev, curr)=> {
 			if (curr.id === initialData.loginData.id) { return curr.Collaborator.permissions; }
@@ -70,6 +83,7 @@ export const findPub = (req, initialData)=> {
 		const adminPermissions = communityAdminData ? pubDataJson.adminPermissions : 'none';
 		const formattedPubData = {
 			...pubDataJson,
+			versionsList: versionsListData.versions,
 			collaborators: [
 				...pubDataJson.collaborators,
 				...pubDataJson.emptyCollaborators.map((item)=> {

@@ -130,6 +130,12 @@ class PubPresentation extends Component {
 	render() {
 		const pubData = this.state.pubData;
 		const activeVersion = pubData.versions[0];
+		const versionsList = pubData.versionsList.map((item)=> {
+			if (item.id === activeVersion.id) {
+				return { ...item, isActive: true };
+			}
+			return item;
+		});
 		const discussions = pubData.discussions || [];
 		const threads = nestDiscussionsToThreads(discussions);
 		const activeThread = threads.reduce((prev, curr)=> {
@@ -188,7 +194,7 @@ class PubPresentation extends Component {
 									return prev;
 								}, 0)}
 								collaborators={pubData.collaborators}
-								versions={pubData.versions}
+								versions={versionsList}
 								localPermissions={pubData.localPermissions}
 								hasHeaderImage={pubData.useHeaderImage && !!pubData.avatar}
 								setOverlayPanel={this.setOverlayPanel}
