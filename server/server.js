@@ -59,48 +59,12 @@ app.use(session({
 	},
 }));
 
-/* -------- */
-/* Configure app CORS */
-/* -------- */
-// const whitelist = [
-// 	/* Localhost */
-// 	/http:\/\/localhost:([0-9]+)*/i,
-// 	/* PubPub Subdomains */
-// 	/https:\/\/([a-z0-9-]+)*.pubpub.org/i,
-// 	/* Custom domains */
-// 	'https://pub.fiftynifty.org',
-// 	'https://pubpub.ito.com',
-// 	'https://www.responsivescience.org',
-// 	'https://www.reclamationsci.com',
-// 	'https://jods.mitpress.mit.edu',
-// 	'https://contemporaryarts.mit.edu',
-// 	'https://www.tjoe.org',
-// ];
-
-// const corsOptions = {
-// 	origin: function (origin, callback) {
-// 		// This assumes the browser implements CORS.
-// 		// origin being undefined means the request is made on a local route
-// 		const originIsWhitelisted = whitelist.reduce((prev, curr)=> {
-// 			if (curr.test && curr.test(origin)) { return true; }
-// 			if (curr === origin) { return true; }
-// 			return prev;
-// 		}, false) || origin === undefined;
-// 		callback(originIsWhitelisted ? null : 'Bad Request', originIsWhitelisted);
-// 	},
-// 	methods: 'POST, GET, PUT, DELETE, OPTIONS',
-// 	allowHeaders: 'X-Requested-With, Content-Type',
-// 	credentials: true,
-// };
-// app.use(cors(corsOptions));
-
 /* ------------------- */
 /* Configure app login */
 /* ------------------- */
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(User.createStrategy());
-// Use static serialize and deserialize of model for passport session support
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 /* -------------------- */
@@ -124,6 +88,7 @@ app.use('/robots.txt', express.static('static/robots.txt'));
 /* Set Hostname for Dev */
 app.use((req, res, next)=> {
 	if (req.hostname.indexOf('localhost') > -1) { req.headers.host = 'dev.pubpub.org'; }
+	/* Once migrated to live, the following two can be removed */
 	if (req.hostname.indexOf('ssl.pubpub.org') > -1) { req.headers.host = 'dev.pubpub.org'; }
 	if (req.hostname.indexOf('dev2.pubpub.org') > -1) { req.headers.host = 'dev.pubpub.org'; }
 	next();

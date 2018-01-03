@@ -45,19 +45,7 @@ body {
 	}
 }
 
-// Import Custom Icon Fonts
-// ****************************
-// @font-face {
-// 	font-family: 'pubpub-icons';
-// 	src:  url('/static/icons/pubpub-icons.eot');
-// 	src:  url('/static/icons/pubpub-icons.eot#iefix') format('embedded-opentype'),
-// 		url('/static/icons/pubpub-icons.ttf') format('truetype'),
-// 		url('/static/icons/pubpub-icons.woff') format('woff'),
-// 		url('/static/icons/pubpub-icons.svg#pubpub-icons') format('svg');
-// }
-
 @include font-face("pubpub-icons", "../static/icons/pubpub-icons", $file-formats: eot woff ttf svg);
-
 .pt-icon-team:before { font-family: 'pubpub-icons' !important; content: "\e903"; }
 .pt-icon-edit2:before { font-family: 'pubpub-icons' !important; content: "\e904"; }
 .pt-icon-doc:before { font-family: 'pubpub-icons' !important; content: "\e902"; }

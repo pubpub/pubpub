@@ -81,16 +81,10 @@ module.exports = {
 					],
 				})
 			},
-			// {
-			// 	test: /\.(woff|woff2)$/,
-			// 	use: [
-			// 		{ loader: 'url-loader', query: { name: 'fonts/[hash].[ext]', limit: 5000, mimetype: 'application/font-woff' } }
-			// 	]
-			// },
 			{
 				test: /\.(ttf|eot|svg|woff|woff2)$/,
 				use: [
-					{ loader: 'file-loader', query: { name: '/fonts/[hash].[ext]' } }
+					{ loader: 'file-loader', query: { name: 'fonts/[hash].[ext]', publicPath: '/dist/' } }
 				]
 			}
 		],

@@ -67,17 +67,11 @@ module.exports = {
 				test: /\.scss$/,
 				use: extractSass.extract({
 					use: [
-						{ loader: 'css-loader', options: { minimize: false } },
+						{ loader: 'css-loader', options: { minimize: true } },
 						{ loader: 'sass-loader', options: { includePaths: [resolve(__dirname, '../')] } }
 					],
 				})
 			},
-			// {
-			// 	test: /\.(woff|woff2)$/,
-			// 	use: [
-			// 		{ loader: 'url-loader', query: { name: 'fonts/[hash].[ext]', limit: 5000, mimetype: 'application/font-woff' } }
-			// 	]
-			// },
 			{
 				test: /\.(ttf|eot|svg|woff|woff2)$/,
 				use: [
@@ -98,18 +92,18 @@ module.exports = {
 			names: ['vendor'],
 			minChunks: Infinity,
 		}),
-		// new webpack.optimize.UglifyJsPlugin({
-		// 	compressor: {
-		// 		warnings: false,
-		// 		screw_ie8: true,
-		// 		unused: true,
-		// 		dead_code: true,
-		// 	},
-		// 	output: {
-		// 		comments: false,
-		// 	},
-		// 	sourceMap: true,
-		// }),
+		new webpack.optimize.UglifyJsPlugin({
+			compressor: {
+				warnings: false,
+				screw_ie8: true,
+				unused: true,
+				dead_code: true,
+			},
+			output: {
+				comments: false,
+			},
+			sourceMap: true,
+		}),
 		new ManifestPlugin({ publicPath: 'https://static.pubpub.org/dist/' }),
 	],
 	node: {
