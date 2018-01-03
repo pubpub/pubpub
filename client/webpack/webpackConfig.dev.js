@@ -24,6 +24,7 @@ module.exports = {
 		...containerEntries,
 		baseStyle: resolve(__dirname, '../baseStyle.scss'),
 		vendor: [
+			resolve(__dirname, '../../static/objectEntriesPolyfill.js'),
 			'@blueprintjs/core',
 			'@blueprintjs/labs',
 			'@pubpub/editor',
@@ -80,14 +81,14 @@ module.exports = {
 					],
 				})
 			},
+			// {
+			// 	test: /\.(woff|woff2)$/,
+			// 	use: [
+			// 		{ loader: 'url-loader', query: { name: 'fonts/[hash].[ext]', limit: 5000, mimetype: 'application/font-woff' } }
+			// 	]
+			// },
 			{
-				test: /\.(woff|woff2)$/,
-				use: [
-					{ loader: 'url-loader', query: { name: 'fonts/[hash].[ext]', limit: 5000, mimetype: 'application/font-woff' } }
-				]
-			},
-			{
-				test: /\.(ttf|eot|svg)$/,
+				test: /\.(ttf|eot|svg|woff|woff2)$/,
 				use: [
 					{ loader: 'file-loader', query: { name: 'fonts/[hash].[ext]' } }
 				]
