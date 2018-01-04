@@ -7,6 +7,16 @@ export const hydrateWrapper = (Component)=> {
 	if (typeof window !== 'undefined' && window.location.origin !== 'http://localhost:9001') {
 		FocusStyleManager.onlyShowFocusOnTabs();
 
+		/* Remove any leftover service workers from last PubPub instance */
+		if (window.navigator && navigator.serviceWorker) {
+			navigator.serviceWorker.getRegistrations()
+			.then((registrations)=> {
+				registrations.forEach((registration)=> {
+					registration.unregister();
+				});
+			});
+		}
+
 		const initialData = JSON.parse(document.getElementById('initial-data').getAttribute('data-json'));
 		const isDev = window.location.origin.indexOf('localhost:') > -1;
 		if (!isDev) {
