@@ -97,13 +97,23 @@ class CollectionSubmit extends Component {
 										</div>
 									}
 									<div className="button-wrapper">
-										<Button
-											className="pt-large pt-intent-primary"
-											text="Create Pub"
-											iconName={!collectionData.isPublic ? 'lock2' : ''}
-											loading={this.state.createPubIsLoading}
-											onClick={this.handleCreatePub}
-										/>
+										{this.props.loginData.id &&
+											<Button
+												className="pt-large pt-intent-primary"
+												text="Create Pub"
+												iconName={!collectionData.isPublic ? 'lock2' : ''}
+												loading={this.state.createPubIsLoading}
+												onClick={this.handleCreatePub}
+											/>
+										}
+										{!this.props.loginData.id &&
+											<a
+												href={`/login?redirect=${this.props.locationData.path}`}
+												className="pt-large pt-button pt-intent-primary"
+											>
+												Login to Create Pub
+											</a>
+										}
 									</div>
 
 								</div>

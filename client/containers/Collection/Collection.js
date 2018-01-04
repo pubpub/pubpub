@@ -173,13 +173,23 @@ class Collection extends Component {
 								<div className="col-12">
 									{!collectionData.isPage && collectionData.isOpenSubmissions &&
 										<div className="create-pub-wrapper">
-											<Button
-												type="button"
-												className="pt-button pt-intent-primary"
-												loading={this.state.createPubIsLoading}
-												onClick={this.handleCreatePub}
-												text="Create Pub in Collection"
-											/>
+											{this.props.loginData.id &&
+												<Button
+													type="button"
+													className="pt-button pt-intent-primary"
+													loading={this.state.createPubIsLoading}
+													onClick={this.handleCreatePub}
+													text="Create Pub in Collection"
+												/>
+											}
+											{!this.props.loginData.id &&
+												<a
+													href={`/login?redirect=${this.props.locationData.path}`}
+													className="pt-button pt-intent-primary"
+												>
+													Login to Create Pub
+												</a>
+											}
 											{collectionData.createPubMessage &&
 												<a href={`/${collectionData.slug}/submit`} className="instructions-link">
 													Submission Instructions
