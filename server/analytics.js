@@ -6,6 +6,9 @@ export default (uaCode)=> {
 		visitor.event(options.category, options.action, options.label, options.value, (err)=> { return emitted ? emitted(err) : null; });
 	}
 	return (req, res, next)=> {
+		if (req.hostname === 'dev.pubpub.org') {
+			return next();
+		}
 		if (!req.headers['x-forwarded-for']) {
 			req.headers['x-forwarded-for'] = '0.0.0.0';
 		}
@@ -23,6 +26,6 @@ export default (uaCode)=> {
 		req.ga = {
 			event: GAEventEmitter
 		};
-		next();
+		return next();
 	};
 };

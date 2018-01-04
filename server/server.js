@@ -98,9 +98,7 @@ app.use((req, res, next)=> {
 
 require('./apiRoutes');
 
-if (process.env.NODE_ENV === 'production') {
-	app.use(analytics('UA-61723493-6'));
-}
+app.use(analytics('UA-61723493-6'));
 require('./clientRoutes');
 /* ------------------- */
 /* ------------------- */

@@ -153,7 +153,7 @@ export const findPub = (req, initialData)=> {
 		if (!formattedPubData.versions.length && formattedPubData.localPermissions === 'none') { throw new Error('Pub Not Found'); }
 		return formattedPubData;
 	});
-}
+};
 
 export const findCollection = (collectionId, useIncludes, initialData)=> {
 	const includes = useIncludes
