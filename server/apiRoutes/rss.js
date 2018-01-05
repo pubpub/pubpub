@@ -4,7 +4,7 @@ import { Community, Pub, User, Collaborator, Collection } from '../models';
 
 app.get('/rss.xml', (req, res)=> {
 	const hostname = req.hostname;
-	const whereQuery = hostname.indexOf('.pubpub.org')
+	const whereQuery = hostname.indexOf('.pubpub.org') > -1
 		? { subdomain: hostname.replace('.pubpub.org', '') }
 		: { domain: hostname };
 
