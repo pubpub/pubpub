@@ -52,21 +52,21 @@ const PubPreview = function(props) {
 	return (
 		<div className={`pub-preview-component ${props.size}-preview`}>
 			{props.size !== 'small' &&
-				<a href={pubLink}>
+				<a href={pubLink} alt={props.title}>
 					<div className="banner-image" style={bannerStyle} />
 				</a>
 			}
 			<div className="content">
 				<div className="content-text">
 					{props.communityData &&
-						<a href={communityUrl} className="community-banner" style={{ backgroundColor: props.communityData.accentColor }}>
+						<a href={communityUrl} alt={props.communityData.title} className="community-banner" style={{ backgroundColor: props.communityData.accentColor }}>
 							<img
 								alt={`${props.communityData.title} logo`}
 								src={resizedSmallHeaderLogo}
 							/>
 						</a>
 					}
-					<a href={pubLink}><h3 className="title">{props.title}</h3></a>
+					<a href={pubLink} alt={props.title}><h3 className="title">{props.title}</h3></a>
 					{props.description &&
 						<div className="description">{props.description}</div>
 					}
