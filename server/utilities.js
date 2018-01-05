@@ -19,7 +19,7 @@ export const renderToNodeStream = (res, reactElement)=> {
 
 export const getInitialData = (req)=> {
 	const hostname = req.hostname;
-	const whereQuery = hostname.indexOf('.pubpub.org')
+	const whereQuery = hostname.indexOf('.pubpub.org') > -1
 		? { subdomain: hostname.replace('.pubpub.org', '') }
 		: { domain: hostname };
 
