@@ -5,7 +5,7 @@ import queryString from 'query-string';
 import { Community, Collection, User } from './models';
 
 export const hostIsValid = (req, access)=> {
-	const isBasePubPub = req.hostname === 'www.pubpub.org' || req.hostname === 'v4.pubpub.org';
+	const isBasePubPub = req.hostname === 'www.pubpub.org';
 	if (!isBasePubPub && access !== 'community') { return false; }
 	if (isBasePubPub && access !== 'pubpub') { return false; }
 	return true;
@@ -23,6 +23,7 @@ export const getInitialData = (req)=> {
 		? { subdomain: hostname.replace('.pubpub.org', '') }
 		: { domain: hostname };
 
+	console.log('whereQuery', whereQuery, req.hostname);
 	/* Gather user data */
 	const user = req.user || {};
 	const loginData = {
@@ -42,7 +43,7 @@ export const getInitialData = (req)=> {
 		queryString: req.query
 			? `?${queryString.stringify(req.query)}`
 			: '',
-		isBasePubPub: hostname === 'www.pubpub.org' || hostname === 'v4.pubpub.org',
+		isBasePubPub: hostname === 'www.pubpub.org',
 
 	};
 

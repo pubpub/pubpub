@@ -90,9 +90,7 @@ app.use('/robots.txt', express.static('static/robots.txt'));
 /* Set Hostname for Dev */
 app.use((req, res, next)=> {
 	if (req.hostname.indexOf('localhost') > -1) { req.headers.host = 'dev.pubpub.org'; }
-	/* Once migrated to live, the following two can be removed */
-	if (req.hostname.indexOf('ssl.pubpub.org') > -1) { req.headers.host = 'dev.pubpub.org'; }
-	if (req.hostname.indexOf('dev2.pubpub.org') > -1) { req.headers.host = 'dev.pubpub.org'; }
+	if (req.hostname.indexOf('v4.pubpub.org') > -1) { req.headers.host = 'www.pubpub.org'; }
 	next();
 });
 
