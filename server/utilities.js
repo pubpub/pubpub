@@ -23,7 +23,6 @@ export const getInitialData = (req)=> {
 		? { subdomain: hostname.replace('.pubpub.org', '') }
 		: { domain: hostname };
 
-	console.log('whereQuery', whereQuery, req.hostname);
 	/* Gather user data */
 	const user = req.user || {};
 	const loginData = {
