@@ -32,7 +32,7 @@ const defaultProps = {
 
 const CommunityPreview = function(props) {
 	const resizedHeaderLogo = getResizedUrl(props.largeHeaderLogo, 'fit-in', '600x0');
-	const resizedHeaderBackground = getResizedUrl(props.largeHeaderBackground, 'fit-in', '1200x0');
+	const resizedHeaderBackground = getResizedUrl(props.largeHeaderBackground, 'fit-in', '800x0');
 	const backgroundStyle = {
 		backgroundColor: props.accentColor,
 		color: props.accentTextColor,
