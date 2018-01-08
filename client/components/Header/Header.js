@@ -49,9 +49,11 @@ class Header extends Component {
 	}
 
 	componentDidMount() {
-		this.setState({
-			redirect: `?redirect=${window.location.pathname}${window.location.search}`
-		});
+		if (window.location.pathname !== '/') {
+			this.setState({
+				redirect: `?redirect=${window.location.pathname}${window.location.search}`
+			});
+		}
 	}
 	handleLogout() {
 		apiFetch('/api/logout')

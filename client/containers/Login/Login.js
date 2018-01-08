@@ -43,7 +43,7 @@ class Login extends Component {
 			window.location.href = this.props.locationData.query.redirect || '/';
 		})
 		.catch((err)=> {
-			this.setState({ loginLoading: false, loginError: err });
+			this.setState({ loginLoading: false, loginError: 'Invalid Email or Password' });
 		});
 	}
 
