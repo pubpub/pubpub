@@ -16,6 +16,8 @@ const propTypes = {
 	bannerImage: PropTypes.string,
 	size: PropTypes.string,
 	communityData: PropTypes.object,
+	inputContent: PropTypes.node,
+	isPlaceholder: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -28,6 +30,8 @@ const defaultProps = {
 	bannerImage: undefined,
 	size: 'large',
 	communityData: undefined,
+	inputContent: null,
+	isPlaceholder: false,
 };
 
 const PubPreview = function(props) {
@@ -48,6 +52,26 @@ const PubPreview = function(props) {
 	const communityHostname = props.communityData && (props.communityData.domain || `${props.communityData.subdomain}.pubpub.org`);
 	const communityUrl = props.communityData && (props.communityData.domain ? `https://${props.communityData.domain}` : `https://${props.communityData.subdomain}.pubpub.org`);
 	const pubLink = props.communityData ? `https://${communityHostname}/pub/${props.slug}` : `/pub/${props.slug}`;
+
+	/* Placeholder state */
+	if (!props.slug) {
+		return (
+			<div className={`pub-preview-component skeleton ${props.size}-preview ${props.isPlaceholder ? 'placeholder' : ''}`}>
+				<div className="pt-skeleton banner-image" />
+				<div className="content">
+					{props.title
+						? <h3 className="title">{props.title}</h3>
+						: <h3 className="pt-skeleton title">-</h3>
+					}
+					<div className="pt-skeleton description" />
+					<div className="pt-skeleton description" />
+					<div className="input-wrapper">
+						{props.inputContent}
+					</div>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className={`pub-preview-component ${props.size}-preview`}>
