@@ -6,6 +6,7 @@ require('./navBar.scss');
 
 const propTypes = {
 	navItems: PropTypes.array.isRequired,
+	socialItems: PropTypes.array.isRequired,
 };
 
 const NavBar = function(props) {
@@ -14,7 +15,7 @@ const NavBar = function(props) {
 			<div className="container">
 				<div className="row">
 					<div className="col-12">
-						<ul>
+						<ul className="nav-list">
 							{props.navItems.filter((item)=> {
 								return !!item;
 							}).map((item)=> {
@@ -66,6 +67,19 @@ const NavBar = function(props) {
 								);
 							})}
 						</ul>
+						{!!props.socialItems.length &&
+							<ul className="social-list">
+								{props.socialItems.map((item)=> {
+									return (
+										<a href={item.url} key={`social-item-${item.id}`}>
+											<li>
+												<span className={`pt-icon-standard ${item.icon}`} />
+											</li>
+										</a>
+									);
+								})}
+							</ul>
+						}
 					</div>
 				</div>
 			</div>

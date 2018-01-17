@@ -111,6 +111,10 @@ app.put('/api/communities', (req, res)=> {
 			'largeHeaderBackground',
 			'accentColor',
 			'navigation',
+			'website',
+			'twitter',
+			'facebook',
+			'email',
 		].indexOf(key) > -1) {
 			updatedCommunity[key] = req.body[key] && req.body[key].trim ? req.body[key].trim() : req.body[key];
 		}

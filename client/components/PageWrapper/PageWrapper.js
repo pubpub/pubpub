@@ -29,6 +29,15 @@ const PageWrapper = (props)=> {
 	const collections = communityData.collections || [];
 	const navigation = communityData.navigation || [];
 	const navItems = populateNavigationIds(collections, navigation);
+	const socialItems = [
+		{ id: 'si-0', icon: 'pt-icon-globe', title: 'Website', value: communityData.website, url: communityData.website },
+		{ id: 'si-1', icon: 'pt-icon-twitter', title: 'Twitter', value: communityData.twitter, url: `https://twitter.com/${communityData.twitter}` },
+		{ id: 'si-2', icon: 'pt-icon-facebook', title: 'Facebook', value: communityData.facebook, url: `https://facebook.com/${communityData.facebook}` },
+		{ id: 'si-3', icon: 'pt-icon-envelope', title: 'Contact', value: communityData.email, url: `mailto:${communityData.email}` },
+	].filter((item)=> {
+		return item.value;
+	});
+
 	return (
 		<div id="page-wrapper-component">
 			{props.fixHeader &&
@@ -65,7 +74,10 @@ const PageWrapper = (props)=> {
 			/>
 
 			{!props.hideNav &&
-				<NavBar navItems={navItems} />
+				<NavBar
+					navItems={navItems}
+					socialItems={socialItems}
+				/>
 			}
 
 			<div className="page-content">
@@ -76,6 +88,7 @@ const PageWrapper = (props)=> {
 				<Footer
 					isAdmin={loginData.isAdmin}
 					isBasePubPub={props.locationData.isBasePubPub}
+					socialItems={socialItems}
 				/>
 			}
 		</div>

@@ -66,6 +66,10 @@ const Community = sequelize.define('Community', {
 	accentHoverColor: { type: Sequelize.STRING },
 	accentMinimalColor: { type: Sequelize.STRING },
 	navigation: { type: Sequelize.JSONB },
+	website: { type: Sequelize.TEXT },
+	facebook: { type: Sequelize.TEXT },
+	twitter: { type: Sequelize.TEXT },
+	email: { type: Sequelize.TEXT },
 });
 
 const User = sequelize.define('User', {

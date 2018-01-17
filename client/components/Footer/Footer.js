@@ -6,6 +6,7 @@ require('./footer.scss');
 const propTypes = {
 	isBasePubPub: PropTypes.bool.isRequired,
 	isAdmin: PropTypes.bool.isRequired,
+	socialItems: PropTypes.array.isRequired,
 };
 
 const Footer = function(props) {
@@ -18,6 +19,7 @@ const Footer = function(props) {
 		]
 		: [
 			{ id: 1, title: 'Dashboard', url: '/dashboard', adminOnly: true },
+			...props.socialItems,
 			{ id: 2, title: 'RSS', url: '/rss.xml' },
 			{ id: 4, title: 'Terms', url: '/tos' },
 			{ id: 5, title: 'PubPub', url: 'https://www.pubpub.org' }

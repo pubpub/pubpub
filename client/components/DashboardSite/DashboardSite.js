@@ -34,6 +34,10 @@ class DashboardSite extends Component {
 			largeHeaderBackground: props.communityData.largeHeaderBackground,
 			accentColor: props.communityData.accentColor,
 			navigation: props.communityData.navigation,
+			website: props.communityData.website || '',
+			twitter: props.communityData.twitter || '',
+			facebook: props.communityData.facebook || '',
+			email: props.communityData.email || '',
 		};
 		this.handleTitleChange = this.handleTitleChange.bind(this);
 		this.handleSubdomainChange = this.handleSubdomainChange.bind(this);
@@ -45,6 +49,10 @@ class DashboardSite extends Component {
 		this.handleLargeHeaderBackgroundChange = this.handleLargeHeaderBackgroundChange.bind(this);
 		this.handleAccentColorChange = this.handleAccentColorChange.bind(this);
 		this.handleNavigationChange = this.handleNavigationChange.bind(this);
+		this.handleWebsiteChange = this.handleWebsiteChange.bind(this);
+		this.handleTwitterChange = this.handleTwitterChange.bind(this);
+		this.handleFacebookChange = this.handleFacebookChange.bind(this);
+		this.handleEmailChange = this.handleEmailChange.bind(this);
 		this.handleSaveClick = this.handleSaveClick.bind(this);
 	}
 	handleTitleChange(evt) {
@@ -76,6 +84,18 @@ class DashboardSite extends Component {
 	}
 	handleNavigationChange(val) {
 		this.setState({ navigation: val });
+	}
+	handleWebsiteChange(evt) {
+		this.setState({ website: evt.target.value });
+	}
+	handleTwitterChange(evt) {
+		this.setState({ twitter: evt.target.value });
+	}
+	handleFacebookChange(evt) {
+		this.setState({ facebook: evt.target.value });
+	}
+	handleEmailChange(evt) {
+		this.setState({ email: evt.target.value });
 	}
 	handleSaveClick(evt) {
 		evt.preventDefault();
@@ -152,6 +172,32 @@ class DashboardSite extends Component {
 					onNewImage={this.handleLargeHeaderBackgroundChange}
 					width={150}
 					helperText="Used on the landing page. Suggested minimum dimensions: 1200px x 800px."
+				/>
+				<InputField
+					label="Website"
+					type="text"
+					value={this.state.website}
+					onChange={this.handleWebsiteChange}
+				/>
+				<InputField
+					label="Twitter"
+					type="text"
+					value={this.state.twitter}
+					helperText={`https://twitter.com/${this.state.twitter}`}
+					onChange={this.handleTwitterChange}
+				/>
+				<InputField
+					label="Facebook"
+					type="text"
+					value={this.state.facebook}
+					helperText={`https://facebook.com/${this.state.facebook}`}
+					onChange={this.handleFacebookChange}
+				/>
+				<InputField
+					label="Contact Email"
+					type="text"
+					value={this.state.email}
+					onChange={this.handleEmailChange}
 				/>
 				<InputField
 					label="Accent Color"
