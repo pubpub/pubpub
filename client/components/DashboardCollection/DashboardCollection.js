@@ -44,7 +44,12 @@ class DashboardCollection extends Component {
 	}
 	render() {
 		const collectionData = this.props.collectionData;
-		const pubs = collectionData.pubs || [];
+		const pubs = collectionData.pubs.map((item)=> {
+			let status = 'unpublished';
+			if (item.firstPublishedAt) { status = 'published'; }
+			if (item.hasOpenSubmission) { status = 'submitted'; }
+			return { ...item, status: status };
+		}) || [];
 		const sections = [
 			{ title: 'Title', param: 'title', className: 'title' },
 			{ title: '', param: 'edit-button' },
@@ -153,15 +158,12 @@ class DashboardCollection extends Component {
 								if (foo[key] < bar[key]) { return -1 * direction; }
 								return 0;
 							}).map((pub)=> {
-								let status = 'unpublished';
-								if (pub.firstPublishedAt) { status = 'published'; }
-								if (pub.hasOpenSubmission) { status = 'submitted'; }
 								return (
 									<tr key={`collection-pub-${pub.id}`}>
 										<td className="title"><a href={`/pub/${pub.slug}`}>{pub.title}</a></td>
 										<td><a href={`/pub/${pub.slug}/collaborate`} className="pt-button pt-icon-edit pt-minimal" /></td>
-										<td className={`status ${status}`}>
-											{status}
+										<td className={`status ${pub.status}`}>
+											{pub.status}
 										</td>
 										<td className="date"><TimeAgo date={pub.updatedAt} title="Last Modified Date" /></td>
 										<td className="tight">{pub.collaboratorCount}</td>
