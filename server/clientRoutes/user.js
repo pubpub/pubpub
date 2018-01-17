@@ -24,7 +24,7 @@ app.get(['/user/:slug', '/user/:slug/:mode'], (req, res, next)=> {
 					{
 						model: User,
 						as: 'collaborators',
-						attributes: ['id', 'avatar', 'initials'],
+						attributes: ['id', 'avatar', 'initials', 'fullName'],
 						through: { attributes: ['isAuthor'] },
 					},
 					{

@@ -50,7 +50,7 @@ app.get('/api/search/pubs', (req, res)=> {
 		{
 			model: User,
 			as: 'collaborators',
-			attributes: ['id', 'avatar', 'initials'],
+			attributes: ['id', 'avatar', 'initials', 'fullName'],
 			through: { attributes: ['isAuthor'] },
 		},
 		{

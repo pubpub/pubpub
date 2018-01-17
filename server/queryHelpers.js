@@ -169,7 +169,7 @@ export const findCollection = (collectionId, useIncludes, initialData)=> {
 					{
 						model: User,
 						as: 'collaborators',
-						attributes: ['id', 'avatar', 'initials'],
+						attributes: ['id', 'avatar', 'initials', 'fullName'],
 						through: { attributes: ['isAuthor'] },
 					},
 					{
@@ -279,7 +279,7 @@ export const getPubSearch = (query, initialData)=> {
 		{
 			model: User,
 			as: 'collaborators',
-			attributes: ['id', 'avatar', 'initials'],
+			attributes: ['id', 'avatar', 'initials', 'fullName'],
 			through: { attributes: ['isAuthor'] },
 		},
 		{
