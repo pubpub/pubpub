@@ -22,12 +22,14 @@
 	}
 	.headerItemsRight {
 		float: right;
+		position: relative;
+		left: 5px;
 	}
 	.headerLogo {
 		height: 40px;
 		display: block;
 	}
-	.avatar-button.pt-button.pt-large {
+	.avatar-button.pt-button.pt-large, .pt-button.pt-large.pt-minimal {
 		padding: 0px 5px;
 	}
 	.community-header {
