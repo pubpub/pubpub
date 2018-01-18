@@ -20,6 +20,7 @@ app.post('/api/collaborators', (req, res)=> {
 			userId: req.body.userId,
 			pubId: req.body.pubId,
 			isAuthor: false,
+			isContributor: false,
 			name: req.body.name,
 			permissions: 'none',
 			order: req.body.order,
@@ -64,7 +65,7 @@ app.put('/api/collaborators', (req, res)=> {
 	// Filter to only allow certain fields to be updated
 	const updatedCollaborator = {};
 	Object.keys(req.body).forEach((key)=> {
-		if (['permissions', 'isAuthor', 'name', 'order'].indexOf(key) > -1) {
+		if (['permissions', 'isAuthor', 'isContributor', 'name', 'order', 'roles'].indexOf(key) > -1) {
 			updatedCollaborator[key] = req.body[key];
 		}
 	});

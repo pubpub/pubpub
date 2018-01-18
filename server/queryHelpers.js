@@ -94,6 +94,9 @@ export const findPub = (req, initialData)=> {
 						Collaborator: {
 							id: item.id,
 							isAuthor: item.isAuthor,
+							isContributor: item.isContributor,
+							title: item.title,
+							roles: item.roles,
 							permissions: item.permissions,
 							order: item.order,
 							createdAt: item.createdAt,

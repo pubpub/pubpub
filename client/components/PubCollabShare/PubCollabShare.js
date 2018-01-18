@@ -40,7 +40,10 @@ class PubCollabShare extends Component {
 		this.state = {
 			collaborationMode: this.props.pubData.collaborationMode,
 			adminPermissions: this.props.pubData.adminPermissions,
-			collaborators: this.props.pubData.collaborators.sort((foo, bar)=> {
+			collaborators: this.props.pubData.collaborators.filter((item)=> {
+				return this.props.canManage || item.Collaborator.isAuthor || item.Collaborator.isContributor;
+			}).sort((foo, bar)=> {
+				if (!this.props.canManage && foo.Collaborator.isAuthor && !bar.Collaborator.isAuthor) { return -1; }
 				if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
 				if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
 				if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
@@ -66,21 +69,7 @@ class PubCollabShare extends Component {
 			});
 		}
 	}
-	handleUserSelect(user) {
-		const calculateOrder = this.state.collaborators[0].Collaborator.order / 2;
-		this.props.onCollaboratorAdd({
-			userId: user.id,
-			name: user.name,
-			order: calculateOrder,
-			pubId: this.props.pubData.id,
-		});
-	}
-	handleCollaborationModeChange(value) {
-		this.setState({ collaborationMode: value });
-		this.props.onPutPub({
-			collaborationMode: value,
-		});
-	}
+
 	onDragEnd(result) {
 		if (!result.destination) { return null; }
 		const sourceIndex = result.source.index;
@@ -117,6 +106,21 @@ class PubCollabShare extends Component {
 				if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
 				return 0;
 			})
+		});
+	}
+	handleUserSelect(user) {
+		const calculateOrder = this.state.collaborators[0].Collaborator.order / 2;
+		this.props.onCollaboratorAdd({
+			userId: user.id,
+			name: user.name,
+			order: calculateOrder,
+			pubId: this.props.pubData.id,
+		});
+	}
+	handleCollaborationModeChange(value) {
+		this.setState({ collaborationMode: value });
+		this.props.onPutPub({
+			collaborationMode: value,
 		});
 	}
 

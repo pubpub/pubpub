@@ -6,8 +6,21 @@
 	padding: 1em 0em;
 	width: 100%;
 	border-bottom: 1px solid #CCC;
-	&.permission-mode {
-		align-items: center;
+	&.static {
+		.content {
+			.name {
+				margin-bottom: 0px;
+				.pt-tag {
+					float: right;
+					font-weight: 400;
+				}
+			}
+			.role-wrapper {
+				.pt-tag {
+					margin: 8px 8px 0px 0px;
+				}
+			}
+		}
 	}
 	.content {
 		flex-shrink: 1;
@@ -17,6 +30,11 @@
 			font-size: 16px;
 			font-weight: bold;
 			margin-bottom: 0.5em;
+		}
+		.pt-checkbox {
+			display: inline-block;
+			margin-right: 2em;
+			padding-left: 20px;
 		}
 	}
 }

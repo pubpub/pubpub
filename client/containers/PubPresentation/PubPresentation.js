@@ -166,8 +166,7 @@ class PubPresentation extends Component {
 			return collaborator.Collaborator.isAuthor;
 		});
 		const contributors = pubData.collaborators.filter((collaborator)=> {
-			// TODO: Remove the or statement
-			return collaborator.Collaborator.isContributor || !collaborator.Collaborator.isAuthor;
+			return collaborator.Collaborator.isContributor;
 		});
 
 		return (
@@ -218,16 +217,49 @@ class PubPresentation extends Component {
 										<div className="pub-side-content">
 											{!!authors.length &&
 												<div className="side-block">
-													<p>Authors</p>
-													{authors.map((item)=> {
+													<p>
+														<a
+															href={`/pub/${pubData.slug}/collaborators`}
+															onClick={(evt)=> {
+																evt.preventDefault();
+																this.setOverlayPanel('collaborators');
+															}}
+														>
+															Authors
+														</a>
+													</p>
+
+													{authors.sort((foo, bar)=> {
+														if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
+														if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
+														if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
+														if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
+														return 0;
+													}).map((item)=> {
 														return <PubPresSideUser user={item} key={item.id} />;
 													})}
 												</div>
 											}
 											{!!contributors.length &&
 												<div className="side-block">
-													<p>Contributors</p>
-													{contributors.map((item)=> {
+													<p>
+														<a
+															href={`/pub/${pubData.slug}/collaborators`}
+															onClick={(evt)=> {
+																evt.preventDefault();
+																this.setOverlayPanel('collaborators');
+															}}
+														>
+															Contributors
+														</a>
+													</p>
+													{contributors.sort((foo, bar)=> {
+														if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
+														if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
+														if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
+														if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
+														return 0;
+													}).map((item)=> {
 														return <PubPresSideUser user={item} key={item.id} />;
 													})}
 												</div>
