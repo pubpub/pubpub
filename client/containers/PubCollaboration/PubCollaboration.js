@@ -560,6 +560,14 @@ class PubCollaboration extends Component {
 							/>
 						</div>
 					</div>
+
+					<div id="discussions">
+						<div className="discussions-content">
+							<h2>Discussions</h2>
+							Whatever here
+							<button className="pt-button pt-fill">Whateveer</button>
+						</div>
+					</div>
 				</div>
 				{/*<PageWrapper
 					loginData={this.props.loginData}

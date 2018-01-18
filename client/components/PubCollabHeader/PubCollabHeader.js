@@ -73,9 +73,9 @@ const PubCollabHeader = function(props) {
 
 	return (
 		<div className="pub-collab-header-component">
-			<div className="header-logo" style={{ backgroundColor: props.communityData.accentColor }}>
+			<a href="/" className="header-logo" style={{ backgroundColor: props.communityData.accentColor }}>
 				<img alt="header logo" className="headerLogo" src={resizedSmallHeaderLogo} />
-			</div>
+			</a>
 			<div className="header-content">
 				<div className="flex-parent">
 					<div

@@ -4,6 +4,7 @@
 	$titlePanelHeight: 75px;
 	.page-content {
 		min-height: calc(100vh - #{$navHeight});
+		padding-top: 75px;
 		.col-12 {
 			margin-top: 0px;
 			margin-bottom: 0px;
@@ -77,6 +78,16 @@
 			margin: 0 auto;
 			.pub-body-component.loading {
 				opacity: 0;
+			}
+		}
+		#discussions {
+			border-top: 1px solid #E0E0E0;
+			padding: 2em 0em 4em;
+			background-color: #F9F9F9;
+			.discussions-content {
+				max-width: 700px;
+				margin: 0 auto;	
+				padding: 0em 2em;
 			}
 		}
 	}
