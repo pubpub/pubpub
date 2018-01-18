@@ -55,7 +55,7 @@
 		color: inherit;
 		line-height: 1;
 		margin: 0;
-		padding: 50px 0px 20px;
+		padding: 50px 0px 10px;
 		font-weight: 800;
 		letter-spacing: 1px;
 	}
@@ -84,6 +84,14 @@
 		padding-bottom: 40px;
 		.pt-button {
 			font-size: 1.1em;
+		}
+		.date {
+			span {
+				vertical-align: middle;
+				&:first-of-type {
+					padding-right: 20px;
+				}
+			}
 		}
 	}
 }

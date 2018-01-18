@@ -1,6 +1,6 @@
 #pub-presentation-container {
 	.container.pub {
-		max-width: 728px;
+		max-width: 950px;
 	}
 	.license-wrapper {
 		padding: 4em 0em;
@@ -8,12 +8,35 @@
 	.no-snapshots-wrapper {
 		padding: 10em 0em;
 	}
+	.pub-side-content {
+		float: right;
+		width: 250px;
+		padding-left: 50px;
+	}
+	.pub-main-content {
+		margin-right: 250px;
+	}
+	#discussions {
+		.col-12 {
+			padding-right: 250px;
+		}
+		border-top: 1px solid #E0E0E0;
+		padding: 2em 0em 4em;
+		margin-bottom: -2em;
+		background-color: #F9F9F9;
+	}
 }
 
 @media only screen and (max-width: 720px) {
 	#pub-presentation-container {
 		.container.pub {
 			max-width: 100%;
+		}
+		.pub-side-content {
+			display: none;
+		}
+		.pub-main-content {
+			margin-right: 0px;
 		}
 	}
 }	

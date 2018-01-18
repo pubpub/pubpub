@@ -5,11 +5,13 @@ import PageWrapper from 'components/PageWrapper/PageWrapper';
 import Overlay from 'components/Overlay/Overlay';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import PubPresHeader from 'components/PubPresHeader/PubPresHeader';
-import PubPresDetails from 'components/PubPresDetails/PubPresDetails';
-import PubPresFooter from 'components/PubPresFooter/PubPresFooter';
+// import PubPresDetails from 'components/PubPresDetails/PubPresDetails';
+import PubPresSideUser from 'components/PubPresSideUser/PubPresSideUser';
+// import PubPresFooter from 'components/PubPresFooter/PubPresFooter';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 import PubBody from 'components/PubBody/PubBody';
 import License from 'components/License/License';
+import dateFormat from 'dateformat';
 import { apiFetch, hydrateWrapper, nestDiscussionsToThreads, generateHash } from 'utilities';
 
 require('./pubPresentation.scss');
@@ -33,7 +35,7 @@ class PubPresentation extends Component {
 		};
 
 		this.closeThreadOverlay = this.closeThreadOverlay.bind(this);
-		this.closeDiscussionOverlay = this.closeDiscussionOverlay.bind(this);
+		this.closePanelOverlay = this.closePanelOverlay.bind(this);
 		this.handlePostDiscussion = this.handlePostDiscussion.bind(this);
 		this.handlePutDiscussion = this.handlePutDiscussion.bind(this);
 		this.setOverlayPanel = this.setOverlayPanel.bind(this);
@@ -67,7 +69,7 @@ class PubPresentation extends Component {
 	closeThreadOverlay() {
 		this.setState({ activeThreadNumber: undefined });
 	}
-	closeDiscussionOverlay() {
+	closePanelOverlay() {
 		this.setState({ activePanel: undefined });
 	}
 	handlePostDiscussion(discussionObject) {
@@ -160,6 +162,14 @@ class PubPresentation extends Component {
 			}, 100);
 		}
 
+		const authors = pubData.collaborators.filter((collaborator)=> {
+			return collaborator.Collaborator.isAuthor;
+		});
+		const contributors = pubData.collaborators.filter((collaborator)=> {
+			// TODO: Remove the or statement
+			return collaborator.Collaborator.isContributor || !collaborator.Collaborator.isAuthor;
+		});
+
 		return (
 			<div id="pub-presentation-container">
 				<PageWrapper
@@ -202,26 +212,63 @@ class PubPresentation extends Component {
 								setOverlayPanel={this.setOverlayPanel}
 							/>*/}
 
-							<PubBody
-								onRef={this.handleEditorRef}
-								versionId={activeVersion.id}
-								content={activeVersion.content}
-								threads={threads}
-								slug={pubData.slug}
-								highlights={highlights}
-								hoverBackgroundColor={this.props.communityData.accentMinimalColor}
-								setActiveThread={this.setActiveThread}
-							/>
+							<div className="container pub">
+								<div className="row">
+									<div className="col-12">
+										<div className="pub-side-content">
+											{!!authors.length &&
+												<div className="side-block">
+													<p>Authors</p>
+													{authors.map((item)=> {
+														return <PubPresSideUser user={item} key={item.id} />;
+													})}
+												</div>
+											}
+											{!!contributors.length &&
+												<div className="side-block">
+													<p>Contributors</p>
+													{contributors.map((item)=> {
+														return <PubPresSideUser user={item} key={item.id} />;
+													})}
+												</div>
+											}
+										</div>
+										<div className="pub-main-content">
+											<PubBody
+												onRef={this.handleEditorRef}
+												versionId={activeVersion.id}
+												content={activeVersion.content}
+												threads={threads}
+												slug={pubData.slug}
+												highlights={highlights}
+												hoverBackgroundColor={this.props.communityData.accentMinimalColor}
+												setActiveThread={this.setActiveThread}
+											/>
+											<div className="license-wrapper">
+												<License />
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 
-							<PubPresFooter
+							{/* <PubPresFooter
 								slug={pubData.slug}
 								collections={pubData.collections}
 								numDiscussions={pubData.discussions.length}
 								localPermissions={pubData.localPermissions}
-							/>
+							/> */}
 
-							<div className="license-wrapper">
-								<License />
+							<div id="discussions">
+								<div className="container pub">
+									<div className="row">
+										<div className="col-12">
+											<h2>Discussions</h2>
+											Whatever here
+											<button className="pt-button pt-fill">Whateveer</button>
+										</div>
+									</div>
+								</div>
 							</div>
 
 							<Overlay isOpen={!!activeThread} onClose={this.closeThreadOverlay} maxWidth={728}>
@@ -240,13 +287,35 @@ class PubPresentation extends Component {
 								/>
 							</Overlay>
 
-							<Overlay isOpen={this.state.activePanel === 'collaborators'} onClose={this.closeDiscussionOverlay} maxWidth={728}>
+							<Overlay isOpen={this.state.activePanel === 'collaborators'} onClose={this.closePanelOverlay} maxWidth={728}>
 								<PubCollabShare
 									appData={this.props.communityData}
 									pubData={pubData}
 									canManage={false}
 									collaboratorsOnly={true}
 								/>
+							</Overlay>
+							<Overlay isOpen={this.state.activePanel === 'versions'} onClose={this.closePanelOverlay} maxWidth={728}>
+								<div>
+									<h6 style={{ paddingRight: '0px' }}>Published Snapshots</h6>
+									<ul>
+										{versionsList.sort((foo, bar)=>{
+											if (foo.createdAt < bar.createdAt) { return 1; }
+											if (foo.createdAt > bar.createdAt) { return -1; }
+											return 0;
+										}).map((version)=> {
+											return (
+												<li key={`version-${version.id}`}>
+													<a href={`/pub/${pubData.slug}?version=${version.id}`} className="pt-menu-item pt-popover-dismiss">
+														<span style={{ fontWeight: version.isActive ? '600' : 'normal' }}>
+															{dateFormat(version.createdAt, 'mmm dd, yyyy · HH:MM')}
+														</span>
+													</a>
+												</li>
+											);
+										})}
+									</ul>
+								</div>
 							</Overlay>
 						</div>
 					}

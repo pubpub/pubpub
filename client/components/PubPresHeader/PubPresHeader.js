@@ -42,8 +42,8 @@ const PubPresHeader = function(props) {
 								<div className="buttons">
 									<div className="pt-button-group pt-minimal">
 										<a href={`/pub/${pubData.slug}/collaborate`} className="pt-button">Edit Pub</a>
-										<a href="/" className="pt-button">Invite Reviewer</a>
-										<a href="/" className="pt-button">More</a>
+										{/* <a href="/" className="pt-button">Invite Reviewer</a> */}
+										{/* <a href="/" className="pt-button">More</a> */}
 									</div>
 								</div>
 							</div>
@@ -80,22 +80,33 @@ const PubPresHeader = function(props) {
 							}
 							<div className="details">
 								<a
-									href={'/'}
+									href={`/pub/${pubData.slug}/versions`}
 									className="pt-button pt-minimal date"
+									onClick={(evt)=> {
+										evt.preventDefault();
+										props.setOverlayPanel('versions');
+									}}
 								>
-									{dateFormat(pubData.versions[0].createdAt, 'mmm dd, yyyy')}
+									<span>{dateFormat(pubData.versions[0].createdAt, 'mmm dd, yyyy')}</span>
+									<span>{pubData.versionsList.length}</span>
+									<span className="pt-icon-standard pt-align-right pt-icon-multi-select" />
+
+									
 								</a>
 								<a
-									href={`/pub/${pubData.slug}/collaborate`}
+									href="#discussions"
 									className="pt-button pt-minimal discussions"
 								>
 									{pubData.discussions.length}
 									<span className="pt-icon-standard pt-align-right pt-icon-chat" />
 								</a>
 								<a
-									href={`/pub/${pubData.slug}?panel=collaborators`}
-									onClick={()=> { props.setOverlayPanel('collaborators'); }}
+									href={`/pub/${pubData.slug}/collaborators`}
 									className="pt-button pt-minimal collaborators"
+									onClick={(evt)=> {
+										evt.preventDefault();
+										props.setOverlayPanel('collaborators');
+									}}
 								>
 									{pubData.collaborators.length}
 									<span className="pt-icon-standard pt-align-right pt-icon-team" />

@@ -38,39 +38,33 @@ const contextTypes = {
 const PubBody = function(props, context) {
 	return (
 		<div className="pub-body-component">
-			<div className="container pub">
-				<div className="row">
-					<div className="col-12">
-						<Editor
-							key={`render-${props.versionId}`}
-							editorId={props.slug}
-							initialContent={props.content}
-							isReadOnly={true}
-							ref={props.onRef}
-						>
-							<Image handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }} />
-							<Video />
-							<File />
-							<Iframe />
-							<Latex />
-							<Footnote />
-							<HighlightMenu
-								versionId={props.versionId}
-								highlights={props.highlights}
-								primaryEditorClassName="pub-body"
-								hoverBackgroundColor={props.hoverBackgroundColor}
-							/>
-							<Citation />
-							<Discussion
-								threads={props.threads}
-								routerContext={context.router}
-								slug={props.slug}
-								setActiveThread={props.setActiveThread}
-							/>
-						</Editor>
-					</div>
-				</div>
-			</div>
+			<Editor
+				key={`render-${props.versionId}`}
+				editorId={props.slug}
+				initialContent={props.content}
+				isReadOnly={true}
+				ref={props.onRef}
+			>
+				<Image handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }} />
+				<Video />
+				<File />
+				<Iframe />
+				<Latex />
+				<Footnote />
+				<HighlightMenu
+					versionId={props.versionId}
+					highlights={props.highlights}
+					primaryEditorClassName="pub-body"
+					hoverBackgroundColor={props.hoverBackgroundColor}
+				/>
+				<Citation />
+				<Discussion
+					threads={props.threads}
+					routerContext={context.router}
+					slug={props.slug}
+					setActiveThread={props.setActiveThread}
+				/>
+			</Editor>
 		</div>
 	);
 };
