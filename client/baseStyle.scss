@@ -45,6 +45,10 @@ body {
 	}
 }
 
+.pt-input {
+	-webkit-appearance: none;
+}
+
 @include font-face("pubpub-icons", "../static/icons/pubpub-icons", $file-formats: eot woff ttf svg);
 .pt-icon-team:before { font-family: 'pubpub-icons' !important; content: "\e903"; }
 .pt-icon-edit2:before { font-family: 'pubpub-icons' !important; content: "\e904"; }

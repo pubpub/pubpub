@@ -40,8 +40,12 @@ const UserHeader = function(props) {
 			</div>
 			<div className="details">
 				<h1>{props.userData.fullName}</h1>
-				<div className="bio">{props.userData.bio}</div>
-
+				{props.userData.title &&
+					<div className="title">{props.userData.title}</div>
+				}
+				{props.userData.bio &&
+					<div className="bio">{props.userData.bio}</div>
+				}
 				<div className="links">
 					{links.filter((link)=> {
 						return link.value;

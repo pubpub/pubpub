@@ -26,6 +26,7 @@ class UserEdit extends Component {
 			hasChanged: false,
 			firstName: props.userData.firstName || '',
 			lastName: props.userData.lastName || '',
+			title: props.userData.title || '',
 			bio: props.userData.bio || '',
 			avatar: props.userData.avatar,
 			location: props.userData.location || '',
@@ -39,6 +40,7 @@ class UserEdit extends Component {
 		this.onFirstNameChange = this.onFirstNameChange.bind(this);
 		this.onLastNameChange = this.onLastNameChange.bind(this);
 		this.onPasswordChange = this.onPasswordChange.bind(this);
+		this.onTitleChange = this.onTitleChange.bind(this);
 		this.onBioChange = this.onBioChange.bind(this);
 		this.onAvatarChange = this.onAvatarChange.bind(this);
 		this.handleSaveDetails = this.handleSaveDetails.bind(this);
@@ -51,6 +53,9 @@ class UserEdit extends Component {
 	}
 	onPasswordChange(evt) {
 		this.setState({ password: evt.target.value, hasChanged: true });
+	}
+	onTitleChange(evt) {
+		this.setState({ title: evt.target.value.substring(0, 70).replace(/\n/g, ' '), hasChanged: true });
 	}
 	onBioChange(evt) {
 		this.setState({ bio: evt.target.value.substring(0, 280).replace(/\n/g, ' '), hasChanged: true });
@@ -65,6 +70,7 @@ class UserEdit extends Component {
 			firstName: this.state.firstName,
 			lastName: this.state.lastName,
 			avatar: this.state.avatar,
+			title: this.state.title,
 			bio: this.state.bio,
 			location: this.state.location,
 			website: this.state.website,
@@ -162,10 +168,17 @@ class UserEdit extends Component {
 									useCrop={true}
 								/>
 								<InputField
+									label="Title"
+									value={this.state.title}
+									onChange={this.onTitleChange}
+									helperText={`${this.state.title.length}/70 characters. Displayed by your name on discussions.`}
+								/>
+								<InputField
 									label="Bio"
 									isTextarea={true}
 									value={this.state.bio}
 									onChange={this.onBioChange}
+									helperText={`${this.state.bio.length}/280 characters`}
 								/>
 								{expandables.map((item)=> {
 									return (

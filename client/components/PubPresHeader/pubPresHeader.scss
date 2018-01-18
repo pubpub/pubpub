@@ -26,7 +26,7 @@
 					background-color: rgba(255, 255, 255, 0.4);
 				}
 			}
-			a, .pt-icon-standard:before {
+			a, .pt-icon-standard:before, .pt-button:before {
 				color: white;
 			}
 		}
@@ -34,6 +34,7 @@
 	.tags-buttons-wrapper {
 		display: flex;
 		align-items: flex-start;
+		padding-top: 5px;
 		.tags {
 			flex-shrink: 1;
 			a:hover {

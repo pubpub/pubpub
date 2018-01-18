@@ -15,6 +15,9 @@
 	}
 	.details {
 		margin-right: calc(150px + 2em);
+		.title {
+			font-style: italic;
+		}
 		.bio {
 			margin: 20px 0px;
 			max-width: 700px;

@@ -90,6 +90,7 @@ const User = sequelize.define('User', {
 	initials: { type: Sequelize.STRING, allowNull: false },
 	avatar: { type: Sequelize.TEXT },
 	bio: { type: Sequelize.TEXT },
+	title: { type: Sequelize.TEXT },
 	email: {
 		type: Sequelize.TEXT,
 		allowNull: false,
@@ -264,7 +265,10 @@ const Collaborator = sequelize.define('Collaborator', {
 		values: ['manage', 'edit', 'view', 'none'], // Must be same as adminPermissions on Pub
 		defaultValue: 'none',
 	},
+	title: { type: Sequelize.TEXT }, // This could allow users to override their default title per-pub. I don't think I'll enable it yet - but it's good to have in place.
 	isAuthor: { type: Sequelize.BOOLEAN },
+	isContributor: { type: Sequelize.BOOLEAN },
+	roles: { type: Sequelize.JSONB },
 	/* Set by Associations */
 	userId: { type: Sequelize.UUID },
 	pubId: { type: Sequelize.UUID, allowNull: false },

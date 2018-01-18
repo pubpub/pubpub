@@ -26,6 +26,7 @@ class UserCreate extends Component {
 			firstName: '',
 			lastName: '',
 			password: '',
+			title: '',
 			bio: '',
 			avatar: undefined,
 			location: '',
@@ -40,6 +41,7 @@ class UserCreate extends Component {
 		this.onFirstNameChange = this.onFirstNameChange.bind(this);
 		this.onLastNameChange = this.onLastNameChange.bind(this);
 		this.onPasswordChange = this.onPasswordChange.bind(this);
+		this.onTitleChange = this.onTitleChange.bind(this);
 		this.onBioChange = this.onBioChange.bind(this);
 		this.onAvatarChange = this.onAvatarChange.bind(this);
 	}
@@ -57,6 +59,7 @@ class UserCreate extends Component {
 				lastName: this.state.lastName,
 				password: SHA3(this.state.password).toString(encHex),
 				avatar: this.state.avatar,
+				title: this.state.title,
 				bio: this.state.bio,
 				location: this.state.location,
 				website: this.state.website,
@@ -83,6 +86,9 @@ class UserCreate extends Component {
 	}
 	onPasswordChange(evt) {
 		this.setState({ password: evt.target.value });
+	}
+	onTitleChange(evt) {
+		this.setState({ title: evt.target.value.substring(0, 70).replace(/\n/g, ' ') });
 	}
 	onBioChange(evt) {
 		this.setState({ bio: evt.target.value.substring(0, 280).replace(/\n/g, ' ') });
@@ -217,10 +223,17 @@ class UserCreate extends Component {
 											useCrop={true}
 										/>
 										<InputField
+											label="Title"
+											value={this.state.title}
+											onChange={this.onTitleChange}
+											helperText={`${this.state.title.length}/70 characters. Displayed by your name on discussions.`}
+										/>
+										<InputField
 											label="Bio"
 											isTextarea={true}
 											value={this.state.bio}
 											onChange={this.onBioChange}
+											helperText={`${this.state.bio.length}/280 characters`}
 										/>
 										{expandables.filter((item)=> {
 											return item.isVisible;

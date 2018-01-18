@@ -36,6 +36,7 @@ app.post('/api/users', (req, res)=> {
 			initials: initials,
 			email: email,
 			avatar: req.body.avatar,
+			title: req.body.title,
 			bio: req.body.bio,
 			location: req.body.location,
 			website: req.body.website,
@@ -73,7 +74,7 @@ app.put('/api/users', (req, res)=> {
 	// Filter to only allow certain fields to be updated
 	const updatedUser = {};
 	Object.keys(req.body).forEach((key)=> {
-		if (['slug', 'firstName', 'lastName', 'avatar', 'bio', 'location', 'website', 'orcid', 'github', 'twitter', 'facebook', 'googleScholar'].indexOf(key) > -1) {
+		if (['slug', 'firstName', 'lastName', 'avatar', 'title', 'bio', 'location', 'website', 'orcid', 'github', 'twitter', 'facebook', 'googleScholar'].indexOf(key) > -1) {
 			updatedUser[key] = req.body[key] && req.body[key].trim ? req.body[key].trim() : req.body[key];
 			if (key === 'slug') {
 				updatedUser.slug = updatedUser.slug.toLowerCase();

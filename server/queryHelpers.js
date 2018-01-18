@@ -19,7 +19,7 @@ export const findPub = (req, initialData)=> {
 			{
 				model: User,
 				as: 'collaborators',
-				attributes: ['id', 'avatar', 'initials', 'fullName', 'slug'],
+				attributes: ['id', 'avatar', 'initials', 'fullName', 'slug', 'title'],
 				through: { attributes: { exclude: ['updatedAt'] } },
 			},
 			{
@@ -34,7 +34,7 @@ export const findPub = (req, initialData)=> {
 				separate: true,
 				model: Discussion,
 				as: 'discussions',
-				include: [{ model: User, as: 'author', attributes: ['id', 'fullName', 'avatar', 'slug', 'initials'] }],
+				include: [{ model: User, as: 'author', attributes: ['id', 'fullName', 'avatar', 'slug', 'initials', 'title'] }],
 			},
 			{
 				required: false,

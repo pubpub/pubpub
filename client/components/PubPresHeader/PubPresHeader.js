@@ -41,7 +41,9 @@ const PubPresHeader = function(props) {
 								</div>
 								<div className="buttons">
 									<div className="pt-button-group pt-minimal">
-										<a href={`/pub/${pubData.slug}/collaborate`} className="pt-button">Edit Pub</a>
+										{pubData.localPermissions !== 'none' &&
+											<a href={`/pub/${pubData.slug}/collaborate`} className="pt-button pt-icon-edit2">Edit Pub</a>
+										}
 										{/* <a href="/" className="pt-button">Invite Reviewer</a> */}
 										{/* <a href="/" className="pt-button">More</a> */}
 									</div>
