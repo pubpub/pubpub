@@ -13,7 +13,8 @@ import DiscussionNew from 'components/DiscussionNew/DiscussionNew';
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionPreviewArchived from 'components/DiscussionPreviewArchived/DiscussionPreviewArchived';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
-import PageWrapper from 'components/PageWrapper/PageWrapper';
+// import PageWrapper from 'components/PageWrapper/PageWrapper';
+import AccentStyle from 'components/AccentStyle/AccentStyle';
 import { apiFetch, hydrateWrapper, nestDiscussionsToThreads, getRandomColor, generateHash } from 'utilities';
 
 
@@ -500,14 +501,73 @@ class PubCollaboration extends Component {
 
 		return (
 			<div id="pub-collaboration-container">
-				<PageWrapper
+				<AccentStyle
+					accentColor={this.props.communityData.accentColor}
+					accentTextColor={this.props.communityData.accentTextColor}
+					accentActionColor={this.props.communityData.accentActionColor}
+					accentHoverColor={this.props.communityData.accentHoverColor}
+					accentMinimalColor={this.props.communityData.accentMinimalColor}
+				/>
+				<PubCollabHeader
+					loginData={this.props.loginData}
+					communityData={this.props.communityData}
+					locationData={this.props.locationData}
+					pubData={pubData}
+					collaborators={pubData.collaborators}
+					canManage={canManage}
+					isAdmin={loginData.isAdmin}
+					activeCollaborators={this.state.activeCollaborators}
+					submissionThreadNumber={submissionThreadNumber}
+					activeThread={activeThread}
+					collabStatus={this.state.collabStatus}
+					onPublishClick={this.togglePublish}
+					onSubmitClick={this.toggleSubmit}
+					onShareClick={this.toggleShare}
+					onDetailsClick={this.toggleDetails}
+					onCollaboratorsClick={this.toggleCollaborators}
+					onCollectionsClick={this.toggleCollections}
+					onThreadClick={this.handleThreadClick}
+				/>
+				<div className="page-content">
+					<div
+						className="content-panel"
+						tabIndex={-1}
+						role="textbox"
+					>
+						{this.state.collabStatus === 'connecting' &&
+							<div className="collaborative-loading">
+								<div className="loading pt-skeleton" style={{ width: '95%', height: '1.2em', marginBottom: '1em' }} />
+								<div className="loading pt-skeleton" style={{ width: '85%', height: '1.2em', marginBottom: '1em' }} />
+								<div className="loading pt-skeleton" style={{ width: '90%', height: '1.2em', marginBottom: '1em' }} />
+								<div className="loading pt-skeleton" style={{ width: '80%', height: '1.2em', marginBottom: '1em' }} />
+								<div className="loading pt-skeleton" style={{ width: '82%', height: '1.2em', marginBottom: '1em' }} />
+							</div>
+						}
+						<div className={`pub-body-component ${this.state.collabStatus === 'connecting' ? 'loading' : ''}`}>
+							<PubCollabEditor
+								onRef={this.handleEditorRef}
+								editorKey={`pub-${pubData.id}`}
+								isReadOnly={!canManage && pubData.localPermissions !== 'edit'}
+								clientData={this.state.activeCollaborators[0]}
+								onClientChange={this.handleClientChange}
+								onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
+								onHighlightClick={this.handleHighlightClick}
+								hoverBackgroundColor={this.props.communityData.accentMinimalColor}
+								highlights={this.state.docReadyForHighlights ? highlights : []}
+								threads={threads}
+								slug={pubData.slug}
+								onStatusChange={this.handleStatusChange}
+							/>
+						</div>
+					</div>
+				</div>
+				{/*<PageWrapper
 					loginData={this.props.loginData}
 					communityData={this.props.communityData}
 					locationData={this.props.locationData}
 					fixHeader={true}
 					hideNav={true}
 					hideFooter={true}
-				>
 					<div>
 						<div className="upper">
 							<div className="container">
@@ -534,6 +594,10 @@ class PubCollaboration extends Component {
 								</div>
 							</div>
 						</div>
+
+
+
+
 						<div className="lower">
 							<div className="container">
 								<div className="row">
@@ -665,7 +729,7 @@ class PubCollaboration extends Component {
 							</div>
 						</div>
 					</div>
-				</PageWrapper>
+				</PageWrapper>*/}
 
 				<Overlay isOpen={this.state.isPublishOpen} onClose={this.togglePublish}>
 					<PubCollabPublish
