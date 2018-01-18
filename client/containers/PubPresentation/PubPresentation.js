@@ -180,13 +180,15 @@ class PubPresentation extends Component {
 					{pubData.versions.length &&
 						<div>
 							<PubPresHeader
-								title={pubData.title}
-								description={pubData.description}
-								backgroundImage={pubData.useHeaderImage ? pubData.avatar : undefined}
+								pubData={pubData}
+								setOverlayPanel={this.setOverlayPanel}
+								// title={pubData.title}
+								// description={pubData.description}
+								// backgroundImage={pubData.useHeaderImage ? pubData.avatar : undefined}
 							/>
 
 
-							<PubPresDetails
+							{/*<PubPresDetails
 								slug={pubData.slug}
 								numDiscussions={pubData.discussions.length}
 								numSuggestions={pubData.discussions.reduce((prev, curr)=> {
@@ -198,7 +200,7 @@ class PubPresentation extends Component {
 								localPermissions={pubData.localPermissions}
 								hasHeaderImage={pubData.useHeaderImage && !!pubData.avatar}
 								setOverlayPanel={this.setOverlayPanel}
-							/>
+							/>*/}
 
 							<PubBody
 								onRef={this.handleEditorRef}
