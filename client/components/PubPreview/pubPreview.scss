@@ -14,7 +14,6 @@
 		vertical-align: top;
 		position: relative;
 		overflow: hidden;
-		height: 100%;
 		&:after {
 			content: "";
 			display: block;
@@ -44,6 +43,7 @@
 		.content {
 			float: left; 
 			width: 35%;
+			height: 100%;
 		}
 	}
 	&.medium-preview {
@@ -57,6 +57,7 @@
 		.content {
 			float: left; 
 			width: 65%;
+			height: 100%;
 		}
 	}
 	&.small-preview {
@@ -67,7 +68,6 @@
 		}
 		.content {
 			padding: 0em;
-			height: auto;
 			&:after {
 				display: none;
 			}
