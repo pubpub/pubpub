@@ -47,7 +47,7 @@ const PubPreview = function(props) {
 		? { backgroundImage: `url("${resizedBannerImage}")` }
 		: { background: gradients[props.title.charCodeAt(props.title.length - 1) % 4] };
 
-	const collaboratorsCount = props.authors.length + props.collaborators.length;
+	// const collaboratorsCount = props.authors.length + props.collaborators.length;
 	const resizedSmallHeaderLogo = props.communityData && getResizedUrl(props.communityData.smallHeaderLogo, 'fit-in', '125x35');
 	const communityHostname = props.communityData && (props.communityData.domain || `${props.communityData.subdomain}.pubpub.org`);
 	const communityUrl = props.communityData && (props.communityData.domain ? `https://${props.communityData.domain}` : `https://${props.communityData.subdomain}.pubpub.org`);
@@ -81,7 +81,72 @@ const PubPreview = function(props) {
 				</a>
 			}
 			<div className="content">
-				<div className="content-text">
+				<div className="title-wrapper">
+					{props.communityData &&
+						<a href={communityUrl} alt={props.communityData.title} className="community-banner" style={{ backgroundColor: props.communityData.accentColor }}>
+							<img
+								alt={`${props.communityData.title} logo`}
+								src={resizedSmallHeaderLogo}
+							/>
+						</a>
+					}
+					<a href={pubLink} alt={props.title}><h3 className="title">{props.title}</h3></a>
+				</div>
+
+				{!!props.authors.length &&
+					<div className="authors">
+						<span>by </span>
+						{props.authors.sort((foo, bar)=> {
+							if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
+							if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
+							if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
+							if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
+							return 0;
+						}).map((author, index)=> {
+							const separator = index === props.authors.length - 1 || props.authors.length === 2 ? '' : ', ';
+							const prefix = index === props.authors.length - 1 && index !== 0 ? ' and ' : '';
+							if (author.slug) {
+								return (
+									<span key={`author-${author.id}`}>
+										{prefix}
+										<a href={`/user/${author.slug}`}>{author.fullName}</a>
+										{separator}
+									</span>
+								);
+							}
+							return <span key={`author-${author.id}`}>{prefix}{author.fullName}{separator}</span>;
+						})}
+					</div>
+				}
+
+				<div className="date-details">
+					<span className="date">{dateFormat(props.publicationDate, 'mmm dd, yyyy')}</span>
+					{[...props.authors, ...props.collaborators].sort((foo, bar)=> {
+						if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
+						if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
+						if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
+						if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
+						return 0;
+					}).map((collaborator)=> {
+						return (
+							<Avatar
+								key={`avatar-${collaborator.id}`}
+								userInitials={collaborator.initials}
+								userAvatar={collaborator.avatar}
+								borderColor="rgba(255, 255, 255, 1.0)"
+								width={20}
+								doesOverlap={true}
+							/>
+						);
+					})}
+				</div>
+
+				{props.description &&
+					<div className="description">{props.description}</div>
+				}
+
+				{/* -------------- */}
+				{/*<div className="content-text">
 					{props.communityData &&
 						<a href={communityUrl} alt={props.communityData.title} className="community-banner" style={{ backgroundColor: props.communityData.accentColor }}>
 							<img
@@ -117,7 +182,7 @@ const PubPreview = function(props) {
 						<div className="subtext">{collaboratorsCount} collaborator{collaboratorsCount === 1 ? '' : 's'}</div>
 						<div className="subtext">{dateFormat(props.publicationDate, 'mmm dd, yyyy')}</div>
 					</div>
-				</div>
+				</div>*/}
 			</div>
 
 		</div>

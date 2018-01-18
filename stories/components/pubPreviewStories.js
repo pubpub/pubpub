@@ -48,6 +48,26 @@ storiesOf('Components/PubPreview', module)
 					authors={collectionData.pubs[2].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
 				/>
 			</div>
+			<div className={'col-6'}>
+				<PubPreview
+					title={collectionData.pubs[1].title}
+					description={collectionData.pubs[1].description}
+					slug={collectionData.pubs[1].slug}
+					bannerImage={collectionData.pubs[1].avatar}
+					size={'medium'}
+					publicationDate={collectionData.pubs[1].firstPublishedAt}
+					collaborators={collectionData.pubs[1].collaborators}
+					authors={collectionData.pubs[1].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
+					communityData={{
+						accentColor: '#000000',
+						domain: 'jods.mitpress.mit.edu',
+						id: 'fake-id',
+						smallHeaderLogo: 'https://assets.pubpub.org/b5ftxm4v/51508255582371.png',
+						subdomain: 'jods',
+						title: 'Journal of Design and Science',
+					}}
+				/>
+			</div>
 		</div>
 
 		<h1 style={{ margin: '2em 0em 0.5em' }}>Small</h1>
