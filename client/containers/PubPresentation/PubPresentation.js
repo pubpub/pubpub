@@ -3,12 +3,16 @@ import PropTypes from 'prop-types';
 import { NonIdealState } from '@blueprintjs/core';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
 import Overlay from 'components/Overlay/Overlay';
-import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
+// import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import PubPresHeader from 'components/PubPresHeader/PubPresHeader';
 // import PubPresDetails from 'components/PubPresDetails/PubPresDetails';
 import PubPresSideUser from 'components/PubPresSideUser/PubPresSideUser';
 // import PubPresFooter from 'components/PubPresFooter/PubPresFooter';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
+import DiscussionList from 'components/DiscussionList/DiscussionList';
+import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
+// import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
+// import DiscussionPreviewArchived from 'components/DiscussionPreviewArchived/DiscussionPreviewArchived';
 import PubBody from 'components/PubBody/PubBody';
 import License from 'components/License/License';
 import dateFormat from 'dateformat';
@@ -32,6 +36,8 @@ class PubPresentation extends Component {
 			activePanel: undefined,
 			pubData: this.props.pubData,
 			postDiscussionIsLoading: false,
+			isArchivedVisible: false,
+			docReadyForHighlights: false,
 		};
 
 		this.closeThreadOverlay = this.closeThreadOverlay.bind(this);
@@ -42,6 +48,7 @@ class PubPresentation extends Component {
 		this.setActiveThread = this.setActiveThread.bind(this);
 		this.getHighlightContent = this.getHighlightContent.bind(this);
 		this.handleEditorRef = this.handleEditorRef.bind(this);
+		this.toggleArchivedVisible = this.toggleArchivedVisible.bind(this);
 	}
 
 	getHighlightContent(from, to) {
@@ -124,9 +131,15 @@ class PubPresentation extends Component {
 		if (!this.state.editorRef) {
 			/* Need to set timeout so DOM can render */
 			setTimeout(()=> {
-				this.setState({ editorRef: ref });
+				this.setState({
+					editorRef: ref,
+					docReadyForHighlights: true,
+				});
 			}, 0);
 		}
+	}
+	toggleArchivedVisible() {
+		this.setState({ isArchivedVisible: !this.state.isArchivedVisible });
 	}
 
 	render() {
@@ -140,12 +153,12 @@ class PubPresentation extends Component {
 		});
 		const discussions = pubData.discussions || [];
 		const threads = nestDiscussionsToThreads(discussions);
-		const activeThread = threads.reduce((prev, curr)=> {
-			if (curr[0].threadNumber === this.state.activeThreadNumber) {
-				return curr;
-			}
-			return prev;
-		}, undefined);
+		// const activeThread = threads.reduce((prev, curr)=> {
+		// 	if (curr[0].threadNumber === this.state.activeThreadNumber) {
+		// 		return curr;
+		// 	}
+		// 	return prev;
+		// }, undefined);
 
 		const highlights = [];
 		const queryObject = this.props.locationData.query;
@@ -169,6 +182,28 @@ class PubPresentation extends Component {
 			return collaborator.Collaborator.isContributor;
 		});
 
+		// const activeThreads = threads.filter((items)=> {
+		// 	return items.reduce((prev, curr)=> {
+		// 		if (curr.isArchived) { return false; }
+		// 		return prev;
+		// 	}, true);
+		// }).sort((foo, bar)=> {
+		// 	if (foo[0].threadNumber > bar[0].threadNumber) { return -1; }
+		// 	if (foo[0].threadNumber < bar[0].threadNumber) { return 1; }
+		// 	return 0;
+		// });
+
+		// const archivedThreads = threads.filter((items)=> {
+		// 	return items.reduce((prev, curr)=> {
+		// 		if (curr.isArchived) { return true; }
+		// 		return prev;
+		// 	}, false);
+		// }).sort((foo, bar)=> {
+		// 	if (foo[0].threadNumber > bar[0].threadNumber) { return -1; }
+		// 	if (foo[0].threadNumber < bar[0].threadNumber) { return 1; }
+		// 	return 0;
+		// });
+
 		return (
 			<div id="pub-presentation-container">
 				<PageWrapper
@@ -188,6 +223,9 @@ class PubPresentation extends Component {
 					}
 					{pubData.versions.length &&
 						<div>
+							{/*<div className="fix-me">
+								<div contentEditable> A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things. </div>
+							</div>*/}
 							<PubPresHeader
 								pubData={pubData}
 								setOverlayPanel={this.setOverlayPanel}
@@ -296,28 +334,66 @@ class PubPresentation extends Component {
 									<div className="row">
 										<div className="col-12">
 											<h2>Discussions</h2>
-											Whatever here
-											<button className="pt-button pt-fill">Whateveer</button>
+											
+											<DiscussionList pubData={pubData} onPreviewClick={this.setActiveThread} />
+											{/*activeThreads.map((thread)=> {
+												return (
+													<DiscussionPreview
+														key={`thread-${thread[0].id}`}
+														discussions={thread}
+														onPreviewClick={this.setActiveThread}
+													/>
+												);
+											})*/}
+											{/*!!archivedThreads.length &&
+												<div className="archived-threads">
+													<button className="pt-button pt-minimal pt-large pt-fill archive-title-button" onClick={this.toggleArchivedVisible}>
+														{this.state.isArchivedVisible ? 'Hide ' : 'Show '}
+														Archived Thread{archivedThreads.length === 1 ? '' : 's'} ({archivedThreads.length})
+													</button>
+													{this.state.isArchivedVisible && archivedThreads.map((thread)=> {
+														return (
+															<DiscussionPreviewArchived
+																key={`thread-${thread[0].id}`}
+																discussions={thread}
+																onPreviewClick={this.setActiveThread}
+															/>
+														);
+													})}
+												</div>
+											*/}
 										</div>
 									</div>
 								</div>
 							</div>
 
-							<Overlay isOpen={!!activeThread} onClose={this.closeThreadOverlay} maxWidth={728}>
-								<DiscussionThread
-									discussions={activeThread || []}
-									canManage={pubData.localPermissions === 'manage' || (this.props.loginData.isAdmin && pubData.adminPermissions === 'manage')}
-									slug={pubData.slug}
-									loginData={this.props.loginData}
-									pathname={`${this.props.locationData.path}${this.props.locationData.queryString}`}
-									handleReplySubmit={this.handlePostDiscussion}
-									handleReplyEdit={this.handlePutDiscussion}
-									submitIsLoading={this.state.postDiscussionIsLoading}
-									isPresentation={true}
-									getHighlightContent={this.getHighlightContent}
-									hoverBackgroundColor={this.props.communityData.accentMinimalColor}
-								/>
-							</Overlay>
+							<DiscussionViewer
+								pubData={pubData}
+								loginData={this.props.loginData}
+								locationData={this.props.locationData}
+								communityData={this.props.communityData}
+								activeThreadNumber={this.state.activeThreadNumber}
+								onClose={this.closeThreadOverlay}
+								getHighlightContent={()=>{}}
+								onPostDiscussion={this.handlePostDiscussion}
+								onPutDiscussion={this.handlePutDiscussion}
+								postDiscussionIsLoading={this.state.postDiscussionIsLoading}
+							/>
+							{/*<Overlay isOpen={!!activeThread} onClose={this.closeThreadOverlay} maxWidth={728}>
+															<DiscussionThread
+																discussions={activeThread || []}
+																canManage={pubData.localPermissions === 'manage' || (this.props.loginData.isAdmin && pubData.adminPermissions === 'manage')}
+																slug={pubData.slug}
+																loginData={this.props.loginData}
+																pathname={`${this.props.locationData.path}${this.props.locationData.queryString}`}
+																handleReplySubmit={this.handlePostDiscussion}
+																handleReplyEdit={this.handlePutDiscussion}
+																submitIsLoading={this.state.postDiscussionIsLoading}
+																isPresentation={true}
+																getHighlightContent={this.getHighlightContent}
+																hoverBackgroundColor={this.props.communityData.accentMinimalColor}
+															/>
+														</Overlay>*/}
 
 							<Overlay isOpen={this.state.activePanel === 'collaborators'} onClose={this.closePanelOverlay} maxWidth={728}>
 								<PubCollabShare

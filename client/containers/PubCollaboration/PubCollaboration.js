@@ -564,8 +564,33 @@ class PubCollaboration extends Component {
 					<div id="discussions">
 						<div className="discussions-content">
 							<h2>Discussions</h2>
-							Whatever here
-							<button className="pt-button pt-fill">Whateveer</button>
+							
+							{activeThreads.map((thread)=> {
+								return (
+									<DiscussionPreview
+										key={`thread-${thread[0].id}`}
+										discussions={thread}
+										onPreviewClick={this.handleThreadClick}
+									/>
+								);
+							})}
+							{!!archivedThreads.length &&
+								<div className="archived-threads">
+									<button className="pt-button pt-minimal pt-large pt-fill archive-title-button" onClick={this.toggleArchivedVisible}>
+										{this.state.isArchivedVisible ? 'Hide ' : 'Show '}
+										Archived Thread{archivedThreads.length === 1 ? '' : 's'} ({archivedThreads.length})
+									</button>
+									{this.state.isArchivedVisible && archivedThreads.map((thread)=> {
+										return (
+											<DiscussionPreviewArchived
+												key={`thread-${thread[0].id}`}
+												discussions={thread}
+												onPreviewClick={this.handleThreadClick}
+											/>
+										);
+									})}
+								</div>
+							}
 						</div>
 					</div>
 				</div>
