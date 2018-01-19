@@ -23,6 +23,7 @@ const propTypes = {
 	highlights: PropTypes.array,
 	hoverBackgroundColor: PropTypes.string.isRequired,
 	setActiveThread: PropTypes.func,
+	onNewHighlightDiscussion: PropTypes.func,
 };
 const defaultProps = {
 	onRef: ()=>{},
@@ -30,12 +31,21 @@ const defaultProps = {
 	threads: [],
 	slug: '',
 	setActiveThread: ()=>{},
+	onNewHighlightDiscussion: ()=>{},
 };
-const contextTypes = {
-	router: PropTypes.object,
-};
+// const contextTypes = {
+// 	router: PropTypes.object,
+// };
 
-const PubBody = function(props, context) {
+const PubBody = function(props) {
+	const findThreadNumberFromHighlightId = (highlightId)=> {
+		const threadNumber = props.highlights.reduce((prev, curr)=> {
+			if (curr.id === highlightId) { return curr.threadNumber; }
+			return prev;
+		}, undefined);
+		props.setActiveThread(threadNumber);
+	};
+
 	return (
 		<div className="pub-body-component">
 			<Editor
@@ -54,13 +64,15 @@ const PubBody = function(props, context) {
 				<HighlightMenu
 					versionId={props.versionId}
 					highlights={props.highlights}
-					primaryEditorClassName="pub-body"
+					primaryEditorClassName="pub-body-component"
+					onNewDiscussion={props.onNewHighlightDiscussion}
+					onDotClick={findThreadNumberFromHighlightId}
 					hoverBackgroundColor={props.hoverBackgroundColor}
 				/>
 				<Citation />
 				<Discussion
 					threads={props.threads}
-					routerContext={context.router}
+					// routerContext={context.router}
 					slug={props.slug}
 					setActiveThread={props.setActiveThread}
 				/>
@@ -71,5 +83,5 @@ const PubBody = function(props, context) {
 
 PubBody.propTypes = propTypes;
 PubBody.defaultProps = defaultProps;
-PubBody.contextTypes = contextTypes;
+// PubBody.contextTypes = contextTypes;
 export default PubBody;

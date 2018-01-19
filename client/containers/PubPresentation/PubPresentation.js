@@ -38,6 +38,7 @@ class PubPresentation extends Component {
 			postDiscussionIsLoading: false,
 			isArchivedVisible: false,
 			docReadyForHighlights: false,
+			initialContent: undefined,
 		};
 
 		this.closeThreadOverlay = this.closeThreadOverlay.bind(this);
@@ -49,6 +50,7 @@ class PubPresentation extends Component {
 		this.getHighlightContent = this.getHighlightContent.bind(this);
 		this.handleEditorRef = this.handleEditorRef.bind(this);
 		this.toggleArchivedVisible = this.toggleArchivedVisible.bind(this);
+		this.handleNewHighlightDiscussion = this.handleNewHighlightDiscussion.bind(this);
 	}
 
 	getHighlightContent(from, to) {
@@ -63,7 +65,7 @@ class PubPresentation extends Component {
 			suffix: suffix,
 			from: from,
 			to: to,
-			version: undefined,
+			version: this.props.pubData.versions[0].id,
 			id: `h${generateHash(8)}`, // Has to start with letter since it's a classname
 		};
 	}
@@ -74,7 +76,10 @@ class PubPresentation extends Component {
 		this.setState({ activeThreadNumber: threadNumber });
 	}
 	closeThreadOverlay() {
-		this.setState({ activeThreadNumber: undefined });
+		this.setState({
+			activeThreadNumber: undefined,
+			initialContent: undefined,
+		});
 	}
 	closePanelOverlay() {
 		this.setState({ activePanel: undefined });
@@ -91,6 +96,7 @@ class PubPresentation extends Component {
 		.then((result)=> {
 			this.setState({
 				postDiscussionIsLoading: false,
+				activeThreadNumber: result.threadNumber,
 				pubData: {
 					...this.state.pubData,
 					discussions: [
@@ -138,6 +144,19 @@ class PubPresentation extends Component {
 			}, 0);
 		}
 	}
+	handleNewHighlightDiscussion(highlightObject) {
+		this.setState({
+			activeThreadNumber: 'new',
+			initialContent: {
+				type: 'doc',
+				attrs: { meta: {} },
+				content: [
+					{ type: 'highlightQuote', attrs: { ...highlightObject, id: `h${generateHash(8)}` } },
+					{ type: 'paragraph', content: [] },
+				]
+			}
+		});
+	}
 	toggleArchivedVisible() {
 		this.setState({ isArchivedVisible: !this.state.isArchivedVisible });
 	}
@@ -160,7 +179,14 @@ class PubPresentation extends Component {
 		// 	return prev;
 		// }, undefined);
 
-		const highlights = [];
+		const highlights = discussions.filter((item)=> {
+			return !item.isArchived && item.highlights;
+		}).reduce((prev, curr)=> {
+			const highlightsWithThread = curr.highlights.map((item)=> {
+				return { ...item, threadNumber: curr.threadNumber };
+			});
+			return [...prev, ...highlightsWithThread];
+		}, []);
 		const queryObject = this.props.locationData.query;
 		if (typeof window !== 'undefined' && this.state.editorRef && queryObject.from && queryObject.to && queryObject.version) {
 			highlights.push({
@@ -310,9 +336,10 @@ class PubPresentation extends Component {
 												content={activeVersion.content}
 												threads={threads}
 												slug={pubData.slug}
-												highlights={highlights}
+												highlights={this.state.docReadyForHighlights ? highlights : []}
 												hoverBackgroundColor={this.props.communityData.accentMinimalColor}
 												setActiveThread={this.setActiveThread}
+												onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
 											/>
 											<div className="license-wrapper">
 												<License />
@@ -333,8 +360,6 @@ class PubPresentation extends Component {
 								<div className="container pub">
 									<div className="row">
 										<div className="col-12">
-											<h2>Discussions</h2>
-											
 											<DiscussionList pubData={pubData} onPreviewClick={this.setActiveThread} />
 											{/*activeThreads.map((thread)=> {
 												return (
@@ -374,10 +399,11 @@ class PubPresentation extends Component {
 								communityData={this.props.communityData}
 								activeThreadNumber={this.state.activeThreadNumber}
 								onClose={this.closeThreadOverlay}
-								getHighlightContent={()=>{}}
+								getHighlightContent={this.getHighlightContent}
 								onPostDiscussion={this.handlePostDiscussion}
 								onPutDiscussion={this.handlePutDiscussion}
 								postDiscussionIsLoading={this.state.postDiscussionIsLoading}
+								initialContent={this.state.initialContent}
 							/>
 							{/*<Overlay isOpen={!!activeThread} onClose={this.closeThreadOverlay} maxWidth={728}>
 															<DiscussionThread

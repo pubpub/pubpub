@@ -1,3 +1,20 @@
 .discussion-viewer-component {
-	
+	.pinned-thread {
+		background-color: white;
+		position: fixed;
+		bottom: 10px;
+		right: 10px;
+		width: 400px;
+		max-width: calc(100vw - 20px);
+		max-height: 50vh;
+		z-index: 15;
+		overflow: hidden;
+		overflow-y: scroll;
+		.discussion-thread-component {
+			padding: 1em;
+		}
+	}
+	.discussion-input-component {
+		margin-bottom: 0em;
+	}
 }

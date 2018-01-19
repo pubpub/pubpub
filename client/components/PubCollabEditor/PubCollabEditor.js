@@ -47,7 +47,7 @@ class PubCollabEditor extends Component {
 		};
 		this.findThreadNumberFromHighlightId = this.findThreadNumberFromHighlightId.bind(this);
 	}
-	componentDidCatch(error, info) {
+	componentDidCatch(error) {
 		this.setState({ error: true });
 	}
 	findThreadNumberFromHighlightId(highlightId) {
@@ -113,6 +113,7 @@ class PubCollabEditor extends Component {
 					<Latex renderFunction={renderLatexString} />
 					<Footnote />
 					<HighlightMenu
+						versionId={undefined}
 						highlights={this.props.highlights}
 						primaryEditorClassName="pub-collab-editor-component"
 						onNewDiscussion={this.props.onNewHighlightDiscussion}
