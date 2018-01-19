@@ -44,7 +44,7 @@ const PubPresHeader = function(props) {
 										{pubData.localPermissions !== 'none' &&
 											<a href={`/pub/${pubData.slug}/collaborate`} className="pt-button pt-icon-edit2">Edit Pub</a>
 										}
-										{/* <a href="/" className="pt-button">Invite Reviewer</a> */}
+										<a href="/" className="pt-button">Invite Reviewer</a>
 										{/* <a href="/" className="pt-button">More</a> */}
 									</div>
 								</div>

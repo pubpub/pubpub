@@ -29,11 +29,21 @@ class DiscussionViewer extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isPinned: true,
+			isPinned: false,
 		};
 		this.handleNewDiscussionSubmit = this.handleNewDiscussionSubmit.bind(this);
 		this.togglePin = this.togglePin.bind(this);
 	}
+
+	// componentWillReceiveProps(nextProps) {
+	// 	if (this.props.postDiscussionIsLoading &&
+	// 		!nextProps.postDiscussionIsLoading &&
+	// 		this.props.activeThreadNumber === 'new' &&
+	// 		nextProps.activeThreadNumber !== 'new'
+	// 	) {
+	// 		this.setState({ isPinned: true });
+	// 	}
+	// }
 
 	handleNewDiscussionSubmit(replyObject) {
 		this.props.onPostDiscussion({
@@ -67,6 +77,15 @@ class DiscussionViewer extends Component {
 		const isPinned = this.state.isPinned || isNew;
 		return (
 			<div className="discussion-viewer-component">
+				{/*!isActive &&
+					<div className="pt-button-group">
+						<button className="pt-button">New Discussion</button>
+						<button className="pt-button">
+							23
+							<span className="pt-icon-standard pt-align-right pt-icon-chat" />
+						</button>
+					</div>
+				*/}
 				{isActive && isPinned &&
 					<div className="pinned-thread pt-elevation-4">
 						<div className="button-group">
