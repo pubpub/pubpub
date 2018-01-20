@@ -39,6 +39,7 @@ class PubPresentation extends Component {
 			isArchivedVisible: false,
 			docReadyForHighlights: false,
 			initialContent: undefined,
+			// fixIt: false,
 		};
 
 		this.closeThreadOverlay = this.closeThreadOverlay.bind(this);
@@ -51,8 +52,35 @@ class PubPresentation extends Component {
 		this.handleEditorRef = this.handleEditorRef.bind(this);
 		this.toggleArchivedVisible = this.toggleArchivedVisible.bind(this);
 		this.handleNewHighlightDiscussion = this.handleNewHighlightDiscussion.bind(this);
+		this.handleScroll = this.handleScroll.bind(this);
+	}
+	componentDidMount() {
+		window.addEventListener('scroll', this.handleScroll);
+		this.pubSideContent = document.getElementsByClassName('pub-side-content')[0];
+		this.discussions = document.getElementById('discussions');
+		// this.setState({ initialFixPos: window.scrollY + document.getElementsByClassName('fix-it')[0].getBoundingClientRect().top });
+	}
+	componentWillUnmount() {
+		window.removeEventListener('scroll', this.handleScroll);
 	}
 
+	handleScroll() {
+		if (!this.state.activeThreadNumber) {
+			if (!this.state.fixIt) {
+				const isPastTopSide = this.pubSideContent.getBoundingClientRect().bottom < -25;
+				const isBeforeDiscussions = this.discussions.getBoundingClientRect().top > window.innerHeight;
+				if (isPastTopSide && isBeforeDiscussions) {
+					this.setState({ fixIt: true });
+				}
+			} else {
+				const isBeforeTopSide = this.pubSideContent.getBoundingClientRect().bottom > -25;
+				const isAfterDiscussions = this.discussions.getBoundingClientRect().top < window.innerHeight;
+				if (isBeforeTopSide || isAfterDiscussions) {
+					this.setState({ fixIt: false });
+				}
+			}
+		}
+	}
 	getHighlightContent(from, to) {
 		const primaryEditorState = this.state.editorRef.state.editorState;
 		if (!primaryEditorState || primaryEditorState.doc.nodeSize < from || primaryEditorState.doc.nodeSize < to) { return {}; }
@@ -326,6 +354,41 @@ class PubPresentation extends Component {
 													}).map((item)=> {
 														return <PubPresSideUser user={item} key={item.id} />;
 													})}
+												</div>
+											}
+											{!this.state.activeThreadNumber &&
+												<div className={`side-block fix-it ${this.state.fixIt ? 'fixed' : ''}`}>
+													{/*<p>
+														<a
+															href={`/pub/${pubData.slug}/collaborators`}
+															onClick={(evt)=> {
+																evt.preventDefault();
+																this.setOverlayPanel('collaborators');
+															}}
+														>
+															Discussions
+														</a>
+													</p>*/}
+													{/*<button className="pt-button pt-minimal pt-fill pt-icon-add">New Discussion</button>
+													<button className="pt-button pt-minimal pt-fill pt-icon-new-person">Invite Reviewer</button>
+													<button className="pt-button pt-minimal pt-fill pt-icon-chat">127 Discussions</button>*/}
+													{/*<div className="pt-button-group">
+														<button className="pt-button pt-icon-chat">127</button>
+														<button className="pt-button pt-icon-add">Add</button>
+													</div>*/}
+													{/*<button className="pt-button pt-icon-chat pt-large pt-minimal">127</button>
+														<button className="pt-button pt-icon-add pt-large pt-minimal">Add</button>*/}
+													<span className="title">Discussions</span>
+													{!!discussions.length &&
+														<a href="#discussions" className="pt-button pt-minimal pt-small pt-icon-chat">
+															{discussions.length}
+														</a>
+													}
+													
+													<button onClick={()=> { this.setActiveThread('new'); }} className="pt-button pt-minimal pt-small pt-icon-add">
+														Add
+													</button>
+														
 												</div>
 											}
 										</div>

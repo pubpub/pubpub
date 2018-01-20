@@ -78,12 +78,15 @@ class DiscussionViewer extends Component {
 		return (
 			<div className="discussion-viewer-component">
 				{/*!isActive &&
-					<div className="pt-button-group">
-						<button className="pt-button">New Discussion</button>
+					<div className="pt-button-group pt-minimal pt-vertical" style={{ position: 'fixed', top: '50px', right: '400px' }}>
+						<button className="pt-button">Add Discussion</button>
+						
 						<button className="pt-button">
-							23
+							<span>23 </span>
+							<span>Discussions</span>
 							<span className="pt-icon-standard pt-align-right pt-icon-chat" />
 						</button>
+						<button className="pt-button">Invite Reviwer</button>
 					</div>
 				*/}
 				{isActive && isPinned &&

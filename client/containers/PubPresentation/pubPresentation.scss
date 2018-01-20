@@ -25,6 +25,44 @@
 		margin-bottom: -2em;
 		background-color: #F9F9F9;
 	}
+	.fix-it {
+		opacity: 0;
+		transition: .2s linear opacity;
+		position: fixed;
+		top: 30vh;
+		width: 200px;
+		text-align: center;
+
+		pointer-events: none;
+		&.fixed {
+			opacity: 1;
+			pointer-events: auto;
+		}
+		.pt-button {
+			margin-bottom: 5px;
+			display: block;
+			// text-align: right;
+			// position: relative;
+
+			margin: 0px auto 12px auto;
+			display: block;
+			padding: 0px;
+			font-weight: 600;
+			opacity: .4;
+			border: 2px solid #555;
+			width: 68px;
+			&:hover {
+				opacity: 0.75;
+				background-color: white;
+			}
+		}
+		.title {
+			font-weight: 600;
+			opacity: 0.4;
+			margin-bottom: 12px;
+			display: inline-block;
+		}
+	}
 }
 
 @media only screen and (max-width: 720px) {

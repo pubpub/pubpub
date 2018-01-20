@@ -53,10 +53,11 @@ class DiscussionList extends Component {
 
 		return (
 			<div className="discussion-list-component">
-				<h2>Discussions</h2>
-				<button className="pt-button pt-intent-primary" onClick={()=> { this.props.onPreviewClick('new'); }}>
+				<button className="pt-button pt-intent-primary new-button" onClick={()=> { this.props.onPreviewClick('new'); }}>
 					New Discussion
 				</button>
+				<h2>Discussions</h2>
+				
 				{activeThreads.map((thread)=> {
 					return (
 						<DiscussionPreview
