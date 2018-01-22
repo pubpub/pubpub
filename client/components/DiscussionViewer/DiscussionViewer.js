@@ -90,55 +90,57 @@ class DiscussionViewer extends Component {
 					</div>
 				*/}
 				{isActive && isPinned &&
-					<div className="pinned-thread pt-elevation-4">
-						<div className="button-group">
-							<button className="pt-button" onClick={this.props.onClose}>Close</button>
+					<div className="pinned-wrapper">
+						<div className="pt-button-group pt-minimal discussion-pinned-overlay-buttons">
 							{!isNew &&
-								<button className="pt-button" onClick={this.togglePin}>Pin</button>
+								<button className="pt-button" onClick={this.togglePin}>Unpin</button>
+							}
+							<button className="pt-button" onClick={this.props.onClose}>Close</button>
+						</div>
+						<div className="pinned-thread pt-elevation-4">
+							{!isNew &&
+								<DiscussionThread
+									discussions={activeThread}
+									canManage={pubData.localPermissions === 'manage' || (this.props.loginData.isAdmin && pubData.adminPermissions === 'manage')}
+									slug={pubData.slug}
+									loginData={this.props.loginData}
+									pathname={`${this.props.locationData.path}${this.props.locationData.queryString}`}
+									handleReplySubmit={this.props.onPostDiscussion}
+									handleReplyEdit={this.props.onPutDiscussion}
+									submitIsLoading={this.props.postDiscussionIsLoading}
+									isPresentation={true}
+									getHighlightContent={this.props.getHighlightContent}
+									hoverBackgroundColor={this.props.communityData.accentMinimalColor}
+								/>
+							}
+							{isNew &&
+								<div>
+									{!this.props.loginData.id &&
+										<div className="login-wrapper">
+											<a href={`/login?redirect=${this.props.locationData.path}`} className="pt-button pt-fill">
+												Login to Add Discussion
+											</a>
+										</div>
+									}
+
+									<div className={this.props.loginData.id ? '' : 'disabled'}>
+										<DiscussionInput
+											initialContent={this.props.initialContent}
+											handleSubmit={this.handleNewDiscussionSubmit}
+											showTitle={true}
+											submitIsLoading={this.props.postDiscussionIsLoading}
+											getHighlightContent={this.props.getHighlightContent}
+										/>
+									</div>
+								</div>
 							}
 						</div>
-						{!isNew &&
-							<DiscussionThread
-								discussions={activeThread}
-								canManage={pubData.localPermissions === 'manage' || (this.props.loginData.isAdmin && pubData.adminPermissions === 'manage')}
-								slug={pubData.slug}
-								loginData={this.props.loginData}
-								pathname={`${this.props.locationData.path}${this.props.locationData.queryString}`}
-								handleReplySubmit={this.props.onPostDiscussion}
-								handleReplyEdit={this.props.onPutDiscussion}
-								submitIsLoading={this.props.postDiscussionIsLoading}
-								isPresentation={true}
-								getHighlightContent={this.props.getHighlightContent}
-								hoverBackgroundColor={this.props.communityData.accentMinimalColor}
-							/>
-						}
-						{isNew &&
-							<div>
-								{!this.props.loginData.id &&
-									<div className="login-wrapper">
-										<a href={`/login?redirect=${this.props.locationData.path}`} className="pt-button pt-fill">
-											Login to Add Discussion
-										</a>
-									</div>
-								}
-
-								<div className={this.props.loginData.id ? '' : 'disabled'}>
-									<DiscussionInput
-										initialContent={this.props.initialContent}
-										handleSubmit={this.handleNewDiscussionSubmit}
-										showTitle={true}
-										submitIsLoading={this.props.postDiscussionIsLoading}
-										getHighlightContent={this.props.getHighlightContent}
-									/>
-								</div>
-							</div>
-						}
 					</div>
 				}
 				<Overlay isOpen={isActive && !isPinned} onClose={this.props.onClose} maxWidth={728}>
-					<div className="button-group">
+					<div className="pt-button-group pt-minimal discussion-viewer-overlay-buttons">
+						<button className="pt-button" onClick={this.togglePin}>Pin to Side</button>
 						<button className="pt-button" onClick={this.props.onClose}>Close</button>
-						<button className="pt-button" onClick={this.togglePin}>Pin</button>
 					</div>
 					<DiscussionThread
 						discussions={activeThread}

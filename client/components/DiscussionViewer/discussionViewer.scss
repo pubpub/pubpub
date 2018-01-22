@@ -1,6 +1,5 @@
 .discussion-viewer-component {
-	.pinned-thread {
-		background-color: white;
+	.pinned-wrapper {
 		position: fixed;
 		bottom: 10px;
 		right: 10px;
@@ -8,13 +7,38 @@
 		max-width: calc(100vw - 20px);
 		max-height: 50vh;
 		z-index: 15;
+	}
+	.pinned-thread {
 		overflow: hidden;
 		overflow-y: scroll;
+		max-height: calc(50vh - 30px);
+		background-color: white;
 		.discussion-thread-component {
 			padding: 1em;
 		}
 	}
 	.discussion-input-component {
 		margin-bottom: 0em;
+	}
+	.discussion-pinned-overlay-buttons {
+		width: 100%;
+		justify-content: flex-end;
+		position: relative;
+	}
+}
+
+.discussion-viewer-overlay-buttons {
+	width: 100%;
+	justify-content: flex-end;
+	position: relative;
+	top: -20px;
+	right: -20px;
+}
+
+@media only screen and (min-width: 1330px) {
+	.discussion-viewer-component {
+		.pinned-wrapper {
+			right: calc(50vw - 656px);
+		}
 	}
 }
