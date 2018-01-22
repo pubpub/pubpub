@@ -3,16 +3,11 @@ import PropTypes from 'prop-types';
 import { NonIdealState } from '@blueprintjs/core';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
 import Overlay from 'components/Overlay/Overlay';
-// import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import PubPresHeader from 'components/PubPresHeader/PubPresHeader';
-// import PubPresDetails from 'components/PubPresDetails/PubPresDetails';
 import PubPresSideUser from 'components/PubPresSideUser/PubPresSideUser';
-// import PubPresFooter from 'components/PubPresFooter/PubPresFooter';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 import DiscussionList from 'components/DiscussionList/DiscussionList';
 import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
-// import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
-// import DiscussionPreviewArchived from 'components/DiscussionPreviewArchived/DiscussionPreviewArchived';
 import PubBody from 'components/PubBody/PubBody';
 import License from 'components/License/License';
 import dateFormat from 'dateformat';
@@ -39,7 +34,7 @@ class PubPresentation extends Component {
 			isArchivedVisible: false,
 			docReadyForHighlights: false,
 			initialContent: undefined,
-			// fixIt: false,
+			fixIt: false,
 		};
 
 		this.closeThreadOverlay = this.closeThreadOverlay.bind(this);
@@ -58,29 +53,11 @@ class PubPresentation extends Component {
 		window.addEventListener('scroll', this.handleScroll);
 		this.pubSideContent = document.getElementsByClassName('pub-side-content')[0];
 		this.discussions = document.getElementById('discussions');
-		// this.setState({ initialFixPos: window.scrollY + document.getElementsByClassName('fix-it')[0].getBoundingClientRect().top });
 	}
 	componentWillUnmount() {
 		window.removeEventListener('scroll', this.handleScroll);
 	}
 
-	handleScroll() {
-		if (!this.state.activeThreadNumber) {
-			if (!this.state.fixIt) {
-				const isPastTopSide = this.pubSideContent.getBoundingClientRect().bottom < -25;
-				const isBeforeDiscussions = this.discussions.getBoundingClientRect().top > window.innerHeight;
-				if (isPastTopSide && isBeforeDiscussions) {
-					this.setState({ fixIt: true });
-				}
-			} else {
-				const isBeforeTopSide = this.pubSideContent.getBoundingClientRect().bottom > -25;
-				const isAfterDiscussions = this.discussions.getBoundingClientRect().top < window.innerHeight;
-				if (isBeforeTopSide || isAfterDiscussions) {
-					this.setState({ fixIt: false });
-				}
-			}
-		}
-	}
 	getHighlightContent(from, to) {
 		const primaryEditorState = this.state.editorRef.state.editorState;
 		if (!primaryEditorState || primaryEditorState.doc.nodeSize < from || primaryEditorState.doc.nodeSize < to) { return {}; }
@@ -111,6 +88,23 @@ class PubPresentation extends Component {
 	}
 	closePanelOverlay() {
 		this.setState({ activePanel: undefined });
+	}
+	handleScroll() {
+		if (!this.state.activeThreadNumber) {
+			if (!this.state.fixIt) {
+				const isPastTopSide = this.pubSideContent.getBoundingClientRect().bottom < -25;
+				const isBeforeDiscussions = this.discussions.getBoundingClientRect().top > window.innerHeight;
+				if (isPastTopSide && isBeforeDiscussions) {
+					this.setState({ fixIt: true });
+				}
+			} else {
+				const isBeforeTopSide = this.pubSideContent.getBoundingClientRect().bottom > -25;
+				const isAfterDiscussions = this.discussions.getBoundingClientRect().top < window.innerHeight;
+				if (isBeforeTopSide || isAfterDiscussions) {
+					this.setState({ fixIt: false });
+				}
+			}
+		}
 	}
 	handlePostDiscussion(discussionObject) {
 		this.setState({ postDiscussionIsLoading: true });
@@ -200,13 +194,6 @@ class PubPresentation extends Component {
 		});
 		const discussions = pubData.discussions || [];
 		const threads = nestDiscussionsToThreads(discussions);
-		// const activeThread = threads.reduce((prev, curr)=> {
-		// 	if (curr[0].threadNumber === this.state.activeThreadNumber) {
-		// 		return curr;
-		// 	}
-		// 	return prev;
-		// }, undefined);
-
 		const highlights = discussions.filter((item)=> {
 			return !item.isArchived && item.highlights;
 		}).reduce((prev, curr)=> {
@@ -236,28 +223,6 @@ class PubPresentation extends Component {
 			return collaborator.Collaborator.isContributor;
 		});
 
-		// const activeThreads = threads.filter((items)=> {
-		// 	return items.reduce((prev, curr)=> {
-		// 		if (curr.isArchived) { return false; }
-		// 		return prev;
-		// 	}, true);
-		// }).sort((foo, bar)=> {
-		// 	if (foo[0].threadNumber > bar[0].threadNumber) { return -1; }
-		// 	if (foo[0].threadNumber < bar[0].threadNumber) { return 1; }
-		// 	return 0;
-		// });
-
-		// const archivedThreads = threads.filter((items)=> {
-		// 	return items.reduce((prev, curr)=> {
-		// 		if (curr.isArchived) { return true; }
-		// 		return prev;
-		// 	}, false);
-		// }).sort((foo, bar)=> {
-		// 	if (foo[0].threadNumber > bar[0].threadNumber) { return -1; }
-		// 	if (foo[0].threadNumber < bar[0].threadNumber) { return 1; }
-		// 	return 0;
-		// });
-
 		return (
 			<div id="pub-presentation-container">
 				<PageWrapper
@@ -277,31 +242,10 @@ class PubPresentation extends Component {
 					}
 					{pubData.versions.length &&
 						<div>
-							{/*<div className="fix-me">
-								<div contentEditable> A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things.  A whole lot of text is here and it is a lot of things. </div>
-							</div>*/}
 							<PubPresHeader
 								pubData={pubData}
 								setOverlayPanel={this.setOverlayPanel}
-								// title={pubData.title}
-								// description={pubData.description}
-								// backgroundImage={pubData.useHeaderImage ? pubData.avatar : undefined}
 							/>
-
-
-							{/*<PubPresDetails
-								slug={pubData.slug}
-								numDiscussions={pubData.discussions.length}
-								numSuggestions={pubData.discussions.reduce((prev, curr)=> {
-									if (curr.suggestions) { return prev + 1; }
-									return prev;
-								}, 0)}
-								collaborators={pubData.collaborators}
-								versions={versionsList}
-								localPermissions={pubData.localPermissions}
-								hasHeaderImage={pubData.useHeaderImage && !!pubData.avatar}
-								setOverlayPanel={this.setOverlayPanel}
-							/>*/}
 
 							<div className="container pub">
 								<div className="row">
@@ -358,37 +302,15 @@ class PubPresentation extends Component {
 											}
 											{!this.state.activeThreadNumber &&
 												<div className={`side-block fix-it ${this.state.fixIt ? 'fixed' : ''}`}>
-													{/*<p>
-														<a
-															href={`/pub/${pubData.slug}/collaborators`}
-															onClick={(evt)=> {
-																evt.preventDefault();
-																this.setOverlayPanel('collaborators');
-															}}
-														>
-															Discussions
-														</a>
-													</p>*/}
-													{/*<button className="pt-button pt-minimal pt-fill pt-icon-add">New Discussion</button>
-													<button className="pt-button pt-minimal pt-fill pt-icon-new-person">Invite Reviewer</button>
-													<button className="pt-button pt-minimal pt-fill pt-icon-chat">127 Discussions</button>*/}
-													{/*<div className="pt-button-group">
-														<button className="pt-button pt-icon-chat">127</button>
-														<button className="pt-button pt-icon-add">Add</button>
-													</div>*/}
-													{/*<button className="pt-button pt-icon-chat pt-large pt-minimal">127</button>
-														<button className="pt-button pt-icon-add pt-large pt-minimal">Add</button>*/}
 													<span className="title">Discussions</span>
 													{!!discussions.length &&
 														<a href="#discussions" className="pt-button pt-minimal pt-small pt-icon-chat">
 															{discussions.length}
 														</a>
 													}
-													
 													<button onClick={()=> { this.setActiveThread('new'); }} className="pt-button pt-minimal pt-small pt-icon-add">
 														Add
 													</button>
-														
 												</div>
 											}
 										</div>
@@ -412,44 +334,11 @@ class PubPresentation extends Component {
 								</div>
 							</div>
 
-							{/* <PubPresFooter
-								slug={pubData.slug}
-								collections={pubData.collections}
-								numDiscussions={pubData.discussions.length}
-								localPermissions={pubData.localPermissions}
-							/> */}
-
 							<div id="discussions">
 								<div className="container pub">
 									<div className="row">
 										<div className="col-12">
 											<DiscussionList pubData={pubData} onPreviewClick={this.setActiveThread} />
-											{/*activeThreads.map((thread)=> {
-												return (
-													<DiscussionPreview
-														key={`thread-${thread[0].id}`}
-														discussions={thread}
-														onPreviewClick={this.setActiveThread}
-													/>
-												);
-											})*/}
-											{/*!!archivedThreads.length &&
-												<div className="archived-threads">
-													<button className="pt-button pt-minimal pt-large pt-fill archive-title-button" onClick={this.toggleArchivedVisible}>
-														{this.state.isArchivedVisible ? 'Hide ' : 'Show '}
-														Archived Thread{archivedThreads.length === 1 ? '' : 's'} ({archivedThreads.length})
-													</button>
-													{this.state.isArchivedVisible && archivedThreads.map((thread)=> {
-														return (
-															<DiscussionPreviewArchived
-																key={`thread-${thread[0].id}`}
-																discussions={thread}
-																onPreviewClick={this.setActiveThread}
-															/>
-														);
-													})}
-												</div>
-											*/}
 										</div>
 									</div>
 								</div>
@@ -468,22 +357,6 @@ class PubPresentation extends Component {
 								postDiscussionIsLoading={this.state.postDiscussionIsLoading}
 								initialContent={this.state.initialContent}
 							/>
-							{/*<Overlay isOpen={!!activeThread} onClose={this.closeThreadOverlay} maxWidth={728}>
-															<DiscussionThread
-																discussions={activeThread || []}
-																canManage={pubData.localPermissions === 'manage' || (this.props.loginData.isAdmin && pubData.adminPermissions === 'manage')}
-																slug={pubData.slug}
-																loginData={this.props.loginData}
-																pathname={`${this.props.locationData.path}${this.props.locationData.queryString}`}
-																handleReplySubmit={this.handlePostDiscussion}
-																handleReplyEdit={this.handlePutDiscussion}
-																submitIsLoading={this.state.postDiscussionIsLoading}
-																isPresentation={true}
-																getHighlightContent={this.getHighlightContent}
-																hoverBackgroundColor={this.props.communityData.accentMinimalColor}
-															/>
-														</Overlay>*/}
-
 							<Overlay isOpen={this.state.activePanel === 'collaborators'} onClose={this.closePanelOverlay} maxWidth={728}>
 								<PubCollabShare
 									appData={this.props.communityData}
