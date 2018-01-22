@@ -263,14 +263,9 @@ class PubCollaboration extends Component {
 			})
 		})
 		.then((result)=> {
-			if (this.state.thread !== result.threadNumber) {
-				document.getElementsByClassName('side-panel-content')[0].scrollTop = 0;
-			}
 			this.setState({
 				postDiscussionIsLoading: false,
-				isSubmitOpen: false,
-				thread: result.threadNumber,
-				initNewDoc: undefined,
+				activeThreadNumber: result.threadNumber,
 				pubData: {
 					...this.state.pubData,
 					discussions: [
@@ -488,27 +483,27 @@ class PubCollaboration extends Component {
 			return prev;
 		}, undefined);
 
-		const activeThreads = threads.filter((items)=> {
-			return items.reduce((prev, curr)=> {
-				if (curr.isArchived) { return false; }
-				return prev;
-			}, true);
-		}).sort((foo, bar)=> {
-			if (foo[0].threadNumber > bar[0].threadNumber) { return -1; }
-			if (foo[0].threadNumber < bar[0].threadNumber) { return 1; }
-			return 0;
-		});
+		// const activeThreads = threads.filter((items)=> {
+		// 	return items.reduce((prev, curr)=> {
+		// 		if (curr.isArchived) { return false; }
+		// 		return prev;
+		// 	}, true);
+		// }).sort((foo, bar)=> {
+		// 	if (foo[0].threadNumber > bar[0].threadNumber) { return -1; }
+		// 	if (foo[0].threadNumber < bar[0].threadNumber) { return 1; }
+		// 	return 0;
+		// });
 
-		const archivedThreads = threads.filter((items)=> {
-			return items.reduce((prev, curr)=> {
-				if (curr.isArchived) { return true; }
-				return prev;
-			}, false);
-		}).sort((foo, bar)=> {
-			if (foo[0].threadNumber > bar[0].threadNumber) { return -1; }
-			if (foo[0].threadNumber < bar[0].threadNumber) { return 1; }
-			return 0;
-		});
+		// const archivedThreads = threads.filter((items)=> {
+		// 	return items.reduce((prev, curr)=> {
+		// 		if (curr.isArchived) { return true; }
+		// 		return prev;
+		// 	}, false);
+		// }).sort((foo, bar)=> {
+		// 	if (foo[0].threadNumber > bar[0].threadNumber) { return -1; }
+		// 	if (foo[0].threadNumber < bar[0].threadNumber) { return 1; }
+		// 	return 0;
+		// });
 
 		let canManage = false;
 		if (pubData.localPermissions === 'manage') { canManage = true; }
