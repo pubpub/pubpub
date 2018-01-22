@@ -61,9 +61,17 @@
 				margin: 2em 0em 1em;
 			}
 		}
+		.container.pub {
+			max-width: 950px;
+		}
+		.pub-side-content {
+			float: right;
+			width: 250px;
+			padding-left: 50px;
+		}
 		.content-panel {
 			// direction: ltr;
-			padding: 2em;
+			padding: 2em 0em;
 			// background-color: white;
 			// border: 1px solid #ECECEC;
 			// border-top: 0px solid #ECECEC;
@@ -74,21 +82,70 @@
 			// .collaborative-loading {
 				
 			// }
-			max-width: 700px;
-			margin: 0 auto;
+			// max-width: 700px;
+			// margin-right: 250px;
+			// margin: 0 auto;
+			margin-right: 250px;
 			.pub-body-component.loading {
 				opacity: 0;
 			}
 		}
+		.fix-it {
+			opacity: 0;
+			transition: .2s linear opacity;
+			position: fixed;
+			top: 30vh;
+			width: 200px;
+			text-align: center;
+
+			pointer-events: none;
+			&.fixed {
+				opacity: 1;
+				pointer-events: auto;
+			}
+			.pt-button {
+				margin-bottom: 5px;
+				display: block;
+				// text-align: right;
+				// position: relative;
+
+				margin: 0px auto 12px auto;
+				display: block;
+				padding: 0px;
+				font-weight: 600;
+				opacity: .4;
+				border: 2px solid #555;
+				width: 68px;
+				&:hover {
+					opacity: 0.75;
+					background-color: white;
+				}
+			}
+			.title {
+				font-weight: 600;
+				opacity: 0.4;
+				margin-bottom: 12px;
+				display: inline-block;
+			}
+		}
+		// #discussions {
+		// 	border-top: 1px solid #E0E0E0;
+		// 	padding: 2em 0em 4em;
+		// 	background-color: #F9F9F9;
+		// 	.discussions-content {
+		// 		max-width: 700px;
+		// 		margin: 0 auto;	
+		// 		padding: 0em 2em;
+		// 	}
+		// }
 		#discussions {
+			// .col-12 {
+			// 	padding-right: 250px;
+			// }
 			border-top: 1px solid #E0E0E0;
 			padding: 2em 0em 4em;
+			margin-bottom: -2em;
 			background-color: #F9F9F9;
-			.discussions-content {
-				max-width: 700px;
-				margin: 0 auto;	
-				padding: 0em 2em;
-			}
 		}
 	}
 }

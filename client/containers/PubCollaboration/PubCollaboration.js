@@ -9,6 +9,8 @@ import PubCollabPublish from 'components/PubCollabPublish/PubCollabPublish';
 import PubCollabSubmit from 'components/PubCollabSubmit/PubCollabSubmit';
 import PubCollabDetails from 'components/PubCollabDetails/PubCollabDetails';
 import PubCollabCollections from 'components/PubCollabCollections/PubCollabCollections';
+import DiscussionList from 'components/DiscussionList/DiscussionList';
+import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
 import DiscussionNew from 'components/DiscussionNew/DiscussionNew';
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionPreviewArchived from 'components/DiscussionPreviewArchived/DiscussionPreviewArchived';
@@ -63,8 +65,14 @@ class PubCollaboration extends Component {
 			postDiscussionIsLoading: false,
 			postVersionIsLoading: false,
 			docReadyForHighlights: false,
+
+			activeThreadNumber: undefined,
+			initialContent: undefined,
+			fixIt: true,
 		};
 		this.editorRef = undefined;
+		this.setActiveThread = this.setActiveThread.bind(this);
+		this.closeThreadOverlay = this.closeThreadOverlay.bind(this);
 		this.togglePublish = this.togglePublish.bind(this);
 		this.toggleSubmit = this.toggleSubmit.bind(this);
 		this.toggleShare = this.toggleShare.bind(this);
@@ -87,13 +95,45 @@ class PubCollaboration extends Component {
 		this.handleAddCollection = this.handleAddCollection.bind(this);
 		this.handleNewHighlightDiscussion = this.handleNewHighlightDiscussion.bind(this);
 		this.handleRemoveCollection = this.handleRemoveCollection.bind(this);
-		this.handleHighlightClick = this.handleHighlightClick.bind(this);
+		// this.handleHighlightClick = this.handleHighlightClick.bind(this);
 		this.getHighlightContent = this.getHighlightContent.bind(this);
 		this.handleStatusChange = this.handleStatusChange.bind(this);
 		this.handleThreadClick = this.handleThreadClick.bind(this);
 		this.handleEditorRef = this.handleEditorRef.bind(this);
+		this.handleScroll = this.handleScroll.bind(this);
 	}
 
+	componentDidMount() {
+		window.addEventListener('scroll', this.handleScroll);
+		this.discussions = document.getElementById('discussions');
+	}
+	componentWillUnmount() {
+		window.removeEventListener('scroll', this.handleScroll);
+	}
+	handleScroll() {
+		if (!this.state.activeThreadNumber) {
+			if (!this.state.fixIt) {
+				const isBeforeDiscussions = this.discussions.getBoundingClientRect().top > window.innerHeight;
+				if (isBeforeDiscussions) {
+					this.setState({ fixIt: true });
+				}
+			} else {
+				const isAfterDiscussions = this.discussions.getBoundingClientRect().top < window.innerHeight;
+				if (isAfterDiscussions) {
+					this.setState({ fixIt: false });
+				}
+			}
+		}
+	}
+	setActiveThread(threadNumber) {
+		this.setState({ activeThreadNumber: threadNumber });
+	}
+	closeThreadOverlay() {
+		this.setState({
+			activeThreadNumber: undefined,
+			initialContent: undefined,
+		});
+	}
 	onOpenShare() {
 		this.setState({
 			isShareOpen: true,
@@ -168,9 +208,9 @@ class PubCollaboration extends Component {
 			}
 		});
 	}
-	handleHighlightClick(threadNumber) {
-		this.setState({ thread: threadNumber });
-	}
+	// handleHighlightClick(threadNumber) {
+	// 	this.setState({ thread: threadNumber });
+	// }
 	handleDetailsSave(detailsObject) {
 		this.setState({ putPubIsLoading: true });
 		return apiFetch('/api/pubs', {
@@ -529,240 +569,82 @@ class PubCollaboration extends Component {
 					onThreadClick={this.handleThreadClick}
 				/>
 				<div className="page-content">
-					<div
-						className="content-panel"
-						tabIndex={-1}
-						role="textbox"
-					>
-						{this.state.collabStatus === 'connecting' &&
-							<div className="collaborative-loading">
-								<div className="loading pt-skeleton" style={{ width: '95%', height: '1.2em', marginBottom: '1em' }} />
-								<div className="loading pt-skeleton" style={{ width: '85%', height: '1.2em', marginBottom: '1em' }} />
-								<div className="loading pt-skeleton" style={{ width: '90%', height: '1.2em', marginBottom: '1em' }} />
-								<div className="loading pt-skeleton" style={{ width: '80%', height: '1.2em', marginBottom: '1em' }} />
-								<div className="loading pt-skeleton" style={{ width: '82%', height: '1.2em', marginBottom: '1em' }} />
-							</div>
-						}
-						<div className={`pub-body-component ${this.state.collabStatus === 'connecting' ? 'loading' : ''}`}>
-							<PubCollabEditor
-								onRef={this.handleEditorRef}
-								editorKey={`pub-${pubData.id}`}
-								isReadOnly={!canManage && pubData.localPermissions !== 'edit'}
-								clientData={this.state.activeCollaborators[0]}
-								onClientChange={this.handleClientChange}
-								onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
-								onHighlightClick={this.handleHighlightClick}
-								hoverBackgroundColor={this.props.communityData.accentMinimalColor}
-								highlights={this.state.docReadyForHighlights ? highlights : []}
-								threads={threads}
-								slug={pubData.slug}
-								onStatusChange={this.handleStatusChange}
-							/>
-						</div>
-					</div>
-
-					<div id="discussions">
-						<div className="discussions-content">
-							<h2>Discussions</h2>
-							
-							{activeThreads.map((thread)=> {
-								return (
-									<DiscussionPreview
-										key={`thread-${thread[0].id}`}
-										discussions={thread}
-										onPreviewClick={this.handleThreadClick}
-									/>
-								);
-							})}
-							{!!archivedThreads.length &&
-								<div className="archived-threads">
-									<button className="pt-button pt-minimal pt-large pt-fill archive-title-button" onClick={this.toggleArchivedVisible}>
-										{this.state.isArchivedVisible ? 'Hide ' : 'Show '}
-										Archived Thread{archivedThreads.length === 1 ? '' : 's'} ({archivedThreads.length})
-									</button>
-									{this.state.isArchivedVisible && archivedThreads.map((thread)=> {
-										return (
-											<DiscussionPreviewArchived
-												key={`thread-${thread[0].id}`}
-												discussions={thread}
-												onPreviewClick={this.handleThreadClick}
-											/>
-										);
-									})}
+					<div className="container pub">
+						<div className="row">
+							<div className="col-12">
+								<div className="pub-side-content">
+									{!this.state.activeThreadNumber &&
+										<div className={`side-block fix-it ${this.state.fixIt ? 'fixed' : ''}`}>
+											<span className="title">Discussions</span>
+											{!!discussions.length &&
+												<a href="#discussions" className="pt-button pt-minimal pt-small pt-icon-chat">
+													{discussions.length}
+												</a>
+											}
+											<button onClick={()=> { this.setActiveThread('new'); }} className="pt-button pt-minimal pt-small pt-icon-add">
+												Add
+											</button>
+										</div>
+									}
 								</div>
-							}
-						</div>
-					</div>
-				</div>
-				{/*<PageWrapper
-					loginData={this.props.loginData}
-					communityData={this.props.communityData}
-					locationData={this.props.locationData}
-					fixHeader={true}
-					hideNav={true}
-					hideFooter={true}
-					<div>
-						<div className="upper">
-							<div className="container">
-								<div className="row">
-									<div className="col-12">
-										<PubCollabHeader
-											pubData={pubData}
-											collaborators={pubData.collaborators}
-											canManage={canManage}
-											isAdmin={loginData.isAdmin}
-											activeCollaborators={this.state.activeCollaborators}
-											submissionThreadNumber={submissionThreadNumber}
-											activeThread={activeThread}
-											collabStatus={this.state.collabStatus}
-											onPublishClick={this.togglePublish}
-											onSubmitClick={this.toggleSubmit}
-											onShareClick={this.toggleShare}
-											onDetailsClick={this.toggleDetails}
-											onCollaboratorsClick={this.toggleCollaborators}
-											onCollectionsClick={this.toggleCollections}
-											onThreadClick={this.handleThreadClick}
+								<div
+									className="content-panel"
+									tabIndex={-1}
+									role="textbox"
+								>
+									{this.state.collabStatus === 'connecting' &&
+										<div className="collaborative-loading">
+											<div className="loading pt-skeleton" style={{ width: '95%', height: '1.2em', marginBottom: '1em' }} />
+											<div className="loading pt-skeleton" style={{ width: '85%', height: '1.2em', marginBottom: '1em' }} />
+											<div className="loading pt-skeleton" style={{ width: '90%', height: '1.2em', marginBottom: '1em' }} />
+											<div className="loading pt-skeleton" style={{ width: '80%', height: '1.2em', marginBottom: '1em' }} />
+											<div className="loading pt-skeleton" style={{ width: '82%', height: '1.2em', marginBottom: '1em' }} />
+										</div>
+									}
+									<div className={`pub-body-component ${this.state.collabStatus === 'connecting' ? 'loading' : ''}`}>
+										<PubCollabEditor
+											onRef={this.handleEditorRef}
+											editorKey={`pub-${pubData.id}`}
+											isReadOnly={!canManage && pubData.localPermissions !== 'edit'}
+											clientData={this.state.activeCollaborators[0]}
+											onClientChange={this.handleClientChange}
+											onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
+											onHighlightClick={this.setActiveThread}
+											hoverBackgroundColor={this.props.communityData.accentMinimalColor}
+											highlights={this.state.docReadyForHighlights ? highlights : []}
+											threads={threads}
+											slug={pubData.slug}
+											onStatusChange={this.handleStatusChange}
 										/>
 									</div>
 								</div>
 							</div>
 						</div>
-
-
-
-
-						<div className="lower">
-							<div className="container">
-								<div className="row">
-									<div className="col-12">
-
-										<div className="side-panel">
-											<div className="side-panel-content">
-												{!this.state.thread &&
-													<div className="new-discussion-wrapper">
-														<button
-															onClick={()=> { this.handleThreadClick('new'); }}
-															className="pt-button pt-minimal pt-icon-add top-button"
-														>
-															New Discussion
-														</button>
-													</div>
-												}
-												{this.state.thread === 'new' &&
-													<DiscussionNew
-														pubId={pubData.id}
-														slug={pubData.slug}
-														loginData={this.props.loginData}
-														pathname={`${this.props.locationData.pathname}${this.props.locationData.queryString}`}
-														initialContent={this.state.initNewDoc}
-														handleDiscussionSubmit={this.handlePostDiscussion}
-														getHighlightContent={this.getHighlightContent}
-														submitIsLoading={this.state.postDiscussionIsLoading}
-														setThread={this.handleThreadClick}
-													/>
-												}
-												{this.state.thread !== 'new' && !activeThread &&
-													<div>
-														{activeThreads.map((thread)=> {
-															return (
-																<DiscussionPreview
-																	key={`thread-${thread[0].id}`}
-																	discussions={thread}
-																	onPreviewClick={this.handleThreadClick}
-																/>
-															);
-														})}
-														{!!archivedThreads.length &&
-															<div className="archived-threads">
-																<button className="pt-button pt-minimal pt-large pt-fill archive-title-button" onClick={this.toggleArchivedVisible}>
-																	{this.state.isArchivedVisible ? 'Hide ' : 'Show '}
-																	Archived Thread{archivedThreads.length === 1 ? '' : 's'} ({archivedThreads.length})
-																</button>
-																{this.state.isArchivedVisible && archivedThreads.map((thread)=> {
-																	return (
-																		<DiscussionPreviewArchived
-																			key={`thread-${thread[0].id}`}
-																			discussions={thread}
-																			onPreviewClick={this.handleThreadClick}
-																		/>
-																	);
-																})}
-															</div>
-														}
-													</div>
-												}
-												{activeThread &&
-													<DiscussionThread
-														discussions={activeThread}
-														canManage={pubData.localPermissions === 'manage' || (this.props.loginData.isAdmin && pubData.adminPermissions === 'manage')}
-														slug={pubData.slug}
-														loginData={this.props.loginData}
-														pathname={`${this.props.locationData.pathname}${this.props.locationData.search}`}
-														handleReplySubmit={this.handlePostDiscussion}
-														handleReplyEdit={this.handlePutDiscussion}
-														submitIsLoading={this.state.postDiscussionIsLoading}
-														onPublish={this.handlePublish}
-														publishIsLoading={this.state.postVersionIsLoading}
-														getHighlightContent={this.getHighlightContent}
-														hoverBackgroundColor={this.props.communityData.accentMinimalColor}
-														setThread={this.handleThreadClick}
-													/>
-												}
-												{threads.length === 0 && !this.state.thread &&
-													<NonIdealState
-														title="Start the Conversation"
-														visual="pt-icon-chat"
-														action={
-															<button
-																onClick={()=> { this.handleThreadClick('new'); }}
-																className="pt-button"
-															>
-																Create New Discussion
-															</button>
-														}
-													/>
-												}
-											</div>
-										</div>
-
-										<div
-											className="content-panel"
-											tabIndex={-1}
-											role="textbox"
-										>
-											{this.state.collabStatus === 'connecting' &&
-												<div className="collaborative-loading">
-													<div className="loading pt-skeleton" style={{ width: '95%', height: '1.2em', marginBottom: '1em' }} />
-													<div className="loading pt-skeleton" style={{ width: '85%', height: '1.2em', marginBottom: '1em' }} />
-													<div className="loading pt-skeleton" style={{ width: '90%', height: '1.2em', marginBottom: '1em' }} />
-													<div className="loading pt-skeleton" style={{ width: '80%', height: '1.2em', marginBottom: '1em' }} />
-													<div className="loading pt-skeleton" style={{ width: '82%', height: '1.2em', marginBottom: '1em' }} />
-												</div>
-											}
-											<div className={`pub-body-component ${this.state.collabStatus === 'connecting' ? 'loading' : ''}`}>
-												<PubCollabEditor
-													onRef={this.handleEditorRef}
-													editorKey={`pub-${pubData.id}`}
-													isReadOnly={!canManage && pubData.localPermissions !== 'edit'}
-													clientData={this.state.activeCollaborators[0]}
-													onClientChange={this.handleClientChange}
-													onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
-													onHighlightClick={this.handleHighlightClick}
-													hoverBackgroundColor={this.props.communityData.accentMinimalColor}
-													highlights={this.state.docReadyForHighlights ? highlights : []}
-													threads={threads}
-													slug={pubData.slug}
-													onStatusChange={this.handleStatusChange}
-												/>
-											</div>
-										</div>
-
-									</div>
+					</div>
+					<div id="discussions">
+						<div className="container pub">
+							<div className="row">
+								<div className="col-12">
+									<DiscussionList pubData={pubData} onPreviewClick={this.setActiveThread} />
 								</div>
 							</div>
 						</div>
 					</div>
-				</PageWrapper>*/}
+				</div>
+
+				<DiscussionViewer
+					pubData={pubData}
+					loginData={this.props.loginData}
+					locationData={this.props.locationData}
+					communityData={this.props.communityData}
+					activeThreadNumber={this.state.activeThreadNumber}
+					onClose={this.closeThreadOverlay}
+					getHighlightContent={this.getHighlightContent}
+					onPostDiscussion={this.handlePostDiscussion}
+					onPutDiscussion={this.handlePutDiscussion}
+					postDiscussionIsLoading={this.state.postDiscussionIsLoading}
+					initialContent={this.state.initialContent}
+				/>
 
 				<Overlay isOpen={this.state.isPublishOpen} onClose={this.togglePublish}>
 					<PubCollabPublish
