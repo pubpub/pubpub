@@ -45,7 +45,8 @@ class DiscussionStatic extends Component {
 						discussions={activeThread}
 						slug={this.props.slug}
 						isPresentation={true}
-						onPreviewClick={()=> { this.props.setActiveThread(activeThread[0].threadNumber); }}
+						// onPreviewClick={()=> { this.props.setActiveThread(activeThread[0].threadNumber); }}
+						onPreviewClick={this.props.setActiveThread}
 					/>
 				</figure>
 			</div>

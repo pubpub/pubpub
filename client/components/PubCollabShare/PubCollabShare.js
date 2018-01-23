@@ -19,6 +19,7 @@ const propTypes = {
 	onCollaboratorDelete: PropTypes.func,
 	onPutPub: PropTypes.func,
 	collaboratorsOnly: PropTypes.bool,
+	mode: PropTypes.string,
 	// isLoading: PropTypes.bool,
 };
 
@@ -31,6 +32,7 @@ const defaultProps = {
 	onCollaboratorDelete: ()=>{},
 	onPutPub: ()=>{},
 	collaboratorsOnly: false,
+	mode: undefined,
 	// isLoading: false,
 };
 
@@ -177,7 +179,9 @@ class PubCollabShare extends Component {
 				}
 
 				<div>
-					<h5> Collaborators</h5>
+					{!this.props.mode &&
+						<h5> Collaborators</h5>
+					}
 					{this.props.canManage &&
 						<UserAutocomplete
 							onSelect={this.handleUserSelect}

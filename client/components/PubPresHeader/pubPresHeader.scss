@@ -26,7 +26,7 @@
 					background-color: rgba(255, 255, 255, 0.4);
 				}
 			}
-			a, .pt-icon-standard:before, .pt-button:before {
+			a, .pt-icon-standard:before, .pt-button:before, .pt-breadcrumb, .pt-breadcrumbs li:after {
 				color: white;
 			}
 		}
@@ -93,6 +93,25 @@
 					padding-right: 20px;
 				}
 			}
+		}
+	}
+	&.mode {
+		border-bottom: 1px solid #E0E0E0;
+		.buttons, .details, .authors, .description {
+			display: none;
+		}
+		.wrapper {
+			margin-bottom: 0px;
+			padding-bottom: 10px;
+			.col-12 {
+				border-bottom: 0px solid #E0E0E0;
+			}
+		}
+		h1 {
+			padding: 20px 0px;
+		}
+		.pt-breadcrumb {
+			text-transform: capitalize;
 		}
 	}
 }

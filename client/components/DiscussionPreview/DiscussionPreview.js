@@ -5,10 +5,14 @@ import Avatar from 'components/Avatar/Avatar';
 require('./discussionPreview.scss');
 
 const propTypes = {
+	slug: PropTypes.string.isRequired,
 	discussions: PropTypes.array.isRequired,
-	onPreviewClick: PropTypes.func.isRequired,
+	onPreviewClick: PropTypes.func,
 };
 
+const defaultProps = {
+	onPreviewClick: undefined,
+};
 
 const DiscussionPreview = function(props) {
 	const hasAttachments = props.discussions.reduce((prev, curr)=> {
@@ -53,8 +57,13 @@ const DiscussionPreview = function(props) {
 
 	return (
 		<a
-			// href={toUrl}
-			onClick={()=> { props.onPreviewClick(props.discussions[0].threadNumber); }}
+			href={`/pub/${props.slug}/discussions/${props.discussions[0].threadNumber}`}
+			onClick={(evt)=> {
+				if (props.onPreviewClick) {
+					evt.preventDefault();
+					props.onPreviewClick(props.discussions[0].threadNumber);
+				}
+			}}
 			className="discussion-preview-component"
 		>
 			<div className="icons">
@@ -107,4 +116,5 @@ const DiscussionPreview = function(props) {
 };
 
 DiscussionPreview.propTypes = propTypes;
+DiscussionPreview.defaultProps = defaultProps;
 export default DiscussionPreview;

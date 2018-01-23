@@ -8,7 +8,13 @@ require('./discussionList.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
-	onPreviewClick: PropTypes.func.isRequired,
+	onPreviewClick: PropTypes.func,
+	mode: PropTypes.string,
+};
+
+const defaultProps = {
+	onPreviewClick: undefined,
+	mode: undefined,
 };
 
 class DiscussionList extends Component {
@@ -53,15 +59,20 @@ class DiscussionList extends Component {
 
 		return (
 			<div className="discussion-list-component">
-				<button className="pt-button pt-intent-primary new-button" onClick={()=> { this.props.onPreviewClick('new'); }}>
-					New Discussion
-				</button>
-				<h2>Discussions</h2>
+				{!this.props.mode &&
+					<button className="pt-button pt-intent-primary new-button" onClick={()=> { this.props.onPreviewClick('new'); }}>
+						New Discussion
+					</button>
+				}
+				{!this.props.mode &&
+					<h2>Discussions</h2>
+				}
 				
 				{activeThreads.map((thread)=> {
 					return (
 						<DiscussionPreview
 							key={`thread-${thread[0].id}`}
+							slug={pubData.slug}
 							discussions={thread}
 							onPreviewClick={this.props.onPreviewClick}
 						/>
@@ -77,6 +88,7 @@ class DiscussionList extends Component {
 							return (
 								<DiscussionPreviewArchived
 									key={`thread-${thread[0].id}`}
+									slug={pubData.slug}
 									discussions={thread}
 									onPreviewClick={this.props.onPreviewClick}
 								/>
@@ -90,4 +102,5 @@ class DiscussionList extends Component {
 }
 
 DiscussionList.propTypes = propTypes;
+DiscussionList.defaultProps = defaultProps;
 export default DiscussionList;

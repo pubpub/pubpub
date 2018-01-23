@@ -6,8 +6,11 @@ import app from '../server';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 import { findPub } from '../queryHelpers';
 
-app.get('/pub/:slug', (req, res, next)=> {
+app.get(['/pub/:slug', '/pub/:slug/:mode', '/pub/:slug/:mode/:subMode'], (req, res, next)=> {
 	if (!hostIsValid(req, 'community')) { return next(); }
+
+	const acceptedModes = ['collaborators', 'versions', 'invite', 'discussions'];
+	if (req.params.mode && acceptedModes.indexOf(req.params.mode) === -1) { return next(); }
 
 	return getInitialData(req)
 	.then((initialData)=> {

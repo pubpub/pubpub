@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import TimeAgo from 'react-timeago';
-import { Button } from '@blueprintjs/core';
+import { Button, NonIdealState } from '@blueprintjs/core';
 import DiscussionInput from 'components/DiscussionInput/DiscussionInput';
 import DiscussionThreadItem from 'components/DiscussionThreadItem/DiscussionThreadItem';
 
@@ -47,7 +47,7 @@ class DiscussionThread extends Component {
 		this.state = {
 			isEditing: false,
 			submitDisabled: false,
-			title: sortedDiscussions[0].title,
+			title: sortedDiscussions[0] ? sortedDiscussions[0].title : '',
 			isLoading: false,
 			archiveIsLoading: false,
 		};
@@ -154,6 +154,15 @@ class DiscussionThread extends Component {
 			if (foo.createdAt < bar.createdAt) { return -1; }
 			return 0;
 		});
+
+		if (!sortedDiscussions.length) {
+			return (
+				<NonIdealState
+					title="Discussion Thread Not Found"
+					visual="pt-icon-widget"
+				/>
+			);
+		}
 
 		const canManageThread =
 			sortedDiscussions[0].userId === this.props.loginData.id || // User is author of thread

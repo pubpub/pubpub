@@ -6,11 +6,13 @@ import Overlay from 'components/Overlay/Overlay';
 import PubPresHeader from 'components/PubPresHeader/PubPresHeader';
 import PubPresSideUser from 'components/PubPresSideUser/PubPresSideUser';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
+import PubPresVersions from 'components/PubPresVersions/PubPresVersions';
 import DiscussionList from 'components/DiscussionList/DiscussionList';
 import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
+import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import PubBody from 'components/PubBody/PubBody';
 import License from 'components/License/License';
-import dateFormat from 'dateformat';
+// import dateFormat from 'dateformat';
 import { apiFetch, hydrateWrapper, nestDiscussionsToThreads, generateHash } from 'utilities';
 
 require('./pubPresentation.scss');
@@ -50,12 +52,16 @@ class PubPresentation extends Component {
 		this.handleScroll = this.handleScroll.bind(this);
 	}
 	componentDidMount() {
-		window.addEventListener('scroll', this.handleScroll);
 		this.pubSideContent = document.getElementsByClassName('pub-side-content')[0];
 		this.discussions = document.getElementById('discussions');
+		if (this.pubSideContent && this.discussions) {
+			window.addEventListener('scroll', this.handleScroll);
+		}
 	}
 	componentWillUnmount() {
-		window.removeEventListener('scroll', this.handleScroll);
+		if (this.pubSideContent && this.discussions) {
+			window.removeEventListener('scroll', this.handleScroll);
+		}
 	}
 
 	getHighlightContent(from, to) {
@@ -186,14 +192,20 @@ class PubPresentation extends Component {
 	render() {
 		const pubData = this.state.pubData;
 		const activeVersion = pubData.versions[0];
-		const versionsList = pubData.versionsList.map((item)=> {
-			if (item.id === activeVersion.id) {
-				return { ...item, isActive: true };
-			}
-			return item;
-		});
+		// const versionsList = pubData.versionsList.map((item)=> {
+		// 	if (item.id === activeVersion.id) {
+		// 		return { ...item, isActive: true };
+		// 	}
+		// 	return item;
+		// });
 		const discussions = pubData.discussions || [];
 		const threads = nestDiscussionsToThreads(discussions);
+		const activeThread = threads.reduce((prev, curr)=> {
+			if (curr[0].threadNumber === Number(this.props.locationData.params.subMode)) {
+				return curr;
+			}
+			return prev;
+		}, []);
 		const highlights = discussions.filter((item)=> {
 			return !item.isArchived && item.highlights;
 		}).reduce((prev, curr)=> {
@@ -223,6 +235,8 @@ class PubPresentation extends Component {
 			return collaborator.Collaborator.isContributor;
 		});
 
+		const mode = this.props.locationData.params.mode;
+		const subMode = this.props.locationData.params.subMode;
 		return (
 			<div id="pub-presentation-container">
 				<PageWrapper
@@ -240,7 +254,7 @@ class PubPresentation extends Component {
 							/>
 						</div>
 					}
-					{pubData.versions.length &&
+					{pubData.versions.length && !mode &&
 						<div>
 							<PubPresHeader
 								pubData={pubData}
@@ -365,28 +379,60 @@ class PubPresentation extends Component {
 									collaboratorsOnly={true}
 								/>
 							</Overlay>
-							<Overlay isOpen={this.state.activePanel === 'versions'} onClose={this.closePanelOverlay} maxWidth={728}>
-								<div>
-									<h6 style={{ paddingRight: '0px' }}>Published Snapshots</h6>
-									<ul>
-										{versionsList.sort((foo, bar)=>{
-											if (foo.createdAt < bar.createdAt) { return 1; }
-											if (foo.createdAt > bar.createdAt) { return -1; }
-											return 0;
-										}).map((version)=> {
-											return (
-												<li key={`version-${version.id}`}>
-													<a href={`/pub/${pubData.slug}?version=${version.id}`} className="pt-menu-item pt-popover-dismiss">
-														<span style={{ fontWeight: version.isActive ? '600' : 'normal' }}>
-															{dateFormat(version.createdAt, 'mmm dd, yyyy · HH:MM')}
-														</span>
-													</a>
-												</li>
-											);
-										})}
-									</ul>
-								</div>
+							<Overlay isOpen={this.state.activePanel === 'invite'} onClose={this.closePanelOverlay} maxWidth={728}>
+								<div>Invite</div>
 							</Overlay>
+							<Overlay isOpen={this.state.activePanel === 'versions'} onClose={this.closePanelOverlay} maxWidth={728}>
+								<PubPresVersions pubData={pubData} />
+							</Overlay>
+						</div>
+					}
+					{pubData.versions.length && mode &&
+						<div>
+							<PubPresHeader
+								pubData={pubData}
+								setOverlayPanel={this.setOverlayPanel}
+								locationData={this.props.locationData}
+							/>
+							<div className="container pub">
+								<div className="row">
+									<div className="col-12">
+										{mode === 'versions' &&
+											<PubPresVersions pubData={pubData} mode={mode} />
+										}
+										{mode === 'invite' &&
+											<div>Invite</div>
+										}
+										{mode === 'collaborators' &&
+											<PubCollabShare
+												appData={this.props.communityData}
+												pubData={pubData}
+												canManage={false}
+												collaboratorsOnly={true}
+												mode={mode}
+											/>
+										}
+										{mode === 'discussions' && !subMode &&
+											<DiscussionList pubData={pubData} mode={mode} />
+										}
+										{mode === 'discussions' && subMode &&
+											<DiscussionThread
+												discussions={activeThread}
+												canManage={pubData.localPermissions === 'manage' || (this.props.loginData.isAdmin && pubData.adminPermissions === 'manage')}
+												slug={pubData.slug}
+												loginData={this.props.loginData}
+												pathname={`${this.props.locationData.path}${this.props.locationData.queryString}`}
+												handleReplySubmit={this.handlePostDiscussion}
+												handleReplyEdit={this.handlePutDiscussion}
+												submitIsLoading={this.state.postDiscussionIsLoading}
+												isPresentation={true}
+												getHighlightContent={()=>{}}
+												hoverBackgroundColor={this.props.communityData.accentMinimalColor}
+											/>
+										}
+									</div>
+								</div>
+							</div>
 						</div>
 					}
 				</PageWrapper>

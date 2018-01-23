@@ -4,15 +4,15 @@ import PropTypes from 'prop-types';
 require('./discussionPreviewArchived.scss');
 
 const propTypes = {
+	slug: PropTypes.string.isRequired,
 	discussions: PropTypes.array.isRequired,
-	// slug: PropTypes.string.isRequired,
 	// isPresentation: PropTypes.bool,
-	onPreviewClick: PropTypes.func.isRequired,
+	onPreviewClick: PropTypes.func,
 };
 
-// const defaultProps = {
-// 	isPresentation: false,
-// };
+const defaultProps = {
+	onPreviewClick: undefined,
+};
 
 const DiscussionPreviewArchived = function(props) {
 	const hasAttachments = props.discussions.reduce((prev, curr)=> {
@@ -46,8 +46,13 @@ const DiscussionPreviewArchived = function(props) {
 
 	return (
 		<a
-			// href={toUrl}
-			onClick={()=> { props.onPreviewClick(props.discussions[0].threadNumber); }}
+			href={`/pub/${props.slug}/discussions/${props.discussions[0].threadNumber}`}
+			onClick={(evt)=> {
+				if (props.onPreviewClick) {
+					evt.preventDefault();
+					props.onPreviewClick(props.discussions[0].threadNumber);
+				}
+			}}
 			className="discussion-preview-archived-component"
 		>
 			<div className="icons">
@@ -77,5 +82,5 @@ const DiscussionPreviewArchived = function(props) {
 };
 
 DiscussionPreviewArchived.propTypes = propTypes;
-// DiscussionPreviewArchived.defaultProps = defaultProps;
+DiscussionPreviewArchived.defaultProps = defaultProps;
 export default DiscussionPreviewArchived;

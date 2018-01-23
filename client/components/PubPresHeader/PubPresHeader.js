@@ -8,6 +8,11 @@ require('./pubPresHeader.scss');
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	setOverlayPanel: PropTypes.func.isRequired,
+	locationData: PropTypes.object,
+};
+
+const defaultProps = {
+	locationData: { params: {} },
 };
 
 const PubPresHeader = function(props) {
@@ -23,8 +28,10 @@ const PubPresHeader = function(props) {
 		backgroundStyle.color = 'white';
 	}
 
+	const mode = props.locationData.params.mode;
+	const subMode = props.locationData.params.subMode;
 	return (
-		<div className="pub-pres-header-component" style={backgroundStyle}>
+		<div className={`pub-pres-header-component ${mode ? 'mode' : ''}`} style={backgroundStyle}>
 			<div className={`wrapper ${useHeaderImage ? 'dim' : ''}`}>
 				<div className="container pub">
 					<div className="row">
@@ -44,13 +51,42 @@ const PubPresHeader = function(props) {
 										{pubData.localPermissions !== 'none' &&
 											<a href={`/pub/${pubData.slug}/collaborate`} className="pt-button pt-icon-edit2">Edit Pub</a>
 										}
-										<a href="/" className="pt-button">Invite Reviewer</a>
+										<a
+											href={`/pub/${pubData.slug}/invite`}
+											className="pt-button"
+											onClick={(evt)=> {
+												evt.preventDefault();
+												props.setOverlayPanel('invite');
+											}}
+										>
+											Invite Reviewer
+										</a>
 										{/* <a href="/" className="pt-button">More</a> */}
 									</div>
 								</div>
 							</div>
 
-							<h1>{pubData.title}</h1>
+							{!mode &&
+								<h1>{pubData.title}</h1>
+							}
+							{mode &&
+								<a href={`/pub/${pubData.slug}`}><h1>{pubData.title}</h1></a>
+							}
+							
+							{mode &&
+								<ul className="pt-breadcrumbs">
+									<li><a className="pt-breadcrumb" href={`/pub/${pubData.slug}`}>Pub</a></li>
+									{!subMode &&
+										<li><span className="pt-breadcrumb">{mode}</span></li>
+									}
+									{subMode &&
+										<li><a className="pt-breadcrumb" href={`/pub/${pubData.slug}/${mode}`}>{mode}</a></li>
+									}
+									{subMode &&
+										<li><span className="pt-breadcrumb">Thread #{subMode}</span></li>
+									}
+								</ul>
+							}
 							{pubData.description &&
 								<div className="description">{pubData.description}</div>
 							}
@@ -123,4 +159,5 @@ const PubPresHeader = function(props) {
 };
 
 PubPresHeader.propTypes = propTypes;
+PubPresHeader.defaultProps = defaultProps;
 export default PubPresHeader;

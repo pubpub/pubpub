@@ -83,7 +83,7 @@ export const findPub = (req, initialData)=> {
 		const adminPermissions = communityAdminData ? pubDataJson.adminPermissions : 'none';
 		const formattedPubData = {
 			...pubDataJson,
-			versionsList: versionsListData.versions,
+			versionsList: versionsListData.toJSON().versions,
 			collaborators: [
 				...pubDataJson.collaborators,
 				...pubDataJson.emptyCollaborators.map((item)=> {
