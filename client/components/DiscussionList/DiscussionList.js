@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionPreviewArchived from 'components/DiscussionPreviewArchived/DiscussionPreviewArchived';
+import { NonIdealState } from '@blueprintjs/core';
 import { nestDiscussionsToThreads } from 'utilities';
 
 require('./discussionList.scss');
@@ -67,7 +68,15 @@ class DiscussionList extends Component {
 				{!this.props.mode &&
 					<h2>Discussions</h2>
 				}
-				
+
+				{!activeThreads.length && !archivedThreads.length &&
+					<NonIdealState
+						title="No Discussions Yet"
+						description="Click 'New Discussion' to start the conversation!"
+						visual="pt-icon-widget"
+					/>
+				}
+
 				{activeThreads.map((thread)=> {
 					return (
 						<DiscussionPreview

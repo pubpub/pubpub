@@ -19,7 +19,7 @@ const PubCollabDropdownPrivacy = function(props) {
 	const items = {
 		private: {
 			value: 'private',
-			title: 'Private Collaboration',
+			title: 'Private',
 			icon: 'pt-icon-lock2',
 			onClick: ()=>{ props.onChange('private'); },
 			description: 'Collaborators must be invited to view or edit the working draft.',
@@ -29,14 +29,14 @@ const PubCollabDropdownPrivacy = function(props) {
 			title: 'Public View',
 			icon: 'pt-icon-team',
 			onClick: ()=>{ props.onChange('publicView'); },
-			description: 'The working draft will be visible to all and suggestions can be made.',
+			description: 'The working draft can be viewed by anyone.',
 		},
 		publicEdit: {
 			value: 'publicEdit',
 			title: 'Public Collaboration',
 			icon: 'pt-icon-globe',
 			onClick: ()=>{ props.onChange('publicEdit'); },
-			description: 'The working draft will be editable by anyone.',
+			description: 'The working draft can be edited by anyone.',
 		},
 	};
 	return (

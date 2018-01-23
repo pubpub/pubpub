@@ -153,7 +153,7 @@ class PubCollabShare extends Component {
 						</div>
 
 						<div className="wrapper">
-							<h5>Collaboration Mode</h5>
+							<h5>Working Draft Privacy</h5>
 							<PubCollabDropdownPrivacy
 								value={this.state.collaborationMode}
 								onChange={this.handleCollaborationModeChange}

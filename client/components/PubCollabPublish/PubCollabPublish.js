@@ -54,6 +54,7 @@ class PubCollabPublish extends Component {
 				<div className="details">Use the <span tabIndex={-1} role="button" onClick={this.props.onOpenDetails}>details panel</span> to change this URL.</div>
 
 				<div className="wrapper">
+					<h6>Working Draft Privacy</h6>
 					<PubCollabDropdownPrivacy
 						value={this.state.collaborationMode}
 						onChange={this.handleCollaborationModeChange}

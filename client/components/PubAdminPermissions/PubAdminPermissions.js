@@ -5,14 +5,14 @@ import PubCollabDropdownPermissions from 'components/PubCollabDropdownPermission
 require('./pubAdminPermissions.scss');
 
 const propTypes = {
-	appData: PropTypes.object,
+	communityData: PropTypes.object,
 	pubData: PropTypes.object,
 	onSave: PropTypes.func,
 	hideNone: PropTypes.bool,
 };
 
 const defaultProps = {
-	appData: {},
+	communityData: {},
 	pubData: {},
 	onSave: ()=>{},
 	hideNone: false,
@@ -45,7 +45,7 @@ class PubAdminPermissions extends Component {
 						leftAligned={true}
 					/>
 				</div>
-				<div className="details">Permissions for the {this.props.appData.title} team.</div>
+				<div className="details">Permissions for the {this.props.communityData.title} team.</div>
 			</div>
 		);
 	}

@@ -254,8 +254,7 @@ class PubPresentation extends Component {
 							<NonIdealState
 								title="No Published Snapshots"
 								visual="pt-icon-issue"
-								description="This URL presents published snapshots. Go to Collaborate mode to continue."
-								action={<a href={`/pub/${this.props.locationData.params.slug}/collaborate`} className="pt-button pt-intent-primary">Go to Collaboration Mode</a>}
+								action={<a href={`/pub/${this.props.locationData.params.slug}/collaborate`} className="pt-button pt-intent-primary">View the Working Draft</a>}
 							/>
 						</div>
 					}
@@ -378,7 +377,7 @@ class PubPresentation extends Component {
 							/>
 							<Overlay isOpen={this.state.activePanel === 'collaborators'} onClose={this.closePanelOverlay} maxWidth={728}>
 								<PubCollabShare
-									appData={this.props.communityData}
+									communityData={this.props.communityData}
 									pubData={pubData}
 									canManage={false}
 									collaboratorsOnly={true}
@@ -410,7 +409,7 @@ class PubPresentation extends Component {
 										}
 										{mode === 'collaborators' &&
 											<PubCollabShare
-												appData={this.props.communityData}
+												communityData={this.props.communityData}
 												pubData={pubData}
 												canManage={false}
 												collaboratorsOnly={true}
