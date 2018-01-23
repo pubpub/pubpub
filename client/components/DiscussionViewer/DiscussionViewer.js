@@ -17,7 +17,9 @@ const propTypes = {
 	getHighlightContent: PropTypes.func.isRequired,
 	onPostDiscussion: PropTypes.func.isRequired,
 	onPutDiscussion: PropTypes.func.isRequired,
+	onPublish: PropTypes.func.isRequired,
 	postDiscussionIsLoading: PropTypes.bool.isRequired,
+	postVersionIsLoading: PropTypes.bool.isRequired,
 	initialContent: PropTypes.object,
 };
 
@@ -111,6 +113,8 @@ class DiscussionViewer extends Component {
 									isPresentation={true}
 									getHighlightContent={this.props.getHighlightContent}
 									hoverBackgroundColor={this.props.communityData.accentMinimalColor}
+									onPublish={this.props.onPublish}
+									publishIsLoading={this.props.postVersionIsLoading}
 								/>
 							}
 							{isNew &&
@@ -154,6 +158,8 @@ class DiscussionViewer extends Component {
 						isPresentation={true}
 						getHighlightContent={this.props.getHighlightContent}
 						hoverBackgroundColor={this.props.communityData.accentMinimalColor}
+						onPublish={this.props.onPublish}
+						publishIsLoading={this.props.postVersionIsLoading}
 					/>
 				</Overlay>
 			</div>

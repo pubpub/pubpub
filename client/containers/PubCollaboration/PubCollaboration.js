@@ -98,7 +98,7 @@ class PubCollaboration extends Component {
 		// this.handleHighlightClick = this.handleHighlightClick.bind(this);
 		this.getHighlightContent = this.getHighlightContent.bind(this);
 		this.handleStatusChange = this.handleStatusChange.bind(this);
-		this.handleThreadClick = this.handleThreadClick.bind(this);
+		// this.handleThreadClick = this.handleThreadClick.bind(this);
 		this.handleEditorRef = this.handleEditorRef.bind(this);
 		this.handleScroll = this.handleScroll.bind(this);
 	}
@@ -265,6 +265,7 @@ class PubCollaboration extends Component {
 		.then((result)=> {
 			this.setState({
 				postDiscussionIsLoading: false,
+				isSubmitOpen: false,
 				activeThreadNumber: result.threadNumber,
 				pubData: {
 					...this.state.pubData,
@@ -450,12 +451,12 @@ class PubCollaboration extends Component {
 			activeCollaborators: [this.localUser, ...clients]
 		});
 	}
-	handleThreadClick(threadNumber) {
-		document.getElementsByClassName('side-panel-content')[0].scrollTop = 0;
-		this.setState({
-			thread: threadNumber,
-		});
-	}
+	// handleThreadClick(threadNumber) {
+	// 	document.getElementsByClassName('side-panel-content')[0].scrollTop = 0;
+	// 	this.setState({
+	// 		thread: threadNumber,
+	// 	});
+	// }
 	handleEditorRef(ref) {
 		this.editorRef = ref;
 		/* This timeout is how long we think */
@@ -561,7 +562,7 @@ class PubCollaboration extends Component {
 					onDetailsClick={this.toggleDetails}
 					onCollaboratorsClick={this.toggleCollaborators}
 					onCollectionsClick={this.toggleCollections}
-					onThreadClick={this.handleThreadClick}
+					onThreadClick={this.setActiveThread}
 				/>
 				<div className="page-content">
 					<div className="container pub">
@@ -637,8 +638,10 @@ class PubCollaboration extends Component {
 					getHighlightContent={this.getHighlightContent}
 					onPostDiscussion={this.handlePostDiscussion}
 					onPutDiscussion={this.handlePutDiscussion}
+					onPublish={this.handlePublish}
 					postDiscussionIsLoading={this.state.postDiscussionIsLoading}
 					initialContent={this.state.initialContent}
+					postVersionIsLoading={this.state.postVersionIsLoading}
 				/>
 
 				<Overlay isOpen={this.state.isPublishOpen} onClose={this.togglePublish}>
