@@ -179,7 +179,7 @@ class DashboardCollection extends Component {
 				{!collectionData.isPage && !pubs.length &&
 					<NonIdealState
 						title="Empty Collection"
-						description="Add Pubs to this collection from a Pub\'s Collaborate page."
+						description="Add Pubs to this collection from a Pub's Collaborate page."
 						visual="pt-icon-duplicate"
 					/>
 				}

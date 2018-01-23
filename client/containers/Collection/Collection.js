@@ -159,6 +159,10 @@ class Collection extends Component {
 			return 0;
 		});
 		const layout = collectionData.layout || getDefaultLayout(collectionData.isPage);
+		const hasTextLayoutComponent = collectionData.layout.reduce((prev, curr)=> {
+			if (curr.type === 'text') { return true; }
+			return prev;
+		}, false);
 		const pubRenderLists = this.generateRenderList(layout);
 		return (
 			<div id="collection-container">
@@ -215,7 +219,7 @@ class Collection extends Component {
 							return <div key={`block-${item.id}`} className="component-wrapper">{editorTypeComponent}</div>;
 						})}
 
-						{!publicDrafts.length && !!collectionData.id && !numPublished && !collectionData.isPage &&
+						{!publicDrafts.length && !!collectionData.id && !numPublished && !collectionData.isPage && !hasTextLayoutComponent &&
 							<NonIdealState
 								title="Empty Collection"
 								description="This collection has no Pubs."

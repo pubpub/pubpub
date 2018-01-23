@@ -63,7 +63,7 @@ class PubCollabEditor extends Component {
 				<NonIdealState
 					title="Uh Oh"
 					visual="error"
-					description="An error has occured. We\'ve logged the bug and have notified our development team. Please reload the page to continue."
+					description="An error has occured. We've logged the bug and have notified our development team. Please reload the page to continue."
 					action={
 						<button
 							className="pt-button"
