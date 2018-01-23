@@ -55,10 +55,10 @@ class PubCollaboration extends Component {
 			isCollectionsOpen: false,
 			isArchivedVisible: false,
 			activeCollaborators: [this.localUser],
-			initNewDoc: undefined,
+			// initNewDoc: undefined,
 			collabStatus: 'connecting',
 
-			thread: undefined,
+			// thread: undefined,
 			pubData: this.props.pubData,
 			putPubIsLoading: false,
 			deletePubIsLoading: false,
@@ -69,6 +69,7 @@ class PubCollaboration extends Component {
 			activeThreadNumber: undefined,
 			initialContent: undefined,
 			fixIt: true,
+			scrolledToPermanent: false,
 		};
 		this.editorRef = undefined;
 		this.setActiveThread = this.setActiveThread.bind(this);
@@ -197,8 +198,8 @@ class PubCollaboration extends Component {
 	}
 	handleNewHighlightDiscussion(highlightObject) {
 		this.setState({
-			thread: 'new',
-			initNewDoc: {
+			activeThreadNumber: 'new',
+			initialContent: {
 				type: 'doc',
 				attrs: { meta: {} },
 				content: [
@@ -480,7 +481,7 @@ class PubCollaboration extends Component {
 			return prev;
 		}, undefined);
 		const activeThread = threads.reduce((prev, curr)=> {
-			if (curr[0].threadNumber === Number(this.state.thread)) { return curr; }
+			if (curr[0].threadNumber === Number(this.state.activeThreadNumber)) { return curr; }
 			return prev;
 		}, undefined);
 
@@ -527,12 +528,15 @@ class PubCollaboration extends Component {
 				...this.getHighlightContent(Number(queryObject.from), Number(queryObject.to)),
 				permanent: true,
 			});
-			setTimeout(()=> {
-				const thing = document.getElementsByClassName('permanent')[0];
-				if (thing) {
-					window.scrollTo(0, thing.getBoundingClientRect().top - 135);
-				}
-			}, 100);
+			if (!this.state.scrolledToPermanent) {
+				setTimeout(()=> {
+					const thing = document.getElementsByClassName('permanent')[0];
+					if (thing) {
+						window.scrollTo(0, thing.getBoundingClientRect().top - 135);
+						this.setState({ scrolledToPermanent: true });
+					}
+				}, 100);
+			}
 		}
 
 		return (

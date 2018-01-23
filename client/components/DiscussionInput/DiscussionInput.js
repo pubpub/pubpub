@@ -80,7 +80,7 @@ class DiscussionInput extends Component {
 				{this.props.showTitle &&
 					<input
 						className="title-input"
-						placeholder="New Discussion Title..."
+						placeholder="Add Discussion Title..."
 						value={this.state.title}
 						onChange={this.onTitleChange}
 					/>
@@ -92,10 +92,12 @@ class DiscussionInput extends Component {
 						placeholder="Reply..."
 						onChange={this.onBodyChange}
 						initialContent={this.props.initialContent}
+						editorId={String(this.state.key)}
 					>
 						<FormattingMenu include={['link']} />
 						<HighlightQuote
 							getHighlightContent={this.props.getHighlightContent}
+							containerId={`pubpub-editor-container-${this.state.key}`}
 						/>
 					</Editor>
 				</div>

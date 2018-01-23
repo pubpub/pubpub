@@ -1,6 +1,13 @@
 #pub-presentation-container {
 	.container.pub {
 		max-width: 950px;
+		&.mode-content {
+			margin: 1em auto;
+			.collaborators-wrapper {
+				padding-top: 0em;
+				padding-bottom: 0em;
+			}
+		}
 	}
 	.license-wrapper {
 		padding: 4em 0em;

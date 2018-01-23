@@ -51,7 +51,7 @@ const PubPresHeader = function(props) {
 										{pubData.localPermissions !== 'none' &&
 											<a href={`/pub/${pubData.slug}/collaborate`} className="pt-button pt-icon-edit2">Edit Pub</a>
 										}
-										<a
+										{/* <a
 											href={`/pub/${pubData.slug}/invite`}
 											className="pt-button"
 											onClick={(evt)=> {
@@ -60,7 +60,7 @@ const PubPresHeader = function(props) {
 											}}
 										>
 											Invite Reviewer
-										</a>
+										</a> */}
 										{/* <a href="/" className="pt-button">More</a> */}
 									</div>
 								</div>

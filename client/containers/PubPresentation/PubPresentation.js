@@ -7,6 +7,7 @@ import PubPresHeader from 'components/PubPresHeader/PubPresHeader';
 import PubPresSideUser from 'components/PubPresSideUser/PubPresSideUser';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 import PubPresVersions from 'components/PubPresVersions/PubPresVersions';
+import PubPresInvite from 'components/PubPresInvite/PubPresInvite';
 import DiscussionList from 'components/DiscussionList/DiscussionList';
 import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
@@ -37,6 +38,7 @@ class PubPresentation extends Component {
 			docReadyForHighlights: false,
 			initialContent: undefined,
 			fixIt: false,
+			scrolledToPermanent: false,
 		};
 
 		this.closeThreadOverlay = this.closeThreadOverlay.bind(this);
@@ -220,12 +222,15 @@ class PubPresentation extends Component {
 				...this.getHighlightContent(Number(queryObject.from), Number(queryObject.to)),
 				permanent: true,
 			});
-			setTimeout(()=> {
-				const thing = document.getElementsByClassName('permanent')[0];
-				if (thing) {
-					window.scrollTo(0, thing.getBoundingClientRect().top - 135);
-				}
-			}, 100);
+			if (!this.state.scrolledToPermanent) {
+				setTimeout(()=> {
+					const thing = document.getElementsByClassName('permanent')[0];
+					if (thing) {
+						window.scrollTo(0, thing.getBoundingClientRect().top - 135);
+						this.setState({ scrolledToPermanent: true });
+					}
+				}, 100);
+			}
 		}
 
 		const authors = pubData.collaborators.filter((collaborator)=> {
@@ -380,7 +385,7 @@ class PubPresentation extends Component {
 								/>
 							</Overlay>
 							<Overlay isOpen={this.state.activePanel === 'invite'} onClose={this.closePanelOverlay} maxWidth={728}>
-								<div>Invite</div>
+								<PubPresInvite pubData={pubData} />
 							</Overlay>
 							<Overlay isOpen={this.state.activePanel === 'versions'} onClose={this.closePanelOverlay} maxWidth={728}>
 								<PubPresVersions pubData={pubData} />
@@ -394,14 +399,14 @@ class PubPresentation extends Component {
 								setOverlayPanel={this.setOverlayPanel}
 								locationData={this.props.locationData}
 							/>
-							<div className="container pub">
+							<div className="container pub mode-content">
 								<div className="row">
 									<div className="col-12">
 										{mode === 'versions' &&
 											<PubPresVersions pubData={pubData} mode={mode} />
 										}
 										{mode === 'invite' &&
-											<div>Invite</div>
+											<PubPresInvite pubData={pubData} mode={mode} />
 										}
 										{mode === 'collaborators' &&
 											<PubCollabShare
