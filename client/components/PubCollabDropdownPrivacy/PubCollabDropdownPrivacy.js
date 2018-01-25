@@ -33,7 +33,7 @@ const PubCollabDropdownPrivacy = function(props) {
 		},
 		publicEdit: {
 			value: 'publicEdit',
-			title: 'Public Collaboration',
+			title: 'Public Edit',
 			icon: 'pt-icon-globe',
 			onClick: ()=>{ props.onChange('publicEdit'); },
 			description: 'The working draft can be edited by anyone.',

@@ -258,7 +258,7 @@ class PubPresentation extends Component {
 							/>
 						</div>
 					}
-					{pubData.versions.length && !mode &&
+					{!!pubData.versions.length && !mode &&
 						<div>
 							<PubPresHeader
 								pubData={pubData}
@@ -391,7 +391,7 @@ class PubPresentation extends Component {
 							</Overlay>
 						</div>
 					}
-					{pubData.versions.length && mode &&
+					{!!pubData.versions.length && mode &&
 						<div>
 							<PubPresHeader
 								pubData={pubData}
