@@ -9,6 +9,12 @@ export default (uaCode)=> {
 		if (req.hostname === 'dev.pubpub.org') {
 			return next();
 		}
+		if (req.path === '/data/rss.xml' ||
+			req.path === '/static/favicon.ico' ||
+			req.path === '/wp-login.php'
+		) {
+			return next();
+		}
 		if (!req.headers['x-forwarded-for']) {
 			req.headers['x-forwarded-for'] = '0.0.0.0';
 		}
