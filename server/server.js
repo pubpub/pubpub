@@ -35,9 +35,9 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 
-/* -------- */
+/* --------------------- */
 /* Configure app session */
-/* -------- */
+/* --------------------- */
 const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
@@ -68,18 +68,18 @@ app.use(passport.session());
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-/* -------------------- */
-/* -------------------- */
 
-// Handle errors.
+/* ------------ */
+/* Handle Error */
+/* ------------ */
 app.use((err, req, res, next)=> {
 	console.log(`Error!  ${err}`);
 	next();
 });
 
-/* ------------------- */
+/* ---------------- */
 /* Server Endpoints */
-/* ------------------- */
+/* ---------------- */
 app.use('/dist', [cors(), express.static('dist')]);
 app.use('/static', express.static('static'));
 app.use('/service-worker.js', express.static('static/service-worker.js'));
@@ -87,20 +87,26 @@ app.use('/favicon.png', express.static('static/favicon.png'));
 app.use('/favicon.ico', express.static('static/favicon.png'));
 app.use('/robots.txt', express.static('static/robots.txt'));
 
+/* -------------------- */
 /* Set Hostname for Dev */
+/* -------------------- */
 app.use((req, res, next)=> {
 	if (req.hostname.indexOf('localhost') > -1) { req.headers.host = 'dev.pubpub.org'; }
 	if (req.hostname.indexOf('v4.pubpub.org') > -1) { req.headers.host = 'www.pubpub.org'; }
 	next();
 });
 
+/* ------------- */
+/* Import Routes */
+/* ------------- */
 require('./apiRoutes');
 
 app.use(analytics('UA-61723493-6'));
 require('./clientRoutes');
-/* ------------------- */
-/* ------------------- */
 
+/* ------------ */
+/* Start Server */
+/* ------------ */
 const port = process.env.PORT || 9876;
 app.listen(port, (err) => {
 	if (err) { console.error(err); }

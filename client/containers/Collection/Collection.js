@@ -159,7 +159,7 @@ class Collection extends Component {
 			return 0;
 		});
 		const layout = collectionData.layout || getDefaultLayout(collectionData.isPage);
-		const hasTextLayoutComponent = collectionData.layout.reduce((prev, curr)=> {
+		const hasTextLayoutComponent = layout.reduce((prev, curr)=> {
 			if (curr.type === 'text') { return true; }
 			return prev;
 		}, false);
