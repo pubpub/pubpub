@@ -228,7 +228,7 @@ const PubCollabHeader = function(props) {
 							<ul className="pt-menu">
 								<li style={{ textAlign: 'right' }}>
 									<a href={`/pub/${props.pubData.slug}`} className="pt-menu-item pt-popover-dismiss">
-										Go to Presentation mode
+										Go to Published Snapshots
 									</a>
 								</li>
 							</ul>
