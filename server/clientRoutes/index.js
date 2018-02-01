@@ -8,6 +8,7 @@ require('./landing');			// Route: '/'
 
 /* Routes for Communities */
 require('./dashboard');			// Route: ['/dashboard', '/dashboard/:slug', '/dashboard/:slug/:mode']
+require('./notifications');		// Route: '/notifications'
 require('./pubCreate');			// Route: '/pub/create'
 require('./pubCollaboration');	// Route: '/pub/:slug/collaborate'
 require('./pubPresentation');	// Route: ['/pub/:slug', '/pub/:slug/:mode', '/pub/:slug/:mode/:subMode']

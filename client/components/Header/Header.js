@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Avatar from 'components/Avatar/Avatar';
-import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider, Button } from '@blueprintjs/core';
+import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { apiFetch, getResizedUrl } from 'utilities';
 
 require('./header.scss');
 
 const propTypes = {
 	locationData: PropTypes.object.isRequired,
-	userName: PropTypes.string,
-	userInitials: PropTypes.string,
-	userSlug: PropTypes.string,
-	userAvatar: PropTypes.string,
-	userIsAdmin: PropTypes.bool,
+	loginData: PropTypes.object.isRequired,
+
+	// userName: PropTypes.string,
+	// userInitials: PropTypes.string,
+	// userSlug: PropTypes.string,
+	// userAvatar: PropTypes.string,
+	// userIsAdmin: PropTypes.bool,
 
 	smallHeaderLogo: PropTypes.string,
 	largeHeaderLogo: PropTypes.string,
@@ -20,23 +22,23 @@ const propTypes = {
 	largeHeaderBackground: PropTypes.string,
 
 	// onLogout: PropTypes.func.isRequired,
-	isBasePubPub: PropTypes.bool,
-	isLandingPage: PropTypes.bool,
+	// isBasePubPub: PropTypes.bool,
+	// isLandingPage: PropTypes.bool,
 
 };
 
 const defaultProps = {
-	userName: undefined,
-	userInitials: undefined,
-	userSlug: undefined,
-	userAvatar: undefined,
-	userIsAdmin: undefined,
+	// userName: undefined,
+	// userInitials: undefined,
+	// userSlug: undefined,
+	// userAvatar: undefined,
+	// userIsAdmin: undefined,
 	smallHeaderLogo: undefined,
 	largeHeaderLogo: undefined,
 	largeHeaderDescription: undefined,
 	largeHeaderBackground: undefined,
-	isBasePubPub: false,
-	isLandingPage: false,
+	// isBasePubPub: false,
+	// isLandingPage: false,
 };
 
 class Header extends Component {
@@ -61,29 +63,32 @@ class Header extends Component {
 	}
 
 	render() {
-		const loggedIn = !!this.props.userSlug;
-		const showGradient = this.props.isLandingPage && !!this.props.largeHeaderBackground;
+		const loggedIn = !!this.props.loginData.slug;
+		const isBasePubPub = this.props.locationData.isBasePubPub;
+		const isLandingPage = this.props.locationData.path === '/';
+		const showGradient = isLandingPage && !!this.props.largeHeaderBackground;
 		const backgroundStyle = {};
+
 		if (showGradient) {
 			const resizedBackground = getResizedUrl(this.props.largeHeaderBackground, 'fit-in', '1500x600');
 			backgroundStyle.backgroundImage = `url("${resizedBackground}")`;
 		}
-		if (this.props.isBasePubPub && !this.props.isLandingPage) {
+		if (isBasePubPub && !isLandingPage) {
 			backgroundStyle.boxShadow = '0 0 0 1px rgba(16, 22, 26, 0.1), 0 0 0 rgba(16, 22, 26, 0), 0 1px 1px rgba(16, 22, 26, 0.2)';
 		}
 
 		const resizedSmallHeaderLogo = getResizedUrl(this.props.smallHeaderLogo, 'fit-in', '0x50');
 		const resizedLargeHeaderLogo = getResizedUrl(this.props.largeHeaderLogo, 'fit-in', '0x200');
-		const useAccentsString = this.props.isBasePubPub ? '' : 'accent-background accent-color';
+		const useAccentsString = isBasePubPub ? '' : 'accent-background accent-color';
 		return (
-			<nav className={`header-component ${useAccentsString} ${this.props.largeHeaderBackground && this.props.isLandingPage ? 'has-image' : ''}`} style={backgroundStyle} >
+			<nav className={`header-component ${useAccentsString} ${this.props.largeHeaderBackground && isLandingPage ? 'has-image' : ''}`} style={backgroundStyle} >
 				<div className={showGradient ? 'header-gradient' : ''}>
 					<div className="container">
 						<div className="row">
 							<div className="col-12">
 
 								{/* App Logo - do not show on homepage */}
-								{(!this.props.isLandingPage || this.props.isBasePubPub) &&
+								{(!isLandingPage || isBasePubPub) &&
 									<div className="headerItems headerItemsLeft">
 										<a href="/">
 											<img alt="header logo" className="headerLogo" src={resizedSmallHeaderLogo} />
@@ -97,7 +102,7 @@ class Header extends Component {
 									<a href="/search" role="button" tabIndex="0" className="pt-button pt-large pt-minimal pt-icon-search" />
 
 									{/* Dashboard panel button */}
-									{this.props.userIsAdmin &&
+									{this.props.loginData.isAdmin &&
 										<a href="/dashboard" className="pt-button pt-large pt-minimal pt-icon-page-layout" />
 									}
 
@@ -107,18 +112,29 @@ class Header extends Component {
 											content={
 												<Menu>
 													<li>
-														<a href={`/user/${this.props.userSlug}`} className="pt-menu-item pt-popover-dismiss">
-															<div>{this.props.userName}</div>
+														<a href={`/user/${this.props.loginData.slug}`} className="pt-menu-item pt-popover-dismiss">
+															<div>{this.props.loginData.fullName}</div>
 															<div className="subtext">View Profile</div>
 														</a>
 													</li>
 													<MenuDivider />
-													{!this.props.isBasePubPub &&
+													{!isBasePubPub &&
 														<li>
 															<a href="/pub/create" className="pt-menu-item pt-popover-dismiss">
 																Create New Pub
 															</a>
 														</li>
+													}
+													{!isBasePubPub &&
+														<MenuItem
+															className="pt-popover-dismiss"
+															href="/notifications"
+															text="Notifications"
+															label={this.props.loginData.notificationCount
+																? <span className="notification-count">{this.props.loginData.notificationCount}</span>
+																: null
+															}
+														/>
 													}
 													<MenuItem text="Logout" onClick={this.handleLogout} />
 												</Menu>
@@ -129,9 +145,12 @@ class Header extends Component {
 											inheritDarkTheme={false}
 										>
 											<button className="pt-button pt-large pt-minimal avatar-button">
+												{!!this.props.loginData.notificationCount &&
+													<div className="notification-count">{this.props.loginData.notificationCount}</div>
+												}
 												<Avatar
-													userInitials={this.props.userInitials}
-													userAvatar={this.props.userAvatar}
+													userInitials={this.props.loginData.initials}
+													userAvatar={this.props.loginData.avatar}
 													width={30}
 												/>
 											</button>
@@ -147,7 +166,7 @@ class Header extends Component {
 						</div>
 					</div>
 				</div>
-				{this.props.isLandingPage && !this.props.isBasePubPub &&
+				{isLandingPage && !isBasePubPub &&
 					<div className="community-header">
 						<div className="container">
 							<div className="row">

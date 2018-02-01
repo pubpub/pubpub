@@ -8,7 +8,7 @@ import Module from 'module';
 import passport from 'passport';
 import analytics from './analytics';
 import { sequelize, User } from './models';
-import { addActivity, getActivities, getNotificationCount } from './notifications';
+import { addActivity, getNotifications, getNotificationCount } from './notifications';
 
 /* Since we are server-rendering components, we 	*/
 /* need to ensure we don't require things intended 	*/
@@ -97,38 +97,38 @@ app.use((req, res, next)=> {
 	next();
 });
 
-app.get('/notifications', (req, res)=> {
-	console.log('Here');
-	addActivity({})
-	.then((result)=> {
-		return res.status(201).json(result);
-	})
-	.catch((err)=> {
-		return res.status(500).json(err);
-	});
-});
+// app.get('/notifications', (req, res)=> {
+// 	console.log('Here');
+// 	addActivity({})
+// 	.then((result)=> {
+// 		return res.status(201).json(result);
+// 	})
+// 	.catch((err)=> {
+// 		return res.status(500).json(err);
+// 	});
+// });
 
-app.get('/notifications2', (req, res)=> {
-	console.log('Here2');
-	getActivities()
-	.then((result)=> {
-		return res.status(201).json(result);
-	})
-	.catch((err)=> {
-		return res.status(500).json(err);
-	});
-});
+// app.get('/notifications2', (req, res)=> {
+// 	console.log('Here2');
+// 	getNotifications()
+// 	.then((result)=> {
+// 		return res.status(201).json(result);
+// 	})
+// 	.catch((err)=> {
+// 		return res.status(500).json(err);
+// 	});
+// });
 
-app.get('/notifications3', (req, res)=> {
-	console.log('Here3');
-	getNotificationCount()
-	.then((result)=> {
-		return res.status(201).json(result);
-	})
-	.catch((err)=> {
-		return res.status(500).json(err);
-	});
-});
+// app.get('/notifications3', (req, res)=> {
+// 	console.log('Here3');
+// 	getNotificationCount()
+// 	.then((result)=> {
+// 		return res.status(201).json(result);
+// 	})
+// 	.catch((err)=> {
+// 		return res.status(500).json(err);
+// 	});
+// });
 
 /* ------------- */
 /* Import Routes */

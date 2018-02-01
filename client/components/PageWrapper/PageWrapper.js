@@ -59,18 +59,19 @@ const PageWrapper = (props)=> {
 
 			<Header
 				locationData={props.locationData}
-				userName={loginData.fullName}
-				userInitials={loginData.initials}
-				userSlug={loginData.slug}
-				userAvatar={loginData.avatar}
-				userIsAdmin={loginData.isAdmin}
+				loginData={props.loginData}
+				// userName={loginData.fullName}
+				// userInitials={loginData.initials}
+				// userSlug={loginData.slug}
+				// userAvatar={loginData.avatar}
+				// userIsAdmin={loginData.isAdmin}
 				smallHeaderLogo={communityData.smallHeaderLogo}
 				largeHeaderLogo={communityData.largeHeaderLogo}
 				largeHeaderDescription={communityData.largeHeaderDescription}
 				largeHeaderBackground={communityData.largeHeaderBackground}
 				// onLogout={()=> {}}
-				isBasePubPub={props.locationData.isBasePubPub}
-				isLandingPage={props.locationData.path === '/'}
+				// isBasePubPub={props.locationData.isBasePubPub}
+				// isLandingPage={props.locationData.path === '/'}
 			/>
 
 			{!props.hideNav &&

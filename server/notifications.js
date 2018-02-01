@@ -76,23 +76,21 @@ export const addActivity = ({ communityId, feedIds, activityType, actor, object,
 	});
 };
 
-export const getNotificationCount = (communityId, userId)=> {
+export const getNotificationsCount = (communityId, userId)=> {
 	/* We use unseen for whether it has been emailed or not */
 	/* We use unread for whether the user viewed it in the site */
-
-	console.time('wahoo');
 	const userFeed = client.feed('notifications', `${communityId}_${userId}`);
 	return userFeed.get({ limit: 1 })
 	.then((activityData)=> {
-		console.timeEnd('wahoo');
 		return activityData.unread;
 	});
 };
 
-export const getActivities = (communityId, userId)=> {
-	// const user1 = client.feed('notifications', 'journalId_userId');
+export const getNotifications = (communityId, userId, markRead, markSeen)=> {
+	/* We use unseen for whether it has been emailed or not */
+	/* We use unread for whether the user viewed it in the site */
 	const userFeed = client.feed('notifications', `${communityId}_${userId}`);
-	return userFeed.get({ limit: 100 })
+	return userFeed.get({ limit: 100, mark_read: markRead, mark_seen: markSeen })
 	.then((activityData)=> {
 		const pubIds = new Set();
 		const userIds = new Set();
@@ -161,7 +159,7 @@ export const generateDiscussionNotifications = (discussionData)=> {
 		/* If reply, notify everyone in the thread */
 		activityType = 'discussionReply';
 		activityFeedUserQuery = Discussion.findAll({
-			where: { pubId: discussionData.pubId, thread: discussionData.thread, userId: { $ne: discussionData.userId } },
+			where: { pubId: discussionData.pubId, threadNumber: discussionData.threadNumber, userId: { $ne: discussionData.userId } },
 			attributes: ['userId'],
 		});
 	} else {
@@ -179,7 +177,7 @@ export const generateDiscussionNotifications = (discussionData)=> {
 			feedIds: activityFeedUserData.map((item)=> { return item.userId; }),
 			activityType: activityType,
 			actor: discussionData.userId,
-			object: activityType === 'newSubmission' ? discussionData.pubId : discussionData.threadNumber,
+			object: activityType === 'newSubmission' ? discussionData.pubId : discussionData.id,
 			target: activityType !== 'newSubmission' ? discussionData.pubId : null,
 		});
 	});

@@ -3,7 +3,7 @@ import ReactDOMServer from 'react-dom/server';
 import { resolve } from 'path';
 import queryString from 'query-string';
 import { Community, Collection, User } from './models';
-import { getNotificationCount } from './notifications';
+import { getNotificationsCount } from './notifications';
 
 export const hostIsValid = (req, access)=> {
 	const isBasePubPub = req.hostname === 'www.pubpub.org';
@@ -110,7 +110,7 @@ export const getInitialData = (req)=> {
 			locationData: locationData,
 		};
 		const notificationCount = loginData.id
-			? getNotificationCount(communityData.id, loginData.id)
+			? getNotificationsCount(communityData.id, loginData.id)
 			: 0;
 		return Promise.all([outputData, notificationCount]);
 	})
