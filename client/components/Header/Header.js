@@ -10,35 +10,17 @@ const propTypes = {
 	locationData: PropTypes.object.isRequired,
 	loginData: PropTypes.object.isRequired,
 
-	// userName: PropTypes.string,
-	// userInitials: PropTypes.string,
-	// userSlug: PropTypes.string,
-	// userAvatar: PropTypes.string,
-	// userIsAdmin: PropTypes.bool,
-
 	smallHeaderLogo: PropTypes.string,
 	largeHeaderLogo: PropTypes.string,
 	largeHeaderDescription: PropTypes.string,
 	largeHeaderBackground: PropTypes.string,
-
-	// onLogout: PropTypes.func.isRequired,
-	// isBasePubPub: PropTypes.bool,
-	// isLandingPage: PropTypes.bool,
-
 };
 
 const defaultProps = {
-	// userName: undefined,
-	// userInitials: undefined,
-	// userSlug: undefined,
-	// userAvatar: undefined,
-	// userIsAdmin: undefined,
 	smallHeaderLogo: undefined,
 	largeHeaderLogo: undefined,
 	largeHeaderDescription: undefined,
 	largeHeaderBackground: undefined,
-	// isBasePubPub: false,
-	// isLandingPage: false,
 };
 
 class Header extends Component {

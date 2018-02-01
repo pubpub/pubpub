@@ -39,10 +39,12 @@ const headerBars = function(isBasePubPub) {
 			<h4 style={titleStyle}>Logged In · User</h4>
 			<div style={wrapperStyle}>
 				<Header
-					userName={data.userName}
-					userInitials={data.userInitials}
-					userSlug={data.userSlug}
-					userIsAdmin={false}
+					loginData={{
+						fullName: data.userName,
+						initials: data.userInitials,
+						slug: data.userSlug,
+						isAdmin: false
+					}},
 					smallHeaderLogo={data.smallHeaderLogo}
 					onLogout={data.onLogout}
 					isBasePubPub={data.isBasePubPub}
@@ -53,11 +55,13 @@ const headerBars = function(isBasePubPub) {
 			<h4 style={titleStyle}>Logged In · Admin</h4>
 			<div style={wrapperStyle}>
 				<Header
-					userName={data.userName}
-					userInitials={data.userInitials}
-					userSlug={data.userSlug}
-					userAvatar={data.userAvatar}
-					userIsAdmin={true}
+					loginData={{
+						fullName: data.userName,
+						initials: data.userInitials,
+						avatar: data.userAvatar,
+						slug: data.userSlug,
+						isAdmin: true
+					}},
 					smallHeaderLogo={data.smallHeaderLogo}
 					onLogout={data.onLogout}
 					isBasePubPub={data.isBasePubPub}
@@ -70,11 +74,13 @@ const headerBars = function(isBasePubPub) {
 					<h4 style={titleStyle}>Home · No Background</h4>
 					<div style={wrapperStyle}>
 						<Header
-							userName={data.userName}
-							userInitials={data.userInitials}
-							userSlug={data.userSlug}
-							userAvatar={data.userAvatar}
-							userIsAdmin={true}
+							loginData={{
+								fullName: data.userName,
+								initials: data.userInitials,
+								avatar: data.userAvatar,
+								slug: data.userSlug,
+								isAdmin: true
+							}},
 							smallHeaderLogo={data.smallHeaderLogo}
 							largeHeaderLogo={data.largeHeaderLogo}
 							largeHeaderDescription={data.largeHeaderDescription}
@@ -87,11 +93,13 @@ const headerBars = function(isBasePubPub) {
 					<h4 style={titleStyle}>Home · Background (Image)</h4>
 					<div style={wrapperStyle}>
 						<Header
-							userName={data.userName}
-							userInitials={data.userInitials}
-							userSlug={data.userSlug}
-							userAvatar={data.userAvatar}
-							userIsAdmin={true}
+							loginData={{
+								fullName: data.userName,
+								initials: data.userInitials,
+								avatar: data.userAvatar,
+								slug: data.userSlug,
+								isAdmin: true
+							}},
 							smallHeaderLogo={data.smallHeaderLogo}
 							largeHeaderLogo={data.largeHeaderLogo}
 							largeHeaderDescription={data.largeHeaderDescription}
