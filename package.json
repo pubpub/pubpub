@@ -66,6 +66,7 @@
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.6",
     "fuzzysearch": "^1.0.3",
+    "getstream": "^3.12.3",
     "html-webpack-plugin": "^2.30.1",
     "katex": "^0.9.0-alpha2",
     "newrelic": "^2.2.1",

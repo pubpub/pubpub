@@ -3,6 +3,7 @@ import ReactDOMServer from 'react-dom/server';
 import { resolve } from 'path';
 import queryString from 'query-string';
 import { Community, Collection, User } from './models';
+import { getNotificationCount } from './notifications';
 
 export const hostIsValid = (req, access)=> {
 	const isBasePubPub = req.hostname === 'www.pubpub.org';
@@ -103,10 +104,23 @@ export const getInitialData = (req)=> {
 			return loginData.isAdmin || item.isPublic;
 		});
 
-		return {
+		const outputData = {
 			communityData: communityData,
 			loginData: loginData,
 			locationData: locationData,
+		};
+		const notificationCount = loginData.id
+			? getNotificationCount(communityData.id, loginData.id)
+			: 0;
+		return Promise.all([outputData, notificationCount]);
+	})
+	.then(([outputData, notificationCount])=> {
+		return {
+			...outputData,
+			loginData: {
+				...loginData,
+				notificationCount: notificationCount
+			}
 		};
 	});
 };

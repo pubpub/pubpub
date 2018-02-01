@@ -1,5 +1,6 @@
 import app from '../server';
 import { Pub, User, Discussion, Collaborator, CommunityAdmin } from '../models';
+import { generateDiscussionNotifications } from '../notifications';
 
 app.post('/api/discussions', (req, res)=> {
 	Discussion.findAll({
@@ -37,14 +38,15 @@ app.post('/api/discussions', (req, res)=> {
 		});
 	})
 	.then((newDiscussion)=> {
-		return Discussion.findOne({
+		const findDiscussion = Discussion.findOne({
 			where: {
 				id: newDiscussion.id,
 			},
 			include: [{ model: User, as: 'author', attributes: ['id', 'fullName', 'avatar', 'slug', 'initials'] }],
 		});
+		return Promise.all([findDiscussion, generateDiscussionNotifications(newDiscussion)]);
 	})
-	.then((populatedDiscussion)=> {
+	.then(([populatedDiscussion])=> {
 		return res.status(201).json({
 			...populatedDiscussion.toJSON(),
 			submitHash: req.body.submitHash ? 'present' : undefined
