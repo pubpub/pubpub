@@ -1,9 +1,7 @@
 .pub-pres-cite-component {
 	h5 {
+		padding-top: 5px;
 		margin-bottom: 3em;
-	}
-	.intro {
-		margin-bottom: 2em;
 	}
 	.pt-button-group {
 		float: right;
@@ -33,6 +31,9 @@
 	}
 }
 
+.cite-tooltip {
+	max-width: 250px;
+}
 @media only screen and (max-width: 720px) {
 	.pub-pres-cite-component {
 		.style-wrapper {

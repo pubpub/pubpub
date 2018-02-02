@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Tooltip, Position } from '@blueprintjs/core';
 
 require('./pubPresCite.scss');
 
@@ -24,8 +25,20 @@ class PubPresCite extends Component {
 		return (
 			<div className="pub-pres-cite-component">
 				<div className={'pt-button-group pt-small'}>
-					<button className={`pt-button ${this.state.mode === 'pub' ? 'pt-active' : ''}`} onClick={()=> { this.setState({ mode: 'pub' }); }}>Cite the Work</button>
-					<button className={`pt-button ${this.state.mode === 'version' ? 'pt-active' : ''}`} onClick={()=> { this.setState({ mode: 'version' }); }}>Cite this Version</button>
+					<Tooltip
+						content={'Cite the work as a whole. The url below will always produce the most recent version of the work.'}
+						tooltipClassName="pt-dark cite-tooltip"
+						position={Position.BOTTOM}
+					>
+						<button className={`pt-button ${this.state.mode === 'pub' ? 'pt-active' : ''}`} onClick={()=> { this.setState({ mode: 'pub' }); }}>Cite the Work</button>
+					</Tooltip>
+					<Tooltip
+						content={'Cite this specific version. The url below will always produce this specific version of the work.'}
+						tooltipClassName="pt-dark cite-tooltip"
+						position={Position.BOTTOM}
+					>
+						<button className={`pt-button ${this.state.mode === 'version' ? 'pt-active' : ''}`} onClick={()=> { this.setState({ mode: 'version' }); }}>Cite this Version</button>
+					</Tooltip>
 				</div>
 
 				<h5>Cite</h5>
