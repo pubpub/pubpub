@@ -241,11 +241,12 @@ export function generateCitationHTML(pubData, communityData) {
 
 	const pubIssuedDate = new Date(pubData.updatedAt);
 	const versionIssuedDate = new Date(pubData.versions[0].updatedAt);
+	const communityHostname = communityData.domain || `${communityData.subdomain}.pubpub.org`;
+	const pubLink = `https://${communityHostname}/pub/${pubData.slug}`;
+
 	const commonData = {
-		// id: pubData.id,
 		type: 'article-journal',
 		title: pubData.title,
-		// DOI: pubData.doi,
 		author: pubData.collaborators.filter((item)=> {
 			return item.Collaborator.isAuthor;
 		}).sort((foo, bar)=> {
@@ -259,9 +260,6 @@ export function generateCitationHTML(pubData, communityData) {
 			};
 		}),
 		'container-title': communityData.title,
-		// issued: [{
-		// 	'date-parts': [issuedDate.getFullYear(), issuedDate.getMonth() + 1, issuedDate.getDate()]
-		// }],
 	};
 	const pubCiteObject = new Cite({
 		...commonData,
@@ -271,6 +269,8 @@ export function generateCitationHTML(pubData, communityData) {
 		issued: [{
 			'date-parts': [pubIssuedDate.getFullYear(), pubIssuedDate.getMonth() + 1, pubIssuedDate.getDate()]
 		}],
+		note: pubLink,
+		URL: pubLink,
 	});
 	const versionCiteObject = new Cite({
 		...commonData,
@@ -280,19 +280,21 @@ export function generateCitationHTML(pubData, communityData) {
 		issued: [{
 			'date-parts': [versionIssuedDate.getFullYear(), versionIssuedDate.getMonth() + 1, versionIssuedDate.getDate()]
 		}],
-		version: pubData.versions[0].id,
+		note: `${pubLink}?version=${pubData.versions[0].id}`,
+		URL: `${pubLink}?version=${pubData.versions[0].id}`,
 	});
-
-	// const apaOutput = pubCiteObject.get({ format: 'string', type: 'html', style: 'citation-apa', lang: 'en-US' }).replace(/\n/gi, ''),
-	// const bibtexOutput = pubCiteObject.get({ format: 'string', type: 'html', style: 'bibtex', lang: 'en-US'}),
 
 	return {
 		pub: {
 			apa: pubCiteObject.get({ format: 'string', type: 'html', style: 'citation-apa', lang: 'en-US' }).replace(/\n/gi, ''),
+			harvard: pubCiteObject.get({ format: 'string', type: 'html', style: 'citation-harvard', lang: 'en-US' }).replace(/\n/gi, ''),
+			vancouver: pubCiteObject.get({ format: 'string', type: 'html', style: 'citation-vancouver', lang: 'en-US' }).replace(/\n/gi, ''),
 			bibtex: pubCiteObject.get({ format: 'string', type: 'html', style: 'bibtex', lang: 'en-US' }),
 		},
 		version: {
 			apa: versionCiteObject.get({ format: 'string', type: 'html', style: 'citation-apa', lang: 'en-US' }).replace(/\n/gi, ''),
+			harvard: versionCiteObject.get({ format: 'string', type: 'html', style: 'citation-harvard', lang: 'en-US' }).replace(/\n/gi, ''),
+			vancouver: versionCiteObject.get({ format: 'string', type: 'html', style: 'citation-vancouver', lang: 'en-US' }).replace(/\n/gi, ''),
 			bibtex: versionCiteObject.get({ format: 'string', type: 'html', style: 'bibtex', lang: 'en-US' }),
 		}
 	};

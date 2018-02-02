@@ -8,6 +8,7 @@ import PubPresSideUser from 'components/PubPresSideUser/PubPresSideUser';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 import PubPresVersions from 'components/PubPresVersions/PubPresVersions';
 import PubPresInvite from 'components/PubPresInvite/PubPresInvite';
+import PubPresCite from 'components/PubPresCite/PubPresCite';
 import DiscussionList from 'components/DiscussionList/DiscussionList';
 import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
@@ -390,12 +391,7 @@ class PubPresentation extends Component {
 								<PubPresVersions pubData={pubData} />
 							</Overlay>
 							<Overlay isOpen={this.state.activePanel === 'cite'} onClose={this.closePanelOverlay} maxWidth={728}>
-								<div>
-									<h5>Cite</h5>
-									<div dangerouslySetInnerHTML={{ __html: pubData.citationData.apa }} />
-									<hr />
-									<div dangerouslySetInnerHTML={{ __html: pubData.citationData.bibtex }} />
-								</div>
+								<PubPresCite pubData={pubData} />
 							</Overlay>
 						</div>
 					}
