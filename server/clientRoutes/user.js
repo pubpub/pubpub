@@ -3,10 +3,13 @@ import React from 'react';
 import UserContainer from 'containers/User/User';
 import Html from '../Html';
 import app from '../server';
+import analytics from '../analytics';
 import { Community, Pub, User } from '../models';
 import { renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 
 app.get(['/user/:slug', '/user/:slug/:mode'], (req, res, next)=> {
+	analytics(req);
+
 	const getUserData = User.findOne({
 		where: {
 			slug: req.params.slug.toLowerCase()

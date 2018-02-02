@@ -3,10 +3,13 @@ import React from 'react';
 import PasswordReset from 'containers/PasswordReset/PasswordReset';
 import Html from '../Html';
 import app from '../server';
+import analytics from '../analytics';
 import { User } from '../models';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 
 app.get(['/password-reset', '/password-reset/:resetHash/:slug'], (req, res, next)=> {
+	analytics(req);
+
 	const findUser = User.findOne({
 		where: { slug: req.params.slug },
 	});

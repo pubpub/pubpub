@@ -3,11 +3,13 @@ import Promise from 'bluebird';
 import PubPresentation from 'containers/PubPresentation/PubPresentation';
 import Html from '../Html';
 import app from '../server';
+import analytics from '../analytics';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 import { findPub } from '../queryHelpers';
 
 app.get(['/pub/:slug', '/pub/:slug/:mode', '/pub/:slug/:mode/:subMode'], (req, res, next)=> {
 	if (!hostIsValid(req, 'community')) { return next(); }
+	analytics(req);
 
 	const acceptedModes = ['collaborators', 'versions', 'invite', 'discussions'];
 	if (req.params.mode && acceptedModes.indexOf(req.params.mode) === -1) { return next(); }

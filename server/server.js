@@ -6,7 +6,6 @@ import compression from 'compression';
 import enforce from 'express-sslify';
 import Module from 'module';
 import passport from 'passport';
-import analytics from './analytics';
 import { sequelize, User } from './models';
 
 /* Since we are server-rendering components, we 	*/
@@ -100,8 +99,6 @@ app.use((req, res, next)=> {
 /* Import Routes */
 /* ------------- */
 require('./apiRoutes');
-
-app.use(analytics('UA-61723493-6'));
 require('./clientRoutes');
 
 /* ------------ */

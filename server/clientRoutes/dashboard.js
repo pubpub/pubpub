@@ -3,11 +3,13 @@ import Promise from 'bluebird';
 import Dashboard from 'containers/Dashboard/Dashboard';
 import Html from '../Html';
 import app from '../server';
+import analytics from '../analytics';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 import { findCollection } from '../queryHelpers';
 
 app.get(['/dashboard', '/dashboard/:slug', '/dashboard/:slug/:mode'], (req, res, next)=> {
 	if (!hostIsValid(req, 'community')) { return next(); }
+	analytics(req);
 
 	return getInitialData(req)
 	.then((initialData)=> {

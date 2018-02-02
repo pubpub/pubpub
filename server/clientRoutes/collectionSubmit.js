@@ -3,12 +3,14 @@ import Promise from 'bluebird';
 import CollectionSubmit from 'containers/CollectionSubmit/CollectionSubmit';
 import Html from '../Html';
 import app from '../server';
+import analytics from '../analytics';
 // import { Collection, CommunityAdmin } from '../models';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 import { findCollection } from '../queryHelpers';
 
 app.get(['/:slug/submit', '/:slug/submit/:hash'], (req, res, next)=> {
 	if (!hostIsValid(req, 'community')) { return next(); }
+	analytics(req);
 
 	return getInitialData(req)
 	.then((initialData)=> {

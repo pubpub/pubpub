@@ -3,11 +3,13 @@ import React from 'react';
 import Explore from 'containers/Explore/Explore';
 import Html from '../Html';
 import app from '../server';
+import analytics from '../analytics';
 import { Community, Pub, Discussion, sequelize } from '../models';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 
 app.get('/explore', (req, res, next)=> {
 	if (!hostIsValid(req, 'pubpub')) { return next(); }
+	analytics(req);
 
 	const getActiveCommunities = Community.findAll({
 		attributes: [
