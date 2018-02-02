@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { NonIdealState } from '@blueprintjs/core';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
+import NotificationsTable from 'components/NotificationsTable/NotificationsTable';
 import { hydrateWrapper } from 'utilities';
 
 require('./notifications.scss');
@@ -37,17 +38,8 @@ const Notifications = (props)=> {
 							}
 
 							{!!notificationsData.results.length &&
-								<div className="notifications-list">
-									{notificationsData.results.sort((foo, bar)=> {
-										if (foo.updatedAt > bar.updatedAt) { return 1; }
-										if (foo.updatedAt < bar.updatedAt) { return -1; }
-										return 0;
-									}).map((result)=> {
-										return (
-											<div>{result.verb}</div>
-										);
-									})}
-									{JSON.stringify(notificationsData, null, 2)}
+								<div className="notification-list">
+									<NotificationsTable resultsData={notificationsData.results} />
 								</div>
 							}
 						</div>

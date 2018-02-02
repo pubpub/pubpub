@@ -44,7 +44,7 @@ const headerBars = function(isBasePubPub) {
 						initials: data.userInitials,
 						slug: data.userSlug,
 						isAdmin: false
-					}},
+					}}
 					smallHeaderLogo={data.smallHeaderLogo}
 					onLogout={data.onLogout}
 					isBasePubPub={data.isBasePubPub}
@@ -61,7 +61,7 @@ const headerBars = function(isBasePubPub) {
 						avatar: data.userAvatar,
 						slug: data.userSlug,
 						isAdmin: true
-					}},
+					}}
 					smallHeaderLogo={data.smallHeaderLogo}
 					onLogout={data.onLogout}
 					isBasePubPub={data.isBasePubPub}
@@ -80,7 +80,7 @@ const headerBars = function(isBasePubPub) {
 								avatar: data.userAvatar,
 								slug: data.userSlug,
 								isAdmin: true
-							}},
+							}}
 							smallHeaderLogo={data.smallHeaderLogo}
 							largeHeaderLogo={data.largeHeaderLogo}
 							largeHeaderDescription={data.largeHeaderDescription}
@@ -99,7 +99,7 @@ const headerBars = function(isBasePubPub) {
 								avatar: data.userAvatar,
 								slug: data.userSlug,
 								isAdmin: true
-							}},
+							}}
 							smallHeaderLogo={data.smallHeaderLogo}
 							largeHeaderLogo={data.largeHeaderLogo}
 							largeHeaderDescription={data.largeHeaderDescription}

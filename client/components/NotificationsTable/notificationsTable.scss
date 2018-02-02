@@ -1,0 +1,22 @@
+.notifications-table-component {
+	width: 100%;
+
+	&.pt-table tbody tr:first-child td {
+		box-shadow: none;
+	}
+	&.pt-table td {
+		padding: 0px;
+		a {
+			padding: 11px;
+			display: block;
+			text-decoration: none;
+		}
+	}
+	td img {
+		width: 25px;
+	}
+	td.time {
+		white-space: nowrap;
+		text-align: right;
+	}
+}
