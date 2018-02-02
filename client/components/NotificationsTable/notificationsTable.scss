@@ -7,16 +7,30 @@
 	&.pt-table td {
 		padding: 0px;
 		a {
-			padding: 11px;
+			padding: 20px 11px;
 			display: block;
 			text-decoration: none;
 		}
 	}
-	td img {
-		width: 25px;
+	td .icon-image {
+		height: 35px;
+		width: 35px;
+		border-radius: 2px;
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-position: center center;
+		user-select: none;
 	}
 	td.time {
 		white-space: nowrap;
 		text-align: right;
+	}
+	.new-dot {
+		background-color: red;
+		border-radius: 10px;
+		height: 10px;
+		width: 10px;
+		display: block;
+		margin-top: 4px;
 	}
 }

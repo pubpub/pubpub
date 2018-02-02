@@ -1,5 +1,6 @@
 import stream from 'getstream';
 import { Pub, User, Discussion, Collaborator, CommunityAdmin } from './models';
+
 const client = stream.connect(process.env.STREAM_API_KEY, process.env.STREAM_API_KEY_SECRET);
 
 /*
@@ -30,12 +31,15 @@ export const addActivity = ({ communityId, feedIds, activityType, actor, object,
 		},
 		newPub: {
 			/* Sent to all Community Admins */
+			// UserName has created a new pub: PubTitle
 			actor: `User:${actor}`,
 			verb: 'created',
 			object: `Pub:${object}`,
 		},
 		newVersionPublished: {
 			/* Sent to all contributors who are not the actor */
+			// PubTitle has (n) new published version(s)
+			// PubTitle has been published
 			actor: `User:${actor}`,
 			verb: 'published',
 			object: `Pub:${object}`,
@@ -50,6 +54,7 @@ export const addActivity = ({ communityId, feedIds, activityType, actor, object,
 		},
 		newCollaborator: {
 			/* Sent to actor */
+			// You have been added to Pub
 			actor: `User:${actor}`,
 			verb: 'added',
 			object: `Pub:${object}`,

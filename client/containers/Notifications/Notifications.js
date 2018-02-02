@@ -38,7 +38,7 @@ const Notifications = (props)=> {
 							}
 
 							{!!notificationsData.results.length &&
-								<div className="notification-list">
+								<div className="notifications-list">
 									<NotificationsTable resultsData={notificationsData.results} />
 								</div>
 							}

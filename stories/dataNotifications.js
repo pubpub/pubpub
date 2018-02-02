@@ -125,7 +125,7 @@ export default [
 		created_at: '2018-02-01T23:04:46.239409',
 		group: 'submittedPub:986e7efb-6f87-41ab-b5da-eb0cdf71c37d2018-02-01',
 		id: '4bca82ed-07a4-11e8-8080-8001629d42af.submittedPub:986e7efb-6f87-41ab-b5da-eb0cdf71c37d2018-02-01',
-		is_read: true,
+		is_read: false,
 		is_seen: false,
 		updated_at: '2018-02-01T23:04:46.239409',
 		verb: 'submitted'
