@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dateFormat from 'dateformat';
 import Avatar from 'components/Avatar/Avatar';
-import { getResizedUrl } from 'utilities';
+import { getResizedUrl, generatePubBackground } from 'utilities';
 
 require('./pubPreview.scss');
 
@@ -35,17 +35,10 @@ const defaultProps = {
 };
 
 const PubPreview = function(props) {
-	const gradients = [
-		'linear-gradient(to right, rgba(116, 235, 213, 0.5), rgba(172, 182, 229, 0.5))',
-		'linear-gradient(to right, rgba(225, 238, 195, 0.5), rgba(240, 80, 83, 0.5))',
-		'linear-gradient(to right, rgba(34, 193, 195, 0.5), rgba(253, 187, 45, 0.5))',
-		'linear-gradient(to right, rgba(217, 167, 199, 0.5), rgba(255, 252, 220, 0.5))',
-		'linear-gradient(to right, rgba(201, 214, 255, 0.5), rgba(226, 226, 226, 0.5))'
-	];
 	const resizedBannerImage = getResizedUrl(props.bannerImage, 'fit-in', '800x0');
 	const bannerStyle = props.bannerImage || !props.slug
 		? { backgroundImage: `url("${resizedBannerImage}")` }
-		: { background: gradients[props.title.charCodeAt(props.title.length - 1) % 4] };
+		: { background: generatePubBackground(props.title) };
 
 	// const collaboratorsCount = props.authors.length + props.collaborators.length;
 	const resizedSmallHeaderLogo = props.communityData && getResizedUrl(props.communityData.smallHeaderLogo, 'fit-in', '125x35');

@@ -21,10 +21,16 @@
 		background-position: center center;
 		user-select: none;
 	}
-	td.time {
-		white-space: nowrap;
-		text-align: right;
+	time {
+		font-size: 0.9em;
+		opacity: 0.75;
+		padding-top: 3px;
+		display: block;
 	}
+	// td.time {
+	// 	white-space: nowrap;
+	// 	text-align: right;
+	// }
 	.new-dot {
 		background-color: red;
 		border-radius: 10px;

@@ -132,5 +132,64 @@ storiesOf('Components/PubPreview', module)
 				/>
 			</div>
 		</div>
+
+		<h1 style={{ margin: '0em 0em 0.5em' }}>Placeholder Backgrounds</h1>
+		<div className="row">
+			<div className="col-6">
+				<PubPreview
+					title="a"
+					description={collectionData.pubs[0].description}
+					slug={collectionData.pubs[0].slug}
+					size="medium"
+					publicationDate={collectionData.pubs[0].firstPublishedAt}
+					collaborators={collectionData.pubs[0].collaborators}
+					authors={collectionData.pubs[0].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
+				/>
+			</div>
+			<div className="col-6">
+				<PubPreview
+					title="b"
+					description={collectionData.pubs[0].description}
+					slug={collectionData.pubs[0].slug}
+					size="medium"
+					publicationDate={collectionData.pubs[0].firstPublishedAt}
+					collaborators={collectionData.pubs[0].collaborators}
+					authors={collectionData.pubs[0].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
+				/>
+			</div>
+			<div className="col-6">
+				<PubPreview
+					title="c"
+					description={collectionData.pubs[0].description}
+					slug={collectionData.pubs[0].slug}
+					size="medium"
+					publicationDate={collectionData.pubs[0].firstPublishedAt}
+					collaborators={collectionData.pubs[0].collaborators}
+					authors={collectionData.pubs[0].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
+				/>
+			</div>
+			<div className="col-6">
+				<PubPreview
+					title="d"
+					description={collectionData.pubs[0].description}
+					slug={collectionData.pubs[0].slug}
+					size="medium"
+					publicationDate={collectionData.pubs[0].firstPublishedAt}
+					collaborators={collectionData.pubs[0].collaborators}
+					authors={collectionData.pubs[0].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
+				/>
+			</div>
+			<div className="col-6">
+				<PubPreview
+					title="e"
+					description={collectionData.pubs[0].description}
+					slug={collectionData.pubs[0].slug}
+					size="medium"
+					publicationDate={collectionData.pubs[0].firstPublishedAt}
+					collaborators={collectionData.pubs[0].collaborators}
+					authors={collectionData.pubs[0].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
+				/>
+			</div>
+		</div>
 	</div>
 ));
