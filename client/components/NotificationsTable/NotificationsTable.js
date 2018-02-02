@@ -24,14 +24,14 @@ const NotificationsTable = function(props) {
 						image = firstActivity.object.avatar;
 						link = `/pub/${firstActivity.object.slug}/collaborate`;
 					} else if (result.verb === 'created') {
-						title = <span><b>{firstActivity.actor.fullName}</b> has created a new pub: <b>{firstActivity.object.title}</b></span>;
-						link = `/pub/${firstActivity.target.slug}/collaborate`;
+						title = <span><b>{firstActivity.actor.fullName}</b> created a new pub: <b>{firstActivity.object.title}</b></span>;
+						link = `/pub/${firstActivity.object.slug}/collaborate`;
 						image = firstActivity.actor.avatar;
 					} else if (result.verb === 'published') {
-						title = firstActivity.isFirstPublished
+						title = firstActivity.isFirstPublish
 							? <span><b>{firstActivity.object.title}</b> has been published.</span>
-							: <span><b>{firstActivity.object.title}</b> has {result.activity_count} new published version{result.activity_count === '1' ? '' : 's'}.</span>;
-						link = `/pub/${firstActivity.target.slug}`;
+							: <span><b>{firstActivity.object.title}</b> has {result.activity_count} new published version{result.activity_count === 1 ? '' : 's'}.</span>;
+						link = `/pub/${firstActivity.object.slug}`;
 						image = firstActivity.object.avatar;
 					} else if (result.verb === 'discussed') {
 						// TODO: This is only new threads at the moment. Should probably be all new discussions

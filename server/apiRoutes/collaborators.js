@@ -1,5 +1,6 @@
 import app from '../server';
-import { Collaborator, User } from '../models';
+import { Collaborator, User, CommunityAdmin } from '../models';
+import { generateNewCollaboratorNotification } from '../notifications';
 
 app.post('/api/collaborators', (req, res)=> {
 	// Authenticate user. Make sure they have edit permissions on the given pub.
@@ -8,12 +9,19 @@ app.post('/api/collaborators', (req, res)=> {
 
 	const user = req.user || {};
 
-	Collaborator.findOne({
+	const findCommunityAdmin = CommunityAdmin.findOne({
+		where: {
+			communityId: req.body.communityId,
+			userId: user.id,
+		}
+	});
+	const findCollaborator = Collaborator.findOne({
 		where: { pubId: req.body.pubId, userId: user.id },
 		raw: true,
-	})
-	.then((collaboratorData)=> {
-		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859' && (!collaboratorData || (collaboratorData.permissions !== 'edit' && collaboratorData.permissions !== 'manage' && !collaboratorData.isAuthor))) {
+	});
+	Promise.all([findCommunityAdmin, findCollaborator])
+	.then(([communityAdminData, collaboratorData])=> {
+		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859' && !communityAdminData && (!collaboratorData || collaboratorData.permissions !== 'manage')) {
 			throw new Error('Not Authorized to edit this pub');
 		}
 		return Collaborator.create({
@@ -27,15 +35,17 @@ app.post('/api/collaborators', (req, res)=> {
 		});
 	})
 	.then((newCollaborator)=> {
-		return Collaborator.findOne({
+		const findNewCollaborator = Collaborator.findOne({
 			where: { id: newCollaborator.id },
 			attributes: { exclude: ['updatedAt'] },
 			include: [
 				{ model: User, as: 'user', attributes: ['id', 'slug', 'initials', 'fullName', 'avatar'] }
 			]
 		});
+		const generateNotification = generateNewCollaboratorNotification(newCollaborator.pubId, req.body.communityId, req.body.userId);
+		return Promise.all([findNewCollaborator, generateNotification]);
 	})
-	.then((newCollaboratorData)=> {
+	.then(([newCollaboratorData])=> {
 		const collaboratorUser = newCollaboratorData.user || {};
 		const output = {
 			id: collaboratorUser.id || newCollaboratorData.id,
@@ -70,11 +80,19 @@ app.put('/api/collaborators', (req, res)=> {
 		}
 	});
 
-	Collaborator.findOne({
-		where: { userId: user.id, pubId: req.body.pubId },
-	})
-	.then((collaboratorData)=> {
-		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859' && (!collaboratorData || (collaboratorData.permissions !== 'edit' && collaboratorData.permissions !== 'manage' && !collaboratorData.isAuthor))) {
+	const findCommunityAdmin = CommunityAdmin.findOne({
+		where: {
+			communityId: req.body.communityId,
+			userId: user.id,
+		}
+	});
+	const findCollaborator = Collaborator.findOne({
+		where: { pubId: req.body.pubId, userId: user.id },
+		raw: true,
+	});
+	Promise.all([findCommunityAdmin, findCollaborator])
+	.then(([communityAdminData, collaboratorData])=> {
+		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859' && !communityAdminData && (!collaboratorData || collaboratorData.permissions !== 'manage')) {
 			throw new Error('Not Authorized to edit this pub');
 		}
 		return Collaborator.update(updatedCollaborator, {
@@ -99,12 +117,20 @@ app.put('/api/collaborators', (req, res)=> {
 app.delete('/api/collaborators', (req, res)=> {
 	const user = req.user || {};
 
-	Collaborator.findOne({
-		where: { userId: user.id, pubId: req.body.pubId },
-	})
-	.then((collaboratorData)=> {
-		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859' && (!collaboratorData || (collaboratorData.permissions !== 'edit' && collaboratorData.permissions !== 'manage' && !collaboratorData.isAuthor))) {
-			throw new Error('Not Authorized to update this collaborator');
+	const findCommunityAdmin = CommunityAdmin.findOne({
+		where: {
+			communityId: req.body.communityId,
+			userId: user.id,
+		}
+	});
+	const findCollaborator = Collaborator.findOne({
+		where: { pubId: req.body.pubId, userId: user.id },
+		raw: true,
+	});
+	Promise.all([findCommunityAdmin, findCollaborator])
+	.then(([communityAdminData, collaboratorData])=> {
+		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859' && !communityAdminData && (!collaboratorData || collaboratorData.permissions !== 'manage')) {
+			throw new Error('Not Authorized to edit this pub');
 		}
 		return Collaborator.destroy({
 			where: { id: req.body.collaboratorId },

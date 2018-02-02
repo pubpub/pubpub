@@ -37,7 +37,7 @@ export const addActivity = ({ communityId, feedIds, activityType, actor, object,
 			object: `Pub:${object}`,
 		},
 		newVersionPublished: {
-			/* Sent to all contributors who are not the actor */
+			/* Sent to all contributors and community admins who are not the actor */
 			// PubTitle has (n) new published version(s)
 			// PubTitle has been published
 			actor: `User:${actor}`,
@@ -185,5 +185,63 @@ export const generateDiscussionNotifications = (discussionData)=> {
 			object: activityType === 'newSubmission' ? discussionData.pubId : discussionData.id,
 			target: activityType !== 'newSubmission' ? discussionData.pubId : null,
 		});
+	});
+};
+
+export const generatePubCreateNotification = (newPub, userId)=> {
+	const activityType = 'newPub';
+
+	const activityFeedUserQuery = CommunityAdmin.findAll({
+		where: { communityId: newPub.communityId, userId: { $ne: userId } },
+		attributes: ['userId'],
+	});
+
+	return activityFeedUserQuery
+	.then((activityFeedUserData)=> {
+		return addActivity({
+			communityId: newPub.communityId,
+			feedIds: activityFeedUserData.map((item)=> { return item.userId; }),
+			activityType: activityType,
+			actor: userId,
+			object: newPub.id,
+		});
+	});
+};
+
+export const generateNewVersionNotification = (pubId, communityId, userId, isFirstPublish)=> {
+	const activityType = 'newVersionPublished';
+
+	const activityFeedAdminQuery = CommunityAdmin.findAll({
+		where: { communityId: communityId, userId: { $ne: userId } },
+		attributes: ['userId'],
+	});
+	const activityFeedCollaboratorQuery = Collaborator.findAll({
+		where: { pubId: pubId, userId: { $ne: userId } },
+		attributes: ['userId'],
+	});
+
+	return Promise.all([activityFeedAdminQuery, activityFeedCollaboratorQuery])
+	.then(([activityFeedAdminData, activityFeedCollaboratorData])=> {
+		const feedIds = [...new Set([...activityFeedAdminData, ...activityFeedCollaboratorData].map((item)=> { return item.userId; }))];
+		return addActivity({
+			communityId: communityId,
+			feedIds: feedIds,
+			activityType: activityType,
+			actor: userId,
+			object: pubId,
+			isFirstPublish: isFirstPublish,
+		});
+	});
+};
+
+export const generateNewCollaboratorNotification = (pubId, communityId, userId)=> {
+	const activityType = 'newCollaborator';
+	console.log('Here we are with', userId, communityId, pubId);
+	return addActivity({
+		communityId: communityId,
+		feedIds: [userId],
+		activityType: activityType,
+		actor: userId,
+		object: pubId,
 	});
 };

@@ -1,6 +1,7 @@
 import app from '../server';
 import { Collection, Pub, Collaborator, CollectionPub, CommunityAdmin } from '../models';
 import { generateHash } from '../utilities';
+import { generatePubCreateNotification } from '../notifications';
 
 app.post('/api/pubs', (req, res)=> {
 	const user = req.user || {};
@@ -43,15 +44,17 @@ app.post('/api/pubs', (req, res)=> {
 		});
 	})
 	.then((newPub)=> {
-		return Collaborator.create({
+		const createCollaborator = Collaborator.create({
 			userId: user.id,
 			pubId: newPub.id,
 			isAuthor: true,
 			permissions: 'manage',
 			order: 0.5,
 		});
+		const createNotification = generatePubCreateNotification(newPub, user.id);
+		return Promise.all([createCollaborator, createNotification]);
 	})
-	.then((newCollaborator)=> {
+	.then(([newCollaborator])=> {
 		return CollectionPub.create({
 			collectionId: req.body.collectionId,
 			pubId: newCollaborator.pubId,

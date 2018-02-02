@@ -309,6 +309,7 @@ class PubCollaboration extends Component {
 			method: 'POST',
 			body: JSON.stringify({
 				...collaboratorObject,
+				communityId: this.props.communityData.id,
 			})
 		})
 		.then((result)=> {
@@ -328,6 +329,7 @@ class PubCollaboration extends Component {
 			method: 'PUT',
 			body: JSON.stringify({
 				...collaboratorObject,
+				communityId: this.props.communityData.id,
 			})
 		})
 		.then((result)=> {
@@ -356,6 +358,7 @@ class PubCollaboration extends Component {
 			method: 'DELETE',
 			body: JSON.stringify({
 				...collaboratorObject,
+				communityId: this.props.communityData.id,
 			})
 		})
 		.then((result)=> {
