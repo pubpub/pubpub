@@ -99,6 +99,9 @@ const Landing = (props)=> {
 						})}
 						<div className="col-12 explore-all-button">
 							<a href="/explore" className="pt-button pt-intent-primary pt-large">Explore All Communities</a>
+							<div className="create-new-message">
+								To create your own collaborative publishing community, please contact <a href="mailto:pubpub@media.mit.edu">pubpub@media.mit.edu</a>
+							</div>
 						</div>
 
 						<div className="col-12">

@@ -37,5 +37,12 @@
 			text-align: center;
 			margin-bottom: 100px;
 		}
+		.create-new-message {
+			font-size: 16px;
+			margin: 2em 0em 0em;
+			a {
+				text-decoration: underline;
+			}
+		}
 	}
 }
