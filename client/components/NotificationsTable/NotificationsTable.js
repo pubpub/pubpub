@@ -53,7 +53,7 @@ const NotificationsTable = function(props) {
 						image = genBackgroundStyle(firstActivity.object.avatar, firstActivity.object.title);
 					} else if (result.verb === 'replied') {
 						const count = result.activity_count;
-						title = <span><b>{count} new repl{count === 1 ? 'y' : 'ies'}</b> {count === 1 ? 'has' : 'have'} been posted to a discussion thread you are in on <b>{firstActivity.target.title}</b>.</span>;
+						title = <span><b>{count} new repl{count === 1 ? 'y' : 'ies'}</b> {count === 1 ? 'has' : 'have'} been posted to your discussion thread on <b>{firstActivity.target.title}</b>.</span>;
 						link = `/pub/${firstActivity.target.slug}/discussions/${firstActivity.object.threadNumber}`;
 						image = genBackgroundStyle(firstActivity.target.avatar, firstActivity.target.title);
 					}

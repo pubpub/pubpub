@@ -184,6 +184,7 @@ const Pub = sequelize.define('Pub', {
 	},
 	editHash: { type: Sequelize.STRING },
 	viewHash: { type: Sequelize.STRING },
+	doi: { type: Sequelize.TEXT },
 	/* Set by Associations */
 	communityId: { type: Sequelize.UUID, allowNull: false },
 }, {
@@ -196,9 +197,6 @@ const Discussion = sequelize.define('Discussion', {
 	id: id,
 	title: { type: Sequelize.TEXT },
 	threadNumber: { type: Sequelize.INTEGER, allowNull: false },
-	// Text is hopefully a dumbed down plaintext
-	// version of the content. Used for searching,
-	// quick previews, etc. May be not needed
 	text: { type: Sequelize.TEXT },
 	content: { type: Sequelize.JSONB },
 	attachments: { type: Sequelize.JSONB },
@@ -225,6 +223,7 @@ const Version = sequelize.define('Version', {
 	description: { type: Sequelize.TEXT },
 	content: { type: Sequelize.JSONB },
 	collaborativeRef: { type: Sequelize.TEXT },
+	doi: { type: Sequelize.TEXT },
 	/* Set by Associations */
 	pubId: { type: Sequelize.UUID, allowNull: false },
 });
