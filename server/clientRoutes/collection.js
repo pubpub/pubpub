@@ -19,7 +19,6 @@ app.get(['/', '/:slug'], (req, res, next)=> {
 		}, undefined);
 
 		if (!collectionId) { throw new Error('Collection Not Found'); }
-		analytics(req);
 
 		return Promise.all([
 			initialData,
@@ -27,6 +26,7 @@ app.get(['/', '/:slug'], (req, res, next)=> {
 		]);
 	})
 	.then(([initialData, collectionData])=> {
+		analytics(req);
 		const newInitialData = {
 			...initialData,
 			collectionData: collectionData,

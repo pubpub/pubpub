@@ -9,7 +9,6 @@ import { findPub } from '../queryHelpers';
 
 app.get(['/pub/:slug', '/pub/:slug/:mode', '/pub/:slug/:mode/:subMode'], (req, res, next)=> {
 	if (!hostIsValid(req, 'community')) { return next(); }
-	analytics(req);
 
 	const acceptedModes = ['collaborators', 'versions', 'invite', 'discussions'];
 	if (req.params.mode && acceptedModes.indexOf(req.params.mode) === -1) { return next(); }
@@ -19,6 +18,7 @@ app.get(['/pub/:slug', '/pub/:slug/:mode', '/pub/:slug/:mode/:subMode'], (req, r
 		return Promise.all([initialData, findPub(req, initialData)]);
 	})
 	.then(([initialData, pubData])=> {
+		analytics(req);
 		const isUnlisted = pubData.collections.reduce((prev, curr)=> {
 			if (curr.isPublic) { return false; }
 			return prev;

@@ -8,8 +8,6 @@ import { Community, Pub, User } from '../models';
 import { renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 
 app.get(['/user/:slug', '/user/:slug/:mode'], (req, res, next)=> {
-	analytics(req);
-
 	const getUserData = User.findOne({
 		where: {
 			slug: req.params.slug.toLowerCase()
@@ -43,6 +41,7 @@ app.get(['/user/:slug', '/user/:slug/:mode'], (req, res, next)=> {
 	return Promise.all([getInitialData(req), getUserData])
 	.then(([initialData, userData])=> {
 		if (!userData) { throw new Error('User Not Found'); }
+		analytics(req);
 
 		const userDataJson = userData.toJSON();
 		if (userDataJson.pubs) {
@@ -50,7 +49,7 @@ app.get(['/user/:slug', '/user/:slug/:mode'], (req, res, next)=> {
 				const isOwnProfile = userDataJson.id === initialData.loginData.id;
 				const isPublicCollab = item.collaborationMode !== 'private';
 				return !!item.firstPublishedAt || isOwnProfile || isPublicCollab;
-			});	
+			});
 		}
 
 		const newInitialData = {
