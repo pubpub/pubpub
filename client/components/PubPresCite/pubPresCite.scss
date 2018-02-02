@@ -9,6 +9,9 @@
 	.style-wrapper {
 		display: flex;
 		margin-bottom: 4em;
+		&:last-of-type {
+			margin-bottom: 0em;
+		}
 		.style-title {
 			width: calc(100px + 3em);
 			flex-shrink: 0;

@@ -9,7 +9,6 @@ import { findCollection } from '../queryHelpers';
 
 app.get(['/', '/:slug'], (req, res, next)=> {
 	if (!hostIsValid(req, 'community')) { return next(); }
-	analytics(req);
 
 	return getInitialData(req)
 	.then((initialData)=> {
@@ -20,6 +19,7 @@ app.get(['/', '/:slug'], (req, res, next)=> {
 		}, undefined);
 
 		if (!collectionId) { throw new Error('Collection Not Found'); }
+		analytics(req);
 
 		return Promise.all([
 			initialData,
