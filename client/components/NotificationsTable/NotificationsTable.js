@@ -43,7 +43,6 @@ const NotificationsTable = function(props) {
 						link = `/pub/${firstActivity.object.slug}`;
 						image = genBackgroundStyle(firstActivity.object.avatar, firstActivity.object.title);
 					} else if (result.verb === 'discussed') {
-						// TODO: This is only new threads at the moment. Should probably be all new discussions
 						const count = result.activity_count;
 						title = <span><b>{count} new discussion{count === 1 ? '' : 's'}</b> {count === 1 ? 'has' : 'have'} been added to <b>{firstActivity.target.title}</b></span>;
 						link = `/pub/${firstActivity.target.slug}#discussions`;
