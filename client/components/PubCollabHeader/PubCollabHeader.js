@@ -147,6 +147,15 @@ const PubCollabHeader = function(props) {
 												Create New Pub
 											</a>
 										</li>
+										<MenuItem
+											className="pt-popover-dismiss"
+											href="/notifications"
+											text="Notifications"
+											label={props.loginData.notificationCount
+												? <span className="notification-count">{props.loginData.notificationCount}</span>
+												: null
+											}
+										/>
 										<MenuItem text="Logout" onClick={handleLogout} />
 									</Menu>
 								}
@@ -156,6 +165,9 @@ const PubCollabHeader = function(props) {
 								inheritDarkTheme={false}
 							>
 								<button className="pt-button pt-large pt-minimal avatar-button">
+									{!!props.loginData.notificationCount &&
+										<div className="notification-count">{props.loginData.notificationCount}</div>
+									}
 									<Avatar
 										userInitials={props.loginData.initials}
 										userAvatar={props.loginData.avatar}

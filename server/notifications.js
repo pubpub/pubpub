@@ -31,22 +31,19 @@ export const addActivity = ({ communityId, feedIds, activityType, actor, object,
 		},
 		newPub: {
 			/* Sent to all Community Admins */
-			// UserName has created a new pub: PubTitle
 			actor: `User:${actor}`,
 			verb: 'created',
 			object: `Pub:${object}`,
 		},
 		newVersionPublished: {
 			/* Sent to all contributors and community admins who are not the actor */
-			// PubTitle has (n) new published version(s)
-			// PubTitle has been published
 			actor: `User:${actor}`,
 			verb: 'published',
 			object: `Pub:${object}`,
 			isFirstPublish: isFirstPublish,
 		},
 		newDiscussion: {
-			/* Sent to all contributors who are not the actor */
+			/* Sent to all contributors and community admins who are not the actor */
 			actor: `User:${actor}`,
 			verb: 'discussed',
 			object: `Discussion:${object}`,
@@ -54,7 +51,6 @@ export const addActivity = ({ communityId, feedIds, activityType, actor, object,
 		},
 		newCollaborator: {
 			/* Sent to actor */
-			// You have been added to Pub
 			actor: `User:${actor}`,
 			verb: 'added',
 			object: `Pub:${object}`,
@@ -150,40 +146,114 @@ export const getNotifications = (communityId, userId, markRead, markSeen)=> {
 	});
 };
 
-export const generateDiscussionNotifications = (discussionData)=> {
-	let activityFeedUserQuery;
-	let activityType;
-	if (discussionData.submitHash) {
-		/* If submission, notify all community admins */
-		activityType = 'newSubmission';
-		activityFeedUserQuery = CommunityAdmin.findAll({
-			where: { communityId: discussionData.communityId },
-			attributes: ['userId'],
-		});
-	} else if (!discussionData.title) {
-		/* If reply, notify everyone in the thread */
-		activityType = 'discussionReply';
-		activityFeedUserQuery = Discussion.findAll({
-			where: { pubId: discussionData.pubId, threadNumber: discussionData.threadNumber, userId: { $ne: discussionData.userId } },
-			attributes: ['userId'],
-		});
-	} else {
-		activityType = 'newDiscussion';
-		activityFeedUserQuery = Collaborator.findAll({
-			where: { pubId: discussionData.pubId, userId: { $ne: discussionData.userId } },
-			attributes: ['userId'],
-		});
-	}
+// export const generateDiscussionNotifications = (discussionData)=> {
+// 	let activityFeedUserQuery;
+// 	let activityType;
+// 	if (discussionData.submitHash) {
+// 		/* If submission, notify all community admins */
+// 		activityType = 'newSubmission';
+// 		activityFeedUserQuery = CommunityAdmin.findAll({
+// 			where: { communityId: discussionData.communityId },
+// 			attributes: ['userId'],
+// 		});
+// 	} else if (!discussionData.title) {
+// 		/* If reply, notify everyone in the thread */
+// 		activityType = 'discussionReply';
+// 		activityFeedUserQuery = Discussion.findAll({
+// 			where: { pubId: discussionData.pubId, threadNumber: discussionData.threadNumber, userId: { $ne: discussionData.userId } },
+// 			attributes: ['userId'],
+// 		});
+// 	} else {
+// 		/* If new discussion, notify all community admins and collaborators */
+// 		activityType = 'newDiscussion';
+// 		const activityFeedAdminQuery = CommunityAdmin.findAll({
+// 			where: { communityId: discussionData.communityId, userId: { $ne: discussionData.userId } },
+// 			attributes: ['userId'],
+// 		});
+// 		const activityFeedCollaboratorQuery = Collaborator.findAll({
+// 			where: { pubId: discussionData.pubId, userId: { $ne: discussionData.userId } },
+// 			attributes: ['userId'],
+// 		});
+// 		activityFeedUserQuery = Promise.all([activityFeedAdminQuery, activityFeedCollaboratorQuery]);
+// 	}
+
+// 	return activityFeedUserQuery
+// 	.then((activityFeedUserData)=> {
+// 		const feedIds = activityType === 'newDiscussion'
+// 			? [...new Set([...activityFeedUserData[0], ...activityFeedUserData[1]].map((item)=> { return item.userId; }))]
+// 			: activityFeedUserData.map((item)=> { return item.userId; });
+
+// 		return addActivity({
+// 			communityId: discussionData.communityId,
+// 			feedIds: feedIds,
+// 			activityType: activityType,
+// 			actor: discussionData.userId,
+// 			object: activityType === 'newSubmission' ? discussionData.pubId : discussionData.id,
+// 			target: activityType !== 'newSubmission' ? discussionData.pubId : null,
+// 		});
+// 	});
+// };
+
+
+export const generateNewSubmissionNotification = (discussionData)=> {
+	/* Notify all community admins */
+	const activityFeedUserQuery = CommunityAdmin.findAll({
+		where: { communityId: discussionData.communityId },
+		attributes: ['userId'],
+	});
 
 	return activityFeedUserQuery
 	.then((activityFeedUserData)=> {
 		return addActivity({
 			communityId: discussionData.communityId,
 			feedIds: activityFeedUserData.map((item)=> { return item.userId; }),
-			activityType: activityType,
+			activityType: 'newSubmission',
 			actor: discussionData.userId,
-			object: activityType === 'newSubmission' ? discussionData.pubId : discussionData.id,
-			target: activityType !== 'newSubmission' ? discussionData.pubId : null,
+			object: discussionData.pubId,
+		});
+	});
+};
+
+export const generateDiscussionReplyNotification = (discussionData)=> {
+	/* If reply, notify everyone in the thread */
+	const activityFeedUserQuery = Discussion.findAll({
+		where: { pubId: discussionData.pubId, threadNumber: discussionData.threadNumber, userId: { $ne: discussionData.userId } },
+		attributes: ['userId'],
+	});
+
+	return activityFeedUserQuery
+	.then((activityFeedUserData)=> {
+		return addActivity({
+			communityId: discussionData.communityId,
+			feedIds: activityFeedUserData.map((item)=> { return item.userId; }),
+			activityType: 'discussionReply',
+			actor: discussionData.userId,
+			object: discussionData.id,
+			target: discussionData.pubId,
+		});
+	});
+};
+
+export const generateNewDiscussionNotification = (discussionData)=> {
+	/* If new discussion, notify all community admins and collaborators */
+	const activityFeedAdminQuery = CommunityAdmin.findAll({
+		where: { communityId: discussionData.communityId, userId: { $ne: discussionData.userId } },
+		attributes: ['userId'],
+	});
+	const activityFeedCollaboratorQuery = Collaborator.findAll({
+		where: { pubId: discussionData.pubId, userId: { $ne: discussionData.userId } },
+		attributes: ['userId'],
+	});
+
+	return Promise.all([activityFeedAdminQuery, activityFeedCollaboratorQuery])
+	.then(([activityFeedAdminData, activityFeedCollaboratorData])=> {
+		return addActivity({
+			communityId: discussionData.communityId,
+			feedIds: [...new Set([...activityFeedAdminData, ...activityFeedCollaboratorData].map((item)=> { return item.userId; }))],
+			activityType: 'newDiscussion',
+			actor: discussionData.userId,
+			object: discussionData.id,
+			target: discussionData.pubId,
 		});
 	});
 };
@@ -236,7 +306,6 @@ export const generateNewVersionNotification = (pubId, communityId, userId, isFir
 
 export const generateNewCollaboratorNotification = (pubId, communityId, userId)=> {
 	const activityType = 'newCollaborator';
-	console.log('Here we are with', userId, communityId, pubId);
 	return addActivity({
 		communityId: communityId,
 		feedIds: [userId],

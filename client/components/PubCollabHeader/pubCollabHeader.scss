@@ -109,6 +109,19 @@
 		padding: 0px;
 		position: relative;
 		left: 8px;
+		.notification-count {
+			position: absolute;
+			background-color: red;
+			vertical-align: top;
+			line-height: 16px;
+			height: 15px;
+			font-size: 12px;
+			padding: 0px 5px;
+			border-radius: 10px;
+			top: -2px;
+			right: -2px;
+			color: white;
+		}
 	}
 	.login-button {
 		position: relative;
@@ -124,5 +137,14 @@
 			text-transform: capitalize;
 			flex-shrink: 0;
 		}
+	}
+}
+
+.pt-menu-item-label {
+	.notification-count {
+		background-color: red;
+		color: white;
+		padding: 0px 8px;
+		border-radius: 19px;
 	}
 }

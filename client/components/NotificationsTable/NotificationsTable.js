@@ -46,7 +46,7 @@ const NotificationsTable = function(props) {
 						// TODO: This is only new threads at the moment. Should probably be all new discussions
 						const count = result.activity_count;
 						title = <span><b>{count} new discussion{count === 1 ? '' : 's'}</b> {count === 1 ? 'has' : 'have'} been added to <b>{firstActivity.target.title}</b></span>;
-						link = `/pub/${firstActivity.target.slug}/discussions`;
+						link = `/pub/${firstActivity.target.slug}#discussions`;
 						image = genBackgroundStyle(firstActivity.target.avatar, firstActivity.target.title);
 					} else if (result.verb === 'added') {
 						title = <span>You have been added to <b>{firstActivity.object.title}</b></span>;
@@ -73,12 +73,6 @@ const NotificationsTable = function(props) {
 									<div><TimeAgo date={`${result.updated_at}Z`} title="Last Updated" /></div>
 								</a>
 							</td>
-
-							{/*<td className="time">
-								<a href={link}>
-									<TimeAgo date={`${result.updated_at}Z`} title="Last Updated" />
-								</a>
-							</td>*/}
 
 							<td className="is-new">
 								<a href={link}>

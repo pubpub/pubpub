@@ -1,6 +1,6 @@
 import app from '../server';
 import { Pub, User, Discussion, Collaborator, CommunityAdmin } from '../models';
-import { generateDiscussionNotifications } from '../notifications';
+import { generateNewSubmissionNotification, generateDiscussionReplyNotification, generateNewDiscussionNotification } from '../notifications';
 
 app.post('/api/discussions', (req, res)=> {
 	Discussion.findAll({
@@ -44,7 +44,17 @@ app.post('/api/discussions', (req, res)=> {
 			},
 			include: [{ model: User, as: 'author', attributes: ['id', 'fullName', 'avatar', 'slug', 'initials'] }],
 		});
-		return Promise.all([findDiscussion, generateDiscussionNotifications(newDiscussion)]);
+
+		const genNewSubmission = newDiscussion.submitHash
+			? generateNewSubmissionNotification(newDiscussion)
+			: null;
+		const genNewDiscussion = !newDiscussion.submitHash
+			? generateNewDiscussionNotification(newDiscussion)
+			: null;
+		const genDiscussionReply = !newDiscussion.title
+			? generateDiscussionReplyNotification(newDiscussion)
+			: null;
+		return Promise.all([findDiscussion, genNewSubmission, genNewDiscussion, genDiscussionReply]);
 	})
 	.then(([populatedDiscussion])=> {
 		return res.status(201).json({

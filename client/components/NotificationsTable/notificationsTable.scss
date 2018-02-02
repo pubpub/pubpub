@@ -1,6 +1,5 @@
 .notifications-table-component {
 	width: 100%;
-
 	&.pt-table tbody tr:first-child td {
 		box-shadow: none;
 	}
@@ -27,10 +26,6 @@
 		padding-top: 3px;
 		display: block;
 	}
-	// td.time {
-	// 	white-space: nowrap;
-	// 	text-align: right;
-	// }
 	.new-dot {
 		background-color: red;
 		border-radius: 10px;
