@@ -1,7 +1,18 @@
 .pub-pres-cite-component {
-	h5 {
+	h5.overlay-title {
 		padding-top: 5px;
 		margin-bottom: 3em;
+	}
+	.pt-callout {
+		margin: -1em 0em 2em;
+		.pt-button {
+			float: right;
+		}
+		p {
+			font-size: 1em;
+			line-height: 1.2;
+			padding: 1em 0em 0em;
+		}
 	}
 	.pt-button-group {
 		float: right;

@@ -4,6 +4,7 @@ require('./collectionPubs');
 require('./communities');
 require('./communityAdmins');
 require('./discussions');
+require('./doi');
 require('./editor');
 require('./logout');
 require('./login');

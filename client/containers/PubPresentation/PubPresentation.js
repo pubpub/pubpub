@@ -35,6 +35,7 @@ class PubPresentation extends Component {
 			activePanel: undefined,
 			pubData: this.props.pubData,
 			postDiscussionIsLoading: false,
+			postDoiIsLoading: false,
 			isArchivedVisible: false,
 			docReadyForHighlights: false,
 			initialContent: undefined,
@@ -53,6 +54,7 @@ class PubPresentation extends Component {
 		this.toggleArchivedVisible = this.toggleArchivedVisible.bind(this);
 		this.handleNewHighlightDiscussion = this.handleNewHighlightDiscussion.bind(this);
 		this.handleScroll = this.handleScroll.bind(this);
+		this.handlePostDoi = this.handlePostDoi.bind(this);
 	}
 	componentDidMount() {
 		this.pubSideContent = document.getElementsByClassName('pub-side-content')[0];
@@ -162,6 +164,20 @@ class PubPresentation extends Component {
 					}),
 				},
 			});
+		});
+	}
+	handlePostDoi() {
+		this.setState({ postDoiIsLoading: true });
+		return apiFetch('/api/doi', {
+			method: 'POST',
+			body: JSON.stringify({
+				pubId: this.props.pubData.id,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then((result)=> {
+			this.setState({ postDoiIsLoading: false });
+			console.log('This is the result we got', result);
 		});
 	}
 	handleEditorRef(ref) {
@@ -391,7 +407,12 @@ class PubPresentation extends Component {
 								<PubPresVersions pubData={pubData} />
 							</Overlay>
 							<Overlay isOpen={this.state.activePanel === 'cite'} onClose={this.closePanelOverlay} maxWidth={728}>
-								<PubPresCite pubData={pubData} />
+								<PubPresCite
+									pubData={pubData}
+									loginData={this.props.loginData}
+									postDoiIsLoading={this.state.postDoiIsLoading}
+									onAssignDoi={this.handlePostDoi}
+								/>
 							</Overlay>
 						</div>
 					}

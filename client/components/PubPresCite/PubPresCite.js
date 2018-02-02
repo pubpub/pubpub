@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Tooltip, Position } from '@blueprintjs/core';
+import { Tooltip, Position, Button } from '@blueprintjs/core';
 
 require('./pubPresCite.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
+	loginData: PropTypes.object.isRequired,
+	postDoiIsLoading: PropTypes.object.isRequired,
+	onAssignDoi: PropTypes.func.isRequired,
 };
 
 class PubPresCite extends Component {
@@ -24,16 +27,16 @@ class PubPresCite extends Component {
 
 		return (
 			<div className="pub-pres-cite-component">
-				<div className={'pt-button-group pt-small'}>
+				<div className="pt-button-group pt-small">
 					<Tooltip
-						content={'Cite the work as a whole. The url below will always produce the most recent version of the work.'}
+						content="Cite the work as a whole. The url below will always produce the most recent version of the work."
 						tooltipClassName="pt-dark cite-tooltip"
 						position={Position.BOTTOM}
 					>
 						<button className={`pt-button ${this.state.mode === 'pub' ? 'pt-active' : ''}`} onClick={()=> { this.setState({ mode: 'pub' }); }}>Cite the Work</button>
 					</Tooltip>
 					<Tooltip
-						content={'Cite this specific version. The url below will always produce this specific version of the work.'}
+						content="Cite this specific version. The url below will always produce this specific version of the work."
 						tooltipClassName="pt-dark cite-tooltip"
 						position={Position.BOTTOM}
 					>
@@ -41,8 +44,20 @@ class PubPresCite extends Component {
 					</Tooltip>
 				</div>
 
-				<h5>Cite</h5>
-				
+				<h5 className="overlay-title">Cite</h5>
+				{this.props.loginData.isAdmin &&
+					<div className="pt-callout">
+						<Button
+							text="Assign DOI"
+							className="pt-small"
+							loading={this.props.postDoiIsLoading}
+							onClick={this.props.onAssignDoi}
+						/>
+						<h5>DOI Assignment</h5>
+						<p>A DOI can be assign to each pub by community admins. When assigned, the pub is given an article-level DOI and each version is assigned it's own child DOI. The article-level DOI will always point to the most recent version while each version DOI can be used to reference the specific version.</p>
+					</div>
+				}
+
 				<div className="style-wrapper">
 					<div className="style-title">APA</div>
 					<div className="style-content" dangerouslySetInnerHTML={{ __html: modeData.apa }} />
@@ -57,7 +72,7 @@ class PubPresCite extends Component {
 					<div className="style-title">Vancouver</div>
 					<div className="style-content" dangerouslySetInnerHTML={{ __html: modeData.vancouver }} />
 				</div>
-				
+
 				<div className="style-wrapper">
 					<div className="style-title">Bibtex</div>
 					<div className="style-content bibtex" dangerouslySetInnerHTML={{ __html: modeData.bibtex }} />
