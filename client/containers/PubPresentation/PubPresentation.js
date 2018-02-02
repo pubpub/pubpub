@@ -389,6 +389,14 @@ class PubPresentation extends Component {
 							<Overlay isOpen={this.state.activePanel === 'versions'} onClose={this.closePanelOverlay} maxWidth={728}>
 								<PubPresVersions pubData={pubData} />
 							</Overlay>
+							<Overlay isOpen={this.state.activePanel === 'cite'} onClose={this.closePanelOverlay} maxWidth={728}>
+								<div>
+									<h5>Cite</h5>
+									<div dangerouslySetInnerHTML={{ __html: pubData.citationData.apa }} />
+									<hr />
+									<div dangerouslySetInnerHTML={{ __html: pubData.citationData.bibtex }} />
+								</div>
+							</Overlay>
 						</div>
 					}
 					{!!pubData.versions.length && mode &&

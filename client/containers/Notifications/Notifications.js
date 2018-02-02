@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { NonIdealState } from '@blueprintjs/core';
+import { NonIdealState, Checkbox } from '@blueprintjs/core';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
 import NotificationsTable from 'components/NotificationsTable/NotificationsTable';
 import { hydrateWrapper } from 'utilities';

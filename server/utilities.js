@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { resolve } from 'path';
 import queryString from 'query-string';
+import Cite from 'citation-js';
 import { Community, Collection, User } from './models';
 import { getNotificationsCount } from './notifications';
 
@@ -234,3 +235,65 @@ export const generateHash = (length)=> {
 	}
 	return hash;
 };
+
+export function generateCitationHTML(pubData, communityData) {
+	if (!pubData.versions.length) { return null; }
+
+	const pubIssuedDate = new Date(pubData.updatedAt);
+	const versionIssuedDate = new Date(pubData.versions[0].updatedAt);
+	const commonData = {
+		// id: pubData.id,
+		type: 'article-journal',
+		title: pubData.title,
+		// DOI: pubData.doi,
+		author: pubData.collaborators.filter((item)=> {
+			return item.Collaborator.isAuthor;
+		}).sort((foo, bar)=> {
+			if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
+			if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
+			return 0;
+		}).map((author)=> {
+			return {
+				given: author.firstName,
+				family: author.lastName,
+			};
+		}),
+		'container-title': communityData.title,
+		// issued: [{
+		// 	'date-parts': [issuedDate.getFullYear(), issuedDate.getMonth() + 1, issuedDate.getDate()]
+		// }],
+	};
+	const pubCiteObject = new Cite({
+		...commonData,
+		id: pubData.id,
+		DOI: pubData.doi,
+		ISSN: pubData.doi ? (communityData.issn || '2471–2388') : null,
+		issued: [{
+			'date-parts': [pubIssuedDate.getFullYear(), pubIssuedDate.getMonth() + 1, pubIssuedDate.getDate()]
+		}],
+	});
+	const versionCiteObject = new Cite({
+		...commonData,
+		id: pubData.versions[0].id,
+		DOI: pubData.versions[0].doi,
+		ISSN: pubData.versions[0].doi ? (communityData.issn || '2471–2388') : null,
+		issued: [{
+			'date-parts': [versionIssuedDate.getFullYear(), versionIssuedDate.getMonth() + 1, versionIssuedDate.getDate()]
+		}],
+		version: pubData.versions[0].id,
+	});
+
+	// const apaOutput = pubCiteObject.get({ format: 'string', type: 'html', style: 'citation-apa', lang: 'en-US' }).replace(/\n/gi, ''),
+	// const bibtexOutput = pubCiteObject.get({ format: 'string', type: 'html', style: 'bibtex', lang: 'en-US'}),
+
+	return {
+		pub: {
+			apa: pubCiteObject.get({ format: 'string', type: 'html', style: 'citation-apa', lang: 'en-US' }).replace(/\n/gi, ''),
+			bibtex: pubCiteObject.get({ format: 'string', type: 'html', style: 'bibtex', lang: 'en-US' }),
+		},
+		version: {
+			apa: versionCiteObject.get({ format: 'string', type: 'html', style: 'citation-apa', lang: 'en-US' }).replace(/\n/gi, ''),
+			bibtex: versionCiteObject.get({ format: 'string', type: 'html', style: 'bibtex', lang: 'en-US' }),
+		}
+	};
+}

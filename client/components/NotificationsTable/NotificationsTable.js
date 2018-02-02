@@ -33,7 +33,7 @@ const NotificationsTable = function(props) {
 						link = `/pub/${firstActivity.object.slug}/collaborate`;
 						image = genBackgroundStyle(firstActivity.object.avatar, firstActivity.object.title);
 					} else if (result.verb === 'created') {
-						title = <span><b>{firstActivity.actor.fullName}</b> created a new pub: <b>{firstActivity.object.title}</b></span>;
+						title = <span><b>{firstActivity.actor.fullName}</b> created a new pub: <b>{firstActivity.object.title}</b>.</span>;
 						link = `/pub/${firstActivity.object.slug}/collaborate`;
 						image = genBackgroundStyle(firstActivity.object.avatar, firstActivity.object.title);
 					} else if (result.verb === 'published') {
@@ -44,11 +44,11 @@ const NotificationsTable = function(props) {
 						image = genBackgroundStyle(firstActivity.object.avatar, firstActivity.object.title);
 					} else if (result.verb === 'discussed') {
 						const count = result.activity_count;
-						title = <span><b>{count} new discussion{count === 1 ? '' : 's'}</b> {count === 1 ? 'has' : 'have'} been added to <b>{firstActivity.target.title}</b></span>;
+						title = <span><b>{count} new discussion{count === 1 ? '' : 's'}</b> {count === 1 ? 'has' : 'have'} been added to <b>{firstActivity.target.title}</b>.</span>;
 						link = `/pub/${firstActivity.target.slug}#discussions`;
 						image = genBackgroundStyle(firstActivity.target.avatar, firstActivity.target.title);
 					} else if (result.verb === 'added') {
-						title = <span>You have been added to <b>{firstActivity.object.title}</b></span>;
+						title = <span>You have been added to <b>{firstActivity.object.title}</b>.</span>;
 						link = `/pub/${firstActivity.object.slug}`;
 						image = genBackgroundStyle(firstActivity.object.avatar, firstActivity.object.title);
 					} else if (result.verb === 'replied') {

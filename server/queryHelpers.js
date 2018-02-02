@@ -1,5 +1,6 @@
 import Promise from 'bluebird';
 import { User, Collection, Pub, Collaborator, Discussion, CommunityAdmin, Community, Version } from './models';
+import { generateCitationHTML } from './utilities';
 
 export const findPub = (req, initialData)=> {
 	const versionParameters = req.query.version
@@ -19,7 +20,7 @@ export const findPub = (req, initialData)=> {
 			{
 				model: User,
 				as: 'collaborators',
-				attributes: ['id', 'avatar', 'initials', 'fullName', 'slug', 'title'],
+				attributes: ['id', 'avatar', 'initials', 'fullName', 'slug', 'title', 'firstName', 'lastName'],
 				through: { attributes: { exclude: ['updatedAt'] } },
 			},
 			{
@@ -91,6 +92,8 @@ export const findPub = (req, initialData)=> {
 						id: item.id,
 						initials: item.name[0],
 						fullName: item.name,
+						firstName: item.name.split(' ')[0],
+						lastName: item.name.split(' ').slice(1, item.name.split(' ').length).join(' '),
 						Collaborator: {
 							id: item.id,
 							isAuthor: item.isAuthor,
@@ -121,7 +124,7 @@ export const findPub = (req, initialData)=> {
 			// on publication - check for discussion with submit hash and communityAdmin
 			// on cancelling submission - perhaps we shoudl remove the archive button and replace it with a 'cancel submission'
 			// discussion that are archived and have a submithash can't be un-archived, perhaps.
-
+			citationData: generateCitationHTML(pubDataJson, initialData.communityData),
 			emptyCollaborators: undefined,
 		};
 		formattedPubData.localPermissions = formattedPubData.collaborators.reduce((prev, curr)=> {

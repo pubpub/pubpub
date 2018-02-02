@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import dateFormat from 'dateformat';
+import { Popover, PopoverInteractionKind, Position, Menu, MenuItem } from '@blueprintjs/core';
 import { getResizedUrl } from 'utilities';
 
 require('./pubPresHeader.scss');
@@ -51,6 +52,31 @@ const PubPresHeader = function(props) {
 										{pubData.localPermissions !== 'none' &&
 											<a href={`/pub/${pubData.slug}/collaborate`} className="pt-button pt-icon-edit2">Edit Pub</a>
 										}
+
+										<Popover
+											content={
+												<Menu>
+													<MenuItem
+														text="Cite"
+														label={<span className="pt-icon-standard pt-icon-bookmark" />}
+														onClick={()=> {
+															props.setOverlayPanel('cite');
+														}}
+													/>
+												</Menu>
+											}
+											popoverClassName="pt-minimal"
+											interactionKind={PopoverInteractionKind.CLICK}
+											position={Position.BOTTOM_RIGHT}
+											transitionDuration={-1}
+											inheritDarkTheme={false}
+										>
+											<button className="pt-button pt-icon-menu" />
+										</Popover>
+
+
+
+										
 										{/* <a
 											href={`/pub/${pubData.slug}/invite`}
 											className="pt-button"
