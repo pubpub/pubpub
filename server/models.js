@@ -224,7 +224,6 @@ const Version = sequelize.define('Version', {
 	description: { type: Sequelize.TEXT },
 	content: { type: Sequelize.JSONB },
 	collaborativeRef: { type: Sequelize.TEXT },
-	doi: { type: Sequelize.TEXT },
 	/* Set by Associations */
 	pubId: { type: Sequelize.UUID, allowNull: false },
 });

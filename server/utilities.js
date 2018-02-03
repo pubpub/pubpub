@@ -1,16 +1,24 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { resolve } from 'path';
+import { Readable } from 'stream';
+// import str from 'string-to-stream';
+// import Promise from 'bluebird';
+// import tmp from 'tmp-promise';
+// import fs from 'fs';
+// const fsWriteFile = Promise.promisify(fs.writeFile);
+// tmp.setGracefulCleanup();
+
 import queryString from 'query-string';
 import Cite from 'citation-js';
 import builder from 'xmlbuilder';
+import request from 'request-promise';
 import { Community, Collection, User, Pub, Version, Collaborator } from './models';
 import { getNotificationsCount } from './notifications';
-import Promise from 'bluebird';
-import fs from 'fs';
 
-const fsWriteFile = Promise.promisify(fs.writeFile);
-
+const doiSubmissionUrl = process.env.DOI_SUBMISSION_URL;
+const doiLoginId = process.env.DOI_LOGIN_ID;
+const doiLoginPassword = process.env.DOI_LOGIN_PASSWORD;
 
 export const hostIsValid = (req, access)=> {
 	const isBasePubPub = req.hostname === 'www.pubpub.org';
@@ -271,7 +279,8 @@ export function generateCitationHTML(pubData, communityData) {
 		...commonData,
 		id: pubData.id,
 		DOI: pubData.doi,
-		ISSN: pubData.doi ? (communityData.issn || '2471–2388') : null,
+		// ISSN: pubData.doi ? (communityData.issn || '2471–2388') : null,
+		ISSN: pubData.doi ? communityData.issn : null,
 		issued: [{
 			'date-parts': [pubIssuedDate.getFullYear(), pubIssuedDate.getMonth() + 1, pubIssuedDate.getDate()]
 		}],
@@ -281,8 +290,9 @@ export function generateCitationHTML(pubData, communityData) {
 	const versionCiteObject = new Cite({
 		...commonData,
 		id: pubData.versions[0].id,
-		DOI: pubData.versions[0].doi,
-		ISSN: pubData.versions[0].doi ? (communityData.issn || '2471–2388') : null,
+		DOI: pubData.doi ? `${pubData.doi}/${pubData.versions[0].id.split('-')[0]}` : null,
+		// ISSN: pubData.doi ? (communityData.issn || '2471–2388') : null,
+		ISSN: pubData.doi ? communityData.issn : null,
 		issued: [{
 			'date-parts': [versionIssuedDate.getFullYear(), versionIssuedDate.getMonth() + 1, versionIssuedDate.getDate()]
 		}],
@@ -317,11 +327,13 @@ export function submitDoiData(pubId, communityId, isNew) {
 	});
 	const findCommunity = Community.findOne({
 		where: { id: communityId },
-		attributes: ['title', 'issn']
+		attributes: ['id', 'title', 'issn', 'domain', 'subdomain']
 	});
+	let willGenerateDoi;
 	return Promise.all([findPub, findCommunity])
 	.then(([pubData, communityData])=> {
-		if (!pubData.doi && !isNew) { return null; }
+		willGenerateDoi = pubData.doi || isNew;
+		if (!willGenerateDoi) { return null; }
 
 		const pubDataJson = pubData.toJSON();
 		const timestamp = new Date().getTime();
@@ -332,8 +344,18 @@ export function submitDoiData(pubId, communityId, isNew) {
 		});
 		const publishedDate = new Date(sortedVersions[0].createdAt);
 		const doi = pubData.doi || `10.21428/${pubData.id.split('-')[0]}`;
-		const communityHostname = communityData.domain || `${communityData.subdomain}.pubpub.org`;
-		const pubLink = `https://${communityHostname}/pub/${pubData.slug}`;
+		// const issn = communityData.issn ? communityData.issn.replace('-', '') : '24712388';
+		const issn = communityData.issn ? communityData.issn.replace('-', '') : null;
+		const issnObject = issn
+			? {
+				issn: {
+					'@media_type': 'electronic',
+					'#text': issn,
+				}
+			}
+			: null;
+		const communityLink = `https://${communityData.domain}` || `https://${communityData.subdomain}.pubpub.org`;
+		const pubLink = `${communityLink}/pub/${pubData.slug}`;
 		const collaborators = [
 			...pubDataJson.collaborators,
 			...pubDataJson.emptyCollaborators.map((item)=> {
@@ -380,9 +402,11 @@ export function submitDoiData(pubId, communityId, isNew) {
 							'@language': 'en',
 							full_title: communityData.title,
 							abbrev_title: communityData.title,
-							issn: {
-								'@media_type': 'electronic',
-								'#text': communityData.issn.replace('-', '') || '24712388',
+							...issnObject,
+							doi_data: {
+								doi: `10.21428/${communityData.id.split('-')[0]}`,
+								timestamp: timestamp,
+								resource: communityLink,
 							},
 						},
 						journal_article: {
@@ -392,12 +416,14 @@ export function submitDoiData(pubId, communityId, isNew) {
 							},
 							contributors: {
 								person_name: collaborators.map((collaborator, collaboratorIndex)=>{
-									return {
+									const personNameOutput = {
 										'@sequence': collaboratorIndex === 0 ? 'first' : 'additional',
-										'@contributor_role': collaborator.Contributor.isAuthor ? 'author' : 'reader',
-										given_name: collaborator.firstName,
-										surname: collaborator.lastName,
+										'@contributor_role': collaborator.Collaborator.isAuthor ? 'author' : 'reader',
+										given_name: collaborator.lastName ? collaborator.firstName : '',
+										surname: collaborator.lastName ? collaborator.lastName : collaborator.firstName,
 									};
+									if (!personNameOutput.given_name) { delete personNameOutput.given_name; }
+									return personNameOutput;
 								})
 							},
 							publication_date: {
@@ -435,7 +461,51 @@ export function submitDoiData(pubId, communityId, isNew) {
 				}
 			}
 		}, { headless: true }).end({ pretty: true });
-		return fsWriteFile(`${__dirname}/outputs/batch.xml`, xmlObject, 'utf-8');
+
+		const readStream = new Readable();
+		readStream._read = function noop() {};
+		readStream.push(xmlObject);
+		readStream.push(null);
+		readStream.path = `/${timestamp}.xml`;
+		// console.log(readStream);
+		// return tmp.file({ postfix: '.xml' })
+		// .then((object)=> {
+		// 	return fsWriteFile(object.path, xmlObject, 'utf-8')
+		// 	.then(()=> {
+		// 		console.log(fs.createReadStream(object.path));
+		// 		return null;
+		// 		return request({
+		// 			method: 'POST',
+		// 			url: doiSubmissionUrl,
+		// 			formData: {
+		// 				login_id: doiLoginId,
+		// 				login_passwd: doiLoginPassword,
+		// 				fname: fs.createReadStream(object.path),
+		// 			},
+		// 			headers: {
+		// 				'content-type': 'multipart/form-data'
+		// 			},
+		// 		});
+		// 	});
+		// });
+		// return null;
+		return request({
+			method: 'POST',
+			url: doiSubmissionUrl,
+			formData: {
+				login_id: doiLoginId,
+				login_passwd: doiLoginPassword,
+				fname: readStream,
+			},
+			headers: {
+				'content-type': 'multipart/form-data'
+			},
+		});
+	})
+	.then((crossrefResponse)=> {
+		if (!willGenerateDoi) { return null; }
+		// Update pub here with doi
+		return crossrefResponse;
 	});
 	// Find pub
 	// If it doesn't have doi, check if isNew. If not, return
