@@ -177,7 +177,9 @@ class PubPresentation extends Component {
 		})
 		.then((result)=> {
 			this.setState({ postDoiIsLoading: false });
-			console.log('This is the result we got', result);
+		})
+		.catch(()=> {
+			this.setState({ postDoiIsLoading: false });	
 		});
 	}
 	handleEditorRef(ref) {

@@ -70,6 +70,7 @@ const Community = sequelize.define('Community', {
 	facebook: { type: Sequelize.TEXT },
 	twitter: { type: Sequelize.TEXT },
 	email: { type: Sequelize.TEXT },
+	issn: { type: Sequelize.TEXT },
 });
 
 const User = sequelize.define('User', {

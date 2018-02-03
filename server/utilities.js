@@ -3,8 +3,14 @@ import ReactDOMServer from 'react-dom/server';
 import { resolve } from 'path';
 import queryString from 'query-string';
 import Cite from 'citation-js';
-import { Community, Collection, User } from './models';
+import builder from 'xmlbuilder';
+import { Community, Collection, User, Pub, Version, Collaborator } from './models';
 import { getNotificationsCount } from './notifications';
+import Promise from 'bluebird';
+import fs from 'fs';
+
+const fsWriteFile = Promise.promisify(fs.writeFile);
+
 
 export const hostIsValid = (req, access)=> {
 	const isBasePubPub = req.hostname === 'www.pubpub.org';
@@ -298,4 +304,141 @@ export function generateCitationHTML(pubData, communityData) {
 			bibtex: versionCiteObject.get({ format: 'string', type: 'html', style: 'bibtex', lang: 'en-US' }),
 		}
 	};
+}
+
+export function submitDoiData(pubId, communityId, isNew) {
+	const findPub = Pub.findOne({
+		where: { id: pubId, communityId: communityId },
+		include: [
+			{ model: Version, as: 'versions' },
+			{ model: User, as: 'collaborators' },
+			{ model: Collaborator, as: 'emptyCollaborators', where: { userId: null }, required: false }
+		]
+	});
+	const findCommunity = Community.findOne({
+		where: { id: communityId },
+		attributes: ['title', 'issn']
+	});
+	return Promise.all([findPub, findCommunity])
+	.then(([pubData, communityData])=> {
+		if (!pubData.doi && !isNew) { return null; }
+
+		const pubDataJson = pubData.toJSON();
+		const timestamp = new Date().getTime();
+		const sortedVersions = pubData.versions.sort((foo, bar)=> {
+			if (foo.createdAt < bar.createdAt) { return -1; }
+			if (foo.createdAt > bar.createdAt) { return 1; }
+			return 0;
+		});
+		const publishedDate = new Date(sortedVersions[0].createdAt);
+		const doi = pubData.doi || `10.21428/${pubData.id.split('-')[0]}`;
+		const communityHostname = communityData.domain || `${communityData.subdomain}.pubpub.org`;
+		const pubLink = `https://${communityHostname}/pub/${pubData.slug}`;
+		const collaborators = [
+			...pubDataJson.collaborators,
+			...pubDataJson.emptyCollaborators.map((item)=> {
+				return {
+					id: item.id,
+					firstName: item.name.split(' ')[0],
+					lastName: item.name.split(' ').slice(1, item.name.split(' ').length).join(' '),
+					Collaborator: {
+						id: item.id,
+						isAuthor: item.isAuthor,
+						isContributor: item.isContributor,
+						title: item.title,
+						roles: item.roles,
+						permissions: item.permissions,
+						order: item.order,
+						createdAt: item.createdAt,
+					}
+				};
+			})
+		].sort((foo, bar)=> {
+			if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
+			if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
+			return 0;
+		});
+
+		const xmlObject = builder.create({
+			doi_batch: {
+				'@xmlns': 'http://www.crossref.org/schema/4.4.1',
+				'@xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+				'@version': '4.4.1',
+				'@xsi:schemaLocation': 'http://www.crossref.org/schema/4.4.1 http://www.crossref.org/schema/deposit/crossref4.4.1.xsd',
+				head: {
+					doi_batch_id: `${pubData.id}_${timestamp}`,
+					timestamp: timestamp,
+					depositor: {
+						depositor_name: 'PubPub',
+						email_address: 'pubpub@media.mit.edu',
+					},
+					registrant: 'PubPub',
+				},
+				body: {
+					journal: {
+						journal_metadata: {
+							'@language': 'en',
+							full_title: communityData.title,
+							abbrev_title: communityData.title,
+							issn: {
+								'@media_type': 'electronic',
+								'#text': communityData.issn.replace('-', '') || '24712388',
+							},
+						},
+						journal_article: {
+							'@publication_type': 'full_text',
+							titles: {
+								title: pubData.title,
+							},
+							contributors: {
+								person_name: collaborators.map((collaborator, collaboratorIndex)=>{
+									return {
+										'@sequence': collaboratorIndex === 0 ? 'first' : 'additional',
+										'@contributor_role': collaborator.Contributor.isAuthor ? 'author' : 'reader',
+										given_name: collaborator.firstName,
+										surname: collaborator.lastName,
+									};
+								})
+							},
+							publication_date: {
+								'@media_type': 'online',
+								month: `0${publishedDate.getMonth() + 1}`.slice(-2),
+								day: publishedDate.getDate(),
+								year: publishedDate.getFullYear(),
+							},
+							doi_data: {
+								doi: doi,
+								timestamp: timestamp,
+								resource: pubLink,
+							},
+							component_list: {
+								component: sortedVersions.map((version)=> {
+									const versionDate = new Date(version.createdAt);
+									return {
+										'@parent_relation': 'isPartOf',
+										publication_date: {
+											'@media_type': 'online',
+											month: `0${versionDate.getMonth() + 1}`.slice(-2),
+											day: versionDate.getDate(),
+											year: versionDate.getFullYear(),
+										},
+										doi_data: {
+											doi: `${doi}/${version.id.split('-')[0]}`,
+											timestamp: timestamp,
+											resource: `${pubLink}?version=${version.id}`,
+										},
+									};
+								})
+							}
+						}
+					}
+				}
+			}
+		}, { headless: true }).end({ pretty: true });
+		return fsWriteFile(`${__dirname}/outputs/batch.xml`, xmlObject, 'utf-8');
+	});
+	// Find pub
+	// If it doesn't have doi, check if isNew. If not, return
+	// Build XML and send to crossref
+	// We need to send back versionDOIs. Really - we need only the pub doi
 }
