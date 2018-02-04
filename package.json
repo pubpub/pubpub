@@ -23,7 +23,7 @@
   "dependencies": {
     "@blueprintjs/core": "^1.35.0",
     "@blueprintjs/labs": "^0.14.2",
-    "@pubpub/editor": "^4.2.6",
+    "@pubpub/editor": "^4.2.7",
     "@storybook/addon-options": "^3.3.2",
     "@storybook/react": "^3.3.2",
     "babel-core": "^6.13.2",
