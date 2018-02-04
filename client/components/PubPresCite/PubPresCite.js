@@ -16,9 +16,15 @@ class PubPresCite extends Component {
 		super(props);
 		this.state = {
 			mode: 'pub',
+			justSetDoi: false,
 		};
 	}
 
+	componentWillReceiveProps(nextProps) {
+		if (!this.props.pubData.doi && nextProps.pubData.doi) {
+			this.setState({ justSetDoi: true });
+		}
+	}
 	render() {
 		const pubData = this.props.pubData;
 		const modeData = this.state.mode === 'pub'
@@ -47,14 +53,28 @@ class PubPresCite extends Component {
 				<h5 className="overlay-title">Cite</h5>
 				{this.props.loginData.isAdmin &&
 					<div className="pt-callout">
-						<Button
-							text="Assign DOI"
-							className="pt-small"
-							loading={this.props.postDoiIsLoading}
-							onClick={this.props.onAssignDoi}
-						/>
+						{!pubData.doi &&
+							<Button
+								text="Assign DOI"
+								className="pt-small"
+								loading={this.props.postDoiIsLoading}
+								onClick={this.props.onAssignDoi}
+							/>
+						}
 						<h5>DOI Assignment</h5>
-						<p>A DOI can be assign to each pub by community admins. When assigned, the pub is given an article-level DOI and each version is assigned it's own child DOI. The article-level DOI will always point to the most recent version while each version DOI can be used to reference the specific version.</p>
+						{!pubData.doi &&
+							<p>A DOI can be assigned to each pub by community admins. When assigned, the pub is given an article-level DOI and each version is assigned it's own child DOI. The article-level DOI will always point to the most recent version while each version DOI can be used to reference the specific version.</p>
+						}
+						{pubData.doi && !this.state.justSetDoi &&
+							<p>DOIs have been registered for this pub and all of it's published versions.</p>
+						}
+
+						{pubData.doi && this.state.justSetDoi &&
+							<div>
+								<p>Successfully registered DOIs for this pub and all of it's published versions!</p>
+								<p>Registration may take a few hours to complete in Crossref's system. If DOI URLs do not work immediately, the registration is likely still processing.</p>
+							</div>
+						}
 					</div>
 				}
 

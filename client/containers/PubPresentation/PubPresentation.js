@@ -173,13 +173,21 @@ class PubPresentation extends Component {
 			body: JSON.stringify({
 				pubId: this.props.pubData.id,
 				communityId: this.props.communityData.id,
+				versionId: this.props.pubData.versions[0].id,
+				slug: this.props.pubData.slug,
 			})
 		})
-		.then((result)=> {
-			this.setState({ postDoiIsLoading: false });
+		.then((updatedPubData)=> {
+			this.setState({
+				postDoiIsLoading: false,
+				pubData: {
+					...this.state.pubData,
+					...updatedPubData,
+				},
+			});
 		})
 		.catch(()=> {
-			this.setState({ postDoiIsLoading: false });	
+			this.setState({ postDoiIsLoading: false });
 		});
 	}
 	handleEditorRef(ref) {

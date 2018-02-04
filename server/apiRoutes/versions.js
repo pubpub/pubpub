@@ -1,6 +1,7 @@
 import app from '../server';
 import { Pub, Version, Collaborator, CommunityAdmin, Discussion } from '../models';
 import { generateNewVersionNotification } from '../notifications';
+import { submitDoiData } from '../utilities';
 
 app.post('/api/versions', (req, res)=> {
 	const user = req.user || {};
@@ -64,7 +65,7 @@ app.post('/api/versions', (req, res)=> {
 		return Promise.all([updatePub, generateNotification]);
 	})
 	.then(()=> {
-		return Discussion.update({ isArchived: true, submitApprovedAt: currentTimestamp }, {
+		const updateDiscussion = Discussion.update({ isArchived: true, submitApprovedAt: currentTimestamp }, {
 			where: {
 				submitHash: req.body.submitHash,
 				pubId: req.body.pubId,
@@ -72,6 +73,8 @@ app.post('/api/versions', (req, res)=> {
 				isArchived: { $not: true },
 			}
 		});
+		const updateDoiData = submitDoiData(req.body.pubId, req.body.communityId, false);
+		return Promise.all([updateDiscussion, updateDoiData]);
 	})
 	.then(()=> {
 		return res.status(201).json('Version Published Successfully');

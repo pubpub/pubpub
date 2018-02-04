@@ -2,13 +2,6 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { resolve } from 'path';
 import { Readable } from 'stream';
-// import str from 'string-to-stream';
-// import Promise from 'bluebird';
-// import tmp from 'tmp-promise';
-// import fs from 'fs';
-// const fsWriteFile = Promise.promisify(fs.writeFile);
-// tmp.setGracefulCleanup();
-
 import queryString from 'query-string';
 import Cite from 'citation-js';
 import builder from 'xmlbuilder';
@@ -329,11 +322,10 @@ export function submitDoiData(pubId, communityId, isNew) {
 		where: { id: communityId },
 		attributes: ['id', 'title', 'issn', 'domain', 'subdomain']
 	});
-	let willGenerateDoi;
+
 	return Promise.all([findPub, findCommunity])
 	.then(([pubData, communityData])=> {
-		willGenerateDoi = pubData.doi || isNew;
-		if (!willGenerateDoi) { return null; }
+		if (!pubData.doi && !isNew) { return [null]; }
 
 		const pubDataJson = pubData.toJSON();
 		const timestamp = new Date().getTime();
@@ -354,8 +346,9 @@ export function submitDoiData(pubId, communityId, isNew) {
 				}
 			}
 			: null;
-		const communityLink = `https://${communityData.domain}` || `https://${communityData.subdomain}.pubpub.org`;
-		const pubLink = `${communityLink}/pub/${pubData.slug}`;
+		const communityHostname = communityData.domain || `${communityData.subdomain}.pubpub.org`;
+		const communityLink = `https://${communityHostname}`;
+		const pubLink = `https://${communityHostname}/pub/${pubData.slug}`;
 		const collaborators = [
 			...pubDataJson.collaborators,
 			...pubDataJson.emptyCollaborators.map((item)=> {
@@ -467,29 +460,7 @@ export function submitDoiData(pubId, communityId, isNew) {
 		readStream.push(xmlObject);
 		readStream.push(null);
 		readStream.path = `/${timestamp}.xml`;
-		// console.log(readStream);
-		// return tmp.file({ postfix: '.xml' })
-		// .then((object)=> {
-		// 	return fsWriteFile(object.path, xmlObject, 'utf-8')
-		// 	.then(()=> {
-		// 		console.log(fs.createReadStream(object.path));
-		// 		return null;
-		// 		return request({
-		// 			method: 'POST',
-		// 			url: doiSubmissionUrl,
-		// 			formData: {
-		// 				login_id: doiLoginId,
-		// 				login_passwd: doiLoginPassword,
-		// 				fname: fs.createReadStream(object.path),
-		// 			},
-		// 			headers: {
-		// 				'content-type': 'multipart/form-data'
-		// 			},
-		// 		});
-		// 	});
-		// });
-		// return null;
-		return request({
+		const submitToCrossref = request({
 			method: 'POST',
 			url: doiSubmissionUrl,
 			formData: {
@@ -501,14 +472,16 @@ export function submitDoiData(pubId, communityId, isNew) {
 				'content-type': 'multipart/form-data'
 			},
 		});
+		return Promise.all([doi, submitToCrossref]);
 	})
-	.then((crossrefResponse)=> {
-		if (!willGenerateDoi) { return null; }
-		// Update pub here with doi
-		return crossrefResponse;
+	.then(([doi])=> {
+		if (!doi) { return [null]; }
+		const updatePub = Pub.update({ doi: doi }, {
+			where: { id: pubId, communityId: communityId }
+		});
+		return Promise.all([doi, updatePub]);
+	})
+	.then(([doi])=> {
+		return doi;
 	});
-	// Find pub
-	// If it doesn't have doi, check if isNew. If not, return
-	// Build XML and send to crossref
-	// We need to send back versionDOIs. Really - we need only the pub doi
 }
