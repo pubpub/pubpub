@@ -51,7 +51,7 @@ class PubPresCite extends Component {
 				</div>
 
 				<h5 className="overlay-title">Cite</h5>
-				{this.props.loginData.isAdmin &&
+				{this.props.loginData.isAdmin && this.props.loginData.id === 'b242f616-7aaa-479c-8ee5-3933dcf70859' &&
 					<div className="pt-callout">
 						{!pubData.doi &&
 							<Button
