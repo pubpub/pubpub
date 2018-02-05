@@ -8,6 +8,7 @@ const propTypes = {
 	userInitials: PropTypes.string,
 	userAvatar: PropTypes.string,
 
+	instanceNumber: PropTypes.number,
 	borderColor: PropTypes.string,
 	borderWidth: PropTypes.string,
 	width: PropTypes.number.isRequired, // Integer number of pixels for avatar
@@ -17,6 +18,7 @@ const propTypes = {
 const defaultProps = {
 	userAvatar: undefined,
 	userInitials: '?',
+	instanceNumber: undefined,
 	borderColor: undefined,
 	borderWidth: undefined,
 	doesOverlap: false,
@@ -29,6 +31,7 @@ const Avatar = function(props) {
 		borderColor: props.borderColor,
 		borderWidth: props.borderColor ? (props.borderWidth || Math.floor(props.width / 50) + 1) : 0,
 		fontSize: Math.floor(props.width / 2.5),
+		zIndex: props.instanceNumber ? -1 * props.instanceNumber : 'initial',
 	};
 
 	const resizedImageUrl = props.width <= 50

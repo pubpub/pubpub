@@ -44,19 +44,19 @@ storiesOf('Components/Avatar', module)
 		</div>
 
 		<div style={wrapperStyle}>
-			{colors.map((color)=> {
-				return <Avatar key={`overlap-${color}`} {...image} borderColor={color} doesOverlap={true} />;
+			{colors.map((color, index)=> {
+				return <Avatar key={`overlap-${color}`} {...image} borderColor={color} instanceNumber={index} doesOverlap={true} />;
 			})}
 		</div>
 		<div style={wrapperStyle}>
-			{colors.map((color)=> {
-				return <Avatar key={`overlapImage-${color}`} {...image} doesOverlap={true} />;
+			{colors.map((color, index)=> {
+				return <Avatar key={`overlapImage-${color}`} {...image} instanceNumber={index} doesOverlap={true} />;
 			})}
 		</div>
 
 		<div style={wrapperStyle}>
-			{colors.map((color)=> {
-				return <Avatar key={`overlapSmall-${color}`} {...image} borderColor={color} width={25} doesOverlap={true} />;
+			{colors.map((color, index)=> {
+				return <Avatar key={`overlapSmall-${color}`} {...image} borderColor={color} width={25} instanceNumber={index} doesOverlap={true} />;
 			})}
 		</div>
 

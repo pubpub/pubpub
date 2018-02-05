@@ -123,10 +123,11 @@ const PubPresDetails = function(props) {
 								{props.collaborators.length}
 								<span className="pt-icon-standard pt-icon-team" />
 								<span className="avatars">
-									{props.collaborators.map((collaborator)=> {
+									{props.collaborators.map((collaborator, index)=> {
 										return (
 											<Avatar
 												key={`avatar-${collaborator.id}`}
+												instanceNumber={index}
 												userInitials={collaborator.initials}
 												userAvatar={collaborator.avatar}
 												borderColor="rgba(255, 255, 255, 1.0)"

@@ -120,10 +120,11 @@ const PubPreview = function(props) {
 						if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
 						if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
 						return 0;
-					}).map((collaborator)=> {
+					}).map((collaborator, index)=> {
 						return (
 							<Avatar
 								key={`avatar-${collaborator.id}`}
+								instanceNumber={index}
 								userInitials={collaborator.initials}
 								userAvatar={collaborator.avatar}
 								borderColor="rgba(255, 255, 255, 1.0)"
