@@ -124,9 +124,10 @@ export const findPub = (req, initialData)=> {
 			// on publication - check for discussion with submit hash and communityAdmin
 			// on cancelling submission - perhaps we shoudl remove the archive button and replace it with a 'cancel submission'
 			// discussion that are archived and have a submithash can't be un-archived, perhaps.
-			citationData: generateCitationHTML(pubDataJson, initialData.communityData),
 			emptyCollaborators: undefined,
 		};
+		const citationData = generateCitationHTML(formattedPubData, initialData.communityData);
+		formattedPubData.citationData = citationData;
 		formattedPubData.localPermissions = formattedPubData.collaborators.reduce((prev, curr)=> {
 			if (curr.id === initialData.loginData.id) {
 				const currPermissions = curr.Collaborator.permissions;

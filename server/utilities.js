@@ -250,22 +250,25 @@ export function generateCitationHTML(pubData, communityData) {
 	const versionIssuedDate = new Date(pubData.versions[0].updatedAt);
 	const communityHostname = communityData.domain || `${communityData.subdomain}.pubpub.org`;
 	const pubLink = `https://${communityHostname}/pub/${pubData.slug}`;
-
+	const authorData = pubData.collaborators.filter((item)=> {
+		return item.Collaborator.isAuthor;
+	}).sort((foo, bar)=> {
+		if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
+		if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
+		return 0;
+	}).map((author)=> {
+		return {
+			given: author.firstName,
+			family: author.lastName,
+		};
+	});
+	const authorsEntry = authorData.length
+		? { author: authorData }
+		: {};
 	const commonData = {
 		type: 'article-journal',
 		title: pubData.title,
-		author: pubData.collaborators.filter((item)=> {
-			return item.Collaborator.isAuthor;
-		}).sort((foo, bar)=> {
-			if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
-			if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
-			return 0;
-		}).map((author)=> {
-			return {
-				given: author.firstName,
-				family: author.lastName,
-			};
-		}),
+		...authorsEntry,
 		'container-title': communityData.title,
 	};
 	const pubCiteObject = new Cite({

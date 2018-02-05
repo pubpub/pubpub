@@ -64,6 +64,7 @@ export const addActivity = ({ communityId, feedIds, activityType, actor, object,
 		},
 
 	};
+	if (feedIds.length === 0) { return null; }
 	const feeds = feedIds.map((id)=> {
 		return `notifications:${communityId}_${id}`;
 	});
