@@ -16,6 +16,7 @@ const Privacy = function(props) {
 				loginData={props.loginData}
 				communityData={props.communityData}
 				locationData={props.locationData}
+				hideNav={this.props.locationData.isBasePubPub}
 			>
 				<div className="legal-wrapper">
 					<div className="container narrow">
