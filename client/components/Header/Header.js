@@ -127,14 +127,14 @@ class Header extends Component {
 											inheritDarkTheme={false}
 										>
 											<button className="pt-button pt-large pt-minimal avatar-button">
-												{!!this.props.loginData.notificationCount &&
-													<div className="notification-count">{this.props.loginData.notificationCount}</div>
-												}
 												<Avatar
 													userInitials={this.props.loginData.initials}
 													userAvatar={this.props.loginData.avatar}
 													width={30}
 												/>
+												{!!this.props.loginData.notificationCount &&
+													<div className="notification-count">{this.props.loginData.notificationCount}</div>
+												}
 											</button>
 										</Popover>
 									}

@@ -165,14 +165,14 @@ const PubCollabHeader = function(props) {
 								inheritDarkTheme={false}
 							>
 								<button className="pt-button pt-large pt-minimal avatar-button">
-									{!!props.loginData.notificationCount &&
-										<div className="notification-count">{props.loginData.notificationCount}</div>
-									}
 									<Avatar
 										userInitials={props.loginData.initials}
 										userAvatar={props.loginData.avatar}
 										width={30}
 									/>
+									{!!props.loginData.notificationCount &&
+										<div className="notification-count">{props.loginData.notificationCount}</div>
+									}
 								</button>
 							</Popover>
 						}
