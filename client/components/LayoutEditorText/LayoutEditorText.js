@@ -9,6 +9,7 @@ import Iframe from '@pubpub/editor/addons/Iframe';
 import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import { s3Upload, getResizedUrl } from 'utilities';
 
+require('./layoutEditorText.scss');
 
 const propTypes = {
 	onChange: PropTypes.func.isRequired,

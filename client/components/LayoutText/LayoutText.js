@@ -7,6 +7,8 @@ import File from '@pubpub/editor/addons/File';
 import Iframe from '@pubpub/editor/addons/Iframe';
 import { getResizedUrl } from 'utilities';
 
+require('./layoutText.scss');
+
 const propTypes = {
 	content: PropTypes.object.isRequired,
 	/* Expected content */
