@@ -54,7 +54,7 @@ const LayoutPubs = function(props) {
 									size={size}
 									publicationDate={selectedPub.firstPublishedAt}
 									collaborators={selectedPub.collaborators.filter((collaborator)=> {
-										return !collaborator.Collaborator.isAuthor;
+										return !collaborator.Collaborator.isContributor;
 									})}
 									authors={selectedPub.collaborators.filter((collaborator)=> {
 										return collaborator.Collaborator.isAuthor;
