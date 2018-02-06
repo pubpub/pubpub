@@ -16,7 +16,7 @@ const Terms = function(props) {
 				loginData={props.loginData}
 				communityData={props.communityData}
 				locationData={props.locationData}
-				hideNav={this.props.locationData.isBasePubPub}
+				hideNav={props.locationData.isBasePubPub}
 			>
 				<div className="legal-wrapper">
 					<div className="container narrow">
