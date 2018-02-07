@@ -110,7 +110,6 @@ class DiscussionViewer extends Component {
 									handleReplySubmit={this.props.onPostDiscussion}
 									handleReplyEdit={this.props.onPutDiscussion}
 									submitIsLoading={this.props.postDiscussionIsLoading}
-									isPresentation={true}
 									getHighlightContent={this.props.getHighlightContent}
 									hoverBackgroundColor={this.props.communityData.accentMinimalColor}
 									onPublish={this.props.onPublish}
@@ -155,7 +154,6 @@ class DiscussionViewer extends Component {
 						handleReplySubmit={this.props.onPostDiscussion}
 						handleReplyEdit={this.props.onPutDiscussion}
 						submitIsLoading={this.props.postDiscussionIsLoading}
-						isPresentation={true}
 						getHighlightContent={this.props.getHighlightContent}
 						hoverBackgroundColor={this.props.communityData.accentMinimalColor}
 						onPublish={this.props.onPublish}

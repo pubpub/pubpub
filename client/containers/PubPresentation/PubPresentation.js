@@ -464,7 +464,7 @@ class PubPresentation extends Component {
 												handleReplySubmit={this.handlePostDiscussion}
 												handleReplyEdit={this.handlePutDiscussion}
 												submitIsLoading={this.state.postDiscussionIsLoading}
-												isPresentation={true}
+												hideScrollButton={true}
 												getHighlightContent={()=>{}}
 												hoverBackgroundColor={this.props.communityData.accentMinimalColor}
 											/>

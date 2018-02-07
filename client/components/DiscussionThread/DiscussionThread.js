@@ -16,7 +16,7 @@ const propTypes = {
 	handleReplySubmit: PropTypes.func.isRequired,
 	handleReplyEdit: PropTypes.func.isRequired,
 	submitIsLoading: PropTypes.bool,
-	isPresentation: PropTypes.bool,
+	hideScrollButton: PropTypes.bool,
 	onPublish: PropTypes.func,
 	publishIsLoading: PropTypes.bool,
 	getHighlightContent: PropTypes.func,
@@ -27,7 +27,7 @@ const defaultProps = {
 	canManage: false,
 	loginData: {},
 	submitIsLoading: false,
-	isPresentation: false,
+	hideScrollButton: false,
 	onPublish: ()=>{},
 	publishIsLoading: false,
 	getHighlightContent: undefined,
@@ -173,7 +173,7 @@ class DiscussionThread extends Component {
 
 		return (
 			<div className="discussion-thread-component">
-				{!this.props.isPresentation &&
+				{/*!this.props.isPresentation &&
 					<a
 						// href={`/pub/${this.props.slug}/collaborate`}
 						onClick={()=> { this.props.setThread(undefined); }}
@@ -181,7 +181,7 @@ class DiscussionThread extends Component {
 					>
 						Show all threads
 					</a>
-				}
+				*/}
 
 				{isArchived &&
 					<div className={`pt-callout ${sortedDiscussions[0].submitApprovedAt ? 'pt-intent-success' : 'pt-intent-danger'}`}>
@@ -288,7 +288,7 @@ class DiscussionThread extends Component {
 								discussion={discussion}
 								isAuthor={isArchived ? false : discussion.userId === this.props.loginData.id || this.props.loginData.id === 'b242f616-7aaa-479c-8ee5-3933dcf70859'}
 								onReplyEdit={this.props.handleReplyEdit}
-								isPresentation={this.props.isPresentation}
+								hideScrollButton={this.props.hideScrollButton}
 								getHighlightContent={this.props.getHighlightContent}
 								hoverBackgroundColor={this.props.hoverBackgroundColor}
 							/>
