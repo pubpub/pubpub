@@ -70,28 +70,6 @@
 			display: inline-block;
 		}
 	}
-	.pub-body-component {
-		h1, h2, h3, h4, h5, h6 {
-			.header-link {
-				position: absolute;
-				opacity: 0;
-				transition: .1s linear opacity;
-				height: 1em;
-				width: 1em;
-				left: -1em;
-				padding-top: calc(0.5em - 8px);
-				padding-left: calc(0.5em - 8px);
-			}
-			&:hover {
-				.header-link {
-					opacity: 0.5;
-					&:hover {
-						opacity: 1;
-					}
-				}
-			}
-		}
-	}
 }
 
 @media only screen and (max-width: 720px) {

@@ -199,14 +199,6 @@ class PubPresentation extends Component {
 					docReadyForHighlights: true,
 				});
 			}, 0);
-			const headers = document.getElementsByClassName('pub-body-component')[0].querySelectorAll('h1, h2, h3, h4, h5, h6');
-			headers.forEach((item)=> {
-				const hashLink = document.createElement('a');
-				hashLink.innerHTML = '<span class="pt-icon-standard pt-icon-link"></span>';
-				hashLink.className = 'header-link';
-				hashLink.href = `#${item.id}`;
-				item.appendChild(hashLink);
-			});
 		}
 	}
 	handleNewHighlightDiscussion(highlightObject) {

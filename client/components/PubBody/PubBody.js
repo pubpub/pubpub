@@ -33,9 +33,6 @@ const defaultProps = {
 	setActiveThread: ()=>{},
 	onNewHighlightDiscussion: ()=>{},
 };
-// const contextTypes = {
-// 	router: PropTypes.object,
-// };
 
 const PubBody = function(props) {
 	const findThreadNumberFromHighlightId = (highlightId)=> {
@@ -53,6 +50,7 @@ const PubBody = function(props) {
 				editorId={props.slug}
 				initialContent={props.content}
 				isReadOnly={true}
+				showHeaderLinks={true}
 				ref={props.onRef}
 			>
 				<Image handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }} />
@@ -72,7 +70,6 @@ const PubBody = function(props) {
 				<Citation />
 				<Discussion
 					threads={props.threads}
-					// routerContext={context.router}
 					slug={props.slug}
 					setActiveThread={props.setActiveThread}
 				/>
@@ -83,5 +80,4 @@ const PubBody = function(props) {
 
 PubBody.propTypes = propTypes;
 PubBody.defaultProps = defaultProps;
-// PubBody.contextTypes = contextTypes;
 export default PubBody;

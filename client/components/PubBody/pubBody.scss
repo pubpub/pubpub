@@ -71,7 +71,7 @@
 	figcaption {
 		font-size: 0.9em;
 	}
-	a {
+	a:not(.header-link) {
 		text-decoration: underline;
 	}
 	.insert-popup {
