@@ -27,7 +27,7 @@ class DashboardSite extends Component {
 			title: props.communityData.title,
 			subdomain: props.communityData.subdomain,
 			description: props.communityData.description,
-			// avatar: props.communityData.avatar,
+			avatar: props.communityData.avatar,
 			favicon: props.communityData.favicon,
 			smallHeaderLogo: props.communityData.smallHeaderLogo,
 			largeHeaderLogo: props.communityData.largeHeaderLogo,
@@ -42,7 +42,7 @@ class DashboardSite extends Component {
 		this.handleTitleChange = this.handleTitleChange.bind(this);
 		this.handleSubdomainChange = this.handleSubdomainChange.bind(this);
 		this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
-		// this.handleAvatarChange = this.handleAvatarChange.bind(this);
+		this.handleAvatarChange = this.handleAvatarChange.bind(this);
 		this.handleFaviconChange = this.handleFaviconChange.bind(this);
 		this.handleSmallHeaderLogoChange = this.handleSmallHeaderLogoChange.bind(this);
 		this.handleLargeHeaderLogoChange = this.handleLargeHeaderLogoChange.bind(this);
@@ -64,9 +64,9 @@ class DashboardSite extends Component {
 	handleDescriptionChange(evt) {
 		this.setState({ description: evt.target.value.substring(0, 280).replace(/\n/g, ' ') });
 	}
-	// handleAvatarChange(val) {
-	// 	this.setState({ avatar: val });
-	// }
+	handleAvatarChange(val) {
+		this.setState({ avatar: val });
+	}
 	handleFaviconChange(val) {
 		this.setState({ favicon: val });
 	}
@@ -133,13 +133,6 @@ class DashboardSite extends Component {
 					value={this.state.description}
 					onChange={this.handleDescriptionChange}
 				/>
-				{/* <ImageUpload
-					htmlFor="avatar-upload"
-					label="Avatar Image"
-					defaultImage={this.state.avatar}
-					onNewImage={this.handleAvatarChange}
-					useCrop={true}
-				/> */}
 				<div className="images-wrapper">
 					<ImageUpload
 						htmlFor="favicon-upload"
@@ -156,10 +149,9 @@ class DashboardSite extends Component {
 						}
 						defaultImage={this.state.favicon}
 						onNewImage={this.handleFaviconChange}
-						// helperText="Used for browser icons. Must be square."
 					/>
 					<ImageUpload
-						htmlFor="favicon-upload"
+						htmlFor="avatar-upload"
 						label={
 							<span>
 								Preview
@@ -171,9 +163,8 @@ class DashboardSite extends Component {
 								</Tooltip>
 							</span>
 						}
-						defaultImage={this.state.favicon}
-						onNewImage={this.handleFaviconChange}
-						// helperText="Used for browser icons. Must be square."
+						defaultImage={this.state.avatar}
+						onNewImage={this.handleAvatarChange}
 					/>
 				</div>
 				<div className="images-wrapper">
@@ -195,11 +186,9 @@ class DashboardSite extends Component {
 						width={150}
 						onNewImage={this.handleSmallHeaderLogoChange}
 						useAccentBackground={true}
-						// helperText="Used in the header bar. Suggested height: 40px"
 					/>
 					<ImageUpload
 						htmlFor="large-header-logo-upload"
-						// label="Landing Page Logo"
 						label={
 							<span>
 								Landing Logo
@@ -216,11 +205,9 @@ class DashboardSite extends Component {
 						width={150}
 						onNewImage={this.handleLargeHeaderLogoChange}
 						useAccentBackground={true}
-						// helperText="Used on the landing page. Suggested height: 200px"
 					/>
 					<ImageUpload
 						htmlFor="large-header-background-upload"
-						// label="Landing Page Background"
 						label={
 							<span>
 								Landing Background
@@ -237,7 +224,6 @@ class DashboardSite extends Component {
 						height={80}
 						width={150}
 						canClear={true}
-						// helperText="Used on the landing page. Suggested minimum dimensions: 1200px x 800px."
 					/>
 				</div>
 				<InputField

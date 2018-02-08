@@ -1,7 +1,6 @@
 .image-upload-component {
 	margin-bottom: 15px;
 	.pt-button.pt-icon-media, .pt-button.pt-icon-media.pt-disabled, .image-wrapper {
-		// background: #F0F0F0;
 		display: inline-block;
 		margin-top: 0.5em;
 		&:before {
@@ -23,15 +22,6 @@
 			background-color: #F0F0F0;
 		}
 	}
-	// img {
-	// 	position: absolute;
-	// 	top: 0;
-	// 	bottom: 0;
-	// 	left: auto;
-	// 	right: auto;
-	// 	max-width: 100%;
-	// 	max-height: 100%;
-	// }
 	input {
 		display: none;
 	}

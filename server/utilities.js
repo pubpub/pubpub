@@ -63,6 +63,7 @@ export const getInitialData = (req)=> {
 					title: 'PubPub',
 					description: 'Collaborative Community Publishing',
 					favicon: '/favicon.png',
+					avatar: '/static/icon.png',
 					smallHeaderLogo: '/static/icon.png',
 					accentColor: '#112233',
 					accentTextColor: '#FFFFFF',
@@ -137,6 +138,7 @@ export const generateMetaComponents = ({ initialData, title, description, image,
 	const siteName = initialData.communityData.title;
 	const url = `https://${initialData.locationData.hostname}${initialData.locationData.path}`;
 	const favicon = initialData.communityData.favicon;
+	const avatar = image || initialData.communityData.avatar;
 
 	let outputComponents = [];
 
@@ -174,13 +176,13 @@ export const generateMetaComponents = ({ initialData, title, description, image,
 		];
 	}
 
-	if (image) {
+	if (avatar) {
 		outputComponents = [
 			...outputComponents,
-			<meta key="i1" property="og:image" content={image} />,
-			<meta key="i2" property="og:image:url" content={image} />,
+			<meta key="i1" property="og:image" content={avatar} />,
+			<meta key="i2" property="og:image:url" content={avatar} />,
 			<meta key="i3" property="og:image:width" content="500" />,
-			<meta name="twitter:image" content={image} />
+			<meta name="twitter:image" content={avatar} />
 		];
 	}
 

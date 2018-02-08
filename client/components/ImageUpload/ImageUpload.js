@@ -122,9 +122,6 @@ class ImageUpload extends Component {
 			...buttonStyle,
 			backgroundImage: `url("${this.state.imageBlob}")`,
 		};
-		// if (!this.state.uploading && this.state.imageBlob) {
-		// 	buttonStyle
-		// }
 		return (
 			<div className="image-upload-component">
 				<label htmlFor={`input-${this.props.htmlFor}`}>
@@ -143,13 +140,7 @@ class ImageUpload extends Component {
 					}
 
 					{!this.state.uploading && this.state.imageBlob &&
-						<div className={`image-wrapper ${this.props.useAccentBackground ? 'accent-background' : ''}`} style={imageStyle}>
-							{/*<img
-								// alt={this.props.label}
-								alt="preview"
-								src={this.state.imageBlob}
-							/>*/}
-						</div>
+						<div className={`image-wrapper ${this.props.useAccentBackground ? 'accent-background' : ''}`} style={imageStyle} />
 					}
 
 					<div className="image-options">
