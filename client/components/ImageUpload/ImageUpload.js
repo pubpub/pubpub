@@ -18,6 +18,7 @@ const propTypes = {
 	htmlFor: PropTypes.string,
 	onNewImage: PropTypes.func,
 	canClear: PropTypes.bool,
+	useAccentBackground: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -31,6 +32,7 @@ const defaultProps = {
 	htmlFor: String(new Date().getTime()),
 	onNewImage: ()=> {},
 	canClear: false,
+	useAccentBackground: false,
 };
 
 class ImageUpload extends Component {
@@ -114,7 +116,15 @@ class ImageUpload extends Component {
 			width: `${this.props.width}px`,
 			height: `${this.props.height}px`,
 			lineHeight: `${this.props.height}px`,
+			// backgroundImage: !this.state.uploading && this.state.imageBlob ?  : null,
 		};
+		const imageStyle = {
+			...buttonStyle,
+			backgroundImage: `url("${this.state.imageBlob}")`,
+		};
+		// if (!this.state.uploading && this.state.imageBlob) {
+		// 	buttonStyle
+		// }
 		return (
 			<div className="image-upload-component">
 				<label htmlFor={`input-${this.props.htmlFor}`}>
@@ -133,21 +143,23 @@ class ImageUpload extends Component {
 					}
 
 					{!this.state.uploading && this.state.imageBlob &&
-						<img
-							alt={this.props.label}
-							src={this.state.imageBlob}
-							style={buttonStyle}
-						/>
-					}
-
-					{!this.state.uploading && this.state.imageBlob &&
-						<div className="image-options">
-							<AnchorButton className="pt-button pt-minimal pt-icon-edit2" />
-							{this.props.canClear &&
-								<button className="pt-button pt-minimal pt-icon-trash pt-intent-danger" onClick={this.clearImage} />
-							}
+						<div className={`image-wrapper ${this.props.useAccentBackground ? 'accent-background' : ''}`} style={imageStyle}>
+							{/*<img
+								// alt={this.props.label}
+								alt="preview"
+								src={this.state.imageBlob}
+							/>*/}
 						</div>
 					}
+
+					<div className="image-options">
+						{!this.state.uploading && this.state.imageBlob &&
+							<AnchorButton className="pt-button pt-minimal pt-icon-edit2" />
+						}
+						{!this.state.uploading && this.state.imageBlob && this.props.canClear &&
+							<button className="pt-button pt-minimal pt-icon-trash pt-intent-danger" onClick={this.clearImage} />
+						}
+					</div>
 					<input
 						id={`input-${this.props.htmlFor}`}
 						name="logo image"

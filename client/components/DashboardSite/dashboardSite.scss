@@ -1,4 +1,17 @@
 .dashboard-site-component {
 	max-width: 600px;
 	margin: 0 auto;
+	.images-wrapper {
+		display: flex;
+		// justify-content: space-between;
+		.image-upload-component {
+			padding-right: 10px;
+		}
+		.pt-icon-info-sign {
+			opacity: 0.5;
+			padding-left: 7px;
+			font-size: 14px;
+			padding-top: 2px;
+		}
+	}
 }

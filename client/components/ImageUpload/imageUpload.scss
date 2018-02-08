@@ -1,7 +1,7 @@
 .image-upload-component {
 	margin-bottom: 15px;
-	.pt-button.pt-icon-media, .pt-button.pt-icon-media.pt-disabled, img {
-		background: #F0F0F0;
+	.pt-button.pt-icon-media, .pt-button.pt-icon-media.pt-disabled, .image-wrapper {
+		// background: #F0F0F0;
 		display: inline-block;
 		margin-top: 0.5em;
 		&:before {
@@ -10,9 +10,28 @@
 			opacity: 0.75;
 		}
 	}
-	img {
-		cursor: pointer;
+	.pt-button.pt-icon-media, .pt-button.pt-icon-media.pt-disabled{
+		background-color: #F0F0F0;
 	}
+	.image-wrapper {
+		position: relative;
+		cursor: pointer;
+		background-size: contain;
+		background-repeat: no-repeat;
+		background-position: center;
+		&:not(.accent-background) {
+			background-color: #F0F0F0;
+		}
+	}
+	// img {
+	// 	position: absolute;
+	// 	top: 0;
+	// 	bottom: 0;
+	// 	left: auto;
+	// 	right: auto;
+	// 	max-width: 100%;
+	// 	max-height: 100%;
+	// }
 	input {
 		display: none;
 	}
@@ -20,6 +39,7 @@
 		vertical-align: top;
 		margin: 0.5em 0em;
 		display: inline-block;
+		width: 30px;
 		.pt-button {
 			display: block;
 		}

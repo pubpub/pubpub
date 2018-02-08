@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button } from '@blueprintjs/core';
+import { Button, Tooltip } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
 import ImageUpload from 'components/ImageUpload/ImageUpload';
 import NavDrag from 'components/NavDrag/NavDrag';
@@ -140,39 +140,106 @@ class DashboardSite extends Component {
 					onNewImage={this.handleAvatarChange}
 					useCrop={true}
 				/> */}
-				<ImageUpload
-					htmlFor="favicon-upload"
-					label="Favicon"
-					defaultImage={this.state.favicon}
-					onNewImage={this.handleFaviconChange}
-					helperText="Used for browser icons. Must be square."
-				/>
-				<ImageUpload
-					htmlFor="small-header-logo-upload"
-					label="Small Header Logo"
-					defaultImage={this.state.smallHeaderLogo}
-					height={50}
-					width={125}
-					onNewImage={this.handleSmallHeaderLogoChange}
-					helperText="Used in the header bar. Suggested height: 40px"
-				/>
-				<ImageUpload
-					htmlFor="large-header-logo-upload"
-					label="Large Header Logo"
-					defaultImage={this.state.largeHeaderLogo}
-					height={60}
-					width={150}
-					onNewImage={this.handleLargeHeaderLogoChange}
-					helperText="Used on the landing page. Suggested height: 200px"
-				/>
-				<ImageUpload
-					htmlFor="large-header-background-upload"
-					label="Large Header Background"
-					defaultImage={this.state.largeHeaderBackground}
-					onNewImage={this.handleLargeHeaderBackgroundChange}
-					width={150}
-					helperText="Used on the landing page. Suggested minimum dimensions: 1200px x 800px."
-				/>
+				<div className="images-wrapper">
+					<ImageUpload
+						htmlFor="favicon-upload"
+						label={
+							<span>
+								Favicon
+								<Tooltip
+									content={<span>Used for browser icons. Must be square.<br />Recommended: 50*50px</span>}
+									tooltipClassName="pt-dark"
+								>
+									<span className="pt-icon-standard pt-icon-info-sign" />
+								</Tooltip>
+							</span>
+						}
+						defaultImage={this.state.favicon}
+						onNewImage={this.handleFaviconChange}
+						// helperText="Used for browser icons. Must be square."
+					/>
+					<ImageUpload
+						htmlFor="favicon-upload"
+						label={
+							<span>
+								Preview
+								<Tooltip
+									content={<span>Used as default preview image for social sharing cards.<br />Recommended: 500*500px</span>}
+									tooltipClassName="pt-dark"
+								>
+									<span className="pt-icon-standard pt-icon-info-sign" />
+								</Tooltip>
+							</span>
+						}
+						defaultImage={this.state.favicon}
+						onNewImage={this.handleFaviconChange}
+						// helperText="Used for browser icons. Must be square."
+					/>
+				</div>
+				<div className="images-wrapper">
+					<ImageUpload
+						htmlFor="small-header-logo-upload"
+						label={
+							<span>
+								Header Logo
+								<Tooltip
+									content={<span>Used in the header bar.<br />Recommended: ~40*150px</span>}
+									tooltipClassName="pt-dark"
+								>
+									<span className="pt-icon-standard pt-icon-info-sign" />
+								</Tooltip>
+							</span>
+						}
+						defaultImage={this.state.smallHeaderLogo}
+						height={80}
+						width={150}
+						onNewImage={this.handleSmallHeaderLogoChange}
+						useAccentBackground={true}
+						// helperText="Used in the header bar. Suggested height: 40px"
+					/>
+					<ImageUpload
+						htmlFor="large-header-logo-upload"
+						// label="Landing Page Logo"
+						label={
+							<span>
+								Landing Logo
+								<Tooltip
+									content={<span>Used on the landing page.<br />Recommended: ~200*750px</span>}
+									tooltipClassName="pt-dark"
+								>
+									<span className="pt-icon-standard pt-icon-info-sign" />
+								</Tooltip>
+							</span>
+						}
+						defaultImage={this.state.largeHeaderLogo}
+						height={80}
+						width={150}
+						onNewImage={this.handleLargeHeaderLogoChange}
+						useAccentBackground={true}
+						// helperText="Used on the landing page. Suggested height: 200px"
+					/>
+					<ImageUpload
+						htmlFor="large-header-background-upload"
+						// label="Landing Page Background"
+						label={
+							<span>
+								Landing Background
+								<Tooltip
+									content={<span>Used on the landing page.<br />Recommended: ~1200*800px</span>}
+									tooltipClassName="pt-dark"
+								>
+									<span className="pt-icon-standard pt-icon-info-sign" />
+								</Tooltip>
+							</span>
+						}
+						defaultImage={this.state.largeHeaderBackground}
+						onNewImage={this.handleLargeHeaderBackgroundChange}
+						height={80}
+						width={150}
+						canClear={true}
+						// helperText="Used on the landing page. Suggested minimum dimensions: 1200px x 800px."
+					/>
+				</div>
 				<InputField
 					label="Website"
 					type="text"
