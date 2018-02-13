@@ -97,7 +97,9 @@ class DashboardCollectionEdit extends Component {
 			isPublic: this.state.isPublic,
 			isOpenSubmissions: this.state.isOpenSubmissions,
 			layout: this.state.layout,
-			createPubMessage: this.state.createPubMessage,
+			createPubMessage: this.editorRef.view.state.doc.textContent
+				? this.state.createPubMessage
+				: null
 		});
 	}
 	handleDelete() {
@@ -215,6 +217,7 @@ class DashboardCollectionEdit extends Component {
 										placeholder="Instructions for submitting to this collection..."
 										onChange={this.setCreatePubMessage}
 										initialContent={this.props.collectionData.createPubMessage || undefined}
+										ref={(ref)=> { this.editorRef = ref; }}
 									>
 										<FormattingMenu />
 										<InsertMenu />
