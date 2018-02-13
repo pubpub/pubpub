@@ -301,6 +301,7 @@ export function getRandomColor(loginId) {
 		'205,220,57',
 		'255,87,34',
 	];
+	if (!loginId) { return colors[0]; }
 	return colors[loginId.charCodeAt(loginId.length - 1) % colors.length];
 }
 
@@ -318,5 +319,6 @@ export function generatePubBackground(pubTitle) {
 		// 'linear-gradient(to right, rgba(201, 214, 255, 1), rgba(226, 226, 226, 1))'
 	];
 
+	if (!pubTitle) { return gradients[0]; }
 	return gradients[pubTitle.charCodeAt(pubTitle.length - 1) % 5];
 }
