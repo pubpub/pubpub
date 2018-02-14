@@ -97,7 +97,7 @@ class DashboardCollectionEdit extends Component {
 			isPublic: this.state.isPublic,
 			isOpenSubmissions: this.state.isOpenSubmissions,
 			layout: this.state.layout,
-			createPubMessage: this.editorRef.view.state.doc.textContent
+			createPubMessage: this.editorRef && this.editorRef.view.state.doc.textContent
 				? this.state.createPubMessage
 				: null
 		});
