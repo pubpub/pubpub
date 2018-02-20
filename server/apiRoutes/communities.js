@@ -24,16 +24,18 @@ app.post('/api/communities', (req, res)=> {
 			isPage: false,
 			isPublic: true,
 			isOpenSubmissions: false,
+			isOpenPublish: false,
 			createPubHash: generateHash(8),
 		},
 		{
 			id: newCollectionIds[1],
-			title: 'Submissions',
-			slug: 'submissions',
+			title: 'Open Submissions',
+			slug: 'open-submissions',
 			communityId: newCommunityId,
 			isPage: false,
 			isPublic: true,
 			isOpenSubmissions: true,
+			isOpenPublish: true,
 			createPubHash: generateHash(8),
 		},
 		{
@@ -44,6 +46,7 @@ app.post('/api/communities', (req, res)=> {
 			isPage: false,
 			isPublic: false,
 			isOpenSubmissions: true,
+			isOpenPublish: false,
 			createPubHash: generateHash(8),
 		}
 	];

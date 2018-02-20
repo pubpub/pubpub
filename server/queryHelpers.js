@@ -41,7 +41,7 @@ export const findPub = (req, initialData)=> {
 				required: false,
 				model: Collection,
 				as: 'collections',
-				attributes: ['id', 'title', 'slug', 'isPublic'],
+				attributes: ['id', 'title', 'slug', 'isPublic', 'isOpenPublish'],
 				through: { attributes: [] },
 			},
 			{

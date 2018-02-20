@@ -164,8 +164,6 @@ const PubPresHeader = function(props) {
 									<span>{dateFormat(pubData.versions[0].createdAt, 'mmm dd, yyyy')}</span>
 									<span>{pubData.versionsList.length}</span>
 									<span className="pt-icon-standard pt-align-right pt-icon-multi-select" />
-
-									
 								</a>
 								<a
 									href="#discussions"

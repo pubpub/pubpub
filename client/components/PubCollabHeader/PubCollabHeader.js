@@ -71,6 +71,12 @@ const PubCollabHeader = function(props) {
 		.then(()=> { window.location.href = '/'; });
 	};
 
+	/* If all the collections a pub is in are set to OpenPublish, then the pub can be published */
+	const pubIsOpenPublish = props.pubData.collections.reduce((prev, curr)=> {
+		if (prev && curr.isOpenPublish) { return prev; }
+		return false;
+	}, true);
+
 	return (
 		<div className="pub-collab-header-component">
 			<a href="/" className="header-logo" style={{ backgroundColor: props.communityData.accentColor }}>
@@ -114,10 +120,10 @@ const PubCollabHeader = function(props) {
 						{props.canManage &&
 							<button type="button" className="pt-button pt-intent-primary" onClick={props.onShareClick}>Share</button>
 						}
-						{props.canManage && props.isAdmin &&
+						{props.canManage && (props.isAdmin || pubIsOpenPublish) &&
 							<button type="button" className="pt-button pt-intent-primary" onClick={props.onPublishClick}>Publish</button>
 						}
-						{props.canManage && !props.isAdmin &&
+						{props.canManage && !props.isAdmin && !pubIsOpenPublish &&
 							<span>
 								{/* TODO - if there is already a submit discussion, need to redirect to that one! */}
 								{props.submissionThreadNumber

@@ -1,5 +1,5 @@
 import app from '../server';
-import { Pub, Version, Collaborator, CommunityAdmin, Discussion } from '../models';
+import { Pub, Version, Collaborator, CommunityAdmin, Discussion, Collection } from '../models';
 import { generateNewVersionNotification } from '../notifications';
 import { submitDoiData } from '../utilities';
 
@@ -18,7 +18,13 @@ app.post('/api/versions', (req, res)=> {
 		}
 	});
 	const findPub = Pub.findOne({
-		where: { id: req.body.pubId, communityId: req.body.communityId }
+		where: { id: req.body.pubId, communityId: req.body.communityId },
+		include: [{
+			model: Collection,
+			as: 'collections',
+			attributes: ['id', 'isOpenPublish'],
+			through: { attributes: [] },
+		}]
 	});
 	const findSubmitDiscussion = Discussion.findOne({
 		where: {
@@ -36,8 +42,12 @@ app.post('/api/versions', (req, res)=> {
 		const isManager = collaboratorData && collaboratorData.permissions === 'manage';
 		const accessAsCommunityAdmin = communityAdminData && pubData.adminPermissions === 'manage';
 		const canApproveSubmission = communityAdminData && discussionData;
+		const canOpenPublish = isManager && pubData.collections.reduce((prev, curr)=> {
+			if (prev && curr.isOpenPublish) { return prev; }
+			return false;
+		}, true);
 		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859'
-			&& !isManager
+			&& !canOpenPublish
 			&& !accessAsCommunityAdmin
 			&& !canApproveSubmission
 		) {

@@ -6,6 +6,7 @@ export default {
 	isPage: false,
 	isPublic: true,
 	isOpenSubmissions: false,
+	isOpenPublish: false,
 	communityId: 'fa4c4dd0-9f15-427d-8560-2d7860baadc1',
 	createdAt: '2017-09-01T15:28:24.256Z',
 	updatedAt: '2017-09-01T15:28:24.256Z',

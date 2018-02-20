@@ -29,6 +29,7 @@ export default {
 				isPage: false,
 				isPublic: true,
 				isOpenSubmissions: false,
+				isOpenPublish: false,
 				layout: [
 					{
 						id: '0kyj32ay',
@@ -73,6 +74,7 @@ export default {
 				isPage: false,
 				isPublic: true,
 				isOpenSubmissions: false,
+				isOpenPublish: false,
 				layout: [
 					{
 						id: '0kyj32ay',

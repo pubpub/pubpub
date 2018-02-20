@@ -45,6 +45,7 @@ export default {
 			isPage: false,
 			isPublic: false,
 			isOpenSubmissions: false,
+			isOpenPublish: false,
 			communityId: '041a0ddd-5737-43ee-840b-054e2d88747b',
 			createdAt: '2017-09-01T15:28:24.136Z',
 			updatedAt: '2017-09-01T15:28:24.136Z'
@@ -57,6 +58,7 @@ export default {
 			isPage: false,
 			isPublic: true,
 			isOpenSubmissions: true,
+			isOpenPublish: true,
 			communityId: '041a0ddd-5737-43ee-840b-054e2d88747b',
 			createdAt: '2017-09-01T15:28:24.136Z',
 			updatedAt: '2017-09-01T15:28:24.136Z'
@@ -69,6 +71,7 @@ export default {
 			isPage: false,
 			isPublic: false,
 			isOpenSubmissions: true,
+			isOpenPublish: true,
 			communityId: '041a0ddd-5737-43ee-840b-054e2d88747b',
 			createdAt: '2017-09-01T15:28:24.136Z',
 			updatedAt: '2017-09-01T15:28:24.136Z'
@@ -81,6 +84,7 @@ export default {
 			isPage: true,
 			isPublic: false,
 			isOpenSubmissions: true,
+			isOpenPublish: true,
 			communityId: '041a0ddd-5737-43ee-840b-054e2d88747b',
 			createdAt: '2017-09-01T15:28:24.136Z',
 			updatedAt: '2017-09-01T15:28:24.136Z'
@@ -93,6 +97,7 @@ export default {
 			isPage: true,
 			isPublic: true,
 			isOpenSubmissions: true,
+			isOpenPublish: true,
 			communityId: '041a0ddd-5737-43ee-840b-054e2d88747b',
 			createdAt: '2017-09-01T15:28:24.136Z',
 			updatedAt: '2017-09-01T15:28:24.136Z'
@@ -105,6 +110,7 @@ export default {
 			isPage: true,
 			isPublic: true,
 			isOpenSubmissions: true,
+			isOpenPublish: true,
 			communityId: '041a0ddd-5737-43ee-840b-054e2d88747b',
 			createdAt: '2017-09-01T15:28:24.136Z',
 			updatedAt: '2017-09-01T15:28:24.136Z'
@@ -117,6 +123,7 @@ export default {
 			isPage: false,
 			isPublic: false,
 			isOpenSubmissions: true,
+			isOpenPublish: true,
 			communityId: '041a0ddd-5737-43ee-840b-054e2d88747b',
 			createdAt: '2017-09-01T15:28:24.136Z',
 			updatedAt: '2017-09-01T15:28:24.136Z'
@@ -129,6 +136,7 @@ export default {
 			isPage: false,
 			isPublic: true,
 			isOpenSubmissions: false,
+			isOpenPublish: false,
 			communityId: '041a0ddd-5737-43ee-840b-054e2d88747b',
 			createdAt: '2017-09-01T15:28:24.136Z',
 			updatedAt: '2017-09-01T15:28:24.136Z'

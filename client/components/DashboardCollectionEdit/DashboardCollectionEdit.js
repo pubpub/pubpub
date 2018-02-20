@@ -41,6 +41,7 @@ class DashboardCollectionEdit extends Component {
 			slug: props.collectionData.slug,
 			isPublic: props.collectionData.isPublic,
 			isOpenSubmissions: props.collectionData.isOpenSubmissions,
+			isOpenPublish: props.collectionData.isOpenPublish,
 			createPubMessage: props.collectionData.createPubMessage,
 			layout: props.collectionData.layout || getDefaultLayout(props.collectionData.isPage),
 		};
@@ -50,8 +51,10 @@ class DashboardCollectionEdit extends Component {
 		this.setSlug = this.setSlug.bind(this);
 		this.setPublic = this.setPublic.bind(this);
 		this.setPrivate = this.setPrivate.bind(this);
-		this.setOpen = this.setOpen.bind(this);
-		this.setClosed = this.setClosed.bind(this);
+		this.setOpenSubmissions = this.setOpenSubmissions.bind(this);
+		this.setClosedSubmissions = this.setClosedSubmissions.bind(this);
+		this.setOpenPublish = this.setOpenPublish.bind(this);
+		this.setClosedPublish = this.setClosedPublish.bind(this);
 		this.setLayout = this.setLayout.bind(this);
 		this.setCreatePubMessage = this.setCreatePubMessage.bind(this);
 		this.handleSaveChanges = this.handleSaveChanges.bind(this);
@@ -76,11 +79,17 @@ class DashboardCollectionEdit extends Component {
 	setPrivate() {
 		this.setState({ hasChanged: true, isPublic: false });
 	}
-	setOpen() {
+	setOpenSubmissions() {
 		this.setState({ hasChanged: true, isOpenSubmissions: true });
 	}
-	setClosed() {
+	setClosedSubmissions() {
 		this.setState({ hasChanged: true, isOpenSubmissions: false });
+	}
+	setOpenPublish() {
+		this.setState({ hasChanged: true, isOpenPublish: true });
+	}
+	setClosedPublish() {
+		this.setState({ hasChanged: true, isOpenPublish: false });
 	}
 	setLayout(newLayout) {
 		this.setState({ hasChanged: true, layout: newLayout });
@@ -96,6 +105,7 @@ class DashboardCollectionEdit extends Component {
 			description: this.state.description,
 			isPublic: this.state.isPublic,
 			isOpenSubmissions: this.state.isOpenSubmissions,
+			isOpenPublish: this.state.isOpenPublish,
 			layout: this.state.layout,
 			createPubMessage: this.editorRef && this.editorRef.view.state.doc.textContent
 				? this.state.createPubMessage
@@ -176,7 +186,7 @@ class DashboardCollectionEdit extends Component {
 							label="Description"
 							placeholder="Enter description"
 							isTextarea={true}
-							helperText="Used for search results. Max 180 characters"
+							helperText="Used for search results. Max 180 characters."
 							value={this.state.description}
 							onChange={this.setDescription}
 							error={undefined}
@@ -202,10 +212,31 @@ class DashboardCollectionEdit extends Component {
 						}
 
 						{!this.props.collectionData.isPage &&
-							<InputField label="Submissions">
+							<InputField
+								label="Submissions"
+								helperText={this.state.isOpenSubmissions
+									? 'Anyone can create new pubs in this collection.'
+									: 'Only Community Admins can create new pubs in this collection.'
+								}
+							>
 								<div className="pt-button-group">
-									<button type="button" className={`pt-button pt-icon-add-to-artifact ${this.state.isOpenSubmissions ? 'pt-active' : ''}`} onClick={this.setOpen}>Open</button>
-									<button type="button" className={`pt-button pt-icon-delete ${!this.state.isOpenSubmissions ? 'pt-active' : ''}`} onClick={this.setClosed}>Closed</button>
+									<button type="button" className={`pt-button pt-icon-add-to-artifact ${this.state.isOpenSubmissions ? 'pt-active' : ''}`} onClick={this.setOpenSubmissions}>Open</button>
+									<button type="button" className={`pt-button pt-icon-delete ${!this.state.isOpenSubmissions ? 'pt-active' : ''}`} onClick={this.setClosedSubmissions}>Closed</button>
+								</div>
+							</InputField>
+						}
+
+						{!this.props.collectionData.isPage &&
+							<InputField
+								label="Publishing"
+								helperText={this.state.isOpenPublish
+									? 'Anyone can publish their own pubs in this collection.'
+									: 'Only Community Admins can publish pubs in this collection. Authors must \'Submit for Publication\'.'
+								}
+							>
+								<div className="pt-button-group">
+									<button type="button" className={`pt-button pt-icon-add-to-artifact ${this.state.isOpenPublish ? 'pt-active' : ''}`} onClick={this.setOpenPublish}>Open</button>
+									<button type="button" className={`pt-button pt-icon-delete ${!this.state.isOpenPublish ? 'pt-active' : ''}`} onClick={this.setClosedPublish}>Closed</button>
 								</div>
 							</InputField>
 						}

@@ -236,6 +236,7 @@ const Collection = sequelize.define('Collection', {
 	isPage: { type: Sequelize.BOOLEAN, allowNull: false },
 	isPublic: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false, },
 	isOpenSubmissions: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false, },
+	isOpenPublish: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false, },
 	layout: { type: Sequelize.JSONB },
 	createPubHash: { type: Sequelize.TEXT },
 	createPubMessage: { type: Sequelize.JSONB },

@@ -103,6 +103,15 @@ class DashboardCollection extends Component {
 							}
 						</div>
 					}
+					{!collectionData.isPage &&
+						<div>
+							<div className="status-bar-separator">·</div>
+							{collectionData.isOpenPublish
+								? <div><span className="pt-icon-standard pt-icon-add-to-artifact" /> Open Publishing</div>
+								: <div><span className="pt-icon-standard pt-icon-delete" /> Closed Publishing</div>
+							}
+						</div>
+					}
 				</div>
 
 				{collectionData.isPage && !!collectionData.layout &&

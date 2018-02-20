@@ -28,6 +28,7 @@ app.post('/api/collections', (req, res)=> {
 			isPage: req.body.isPage,
 			isPublic: false,
 			isOpenSubmissions: false,
+			isOpenPublish: false,
 			createPubHash: generateHash(8),
 		});
 	})
@@ -64,7 +65,7 @@ app.put('/api/collections', (req, res)=> {
 	// Filter to only allow certain fields to be updated
 	const updatedCollection = {};
 	Object.keys(req.body).forEach((key)=> {
-		if (['title', 'slug', 'description', 'isPublic', 'isOpenSubmissions', 'layout', 'createPubMessage'].indexOf(key) > -1) {
+		if (['title', 'slug', 'description', 'isPublic', 'isOpenSubmissions', 'isOpenPublish', 'layout', 'createPubMessage'].indexOf(key) > -1) {
 			updatedCollection[key] = req.body[key] && req.body[key].trim
 				? req.body[key].trim()
 				: req.body[key];
