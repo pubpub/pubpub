@@ -204,6 +204,7 @@ class Dashboard extends Component {
 											if (activeMode === 'create') {
 												return (
 													<DashboardCreateCollection
+														communityData={communityData}
 														isPage={true}
 														onCreate={this.handleCollectionCreate}
 														isLoading={this.state.postCollectionIsLoading}
@@ -217,6 +218,7 @@ class Dashboard extends Component {
 											if (activeMode === 'create') {
 												return (
 													<DashboardCreateCollection
+														communityData={communityData}
 														isPage={false}
 														onCreate={this.handleCollectionCreate}
 														isLoading={this.state.postCollectionIsLoading}

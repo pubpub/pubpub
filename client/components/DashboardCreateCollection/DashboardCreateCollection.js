@@ -6,6 +6,7 @@ import InputField from 'components/InputField/InputField';
 require('./dashboardCreateCollection.scss');
 
 const propTypes = {
+	communityData: PropTypes.object.isRequired,
 	isPage: PropTypes.bool.isRequired,
 	isLoading: PropTypes.bool,
 	error: PropTypes.string,
@@ -25,6 +26,7 @@ class DashboardCreateCollection extends Component {
 			title: '',
 			slug: '',
 			description: '',
+			error: undefined,
 		};
 		this.handleTitleChange = this.handleTitleChange.bind(this);
 		this.handleSlugChange = this.handleSlugChange.bind(this);
@@ -46,7 +48,15 @@ class DashboardCreateCollection extends Component {
 	}
 	handleCreateSubmit(evt) {
 		evt.preventDefault();
-		this.props.onCreate({
+
+		const collectionSlugs = this.props.communityData.collections.map((item)=> {
+			return item.slug;
+		});
+		if (collectionSlugs.indexOf(this.state.slug) > -1) {
+			return this.setState({ error: 'URL already used by another Page or Collection.' });
+		}
+		this.setState({ error: undefined });
+		return this.props.onCreate({
 			title: this.state.title,
 			slug: this.state.slug,
 			description: this.state.description,
@@ -82,7 +92,7 @@ class DashboardCreateCollection extends Component {
 						value={this.state.description}
 						onChange={this.handleDescriptionChange}
 					/>
-					<InputField error={this.props.error && `Error Creating ${itemString}`}>
+					<InputField error={this.state.error || (this.props.error && `Error Creating ${itemString}`)}>
 						<Button
 							name="login"
 							type="submit"
