@@ -37,16 +37,6 @@ class DiscussionViewer extends Component {
 		this.togglePin = this.togglePin.bind(this);
 	}
 
-	// componentWillReceiveProps(nextProps) {
-	// 	if (this.props.postDiscussionIsLoading &&
-	// 		!nextProps.postDiscussionIsLoading &&
-	// 		this.props.activeThreadNumber === 'new' &&
-	// 		nextProps.activeThreadNumber !== 'new'
-	// 	) {
-	// 		this.setState({ isPinned: true });
-	// 	}
-	// }
-
 	handleNewDiscussionSubmit(replyObject) {
 		this.props.onPostDiscussion({
 			userId: this.props.loginData.id,
@@ -79,23 +69,19 @@ class DiscussionViewer extends Component {
 		const isPinned = this.state.isPinned || isNew;
 		return (
 			<div className="discussion-viewer-component">
-				{/*!isActive &&
-					<div className="pt-button-group pt-minimal pt-vertical" style={{ position: 'fixed', top: '50px', right: '400px' }}>
-						<button className="pt-button">Add Discussion</button>
-						
-						<button className="pt-button">
-							<span>23 </span>
-							<span>Discussions</span>
-							<span className="pt-icon-standard pt-align-right pt-icon-chat" />
-						</button>
-						<button className="pt-button">Invite Reviwer</button>
-					</div>
-				*/}
 				{isActive && isPinned &&
 					<div className="pinned-wrapper">
 						<div className="pt-button-group pt-minimal discussion-pinned-overlay-buttons">
 							{!isNew &&
 								<button className="pt-button" onClick={this.togglePin}>Unpin</button>
+							}
+							{!isNew && !!pubData.versions.length &&
+								<a
+									href={`/pub/${this.props.locationData.params.slug}/discussions/${activeThread[0] ? activeThread[0].threadNumber : ''}`}
+									className="pt-button"
+								>
+									Permalink
+								</a>
 							}
 							<button className="pt-button" onClick={this.props.onClose}>Close</button>
 						</div>
@@ -143,6 +129,14 @@ class DiscussionViewer extends Component {
 				<Overlay isOpen={isActive && !isPinned} onClose={this.props.onClose} maxWidth={728}>
 					<div className="pt-button-group pt-minimal discussion-viewer-overlay-buttons">
 						<button className="pt-button" onClick={this.togglePin}>Pin to Side</button>
+						{!!pubData.versions.length &&
+							<a
+								href={`/pub/${this.props.locationData.params.slug}/discussions/${activeThread[0] ? activeThread[0].threadNumber : ''}`}
+								className="pt-button"
+							>
+								Permalink
+							</a>
+						}
 						<button className="pt-button" onClick={this.props.onClose}>Close</button>
 					</div>
 					<DiscussionThread
