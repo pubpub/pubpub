@@ -9,6 +9,7 @@ import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 import PubPresVersions from 'components/PubPresVersions/PubPresVersions';
 import PubPresInvite from 'components/PubPresInvite/PubPresInvite';
 import PubPresCite from 'components/PubPresCite/PubPresCite';
+import PubPresDoi from 'components/PubPresDoi/PubPresDoi';
 import DiscussionList from 'components/DiscussionList/DiscussionList';
 import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
@@ -290,6 +291,7 @@ class PubPresentation extends Component {
 							<PubPresHeader
 								pubData={pubData}
 								setOverlayPanel={this.setOverlayPanel}
+								loginData={this.props.loginData}
 							/>
 
 							<div className="container pub">
@@ -419,11 +421,17 @@ class PubPresentation extends Component {
 							<Overlay isOpen={this.state.activePanel === 'cite'} onClose={this.closePanelOverlay} maxWidth={728}>
 								<PubPresCite
 									pubData={pubData}
-									loginData={this.props.loginData}
-									postDoiIsLoading={this.state.postDoiIsLoading}
-									onAssignDoi={this.handlePostDoi}
 								/>
 							</Overlay>
+							{this.props.loginData.isAdmin &&
+								<Overlay isOpen={this.state.activePanel === 'doi'} onClose={this.closePanelOverlay} maxWidth={728}>
+									<PubPresDoi
+										pubData={pubData}
+										postDoiIsLoading={this.state.postDoiIsLoading}
+										onAssignDoi={this.handlePostDoi}
+									/>
+								</Overlay>
+							}
 						</div>
 					}
 					{!!pubData.versions.length && mode &&
@@ -432,6 +440,7 @@ class PubPresentation extends Component {
 								pubData={pubData}
 								setOverlayPanel={this.setOverlayPanel}
 								locationData={this.props.locationData}
+								loginData={this.props.loginData}
 							/>
 							<div className="container pub mode-content">
 								<div className="row">

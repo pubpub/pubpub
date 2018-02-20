@@ -6,9 +6,6 @@ require('./pubPresCite.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
-	loginData: PropTypes.object.isRequired,
-	postDoiIsLoading: PropTypes.object.isRequired,
-	onAssignDoi: PropTypes.func.isRequired,
 };
 
 class PubPresCite extends Component {
@@ -71,33 +68,6 @@ class PubPresCite extends Component {
 					<div className="style-title">Bibtex</div>
 					<div className="style-content bibtex" dangerouslySetInnerHTML={{ __html: modeData.bibtex }} />
 				</div>
-
-				{this.props.loginData.isAdmin && this.props.loginData.id === 'b242f616-7aaa-479c-8ee5-3933dcf70859' &&
-					<div className="pt-callout">
-						{!pubData.doi &&
-							<Button
-								text="Assign DOI"
-								className="pt-small"
-								loading={this.props.postDoiIsLoading}
-								onClick={this.props.onAssignDoi}
-							/>
-						}
-						<h5>DOI Assignment</h5>
-						{!pubData.doi &&
-							<p>A DOI can be registered for each pub by community admins. When completed, the pub is assigned an article-level DOI and each version is assigned its own component DOI. The article-level DOI will always point to the most recent version while each version DOI can be used to reference earlier snapshots.</p>
-						}
-						{pubData.doi && !this.state.justSetDoi &&
-							<p>DOIs have been registered for this pub and all of its published versions.</p>
-						}
-
-						{pubData.doi && this.state.justSetDoi &&
-							<div>
-								<p>Successfully registered DOIs for this pub and all of its published versions!</p>
-								<p>Registration may take a few hours to complete in Crossref's system. If DOI URLs do not work immediately, the registration is likely still processing.</p>
-							</div>
-						}
-					</div>
-				}
 			</div>
 		);
 	}

@@ -10,6 +10,7 @@ const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	setOverlayPanel: PropTypes.func.isRequired,
 	locationData: PropTypes.object,
+	loginData: PropTypes.object.isRequired,
 };
 
 const defaultProps = {
@@ -63,6 +64,15 @@ const PubPresHeader = function(props) {
 															props.setOverlayPanel('cite');
 														}}
 													/>
+													{props.loginData.isAdmin &&
+														<MenuItem
+															text="DOI"
+															label={<span className="pt-icon-standard pt-icon-doi" />}
+															onClick={()=> {
+																props.setOverlayPanel('doi');
+															}}
+														/>
+													}
 												</Menu>
 											}
 											popoverClassName="pt-minimal"
