@@ -40,7 +40,7 @@ app.post('/api/versions', (req, res)=> {
 	Promise.all([findCollaborator, findCommunityAdmin, findPub, findSubmitDiscussion])
 	.then(([collaboratorData, communityAdminData, pubData, discussionData])=> {
 		const isManager = collaboratorData && collaboratorData.permissions === 'manage';
-		const accessAsCommunityAdmin = communityAdminData && pubData.adminPermissions === 'manage';
+		const accessAsCommunityAdmin = communityAdminData && (pubData.adminPermissions === 'manage' || isManager);
 		const canApproveSubmission = communityAdminData && discussionData;
 		const canOpenPublish = isManager && pubData.collections.reduce((prev, curr)=> {
 			if (prev && curr.isOpenPublish) { return prev; }
