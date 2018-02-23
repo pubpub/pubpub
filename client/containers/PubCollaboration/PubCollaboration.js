@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { NonIdealState } from '@blueprintjs/core';
+// import { NonIdealState } from '@blueprintjs/core';
 import Overlay from 'components/Overlay/Overlay';
 import PubCollabEditor from 'components/PubCollabEditor/PubCollabEditor';
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
@@ -11,10 +11,10 @@ import PubCollabDetails from 'components/PubCollabDetails/PubCollabDetails';
 import PubCollabCollections from 'components/PubCollabCollections/PubCollabCollections';
 import DiscussionList from 'components/DiscussionList/DiscussionList';
 import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
-import DiscussionNew from 'components/DiscussionNew/DiscussionNew';
-import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
-import DiscussionPreviewArchived from 'components/DiscussionPreviewArchived/DiscussionPreviewArchived';
-import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
+// import DiscussionNew from 'components/DiscussionNew/DiscussionNew';
+// import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
+// import DiscussionPreviewArchived from 'components/DiscussionPreviewArchived/DiscussionPreviewArchived';
+// import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 // import PageWrapper from 'components/PageWrapper/PageWrapper';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
 import { apiFetch, hydrateWrapper, nestDiscussionsToThreads, getRandomColor, generateHash } from 'utilities';
@@ -28,7 +28,6 @@ const propTypes = {
 	loginData: PropTypes.object.isRequired,
 	locationData: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
-
 };
 
 class PubCollaboration extends Component {
@@ -45,6 +44,7 @@ class PubCollaboration extends Component {
 			name: loginData.fullName || 'Anonymous',
 			initials: loginData.initials || '?',
 			canEdit: props.pubData.localPermissions === 'edit' || props.pubData.localPermissions === 'manage',
+			firebaseToken: props.pubData.firebaseToken,
 		};
 
 		this.state = {
@@ -599,7 +599,7 @@ class PubCollaboration extends Component {
 									<div className="pub-body-component">
 										<PubCollabEditor
 											onRef={this.handleEditorRef}
-											editorKey={`pub-${pubData.id}`}
+											editorKey={pubData.editorKey}
 											isReadOnly={!canManage && pubData.localPermissions !== 'edit'}
 											clientData={this.state.activeCollaborators[0]}
 											onClientChange={this.handleClientChange}

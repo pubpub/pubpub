@@ -1,11 +1,18 @@
 import React from 'react';
 import Promise from 'bluebird';
+import firebaseAdmin from 'firebase-admin';
 import PubCollaboration from 'containers/PubCollaboration/PubCollaboration';
 import Html from '../Html';
 import app from '../server';
 import analytics from '../analytics';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 import { findPub } from '../queryHelpers';
+
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+firebaseAdmin.initializeApp({
+	credential: firebaseAdmin.credential.cert(serviceAccount),
+	databaseURL: process.env.FIREBASE_DATABASE_URL,
+});
 
 app.get('/pub/:slug/collaborate', (req, res, next)=> {
 	if (!hostIsValid(req, 'community')) { return next(); }
@@ -19,9 +26,21 @@ app.get('/pub/:slug/collaborate', (req, res, next)=> {
 		]);
 	})
 	.then(([initialData, pubData])=> {
+		const tokenClientId = initialData.loginData.clientId || 'anonymous';
+		const createFirebaseToken = firebaseAdmin.auth().createCustomToken(tokenClientId, {
+			localPermissions: pubData.localPermissions,
+			editorKey: `pub-${pubData.id}`,
+		});
+		return Promise.all([initialData, pubData, createFirebaseToken]);
+	})
+	.then(([initialData, pubData, firebaseToken])=> {
 		const newInitialData = {
 			...initialData,
-			pubData: pubData,
+			pubData: {
+				...pubData,
+				firebaseToken: firebaseToken,
+				editorKey: `pub-${pubData.id}`,
+			}
 		};
 		return renderToNodeStream(res,
 			<Html
