@@ -55,12 +55,12 @@ export const getFirebaseConfig = function() {
 		messagingSenderId: '955699971712'
 	};
 	const devConfig = {
-		apiKey: 'AIzaSyDGttY0gbzGUhrrUD9f9bllMxmYWl3WWoc',
-		authDomain: 'pubpub-v4-dev.firebaseapp.com',
-		databaseURL: 'https://pubpub-v4-dev.firebaseio.com',
-		projectId: 'pubpub-v4-dev',
-		storageBucket: 'pubpub-v4-dev.appspot.com',
-		messagingSenderId: '175246944410'
+		apiKey: 'AIzaSyBNlAp1EW5zhiPS8HWwXwZ8WMs-EdkMmKI',
+		authDomain: 'pubpub-v4-dev-60334.firebaseapp.com',
+		databaseURL: 'https://pubpub-v4-dev-60334.firebaseio.com',
+		projectId: 'pubpub-v4-dev-60334',
+		storageBucket: 'pubpub-v4-dev-60334.appspot.com',
+		messagingSenderId: '410839613714'
 	};
 
 	if (typeof window === 'undefined') { return devConfig; }
