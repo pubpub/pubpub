@@ -8,9 +8,7 @@ import analytics from '../analytics';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 import { findPub } from '../queryHelpers';
 
-console.log(typeof process.env.FIREBASE_SERVICE_ACCOUNT);
-console.log(process.env.FIREBASE_SERVICE_ACCOUNT);
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64, 'base64').toString());
 firebaseAdmin.initializeApp({
 	credential: firebaseAdmin.credential.cert(serviceAccount),
 	databaseURL: process.env.FIREBASE_DATABASE_URL,
