@@ -44,6 +44,7 @@ class PubCollaboration extends Component {
 			image: loginData.avatar || null,
 			name: loginData.fullName || 'Anonymous',
 			initials: loginData.initials || '?',
+			canEdit: props.pubData.localPermissions === 'edit' || props.pubData.localPermissions === 'manage',
 		};
 
 		this.state = {
@@ -595,16 +596,7 @@ class PubCollaboration extends Component {
 									tabIndex={-1}
 									role="textbox"
 								>
-									{this.state.collabStatus === 'connecting' &&
-										<div className="collaborative-loading">
-											<div className="loading pt-skeleton" style={{ width: '95%', height: '1.2em', marginBottom: '1em' }} />
-											<div className="loading pt-skeleton" style={{ width: '85%', height: '1.2em', marginBottom: '1em' }} />
-											<div className="loading pt-skeleton" style={{ width: '90%', height: '1.2em', marginBottom: '1em' }} />
-											<div className="loading pt-skeleton" style={{ width: '80%', height: '1.2em', marginBottom: '1em' }} />
-											<div className="loading pt-skeleton" style={{ width: '82%', height: '1.2em', marginBottom: '1em' }} />
-										</div>
-									}
-									<div className={`pub-body-component ${this.state.collabStatus === 'connecting' ? 'loading' : ''}`}>
+									<div className="pub-body-component">
 										<PubCollabEditor
 											onRef={this.handleEditorRef}
 											editorKey={`pub-${pubData.id}`}
