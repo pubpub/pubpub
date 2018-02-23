@@ -69,7 +69,7 @@
 			width: 250px;
 			padding-left: 50px;
 		}
-		.content-panel {
+		.pub-main-content {
 			// direction: ltr;
 			padding: 2em 0em;
 			// background-color: white;
@@ -139,9 +139,6 @@
 		// 	}
 		// }
 		#discussions {
-			// .col-12 {
-			// 	padding-right: 250px;
-			// }
 			border-top: 1px solid #E0E0E0;
 			padding: 2em 0em 4em;
 			margin-bottom: -2em;
@@ -149,3 +146,19 @@
 		}
 	}
 }
+
+@media only screen and (max-width: 720px) {
+	#pub-collaboration-container {
+		.page-content {
+			.container.pub {
+				max-width: 100%;
+			}
+			.pub-side-content {
+				display: none;
+			}
+			.pub-main-content {
+				margin-right: 0px;
+			}	
+		}
+	}
+}		

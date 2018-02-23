@@ -592,7 +592,7 @@ class PubCollaboration extends Component {
 									}
 								</div>
 								<div
-									className="content-panel"
+									className="pub-main-content"
 									tabIndex={-1}
 									role="textbox"
 								>
