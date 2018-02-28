@@ -58,6 +58,13 @@ const PubPresHeader = function(props) {
 											content={
 												<Menu>
 													<MenuItem
+														text="Share"
+														label={<span className="pt-icon-standard pt-icon-share" />}
+														onClick={()=> {
+															props.setOverlayPanel('share');
+														}}
+													/>
+													<MenuItem
 														text="Cite"
 														label={<span className="pt-icon-standard pt-icon-bookmark" />}
 														onClick={()=> {

@@ -1,0 +1,15 @@
+.pub-pres-share-component {
+	h5 {
+		margin-bottom: 1em;
+	}
+	.intro {
+		margin-bottom: 2em;
+	}
+	.pt-button {
+		width: 45%;
+		margin: 20px 0px;
+		&:nth-child(odd) {
+			margin-right: 10%;
+		}
+	}
+}

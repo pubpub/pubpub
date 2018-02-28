@@ -55,16 +55,26 @@
 			opacity: .4;
 			border: 2px solid #555;
 			width: 68px;
+			height: 28px;
 			&:hover {
 				opacity: 0.75;
 				background-color: white;
+			}
+			&.share-button {
+				.pt-icon-standard {
+					margin: 2px 2px 0px;
+					font-size: 0.95em;
+				}
 			}
 		}
 		.title {
 			font-weight: 600;
 			opacity: 0.4;
-			margin-bottom: 12px;
+			margin-bottom: 5px;
 			display: inline-block;
+			&:not(:first-of-type) {
+				margin-top: 20px;
+			}
 		}
 	}
 }

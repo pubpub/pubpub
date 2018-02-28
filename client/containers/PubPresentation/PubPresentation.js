@@ -8,6 +8,7 @@ import PubPresSideUser from 'components/PubPresSideUser/PubPresSideUser';
 import PubCollabShare from 'components/PubCollabShare/PubCollabShare';
 import PubPresVersions from 'components/PubPresVersions/PubPresVersions';
 import PubPresInvite from 'components/PubPresInvite/PubPresInvite';
+import PubPresShare from 'components/PubPresShare/PubPresShare';
 import PubPresCite from 'components/PubPresCite/PubPresCite';
 import PubPresDoi from 'components/PubPresDoi/PubPresDoi';
 import DiscussionList from 'components/DiscussionList/DiscussionList';
@@ -358,6 +359,13 @@ class PubPresentation extends Component {
 													<button onClick={()=> { this.setActiveThread('new'); }} className="pt-button pt-minimal pt-small pt-icon-add">
 														Add
 													</button>
+
+													<span className="title">Share</span>
+													<button onClick={()=> { this.setOverlayPanel('share'); }} className="pt-button pt-minimal pt-small share-button">
+														<span className="pt-icon-standard pt-icon-twitter" />
+														<span className="pt-icon-standard pt-icon-facebook" />
+														<span className="pt-icon-standard pt-icon-envelope" />
+													</button>
 												</div>
 											}
 										</div>
@@ -419,8 +427,12 @@ class PubPresentation extends Component {
 								<PubPresVersions pubData={pubData} />
 							</Overlay>
 							<Overlay isOpen={this.state.activePanel === 'cite'} onClose={this.closePanelOverlay} maxWidth={728}>
-								<PubPresCite
+								<PubPresCite pubData={pubData} />
+							</Overlay>
+							<Overlay isOpen={this.state.activePanel === 'share'} onClose={this.closePanelOverlay} maxWidth={728}>
+								<PubPresShare
 									pubData={pubData}
+									communityData={this.props.communityData}
 								/>
 							</Overlay>
 							{this.props.loginData.isAdmin &&
