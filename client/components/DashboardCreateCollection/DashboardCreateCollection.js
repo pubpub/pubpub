@@ -52,6 +52,7 @@ class DashboardCreateCollection extends Component {
 		const collectionSlugs = this.props.communityData.collections.map((item)=> {
 			return item.slug;
 		});
+		collectionSlugs.push('home');
 		if (collectionSlugs.indexOf(this.state.slug) > -1) {
 			return this.setState({ error: 'URL already used by another Page or Collection.' });
 		}
