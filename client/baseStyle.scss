@@ -3,6 +3,11 @@
 @import "~normalize.css";
 @import "./blueprint.scss";
 @import "./grid.scss";
+
+/* I'm not sure why I need to import these                    */
+/* It seems that for other instances, (e.g. File Addon)       */
+/* the css that is imported within the package is sufficient. */
+/* But that doesn't seem to be the case for the following     */
 @import "~@pubpub/editor/dist/style.scss";
 @import "~katex/dist/katex.css";
 
