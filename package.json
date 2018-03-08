@@ -69,7 +69,7 @@
     "fuzzysearch": "^1.0.3",
     "getstream": "^3.12.3",
     "html-webpack-plugin": "^2.30.1",
-    "katex": "^0.9.0-alpha2",
+    "katex": "^0.9.0",
     "newrelic": "^2.2.1",
     "node-sass": "^4.7.2",
     "nodemon": "^1.14.12",
