@@ -12,15 +12,15 @@
 		color: white;
 		.pt-button:not([class*="pt-intent-"]), .pt-button[class*="pt-icon-"]::before { color: inherit; }
 	}
-	.headerItems {
+	.header-items {
 		height: 40px;
 		display: flex;
 		align-items: center;		
 	}
-	.headerItemsLeft {
+	.header-items-left {
 		float: left;
 	}
-	.headerItemsRight {
+	.header-items-right {
 		float: right;
 		position: relative;
 		left: 5px;
@@ -75,10 +75,18 @@
 	}
 }
 
-@media only screen and (max-width: 720px) {  /* Used to be 45em */
+@media only screen and (max-width: 720px) {
 	.community-header {
 		.description {
 			max-width: 100%;
+		}
+	}
+}
+
+@media print {
+	.header-component {
+		.header-items-right {
+			display: none;
 		}
 	}
 }

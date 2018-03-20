@@ -69,3 +69,9 @@
 		top: -1px;
 	}
 }
+
+@media print {
+	.nav-bar-component {
+		display: none;
+	}
+}

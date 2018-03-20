@@ -78,3 +78,9 @@
 		font-size: 15px;
 	}
 }
+
+@media print {
+	.pub-body-component {
+		font-size: 14px;
+	}
+}

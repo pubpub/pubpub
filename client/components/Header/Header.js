@@ -71,14 +71,14 @@ class Header extends Component {
 
 								{/* App Logo - do not show on homepage */}
 								{(!isLandingPage || isBasePubPub) &&
-									<div className="headerItems headerItemsLeft">
+									<div className="header-items header-items-left">
 										<a href="/">
 											<img alt="header logo" className="headerLogo" src={resizedSmallHeaderLogo} />
 										</a>
 									</div>
 								}
 
-								<div className="headerItems headerItemsRight">
+								<div className="header-items header-items-right">
 
 									{/* Search button */}
 									<a href="/search" role="button" tabIndex="0" className="pt-button pt-large pt-minimal pt-icon-search" />
