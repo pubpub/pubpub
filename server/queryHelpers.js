@@ -86,9 +86,23 @@ export const findPub = (req, initialData)=> {
 			if (curr.id === initialData.loginData.id) { return curr.Collaborator.permissions; }
 			return prev;
 		}, 'none');
+
+		/* Remove the content from the chapters other than the rendered */
+		/* chapter to save bytes on the transfer */
+		const formattedVersionsData = !hasChapters
+			? pubDataJson.versions
+			: [{
+				...pubDataJson.versions[0],
+				content: pubDataJson.versions[0].content.map((item, index)=> {
+					if (index === chapterIndex - 1) { return item; }
+					return { title: item.title };
+				})
+			}];
+
 		const adminPermissions = communityAdminData ? pubDataJson.adminPermissions : 'none';
 		const formattedPubData = {
 			...pubDataJson,
+			versions: formattedVersionsData,
 			versionsList: versionsListData.toJSON().versions,
 			collaborators: [
 				...pubDataJson.collaborators,
