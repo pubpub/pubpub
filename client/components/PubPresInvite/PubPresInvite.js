@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import dateFormat from 'dateformat';
 
 require('./pubPresInvite.scss');
 
@@ -21,7 +20,6 @@ const PubPresInvite = function(props) {
 				<h5>Invite Reviewer</h5>
 			}
 			<div className="intro">How about an invitation?</div>
-			
 		</div>
 	);
 };

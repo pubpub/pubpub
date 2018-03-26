@@ -251,7 +251,7 @@ const PubCollabHeader = function(props) {
 										Go to Published Snapshots
 									</a>
 								</li>
-								{(true || props.loginData.id === 'b242f616-7aaa-479c-8ee5-3933dcf70859' || props.loginData.id === '807f3604-4223-4495-b576-861d04d2f39e') &&
+								{(props.loginData.id === 'b242f616-7aaa-479c-8ee5-3933dcf70859' || props.loginData.id === '807f3604-4223-4495-b576-861d04d2f39e' || props.loginData.id === '52441948-93f6-4e03-950a-b5ed061c635b') &&
 									<li>
 										<button onClick={props.onChaptersClick} className="pt-menu-item pt-popover-dismiss" style={{ textAlign: 'right' }}>
 											Chapters

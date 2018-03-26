@@ -67,13 +67,27 @@
 				}
 			}
 		}
+		.arrow {
+			width: 30px;
+			display: inline-block;
+			margin-right: 6px;
+			margin-top: -5px;
+			&:last-of-type {
+				margin-right: 0px;
+			}
+			&.hidden {
+				opacity: 0;
+				pointer-events: none;
+			}
+		}
 		.title {
 			font-weight: 600;
 			opacity: 0.4;
 			margin-bottom: 5px;
 			display: inline-block;
-			&:not(:first-of-type) {
-				margin-top: 20px;
+			margin-top: 20px;
+			&:first-child {
+				margin-top: 0px;
 			}
 		}
 	}

@@ -32,6 +32,7 @@ const PubPresHeader = function(props) {
 
 	const mode = props.locationData.params.mode;
 	const subMode = props.locationData.params.subMode;
+	const numChapters = Array.isArray(props.pubData.versions[0].content) && props.pubData.versions[0].content.length;
 	return (
 		<div className={`pub-pres-header-component ${mode ? 'mode' : ''}`} style={backgroundStyle}>
 			<div className={`wrapper ${useHeaderImage ? 'dim' : ''}`}>
@@ -77,6 +78,15 @@ const PubPresHeader = function(props) {
 															label={<span className="pt-icon-standard pt-icon-doi" />}
 															onClick={()=> {
 																props.setOverlayPanel('doi');
+															}}
+														/>
+													}
+													{numChapters &&
+														<MenuItem
+															text="Chapters"
+															label={<span className="pt-icon-standard pt-icon-properties" />}
+															onClick={()=> {
+																props.setOverlayPanel('chapters');
 															}}
 														/>
 													}
@@ -190,6 +200,19 @@ const PubPresHeader = function(props) {
 									{pubData.collaborators.length}
 									<span className="pt-icon-standard pt-align-right pt-icon-team" />
 								</a>
+								{numChapters &&
+									<a
+										href={`/pub/${pubData.slug}/chapters`}
+										className="pt-button pt-minimal chapters"
+										onClick={(evt)=> {
+											evt.preventDefault();
+											props.setOverlayPanel('chapters');
+										}}
+									>
+										{numChapters}
+										<span className="pt-icon-standard pt-align-right pt-icon-properties" />
+									</a>
+								}
 							</div>
 						</div>
 					</div>

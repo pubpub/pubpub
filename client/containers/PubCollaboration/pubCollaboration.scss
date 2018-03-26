@@ -121,11 +121,28 @@
 					background-color: white;
 				}
 			}
+			.arrow {
+				width: 30px;
+				display: inline-block;
+				margin-right: 6px;
+				margin-top: -5px;
+				&:last-of-type {
+					margin-right: 0px;
+				}
+				&.hidden {
+					opacity: 0;
+					pointer-events: none;
+				}
+			}
 			.title {
 				font-weight: 600;
 				opacity: 0.4;
-				margin-bottom: 12px;
+				// margin-bottom: 12px;
+				margin: 20px 0px 10px;
 				display: inline-block;
+				&:first-child {
+					margin-top: 0px;
+				}
 			}
 		}
 		// #discussions {

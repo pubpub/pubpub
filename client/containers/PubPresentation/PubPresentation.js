@@ -10,6 +10,7 @@ import PubPresVersions from 'components/PubPresVersions/PubPresVersions';
 import PubPresInvite from 'components/PubPresInvite/PubPresInvite';
 import PubPresShare from 'components/PubPresShare/PubPresShare';
 import PubPresCite from 'components/PubPresCite/PubPresCite';
+import PubPresChapters from 'components/PubPresChapters/PubPresChapters';
 import PubPresDoi from 'components/PubPresDoi/PubPresDoi';
 import DiscussionList from 'components/DiscussionList/DiscussionList';
 import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
@@ -360,6 +361,16 @@ class PubPresentation extends Component {
 											}
 											{!this.state.activeThreadNumber &&
 												<div className={`side-block fix-it ${this.state.fixIt ? 'fixed' : ''}`}>
+													{Array.isArray(activeVersion.content) &&
+														<div>
+															<span className="title">Chapters</span>
+															<button onClick={()=> { this.setOverlayPanel('chapters'); }} className="pt-button pt-minimal pt-small pt-icon-properties">
+																All
+															</button>
+															<a href={`/pub/${pubData.slug}/chapter/${chapterIndex}${queryObject.version ? `?version=${queryObject.version}` : ''}`} className={`pt-button pt-minimal pt-small arrow pt-icon-arrow-left ${chapterIndex !== 0 ? '' : ' hidden'}`} />
+															<a href={`/pub/${pubData.slug}/chapter/${chapterIndex + 2}${queryObject.version ? `?version=${queryObject.version}` : ''}`} className={`pt-button pt-minimal pt-small arrow pt-icon-arrow-right ${chapterIndex !== activeVersion.content.length - 1 ? '' : ' hidden'}`} />
+														</div>
+													}
 													<span className="title">Discussions</span>
 													{!!discussions.length &&
 														<a href="#discussions" className="pt-button pt-minimal pt-small pt-icon-chat">
@@ -439,6 +450,9 @@ class PubPresentation extends Component {
 							<Overlay isOpen={this.state.activePanel === 'cite'} onClose={this.closePanelOverlay} maxWidth={728}>
 								<PubPresCite pubData={pubData} />
 							</Overlay>
+							<Overlay isOpen={this.state.activePanel === 'chapters'} onClose={this.closePanelOverlay} maxWidth={728}>
+								<PubPresChapters pubData={pubData} />
+							</Overlay>
 							<Overlay isOpen={this.state.activePanel === 'share'} onClose={this.closePanelOverlay} maxWidth={728}>
 								<PubPresShare
 									pubData={pubData}
@@ -472,6 +486,9 @@ class PubPresentation extends Component {
 										}
 										{mode === 'invite' &&
 											<PubPresInvite pubData={pubData} mode={mode} />
+										}
+										{mode === 'chapters' &&
+											<PubPresChapters pubData={pubData} mode={mode} />
 										}
 										{mode === 'collaborators' &&
 											<PubCollabShare

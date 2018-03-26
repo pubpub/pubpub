@@ -72,12 +72,8 @@ class PubCollabChapters extends Component {
 	render() {
 		return (
 			<div className="pub-collab-chapters-component">
+				<button className="pt-button add-chapters-button" onClick={this.props.onChapterAdd}>Add Chapter</button>
 				<h5>Chapters</h5>
-				<div className="details">
-					Use the below input to add chapters.
-				</div>
-
-				<button className="pt-button" onClick={this.props.onChapterAdd}>Add Chapter</button>
 
 				<div className="chapter first">
 					<div className="title">

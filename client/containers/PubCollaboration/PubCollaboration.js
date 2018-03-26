@@ -77,6 +77,7 @@ class PubCollaboration extends Component {
 
 			chaptersData: [{ id: '', order: 0, title: 'Introduction' }],
 			compositeEditorKey: props.pubData.editorKey,
+			activeChapterIndex: 0,
 		};
 		this.editorRef = undefined;
 		this.setActiveThread = this.setActiveThread.bind(this);
@@ -113,6 +114,8 @@ class PubCollaboration extends Component {
 		this.handleChapterAdd = this.handleChapterAdd.bind(this);
 		this.handleChaptersChange = this.handleChaptersChange.bind(this);
 		this.handleChapterSet = this.handleChapterSet.bind(this);
+		this.incrementChapter = this.incrementChapter.bind(this);
+		this.decrementChapter = this.decrementChapter.bind(this);
 	}
 
 	componentDidMount() {
@@ -275,8 +278,29 @@ class PubCollaboration extends Component {
 		this.setState({
 			compositeEditorKey: `${this.props.pubData.editorKey}/${chapterId}`,
 			isChaptersOpen: false,
+			activeChapterIndex: this.state.chaptersData.reduce((prev, curr, index)=> {
+				if (curr.id === chapterId) { return index; }
+				return prev;
+			}, 0)
 		});
 	}
+	incrementChapter() {
+		const newActiveIndex = this.state.activeChapterIndex + 1;
+		const newActiveChapter = this.state.chaptersData[newActiveIndex];
+		this.setState({
+			compositeEditorKey: `${this.props.pubData.editorKey}/${newActiveChapter.id}`,
+			activeChapterIndex: newActiveIndex
+		});
+	}
+	decrementChapter() {
+		const newActiveIndex = this.state.activeChapterIndex - 1;
+		const newActiveChapter = this.state.chaptersData[newActiveIndex];
+		this.setState({
+			compositeEditorKey: `${this.props.pubData.editorKey}/${newActiveChapter.id}`,
+			activeChapterIndex: newActiveIndex
+		});
+	}
+
 	// handleChapterTitleChange(newTitle, index) {
 	// 	const chapterData = this.state.chaptersData[index];
 	// 	this.firebaseChaptersRef.child(chapterData.firebaseId).set({
@@ -674,6 +698,17 @@ class PubCollaboration extends Component {
 								<div className="pub-side-content">
 									{!this.state.activeThreadNumber &&
 										<div className={`side-block fix-it ${this.state.fixIt ? 'fixed' : ''}`}>
+											{this.state.chaptersData.length > 1 &&
+												<div>
+													<span className="title">Chapters</span>
+													<button onClick={this.toggleChapters} className="pt-button pt-minimal pt-small">
+														Manage
+													</button>
+													<button onClick={this.decrementChapter} className={`pt-button pt-minimal pt-small arrow pt-icon-arrow-left ${this.state.activeChapterIndex !== 0 ? '' : ' hidden'}`} />
+													<button onClick={this.incrementChapter} className={`pt-button pt-minimal pt-small arrow pt-icon-arrow-right ${this.state.activeChapterIndex !== this.state.chaptersData.length - 1 ? '' : ' hidden'}`} />
+												</div>
+											}
+
 											<span className="title">Discussions</span>
 											{!!discussions.length &&
 												<a href="#discussions" className="pt-button pt-minimal pt-small pt-icon-chat">
