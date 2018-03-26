@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import { NonIdealState } from '@blueprintjs/core';
+import firebase from 'firebase';
+import uuidv4 from 'uuid/v4';
 import Overlay from 'components/Overlay/Overlay';
 import PubCollabEditor from 'components/PubCollabEditor/PubCollabEditor';
 import PubCollabHeader from 'components/PubCollabHeader/PubCollabHeader';
@@ -9,6 +10,7 @@ import PubCollabPublish from 'components/PubCollabPublish/PubCollabPublish';
 import PubCollabSubmit from 'components/PubCollabSubmit/PubCollabSubmit';
 import PubCollabDetails from 'components/PubCollabDetails/PubCollabDetails';
 import PubCollabCollections from 'components/PubCollabCollections/PubCollabCollections';
+import PubCollabChapters from 'components/PubCollabChapters/PubCollabChapters';
 import DiscussionList from 'components/DiscussionList/DiscussionList';
 import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
 // import DiscussionNew from 'components/DiscussionNew/DiscussionNew';
@@ -17,7 +19,7 @@ import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
 // import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 // import PageWrapper from 'components/PageWrapper/PageWrapper';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
-import { apiFetch, hydrateWrapper, nestDiscussionsToThreads, getRandomColor, generateHash } from 'utilities';
+import { apiFetch, hydrateWrapper, getFirebaseConfig, nestDiscussionsToThreads, getRandomColor, generateHash } from 'utilities';
 
 
 require('./pubCollaboration.scss');
@@ -55,12 +57,13 @@ class PubCollaboration extends Component {
 			isCollaboratorsOpen: false,
 			isCollectionsOpen: false,
 			isArchivedVisible: false,
+			isChaptersOpen: false,
 			activeCollaborators: [this.localUser],
 			// initNewDoc: undefined,
 			collabStatus: 'connecting',
 
 			// thread: undefined,
-			pubData: this.props.pubData,
+			pubData: props.pubData,
 			putPubIsLoading: false,
 			deletePubIsLoading: false,
 			postDiscussionIsLoading: false,
@@ -71,6 +74,9 @@ class PubCollaboration extends Component {
 			initialContent: undefined,
 			fixIt: true,
 			scrolledToPermanent: false,
+
+			chaptersData: [{ id: '', order: 0, title: 'Introduction' }],
+			compositeEditorKey: props.pubData.editorKey,
 		};
 		this.editorRef = undefined;
 		this.setActiveThread = this.setActiveThread.bind(this);
@@ -81,6 +87,7 @@ class PubCollaboration extends Component {
 		this.toggleDetails = this.toggleDetails.bind(this);
 		this.toggleCollaborators = this.toggleCollaborators.bind(this);
 		this.toggleCollections = this.toggleCollections.bind(this);
+		this.toggleChapters = this.toggleChapters.bind(this);
 		this.toggleArchivedVisible = this.toggleArchivedVisible.bind(this);
 		this.handleDetailsSave = this.handleDetailsSave.bind(this);
 		this.handlePubDelete = this.handlePubDelete.bind(this);
@@ -103,14 +110,45 @@ class PubCollaboration extends Component {
 		// this.handleThreadClick = this.handleThreadClick.bind(this);
 		this.handleEditorRef = this.handleEditorRef.bind(this);
 		this.handleScroll = this.handleScroll.bind(this);
+		this.handleChapterAdd = this.handleChapterAdd.bind(this);
+		this.handleChaptersChange = this.handleChaptersChange.bind(this);
+		this.handleChapterSet = this.handleChapterSet.bind(this);
 	}
 
 	componentDidMount() {
 		window.addEventListener('scroll', this.handleScroll);
 		this.discussions = document.getElementById('discussions');
+		const existingApp = firebase.apps.reduce((prev, curr)=> {
+			if (curr.name === this.props.pubData.editorKey) { return curr; }
+			return prev;
+		}, undefined);
+		this.firebaseApp = existingApp || firebase.initializeApp(getFirebaseConfig(), this.props.pubData.editorKey);
+		const database = firebase.database(this.firebaseApp);
+		firebase.auth(this.firebaseApp).signInWithCustomToken(this.props.pubData.firebaseToken)
+		.then(()=> {
+			this.firebaseChaptersRef = database.ref(`${this.props.pubData.editorKey}/chapters`);
+			this.firebaseChaptersCallback = this.firebaseChaptersRef.on('value', (snapshot) => {
+				const snapshotVal = snapshot.val() || this.state.chaptersData;
+				const snapshotArray = Object.keys(snapshotVal).map((key)=> {
+					return {
+						...snapshotVal[key],
+						firebaseId: key,
+					};
+				});
+				const newChaptersData = snapshotArray.length
+					? snapshotArray.sort((foo, bar)=> {
+						if (foo.order < bar.order) { return -1; }
+						if (foo.order > bar.order) { return 1; }
+						return 0;
+					})
+					: [];
+				this.setState({ chaptersData: newChaptersData });
+			});
+		});
 	}
 	componentWillUnmount() {
 		window.removeEventListener('scroll', this.handleScroll);
+		this.firebaseChaptersRef.off('value', this.firebaseChaptersCallback);
 	}
 	handleScroll() {
 		if (!this.state.activeThreadNumber) {
@@ -194,6 +232,9 @@ class PubCollaboration extends Component {
 	toggleCollections() {
 		this.setState({ isCollectionsOpen: !this.state.isCollectionsOpen });
 	}
+	toggleChapters() {
+		this.setState({ isChaptersOpen: !this.state.isChaptersOpen });
+	}
 	toggleArchivedVisible() {
 		this.setState({ isArchivedVisible: !this.state.isArchivedVisible });
 	}
@@ -210,6 +251,40 @@ class PubCollaboration extends Component {
 			}
 		});
 	}
+	handleChapterAdd() {
+		const newChaptersData = this.state.chaptersData;
+		newChaptersData.push({
+			order: this.state.chaptersData.length,
+			title: 'New Chapter',
+			id: uuidv4(),
+		});
+		this.firebaseChaptersRef.set(newChaptersData);
+	}
+	handleChaptersChange(newChaptersArray) {
+		// const chapterData = this.state.chaptersData[index];
+		const newChaptersData = {};
+		newChaptersArray.forEach((chapter)=> {
+			newChaptersData[chapter.firebaseId] = {
+				...chapter,
+				firebaseId: null,
+			};
+		});
+		this.firebaseChaptersRef.set(newChaptersData);
+	}
+	handleChapterSet(chapterId) {
+		this.setState({
+			compositeEditorKey: `${this.props.pubData.editorKey}/${chapterId}`,
+			isChaptersOpen: false,
+		});
+	}
+	// handleChapterTitleChange(newTitle, index) {
+	// 	const chapterData = this.state.chaptersData[index];
+	// 	this.firebaseChaptersRef.child(chapterData.firebaseId).set({
+	// 		...chapterData,
+	// 		title: newTitle,
+	// 	});
+	// }
+
 	// handleHighlightClick(threadNumber) {
 	// 	this.setState({ thread: threadNumber });
 	// }
@@ -434,6 +509,9 @@ class PubCollaboration extends Component {
 		}
 	}
 	handlePublish(submitHash) {
+		// We need to keep track of chapter metadata in the firebase
+		// We also need to store the chapter metadata on the version object
+		// So we have to manage firebase credentials from pubpub also it seems.
 		this.setState({ postVersionIsLoading: true });
 		return apiFetch('/api/versions', {
 			method: 'POST',
@@ -571,6 +649,7 @@ class PubCollaboration extends Component {
 					onCollaboratorsClick={this.toggleCollaborators}
 					onCollectionsClick={this.toggleCollections}
 					onThreadClick={this.setActiveThread}
+					onChaptersClick={this.toggleChapters}
 				/>
 				<div className="page-content">
 					<div className="container pub">
@@ -599,7 +678,7 @@ class PubCollaboration extends Component {
 									<div className="pub-body-component">
 										<PubCollabEditor
 											onRef={this.handleEditorRef}
-											editorKey={pubData.editorKey}
+											editorKey={this.state.compositeEditorKey}
 											isReadOnly={!canManage && pubData.localPermissions !== 'edit'}
 											clientData={this.state.activeCollaborators[0]}
 											onClientChange={this.handleClientChange}
@@ -705,6 +784,14 @@ class PubCollaboration extends Component {
 						onDelete={this.handlePubDelete}
 						putIsLoading={this.state.putPubIsLoading}
 						deleteIsLoading={this.state.deletePubIsLoading}
+					/>
+				</Overlay>
+				<Overlay isOpen={this.state.isChaptersOpen} onClose={this.toggleChapters}>
+					<PubCollabChapters
+						chaptersData={this.state.chaptersData}
+						onChapterAdd={this.handleChapterAdd}
+						onChaptersChange={this.handleChaptersChange}
+						onChapterSet={this.handleChapterSet}
 					/>
 				</Overlay>
 			</div>
