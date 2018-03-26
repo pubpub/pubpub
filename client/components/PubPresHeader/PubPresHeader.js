@@ -29,10 +29,13 @@ const PubPresHeader = function(props) {
 		backgroundStyle.backgroundImage = `url("${resizedBackground}")`;
 		backgroundStyle.color = 'white';
 	}
-
+	const queryObject = props.locationData.query;
 	const mode = props.locationData.params.mode;
 	const subMode = props.locationData.params.subMode;
 	const numChapters = Array.isArray(props.pubData.versions[0].content) && props.pubData.versions[0].content.length;
+	const activeChapterId = props.locationData.params.chapterId ? props.locationData.params.chapterId - 1 : 0;
+	const activeChapterTitle = Array.isArray(props.pubData.versions[0].content) && props.pubData.versions[0].content[activeChapterId].title;
+
 	return (
 		<div className={`pub-pres-header-component ${mode ? 'mode' : ''}`} style={backgroundStyle}>
 			<div className={`wrapper ${useHeaderImage ? 'dim' : ''}`}>
@@ -101,9 +104,6 @@ const PubPresHeader = function(props) {
 											<button className="pt-button pt-icon-menu" />
 										</Popover>
 
-
-
-										
 										{/* <a
 											href={`/pub/${pubData.slug}/invite`}
 											className="pt-button"
@@ -122,10 +122,12 @@ const PubPresHeader = function(props) {
 							{!mode &&
 								<h1>{pubData.title}</h1>
 							}
+							{!!activeChapterTitle &&
+								<h2>{activeChapterTitle}</h2>
+							}
 							{mode &&
 								<a href={`/pub/${pubData.slug}`}><h1>{pubData.title}</h1></a>
 							}
-							
 							{mode &&
 								<ul className="pt-breadcrumbs">
 									<li><a className="pt-breadcrumb" href={`/pub/${pubData.slug}`}>Pub</a></li>
@@ -202,7 +204,7 @@ const PubPresHeader = function(props) {
 								</a>
 								{numChapters &&
 									<a
-										href={`/pub/${pubData.slug}/chapters`}
+										href={`/pub/${pubData.slug}/chapters${queryObject.version ? `?version=${queryObject.version}` : ''}`}
 										className="pt-button pt-minimal chapters"
 										onClick={(evt)=> {
 											evt.preventDefault();

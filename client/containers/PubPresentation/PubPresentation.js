@@ -302,6 +302,7 @@ class PubPresentation extends Component {
 						<div>
 							<PubPresHeader
 								pubData={pubData}
+								locationData={this.props.locationData}
 								setOverlayPanel={this.setOverlayPanel}
 								loginData={this.props.loginData}
 							/>
@@ -451,7 +452,10 @@ class PubPresentation extends Component {
 								<PubPresCite pubData={pubData} />
 							</Overlay>
 							<Overlay isOpen={this.state.activePanel === 'chapters'} onClose={this.closePanelOverlay} maxWidth={728}>
-								<PubPresChapters pubData={pubData} />
+								<PubPresChapters
+									pubData={pubData}
+									locationData={this.props.locationData}
+								/>
 							</Overlay>
 							<Overlay isOpen={this.state.activePanel === 'share'} onClose={this.closePanelOverlay} maxWidth={728}>
 								<PubPresShare
@@ -488,7 +492,11 @@ class PubPresentation extends Component {
 											<PubPresInvite pubData={pubData} mode={mode} />
 										}
 										{mode === 'chapters' &&
-											<PubPresChapters pubData={pubData} mode={mode} />
+											<PubPresChapters
+												pubData={pubData}
+												locationData={this.props.locationData}
+												mode={mode}
+											/>
 										}
 										{mode === 'collaborators' &&
 											<PubCollabShare
