@@ -513,14 +513,30 @@ class PubCollaboration extends Component {
 		// We also need to store the chapter metadata on the version object
 		// So we have to manage firebase credentials from pubpub also it seems.
 		this.setState({ postVersionIsLoading: true });
-		return apiFetch('/api/versions', {
-			method: 'POST',
-			body: JSON.stringify({
-				pubId: this.props.pubData.id,
-				communityId: this.props.communityData.id,
-				content: this.editorRef.view.state.doc.toJSON(),
-				submitHash: submitHash,
-			})
+		const editorRefs = this.state.chaptersData.map((item)=> {
+			return `${this.props.pubData.editorKey}/${item.id}`;
+		});
+		this.editorRef.getCollabJSONs(editorRefs)
+		.then((content)=> {
+			const newContent = content.length === 1
+				? content[0]
+				: content.map((item, index)=> {
+					return {
+						title: this.state.chaptersData[index].title,
+						content: item,
+					};
+				});
+			return apiFetch('/api/versions', {
+				method: 'POST',
+				body: JSON.stringify({
+					pubId: this.props.pubData.id,
+					communityId: this.props.communityData.id,
+					// content: this.editorRef.view.state.doc.toJSON(),
+					// content: content.length > 1 ? content : content[0],
+					content: newContent,
+					submitHash: submitHash,
+				})
+			});
 		})
 		.then(()=> {
 			window.location.href = `/pub/${this.props.locationData.params.slug}`;

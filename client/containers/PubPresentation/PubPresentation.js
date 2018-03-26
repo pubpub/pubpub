@@ -262,6 +262,16 @@ class PubPresentation extends Component {
 			}
 		}
 
+		const chapterIndex = this.props.locationData.params.chapterId
+			? Number(this.props.locationData.params.chapterId) - 1
+			: 0;
+		// If we have an array, set the chapter index
+
+
+		const activeContent = Array.isArray(activeVersion.content)
+			? activeVersion.content[chapterIndex].content
+			: activeVersion.content;
+
 		const authors = pubData.collaborators.filter((collaborator)=> {
 			return collaborator.Collaborator.isAuthor;
 		});
@@ -373,7 +383,7 @@ class PubPresentation extends Component {
 											<PubBody
 												onRef={this.handleEditorRef}
 												versionId={activeVersion.id}
-												content={activeVersion.content}
+												content={activeContent}
 												threads={threads}
 												slug={pubData.slug}
 												highlights={this.state.docReadyForHighlights ? highlights : []}
