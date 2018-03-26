@@ -122,9 +122,9 @@ const PubPresHeader = function(props) {
 							{!mode &&
 								<h1>{pubData.title}</h1>
 							}
-							{!!activeChapterTitle &&
+							{/* !!activeChapterTitle &&
 								<h2>{activeChapterTitle}</h2>
-							}
+							*/}
 							{mode &&
 								<a href={`/pub/${pubData.slug}`}><h1>{pubData.title}</h1></a>
 							}

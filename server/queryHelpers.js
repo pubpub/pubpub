@@ -76,9 +76,9 @@ export const findPub = (req, initialData)=> {
 	return Promise.all([getPubData, getVersionsList, getCommunityAdminData])
 	.then(([pubData, versionsListData, communityAdminData])=> {
 		if (!pubData) { throw new Error('Pub Not Found'); }
-		const hasChapters = Array.isArray(pubData.versions[0].content);
+		const hasChapters = pubData.versions[0] && Array.isArray(pubData.versions[0].content);
 		const chapterIndex = initialData.locationData.params.chapterId;
-		const chapterOutOfRange = chapterIndex > pubData.versions[0].content.length || chapterIndex < 1;
+		const chapterOutOfRange = hasChapters && chapterIndex > pubData.versions[0].content.length || chapterIndex < 1;
 		if (hasChapters && chapterOutOfRange) { throw new Error('Pub Not Found'); }
 
 		const pubDataJson = pubData.toJSON();
@@ -94,6 +94,7 @@ export const findPub = (req, initialData)=> {
 			: [{
 				...pubDataJson.versions[0],
 				content: pubDataJson.versions[0].content.map((item, index)=> {
+					if (!chapterIndex && index === 0) { return item; }
 					if (index === chapterIndex - 1) { return item; }
 					return { title: item.title };
 				})

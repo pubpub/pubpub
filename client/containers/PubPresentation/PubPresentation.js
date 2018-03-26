@@ -269,9 +269,13 @@ class PubPresentation extends Component {
 		// If we have an array, set the chapter index
 
 
-		const activeContent = Array.isArray(activeVersion.content)
-			? activeVersion.content[chapterIndex].content
-			: activeVersion.content;
+		let activeContent;
+		if (activeVersion && Array.isArray(activeVersion.content)) {
+			activeContent = activeVersion.content[chapterIndex].content;
+		}
+		if (activeVersion && !Array.isArray(activeVersion.content)) {
+			activeContent = activeVersion.content;
+		}
 
 		const authors = pubData.collaborators.filter((collaborator)=> {
 			return collaborator.Collaborator.isAuthor;

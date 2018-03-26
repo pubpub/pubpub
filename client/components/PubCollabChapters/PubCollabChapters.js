@@ -38,6 +38,7 @@ class PubCollabChapters extends Component {
 		this.props.onChaptersChange(newChaptersArray);
 	}
 	onDragEnd(result) {
+		if (!result.destination) { return null; }
 		const source = result.source.index + 1;
 		const destination = result.destination.index + 1;
 		const movedItem = this.props.chaptersData[source];
@@ -55,7 +56,7 @@ class PubCollabChapters extends Component {
 				order: index,
 			};
 		});
-		this.props.onChaptersChange(newChaptersArray);
+		return this.props.onChaptersChange(newChaptersArray);
 	}
 	handleChapterRemove(removeIndex) {
 		const newChaptersArray = this.props.chaptersData.filter((item)=> {
