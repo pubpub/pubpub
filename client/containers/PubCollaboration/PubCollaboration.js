@@ -121,11 +121,12 @@ class PubCollaboration extends Component {
 	componentDidMount() {
 		window.addEventListener('scroll', this.handleScroll);
 		this.discussions = document.getElementById('discussions');
+		const chaptersFirebaseAppName = `chapters-${this.props.pubData.editorKey}`;
 		const existingApp = firebase.apps.reduce((prev, curr)=> {
-			if (curr.name === this.props.pubData.editorKey) { return curr; }
+			if (curr.name === chaptersFirebaseAppName) { return curr; }
 			return prev;
 		}, undefined);
-		this.firebaseApp = existingApp || firebase.initializeApp(getFirebaseConfig(), this.props.pubData.editorKey);
+		this.firebaseApp = existingApp || firebase.initializeApp(getFirebaseConfig(), chaptersFirebaseAppName);
 		const database = firebase.database(this.firebaseApp);
 		firebase.auth(this.firebaseApp).signInWithCustomToken(this.props.pubData.firebaseToken)
 		.then(()=> {
@@ -264,7 +265,6 @@ class PubCollaboration extends Component {
 		this.firebaseChaptersRef.set(newChaptersData);
 	}
 	handleChaptersChange(newChaptersArray) {
-		// const chapterData = this.state.chaptersData[index];
 		const newChaptersData = {};
 		newChaptersArray.forEach((chapter)=> {
 			newChaptersData[chapter.firebaseId] = {
@@ -300,14 +300,6 @@ class PubCollaboration extends Component {
 			activeChapterIndex: newActiveIndex
 		});
 	}
-
-	// handleChapterTitleChange(newTitle, index) {
-	// 	const chapterData = this.state.chaptersData[index];
-	// 	this.firebaseChaptersRef.child(chapterData.firebaseId).set({
-	// 		...chapterData,
-	// 		title: newTitle,
-	// 	});
-	// }
 
 	// handleHighlightClick(threadNumber) {
 	// 	this.setState({ thread: threadNumber });
@@ -547,6 +539,7 @@ class PubCollaboration extends Component {
 				: content.map((item, index)=> {
 					return {
 						title: this.state.chaptersData[index].title,
+						id: this.state.chaptersData[index].id,
 						content: item,
 					};
 				});
@@ -843,6 +836,7 @@ class PubCollaboration extends Component {
 						onChapterAdd={this.handleChapterAdd}
 						onChaptersChange={this.handleChaptersChange}
 						onChapterSet={this.handleChapterSet}
+						activeChapterIndex={this.state.activeChapterIndex}
 					/>
 				</Overlay>
 			</div>

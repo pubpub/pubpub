@@ -34,7 +34,7 @@ const PubPresHeader = function(props) {
 	const subMode = props.locationData.params.subMode;
 	const numChapters = Array.isArray(props.pubData.versions[0].content) && props.pubData.versions[0].content.length;
 	const activeChapterId = props.locationData.params.chapterId ? props.locationData.params.chapterId - 1 : 0;
-	const activeChapterTitle = Array.isArray(props.pubData.versions[0].content) && props.pubData.versions[0].content[activeChapterId].title;
+	// const activeChapterTitle = Array.isArray(props.pubData.versions[0].content) && props.pubData.versions[0].content[activeChapterId].title;
 
 	return (
 		<div className={`pub-pres-header-component ${mode ? 'mode' : ''}`} style={backgroundStyle}>
@@ -211,7 +211,7 @@ const PubPresHeader = function(props) {
 											props.setOverlayPanel('chapters');
 										}}
 									>
-										{numChapters}
+										{activeChapterId + 1} of {numChapters}
 										<span className="pt-icon-standard pt-align-right pt-icon-properties" />
 									</a>
 								}

@@ -10,6 +10,7 @@ const propTypes = {
 	// onChapterTitleChange: PropTypes.func.isRequired,
 	onChaptersChange: PropTypes.func.isRequired,
 	onChapterSet: PropTypes.func.isRequired,
+	activeChapterIndex: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -76,7 +77,7 @@ class PubCollabChapters extends Component {
 				<button className="pt-button add-chapters-button" onClick={this.props.onChapterAdd}>Add Chapter</button>
 				<h5>Chapters</h5>
 
-				<div className="chapter first">
+				<div className={`chapter first ${this.props.activeChapterIndex === 0 ? 'active' : ''}`}>
 					<div className="title">
 						{this.state.editIndex === 0 &&
 							<input
@@ -118,7 +119,7 @@ class PubCollabChapters extends Component {
 												<div>
 													<div
 														ref={providedItem.innerRef}
-														className={`chapter ${snapshotItem.isDragging ? 'dragging' : ''}`}
+														className={`chapter ${snapshotItem.isDragging ? 'dragging' : ''} ${this.props.activeChapterIndex === index ? 'active' : ''}`}
 														style={providedItem.draggableStyle}
 													>
 														<span {...providedItem.dragHandleProps} className="drag">

@@ -19,6 +19,9 @@
 				max-width: calc(100% - 40px);
 			}
 		}
+		&.active {
+			background-color: #DDD;
+		}
 		.drag {
 			padding-right: 10px;
 			margin-right: 10px;

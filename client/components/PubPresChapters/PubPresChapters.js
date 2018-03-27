@@ -19,6 +19,7 @@ const PubPresChapters = (props)=> {
 		return item.title;
 	});
 	const queryObject = props.locationData.query;
+	const activeChapterId = props.locationData.params.chapterId ? props.locationData.params.chapterId - 1 : 0;
 	return (
 		<div className="pub-pres-chapters-component">
 			{!props.mode &&
@@ -28,7 +29,7 @@ const PubPresChapters = (props)=> {
 				{chapterTitles.map((chapterTitle, index)=> {
 					return (
 						<li key={chapterTitle}>
-							<a href={`/pub/${props.pubData.slug}/chapter/${index + 1}${queryObject.version ? `?version=${queryObject.version}` : ''}`} className="pt-menu-item pt-popover-dismiss">
+							<a href={`/pub/${props.pubData.slug}/chapter/${index + 1}${queryObject.version ? `?version=${queryObject.version}` : ''}`} className={`pt-menu-item pt-popover-dismiss ${activeChapterId === index ? 'pt-active' : ''}`}>
 								{chapterTitle}
 							</a>
 						</li>
