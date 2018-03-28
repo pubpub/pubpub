@@ -7,6 +7,7 @@ require('./discussionLabelsList.scss');
 
 const propTypes = {
 	labelsData: PropTypes.array,
+	selectedLabels: PropTypes.array.isRequired,
 	permissions: PropTypes.string.isRequired,
 	onLabelSelect: PropTypes.func.isRequired,
 	onLabelsUpdate: PropTypes.func.isRequired,
@@ -122,7 +123,11 @@ class DiscussionLabelsList extends Component {
 					return (
 						<li>
 							<div key={`label-${label.id}`} className="pt-menu-item label" onClick={handleClick}>
-								<div className="color" style={{ backgroundColor: label.color }} />
+								<div className="color" style={{ backgroundColor: label.color }}>
+									{this.props.selectedLabels.indexOf(label.id) > -1 &&
+										<span className="pt-icon-standard pt-icon-small-tick" />
+									}
+								</div>
 								<div className="title">{label.title}</div>
 								<Tooltip
 									content={label.publicApply

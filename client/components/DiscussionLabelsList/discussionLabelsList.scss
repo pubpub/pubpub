@@ -29,6 +29,11 @@
 			width: 30px;
 			margin-right: 10px;
 		}
+		.pt-icon-small-tick {
+			&:before {
+				color: white;
+			}
+		}
 	}
 	.title, .pt-input {
 		// vertical-align: middle;

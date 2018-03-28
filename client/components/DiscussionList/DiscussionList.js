@@ -25,12 +25,20 @@ class DiscussionList extends Component {
 		super(props);
 		this.state = {
 			isArchivedVisible: false,
+			filteredLabels: [],
 		};
 		this.toggleArchivedVisible = this.toggleArchivedVisible.bind(this);
+		this.toggleFilteredLabel = this.toggleFilteredLabel.bind(this);
 	}
 
 	toggleArchivedVisible() {
 		this.setState({ isArchivedVisible: !this.state.isArchivedVisible });
+	}
+	toggleFilteredLabel(labelId) {
+		const newFilteredLabels = this.state.filteredLabels.indexOf(labelId) > -1
+			? this.state.filteredLabels.filter((id)=> { return id !== labelId; })
+			: [...this.state.filteredLabels, labelId];
+		this.setState({ filteredLabels: newFilteredLabels });
 	}
 
 	render() {
@@ -39,6 +47,14 @@ class DiscussionList extends Component {
 		const threads = nestDiscussionsToThreads(discussions);
 
 		const activeThreads = threads.filter((items)=> {
+			const threadLabels = items[0].labels || [];
+			if (this.state.filteredLabels.length === 0) { return true; }
+			const hasNecessaryLabel = this.state.filteredLabels.reduce((prev, curr)=> {
+				if (threadLabels.indexOf(curr) === -1) { return false; }
+				return prev;
+			}, true);
+			return hasNecessaryLabel;
+		}).filter((items)=> {
 			return items.reduce((prev, curr)=> {
 				if (curr.isArchived) { return false; }
 				return prev;
@@ -59,7 +75,7 @@ class DiscussionList extends Component {
 			if (foo[0].threadNumber < bar[0].threadNumber) { return 1; }
 			return 0;
 		});
-
+		const filtersActive = this.state.filteredLabels.length;
 		return (
 			<div className="discussion-list-component">
 				{!this.props.mode &&
@@ -76,8 +92,9 @@ class DiscussionList extends Component {
 						content={
 							<DiscussionLabelsList
 								labelsData={pubData.labels || []}
+								selectedLabels={this.state.filteredLabels}
 								permissions={pubData.localPermissions}
-								onLabelSelect={(evt)=>{ console.log(evt); }}
+								onLabelSelect={this.toggleFilteredLabel}
 								onLabelsUpdate={this.props.onLabelsSave}
 							/>
 						}
@@ -93,8 +110,8 @@ class DiscussionList extends Component {
 
 				{!activeThreads.length && !archivedThreads.length &&
 					<NonIdealState
-						title="No Discussions Yet"
-						description="Click 'New Discussion' to start the conversation!"
+						title={filtersActive ? 'No Discussions Match Filter' : 'No Discussions Yet'}
+						description={filtersActive ? '' : 'Click \'New Discussion\' to start the conversation!'}
 						visual="pt-icon-widget"
 					/>
 				}
