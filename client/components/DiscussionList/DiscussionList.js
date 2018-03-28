@@ -12,6 +12,7 @@ const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	onPreviewClick: PropTypes.func,
 	mode: PropTypes.string,
+	onLabelsSave: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -74,29 +75,10 @@ class DiscussionList extends Component {
 					<Popover
 						content={
 							<DiscussionLabelsList
-								labelsData={pubData.labels || [
-									{
-										id: '123-123-12342',
-										title: 'Peer Review',
-										publicApply: false,
-										color: '#5aaf05',
-									},
-									{
-										id: '223-321-12342',
-										title: 'Category1',
-										publicApply: true,
-										color: '#7418a5',
-									},
-									{
-										id: '446-123-12342',
-										title: 'Question',
-										publicApply: true,
-										color: '#0052cc',
-									},
-								]}
+								labelsData={pubData.labels || []}
 								permissions={pubData.localPermissions}
 								onLabelSelect={(evt)=>{ console.log(evt); }}
-								onLabelsUpdate={(evt)=>{ console.log(evt); }}
+								onLabelsUpdate={this.props.onLabelsSave}
 							/>
 						}
 						interactionKind={PopoverInteractionKind.CLICK}
@@ -121,6 +103,7 @@ class DiscussionList extends Component {
 					return (
 						<DiscussionPreview
 							key={`thread-${thread[0].id}`}
+							availableLabels={pubData.labels || []}
 							slug={pubData.slug}
 							discussions={thread}
 							onPreviewClick={this.props.onPreviewClick}

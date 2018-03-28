@@ -74,7 +74,7 @@ app.put('/api/discussions', (req, res)=> {
 	// Filter to only allow certain fields to be updated
 	const updatedDiscussion = {};
 	Object.keys(req.body).forEach((key)=> {
-		if (['title', 'content', 'text', 'isArchived', 'highlights'].indexOf(key) > -1) {
+		if (['title', 'content', 'text', 'isArchived', 'highlights', 'labels'].indexOf(key) > -1) {
 			updatedDiscussion[key] = req.body[key] && req.body[key].trim
 				? req.body[key].trim()
 				: req.body[key];

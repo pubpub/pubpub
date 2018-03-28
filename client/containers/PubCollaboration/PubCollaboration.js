@@ -91,6 +91,7 @@ class PubCollaboration extends Component {
 		this.toggleChapters = this.toggleChapters.bind(this);
 		this.toggleArchivedVisible = this.toggleArchivedVisible.bind(this);
 		this.handleDetailsSave = this.handleDetailsSave.bind(this);
+		this.handlePutLabels = this.handlePutLabels.bind(this);
 		this.handlePubDelete = this.handlePubDelete.bind(this);
 		this.handlePostDiscussion = this.handlePostDiscussion.bind(this);
 		this.handlePutDiscussion = this.handlePutDiscussion.bind(this);
@@ -328,6 +329,24 @@ class PubCollaboration extends Component {
 		})
 		.catch(()=> {
 			this.setState({ putPubIsLoading: false });
+		});
+	}
+	handlePutLabels(newLabels) {
+		return apiFetch('/api/pubs', {
+			method: 'PUT',
+			body: JSON.stringify({
+				labels: newLabels,
+				pubId: this.props.pubData.id,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then((result)=> {
+			this.setState({
+				pubData: { ...this.state.pubData, ...result },
+			});
+		})
+		.catch((err)=> {
+			console.error('Error saving labels', err);
 		});
 	}
 	handlePubDelete(pubId) {
@@ -743,7 +762,11 @@ class PubCollaboration extends Component {
 						<div className="container pub">
 							<div className="row">
 								<div className="col-12">
-									<DiscussionList pubData={pubData} onPreviewClick={this.setActiveThread} />
+									<DiscussionList
+										pubData={pubData}
+										onPreviewClick={this.setActiveThread}
+										onLabelsSave={this.handlePutLabels}
+									/>
 								</div>
 							</div>
 						</div>

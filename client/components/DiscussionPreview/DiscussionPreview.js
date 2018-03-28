@@ -6,11 +6,13 @@ require('./discussionPreview.scss');
 
 const propTypes = {
 	slug: PropTypes.string.isRequired,
+	availableLabels: PropTypes.array,
 	discussions: PropTypes.array.isRequired,
 	onPreviewClick: PropTypes.func,
 };
 
 const defaultProps = {
+	availableLabels: [],
 	onPreviewClick: undefined,
 };
 
@@ -54,7 +56,11 @@ const DiscussionPreview = function(props) {
 	// const toUrl = props.isPresentation
 	// 	? `/pub/${props.slug}?thread=${props.discussions[0].threadNumber}`
 	// 	: `/pub/${props.slug}/collaborate?thread=${props.discussions[0].threadNumber}`;
-
+	const labelsById = {};
+	props.availableLabels.forEach((label)=> {
+		labelsById[label.id] = label;
+	});
+	const labels = sortedDiscussions[0].labels || [];
 	return (
 		<a
 			href={`/pub/${props.slug}/discussions/${props.discussions[0].threadNumber}`}
@@ -87,6 +93,12 @@ const DiscussionPreview = function(props) {
 					<span>Discussion by {sortedDiscussions[0].author.fullName}</span>
 				}
 				{!isPublic && <span className="pt-icon-standard pt-icon-lock2" />}
+				{labels.filter((labelId)=> {
+					return labelsById[labelId];
+				}).map((labelId)=> {
+					const label = labelsById[labelId];
+					return <span className="pt-tag" style={{ backgroundColor: label.color }}>{label.title}</span>;
+				})}
 			</div>
 			<div className="authors">
 				{discussionAuthors}

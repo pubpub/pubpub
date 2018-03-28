@@ -58,6 +58,7 @@ class PubPresentation extends Component {
 		this.handleNewHighlightDiscussion = this.handleNewHighlightDiscussion.bind(this);
 		this.handleScroll = this.handleScroll.bind(this);
 		this.handlePostDoi = this.handlePostDoi.bind(this);
+		this.handlePutLabels = this.handlePutLabels.bind(this);
 	}
 	componentDidMount() {
 		this.pubSideContent = document.getElementsByClassName('pub-side-content')[0];
@@ -167,6 +168,24 @@ class PubPresentation extends Component {
 					}),
 				},
 			});
+		});
+	}
+	handlePutLabels(newLabels) {
+		return apiFetch('/api/pubs', {
+			method: 'PUT',
+			body: JSON.stringify({
+				labels: newLabels,
+				pubId: this.props.pubData.id,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then((result)=> {
+			this.setState({
+				pubData: { ...this.state.pubData, ...result },
+			});
+		})
+		.catch((err)=> {
+			console.error('Error saving labels', err);
 		});
 	}
 	handlePostDoi() {
@@ -419,7 +438,11 @@ class PubPresentation extends Component {
 								<div className="container pub">
 									<div className="row">
 										<div className="col-12">
-											<DiscussionList pubData={pubData} onPreviewClick={this.setActiveThread} />
+											<DiscussionList
+												pubData={pubData}
+												onPreviewClick={this.setActiveThread}
+												onLabelsSave={this.handlePutLabels}
+											/>
 										</div>
 									</div>
 								</div>
@@ -512,10 +535,15 @@ class PubPresentation extends Component {
 											/>
 										}
 										{mode === 'discussions' && !subMode &&
-											<DiscussionList pubData={pubData} mode={mode} />
+											<DiscussionList
+												pubData={pubData}
+												mode={mode}
+												onLabelsSave={this.handlePutLabels}
+											/>
 										}
 										{mode === 'discussions' && subMode &&
 											<DiscussionThread
+												pubData={pubData}
 												discussions={activeThread}
 												canManage={pubData.localPermissions === 'manage' || (this.props.loginData.isAdmin && pubData.adminPermissions === 'manage')}
 												slug={pubData.slug}

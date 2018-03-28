@@ -1,0 +1,44 @@
+.discussion-labels-component {
+	margin-top: -25px;
+	margin-bottom: 2em;
+	.pt-minimal {
+		cursor: pointer;
+	}
+	.pt-fill {
+		margin-bottom: 10px;
+	}
+	.pt-menu-item {
+		display: flex;
+		align-items: center;
+	}
+	.label-title {
+		flex-grow: 1;
+		flex-shrink: 1;
+	}
+	.pt-tag {
+		margin: 0px 5px 5px 0px;
+	}
+	.color {
+		height: 20px;
+		width: 20px;
+		margin-right: 10px;
+		border-radius: 2px;
+		.pt-icon-tick {
+			padding: 2px;
+			&:before {
+				color: white;
+			}
+		}
+	}
+	.pt-icon-endorsed {
+		margin-left: 10px;
+		&:before {
+			opacity: 0.25;
+		}
+		&.active {
+			&:before {
+				opacity: 0.75;
+			}
+		}
+	}
+}

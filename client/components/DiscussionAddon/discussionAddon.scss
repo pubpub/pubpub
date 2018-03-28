@@ -4,7 +4,7 @@
 	pointer-events: none;
 	.discussion-preview-component {
 		color: inherit;
-		text-decoration: none;
+		text-decoration: none !important;
 	}
 	&.editable {
 		.discussion-preview-component {

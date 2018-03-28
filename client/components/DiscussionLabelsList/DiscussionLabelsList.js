@@ -6,10 +6,14 @@ import uuidv4 from 'uuid/v4';
 require('./discussionLabelsList.scss');
 
 const propTypes = {
-	labelsData: PropTypes.array.isRequired,
+	labelsData: PropTypes.array,
 	permissions: PropTypes.string.isRequired,
 	onLabelSelect: PropTypes.func.isRequired,
 	onLabelsUpdate: PropTypes.func.isRequired,
+};
+
+const defaultProps = {
+	labelsData: [],
 };
 
 class DiscussionLabelsList extends Component {
@@ -19,6 +23,7 @@ class DiscussionLabelsList extends Component {
 			isEditMode: false,
 			labelsData: props.labelsData,
 			isSaving: false,
+			labelsDataChanged: false,
 		};
 		this.toggleEditMode = this.toggleEditMode.bind(this);
 		this.updateTitle = this.updateTitle.bind(this);
@@ -29,15 +34,12 @@ class DiscussionLabelsList extends Component {
 		this.handleSave = this.handleSave.bind(this);
 	}
 	componentWillReceiveProps(nextProps) {
-		const currentLabels = JSON.stringify(this.props.labelsData);
-		const nextLabels = JSON.stringify(nextProps.labelsData);
-		if (nextLabels !== currentLabels) {
-			this.setState({
-				labelsData: nextProps.labelsData,
-				isSaving: false,
-				isEditMode: false,
-			});
-		}
+		this.setState({
+			labelsData: nextProps.labelsData,
+			isSaving: false,
+			isEditMode: false,
+			labelsDataChanged: false,
+		});
 	}
 
 	toggleEditMode() {
@@ -52,7 +54,7 @@ class DiscussionLabelsList extends Component {
 				title: newTitle,
 			};
 		});
-		this.setState({ labelsData: newLabelsData });
+		this.setState({ labelsData: newLabelsData, labelsDataChanged: true });
 	}
 	updateColor(id, newColor) {
 		const newLabelsData = this.state.labelsData.map((label)=> {
@@ -62,9 +64,9 @@ class DiscussionLabelsList extends Component {
 				color: newColor,
 			};
 		});
-		this.setState({ labelsData: newLabelsData });
+		this.setState({ labelsData: newLabelsData, labelsDataChanged: true });
 	}
-	togglePublicApply(id, newColor) {
+	togglePublicApply(id) {
 		const newLabelsData = this.state.labelsData.map((label)=> {
 			if (label.id !== id) { return label; }
 			return {
@@ -72,13 +74,13 @@ class DiscussionLabelsList extends Component {
 				publicApply: !label.publicApply,
 			};
 		});
-		this.setState({ labelsData: newLabelsData });
+		this.setState({ labelsData: newLabelsData, labelsDataChanged: true });
 	}
 	removeLabel(id) {
 		const newLabelsData = this.state.labelsData.filter((label)=> {
 			return label.id !== id;
 		});
-		this.setState({ labelsData: newLabelsData });
+		this.setState({ labelsData: newLabelsData, labelsDataChanged: true });
 	}
 	addLabel() {
 		const newLabelsData = [
@@ -90,7 +92,7 @@ class DiscussionLabelsList extends Component {
 				publicApply: false,
 			}
 		];
-		this.setState({ labelsData: newLabelsData });
+		this.setState({ labelsData: newLabelsData, labelsDataChanged: true });
 	}
 	handleSave() {
 		this.setState({ isSaving: true });
@@ -109,6 +111,7 @@ class DiscussionLabelsList extends Component {
 						onClick={this.handleSave}
 						text="Save"
 						loading={this.state.isSaving}
+						disabled={!this.state.labelsDataChanged}
 					/>
 				}
 				<li className="pt-menu-header"><h6>Filter by Label</h6></li>
@@ -129,7 +132,7 @@ class DiscussionLabelsList extends Component {
 									tooltipClassName="pt-dark"
 									position={Position.TOP}
 								>
-									<span className={`pt-icon-standard pt-icon-globe ${label.publicApply ? 'active' : ''}`} />
+									<span className={`pt-icon-standard pt-icon-endorsed ${label.publicApply ? '' : 'active'}`} />
 								</Tooltip>
 							</div>
 						</li>
@@ -185,7 +188,7 @@ class DiscussionLabelsList extends Component {
 								tooltipClassName="pt-dark"
 								position={Position.TOP}
 							>
-								<button onClick={handlePublicApplyToggle} className={`pt-button pt-minimal pt-icon-globe ${label.publicApply ? 'active' : ''}`} />
+								<button onClick={handlePublicApplyToggle} className={`pt-button pt-minimal pt-icon-endorsed ${label.publicApply ? '' : 'active'}`} />
 							</Tooltip>
 							<button onClick={handleLabelRemove} className="pt-button pt-icon-trash pt-minimal" />
 						</div>
@@ -201,4 +204,5 @@ class DiscussionLabelsList extends Component {
 }
 
 DiscussionLabelsList.propTypes = propTypes;
+DiscussionLabelsList.defaultProps = defaultProps;
 export default DiscussionLabelsList;

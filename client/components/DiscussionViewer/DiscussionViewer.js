@@ -88,6 +88,7 @@ class DiscussionViewer extends Component {
 						<div className="pinned-thread pt-elevation-4">
 							{!isNew &&
 								<DiscussionThread
+									pubData={this.props.pubData}
 									discussions={activeThread}
 									canManage={pubData.localPermissions === 'manage' || (this.props.loginData.isAdmin && pubData.adminPermissions === 'manage')}
 									slug={pubData.slug}
@@ -140,6 +141,7 @@ class DiscussionViewer extends Component {
 						<button className="pt-button" onClick={this.props.onClose}>Close</button>
 					</div>
 					<DiscussionThread
+						pubData={this.props.pubData}
 						discussions={activeThread}
 						canManage={pubData.localPermissions === 'manage' || (this.props.loginData.isAdmin && pubData.adminPermissions === 'manage')}
 						slug={pubData.slug}

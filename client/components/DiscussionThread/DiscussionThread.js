@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import TimeAgo from 'react-timeago';
 import { Button, NonIdealState } from '@blueprintjs/core';
 import DiscussionInput from 'components/DiscussionInput/DiscussionInput';
+import DiscussionLabels from 'components/DiscussionLabels/DiscussionLabels';
 import DiscussionThreadItem from 'components/DiscussionThreadItem/DiscussionThreadItem';
 
 require('./discussionThread.scss');
 
 const propTypes = {
+	pubData: PropTypes.object.isRequired,
 	discussions: PropTypes.array.isRequired,
 	canManage: PropTypes.bool,
 	slug: PropTypes.string.isRequired,
@@ -57,6 +59,7 @@ class DiscussionThread extends Component {
 		this.handleTitleChange = this.handleTitleChange.bind(this);
 		this.handlePublish = this.handlePublish.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
+		this.saveLabels = this.saveLabels.bind(this);
 		this.archiveDiscussion = this.archiveDiscussion.bind(this);
 		this.onReplySubmit = this.onReplySubmit.bind(this);
 	}
@@ -100,6 +103,7 @@ class DiscussionThread extends Component {
 		this.setState({ isLoading: true });
 		this.props.handleReplyEdit({
 			title: this.state.title,
+			labels: this.state.labels,
 			pubId: sortedDiscussions[0].pubId,
 			discussionId: sortedDiscussions[0].id,
 			userId: sortedDiscussions[0].userId,
@@ -125,6 +129,20 @@ class DiscussionThread extends Component {
 		this.setState({
 			title: evt.target.value,
 			submitDisabled: !evt.target.value,
+		});
+	}
+	saveLabels(newLabels) {
+		const sortedDiscussions = this.props.discussions.sort((foo, bar)=> {
+			if (foo.createdAt > bar.createdAt) { return 1; }
+			if (foo.createdAt < bar.createdAt) { return -1; }
+			return 0;
+		});
+
+		this.props.handleReplyEdit({
+			labels: newLabels,
+			pubId: sortedDiscussions[0].pubId,
+			discussionId: sortedDiscussions[0].id,
+			userId: sortedDiscussions[0].userId,
 		});
 	}
 
@@ -256,6 +274,14 @@ class DiscussionThread extends Component {
 				{!this.state.isEditing &&
 					<div className="title">{sortedDiscussions[0].title}</div>
 				}
+
+				<DiscussionLabels
+					availableLabels={this.props.pubData.labels || []}
+					labelsData={sortedDiscussions[0].labels || []}
+					onLabelsSave={this.saveLabels}
+					isAdmin={this.props.canManage}
+					canManageThread={canManageThread}
+				/>
 
 				{sortedDiscussions[0].submitHash && !isArchived &&
 					<div className="submission-buttons">

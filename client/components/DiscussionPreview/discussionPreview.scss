@@ -25,6 +25,15 @@
 		// 	padding-left: 0.25em;
 		// }
 	}
+	.pt-tag {
+		margin-right: 5px;
+		font-size: 12px;
+		font-weight: 400;
+		padding: 0px 4px;
+		&:first-of-type {
+			margin-left: 25px;
+		}
+	}
 	.authors {
 		/* These lines are just so we can simply remove this without mucking with other css class */
 		margin-top: -0.5em; 

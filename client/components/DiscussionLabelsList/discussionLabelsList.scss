@@ -35,7 +35,7 @@
 		flex-grow: 1;
 		flex-shrink: 1;
 	}
-	.pt-icon-globe {
+	.pt-icon-endorsed {
 		&:before {
 			opacity: 0.25;
 		}
@@ -44,7 +44,6 @@
 				opacity: 0.75;
 			}
 		}
-		// vertical-align: middle;
 	}
 }
 .pt-popover.color-select-popover {
