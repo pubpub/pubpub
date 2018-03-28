@@ -186,6 +186,7 @@ const Pub = sequelize.define('Pub', {
 	editHash: { type: Sequelize.STRING },
 	viewHash: { type: Sequelize.STRING },
 	doi: { type: Sequelize.TEXT },
+	labels: { type: Sequelize.JSONB },
 	/* Set by Associations */
 	communityId: { type: Sequelize.UUID, allowNull: false },
 }, {
@@ -207,6 +208,7 @@ const Discussion = sequelize.define('Discussion', {
 	submitApprovedAt: { type: Sequelize.DATE },
 	isArchived: { type: Sequelize.BOOLEAN },
 	isPublic: { type: Sequelize.BOOLEAN },
+	labels: { type: Sequelize.JSONB },
 	/* Set by Associations */
 	userId: { type: Sequelize.UUID, allowNull: false },
 	pubId: { type: Sequelize.UUID, allowNull: false },

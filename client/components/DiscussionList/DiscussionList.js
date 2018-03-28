@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionPreviewArchived from 'components/DiscussionPreviewArchived/DiscussionPreviewArchived';
-import { NonIdealState } from '@blueprintjs/core';
+import DiscussionLabelsList from 'components/DiscussionLabelsList/DiscussionLabelsList';
+import { Popover, PopoverInteractionKind, Position, NonIdealState } from '@blueprintjs/core';
 import { nestDiscussionsToThreads } from 'utilities';
 
 require('./discussionList.scss');
@@ -68,6 +69,45 @@ class DiscussionList extends Component {
 				{!this.props.mode &&
 					<h2>Discussions</h2>
 				}
+
+				<div className="filter-bar">
+					<Popover
+						content={
+							<DiscussionLabelsList
+								labelsData={pubData.labels || [
+									{
+										id: '123-123-12342',
+										title: 'Peer Review',
+										publicApply: false,
+										color: '#5aaf05',
+									},
+									{
+										id: '223-321-12342',
+										title: 'Category1',
+										publicApply: true,
+										color: '#7418a5',
+									},
+									{
+										id: '446-123-12342',
+										title: 'Question',
+										publicApply: true,
+										color: '#0052cc',
+									},
+								]}
+								permissions={pubData.localPermissions}
+								onLabelSelect={(evt)=>{ console.log(evt); }}
+								onLabelsUpdate={(evt)=>{ console.log(evt); }}
+							/>
+						}
+						interactionKind={PopoverInteractionKind.CLICK}
+						position={Position.BOTTOM_RIGHT}
+						popoverClassName="pt-minimal"
+						transitionDuration={-1}
+						inheritDarkTheme={false}
+					>
+						<div className="pt-button pt-minimal">Labels</div>
+					</Popover>
+				</div>
 
 				{!activeThreads.length && !archivedThreads.length &&
 					<NonIdealState
