@@ -558,7 +558,8 @@ class PubCollaboration extends Component {
 		.then(()=> {
 			window.location.href = `/pub/${this.props.locationData.params.slug}`;
 		})
-		.catch(()=> {
+		.catch((err)=> {
+			console.log('Error Publishing', err);
 			this.setState({ postVersionIsLoading: false });
 		});
 	}
