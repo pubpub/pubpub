@@ -61,7 +61,7 @@ class DiscussionLabels extends Component {
 
 		return (
 			<div className="discussion-labels-component">
-				{this.props.canManageThread &&
+				{this.props.canManageThread && !!this.props.availableLabels.length &&
 					<Popover
 						content={
 							<div className="pt-menu">

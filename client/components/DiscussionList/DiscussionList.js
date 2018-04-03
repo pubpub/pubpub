@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
-import DiscussionPreviewArchived from 'components/DiscussionPreviewArchived/DiscussionPreviewArchived';
 import DiscussionLabelsList from 'components/DiscussionLabelsList/DiscussionLabelsList';
 import { Popover, PopoverInteractionKind, Position, NonIdealState } from '@blueprintjs/core';
 import { nestDiscussionsToThreads } from 'utilities';
@@ -24,16 +23,24 @@ class DiscussionList extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isArchivedVisible: false,
+			isArchivedMode: false,
+			// isArchivedVisible: false,
 			filteredLabels: [],
 		};
-		this.toggleArchivedVisible = this.toggleArchivedVisible.bind(this);
+		this.setDiscussionsMode = this.setDiscussionsMode.bind(this);
+		this.setArchivedMode = this.setArchivedMode.bind(this);
 		this.toggleFilteredLabel = this.toggleFilteredLabel.bind(this);
 	}
 
-	toggleArchivedVisible() {
-		this.setState({ isArchivedVisible: !this.state.isArchivedVisible });
+	setDiscussionsMode() {
+		this.setState({ isArchivedMode: false });
 	}
+	setArchivedMode() {
+		this.setState({ isArchivedMode: true });
+	}
+	// toggleArchivedVisible() {
+	// 	this.setState({ isArchivedVisible: !this.state.isArchivedVisible });
+	// }
 	toggleFilteredLabel(labelId) {
 		const newFilteredLabels = this.state.filteredLabels.indexOf(labelId) > -1
 			? this.state.filteredLabels.filter((id)=> { return id !== labelId; })
@@ -88,27 +95,35 @@ class DiscussionList extends Component {
 				}
 
 				<div className="filter-bar">
-					<Popover
-						content={
-							<DiscussionLabelsList
-								labelsData={pubData.labels || []}
-								selectedLabels={this.state.filteredLabels}
-								permissions={pubData.localPermissions}
-								onLabelSelect={this.toggleFilteredLabel}
-								onLabelsUpdate={this.props.onLabelsSave}
-							/>
-						}
-						interactionKind={PopoverInteractionKind.CLICK}
-						position={Position.BOTTOM_RIGHT}
-						popoverClassName="pt-minimal"
-						transitionDuration={-1}
-						inheritDarkTheme={false}
-					>
-						<div className="pt-button pt-minimal">Labels</div>
-					</Popover>
+					<div className="left">
+						<button className={`pt-button pt-minimal ${!this.state.isArchivedMode ? 'active' : ''}`} onClick={this.setDiscussionsMode}>{activeThreads.length} Discussion{activeThreads.length === 1 ? '' : 's'}</button>
+						<button className={`pt-button pt-minimal ${this.state.isArchivedMode ? 'active' : ''}`} onClick={this.setArchivedMode}>{archivedThreads.length} Archived</button>
+					</div>
+					<div className="right">
+						<div className="pt-button pt-minimal">Authors</div>
+						<Popover
+							content={
+								<DiscussionLabelsList
+									labelsData={pubData.labels || []}
+									selectedLabels={this.state.filteredLabels}
+									permissions={pubData.localPermissions}
+									onLabelSelect={this.toggleFilteredLabel}
+									onLabelsUpdate={this.props.onLabelsSave}
+								/>
+							}
+							interactionKind={PopoverInteractionKind.CLICK}
+							position={Position.BOTTOM_RIGHT}
+							popoverClassName="pt-minimal"
+							transitionDuration={-1}
+							inheritDarkTheme={false}
+						>
+							<div className="pt-button pt-minimal">Labels</div>
+						</Popover>
+						<div className="pt-button pt-minimal">Sort</div>
+					</div>
 				</div>
 
-				{!activeThreads.length && !archivedThreads.length &&
+				{!this.state.isArchivedMode && !activeThreads.length &&
 					<NonIdealState
 						title={filtersActive ? 'No Discussions Match Filter' : 'No Discussions Yet'}
 						description={filtersActive ? '' : 'Click \'New Discussion\' to start the conversation!'}
@@ -116,7 +131,14 @@ class DiscussionList extends Component {
 					/>
 				}
 
-				{activeThreads.map((thread)=> {
+				{this.state.isArchivedMode && !archivedThreads.length &&
+					<NonIdealState
+						title={filtersActive ? 'No Archived Discussions Match Filter' : 'No Archived Discussions'}
+						visual="pt-icon-widget"
+					/>
+				}
+
+				{!this.state.isArchivedMode && activeThreads.map((thread)=> {
 					return (
 						<DiscussionPreview
 							key={`thread-${thread[0].id}`}
@@ -127,24 +149,17 @@ class DiscussionList extends Component {
 						/>
 					);
 				})}
-				{!!archivedThreads.length &&
-					<div className="archived-threads">
-						<button className="pt-button pt-minimal pt-large pt-fill archive-title-button" onClick={this.toggleArchivedVisible}>
-							{this.state.isArchivedVisible ? 'Hide ' : 'Show '}
-							Archived Thread{archivedThreads.length === 1 ? '' : 's'} ({archivedThreads.length})
-						</button>
-						{this.state.isArchivedVisible && archivedThreads.map((thread)=> {
-							return (
-								<DiscussionPreviewArchived
-									key={`thread-${thread[0].id}`}
-									slug={pubData.slug}
-									discussions={thread}
-									onPreviewClick={this.props.onPreviewClick}
-								/>
-							);
-						})}
-					</div>
-				}
+				{this.state.isArchivedMode && archivedThreads.map((thread)=> {
+					return (
+						<DiscussionPreview
+							key={`thread-${thread[0].id}`}
+							availableLabels={pubData.labels || []}
+							slug={pubData.slug}
+							discussions={thread}
+							onPreviewClick={this.props.onPreviewClick}
+						/>
+					);
+				})}
 			</div>
 		);
 	}
