@@ -26,7 +26,7 @@ const Html = (props) => {
 		/* Note that fonts will still be sourced from static.pubpub */
 		/* so if viewing those needs to be tested, the webpack config */
 		/* needs to change. */
-		if (props.initialData.locationData.hostname === 'dev.pubpub.org') {
+		if (props.initialData.locationData.hostname === 'dev.pubpub.org' || props.initialData.locationData.hostname === 'frankdev.pubpub.org') {
 			manifestUrl = manifestUrl.replace('https://static.pubpub.org', '');
 		}
 

@@ -24,12 +24,15 @@
 		border: 1px solid #D9D9D9;
 		border-bottom: 0px solid #D9D9D9;
 		padding: 10px 4px;
+		flex-wrap: wrap;
 		.left {
 			flex-grow: 1;
 			flex-shrink: 1;
+			white-space: nowrap;
 		}
 		.right {
 			text-align: right;
+			white-space: nowrap;
 		}
 		.active {
 			font-weight: bold;
