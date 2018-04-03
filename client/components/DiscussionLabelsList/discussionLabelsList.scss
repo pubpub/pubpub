@@ -40,6 +40,10 @@
 		flex-grow: 1;
 		flex-shrink: 1;
 	}
+	.empty {
+		pointer-events: none;
+		opacity: 0.75;
+	}
 	.pt-icon-endorsed {
 		&:before {
 			opacity: 0.25;

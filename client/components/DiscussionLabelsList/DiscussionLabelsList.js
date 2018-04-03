@@ -100,7 +100,7 @@ class DiscussionLabelsList extends Component {
 		this.props.onLabelsUpdate(this.state.labelsData);
 	}
 	render() {
-		const showEditMode = this.state.isEditMode || !this.props.labelsData.length;
+		const showEditMode = this.state.isEditMode || (!this.props.labelsData.length && this.props.permissions === 'manage');
 		return (
 			<div className="discussion-labels-list-component pt-menu pt-elevation-1">
 				{this.props.permissions === 'manage' && !showEditMode &&
@@ -118,7 +118,11 @@ class DiscussionLabelsList extends Component {
 				<li className="pt-menu-header"><h6>Filter by Label</h6></li>
 
 				{/* Labels View Mode */}
-				{!showEditMode && this.state.labelsData.map((label)=> {
+				{!showEditMode && this.state.labelsData.sort((foo, bar)=> {
+					if (foo.title.toLowerCase() < bar.title.toLowerCase()) { return -1; }
+					if (foo.title.toLowerCase() > bar.title.toLowerCase()) { return 1; }
+					return 0;
+				}).map((label)=> {
 					const handleClick = ()=> { this.props.onLabelSelect(label.id); };
 					return (
 						<li>
@@ -143,6 +147,10 @@ class DiscussionLabelsList extends Component {
 						</li>
 					);
 				})}
+
+				{!showEditMode && !this.state.labelsData.length &&
+					<div className="pt-menu-item empty">No Labels to Filter by</div>
+				}
 
 				{/* Labels Edit Mode */}
 				{showEditMode && this.state.labelsData.map((label)=> {

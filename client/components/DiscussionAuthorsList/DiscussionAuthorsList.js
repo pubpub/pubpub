@@ -45,6 +45,9 @@ const DiscussionAuthorsList = (props)=> {
 					</li>
 				);
 			})}
+			{!authors.length &&
+				<div className="pt-menu-item empty">No Authors to Filter by</div>
+			}
 		</div>
 	);
 };
