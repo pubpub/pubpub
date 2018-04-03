@@ -67,7 +67,10 @@ class DiscussionList extends Component {
 			}, false);
 			return isArchivedList ? threadIsArchived : !threadIsArchived;
 		}).filter((items)=> {
-			const threadLabels = items[0].labels || [];
+			const threadLabels = items.reduce((prev, curr)=> {
+				if (curr.labels && curr.labels.length) { return curr.labels; }
+				return prev;
+			}, []);
 			if (this.state.filteredLabels.length === 0) { return true; }
 			const hasNecessaryLabel = this.state.filteredLabels.reduce((prev, curr)=> {
 				if (threadLabels.indexOf(curr) === -1) { return false; }
