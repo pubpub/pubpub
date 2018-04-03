@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
+import DiscussionAuthorsList from 'components/DiscussionAuthorsList/DiscussionAuthorsList';
 import DiscussionLabelsList from 'components/DiscussionLabelsList/DiscussionLabelsList';
+import DiscussionSortList from 'components/DiscussionSortList/DiscussionSortList';
 import { Popover, PopoverInteractionKind, Position, NonIdealState } from '@blueprintjs/core';
 import { nestDiscussionsToThreads } from 'utilities';
 
@@ -24,12 +26,16 @@ class DiscussionList extends Component {
 		super(props);
 		this.state = {
 			isArchivedMode: false,
-			// isArchivedVisible: false,
 			filteredLabels: [],
+			filteredAuthors: [],
+			sortMode: 'newestThread', // newestThread, oldestThread, newestReply, oldestReply, mostReplies, leastReplies
 		};
 		this.setDiscussionsMode = this.setDiscussionsMode.bind(this);
 		this.setArchivedMode = this.setArchivedMode.bind(this);
 		this.toggleFilteredLabel = this.toggleFilteredLabel.bind(this);
+		this.toggleFilteredAuthor = this.toggleFilteredAuthor.bind(this);
+		this.setSortMode = this.setSortMode.bind(this);
+		this.filterAndSortThreads = this.filterAndSortThreads.bind(this);
 	}
 
 	setDiscussionsMode() {
@@ -38,22 +44,29 @@ class DiscussionList extends Component {
 	setArchivedMode() {
 		this.setState({ isArchivedMode: true });
 	}
-	// toggleArchivedVisible() {
-	// 	this.setState({ isArchivedVisible: !this.state.isArchivedVisible });
-	// }
+	setSortMode(sortSlug) {
+		this.setState({ sortMode: sortSlug });
+	}
+	toggleFilteredAuthor(authorId) {
+		const newFilteredAuthors = this.state.filteredAuthors.indexOf(authorId) > -1
+			? this.state.filteredAuthors.filter((id)=> { return id !== authorId; })
+			: [...this.state.filteredAuthors, authorId];
+		this.setState({ filteredAuthors: newFilteredAuthors });
+	}
 	toggleFilteredLabel(labelId) {
 		const newFilteredLabels = this.state.filteredLabels.indexOf(labelId) > -1
 			? this.state.filteredLabels.filter((id)=> { return id !== labelId; })
 			: [...this.state.filteredLabels, labelId];
 		this.setState({ filteredLabels: newFilteredLabels });
 	}
-
-	render() {
-		const pubData = this.props.pubData;
-		const discussions = pubData.discussions || [];
-		const threads = nestDiscussionsToThreads(discussions);
-
-		const activeThreads = threads.filter((items)=> {
+	filterAndSortThreads(threads, isArchivedList) {
+		return threads.filter((items)=> {
+			const threadIsArchived = items.reduce((prev, curr)=> {
+				if (curr.isArchived) { return true; }
+				return prev;
+			}, false);
+			return isArchivedList ? threadIsArchived : !threadIsArchived;
+		}).filter((items)=> {
 			const threadLabels = items[0].labels || [];
 			if (this.state.filteredLabels.length === 0) { return true; }
 			const hasNecessaryLabel = this.state.filteredLabels.reduce((prev, curr)=> {
@@ -62,27 +75,51 @@ class DiscussionList extends Component {
 			}, true);
 			return hasNecessaryLabel;
 		}).filter((items)=> {
-			return items.reduce((prev, curr)=> {
-				if (curr.isArchived) { return false; }
+			const authors = {};
+			items.forEach((discussion)=> {
+				authors[discussion.author.id] = discussion.author;
+			});
+			if (this.state.filteredAuthors.length === 0) { return true; }
+			const hasNecessaryAuthor = this.state.filteredAuthors.reduce((prev, curr)=> {
+				if (authors[curr]) { return false; }
 				return prev;
 			}, true);
+			return hasNecessaryAuthor;
 		}).sort((foo, bar)=> {
-			if (foo[0].threadNumber > bar[0].threadNumber) { return -1; }
-			if (foo[0].threadNumber < bar[0].threadNumber) { return 1; }
+			/* Newest Thread */
+			if (this.state.sortMode === 'newestThread' && foo[0].threadNumber > bar[0].threadNumber) { return -1; }
+			if (this.state.sortMode === 'newestThread' && foo[0].threadNumber < bar[0].threadNumber) { return 1; }
+			/* Oldest Thread */
+			if (this.state.sortMode === 'oldestThread' && foo[0].threadNumber < bar[0].threadNumber) { return -1; }
+			if (this.state.sortMode === 'oldestThread' && foo[0].threadNumber > bar[0].threadNumber) { return 1; }
+			/* Newest Reply */
+			const fooNewestReply = foo.reduce((prev, curr)=> { if (curr.createdAt > prev) { return curr.createdAt; } return prev; }, '0000-02-01T22:21:19.608Z');
+			const barNewestReply = bar.reduce((prev, curr)=> { if (curr.createdAt > prev) { return curr.createdAt; } return prev; }, '0000-02-01T22:21:19.608Z');
+			if (this.state.sortMode === 'newestReply' && fooNewestReply > barNewestReply) { return -1; }
+			if (this.state.sortMode === 'newestReply' && fooNewestReply < barNewestReply) { return 1; }
+			/* Oldest Reply */
+			const fooOldestReply = foo.reduce((prev, curr)=> { if (curr.createdAt < prev) { return curr.createdAt; } return prev; }, '9999-02-01T22:21:19.608Z');
+			const barOldestReply = bar.reduce((prev, curr)=> { if (curr.createdAt < prev) { return curr.createdAt; } return prev; }, '9999-02-01T22:21:19.608Z');
+			if (this.state.sortMode === 'oldestReply' && fooOldestReply < barOldestReply) { return -1; }
+			if (this.state.sortMode === 'oldestReply' && fooOldestReply > barOldestReply) { return 1; }
+			/* Most Replies */
+			if (this.state.sortMode === 'mostReplies' && foo.length > bar.length) { return -1; }
+			if (this.state.sortMode === 'mostReplies' && foo.length < bar.length) { return 1; }
+			/* Least Replies */
+			if (this.state.sortMode === 'leastReplies' && foo.length < bar.length) { return -1; }
+			if (this.state.sortMode === 'leastReplies' && foo.length > bar.length) { return 1; }
 			return 0;
 		});
+	}
 
-		const archivedThreads = threads.filter((items)=> {
-			return items.reduce((prev, curr)=> {
-				if (curr.isArchived) { return true; }
-				return prev;
-			}, false);
-		}).sort((foo, bar)=> {
-			if (foo[0].threadNumber > bar[0].threadNumber) { return -1; }
-			if (foo[0].threadNumber < bar[0].threadNumber) { return 1; }
-			return 0;
-		});
-		const filtersActive = this.state.filteredLabels.length;
+	render() {
+		const pubData = this.props.pubData;
+		const discussions = pubData.discussions || [];
+		const threads = nestDiscussionsToThreads(discussions);
+
+		const activeThreads = this.filterAndSortThreads(threads, false);
+		const archivedThreads = this.filterAndSortThreads(threads, true);
+		const filtersActive = this.state.filteredLabels.length || this.state.filteredAuthors.length;
 		return (
 			<div className="discussion-list-component">
 				{!this.props.mode &&
@@ -100,7 +137,22 @@ class DiscussionList extends Component {
 						<button className={`pt-button pt-minimal ${this.state.isArchivedMode ? 'active' : ''}`} onClick={this.setArchivedMode}>{archivedThreads.length} Archived</button>
 					</div>
 					<div className="right">
-						<div className="pt-button pt-minimal">Authors</div>
+						<Popover
+							content={
+								<DiscussionAuthorsList
+									threadsData={threads || []}
+									selected={this.state.filteredAuthors}
+									onSelect={this.toggleFilteredAuthor}
+								/>
+							}
+							interactionKind={PopoverInteractionKind.CLICK}
+							position={Position.BOTTOM_RIGHT}
+							popoverClassName="pt-minimal"
+							transitionDuration={-1}
+							inheritDarkTheme={false}
+						>
+							<div className={`pt-button pt-minimal ${this.state.filteredAuthors.length ? 'active' : ''}`}>Authors</div>
+						</Popover>
 						<Popover
 							content={
 								<DiscussionLabelsList
@@ -117,9 +169,23 @@ class DiscussionList extends Component {
 							transitionDuration={-1}
 							inheritDarkTheme={false}
 						>
-							<div className="pt-button pt-minimal">Labels</div>
+							<div className={`pt-button pt-minimal ${this.state.filteredLabels.length ? 'active' : ''}`}>Labels</div>
 						</Popover>
-						<div className="pt-button pt-minimal">Sort</div>
+						<Popover
+							content={
+								<DiscussionSortList
+									selected={this.state.sortMode}
+									onSelect={this.setSortMode}
+								/>
+							}
+							interactionKind={PopoverInteractionKind.CLICK}
+							position={Position.BOTTOM_RIGHT}
+							popoverClassName="pt-minimal"
+							transitionDuration={-1}
+							inheritDarkTheme={false}
+						>
+							<div className={`pt-button pt-minimal ${this.state.sortMode !== 'newestThread' ? 'active' : ''}`}>Sort</div>
+						</Popover>
 					</div>
 				</div>
 
