@@ -12,7 +12,7 @@ app.post('/api/communities', (req, res)=> {
 	const newCollectionIds = [uuidv4(), uuidv4(), uuidv4()];
 	const subdomain = req.body.subdomain.replace(/ /g, '-').replace(/[^a-zA-Z0-9-]/gi, '').toLowerCase();
 
-	const subdomainBlacklist = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'www', 'dev', 'assets'];
+	const subdomainBlacklist = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'www', 'dev', 'assets', 'jake', 'resize'];
 	if (subdomainBlacklist.indexOf(subdomain) > -1) { return res.status(500).json('URL already used'); }
 
 	const collections = [
