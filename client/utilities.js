@@ -74,10 +74,10 @@ export const getResizedUrl = function(url, type, dimensions) {
 	if (!url || url.indexOf('https://assets.pubpub.org/') === -1) { return url; }
 	const extension = url.split('.').pop().toLowerCase();
 	const validExtensions = ['jpg', 'jpeg', 'png', 'gif'];
-	if (validExtensions.indexOf(extension) === -1) { return 'url'; }
+	if (validExtensions.indexOf(extension) === -1) { return url; }
 
 	const prefix = type ? `${type}/` : '';
-	return `https://jake.pubpub.org/unsafe/${prefix}${dimensions}/${url}`;
+	// return `https://jake.pubpub.org/unsafe/${prefix}${dimensions}/${url}`;
 
 	/* jake.pubpub.org is our original resizing service */
 	/* hosted on Heroku with .gif support. More expensive, but works. */
@@ -96,8 +96,8 @@ export const getResizedUrl = function(url, type, dimensions) {
 	// if (extension === 'gif') {
 	// 	return `https://jake.pubpub.org/unsafe/${prefix}${dimensions}/${url}`;
 	// }
-	// const filepath = url.replace('https://assets.pubpub.org/', '');
-	// return `https://jakejr.pubpub.org/${prefix}${dimensions}/${filepath}`;
+	const filepath = url.replace('https://assets.pubpub.org/', '');
+	return `https://resize.pubpub.org/${prefix}${dimensions}/${filepath}`;
 };
 
 export const nestDiscussionsToThreads = function(discussions) {
