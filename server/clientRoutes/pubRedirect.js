@@ -7,7 +7,7 @@ app.get('/pub/:slug', (req, res, next)=> {
 
 	return Pub.findOne({
 		where: {
-			slug: req.params.slug.replace(/_/gi, '-'),
+			slug: req.params.slug.replace(/_/gi, '-').toLowerCase(),
 		},
 		attributes: ['id'],
 		include: [{
