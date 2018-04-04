@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import CommunityPreview from 'components/CommunityPreview/CommunityPreview';
 import LandingFeature from 'components/LandingFeature/LandingFeature';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
-import { hydrateWrapper } from 'utilities';
+import { hydrateWrapper, getResizedUrl } from 'utilities';
 
 require('./landing.scss');
 
@@ -66,7 +66,7 @@ const Landing = (props)=> {
 							</div>
 
 							<div className="image-wrapper pt-elevation-3">
-								<img src="https://jakejr.pubpub.org/fit-in/800x0/_site/landing-responsive-framed.png" alt="PubPub Community" />
+								<img src={getResizedUrl('https://assets.pubpub.org/_site/landing-responsive-framed.png', null, '800x0')} alt="PubPub Community" />
 								{/*
 								<img src="https://jakejr.pubpub.org/fit-in/800x0/_site/landing-viral-framed.png" alt="PubPub Community" />
 								<img src="https://jakejr.pubpub.org/fit-in/800x0/_site/landing-joi-framed.png" alt="PubPub Community" />
