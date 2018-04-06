@@ -30,6 +30,7 @@ export const hydrateWrapper = (Component)=> {
 			_paq.push(['setDomains', ['*.pubpub.org']]);
 			_paq.push(['trackPageView']);
 			_paq.push(['enableLinkTracking']);
+			_paq.push(['enableHeartBeatTimer']);
 			const url = 'https://pubpub.innocraft.cloud/';
 			_paq.push(['setTrackerUrl', `${url}piwik.php`]);
 			_paq.push(['setSiteId', '1']);
