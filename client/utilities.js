@@ -22,6 +22,23 @@ export const hydrateWrapper = (Component)=> {
 		if (!isDev) {
 			Raven.config('https://b4764efd07c240488d390c8343193208@sentry.io/197897').install();
 			Raven.setUserContext({ username: initialData.loginData.slug });
+
+			/* Matomo Code */
+			const _paq = _paq || [];
+			/* tracker methods like 'setCustomDimension' should be called before 'trackPageView' */
+			_paq.push(['setDocumentTitle', `${document.domain}/${document.title}`]);
+			_paq.push(['setCookieDomain', '*.pubpub.org']);
+			_paq.push(['setDomains', ['*.pubpub.org']]);
+			_paq.push(['trackPageView']);
+			_paq.push(['enableLinkTracking']);
+			(function() {
+				var u='//pubpub.innocraft.cloud/';
+				_paq.push(['setTrackerUrl', u+'piwik.php']);
+				_paq.push(['setSiteId', '1']);
+				var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+				g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+			})();
+
 		}
 
 		hydrate(<Component {...initialData} />, document.getElementById('root'));
