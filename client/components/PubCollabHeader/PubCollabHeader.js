@@ -44,6 +44,7 @@ const defaultProps = {
 };
 
 const PubCollabHeader = function(props) {
+	const isAdmin = props.loginData.isAdmin;
 	const authors = props.collaborators.filter((collaborator)=> {
 		return collaborator.Collaborator.isAuthor;
 	});
@@ -155,6 +156,13 @@ const PubCollabHeader = function(props) {
 												Create New Pub
 											</a>
 										</li>
+										{isAdmin &&
+											<li>
+												<a href="/dashboard" className="pt-menu-item pt-popover-dismiss">
+													Dashboard
+												</a>
+											</li>
+										}
 										<MenuItem
 											className="pt-popover-dismiss"
 											href="/notifications"

@@ -45,6 +45,7 @@ class Header extends Component {
 	}
 
 	render() {
+		const isAdmin = this.props.loginData.isAdmin;
 		const loggedIn = !!this.props.loginData.slug;
 		const isBasePubPub = this.props.locationData.isBasePubPub;
 		const isLandingPage = this.props.locationData.path === '/';
@@ -84,7 +85,7 @@ class Header extends Component {
 									<a href="/search" role="button" tabIndex="0" className="pt-button pt-large pt-minimal pt-icon-search" />
 
 									{/* Dashboard panel button */}
-									{this.props.loginData.isAdmin &&
+									{isAdmin &&
 										<a href="/dashboard" className="pt-button pt-large pt-minimal pt-icon-page-layout" />
 									}
 
@@ -104,6 +105,13 @@ class Header extends Component {
 														<li>
 															<a href="/pub/create" className="pt-menu-item pt-popover-dismiss">
 																Create New Pub
+															</a>
+														</li>
+													}
+													{!isBasePubPub && isAdmin &&
+														<li>
+															<a href="/dashboard" className="pt-menu-item pt-popover-dismiss">
+																Dashboard
 															</a>
 														</li>
 													}
