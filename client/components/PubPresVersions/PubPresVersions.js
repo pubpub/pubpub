@@ -21,6 +21,10 @@ const PubPresVersions = function(props) {
 			return { ...item, isActive: true };
 		}
 		return item;
+	}).sort((foo, bar)=>{
+		if (foo.createdAt < bar.createdAt) { return 1; }
+		if (foo.createdAt > bar.createdAt) { return -1; }
+		return 0;
 	});
 	return (
 		<div className="pub-pres-versions-component">
@@ -28,23 +32,43 @@ const PubPresVersions = function(props) {
 				<h5>Versions · Published Snapshots</h5>
 			}
 			<div className="intro">Published snapshots are maintained as discrete versions. Select a version below to navigate to the permalink for that published snapshot.</div>
-			<ul className="pt-menu">
-				{versionsList.sort((foo, bar)=>{
-					if (foo.createdAt < bar.createdAt) { return 1; }
-					if (foo.createdAt > bar.createdAt) { return -1; }
-					return 0;
-				}).map((version)=> {
-					return (
-						<li key={`version-${version.id}`}>
-							<a href={`/pub/${pubData.slug}?version=${version.id}`} className="pt-menu-item pt-popover-dismiss">
-								<span style={{ fontWeight: version.isActive ? '600' : 'normal' }}>
-									{dateFormat(version.createdAt, 'mmm dd, yyyy · h:MM TT')}
-								</span>
+
+			<div className="version-sections">
+				<div className="section">
+					<div className="title">All Versions</div>
+					<ul className="pt-menu">
+						{versionsList.map((version)=> {
+							return (
+								<li key={`version-${version.id}`}>
+									<a href={`/pub/${pubData.slug}?version=${version.id}`} className={`pt-menu-item pt-popover-dismiss ${version.isActive ? 'pt-active' : ''}`}>
+										{dateFormat(version.createdAt, 'mmm dd, yyyy · h:MMTT')}
+									</a>
+								</li>
+							);
+						})}
+					</ul>
+				</div>
+				<div className="section">
+					<div className="title">First Published</div>
+					<ul className="pt-menu">
+						<li>
+							<a href={`/pub/${pubData.slug}?version=${versionsList[0].id}`} className="pt-menu-item pt-popover-dismiss">
+								{dateFormat(versionsList[versionsList.length - 1].createdAt, 'mmm dd, yyyy · h:MMTT')}
 							</a>
 						</li>
-					);
-				})}
-			</ul>
+					</ul>
+				</div>
+				<div className="section">
+					<div className="title">Most Recently Updated</div>
+					<ul className="pt-menu">
+						<li>
+							<a href={`/pub/${pubData.slug}?version=${versionsList[versionsList.length - 1].id}`} className="pt-menu-item pt-popover-dismiss">
+								{dateFormat(versionsList[0].createdAt, 'mmm dd, yyyy · h:MMTT')}
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
 		</div>
 	);
 };

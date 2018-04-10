@@ -35,6 +35,11 @@ const PubPresHeader = function(props) {
 	const numChapters = Array.isArray(props.pubData.versions[0].content) && props.pubData.versions[0].content.length;
 	const activeChapterId = props.locationData.params.chapterId ? props.locationData.params.chapterId - 1 : 0;
 	// const activeChapterTitle = Array.isArray(props.pubData.versions[0].content) && props.pubData.versions[0].content[activeChapterId].title;
+	const sortedVersionsList = pubData.versionsList.sort((foo, bar)=>{
+		if (foo.createdAt < bar.createdAt) { return 1; }
+		if (foo.createdAt > bar.createdAt) { return -1; }
+		return 0;
+	});
 
 	return (
 		<div className={`pub-pres-header-component ${mode ? 'mode' : ''}`} style={backgroundStyle}>
@@ -180,7 +185,7 @@ const PubPresHeader = function(props) {
 										props.setOverlayPanel('versions');
 									}}
 								>
-									<span>{dateFormat(pubData.versions[0].createdAt, 'mmm dd, yyyy')}</span>
+									<span>{sortedVersionsList[sortedVersionsList.length - 1].id !== pubData.versions[0].id ? 'Updated ' : ''}{dateFormat(pubData.versions[0].createdAt, 'mmm dd, yyyy')}</span>
 									<span>{pubData.versionsList.length}</span>
 									<span className="pt-icon-standard pt-align-right pt-icon-multi-select" />
 								</a>
