@@ -52,7 +52,7 @@ const PubPresVersions = function(props) {
 					<div className="title">First Published</div>
 					<ul className="pt-menu">
 						<li>
-							<a href={`/pub/${pubData.slug}?version=${versionsList[0].id}`} className="pt-menu-item pt-popover-dismiss">
+							<a href={`/pub/${pubData.slug}?version=${versionsList[versionsList.length - 1].id}`} className="pt-menu-item pt-popover-dismiss">
 								{dateFormat(versionsList[versionsList.length - 1].createdAt, 'mmm dd, yyyy · h:MMTT')}
 							</a>
 						</li>
@@ -62,7 +62,7 @@ const PubPresVersions = function(props) {
 					<div className="title">Most Recently Updated</div>
 					<ul className="pt-menu">
 						<li>
-							<a href={`/pub/${pubData.slug}?version=${versionsList[versionsList.length - 1].id}`} className="pt-menu-item pt-popover-dismiss">
+							<a href={`/pub/${pubData.slug}?version=${versionsList[0].id}`} className="pt-menu-item pt-popover-dismiss">
 								{dateFormat(versionsList[0].createdAt, 'mmm dd, yyyy · h:MMTT')}
 							</a>
 						</li>
