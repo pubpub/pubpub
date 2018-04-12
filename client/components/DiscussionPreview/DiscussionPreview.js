@@ -88,11 +88,13 @@ const DiscussionPreview = function(props) {
 			</div>
 
 			<div className="title">
-				{sortedDiscussions[0].title}
-				{!sortedDiscussions[0].title &&
-					<span>Discussion by {sortedDiscussions[0].author.fullName}</span>
-				}
-				{!isPublic && <span className="pt-icon-standard pt-icon-lock2" />}
+				<span className="text">
+					{sortedDiscussions[0].title}
+					{!sortedDiscussions[0].title &&
+						<span>Discussion by {sortedDiscussions[0].author.fullName}</span>
+					}
+					{!isPublic && <span className="pt-icon-standard pt-icon-lock2" />}
+				</span>
 				{labels.filter((labelId)=> {
 					return labelsById[labelId];
 				}).sort((foo, bar)=> {
