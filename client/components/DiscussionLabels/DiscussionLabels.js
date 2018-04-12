@@ -59,9 +59,13 @@ class DiscussionLabels extends Component {
 			labelsById[label.id] = label;
 		});
 
+		const availableLabels = this.props.availableLabels.filter((label)=> {
+			return this.props.isAdmin || label.publicApply;
+		});
+
 		return (
 			<div className="discussion-labels-component">
-				{this.props.canManageThread && !!this.props.availableLabels.length &&
+				{this.props.canManageThread && !!availableLabels.length &&
 					<Popover
 						content={
 							<div className="pt-menu">
@@ -72,9 +76,7 @@ class DiscussionLabels extends Component {
 									loading={this.state.isSaving}
 									disabled={!this.state.labelsDataChanged}
 								/>
-								{this.props.availableLabels.filter((label)=> {
-									return this.props.isAdmin || label.publicApply;
-								}).sort((foo, bar)=> {
+								{availableLabels.sort((foo, bar)=> {
 									if (foo.title < bar.title) { return -1; }
 									if (foo.title > bar.title) { return 1; }
 									return 0;
@@ -127,7 +129,6 @@ class DiscussionLabels extends Component {
 					const label = labelsById[labelId];
 					return <span className="pt-tag" style={{ backgroundColor: label.color }}>{label.title}</span>;
 				})}
-				
 			</div>
 		);
 	}
