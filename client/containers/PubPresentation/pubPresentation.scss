@@ -29,6 +29,19 @@
 		margin-bottom: -2em;
 		background-color: #F9F9F9;
 	}
+	.bottom-chapter-buttons {
+		margin: 4em 0em;
+		border: 1px solid #DDD;
+		border-radius: 2px;
+		background-color: #F9F9F9;
+		.pt-button {
+			padding: 10px 15px;
+		}
+		.disabled {
+			opacity: 0.5;
+			pointer-events: none;
+		}
+	}
 	.fix-it {
 		opacity: 0;
 		transition: .2s linear opacity;

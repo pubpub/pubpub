@@ -426,6 +426,29 @@ class PubPresentation extends Component {
 												setActiveThread={this.setActiveThread}
 												onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
 											/>
+											{Array.isArray(activeVersion.content) &&
+												<div className="bottom-chapter-buttons pt-button-group pt-fill pt-minimal pt-large">
+													<a
+														href={`/pub/${pubData.slug}/chapter/${chapterIndex}${queryObject.version ? `?version=${queryObject.version}` : ''}`}
+														className={`pt-button pt-icon-arrow-left ${chapterIndex !== 0 ? '' : ' disabled'}`}
+													>
+														Previous
+													</a>
+													<button
+														onClick={()=> { this.setOverlayPanel('chapters'); }}
+														className="pt-button pt-icon-properties"
+													>
+														Chapters
+													</button>
+													<a
+														href={`/pub/${pubData.slug}/chapter/${chapterIndex + 2}${queryObject.version ? `?version=${queryObject.version}` : ''}`}
+														className={`pt-button ${chapterIndex !== activeVersion.content.length - 1 ? '' : ' disabled'}`}
+													>
+														Next
+														<span className="pt-icon-standard pt-icon-arrow-right pt-align-right" />
+													</a>
+												</div>
+											}
 											<div className="license-wrapper">
 												<License />
 											</div>
