@@ -136,8 +136,14 @@ export const getNotifications = (communityId, userId, markRead, markSeen)=> {
 							newActivity[key] = dataById[value.split(':')[1]];
 						});
 						return newActivity;
+					}).filter((activity)=> {
+						const hasActor = typeof activity.actor !== 'string';
+						const hasObject = typeof activity.object !== 'string';
+						return hasActor && hasObject;
 					})
 				};
+			}).filter((result)=> {
+				return result.activities && result.activities.length;
 			})
 		};
 		return enrichedActivityData;

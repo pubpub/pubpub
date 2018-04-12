@@ -42,6 +42,7 @@ const Html = (props) => {
 				<meta name="google-site-verification" content="jmmJFnkSOeIEuS54adOzGMwc0kwpsa8wQ-L4GyPpPDg" />
 				<link rel="stylesheet" type="text/css" href={getPath('baseStyle', 'css')} />
 				<link rel="stylesheet" type="text/css" href={getPath(props.chunkName, 'css')} />
+				<script dangerouslySetInnerHTML={{ __html: 'let _paq = [];' }} />
 			</head>
 			<body>
 				<div id="root">
