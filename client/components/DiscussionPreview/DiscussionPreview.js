@@ -95,6 +95,10 @@ const DiscussionPreview = function(props) {
 				{!isPublic && <span className="pt-icon-standard pt-icon-lock2" />}
 				{labels.filter((labelId)=> {
 					return labelsById[labelId];
+				}).sort((foo, bar)=> {
+					if (labelsById[foo].title < labelsById[bar].title) { return -1; }
+					if (labelsById[foo].title > labelsById[bar].title) { return 1; }
+					return 0;
 				}).map((labelId)=> {
 					const label = labelsById[labelId];
 					return <span className="pt-tag" style={{ backgroundColor: label.color }}>{label.title}</span>;

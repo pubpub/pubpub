@@ -84,7 +84,7 @@ class DiscussionList extends Component {
 			});
 			if (this.state.filteredAuthors.length === 0) { return true; }
 			const hasNecessaryAuthor = this.state.filteredAuthors.reduce((prev, curr)=> {
-				if (authors[curr]) { return false; }
+				if (!authors[curr]) { return false; }
 				return prev;
 			}, true);
 			return hasNecessaryAuthor;

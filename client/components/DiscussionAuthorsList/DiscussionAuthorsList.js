@@ -27,7 +27,7 @@ const DiscussionAuthorsList = (props)=> {
 	});
 	return (
 		<div className="discussion-authors-list-component pt-menu pt-elevation-1">
-			<li className="pt-menu-header"><h6>Filter by Author</h6></li>
+			<li className="pt-menu-header"><h6>Filter by Discussion Author</h6></li>
 
 			{authors.map((author)=> {
 				const handleClick = ()=> { props.onSelect(author.id); };
