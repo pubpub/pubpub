@@ -629,7 +629,7 @@ class PubCollaboration extends Component {
 
 		let canDelete = false;
 		if (canManage && !pubData.firstPublishedAt) { canDelete = true; }
-		if (pubData.adminPermissions === 'manage' && loginData.isAdmin) { canDelete = true; }
+		if (canManage && loginData.isAdmin) { canDelete = true; }
 
 		const highlights = discussions.filter((item)=> {
 			return !item.isArchived && item.highlights;
