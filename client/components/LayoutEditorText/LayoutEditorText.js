@@ -23,6 +23,9 @@ const propTypes = {
 class LayoutEditorText extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			key: new Date().getTime(),
+		};
 		this.handleRemove = this.handleRemove.bind(this);
 		this.setAlignLeft = this.setAlignLeft.bind(this);
 		this.setAlignCenter = this.setAlignCenter.bind(this);
@@ -122,6 +125,7 @@ class LayoutEditorText extends Component {
 										placeholder="Enter text..."
 										onChange={this.setText}
 										initialContent={this.props.content.text || undefined}
+										editorId={String(this.state.key)}
 									>
 										<FormattingMenu />
 										<InsertMenu />
