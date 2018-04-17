@@ -34,7 +34,7 @@ const Explore = (props)=> {
 
 						{exploreData.activeCommunities.filter((item)=> {
 							/* TODO: This is temporary while we prep frankenbook */
-							if (item.subdomain === 'frankenbook') { return false; }
+							if (item.subdomain === 'frankenbook2') { return false; }
 							return item.numDiscussions;
 						}).sort((foo, bar)=> {
 							if (foo.title < bar.title) { return -1; }
