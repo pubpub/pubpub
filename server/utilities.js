@@ -134,12 +134,11 @@ export const getInitialData = (req)=> {
 	});
 };
 
-export const generateMetaComponents = ({ initialData, title, description, image, publishedAt, unlisted })=> {
+export const generateMetaComponents = ({ initialData, title, description, image, collaborators, doi, publishedAt, unlisted })=> {
 	const siteName = initialData.communityData.title;
 	const url = `https://${initialData.locationData.hostname}${initialData.locationData.path}`;
 	const favicon = initialData.communityData.favicon;
 	const avatar = image || initialData.communityData.avatar;
-
 	let outputComponents = [];
 
 	if (title) {
@@ -148,7 +147,9 @@ export const generateMetaComponents = ({ initialData, title, description, image,
 			<title key="t1">{title}</title>,
 			<meta key="t2" property="og:title" content={title} />,
 			<meta key="t3" name="twitter:title" content={title} />,
-			<meta name="twitter:image:alt" content={title} />
+			<meta key="t4" name="twitter:image:alt" content={title} />,
+			<meta key="t5" name="citation_title" content={title} />,
+			<meta key="t6" name="dc.title" content={title} />,
 		];
 	}
 
@@ -156,6 +157,7 @@ export const generateMetaComponents = ({ initialData, title, description, image,
 		outputComponents = [
 			...outputComponents,
 			<meta key="sn1" property="og:site_name" content={siteName} />,
+			<meta key="sn2" property="citation_journal_title" content={siteName} />,
 		];
 	}
 
@@ -182,7 +184,7 @@ export const generateMetaComponents = ({ initialData, title, description, image,
 			<meta key="i1" property="og:image" content={avatar} />,
 			<meta key="i2" property="og:image:url" content={avatar} />,
 			<meta key="i3" property="og:image:width" content="500" />,
-			<meta name="twitter:image" content={avatar} />
+			<meta name="twitter:image" content={avatar} />,
 		];
 	}
 
@@ -193,10 +195,46 @@ export const generateMetaComponents = ({ initialData, title, description, image,
 		];
 	}
 
-	if (publishedAt) {
+	if (collaborators) {
+		const authors = collaborators.sort((foo, bar)=> {
+			if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
+			if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
+			if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
+			if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
+			return 0;
+		}).filter((item)=> {
+			return item.Collaborator.isAuthor;
+		});
+		const citationAuthorTags = authors.map((author)=> {
+			return <meta key={`author-cite-${author.id}`} name="citation_author" content={author.fullName} />;
+		});
+		const dcAuthorTags = authors.map((author)=> {
+			return <meta key={`author-dc-${author.id}`} name="dc.creator" content={author.fullName} />;
+		});
 		outputComponents = [
 			...outputComponents,
-			<meta key="pa1" property="article:published_time" content={publishedAt} />
+			citationAuthorTags,
+			dcAuthorTags,
+		];
+	}
+
+	if (publishedAt) {
+		const googleScholarPublishedAt = `${publishedAt.getFullYear()}/${publishedAt.getMonth() + 1}/${publishedAt.getDate()}`;
+		outputComponents = [
+			...outputComponents,
+			<meta key="pa1" property="article:published_time" content={publishedAt} />,
+			<meta key="pa2" property="citation_publication_date" content={googleScholarPublishedAt} />,
+			<meta key="pub1" property="citation_publisher" content="PubPub" />,
+			<meta key="pub2" property="dc.publisher" content="PubPub" />,
+		];
+	}
+
+	if (doi) {
+		outputComponents = [
+			...outputComponents,
+			<meta key="doi1" property="citation_doi" content={`doi:${doi}`} />,
+			<meta key="doi2" property="dc.identifier" content={`doi:${doi}`} />,
+			<meta key="doi3" property="prism.doi" content={`doi:${doi}`} />,
 		];
 	}
 

@@ -37,7 +37,9 @@ app.get(['/pub/:slug', '/pub/:slug/:mode', '/pub/:slug/chapter/:chapterId', '/pu
 					title: pubData.title,
 					description: pubData.description,
 					image: pubData.avatar,
+					collaborators: pubData.collaborators,
 					publishedAt: pubData.firstPublishedAt,
+					doi: pubData.doi,
 					unlisted: isUnlisted,
 				})}
 			>
