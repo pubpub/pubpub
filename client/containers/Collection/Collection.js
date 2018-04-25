@@ -202,7 +202,7 @@ class Collection extends Component {
 										</div>
 									}
 									{title && title !== 'Home' &&
-										<h1>{title}</h1>
+										<h1 className="collection-title">{title}</h1>
 									}
 								</div>
 							</div>

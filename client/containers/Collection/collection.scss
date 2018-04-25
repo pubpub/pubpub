@@ -1,6 +1,10 @@
 #collection-container {
 	.page-content {
 		padding-top: 2em;
+		.collection-title {
+			font-size: 2.25em;
+			line-height: 1;
+		}
 	}
 	.create-pub-wrapper {
 		float: right;

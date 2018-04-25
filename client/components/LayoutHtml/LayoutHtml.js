@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+require('./layoutHtml.scss');
+
 const propTypes = {
 	content: PropTypes.object.isRequired,
 	/* Expected content */

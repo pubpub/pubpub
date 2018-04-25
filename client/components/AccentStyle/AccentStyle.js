@@ -26,10 +26,9 @@ const AccentStyle = function(props) {
 			.thread:hover:after { background-color: ${props.accentColor}; }
 			.pt-slider-progress, .pt-dark .pt-slider-progress { background: ${props.accentColor}; }
 			.pt-slider-handle .pt-slider-label { background: ${props.accentColor}; color: ${props.accentTextColor}; }
-			.pub-body-component a, .layout-html a, .layout-text a, .layout-editor-text a { color: ${props.accentActionColor}; }
 			.pub-body-component sup.footnote { color: ${props.accentColor}; }
 			.pub-body-component span.citation { color: ${props.accentColor}; }
-			.footnote-text a { color: ${props.accentActionColor}; text-decoration: underline; }
+			.footnote-text a { text-decoration: underline; }
 			.highlight-background:before, .highlight-quote .highlight-text { background-color: ${props.accentMinimalColor}; }
 			.highlight-dot-wrapper .highlight-dot { background-color: ${props.accentColor}; }
 		` }}
