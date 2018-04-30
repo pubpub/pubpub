@@ -3,8 +3,7 @@ import passport from 'passport';
 import crypto from 'crypto';
 import app from '../server';
 import { User } from '../models';
-// app.post('/api/login', passport.authenticate('local'), (req, res)=> {
-// 	return res.status(201).json('success');
+
 app.post('/api/login', (req, res, next)=> {
 	const authenticate = new Promise((resolve, reject)=> {
 		passport.authenticate('local', (authErr, user)=> {
