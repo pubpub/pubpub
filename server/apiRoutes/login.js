@@ -75,8 +75,7 @@ app.post('/api/login', (req, res, next)=> {
 			return res.status(201).json('success');
 		});
 	})
-	.catch((err)=> {
-		console.error('Login Error: ', err);
+	.catch(()=> {
 		return res.status(500).json('Login attempt failed');
 	});
 });

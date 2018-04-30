@@ -68,6 +68,7 @@ app.put('/api/password-reset', (req, res)=> {
 			salt: passwordResetData.dataValues.salt,
 			resetHash: '',
 			resetHashExpiration: currentTime,
+			passwordDigest: 'sha512',
 		};
 		return User.update(updateData, {
 			where: whereQuery,
