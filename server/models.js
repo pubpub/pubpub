@@ -119,6 +119,7 @@ const User = sequelize.define('User', {
 	resetHash: { type: Sequelize.TEXT },
 	inactive: { type: Sequelize.BOOLEAN },
 	pubpubV3Id: { type: Sequelize.INTEGER },
+	passwordDigest: { type: Sequelize.TEXT },
 	hash: { type: Sequelize.TEXT, allowNull: false },
 	salt: { type: Sequelize.TEXT, allowNull: false },
 });
@@ -127,7 +128,7 @@ passportLocalSequelize.attachToUser(User, {
 	usernameField: 'email',
 	hashField: 'hash',
 	saltField: 'salt',
-	digest: 'sha1',
+	digest: 'sha512',
 	iterations: 25000,
 });
 

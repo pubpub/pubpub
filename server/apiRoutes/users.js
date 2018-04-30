@@ -1,7 +1,7 @@
 import Promise from 'bluebird';
 import passport from 'passport';
 import app from '../server';
-import { User, Pub, Signup, Community } from '../models';
+import { User, Signup } from '../models';
 
 app.post('/api/users', (req, res)=> {
 	// Check that hash and email sync up
@@ -45,6 +45,7 @@ app.post('/api/users', (req, res)=> {
 			twitter: req.body.twitter,
 			facebook: req.body.facebook,
 			googleScholar: req.body.googleScholar,
+			passwordDigest: 'sha512',
 		};
 
 		const userRegister = Promise.promisify(User.register, { context: User });
