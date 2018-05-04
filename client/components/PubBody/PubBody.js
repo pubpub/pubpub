@@ -17,6 +17,7 @@ require('./pubBody.scss');
 const propTypes = {
 	onRef: PropTypes.func,
 	versionId: PropTypes.string.isRequired,
+	chapterNumber: PropTypes.string,
 	content: PropTypes.object.isRequired,
 	threads: PropTypes.array,
 	slug: PropTypes.string,
@@ -27,6 +28,7 @@ const propTypes = {
 };
 const defaultProps = {
 	onRef: ()=>{},
+	chapterNumber: undefined,
 	highlights: [],
 	threads: [],
 	slug: '',
@@ -61,6 +63,7 @@ const PubBody = function(props) {
 				<Footnote />
 				<HighlightMenu
 					versionId={props.versionId}
+					chapterNumber={props.chapterNumber}
 					highlights={props.highlights}
 					primaryEditorClassName="pub-body-component"
 					onNewDiscussion={props.onNewHighlightDiscussion}

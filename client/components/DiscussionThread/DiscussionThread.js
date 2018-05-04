@@ -22,6 +22,7 @@ const propTypes = {
 	onPublish: PropTypes.func,
 	publishIsLoading: PropTypes.bool,
 	getHighlightContent: PropTypes.func,
+	handleQuotePermalink: PropTypes.func,
 	hoverBackgroundColor: PropTypes.string,
 	setThread: PropTypes.func.isRequired,
 };
@@ -33,6 +34,7 @@ const defaultProps = {
 	onPublish: ()=>{},
 	publishIsLoading: false,
 	getHighlightContent: undefined,
+	handleQuotePermalink: undefined,
 	hoverBackgroundColor: undefined,
 };
 
@@ -316,6 +318,7 @@ class DiscussionThread extends Component {
 								onReplyEdit={this.props.handleReplyEdit}
 								hideScrollButton={this.props.hideScrollButton}
 								getHighlightContent={this.props.getHighlightContent}
+								handleQuotePermalink={this.props.handleQuotePermalink}
 								hoverBackgroundColor={this.props.hoverBackgroundColor}
 							/>
 						);

@@ -35,8 +35,17 @@ class DiscussionViewer extends Component {
 		};
 		this.handleNewDiscussionSubmit = this.handleNewDiscussionSubmit.bind(this);
 		this.togglePin = this.togglePin.bind(this);
+		this.handleQuotePermalink = this.handleQuotePermalink.bind(this);
 	}
 
+	handleQuotePermalink(quoteObject) {
+		const hasChapters = !!quoteObject.chapter;
+		const chapterString = hasChapters ? `/chapter/${quoteObject.chapter}` : '';
+		const toFromString = `?to=${quoteObject.to}&from=${quoteObject.from}`;
+		const versionString = `&version=${quoteObject.version}`;
+		const permalinkPath = `/pub/${this.props.pubData.slug}${chapterString}${toFromString}${versionString}`;
+		window.open(permalinkPath);
+	}
 	handleNewDiscussionSubmit(replyObject) {
 		this.props.onPostDiscussion({
 			userId: this.props.loginData.id,
@@ -67,6 +76,8 @@ class DiscussionViewer extends Component {
 		const isActive = !!this.props.activeThreadNumber;
 		const isNew = this.props.activeThreadNumber === 'new';
 		const isPinned = this.state.isPinned || isNew;
+		const isEditor = this.props.locationData.path.indexOf(`${this.props.pubData.slug}/collaborate`) > -1;
+		const quotePermalinkFunc = isEditor ? undefined : this.handleQuotePermalink;
 		return (
 			<div className="discussion-viewer-component">
 				{isActive && isPinned &&
@@ -98,6 +109,7 @@ class DiscussionViewer extends Component {
 									handleReplyEdit={this.props.onPutDiscussion}
 									submitIsLoading={this.props.postDiscussionIsLoading}
 									getHighlightContent={this.props.getHighlightContent}
+									handleQuotePermalink={quotePermalinkFunc}
 									hoverBackgroundColor={this.props.communityData.accentMinimalColor}
 									onPublish={this.props.onPublish}
 									publishIsLoading={this.props.postVersionIsLoading}
@@ -151,6 +163,7 @@ class DiscussionViewer extends Component {
 						handleReplyEdit={this.props.onPutDiscussion}
 						submitIsLoading={this.props.postDiscussionIsLoading}
 						getHighlightContent={this.props.getHighlightContent}
+						handleQuotePermalink={quotePermalinkFunc}
 						hoverBackgroundColor={this.props.communityData.accentMinimalColor}
 						onPublish={this.props.onPublish}
 						publishIsLoading={this.props.postVersionIsLoading}

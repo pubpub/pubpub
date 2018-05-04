@@ -15,6 +15,7 @@ const propTypes = {
 	hideScrollButton: PropTypes.bool,
 	onReplyEdit: PropTypes.func,
 	getHighlightContent: PropTypes.func,
+	handleQuotePermalink: PropTypes.func,
 	hoverBackgroundColor: PropTypes.string,
 };
 const defaultProps = {
@@ -22,6 +23,7 @@ const defaultProps = {
 	hideScrollButton: false,
 	onReplyEdit: ()=> {},
 	getHighlightContent: undefined,
+	handleQuotePermalink: undefined,
 	hoverBackgroundColor: undefined,
 };
 
@@ -158,9 +160,9 @@ class DiscussionThreadItem extends Component {
 							<FormattingMenu include={['link']} />
 						}
 						<HighlightQuote
-							// hideScrollButton={this.props.hideScrollButton}
 							hideScrollButton={this.props.hideScrollButton}
 							getHighlightContent={this.props.getHighlightContent}
+							handlePermalink={this.props.handleQuotePermalink}
 							hoverBackgroundColor={this.props.hoverBackgroundColor}
 						/>
 					</Editor>

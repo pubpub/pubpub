@@ -16,6 +16,10 @@
 		.discussion-thread-component {
 			padding: 1em;
 		}
+		.disabled {
+			pointer-events: none;
+			opacity: 0.5;
+		}
 	}
 	.discussion-input-component {
 		margin-bottom: 0em;

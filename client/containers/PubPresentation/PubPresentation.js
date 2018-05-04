@@ -79,15 +79,21 @@ class PubPresentation extends Component {
 		const exact = primaryEditorState.doc.textBetween(from, to);
 		const prefix = primaryEditorState.doc.textBetween(Math.max(0, from - 10), Math.max(0, from));
 		const suffix = primaryEditorState.doc.textBetween(Math.min(primaryEditorState.doc.nodeSize - 2, to), Math.min(primaryEditorState.doc.nodeSize - 2, to + 10));
-		return {
+		const hasChapters = Array.isArray(this.state.pubData.versions[0].content);
+		const chapterIndex = this.props.locationData.params.chapterId
+			? Number(this.props.locationData.params.chapterId) - 1
+			: 0;
+		const thing = {
 			exact: exact,
 			prefix: prefix,
 			suffix: suffix,
 			from: from,
 			to: to,
 			version: this.props.pubData.versions[0].id,
+			chapter: hasChapters ? String(chapterIndex + 1) : undefined,
 			id: `h${generateHash(8)}`, // Has to start with letter since it's a classname
 		};
+		return thing;
 	}
 	setOverlayPanel(panel) {
 		this.setState({ activePanel: panel });
@@ -282,6 +288,7 @@ class PubPresentation extends Component {
 			}
 		}
 
+		const hasChapters = activeVersion && Array.isArray(activeVersion.content);
 		const chapterIndex = this.props.locationData.params.chapterId
 			? Number(this.props.locationData.params.chapterId) - 1
 			: 0;
@@ -289,10 +296,10 @@ class PubPresentation extends Component {
 
 
 		let activeContent;
-		if (activeVersion && Array.isArray(activeVersion.content)) {
+		if (hasChapters) {
 			activeContent = activeVersion.content[chapterIndex].content;
 		}
-		if (activeVersion && !Array.isArray(activeVersion.content)) {
+		if (activeVersion && !hasChapters) {
 			activeContent = activeVersion.content;
 		}
 
@@ -418,6 +425,7 @@ class PubPresentation extends Component {
 											<PubBody
 												onRef={this.handleEditorRef}
 												versionId={activeVersion.id}
+												chapterNumber={hasChapters ? String(chapterIndex + 1) : undefined}
 												content={activeContent}
 												threads={threads}
 												slug={pubData.slug}
