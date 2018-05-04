@@ -23,7 +23,7 @@
   "dependencies": {
     "@blueprintjs/core": "^1.35.0",
     "@blueprintjs/labs": "^0.14.2",
-    "@pubpub/editor": "^4.8.0",
+    "@pubpub/editor": "^4.8.1",
     "@storybook/addon-options": "^3.3.2",
     "@storybook/react": "^3.3.2",
     "babel-core": "^6.13.2",
@@ -65,6 +65,7 @@
     "express-sslify": "^1.2.0",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.6",
+    "firebase": "4.7.0",
     "firebase-admin": "^5.9.0",
     "fuzzysearch": "^1.0.3",
     "getstream": "^3.12.3",
@@ -97,7 +98,7 @@
     "universal-analytics": "^0.4.16",
     "url-loader": "^0.6.2",
     "uuid": "^3.1.0",
-    "webpack": "^3.10.0",
+    "webpack": "^3.11.0",
     "webpack-bundle-analyzer": "^2.9.1",
     "webpack-manifest-plugin": "^1.3.2",
     "xmlbuilder": "^9.0.4"

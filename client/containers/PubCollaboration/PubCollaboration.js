@@ -13,14 +13,8 @@ import PubCollabCollections from 'components/PubCollabCollections/PubCollabColle
 import PubCollabChapters from 'components/PubCollabChapters/PubCollabChapters';
 import DiscussionList from 'components/DiscussionList/DiscussionList';
 import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
-// import DiscussionNew from 'components/DiscussionNew/DiscussionNew';
-// import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
-// import DiscussionPreviewArchived from 'components/DiscussionPreviewArchived/DiscussionPreviewArchived';
-// import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
-// import PageWrapper from 'components/PageWrapper/PageWrapper';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
 import { apiFetch, hydrateWrapper, getFirebaseConfig, nestDiscussionsToThreads, getRandomColor, generateHash } from 'utilities';
-
 
 require('./pubCollaboration.scss');
 require('components/PubBody/pubBody.scss');
