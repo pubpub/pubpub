@@ -4,7 +4,11 @@ import { User, Collection, Pub, Collaborator, Discussion, CommunityAdmin, Commun
 import { generateCitationHTML } from './utilities';
 
 export const findPub = (req, initialData)=> {
-	const versionParameters = req.query.version && validator.isUUID(req.query.version)
+	if (req.query.version && !validator.isUUID(req.query.version)) {
+		throw new Error('Pub Not Found');
+	}
+
+	const versionParameters = req.query.version
 		? {
 			where: { id: req.query.version },
 		}
