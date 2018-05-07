@@ -1,9 +1,10 @@
 import Promise from 'bluebird';
+import validator from 'validator';
 import { User, Collection, Pub, Collaborator, Discussion, CommunityAdmin, Community, Version } from './models';
 import { generateCitationHTML } from './utilities';
 
 export const findPub = (req, initialData)=> {
-	const versionParameters = req.query.version
+	const versionParameters = req.query.version && validator.isUUID(req.query.version)
 		? {
 			where: { id: req.query.version },
 		}
