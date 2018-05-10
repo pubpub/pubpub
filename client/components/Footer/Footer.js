@@ -14,6 +14,7 @@ const Footer = function(props) {
 		? [
 			{ id: 1, title: 'pubpub@media.mit.edu', url: 'mailto:pubpub@media.mit.edu' },
 			{ id: 2, title: 'Code', url: 'https://github.com/pubpub' },
+			{ id: 3, title: 'About', url: '/about' },
 			{ id: 4, title: 'Terms', url: '/tos' },
 			{ id: 6, title: 'Help', url: 'https://meta.pubpub.org/help' },
 
