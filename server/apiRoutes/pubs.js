@@ -147,7 +147,7 @@ app.delete('/api/pubs', (req, res)=> {
 		// Managers can delete their own unpublished pubs
 		const isManager = collaboratorData && collaboratorData.permissions === 'manage';
 		const accessAsManager = !pubData.firstPublishedAt && isManager;
-		const accessAsCommunityAdmin = communityAdminData && isManager;
+		const accessAsCommunityAdmin = communityAdminData && (pubData.adminPermissions === 'manage' || isManager);
 		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859'
 			&& !accessAsManager
 			&& !accessAsCommunityAdmin
