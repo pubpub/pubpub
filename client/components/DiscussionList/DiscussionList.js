@@ -4,7 +4,7 @@ import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
 import DiscussionAuthorsList from 'components/DiscussionAuthorsList/DiscussionAuthorsList';
 import DiscussionLabelsList from 'components/DiscussionLabelsList/DiscussionLabelsList';
 import DiscussionSortList from 'components/DiscussionSortList/DiscussionSortList';
-import { Popover, PopoverInteractionKind, Position, NonIdealState } from '@blueprintjs/core';
+import { Popover, PopoverInteractionKind, Position, NonIdealState, Button } from '@blueprintjs/core';
 import { nestDiscussionsToThreads } from 'utilities';
 
 require('./discussionList.scss');
@@ -29,6 +29,7 @@ class DiscussionList extends Component {
 			filteredLabels: [],
 			filteredAuthors: [],
 			sortMode: 'newestThread', // newestThread, oldestThread, newestReply, oldestReply, mostReplies, leastReplies
+			pageOffset: 0,
 		};
 		this.setDiscussionsMode = this.setDiscussionsMode.bind(this);
 		this.setArchivedMode = this.setArchivedMode.bind(this);
@@ -36,16 +37,32 @@ class DiscussionList extends Component {
 		this.toggleFilteredAuthor = this.toggleFilteredAuthor.bind(this);
 		this.setSortMode = this.setSortMode.bind(this);
 		this.filterAndSortThreads = this.filterAndSortThreads.bind(this);
+		this.handlePreviousPage = this.handlePreviousPage.bind(this);
+		this.handleNextPage = this.handleNextPage.bind(this);
+		this.setOffset = this.setOffset.bind(this);
 	}
 
 	setDiscussionsMode() {
-		this.setState({ isArchivedMode: false });
+		this.setState({
+			isArchivedMode: false,
+			pageOffset: 0,
+		});
 	}
 	setArchivedMode() {
-		this.setState({ isArchivedMode: true });
+		this.setState({
+			isArchivedMode: true,
+			pageOffset: 0,
+		});
 	}
 	setSortMode(sortSlug) {
 		this.setState({ sortMode: sortSlug });
+	}
+	setOffset(offset) {
+		this.setState({
+			pageOffset: offset,
+		});
+		const top = document.getElementsByClassName('filter-bar')[0].getBoundingClientRect().top;
+		window.scrollBy(0, top);
 	}
 	toggleFilteredAuthor(authorId) {
 		const newFilteredAuthors = this.state.filteredAuthors.indexOf(authorId) > -1
@@ -115,6 +132,38 @@ class DiscussionList extends Component {
 		});
 	}
 
+	calculationPagination(current, last) {
+		const delta = 1;
+		const left = current - delta;
+		const right = current + delta + 1;
+		const range = [];
+		const rangeWithDots = [];
+		let l;
+
+		for (let index = 1; index <= last; index += 1) {
+			if (index === 1 || index === last || (index >= left && index < right)) {
+				range.push(index);
+			}
+		}
+
+		range.forEach((index)=> {
+			if (l && index - l !== 1) {
+				rangeWithDots.push('...');
+			}
+			rangeWithDots.push(index);
+			l = index;
+		});
+
+		return rangeWithDots;
+	}
+
+	handlePreviousPage() {
+		this.setOffset(Math.max(this.state.pageOffset - 20, 0));
+	}
+	handleNextPage() {
+		this.setOffset(this.state.pageOffset + 20);
+	}
+
 	render() {
 		const pubData = this.props.pubData;
 		const discussions = pubData.discussions || [];
@@ -123,6 +172,13 @@ class DiscussionList extends Component {
 		const activeThreads = this.filterAndSortThreads(threads, false);
 		const archivedThreads = this.filterAndSortThreads(threads, true);
 		const filtersActive = this.state.filteredLabels.length || this.state.filteredAuthors.length;
+
+		const threadsToShow = this.state.isArchivedMode ? archivedThreads : activeThreads;
+
+		// const usePagination = (!this.state.isArchivedMode && activeThreads.length > 20) || (this.state.isArchivedMode && archivedThreads.length > 20);
+		const numPages = Math.floor(threadsToShow.length / 20) + 1;
+		const usePagination = numPages > 1;
+		const currentPage = Math.floor(this.state.pageOffset / 20) + 1;
 		return (
 			<div className="discussion-list-component">
 				{!this.props.mode &&
@@ -207,7 +263,31 @@ class DiscussionList extends Component {
 					/>
 				}
 
-				{!this.state.isArchivedMode && activeThreads.map((thread)=> {
+				{/*!this.state.isArchivedMode && activeThreads.map((thread)=> {
+					return (
+						<DiscussionPreview
+							key={`thread-${thread[0].id}`}
+							availableLabels={pubData.labels || []}
+							slug={pubData.slug}
+							discussions={thread}
+							onPreviewClick={this.props.onPreviewClick}
+						/>
+					);
+				})*/}
+				{/*this.state.isArchivedMode && archivedThreads.map((thread)=> {
+					return (
+						<DiscussionPreview
+							key={`thread-${thread[0].id}`}
+							availableLabels={pubData.labels || []}
+							slug={pubData.slug}
+							discussions={thread}
+							onPreviewClick={this.props.onPreviewClick}
+						/>
+					);
+				})*/}
+				{threadsToShow.filter((item, index)=> {
+					return index >= this.state.pageOffset && index < this.state.pageOffset + 20;
+				}).map((thread)=> {
 					return (
 						<DiscussionPreview
 							key={`thread-${thread[0].id}`}
@@ -218,17 +298,44 @@ class DiscussionList extends Component {
 						/>
 					);
 				})}
-				{this.state.isArchivedMode && archivedThreads.map((thread)=> {
-					return (
-						<DiscussionPreview
-							key={`thread-${thread[0].id}`}
-							availableLabels={pubData.labels || []}
-							slug={pubData.slug}
-							discussions={thread}
-							onPreviewClick={this.props.onPreviewClick}
-						/>
-					);
-				})}
+
+				{usePagination &&
+					<div className="pagination-bar">
+						<div className="pt-button-group pt-minimal">
+							{!!this.state.pageOffset &&
+								<Button
+									onClick={this.handlePreviousPage}
+									text="Previous"
+								/>
+							}
+							{this.calculationPagination(currentPage, numPages).map((item, index)=> {
+								if (item === '...') {
+									return (
+										<Button
+											key={`item-${index}`}
+											className="pt-disabled"
+											text="..."
+										/>
+									);
+								}
+								return (
+									<Button
+										key={item}
+										className={item === currentPage ? 'pt-active' : ''}
+										onClick={()=>{ this.setOffset((item - 1) * 20); }}
+										text={item}
+									/>
+								);
+							})}
+							{currentPage !== numPages &&
+								<Button
+									onClick={this.handleNextPage}
+									text="Next"
+								/>
+							}
+						</div>
+					</div>
+				}
 			</div>
 		);
 	}

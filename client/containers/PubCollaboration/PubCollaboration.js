@@ -278,6 +278,7 @@ class PubCollaboration extends Component {
 				return prev;
 			}, 0)
 		});
+		window.scrollTo(0, 0);
 	}
 	incrementChapter() {
 		const newActiveIndex = this.state.activeChapterIndex + 1;
@@ -286,6 +287,7 @@ class PubCollaboration extends Component {
 			compositeEditorKey: `${this.props.pubData.editorKey}/${newActiveChapter.id}`,
 			activeChapterIndex: newActiveIndex
 		});
+		window.scrollTo(0, 0);
 	}
 	decrementChapter() {
 		const newActiveIndex = this.state.activeChapterIndex - 1;
@@ -294,6 +296,7 @@ class PubCollaboration extends Component {
 			compositeEditorKey: `${this.props.pubData.editorKey}/${newActiveChapter.id}`,
 			activeChapterIndex: newActiveIndex
 		});
+		window.scrollTo(0, 0);
 	}
 
 	// handleHighlightClick(threadNumber) {
