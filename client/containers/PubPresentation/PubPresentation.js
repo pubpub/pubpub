@@ -263,6 +263,20 @@ class PubPresentation extends Component {
 			}
 			return prev;
 		}, []);
+
+		const hasChapters = activeVersion && Array.isArray(activeVersion.content);
+		const chapterIndex = this.props.locationData.params.chapterId
+			? Number(this.props.locationData.params.chapterId) - 1
+			: 0;
+
+		let activeContent;
+		if (hasChapters) {
+			activeContent = activeVersion.content[chapterIndex].content;
+		}
+		if (activeVersion && !hasChapters) {
+			activeContent = activeVersion.content;
+		}
+
 		const highlights = discussions.filter((item)=> {
 			return !item.isArchived && item.highlights;
 		}).reduce((prev, curr)=> {
@@ -270,7 +284,13 @@ class PubPresentation extends Component {
 				return { ...item, threadNumber: curr.threadNumber };
 			});
 			return [...prev, ...highlightsWithThread];
-		}, []);
+		}, [])
+		.filter((highlight)=> {
+			return true;
+			// if (!hasChapters) { return true; }
+			// return Number(highlight.chapter) === 1;
+		});
+
 		const queryObject = this.props.locationData.query;
 		if (typeof window !== 'undefined' && this.state.editorRef && queryObject.from && queryObject.to && queryObject.version) {
 			highlights.push({
@@ -286,21 +306,6 @@ class PubPresentation extends Component {
 					}
 				}, 100);
 			}
-		}
-
-		const hasChapters = activeVersion && Array.isArray(activeVersion.content);
-		const chapterIndex = this.props.locationData.params.chapterId
-			? Number(this.props.locationData.params.chapterId) - 1
-			: 0;
-		// If we have an array, set the chapter index
-
-
-		let activeContent;
-		if (hasChapters) {
-			activeContent = activeVersion.content[chapterIndex].content;
-		}
-		if (activeVersion && !hasChapters) {
-			activeContent = activeVersion.content;
 		}
 
 		const authors = pubData.collaborators.filter((collaborator)=> {

@@ -90,7 +90,7 @@ app.use('/robots.txt', express.static('static/robots.txt'));
 /* Set Hostname for Dev */
 /* -------------------- */
 app.use((req, res, next)=> {
-	if (req.hostname.indexOf('localhost') > -1) { req.headers.host = 'frankdev.pubpub.org'; }
+	if (req.hostname.indexOf('localhost') > -1) { req.headers.host = 'frankenbook2.pubpub.org'; }
 	if (req.hostname.indexOf('dev.pubpub.org') > -1) { req.headers.host = 'frankdev.pubpub.org'; }
 	if (req.hostname.indexOf('v4.pubpub.org') > -1) { req.headers.host = 'www.pubpub.org'; }
 	next();

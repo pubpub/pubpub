@@ -101,7 +101,7 @@ export const findPub = (req, initialData)=> {
 				content: pubDataJson.versions[0].content.map((item, index)=> {
 					if (!chapterIndex && index === 0) { return item; }
 					if (index === chapterIndex - 1) { return item; }
-					return { title: item.title };
+					return { title: item.title, id: item.id };
 				})
 			}];
 
