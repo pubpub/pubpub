@@ -24,10 +24,20 @@ const PubPresChapters = (props)=> {
 			}
 			<ul className="pt-menu">
 				{content.map((chapter, index)=> {
+					const split = chapter.title.split('/');
+					const prefix = split.length > 1
+						? split[0]
+						: undefined;
+					const title = split.length > 1
+						? split[1]
+						: split[0];
 					return (
-						<li key={chapter.title}>
+						<li key={chapter.id}>
+							{prefix &&
+								<span className="section-header">{prefix}</span>
+							}
 							<a href={`/pub/${props.pubData.slug}/${index === 0 ? '' : 'content/'}${chapter.id}${queryObject.version ? `?version=${queryObject.version}` : ''}`} className={`pt-menu-item pt-popover-dismiss ${activeChapterId === chapter.id ? 'pt-active' : ''}`}>
-								{chapter.title}
+								{title}
 							</a>
 						</li>
 					);
