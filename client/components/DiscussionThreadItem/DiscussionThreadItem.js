@@ -153,7 +153,7 @@ class DiscussionThreadItem extends Component {
 
 				</div>
 
-				<div className="text" {...editingProps} key="editor-wrapper">
+				<div className="text" {...editingProps} key="editor-wrapper" id={`pubpub-editor-container-${discussion.id}`}>
 					<Editor
 						key={this.state.isEditing ? `discussion-${discussion.id}-editing` : `discussion-${discussion.id}`}
 						ref={(ref)=> { this.editorRef = ref; }}
@@ -161,6 +161,7 @@ class DiscussionThreadItem extends Component {
 						isReadOnly={!this.state.isEditing}
 						placeholder="Reply..."
 						onChange={this.onBodyChange}
+						editorId={discussion.id}
 					>
 						{this.state.isEditing &&
 							<FormattingMenu include={['link']} />

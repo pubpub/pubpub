@@ -332,6 +332,7 @@ class DiscussionThread extends Component {
 								handleSubmit={this.onReplySubmit}
 								submitIsLoading={this.props.submitIsLoading}
 								getHighlightContent={this.props.getHighlightContent}
+								inputKey={'thread-reply'}
 							/>
 							: <a href={`/login?redirect=${this.props.pathname}`} className="pt-button pt-fill">
 								Login to Reply

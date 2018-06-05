@@ -21,6 +21,7 @@ const propTypes = {
 	initialContent: PropTypes.object,
 	submitIsLoading: PropTypes.bool,
 	getHighlightContent: PropTypes.func,
+	inputKey: PropTypes.string,
 };
 
 const defaultProps = {
@@ -28,6 +29,7 @@ const defaultProps = {
 	initialContent: undefined,
 	submitIsLoading: false,
 	getHighlightContent: undefined,
+	inputKey: undefined,
 };
 
 class DiscussionInput extends Component {
@@ -38,7 +40,7 @@ class DiscussionInput extends Component {
 			body: '',
 			isPublic: true,
 			submitDisabled: true,
-			key: new Date().getTime(),
+			key: props.inputKey || new Date().getTime(),
 		};
 		this.onTitleChange = this.onTitleChange.bind(this);
 		this.onBodyChange = this.onBodyChange.bind(this);
@@ -91,7 +93,7 @@ class DiscussionInput extends Component {
 						onChange={this.onTitleChange}
 					/>
 				}
-				<div className="input-text" tabIndex={-1} role="textbox">
+				<div className="input-text" tabIndex={-1} role="textbox" id={`pubpub-editor-container-${this.state.key}`}>
 					<Editor
 						key={this.state.key}
 						ref={(ref)=> { this.editorRef = ref; }}
