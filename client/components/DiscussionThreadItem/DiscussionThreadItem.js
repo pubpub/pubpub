@@ -3,9 +3,15 @@ import PropTypes from 'prop-types';
 import TimeAgo from 'react-timeago';
 import { Button } from '@blueprintjs/core';
 import Avatar from 'components/Avatar/Avatar';
-import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
 import { Editor } from '@pubpub/editor';
+import Image from '@pubpub/editor/addons/Image';
+import Video from '@pubpub/editor/addons/Video';
+import File from '@pubpub/editor/addons/File';
+import Iframe from '@pubpub/editor/addons/Iframe';
+import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
+import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import HighlightQuote from '@pubpub/editor/addons/HighlightQuote';
+import { getResizedUrl } from 'utilities';
 
 require('./discussionThreadItem.scss');
 
@@ -159,12 +165,19 @@ class DiscussionThreadItem extends Component {
 						{this.state.isEditing &&
 							<FormattingMenu include={['link']} />
 						}
+						{this.state.isEditing &&
+							<InsertMenu />
+						}
 						<HighlightQuote
 							hideScrollButton={this.props.hideScrollButton}
 							getHighlightContent={this.props.getHighlightContent}
 							handlePermalink={this.props.handleQuotePermalink}
 							hoverBackgroundColor={this.props.hoverBackgroundColor}
 						/>
+						<Image handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }} />
+						<Video />
+						<File />
+						<Iframe />
 					</Editor>
 				</div>
 				{this.state.isEditing &&

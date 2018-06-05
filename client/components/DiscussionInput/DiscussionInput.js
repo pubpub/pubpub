@@ -2,10 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 import { Editor } from '@pubpub/editor';
+import Image from '@pubpub/editor/addons/Image';
+import Video from '@pubpub/editor/addons/Video';
+import File from '@pubpub/editor/addons/File';
+import Iframe from '@pubpub/editor/addons/Iframe';
 import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
+import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import HighlightQuote from '@pubpub/editor/addons/HighlightQuote';
 import DropdownRichItem from 'components/DropdownRichItem/DropdownRichItem';
 import FormattingHelp from 'components/FormattingHelp/FormattingHelp';
+import { getResizedUrl } from 'utilities';
 
 require('./discussionInput.scss');
 
@@ -95,10 +101,15 @@ class DiscussionInput extends Component {
 						editorId={String(this.state.key)}
 					>
 						<FormattingMenu include={['link']} />
+						<InsertMenu />
 						<HighlightQuote
 							getHighlightContent={this.props.getHighlightContent}
 							containerId={`pubpub-editor-container-${this.state.key}`}
 						/>
+						<Image handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }} />
+						<Video />
+						<File />
+						<Iframe />
 					</Editor>
 				</div>
 				<div className="buttons">
