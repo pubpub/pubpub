@@ -11,7 +11,7 @@ import Iframe from '@pubpub/editor/addons/Iframe';
 import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
 import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import HighlightQuote from '@pubpub/editor/addons/HighlightQuote';
-import { getResizedUrl } from 'utilities';
+import { s3Upload, getResizedUrl } from 'utilities';
 
 require('./discussionThreadItem.scss');
 
@@ -175,9 +175,12 @@ class DiscussionThreadItem extends Component {
 							handlePermalink={this.props.handleQuotePermalink}
 							hoverBackgroundColor={this.props.hoverBackgroundColor}
 						/>
-						<Image handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }} />
-						<Video />
-						<File />
+						<Image
+							handleFileUpload={s3Upload}
+							handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }}
+						/>
+						<Video handleFileUpload={s3Upload} />
+						<File handleFileUpload={s3Upload} />
 						<Iframe />
 					</Editor>
 				</div>

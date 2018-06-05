@@ -11,7 +11,7 @@ import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import HighlightQuote from '@pubpub/editor/addons/HighlightQuote';
 import DropdownRichItem from 'components/DropdownRichItem/DropdownRichItem';
 import FormattingHelp from 'components/FormattingHelp/FormattingHelp';
-import { getResizedUrl } from 'utilities';
+import { s3Upload, getResizedUrl } from 'utilities';
 
 require('./discussionInput.scss');
 
@@ -108,9 +108,12 @@ class DiscussionInput extends Component {
 							getHighlightContent={this.props.getHighlightContent}
 							containerId={`pubpub-editor-container-${this.state.key}`}
 						/>
-						<Image handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }} />
-						<Video />
-						<File />
+						<Image
+							handleFileUpload={s3Upload}
+							handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }}
+						/>
+						<Video handleFileUpload={s3Upload} />
+						<File handleFileUpload={s3Upload} />
 						<Iframe />
 					</Editor>
 				</div>
