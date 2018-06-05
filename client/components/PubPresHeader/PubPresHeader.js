@@ -218,7 +218,9 @@ const PubPresHeader = function(props) {
 										props.setOverlayPanel('collaborators');
 									}}
 								>
-									{pubData.collaborators.length}
+									{pubData.collaborators.filter((item)=> {
+										return item.Collaborator.isAuthor || item.Collaborator.isContributor;
+									}).length}
 									<span className="pt-icon-standard pt-align-right pt-icon-team" />
 								</a>
 								{numChapters &&
