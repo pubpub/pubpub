@@ -496,6 +496,7 @@ class PubPresentation extends Component {
 												pubData={pubData}
 												onPreviewClick={this.setActiveThread}
 												onLabelsSave={this.handlePutLabels}
+												showAll={queryObject.all}
 											/>
 										</div>
 									</div>

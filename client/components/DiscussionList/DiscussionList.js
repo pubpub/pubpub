@@ -14,11 +14,13 @@ const propTypes = {
 	onPreviewClick: PropTypes.func,
 	mode: PropTypes.string,
 	onLabelsSave: PropTypes.func.isRequired,
+	showAll: PropTypes.bool,
 };
 
 const defaultProps = {
 	onPreviewClick: undefined,
 	mode: undefined,
+	showAll: false,
 };
 
 class DiscussionList extends Component {
@@ -176,7 +178,7 @@ class DiscussionList extends Component {
 		const threadsToShow = this.state.isArchivedMode ? archivedThreads : activeThreads;
 
 		// const usePagination = (!this.state.isArchivedMode && activeThreads.length > 20) || (this.state.isArchivedMode && archivedThreads.length > 20);
-		const numPages = Math.floor(threadsToShow.length / 20) + 1;
+		const numPages = this.props.showAll ? 1 : Math.floor(threadsToShow.length / 20) + 1;
 		const usePagination = numPages > 1;
 		const currentPage = Math.floor(this.state.pageOffset / 20) + 1;
 		return (
@@ -286,6 +288,7 @@ class DiscussionList extends Component {
 					);
 				})*/}
 				{threadsToShow.filter((item, index)=> {
+					if (!usePagination) { return true; }
 					return index >= this.state.pageOffset && index < this.state.pageOffset + 20;
 				}).map((thread)=> {
 					return (
