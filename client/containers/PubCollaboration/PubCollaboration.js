@@ -650,29 +650,6 @@ class PubCollaboration extends Component {
 		if (canManage && !pubData.firstPublishedAt) { canDelete = true; }
 		if (canManage && loginData.isAdmin) { canDelete = true; }
 
-		const highlights = discussions.filter((item)=> {
-			return !item.isArchived && item.highlights;
-		}).reduce((prev, curr)=> {
-			const highlightsWithThread = curr.highlights.map((item)=> {
-				return { ...item, threadNumber: curr.threadNumber };
-			});
-			return [...prev, ...highlightsWithThread];
-		}, []);
-		if (this.editorRef && queryObject.from && queryObject.to) {
-			highlights.push({
-				...this.getHighlightContent(Number(queryObject.from), Number(queryObject.to)),
-				permanent: true,
-			});
-			if (!this.state.scrolledToPermanent) {
-				setTimeout(()=> {
-					const thing = document.getElementsByClassName('permanent')[0];
-					if (thing) {
-						window.scrollTo(0, thing.getBoundingClientRect().top - 135);
-						this.setState({ scrolledToPermanent: true });
-					}
-				}, 100);
-			}
-		}
 		const chapterId = this.props.locationData.params.chapterId || '';
 		const hasChapters = this.state.chaptersData.length > 1;
 		const chapterIds = hasChapters
@@ -690,6 +667,36 @@ class PubCollaboration extends Component {
 		const prevChapterId = currentChapterIndex - 1 > 0
 			? chapterIds[currentChapterIndex - 1]
 			: '';
+
+		const highlights = discussions.filter((item)=> {
+			return !item.isArchived && item.highlights;
+		}).reduce((prev, curr)=> {
+			const highlightsWithThread = curr.highlights.map((item)=> {
+				return { ...item, threadNumber: curr.threadNumber };
+			});
+			return [...prev, ...highlightsWithThread];
+		}, [])
+		.filter((highlight)=> {
+			if (!hasChapters) { return true; }
+			return chapterId === highlight.section;
+		});
+
+		if (this.editorRef && queryObject.from && queryObject.to) {
+			highlights.push({
+				...this.getHighlightContent(Number(queryObject.from), Number(queryObject.to)),
+				permanent: true,
+			});
+			if (!this.state.scrolledToPermanent) {
+				setTimeout(()=> {
+					const thing = document.getElementsByClassName('permanent')[0];
+					if (thing) {
+						window.scrollTo(0, thing.getBoundingClientRect().top - 135);
+						this.setState({ scrolledToPermanent: true });
+					}
+				}, 100);
+			}
+		}
+
 		return (
 			<div id="pub-collaboration-container">
 				<AccentStyle
