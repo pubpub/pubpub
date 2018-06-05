@@ -39,8 +39,8 @@ class DiscussionViewer extends Component {
 	}
 
 	handleQuotePermalink(quoteObject) {
-		const hasChapters = !!quoteObject.chapter;
-		const chapterString = hasChapters ? `/chapter/${quoteObject.chapter}` : '';
+		const hasChapters = !!quoteObject.section;
+		const chapterString = hasChapters ? `/chapter/${quoteObject.section}` : '';
 		const toFromString = `?to=${quoteObject.to}&from=${quoteObject.from}`;
 		const versionString = `&version=${quoteObject.version}`;
 		const permalinkPath = `/pub/${this.props.pubData.slug}${chapterString}${toFromString}${versionString}`;

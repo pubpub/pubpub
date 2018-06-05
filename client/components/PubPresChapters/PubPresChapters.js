@@ -15,22 +15,19 @@ const defaultProps = {
 
 const PubPresChapters = (props)=> {
 	const content = props.pubData.versions[0].content;
-	const chapterTitles = content.map((item)=> {
-		return item.title;
-	});
 	const queryObject = props.locationData.query;
-	const activeChapterId = props.locationData.params.chapterId ? props.locationData.params.chapterId - 1 : 0;
+	const activeChapterId = props.locationData.params.chapterId || '';
 	return (
 		<div className="pub-pres-chapters-component">
 			{!props.mode &&
 				<h5>Chapters</h5>
 			}
 			<ul className="pt-menu">
-				{chapterTitles.map((chapterTitle, index)=> {
+				{content.map((chapter, index)=> {
 					return (
-						<li key={chapterTitle}>
-							<a href={`/pub/${props.pubData.slug}/chapter/${index + 1}${queryObject.version ? `?version=${queryObject.version}` : ''}`} className={`pt-menu-item pt-popover-dismiss ${activeChapterId === index ? 'pt-active' : ''}`}>
-								{chapterTitle}
+						<li key={chapter.title}>
+							<a href={`/pub/${props.pubData.slug}/${index === 0 ? '' : 'chapter/'}${chapter.id}${queryObject.version ? `?version=${queryObject.version}` : ''}`} className={`pt-menu-item pt-popover-dismiss ${activeChapterId === chapter.id ? 'pt-active' : ''}`}>
+								{chapter.title}
 							</a>
 						</li>
 					);

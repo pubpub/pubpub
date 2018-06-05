@@ -114,7 +114,7 @@ class PubCollabEditor extends Component {
 					<Footnote />
 					<HighlightMenu
 						versionId={undefined}
-						chapterNumber={undefined}
+						sectionId={undefined}
 						highlights={this.props.highlights}
 						primaryEditorClassName="pub-collab-editor-component"
 						onNewDiscussion={this.props.onNewHighlightDiscussion}

@@ -82,9 +82,15 @@ export const findPub = (req, initialData)=> {
 	.then(([pubData, versionsListData, communityAdminData])=> {
 		if (!pubData) { throw new Error('Pub Not Found'); }
 		const hasChapters = pubData.versions[0] && Array.isArray(pubData.versions[0].content);
-		const chapterIndex = initialData.locationData.params.chapterId;
-		const chapterOutOfRange = hasChapters && chapterIndex > pubData.versions[0].content.length || chapterIndex < 1;
-		if (hasChapters && chapterOutOfRange) { throw new Error('Pub Not Found'); }
+		// const chapterIndex = initialData.locationData.params.chapterId;
+		const chapterId = initialData.locationData.params.chapterId;
+		const validChapterId = hasChapters && pubData.versions[0].content.reduce((prev, curr)=> {
+			if (!chapterId) { return true; }
+			if (chapterId === curr.id) { return true; }
+			return prev;
+		}, false);
+		// const chapterOutOfRange = hasChapters && chapterIndex > pubData.versions[0].content.length || chapterIndex < 1;
+		if (hasChapters && !validChapterId) { throw new Error('Pub Not Found'); }
 
 		const pubDataJson = pubData.toJSON();
 		const userPermissions = pubDataJson.collaborators.reduce((prev, curr)=> {
@@ -99,8 +105,8 @@ export const findPub = (req, initialData)=> {
 			: [{
 				...pubDataJson.versions[0],
 				content: pubDataJson.versions[0].content.map((item, index)=> {
-					if (!chapterIndex && index === 0) { return item; }
-					if (index === chapterIndex - 1) { return item; }
+					if (!chapterId && index === 0) { return item; }
+					if (item.id === chapterId) { return item; }
 					return { title: item.title, id: item.id };
 				})
 			}];

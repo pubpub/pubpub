@@ -80,9 +80,8 @@ class PubPresentation extends Component {
 		const prefix = primaryEditorState.doc.textBetween(Math.max(0, from - 10), Math.max(0, from));
 		const suffix = primaryEditorState.doc.textBetween(Math.min(primaryEditorState.doc.nodeSize - 2, to), Math.min(primaryEditorState.doc.nodeSize - 2, to + 10));
 		const hasChapters = Array.isArray(this.state.pubData.versions[0].content);
-		const chapterIndex = this.props.locationData.params.chapterId
-			? Number(this.props.locationData.params.chapterId) - 1
-			: 0;
+		const activeVersion = this.state.pubData.versions[0];
+		const chapterId = hasChapters ? this.props.locationData.params.chapterId || activeVersion.id : undefined;
 		const thing = {
 			exact: exact,
 			prefix: prefix,
@@ -90,7 +89,7 @@ class PubPresentation extends Component {
 			from: from,
 			to: to,
 			version: this.props.pubData.versions[0].id,
-			chapter: hasChapters ? String(chapterIndex + 1) : undefined,
+			section: hasChapters ? chapterId : undefined,
 			id: `h${generateHash(8)}`, // Has to start with letter since it's a classname
 		};
 		return thing;
@@ -265,13 +264,36 @@ class PubPresentation extends Component {
 		}, []);
 
 		const hasChapters = activeVersion && Array.isArray(activeVersion.content);
-		const chapterIndex = this.props.locationData.params.chapterId
-			? Number(this.props.locationData.params.chapterId) - 1
-			: 0;
+		// const chapterIndex = this.props.locationData.params.chapterId
+		// 	? Number(this.props.locationData.params.chapterId) - 1
+		// 	: 0;
+
+		// The first chapter has an empty string for ID. So for
+		// that chapter,use the version id as the chapterId
+		const chapterId = hasChapters ? this.props.locationData.params.chapterId || activeVersion.id : undefined;
+
+		const chapterIds = hasChapters
+			? this.state.pubData.versions[0].content.map((chapter)=> {
+				return chapter.id || activeVersion.id;
+			})
+			: undefined;
+		const currentChapterIndex = chapterIds.reduce((prev, curr, index)=> {
+			if (chapterId === curr) { return index; }
+			return prev;
+		}, undefined);
+		const nextChapterId = chapterIds.length > currentChapterIndex + 1
+			? chapterIds[currentChapterIndex + 1]
+			: '';
+		const prevChapterId = currentChapterIndex - 1 > 0
+			? chapterIds[currentChapterIndex - 1]
+			: '';
 
 		let activeContent;
 		if (hasChapters) {
-			activeContent = activeVersion.content[chapterIndex].content;
+			activeContent = activeVersion.content.reduce((prev, curr)=> {
+				if (curr.id === chapterId) { return curr.content; }
+				return prev;
+			}, activeVersion.content[0].content);
 		}
 		if (activeVersion && !hasChapters) {
 			activeContent = activeVersion.content;
@@ -286,9 +308,8 @@ class PubPresentation extends Component {
 			return [...prev, ...highlightsWithThread];
 		}, [])
 		.filter((highlight)=> {
-			return true;
-			// if (!hasChapters) { return true; }
-			// return Number(highlight.chapter) === 1;
+			if (!hasChapters) { return true; }
+			return chapterId === highlight.section;
 		});
 
 		const queryObject = this.props.locationData.query;
@@ -403,8 +424,8 @@ class PubPresentation extends Component {
 															<button onClick={()=> { this.setOverlayPanel('chapters'); }} className="pt-button pt-minimal pt-small pt-icon-properties">
 																All
 															</button>
-															<a href={`/pub/${pubData.slug}/chapter/${chapterIndex}${queryObject.version ? `?version=${queryObject.version}` : ''}`} className={`pt-button pt-minimal pt-small arrow pt-icon-arrow-left ${chapterIndex !== 0 ? '' : ' hidden'}`} />
-															<a href={`/pub/${pubData.slug}/chapter/${chapterIndex + 2}${queryObject.version ? `?version=${queryObject.version}` : ''}`} className={`pt-button pt-minimal pt-small arrow pt-icon-arrow-right ${chapterIndex !== activeVersion.content.length - 1 ? '' : ' hidden'}`} />
+															<a href={`/pub/${pubData.slug}/${prevChapterId ? 'chapter/' : ''}${prevChapterId}${queryObject.version ? `?version=${queryObject.version}` : ''}`} className={`pt-button pt-minimal pt-small arrow pt-icon-arrow-left ${prevChapterId || currentChapterIndex > 0 ? '' : ' hidden'}`} />
+															<a href={`/pub/${pubData.slug}/chapter/${nextChapterId}${queryObject.version ? `?version=${queryObject.version}` : ''}`} className={`pt-button pt-minimal pt-small arrow pt-icon-arrow-right ${nextChapterId ? '' : ' hidden'}`} />
 														</div>
 													}
 													<span className="title">Discussions</span>
@@ -430,7 +451,7 @@ class PubPresentation extends Component {
 											<PubBody
 												onRef={this.handleEditorRef}
 												versionId={activeVersion.id}
-												chapterNumber={hasChapters ? String(chapterIndex + 1) : undefined}
+												sectionId={chapterId}
 												content={activeContent}
 												threads={threads}
 												slug={pubData.slug}
@@ -442,8 +463,8 @@ class PubPresentation extends Component {
 											{Array.isArray(activeVersion.content) &&
 												<div className="bottom-chapter-buttons pt-button-group pt-fill pt-minimal pt-large">
 													<a
-														href={`/pub/${pubData.slug}/chapter/${chapterIndex}${queryObject.version ? `?version=${queryObject.version}` : ''}`}
-														className={`pt-button pt-icon-arrow-left ${chapterIndex !== 0 ? '' : ' disabled'}`}
+														href={`/pub/${pubData.slug}/${prevChapterId ? 'chapter/' : ''}${prevChapterId}${queryObject.version ? `?version=${queryObject.version}` : ''}`}
+														className={`pt-button pt-icon-arrow-left ${prevChapterId || currentChapterIndex > 0 ? '' : ' disabled'}`}
 													>
 														Previous
 													</a>
@@ -454,8 +475,8 @@ class PubPresentation extends Component {
 														Chapters
 													</button>
 													<a
-														href={`/pub/${pubData.slug}/chapter/${chapterIndex + 2}${queryObject.version ? `?version=${queryObject.version}` : ''}`}
-														className={`pt-button ${chapterIndex !== activeVersion.content.length - 1 ? '' : ' disabled'}`}
+														href={`/pub/${pubData.slug}/chapter/${nextChapterId}${queryObject.version ? `?version=${queryObject.version}` : ''}`}
+														className={`pt-button ${nextChapterId ? '' : ' disabled'}`}
 													>
 														Next
 														<span className="pt-icon-standard pt-icon-arrow-right pt-align-right" />
