@@ -29,6 +29,7 @@ const propTypes = {
 	highlights: PropTypes.array,
 	slug: PropTypes.string,
 	onStatusChange: PropTypes.func,
+	sectionId: PropTypes.string,
 };
 
 const defaultProps = {
@@ -37,6 +38,7 @@ const defaultProps = {
 	slug: '',
 	highlights: undefined,
 	onStatusChange: ()=>{},
+	sectionId: undefined,
 };
 
 class PubCollabEditor extends Component {
@@ -114,7 +116,7 @@ class PubCollabEditor extends Component {
 					<Footnote />
 					<HighlightMenu
 						versionId={undefined}
-						sectionId={undefined}
+						sectionId={this.props.sectionId}
 						highlights={this.props.highlights}
 						primaryEditorClassName="pub-collab-editor-component"
 						onNewDiscussion={this.props.onNewHighlightDiscussion}

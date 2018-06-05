@@ -33,13 +33,27 @@ const PubPresHeader = function(props) {
 	const mode = props.locationData.params.mode;
 	const subMode = props.locationData.params.subMode;
 	const numChapters = Array.isArray(props.pubData.versions[0].content) && props.pubData.versions[0].content.length;
-	const activeChapterId = props.locationData.params.chapterId ? props.locationData.params.chapterId - 1 : 0;
+	// const activeChapterId = props.locationData.params.chapterId ? props.locationData.params.chapterId - 1 : 0;
 	// const activeChapterTitle = Array.isArray(props.pubData.versions[0].content) && props.pubData.versions[0].content[activeChapterId].title;
 	const sortedVersionsList = pubData.versionsList.sort((foo, bar)=>{
 		if (foo.createdAt < bar.createdAt) { return 1; }
 		if (foo.createdAt > bar.createdAt) { return -1; }
 		return 0;
 	});
+
+	const activeVersion = pubData.versions[0];
+	const hasChapters = activeVersion && Array.isArray(activeVersion.content);
+	const chapterId = hasChapters ? props.locationData.params.chapterId || '' : undefined;
+
+	const chapterIds = hasChapters
+		? pubData.versions[0].content.map((chapter)=> {
+			return chapter.id || '';
+		})
+		: [];
+	const currentChapterIndex = chapterIds.reduce((prev, curr, index)=> {
+		if (chapterId === curr) { return index; }
+		return prev;
+	}, undefined);
 
 	return (
 		<div className={`pub-pres-header-component ${mode ? 'mode' : ''}`} style={backgroundStyle}>
@@ -91,7 +105,7 @@ const PubPresHeader = function(props) {
 													}
 													{numChapters &&
 														<MenuItem
-															text="Chapters"
+															text="Contents"
 															label={<span className="pt-icon-standard pt-icon-properties" />}
 															onClick={()=> {
 																props.setOverlayPanel('chapters');
@@ -209,14 +223,14 @@ const PubPresHeader = function(props) {
 								</a>
 								{numChapters &&
 									<a
-										href={`/pub/${pubData.slug}/chapters${queryObject.version ? `?version=${queryObject.version}` : ''}`}
+										href={`/pub/${pubData.slug}/contents${queryObject.version ? `?version=${queryObject.version}` : ''}`}
 										className="pt-button pt-minimal chapters"
 										onClick={(evt)=> {
 											evt.preventDefault();
 											props.setOverlayPanel('chapters');
 										}}
 									>
-										{activeChapterId + 1} of {numChapters}
+										{currentChapterIndex + 1} of {numChapters}
 										<span className="pt-icon-standard pt-align-right pt-icon-properties" />
 									</a>
 								}

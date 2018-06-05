@@ -80,8 +80,7 @@ class PubPresentation extends Component {
 		const prefix = primaryEditorState.doc.textBetween(Math.max(0, from - 10), Math.max(0, from));
 		const suffix = primaryEditorState.doc.textBetween(Math.min(primaryEditorState.doc.nodeSize - 2, to), Math.min(primaryEditorState.doc.nodeSize - 2, to + 10));
 		const hasChapters = Array.isArray(this.state.pubData.versions[0].content);
-		const activeVersion = this.state.pubData.versions[0];
-		const chapterId = hasChapters ? this.props.locationData.params.chapterId || activeVersion.id : undefined;
+		const chapterId = hasChapters ? this.props.locationData.params.chapterId || '' : undefined;
 		const thing = {
 			exact: exact,
 			prefix: prefix,
@@ -268,15 +267,13 @@ class PubPresentation extends Component {
 		// 	? Number(this.props.locationData.params.chapterId) - 1
 		// 	: 0;
 
-		// The first chapter has an empty string for ID. So for
-		// that chapter,use the version id as the chapterId
-		const chapterId = hasChapters ? this.props.locationData.params.chapterId || activeVersion.id : undefined;
+		const chapterId = hasChapters ? this.props.locationData.params.chapterId || '' : undefined;
 
 		const chapterIds = hasChapters
 			? this.state.pubData.versions[0].content.map((chapter)=> {
-				return chapter.id || activeVersion.id;
+				return chapter.id || '';
 			})
-			: undefined;
+			: [];
 		const currentChapterIndex = chapterIds.reduce((prev, curr, index)=> {
 			if (chapterId === curr) { return index; }
 			return prev;
@@ -420,12 +417,12 @@ class PubPresentation extends Component {
 												<div className={`side-block fix-it ${this.state.fixIt ? 'fixed' : ''}`}>
 													{Array.isArray(activeVersion.content) &&
 														<div>
-															<span className="title">Chapters</span>
+															<span className="title">Contents</span>
 															<button onClick={()=> { this.setOverlayPanel('chapters'); }} className="pt-button pt-minimal pt-small pt-icon-properties">
 																All
 															</button>
-															<a href={`/pub/${pubData.slug}/${prevChapterId ? 'chapter/' : ''}${prevChapterId}${queryObject.version ? `?version=${queryObject.version}` : ''}`} className={`pt-button pt-minimal pt-small arrow pt-icon-arrow-left ${prevChapterId || currentChapterIndex > 0 ? '' : ' hidden'}`} />
-															<a href={`/pub/${pubData.slug}/chapter/${nextChapterId}${queryObject.version ? `?version=${queryObject.version}` : ''}`} className={`pt-button pt-minimal pt-small arrow pt-icon-arrow-right ${nextChapterId ? '' : ' hidden'}`} />
+															<a href={`/pub/${pubData.slug}/${prevChapterId ? 'content/' : ''}${prevChapterId}${queryObject.version ? `?version=${queryObject.version}` : ''}`} className={`pt-button pt-minimal pt-small arrow pt-icon-arrow-left ${prevChapterId || currentChapterIndex > 0 ? '' : ' hidden'}`} />
+															<a href={`/pub/${pubData.slug}/content/${nextChapterId}${queryObject.version ? `?version=${queryObject.version}` : ''}`} className={`pt-button pt-minimal pt-small arrow pt-icon-arrow-right ${nextChapterId ? '' : ' hidden'}`} />
 														</div>
 													}
 													<span className="title">Discussions</span>
@@ -463,7 +460,7 @@ class PubPresentation extends Component {
 											{Array.isArray(activeVersion.content) &&
 												<div className="bottom-chapter-buttons pt-button-group pt-fill pt-minimal pt-large">
 													<a
-														href={`/pub/${pubData.slug}/${prevChapterId ? 'chapter/' : ''}${prevChapterId}${queryObject.version ? `?version=${queryObject.version}` : ''}`}
+														href={`/pub/${pubData.slug}/${prevChapterId ? 'content/' : ''}${prevChapterId}${queryObject.version ? `?version=${queryObject.version}` : ''}`}
 														className={`pt-button pt-icon-arrow-left ${prevChapterId || currentChapterIndex > 0 ? '' : ' disabled'}`}
 													>
 														Previous
@@ -472,10 +469,10 @@ class PubPresentation extends Component {
 														onClick={()=> { this.setOverlayPanel('chapters'); }}
 														className="pt-button pt-icon-properties"
 													>
-														Chapters
+														Contents
 													</button>
 													<a
-														href={`/pub/${pubData.slug}/chapter/${nextChapterId}${queryObject.version ? `?version=${queryObject.version}` : ''}`}
+														href={`/pub/${pubData.slug}/content/${nextChapterId}${queryObject.version ? `?version=${queryObject.version}` : ''}`}
 														className={`pt-button ${nextChapterId ? '' : ' disabled'}`}
 													>
 														Next
@@ -575,7 +572,7 @@ class PubPresentation extends Component {
 										{mode === 'invite' &&
 											<PubPresInvite pubData={pubData} mode={mode} />
 										}
-										{mode === 'chapters' &&
+										{mode === 'contents' &&
 											<PubPresChapters
 												pubData={pubData}
 												locationData={this.props.locationData}

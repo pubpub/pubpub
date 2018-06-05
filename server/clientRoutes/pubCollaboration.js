@@ -14,7 +14,7 @@ firebaseAdmin.initializeApp({
 	databaseURL: process.env.FIREBASE_DATABASE_URL,
 });
 
-app.get('/pub/:slug/collaborate', (req, res, next)=> {
+app.get(['/pub/:slug/collaborate', '/pub/:slug/collaborate/content/:chapterId'], (req, res, next)=> {
 	if (!hostIsValid(req, 'community')) { return next(); }
 	analytics(req);
 
@@ -22,7 +22,7 @@ app.get('/pub/:slug/collaborate', (req, res, next)=> {
 	.then((initialData)=> {
 		return Promise.all([
 			initialData,
-			findPub(req, initialData)
+			findPub(req, initialData, true)
 		]);
 	})
 	.then(([initialData, pubData])=> {

@@ -70,8 +70,8 @@ class PubCollaboration extends Component {
 			scrolledToPermanent: false,
 
 			chaptersData: [{ id: '', order: 0, title: 'Introduction' }],
-			compositeEditorKey: props.pubData.editorKey,
-			activeChapterIndex: 0,
+			// compositeEditorKey: props.pubData.editorKey,
+			// activeChapterIndex: 0,
 		};
 		this.editorRef = undefined;
 		this.setActiveThread = this.setActiveThread.bind(this);
@@ -108,9 +108,9 @@ class PubCollaboration extends Component {
 		this.handleScroll = this.handleScroll.bind(this);
 		this.handleChapterAdd = this.handleChapterAdd.bind(this);
 		this.handleChaptersChange = this.handleChaptersChange.bind(this);
-		this.handleChapterSet = this.handleChapterSet.bind(this);
-		this.incrementChapter = this.incrementChapter.bind(this);
-		this.decrementChapter = this.decrementChapter.bind(this);
+		// this.handleChapterSet = this.handleChapterSet.bind(this);
+		// this.incrementChapter = this.incrementChapter.bind(this);
+		// this.decrementChapter = this.decrementChapter.bind(this);
 	}
 
 	componentDidMount() {
@@ -203,6 +203,8 @@ class PubCollaboration extends Component {
 		const exact = primaryEditorState.doc.textBetween(from, to);
 		const prefix = primaryEditorState.doc.textBetween(Math.max(0, from - 10), Math.max(0, from));
 		const suffix = primaryEditorState.doc.textBetween(Math.min(primaryEditorState.doc.nodeSize - 2, to), Math.min(primaryEditorState.doc.nodeSize - 2, to + 10));
+		const hasChapters = this.state.chaptersData.length > 1;
+		const chapterId = hasChapters ? this.props.locationData.params.chapterId || '' : undefined;
 		return {
 			exact: exact,
 			prefix: prefix,
@@ -210,6 +212,7 @@ class PubCollaboration extends Component {
 			from: from,
 			to: to,
 			version: undefined,
+			section: hasChapters ? chapterId : undefined,
 			id: `h${generateHash(8)}`, /* Has to start with letter since it's a classname */
 		};
 	}
@@ -269,35 +272,35 @@ class PubCollaboration extends Component {
 		});
 		this.firebaseChaptersRef.set(newChaptersData);
 	}
-	handleChapterSet(chapterId) {
-		this.setState({
-			compositeEditorKey: `${this.props.pubData.editorKey}/${chapterId}`,
-			isChaptersOpen: false,
-			activeChapterIndex: this.state.chaptersData.reduce((prev, curr, index)=> {
-				if (curr.id === chapterId) { return index; }
-				return prev;
-			}, 0)
-		});
-		window.scrollTo(0, 0);
-	}
-	incrementChapter() {
-		const newActiveIndex = this.state.activeChapterIndex + 1;
-		const newActiveChapter = this.state.chaptersData[newActiveIndex];
-		this.setState({
-			compositeEditorKey: `${this.props.pubData.editorKey}/${newActiveChapter.id}`,
-			activeChapterIndex: newActiveIndex
-		});
-		window.scrollTo(0, 0);
-	}
-	decrementChapter() {
-		const newActiveIndex = this.state.activeChapterIndex - 1;
-		const newActiveChapter = this.state.chaptersData[newActiveIndex];
-		this.setState({
-			compositeEditorKey: `${this.props.pubData.editorKey}/${newActiveChapter.id}`,
-			activeChapterIndex: newActiveIndex
-		});
-		window.scrollTo(0, 0);
-	}
+	// handleChapterSet(chapterId) {
+	// 	this.setState({
+	// 		compositeEditorKey: `${this.props.pubData.editorKey}/${chapterId}`,
+	// 		isChaptersOpen: false,
+	// 		activeChapterIndex: this.state.chaptersData.reduce((prev, curr, index)=> {
+	// 			if (curr.id === chapterId) { return index; }
+	// 			return prev;
+	// 		}, 0)
+	// 	});
+	// 	window.scrollTo(0, 0);
+	// }
+	// incrementChapter() {
+	// 	const newActiveIndex = this.state.activeChapterIndex + 1;
+	// 	const newActiveChapter = this.state.chaptersData[newActiveIndex];
+	// 	this.setState({
+	// 		compositeEditorKey: `${this.props.pubData.editorKey}/${newActiveChapter.id}`,
+	// 		activeChapterIndex: newActiveIndex
+	// 	});
+	// 	window.scrollTo(0, 0);
+	// }
+	// decrementChapter() {
+	// 	const newActiveIndex = this.state.activeChapterIndex - 1;
+	// 	const newActiveChapter = this.state.chaptersData[newActiveIndex];
+	// 	this.setState({
+	// 		compositeEditorKey: `${this.props.pubData.editorKey}/${newActiveChapter.id}`,
+	// 		activeChapterIndex: newActiveIndex
+	// 	});
+	// 	window.scrollTo(0, 0);
+	// }
 
 	// handleHighlightClick(threadNumber) {
 	// 	this.setState({ thread: threadNumber });
@@ -670,7 +673,23 @@ class PubCollaboration extends Component {
 				}, 100);
 			}
 		}
-
+		const chapterId = this.props.locationData.params.chapterId || '';
+		const hasChapters = this.state.chaptersData.length > 1;
+		const chapterIds = hasChapters
+			? this.state.chaptersData.map((chapter)=> {
+				return chapter.id || '';
+			})
+			: [];
+		const currentChapterIndex = chapterIds.reduce((prev, curr, index)=> {
+			if (chapterId === curr) { return index; }
+			return prev;
+		}, undefined);
+		const nextChapterId = chapterIds.length > currentChapterIndex + 1
+			? chapterIds[currentChapterIndex + 1]
+			: '';
+		const prevChapterId = currentChapterIndex - 1 > 0
+			? chapterIds[currentChapterIndex - 1]
+			: '';
 		return (
 			<div id="pub-collaboration-container">
 				<AccentStyle
@@ -710,12 +729,14 @@ class PubCollaboration extends Component {
 										<div className={`side-block fix-it ${this.state.fixIt ? 'fixed' : ''}`}>
 											{this.state.chaptersData.length > 1 &&
 												<div>
-													<span className="title">Chapters</span>
+													<span className="title">Contents</span>
 													<button onClick={this.toggleChapters} className="pt-button pt-minimal pt-small">
 														Manage
 													</button>
-													<button onClick={this.decrementChapter} className={`pt-button pt-minimal pt-small arrow pt-icon-arrow-left ${this.state.activeChapterIndex !== 0 ? '' : ' hidden'}`} />
-													<button onClick={this.incrementChapter} className={`pt-button pt-minimal pt-small arrow pt-icon-arrow-right ${this.state.activeChapterIndex !== this.state.chaptersData.length - 1 ? '' : ' hidden'}`} />
+													{/*<button onClick={this.decrementChapter} className={`pt-button pt-minimal pt-small arrow pt-icon-arrow-left ${this.state.activeChapterIndex !== 0 ? '' : ' hidden'}`} />
+													<button onClick={this.incrementChapter} className={`pt-button pt-minimal pt-small arrow pt-icon-arrow-right ${this.state.activeChapterIndex !== this.state.chaptersData.length - 1 ? '' : ' hidden'}`} />*/}
+													<a href={`/pub/${pubData.slug}/collaborate/${prevChapterId ? 'content/' : ''}${prevChapterId}`} className={`pt-button pt-minimal pt-small arrow pt-icon-arrow-left ${prevChapterId || currentChapterIndex > 0 ? '' : ' hidden'}`} />
+													<a href={`/pub/${pubData.slug}/collaborate/content/${nextChapterId}`} className={`pt-button pt-minimal pt-small arrow pt-icon-arrow-right ${nextChapterId ? '' : ' hidden'}`} />
 												</div>
 											}
 
@@ -739,7 +760,7 @@ class PubCollaboration extends Component {
 									<div className="pub-body-component">
 										<PubCollabEditor
 											onRef={this.handleEditorRef}
-											editorKey={this.state.compositeEditorKey}
+											editorKey={`${this.props.pubData.editorKey}${chapterId ? '/' : ''}${chapterId || ''}`}
 											isReadOnly={!canManage && pubData.localPermissions !== 'edit'}
 											clientData={this.state.activeCollaborators[0]}
 											onClientChange={this.handleClientChange}
@@ -747,6 +768,7 @@ class PubCollaboration extends Component {
 											onHighlightClick={this.setActiveThread}
 											hoverBackgroundColor={this.props.communityData.accentMinimalColor}
 											highlights={this.state.docReadyForHighlights ? highlights : []}
+											sectionId={chapterId}
 											threads={threads}
 											slug={pubData.slug}
 											onStatusChange={this.handleStatusChange}
@@ -853,11 +875,12 @@ class PubCollaboration extends Component {
 				</Overlay>
 				<Overlay isOpen={this.state.isChaptersOpen} onClose={this.toggleChapters}>
 					<PubCollabChapters
+						locationData={this.props.locationData}
 						chaptersData={this.state.chaptersData}
 						onChapterAdd={this.handleChapterAdd}
 						onChaptersChange={this.handleChaptersChange}
-						onChapterSet={this.handleChapterSet}
-						activeChapterIndex={this.state.activeChapterIndex}
+						// onChapterSet={this.handleChapterSet}
+						// activeChapterId={this.props.locationData.params.chapterId}
 					/>
 				</Overlay>
 			</div>

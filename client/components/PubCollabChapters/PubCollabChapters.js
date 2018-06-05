@@ -5,12 +5,13 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 require('./pubCollabChapters.scss');
 
 const propTypes = {
+	locationData: PropTypes.object.isRequired,
 	chaptersData: PropTypes.object.isRequired,
 	onChapterAdd: PropTypes.func.isRequired,
 	// onChapterTitleChange: PropTypes.func.isRequired,
 	onChaptersChange: PropTypes.func.isRequired,
-	onChapterSet: PropTypes.func.isRequired,
-	activeChapterIndex: PropTypes.func.isRequired,
+	// onChapterSet: PropTypes.func.isRequired,
+	// activeChapterId: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -72,12 +73,13 @@ class PubCollabChapters extends Component {
 	}
 
 	render() {
+		const activeChapterId = this.props.locationData.params.chapterId || '';
 		return (
 			<div className="pub-collab-chapters-component">
-				<button className="pt-button add-chapters-button" onClick={this.props.onChapterAdd}>Add Chapter</button>
-				<h5>Chapters</h5>
+				<button className="pt-button add-chapters-button" onClick={this.props.onChapterAdd}>Add Section</button>
+				<h5>Contents</h5>
 
-				<div className={`chapter first ${this.props.activeChapterIndex === 0 ? 'active' : ''}`}>
+				<div className={`chapter first ${activeChapterId === '' ? 'active' : ''}`}>
 					<div className="title">
 						{this.state.editIndex === 0 &&
 							<input
@@ -87,7 +89,10 @@ class PubCollabChapters extends Component {
 							/>
 						}
 						{this.state.editIndex !== 0 &&
-							<span className="link-title" onClick={()=> { this.props.onChapterSet(this.props.chaptersData[0].id); }}>{this.props.chaptersData[0].title}</span>
+							<a className="link-title" href={`/pub/${this.props.locationData.params.slug}/collaborate`}>
+								{this.props.chaptersData[0].title}
+							</a>
+							/*<span className="link-title" onClick={()=> { this.props.onChapterSet(this.props.chaptersData[0].id); }}>{this.props.chaptersData[0].title}</span>*/
 						}
 					</div>
 					{this.state.editIndex === 0 &&
@@ -119,7 +124,7 @@ class PubCollabChapters extends Component {
 												<div>
 													<div
 														ref={providedItem.innerRef}
-														className={`chapter ${snapshotItem.isDragging ? 'dragging' : ''} ${this.props.activeChapterIndex === index ? 'active' : ''}`}
+														className={`chapter ${snapshotItem.isDragging ? 'dragging' : ''} ${activeChapterId === chapter.id ? 'active' : ''}`}
 														style={providedItem.draggableStyle}
 													>
 														<span {...providedItem.dragHandleProps} className="drag">
@@ -134,7 +139,10 @@ class PubCollabChapters extends Component {
 																/>
 															}
 															{!isEditing &&
-																<span onClick={()=> { this.props.onChapterSet(chapter.id); }} className="link-title">{chapter.title}</span>
+																<a className="link-title" href={`/pub/${this.props.locationData.params.slug}/collaborate/content/${chapter.id}`}>
+																	{chapter.title}
+																</a>
+																// <span onClick={()=> { this.props.onChapterSet(chapter.id); }} className="link-title">{chapter.title}</span>
 															}
 														</div>
 														{isEditing &&

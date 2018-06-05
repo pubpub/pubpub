@@ -3,7 +3,7 @@ import validator from 'validator';
 import { User, Collection, Pub, Collaborator, Discussion, CommunityAdmin, Community, Version } from './models';
 import { generateCitationHTML } from './utilities';
 
-export const findPub = (req, initialData)=> {
+export const findPub = (req, initialData, isDraft)=> {
 	if (req.query.version && !validator.isUUID(req.query.version)) {
 		throw new Error('Pub Not Found');
 	}
@@ -81,7 +81,7 @@ export const findPub = (req, initialData)=> {
 	return Promise.all([getPubData, getVersionsList, getCommunityAdminData])
 	.then(([pubData, versionsListData, communityAdminData])=> {
 		if (!pubData) { throw new Error('Pub Not Found'); }
-		const hasChapters = pubData.versions[0] && Array.isArray(pubData.versions[0].content);
+		const hasChapters = !isDraft && pubData.versions[0] && Array.isArray(pubData.versions[0].content);
 		// const chapterIndex = initialData.locationData.params.chapterId;
 		const chapterId = initialData.locationData.params.chapterId;
 		const validChapterId = hasChapters && pubData.versions[0].content.reduce((prev, curr)=> {

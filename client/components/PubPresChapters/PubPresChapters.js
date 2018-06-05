@@ -20,13 +20,13 @@ const PubPresChapters = (props)=> {
 	return (
 		<div className="pub-pres-chapters-component">
 			{!props.mode &&
-				<h5>Chapters</h5>
+				<h5>Contents</h5>
 			}
 			<ul className="pt-menu">
 				{content.map((chapter, index)=> {
 					return (
 						<li key={chapter.title}>
-							<a href={`/pub/${props.pubData.slug}/${index === 0 ? '' : 'chapter/'}${chapter.id}${queryObject.version ? `?version=${queryObject.version}` : ''}`} className={`pt-menu-item pt-popover-dismiss ${activeChapterId === chapter.id ? 'pt-active' : ''}`}>
+							<a href={`/pub/${props.pubData.slug}/${index === 0 ? '' : 'content/'}${chapter.id}${queryObject.version ? `?version=${queryObject.version}` : ''}`} className={`pt-menu-item pt-popover-dismiss ${activeChapterId === chapter.id ? 'pt-active' : ''}`}>
 								{chapter.title}
 							</a>
 						</li>
