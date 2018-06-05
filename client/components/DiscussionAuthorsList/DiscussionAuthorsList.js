@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Avatar from 'components/Avatar/Avatar';
 
 require('./discussionAuthorsList.scss');
 
@@ -39,7 +40,8 @@ const DiscussionAuthorsList = (props)=> {
 									<span className="pt-icon-standard pt-icon-small-tick" />
 								}
 							</div>
-							<img src={author.avatar} alt={author.fullName} />
+							{/*<img src={author.avatar} alt={author.fullName} />*/}
+							<Avatar width={16} userInitials={author.initials} userAvatar={author.avatar} />
 							<div className="title">{author.fullName}</div>
 						</div>
 					</li>
