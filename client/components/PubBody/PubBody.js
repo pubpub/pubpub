@@ -55,7 +55,10 @@ const PubBody = function(props) {
 				showHeaderLinks={true}
 				ref={props.onRef}
 			>
-				<Image handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }} />
+				<Image
+					handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }}
+					linkToSrc={true}
+				/>
 				<Video />
 				<File />
 				<Iframe />

@@ -178,6 +178,7 @@ class DiscussionThreadItem extends Component {
 						<Image
 							handleFileUpload={s3Upload}
 							handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }}
+							linkToSrc={!this.state.isEditing}
 						/>
 						<Video handleFileUpload={s3Upload} />
 						<File handleFileUpload={s3Upload} />

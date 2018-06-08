@@ -108,6 +108,7 @@ class PubCollabEditor extends Component {
 					<Image
 						handleFileUpload={s3Upload}
 						handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }}
+						linkToSrc={this.props.isReadOnly}
 					/>
 					<Video handleFileUpload={s3Upload} />
 					<File handleFileUpload={s3Upload} />
