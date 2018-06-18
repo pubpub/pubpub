@@ -5,12 +5,12 @@ import tmp from 'tmp-promise';
 
 // const fsReadFile = Promise.promisify(fs.readFile);
 // const fsWriteFile = Promise.promisify(fs.writeFile);
-tmp.file({ postfix: '.md' })
+tmp.file({ postfix: '.docx' })
 .then((tmpFile)=> {
 	const src = '<h1>Hello</h1><p>It&rsquo;s bananas</p>';
 	// Arguments in either a single String or as an Array:
 	// const args = '-f html -t docx -o word.docx';
-	const args = `-f html -t markdown -o ${tmpFile.path}`;
+	const args = `-f html -t docx -o ${tmpFile.path}`;
 	console.log(tmpFile.path);
 
 	// Call pandoc
