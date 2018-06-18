@@ -4,7 +4,7 @@ import nodePandoc from 'node-pandoc';
 import tmp from 'tmp-promise';
 
 const dataDir = process.env.NODE_ENV === 'production'
-	? '--data-dir /app/.apt/usr/share/pandoc/ '
+	? '--data-dir=/app/.apt/usr/share/pandoc '
 	: '';
 // const fsReadFile = Promise.promisify(fs.readFile);
 // const fsWriteFile = Promise.promisify(fs.writeFile);
@@ -14,6 +14,7 @@ tmp.file({ postfix: '.docx' })
 	// Arguments in either a single String or as an Array:
 	// const args = '-f html -t docx -o word.docx';
 	const args = `${dataDir}-f html -t docx -o ${tmpFile.path}`;
+	// const args = `${dataDir}-f html -t json -o out.json`;
 	console.log(tmpFile.path);
 	console.log(args);
 
