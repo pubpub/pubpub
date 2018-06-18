@@ -4,7 +4,7 @@ import nodePandoc from 'node-pandoc';
 import tmp from 'tmp-promise';
 
 const dataDir = process.env.NODE_ENV === 'production'
-	? '--data-dir /app/.apt/usr/share/pandoc/'
+	? '--data-dir /app/.apt/usr/share/pandoc/ '
 	: '';
 // const fsReadFile = Promise.promisify(fs.readFile);
 // const fsWriteFile = Promise.promisify(fs.writeFile);
@@ -13,14 +13,16 @@ tmp.file({ postfix: '.docx' })
 	const src = '<h1>Hello</h1><p>It&rsquo;s bananas</p>';
 	// Arguments in either a single String or as an Array:
 	// const args = '-f html -t docx -o word.docx';
-	const args = `${dataDir} -f html -t docx -o ${tmpFile.path}`;
+	const args = `${dataDir}-f html -t docx -o ${tmpFile.path}`;
 	console.log(tmpFile.path);
+	console.log(args);
 
 	// Call pandoc
 	nodePandoc(src, args, (err, result)=> {
-		if (err) console.error('Oh Nos: ',err);
+		if (err) console.error('Oh no: ', err);
 		// Without the -o arg, the converted value will be returned.
-		return console.log(result), result;
+		console.log(result);
+		return result;
 	});
 })
 .catch((promiseErr)=> {
@@ -33,7 +35,7 @@ tmp.file({ postfix: '.pdf' })
 	const src = '<h1>Hello</h1><p>It&rsquo;s bananas</p>';
 	// Arguments in either a single String or as an Array:
 	// const args = '-f html -t docx -o word.docx';
-	const args = `${dataDir} -f html -t pdf -o ${tmpFile.path}`;
+	const args = `${dataDir}-f html -t latex -o ${tmpFile.path}`;
 	console.log(tmpFile.path);
 
 	// Call pandoc
