@@ -4,7 +4,7 @@ import nodePandoc from 'node-pandoc';
 import tmp from 'tmp-promise';
 
 const dataDir = process.env.NODE_ENV === 'production'
-	? '--data-dir=/app/.apt/usr/share/pandoc '
+	? '--data-dir=/app/.apt/usr/share/pandoc/data '
 	: '';
 // const fsReadFile = Promise.promisify(fs.readFile);
 // const fsWriteFile = Promise.promisify(fs.writeFile);
