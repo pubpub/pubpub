@@ -38,4 +38,4 @@ Navigate to `localhost:9876`
 # Pandoc
 
 ## Latex
-The [Latex Buildpack we are using](https://github.com/Thermondo/heroku-buildpack-tex) allows a `texlive.packages` file in the root directory to specify additional packages to be installed.
+The [Latex Buildpack we are using](https://github.com/Thermondo/heroku-buildpack-tex) allows a `texlive.packages` file in the root directory to specify additional packages to be installed. [List of available packages](http://fedoraproject.org/wiki/Features/TeXLive) (I think... documentation on packages is a bit tough to find).
