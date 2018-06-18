@@ -18,7 +18,8 @@
     "lint": "eslint .",
     "postinstall": "npm run build-prod",
     "start": "concurrently --kill-others \"npm run api-dev\" \"npm run build-dev\"",
-    "storybook": "start-storybook -p 9001 -c .storybook -s ./"
+    "storybook": "start-storybook -p 9001 -c .storybook -s ./",
+    "workers": "WORKER=true nodemon workers/init.js --watch workers/worker.js"
   },
   "dependencies": {
     "@blueprintjs/core": "^1.35.0",
@@ -72,6 +73,7 @@
     "html-webpack-plugin": "^2.30.1",
     "katex": "^0.9.0",
     "newrelic": "^2.2.1",
+    "node-pandoc": "^0.3.0",
     "node-sass": "^4.7.2",
     "nodemon": "^1.14.12",
     "normalize.css": "^7.0.0",
