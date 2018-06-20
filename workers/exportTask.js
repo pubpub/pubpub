@@ -61,11 +61,7 @@ export default (pubId, versionId, format)=> {
 						<Latex />
 						<Footnote />
 						<Citation />
-						<Discussion
-							// threads={props.threads}
-							// slug={props.slug}
-							// setActiveThread={props.setActiveThread}
-						/>
+						<Discussion />
 					</Editor>
 				</body>
 			</html>
@@ -75,10 +71,7 @@ export default (pubId, versionId, format)=> {
 		return Promise.all([staticHtml, tmp.file({ postfix: `.${formatTypes[format].extension}` })]);
 	})
 	.then(([staticHtml, tmpFile])=> {
-		// Arguments in either a single String or as an Array:
-		// const args = '-f html -t docx -o word.docx';
 		const args = `${dataDir}-f html -t ${formatTypes[format].output} -o ${tmpFile.path}`;
-		// const args = `${dataDir}-f html -t json -o out.json`;
 		// console.log(args);
 
 		const convertFile = new Promise((resolve, reject)=> {
@@ -96,31 +89,6 @@ export default (pubId, versionId, format)=> {
 	.catch((err)=> {
 		console.log('Error!', err);
 	});
-
-	// const fsReadFile = Promise.promisify(fs.readFile);
-	// const fsWriteFile = Promise.promisify(fs.writeFile);
-	// tmp.file({ postfix: '.docx' })
-	// .then((tmpFile)=> {
-	// 	const src = '<h1>Hello</h1><p>It&rsquo;s bananas</p>';
-	// 	// Arguments in either a single String or as an Array:
-	// 	// const args = '-f html -t docx -o word.docx';
-	// 	const args = `${dataDir}-f html -t docx -o ${tmpFile.path}`;
-	// 	// const args = `${dataDir}-f html -t json -o out.json`;
-	// 	console.log(tmpFile.path);
-	// 	console.log(args);
-
-	// 	// Call pandoc
-	// 	nodePandoc(src, args, (err, result)=> {
-	// 		if (err) console.error('Oh no: ', err);
-	// 		// Without the -o arg, the converted value will be returned.
-	// 		console.log(result);
-	// 		return result;
-	// 	});
-	// })
-	// .catch((promiseErr)=> {
-	// 	console.log('Error in promise chain', promiseErr);
-	// });
-
 	/*
 	- get json from pubpub, convert to HTML, enter into pandoc, upload output, return url
 	- get file, enter into pandoc, get html, convert into pubpub json
