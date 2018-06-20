@@ -16,9 +16,9 @@ if (process.env.NODE_ENV !== 'production') {
 // exportTask('3ecac2f5-8065-4bde-aa0e-c1ab222fd673', '468e94cb-a894-40b6-9a78-78ab7bda5798', 'odt');
 // exportTask('3ecac2f5-8065-4bde-aa0e-c1ab222fd673', '468e94cb-a894-40b6-9a78-78ab7bda5798', 'plain');
 // exportTask('3ecac2f5-8065-4bde-aa0e-c1ab222fd673', '468e94cb-a894-40b6-9a78-78ab7bda5798', 'jats');
-exportTask('3ecac2f5-8065-4bde-aa0e-c1ab222fd673', '468e94cb-a894-40b6-9a78-78ab7bda5798', 'tex');
-importTask();
-analyticsTask();
+// exportTask('3ecac2f5-8065-4bde-aa0e-c1ab222fd673', '468e94cb-a894-40b6-9a78-78ab7bda5798', 'tex');
+importTask('3ecac2f5-8065-4bde-aa0e-c1ab222fd673', 'https://assets.pubpub.org/ywh5c35b/61529509039692.docx');
+// analyticsTask();
 
 
 

@@ -15,6 +15,7 @@ import Citation from '@pubpub/editor/addons/Citation';
 import Discussion from 'components/DiscussionAddon/DiscussionAddon';
 import { Pub, Version } from '../server/models';
 
+tmp.setGracefulCleanup();
 const dataDir = process.env.NODE_ENV === 'production'
 	? '--data-dir=/app/.apt/usr/share/pandoc/data '
 	: '';
