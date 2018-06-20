@@ -3,23 +3,8 @@ import request from 'request';
 import Promise from 'bluebird';
 import nodePandoc from 'node-pandoc';
 import tmp from 'tmp-promise';
-import React from 'react';
-import ReactDOMServer from 'react-dom/server';
-import { Editor } from '@pubpub/editor';
-import Image from '@pubpub/editor/addons/Image';
-import Video from '@pubpub/editor/addons/Video';
-import File from '@pubpub/editor/addons/File';
-import Iframe from '@pubpub/editor/addons/Iframe';
-import Latex from '@pubpub/editor/addons/Latex';
-import Footnote from '@pubpub/editor/addons/Footnote';
-import Citation from '@pubpub/editor/addons/Citation';
-import Discussion from 'components/DiscussionAddon/DiscussionAddon';
-import { Pub, Version } from '../server/models';
 
-// const fsReadFile = Promise.promisify(fs.readFile);
 tmp.setGracefulCleanup();
-// const fsWriteFile = Promise.promisify(fs.writeFile);
-
 const dataDir = process.env.NODE_ENV === 'production'
 	? '--data-dir=/app/.apt/usr/share/pandoc/data '
 	: '';
@@ -69,6 +54,8 @@ export default (pubId, sourceUrl)=> {
 	})
 	.then((convertedHtml)=> {
 		console.log(convertedHtml);
+		// Send HTML to editor, which converts to json
+		// And then editor (I think) writes to firebase
 	})
 	.catch((err)=> {
 		console.log('Error!', err);
