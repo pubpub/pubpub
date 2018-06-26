@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import firebase from 'firebase';
+import firebase from '@firebase/app';
 import uuidv4 from 'uuid/v4';
 import Overlay from 'components/Overlay/Overlay';
 import PubCollabEditor from 'components/PubCollabEditor/PubCollabEditor';
@@ -16,6 +16,8 @@ import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
 import { apiFetch, hydrateWrapper, getFirebaseConfig, nestDiscussionsToThreads, getRandomColor, generateHash } from 'utilities';
 
+require('@firebase/auth');
+require('@firebase/database');
 require('./pubCollaboration.scss');
 require('components/PubBody/pubBody.scss');
 
