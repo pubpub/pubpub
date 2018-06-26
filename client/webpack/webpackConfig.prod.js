@@ -1,14 +1,10 @@
 const { resolve } = require('path');
 const { readdirSync } = require('fs');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
-const extractSass = new ExtractTextPlugin({
-	filename: '[name].[contenthash].css',
-	allChunks: true,
-});
 
 const containerEntries = readdirSync(resolve(__dirname, '../containers')).filter((item)=> {
 	if (item === '.DS_Store') { return false; }
@@ -21,35 +17,13 @@ const containerEntries = readdirSync(resolve(__dirname, '../containers')).filter
 }, {});
 
 module.exports = {
+	mode: 'production',
 	entry: {
 		...containerEntries,
 		baseStyle: resolve(__dirname, '../baseStyle.scss'),
-		vendor: [
-			resolve(__dirname, '../../static/objectEntriesPolyfill.js'),
-			'raven-js',
-			'@blueprintjs/core',
-			'@blueprintjs/labs',
-			'@pubpub/editor',
-			'prosemirror-collab',
-			'prosemirror-commands',
-			'prosemirror-compress',
-			'prosemirror-gapcursor',
-			'prosemirror-history',
-			'prosemirror-inputrules',
-			'prosemirror-keymap',
-			'prosemirror-model',
-			'prosemirror-schema-list',
-			'prosemirror-schema-table',
-			'prosemirror-state',
-			'prosemirror-transform',
-			'prosemirror-view',
-			'react',
-			'react-dom',
-			'react-addons-css-transition-group',
-		]
 	},
 	resolve: {
-		modules: [resolve(__dirname, '../'), 'node_modules']
+		modules: [resolve(__dirname, '../'), 'node_modules', resolve(__dirname, '../../static/objectEntriesPolyfill.js')]
 	},
 	devtool: '#source-map',
 	output: {
@@ -66,12 +40,11 @@ module.exports = {
 			},
 			{
 				test: /\.scss$/,
-				use: extractSass.extract({
-					use: [
-						{ loader: 'css-loader', options: { minimize: true } },
-						{ loader: 'sass-loader', options: { includePaths: [resolve(__dirname, '../')] } }
-					],
-				})
+				use: [
+					MiniCssExtractPlugin.loader,
+					{ loader: 'css-loader', options: { minimize: true } },
+					{ loader: 'sass-loader', options: { includePaths: [resolve(__dirname, '../')] } }
+				],
 			},
 			{
 				test: /\.(ttf|eot|svg|woff|woff2)$/,
@@ -88,25 +61,28 @@ module.exports = {
 				NODE_ENV: JSON.stringify('production'),
 			},
 		}),
-		extractSass,
-		new webpack.optimize.CommonsChunkPlugin({
-			names: ['vendor'],
-			minChunks: Infinity,
-		}),
-		new webpack.optimize.UglifyJsPlugin({
-			compressor: {
-				warnings: false,
-				screw_ie8: true,
-				unused: true,
-				dead_code: true,
-			},
-			output: {
-				comments: false,
-			},
-			sourceMap: true,
+		new MiniCssExtractPlugin({
+			filename: '[name].[contenthash].css',
 		}),
 		new ManifestPlugin({ publicPath: 'https://static.pubpub.org/dist/' }),
 	],
+	optimization: {
+		minimizer: [
+			new UglifyJsPlugin({
+				sourceMap: true,
+			}),
+		],
+		splitChunks: {
+			cacheGroups: {
+				vendors: {
+					test: /[\\/]node_modules[\\/]/,
+					name: 'vendor',
+					chunks: 'all',
+					minChunks: 2,
+				},
+			}
+		},
+	},
 	node: {
 		net: 'empty',
 		tls: 'empty',

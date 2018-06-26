@@ -41,6 +41,7 @@ const Html = (props) => {
 				<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 				<meta name="google-site-verification" content="jmmJFnkSOeIEuS54adOzGMwc0kwpsa8wQ-L4GyPpPDg" />
 				<link rel="stylesheet" type="text/css" href={getPath('baseStyle', 'css')} />
+				<link rel="stylesheet" type="text/css" href={getPath('vendor', 'css')} />
 				<link rel="stylesheet" type="text/css" href={getPath(props.chunkName, 'css')} />
 				<script dangerouslySetInnerHTML={{ __html: 'let _paq = [];' }} />
 			</head>
@@ -48,7 +49,7 @@ const Html = (props) => {
 				<div id="root">
 					{props.children}
 				</div>
-				<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=fetch,default,HTMLCanvasElement.prototype.toBlob" />
+				<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=fetch,default,HTMLCanvasElement.prototype.toBlob,Object.entries" />
 				<script id="initial-data" type="text/plain" data-json={JSON.stringify(props.initialData)} />
 				<script src={getPath('vendor', 'js')} />
 				<script src={getPath(props.chunkName, 'js')} />

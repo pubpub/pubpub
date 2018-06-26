@@ -1,13 +1,7 @@
 const { resolve } = require('path');
 const { readdirSync } = require('fs');
-const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
-
-const extractSass = new ExtractTextPlugin({
-	filename: '[name].css',
-	allChunks: true,
-});
 
 const containerEntries = readdirSync(resolve(__dirname, '../containers')).filter((item)=> {
 	if (item === '.DS_Store') { return false; }
@@ -20,32 +14,10 @@ const containerEntries = readdirSync(resolve(__dirname, '../containers')).filter
 }, {});
 
 module.exports = {
+	mode: 'development',
 	entry: {
 		...containerEntries,
 		baseStyle: resolve(__dirname, '../baseStyle.scss'),
-		vendor: [
-			resolve(__dirname, '../../static/objectEntriesPolyfill.js'),
-			'raven-js',
-			'@blueprintjs/core',
-			'@blueprintjs/labs',
-			'@pubpub/editor',
-			'prosemirror-collab',
-			'prosemirror-commands',
-			'prosemirror-compress',
-			'prosemirror-gapcursor',
-			'prosemirror-history',
-			'prosemirror-inputrules',
-			'prosemirror-keymap',
-			'prosemirror-model',
-			'prosemirror-schema-list',
-			'prosemirror-schema-table',
-			'prosemirror-state',
-			'prosemirror-transform',
-			'prosemirror-view',
-			'react',
-			'react-dom',
-			'react-addons-css-transition-group',
-		]
 	},
 	resolve: {
 		modules: [resolve(__dirname, '../'), 'node_modules']
@@ -75,12 +47,11 @@ module.exports = {
 			},
 			{
 				test: /\.scss$/,
-				use: extractSass.extract({
-					use: [
-						{ loader: 'css-loader', options: { minimize: false } },
-						{ loader: 'sass-loader', options: { includePaths: [resolve(__dirname, '../')] } }
-					],
-				})
+				use: [
+					MiniCssExtractPlugin.loader,
+					{ loader: 'css-loader', options: { minimize: false } },
+					{ loader: 'sass-loader', options: { includePaths: [resolve(__dirname, '../')] } }
+				],
 			},
 			{
 				test: /\.(ttf|eot|svg|woff|woff2)$/,
@@ -91,13 +62,24 @@ module.exports = {
 		],
 	},
 	plugins: [
-		extractSass,
-		new webpack.optimize.CommonsChunkPlugin({
-			names: ['vendor'],
-			minChunks: Infinity,
+		new MiniCssExtractPlugin({
+			filename: '[name].css',
 		}),
 		new ManifestPlugin({ publicPath: '/dist/' }),
+
 	],
+	optimization: {
+		splitChunks: {
+			cacheGroups: {
+				vendors: {
+					test: /[\\/]node_modules[\\/]/,
+					name: 'vendor',
+					chunks: 'all',
+					minChunks: 2,
+				},
+			}
+		},
+	},
 	node: {
 		net: 'empty',
 		tls: 'empty',
