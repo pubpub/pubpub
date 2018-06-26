@@ -202,29 +202,26 @@ class PubCollabShare extends Component {
 											ref={provided.innerRef}
 											className={`main-list ${snapshot.isDraggingOver ? 'dragging' : ''}`}
 										>
-											{this.state.collaborators.map((item)=> {
+											{this.state.collaborators.map((item, index)=> {
 												return (
-													<Draggable key={`draggable-${item.id}`} draggableId={item.id}>
+													<Draggable key={`draggable-${item.id}`} draggableId={item.id} index={index}>
 														{(providedItem, snapshotItem) => (
-															<div>
-																<div
-																	ref={providedItem.innerRef}
-																	className={`draggable-item ${snapshotItem.isDragging ? 'dragging' : ''}`}
-																	style={providedItem.draggableStyle}
-																>
-																	<PubCollaboratorDetails
-																		key={`details-${item.id}`}
-																		pubId={this.props.pubData.id}
-																		handle={<span {...providedItem.dragHandleProps} className="pt-icon-standard pt-icon-drag-handle-horizontal" />}
-																		canManage={this.props.canManage}
-																		lastAdmin={item.Collaborator.permissions === 'manage' && numPubAdmins === 1}
-																		collaboratorData={item}
-																		onCollaboratorUpdate={this.props.onCollaboratorUpdate}
-																		onCollaboratorDelete={this.props.onCollaboratorDelete}
-																		// isPermissionsMode={true}
-																	/>
-																</div>
-																{providedItem.placeholder}
+															<div
+																ref={providedItem.innerRef}
+																className={`draggable-item ${snapshotItem.isDragging ? 'dragging' : ''}`}
+																{...providedItem.draggableProps}
+															>
+																<PubCollaboratorDetails
+																	key={`details-${item.id}`}
+																	pubId={this.props.pubData.id}
+																	handle={<span {...providedItem.dragHandleProps} className="pt-icon-standard pt-icon-drag-handle-horizontal" />}
+																	canManage={this.props.canManage}
+																	lastAdmin={item.Collaborator.permissions === 'manage' && numPubAdmins === 1}
+																	collaboratorData={item}
+																	onCollaboratorUpdate={this.props.onCollaboratorUpdate}
+																	onCollaboratorDelete={this.props.onCollaboratorDelete}
+																	// isPermissionsMode={true}
+																/>
 															</div>
 														)}
 													</Draggable>

@@ -119,55 +119,53 @@ class PubCollabChapters extends Component {
 									if (index === 0) { return null; }
 									const isEditing = this.state.editIndex === index;
 									return (
-										<Draggable key={`draggable-${chapter.id}`} draggableId={chapter.id}>
+										<Draggable key={`draggable-${chapter.id}`} draggableId={chapter.id} index={index - 1}>
 											{(providedItem, snapshotItem) => (
-												<div>
-													<div
-														ref={providedItem.innerRef}
-														className={`chapter ${snapshotItem.isDragging ? 'dragging' : ''} ${activeChapterId === chapter.id ? 'active' : ''}`}
-														style={providedItem.draggableStyle}
-													>
-														<span {...providedItem.dragHandleProps} className="drag">
-															<span className="pt-icon-standard pt-icon-drag-handle-horizontal" />
-														</span>
-														<div className="title">
-															{isEditing &&
-																<input
-																	className="pt-fill pt-input"
-																	value={chapter.title}
-																	onChange={(evt)=> { this.handleTitleChange(evt, index); }}
-																/>
-															}
-															{!isEditing &&
-																<a className="link-title" href={`/pub/${this.props.locationData.params.slug}/collaborate/content/${chapter.id}`}>
-																	{chapter.title}
-																</a>
-																// <span onClick={()=> { this.props.onChapterSet(chapter.id); }} className="link-title">{chapter.title}</span>
-															}
-														</div>
+												<div
+													ref={providedItem.innerRef}
+													className={`chapter ${snapshotItem.isDragging ? 'dragging' : ''} ${activeChapterId === chapter.id ? 'active' : ''}`}
+													{...providedItem.draggableProps}
+												>
+													<span {...providedItem.dragHandleProps} className="drag">
+														<span className="pt-icon-standard pt-icon-drag-handle-horizontal" />
+													</span>
+													<div className="title">
 														{isEditing &&
-															<button
-																className="pt-button pt-minimal pt-icon-tick"
-																onClick={()=> { this.handleSetEdit(undefined); }}
+															<input
+																className="pt-fill pt-input"
+																value={chapter.title}
+																onChange={(evt)=> { this.handleTitleChange(evt, index); }}
 															/>
 														}
 														{!isEditing &&
-															<button
-																className="pt-button pt-minimal pt-icon-edit2"
-																onClick={()=> { this.handleSetEdit(index); }}
-															/>
+															<a className="link-title" href={`/pub/${this.props.locationData.params.slug}/collaborate/content/${chapter.id}`}>
+																{chapter.title}
+															</a>
+															// <span onClick={()=> { this.props.onChapterSet(chapter.id); }} className="link-title">{chapter.title}</span>
 														}
-														<button
-															className="pt-button pt-minimal pt-icon-trash pt-intent-danger"
-															onClick={()=> { this.handleChapterRemove(index); }}
-														/>
 													</div>
-													{providedItem.placeholder}
+													{isEditing &&
+														<button
+															className="pt-button pt-minimal pt-icon-tick"
+															onClick={()=> { this.handleSetEdit(undefined); }}
+														/>
+													}
+													{!isEditing &&
+														<button
+															className="pt-button pt-minimal pt-icon-edit2"
+															onClick={()=> { this.handleSetEdit(index); }}
+														/>
+													}
+													<button
+														className="pt-button pt-minimal pt-icon-trash pt-intent-danger"
+														onClick={()=> { this.handleChapterRemove(index); }}
+													/>
 												</div>
 											)}
 										</Draggable>
 									);
 								})}
+								{provided.placeholder}
 							</div>
 						)}
 					</Droppable>

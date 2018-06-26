@@ -133,7 +133,7 @@ class NavDrag extends Component {
 				</div>
 				<DragDropContext onDragEnd={this.onDragEnd}>
 					<div className="main-list-wrapper">
-						<Droppable droppableId="mainDroppable" type="PRIMARY-NAV" direction="horizontal">
+						<Droppable droppableId="mainDroppable" direction="horizontal">
 							{(provided, snapshot) => (
 								<div
 									ref={provided.innerRef}
@@ -141,75 +141,69 @@ class NavDrag extends Component {
 								>
 									<div className="nav-item-background accent-background" />
 									<div className="nav-item accent-color">Home</div>
-									{this.state.nav.map((item)=> {
+									{this.state.nav.map((item, index)=> {
 										return (
-											<Draggable key={`draggable-${item.id}`} draggableId={item.id} type="PRIMARY-NAV">
+											<Draggable key={`draggable-${item.id}`} draggableId={item.id} index={index}>
 												{(providedItem, snapshotItem) => (
-													<div>
-														<div
-															ref={providedItem.innerRef}
-															className={`nav-item accent-color ${snapshotItem.isDragging ? 'dragging' : ''}`}
-															style={providedItem.draggableStyle}
-														>
-															<span {...providedItem.dragHandleProps} className="dragger-horiz">
-																<span className="pt-icon-standard pt-icon-drag-handle-vertical" />
-																{!item.children && !item.isPublic &&
-																	<span className="pt-icon-standard pt-icon-lock2 pt-align-left" />
-																}
-																{item.title}
-																{item.children &&
-																	<span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
-																}
-															</span>
-															<button onClick={()=>{ this.removeItem(item.id); }} className="pt-button pt-icon-small-cross pt-minimal" />
-
-															{item.children &&
-																<div className="dropdown-wrapper pt-card pt-elevation-2">
-																	<CollectionAutocomplete
-																		collections={this.props.collections}
-																		usedItems={item.children}
-																		placeholder="Add..."
-																		onSelect={(newItem)=>{ this.addItem(newItem, item.id); }}
-																	/>
-																	<Droppable droppableId={item.id} type={item.id}>
-																		{(providedSub, snapshotSub) => (
-																			<div
-																				ref={providedSub.innerRef}
-																				className={`sub-list ${snapshotSub.isDraggingOver ? 'dragging' : ''}`}
-																			>
-																				{item.children.map((child)=> {
-																					return (
-																						<Draggable key={`subitem-${item.id}-${child.id}`} draggableId={child.id} type={item.id}>
-																							{(providedItemSub, snapshotItemSub) => (
-																								<div>
-																									<div
-																										ref={providedItemSub.innerRef}
-																										className={`sub-nav-item ${snapshotItemSub.isDragging ? 'dragging' : ''}`}
-																										style={providedItemSub.draggableStyle}
-																									>
-																										<span {...providedItemSub.dragHandleProps} className="dragger-vert">
-																											<span className="pt-icon-standard pt-icon-drag-handle-horizontal" />
-																											{!child.children && !child.isPublic &&
-																												<span className="pt-icon-standard pt-icon-lock2 pt-align-left" />
-																											}
-																											{child.title}
-																										</span>
-																										<button onClick={()=>{ this.removeItem(child.id, item.id); }} className="pt-button pt-minimal pt-icon-small-cross" />
-																									</div>
-																									{providedItemSub.placeholder}
-																								</div>
-																							)}
-																						</Draggable>
-																					);
-																				})}
-																				{providedSub.placeholder}
-																			</div>
-																		)}
-																	</Droppable>
-																</div>
+													<div
+														ref={providedItem.innerRef}
+														className={`nav-item accent-color ${snapshotItem.isDragging ? 'dragging' : ''}`}
+														{...providedItem.draggableProps}
+													>
+														<span {...providedItem.dragHandleProps} className="dragger-horiz">
+															<span className="pt-icon-standard pt-icon-drag-handle-vertical" />
+															{!item.children && !item.isPublic &&
+																<span className="pt-icon-standard pt-icon-lock2 pt-align-left" />
 															}
-														</div>
-														{providedItem.placeholder}
+															{item.title}
+															{item.children &&
+																<span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
+															}
+														</span>
+														<button onClick={()=>{ this.removeItem(item.id); }} className="pt-button pt-icon-small-cross pt-minimal" />
+
+														{item.children &&
+															<div className="dropdown-wrapper pt-card pt-elevation-2">
+																<CollectionAutocomplete
+																	collections={this.props.collections}
+																	usedItems={item.children}
+																	placeholder="Add..."
+																	onSelect={(newItem)=>{ this.addItem(newItem, item.id); }}
+																/>
+																<Droppable droppableId={item.id}>
+																	{(providedSub, snapshotSub) => (
+																		<div
+																			ref={providedSub.innerRef}
+																			className={`sub-list ${snapshotSub.isDraggingOver ? 'dragging' : ''}`}
+																		>
+																			{item.children.map((child, childIndex)=> {
+																				return (
+																					<Draggable key={`subitem-${item.id}-${child.id}`} draggableId={child.id} index={childIndex}>
+																						{(providedItemSub, snapshotItemSub) => (
+																							<div
+																								ref={providedItemSub.innerRef}
+																								className={`sub-nav-item ${snapshotItemSub.isDragging ? 'dragging' : ''}`}
+																								{...providedItemSub.draggableProps}
+																							>
+																								<span {...providedItemSub.dragHandleProps} className="dragger-vert">
+																									<span className="pt-icon-standard pt-icon-drag-handle-horizontal" />
+																									{!child.children && !child.isPublic &&
+																										<span className="pt-icon-standard pt-icon-lock2 pt-align-left" />
+																									}
+																									{child.title}
+																								</span>
+																								<button onClick={()=>{ this.removeItem(child.id, item.id); }} className="pt-button pt-minimal pt-icon-small-cross" />
+																							</div>
+																						)}
+																					</Draggable>
+																				);
+																			})}
+																			{providedSub.placeholder}
+																		</div>
+																	)}
+																</Droppable>
+															</div>
+														}
 													</div>
 												)}
 											</Draggable>
