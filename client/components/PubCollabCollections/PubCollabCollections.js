@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { MultiSelect } from '@blueprintjs/labs';
+// import { MultiSelect } from '@blueprintjs/labs';
+import { MultiSelect } from '@blueprintjs/select';
 import fuzzysearch from 'fuzzysearch';
 
 require('./pubCollabCollections.scss');

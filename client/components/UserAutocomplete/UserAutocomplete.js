@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { MenuItem } from '@blueprintjs/core';
-import { Suggest } from '@blueprintjs/labs';
+// import { Suggest } from '@blueprintjs/labs';
+import { Suggest } from '@blueprintjs/select';
 import Avatar from 'components/Avatar/Avatar';
 import { apiFetch } from 'utilities';
 

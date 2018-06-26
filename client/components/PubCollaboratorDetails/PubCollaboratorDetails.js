@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox, Tooltip } from '@blueprintjs/core';
-import { MultiSelect } from '@blueprintjs/labs';
+// import { MultiSelect } from '@blueprintjs/labs';
+import { MultiSelect } from '@blueprintjs/select';
 import fuzzysearch from 'fuzzysearch';
 import Avatar from 'components/Avatar/Avatar';
 import PubCollabDropdownPermissions from 'components/PubCollabDropdownPermissions/PubCollabDropdownPermissions';

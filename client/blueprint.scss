@@ -1,4 +1,4 @@
-// Override Default blueprint colors here
+// Override Default blueprint colors
 // ****************************
 $dark-gray1: desaturate(#182026, 100%) ;
 $dark-gray2: desaturate(#202b33, 100%) ;
@@ -24,21 +24,12 @@ $blue3: $dark-gray3;
 $blue4: $dark-gray4;
 $blue5: $dark-gray5;
 
-// Import Core Blueprint sass
+// Override Blueprint sass variables
 // ****************************
-$icon-font-path: "~@blueprintjs/core/resources/icons";
-@import "~@blueprintjs/core/src/common/_colors.scss";
 @import "~@blueprintjs/core/src/common/_variables.scss";
-
-// Override Blueprint sass variables here
-// ****************************
 $pt-border-radius: floor($pt-grid-size / 5);
 
 // Import Core Blueprint sass
 // ****************************
-@import "~@blueprintjs/core/src/blueprint.scss";
-@import "~@blueprintjs/labs/src/blueprint-labs.scss";
-
-.pt-button[class*="pt-icon-"]::before {
-	line-height: inherit;
-}
+@import '~@blueprintjs/core/src/blueprint.scss';
+@import '~@blueprintjs/icons/lib/css/blueprint-icons.css';

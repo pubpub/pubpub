@@ -21,8 +21,8 @@
     "storybook": "start-storybook -p 9001 -c .storybook -s ./"
   },
   "dependencies": {
-    "@blueprintjs/core": "^1.35.0",
-    "@blueprintjs/labs": "^0.14.2",
+    "@blueprintjs/core": "^2.3.1",
+    "@blueprintjs/select": "^2.0.1",
     "@pubpub/editor": "^5.0.0-beta2",
     "@storybook/addon-options": "^3.3.2",
     "@storybook/react": "^3.3.2",

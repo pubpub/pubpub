@@ -60,7 +60,13 @@ sup {
 	-webkit-appearance: none;
 }
 
-@include font-face("pubpub-icons", "../static/icons/pubpub-icons", $file-formats: eot woff ttf svg);
+@font-face {
+	font-family: "pubpub-icons";
+	src: url("../static/icons/pubpub-icons.woff") format("woff"),
+		url("../static/icons/pubpub-icons.eot") format("eot"),
+		url("../static/icons/pubpub-icons.ttf") format("ttg"),
+		url("../static/icons/pubpub-icons.svg") format("svg");
+}
 .pt-icon-team:before { font-family: 'pubpub-icons' !important; content: "\e903"; }
 .pt-icon-edit2:before { font-family: 'pubpub-icons' !important; content: "\e904"; }
 .pt-icon-doc:before { font-family: 'pubpub-icons' !important; content: "\e902"; }
