@@ -1,10 +1,8 @@
+/* eslint-disable no-param-reassign */
 const { resolve } = require('path');
-const genDefaultConfig = require('@storybook/react/dist/server/config/defaults/webpack.config.js');
 
-module.exports = (baseConfig, env) => {
-	const config = genDefaultConfig(baseConfig, env);
-
-	config.module.rules.push(
+module.exports = (baseConfig) => {
+	baseConfig.module.rules.push(
 		{
 			test: /\.scss$/,
 			use: [
@@ -14,7 +12,15 @@ module.exports = (baseConfig, env) => {
 			]
 		}
 	);
+	baseConfig.module.rules.push(
+		{
+			test: /\.(ttf|eot|svg|woff|woff2)$/,
+			use: [
+				{ loader: 'file-loader', query: { name: 'fonts/[hash].[ext]', publicPath: '/dist/' } }
+			]
+		}
+	);
 
-	config.resolve.modules = [resolve(__dirname, '../client'), 'node_modules'];
-	return config;
+	baseConfig.resolve.modules = [resolve(__dirname, '../client'), 'node_modules'];
+	return baseConfig;
 };
