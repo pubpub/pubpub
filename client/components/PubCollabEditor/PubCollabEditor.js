@@ -13,6 +13,8 @@ import Footnote from '@pubpub/editor/addons/Footnote';
 import HighlightMenu from '@pubpub/editor/addons/HighlightMenu';
 import Citation from '@pubpub/editor/addons/Citation';
 import InsertMenu from '@pubpub/editor/addons/InsertMenu';
+import LinkMenu from '@pubpub/editor/addons/LinkMenu';
+import Table from '@pubpub/editor/addons/Table';
 import Discussion from 'components/DiscussionAddon/DiscussionAddon';
 import { s3Upload, getFirebaseConfig, getResizedUrl, formatCitationString, renderLatexString } from 'utilities';
 
@@ -91,13 +93,31 @@ class PubCollabEditor extends Component {
 					ref={this.props.onRef}
 					isReadOnly={this.props.isReadOnly}
 					key={this.props.editorKey}
+					editorId="collab"
+					onOptionsRender={(nodeDom, optionsDom)=>{
+						const getOffsetTop = (node, runningOffset)=> {
+							if (node.offsetParent.className.split(' ').indexOf('ProseMirror') > -1) {
+								return node.offsetTop + runningOffset;
+							}
+							return getOffsetTop(node.parentNode, node.offsetTop + runningOffset);
+						};
+
+						optionsDom.style.top = `${getOffsetTop(nodeDom, 0)}px`;
+						// This should be set to 100% plus the gap until the right margin content begins
+						optionsDom.style.left = 'calc(100% + 50px)';
+						// Width should be set to the width of the right margin
+						optionsDom.style.width = '250px';
+						optionsDom.style.fontSize = '14px';
+					}}
 				>
-					{!this.props.isReadOnly &&
+					{/*!this.props.isReadOnly &&
 						<FormattingMenu />
-					}
+					*/}
 					{!this.props.isReadOnly &&
 						<InsertMenu />
 					}
+					<LinkMenu />
+					<Table />
 					<Collaborative
 						firebaseConfig={getFirebaseConfig()}
 						clientData={this.props.clientData}
