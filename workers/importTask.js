@@ -54,6 +54,8 @@ export default (pubId, sourceUrl)=> {
 	})
 	.then((convertedHtml)=> {
 		console.log(convertedHtml);
+		// Need to check for media folder - and upload all assets there to server, and then replace urls
+
 		// Send HTML to editor, which converts to json
 		// And then editor (I think) writes to firebase
 	})
