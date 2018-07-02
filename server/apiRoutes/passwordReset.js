@@ -28,7 +28,7 @@ app.post('/api/password-reset', (req, res)=> {
 			To: updatedUser.email,
 			TemplateId: '3668905',
 			TemplateModel: {
-				action_url: `${req.headers.origin}/password-reset/${updatedUser.resetHash}/${updatedUser.slug}`
+				action_url: `https://${req.hostname}/password-reset/${updatedUser.resetHash}/${updatedUser.slug}`
 			}
 		});
 	})
