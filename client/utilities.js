@@ -25,17 +25,21 @@ export const hydrateWrapper = (Component)=> {
 			Raven.setUserContext({ username: initialData.loginData.slug });
 
 			/* Matomo Code */
-			_paq.push(['setDocumentTitle', `${document.domain}/${document.title}`]);
-			_paq.push(['setCookieDomain', '*.pubpub.org']);
-			_paq.push(['setDomains', ['*.pubpub.org']]);
-			_paq.push(['trackPageView']);
-			_paq.push(['enableLinkTracking']);
-			_paq.push(['enableHeartBeatTimer']);
-			const url = 'https://pubpub.innocraft.cloud/';
-			_paq.push(['setTrackerUrl', `${url}piwik.php`]);
-			_paq.push(['setSiteId', '1']);
-			const doc = document; const g = doc.createElement('script'); const s = doc.getElementsByTagName('script')[0];
-			g.type = 'text/javascript'; g.async = true; g.defer = true; g.src = `${url}piwik.js`; s.parentNode.insertBefore(g, s);
+			/* Set inside timeout because in some instances _paq does not seem to be */
+			/* instantiated yet */
+			setTimeout(()=> {
+				_paq.push(['setDocumentTitle', `${document.domain}/${document.title}`]);
+				_paq.push(['setCookieDomain', '*.pubpub.org']);
+				_paq.push(['setDomains', ['*.pubpub.org']]);
+				_paq.push(['trackPageView']);
+				_paq.push(['enableLinkTracking']);
+				_paq.push(['enableHeartBeatTimer']);
+				const url = 'https://pubpub.innocraft.cloud/';
+				_paq.push(['setTrackerUrl', `${url}piwik.php`]);
+				_paq.push(['setSiteId', '1']);
+				const doc = document; const g = doc.createElement('script'); const s = doc.getElementsByTagName('script')[0];
+				g.type = 'text/javascript'; g.async = true; g.defer = true; g.src = `${url}piwik.js`; s.parentNode.insertBefore(g, s);
+			}, 0);
 		}
 
 		hydrate(<Component {...initialData} />, document.getElementById('root'));
