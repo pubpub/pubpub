@@ -39,6 +39,7 @@
         "react/jsx-filename-extension": 0,
         "react/jsx-indent": [2, "tab"],
         "react/jsx-indent-props": [2, "tab"],
+        "react/jsx-one-expression-per-line": 0,
         "space-before-function-paren": 0,
     },
 }

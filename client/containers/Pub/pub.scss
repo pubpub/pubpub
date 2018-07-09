@@ -1,0 +1,44 @@
+/*
+There are three views:
+Default (used in mobile/narrow and browsers that don't support CSS grid)
+Grid (used in desktops that support CSS grid)
+ */
+
+#pub-container {
+	.container.pub {
+		.main-content {
+			font-size: 18px;
+			line-height: 1.6;
+		}
+	}
+	
+}
+
+@media only screen and (min-width: 750px) {
+	@supports (display: grid) {
+		#pub-container {
+			.pub-columns {
+				display: grid;
+				grid-template-columns: 1fr 275px;
+				grid-template-areas: "main side";
+				grid-column-gap: 2%;
+			}
+			.main-content {
+				grid-area: main;
+			}
+			.side-content {
+				grid-area: side;
+				padding: 1em;
+				background-color: #f0f0f2;
+			}
+		}
+	}
+}
+
+print {
+	#pub-container {
+		.container.pub {
+			max-width: 100%;
+		}
+	}
+}

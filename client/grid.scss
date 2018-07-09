@@ -1,58 +1,11 @@
-h1 {
-	font-size: 2.5rem;
-}
-
-h2 {
-	font-size: 2rem;
-}
-
-h3 {
-	font-size: 1.375rem;
-}
-
-h4 {
-	font-size: 1.125rem;
-}
-
-h5 {
-	font-size: 1rem;
-}
-
-h6 {
-	font-size: 0.875rem;
-}
-
-p {
-	font-size: 1.125rem;
-	line-height: 1.8;
-}
-
-/* POSITIONING */
-
-.left {
-	text-align: left;
-}
-
-.right {
-	text-align: right;
-}
-
-.center {
-	text-align: center;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-.justify {
-	text-align: justify;
-}
-
 /* ==== GRID SYSTEM ==== */
-
 .container {
 	width: 96%;
 	margin-left: auto;
 	margin-right: auto;
+	&.pub {
+		max-width: 1050px;
+	}
 	&.narrow {
 		max-width: 800px;
 	}
@@ -159,13 +112,7 @@ p {
 	display: none;
 }
 
-@media only screen and (min-width: 540px) {  /* 540px used to be 33.75em*/
-	.container {
-		// width: 80%;
-	}
-}
-
-@media only screen and (min-width: 720px) {  /* 720px used to be 45em*/
+@media only screen and (min-width: 720px) {
 	.col-1 {
 		width: 4.33%;
 	}
@@ -219,16 +166,8 @@ p {
 	}
 }
 
-// @media only screen and (min-width: 60em) { /* 960px */
-//   .container {
-//     // width: 75%;
-//     max-width: 60rem;
-//   }
-// }
-
-@media only screen and (min-width: 1200px) { /* 1200px Used to be 75em*/ 
+@media only screen and (min-width: 1200px) {
 	.container {
-		// width: 75%;
 		max-width: 1200px;
 	}
 }
