@@ -24,7 +24,7 @@
   "dependencies": {
     "@blueprintjs/core": "^2.3.1",
     "@blueprintjs/select": "^2.0.1",
-    "@pubpub/editor": "^5.0.0-beta12",
+    "@pubpub/editor": "5.0.0-beta12",
     "@storybook/addon-options": "^4.0.0-alpha.10",
     "@storybook/react": "^4.0.0-alpha.10",
     "amqplib": "^0.5.2",
@@ -99,8 +99,8 @@
     "sequelize": "^4.11.1",
     "style-loader": "^0.21.0",
     "throng": "^4.0.0",
-    "uglifyjs-webpack-plugin": "^1.2.7",
     "tmp-promise": "^1.0.4",
+    "uglifyjs-webpack-plugin": "^1.2.7",
     "universal-analytics": "^0.4.16",
     "url-loader": "^1.0.1",
     "uuid": "^3.3.0",
