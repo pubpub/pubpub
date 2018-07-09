@@ -18,7 +18,8 @@
     "lint": "eslint .",
     "postinstall": "npm run build-prod",
     "start": "concurrently --kill-others \"npm run api-dev\" \"npm run build-dev\"",
-    "storybook": "start-storybook -p 9001 -c .storybook -s ./"
+    "storybook": "start-storybook -p 9001 -c .storybook -s ./",
+    "workers": "NODE_PATH=./client WORKER=true nodemon workers/init.js --watch workers"
   },
   "dependencies": {
     "@blueprintjs/core": "^2.3.1",
@@ -26,6 +27,7 @@
     "@pubpub/editor": "^5.0.0-beta12",
     "@storybook/addon-options": "^4.0.0-alpha.10",
     "@storybook/react": "^4.0.0-alpha.10",
+    "amqplib": "^0.5.2",
     "babel-core": "^6.13.2",
     "babel-eslint": "^8.1.2",
     "babel-loader": "^7.1.2",
@@ -73,6 +75,7 @@
     "katex": "^0.9.0",
     "mini-css-extract-plugin": "^0.4.0",
     "newrelic": "^4.2.0",
+    "node-pandoc": "^0.3.0",
     "node-sass": "^4.7.2",
     "nodemon": "^1.14.12",
     "normalize.css": "^8.0.0",
@@ -97,6 +100,7 @@
     "style-loader": "^0.21.0",
     "throng": "^4.0.0",
     "uglifyjs-webpack-plugin": "^1.2.7",
+    "tmp-promise": "^1.0.4",
     "universal-analytics": "^0.4.16",
     "url-loader": "^1.0.1",
     "uuid": "^3.3.0",
