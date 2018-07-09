@@ -208,7 +208,7 @@ export const findCollection = (collectionId, useIncludes, initialData)=> {
 						model: User,
 						as: 'collaborators',
 						attributes: ['id', 'avatar', 'initials', 'fullName'],
-						through: { attributes: ['isAuthor', 'isContributor'] },
+						through: { attributes: ['isAuthor', 'isContributor', 'order'] },
 					},
 					{
 						required: false,
