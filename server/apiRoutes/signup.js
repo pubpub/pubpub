@@ -40,7 +40,7 @@ app.post('/api/signup', (req, res)=> {
 			To: signUpData.email,
 			TemplateId: '3270742',
 			TemplateModel: {
-				action_url: `${req.headers.origin}/user/create/${signUpData.hash}`
+				action_url: `https://${req.hostname}/user/create/${signUpData.hash}`
 			}
 		});
 	})

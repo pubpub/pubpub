@@ -43,7 +43,6 @@ const Html = (props) => {
 				<link rel="stylesheet" type="text/css" href={getPath('baseStyle', 'css')} />
 				<link rel="stylesheet" type="text/css" href={getPath('vendor', 'css')} />
 				<link rel="stylesheet" type="text/css" href={getPath(props.chunkName, 'css')} />
-				<script dangerouslySetInnerHTML={{ __html: 'let _paq = [];' }} />
 			</head>
 			<body>
 				<div id="root">
