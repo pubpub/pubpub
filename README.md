@@ -39,3 +39,9 @@ Navigate to `localhost:9876`
 
 ## Latex
 The [Latex Buildpack we are using](https://github.com/Thermondo/heroku-buildpack-tex) allows a `texlive.packages` file in the root directory to specify additional packages to be installed. [List of available packages](http://fedoraproject.org/wiki/Features/TeXLive) (I think... documentation on packages is a bit tough to find).
+
+# v5 Migration for Prod
+- Add Cloudamqp to heroku deployment
+- Add workers dyno to heroku deployment
+- Update database schemas
+- Remove local font loading from webpack.prod config. See comment TODO there.
