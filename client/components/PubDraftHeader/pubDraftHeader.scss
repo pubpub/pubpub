@@ -1,0 +1,33 @@
+.pub-draft-header-component {
+	height: 73px; /* Height of wrapper */
+	.wrapper {
+		background: #F0F0F0;
+		border-bottom: 1px solid #D2D2D2;
+		&.fixed {
+			position: fixed;
+			top: 0;
+			width: 100%;
+			z-index: 1;
+		}
+		.col-12 {
+			display: flex;
+			align-items: center;
+			&:first-of-type {
+				margin-bottom: 0px;
+			}
+			.left-section {
+				flex-grow: 1;
+				flex-shrink: 1;
+			}
+			.right-section {
+
+			}
+		}
+	}	
+}
+
+@media only screen and (max-width: 720px) {
+	.pub-draft-header-component {
+
+	}
+}

@@ -7,8 +7,8 @@ require('./pubHeader.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
-	setOverlayPanel: PropTypes.func.isRequired,
 	locationData: PropTypes.object,
+	setOverlayPanel: PropTypes.func.isRequired,
 };
 
 const defaultProps = {

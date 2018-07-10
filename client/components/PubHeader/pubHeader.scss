@@ -3,8 +3,7 @@
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-color: #F8F8F8;
-	border-bottom: 1px solid #B3B3B3;
-	margin-bottom: 1em;
+	border-bottom: 1px solid #D2D2D2;
 	.wrapper {
 		padding-bottom: 40px;
 		&.dim {
@@ -13,7 +12,7 @@
 			.pt-tag {
 			    background-color: rgba(255,255,255,0.3)
 			}
-			a, .pt-icon-standard:before, .pt-button:before, .pt-breadcrumb, .pt-breadcrumbs li:after {
+			a, .pt-tag, .pt-icon-standard:before, .pt-button:before, .pt-breadcrumb, .pt-breadcrumbs li:after {
 				color: white;
 			}
 		}
