@@ -33,6 +33,7 @@
         "max-len": 0,
         "no-tabs": 0,
         "no-underscore-dangle": 0,
+        "operator-linebreak": 0,
         "react/destructuring-assignment": 0,
         "react/jsx-boolean-value": 0,
         "react/forbid-prop-types": 0,
@@ -40,6 +41,7 @@
         "react/jsx-indent": [2, "tab"],
         "react/jsx-indent-props": [2, "tab"],
         "react/jsx-one-expression-per-line": 0,
+        "react/jsx-wrap-multiline": 0,
         "space-before-function-paren": 0,
     },
 }

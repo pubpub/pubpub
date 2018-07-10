@@ -14,7 +14,12 @@ export const accentDataLight = {
 	accentMinimalColor: 'rgba(38, 224, 208, 0.15)',
 };
 
-export const initialData = require('./dataInitial.js');
-export const communityData = require('./dataCommunity.js');
+const initialData = require('./dataInitial.js');
+
+export const locationData = initialData.locationData;
+export const loginData = initialData.loginData;
+export const communityData = initialData.communityData;
+// export const communityData = require('./dataCommunity.js');
 export const collectionData = require('./dataCollection.js');
 export const notificationsData = require('./dataNotifications.js');
+export const pubData = require('./dataPub.js');

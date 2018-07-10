@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import dateFormat from 'dateformat';
-import { Popover, PopoverInteractionKind, Position, Menu, MenuItem } from '@blueprintjs/core';
 import { getResizedUrl } from 'utilities';
 
 require('./pubHeader.scss');
@@ -10,7 +9,6 @@ const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	setOverlayPanel: PropTypes.func.isRequired,
 	locationData: PropTypes.object,
-	loginData: PropTypes.object.isRequired,
 };
 
 const defaultProps = {
@@ -55,6 +53,10 @@ const PubHeader = function(props) {
 		return prev;
 	}, undefined);
 
+	const numDiscussions = pubData.discussions.length;
+	const numCollaborators = pubData.collaborators.filter((item)=> {
+		return item.Collaborator.isAuthor || item.Collaborator.isContributor;
+	}).length;
 	return (
 		<div className={`pub-header-component ${mode ? 'mode' : ''}`} style={backgroundStyle}>
 			<div className={`wrapper ${useHeaderImage ? 'dim' : ''}`}>
@@ -72,78 +74,29 @@ const PubHeader = function(props) {
 									})}
 								</div>
 								<div className="buttons">
-									<div className="pt-button-group pt-minimal">
-										{pubData.localPermissions !== 'none' &&
-											<a href={`/pub/${pubData.slug}/collaborate`} className="pt-button pt-icon-edit2">Edit Pub</a>
-										}
+									<button
+										className="pt-button pt-small"
+										type="button"
+										onClick={()=> {
+											props.setOverlayPanel('pub');
+										}}
+									>
+										Pub Settings
+									</button>
 
-										<Popover
-											content={
-												<Menu>
-													<MenuItem
-														text="Share"
-														label={<span className="pt-icon-standard pt-icon-share" />}
-														onClick={()=> {
-															props.setOverlayPanel('share');
-														}}
-													/>
-													<MenuItem
-														text="Cite"
-														label={<span className="pt-icon-standard pt-icon-bookmark" />}
-														onClick={()=> {
-															props.setOverlayPanel('cite');
-														}}
-													/>
-													{props.loginData.isAdmin &&
-														<MenuItem
-															text="DOI"
-															label={<span className="pt-icon-standard pt-icon-doi" />}
-															onClick={()=> {
-																props.setOverlayPanel('doi');
-															}}
-														/>
-													}
-													{numChapters &&
-														<MenuItem
-															text="Contents"
-															label={<span className="pt-icon-standard pt-icon-properties" />}
-															onClick={()=> {
-																props.setOverlayPanel('chapters');
-															}}
-														/>
-													}
-												</Menu>
-											}
-											popoverClassName="pt-minimal"
-											interactionKind={PopoverInteractionKind.CLICK}
-											position={Position.BOTTOM_RIGHT}
-											transitionDuration={-1}
-											inheritDarkTheme={false}
-										>
-											<button className="pt-button pt-icon-menu" />
-										</Popover>
-
-										{/* <a
-											href={`/pub/${pubData.slug}/invite`}
-											className="pt-button"
-											onClick={(evt)=> {
-												evt.preventDefault();
-												props.setOverlayPanel('invite');
-											}}
-										>
-											Invite Reviewer
-										</a> */}
-										{/* <a href="/" className="pt-button">More</a> */}
-									</div>
+									<button
+										className="pt-button pt-small pt-intent-primary"
+										type="button"
+									>
+										Share
+									</button>
 								</div>
 							</div>
 
 							{!mode &&
 								<h1>{pubData.title}</h1>
 							}
-							{/* !!activeChapterTitle &&
-								<h2>{activeChapterTitle}</h2>
-							*/}
+
 							{mode &&
 								<a href={`/pub/${pubData.slug}`}><h1>{pubData.title}</h1></a>
 							}
@@ -191,39 +144,31 @@ const PubHeader = function(props) {
 								</div>
 							}
 							<div className="details">
-								<a
-									href={`/pub/${pubData.slug}/versions`}
-									className="pt-button pt-minimal date"
-									onClick={(evt)=> {
-										evt.preventDefault();
-										props.setOverlayPanel('versions');
-									}}
-								>
-									<span>{sortedVersionsList[sortedVersionsList.length - 1].id !== pubData.versions[0].id ? 'Updated ' : ''}{dateFormat(pubData.versions[0].createdAt, 'mmm dd, yyyy')}</span>
-									<span>{pubData.versionsList.length}</span>
-									<span className="pt-icon-standard pt-align-right pt-icon-multi-select" />
-								</a>
+
 								<a
 									href="#discussions"
-									className="pt-button pt-minimal discussions"
+									// className="pt-button pt-minimal discussions"
 								>
-									{pubData.discussions.length}
-									<span className="pt-icon-standard pt-align-right pt-icon-chat" />
+									<span className="pt-icon-standard pt-icon-chat" />
+									{numDiscussions} Discussion{numDiscussions === 1 ? '' : 's'}
 								</a>
 								<a
 									href={`/pub/${pubData.slug}/collaborators`}
-									className="pt-button pt-minimal collaborators"
+									// className="pt-button pt-minimal collaborators"
 									onClick={(evt)=> {
 										evt.preventDefault();
 										props.setOverlayPanel('collaborators');
 									}}
 								>
-									{pubData.collaborators.filter((item)=> {
-										return item.Collaborator.isAuthor || item.Collaborator.isContributor;
-									}).length}
-									<span className="pt-icon-standard pt-align-right pt-icon-team" />
+									<span className="pt-icon-standard pt-icon-team" />
+									{numCollaborators} Collaborator{numCollaborators === 1 ? '' : 's'}
 								</a>
-								{numChapters &&
+								<a>
+									<span className="pt-icon-standard pt-icon-multi-select" />
+									{pubData.versionsList.length} Saved Version{pubData.versionsList.length === 1 ? '' : 's'} (2 newer)
+								</a>
+
+								{/*numChapters &&
 									<a
 										href={`/pub/${pubData.slug}/contents${queryObject.version ? `?version=${queryObject.version}` : ''}`}
 										className="pt-button pt-minimal chapters"
@@ -235,7 +180,22 @@ const PubHeader = function(props) {
 										{currentChapterIndex + 1} of {numChapters}
 										<span className="pt-icon-standard pt-align-right pt-icon-properties" />
 									</a>
-								}
+								*/}
+							</div>
+							<div className="details">
+								<a
+									href={`/pub/${pubData.slug}/versions`}
+									// className="pt-button pt-minimal date"
+									onClick={(evt)=> {
+										evt.preventDefault();
+										props.setOverlayPanel('versions');
+									}}
+								>
+									<span>{sortedVersionsList[sortedVersionsList.length - 1].id !== pubData.versions[0].id ? 'Updated ' : ''}{dateFormat(pubData.versions[0].createdAt, 'mmm dd, yyyy')}</span>
+								</a>
+								<a>
+									Go to Working Draft
+								</a>
 							</div>
 						</div>
 					</div>

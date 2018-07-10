@@ -27,7 +27,6 @@ class Pub extends Component {
 
 	render() {
 		const pubData = this.state.pubData;
-
 		return (
 			<div id="pub-container">
 				<PageWrapper
