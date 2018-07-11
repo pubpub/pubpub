@@ -8,11 +8,11 @@ import analytics from '../analytics';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 import { findPub } from '../queryHelpers';
 
-const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64, 'base64').toString());
-firebaseAdmin.initializeApp({
-	credential: firebaseAdmin.credential.cert(serviceAccount),
-	databaseURL: process.env.FIREBASE_DATABASE_URL,
-});
+// const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64, 'base64').toString());
+// firebaseAdmin.initializeApp({
+// 	credential: firebaseAdmin.credential.cert(serviceAccount),
+// 	databaseURL: process.env.FIREBASE_DATABASE_URL,
+// });
 
 app.get(['/pub/:slug/collaborate', '/pub/:slug/collaborate/content/:chapterId'], (req, res, next)=> {
 	if (!hostIsValid(req, 'community')) { return next(); }

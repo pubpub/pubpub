@@ -309,7 +309,9 @@ Pub.hasMany(Discussion, { onDelete: 'CASCADE', as: 'discussions', foreignKey: 'p
 Discussion.belongsTo(Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' });
 
 /* Pubs can have many Versions */
+/* We also select as activeVersion at time */
 Pub.hasMany(Version, { onDelete: 'CASCADE', as: 'versions', foreignKey: 'pubId' });
+Pub.hasMany(Version, { onDelete: 'CASCADE', as: 'activeVersion', foreignKey: 'pubId' });
 
 /*  Users can have many Discussions. Discussions belong to a single User. */
 User.hasMany(Discussion, { onDelete: 'CASCADE', as: 'discussions', foreignKey: 'userId' });

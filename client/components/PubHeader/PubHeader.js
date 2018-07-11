@@ -30,21 +30,21 @@ const PubHeader = function(props) {
 	const queryObject = props.locationData.query;
 	const mode = props.locationData.params.mode;
 	const subMode = props.locationData.params.subMode;
-	const numChapters = Array.isArray(props.pubData.versions[0].content) && props.pubData.versions[0].content.length;
+	const numChapters = Array.isArray(props.pubData.activeVersion.content) && props.pubData.activeVersion.content.length;
 	// const activeChapterId = props.locationData.params.chapterId ? props.locationData.params.chapterId - 1 : 0;
-	// const activeChapterTitle = Array.isArray(props.pubData.versions[0].content) && props.pubData.versions[0].content[activeChapterId].title;
-	const sortedVersionsList = pubData.versionsList.sort((foo, bar)=>{
+	// const activeChapterTitle = Array.isArray(props.pubData.activeVersion.content) && props.pubData.activeVersion.content[activeChapterId].title;
+	const sortedVersionsList = pubData.versions.sort((foo, bar)=>{
 		if (foo.createdAt < bar.createdAt) { return 1; }
 		if (foo.createdAt > bar.createdAt) { return -1; }
 		return 0;
 	});
 
-	const activeVersion = pubData.versions[0];
+	const activeVersion = pubData.activeVersion;
 	const hasChapters = activeVersion && Array.isArray(activeVersion.content);
 	const chapterId = hasChapters ? props.locationData.params.chapterId || '' : undefined;
 
 	const chapterIds = hasChapters
-		? pubData.versions[0].content.map((chapter)=> {
+		? pubData.activeVersion.content.map((chapter)=> {
 			return chapter.id || '';
 		})
 		: [];
@@ -165,7 +165,7 @@ const PubHeader = function(props) {
 								</a>
 								<a>
 									<span className="pt-icon-standard pt-icon-multi-select" />
-									{pubData.versionsList.length} Saved Version{pubData.versionsList.length === 1 ? '' : 's'} (2 newer)
+									{pubData.versions.length} Saved Version{pubData.versions.length === 1 ? '' : 's'} (2 newer)
 								</a>
 
 								{/*numChapters &&
@@ -191,7 +191,7 @@ const PubHeader = function(props) {
 										props.setOverlayPanel('versions');
 									}}
 								>
-									<span>{sortedVersionsList[sortedVersionsList.length - 1].id !== pubData.versions[0].id ? 'Updated ' : ''}{dateFormat(pubData.versions[0].createdAt, 'mmm dd, yyyy')}</span>
+									<span>{sortedVersionsList[sortedVersionsList.length - 1].id !== pubData.activeVersion.id ? 'Updated ' : ''}{dateFormat(pubData.activeVersion.createdAt, 'mmm dd, yyyy')}</span>
 								</a>
 								<a>
 									Go to Working Draft

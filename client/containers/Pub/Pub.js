@@ -5,6 +5,7 @@ import PageWrapper from 'components/PageWrapper/PageWrapper';
 import Overlay from 'components/Overlay/Overlay';
 import PubHeader from 'components/PubHeader/PubHeader';
 import PubDraftHeader from 'components/PubDraftHeader/PubDraftHeader';
+import PubPresSideUser from 'components/PubPresSideUser/PubPresSideUser';
 
 import { apiFetch, hydrateWrapper, nestDiscussionsToThreads, generateHash } from 'utilities';
 
@@ -28,6 +29,12 @@ class Pub extends Component {
 
 	render() {
 		const pubData = this.state.pubData;
+		const authors = pubData.collaborators.filter((collaborator)=> {
+			return collaborator.Collaborator.isAuthor;
+		});
+		const contributors = pubData.collaborators.filter((collaborator)=> {
+			return collaborator.Collaborator.isContributor;
+		});
 		return (
 			<div id="pub-container">
 				<PageWrapper
@@ -40,15 +47,21 @@ class Pub extends Component {
 						locationData={this.props.locationData}
 						setOverlayPanel={()=>{}}
 					/>
+
+					{/* If in draft mode */}
 					<PubDraftHeader
 						pubData={pubData}
 						setOverlayPanel={()=>{}}
 						bottomCutoffId="discussions"
 					/>
+
+
 					<div className="container pub">
 						<div className="row">
 							<div className="col-12 pub-columns">
 								<div className="main-content">
+									{/* Editor - conditionally include collab plugin */}
+									{/* License */}
 									<p>Nature’s ecosystem provides us with an elegant example of a complex adaptive system where myriad “currencies” interact and respond to feedback systems that enable both flourishing and regulation. This collaborative model–rather than a model of exponential financial growth or the Singularity, which promises the transcendence of our current human condition through advances in technology—should provide the paradigm for our approach to artificial intelligence. More than 60 years ago, MIT mathematician and philosopher Norbert Wiener warned us that “when human atoms are knit into an organization in which they are used, not in their full right as responsible human beings, but as cogs and levers and rods, it matters little that their raw material is flesh and blood.” We should heed Wiener’s warning.</p>
 									<h1>INTRODUCTION: THE CANCER OF CURRENCY</h1>
 									<p>As the sun beats down on Earth, photosynthesis converts water, carbon dioxide and the sun’s energy into oxygen and glucose. Photosynthesis is one of the many chemical and biological processes that transforms one form of matter and energy into another. These molecules then get metabolized by other biological and chemical processes into yet other molecules. Scientists often call these molecules “currencies” because they represent a form of power that is transferred between cells or processes to mutual benefit—“traded,” in effect. The biggest difference between these and financial currencies is that there is no “master currency” or “currency exchange.” Rather, each currency can only be used by certain processes, and the “market” of these currencies drives the dynamics that are “life.” </p>
@@ -57,7 +70,57 @@ class Pub extends Component {
 									<p>Unfortunately, our current human civilization does not have the built-in resilience of our environment, and the paradigms that set our goals and drive the evolution of society today have set us on a dangerous course which the mathematician Norbert Wiener warned us about decades ago. The paradigm of a single master currency has driven many corporations and institutions to lose sight of their original missions. Values and complexity are focused more and more on prioritizing exponential financial growth, led by for-profit corporate entities that have gained autonomy, rights, power, and nearly unregulated societal influence. The behavior of these entities are akin to cancers. Healthy cells regulate their growth and respond to their surroundings, even eliminating themselves if they wander into an organ where they don’t belong. Cancerous cells, on the other hand, optimize for unconstrained growth and spread with disregard to their function or context.</p>
 								</div>
 								<div className="side-content">
-									Side
+									{/* TOC */}
+									{/* Collaborators */}
+									{/* */}
+									<div className="header-title">Table of Contents</div>
+									<div className="toc">
+										<a>Series Foreword </a>
+										<a>Foreword by Colleen Macklin </a>
+										<a>1 Our Game Could Be Your Life </a>
+										<a>2 Resonant Learning </a>
+										<a><b>3 In a Game, You Can Be Whoever You Wan…</b></a>
+										<a className="section">Introduction</a>
+										<a className="section">Analysis</a>
+										<a className="section">Opinions</a>
+										<a className="section">Further Exploration</a>
+										<a>4 “I Wish I Could Go On Here Forever” </a>
+										<a>5 Discovering the Secret World of Ysola </a>
+										<a>6 Beetles, Beasties, and Bunnies in Your Ba…</a>
+										<a>7 Doorway to Games </a>
+										<a>8 Measuring Resonant Success </a>
+										<a>9 Games not Gamification</a>
+									</div>
+
+									{!!authors.length &&
+										<div>
+											<div className="header-title">Authors</div>
+
+											{authors.sort((foo, bar)=> {
+												if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
+												if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
+												if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
+												if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
+												return 0;
+											}).map((item)=> {
+												return <PubPresSideUser user={item} key={item.id} />;
+											})}
+										</div>
+									}
+									{!!contributors.length &&
+										<div>
+											<div className="header-title">Contributors</div>
+											{contributors.sort((foo, bar)=> {
+												if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
+												if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
+												if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
+												if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
+												return 0;
+											}).map((item)=> {
+												return <PubPresSideUser user={item} key={item.id} />;
+											})}
+										</div>
+									}
 								</div>
 							</div>
 						</div>

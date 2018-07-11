@@ -51,48 +51,58 @@ export const findPub = (req, initialData, isDraft)=> {
 			},
 			{
 				required: false,
-				separate: true,
+				// separate: true,
 				model: Version,
 				as: 'versions',
+				attributes: ['createdAt', 'id']
+				// ...versionParameters
+			},
+			{
+				required: false,
+				separate: true,
+				model: Version,
+				as: 'activeVersion',
 				...versionParameters
 			}
 		]
 	});
 	// const getVersionsList = 5;
-	const getVersionsList = Pub.findOne({
-		where: {
-			slug: req.params.slug.toLowerCase(),
-			communityId: initialData.communityData.id,
-		},
-		attributes: ['id'],
-		include: [{
-			required: false,
-			model: Version,
-			as: 'versions',
-			attributes: ['createdAt', 'id']
-		}]
-	});
+	// const getActiveVersion = Version.findOne({
+	// 	where: {
+	// 		slug: req.params.slug.toLowerCase(),
+	// 		communityId: initialData.communityData.id,
+	// 	},
+	// 	attributes: ['id'],
+	// 	include: [{
+	// 		required: false,
+	// 		model: Version,
+	// 		as: 'versions',
+	// 		attributes: ['createdAt', 'id']
+	// 	}]
+	// });
 	const getCommunityAdminData = CommunityAdmin.findOne({
 		where: {
 			userId: initialData.loginData.id,
 			communityId: initialData.communityData.id,
 		}
 	});
-	return Promise.all([getPubData, getVersionsList, getCommunityAdminData])
-	.then(([pubData, versionsListData, communityAdminData])=> {
+	return Promise.all([getPubData, getCommunityAdminData])
+	.then(([pubData, communityAdminData])=> {
 		if (!pubData) { throw new Error('Pub Not Found'); }
-		const hasChapters = !isDraft && pubData.versions[0] && Array.isArray(pubData.versions[0].content);
+		const pubDataJson = pubData.toJSON();
+		const activeVersion = pubDataJson.activeVersion[0];
+		const hasChapters = !isDraft && activeVersion && Array.isArray(activeVersion.content);
 		// const chapterIndex = initialData.locationData.params.chapterId;
 		const chapterId = initialData.locationData.params.chapterId;
-		const validChapterId = hasChapters && pubData.versions[0].content.reduce((prev, curr)=> {
+		const validChapterId = hasChapters && activeVersion.content.reduce((prev, curr)=> {
 			if (!chapterId) { return true; }
 			if (chapterId === curr.id) { return true; }
 			return prev;
 		}, false);
-		// const chapterOutOfRange = hasChapters && chapterIndex > pubData.versions[0].content.length || chapterIndex < 1;
+		// const chapterOutOfRange = hasChapters && chapterIndex > activeVersion.content.length || chapterIndex < 1;
 		if (hasChapters && !validChapterId) { throw new Error('Pub Not Found'); }
 
-		const pubDataJson = pubData.toJSON();
+		
 		const userPermissions = pubDataJson.collaborators.reduce((prev, curr)=> {
 			if (curr.id === initialData.loginData.id) { return curr.Collaborator.permissions; }
 			return prev;
@@ -100,22 +110,23 @@ export const findPub = (req, initialData, isDraft)=> {
 
 		/* Remove the content from the chapters other than the rendered */
 		/* chapter to save bytes on the transfer */
-		const formattedVersionsData = !hasChapters
-			? pubDataJson.versions
-			: [{
-				...pubDataJson.versions[0],
-				content: pubDataJson.versions[0].content.map((item, index)=> {
+		const formattedActiveVersionData = !hasChapters
+			? activeVersion
+			: {
+				...activeVersion,
+				content: activeVersion.content.map((item, index)=> {
 					if (!chapterId && index === 0) { return item; }
 					if (item.id === chapterId) { return item; }
 					return { title: item.title, id: item.id };
 				})
-			}];
+			};
 
 		const adminPermissions = communityAdminData ? pubDataJson.adminPermissions : 'none';
 		const formattedPubData = {
 			...pubDataJson,
-			versions: formattedVersionsData,
-			versionsList: versionsListData.toJSON().versions,
+			// versions: formattedVersionsData,
+			activeVersion: formattedActiveVersionData,
+			// versionsList: versionsListData.toJSON().versions,
 			collaborators: [
 				...pubDataJson.collaborators,
 				...pubDataJson.emptyCollaborators.map((item)=> {
