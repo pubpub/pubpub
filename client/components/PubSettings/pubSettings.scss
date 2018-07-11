@@ -1,0 +1,28 @@
+.pub-settings-component {
+	display: flex;
+	.left-column {
+		padding-right: 20px;
+		flex-shrink: 1;
+		flex-grow: 0;
+		position: relative;
+		font-weight: bold;
+		&:after {
+			content: "";
+			background: #E0E0E0;
+			position: absolute;
+			width: 1px;
+			height: calc(100% + 40px);
+			top: -20px;
+			right: 0px;
+		}
+		.pt-menu {
+			padding: 0px;
+			min-width: auto;
+		}
+	}
+	.right-column {
+		padding-left: 20px;
+		flex-grow: 1;
+		overflow: hidden;
+	}
+}

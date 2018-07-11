@@ -71,7 +71,6 @@ class PubBody extends Component {
 			return prev;
 		}, undefined);
 		this.props.setActiveThread(threadNumber);
-		// this.props.onHighlightClick(threadNumber);
 	};
 
 	render() {
@@ -107,7 +106,7 @@ class PubBody extends Component {
 					editorId={this.props.slug}
 					initialContent={this.props.isDraft ? undefined : this.props.content}
 					isReadOnly={this.props.isReadOnly}
-					showHeaderLinks={true}
+					showHeaderLinks={!this.props.isDraft}
 					ref={this.props.onRef}
 					placeholder={this.props.isDraft ? 'Begin writing here...' : undefined}
 					onOptionsRender={(nodeDom, optionsDom)=>{
@@ -119,9 +118,10 @@ class PubBody extends Component {
 						};
 
 						optionsDom.style.top = `${getOffsetTop(nodeDom, 0)}px`;
-						// This should be set to 100% plus the gap until the right margin content begins
-						optionsDom.style.left = ' calc(100% + (100% + 275px) * (4/96))'; // Side is 275px, gap is 4%. As set in pub.scss
-						// Width should be set to the width of the right margin
+						/* Left should be set to 100% plus the gap until the right margin content begins */
+						/* Side is 275px, gap is 4%. As set in pub.scss */
+						optionsDom.style.left = 'calc(100% + (100% + 275px) * (4/96))';
+						/* Width should be set to the width of the right margin */
 						optionsDom.style.width = '275px';
 						optionsDom.style.fontSize = '14px';
 					}}

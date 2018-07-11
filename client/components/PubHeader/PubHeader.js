@@ -8,7 +8,7 @@ require('./pubHeader.scss');
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	locationData: PropTypes.object,
-	setOverlayPanel: PropTypes.func.isRequired,
+	setSettingsMode: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -78,7 +78,7 @@ const PubHeader = function(props) {
 										className="pt-button pt-small"
 										type="button"
 										onClick={()=> {
-											props.setOverlayPanel('pub');
+											props.setSettingsMode('pub');
 										}}
 									>
 										Pub Settings
@@ -157,7 +157,7 @@ const PubHeader = function(props) {
 									// className="pt-button pt-minimal collaborators"
 									onClick={(evt)=> {
 										evt.preventDefault();
-										props.setOverlayPanel('collaborators');
+										props.setSettingsMode('collaborators');
 									}}
 								>
 									<span className="pt-icon-standard pt-icon-team" />
@@ -174,7 +174,7 @@ const PubHeader = function(props) {
 										className="pt-button pt-minimal chapters"
 										onClick={(evt)=> {
 											evt.preventDefault();
-											props.setOverlayPanel('chapters');
+											props.setSettingsMode('chapters');
 										}}
 									>
 										{currentChapterIndex + 1} of {numChapters}
@@ -189,7 +189,7 @@ const PubHeader = function(props) {
 										// className="pt-button pt-minimal date"
 										onClick={(evt)=> {
 											evt.preventDefault();
-											props.setOverlayPanel('versions');
+											props.setSettingsMode('versions');
 										}}
 									>
 										<span>{sortedVersionsList[sortedVersionsList.length - 1].id !== activeVersion.id ? 'Updated ' : ''}{dateFormat(pubData.activeVersion.createdAt, 'mmm dd, yyyy')}</span>

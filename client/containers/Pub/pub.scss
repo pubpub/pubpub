@@ -7,7 +7,9 @@ Grid (used in desktops that support CSS grid)
 #pub-container {
 	.container.pub {
 		.main-content {
-			
+			.license-wrapper {
+				padding: 4em 0em;
+			}
 		}
 	}
 	// Todo - this .discsussions is just for debugging

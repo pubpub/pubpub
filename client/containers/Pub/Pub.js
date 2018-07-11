@@ -7,6 +7,8 @@ import PubHeader from 'components/PubHeader/PubHeader';
 import PubDraftHeader from 'components/PubDraftHeader/PubDraftHeader';
 import PubPresSideUser from 'components/PubPresSideUser/PubPresSideUser';
 import PubBody from 'components/PubBodyNew/PubBody';
+import PubSettings from 'components/PubSettings/PubSettings';
+import License from 'components/License/License';
 import { apiFetch, hydrateWrapper, getFirebaseConfig, nestDiscussionsToThreads, getRandomColor, generateHash } from 'utilities';
 
 require('@firebase/auth');
@@ -40,10 +42,11 @@ class Pub extends Component {
 		this.state = {
 			pubData: this.props.pubData,
 			activeCollaborators: [this.localUser],
+			settingsMode: undefined,
 			collabStatus: 'connecting',
 			docReadyForHighlights: false,
 			activeThreadNumber: undefined,
-			initialContent: undefined,
+			initialDiscussionContent: undefined,
 			fixIt: true,
 			scrolledToPermanent: false,
 			sectionsData: [{ id: '', order: 0, title: 'Introduction' }],
@@ -52,10 +55,13 @@ class Pub extends Component {
 		};
 		this.setSavingTimeout = null;
 		this.getHighlightContent = this.getHighlightContent.bind(this);
+		this.setActiveThread = this.setActiveThread.bind(this);
+		this.setSettingsMode = this.setSettingsMode.bind(this);
 		this.handleEditorRef = this.handleEditorRef.bind(this);
 		this.handleMenuWrapperRef = this.handleMenuWrapperRef.bind(this);
+		this.handleNewHighlightDiscussion = this.handleNewHighlightDiscussion.bind(this);
 		this.handleStatusChange = this.handleStatusChange.bind(this);
-
+		this.handleClientChange = this.handleClientChange.bind(this);
 	}
 
 	getHighlightContent(from, to) {
@@ -79,6 +85,14 @@ class Pub extends Component {
 			id: `h${generateHash(8)}`, // Has to start with letter since it's a classname
 		};
 		return highlightObject;
+	}
+
+	setActiveThread(threadNumber) {
+		this.setState({ activeThreadNumber: threadNumber });
+	}
+
+	setSettingsMode(mode) {
+		this.setState({ settingsMode: mode });
 	}
 
 	handleEditorRef(ref) {
@@ -107,6 +121,20 @@ class Pub extends Component {
 		}
 	}
 
+	handleNewHighlightDiscussion(highlightObject) {
+		this.setState({
+			activeThreadNumber: 'new',
+			initialDiscussionContent: {
+				type: 'doc',
+				attrs: { meta: {} },
+				content: [
+					{ type: 'highlightQuote', attrs: { ...highlightObject, id: `h${generateHash(8)}` } },
+					{ type: 'paragraph', content: [] },
+				]
+			}
+		});
+	}
+
 	handleStatusChange(status) {
 		clearTimeout(this.setSavingTimeout);
 
@@ -127,6 +155,12 @@ class Pub extends Component {
 		if (this.state.collabStatus === 'disconnected' && status === 'connected') {
 			this.setState({ collabStatus: status });
 		}
+	}
+
+	handleClientChange(clients) {
+		this.setState({
+			activeCollaborators: [this.localUser, ...clients]
+		});
 	}
 
 	render() {
@@ -247,16 +281,18 @@ class Pub extends Component {
 					<PubHeader
 						pubData={pubData}
 						locationData={this.props.locationData}
-						setOverlayPanel={()=>{}}
+						setSettingsMode={this.setSettingsMode}
 					/>
 
 					{pubData.isDraft &&
 						<PubDraftHeader
 							pubData={pubData}
-							setOverlayPanel={()=>{}}
+							loginData={loginData}
+							setSettingsMode={this.setSettingsMode}
 							bottomCutoffId="discussions"
 							onRef={this.handleMenuWrapperRef}
 							collabStatus={this.state.collabStatus}
+							activeCollaborators={this.state.activeCollaborators}
 						/>
 					}
 
@@ -275,23 +311,25 @@ class Pub extends Component {
 										slug={pubData.slug}
 										highlights={this.state.docReadyForHighlights ? highlights : []}
 										hoverBackgroundColor={this.props.communityData.accentMinimalColor}
-										// setActiveThread={this.setActiveThread}
-										setActiveThread={()=>{}}
-										// onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
+										setActiveThread={this.setActiveThread}
+										onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
 										onNewHighlightDiscussion={()=>{}}
 
+										// Props from CollabEditor
 										editorKey={`${this.props.pubData.editorKey}${sectionId ? '/' : ''}${sectionId || ''}`}
 										isReadOnly={!pubData.isDraft || (!canManage && pubData.localPermissions !== 'edit')}
 										clientData={this.state.activeCollaborators[0]}
-										// onClientChange={this.handleClientChange}
-										onClientChange={()=>{}}
-										// onHighlightClick={this.setActiveThread}
-										onHighlightClick={()=>{}}
+										onClientChange={this.handleClientChange}
 										onStatusChange={this.handleStatusChange}
 										menuWrapperRefNode={this.state.menuWrapperRefNode}
 									/>
-									{/* Editor - conditionally include collab plugin */}
+
 									{/* License */}
+									{pubData.isDraft &&
+										<div className="license-wrapper">
+											<License />
+										</div>
+									}
 								</div>
 								<div className="side-content">
 									{/* TOC */}
@@ -362,6 +400,11 @@ class Pub extends Component {
 							</div>
 						</div>
 					</div>
+					<PubSettings
+						settingsMode={this.state.settingsMode}
+						setSettingsMode={this.setSettingsMode}
+						pubData={pubData}
+					/>
 				</PageWrapper>
 			</div>
 		);

@@ -17,7 +17,13 @@ const defaultProps = {
 
 const Overlay = function(props) {
 	return (
-		<BlueprintOverlay className="pt-overlay-scroll-container" isOpen={props.isOpen} onClose={props.onClose}>
+		<BlueprintOverlay
+			className="pt-overlay-scroll-container"
+			isOpen={props.isOpen}
+			onClose={props.onClose}
+			transitionName="pub-overlay"
+			transitionDuration={200}
+		>
 			<style>
 				{`
 					@media only screen and (min-width: ${props.maxWidth / 0.90}px) {
@@ -29,7 +35,7 @@ const Overlay = function(props) {
 				`}
 			</style>
 			<div className="overlay-wrapper pt-card pt-elevation-2">
-				{props.children}
+					{props.children}
 			</div>
 		</BlueprintOverlay>
 	);

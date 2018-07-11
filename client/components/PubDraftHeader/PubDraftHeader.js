@@ -1,20 +1,24 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import throttle from 'lodash.throttle';
+import { Tooltip } from '@blueprintjs/core';
+import Avatar from 'components/Avatar/Avatar';
 
 require('./pubDraftHeader.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
-	locationData: PropTypes.object,
-	setOverlayPanel: PropTypes.func.isRequired,
+	loginData: PropTypes.object.isRequired,
+	// locationData: PropTypes.object,
+	setSettingsMode: PropTypes.func.isRequired,
 	onRef: PropTypes.func.isRequired,
 	bottomCutoffId: PropTypes.string,
 	collabStatus: PropTypes.string.isRequired,
+	activeCollaborators: PropTypes.array.isRequired,
 };
 
 const defaultProps = {
-	locationData: { params: {} },
+	// locationData: { params: {} },
 	bottomCutoffId: '',
 };
 
@@ -59,6 +63,25 @@ class PubDraftHeader extends Component {
 
 	render() {
 		const pubData = this.props.pubData;
+		const uniqueActiveCollaborators = {};
+		this.props.activeCollaborators.forEach((item)=> {
+			if (item.initials !== '?') {
+				uniqueActiveCollaborators[item.id] = item;
+			}
+		});
+		const numAnonymous = this.props.activeCollaborators.reduce((prev, curr)=> {
+			if (curr.initials === '?') { return prev + 1; }
+			return prev;
+		}, 0);
+		if (numAnonymous) {
+			uniqueActiveCollaborators.anon = {
+				backgroundColor: 'rgba(96,96,96, 0.2)',
+				cursorColor: 'rgba(96,96,96, 1.0)',
+				id: 'anon',
+				initials: numAnonymous,
+				name: `${numAnonymous} anonymous user${numAnonymous === 1 ? '' : 's'}`,
+			};
+		}
 		return (
 			<div className="pub-draft-header-component" ref={this.headerRef}>
 				<div className={`wrapper ${this.state.isFixed ? 'fixed' : ''}`}>
@@ -81,6 +104,30 @@ class PubDraftHeader extends Component {
 									
 								</div>
 								<div className="right-section">
+									{Object.keys(uniqueActiveCollaborators).map((key)=> {
+										return uniqueActiveCollaborators[key];
+									}).filter((item)=> {
+										return item && item.id !== this.props.loginData.id;
+									}).map((collaborator)=> {
+										return (
+											<div className="avatar-wrapper" key={`present-avatar-${collaborator.id}`}>
+												<Tooltip
+													content={collaborator.name}
+													tooltipClassName="pt-dark"
+												>
+													<Avatar
+														/* Cast userInitials to string since
+														the anonymous Avatar is a int count */
+														userInitials={String(collaborator.initials)}
+														userAvatar={collaborator.image}
+														borderColor={collaborator.cursorColor}
+														borderWidth="2px"
+														width={24}
+													/>
+												</Tooltip>
+											</div>
+										);
+									})}
 									<button className="pt-button pt-small" type="button">
 										Editing
 										<span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
