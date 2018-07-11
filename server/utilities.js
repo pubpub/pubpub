@@ -260,6 +260,10 @@ export const handleErrors = (req, res, next)=> {
 		if (err.message === 'Community Not Found') {
 			return res.status(404).sendFile(resolve(__dirname, './errorPages/communityNotFound.html'));
 		}
+		if (err.message.indexOf('DraftRedirect:') === 0) {
+			const slug = err.message.split(':')[1];
+			return res.redirect(`/pub/${slug}/draft`);
+		}
 		if (err.message === 'Collection Not Found' ||
 			err.message === 'Pub Not Found' ||
 			err.message === 'User Not Admin' ||

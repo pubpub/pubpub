@@ -30,7 +30,8 @@ const PubHeader = function(props) {
 	const queryObject = props.locationData.query;
 	const mode = props.locationData.params.mode;
 	const subMode = props.locationData.params.subMode;
-	const numChapters = Array.isArray(props.pubData.activeVersion.content) && props.pubData.activeVersion.content.length;
+	const activeVersion = pubData.activeVersion;
+	const numChapters = activeVersion && Array.isArray(activeVersion.content) && activeVersion.content.length;
 	// const activeChapterId = props.locationData.params.chapterId ? props.locationData.params.chapterId - 1 : 0;
 	// const activeChapterTitle = Array.isArray(props.pubData.activeVersion.content) && props.pubData.activeVersion.content[activeChapterId].title;
 	const sortedVersionsList = pubData.versions.sort((foo, bar)=>{
@@ -39,7 +40,6 @@ const PubHeader = function(props) {
 		return 0;
 	});
 
-	const activeVersion = pubData.activeVersion;
 	const hasChapters = activeVersion && Array.isArray(activeVersion.content);
 	const chapterId = hasChapters ? props.locationData.params.chapterId || '' : undefined;
 
@@ -165,7 +165,7 @@ const PubHeader = function(props) {
 								</a>
 								<a>
 									<span className="pt-icon-standard pt-icon-multi-select" />
-									{pubData.versions.length} Saved Version{pubData.versions.length === 1 ? '' : 's'} (2 newer)
+									{pubData.versions.length} Saved Version{pubData.versions.length === 1 ? '' : 's'}
 								</a>
 
 								{/*numChapters &&
@@ -183,19 +183,28 @@ const PubHeader = function(props) {
 								*/}
 							</div>
 							<div className="details">
-								<a
-									href={`/pub/${pubData.slug}/versions`}
-									// className="pt-button pt-minimal date"
-									onClick={(evt)=> {
-										evt.preventDefault();
-										props.setOverlayPanel('versions');
-									}}
-								>
-									<span>{sortedVersionsList[sortedVersionsList.length - 1].id !== pubData.activeVersion.id ? 'Updated ' : ''}{dateFormat(pubData.activeVersion.createdAt, 'mmm dd, yyyy')}</span>
-								</a>
-								<a href={`/pub/${pubData.slug}/draft`}>
-									Go to Working Draft
-								</a>
+								{!pubData.isDraft &&
+									<a
+										href={`/pub/${pubData.slug}/versions`}
+										// className="pt-button pt-minimal date"
+										onClick={(evt)=> {
+											evt.preventDefault();
+											props.setOverlayPanel('versions');
+										}}
+									>
+										<span>{sortedVersionsList[sortedVersionsList.length - 1].id !== activeVersion.id ? 'Updated ' : ''}{dateFormat(pubData.activeVersion.createdAt, 'mmm dd, yyyy')}</span>
+									</a>
+								}
+								{!pubData.isDraft &&
+									<a href={`/pub/${pubData.slug}/draft`}>
+										Go to Working Draft
+									</a>
+								}
+								{pubData.isDraft && !!sortedVersionsList.length &&
+									<a href={`/pub/${pubData.slug}`}>
+										Go to Newest Saved Version
+									</a>
+								}
 							</div>
 						</div>
 					</div>

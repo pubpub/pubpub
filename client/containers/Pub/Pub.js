@@ -50,9 +50,11 @@ class Pub extends Component {
 			editorRefNode: undefined,
 			menuWrapperRefNode: undefined,
 		};
+		this.setSavingTimeout = null;
 		this.getHighlightContent = this.getHighlightContent.bind(this);
 		this.handleEditorRef = this.handleEditorRef.bind(this);
 		this.handleMenuWrapperRef = this.handleMenuWrapperRef.bind(this);
+		this.handleStatusChange = this.handleStatusChange.bind(this);
 
 	}
 
@@ -102,6 +104,28 @@ class Pub extends Component {
 			this.setState({
 				menuWrapperRefNode: ref,	
 			});
+		}
+	}
+
+	handleStatusChange(status) {
+		clearTimeout(this.setSavingTimeout);
+
+		/* If loading, wait until 'connected' */
+		if (this.state.collabStatus === 'connecting' && status === 'connected') {
+			this.setState({ collabStatus: status });
+		}
+		if (this.state.collabStatus !== 'connecting' && this.state.collabStatus !== 'disconnected') {
+			if (status === 'saving') {
+				this.setSavingTimeout = setTimeout(()=> {
+					this.setState({ collabStatus: status });
+				}, 250);
+			} else {
+				this.setState({ collabStatus: status });
+			}
+		}
+		/* If disconnected, only set state if the new status is 'connected' */
+		if (this.state.collabStatus === 'disconnected' && status === 'connected') {
+			this.setState({ collabStatus: status });
 		}
 	}
 
@@ -232,6 +256,7 @@ class Pub extends Component {
 							setOverlayPanel={()=>{}}
 							bottomCutoffId="discussions"
 							onRef={this.handleMenuWrapperRef}
+							collabStatus={this.state.collabStatus}
 						/>
 					}
 
@@ -243,7 +268,7 @@ class Pub extends Component {
 									<PubBody
 										onRef={this.handleEditorRef}
 										isDraft={pubData.isDraft}
-										versionId={activeVersion.id}
+										versionId={activeVersion && activeVersion.id}
 										sectionId={sectionId}
 										content={activeContent}
 										threads={threads}
@@ -262,8 +287,7 @@ class Pub extends Component {
 										onClientChange={()=>{}}
 										// onHighlightClick={this.setActiveThread}
 										onHighlightClick={()=>{}}
-										// onStatusChange={this.handleStatusChange}
-										onStatusChange={()=>{}}
+										onStatusChange={this.handleStatusChange}
 										menuWrapperRefNode={this.state.menuWrapperRefNode}
 									/>
 									{/* Editor - conditionally include collab plugin */}

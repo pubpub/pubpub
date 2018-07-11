@@ -10,6 +10,7 @@ const propTypes = {
 	setOverlayPanel: PropTypes.func.isRequired,
 	onRef: PropTypes.func.isRequired,
 	bottomCutoffId: PropTypes.string,
+	collabStatus: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
@@ -65,7 +66,11 @@ class PubDraftHeader extends Component {
 						<div className="row">
 							<div className="col-12">
 								<div className="left-section">
-									Working Draft autosaved.
+									<span className={`collab-status ${this.props.collabStatus}`}>
+										<span>Working Draft </span>
+										{this.props.collabStatus}
+										{this.props.collabStatus === 'saving' || this.props.collabStatus === 'connecting' ? '...' : ''}
+									</span>
 								</div>
 								<div className="right-section">
 									<button className="pt-button pt-intent-primary pt-small" type="button">Save Version</button>

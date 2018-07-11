@@ -22,6 +22,15 @@
 			.right-section {
 
 			}
+			.collab-status {
+				&.disconnected {
+					background: #db3737;
+					color: #ffffff;
+					padding: 2px 6px;
+					border-radius: 2px;
+				}
+				text-transform: capitalize;
+			}
 			.header-menu {
 				border-bottom: 0px solid transparent;
 				margin-bottom: 0px;

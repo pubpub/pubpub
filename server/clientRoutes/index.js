@@ -11,9 +11,9 @@ require('./landing');			// Route: '/'
 require('./dashboard');			// Route: ['/dashboard', '/dashboard/:slug', '/dashboard/:slug/:mode']
 require('./notifications');		// Route: '/notifications'
 require('./pubCreate');			// Route: '/pub/create'
-require('./pubCollaboration');	// Route: '/pub/:slug/collaborate'
-require('./pubPresentation');	// Route: ['/pub/:slug', '/pub/:slug/:mode', '/pub/:slug/:mode/:subMode']
-require('./pub');				// Route: ['/newpub/:slug', '/newpub/:slug/:mode', '/newpub/:slug/:mode/:subMode']
+// require('./pubCollaboration');	// Route: '/pub/:slug/collaborate'
+// require('./pubPresentation');	// Route: ['/pub/:slug', '/pub/:slug/:mode', '/pub/:slug/:mode/:subMode']
+require('./pub');				// Route: ['/pub/:slug', '/pub/:slug/content/:chapterId', '/pub/:slug/draft', '/pub/:slug/draft/content/:chapterId', '/pub/:slug/:mode', '/pub/:slug/:mode/:subMode']
 require('./collection'); 		// Route: ['/', '/:slug']
 require('./collectionSubmit'); 	// Route: ['/:slug/submit', '/:slug/submit/:hash']
 
