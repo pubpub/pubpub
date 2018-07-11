@@ -4,6 +4,7 @@
 	font-size: 12px;
 	.avatar-wrapper {
 		flex-shrink: 0;
+		z-index: -1;
 	}
 	.details-wrapper {
 		flex-grow: 1;

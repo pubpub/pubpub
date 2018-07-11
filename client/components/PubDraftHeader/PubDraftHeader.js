@@ -8,6 +8,7 @@ const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	locationData: PropTypes.object,
 	setOverlayPanel: PropTypes.func.isRequired,
+	onRef: PropTypes.func.isRequired,
 	bottomCutoffId: PropTypes.string,
 };
 
@@ -71,7 +72,7 @@ class PubDraftHeader extends Component {
 								</div>
 							</div>
 							<div className="col-12">
-								<div className="left-section">
+								<div className="left-section" ref={this.props.onRef} key="wrapper">
 									
 								</div>
 								<div className="right-section">

@@ -85,7 +85,7 @@ const PubHeader = function(props) {
 									</button>
 
 									<button
-										className="pt-button pt-small pt-intent-primary"
+										className="pt-button pt-small"
 										type="button"
 									>
 										Share
@@ -193,7 +193,7 @@ const PubHeader = function(props) {
 								>
 									<span>{sortedVersionsList[sortedVersionsList.length - 1].id !== pubData.activeVersion.id ? 'Updated ' : ''}{dateFormat(pubData.activeVersion.createdAt, 'mmm dd, yyyy')}</span>
 								</a>
-								<a>
+								<a href={`/pub/${pubData.slug}/draft`}>
 									Go to Working Draft
 								</a>
 							</div>

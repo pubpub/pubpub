@@ -6,9 +6,11 @@ import Overlay from 'components/Overlay/Overlay';
 import PubHeader from 'components/PubHeader/PubHeader';
 import PubDraftHeader from 'components/PubDraftHeader/PubDraftHeader';
 import PubPresSideUser from 'components/PubPresSideUser/PubPresSideUser';
+import PubBody from 'components/PubBodyNew/PubBody';
+import { apiFetch, hydrateWrapper, getFirebaseConfig, nestDiscussionsToThreads, getRandomColor, generateHash } from 'utilities';
 
-import { apiFetch, hydrateWrapper, nestDiscussionsToThreads, generateHash } from 'utilities';
-
+require('@firebase/auth');
+require('@firebase/database');
 require('./pub.scss');
 
 const propTypes = {
@@ -21,20 +23,196 @@ const propTypes = {
 class Pub extends Component {
 	constructor(props) {
 		super(props);
+		const loginData = props.loginData;
+		const loginId = loginData.id || `anon-${Math.floor(Math.random() * 9999)}`;
+		const userColor = getRandomColor(loginId);
+		this.localUser = {
+			id: loginId,
+			backgroundColor: `rgba(${userColor}, 0.2)`,
+			cursorColor: `rgba(${userColor}, 1.0)`,
+			image: loginData.avatar || null,
+			name: loginData.fullName || 'Anonymous',
+			initials: loginData.initials || '?',
+			canEdit: props.pubData.localPermissions === 'edit' || props.pubData.localPermissions === 'manage',
+			firebaseToken: props.pubData.firebaseToken,
+		};
+
 		this.state = {
 			pubData: this.props.pubData,
+			activeCollaborators: [this.localUser],
+			collabStatus: 'connecting',
+			docReadyForHighlights: false,
+			activeThreadNumber: undefined,
+			initialContent: undefined,
+			fixIt: true,
+			scrolledToPermanent: false,
+			sectionsData: [{ id: '', order: 0, title: 'Introduction' }],
+			editorRefNode: undefined,
+			menuWrapperRefNode: undefined,
 		};
-		this.editorRef = React.createRef();
+		this.getHighlightContent = this.getHighlightContent.bind(this);
+		this.handleEditorRef = this.handleEditorRef.bind(this);
+		this.handleMenuWrapperRef = this.handleMenuWrapperRef.bind(this);
+
+	}
+
+	getHighlightContent(from, to) {
+		const primaryEditorState = this.state.editorRefNode.state.editorState;
+		if (!primaryEditorState || primaryEditorState.doc.nodeSize < from || primaryEditorState.doc.nodeSize < to) { return {}; }
+		const exact = primaryEditorState.doc.textBetween(from, to);
+		const prefix = primaryEditorState.doc.textBetween(Math.max(0, from - 10), Math.max(0, from));
+		const suffix = primaryEditorState.doc.textBetween(Math.min(primaryEditorState.doc.nodeSize - 2, to), Math.min(primaryEditorState.doc.nodeSize - 2, to + 10));
+		const hasSections = this.state.pubData.isDraft
+			? this.state.sectionsData.length > 1
+			: Array.isArray(this.state.pubData.versions[0].content);
+		const sectionId = hasSections ? this.props.locationData.params.sectionId || '' : undefined;
+		const highlightObject = {
+			exact: exact,
+			prefix: prefix,
+			suffix: suffix,
+			from: from,
+			to: to,
+			version: this.state.pubData.isDraft ? undefined : this.props.pubData.versions[0].id,
+			section: hasSections ? sectionId : undefined,
+			id: `h${generateHash(8)}`, // Has to start with letter since it's a classname
+		};
+		return highlightObject;
+	}
+
+	handleEditorRef(ref) {
+		if (!this.state.editorRefNode) {
+			/* Need to set timeout so DOM can render */
+			/* When in draft, this timeout is how long we think */
+			/* it will take the firebase server to */
+			/* initalize the most recent doc and steps. */
+			/* It doesn't hurt to be a bit conservative here */
+			const timeoutDelay = this.state.pubData.isDraft
+				? 2500
+				: 0;
+			setTimeout(()=> {
+				this.setState({
+					docReadyForHighlights: true,
+					editorRefNode: ref,
+				});
+			}, timeoutDelay);
+		}
+	}
+	handleMenuWrapperRef(ref) {
+		if (!this.state.menuWrapperRefNode) {
+			this.setState({
+				menuWrapperRefNode: ref,	
+			});
+		}
 	}
 
 	render() {
 		const pubData = this.state.pubData;
+		const loginData = this.props.loginData;
+		const queryObject = this.props.locationData.query;
+		const mode = this.props.locationData.params.mode;
+		const subMode = this.props.locationData.params.subMode;
+
+		const activeVersion = pubData.activeVersion;
 		const authors = pubData.collaborators.filter((collaborator)=> {
 			return collaborator.Collaborator.isAuthor;
 		});
 		const contributors = pubData.collaborators.filter((collaborator)=> {
 			return collaborator.Collaborator.isContributor;
 		});
+
+		const discussions = pubData.discussions || [];
+		const threads = nestDiscussionsToThreads(discussions);
+
+		/* The activeThread can either be the one selected in state, */
+		/* or one hardcoded in the URL */
+		const activeThread = threads.reduce((prev, curr)=> {
+			if (
+				curr[0].threadNumber === Number(this.props.locationData.params.subMode) ||
+				curr[0].threadNumber === Number(this.state.activeThreadNumber)
+			) {
+				return curr;
+			}
+			return prev;
+		}, undefined);
+
+		/* Section variables */
+		const hasSections = pubData.isDraft
+			? this.state.sectionsData.length > 1
+			: activeVersion && Array.isArray(activeVersion.content);
+
+		const sectionId = this.props.locationData.params.sectionId || '';
+		const sectionsData = pubData.isDraft ? this.state.sectionsData : activeVersion.content;
+
+		const sectionIds = hasSections
+			? sectionsData.map((section)=> {
+				return section.id || '';
+			})
+			: [];
+		const currentSectionIndex = sectionIds.reduce((prev, curr, index)=> {
+			if (sectionId === curr) { return index; }
+			return prev;
+		}, undefined);
+		const nextSectionId = sectionIds.length > currentSectionIndex + 1
+			? sectionIds[currentSectionIndex + 1]
+			: '';
+		const prevSectionId = currentSectionIndex - 1 > 0
+			? sectionIds[currentSectionIndex - 1]
+			: '';
+
+
+		const activeContent = !hasSections
+			? (activeVersion && activeVersion.content)
+			: activeVersion.content.reduce((prev, curr)=> {
+				if (curr.id === sectionId) { return curr.content; }
+				return prev;
+			}, activeVersion.content[0].content);
+
+		/* Get Highlights from discussions. Filtering for */
+		/* only highlights that are active in the current section */
+		/* and not archived. */
+		const highlights = discussions.filter((item)=> {
+			return !item.isArchived && item.highlights;
+		}).reduce((prev, curr)=> {
+			const highlightsWithThread = curr.highlights.map((item)=> {
+				return { ...item, threadNumber: curr.threadNumber };
+			});
+			return [...prev, ...highlightsWithThread];
+		}, [])
+		.filter((highlight)=> {
+			if (!hasSections) { return true; }
+			return sectionId === highlight.section;
+		});
+
+		/* Add a permalink highlight if the URL mandates one */
+		const hasPermanentHighlight = pubData.isDraft
+			? typeof window !== 'undefined' && this.state.editorRefNode && queryObject.from && queryObject.to
+			: typeof window !== 'undefined' && this.state.editorRefNode && queryObject.from && queryObject.to && queryObject.version
+		if (hasPermanentHighlight) {
+			highlights.push({
+				...this.getHighlightContent(Number(queryObject.from), Number(queryObject.to)),
+				permanent: true,
+			});
+			if (!this.state.scrolledToPermanent) {
+				setTimeout(()=> {
+					const thing = document.getElementsByClassName('permanent')[0];
+					if (thing) {
+						window.scrollTo(0, thing.getBoundingClientRect().top - 135);
+						this.setState({ scrolledToPermanent: true });
+					}
+				}, 100);
+			}
+		}
+
+		/* Calculate Permissions for UI elements */
+		let canManage = false;
+		if (pubData.localPermissions === 'manage') { canManage = true; }
+		if (pubData.adminPermissions === 'manage' && loginData.isAdmin) { canManage = true; }
+
+		let canDelete = false;
+		if (canManage && !pubData.firstPublishedAt) { canDelete = true; }
+		if (canManage && loginData.isAdmin) { canDelete = true; }
+
+
 		return (
 			<div id="pub-container">
 				<PageWrapper
@@ -48,26 +226,48 @@ class Pub extends Component {
 						setOverlayPanel={()=>{}}
 					/>
 
-					{/* If in draft mode */}
-					<PubDraftHeader
-						pubData={pubData}
-						setOverlayPanel={()=>{}}
-						bottomCutoffId="discussions"
-					/>
+					{pubData.isDraft &&
+						<PubDraftHeader
+							pubData={pubData}
+							setOverlayPanel={()=>{}}
+							bottomCutoffId="discussions"
+							onRef={this.handleMenuWrapperRef}
+						/>
+					}
 
 
 					<div className="container pub">
 						<div className="row">
 							<div className="col-12 pub-columns">
 								<div className="main-content">
+									<PubBody
+										onRef={this.handleEditorRef}
+										isDraft={pubData.isDraft}
+										versionId={activeVersion.id}
+										sectionId={sectionId}
+										content={activeContent}
+										threads={threads}
+										slug={pubData.slug}
+										highlights={this.state.docReadyForHighlights ? highlights : []}
+										hoverBackgroundColor={this.props.communityData.accentMinimalColor}
+										// setActiveThread={this.setActiveThread}
+										setActiveThread={()=>{}}
+										// onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
+										onNewHighlightDiscussion={()=>{}}
+
+										editorKey={`${this.props.pubData.editorKey}${sectionId ? '/' : ''}${sectionId || ''}`}
+										isReadOnly={!pubData.isDraft || (!canManage && pubData.localPermissions !== 'edit')}
+										clientData={this.state.activeCollaborators[0]}
+										// onClientChange={this.handleClientChange}
+										onClientChange={()=>{}}
+										// onHighlightClick={this.setActiveThread}
+										onHighlightClick={()=>{}}
+										// onStatusChange={this.handleStatusChange}
+										onStatusChange={()=>{}}
+										menuWrapperRefNode={this.state.menuWrapperRefNode}
+									/>
 									{/* Editor - conditionally include collab plugin */}
 									{/* License */}
-									<p>Nature’s ecosystem provides us with an elegant example of a complex adaptive system where myriad “currencies” interact and respond to feedback systems that enable both flourishing and regulation. This collaborative model–rather than a model of exponential financial growth or the Singularity, which promises the transcendence of our current human condition through advances in technology—should provide the paradigm for our approach to artificial intelligence. More than 60 years ago, MIT mathematician and philosopher Norbert Wiener warned us that “when human atoms are knit into an organization in which they are used, not in their full right as responsible human beings, but as cogs and levers and rods, it matters little that their raw material is flesh and blood.” We should heed Wiener’s warning.</p>
-									<h1>INTRODUCTION: THE CANCER OF CURRENCY</h1>
-									<p>As the sun beats down on Earth, photosynthesis converts water, carbon dioxide and the sun’s energy into oxygen and glucose. Photosynthesis is one of the many chemical and biological processes that transforms one form of matter and energy into another. These molecules then get metabolized by other biological and chemical processes into yet other molecules. Scientists often call these molecules “currencies” because they represent a form of power that is transferred between cells or processes to mutual benefit—“traded,” in effect. The biggest difference between these and financial currencies is that there is no “master currency” or “currency exchange.” Rather, each currency can only be used by certain processes, and the “market” of these currencies drives the dynamics that are “life.” </p>
-									<p>As certain currencies became abundant as an output of a successful process or organism, other organisms evolved to take that output and convert it into something else. Over billions of years, this is how the Earth’s ecosystem has evolved, creating vast systems of metabolic pathways and forming highly complex self-regulating systems that, for example, stabilize our body temperatures or the temperature of the Earth, despite continuous fluctuations and changes among the individual elements at every scale—from micro to macro. The output of one process becomes the input of another. Ultimately, everything interconnects.</p>
-									<p>We live in a civilization in which the primary currencies are money and power—where more often than not, the goal is to accumulate both at the expense of society at large. This is a very simple and fragile system compared to the Earth’s ecosystems, where myriads of “currencies” are exchanged among processes to create hugely complex systems of inputs and outputs with feedback systems that adapt and regulate stocks, flows, and connections.</p>
-									<p>Unfortunately, our current human civilization does not have the built-in resilience of our environment, and the paradigms that set our goals and drive the evolution of society today have set us on a dangerous course which the mathematician Norbert Wiener warned us about decades ago. The paradigm of a single master currency has driven many corporations and institutions to lose sight of their original missions. Values and complexity are focused more and more on prioritizing exponential financial growth, led by for-profit corporate entities that have gained autonomy, rights, power, and nearly unregulated societal influence. The behavior of these entities are akin to cancers. Healthy cells regulate their growth and respond to their surroundings, even eliminating themselves if they wander into an organ where they don’t belong. Cancerous cells, on the other hand, optimize for unconstrained growth and spread with disregard to their function or context.</p>
 								</div>
 								<div className="side-content">
 									{/* TOC */}

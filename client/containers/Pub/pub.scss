@@ -7,10 +7,10 @@ Grid (used in desktops that support CSS grid)
 #pub-container {
 	.container.pub {
 		.main-content {
-			font-size: 18px;
-			line-height: 1.6;
+			
 		}
 	}
+	// Todo - this .discsussions is just for debugging
 	.discussions {
 		background-color: #F8F8F8;
 		font-size: 18px;
@@ -32,12 +32,9 @@ Grid (used in desktops that support CSS grid)
 			}
 			.main-content {
 				grid-area: main;
-				font-family: 'Georgia';
 			}
 			.side-content {
 				grid-area: side;
-				// padding: 1em;
-				// background-color: #f0f0f2;
 				.header-title {
 					font-weight: 600;
 					font-size: 16px;

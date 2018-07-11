@@ -13,10 +13,10 @@ firebaseAdmin.initializeApp({
 	databaseURL: process.env.FIREBASE_DATABASE_URL,
 });
 
-app.get(['/newpub/:slug', '/newpub/:slug/draft', '/newpub/:slug/:mode', '/newpub/:slug/content/:chapterId', '/newpub/:slug/:mode/:subMode'], (req, res, next)=> {
+app.get(['/pub/:slug', '/pub/:slug/content/:chapterId', '/pub/:slug/draft', '/pub/:slug/draft/content/:chapterId', '/pub/:slug/:mode', '/pub/:slug/:mode/:subMode'], (req, res, next)=> {
 	if (!hostIsValid(req, 'community')) { return next(); }
 
-	const isDraft = req.path === `/newpub/${req.params.slug}/draft`;
+	const isDraft = req.path.indexOf(`/pub/${req.params.slug}/draft`) === 0;
 	const acceptedModes = ['collaborators', 'versions', 'invite', 'discussions', 'contents'];
 	if (req.params.mode && acceptedModes.indexOf(req.params.mode) === -1) { return next(); }
 
