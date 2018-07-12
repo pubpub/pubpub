@@ -22,7 +22,7 @@ class PubSettings extends Component {
 
 	render() {
 		const pubData = this.props.pubData;
-		
+		const modes = ['pub', 'details', 'versions', 'permissions', 'metadata', 'settings', 'search'];
 		return (
 			<Overlay
 				isOpen={this.props.settingsMode}
@@ -32,12 +32,21 @@ class PubSettings extends Component {
 				<div className="pub-settings-component">
 					<div className="left-column">
 						<ul className="pt-menu">
-							<li><a class="pt-menu-item" tabindex="0">Details</a></li>
-							<li><a class="pt-menu-item" tabindex="0">Versions</a></li>
-							<li><a class="pt-menu-item pt-active" tabindex="0">Permissions</a></li>
-							<li><a class="pt-menu-item" tabindex="0">Metadata</a></li>
-							<li><a class="pt-menu-item" tabindex="0">Settings</a></li>
-							<li><a class="pt-menu-item" tabindex="0">Search</a></li>
+							{modes.map((mode)=> {
+								return (
+									<li>
+										<button
+											key={mode}
+											type="button"
+											onClick={()=> { this.props.setSettingsMode(mode); }}
+											className={`pt-menu-item ${this.props.settingsMode === mode ? 'pt-active' : ''}`}
+											tabIndex="0"
+										>
+											{mode}
+										</button>
+									</li>
+								);
+							})}
 						</ul>
 					</div>
 					<div className="right-column">

@@ -325,7 +325,7 @@ class Pub extends Component {
 									/>
 
 									{/* License */}
-									{pubData.isDraft &&
+									{!pubData.isDraft &&
 										<div className="license-wrapper">
 											<License />
 										</div>

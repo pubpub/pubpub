@@ -5,7 +5,6 @@
 		flex-shrink: 1;
 		flex-grow: 0;
 		position: relative;
-		font-weight: bold;
 		&:after {
 			content: "";
 			background: #E0E0E0;
@@ -18,6 +17,10 @@
 		.pt-menu {
 			padding: 0px;
 			min-width: auto;
+		}
+		.pt-menu-item {
+			font-weight: bold;
+			text-transform: capitalize;
 		}
 	}
 	.right-column {

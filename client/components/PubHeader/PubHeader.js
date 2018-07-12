@@ -74,6 +74,14 @@ const PubHeader = function(props) {
 									})}
 								</div>
 								<div className="buttons">
+									{!pubData.isDraft &&
+										<a
+											className="pt-button pt-small"
+											href={`/pub/${pubData.slug}/draft`}
+										>
+											Go To Working Draft
+										</a>
+									}
 									<button
 										className="pt-button pt-small"
 										type="button"
@@ -81,7 +89,7 @@ const PubHeader = function(props) {
 											props.setSettingsMode('pub');
 										}}
 									>
-										Pub Settings
+										Settings
 									</button>
 
 									<button
@@ -144,12 +152,23 @@ const PubHeader = function(props) {
 								</div>
 							}
 							<div className="details">
-
+								{!pubData.isDraft &&
+									<a
+										href={`/pub/${pubData.slug}/versions`}
+										// className="pt-button pt-minimal date"
+										onClick={(evt)=> {
+											evt.preventDefault();
+											props.setSettingsMode('versions');
+										}}
+									>
+										<span>{sortedVersionsList[sortedVersionsList.length - 1].id !== activeVersion.id ? 'Updated ' : ''}{dateFormat(pubData.activeVersion.createdAt, 'mmm dd, yyyy')}</span>
+									</a>
+								}
 								<a
 									href="#discussions"
 									// className="pt-button pt-minimal discussions"
 								>
-									<span className="pt-icon-standard pt-icon-chat" />
+									{/*<span className="pt-icon-standard pt-icon-chat" />*/}
 									{numDiscussions} Discussion{numDiscussions === 1 ? '' : 's'}
 								</a>
 								<a
@@ -160,12 +179,13 @@ const PubHeader = function(props) {
 										props.setSettingsMode('collaborators');
 									}}
 								>
-									<span className="pt-icon-standard pt-icon-team" />
+									{/*<span className="pt-icon-standard pt-icon-team" />*/}
 									{numCollaborators} Collaborator{numCollaborators === 1 ? '' : 's'}
 								</a>
 								<a>
-									<span className="pt-icon-standard pt-icon-multi-select" />
-									{pubData.versions.length} Saved Version{pubData.versions.length === 1 ? '' : 's'}
+									{/*<span className="pt-icon-standard pt-icon-multi-select" />*/}
+									{/* TODO: save older to be caluclated properly. Use this space to say newer, if that makes sense*/}
+									{pubData.versions.length} Older Version{pubData.versions.length === 1 ? '' : 's'}
 								</a>
 
 								{/*numChapters &&
@@ -182,7 +202,7 @@ const PubHeader = function(props) {
 									</a>
 								*/}
 							</div>
-							<div className="details">
+							{/*<div className="details">
 								{!pubData.isDraft &&
 									<a
 										href={`/pub/${pubData.slug}/versions`}
@@ -205,7 +225,7 @@ const PubHeader = function(props) {
 										Go to Newest Saved Version
 									</a>
 								}
-							</div>
+							</div>*/}
 						</div>
 					</div>
 				</div>
