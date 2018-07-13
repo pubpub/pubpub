@@ -38,26 +38,10 @@ Grid (used in desktops that support CSS grid)
 			.side-content {
 				grid-area: side;
 				.header-title {
+					display: block;
 					font-weight: 600;
 					font-size: 16px;
 					margin-bottom: 10px;
-				}
-				.toc {
-					border-left: 2px solid #CCC;
-					padding-left: 10px;
-					font-size: 14px;
-					margin-bottom: 4em;
-					a {
-						display: block;
-						width: 100%;
-						white-space: nowrap;
-						overflow: hidden;
-						text-overflow: ellipsis;
-						margin-bottom: 4px;
-						&.section {
-							padding-left: 2em;
-						}
-					}
 				}
 			}
 		}

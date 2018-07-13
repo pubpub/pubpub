@@ -9,6 +9,7 @@ import PubDraftHeader from 'components/PubDraftHeader/PubDraftHeader';
 import PubPresSideUser from 'components/PubPresSideUser/PubPresSideUser';
 import PubBody from 'components/PubBodyNew/PubBody';
 import PubOptions from 'components/PubOptions/PubOptions';
+import PubToc from 'components/PubToc/PubToc';
 import License from 'components/License/License';
 import { apiFetch, hydrateWrapper, getFirebaseConfig, nestDiscussionsToThreads, getRandomColor, generateHash } from 'utilities';
 
@@ -331,7 +332,6 @@ class Pub extends Component {
 		if (canManage && !pubData.firstPublishedAt) { canDelete = true; }
 		if (canManage && loginData.isAdmin) { canDelete = true; }
 
-
 		return (
 			<div id="pub-container">
 				<PageWrapper
@@ -393,28 +393,16 @@ class Pub extends Component {
 									}
 								</div>
 								<div className="side-content">
-									{/* TOC */}
-									{/* Collaborators */}
-									{/* */}
-									<div className="header-title">Table of Contents</div>
-									<div className="toc">
-										<a>Series Foreword </a>
-										<a>Foreword by Colleen Macklin </a>
-										<a>1 Our Game Could Be Your Life </a>
-										<a>2 Resonant Learning </a>
-										<a><b>3 In a Game, You Can Be Whoever You Wan…</b></a>
-										<a className="section">Introduction</a>
-										<a className="section">Analysis</a>
-										<a className="section">Opinions</a>
-										<a className="section">Further Exploration</a>
-										<a>4 “I Wish I Could Go On Here Forever” </a>
-										<a>5 Discovering the Secret World of Ysola </a>
-										<a>6 Beetles, Beasties, and Bunnies in Your Ba…</a>
-										<a>7 Doorway to Games </a>
-										<a>8 Measuring Resonant Success </a>
-										<a>9 Games not Gamification</a>
-									</div>
+									{/* Table of Contents */}
+									<PubToc
+										pubData={pubData}
+										locationData={this.props.locationData}
+										setOptionsMode={this.setOptionsMode}
+										editorRefNode={this.state.editorRefNode}
+										activeContent={activeContent}
+									/>
 
+									{/* Collaborators */}
 									{!!authors.length &&
 										<div>
 											<div className="header-title">Authors</div>
