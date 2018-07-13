@@ -1,0 +1,9 @@
+.pub-options-social-component {
+	.pt-button {
+		width: 45%;
+		margin: 20px 0px;
+		&:nth-child(odd) {
+			margin-right: 10%;
+		}
+	}	
+}

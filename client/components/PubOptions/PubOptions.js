@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Overlay from 'components/Overlay/Overlay';
 import PubOptionsCite from 'components/PubOptionsCite/PubOptionsCite';
+import PubOptionsDoi from 'components/PubOptionsDoi/PubOptionsDoi';
 import PubOptionsDetails from 'components/PubOptionsDetails/PubOptionsDetails';
 import PubOptionsDelete from 'components/PubOptionsDelete/PubOptionsDelete';
 import PubOptionsPages from 'components/PubOptionsPages/PubOptionsPages';
+import PubOptionsSocial from 'components/PubOptionsSocial/PubOptionsSocial';
 import PubOptionsVersions from 'components/PubOptionsVersions/PubOptionsVersions';
 
 
@@ -25,7 +27,7 @@ const defaultProps = {
 
 const PubOptions = (props)=> {
 	const optionsMode = props.optionsMode;
-	const modes = ['details', 'versions', 'pages', 'sharing', 'cite', 'export', 'analytics', 'delete'];
+	const modes = ['details', 'versions', 'pages', 'sharing', 'cite', 'DOI', 'social', 'export', 'analytics', 'delete'];
 	const defaultChildProps = {
 		communityData: props.communityData,
 		pubData: props.pubData,
@@ -65,6 +67,9 @@ const PubOptions = (props)=> {
 					{optionsMode === 'cite' &&
 						<PubOptionsCite key="cite" {...defaultChildProps} />
 					}
+					{optionsMode === 'DOI' &&
+						<PubOptionsDoi key="doi" {...defaultChildProps} />
+					}
 					{optionsMode === 'details' &&
 						<PubOptionsDetails key="details" {...defaultChildProps} />
 					}
@@ -74,10 +79,12 @@ const PubOptions = (props)=> {
 					{optionsMode === 'pages' &&
 						<PubOptionsPages key="pages" {...defaultChildProps} />
 					}
+					{optionsMode === 'social' &&
+						<PubOptionsSocial key="social" {...defaultChildProps} />
+					}
 					{optionsMode === 'versions' &&
 						<PubOptionsVersions key="versions" {...defaultChildProps} />
 					}
-					
 				</div>
 			</div>
 		</Overlay>
