@@ -100,9 +100,7 @@ class PubDraftHeader extends Component {
 								</div>
 							</div>
 							<div className="col-12">
-								<div className="left-section" ref={this.props.onRef} key="wrapper">
-									
-								</div>
+								<div className="left-section" ref={this.props.onRef} key="wrapper" />
 								<div className="right-section">
 									{Object.keys(uniqueActiveCollaborators).map((key)=> {
 										return uniqueActiveCollaborators[key];
@@ -140,7 +138,7 @@ class PubDraftHeader extends Component {
 			</div>
 		);
 	}
-};
+}
 
 PubDraftHeader.propTypes = propTypes;
 PubDraftHeader.defaultProps = defaultProps;

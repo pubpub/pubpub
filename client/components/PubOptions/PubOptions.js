@@ -55,6 +55,10 @@ const PubOptions = (props)=> {
 		canManage: canManage,
 	};
 
+	const leftColumnStyle = optionsMode === 'saveVersion'
+		? { display: 'none' }
+		: {};
+
 	return (
 		<Overlay
 			isOpen={optionsMode}
@@ -63,7 +67,7 @@ const PubOptions = (props)=> {
 		>
 			<div className="pub-options-component">
 				{/* Left Navigation Buttons */}
-				<div className="left-column">
+				<div className="left-column" style={leftColumnStyle}>
 					<ul className="pt-menu">
 						{modes.map((mode)=> {
 							return (

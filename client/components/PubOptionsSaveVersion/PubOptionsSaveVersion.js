@@ -124,7 +124,7 @@ class PubOptionsSaveVersion extends Component {
 					<Button
 						onClick={this.handlePublish}
 						className="pt-intent-primary"
-						text="Publish Snapshot"
+						text="Save Version"
 						loading={this.state.isLoading}
 					/>
 				</div>
