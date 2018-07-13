@@ -7,6 +7,7 @@ import PubOptionsDetails from 'components/PubOptionsDetails/PubOptionsDetails';
 import PubOptionsDelete from 'components/PubOptionsDelete/PubOptionsDelete';
 import PubOptionsPages from 'components/PubOptionsPages/PubOptionsPages';
 import PubOptionsSections from 'components/PubOptionsSections/PubOptionsSections';
+import PubOptionsSharing from 'components/PubOptionsSharing/PubOptionsSharing';
 import PubOptionsSocial from 'components/PubOptionsSocial/PubOptionsSocial';
 import PubOptionsVersions from 'components/PubOptionsVersions/PubOptionsVersions';
 
@@ -31,8 +32,14 @@ const defaultProps = {
 
 const PubOptions = (props)=> {
 	const optionsMode = props.optionsMode;
+	// TODO: Hide based on canManage, and other metrics
 	// TODO: Hide sections if we are not in draft, and there are no sections
 	const modes = ['details', 'versions', 'pages', 'sharing', 'cite', 'DOI', 'sections', 'social', 'export', 'analytics', 'delete'];
+
+	let canManage = false;
+	if (props.pubData.localPermissions === 'manage') { canManage = true; }
+	if (props.pubData.adminPermissions === 'manage' && props.loginData.isAdmin) { canManage = true; }
+
 	const defaultChildProps = {
 		communityData: props.communityData,
 		pubData: props.pubData,
@@ -40,6 +47,7 @@ const PubOptions = (props)=> {
 		locationData: props.locationData,
 		firebaseRef: props.firebaseRef,
 		setPubData: props.setPubData,
+		canManage: canManage,
 	};
 
 	return (
@@ -88,6 +96,9 @@ const PubOptions = (props)=> {
 					}
 					{optionsMode === 'sections' &&
 						<PubOptionsSections key="sections" {...defaultChildProps} />
+					}
+					{optionsMode === 'sharing' &&
+						<PubOptionsSharing key="sharing" {...defaultChildProps} />
 					}
 					{optionsMode === 'social' &&
 						<PubOptionsSocial key="social" {...defaultChildProps} />

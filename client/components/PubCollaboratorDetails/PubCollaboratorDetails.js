@@ -186,11 +186,11 @@ class PubCollaboratorDetails extends Component {
 							<Tooltip
 								content="Must be listed as Author or Contributor to add roles."
 								tooltipClassName="pt-dark"
-								isDisabled={this.state.isAuthor || this.state.isContributor}
+								disabled={this.state.isAuthor || this.state.isContributor}
 							>
 								<MultiSelect
 									items={this.getFilteredItems(this.state.roleQueryValue)}
-									itemRenderer={({ item, handleClick, isActive })=> {
+									itemRenderer={(item, { handleClick, isActive })=> {
 										return (
 											<li key={item}>
 												<a role="button" tabIndex={-1} onClick={handleClick} className={isActive ? 'pt-menu-item pt-active' : 'pt-menu-item'}>
