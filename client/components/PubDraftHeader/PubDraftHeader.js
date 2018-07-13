@@ -96,7 +96,7 @@ class PubDraftHeader extends Component {
 									</span>
 								</div>
 								<div className="right-section">
-									<button className="pt-button pt-intent-primary pt-small" type="button">Save Version</button>
+									<button className="pt-button pt-intent-primary pt-small" type="button" onClick={()=> { this.props.setOptionsMode('saveVersion'); }}>Save Version</button>
 								</div>
 							</div>
 							<div className="col-12">

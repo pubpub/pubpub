@@ -463,6 +463,7 @@ class Pub extends Component {
 						loginData={loginData}
 						locationData={this.props.locationData}
 						firebaseRef={this.firebaseRef}
+						editorRefNode={this.state.editorRefNode}
 						optionsMode={this.state.optionsMode}
 						setOptionsMode={this.setOptionsMode}
 						setPubData={this.setPubData}

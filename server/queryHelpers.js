@@ -91,32 +91,31 @@ export const findPub = (req, initialData, isDraft)=> {
 		if (!pubData) { throw new Error('Pub Not Found'); }
 		const pubDataJson = pubData.toJSON();
 		const activeVersion = pubDataJson.activeVersion[0];
-		const hasChapters = !isDraft && activeVersion && Array.isArray(activeVersion.content);
-		// const chapterIndex = initialData.locationData.params.chapterId;
-		const chapterId = initialData.locationData.params.chapterId;
-		const validChapterId = hasChapters && activeVersion.content.reduce((prev, curr)=> {
-			if (!chapterId) { return true; }
-			if (chapterId === curr.id) { return true; }
+		const hasSections = !isDraft && activeVersion && Array.isArray(activeVersion.content);
+		// const sectionIndex = initialData.locationData.params.sectionId;
+		const sectionId = initialData.locationData.params.sectionId;
+		const validSectionId = hasSections && activeVersion.content.reduce((prev, curr)=> {
+			if (!sectionId) { return true; }
+			if (sectionId === curr.id) { return true; }
 			return prev;
 		}, false);
-		// const chapterOutOfRange = hasChapters && chapterIndex > activeVersion.content.length || chapterIndex < 1;
-		if (hasChapters && !validChapterId) { throw new Error('Pub Not Found'); }
+		// const sectionOutOfRange = hasSections && sectionIndex > activeVersion.content.length || sectionIndex < 1;
+		if (hasSections && !validSectionId) { throw new Error('Pub Not Found'); }
 
-		
 		const userPermissions = pubDataJson.collaborators.reduce((prev, curr)=> {
 			if (curr.id === initialData.loginData.id) { return curr.Collaborator.permissions; }
 			return prev;
 		}, 'none');
 
-		/* Remove the content from the chapters other than the rendered */
-		/* chapter to save bytes on the transfer */
-		const formattedActiveVersionData = !hasChapters
+		/* Remove the content from the sections other than the rendered */
+		/* section to save bytes on the transfer */
+		const formattedActiveVersionData = !hasSections
 			? activeVersion
 			: {
 				...activeVersion,
 				content: activeVersion.content.map((item, index)=> {
-					if (!chapterId && index === 0) { return item; }
-					if (item.id === chapterId) { return item; }
+					if (!sectionId && index === 0) { return item; }
+					if (item.id === sectionId) { return item; }
 					return { title: item.title, id: item.id };
 				})
 			};

@@ -9,6 +9,7 @@ import PubOptionsPages from 'components/PubOptionsPages/PubOptionsPages';
 import PubOptionsSections from 'components/PubOptionsSections/PubOptionsSections';
 import PubOptionsSharing from 'components/PubOptionsSharing/PubOptionsSharing';
 import PubOptionsSocial from 'components/PubOptionsSocial/PubOptionsSocial';
+import PubOptionsSaveVersion from 'components/PubOptionsSaveVersion/PubOptionsSaveVersion';
 import PubOptionsVersions from 'components/PubOptionsVersions/PubOptionsVersions';
 
 
@@ -20,6 +21,7 @@ const propTypes = {
 	loginData: PropTypes.object.isRequired,
 	locationData: PropTypes.object.isRequired,
 	firebaseRef: PropTypes.object,
+	editorRefNode: PropTypes.object,
 	optionsMode: PropTypes.string,
 	setOptionsMode: PropTypes.func.isRequired,
 	setPubData: PropTypes.func.isRequired,
@@ -27,6 +29,7 @@ const propTypes = {
 
 const defaultProps = {
 	firebaseRef: undefined,
+	editorRefNode: undefined,
 	optionsMode: undefined,
 };
 
@@ -46,6 +49,8 @@ const PubOptions = (props)=> {
 		loginData: props.loginData,
 		locationData: props.locationData,
 		firebaseRef: props.firebaseRef,
+		editorRefNode: props.editorRefNode,
+		setOptionsMode: props.setOptionsMode,
 		setPubData: props.setPubData,
 		canManage: canManage,
 	};
@@ -102,6 +107,9 @@ const PubOptions = (props)=> {
 					}
 					{optionsMode === 'social' &&
 						<PubOptionsSocial key="social" {...defaultChildProps} />
+					}
+					{optionsMode === 'saveVersion' &&
+						<PubOptionsSaveVersion key="saveVersion" {...defaultChildProps} />
 					}
 					{optionsMode === 'versions' &&
 						<PubOptionsVersions key="versions" {...defaultChildProps} />
