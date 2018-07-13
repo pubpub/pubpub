@@ -13,7 +13,7 @@ firebaseAdmin.initializeApp({
 	databaseURL: process.env.FIREBASE_DATABASE_URL,
 });
 
-app.get(['/pub/:slug', '/pub/:slug/content/:chapterId', '/pub/:slug/draft', '/pub/:slug/draft/content/:chapterId', '/pub/:slug/:mode', '/pub/:slug/:mode/:subMode'], (req, res, next)=> {
+app.get(['/pub/:slug', '/pub/:slug/content/:sectionId', '/pub/:slug/draft', '/pub/:slug/draft/content/:sectionId', '/pub/:slug/:mode', '/pub/:slug/:mode/:subMode'], (req, res, next)=> {
 	if (!hostIsValid(req, 'community')) { return next(); }
 
 	const isDraft = req.path.indexOf(`/pub/${req.params.slug}/draft`) === 0;

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import firebase from '@firebase/app';
 import { NonIdealState } from '@blueprintjs/core';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
 import Overlay from 'components/Overlay/Overlay';
@@ -40,7 +41,10 @@ class Pub extends Component {
 		};
 
 		this.state = {
-			pubData: this.props.pubData,
+			pubData: {
+				...this.props.pubData,
+				sectionsData: this.props.pubData.isDraft ? [{ id: '', order: 0, title: 'Introduction' }] : undefined
+			},
 			activeCollaborators: [this.localUser],
 			optionsMode: undefined,
 			collabStatus: 'connecting',
@@ -49,20 +53,47 @@ class Pub extends Component {
 			initialDiscussionContent: undefined,
 			fixIt: true,
 			scrolledToPermanent: false,
-			sectionsData: [{ id: '', order: 0, title: 'Introduction' }],
+			// sectionsData: [{ id: '', order: 0, title: 'Introduction' }],
 			editorRefNode: undefined,
 			menuWrapperRefNode: undefined,
 		};
+		this.firebaseRef = null;
 		this.setSavingTimeout = null;
 		this.getHighlightContent = this.getHighlightContent.bind(this);
 		this.setActiveThread = this.setActiveThread.bind(this);
 		this.setOptionsMode = this.setOptionsMode.bind(this);
 		this.setPubData = this.setPubData.bind(this);
+		this.handleSectionsChange = this.handleSectionsChange.bind(this);
 		this.handleEditorRef = this.handleEditorRef.bind(this);
 		this.handleMenuWrapperRef = this.handleMenuWrapperRef.bind(this);
 		this.handleNewHighlightDiscussion = this.handleNewHighlightDiscussion.bind(this);
 		this.handleStatusChange = this.handleStatusChange.bind(this);
 		this.handleClientChange = this.handleClientChange.bind(this);
+	}
+
+	componentDidMount() {
+		if (this.state.pubData.isDraft) {
+			/* Setup Firebase App */
+			const firebaseAppName = `Pub-${this.props.pubData.editorKey}`;
+			const existingApp = firebase.apps.reduce((prev, curr)=> {
+				if (curr.name === firebaseAppName) { return curr; }
+				return prev;
+			}, undefined);
+			const firebaseApp = existingApp || firebase.initializeApp(getFirebaseConfig(), firebaseAppName);
+			const database = firebase.database(firebaseApp);
+			firebase.auth(firebaseApp).signInWithCustomToken(this.props.pubData.firebaseToken)
+			.then(()=> {
+				this.firebaseRef = database.ref(`${this.props.pubData.editorKey}`);
+				/* Add listener event to update sectionsData when it changes in Firebase */
+				this.firebaseRef.child('/sections').on('value', this.handleSectionsChange);
+			});
+		}
+	}
+
+	componentWillUnmount() {
+		if (this.firebaseRef) {
+			this.firebaseRef.child('/sections').off('value', this.handleSectionsChange);
+		}
 	}
 
 	getHighlightContent(from, to) {
@@ -72,7 +103,7 @@ class Pub extends Component {
 		const prefix = primaryEditorState.doc.textBetween(Math.max(0, from - 10), Math.max(0, from));
 		const suffix = primaryEditorState.doc.textBetween(Math.min(primaryEditorState.doc.nodeSize - 2, to), Math.min(primaryEditorState.doc.nodeSize - 2, to + 10));
 		const hasSections = this.state.pubData.isDraft
-			? this.state.sectionsData.length > 1
+			? this.state.pubData.sectionsData.length > 1
 			: Array.isArray(this.state.pubData.versions[0].content);
 		const sectionId = hasSections ? this.props.locationData.params.sectionId || '' : undefined;
 		const highlightObject = {
@@ -100,6 +131,27 @@ class Pub extends Component {
 		this.setState({ pubData: newPubData });
 	}
 
+	handleSectionsChange(snapshot) {
+		const snapshotVal = snapshot.val() || this.state.pubData.sectionsData;
+		const snapshotArray = Object.keys(snapshotVal).map((key)=> {
+			return {
+				...snapshotVal[key],
+				firebaseId: key,
+			};
+		});
+		const newSectionsData = snapshotArray.length
+			? snapshotArray.sort((foo, bar)=> {
+				if (foo.order < bar.order) { return -1; }
+				if (foo.order > bar.order) { return 1; }
+				return 0;
+			})
+			: [];
+		this.setPubData({
+			...this.state.pubData,
+			sectionsData: newSectionsData,
+		});
+	}
+
 	handleEditorRef(ref) {
 		if (!this.state.editorRefNode) {
 			/* Need to set timeout so DOM can render */
@@ -118,10 +170,11 @@ class Pub extends Component {
 			}, timeoutDelay);
 		}
 	}
+
 	handleMenuWrapperRef(ref) {
 		if (!this.state.menuWrapperRefNode) {
 			this.setState({
-				menuWrapperRefNode: ref,	
+				menuWrapperRefNode: ref,
 			});
 		}
 	}
@@ -200,11 +253,11 @@ class Pub extends Component {
 
 		/* Section variables */
 		const hasSections = pubData.isDraft
-			? this.state.sectionsData.length > 1
+			? this.state.pubData.sectionsData.length > 1
 			: activeVersion && Array.isArray(activeVersion.content);
 
 		const sectionId = this.props.locationData.params.sectionId || '';
-		const sectionsData = pubData.isDraft ? this.state.sectionsData : activeVersion.content;
+		const sectionsData = pubData.isDraft ? this.state.pubData.sectionsData : activeVersion.content;
 
 		const sectionIds = hasSections
 			? sectionsData.map((section)=> {
@@ -223,12 +276,15 @@ class Pub extends Component {
 			: '';
 
 
-		const activeContent = !hasSections
-			? (activeVersion && activeVersion.content)
-			: activeVersion.content.reduce((prev, curr)=> {
-				if (curr.id === sectionId) { return curr.content; }
-				return prev;
-			}, activeVersion.content[0].content);
+		let activeContent;
+		if (!pubData.isDraft) {
+			activeContent = !hasSections
+				? (activeVersion && activeVersion.content)
+				: activeVersion.content.reduce((prev, curr)=> {
+					if (curr.id === sectionId) { return curr.content; }
+					return prev;
+				}, activeVersion.content[0].content);
+		}
 
 		/* Get Highlights from discussions. Filtering for */
 		/* only highlights that are active in the current section */
@@ -318,7 +374,7 @@ class Pub extends Component {
 										hoverBackgroundColor={this.props.communityData.accentMinimalColor}
 										setActiveThread={this.setActiveThread}
 										onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
-										onNewHighlightDiscussion={()=>{}}
+										// onNewHighlightDiscussion={()=>{}}
 
 										// Props from CollabEditor
 										editorKey={`${this.props.pubData.editorKey}${sectionId ? '/' : ''}${sectionId || ''}`}
@@ -405,6 +461,8 @@ class Pub extends Component {
 						communityData={this.props.communityData}
 						pubData={pubData}
 						loginData={loginData}
+						locationData={this.props.locationData}
+						firebaseRef={this.firebaseRef}
 						optionsMode={this.state.optionsMode}
 						setOptionsMode={this.setOptionsMode}
 						setPubData={this.setPubData}

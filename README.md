@@ -46,3 +46,4 @@ The [Latex Buildpack we are using](https://github.com/Thermondo/heroku-buildpack
 - Add workers dyno to heroku deployment
 - Update database schemas
 - Remove local font loading from webpack.prod config. See comment TODO there.
+- Change /chapters to /sections on firebase

@@ -6,6 +6,7 @@ import PubOptionsDoi from 'components/PubOptionsDoi/PubOptionsDoi';
 import PubOptionsDetails from 'components/PubOptionsDetails/PubOptionsDetails';
 import PubOptionsDelete from 'components/PubOptionsDelete/PubOptionsDelete';
 import PubOptionsPages from 'components/PubOptionsPages/PubOptionsPages';
+import PubOptionsSections from 'components/PubOptionsSections/PubOptionsSections';
 import PubOptionsSocial from 'components/PubOptionsSocial/PubOptionsSocial';
 import PubOptionsVersions from 'components/PubOptionsVersions/PubOptionsVersions';
 
@@ -16,22 +17,28 @@ const propTypes = {
 	communityData: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
 	loginData: PropTypes.object.isRequired,
+	locationData: PropTypes.object.isRequired,
+	firebaseRef: PropTypes.object,
 	optionsMode: PropTypes.string,
 	setOptionsMode: PropTypes.func.isRequired,
 	setPubData: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
+	firebaseRef: undefined,
 	optionsMode: undefined,
 };
 
 const PubOptions = (props)=> {
 	const optionsMode = props.optionsMode;
-	const modes = ['details', 'versions', 'pages', 'sharing', 'cite', 'DOI', 'social', 'export', 'analytics', 'delete'];
+	// TODO: Hide sections if we are not in draft, and there are no sections
+	const modes = ['details', 'versions', 'pages', 'sharing', 'cite', 'DOI', 'sections', 'social', 'export', 'analytics', 'delete'];
 	const defaultChildProps = {
 		communityData: props.communityData,
 		pubData: props.pubData,
 		loginData: props.loginData,
+		locationData: props.locationData,
+		firebaseRef: props.firebaseRef,
 		setPubData: props.setPubData,
 	};
 
@@ -78,6 +85,9 @@ const PubOptions = (props)=> {
 					}
 					{optionsMode === 'pages' &&
 						<PubOptionsPages key="pages" {...defaultChildProps} />
+					}
+					{optionsMode === 'sections' &&
+						<PubOptionsSections key="sections" {...defaultChildProps} />
 					}
 					{optionsMode === 'social' &&
 						<PubOptionsSocial key="social" {...defaultChildProps} />
