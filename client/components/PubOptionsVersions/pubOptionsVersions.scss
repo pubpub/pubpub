@@ -1,0 +1,30 @@
+.pub-options-versions-component {
+	.version-sections {
+		display: flex;
+	    flex-wrap: wrap-reverse;
+		width: 100%;
+		.section {
+			flex-grow: 1;
+			flex-shrink: 1;
+			margin-bottom: 2em;
+			.title {
+				font-weight: bold;
+				font-size: 16px;
+			}
+			.pt-menu-item {
+				position: relative;
+				left: -12px;
+			}
+		}
+	}
+}
+
+@media only screen and (max-width: 720px) {
+	.pub-options-versions-component {
+		.version-sections {
+			.section {
+				width: 100%;
+			}
+		}
+	}
+}

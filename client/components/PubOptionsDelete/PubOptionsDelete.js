@@ -10,7 +10,7 @@ const propTypes = {
 	communityData: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
 	// loginData: PropTypes.object.isRequired,
-	// setPubData: PropTypes.object.isRequired,
+	// setPubData: PropTypes.func.isRequired,
 };
 
 class PubOptionsDelete extends Component {

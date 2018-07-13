@@ -1,8 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Overlay from 'components/Overlay/Overlay';
+import PubOptionsCite from 'components/PubOptionsCite/PubOptionsCite';
 import PubOptionsDetails from 'components/PubOptionsDetails/PubOptionsDetails';
 import PubOptionsDelete from 'components/PubOptionsDelete/PubOptionsDelete';
+import PubOptionsPages from 'components/PubOptionsPages/PubOptionsPages';
+import PubOptionsVersions from 'components/PubOptionsVersions/PubOptionsVersions';
+
 
 require('./pubOptions.scss');
 
@@ -21,7 +25,7 @@ const defaultProps = {
 
 const PubOptions = (props)=> {
 	const optionsMode = props.optionsMode;
-	const modes = ['details', 'versions', 'sharing', 'cite', 'export', 'analytics', 'delete'];
+	const modes = ['details', 'versions', 'pages', 'sharing', 'cite', 'export', 'analytics', 'delete'];
 	const defaultChildProps = {
 		communityData: props.communityData,
 		pubData: props.pubData,
@@ -41,9 +45,8 @@ const PubOptions = (props)=> {
 					<ul className="pt-menu">
 						{modes.map((mode)=> {
 							return (
-								<li>
+								<li key={mode}>
 									<button
-										key={mode}
 										type="button"
 										onClick={()=> { props.setOptionsMode(mode); }}
 										className={`pt-menu-item ${optionsMode === mode ? 'pt-active' : ''}`}
@@ -59,12 +62,22 @@ const PubOptions = (props)=> {
 
 				{/* Right Content Panel */}
 				<div className="right-column">
+					{optionsMode === 'cite' &&
+						<PubOptionsCite key="cite" {...defaultChildProps} />
+					}
 					{optionsMode === 'details' &&
-						<PubOptionsDetails {...defaultChildProps} />
+						<PubOptionsDetails key="details" {...defaultChildProps} />
 					}
 					{optionsMode === 'delete' &&
-						<PubOptionsDelete {...defaultChildProps} />
+						<PubOptionsDelete key="delete" {...defaultChildProps} />
 					}
+					{optionsMode === 'pages' &&
+						<PubOptionsPages key="pages" {...defaultChildProps} />
+					}
+					{optionsMode === 'versions' &&
+						<PubOptionsVersions key="versions" {...defaultChildProps} />
+					}
+					
 				</div>
 			</div>
 		</Overlay>
