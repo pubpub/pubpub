@@ -7,7 +7,7 @@ import PubHeader from 'components/PubHeader/PubHeader';
 import PubDraftHeader from 'components/PubDraftHeader/PubDraftHeader';
 import PubPresSideUser from 'components/PubPresSideUser/PubPresSideUser';
 import PubBody from 'components/PubBodyNew/PubBody';
-import PubSettings from 'components/PubSettings/PubSettings';
+import PubOptions from 'components/PubOptions/PubOptions';
 import License from 'components/License/License';
 import { apiFetch, hydrateWrapper, getFirebaseConfig, nestDiscussionsToThreads, getRandomColor, generateHash } from 'utilities';
 
@@ -42,7 +42,7 @@ class Pub extends Component {
 		this.state = {
 			pubData: this.props.pubData,
 			activeCollaborators: [this.localUser],
-			settingsMode: undefined,
+			optionsMode: undefined,
 			collabStatus: 'connecting',
 			docReadyForHighlights: false,
 			activeThreadNumber: undefined,
@@ -56,7 +56,8 @@ class Pub extends Component {
 		this.setSavingTimeout = null;
 		this.getHighlightContent = this.getHighlightContent.bind(this);
 		this.setActiveThread = this.setActiveThread.bind(this);
-		this.setSettingsMode = this.setSettingsMode.bind(this);
+		this.setOptionsMode = this.setOptionsMode.bind(this);
+		this.setPubData = this.setPubData.bind(this);
 		this.handleEditorRef = this.handleEditorRef.bind(this);
 		this.handleMenuWrapperRef = this.handleMenuWrapperRef.bind(this);
 		this.handleNewHighlightDiscussion = this.handleNewHighlightDiscussion.bind(this);
@@ -91,8 +92,12 @@ class Pub extends Component {
 		this.setState({ activeThreadNumber: threadNumber });
 	}
 
-	setSettingsMode(mode) {
-		this.setState({ settingsMode: mode });
+	setOptionsMode(mode) {
+		this.setState({ optionsMode: mode });
+	}
+
+	setPubData(newPubData) {
+		this.setState({ pubData: newPubData });
 	}
 
 	handleEditorRef(ref) {
@@ -281,14 +286,14 @@ class Pub extends Component {
 					<PubHeader
 						pubData={pubData}
 						locationData={this.props.locationData}
-						setSettingsMode={this.setSettingsMode}
+						setOptionsMode={this.setOptionsMode}
 					/>
 
 					{pubData.isDraft &&
 						<PubDraftHeader
 							pubData={pubData}
 							loginData={loginData}
-							setSettingsMode={this.setSettingsMode}
+							setOptionsMode={this.setOptionsMode}
 							bottomCutoffId="discussions"
 							onRef={this.handleMenuWrapperRef}
 							collabStatus={this.state.collabStatus}
@@ -391,19 +396,18 @@ class Pub extends Component {
 						<div className="container pub">
 							<div className="row">
 								<div className="col-12">
-									<p>Nature’s ecosystem provides us with an elegant example of a complex adaptive system where myriad “currencies” interact and respond to feedback systems that enable both flourishing and regulation. This collaborative model–rather than a model of exponential financial growth or the Singularity, which promises the transcendence of our current human condition through advances in technology—should provide the paradigm for our approach to artificial intelligence. More than 60 years ago, MIT mathematician and philosopher Norbert Wiener warned us that “when human atoms are knit into an organization in which they are used, not in their full right as responsible human beings, but as cogs and levers and rods, it matters little that their raw material is flesh and blood.” We should heed Wiener’s warning.</p>
-									<h1>INTRODUCTION: THE CANCER OF CURRENCY</h1>
-									<p>As the sun beats down on Earth, photosynthesis converts water, carbon dioxide and the sun’s energy into oxygen and glucose. Photosynthesis is one of the many chemical and biological processes that transforms one form of matter and energy into another. These molecules then get metabolized by other biological and chemical processes into yet other molecules. Scientists often call these molecules “currencies” because they represent a form of power that is transferred between cells or processes to mutual benefit—“traded,” in effect. The biggest difference between these and financial currencies is that there is no “master currency” or “currency exchange.” Rather, each currency can only be used by certain processes, and the “market” of these currencies drives the dynamics that are “life.” </p>
-									<p>As certain currencies became abundant as an output of a successful process or organism, other organisms evolved to take that output and convert it into something else. Over billions of years, this is how the Earth’s ecosystem has evolved, creating vast systems of metabolic pathways and forming highly complex self-regulating systems that, for example, stabilize our body temperatures or the temperature of the Earth, despite continuous fluctuations and changes among the individual elements at every scale—from micro to macro. The output of one process becomes the input of another. Ultimately, everything interconnects.</p>
-									<p>We live in a civilization in which the primary currencies are money and power—where more often than not, the goal is to accumulate both at the expense of society at large. This is a very simple and fragile system compared to the Earth’s ecosystems, where myriads of “currencies” are exchanged among processes to create hugely complex systems of inputs and outputs with feedback systems that adapt and regulate stocks, flows, and connections.</p>
+									<h2>Discussions</h2>
 								</div>
 							</div>
 						</div>
 					</div>
-					<PubSettings
-						settingsMode={this.state.settingsMode}
-						setSettingsMode={this.setSettingsMode}
+					<PubOptions
+						communityData={this.props.communityData}
 						pubData={pubData}
+						loginData={loginData}
+						optionsMode={this.state.optionsMode}
+						setOptionsMode={this.setOptionsMode}
+						setPubData={this.setPubData}
 					/>
 				</PageWrapper>
 			</div>

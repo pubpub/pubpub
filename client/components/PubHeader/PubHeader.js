@@ -8,7 +8,7 @@ require('./pubHeader.scss');
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	locationData: PropTypes.object,
-	setSettingsMode: PropTypes.func.isRequired,
+	setOptionsMode: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -86,15 +86,18 @@ const PubHeader = function(props) {
 										className="pt-button pt-small"
 										type="button"
 										onClick={()=> {
-											props.setSettingsMode('pub');
+											props.setOptionsMode('details');
 										}}
 									>
-										Settings
+										Options
 									</button>
 
 									<button
 										className="pt-button pt-small"
 										type="button"
+										onClick={()=> {
+											props.setOptionsMode('sharing');
+										}}
 									>
 										Share
 									</button>
@@ -158,7 +161,7 @@ const PubHeader = function(props) {
 										// className="pt-button pt-minimal date"
 										onClick={(evt)=> {
 											evt.preventDefault();
-											props.setSettingsMode('versions');
+											props.setOptionsMode('versions');
 										}}
 									>
 										<span>{sortedVersionsList[sortedVersionsList.length - 1].id !== activeVersion.id ? 'Updated ' : ''}{dateFormat(pubData.activeVersion.createdAt, 'mmm dd, yyyy')}</span>
@@ -176,13 +179,20 @@ const PubHeader = function(props) {
 									// className="pt-button pt-minimal collaborators"
 									onClick={(evt)=> {
 										evt.preventDefault();
-										props.setSettingsMode('collaborators');
+										props.setOptionsMode('collaborators');
 									}}
 								>
 									{/*<span className="pt-icon-standard pt-icon-team" />*/}
 									{numCollaborators} Collaborator{numCollaborators === 1 ? '' : 's'}
 								</a>
-								<a>
+								<a
+									href={`/pub/${pubData.slug}/versions`}
+									// className="pt-button pt-minimal date"
+									onClick={(evt)=> {
+										evt.preventDefault();
+										props.setOptionsMode('versions');
+									}}
+								>
 									{/*<span className="pt-icon-standard pt-icon-multi-select" />*/}
 									{/* TODO: save older to be caluclated properly. Use this space to say newer, if that makes sense*/}
 									{pubData.versions.length} Older Version{pubData.versions.length === 1 ? '' : 's'}
@@ -194,7 +204,7 @@ const PubHeader = function(props) {
 										className="pt-button pt-minimal chapters"
 										onClick={(evt)=> {
 											evt.preventDefault();
-											props.setSettingsMode('chapters');
+											props.setOptionsMode('chapters');
 										}}
 									>
 										{currentChapterIndex + 1} of {numChapters}
@@ -209,7 +219,7 @@ const PubHeader = function(props) {
 										// className="pt-button pt-minimal date"
 										onClick={(evt)=> {
 											evt.preventDefault();
-											props.setSettingsMode('versions');
+											props.setOptionsMode('versions');
 										}}
 									>
 										<span>{sortedVersionsList[sortedVersionsList.length - 1].id !== activeVersion.id ? 'Updated ' : ''}{dateFormat(pubData.activeVersion.createdAt, 'mmm dd, yyyy')}</span>

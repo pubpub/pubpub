@@ -10,7 +10,7 @@ const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	loginData: PropTypes.object.isRequired,
 	// locationData: PropTypes.object,
-	setSettingsMode: PropTypes.func.isRequired,
+	setOptionsMode: PropTypes.func.isRequired,
 	onRef: PropTypes.func.isRequired,
 	bottomCutoffId: PropTypes.string,
 	collabStatus: PropTypes.string.isRequired,

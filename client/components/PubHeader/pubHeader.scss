@@ -83,11 +83,16 @@
 		a {
 			margin-right: 2em;
 			&:not(:last-of-type):after {
-				content: "·";
+				content: "";
 				position: relative;
 				left: 1em;
-				text-decoration: none;
+				top: -.25em;
 				pointer-events: none;
+				width: 2px;
+				height: 2px;
+				background: white;
+				display: inline-block;
+				border-radius: 2px;
 			}
 		}
 	}
