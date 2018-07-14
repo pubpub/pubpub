@@ -13,6 +13,7 @@ const propTypes = {
 	locationData: PropTypes.object.isRequired,
 	communityData: PropTypes.object.isRequired,
 	activeThreadNumber: PropTypes.string.isRequired,
+	activeThreadNode: PropTypes.object,
 	onClose: PropTypes.func.isRequired,
 	getHighlightContent: PropTypes.func.isRequired,
 	onPostDiscussion: PropTypes.func.isRequired,
@@ -25,6 +26,7 @@ const propTypes = {
 
 const defaultProps = {
 	initialContent: undefined,
+	activeThreadNode: undefined,
 };
 
 class DiscussionViewer extends Component {
@@ -76,7 +78,9 @@ class DiscussionViewer extends Component {
 
 		const isActive = !!this.props.activeThreadNumber;
 		const isNew = this.props.activeThreadNumber === 'new';
-		const isPinned = this.state.isPinned || isNew;
+		// const isPinned = this.state.isPinned || isNew;
+		// TODO - maybe we should make activeThreadNode be a height, given that we want to support new discussions.
+		const isPinned = this.props.activeThreadNode || isNew;
 		const isEditor = this.props.locationData.path.indexOf(`${this.props.pubData.slug}/collaborate`) > -1;
 		const quotePermalinkFunc = isEditor ? undefined : this.handleQuotePermalink;
 		return (

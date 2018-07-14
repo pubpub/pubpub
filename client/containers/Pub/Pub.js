@@ -53,6 +53,7 @@ class Pub extends Component {
 			collabStatus: 'connecting',
 			docReadyForHighlights: false,
 			activeThreadNumber: undefined,
+			activeThreadNode: undefined,
 			initialDiscussionContent: undefined,
 			fixIt: true,
 			scrolledToPermanent: false,
@@ -126,8 +127,12 @@ class Pub extends Component {
 		return highlightObject;
 	}
 
-	setActiveThread(threadNumber) {
-		this.setState({ activeThreadNumber: threadNumber });
+	setActiveThread(threadNumber, highlightNode) {
+		// TODO: set highlight node
+		this.setState({
+			activeThreadNumber: threadNumber,
+			activeThreadNode: highlightNode,
+		});
 	}
 
 	setOptionsMode(mode) {
@@ -489,6 +494,7 @@ class Pub extends Component {
 								locationData={this.props.locationData}
 								communityData={this.props.communityData}
 								activeThreadNumber={this.state.activeThreadNumber}
+								activeThreadNode={this.state.activeThreadNode}
 								onClose={this.closeThreadOverlay}
 								getHighlightContent={this.getHighlightContent}
 								onPostDiscussion={this.handlePostDiscussion}

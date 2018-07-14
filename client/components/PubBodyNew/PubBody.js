@@ -57,6 +57,7 @@ class PubBody extends Component {
 		super(props);
 		this.state = {
 			error: undefined,
+
 		};
 		this.findThreadNumberFromHighlightId = this.findThreadNumberFromHighlightId.bind(this);
 	}
@@ -65,12 +66,12 @@ class PubBody extends Component {
 		this.setState({ error: true });
 	}
 
-	findThreadNumberFromHighlightId(highlightId) {
+	findThreadNumberFromHighlightId(highlightId, highlightNode) {
 		const threadNumber = this.props.highlights.reduce((prev, curr)=> {
 			if (curr.id === highlightId) { return curr.threadNumber; }
 			return prev;
 		}, undefined);
-		this.props.setActiveThread(threadNumber);
+		this.props.setActiveThread(threadNumber, highlightNode);
 	};
 
 	render() {
