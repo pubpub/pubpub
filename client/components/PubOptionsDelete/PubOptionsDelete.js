@@ -48,6 +48,9 @@ class PubOptionsDelete extends Component {
 	}
 
 	render() {
+		// let canDelete = false;
+		// if (canManage && !pubData.firstPublishedAt) { canDelete = true; }
+		// if (canManage && loginData.isAdmin) { canDelete = true; }
 		return (
 			<div className="pub-options-delete-component">
 				<h1>Delete Pub</h1>

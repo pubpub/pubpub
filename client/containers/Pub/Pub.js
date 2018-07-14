@@ -8,7 +8,8 @@ import PubPresSideUser from 'components/PubPresSideUser/PubPresSideUser';
 import PubBody from 'components/PubBodyNew/PubBody';
 import PubOptions from 'components/PubOptions/PubOptions';
 import PubToc from 'components/PubToc/PubToc';
-import License from 'components/License/License';
+import PubLicense from 'components/PubLicense/PubLicense';
+import PubSectionNav from 'components/PubSectionNav/PubSectionNav';
 import DiscussionList from 'components/DiscussionList/DiscussionList';
 import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
@@ -311,8 +312,8 @@ class Pub extends Component {
 		const queryObject = this.props.locationData.query;
 		const mode = this.props.locationData.params.mode;
 		const subMode = this.props.locationData.params.subMode;
-
 		const activeVersion = pubData.activeVersion;
+
 		const authors = pubData.collaborators.filter((collaborator)=> {
 			return collaborator.Collaborator.isAuthor;
 		});
@@ -339,27 +340,9 @@ class Pub extends Component {
 		const hasSections = pubData.isDraft
 			? this.state.pubData.sectionsData.length > 1
 			: activeVersion && Array.isArray(activeVersion.content);
-
 		const sectionId = this.props.locationData.params.sectionId || '';
-		const sectionsData = pubData.isDraft ? this.state.pubData.sectionsData : activeVersion.content;
 
-		const sectionIds = hasSections
-			? sectionsData.map((section)=> {
-				return section.id || '';
-			})
-			: [];
-		const currentSectionIndex = sectionIds.reduce((prev, curr, index)=> {
-			if (sectionId === curr) { return index; }
-			return prev;
-		}, undefined);
-		const nextSectionId = sectionIds.length > currentSectionIndex + 1
-			? sectionIds[currentSectionIndex + 1]
-			: '';
-		const prevSectionId = currentSectionIndex - 1 > 0
-			? sectionIds[currentSectionIndex - 1]
-			: '';
-
-
+		/* Active Content */
 		let activeContent;
 		if (!pubData.isDraft) {
 			activeContent = !hasSections
@@ -389,7 +372,7 @@ class Pub extends Component {
 		/* Add a permalink highlight if the URL mandates one */
 		const hasPermanentHighlight = pubData.isDraft
 			? typeof window !== 'undefined' && this.state.editorRefNode && queryObject.from && queryObject.to
-			: typeof window !== 'undefined' && this.state.editorRefNode && queryObject.from && queryObject.to && queryObject.version
+			: typeof window !== 'undefined' && this.state.editorRefNode && queryObject.from && queryObject.to && queryObject.version;
 		if (hasPermanentHighlight) {
 			highlights.push({
 				...this.getHighlightContent(Number(queryObject.from), Number(queryObject.to)),
@@ -405,15 +388,6 @@ class Pub extends Component {
 				}, 100);
 			}
 		}
-
-		/* Calculate Permissions for UI elements */
-		let canManage = false;
-		if (pubData.localPermissions === 'manage') { canManage = true; }
-		if (pubData.adminPermissions === 'manage' && loginData.isAdmin) { canManage = true; }
-
-		let canDelete = false;
-		if (canManage && !pubData.firstPublishedAt) { canDelete = true; }
-		if (canManage && loginData.isAdmin) { canDelete = true; }
 
 		return (
 			<div id="pub-container">
@@ -458,22 +432,30 @@ class Pub extends Component {
 												hoverBackgroundColor={this.props.communityData.accentMinimalColor}
 												setActiveThread={this.setActiveThread}
 												onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
-												// onNewHighlightDiscussion={()=>{}}
 
 												// Props from CollabEditor
 												editorKey={`${this.props.pubData.editorKey}${sectionId ? '/' : ''}${sectionId || ''}`}
-												isReadOnly={!pubData.isDraft || (!canManage && pubData.localPermissions !== 'edit')}
+												isReadOnly={!pubData.isDraft || (pubData.localPermissions !== 'manage' && pubData.localPermissions !== 'edit')}
 												clientData={this.state.activeCollaborators[0]}
 												onClientChange={this.handleClientChange}
 												onStatusChange={this.handleStatusChange}
 												menuWrapperRefNode={this.state.menuWrapperRefNode}
 											/>
 
+											{/* Prev/Content/Next Buttons */}
+											{hasSections &&
+												<PubSectionNav
+													pubData={pubData}
+													queryObject={queryObject}
+													hasSections={hasSections}
+													sectionId={sectionId}
+													setOptionsMode={this.setOptionsMode}
+												/>
+											}
+
 											{/* License */}
 											{!pubData.isDraft &&
-												<div className="license-wrapper">
-													<License />
-												</div>
+												<PubLicense />
 											}
 										</div>
 										<div className="side-content">
@@ -561,35 +543,37 @@ class Pub extends Component {
 						</div>
 					}
 
-					<div className="container pub mode-content">
-						<div className="row">
-							<div className="col-12">
-								{mode === 'discussions' && !subMode &&
-									<DiscussionList
-										pubData={pubData}
-										mode={mode}
-										onLabelsSave={this.handlePutLabels}
-									/>
-								}
-								{mode === 'discussions' && subMode &&
-									<DiscussionThread
-										pubData={pubData}
-										discussions={activeThread}
-										canManage={pubData.localPermissions === 'manage' || (this.props.loginData.isAdmin && pubData.adminPermissions === 'manage')}
-										slug={pubData.slug}
-										loginData={this.props.loginData}
-										pathname={`${this.props.locationData.path}${this.props.locationData.queryString}`}
-										handleReplySubmit={this.handlePostDiscussion}
-										handleReplyEdit={this.handlePutDiscussion}
-										submitIsLoading={this.state.postDiscussionIsLoading}
-										hideScrollButton={true}
-										getHighlightContent={()=>{}}
-										hoverBackgroundColor={this.props.communityData.accentMinimalColor}
-									/>
-								}
+					{mode === 'discussions' &&
+						<div className="container pub mode-content">
+							<div className="row">
+								<div className="col-12">
+									{!subMode &&
+										<DiscussionList
+											pubData={pubData}
+											mode={mode}
+											onLabelsSave={this.handlePutLabels}
+										/>
+									}
+									{subMode &&
+										<DiscussionThread
+											pubData={pubData}
+											discussions={activeThread}
+											canManage={pubData.localPermissions === 'manage'}
+											slug={pubData.slug}
+											loginData={this.props.loginData}
+											pathname={`${this.props.locationData.path}${this.props.locationData.queryString}`}
+											handleReplySubmit={this.handlePostDiscussion}
+											handleReplyEdit={this.handlePutDiscussion}
+											submitIsLoading={this.state.postDiscussionIsLoading}
+											hideScrollButton={true}
+											getHighlightContent={()=>{}}
+											hoverBackgroundColor={this.props.communityData.accentMinimalColor}
+										/>
+									}
+								</div>
 							</div>
 						</div>
-					</div>
+					}
 				</PageWrapper>
 			</div>
 		);

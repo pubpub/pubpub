@@ -1,0 +1,10 @@
+.pub-section-nav-component {
+	margin: 4em 0em;
+	.pt-button {
+		padding: 15px;
+	}
+	.disabled {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+}
