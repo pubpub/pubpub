@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-require('./pubToc.scss');
+require('./pubSideToc.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
@@ -16,7 +16,7 @@ const defaultProps = {
 	activeContent: undefined,
 };
 
-const PubToc = function(props) {
+const PubSideToc = function(props) {
 	/* activeContent will be defined on saved versions */
 	/* editorRefNode will be defined and used on working drafts */
 	if (!props.activeContent && !props.editorRefNode) { return null; }
@@ -92,7 +92,7 @@ const PubToc = function(props) {
 	*/
 	if (!hasSections && !headings.length) { return null; }
 	return (
-		<div className="pub-toc-component">
+		<div className="pub-side-toc-component">
 			{(props.pubData.isDraft || hasSections) &&
 				<a
 					href={`/pub/${props.pubData.slug}/sections`}
@@ -140,6 +140,6 @@ const PubToc = function(props) {
 	);
 };
 
-PubToc.propTypes = propTypes;
-PubToc.defaultProps = defaultProps;
-export default PubToc;
+PubSideToc.propTypes = propTypes;
+PubSideToc.defaultProps = defaultProps;
+export default PubSideToc;

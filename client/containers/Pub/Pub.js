@@ -4,10 +4,10 @@ import firebase from '@firebase/app';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
 import PubHeader from 'components/PubHeader/PubHeader';
 import PubDraftHeader from 'components/PubDraftHeader/PubDraftHeader';
-import PubPresSideUser from 'components/PubPresSideUser/PubPresSideUser';
 import PubBody from 'components/PubBodyNew/PubBody';
 import PubOptions from 'components/PubOptions/PubOptions';
-import PubToc from 'components/PubToc/PubToc';
+import PubSideToc from 'components/PubSideToc/PubSideToc';
+import PubSideCollaborators from 'components/PubSideCollaborators/PubSideCollaborators';
 import PubLicense from 'components/PubLicense/PubLicense';
 import PubSectionNav from 'components/PubSectionNav/PubSectionNav';
 import DiscussionList from 'components/DiscussionList/DiscussionList';
@@ -313,14 +313,6 @@ class Pub extends Component {
 		const mode = this.props.locationData.params.mode;
 		const subMode = this.props.locationData.params.subMode;
 		const activeVersion = pubData.activeVersion;
-
-		const authors = pubData.collaborators.filter((collaborator)=> {
-			return collaborator.Collaborator.isAuthor;
-		});
-		const contributors = pubData.collaborators.filter((collaborator)=> {
-			return collaborator.Collaborator.isContributor;
-		});
-
 		const discussions = pubData.discussions || [];
 		const threads = nestDiscussionsToThreads(discussions);
 
@@ -460,7 +452,7 @@ class Pub extends Component {
 										</div>
 										<div className="side-content">
 											{/* Table of Contents */}
-											<PubToc
+											<PubSideToc
 												pubData={pubData}
 												locationData={this.props.locationData}
 												setOptionsMode={this.setOptionsMode}
@@ -469,35 +461,10 @@ class Pub extends Component {
 											/>
 
 											{/* Collaborators */}
-											{!!authors.length &&
-												<div>
-													<div className="header-title">Authors</div>
-
-													{authors.sort((foo, bar)=> {
-														if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
-														if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
-														if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
-														if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
-														return 0;
-													}).map((item)=> {
-														return <PubPresSideUser user={item} key={item.id} />;
-													})}
-												</div>
-											}
-											{!!contributors.length &&
-												<div>
-													<div className="header-title">Contributors</div>
-													{contributors.sort((foo, bar)=> {
-														if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
-														if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
-														if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
-														if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
-														return 0;
-													}).map((item)=> {
-														return <PubPresSideUser user={item} key={item.id} />;
-													})}
-												</div>
-											}
+											<PubSideCollaborators
+												pubData={pubData}
+												setOptionsMode={this.setOptionsMode}
+											/>
 										</div>
 									</div>
 								</div>
