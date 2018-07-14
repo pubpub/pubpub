@@ -17,7 +17,8 @@ app.get(['/pub/:slug', '/pub/:slug/content/:sectionId', '/pub/:slug/draft', '/pu
 	if (!hostIsValid(req, 'community')) { return next(); }
 
 	const isDraft = req.path.indexOf(`/pub/${req.params.slug}/draft`) === 0;
-	const acceptedModes = ['collaborators', 'versions', 'invite', 'discussions', 'contents'];
+	// const acceptedModes = ['collaborators', 'versions', 'invite', 'discussions', 'contents'];
+	const acceptedModes = ['discussions'];
 	if (req.params.mode && acceptedModes.indexOf(req.params.mode) === -1) { return next(); }
 
 

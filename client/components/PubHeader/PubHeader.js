@@ -145,7 +145,7 @@ const PubHeader = function(props) {
 							<div className="details">
 								{!pubData.isDraft &&
 									<a
-										href={`/pub/${pubData.slug}/versions`}
+										// href={`/pub/${pubData.slug}/versions`}
 										onClick={(evt)=> {
 											evt.preventDefault();
 											props.setOptionsMode('versions');
@@ -161,7 +161,7 @@ const PubHeader = function(props) {
 									{numDiscussions} Discussion{numDiscussions === 1 ? '' : 's'}
 								</a>
 								<a
-									href={`/pub/${pubData.slug}/collaborators`}
+									// href={`/pub/${pubData.slug}/collaborators`}
 									onClick={(evt)=> {
 										evt.preventDefault();
 										props.setOptionsMode('collaborators');
@@ -171,7 +171,7 @@ const PubHeader = function(props) {
 									{numCollaborators} Collaborator{numCollaborators === 1 ? '' : 's'}
 								</a>
 								<a
-									href={`/pub/${pubData.slug}/versions`}
+									// href={`/pub/${pubData.slug}/versions`}
 									onClick={(evt)=> {
 										evt.preventDefault();
 										props.setOptionsMode('versions');
