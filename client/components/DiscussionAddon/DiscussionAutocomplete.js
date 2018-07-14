@@ -82,7 +82,7 @@ class DiscussionAutocomplete extends Component {
 						placeholder: this.props.placeholder,
 					}}
 					inputValueRenderer={(item) => { return item.title; }}
-					itemRenderer={({ item, handleClick, isActive })=> {
+					itemRenderer={(item, { handleClick, isActive })=> {
 						const discussion = item[0];
 						return (
 							<li key={item[0].id}>

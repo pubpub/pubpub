@@ -7,6 +7,8 @@ const propTypes = {
 	threads: PropTypes.array,
 	slug: PropTypes.string,
 	setActiveThread: PropTypes.func,
+	onOptionsRender: PropTypes.func,
+	optionsContainerRef: PropTypes.object,
 	/* All addons get the following props,
 	but certain schema-based addons may not need them */
 	// containerId: PropTypes.string.isRequired,
@@ -17,9 +19,13 @@ const defaultProps = {
 	threads: [],
 	slug: '',
 	setActiveThread: ()=>{},
+	onOptionsRender: ()=>{},
+	optionsContainerRef: {},
 };
 
 class DiscussionAddon extends Component {
+	// TODO: Use side panel for options
+	// Pass in getThreads - rather than threads. So that we can have updated thread content in dropdown.
 	static schema = (props)=> {
 		return {
 			nodes: {
@@ -35,7 +41,7 @@ class DiscussionAddon extends Component {
 					draggable: false,
 					selectable: true,
 					insertMenu: {
-						label: 'Insert Discussion Thread',
+						label: 'Discussion Thread',
 						icon: 'pt-icon-chat',
 						onInsert: (view) => {
 							const discussionNode = view.state.schema.nodes.discussion.create();
@@ -54,6 +60,8 @@ class DiscussionAddon extends Component {
 								{...helperFunctions}
 								threads={props.threads}
 								slug={props.slug}
+								onOptionsRender={props.onOptionsRender}
+								optionsContainerRef={props.optionsContainerRef}
 							/>
 						);
 					},

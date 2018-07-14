@@ -91,6 +91,7 @@
     "react-avatar-editor": "^11.0.4",
     "react-beautiful-dnd": "^8.0.2",
     "react-dom": "^16.4.1",
+    "react-portal": "^4.1.5",
     "react-timeago": "^4.1.9",
     "request": "^2.79.0",
     "request-promise": "^4.1.1",

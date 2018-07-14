@@ -46,6 +46,7 @@ class DiscussionViewer extends Component {
 		const permalinkPath = `/pub/${this.props.pubData.slug}${chapterString}${toFromString}${versionString}`;
 		window.open(permalinkPath);
 	}
+
 	handleNewDiscussionSubmit(replyObject) {
 		this.props.onPostDiscussion({
 			userId: this.props.loginData.id,
