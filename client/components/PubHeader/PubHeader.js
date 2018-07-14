@@ -27,36 +27,24 @@ const PubHeader = function(props) {
 		backgroundStyle.backgroundImage = `url("${resizedBackground}")`;
 		backgroundStyle.color = 'white';
 	}
-	const queryObject = props.locationData.query;
 	const mode = props.locationData.params.mode;
 	const subMode = props.locationData.params.subMode;
 	const activeVersion = pubData.activeVersion;
-	const numChapters = activeVersion && Array.isArray(activeVersion.content) && activeVersion.content.length;
-	// const activeChapterId = props.locationData.params.chapterId ? props.locationData.params.chapterId - 1 : 0;
-	// const activeChapterTitle = Array.isArray(props.pubData.activeVersion.content) && props.pubData.activeVersion.content[activeChapterId].title;
 	const sortedVersionsList = pubData.versions.sort((foo, bar)=>{
 		if (foo.createdAt < bar.createdAt) { return 1; }
 		if (foo.createdAt > bar.createdAt) { return -1; }
 		return 0;
 	});
 
-	const hasChapters = activeVersion && Array.isArray(activeVersion.content);
-	const chapterId = hasChapters ? props.locationData.params.chapterId || '' : undefined;
-
-	const chapterIds = hasChapters
-		? pubData.activeVersion.content.map((chapter)=> {
-			return chapter.id || '';
-		})
-		: [];
-	const currentChapterIndex = chapterIds.reduce((prev, curr, index)=> {
-		if (chapterId === curr) { return index; }
+	const numNewerVersions = !pubData.isDraft && pubData.versions.reduce((prev, curr)=> {
+		if (curr.createdAt > activeVersion.createdAt) { return prev + 1; }
 		return prev;
-	}, undefined);
-
+	}, 0);
 	const numDiscussions = pubData.discussions.length;
 	const numCollaborators = pubData.collaborators.filter((item)=> {
 		return item.Collaborator.isAuthor || item.Collaborator.isContributor;
 	}).length;
+
 	return (
 		<div className={`pub-header-component ${mode ? 'mode' : ''}`} style={backgroundStyle}>
 			<div className={`wrapper ${useHeaderImage ? 'dim' : ''}`}>
@@ -158,7 +146,6 @@ const PubHeader = function(props) {
 								{!pubData.isDraft &&
 									<a
 										href={`/pub/${pubData.slug}/versions`}
-										// className="pt-button pt-minimal date"
 										onClick={(evt)=> {
 											evt.preventDefault();
 											props.setOptionsMode('versions');
@@ -169,73 +156,43 @@ const PubHeader = function(props) {
 								}
 								<a
 									href="#discussions"
-									// className="pt-button pt-minimal discussions"
 								>
-									{/*<span className="pt-icon-standard pt-icon-chat" />*/}
+									{/* <span className="pt-icon-standard pt-icon-chat" /> */}
 									{numDiscussions} Discussion{numDiscussions === 1 ? '' : 's'}
 								</a>
 								<a
 									href={`/pub/${pubData.slug}/collaborators`}
-									// className="pt-button pt-minimal collaborators"
 									onClick={(evt)=> {
 										evt.preventDefault();
 										props.setOptionsMode('collaborators');
 									}}
 								>
-									{/*<span className="pt-icon-standard pt-icon-team" />*/}
+									{/* <span className="pt-icon-standard pt-icon-team" /> */}
 									{numCollaborators} Collaborator{numCollaborators === 1 ? '' : 's'}
 								</a>
 								<a
 									href={`/pub/${pubData.slug}/versions`}
-									// className="pt-button pt-minimal date"
 									onClick={(evt)=> {
 										evt.preventDefault();
 										props.setOptionsMode('versions');
 									}}
 								>
-									{/*<span className="pt-icon-standard pt-icon-multi-select" />*/}
-									{/* TODO: save older to be caluclated properly. Use this space to say newer, if that makes sense*/}
-									{pubData.versions.length} Older Version{pubData.versions.length === 1 ? '' : 's'}
-								</a>
+									{/* If is draft, say total number of saved versions */}
+									{pubData.isDraft &&
+										<span>{pubData.versions.length} Saved Version{pubData.versions.length === 1 ? '' : 's'}</span>
+									}
 
-								{/*numChapters &&
-									<a
-										href={`/pub/${pubData.slug}/contents${queryObject.version ? `?version=${queryObject.version}` : ''}`}
-										className="pt-button pt-minimal chapters"
-										onClick={(evt)=> {
-											evt.preventDefault();
-											props.setOptionsMode('chapters');
-										}}
-									>
-										{currentChapterIndex + 1} of {numChapters}
-										<span className="pt-icon-standard pt-align-right pt-icon-properties" />
-									</a>
-								*/}
+									{/* If not draft, and newer versions, say numNewerVersions */}
+									{!pubData.isDraft && !!numNewerVersions &&
+										<span>{numNewerVersions} Newer Version{pubData.versions.length === 1 ? '' : 's'}</span>
+									}
+									
+									{/* If not draft, and no newer versions, say numVersions - 1 Older Versions */}
+									{!pubData.isDraft && !numNewerVersions &&
+										<span>{pubData.versions.length - 1} Older Version{pubData.versions.length === 1 ? '' : 's'}</span>
+									}
+								</a>
 							</div>
-							{/*<div className="details">
-								{!pubData.isDraft &&
-									<a
-										href={`/pub/${pubData.slug}/versions`}
-										// className="pt-button pt-minimal date"
-										onClick={(evt)=> {
-											evt.preventDefault();
-											props.setOptionsMode('versions');
-										}}
-									>
-										<span>{sortedVersionsList[sortedVersionsList.length - 1].id !== activeVersion.id ? 'Updated ' : ''}{dateFormat(pubData.activeVersion.createdAt, 'mmm dd, yyyy')}</span>
-									</a>
-								}
-								{!pubData.isDraft &&
-									<a href={`/pub/${pubData.slug}/draft`}>
-										Go to Working Draft
-									</a>
-								}
-								{pubData.isDraft && !!sortedVersionsList.length &&
-									<a href={`/pub/${pubData.slug}`}>
-										Go to Newest Saved Version
-									</a>
-								}
-							</div>*/}
 						</div>
 					</div>
 				</div>
