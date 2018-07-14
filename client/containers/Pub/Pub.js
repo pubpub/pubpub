@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import firebase from '@firebase/app';
-import { NonIdealState } from '@blueprintjs/core';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
-import Overlay from 'components/Overlay/Overlay';
 import PubHeader from 'components/PubHeader/PubHeader';
 import PubDraftHeader from 'components/PubDraftHeader/PubDraftHeader';
 import PubPresSideUser from 'components/PubPresSideUser/PubPresSideUser';
@@ -11,6 +9,9 @@ import PubBody from 'components/PubBodyNew/PubBody';
 import PubOptions from 'components/PubOptions/PubOptions';
 import PubToc from 'components/PubToc/PubToc';
 import License from 'components/License/License';
+import DiscussionList from 'components/DiscussionList/DiscussionList';
+import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
+import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import { apiFetch, hydrateWrapper, getFirebaseConfig, nestDiscussionsToThreads, getRandomColor, generateHash } from 'utilities';
 
 require('@firebase/auth');
@@ -70,6 +71,10 @@ class Pub extends Component {
 		this.handleNewHighlightDiscussion = this.handleNewHighlightDiscussion.bind(this);
 		this.handleStatusChange = this.handleStatusChange.bind(this);
 		this.handleClientChange = this.handleClientChange.bind(this);
+		this.handlePutLabels = this.handlePutLabels.bind(this);
+		this.closeThreadOverlay = this.closeThreadOverlay.bind(this);
+		this.handlePostDiscussion = this.handlePostDiscussion.bind(this);
+		this.handlePutDiscussion = this.handlePutDiscussion.bind(this);
 	}
 
 	componentDidMount() {
@@ -222,6 +227,84 @@ class Pub extends Component {
 		});
 	}
 
+	handlePutLabels(newLabels) {
+		return apiFetch('/api/pubs', {
+			method: 'PUT',
+			body: JSON.stringify({
+				labels: newLabels,
+				pubId: this.props.pubData.id,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then((result)=> {
+			this.setPubData({
+				...this.state.pubData,
+				...result
+			});
+		})
+		.catch((err)=> {
+			console.error('Error saving labels', err);
+		});
+	}
+
+	closeThreadOverlay() {
+		this.setState({
+			activeThreadNumber: undefined,
+			initialDiscussionContent: undefined,
+		});
+	}
+
+	handlePostDiscussion(discussionObject) {
+		this.setState({ postDiscussionIsLoading: true });
+		return apiFetch('/api/discussions', {
+			method: 'POST',
+			body: JSON.stringify({
+				...discussionObject,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then((result)=> {
+			this.setState({
+				postDiscussionIsLoading: false,
+				activeThreadNumber: result.threadNumber,
+				pubData: {
+					...this.state.pubData,
+					discussions: [
+						...this.state.pubData.discussions,
+						result,
+					],
+				},
+			});
+		})
+		.catch(()=> {
+			this.setState({ postDiscussionIsLoading: false });
+		});
+	}
+
+	handlePutDiscussion(discussionObject) {
+		return apiFetch('/api/discussions', {
+			method: 'PUT',
+			body: JSON.stringify({
+				...discussionObject,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then((result)=> {
+			this.setState({
+				pubData: {
+					...this.state.pubData,
+					discussions: this.state.pubData.discussions.map((item)=> {
+						if (item.id !== result.id) { return item; }
+						return {
+							...item,
+							...result,
+						};
+					}),
+				},
+			});
+		});
+	}
+
 	render() {
 		const pubData = this.state.pubData;
 		const loginData = this.props.loginData;
@@ -357,105 +440,156 @@ class Pub extends Component {
 						/>
 					}
 
+					{!mode &&
+						<div>
+							<div className="container pub">
+								<div className="row">
+									<div className="col-12 pub-columns">
+										<div className="main-content">
+											<PubBody
+												onRef={this.handleEditorRef}
+												isDraft={pubData.isDraft}
+												versionId={activeVersion && activeVersion.id}
+												sectionId={sectionId}
+												content={activeContent}
+												threads={threads}
+												slug={pubData.slug}
+												highlights={this.state.docReadyForHighlights ? highlights : []}
+												hoverBackgroundColor={this.props.communityData.accentMinimalColor}
+												setActiveThread={this.setActiveThread}
+												onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
+												// onNewHighlightDiscussion={()=>{}}
 
-					<div className="container pub">
+												// Props from CollabEditor
+												editorKey={`${this.props.pubData.editorKey}${sectionId ? '/' : ''}${sectionId || ''}`}
+												isReadOnly={!pubData.isDraft || (!canManage && pubData.localPermissions !== 'edit')}
+												clientData={this.state.activeCollaborators[0]}
+												onClientChange={this.handleClientChange}
+												onStatusChange={this.handleStatusChange}
+												menuWrapperRefNode={this.state.menuWrapperRefNode}
+											/>
+
+											{/* License */}
+											{!pubData.isDraft &&
+												<div className="license-wrapper">
+													<License />
+												</div>
+											}
+										</div>
+										<div className="side-content">
+											{/* Table of Contents */}
+											<PubToc
+												pubData={pubData}
+												locationData={this.props.locationData}
+												setOptionsMode={this.setOptionsMode}
+												editorRefNode={this.state.editorRefNode}
+												activeContent={activeContent}
+											/>
+
+											{/* Collaborators */}
+											{!!authors.length &&
+												<div>
+													<div className="header-title">Authors</div>
+
+													{authors.sort((foo, bar)=> {
+														if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
+														if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
+														if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
+														if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
+														return 0;
+													}).map((item)=> {
+														return <PubPresSideUser user={item} key={item.id} />;
+													})}
+												</div>
+											}
+											{!!contributors.length &&
+												<div>
+													<div className="header-title">Contributors</div>
+													{contributors.sort((foo, bar)=> {
+														if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
+														if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
+														if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
+														if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
+														return 0;
+													}).map((item)=> {
+														return <PubPresSideUser user={item} key={item.id} />;
+													})}
+												</div>
+											}
+										</div>
+									</div>
+								</div>
+							</div>
+							<div id="discussions" className="discussions">
+								<div className="container pub">
+									<div className="row">
+										<div className="col-12">
+											<DiscussionList
+												pubData={pubData}
+												onPreviewClick={this.setActiveThread}
+												onLabelsSave={this.handlePutLabels}
+												showAll={queryObject.all}
+											/>
+										</div>
+									</div>
+								</div>
+							</div>
+							<DiscussionViewer
+								pubData={pubData}
+								loginData={this.props.loginData}
+								locationData={this.props.locationData}
+								communityData={this.props.communityData}
+								activeThreadNumber={this.state.activeThreadNumber}
+								onClose={this.closeThreadOverlay}
+								getHighlightContent={this.getHighlightContent}
+								onPostDiscussion={this.handlePostDiscussion}
+								onPutDiscussion={this.handlePutDiscussion}
+								postDiscussionIsLoading={this.state.postDiscussionIsLoading}
+								initialContent={this.state.initialDiscussionContent}
+							/>
+							<PubOptions
+								communityData={this.props.communityData}
+								pubData={pubData}
+								loginData={loginData}
+								locationData={this.props.locationData}
+								firebaseRef={this.firebaseRef}
+								editorRefNode={this.state.editorRefNode}
+								optionsMode={this.state.optionsMode}
+								setOptionsMode={this.setOptionsMode}
+								setPubData={this.setPubData}
+							/>
+						</div>
+					}
+
+					<div className="container pub mode-content">
 						<div className="row">
-							<div className="col-12 pub-columns">
-								<div className="main-content">
-									<PubBody
-										onRef={this.handleEditorRef}
-										isDraft={pubData.isDraft}
-										versionId={activeVersion && activeVersion.id}
-										sectionId={sectionId}
-										content={activeContent}
-										threads={threads}
-										slug={pubData.slug}
-										highlights={this.state.docReadyForHighlights ? highlights : []}
-										hoverBackgroundColor={this.props.communityData.accentMinimalColor}
-										setActiveThread={this.setActiveThread}
-										onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
-										// onNewHighlightDiscussion={()=>{}}
-
-										// Props from CollabEditor
-										editorKey={`${this.props.pubData.editorKey}${sectionId ? '/' : ''}${sectionId || ''}`}
-										isReadOnly={!pubData.isDraft || (!canManage && pubData.localPermissions !== 'edit')}
-										clientData={this.state.activeCollaborators[0]}
-										onClientChange={this.handleClientChange}
-										onStatusChange={this.handleStatusChange}
-										menuWrapperRefNode={this.state.menuWrapperRefNode}
-									/>
-
-									{/* License */}
-									{!pubData.isDraft &&
-										<div className="license-wrapper">
-											<License />
-										</div>
-									}
-								</div>
-								<div className="side-content">
-									{/* Table of Contents */}
-									<PubToc
+							<div className="col-12">
+								{mode === 'discussions' && !subMode &&
+									<DiscussionList
 										pubData={pubData}
-										locationData={this.props.locationData}
-										setOptionsMode={this.setOptionsMode}
-										editorRefNode={this.state.editorRefNode}
-										activeContent={activeContent}
+										mode={mode}
+										onLabelsSave={this.handlePutLabels}
 									/>
-
-									{/* Collaborators */}
-									{!!authors.length &&
-										<div>
-											<div className="header-title">Authors</div>
-
-											{authors.sort((foo, bar)=> {
-												if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
-												if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
-												if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
-												if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
-												return 0;
-											}).map((item)=> {
-												return <PubPresSideUser user={item} key={item.id} />;
-											})}
-										</div>
-									}
-									{!!contributors.length &&
-										<div>
-											<div className="header-title">Contributors</div>
-											{contributors.sort((foo, bar)=> {
-												if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
-												if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
-												if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
-												if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
-												return 0;
-											}).map((item)=> {
-												return <PubPresSideUser user={item} key={item.id} />;
-											})}
-										</div>
-									}
-								</div>
+								}
+								{mode === 'discussions' && subMode &&
+									<DiscussionThread
+										pubData={pubData}
+										discussions={activeThread}
+										canManage={pubData.localPermissions === 'manage' || (this.props.loginData.isAdmin && pubData.adminPermissions === 'manage')}
+										slug={pubData.slug}
+										loginData={this.props.loginData}
+										pathname={`${this.props.locationData.path}${this.props.locationData.queryString}`}
+										handleReplySubmit={this.handlePostDiscussion}
+										handleReplyEdit={this.handlePutDiscussion}
+										submitIsLoading={this.state.postDiscussionIsLoading}
+										hideScrollButton={true}
+										getHighlightContent={()=>{}}
+										hoverBackgroundColor={this.props.communityData.accentMinimalColor}
+									/>
+								}
 							</div>
 						</div>
 					</div>
-					<div id="discussions" className="discussions">
-						<div className="container pub">
-							<div className="row">
-								<div className="col-12">
-									<h2>Discussions</h2>
-								</div>
-							</div>
-						</div>
-					</div>
-					<PubOptions
-						communityData={this.props.communityData}
-						pubData={pubData}
-						loginData={loginData}
-						locationData={this.props.locationData}
-						firebaseRef={this.firebaseRef}
-						editorRefNode={this.state.editorRefNode}
-						optionsMode={this.state.optionsMode}
-						setOptionsMode={this.setOptionsMode}
-						setPubData={this.setPubData}
-					/>
 				</PageWrapper>
 			</div>
 		);
