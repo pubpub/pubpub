@@ -27,8 +27,24 @@ export const hydrateWrapper = (Component)=> {
 			/* Matomo Code */
 			window._paq = [];
 			window._paq.push(['setDocumentTitle', `${document.domain}/${document.title}`]);
-			window._paq.push(['setCookieDomain', '*.pubpub.org']);
 			window._paq.push(['setDomains', ['*.pubpub.org']]);
+			if (initialData.communityData) {
+				window._paq.push(['setCustomDimension', 1, initialData.communityData.id]);
+			}
+			if (initialData.collectionData) {
+				window._paq.push(['setCustomDimension', 2, initialData.collectionData.id]);
+			}
+			if (initialData.pubData) {
+				const versionId = initialData.pubData.isDraft
+					? 'draft'
+					: initialData.pubData.activeVersion.id;
+
+				window._paq.push(['setCustomDimension', 3, initialData.pubData.id]);
+				window._paq.push(['setCustomDimension', 4, versionId]);
+			}
+			if (initialData.loginData.id) {
+				window._paq.push(['setUserId', initialData.loginData.id]);
+			}
 			window._paq.push(['trackPageView']);
 			window._paq.push(['enableLinkTracking']);
 			window._paq.push(['enableHeartBeatTimer']);
