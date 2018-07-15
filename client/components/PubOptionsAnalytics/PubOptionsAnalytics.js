@@ -70,7 +70,6 @@ class PubOptionsAnalytics extends Component {
 	handleMouseMove(geography, evt) {
 		const x = evt.clientX;
 		const y = evt.clientY + window.pageYOffset;
-		// console.log(geography, x, y);
 		const countryVisits = this.state.countryData[geography.properties.name] || 0;
 		const percentage = this.state.totalVisits ? (Math.round((countryVisits / this.state.totalVisits) * 10000) / 100) : 0;
 		this.setState({
@@ -134,14 +133,6 @@ class PubOptionsAnalytics extends Component {
 							<XAxis dataKey="date" />
 							<YAxis />
 							<Tooltip
-								// labelFormatter={(value, name, props)=> {
-								// 	console.log('label props', value, name, props);
-								// 	return <span>LABEL</span>
-								// }}
-								// formatter={(value, name, props)=> {
-								// 	console.log('format props', value, name, props);
-								// 	return <span>Form</span>
-								// }}
 								content={(instance)=> {
 									if (!instance.active) { return null; }
 									const payload = instance.payload[0].payload;
@@ -179,11 +170,9 @@ class PubOptionsAnalytics extends Component {
 							<Geographies geography={this.state.mapData}>
 								{(geographies, projection) => {
 									return geographies.map((geography) => {
-										// console.log(geography);
 										const countryVisits = this.state.countryData[geography.properties.name] || 0;
 										const visitRatio = this.state.totalVisits ? countryVisits / this.state.totalVisits : 0;
 										const fill = `rgba(26, 76, 109, ${visitRatio ? visitRatio * 0.75 + 0.25 : 0.05})`;
-										// console.log(geography.properties.name, visitRatio, this.state.countryData[geography.properties.name], this.state.totalVisits);
 										return (
 											<Geography
 												key={geography.id}

@@ -48,3 +48,4 @@ The [Latex Buildpack we are using](https://github.com/Thermondo/heroku-buildpack
 - Remove local font loading from webpack.prod config. See comment TODO there.
 - Change /chapters to /sections on firebase
 - Update versionId in hydrateWrapper for analytics
+- Add new config items to heroku
