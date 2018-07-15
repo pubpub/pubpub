@@ -35,10 +35,12 @@ export const hydrateWrapper = (Component)=> {
 				window._paq.push(['setCustomDimension', 2, initialData.collectionData.id]);
 			}
 			if (initialData.pubData) {
-				const versionId = initialData.pubData.isDraft
+				// const versionId = initialData.pubData.isDraft
+				// 	? 'draft'
+				// 	: initialData.pubData.activeVersion.id;
+				const versionId = initialData.locationData.path.indexOf('/collaborate') > -1
 					? 'draft'
-					: initialData.pubData.activeVersion.id;
-
+					: initialData.pubData.versions[0].id;
 				window._paq.push(['setCustomDimension', 3, initialData.pubData.id]);
 				window._paq.push(['setCustomDimension', 4, versionId]);
 			}
