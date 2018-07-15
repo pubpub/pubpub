@@ -1,8 +1,14 @@
 .pub-options-analytics-component {
-	.map-tooltip {
-		position: fixed;
-		pointer-events: none;
+	h2 {
+		font-size: 22px;
+		font-weight: 800;
+		&:not(:first-of-type) {
+			margin-top: 2em;
+		}
+	}
+	.pt-elevation-2 {
 		background: white;
 		padding: 1em;
-	}	
+		pointer-events: none;
+	}
 }

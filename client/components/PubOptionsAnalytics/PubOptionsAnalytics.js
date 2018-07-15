@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { ComposableMap, ZoomableGroup, Geographies, Geography } from 'react-simple-maps';
+import { ResponsiveContainer, AreaChart, XAxis, YAxis, Tooltip, Area } from 'recharts';
+// Use Recharts
 
 require('./pubOptionsAnalytics.scss');
 
@@ -56,7 +58,7 @@ class PubOptionsAnalytics extends Component {
 				visitsData: visitsData,
 				countryData: countryData,
 				totalVisits: Object.values(visitsData).reduce((prev, curr)=> {
-					return prev + curr;
+					return prev + curr.nb_visits;
 				}, 0),
 			});
 		})
@@ -91,18 +93,75 @@ class PubOptionsAnalytics extends Component {
 		const tooltipStyle = {
 			top: toolTipData.y,
 			left: toolTipData.x,
+			position: 'fixed',
 		};
 		return (
 			<div className="pub-options-analytics-component">
 				<h1>Analytics</h1>
 
 				{this.state.toolTipData &&
-					<div className="map-tooltip pt-elevation-2" style={tooltipStyle}>
+					<div className="pt-elevation-2" style={tooltipStyle}>
 						<div><b>Country: </b>{this.state.toolTipData.name}</div>
 						<div><b>Visits: </b>{this.state.toolTipData.visits.toLocaleString()}</div>
 						<div><b>Percent of Total Visits: </b>{this.state.toolTipData.percentage}%</div>
 					</div>
 				}
+
+				<h2>Visits</h2>
+				{this.state.visitsData &&
+					<ResponsiveContainer width="100%" height={150}>
+						<AreaChart
+							data={Object.keys(this.state.visitsData).sort((foo, bar)=> {
+								if (foo < bar) { return -1; }
+								if (foo > bar) { return 1; }
+								return 0;
+							}).map((item)=> {
+								return {
+									date: item,
+									visits: this.state.visitsData[item].nb_visits,
+									unique: this.state.visitsData[item].nb_uniq_visitors,
+									avgTime: this.state.visitsData[item].avg_time_on_site,
+								};
+							})}
+							margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+						>
+							<defs>
+								<linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+									<stop offset="5%" stopColor="#607D8B" stopOpacity={0.6} />
+									<stop offset="95%" stopColor="#607D8B" stopOpacity={0} />
+								</linearGradient>
+							</defs>
+							<XAxis dataKey="date" />
+							<YAxis />
+							<Tooltip
+								// labelFormatter={(value, name, props)=> {
+								// 	console.log('label props', value, name, props);
+								// 	return <span>LABEL</span>
+								// }}
+								// formatter={(value, name, props)=> {
+								// 	console.log('format props', value, name, props);
+								// 	return <span>Form</span>
+								// }}
+								content={(instance)=> {
+									if (!instance.active) { return null; }
+									const payload = instance.payload[0].payload;
+									// console.log(payload);
+									return (
+										<div className="pt-elevation-2">
+											<div><b>{payload.date}</b></div>
+											<div>Visits: {payload.visits}</div>
+											<div>Unique Visits: {payload.unique}</div>
+											<div>Average Time on Page: {payload.avgTime}s</div>
+										</div>
+									);
+								}}
+							/>
+							<Area type="monotone" dataKey="visits" stroke="#607D8B" fillOpacity={1} fill="url(#colorUv)" />
+						</AreaChart>
+					</ResponsiveContainer>
+				}
+
+				<h2>Visit Locations</h2>
 				{this.state.mapData && this.state.countryData &&
 					<ComposableMap
 						projectionConfig={{

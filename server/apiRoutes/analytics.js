@@ -12,7 +12,7 @@ app.get('/api/analytics', (req, res)=> {
 		&token_auth=${tokenAuth}
 		&format=json
 		&date=2018-06-14,2018-07-15
-		&urls[0]=${encodeURIComponent('method=VisitsSummary.getVisits&period=day')}
+		&urls[0]=${encodeURIComponent('method=VisitsSummary.get&period=day')}
 		&urls[1]=${encodeURIComponent('method=UserCountry.getCountry&period=range')}
 	`.replace(/\s/g, '');
 	// &segment=browserCode==FF
