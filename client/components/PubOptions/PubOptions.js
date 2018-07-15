@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Overlay from 'components/Overlay/Overlay';
+import PubOptionsAnalytics from 'components/PubOptionsAnalytics/PubOptionsAnalytics';
 import PubOptionsCite from 'components/PubOptionsCite/PubOptionsCite';
 import PubOptionsDoi from 'components/PubOptionsDoi/PubOptionsDoi';
 import PubOptionsDetails from 'components/PubOptionsDetails/PubOptionsDetails';
@@ -88,6 +89,9 @@ const PubOptions = (props)=> {
 
 				{/* Right Content Panel */}
 				<div className="right-column">
+					{optionsMode === 'analytics' &&
+						<PubOptionsAnalytics key="analytics" {...defaultChildProps} />
+					}
 					{optionsMode === 'cite' &&
 						<PubOptionsCite key="cite" {...defaultChildProps} />
 					}

@@ -27,11 +27,7 @@ export const hydrateWrapper = (Component)=> {
 			/* Matomo Code */
 			window._paq = [];
 			window._paq.push(['setDocumentTitle', `${document.domain}/${document.title}`]);
-			// window._paq.push(['setCookieDomain', '*.pubpub.org']);
 			window._paq.push(['setDomains', ['*.pubpub.org']]);
-			window._paq.push(['trackPageView']);
-			window._paq.push(['enableLinkTracking']);
-			window._paq.push(['enableHeartBeatTimer']);
 			if (initialData.communityData) {
 				window._paq.push(['setCustomDimension', 1, initialData.communityData.id]);
 			}
@@ -46,6 +42,12 @@ export const hydrateWrapper = (Component)=> {
 				window._paq.push(['setCustomDimension', 3, initialData.pubData.id]);
 				window._paq.push(['setCustomDimension', 4, versionId]);
 			}
+			if (initialData.loginData.id) {
+				window._paq.push(['setUserId', initialData.loginData.id]);
+			}
+			window._paq.push(['trackPageView']);
+			window._paq.push(['enableLinkTracking']);
+			window._paq.push(['enableHeartBeatTimer']);
 			const url = 'https://pubpub.innocraft.cloud/';
 			window._paq.push(['setTrackerUrl', `${url}piwik.php`]);
 			window._paq.push(['setSiteId', '1']);

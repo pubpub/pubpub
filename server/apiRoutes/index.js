@@ -1,3 +1,4 @@
+require('./analytics');
 require('./collaborators');
 require('./collections');
 require('./collectionPubs');
