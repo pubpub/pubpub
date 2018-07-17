@@ -8,3 +8,4 @@ npm-debug.log
 config.js
 migrate
 dist
+.node-version
