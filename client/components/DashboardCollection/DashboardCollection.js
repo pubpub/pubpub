@@ -170,7 +170,7 @@ class DashboardCollection extends Component {
 								return (
 									<tr key={`collection-pub-${pub.id}`}>
 										<td className="title"><a href={`/pub/${pub.slug}`}>{pub.title}</a></td>
-										<td><a href={`/pub/${pub.slug}/collaborate`} className="pt-button pt-icon-edit pt-minimal" /></td>
+										<td><a href={`/pub/${pub.slug}/draft`} className="pt-button pt-icon-edit pt-minimal" /></td>
 										<td className={`status ${pub.status}`}>
 											{pub.status}
 										</td>

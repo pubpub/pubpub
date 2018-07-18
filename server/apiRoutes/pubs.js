@@ -61,7 +61,7 @@ app.post('/api/pubs', (req, res)=> {
 		});
 	})
 	.then(()=> {
-		return res.status(201).json(`/pub/${newPubSlug}/collaborate`);
+		return res.status(201).json(`/pub/${newPubSlug}/draft`);
 	})
 	.catch((err)=> {
 		console.log('Error creating Pub', err);
