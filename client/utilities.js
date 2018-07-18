@@ -24,6 +24,29 @@ export const hydrateWrapper = (Component)=> {
 			Raven.config('https://b4764efd07c240488d390c8343193208@sentry.io/197897').install();
 			Raven.setUserContext({ username: initialData.loginData.slug });
 
+			/* Heap Code */
+			if (initialData.communityData) {
+				window.communityId = initialData.communityData.id;
+			}
+			if (initialData.collectionData) {
+				window.collectionId = initialData.collectionData.id;
+			}
+			if (initialData.pubData) {
+				window.pubId = initialData.pubData.id;
+				// window.versionId = initialData.pubData.isDraft
+				// 	? 'draft'
+				// 	: initialData.pubData.activeVersion.id;
+				window.versionId = initialData.locationData.path.indexOf('/collaborate') > -1
+					? 'draft'
+					: initialData.pubData.versions[0].id;
+			}
+
+			window.heap = window.heap||[],heap.load=function(e,t){window.heap.appid=e,window.heap.config=t=t||{};var r=t.forceSSL||"https:"===document.location.protocol,a=document.createElement("script");a.type="text/javascript",a.async=!0,a.src=(r?"https:":"http:")+"//cdn.heapanalytics.com/js/heap-"+e+".js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n);for(var o=function(e){return function(){heap.push([e].concat(Array.prototype.slice.call(arguments,0)))}},p=["addEventProperties","addUserProperties","clearEventProperties","identify","resetIdentity","removeEventProperty","setEventProperties","track","unsetEventProperty"],c=0;c<p.length;c++)heap[p[c]]=o(p[c])};
+			const heapEnvironment = window.location.origin.indexOf('https://dev.pubpub.org') === 0
+				? '3777990325'
+				: '422727431';
+			heap.load(heapEnvironment);
+
 			/* Matomo Code */
 			window._paq = [];
 			window._paq.push(['setDocumentTitle', `${document.domain}/${document.title}`]);
