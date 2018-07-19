@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dateFormat from 'dateformat';
 import { getResizedUrl } from 'utilities';
+import { EditableText } from '@blueprintjs/core';
 
 require('./pubHeader.scss');
 
@@ -95,6 +96,18 @@ const PubHeader = function(props) {
 							{!mode &&
 								<h1>{pubData.title}</h1>
 							}
+							{/*<h1>
+								<EditableText
+									placeholder="Add a Pub Title"
+									isEditing={true}
+									multiline={true}
+									confirmOnEnterKey={true}
+									// onCancel
+									// onChange
+									// onConfirm
+									// value
+								/>
+							</h1>*/}
 
 							{mode &&
 								<a href={`/pub/${pubData.slug}`}><h1>{pubData.title}</h1></a>

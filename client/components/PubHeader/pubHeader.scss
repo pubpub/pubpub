@@ -18,6 +18,20 @@
 			a.pt-button {
 				text-shadow: 0px 0px 0px transparent;
 			}
+			.pt-editable-text {
+				&:hover:before {
+					box-shadow: 0 0 0 0 rgba(255, 255, 255, 0), 0 0 0 0 rgb(255, 255, 255), inset 0 0 0 1px rgba(247, 252, 255, 0.54);
+					background-color: transparent;
+				}
+				&.pt-editable-text-editing:before {
+					box-shadow: 0 0 0 0 rgba(255, 255, 255, 0), 0 0 0 0 rgb(255, 255, 255), inset 0 0 0 1px rgba(247, 252, 255, 0.54);
+					background-color: rgba(0, 0, 0, 0.35);
+				}
+				&.pt-editable-text-placeholder > .pt-editable-text-content, ::placeholder {
+					color: inherit;
+					opacity: 0.75;
+				}
+			}
 		}
 	}
 	.tags-buttons-wrapper {
