@@ -11,10 +11,12 @@ app.post('/api/export', (req, res)=> {
 		const sendMessage = addWorkerTask(JSON.stringify({
 			id: workerTaskData.id,
 			type: workerTaskData.type,
-			pubId: req.body.pubId,
-			versionId: req.body.versionId,
-			content: req.body.content,
-			format: req.body.format,
+			input: {
+				pubId: req.body.pubId,
+				versionId: req.body.versionId,
+				content: req.body.content,
+				format: req.body.format,
+			}
 		}));
 		return Promise.all([workerTaskData, sendMessage]);
 	})

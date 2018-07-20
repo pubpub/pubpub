@@ -287,6 +287,7 @@ const CommunityAdmin = sequelize.define('CommunityAdmin', {
 const WorkerTask = sequelize.define('WorkerTask', {
 	id: id,
 	type: { type: Sequelize.TEXT, allowNull: false },
+	input: { type: Sequelize.JSONB },
 	isProcessing: { type: Sequelize.BOOLEAN },
 	error: { type: Sequelize.JSONB },
 	output: { type: Sequelize.JSONB },

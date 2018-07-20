@@ -42,7 +42,8 @@ const dataDir = process.env.NODE_ENV === 'production'
 export default (pubId, versionId, content, format)=> {
 	const formatTypes = {
 		docx: { output: 'docx', extension: 'docx' },
-		pdf: { output: 'latex', extension: 'pdf' },
+		// pdf: { output: 'latex', extension: 'pdf', flags: `--pdf-engine=xelatex --template=${__dirname}/template.tex` },
+		pdf: { output: 'latex', extension: 'pdf', flags: '--pdf-engine=xelatex --variable=mainfont:utopia' },
 		epub: { output: 'epub', extension: 'epub' },
 		html: { output: 'html', extension: 'html' },
 		markdown: { output: 'markdown_strict', extension: 'md' },
@@ -92,18 +93,24 @@ export default (pubId, versionId, content, format)=> {
 		return Promise.all([staticHtml, generateTmpFile]);
 	})
 	.then(([staticHtml, tmpFile])=> {
-		const args = `${dataDir}-f html -t ${formatTypes[format].output} -o ${tmpFile.path}`;
+		const flags = formatTypes[format].flags;
+		const args = `${dataDir}-f html -t ${formatTypes[format].output} ${flags || ''} -o ${tmpFile.path}`;
 
 		const convertFile = new Promise((resolve, reject)=> {
 			nodePandoc(staticHtml, args, (err, result)=> {
-				console.log(JSON.stringify(err, null, 2));
-				if (err) reject(err);
-				resolve(result);
+				console.log(err && err.message);
+				const wroteToFile = !!fs.statSync(tmpFile.path).size;
+				if (result && wroteToFile) {
+					resolve(result);
+				}
+				if (result && !wroteToFile) {
+					reject(new Error('Error in Pandoc'));
+				}
 			});
 		});
 		return Promise.all([tmpFile, convertFile]);
 	})
-	.then(([tmpFile, convertResult])=> {
+	.then(([tmpFile])=> {
 		const key = `${generateHash(8)}/${versionId}.${formatTypes[format].extension}`;
 		const params = {
 			Key: key,
