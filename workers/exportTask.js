@@ -69,8 +69,7 @@ export default (pubId, versionId, content, format)=> {
 				<body>
 					<Editor
 						initialContent={versionData.content}
-						isReadOnly={true}
-						// TODO: renderStaticMarkup this vs readonly?
+						renderStaticMarkup={true}
 					>
 						<Image
 							handleResizeUrl={(url)=> { return url; }}
