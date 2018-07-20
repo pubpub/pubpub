@@ -42,7 +42,7 @@ const dataDir = process.env.NODE_ENV === 'production'
 export default (pubId, versionId, content, format)=> {
 	const formatTypes = {
 		docx: { output: 'docx', extension: 'docx' },
-		// pdf: { output: 'latex', extension: 'pdf', flags: `--pdf-engine=xelatex --template=${__dirname}/template.tex` },
+		// pdf: { output: 'latex', extension: 'pdf', flags: ` --pdf-engine=xelatex --template=${__dirname}/template.tex` },
 		pdf: { output: 'latex', extension: 'pdf', flags: ' --pdf-engine=xelatex' },
 		epub: { output: 'epub', extension: 'epub' },
 		html: { output: 'html', extension: 'html' },

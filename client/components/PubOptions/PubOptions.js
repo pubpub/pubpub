@@ -7,6 +7,7 @@ import PubOptionsDoi from 'components/PubOptionsDoi/PubOptionsDoi';
 import PubOptionsDetails from 'components/PubOptionsDetails/PubOptionsDetails';
 import PubOptionsDelete from 'components/PubOptionsDelete/PubOptionsDelete';
 import PubOptionsExport from 'components/PubOptionsExport/PubOptionsExport';
+import PubOptionsImport from 'components/PubOptionsImport/PubOptionsImport';
 import PubOptionsPages from 'components/PubOptionsPages/PubOptionsPages';
 import PubOptionsSections from 'components/PubOptionsSections/PubOptionsSections';
 import PubOptionsSharing from 'components/PubOptionsSharing/PubOptionsSharing';
@@ -39,7 +40,7 @@ const PubOptions = (props)=> {
 	const optionsMode = props.optionsMode;
 	// TODO: Hide based on canManage, and other metrics
 	// TODO: Hide sections if we are not in draft, and there are no sections
-	const modes = ['details', 'versions', 'pages', 'sharing', 'cite', 'DOI', 'sections', 'social', 'export', 'analytics', 'delete'];
+	const modes = ['details', 'versions', 'pages', 'sharing', 'cite', 'DOI', 'sections', 'social', 'export', 'import', 'analytics', 'delete'];
 
 	let canManage = false;
 	if (props.pubData.localPermissions === 'manage') { canManage = true; }
@@ -105,6 +106,12 @@ const PubOptions = (props)=> {
 					{optionsMode === 'delete' &&
 						<PubOptionsDelete key="delete" {...defaultChildProps} />
 					}
+					{optionsMode === 'export' &&
+						<PubOptionsExport key="export" {...defaultChildProps} />
+					}
+					{optionsMode === 'import' &&
+						<PubOptionsImport key="import" {...defaultChildProps} />
+					}
 					{optionsMode === 'pages' &&
 						<PubOptionsPages key="pages" {...defaultChildProps} />
 					}
@@ -122,9 +129,6 @@ const PubOptions = (props)=> {
 					}
 					{optionsMode === 'versions' &&
 						<PubOptionsVersions key="versions" {...defaultChildProps} />
-					}
-					{optionsMode === 'export' &&
-						<PubOptionsExport key="export" {...defaultChildProps} />
 					}
 				</div>
 			</div>

@@ -2,17 +2,13 @@ import app from '../server';
 import { WorkerTask } from '../models';
 import { addWorkerTask } from '../utilities';
 
-app.post('/api/export', (req, res)=> {
+app.post('/api/import', (req, res)=> {
 	const input = {
-		pubId: req.body.pubId,
-		versionId: req.body.versionId,
-		content: req.body.content,
-		format: req.body.format,
+		sourceUrl: req.body.sourceUrl,
 	};
-
 	return WorkerTask.create({
 		isProcessing: true,
-		type: 'export',
+		type: 'import',
 		input: input,
 	})
 	.then((workerTaskData)=> {

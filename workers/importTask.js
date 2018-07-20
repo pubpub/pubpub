@@ -23,7 +23,7 @@ export default (sourceUrl)=> {
 		tex: { format: 'latex' },
 	};
 
-	tmp.file({ postfix: `.${extension}` })
+	return tmp.file({ postfix: `.${extension}` })
 	.then((tmpFile)=> {
 		return new Promise((resolve, reject)=> {
 			request.head(sourceUrl, (err)=> {
@@ -47,19 +47,27 @@ export default (sourceUrl)=> {
 		const args = `${dataDir}-f ${extensionTypes[extension].format} -t html`;
 		return new Promise((resolve, reject)=> {
 			nodePandoc(tmpPath, args, (err, result)=> {
-				if (err) reject(err);
-				resolve(result);
+				if (err && err.message) {
+					console.warn(err.message);
+				}
+				/* This callback is called multiple times */
+				/* err is sent multiple times and includes warnings */
+				/* So to check if the file generated, check the size */
+				/* of the tmp file. */
+				if (result && !err) {
+					resolve(result);
+				}
+				if (result && err) {
+					reject(new Error('Error in Pandoc'));
+				}
 			});
 		});
 	})
 	.then((convertedHtml)=> {
-		console.log(convertedHtml);
+		return { html: convertedHtml };
 		// Need to check for media folder - and upload all assets there to server, and then replace urls
 
 		// Send HTML to editor, which converts to json
 		// And then editor (I think) writes to firebase
-	})
-	.catch((err)=> {
-		console.log('Error!', err);
 	});
 };

@@ -8,6 +8,7 @@ require('./discussions');
 require('./doi');
 require('./editor');
 require('./export');
+require('./import');
 require('./logout');
 require('./login');
 require('./passwordReset');

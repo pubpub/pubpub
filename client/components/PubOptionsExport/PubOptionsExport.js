@@ -84,7 +84,7 @@ class PubOptionsExport extends Component {
 			{ format: 'tex', title: 'LaTeX' },
 		];
 		return (
-			<div className="pub-options-delete-component">
+			<div className="pub-options-export-component">
 				<h1>Export Pub</h1>
 
 				<p>Export the current version or working draft.</p>
