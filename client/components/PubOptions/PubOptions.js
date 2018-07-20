@@ -6,6 +6,7 @@ import PubOptionsCite from 'components/PubOptionsCite/PubOptionsCite';
 import PubOptionsDoi from 'components/PubOptionsDoi/PubOptionsDoi';
 import PubOptionsDetails from 'components/PubOptionsDetails/PubOptionsDetails';
 import PubOptionsDelete from 'components/PubOptionsDelete/PubOptionsDelete';
+import PubOptionsExport from 'components/PubOptionsExport/PubOptionsExport';
 import PubOptionsPages from 'components/PubOptionsPages/PubOptionsPages';
 import PubOptionsSections from 'components/PubOptionsSections/PubOptionsSections';
 import PubOptionsSharing from 'components/PubOptionsSharing/PubOptionsSharing';
@@ -121,6 +122,9 @@ const PubOptions = (props)=> {
 					}
 					{optionsMode === 'versions' &&
 						<PubOptionsVersions key="versions" {...defaultChildProps} />
+					}
+					{optionsMode === 'export' &&
+						<PubOptionsExport key="export" {...defaultChildProps} />
 					}
 				</div>
 			</div>

@@ -6,6 +6,7 @@ import queryString from 'query-string';
 import Cite from 'citation-js';
 import builder from 'xmlbuilder';
 import request from 'request-promise';
+import amqplib from 'amqplib';
 import { Community, Collection, User, Pub, Version, Collaborator } from './models';
 import { getNotificationsCount } from './notifications';
 
@@ -276,16 +277,16 @@ export const handleErrors = (req, res, next)=> {
 	};
 };
 
-export const generateHash = (length)=> {
+export function generateHash(length) {
 	const tokenLength = length || 32;
 	const possible = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
 	let hash = '';
-	for (let index = 0; index < tokenLength; index++) {
+	for (let index = 0; index < tokenLength; index += 1) {
 		hash += possible.charAt(Math.floor(Math.random() * possible.length));
 	}
 	return hash;
-};
+}
 
 export function generateCitationHTML(pubData, communityData) {
 	if (!pubData.versions.length) { return null; }
@@ -531,4 +532,22 @@ export function submitDoiData(pubId, communityId, isNew) {
 	.then(([doi])=> {
 		return doi;
 	});
+}
+
+
+/* Worker Queue Tasks */
+const queueName = 'pubpubTaskQueue';
+let openChannel;
+amqplib.connect(process.env.CLOUDAMQP_URL).then((conn)=> {
+	return conn.createConfirmChannel().then((channel)=> {
+		return channel.assertQueue(queueName, { durable: true })
+		.then(()=> {
+			openChannel = channel;
+		});
+	});
+});
+
+export function addWorkerTask(message) {
+	openChannel.sendToQueue(queueName, Buffer.from(message), { deliveryMode: true });
+	return openChannel.waitForConfirms();
 }

@@ -9,7 +9,7 @@ const dataDir = process.env.NODE_ENV === 'production'
 	? '--data-dir=/app/.apt/usr/share/pandoc/data '
 	: '';
 
-export default (pubId, sourceUrl)=> {
+export default (sourceUrl)=> {
 	// - get file, enter into pandoc, get html, convert into pubpub json
 	const extension = sourceUrl.split('.').pop().toLowerCase();
 	const extensionTypes = {

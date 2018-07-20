@@ -284,6 +284,14 @@ const CommunityAdmin = sequelize.define('CommunityAdmin', {
 	communityId: { type: Sequelize.UUID, allowNull: false },
 });
 
+const WorkerTask = sequelize.define('WorkerTask', {
+	id: id,
+	type: { type: Sequelize.TEXT, allowNull: false },
+	isProcessing: { type: Sequelize.BOOLEAN },
+	error: { type: Sequelize.JSONB },
+	output: { type: Sequelize.JSONB },
+});
+
 /* Communities can have many Admins. Users can admin many communities. */
 User.belongsToMany(Community, { onDelete: 'CASCADE', as: 'communities', through: 'CommunityAdmin', foreignKey: 'userId' });
 Community.belongsToMany(User, { onDelete: 'CASCADE', as: 'admins', through: 'CommunityAdmin', foreignKey: 'communityId' });
@@ -335,6 +343,7 @@ const db = {
 	Signup: Signup,
 	User: User,
 	Version: Version,
+	WorkerTask: WorkerTask,
 };
 
 db.sequelize = sequelize;
