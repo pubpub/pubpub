@@ -8,14 +8,6 @@ if (process.env.NODE_ENV !== 'production') {
 	require('../server/config.js');
 }
 
-// exportTask('3ecac2f5-8065-4bde-aa0e-c1ab222fd673', '427a3c55-993a-4083-918c-85c682bedccf', null, 'pdf')
-// .then((output)=> {
-// 	console.log('got output', output);
-// })
-// .catch((err)=> {
-// 	console.log('Caught err', err.message);
-// });
-
 const processTask = (channel)=> {
 	return (msg)=> {
 		const taskData = JSON.parse(msg.content.toString());
@@ -86,3 +78,12 @@ amqplib.connect(process.env.CLOUDAMQP_URL).then((conn)=> {
 	});
 })
 .catch(console.warn);
+
+
+// exportTask('3ecac2f5-8065-4bde-aa0e-c1ab222fd673', '427a3c55-993a-4083-918c-85c682bedccf', null, 'pdf')
+// .then((output)=> {
+// 	console.log('got output', output);
+// })
+// .catch((err)=> {
+// 	console.log('Caught err', err.message);
+// });

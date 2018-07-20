@@ -76,6 +76,12 @@ class PubOptionsExport extends Component {
 			{ format: 'pdf', title: 'PDF' },
 			{ format: 'docx', title: 'Word' },
 			{ format: 'markdown', title: 'Markdown' },
+			{ format: 'epub', title: 'EPUB' },
+			{ format: 'html', title: 'HTML' },
+			{ format: 'odt', title: 'OpenDocument' },
+			{ format: 'plain', title: 'Plain Text' },
+			{ format: 'jats', title: 'JATS XML' },
+			{ format: 'tex', title: 'LaTeX' },
 		];
 		return (
 			<div className="pub-options-delete-component">
