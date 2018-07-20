@@ -38,7 +38,7 @@ Navigate to `localhost:9876`
 # Pandoc
 
 ## Latex
-The [Latex Buildpack we are using](https://github.com/Thermondo/heroku-buildpack-tex) allows a `texlive.packages` file in the root directory to specify additional packages to be installed. [List of available packages](http://fedoraproject.org/wiki/Features/TeXLive) (I think... documentation on packages is a bit tough to find).
+The [Latex Buildpack we are using](https://github.com/Thermondo/heroku-buildpack-tex) allows a `texlive.packages` file in the root directory to specify additional packages to be installed. [List of available packages](http://fedoraproject.org/wiki/Features/TeXLive) (I think... documentation on packages is a bit tough to find). [Can be useful](https://rpmfind.net/linux/rpm2html/search.php?query=texlive-collection-fontsextra) for understanding what's in collections. Not sure why it's so hard to find official documentation on texlive packages available.
 
 # v5 Migration for Prod
 - Add Cloudamqp to heroku deployment
