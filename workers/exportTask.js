@@ -43,7 +43,7 @@ export default (pubId, versionId, content, format)=> {
 	const formatTypes = {
 		docx: { output: 'docx', extension: 'docx' },
 		// pdf: { output: 'latex', extension: 'pdf', flags: `--pdf-engine=xelatex --template=${__dirname}/template.tex` },
-		pdf: { output: 'latex', extension: 'pdf', flags: '--pdf-engine=xelatex --variable=mainfont:utopia' },
+		pdf: { output: 'latex', extension: 'pdf', flags: '--pdf-engine=xelatex' },
 		epub: { output: 'epub', extension: 'epub' },
 		html: { output: 'html', extension: 'html' },
 		markdown: { output: 'markdown_strict', extension: 'md' },
@@ -98,7 +98,10 @@ export default (pubId, versionId, content, format)=> {
 
 		const convertFile = new Promise((resolve, reject)=> {
 			nodePandoc(staticHtml, args, (err, result)=> {
-				console.log(err && err.message);
+				/* This callback is called multiple times */
+				/* err is sent multiple times and includes warnings */
+				/* So to check if the file generated, check the size */
+				/* of the tmp file. */
 				const wroteToFile = !!fs.statSync(tmpFile.path).size;
 				if (result && wroteToFile) {
 					resolve(result);
@@ -118,7 +121,7 @@ export default (pubId, versionId, content, format)=> {
 			ACL: 'public-read',
 		};
 		return new Promise((resolve, reject)=> {
-			s3bucket.upload(params, (err, data)=> {
+			s3bucket.upload(params, (err)=> {
 				if (err) { reject(err); }
 				resolve({ url: `https://assets.pubpub.org/${key}` });
 			});
