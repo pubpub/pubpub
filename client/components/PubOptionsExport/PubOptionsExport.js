@@ -8,6 +8,7 @@ require('./pubOptionsExport.scss');
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
+	editorRefNode: PropTypes.object.isRequired,
 	// loginData: PropTypes.object.isRequired,
 	// setPubData: PropTypes.func.isRequired,
 	// TODO: we should pass in content in the case that we are in the working draft
@@ -22,23 +23,57 @@ class PubOptionsExport extends Component {
 			type: { format: 'pdf', title: 'PDF' },
 			taskId: undefined,
 		};
+		this.getDraftContent = this.getDraftContent.bind(this);
 		this.handleExport = this.handleExport.bind(this);
 		this.checkTask = this.checkTask.bind(this);
+	}
+
+	getDraftContent() {
+		const sectionsData = this.props.pubData.sectionsData;
+		const editorRefs = sectionsData.map((item)=> {
+			return `${this.props.pubData.editorKey}/${item.id}`;
+		});
+
+		if (!this.props.pubData.isDraft) {
+			return new Promise((resolve)=> {
+				resolve(undefined);
+			});
+		}
+
+		return this.props.editorRefNode.getCollabJSONs(editorRefs)
+		.then((content)=> {
+			const newContent = content.length === 1
+				? content[0]
+				: content.map((item, index)=> {
+					return {
+						title: sectionsData[index].title,
+						id: sectionsData[index].id,
+						content: item,
+					};
+				});
+			return newContent;
+		})
+		.catch((err)=> {
+			console.error('Error getting draft content', err);
+		});
 	}
 
 	handleExport() {
 		// Check if that format is available for download, if not send off event.
 		this.setState({ isLoading: true });
-		return apiFetch('/api/export', {
-			method: 'POST',
-			body: JSON.stringify({
-				pubId: this.props.pubData.id,
-				versionId: this.props.pubData.isDraft
-					? 'draft'
-					: this.props.pubData.activeVersion.id,
-				content: '',
-				format: this.state.type.format,
-			})
+		return this.getDraftContent()
+		.then((draftContent)=> {
+			return apiFetch('/api/export', {
+				method: 'POST',
+				body: JSON.stringify({
+					pubId: this.props.pubData.id,
+					versionId: this.props.pubData.isDraft
+						? 'draft'
+						: this.props.pubData.activeVersion.id,
+					content: draftContent,
+					format: this.state.type.format,
+				})
+			});
 		})
 		.then((taskId)=> {
 			this.setState({ taskId: taskId });

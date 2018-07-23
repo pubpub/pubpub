@@ -55,9 +55,11 @@ export default (pubId, versionId, content, format)=> {
 	const findPub = Pub.findOne({
 		where: { id: pubId }
 	});
-	const findVersion = Version.findOne({
-		where: { id: versionId }
-	});
+	const findVersion = versionId === 'draft'
+		? undefined
+		: Version.findOne({
+			where: { id: versionId }
+		});
 
 	return Promise.all([findPub, findVersion])
 	.then(([pubData, versionData])=> {
@@ -68,7 +70,7 @@ export default (pubId, versionId, content, format)=> {
 				</head>
 				<body>
 					<Editor
-						initialContent={versionData.content}
+						initialContent={versionData ? versionData.content : content}
 						renderStaticMarkup={true}
 					>
 						<Image

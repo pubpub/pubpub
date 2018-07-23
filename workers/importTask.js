@@ -4,13 +4,17 @@ import Promise from 'bluebird';
 import nodePandoc from 'node-pandoc';
 import tmp from 'tmp-promise';
 
+// Need to check for media folder - and upload all assets there to server, and then replace urls
+// Send HTML to editor, which converts to json
+// And then editor (I think) writes to firebase
+// - get file, enter into pandoc, get html, convert into pubpub json
+
 tmp.setGracefulCleanup();
 const dataDir = process.env.NODE_ENV === 'production'
 	? '--data-dir=/app/.apt/usr/share/pandoc/data '
 	: '';
 
 export default (sourceUrl)=> {
-	// - get file, enter into pandoc, get html, convert into pubpub json
 	const extension = sourceUrl.split('.').pop().toLowerCase();
 	const extensionTypes = {
 		docx: { format: 'docx' },
@@ -65,9 +69,5 @@ export default (sourceUrl)=> {
 	})
 	.then((convertedHtml)=> {
 		return { html: convertedHtml };
-		// Need to check for media folder - and upload all assets there to server, and then replace urls
-
-		// Send HTML to editor, which converts to json
-		// And then editor (I think) writes to firebase
 	});
 };

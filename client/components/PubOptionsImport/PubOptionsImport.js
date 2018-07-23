@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button } from '@blueprintjs/core';
+import { AnchorButton } from '@blueprintjs/core';
 import { apiFetch } from 'utilities';
 import { s3Upload } from 'utilities';
 
@@ -81,23 +81,23 @@ class PubOptionsImport extends Component {
 		return (
 			<div className="pub-options-import-component">
 				<h1>Import to Pub</h1>
-
-				<input
-					// id={`input-${this.props.htmlFor}`}
-					name="logo"
-					type="file"
-					accept=".docx"
-					onChange={this.handleFileSelect}
-				/>
-				<div>
-					<Button
+				<p>You can import .docx, .epub, .html, .md, .odt, .txt, .xml, .tex</p>
+				<label htmlFor="import-select-file">
+					<AnchorButton
 						type="button"
 						className="pt-intent-primary pt-large"
 						text="Import File"
 						loading={this.state.isLoading}
-						// onClick={this.handleImport}
 					/>
-				</div>
+					<input
+						id="import-select-file"
+						name="logo"
+						type="file"
+						accept=".docx, .epub, .html, .md, .odt, .txt, .xml, .tex"
+						onChange={this.handleFileSelect}
+					/>
+				</label>
+
 			</div>
 		);
 	}
