@@ -3,6 +3,7 @@ import React from 'react';
 import Raven from 'raven-js';
 import { hydrate } from 'react-dom';
 import { FocusStyleManager } from '@blueprintjs/core';
+import KeenTracking from 'keen-tracking';
 
 export const hydrateWrapper = (Component)=> {
 	if (typeof window !== 'undefined' && window.location.origin !== 'http://localhost:9001') {
@@ -23,6 +24,13 @@ export const hydrateWrapper = (Component)=> {
 		if (!isDev) {
 			Raven.config('https://b4764efd07c240488d390c8343193208@sentry.io/197897').install();
 			Raven.setUserContext({ username: initialData.loginData.slug });
+
+			/* Keen Code */
+			const client = new KeenTracking({
+				projectId: '5b5791b9c9e77c000175ca3b',
+				writeKey: '44F36099BAA3DF17892D232C2D9A807E817FCA0D99461DBDCA05CB97E760D57409145F6E2045B616ED3BD16C3B4A75A467240F23CE78E09BB7515603C3DFD2061F430B27CDA4059F059EF58702514CDE5A09CD5134E6530CFAD8589D5341D185',
+			});
+			client.initAutoTracking();
 
 			/* Heap Code */
 			if (initialData.communityData) {
