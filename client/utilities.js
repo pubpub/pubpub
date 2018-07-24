@@ -30,7 +30,21 @@ export const hydrateWrapper = (Component)=> {
 				projectId: '5b5791b9c9e77c000175ca3b',
 				writeKey: '44F36099BAA3DF17892D232C2D9A807E817FCA0D99461DBDCA05CB97E760D57409145F6E2045B616ED3BD16C3B4A75A467240F23CE78E09BB7515603C3DFD2061F430B27CDA4059F059EF58702514CDE5A09CD5134E6530CFAD8589D5341D185',
 			});
-			client.initAutoTracking();
+
+			const customEventData = {};
+			if (initialData.communityData) {
+				customEventData.communityId = initialData.communityData.id;
+			}
+			if (initialData.collectionData) {
+				customEventData.collectionId = initialData.collectionData.id;
+			}
+			if (initialData.pubData) {
+				customEventData.pubId = initialData.pubData.id;
+				customEventData.versionId = initialData.pubData.isDraft
+					? 'draft'
+					: initialData.pubData.activeVersion.id;
+			}
+			client.recordEvent('pageviews', customEventData);
 
 			/* Heap Code */
 			if (initialData.communityData) {
