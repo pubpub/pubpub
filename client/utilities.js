@@ -52,7 +52,7 @@ export const hydrateWrapper = (Component)=> {
 				// 	: initialData.pubData.activeVersion.id;
 				customEventData.versionId = initialData.locationData.path.indexOf('/collaborate') > -1
 					? 'draft'
-					: initialData.pubData.activeVersion.id;
+					: initialData.pubData.versions[0].id;
 			}
 			if (initialData.loginData.id) {
 				customEventData.userId = initialData.loginData.id;
