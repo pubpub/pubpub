@@ -44,7 +44,8 @@ export const hydrateWrapper = (Component)=> {
 					? 'draft'
 					: initialData.pubData.activeVersion.id;
 			}
-			client.recordEvent('pageviews', customEventData);
+			client.extendEvent('pageviews', { pubpubData: customEventData });
+			client.recordEvent('pageviews');
 
 			/* Heap Code */
 			if (initialData.communityData) {
