@@ -71,6 +71,7 @@
     "getstream": "^3.12.3",
     "html-webpack-plugin": "^2.30.1",
     "katex": "^0.9.0",
+    "keen-tracking": "^3.0.1",
     "newrelic": "^2.2.1",
     "node-sass": "^4.7.2",
     "nodemon": "^1.14.12",
