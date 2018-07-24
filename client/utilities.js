@@ -54,13 +54,7 @@ export const hydrateWrapper = (Component)=> {
 				customEventData.userId = initialData.loginData.id;
 			}
 			client.extendEvent('pageviews', { pubpub: customEventData });
-			client.initAutoTracking({
-				ignoreDisabledFormFields: false,
-				recordClicks: false,
-				recordFormSubmits: false,
-				recordPageViews: true,
-				recordScrollState: false,
-			});
+			client.initAutoTracking();
 
 			/* Heap Code */
 			if (initialData.communityData) {
