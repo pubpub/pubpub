@@ -29,6 +29,7 @@ class UserAutocomplete extends Component {
 			items: [],
 			value: '',
 		};
+		this.inputRef = undefined;
 		this.filterItems = this.filterItems.bind(this);
 		this.handleSelect = this.handleSelect.bind(this);
 	}
@@ -60,6 +61,7 @@ class UserAutocomplete extends Component {
 	handleSelect(data) {
 		this.props.onSelect(data);
 		this.setState({ value: '' });
+		this.inputRef.focus();
 	}
 
 
@@ -74,12 +76,13 @@ class UserAutocomplete extends Component {
 						onChange: this.filterItems,
 						placeholder: this.props.placeholder,
 						className: 'pt-large',
+						inputRef: (ref)=> { this.inputRef = ref; },
 					}}
 					inputValueRenderer={(item) => { return item.fullName; }}
-					itemRenderer={(item, { handleClick, isActive })=> {
+					itemRenderer={(item, { handleClick, modifiers })=> {
 						return (
 							<li key={item.id || 'empty-user-create'}>
-								<a role="button" tabIndex={-1} onClick={handleClick} className={isActive ? 'pt-menu-item pt-active' : 'pt-menu-item'}>
+								<a role="button" tabIndex={-1} onClick={handleClick} className={modifiers.active ? 'pt-menu-item pt-active' : 'pt-menu-item'}>
 									{item.fullName && <Avatar userInitials={item.initials} userAvatar={item.avatar} width={25} />}
 									{item.name && <span>Add collaborator named: </span>}
 									<span className="autocomplete-name">{item.name || item.fullName}</span>

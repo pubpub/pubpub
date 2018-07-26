@@ -16,6 +16,7 @@
     "build-prod": "rm -rf ./dist && webpack --config ./client/webpack/webpackConfig.prod.js",
     "prod": "npm run build-prod && npm run api-prod",
     "lint": "eslint .",
+    "migrate": "node initMigrations.js",
     "postinstall": "npm run build-prod",
     "start": "concurrently --kill-others \"npm run api-dev\" \"npm run build-dev\"",
     "storybook": "start-storybook -p 9001 -c .storybook -s ./",

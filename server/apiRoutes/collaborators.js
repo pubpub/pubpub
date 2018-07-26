@@ -30,7 +30,7 @@ app.post('/api/collaborators', (req, res)=> {
 			isAuthor: false,
 			isContributor: false,
 			name: req.body.name,
-			permissions: 'none',
+			permissions: req.body.permissions || 'none',
 			order: req.body.order,
 		});
 	})

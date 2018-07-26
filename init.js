@@ -11,4 +11,3 @@ throng({
 }, ()=> {
 	require('./server/server.js');
 });
-

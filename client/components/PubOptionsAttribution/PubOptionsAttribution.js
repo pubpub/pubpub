@@ -4,11 +4,10 @@ import UserAutocomplete from 'components/UserAutocomplete/UserAutocomplete';
 import PubAdminPermissions from 'components/PubAdminPermissions/PubAdminPermissions';
 import PubCollaboratorDetails from 'components/PubCollaboratorDetails/PubCollaboratorDetails';
 import PubCollabDropdownPrivacy from 'components/PubCollabDropdownPrivacy/PubCollabDropdownPrivacy';
-import Avatar from 'components/Avatar/Avatar';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { apiFetch } from 'utilities';
 
-require('./pubOptionsSharing.scss');
+require('./pubOptionsAttribution.scss');
 
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
@@ -42,7 +41,7 @@ const propTypes = {
 // 	// isLoading: false,
 // };
 
-class PubOptionsSharing extends Component {
+class PubOptionsAttribution extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -60,7 +59,6 @@ class PubOptionsSharing extends Component {
 			}),
 		};
 		this.handleUserSelect = this.handleUserSelect.bind(this);
-		this.handleAddManagerSelect = this.handleAddManagerSelect.bind(this);
 		this.handleCollaborationModeChange = this.handleCollaborationModeChange.bind(this);
 		this.onDragEnd = this.onDragEnd.bind(this);
 		this.handleCollaboratorAdd = this.handleCollaboratorAdd.bind(this);
@@ -130,30 +128,6 @@ class PubOptionsSharing extends Component {
 			order: calculateOrder,
 			pubId: this.props.pubData.id,
 		});
-	}
-
-	handleAddManagerSelect(user) {
-		const calculateOrder = this.state.collaborators[0].Collaborator.order / 2;
-
-		const collaboratorExists = this.props.pubData.collaborators.reduce((prev, curr)=> {
-			if (curr.id === user.id) { return curr; }
-			return prev;
-		}, false);
-		if (collaboratorExists) {
-			this.handleCollaboratorUpdate({
-				collaboratorId: collaboratorExists.Collaborator.id,
-				pubId: this.props.pubData.id,
-				permissions: 'manage',
-			});
-		} else {
-			this.handleCollaboratorAdd({
-				userId: user.id,
-				name: user.name,
-				order: calculateOrder,
-				pubId: this.props.pubData.id,
-				permissions: 'manage',
-			});
-		}
 	}
 
 	handleCollaborationModeChange(value) {
@@ -250,64 +224,29 @@ class PubOptionsSharing extends Component {
 
 	render() {
 		const pubData = this.props.pubData;
-		const managers = this.props.pubData.collaborators.filter((item)=> {
-			return item.Collaborator.permissions === 'manage';
-		});
-		const numPubAdmins = managers.length;
-		// `${window.location.origin}/pub/${pubData.slug}/collaborate?access=${pubData.editHash}`
+		const numPubAdmins = this.props.pubData.collaborators.reduce((prev, curr)=> {
+			if (curr.Collaborator.permissions === 'manage') { return prev + 1; }
+			return prev;
+		}, 0);
 		return (
-			<div className="pub-options-sharing-component">
+			<div className="pub-options-attribution-component">
 				<div>
-					<h1>Sharing</h1>
-					<h2>Managers</h2>
-					<div className="managers">
-						<p>Managers can view all versions, edit pub details, edit the draft</p>
-						<div className="manager pt-elevation-1">
-							<div className="name">
-								Community Admins
+					<h1>Attribution</h1>
+					<h5>Sharing Links</h5>
+					<div className="wrapper">
+						<div className="share-link">
+							<div className="input-name">
+								Anyone with this link <b>Can Edit</b>
 							</div>
-							<div className="options">
-								Can Manage
-							</div>
+							<input className="pt-input" type="text" value={`${window.location.origin}/pub/${pubData.slug}/collaborate?access=${pubData.editHash}`} onChange={()=>{}} />
 						</div>
-						{managers.sort((foo, bar)=> {
-							/* TODO: because Collaborator objects may already have been created, */
-							/* this won't be perfect all the time */
-							if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return -1; }
-							if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return 1; }
-							return 0;
-						}).map((manager)=> {
-							return (
-								<div className="manager pt-elevation-1">
-									<div className="name">
-										<Avatar width={35} userInitials={manager.initials} userAvatar={manager.avatar} />
-										{manager.fullName}
-									</div>
-									{managers.length > 1 &&
-										<div className="options">
-											<button className="pt-button pt-minimal" type="button" onClick={()=> {
-												this.handleCollaboratorDelete({
-													collaboratorId: manager.Collaborator.id,
-													pubId: this.props.pubData.id,
-												});
-											}}>Remove</button>
-										</div>
-									}
-								</div>
-							);
-						})}
-						<div className="manager pt-elevation-1 add">
-							<UserAutocomplete
-								onSelect={this.handleAddManagerSelect}
-								allowCustomUser={false} // Eventually use this for emails
-								placeholder="Add manager..."
-								usedUserIds={managers.map((item)=> {
-									return item.id;
-								})}
-							/>
+						<div className="share-link">
+							<div className="input-name">
+								Anyone with this link <b>Can View</b>
+							</div>
+							<input className="pt-input" type="text" value={`${window.location.origin}/pub/${pubData.slug}/collaborate?access=${pubData.viewHash}`} onChange={()=>{}} />
 						</div>
 					</div>
-
 
 					<div className="wrapper">
 						<h5>Working Draft Privacy</h5>
@@ -390,6 +329,6 @@ class PubOptionsSharing extends Component {
 	}
 }
 
-PubOptionsSharing.propTypes = propTypes;
-// PubOptionsSharing.defaultProps = defaultProps;
-export default PubOptionsSharing;
+PubOptionsAttribution.propTypes = propTypes;
+// PubOptionsAttribution.defaultProps = defaultProps;
+export default PubOptionsAttribution;

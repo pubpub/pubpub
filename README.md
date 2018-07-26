@@ -44,7 +44,7 @@ The [Latex Buildpack we are using](https://github.com/Thermondo/heroku-buildpack
 - Add Cloudamqp to heroku deployment
 - Update buildpacks on heroku
 - Add workers dyno to heroku deployment
-- Update database schemas
+- Update database schemas (diff the models.js file)
 - Remove local font loading from webpack.prod config. See comment TODO there.
 - Change /chapters to /sections on firebase
 - Update versionId in hydrateWrapper for analytics

@@ -1,4 +1,56 @@
 .pub-options-sharing-component {
+	.managers {
+		&:after {
+			display: table;
+			clear: both;
+			content: "";
+		}
+	}
+	.manager {
+		width: calc(50% - 0.5em);
+		margin-right: 0.5em;
+		margin-bottom: 1em;
+		float: left;
+		padding: 0.5em;
+		&:nth-child(odd) {
+			margin-right: 0em;
+			margin-left: 0.5em;
+		}
+		display: flex;
+		height: 49px;
+		.name {
+			flex-grow: 1;
+			flex-shrink: 1;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: flex;
+			align-items: center;
+			font-size: 16px;
+			.avatar-component {
+				margin-right: 0.5em;
+			}
+		}
+		.options {
+			margin-left: 1em;
+			white-space: nowrap;
+			flex-shrink: 0;
+			flex-grow: 0;
+			display: flex;
+			align-items: center;
+		}
+		&.add {
+			padding: 0em;
+			.user-autocomplete-component {
+				width: 100%;
+				input {
+					height: 49px;
+				    box-shadow: none;
+				    background: #F0F0F0;
+				}
+			}
+		}
+	}
 	.draggable-item {
 		// margin-bottom: 1em;
 		background-color: rgba(255, 255, 255, 0.75);

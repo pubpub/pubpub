@@ -35,6 +35,23 @@ export default {
             }
         },
         {
+            "id": "44f9e161-9928-4327-8971-cfa7ba423712",
+            "initials": "R",
+            "fullName": "Rudy Rudebega",
+            "firstName": "Rudy",
+            "lastName": "Rudebega",
+            "Collaborator": {
+                "id": "44f9e161-9928-4327-8971-cfa7ba423712",
+                "isAuthor": true,
+                "isContributor": false,
+                "title": null,
+                "roles": null,
+                "permissions": "manage",
+                "order": 0.26,
+                "createdAt": "2018-02-06T16:37:49.266Z"
+            }
+        },
+        {
             "id": "52441948-93f6-4e03-950a-b5ed061c635b",
             "avatar": "https://assets.pubpub.org/_testing/01519309255968.jpg",
             "initials": "CG",

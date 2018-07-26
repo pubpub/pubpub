@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Overlay from 'components/Overlay/Overlay';
 import PubOptionsAnalytics from 'components/PubOptionsAnalytics/PubOptionsAnalytics';
+import PubOptionsAttribution from 'components/PubOptionsAttribution/PubOptionsAttribution';
 import PubOptionsCite from 'components/PubOptionsCite/PubOptionsCite';
 import PubOptionsDoi from 'components/PubOptionsDoi/PubOptionsDoi';
 import PubOptionsDetails from 'components/PubOptionsDetails/PubOptionsDetails';
@@ -40,7 +41,7 @@ const PubOptions = (props)=> {
 	const optionsMode = props.optionsMode;
 	// TODO: Hide based on canManage, and other metrics
 	// TODO: Hide sections if we are not in draft, and there are no sections
-	const modes = ['details', 'versions', 'pages', 'sharing', 'cite', 'DOI', 'sections', 'social', 'export', 'import', 'analytics', 'delete'];
+	const modes = ['details', 'attribution', 'versions', 'pages', 'sharing', 'cite', 'DOI', 'sections', 'social', 'export', 'import', 'analytics', 'delete'];
 
 	let canManage = false;
 	if (props.pubData.localPermissions === 'manage') { canManage = true; }
@@ -93,6 +94,9 @@ const PubOptions = (props)=> {
 				<div className="right-column">
 					{optionsMode === 'analytics' &&
 						<PubOptionsAnalytics key="analytics" {...defaultChildProps} />
+					}
+					{optionsMode === 'attribution' &&
+						<PubOptionsAttribution key="attribution" {...defaultChildProps} />
 					}
 					{optionsMode === 'cite' &&
 						<PubOptionsCite key="cite" {...defaultChildProps} />

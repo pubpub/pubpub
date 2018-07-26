@@ -174,20 +174,34 @@ const Pub = sequelize.define('Pub', {
 	// publishedAt: { type: Sequelize.DATE },
 	firstPublishedAt: { type: Sequelize.DATE },
 	lastPublishedAt: { type: Sequelize.DATE },
-	collaborationMode: {
+	collaborationMode: { // TODO: DELETE
+		// Used to note the mode of the workingDraft
 		type: Sequelize.ENUM,
 		values: ['private', 'publicView', 'publicEdit'],
 		defaultValue: 'private',
 	},
-	adminPermissions: {
+	adminPermissions: { // TODO: DELETE
 		type: Sequelize.ENUM,
 		values: ['manage', 'edit', 'view', 'none'], // Must be same as permissions on Collaborator
 		defaultValue: 'none',
 	},
-	editHash: { type: Sequelize.STRING },
-	viewHash: { type: Sequelize.STRING },
+	draftEditHash: { type: Sequelize.STRING }, // TODO: This is used for draft
+	draftViewHash: { type: Sequelize.STRING }, // TODO: This is used for draft
 	doi: { type: Sequelize.TEXT },
 	labels: { type: Sequelize.JSONB },
+
+	isCommunityAdminManaged: { type: Sequelize.BOOLEAN },
+	communityAdminDraftPermissions: {
+		type: Sequelize.ENUM,
+		values: ['none', 'view', 'edit'],
+		defaultValue: 'none',
+	},
+	draftPermissions: {
+		type: Sequelize.ENUM,
+		values: ['private', 'publicView', 'publicEdit'],
+		defaultValue: 'private',
+	},
+
 	/* Set by Associations */
 	communityId: { type: Sequelize.UUID, allowNull: false },
 }, {
@@ -226,7 +240,10 @@ const Version = sequelize.define('Version', {
 	id: id,
 	description: { type: Sequelize.TEXT },
 	content: { type: Sequelize.JSONB },
-	collaborativeRef: { type: Sequelize.TEXT },
+	// collaborativeRef: { type: Sequelize.TEXT }, // TODO: not clear what this is used for.
+	isPublic: { type: Sequelize.BOOLEAN }, // New
+	isCommunityAdminShared: { type: Sequelize.BOOLEAN }, // New
+	viewHash: { type: Sequelize.STRING }, // New
 	/* Set by Associations */
 	pubId: { type: Sequelize.UUID, allowNull: false },
 });
@@ -264,6 +281,9 @@ const Collaborator = sequelize.define('Collaborator', {
 	name: { type: Sequelize.TEXT },
 	order: { type: Sequelize.DOUBLE },
 	permissions: {
+		// In this new version, we use this both to denote manager,
+		// and draft permissions. If set to manage, can't be added to draft, as they already have
+		// access through management.
 		type: Sequelize.ENUM,
 		values: ['manage', 'edit', 'view', 'none'], // Must be same as adminPermissions on Pub
 		defaultValue: 'none',
@@ -272,6 +292,7 @@ const Collaborator = sequelize.define('Collaborator', {
 	isAuthor: { type: Sequelize.BOOLEAN },
 	isContributor: { type: Sequelize.BOOLEAN },
 	roles: { type: Sequelize.JSONB },
+	versionAccessList: { type: Sequelize.JSONB },
 	/* Set by Associations */
 	userId: { type: Sequelize.UUID },
 	pubId: { type: Sequelize.UUID, allowNull: false },
@@ -291,6 +312,39 @@ const WorkerTask = sequelize.define('WorkerTask', {
 	isProcessing: { type: Sequelize.BOOLEAN },
 	error: { type: Sequelize.JSONB },
 	output: { type: Sequelize.JSONB },
+});
+
+const PubManager = sequelize.define('PubManager', {
+	id: id,
+	/* Set by Associations */
+	userId: { type: Sequelize.UUID, allowNull: false },
+	pubId: { type: Sequelize.UUID, allowNull: false },
+});
+
+const VersionPermission = sequelize.define('VersionPermission', {
+	id: id,
+	permissions: {
+		type: Sequelize.ENUM,
+		values: ['view', 'edit'],
+		defaultValue: 'view',
+	},
+	/* Set by Associations */
+	userId: { type: Sequelize.UUID, allowNull: false },
+	pubId: { type: Sequelize.UUID, allowNull: false },
+	versionId: { type: Sequelize.UUID },
+});
+
+const PubAttribution = sequelize.define('PubAttribution', {
+	id: id,
+	name: { type: Sequelize.TEXT }, /* Used for non-account attribution */
+	avatar: { type: Sequelize.TEXT }, /* Used for non-account attribution */
+	title: { type: Sequelize.TEXT }, /* Used for non-account attribution */
+	order: { type: Sequelize.DOUBLE },
+	isAuthor: { type: Sequelize.BOOLEAN },
+	roles: { type: Sequelize.JSONB },
+	/* Set by Associations */
+	userId: { type: Sequelize.UUID },
+	pubId: { type: Sequelize.UUID, allowNull: false },
 });
 
 /* Communities can have many Admins. Users can admin many communities. */
@@ -345,6 +399,9 @@ const db = {
 	User: User,
 	Version: Version,
 	WorkerTask: WorkerTask,
+	PubManager: PubManager,
+	VersionPermission: VersionPermission,
+	PubAttribution: PubAttribution,
 };
 
 db.sequelize = sequelize;
