@@ -4,6 +4,7 @@ import Raven from 'raven-js';
 import { hydrate } from 'react-dom';
 import { FocusStyleManager } from '@blueprintjs/core';
 import KeenTracking from 'keen-tracking';
+import TimeMe from 'timeme.js';
 
 export const hydrateWrapper = (Component)=> {
 	if (typeof window !== 'undefined' && window.location.origin !== 'http://localhost:9001') {
@@ -26,7 +27,11 @@ export const hydrateWrapper = (Component)=> {
 			Raven.setUserContext({ username: initialData.loginData.slug });
 
 			/* Keen Code */
-			const keenEnvironment = window.location.origin.indexOf('https://dev.pubpub.org') === 0
+			TimeMe.initialize({
+				currentPageName: document.title, // current page
+				idleTimeoutInSeconds: 30 // seconds
+			});
+			const keenEnvironment = (window.location.origin.indexOf('https://dev.pubpub.org') === 0 || window.location.origin.indexOf('localhost:9876') > -1)
 				? {
 					projectId: '5b5791b9c9e77c000175ca3b',
 					writeKey: '44F36099BAA3DF17892D232C2D9A807E817FCA0D99461DBDCA05CB97E760D57409145F6E2045B616ED3BD16C3B4A75A467240F23CE78E09BB7515603C3DFD2061F430B27CDA4059F059EF58702514CDE5A09CD5134E6530CFAD8589D5341D185',
@@ -53,28 +58,16 @@ export const hydrateWrapper = (Component)=> {
 			if (initialData.loginData.id) {
 				customEventData.userId = initialData.loginData.id;
 			}
-			client.extendEvent('pageviews', { pubpub: customEventData });
+			client.extendEvent({ pubpub: customEventData });
 			client.initAutoTracking();
 
-			/* Heap Code */
-			if (initialData.communityData) {
-				window.communityId = initialData.communityData.id;
-			}
-			if (initialData.collectionData) {
-				window.collectionId = initialData.collectionData.id;
-			}
-			if (initialData.pubData) {
-				window.pubId = initialData.pubData.id;
-				window.versionId = initialData.pubData.isDraft
-					? 'draft'
-					: initialData.pubData.activeVersion.id;
-			}
-
-			window.heap = window.heap||[],heap.load=function(e,t){window.heap.appid=e,window.heap.config=t=t||{};var r=t.forceSSL||"https:"===document.location.protocol,a=document.createElement("script");a.type="text/javascript",a.async=!0,a.src=(r?"https:":"http:")+"//cdn.heapanalytics.com/js/heap-"+e+".js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(a,n);for(var o=function(e){return function(){heap.push([e].concat(Array.prototype.slice.call(arguments,0)))}},p=["addEventProperties","addUserProperties","clearEventProperties","identify","resetIdentity","removeEventProperty","setEventProperties","track","unsetEventProperty"],c=0;c<p.length;c++)heap[p[c]]=o(p[c])};
-			const heapEnvironment = window.location.origin.indexOf('https://dev.pubpub.org') === 0
-				? '3777990325'
-				: '422727431';
-			heap.load(heapEnvironment);
+			window.onbeforeunload = ()=> {
+				client.recordEvent('time_spent', {
+					page: {
+						time_on_page_active: TimeMe.getTimeOnCurrentPageInSeconds(),
+					}
+				});
+			};
 
 			/* Matomo Code */
 			window._paq = [];
