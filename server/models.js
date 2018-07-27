@@ -276,7 +276,7 @@ const CollectionPub = sequelize.define('CollectionPub', {
 	]
 });
 
-const Collaborator = sequelize.define('Collaborator', {
+const Collaborator = sequelize.define('Collaborator', { // TODO: Delete this table
 	id: id,
 	name: { type: Sequelize.TEXT },
 	order: { type: Sequelize.DOUBLE },

@@ -267,7 +267,7 @@ new Promise((resolve)=> {
 	process.exit();
 });
 
-
+/* In case we need to remove an enum type again */
 // .then(()=> {
 // 	return sequelize.queryInterface.sequelize.query('DROP TYPE "enum_Pubs_communityAdminDraftPermissions";');
 // })
