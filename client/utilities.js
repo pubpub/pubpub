@@ -63,7 +63,9 @@ export const hydrateWrapper = (Component)=> {
 				customEventData.userId = initialData.loginData.id;
 			}
 			client.extendEvent({ pubpub: customEventData });
-			client.initAutoTracking();
+			client.initAutoTracking({
+				recordClicks: false,
+			});
 
 			window.onbeforeunload = ()=> {
 				client.recordEvent('time_spent', {
