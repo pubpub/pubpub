@@ -55,6 +55,7 @@ const PubPresHeader = function(props) {
 		return prev;
 	}, undefined);
 
+	const isDraftVisible = pubData.isManager || pubData.isDraftViewer || pubData.isDraftEditor || pubData.draftPermissions !== 'none';
 	return (
 		<div className={`pub-pres-header-component ${mode ? 'mode' : ''}`} style={backgroundStyle}>
 			<div className={`wrapper ${useHeaderImage ? 'dim' : ''}`}>
@@ -73,7 +74,7 @@ const PubPresHeader = function(props) {
 								</div>
 								<div className="buttons">
 									<div className="pt-button-group pt-minimal">
-										{pubData.localPermissions !== 'none' &&
+										{isDraftVisible &&
 											<a href={`/pub/${pubData.slug}/collaborate`} className="pt-button pt-icon-edit2">Edit Pub</a>
 										}
 

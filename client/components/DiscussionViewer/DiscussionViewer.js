@@ -106,7 +106,7 @@ class DiscussionViewer extends Component {
 								<DiscussionThread
 									pubData={this.props.pubData}
 									discussions={activeThread}
-									canManage={pubData.localPermissions === 'manage' || (this.props.loginData.isAdmin && pubData.adminPermissions === 'manage')}
+									canManage={pubData.isManager}
 									slug={pubData.slug}
 									loginData={this.props.loginData}
 									pathname={`${this.props.locationData.path}${this.props.locationData.queryString}`}
@@ -160,7 +160,7 @@ class DiscussionViewer extends Component {
 					<DiscussionThread
 						pubData={this.props.pubData}
 						discussions={activeThread}
-						canManage={pubData.localPermissions === 'manage' || (this.props.loginData.isAdmin && pubData.adminPermissions === 'manage')}
+						canManage={pubData.isManager}
 						slug={pubData.slug}
 						loginData={this.props.loginData}
 						pathname={`${this.props.locationData.path}${this.props.locationData.queryString}`}

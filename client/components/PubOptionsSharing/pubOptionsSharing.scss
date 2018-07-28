@@ -1,5 +1,6 @@
 .pub-options-sharing-component {
 	.managers {
+		margin-bottom: 2em;
 		&:after {
 			display: table;
 			clear: both;
@@ -15,6 +16,7 @@
 		&:nth-child(odd) {
 			margin-right: 0em;
 			margin-left: 0.5em;
+			width: calc(50% - 0.5em - 1px);
 		}
 		display: flex;
 		height: 49px;
@@ -51,39 +53,23 @@
 			}
 		}
 	}
-	.draggable-item {
-		// margin-bottom: 1em;
-		background-color: rgba(255, 255, 255, 0.75);
-		&.dragging {
-			box-shadow: 0px 1px 4px 2px rgba(0, 0, 0, 0.25);
+	.version-block {
+		&.draft {
+			background: #F4F4F4;
 		}
-	}
-	.pt-icon-drag-handle-horizontal {
-		padding: 0em 1em;
-		cursor: ns-resize;
-	}
-	.share-link {
-		display: flex;
-		align-items: center;
-		&:not(:last-of-type) {
-			padding-bottom: 0.5em;
+		&:last-of-type {
+			border-bottom: 1px solid #CCC;
 		}
-		b {
-			width: 15em;
-			display: inline-block;
+		border: 1px solid #CCC;
+		border-bottom: 0px solid transparent;
+		padding: 1em;
+		.header {
+			display: flex;
+			.title {
+				font-weight: bold;
+				flex-grow: 1;
+				flex-shrink: 1;
+			}
 		}
-		input {
-			display: block;
-			flex-shrink: 1;
-			flex-grow: 1;
-			text-align: center;
-		}
-	}
-	.wrapper {
-		padding-bottom: 4em;
-	}
-	.collaborators-wrapper {
-		padding-top: 1em;
-		padding-bottom: 2em;
 	}	
 }

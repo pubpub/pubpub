@@ -295,16 +295,28 @@ export function generateCitationHTML(pubData, communityData) {
 	const versionIssuedDate = new Date(pubData.versions[0].updatedAt);
 	const communityHostname = communityData.domain || `${communityData.subdomain}.pubpub.org`;
 	const pubLink = `https://${communityHostname}/pub/${pubData.slug}`;
-	const authorData = pubData.collaborators.filter((item)=> {
-		return item.Collaborator.isAuthor;
+	// const authorData = pubData.collaborators.filter((item)=> {
+	// 	return item.Collaborator.isAuthor;
+	// }).sort((foo, bar)=> {
+	// 	if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
+	// 	if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
+	// 	return 0;
+	// }).map((author)=> {
+	// 	return {
+	// 		given: author.firstName,
+	// 		family: author.lastName,
+	// 	};
+	// });
+	const authorData = pubData.attributions.filter((attribution)=> {
+		return attribution.isAuthor;
 	}).sort((foo, bar)=> {
-		if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
-		if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
+		if (foo.order < bar.order) { return -1; }
+		if (foo.order > bar.order) { return 1; }
 		return 0;
-	}).map((author)=> {
+	}).map((attribution)=> {
 		return {
-			given: author.firstName,
-			family: author.lastName,
+			given: attribution.user.firstName,
+			family: attribution.user.lastName,
 		};
 	});
 	const authorsEntry = authorData.length

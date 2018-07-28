@@ -6,6 +6,7 @@ import PubCollaboratorDetails from 'components/PubCollaboratorDetails/PubCollabo
 import PubCollabDropdownPrivacy from 'components/PubCollabDropdownPrivacy/PubCollabDropdownPrivacy';
 import Avatar from 'components/Avatar/Avatar';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import dateFormat from 'dateformat';
 import { apiFetch } from 'utilities';
 
 require('./pubOptionsSharing.scss');
@@ -15,49 +16,28 @@ const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	setPubData: PropTypes.func.isRequired,
 	canManage: PropTypes.bool.isRequired,
-
-	
-
-	// onOpenCollaborators: PropTypes.func,
-	// onOpenShare: PropTypes.func,
-	// onCollaboratorAdd: PropTypes.func,
-	// onCollaboratorUpdate: PropTypes.func,
-	// onCollaboratorDelete: PropTypes.func,
-	// onPutPub: PropTypes.func,
-	// collaboratorsOnly: PropTypes.bool,
-	// mode: PropTypes.string,
-	// isLoading: PropTypes.bool,
 };
-
-// const defaultProps = {
-// 	// canManage: false,
-// 	// onOpenCollaborators: ()=>{},
-// 	// onOpenShare: ()=>{},
-// 	onCollaboratorAdd: ()=>{},
-// 	onCollaboratorUpdate: ()=>{},
-// 	onCollaboratorDelete: ()=>{},
-// 	onPutPub: ()=>{},
-// 	// collaboratorsOnly: false,
-// 	// mode: undefined,
-// 	// isLoading: false,
-// };
 
 class PubOptionsSharing extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			collaborationMode: this.props.pubData.collaborationMode,
-			adminPermissions: this.props.pubData.adminPermissions,
-			collaborators: this.props.pubData.collaborators.filter((item)=> {
-				return this.props.canManage || item.Collaborator.isAuthor || item.Collaborator.isContributor;
-			}).sort((foo, bar)=> {
-				if (!this.props.canManage && foo.Collaborator.isAuthor && !bar.Collaborator.isAuthor) { return -1; }
-				if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
-				if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
-				if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
-				if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
-				return 0;
-			}),
+			isCommunityAdminManaged: this.props.pubData.isCommunityAdminManaged,
+			communityAdminDraftPermissions: this.props.pubData.communityAdminDraftPermissions,
+			draftPermissions: this.props.pubData.draftPermissions,
+			// managers: this.props.pubData.managers,
+			// collaborationMode: this.props.pubData.collaborationMode,
+			// adminPermissions: this.props.pubData.adminPermissions,
+			// collaborators: this.props.pubData.collaborators.filter((item)=> {
+			// 	return this.props.canManage || item.Collaborator.isAuthor || item.Collaborator.isContributor;
+			// }).sort((foo, bar)=> {
+			// 	if (!this.props.canManage && foo.Collaborator.isAuthor && !bar.Collaborator.isAuthor) { return -1; }
+			// 	if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
+			// 	if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
+			// 	if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
+			// 	if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
+			// 	return 0;
+			// }),
 		};
 		this.handleUserSelect = this.handleUserSelect.bind(this);
 		this.handleAddManagerSelect = this.handleAddManagerSelect.bind(this);
@@ -69,19 +49,19 @@ class PubOptionsSharing extends Component {
 		this.handlePutPub = this.handlePutPub.bind(this);
 	}
 
-	componentWillReceiveProps(nextProps) {
-		if (nextProps.pubData.collaborators.length !== this.props.pubData.collaborators.length) {
-			this.setState({
-				collaborators: nextProps.pubData.collaborators.sort((foo, bar)=> {
-					if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
-					if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
-					if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
-					if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
-					return 0;
-				})
-			});
-		}
-	}
+	// componentWillReceiveProps(nextProps) {
+	// 	if (nextProps.pubData.collaborators.length !== this.props.pubData.collaborators.length) {
+	// 		this.setState({
+	// 			collaborators: nextProps.pubData.collaborators.sort((foo, bar)=> {
+	// 				if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
+	// 				if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
+	// 				if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
+	// 				if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
+	// 				return 0;
+	// 			})
+	// 		});
+	// 	}
+	// }
 
 	onDragEnd(result) {
 		if (!result.destination) { return null; }
@@ -250,9 +230,10 @@ class PubOptionsSharing extends Component {
 
 	render() {
 		const pubData = this.props.pubData;
-		const managers = this.props.pubData.collaborators.filter((item)=> {
-			return item.Collaborator.permissions === 'manage';
-		});
+		// const managers = this.props.pubData.collaborators.filter((item)=> {
+		// 	return item.Collaborator.permissions === 'manage';
+		// });
+		const managers = pubData.managers;
 		const numPubAdmins = managers.length;
 		// `${window.location.origin}/pub/${pubData.slug}/collaborate?access=${pubData.editHash}`
 		return (
@@ -273,24 +254,30 @@ class PubOptionsSharing extends Component {
 						{managers.sort((foo, bar)=> {
 							/* TODO: because Collaborator objects may already have been created, */
 							/* this won't be perfect all the time */
-							if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return -1; }
-							if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return 1; }
+							if (foo.createdAt < bar.createdAt) { return -1; }
+							if (foo.createdAt > bar.createdAt) { return 1; }
 							return 0;
 						}).map((manager)=> {
 							return (
 								<div className="manager pt-elevation-1">
 									<div className="name">
-										<Avatar width={35} userInitials={manager.initials} userAvatar={manager.avatar} />
-										{manager.fullName}
+										<Avatar width={35} userInitials={manager.user.initials} userAvatar={manager.user.avatar} />
+										{manager.user.fullName}
 									</div>
 									{managers.length > 1 &&
 										<div className="options">
-											<button className="pt-button pt-minimal" type="button" onClick={()=> {
-												this.handleCollaboratorDelete({
-													collaboratorId: manager.Collaborator.id,
-													pubId: this.props.pubData.id,
-												});
-											}}>Remove</button>
+											<button
+												className="pt-button pt-minimal"
+												type="button"
+												onClick={()=> {
+													this.handleCollaboratorDelete({
+														collaboratorId: manager.id,
+														pubId: this.props.pubData.id,
+													});
+												}}
+											>
+												Remove
+											</button>
 										</div>
 									}
 								</div>
@@ -302,34 +289,57 @@ class PubOptionsSharing extends Component {
 								allowCustomUser={false} // Eventually use this for emails
 								placeholder="Add manager..."
 								usedUserIds={managers.map((item)=> {
-									return item.id;
+									return item.user.id;
 								})}
 							/>
 						</div>
 					</div>
 
+					<h2>Permissions</h2>
 
-					<div className="wrapper">
+					<div className="version-block draft">
+						<div className="header">
+							<div className="title">Working Draft</div>
+							{/*<div className="note"></div>*/}
+							<div className="privacy">Public Edit</div>
+						</div>
+					</div>
+					{pubData.versions.sort((foo, bar)=> {
+						if (foo.createdAt < bar.createdAt) { return 1; }
+						if (foo.createdAt > bar.createdAt) { return -1; }
+						return 0;
+					}).map((version)=> {
+						return (
+							<div className="version-block">
+								<div className="header">
+									<div className="title">{dateFormat(version.createdAt, 'mmm dd, yyyy · h:MMTT')}</div>
+									{/*<div className="note"></div>*/}
+									<div className="privacy">Public Edit</div>
+								</div>
+							</div>
+						);
+					})}
+					{/*<div className="wrapper">
 						<h5>Working Draft Privacy</h5>
 						<PubCollabDropdownPrivacy
 							value={this.state.collaborationMode}
 							onChange={this.handleCollaborationModeChange}
 						/>
-					</div>
+					</div>*/}
 
-					<div className="wrapper">
+					{/*<div className="wrapper">
 						<h5>Community Admin Permissions</h5>
 						<PubAdminPermissions
 							communityData={this.props.communityData}
 							onSave={this.handlePutPub}
 							pubData={pubData}
 						/>
-					</div>
+					</div>*/}
 
 				</div>
 
 
-				<div>
+				{/*<div>
 					<h5> Collaborators</h5>
 					{this.props.canManage &&
 						<UserAutocomplete
@@ -383,7 +393,7 @@ class PubOptionsSharing extends Component {
 							</div>
 						</DragDropContext>
 					</div>
-				</div>
+				</div>*/}
 
 			</div>
 		);

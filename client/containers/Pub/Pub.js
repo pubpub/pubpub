@@ -39,7 +39,7 @@ class Pub extends Component {
 			image: loginData.avatar || null,
 			name: loginData.fullName || 'Anonymous',
 			initials: loginData.initials || '?',
-			canEdit: props.pubData.localPermissions === 'edit' || props.pubData.localPermissions === 'manage',
+			canEdit: props.pubData.isDraftEditor || props.pubData.isManager,
 			firebaseToken: props.pubData.firebaseToken,
 		};
 
@@ -432,7 +432,7 @@ class Pub extends Component {
 
 												// Props from CollabEditor
 												editorKey={`${this.props.pubData.editorKey}${sectionId ? '/' : ''}${sectionId || ''}`}
-												isReadOnly={!pubData.isDraft || (pubData.localPermissions !== 'manage' && pubData.localPermissions !== 'edit')}
+												isReadOnly={!pubData.isDraft || (!pubData.isManager && !pubData.isDraftEditor)}
 												clientData={this.state.activeCollaborators[0]}
 												onClientChange={this.handleClientChange}
 												onStatusChange={this.handleStatusChange}
@@ -531,7 +531,7 @@ class Pub extends Component {
 										<DiscussionThread
 											pubData={pubData}
 											discussions={activeThread}
-											canManage={pubData.localPermissions === 'manage'}
+											canManage={pubData.isManager}
 											slug={pubData.slug}
 											loginData={this.props.loginData}
 											pathname={`${this.props.locationData.path}${this.props.locationData.queryString}`}

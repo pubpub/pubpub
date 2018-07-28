@@ -8,7 +8,7 @@ require('./discussionLabelsList.scss');
 const propTypes = {
 	labelsData: PropTypes.array,
 	selectedLabels: PropTypes.array.isRequired,
-	permissions: PropTypes.string.isRequired,
+	isManager: PropTypes.bool.isRequired,
 	onLabelSelect: PropTypes.func.isRequired,
 	onLabelsUpdate: PropTypes.func.isRequired,
 };
@@ -100,13 +100,13 @@ class DiscussionLabelsList extends Component {
 		this.props.onLabelsUpdate(this.state.labelsData);
 	}
 	render() {
-		const showEditMode = this.state.isEditMode || (!this.props.labelsData.length && this.props.permissions === 'manage');
+		const showEditMode = this.state.isEditMode || (!this.props.labelsData.length && this.props.isManager);
 		return (
 			<div className="discussion-labels-list-component pt-menu pt-elevation-1">
-				{this.props.permissions === 'manage' && !showEditMode &&
+				{this.props.isManager && !showEditMode &&
 					<button className="pt-button pt-icon-edit2 action-button" onClick={this.toggleEditMode} />
 				}
-				{this.props.permissions === 'manage' && showEditMode &&
+				{this.props.isManager && showEditMode &&
 					<Button
 						className="pt-button pt-intent-primary action-button"
 						onClick={this.handleSave}

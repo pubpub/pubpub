@@ -10,11 +10,17 @@ const propTypes = {
 };
 
 const PubSideCollaborators = function(props) {
-	const authors = props.pubData.collaborators.filter((collaborator)=> {
-		return collaborator.Collaborator.isAuthor;
+	// const authors = props.pubData.collaborators.filter((collaborator)=> {
+	// 	return collaborator.Collaborator.isAuthor;
+	// });
+	// const contributors = props.pubData.collaborators.filter((collaborator)=> {
+	// 	return collaborator.Collaborator.isContributor;
+	// });
+	const authors = props.pubData.attributions.filter((attribution)=> {
+		return attribution.isAuthor;
 	});
-	const contributors = props.pubData.collaborators.filter((collaborator)=> {
-		return collaborator.Collaborator.isContributor;
+	const contributors = props.pubData.attributions.filter((attribution)=> {
+		return !attribution.isAuthor;
 	});
 
 	return (
@@ -23,13 +29,13 @@ const PubSideCollaborators = function(props) {
 				<div>
 					<div className="header-title">Authors</div>
 					{authors.sort((foo, bar)=> {
-						if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
-						if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
-						if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
-						if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
+						if (foo.order < bar.order) { return -1; }
+						if (foo.order > bar.order) { return 1; }
+						if (foo.createdAt < bar.createdAt) { return 1; }
+						if (foo.createdAt > bar.createdAt) { return -1; }
 						return 0;
 					}).map((item)=> {
-						return <PubPresSideUser user={item} key={item.id} />;
+						return <PubPresSideUser user={item.user} key={item.id} />;
 					})}
 				</div>
 			}
@@ -37,13 +43,13 @@ const PubSideCollaborators = function(props) {
 				<div>
 					<div className="header-title">Contributors</div>
 					{contributors.sort((foo, bar)=> {
-						if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
-						if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
-						if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
-						if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
+						if (foo.order < bar.order) { return -1; }
+						if (foo.order > bar.order) { return 1; }
+						if (foo.createdAt < bar.createdAt) { return 1; }
+						if (foo.createdAt > bar.createdAt) { return -1; }
 						return 0;
 					}).map((item)=> {
-						return <PubPresSideUser user={item} key={item.id} />;
+						return <PubPresSideUser user={item.user} key={item.id} />;
 					})}
 				</div>
 			}

@@ -34,7 +34,10 @@ app.get(['/pub/:slug', '/pub/:slug/content/:sectionId', '/pub/:slug/draft', '/pu
 		const tokenClientId = initialData.loginData.clientId || 'anonymous';
 		const createFirebaseToken = isDraft
 			? firebaseAdmin.auth().createCustomToken(tokenClientId, {
-				localPermissions: pubData.localPermissions,
+				// localPermissions: pubData.localPermissions,
+				isManager: pubData.isManager,
+				isDraftEditor: pubData.isDraftEditor,
+				isDraftViewer: pubData.isDraftViewer,
 				editorKey: `pub-${pubData.id}`,
 			})
 			: undefined;

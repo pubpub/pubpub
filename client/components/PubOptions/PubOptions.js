@@ -43,10 +43,6 @@ const PubOptions = (props)=> {
 	// TODO: Hide sections if we are not in draft, and there are no sections
 	const modes = ['details', 'attribution', 'versions', 'pages', 'sharing', 'cite', 'DOI', 'sections', 'social', 'export', 'import', 'analytics', 'delete'];
 
-	let canManage = false;
-	if (props.pubData.localPermissions === 'manage') { canManage = true; }
-	if (props.pubData.adminPermissions === 'manage' && props.loginData.isAdmin) { canManage = true; }
-
 	const defaultChildProps = {
 		communityData: props.communityData,
 		pubData: props.pubData,
@@ -56,7 +52,7 @@ const PubOptions = (props)=> {
 		editorRefNode: props.editorRefNode,
 		setOptionsMode: props.setOptionsMode,
 		setPubData: props.setPubData,
-		canManage: canManage,
+		canManage: props.pubData.isManager,
 	};
 
 	const leftColumnStyle = optionsMode === 'saveVersion'

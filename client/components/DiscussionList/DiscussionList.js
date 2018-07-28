@@ -219,7 +219,7 @@ class DiscussionList extends Component {
 								<DiscussionLabelsList
 									labelsData={pubData.labels || []}
 									selectedLabels={this.state.filteredLabels}
-									permissions={pubData.localPermissions}
+									isManager={pubData.isManager}
 									onLabelSelect={this.toggleFilteredLabel}
 									onLabelsUpdate={this.props.onLabelsSave}
 								/>

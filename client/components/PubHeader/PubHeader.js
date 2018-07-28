@@ -18,8 +18,11 @@ const defaultProps = {
 
 const PubHeader = function(props) {
 	const pubData = props.pubData;
-	const authors = pubData.collaborators.filter((collaborator)=> {
-		return collaborator.Collaborator.isAuthor;
+	// const authors = pubData.collaborators.filter((collaborator)=> {
+	// 	return collaborator.Collaborator.isAuthor;
+	// });
+	const authors = pubData.attributions.filter((attribution)=> {
+		return attribution.isAuthor;
 	});
 	const useHeaderImage = pubData.useHeaderImage && pubData.avatar;
 	const backgroundStyle = {};
@@ -42,9 +45,10 @@ const PubHeader = function(props) {
 		return prev;
 	}, 0);
 	const numDiscussions = pubData.discussions.length;
-	const numCollaborators = pubData.collaborators.filter((item)=> {
-		return item.Collaborator.isAuthor || item.Collaborator.isContributor;
-	}).length;
+	// const numCollaborators = pubData.collaborators.filter((item)=> {
+	// 	return item.Collaborator.isAuthor || item.Collaborator.isContributor;
+	// }).length;
+	const numCollaborators = pubData.attributions.length;
 
 	return (
 		<div className={`pub-header-component ${mode ? 'mode' : ''}`} style={backgroundStyle}>
@@ -134,24 +138,25 @@ const PubHeader = function(props) {
 								<div className="authors">
 									<span>by </span>
 									{authors.sort((foo, bar)=> {
-										if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
-										if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
-										if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
-										if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
+										if (foo.order < bar.order) { return -1; }
+										if (foo.order > bar.order) { return 1; }
+										if (foo.createdAt < bar.createdAt) { return 1; }
+										if (foo.createdAt > bar.createdAt) { return -1; }
 										return 0;
 									}).map((author, index)=> {
 										const separator = index === authors.length - 1 || authors.length === 2 ? '' : ', ';
 										const prefix = index === authors.length - 1 && index !== 0 ? ' and ' : '';
-										if (author.slug) {
+										const user = author.user;
+										if (user.slug) {
 											return (
-												<span key={`author-${author.id}`}>
+												<span key={`author-${user.id}`}>
 													{prefix}
-													<a href={`/user/${author.slug}`}>{author.fullName}</a>
+													<a href={`/user/${user.slug}`}>{user.fullName}</a>
 													{separator}
 												</span>
 											);
 										}
-										return <span key={`author-${author.id}`}>{prefix}{author.fullName}{separator}</span>;
+										return <span key={`author-${user.id}`}>{prefix}{user.fullName}{separator}</span>;
 									})}
 								</div>
 							}
