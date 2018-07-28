@@ -67,7 +67,7 @@ const PubHeader = function(props) {
 									})}
 								</div>
 								<div className="buttons">
-									{!pubData.isDraft &&
+									{!pubData.isDraft && (pubData.isDraftViewer || pubData.isDraftEditor || pubData.isManager) &&
 										<a
 											className="pt-button pt-small"
 											href={`/pub/${pubData.slug}/draft`}

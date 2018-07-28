@@ -35,10 +35,10 @@ class PubCollaboratorDetails extends Component {
 		super(props);
 		this.state = {
 			// name: props.collaboratorData.name,
-			isAuthor: props.collaboratorData.Collaborator.isAuthor,
-			isContributor: props.collaboratorData.Collaborator.isContributor,
-			permissions: props.collaboratorData.Collaborator.permissions,
-			roles: props.collaboratorData.Collaborator.roles || [],
+			isAuthor: props.collaboratorData.isAuthor,
+			// isContributor: props.collaboratorData.Collaborator.isContributor,
+			permissions: props.collaboratorData.permissions,
+			roles: props.collaboratorData.roles || [],
 			roleQueryValue: '',
 		};
 		this.getFilteredItems = this.getFilteredItems.bind(this);

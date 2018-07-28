@@ -47,14 +47,11 @@ class PubOptionsAttribution extends Component {
 		this.state = {
 			collaborationMode: this.props.pubData.collaborationMode,
 			adminPermissions: this.props.pubData.adminPermissions,
-			collaborators: this.props.pubData.collaborators.filter((item)=> {
-				return this.props.canManage || item.Collaborator.isAuthor || item.Collaborator.isContributor;
-			}).sort((foo, bar)=> {
-				if (!this.props.canManage && foo.Collaborator.isAuthor && !bar.Collaborator.isAuthor) { return -1; }
-				if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
-				if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
-				if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
-				if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
+			attributions: this.props.pubData.attributions.sort((foo, bar)=> {
+				if (foo.order < bar.order) { return -1; }
+				if (foo.order > bar.order) { return 1; }
+				if (foo.createdAt < bar.createdAt) { return 1; }
+				if (foo.createdAt > bar.createdAt) { return -1; }
 				return 0;
 			}),
 		};
@@ -224,104 +221,66 @@ class PubOptionsAttribution extends Component {
 
 	render() {
 		const pubData = this.props.pubData;
-		const numPubAdmins = this.props.pubData.collaborators.reduce((prev, curr)=> {
-			if (curr.Collaborator.permissions === 'manage') { return prev + 1; }
-			return prev;
-		}, 0);
+		// const numPubAdmins = this.props.pubData.attributions.reduce((prev, curr)=> {
+		// 	if (curr.Collaborator.permissions === 'manage') { return prev + 1; }
+		// 	return prev;
+		// }, 0);
 		return (
 			<div className="pub-options-attribution-component">
-				<div>
-					<h1>Attribution</h1>
-					<h5>Sharing Links</h5>
-					<div className="wrapper">
-						<div className="share-link">
-							<div className="input-name">
-								Anyone with this link <b>Can Edit</b>
-							</div>
-							<input className="pt-input" type="text" value={`${window.location.origin}/pub/${pubData.slug}/collaborate?access=${pubData.editHash}`} onChange={()=>{}} />
+				<h1>Attribution</h1>
+
+				{this.props.canManage &&
+					<UserAutocomplete
+						onSelect={this.handleUserSelect}
+						allowCustomUser={true}
+						placeholder="Add new Collaborator..."
+						usedUserIds={this.state.attributions.map((item)=> {
+							return item.user.id;
+						})}
+					/>
+				}
+
+				<div className="collaborators-wrapper">
+					<DragDropContext onDragEnd={this.onDragEnd}>
+						<div className="main-list-wrapper">
+							<Droppable droppableId="mainDroppable">
+								{(provided, snapshot) => (
+									<div
+										ref={provided.innerRef}
+										className={`main-list ${snapshot.isDraggingOver ? 'dragging' : ''}`}
+									>
+										{this.state.attributions.map((item, index)=> {
+											return (
+												<Draggable key={`draggable-${item.id}`} draggableId={item.id} index={index}>
+													{(providedItem, snapshotItem) => (
+														<div
+															ref={providedItem.innerRef}
+															className={`draggable-item ${snapshotItem.isDragging ? 'dragging' : ''}`}
+															{...providedItem.draggableProps}
+														>
+															<PubCollaboratorDetails
+																key={`details-${item.id}`}
+																pubId={this.props.pubData.id}
+																handle={<span {...providedItem.dragHandleProps} className="pt-icon-standard pt-icon-drag-handle-horizontal" />}
+																canManage={this.props.canManage}
+																// lastAdmin={item.Collaborator.permissions === 'manage' && numPubAdmins === 1}
+																lastAdmin={false}
+																collaboratorData={item}
+																onCollaboratorUpdate={this.handleCollaboratorUpdate}
+																onCollaboratorDelete={this.handleCollaboratorDelete}
+																// isPermissionsMode={true}
+															/>
+														</div>
+													)}
+												</Draggable>
+											);
+										})}
+										{provided.placeholder}
+									</div>
+								)}
+							</Droppable>
 						</div>
-						<div className="share-link">
-							<div className="input-name">
-								Anyone with this link <b>Can View</b>
-							</div>
-							<input className="pt-input" type="text" value={`${window.location.origin}/pub/${pubData.slug}/collaborate?access=${pubData.viewHash}`} onChange={()=>{}} />
-						</div>
-					</div>
-
-					<div className="wrapper">
-						<h5>Working Draft Privacy</h5>
-						<PubCollabDropdownPrivacy
-							value={this.state.collaborationMode}
-							onChange={this.handleCollaborationModeChange}
-						/>
-					</div>
-
-					<div className="wrapper">
-						<h5>Community Admin Permissions</h5>
-						<PubAdminPermissions
-							communityData={this.props.communityData}
-							onSave={this.handlePutPub}
-							pubData={pubData}
-						/>
-					</div>
-
-				</div>
-
-
-				<div>
-					<h5> Collaborators</h5>
-					{this.props.canManage &&
-						<UserAutocomplete
-							onSelect={this.handleUserSelect}
-							allowCustomUser={true}
-							placeholder="Add new Collaborator..."
-							usedUserIds={this.state.collaborators.map((item)=> {
-								return item.id;
-							})}
-						/>
-					}
-
-					<div className="collaborators-wrapper">
-						<DragDropContext onDragEnd={this.onDragEnd}>
-							<div className="main-list-wrapper">
-								<Droppable droppableId="mainDroppable">
-									{(provided, snapshot) => (
-										<div
-											ref={provided.innerRef}
-											className={`main-list ${snapshot.isDraggingOver ? 'dragging' : ''}`}
-										>
-											{this.state.collaborators.map((item, index)=> {
-												return (
-													<Draggable key={`draggable-${item.id}`} draggableId={item.id} index={index}>
-														{(providedItem, snapshotItem) => (
-															<div
-																ref={providedItem.innerRef}
-																className={`draggable-item ${snapshotItem.isDragging ? 'dragging' : ''}`}
-																{...providedItem.draggableProps}
-															>
-																<PubCollaboratorDetails
-																	key={`details-${item.id}`}
-																	pubId={this.props.pubData.id}
-																	handle={<span {...providedItem.dragHandleProps} className="pt-icon-standard pt-icon-drag-handle-horizontal" />}
-																	canManage={this.props.canManage}
-																	lastAdmin={item.Collaborator.permissions === 'manage' && numPubAdmins === 1}
-																	collaboratorData={item}
-																	onCollaboratorUpdate={this.handleCollaboratorUpdate}
-																	onCollaboratorDelete={this.handleCollaboratorDelete}
-																	// isPermissionsMode={true}
-																/>
-															</div>
-														)}
-													</Draggable>
-												);
-											})}
-											{provided.placeholder}
-										</div>
-									)}
-								</Droppable>
-							</div>
-						</DragDropContext>
-					</div>
+					</DragDropContext>
 				</div>
 
 			</div>
