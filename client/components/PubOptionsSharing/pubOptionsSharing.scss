@@ -60,16 +60,34 @@
 		&:last-of-type {
 			border-bottom: 1px solid #CCC;
 		}
+		&:not(.active):hover {
+			background: #F9F9F9;
+		}
+		&.active {
+			cursor: default;
+		}
+		cursor: pointer;
 		border: 1px solid #CCC;
 		border-bottom: 0px solid transparent;
 		padding: 1em;
 		.header {
 			display: flex;
 			.title {
-				font-weight: bold;
 				flex-grow: 1;
 				flex-shrink: 1;
+				span {
+					padding-left: 1em;
+				}
 			}
+			.privacy {
+				white-space: nowrap;
+				padding-left: 2em;
+			}
+		}
+		a {
+			color: #2B88DF;
+			margin-right: 1em;
+			display: inline-block;
 		}
 	}	
 }

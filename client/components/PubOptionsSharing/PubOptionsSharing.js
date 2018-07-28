@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import UserAutocomplete from 'components/UserAutocomplete/UserAutocomplete';
-import PubAdminPermissions from 'components/PubAdminPermissions/PubAdminPermissions';
-import PubCollaboratorDetails from 'components/PubCollaboratorDetails/PubCollaboratorDetails';
-import PubCollabDropdownPrivacy from 'components/PubCollabDropdownPrivacy/PubCollabDropdownPrivacy';
+// import PubAdminPermissions from 'components/PubAdminPermissions/PubAdminPermissions';
+// import PubCollaboratorDetails from 'components/PubCollaboratorDetails/PubCollaboratorDetails';
+// import PubCollabDropdownPrivacy from 'components/PubCollabDropdownPrivacy/PubCollabDropdownPrivacy';
 import Avatar from 'components/Avatar/Avatar';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+// import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import dateFormat from 'dateformat';
 import { apiFetch } from 'utilities';
 
@@ -22,6 +22,7 @@ class PubOptionsSharing extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			activePermissionsVersion: 'draft',
 			isCommunityAdminManaged: this.props.pubData.isCommunityAdminManaged,
 			communityAdminDraftPermissions: this.props.pubData.communityAdminDraftPermissions,
 			draftPermissions: this.props.pubData.draftPermissions,
@@ -297,25 +298,84 @@ class PubOptionsSharing extends Component {
 
 					<h2>Permissions</h2>
 
-					<div className="version-block draft">
+					<div
+						className={`version-block draft ${this.state.activePermissionsVersion === 'draft' ? 'active' : ''}`}
+						onClick={()=> { this.setState({ activePermissionsVersion: 'draft' }); }}
+						role="button"
+						tabIndex="-1"
+					>
 						<div className="header">
-							<div className="title">Working Draft</div>
-							{/*<div className="note"></div>*/}
-							<div className="privacy">Public Edit</div>
+							<div className="title"><b>Working Draft</b></div>
+							<div className="privacy">
+								{this.state.activePermissionsVersion === 'draft' &&
+									<div className="pt-button">Public Edit</div>
+								}
+								{this.state.activePermissionsVersion !== 'draft' &&
+									<span>Public Edit</span>
+								}
+							</div>
 						</div>
+						{this.state.activePermissionsVersion === 'draft' &&
+							<div>
+								<div>Permissions</div>
+								<UserAutocomplete
+									onSelect={this.handleAddManagerSelect}
+									allowCustomUser={false} // Eventually use this for emails
+									placeholder="Add manager..."
+									usedUserIds={managers.map((item)=> {
+										return item.user.id;
+									})}
+								/>
+								
+								<div>Sharing Links</div>
+								<a href="">Anyone with this link can view (Click to copy)</a>
+								<a href="">Anyone with this link can edit (Click to copy)</a>
+							</div>
+						}
 					</div>
 					{pubData.versions.sort((foo, bar)=> {
 						if (foo.createdAt < bar.createdAt) { return 1; }
 						if (foo.createdAt > bar.createdAt) { return -1; }
 						return 0;
 					}).map((version)=> {
+						const isActive = this.state.activePermissionsVersion === version.id;
 						return (
-							<div className="version-block">
+							<div
+								className={`version-block ${isActive ? 'active' : ''}`}
+								onClick={()=> { this.setState({ activePermissionsVersion: version.id }); }}
+								role="button"
+								tabIndex="-1"
+							>
 								<div className="header">
-									<div className="title">{dateFormat(version.createdAt, 'mmm dd, yyyy · h:MMTT')}</div>
-									{/*<div className="note"></div>*/}
-									<div className="privacy">Public Edit</div>
+									<div className="title">
+										<b>{dateFormat(version.createdAt, 'mmm dd, yyyy · h:MMTT')}</b>
+										<span>{version.description}</span>
+									</div>
+									<div className="privacy">
+										{isActive &&
+											<div className="pt-button">Public Edit</div>
+										}
+										{!isActive &&
+											<span>Public Edit</span>
+										}
+									</div>
 								</div>
+								{isActive &&
+									<div>
+										<div>Permissions</div>
+										<UserAutocomplete
+											onSelect={this.handleAddManagerSelect}
+											allowCustomUser={false} // Eventually use this for emails
+											placeholder="Add manager..."
+											usedUserIds={managers.map((item)=> {
+												return item.user.id;
+											})}
+										/>
+
+										<div>Sharing Links</div>
+										<a href="">Anyone with this link can view (Click to copy)</a>
+									</div>
+								}
 							</div>
 						);
 					})}
