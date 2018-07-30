@@ -404,74 +404,76 @@ class PubOptionsSharing extends Component {
 						{this.state.activePermissionsVersion === 'draft' &&
 							<div>
 								<div>Permissions</div>
-								<div className="manager pt-elevation-1">
-									<div className="name">
-										Community Admins
+								<div className="managers">
+									<div className="manager pt-elevation-1">
+										<div className="name">
+											Community Admins
+										</div>
+										<div className="options">
+											<PubOptionsDropdownPermissions
+												value={this.props.pubData.communityAdminDraftPermissions}
+												onChange={(newValue)=> {
+													this.handlePubUpdate({
+														communityAdminDraftPermissions: newValue,
+													});
+												}}
+											/>
+										</div>
 									</div>
-									<div className="options">
-										<PubOptionsDropdownPermissions
-											value={this.props.pubData.communityAdminDraftPermissions}
-											onChange={(newValue)=> {
-												this.handlePubUpdate({
-													communityAdminDraftPermissions: newValue,
+									{this.props.pubData.versionPermissions.filter((versionPermission)=> {
+										return !versionPermission.versionId;
+									}).sort((foo, bar)=> {
+										if (foo.createdAt < bar.createdAt) { return -1; }
+										if (foo.createdAt > bar.createdAt) { return 1; }
+										return 0;
+									}).map((versionPermission)=> {
+										return (
+											<div className="manager pt-elevation-1">
+												<div className="name">
+													<Avatar width={35} userInitials={versionPermission.user.initials} userAvatar={versionPermission.user.avatar} />
+													{versionPermission.user.fullName}
+												</div>
+												<div className="options">
+													<PubOptionsDropdownPermissions
+														value={versionPermission.permissions}
+														hideNone={true}
+														onChange={(newValue)=> {
+															this.handleVersionPermissionUpdate({
+																versionPermissionId: versionPermission.id,
+																permissions: newValue,
+															});
+														}}
+													/>
+													<button
+														className="pt-button pt-minimal"
+														type="button"
+														onClick={()=> {
+															this.handleVersionPermissionDelete(versionPermission.id);
+														}}
+													>
+														Remove
+													</button>
+												</div>
+											</div>
+										);
+									})}
+									<div className="manager pt-elevation-1 add">
+										<UserAutocomplete
+											onSelect={(user)=> {
+												return this.handleVersionPermissionAdd({
+													userId: user.id,
+													versionId: null,
 												});
 											}}
+											allowCustomUser={false} // Eventually use this for emails
+											placeholder="Add person to draft..."
+											usedUserIds={this.props.pubData.versionPermissions.filter((versionPermission)=> {
+												return !versionPermission.versionId;
+											}).map((item)=> {
+												return item.user.id;
+											})}
 										/>
 									</div>
-								</div>
-								{this.props.pubData.versionPermissions.filter((versionPermission)=> {
-									return !versionPermission.versionId;
-								}).sort((foo, bar)=> {
-									if (foo.createdAt < bar.createdAt) { return -1; }
-									if (foo.createdAt > bar.createdAt) { return 1; }
-									return 0;
-								}).map((versionPermission)=> {
-									return (
-										<div className="manager pt-elevation-1">
-											<div className="name">
-												<Avatar width={35} userInitials={versionPermission.user.initials} userAvatar={versionPermission.user.avatar} />
-												{versionPermission.user.fullName}
-											</div>
-											<div className="options">
-												<PubOptionsDropdownPermissions
-													value={versionPermission.permissions}
-													hideNone={true}
-													onChange={(newValue)=> {
-														this.handleVersionPermissionUpdate({
-															versionPermissionId: versionPermission.id,
-															permissions: newValue,
-														});
-													}}
-												/>
-												<button
-													className="pt-button pt-minimal"
-													type="button"
-													onClick={()=> {
-														this.handleVersionPermissionDelete(versionPermission.id);
-													}}
-												>
-													Remove
-												</button>
-											</div>
-										</div>
-									);
-								})}
-								<div className="manager pt-elevation-1 add">
-									<UserAutocomplete
-										onSelect={(user)=> {
-											return this.handleVersionPermissionAdd({
-												userId: user.id,
-												versionId: null,
-											});
-										}}
-										allowCustomUser={false} // Eventually use this for emails
-										placeholder="Add person to draft..."
-										usedUserIds={this.props.pubData.versionPermissions.filter((versionPermission)=> {
-											return !versionPermission.versionId;
-										}).map((item)=> {
-											return item.user.id;
-										})}
-									/>
 								</div>
 
 								<div>Sharing Links</div>
@@ -519,67 +521,69 @@ class PubOptionsSharing extends Component {
 								{isActive &&
 									<div>
 										<div>Permissions</div>
-										<div className="manager pt-elevation-1">
-											<div className="name">
-												Community Admins
+										<div className="managers">
+											<div className="manager pt-elevation-1">
+												<div className="name">
+													Community Admins
+												</div>
+												<div className="options">
+													<Checkbox
+														checked={version.isCommunityAdminShared}
+														onChange={(evt)=> {
+															this.handleVersionUpdate({
+																versionId: version.id,
+																isCommunityAdminShared: evt.target.checked,
+															});
+														}}
+													>
+														Can View
+													</Checkbox>
+												</div>
 											</div>
-											<div className="options">
-												<Checkbox
-													checked={version.isCommunityAdminShared}
-													onChange={(evt)=> {
-														this.handleVersionUpdate({
+											{this.props.pubData.versionPermissions.filter((versionPermission)=> {
+												return versionPermission.versionId === version.id;
+											}).sort((foo, bar)=> {
+												if (foo.createdAt < bar.createdAt) { return -1; }
+												if (foo.createdAt > bar.createdAt) { return 1; }
+												return 0;
+											}).map((versionPermission)=> {
+												return (
+													<div className="manager pt-elevation-1">
+														<div className="name">
+															<Avatar width={35} userInitials={versionPermission.user.initials} userAvatar={versionPermission.user.avatar} />
+															{versionPermission.user.fullName}
+														</div>
+														<div className="options">
+															<button
+																className="pt-button pt-minimal"
+																type="button"
+																onClick={()=> {
+																	this.handleVersionPermissionDelete(versionPermission.id);
+																}}
+															>
+																Remove
+															</button>
+														</div>
+													</div>
+												);
+											})}
+											<div className="manager pt-elevation-1 add">
+												<UserAutocomplete
+													onSelect={(user)=> {
+														return this.handleVersionPermissionAdd({
+															userId: user.id,
 															versionId: version.id,
-															isCommunityAdminShared: evt.target.checked,
 														});
 													}}
-												>
-													Can View
-												</Checkbox>
+													allowCustomUser={false} // Eventually use this for emails
+													placeholder="Add person to this version..."
+													usedUserIds={this.props.pubData.versionPermissions.filter((versionPermission)=> {
+														return !versionPermission.versionId;
+													}).map((item)=> {
+														return item.user.id;
+													})}
+												/>
 											</div>
-										</div>
-										{this.props.pubData.versionPermissions.filter((versionPermission)=> {
-											return versionPermission.versionId === version.id;
-										}).sort((foo, bar)=> {
-											if (foo.createdAt < bar.createdAt) { return -1; }
-											if (foo.createdAt > bar.createdAt) { return 1; }
-											return 0;
-										}).map((versionPermission)=> {
-											return (
-												<div className="manager pt-elevation-1">
-													<div className="name">
-														<Avatar width={35} userInitials={versionPermission.user.initials} userAvatar={versionPermission.user.avatar} />
-														{versionPermission.user.fullName}
-													</div>
-													<div className="options">
-														<button
-															className="pt-button pt-minimal"
-															type="button"
-															onClick={()=> {
-																this.handleVersionPermissionDelete(versionPermission.id);
-															}}
-														>
-															Remove
-														</button>
-													</div>
-												</div>
-											);
-										})}
-										<div className="manager pt-elevation-1 add">
-											<UserAutocomplete
-												onSelect={(user)=> {
-													return this.handleVersionPermissionAdd({
-														userId: user.id,
-														versionId: version.id,
-													});
-												}}
-												allowCustomUser={false} // Eventually use this for emails
-												placeholder="Add person to this version..."
-												usedUserIds={this.props.pubData.versionPermissions.filter((versionPermission)=> {
-													return !versionPermission.versionId;
-												}).map((item)=> {
-													return item.user.id;
-												})}
-											/>
 										</div>
 
 										<div>Sharing Links</div>
