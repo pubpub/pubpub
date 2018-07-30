@@ -41,9 +41,6 @@ app.get(['/pub/:slug', '/pub/:slug/content/:sectionId', '/pub/:slug/draft', '/pu
 				editorKey: `pub-${pubData.id}`,
 			})
 			: undefined;
-		if (!isDraft && pubData && !pubData.versions.length) {
-			throw new Error(`DraftRedirect:${req.params.slug}`);
-		}
 		return Promise.all([
 			initialData,
 			pubData,

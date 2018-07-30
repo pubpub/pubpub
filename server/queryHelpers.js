@@ -117,7 +117,12 @@ export const findPub = (req, initialData, isDraft)=> {
 			return prev;
 		}, false);
 		// const sectionOutOfRange = hasSections && sectionIndex > activeVersion.content.length || sectionIndex < 1;
-		if (hasSections && !validSectionId) { throw new Error('Pub Not Found'); }
+		if (hasSections && !validSectionId) {
+			throw new Error('Pub Not Found');
+		}
+		if (!isDraft && pubData && !pubData.versions.length) {
+			throw new Error(`DraftRedirect:${req.params.slug}`);
+		}
 
 		// const userPermissions = pubDataJson.managers.reduce((prev, curr)=> {
 		// 	if (curr.userId === initialData.loginData.id) { return 'manage'; }
@@ -140,10 +145,10 @@ export const findPub = (req, initialData, isDraft)=> {
 		const isCommunityAdminManager = communityAdminData && pubDataJson.isCommunityAdminManaged;
 		const isCommunityAdminViewer = communityAdminData && pubDataJson.communityAdminDraftPermissions === 'view';
 		const isCommunityAdminEditor = communityAdminData && pubDataJson.communityAdminDraftPermissions === 'edit';
-		const isValidViewHash = false;
-		// const isValidViewHash = isDraft
-		// 	? req.query.access === pubData.draftViewHash
-		// 	: req.query.access === activeVersion.viewHash;
+
+		const isValidViewHash = isDraft
+			? req.query.access === pubData.draftViewHash
+			: req.query.access === activeVersion.viewHash;
 		const isValidEditHash = isDraft && req.query.access === pubData.draftEditHash;
 		const isPubPubAdmin = initialData.loginData.id === 14;
 
@@ -171,7 +176,7 @@ export const findPub = (req, initialData, isDraft)=> {
 				&& curr.permissions === 'edit'
 			) { return true; }
 			return prev;
-		}, isManager || isValidViewHash || activeVersion.isPublic);
+		}, isManager || isValidViewHash || (activeVersion && activeVersion.isPublic));
 
 		/* Ensure draft access */
 		if (isDraft && !isManager && !isDraftViewer && !isDraftEditor) {

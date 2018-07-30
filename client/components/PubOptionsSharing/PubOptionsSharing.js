@@ -498,7 +498,7 @@ class PubOptionsSharing extends Component {
 								<div className="header">
 									<div className="title">
 										<b>{dateFormat(version.createdAt, 'mmm dd, yyyy · h:MMTT')}</b>
-										<span>{version.description}</span>
+										<span>This is a version note{version.description}</span>
 									</div>
 									<div className="privacy">
 										{isActive &&
@@ -520,7 +520,7 @@ class PubOptionsSharing extends Component {
 								</div>
 								{isActive &&
 									<div>
-										<div>Permissions</div>
+										<div>Version Permissions</div>
 										<div className="managers">
 											<div className="manager pt-elevation-1">
 												<div className="name">
