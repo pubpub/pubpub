@@ -5,6 +5,7 @@ import UserAutocomplete from 'components/UserAutocomplete/UserAutocomplete';
 // import PubCollaboratorDetails from 'components/PubCollaboratorDetails/PubCollaboratorDetails';
 // import PubCollabDropdownPrivacy from 'components/PubCollabDropdownPrivacy/PubCollabDropdownPrivacy';
 import Avatar from 'components/Avatar/Avatar';
+import { Checkbox } from '@blueprintjs/core';
 // import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import dateFormat from 'dateformat';
 import { apiFetch } from 'utilities';
@@ -40,14 +41,20 @@ class PubOptionsSharing extends Component {
 			// 	return 0;
 			// }),
 		};
-		this.handleUserSelect = this.handleUserSelect.bind(this);
-		this.handleAddManagerSelect = this.handleAddManagerSelect.bind(this);
-		this.handleCollaborationModeChange = this.handleCollaborationModeChange.bind(this);
-		this.onDragEnd = this.onDragEnd.bind(this);
-		this.handleCollaboratorAdd = this.handleCollaboratorAdd.bind(this);
-		this.handleCollaboratorUpdate = this.handleCollaboratorUpdate.bind(this);
-		this.handleCollaboratorDelete = this.handleCollaboratorDelete.bind(this);
-		this.handlePutPub = this.handlePutPub.bind(this);
+		// this.handleUserSelect = this.handleUserSelect.bind(this);
+		this.handleAddManager = this.handleAddManager.bind(this);
+		this.handleRemoveManager = this.handleRemoveManager.bind(this);
+		this.handleVersionUpdate = this.handleVersionUpdate.bind(this);
+		this.handlePubUpdate = this.handlePubUpdate.bind(this);
+		this.handleVersionPermissionAdd = this.handleVersionPermissionAdd.bind(this);
+		this.handleVersionPermissionUpdate = this.handleVersionPermissionUpdate.bind(this);
+		this.handleVersionPermissionDelete = this.handleVersionPermissionDelete.bind(this);
+		// this.handleCollaborationModeChange = this.handleCollaborationModeChange.bind(this);
+		// this.onDragEnd = this.onDragEnd.bind(this);
+		// this.handleCollaboratorAdd = this.handleCollaboratorAdd.bind(this);
+		// this.handleCollaboratorUpdate = this.handleCollaboratorUpdate.bind(this);
+		// this.handleCollaboratorDelete = this.handleCollaboratorDelete.bind(this);
+		// this.handlePutPub = this.handlePutPub.bind(this);
 	}
 
 	// componentWillReceiveProps(nextProps) {
@@ -64,156 +71,90 @@ class PubOptionsSharing extends Component {
 	// 	}
 	// }
 
-	onDragEnd(result) {
-		if (!result.destination) { return null; }
-		const sourceIndex = result.source.index;
-		const sourceId = this.state.collaborators[sourceIndex].Collaborator.id;
-		const destIndex = result.destination.index;
-		const destinationOrder = this.state.collaborators[destIndex].Collaborator.order;
-		const direction = sourceIndex > destIndex ? -1 : 1;
-		let newOrder = 0.5;
-		if (sourceIndex === destIndex) {
-			newOrder = this.state.collaborators[sourceIndex].Collaborator.order;
-		} else if (result.destination.index === 0) {
-			newOrder = destinationOrder / 2;
-		} else if (result.destination.index === this.state.collaborators.length - 1) {
-			newOrder = (1 + destinationOrder) / 2;
-		} else {
-			const destinationNeighborOrder = this.state.collaborators[destIndex + direction].Collaborator.order;
-			newOrder = (destinationOrder + destinationNeighborOrder) / 2;
-		}
-
-		const newCollaborators = this.state.collaborators;
-		newCollaborators[sourceIndex].Collaborator.order = newOrder;
-
-		this.handleCollaboratorUpdate({
-			collaboratorId: sourceId,
-			pubId: this.props.pubData.id,
-			order: newOrder
-		});
-
-		return this.setState({
-			collaborators: newCollaborators.sort((foo, bar)=> {
-				if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
-				if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
-				if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
-				if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
-				return 0;
-			})
-		});
-	}
-
-	handleUserSelect(user) {
-		const calculateOrder = this.state.collaborators[0].Collaborator.order / 2;
-		this.handleCollaboratorAdd({
-			userId: user.id,
-			name: user.name,
-			order: calculateOrder,
-			pubId: this.props.pubData.id,
-		});
-	}
-
-	handleAddManagerSelect(user) {
-		const calculateOrder = this.state.collaborators[0].Collaborator.order / 2;
-
-		const collaboratorExists = this.props.pubData.collaborators.reduce((prev, curr)=> {
-			if (curr.id === user.id) { return curr; }
-			return prev;
-		}, false);
-		if (collaboratorExists) {
-			this.handleCollaboratorUpdate({
-				collaboratorId: collaboratorExists.Collaborator.id,
-				pubId: this.props.pubData.id,
-				permissions: 'manage',
-			});
-		} else {
-			this.handleCollaboratorAdd({
-				userId: user.id,
-				name: user.name,
-				order: calculateOrder,
-				pubId: this.props.pubData.id,
-				permissions: 'manage',
-			});
-		}
-	}
-
-	handleCollaborationModeChange(value) {
-		this.setState({ collaborationMode: value });
-		this.handlePutPub({
-			collaborationMode: value,
-		});
-	}
-
-	handleCollaboratorAdd(collaboratorObject) {
-		return apiFetch('/api/collaborators', {
+	handleAddManager(user) {
+		return apiFetch('/api/pubManagers', {
 			method: 'POST',
 			body: JSON.stringify({
-				...collaboratorObject,
+				userId: user.id,
+				pubId: this.props.pubData.id,
 				communityId: this.props.communityData.id,
 			})
 		})
 		.then((result)=> {
 			this.props.setPubData({
 				...this.props.pubData,
-				collaborators: [
-					...this.props.pubData.collaborators,
+				managers: [
+					...this.props.pubData.managers,
 					result,
 				]
 			});
 		});
 	}
 
-	handleCollaboratorUpdate(collaboratorObject) {
-		return apiFetch('/api/collaborators', {
-			method: 'PUT',
-			body: JSON.stringify({
-				...collaboratorObject,
-				communityId: this.props.communityData.id,
-			})
-		})
-		.then((result)=> {
-			this.props.setPubData({
-				...this.props.pubData,
-				collaborators: this.props.pubData.collaborators.map((item)=> {
-					if (item.Collaborator.id === result.Collaborator.id) {
-						return {
-							...item,
-							fullName: result.fullName || item.fullName,
-							Collaborator: {
-								...item.Collaborator,
-								...result.Collaborator,
-							}
-						};
-					}
-					return item;
-				})
-			});
-		});
-	}
-
-	handleCollaboratorDelete(collaboratorObject) {
-		return apiFetch('/api/collaborators', {
+	handleRemoveManager(managerId) {
+		return apiFetch('/api/pubManagers', {
 			method: 'DELETE',
 			body: JSON.stringify({
-				...collaboratorObject,
+				pubManagerId: managerId,
+				pubId: this.props.pubData.id,
 				communityId: this.props.communityData.id,
 			})
 		})
-		.then((result)=> {
+		.then(()=> {
 			this.props.setPubData({
 				...this.props.pubData,
-				collaborators: this.props.pubData.collaborators.filter((item)=> {
-					return item.Collaborator.id !== result;
+				managers: this.props.pubData.managers.filter((manager)=> {
+					return manager.id !== managerId;
 				})
 			});
 		});
 	}
 
-	handlePutPub(detailsObject) {
+	handleVersionUpdate(versionUpdates) {
+		return apiFetch('/api/versions', {
+			method: 'PUT',
+			body: JSON.stringify({
+				...versionUpdates,
+				pubId: this.props.pubData.id,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then(()=> {
+			this.props.setPubData({
+				...this.props.pubData,
+				versions: this.props.pubData.versions.map((version)=> {
+					if (version.id !== versionUpdates.versionId) { return version; }
+					return {
+						...version,
+						versionUpdates,
+					};
+				})
+			});
+		});
+	}
+
+	handlePubUpdate(pubUpdates) {
 		return apiFetch('/api/pubs', {
 			method: 'PUT',
 			body: JSON.stringify({
-				...detailsObject,
+				...pubUpdates,
+				pubId: this.props.pubData.id,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then(()=> {
+			this.props.setPubData({
+				...this.props.pubData,
+				...pubUpdates,
+			});
+		});
+	}
+
+	handleVersionPermissionAdd(newVersionPermission) {
+		return apiFetch('/api/versionPermissions', {
+			method: 'POST',
+			body: JSON.stringify({
+				...newVersionPermission,
 				pubId: this.props.pubData.id,
 				communityId: this.props.communityData.id,
 			})
@@ -221,13 +162,147 @@ class PubOptionsSharing extends Component {
 		.then((result)=> {
 			this.props.setPubData({
 				...this.props.pubData,
-				...result
+				versionPermissions: [
+					...this.props.pubData.versionPermissions,
+					...result,
+				]
 			});
-		})
-		.catch(()=> {
-			// this.setState({ putPubIsLoading: false });
 		});
 	}
+
+	handleVersionPermissionUpdate(versionPermissionUpdates) {
+		return apiFetch('/api/versionPermissions', {
+			method: 'PUT',
+			body: JSON.stringify({
+				...versionPermissionUpdates,
+				pubId: this.props.pubData.id,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then(()=> {
+			this.props.setPubData({
+				...this.props.pubData,
+				versionPermissions: this.props.pubData.versionPermissions.map((versionPermission)=> {
+					if (versionPermission.id !== versionPermissionUpdates.versionPermissionId) { return versionPermission; }
+					return {
+						...versionPermission,
+						versionPermissionUpdates,
+					};
+				})
+			});
+		});
+	}
+
+	handleVersionPermissionDelete(versionPermissionId) {
+		return apiFetch('/api/pubManagers', {
+			method: 'DELETE',
+			body: JSON.stringify({
+				versionPermissionId: versionPermissionId,
+				pubId: this.props.pubData.id,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then(()=> {
+			this.props.setPubData({
+				...this.props.pubData,
+				versionPermissions: this.props.pubData.versionPermissions.filter((versionPermission)=> {
+					return versionPermission.id !== versionPermissionId;
+				})
+			});
+		});
+	}
+
+	// handleCollaborationModeChange(value) {
+	// 	this.setState({ collaborationMode: value });
+	// 	this.handlePutPub({
+	// 		collaborationMode: value,
+	// 	});
+	// }
+
+	// handleCollaboratorAdd(collaboratorObject) {
+	// 	return apiFetch('/api/collaborators', {
+	// 		method: 'POST',
+	// 		body: JSON.stringify({
+	// 			...collaboratorObject,
+	// 			communityId: this.props.communityData.id,
+	// 		})
+	// 	})
+	// 	.then((result)=> {
+	// 		this.props.setPubData({
+	// 			...this.props.pubData,
+	// 			collaborators: [
+	// 				...this.props.pubData.collaborators,
+	// 				result,
+	// 			]
+	// 		});
+	// 	});
+	// }
+
+	// handleCollaboratorUpdate(collaboratorObject) {
+	// 	return apiFetch('/api/collaborators', {
+	// 		method: 'PUT',
+	// 		body: JSON.stringify({
+	// 			...collaboratorObject,
+	// 			communityId: this.props.communityData.id,
+	// 		})
+	// 	})
+	// 	.then((result)=> {
+	// 		this.props.setPubData({
+	// 			...this.props.pubData,
+	// 			collaborators: this.props.pubData.collaborators.map((item)=> {
+	// 				if (item.Collaborator.id === result.Collaborator.id) {
+	// 					return {
+	// 						...item,
+	// 						fullName: result.fullName || item.fullName,
+	// 						Collaborator: {
+	// 							...item.Collaborator,
+	// 							...result.Collaborator,
+	// 						}
+	// 					};
+	// 				}
+	// 				return item;
+	// 			})
+	// 		});
+	// 	});
+	// }
+
+	// handleCollaboratorDelete(collaboratorObject) {
+	// 	return apiFetch('/api/collaborators', {
+	// 		method: 'DELETE',
+	// 		body: JSON.stringify({
+	// 			...collaboratorObject,
+	// 			communityId: this.props.communityData.id,
+	// 		})
+	// 	})
+	// 	.then((result)=> {
+	// 		this.props.setPubData({
+	// 			...this.props.pubData,
+	// 			collaborators: this.props.pubData.collaborators.filter((item)=> {
+	// 				return item.Collaborator.id !== result;
+	// 			})
+	// 		});
+	// 	});
+	// }
+
+	// handlePutPub(detailsObject) {
+	// 	return apiFetch('/api/pubs', {
+	// 		method: 'PUT',
+	// 		body: JSON.stringify({
+	// 			...detailsObject,
+	// 			pubId: this.props.pubData.id,
+	// 			communityId: this.props.communityData.id,
+	// 		})
+	// 	})
+	// 	.then((result)=> {
+	// 		this.props.setPubData({
+	// 			...this.props.pubData,
+	// 			...result
+	// 		});
+	// 	})
+	// 	.catch(()=> {
+	// 		// this.setState({ putPubIsLoading: false });
+	// 	});
+	// }
 
 	render() {
 		const pubData = this.props.pubData;
@@ -235,7 +310,7 @@ class PubOptionsSharing extends Component {
 		// 	return item.Collaborator.permissions === 'manage';
 		// });
 		const managers = pubData.managers;
-		const numPubAdmins = managers.length;
+		// const numManagers = managers.length;
 		// `${window.location.origin}/pub/${pubData.slug}/collaborate?access=${pubData.editHash}`
 		return (
 			<div className="pub-options-sharing-component">
@@ -249,7 +324,16 @@ class PubOptionsSharing extends Component {
 								Community Admins
 							</div>
 							<div className="options">
-								Can Manage
+								<Checkbox
+									checked={this.props.pubData.isCommunityAdminManaged}
+									onChange={(evt)=> {
+										this.handlePubUpdate({
+											isCommunityAdminManaged: evt.target.checked,
+										});
+									}}
+								>
+									Can Manage
+								</Checkbox>
 							</div>
 						</div>
 						{managers.sort((foo, bar)=> {
@@ -271,10 +355,7 @@ class PubOptionsSharing extends Component {
 												className="pt-button pt-minimal"
 												type="button"
 												onClick={()=> {
-													this.handleCollaboratorDelete({
-														collaboratorId: manager.id,
-														pubId: this.props.pubData.id,
-													});
+													this.handleRemoveManager(manager.id);
 												}}
 											>
 												Remove
@@ -286,7 +367,7 @@ class PubOptionsSharing extends Component {
 						})}
 						<div className="manager pt-elevation-1 add">
 							<UserAutocomplete
-								onSelect={this.handleAddManagerSelect}
+								onSelect={this.handleAddManager}
 								allowCustomUser={false} // Eventually use this for emails
 								placeholder="Add manager..."
 								usedUserIds={managers.map((item)=> {
@@ -319,14 +400,14 @@ class PubOptionsSharing extends Component {
 							<div>
 								<div>Permissions</div>
 								<UserAutocomplete
-									onSelect={this.handleAddManagerSelect}
+									onSelect={this.handleAddManager}
 									allowCustomUser={false} // Eventually use this for emails
 									placeholder="Add manager..."
 									usedUserIds={managers.map((item)=> {
 										return item.user.id;
 									})}
 								/>
-								
+
 								<div>Sharing Links</div>
 								<a href="">Anyone with this link can view (Click to copy)</a>
 								<a href="">Anyone with this link can edit (Click to copy)</a>
@@ -364,7 +445,7 @@ class PubOptionsSharing extends Component {
 									<div>
 										<div>Permissions</div>
 										<UserAutocomplete
-											onSelect={this.handleAddManagerSelect}
+											onSelect={this.handleAddManager}
 											allowCustomUser={false} // Eventually use this for emails
 											placeholder="Add manager..."
 											usedUserIds={managers.map((item)=> {

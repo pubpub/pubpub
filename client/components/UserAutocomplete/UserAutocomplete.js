@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { MenuItem } from '@blueprintjs/core';
+import { MenuItem, Position } from '@blueprintjs/core';
 // import { Suggest } from '@blueprintjs/labs';
 import { Suggest } from '@blueprintjs/select';
 import Avatar from 'components/Avatar/Avatar';
@@ -92,7 +92,10 @@ class UserAutocomplete extends Component {
 					}}
 					onItemSelect={this.handleSelect}
 					noResults={<MenuItem disabled text="No results" />}
-					popoverProps={{ popoverClassName: 'pt-minimal user-autocomplete-popover' }}
+					popoverProps={{
+						popoverClassName: 'pt-minimal user-autocomplete-popover',
+						position: Position.BOTTOM_LEFT,
+					}}
 				/>
 			</div>
 		);

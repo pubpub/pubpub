@@ -59,7 +59,10 @@ export const hydrateWrapper = (Component)=> {
 				customEventData.userId = initialData.loginData.id;
 			}
 			client.extendEvent({ pubpub: customEventData });
-			client.initAutoTracking();
+			client.initAutoTracking({
+				recordClicks: false,
+				// TODO: recordClicks being true breaks functionality on file input overlays (e.g. pub header image upload)
+			});
 
 			window.onbeforeunload = ()=> {
 				client.recordEvent('time_spent', {

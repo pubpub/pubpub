@@ -10,7 +10,7 @@ app.get('/api/search/users', (req, res)=> {
 			]
 		},
 		attributes: ['id', 'slug', 'fullName', 'initials', 'avatar'],
-		limit: 10,
+		limit: 5,
 	})
 	.then((results)=> {
 		return res.status(201).json(results);

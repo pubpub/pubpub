@@ -75,7 +75,7 @@ app.put('/api/pubs', (req, res)=> {
 	// Filter to only allow certain fields to be updated
 	const updatedPub = {};
 	Object.keys(req.body).forEach((key)=> {
-		if (['slug', 'title', 'description', 'avatar', 'useHeaderImage', 'collaborationMode', 'adminPermissions', 'labels'].indexOf(key) > -1) {
+		if (['slug', 'title', 'description', 'avatar', 'useHeaderImage', 'isCommunityAdminManaged', 'communityAdminDraftPermissions', 'draftPermissions', 'labels'].indexOf(key) > -1) {
 			updatedPub[key] = req.body[key] && req.body[key].trim ? req.body[key].trim() : req.body[key];
 			if (key === 'slug') {
 				updatedPub.slug = updatedPub.slug.replace(/[^a-zA-Z0-9-]/gi, '').replace(/ /g, '-').toLowerCase();

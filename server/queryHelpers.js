@@ -71,7 +71,7 @@ export const findPub = (req, initialData, isDraft)=> {
 				// separate: true,
 				model: Version,
 				as: 'versions',
-				attributes: ['createdAt', 'id']
+				attributes: ['createdAt', 'id', 'description', 'isPublic', 'isCommunityAdminShared']
 				// ...versionParameters
 			},
 			{
