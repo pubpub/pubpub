@@ -140,9 +140,10 @@ export const findPub = (req, initialData, isDraft)=> {
 		const isCommunityAdminManager = communityAdminData && pubDataJson.isCommunityAdminManaged;
 		const isCommunityAdminViewer = communityAdminData && pubDataJson.communityAdminDraftPermissions === 'view';
 		const isCommunityAdminEditor = communityAdminData && pubDataJson.communityAdminDraftPermissions === 'edit';
-		const isValidViewHash = isDraft
-			? req.query.access === pubData.draftViewHash
-			: req.query.access === activeVersion.viewHash;
+		const isValidViewHash = false;
+		// const isValidViewHash = isDraft
+		// 	? req.query.access === pubData.draftViewHash
+		// 	: req.query.access === activeVersion.viewHash;
 		const isValidEditHash = isDraft && req.query.access === pubData.draftEditHash;
 		const isPubPubAdmin = initialData.loginData.id === 14;
 
