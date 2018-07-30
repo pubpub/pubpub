@@ -9,6 +9,7 @@ const propTypes = {
 	icon: PropTypes.string,
 	isRightAligned: PropTypes.bool,
 	isDisabled: PropTypes.bool,
+	isSmall: PropTypes.bool,
 	children: PropTypes.node.isRequired,
 };
 
@@ -17,6 +18,7 @@ const defaultProps = {
 	icon: undefined,
 	isDisabled: false,
 	isRightAligned: false,
+	isSmall: false,
 };
 
 const DropdownButton = function(props) {
@@ -34,12 +36,12 @@ const DropdownButton = function(props) {
 
 		>
 			{props.icon && !props.label
-				? <button disabled={props.isDisabled} type="button" className={`dropdown-button pt-button ${props.icon}`} />
-				: <button disabled={props.isDisabled} type="button" className="dropdown-button pt-button">
+				? <button disabled={props.isDisabled} type="button" className={`dropdown-button pt-button ${props.icon} ${props.isSmall ? 'pt-small' : ''}`} />
+				: <button disabled={props.isDisabled} type="button" className={`dropdown-button pt-button ${props.isSmall ? 'pt-small' : ''}`}>
 					{props.icon &&
 						<span className={`pt-icon-standard ${props.icon}`} />
 					}
-					{props.label}
+					{props.label.trim()}
 					<span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
 				</button>
 			}

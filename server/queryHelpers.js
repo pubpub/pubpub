@@ -71,7 +71,7 @@ export const findPub = (req, initialData, isDraft)=> {
 				// separate: true,
 				model: Version,
 				as: 'versions',
-				attributes: ['createdAt', 'id', 'description', 'isPublic', 'isCommunityAdminShared']
+				attributes: ['createdAt', 'id', 'description', 'isPublic', 'isCommunityAdminShared', 'viewHash']
 				// ...versionParameters
 			},
 			{
@@ -191,8 +191,19 @@ export const findPub = (req, initialData, isDraft)=> {
 
 		const formattedPubData = {
 			...pubDataJson,
-			// versions: formattedVersionsData,
-			activeVersion: formattedActiveVersionData,
+			versions: pubDataJson.versions.map((version)=> {
+				if (isManager) { return version; }
+				return {
+					...version,
+					viewHash: undefined,
+				};
+			}),
+			activeVersion: isManager
+				? formattedActiveVersionData
+				: {
+					...formattedActiveVersionData,
+					viewHash: undefined,
+				},
 			// versionsList: versionsListData.toJSON().versions,
 			attributions: pubDataJson.attributions.map((attribution)=> {
 				if (attribution.user) { return attribution; }

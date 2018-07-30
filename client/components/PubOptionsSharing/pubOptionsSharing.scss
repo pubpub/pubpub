@@ -1,43 +1,40 @@
 .pub-options-sharing-component {
-	.managers {
+	.cards-wrapper {
 		margin-bottom: 2em;
-		&:after {
-			display: table;
-			clear: both;
-			content: "";
-		}
-	}
-	.manager {
-		width: calc(50% - 0.5em);
-		margin-right: 0.5em;
-		margin-bottom: 1em;
-		float: left;
-		padding: 0.5em;
-		&:nth-child(odd) {
-			margin-right: 0em;
-			margin-left: 0.5em;
-			width: calc(50% - 0.5em - 1px);
-		}
 		display: flex;
-		height: 49px;
+		flex-wrap: wrap;
+	}
+	.card {
+		margin-right: 0.5em;
+		margin-bottom: 0.5em;
+		padding: 4px 6px;
+		display: flex;
+		height: 33px;
+		background-color: white;
 		.name {
-			flex-grow: 1;
-			flex-shrink: 1;
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
 			display: flex;
 			align-items: center;
-			font-size: 16px;
+			font-size: 14px;
+			margin-right: 3em;
 			.avatar-component {
 				margin-right: 0.5em;
 			}
+			.pt-icon-people {
+				font-size: 14px;
+				margin-right: 2px;
+			}
+			.managers-preview {
+				margin-left: 5px;
+				.avatar-component {
+					margin-right: 1px;
+				}
+			}
 		}
 		.options {
-			margin-left: 1em;
 			white-space: nowrap;
-			flex-shrink: 0;
-			flex-grow: 0;
 			display: flex;
 			align-items: center;
 		}
@@ -46,17 +43,18 @@
 			.user-autocomplete-component {
 				width: 100%;
 				input {
-					height: 49px;
+					height: 33px;
 				    box-shadow: none;
-				    background: #F0F0F0;
+				    // background: #F9F9F9;
+				    font-size: 14px;
 				}
 			}
 		}
+		&.flat {
+		    background: #F9F9F9;
+		}
 	}
 	.version-block {
-		&.draft {
-			background: #F4F4F4;
-		}
 		&:last-of-type {
 			border-bottom: 1px solid #CCC;
 		}
@@ -65,6 +63,7 @@
 		}
 		&.active {
 			cursor: default;
+			background: #F4F4F4;
 		}
 		cursor: pointer;
 		border: 1px solid #CCC;
@@ -90,7 +89,18 @@
 			display: inline-block;
 		}
 	}
+	.access-preview {
+		display: flex;
+		align-items: center;
+		& > * {
+			margin-right: 1px;
+		}
+	}
 	.pt-checkbox {
 		margin-bottom: 0px;
 	}
+}
+
+.pub-options-dropdown.pt-menu {
+	min-width: auto;
 }

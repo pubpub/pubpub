@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
-import DropdownRichItem from 'components/DropdownRichItem/DropdownRichItem';
-
-require('./pubOptionsDropdownPrivacy.scss');
 
 const propTypes = {
 	value: PropTypes.string,
@@ -24,43 +21,44 @@ const PubOptionsDropdownPrivacy = function(props) {
 			title: 'Private',
 			icon: 'pt-icon-lock2',
 			onClick: ()=>{ props.onChange('private'); },
-			// description: 'Collaborators must be invited to view or edit the working draft.',
 		},
 		publicView: {
 			value: props.isDraft ? 'publicView' : 'public',
 			title: props.isDraft ? 'Public View' : 'Public',
 			icon: props.isDraft ? 'pt-icon-eye-open' : 'pt-icon-globe',
 			onClick: ()=>{ props.onChange(props.isDraft ? 'publicView' : 'public'); },
-			// description: 'The working draft can be viewed by anyone.',
 		},
 		publicEdit: {
 			value: 'publicEdit',
 			title: 'Public Edit',
 			icon: 'pt-icon-edit2',
 			onClick: ()=>{ props.onChange('publicEdit'); },
-			// description: 'The working draft can be edited by anyone.',
 		},
 	};
 	return (
 		<div className="pub-options-dropdown-privacy-component">
-			<DropdownButton label={items[props.value].title} icon={items[props.value].icon}>
-				<div className="pt-menu">
+			<DropdownButton
+				label={items[props.value].title}
+				icon={items[props.value].icon}
+			>
+				<ul className="pub-options-dropdown pt-menu">
 					{Object.keys(items).filter((item, index)=> {
 						return props.isDraft || index < 2;
-					}).map((key, index, array)=> {
+					}).map((key)=> {
 						const item = items[key];
 						return (
-							<DropdownRichItem
-								key={`${item.value}-option-${keySuffix}`}
-								title={item.title}
-								// description={item.description}
-								icon={item.icon}
-								onClick={item.onClick}
-								hideBottomBorder={index === array.length - 1}
-							/>
+							<li key={`${item.value}-option-${keySuffix}`}>
+								<button
+									className={`pt-menu-item pt-popover-dismiss ${item.icon}`}
+									onClick={item.onClick}
+									type="button"
+								>
+									<div className="title">{item.title}</div>
+								</button>
+							</li>
 						);
 					})}
-				</div>
+				</ul>
 			</DropdownButton>
 		</div>
 	);
