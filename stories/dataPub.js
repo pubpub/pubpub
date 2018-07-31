@@ -65,6 +65,26 @@ export default {
                 "firstName": "Charles",
                 "lastName": "E. Robinson"
             }
+        },
+        {
+            "id": "989c1022-1fae-434e-b730-a37507a80ffb",
+            "name": "Frankie Delve",
+            "avatar": null,
+            "title": null,
+            "order": 0.25,
+            "isAuthor": true,
+            "roles": null,
+            "userId": null,
+            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
+            "createdAt": "2018-07-26T20:51:02.864Z",
+            "updatedAt": "2018-07-26T20:51:02.864Z",
+            "user": {
+                "id": "989c10ab-1fae-434e-b730-a37507a80ffb",
+                "initials": "F",
+                "fullName": "Frankie Delve",
+                "firstName": "Frankie",
+                "lastName": "Delve"
+            }
         }
     ],
     "versionPermissions": [

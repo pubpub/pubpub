@@ -215,6 +215,8 @@ export const findPub = (req, initialData, isDraft)=> {
 						fullName: attribution.name,
 						firstName: attribution.name.split(' ')[0],
 						lastName: attribution.name.split(' ').slice(1, attribution.name.split(' ').length).join(' '),
+						avatar: attribution.avatar,
+						title: attribution.title
 					}
 				};
 			}),

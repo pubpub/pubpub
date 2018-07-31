@@ -45,22 +45,19 @@ app.post('/api/pubAttributions', (req, res)=> {
 		return Promise.all([findNewPubAttribution, generateNotification]);
 	})
 	.then(([newPubAttributionData])=> {
-		// const collaboratorUser = newCollaboratorData.user || {};
-		// const output = {
-		// 	id: collaboratorUser.id || newCollaboratorData.id,
-		// 	fullName: collaboratorUser.fullName || newCollaboratorData.name,
-		// 	initials: collaboratorUser.initials || newCollaboratorData.name[0],
-		// 	slug: collaboratorUser.slug,
-		// 	avatar: collaboratorUser.avatar,
-		// 	Collaborator: {
-		// 		id: newCollaboratorData.id,
-		// 		isAuthor: newCollaboratorData.isAuthor,
-		// 		permissions: newCollaboratorData.permissions,
-		// 		order: newCollaboratorData.order,
-		// 		createdAt: newCollaboratorData.createdAt,
-		// 	}
-		// };
-		return res.status(201).json(newPubAttributionData);
+		const output = newPubAttributionData.toJSON();
+		if (!output.user) {
+			output.user = {
+				id: output.id,
+				initials: output.name[0],
+				fullName: output.name,
+				firstName: output.name.split(' ')[0],
+				lastName: output.name.split(' ').slice(1, output.name.split(' ').length).join(' '),
+				avatar: output.avatar,
+				title: output.title,
+			};
+		}
+		return res.status(201).json(output);
 	})
 	.catch((err)=> {
 		console.error('Error in postPubAttribution: ', err);
@@ -69,6 +66,7 @@ app.post('/api/pubAttributions', (req, res)=> {
 });
 
 app.put('/api/pubAttributions', (req, res)=> {
+	console.log('hih');
 	const user = req.user || {};
 
 	// Filter to only allow certain fields to be updated

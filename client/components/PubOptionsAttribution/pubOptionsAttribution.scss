@@ -10,28 +10,34 @@
 		padding: 0em 1em;
 		cursor: ns-resize;
 	}
-	.share-link {
+	.attribution-wrapper {
 		display: flex;
-		align-items: center;
-		&:not(:last-of-type) {
-			padding-bottom: 0.5em;
+		padding: 1em 0;
+		width: 100%;
+		border-bottom: 1px solid #ccc;
+		.avatar-wrapper {
 		}
-		b {
-			width: 15em;
-			display: inline-block;
-		}
-		input {
-			display: block;
+		.content {
 			flex-shrink: 1;
 			flex-grow: 1;
-			text-align: center;
+			margin-left: 1em
+		}
+		.top-content {
+			display: flex;
+			align-items: center;
+			.name {
+				flex-grow: 1;
+				flex-shrink: 1;
+				font-weight: bold;
+			}
+		}
+		.bottom-content {
+			display: flex;
+			align-items: center;
+			.pt-checkbox {
+				margin-bottom: 0px;
+				margin-right: 2em;
+			}
 		}
 	}
-	.wrapper {
-		padding-bottom: 4em;
-	}
-	.collaborators-wrapper {
-		padding-top: 1em;
-		padding-bottom: 2em;
-	}	
 }
