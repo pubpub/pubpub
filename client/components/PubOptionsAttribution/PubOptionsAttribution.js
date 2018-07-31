@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Checkbox } from '@blueprintjs/core';
+import { Checkbox, Position } from '@blueprintjs/core';
 import { MultiSelect } from '@blueprintjs/select';
 import fuzzysearch from 'fuzzysearch';
 import Avatar from 'components/Avatar/Avatar';
@@ -470,24 +470,18 @@ class PubOptionsAttribution extends Component {
 																				});
 																			}}
 																			noResults={<div className="pt-menu-item">No Matching Roles</div>}
-																			popoverProps={{ popoverClassName: 'pt-minimal' }}
+																			popoverProps={{
+																				popoverClassName: 'pt-minimal',
+																				position: Position.BOTTOM_LEFT,
+																				modifiers: {
+																					preventOverflow: { enabled: false },
+																					hide: { enabled: false },
+																				},
+																			}}
 																		/>
 																	</div>
 																</div>
 															</div>
-
-															{/*<PubCollaboratorDetails
-																key={`details-${item.id}`}
-																pubId={this.props.pubData.id}
-																handle={<span {...providedItem.dragHandleProps} className="pt-icon-standard pt-icon-drag-handle-horizontal" />}
-																canManage={this.props.canManage}
-																// lastAdmin={item.Collaborator.permissions === 'manage' && numPubAdmins === 1}
-																lastAdmin={false}
-																collaboratorData={item}
-																onCollaboratorUpdate={this.handleCollaboratorUpdate}
-																onCollaboratorDelete={this.handleCollaboratorDelete}
-																// isPermissionsMode={true}
-															/>*/}
 														</div>
 													)}
 												</Draggable>

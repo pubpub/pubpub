@@ -95,6 +95,10 @@ class UserAutocomplete extends Component {
 					popoverProps={{
 						popoverClassName: 'pt-minimal user-autocomplete-popover',
 						position: Position.BOTTOM_LEFT,
+						modifiers: {
+							preventOverflow: { enabled: false },
+							hide: { enabled: false },
+						},
 					}}
 				/>
 			</div>

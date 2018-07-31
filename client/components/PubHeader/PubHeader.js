@@ -182,7 +182,7 @@ const PubHeader = function(props) {
 									// href={`/pub/${pubData.slug}/collaborators`}
 									onClick={(evt)=> {
 										evt.preventDefault();
-										props.setOptionsMode('collaborators');
+										props.setOptionsMode('attribution');
 									}}
 								>
 									{/* <span className="pt-icon-standard pt-icon-team" /> */}

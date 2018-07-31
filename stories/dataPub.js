@@ -25,8 +25,25 @@ export default {
     "draftPermissions": "private",
     "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
     "createdAt": "2018-02-06T16:35:39.526Z",
-    "updatedAt": "2018-07-30T14:28:39.839Z",
+    "updatedAt": "2018-07-30T17:47:05.249Z",
     "managers": [
+        {
+            "id": "c5aeb56a-1737-4aa8-bcd6-b066ea581743",
+            "userId": "10d3fadd-8b76-4c3c-93ac-dcf38d3eec2e",
+            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
+            "createdAt": "2018-07-30T17:10:52.327Z",
+            "updatedAt": "2018-07-30T17:10:52.327Z",
+            "user": {
+                "id": "10d3fadd-8b76-4c3c-93ac-dcf38d3eec2e",
+                "firstName": "Darrell",
+                "lastName": "Glover",
+                "fullName": "Darrell Glover",
+                "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/axel/128.jpg",
+                "slug": "darrell-glover7796",
+                "initials": "DG",
+                "title": null
+            }
+        },
         {
             "id": "388e4e52-9ac4-4e8f-a8d7-547b731a5b3c",
             "userId": "52441948-93f6-4e03-950a-b5ed061c635b",
@@ -47,6 +64,105 @@ export default {
     ],
     "attributions": [
         {
+            "id": "542c0a5c-b43a-455e-a865-8a665ed920e0",
+            "name": null,
+            "avatar": null,
+            "title": null,
+            "order": 0.0130615234375,
+            "isAuthor": true,
+            "roles": null,
+            "userId": "81494962-ca4b-4e88-a96a-667a515ef79b",
+            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
+            "createdAt": "2018-07-31T12:57:38.970Z",
+            "updatedAt": "2018-07-31T13:22:53.089Z",
+            "user": {
+                "id": "81494962-ca4b-4e88-a96a-667a515ef79b",
+                "firstName": "Hope",
+                "lastName": "Hessel",
+                "fullName": "Hope Hessel",
+                "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/buddhasource/128.jpg",
+                "slug": "hope-hessel4005",
+                "initials": "HH",
+                "title": null
+            }
+        },
+        {
+            "id": "d2b9a852-3703-4848-8f44-01e2ed529c1b",
+            "name": null,
+            "avatar": null,
+            "title": null,
+            "order": 0.01220703125,
+            "isAuthor": true,
+            "roles": null,
+            "userId": "b914f233-653e-48a6-9967-03c3488db2a4",
+            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
+            "createdAt": "2018-07-31T12:57:41.160Z",
+            "updatedAt": "2018-07-31T13:21:38.821Z",
+            "user": {
+                "id": "b914f233-653e-48a6-9967-03c3488db2a4",
+                "firstName": "Heather",
+                "lastName": "Rolfson",
+                "fullName": "Heather Rolfson",
+                "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/reabo101/128.jpg",
+                "slug": "heather-rolfson1931",
+                "initials": "HR",
+                "title": null
+            }
+        },
+        {
+            "id": "fd147a32-0c0f-450e-8ebe-33c80de82872",
+            "name": null,
+            "avatar": null,
+            "title": null,
+            "order": 0.013916015625,
+            "isAuthor": false,
+            "roles": [
+                "Peer Review",
+                "Conceptualization",
+                "Data Curation",
+                "Funding Acquisition",
+                "Investigation",
+                "Resources",
+                "oka"
+            ],
+            "userId": "28935693-1b62-473b-9f56-53f9d345f769",
+            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
+            "createdAt": "2018-07-31T13:16:34.394Z",
+            "updatedAt": "2018-07-31T13:21:30.805Z",
+            "user": {
+                "id": "28935693-1b62-473b-9f56-53f9d345f769",
+                "firstName": "Julie",
+                "lastName": "Wisozk",
+                "fullName": "Julie Wisozk",
+                "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/zaki3d/128.jpg",
+                "slug": "julie-wisozk326",
+                "initials": "JW",
+                "title": null
+            }
+        },
+        {
+            "id": "f24f25a0-cdab-4dee-9ff3-8fc3321f7bb1",
+            "name": "Frank G",
+            "avatar": null,
+            "title": null,
+            "order": 0.015625,
+            "isAuthor": false,
+            "roles": null,
+            "userId": null,
+            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
+            "createdAt": "2018-07-31T12:57:49.533Z",
+            "updatedAt": "2018-07-31T12:57:49.533Z",
+            "user": {
+                "id": "f24f25a0-cdab-4dee-9ff3-8fc3321f7bb1",
+                "initials": "F",
+                "fullName": "Frank G",
+                "firstName": "Frank",
+                "lastName": "G",
+                "avatar": null,
+                "title": null
+            }
+        },
+        {
             "id": "989c102b-1fae-434e-b730-a37507a80ffb",
             "name": "Charles E. Robinson",
             "avatar": null,
@@ -63,27 +179,9 @@ export default {
                 "initials": "C",
                 "fullName": "Charles E. Robinson",
                 "firstName": "Charles",
-                "lastName": "E. Robinson"
-            }
-        },
-        {
-            "id": "989c1022-1fae-434e-b730-a37507a80ffb",
-            "name": "Frankie Delve",
-            "avatar": null,
-            "title": null,
-            "order": 0.25,
-            "isAuthor": true,
-            "roles": null,
-            "userId": null,
-            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
-            "createdAt": "2018-07-26T20:51:02.864Z",
-            "updatedAt": "2018-07-26T20:51:02.864Z",
-            "user": {
-                "id": "989c10ab-1fae-434e-b730-a37507a80ffb",
-                "initials": "F",
-                "fullName": "Frankie Delve",
-                "firstName": "Frankie",
-                "lastName": "Delve"
+                "lastName": "E. Robinson",
+                "avatar": null,
+                "title": null
             }
         }
     ],
@@ -218,28 +316,32 @@ export default {
             "id": "427a3c55-993a-4083-918c-85c682bedccf",
             "description": null,
             "isPublic": true,
-            "isCommunityAdminShared": true
+            "isCommunityAdminShared": true,
+            "viewHash": "55rdhiqq"
         },
         {
             "createdAt": "2018-07-13T23:22:11.709Z",
             "id": "96aaaa92-e238-4be2-b490-f929eb25c0ea",
             "description": null,
-            "isPublic": true,
-            "isCommunityAdminShared": null
+            "isPublic": false,
+            "isCommunityAdminShared": null,
+            "viewHash": "1nk4lhx6"
         },
         {
             "createdAt": "2018-04-03T15:48:10.482Z",
             "id": "468e94cb-a894-40b6-9a78-78ab7bda5798",
             "description": null,
             "isPublic": true,
-            "isCommunityAdminShared": null
+            "isCommunityAdminShared": null,
+            "viewHash": "5283fib1"
         },
         {
             "createdAt": "2018-02-06T16:37:59.356Z",
             "id": "39b9a9b9-b115-480b-9e0b-678b547f11a6",
             "description": null,
             "isPublic": true,
-            "isCommunityAdminShared": null
+            "isCommunityAdminShared": null,
+            "viewHash": "hrraitud"
         }
     ],
     "discussions": [
@@ -1688,16 +1790,16 @@ export default {
     "isVersionViewer": true,
     "citationData": {
         "pub": {
-            "apa": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"3ecac2f5-8065-4bde-aa0e-c1ab222fd673\" class=\"csl-entry\">E. Robinson, C. (2018). Introduction. <i>Frankenbook</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h</div></div>",
-            "harvard": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"3ecac2f5-8065-4bde-aa0e-c1ab222fd673\" class=\"csl-entry\">E. Robinson, C. (2018). Introduction. <i>Frankenbook</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h</div></div>",
-            "vancouver": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"3ecac2f5-8065-4bde-aa0e-c1ab222fd673\" class=\"csl-entry\">    <div class=\"csl-left-margin\">1. </div><div class=\"csl-right-inline\">E. Robinson C. Introduction. Frankenbook [Internet]. 2018 Jul 30; Available from: https://frankdev.pubpub.org/pub/zw3syn5h</div>  </div></div>",
-            "bibtex": "<div class=\"csl-bib-body><div class=\"csl-entry>@article{E. Robinson2018Introduction,<ul style=\"list-style-type:none\"><li>journal={Frankenbook},</li><li>note={https://frankdev.pubpub.org/pub/zw3syn5h},</li><li>title={{Introduction}},</li><li>url={https://frankdev.pubpub.org/pub/zw3syn5h},</li><li>author={E. Robinson, Charles},</li><li>date={2018-07-30},</li><li>year=2018,</li><li>month=7,</li><li>day=30,</li></ul>}</div></div>"
+            "apa": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"3ecac2f5-8065-4bde-aa0e-c1ab222fd673\" class=\"csl-entry\">Rolfson, H., Hessel, H., &#38; E. Robinson, C. (2018). Introduction. <i>Frankenbook</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h</div></div>",
+            "harvard": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"3ecac2f5-8065-4bde-aa0e-c1ab222fd673\" class=\"csl-entry\">Rolfson, H., Hessel, H., &#38; E. Robinson, C. (2018). Introduction. <i>Frankenbook</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h</div></div>",
+            "vancouver": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"3ecac2f5-8065-4bde-aa0e-c1ab222fd673\" class=\"csl-entry\">    <div class=\"csl-left-margin\">1. </div><div class=\"csl-right-inline\">Rolfson H, Hessel H, E. Robinson C. Introduction. Frankenbook [Internet]. 2018 Jul 30; Available from: https://frankdev.pubpub.org/pub/zw3syn5h</div>  </div></div>",
+            "bibtex": "<div class=\"csl-bib-body><div class=\"csl-entry>@article{Rolfson2018Introduction,<ul style=\"list-style-type:none\"><li>journal={Frankenbook},</li><li>note={https://frankdev.pubpub.org/pub/zw3syn5h},</li><li>title={{Introduction}},</li><li>url={https://frankdev.pubpub.org/pub/zw3syn5h},</li><li>author={Rolfson, Heather and Hessel, Hope and E. Robinson, Charles},</li><li>date={2018-07-30},</li><li>year=2018,</li><li>month=7,</li><li>day=30,</li></ul>}</div></div>"
         },
         "version": {
-            "apa": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"427a3c55-993a-4083-918c-85c682bedccf\" class=\"csl-entry\">E. Robinson, C. (n.d.). Introduction. <i>Frankenbook</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h?version=427a3c55-993a-4083-918c-85c682bedccf</div></div>",
-            "harvard": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"427a3c55-993a-4083-918c-85c682bedccf\" class=\"csl-entry\">E. Robinson, C. (n.d.). Introduction. <i>Frankenbook</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h?version=427a3c55-993a-4083-918c-85c682bedccf</div></div>",
-            "vancouver": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"427a3c55-993a-4083-918c-85c682bedccf\" class=\"csl-entry\">    <div class=\"csl-left-margin\">1. </div><div class=\"csl-right-inline\">E. Robinson C. Introduction. Frankenbook [Internet]. Available from: https://frankdev.pubpub.org/pub/zw3syn5h?version=427a3c55-993a-4083-918c-85c682bedccf</div>  </div></div>",
-            "bibtex": "<div class=\"csl-bib-body><div class=\"csl-entry>@article{E. RobinsonIntroduction,<ul style=\"list-style-type:none\"><li>journal={Frankenbook},</li><li>note={https://frankdev.pubpub.org/pub/zw3syn5h?version=427a3c55-993a-4083-918c-85c682bedccf},</li><li>title={{Introduction}},</li><li>url={https://frankdev.pubpub.org/pub/zw3syn5h?version=427a3c55-993a-4083-918c-85c682bedccf},</li><li>author={E. Robinson, Charles},</li></ul>}</div></div>"
+            "apa": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"96aaaa92-e238-4be2-b490-f929eb25c0ea\" class=\"csl-entry\">Rolfson, H., Hessel, H., &#38; E. Robinson, C. (n.d.). Introduction. <i>Frankenbook</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h?version=96aaaa92-e238-4be2-b490-f929eb25c0ea</div></div>",
+            "harvard": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"96aaaa92-e238-4be2-b490-f929eb25c0ea\" class=\"csl-entry\">Rolfson, H., Hessel, H., &#38; E. Robinson, C. (n.d.). Introduction. <i>Frankenbook</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h?version=96aaaa92-e238-4be2-b490-f929eb25c0ea</div></div>",
+            "vancouver": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"96aaaa92-e238-4be2-b490-f929eb25c0ea\" class=\"csl-entry\">    <div class=\"csl-left-margin\">1. </div><div class=\"csl-right-inline\">Rolfson H, Hessel H, E. Robinson C. Introduction. Frankenbook [Internet]. Available from: https://frankdev.pubpub.org/pub/zw3syn5h?version=96aaaa92-e238-4be2-b490-f929eb25c0ea</div>  </div></div>",
+            "bibtex": "<div class=\"csl-bib-body><div class=\"csl-entry>@article{RolfsonIntroduction,<ul style=\"list-style-type:none\"><li>journal={Frankenbook},</li><li>note={https://frankdev.pubpub.org/pub/zw3syn5h?version=96aaaa92-e238-4be2-b490-f929eb25c0ea},</li><li>title={{Introduction}},</li><li>url={https://frankdev.pubpub.org/pub/zw3syn5h?version=96aaaa92-e238-4be2-b490-f929eb25c0ea},</li><li>author={Rolfson, Heather and Hessel, Hope and E. Robinson, Charles},</li></ul>}</div></div>"
         }
     },
     "isDraft": false,

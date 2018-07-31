@@ -33,10 +33,13 @@
 		}
 		.bottom-content {
 			display: flex;
-			align-items: center;
+			align-items: flex-start;
+			margin-right: 1em;
 			.pt-checkbox {
 				margin-bottom: 0px;
 				margin-right: 2em;
+				margin-top: 7px;
+				white-space: nowrap;
 			}
 		}
 	}
