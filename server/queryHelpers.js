@@ -8,14 +8,14 @@ export const findPub = (req, initialData, isDraft)=> {
 		throw new Error('Pub Not Found');
 	}
 
-	const versionParameters = req.query.version
-		? {
-			where: { id: req.query.version },
-		}
-		: {
-			limit: 1,
-			order: [['createdAt', 'DESC']],
-		};
+	// const versionParameters = req.query.version
+	// 	? {
+	// 		where: { id: req.query.version },
+	// 	}
+	// 	: {
+	// 		limit: 1,
+	// 		order: [['createdAt', 'DESC']],
+	// 	};
 	const getPubData = Pub.findOne({
 		where: {
 			slug: req.params.slug.toLowerCase(),
@@ -74,13 +74,13 @@ export const findPub = (req, initialData, isDraft)=> {
 				attributes: ['createdAt', 'id', 'description', 'isPublic', 'isCommunityAdminShared', 'viewHash']
 				// ...versionParameters
 			},
-			{
-				required: false,
-				separate: true,
-				model: Version,
-				as: 'activeVersion',
-				...versionParameters
-			}
+			// {
+			// 	required: false,
+			// 	separate: true,
+			// 	model: Version,
+			// 	as: 'activeVersion',
+			// 	...versionParameters
+			// }
 		]
 	});
 	// const getVersionsList = 5;
@@ -106,8 +106,45 @@ export const findPub = (req, initialData, isDraft)=> {
 	return Promise.all([getPubData, getCommunityAdminData])
 	.then(([pubData, communityAdminData])=> {
 		if (!pubData) { throw new Error('Pub Not Found'); }
+
 		const pubDataJson = pubData.toJSON();
-		const activeVersion = pubDataJson.activeVersion[0];
+		const isPubPubAdmin = initialData.loginData.id === 14;
+		const isCommunityAdminManager = communityAdminData && pubDataJson.isCommunityAdminManaged;
+		const isManager = pubDataJson.managers.reduce((prev, curr)=> {
+			if (curr.userId === initialData.loginData.id) { return true; }
+			return prev;
+		}, isCommunityAdminManager || isPubPubAdmin);
+
+		const allowedVersions = pubDataJson.versions.sort((foo, bar)=> {
+			if (foo.createdAt > bar.createdAt) { return -1; }
+			if (foo.createdAt < bar.createdAt) { return 1; }
+			return 0;
+		}).filter((version)=> {
+			if (version.isPublic) { return true; }
+			if (isManager) { return true; }
+			if (version.id === req.query.version && version.viewHash === req.query.access) { return true; }
+			return pubDataJson.versionPermissions.reduce((prev, curr)=> {
+				if (version.id === curr.versionId && curr.userId === initialData.loginData.id) {
+					return true;
+				}
+				return prev;
+			}, false);
+		});
+		pubDataJson.versions = allowedVersions;
+		if (isDraft) { return [pubDataJson, communityAdminData, undefined]; }
+
+		const versionId = req.query.version || (allowedVersions[0] && allowedVersions[0].id);
+		const findActiveVersion = Version.findOne({
+			where: {
+				id: versionId,
+			},
+			raw: true,
+		});
+		return Promise.all([pubDataJson, communityAdminData, findActiveVersion]);
+	})
+	.then(([pubDataJson, communityAdminData, activeVersion])=> {
+		// const pubDataJson = pubData.toJSON();
+		// const activeVersion = pubDataJson.activeVersion[0];
 		const hasSections = !isDraft && activeVersion && Array.isArray(activeVersion.content);
 		// const sectionIndex = initialData.locationData.params.sectionId;
 		const sectionId = initialData.locationData.params.sectionId;
@@ -120,7 +157,7 @@ export const findPub = (req, initialData, isDraft)=> {
 		if (hasSections && !validSectionId) {
 			throw new Error('Pub Not Found');
 		}
-		if (!isDraft && pubData && !pubData.versions.length) {
+		if (!isDraft && pubDataJson && !pubDataJson.versions.length) {
 			throw new Error(`DraftRedirect:${req.params.slug}`);
 		}
 
@@ -147,9 +184,9 @@ export const findPub = (req, initialData, isDraft)=> {
 		const isCommunityAdminEditor = communityAdminData && pubDataJson.communityAdminDraftPermissions === 'edit';
 
 		const isValidViewHash = isDraft
-			? req.query.access === pubData.draftViewHash
+			? req.query.access === pubDataJson.draftViewHash
 			: req.query.access === activeVersion.viewHash;
-		const isValidEditHash = isDraft && req.query.access === pubData.draftEditHash;
+		const isValidEditHash = isDraft && req.query.access === pubDataJson.draftEditHash;
 		const isPubPubAdmin = initialData.loginData.id === 14;
 
 		const isManager = pubDataJson.managers.reduce((prev, curr)=> {
@@ -348,7 +385,7 @@ export const findCollection = (collectionId, useIncludes, initialData)=> {
 						model: Version,
 						required: false,
 						as: 'versions',
-						attributes: ['id', 'isPublic', 'isCommunityAdminShared']
+						attributes: ['id', 'isPublic', 'isCommunityAdminShared', 'createdAt']
 					},
 
 					{
@@ -454,11 +491,35 @@ export const findCollection = (collectionId, useIncludes, initialData)=> {
 				// return !!item.firstPublishedAt || publicCanCollab || adminCanCollab;
 			})
 			.map((item)=> {
+				/* Calculate earliest version visible here and set firstPublished value on Pub */
+				const isPubPubAdmin = initialData.loginData.id === 14;
+				const isCommunityAdminManager = communityAdminData && item.isCommunityAdminManaged;
+				const isManager = item.managers.reduce((prev, curr)=> {
+					if (curr.userId === initialData.loginData.id) { return true; }
+					return prev;
+				}, isCommunityAdminManager || isPubPubAdmin);
+
+				const allowedVersions = item.versions.sort((foo, bar)=> {
+					if (foo.createdAt > bar.createdAt) { return -1; }
+					if (foo.createdAt < bar.createdAt) { return 1; }
+					return 0;
+				}).filter((version)=> {
+					if (version.isPublic) { return true; }
+					if (isManager) { return true; }
+					return item.versionPermissions.reduce((prev, curr)=> {
+						if (version.id === curr.versionId && curr.userId === initialData.loginData.id) {
+							return true;
+						}
+						return prev;
+					}, false);
+				});
+
 				return {
 					...item,
 					versions: undefined,
 					managers: undefined,
 					versionPermissions: undefined,
+					firstPublishedAt: allowedVersions.length ? allowedVersions[allowedVersions.length - 1].createdAt : undefined,
 				};
 			});
 		}
