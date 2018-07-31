@@ -351,7 +351,6 @@ class PubOptionsAttribution extends Component {
 						</div>
 					</DragDropContext>
 				</div>
-
 			</div>
 		);
 	}

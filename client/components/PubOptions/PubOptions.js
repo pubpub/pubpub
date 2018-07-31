@@ -52,7 +52,7 @@ const PubOptions = (props)=> {
 		editorRefNode: props.editorRefNode,
 		setOptionsMode: props.setOptionsMode,
 		setPubData: props.setPubData,
-		canManage: props.pubData.isManager,
+		canManage: props.pubData.isManager, // TODO: This is duplicative. Lets jusst use pubData.isManager rather than passing this too
 	};
 
 	const leftColumnStyle = optionsMode === 'saveVersion'

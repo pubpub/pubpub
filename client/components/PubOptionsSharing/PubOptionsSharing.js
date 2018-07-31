@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import dateFormat from 'dateformat';
-import { Checkbox } from '@blueprintjs/core';
+import { Checkbox, Spinner } from '@blueprintjs/core';
 import UserAutocomplete from 'components/UserAutocomplete/UserAutocomplete';
 import PubOptionsSharingDropdownPrivacy from 'components/PubOptionsSharingDropdownPrivacy/PubOptionsSharingDropdownPrivacy';
 import PubOptionsSharingDropdownPermissions from 'components/PubOptionsSharingDropdownPermissions/PubOptionsSharingDropdownPermissions';
@@ -21,6 +21,10 @@ class PubOptionsSharing extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			/* We store pubData in state of this component so we can do immediate */
+			/* updates and save in the background without jumpy effects */
+			pubData: this.props.pubData,
+			isLoading: false,
 			activePermissionsVersion: 'draft',
 		};
 		this.handleAddManager = this.handleAddManager.bind(this);
@@ -37,77 +41,88 @@ class PubOptionsSharing extends Component {
 			method: 'POST',
 			body: JSON.stringify({
 				userId: user.id,
-				pubId: this.props.pubData.id,
+				pubId: this.state.pubData.id,
 				communityId: this.props.communityData.id,
 			})
 		})
 		.then((result)=> {
-			this.props.setPubData({
-				...this.props.pubData,
+			const newPubData = {
+				...this.state.pubData,
 				managers: [
-					...this.props.pubData.managers,
+					...this.state.pubData.managers,
 					result,
 				]
-			});
+			};
+			this.setState({ pubData: newPubData });
+			this.props.setPubData(newPubData);
 		});
 	}
 
 	handleRemoveManager(managerId) {
+		const newPubData = {
+			...this.state.pubData,
+			managers: this.state.pubData.managers.filter((manager)=> {
+				return manager.id !== managerId;
+			})
+		};
+		this.setState({ pubData: newPubData, isLoading: true });
 		return apiFetch('/api/pubManagers', {
 			method: 'DELETE',
 			body: JSON.stringify({
 				pubManagerId: managerId,
-				pubId: this.props.pubData.id,
+				pubId: this.state.pubData.id,
 				communityId: this.props.communityData.id,
 			})
 		})
 		.then(()=> {
-			this.props.setPubData({
-				...this.props.pubData,
-				managers: this.props.pubData.managers.filter((manager)=> {
-					return manager.id !== managerId;
-				})
-			});
+			this.props.setPubData(newPubData);
+			this.setState({ isLoading: false });
 		});
 	}
 
 	handleVersionUpdate(versionUpdates) {
+		const newPubData = {
+			...this.state.pubData,
+			versions: this.state.pubData.versions.map((version)=> {
+				if (version.id !== versionUpdates.versionId) { return version; }
+				return {
+					...version,
+					...versionUpdates,
+				};
+			})
+		};
+		this.setState({ pubData: newPubData, isLoading: true });
 		return apiFetch('/api/versions', {
 			method: 'PUT',
 			body: JSON.stringify({
 				...versionUpdates,
-				pubId: this.props.pubData.id,
+				pubId: this.state.pubData.id,
 				communityId: this.props.communityData.id,
 			})
 		})
 		.then(()=> {
-			this.props.setPubData({
-				...this.props.pubData,
-				versions: this.props.pubData.versions.map((version)=> {
-					if (version.id !== versionUpdates.versionId) { return version; }
-					return {
-						...version,
-						...versionUpdates,
-					};
-				})
-			});
+			this.props.setPubData(newPubData);
+			this.setState({ isLoading: false });
 		});
 	}
 
 	handlePubUpdate(pubUpdates) {
+		const newPubData = {
+			...this.state.pubData,
+			...pubUpdates,
+		};
+		this.setState({ pubData: newPubData, isLoading: true });
 		return apiFetch('/api/pubs', {
 			method: 'PUT',
 			body: JSON.stringify({
 				...pubUpdates,
-				pubId: this.props.pubData.id,
+				pubId: this.state.pubData.id,
 				communityId: this.props.communityData.id,
 			})
 		})
 		.then(()=> {
-			this.props.setPubData({
-				...this.props.pubData,
-				...pubUpdates,
-			});
+			this.props.setPubData(newPubData);
+			this.setState({ isLoading: false });
 		});
 	}
 
@@ -116,65 +131,73 @@ class PubOptionsSharing extends Component {
 			method: 'POST',
 			body: JSON.stringify({
 				...newVersionPermission,
-				pubId: this.props.pubData.id,
+				pubId: this.state.pubData.id,
 				communityId: this.props.communityData.id,
 			})
 		})
 		.then((result)=> {
-			this.props.setPubData({
-				...this.props.pubData,
+			const newPubData = {
+				...this.state.pubData,
 				versionPermissions: [
-					...this.props.pubData.versionPermissions,
+					...this.state.pubData.versionPermissions,
 					result,
 				]
-			});
+			};
+			this.setState({ pubData: newPubData });
+			this.props.setPubData(newPubData);
 		});
 	}
 
 	handleVersionPermissionUpdate(versionPermissionUpdates) {
+		const newPubData = {
+			...this.state.pubData,
+			versionPermissions: this.state.pubData.versionPermissions.map((versionPermission)=> {
+				if (versionPermission.id !== versionPermissionUpdates.versionPermissionId) { return versionPermission; }
+				return {
+					...versionPermission,
+					...versionPermissionUpdates,
+				};
+			})
+		};
+		this.setState({ pubData: newPubData, isLoading: true });
 		return apiFetch('/api/versionPermissions', {
 			method: 'PUT',
 			body: JSON.stringify({
 				...versionPermissionUpdates,
-				pubId: this.props.pubData.id,
+				pubId: this.state.pubData.id,
 				communityId: this.props.communityData.id,
 			})
 		})
 		.then(()=> {
-			this.props.setPubData({
-				...this.props.pubData,
-				versionPermissions: this.props.pubData.versionPermissions.map((versionPermission)=> {
-					if (versionPermission.id !== versionPermissionUpdates.versionPermissionId) { return versionPermission; }
-					return {
-						...versionPermission,
-						...versionPermissionUpdates,
-					};
-				})
-			});
+			this.setState({ isLoading: false });
+			this.props.setPubData(newPubData);
 		});
 	}
 
 	handleVersionPermissionDelete(versionPermissionId) {
+		const newPubData = {
+			...this.state.pubData,
+			versionPermissions: this.state.pubData.versionPermissions.filter((versionPermission)=> {
+				return versionPermission.id !== versionPermissionId;
+			})
+		};
+		this.setState({ pubData: newPubData, isLoading: true });
 		return apiFetch('/api/versionPermissions', {
 			method: 'DELETE',
 			body: JSON.stringify({
 				versionPermissionId: versionPermissionId,
-				pubId: this.props.pubData.id,
+				pubId: this.state.pubData.id,
 				communityId: this.props.communityData.id,
 			})
 		})
 		.then(()=> {
-			this.props.setPubData({
-				...this.props.pubData,
-				versionPermissions: this.props.pubData.versionPermissions.filter((versionPermission)=> {
-					return versionPermission.id !== versionPermissionId;
-				})
-			});
+			this.setState({ isLoading: false });
+			this.props.setPubData(newPubData);
 		});
 	}
 
 	render() {
-		const pubData = this.props.pubData;
+		const pubData = this.state.pubData;
 		const managers = pubData.managers;
 		const managerIds = {};
 		managers.forEach((manager)=> {
@@ -183,6 +206,11 @@ class PubOptionsSharing extends Component {
 		return (
 			<div className="pub-options-sharing-component">
 				<div>
+					{this.state.isLoading &&
+						<div className="save-wrapper">
+							<Spinner small={true} /> Saving...
+						</div>
+					}
 					<h1>Sharing</h1>
 					<div className="pt-callout">
 						<h5>UI Questions</h5>
@@ -201,7 +229,7 @@ class PubOptionsSharing extends Component {
 							</div>
 							<div className="options">
 								<Checkbox
-									checked={this.props.pubData.isCommunityAdminManaged}
+									checked={pubData.isCommunityAdminManaged}
 									onChange={(evt)=> {
 										this.handlePubUpdate({
 											isCommunityAdminManaged: evt.target.checked,
@@ -263,7 +291,7 @@ class PubOptionsSharing extends Component {
 							<div className="privacy">
 								{this.state.activePermissionsVersion === 'draft' &&
 									<PubOptionsSharingDropdownPrivacy
-										value={this.props.pubData.draftPermissions}
+										value={pubData.draftPermissions}
 										isDraft={true}
 										onChange={(newValue)=> {
 											this.handlePubUpdate({ draftPermissions: newValue });
@@ -272,20 +300,20 @@ class PubOptionsSharing extends Component {
 								}
 								{this.state.activePermissionsVersion !== 'draft' &&
 									<span>
-										{this.props.pubData.draftPermissions === 'private' &&
+										{pubData.draftPermissions === 'private' &&
 											<span className="pt-icon-standard pt-icon-lock2" />
 										}
-										<span>{this.props.pubData.draftPermissions.replace('public', 'Public ').replace('private', 'Private')}</span>
+										<span>{pubData.draftPermissions.replace('public', 'Public ').replace('private', 'Private')}</span>
 									</span>
 								}
 							</div>
 						</div>
 						{this.state.activePermissionsVersion !== 'draft' &&
 							<div className="access-preview">
-								{(this.props.pubData.isCommunityAdminManaged || this.props.pubData.communityAdminDraftPermissions !== 'none') &&
+								{(pubData.isCommunityAdminManaged || pubData.communityAdminDraftPermissions !== 'none') &&
 									<span className="pt-icon-standard pt-icon-people" />
 								}
-								{this.props.pubData.managers.concat(this.props.pubData.versionPermissions.filter((versionPermission)=> {
+								{pubData.managers.concat(pubData.versionPermissions.filter((versionPermission)=> {
 									return !managerIds[versionPermission.user.id];
 								}).filter((versionPermission)=> {
 									return !versionPermission.versionId;
@@ -317,7 +345,7 @@ class PubOptionsSharing extends Component {
 									</div>
 
 									{/* If community admins are not managers, show options for their draft permissions */}
-									{!this.props.pubData.isCommunityAdminManaged &&
+									{!pubData.isCommunityAdminManaged &&
 										<div className="card pt-elevation-1">
 											<div className="name">
 												<span className="pt-icon-standard pt-icon-people" />
@@ -325,7 +353,7 @@ class PubOptionsSharing extends Component {
 											</div>
 											<div className="options">
 												<PubOptionsSharingDropdownPermissions
-													value={this.props.pubData.communityAdminDraftPermissions}
+													value={pubData.communityAdminDraftPermissions}
 													onChange={(newValue)=> {
 														this.handlePubUpdate({
 															communityAdminDraftPermissions: newValue,
@@ -337,7 +365,7 @@ class PubOptionsSharing extends Component {
 									}
 
 									{/* List all version permissions, filtering out managers */}
-									{this.props.pubData.versionPermissions.filter((versionPermission)=> {
+									{pubData.versionPermissions.filter((versionPermission)=> {
 										return !managerIds[versionPermission.user.id];
 									}).filter((versionPermission)=> {
 										return !versionPermission.versionId;
@@ -386,11 +414,11 @@ class PubOptionsSharing extends Component {
 											}}
 											allowCustomUser={false} // Eventually use this for emails
 											placeholder="Add user..."
-											usedUserIds={this.props.pubData.versionPermissions.filter((versionPermission)=> {
+											usedUserIds={pubData.versionPermissions.filter((versionPermission)=> {
 												return !versionPermission.versionId;
 											}).map((item)=> {
 												return item.user.id;
-											}).concat(this.props.pubData.managers.map((item)=> {
+											}).concat(pubData.managers.map((item)=> {
 												return item.user.id;
 											}))}
 										/>
@@ -446,10 +474,10 @@ class PubOptionsSharing extends Component {
 								</div>
 								{!isActive &&
 									<div className="access-preview">
-										{(this.props.pubData.isCommunityAdminManaged || version.isCommunityAdminShared) &&
+										{(pubData.isCommunityAdminManaged || version.isCommunityAdminShared) &&
 											<span className="pt-icon-standard pt-icon-people" />
 										}
-										{this.props.pubData.managers.concat(this.props.pubData.versionPermissions.filter((versionPermission)=> {
+										{pubData.managers.concat(pubData.versionPermissions.filter((versionPermission)=> {
 											return !managerIds[versionPermission.user.id];
 										}).filter((versionPermission)=> {
 											return versionPermission.versionId === version.id;
@@ -481,7 +509,7 @@ class PubOptionsSharing extends Component {
 											</div>
 
 											{/* If community admins are not managers, show options for their version permissions */}
-											{!this.props.pubData.isCommunityAdminManaged &&
+											{!pubData.isCommunityAdminManaged &&
 												<div className="card pt-elevation-1">
 													<div className="name">
 														<span className="pt-icon-standard pt-icon-people" />
@@ -502,7 +530,7 @@ class PubOptionsSharing extends Component {
 													</div>
 												</div>
 											}
-											{this.props.pubData.versionPermissions.filter((versionPermission)=> {
+											{pubData.versionPermissions.filter((versionPermission)=> {
 												return !managerIds[versionPermission.user.id];
 											}).filter((versionPermission)=> {
 												return versionPermission.versionId === version.id;
@@ -541,11 +569,11 @@ class PubOptionsSharing extends Component {
 													}}
 													allowCustomUser={false} // Eventually use this for emails
 													placeholder="Add user..."
-													usedUserIds={this.props.pubData.versionPermissions.filter((versionPermission)=> {
+													usedUserIds={pubData.versionPermissions.filter((versionPermission)=> {
 														return !versionPermission.versionId;
 													}).map((item)=> {
 														return item.user.id;
-													}).concat(this.props.pubData.managers.map((item)=> {
+													}).concat(pubData.managers.map((item)=> {
 														return item.user.id;
 													}))}
 												/>
