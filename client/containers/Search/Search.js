@@ -80,11 +80,11 @@ class Search extends Component {
 														bannerImage={pub.avatar}
 														size="medium"
 														publicationDate={pub.updatedAt}
-														collaborators={pub.collaborators.filter((item)=> {
-															return !item.Collaborator.isAuthor;
+														collaborators={pub.attributions.filter((item)=> {
+															return !item.isAuthor;
 														})}
-														authors={pub.collaborators.filter((item)=> {
-															return item.Collaborator.isAuthor;
+														authors={pub.attributions.filter((item)=> {
+															return item.isAuthor;
 														})}
 													/>
 												</div>

@@ -53,11 +53,11 @@ const LayoutPubs = function(props) {
 									bannerImage={selectedPub.avatar}
 									size={size}
 									publicationDate={selectedPub.firstPublishedAt}
-									collaborators={selectedPub.collaborators.filter((collaborator)=> {
-										return collaborator.Collaborator.isContributor;
+									collaborators={selectedPub.attributions.filter((collaborator)=> {
+										return !collaborator.isAuthor;
 									})}
-									authors={selectedPub.collaborators.filter((collaborator)=> {
-										return collaborator.Collaborator.isAuthor;
+									authors={selectedPub.attributions.filter((collaborator)=> {
+										return collaborator.isAuthor;
 									})}
 								/>
 							</div>

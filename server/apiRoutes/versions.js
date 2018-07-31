@@ -5,7 +5,13 @@ import { submitDoiData } from '../utilities';
 
 app.post('/api/versions', (req, res)=> {
 	const user = req.user || {};
-	const findCollaborator = Collaborator.findOne({
+	// const findCollaborator = Collaborator.findOne({
+	// 	where: {
+	// 		userId: user.id,
+	// 		pubId: req.body.pubId,
+	// 	}
+	// });
+	const findPubManager = PubManager.findOne({
 		where: {
 			userId: user.id,
 			pubId: req.body.pubId,
@@ -37,12 +43,12 @@ app.post('/api/versions', (req, res)=> {
 	const currentTimestamp = new Date();
 	let firstPublishedAtValue;
 
-	Promise.all([findCollaborator, findCommunityAdmin, findPub, findSubmitDiscussion])
-	.then(([collaboratorData, communityAdminData, pubData, discussionData])=> {
-		const isManager = collaboratorData && collaboratorData.permissions === 'manage';
-		const accessAsCommunityAdmin = communityAdminData && (pubData.adminPermissions === 'manage' || isManager);
+	Promise.all([findPubManager, findCommunityAdmin, findPub, findSubmitDiscussion])
+	.then(([pubManagerData, communityAdminData, pubData, discussionData])=> {
+		// const isManager = collaboratorData && collaboratorData.permissions === 'manage';
+		const accessAsCommunityAdmin = communityAdminData && (pubData.adminPermissions === 'manage' || pubManagerData);
 		const canApproveSubmission = communityAdminData && discussionData;
-		const canOpenPublish = isManager && pubData.collections.reduce((prev, curr)=> {
+		const canOpenPublish = pubManagerData && pubData.collections.reduce((prev, curr)=> {
 			if (prev && curr.isOpenPublish) { return prev; }
 			return false;
 		}, true);

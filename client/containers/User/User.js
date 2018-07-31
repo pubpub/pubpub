@@ -56,9 +56,9 @@ class User extends Component {
 			return localCommunityId && pub.communityId !== localCommunityId;
 		});
 		const authoredPubs = communityPubs.filter((pub)=> {
-			const collaborators = pub.collaborators || [];
+			const collaborators = pub.attributions || [];
 			const isAuthor = collaborators.reduce((prev, curr)=> {
-				if (curr.id === loginData.id && curr.Collaborator.isAuthor) { return true; }
+				if (curr.user.id === loginData.id && curr.isAuthor) { return true; }
 				return prev;
 			}, false);
 			return isAuthor;
@@ -129,11 +129,11 @@ class User extends Component {
 													bannerImage={pub.avatar}
 													size="medium"
 													publicationDate={dateFormat(pub.firstPublishedAt, 'mmm dd, yyyy')}
-													collaborators={pub.collaborators.filter((item)=> {
-														return !item.Collaborator.isAuthor;
+													collaborators={pub.attributions.filter((item)=> {
+														return !item.isAuthor;
 													})}
-													authors={pub.collaborators.filter((item)=> {
-														return item.Collaborator.isAuthor;
+													authors={pub.attributions.filter((item)=> {
+														return item.isAuthor;
 													})}
 												/>
 											</div>

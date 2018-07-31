@@ -1,6 +1,7 @@
 import app from '../server';
 import { User, Pub, Discussion, Collaborator, Collection, Community } from '../models';
 
+/*COLLABTODO*/
 app.get('/api/search/users', (req, res)=> {
 	User.findAll({
 		where: {

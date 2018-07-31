@@ -7,7 +7,7 @@ import Cite from 'citation-js';
 import builder from 'xmlbuilder';
 import request from 'request-promise';
 import amqplib from 'amqplib';
-import { Community, Collection, User, Pub, Version, Collaborator } from './models';
+import { Community, Collection, User, Pub, Version, } from './models';
 import { getNotificationsCount } from './notifications';
 
 const doiSubmissionUrl = process.env.DOI_SUBMISSION_URL;
@@ -135,6 +135,7 @@ export const getInitialData = (req)=> {
 	});
 };
 
+/*COLLABTODO*/
 export const generateMetaComponents = ({ initialData, title, description, image, collaborators, doi, publishedAt, unlisted })=> {
 	const siteName = initialData.communityData.title;
 	const url = `https://${initialData.locationData.hostname}${initialData.locationData.path}`;
@@ -198,13 +199,13 @@ export const generateMetaComponents = ({ initialData, title, description, image,
 
 	if (collaborators) {
 		const authors = collaborators.sort((foo, bar)=> {
-			if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
-			if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
-			if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
-			if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
+			if (foo.order < bar.order) { return -1; }
+			if (foo.order > bar.order) { return 1; }
+			if (foo.createdAt < bar.createdAt) { return 1; }
+			if (foo.createdAt > bar.createdAt) { return -1; }
 			return 0;
 		}).filter((item)=> {
-			return item.Collaborator.isAuthor;
+			return item.isAuthor;
 		});
 		const citationAuthorTags = authors.map((author)=> {
 			return <meta key={`author-cite-${author.id}`} name="citation_author" content={author.fullName} />;
@@ -369,6 +370,7 @@ export function generateCitationHTML(pubData, communityData) {
 	};
 }
 
+/* COLLABTODO*/
 export function submitDoiData(pubId, communityId, isNew) {
 	const findPub = Pub.findOne({
 		where: { id: pubId, communityId: communityId },

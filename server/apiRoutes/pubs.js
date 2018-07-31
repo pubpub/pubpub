@@ -1,5 +1,5 @@
 import app from '../server';
-import { Collection, Pub, Collaborator, CollectionPub, CommunityAdmin } from '../models';
+import { Collection, Pub, Collaborator, CollectionPub, CommunityAdmin, PubManager, PubAttribution } from '../models';
 import { generateHash } from '../utilities';
 import { generatePubCreateNotification } from '../notifications';
 
@@ -44,20 +44,30 @@ app.post('/api/pubs', (req, res)=> {
 		});
 	})
 	.then((newPub)=> {
-		const createCollaborator = Collaborator.create({
+		// const createCollaborator = Collaborator.create({
+		// 	userId: user.id,
+		// 	pubId: newPub.id,
+		// 	isAuthor: true,
+		// 	permissions: 'manage',
+		// 	order: 0.5,
+		// });
+		const createPubManager = PubManager.create({
+			userId: user.id,
+			pubId: newPub.id,
+		});
+		const createPubAttribution = PubAttribution.create({
 			userId: user.id,
 			pubId: newPub.id,
 			isAuthor: true,
-			permissions: 'manage',
 			order: 0.5,
 		});
 		const createNotification = generatePubCreateNotification(newPub, user.id);
-		return Promise.all([createCollaborator, createNotification]);
+		return Promise.all([createPubManager, createPubAttribution, createNotification]);
 	})
-	.then(([newCollaborator])=> {
+	.then(([newPubManager])=> {
 		return CollectionPub.create({
 			collectionId: req.body.collectionId,
-			pubId: newCollaborator.pubId,
+			pubId: newPubManager.pubId,
 		});
 	})
 	.then(()=> {
@@ -83,7 +93,7 @@ app.put('/api/pubs', (req, res)=> {
 		}
 	});
 
-	const findCollaborator = Collaborator.findOne({
+	const findPubManager = PubManager.findOne({
 		where: {
 			userId: user.id,
 			pubId: req.body.pubId,
@@ -99,12 +109,12 @@ app.put('/api/pubs', (req, res)=> {
 	const findPub = Pub.findOne({
 		where: { id: req.body.pubId, communityId: req.body.communityId }
 	});
-	Promise.all([findCollaborator, findCommunityAdmin, findPub])
-	.then(([collaboratorData, communityAdminData, pubData])=> {
-		const isManager = collaboratorData && collaboratorData.permissions === 'manage';
+	Promise.all([findPubManager, findCommunityAdmin, findPub])
+	.then(([pubManagerData, communityAdminData, pubData])=> {
+		// const isManager = collaboratorData && collaboratorData.permissions === 'manage';
 		const accessAsCommunityAdmin = communityAdminData && pubData.adminPermissions === 'manage';
 		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859'
-			&& !isManager
+			&& !pubManagerData
 			&& !accessAsCommunityAdmin
 		) {
 			throw new Error('Not Authorized to update this pub');
@@ -125,7 +135,7 @@ app.put('/api/pubs', (req, res)=> {
 app.delete('/api/pubs', (req, res)=> {
 	const user = req.user || {};
 
-	const findCollaborator = Collaborator.findOne({
+	const findPubManager = PubManager.findOne({
 		where: {
 			userId: user.id,
 			pubId: req.body.pubId,
@@ -141,13 +151,13 @@ app.delete('/api/pubs', (req, res)=> {
 	const findPub = Pub.findOne({
 		where: { id: req.body.pubId, communityId: req.body.communityId }
 	});
-	Promise.all([findCollaborator, findCommunityAdmin, findPub])
-	.then(([collaboratorData, communityAdminData, pubData])=> {
+	Promise.all([findPubManager, findCommunityAdmin, findPub])
+	.then(([pubManagerData, communityAdminData, pubData])=> {
 		// Only community admins can delete a published pub
 		// Managers can delete their own unpublished pubs
-		const isManager = collaboratorData && collaboratorData.permissions === 'manage';
-		const accessAsManager = !pubData.firstPublishedAt && isManager;
-		const accessAsCommunityAdmin = communityAdminData && (pubData.adminPermissions === 'manage' || isManager);
+		// const isManager = collaboratorData && collaboratorData.permissions === 'manage';
+		const accessAsManager = !pubData.firstPublishedAt && pubManagerData;
+		const accessAsCommunityAdmin = communityAdminData && (pubData.adminPermissions === 'manage' || pubManagerData);
 		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859'
 			&& !accessAsManager
 			&& !accessAsCommunityAdmin

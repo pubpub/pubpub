@@ -1,5 +1,5 @@
 import app from '../server';
-import { Pub, User, Discussion, Collaborator, CommunityAdmin } from '../models';
+import { Pub, User, Discussion, Collaborator, CommunityAdmin, PubManager } from '../models';
 import { generateNewSubmissionNotification, generateDiscussionReplyNotification, generateNewDiscussionNotification } from '../notifications';
 
 app.post('/api/discussions', (req, res)=> {
@@ -83,7 +83,7 @@ app.put('/api/discussions', (req, res)=> {
 	updatedDiscussion.updatedAt = new Date();
 
 	// Find if the user is allowed to admin this pub
-	const findPubAdmin = Collaborator.findOne({
+	const findPubManager = PubManager.findOne({
 		where: { userId: user.id, pubId: req.body.pubId },
 		raw: true,
 	});
@@ -106,9 +106,9 @@ app.put('/api/discussions', (req, res)=> {
 		raw: true,
 	});
 
-	Promise.all([findPubAdmin, findCommunityAdmin, findPub, findDiscussion])
-	.then(([isPubAdmin, isCommunityAdmin, adminsManagePub, isDiscussionAuthor])=> {
-		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859' && !isPubAdmin && !(isCommunityAdmin && adminsManagePub) && !isDiscussionAuthor) {
+	Promise.all([findPubManager, findCommunityAdmin, findPub, findDiscussion])
+	.then(([isPubManager, isCommunityAdmin, adminsManagePub, isDiscussionAuthor])=> {
+		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859' && !isPubManager && !(isCommunityAdmin && adminsManagePub) && !isDiscussionAuthor) {
 			throw new Error('Not Authorized to update this discussion');
 		}
 

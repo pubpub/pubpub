@@ -90,24 +90,24 @@ const PubPreview = function(props) {
 					<div className="authors">
 						<span>by </span>
 						{props.authors.sort((foo, bar)=> {
-							if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
-							if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
-							if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
-							if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
+							if (foo.order < bar.order) { return -1; }
+							if (foo.order > bar.order) { return 1; }
+							if (foo.createdAt < bar.createdAt) { return 1; }
+							if (foo.createdAt > bar.createdAt) { return -1; }
 							return 0;
 						}).map((author, index)=> {
 							const separator = index === props.authors.length - 1 || props.authors.length === 2 ? '' : ', ';
 							const prefix = index === props.authors.length - 1 && index !== 0 ? ' and ' : '';
-							if (author.slug) {
+							if (author.user.slug) {
 								return (
 									<span key={`author-${author.id}`}>
 										{prefix}
-										<a href={`/user/${author.slug}`}>{author.fullName}</a>
+										<a href={`/user/${author.user.slug}`}>{author.user.fullName}</a>
 										{separator}
 									</span>
 								);
 							}
-							return <span key={`author-${author.id}`}>{prefix}{author.fullName}{separator}</span>;
+							return <span key={`author-${author.id}`}>{prefix}{author.user.fullName}{separator}</span>;
 						})}
 					</div>
 				}
@@ -115,18 +115,18 @@ const PubPreview = function(props) {
 				<div className="date-details">
 					<span className="date">{dateFormat(props.publicationDate, 'mmm dd, yyyy')}</span>
 					{[...props.authors, ...props.collaborators].sort((foo, bar)=> {
-						if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
-						if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
-						if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
-						if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
+						if (foo.order < bar.order) { return -1; }
+						if (foo.order > bar.order) { return 1; }
+						if (foo.createdAt < bar.createdAt) { return 1; }
+						if (foo.createdAt > bar.createdAt) { return -1; }
 						return 0;
 					}).map((collaborator, index)=> {
 						return (
 							<Avatar
 								key={`avatar-${collaborator.id}`}
 								instanceNumber={index}
-								userInitials={collaborator.initials}
-								userAvatar={collaborator.avatar}
+								userInitials={collaborator.user.initials}
+								userAvatar={collaborator.user.avatar}
 								borderColor="rgba(255, 255, 255, 1.0)"
 								width={20}
 								doesOverlap={true}

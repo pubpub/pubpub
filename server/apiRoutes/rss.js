@@ -2,6 +2,7 @@ import RSS from 'rss';
 import app from '../server';
 import { Community, Pub, User, Collaborator, Collection } from '../models';
 
+/* COLLABTODO*/
 app.get('/rss.xml', (req, res)=> {
 	const hostname = req.hostname;
 	const whereQuery = hostname.indexOf('.pubpub.org') > -1

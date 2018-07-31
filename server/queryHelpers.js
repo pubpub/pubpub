@@ -303,6 +303,7 @@ export const findPub = (req, initialData, isDraft)=> {
 };
 
 export const findCollection = (collectionId, useIncludes, initialData)=> {
+	console.time('CollectionTime');
 	const includes = useIncludes
 		? [
 			{
@@ -313,19 +314,44 @@ export const findCollection = (collectionId, useIncludes, initialData)=> {
 					exclude: ['editHash', 'viewHash'],
 				},
 				include: [
+					// {
+					// 	model: User,
+					// 	as: 'collaborators',
+					// 	attributes: ['id', 'avatar', 'initials', 'fullName'],
+					// 	through: { attributes: ['isAuthor', 'isContributor', 'order'] },
+					// },
+					// {
+					// 	required: false,
+					// 	model: Collaborator,
+					// 	as: 'emptyCollaborators',
+					// 	where: { userId: null },
+					// 	attributes: { exclude: ['createdAt', 'updatedAt'] },
+					// },
 					{
-						model: User,
-						as: 'collaborators',
-						attributes: ['id', 'avatar', 'initials', 'fullName'],
-						through: { attributes: ['isAuthor', 'isContributor', 'order'] },
+						model: PubManager,
+						as: 'managers',
+						separate: true,
 					},
 					{
+						model: PubAttribution,
+						as: 'attributions',
 						required: false,
-						model: Collaborator,
-						as: 'emptyCollaborators',
-						where: { userId: null },
-						attributes: { exclude: ['createdAt', 'updatedAt'] },
+						separate: true,
+						include: [{ model: User, as: 'user', required: false, attributes: ['id', 'firstName', 'lastName', 'fullName', 'avatar', 'slug', 'initials', 'title'] }],
 					},
+					{
+						model: VersionPermission,
+						as: 'versionPermissions',
+						required: false,
+						separate: true,
+					},
+					{
+						model: Version,
+						required: false,
+						as: 'versions',
+						attributes: ['id', 'isPublic', 'isCommunityAdminShared']
+					},
+
 					{
 						required: false,
 						separate: true,
@@ -361,39 +387,87 @@ export const findCollection = (collectionId, useIncludes, initialData)=> {
 						if (curr.suggestions) { return prev + 1; }
 						return prev;
 					}, 0) : 0,
-					collaboratorCount: pub.collaborators.length + pub.emptyCollaborators.length,
+					// collaboratorCount: pub.collaborators.length + pub.emptyCollaborators.length,
+					collaboratorCount: pub.attributions.length,
 					hasOpenSubmission: pub.discussions ? pub.discussions.reduce((prev, curr)=> {
 						if (curr.submitHash && !curr.isArchived) { return true; }
 						return prev;
 					}, false) : false,
 					discussions: undefined,
-					collaborators: [
-						...pub.collaborators,
-						...pub.emptyCollaborators.map((item)=> {
-							return {
-								id: item.id,
-								initials: item.name ? item.name[0] : '',
-								fullName: item.name,
-								Collaborator: {
-									id: item.id,
-									isAuthor: item.isAuthor,
-									permissions: item.permissions,
-									order: item.order,
-								}
-							};
-						})
-					],
-					emptyCollaborators: undefined,
+					// collaborators: [
+					// 	...pub.collaborators,
+					// 	...pub.emptyCollaborators.map((item)=> {
+					// 		return {
+					// 			id: item.id,
+					// 			initials: item.name ? item.name[0] : '',
+					// 			fullName: item.name,
+					// 			Collaborator: {
+					// 				id: item.id,
+					// 				isAuthor: item.isAuthor,
+					// 				permissions: item.permissions,
+					// 				order: item.order,
+					// 			}
+					// 		};
+					// 	})
+					// ],
+					attributions: pub.attributions.map((attribution)=> {
+						if (attribution.user) { return attribution; }
+						return {
+							...attribution,
+							user: {
+								id: attribution.id,
+								initials: attribution.name[0],
+								fullName: attribution.name,
+								firstName: attribution.name.split(' ')[0],
+								lastName: attribution.name.split(' ').slice(1, attribution.name.split(' ').length).join(' '),
+								avatar: attribution.avatar,
+								title: attribution.title
+							}
+						};
+					}),
+					// emptyCollaborators: undefined,
 				};
 			}).filter((item)=> {
-				const adminCanCollab = item.adminPermissions !== 'none' && !!communityAdminData;
-				const publicCanCollab = item.collaborationMode !== 'private';
-				return !!item.firstPublishedAt || publicCanCollab || adminCanCollab;
+				const isManager = item.managers.reduce((prev, curr)=> {
+					if (curr.userId === initialData.loginData.id) { return true; }
+					return prev;
+				}, communityAdminData && item.isCommunityAdminManaged);
+
+				const isDraftViewer = item.versionPermissions.reduce((prev, curr)=> {
+					if (!curr.versionId && curr.userId === initialData.loginData.id) { return true; }
+					return prev;
+				}, item.draftPermissions !== 'private' || (communityAdminData && item.communityAdminDraftPermissions !== 'none'));
+
+				const isPrivateVersionViewer = item.versionPermissions.reduce((prev, curr)=> {
+					if (curr.versionId && curr.userId === initialData.loginData.id) { return true; }
+					return prev;
+				}, false);
+
+				const isVersionVisible = item.versions.reduce((prev, curr)=> {
+					if (curr.isPublic) { return true; }
+					if (curr.isCommunityAdminShared && communityAdminData) { return true; }
+					return prev;
+				}, false);
+
+				return isManager || isDraftViewer || isPrivateVersionViewer || isVersionVisible;
+				// const adminCanCollab = item.adminPermissions !== 'none' && !!communityAdminData;
+				// const publicCanCollab = item.collaborationMode !== 'private';
+				// return !!item.firstPublishedAt || publicCanCollab || adminCanCollab;
+			})
+			.map((item)=> {
+				// remove versions
+				return {
+					...item,
+					versions: undefined,
+					managers: undefined,
+					versionPermissions: undefined,
+				};
 			});
 		}
 		if (!communityAdminData && initialData.locationData.params.hash !== collectionDataJson.createPubHash) {
 			collectionDataJson.createPubHash = undefined;
 		}
+		console.timeEnd('CollectionTime');
 		return collectionDataJson;
 	});
 };
