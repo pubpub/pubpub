@@ -12,13 +12,6 @@ const propTypes = {
 };
 
 class PubOptionsVersions extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			isLoading: false,
-		};
-	}
-
 	render() {
 		const pubData = this.props.pubData;
 		const activeVersion = pubData.activeVersion;

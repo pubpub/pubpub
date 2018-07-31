@@ -292,7 +292,7 @@ export function generateCitationHTML(pubData, communityData) {
 	if (!pubData.versions.length) { return null; }
 
 	const pubIssuedDate = new Date(pubData.updatedAt);
-	const versionIssuedDate = new Date(pubData.versions[0].updatedAt);
+	const versionIssuedDate = new Date(pubData.activeVersion.updatedAt);
 	const communityHostname = communityData.domain || `${communityData.subdomain}.pubpub.org`;
 	const pubLink = `https://${communityHostname}/pub/${pubData.slug}`;
 	// const authorData = pubData.collaborators.filter((item)=> {
@@ -342,15 +342,15 @@ export function generateCitationHTML(pubData, communityData) {
 	});
 	const versionCiteObject = new Cite({
 		...commonData,
-		id: pubData.versions[0].id,
-		DOI: pubData.doi ? `${pubData.doi}/${pubData.versions[0].id.split('-')[0]}` : null,
+		id: pubData.activeVersion.id || 'Draft',
+		DOI: pubData.doi && pubData.activeVersion.id ? `${pubData.doi}/${pubData.activeVersion.id.split('-')[0]}` : null,
 		// ISSN: pubData.doi ? (communityData.issn || '2471–2388') : null,
 		ISSN: pubData.doi ? communityData.issn : null,
 		issued: [{
 			'date-parts': [versionIssuedDate.getFullYear(), versionIssuedDate.getMonth() + 1, versionIssuedDate.getDate()]
 		}],
-		note: `${pubLink}?version=${pubData.versions[0].id}`,
-		URL: `${pubLink}?version=${pubData.versions[0].id}`,
+		note: pubData.activeVersion.id ? `${pubLink}?version=${pubData.activeVersion.id}` : `${pubLink}/draft`,
+		URL: pubData.activeVersion.id ? `${pubLink}?version=${pubData.activeVersion.id}` : `${pubLink}/draft`,
 	});
 
 	return {

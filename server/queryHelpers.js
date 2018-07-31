@@ -131,7 +131,7 @@ export const findPub = (req, initialData, isDraft)=> {
 			}, false);
 		});
 		pubDataJson.versions = allowedVersions;
-		if (isDraft) { return [pubDataJson, communityAdminData, undefined]; }
+		if (isDraft) { return [pubDataJson, communityAdminData, {}]; }
 
 		const versionId = req.query.version || (allowedVersions[0] && allowedVersions[0].id);
 		const findActiveVersion = Version.findOne({
