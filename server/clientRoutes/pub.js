@@ -76,7 +76,7 @@ app.get(['/pub/:slug', '/pub/:slug/content/:sectionId', '/pub/:slug/draft', '/pu
 					title: pubData.title,
 					description: pubData.description,
 					image: pubData.avatar,
-					collaborators: pubData.collaborators,
+					attributions: pubData.attributions,
 					publishedAt: pubData.firstPublishedAt,
 					doi: pubData.doi,
 					unlisted: isUnlistedCollection || isUnlistedDraft,

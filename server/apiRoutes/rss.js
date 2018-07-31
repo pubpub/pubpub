@@ -1,8 +1,7 @@
 import RSS from 'rss';
 import app from '../server';
-import { Community, Pub, User, Collaborator, Collection } from '../models';
+import { Community, Pub, User, Collaborator, Collection, PubAttribution } from '../models';
 
-/* COLLABTODO*/
 app.get('/rss.xml', (req, res)=> {
 	const hostname = req.hostname;
 	const whereQuery = hostname.indexOf('.pubpub.org') > -1
@@ -30,18 +29,24 @@ app.get('/rss.xml', (req, res)=> {
 						attributes: ['id', 'isPublic'],
 						through: { attributes: [] },
 					},
+					// {
+					// 	model: User,
+					// 	as: 'collaborators',
+					// 	attributes: ['id', 'fullName'],
+					// 	through: { attributes: { exclude: ['updatedAt'] } },
+					// },
+					// {
+					// 	required: false,
+					// 	model: Collaborator,
+					// 	as: 'emptyCollaborators',
+					// 	where: { userId: null },
+					// 	attributes: { exclude: ['updatedAt'] },
+					// },
 					{
-						model: User,
-						as: 'collaborators',
-						attributes: ['id', 'fullName'],
-						through: { attributes: { exclude: ['updatedAt'] } },
-					},
-					{
+						model: PubAttribution,
+						as: 'attributions',
 						required: false,
-						model: Collaborator,
-						as: 'emptyCollaborators',
-						where: { userId: null },
-						attributes: { exclude: ['updatedAt'] },
+						include: [{ model: User, as: 'user', required: false, attributes: ['id', 'firstName', 'lastName', 'fullName', 'avatar', 'slug', 'initials', 'title'] }],
 					},
 				]
 			},
@@ -71,26 +76,24 @@ app.get('/rss.xml', (req, res)=> {
 			if (foo.firstPublishedAt < bar.firstPublishedAt) { return -1; }
 			return 0;
 		}).forEach((pub)=> {
-			const authors = [
-				...pub.collaborators,
-				...pub.emptyCollaborators.map((item)=> {
-					return {
-						id: item.id,
-						initials: item.name[0],
-						fullName: item.name,
-						Collaborator: {
-							id: item.id,
-							isAuthor: item.isAuthor,
-							permissions: item.permissions,
-							order: item.order,
-							createdAt: item.createdAt,
-						}
-					};
-				})
-			].filter((item)=> {
-				return item.Collaborator.isAuthor;
+			const authors = pub.attributions.map((attribution)=> {
+				if (attribution.user) { return attribution; }
+				return {
+					...attribution,
+					user: {
+						id: attribution.id,
+						initials: attribution.name[0],
+						fullName: attribution.name,
+						firstName: attribution.name.split(' ')[0],
+						lastName: attribution.name.split(' ').slice(1, attribution.name.split(' ').length).join(' '),
+						avatar: attribution.avatar,
+						title: attribution.title
+					}
+				};
+			}).filter((item)=> {
+				return item.isAuthor;
 			}).map((item)=> {
-				return item.fullName;
+				return item.user.fullName;
 			}).join(', ');
 
 			feed.item({

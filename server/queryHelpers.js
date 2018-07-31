@@ -303,7 +303,6 @@ export const findPub = (req, initialData, isDraft)=> {
 };
 
 export const findCollection = (collectionId, useIncludes, initialData)=> {
-	console.time('CollectionTime');
 	const includes = useIncludes
 		? [
 			{
@@ -337,7 +336,7 @@ export const findCollection = (collectionId, useIncludes, initialData)=> {
 						as: 'attributions',
 						required: false,
 						separate: true,
-						include: [{ model: User, as: 'user', required: false, attributes: ['id', 'firstName', 'lastName', 'fullName', 'avatar', 'slug', 'initials', 'title'] }],
+						include: [{ model: User, as: 'user', required: false, attributes: ['id', 'fullName', 'avatar', 'slug', 'initials', 'title'] }],
 					},
 					{
 						model: VersionPermission,
@@ -455,7 +454,6 @@ export const findCollection = (collectionId, useIncludes, initialData)=> {
 				// return !!item.firstPublishedAt || publicCanCollab || adminCanCollab;
 			})
 			.map((item)=> {
-				// remove versions
 				return {
 					...item,
 					versions: undefined,
@@ -467,11 +465,13 @@ export const findCollection = (collectionId, useIncludes, initialData)=> {
 		if (!communityAdminData && initialData.locationData.params.hash !== collectionDataJson.createPubHash) {
 			collectionDataJson.createPubHash = undefined;
 		}
-		console.timeEnd('CollectionTime');
 		return collectionDataJson;
 	});
 };
 
+
+// TODO - this needs to be updated to not use Collaborator
+// but it also needs a redesign.
 export const getPubSearch = (query, initialData)=> {
 	const searchTerms = [
 		{

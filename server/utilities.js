@@ -7,7 +7,7 @@ import Cite from 'citation-js';
 import builder from 'xmlbuilder';
 import request from 'request-promise';
 import amqplib from 'amqplib';
-import { Community, Collection, User, Pub, Version, } from './models';
+import { Community, Collection, User, Pub, Version, PubAttribution } from './models';
 import { getNotificationsCount } from './notifications';
 
 const doiSubmissionUrl = process.env.DOI_SUBMISSION_URL;
@@ -135,8 +135,7 @@ export const getInitialData = (req)=> {
 	});
 };
 
-/*COLLABTODO*/
-export const generateMetaComponents = ({ initialData, title, description, image, collaborators, doi, publishedAt, unlisted })=> {
+export const generateMetaComponents = ({ initialData, title, description, image, attributions, doi, publishedAt, unlisted })=> {
 	const siteName = initialData.communityData.title;
 	const url = `https://${initialData.locationData.hostname}${initialData.locationData.path}`;
 	const favicon = initialData.communityData.favicon;
@@ -197,8 +196,8 @@ export const generateMetaComponents = ({ initialData, title, description, image,
 		];
 	}
 
-	if (collaborators) {
-		const authors = collaborators.sort((foo, bar)=> {
+	if (attributions) {
+		const authors = attributions.sort((foo, bar)=> {
 			if (foo.order < bar.order) { return -1; }
 			if (foo.order > bar.order) { return 1; }
 			if (foo.createdAt < bar.createdAt) { return 1; }
@@ -208,10 +207,10 @@ export const generateMetaComponents = ({ initialData, title, description, image,
 			return item.isAuthor;
 		});
 		const citationAuthorTags = authors.map((author)=> {
-			return <meta key={`author-cite-${author.id}`} name="citation_author" content={author.fullName} />;
+			return <meta key={`author-cite-${author.id}`} name="citation_author" content={author.user.fullName} />;
 		});
 		const dcAuthorTags = authors.map((author)=> {
-			return <meta key={`author-dc-${author.id}`} name="dc.creator" content={author.fullName} />;
+			return <meta key={`author-dc-${author.id}`} name="dc.creator" content={author.user.fullName} />;
 		});
 		outputComponents = [
 			...outputComponents,
@@ -370,14 +369,19 @@ export function generateCitationHTML(pubData, communityData) {
 	};
 }
 
-/* COLLABTODO*/
 export function submitDoiData(pubId, communityId, isNew) {
 	const findPub = Pub.findOne({
 		where: { id: pubId, communityId: communityId },
 		include: [
-			{ model: Version, as: 'versions' },
-			{ model: User, as: 'collaborators' },
-			{ model: Collaborator, as: 'emptyCollaborators', where: { userId: null }, required: false }
+			{ model: Version, as: 'versions', where: { isPublic: true } },
+			// { model: User, as: 'collaborators' },
+			// { model: Collaborator, as: 'emptyCollaborators', where: { userId: null }, required: false }
+			{
+				model: PubAttribution,
+				as: 'attributions',
+				required: false,
+				include: [{ model: User, as: 'user', required: false, attributes: ['id', 'firstName', 'lastName', 'fullName', 'avatar', 'slug', 'initials', 'title'] }],
+			},
 		]
 	});
 	const findCommunity = Community.findOne({
@@ -411,28 +415,43 @@ export function submitDoiData(pubId, communityId, isNew) {
 		const communityHostname = communityData.domain || `${communityData.subdomain}.pubpub.org`;
 		const communityLink = `https://${communityHostname}`;
 		const pubLink = `https://${communityHostname}/pub/${pubData.slug}`;
-		const collaborators = [
-			...pubDataJson.collaborators,
-			...pubDataJson.emptyCollaborators.map((item)=> {
-				return {
-					id: item.id,
-					firstName: item.name.split(' ')[0],
-					lastName: item.name.split(' ').slice(1, item.name.split(' ').length).join(' '),
-					Collaborator: {
-						id: item.id,
-						isAuthor: item.isAuthor,
-						isContributor: item.isContributor,
-						title: item.title,
-						roles: item.roles,
-						permissions: item.permissions,
-						order: item.order,
-						createdAt: item.createdAt,
-					}
-				};
-			})
-		].sort((foo, bar)=> {
-			if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
-			if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
+		// const collaborators = [
+		// 	...pubDataJson.collaborators,
+		// 	...pubDataJson.emptyCollaborators.map((item)=> {
+		// 		return {
+		// 			id: item.id,
+		// 			firstName: item.name.split(' ')[0],
+		// 			lastName: item.name.split(' ').slice(1, item.name.split(' ').length).join(' '),
+		// 			Collaborator: {
+		// 				id: item.id,
+		// 				isAuthor: item.isAuthor,
+		// 				isContributor: item.isContributor,
+		// 				title: item.title,
+		// 				roles: item.roles,
+		// 				permissions: item.permissions,
+		// 				order: item.order,
+		// 				createdAt: item.createdAt,
+		// 			}
+		// 		};
+		// 	})
+		const collaborators = pubDataJson.attributions.map((attribution)=> {
+			if (attribution.user) { return attribution; }
+			return {
+				...attribution,
+				user: {
+					id: attribution.id,
+					initials: attribution.name[0],
+					fullName: attribution.name,
+					firstName: attribution.name.split(' ')[0],
+					lastName: attribution.name.split(' ').slice(1, attribution.name.split(' ').length).join(' '),
+					avatar: attribution.avatar,
+					title: attribution.title
+				}
+			};
+		})
+		.sort((foo, bar)=> {
+			if (foo.order < bar.order) { return -1; }
+			if (foo.order > bar.order) { return 1; }
 			return 0;
 		});
 
@@ -473,9 +492,9 @@ export function submitDoiData(pubId, communityId, isNew) {
 								person_name: collaborators.map((collaborator, collaboratorIndex)=>{
 									const personNameOutput = {
 										'@sequence': collaboratorIndex === 0 ? 'first' : 'additional',
-										'@contributor_role': collaborator.Collaborator.isAuthor ? 'author' : 'reader',
-										given_name: collaborator.lastName ? collaborator.firstName : '',
-										surname: collaborator.lastName ? collaborator.lastName : collaborator.firstName,
+										'@contributor_role': collaborator.isAuthor ? 'author' : 'reader',
+										given_name: collaborator.user.lastName ? collaborator.user.firstName : '',
+										surname: collaborator.user.lastName ? collaborator.user.lastName : collaborator.user.firstName,
 									};
 									if (!personNameOutput.given_name) { delete personNameOutput.given_name; }
 									return personNameOutput;

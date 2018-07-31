@@ -31,7 +31,7 @@ class PubOptionsAttribution extends Component {
 		this.getFilteredRoles = this.getFilteredRoles.bind(this);
 		this.handleAttributionAdd = this.handleAttributionAdd.bind(this);
 		this.handleAttributionUpdate = this.handleAttributionUpdate.bind(this);
-		this.handleAttributionDelete = this.handleAttributionDelete.bind(this)
+		this.handleAttributionDelete = this.handleAttributionDelete.bind(this);
 	}
 
 	onDragEnd(result) {
@@ -55,8 +55,8 @@ class PubOptionsAttribution extends Component {
 			newOrder = (destinationOrder + destinationNeighborOrder) / 2;
 		}
 
-		const newCollaborators = pubData.attributions;
-		newCollaborators[sourceIndex].order = newOrder;
+		// const newCollaborators = pubData.attributions;
+		// newCollaborators[sourceIndex].order = newOrder;
 
 		this.handleAttributionUpdate({
 			pubAttributionId: sourceId,
@@ -220,137 +220,135 @@ class PubOptionsAttribution extends Component {
 					})}
 				/>
 
-				<div className="collaborators-wrapper">
-					<DragDropContext onDragEnd={this.onDragEnd}>
-						<div className="main-list-wrapper">
-							<Droppable droppableId="mainDroppable">
-								{(provided, snapshot) => (
-									<div
-										ref={provided.innerRef}
-										className={`main-list ${snapshot.isDraggingOver ? 'dragging' : ''}`}
-									>
-										{pubData.attributions.sort((foo, bar)=> {
-											if (foo.order < bar.order) { return -1; }
-											if (foo.order > bar.order) { return 1; }
-											return 0;
-										}).map((attribution, index)=> {
-											return (
-												<Draggable key={`draggable-${attribution.id}`} draggableId={attribution.id} index={index}>
-													{(providedItem, snapshotItem) => (
-														<div
-															ref={providedItem.innerRef}
-															className={`draggable-item ${snapshotItem.isDragging ? 'dragging' : ''}`}
-															{...providedItem.draggableProps}
-														>
-															<div className="attribution-wrapper">
-																<div className="avatar-wrapper">
-																	<Avatar width={50} userInitials={attribution.user.initials} userAvatar={attribution.user.avatar} />
-																</div>
-																<div className="content">
-																	<div className="top-content">
-																		<div className="name">
-																			<span>{attribution.user.fullName}</span>
-																			<span key={`${attribution.id}-handle`} {...providedItem.dragHandleProps} className="pt-icon-standard pt-icon-drag-handle-horizontal" />
-																		</div>
-																		<button
-																			className="pt-button pt-minimal"
-																			type="button"
-																			onClick={()=> {
-																				this.handleAttributionDelete(attribution.id);
-																			}}
-																		>
-																			<span className="pt-icon-standard pt-icon-small-cross" />
-																		</button>
+				<DragDropContext onDragEnd={this.onDragEnd}>
+					<div className="main-list-wrapper">
+						<Droppable droppableId="mainDroppable">
+							{(provided, snapshot) => (
+								<div
+									ref={provided.innerRef}
+									className={`main-list ${snapshot.isDraggingOver ? 'dragging' : ''}`}
+								>
+									{pubData.attributions.sort((foo, bar)=> {
+										if (foo.order < bar.order) { return -1; }
+										if (foo.order > bar.order) { return 1; }
+										return 0;
+									}).map((attribution, index)=> {
+										return (
+											<Draggable key={`draggable-${attribution.id}`} draggableId={attribution.id} index={index}>
+												{(providedItem, snapshotItem) => (
+													<div
+														ref={providedItem.innerRef}
+														className={`draggable-item ${snapshotItem.isDragging ? 'dragging' : ''}`}
+														{...providedItem.draggableProps}
+													>
+														<div className="attribution-wrapper">
+															<div className="avatar-wrapper">
+																<Avatar width={50} userInitials={attribution.user.initials} userAvatar={attribution.user.avatar} />
+															</div>
+															<div className="content">
+																<div className="top-content">
+																	<div className="name">
+																		<span>{attribution.user.fullName}</span>
+																		<span key={`${attribution.id}-handle`} {...providedItem.dragHandleProps} className="pt-icon-standard pt-icon-drag-handle-horizontal" />
 																	</div>
-																	<div className="bottom-content">
-																		<Checkbox
-																			checked={attribution.isAuthor}
-																			onChange={(evt)=> {
-																				this.handleAttributionUpdate({
-																					pubAttributionId: attribution.id,
-																					isAuthor: evt.target.checked,
-																				});
-																			}}
-																		>
-																			List as Author
-																		</Checkbox>
-																		<MultiSelect
-																			items={attribution.roles || []}
-																			itemListPredicate={this.getFilteredRoles}
-																			itemRenderer={(item, { handleClick, modifiers })=> {
-																				return (
-																					<li key={item}>
-																						<button
-																							type="button"
-																							tabIndex={-1}
-																							onClick={handleClick}
-																							className={modifiers.active ? 'pt-menu-item pt-active' : 'pt-menu-item'}
-																						>
-																							{item}
-																						</button>
-																					</li>
-																				);
-																			}}
-																			selectedItems={attribution.roles || []}
-																			tagRenderer={(item)=> {
-																				return (
-																					<span>
+																	<button
+																		className="pt-button pt-minimal"
+																		type="button"
+																		onClick={()=> {
+																			this.handleAttributionDelete(attribution.id);
+																		}}
+																	>
+																		<span className="pt-icon-standard pt-icon-small-cross" />
+																	</button>
+																</div>
+																<div className="bottom-content">
+																	<Checkbox
+																		checked={attribution.isAuthor}
+																		onChange={(evt)=> {
+																			this.handleAttributionUpdate({
+																				pubAttributionId: attribution.id,
+																				isAuthor: evt.target.checked,
+																			});
+																		}}
+																	>
+																		List as Author
+																	</Checkbox>
+																	<MultiSelect
+																		items={attribution.roles || []}
+																		itemListPredicate={this.getFilteredRoles}
+																		itemRenderer={(item, { handleClick, modifiers })=> {
+																			return (
+																				<li key={item}>
+																					<button
+																						type="button"
+																						tabIndex={-1}
+																						onClick={handleClick}
+																						className={modifiers.active ? 'pt-menu-item pt-active' : 'pt-menu-item'}
+																					>
 																						{item}
-																					</span>
-																				);
-																			}}
-																			tagInputProps={{
-																				onRemove: (evt, roleIndex)=> {
-																					const newRoles = attribution.roles.filter((item, filterIndex)=> {
-																						return filterIndex !== roleIndex;
-																					});
-																					this.handleAttributionUpdate({
-																						pubAttributionId: attribution.id,
-																						roles: newRoles,
-																					});
-																				},
-																				placeholder: 'Add roles...',
-																				tagProps: {
-																					className: 'pt-minimal pt-intent-primary'
-																				},
-																				inputProps: {
-																					placeholder: 'Add roles...',
-																				},
-																			}}
-																			resetOnSelect={true}
-																			onItemSelect={(newRole)=> {
-																				const existingRoles = attribution.roles || [];
-																				const newRoles = [...existingRoles, newRole];
+																					</button>
+																				</li>
+																			);
+																		}}
+																		selectedItems={attribution.roles || []}
+																		tagRenderer={(item)=> {
+																			return (
+																				<span>
+																					{item}
+																				</span>
+																			);
+																		}}
+																		tagInputProps={{
+																			onRemove: (evt, roleIndex)=> {
+																				const newRoles = attribution.roles.filter((item, filterIndex)=> {
+																					return filterIndex !== roleIndex;
+																				});
 																				this.handleAttributionUpdate({
 																					pubAttributionId: attribution.id,
 																					roles: newRoles,
 																				});
-																			}}
-																			noResults={<div className="pt-menu-item">No Matching Roles</div>}
-																			popoverProps={{
-																				popoverClassName: 'pt-minimal',
-																				position: Position.BOTTOM_LEFT,
-																				modifiers: {
-																					preventOverflow: { enabled: false },
-																					hide: { enabled: false },
-																				},
-																			}}
-																		/>
-																	</div>
+																			},
+																			placeholder: 'Add roles...',
+																			tagProps: {
+																				className: 'pt-minimal pt-intent-primary'
+																			},
+																			inputProps: {
+																				placeholder: 'Add roles...',
+																			},
+																		}}
+																		resetOnSelect={true}
+																		onItemSelect={(newRole)=> {
+																			const existingRoles = attribution.roles || [];
+																			const newRoles = [...existingRoles, newRole];
+																			this.handleAttributionUpdate({
+																				pubAttributionId: attribution.id,
+																				roles: newRoles,
+																			});
+																		}}
+																		noResults={<div className="pt-menu-item">No Matching Roles</div>}
+																		popoverProps={{
+																			popoverClassName: 'pt-minimal',
+																			position: Position.BOTTOM_LEFT,
+																			modifiers: {
+																				preventOverflow: { enabled: false },
+																				hide: { enabled: false },
+																			},
+																		}}
+																	/>
 																</div>
 															</div>
 														</div>
-													)}
-												</Draggable>
-											);
-										})}
-										{provided.placeholder}
-									</div>
-								)}
-							</Droppable>
-						</div>
-					</DragDropContext>
-				</div>
+													</div>
+												)}
+											</Draggable>
+										);
+									})}
+									{provided.placeholder}
+								</div>
+							)}
+						</Droppable>
+					</div>
+				</DragDropContext>
 			</div>
 		);
 	}

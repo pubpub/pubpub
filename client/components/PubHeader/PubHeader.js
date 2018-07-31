@@ -45,10 +45,10 @@ const PubHeader = function(props) {
 		return prev;
 	}, 0);
 	const numDiscussions = pubData.discussions.length;
-	// const numCollaborators = pubData.collaborators.filter((item)=> {
+	// const numAttributions = pubData.collaborators.filter((item)=> {
 	// 	return item.Collaborator.isAuthor || item.Collaborator.isContributor;
 	// }).length;
-	const numCollaborators = pubData.attributions.length;
+	const numAttributions = pubData.attributions.length;
 
 	return (
 		<div className={`pub-header-component ${mode ? 'mode' : ''}`} style={backgroundStyle}>
@@ -186,7 +186,7 @@ const PubHeader = function(props) {
 									}}
 								>
 									{/* <span className="pt-icon-standard pt-icon-team" /> */}
-									{numCollaborators} Collaborator{numCollaborators === 1 ? '' : 's'}
+									{numAttributions} Collaborator{numAttributions === 1 ? '' : 's'}
 								</a>
 								<a
 									// href={`/pub/${pubData.slug}/versions`}
