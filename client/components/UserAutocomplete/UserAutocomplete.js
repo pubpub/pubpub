@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { MenuItem, Position } from '@blueprintjs/core';
-// import { Suggest } from '@blueprintjs/labs';
 import { Suggest } from '@blueprintjs/select';
 import Avatar from 'components/Avatar/Avatar';
 import { apiFetch } from 'utilities';
@@ -27,40 +26,45 @@ class UserAutocomplete extends Component {
 		super(props);
 		this.state = {
 			items: [],
-			value: '',
+			queryValue: '',
 		};
 		this.inputRef = undefined;
 		this.filterItems = this.filterItems.bind(this);
 		this.handleSelect = this.handleSelect.bind(this);
 	}
 
-	filterItems(evt) {
-		const query = evt.target.value;
-		this.setState({ value: query });
-		apiFetch(`/api/search/users?q=${query}`)
-		.then((result) => {
-			const appendedResult = this.props.allowCustomUser && query
-				? [
-					{
-						name: query,
-					},
-					...result,
-				]
-				: result;
-			this.setState({
-				items: appendedResult.filter((item)=> {
-					return this.props.usedUserIds.indexOf(item.id) === -1;
-				})
+	filterItems(query) {
+		if (!query) {
+			this.setState({ queryValue: query });
+			return [];
+		}
+		if (query !== this.state.queryValue) {
+			this.setState({ queryValue: query });
+			apiFetch(`/api/search/users?q=${query}`)
+			.then((result) => {
+				const appendedResult = this.props.allowCustomUser && query
+					? [
+						{
+							name: query,
+						},
+						...result,
+					]
+					: result;
+				this.setState({
+					items: appendedResult.filter((item)=> {
+						return this.props.usedUserIds.indexOf(item.id) === -1;
+					})
+				});
+			})
+			.catch((error) => {
+				console.error(error);
 			});
-		})
-		.catch((error) => {
-			console.log(error);
-		});
+		}
+		return this.state.items;
 	}
 
 	handleSelect(data) {
 		this.props.onSelect(data);
-		this.setState({ value: '' });
 		this.inputRef.focus();
 	}
 
@@ -72,27 +76,33 @@ class UserAutocomplete extends Component {
 					className="input"
 					items={this.state.items}
 					inputProps={{
-						value: this.state.value,
-						onChange: this.filterItems,
 						placeholder: this.props.placeholder,
 						className: 'pt-large',
 						inputRef: (ref)=> { this.inputRef = ref; },
 					}}
-					inputValueRenderer={(item) => { return item.fullName; }}
+					itemListPredicate={this.filterItems}
+					inputValueRenderer={()=> { return ''; }}
 					itemRenderer={(item, { handleClick, modifiers })=> {
 						return (
 							<li key={item.id || 'empty-user-create'}>
-								<a role="button" tabIndex={-1} onClick={handleClick} className={modifiers.active ? 'pt-menu-item pt-active' : 'pt-menu-item'}>
+								<button
+									type="button"
+									tabIndex={-1}
+									onClick={handleClick}
+									className={modifiers.active ? 'pt-menu-item pt-active' : 'pt-menu-item'}
+								>
 									{item.fullName && <Avatar userInitials={item.initials} userAvatar={item.avatar} width={25} />}
 									{item.name && <span>Add collaborator named: </span>}
 									<span className="autocomplete-name">{item.name || item.fullName}</span>
-								</a>
+								</button>
 							</li>
 						);
 					}}
+					closeOnSelect={true}
 					onItemSelect={this.handleSelect}
 					noResults={<MenuItem disabled text="No results" />}
 					popoverProps={{
+						isOpen: this.state.queryValue,
 						popoverClassName: 'pt-minimal user-autocomplete-popover',
 						position: Position.BOTTOM_LEFT,
 						modifiers: {

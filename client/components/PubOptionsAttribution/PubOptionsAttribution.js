@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Checkbox, Position } from '@blueprintjs/core';
+import { Checkbox, Position, Spinner } from '@blueprintjs/core';
 import { MultiSelect } from '@blueprintjs/select';
 import fuzzysearch from 'fuzzysearch';
 import Avatar from 'components/Avatar/Avatar';
 import UserAutocomplete from 'components/UserAutocomplete/UserAutocomplete';
-import PubAdminPermissions from 'components/PubAdminPermissions/PubAdminPermissions';
-import PubCollaboratorDetails from 'components/PubCollaboratorDetails/PubCollaboratorDetails';
-import PubCollabDropdownPrivacy from 'components/PubCollabDropdownPrivacy/PubCollabDropdownPrivacy';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { apiFetch } from 'utilities';
 
@@ -18,106 +15,59 @@ const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	setPubData: PropTypes.func.isRequired,
 	canManage: PropTypes.bool.isRequired,
-
-	
-
-	// onOpenCollaborators: PropTypes.func,
-	// onOpenShare: PropTypes.func,
-	// onCollaboratorAdd: PropTypes.func,
-	// onCollaboratorUpdate: PropTypes.func,
-	// onCollaboratorDelete: PropTypes.func,
-	// onPutPub: PropTypes.func,
-	// collaboratorsOnly: PropTypes.bool,
-	// mode: PropTypes.string,
-	// isLoading: PropTypes.bool,
 };
 
-// const defaultProps = {
-// 	// canManage: false,
-// 	// onOpenCollaborators: ()=>{},
-// 	// onOpenShare: ()=>{},
-// 	onCollaboratorAdd: ()=>{},
-// 	onCollaboratorUpdate: ()=>{},
-// 	onCollaboratorDelete: ()=>{},
-// 	onPutPub: ()=>{},
-// 	// collaboratorsOnly: false,
-// 	// mode: undefined,
-// 	// isLoading: false,
-// };
 
 class PubOptionsAttribution extends Component {
 	constructor(props) {
 		super(props);
-		// this.state = {
-		// 	collaborationMode: this.props.pubData.collaborationMode,
-		// 	adminPermissions: this.props.pubData.adminPermissions,
-		// 	attributions: this.props.pubData.attributions.sort((foo, bar)=> {
-		// 		if (foo.order < bar.order) { return -1; }
-		// 		if (foo.order > bar.order) { return 1; }
-		// 		if (foo.createdAt < bar.createdAt) { return 1; }
-		// 		if (foo.createdAt > bar.createdAt) { return -1; }
-		// 		return 0;
-		// 	}),
-		// };
+		this.state = {
+			/* We store pubData in state of this component so we can do immediate */
+			/* updates and save in the background without jumpy effects */
+			pubData: this.props.pubData,
+			isLoading: false,
+		};
+		this.onDragEnd = this.onDragEnd.bind(this);
 		this.getFilteredRoles = this.getFilteredRoles.bind(this);
 		this.handleAttributionAdd = this.handleAttributionAdd.bind(this);
 		this.handleAttributionUpdate = this.handleAttributionUpdate.bind(this);
-		this.handleAttributionDelete = this.handleAttributionDelete.bind(this);
-		// this.handleCollaborationModeChange = this.handleCollaborationModeChange.bind(this);
-		this.onDragEnd = this.onDragEnd.bind(this);
-
-		// this.handleCollaboratorAdd = this.handleCollaboratorAdd.bind(this);
-		// this.handleCollaboratorUpdate = this.handleCollaboratorUpdate.bind(this);
-		// this.handleCollaboratorDelete = this.handleCollaboratorDelete.bind(this);
-		// this.handlePu/tPub = this.handlePutPub.bind(this);
+		this.handleAttributionDelete = this.handleAttributionDelete.bind(this)
 	}
 
-	// componentWillReceiveProps(nextProps) {
-	// 	if (nextProps.pubData.collaborators.length !== this.props.pubData.collaborators.length) {
-	// 		this.setState({
-	// 			collaborators: nextProps.pubData.collaborators.sort((foo, bar)=> {
-	// 				if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
-	// 				if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
-	// 				if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
-	// 				if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
-	// 				return 0;
-	// 			})
-	// 		});
-	// 	}
-	// }
-
 	onDragEnd(result) {
+		const pubData = this.state.pubData;
+
 		if (!result.destination) { return null; }
 		const sourceIndex = result.source.index;
-		const sourceId = this.props.pubData.attributions[sourceIndex].id;
+		const sourceId = pubData.attributions[sourceIndex].id;
 		const destIndex = result.destination.index;
-		const destinationOrder = this.props.pubData.attributions[destIndex].order;
+		const destinationOrder = pubData.attributions[destIndex].order;
 		const direction = sourceIndex > destIndex ? -1 : 1;
 		let newOrder = 0.5;
 		if (sourceIndex === destIndex) {
-			newOrder = this.props.pubData.attributions[sourceIndex].order;
+			newOrder = pubData.attributions[sourceIndex].order;
 		} else if (result.destination.index === 0) {
 			newOrder = destinationOrder / 2;
-		} else if (result.destination.index === this.props.pubData.attributions.length - 1) {
+		} else if (result.destination.index === pubData.attributions.length - 1) {
 			newOrder = (1 + destinationOrder) / 2;
 		} else {
-			const destinationNeighborOrder = this.props.pubData.attributions[destIndex + direction].order;
+			const destinationNeighborOrder = pubData.attributions[destIndex + direction].order;
 			newOrder = (destinationOrder + destinationNeighborOrder) / 2;
 		}
 
-		const newCollaborators = this.props.pubData.attributions;
+		const newCollaborators = pubData.attributions;
 		newCollaborators[sourceIndex].order = newOrder;
 
 		this.handleAttributionUpdate({
 			pubAttributionId: sourceId,
 			order: newOrder,
-			pubId: this.props.pubData.id,
+			pubId: pubData.id,
 			communityId: this.props.communityData.id,
 		});
 
-		return this.props.setPubData({
-			...this.props.pubData,
-			attributions: this.props.pubData.attributions.map((attribution)=> {
+		const newPubData = {
+			...pubData,
+			attributions: pubData.attributions.map((attribution)=> {
 				if (attribution.id !== sourceId) {
 					return attribution;
 				}
@@ -126,16 +76,10 @@ class PubOptionsAttribution extends Component {
 					order: newOrder,
 				};
 			})
-		});
-		// return this.setState({
-		// 	collaborators: newCollaborators.sort((foo, bar)=> {
-		// 		if (foo.Collaborator.order < bar.Collaborator.order) { return -1; }
-		// 		if (foo.Collaborator.order > bar.Collaborator.order) { return 1; }
-		// 		if (foo.Collaborator.createdAt < bar.Collaborator.createdAt) { return 1; }
-		// 		if (foo.Collaborator.createdAt > bar.Collaborator.createdAt) { return -1; }
-		// 		return 0;
-		// 	})
-		// });
+		};
+
+		this.setState({ pubData: newPubData });
+		return this.props.setPubData(newPubData);
 	}
 
 	getFilteredRoles(query, existingRoles) {
@@ -176,7 +120,7 @@ class PubOptionsAttribution extends Component {
 	}
 
 	handleAttributionAdd(user) {
-		const calculatedOrder = this.props.pubData.attributions.sort((foo, bar)=> {
+		const calculatedOrder = this.state.pubData.attributions.sort((foo, bar)=> {
 			if (foo.order < bar.order) { return -1; }
 			if (foo.order > bar.order) { return 1; }
 			if (foo.createdAt < bar.createdAt) { return 1; }
@@ -190,172 +134,88 @@ class PubOptionsAttribution extends Component {
 				userId: user.id,
 				name: user.name,
 				order: calculatedOrder,
-				pubId: this.props.pubData.id,
+				pubId: this.state.pubData.id,
 				communityId: this.props.communityData.id,
 			})
 		})
 		.then((result)=> {
-			this.props.setPubData({
-				...this.props.pubData,
+			const newPubData = {
+				...this.state.pubData,
 				attributions: [
-					...this.props.pubData.attributions,
+					...this.state.pubData.attributions,
 					result,
 				]
-			});
+			};
+			this.setState({ pubData: newPubData });
+			this.props.setPubData(newPubData);
 		});
 	}
 
 	handleAttributionUpdate(updatedAttribution) {
+		const newPubData = {
+			...this.state.pubData,
+			attributions: this.state.pubData.attributions.map((attribution)=> {
+				if (attribution.id !== updatedAttribution.pubAttributionId) {
+					return attribution;
+				}
+				return {
+					...attribution,
+					...updatedAttribution,
+				};
+			})
+		};
+		this.setState({ pubData: newPubData, isLoading: true });
 		return apiFetch('/api/pubAttributions', {
 			method: 'PUT',
 			body: JSON.stringify({
 				...updatedAttribution,
-				pubId: this.props.pubData.id,
+				pubId: this.state.pubData.id,
 				communityId: this.props.communityData.id,
 			})
 		})
 		.then(()=> {
-			this.props.setPubData({
-				...this.props.pubData,
-				attributions: this.props.pubData.attributions.map((attribution)=> {
-					if (attribution.id !== updatedAttribution.pubAttributionId) {
-						return attribution;
-					}
-					return {
-						...attribution,
-						...updatedAttribution,
-					};
-				})
-			});
+			this.props.setPubData(newPubData);
+			this.setState({ isLoading: false });
 		});
 	}
 
 	handleAttributionDelete(pubAttributionId) {
+		const newPubData = {
+			...this.state.pubData,
+			attributions: this.state.pubData.attributions.filter((attribution)=> {
+				return attribution.id !== pubAttributionId;
+			})
+		};
+		this.setState({ pubData: newPubData, isLoading: true });
 		return apiFetch('/api/pubAttributions', {
 			method: 'DELETE',
 			body: JSON.stringify({
 				pubAttributionId: pubAttributionId,
-				pubId: this.props.pubData.id,
+				pubId: this.state.pubData.id,
 				communityId: this.props.communityData.id,
 			})
 		})
 		.then(()=> {
-			this.props.setPubData({
-				...this.props.pubData,
-				attributions: this.props.pubData.attributions.filter((attribution)=> {
-					return attribution.id !== pubAttributionId;
-				})
-			});
+			this.props.setPubData(newPubData);
+			this.setState({ isLoading: false });
 		});
 	}
 
-	// handleCollaborationModeChange(value) {
-	// 	this.setState({ collaborationMode: value });
-	// 	this.handlePutPub({
-	// 		collaborationMode: value,
-	// 	});
-	// }
-
-	// handleCollaboratorAdd(collaboratorObject) {
-	// 	return apiFetch('/api/collaborators', {
-	// 		method: 'POST',
-	// 		body: JSON.stringify({
-	// 			...collaboratorObject,
-	// 			communityId: this.props.communityData.id,
-	// 		})
-	// 	})
-	// 	.then((result)=> {
-	// 		this.props.setPubData({
-	// 			...this.props.pubData,
-	// 			collaborators: [
-	// 				...this.props.pubData.collaborators,
-	// 				result,
-	// 			]
-	// 		});
-	// 	});
-	// }
-
-	// handleCollaboratorUpdate(collaboratorObject) {
-	// 	return apiFetch('/api/collaborators', {
-	// 		method: 'PUT',
-	// 		body: JSON.stringify({
-	// 			...collaboratorObject,
-	// 			communityId: this.props.communityData.id,
-	// 		})
-	// 	})
-	// 	.then((result)=> {
-	// 		this.props.setPubData({
-	// 			...this.props.pubData,
-	// 			collaborators: this.props.pubData.collaborators.map((item)=> {
-	// 				if (item.Collaborator.id === result.Collaborator.id) {
-	// 					return {
-	// 						...item,
-	// 						fullName: result.fullName || item.fullName,
-	// 						Collaborator: {
-	// 							...item.Collaborator,
-	// 							...result.Collaborator,
-	// 						}
-	// 					};
-	// 				}
-	// 				return item;
-	// 			})
-	// 		});
-	// 	});
-	// }
-
-	// handleCollaboratorDelete(collaboratorObject) {
-	// 	return apiFetch('/api/collaborators', {
-	// 		method: 'DELETE',
-	// 		body: JSON.stringify({
-	// 			...collaboratorObject,
-	// 			communityId: this.props.communityData.id,
-	// 		})
-	// 	})
-	// 	.then((result)=> {
-	// 		this.props.setPubData({
-	// 			...this.props.pubData,
-	// 			collaborators: this.props.pubData.collaborators.filter((item)=> {
-	// 				return item.Collaborator.id !== result;
-	// 			})
-	// 		});
-	// 	});
-	// }
-
-	// handlePutPub(detailsObject) {
-	// 	return apiFetch('/api/pubs', {
-	// 		method: 'PUT',
-	// 		body: JSON.stringify({
-	// 			...detailsObject,
-	// 			pubId: this.props.pubData.id,
-	// 			communityId: this.props.communityData.id,
-	// 		})
-	// 	})
-	// 	.then((result)=> {
-	// 		this.props.setPubData({
-	// 			...this.props.pubData,
-	// 			...result
-	// 		});
-	// 	})
-	// 	.catch(()=> {
-	// 		// this.setState({ putPubIsLoading: false });
-	// 	});
-	// }
-
 	render() {
-		// const pubData = this.props.pubData;
-		// const numPubAdmins = this.props.pubData.attributions.reduce((prev, curr)=> {
-		// 	if (curr.Collaborator.permissions === 'manage') { return prev + 1; }
-		// 	return prev;
-		// }, 0);
+		const pubData = this.state.pubData;
 		return (
 			<div className="pub-options-attribution-component">
+				{this.state.isLoading &&
+					<div className="save-wrapper">
+						<Spinner small={true} /> Saving...
+					</div>
+				}
 				<h1>Attribution</h1>
-
 				<UserAutocomplete
 					onSelect={this.handleAttributionAdd}
 					allowCustomUser={true}
 					placeholder="Add new person..."
-					usedUserIds={this.props.pubData.attributions.map((item)=> {
+					usedUserIds={pubData.attributions.map((item)=> {
 						return item.user.id;
 					})}
 				/>
@@ -369,7 +229,7 @@ class PubOptionsAttribution extends Component {
 										ref={provided.innerRef}
 										className={`main-list ${snapshot.isDraggingOver ? 'dragging' : ''}`}
 									>
-										{this.props.pubData.attributions.sort((foo, bar)=> {
+										{pubData.attributions.sort((foo, bar)=> {
 											if (foo.order < bar.order) { return -1; }
 											if (foo.order > bar.order) { return 1; }
 											return 0;
@@ -390,7 +250,7 @@ class PubOptionsAttribution extends Component {
 																	<div className="top-content">
 																		<div className="name">
 																			<span>{attribution.user.fullName}</span>
-																			<span {...providedItem.dragHandleProps} className="pt-icon-standard pt-icon-drag-handle-horizontal" />
+																			<span key={`${attribution.id}-handle`} {...providedItem.dragHandleProps} className="pt-icon-standard pt-icon-drag-handle-horizontal" />
 																		</div>
 																		<button
 																			className="pt-button pt-minimal"
@@ -415,15 +275,19 @@ class PubOptionsAttribution extends Component {
 																			List as Author
 																		</Checkbox>
 																		<MultiSelect
-																			// items={this.getFilteredRoles(this.state.roleQueryValue, attribution.roles)}
 																			items={attribution.roles || []}
 																			itemListPredicate={this.getFilteredRoles}
 																			itemRenderer={(item, { handleClick, modifiers })=> {
 																				return (
 																					<li key={item}>
-																						<a role="button" tabIndex={-1} onClick={handleClick} className={modifiers.active ? 'pt-menu-item pt-active' : 'pt-menu-item'}>
+																						<button
+																							type="button"
+																							tabIndex={-1}
+																							onClick={handleClick}
+																							className={modifiers.active ? 'pt-menu-item pt-active' : 'pt-menu-item'}
+																						>
 																							{item}
-																						</a>
+																						</button>
 																					</li>
 																				);
 																			}}
@@ -436,7 +300,6 @@ class PubOptionsAttribution extends Component {
 																				);
 																			}}
 																			tagInputProps={{
-																				// className: 'pt-large',
 																				onRemove: (evt, roleIndex)=> {
 																					const newRoles = attribution.roles.filter((item, filterIndex)=> {
 																						return filterIndex !== roleIndex;
@@ -451,19 +314,13 @@ class PubOptionsAttribution extends Component {
 																					className: 'pt-minimal pt-intent-primary'
 																				},
 																				inputProps: {
-																					// onChange: this.handleInputChange,
 																					placeholder: 'Add roles...',
 																				},
 																			}}
-																			// itemListPredicate={this.handleInputChange}
 																			resetOnSelect={true}
 																			onItemSelect={(newRole)=> {
 																				const existingRoles = attribution.roles || [];
 																				const newRoles = [...existingRoles, newRole];
-																				// this.setState({
-																				// 	roles: newRoles,
-																				// 	roleQueryValue: '',
-																				// });
 																				this.handleAttributionUpdate({
 																					pubAttributionId: attribution.id,
 																					roles: newRoles,
@@ -501,5 +358,4 @@ class PubOptionsAttribution extends Component {
 }
 
 PubOptionsAttribution.propTypes = propTypes;
-// PubOptionsAttribution.defaultProps = defaultProps;
 export default PubOptionsAttribution;

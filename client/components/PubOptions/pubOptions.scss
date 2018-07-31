@@ -26,7 +26,7 @@
 	.right-column {
 		padding-left: 20px;
 		flex-grow: 1;
-		overflow: hidden;
+		// overflow: hidden;
 		h1 {
 			font-weight: 800;
 			font-size: 28px;
@@ -41,6 +41,8 @@
 		}
 		.save-wrapper {
 			float: right;
+			display: flex;
+			align-items: center;
 			.pt-button {
 				margin-bottom: 5px;
 			}
@@ -53,6 +55,9 @@
 				&.active {
 					opacity: 1;
 				}
+			}
+			.pt-spinner {
+				margin-right: 0.25em;
 			}
 		}
 		.pt-form-group {

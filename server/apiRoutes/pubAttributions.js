@@ -66,7 +66,6 @@ app.post('/api/pubAttributions', (req, res)=> {
 });
 
 app.put('/api/pubAttributions', (req, res)=> {
-	console.log('hih');
 	const user = req.user || {};
 
 	// Filter to only allow certain fields to be updated
