@@ -203,6 +203,14 @@ class PubOptionsSharing extends Component {
 		managers.forEach((manager)=> {
 			managerIds[manager.user.id] = true;
 		});
+		const defaultPublicVersionId = pubData.versions.sort((foo, bar)=> {
+			if (foo.createdAt > bar.createdAt) { return -1; }
+			if (foo.createdAt < bar.createdAt) { return 1; }
+			return 0;
+		}).reduce((prev, curr)=> {
+			if (!prev && curr.isPublic) { return curr.id; }
+			return prev;
+		}, undefined);
 		return (
 			<div className="pub-options-sharing-component">
 				<div>
@@ -308,7 +316,7 @@ class PubOptionsSharing extends Component {
 								}
 							</div>
 						</div>
-						{this.state.activePermissionsVersion !== 'draft' &&
+						{this.state.activePermissionsVersion !== 'draft' && pubData.draftPermissions !== 'publicEdit' &&
 							<div className="access-preview">
 								{(pubData.isCommunityAdminManaged || pubData.communityAdminDraftPermissions !== 'none') &&
 									<span className="pt-icon-standard pt-icon-people" />
@@ -330,7 +338,9 @@ class PubOptionsSharing extends Component {
 										<div className="name">
 											Managers
 											<span className="managers-preview">
-												<span className="pt-icon-standard pt-icon-people" />
+												{pubData.isCommunityAdminManaged &&
+													<span className="pt-icon-standard pt-icon-people" />
+												}
 												{managers.slice(0, 2).map((manager)=> {
 													return <Avatar width={20} userInitials={manager.user.initials} userAvatar={manager.user.avatar} />;
 												})}
@@ -464,6 +474,9 @@ class PubOptionsSharing extends Component {
 										}
 										{!isActive &&
 											<span>
+												{version.id === defaultPublicVersionId &&
+													<span>(Default Public Version) </span>
+												}
 												{!version.isPublic &&
 													<span className="pt-icon-standard pt-icon-lock2" />
 												}
@@ -472,7 +485,7 @@ class PubOptionsSharing extends Component {
 										}
 									</div>
 								</div>
-								{!isActive &&
+								{!isActive && !version.isPublic &&
 									<div className="access-preview">
 										{(pubData.isCommunityAdminManaged || version.isCommunityAdminShared) &&
 											<span className="pt-icon-standard pt-icon-people" />
@@ -494,6 +507,9 @@ class PubOptionsSharing extends Component {
 												<div className="name">
 													Managers
 													<span className="managers-preview">
+														{version.isCommunityAdminShared &&
+															<span className="pt-icon-standard pt-icon-people" />
+														}
 														<span className="pt-icon-standard pt-icon-people" />
 														{managers.slice(0, 2).map((manager)=> {
 															return <Avatar width={20} userInitials={manager.user.initials} userAvatar={manager.user.avatar} />;

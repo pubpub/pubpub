@@ -169,6 +169,9 @@ const PubHeader = function(props) {
 											props.setOptionsMode('versions');
 										}}
 									>
+										{!activeVersion.isPublic && 
+											<span className="pt-icon-standard pt-icon-lock2" />
+										}
 										<span>{sortedVersionsList[sortedVersionsList.length - 1].id !== activeVersion.id ? 'Updated ' : ''}{dateFormat(pubData.activeVersion.createdAt, 'mmm dd, yyyy')}</span>
 									</a>
 								}

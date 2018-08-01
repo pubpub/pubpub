@@ -351,8 +351,10 @@ const Tag = sequelize.define('Tag', {
 	id: id,
 	title: { type: Sequelize.TEXT },
 	isRestricted: { type: Sequelize.BOOLEAN }, /* Restricted tags can only be set by Community Admins */
+	isPrivate: { type: Sequelize.BOOLEAN }, /* Only visible to community admins */
 	/* Set by Associations */
-	communityId: { type: Sequelize.UUID },
+	pageId: { type: Sequelize.UUID }, /* Used to link a tag to a specific page */
+	communityId: { type: Sequelize.UUID, allowNull: false },
 });
 
 const PubTag = sequelize.define('PubTag', {
