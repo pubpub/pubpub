@@ -347,6 +347,22 @@ const PubAttribution = sequelize.define('PubAttribution', {
 	pubId: { type: Sequelize.UUID, allowNull: false },
 });
 
+const Tag = sequelize.define('Tag', {
+	id: id,
+	title: { type: Sequelize.TEXT },
+	isRestricted: { type: Sequelize.BOOLEAN }, /* Restricted tags can only be set by Community Admins */
+	/* Set by Associations */
+	communityId: { type: Sequelize.UUID },
+});
+
+const PubTag = sequelize.define('PubTag', {
+	id: id,
+	// Will we want order here?
+	/* Set by Associations */
+	pubId: { type: Sequelize.UUID },
+	tagId: { type: Sequelize.UUID },
+});
+
 /* Communities can have many Admins. Users can admin many communities. */
 User.belongsToMany(Community, { onDelete: 'CASCADE', as: 'communities', through: 'CommunityAdmin', foreignKey: 'userId' });
 Community.belongsToMany(User, { onDelete: 'CASCADE', as: 'admins', through: 'CommunityAdmin', foreignKey: 'communityId' });
@@ -361,7 +377,7 @@ Collaborator.belongsTo(User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'use
 
 
 
-/* Pubs have many PubAttributions. PubAttributions are associated with a single user*/
+/* Pubs have many PubAttributions. PubAttributions are associated with a single user */
 Pub.hasMany(PubAttribution, { onDelete: 'CASCADE', as: 'attributions', foreignKey: 'pubId' });
 PubAttribution.belongsTo(User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' });
 /* Pubs have many VersionPermissions. */
@@ -371,6 +387,15 @@ VersionPermission.belongsTo(User, { onDelete: 'CASCADE', as: 'user', foreignKey:
 Pub.hasMany(PubManager, { onDelete: 'CASCADE', as: 'managers', foreignKey: 'pubId' });
 PubManager.belongsTo(User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' });
 
+
+
+/* Communities have many Tags */
+Community.hasMany(Tag, { onDelete: 'CASCADE', as: 'tags', foreignKey: 'communityId' });
+/* Tags can belong to many Pubs. */
+// Tag.belongsToMany(Pub, { onDelete: 'CASCADE', as: 'pubs', through: 'PubTag', foreignKey: 'tagId' });
+/* Pubs have many PubTags. */
+Pub.hasMany(PubTag, { onDelete: 'CASCADE', as: 'pubTags', foreignKey: 'pubId' });
+PubTag.belongsTo(Tag, { onDelete: 'CASCADE', as: 'tag', foreignKey: 'tagId' });
 
 
 /* Communities have many Pubs. Pubs belong to a single Community */
@@ -416,6 +441,8 @@ const db = {
 	PubManager: PubManager,
 	VersionPermission: VersionPermission,
 	PubAttribution: PubAttribution,
+	Tag: Tag,
+	PubTag: PubTag,
 };
 
 db.sequelize = sequelize;

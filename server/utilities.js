@@ -7,7 +7,7 @@ import Cite from 'citation-js';
 import builder from 'xmlbuilder';
 import request from 'request-promise';
 import amqplib from 'amqplib';
-import { Community, Collection, User, Pub, Version, PubAttribution } from './models';
+import { Community, Collection, User, Pub, Version, PubAttribution, Tag } from './models';
 import { getNotificationsCount } from './notifications';
 
 const doiSubmissionUrl = process.env.DOI_SUBMISSION_URL;
@@ -97,6 +97,10 @@ export const getInitialData = (req)=> {
 				as: 'admins',
 				through: { attributes: [] },
 				attributes: ['id', 'slug', 'fullName', 'initials', 'avatar'],
+			},
+			{
+				model: Tag,
+				as: 'tags',
 			}
 		],
 	})

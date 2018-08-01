@@ -1,6 +1,6 @@
 import Promise from 'bluebird';
 import validator from 'validator';
-import { User, Collection, Pub, Collaborator, Discussion, CommunityAdmin, Community, Version, PubManager, PubAttribution, VersionPermission } from './models';
+import { User, Collection, Pub, Collaborator, Discussion, CommunityAdmin, Community, Version, PubManager, PubAttribution, VersionPermission, Tag, PubTag } from './models';
 import { generateCitationHTML } from './utilities';
 
 export const findPub = (req, initialData, isDraft)=> {
@@ -38,6 +38,12 @@ export const findPub = (req, initialData, isDraft)=> {
 				as: 'versionPermissions',
 				required: false,
 				include: [{ model: User, as: 'user', attributes: ['id', 'firstName', 'lastName', 'fullName', 'avatar', 'slug', 'initials', 'title'] }],
+			},
+			{
+				model: PubTag,
+				as: 'pubTags',
+				required: false,
+				include: [{ model: Tag, as: 'tag' }],
 			},
 			// {
 			// 	model: User,
