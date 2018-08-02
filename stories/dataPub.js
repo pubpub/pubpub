@@ -21,26 +21,76 @@ export default {
         }
     ],
     "isCommunityAdminManaged": true,
-    "communityAdminDraftPermissions": "none",
+    "communityAdminDraftPermissions": "view",
     "draftPermissions": "private",
     "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
     "createdAt": "2018-02-06T16:35:39.526Z",
-    "updatedAt": "2018-07-30T17:47:05.249Z",
+    "updatedAt": "2018-08-01T14:23:40.018Z",
+    "collections": [
+        {
+            "id": "af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b",
+            "title": "Essays",
+            "slug": "essays",
+            "isPublic": true,
+            "isOpenPublish": true
+        },
+        {
+            "id": "0fd7f42c-d8a1-4275-bf2b-cd641416959c",
+            "title": "Home",
+            "slug": "",
+            "isPublic": true,
+            "isOpenPublish": false
+        }
+    ],
+    "versions": [
+        {
+            "createdAt": "2018-07-13T23:24:50.401Z",
+            "id": "427a3c55-993a-4083-918c-85c682bedccf",
+            "description": null,
+            "isPublic": false,
+            "isCommunityAdminShared": true,
+            "viewHash": "55rdhiqq"
+        },
+        {
+            "createdAt": "2018-07-13T23:22:11.709Z",
+            "id": "96aaaa92-e238-4be2-b490-f929eb25c0ea",
+            "description": null,
+            "isPublic": true,
+            "isCommunityAdminShared": null,
+            "viewHash": "1nk4lhx6"
+        },
+        {
+            "createdAt": "2018-04-03T15:48:10.482Z",
+            "id": "468e94cb-a894-40b6-9a78-78ab7bda5798",
+            "description": null,
+            "isPublic": false,
+            "isCommunityAdminShared": null,
+            "viewHash": "5283fib1"
+        },
+        {
+            "createdAt": "2018-02-06T16:37:59.356Z",
+            "id": "39b9a9b9-b115-480b-9e0b-678b547f11a6",
+            "description": null,
+            "isPublic": false,
+            "isCommunityAdminShared": null,
+            "viewHash": "hrraitud"
+        }
+    ],
     "managers": [
         {
-            "id": "c5aeb56a-1737-4aa8-bcd6-b066ea581743",
-            "userId": "10d3fadd-8b76-4c3c-93ac-dcf38d3eec2e",
+            "id": "d9df25a5-fd07-4523-a859-437e81a56043",
+            "userId": "e8852755-fd3a-4fd5-aceb-cb6ea52b50e5",
             "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
-            "createdAt": "2018-07-30T17:10:52.327Z",
-            "updatedAt": "2018-07-30T17:10:52.327Z",
+            "createdAt": "2018-08-01T14:22:32.244Z",
+            "updatedAt": "2018-08-01T14:22:32.244Z",
             "user": {
-                "id": "10d3fadd-8b76-4c3c-93ac-dcf38d3eec2e",
-                "firstName": "Darrell",
-                "lastName": "Glover",
-                "fullName": "Darrell Glover",
-                "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/axel/128.jpg",
-                "slug": "darrell-glover7796",
-                "initials": "DG",
+                "id": "e8852755-fd3a-4fd5-aceb-cb6ea52b50e5",
+                "firstName": "Lavina",
+                "lastName": "Medhurst",
+                "fullName": "Lavina Medhurst",
+                "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/ehsandiary/128.jpg",
+                "slug": "lavina-medhurst2023",
+                "initials": "LM",
                 "title": null
             }
         },
@@ -64,17 +114,69 @@ export default {
     ],
     "attributions": [
         {
+            "id": "f6d8dac6-73f2-41a3-9bd4-2bd7779c7d62",
+            "name": null,
+            "avatar": null,
+            "title": null,
+            "order": 0.0030517578125,
+            "isAuthor": false,
+            "roles": null,
+            "userId": "70a75380-177d-4470-9e31-f14822ee9dcc",
+            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
+            "createdAt": "2018-07-31T14:36:47.944Z",
+            "updatedAt": "2018-07-31T14:36:47.944Z",
+            "user": {
+                "id": "70a75380-177d-4470-9e31-f14822ee9dcc",
+                "firstName": "Emmett",
+                "lastName": "MacGyver",
+                "fullName": "Emmett MacGyver",
+                "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/ma_tiax/128.jpg",
+                "slug": "emmett-macgyver57",
+                "initials": "EM",
+                "title": null
+            }
+        },
+        {
+            "id": "ab2e1538-6494-4ee9-97b5-2e90301bb91f",
+            "name": null,
+            "avatar": null,
+            "title": null,
+            "order": 0.00457763671875,
+            "isAuthor": false,
+            "roles": null,
+            "userId": "3030f09e-f784-41f2-9691-49345995390c",
+            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
+            "createdAt": "2018-07-31T14:36:51.898Z",
+            "updatedAt": "2018-08-01T14:14:39.442Z",
+            "user": {
+                "id": "3030f09e-f784-41f2-9691-49345995390c",
+                "firstName": "Emmalee",
+                "lastName": "Trantow",
+                "fullName": "Emmalee Trantow",
+                "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/jpenico/128.jpg",
+                "slug": "emmalee-trantow7530",
+                "initials": "ET",
+                "title": null
+            }
+        },
+        {
             "id": "542c0a5c-b43a-455e-a865-8a665ed920e0",
             "name": null,
             "avatar": null,
             "title": null,
-            "order": 0.0130615234375,
+            "order": 0.006103515625,
             "isAuthor": true,
-            "roles": null,
+            "roles": [
+                "Data Curation",
+                "Formal Analysis",
+                "Investigation",
+                "Funding Acquisition",
+                "Illustrator"
+            ],
             "userId": "81494962-ca4b-4e88-a96a-667a515ef79b",
             "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
             "createdAt": "2018-07-31T12:57:38.970Z",
-            "updatedAt": "2018-07-31T13:22:53.089Z",
+            "updatedAt": "2018-07-31T14:19:41.351Z",
             "user": {
                 "id": "81494962-ca4b-4e88-a96a-667a515ef79b",
                 "firstName": "Hope",
@@ -93,11 +195,13 @@ export default {
             "title": null,
             "order": 0.01220703125,
             "isAuthor": true,
-            "roles": null,
+            "roles": [
+                "Illustrator"
+            ],
             "userId": "b914f233-653e-48a6-9967-03c3488db2a4",
             "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
             "createdAt": "2018-07-31T12:57:41.160Z",
-            "updatedAt": "2018-07-31T13:21:38.821Z",
+            "updatedAt": "2018-07-31T13:50:44.330Z",
             "user": {
                 "id": "b914f233-653e-48a6-9967-03c3488db2a4",
                 "firstName": "Heather",
@@ -121,14 +225,12 @@ export default {
                 "Conceptualization",
                 "Data Curation",
                 "Funding Acquisition",
-                "Investigation",
-                "Resources",
-                "oka"
+                "Investigation"
             ],
             "userId": "28935693-1b62-473b-9f56-53f9d345f769",
             "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
             "createdAt": "2018-07-31T13:16:34.394Z",
-            "updatedAt": "2018-07-31T13:21:30.805Z",
+            "updatedAt": "2018-07-31T13:26:26.003Z",
             "user": {
                 "id": "28935693-1b62-473b-9f56-53f9d345f769",
                 "firstName": "Julie",
@@ -146,12 +248,12 @@ export default {
             "avatar": null,
             "title": null,
             "order": 0.015625,
-            "isAuthor": false,
+            "isAuthor": true,
             "roles": null,
             "userId": null,
             "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
             "createdAt": "2018-07-31T12:57:49.533Z",
-            "updatedAt": "2018-07-31T12:57:49.533Z",
+            "updatedAt": "2018-07-31T14:19:27.983Z",
             "user": {
                 "id": "f24f25a0-cdab-4dee-9ff3-8fc3321f7bb1",
                 "initials": "F",
@@ -187,63 +289,6 @@ export default {
     ],
     "versionPermissions": [
         {
-            "id": "9961e618-e15d-4749-a36c-c327fd788fd4",
-            "permissions": "view",
-            "userId": "63c9d1b8-ecb4-48cb-9946-eb2dac0e3cdb",
-            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
-            "versionId": null,
-            "createdAt": "2018-07-30T13:38:36.963Z",
-            "updatedAt": "2018-07-30T13:38:36.963Z",
-            "user": {
-                "id": "63c9d1b8-ecb4-48cb-9946-eb2dac0e3cdb",
-                "firstName": "Mallory",
-                "lastName": "Ankunding",
-                "fullName": "Mallory Ankunding",
-                "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/coreyweb/128.jpg",
-                "slug": "mallory-ankunding2109",
-                "initials": "MA",
-                "title": null
-            }
-        },
-        {
-            "id": "cba7c42f-a9c0-44f3-93c2-cd83465b80c9",
-            "permissions": "view",
-            "userId": "b3fd3ff3-0c29-46cd-9d0b-f4d4df90c098",
-            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
-            "versionId": null,
-            "createdAt": "2018-07-30T13:41:32.668Z",
-            "updatedAt": "2018-07-30T13:41:32.668Z",
-            "user": {
-                "id": "b3fd3ff3-0c29-46cd-9d0b-f4d4df90c098",
-                "firstName": "Paolo",
-                "lastName": "Hessel",
-                "fullName": "Paolo Hessel",
-                "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/carlfairclough/128.jpg",
-                "slug": "paolo-hessel2067",
-                "initials": "PH",
-                "title": null
-            }
-        },
-        {
-            "id": "61dfe24b-5db3-4e39-ad68-0b65f1a54688",
-            "permissions": "view",
-            "userId": "088884b7-0a97-4ad8-94d6-4c33d131f0bf",
-            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
-            "versionId": null,
-            "createdAt": "2018-07-30T13:43:08.971Z",
-            "updatedAt": "2018-07-30T13:43:08.971Z",
-            "user": {
-                "id": "088884b7-0a97-4ad8-94d6-4c33d131f0bf",
-                "firstName": "Lorena",
-                "lastName": "Boehm",
-                "fullName": "Lorena Boehm",
-                "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/xiel/128.jpg",
-                "slug": "lorena-boehm3062",
-                "initials": "LB",
-                "title": null
-            }
-        },
-        {
             "id": "6fd51ee3-0e15-4ce9-83fd-9341c2ba3d2f",
             "permissions": "view",
             "userId": "b914f233-653e-48a6-9967-03c3488db2a4",
@@ -259,25 +304,6 @@ export default {
                 "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/reabo101/128.jpg",
                 "slug": "heather-rolfson1931",
                 "initials": "HR",
-                "title": null
-            }
-        },
-        {
-            "id": "91e2a083-441c-4f28-ade1-2ee4e264b984",
-            "permissions": "view",
-            "userId": "6f17ab71-ac5a-4280-b4df-d4e663055795",
-            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
-            "versionId": null,
-            "createdAt": "2018-07-30T14:29:22.645Z",
-            "updatedAt": "2018-07-30T14:29:22.645Z",
-            "user": {
-                "id": "6f17ab71-ac5a-4280-b4df-d4e663055795",
-                "firstName": "Lew",
-                "lastName": "Jones",
-                "fullName": "Lew Jones",
-                "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/alevizio/128.jpg",
-                "slug": "lew-jones5765",
-                "initials": "LJ",
                 "title": null
             }
         },
@@ -299,49 +325,82 @@ export default {
                 "initials": "CG",
                 "title": "EAPS 2020. Interested in studying oceanography and spelunking."
             }
-        }
-    ],
-    "collections": [
-        {
-            "id": "0fd7f42c-d8a1-4275-bf2b-cd641416959c",
-            "title": "Home",
-            "slug": "",
-            "isPublic": true,
-            "isOpenPublish": false
-        }
-    ],
-    "versions": [
-        {
-            "createdAt": "2018-07-13T23:24:50.401Z",
-            "id": "427a3c55-993a-4083-918c-85c682bedccf",
-            "description": null,
-            "isPublic": true,
-            "isCommunityAdminShared": true,
-            "viewHash": "55rdhiqq"
         },
         {
-            "createdAt": "2018-07-13T23:22:11.709Z",
-            "id": "96aaaa92-e238-4be2-b490-f929eb25c0ea",
-            "description": null,
-            "isPublic": false,
-            "isCommunityAdminShared": null,
-            "viewHash": "1nk4lhx6"
+            "id": "cba7c42f-a9c0-44f3-93c2-cd83465b80c9",
+            "permissions": "edit",
+            "userId": "b3fd3ff3-0c29-46cd-9d0b-f4d4df90c098",
+            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
+            "versionId": null,
+            "createdAt": "2018-07-30T13:41:32.668Z",
+            "updatedAt": "2018-07-31T14:59:19.313Z",
+            "user": {
+                "id": "b3fd3ff3-0c29-46cd-9d0b-f4d4df90c098",
+                "firstName": "Paolo",
+                "lastName": "Hessel",
+                "fullName": "Paolo Hessel",
+                "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/carlfairclough/128.jpg",
+                "slug": "paolo-hessel2067",
+                "initials": "PH",
+                "title": null
+            }
         },
         {
-            "createdAt": "2018-04-03T15:48:10.482Z",
-            "id": "468e94cb-a894-40b6-9a78-78ab7bda5798",
-            "description": null,
-            "isPublic": true,
-            "isCommunityAdminShared": null,
-            "viewHash": "5283fib1"
+            "id": "61dfe24b-5db3-4e39-ad68-0b65f1a54688",
+            "permissions": "edit",
+            "userId": "088884b7-0a97-4ad8-94d6-4c33d131f0bf",
+            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
+            "versionId": null,
+            "createdAt": "2018-07-30T13:43:08.971Z",
+            "updatedAt": "2018-07-31T15:01:02.002Z",
+            "user": {
+                "id": "088884b7-0a97-4ad8-94d6-4c33d131f0bf",
+                "firstName": "Lorena",
+                "lastName": "Boehm",
+                "fullName": "Lorena Boehm",
+                "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/xiel/128.jpg",
+                "slug": "lorena-boehm3062",
+                "initials": "LB",
+                "title": null
+            }
         },
         {
-            "createdAt": "2018-02-06T16:37:59.356Z",
-            "id": "39b9a9b9-b115-480b-9e0b-678b547f11a6",
-            "description": null,
-            "isPublic": true,
-            "isCommunityAdminShared": null,
-            "viewHash": "hrraitud"
+            "id": "9961e618-e15d-4749-a36c-c327fd788fd4",
+            "permissions": "edit",
+            "userId": "63c9d1b8-ecb4-48cb-9946-eb2dac0e3cdb",
+            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
+            "versionId": null,
+            "createdAt": "2018-07-30T13:38:36.963Z",
+            "updatedAt": "2018-07-31T15:01:05.839Z",
+            "user": {
+                "id": "63c9d1b8-ecb4-48cb-9946-eb2dac0e3cdb",
+                "firstName": "Mallory",
+                "lastName": "Ankunding",
+                "fullName": "Mallory Ankunding",
+                "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/coreyweb/128.jpg",
+                "slug": "mallory-ankunding2109",
+                "initials": "MA",
+                "title": null
+            }
+        },
+        {
+            "id": "98303950-7a37-47b0-90bb-97b1c963990f",
+            "permissions": "view",
+            "userId": "6f17ab71-ac5a-4280-b4df-d4e663055795",
+            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
+            "versionId": "96aaaa92-e238-4be2-b490-f929eb25c0ea",
+            "createdAt": "2018-08-01T14:31:49.267Z",
+            "updatedAt": "2018-08-01T14:31:49.267Z",
+            "user": {
+                "id": "6f17ab71-ac5a-4280-b4df-d4e663055795",
+                "firstName": "Lew",
+                "lastName": "Jones",
+                "fullName": "Lew Jones",
+                "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/alevizio/128.jpg",
+                "slug": "lew-jones5765",
+                "initials": "LJ",
+                "title": null
+            }
         }
     ],
     "discussions": [
@@ -658,6 +717,70 @@ export default {
                 "slug": "coty-greenfelder8042",
                 "initials": "CG",
                 "title": "EAPS 2020. Interested in studying oceanography and spelunking."
+            }
+        }
+    ],
+    "pubTags": [
+        {
+            "id": "e28750e8-a285-4834-8d6f-7d514125eaa2",
+            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
+            "tagId": "fb13b7ae-8e7f-4e64-a755-5097942336c6",
+            "createdAt": "2018-08-02T16:14:32.104Z",
+            "updatedAt": "2018-08-02T16:14:32.104Z",
+            "tag": {
+                "id": "fb13b7ae-8e7f-4e64-a755-5097942336c6",
+                "title": "Editor's Pick",
+                "isRestricted": true,
+                "isPublic": null,
+                "pageId": null,
+                "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+                "createdAt": "2018-08-02T13:45:01.558Z",
+                "updatedAt": "2018-08-02T16:48:05.649Z",
+                "page": null
+            }
+        },
+        {
+            "id": "8780b525-56b3-4386-8412-d20630369e1d",
+            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
+            "tagId": "315c8a93-7bcc-453b-a42e-e5c82aeb5271",
+            "createdAt": "2018-08-02T12:05:07.279Z",
+            "updatedAt": "2018-08-02T12:05:07.279Z",
+            "tag": {
+                "id": "315c8a93-7bcc-453b-a42e-e5c82aeb5271",
+                "title": "Issue 3!",
+                "isRestricted": true,
+                "isPublic": true,
+                "pageId": "5b763da8-d0c7-4d90-8e56-9d1ac0e49a5a",
+                "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+                "createdAt": "2018-08-02T12:05:07.254Z",
+                "updatedAt": "2018-08-02T16:24:40.875Z",
+                "page": {
+                    "id": "5b763da8-d0c7-4d90-8e56-9d1ac0e49a5a",
+                    "title": "About Frankenbook",
+                    "slug": "about"
+                }
+            }
+        },
+        {
+            "id": "d0f73854-125f-4ca4-9e05-b718175115c4",
+            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
+            "tagId": "bb3cd79a-bc4d-4721-8755-0a3bf5457cea",
+            "createdAt": "2018-08-02T16:16:39.954Z",
+            "updatedAt": "2018-08-02T16:16:39.954Z",
+            "tag": {
+                "id": "bb3cd79a-bc4d-4721-8755-0a3bf5457cea",
+                "title": "Neuroscience",
+                "isRestricted": true,
+                "isPublic": null,
+                "pageId": "5b763da8-d0c7-4d90-8e56-9d1ac0e49a5a",
+                "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+                "createdAt": "2018-08-02T13:45:33.744Z",
+                "updatedAt": "2018-08-02T16:06:29.154Z",
+                "page": {
+                    "id": "5b763da8-d0c7-4d90-8e56-9d1ac0e49a5a",
+                    "title": "About Frankenbook",
+                    "slug": "about"
+                }
             }
         }
     ],
@@ -1777,12 +1900,12 @@ export default {
                 }
             ]
         },
-        "isPublic": true,
+        "isPublic": false,
         "isCommunityAdminShared": true,
         "viewHash": "55rdhiqq",
         "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
         "createdAt": "2018-07-13T23:24:50.401Z",
-        "updatedAt": "2018-07-30T13:55:55.715Z"
+        "updatedAt": "2018-07-31T16:18:13.304Z"
     },
     "isManager": true,
     "isDraftEditor": false,
@@ -1790,16 +1913,16 @@ export default {
     "isVersionViewer": true,
     "citationData": {
         "pub": {
-            "apa": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"3ecac2f5-8065-4bde-aa0e-c1ab222fd673\" class=\"csl-entry\">Rolfson, H., Hessel, H., &#38; E. Robinson, C. (2018). Introduction. <i>Frankenbook</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h</div></div>",
-            "harvard": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"3ecac2f5-8065-4bde-aa0e-c1ab222fd673\" class=\"csl-entry\">Rolfson, H., Hessel, H., &#38; E. Robinson, C. (2018). Introduction. <i>Frankenbook</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h</div></div>",
-            "vancouver": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"3ecac2f5-8065-4bde-aa0e-c1ab222fd673\" class=\"csl-entry\">    <div class=\"csl-left-margin\">1. </div><div class=\"csl-right-inline\">Rolfson H, Hessel H, E. Robinson C. Introduction. Frankenbook [Internet]. 2018 Jul 30; Available from: https://frankdev.pubpub.org/pub/zw3syn5h</div>  </div></div>",
-            "bibtex": "<div class=\"csl-bib-body><div class=\"csl-entry>@article{Rolfson2018Introduction,<ul style=\"list-style-type:none\"><li>journal={Frankenbook},</li><li>note={https://frankdev.pubpub.org/pub/zw3syn5h},</li><li>title={{Introduction}},</li><li>url={https://frankdev.pubpub.org/pub/zw3syn5h},</li><li>author={Rolfson, Heather and Hessel, Hope and E. Robinson, Charles},</li><li>date={2018-07-30},</li><li>year=2018,</li><li>month=7,</li><li>day=30,</li></ul>}</div></div>"
+            "apa": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"3ecac2f5-8065-4bde-aa0e-c1ab222fd673\" class=\"csl-entry\">Hessel, H., Rolfson, H., G, F., &#38; E. Robinson, C. (2018). Introduction. <i>Frankenbook</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h</div></div>",
+            "harvard": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"3ecac2f5-8065-4bde-aa0e-c1ab222fd673\" class=\"csl-entry\">Hessel, H., Rolfson, H., G, F., &#38; E. Robinson, C. (2018). Introduction. <i>Frankenbook</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h</div></div>",
+            "vancouver": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"3ecac2f5-8065-4bde-aa0e-c1ab222fd673\" class=\"csl-entry\">    <div class=\"csl-left-margin\">1. </div><div class=\"csl-right-inline\">Hessel H, Rolfson H, G F, E. Robinson C. Introduction. Frankenbook [Internet]. 2018 Aug 1; Available from: https://frankdev.pubpub.org/pub/zw3syn5h</div>  </div></div>",
+            "bibtex": "<div class=\"csl-bib-body><div class=\"csl-entry>@article{Hessel2018Introduction,<ul style=\"list-style-type:none\"><li>journal={Frankenbook},</li><li>note={https://frankdev.pubpub.org/pub/zw3syn5h},</li><li>title={{Introduction}},</li><li>url={https://frankdev.pubpub.org/pub/zw3syn5h},</li><li>author={Hessel, Hope and Rolfson, Heather and G, Frank and E. Robinson, Charles},</li><li>date={2018-08-01},</li><li>year=2018,</li><li>month=8,</li><li>day=1,</li></ul>}</div></div>"
         },
         "version": {
-            "apa": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"96aaaa92-e238-4be2-b490-f929eb25c0ea\" class=\"csl-entry\">Rolfson, H., Hessel, H., &#38; E. Robinson, C. (n.d.). Introduction. <i>Frankenbook</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h?version=96aaaa92-e238-4be2-b490-f929eb25c0ea</div></div>",
-            "harvard": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"96aaaa92-e238-4be2-b490-f929eb25c0ea\" class=\"csl-entry\">Rolfson, H., Hessel, H., &#38; E. Robinson, C. (n.d.). Introduction. <i>Frankenbook</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h?version=96aaaa92-e238-4be2-b490-f929eb25c0ea</div></div>",
-            "vancouver": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"96aaaa92-e238-4be2-b490-f929eb25c0ea\" class=\"csl-entry\">    <div class=\"csl-left-margin\">1. </div><div class=\"csl-right-inline\">Rolfson H, Hessel H, E. Robinson C. Introduction. Frankenbook [Internet]. Available from: https://frankdev.pubpub.org/pub/zw3syn5h?version=96aaaa92-e238-4be2-b490-f929eb25c0ea</div>  </div></div>",
-            "bibtex": "<div class=\"csl-bib-body><div class=\"csl-entry>@article{RolfsonIntroduction,<ul style=\"list-style-type:none\"><li>journal={Frankenbook},</li><li>note={https://frankdev.pubpub.org/pub/zw3syn5h?version=96aaaa92-e238-4be2-b490-f929eb25c0ea},</li><li>title={{Introduction}},</li><li>url={https://frankdev.pubpub.org/pub/zw3syn5h?version=96aaaa92-e238-4be2-b490-f929eb25c0ea},</li><li>author={Rolfson, Heather and Hessel, Hope and E. Robinson, Charles},</li></ul>}</div></div>"
+            "apa": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"427a3c55-993a-4083-918c-85c682bedccf\" class=\"csl-entry\">Hessel, H., Rolfson, H., G, F., &#38; E. Robinson, C. (2018). Introduction. <i>Frankenbook</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h?version=427a3c55-993a-4083-918c-85c682bedccf</div></div>",
+            "harvard": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"427a3c55-993a-4083-918c-85c682bedccf\" class=\"csl-entry\">Hessel, H., Rolfson, H., G, F., &#38; E. Robinson, C. (2018). Introduction. <i>Frankenbook</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h?version=427a3c55-993a-4083-918c-85c682bedccf</div></div>",
+            "vancouver": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"427a3c55-993a-4083-918c-85c682bedccf\" class=\"csl-entry\">    <div class=\"csl-left-margin\">1. </div><div class=\"csl-right-inline\">Hessel H, Rolfson H, G F, E. Robinson C. Introduction. Frankenbook [Internet]. 2018 Jul 31; Available from: https://frankdev.pubpub.org/pub/zw3syn5h?version=427a3c55-993a-4083-918c-85c682bedccf</div>  </div></div>",
+            "bibtex": "<div class=\"csl-bib-body><div class=\"csl-entry>@article{Hessel2018Introduction,<ul style=\"list-style-type:none\"><li>journal={Frankenbook},</li><li>note={https://frankdev.pubpub.org/pub/zw3syn5h?version=427a3c55-993a-4083-918c-85c682bedccf},</li><li>title={{Introduction}},</li><li>url={https://frankdev.pubpub.org/pub/zw3syn5h?version=427a3c55-993a-4083-918c-85c682bedccf},</li><li>author={Hessel, Hope and Rolfson, Heather and G, Frank and E. Robinson, Charles},</li><li>date={2018-07-31},</li><li>year=2018,</li><li>month=7,</li><li>day=31,</li></ul>}</div></div>"
         }
     },
     "isDraft": false,

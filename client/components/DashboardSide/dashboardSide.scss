@@ -1,22 +1,26 @@
 .dashboard-side-component {
-	background-color: #F9F9F9;
-	border-right: 1px solid #ECECEC;
-	width: 200px;
-	height: 100%;
-	overflow: hidden;
+	// border-right: 1px solid #ECECEC;
+	// width: 200px;
+	// height: 100%;
+	// overflow: hidden;
 
 	.content {
-		width: 250px;
+		// width: 250px;
 		// padding: 1em calc(1em + 50px) 1em 1em;
-		padding: 1em calc(1em + 50px) 1em 0em;
-		height: 100%;
-		overflow-y: scroll;
-		overflow-x: hidden;
+		// padding: 1em calc(1em + 50px) 1em 0em;
+		// height: 100%;
+		// overflow-y: scroll;
+		// overflow-x: hidden;
 	}
 	ul {
 		background-color: inherit;
 		min-width: 0px;
 		padding: 0px;
+		background-color: #F4F4F4;
+		margin-bottom: 1em;
+		padding: 0.5em;
+		border: 1px solid #CCC;
+		border-radius: 2px;
 	}
 	.empty {
 		text-align: center;
@@ -30,5 +34,10 @@
 	}
 	.pt-menu-header {
 		border-top: 0px;
+		background-color: #dcdcdc;
+		margin: -0.5em;
+		padding: 0.5em 1em;
+		margin-bottom: 0.5em;
 	}
+
 }

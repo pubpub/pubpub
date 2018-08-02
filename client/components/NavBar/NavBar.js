@@ -54,6 +54,10 @@ const NavBar = function(props) {
 										popoverClassName="pt-minimal nav-bar-popover"
 										inheritDarkTheme={false}
 										position={Position.BOTTOM_LEFT}
+										modifiers={{
+											preventOverflow: { enabled: false },
+											hide: { enabled: false },
+										}}
 										interactionKind={PopoverInteractionKind.HOVER}
 										key={`dropdown-${item.title}`}
 									>

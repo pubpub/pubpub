@@ -1,25 +1,25 @@
 #dashboard-container {
-	$sidePanelWidth: 200px; // 200 is width of side panel
-	$navHeight: 56px; // 56px is height of nav
-	.page-content {
-		background-color: #F9F9F9;
-		min-height: calc(100vh - #{$navHeight});	
-	}
-	.no-margin {
-		margin-top: 0px;
-		margin-bottom: 0px;
-	}
-	.side-panel {
-		position: fixed;
-		height: calc(100vh - #{$navHeight});
-	}
-	.content-panel {
-		padding: 1.5em 2em;
-		background-color: white;
-		border-right: 1px solid #ECECEC;
-		margin-left: $sidePanelWidth;
-		min-height: calc(100vh - #{$navHeight});
-	}
+	// $sidePanelWidth: 200px; // 200 is width of side panel
+	// $navHeight: 56px; // 56px is height of nav
+	// .page-content {
+	// 	background-color: #F9F9F9;
+	// 	min-height: calc(100vh - #{$navHeight});	
+	// }
+	// .no-margin {
+	// 	margin-top: 0px;
+	// 	margin-bottom: 0px;
+	// }
+	// .side-panel {
+	// 	position: fixed;
+	// 	height: calc(100vh - #{$navHeight});
+	// }
+	// .content-panel {
+	// 	padding: 1.5em 2em;
+	// 	background-color: white;
+	// 	border-right: 1px solid #ECECEC;
+	// 	margin-left: $sidePanelWidth;
+	// 	min-height: calc(100vh - #{$navHeight});
+	// }
 
 	.content-title {
 		margin-bottom: 1em;
@@ -28,6 +28,27 @@
 		float: right;
 		button {
 			margin-left: 1em;
+		}
+	}
+}
+
+@media only screen and (min-width: 750px) {
+	@supports (display: grid) {
+		#dashboard-container {
+			.dashboard-columns {
+				display: grid;
+				grid-template-columns: 200px 1fr;
+				grid-template-areas: "side main";
+				grid-column-gap: 3%;
+				margin-top: 2em;
+			}
+			.side-content {
+				grid-area: side;
+			}
+			.main-content {
+				grid-area: main;
+			}
+			
 		}
 	}
 }

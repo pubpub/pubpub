@@ -173,13 +173,13 @@ class Dashboard extends Component {
 				>
 					<div className="container">
 						<div className="row">
-							<div className="col-12 no-margin">
+							<div className="col-12 dashboard-columns">
 
-								<div className="side-panel">
+								<div className="side-content">
 									<DashboardSide pages={pages} collections={collections} activeSlug={activeSlug} />
 								</div>
 
-								<div className="content-panel">
+								<div className="content-content">
 									{(()=> {
 										switch (activeSlug) {
 										case 'team':
@@ -192,7 +192,7 @@ class Dashboard extends Component {
 													/>
 												</div>
 											);
-										case 'site':
+										case 'details':
 											return (
 												<DashboardSite
 													communityData={communityData}

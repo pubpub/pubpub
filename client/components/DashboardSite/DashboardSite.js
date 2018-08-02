@@ -111,7 +111,7 @@ class DashboardSite extends Component {
 
 		return (
 			<div className="dashboard-site-component">
-				<h1 className="content-title">Site</h1>
+				<h1 className="content-title">Details</h1>
 				<InputField
 					label="Title"
 					type="text"
