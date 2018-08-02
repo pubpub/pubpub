@@ -43,7 +43,11 @@ export const findPub = (req, initialData, isDraft)=> {
 				model: PubTag,
 				as: 'pubTags',
 				required: false,
-				include: [{ model: Tag, as: 'tag' }],
+				include: [{
+					model: Tag,
+					as: 'tag',
+					include: [{ model: Collection, as: 'page', required: false, attributes: ['id', 'title', 'slug'] }] 
+				}],
 			},
 			// {
 			// 	model: User,

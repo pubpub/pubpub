@@ -19,7 +19,7 @@ app.post('/api/pubTags', (req, res)=> {
 		/* If the tag is being created from the pub, create the Tag first */
 		if (!req.body.tagId && req.body.title) {
 			return Tag.create({
-				title: req.body.title,
+				title: req.body.title.trim(),
 				isRestricted: true,
 				communityId: req.body.communityId,
 			});

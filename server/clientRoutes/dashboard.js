@@ -20,6 +20,7 @@ app.get(['/dashboard', '/dashboard/:slug', '/dashboard/:slug/:mode'], (req, res,
 		if (slug === 'activity') { activeItem.title = 'Activity'; }
 		if (slug === 'team') { activeItem.title = 'Team'; }
 		if (slug === 'site') { activeItem.title = 'Site'; }
+		if (slug === 'tags') { activeItem.title = 'Tags'; }
 		if (slug === 'page') { activeItem.title = 'New Page'; }
 		if (slug === 'collection') { activeItem.title = 'New Collection'; }
 

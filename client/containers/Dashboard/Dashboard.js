@@ -7,6 +7,7 @@ import DashboardCollectionEdit from 'components/DashboardCollectionEdit/Dashboar
 import DashboardCreateCollection from 'components/DashboardCreateCollection/DashboardCreateCollection';
 import DashboardSite from 'components/DashboardSite/DashboardSite';
 import DashboardTeam from 'components/DashboardTeam/DashboardTeam';
+import DashboardTags from 'components/DashboardTags/DashboardTags';
 
 import { hydrateWrapper, apiFetch } from 'utilities';
 
@@ -194,6 +195,15 @@ class Dashboard extends Component {
 										case 'site':
 											return (
 												<DashboardSite
+													communityData={communityData}
+													onSave={this.handleSiteSave}
+													isLoading={this.state.putCommunityIsLoading}
+													error={this.state.putCommunityError}
+												/>
+											);
+										case 'tags':
+											return (
+												<DashboardTags
 													communityData={communityData}
 													onSave={this.handleSiteSave}
 													isLoading={this.state.putCommunityIsLoading}

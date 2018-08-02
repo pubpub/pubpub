@@ -65,6 +65,15 @@ const PubHeader = function(props) {
 									}).map((item)=> {
 										return <a key={`footer-collection-${item.id}`} href={`/${item.slug}`} className="pt-tag pt-intent-primary pt-minimal">{item.title}</a>;
 									})}
+									<div className="tags new-tags">
+										New Tags: {pubData.pubTags.sort((foo, bar)=> {
+											if (foo.tag.title.toLowerCase() < bar.tag.title.toLowerCase()) { return -1; }
+											if (foo.tag.title.toLowerCase() > bar.tag.title.toLowerCase()) { return 1; }
+											return 0;
+										}).map((item)=> {
+											return <a key={`new-tag-collection-${item.id}`} href={item.tag.page ? `/${item.tag.page.slug}` : `/search?tag=${item.tag.title}`} className="pt-tag pt-intent-primary pt-minimal">{item.tag.title}</a>;
+										})}
+									</div>
 								</div>
 								<div className="buttons">
 									{!pubData.isDraft && (pubData.isDraftViewer || pubData.isDraftEditor || pubData.isManager) &&

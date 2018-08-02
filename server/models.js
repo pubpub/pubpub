@@ -366,12 +366,12 @@ const PubTag = sequelize.define('PubTag', {
 });
 
 /* Communities can have many Admins. Users can admin many communities. */
-User.belongsToMany(Community, { onDelete: 'CASCADE', as: 'communities', through: 'CommunityAdmin', foreignKey: 'userId' });
-Community.belongsToMany(User, { onDelete: 'CASCADE', as: 'admins', through: 'CommunityAdmin', foreignKey: 'communityId' });
+User.belongsToMany(Community, { as: 'communities', through: 'CommunityAdmin', foreignKey: 'userId' });
+Community.belongsToMany(User, { as: 'admins', through: 'CommunityAdmin', foreignKey: 'communityId' });
 
 /* Pubs can have many Users. Users can belong to many Pubs. */
-User.belongsToMany(Pub, { onDelete: 'CASCADE', as: 'pubs', through: 'Collaborator', foreignKey: 'userId' });
-Pub.belongsToMany(User, { onDelete: 'CASCADE', as: 'collaborators', through: 'Collaborator', foreignKey: 'pubId' });
+User.belongsToMany(Pub, { as: 'pubs', through: 'Collaborator', foreignKey: 'userId' });
+Pub.belongsToMany(User, { as: 'collaborators', through: 'Collaborator', foreignKey: 'pubId' });
 
 /* Add emptyCollaborators association so we can grab authors that don't have userId accounts */
 Pub.hasMany(Collaborator, { onDelete: 'CASCADE', as: 'emptyCollaborators', foreignKey: 'pubId' });
@@ -398,7 +398,7 @@ Community.hasMany(Tag, { onDelete: 'CASCADE', as: 'tags', foreignKey: 'community
 /* Pubs have many PubTags. */
 Pub.hasMany(PubTag, { onDelete: 'CASCADE', as: 'pubTags', foreignKey: 'pubId' });
 PubTag.belongsTo(Tag, { onDelete: 'CASCADE', as: 'tag', foreignKey: 'tagId' });
-
+Tag.belongsTo(Collection, { as: 'page', foreignKey: 'pageId' });
 
 /* Communities have many Pubs. Pubs belong to a single Community */
 Community.hasMany(Pub, { onDelete: 'CASCADE', as: 'pubs', foreignKey: 'communityId' });
@@ -422,8 +422,8 @@ User.hasMany(Discussion, { onDelete: 'CASCADE', as: 'discussions', foreignKey: '
 Discussion.belongsTo(User, { onDelete: 'CASCADE', as: 'author', foreignKey: 'userId' });
 
 /* Collections can have many Pubs. Pubs can belong to many Collections. */
-Collection.belongsToMany(Pub, { onDelete: 'CASCADE', as: 'pubs', through: 'CollectionPub', foreignKey: 'collectionId' });
-Pub.belongsToMany(Collection, { onDelete: 'CASCADE', as: 'collections', through: 'CollectionPub', foreignKey: 'pubId' });
+Collection.belongsToMany(Pub, { as: 'pubs', through: 'CollectionPub', foreignKey: 'collectionId' });
+Pub.belongsToMany(Collection, { as: 'collections', through: 'CollectionPub', foreignKey: 'pubId' });
 
 /* Communities have many Collections. A Collection belongs to only one Community. */
 Community.hasMany(Collection, { onDelete: 'CASCADE', as: 'collections', foreignKey: 'communityId' });

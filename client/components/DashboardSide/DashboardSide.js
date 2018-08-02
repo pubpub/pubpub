@@ -35,6 +35,12 @@ const DashboardSide = function(props) {
 			slug: 'team',
 			id: 2,
 		},
+		{
+			title: 'Tags',
+			icon: 'pt-icon-tag',
+			slug: 'tags',
+			id: 3,
+		},
 	];
 	return (
 		<div className="dashboard-side-component">

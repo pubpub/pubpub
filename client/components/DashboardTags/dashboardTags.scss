@@ -1,0 +1,30 @@
+.dashboard-tags-component {
+	max-width: 600px;
+	margin: 0 auto;
+	.autocomplete-wrapper {
+		padding: 2em 0em;
+		.pt-input {
+			width: 100%;
+		}
+	}
+	.tag-wrapper {
+		display: flex;
+		align-items: center;
+		padding-bottom: 1em;
+		margin-bottom: 1em;
+		border-bottom: 1px solid #CCC;
+		.title {
+			flex-grow: 1;
+			flex-shrink: 1;
+		}
+		.pt-editable-text-content:after {
+			font-family: 'pubpub-icons' !important;
+			content: "\E904";
+			padding-left: 0.5em;
+			opacity: 0.75;
+		}
+		.pt-checkbox {
+			margin: 0px 2em 0px;
+		}
+	}
+}

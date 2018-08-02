@@ -101,6 +101,7 @@ export const getInitialData = (req)=> {
 			{
 				model: Tag,
 				as: 'tags',
+				include: [{ model: Collection, as: 'page', required: false, attributes: ['id', 'title', 'slug'] }]
 			}
 		],
 	})

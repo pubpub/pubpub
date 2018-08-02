@@ -17,7 +17,7 @@ app.post('/api/tags', (req, res)=> {
 			throw new Error('Not Authorized to create this tag');
 		}
 		return Tag.create({
-			title: req.body.title,
+			title: req.body.title.trim(),
 			isRestricted: true,
 			communityId: req.body.communityId,
 		});
@@ -37,7 +37,7 @@ app.put('/api/tags', (req, res)=> {
 	// Filter to only allow certain fields to be updated
 	const updatedTag = {};
 	Object.keys(req.body).forEach((key)=> {
-		if (['title', 'isRestricted'].indexOf(key) > -1) {
+		if (['title', 'isRestricted', 'isPrivate', 'pageId'].indexOf(key) > -1) {
 			updatedTag[key] = req.body[key];
 		}
 	});
