@@ -25,17 +25,20 @@ export const findPub = (req, initialData, isDraft)=> {
 			{
 				model: PubManager,
 				as: 'managers',
+				separate: true,
 				include: [{ model: User, as: 'user', attributes: ['id', 'firstName', 'lastName', 'fullName', 'avatar', 'slug', 'initials', 'title'] }],
 			},
 			{
 				model: PubAttribution,
 				as: 'attributions',
 				required: false,
+				separate: true,
 				include: [{ model: User, as: 'user', required: false, attributes: ['id', 'firstName', 'lastName', 'fullName', 'avatar', 'slug', 'initials', 'title'] }],
 			},
 			{
 				model: VersionPermission,
 				as: 'versionPermissions',
+				separate: true,
 				required: false,
 				include: [{ model: User, as: 'user', attributes: ['id', 'firstName', 'lastName', 'fullName', 'avatar', 'slug', 'initials', 'title'] }],
 			},
@@ -43,10 +46,11 @@ export const findPub = (req, initialData, isDraft)=> {
 				model: PubTag,
 				as: 'pubTags',
 				required: false,
+				separate: true,
 				include: [{
 					model: Tag,
 					as: 'tag',
-					include: [{ model: Collection, as: 'page', required: false, attributes: ['id', 'title', 'slug'] }] 
+					include: [{ model: Collection, as: 'page', required: false, attributes: ['id', 'title', 'slug'] }]
 				}],
 			},
 			// {

@@ -23,8 +23,6 @@ class PubOptionsTags extends Component {
 			/* updates and save in the background without jumpy effects */
 			pubTags: this.props.pubData.pubTags,
 			isLoading: false,
-			// queryValue: '',
-			// filteredTags: [],
 		};
 		this.inputRef = undefined;
 		this.getFilteredTags = this.getFilteredTags.bind(this);

@@ -9,8 +9,8 @@
     ],
     "settings": {
       "import/resolver": {
-        "webpack": {
-          "config": "client/webpack/webpackConfig.dev.js"
+        "node": {
+            "paths": ["client"]
         }
       }
     },
