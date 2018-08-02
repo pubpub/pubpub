@@ -71,7 +71,14 @@ const PubHeader = function(props) {
 											if (foo.tag.title.toLowerCase() > bar.tag.title.toLowerCase()) { return 1; }
 											return 0;
 										}).map((item)=> {
-											return <a key={`new-tag-collection-${item.id}`} href={item.tag.page ? `/${item.tag.page.slug}` : `/search?tag=${item.tag.title}`} className="pt-tag pt-intent-primary pt-minimal">{item.tag.title}</a>;
+											return (
+												<a key={`new-tag-collection-${item.id}`} href={item.tag.page ? `/${item.tag.page.slug}` : `/search?tag=${item.tag.title}`} className="pt-tag pt-intent-primary pt-minimal">
+													{!item.tag.isPublic &&
+														<span className="pt-icon-standard pt-icon-lock2" />
+													}
+													{item.tag.title}
+												</a>
+											);
 										})}
 									</div>
 								</div>

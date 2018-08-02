@@ -21,6 +21,7 @@ app.post('/api/pubTags', (req, res)=> {
 			return Tag.create({
 				title: req.body.title.trim(),
 				isRestricted: true,
+				isPublic: true,
 				communityId: req.body.communityId,
 			});
 		}

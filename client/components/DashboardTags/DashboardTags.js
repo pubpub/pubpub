@@ -136,10 +136,10 @@ class DashboardTags extends Component {
 								<Button text={tag.page ? `Linked to: ${tag.page.title}` : 'Link to Page'} rightIcon="caret-down" />
 							</Select>
 							<Checkbox
-								checked={tag.isPrivate}
+								checked={tag.isPublic}
 								onChange={(evt)=> {
 									this.handleTagUpdate({
-										isPrivate: evt.target.checked,
+										isPublic: evt.target.checked,
 										tagId: tag.id,
 									});
 								}}

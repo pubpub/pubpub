@@ -301,6 +301,9 @@ export const findPub = (req, initialData, isDraft)=> {
 			collections: pubDataJson.collections.filter((item)=> {
 				return item.isPublic || communityAdminData;
 			}),
+			pubTags: pubDataJson.pubTags.filter((item)=> {
+				return item.tag.isPublic || communityAdminData;
+			}),
 			// Add submit for publication button that creates discussion with submitHash
 			// Need to add a map to remove the submitHash if not communityAdmin
 			// Return threadNumber and pop them into that new submission (actually we should do that for all discussions)

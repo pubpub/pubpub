@@ -119,6 +119,10 @@ export const getInitialData = (req)=> {
 			return loginData.isAdmin || item.isPublic;
 		});
 
+		communityData.tags = communityData.tags.filter((item)=> {
+			return loginData.isAdmin || item.isPublic;
+		});
+
 		const outputData = {
 			communityData: communityData,
 			loginData: loginData,

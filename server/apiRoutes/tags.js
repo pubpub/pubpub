@@ -19,6 +19,7 @@ app.post('/api/tags', (req, res)=> {
 		return Tag.create({
 			title: req.body.title.trim(),
 			isRestricted: true,
+			isPublic: true,
 			communityId: req.body.communityId,
 		});
 	})
@@ -37,7 +38,7 @@ app.put('/api/tags', (req, res)=> {
 	// Filter to only allow certain fields to be updated
 	const updatedTag = {};
 	Object.keys(req.body).forEach((key)=> {
-		if (['title', 'isRestricted', 'isPrivate', 'pageId'].indexOf(key) > -1) {
+		if (['title', 'isRestricted', 'isPublic', 'pageId'].indexOf(key) > -1) {
 			updatedTag[key] = req.body[key];
 		}
 	});
