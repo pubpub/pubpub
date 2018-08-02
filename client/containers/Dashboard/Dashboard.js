@@ -167,7 +167,7 @@ class Dashboard extends Component {
 					loginData={this.props.loginData}
 					communityData={this.props.communityData}
 					locationData={this.props.locationData}
-					fixHeader={true}
+					// fixHeader={true}
 					hideNav={true}
 					hideFooter={true}
 				>
