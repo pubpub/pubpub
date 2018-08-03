@@ -5,8 +5,8 @@ import { pubData, communityData } from '../data';
 
 storiesOf('Components', module)
 .add('DashboardTags', () => (
-	<div className="pub-options-component">
-		<div className="container right-column">
+	<div className="pub-options-component" style={{ padding: '20px' }}>
+		<div className="right-column">
 			<DashboardTags
 				pubData={pubData}
 				communityData={communityData}

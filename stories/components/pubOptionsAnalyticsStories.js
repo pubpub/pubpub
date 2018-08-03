@@ -7,8 +7,8 @@ require('components/PubOptions/pubOptions.scss');
 
 storiesOf('Components', module)
 .add('PubOptionsAnalytics', () => (
-	<div className="pub-options-component">
-		<div className="container right-column">
+	<div className="pub-options-component" style={{ padding: '20px' }}>
+		<div className="right-column">
 			<PubOptionsAnalytics
 				pubData={pubData}
 				communityData={communityData}

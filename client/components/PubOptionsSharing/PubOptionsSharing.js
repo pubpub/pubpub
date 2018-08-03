@@ -17,7 +17,7 @@ const propTypes = {
 };
 
 class PubOptionsSharing extends Component {
-	constructor(props) {
+	constructor(props) { 
 		super(props);
 		this.state = {
 			/* We store pubData in state of this component so we can do immediate */
