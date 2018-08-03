@@ -211,6 +211,16 @@ class PubOptionsSharing extends Component {
 			if (!prev && curr.isPublic) { return curr.id; }
 			return prev;
 		}, undefined);
+
+		const sortedVersions = pubData.versions.sort((foo, bar)=> {
+			if (foo.createdAt < bar.createdAt) { return 1; }
+			if (foo.createdAt > bar.createdAt) { return -1; }
+			return 0;
+		});
+		const versionBlockItems = [
+			{}, // Draft placeholder. Absence of item.id indicates it's draft when rendering
+			...sortedVersions,
+		];
 		return (
 			<div className="pub-options-sharing-component">
 				<div>
@@ -222,7 +232,9 @@ class PubOptionsSharing extends Component {
 					<h1>Sharing</h1>
 					<h2>Managers</h2>
 					<p>Managers can view all versions, edit pub details, and edit the draft.</p>
+
 					<div className="cards-wrapper">
+						{/* Dedicated card for Community Admin manager permissions */}
 						<PubOptionsSharingCard
 							content={[
 								<span className="pt-icon-standard pt-icon-people" />,
@@ -241,6 +253,8 @@ class PubOptionsSharing extends Component {
 								</Checkbox>
 							}
 						/>
+
+						{/* Iterate and list all existing pub managers */}
 						{managers.sort((foo, bar)=> {
 							if (foo.createdAt < bar.createdAt) { return -1; }
 							if (foo.createdAt > bar.createdAt) { return 1; }
@@ -266,6 +280,8 @@ class PubOptionsSharing extends Component {
 								/>
 							);
 						})}
+
+						{/* Input card for adding new manager */}
 						<PubOptionsSharingCard
 							content={
 								<UserAutocomplete
@@ -282,234 +298,108 @@ class PubOptionsSharing extends Component {
 					</div>
 
 					<h2>Version Permissions</h2>
-					<div
-						className={`version-block ${this.state.activePermissionsVersion === 'draft' ? 'active' : ''}`}
-						onClick={()=> { this.setState({ activePermissionsVersion: 'draft' }); }}
-						role="button"
-						tabIndex="-1"
-					>
-						<div className="header">
-							<div className="title"><b>Working Draft</b></div>
-							<div className="privacy">
-								{this.state.activePermissionsVersion === 'draft' &&
-									<PubOptionsSharingDropdownPrivacy
-										value={pubData.draftPermissions}
-										isDraft={true}
-										onChange={(newValue)=> {
-											this.handlePubUpdate({ draftPermissions: newValue });
-										}}
-									/>
-								}
-								{this.state.activePermissionsVersion !== 'draft' &&
-									<span>
-										{pubData.draftPermissions === 'private' &&
-											<span className="pt-icon-standard pt-icon-lock2" />
-										}
-										<span>{pubData.draftPermissions.replace('public', 'Public ').replace('private', 'Private')}</span>
-									</span>
-								}
-							</div>
-						</div>
-						{this.state.activePermissionsVersion !== 'draft' && pubData.draftPermissions !== 'publicEdit' &&
-							<div className="access-preview">
-								{(pubData.isCommunityAdminManaged || pubData.communityAdminDraftPermissions !== 'none') &&
-									<span className="pt-icon-standard pt-icon-people" />
-								}
-								{pubData.managers.concat(pubData.versionPermissions.filter((versionPermission)=> {
-									return !managerIds[versionPermission.user.id];
-								}).filter((versionPermission)=> {
-									return !versionPermission.versionId;
-								})).map((item)=> {
-									return <Avatar width={20} userInitials={item.user.initials} userAvatar={item.user.avatar} />;
-								})}
-							</div>
-						}
-						{this.state.activePermissionsVersion === 'draft' &&
-							<div>
-								<div>Permissions</div>
-								<div className="cards-wrapper">
-									<PubOptionsSharingCard
-										content={[
-											<span>Managers</span>,
-											<span className="managers-preview">
-												{pubData.isCommunityAdminManaged &&
-													<span className="pt-icon-standard pt-icon-people" />
-												}
-												{managers.slice(0, 2).map((manager)=> {
-													return <Avatar width={20} userInitials={manager.user.initials} userAvatar={manager.user.avatar} />;
-												})}
-												{managers.length - 2 > 0 &&
-													<Avatar width={20} userInitials={`+${managers.length - 2}`} />
-												}
-											</span>
-										]}
-										options={
-											<span>Can Edit</span>
-										}
-										isFlatCard={true}
-									/>
 
-									{/* If community admins are not managers, show options for their draft permissions */}
-									{!pubData.isCommunityAdminManaged &&
-										<PubOptionsSharingCard
-											content={[
-												<span className="pt-icon-standard pt-icon-people" />,
-												<span>Community Admins</span>
-											]}
-											options={
-												<PubOptionsSharingDropdownPermissions
-													value={pubData.communityAdminDraftPermissions}
-													onChange={(newValue)=> {
-														this.handlePubUpdate({
-															communityAdminDraftPermissions: newValue,
-														});
-													}}
-												/>
-											}
-										/>
-									}
+					{/* Iterate and list options for all versions including working draft */}
+					{versionBlockItems.map((version)=> {
+						const isDraft = !version.id;
+						const isActive = isDraft
+							? this.state.activePermissionsVersion === 'draft'
+							: this.state.activePermissionsVersion === version.id;
+						const savedVersionPrivacy = version.isPublic ? 'publicView' : 'private';
+						const currentPrivacy = isDraft
+							? pubData.draftPermissions
+							: savedVersionPrivacy;
+						const communityAdminsHavePermission = isDraft
+							? pubData.isCommunityAdminManaged || pubData.communityAdminDraftPermissions !== 'none'
+							: pubData.isCommunityAdminManaged || version.isCommunityAdminShared;
+						const showPreviewAcess = isDraft
+							? this.state.activePermissionsVersion !== 'draft' && pubData.draftPermissions !== 'publicEdit'
+							: !isActive && !version.isPublic;
+						const privacyTitle = isDraft
+							? currentPrivacy.replace('public', 'Public ').replace('private', 'Private')
+							: currentPrivacy.replace('public', 'Public').replace('private', 'Private').replace('Edit', '').replace('View', '');
+						const communityAdminsHaveFullAccess = pubData.isCommunityAdminManaged;
 
-									{/* List all version permissions, filtering out managers */}
-									{pubData.versionPermissions.filter((versionPermission)=> {
-										return !managerIds[versionPermission.user.id];
-									}).filter((versionPermission)=> {
-										return !versionPermission.versionId;
-									}).sort((foo, bar)=> {
-										if (foo.createdAt < bar.createdAt) { return -1; }
-										if (foo.createdAt > bar.createdAt) { return 1; }
-										return 0;
-									}).map((versionPermission)=> {
-										return (
-											<PubOptionsSharingCard
-												key={versionPermission.id}
-												content={[
-													<Avatar width={25} userInitials={versionPermission.user.initials} userAvatar={versionPermission.user.avatar} />,
-													<span>{versionPermission.user.fullName}</span>
-												]}
-												options={[
-													<PubOptionsSharingDropdownPermissions
-														value={versionPermission.permissions}
-														hideNone={true}
-														onChange={(newValue)=> {
-															this.handleVersionPermissionUpdate({
-																versionPermissionId: versionPermission.id,
-																permissions: newValue,
-															});
-														}}
-													/>,
-													<button
-														className="pt-button pt-minimal pt-small"
-														type="button"
-														onClick={()=> {
-															this.handleVersionPermissionDelete(versionPermission.id);
-														}}
-													>
-														<span className="pt-icon-standard pt-icon-small-cross" />
-													</button>
-												]}
-											/>
-										);
-									})}
-									<PubOptionsSharingCard
-										content={
-											<UserAutocomplete
-												onSelect={(user)=> {
-													return this.handleVersionPermissionAdd({
-														userId: user.id,
-														versionId: null,
-													});
-												}}
-												allowCustomUser={false} // Eventually use this for emails
-												placeholder="Add user..."
-												usedUserIds={pubData.versionPermissions.filter((versionPermission)=> {
-													return !versionPermission.versionId;
-												}).map((item)=> {
-													return item.user.id;
-												}).concat(pubData.managers.map((item)=> {
-													return item.user.id;
-												}))}
-											/>
-										}
-										isAddCard={true}
-									/>
-								</div>
-
-								<div>Sharing Links</div>
-								<div><a href={`${window.location.origin}/pub/${pubData.slug}/draft?access=${pubData.draftViewHash}`}>Anyone with this link can view (Click to copy)</a></div>
-								<div><a href={`${window.location.origin}/pub/${pubData.slug}/draft?access=${pubData.draftEditHash}`}>Anyone with this link can edit (Click to copy)</a></div>
-							</div>
-						}
-					</div>
-					{pubData.versions.sort((foo, bar)=> {
-						if (foo.createdAt < bar.createdAt) { return 1; }
-						if (foo.createdAt > bar.createdAt) { return -1; }
-						return 0;
-					}).map((version)=> {
-						const isActive = this.state.activePermissionsVersion === version.id;
 						return (
 							<div
 								className={`version-block ${isActive ? 'active' : ''}`}
-								onClick={()=> { this.setState({ activePermissionsVersion: version.id }); }}
+								onClick={()=> {
+									this.setState({ activePermissionsVersion: version.id || 'draft' });
+								}}
 								role="button"
 								tabIndex="-1"
 							>
 								<div className="header">
 									<div className="title">
-										<b>{dateFormat(version.createdAt, 'mmm dd, yyyy · h:MMTT')}</b>
+										<b>{isDraft ? 'Working Draft' : dateFormat(version.createdAt, 'mmm dd, yyyy · h:MMTT')}</b>
 										<span>{version.description}</span>
 									</div>
 									<div className="privacy">
+										{/* If isActive version block, show dropdown button with options */}
 										{isActive &&
 											<PubOptionsSharingDropdownPrivacy
-												value={version.isPublic ? 'publicView' : 'private'}
-												isDraft={false}
+												value={currentPrivacy}
+												isDraft={isDraft}
 												onChange={(newValue)=> {
-													this.handleVersionUpdate({
-														versionId: version.id,
-														isPublic: newValue === 'public'
-													});
+													const newPrivacyObject = isDraft
+														? { draftPermissions: newValue }
+														: {
+															versionId: version.id,
+															isPublic: newValue === 'public'
+														};
+													this.handleVersionUpdate(newPrivacyObject);
 												}}
 											/>
 										}
+
+										{/* If collapsed block and defaultPublicVersion, show message */}
+										{!isActive && !isDraft && version.id === defaultPublicVersionId &&
+											<span>(Default Public Version) </span>
+										}
+
+										{/* If collapsed block, show privacy status */}
 										{!isActive &&
 											<span>
-												{version.id === defaultPublicVersionId &&
-													<span>(Default Public Version) </span>
-												}
-												{!version.isPublic &&
+												{currentPrivacy === 'private' &&
 													<span className="pt-icon-standard pt-icon-lock2" />
 												}
-												<span>{version.isPublic ? 'Public' : 'Private'}</span>
+												<span>{privacyTitle}</span>
 											</span>
 										}
 									</div>
 								</div>
-								{!isActive && !version.isPublic &&
+
+								{/* Preview who has access when the version block is collapsed */}
+								{showPreviewAcess &&
 									<div className="access-preview">
-										{(pubData.isCommunityAdminManaged || version.isCommunityAdminShared) &&
+										{communityAdminsHavePermission &&
 											<span className="pt-icon-standard pt-icon-people" />
 										}
 										{pubData.managers.concat(pubData.versionPermissions.filter((versionPermission)=> {
 											return !managerIds[versionPermission.user.id];
 										}).filter((versionPermission)=> {
-											return versionPermission.versionId === version.id;
+											return isDraft
+												? !versionPermission.versionId
+												: versionPermission.versionId === version.id;
 										})).map((item)=> {
 											return <Avatar width={20} userInitials={item.user.initials} userAvatar={item.user.avatar} />;
 										})}
 									</div>
 								}
+
+								{/* Expanded permissions view */}
 								{isActive &&
 									<div>
 										<div>Permissions</div>
 										<div className="cards-wrapper">
+											{/* Card deailing who has access due to manager status */}
 											<PubOptionsSharingCard
 												content={[
 													<span>Managers</span>,
 													<span className="managers-preview">
-														{version.isCommunityAdminShared &&
+														{communityAdminsHaveFullAccess &&
 															<span className="pt-icon-standard pt-icon-people" />
 														}
-														<span className="pt-icon-standard pt-icon-people" />
 														{managers.slice(0, 2).map((manager)=> {
 															return <Avatar width={20} userInitials={manager.user.initials} userAvatar={manager.user.avatar} />;
 														})}
@@ -519,37 +409,51 @@ class PubOptionsSharing extends Component {
 													</span>
 												]}
 												options={
-													<span>Can View</span>
+													<span>{isDraft ? 'Can Edit' : 'Can View'}</span>
 												}
 												isFlatCard={true}
 											/>
 
-											{/* If community admins are not managers, show options for their version permissions */}
+											{/* If community admins are not managers, show options for their permissions */}
 											{!pubData.isCommunityAdminManaged &&
 												<PubOptionsSharingCard
 													content={[
 														<span className="pt-icon-standard pt-icon-people" />,
 														<span>Community Admins</span>
 													]}
-													options={
-														<Checkbox
-															checked={version.isCommunityAdminShared}
-															onChange={(evt)=> {
-																this.handleVersionUpdate({
-																	versionId: version.id,
-																	isCommunityAdminShared: evt.target.checked,
+													options={isDraft
+														? <PubOptionsSharingDropdownPermissions
+															value={pubData.communityAdminDraftPermissions}
+															onChange={(newValue)=> {
+																this.handlePubUpdate({
+																	communityAdminDraftPermissions: newValue,
 																});
 															}}
-														>
-															Can View
-														</Checkbox>
+														/>
+														: (
+															<Checkbox
+																checked={version.isCommunityAdminShared}
+																onChange={(evt)=> {
+																	this.handleVersionUpdate({
+																		versionId: version.id,
+																		isCommunityAdminShared: evt.target.checked,
+																	});
+																}}
+															>
+																Can View
+															</Checkbox>
+														)
 													}
 												/>
 											}
+
+											{/* List all version permissions, filtering out managers */}
 											{pubData.versionPermissions.filter((versionPermission)=> {
 												return !managerIds[versionPermission.user.id];
 											}).filter((versionPermission)=> {
-												return versionPermission.versionId === version.id;
+												return isDraft
+													? !versionPermission.versionId
+													: versionPermission.versionId === version.id;
 											}).sort((foo, bar)=> {
 												if (foo.createdAt < bar.createdAt) { return -1; }
 												if (foo.createdAt > bar.createdAt) { return 1; }
@@ -560,29 +464,45 @@ class PubOptionsSharing extends Component {
 														key={versionPermission.id}
 														content={[
 															<Avatar width={25} userInitials={versionPermission.user.initials} userAvatar={versionPermission.user.avatar} />,
-															<span>{versionPermission.user.fullName}</span>,
+															<span>{versionPermission.user.fullName}</span>
 														]}
-														options={
+														options={[
+															isDraft
+																? (
+																	<PubOptionsSharingDropdownPermissions
+																		value={versionPermission.permissions}
+																		hideNone={true}
+																		onChange={(newValue)=> {
+																			this.handleVersionPermissionUpdate({
+																				versionPermissionId: versionPermission.id,
+																				permissions: newValue,
+																			});
+																		}}
+																	/>
+																)
+																: null,
 															<button
 																className="pt-button pt-minimal pt-small"
 																type="button"
 																onClick={()=> {
-																	this.handleVersionPermissionDelete(versionPermission.id);
+																	this.handleVersionPermissionDelete(versionPermission.id || null);
 																}}
 															>
 																<span className="pt-icon-standard pt-icon-small-cross" />
 															</button>
-														}
+														]}
 													/>
 												);
 											})}
+
+											{/* Card for adding new user to version permissions */}
 											<PubOptionsSharingCard
 												content={
 													<UserAutocomplete
 														onSelect={(user)=> {
 															return this.handleVersionPermissionAdd({
 																userId: user.id,
-																versionId: version.id,
+																versionId: null,
 															});
 														}}
 														allowCustomUser={false} // Eventually use this for emails
@@ -601,12 +521,19 @@ class PubOptionsSharing extends Component {
 										</div>
 
 										<div>Sharing Links</div>
-										<a href={`${window.location.origin}/pub/${pubData.slug}?version=${version.id}&access=${version.viewHash}`}>Anyone with this link can view (Click to copy)</a>
+										{isDraft && [
+											<div><a href={`${window.location.origin}/pub/${pubData.slug}/draft?access=${pubData.draftViewHash}`}>Anyone with this link can view (Click to copy)</a></div>,
+											<div><a href={`${window.location.origin}/pub/${pubData.slug}/draft?access=${pubData.draftEditHash}`}>Anyone with this link can edit (Click to copy)</a></div>
+										]}
+										{!isDraft &&
+											<a href={`${window.location.origin}/pub/${pubData.slug}?version=${version.id}&access=${version.viewHash}`}>Anyone with this link can view (Click to copy)</a>
+										}
 									</div>
 								}
 							</div>
 						);
 					})}
+
 				</div>
 			</div>
 		);

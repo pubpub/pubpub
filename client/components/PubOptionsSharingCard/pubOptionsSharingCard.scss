@@ -1,11 +1,13 @@
 .pub-options-sharing-card-component {
-	margin-right: 0.5em;
-	margin-bottom: 0.5em;
 	padding: 4px 6px;
 	display: flex;
 	height: 33px;
 	background-color: white;
 	width: calc(50% - 0.5em);
+	margin-bottom: 0.5em;
+	&:nth-of-type(odd) {
+		margin-right: 1em;
+	}
 	.content {
 		white-space: nowrap;
 		overflow: hidden;
