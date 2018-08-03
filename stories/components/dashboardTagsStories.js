@@ -10,8 +10,6 @@ storiesOf('Components/DashboardTags', module)
 			<DashboardTags
 				pubData={pubData}
 				communityData={communityData}
-				setPubdat={()=>{}}
-				canManage={true}
 			/>
 		</div>
 	</div>

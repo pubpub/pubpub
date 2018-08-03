@@ -12,8 +12,7 @@ storiesOf('Components/PubOptionsSharing', module)
 			<PubOptionsSharing
 				pubData={pubData}
 				communityData={communityData}
-				setPubdat={()=>{}}
-				canManage={true}
+				setPubData={()=>{}}
 			/>
 		</div>
 	</div>

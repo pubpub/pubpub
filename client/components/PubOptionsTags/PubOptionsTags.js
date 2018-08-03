@@ -11,7 +11,6 @@ const propTypes = {
 	communityData: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
 	setPubData: PropTypes.func.isRequired,
-	canManage: PropTypes.bool.isRequired,
 };
 
 

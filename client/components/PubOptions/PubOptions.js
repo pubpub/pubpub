@@ -39,7 +39,7 @@ const defaultProps = {
 
 const PubOptions = (props)=> {
 	const optionsMode = props.optionsMode;
-	// TODO: Hide based on canManage, and other metrics
+	// TODO: Hide based on isManager, and other metrics
 	// TODO: Hide sections if we are not in draft, and there are no sections
 	const modes = ['details', 'attribution', 'versions', 'tags', 'sharing', 'cite', 'DOI', 'sections', 'social', 'export', 'import', 'analytics', 'delete'];
 
@@ -52,7 +52,6 @@ const PubOptions = (props)=> {
 		editorRefNode: props.editorRefNode,
 		setOptionsMode: props.setOptionsMode,
 		setPubData: props.setPubData,
-		canManage: props.pubData.isManager, // TODO: This is duplicative. Lets jusst use pubData.isManager rather than passing this too
 	};
 
 	const leftColumnStyle = optionsMode === 'saveVersion'

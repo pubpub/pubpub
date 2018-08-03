@@ -13,7 +13,6 @@ storiesOf('Components/PubOptionsAttribution', module)
 				pubData={pubData}
 				communityData={communityData}
 				setPubData={()=>{}}
-				canManage={true}
 			/>
 		</div>
 	</div>
