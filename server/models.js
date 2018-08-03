@@ -377,8 +377,8 @@ Pub.belongsToMany(User, { as: 'collaborators', through: 'Collaborator', foreignK
 Pub.hasMany(Collaborator, { onDelete: 'CASCADE', as: 'emptyCollaborators', foreignKey: 'pubId' });
 Collaborator.belongsTo(User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' });
 
-
-
+/* NEW MODELS */
+/* ---------- */
 /* Pubs have many PubAttributions. PubAttributions are associated with a single user */
 Pub.hasMany(PubAttribution, { onDelete: 'CASCADE', as: 'attributions', foreignKey: 'pubId' });
 PubAttribution.belongsTo(User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' });
@@ -388,8 +388,8 @@ VersionPermission.belongsTo(User, { onDelete: 'CASCADE', as: 'user', foreignKey:
 /* Pubs have many PubManagers. */
 Pub.hasMany(PubManager, { onDelete: 'CASCADE', as: 'managers', foreignKey: 'pubId' });
 PubManager.belongsTo(User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' });
-
-
+/* ---------- */
+/* ---------- */
 
 /* Communities have many Tags */
 Community.hasMany(Tag, { onDelete: 'CASCADE', as: 'tags', foreignKey: 'communityId' });

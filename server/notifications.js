@@ -74,7 +74,7 @@ export const addActivity = ({ communityId, feedIds, activityType, actor, object,
 		return result;
 	})
 	.catch((err)=> {
-		console.log('err', err);
+		console.error('err', err);
 	});
 };
 
@@ -149,7 +149,7 @@ export const getNotifications = (communityId, userId, markRead, markSeen)=> {
 		return enrichedActivityData;
 	})
 	.catch((err)=> {
-		console.log('err', err);
+		console.error('err', err);
 	});
 };
 

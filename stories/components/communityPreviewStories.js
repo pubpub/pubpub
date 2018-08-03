@@ -51,7 +51,6 @@ storiesOf('Components', module)
 					<CommunityPreview {...data} />
 				</div>
 			</div>
-		</div>
-		
+		</div>		
 	</div>
 ));

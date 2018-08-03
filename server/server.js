@@ -72,7 +72,7 @@ passport.deserializeUser(User.deserializeUser());
 /* Handle Error */
 /* ------------ */
 app.use((err, req, res, next)=> {
-	console.log(`Error!  ${err}`);
+	console.error(`Error!  ${err}`);
 	next();
 });
 

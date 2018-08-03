@@ -4,7 +4,6 @@ import Search from 'containers/Search/Search';
 import Html from '../Html';
 import app from '../server';
 import analytics from '../analytics';
-import { Community, Pub, Discussion, sequelize } from '../models';
 import { renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 import { getPubSearch } from '../queryHelpers';
 

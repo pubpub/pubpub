@@ -6,16 +6,16 @@ import { collectionData } from '../data';
 
 storiesOf('Components', module)
 .add('PubPreview', () => (
-	<div className={'container'}>
+	<div className="container">
 		<h1 style={{ margin: '0em 0em 0.5em' }}>Large</h1>
-		<div className={'row'}>
-			<div className={'col-12'}>
+		<div className="row">
+			<div className="col-12">
 				<PubPreview
 					title={collectionData.pubs[0].title}
 					description={collectionData.pubs[0].description}
 					slug={collectionData.pubs[0].slug}
 					bannerImage={collectionData.pubs[0].avatar}
-					size={'large'}
+					size="large"
 					publicationDate={collectionData.pubs[0].firstPublishedAt}
 					collaborators={collectionData.pubs[0].collaborators}
 					authors={collectionData.pubs[0].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
@@ -23,38 +23,38 @@ storiesOf('Components', module)
 			</div>
 		</div>
 		<h1 style={{ margin: '2em 0em 0.5em' }}>Medium</h1>
-		<div className={'row'}>
-			<div className={'col-6'}>
+		<div className="row">
+			<div className="col-6">
 				<PubPreview
 					title={collectionData.pubs[1].title}
 					description={collectionData.pubs[1].description}
 					slug={collectionData.pubs[1].slug}
 					bannerImage={collectionData.pubs[1].avatar}
-					size={'medium'}
+					size="medium"
 					publicationDate={collectionData.pubs[1].firstPublishedAt}
 					collaborators={collectionData.pubs[1].collaborators}
 					authors={collectionData.pubs[1].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
 				/>
 			</div>
-			<div className={'col-6'}>
+			<div className="col-6">
 				<PubPreview
 					title={collectionData.pubs[2].title}
 					description={collectionData.pubs[2].description}
 					slug={collectionData.pubs[2].slug}
 					bannerImage={collectionData.pubs[2].avatar}
-					size={'medium'}
+					size="medium"
 					publicationDate={collectionData.pubs[2].firstPublishedAt}
 					collaborators={collectionData.pubs[2].collaborators}
 					authors={collectionData.pubs[2].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
 				/>
 			</div>
-			<div className={'col-6'}>
+			<div className="col-6">
 				<PubPreview
 					title={collectionData.pubs[1].title}
 					description={collectionData.pubs[1].description}
 					slug={collectionData.pubs[1].slug}
 					bannerImage={collectionData.pubs[1].avatar}
-					size={'medium'}
+					size="medium"
 					publicationDate={collectionData.pubs[1].firstPublishedAt}
 					collaborators={collectionData.pubs[1].collaborators}
 					authors={collectionData.pubs[1].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
@@ -71,26 +71,26 @@ storiesOf('Components', module)
 		</div>
 
 		<h1 style={{ margin: '2em 0em 0.5em' }}>Small</h1>
-		<div className={'row'}>
-			<div className={'col-12'}>
+		<div className="row">
+			<div className="col-12">
 				<PubPreview
 					title={collectionData.pubs[0].title}
 					description={collectionData.pubs[0].description}
 					slug={collectionData.pubs[0].slug}
 					bannerImage={collectionData.pubs[0].avatar}
-					size={'small'}
+					size="small"
 					publicationDate={collectionData.pubs[0].firstPublishedAt}
 					collaborators={collectionData.pubs[0].collaborators}
 					authors={collectionData.pubs[0].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
 				/>
 			</div>
-			<div className={'col-12'}>
+			<div className="col-12">
 				<PubPreview
 					title={collectionData.pubs[1].title}
 					description={collectionData.pubs[1].description}
 					slug={collectionData.pubs[1].slug}
 					bannerImage={collectionData.pubs[1].avatar}
-					size={'small'}
+					size="small"
 					publicationDate={collectionData.pubs[1].firstPublishedAt}
 					collaborators={collectionData.pubs[1].collaborators}
 					authors={collectionData.pubs[1].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
@@ -99,35 +99,35 @@ storiesOf('Components', module)
 		</div>
 
 		<h1 style={{ margin: '2em 0em 0.5em' }}>Placeholder</h1>
-		<div className={'row'}>
-			<div className={'col-12'}>
+		<div className="row">
+			<div className="col-12">
 				<PubPreview
-					size={'large'}
+					size="large"
 					isPlaceholder={true}
 				/>
 			</div>
 		</div>
-		<div className={'row'}>
-			<div className={'col-6'}>
+		<div className="row">
+			<div className="col-6">
 				<PubPreview
-					title={'A sample title for placeholder'}
-					size={'medium'}
+					title="A sample title for placeholder"
+					size="medium"
 					isPlaceholder={true}
 				/>
 			</div>
-			<div className={'col-6'}>
+			<div className="col-6">
 				<PubPreview
-					title={'A sample title for placeholder'}
-					size={'medium'}
+					title="A sample title for placeholder"
+					size="medium"
 					isPlaceholder={true}
-					inputContent={<input className={'pt-input pt-fill'} type={'text'} />}
+					inputContent={<input className="pt-input pt-fill" type="text" />}
 				/>
 			</div>
 		</div>
-		<div className={'row'}>
-			<div className={'col-12'}>
+		<div className="row">
+			<div className="col-12">
 				<PubPreview
-					size={'small'}
+					size="small"
 					isPlaceholder={true}
 				/>
 			</div>

@@ -36,7 +36,7 @@ app.post('/api/password-reset', (req, res)=> {
 		return res.status(200).json('success');
 	})
 	.catch((err)=> {
-		console.log('Error resetting password post', err);
+		console.error('Error resetting password post', err);
 		return res.status(401).json('Error resseting password.');
 	});
 });
@@ -81,4 +81,3 @@ app.put('/api/password-reset', (req, res)=> {
 		return res.status(401).json(err.message);
 	});
 });
-

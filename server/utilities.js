@@ -281,7 +281,7 @@ export const handleErrors = (req, res, next)=> {
 		) {
 			return next();
 		}
-		console.log('Err', err);
+		console.error('Err', err);
 		return res.status(500).json('Error');
 	};
 };

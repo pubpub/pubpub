@@ -1,5 +1,5 @@
 import app from '../server';
-import { Pub, Version, Collaborator, CommunityAdmin, Discussion, Collection, PubManager } from '../models';
+import { Pub, Version, CommunityAdmin, Discussion, Collection, PubManager } from '../models';
 import { generateNewVersionNotification } from '../notifications';
 import { submitDoiData } from '../utilities';
 

@@ -16,7 +16,7 @@ const defaultProps = {
 	hideNone: false,
 };
 
-const PubCollabDropdownPermissions = function(props) {
+const PubOptionsSharingDropdownPermissions = function(props) {
 	const keySuffix = Math.round(Math.random() * 25000);
 	const items = {
 		none: {
@@ -52,7 +52,7 @@ const PubCollabDropdownPermissions = function(props) {
 			isDisabled={props.isDisabled}
 			isSmall={true}
 		>
-			<ul className="pub-options-dropdown pt-menu">
+			<ul className="pub-options-sharing-dropdown-permissions-component pt-menu">
 				{Object.keys(items).map((key)=> {
 					const item = items[key];
 					return (
@@ -72,6 +72,6 @@ const PubCollabDropdownPermissions = function(props) {
 	);
 };
 
-PubCollabDropdownPermissions.propTypes = propTypes;
-PubCollabDropdownPermissions.defaultProps = defaultProps;
-export default PubCollabDropdownPermissions;
+PubOptionsSharingDropdownPermissions.propTypes = propTypes;
+PubOptionsSharingDropdownPermissions.defaultProps = defaultProps;
+export default PubOptionsSharingDropdownPermissions;

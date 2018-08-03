@@ -14,7 +14,7 @@ import Latex from '@pubpub/editor/addons/Latex';
 import Footnote from '@pubpub/editor/addons/Footnote';
 import Table from '@pubpub/editor/addons/Table';
 import Citation from '@pubpub/editor/addons/Citation';
-import Discussion from '../client/components/DiscussionAddon/DiscussionAddon';
+import Discussion from 'components/DiscussionAddon/DiscussionAddon';
 import { Pub, Version } from '../server/models';
 import { generateHash } from '../server/utilities';
 

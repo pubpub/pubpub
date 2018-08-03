@@ -1,4 +1,4 @@
-/* eslint-disable global-require */
+/* eslint-disable global-require no-console */
 import amqplib from 'amqplib';
 import exportTask from './exportTask';
 import importTask from './importTask';

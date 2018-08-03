@@ -36,7 +36,7 @@ const PubOptionsDropdownPrivacy = function(props) {
 		},
 	};
 	return (
-		<div className="pub-options-dropdown-privacy-component">
+		<div className="pub-options-sharing-dropdown-privacy-component">
 			<DropdownButton
 				label={items[props.value].title}
 				icon={items[props.value].icon}

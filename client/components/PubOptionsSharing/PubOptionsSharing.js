@@ -17,7 +17,7 @@ const propTypes = {
 };
 
 class PubOptionsSharing extends Component {
-	constructor(props) { 
+	constructor(props) {
 		super(props);
 		this.state = {
 			/* We store pubData in state of this component so we can do immediate */
@@ -219,13 +219,6 @@ class PubOptionsSharing extends Component {
 						</div>
 					}
 					<h1>Sharing</h1>
-					<div className="pt-callout">
-						<h5>UI Questions</h5>
-						<p>Should the people cards be fixed-width, or adjustable width (as they are now)?</p>
-						<p>When a version is public, should we show the preview of faces (as we do now) when it is collapsed under Version Permissions?</p>
-						<p>When a version is public, should we disable the manipulation of specific permissions when chosen version is expanded (perhaps reduced opacity, so you can see something is there, but not change it)?</p>
-
-					</div>
 					<h2>Managers</h2>
 					<p>Managers can view all versions, edit pub details, and edit the draft.</p>
 					<div className="cards-wrapper">

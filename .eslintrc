@@ -26,7 +26,7 @@
         "import/no-extraneous-dependencies": 0,
         "indent": [2, "tab", { "MemberExpression": 0 }],
         "jsx-a11y/click-events-have-key-events": 0,
-        "no-console": [1, { allow: ["warn", "error"] }],
+        "no-console": [1, { allow: ["warn", "error", "info"] }],
         "object-shorthand": 0,
         "object-curly-newline": 0,
         "prefer-destructuring": 0,
