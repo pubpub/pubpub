@@ -24,14 +24,12 @@ app.get(['/pub/:slug', '/pub/:slug/content/:sectionId', '/pub/:slug/draft', '/pu
 
 	return getInitialData(req)
 	.then((initialData)=> {
-		console.time('Pub query');
 		return Promise.all([
 			initialData,
 			findPub(req, initialData, isDraft)
 		]);
 	})
 	.then(([initialData, pubData])=> {
-		console.timeEnd('Pub query');
 		/* If isDraft, generate a firebaseToken */
 		const tokenClientId = initialData.loginData.clientId || 'anonymous';
 		const createFirebaseToken = isDraft

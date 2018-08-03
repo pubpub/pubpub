@@ -161,6 +161,9 @@ class PubOptionsTags extends Component {
 									this.handlePubTagDelete(pubTag.id);
 								}}
 							>
+								{!pubTag.tag.isPublic &&
+									<span className="pt-icon-standard pt-icon-lock2" />
+								}
 								{pubTag.tag.title}
 							</Tag>
 						);
