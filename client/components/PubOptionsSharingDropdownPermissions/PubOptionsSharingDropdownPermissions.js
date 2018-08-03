@@ -45,30 +45,32 @@ const PubOptionsSharingDropdownPermissions = function(props) {
 	if (props.hideNone) { delete items.none; }
 	const selectedKey = props.value === 'none' && props.hideNone ? 'view' : props.value;
 	return (
-		<DropdownButton
-			label={items[selectedKey].title}
-			// icon={items[selectedKey].icon}
-			isRightAligned={true}
-			isDisabled={props.isDisabled}
-			isSmall={true}
-		>
-			<ul className="pub-options-sharing-dropdown-permissions-component pt-menu">
-				{Object.keys(items).map((key)=> {
-					const item = items[key];
-					return (
-						<li key={`${item.value}-option-${keySuffix}`}>
-							<button
-								className={`pt-menu-item pt-popover-dismiss ${item.icon}`}
-								onClick={item.onClick}
-								type="button"
-							>
-								<div className="title">{item.title}</div>
-							</button>
-						</li>
-					);
-				})}
-			</ul>
-		</DropdownButton>
+		<div className="pub-options-sharing-dropdown-permissions-component">
+			<DropdownButton
+				label={items[selectedKey].title}
+				// icon={items[selectedKey].icon}
+				isRightAligned={true}
+				isDisabled={props.isDisabled}
+				isSmall={true}
+			>
+				<ul className="pub-options-sharing-dropdown-permissions-component pub-options-dropdown pt-menu">
+					{Object.keys(items).map((key)=> {
+						const item = items[key];
+						return (
+							<li key={`${item.value}-option-${keySuffix}`}>
+								<button
+									className={`pt-menu-item pt-popover-dismiss ${item.icon}`}
+									onClick={item.onClick}
+									type="button"
+								>
+									<div className="title">{item.title}</div>
+								</button>
+							</li>
+						);
+					})}
+				</ul>
+			</DropdownButton>
+		</div>
 	);
 };
 

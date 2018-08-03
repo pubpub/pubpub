@@ -40,6 +40,7 @@ const PubOptionsDropdownPrivacy = function(props) {
 			<DropdownButton
 				label={items[props.value].title}
 				icon={items[props.value].icon}
+				isRightAligned={true}
 			>
 				<ul className="pub-options-dropdown pt-menu">
 					{Object.keys(items).filter((item, index)=> {

@@ -5,6 +5,7 @@ import { Checkbox, Spinner } from '@blueprintjs/core';
 import UserAutocomplete from 'components/UserAutocomplete/UserAutocomplete';
 import PubOptionsSharingDropdownPrivacy from 'components/PubOptionsSharingDropdownPrivacy/PubOptionsSharingDropdownPrivacy';
 import PubOptionsSharingDropdownPermissions from 'components/PubOptionsSharingDropdownPermissions/PubOptionsSharingDropdownPermissions';
+import PubOptionsSharingCard from 'components/PubOptionsSharingCard/PubOptionsSharingCard';
 import Avatar from 'components/Avatar/Avatar';
 import { apiFetch } from 'utilities';
 
@@ -222,12 +223,12 @@ class PubOptionsSharing extends Component {
 					<h2>Managers</h2>
 					<p>Managers can view all versions, edit pub details, and edit the draft.</p>
 					<div className="cards-wrapper">
-						<div className="card pt-elevation-1">
-							<div className="name">
-								<span className="pt-icon-standard pt-icon-people" />
-								Community Admins
-							</div>
-							<div className="options">
+						<PubOptionsSharingCard
+							content={[
+								<span className="pt-icon-standard pt-icon-people" />,
+								<span>Community Admins</span>
+							]}
+							options={
 								<Checkbox
 									checked={pubData.isCommunityAdminManaged}
 									onChange={(evt)=> {
@@ -238,45 +239,46 @@ class PubOptionsSharing extends Component {
 								>
 									Can Manage
 								</Checkbox>
-							</div>
-						</div>
+							}
+						/>
 						{managers.sort((foo, bar)=> {
 							if (foo.createdAt < bar.createdAt) { return -1; }
 							if (foo.createdAt > bar.createdAt) { return 1; }
 							return 0;
 						}).map((manager)=> {
 							return (
-								<div className="card pt-elevation-1">
-									<div className="name">
-										<Avatar width={25} userInitials={manager.user.initials} userAvatar={manager.user.avatar} />
-										{manager.user.fullName}
-									</div>
-									{managers.length > 1 &&
-										<div className="options">
-											<button
-												className="pt-button pt-minimal pt-small"
-												type="button"
-												onClick={()=> {
-													this.handleRemoveManager(manager.id);
-												}}
-											>
-												<span className="pt-icon-standard pt-icon-small-cross" />
-											</button>
-										</div>
+								<PubOptionsSharingCard
+									key={`card-${manager.id}`}
+									content={[
+										<Avatar width={25} userInitials={manager.user.initials} userAvatar={manager.user.avatar} />,
+										<span>{manager.user.fullName}</span>
+									]}
+									options={managers.length > 1
+										? <button
+											className="pt-button pt-minimal pt-small pt-icon-small-cross"
+											type="button"
+											onClick={()=> {
+												this.handleRemoveManager(manager.id);
+											}}
+										/>
+										: null
 									}
-								</div>
+								/>
 							);
 						})}
-						<div className="card pt-elevation-1 add">
-							<UserAutocomplete
-								onSelect={this.handleAddManager}
-								allowCustomUser={false} // Eventually use this for emails
-								placeholder="Add manager..."
-								usedUserIds={managers.map((item)=> {
-									return item.user.id;
-								})}
-							/>
-						</div>
+						<PubOptionsSharingCard
+							content={
+								<UserAutocomplete
+									onSelect={this.handleAddManager}
+									allowCustomUser={false} // Eventually use this for emails
+									placeholder="Add manager..."
+									usedUserIds={managers.map((item)=> {
+										return item.user.id;
+									})}
+								/>
+							}
+							isAddCard={true}
+						/>
 					</div>
 
 					<h2>Version Permissions</h2>
@@ -326,9 +328,9 @@ class PubOptionsSharing extends Component {
 							<div>
 								<div>Permissions</div>
 								<div className="cards-wrapper">
-									<div className="card pt-elevation-0 flat">
-										<div className="name">
-											Managers
+									<PubOptionsSharingCard
+										content={[
+											<span>Managers</span>,
 											<span className="managers-preview">
 												{pubData.isCommunityAdminManaged &&
 													<span className="pt-icon-standard pt-icon-people" />
@@ -340,20 +342,21 @@ class PubOptionsSharing extends Component {
 													<Avatar width={20} userInitials={`+${managers.length - 2}`} />
 												}
 											</span>
-										</div>
-										<div className="options">
-											Can Edit
-										</div>
-									</div>
+										]}
+										options={
+											<span>Can Edit</span>
+										}
+										isFlatCard={true}
+									/>
 
 									{/* If community admins are not managers, show options for their draft permissions */}
 									{!pubData.isCommunityAdminManaged &&
-										<div className="card pt-elevation-1">
-											<div className="name">
-												<span className="pt-icon-standard pt-icon-people" />
-												Community Admins
-											</div>
-											<div className="options">
+										<PubOptionsSharingCard
+											content={[
+												<span className="pt-icon-standard pt-icon-people" />,
+												<span>Community Admins</span>
+											]}
+											options={
 												<PubOptionsSharingDropdownPermissions
 													value={pubData.communityAdminDraftPermissions}
 													onChange={(newValue)=> {
@@ -362,8 +365,8 @@ class PubOptionsSharing extends Component {
 														});
 													}}
 												/>
-											</div>
-										</div>
+											}
+										/>
 									}
 
 									{/* List all version permissions, filtering out managers */}
@@ -377,12 +380,13 @@ class PubOptionsSharing extends Component {
 										return 0;
 									}).map((versionPermission)=> {
 										return (
-											<div className="card pt-elevation-1">
-												<div className="name">
-													<Avatar width={25} userInitials={versionPermission.user.initials} userAvatar={versionPermission.user.avatar} />
-													{versionPermission.user.fullName}
-												</div>
-												<div className="options">
+											<PubOptionsSharingCard
+												key={versionPermission.id}
+												content={[
+													<Avatar width={25} userInitials={versionPermission.user.initials} userAvatar={versionPermission.user.avatar} />,
+													<span>{versionPermission.user.fullName}</span>
+												]}
+												options={[
 													<PubOptionsSharingDropdownPermissions
 														value={versionPermission.permissions}
 														hideNone={true}
@@ -392,7 +396,7 @@ class PubOptionsSharing extends Component {
 																permissions: newValue,
 															});
 														}}
-													/>
+													/>,
 													<button
 														className="pt-button pt-minimal pt-small"
 														type="button"
@@ -402,29 +406,32 @@ class PubOptionsSharing extends Component {
 													>
 														<span className="pt-icon-standard pt-icon-small-cross" />
 													</button>
-												</div>
-											</div>
+												]}
+											/>
 										);
 									})}
-									<div className="card pt-elevation-1 add">
-										<UserAutocomplete
-											onSelect={(user)=> {
-												return this.handleVersionPermissionAdd({
-													userId: user.id,
-													versionId: null,
-												});
-											}}
-											allowCustomUser={false} // Eventually use this for emails
-											placeholder="Add user..."
-											usedUserIds={pubData.versionPermissions.filter((versionPermission)=> {
-												return !versionPermission.versionId;
-											}).map((item)=> {
-												return item.user.id;
-											}).concat(pubData.managers.map((item)=> {
-												return item.user.id;
-											}))}
-										/>
-									</div>
+									<PubOptionsSharingCard
+										content={
+											<UserAutocomplete
+												onSelect={(user)=> {
+													return this.handleVersionPermissionAdd({
+														userId: user.id,
+														versionId: null,
+													});
+												}}
+												allowCustomUser={false} // Eventually use this for emails
+												placeholder="Add user..."
+												usedUserIds={pubData.versionPermissions.filter((versionPermission)=> {
+													return !versionPermission.versionId;
+												}).map((item)=> {
+													return item.user.id;
+												}).concat(pubData.managers.map((item)=> {
+													return item.user.id;
+												}))}
+											/>
+										}
+										isAddCard={true}
+									/>
 								</div>
 
 								<div>Sharing Links</div>
@@ -495,9 +502,9 @@ class PubOptionsSharing extends Component {
 									<div>
 										<div>Permissions</div>
 										<div className="cards-wrapper">
-											<div className="card pt-elevation-0 flat">
-												<div className="name">
-													Managers
+											<PubOptionsSharingCard
+												content={[
+													<span>Managers</span>,
 													<span className="managers-preview">
 														{version.isCommunityAdminShared &&
 															<span className="pt-icon-standard pt-icon-people" />
@@ -510,20 +517,21 @@ class PubOptionsSharing extends Component {
 															<Avatar width={20} userInitials={`+${managers.length - 2}`} />
 														}
 													</span>
-												</div>
-												<div className="options">
-													Can View
-												</div>
-											</div>
+												]}
+												options={
+													<span>Can View</span>
+												}
+												isFlatCard={true}
+											/>
 
 											{/* If community admins are not managers, show options for their version permissions */}
 											{!pubData.isCommunityAdminManaged &&
-												<div className="card pt-elevation-1">
-													<div className="name">
-														<span className="pt-icon-standard pt-icon-people" />
-														Community Admins
-													</div>
-													<div className="options">
+												<PubOptionsSharingCard
+													content={[
+														<span className="pt-icon-standard pt-icon-people" />,
+														<span>Community Admins</span>
+													]}
+													options={
 														<Checkbox
 															checked={version.isCommunityAdminShared}
 															onChange={(evt)=> {
@@ -535,8 +543,8 @@ class PubOptionsSharing extends Component {
 														>
 															Can View
 														</Checkbox>
-													</div>
-												</div>
+													}
+												/>
 											}
 											{pubData.versionPermissions.filter((versionPermission)=> {
 												return !managerIds[versionPermission.user.id];
@@ -548,12 +556,13 @@ class PubOptionsSharing extends Component {
 												return 0;
 											}).map((versionPermission)=> {
 												return (
-													<div className="card pt-elevation-1">
-														<div className="name">
-															<Avatar width={25} userInitials={versionPermission.user.initials} userAvatar={versionPermission.user.avatar} />
-															{versionPermission.user.fullName}
-														</div>
-														<div className="options">
+													<PubOptionsSharingCard
+														key={versionPermission.id}
+														content={[
+															<Avatar width={25} userInitials={versionPermission.user.initials} userAvatar={versionPermission.user.avatar} />,
+															<span>{versionPermission.user.fullName}</span>,
+														]}
+														options={
 															<button
 																className="pt-button pt-minimal pt-small"
 																type="button"
@@ -563,29 +572,32 @@ class PubOptionsSharing extends Component {
 															>
 																<span className="pt-icon-standard pt-icon-small-cross" />
 															</button>
-														</div>
-													</div>
+														}
+													/>
 												);
 											})}
-											<div className="card pt-elevation-1 add">
-												<UserAutocomplete
-													onSelect={(user)=> {
-														return this.handleVersionPermissionAdd({
-															userId: user.id,
-															versionId: version.id,
-														});
-													}}
-													allowCustomUser={false} // Eventually use this for emails
-													placeholder="Add user..."
-													usedUserIds={pubData.versionPermissions.filter((versionPermission)=> {
-														return !versionPermission.versionId;
-													}).map((item)=> {
-														return item.user.id;
-													}).concat(pubData.managers.map((item)=> {
-														return item.user.id;
-													}))}
-												/>
-											</div>
+											<PubOptionsSharingCard
+												content={
+													<UserAutocomplete
+														onSelect={(user)=> {
+															return this.handleVersionPermissionAdd({
+																userId: user.id,
+																versionId: version.id,
+															});
+														}}
+														allowCustomUser={false} // Eventually use this for emails
+														placeholder="Add user..."
+														usedUserIds={pubData.versionPermissions.filter((versionPermission)=> {
+															return !versionPermission.versionId;
+														}).map((item)=> {
+															return item.user.id;
+														}).concat(pubData.managers.map((item)=> {
+															return item.user.id;
+														}))}
+													/>
+												}
+												isAddCard={true}
+											/>
 										</div>
 
 										<div>Sharing Links</div>
