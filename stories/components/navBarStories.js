@@ -33,14 +33,14 @@ const navBars = (
 	</div>
 );
 
-storiesOf('Components/NavBar', module)
-.add('Styled Dark', () => (
+storiesOf('Components', module)
+.add('NavBar - Dark', () => (
 	<div>
 		<AccentStyle {...accentDataDark} />
 		{navBars}
 	</div>
 ))
-.add('Styled Light', () => (
+.add('NavBar - Light', () => (
 	<div>
 		<AccentStyle {...accentDataLight} />
 		{navBars}

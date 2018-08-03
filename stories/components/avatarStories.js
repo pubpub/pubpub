@@ -22,8 +22,8 @@ const border = {
 
 const sizes = [25, 50, 100, 250];
 const colors = ['green', 'blue', 'red', 'purple', 'cyan', 'orange', 'magenta', 'pink'];
-storiesOf('Components/Avatar', module)
-.add('Default', () => (
+storiesOf('Components', module)
+.add('Avatar', () => (
 	<div>
 		<div style={wrapperStyle}>
 			{sizes.map((size)=> {

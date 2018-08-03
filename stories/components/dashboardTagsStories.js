@@ -3,8 +3,8 @@ import { storiesOf } from '@storybook/react';
 import DashboardTags from 'components/DashboardTags/DashboardTags';
 import { pubData, communityData } from '../data';
 
-storiesOf('Components/DashboardTags', module)
-.add('Default', () => (
+storiesOf('Components', module)
+.add('DashboardTags', () => (
 	<div className="pub-options-component">
 		<div className="container right-column">
 			<DashboardTags

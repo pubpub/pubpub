@@ -115,19 +115,19 @@ const headerBars = function(isBasePubPub) {
 	);
 };
 
-storiesOf('Components/Header', module)
-.add('PubPub', () => (
+storiesOf('Components', module)
+.add('Header - PubPub', () => (
 	<div>
 		{headerBars(true)}
 	</div>
 ))
-.add('Styled Dark', () => (
+.add('Header - Dark', () => (
 	<div>
 		<AccentStyle {...accentDataDark} />
 		{headerBars()}
 	</div>
 ))
-.add('Styled Light', () => (
+.add('Header - Light', () => (
 	<div>
 		<AccentStyle {...accentDataLight} />
 		{headerBars()}

@@ -3,9 +3,9 @@ import { storiesOf } from '@storybook/react';
 import PubHeader from 'components/PubHeader/PubHeader';
 import { pubData, locationData } from '../data';
 
-storiesOf('Components/PubHeader', module)
-.add('Default', () => (
-	<div className={'container'}>
+storiesOf('Components', module)
+.add('PubHeader', () => (
+	<div className="container">
 		<PubHeader
 			pubData={pubData}
 			locationData={locationData}

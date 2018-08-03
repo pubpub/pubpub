@@ -5,8 +5,8 @@ import { pubData, communityData } from '../data';
 
 require('components/PubOptions/pubOptions.scss');
 
-storiesOf('Components/PubOptionsDetails', module)
-.add('Default', () => (
+storiesOf('Components', module)
+.add('PubOptionsDetails', () => (
 	<div className="pub-options-component">
 		<div className="container right-column">
 			<PubOptionsDetails
