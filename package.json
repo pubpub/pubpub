@@ -109,7 +109,6 @@
     "timeme.js": "^2.0.3",
     "tmp-promise": "^1.0.4",
     "uglifyjs-webpack-plugin": "^1.2.7",
-    "universal-analytics": "^0.4.16",
     "url-loader": "^1.0.1",
     "uuid": "^3.3.0",
     "validator": "^10.1.0",

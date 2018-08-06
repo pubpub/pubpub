@@ -3,12 +3,10 @@ import React from 'react';
 import Search from 'containers/Search/Search';
 import Html from '../Html';
 import app from '../server';
-import analytics from '../analytics';
 import { renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 import { getPubSearch } from '../queryHelpers';
 
 app.get('/search', (req, res, next)=> {
-	analytics(req);
 
 	return getInitialData(req)
 	.then((initialData)=> {

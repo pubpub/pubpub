@@ -4,7 +4,6 @@ import firebaseAdmin from 'firebase-admin';
 import PubCollaboration from 'containers/PubCollaboration/PubCollaboration';
 import Html from '../Html';
 import app from '../server';
-import analytics from '../analytics';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 import { findPub } from '../queryHelpers';
 
@@ -16,7 +15,6 @@ import { findPub } from '../queryHelpers';
 
 app.get(['/pub/:slug/collaborate', '/pub/:slug/collaborate/content/:chapterId'], (req, res, next)=> {
 	if (!hostIsValid(req, 'community')) { return next(); }
-	analytics(req);
 
 	return getInitialData(req)
 	.then((initialData)=> {

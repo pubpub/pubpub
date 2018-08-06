@@ -2,11 +2,9 @@ import React from 'react';
 import Signup from 'containers/Signup/Signup';
 import Html from '../Html';
 import app from '../server';
-import analytics from '../analytics';
 import { renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 
 app.get('/signup', (req, res, next)=> {
-	analytics(req);
 
 	return getInitialData(req)
 	.then((initialData)=> {

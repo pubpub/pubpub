@@ -3,13 +3,10 @@ import React from 'react';
 import UserCreate from 'containers/UserCreate/UserCreate';
 import Html from '../Html';
 import app from '../server';
-import analytics from '../analytics';
 import { Signup } from '../models';
 import { renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 
 app.get('/user/create/:hash', (req, res, next)=> {
-	analytics(req);
-
 	const getSignup = Signup.findOne({
 		where: { hash: req.params.hash, completed: false },
 		attributes: ['email', 'hash']

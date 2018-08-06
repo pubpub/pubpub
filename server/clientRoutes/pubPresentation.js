@@ -3,7 +3,6 @@ import Promise from 'bluebird';
 import PubPresentation from 'containers/PubPresentation/PubPresentation';
 import Html from '../Html';
 import app from '../server';
-import analytics from '../analytics';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 import { findPub } from '../queryHelpers';
 
@@ -18,7 +17,6 @@ app.get(['/oldpub/:slug', '/oldpub/:slug/:mode', '/oldpub/:slug/content/:chapter
 		return Promise.all([initialData, findPub(req, initialData)]);
 	})
 	.then(([initialData, pubData])=> {
-		analytics(req);
 		const isUnlisted = pubData.collections.reduce((prev, curr)=> {
 			if (curr.isPublic) { return false; }
 			return prev;

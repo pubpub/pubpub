@@ -2,12 +2,9 @@ import React from 'react';
 import Terms from 'containers/Terms/Terms';
 import Html from '../Html';
 import app from '../server';
-import analytics from '../analytics';
 import { renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 
 app.get('/tos', (req, res, next)=> {
-	analytics(req);
-
 	return getInitialData(req)
 	.then((initialData)=> {
 		return renderToNodeStream(res,

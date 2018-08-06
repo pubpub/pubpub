@@ -3,7 +3,6 @@ import Promise from 'bluebird';
 import CollectionContainer from 'containers/Collection/Collection';
 import Html from '../Html';
 import app from '../server';
-import analytics from '../analytics';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 import { findCollection } from '../queryHelpers';
 
@@ -26,7 +25,6 @@ app.get(['/', '/:slug'], (req, res, next)=> {
 		]);
 	})
 	.then(([initialData, collectionData])=> {
-		analytics(req);
 		const newInitialData = {
 			...initialData,
 			collectionData: collectionData,
