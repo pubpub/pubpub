@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { Sequelize } from 'sequelize';
-import { sequelize, Pub, Version, PubManager, Collaborator, VersionPermission, PubAttribution } from './models';
+import { sequelize, Pub, Version, PubManager, Collaborator, VersionPermission, PubAttribution, Collection, Page } from './models';
 import { generateHash } from './utilities';
 
 console.log('Beginning Migration');
@@ -259,6 +259,25 @@ new Promise((resolve)=> {
 // 		return PubAttribution.bulkCreate(newPubAttributions);
 // 	});
 // })
+.then(()=> {
+	/* Migrate Collections to Pages */
+	return Collection.findAll({})
+	.then((collectionsData)=> {
+		const newPages = collectionsData.map((collection)=> {
+			return {
+				id: collection.id,
+				title: collection.title,
+				description: collection.description,
+				slug: collection.slug,
+				isPublic: collection.isPublic,
+				viewHash: collection.createPubHash,
+				layout: collection.layout,
+				communityId: collection.communityId,
+			};
+		});
+		return Page.bulkCreate(newPages);
+	});
+})
 .catch((err)=> {
 	console.log('Error with Migration', err);
 })

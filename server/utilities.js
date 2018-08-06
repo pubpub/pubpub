@@ -7,7 +7,7 @@ import Cite from 'citation-js';
 import builder from 'xmlbuilder';
 import request from 'request-promise';
 import amqplib from 'amqplib';
-import { Community, Collection, User, Pub, Version, PubAttribution, Tag } from './models';
+import { Community, Collection, User, Pub, Version, PubAttribution, Tag, Page } from './models';
 import { getNotificationsCount } from './notifications';
 
 const doiSubmissionUrl = process.env.DOI_SUBMISSION_URL;
@@ -85,9 +85,16 @@ export const getInitialData = (req)=> {
 			exclude: ['createdAt', 'updatedAt']
 		},
 		include: [
+			// {
+			// 	model: Collection,
+			// 	as: 'collections',
+			// 	attributes: {
+			// 		exclude: ['createdAt', 'updatedAt', 'communityId']
+			// 	},
+			// },
 			{
-				model: Collection,
-				as: 'collections',
+				model: Page,
+				as: 'pages',
 				attributes: {
 					exclude: ['createdAt', 'updatedAt', 'communityId']
 				},
@@ -101,7 +108,8 @@ export const getInitialData = (req)=> {
 			{
 				model: Tag,
 				as: 'tags',
-				include: [{ model: Collection, as: 'page', required: false, attributes: ['id', 'title', 'slug'] }]
+				separate: true,
+				// include: [{ model: Page, as: 'page', required: false, attributes: ['id', 'title', 'slug'] }]
 			}
 		],
 	})
@@ -115,12 +123,30 @@ export const getInitialData = (req)=> {
 			return prev;
 		}, false);
 
-		communityData.collections = communityData.collections.filter((item)=> {
-			return loginData.isAdmin || item.isPublic;
+		const availablePages = {};
+		communityData.pages = communityData.pages.filter((item)=> {
+			if (!loginData.isAdmin && !item.isPublic) {
+				return false;
+			}
+
+			availablePages[item.id] = {
+				id: item.id,
+				title: item.title,
+				slug: item.slug,
+			};
+			return true;
 		});
 
 		communityData.tags = communityData.tags.filter((item)=> {
 			return loginData.isAdmin || item.isPublic;
+		});
+
+		communityData.tags = communityData.tags.map((tag)=> {
+			if (!tag.pageId) { return tag; }
+			return {
+				...tag,
+				page: availablePages[tag.pageId]
+			};
 		});
 
 		const outputData = {
@@ -129,7 +155,8 @@ export const getInitialData = (req)=> {
 			locationData: locationData,
 		};
 		const notificationCount = loginData.id
-			? getNotificationsCount(communityData.id, loginData.id)
+			// ? getNotificationsCount(communityData.id, loginData.id)
+			? 0
 			: 0;
 		return Promise.all([outputData, notificationCount]);
 	})
@@ -274,7 +301,7 @@ export const handleErrors = (req, res, next)=> {
 			const slug = err.message.split(':')[1];
 			return res.redirect(`/pub/${slug}/draft`);
 		}
-		if (err.message === 'Collection Not Found' ||
+		if (err.message === 'Page Not Found' ||
 			err.message === 'Pub Not Found' ||
 			err.message === 'User Not Admin' ||
 			err.message === 'User Not Found'

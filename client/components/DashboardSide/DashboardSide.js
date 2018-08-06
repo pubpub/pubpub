@@ -5,13 +5,13 @@ require('./dashboardSide.scss');
 
 const propTypes = {
 	pages: PropTypes.array,
-	collections: PropTypes.array,
+	// collections: PropTypes.array,
 	activeSlug: PropTypes.string,
 };
 
 const defaultProps = {
 	pages: [],
-	collections: [],
+	// collections: [],
 	activeSlug: undefined,
 };
 
@@ -23,6 +23,12 @@ const DashboardSide = function(props) {
 		// 	slug: 'activity',
 		// 	id: 0,
 		// },
+		{
+			title: 'Pubs',
+			icon: 'pt-icon-document',
+			slug: 'pubs',
+			id: 0,
+		},
 		{
 			title: 'Details',
 			icon: 'pt-icon-application',
@@ -79,18 +85,18 @@ const DashboardSide = function(props) {
 						</li>
 					);
 				})}
-				{props.pages.length === 0 &&
+				{/*props.pages.length === 0 &&
 					<li>
 						<a className="pt-menu-item empty">No Pages</a>
 					</li>
-				}
+				*/}
 
-				<li className="pt-menu-header2">
+				{/*<li className="pt-menu-header2">
 					<a href="/dashboard/collection/create" className="pt-button pt-icon-plus pt-small pt-minimal title-button" />
 					<h6>Collections</h6>
-				</li>
+				</li>*/}
 
-				{props.collections.sort((foo, bar)=> {
+				{/*props.collections.sort((foo, bar)=> {
 					const fooTitle = foo.title.toLowerCase();
 					const barTitle = bar.title.toLowerCase();
 					if (fooTitle > barTitle) { return 1; }
@@ -109,7 +115,7 @@ const DashboardSide = function(props) {
 					<li>
 						<a className="pt-menu-item empty">No Collections</a>
 					</li>
-				}
+				*/}
 
 			</ul>
 		</div>

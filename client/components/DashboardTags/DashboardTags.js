@@ -107,7 +107,7 @@ class DashboardTags extends Component {
 								/>
 							</div>
 							<Select
-								items={this.props.communityData.collections}
+								items={this.props.communityData.pages}
 								itemRenderer={(item, { handleClick, modifiers })=> {
 									return (
 										<button

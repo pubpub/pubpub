@@ -8,6 +8,7 @@ import DashboardCreateCollection from 'components/DashboardCreateCollection/Dash
 import DashboardSite from 'components/DashboardSite/DashboardSite';
 import DashboardTeam from 'components/DashboardTeam/DashboardTeam';
 import DashboardTags from 'components/DashboardTags/DashboardTags';
+import DashboardPubs from 'components/DashboardPubs/DashboardPubs';
 
 import { hydrateWrapper, apiFetch } from 'utilities';
 
@@ -18,6 +19,7 @@ const propTypes = {
 	loginData: PropTypes.object.isRequired,
 	locationData: PropTypes.object.isRequired,
 	collectionData: PropTypes.object.isRequired,
+	pubsData: PropTypes.array.isRequired,
 };
 
 class Dashboard extends Component {
@@ -151,12 +153,12 @@ class Dashboard extends Component {
 	render() {
 		const communityData = this.props.communityData;
 		const collectionData = this.props.collectionData;
-		const pages = communityData.collections.filter((item)=> {
-			return item.isPage;
-		});
-		const collections = communityData.collections.filter((item)=> {
-			return !item.isPage;
-		});
+		// const pages = communityData.collections.filter((item)=> {
+		// 	return item.isPage;
+		// });
+		// const collections = communityData.collections.filter((item)=> {
+		// 	return !item.isPage;
+		// });
 
 		const activeSlug = this.props.locationData.params.slug || '';
 		const activeMode = this.props.locationData.params.mode || '';
@@ -176,12 +178,23 @@ class Dashboard extends Component {
 							<div className="col-12 dashboard-columns">
 
 								<div className="side-content">
-									<DashboardSide pages={pages} collections={collections} activeSlug={activeSlug} />
+									<DashboardSide
+										pages={communityData.collections}
+										// collections={collections}
+										activeSlug={activeSlug}
+									/>
 								</div>
 
 								<div className="content-content">
 									{(()=> {
 										switch (activeSlug) {
+										case 'pubs':
+											return (
+												<DashboardPubs
+													communityData={communityData}
+													pubsData={this.props.pubsData}
+												/>
+											);
 										case 'team':
 											return (
 												<div>

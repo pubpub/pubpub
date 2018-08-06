@@ -4,13 +4,13 @@ import Dashboard from 'containers/Dashboard/Dashboard';
 import Html from '../Html';
 import app from '../server';
 import analytics from '../analytics';
+import { Pub, Version, Discussion } from '../models';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 import { findCollection } from '../queryHelpers';
 
 app.get(['/dashboard', '/dashboard/:slug', '/dashboard/:slug/:mode'], (req, res, next)=> {
 	if (!hostIsValid(req, 'community')) { return next(); }
-	analytics(req);
-
+	// analytics(req);
 	return getInitialData(req)
 	.then((initialData)=> {
 		if (!initialData.loginData.isAdmin) { throw new Error('User Not Admin'); }
@@ -21,30 +21,54 @@ app.get(['/dashboard', '/dashboard/:slug', '/dashboard/:slug/:mode'], (req, res,
 		if (slug === 'team') { activeItem.title = 'Team'; }
 		if (slug === 'details') { activeItem.title = 'Details'; }
 		if (slug === 'tags') { activeItem.title = 'Tags'; }
+		if (slug === 'pubs') { activeItem.title = 'Pubs'; }
 		if (slug === 'page') { activeItem.title = 'New Page'; }
 		if (slug === 'collection') { activeItem.title = 'New Collection'; }
 
-		const collectionId = initialData.communityData.collections.reduce((prev, curr)=> {
+		const pageId = initialData.communityData.pages.reduce((prev, curr)=> {
 			if (curr.slug === '' && (req.params.slug === undefined || req.params.slug === 'home')) { return curr.id; }
 			if (curr.slug === req.params.slug) { return curr.id; }
 			return prev;
 		}, undefined);
 
-		if (!collectionId && !activeItem.title) { throw new Error('Collection Not Found'); }
+		if (!pageId && !activeItem.title) { throw new Error('Page Not Found'); }
 
 		const findCollectionData = activeItem.title
 			? activeItem
-			: findCollection(collectionId, true, initialData);
+			: findCollection(pageId, true, initialData);
 
+		// TODO - need to filter this for manager permissions
+		const findPubs = slug === 'pubs'
+			? Pub.findAll({
+				where: { communityId: initialData.communityData.id },
+				include: [
+					{
+						model: Version,
+						required: false,
+						as: 'versions',
+						attributes: ['id', 'isPublic', 'isCommunityAdminShared', 'createdAt']
+					},
+					{
+						required: false,
+						separate: true,
+						model: Discussion,
+						as: 'discussions',
+						attributes: ['id', 'createdAt', 'pubId']
+					}
+				]
+			})
+			: [];
 		return Promise.all([
 			initialData,
 			findCollectionData,
+			findPubs,
 		]);
 	})
-	.then(([initialData, collectionData])=> {
+	.then(([initialData, collectionData, pubsData])=> {
 		const newInitialData = {
 			...initialData,
 			collectionData: collectionData,
+			pubsData: pubsData
 		};
 		return renderToNodeStream(res,
 			<Html

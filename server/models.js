@@ -264,6 +264,24 @@ const Collection = sequelize.define('Collection', {
 	communityId: { type: Sequelize.UUID, allowNull: false },
 });
 
+const Page = sequelize.define('Page', {
+	id: id,
+	title: { type: Sequelize.TEXT, allowNull: false },
+	description: { type: Sequelize.TEXT },
+	slug: { type: Sequelize.TEXT, allowNull: false },
+
+	// isPage: { type: Sequelize.BOOLEAN, allowNull: false },
+	isPublic: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false, },
+	viewHash: { type: Sequelize.TEXT },
+	// isOpenSubmissions: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false, },
+	// isOpenPublish: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false, },
+	layout: { type: Sequelize.JSONB },
+	// createPubHash: { type: Sequelize.TEXT },
+	// createPubMessage: { type: Sequelize.JSONB },
+	/* Set by Associations */
+	communityId: { type: Sequelize.UUID, allowNull: false },
+});
+
 const CollectionPub = sequelize.define('CollectionPub', {
 	id: id,
 	/* Set by Associations */
@@ -398,7 +416,7 @@ Community.hasMany(Tag, { onDelete: 'CASCADE', as: 'tags', foreignKey: 'community
 /* Pubs have many PubTags. */
 Pub.hasMany(PubTag, { onDelete: 'CASCADE', as: 'pubTags', foreignKey: 'pubId' });
 PubTag.belongsTo(Tag, { onDelete: 'CASCADE', as: 'tag', foreignKey: 'tagId' });
-Tag.belongsTo(Collection, { as: 'page', foreignKey: 'pageId' });
+Tag.belongsTo(Page, { as: 'page', foreignKey: 'pageId' });
 
 /* Communities have many Pubs. Pubs belong to a single Community */
 Community.hasMany(Pub, { onDelete: 'CASCADE', as: 'pubs', foreignKey: 'communityId' });
@@ -428,6 +446,9 @@ Pub.belongsToMany(Collection, { as: 'collections', through: 'CollectionPub', for
 /* Communities have many Collections. A Collection belongs to only one Community. */
 Community.hasMany(Collection, { onDelete: 'CASCADE', as: 'collections', foreignKey: 'communityId' });
 
+/* Communities have many Pages. */
+Community.hasMany(Page, { onDelete: 'CASCADE', as: 'pages', foreignKey: 'communityId' });
+
 const db = {
 	Community: Community,
 	CommunityAdmin: CommunityAdmin,
@@ -445,6 +466,7 @@ const db = {
 	PubAttribution: PubAttribution,
 	Tag: Tag,
 	PubTag: PubTag,
+	Page: Page,
 };
 
 db.sequelize = sequelize;

@@ -20,7 +20,7 @@ app.get(['/:slug/submit', '/:slug/submit/:hash'], (req, res, next)=> {
 			return prev;
 		}, undefined);
 
-		if (!collectionId) { throw new Error('Collection Not Found'); }
+		if (!collectionId) { throw new Error('Page Not Found'); }
 
 		return Promise.all([
 			initialData,
