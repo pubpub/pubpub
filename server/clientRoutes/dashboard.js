@@ -7,27 +7,28 @@ import { Pub, Version, Discussion, PubTag, Tag } from '../models';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 import { findCollection } from '../queryHelpers';
 
-app.get(['/dashboard', '/dashboard/:slug', '/dashboard/:slug/:mode'], (req, res, next)=> {
+app.get(['/dashboard', '/dashboard/:mode', '/dashboard/:mode/:slug'], (req, res, next)=> {
 	if (!hostIsValid(req, 'community')) { return next(); }
-	if (!req.params.slug) {
-		return res.redirect(`/dashboard/pubs`);
+	if (!req.params.mode) {
+		return res.redirect('/dashboard/pubs');
 	}
 	return getInitialData(req)
 	.then((initialData)=> {
 		if (!initialData.loginData.isAdmin) { throw new Error('User Not Admin'); }
 
 		const slug = initialData.locationData.params.slug || '';
+		const mode = initialData.locationData.params.mode;
 		const activeItem = {};
-		if (slug === 'activity') { activeItem.title = 'Activity'; }
-		if (slug === 'team') { activeItem.title = 'Team'; }
-		if (slug === 'details') { activeItem.title = 'Details'; }
-		if (slug === 'tags') { activeItem.title = 'Tags'; }
-		if (slug === 'pubs') { activeItem.title = 'Pubs'; }
-		if (slug === 'page') { activeItem.title = 'New Page'; }
-		if (slug === 'collection') { activeItem.title = 'New Collection'; }
+		if (mode === 'activity') { activeItem.title = 'Activity'; }
+		if (mode === 'team') { activeItem.title = 'Team'; }
+		if (mode === 'details') { activeItem.title = 'Details'; }
+		if (mode === 'tags') { activeItem.title = 'Tags'; }
+		if (mode === 'pubs') { activeItem.title = 'Pubs'; }
+		if (mode === 'page') { activeItem.title = 'New Page'; }
+		// if (mode === 'collection') { activeItem.title = 'New Collection'; }
 
 		const pageId = initialData.communityData.pages.reduce((prev, curr)=> {
-			if (curr.slug === '' && (req.params.slug === undefined || req.params.slug === 'home')) { return curr.id; }
+			if (mode === 'pages' && !req.params.slug && !curr.slug) { return curr.id; }
 			if (curr.slug === req.params.slug) { return curr.id; }
 			return prev;
 		}, undefined);
@@ -39,7 +40,7 @@ app.get(['/dashboard', '/dashboard/:slug', '/dashboard/:slug/:mode'], (req, res,
 			: findCollection(pageId, true, initialData);
 
 		// TODO - need to filter this for manager permissions
-		const findPubs = slug === 'pubs'
+		const findPubs = mode === 'pubs'
 			? Pub.findAll({
 				where: { communityId: initialData.communityData.id },
 				include: [

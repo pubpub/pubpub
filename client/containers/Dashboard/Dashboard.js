@@ -162,7 +162,7 @@ class Dashboard extends Component {
 
 		const activeSlug = this.props.locationData.params.slug || '';
 		const activeMode = this.props.locationData.params.mode || '';
-
+		console.log(activeMode, activeSlug)
 		return (
 			<div id="dashboard-container">
 				<PageWrapper
@@ -181,13 +181,14 @@ class Dashboard extends Component {
 									<DashboardSide
 										pages={communityData.pages}
 										// collections={collections}
-										activeSlug={activeSlug}
+										activeTab={activeSlug || activeMode}
+										// activeMode={activeMode}
 									/>
 								</div>
 
 								<div className="content-content">
 									{(()=> {
-										switch (activeSlug) {
+										switch (activeMode) {
 										case 'pubs':
 											return (
 												<DashboardPubs

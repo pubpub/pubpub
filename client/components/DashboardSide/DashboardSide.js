@@ -6,13 +6,13 @@ require('./dashboardSide.scss');
 const propTypes = {
 	pages: PropTypes.array,
 	// collections: PropTypes.array,
-	activeSlug: PropTypes.string,
+	activeTab: PropTypes.string,
 };
 
 const defaultProps = {
 	pages: [],
 	// collections: [],
-	activeSlug: undefined,
+	activeTab: undefined,
 };
 
 const DashboardSide = function(props) {
@@ -57,7 +57,7 @@ const DashboardSide = function(props) {
 				{communityControls.map((control)=> {
 					return (
 						<li key={`side-control-${control.id}`}>
-							<a className={`pt-menu-item ${props.activeSlug === control.slug && 'pt-active'} ${control.icon}`} tabIndex="0" href={`/dashboard/${control.slug}`}>
+							<a className={`pt-menu-item ${props.activeTab === control.slug && 'pt-active'} ${control.icon}`} tabIndex="0" href={`/dashboard/${control.slug}`}>
 								{control.title}
 							</a>
 						</li>
@@ -71,15 +71,18 @@ const DashboardSide = function(props) {
 					<h6>Pages</h6>
 				</li>
 				{props.pages.sort((foo, bar)=> {
+					if (!foo.slug) { return -1; }
 					const fooTitle = foo.title.toLowerCase();
 					const barTitle = bar.title.toLowerCase();
 					if (fooTitle > barTitle) { return 1; }
 					if (fooTitle < barTitle) { return -1; }
 					return 0;
 				}).map((page)=> {
+					const publicStatusIcon = page.isPublic ? 'pt-icon-globe' : 'pt-icon-lock';
+					const pageIcon = page.slug ? publicStatusIcon : 'pt-icon-home';
 					return (
 						<li key={`side-page-${page.id}`}>
-							<a className={`pt-menu-item ${props.activeSlug === page.slug && 'pt-active'} ${page.isPublic ? 'pt-icon-globe' : 'pt-icon-lock'}`} tabIndex="0" href={`/dashboard/${page.slug}`}>
+							<a className={`pt-menu-item ${props.activeTab === page.slug && 'pt-active'} ${pageIcon}`} tabIndex="0" href={`/dashboard/pages/${page.slug}`}>
 								{page.title}
 							</a>
 						</li>
@@ -105,7 +108,7 @@ const DashboardSide = function(props) {
 				}).map((collection)=> {
 					return (
 						<li key={`side-collection-${collection.id}`}>
-							<a className={`pt-menu-item ${props.activeSlug === collection.slug && 'pt-active'} ${collection.isPublic ? 'pt-icon-globe' : 'pt-icon-lock'}`} tabIndex="0" href={`/dashboard/${collection.slug}`}>
+							<a className={`pt-menu-item ${props.activeTab === collection.slug && 'pt-active'} ${collection.isPublic ? 'pt-icon-globe' : 'pt-icon-lock'}`} tabIndex="0" href={`/dashboard/${collection.slug}`}>
 								{collection.title}
 							</a>
 						</li>

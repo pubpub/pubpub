@@ -8,7 +8,7 @@ require('./pubRedirect');		// Route: '/pub/:slug'
 require('./landing');			// Route: '/'
 
 /* Routes for Communities */
-require('./dashboard');			// Route: ['/dashboard', '/dashboard/:slug', '/dashboard/:slug/:mode']
+require('./dashboard');			// Route: ['/dashboard', '/dashboard/:mode', '/dashboard/:mode/:slug']
 require('./notifications');		// Route: '/notifications'
 require('./pubCreate');			// Route: '/pub/create'
 // require('./pubCollaboration');	// Route: '/pub/:slug/collaborate'
