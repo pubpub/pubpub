@@ -1,6 +1,6 @@
 import Promise from 'bluebird';
 import validator from 'validator';
-import { User, Collection, Pub, Collaborator, Discussion, CommunityAdmin, Community, Version, PubManager, PubAttribution, VersionPermission, Tag, PubTag } from './models';
+import { User, Collection, Pub, Collaborator, Discussion, CommunityAdmin, Community, Version, PubManager, PubAttribution, VersionPermission, Tag, PubTag, Page } from './models';
 import { generateCitationHTML } from './utilities';
 
 export const findPub = (req, initialData, isDraft)=> {
@@ -50,7 +50,7 @@ export const findPub = (req, initialData, isDraft)=> {
 				include: [{
 					model: Tag,
 					as: 'tag',
-					include: [{ model: Collection, as: 'page', required: false, attributes: ['id', 'title', 'slug'] }]
+					include: [{ model: Page, as: 'page', required: false, attributes: ['id', 'title', 'slug'] }]
 				}],
 			},
 			// {

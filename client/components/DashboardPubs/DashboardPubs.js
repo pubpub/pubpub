@@ -24,8 +24,17 @@ class DashboardPubs extends Component {
 					return 0;
 				}).map((pub)=> {
 					return (
-						<div key={`pub-${pub.id}`}>
-							{pub.title}
+						<div key={`pub-${pub.id}`} className="pub-wrapper">
+							<div className="title">
+								<a href={`/pub/${pub.slug}`}>{pub.title}</a>
+							</div>
+							<div>
+								{pub.pubTags.map((pubTag)=> {
+									return <span className="pt-tag pt-minimal pt-small">{pubTag.tag.title}</span>;
+								})}
+							</div>
+							<div>{pub.versions.length} versions ·</div>
+							<div>{pub.discussions.length} discussions</div>
 						</div>
 					);
 				})}

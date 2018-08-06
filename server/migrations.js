@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { Sequelize } from 'sequelize';
-import { sequelize, Pub, Version, PubManager, Collaborator, VersionPermission, PubAttribution, Collection, Page } from './models';
+import { sequelize, Pub, Version, PubManager, Collaborator, VersionPermission, PubAttribution, Collection, Page, CollectionPub, Tag, PubTag } from './models';
 import { generateHash } from './utilities';
 
 console.log('Beginning Migration');
@@ -259,32 +259,62 @@ new Promise((resolve)=> {
 // 		return PubAttribution.bulkCreate(newPubAttributions);
 // 	});
 // })
-.then(()=> {
-	/* Migrate Collections to Pages */
-	return Collection.findAll({})
-	.then((collectionsData)=> {
-		const newPages = collectionsData.map((collection)=> {
-			return {
-				id: collection.id,
-				title: collection.title,
-				description: collection.description,
-				slug: collection.slug,
-				isPublic: collection.isPublic,
-				viewHash: collection.createPubHash,
-				layout: collection.layout,
-				communityId: collection.communityId,
-			};
-		});
-		return Page.bulkCreate(newPages);
-	});
-})
-.catch((err)=> {
-	console.log('Error with Migration', err);
-})
-.finally(()=> {
-	console.log('Ending Migration');
-	process.exit();
-});
+// .then(()=> {
+// 	/* Migrate Collections to Pages */
+// 	return Collection.findAll({})
+// 	.then((collectionsData)=> {
+// 		const newPages = collectionsData.map((collection)=> {
+// 			return {
+// 				id: collection.id,
+// 				title: collection.title,
+// 				description: collection.description,
+// 				slug: collection.slug,
+// 				isPublic: collection.isPublic,
+// 				viewHash: collection.createPubHash,
+// 				layout: collection.layout,
+// 				communityId: collection.communityId,
+// 			};
+// 		});
+// 		return Page.bulkCreate(newPages);
+// 	});
+// })
+// .then(()=> {
+// 	/* Create a Tag for all existing Collections */
+// 	return Collection.findAll({})
+// 	.then((collectionsData)=> {
+// 		const newTags = collectionsData.map((collection)=> {
+// 			return {
+// 				id: collection.id,
+// 				title: collection.title || 'Home',
+// 				isRestricted: true,
+// 				isPublic: collection.isPublic,
+// 				pageId: collection.id, /* Use the same id since that's what we used when migrating collection->page */
+// 				communityId: collection.communityId,
+// 			};
+// 		});
+// 		return Tag.bulkCreate(newTags);
+// 	});
+// })
+// .then(()=> {
+// 	/* Migrate CollectionPubs to PubTags */
+// 	return CollectionPub.findAll({})
+// 	.then((collectionPubsData)=> {
+// 		const newPubTags = collectionPubsData.map((collectionPub)=> {
+// 			return {
+// 				tagId: collectionPub.collectionId,
+// 				pubId: collectionPub.pubId,
+// 			};
+// 		});
+// 		return PubTag.bulkCreate(newPubTags);
+// 	});
+// })
+// .catch((err)=> {
+// 	console.log('Error with Migration', err);
+// })
+// .finally(()=> {
+// 	console.log('Ending Migration');
+// 	process.exit();
+// });
 
 /* In case we need to remove an enum type again */
 // .then(()=> {

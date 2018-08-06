@@ -179,7 +179,7 @@ class Dashboard extends Component {
 
 								<div className="side-content">
 									<DashboardSide
-										pages={communityData.collections}
+										pages={communityData.pages}
 										// collections={collections}
 										activeSlug={activeSlug}
 									/>

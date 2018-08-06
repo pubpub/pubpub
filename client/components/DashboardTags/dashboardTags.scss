@@ -17,6 +17,25 @@
 			flex-grow: 1;
 			flex-shrink: 1;
 			display: flex;
+			// .pt-editable-text:not(.pt-editable-text-editing) {
+			.pt-editable-text-content {
+				padding-right: 2em;
+				height: 18px !important;
+				line-height: 18px !important;
+				&:after {
+					font-family: 'pubpub-icons' !important;
+					content: "\E904";
+					padding-left: 0.5em;
+					opacity: 0.75;
+					// height: 18px;
+					position: absolute;
+				}
+			}
+			// }
+			.pt-editable-text-input {
+				height: 18px !important;
+				line-height: 18px !important;
+			}
 			.pt-editable-text-content {
 				padding-right: 2em;
 				&:after {

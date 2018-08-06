@@ -3,13 +3,15 @@ import Promise from 'bluebird';
 import Dashboard from 'containers/Dashboard/Dashboard';
 import Html from '../Html';
 import app from '../server';
-import { Pub, Version, Discussion } from '../models';
+import { Pub, Version, Discussion, PubTag, Tag } from '../models';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 import { findCollection } from '../queryHelpers';
 
 app.get(['/dashboard', '/dashboard/:slug', '/dashboard/:slug/:mode'], (req, res, next)=> {
 	if (!hostIsValid(req, 'community')) { return next(); }
-
+	if (!req.params.slug) {
+		return res.redirect(`/dashboard/pubs`);
+	}
 	return getInitialData(req)
 	.then((initialData)=> {
 		if (!initialData.loginData.isAdmin) { throw new Error('User Not Admin'); }
@@ -53,7 +55,17 @@ app.get(['/dashboard', '/dashboard/:slug', '/dashboard/:slug/:mode'], (req, res,
 						model: Discussion,
 						as: 'discussions',
 						attributes: ['id', 'createdAt', 'pubId']
-					}
+					},
+					{
+						model: PubTag,
+						as: 'pubTags',
+						required: false,
+						separate: true,
+						include: [{
+							model: Tag,
+							as: 'tag',
+						}],
+					},
 				]
 			})
 			: [];

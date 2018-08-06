@@ -71,7 +71,7 @@ class DashboardTags extends Component {
 	render() {
 		return (
 			<div className="dashboard-tags-component">
-				<h1 className="content-title">Tags123</h1>
+				<h1 className="content-title">Tags</h1>
 				<div className="details">Tags can be used to organize content and can be used to flow content onto pages.</div>
 
 				<div className="autocomplete-wrapper">
