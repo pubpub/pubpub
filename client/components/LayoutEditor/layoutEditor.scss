@@ -7,6 +7,7 @@
 		display: flex;
 		align-items: flex-end;
 		padding: 1em;
+		flex-wrap: wrap;
 		// margin: 1em 0em;
 		background-color: #F0F0F0;
 		border-bottom: 1px solid #CCC;
@@ -17,8 +18,8 @@
 		.pt-form-group {
 			margin-bottom: 0px;
 		}
-		.pt-form-group:not(:first-child) {
-			padding-left: 1em;
+		.pt-form-group:not(:last-child) {
+			padding-right: 1em;
 		}
 	}
 	.block-content {
