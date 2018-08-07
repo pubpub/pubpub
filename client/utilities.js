@@ -439,7 +439,8 @@ export function generateRenderLists(layout, pubs) {
 
 			/* While below the set limit of max available pubs */
 			/* keep adding pubs to the renderList */
-			const limit = block.content.limit || (availablePubs.length + renderList.length);
+			const maxAvailableList = availablePubs.length + renderList.length;
+			const limit = Math.min(maxAvailableList, block.content.limit || maxAvailableList);
 			for (let pubIndex = renderList.length; pubIndex < limit; pubIndex += 1) {
 				renderList.push(availablePubs[0]);
 				nonSpecifiedPubs = nonSpecifiedPubs.filter((pub)=> {
