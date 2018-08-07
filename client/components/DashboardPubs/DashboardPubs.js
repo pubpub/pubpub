@@ -34,7 +34,6 @@ class DashboardPubs extends Component {
 								})}
 							</div>
 							<div>{pub.versions.length} versions ·</div>
-							<div>{pub.discussions.length} discussions</div>
 						</div>
 					);
 				})}

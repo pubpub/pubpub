@@ -9,6 +9,7 @@ const propTypes = {
 	content: PropTypes.object.isRequired,
 	pubs: PropTypes.array.isRequired,
 	pubRenderList: PropTypes.array.isRequired,
+	communityData: PropTypes.object.isRequired,
 	/* Expected content */
 	/* title, size, limit, pubIds */
 };
@@ -21,42 +22,57 @@ class LayoutEditorPubs extends Component {
 		this.setMedium = this.setMedium.bind(this);
 		this.setLarge = this.setLarge.bind(this);
 		this.setLimit = this.setLimit.bind(this);
+		this.setTag = this.setTag.bind(this);
 		this.changeTitle = this.changeTitle.bind(this);
 		this.changePubId = this.changePubId.bind(this);
 	}
+
 	handleRemove() {
 		this.props.onRemove(this.props.layoutIndex);
 	}
+
 	setSmall() {
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
 			size: 'small'
 		});
 	}
+
 	setMedium() {
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
 			size: 'medium'
 		});
 	}
+
 	setLarge() {
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
 			size: 'large'
 		});
 	}
+
 	setLimit(evt) {
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
 			limit: Number(evt.target.value)
 		});
 	}
+
+	setTag(evt) {
+		this.props.onChange(this.props.layoutIndex, {
+			...this.props.content,
+			tagId: evt.target.value,
+		});
+	}
+
 	changeTitle(evt) {
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
 			title: evt.target.value,
 		});
 	}
+
 	changePubId(index, string) {
 		const newPubIds = this.props.content.pubIds;
 		newPubIds[index] = string;
@@ -65,6 +81,7 @@ class LayoutEditorPubs extends Component {
 			pubIds: newPubIds.filter((item)=> { return item; }),
 		});
 	}
+
 	render() {
 		const size = this.props.content.size;
 		const displayLimit = this.props.content.limit || Math.max(4, this.props.pubRenderList.length);
@@ -74,6 +91,10 @@ class LayoutEditorPubs extends Component {
 		}
 		const previews = [...this.props.content.pubIds, ...emptyPreviews].slice(0, displayLimit);
 		const selectOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+		const activeTag = this.props.communityData.tags.reduce((prev, curr)=> {
+			if (curr.id === this.props.content.tagId) { return curr; }
+			return prev;
+		}, {});
 		return (
 			<div className="layout-editor-pubs-component">
 				<div className="block-header">
@@ -82,6 +103,17 @@ class LayoutEditorPubs extends Component {
 						<input id={`section-title-${this.props.layoutIndex}`} type="text" className="pt-input" value={this.props.content.title} onChange={this.changeTitle} />
 					</div>
 					<div className="spacer" />
+					<div className="pt-form-group">
+						<label htmlFor={`section-tag-${this.props.layoutIndex}`}>Use Tag</label>
+						<div className="pt-button-group pt-select">
+							<select value={activeTag.id} onChange={this.setTag}>
+								<option value={undefined}>Do not use tag</option>
+								{this.props.communityData.tags.map((item)=> {
+									return <option value={item.id} key={`tag-option-${item.id}`}>{item.title}</option>;
+								})}
+							</select>
+						</div>
+					</div>
 					<div className="pt-form-group">
 						<label htmlFor={`section-size-${this.props.layoutIndex}`}>Size</label>
 						<div className="pt-button-group">
@@ -132,7 +164,14 @@ class LayoutEditorPubs extends Component {
 													<select value={this.props.content.pubIds[index] || ''} onChange={(evt)=> { this.changePubId(index, evt.target.value); }}>
 														<option value="">Choose specific Pub</option>
 														{this.props.pubs.filter((pub)=> {
-															return pub.firstPublishedAt;
+															if (!this.props.content.tagId) { return true; }
+															return pub.pubTags.reduce((prev, curr)=> {
+																if (curr.tagId === this.props.content.tagId) { return true; }
+																return prev;
+															}, false);
+														// })
+														// }).filter((pub)=> {
+															// return pub.firstPublishedAt;
 														}).sort((foo, bar)=> {
 															if (foo.title < bar.title) { return -1; }
 															if (foo.title > bar.title) { return 1; }

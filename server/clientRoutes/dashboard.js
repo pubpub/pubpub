@@ -25,7 +25,6 @@ app.get(['/dashboard', '/dashboard/:mode', '/dashboard/:mode/:slug'], (req, res,
 		if (mode === 'tags') { activeItem.title = 'Tags'; }
 		if (mode === 'pubs') { activeItem.title = 'Pubs'; }
 		if (mode === 'page') { activeItem.title = 'New Page'; }
-		// if (mode === 'collection') { activeItem.title = 'New Collection'; }
 
 		const pageId = initialData.communityData.pages.reduce((prev, curr)=> {
 			if (mode === 'pages' && !slug && !curr.slug) { return curr.id; }
@@ -39,37 +38,10 @@ app.get(['/dashboard', '/dashboard/:mode', '/dashboard/:mode/:slug'], (req, res,
 			? activeItem
 			: findPage(pageId, true, initialData);
 
-		// TODO - need to filter this for manager permissions
 		const findPubs = mode === 'pubs'
-			? Pub.findAll({
-				where: { communityId: initialData.communityData.id },
-				include: [
-					{
-						model: Version,
-						required: false,
-						as: 'versions',
-						attributes: ['id', 'isPublic', 'isCommunityAdminShared', 'createdAt']
-					},
-					{
-						required: false,
-						separate: true,
-						model: Discussion,
-						as: 'discussions',
-						attributes: ['id', 'createdAt', 'pubId']
-					},
-					{
-						model: PubTag,
-						as: 'pubTags',
-						required: false,
-						separate: true,
-						include: [{
-							model: Tag,
-							as: 'tag',
-						}],
-					},
-				]
-			})
-			: [];
+			? findPage(initialData.communityData.pages[0].id, true, initialData)
+			: { pubs: [] };
+
 		return Promise.all([
 			initialData,
 			findPageData,
@@ -80,7 +52,7 @@ app.get(['/dashboard', '/dashboard/:mode', '/dashboard/:mode/:slug'], (req, res,
 		const newInitialData = {
 			...initialData,
 			pageData: pageData,
-			pubsData: pubsData
+			pubsData: pubsData.pubs,
 		};
 		return renderToNodeStream(res,
 			<Html

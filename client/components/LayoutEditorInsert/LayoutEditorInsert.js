@@ -7,7 +7,7 @@ require('./layoutEditorInsert.scss');
 const propTypes = {
 	insertIndex: PropTypes.number.isRequired,
 	onInsert: PropTypes.func.isRequired,
-	isPage: PropTypes.bool.isRequired,
+	// isPage: PropTypes.bool.isRequired,
 };
 
 const LayoutEditorInsert = function(props) {
@@ -15,12 +15,12 @@ const LayoutEditorInsert = function(props) {
 		{ title: 'Add Pub List', type: 'pubs' },
 		{ title: 'Add Text Block', type: 'text' },
 		{ title: 'Add HTML Block', type: 'html' },
-		{ title: 'Add Open Drafts Block', type: 'drafts' },
+		// { title: 'Add Open Drafts Block', type: 'drafts' },
 	];
-	if (props.isPage) {
-		types.splice(3, 1);
-		types.splice(0, 1);
-	}
+	// if (props.isPage) {
+	// 	types.splice(3, 1);
+	// 	types.splice(0, 1);
+	// }
 	return (
 		<div className="layout-editor-insert-component">
 			<Popover
@@ -47,7 +47,7 @@ const LayoutEditorInsert = function(props) {
 				transitionDuration={-1}
 				inheritDarkTheme={false}
 			>
-				<button className="pt-button pt-icon-add">Add Section</button>
+				<button type="button" className="pt-button pt-icon-add">Add Section</button>
 			</Popover>
 			<div className="center-line" />
 		</div>

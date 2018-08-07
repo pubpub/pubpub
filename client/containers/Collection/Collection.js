@@ -14,7 +14,7 @@ const propTypes = {
 	communityData: PropTypes.object.isRequired,
 	loginData: PropTypes.object.isRequired,
 	locationData: PropTypes.object.isRequired,
-	collectionData: PropTypes.object.isRequired,
+	pageData: PropTypes.object.isRequired,
 };
 
 class Collection extends Component {
@@ -29,8 +29,8 @@ class Collection extends Component {
 	}
 
 	getComponentFromType(item, index, pubRenderLists) {
-		const collectionData = this.props.collectionData || {};
-		const pubs = collectionData.pubs || [];
+		const pageData = this.props.pageData || {};
+		const pubs = pageData.pubs || [];
 
 		if (item.type === 'pubs') {
 			return (
@@ -39,7 +39,7 @@ class Collection extends Component {
 					layoutIndex={index}
 					content={item.content}
 					pubRenderList={pubRenderLists[index]}
-					isLoading={!collectionData.id}
+					// isLoading={!collectionData.id}
 				/>
 			);
 		}
@@ -59,25 +59,27 @@ class Collection extends Component {
 				/>
 			);
 		}
-		if (item.type === 'drafts') {
-			return (
-				<LayoutDrafts
-					key={`item-${item.id}`}
-					content={item.content}
-					pubs={pubs.filter((pub)=> {
-						return !pub.firstPublishedAt;
-					})}
-				/>
-			);
-		}
+		// if (item.type === 'drafts') {
+		// 	return (
+		// 		<LayoutDrafts
+		// 			key={`item-${item.id}`}
+		// 			content={item.content}
+		// 			pubs={pubs.filter((pub)=> {
+		// 				return !pub.firstPublishedAt;
+		// 			})}
+		// 		/>
+		// 	);
+		// }
 		return null;
 	}
 	generateRenderList(layout) {
-		const collectionData = this.props.collectionData || {};
-		const pubs = collectionData.pubs || [];
+		const pageData = this.props.pageData || {};
+		const pubs = pageData.pubs || [];
 		const allPubs = pubs.filter((item)=> {
-			return item.firstPublishedAt;
+			// return item.firstPublishedAt;
+			return true;
 		}).sort((foo, bar)=> {
+			// TODO: Sort by active version date, or draft createdAt
 			if (foo.firstPublishedAt < bar.firstPublishedAt) { return 1; }
 			if (foo.firstPublishedAt > bar.firstPublishedAt) { return -1; }
 			return 0;
@@ -96,7 +98,13 @@ class Collection extends Component {
 		});
 		layout.forEach((block, index)=> {
 			if (block.type === 'pubs') {
-				const pubsById = pubs.reduce((prev, curr)=> {
+				const pubsById = pubs.filter((pub)=> {
+					if (!block.content.tagId) { return true; }
+					return pub.pubTags.reduce((prev, curr)=> {
+						if (curr.tagId === block.content.tagId) { return true; }
+						return prev;
+					}, false);
+				}).reduce((prev, curr)=> {
 					const output = prev;
 					output[curr.id] = curr;
 					return output;
@@ -122,7 +130,7 @@ class Collection extends Component {
 		return apiFetch('/api/pubs', {
 			method: 'POST',
 			body: JSON.stringify({
-				collectionId: this.props.collectionData.id,
+				collectionId: this.props.pageData.id,
 				communityId: this.props.communityData.id,
 				createPubHash: undefined,
 			})
@@ -138,27 +146,27 @@ class Collection extends Component {
 	}
 
 	render() {
-		const collectionData = this.props.collectionData;
+		const pageData = this.props.pageData;
 		const slug = this.props.locationData.params.slug;
-		const title = this.props.communityData.collections.reduce((prev, curr)=> {
+		const title = this.props.communityData.pages.reduce((prev, curr)=> {
 			if (curr.slug === '' && slug === undefined) { return curr.title; }
 			if (curr.slug === slug) { return curr.title; }
 			return prev;
 		}, undefined);
 		// if (!title) { return <NoMatch />; }
 		if (!title) { return <h1>Nothing</h1>; }
-		const numPublished = collectionData.pubs.reduce((prev, curr)=> {
+		const numPublished = pageData.pubs.reduce((prev, curr)=> {
 			if (curr.firstPublishedAt) { return prev + 1; }
 			return prev;
 		}, 0);
-		const publicDrafts = collectionData.pubs.filter((item)=> {
+		const publicDrafts = pageData.pubs.filter((item)=> {
 			return !item.firstPublishedAt;
 		}).sort((foo, bar)=> {
 			if (foo.updatedAt > bar.updatedAt) { return -1; }
 			if (foo.updatedAt < bar.updatedAt) { return 1; }
 			return 0;
 		});
-		const layout = collectionData.layout || getDefaultLayout(collectionData.isPage);
+		const layout = pageData.layout || getDefaultLayout();
 		const hasTextLayoutComponent = layout.reduce((prev, curr)=> {
 			if (curr.type === 'text') { return true; }
 			return prev;
@@ -172,10 +180,10 @@ class Collection extends Component {
 					locationData={this.props.locationData}
 				>
 					<div className="container">
-						{((!collectionData.isPage && collectionData.isOpenSubmissions) || (title && title !== 'Home')) &&
+						{((!pageData.isPage && pageData.isOpenSubmissions) || (title && title !== 'Home')) &&
 							<div className="row">
 								<div className="col-12">
-									{!collectionData.isPage && collectionData.isOpenSubmissions &&
+									{!pageData.isPage && pageData.isOpenSubmissions &&
 										<div className="create-pub-wrapper">
 											{this.props.loginData.id &&
 												<Button
@@ -194,8 +202,8 @@ class Collection extends Component {
 													Login to Create Pub
 												</a>
 											}
-											{collectionData.createPubMessage &&
-												<a href={`/${collectionData.slug}/submit`} className="instructions-link">
+											{pageData.createPubMessage &&
+												<a href={`/${pageData.slug}/submit`} className="instructions-link">
 													Submission Instructions
 												</a>
 											}
@@ -209,7 +217,7 @@ class Collection extends Component {
 						}
 
 						{layout.filter((item)=> {
-							if (collectionData.id && !numPublished && item.type === 'pubs') {
+							if (pageData.id && !numPublished && item.type === 'pubs') {
 								return false;
 							}
 							return true;
@@ -219,7 +227,7 @@ class Collection extends Component {
 							return <div key={`block-${item.id}`} className="component-wrapper">{editorTypeComponent}</div>;
 						})}
 
-						{!publicDrafts.length && !!collectionData.id && !numPublished && !collectionData.isPage && !hasTextLayoutComponent &&
+						{!publicDrafts.length && !!pageData.id && !numPublished && !pageData.isPage && !hasTextLayoutComponent &&
 							<NonIdealState
 								title="Empty Collection"
 								description="This collection has no Pubs."

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
+import LayoutEditor from 'components/LayoutEditor/LayoutEditor';
 import { getDefaultLayout, apiFetch } from 'utilities';
 
 require('./dashboardPage.scss');
@@ -22,7 +23,7 @@ class DashboardPage extends Component {
 			description: props.pageData.description || '',
 			slug: props.pageData.slug,
 			isPublic: props.pageData.isPublic,
-			layout: props.pageData.layout || getDefaultLayout(props.pageData.isPage),
+			layout: props.pageData.layout || getDefaultLayout(),
 			isLoading: false,
 			error: undefined,
 			deleteString: '',
@@ -121,18 +122,18 @@ class DashboardPage extends Component {
 	}
 
 	render() {
-		const data = this.props.pageData;
-		const pubs = data.pubs || [];
+		const pageData = this.props.pageData;
+		// const pubs = data.pubs || [];
 
 		return (
 			<div className="dashboard-page-component">
 				<div className="content-buttons">
-					<a href={`/dashboard/${data.slug}`} className="pt-button">Cancel</a>
+					<a href={`/dashboard/${pageData.slug}`} className="pt-button">Cancel</a>
 					<Button
 						type="button"
 						className="pt-intent-primary"
 						text="Save Changes"
-						disabled={!this.state.hasChanged || !this.state.title || (data.slug && !this.state.slug)}
+						disabled={!this.state.hasChanged || !this.state.title || (pageData.slug && !this.state.slug)}
 						loading={this.state.isLoading}
 						onClick={this.handleSaveChanges}
 					/>
@@ -141,7 +142,12 @@ class DashboardPage extends Component {
 					}
 				</div>
 
-				<h1>{data.title}</h1>
+				<h1>
+					{pageData.title}
+					<a href={`/${pageData.slug}`}>
+						Go to Page
+					</a>
+				</h1>
 
 				<div className="section-wrapper">
 					<div className="title">Details</div>
@@ -163,7 +169,7 @@ class DashboardPage extends Component {
 							onChange={this.setDescription}
 							error={undefined}
 						/>
-						{this.props.pageData.slug &&
+						{pageData.slug &&
 							<InputField
 								label="Link"
 								placeholder="Enter link"
@@ -174,7 +180,7 @@ class DashboardPage extends Component {
 							/>
 						}
 
-						{this.props.pageData.slug &&
+						{pageData.slug &&
 							<InputField label="Privacy">
 								<div className="pt-button-group">
 									<button type="button" className={`pt-button pt-icon-globe ${this.state.isPublic ? 'pt-active' : ''}`} onClick={this.setPublic}>Public</button>
@@ -189,11 +195,12 @@ class DashboardPage extends Component {
 						Layout
 					</div>
 					<div className="content">
-						{/*<LayoutEditor
+						<LayoutEditor
 							onChange={this.setLayout}
 							initialLayout={this.state.layout}
-							pubs={data.pubs}
-						/>*/}
+							pubs={pageData.pubs}
+							communityData={this.props.communityData}
+						/>
 					</div>
 				</div>
 				{this.props.pageData.slug &&
@@ -205,7 +212,7 @@ class DashboardPage extends Component {
 							<div className="pt-callout pt-intent-danger">
 								<h5>Delete Page from Community</h5>
 								<p>Deleting a Page is permanent.</p>
-								<p>This will permanantely delete <b>{this.props.pageData.title}</b>. This will not delete pubs that are included in this page's layout.</p>
+								<p>This will permanantely delete <b>{pageData.title}</b>. This will not delete pubs that are included in this page's layout.</p>
 								<p>Please type the title of the Page below to confirm your intention.</p>
 
 								<InputField
@@ -219,8 +226,8 @@ class DashboardPage extends Component {
 									<Button
 										type="button"
 										className="pt-intent-danger"
-										text={`Delete ${this.props.pageData.isPage ? 'Page' : 'Collection'}`}
-										disabled={this.state.deleteString !== this.props.pageData.title}
+										text="Delete Page"
+										disabled={this.state.deleteString !== pageData.title}
 										loading={this.state.isLoadingDelete}
 										onClick={this.handleDelete}
 									/>

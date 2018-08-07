@@ -209,18 +209,18 @@ export function generateHash(length) {
 	return hash;
 }
 
-export function getDefaultLayout(isPage) {
-	if (isPage) {
-		return [
-			{
-				id: 'kruw36cv',
-				type: 'text',
-				content: {
-					text: undefined,
-				},
-			}
-		];
-	}
+export function getDefaultLayout() {
+	// if (isPage) {
+	// 	return [
+	// 		{
+	// 			id: 'kruw36cv',
+	// 			type: 'text',
+	// 			content: {
+	// 				text: undefined,
+	// 			},
+	// 		}
+	// 	];
+	// }
 	return [
 		{
 			id: '0kyj32ay',
@@ -242,13 +242,17 @@ export function getDefaultLayout(isPage) {
 				pubIds: []
 			}
 		},
-		{
-			id: 'kruw36cv',
-			type: 'drafts',
-			content: {
-				title: 'Open Drafts',
-			},
-		}
+		// {
+		// 	type: pub
+		// 	content: {
+		// 		title:
+		// 		previewType:
+		// 		limit:
+		// 		pubIds:
+		// 		draftsOnly:
+		// 		tagId:
+		// 	}
+		// }
 	];
 }
 

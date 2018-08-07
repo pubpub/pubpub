@@ -4,22 +4,23 @@ import LayoutEditorInsert from 'components/LayoutEditorInsert/LayoutEditorInsert
 import LayoutEditorPubs from 'components/LayoutEditorPubs/LayoutEditorPubs';
 import LayoutEditorText from 'components/LayoutEditorText/LayoutEditorText';
 import LayoutEditorHtml from 'components/LayoutEditorHtml/LayoutEditorHtml';
-import LayoutEditorDrafts from 'components/LayoutEditorDrafts/LayoutEditorDrafts';
+// import LayoutEditorDrafts from 'components/LayoutEditorDrafts/LayoutEditorDrafts';
 import { generateHash } from 'utilities';
 
 require('./layoutEditor.scss');
 
 const propTypes = {
-	onChange: PropTypes.func,
+	onChange: PropTypes.func.isRequired,
 	initialLayout: PropTypes.array.isRequired,
 	pubs: PropTypes.array.isRequired,
-	isPage: PropTypes.bool,
+	communityData: PropTypes.object.isRequired,
+	// isPage: PropTypes.bool,
 };
 
-const defaultProps = {
-	onChange: ()=>{},
-	isPage: false,
-};
+// const defaultProps = {
+// 	onChange: ()=>{},
+// 	// isPage: false,
+// };
 
 class LayoutEditor extends Component {
 	constructor(props) {
@@ -30,60 +31,61 @@ class LayoutEditor extends Component {
 			pubRenderLists: this.generateRenderList(props.initialLayout),
 		};
 		this.handleInsert = this.handleInsert.bind(this);
-		this.getComponentFromType = this.getComponentFromType.bind(this);
+		// this.getComponentFromType = this.getComponentFromType.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleRemove = this.handleRemove.bind(this);
+		this.generateRenderList = this.generateRenderList.bind(this);
 	}
 
-	getComponentFromType(item, index) {
-		if (item.type === 'pubs') {
-			return (
-				<LayoutEditorPubs
-					key={`item-${item.id}`}
-					onChange={this.handleChange}
-					onRemove={this.handleRemove}
-					layoutIndex={index}
-					content={item.content}
-					pubRenderList={this.state.pubRenderLists[index] || []}
-					pubs={this.props.pubs}
-				/>
-			);
-		}
-		if (item.type === 'text') {
-			return (
-				<LayoutEditorText
-					key={`item-${item.id}`}
-					onChange={this.handleChange}
-					onRemove={this.handleRemove}
-					layoutIndex={index}
-					content={item.content}
-				/>
-			);
-		}
-		if (item.type === 'html') {
-			return (
-				<LayoutEditorHtml
-					key={`item-${item.id}`}
-					onChange={this.handleChange}
-					onRemove={this.handleRemove}
-					layoutIndex={index}
-					content={item.content}
-				/>
-			);
-		}
-		if (item.type === 'drafts') {
-			return (
-				<LayoutEditorDrafts
-					key={`item-${item.id}`}
-					onChange={this.handleChange}
-					onRemove={this.handleRemove}
-					layoutIndex={index}
-					content={item.content}
-				/>
-			);
-		}
-		return null;
-	}
+	// getComponentFromType(item, index) {
+	// 	if (item.type === 'pubs') {
+	// 		return (
+	// 			<LayoutEditorPubs
+	// 				key={`item-${item.id}`}
+	// 				onChange={this.handleChange}
+	// 				onRemove={this.handleRemove}
+	// 				layoutIndex={index}
+	// 				content={item.content}
+	// 				pubRenderList={this.state.pubRenderLists[index] || []}
+	// 				pubs={this.props.pubs}
+	// 			/>
+	// 		);
+	// 	}
+	// 	if (item.type === 'text') {
+	// 		return (
+	// 			<LayoutEditorText
+	// 				key={`item-${item.id}`}
+	// 				onChange={this.handleChange}
+	// 				onRemove={this.handleRemove}
+	// 				layoutIndex={index}
+	// 				content={item.content}
+	// 			/>
+	// 		);
+	// 	}
+	// 	if (item.type === 'html') {
+	// 		return (
+	// 			<LayoutEditorHtml
+	// 				key={`item-${item.id}`}
+	// 				onChange={this.handleChange}
+	// 				onRemove={this.handleRemove}
+	// 				layoutIndex={index}
+	// 				content={item.content}
+	// 			/>
+	// 		);
+	// 	}
+	// 	// if (item.type === 'drafts') {
+	// 	// 	return (
+	// 	// 		<LayoutEditorDrafts
+	// 	// 			key={`item-${item.id}`}
+	// 	// 			onChange={this.handleChange}
+	// 	// 			onRemove={this.handleRemove}
+	// 	// 			layoutIndex={index}
+	// 	// 			content={item.content}
+	// 	// 		/>
+	// 	// 	);
+	// 	// }
+	// 	return null;
+	// }
 
 	handleInsert(index, type) {
 		const newLayout = this.state.layout;
@@ -104,9 +106,9 @@ class LayoutEditor extends Component {
 				title: '',
 				html: '',
 			},
-			drafts: {
-				title: 'Open Drafts'
-			},
+			// drafts: {
+			// 	title: 'Open Drafts'
+			// },
 		};
 		newLayout.splice(index, 0, {
 			id: generateHash(8),
@@ -120,6 +122,7 @@ class LayoutEditor extends Component {
 		});
 		this.props.onChange(newLayout);
 	}
+
 	handleChange(index, newContent) {
 		const newLayout = this.state.layout;
 		newLayout[index].content = newContent;
@@ -130,10 +133,20 @@ class LayoutEditor extends Component {
 		});
 		this.props.onChange(newLayout);
 	}
+
+	handleRemove(index) {
+		const newLayout = this.state.layout;
+		newLayout.splice(index, 1);
+		this.setState({ layout: newLayout });
+		this.props.onChange(newLayout);
+	}
+
 	generateRenderList(newLayout) {
 		const allPubs = this.props.pubs.filter((item)=> {
-			return item.firstPublishedAt;
+			// return item.firstPublishedAt;
+			return true;
 		}).sort((foo, bar)=> {
+			// TODO: Sort by active version date, or draft createdAt
 			if (foo.firstPublishedAt < bar.firstPublishedAt) { return 1; }
 			if (foo.firstPublishedAt > bar.firstPublishedAt) { return -1; }
 			return 0;
@@ -152,7 +165,13 @@ class LayoutEditor extends Component {
 		});
 		newLayout.forEach((block, index)=> {
 			if (block.type === 'pubs') {
-				const pubsById = this.props.pubs.reduce((prev, curr)=> {
+				const pubsById = this.props.pubs.filter((pub)=> {
+					if (!block.content.tagId) { return true; }
+					return pub.pubTags.reduce((prev, curr)=> {
+						if (curr.tagId === block.content.tagId) { return true; }
+						return prev;
+					}, false);
+				}).reduce((prev, curr)=> {
 					const output = prev;
 					output[curr.id] = curr;
 					return output;
@@ -172,12 +191,6 @@ class LayoutEditor extends Component {
 		});
 		return pubRenderLists;
 	}
-	handleRemove(index) {
-		const newLayout = this.state.layout;
-		newLayout.splice(index, 1);
-		this.setState({ layout: newLayout });
-		this.props.onChange(newLayout);
-	}
 
 	render() {
 		return (
@@ -185,26 +198,70 @@ class LayoutEditor extends Component {
 				<LayoutEditorInsert
 					insertIndex={0}
 					onInsert={this.handleInsert}
-					isPage={this.props.isPage}
+					// isPage={this.props.isPage}
 				/>
 				{this.state.layout.map((item, index)=> {
-					const editorTypeComponent = this.getComponentFromType(item, index);
-					if (!editorTypeComponent) { return null; }
-					return [
-						<div key={`block-${item.id}`} className="component-wrapper">{editorTypeComponent}</div>,
-						<LayoutEditorInsert
-							key={`insert-${item.id}`}
-							insertIndex={index + 1}
-							onInsert={this.handleInsert}
-							isPage={this.props.isPage}
-						/>
-					];
+					const validType = ['pubs', 'text', 'html'].indexOf(item.type) > -1;
+					// const editorTypeComponent = this.getComponentFromType(item, index);
+					// if (!editorTypeComponent) { return null; }
+					if (!validType) { return null; }
+					return (
+						<div>
+							<div key={`block-${item.id}`} className="component-wrapper">
+								{item.type === 'pubs' &&
+									<LayoutEditorPubs
+										key={`item-${item.id}`}
+										onChange={this.handleChange}
+										onRemove={this.handleRemove}
+										layoutIndex={index}
+										content={item.content}
+										pubRenderList={this.state.pubRenderLists[index] || []}
+										pubs={this.props.pubs}
+										communityData={this.props.communityData}
+									/>
+								}
+								{item.type === 'text' &&
+									<LayoutEditorText
+										key={`item-${item.id}`}
+										onChange={this.handleChange}
+										onRemove={this.handleRemove}
+										layoutIndex={index}
+										content={item.content}
+									/>
+								}
+								{item.type === 'html' &&
+									<LayoutEditorHtml
+										key={`item-${item.id}`}
+										onChange={this.handleChange}
+										onRemove={this.handleRemove}
+										layoutIndex={index}
+										content={item.content}
+									/>
+								}
+							</div>
+							<LayoutEditorInsert
+								key={`insert-${item.id}`}
+								insertIndex={index + 1}
+								onInsert={this.handleInsert}
+								// isPage={this.props.isPage}
+							/>
+						</div>
+					);
+					// return [
+					// 	<div key={`block-${item.id}`} className="component-wrapper">{editorTypeComponent}</div>,
+					// 	<LayoutEditorInsert
+					// 		key={`insert-${item.id}`}
+					// 		insertIndex={index + 1}
+					// 		onInsert={this.handleInsert}
+					// 		isPage={this.props.isPage}
+					// 	/>
+					// ];
 				})}
 			</div>
 		);
 	}
 }
 
-LayoutEditor.defaultProps = defaultProps;
+// LayoutEditor.defaultProps = defaultProps;
 LayoutEditor.propTypes = propTypes;
 export default LayoutEditor;

@@ -26,9 +26,9 @@ const PageWrapper = (props)=> {
 	const loginData = props.loginData;
 	const communityData = props.communityData;
 
-	const collections = communityData.collections || [];
+	const pages = communityData.pages || [];
 	const navigation = communityData.navigation || [];
-	const navItems = populateNavigationIds(collections, navigation);
+	const navItems = populateNavigationIds(pages, navigation);
 	const socialItems = [
 		{ id: 'si-0', icon: 'pt-icon-globe', title: 'Website', value: communityData.website, url: communityData.website },
 		{ id: 'si-1', icon: 'pt-icon-twitter', title: 'Twitter', value: communityData.twitter, url: `https://twitter.com/${communityData.twitter}` },
