@@ -9,43 +9,52 @@ import File from '@pubpub/editor/addons/File';
 import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import LayoutEditor from 'components/LayoutEditor/LayoutEditor';
 import InputField from 'components/InputField/InputField';
-import { s3Upload, getResizedUrl, getDefaultLayout } from 'utilities';
+import { s3Upload, getResizedUrl, getDefaultLayout, apiFetch } from 'utilities';
 
 require('./dashboardPage.scss');
 
 const propTypes = {
-	collectionData: PropTypes.object.isRequired,
-	putIsLoading: PropTypes.bool,
-	deleteIsLoading: PropTypes.bool,
-	error: PropTypes.string,
-	onSave: PropTypes.func,
-	onDelete: PropTypes.func,
+	communityData: PropTypes.object.isRequired,
+	pageData: PropTypes.object.isRequired,
+	// location: PropTypes.object.isRequired,
+	setCommunityData: PropTypes.func.isRequired,
+	setPageData: PropTypes.func.isRequired,
+	// collectionData: PropTypes.object.isRequired,
+	// putIsLoading: PropTypes.bool,
+	// deleteIsLoading: PropTypes.bool,
+	// error: PropTypes.string,
+	// onSave: PropTypes.func,
+	// onDelete: PropTypes.func,
 };
 
-const defaultProps = {
-	putIsLoading: false,
-	deleteIsLoading: false,
-	error: undefined,
-	onSave: ()=>{},
-	onDelete: ()=> {},
-};
+// const defaultProps = {
+// 	putIsLoading: false,
+// 	deleteIsLoading: false,
+// 	error: undefined,
+// 	onSave: ()=>{},
+// 	onDelete: ()=> {},
+// };
 
-class DashboardCollectionPage extends Component {
+class DashboardPage extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			editMode: 'details',
+			// editMode: 'details',
 			hasChanged: false,
-			title: props.collectionData.title,
-			description: props.collectionData.description || '',
-			slug: props.collectionData.slug,
-			isPublic: props.collectionData.isPublic,
-			isOpenSubmissions: props.collectionData.isOpenSubmissions,
-			isOpenPublish: props.collectionData.isOpenPublish,
-			createPubMessage: props.collectionData.createPubMessage,
-			layout: props.collectionData.layout || getDefaultLayout(props.collectionData.isPage),
+			title: props.pageData.title,
+			description: props.pageData.description || '',
+			slug: props.pageData.slug,
+			isPublic: props.pageData.isPublic,
+			isOpenSubmissions: props.pageData.isOpenSubmissions,
+			isOpenPublish: props.pageData.isOpenPublish,
+			// createPubMessage: props.pageData.createPubMessage,
+			layout: props.pageData.layout || getDefaultLayout(props.pageData.isPage),
+			isLoading: false,
+			error: undefined,
+			deleteString: '',
+			isLoadingDelete: false,
 		};
-		this.setEditMode = this.setEditMode.bind(this);
+		// this.setEditMode = this.setEditMode.bind(this);
 		this.setTitle = this.setTitle.bind(this);
 		this.setDescription = this.setDescription.bind(this);
 		this.setSlug = this.setSlug.bind(this);
@@ -61,63 +70,119 @@ class DashboardCollectionPage extends Component {
 		this.handleDelete = this.handleDelete.bind(this);
 	}
 
-	setEditMode(mode) {
-		this.setState({ editMode: mode });
-	}
+	// setEditMode(mode) {
+	// 	this.setState({ editMode: mode });
+	// }
+
 	setTitle(evt) {
 		this.setState({ hasChanged: true, title: evt.target.value });
 	}
+
 	setDescription(evt) {
 		this.setState({ hasChanged: true, description: evt.target.value.substring(0, 280).replace(/\n/g, ' ') });
 	}
+
 	setSlug(evt) {
 		this.setState({ hasChanged: true, slug: evt.target.value.replace(/ /g, '-').replace(/[^a-zA-Z0-9-]/gi, '').toLowerCase() });
 	}
+
 	setPublic() {
 		this.setState({ hasChanged: true, isPublic: true });
 	}
+
 	setPrivate() {
 		this.setState({ hasChanged: true, isPublic: false });
 	}
+
 	setOpenSubmissions() {
 		this.setState({ hasChanged: true, isOpenSubmissions: true });
 	}
+
 	setClosedSubmissions() {
 		this.setState({ hasChanged: true, isOpenSubmissions: false });
 	}
+
 	setOpenPublish() {
 		this.setState({ hasChanged: true, isOpenPublish: true });
 	}
+
 	setClosedPublish() {
 		this.setState({ hasChanged: true, isOpenPublish: false });
 	}
+
 	setLayout(newLayout) {
 		this.setState({ hasChanged: true, layout: newLayout });
 	}
+
 	setCreatePubMessage(val) {
 		this.setState({ hasChanged: true, createPubMessage: val });
 	}
+
 	handleSaveChanges() {
-		this.props.onSave({
-			collectionId: this.props.collectionData.id,
+		const pageObject = {
 			title: this.state.title,
 			slug: this.state.slug,
 			description: this.state.description,
 			isPublic: this.state.isPublic,
-			isOpenSubmissions: this.state.isOpenSubmissions,
-			isOpenPublish: this.state.isOpenPublish,
+			// isOpenSubmissions: this.state.isOpenSubmissions,
+			// isOpenPublish: this.state.isOpenPublish,
 			layout: this.state.layout,
-			createPubMessage: this.editorRef && this.editorRef.view.state.doc.textContent
-				? this.state.createPubMessage
-				: null
+			// createPubMessage: this.editorRef && this.editorRef.view.state.doc.textContent
+			// 	? this.state.createPubMessage
+			// 	: null
+		};
+		this.setState({ isLoading: true, error: undefined });
+		return apiFetch('/api/pages', {
+			method: 'PUT',
+			body: JSON.stringify({
+				...pageObject,
+				pageId: this.props.pageData.id,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then(()=> {
+			this.setState({ isLoading: false, error: undefined });
+			this.props.setCommunityData({
+				...this.props.communityData,
+				pages: this.props.communityData.pages.map((page)=> {
+					if (page.id !== this.props.pageData.id) { return page; }
+					return {
+						...page,
+						...pageObject,
+					};
+				})
+			});
+			this.props.setPageData({
+				...this.props.pageData,
+				...pageObject,
+			});
+		})
+		.catch((err)=> {
+			console.error(err);
+			this.setState({ isLoading: false, error: err });
 		});
 	}
+
 	handleDelete() {
-		this.props.onDelete(this.props.collectionData.id);
+		this.setState({ isLoadingDelete: true });
+		return apiFetch('/api/pages', {
+			method: 'DELETE',
+			body: JSON.stringify({
+				pageId: this.props.pageData.id,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then(()=> {
+			window.location.href = '/dashboard';
+		})
+		.catch((err)=> {
+			console.error(err);
+			this.setState({ isLoadingDelete: false });
+		});
 	}
 
 	render() {
-		const data = this.props.collectionData;
+		const data = this.props.pageData;
 		const pubs = data.pubs || [];
 
 		return (
@@ -129,10 +194,10 @@ class DashboardCollectionPage extends Component {
 						className="pt-intent-primary"
 						text="Save Changes"
 						disabled={!this.state.hasChanged || !this.state.title || (data.slug && !this.state.slug)}
-						loading={this.props.putIsLoading}
+						loading={this.state.isLoading}
 						onClick={this.handleSaveChanges}
 					/>
-					{this.props.error &&
+					{this.state.error &&
 						<div className="error">Error Saving</div>
 					}
 				</div>
@@ -142,16 +207,14 @@ class DashboardCollectionPage extends Component {
 				<div className="section-wrapper">
 					<div className="title">Details</div>
 					<div className="content">
-						{this.props.collectionData.slug &&
-							<InputField
-								label="Title"
-								placeholder="Enter title"
-								isRequired={true}
-								value={this.state.title}
-								onChange={this.setTitle}
-								error={undefined}
-							/>
-						}
+						<InputField
+							label="Title"
+							placeholder="Enter title"
+							isRequired={true}
+							value={this.state.title}
+							onChange={this.setTitle}
+							error={undefined}
+						/>
 						<InputField
 							label="Description"
 							placeholder="Enter description"
@@ -161,7 +224,7 @@ class DashboardCollectionPage extends Component {
 							onChange={this.setDescription}
 							error={undefined}
 						/>
-						{this.props.collectionData.slug &&
+						{this.props.pageData.slug &&
 							<InputField
 								label="Link"
 								placeholder="Enter link"
@@ -172,7 +235,7 @@ class DashboardCollectionPage extends Component {
 							/>
 						}
 
-						{this.props.collectionData.slug &&
+						{this.props.pageData.slug &&
 							<InputField label="Privacy">
 								<div className="pt-button-group">
 									<button type="button" className={`pt-button pt-icon-globe ${this.state.isPublic ? 'pt-active' : ''}`} onClick={this.setPublic}>Public</button>
@@ -181,7 +244,7 @@ class DashboardCollectionPage extends Component {
 							</InputField>
 						}
 
-						{!this.props.collectionData.isPage &&
+						{/*!this.props.pageData.isPage &&
 							<InputField
 								label="Submissions"
 								helperText={this.state.isOpenSubmissions
@@ -194,9 +257,9 @@ class DashboardCollectionPage extends Component {
 									<button type="button" className={`pt-button pt-icon-delete ${!this.state.isOpenSubmissions ? 'pt-active' : ''}`} onClick={this.setClosedSubmissions}>Closed</button>
 								</div>
 							</InputField>
-						}
+						*/}
 
-						{!this.props.collectionData.isPage &&
+						{/*!this.props.pageData.isPage &&
 							<InputField
 								label="Publishing"
 								helperText={this.state.isOpenPublish
@@ -209,15 +272,15 @@ class DashboardCollectionPage extends Component {
 									<button type="button" className={`pt-button pt-icon-delete ${!this.state.isOpenPublish ? 'pt-active' : ''}`} onClick={this.setClosedPublish}>Closed</button>
 								</div>
 							</InputField>
-						}
+						*/}
 
-						{!this.props.collectionData.isPage &&
+						{/*!this.props.pageData.isPage &&
 							<InputField label="Submission Instructions">
 								<div className="editor-wrapper">
 									<Editor
 										placeholder="Instructions for submitting to this collection..."
 										onChange={this.setCreatePubMessage}
-										initialContent={this.props.collectionData.createPubMessage || undefined}
+										initialContent={this.props.pageData.createPubMessage || undefined}
 										ref={(ref)=> { this.editorRef = ref; }}
 									>
 										<FormattingMenu />
@@ -231,7 +294,7 @@ class DashboardCollectionPage extends Component {
 									</Editor>
 								</div>
 							</InputField>
-						}
+						*/}
 					</div>
 				</div>
 				<div className="section-wrapper">
@@ -239,15 +302,15 @@ class DashboardCollectionPage extends Component {
 						Layout
 					</div>
 					<div className="content">
-						<LayoutEditor
+						{/*<LayoutEditor
 							onChange={this.setLayout}
 							initialLayout={this.state.layout}
 							pubs={data.pubs}
 							isPage={data.isPage}
-						/>
+						/>*/}
 					</div>
 				</div>
-				{this.props.collectionData.slug &&
+				{this.props.pageData.slug &&
 					<div className="section-wrapper">
 						<div className="title">
 							Delete
@@ -255,14 +318,24 @@ class DashboardCollectionPage extends Component {
 						<div className="content">
 							<div className="pt-callout pt-intent-danger">
 								<h5>Delete Page from Community</h5>
-								<div>Deleting a Page is permanent.</div>
+								<p>Deleting a Page is permanent.</p>
+								<p>This will permanantely delete <b>{this.props.pageData.title}</b>. This will not delete pubs that are included in this page's layout.</p>
+								<p>Please type the title of the Page below to confirm your intention.</p>
+
+								<InputField
+									label={<b>Confirm Page Title</b>}
+									value={this.state.deleteString}
+									onChange={(evt)=> {
+										this.setState({ deleteString: evt.target.value });
+									}}
+								/>
 								<div className="delete-button-wrapper">
 									<Button
 										type="button"
 										className="pt-intent-danger"
-										text={`Delete ${this.props.collectionData.isPage ? 'Page' : 'Collection'}`}
-										disabled={pubs.length}
-										loading={this.props.deleteIsLoading}
+										text={`Delete ${this.props.pageData.isPage ? 'Page' : 'Collection'}`}
+										disabled={this.state.deleteString !== this.props.pageData.title}
+										loading={this.state.isLoadingDelete}
 										onClick={this.handleDelete}
 									/>
 								</div>
@@ -276,6 +349,6 @@ class DashboardCollectionPage extends Component {
 }
 
 
-DashboardCollectionPage.propTypes = propTypes;
-DashboardCollectionPage.defaultProps = defaultProps;
-export default DashboardCollectionPage;
+DashboardPage.propTypes = propTypes;
+// DashboardPage.defaultProps = defaultProps;
+export default DashboardPage;

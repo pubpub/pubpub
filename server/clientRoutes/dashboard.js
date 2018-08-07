@@ -5,7 +5,7 @@ import Html from '../Html';
 import app from '../server';
 import { Pub, Version, Discussion, PubTag, Tag } from '../models';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
-import { findCollection } from '../queryHelpers';
+import { findPage } from '../queryHelpers';
 
 app.get(['/dashboard', '/dashboard/:mode', '/dashboard/:mode/:slug'], (req, res, next)=> {
 	if (!hostIsValid(req, 'community')) { return next(); }
@@ -28,16 +28,16 @@ app.get(['/dashboard', '/dashboard/:mode', '/dashboard/:mode/:slug'], (req, res,
 		// if (mode === 'collection') { activeItem.title = 'New Collection'; }
 
 		const pageId = initialData.communityData.pages.reduce((prev, curr)=> {
-			if (mode === 'pages' && !req.params.slug && !curr.slug) { return curr.id; }
-			if (curr.slug === req.params.slug) { return curr.id; }
+			if (mode === 'pages' && !slug && !curr.slug) { return curr.id; }
+			if (curr.slug === slug) { return curr.id; }
 			return prev;
 		}, undefined);
 
 		if (!pageId && !activeItem.title) { throw new Error('Page Not Found'); }
 
-		const findCollectionData = activeItem.title
+		const findPageData = activeItem.title
 			? activeItem
-			: findCollection(pageId, true, initialData);
+			: findPage(pageId, true, initialData);
 
 		// TODO - need to filter this for manager permissions
 		const findPubs = mode === 'pubs'
@@ -72,14 +72,14 @@ app.get(['/dashboard', '/dashboard/:mode', '/dashboard/:mode/:slug'], (req, res,
 			: [];
 		return Promise.all([
 			initialData,
-			findCollectionData,
+			findPageData,
 			findPubs,
 		]);
 	})
-	.then(([initialData, collectionData, pubsData])=> {
+	.then(([initialData, pageData, pubsData])=> {
 		const newInitialData = {
 			...initialData,
-			collectionData: collectionData,
+			pageData: pageData,
 			pubsData: pubsData
 		};
 		return renderToNodeStream(res,
@@ -88,7 +88,7 @@ app.get(['/dashboard', '/dashboard/:mode', '/dashboard/:mode/:slug'], (req, res,
 				initialData={newInitialData}
 				headerComponents={generateMetaComponents({
 					initialData: initialData,
-					title: `${collectionData.title} · Dashboard`,
+					title: `${pageData.title} · Dashboard`,
 					unlisted: true,
 				})}
 			>

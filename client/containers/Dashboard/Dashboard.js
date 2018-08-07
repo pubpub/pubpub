@@ -4,14 +4,14 @@ import PageWrapper from 'components/PageWrapper/PageWrapper';
 import DashboardSide from 'components/DashboardSide/DashboardSide';
 // import DashboardCollection from 'components/DashboardCollection/DashboardCollection';
 // import DashboardCollectionEdit from 'components/DashboardCollectionEdit/DashboardCollectionEdit';
-import DashboardCreateCollection from 'components/DashboardCreateCollection/DashboardCreateCollection';
-import DashboardSite from 'components/DashboardSite/DashboardSite';
+import DashboardCreatePage from 'components/DashboardCreatePage/DashboardCreatePage';
+import DashboardDetails from 'components/DashboardDetails/DashboardDetails';
 import DashboardTeam from 'components/DashboardTeam/DashboardTeam';
 import DashboardTags from 'components/DashboardTags/DashboardTags';
 import DashboardPubs from 'components/DashboardPubs/DashboardPubs';
 import DashboardPage from 'components/DashboardPage/DashboardPage';
 
-import { hydrateWrapper, apiFetch } from 'utilities';
+import { hydrateWrapper } from 'utilities';
 
 require('./dashboard.scss');
 
@@ -19,7 +19,7 @@ const propTypes = {
 	communityData: PropTypes.object.isRequired,
 	loginData: PropTypes.object.isRequired,
 	locationData: PropTypes.object.isRequired,
-	collectionData: PropTypes.object.isRequired,
+	pageData: PropTypes.object.isRequired,
 	pubsData: PropTypes.array.isRequired,
 };
 
@@ -28,7 +28,7 @@ class Dashboard extends Component {
 		super(props);
 		this.state = {
 			communityData: props.communityData,
-			collectionData: props.collectionData,
+			pageData: props.pageData,
 			// putCommunityIsLoading: false,
 			// putCommunityError: undefined,
 			// postCollectionIsLoading: false,
@@ -39,7 +39,7 @@ class Dashboard extends Component {
 			// postPubIsLoading: false,
 		};
 		this.setCommunityData = this.setCommunityData.bind(this);
-		this.setCollectionData = this.setCollectionData.bind(this);
+		this.setPageData = this.setPageData.bind(this);
 		// this.handleCreatePub = this.handleCreatePub.bind(this);
 		// this.handleSiteSave = this.handleSiteSave.bind(this);
 		// this.handleCollectionCreate = this.handleCollectionCreate.bind(this);
@@ -53,8 +53,8 @@ class Dashboard extends Component {
 		this.setState({ communityData: newCommunityData });
 	}
 
-	setCollectionData(newCollectionData) {
-		this.setState({ collectionData: newCollectionData });
+	setPageData(newPageData) {
+		this.setState({ pageData: newPageData });
 	}
 
 	// handleCreatePub(collectionId) {
@@ -165,14 +165,14 @@ class Dashboard extends Component {
 
 	render() {
 		const communityData = this.state.communityData;
-		const collectionData = this.state.collectionData;
+		const pageData = this.state.pageData;
 		const activeSlug = this.props.locationData.params.slug || '';
 		const activeMode = this.props.locationData.params.mode || '';
 		return (
 			<div id="dashboard-container">
 				<PageWrapper
 					loginData={this.props.loginData}
-					communityData={this.props.communityData}
+					communityData={communityData}
 					locationData={this.props.locationData}
 					// fixHeader={true}
 					hideNav={true}
@@ -191,7 +191,7 @@ class Dashboard extends Component {
 									/>
 								</div>
 
-								<div className="content-content">
+								<div className="main-content">
 									{(()=> {
 										switch (activeMode) {
 										case 'pubs':
@@ -205,45 +205,51 @@ class Dashboard extends Component {
 											return (
 												<DashboardTeam
 													communityData={communityData}
-													onAddAdmin={this.handleAddAdmin}
-													onRemoveAdmin={this.handleRemoveAdmin}
+													setCommunityData={this.setCommunityData}
+													// onAddAdmin={this.handleAddAdmin}
+													// onRemoveAdmin={this.handleRemoveAdmin}
 												/>
 											);
 										case 'details':
 											return (
-												<DashboardSite
+												<DashboardDetails
 													communityData={communityData}
-													onSave={this.handleSiteSave}
-													isLoading={this.state.putCommunityIsLoading}
-													error={this.state.putCommunityError}
+													setCommunityData={this.setCommunityData}
+													// onSave={this.handleSiteSave}
+													// isLoading={this.state.putCommunityIsLoading}
+													// error={this.state.putCommunityError}
 												/>
 											);
 										case 'tags':
 											return (
 												<DashboardTags
 													communityData={communityData}
-													onSave={this.handleSiteSave}
-													isLoading={this.state.putCommunityIsLoading}
-													error={this.state.putCommunityError}
+													setCommunityData={this.setCommunityData}
+													// onSave={this.handleSiteSave}
+													// isLoading={this.state.putCommunityIsLoading}
+													// error={this.state.putCommunityError}
 												/>
 											);
 										case 'page':
 											return (
-												<DashboardCreateCollection
+												<DashboardCreatePage
 													communityData={communityData}
-													isPage={true}
-													onCreate={this.handleCollectionCreate}
-													isLoading={this.state.postCollectionIsLoading}
-													error={this.state.postCollectionError}
 													hostname={this.props.locationData.hostname}
+													// isPage={true}
+													// onCreate={this.handleCollectionCreate}
+													// isLoading={this.state.postCollectionIsLoading}
+													// error={this.state.postCollectionError}
+													// hostname={this.props.locationData.hostname}
 												/>
 											);
 										default:
 											return (
 												<DashboardPage
 													communityData={communityData}
-													collectionData={collectionData}
-													location={this.props.locationData}
+													pageData={pageData}
+													// location={this.props.locationData}
+													setCommunityData={this.setCommunityData}
+													setPageData={this.setPageData}
 												/>
 											);
 											// if (activeMode === 'edit') {

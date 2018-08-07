@@ -9,6 +9,7 @@ require('./dashboardTags.scss');
 
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
+	setCommunityData: PropTypes.func.isRequired,
 	// onAddAdmin: PropTypes.func,
 	// onRemoveAdmin: PropTypes.func,
 };
@@ -37,8 +38,15 @@ class DashboardTags extends Component {
 				communityId: this.props.communityData.id,
 			})
 		})
-		.then(()=> {
-			window.location.reload();
+		.then((newTag)=> {
+			this.setState({ newTagValue: '' });
+			this.props.setCommunityData({
+				...this.props.communityData,
+				tags: [
+					...this.props.communityData.tags,
+					newTag,
+				]
+			});
 		});
 	}
 
@@ -51,7 +59,21 @@ class DashboardTags extends Component {
 			})
 		})
 		.then(()=> {
-			window.location.reload();
+			this.props.setCommunityData({
+				...this.props.communityData,
+				tags: this.props.communityData.tags.map((tag)=> {
+					if (tag.id !== updatedTag.tagId) { return tag; }
+					if (!updatedTag.pageId) { return { ...tag, ...updatedTag }; }
+					return {
+						...tag,
+						...updatedTag,
+						page: this.props.communityData.pages.reduce((prev, curr)=> {
+							if (curr.id === updatedTag.pageId) { return curr; }
+							return prev;
+						}, undefined)
+					};
+				})
+			});
 		});
 	}
 
@@ -64,7 +86,12 @@ class DashboardTags extends Component {
 			})
 		})
 		.then(()=> {
-			window.location.reload();
+			this.props.setCommunityData({
+				...this.props.communityData,
+				tags: this.props.communityData.tags.filter((tag)=> {
+					return tag.id !== tagId;
+				})
+			});
 		});
 	}
 

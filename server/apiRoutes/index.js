@@ -1,6 +1,5 @@
 require('./analytics');
 require('./collaborators');
-require('./collections');
 require('./collectionPubs');
 require('./communities');
 require('./communityAdmins');
@@ -11,6 +10,7 @@ require('./export');
 require('./import');
 require('./logout');
 require('./login');
+require('./pages');
 require('./passwordReset');
 require('./pubs');
 require('./pubAttributions');

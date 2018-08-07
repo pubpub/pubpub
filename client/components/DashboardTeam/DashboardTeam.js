@@ -2,18 +2,20 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Avatar from 'components/Avatar/Avatar';
 import UserAutocomplete from 'components/UserAutocomplete/UserAutocomplete';
+import { apiFetch } from 'utilities';
 
 require('./dashboardTeam.scss');
 
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
-	onAddAdmin: PropTypes.func,
-	onRemoveAdmin: PropTypes.func,
+	setCommunityData: PropTypes.func.isRequired,
+	// onAddAdmin: PropTypes.func,
+	// onRemoveAdmin: PropTypes.func,
 };
-const defaultProps = {
-	onAddAdmin: ()=>{},
-	onRemoveAdmin: ()=>{},
-};
+// const defaultProps = {
+// 	onAddAdmin: ()=>{},
+// 	onRemoveAdmin: ()=>{},
+// };
 
 class DashboardTeam extends Component {
 	constructor(props) {
@@ -21,18 +23,43 @@ class DashboardTeam extends Component {
 		this.handleAdminAdd = this.handleAdminAdd.bind(this);
 		this.handleAdminRemove = this.handleAdminRemove.bind(this);
 	}
+
 	handleAdminAdd(user) {
 		if (user) {
-			this.props.onAddAdmin({
-				userId: user.id,
-				communityId: this.props.communityData.id,
+			return apiFetch('/api/communityAdmins', {
+				method: 'POST',
+				body: JSON.stringify({
+					userId: user.id,
+					communityId: this.props.communityData.id,
+				})
+			})
+			.then((result)=> {
+				this.props.setCommunityData({
+					...this.props.communityData,
+					admins: [
+						result,
+						...this.props.communityData.admins,
+					]
+				});
 			});
 		}
 	}
+
 	handleAdminRemove(userId) {
-		this.props.onRemoveAdmin({
-			userId: userId,
-			communityId: this.props.communityData.id,
+		return apiFetch('/api/communityAdmins', {
+			method: 'DELETE',
+			body: JSON.stringify({
+				userId: userId,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then(()=> {
+			this.props.setCommunityData({
+				...this.props.communityData,
+				admins: this.props.communityData.admins.filter((admin)=> {
+					return admin.id !== userId;
+				})
+			});
 		});
 	}
 
@@ -53,8 +80,8 @@ class DashboardTeam extends Component {
 				</div>
 
 				{this.props.communityData.admins.sort((foo, bar)=> {
-					if (foo.fullName < bar.fullName) { return -1; }
-					if (foo.fullName > bar.fullName) { return 1; }
+					if (foo.createdAt < bar.createdAt) { return -1; }
+					if (foo.createdAt > bar.createdAt) { return 1; }
 					return 0;
 				}).map((admin)=> {
 					return (
@@ -85,5 +112,5 @@ class DashboardTeam extends Component {
 }
 
 DashboardTeam.propTypes = propTypes;
-DashboardTeam.defaultProps = defaultProps;
+// DashboardTeam.defaultProps = defaultProps;
 export default DashboardTeam;

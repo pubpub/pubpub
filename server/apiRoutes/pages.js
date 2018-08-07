@@ -1,16 +1,16 @@
 /* eslint-disable no-param-reassign */
 import sanitizeHtml from 'sanitize-html';
 import app from '../server';
-import { Collection, Community, CommunityAdmin } from '../models';
+import { Page, Community, CommunityAdmin } from '../models';
 import { generateHash } from '../utilities';
 
 
-app.post('/api/collections', (req, res)=> {
+app.post('/api/pages', (req, res)=> {
 	// Authenticate user. Make sure they have manage permissions on the given pub.
 
 	const user = req.user || {};
 
-	let newCollectionOutput;
+	let newPageOutput;
 	let newNavigationOutput;
 	CommunityAdmin.findOne({
 		where: { userId: user.id, communityId: req.body.communityId },
@@ -20,20 +20,20 @@ app.post('/api/collections', (req, res)=> {
 		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859' && !collaboratorData) {
 			throw new Error('Not Authorized to update this community');
 		}
-		return Collection.create({
+		return Page.create({
 			communityId: req.body.communityId,
 			title: req.body.title,
 			slug: req.body.slug,
 			description: req.body.description,
-			isPage: req.body.isPage,
+			// isPage: req.body.isPage,
 			isPublic: false,
-			isOpenSubmissions: false,
-			isOpenPublish: false,
-			createPubHash: generateHash(8),
+			// isOpenSubmissions: false,
+			// isOpenPublish: false,
+			viewHash: generateHash(8),
 		});
 	})
-	.then((newCollection)=> {
-		newCollectionOutput = newCollection;
+	.then((newPage)=> {
+		newPageOutput = newPage;
 		return Community.findOne({
 			where: { id: req.body.communityId },
 			attributes: ['id', 'navigation']
@@ -43,7 +43,7 @@ app.post('/api/collections', (req, res)=> {
 		const oldNavigation = communityData.toJSON().navigation;
 		newNavigationOutput = [
 			oldNavigation[0],
-			newCollectionOutput.id,
+			newPageOutput.id,
 			...oldNavigation.slice(1, oldNavigation.length)
 		];
 		return Community.update({ navigation: newNavigationOutput }, {
@@ -54,26 +54,27 @@ app.post('/api/collections', (req, res)=> {
 		return res.status(201).json('success');
 	})
 	.catch((err)=> {
-		console.error('Error in postCollection: ', err);
+		console.error('Error in postPage: ', err);
 		return res.status(500).json(err.message);
 	});
 });
 
-app.put('/api/collections', (req, res)=> {
+app.put('/api/pages', (req, res)=> {
 	const user = req.user || {};
 
 	// Filter to only allow certain fields to be updated
-	const updatedCollection = {};
+	const updatedPage = {};
 	Object.keys(req.body).forEach((key)=> {
-		if (['title', 'slug', 'description', 'isPublic', 'isOpenSubmissions', 'isOpenPublish', 'layout', 'createPubMessage'].indexOf(key) > -1) {
-			updatedCollection[key] = req.body[key] && req.body[key].trim
+		if (['title', 'slug', 'description', 'isPublic', 'layout'].indexOf(key) > -1) {
+		// if (['title', 'slug', 'description', 'isPublic', 'isOpenSubmissions', 'isOpenPublish', 'layout', 'createPubMessage'].indexOf(key) > -1) {
+			updatedPage[key] = req.body[key] && req.body[key].trim
 				? req.body[key].trim()
 				: req.body[key];
 			if (key === 'slug') {
-				updatedCollection.slug = updatedCollection.slug.replace(/[^a-zA-Z0-9-]/gi, '').replace(/ /g, '-').toLowerCase();
+				updatedPage.slug = updatedPage.slug.replace(/[^a-zA-Z0-9-]/gi, '').replace(/ /g, '-').toLowerCase();
 			}
 			if (key === 'layout') {
-				updatedCollection.layout = updatedCollection.layout.map((block)=> {
+				updatedPage.layout = updatedPage.layout.map((block)=> {
 					if (block.type !== 'html') { return block; }
 					const cleanedBlock = { ...block };
 					cleanedBlock.content.html = sanitizeHtml(block.content.html, {
@@ -99,20 +100,20 @@ app.put('/api/collections', (req, res)=> {
 		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859' && !adminData) {
 			throw new Error('Not Authorized to update this community');
 		}
-		return Collection.update(updatedCollection, {
-			where: { id: req.body.collectionId, communityId: req.body.communityId }
+		return Page.update(updatedPage, {
+			where: { id: req.body.pageId, communityId: req.body.communityId }
 		});
 	})
 	.then(()=> {
 		return res.status(202).json('success');
 	})
 	.catch((err)=> {
-		console.log('Error putting Pub', err);
+		console.error('Error in putPage', err);
 		return res.status(500).json(err);
 	});
 });
 
-app.delete('/api/collections', (req, res)=> {
+app.delete('/api/pages', (req, res)=> {
 	// Authenticate user. Make sure they have manage permissions on the given pub.
 
 	const user = req.user || {};
@@ -126,9 +127,9 @@ app.delete('/api/collections', (req, res)=> {
 		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859' && !adminData) {
 			throw new Error('Not Authorized to update this community');
 		}
-		return Collection.destroy({
+		return Page.destroy({
 			where: {
-				id: req.body.collectionId,
+				id: req.body.pageId,
 				communityId: req.body.communityId,
 			}
 		});
@@ -142,13 +143,13 @@ app.delete('/api/collections', (req, res)=> {
 	.then((communityData)=> {
 		const oldNavigation = communityData.toJSON().navigation;
 		newNavigationOutput = oldNavigation.filter((item)=> {
-			return item !== req.body.collectionId;
+			return item !== req.body.pageId;
 		}).map((item)=> {
 			if (!item.children) { return item; }
 			return {
 				...item,
 				children: item.children.filter((subitem)=> {
-					return subitem !== req.body.collectionId;
+					return subitem !== req.body.pageId;
 				})
 			};
 		});
@@ -160,7 +161,7 @@ app.delete('/api/collections', (req, res)=> {
 		return res.status(202).json('success');
 	})
 	.catch((err)=> {
-		console.error('Error in postCollection: ', err);
+		console.error('Error in deletePage: ', err);
 		return res.status(500).json(err.message);
 	});
 });

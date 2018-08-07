@@ -2,30 +2,32 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
+import { apiFetch } from 'utilities';
 
-require('./dashboardCreateCollection.scss');
+require('./dashboardCreatePage.scss');
 
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
-	isPage: PropTypes.bool.isRequired,
-	isLoading: PropTypes.bool,
-	error: PropTypes.string,
-	onCreate: PropTypes.func,
+	// isPage: PropTypes.bool.isRequired,
+	// isLoading: PropTypes.bool,
+	// error: PropTypes.string,
+	// onCreate: PropTypes.func,
 	hostname: PropTypes.string.isRequired,
 };
-const defaultProps = {
-	isLoading: false,
-	error: undefined,
-	onCreate: ()=>{},
-};
+// const defaultProps = {
+// 	isLoading: false,
+// 	error: undefined,
+// 	onCreate: ()=>{},
+// };
 
-class DashboardCreateCollection extends Component {
+class DashboardCreatePage extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			title: '',
 			slug: '',
 			description: '',
+			isLoading: false,
 			error: undefined,
 		};
 		this.handleTitleChange = this.handleTitleChange.bind(this);
@@ -33,55 +35,75 @@ class DashboardCreateCollection extends Component {
 		this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
 		this.handleCreateSubmit = this.handleCreateSubmit.bind(this);
 	}
+
 	handleTitleChange(evt) {
 		this.setState({ title: evt.target.value });
 	}
+
 	handleSlugChange(evt) {
 		this.setState({
 			slug: evt.target.value.replace(/ /g, '-').replace(/[^a-zA-Z0-9-]/gi, '').toLowerCase()
 		});
 	}
+
 	handleDescriptionChange(evt) {
 		this.setState({
 			description: evt.target.value.substring(0, 280).replace(/\n/g, ' ')
 		});
 	}
+
 	handleCreateSubmit(evt) {
 		evt.preventDefault();
 
-		const collectionSlugs = this.props.communityData.collections.map((item)=> {
+		const pageSlugs = this.props.communityData.pages.map((item)=> {
 			return item.slug;
 		});
-		collectionSlugs.push('home');
-		if (collectionSlugs.indexOf(this.state.slug) > -1) {
-			return this.setState({ error: 'URL already used by another Page or Collection.' });
+		pageSlugs.push('home');
+		if (pageSlugs.indexOf(this.state.slug) > -1) {
+			return this.setState({ error: 'URL already used by another Page.' });
 		}
-		this.setState({ error: undefined });
-		return this.props.onCreate({
+
+		this.setState({ isLoading: true, error: undefined });
+		const newPageObject = {
 			title: this.state.title,
 			slug: this.state.slug,
 			description: this.state.description,
-			isPage: this.props.isPage,
+			// isPage: this.props.isPage,
+		};
+
+		return apiFetch('/api/pages', {
+			method: 'POST',
+			body: JSON.stringify({
+				...newPageObject,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then(()=> {
+			this.setState({ isLoading: false, error: undefined });
+			window.location.href = `/dashboard/pages/${newPageObject.slug}`;
+		})
+		.catch((err)=> {
+			console.error(err);
+			this.setState({ isLoading: false, error: err });
 		});
 	}
 
 	render() {
-		const itemString = this.props.isPage ? 'Page' : 'Collection';
 		return (
-			<div className="dashboard-create-collection-component">
-				<h1 className="content-title">Create New {itemString}</h1>
+			<div className="dashboard-create-page-component">
+				<h1 className="content-title">Create New Page</h1>
 
 				<form onSubmit={this.handleCreateSubmit}>
 					<InputField
-						label={`${itemString} Title`}
-						placeholder={`Brand New ${itemString}`}
+						label="Page Title"
+						placeholder="Brand New Page"
 						isRequired={true}
 						value={this.state.title}
 						onChange={this.handleTitleChange}
 					/>
 					<InputField
-						label={`${itemString} URL`}
-						placeholder={`my-${itemString.toLowerCase()}`}
+						label="Page URL"
+						placeholder="my-page"
 						isRequired={true}
 						helperText={`${this.props.hostname}/${this.state.slug}`}
 						value={this.state.slug}
@@ -93,15 +115,15 @@ class DashboardCreateCollection extends Component {
 						value={this.state.description}
 						onChange={this.handleDescriptionChange}
 					/>
-					<InputField error={this.state.error || (this.props.error && `Error Creating ${itemString}`)}>
+					<InputField error={this.state.error}>
 						<Button
 							name="login"
 							type="submit"
 							className="pt-button pt-intent-primary"
 							onClick={this.handleCreateSubmit}
-							text={`Create ${itemString}`}
+							text="Create Page"
 							disabled={!this.state.title || !this.state.slug}
-							loading={this.props.isLoading}
+							loading={this.state.isLoading}
 						/>
 					</InputField>
 				</form>
@@ -110,6 +132,6 @@ class DashboardCreateCollection extends Component {
 	}
 }
 
-DashboardCreateCollection.propTypes = propTypes;
-DashboardCreateCollection.defaultProps = defaultProps;
-export default DashboardCreateCollection;
+DashboardCreatePage.propTypes = propTypes;
+// DashboardCreatePage.defaultProps = defaultProps;
+export default DashboardCreatePage;

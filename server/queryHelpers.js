@@ -356,7 +356,7 @@ export const findPub = (req, initialData, isDraft)=> {
 	});
 };
 
-export const findCollection = (collectionId, useIncludes, initialData)=> {
+export const findPage = (pageId, useIncludes, initialData)=> {
 	const includes = useIncludes
 		? [
 			{
@@ -416,11 +416,11 @@ export const findCollection = (collectionId, useIncludes, initialData)=> {
 			}
 		]
 		: [];
-	const collectionQuery = Collection.findOne({
+	const pageQuery = Page.findOne({
 		where: {
-			id: collectionId
+			id: pageId
 		},
-		include: includes,
+		// include: includes,
 	});
 	const communityAdminQuery = CommunityAdmin.findOne({
 		where: {
@@ -428,10 +428,10 @@ export const findCollection = (collectionId, useIncludes, initialData)=> {
 			communityId: initialData.communityData.id,
 		}
 	});
-	return Promise.all([collectionQuery, communityAdminQuery])
-	.then(([collectionData, communityAdminData])=> {
-		const collectionDataJson = collectionData.toJSON();
-		if (collectionData.pubs) {
+	return Promise.all([pageQuery, communityAdminQuery])
+	.then(([pageData, communityAdminData])=> {
+		const pageDataJson = pageData.toJSON();
+		if (pageData.pubs) {
 			collectionDataJson.pubs = collectionDataJson.pubs.map((pub)=> {
 				return {
 					...pub,
@@ -540,10 +540,10 @@ export const findCollection = (collectionId, useIncludes, initialData)=> {
 				};
 			});
 		}
-		if (!communityAdminData && initialData.locationData.params.hash !== collectionDataJson.createPubHash) {
-			collectionDataJson.createPubHash = undefined;
+		if (!communityAdminData && initialData.locationData.params.hash !== pageDataJson.viewHash) {
+			pageDataJson.createPubHash = undefined;
 		}
-		return collectionDataJson;
+		return pageDataJson;
 	});
 };
 

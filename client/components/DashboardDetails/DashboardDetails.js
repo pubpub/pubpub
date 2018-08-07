@@ -4,23 +4,24 @@ import { Button, Tooltip } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
 import ImageUpload from 'components/ImageUpload/ImageUpload';
 import NavDrag from 'components/NavDrag/NavDrag';
-import { populateNavigationIds } from 'utilities';
+import { populateNavigationIds, apiFetch } from 'utilities';
 
-require('./dashboardSite.scss');
+require('./dashboardDetails.scss');
 
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
-	error: PropTypes.string,
-	isLoading: PropTypes.bool,
-	onSave: PropTypes.func,
+	setCommunityData: PropTypes.func.isRequired,
+	// error: PropTypes.string,
+	// isLoading: PropTypes.bool,
+	// onSave: PropTypes.func,
 };
-const defaultProps = {
-	error: undefined,
-	isLoading: false,
-	onSave: ()=>{},
-};
+// const defaultProps = {
+// 	error: undefined,
+// 	isLoading: false,
+// 	onSave: ()=>{},
+// };
 
-class DashboardSite extends Component {
+class DashboardDetails extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -38,6 +39,8 @@ class DashboardSite extends Component {
 			twitter: props.communityData.twitter || '',
 			facebook: props.communityData.facebook || '',
 			email: props.communityData.email || '',
+			isLoading: false,
+			error: undefined,
 		};
 		this.handleTitleChange = this.handleTitleChange.bind(this);
 		this.handleSubdomainChange = this.handleSubdomainChange.bind(this);
@@ -97,20 +100,47 @@ class DashboardSite extends Component {
 	handleEmailChange(evt) {
 		this.setState({ email: evt.target.value });
 	}
+
 	handleSaveClick(evt) {
 		evt.preventDefault();
-		this.props.onSave({
-			communityId: this.props.communityData.id,
-			...this.state
+		const siteObject = {
+			...this.state,
+			isLoading: undefined,
+			error: undefined,
+		};
+
+		this.setState({ isLoading: true, error: undefined });
+		return apiFetch('/api/communities', {
+			method: 'PUT',
+			body: JSON.stringify({
+				...siteObject,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then(()=> {
+			if (!this.props.communityData.domain && this.props.communityData.slug !== siteObject.slug) {
+				window.location.replace(`https://${siteObject.subdomain}.pubpub.org/dashboard/details`);
+			} else {
+				this.setState({ isLoading: false, error: undefined });
+				this.props.setCommunityData({
+					...this.props.communityData,
+					...siteObject
+				});
+			}
+		})
+		.catch((err)=> {
+			console.error(err);
+			this.setState({ isLoading: false, error: err });
 		});
 	}
+
 	render() {
 		const collections = this.props.communityData.collections || [];
 		const navigation = this.props.communityData.navigation || [];
 		const initialNav = populateNavigationIds(collections, navigation);
 
 		return (
-			<div className="dashboard-site-component">
+			<div className="dashboard-details-component">
 				<h1 className="content-title">Details</h1>
 				<InputField
 					label="Title"
@@ -266,7 +296,7 @@ class DashboardSite extends Component {
 						onChange={this.handleNavigationChange}
 					/>
 				</InputField>
-				<InputField error={this.props.error}>
+				<InputField error={this.state.error}>
 					<Button
 						name="create"
 						type="submit"
@@ -274,7 +304,7 @@ class DashboardSite extends Component {
 						onClick={this.handleSaveClick}
 						text="Save Site Details"
 						disabled={!this.state.title || !this.state.subdomain}
-						loading={this.props.isLoading}
+						loading={this.state.isLoading}
 					/>
 				</InputField>
 			</div>
@@ -282,6 +312,6 @@ class DashboardSite extends Component {
 	}
 }
 
-DashboardSite.propTypes = propTypes;
-DashboardSite.defaultProps = defaultProps;
-export default DashboardSite;
+DashboardDetails.propTypes = propTypes;
+// DashboardDetails.defaultProps = defaultProps;
+export default DashboardDetails;

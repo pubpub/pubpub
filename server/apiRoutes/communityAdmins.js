@@ -23,8 +23,8 @@ app.post('/api/communityAdmins', (req, res)=> {
 			attributes: ['id', 'slug', 'fullName', 'initials', 'avatar'],
 		});
 	})
-	.then(()=> {
-		return res.status(201).json('success');
+	.then((newAdminData)=> {
+		return res.status(201).json(newAdminData);
 	})
 	.catch((err)=> {
 		console.error('Error in postCommunityAdmin: ', err);
