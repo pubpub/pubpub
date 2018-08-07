@@ -1,6 +1,6 @@
 import React from 'react';
 import Promise from 'bluebird';
-import CollectionContainer from 'containers/Collection/Collection';
+import PageContainer from 'containers/Page/Page';
 import Html from '../Html';
 import app from '../server';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
@@ -34,7 +34,7 @@ app.get(['/', '/:slug'], (req, res, next)=> {
 			: `${pageData.title} · ${newInitialData.communityData.title}`;
 		return renderToNodeStream(res,
 			<Html
-				chunkName="Collection"
+				chunkName="Page"
 				initialData={newInitialData}
 				headerComponents={generateMetaComponents({
 					initialData: initialData,
@@ -42,7 +42,7 @@ app.get(['/', '/:slug'], (req, res, next)=> {
 					description: pageData.description,
 				})}
 			>
-				<CollectionContainer {...newInitialData} />
+				<PageContainer {...newInitialData} />
 			</Html>
 		);
 	})

@@ -8,7 +8,7 @@ import LayoutDrafts from 'components/LayoutDrafts/LayoutDrafts';
 import LayoutText from 'components/LayoutText/LayoutText';
 import { hydrateWrapper, apiFetch, getDefaultLayout } from 'utilities';
 
-require('./collection.scss');
+require('./page.scss');
 
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
@@ -17,7 +17,7 @@ const propTypes = {
 	pageData: PropTypes.object.isRequired,
 };
 
-class Collection extends Component {
+class Page extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -173,7 +173,7 @@ class Collection extends Component {
 		}, false);
 		const pubRenderLists = this.generateRenderList(layout);
 		return (
-			<div id="collection-container">
+			<div id="page-container">
 				<PageWrapper
 					loginData={this.props.loginData}
 					communityData={this.props.communityData}
@@ -241,7 +241,7 @@ class Collection extends Component {
 	}
 }
 
-Collection.propTypes = propTypes;
-export default Collection;
+Page.propTypes = propTypes;
+export default Page;
 
-hydrateWrapper(Collection);
+hydrateWrapper(Page);
