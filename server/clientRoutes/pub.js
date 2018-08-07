@@ -16,7 +16,7 @@ firebaseAdmin.initializeApp({
 app.get(['/pub/:slug', '/pub/:slug/content/:sectionId', '/pub/:slug/draft', '/pub/:slug/draft/content/:sectionId', '/pub/:slug/:mode', '/pub/:slug/:mode/:subMode'], (req, res, next)=> {
 	if (!hostIsValid(req, 'community')) { return next(); }
 
-	const isDraft = req.path.indexOf(`/pub/${req.params.slug}/draft`) === 0;
+	const isDraftRoute = req.path.indexOf(`/pub/${req.params.slug}/draft`) === 0;
 	// const acceptedModes = ['collaborators', 'versions', 'invite', 'discussions', 'contents'];
 	const acceptedModes = ['discussions'];
 	if (req.params.mode && acceptedModes.indexOf(req.params.mode) === -1) { return next(); }
@@ -26,13 +26,13 @@ app.get(['/pub/:slug', '/pub/:slug/content/:sectionId', '/pub/:slug/draft', '/pu
 	.then((initialData)=> {
 		return Promise.all([
 			initialData,
-			findPub(req, initialData, isDraft)
+			findPub(req, initialData, isDraftRoute)
 		]);
 	})
 	.then(([initialData, pubData])=> {
 		/* If isDraft, generate a firebaseToken */
 		const tokenClientId = initialData.loginData.clientId || 'anonymous';
-		const createFirebaseToken = isDraft
+		const createFirebaseToken = isDraftRoute
 			? firebaseAdmin.auth().createCustomToken(tokenClientId, {
 				// localPermissions: pubData.localPermissions,
 				isManager: pubData.isManager,
@@ -62,7 +62,7 @@ app.get(['/pub/:slug', '/pub/:slug/content/:sectionId', '/pub/:slug/draft', '/pu
 			...initialData,
 			pubData: {
 				...pubData,
-				isDraft: isDraft,
+				// isDraft: isDraft,
 				firebaseToken: firebaseToken,
 				editorKey: `pub-${pubData.id}`,
 			}

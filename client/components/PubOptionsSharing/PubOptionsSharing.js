@@ -341,13 +341,16 @@ class PubOptionsSharing extends Component {
 												value={currentPrivacy}
 												isDraft={isDraft}
 												onChange={(newValue)=> {
-													const newPrivacyObject = isDraft
-														? { draftPermissions: newValue }
-														: {
+													if (isDraft) {
+														this.handlePubUpdate({
+															draftPermissions: newValue
+														});
+													} else {
+														this.handleVersionUpdate({
 															versionId: version.id,
 															isPublic: newValue === 'public'
-														};
-													this.handleVersionUpdate(newPrivacyObject);
+														});
+													}
 												}}
 											/>
 										}

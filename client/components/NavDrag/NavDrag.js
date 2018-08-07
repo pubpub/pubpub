@@ -120,7 +120,12 @@ class NavDrag extends Component {
 			...this.cleanOutputNav(newItems)
 		]);
 	}
+
 	render() {
+		const homeTitle = this.props.pages.reduce((prev, curr)=> {
+			if (!curr.slug) { return curr.title; }
+			return prev;
+		}, '');
 		return (
 			<div className="nav-drag-component">
 				<div className="new-collection-wrapper">
@@ -140,7 +145,7 @@ class NavDrag extends Component {
 									className={`main-list ${snapshot.isDraggingOver ? 'dragging' : ''}`}
 								>
 									<div className="nav-item-background accent-background" />
-									<div className="nav-item accent-color">Home</div>
+									<div className="nav-item accent-color">{homeTitle}</div>
 									{this.state.nav.map((item, index)=> {
 										return (
 											<Draggable key={`draggable-${item.id}`} draggableId={item.id} index={index}>

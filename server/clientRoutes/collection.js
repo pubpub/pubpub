@@ -4,34 +4,34 @@ import CollectionContainer from 'containers/Collection/Collection';
 import Html from '../Html';
 import app from '../server';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
-import { findCollection } from '../queryHelpers';
+import { findPage } from '../queryHelpers';
 
 app.get(['/', '/:slug'], (req, res, next)=> {
 	if (!hostIsValid(req, 'community')) { return next(); }
 
 	return getInitialData(req)
 	.then((initialData)=> {
-		const collectionId = initialData.communityData.collections.reduce((prev, curr)=> {
+		const pageId = initialData.communityData.pages.reduce((prev, curr)=> {
 			if (curr.slug === '' && req.params.slug === undefined) { return curr.id; }
 			if (curr.slug === req.params.slug) { return curr.id; }
 			return prev;
 		}, undefined);
 
-		if (!collectionId) { throw new Error('Page Not Found'); }
+		if (!pageId) { throw new Error('Page Not Found'); }
 
 		return Promise.all([
 			initialData,
-			findCollection(collectionId, true, initialData)
+			findPage(pageId, true, initialData)
 		]);
 	})
-	.then(([initialData, collectionData])=> {
+	.then(([initialData, pageData])=> {
 		const newInitialData = {
 			...initialData,
-			collectionData: collectionData,
+			pageData: pageData,
 		};
-		const pageTitle = collectionData.title === 'Home'
+		const pageTitle = !pageData.slug
 			? newInitialData.communityData.title
-			: collectionData.title;
+			: `${pageData.title} · ${newInitialData.communityData.title}`;
 		return renderToNodeStream(res,
 			<Html
 				chunkName="Collection"
@@ -39,7 +39,7 @@ app.get(['/', '/:slug'], (req, res, next)=> {
 				headerComponents={generateMetaComponents({
 					initialData: initialData,
 					title: pageTitle,
-					description: collectionData.description,
+					description: pageData.description,
 				})}
 			>
 				<CollectionContainer {...newInitialData} />

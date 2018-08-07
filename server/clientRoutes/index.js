@@ -15,7 +15,7 @@ require('./pubCreate');			// Route: '/pub/create'
 // require('./pubPresentation');	// Route: ['/pub/:slug', '/pub/:slug/:mode', '/pub/:slug/:mode/:subMode']
 require('./pub');				// Route: ['/pub/:slug', '/pub/:slug/content/:chapterId', '/pub/:slug/draft', '/pub/:slug/draft/content/:chapterId', '/pub/:slug/:mode', '/pub/:slug/:mode/:subMode']
 require('./collection'); 		// Route: ['/', '/:slug']
-require('./collectionSubmit'); 	// Route: ['/:slug/submit', '/:slug/submit/:hash']
+// require('./collectionSubmit'); 	// Route: ['/:slug/submit', '/:slug/submit/:hash']
 
 /* Routes for all */
 require('./login'); 			// Route: '/login'

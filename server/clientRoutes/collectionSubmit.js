@@ -1,3 +1,4 @@
+// TODO: Remove this file
 import React from 'react';
 import Promise from 'bluebird';
 import CollectionSubmit from 'containers/CollectionSubmit/CollectionSubmit';

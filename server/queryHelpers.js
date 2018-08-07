@@ -3,7 +3,7 @@ import validator from 'validator';
 import { User, Collection, Pub, Collaborator, Discussion, CommunityAdmin, Community, Version, PubManager, PubAttribution, VersionPermission, Tag, PubTag, Page } from './models';
 import { generateCitationHTML } from './utilities';
 
-export const findPub = (req, initialData, isDraft)=> {
+export const findPub = (req, initialData, isDraftRoute)=> {
 	if (req.query.version && !validator.isUUID(req.query.version)) {
 		throw new Error('Pub Not Found');
 	}
@@ -119,47 +119,92 @@ export const findPub = (req, initialData, isDraft)=> {
 	});
 	return Promise.all([getPubData, getCommunityAdminData])
 	.then(([pubData, communityAdminData])=> {
+		// console.log(pubData);
 		if (!pubData) { throw new Error('Pub Not Found'); }
-
 		const pubDataJson = pubData.toJSON();
-		const isPubPubAdmin = initialData.loginData.id === 14;
-		const isCommunityAdminManager = communityAdminData && pubDataJson.isCommunityAdminManaged;
-		const isManager = pubDataJson.managers.reduce((prev, curr)=> {
-			if (curr.userId === initialData.loginData.id) { return true; }
-			return prev;
-		}, isCommunityAdminManager || isPubPubAdmin);
+		const formattedPubData = formatAndAuthenticatePub(pubDataJson, initialData.loginData, communityAdminData, req, isDraftRoute);
+		// if (isDraft) { return [pubDataJson, communityAdminData, {}]; }
 
-		const allowedVersions = pubDataJson.versions.sort((foo, bar)=> {
-			if (foo.createdAt > bar.createdAt) { return -1; }
-			if (foo.createdAt < bar.createdAt) { return 1; }
-			return 0;
-		}).filter((version)=> {
-			if (version.isPublic) { return true; }
-			if (isManager) { return true; }
-			if (version.id === req.query.version && version.viewHash === req.query.access) { return true; }
-			return pubDataJson.versionPermissions.reduce((prev, curr)=> {
-				if (version.id === curr.versionId && curr.userId === initialData.loginData.id) {
-					return true;
-				}
-				return prev;
-			}, false);
-		});
-		pubDataJson.versions = allowedVersions;
-		if (isDraft) { return [pubDataJson, communityAdminData, {}]; }
+		if (!formattedPubData) {
+			throw new Error('Pub Not Found');
+		}
+		if (!isDraftRoute && formattedPubData.isDraft) {
+			throw new Error(`DraftRedirect:${req.params.slug}`);
+		}
+		// const hasDraftAccess = formattedPubData.isManager || formattedPubData.isDraftViewer || formattedPubData.isDraftEditor;
+		// const hasVersionAccess = formattedPubData.isManager || formattedPubData.isVersionViewer;
+		// console.log(formattedPubData.isManager, formattedPubData.isDraftViewer, formattedPubData.isDraftEditor);
+		// console.log(formattedPubData.isManager, formattedPubData.isVersionViewer);
+		// console.log(formattedPubData.isManager, hasDraftAccess, hasVersionAccess);
 
-		const versionId = req.query.version || (allowedVersions[0] && allowedVersions[0].id);
-		const findActiveVersion = Version.findOne({
-			where: {
-				id: versionId,
-			},
-			raw: true,
-		});
-		return Promise.all([pubDataJson, communityAdminData, findActiveVersion]);
+		// /* Ensure access of some kind */
+		// if (!hasDraftAccess && !hasVersionAccess) {
+		// 	throw new Error('Pub Not Found');
+		// }
+
+		// /* Redirect if !draft but there are no versions */
+		// if (!isDraft && formattedPubData && !formattedPubData.versions.length) {
+		// 	throw new Error(`DraftRedirect:${req.params.slug}`);
+		// }
+
+		/* Ensure saved version access */
+		if (!formattedPubData.isDraft && !formattedPubData.hasVersionAccess) {
+			throw new Error('Pub Not Found');
+		}
+
+		/* Ensure draft access */
+		if (formattedPubData.isDraft && !formattedPubData.hasDraftAccess) {
+			throw new Error('Pub Not Found');
+		}
+
+		const findActiveVersion = isDraftRoute
+			? {}
+			: Version.findOne({
+				where: {
+					id: formattedPubData.activeVersion.id,
+				},
+				attributes: { exclude: ['viewHash'] },
+				raw: true,
+			});
+		return Promise.all([formattedPubData, findActiveVersion]);
+		// const isPubPubAdmin = initialData.loginData.id === 14;
+		// const isCommunityAdminManager = communityAdminData && pubDataJson.isCommunityAdminManaged;
+		// const isManager = pubDataJson.managers.reduce((prev, curr)=> {
+		// 	if (curr.userId === initialData.loginData.id) { return true; }
+		// 	return prev;
+		// }, isCommunityAdminManager || isPubPubAdmin);
+
+		// const allowedVersions = pubDataJson.versions.sort((foo, bar)=> {
+		// 	if (foo.createdAt > bar.createdAt) { return -1; }
+		// 	if (foo.createdAt < bar.createdAt) { return 1; }
+		// 	return 0;
+		// }).filter((version)=> {
+		// 	if (version.isPublic) { return true; }
+		// 	if (isManager) { return true; }
+		// 	if (version.id === req.query.version && version.viewHash === req.query.access) { return true; }
+		// 	return pubDataJson.versionPermissions.reduce((prev, curr)=> {
+		// 		if (version.id === curr.versionId && curr.userId === initialData.loginData.id) {
+		// 			return true;
+		// 		}
+		// 		return prev;
+		// 	}, false);
+		// });
+		// pubDataJson.versions = allowedVersions;
+		// if (isDraft) { return [pubDataJson, communityAdminData, {}]; }
+
+		// const versionId = req.query.version || (allowedVersions[0] && allowedVersions[0].id);
+		// const findActiveVersion = Version.findOne({
+		// 	where: {
+		// 		id: versionId,
+		// 	},
+		// 	raw: true,
+		// });
+		// return Promise.all([pubDataJson, communityAdminData, findActiveVersion]);
 	})
-	.then(([pubDataJson, communityAdminData, activeVersion])=> {
+	.then(([formattedPubData, activeVersion])=> {
 		// const pubDataJson = pubData.toJSON();
 		// const activeVersion = pubDataJson.activeVersion[0];
-		const hasSections = !isDraft && activeVersion && Array.isArray(activeVersion.content);
+		const hasSections = !isDraftRoute && activeVersion && Array.isArray(activeVersion.content);
 		// const sectionIndex = initialData.locationData.params.sectionId;
 		const sectionId = initialData.locationData.params.sectionId;
 		const validSectionId = hasSections && activeVersion.content.reduce((prev, curr)=> {
@@ -170,9 +215,6 @@ export const findPub = (req, initialData, isDraft)=> {
 		// const sectionOutOfRange = hasSections && sectionIndex > activeVersion.content.length || sectionIndex < 1;
 		if (hasSections && !validSectionId) {
 			throw new Error('Pub Not Found');
-		}
-		if (!isDraft && pubDataJson && !pubDataJson.versions.length) {
-			throw new Error(`DraftRedirect:${req.params.slug}`);
 		}
 
 		// const userPermissions = pubDataJson.managers.reduce((prev, curr)=> {
@@ -192,136 +234,134 @@ export const findPub = (req, initialData, isDraft)=> {
 					return { title: item.title, id: item.id };
 				})
 			};
+		// formattedPubData.activeVersion = formattedActiveVersionData;
+		// const isCommunityAdminManager = communityAdminData && pubDataJson.isCommunityAdminManaged;
+		// const isCommunityAdminViewer = communityAdminData && pubDataJson.communityAdminDraftPermissions === 'view';
+		// const isCommunityAdminEditor = communityAdminData && pubDataJson.communityAdminDraftPermissions === 'edit';
 
-		const isCommunityAdminManager = communityAdminData && pubDataJson.isCommunityAdminManaged;
-		const isCommunityAdminViewer = communityAdminData && pubDataJson.communityAdminDraftPermissions === 'view';
-		const isCommunityAdminEditor = communityAdminData && pubDataJson.communityAdminDraftPermissions === 'edit';
+		// const isValidViewHash = isDraft
+		// 	? req.query.access === pubDataJson.draftViewHash
+		// 	: req.query.access === activeVersion.viewHash;
+		// const isValidEditHash = isDraft && req.query.access === pubDataJson.draftEditHash;
+		// const isPubPubAdmin = initialData.loginData.id === 14;
 
-		const isValidViewHash = isDraft
-			? req.query.access === pubDataJson.draftViewHash
-			: req.query.access === activeVersion.viewHash;
-		const isValidEditHash = isDraft && req.query.access === pubDataJson.draftEditHash;
-		const isPubPubAdmin = initialData.loginData.id === 14;
+		// const isManager = pubDataJson.managers.reduce((prev, curr)=> {
+		// 	if (curr.userId === initialData.loginData.id) { return true; }
+		// 	return prev;
+		// }, isCommunityAdminManager || isPubPubAdmin);
+		// const isDraftEditor = pubDataJson.versionPermissions.reduce((prev, curr)=> {
+		// 	if (curr.userId === initialData.loginData.id
+		// 		&& !curr.versionId
+		// 		&& curr.permissions === 'edit'
+		// 	) { return true; }
+		// 	return prev;
+		// }, isCommunityAdminEditor || isValidEditHash || pubDataJson.draftPermissions === 'publicEdit');
+		// const isDraftViewer = pubDataJson.versionPermissions.reduce((prev, curr)=> {
+		// 	if (curr.userId === initialData.loginData.id
+		// 		&& !curr.versionId
+		// 		&& curr.permissions === 'view'
+		// 	) { return true; }
+		// 	return prev;
+		// }, isCommunityAdminViewer || isValidViewHash || pubDataJson.draftPermissions === 'publicView');
+		// const isVersionViewer = pubDataJson.versionPermissions.reduce((prev, curr)=> {
+		// 	if (curr.userId === initialData.loginData.id
+		// 		&& curr.versionId === formattedActiveVersionData.id
+		// 		&& curr.permissions === 'edit'
+		// 	) { return true; }
+		// 	return prev;
+		// }, isManager || isValidViewHash || (activeVersion && activeVersion.isPublic));
 
-		const isManager = pubDataJson.managers.reduce((prev, curr)=> {
-			if (curr.userId === initialData.loginData.id) { return true; }
-			return prev;
-		}, isCommunityAdminManager || isPubPubAdmin);
-		const isDraftEditor = pubDataJson.versionPermissions.reduce((prev, curr)=> {
-			if (curr.userId === initialData.loginData.id
-				&& !curr.versionId
-				&& curr.permissions === 'edit'
-			) { return true; }
-			return prev;
-		}, isCommunityAdminEditor || isValidEditHash || pubDataJson.draftPermissions === 'publicEdit');
-		const isDraftViewer = pubDataJson.versionPermissions.reduce((prev, curr)=> {
-			if (curr.userId === initialData.loginData.id
-				&& !curr.versionId
-				&& curr.permissions === 'view'
-			) { return true; }
-			return prev;
-		}, isCommunityAdminViewer || isValidViewHash || pubDataJson.draftPermissions === 'publicView');
-		const isVersionViewer = pubDataJson.versionPermissions.reduce((prev, curr)=> {
-			if (curr.userId === initialData.loginData.id
-				&& curr.versionId === formattedActiveVersionData.id
-				&& curr.permissions === 'edit'
-			) { return true; }
-			return prev;
-		}, isManager || isValidViewHash || (activeVersion && activeVersion.isPublic));
-
-		/* Ensure draft access */
-		if (isDraft && !isManager && !isDraftViewer && !isDraftEditor) {
-			throw new Error('Pub Not Found');
-		}
-
-		/* Ensure saved version access */
-		if (!isDraft && !isManager && !isVersionViewer) {
-			throw new Error('Pub Not Found');
-		}
+		
 
 
-		const formattedPubData = {
-			...pubDataJson,
-			versions: pubDataJson.versions.map((version)=> {
-				if (isManager) { return version; }
-				return {
-					...version,
-					viewHash: undefined,
-				};
-			}),
-			activeVersion: isManager
-				? formattedActiveVersionData
-				: {
-					...formattedActiveVersionData,
-					viewHash: undefined,
-				},
-			// versionsList: versionsListData.toJSON().versions,
-			attributions: pubDataJson.attributions.map((attribution)=> {
-				if (attribution.user) { return attribution; }
-				return {
-					...attribution,
-					user: {
-						id: attribution.id,
-						initials: attribution.name[0],
-						fullName: attribution.name,
-						firstName: attribution.name.split(' ')[0],
-						lastName: attribution.name.split(' ').slice(1, attribution.name.split(' ').length).join(' '),
-						avatar: attribution.avatar,
-						title: attribution.title
-					}
-				};
-			}),
-			// collaborators: [
-			// 	...pubDataJson.collaborators,
-			// 	...pubDataJson.emptyCollaborators.map((item)=> {
-			// 		return {
-			// 			id: item.id,
-			// 			initials: item.name[0],
-			// 			fullName: item.name,
-			// 			firstName: item.name.split(' ')[0],
-			// 			lastName: item.name.split(' ').slice(1, item.name.split(' ').length).join(' '),
-			// 			Collaborator: {
-			// 				id: item.id,
-			// 				isAuthor: item.isAuthor,
-			// 				isContributor: item.isContributor,
-			// 				title: item.title,
-			// 				roles: item.roles,
-			// 				permissions: item.permissions,
-			// 				order: item.order,
-			// 				createdAt: item.createdAt,
-			// 			}
-			// 		};
-			// 	})
-			// ],
-			discussions: pubDataJson.discussions.filter((item)=> {
-				// return item.isPublic || userPermissions !== 'none' || adminPermissions !== 'none';
-				return item.isPublic || isManager;
-			}).map((item)=> {
-				if (!isManager && item.submitHash) {
-					return { ...item, submitHash: 'present' };
-				}
-				return item;
-			}),
-			collections: pubDataJson.collections.filter((item)=> {
-				return item.isPublic || communityAdminData;
-			}),
-			pubTags: pubDataJson.pubTags.filter((item)=> {
-				return item.tag.isPublic || communityAdminData;
-			}),
-			// Add submit for publication button that creates discussion with submitHash
-			// Need to add a map to remove the submitHash if not communityAdmin
-			// Return threadNumber and pop them into that new submission (actually we should do that for all discussions)
-			// on publication - check for discussion with submit hash and communityAdmin
-			// on cancelling submission - perhaps we shoudl remove the archive button and replace it with a 'cancel submission'
-			// discussion that are archived and have a submithash can't be un-archived, perhaps.
-			// emptyCollaborators: undefined,
-			isManager: isManager,
-			isDraftEditor: isDraftEditor,
-			isDraftViewer: isDraftViewer,
-			isVersionViewer: isVersionViewer,
+		// const formattedPubData = {
+		// 	...pubDataJson,
+		// 	versions: pubDataJson.versions.map((version)=> {
+		// 		if (isManager) { return version; }
+		// 		return {
+		// 			...version,
+		// 			viewHash: undefined,
+		// 		};
+		// 	}),
+		// 	activeVersion: isManager
+		// 		? formattedActiveVersionData
+		// 		: {
+		// 			...formattedActiveVersionData,
+		// 			viewHash: undefined,
+		// 		},
+		// 	// versionsList: versionsListData.toJSON().versions,
+		// 	attributions: pubDataJson.attributions.map((attribution)=> {
+		// 		if (attribution.user) { return attribution; }
+		// 		return {
+		// 			...attribution,
+		// 			user: {
+		// 				id: attribution.id,
+		// 				initials: attribution.name[0],
+		// 				fullName: attribution.name,
+		// 				firstName: attribution.name.split(' ')[0],
+		// 				lastName: attribution.name.split(' ').slice(1, attribution.name.split(' ').length).join(' '),
+		// 				avatar: attribution.avatar,
+		// 				title: attribution.title
+		// 			}
+		// 		};
+		// 	}),
+		// 	// collaborators: [
+		// 	// 	...pubDataJson.collaborators,
+		// 	// 	...pubDataJson.emptyCollaborators.map((item)=> {
+		// 	// 		return {
+		// 	// 			id: item.id,
+		// 	// 			initials: item.name[0],
+		// 	// 			fullName: item.name,
+		// 	// 			firstName: item.name.split(' ')[0],
+		// 	// 			lastName: item.name.split(' ').slice(1, item.name.split(' ').length).join(' '),
+		// 	// 			Collaborator: {
+		// 	// 				id: item.id,
+		// 	// 				isAuthor: item.isAuthor,
+		// 	// 				isContributor: item.isContributor,
+		// 	// 				title: item.title,
+		// 	// 				roles: item.roles,
+		// 	// 				permissions: item.permissions,
+		// 	// 				order: item.order,
+		// 	// 				createdAt: item.createdAt,
+		// 	// 			}
+		// 	// 		};
+		// 	// 	})
+		// 	// ],
+		// 	discussions: pubDataJson.discussions.filter((item)=> {
+		// 		// return item.isPublic || userPermissions !== 'none' || adminPermissions !== 'none';
+		// 		return item.isPublic || isManager;
+		// 	}).map((item)=> {
+		// 		if (!isManager && item.submitHash) {
+		// 			return { ...item, submitHash: 'present' };
+		// 		}
+		// 		return item;
+		// 	}),
+		// 	collections: pubDataJson.collections.filter((item)=> {
+		// 		return item.isPublic || communityAdminData;
+		// 	}),
+		// 	pubTags: pubDataJson.pubTags.filter((item)=> {
+		// 		return item.tag.isPublic || communityAdminData;
+		// 	}),
+		// 	// Add submit for publication button that creates discussion with submitHash
+		// 	// Need to add a map to remove the submitHash if not communityAdmin
+		// 	// Return threadNumber and pop them into that new submission (actually we should do that for all discussions)
+		// 	// on publication - check for discussion with submit hash and communityAdmin
+		// 	// on cancelling submission - perhaps we shoudl remove the archive button and replace it with a 'cancel submission'
+		// 	// discussion that are archived and have a submithash can't be un-archived, perhaps.
+		// 	// emptyCollaborators: undefined,
+		// 	isManager: isManager,
+		// 	isDraftEditor: isDraftEditor,
+		// 	isDraftViewer: isDraftViewer,
+		// 	isVersionViewer: isVersionViewer,
+		// };
+
+		const outputPub = {
+			...formattedPubData,
+			activeVersion: formattedActiveVersionData,
+			citationData: generateCitationHTML(formattedPubData, initialData.communityData),
 		};
-		const citationData = generateCitationHTML(formattedPubData, initialData.communityData);
-		formattedPubData.citationData = citationData;
+		// const citationData = ;
+		// formattedPubData.citationData = citationData;
 		// formattedPubData.localPermissions = formattedPubData.collaborators.reduce((prev, curr)=> {
 		// 	if (curr.id === initialData.loginData.id) {
 		// 		const currPermissions = curr.Collaborator.permissions;
@@ -347,75 +387,63 @@ export const findPub = (req, initialData, isDraft)=> {
 		// if (initialData.loginData.id === 14) {
 		// 	formattedPubData.localPermissions = 'manage';
 		// }
-		if (!isManager) {
-			formattedPubData.draftViewHash = undefined;
-			formattedPubData.draftEditHash = undefined;
+		if (!formattedPubData.isManager) {
+			outputPub.draftViewHash = undefined;
+			outputPub.draftEditHash = undefined;
 		}
 		// if (!formattedPubData.versions.length && formattedPubData.localPermissions === 'none') { throw new Error('Pub Not Found'); }
-		return formattedPubData;
+		return outputPub;
 	});
 };
 
 export const findPage = (pageId, useIncludes, initialData)=> {
-	const includes = useIncludes
-		? [
-			{
-				model: Pub,
-				as: 'pubs',
-				through: { attributes: [] },
-				attributes: {
-					exclude: ['editHash', 'viewHash'],
-				},
-				include: [
-					// {
-					// 	model: User,
-					// 	as: 'collaborators',
-					// 	attributes: ['id', 'avatar', 'initials', 'fullName'],
-					// 	through: { attributes: ['isAuthor', 'isContributor', 'order'] },
-					// },
-					// {
-					// 	required: false,
-					// 	model: Collaborator,
-					// 	as: 'emptyCollaborators',
-					// 	where: { userId: null },
-					// 	attributes: { exclude: ['createdAt', 'updatedAt'] },
-					// },
-					{
-						model: PubManager,
-						as: 'managers',
-						separate: true,
-					},
-					{
-						model: PubAttribution,
-						as: 'attributions',
-						required: false,
-						separate: true,
-						include: [{ model: User, as: 'user', required: false, attributes: ['id', 'fullName', 'avatar', 'slug', 'initials', 'title'] }],
-					},
-					{
-						model: VersionPermission,
-						as: 'versionPermissions',
-						required: false,
-						separate: true,
-					},
-					{
-						model: Version,
-						required: false,
-						as: 'versions',
-						attributes: ['id', 'isPublic', 'isCommunityAdminShared', 'createdAt']
-					},
-
-					{
-						required: false,
-						separate: true,
-						model: Discussion,
-						as: 'discussions',
-						attributes: ['suggestions', 'pubId', 'submitHash', 'isArchived']
-					}
-				]
-			}
-		]
-		: [];
+	// Get page
+	// Get tags from layout
+	// Get pubs from tags
+	// const includes = useIncludes
+	// 	? [
+	// 		{
+	// 			model: Pub,
+	// 			as: 'pubs',
+	// 			through: { attributes: [] },
+	// 			attributes: {
+	// 				exclude: ['editHash', 'viewHash'],
+	// 			},
+	// 			include: [
+	// 				{
+	// 					model: Version,
+	// 					required: false,
+	// 					as: 'versions',
+	// 					attributes: ['id', 'isPublic', 'isCommunityAdminShared', 'createdAt']
+	// 				},
+	// 				{
+	// 					model: PubManager,
+	// 					as: 'managers',
+	// 					separate: true,
+	// 				},
+	// 				{
+	// 					model: PubAttribution,
+	// 					as: 'attributions',
+	// 					required: false,
+	// 					separate: true,
+	// 					include: [{ model: User, as: 'user', required: false, attributes: ['id', 'fullName', 'avatar', 'slug', 'initials', 'title'] }],
+	// 				},
+	// 				{
+	// 					model: VersionPermission,
+	// 					as: 'versionPermissions',
+	// 					required: false,
+	// 					separate: true,
+	// 				},
+	// 				{
+	// 					model: PubTag,
+	// 					as: 'pubTags',
+	// 					required: false,
+	// 					separate: true,
+	// 				},
+	// 			]
+	// 		}
+	// 	]
+	// 	: [];
 	const pageQuery = Page.findOne({
 		where: {
 			id: pageId
@@ -428,122 +456,168 @@ export const findPage = (pageId, useIncludes, initialData)=> {
 			communityId: initialData.communityData.id,
 		}
 	});
-	return Promise.all([pageQuery, communityAdminQuery])
-	.then(([pageData, communityAdminData])=> {
-		const pageDataJson = pageData.toJSON();
-		if (pageData.pubs) {
-			collectionDataJson.pubs = collectionDataJson.pubs.map((pub)=> {
-				return {
-					...pub,
-					discussionCount: pub.discussions ? pub.discussions.length : 0,
-					suggestionCount: pub.discussions ? pub.discussions.reduce((prev, curr)=> {
-						if (curr.suggestions) { return prev + 1; }
-						return prev;
-					}, 0) : 0,
-					// collaboratorCount: pub.collaborators.length + pub.emptyCollaborators.length,
-					collaboratorCount: pub.attributions.length,
-					hasOpenSubmission: pub.discussions ? pub.discussions.reduce((prev, curr)=> {
-						if (curr.submitHash && !curr.isArchived) { return true; }
-						return prev;
-					}, false) : false,
-					discussions: undefined,
-					// collaborators: [
-					// 	...pub.collaborators,
-					// 	...pub.emptyCollaborators.map((item)=> {
-					// 		return {
-					// 			id: item.id,
-					// 			initials: item.name ? item.name[0] : '',
-					// 			fullName: item.name,
-					// 			Collaborator: {
-					// 				id: item.id,
-					// 				isAuthor: item.isAuthor,
-					// 				permissions: item.permissions,
-					// 				order: item.order,
-					// 			}
-					// 		};
-					// 	})
-					// ],
-					attributions: pub.attributions.map((attribution)=> {
-						if (attribution.user) { return attribution; }
-						return {
-							...attribution,
-							user: {
-								id: attribution.id,
-								initials: attribution.name[0],
-								fullName: attribution.name,
-								firstName: attribution.name.split(' ')[0],
-								lastName: attribution.name.split(' ').slice(1, attribution.name.split(' ').length).join(' '),
-								avatar: attribution.avatar,
-								title: attribution.title
-							}
-						};
-					}),
-					// emptyCollaborators: undefined,
-				};
-			}).filter((item)=> {
-				const isManager = item.managers.reduce((prev, curr)=> {
-					if (curr.userId === initialData.loginData.id) { return true; }
-					return prev;
-				}, communityAdminData && item.isCommunityAdminManaged);
+	const pubsQuery = useIncludes && Pub.findAll({
+		where: { communityId: initialData.communityData.id },
+		include: [
+			{
+				model: Version,
+				required: false,
+				as: 'versions',
+				attributes: ['id', 'isPublic', 'isCommunityAdminShared', 'createdAt']
+			},
+			{
+				model: PubManager,
+				as: 'managers',
+				separate: true,
+			},
+			{
+				model: PubAttribution,
+				as: 'attributions',
+				required: false,
+				separate: true,
+				include: [{ model: User, as: 'user', required: false, attributes: ['id', 'fullName', 'avatar', 'slug', 'initials', 'title'] }],
+			},
+			{
+				model: VersionPermission,
+				as: 'versionPermissions',
+				required: false,
+				separate: true,
+			},
+			{
+				model: PubTag,
+				as: 'pubTags',
+				required: false,
+				separate: true,
+			},
+		]
+	});
+	return Promise.all([pageQuery, communityAdminQuery, pubsQuery])
+	.then(([pageData, communityAdminData, pubsData])=> {
+		// const pageDataJson = pageData.toJSON();
+		const formattedPubsData = pubsData.map((pubData)=> {
+			return formatAndAuthenticatePub(pubData.toJSON(), initialData.loginData, communityAdminData, { query: {} }, false);
+		}).filter((formattedPub)=> {
+			return formattedPub;
+		});
+		// if (pubsData && pubsData.length) {
+		// 	formattedPubsData = pubsData.map((pub)=> {
+		// 		const pubData = pub.toJSON();
+		// 		return {
+		// 			...pubData,
 
-				const isDraftViewer = item.versionPermissions.reduce((prev, curr)=> {
-					if (!curr.versionId && curr.userId === initialData.loginData.id) { return true; }
-					return prev;
-				}, item.draftPermissions !== 'private' || (communityAdminData && item.communityAdminDraftPermissions !== 'none'));
+		// 			...pub,
+		// 			discussionCount: pub.discussions ? pub.discussions.length : 0,
+		// 			suggestionCount: pub.discussions ? pub.discussions.reduce((prev, curr)=> {
+		// 				if (curr.suggestions) { return prev + 1; }
+		// 				return prev;
+		// 			}, 0) : 0,
+		// 			// collaboratorCount: pub.collaborators.length + pub.emptyCollaborators.length,
+		// 			collaboratorCount: pub.attributions.length,
+		// 			hasOpenSubmission: pub.discussions ? pub.discussions.reduce((prev, curr)=> {
+		// 				if (curr.submitHash && !curr.isArchived) { return true; }
+		// 				return prev;
+		// 			}, false) : false,
+		// 			discussions: undefined,
+		// 			// collaborators: [
+		// 			// 	...pub.collaborators,
+		// 			// 	...pub.emptyCollaborators.map((item)=> {
+		// 			// 		return {
+		// 			// 			id: item.id,
+		// 			// 			initials: item.name ? item.name[0] : '',
+		// 			// 			fullName: item.name,
+		// 			// 			Collaborator: {
+		// 			// 				id: item.id,
+		// 			// 				isAuthor: item.isAuthor,
+		// 			// 				permissions: item.permissions,
+		// 			// 				order: item.order,
+		// 			// 			}
+		// 			// 		};
+		// 			// 	})
+		// 			// ],
+		// 			attributions: pub.attributions.map((attribution)=> {
+		// 				if (attribution.user) { return attribution; }
+		// 				return {
+		// 					...attribution,
+		// 					user: {
+		// 						id: attribution.id,
+		// 						initials: attribution.name[0],
+		// 						fullName: attribution.name,
+		// 						firstName: attribution.name.split(' ')[0],
+		// 						lastName: attribution.name.split(' ').slice(1, attribution.name.split(' ').length).join(' '),
+		// 						avatar: attribution.avatar,
+		// 						title: attribution.title
+		// 					}
+		// 				};
+		// 			}),
+		// 			// emptyCollaborators: undefined,
+		// 		};
+		// 	}).filter((item)=> {
+		// 		const isManager = item.managers.reduce((prev, curr)=> {
+		// 			if (curr.userId === initialData.loginData.id) { return true; }
+		// 			return prev;
+		// 		}, communityAdminData && item.isCommunityAdminManaged);
 
-				const isPrivateVersionViewer = item.versionPermissions.reduce((prev, curr)=> {
-					if (curr.versionId && curr.userId === initialData.loginData.id) { return true; }
-					return prev;
-				}, false);
+		// 		const isDraftViewer = item.versionPermissions.reduce((prev, curr)=> {
+		// 			if (!curr.versionId && curr.userId === initialData.loginData.id) { return true; }
+		// 			return prev;
+		// 		}, item.draftPermissions !== 'private' || (communityAdminData && item.communityAdminDraftPermissions !== 'none'));
 
-				const isVersionVisible = item.versions.reduce((prev, curr)=> {
-					if (curr.isPublic) { return true; }
-					if (curr.isCommunityAdminShared && communityAdminData) { return true; }
-					return prev;
-				}, false);
+		// 		const isPrivateVersionViewer = item.versionPermissions.reduce((prev, curr)=> {
+		// 			if (curr.versionId && curr.userId === initialData.loginData.id) { return true; }
+		// 			return prev;
+		// 		}, false);
 
-				return isManager || isDraftViewer || isPrivateVersionViewer || isVersionVisible;
-				// const adminCanCollab = item.adminPermissions !== 'none' && !!communityAdminData;
-				// const publicCanCollab = item.collaborationMode !== 'private';
-				// return !!item.firstPublishedAt || publicCanCollab || adminCanCollab;
-			})
-			.map((item)=> {
-				/* Calculate earliest version visible here and set firstPublished value on Pub */
-				const isPubPubAdmin = initialData.loginData.id === 14;
-				const isCommunityAdminManager = communityAdminData && item.isCommunityAdminManaged;
-				const isManager = item.managers.reduce((prev, curr)=> {
-					if (curr.userId === initialData.loginData.id) { return true; }
-					return prev;
-				}, isCommunityAdminManager || isPubPubAdmin);
+		// 		const isVersionVisible = item.versions.reduce((prev, curr)=> {
+		// 			if (curr.isPublic) { return true; }
+		// 			if (curr.isCommunityAdminShared && communityAdminData) { return true; }
+		// 			return prev;
+		// 		}, false);
 
-				const allowedVersions = item.versions.sort((foo, bar)=> {
-					if (foo.createdAt > bar.createdAt) { return -1; }
-					if (foo.createdAt < bar.createdAt) { return 1; }
-					return 0;
-				}).filter((version)=> {
-					if (version.isPublic) { return true; }
-					if (isManager) { return true; }
-					return item.versionPermissions.reduce((prev, curr)=> {
-						if (version.id === curr.versionId && curr.userId === initialData.loginData.id) {
-							return true;
-						}
-						return prev;
-					}, false);
-				});
+		// 		return isManager || isDraftViewer || isPrivateVersionViewer || isVersionVisible;
+		// 		// const adminCanCollab = item.adminPermissions !== 'none' && !!communityAdminData;
+		// 		// const publicCanCollab = item.collaborationMode !== 'private';
+		// 		// return !!item.firstPublishedAt || publicCanCollab || adminCanCollab;
+		// 	})
+		// 	.map((item)=> {
+		// 		/* Calculate earliest version visible here and set firstPublished value on Pub */
+		// 		const isPubPubAdmin = initialData.loginData.id === 14;
+		// 		const isCommunityAdminManager = communityAdminData && item.isCommunityAdminManaged;
+		// 		const isManager = item.managers.reduce((prev, curr)=> {
+		// 			if (curr.userId === initialData.loginData.id) { return true; }
+		// 			return prev;
+		// 		}, isCommunityAdminManager || isPubPubAdmin);
 
-				return {
-					...item,
-					versions: undefined,
-					managers: undefined,
-					versionPermissions: undefined,
-					firstPublishedAt: allowedVersions.length ? allowedVersions[allowedVersions.length - 1].createdAt : undefined,
-				};
-			});
-		}
-		if (!communityAdminData && initialData.locationData.params.hash !== pageDataJson.viewHash) {
-			pageDataJson.createPubHash = undefined;
-		}
-		return pageDataJson;
+		// 		const allowedVersions = item.versions.sort((foo, bar)=> {
+		// 			if (foo.createdAt > bar.createdAt) { return -1; }
+		// 			if (foo.createdAt < bar.createdAt) { return 1; }
+		// 			return 0;
+		// 		}).filter((version)=> {
+		// 			if (version.isPublic) { return true; }
+		// 			if (isManager) { return true; }
+		// 			return item.versionPermissions.reduce((prev, curr)=> {
+		// 				if (version.id === curr.versionId && curr.userId === initialData.loginData.id) {
+		// 					return true;
+		// 				}
+		// 				return prev;
+		// 			}, false);
+		// 		});
+
+		// 		return {
+		// 			...item,
+		// 			versions: undefined,
+		// 			managers: undefined,
+		// 			versionPermissions: undefined,
+		// 			firstPublishedAt: allowedVersions.length ? allowedVersions[allowedVersions.length - 1].createdAt : undefined,
+		// 		};
+		// 	});
+		// }
+		// if (!communityAdminData && initialData.locationData.params.hash !== pageDataJson.viewHash) {
+		// 	pageDataJson.createPubHash = undefined;
+		// }
+		return {
+			...pageData.toJSON(),
+			pubs: formattedPubsData,
+		};
 	});
 };
 
@@ -650,4 +724,281 @@ export const getPubSearch = (query, initialData)=> {
 		});
 		return output;
 	});
+};
+
+export const formatAndAuthenticatePub = (pub, loginData, communityAdminData, req, isDraftRoute)=> {
+	/* Used to format pub JSON and to test */
+	/* whether the user has permissions */
+
+	const isPubPubAdmin = loginData.id === 14;
+	const isCommunityAdminManager = communityAdminData && pub.isCommunityAdminManaged;
+	const isManager = pub.managers.reduce((prev, curr)=> {
+		if (curr.userId === loginData.id) { return true; }
+		return prev;
+	}, isCommunityAdminManager || isPubPubAdmin);
+
+	const allowedVersions = pub.versions.sort((foo, bar)=> {
+		if (foo.createdAt > bar.createdAt) { return -1; }
+		if (foo.createdAt < bar.createdAt) { return 1; }
+		return 0;
+	}).filter((version)=> {
+		if (version.isPublic) { return true; }
+		if (isManager) { return true; }
+		if (version.id === req.query.version && version.viewHash === req.query.access) { return true; }
+		return pub.versionPermissions.reduce((prev, curr)=> {
+			if (version.id === curr.versionId && curr.userId === loginData.id) {
+				return true;
+			}
+			return prev;
+		}, false);
+	});
+	const activeVersion = allowedVersions.reduce((prev, curr, index)=> {
+		if (index === 0) { return curr; }
+		if (req.query.version === curr.id) { return curr; }
+		return prev;
+	}, {});
+	// pub.versions = allowedVersions;
+	// pub.activeVersion = allowedVersions.reduce((prev, curr, index)=> {
+	// 	if (index === 0) { return curr; }
+	// 	if (req.query.version === curr.id) { return curr; }
+	// 	return prev;
+	// }, {});
+	
+
+
+	// const pubDataJson = pubData.toJSON();
+	// const activeVersion = pubDataJson.activeVersion[0];
+	// const hasSections = !isDraft && activeVersion && Array.isArray(activeVersion.content);
+	// const sectionIndex = initialData.locationData.params.sectionId;
+	// const sectionId = initialData.locationData.params.sectionId;
+	// const validSectionId = hasSections && activeVersion.content.reduce((prev, curr)=> {
+	// 	if (!sectionId) { return true; }
+	// 	if (sectionId === curr.id) { return true; }
+	// 	return prev;
+	// }, false);
+	// const sectionOutOfRange = hasSections && sectionIndex > activeVersion.content.length || sectionIndex < 1;
+	// if (hasSections && !validSectionId) {
+	// 	throw new Error('Pub Not Found');
+	// }
+	// if (!isDraft && pubDataJson && !pubDataJson.versions.length) {
+	// 	throw new Error(`DraftRedirect:${req.params.slug}`);
+	// }
+
+	// const userPermissions = pubDataJson.managers.reduce((prev, curr)=> {
+	// 	if (curr.userId === initialData.loginData.id) { return 'manage'; }
+	// 	return prev;
+	// }, 'none');
+
+	/* Remove the content from the sections other than the rendered */
+	/* section to save bytes on the transfer */
+	// const formattedActiveVersionData = !hasSections
+	// 	? activeVersion
+	// 	: {
+	// 		...activeVersion,
+	// 		content: activeVersion.content.map((item, index)=> {
+	// 			if (!sectionId && index === 0) { return item; }
+	// 			if (item.id === sectionId) { return item; }
+	// 			return { title: item.title, id: item.id };
+	// 		})
+	// 	};
+
+	// const isCommunityAdminManager = communityAdminData && pubDataJson.isCommunityAdminManaged;
+	const isCommunityAdminViewer = communityAdminData && pub.communityAdminDraftPermissions === 'view';
+	const isCommunityAdminEditor = communityAdminData && pub.communityAdminDraftPermissions === 'edit';
+
+	const isValidViewHash = isDraftRoute
+		? req.query.access && req.query.access === pub.draftViewHash
+		: req.query.access && req.query.access === activeVersion.viewHash;
+	const isValidEditHash = isDraftRoute && req.query.access === pub.draftEditHash;
+	// const isPubPubAdmin = initialData.loginData.id === 14;
+
+	// const isManager = pubDataJson.managers.reduce((prev, curr)=> {
+	// 	if (curr.userId === initialData.loginData.id) { return true; }
+	// 	return prev;
+	// }, isCommunityAdminManager || isPubPubAdmin);
+	const isDraftEditor = pub.versionPermissions.reduce((prev, curr)=> {
+		if (curr.userId === loginData.id
+			&& !curr.versionId
+			&& curr.permissions === 'edit'
+		) { return true; }
+		return prev;
+	}, isCommunityAdminEditor || isValidEditHash || pub.draftPermissions === 'publicEdit');
+	const isDraftViewer = pub.versionPermissions.reduce((prev, curr)=> {
+		if (curr.userId === loginData.id
+			&& !curr.versionId
+			&& curr.permissions === 'view'
+		) { return true; }
+		return prev;
+	}, isCommunityAdminViewer || isValidViewHash || pub.draftPermissions === 'publicView');
+
+	// console.log('12, isDraftViewer', pub.draftPermissions === 'publicView');
+	const isVersionViewer = pub.versionPermissions.reduce((prev, curr)=> {
+		if (curr.userId === loginData.id
+			&& curr.versionId === activeVersion.id
+			&& curr.permissions === 'edit'
+		) { return true; }
+		return prev;
+	}, isManager || isValidViewHash || (activeVersion && activeVersion.isPublic));
+	// console.log('13, isVersionViewer', isVersionViewer);
+
+	// /* Ensure draft access */
+	// if (isDraftRoute && !isManager && !isDraftViewer && !isDraftEditor) {
+	// 	throw new Error('Pub Not Found');
+	// }
+
+	// /* Ensure saved version access */
+	// if (!isDraftRoute && !isManager && !isVersionViewer) {
+	// 	throw new Error('Pub Not Found');
+	// }
+
+
+	const formattedPubData = {
+		...pub,
+		versions: allowedVersions.map((version)=> {
+			if (isManager) { return version; }
+			return {
+				...version,
+				viewHash: undefined,
+			};
+		}),
+		activeVersion: activeVersion,
+		// activeVersion: isManager
+		// 	? formattedActiveVersionData
+		// 	: {
+		// 		...formattedActiveVersionData,
+		// 		viewHash: undefined,
+		// 	},
+		// versionsList: versionsListData.toJSON().versions,
+		attributions: pub.attributions.map((attribution)=> {
+			if (attribution.user) { return attribution; }
+			return {
+				...attribution,
+				user: {
+					id: attribution.id,
+					initials: attribution.name[0],
+					fullName: attribution.name,
+					firstName: attribution.name.split(' ')[0],
+					lastName: attribution.name.split(' ').slice(1, attribution.name.split(' ').length).join(' '),
+					avatar: attribution.avatar,
+					title: attribution.title
+				}
+			};
+		}),
+		// collaborators: [
+		// 	...pubDataJson.collaborators,
+		// 	...pubDataJson.emptyCollaborators.map((item)=> {
+		// 		return {
+		// 			id: item.id,
+		// 			initials: item.name[0],
+		// 			fullName: item.name,
+		// 			firstName: item.name.split(' ')[0],
+		// 			lastName: item.name.split(' ').slice(1, item.name.split(' ').length).join(' '),
+		// 			Collaborator: {
+		// 				id: item.id,
+		// 				isAuthor: item.isAuthor,
+		// 				isContributor: item.isContributor,
+		// 				title: item.title,
+		// 				roles: item.roles,
+		// 				permissions: item.permissions,
+		// 				order: item.order,
+		// 				createdAt: item.createdAt,
+		// 			}
+		// 		};
+		// 	})
+		// ],
+		discussions: pub.discussions
+			? pub.discussions.filter((item)=> {
+				// return item.isPublic || userPermissions !== 'none' || adminPermissions !== 'none';
+				return item.isPublic || isManager;
+			}).map((item)=> {
+				if (!isManager && item.submitHash) {
+					return { ...item, submitHash: 'present' };
+				}
+				return item;
+			})
+			: undefined,
+		collections: pub.collections
+			? pub.collections.filter((item)=> {
+				return item.isPublic || communityAdminData;
+			})
+			: undefined,
+		pubTags: pub.pubTags.filter((item)=> {
+			return !item.tag || item.tag.isPublic || communityAdminData;
+		}),
+		// Add submit for publication button that creates discussion with submitHash
+		// Need to add a map to remove the submitHash if not communityAdmin
+		// Return threadNumber and pop them into that new submission (actually we should do that for all discussions)
+		// on publication - check for discussion with submit hash and communityAdmin
+		// on cancelling submission - perhaps we shoudl remove the archive button and replace it with a 'cancel submission'
+		// discussion that are archived and have a submithash can't be un-archived, perhaps.
+		// emptyCollaborators: undefined,
+		isManager: isManager,
+		isDraftEditor: isDraftEditor,
+		isDraftViewer: isDraftViewer,
+		isVersionViewer: isVersionViewer,
+		isDraft: isDraftRoute || !allowedVersions.length,
+		hasDraftAccess: isManager || isDraftViewer || isDraftEditor,
+		hasVersionAccess: isManager || isVersionViewer,
+	};
+	// const citationData = generateCitationHTML(formattedPubData, initialData.communityData);
+	// formattedPubData.citationData = citationData;
+	// formattedPubData.localPermissions = formattedPubData.collaborators.reduce((prev, curr)=> {
+	// 	if (curr.id === initialData.loginData.id) {
+	// 		const currPermissions = curr.Collaborator.permissions;
+	// 		if (prev === 'manage') { return prev; }
+	// 		if (currPermissions === 'manage') { return currPermissions; }
+	// 		if (currPermissions === 'edit' && prev !== 'manage') { return currPermissions; }
+	// 		if (currPermissions === 'view' && prev === 'none') { return currPermissions; }
+	// 	}
+	// 	return prev;
+	// }, isManager ? 'manage' : 'none');
+	// if (req.query.access === formattedPubData.viewHash && formattedPubData.localPermissions === 'none') {
+	// 	formattedPubData.localPermissions = 'view';
+	// }
+	// if (req.query.access === formattedPubData.editHash && (formattedPubData.localPermissions === 'none' || formattedPubData.localPermissions === 'view')) {
+	// 	formattedPubData.localPermissions = 'edit';
+	// }
+	// if (pubDataJson.collaborationMode === 'publicView' && formattedPubData.localPermissions === 'none') {
+	// 	formattedPubData.localPermissions = 'view';
+	// }
+	// if (pubDataJson.collaborationMode === 'publicEdit' && (formattedPubData.localPermissions === 'none' || formattedPubData.localPermissions === 'view')) {
+	// 	formattedPubData.localPermissions = 'edit';
+	// }
+	// if (initialData.loginData.id === 14) {
+	// 	formattedPubData.localPermissions = 'manage';
+	// }
+	if (!isManager) {
+		formattedPubData.draftViewHash = undefined;
+		formattedPubData.draftEditHash = undefined;
+	}
+
+
+	// const hasDraftAccess = formattedPubData.isManager || formattedPubData.isDraftViewer || formattedPubData.isDraftEditor;
+	// const hasVersionAccess = formattedPubData.isManager || formattedPubData.isVersionViewer;
+	// console.log(formattedPubData.isManager, formattedPubData.isDraftViewer, formattedPubData.isDraftEditor);
+	// console.log(formattedPubData.isManager, formattedPubData.isVersionViewer);
+	// console.log(formattedPubData.isManager, hasDraftAccess, hasVersionAccess);
+
+	/* Ensure access of some kind */
+	if (!formattedPubData.hasDraftAccess && !formattedPubData.hasVersionAccess) {
+		return null;
+	}
+
+	/* Redirect if !draft but there are no versions */
+	// if (!isDraftRoute && formattedPubData && !formattedPubData.versions.length) {
+	// 	// throw new Error(`DraftRedirect:${req.params.slug}`);
+	// 	return 'redirect';
+	// }
+
+	/* Ensure saved version access */
+	// if (!isDraftRoute && !hasVersionAccess) {
+	// 	return null;
+	// }
+
+	/* Ensure draft access */
+	// if (isDraftRoute && !hasDraftAccess) {
+	// 	return null;
+	// }
+
+	return formattedPubData;
 };
