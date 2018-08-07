@@ -4,7 +4,7 @@ import { Button, NonIdealState } from '@blueprintjs/core';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
 import LayoutPubs from 'components/LayoutPubs/LayoutPubs';
 import LayoutHtml from 'components/LayoutHtml/LayoutHtml';
-import LayoutDrafts from 'components/LayoutDrafts/LayoutDrafts';
+// import LayoutDrafts from 'components/LayoutDrafts/LayoutDrafts';
 import LayoutText from 'components/LayoutText/LayoutText';
 import { hydrateWrapper, apiFetch, getDefaultLayout, generateRenderLists } from 'utilities';
 
@@ -23,108 +23,8 @@ class Page extends Component {
 		this.state = {
 			createPubIsLoading: false,
 		};
-		this.getComponentFromType = this.getComponentFromType.bind(this);
-		// this.generateRenderList = this.generateRenderList.bind(this);
 		this.handleCreatePub = this.handleCreatePub.bind(this);
 	}
-
-	getComponentFromType(item, index, pubRenderLists) {
-		const pageData = this.props.pageData || {};
-		const pubs = pageData.pubs || [];
-
-		if (item.type === 'pubs') {
-			return (
-				<LayoutPubs
-					key={`item-${item.id}`}
-					layoutIndex={index}
-					content={item.content}
-					pubRenderList={pubRenderLists[index]}
-					// isLoading={!collectionData.id}
-				/>
-			);
-		}
-		if (item.type === 'text') {
-			return (
-				<LayoutText
-					key={`item-${item.id}`}
-					content={item.content}
-				/>
-			);
-		}
-		if (item.type === 'html') {
-			return (
-				<LayoutHtml
-					key={`item-${item.id}`}
-					content={item.content}
-				/>
-			);
-		}
-		// if (item.type === 'drafts') {
-		// 	return (
-		// 		<LayoutDrafts
-		// 			key={`item-${item.id}`}
-		// 			content={item.content}
-		// 			pubs={pubs.filter((pub)=> {
-		// 				return !pub.firstPublishedAt;
-		// 			})}
-		// 		/>
-		// 	);
-		// }
-		return null;
-	}
-
-	// generateRenderList(layout) {
-	// 	const pageData = this.props.pageData || {};
-	// 	const pubs = pageData.pubs || [];
-	// 	const allPubs = pubs.filter((item)=> {
-	// 		// return item.firstPublishedAt;
-	// 		return true;
-	// 	}).sort((foo, bar)=> {
-	// 		// TODO: Sort by active version date, or draft createdAt
-	// 		if (foo.firstPublishedAt < bar.firstPublishedAt) { return 1; }
-	// 		if (foo.firstPublishedAt > bar.firstPublishedAt) { return -1; }
-	// 		return 0;
-	// 	});
-	// 	const nonSpecifiedPubs = [...allPubs];
-	// 	const pubRenderLists = {};
-	// 	layout.forEach((block)=> {
-	// 		if (block.type === 'pubs') {
-	// 			const specifiedPubs = block.content.pubIds;
-	// 			nonSpecifiedPubs.forEach((pub, index)=> {
-	// 				if (specifiedPubs.indexOf(pub.id) > -1) {
-	// 					nonSpecifiedPubs.splice(index, 1);
-	// 				}
-	// 			});
-	// 		}
-	// 	});
-	// 	layout.forEach((block, index)=> {
-	// 		if (block.type === 'pubs') {
-	// 			const pubsById = pubs.filter((pub)=> {
-	// 				if (!block.content.tagId) { return true; }
-	// 				return pub.pubTags.reduce((prev, curr)=> {
-	// 					if (curr.tagId === block.content.tagId) { return true; }
-	// 					return prev;
-	// 				}, false);
-	// 			}).reduce((prev, curr)=> {
-	// 				const output = prev;
-	// 				output[curr.id] = curr;
-	// 				return output;
-	// 			}, {});
-	// 			const renderList = block.content.pubIds.map((id)=> {
-	// 				return pubsById[id];
-	// 			});
-	// 			const limit = block.content.limit || (nonSpecifiedPubs.length + renderList.length);
-	// 			for (let pubIndex = renderList.length; pubIndex < limit; pubIndex += 1) {
-	// 				if (nonSpecifiedPubs.length) {
-	// 					renderList.push(nonSpecifiedPubs[0]);
-	// 					nonSpecifiedPubs.splice(0, 1);
-	// 				}
-	// 			}
-	// 			pubRenderLists[index] = renderList;
-	// 		}
-	// 	});
-	// 	return pubRenderLists;
-	// }
 
 	handleCreatePub() {
 		this.setState({ createPubIsLoading: true });
@@ -218,14 +118,38 @@ class Page extends Component {
 						*/}
 
 						{layout.filter((item)=> {
+							// TODO - this filter is a bit broken.
 							if (pageData.id && !numPublished && item.type === 'pubs') {
 								return false;
 							}
 							return true;
 						}).map((item, index)=> {
-							const editorTypeComponent = this.getComponentFromType(item, index, pubRenderLists);
-							if (!editorTypeComponent) { return null; }
-							return <div key={`block-${item.id}`} className="component-wrapper">{editorTypeComponent}</div>;
+							const validType = ['pubs', 'text', 'html'].indexOf(item.type) > -1;
+							if (!validType) { return null; }
+							return (
+								<div key={`block-${item.id}`} className="component-wrapper">
+									{item.type === 'pubs' &&
+										<LayoutPubs
+											key={`item-${item.id}`}
+											layoutIndex={index}
+											content={item.content}
+											pubRenderList={pubRenderLists[index]}
+										/>
+									}
+									{item.type === 'text' &&
+										<LayoutText
+											key={`item-${item.id}`}
+											content={item.content}
+										/>
+									}
+									{item.type === 'html' &&
+										<LayoutHtml
+											key={`item-${item.id}`}
+											content={item.content}
+										/>
+									}
+								</div>
+							);
 						})}
 
 						{!publicDrafts.length && !!pageData.id && !numPublished && !pageData.isPage && !hasTextLayoutComponent &&
