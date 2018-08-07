@@ -9,7 +9,7 @@ import { generateHash } from 'utilities';
 require('./collectionAutocomplete.scss');
 
 const propTypes = {
-	collections: PropTypes.array.isRequired,
+	pages: PropTypes.array.isRequired,
 	usedItems: PropTypes.array,
 	onSelect: PropTypes.func,
 	placeholder: PropTypes.string,
@@ -45,7 +45,7 @@ class CollectionAutocomplete extends Component {
 		const usedIndexes = props.usedItems.map((item)=> {
 			return item.id;
 		});
-		return props.collections.filter((item)=> {
+		return props.pages.filter((item)=> {
 			const fuzzyMatchName = fuzzysearch(query.toLowerCase(), item.title.toLowerCase());
 			const fuzzyMatchSlug = fuzzysearch(query.toLowerCase(), item.slug.toLowerCase());
 			const alreadyUsed = usedIndexes.indexOf(item.id) > -1;

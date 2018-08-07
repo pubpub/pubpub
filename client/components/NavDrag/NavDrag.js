@@ -7,7 +7,7 @@ require('./navDrag.scss');
 
 const propTypes = {
 	initialNav: PropTypes.array.isRequired,
-	collections: PropTypes.array.isRequired,
+	pages: PropTypes.array.isRequired,
 	onChange: PropTypes.func.isRequired,
 };
 
@@ -125,7 +125,7 @@ class NavDrag extends Component {
 			<div className="nav-drag-component">
 				<div className="new-collection-wrapper">
 					<CollectionAutocomplete
-						collections={this.props.collections}
+						pages={this.props.pages}
 						usedItems={this.state.nav}
 						onSelect={(newItem)=>{ this.addItem(newItem, undefined); }}
 						allowCustom={true}
@@ -165,7 +165,7 @@ class NavDrag extends Component {
 														{item.children &&
 															<div className="dropdown-wrapper pt-card pt-elevation-2">
 																<CollectionAutocomplete
-																	collections={this.props.collections}
+																	pages={this.props.pages}
 																	usedItems={item.children}
 																	placeholder="Add..."
 																	onSelect={(newItem)=>{ this.addItem(newItem, item.id); }}

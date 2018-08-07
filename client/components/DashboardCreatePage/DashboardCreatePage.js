@@ -8,17 +8,8 @@ require('./dashboardCreatePage.scss');
 
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
-	// isPage: PropTypes.bool.isRequired,
-	// isLoading: PropTypes.bool,
-	// error: PropTypes.string,
-	// onCreate: PropTypes.func,
 	hostname: PropTypes.string.isRequired,
 };
-// const defaultProps = {
-// 	isLoading: false,
-// 	error: undefined,
-// 	onCreate: ()=>{},
-// };
 
 class DashboardCreatePage extends Component {
 	constructor(props) {
@@ -133,5 +124,4 @@ class DashboardCreatePage extends Component {
 }
 
 DashboardCreatePage.propTypes = propTypes;
-// DashboardCreatePage.defaultProps = defaultProps;
 export default DashboardCreatePage;

@@ -11,15 +11,7 @@ require('./dashboardDetails.scss');
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
 	setCommunityData: PropTypes.func.isRequired,
-	// error: PropTypes.string,
-	// isLoading: PropTypes.bool,
-	// onSave: PropTypes.func,
 };
-// const defaultProps = {
-// 	error: undefined,
-// 	isLoading: false,
-// 	onSave: ()=>{},
-// };
 
 class DashboardDetails extends Component {
 	constructor(props) {
@@ -58,45 +50,59 @@ class DashboardDetails extends Component {
 		this.handleEmailChange = this.handleEmailChange.bind(this);
 		this.handleSaveClick = this.handleSaveClick.bind(this);
 	}
+
 	handleTitleChange(evt) {
 		this.setState({ title: evt.target.value });
 	}
+
 	handleSubdomainChange(evt) {
 		this.setState({ subdomain: evt.target.value.replace(/ /g, '-').replace(/[^a-zA-Z0-9-]/gi, '').toLowerCase() });
 	}
+
 	handleDescriptionChange(evt) {
 		this.setState({ description: evt.target.value.substring(0, 280).replace(/\n/g, ' ') });
 	}
+
 	handleAvatarChange(val) {
 		this.setState({ avatar: val });
 	}
+
 	handleFaviconChange(val) {
 		this.setState({ favicon: val });
 	}
+
 	handleSmallHeaderLogoChange(val) {
 		this.setState({ smallHeaderLogo: val });
 	}
+
 	handleLargeHeaderLogoChange(val) {
 		this.setState({ largeHeaderLogo: val });
 	}
+
 	handleLargeHeaderBackgroundChange(val) {
 		this.setState({ largeHeaderBackground: val });
 	}
+
 	handleAccentColorChange(evt) {
 		this.setState({ accentColor: evt.target.value });
 	}
+
 	handleNavigationChange(val) {
 		this.setState({ navigation: val });
 	}
+
 	handleWebsiteChange(evt) {
 		this.setState({ website: evt.target.value });
 	}
+
 	handleTwitterChange(evt) {
 		this.setState({ twitter: evt.target.value });
 	}
+
 	handleFacebookChange(evt) {
 		this.setState({ facebook: evt.target.value });
 	}
+
 	handleEmailChange(evt) {
 		this.setState({ email: evt.target.value });
 	}
@@ -135,9 +141,9 @@ class DashboardDetails extends Component {
 	}
 
 	render() {
-		const collections = this.props.communityData.collections || [];
+		const pages = this.props.communityData.pages || [];
 		const navigation = this.props.communityData.navigation || [];
-		const initialNav = populateNavigationIds(collections, navigation);
+		const initialNav = populateNavigationIds(pages, navigation);
 
 		return (
 			<div className="dashboard-details-component">
@@ -292,7 +298,7 @@ class DashboardDetails extends Component {
 				<InputField label="Navigation">
 					<NavDrag
 						initialNav={initialNav}
-						collections={collections}
+						pages={pages}
 						onChange={this.handleNavigationChange}
 					/>
 				</InputField>
@@ -313,5 +319,4 @@ class DashboardDetails extends Component {
 }
 
 DashboardDetails.propTypes = propTypes;
-// DashboardDetails.defaultProps = defaultProps;
 export default DashboardDetails;

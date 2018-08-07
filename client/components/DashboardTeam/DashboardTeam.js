@@ -9,13 +9,7 @@ require('./dashboardTeam.scss');
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
 	setCommunityData: PropTypes.func.isRequired,
-	// onAddAdmin: PropTypes.func,
-	// onRemoveAdmin: PropTypes.func,
 };
-// const defaultProps = {
-// 	onAddAdmin: ()=>{},
-// 	onRemoveAdmin: ()=>{},
-// };
 
 class DashboardTeam extends Component {
 	constructor(props) {
@@ -25,24 +19,23 @@ class DashboardTeam extends Component {
 	}
 
 	handleAdminAdd(user) {
-		if (user) {
-			return apiFetch('/api/communityAdmins', {
-				method: 'POST',
-				body: JSON.stringify({
-					userId: user.id,
-					communityId: this.props.communityData.id,
-				})
+		if (!user) { return null; }
+		return apiFetch('/api/communityAdmins', {
+			method: 'POST',
+			body: JSON.stringify({
+				userId: user.id,
+				communityId: this.props.communityData.id,
 			})
-			.then((result)=> {
-				this.props.setCommunityData({
-					...this.props.communityData,
-					admins: [
-						result,
-						...this.props.communityData.admins,
-					]
-				});
+		})
+		.then((result)=> {
+			this.props.setCommunityData({
+				...this.props.communityData,
+				admins: [
+					result,
+					...this.props.communityData.admins,
+				]
 			});
-		}
+		});
 	}
 
 	handleAdminRemove(userId) {
@@ -100,7 +93,13 @@ class DashboardTeam extends Component {
 								</div>
 							</div>
 							<div className="remove-wrapper">
-								<button className="pt-button pt-minimal" onClick={()=>{ this.handleAdminRemove(admin.id); }}>Remove</button>
+								<button
+									type="button"
+									className="pt-button pt-minimal"
+									onClick={()=>{ this.handleAdminRemove(admin.id); }}
+								>
+									Remove
+								</button>
 							</div>
 
 						</div>
@@ -112,5 +111,4 @@ class DashboardTeam extends Component {
 }
 
 DashboardTeam.propTypes = propTypes;
-// DashboardTeam.defaultProps = defaultProps;
 export default DashboardTeam;

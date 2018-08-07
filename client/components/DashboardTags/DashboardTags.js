@@ -10,12 +10,6 @@ require('./dashboardTags.scss');
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
 	setCommunityData: PropTypes.func.isRequired,
-	// onAddAdmin: PropTypes.func,
-	// onRemoveAdmin: PropTypes.func,
-};
-const defaultProps = {
-	// onAddAdmin: ()=>{},
-	// onRemoveAdmin: ()=>{},
 };
 
 class DashboardTags extends Component {
@@ -189,5 +183,4 @@ class DashboardTags extends Component {
 }
 
 DashboardTags.propTypes = propTypes;
-DashboardTags.defaultProps = defaultProps;
 export default DashboardTags;

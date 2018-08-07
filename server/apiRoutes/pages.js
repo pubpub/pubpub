@@ -25,10 +25,7 @@ app.post('/api/pages', (req, res)=> {
 			title: req.body.title,
 			slug: req.body.slug,
 			description: req.body.description,
-			// isPage: req.body.isPage,
 			isPublic: false,
-			// isOpenSubmissions: false,
-			// isOpenPublish: false,
 			viewHash: generateHash(8),
 		});
 	})
@@ -66,7 +63,6 @@ app.put('/api/pages', (req, res)=> {
 	const updatedPage = {};
 	Object.keys(req.body).forEach((key)=> {
 		if (['title', 'slug', 'description', 'isPublic', 'layout'].indexOf(key) > -1) {
-		// if (['title', 'slug', 'description', 'isPublic', 'isOpenSubmissions', 'isOpenPublish', 'layout', 'createPubMessage'].indexOf(key) > -1) {
 			updatedPage[key] = req.body[key] && req.body[key].trim
 				? req.body[key].trim()
 				: req.body[key];
