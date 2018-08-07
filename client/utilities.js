@@ -386,3 +386,75 @@ export function generatePubBackground(pubTitle) {
 	if (!pubTitle) { return gradients[0]; }
 	return gradients[pubTitle.charCodeAt(pubTitle.length - 1) % 5];
 }
+
+export function generateRenderLists(layout, pubs) {
+	const allPubs = pubs.sort((foo, bar)=> {
+		/* Sort by activeVersion date - or date of pub creation */
+		/* when there are no saved versions */
+		const fooDate = foo.activeVersion.createdAt || foo.createdAt;
+		const barDate = bar.activeVersion.createdAt || bar.createdAt;
+		if (fooDate < barDate) { return 1; }
+		if (fooDate > barDate) { return -1; }
+		return 0;
+	});
+
+	/* nonSpecifiedPubs is used to keep track of which pubs should flow */
+	/* when looking to fill a slot that has not been specifically */
+	/* assigned to a given pub */
+	let nonSpecifiedPubs = [...allPubs];
+
+	/* Iterate over each block and remove specified pubs from the */
+	/* list of nonSpecifiedPubs. */
+	layout.forEach((block)=> {
+		if (block.type === 'pubs') {
+			const specifiedPubs = block.content.pubIds;
+			nonSpecifiedPubs = nonSpecifiedPubs.filter((pub)=> {
+				return specifiedPubs.indexOf(pub.id) === -1;
+			});
+			// nonSpecifiedPubs.forEach((pub, index)=> {
+			// 	if (specifiedPubs.indexOf(pub.id) > -1) {
+			// 		nonSpecifiedPubs.splice(index, 1);
+			// 	}
+			// });
+		}
+	});
+
+	/* pubRenderLists holds the list of pubs to be rendered in each block */
+	const pubRenderLists = {};
+
+	/* Iterate over each block and generate the renderList for that block */
+	layout.forEach((block, index)=> {
+		if (block.type === 'pubs') {
+			const pubsById = {};
+			pubs.forEach((prev, curr)=> {
+				pubsById[curr.id] = curr;
+			});
+
+			/* First add the specified pubs for a given block to the renderList */
+			const renderList = block.content.pubIds.map((id)=> {
+				return pubsById[id];
+			});
+
+
+			const limit = block.content.limit || (nonSpecifiedPubs.length + renderList.length);
+
+			for (let pubIndex = renderList.length; pubIndex < limit; pubIndex += 1) {
+				// if (nonSpecifiedPubs.length) {
+				renderList.push(nonSpecifiedPubs[0]);
+				nonSpecifiedPubs.splice(0, 1);
+				// }
+			}
+
+			pubRenderLists[index] = renderList.filter((pub)=> {
+				return pub;
+			}).filter((pub)=> {
+				if (!block.content.tagId) { return true; }
+				return pub.pubTags.reduce((prev, curr)=> {
+					if (curr.tagId === block.content.tagId) { return true; }
+					return prev;
+				}, false);
+			});
+		}
+	});
+	return pubRenderLists;
+}

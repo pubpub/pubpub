@@ -5,7 +5,7 @@ import LayoutEditorPubs from 'components/LayoutEditorPubs/LayoutEditorPubs';
 import LayoutEditorText from 'components/LayoutEditorText/LayoutEditorText';
 import LayoutEditorHtml from 'components/LayoutEditorHtml/LayoutEditorHtml';
 // import LayoutEditorDrafts from 'components/LayoutEditorDrafts/LayoutEditorDrafts';
-import { generateHash } from 'utilities';
+import { generateHash, generateRenderLists } from 'utilities';
 
 require('./layoutEditor.scss');
 
@@ -25,16 +25,16 @@ const propTypes = {
 class LayoutEditor extends Component {
 	constructor(props) {
 		super(props);
-		this.generateRenderList = this.generateRenderList.bind(this);
+		// generateRenderLists = generateRenderLists.bind(this);
 		this.state = {
 			layout: props.initialLayout,
-			pubRenderLists: this.generateRenderList(props.initialLayout),
+			pubRenderLists: generateRenderLists(props.initialLayout, props.pubs),
 		};
 		this.handleInsert = this.handleInsert.bind(this);
 		// this.getComponentFromType = this.getComponentFromType.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleRemove = this.handleRemove.bind(this);
-		this.generateRenderList = this.generateRenderList.bind(this);
+		// generateRenderLists = generateRenderLists.bind(this);
 	}
 
 	// getComponentFromType(item, index) {
@@ -115,7 +115,7 @@ class LayoutEditor extends Component {
 			type: type,
 			content: defaultContents[type],
 		});
-		const newPubRenderList = this.generateRenderList(newLayout);
+		const newPubRenderList = generateRenderLists(newLayout, this.props.pubs);
 		this.setState({
 			layout: newLayout,
 			pubRenderLists: newPubRenderList,
@@ -126,7 +126,7 @@ class LayoutEditor extends Component {
 	handleChange(index, newContent) {
 		const newLayout = this.state.layout;
 		newLayout[index].content = newContent;
-		const newPubRenderList = this.generateRenderList(newLayout);
+		const newPubRenderList = generateRenderLists(newLayout, this.props.pubs);
 		this.setState({
 			layout: newLayout,
 			pubRenderLists: newPubRenderList,
@@ -141,56 +141,75 @@ class LayoutEditor extends Component {
 		this.props.onChange(newLayout);
 	}
 
-	generateRenderList(newLayout) {
-		const allPubs = this.props.pubs.filter((item)=> {
-			// return item.firstPublishedAt;
-			return true;
-		}).sort((foo, bar)=> {
-			// TODO: Sort by active version date, or draft createdAt
-			if (foo.firstPublishedAt < bar.firstPublishedAt) { return 1; }
-			if (foo.firstPublishedAt > bar.firstPublishedAt) { return -1; }
-			return 0;
-		});
-		const nonSpecifiedPubs = [...allPubs];
-		const pubRenderLists = {};
-		newLayout.forEach((block)=> {
-			if (block.type === 'pubs') {
-				const specifiedPubs = block.content.pubIds;
-				nonSpecifiedPubs.forEach((pub, index)=> {
-					if (specifiedPubs.indexOf(pub.id) > -1) {
-						nonSpecifiedPubs.splice(index, 1);
-					}
-				});
-			}
-		});
-		newLayout.forEach((block, index)=> {
-			if (block.type === 'pubs') {
-				const pubsById = this.props.pubs.filter((pub)=> {
-					if (!block.content.tagId) { return true; }
-					return pub.pubTags.reduce((prev, curr)=> {
-						if (curr.tagId === block.content.tagId) { return true; }
-						return prev;
-					}, false);
-				}).reduce((prev, curr)=> {
-					const output = prev;
-					output[curr.id] = curr;
-					return output;
-				}, {});
-				const renderList = block.content.pubIds.map((id)=> {
-					return pubsById[id];
-				});
-				const limit = block.content.limit || (nonSpecifiedPubs.length + renderList.length);
-				for (let pubIndex = renderList.length; pubIndex < limit; pubIndex += 1) {
-					if (nonSpecifiedPubs.length) {
-						renderList.push(nonSpecifiedPubs[0]);
-						nonSpecifiedPubs.splice(0, 1);
-					}
-				}
-				pubRenderLists[index] = renderList;
-			}
-		});
-		return pubRenderLists;
-	}
+	// generateRenderList(newLayout) {
+	// 	const allPubs = this.props.pubs.sort((foo, bar)=> {
+	// 		/* Sort by activeVersion date - or date of pub creation */
+	// 		/* when there are no saved versions */
+	// 		const fooDate = foo.activeVersion.createdAt || foo.createdAt;
+	// 		const barDate = bar.activeVersion.createdAt || bar.createdAt;
+	// 		if (fooDate < barDate) { return 1; }
+	// 		if (fooDate > barDate) { return -1; }
+	// 		return 0;
+	// 	});
+
+	// 	/* nonSpecifiedPubs is used to keep track of which pubs should flow */
+	// 	/* when looking to fill a slot that has not been specifically */
+	// 	/* assigned to a given pub */
+	// 	let nonSpecifiedPubs = [...allPubs];
+
+	// 	/* Iterate over each block and remove specified pubs from the */
+	// 	/* list of nonSpecifiedPubs. */
+	// 	newLayout.forEach((block)=> {
+	// 		if (block.type === 'pubs') {
+	// 			const specifiedPubs = block.content.pubIds;
+	// 			nonSpecifiedPubs = nonSpecifiedPubs.filter((pub)=> {
+	// 				return specifiedPubs.indexOf(pub.id) > -1;
+	// 			});
+	// 			// nonSpecifiedPubs.forEach((pub, index)=> {
+	// 			// 	if (specifiedPubs.indexOf(pub.id) > -1) {
+	// 			// 		nonSpecifiedPubs.splice(index, 1);
+	// 			// 	}
+	// 			// });
+	// 		}
+	// 	});
+
+	// 	/* pubRenderLists holds the list of pubs to be rendered in each block */
+	// 	const pubRenderLists = {};
+
+	// 	/* Iterate over each block and generate the renderList for that block */
+	// 	newLayout.forEach((block, index)=> {
+	// 		if (block.type === 'pubs') {
+	// 			const pubsById = {};
+	// 			this.props.pubs.forEach((prev, curr)=> {
+	// 				pubsById[curr.id] = curr;
+	// 			});
+
+	// 			/* First add the specified pubs for a given block to the renderList */
+	// 			const renderList = block.content.pubIds.map((id)=> {
+	// 				return pubsById[id];
+	// 			});
+
+
+	// 			const limit = block.content.limit || (nonSpecifiedPubs.length + renderList.length);
+
+	// 			for (let pubIndex = renderList.length; pubIndex < limit; pubIndex += 1) {
+	// 				// if (nonSpecifiedPubs.length) {
+	// 				renderList.push(nonSpecifiedPubs[0]);
+	// 				nonSpecifiedPubs.splice(0, 1);
+	// 				// }
+	// 			}
+
+	// 			pubRenderLists[index] = renderList.filter((pub)=> {
+	// 				if (!block.content.tagId) { return true; }
+	// 				return pub.pubTags.reduce((prev, curr)=> {
+	// 					if (curr.tagId === block.content.tagId) { return true; }
+	// 					return prev;
+	// 				}, false);
+	// 			});
+	// 		}
+	// 	});
+	// 	return pubRenderLists;
+	// }
 
 	render() {
 		return (

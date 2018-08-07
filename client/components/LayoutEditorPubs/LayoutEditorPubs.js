@@ -107,7 +107,7 @@ class LayoutEditorPubs extends Component {
 						<label htmlFor={`section-tag-${this.props.layoutIndex}`}>Use Tag</label>
 						<div className="pt-button-group pt-select">
 							<select value={activeTag.id} onChange={this.setTag}>
-								<option value={undefined}>Do not use tag</option>
+								<option value="">Do not use tag</option>
 								{this.props.communityData.tags.map((item)=> {
 									return <option value={item.id} key={`tag-option-${item.id}`}>{item.title}</option>;
 								})}
@@ -169,7 +169,6 @@ class LayoutEditorPubs extends Component {
 																if (curr.tagId === this.props.content.tagId) { return true; }
 																return prev;
 															}, false);
-														// })
 														// }).filter((pub)=> {
 															// return pub.firstPublishedAt;
 														}).sort((foo, bar)=> {

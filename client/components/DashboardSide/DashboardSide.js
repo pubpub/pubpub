@@ -71,6 +71,7 @@ const DashboardSide = function(props) {
 				</li>
 				{props.pages.sort((foo, bar)=> {
 					if (!foo.slug) { return -1; }
+					if (!bar.slug) { return 1; }
 					const fooTitle = foo.title.toLowerCase();
 					const barTitle = bar.title.toLowerCase();
 					if (fooTitle > barTitle) { return 1; }

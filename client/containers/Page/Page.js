@@ -6,7 +6,7 @@ import LayoutPubs from 'components/LayoutPubs/LayoutPubs';
 import LayoutHtml from 'components/LayoutHtml/LayoutHtml';
 import LayoutDrafts from 'components/LayoutDrafts/LayoutDrafts';
 import LayoutText from 'components/LayoutText/LayoutText';
-import { hydrateWrapper, apiFetch, getDefaultLayout } from 'utilities';
+import { hydrateWrapper, apiFetch, getDefaultLayout, generateRenderLists } from 'utilities';
 
 require('./page.scss');
 
@@ -24,7 +24,7 @@ class Page extends Component {
 			createPubIsLoading: false,
 		};
 		this.getComponentFromType = this.getComponentFromType.bind(this);
-		this.generateRenderList = this.generateRenderList.bind(this);
+		// this.generateRenderList = this.generateRenderList.bind(this);
 		this.handleCreatePub = this.handleCreatePub.bind(this);
 	}
 
@@ -72,58 +72,59 @@ class Page extends Component {
 		// }
 		return null;
 	}
-	generateRenderList(layout) {
-		const pageData = this.props.pageData || {};
-		const pubs = pageData.pubs || [];
-		const allPubs = pubs.filter((item)=> {
-			// return item.firstPublishedAt;
-			return true;
-		}).sort((foo, bar)=> {
-			// TODO: Sort by active version date, or draft createdAt
-			if (foo.firstPublishedAt < bar.firstPublishedAt) { return 1; }
-			if (foo.firstPublishedAt > bar.firstPublishedAt) { return -1; }
-			return 0;
-		});
-		const nonSpecifiedPubs = [...allPubs];
-		const pubRenderLists = {};
-		layout.forEach((block)=> {
-			if (block.type === 'pubs') {
-				const specifiedPubs = block.content.pubIds;
-				nonSpecifiedPubs.forEach((pub, index)=> {
-					if (specifiedPubs.indexOf(pub.id) > -1) {
-						nonSpecifiedPubs.splice(index, 1);
-					}
-				});
-			}
-		});
-		layout.forEach((block, index)=> {
-			if (block.type === 'pubs') {
-				const pubsById = pubs.filter((pub)=> {
-					if (!block.content.tagId) { return true; }
-					return pub.pubTags.reduce((prev, curr)=> {
-						if (curr.tagId === block.content.tagId) { return true; }
-						return prev;
-					}, false);
-				}).reduce((prev, curr)=> {
-					const output = prev;
-					output[curr.id] = curr;
-					return output;
-				}, {});
-				const renderList = block.content.pubIds.map((id)=> {
-					return pubsById[id];
-				});
-				const limit = block.content.limit || (nonSpecifiedPubs.length + renderList.length);
-				for (let pubIndex = renderList.length; pubIndex < limit; pubIndex += 1) {
-					if (nonSpecifiedPubs.length) {
-						renderList.push(nonSpecifiedPubs[0]);
-						nonSpecifiedPubs.splice(0, 1);
-					}
-				}
-				pubRenderLists[index] = renderList;
-			}
-		});
-		return pubRenderLists;
-	}
+
+	// generateRenderList(layout) {
+	// 	const pageData = this.props.pageData || {};
+	// 	const pubs = pageData.pubs || [];
+	// 	const allPubs = pubs.filter((item)=> {
+	// 		// return item.firstPublishedAt;
+	// 		return true;
+	// 	}).sort((foo, bar)=> {
+	// 		// TODO: Sort by active version date, or draft createdAt
+	// 		if (foo.firstPublishedAt < bar.firstPublishedAt) { return 1; }
+	// 		if (foo.firstPublishedAt > bar.firstPublishedAt) { return -1; }
+	// 		return 0;
+	// 	});
+	// 	const nonSpecifiedPubs = [...allPubs];
+	// 	const pubRenderLists = {};
+	// 	layout.forEach((block)=> {
+	// 		if (block.type === 'pubs') {
+	// 			const specifiedPubs = block.content.pubIds;
+	// 			nonSpecifiedPubs.forEach((pub, index)=> {
+	// 				if (specifiedPubs.indexOf(pub.id) > -1) {
+	// 					nonSpecifiedPubs.splice(index, 1);
+	// 				}
+	// 			});
+	// 		}
+	// 	});
+	// 	layout.forEach((block, index)=> {
+	// 		if (block.type === 'pubs') {
+	// 			const pubsById = pubs.filter((pub)=> {
+	// 				if (!block.content.tagId) { return true; }
+	// 				return pub.pubTags.reduce((prev, curr)=> {
+	// 					if (curr.tagId === block.content.tagId) { return true; }
+	// 					return prev;
+	// 				}, false);
+	// 			}).reduce((prev, curr)=> {
+	// 				const output = prev;
+	// 				output[curr.id] = curr;
+	// 				return output;
+	// 			}, {});
+	// 			const renderList = block.content.pubIds.map((id)=> {
+	// 				return pubsById[id];
+	// 			});
+	// 			const limit = block.content.limit || (nonSpecifiedPubs.length + renderList.length);
+	// 			for (let pubIndex = renderList.length; pubIndex < limit; pubIndex += 1) {
+	// 				if (nonSpecifiedPubs.length) {
+	// 					renderList.push(nonSpecifiedPubs[0]);
+	// 					nonSpecifiedPubs.splice(0, 1);
+	// 				}
+	// 			}
+	// 			pubRenderLists[index] = renderList;
+	// 		}
+	// 	});
+	// 	return pubRenderLists;
+	// }
 
 	handleCreatePub() {
 		this.setState({ createPubIsLoading: true });
@@ -171,7 +172,7 @@ class Page extends Component {
 			if (curr.type === 'text') { return true; }
 			return prev;
 		}, false);
-		const pubRenderLists = this.generateRenderList(layout);
+		const pubRenderLists = generateRenderLists(layout, this.props.pageData.pubs);
 		return (
 			<div id="page-container">
 				<PageWrapper
@@ -180,7 +181,7 @@ class Page extends Component {
 					locationData={this.props.locationData}
 				>
 					<div className="container">
-						{((!pageData.isPage && pageData.isOpenSubmissions) || (title && title !== 'Home')) &&
+						{/*((!pageData.isPage && pageData.isOpenSubmissions) || (title && title !== 'Home')) &&
 							<div className="row">
 								<div className="col-12">
 									{!pageData.isPage && pageData.isOpenSubmissions &&
@@ -214,7 +215,7 @@ class Page extends Component {
 									}
 								</div>
 							</div>
-						}
+						*/}
 
 						{layout.filter((item)=> {
 							if (pageData.id && !numPublished && item.type === 'pubs') {
