@@ -81,7 +81,7 @@ class Page extends Component {
 					locationData={this.props.locationData}
 				>
 					<div className="container">
-						{/*((!pageData.isPage && pageData.isOpenSubmissions) || (title && title !== 'Home')) &&
+						{/* ((!pageData.isPage && pageData.isOpenSubmissions) || (title && title !== 'Home')) &&
 							<div className="row">
 								<div className="col-12">
 									{!pageData.isPage && pageData.isOpenSubmissions &&
