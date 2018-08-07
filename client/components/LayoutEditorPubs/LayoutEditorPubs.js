@@ -60,9 +60,24 @@ class LayoutEditorPubs extends Component {
 	}
 
 	setTag(evt) {
+		const newTagId = evt.target.value;
+
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
-			tagId: evt.target.value,
+			tagId: newTagId,
+			pubIds: this.props.content.pubIds.filter((item)=> {
+				return item;
+			}).filter((pubId)=> {
+				if (!newTagId) { return true; }
+				const specifiedPub = this.props.pubs.reduce((prev, curr)=> {
+					if (curr.id === pubId) { return curr; }
+					return prev;
+				}, undefined);
+				return specifiedPub.pubTags.reduce((prev, curr)=> {
+					if (curr.tagId === newTagId) { return true; }
+					return prev;
+				}, false);
+			}),
 		});
 	}
 
@@ -78,7 +93,19 @@ class LayoutEditorPubs extends Component {
 		newPubIds[index] = string;
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
-			pubIds: newPubIds.filter((item)=> { return item; }),
+			pubIds: newPubIds.filter((item)=> {
+				return item;
+			}).filter((pubId)=> {
+				if (!this.props.content.tagId) { return true; }
+				const specifiedPub = this.props.pubs.reduce((prev, curr)=> {
+					if (curr.id === pubId) { return curr; }
+					return prev;
+				}, undefined);
+				return specifiedPub.pubTags.reduce((prev, curr)=> {
+					if (curr.tagId === this.props.content.tagId) { return true; }
+					return prev;
+				}, false);
+			}),
 		});
 	}
 
