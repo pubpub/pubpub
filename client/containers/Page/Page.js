@@ -4,8 +4,8 @@ import { Button, NonIdealState } from '@blueprintjs/core';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
 import LayoutPubs from 'components/LayoutPubs/LayoutPubs';
 import LayoutHtml from 'components/LayoutHtml/LayoutHtml';
-import LayoutHeader from 'components/LayoutHeader/LayoutHeader';
-import LayoutCreatePub from 'components/LayoutCreatePub/LayoutCreatePub';
+import LayoutBanner from 'components/LayoutBanner/LayoutBanner';
+// import LayoutCreatePub from 'components/LayoutCreatePub/LayoutCreatePub';
 // import LayoutDrafts from 'components/LayoutDrafts/LayoutDrafts';
 import LayoutText from 'components/LayoutText/LayoutText';
 import { hydrateWrapper, apiFetch, getDefaultLayout, generateRenderLists } from 'utilities';
@@ -125,7 +125,7 @@ class Page extends Component {
 						}
 						return true;
 					}).map((item, index)=> {
-						const validType = ['pubs', 'text', 'html', 'header', 'createPub'].indexOf(item.type) > -1;
+						const validType = ['pubs', 'text', 'html', 'banner'].indexOf(item.type) > -1;
 						if (!validType) { return null; }
 						return (
 							<div key={`block-${item.id}`} className="component-wrapper">
@@ -149,14 +149,8 @@ class Page extends Component {
 										content={item.content}
 									/>
 								}
-								{item.type === 'header' &&
-									<LayoutHeader
-										key={`item-${item.id}`}
-										content={item.content}
-									/>
-								}
-								{item.type === 'createPub' &&
-									<LayoutCreatePub
+								{item.type === 'banner' &&
+									<LayoutBanner
 										key={`item-${item.id}`}
 										content={item.content}
 										communityData={this.props.communityData}
@@ -164,6 +158,15 @@ class Page extends Component {
 										locationData={this.props.locationData}
 									/>
 								}
+								{/* item.type === 'createPub' &&
+									<LayoutCreatePub
+										key={`item-${item.id}`}
+										content={item.content}
+										communityData={this.props.communityData}
+										loginData={this.props.loginData}
+										locationData={this.props.locationData}
+									/>
+								*/}
 							</div>
 						);
 					})}

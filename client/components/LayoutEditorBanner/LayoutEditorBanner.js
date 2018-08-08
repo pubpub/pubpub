@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Checkbox, Button } from '@blueprintjs/core';
+import { getResizedUrl } from 'utilities';
 
-require('./layoutEditorHeader.scss');
+require('./layoutEditorBanner.scss');
 
 const propTypes = {
 	onChange: PropTypes.func.isRequired,
@@ -9,10 +11,10 @@ const propTypes = {
 	layoutIndex: PropTypes.number.isRequired,
 	content: PropTypes.object.isRequired,
 	/* Expected content */
-	/* text, align, background, backgroundSize */
+	/* text, align, backgroundColor, backgroundImage, backgroundSize, showButton, buttonText, defaultTags */
 };
 
-class LayoutEditorHeader extends Component {
+class LayoutEditorBanner extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -21,7 +23,11 @@ class LayoutEditorHeader extends Component {
 		this.handleRemove = this.handleRemove.bind(this);
 		this.setAlign = this.setAlign.bind(this);
 		this.setBackgroundSize = this.setBackgroundSize.bind(this);
+		this.setBackgroundColor = this.setBackgroundColor.bind(this);
+		this.setBackgroundImage = this.setBackgroundImage.bind(this);
 		this.setText = this.setText.bind(this);
+		this.setShowButton = this.setShowButton.bind(this);
+		this.setButtonText = this.setButtonText.bind(this);
 	}
 
 	setAlign(alignValue) {
@@ -38,10 +44,38 @@ class LayoutEditorHeader extends Component {
 		});
 	}
 
+	setBackgroundColor(evt) {
+		this.props.onChange(this.props.layoutIndex, {
+			...this.props.content,
+			backgroundColor: evt.target.value,
+		});
+	}
+
+	setBackgroundImage(evt) {
+		this.props.onChange(this.props.layoutIndex, {
+			...this.props.content,
+			backgroundImage: evt.target.value,
+		});
+	}
+
 	setText(evt) {
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
 			text: evt.target.value,
+		});
+	}
+
+	setShowButton(evt) {
+		this.props.onChange(this.props.layoutIndex, {
+			...this.props.content,
+			showButton: evt.target.checked,
+		});
+	}
+
+	setButtonText(evt) {
+		this.props.onChange(this.props.layoutIndex, {
+			...this.props.content,
+			buttonText: evt.target.value,
 		});
 	}
 
@@ -50,6 +84,10 @@ class LayoutEditorHeader extends Component {
 	}
 
 	render() {
+		const backgroundImageCss = this.props.content.backgroundImage
+			? `url("${getResizedUrl(this.props.content.backgroundImage, 'fit-in', '1500x600')}")`
+			: undefined;
+
 		const textStyle = {
 			textAlign: this.props.content.align || 'left',
 			color: 'white',
@@ -57,13 +95,15 @@ class LayoutEditorHeader extends Component {
 			lineHeight: '1em',
 		};
 		const backgroundStyle = {
-			background: '#03a9f4',
+			backgroundColor: this.props.content.backgroundColor,
+			backgroundImage: backgroundImageCss,
 			minHeight: '200px',
 			display: 'flex',
 			alignItems: 'center',
 		};
+
 		return (
-			<div className="layout-editor-header-component">
+			<div className="layout-editor-banner-component">
 				<div className="block-header">
 					<div className="pt-form-group">
 						<label htmlFor={`section-title-${this.props.layoutIndex}`}>
@@ -78,6 +118,30 @@ class LayoutEditorHeader extends Component {
 						/>
 					</div>
 					<div className="spacer" />
+					<div className="pt-form-group">
+						<label htmlFor={`section-title-${this.props.layoutIndex}`}>
+							Background Color
+						</label>
+						<input
+							id={`section-title-${this.props.layoutIndex}`}
+							type="text"
+							className="pt-input"
+							value={this.props.content.backgroundColor}
+							onChange={this.setBackgroundColor}
+						/>
+					</div>
+					<div className="pt-form-group">
+						<label htmlFor={`section-title-${this.props.layoutIndex}`}>
+							Background Image
+						</label>
+						<input
+							id={`section-title-${this.props.layoutIndex}`}
+							type="text"
+							className="pt-input"
+							value={this.props.content.backgroundImage}
+							onChange={this.setBackgroundImage}
+						/>
+					</div>
 					<div className="pt-form-group">
 						<label htmlFor={`section-size-${this.props.layoutIndex}`}>
 							Align
@@ -129,6 +193,43 @@ class LayoutEditorHeader extends Component {
 						</div>
 					</div>
 					<div className="pt-form-group">
+						<label htmlFor={`section-title-${this.props.layoutIndex}`}>
+							Create Pub Button
+						</label>
+						<Checkbox
+							checked={this.props.content.showButton}
+							onChange={this.setShowButton}
+						>
+							Show Button
+						</Checkbox>
+					</div>
+					{this.props.content.showButton &&
+						<div className="pt-form-group">
+							<label htmlFor={`section-title-${this.props.layoutIndex}`}>
+								Button Text
+							</label>
+							<input
+								id={`section-title-${this.props.layoutIndex}`}
+								type="text"
+								className="pt-input"
+								value={this.props.content.buttonText}
+								onChange={this.setButtonText}
+							/>
+						</div>
+					}
+					{this.props.content.showButton &&
+						<div className="pt-form-group">
+							<label htmlFor={`section-default-tags-${this.props.layoutIndex}`}>
+								Default Tags
+							</label>
+							<input
+								id={`section-default-tags-${this.props.layoutIndex}`}
+								type="text"
+								className="pt-input"
+							/>
+						</div>
+					}
+					<div className="pt-form-group">
 						<div className="pt-button-group">
 							<button
 								type="button"
@@ -142,10 +243,19 @@ class LayoutEditorHeader extends Component {
 				<div className="block-content" style={this.props.content.backgroundSize === 'full' ? backgroundStyle : undefined}>
 					<div className="container">
 						<div className="row" style={this.props.content.backgroundSize === 'standard' ? backgroundStyle : undefined}>
-							<div className="col-12">
-								<h2 style={textStyle}>
-									{this.props.content.text}
-								</h2>
+							<div className="col-12" style={textStyle}>
+								{this.props.content.text &&
+									<h2>
+										{this.props.content.text}
+									</h2>
+								}
+								{this.props.content.showButton &&
+									<Button
+										className="pt-large"
+										onClick={()=>{}}
+										text={this.props.content.buttonText || 'Create Pub'}
+									/>
+								}
 							</div>
 						</div>
 					</div>
@@ -155,5 +265,5 @@ class LayoutEditorHeader extends Component {
 	}
 }
 
-LayoutEditorHeader.propTypes = propTypes;
-export default LayoutEditorHeader;
+LayoutEditorBanner.propTypes = propTypes;
+export default LayoutEditorBanner;

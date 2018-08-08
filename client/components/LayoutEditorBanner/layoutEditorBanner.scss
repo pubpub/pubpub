@@ -1,0 +1,25 @@
+.layout-editor-banner-component {
+	.block-content {
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-position: center center;
+		padding: 0em !important;
+		.row {
+			background-size: cover;
+			background-repeat: no-repeat;
+			background-position: center center;
+		}
+		h2 {
+			margin-bottom: 0em;
+			color: inherit;
+			font-size: inherit;
+			line-height: inherit;
+		}
+		h2 + .pt-button {
+			margin-top: 1em;
+		}
+		.pt-button {
+			padding: 10px 40px;
+		}
+	}
+}

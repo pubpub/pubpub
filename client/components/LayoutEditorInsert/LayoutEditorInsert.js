@@ -15,8 +15,8 @@ const LayoutEditorInsert = function(props) {
 		{ title: 'Add Pub List', type: 'pubs' },
 		{ title: 'Add Text Block', type: 'text' },
 		{ title: 'Add HTML Block', type: 'html' },
-		{ title: 'Add Header Block', type: 'header' },
-		{ title: 'Add Create Pub Button', type: 'createPub' },
+		{ title: 'Add Banner Block', type: 'banner' },
+		// { title: 'Add Create Pub Button', type: 'createPub' },
 		// { title: 'Add Open Drafts Block', type: 'drafts' },
 	];
 	// if (props.isPage) {
