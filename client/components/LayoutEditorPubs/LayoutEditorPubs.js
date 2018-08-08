@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import PubPreview from 'components/PubPreview/PubPreview';
+import TagMultiSelect from 'components/TagMultiSelect/TagMultiSelect';
+// import { Position } from '@blueprintjs/core';
+// import { MultiSelect } from '@blueprintjs/select';
+// import fuzzysearch from 'fuzzysearch';
 
 const propTypes = {
 	onChange: PropTypes.func.isRequired,
@@ -22,7 +26,7 @@ class LayoutEditorPubs extends Component {
 		this.setMedium = this.setMedium.bind(this);
 		this.setLarge = this.setLarge.bind(this);
 		this.setLimit = this.setLimit.bind(this);
-		this.setTag = this.setTag.bind(this);
+		this.setTagIds = this.setTagIds.bind(this);
 		this.changeTitle = this.changeTitle.bind(this);
 		this.changePubId = this.changePubId.bind(this);
 	}
@@ -59,22 +63,24 @@ class LayoutEditorPubs extends Component {
 		});
 	}
 
-	setTag(evt) {
-		const newTagId = evt.target.value;
-
+	setTagIds(newTagIds) {
+		// console.log('evt', evt);
+		// const newTagId = evt.target.value;
+		// const existingTagIds = this.props.content.tagIds || [];
+		// const newTagIds = [...existingTagIds, newTagId];
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
-			tagId: newTagId,
+			tagIds: newTagIds,
 			pubIds: this.props.content.pubIds.filter((item)=> {
 				return item;
 			}).filter((pubId)=> {
-				if (!newTagId) { return true; }
+				if (!newTagsIds.length) { return true; }
 				const specifiedPub = this.props.pubs.reduce((prev, curr)=> {
 					if (curr.id === pubId) { return curr; }
 					return prev;
 				}, undefined);
 				return specifiedPub.pubTags.reduce((prev, curr)=> {
-					if (curr.tagId === newTagId) { return true; }
+					if (newTagIds.indexOf(curr.tagId) > -1) { return true; }
 					return prev;
 				}, false);
 			}),
@@ -111,17 +117,22 @@ class LayoutEditorPubs extends Component {
 
 	render() {
 		const size = this.props.content.size;
-		const displayLimit = this.props.content.limit || Math.max(4, this.props.pubRenderList.length);
+		// const displayLimit = this.props.content.limit || Math.max(4, this.props.pubRenderList.length);
+		const displayLimit = this.props.content.limit || this.props.pubRenderList.length;
 		const emptyPreviews = [];
 		for (let index = 0; index < displayLimit; index += 1) {
 			emptyPreviews.push(null);
 		}
 		const previews = [...this.props.content.pubIds, ...emptyPreviews].slice(0, displayLimit);
 		const selectOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-		const activeTag = this.props.communityData.tags.reduce((prev, curr)=> {
-			if (curr.id === this.props.content.tagId) { return curr; }
-			return prev;
-		}, {});
+		// const activeTag = this.props.communityData.tags.reduce((prev, curr)=> {
+		// 	if (curr.id === this.props.content.tagId) { return curr; }
+		// 	return prev;
+		// }, {});
+		const tagsById = {};
+		this.props.communityData.tags.forEach((tag)=> {
+			tagsById[tag.id] = tag;
+		});
 		return (
 			<div className="layout-editor-pubs-component">
 				<div className="block-header">
@@ -133,12 +144,23 @@ class LayoutEditorPubs extends Component {
 					<div className="pt-form-group">
 						<label htmlFor={`section-tag-${this.props.layoutIndex}`}>Use Tag</label>
 						<div className="pt-button-group pt-select">
-							<select value={activeTag.id} onChange={this.setTag}>
-								<option value="">Do not use tag</option>
-								{this.props.communityData.tags.map((item)=> {
-									return <option value={item.id} key={`tag-option-${item.id}`}>{item.title}</option>;
-								})}
-							</select>
+							<TagMultiSelect
+								allTags={this.props.communityData.tags}
+								selectedTagIds={this.props.content.tagIds || []}
+								onItemSelect={(newTagId)=> {
+									const existingTagIds = this.props.content.tagIds || [];
+									const newTagIds = [...existingTagIds, newTagId];
+									this.setTagIds(newTagIds);
+								}}
+								onRemove={(evt, tagIndex)=> {
+									const existingTagIds = this.props.content.tagIds || [];
+									const newTagIds = existingTagIds.filter((item, filterIndex)=> {
+										return filterIndex !== tagIndex;
+									});
+									this.setTagIds(newTagIds);
+								}}
+								placeholder="Add tags..."
+							/>
 						</div>
 					</div>
 					<div className="pt-form-group">
@@ -191,9 +213,11 @@ class LayoutEditorPubs extends Component {
 													<select value={this.props.content.pubIds[index] || ''} onChange={(evt)=> { this.changePubId(index, evt.target.value); }}>
 														<option value="">Choose specific Pub</option>
 														{this.props.pubs.filter((pub)=> {
-															if (!this.props.content.tagId) { return true; }
+															const tagIds = this.props.content.tagIds || [];
+															if (!tagIds.length) { return true; }
 															return pub.pubTags.reduce((prev, curr)=> {
-																if (curr.tagId === this.props.content.tagId) { return true; }
+																// if (curr.tagId === this.props.content.tagId) { return true; }
+																if (tagIds.indexOf(curr.tagId) > -1) { return true; }
 																return prev;
 															}, false);
 														// }).filter((pub)=> {

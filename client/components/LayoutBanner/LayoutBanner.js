@@ -29,6 +29,7 @@ class LayoutBanner extends Component {
 			method: 'POST',
 			body: JSON.stringify({
 				communityId: this.props.communityData.id,
+				defaultTagIds: this.props.content.defaultTagIds,
 			})
 		})
 		.then((result)=> {

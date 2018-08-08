@@ -324,6 +324,7 @@ new Promise((resolve)=> {
 						// TODO - do we have a drafts only type here?
 						// TODO - add page title here for non Home pages
 						// TODO - migrate draft blocks
+						// TODO - add [tagIds] so that flow still works as it did in collections
 					}
 				};
 			});

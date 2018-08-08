@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox, Button } from '@blueprintjs/core';
+import TagMultiSelect from 'components/TagMultiSelect/TagMultiSelect';
 import { getResizedUrl } from 'utilities';
 
 require('./layoutEditorBanner.scss');
@@ -10,8 +11,9 @@ const propTypes = {
 	onRemove: PropTypes.func.isRequired,
 	layoutIndex: PropTypes.number.isRequired,
 	content: PropTypes.object.isRequired,
+	communityData: PropTypes.object.isRequired,
 	/* Expected content */
-	/* text, align, backgroundColor, backgroundImage, backgroundSize, showButton, buttonText, defaultTags */
+	/* text, align, backgroundColor, backgroundImage, backgroundSize, showButton, buttonText, defaultTagIds */
 };
 
 class LayoutEditorBanner extends Component {
@@ -25,6 +27,7 @@ class LayoutEditorBanner extends Component {
 		this.setBackgroundSize = this.setBackgroundSize.bind(this);
 		this.setBackgroundColor = this.setBackgroundColor.bind(this);
 		this.setBackgroundImage = this.setBackgroundImage.bind(this);
+		this.setDefaultTagIds = this.setDefaultTagIds.bind(this);
 		this.setText = this.setText.bind(this);
 		this.setShowButton = this.setShowButton.bind(this);
 		this.setButtonText = this.setButtonText.bind(this);
@@ -76,6 +79,13 @@ class LayoutEditorBanner extends Component {
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
 			buttonText: evt.target.value,
+		});
+	}
+
+	setDefaultTagIds(newTagIds) {
+		this.props.onChange(this.props.layoutIndex, {
+			...this.props.content,
+			defaultTagIds: newTagIds,
 		});
 	}
 
@@ -227,6 +237,30 @@ class LayoutEditorBanner extends Component {
 								type="text"
 								className="pt-input"
 							/>
+						</div>
+					}
+					{this.props.content.showButton &&
+						<div className="pt-form-group">
+							<label htmlFor={`section-tag-${this.props.layoutIndex}`}>Default Pub Tags</label>
+							<div className="pt-button-group pt-select">
+								<TagMultiSelect
+									allTags={this.props.communityData.tags}
+									selectedTagIds={this.props.content.defaultTagIds || []}
+									onItemSelect={(newTagId)=> {
+										const existingTagIds = this.props.content.defaultTagIds || [];
+										const newTagIds = [...existingTagIds, newTagId];
+										this.setDefaultTagIds(newTagIds);
+									}}
+									onRemove={(evt, tagIndex)=> {
+										const existingTagIds = this.props.content.defaultTagIds || [];
+										const newTagIds = existingTagIds.filter((item, filterIndex)=> {
+											return filterIndex !== tagIndex;
+										});
+										this.setDefaultTagIds(newTagIds);
+									}}
+									placeholder="Default Pub Tags..."
+								/>
+							</div>
 						</div>
 					}
 					<div className="pt-form-group">

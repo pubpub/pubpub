@@ -424,10 +424,13 @@ export function generateRenderLists(layout, pubs) {
 			pubs.forEach((curr)=> {
 				allPubIds[curr.id] = curr;
 			});
+			const tagIds = block.content.tagIds || [];
+			// console.log(tagIds);
 			const availablePubs = nonSpecifiedPubs.filter((pub)=> {
-				if (!block.content.tagId) { return true; }
+				if (!tagIds.length) { return true; }
 				return pub.pubTags.reduce((prev, curr)=> {
-					if (curr.tagId === block.content.tagId) { return true; }
+					// if (curr.tagId === block.content.tagId) { return true; }
+					if (tagIds.indexOf(curr.tagId) > -1) { return true; }
 					return prev;
 				}, false);
 			});

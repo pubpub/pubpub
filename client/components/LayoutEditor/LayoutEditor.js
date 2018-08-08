@@ -38,6 +38,7 @@ class LayoutEditor extends Component {
 				size: 'medium',
 				limit: 0,
 				pubIds: [],
+				tagIds: [],
 			},
 			text: {
 				title: '',
@@ -57,7 +58,7 @@ class LayoutEditor extends Component {
 				backgroundSize: 'full',
 				showButton: false,
 				buttonText: '',
-				defaultTags: [],
+				defaultTagIds: [],
 			},
 			// createPub: {
 			// 	text: '',
@@ -150,6 +151,7 @@ class LayoutEditor extends Component {
 										onRemove={this.handleRemove}
 										layoutIndex={index}
 										content={item.content}
+										communityData={this.props.communityData}
 									/>
 								}
 								{/* item.type === 'createPub' &&
