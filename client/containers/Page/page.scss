@@ -1,20 +1,32 @@
 #page-container {
 	.page-content {
 		// padding-top: 2em;
-		.collection-title {
-			font-size: 2.25em;
-			line-height: 1;
-		}
+		// .collection-title {
+		// 	font-size: 2.25em;
+		// 	line-height: 1;
+		// }
 	}
 	.create-pub-wrapper {
-		float: right;
-		text-align: right;
-		margin-bottom: 2em;
-		.instructions-link {
-			display: block;
-			opacity: 0.85;
-			padding-top: 0.25em;
+		// float: right;
+		// text-align: right;
+		// margin-bottom: 2em;
+		.col-12 {
+			margin-top: 0em;
+			margin-bottom: 0em;
+			min-height: 0px;
+			position: relative;
 		}
+		.pt-button {
+			position: absolute;
+			top: 2.5em;
+			right: 0;
+			white-space: nowrap;
+		}
+		// .instructions-link {
+		// 	display: block;
+		// 	opacity: 0.85;
+		// 	padding-top: 0.25em;
+		// }
 	}
 	
 	.pub-preview-component {
@@ -22,6 +34,13 @@
 	}
 	.pt-non-ideal-state {
 		padding: 8em 0em 16em;
+	}
+	.block-content {
+		h2.block-title {
+			margin: 0px;
+			font-size: 28px;
+			font-weight: 800;
+		}
 	}
 	// .description {
 	// 	max-width: 800px;

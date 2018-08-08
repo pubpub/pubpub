@@ -308,35 +308,43 @@ new Promise((resolve)=> {
 // 		return PubTag.bulkCreate(newPubTags);
 // 	});
 // })
-.then(()=> {
-	/* Update layout on all Pages */
-	return Page.findAll()
-	.then((pagesData)=> {
-		const layoutUpdates = pagesData.map((pageData)=> {
-			const newLayout = pageData.layout.map((block)=> {
-				if (block.type !== 'pubs') { return block; }
-				return {
-					...block,
-					content: {
-						...block.content,
-						size: undefined,
-						pubPreviewType: block.content.size,
-						// TODO - do we have a drafts only type here?
-						// TODO - add page title here for non Home pages
-						// TODO - migrate draft blocks
-						// TODO - add [tagIds] so that flow still works as it did in collections
-					}
-				};
-			});
-			return newLayout;
-			// return Page.update({ layout: newLayout }, {
-			// 	where: { id: pageData.id }
-			// });
-		});
-		console.log(JSON.stringify(layoutUpdates, null, 2));
-		// return Promise.all(layoutUpdates);
-	});
-})
+// .then(()=> {
+// 	/* Update layout on all Pages */
+// 	return Page.findAll()
+// 	.then((pagesData)=> {
+// 		const layoutUpdates = pagesData.filter((pageData)=> {
+// 			return pageData.layout;
+// 		}).map((pageData)=> {
+// 			const newLayout = pageData.layout.map((block, index)=> {
+// 				if (index === 0 && pageData.slug) {
+// 					return {
+// 						...block,
+// 						content: {
+// 							...block.content,
+// 							title: pageData.title,
+// 						}
+// 					};
+// 				}
+// 				return block;
+// 			}).map((block)=> {
+// 				if (block.type !== 'pubs') { return block; }
+// 				return {
+// 					...block,
+// 					content: {
+// 						...block.content,
+// 						size: undefined,
+// 						pubPreviewType: block.content.size,
+// 						tagIds: [pageData.id]
+// 					}
+// 				};
+// 			});
+// 			return Page.update({ layout: newLayout }, {
+// 				where: { id: pageData.id }
+// 			});
+// 		});
+// 		return Promise.all(layoutUpdates);
+// 	});
+// })
 .catch((err)=> {
 	console.log('Error with Migration', err);
 })

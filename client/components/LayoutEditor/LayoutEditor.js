@@ -35,7 +35,7 @@ class LayoutEditor extends Component {
 		const defaultContents = {
 			pubs: {
 				title: '',
-				size: 'medium',
+				pubPreviewType: 'medium',
 				limit: 0,
 				pubIds: [],
 				tagIds: [],

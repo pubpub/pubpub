@@ -18,7 +18,7 @@ const LayoutHtml = function(props) {
 					{props.content.title &&
 						<div className="row">
 							<div className="col-12">
-								<h3>{props.content.title}</h3>
+								<h2 className="block-title">{props.content.title}</h2>
 							</div>
 						</div>
 					}

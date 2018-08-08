@@ -10,11 +10,11 @@ const propTypes = {
 	pubRenderList: PropTypes.array.isRequired,
 	isLoading: PropTypes.bool.isRequired,
 	/* Expected content */
-	/* title, size, limit, pubIds */
+	/* title, pubPreviewType, limit, pubIds, tagIds */
 };
 
 const LayoutPubs = function(props) {
-	const size = props.content.size;
+	const pubPreviewType = props.content.pubPreviewType;
 	const displayLimit = props.content.limit || Math.max(4, props.pubRenderList.length);
 	const emptyPreviews = [];
 	for (let index = 0; index < displayLimit; index += 1) {
@@ -39,7 +39,7 @@ const LayoutPubs = function(props) {
 					{props.content.title &&
 						<div className="row">
 							<div className="col-12">
-								<h3>{props.content.title}</h3>
+								<h2 className="block-title">{props.content.title}</h2>
 							</div>
 						</div>
 					}
@@ -48,13 +48,13 @@ const LayoutPubs = function(props) {
 						{renderItems.map((item, index)=> {
 							const selectedPub = props.pubRenderList[index] || { collaborators: [] };
 							return (
-								<div key={`preview-${props.layoutIndex}-${index}`} className={size === 'medium' ? 'col-6' : 'col-12'}>
+								<div key={`preview-${props.layoutIndex}-${index}`} className={pubPreviewType === 'medium' ? 'col-6' : 'col-12'}>
 									<PubPreview
 										title={selectedPub.title}
 										description={selectedPub.description}
 										slug={selectedPub.slug}
 										bannerImage={selectedPub.avatar}
-										size={size}
+										size={pubPreviewType}
 										publicationDate={selectedPub.firstPublishedAt}
 										collaborators={selectedPub.attributions.filter((collaborator)=> {
 											return !collaborator.isAuthor;

@@ -82,6 +82,20 @@ class Page extends Component {
 					communityData={this.props.communityData}
 					locationData={this.props.locationData}
 				>
+					{/* <div className="container create-pub-wrapper">
+							<div className="row">
+								<div className="col-12">
+									<Button
+										type="button"
+										className="pt-button pt-intent-primary"
+										loading={this.state.createPubIsLoading}
+										onClick={this.handleCreatePub}
+										text="Create Pub in Collection"
+									/>
+								</div>
+							</div>
+						</div>
+					*/}
 					{/* ((!pageData.isPage && pageData.isOpenSubmissions) || (title && title !== 'Home')) &&
 						<div className="row">
 							<div className="col-12">

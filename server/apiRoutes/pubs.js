@@ -11,25 +11,13 @@ app.post('/api/pubs', (req, res)=> {
 	const date = new Date();
 	const dateString = `${months[date.getMonth()]} ${date.getDate()}`;
 
-	// verify that user is communityAdmin - or collection is open - or user has hash
+	// verify that user is communityAdmin
 	const findCommunityAdmin = CommunityAdmin.findOne({
 		where: {
 			communityId: req.body.communityId,
 			userId: user.id,
 		}
 	});
-	// const findCollection = Collection.findOne({
-	// 	where: {
-	// 		id: req.body.collectionId,
-	// 		$or: [
-	// 			{ isOpenSubmissions: true },
-	// 			{ createPubHash: req.body.createPubHash }
-	// 		]
-	// 	}
-	// });
-
-	// return Promise.all([findCommunityAdmin, findCollection])
-	// .then(([communityAdminData, collectionData])=> {
 	return findCommunityAdmin
 	.then((communityAdminData)=> {
 		if (!communityAdminData) {
@@ -46,13 +34,6 @@ app.post('/api/pubs', (req, res)=> {
 		});
 	})
 	.then((newPub)=> {
-		// const createCollaborator = Collaborator.create({
-		// 	userId: user.id,
-		// 	pubId: newPub.id,
-		// 	isAuthor: true,
-		// 	permissions: 'manage',
-		// 	order: 0.5,
-		// });
 		const createPubManager = PubManager.create({
 			userId: user.id,
 			pubId: newPub.id,
@@ -76,12 +57,6 @@ app.post('/api/pubs', (req, res)=> {
 		const createPubTags = PubTag.bulkCreate(newPubTagObjects);
 		return Promise.all([createPubManager, createPubAttribution, createPubTags, createNotification]);
 	})
-	// .then(([newPubManager])=> {
-	// 	return CollectionPub.create({
-	// 		collectionId: req.body.collectionId,
-	// 		pubId: newPubManager.pubId,
-	// 	});
-	// })
 	.then(()=> {
 		return res.status(201).json(`/pub/${newPubSlug}/draft`);
 	})

@@ -24,8 +24,10 @@
 	}
 	.block-content {
 		padding: 1em 0em;
-		h3 {
+		h2.block-title {
 			margin: 0px;
+			font-size: 28px;
+			font-weight: 800;
 		}
 		.layout-editor-text {
 			a {

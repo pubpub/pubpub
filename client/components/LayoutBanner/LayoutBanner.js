@@ -11,7 +11,7 @@ const propTypes = {
 	locationData: PropTypes.object.isRequired,
 	content: PropTypes.object.isRequired,
 	/* Expected content */
-	/* text, align, backgroundColor, backgroundImage, backgroundSize, showButton, buttonText, defaultTags */
+	/* text, align, backgroundColor, backgroundImage, backgroundSize, showButton, buttonText, defaultTagIds */
 };
 
 class LayoutBanner extends Component {

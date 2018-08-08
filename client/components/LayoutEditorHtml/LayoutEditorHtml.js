@@ -17,21 +17,25 @@ class LayoutEditorHtml extends Component {
 		this.setText = this.setText.bind(this);
 		this.changeTitle = this.changeTitle.bind(this);
 	}
+
 	handleRemove() {
 		this.props.onRemove(this.props.layoutIndex);
 	}
+
 	setText(evt) {
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
 			html: evt.target.value,
 		});
 	}
+
 	changeTitle(evt) {
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
 			title: evt.target.value,
 		});
 	}
+
 	render() {
 		return (
 			<div className="layout-editor-html-component">
@@ -53,7 +57,7 @@ class LayoutEditorHtml extends Component {
 						{this.props.content.title &&
 							<div className="row">
 								<div className="col-12">
-									<h3>{this.props.content.title}</h3>
+									<h2 className="block-title">{this.props.content.title}</h2>
 								</div>
 							</div>
 						}

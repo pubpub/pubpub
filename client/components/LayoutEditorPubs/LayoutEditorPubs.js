@@ -15,7 +15,7 @@ const propTypes = {
 	pubRenderList: PropTypes.array.isRequired,
 	communityData: PropTypes.object.isRequired,
 	/* Expected content */
-	/* title, size, limit, pubIds */
+	/* title, pubPreviewType, limit, pubIds, tagIds */
 };
 
 class LayoutEditorPubs extends Component {
@@ -38,21 +38,21 @@ class LayoutEditorPubs extends Component {
 	setSmall() {
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
-			size: 'small'
+			pubPreviewType: 'small'
 		});
 	}
 
 	setMedium() {
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
-			size: 'medium'
+			pubPreviewType: 'medium'
 		});
 	}
 
 	setLarge() {
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
-			size: 'large'
+			pubPreviewType: 'large'
 		});
 	}
 
@@ -116,7 +116,7 @@ class LayoutEditorPubs extends Component {
 	}
 
 	render() {
-		const size = this.props.content.size;
+		const pubPreviewType = this.props.content.pubPreviewType;
 		// const displayLimit = this.props.content.limit || Math.max(4, this.props.pubRenderList.length);
 		const displayLimit = this.props.content.limit || this.props.pubRenderList.length;
 		const emptyPreviews = [];
@@ -164,11 +164,11 @@ class LayoutEditorPubs extends Component {
 						</div>
 					</div>
 					<div className="pt-form-group">
-						<label htmlFor={`section-size-${this.props.layoutIndex}`}>Size</label>
+						<label htmlFor={`section-size-${this.props.layoutIndex}`}>Preview Type</label>
 						<div className="pt-button-group">
-							<button className={`pt-button ${size === 'large' ? 'pt-active' : ''}`} onClick={this.setLarge}>Large</button>
-							<button className={`pt-button ${size === 'medium' ? 'pt-active' : ''}`} onClick={this.setMedium}>Medium</button>
-							<button className={`pt-button ${size === 'small' ? 'pt-active' : ''}`} onClick={this.setSmall}>Small</button>
+							<button className={`pt-button ${pubPreviewType === 'large' ? 'pt-active' : ''}`} onClick={this.setLarge}>Large</button>
+							<button className={`pt-button ${pubPreviewType === 'medium' ? 'pt-active' : ''}`} onClick={this.setMedium}>Medium</button>
+							<button className={`pt-button ${pubPreviewType === 'small' ? 'pt-active' : ''}`} onClick={this.setSmall}>Small</button>
 						</div>
 					</div>
 					<div className="pt-form-group">
@@ -194,7 +194,7 @@ class LayoutEditorPubs extends Component {
 						{this.props.content.title &&
 							<div className="row">
 								<div className="col-12">
-									<h3>{this.props.content.title}</h3>
+									<h2 className="block-title">{this.props.content.title}</h2>
 								</div>
 							</div>
 						}
@@ -203,9 +203,9 @@ class LayoutEditorPubs extends Component {
 							{previews.map((item, index)=> {
 								const selectPub = (this.props.pubRenderList && this.props.pubRenderList[index]) || {};
 								return (
-									<div key={`preview-${this.props.layoutIndex}-${index}`} className={size === 'medium' ? 'col-6' : 'col-12'}>
+									<div key={`preview-${this.props.layoutIndex}-${index}`} className={pubPreviewType === 'medium' ? 'col-6' : 'col-12'}>
 										<PubPreview
-											size={size}
+											size={pubPreviewType}
 											isPlaceholder={true}
 											title={this.props.content.pubIds[index] ? selectPub.title : undefined}
 											inputContent={this.props.content.pubIds.length >= index
