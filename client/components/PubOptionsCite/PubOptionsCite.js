@@ -21,6 +21,8 @@ class PubOptionsCite extends Component {
 
 	render() {
 		const pubData = this.props.pubData;
+		// TODO: How do we cite on drafts?
+		if (!pubData.citationData) { return null; }
 		const modeData = this.state.mode === 'pub'
 			? pubData.citationData.pub
 			: pubData.citationData.version;

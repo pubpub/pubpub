@@ -61,9 +61,7 @@ class LayoutEditorCreatePub extends Component {
 			<button
 				type="button"
 				className={`pt-button ${this.props.content.size === 'large' ? 'pt-large' : ''}`}
-				onClick={()=> {
-					console.log('Yooo');
-				}}
+				onClick={()=> {}}
 			>
 				{this.props.content.text || 'Create Pub'}
 			</button>

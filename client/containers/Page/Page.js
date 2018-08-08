@@ -159,6 +159,9 @@ class Page extends Component {
 									<LayoutCreatePub
 										key={`item-${item.id}`}
 										content={item.content}
+										communityData={this.props.communityData}
+										loginData={this.props.loginData}
+										locationData={this.props.locationData}
 									/>
 								}
 							</div>

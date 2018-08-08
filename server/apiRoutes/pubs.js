@@ -18,29 +18,31 @@ app.post('/api/pubs', (req, res)=> {
 			userId: user.id,
 		}
 	});
-	const findCollection = Collection.findOne({
-		where: {
-			id: req.body.collectionId,
-			$or: [
-				{ isOpenSubmissions: true },
-				{ createPubHash: req.body.createPubHash }
-			]
-		}
-	});
+	// const findCollection = Collection.findOne({
+	// 	where: {
+	// 		id: req.body.collectionId,
+	// 		$or: [
+	// 			{ isOpenSubmissions: true },
+	// 			{ createPubHash: req.body.createPubHash }
+	// 		]
+	// 	}
+	// });
 
-	return Promise.all([findCommunityAdmin, findCollection])
-	.then(([communityAdminData, collectionData])=> {
-		if (!communityAdminData && !collectionData) {
+	// return Promise.all([findCommunityAdmin, findCollection])
+	// .then(([communityAdminData, collectionData])=> {
+	return findCommunityAdmin
+	.then((communityAdminData)=> {
+		if (!communityAdminData) {
 			throw new Error('Not Authorized to create pub in this collection');
 		}
 		return Pub.create({
 			title: `New Pub on ${dateString}`,
 			slug: newPubSlug,
 			communityId: req.body.communityId,
-			collaborationMode: 'private',
-			adminPermissions: 'none',
-			editHash: generateHash(8),
-			viewHash: generateHash(8),
+			draftPermissions: 'private',
+			isCommunityAdminManaged: true,
+			draftEditHash: generateHash(8),
+			draftViewHash: generateHash(8),
 		});
 	})
 	.then((newPub)=> {
@@ -61,15 +63,16 @@ app.post('/api/pubs', (req, res)=> {
 			isAuthor: true,
 			order: 0.5,
 		});
-		const createNotification = generatePubCreateNotification(newPub, user.id);
+		// const createNotification = generatePubCreateNotification(newPub, user.id);
+		const createNotification = undefined;
 		return Promise.all([createPubManager, createPubAttribution, createNotification]);
 	})
-	.then(([newPubManager])=> {
-		return CollectionPub.create({
-			collectionId: req.body.collectionId,
-			pubId: newPubManager.pubId,
-		});
-	})
+	// .then(([newPubManager])=> {
+	// 	return CollectionPub.create({
+	// 		collectionId: req.body.collectionId,
+	// 		pubId: newPubManager.pubId,
+	// 	});
+	// })
 	.then(()=> {
 		return res.status(201).json(`/pub/${newPubSlug}/draft`);
 	})
