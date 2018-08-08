@@ -25,27 +25,29 @@ const LayoutText = function(props) {
 	return (
 		<div className="layout-text-component">
 			<div className="block-content">
-				{props.content.title &&
+				<div className="container">
+					{props.content.title &&
+						<div className="row">
+							<div className="col-12">
+								<h3>{props.content.title}</h3>
+							</div>
+						</div>
+					}
 					<div className="row">
 						<div className="col-12">
-							<h3>{props.content.title}</h3>
-						</div>
-					</div>
-				}
-				<div className="row">
-					<div className="col-12">
-						<div style={wrapperStyle}>
-							<Editor
-								initialContent={props.content.text || undefined}
-								isReadOnly={true}
-							>
-								<Image
-									handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '1200x0'); }}
-								/>
-								<Video />
-								<Iframe />
-								<File />
-							</Editor>
+							<div style={wrapperStyle}>
+								<Editor
+									initialContent={props.content.text || undefined}
+									isReadOnly={true}
+								>
+									<Image
+										handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '1200x0'); }}
+									/>
+									<Video />
+									<Iframe />
+									<File />
+								</Editor>
+							</div>
 						</div>
 					</div>
 				</div>

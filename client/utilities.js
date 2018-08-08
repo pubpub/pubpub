@@ -243,10 +243,10 @@ export function getDefaultLayout() {
 			}
 		},
 		// {
-		// 	type: pub
+		// 	type: pubs
 		// 	content: {
 		// 		title:
-		// 		previewType:
+		// 		pubPreviewType:
 		// 		limit:
 		// 		pubIds:
 		// 		draftsOnly:

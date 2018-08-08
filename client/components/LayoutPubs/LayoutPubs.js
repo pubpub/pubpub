@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import PubPreview from 'components/PubPreview/PubPreview';
 
+require('./layoutPubs.scss');
+
 const propTypes = {
 	layoutIndex: PropTypes.number.isRequired,
 	content: PropTypes.object.isRequired,
@@ -31,38 +33,40 @@ const LayoutPubs = function(props) {
 		return props.isLoading || (pub && pub.slug);
 	});
 	return (
-		<div className="layout-editor-pubs-component">
+		<div className="layout-pubs-component">
 			<div className="block-content">
-				{props.content.title &&
-					<div className="row">
-						<div className="col-12">
-							<h3>{props.content.title}</h3>
-						</div>
-					</div>
-				}
-
-				<div className="row">
-					{renderItems.map((item, index)=> {
-						const selectedPub = props.pubRenderList[index] || { collaborators: [] };
-						return (
-							<div key={`preview-${props.layoutIndex}-${index}`} className={size === 'medium' ? 'col-6' : 'col-12'}>
-								<PubPreview
-									title={selectedPub.title}
-									description={selectedPub.description}
-									slug={selectedPub.slug}
-									bannerImage={selectedPub.avatar}
-									size={size}
-									publicationDate={selectedPub.firstPublishedAt}
-									collaborators={selectedPub.attributions.filter((collaborator)=> {
-										return !collaborator.isAuthor;
-									})}
-									authors={selectedPub.attributions.filter((collaborator)=> {
-										return collaborator.isAuthor;
-									})}
-								/>
+				<div className="container">
+					{props.content.title &&
+						<div className="row">
+							<div className="col-12">
+								<h3>{props.content.title}</h3>
 							</div>
-						);
-					})}
+						</div>
+					}
+
+					<div className="row">
+						{renderItems.map((item, index)=> {
+							const selectedPub = props.pubRenderList[index] || { collaborators: [] };
+							return (
+								<div key={`preview-${props.layoutIndex}-${index}`} className={size === 'medium' ? 'col-6' : 'col-12'}>
+									<PubPreview
+										title={selectedPub.title}
+										description={selectedPub.description}
+										slug={selectedPub.slug}
+										bannerImage={selectedPub.avatar}
+										size={size}
+										publicationDate={selectedPub.firstPublishedAt}
+										collaborators={selectedPub.attributions.filter((collaborator)=> {
+											return !collaborator.isAuthor;
+										})}
+										authors={selectedPub.attributions.filter((collaborator)=> {
+											return collaborator.isAuthor;
+										})}
+									/>
+								</div>
+							);
+						})}
+					</div>
 				</div>
 			</div>
 		</div>

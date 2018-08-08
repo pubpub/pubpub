@@ -1,0 +1,10 @@
+.layout-editor-create-pub-component {
+	&:after {
+		display: table;
+		content: "";
+		clear: both;
+	}
+	.pt-button {
+		white-space: nowrap;
+	}
+}

@@ -24,7 +24,7 @@ class LayoutEditorText extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			key: new Date().getTime(),
+			key: `text-block-${props.layoutIndex}`,
 		};
 		this.handleRemove = this.handleRemove.bind(this);
 		this.setAlignLeft = this.setAlignLeft.bind(this);
@@ -34,45 +34,53 @@ class LayoutEditorText extends Component {
 		this.setText = this.setText.bind(this);
 		this.changeTitle = this.changeTitle.bind(this);
 	}
-	handleRemove() {
-		this.props.onRemove(this.props.layoutIndex);
-	}
+
 	setAlignLeft() {
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
 			align: 'left'
 		});
 	}
+
 	setAlignCenter() {
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
 			align: 'center'
 		});
 	}
+
 	setWidthNarrow() {
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
 			width: 'narrow'
 		});
 	}
+
 	setWidthWide() {
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
 			width: 'wide'
 		});
 	}
+
 	setText(textJSON) {
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
 			text: textJSON,
 		});
 	}
+
+	handleRemove() {
+		this.props.onRemove(this.props.layoutIndex);
+	}
+
 	changeTitle(evt) {
 		this.props.onChange(this.props.layoutIndex, {
 			...this.props.content,
 			title: evt.target.value,
 		});
 	}
+
 	render() {
 		const wrapperStyle = {
 			textAlign: this.props.content.align || 'left',
@@ -120,12 +128,13 @@ class LayoutEditorText extends Component {
 
 						<div className="row">
 							<div className="col-12">
-								<div style={wrapperStyle}>
+								<div style={wrapperStyle} id={String(this.state.key)}>
 									<Editor
 										placeholder="Enter text..."
 										onChange={this.setText}
 										initialContent={this.props.content.text || undefined}
 										editorId={String(this.state.key)}
+										containerId={String(this.state.key)}
 									>
 										<FormattingMenu />
 										<InsertMenu />
@@ -144,7 +153,7 @@ class LayoutEditorText extends Component {
 					</div>
 				</div>
 			</div>
-		);	
+		);
 	}
 }
 

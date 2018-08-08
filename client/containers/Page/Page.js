@@ -4,6 +4,8 @@ import { Button, NonIdealState } from '@blueprintjs/core';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
 import LayoutPubs from 'components/LayoutPubs/LayoutPubs';
 import LayoutHtml from 'components/LayoutHtml/LayoutHtml';
+import LayoutHeader from 'components/LayoutHeader/LayoutHeader';
+import LayoutCreatePub from 'components/LayoutCreatePub/LayoutCreatePub';
 // import LayoutDrafts from 'components/LayoutDrafts/LayoutDrafts';
 import LayoutText from 'components/LayoutText/LayoutText';
 import { hydrateWrapper, apiFetch, getDefaultLayout, generateRenderLists } from 'utilities';
@@ -80,86 +82,96 @@ class Page extends Component {
 					communityData={this.props.communityData}
 					locationData={this.props.locationData}
 				>
-					<div className="container">
-						{/* ((!pageData.isPage && pageData.isOpenSubmissions) || (title && title !== 'Home')) &&
-							<div className="row">
-								<div className="col-12">
-									{!pageData.isPage && pageData.isOpenSubmissions &&
-										<div className="create-pub-wrapper">
-											{this.props.loginData.id &&
-												<Button
-													type="button"
-													className="pt-button pt-intent-primary"
-													loading={this.state.createPubIsLoading}
-													onClick={this.handleCreatePub}
-													text="Create Pub in Collection"
-												/>
-											}
-											{!this.props.loginData.id &&
-												<a
-													href={`/login?redirect=${this.props.locationData.path}`}
-													className="pt-button pt-intent-primary"
-												>
-													Login to Create Pub
-												</a>
-											}
-											{pageData.createPubMessage &&
-												<a href={`/${pageData.slug}/submit`} className="instructions-link">
-													Submission Instructions
-												</a>
-											}
-										</div>
-									}
-									{title && title !== 'Home' &&
-										<h1 className="collection-title">{title}</h1>
-									}
-								</div>
+					{/* ((!pageData.isPage && pageData.isOpenSubmissions) || (title && title !== 'Home')) &&
+						<div className="row">
+							<div className="col-12">
+								{!pageData.isPage && pageData.isOpenSubmissions &&
+									<div className="create-pub-wrapper">
+										{this.props.loginData.id &&
+											<Button
+												type="button"
+												className="pt-button pt-intent-primary"
+												loading={this.state.createPubIsLoading}
+												onClick={this.handleCreatePub}
+												text="Create Pub in Collection"
+											/>
+										}
+										{!this.props.loginData.id &&
+											<a
+												href={`/login?redirect=${this.props.locationData.path}`}
+												className="pt-button pt-intent-primary"
+											>
+												Login to Create Pub
+											</a>
+										}
+										{pageData.createPubMessage &&
+											<a href={`/${pageData.slug}/submit`} className="instructions-link">
+												Submission Instructions
+											</a>
+										}
+									</div>
+								}
+								{title && title !== 'Home' &&
+									<h1 className="collection-title">{title}</h1>
+								}
 							</div>
-						*/}
+						</div>
+					*/}
 
-						{layout.filter((item)=> {
-							// TODO - this filter is a bit broken.
-							if (pageData.id && !numPublished && item.type === 'pubs') {
-								return false;
-							}
-							return true;
-						}).map((item, index)=> {
-							const validType = ['pubs', 'text', 'html'].indexOf(item.type) > -1;
-							if (!validType) { return null; }
-							return (
-								<div key={`block-${item.id}`} className="component-wrapper">
-									{item.type === 'pubs' &&
-										<LayoutPubs
-											key={`item-${item.id}`}
-											layoutIndex={index}
-											content={item.content}
-											pubRenderList={pubRenderLists[index]}
-										/>
-									}
-									{item.type === 'text' &&
-										<LayoutText
-											key={`item-${item.id}`}
-											content={item.content}
-										/>
-									}
-									{item.type === 'html' &&
-										<LayoutHtml
-											key={`item-${item.id}`}
-											content={item.content}
-										/>
-									}
-								</div>
-							);
-						})}
-
-						{!publicDrafts.length && !!pageData.id && !numPublished && !pageData.isPage && !hasTextLayoutComponent &&
-							<NonIdealState
-								title="Empty Collection"
-								description="This collection has no Pubs."
-								visual="pt-icon-applications"
-							/>
+					{layout.filter((item)=> {
+						// TODO - this filter is a bit broken.
+						if (pageData.id && !numPublished && item.type === 'pubs') {
+							return false;
 						}
-					</div>
+						return true;
+					}).map((item, index)=> {
+						const validType = ['pubs', 'text', 'html', 'header', 'createPub'].indexOf(item.type) > -1;
+						if (!validType) { return null; }
+						return (
+							<div key={`block-${item.id}`} className="component-wrapper">
+								{item.type === 'pubs' &&
+									<LayoutPubs
+										key={`item-${item.id}`}
+										layoutIndex={index}
+										content={item.content}
+										pubRenderList={pubRenderLists[index]}
+									/>
+								}
+								{item.type === 'text' &&
+									<LayoutText
+										key={`item-${item.id}`}
+										content={item.content}
+									/>
+								}
+								{item.type === 'html' &&
+									<LayoutHtml
+										key={`item-${item.id}`}
+										content={item.content}
+									/>
+								}
+								{item.type === 'header' &&
+									<LayoutHeader
+										key={`item-${item.id}`}
+										content={item.content}
+									/>
+								}
+								{item.type === 'createPub' &&
+									<LayoutCreatePub
+										key={`item-${item.id}`}
+										content={item.content}
+									/>
+								}
+							</div>
+						);
+					})}
+
+					{!publicDrafts.length && !!pageData.id && !numPublished && !pageData.isPage && !hasTextLayoutComponent &&
+						<NonIdealState
+							title="Empty Collection"
+							description="This collection has no Pubs."
+							visual="pt-icon-applications"
+						/>
+					}
 				</PageWrapper>
 			</div>
 		);

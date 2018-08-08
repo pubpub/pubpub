@@ -4,6 +4,8 @@ import LayoutEditorInsert from 'components/LayoutEditorInsert/LayoutEditorInsert
 import LayoutEditorPubs from 'components/LayoutEditorPubs/LayoutEditorPubs';
 import LayoutEditorText from 'components/LayoutEditorText/LayoutEditorText';
 import LayoutEditorHtml from 'components/LayoutEditorHtml/LayoutEditorHtml';
+import LayoutEditorHeader from 'components/LayoutEditorHeader/LayoutEditorHeader';
+import LayoutEditorCreatePub from 'components/LayoutEditorCreatePub/LayoutEditorCreatePub';
 // import LayoutEditorDrafts from 'components/LayoutEditorDrafts/LayoutEditorDrafts';
 import { generateHash, generateRenderLists } from 'utilities';
 
@@ -46,6 +48,18 @@ class LayoutEditor extends Component {
 			html: {
 				title: '',
 				html: '',
+			},
+			header: {
+				text: '',
+				align: 'left',
+				background: '',
+				backgroundSize: 'full',
+			},
+			createPub: {
+				text: '',
+				align: 'left',
+				size: 'standard',
+				defaultTags: [],
 			},
 			// drafts: {
 			// 	title: 'Open Drafts'
@@ -90,7 +104,7 @@ class LayoutEditor extends Component {
 					onInsert={this.handleInsert}
 				/>
 				{this.state.layout.map((item, index)=> {
-					const validType = ['pubs', 'text', 'html'].indexOf(item.type) > -1;
+					const validType = ['pubs', 'text', 'html', 'header', 'createPub'].indexOf(item.type) > -1;
 					if (!validType) { return null; }
 					return (
 						<div>
@@ -118,6 +132,24 @@ class LayoutEditor extends Component {
 								}
 								{item.type === 'html' &&
 									<LayoutEditorHtml
+										key={`item-${item.id}`}
+										onChange={this.handleChange}
+										onRemove={this.handleRemove}
+										layoutIndex={index}
+										content={item.content}
+									/>
+								}
+								{item.type === 'header' &&
+									<LayoutEditorHeader
+										key={`item-${item.id}`}
+										onChange={this.handleChange}
+										onRemove={this.handleRemove}
+										layoutIndex={index}
+										content={item.content}
+									/>
+								}
+								{item.type === 'createPub' &&
+									<LayoutEditorCreatePub
 										key={`item-${item.id}`}
 										onChange={this.handleChange}
 										onRemove={this.handleRemove}

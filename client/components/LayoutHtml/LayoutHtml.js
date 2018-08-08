@@ -14,16 +14,18 @@ const LayoutHtml = function(props) {
 	return (
 		<div className="layout-html-component">
 			<div className="block-content">
-				{props.content.title &&
+				<div className="container">
+					{props.content.title &&
+						<div className="row">
+							<div className="col-12">
+								<h3>{props.content.title}</h3>
+							</div>
+						</div>
+					}
 					<div className="row">
 						<div className="col-12">
-							<h3>{props.content.title}</h3>
+							<div dangerouslySetInnerHTML={{ __html: props.content.html }} />
 						</div>
-					</div>
-				}
-				<div className="row">
-					<div className="col-12">
-						<div dangerouslySetInnerHTML={{ __html: props.content.html }} />
 					</div>
 				</div>
 			</div>
