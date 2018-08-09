@@ -10,3 +10,14 @@
 		}
 	}	
 }
+
+.tag-autocomplete-popover {
+	.autocomplete-name {
+		position: relative;
+		padding: 0px 10px;
+		.pt-icon-lock2 {
+			position: absolute;
+			left: -7px;
+		}
+	}
+}

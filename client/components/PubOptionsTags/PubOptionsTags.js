@@ -131,7 +131,12 @@ class PubOptionsTags extends Component {
 									className={modifiers.active ? 'pt-menu-item pt-active' : 'pt-menu-item'}
 								>
 									{!item.id && <span>Create new tag: </span>}
-									<span className="autocomplete-name">{item.title}</span>
+									<span className="autocomplete-name">
+										{item.id && !item.isPublic &&
+											<span className="pt-icon-standard pt-icon-lock2" />
+										}
+										{item.title}
+									</span>
 								</button>
 							</li>
 						);
@@ -141,7 +146,7 @@ class PubOptionsTags extends Component {
 					noResults={<MenuItem disabled text="No results" />}
 					popoverProps={{
 						// isOpen: this.state.queryValue,
-						popoverClassName: 'pt-minimal user-autocomplete-popover',
+						popoverClassName: 'pt-minimal tag-autocomplete-popover',
 						position: Position.BOTTOM_LEFT,
 						modifiers: {
 							preventOverflow: { enabled: false },
