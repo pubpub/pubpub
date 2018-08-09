@@ -1,7 +1,7 @@
 import app from '../server';
 import { Pub, Version, CommunityAdmin, Discussion, Collection, PubManager } from '../models';
 import { generateNewVersionNotification } from '../notifications';
-import { submitDoiData } from '../utilities';
+import { submitDoiData, generateHash } from '../utilities';
 
 app.post('/api/versions', (req, res)=> {
 	const user = req.user || {};
@@ -63,6 +63,7 @@ app.post('/api/versions', (req, res)=> {
 		return Version.create({
 			pubId: req.body.pubId,
 			content: req.body.content,
+			viewHash: generateHash(8),
 		});
 	})
 	.then(()=> {

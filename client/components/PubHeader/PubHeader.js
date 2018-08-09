@@ -66,7 +66,9 @@ const PubHeader = function(props) {
 										return <a key={`footer-collection-${item.id}`} href={`/${item.slug}`} className="pt-tag pt-intent-primary pt-minimal">{item.title}</a>;
 									})}
 									<div className="tags new-tags">
-										New Tags: {pubData.pubTags.sort((foo, bar)=> {
+										New Tags: {pubData.pubTags.filter((pubTag)=> {
+											return pubTag.tag;
+										}).sort((foo, bar)=> {
 											if (foo.tag.title.toLowerCase() < bar.tag.title.toLowerCase()) { return -1; }
 											if (foo.tag.title.toLowerCase() > bar.tag.title.toLowerCase()) { return 1; }
 											return 0;
