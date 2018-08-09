@@ -58,12 +58,13 @@ const PageWrapper = (props)=> {
 			/>
 
 			<Header
+				communityData={props.communityData}
 				locationData={props.locationData}
 				loginData={props.loginData}
-				smallHeaderLogo={communityData.smallHeaderLogo}
-				largeHeaderLogo={communityData.largeHeaderLogo}
-				largeHeaderDescription={communityData.largeHeaderDescription}
-				largeHeaderBackground={communityData.largeHeaderBackground}
+				// smallHeaderLogo={communityData.smallHeaderLogo}
+				// largeHeaderLogo={communityData.largeHeaderLogo}
+				// largeHeaderDescription={communityData.largeHeaderDescription}
+				// largeHeaderBackground={communityData.largeHeaderBackground}
 			/>
 
 			{!props.hideNav &&

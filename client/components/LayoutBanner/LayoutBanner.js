@@ -81,7 +81,7 @@ class LayoutBanner extends Component {
 								{!this.props.loginData.id && this.props.content.showButton &&
 									<a
 										href={`/login?redirect=${this.props.locationData.path}`}
-										className="pt-button pt-intent-primary"
+										className="pt-button pt-large"
 									>
 										Login to Create Pub
 									</a>
