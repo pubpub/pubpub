@@ -427,6 +427,8 @@ export function submitDoiData(pubId, communityId, isNew) {
 
 	return Promise.all([findPub, findCommunity])
 	.then(([pubData, communityData])=> {
+		// TODO: DOI options need a refactor now that versions can be public.
+		if (!pubData) { return [null]; }
 		if (!pubData.doi && !isNew) { return [null]; }
 
 		const pubDataJson = pubData.toJSON();
