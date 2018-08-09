@@ -201,7 +201,7 @@ const Pub = sequelize.define('Pub', {
 		values: ['private', 'publicView', 'publicEdit'],
 		defaultValue: 'private',
 	},
-
+	review: { type: Sequelize.JSONB },
 	/* Set by Associations */
 	communityId: { type: Sequelize.UUID, allowNull: false },
 }, {

@@ -345,6 +345,11 @@ new Promise((resolve)=> {
 // 		return Promise.all(layoutUpdates);
 // 	});
 // })
+// .then(()=> {
+// 	return sequelize.queryInterface.addColumn('Pubs', 'review', {
+// 		type: Sequelize.JSONB,
+// 	});
+// })
 .catch((err)=> {
 	console.log('Error with Migration', err);
 })
