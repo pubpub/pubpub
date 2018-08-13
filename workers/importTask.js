@@ -15,6 +15,7 @@ const dataDir = process.env.NODE_ENV === 'production'
 	: '';
 
 export default (sourceUrl)=> {
+	console.log('Got an import task for ', sourceUrl);
 	const extension = sourceUrl.split('.').pop().toLowerCase();
 	const extensionTypes = {
 		docx: { format: 'docx' },
@@ -48,12 +49,14 @@ export default (sourceUrl)=> {
 		});
 	})
 	.then((tmpPath)=> {
+		console.log('About to start pandoc');
 		const args = `${dataDir}-f ${extensionTypes[extension].format} -t html`;
 		return new Promise((resolve, reject)=> {
 			nodePandoc(tmpPath, args, (err, result)=> {
-				if (err && err.message) {
-					console.warn(err.message);
-				}
+				console.warn(err);
+				// if (err && err.message) {
+				// 	console.warn(err.message);
+				// }
 				/* This callback is called multiple times */
 				/* err is sent multiple times and includes warnings */
 				/* So to check if the file generated, check the size */
