@@ -58,15 +58,15 @@ const PubHeader = function(props) {
 						<div className="col-12">
 							<div className="tags-buttons-wrapper">
 								<div className="tags">
-									{pubData.collections.sort((foo, bar)=> {
+									{/* pubData.collections.sort((foo, bar)=> {
 										if (foo.title.toLowerCase() < bar.title.toLowerCase()) { return -1; }
 										if (foo.title.toLowerCase() > bar.title.toLowerCase()) { return 1; }
 										return 0;
 									}).map((item)=> {
 										return <a key={`footer-collection-${item.id}`} href={`/${item.slug}`} className="pt-tag pt-intent-primary pt-minimal">{item.title}</a>;
-									})}
+									}) */}
 									<div className="tags new-tags">
-										New Tags: {pubData.pubTags.filter((pubTag)=> {
+										{pubData.pubTags.filter((pubTag)=> {
 											return pubTag.tag;
 										}).sort((foo, bar)=> {
 											if (foo.tag.title.toLowerCase() < bar.tag.title.toLowerCase()) { return -1; }
