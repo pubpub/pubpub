@@ -30,8 +30,6 @@ class PubOptionsDiscussions extends Component {
 			method: 'POST',
 			body: JSON.stringify({
 				title: this.state.newChannelTitle,
-				isPublicView: false,
-				isPublicWrite: false,
 				pubId: this.props.pubData.id,
 				communityId: this.props.communityData.id,
 			})
@@ -63,8 +61,7 @@ class PubOptionsDiscussions extends Component {
 			{
 				id: undefined,
 				title: 'public',
-				isPublicView: true,
-				isPublicWrite: true,
+				permissions: 'public',
 				isCommunityAdminModerated: true,
 				participants: [],
 			},
@@ -94,10 +91,7 @@ class PubOptionsDiscussions extends Component {
 										#{channel.title}
 									</div>
 									<div className="option">
-										{channel.isPublicView ? 'Public View' : 'Private View'}
-									</div>
-									<div className="option">
-										{channel.isPublicWrite ? 'Public Write' : 'Private Write'}
+										{channel.permissions}
 									</div>
 								</div>
 								<div>

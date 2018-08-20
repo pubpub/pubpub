@@ -387,8 +387,11 @@ const PubTag = sequelize.define('PubTag', {
 const DiscussionChannel = sequelize.define('DiscussionChannel', {
 	id: id,
 	title: { type: Sequelize.TEXT },
-	isPublicView: { type: Sequelize.BOOLEAN },
-	isPublicWrite: { type: Sequelize.BOOLEAN },
+	permissions: {
+		type: Sequelize.ENUM,
+		values: ['private', 'restricted', 'public'],
+		defaultValue: 'private',
+	},
 	isCommunityAdminModerated: { type: Sequelize.BOOLEAN },
 	viewHash: { type: Sequelize.STRING },
 	writeHash: { type: Sequelize.STRING },
@@ -398,6 +401,11 @@ const DiscussionChannel = sequelize.define('DiscussionChannel', {
 });
 
 const DiscussionChannelParticipant = sequelize.define('DiscussionChannelParticipant', {
+	/* Theoretically, we could allow participants to have either view or write permissions */
+	/* This seems like a bit of an unnecessary verboseness. The viewHash URL seems like it would */
+	/* solve most cases where you want view, but not write permissions. */
+	/* We might revisit and decide otherwise later. */
+	id: id,
 	isModerator: { type: Sequelize.BOOLEAN },
 	userId: { type: Sequelize.UUID, allowNull: false },
 	discussionChannelId: { type: Sequelize.UUID, allowNull: false },

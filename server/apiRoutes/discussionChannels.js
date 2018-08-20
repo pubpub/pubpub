@@ -1,42 +1,18 @@
 import app from '../server';
-import { PubManager, User, CommunityAdmin, PubAttribution, DiscussionChannel, DiscussionChannelParticipant } from '../models';
+import { User, CommunityAdmin, DiscussionChannel, DiscussionChannelParticipant } from '../models';
 import { generateHash } from '../utilities';
 
 app.post('/api/discussionChannels', (req, res)=> {
-	// Anyone can create discussion channel.
-	// Only managers can set discussion channels public?
-	// discussionChannels have participants, some of whom are moderators
-
-
 	const user = req.user || {};
 
-	const findCommunityAdmin = CommunityAdmin.findOne({
-		where: {
-			communityId: req.body.communityId,
-			userId: user.id,
-		}
-	});
-	const findPubManager = PubManager.findOne({
-		where: {
-			pubId: req.body.pubId,
-			userId: user.id
-		},
-	});
-	Promise.all([findCommunityAdmin, findPubManager])
-	.then(([communityAdminData, pubManagerData])=> {
-		// if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859' && !communityAdminData && !pubManagerData) {
-		// 	throw new Error('Not Authorized to edit this pub');
-		// }
-		return DiscussionChannel.create({
-			title: req.body.title.replace(/ /g, '-').replace(/[^a-zA-Z0-9-]/gi, '').toLowerCase(),
-			isPublicRead: false,
-			isPublicWrite: false,
-			isCommunityAdminModerated: true,
-			pubId: req.body.pubId,
-			communityId: req.body.communityId,
-			viewHash: generateHash(8),
-			writeHash: generateHash(8),
-		});
+	DiscussionChannel.create({
+		title: req.body.title.replace(/ /g, '-').replace(/[^a-zA-Z0-9-]/gi, '').toLowerCase(),
+		permissions: 'private',
+		isCommunityAdminModerated: true,
+		pubId: req.body.pubId,
+		communityId: req.body.communityId,
+		viewHash: generateHash(8),
+		writeHash: generateHash(8),
 	})
 	.then((newDiscussionChannel)=> {
 		return DiscussionChannelParticipant.create({
@@ -72,10 +48,10 @@ app.put('/api/discussionChannels', (req, res)=> {
 	const user = req.user || {};
 
 	// Filter to only allow certain fields to be updated
-	const updatedPubAttribution = {};
+	const updatedDiscussionChannel = {};
 	Object.keys(req.body).forEach((key)=> {
-		if (['name', 'avatar', 'title', 'order', 'isAuthor', 'roles'].indexOf(key) > -1) {
-			updatedPubAttribution[key] = req.body[key];
+		if (['title', 'permissions', 'isCommunityAdminModerated'].indexOf(key) > -1) {
+			updatedDiscussionChannel[key] = req.body[key];
 		}
 	});
 
@@ -85,59 +61,85 @@ app.put('/api/discussionChannels', (req, res)=> {
 			userId: user.id,
 		}
 	});
-	const findPubManager = PubManager.findOne({
-		where: {
-			pubId: req.body.pubId,
-			userId: user.id
-		},
-	});
-	Promise.all([findCommunityAdmin, findPubManager])
-	.then(([communityAdminData, pubManagerData])=> {
-		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859' && !communityAdminData && !pubManagerData) {
-			throw new Error('Not Authorized to edit this pub');
-		}
-		return PubAttribution.update(updatedPubAttribution, {
-			where: { id: req.body.pubAttributionId },
-		});
-	})
-	.then(()=> {
-		return res.status(201).json(updatedPubAttribution);
-	})
-	.catch((err)=> {
-		console.error('Error in putPubAttribution: ', err);
-		return res.status(500).json(err.message);
-	});
-});
-
-app.delete('/api/discussionChannels', (req, res)=> {
-	const user = req.user || {};
-
-	const findCommunityAdmin = CommunityAdmin.findOne({
+	const findDiscussionChannel = DiscussionChannel.findOne({
 		where: {
 			communityId: req.body.communityId,
+			id: req.body.discussionChannelId
+		}
+	});
+	const findDiscussionChannelParticipant = DiscussionChannelParticipant.findOne({
+		where: {
+			discussionChannelId: req.body.discussionChannelId,
 			userId: user.id,
 		}
 	});
-	const findPubManager = PubManager.findOne({
-		where: {
-			pubId: req.body.pubId,
-			userId: user.id
-		},
-	});
-	Promise.all([findCommunityAdmin, findPubManager])
-	.then(([communityAdminData, pubManagerData])=> {
-		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859' && !communityAdminData && !pubManagerData) {
-			throw new Error('Not Authorized to edit this pub');
+
+	Promise.all([findCommunityAdmin, findDiscussionChannel, findDiscussionChannelParticipant])
+	.then(([communityAdminData, discussionChannelData, discussionChannelParticipantData])=> {
+		const canModerateAsCommunityAdmin = communityAdminData && discussionChannelData.isCommunityAdminModerated;
+		const canModerateAsParticipant = discussionChannelParticipantData && discussionChannelParticipantData.isModerator;
+		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859' && !canModerateAsCommunityAdmin && !canModerateAsParticipant) {
+			throw new Error('Not Authorized to edit this discussion channel');
 		}
-		return PubAttribution.destroy({
+
+		const settingNonPrivate = req.body.permissions === 'restricted' || req.body.permissions === 'public';
+		const validPrivacySetting = canModerateAsCommunityAdmin || !settingNonPrivate;
+		if (!validPrivacySetting) {
+			/* Only community admins can set discussion channels public */
+			throw new Error('Invalid privacy setting');
+		}
+
+		return DiscussionChannel.update(updatedDiscussionChannel, {
 			where: { id: req.body.pubAttributionId },
 		});
 	})
 	.then(()=> {
-		return res.status(201).json(req.body.pubAttributionId);
+		return res.status(201).json(updatedDiscussionChannel);
 	})
 	.catch((err)=> {
-		console.error('Error in deletePubAttribution: ', err);
+		console.error('Error in putDiscussionChannel: ', err);
 		return res.status(500).json(err.message);
 	});
 });
+
+/* Do we allow users to delete a discussion channel? */
+// app.delete('/api/discussionChannels', (req, res)=> {
+// 	const user = req.user || {};
+
+// 	const findCommunityAdmin = CommunityAdmin.findOne({
+// 		where: {
+// 			communityId: req.body.communityId,
+// 			userId: user.id,
+// 		}
+// 	});
+// 	const findDiscussionChannel = DiscussionChannel.findOne({
+// 		where: {
+// 			communityId: req.body.communityId,
+// 			id: req.body.discussionChannelId
+// 		}
+// 	});
+// 	const findDiscussionChannelParticipant = DiscussionChannelParticipant.findOne({
+// 		where: {
+// 			discussionChannelId: req.body.discussionChannelId,
+// 			userId: user.id,
+// 		}
+// 	});
+// 	Promise.all([findCommunityAdmin, findDiscussionChannel, findDiscussionChannelParticipant])
+// 	.then(([communityAdminData, discussionChannelData, discussionChannelParticipantData])=> {
+// 		const canModerateAsCommunityAdmin = communityAdminData && discussionChannelData.isCommunityAdminModerated;
+// 		const canModerateAsParticipant = discussionChannelParticipantData && discussionChannelParticipantData.isModerator;
+// 		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859' && !canModerateAsCommunityAdmin && !canModerateAsParticipant) {
+// 			throw new Error('Not Authorized to delete this discussionChannel');
+// 		}
+// 		return DiscussionChannel.destroy({
+// 			where: { id: req.body.discussionChannelId },
+// 		});
+// 	})
+// 	.then(()=> {
+// 		return res.status(201).json(req.body.discussionChannelId);
+// 	})
+// 	.catch((err)=> {
+// 		console.error('Error in deleteDiscussionChannel: ', err);
+// 		return res.status(500).json(err.message);
+// 	});
+// });

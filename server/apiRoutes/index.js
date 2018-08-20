@@ -5,6 +5,7 @@ require('./communities');
 require('./communityAdmins');
 require('./discussions');
 require('./discussionChannels');
+require('./discussionChannelParticipants');
 require('./doi');
 require('./editor');
 require('./export');
