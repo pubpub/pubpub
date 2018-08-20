@@ -1,0 +1,30 @@
+.pub-options-discussions-component {
+	.channels {
+		padding-top: 2em;
+	}
+	.channel {
+		padding-bottom: 1em;
+		margin-bottom: 1em;
+		border-bottom: 1px solid #CCC;
+		.header {
+			display: flex;
+			padding-bottom: 0.5em;
+			.title {
+				flex-grow: 1;
+				flex-shrink: 1;
+				font-weight: bold;
+			}
+			.option {
+				margin-left: 1em;
+				white-space: nowrap;
+			}
+		}
+	}
+	.cards-wrapper {
+		display: flex;
+		flex-wrap: wrap;
+	}
+	.pt-checkbox {
+		margin-bottom: 0px;
+	}
+}

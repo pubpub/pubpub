@@ -1,6 +1,6 @@
 import Promise from 'bluebird';
 import validator from 'validator';
-import { User, Collection, Pub, Collaborator, Discussion, CommunityAdmin, Community, Version, PubManager, PubAttribution, VersionPermission, Tag, PubTag, Page } from './models';
+import { User, Collection, Pub, Collaborator, Discussion, CommunityAdmin, Community, Version, PubManager, PubAttribution, VersionPermission, Tag, PubTag, Page, DiscussionChannel, DiscussionChannelParticipant } from './models';
 import { generateCitationHTML } from './utilities';
 
 export const formatAndAuthenticatePub = (pub, loginData, communityAdminData, req, isDraftRoute)=> {
@@ -186,6 +186,13 @@ export const findPub = (req, initialData, isDraftRoute)=> {
 				model: Discussion,
 				as: 'discussions',
 				include: [{ model: User, as: 'author', attributes: ['id', 'fullName', 'avatar', 'slug', 'initials', 'title'] }],
+			},
+			{
+				required: false,
+				separate: true,
+				model: DiscussionChannel,
+				as: 'discussionChannels',
+				include: [{ model: DiscussionChannelParticipant, as: 'participants', include: [{ model: User, as: 'user', attributes: ['id', 'fullName', 'avatar', 'slug', 'initials', 'title'] }] }]
 			},
 			{
 				required: false,

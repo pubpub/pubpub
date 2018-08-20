@@ -74,7 +74,7 @@ class PubOptionsReview extends Component {
 		// 	- Keep everything private from author until outline completed?
 		
 		return (
-			<div className="pub-options-versions-component">
+			<div className="pub-options-review-component">
 				<h1>Review</h1>
 
 				<Button

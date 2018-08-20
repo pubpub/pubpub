@@ -16,6 +16,7 @@ import PubOptionsSocial from 'components/PubOptionsSocial/PubOptionsSocial';
 import PubOptionsSaveVersion from 'components/PubOptionsSaveVersion/PubOptionsSaveVersion';
 import PubOptionsVersions from 'components/PubOptionsVersions/PubOptionsVersions';
 import PubOptionsReview from 'components/PubOptionsReview/PubOptionsReview';
+import PubOptionsDiscussions from 'components/PubOptionsDiscussions/PubOptionsDiscussions';
 
 
 require('./pubOptions.scss');
@@ -42,7 +43,7 @@ const PubOptions = (props)=> {
 	const optionsMode = props.optionsMode;
 	// TODO: Hide based on isManager, and other metrics
 	// TODO: Hide sections if we are not in draft, and there are no sections
-	const modes = ['details', 'attribution', 'versions', 'tags', 'sharing', 'cite', 'DOI', 'review', 'sections', 'social', 'export', 'import', 'analytics', 'delete'];
+	const modes = ['details', 'attribution', 'versions', 'tags', 'sharing', 'cite', 'DOI', 'review', 'discussions', 'sections', 'social', 'export', 'import', 'analytics', 'delete'];
 
 	const defaultChildProps = {
 		communityData: props.communityData,
@@ -132,6 +133,9 @@ const PubOptions = (props)=> {
 					}
 					{optionsMode === 'review' &&
 						<PubOptionsReview key="review" {...defaultChildProps} />
+					}
+					{optionsMode === 'discussions' &&
+						<PubOptionsDiscussions key="discussions" {...defaultChildProps} />
 					}
 				</div>
 			</div>

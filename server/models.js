@@ -222,7 +222,7 @@ const Discussion = sequelize.define('Discussion', {
 	submitHash: { type: Sequelize.TEXT },
 	submitApprovedAt: { type: Sequelize.DATE },
 	isArchived: { type: Sequelize.BOOLEAN },
-	isPublic: { type: Sequelize.BOOLEAN },
+	isPublic: { type: Sequelize.BOOLEAN }, /* TODO: this field is deprecated once discussionChannels exist. Need to migrate isPublic=false to new channel */
 	labels: { type: Sequelize.JSONB },
 	/* Set by Associations */
 	userId: { type: Sequelize.UUID, allowNull: false },
@@ -383,6 +383,25 @@ const PubTag = sequelize.define('PubTag', {
 	tagId: { type: Sequelize.UUID },
 });
 
+const DiscussionChannel = sequelize.define('DiscussionChannel', {
+	id: id,
+	title: { type: Sequelize.TEXT },
+	isPublicView: { type: Sequelize.BOOLEAN },
+	isPublicWrite: { type: Sequelize.BOOLEAN },
+	isCommunityAdminModerated: { type: Sequelize.BOOLEAN },
+	viewHash: { type: Sequelize.STRING },
+	writeHash: { type: Sequelize.STRING },
+	/* Set by Associations */
+	pubId: { type: Sequelize.UUID, allowNull: false },
+	communityId: { type: Sequelize.UUID, allowNull: false },
+});
+
+const DiscussionChannelParticipant = sequelize.define('DiscussionChannelParticipant', {
+	isModerator: { type: Sequelize.BOOLEAN },
+	userId: { type: Sequelize.UUID, allowNull: false },
+	discussionChannelId: { type: Sequelize.UUID, allowNull: false },
+});
+
 /* Communities can have many Admins. Users can admin many communities. */
 User.belongsToMany(Community, { as: 'communities', through: 'CommunityAdmin', foreignKey: 'userId' });
 Community.belongsToMany(User, { as: 'admins', through: 'CommunityAdmin', foreignKey: 'communityId' });
@@ -406,6 +425,10 @@ VersionPermission.belongsTo(User, { onDelete: 'CASCADE', as: 'user', foreignKey:
 /* Pubs have many PubManagers. */
 Pub.hasMany(PubManager, { onDelete: 'CASCADE', as: 'managers', foreignKey: 'pubId' });
 PubManager.belongsTo(User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' });
+
+Pub.hasMany(DiscussionChannel, { onDelete: 'CASCADE', as: 'discussionChannels', foreignKey: 'pubId' });
+DiscussionChannel.hasMany(DiscussionChannelParticipant, { onDelete: 'CASCADE', as: 'participants', foreignKey: 'discussionChannelId' });
+DiscussionChannelParticipant.belongsTo(User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' });
 /* ---------- */
 /* ---------- */
 
@@ -467,6 +490,8 @@ const db = {
 	Tag: Tag,
 	PubTag: PubTag,
 	Page: Page,
+	DiscussionChannel: DiscussionChannel,
+	DiscussionChannelParticipant: DiscussionChannelParticipant,
 };
 
 db.sequelize = sequelize;
