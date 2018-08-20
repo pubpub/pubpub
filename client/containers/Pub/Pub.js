@@ -8,6 +8,7 @@ import PubBody from 'components/PubBodyNew/PubBody';
 import PubOptions from 'components/PubOptions/PubOptions';
 import PubSideToc from 'components/PubSideToc/PubSideToc';
 import PubSideCollaborators from 'components/PubSideCollaborators/PubSideCollaborators';
+import PubSideOptions from 'components/PubSideOptions/PubSideOptions';
 import PubLicense from 'components/PubLicense/PubLicense';
 import PubSectionNav from 'components/PubSectionNav/PubSectionNav';
 import DiscussionList from 'components/DiscussionList/DiscussionList';
@@ -320,6 +321,10 @@ class Pub extends Component {
 		const activeVersion = pubData.activeVersion;
 		const discussions = pubData.discussions || [];
 		const threads = nestDiscussionsToThreads(discussions);
+		const activeDiscussionChannel = pubData.discussionChannels.reduce((prev, curr)=> {
+			if (queryObject.channel === curr.title) { return curr; }
+			return prev;
+		}, undefined);
 
 		/* The activeThread can either be the one selected in state, */
 		/* or one hardcoded in the URL */
@@ -467,6 +472,12 @@ class Pub extends Component {
 
 											{/* Collaborators */}
 											<PubSideCollaborators
+												pubData={pubData}
+												setOptionsMode={this.setOptionsMode}
+											/>
+
+											{/* Quick Options */}
+											<PubSideOptions
 												pubData={pubData}
 												setOptionsMode={this.setOptionsMode}
 											/>

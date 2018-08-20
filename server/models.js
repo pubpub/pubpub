@@ -228,6 +228,7 @@ const Discussion = sequelize.define('Discussion', {
 	userId: { type: Sequelize.UUID, allowNull: false },
 	pubId: { type: Sequelize.UUID, allowNull: false },
 	communityId: { type: Sequelize.UUID, allowNull: false },
+	discussionChannelId: { type: Sequelize.UUID },
 }, {
 	indexes: [
 		{ fields: ['userId'], method: 'BTREE' },

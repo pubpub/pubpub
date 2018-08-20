@@ -188,6 +188,7 @@ export const findPub = (req, initialData, isDraftRoute)=> {
 				include: [{ model: User, as: 'author', attributes: ['id', 'fullName', 'avatar', 'slug', 'initials', 'title'] }],
 			},
 			{
+				// TODO: Need to filter for discussion channels and discussions you have access to.
 				required: false,
 				separate: true,
 				model: DiscussionChannel,

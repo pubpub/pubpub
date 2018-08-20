@@ -21,6 +21,12 @@ const PubHeader = function(props) {
 	// const authors = pubData.collaborators.filter((collaborator)=> {
 	// 	return collaborator.Collaborator.isAuthor;
 	// });
+	const queryObject = props.locationData.query;
+	const activeDiscussionChannel = pubData.discussionChannels.reduce((prev, curr)=> {
+		if (queryObject.channel === curr.title) { return curr; }
+		return prev;
+	}, { title: 'public' });
+
 	const authors = pubData.attributions.filter((attribution)=> {
 		return attribution.isAuthor;
 	});
@@ -191,13 +197,27 @@ const PubHeader = function(props) {
 											<span className="pt-icon-standard pt-icon-lock2" />
 										}
 										<span>{sortedVersionsList[sortedVersionsList.length - 1].id !== activeVersion.id ? 'Updated ' : ''}{dateFormat(pubData.activeVersion.createdAt, 'mmm dd, yyyy')}</span>
+										{/* If is draft, say total number of saved versions */}
+										{pubData.isDraft &&
+											<span> ({pubData.versions.length} Saved Version{pubData.versions.length === 1 ? '' : 's'})</span>
+										}
+
+										{/* If not draft, and newer versions, say numNewerVersions */}
+										{!pubData.isDraft && !!numNewerVersions &&
+											<span> ({numNewerVersions} Newer Version{pubData.versions.length === 1 ? '' : 's'})</span>
+										}
+										
+										{/* If not draft, and no newer versions, say numVersions - 1 Older Versions */}
+										{!pubData.isDraft && !numNewerVersions &&
+											<span> ({pubData.versions.length - 1} Older Version{pubData.versions.length === 1 ? '' : 's'})</span>
+										}
 									</a>
 								}
 								<a
 									href="#discussions"
 								>
 									{/* <span className="pt-icon-standard pt-icon-chat" /> */}
-									{numDiscussions} Discussion{numDiscussions === 1 ? '' : 's'}
+									{numDiscussions} Discussion{numDiscussions === 1 ? '' : 's'} (#{activeDiscussionChannel.title})
 								</a>
 								<a
 									// href={`/pub/${pubData.slug}/collaborators`}
@@ -208,28 +228,6 @@ const PubHeader = function(props) {
 								>
 									{/* <span className="pt-icon-standard pt-icon-team" /> */}
 									{numAttributions} Collaborator{numAttributions === 1 ? '' : 's'}
-								</a>
-								<a
-									// href={`/pub/${pubData.slug}/versions`}
-									onClick={(evt)=> {
-										evt.preventDefault();
-										props.setOptionsMode('versions');
-									}}
-								>
-									{/* If is draft, say total number of saved versions */}
-									{pubData.isDraft &&
-										<span>{pubData.versions.length} Saved Version{pubData.versions.length === 1 ? '' : 's'}</span>
-									}
-
-									{/* If not draft, and newer versions, say numNewerVersions */}
-									{!pubData.isDraft && !!numNewerVersions &&
-										<span>{numNewerVersions} Newer Version{pubData.versions.length === 1 ? '' : 's'}</span>
-									}
-									
-									{/* If not draft, and no newer versions, say numVersions - 1 Older Versions */}
-									{!pubData.isDraft && !numNewerVersions &&
-										<span>{pubData.versions.length - 1} Older Version{pubData.versions.length === 1 ? '' : 's'}</span>
-									}
 								</a>
 							</div>
 						</div>
@@ -243,3 +241,26 @@ const PubHeader = function(props) {
 PubHeader.propTypes = propTypes;
 PubHeader.defaultProps = defaultProps;
 export default PubHeader;
+
+// <a
+// 									// href={`/pub/${pubData.slug}/versions`}
+// 									onClick={(evt)=> {
+// 										evt.preventDefault();
+// 										props.setOptionsMode('versions');
+// 									}}
+// 								>
+// 									{/* If is draft, say total number of saved versions */}
+// 									{pubData.isDraft &&
+// 										<span>{pubData.versions.length} Saved Version{pubData.versions.length === 1 ? '' : 's'}</span>
+// 									}
+
+// 									{/* If not draft, and newer versions, say numNewerVersions */}
+// 									{!pubData.isDraft && !!numNewerVersions &&
+// 										<span>{numNewerVersions} Newer Version{pubData.versions.length === 1 ? '' : 's'}</span>
+// 									}
+									
+// 									{/* If not draft, and no newer versions, say numVersions - 1 Older Versions */}
+// 									{!pubData.isDraft && !numNewerVersions &&
+// 										<span>{pubData.versions.length - 1} Older Version{pubData.versions.length === 1 ? '' : 's'}</span>
+// 									}
+// 								</a>

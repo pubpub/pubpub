@@ -57,6 +57,8 @@ class PubOptionsDiscussions extends Component {
 			Show public write/ public View
 			Show options if you can set options
 		*/
+		// TODO: Hide public options
+		// Only allow options on channels you moderate
 		const channels = [
 			{
 				id: undefined,

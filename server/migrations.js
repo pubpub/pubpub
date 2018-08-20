@@ -350,6 +350,11 @@ new Promise((resolve)=> {
 // 		type: Sequelize.JSONB,
 // 	});
 // })
+// .then(()=> {
+// 	return sequelize.queryInterface.addColumn('Discussions', 'discussionChannelId', {
+// 		type: Sequelize.UUID
+// 	});
+// })
 .catch((err)=> {
 	console.log('Error with Migration', err);
 })
