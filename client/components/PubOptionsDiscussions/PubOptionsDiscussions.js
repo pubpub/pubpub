@@ -172,12 +172,7 @@ class PubOptionsDiscussions extends Component {
 
 	render() {
 		const pubData = this.props.pubData;
-		/* List all discussion channels
-			Show public write/ public View
-			Show options if you can set options
-		*/
-		// TODO: Hide public options
-		// Only allow options on channels you moderate
+		// TODO: Only allow options on channels you moderate
 		const channels = [
 			{
 				id: undefined,
@@ -187,6 +182,11 @@ class PubOptionsDiscussions extends Component {
 				participants: [],
 			},
 			...pubData.discussionChannels
+		];
+		const channelPermissionOptions = [
+			{ value: 'private', title: 'Private', description: 'Private View. Private Write' },
+			{ value: 'restricted', title: 'Restricted', description: 'Public View. Private Write' },
+			{ value: 'public', title: 'Public', description: 'Public View. Public Write' },
 		];
 		return (
 			<div className="pub-options-discussions-component">
@@ -212,56 +212,40 @@ class PubOptionsDiscussions extends Component {
 										#{channel.title}
 									</div>
 									<div className="option">
-										<DropdownButton
-											label={channel.permissions}
-											// icon={items[props.value].icon}
-											isRightAligned={true}
-										>
-											<ul className="pub-options-dropdown pt-menu">
-												<li>
-													<button
-														className={`pt-menu-item pt-popover-dismiss`}
-														onClick={()=> {
-															this.handleChannelUpdate({
-																discussionChannelId: channel.id,
-																permissions: 'private',
-															});
-														}}
-														type="button"
-													>
-														<div className="title">Private</div>
-													</button>
-												</li>
-												<li>
-													<button
-														className={`pt-menu-item pt-popover-dismiss`}
-														onClick={()=> {
-															this.handleChannelUpdate({
-																discussionChannelId: channel.id,
-																permissions: 'restricted',
-															});
-														}}
-														type="button"
-													>
-														<div className="title">Restricted</div>
-													</button>
-												</li>
-												<li>
-													<button
-														className={`pt-menu-item pt-popover-dismiss`}
-														onClick={()=> {
-															this.handleChannelUpdate({
-																discussionChannelId: channel.id,
-																permissions: 'public',
-															});
-														}}
-														type="button"
-													>
-														<div className="title">Public</div>
-													</button>
-												</li>
-											</ul>
-										</DropdownButton>
+										{!channel.id &&
+											<span>Public</span>
+										}
+
+										{/* Permissions Dropdown for channels other than #public */}
+										{channel.id &&
+											<DropdownButton
+												label={channel.permissions}
+												// icon={items[props.value].icon}
+												isRightAligned={true}
+											>
+												<ul className="channel-permissions-dropdown pt-menu">
+													{channelPermissionOptions.map((option)=> {
+														return (
+															<li key={`permissions-${option.value}`}>
+																<button
+																	className="pt-menu-item pt-popover-dismiss"
+																	onClick={()=> {
+																		this.handleChannelUpdate({
+																			discussionChannelId: channel.id,
+																			permissions: option.value,
+																		});
+																	}}
+																	type="button"
+																>
+																	<div className="title">{option.title}</div>
+																	<div className="description">{option.description}</div>
+																</button>
+															</li>
+														);
+													})}
+												</ul>
+											</DropdownButton>
+										}
 									</div>
 								</div>
 								<div>
@@ -281,6 +265,7 @@ class PubOptionsDiscussions extends Component {
 															isCommunityAdminModerated: evt.target.checked,
 														});
 													}}
+													disabled={!channel.id}
 												>
 													Can Moderate
 												</Checkbox>
@@ -327,25 +312,27 @@ class PubOptionsDiscussions extends Component {
 											);
 										})}
 
-										{/* Card for adding new user to version permissions */}
-										<PubOptionsSharingCard
-											content={
-												<UserAutocomplete
-													onSelect={(user)=> {
-														return this.handleChannelParticipantAdd({
-															userId: user.id,
-															discussionChannelId: channel.id,
-														});
-													}}
-													allowCustomUser={false} // Eventually use this for emails
-													placeholder={`Add participant to #${channel.title}...`}
-													usedUserIds={channel.participants.map((item)=> {
-														return item.user.id;
-													})}
-												/>
-											}
-											isAddCard={true}
-										/>
+										{/* Card for adding new user to channel. Not used for #public */}
+										{channel.id &&
+											<PubOptionsSharingCard
+												content={
+													<UserAutocomplete
+														onSelect={(user)=> {
+															return this.handleChannelParticipantAdd({
+																userId: user.id,
+																discussionChannelId: channel.id,
+															});
+														}}
+														allowCustomUser={false} // Eventually use this for emails
+														placeholder={`Add participant to #${channel.title}...`}
+														usedUserIds={channel.participants.map((item)=> {
+															return item.user.id;
+														})}
+													/>
+												}
+												isAddCard={true}
+											/>
+										}
 									</div>
 								</div>
 							</div>

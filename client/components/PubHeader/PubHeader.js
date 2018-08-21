@@ -206,7 +206,7 @@ const PubHeader = function(props) {
 										{!pubData.isDraft && !!numNewerVersions &&
 											<span> ({numNewerVersions} Newer Version{pubData.versions.length === 1 ? '' : 's'})</span>
 										}
-										
+
 										{/* If not draft, and no newer versions, say numVersions - 1 Older Versions */}
 										{!pubData.isDraft && !numNewerVersions &&
 											<span> ({pubData.versions.length - 1} Older Version{pubData.versions.length === 1 ? '' : 's'})</span>

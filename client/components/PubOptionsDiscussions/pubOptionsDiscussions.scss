@@ -27,4 +27,21 @@
 	.pt-checkbox {
 		margin-bottom: 0px;
 	}
+	.dropdown-button.pt-button {
+		text-transform: capitalize;
+	}
+}
+
+.channel-permissions-dropdown {
+	.pt-menu-item {
+		flex-wrap: wrap;
+	}
+	.title {
+		font-weight: bold;
+		width: 100%;
+	}
+	.description {
+		font-size: 12px;
+		margin-top: -5px;
+	}
 }
