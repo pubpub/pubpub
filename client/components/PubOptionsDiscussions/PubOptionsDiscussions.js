@@ -4,6 +4,7 @@ import { Button, Checkbox } from '@blueprintjs/core';
 import PubOptionsSharingCard from 'components/PubOptionsSharingCard/PubOptionsSharingCard';
 import UserAutocomplete from 'components/UserAutocomplete/UserAutocomplete';
 import Avatar from 'components/Avatar/Avatar';
+import DropdownButton from 'components/DropdownButton/DropdownButton';
 import { apiFetch } from 'utilities';
 
 require('./pubOptionsDiscussions.scss');
@@ -19,33 +20,153 @@ class PubOptionsDiscussions extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			pubData: props.pubData,
 			newChannelTitle: '',
 		};
-		this.handleAddChannel = this.handleAddChannel.bind(this);
+		this.handleChannelAdd = this.handleChannelAdd.bind(this);
+		this.handleChannelUpdate = this.handleChannelUpdate.bind(this);
+		this.handleChannelParticipantAdd = this.handleChannelParticipantAdd.bind(this);
+		this.handleChannelParticipantDelete = this.handleChannelParticipantDelete.bind(this);
 	}
 
-	handleAddChannel(evt) {
+	handleChannelAdd(evt) {
 		evt.preventDefault();
 		return apiFetch('/api/discussionChannels', {
 			method: 'POST',
 			body: JSON.stringify({
 				title: this.state.newChannelTitle,
-				pubId: this.props.pubData.id,
+				pubId: this.state.pubData.id,
 				communityId: this.props.communityData.id,
 			})
 		})
 		.then((newDiscussionChannel)=> {
-			this.setState({ newChannelTitle: '' });
-			this.props.setPubData({
-				...this.props.pubData,
+			const newPubData = {
+				...this.state.pubData,
 				discussionChannels: [
 					newDiscussionChannel,
-					...this.props.pubData.discussionChannels
+					...this.state.pubData.discussionChannels
 				],
+			};
+			this.setState({
+				newChannelTitle: '',
+				pubData: newPubData,
 			});
+			this.props.setPubData(newPubData);
 		})
 		.catch((err)=> {
 			console.error('Error creating discussion channel', err);
+		});
+	}
+
+	handleChannelUpdate(updatedChannelObject) {
+		return apiFetch('/api/discussionChannels', {
+			method: 'PUT',
+			body: JSON.stringify({
+				...updatedChannelObject,
+				pubId: this.state.pubData.id,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then((newDiscussionChannelData)=> {
+			const newPubData = {
+				...this.state.pubData,
+				discussionChannels: this.state.pubData.discussionChannels.map((channel)=> {
+					if (channel.id !== updatedChannelObject.discussionChannelId) { return channel; }
+					return {
+						...channel,
+						...newDiscussionChannelData,
+					};
+				})
+			};
+			this.setState({ pubData: newPubData });
+			this.props.setPubData(newPubData);
+		})
+		.catch((err)=> {
+			console.error('Error updated discussion channel', err);
+		});
+	}
+
+	handleChannelParticipantAdd(newChannelParticipant) {
+		return apiFetch('/api/discussionChannelParticipants', {
+			method: 'POST',
+			body: JSON.stringify({
+				...newChannelParticipant,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then((result)=> {
+			const newPubData = {
+				...this.state.pubData,
+				discussionChannels: this.state.pubData.discussionChannels.map((channel)=> {
+					if (channel.id !== newChannelParticipant.discussionChannelId) { return channel; }
+					return {
+						...channel,
+						participants: [
+							...channel.participants,
+							result
+						]
+					};
+				})
+			};
+			this.setState({ pubData: newPubData });
+			this.props.setPubData(newPubData);
+		});
+	}
+
+	handleChannelParticipantUpdate(channelParticipantUpdates) {
+		const newPubData = {
+			...this.state.pubData,
+			discussionChannels: this.state.pubData.discussionChannels.map((channel)=> {
+				return {
+					...channel,
+					participants: channel.participants.map((participant)=> {
+						if (participant.id !== channelParticipantUpdates.discussionChannelParticipantId) { return participant; }
+						return {
+							...participant,
+							...channelParticipantUpdates
+						};
+					})
+				};
+			})
+		};
+		this.setState({ pubData: newPubData });
+		return apiFetch('/api/discussionChannelParticipants', {
+			method: 'PUT',
+			body: JSON.stringify({
+				...channelParticipantUpdates,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then(()=> {
+			// this.setState({ isLoading: false });
+			this.props.setPubData(newPubData);
+		});
+	}
+
+	handleChannelParticipantDelete(channelId, channelParticipantId) {
+		const newPubData = {
+			...this.state.pubData,
+			discussionChannels: this.state.pubData.discussionChannels.map((channel)=> {
+				return {
+					...channel,
+					participants: channel.participants.filter((participant)=> {
+						return participant.id !== channelParticipantId;
+					})
+				};
+			})
+		};
+		this.setState({ pubData: newPubData });
+		return apiFetch('/api/discussionChannelParticipants', {
+			method: 'DELETE',
+			body: JSON.stringify({
+				discussionChannelId: channelId,
+				discussionChannelParticipantId: channelParticipantId,
+				communityId: this.props.communityData.id,
+			})
+		})
+		.then(()=> {
+			// this.setState({ isLoading: false });
+			this.props.setPubData(newPubData);
 		});
 	}
 
@@ -70,7 +191,7 @@ class PubOptionsDiscussions extends Component {
 		return (
 			<div className="pub-options-discussions-component">
 				<h1>Discussion Channels</h1>
-				<form onSubmit={this.handleAddChannel}>
+				<form onSubmit={this.handleChannelAdd}>
 					<input
 						type="text"
 						className="pt-input pt-fill"
@@ -91,7 +212,56 @@ class PubOptionsDiscussions extends Component {
 										#{channel.title}
 									</div>
 									<div className="option">
-										{channel.permissions}
+										<DropdownButton
+											label={channel.permissions}
+											// icon={items[props.value].icon}
+											isRightAligned={true}
+										>
+											<ul className="pub-options-dropdown pt-menu">
+												<li>
+													<button
+														className={`pt-menu-item pt-popover-dismiss`}
+														onClick={()=> {
+															this.handleChannelUpdate({
+																discussionChannelId: channel.id,
+																permissions: 'private',
+															});
+														}}
+														type="button"
+													>
+														<div className="title">Private</div>
+													</button>
+												</li>
+												<li>
+													<button
+														className={`pt-menu-item pt-popover-dismiss`}
+														onClick={()=> {
+															this.handleChannelUpdate({
+																discussionChannelId: channel.id,
+																permissions: 'restricted',
+															});
+														}}
+														type="button"
+													>
+														<div className="title">Restricted</div>
+													</button>
+												</li>
+												<li>
+													<button
+														className={`pt-menu-item pt-popover-dismiss`}
+														onClick={()=> {
+															this.handleChannelUpdate({
+																discussionChannelId: channel.id,
+																permissions: 'public',
+															});
+														}}
+														type="button"
+													>
+														<div className="title">Public</div>
+													</button>
+												</li>
+											</ul>
+										</DropdownButton>
 									</div>
 								</div>
 								<div>
@@ -106,9 +276,9 @@ class PubOptionsDiscussions extends Component {
 												<Checkbox
 													checked={channel.isCommunityAdminModerated}
 													onChange={(evt)=> {
-														this.handleVersionUpdate({
-															versionId: version.id,
-															isCommunityAdminShared: evt.target.checked,
+														this.handleChannelUpdate({
+															discussionChannelId: channel.id,
+															isCommunityAdminModerated: evt.target.checked,
 														});
 													}}
 												>
@@ -130,17 +300,29 @@ class PubOptionsDiscussions extends Component {
 														<Avatar width={25} userInitials={participant.user.initials} userAvatar={participant.user.avatar} />,
 														<span>{participant.user.fullName}</span>
 													]}
-													options={(
+													options={[
+														<Checkbox
+															checked={participant.isModerator}
+															onChange={(evt)=> {
+																this.handleChannelParticipantUpdate({
+																	discussionChannelParticipantId: participant.id,
+																	discussionChannelId: channel.id,
+																	isModerator: evt.target.checked,
+																});
+															}}
+														>
+															Can Moderate
+														</Checkbox>,
 														<button
 															className="pt-button pt-minimal pt-small"
 															type="button"
 															onClick={()=> {
-																this.handleVersionPermissionDelete(versionPermission.id || null);
+																this.handleChannelParticipantDelete(channel.id, participant.id);
 															}}
 														>
 															<span className="pt-icon-standard pt-icon-small-cross" />
 														</button>
-													)}
+													]}
 												/>
 											);
 										})}
@@ -150,9 +332,9 @@ class PubOptionsDiscussions extends Component {
 											content={
 												<UserAutocomplete
 													onSelect={(user)=> {
-														return this.handleVersionPermissionAdd({
+														return this.handleChannelParticipantAdd({
 															userId: user.id,
-															versionId: null,
+															discussionChannelId: channel.id,
 														});
 													}}
 													allowCustomUser={false} // Eventually use this for emails

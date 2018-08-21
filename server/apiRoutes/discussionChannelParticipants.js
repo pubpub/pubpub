@@ -45,7 +45,7 @@ app.post('/api/discussionChannelParticipants', (req, res)=> {
 			]
 		});
 	})
-	.then(([newDiscussionChannelParticipantData])=> {
+	.then((newDiscussionChannelParticipantData)=> {
 		return res.status(201).json(newDiscussionChannelParticipantData);
 	})
 	.catch((err)=> {

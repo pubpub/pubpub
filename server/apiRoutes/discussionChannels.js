@@ -90,7 +90,7 @@ app.put('/api/discussionChannels', (req, res)=> {
 		}
 
 		return DiscussionChannel.update(updatedDiscussionChannel, {
-			where: { id: req.body.pubAttributionId },
+			where: { id: req.body.discussionChannelId },
 		});
 	})
 	.then(()=> {
