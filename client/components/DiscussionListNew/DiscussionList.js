@@ -12,16 +12,19 @@ require('./discussionList.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
+	locationData: PropTypes.object.isRequired,
 	onPreviewClick: PropTypes.func,
-	mode: PropTypes.string,
+	// mode: PropTypes.string,
 	onLabelsSave: PropTypes.func.isRequired,
-	showAll: PropTypes.bool,
+	onPostDiscussion: PropTypes.func.isRequired,
+	getHighlightContent: PropTypes.func.isRequired,
+	// showAll: PropTypes.bool,
 };
 
 const defaultProps = {
 	onPreviewClick: undefined,
-	mode: undefined,
-	showAll: false,
+	// mode: undefined,
+	// showAll: false,
 };
 
 class DiscussionList extends Component {
@@ -32,30 +35,33 @@ class DiscussionList extends Component {
 			filteredLabels: [],
 			filteredAuthors: [],
 			sortMode: 'newestThread', // newestThread, oldestThread, newestReply, oldestReply, mostReplies, leastReplies
-			pageOffset: 0,
+			newThreadLoading: false,
+			// pageOffset: 0,
 		};
 		this.setDiscussionsMode = this.setDiscussionsMode.bind(this);
 		this.setArchivedMode = this.setArchivedMode.bind(this);
+		// this.handlePutLabels = this.handlePutLabels.bind(this);
 		this.toggleFilteredLabel = this.toggleFilteredLabel.bind(this);
 		this.toggleFilteredAuthor = this.toggleFilteredAuthor.bind(this);
 		this.setSortMode = this.setSortMode.bind(this);
 		this.filterAndSortThreads = this.filterAndSortThreads.bind(this);
-		this.handlePreviousPage = this.handlePreviousPage.bind(this);
-		this.handleNextPage = this.handleNextPage.bind(this);
-		this.setOffset = this.setOffset.bind(this);
+		this.handlePostNewThread = this.handlePostNewThread.bind(this);
+		// this.handlePreviousPage = this.handlePreviousPage.bind(this);
+		// this.handleNextPage = this.handleNextPage.bind(this);
+		// this.setOffset = this.setOffset.bind(this);
 	}
 
 	setDiscussionsMode() {
 		this.setState({
 			isArchivedMode: false,
-			pageOffset: 0,
+			// pageOffset: 0,
 		});
 	}
 
 	setArchivedMode() {
 		this.setState({
 			isArchivedMode: true,
-			pageOffset: 0,
+			// pageOffset: 0,
 		});
 	}
 
@@ -63,12 +69,20 @@ class DiscussionList extends Component {
 		this.setState({ sortMode: sortSlug });
 	}
 
-	setOffset(offset) {
-		this.setState({
-			pageOffset: offset,
+	// setOffset(offset) {
+	// 	this.setState({
+	// 		pageOffset: offset,
+	// 	});
+	// 	const top = document.getElementsByClassName('filter-bar')[0].getBoundingClientRect().top;
+	// 	window.scrollBy(0, top);
+	// }
+
+	handlePostNewThread(discussionObject) {
+		this.setState({ newThreadLoading: true });
+		return this.props.onPostDiscussion(discussionObject)
+		.then(()=> {
+			this.setState({ newThreadLoading: false });
 		});
-		const top = document.getElementsByClassName('filter-bar')[0].getBoundingClientRect().top;
-		window.scrollBy(0, top);
 	}
 
 	toggleFilteredAuthor(authorId) {
@@ -141,38 +155,38 @@ class DiscussionList extends Component {
 		});
 	}
 
-	calculationPagination(current, last) {
-		const delta = 1;
-		const left = current - delta;
-		const right = current + delta + 1;
-		const range = [];
-		const rangeWithDots = [];
-		let l;
+	// calculationPagination(current, last) {
+	// 	const delta = 1;
+	// 	const left = current - delta;
+	// 	const right = current + delta + 1;
+	// 	const range = [];
+	// 	const rangeWithDots = [];
+	// 	let l;
 
-		for (let index = 1; index <= last; index += 1) {
-			if (index === 1 || index === last || (index >= left && index < right)) {
-				range.push(index);
-			}
-		}
+	// 	for (let index = 1; index <= last; index += 1) {
+	// 		if (index === 1 || index === last || (index >= left && index < right)) {
+	// 			range.push(index);
+	// 		}
+	// 	}
 
-		range.forEach((index)=> {
-			if (l && index - l !== 1) {
-				rangeWithDots.push('...');
-			}
-			rangeWithDots.push(index);
-			l = index;
-		});
+	// 	range.forEach((index)=> {
+	// 		if (l && index - l !== 1) {
+	// 			rangeWithDots.push('...');
+	// 		}
+	// 		rangeWithDots.push(index);
+	// 		l = index;
+	// 	});
 
-		return rangeWithDots;
-	}
+	// 	return rangeWithDots;
+	// }
 
-	handlePreviousPage() {
-		this.setOffset(Math.max(this.state.pageOffset - 20, 0));
-	}
+	// handlePreviousPage() {
+	// 	this.setOffset(Math.max(this.state.pageOffset - 20, 0));
+	// }
 
-	handleNextPage() {
-		this.setOffset(this.state.pageOffset + 20);
-	}
+	// handleNextPage() {
+	// 	this.setOffset(this.state.pageOffset + 20);
+	// }
 
 	render() {
 		const pubData = this.props.pubData;
@@ -186,17 +200,13 @@ class DiscussionList extends Component {
 		const threadsToShow = this.state.isArchivedMode ? archivedThreads : activeThreads;
 
 		// const usePagination = (!this.state.isArchivedMode && activeThreads.length > 20) || (this.state.isArchivedMode && archivedThreads.length > 20);
-		const numPages = this.props.showAll ? 1 : Math.floor(threadsToShow.length / 20) + 1;
-		const usePagination = numPages > 1;
-		const currentPage = Math.floor(this.state.pageOffset / 20) + 1;
+		// const numPages = this.props.showAll ? 1 : Math.floor(threadsToShow.length / 20) + 1;
+		// const usePagination = numPages > 1;
+		// const currentPage = Math.floor(this.state.pageOffset / 20) + 1;
 		return (
 			<div className="discussion-list-component">
 				<div className="discussion-header">
-					<h2>
-						{!this.props.mode &&
-							<span>Discussions</span>
-						}
-					</h2>
+					<h2>Discussions</h2>
 					<div className="pt-select pt-small">
 						<select>
 							<option value="public">public</option>
@@ -205,11 +215,11 @@ class DiscussionList extends Component {
 				</div>
 
 				<DiscussionInput
-					// initialContent={this.props.initialContent}
-					handleSubmit={()=>{}}
+					initialContent={undefined}
+					handleSubmit={this.handlePostNewThread}
 					showTitle={true}
-					submitIsLoading={false}
-					getHighlightContent={()=>{}}
+					submitIsLoading={this.state.newThreadLoading}
+					getHighlightContent={this.props.getHighlightContent}
 					inputKey="bottom-general"
 				/>
 
@@ -225,7 +235,7 @@ class DiscussionList extends Component {
 						<button className={`pt-button pt-minimal ${this.state.isArchivedMode ? 'active' : ''}`} onClick={this.setArchivedMode}>{archivedThreads.length} Archived</button>
 					</div>
 					<div className="right">
-						<Popover
+						{/* <Popover
 							content={
 								<DiscussionAuthorsList
 									threadsData={threads || []}
@@ -241,6 +251,7 @@ class DiscussionList extends Component {
 						>
 							<div className={`pt-button pt-minimal ${this.state.filteredAuthors.length ? 'active' : ''}`}>Authors</div>
 						</Popover>
+						*/}
 						<Popover
 							content={
 								<DiscussionLabelsList
@@ -292,7 +303,7 @@ class DiscussionList extends Component {
 					/>
 				}
 
-				{/*!this.state.isArchivedMode && activeThreads.map((thread)=> {
+				{/* !this.state.isArchivedMode && activeThreads.map((thread)=> {
 					return (
 						<DiscussionPreview
 							key={`thread-${thread[0].id}`}
@@ -302,8 +313,8 @@ class DiscussionList extends Component {
 							onPreviewClick={this.props.onPreviewClick}
 						/>
 					);
-				})*/}
-				{/*this.state.isArchivedMode && archivedThreads.map((thread)=> {
+				}) */}
+				{/* this.state.isArchivedMode && archivedThreads.map((thread)=> {
 					return (
 						<DiscussionPreview
 							key={`thread-${thread[0].id}`}
@@ -313,11 +324,8 @@ class DiscussionList extends Component {
 							onPreviewClick={this.props.onPreviewClick}
 						/>
 					);
-				})*/}
-				{threadsToShow.filter((item, index)=> {
-					if (!usePagination) { return true; }
-					return index >= this.state.pageOffset && index < this.state.pageOffset + 20;
-				}).map((thread)=> {
+				}) */}
+				{threadsToShow.map((thread)=> {
 					return (
 						<DiscussionPreview
 							key={`thread-${thread[0].id}`}
@@ -329,7 +337,7 @@ class DiscussionList extends Component {
 					);
 				})}
 
-				{usePagination &&
+				{/* usePagination &&
 					<div className="pagination-bar">
 						<div className="pt-button-group pt-minimal">
 							{!!this.state.pageOffset &&
@@ -365,7 +373,7 @@ class DiscussionList extends Component {
 							}
 						</div>
 					</div>
-				}
+				*/}
 			</div>
 		);
 	}

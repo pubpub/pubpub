@@ -17,8 +17,8 @@ const propTypes = {
 	onClose: PropTypes.func.isRequired,
 	getHighlightContent: PropTypes.func.isRequired,
 	onPostDiscussion: PropTypes.func.isRequired,
-	onPutDiscussion: PropTypes.func.isRequired,
-	onPublish: PropTypes.func.isRequired,
+	// onPutDiscussion: PropTypes.func.isRequired,
+	// onPublish: PropTypes.func.isRequired,
 	postDiscussionIsLoading: PropTypes.bool.isRequired,
 	postVersionIsLoading: PropTypes.bool.isRequired,
 	initialContent: PropTypes.object,
@@ -51,8 +51,8 @@ class DiscussionViewer extends Component {
 
 	handleNewDiscussionSubmit(replyObject) {
 		this.props.onPostDiscussion({
-			userId: this.props.loginData.id,
-			pubId: this.props.pubData.id,
+			// userId: this.props.loginData.id,
+			// pubId: this.props.pubData.id,
 			title: replyObject.title,
 			content: replyObject.content,
 			text: replyObject.text,

@@ -51,10 +51,14 @@ class DiscussionInput extends Component {
 	componentWillReceiveProps(nextProps) {
 		if (this.props.submitIsLoading && !nextProps.submitIsLoading) {
 			this.setState({
-				key: new Date().getTime()
+				key: new Date().getTime(),
+				title: '',
+				body: '',
+				submitDisabled: true,
 			});
 		}
 	}
+
 	onTitleChange(evt) {
 		this.setState({ title: evt.target.value });
 	}

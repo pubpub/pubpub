@@ -11,7 +11,7 @@ import PubSideCollaborators from 'components/PubSideCollaborators/PubSideCollabo
 import PubSideOptions from 'components/PubSideOptions/PubSideOptions';
 import PubLicense from 'components/PubLicense/PubLicense';
 import PubSectionNav from 'components/PubSectionNav/PubSectionNav';
-import DiscussionList from 'components/DiscussionList/DiscussionList';
+import DiscussionList from 'components/DiscussionListNew/DiscussionList';
 import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
 import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import { apiFetch, hydrateWrapper, getFirebaseConfig, nestDiscussionsToThreads, getRandomColor, generateHash } from 'utilities';
@@ -49,6 +49,7 @@ class Pub extends Component {
 				...this.props.pubData,
 				sectionsData: this.props.pubData.isDraft ? [{ id: '', order: 0, title: 'Introduction' }] : undefined
 			},
+			locationData: this.props.locationData,
 			activeCollaborators: [this.localUser],
 			optionsMode: undefined,
 			collabStatus: 'connecting',
@@ -267,6 +268,8 @@ class Pub extends Component {
 			method: 'POST',
 			body: JSON.stringify({
 				...discussionObject,
+				userId: this.props.loginData.id,
+				pubId: this.props.pubData.id,
 				communityId: this.props.communityData.id,
 			})
 		})
@@ -416,118 +419,119 @@ class Pub extends Component {
 						/>
 					}
 
-					{!mode &&
-						<div>
-							<div className="container pub">
-								<div className="row">
-									<div className="col-12 pub-columns">
-										<div className="main-content">
-											<PubBody
-												onRef={this.handleEditorRef}
-												isDraft={pubData.isDraft}
-												versionId={activeVersion && activeVersion.id}
-												sectionId={sectionId}
-												content={activeContent}
-												threads={threads}
-												slug={pubData.slug}
-												highlights={this.state.docReadyForHighlights ? highlights : []}
-												hoverBackgroundColor={this.props.communityData.accentMinimalColor}
-												setActiveThread={this.setActiveThread}
-												onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
+					<div className="container pub">
+						<div className="row">
+							<div className="col-12 pub-columns">
+								<div className="main-content">
+									<PubBody
+										onRef={this.handleEditorRef}
+										isDraft={pubData.isDraft}
+										versionId={activeVersion && activeVersion.id}
+										sectionId={sectionId}
+										content={activeContent}
+										threads={threads}
+										slug={pubData.slug}
+										highlights={this.state.docReadyForHighlights ? highlights : []}
+										hoverBackgroundColor={this.props.communityData.accentMinimalColor}
+										setActiveThread={this.setActiveThread}
+										onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
 
-												// Props from CollabEditor
-												editorKey={`${this.props.pubData.editorKey}${sectionId ? '/' : ''}${sectionId || ''}`}
-												isReadOnly={!pubData.isDraft || (!pubData.isManager && !pubData.isDraftEditor)}
-												clientData={this.state.activeCollaborators[0]}
-												onClientChange={this.handleClientChange}
-												onStatusChange={this.handleStatusChange}
-												menuWrapperRefNode={this.state.menuWrapperRefNode}
-											/>
+										// Props from CollabEditor
+										editorKey={`${this.props.pubData.editorKey}${sectionId ? '/' : ''}${sectionId || ''}`}
+										isReadOnly={!pubData.isDraft || (!pubData.isManager && !pubData.isDraftEditor)}
+										clientData={this.state.activeCollaborators[0]}
+										onClientChange={this.handleClientChange}
+										onStatusChange={this.handleStatusChange}
+										menuWrapperRefNode={this.state.menuWrapperRefNode}
+									/>
 
-											{/* Prev/Content/Next Buttons */}
-											{hasSections &&
-												<PubSectionNav
-													pubData={pubData}
-													queryObject={queryObject}
-													hasSections={hasSections}
-													sectionId={sectionId}
-													setOptionsMode={this.setOptionsMode}
-												/>
-											}
+									{/* Prev/Content/Next Buttons */}
+									{hasSections &&
+										<PubSectionNav
+											pubData={pubData}
+											queryObject={queryObject}
+											hasSections={hasSections}
+											sectionId={sectionId}
+											setOptionsMode={this.setOptionsMode}
+										/>
+									}
 
-											{/* License */}
-											{!pubData.isDraft &&
-												<PubLicense />
-											}
-										</div>
-										<div className="side-content">
-											{/* Table of Contents */}
-											<PubSideToc
-												pubData={pubData}
-												locationData={this.props.locationData}
-												setOptionsMode={this.setOptionsMode}
-												editorRefNode={this.state.editorRefNode}
-												activeContent={activeContent}
-											/>
+									{/* License */}
+									{!pubData.isDraft &&
+										<PubLicense />
+									}
+								</div>
+								<div className="side-content">
+									{/* Table of Contents */}
+									<PubSideToc
+										pubData={pubData}
+										locationData={this.props.locationData}
+										setOptionsMode={this.setOptionsMode}
+										editorRefNode={this.state.editorRefNode}
+										activeContent={activeContent}
+									/>
 
-											{/* Collaborators */}
-											<PubSideCollaborators
-												pubData={pubData}
-												setOptionsMode={this.setOptionsMode}
-											/>
+									{/* Collaborators */}
+									<PubSideCollaborators
+										pubData={pubData}
+										setOptionsMode={this.setOptionsMode}
+									/>
 
-											{/* Quick Options */}
-											<PubSideOptions
-												pubData={pubData}
-												setOptionsMode={this.setOptionsMode}
-											/>
-										</div>
-									</div>
+									{/* Quick Options */}
+									<PubSideOptions
+										pubData={pubData}
+										setOptionsMode={this.setOptionsMode}
+									/>
 								</div>
 							</div>
-							<div id="discussions" className="discussions">
-								<div className="container pub">
-									<div className="row">
-										<div className="col-12">
-											<DiscussionList
-												pubData={pubData}
-												onPreviewClick={this.setActiveThread}
-												onLabelsSave={this.handlePutLabels}
-												showAll={queryObject.all}
-											/>
-										</div>
-									</div>
-								</div>
-							</div>
-							<DiscussionViewer
-								pubData={pubData}
-								loginData={this.props.loginData}
-								locationData={this.props.locationData}
-								communityData={this.props.communityData}
-								activeThreadNumber={this.state.activeThreadNumber}
-								activeThreadNode={this.state.activeThreadNode}
-								onClose={this.closeThreadOverlay}
-								getHighlightContent={this.getHighlightContent}
-								onPostDiscussion={this.handlePostDiscussion}
-								onPutDiscussion={this.handlePutDiscussion}
-								postDiscussionIsLoading={this.state.postDiscussionIsLoading}
-								initialContent={this.state.initialDiscussionContent}
-							/>
-							<PubOptions
-								communityData={this.props.communityData}
-								pubData={pubData}
-								loginData={loginData}
-								locationData={this.props.locationData}
-								firebaseRef={this.firebaseRef}
-								editorRefNode={this.state.editorRefNode}
-								optionsMode={this.state.optionsMode}
-								setOptionsMode={this.setOptionsMode}
-								setPubData={this.setPubData}
-							/>
 						</div>
-					}
+					</div>
+					<div id="discussions" className="discussions">
+						<div className="container pub">
+							<div className="row">
+								<div className="col-12">
+									<DiscussionList
+										pubData={pubData}
+										locationData={this.state.locationData}
+										onPreviewClick={this.setActiveThread}
+										onLabelsSave={this.handlePutLabels}
+										onPostDiscussion={this.handlePostDiscussion}
+										getHighlightContent={this.getHighlightContent}
+										// showAll={queryObject.all}
+									/>
+								</div>
+							</div>
+						</div>
+					</div>
 
-					{mode === 'discussions' &&
+					{/* Components that render overlays */}
+					<DiscussionViewer
+						pubData={pubData}
+						loginData={this.props.loginData}
+						locationData={this.props.locationData}
+						communityData={this.props.communityData}
+						activeThreadNumber={this.state.activeThreadNumber}
+						activeThreadNode={this.state.activeThreadNode}
+						onClose={this.closeThreadOverlay}
+						getHighlightContent={this.getHighlightContent}
+						onPostDiscussion={this.handlePostDiscussion}
+						onPutDiscussion={this.handlePutDiscussion}
+						postDiscussionIsLoading={this.state.postDiscussionIsLoading}
+						initialContent={this.state.initialDiscussionContent}
+					/>
+					<PubOptions
+						communityData={this.props.communityData}
+						pubData={pubData}
+						loginData={loginData}
+						locationData={this.props.locationData}
+						firebaseRef={this.firebaseRef}
+						editorRefNode={this.state.editorRefNode}
+						optionsMode={this.state.optionsMode}
+						setOptionsMode={this.setOptionsMode}
+						setPubData={this.setPubData}
+					/>
+
+					{/* mode === 'discussions' &&
 						<div className="container pub mode-content">
 							<div className="row">
 								<div className="col-12">
@@ -557,7 +561,7 @@ class Pub extends Component {
 								</div>
 							</div>
 						</div>
-					}
+					*/}
 				</PageWrapper>
 			</div>
 		);

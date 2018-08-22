@@ -18,7 +18,7 @@ app.get(['/pub/:slug', '/pub/:slug/content/:sectionId', '/pub/:slug/draft', '/pu
 
 	const isDraftRoute = req.path.indexOf(`/pub/${req.params.slug}/draft`) === 0;
 	// const acceptedModes = ['collaborators', 'versions', 'invite', 'discussions', 'contents'];
-	const acceptedModes = ['discussions'];
+	const acceptedModes = []; // TODO: remove all mode content from pub.js and Pub.js
 	if (req.params.mode && acceptedModes.indexOf(req.params.mode) === -1) { return next(); }
 
 

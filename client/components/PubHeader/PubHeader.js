@@ -37,8 +37,8 @@ const PubHeader = function(props) {
 		backgroundStyle.backgroundImage = `url("${resizedBackground}")`;
 		backgroundStyle.color = 'white';
 	}
-	const mode = props.locationData.params.mode;
-	const subMode = props.locationData.params.subMode;
+	// const mode = props.locationData.params.mode;
+	// const subMode = props.locationData.params.subMode;
 	const activeVersion = pubData.activeVersion;
 	const sortedVersionsList = pubData.versions.sort((foo, bar)=>{
 		if (foo.createdAt < bar.createdAt) { return 1; }
@@ -57,7 +57,7 @@ const PubHeader = function(props) {
 	const numAttributions = pubData.attributions.length;
 
 	return (
-		<div className={`pub-header-component ${mode ? 'mode' : ''}`} style={backgroundStyle}>
+		<div className="pub-header-component" style={backgroundStyle}>
 			<div className={`wrapper ${useHeaderImage ? 'dim' : ''}`}>
 				<div className="container pub">
 					<div className="row">
@@ -121,9 +121,7 @@ const PubHeader = function(props) {
 								</div>
 							</div>
 
-							{!mode &&
-								<h1>{pubData.title}</h1>
-							}
+							<h1>{pubData.title}</h1>
 							{/*<h1>
 								<EditableText
 									placeholder="Add a Pub Title"
@@ -137,23 +135,6 @@ const PubHeader = function(props) {
 								/>
 							</h1>*/}
 
-							{mode &&
-								<a href={`/pub/${pubData.slug}`}><h1>{pubData.title}</h1></a>
-							}
-							{mode &&
-								<ul className="pt-breadcrumbs">
-									<li><a className="pt-breadcrumb" href={`/pub/${pubData.slug}`}>Pub</a></li>
-									{!subMode &&
-										<li><span className="pt-breadcrumb">{mode}</span></li>
-									}
-									{subMode &&
-										<li><a className="pt-breadcrumb" href={`/pub/${pubData.slug}/${mode}`}>{mode}</a></li>
-									}
-									{subMode &&
-										<li><span className="pt-breadcrumb">Thread #{subMode}</span></li>
-									}
-								</ul>
-							}
 							{pubData.description &&
 								<div className="description">{pubData.description}</div>
 							}

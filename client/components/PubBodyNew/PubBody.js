@@ -144,7 +144,7 @@ class PubBody extends Component {
 							onStatusChange={this.props.onStatusChange}
 						/>
 					}
-					
+
 					<Image
 						handleFileUpload={s3Upload}
 						handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }}
