@@ -5,6 +5,10 @@ import Avatar from 'components/Avatar/Avatar';
 require('./discussionPreview.scss');
 
 const propTypes = {
+	thread: PropTypes.array.isRequired,
+	isMinimal: PropTypes.bool,
+	
+
 	slug: PropTypes.string.isRequired,
 	availableLabels: PropTypes.array,
 	discussions: PropTypes.array.isRequired,
@@ -106,9 +110,9 @@ const DiscussionPreview = function(props) {
 					return <span className="pt-tag" style={{ backgroundColor: label.color }}>{label.title}</span>;
 				})}
 			</div>
-			<div className="authors">
+			{/* <div className="authors">
 				{discussionAuthors}
-			</div>
+			</div> */}
 			<div>
 				{sortedDiscussions.slice(0, 3).map((discussion)=> {
 					return (
@@ -118,7 +122,7 @@ const DiscussionPreview = function(props) {
 								userInitials={discussion.author.initials}
 								userAvatar={discussion.author.avatar}
 							/>
-							<div className="text">{discussion.text}</div>
+							<div className="text"><b>{discussion.author.fullName}: </b>{discussion.text}</div>
 						</div>
 					);
 				})}

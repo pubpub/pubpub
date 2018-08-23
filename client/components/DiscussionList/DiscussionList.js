@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
+
+import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import DiscussionAuthorsList from 'components/DiscussionAuthorsList/DiscussionAuthorsList';
 import DiscussionLabelsList from 'components/DiscussionLabelsList/DiscussionLabelsList';
 import DiscussionSortList from 'components/DiscussionSortList/DiscussionSortList';
@@ -12,6 +13,7 @@ require('./discussionList.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
+	loginData: PropTypes.object.isRequired,
 	onPreviewClick: PropTypes.func,
 	mode: PropTypes.string,
 	onLabelsSave: PropTypes.func.isRequired,
@@ -319,12 +321,12 @@ class DiscussionList extends Component {
 					return index >= this.state.pageOffset && index < this.state.pageOffset + 20;
 				}).map((thread)=> {
 					return (
-						<DiscussionPreview
+						<DiscussionThread
 							key={`thread-${thread[0].id}`}
-							availableLabels={pubData.labels || []}
-							slug={pubData.slug}
-							discussions={thread}
-							onPreviewClick={this.props.onPreviewClick}
+							thread={thread}
+							isMinimal={true}
+							pubData={this.props.pubData}
+							loginData={this.props.loginData}
 						/>
 					);
 				})}

@@ -31,6 +31,7 @@ app.post('/api/discussions', (req, res)=> {
 			userId: req.body.userId,
 			pubId: req.body.pubId,
 			communityId: req.body.communityId,
+			discussionChannelId: req.body.discussionChannelId,
 			threadNumber: req.body.threadNumber || (maxThreadNumber + 1),
 			submitHash: req.body.submitHash,
 			highlights: req.body.highlights,

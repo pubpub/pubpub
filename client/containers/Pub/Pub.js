@@ -9,11 +9,13 @@ import PubOptions from 'components/PubOptions/PubOptions';
 import PubSideToc from 'components/PubSideToc/PubSideToc';
 import PubSideCollaborators from 'components/PubSideCollaborators/PubSideCollaborators';
 import PubSideOptions from 'components/PubSideOptions/PubSideOptions';
+import PubSideDiscussions from 'components/PubSideDiscussions/PubSideDiscussions';
 import PubLicense from 'components/PubLicense/PubLicense';
 import PubSectionNav from 'components/PubSectionNav/PubSectionNav';
 import DiscussionList from 'components/DiscussionListNew/DiscussionList';
-import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
-import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
+// import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
+// import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
+import queryString from 'query-string';
 import { apiFetch, hydrateWrapper, getFirebaseConfig, nestDiscussionsToThreads, getRandomColor, generateHash } from 'utilities';
 
 require('@firebase/auth');
@@ -66,9 +68,11 @@ class Pub extends Component {
 		this.firebaseRef = null;
 		this.setSavingTimeout = null;
 		this.getHighlightContent = this.getHighlightContent.bind(this);
+		this.getActiveDiscussionChannel = this.getActiveDiscussionChannel.bind(this);
 		this.setActiveThread = this.setActiveThread.bind(this);
 		this.setOptionsMode = this.setOptionsMode.bind(this);
 		this.setPubData = this.setPubData.bind(this);
+		this.setDiscussionChannel = this.setDiscussionChannel.bind(this);
 		this.handleSectionsChange = this.handleSectionsChange.bind(this);
 		this.handleEditorRef = this.handleEditorRef.bind(this);
 		this.handleMenuWrapperRef = this.handleMenuWrapperRef.bind(this);
@@ -104,6 +108,13 @@ class Pub extends Component {
 		if (this.firebaseRef) {
 			this.firebaseRef.child('/sections').off('value', this.handleSectionsChange);
 		}
+	}
+
+	getActiveDiscussionChannel() {
+		return this.state.pubData.discussionChannels.reduce((prev, curr)=> {
+			if (this.state.locationData.query.channel === curr.title) { return curr; }
+			return prev;
+		}, undefined);
 	}
 
 	getHighlightContent(from, to) {
@@ -143,6 +154,24 @@ class Pub extends Component {
 
 	setPubData(newPubData) {
 		this.setState({ pubData: newPubData });
+	}
+
+	setDiscussionChannel(channelTitle) {
+		const newQuery = {
+			...this.state.locationData.query,
+			channel: channelTitle === 'public' ? undefined : channelTitle,
+		};
+		const newQueryString = Object.values(newQuery).filter(item => !!item).length
+			? `?${queryString.stringify(newQuery)}`
+			: '';
+		this.setState({
+			locationData: {
+				...this.state.locationData,
+				query: newQuery,
+				queryString: newQueryString
+			}
+		});
+		window.history.replaceState({}, '', `${this.state.locationData.path}${newQueryString}`);
 	}
 
 	handleSectionsChange(snapshot) {
@@ -264,6 +293,7 @@ class Pub extends Component {
 
 	handlePostDiscussion(discussionObject) {
 		this.setState({ postDiscussionIsLoading: true });
+		const activeDiscussionChannel = this.getActiveDiscussionChannel();
 		return apiFetch('/api/discussions', {
 			method: 'POST',
 			body: JSON.stringify({
@@ -271,6 +301,7 @@ class Pub extends Component {
 				userId: this.props.loginData.id,
 				pubId: this.props.pubData.id,
 				communityId: this.props.communityData.id,
+				discussionChannelId: activeDiscussionChannel ? activeDiscussionChannel.id : null,
 			})
 		})
 		.then((result)=> {
@@ -319,15 +350,15 @@ class Pub extends Component {
 		const pubData = this.state.pubData;
 		const loginData = this.props.loginData;
 		const queryObject = this.props.locationData.query;
-		const mode = this.props.locationData.params.mode;
-		const subMode = this.props.locationData.params.subMode;
+		// const mode = this.props.locationData.params.mode;
+		// const subMode = this.props.locationData.params.subMode;
 		const activeVersion = pubData.activeVersion;
 		const discussions = pubData.discussions || [];
-		const threads = nestDiscussionsToThreads(discussions);
-		const activeDiscussionChannel = pubData.discussionChannels.reduce((prev, curr)=> {
-			if (queryObject.channel === curr.title) { return curr; }
-			return prev;
-		}, undefined);
+		const activeDiscussionChannel = this.getActiveDiscussionChannel();
+		const threads = nestDiscussionsToThreads(discussions).filter((thread)=> {
+			const activeDiscussionChannelId = activeDiscussionChannel ? activeDiscussionChannel.id : null;
+			return activeDiscussionChannelId === thread[0].discussionChannelId;
+		});
 
 		/* The activeThread can either be the one selected in state, */
 		/* or one hardcoded in the URL */
@@ -363,6 +394,9 @@ class Pub extends Component {
 		/* and not archived. */
 		const highlights = discussions.filter((item)=> {
 			return !item.isArchived && item.highlights;
+		}).filter((item)=> {
+			const activeDiscussionChannelId = activeDiscussionChannel ? activeDiscussionChannel.id : null;
+			return activeDiscussionChannelId === item.discussionChannelId;
 		}).reduce((prev, curr)=> {
 			const highlightsWithThread = curr.highlights.map((item)=> {
 				return { ...item, threadNumber: curr.threadNumber };
@@ -481,6 +515,17 @@ class Pub extends Component {
 									<PubSideOptions
 										pubData={pubData}
 										setOptionsMode={this.setOptionsMode}
+										activeDiscussionChannel={activeDiscussionChannel}
+										setDiscussionChannel={this.setDiscussionChannel}
+									/>
+									<PubSideDiscussions
+										threads={threads}
+										pubData={pubData}
+										locationData={this.state.locationData}
+										loginData={this.props.loginData}
+										onPostDiscussion={this.handlePostDiscussion}
+										onPutDiscussion={this.handlePutDiscussion}
+										getHighlightContent={this.getHighlightContent}
 									/>
 								</div>
 							</div>
@@ -492,11 +537,16 @@ class Pub extends Component {
 								<div className="col-12">
 									<DiscussionList
 										pubData={pubData}
+										loginData={this.props.loginData}
+										threads={threads}
 										locationData={this.state.locationData}
 										onPreviewClick={this.setActiveThread}
 										onLabelsSave={this.handlePutLabels}
 										onPostDiscussion={this.handlePostDiscussion}
+										onPutDiscussion={this.handlePutDiscussion}
 										getHighlightContent={this.getHighlightContent}
+										activeDiscussionChannel={activeDiscussionChannel}
+										setDiscussionChannel={this.setDiscussionChannel}
 										// showAll={queryObject.all}
 									/>
 								</div>
@@ -505,7 +555,7 @@ class Pub extends Component {
 					</div>
 
 					{/* Components that render overlays */}
-					<DiscussionViewer
+					{/* <DiscussionViewer
 						pubData={pubData}
 						loginData={this.props.loginData}
 						locationData={this.props.locationData}
@@ -519,6 +569,7 @@ class Pub extends Component {
 						postDiscussionIsLoading={this.state.postDiscussionIsLoading}
 						initialContent={this.state.initialDiscussionContent}
 					/>
+					*/}
 					<PubOptions
 						communityData={this.props.communityData}
 						pubData={pubData}

@@ -1,6 +1,7 @@
 .pub-side-options-component {
 	margin: 4em 0em 0em;
 	padding-top: 1em;
+	height: 85px;
 	.links {
 		display: flex;
 		justify-content: space-between;
@@ -15,16 +16,10 @@
 		align-items: center;
 		padding: 1em 0em;
 		border-bottom: 1px solid #CCC;
-		.pt-select {
+		.pt-popover-wrapper {
 			flex-grow: 1;
 			flex-shrink: 1;
 			margin-right: 1em;
-			&:after {
-				line-height: 24px;
-			}
-			select {
-				height: 24px;
-			}
 		}
 	}
 }

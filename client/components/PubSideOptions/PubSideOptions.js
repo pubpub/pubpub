@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import DropdownButton from 'components/DropdownButton/DropdownButton';
 
 require('./pubSideOptions.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	setOptionsMode: PropTypes.func.isRequired,
+	setDiscussionChannel: PropTypes.func.isRequired,
+	activeDiscussionChannel: PropTypes.object,
+};
+
+const defaultProps = {
+	activeDiscussionChannel: { title: 'public' },
 };
 
 class PubSideOptions extends Component {
@@ -48,8 +55,11 @@ class PubSideOptions extends Component {
 	render() {
 		const wrapperStyle = {
 			position: this.state.isPositionFixed ? 'fixed' : 'static',
-			top: '1em',
+			paddingTop: this.state.isPositionFixed ? '1em' : '0em',
+			top: '0em',
 			width: '275px',
+			background: 'white',
+			zIndex: '999',
 		};
 
 		// TODO: handling discussion flows
@@ -60,13 +70,17 @@ class PubSideOptions extends Component {
 		// heights and position that exist.
 		// If one is selected - you have to give that one priority, so you set it first, and then calculate
 		// for the previews before and after.
+		const discussionChannels = [
+			{ title: 'public' },
+			...this.props.pubData.discussionChannels,
+		];
 		return (
 			<div className="pub-side-options-component" ref={this.wrapperRef}>
 				<div style={wrapperStyle}>
 					<div className="links">
-						<a onClick={()=> { props.setOptionsMode('cite'); }}>Cite</a>
+						<a onClick={()=> { this.props.setOptionsMode('cite'); }}>Cite</a>
 						<span>·</span>
-						<a onClick={()=> { props.setOptionsMode('export'); }}>Export</a>
+						<a onClick={()=> { this.props.setOptionsMode('export'); }}>Export</a>
 						<span>·</span>
 						<a><span className="pt-icon-standard pt-icon-facebook" /></a>
 						<span>·</span>
@@ -77,11 +91,30 @@ class PubSideOptions extends Component {
 						<a><span className="pt-icon-standard pt-icon-google-plus" /></a>
 					</div>
 					<div className="discussion-options">
-						<div className="pt-select pt-fill pt-small">
-							<select>
-								<option value="public">public</option>
-							</select>
-						</div>
+						<DropdownButton
+							label={`#${this.props.activeDiscussionChannel.title}`}
+							// icon={items[props.value].icon}
+							// isRightAligned={true}
+							isSmall={true}
+						>
+							<ul className="channel-permissions-dropdown pt-menu">
+								{discussionChannels.map((channel)=> {
+									return (
+										<li key={`channel-option-${channel.title}`}>
+											<button
+												className="pt-menu-item pt-popover-dismiss"
+												onClick={()=> {
+													this.props.setDiscussionChannel(channel.title);
+												}}
+												type="button"
+											>
+												#{channel.title}
+											</button>
+										</li>
+									);
+								})}
+							</ul>
+						</DropdownButton>
 						<a>View All</a>
 					</div>
 				</div>
@@ -91,4 +124,5 @@ class PubSideOptions extends Component {
 }
 
 PubSideOptions.propTypes = propTypes;
+PubSideOptions.defaultProps = defaultProps;
 export default PubSideOptions;

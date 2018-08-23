@@ -22,6 +22,7 @@ const propTypes = {
 	submitIsLoading: PropTypes.bool,
 	getHighlightContent: PropTypes.func,
 	inputKey: PropTypes.string,
+	activeDiscussionChannel: PropTypes.object.isRequired,
 };
 
 const defaultProps = {
@@ -137,7 +138,7 @@ class DiscussionInput extends Component {
 
 					</div>
 					<div className="buttons-right">
-						{this.props.showTitle &&
+						{/* this.props.showTitle &&
 							<Popover
 								content={
 									<div className="pt-menu">
@@ -165,14 +166,14 @@ class DiscussionInput extends Component {
 							>
 								<button type="button" className={`pt-button pt-minimal pt-small ${this.state.isPublic ? 'pt-icon-globe' : 'pt-icon-lock2'}`} />
 							</Popover>
-						}
+						*/}
 
 						<Button
 							name="submit"
 							type="submit"
 							className="pt-button pt-intent-primary pt-small"
 							onClick={this.onSubmit}
-							text={this.props.showTitle ? 'Submit Discussion' : 'Submit Reply'}
+							text={this.props.showTitle ? `Post to #${this.props.activeDiscussionChannel.title}` : 'Submit Reply'}
 							disabled={this.state.submitDisabled}
 							loading={this.props.submitIsLoading}
 						/>

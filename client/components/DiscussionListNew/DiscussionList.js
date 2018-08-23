@@ -1,28 +1,35 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import DiscussionPreview from 'components/DiscussionPreview/DiscussionPreview';
-import DiscussionAuthorsList from 'components/DiscussionAuthorsList/DiscussionAuthorsList';
+import DiscussionThread from 'components/DiscussionThreadNew/DiscussionThread';
+// import DiscussionAuthorsList from 'components/DiscussionAuthorsList/DiscussionAuthorsList';
 import DiscussionLabelsList from 'components/DiscussionLabelsList/DiscussionLabelsList';
 import DiscussionSortList from 'components/DiscussionSortList/DiscussionSortList';
 import DiscussionInput from 'components/DiscussionInput/DiscussionInput';
+import DropdownButton from 'components/DropdownButton/DropdownButton';
 import { Popover, PopoverInteractionKind, Position, NonIdealState, Button } from '@blueprintjs/core';
-import { nestDiscussionsToThreads } from 'utilities';
+// import { nestDiscussionsToThreads } from 'utilities';
 
 require('./discussionList.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
+	loginData: PropTypes.object.isRequired,
 	locationData: PropTypes.object.isRequired,
 	onPreviewClick: PropTypes.func,
 	// mode: PropTypes.string,
+	threads: PropTypes.array.isRequired,
 	onLabelsSave: PropTypes.func.isRequired,
 	onPostDiscussion: PropTypes.func.isRequired,
+	onPutDiscussion: PropTypes.func.isRequired,
 	getHighlightContent: PropTypes.func.isRequired,
+	setDiscussionChannel: PropTypes.func.isRequired,
+	activeDiscussionChannel: PropTypes.object,
 	// showAll: PropTypes.bool,
 };
 
 const defaultProps = {
 	onPreviewClick: undefined,
+	activeDiscussionChannel: { title: 'public' },
 	// mode: undefined,
 	// showAll: false,
 };
@@ -46,6 +53,7 @@ class DiscussionList extends Component {
 		this.setSortMode = this.setSortMode.bind(this);
 		this.filterAndSortThreads = this.filterAndSortThreads.bind(this);
 		this.handlePostNewThread = this.handlePostNewThread.bind(this);
+		this.handleQuotePermalink = this.handleQuotePermalink.bind(this);
 		// this.handlePreviousPage = this.handlePreviousPage.bind(this);
 		// this.handleNextPage = this.handleNextPage.bind(this);
 		// this.setOffset = this.setOffset.bind(this);
@@ -76,6 +84,15 @@ class DiscussionList extends Component {
 	// 	const top = document.getElementsByClassName('filter-bar')[0].getBoundingClientRect().top;
 	// 	window.scrollBy(0, top);
 	// }
+
+	handleQuotePermalink(quoteObject) {
+		const hasChapters = !!quoteObject.section;
+		const chapterString = hasChapters ? `/content/${quoteObject.section}` : '';
+		const toFromString = `?to=${quoteObject.to}&from=${quoteObject.from}`;
+		const versionString = quoteObject.version ? `&version=${quoteObject.version}` : '';
+		const permalinkPath = `/pub/${this.props.pubData.slug}${chapterString}${toFromString}${versionString}`;
+		window.open(permalinkPath);
+	}
 
 	handlePostNewThread(discussionObject) {
 		this.setState({ newThreadLoading: true });
@@ -190,8 +207,7 @@ class DiscussionList extends Component {
 
 	render() {
 		const pubData = this.props.pubData;
-		const discussions = pubData.discussions || [];
-		const threads = nestDiscussionsToThreads(discussions);
+		const threads = this.props.threads;
 
 		const activeThreads = this.filterAndSortThreads(threads, false);
 		const archivedThreads = this.filterAndSortThreads(threads, true);
@@ -203,15 +219,38 @@ class DiscussionList extends Component {
 		// const numPages = this.props.showAll ? 1 : Math.floor(threadsToShow.length / 20) + 1;
 		// const usePagination = numPages > 1;
 		// const currentPage = Math.floor(this.state.pageOffset / 20) + 1;
+		const discussionChannels = [
+			{ title: 'public' },
+			...pubData.discussionChannels,
+		];
 		return (
 			<div className="discussion-list-component">
 				<div className="discussion-header">
 					<h2>Discussions</h2>
-					<div className="pt-select pt-small">
-						<select>
-							<option value="public">public</option>
-						</select>
-					</div>
+
+					<DropdownButton
+						label={`#${this.props.activeDiscussionChannel.title}`}
+						// icon={items[props.value].icon}
+						isRightAligned={true}
+					>
+						<ul className="channel-permissions-dropdown pt-menu">
+							{discussionChannels.map((channel)=> {
+								return (
+									<li key={`channel-option-${channel.title}`}>
+										<button
+											className="pt-menu-item pt-popover-dismiss"
+											onClick={()=> {
+												this.props.setDiscussionChannel(channel.title);
+											}}
+											type="button"
+										>
+											#{channel.title}
+										</button>
+									</li>
+								);
+							})}
+						</ul>
+					</DropdownButton>
 				</div>
 
 				<DiscussionInput
@@ -221,9 +260,10 @@ class DiscussionList extends Component {
 					submitIsLoading={this.state.newThreadLoading}
 					getHighlightContent={this.props.getHighlightContent}
 					inputKey="bottom-general"
+					activeDiscussionChannel={this.props.activeDiscussionChannel}
 				/>
 
-				{/*!this.props.mode &&
+				{/* !this.props.mode &&
 					<button className="pt-button pt-intent-primary new-button" onClick={()=> { this.props.onPreviewClick('new'); }}>
 						New Discussion
 					</button>
@@ -327,12 +367,17 @@ class DiscussionList extends Component {
 				}) */}
 				{threadsToShow.map((thread)=> {
 					return (
-						<DiscussionPreview
+						<DiscussionThread
 							key={`thread-${thread[0].id}`}
-							availableLabels={pubData.labels || []}
-							slug={pubData.slug}
-							discussions={thread}
-							onPreviewClick={this.props.onPreviewClick}
+							thread={thread}
+							isMinimal={false}
+							pubData={this.props.pubData}
+							locationData={this.props.locationData}
+							loginData={this.props.loginData}
+							onPostDiscussion={this.props.onPostDiscussion}
+							onPutDiscussion={this.props.onPutDiscussion}
+							getHighlightContent={this.props.getHighlightContent}
+							handleQuotePermalink={this.handleQuotePermalink}
 						/>
 					);
 				})}
