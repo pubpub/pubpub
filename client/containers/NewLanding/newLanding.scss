@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway:600');
+
+#new-landing-container {
+	.header {
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-position: center center;
+		background-color: #454F60;
+		background-image: url('/static/herobg.png');
+		color: white;
+		nav {
+			display: flex;
+			align-items: center;
+			img {
+				height: 35px;
+				display: block;
+				margin-right: 0.5em;
+			}
+			.title {
+				font-family: 'Raleway', sans-serif;
+				font-size: 32px;
+			}
+			.spacer {
+				flex-grow: 1;
+				flex-shrink: 1;
+			}
+			.link, .separator {
+				margin-left: 1em;
+				color: inherit;
+			}
+		}
+		.content {
+			text-align: center;
+			padding-bottom: 3em;
+			h1 {
+				color: white;
+				font-weight: 600;
+				margin: 1em 0em;
+			}
+			p {
+				max-width: 700px;
+				margin: 2em auto;
+				font-size: 18px;
+			}
+			button {
+				margin: 0.5em;
+			}
+		}
+	}
+	.bg0, .bg1, .bg2 {
+		padding: 2em 0em;
+	}
+	.bg1 {
+		background: #F4EFEA;
+	}
+	.bg2 {
+		background: #EAEFF4;
+	}
+}

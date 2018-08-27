@@ -7,6 +7,8 @@ require('./about');				// Route: '/about'
 require('./pubRedirect');		// Route: '/pub/:slug'
 require('./landing');			// Route: '/'
 
+require('./newLanding');			// Route: '/landing'
+
 /* Routes for Communities */
 require('./dashboard');			// Route: ['/dashboard', '/dashboard/:mode', '/dashboard/:mode/:slug']
 require('./notifications');		// Route: '/notifications'
