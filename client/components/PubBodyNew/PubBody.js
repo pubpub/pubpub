@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Editor } from '@pubpub/editor';
-import HeaderMenu from '@pubpub/editor/addons/HeaderMenu';
-import Collaborative from '@pubpub/editor/addons/Collaborative';
-import Image from '@pubpub/editor/addons/Image';
-import Video from '@pubpub/editor/addons/Video';
-import File from '@pubpub/editor/addons/File';
-import Iframe from '@pubpub/editor/addons/Iframe';
-import Latex from '@pubpub/editor/addons/Latex';
-import Footnote from '@pubpub/editor/addons/Footnote';
-import HighlightMenu from '@pubpub/editor/addons/HighlightMenu';
-import Citation from '@pubpub/editor/addons/Citation';
-import LinkMenu from '@pubpub/editor/addons/LinkMenu';
-import Table from '@pubpub/editor/addons/Table';
-import Discussion from 'components/DiscussionAddon/DiscussionAddon';
+import { NonIdealState } from '@blueprintjs/core';
+import Editor from '@pubpub/editor';
+// import HeaderMenu from '@pubpub/editor/addons/HeaderMenu';
+// import Collaborative from '@pubpub/editor/addons/Collaborative';
+// import Image from '@pubpub/editor/addons/Image';
+// import Video from '@pubpub/editor/addons/Video';
+// import File from '@pubpub/editor/addons/File';
+// import Iframe from '@pubpub/editor/addons/Iframe';
+// import Latex from '@pubpub/editor/addons/Latex';
+// import Footnote from '@pubpub/editor/addons/Footnote';
+// import HighlightMenu from '@pubpub/editor/addons/HighlightMenu';
+// import Citation from '@pubpub/editor/addons/Citation';
+// import LinkMenu from '@pubpub/editor/addons/LinkMenu';
+// import Table from '@pubpub/editor/addons/Table';
+// import Discussion from 'components/DiscussionAddon/DiscussionAddon';
 import { s3Upload, getFirebaseConfig, getResizedUrl, formatCitationString, renderLatexString } from 'utilities';
 
 require('./pubBody.scss');
@@ -39,6 +40,7 @@ const propTypes = {
 	isReadOnly: PropTypes.bool.isRequired,
 	onStatusChange: PropTypes.func,
 	menuWrapperRefNode: PropTypes.object,
+	onChange: PropTypes.func,
 };
 const defaultProps = {
 	onRef: ()=>{},
@@ -50,6 +52,7 @@ const defaultProps = {
 	onNewHighlightDiscussion: ()=>{},
 	onStatusChange: ()=>{},
 	menuWrapperRefNode: undefined,
+	onChange: ()=> {},
 };
 
 class PubBody extends Component {
@@ -57,7 +60,7 @@ class PubBody extends Component {
 		super(props);
 		this.state = {
 			error: undefined,
-
+			editorChangeObject: undefined,
 		};
 		this.findThreadNumberFromHighlightId = this.findThreadNumberFromHighlightId.bind(this);
 	}
@@ -72,7 +75,7 @@ class PubBody extends Component {
 			return prev;
 		}, undefined);
 		this.props.setActiveThread(threadNumber, highlightNode);
-	};
+	}
 
 	render() {
 		if (this.props.isDraft && !this.props.menuWrapperRefNode) { return null; }
@@ -102,81 +105,101 @@ class PubBody extends Component {
 						You have view permissions. You can see the working draft but cannot edit it.
 					</div>
 				}
+
 				<Editor
-					key={this.props.editorKey}
-					editorId={this.props.slug}
-					initialContent={this.props.isDraft ? undefined : this.props.content}
-					isReadOnly={this.props.isReadOnly}
-					showHeaderLinks={!this.props.isDraft}
 					ref={this.props.onRef}
 					placeholder={this.props.isDraft ? 'Begin writing here...' : undefined}
-					onOptionsRender={(nodeDom, optionsDom)=>{
-						const getOffsetTop = (node, runningOffset)=> {
-							if (node.offsetParent.className.split(' ').indexOf('ProseMirror') > -1) {
-								return node.offsetTop + runningOffset;
-							}
-							return getOffsetTop(node.parentNode, node.offsetTop + runningOffset);
-						};
-
-						optionsDom.style.top = `${getOffsetTop(nodeDom, 0)}px`;
-						/* Left should be set to 100% plus the gap until the right margin content begins */
-						/* Side is 275px, gap is 4%. As set in pub.scss */
-						optionsDom.style.left = 'calc(100% + (100% + 275px) * (4/96))';
-						/* Width should be set to the width of the right margin */
-						optionsDom.style.width = '275px';
-						optionsDom.style.fontSize = '14px';
+					initialContent={this.props.isDraft ? undefined : this.props.content}
+					isReadOnly={this.props.isReadOnly}
+					onChange={this.props.onChange}
+					collaborativeOptions={{
+						firebaseConfig: getFirebaseConfig(),
+						clientData: this.props.clientData,
+						editorKey: this.props.editorKey,
+						onClientChange: this.props.onClientChange,
+						onStatusChange: this.props.onStatusChange,
 					}}
-				>
-					{!this.props.isReadOnly &&
-						<HeaderMenu
-							wrapperDomNode={this.props.menuWrapperRefNode}
-						/>
-					}
-					{!this.props.isReadOnly &&
-						<LinkMenu />
-					}
-					{this.props.isDraft &&
-						<Collaborative
-							firebaseConfig={getFirebaseConfig()}
-							clientData={this.props.clientData}
-							editorKey={this.props.editorKey}
-							onClientChange={this.props.onClientChange}
-							onStatusChange={this.props.onStatusChange}
-						/>
-					}
-
-					<Image
-						handleFileUpload={s3Upload}
-						handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }}
-						linkToSrc={this.props.isReadOnly}
-					/>
-					<Video handleFileUpload={s3Upload} />
-					<File handleFileUpload={s3Upload} />
-					<Iframe />
-					<Latex renderFunction={renderLatexString} />
-					<Footnote />
-					<Table />
-					<HighlightMenu
-						versionId={this.props.isDraft ? undefined : this.props.versionId}
-						sectionId={this.props.sectionId}
-						highlights={this.props.highlights}
-						primaryEditorClassName="pub-body-component"
-						onNewDiscussion={this.props.onNewHighlightDiscussion}
-						onDotClick={this.findThreadNumberFromHighlightId}
-						hoverBackgroundColor={this.props.hoverBackgroundColor}
-					/>
-					<Citation formatFunction={formatCitationString} />
-					<Discussion
-						threads={this.props.threads}
-						slug={this.props.slug}
-						setActiveThread={this.props.isDraft ? undefined : this.props.setActiveThread}
-					/>
-				</Editor>
+					getHighlights={()=> {
+						return this.props.highlights;
+					}}
+				/>
 			</div>
 		);
 	}
-};
+}
 
 PubBody.propTypes = propTypes;
 PubBody.defaultProps = defaultProps;
 export default PubBody;
+
+
+// <Editor
+// 	key={this.props.editorKey}
+// 	editorId={this.props.slug}
+// 	initialContent={this.props.isDraft ? undefined : this.props.content}
+// 	isReadOnly={this.props.isReadOnly}
+// 	showHeaderLinks={!this.props.isDraft}
+// 	ref={this.props.onRef}
+// 	placeholder={this.props.isDraft ? 'Begin writing here...' : undefined}
+// 	onOptionsRender={(nodeDom, optionsDom)=>{
+// 		const getOffsetTop = (node, runningOffset)=> {
+// 			if (node.offsetParent.className.split(' ').indexOf('ProseMirror') > -1) {
+// 				return node.offsetTop + runningOffset;
+// 			}
+// 			return getOffsetTop(node.parentNode, node.offsetTop + runningOffset);
+// 		};
+
+// 		optionsDom.style.top = `${getOffsetTop(nodeDom, 0)}px`;
+// 		/* Left should be set to 100% plus the gap until the right margin content begins */
+// 		/* Side is 275px, gap is 4%. As set in pub.scss */
+// 		optionsDom.style.left = 'calc(100% + (100% + 275px) * (4/96))';
+// 		/* Width should be set to the width of the right margin */
+// 		optionsDom.style.width = '275px';
+// 		optionsDom.style.fontSize = '14px';
+// 	}}
+// >
+// 	{!this.props.isReadOnly &&
+// 		<HeaderMenu
+// 			wrapperDomNode={this.props.menuWrapperRefNode}
+// 		/>
+// 	}
+// 	{!this.props.isReadOnly &&
+// 		<LinkMenu />
+// 	}
+// 	{this.props.isDraft &&
+// 		<Collaborative
+// 			firebaseConfig={getFirebaseConfig()}
+// 			clientData={this.props.clientData}
+// 			editorKey={this.props.editorKey}
+// 			onClientChange={this.props.onClientChange}
+// 			onStatusChange={this.props.onStatusChange}
+// 		/>
+// 	}
+
+// 	<Image
+// 		handleFileUpload={s3Upload}
+// 		handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }}
+// 		linkToSrc={this.props.isReadOnly}
+// 	/>
+// 	<Video handleFileUpload={s3Upload} />
+// 	<File handleFileUpload={s3Upload} />
+// 	<Iframe />
+// 	<Latex renderFunction={renderLatexString} />
+// 	<Footnote />
+// 	<Table />
+// 	<HighlightMenu
+// 		versionId={this.props.isDraft ? undefined : this.props.versionId}
+// 		sectionId={this.props.sectionId}
+// 		highlights={this.props.highlights}
+// 		primaryEditorClassName="pub-body-component"
+// 		onNewDiscussion={this.props.onNewHighlightDiscussion}
+// 		onDotClick={this.findThreadNumberFromHighlightId}
+// 		hoverBackgroundColor={this.props.hoverBackgroundColor}
+// 	/>
+// 	<Citation formatFunction={formatCitationString} />
+// 	<Discussion
+// 		threads={this.props.threads}
+// 		slug={this.props.slug}
+// 		setActiveThread={this.props.isDraft ? undefined : this.props.setActiveThread}
+// 	/>
+// </Editor>

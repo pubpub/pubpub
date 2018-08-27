@@ -88,7 +88,10 @@ class DiscussionThread extends Component {
 			userId: sortedDiscussions[0].userId,
 		})
 		.then(()=> {
-			this.setState({ isLoadingThreadEdit: false });
+			this.setState({
+				isLoadingThreadEdit: false,
+				isEditing: false,
+			});
 		});
 	}
 
@@ -144,7 +147,7 @@ class DiscussionThread extends Component {
 						}
 
 						{/* Show first three replies */}
-						{sortedDiscussions.slice(0, 3).map((discussion)=> {
+						{sortedDiscussions.slice(0, 3).map((discussion, index, array)=> {
 							/* If isMinimal, and string is sufficently long, replace with ellipsis */
 							const previewLimit = this.props.isMinimal ? 45 : 200;
 							const previewText = discussion.text.length > previewLimit
@@ -152,6 +155,9 @@ class DiscussionThread extends Component {
 								: discussion.text;
 							return (
 								<div className="discussion" key={`discussion-preview-${discussion.id}`}>
+									{index + 1 !== array.length &&
+										<div className="line" />
+									}
 									<Avatar
 										width={20}
 										userInitials={discussion.author.initials}
@@ -182,7 +188,7 @@ class DiscussionThread extends Component {
 							text="Collapse"
 						/>
 						{isArchived &&
-							<div className="pt-callout 'pt-intent-danger">
+							<div className="pt-callout pt-intent-danger">
 								{!sortedDiscussions[0].submitHash && 'Thread is Archived'}
 								{canManageThread &&
 									<Button

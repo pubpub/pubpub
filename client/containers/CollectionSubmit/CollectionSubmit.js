@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, NonIdealState } from '@blueprintjs/core';
-import { Editor } from '@pubpub/editor';
-import Image from '@pubpub/editor/addons/Image';
-import Video from '@pubpub/editor/addons/Video';
-import File from '@pubpub/editor/addons/File';
+// import { Editor } from '@pubpub/editor';
+// import Image from '@pubpub/editor/addons/Image';
+// import Video from '@pubpub/editor/addons/Video';
+// import File from '@pubpub/editor/addons/File';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
 import { hydrateWrapper, apiFetch, getResizedUrl } from 'utilities';
 
@@ -84,16 +84,16 @@ class CollectionSubmit extends Component {
 
 									{collectionData.createPubMessage &&
 										<div className="message">
-											<Editor
-												initialContent={collectionData.createPubMessage || undefined}
-												isReadOnly={true}
-											>
-												<Image
-													handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }}
-												/>
-												<Video />
-												<File />
-											</Editor>
+											{/*<Editor
+																							initialContent={collectionData.createPubMessage || undefined}
+																							isReadOnly={true}
+																						>
+																							<Image
+																								handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '800x0'); }}
+																							/>
+																							<Video />
+																							<File />
+																						</Editor>*/}
 										</div>
 									}
 									<div className="button-wrapper">

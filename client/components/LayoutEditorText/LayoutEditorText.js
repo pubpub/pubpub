@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Editor } from '@pubpub/editor';
-import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
-import Image from '@pubpub/editor/addons/Image';
-import Video from '@pubpub/editor/addons/Video';
-import File from '@pubpub/editor/addons/File';
-import Iframe from '@pubpub/editor/addons/Iframe';
-import InsertMenu from '@pubpub/editor/addons/InsertMenu';
+// import { Editor } from '@pubpub/editor';
+// import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
+// import Image from '@pubpub/editor/addons/Image';
+// import Video from '@pubpub/editor/addons/Video';
+// import File from '@pubpub/editor/addons/File';
+// import Iframe from '@pubpub/editor/addons/Iframe';
+// import InsertMenu from '@pubpub/editor/addons/InsertMenu';
 import { s3Upload, getResizedUrl } from 'utilities';
 
 require('./layoutEditorText.scss');
@@ -129,7 +129,7 @@ class LayoutEditorText extends Component {
 						<div className="row">
 							<div className="col-12">
 								<div style={wrapperStyle} id={String(this.state.key)}>
-									<Editor
+									{/*<Editor
 										placeholder="Enter text..."
 										onChange={this.setText}
 										initialContent={this.props.content.text || undefined}
@@ -146,7 +146,7 @@ class LayoutEditorText extends Component {
 										<Video handleFileUpload={s3Upload} />
 										<File handleFileUpload={s3Upload} />
 
-									</Editor>
+									</Editor>*/}
 								</div>
 							</div>
 						</div>

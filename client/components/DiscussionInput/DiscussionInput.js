@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
-import { Editor } from '@pubpub/editor';
-import Image from '@pubpub/editor/addons/Image';
-import Video from '@pubpub/editor/addons/Video';
-import File from '@pubpub/editor/addons/File';
-import Iframe from '@pubpub/editor/addons/Iframe';
-import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
-import InsertMenu from '@pubpub/editor/addons/InsertMenu';
-import HighlightQuote from '@pubpub/editor/addons/HighlightQuote';
+// import { Editor } from '@pubpub/editor';
+// import Image from '@pubpub/editor/addons/Image';
+// import Video from '@pubpub/editor/addons/Video';
+// import File from '@pubpub/editor/addons/File';
+// import Iframe from '@pubpub/editor/addons/Iframe';
+// import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
+// import InsertMenu from '@pubpub/editor/addons/InsertMenu';
+// import HighlightQuote from '@pubpub/editor/addons/HighlightQuote';
 import DropdownRichItem from 'components/DropdownRichItem/DropdownRichItem';
 import FormattingHelp from 'components/FormattingHelp/FormattingHelp';
 import { s3Upload, getResizedUrl } from 'utilities';
@@ -99,7 +99,7 @@ class DiscussionInput extends Component {
 					/>
 				}
 				<div className="input-text" tabIndex={-1} role="textbox" id={`pubpub-editor-container-${this.state.key}`}>
-					<Editor
+					{/*<Editor
 						key={this.state.key}
 						ref={(ref)=> { this.editorRef = ref; }}
 						placeholder="Reply..."
@@ -120,7 +120,7 @@ class DiscussionInput extends Component {
 						<Video handleFileUpload={s3Upload} />
 						<File handleFileUpload={s3Upload} />
 						<Iframe />
-					</Editor>
+					</Editor>*/}
 				</div>
 				<div className="buttons">
 					<div className="buttons-left">

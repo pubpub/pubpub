@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import TimeAgo from 'react-timeago';
 import { Button } from '@blueprintjs/core';
 import Avatar from 'components/Avatar/Avatar';
-import { Editor } from '@pubpub/editor';
-import Image from '@pubpub/editor/addons/Image';
-import Video from '@pubpub/editor/addons/Video';
-import File from '@pubpub/editor/addons/File';
-import Iframe from '@pubpub/editor/addons/Iframe';
-import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
-import InsertMenu from '@pubpub/editor/addons/InsertMenu';
-import HighlightQuote from '@pubpub/editor/addons/HighlightQuote';
+// import { Editor } from '@pubpub/editor';
+// import Image from '@pubpub/editor/addons/Image';
+// import Video from '@pubpub/editor/addons/Video';
+// import File from '@pubpub/editor/addons/File';
+// import Iframe from '@pubpub/editor/addons/Iframe';
+// import FormattingMenu from '@pubpub/editor/addons/FormattingMenu';
+// import InsertMenu from '@pubpub/editor/addons/InsertMenu';
+// import HighlightQuote from '@pubpub/editor/addons/HighlightQuote';
 import { s3Upload, getResizedUrl } from 'utilities';
 
 require('./discussionThreadItem.scss');
@@ -154,7 +154,7 @@ class DiscussionThreadItem extends Component {
 				</div>
 
 				<div className="text" {...editingProps} key="editor-wrapper" id={`pubpub-editor-container-${discussion.id}`}>
-					<Editor
+					{/*<Editor
 						key={this.state.isEditing ? `discussion-${discussion.id}-editing` : `discussion-${discussion.id}`}
 						ref={(ref)=> { this.editorRef = ref; }}
 						initialContent={discussion.content}
@@ -183,7 +183,7 @@ class DiscussionThreadItem extends Component {
 						<Video handleFileUpload={s3Upload} />
 						<File handleFileUpload={s3Upload} />
 						<Iframe />
-					</Editor>
+					</Editor>*/}
 				</div>
 				{this.state.isEditing &&
 					<div className="editing-buttons">

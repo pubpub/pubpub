@@ -30,7 +30,12 @@ const PubSideToc = function(props) {
 
 	const hasSections = Array.isArray(sectionsData) && sectionsData.length > 1;
 
-	const headingsContent = props.activeContent || props.editorRefNode.getJSON();
+	// const headingsContent = props.activeContent || props.editorRefNode.getJSON();
+	const draftContent = props.editorRefNode.state
+		? props.editorRefNode.state.doc.toJSON()
+		: { content: [] };
+	const headingsContent = props.activeContent || draftContent;
+
 	const headings = headingsContent.content.filter((item)=> {
 		return item.type === 'heading' && item.attrs.level < 3;
 	}).map((item, index)=> {

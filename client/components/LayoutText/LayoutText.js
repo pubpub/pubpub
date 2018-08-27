@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Editor } from '@pubpub/editor';
-import Image from '@pubpub/editor/addons/Image';
-import Video from '@pubpub/editor/addons/Video';
-import File from '@pubpub/editor/addons/File';
-import Iframe from '@pubpub/editor/addons/Iframe';
+// import { Editor } from '@pubpub/editor';
+// import Image from '@pubpub/editor/addons/Image';
+// import Video from '@pubpub/editor/addons/Video';
+// import File from '@pubpub/editor/addons/File';
+// import Iframe from '@pubpub/editor/addons/Iframe';
 import { getResizedUrl } from 'utilities';
 
 require('./layoutText.scss');
@@ -36,7 +36,7 @@ const LayoutText = function(props) {
 					<div className="row">
 						<div className="col-12">
 							<div style={wrapperStyle}>
-								<Editor
+								{/*<Editor
 									initialContent={props.content.text || undefined}
 									isReadOnly={true}
 								>
@@ -46,7 +46,7 @@ const LayoutText = function(props) {
 									<Video />
 									<Iframe />
 									<File />
-								</Editor>
+								</Editor>*/}
 							</div>
 						</div>
 					</div>

@@ -35,6 +35,16 @@
 		
 		.discussion {
 			margin: 0.25em 0em;
+			position: relative;
+			.line {
+				width: 2px;
+				height: calc(100% + 10px);
+				position: absolute;
+				background: #CCC;
+				left: 9px;
+				top: 0px;
+				z-index: 0;
+			}
 			.avatar-component {
 				margin-right: 1em;
 			}

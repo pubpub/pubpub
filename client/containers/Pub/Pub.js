@@ -11,6 +11,7 @@ import PubSideCollaborators from 'components/PubSideCollaborators/PubSideCollabo
 import PubSideOptions from 'components/PubSideOptions/PubSideOptions';
 import PubSideDiscussions from 'components/PubSideDiscussions/PubSideDiscussions';
 import PubLicense from 'components/PubLicense/PubLicense';
+import PubInlineMenu from 'components/PubInlineMenu/PubInlineMenu';
 import PubSectionNav from 'components/PubSectionNav/PubSectionNav';
 import DiscussionList from 'components/DiscussionListNew/DiscussionList';
 // import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
@@ -64,8 +65,10 @@ class Pub extends Component {
 			// sectionsData: [{ id: '', order: 0, title: 'Introduction' }],
 			editorRefNode: undefined,
 			menuWrapperRefNode: undefined,
+			editorChangeObject: {},
 		};
 		this.firebaseRef = null;
+		this.pageRef = React.createRef();
 		this.setSavingTimeout = null;
 		this.getHighlightContent = this.getHighlightContent.bind(this);
 		this.getActiveDiscussionChannel = this.getActiveDiscussionChannel.bind(this);
@@ -73,6 +76,7 @@ class Pub extends Component {
 		this.setOptionsMode = this.setOptionsMode.bind(this);
 		this.setPubData = this.setPubData.bind(this);
 		this.setDiscussionChannel = this.setDiscussionChannel.bind(this);
+		this.getAbsolutePosition = this.getAbsolutePosition.bind(this);
 		this.handleSectionsChange = this.handleSectionsChange.bind(this);
 		this.handleEditorRef = this.handleEditorRef.bind(this);
 		this.handleMenuWrapperRef = this.handleMenuWrapperRef.bind(this);
@@ -83,6 +87,7 @@ class Pub extends Component {
 		this.closeThreadOverlay = this.closeThreadOverlay.bind(this);
 		this.handlePostDiscussion = this.handlePostDiscussion.bind(this);
 		this.handlePutDiscussion = this.handlePutDiscussion.bind(this);
+		this.handleEditorChange = this.handleEditorChange.bind(this);
 	}
 
 	componentDidMount() {
@@ -156,6 +161,15 @@ class Pub extends Component {
 		this.setState({ pubData: newPubData });
 	}
 
+	getAbsolutePosition(top, left) {
+		// const container = this.state.editorRefNode.editorRef.current;
+		// const page = this.pageRef.current;
+		// debugger;
+		return {
+			top: top + window.scrollY,
+			left: left,
+		};
+	}
 	setDiscussionChannel(channelTitle) {
 		const newQuery = {
 			...this.state.locationData.query,
@@ -196,12 +210,14 @@ class Pub extends Component {
 	}
 
 	handleEditorRef(ref) {
-		if (!this.state.editorRefNode) {
-			/* Need to set timeout so DOM can render */
-			/* When in draft, this timeout is how long we think */
-			/* it will take the firebase server to */
-			/* initalize the most recent doc and steps. */
-			/* It doesn't hurt to be a bit conservative here */
+		console.log(ref);
+		this.setState({ editorRefNode: ref });
+		/*if (!this.state.editorRefNode) {
+			//Need to set timeout so DOM can render
+			//When in draft, this timeout is how long we think
+			//it will take the firebase server to
+			//initalize the most recent doc and steps.
+			//It doesn't hurt to be a bit conservative here
 			const timeoutDelay = this.state.pubData.isDraft
 				? 2500
 				: 0;
@@ -212,6 +228,7 @@ class Pub extends Component {
 				});
 			}, timeoutDelay);
 		}
+		*/
 	}
 
 	handleMenuWrapperRef(ref) {
@@ -346,6 +363,13 @@ class Pub extends Component {
 		});
 	}
 
+	handleEditorChange(changeObject) {
+		console.log(changeObject);
+		this.setState({ editorChangeObject: changeObject });
+	}
+
+
+
 	render() {
 		const pubData = this.state.pubData;
 		const loginData = this.props.loginData;
@@ -428,8 +452,9 @@ class Pub extends Component {
 			}
 		}
 
+		const shortcutValues = this.state.editorChangeObject.shortcutValues || {};
 		return (
-			<div id="pub-container">
+			<div id="pub-container" ref={this.pageRef}>
 				<PageWrapper
 					loginData={this.props.loginData}
 					communityData={this.props.communityData}
@@ -452,6 +477,8 @@ class Pub extends Component {
 							activeCollaborators={this.state.activeCollaborators}
 						/>
 					}
+					
+
 
 					<div className="container pub">
 						<div className="row">
@@ -469,6 +496,7 @@ class Pub extends Component {
 										hoverBackgroundColor={this.props.communityData.accentMinimalColor}
 										setActiveThread={this.setActiveThread}
 										onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
+										onChange={this.handleEditorChange}
 
 										// Props from CollabEditor
 										editorKey={`${this.props.pubData.editorKey}${sectionId ? '/' : ''}${sectionId || ''}`}
@@ -555,6 +583,12 @@ class Pub extends Component {
 					</div>
 
 					{/* Components that render overlays */}
+					<PubInlineMenu
+						pubData={pubData}
+						editorChangeObject={this.state.editorChangeObject}
+						getAbsolutePosition={this.getAbsolutePosition}
+						// selectionBoundingBox={this.state.editorChangeObject.selectionBoundingBox}
+					/>
 					{/* <DiscussionViewer
 						pubData={pubData}
 						loginData={this.props.loginData}

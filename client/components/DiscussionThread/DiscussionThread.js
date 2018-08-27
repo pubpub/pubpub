@@ -168,6 +168,7 @@ class DiscussionThread extends Component {
 		const submitHash = sortedDiscussions[0].submitHash;
 		this.props.onPublish(submitHash);
 	}
+
 	render() {
 		const sortedDiscussions = this.props.discussions.sort((foo, bar)=> {
 			if (foo.createdAt > bar.createdAt) { return 1; }
