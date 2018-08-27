@@ -76,6 +76,7 @@ const Landing = (props)=> {
 							<p>PubPub improves your content with community publishing, the collaborative process of drafting, review, and discussion that results in trusted, transparent documents with rich context, review maps, and group support. PubPub is the first community publishing platform.</p>
 							<button className="pt-button pt-intent-primary pt-large">Join PubPub</button>
 							<button className="pt-button pt-large">Create your Community</button>
+							<img src="/static/hero.png" />
 						</div>
 					</div>
 				</div>
@@ -147,22 +148,25 @@ const Landing = (props)=> {
 						<div className="col-12">
 							<h2>Rich features for community publishing</h2>
 							<p>Take control of your research. PubPub allows you to publish complex documents with and for your community, not arbitrary standards.</p>
-							<ul>
-								<li>Real-time, collaborative writing and editing</li>
-								<li>Rich media embeds like videos, photos, and tables</li>
-								<li>Import and export MS Word, LaTex, XML, and more</li>
-								<li>Citations, footnotes, and figures</li>
-								<li>LaTex equation support</li>
-								<li>One-click DOI creation</li>
-								<li>Chapters and sections</li>
-								<li>Public and private discussions</li>
-								<li>Customizable review processes with review maps</li>
-								<li>Beautiful, customizable page layouts</li>
-								<li>Community permissions</li>
-								<li>Version control</li>
-								<li>SEO friendly</li>
-								<li>Mobile Responsive</li>
-							</ul>
+							<div className="type-block">
+								<ul className="content">
+									<li>Real-time, collaborative writing and editing</li>
+									<li>Rich media embeds like videos, photos, and tables</li>
+									<li>Import and export MS Word, LaTex, XML, and more</li>
+									<li>Citations, footnotes, and figures</li>
+									<li>LaTex equation support</li>
+									<li>One-click DOI creation</li>
+									<li>Chapters and sections</li>
+									<li>Public and private discussions</li>
+									<li>Customizable review processes with review maps</li>
+									<li>Beautiful, customizable page layouts</li>
+									<li>Community permissions</li>
+									<li>Version control</li>
+									<li>SEO friendly</li>
+									<li>Mobile Responsive</li>
+								</ul>
+								<div className="image"></div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -173,7 +177,10 @@ const Landing = (props)=> {
 						<div className="col-12">
 							<h2>Free, open access, and open source</h2>
 							<p>A member of MIT’s Knowledge Futures Groups, we are committed to providing PubPub for free forever, releasing open-source code, and operating under non-profit, researcher-friendly business models. We make money from donations and by charging for enterprise setup and features, not by charging for access or running ads.</p>
-							<button className="pt-button">PubPub Mission</button>
+							<div>
+								<button className="pt-button">PubPub Mission</button>	
+							</div>
+							
 
 							<a>pubpub</a>
 							<a>pubpub-editor</a>
