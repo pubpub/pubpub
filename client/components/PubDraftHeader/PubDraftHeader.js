@@ -250,14 +250,16 @@ class PubDraftHeader extends Component {
 									>
 										{insertItems.map((item)=> {
 											return (
-												<div
+												<label
 													className="pt-menu-item pt-popover-dismiss insert-menu-item"
 													key={item.key}
 													onClick={insertFunctions[item.key]}
+													// htmlFor="thing"
 												>
 													{item.icon}
 													<span>{item.title}</span>
-												</div>
+													{/* <input type="file" id="thing" style={{display: 'none'}} /> */}
+												</label>
 											);
 										})}
 									</DropdownButton>

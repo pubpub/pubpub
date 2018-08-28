@@ -13,6 +13,7 @@ import PubSideDiscussions from 'components/PubSideDiscussions/PubSideDiscussions
 import PubLicense from 'components/PubLicense/PubLicense';
 import PubInlineMenu from 'components/PubInlineMenu/PubInlineMenu';
 import PubLinkMenu from 'components/PubLinkMenu/PubLinkMenu';
+import PubSideControls from 'components/PubSideControls/PubSideControls';
 import PubSectionNav from 'components/PubSectionNav/PubSectionNav';
 import DiscussionList from 'components/DiscussionListNew/DiscussionList';
 // import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
@@ -70,6 +71,7 @@ class Pub extends Component {
 		};
 		this.firebaseRef = null;
 		this.pageRef = React.createRef();
+		this.sideMarginRef = React.createRef();
 		this.setSavingTimeout = null;
 		this.getHighlightContent = this.getHighlightContent.bind(this);
 		this.getActiveDiscussionChannel = this.getActiveDiscussionChannel.bind(this);
@@ -162,15 +164,22 @@ class Pub extends Component {
 		this.setState({ pubData: newPubData });
 	}
 
-	getAbsolutePosition(top, left) {
+	getAbsolutePosition(top, left, placeInSideMargin) {
 		// const container = this.state.editorRefNode.editorRef.current;
 		// const page = this.pageRef.current;
+		const sideContainer = this.sideMarginRef.current;
 		// debugger;
 		return {
 			top: top + window.scrollY,
-			left: left,
+			left: placeInSideMargin
+				? sideContainer.getBoundingClientRect().left
+				: left,
+			width: placeInSideMargin
+				? sideContainer.getBoundingClientRect().width
+				: undefined,
 		};
 	}
+
 	setDiscussionChannel(channelTitle) {
 		const newQuery = {
 			...this.state.locationData.query,
@@ -523,7 +532,7 @@ class Pub extends Component {
 										<PubLicense />
 									}
 								</div>
-								<div className="side-content">
+								<div className="side-content" ref={this.sideMarginRef}>
 									{/* Table of Contents */}
 									<PubSideToc
 										pubData={pubData}
@@ -589,6 +598,11 @@ class Pub extends Component {
 						getAbsolutePosition={this.getAbsolutePosition}
 					/>
 					<PubLinkMenu
+						pubData={pubData}
+						editorChangeObject={this.state.editorChangeObject}
+						getAbsolutePosition={this.getAbsolutePosition}
+					/>
+					<PubSideControls
 						pubData={pubData}
 						editorChangeObject={this.state.editorChangeObject}
 						getAbsolutePosition={this.getAbsolutePosition}

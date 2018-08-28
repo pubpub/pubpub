@@ -2,6 +2,11 @@
 	margin: 4em 0em 0em;
 	padding-top: 1em;
 	height: 85px;
+	.side-options-wrapper {
+		width: 275px;
+		background: white;
+		z-index: 15;
+	}
 	.links {
 		display: flex;
 		justify-content: space-between;

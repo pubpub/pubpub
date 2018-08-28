@@ -63,9 +63,6 @@ class PubSideOptions extends Component {
 			position: this.state.isPositionFixed ? 'fixed' : 'static',
 			paddingTop: this.state.isPositionFixed ? '1em' : '0em',
 			top: `${topOffset}px`,
-			width: '275px',
-			background: 'white',
-			zIndex: '19',
 		};
 
 		// TODO: handling discussion flows
@@ -82,7 +79,7 @@ class PubSideOptions extends Component {
 		];
 		return (
 			<div className="pub-side-options-component" ref={this.wrapperRef}>
-				<div style={wrapperStyle}>
+				<div className="side-options-wrapper" style={wrapperStyle}>
 					<div className="links">
 						<a onClick={()=> { this.props.setOptionsMode('cite'); }}>Cite</a>
 						<span>·</span>

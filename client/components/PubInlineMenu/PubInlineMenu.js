@@ -29,6 +29,7 @@ const PubInlineMenu = (props)=> {
 		{ key: 'header2', icon: 'header-two' },
 		{ key: 'strong', icon: 'bold' },
 		{ key: 'em', icon: 'italic' },
+		{ key: 'link', icon: 'link' },
 	];
 	return (
 		<div className="pub-inline-menu-component pt-elevation-2" style={menuStyle}>
