@@ -24,6 +24,11 @@ const PubLinkMenu = (props)=> {
 	return (
 		<div className="pub-link-menu-component pt-elevation-2" style={menuStyle}>
 			<input
+				ref={(elem)=> {
+					if (elem && !activeLink.attrs.href) {
+						elem.focus();
+					}
+				}}
 				className="pt-input"
 				type="text"
 				value={activeLink.attrs.href}
@@ -31,7 +36,7 @@ const PubLinkMenu = (props)=> {
 					activeLink.updateAttrs({ href: evt.target.value });
 				}}
 			/>
-			<a href={activeLink.attrs.href} target="_blank">
+			<a className="pt-button pt-minimal" href={activeLink.attrs.href} target="_blank" rel="noopener noreferrer">
 				Go To Link
 			</a>
 			<Button

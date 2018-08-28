@@ -12,6 +12,7 @@ import PubSideOptions from 'components/PubSideOptions/PubSideOptions';
 import PubSideDiscussions from 'components/PubSideDiscussions/PubSideDiscussions';
 import PubLicense from 'components/PubLicense/PubLicense';
 import PubInlineMenu from 'components/PubInlineMenu/PubInlineMenu';
+import PubLinkMenu from 'components/PubLinkMenu/PubLinkMenu';
 import PubSectionNav from 'components/PubSectionNav/PubSectionNav';
 import DiscussionList from 'components/DiscussionListNew/DiscussionList';
 // import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
@@ -586,7 +587,11 @@ class Pub extends Component {
 						pubData={pubData}
 						editorChangeObject={this.state.editorChangeObject}
 						getAbsolutePosition={this.getAbsolutePosition}
-						// selectionBoundingBox={this.state.editorChangeObject.selectionBoundingBox}
+					/>
+					<PubLinkMenu
+						pubData={pubData}
+						editorChangeObject={this.state.editorChangeObject}
+						getAbsolutePosition={this.getAbsolutePosition}
 					/>
 					{/* <DiscussionViewer
 						pubData={pubData}

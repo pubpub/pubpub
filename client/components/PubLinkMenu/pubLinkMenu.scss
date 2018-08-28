@@ -1,4 +1,13 @@
 .pub-link-menu-component {
 	padding: 0.25em;
 	border-radius: 2px;
+	background: white;
+	input {
+		display: block;
+		width: 250px;
+		margin-bottom: 5px;
+	}
+	button.pt-button {
+		float: right;
+	}
 }
