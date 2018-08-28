@@ -13,7 +13,7 @@ app.get('/landing', (req, res, next)=> {
 				initialData={initialData}
 				headerComponents={generateMetaComponents({
 					initialData: initialData,
-					title: 'PubPub',
+					title: 'PubPub · Community Publishing',
 				})}
 			>
 				<NewLanding {...initialData} />

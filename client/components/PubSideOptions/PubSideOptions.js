@@ -35,15 +35,18 @@ class PubSideOptions extends Component {
 	}
 
 	handleScroll() {
+		const topOffset = this.props.pubData.isDraft
+			? 73 /* Height of draftHeaderBar */
+			: 0;
 		if (this.wrapperRef.current) {
 			if (!this.state.isPositionFixed) {
-				const isPastTop = this.wrapperRef.current.getBoundingClientRect().top < 0;
+				const isPastTop = this.wrapperRef.current.getBoundingClientRect().top < topOffset;
 				const isBeforeBottom = this.wrapperRef.current.parentNode.getBoundingClientRect().bottom > 200;
 				if (isPastTop && isBeforeBottom) {
 					this.setState(()=> { return { isPositionFixed: true }; });
 				}
 			} else {
-				const isBeforeTop = this.wrapperRef.current.getBoundingClientRect().top > 0;
+				const isBeforeTop = this.wrapperRef.current.getBoundingClientRect().top > topOffset;
 				const isAfterBottom = this.wrapperRef.current.parentNode.getBoundingClientRect().bottom < 200;
 				if (isBeforeTop || isAfterBottom) {
 					this.setState(()=> { return { isPositionFixed: false }; });
@@ -53,13 +56,16 @@ class PubSideOptions extends Component {
 	}
 
 	render() {
+		const topOffset = this.props.pubData.isDraft
+			? 73 /* Height of draftHeaderBar */
+			: 0;
 		const wrapperStyle = {
 			position: this.state.isPositionFixed ? 'fixed' : 'static',
 			paddingTop: this.state.isPositionFixed ? '1em' : '0em',
-			top: '0em',
+			top: `${topOffset}px`,
 			width: '275px',
 			background: 'white',
-			zIndex: '999',
+			zIndex: '19',
 		};
 
 		// TODO: handling discussion flows

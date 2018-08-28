@@ -8,6 +8,7 @@ const propTypes = {
 	label: PropTypes.string,
 	icon: PropTypes.string,
 	isRightAligned: PropTypes.bool,
+	isMinimal: PropTypes.bool,
 	isDisabled: PropTypes.bool,
 	isSmall: PropTypes.bool,
 	children: PropTypes.node.isRequired,
@@ -16,6 +17,7 @@ const propTypes = {
 const defaultProps = {
 	label: undefined,
 	icon: undefined,
+	isMinimal: false,
 	isDisabled: false,
 	isRightAligned: false,
 	isSmall: false,
@@ -36,8 +38,8 @@ const DropdownButton = function(props) {
 
 		>
 			{props.icon && !props.label
-				? <button disabled={props.isDisabled} type="button" className={`dropdown-button pt-button ${props.icon} ${props.isSmall ? 'pt-small' : ''}`} />
-				: <button disabled={props.isDisabled} type="button" className={`dropdown-button pt-button ${props.isSmall ? 'pt-small' : ''}`}>
+				? <button disabled={props.isDisabled} type="button" className={`dropdown-button pt-button ${props.icon} ${props.isSmall ? 'pt-small' : ''} ${props.isMinimal ? 'pt-minimal' : ''}`} />
+				: <button disabled={props.isDisabled} type="button" className={`dropdown-button pt-button ${props.isSmall ? 'pt-small' : ''} ${props.isMinimal ? 'pt-minimal' : ''}`}>
 					{props.icon &&
 						<span className={`pt-icon-standard ${props.icon}`} />
 					}

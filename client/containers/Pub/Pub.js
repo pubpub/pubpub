@@ -470,6 +470,7 @@ class Pub extends Component {
 						<PubDraftHeader
 							pubData={pubData}
 							loginData={loginData}
+							editorChangeObject={this.state.editorChangeObject}
 							setOptionsMode={this.setOptionsMode}
 							bottomCutoffId="discussions"
 							onRef={this.handleMenuWrapperRef}
@@ -477,8 +478,6 @@ class Pub extends Component {
 							activeCollaborators={this.state.activeCollaborators}
 						/>
 					}
-					
-
 
 					<div className="container pub">
 						<div className="row">
@@ -504,7 +503,7 @@ class Pub extends Component {
 										clientData={this.state.activeCollaborators[0]}
 										onClientChange={this.handleClientChange}
 										onStatusChange={this.handleStatusChange}
-										menuWrapperRefNode={this.state.menuWrapperRefNode}
+										// menuWrapperRefNode={this.state.menuWrapperRefNode}
 									/>
 
 									{/* Prev/Content/Next Buttons */}

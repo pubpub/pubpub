@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import throttle from 'lodash.throttle';
-import { Tooltip } from '@blueprintjs/core';
+import { Button, Tooltip } from '@blueprintjs/core';
 import Avatar from 'components/Avatar/Avatar';
+import Icon from 'components/Icon/Icon';
+import DropdownButton from 'components/DropdownButton/DropdownButton';
 
 require('./pubDraftHeader.scss');
 
@@ -10,6 +12,7 @@ const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	loginData: PropTypes.object.isRequired,
 	// locationData: PropTypes.object,
+	editorChangeObject: PropTypes.object.isRequired,
 	setOptionsMode: PropTypes.func.isRequired,
 	onRef: PropTypes.func.isRequired,
 	bottomCutoffId: PropTypes.string,
@@ -82,6 +85,130 @@ class PubDraftHeader extends Component {
 				name: `${numAnonymous} anonymous user${numAnonymous === 1 ? '' : 's'}`,
 			};
 		}
+		const menuItems = this.props.editorChangeObject.menuItems || [];
+		const menuItemsObject = menuItems.reduce((prev, curr)=> {
+			return { ...prev, [curr.title]: curr };
+		}, {});
+
+		const formattingItems = [
+			{
+				key: 'header1',
+				icon: <Icon icon="header-one" />
+			},
+			{
+				key: 'header2',
+				icon: <Icon icon="header-two" />
+			},
+			{
+				key: 'strong',
+				icon: <Icon icon="bold" />
+			},
+			{
+				key: 'em',
+				icon: <Icon icon="italic" />
+			},
+			{
+				key: 'code',
+				icon: <Icon icon="code" />
+			},
+			{
+				key: 'subscript',
+				icon: <Icon icon="subscript" />
+			},
+			{
+				key: 'superscript',
+				icon: <Icon icon="superscript" />
+			},
+			{
+				key: 'strikethrough',
+				icon: <Icon icon="strikethrough" />
+			},
+			{
+				key: 'blockquote',
+				icon: <Icon icon="citation" />
+			},
+			{
+				key: 'bullet-list',
+				icon: <Icon icon="list-ul" />
+			},
+			{
+				key: 'numbered-list',
+				icon: <Icon icon="list-ol" />
+			},
+			{
+				key: 'link',
+				icon: <Icon icon="link" />
+			},
+		];
+
+		const insertFunctions = this.props.editorChangeObject.insertFunctions || {};
+		const insertItems = [
+			{
+				key: 'citation',
+				title: 'Citation',
+				icon: <Icon icon="bookmark" />
+			},
+			{
+				key: 'citation_list',
+				title: 'Citation List',
+				icon: <Icon icon="numbered-list" />
+			},
+			{
+				key: 'code_block',
+				title: 'Code Block',
+				icon: <Icon icon="code" />
+			},
+			{
+				key: 'discussion_thread',
+				title: 'Discussion Thread',
+				icon: <Icon icon="chat" />
+			},
+			{
+				key: 'equation',
+				title: 'Equation',
+				icon: <Icon icon="function" />
+			},
+			{
+				key: 'file',
+				title: 'File',
+				icon: <Icon icon="document" />
+			},
+			{
+				key: 'footnote',
+				title: 'Footnote',
+				icon: <Icon icon="asterisk" />
+			},
+			{
+				key: 'footenote_list',
+				title: 'Footnote List',
+				icon: <Icon icon="numbered-list" />
+			},
+			{
+				key: 'horizontal_rule',
+				title: 'Horizontal Line',
+				icon: <Icon icon="minus" />
+			},
+			{
+				key: 'iframe',
+				title: 'Iframe',
+				icon: <Icon icon="code-block" />
+			},
+			{
+				key: 'image',
+				title: 'Image',
+				icon: <Icon icon="media" />
+			},
+			{
+				key: 'table',
+				title: 'Table',
+				icon: <Icon icon="th" />
+			},
+			{
+				key: 'video',
+				title: 'Video',
+				icon: <Icon icon="video" />
+			},
+		];
 		return (
 			<div className="pub-draft-header-component" ref={this.headerRef}>
 				<div className={`wrapper ${this.state.isFixed ? 'fixed' : ''}`}>
@@ -100,7 +227,41 @@ class PubDraftHeader extends Component {
 								</div>
 							</div>
 							<div className="col-12">
-								<div className="left-section" ref={this.props.onRef} key="wrapper" />
+								<div className="left-section">
+									{formattingItems.map((item)=> {
+										const menuItem = menuItemsObject[item.key] || {};
+										return (
+											<Button
+												key={item.key}
+												className="pt-minimal menu-button"
+												icon={item.icon}
+												active={menuItem.isActive}
+												onClick={menuItem.run}
+												onMouseDown={(evt)=> {
+													evt.preventDefault();
+												}}
+											/>
+										);
+									})}
+									<DropdownButton
+										label="Insert"
+										isSmall={true}
+										isMinimal={true}
+									>
+										{insertItems.map((item)=> {
+											return (
+												<div
+													className="pt-menu-item pt-popover-dismiss insert-menu-item"
+													key={item.key}
+													onClick={insertFunctions[item.key]}
+												>
+													{item.icon}
+													<span>{item.title}</span>
+												</div>
+											);
+										})}
+									</DropdownButton>
+								</div>
 								<div className="right-section">
 									{Object.keys(uniqueActiveCollaborators).map((key)=> {
 										return uniqueActiveCollaborators[key];
@@ -126,10 +287,10 @@ class PubDraftHeader extends Component {
 											</div>
 										);
 									})}
-									<button className="pt-button pt-small" type="button">
+									{/* <button className="pt-button pt-small" type="button">
 										Editing
 										<span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
-									</button>
+									</button> */}
 								</div>
 							</div>
 						</div>

@@ -180,8 +180,6 @@ const Landing = (props)=> {
 							<div>
 								<button className="pt-button">PubPub Mission</button>	
 							</div>
-							
-
 							<a>pubpub</a>
 							<a>pubpub-editor</a>
 							<a>review-maps</a>
@@ -199,13 +197,13 @@ const Landing = (props)=> {
 								<li>Catherine</li>
 								<li>Gabe</li>
 								<li>SJ</li>
-								<li>Jess Polka</li>
-								<li>Joel</li>
-								<li>Andy Lippman</li>
-								<li>Joi Ito</li>
 								<li>Amy Brand</li>
-								<li>Ed Finn</li>
+								<li>Joi Ito</li>
+								<li>Jess Polka</li>
+								<li>Andy Lippman</li>
 								<li>Terry</li>
+								<li>Joel</li>
+								<li>Ed Finn</li>
 								<li>Thomas</li>
 							</ul>
 						</div>

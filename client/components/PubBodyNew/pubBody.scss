@@ -5,10 +5,8 @@
 	-moz-font-feature-settings: "liga" on;
 	font-size: 20px;
 	min-height: 300px;
-	.pubpub-editor {
-		.ProseMirror {
-			min-height: 150px;
-		}
+	.editor.ProseMirror {
+		min-height: 150px;
 		h1 { font-size: 1.5em; }
 		h2 { font-size: 1.25em; }
 		h3 { font-size: 1.2em; }

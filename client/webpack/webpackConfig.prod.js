@@ -83,7 +83,7 @@ module.exports = {
 					test: /[\\/]node_modules[\\/]/,
 					name: 'vendor',
 					chunks: 'all',
-					minChunks: 2,
+					// minChunks: 2, // This was causing weird vendor.css issues where it wouldn't output.
 				},
 			}
 		},

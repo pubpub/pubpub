@@ -39,7 +39,7 @@ const propTypes = {
 	onHighlightClick: PropTypes.func.isRequired,
 	isReadOnly: PropTypes.bool.isRequired,
 	onStatusChange: PropTypes.func,
-	menuWrapperRefNode: PropTypes.object,
+	// menuWrapperRefNode: PropTypes.object,
 	onChange: PropTypes.func,
 };
 const defaultProps = {
@@ -51,7 +51,7 @@ const defaultProps = {
 	setActiveThread: ()=>{},
 	onNewHighlightDiscussion: ()=>{},
 	onStatusChange: ()=>{},
-	menuWrapperRefNode: undefined,
+	// menuWrapperRefNode: undefined,
 	onChange: ()=> {},
 };
 
@@ -78,7 +78,7 @@ class PubBody extends Component {
 	}
 
 	render() {
-		if (this.props.isDraft && !this.props.menuWrapperRefNode) { return null; }
+		// if (this.props.isDraft && !this.props.menuWrapperRefNode) { return null; }
 
 		if (this.state.error) {
 			return (
@@ -112,13 +112,16 @@ class PubBody extends Component {
 					initialContent={this.props.isDraft ? undefined : this.props.content}
 					isReadOnly={this.props.isReadOnly}
 					onChange={this.props.onChange}
-					collaborativeOptions={{
-						firebaseConfig: getFirebaseConfig(),
-						clientData: this.props.clientData,
-						editorKey: this.props.editorKey,
-						onClientChange: this.props.onClientChange,
-						onStatusChange: this.props.onStatusChange,
-					}}
+					collaborativeOptions={this.props.isDraft
+						? {
+							firebaseConfig: getFirebaseConfig(),
+							clientData: this.props.clientData,
+							editorKey: this.props.editorKey,
+							onClientChange: this.props.onClientChange,
+							onStatusChange: this.props.onStatusChange,
+						}
+						: undefined
+					}
 					getHighlights={()=> {
 						return this.props.highlights;
 					}}
