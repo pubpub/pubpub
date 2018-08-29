@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { getJSON } from '@pubpub/editor';
 
 require('./pubSideToc.scss');
 
@@ -9,6 +10,7 @@ const propTypes = {
 	setOptionsMode: PropTypes.func.isRequired,
 	editorRefNode: PropTypes.object,
 	activeContent: PropTypes.object,
+	editorChangeObject: PropTypes.object.isRequired,
 };
 
 const defaultProps = {
@@ -19,7 +21,7 @@ const defaultProps = {
 const PubSideToc = function(props) {
 	/* activeContent will be defined on saved versions */
 	/* editorRefNode will be defined and used on working drafts */
-	if (!props.activeContent && !props.editorRefNode) { return null; }
+	if (!props.activeContent && !props.editorChangeObject.view) { return null; }
 
 	const queryObject = props.locationData.query;
 	const content = props.pubData.activeVersion && props.pubData.activeVersion.content;
@@ -30,13 +32,7 @@ const PubSideToc = function(props) {
 
 	const hasSections = Array.isArray(sectionsData) && sectionsData.length > 1;
 
-	// const headingsContent = props.activeContent || props.editorRefNode.getJSON();
-	// const draftContent = props.editorRefNode.state
-	// 	? props.editorRefNode.state.doc.toJSON()
-	// 	: { content: [] };
-	// const headingsContent = props.activeContent || draftContent;
-	// TODO: Fix
-	const headingsContent = { content: [] };
+	const headingsContent = props.activeContent || getJSON(props.editorChangeObject.view);
 
 	const headings = headingsContent.content.filter((item)=> {
 		return item.type === 'heading' && item.attrs.level < 3;

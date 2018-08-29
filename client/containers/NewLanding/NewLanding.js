@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import CommunityPreview from 'components/CommunityPreview/CommunityPreview';
-import LandingFeature from 'components/LandingFeature/LandingFeature';
-import PageWrapper from 'components/PageWrapper/PageWrapper';
-import { hydrateWrapper, getResizedUrl } from 'utilities';
+import { hydrateWrapper } from 'utilities';
 
 require('./newLanding.scss');
 

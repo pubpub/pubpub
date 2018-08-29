@@ -9,7 +9,7 @@ const propTypes = {
 	updateAttrs: PropTypes.func.isRequired,
 };
 
-class PubSideControlsImage extends Component {
+class PubSideControlsVideo extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -17,12 +17,12 @@ class PubSideControlsImage extends Component {
 		};
 		this.randKey = Math.round(Math.random() * 99999);
 		this.onUploadFinish = this.onUploadFinish.bind(this);
-		this.handleImageSelect = this.handleImageSelect.bind(this);
+		this.handleVideoSelect = this.handleVideoSelect.bind(this);
 	}
 
 	onUploadFinish(evt, index, type, filename) {
 		/* This timeout is due to S3 returning a 404 if we render the */
-		/* image immediately after upload. S3 seems to have read-after-write */
+		/* video immediately after upload. S3 seems to have read-after-write */
 		/* consistency - but I am still seeing problems with it. 500ms */
 		/* seems to do the trick, but this is pretty hand-wavy. */
 		setTimeout(()=> {
@@ -33,7 +33,7 @@ class PubSideControlsImage extends Component {
 		}, 500);
 	}
 
-	handleImageSelect(evt) {
+	handleVideoSelect(evt) {
 		if (evt.target.files.length) {
 			s3Upload(evt.target.files[0], ()=>{}, this.onUploadFinish, 0);
 			this.setState({
@@ -50,8 +50,8 @@ class PubSideControlsImage extends Component {
 			{ key: 'full', icon: 'pt-icon-vertical-distribution' },
 		];
 		return (
-			<div className="pub-side-controls-image-component">
-				<div className="options-title">Image Details</div>
+			<div className="pub-side-controls-video-component">
+				<div className="options-title">Video Details</div>
 				{/*  Size Adjustment */}
 				<div className="form-label first">
 					Size
@@ -114,15 +114,15 @@ class PubSideControlsImage extends Component {
 				<label htmlFor={this.randKey} className="file-select">
 					<AnchorButton
 						className="pt-button"
-						text="Choose new image"
+						text="Choose new video"
 						loading={this.state.isUploading}
 					/>
 					<input
 						id={this.randKey}
-						name="image"
+						name="video"
 						type="file"
-						accept="image/png, image/jpeg, image/gif"
-						onChange={this.handleImageSelect}
+						accept="video/mp4, video/webm"
+						onChange={this.handleVideoSelect}
 						className="file-input"
 					/>
 				</label>
@@ -132,5 +132,5 @@ class PubSideControlsImage extends Component {
 }
 
 
-PubSideControlsImage.propTypes = propTypes;
-export default PubSideControlsImage;
+PubSideControlsVideo.propTypes = propTypes;
+export default PubSideControlsVideo;

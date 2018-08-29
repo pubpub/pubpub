@@ -379,7 +379,7 @@ class Pub extends Component {
 	}
 
 	handleEditorChange(changeObject) {
-		// console.log(changeObject);
+		console.log(changeObject);
 		if (!this.state.editorChangeObject.view) {
 			/* Sometimes the bounding boxes need updating */
 			/* after initial load. */
@@ -554,6 +554,7 @@ class Pub extends Component {
 										setOptionsMode={this.setOptionsMode}
 										editorRefNode={this.state.editorRefNode}
 										activeContent={activeContent}
+										editorChangeObject={this.state.editorChangeObject}
 									/>
 
 									{/* Collaborators */}
