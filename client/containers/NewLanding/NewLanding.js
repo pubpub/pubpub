@@ -11,11 +11,9 @@ const propTypes = {
 	communityData: PropTypes.object.isRequired,
 	loginData: PropTypes.object.isRequired,
 	locationData: PropTypes.object.isRequired,
-	landingData: PropTypes.object.isRequired,
 };
 
 const Landing = (props)=> {
-	const landingData = props.landingData;
 	const features = [
 		{
 			title: 'Collaborative Editing',
@@ -58,10 +56,10 @@ const Landing = (props)=> {
 								<img src="/static/logoWhite.png" alt="PubPub" />
 								<span className="title">PubPub</span>
 								<div className="spacer" />
-								<a className="link">About</a>
-								<a className="link">Features</a>
-								<a className="link">Pricing</a>
-								<a className="link">Contact</a>
+								<a href="/new/about" className="link">About</a>
+								<a href="/new/features" className="link">Features</a>
+								<a href="/new/pricing" className="link">Pricing</a>
+								<a href="/new/contact" className="link">Contact</a>
 								<span className="separator">·</span>
 								<a className="link">Search</a>
 								<a className="link">Signup or Login</a>

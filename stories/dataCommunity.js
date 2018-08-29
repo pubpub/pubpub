@@ -2,72 +2,190 @@ export default {
     "id": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
     "subdomain": "frankdev",
     "domain": null,
-    "title": "Frankenbook",
+    "title": "PubPub Dev",
     "description": "",
     "avatar": null,
     "favicon": null,
-    "smallHeaderLogo": "https://assets.pubpub.org/_testing/11517874359900.png",
-    "largeHeaderLogo": "https://assets.pubpub.org/_testing/51517935627627.png",
-    "largeHeaderBackground": "https://assets.pubpub.org/_testing/51517937166655.jpg",
-    "accentColor": "#141413",
+    "smallHeaderLogo": "https://assets.pubpub.org/_testing/41535547813533.png",
+    "largeHeaderLogo": "https://assets.pubpub.org/_testing/51535547817693.png",
+    "largeHeaderBackground": null,
+    "accentColor": "#454F60",
     "accentTextColor": "#FFFFFF",
-    "accentActionColor": "rgba(20, 20, 19, 0.6)",
-    "accentHoverColor": "rgba(20, 20, 19, 0.8)",
-    "accentMinimalColor": "rgba(20, 20, 19, 0.19999999999999996)",
+    "accentActionColor": "rgba(69, 79, 96, 0.6)",
+    "accentHoverColor": "rgba(69, 79, 96, 0.8)",
+    "accentMinimalColor": "rgba(69, 79, 96, 0.19999999999999996)",
     "navigation": [
         "0fd7f42c-d8a1-4275-bf2b-cd641416959c",
         "72a43321-6b86-4d94-8412-288c3d28fd6a",
-        "632bfbc1-a8a3-4829-be61-fa20db405d90",
-        "af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b",
-        {
-            "id": "4zsvxnbq",
-            "title": "About",
-            "children": [
-                "5b763da8-d0c7-4d90-8e56-9d1ac0e49a5a",
-                "dd0d1dd0-30c2-4f27-9ef1-dec455c84177",
-                "8b10fb64-0cb4-4176-b46a-8610c2a48223",
-                "35d1cbbd-2e54-4334-8443-2df07fbd7383"
-            ]
-        }
+        "0321c3c5-15df-44e0-a4e0-fb4e38453dbc"
     ],
     "website": "",
     "facebook": "",
     "twitter": "",
     "email": "",
     "issn": null,
-    "collections": [
+    "pages": [
         {
-            "id": "af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b",
-            "title": "Essays",
-            "description": "",
-            "slug": "essays",
-            "isPage": false,
-            "isPublic": true,
-            "isOpenSubmissions": true,
-            "isOpenPublish": true,
+            "id": "0321c3c5-15df-44e0-a4e0-fb4e38453dbc",
+            "title": "The Practice of Change",
+            "description": "How I survived being interested in everything",
+            "slug": "practiceofchange",
+            "isPublic": false,
+            "viewHash": "72pbxuc7",
             "layout": [
                 {
-                    "id": "9n9tcqy6",
+                    "id": "dcnz9e7a",
                     "type": "text",
                     "content": {
                         "text": {
                             "type": "doc",
                             "attrs": {
-                                "meta": {}
+                                "meta": {},
+                                "trackChangesData": {}
                             },
                             "content": [
                                 {
                                     "type": "heading",
                                     "attrs": {
-                                        "id": "this-is-my-title-and-if-it-is-long-it-will-become-terrible",
-                                        "level": 1
+                                        "id": "the-practice-of-change",
+                                        "level": 1,
+                                        "trackChangesData": {}
                                     },
                                     "content": [
                                         {
-                                            "text": "This is my title and if it is long it will become terrible.",
-                                            "type": "text"
+                                            "text": "The Practice of Change",
+                                            "type": "text",
+                                            "marks": [
+                                                {
+                                                    "type": "em"
+                                                }
+                                            ],
+                                            "currIndex": 0
                                         }
-                                    ]
+                                    ],
+                                    "currIndex": 0
+                                },
+                                {
+                                    "type": "heading",
+                                    "attrs": {
+                                        "id": "how-i-survived-being-interested-in-everything",
+                                        "level": 2,
+                                        "trackChangesData": {}
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "How I survived being interested in everything  ",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 1
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null,
+                                        "trackChangesData": {}
+                                    },
+                                    "currIndex": 2
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null,
+                                        "trackChangesData": {}
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "doctoral dissertation, academic year 2018",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 3
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null,
+                                        "trackChangesData": {}
+                                    },
+                                    "currIndex": 4
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null,
+                                        "trackChangesData": {}
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "keio university",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 5
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": "MsoNormal",
+                                        "trackChangesData": {}
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "graduate school of media & governance",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 6
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": "MsoBodyText",
+                                        "trackChangesData": {}
+                                    },
+                                    "content": [
+                                        {
+                                            "text": " ",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 7
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": "MsoNormal",
+                                        "trackChangesData": {}
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "j o i c h i i t o",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 8
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": "MsoNormal",
+                                        "trackChangesData": {}
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "(version 1.1)",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 9
                                 }
                             ]
                         },
@@ -84,18 +202,451 @@ export default {
                         "limit": 1,
                         "title": "",
                         "pubIds": [
-                            "035ca4ed-db16-4c30-a1a0-b50f1969b8fa"
+                            "5a635bdc-d71c-40bd-af89-56fdc8b32014"
                         ]
                     }
                 },
                 {
-                    "id": "gruw36cv",
+                    "id": "gu1wh8h8",
+                    "type": "text",
+                    "content": {
+                        "text": {
+                            "type": "doc",
+                            "attrs": {
+                                "meta": {},
+                                "trackChangesData": {}
+                            },
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null,
+                                        "trackChangesData": {}
+                                    },
+                                    "currIndex": 0
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null,
+                                        "trackChangesData": {}
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Over the last century civilization has systematically supported a market- based approach to developing technical, financial, social and legal tools that focus on efficiency, growth and productivity. In this manner we have achieved considerable progress on some of the most press- ing humanitarian challenges, such as eradicating infectious diseases and making life easier and more convenient. However, we have often put our tools and methods to use with little regard to their systemic or long-term effects, and have thereby created a set of new, inter- connected, and more complex problems. Our new problems require new approaches: new understanding, solution design and interven- tion. Yet we continue to try to solve these new problems with the same tools that caused them.",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 1
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": "MsoBodyText",
+                                        "trackChangesData": {}
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Therefore in my dissertation I ask:",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 2
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": "MsoBodyText",
+                                        "trackChangesData": {}
+                                    },
+                                    "content": [
+                                        {
+                                            "text": " ",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        },
+                                        {
+                                            "text": "How can we understand and effectively intervene in interconnected complex adaptive systems?",
+                                            "type": "text",
+                                            "marks": [
+                                                {
+                                                    "type": "em"
+                                                }
+                                            ],
+                                            "currIndex": 1
+                                        }
+                                    ],
+                                    "currIndex": 3
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": "MsoBodyText",
+                                        "trackChangesData": {}
+                                    },
+                                    "content": [
+                                        {
+                                            "text": " ",
+                                            "type": "text",
+                                            "marks": [
+                                                {
+                                                    "type": "em"
+                                                }
+                                            ],
+                                            "currIndex": 0
+                                        },
+                                        {
+                                            "text": "In particular, my thesis presents through theory and practice the following contributions to addressing these problems:",
+                                            "type": "text",
+                                            "currIndex": 1
+                                        }
+                                    ],
+                                    "currIndex": 4
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": "MsoBodyText",
+                                        "trackChangesData": {}
+                                    },
+                                    "content": [
+                                        {
+                                            "text": " ",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 5
+                                },
+                                {
+                                    "type": "ordered_list",
+                                    "attrs": {
+                                        "order": 1,
+                                        "trackChangesData": {}
+                                    },
+                                    "content": [
+                                        {
+                                            "type": "list_item",
+                                            "attrs": {
+                                                "trackChangesData": {}
+                                            },
+                                            "content": [
+                                                {
+                                                    "type": "paragraph",
+                                                    "attrs": {
+                                                        "class": "MsoListParagraph",
+                                                        "trackChangesData": {}
+                                                    },
+                                                    "content": [
+                                                        {
+                                                            "text": "A post-Internet framework for understanding and interven- ing in complex adaptive systems. ",
+                                                            "type": "text",
+                                                            "marks": [
+                                                                {
+                                                                    "type": "strong"
+                                                                }
+                                                            ],
+                                                            "currIndex": 0
+                                                        },
+                                                        {
+                                                            "text": "Drawing on systems dynam- ics, evolutionary dynamics and theory of change based on causal networks, I describe a way to understand and suggest ways to intervene in complex systems. I argue that an anti-disciplinary approach and paradigm shifts are required to achieve the out- comes we desire.",
+                                                            "type": "text",
+                                                            "currIndex": 1
+                                                        }
+                                                    ],
+                                                    "currIndex": 0
+                                                }
+                                            ],
+                                            "currIndex": 0
+                                        },
+                                        {
+                                            "type": "list_item",
+                                            "attrs": {
+                                                "trackChangesData": {}
+                                            },
+                                            "content": [
+                                                {
+                                                    "type": "paragraph",
+                                                    "attrs": {
+                                                        "class": "MsoListParagraph",
+                                                        "trackChangesData": {}
+                                                    },
+                                                    "content": [
+                                                        {
+                                                            "text": "Learnings from the creation and management of post-Internet organizations that can be applied to designing and deploying interventions. ",
+                                                            "type": "text",
+                                                            "marks": [
+                                                                {
+                                                                    "type": "strong"
+                                                                }
+                                                            ],
+                                                            "currIndex": 0
+                                                        },
+                                                        {
+                                                            "text": "I propose an architecture of layers of interoper- ability to unbundle complex, inflexible, and monolithic systems and increase competition, cooperation, generativity, and flexibil- ity. I argue that the Internet is the best example of this architec- ture and that the Internet has provided an opportunity to de- ploy this architecture in other domains. I demonstrate how the Internet has has made the world more complex but through low- ering the cost of communication and collaboration has enabled new forms of organization and production. This has changed the nature of our interventions.",
+                                                            "type": "text",
+                                                            "currIndex": 1
+                                                        }
+                                                    ],
+                                                    "currIndex": 0
+                                                }
+                                            ],
+                                            "currIndex": 1
+                                        },
+                                        {
+                                            "type": "list_item",
+                                            "attrs": {
+                                                "trackChangesData": {}
+                                            },
+                                            "content": [
+                                                {
+                                                    "type": "paragraph",
+                                                    "attrs": {
+                                                        "class": "MsoListParagraph",
+                                                        "trackChangesData": {}
+                                                    },
+                                                    "content": [
+                                                        {
+                                                            "text": "How and why we must change the values of society from one based on the measurement of financial value to flourishing and robustness. ",
+                                                            "type": "text",
+                                                            "marks": [
+                                                                {
+                                                                    "type": "strong"
+                                                                }
+                                                            ],
+                                                            "currIndex": 0
+                                                        },
+                                                        {
+                                                            "text": "The paradigm determines what we measure and generates the values and the goals of a system. Measuring value financially has created a competitive market-based system that has provided many societal benefits but has produced com- plex problems not solvable through competitive market-based solutions. In order to address these challenges, we must shift the paradigm across our systems to focus on a more complex measure of flourishing and robustness. In order to transcend  our current economic paradigm, the transformation will require a movement that includes arts and culture to transform strongly held beliefs. I propose a framework of values based on the pur- suit of flourishing and a method for transforming ourselves.",
+                                                            "type": "text",
+                                                            "currIndex": 1
+                                                        }
+                                                    ],
+                                                    "currIndex": 0
+                                                }
+                                            ],
+                                            "currIndex": 2
+                                        }
+                                    ],
+                                    "currIndex": 6
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": "MsoBodyText",
+                                        "trackChangesData": {}
+                                    },
+                                    "content": [
+                                        {
+                                            "text": " ",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 7
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": "MsoBodyText",
+                                        "trackChangesData": {}
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Reflecting on my work experience, I examine my successes and failures in the form of learnings and insights. I discuss what questions are outstanding and conclude with a call to action with a theory of change; we need to bring about a fundamental normative shift in society through communities, away from the pursuit of growth for growth’s sake and towards a sustainable sensibility of flourishing that can draw on both historical examples and the sensibilities of some modern indigenous cultures, as well as new values emerging from theoretical and practical progress in science.",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 8
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null,
+                                        "trackChangesData": {}
+                                    },
+                                    "currIndex": 9
+                                },
+                                {
+                                    "type": "image",
+                                    "attrs": {
+                                        "url": "https://assets.pubpub.org/_testing/71534266580550.png",
+                                        "size": 46,
+                                        "align": "center",
+                                        "caption": "<p>Scheming with Timothy Leary in 1995</p>",
+                                        "trackChangesData": {}
+                                    },
+                                    "currIndex": 10
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": "MsoBodyText",
+                                        "trackChangesData": {}
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "“Question authority and think for yourself.”",
+                                            "type": "text",
+                                            "marks": [
+                                                {
+                                                    "type": "em"
+                                                }
+                                            ],
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 11
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": "MsoNormal",
+                                        "trackChangesData": {}
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "— Timothy Leary ",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 12
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": "MsoBodyText",
+                                        "trackChangesData": {}
+                                    },
+                                    "currIndex": 13
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null,
+                                        "trackChangesData": {}
+                                    },
+                                    "currIndex": 14
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": "MsoBodyText",
+                                        "trackChangesData": {}
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Keywords: Cybernetics, Systems Dynamics, Philosophy of Science, Internet, Cryptocurrency",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 15
+                                }
+                            ]
+                        },
+                        "align": "left",
+                        "title": "Abstract",
+                        "width": "wide"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b",
+            "title": "Essays",
+            "description": "",
+            "slug": "essays",
+            "isPublic": true,
+            "viewHash": "szjeeg1w",
+            "layout": [
+                {
+                    "id": "j0sbbej1",
+                    "type": "banner",
+                    "content": {
+                        "text": "Hello",
+                        "align": "left",
+                        "title": "Essays",
+                        "buttonText": "",
+                        "showButton": true,
+                        "defaultTagIds": [
+                            "632bfbc1-a8a3-4829-be61-fa20db405d90",
+                            "72a43321-6b86-4d94-8412-288c3d28fd6a",
+                            "8b10fb64-0cb4-4176-b46a-8610c2a48223"
+                        ],
+                        "backgroundSize": "full",
+                        "backgroundColor": "red",
+                        "backgroundImage": ""
+                    }
+                },
+                {
+                    "id": "8ylkkb3t",
+                    "type": "banner",
+                    "content": {
+                        "text": "Essays",
+                        "align": "center",
+                        "buttonText": "",
+                        "showButton": false,
+                        "defaultTags": [],
+                        "backgroundSize": "full",
+                        "backgroundColor": "#112299",
+                        "backgroundImage": ""
+                    }
+                },
+                {
+                    "id": "azrngmqv",
+                    "type": "header",
+                    "content": {
+                        "text": "This is my title and if it is long it will become terrible.",
+                        "align": "left",
+                        "background": "",
+                        "backgroundSize": "full"
+                    }
+                },
+                {
+                    "id": "0kyj32ay",
                     "type": "pubs",
                     "content": {
-                        "size": "medium",
-                        "limit": 0,
+                        "limit": 2,
+                        "tagId": "af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b",
                         "title": "",
-                        "pubIds": []
+                        "pubIds": [],
+                        "tagIds": [
+                            "af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b"
+                        ],
+                        "pubPreviewType": "medium"
+                    }
+                },
+                {
+                    "id": "3ciekgep",
+                    "type": "banner",
+                    "content": {
+                        "text": "Essays Newer",
+                        "align": "center",
+                        "buttonText": "",
+                        "showButton": false,
+                        "defaultTags": [],
+                        "backgroundSize": "full",
+                        "backgroundColor": "#227799",
+                        "backgroundImage": ""
+                    }
+                },
+                {
+                    "id": "8ktkn6xs",
+                    "type": "pubs",
+                    "content": {
+                        "limit": 0,
+                        "tagId": "af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b",
+                        "title": "",
+                        "pubIds": [],
+                        "tagIds": [
+                            "af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b"
+                        ],
+                        "pubPreviewType": "medium"
                     }
                 },
                 {
@@ -105,19 +656,83 @@ export default {
                         "title": "Open Drafts"
                     }
                 }
-            ],
-            "createPubHash": "szjeeg1w",
-            "createPubMessage": null
+            ]
         },
         {
-            "id": "5b763da8-d0c7-4d90-8e56-9d1ac0e49a5a",
-            "title": "About Frankenbook",
+            "id": "0fd7f42c-d8a1-4275-bf2b-cd641416959c",
+            "title": "Home",
             "description": "",
-            "slug": "about",
-            "isPage": true,
+            "slug": "",
             "isPublic": true,
-            "isOpenSubmissions": false,
-            "isOpenPublish": false,
+            "viewHash": "kh128d20",
+            "layout": [
+                {
+                    "id": "lq2zkm3d",
+                    "type": "pubs",
+                    "content": {
+                        "limit": 4,
+                        "title": "Dev Notes",
+                        "pubIds": [
+                            "4c350f9e-4dd3-41c3-bbe6-7cd855ce414f",
+                            "12e9dbbd-5261-4d7a-90be-ae818fcfaab1",
+                            "dc42a249-9452-4946-98ab-7c9c0fe158ea"
+                        ],
+                        "tagIds": [
+                            "72a43321-6b86-4d94-8412-288c3d28fd6a"
+                        ],
+                        "pubPreviewType": "medium"
+                    }
+                },
+                {
+                    "id": "8j4m8rff",
+                    "type": "html",
+                    "content": {
+                        "html": "<h2><a href=\"/notes\">All dev notes »</a></h2>",
+                        "title": ""
+                    }
+                },
+                {
+                    "id": "mbxpkscx",
+                    "type": "pubs",
+                    "content": {
+                        "limit": 0,
+                        "title": "Test Pages",
+                        "pubIds": [],
+                        "tagIds": [
+                            "0fd7f42c-d8a1-4275-bf2b-cd641416959c"
+                        ],
+                        "pubPreviewType": "medium"
+                    }
+                },
+                {
+                    "id": "999hm25o",
+                    "type": "createPub",
+                    "content": {
+                        "size": "large",
+                        "text": "",
+                        "align": "left",
+                        "defaultTags": []
+                    }
+                },
+                {
+                    "id": "d5nqdi6q",
+                    "type": "header",
+                    "content": {
+                        "text": "Hello there",
+                        "align": "center",
+                        "background": "",
+                        "backgroundSize": "standard"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "8b10fb64-0cb4-4176-b46a-8610c2a48223",
+            "title": "Privacy Policy",
+            "description": "",
+            "slug": "privacy",
+            "isPublic": true,
+            "viewHash": "5mc4qy7d",
             "layout": [
                 {
                     "id": "kruw36cv",
@@ -142,24 +757,37 @@ export default {
                                                 {
                                                     "type": "em"
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 0
                                         },
                                         {
-                                            "text": " is a collective reading and collaborative annotation experience of the original 1818 text of ",
-                                            "type": "text"
-                                        },
+                                            "text": " is a project of the Center for Science and the Imagination at Arizona State University (“ASU”) and the Media Lab and The MIT Press at the Massachusetts Institute of Technology (“MIT”).",
+                                            "type": "text",
+                                            "currIndex": 1
+                                        }
+                                    ],
+                                    "currIndex": 0
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
                                         {
-                                            "text": "Frankenstein; or, The Modern Prometheus",
+                                            "text": "Frankenbook",
                                             "type": "text",
                                             "marks": [
                                                 {
                                                     "type": "em"
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 0
                                         },
                                         {
-                                            "text": ", by Mary Wollstonecraft Shelley. The project launched in January 2018, as part of Arizona State University’s celebration of the novel’s 200th anniversary. Even two centuries later, Shelley’s modern myth continues to shape the way people imagine science, technology, and their moral consequences. ",
-                                            "type": "text"
+                                            "text": " is committed to respecting the privacy of users who access the ",
+                                            "type": "text",
+                                            "currIndex": 1
                                         },
                                         {
                                             "text": "Frankenbook",
@@ -168,13 +796,848 @@ export default {
                                                 {
                                                     "type": "em"
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 2
+                                        },
+                                        {
+                                            "text": "website (the “Site,” which includes all pages within the frankenbook.org host directory and subdomains, and all associated services.",
+                                            "type": "text",
+                                            "currIndex": 3
+                                        }
+                                    ],
+                                    "currIndex": 1
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "currIndex": 2
+                                },
+                                {
+                                    "type": "heading",
+                                    "attrs": {
+                                        "id": "web-server-logs",
+                                        "level": 2
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Web Server Logs",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 3
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "When you visit the Site, our web server may record the following information in its server log:",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 4
+                                },
+                                {
+                                    "type": "bullet_list",
+                                    "content": [
+                                        {
+                                            "type": "list_item",
+                                            "content": [
+                                                {
+                                                    "type": "paragraph",
+                                                    "attrs": {
+                                                        "class": null
+                                                    },
+                                                    "content": [
+                                                        {
+                                                            "text": "your IP Address,",
+                                                            "type": "text",
+                                                            "currIndex": 0
+                                                        }
+                                                    ],
+                                                    "currIndex": 0
+                                                }
+                                            ],
+                                            "currIndex": 0
+                                        },
+                                        {
+                                            "type": "list_item",
+                                            "content": [
+                                                {
+                                                    "type": "paragraph",
+                                                    "attrs": {
+                                                        "class": null
+                                                    },
+                                                    "content": [
+                                                        {
+                                                            "text": "the URLs you have requested to access,",
+                                                            "type": "text",
+                                                            "currIndex": 0
+                                                        }
+                                                    ],
+                                                    "currIndex": 0
+                                                }
+                                            ],
+                                            "currIndex": 1
+                                        },
+                                        {
+                                            "type": "list_item",
+                                            "content": [
+                                                {
+                                                    "type": "paragraph",
+                                                    "attrs": {
+                                                        "class": null
+                                                    },
+                                                    "content": [
+                                                        {
+                                                            "text": "the dates and methods of requests,",
+                                                            "type": "text",
+                                                            "currIndex": 0
+                                                        }
+                                                    ],
+                                                    "currIndex": 0
+                                                }
+                                            ],
+                                            "currIndex": 2
+                                        },
+                                        {
+                                            "type": "list_item",
+                                            "content": [
+                                                {
+                                                    "type": "paragraph",
+                                                    "attrs": {
+                                                        "class": null
+                                                    },
+                                                    "content": [
+                                                        {
+                                                            "text": "the status code of your requests,",
+                                                            "type": "text",
+                                                            "currIndex": 0
+                                                        }
+                                                    ],
+                                                    "currIndex": 0
+                                                }
+                                            ],
+                                            "currIndex": 3
+                                        },
+                                        {
+                                            "type": "list_item",
+                                            "content": [
+                                                {
+                                                    "type": "paragraph",
+                                                    "attrs": {
+                                                        "class": null
+                                                    },
+                                                    "content": [
+                                                        {
+                                                            "text": "URLs of pages that referred you to the Site,",
+                                                            "type": "text",
+                                                            "currIndex": 0
+                                                        }
+                                                    ],
+                                                    "currIndex": 0
+                                                }
+                                            ],
+                                            "currIndex": 4
+                                        },
+                                        {
+                                            "type": "list_item",
+                                            "content": [
+                                                {
+                                                    "type": "paragraph",
+                                                    "attrs": {
+                                                        "class": null
+                                                    },
+                                                    "content": [
+                                                        {
+                                                            "text": "the number of bytes transferred, and",
+                                                            "type": "text",
+                                                            "currIndex": 0
+                                                        }
+                                                    ],
+                                                    "currIndex": 0
+                                                }
+                                            ],
+                                            "currIndex": 5
+                                        },
+                                        {
+                                            "type": "list_item",
+                                            "content": [
+                                                {
+                                                    "type": "paragraph",
+                                                    "attrs": {
+                                                        "class": null
+                                                    },
+                                                    "content": [
+                                                        {
+                                                            "text": "your web browser and operating system platform.",
+                                                            "type": "text",
+                                                            "currIndex": 0
+                                                        }
+                                                    ],
+                                                    "currIndex": 0
+                                                }
+                                            ],
+                                            "currIndex": 6
+                                        }
+                                    ],
+                                    "currIndex": 5
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "We use server log information to help diagnose problems with our server and to administer our website by identifying which parts or features of our site are most heavily used. We also use this information to tailor site content to user needs and to generate aggregate statistical reports. Web server logs are retained on a temporary basis, during which time their contents are accessible to Site administrators, and then deleted completely from our systems. Unless required by legal process, we do not link IP addresses to any personally identifiable information. This means that user sessions will be tracked by IP address, but a user’s identity will remain anonymous.",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 6
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "In addition, we ordinarily do not disclose to third parties site usage by individual IP addresses, but we may do so in very limited circumstances when complying with law or legal process, working with consultants assisting us with fixing or improving the Site, or monitoring and improving the security of our network.",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 7
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "currIndex": 8
+                                },
+                                {
+                                    "type": "heading",
+                                    "attrs": {
+                                        "id": "user-registration-and-user-generated-content",
+                                        "level": 2
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "User Registration and User Generated Content",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 9
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "To obtain user registration, you must submit your email address to the Site, and a password that you create for user authentication purposes. We also ask you to provide a first and last name. You may use a pseudonym if you wish.",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 10
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "The Site allows registered users to post content, images, multimedia presentations, and other scholarly works, as well as reviews, comments and other user-generated content in certain areas. The content you post will be available for all registered users to view and will identify you as the poster by the user name you have selected. If you do not wish to be identified as the source of content you post to the Site, you should select a pseudonymous user name.",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 11
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Frankenbook",
+                                            "type": "text",
+                                            "marks": [
+                                                {
+                                                    "type": "em"
+                                                }
+                                            ],
+                                            "currIndex": 0
+                                        },
+                                        {
+                                            "text": " creates a profile page for each registered user. The profile pages are public-facing. By default, the profile page includes your user name and information about your contributions to ",
+                                            "type": "text",
+                                            "currIndex": 1
+                                        },
+                                        {
+                                            "text": "Frankenbook",
+                                            "type": "text",
+                                            "marks": [
+                                                {
+                                                    "type": "em"
+                                                }
+                                            ],
+                                            "currIndex": 2
+                                        },
+                                        {
+                                            "text": " and other activities on the Site. You may (but do not need to) augment your profile page with additional information, including a picture.",
+                                            "type": "text",
+                                            "currIndex": 3
+                                        }
+                                    ],
+                                    "currIndex": 12
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "We will not disclose your email address anywhere on the Site (see below, “Email”) unless requested by you.",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 13
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "From time to time we may solicit feedback from you about your use of the Site and its features (your “Feedback”). You are not required to provide Feedback. We solicit Feedback for internal purposes only, so that we can evaluate the Site and its features, and we will not publish or otherwise disclose your Feedback without first obtaining your consent to do so.",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 14
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "currIndex": 15
+                                },
+                                {
+                                    "type": "heading",
+                                    "attrs": {
+                                        "id": "programming-analytics",
+                                        "level": 2
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Programming Analytics",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 16
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "In order to refine the resources on offer through the Site and to optimize ",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        },
+                                        {
+                                            "text": "Frankenbook",
+                                            "type": "text",
+                                            "marks": [
+                                                {
+                                                    "type": "em"
+                                                }
+                                            ],
+                                            "currIndex": 1
+                                        },
+                                        {
+                                            "text": "’s programming, ",
+                                            "type": "text",
+                                            "currIndex": 2
+                                        },
+                                        {
+                                            "text": "Frankenbook",
+                                            "type": "text",
+                                            "marks": [
+                                                {
+                                                    "type": "em"
+                                                }
+                                            ],
+                                            "currIndex": 3
+                                        },
+                                        {
+                                            "text": " may elect to conduct internal analytics of content submitted by users. Any such internal analytics will be conducted on an anonymized set of user-generated content.",
+                                            "type": "text",
+                                            "currIndex": 4
+                                        }
+                                    ],
+                                    "currIndex": 17
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "currIndex": 18
+                                },
+                                {
+                                    "type": "heading",
+                                    "attrs": {
+                                        "id": "google-analytics-and-mixpanel",
+                                        "level": 2
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Google Analytics and Mixpanel",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 19
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "We use Google Analytics and Mixpanel software to perform Site usage analytics. Google Analytics collects anonymous information from users to help us track Site usage and referrals from other websites. These data are used primarily to optimize the website experience for our visitors, but we may use the data as well to assist us in our marketing of the Site.",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 20
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Information collected and processed by Google Analytics and Mixpanel include the user’s IP address, network location, and geographic location. Google Analytics and Mixpanel acquires all its information directly from the user, by installing a cookie (see below) on JavaScript-enabled computers. The Site does not share any information it collects with Google or Mixpanel, and neither Google nor Mixpanel collect any personal identifying information such as names, contact information, social security numbers or financial information.",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 21
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "currIndex": 22
+                                },
+                                {
+                                    "type": "heading",
+                                    "attrs": {
+                                        "id": "cookies",
+                                        "level": 2
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Cookies",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 23
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Cookies are unique bits of computer data that many major websites will transfer to your computer the first time that you visit. Cookies are stored on your hard drive and may be later accessed by the website to track prior usage. As noted above, Google Analytics and Mixpanel will install a cookie on the hard drives of Site visitors.",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 24
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "currIndex": 25
+                                },
+                                {
+                                    "type": "heading",
+                                    "attrs": {
+                                        "id": "email",
+                                        "level": 2
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Email",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 26
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "We will only record your email address if you send us a message or submit it to us as part of the user registration process. We will only use your email address for the purpose for which you have provided it — i.e., to respond to a message from you or to communicate with you regarding your user account or your contributions to ",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        },
+                                        {
+                                            "text": "Frankenbook",
+                                            "type": "text",
+                                            "marks": [
+                                                {
+                                                    "type": "em"
+                                                }
+                                            ],
+                                            "currIndex": 1
+                                        },
+                                        {
+                                            "text": ".",
+                                            "type": "text",
+                                            "currIndex": 2
+                                        }
+                                    ],
+                                    "currIndex": 27
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "When you submit your email address to the Site during registration, we will ask you whether you want to receive periodic announcements from the Site by email. Accepting emailed announcements is entirely optional and not a condition of registration, and you may change your email settings at any time to subscribe or unsubscribe to these mailings.",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 28
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "In the event we contract with a third-party service to assist with email delivery of newsletters and other mailings containing information about the Site, that service will be prohibited from using or sharing Site user information for any purpose other than facilitating communications on behalf of the Site.",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 29
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "currIndex": 30
+                                },
+                                {
+                                    "type": "heading",
+                                    "attrs": {
+                                        "id": "disclosure-to-third-parties",
+                                        "level": 2
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Disclosure to Third Parties",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 31
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "We will not sell, lend, or disclose to third parties any personally identifiable information collected from users, except as described in this Policy or in the event we are required by law to do so. We may disclose information to ASU and MIT’s employees, fellows, students, consultants and agents who have a legitimate need to know the information for the purpose of fixing or improving the Site and monitoring and improving the security of our network. We may also disclose this information when special circumstances call for it, such as when disclosure is required by law or court order or when disclosure is, in our sole discretion, necessary to protect our legal rights, including intellectual property rights.",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 32
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "currIndex": 33
+                                },
+                                {
+                                    "type": "heading",
+                                    "attrs": {
+                                        "id": "other-websites",
+                                        "level": 2
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Other Websites",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 34
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "This Site may contain links to other web resources, including websites of organizations other than Arizona State University and the Massachusetts Institute of Technology. The websites to which the Site links may also install cookies on your computer, log your access to their web pages, or collect user-identifying information directly from you, once you proceed to browse those sites. We are not responsible for the privacy policies of other sites to which the Site provides links. Please visit the relevant sites to review their privacy policies.",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 35
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "currIndex": 36
+                                },
+                                {
+                                    "type": "heading",
+                                    "attrs": {
+                                        "id": "data-security",
+                                        "level": 2
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Data Security",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 37
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "We have in place physical, electronic and managerial procedures to protect the information we collect online. However, as effective as these measures are, no security system is impenetrable. We cannot completely guarantee the security of our database, nor can we guarantee that the information you supply will not be intercepted while being transmitted to us over the Internet.",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 38
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "currIndex": 39
+                                },
+                                {
+                                    "type": "heading",
+                                    "attrs": {
+                                        "id": "notification-of-changes-in-the-privacy-policy",
+                                        "level": 2
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Notification of Changes in the Privacy Policy",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 40
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "We will review our security measures and Privacy Policy on a periodic basis, and we may modify our policies as appropriate. We may also change or update our Privacy Policy if we add new services or features. If any changes are made, we will make appropriate amendments to this policy and post them at the Site. By accessing the Site after modifications to this Privacy Policy have been posted, you agree to be bound by the modified terms. We encourage you to review our Privacy Policy on a regular basis.",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 41
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "If you have any questions about this Privacy Policy, the practices of this Site, or your dealings with this Site, you can contact Pubpub@media.mit.edu.",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 42
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "currIndex": 43
+                                },
+                                {
+                                    "type": "heading",
+                                    "attrs": {
+                                        "id": "effective-date",
+                                        "level": 2
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Effective Date",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 44
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "This Privacy Policy is in effect as of as of January 1, 2018.",
+                                            "type": "text",
+                                            "currIndex": 0
+                                        }
+                                    ],
+                                    "currIndex": 45
+                                }
+                            ]
+                        },
+                        "title": "Privacy Policy",
+                        "width": "wide"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "5b763da8-d0c7-4d90-8e56-9d1ac0e49a5a",
+            "title": "About Frankenbook",
+            "description": "",
+            "slug": "about",
+            "isPublic": false,
+            "viewHash": "ca5nyw6r",
+            "layout": [
+                {
+                    "id": "kruw36cv",
+                    "type": "text",
+                    "content": {
+                        "text": {
+                            "type": "doc",
+                            "attrs": {
+                                "meta": {}
+                            },
+                            "content": [
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Frankenbook",
+                                            "type": "text",
+                                            "marks": [
+                                                {
+                                                    "type": "em"
+                                                }
+                                            ],
+                                            "currIndex": 0
+                                        },
+                                        {
+                                            "text": " is a collective reading and collaborative annotation experience of the original 1818 text of ",
+                                            "type": "text",
+                                            "currIndex": 1
+                                        },
+                                        {
+                                            "text": "Frankenstein; or, The Modern Prometheus",
+                                            "type": "text",
+                                            "marks": [
+                                                {
+                                                    "type": "em"
+                                                }
+                                            ],
+                                            "currIndex": 2
+                                        },
+                                        {
+                                            "text": ", by Mary Wollstonecraft Shelley. The project launched in January 2018, as part of Arizona State University’s celebration of the novel’s 200th anniversary. Even two centuries later, Shelley’s modern myth continues to shape the way people imagine science, technology, and their moral consequences. ",
+                                            "type": "text",
+                                            "currIndex": 3
+                                        },
+                                        {
+                                            "text": "Frankenbook",
+                                            "type": "text",
+                                            "marks": [
+                                                {
+                                                    "type": "em"
+                                                }
+                                            ],
+                                            "currIndex": 4
                                         },
                                         {
                                             "text": " gives readers the opportunity to trace the scientific, technological, political, and ethical dimensions of the novel, and to learn more about its historical context and enduring legacy.",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 5
                                         }
-                                    ]
+                                    ],
+                                    "currIndex": 0
                                 },
                                 {
                                     "type": "paragraph",
@@ -184,7 +1647,8 @@ export default {
                                     "content": [
                                         {
                                             "text": "To learn more about Arizona State University’s celebration of Frankenstein's bicentennial, visit ",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 0
                                         },
                                         {
                                             "text": "frankenstein.asu.edu",
@@ -198,13 +1662,16 @@ export default {
                                                         "target": null
                                                     }
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 1
                                         },
                                         {
                                             "text": ".",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 2
                                         }
-                                    ]
+                                    ],
+                                    "currIndex": 1
                                 },
                                 {
                                     "type": "paragraph",
@@ -219,11 +1686,13 @@ export default {
                                                 {
                                                     "type": "em"
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 0
                                         },
                                         {
                                             "text": " is supported by a generous grant from the ",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 1
                                         },
                                         {
                                             "text": "Alfred P. Sloan Foundation",
@@ -237,19 +1706,23 @@ export default {
                                                         "target": null
                                                     }
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 2
                                         },
                                         {
                                             "text": ".",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 3
                                         }
-                                    ]
+                                    ],
+                                    "currIndex": 2
                                 },
                                 {
                                     "type": "paragraph",
                                     "attrs": {
                                         "class": null
-                                    }
+                                    },
+                                    "currIndex": 3
                                 },
                                 {
                                     "type": "heading",
@@ -260,9 +1733,11 @@ export default {
                                     "content": [
                                         {
                                             "text": "How to Use the Book",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 0
                                         }
-                                    ]
+                                    ],
+                                    "currIndex": 4
                                 },
                                 {
                                     "type": "paragraph",
@@ -277,11 +1752,13 @@ export default {
                                                 {
                                                     "type": "em"
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 0
                                         },
                                         {
                                             "text": " is designed to make reading ",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 1
                                         },
                                         {
                                             "text": "Frankenstein",
@@ -290,13 +1767,16 @@ export default {
                                                 {
                                                     "type": "em"
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 2
                                         },
                                         {
                                             "text": " an interactive, social experience of learning and exploration.",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 3
                                         }
-                                    ]
+                                    ],
+                                    "currIndex": 5
                                 },
                                 {
                                     "type": "bullet_list",
@@ -317,11 +1797,13 @@ export default {
                                                                 {
                                                                     "type": "strong"
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "currIndex": 0
                                                         },
                                                         {
                                                             "text": " You are welcome to read and share passages from the book without creating a user account. However, if you would like to write replies and submit your own annotations, you will need to create an account. ",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 1
                                                         },
                                                         {
                                                             "text": "Get started here!",
@@ -335,11 +1817,14 @@ export default {
                                                                         "target": null
                                                                     }
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "currIndex": 2
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 0
                                         },
                                         {
                                             "type": "list_item",
@@ -357,15 +1842,19 @@ export default {
                                                                 {
                                                                     "type": "strong"
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "currIndex": 0
                                                         },
                                                         {
                                                             "text": " We’ve had dozens of experts from a wide variety of intellectual and professional backgrounds annotate the text of Frankenstein. At the end of any paragraph with an annotation attached to it, you’ll see an orange box with a number inside. That number tells you how many different annotations there are on that paragraph. To read the annotations, simply click on the orange box. You can also click the name of the author of any annotation to learn more about them.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 1
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 1
                                         },
                                         {
                                             "type": "list_item",
@@ -383,15 +1872,19 @@ export default {
                                                                 {
                                                                     "type": "strong"
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "currIndex": 0
                                                         },
                                                         {
                                                             "text": " Annotations are grouped into 8 different themes. By default, all of the themes are turned on. You can use the \"Active Themes\" drop-down menu, located at the top of the book page, to toggle themes on and off. Limiting the number of themes you have turned on helps you focus on the ideas and topic you’re most interested in. For example, maybe you’d like to only see annotations on science and technology issues, or maybe you’re primarily interested in the novel’s connections to philosophy and politics. Learn more about the themes.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 1
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 2
                                         },
                                         {
                                             "type": "list_item",
@@ -409,15 +1902,19 @@ export default {
                                                                 {
                                                                     "type": "strong"
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "currIndex": 0
                                                         },
                                                         {
                                                             "text": " This project is about sparking conversation and the exchange of ideas. We want to hear what you think! Next to each annotation, you’ll find a \"Reply\" button. Simply click on that button and begin typing. Replies will appear immediately. You must create a user account and be logged in to write a reply. Media content can be directly embedded into replies by typing '/' and then choosing an element from the menu. Images, videos, and web iFrames can be directly added.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 1
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 3
                                         },
                                         {
                                             "type": "list_item",
@@ -435,11 +1932,13 @@ export default {
                                                                 {
                                                                     "type": "strong"
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "currIndex": 0
                                                         },
                                                         {
                                                             "text": " We’d love to add your knowledge, expertise, and perspectives to Frankenbook! Registered users can submit annotations for consideration by our team of editors—if the annotations add something new and exciting to the project, they will become a permanent part of Frankenbook. If the paragraph you would like to annotate already has annotations, click on the orange box and begin typing under “New Annotation.” If the paragraph doesn’t have any annotations yet, click on the gray box with a “+” sign and begin typing under “New Annotation.” You must ",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 1
                                                         },
                                                         {
                                                             "text": "create a user account",
@@ -453,15 +1952,19 @@ export default {
                                                                         "target": null
                                                                     }
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "currIndex": 2
                                                         },
                                                         {
                                                             "text": " and be logged in to submit an annotation.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 3
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 4
                                         },
                                         {
                                             "type": "list_item",
@@ -479,23 +1982,29 @@ export default {
                                                                 {
                                                                     "type": "strong"
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "currIndex": 0
                                                         },
                                                         {
                                                             "text": " It’s easy to select and share your favorite passage from the novel. Simply click and drag to highlight any passage—anything from a single evocative word to several stirring paragraphs. A round hyperlink icon will appear on the left margin. If you click on that icon, you’ll see a unique URL for that passage, which you can drop into a text or email, or post to the social media platform of your choice.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 1
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 5
                                         }
-                                    ]
+                                    ],
+                                    "currIndex": 6
                                 },
                                 {
                                     "type": "paragraph",
                                     "attrs": {
                                         "class": null
-                                    }
+                                    },
+                                    "currIndex": 7
                                 },
                                 {
                                     "type": "heading",
@@ -506,9 +2015,11 @@ export default {
                                     "content": [
                                         {
                                             "text": "About the Themes",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 0
                                         }
-                                    ]
+                                    ],
+                                    "currIndex": 8
                                 },
                                 {
                                     "type": "paragraph",
@@ -518,9 +2029,11 @@ export default {
                                     "content": [
                                         {
                                             "text": "Our annotations are organized by themes, to help you learn more about the subjects you’re most interested in:",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 0
                                         }
-                                    ]
+                                    ],
+                                    "currIndex": 9
                                 },
                                 {
                                     "type": "bullet_list",
@@ -541,15 +2054,19 @@ export default {
                                                                 {
                                                                     "type": "strong"
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "currIndex": 0
                                                         },
                                                         {
                                                             "text": " Prejudice, social exclusion, and struggles for justice in the novel, in the Romantic Era, and today.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 1
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 0
                                         },
                                         {
                                             "type": "list_item",
@@ -567,15 +2084,19 @@ export default {
                                                                 {
                                                                     "type": "strong"
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "currIndex": 0
                                                         },
                                                         {
                                                             "text": " Digging into Frankenstein’s preoccupation with health, disease, and the body.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 1
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 1
                                         },
                                         {
                                             "type": "list_item",
@@ -593,15 +2114,19 @@ export default {
                                                                 {
                                                                     "type": "strong"
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "currIndex": 0
                                                         },
                                                         {
                                                             "text": " The stories that influenced Shelley, and how Frankenstein has echoed throughout culture over the past 200 years.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 1
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 2
                                         },
                                         {
                                             "type": "list_item",
@@ -619,15 +2144,19 @@ export default {
                                                                 {
                                                                     "type": "strong"
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "currIndex": 0
                                                         },
                                                         {
                                                             "text": " The woman at the heart of it all: Mary Shelley’s adventures, relationships, and writing.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 1
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 3
                                         },
                                         {
                                             "type": "list_item",
@@ -645,15 +2174,19 @@ export default {
                                                                 {
                                                                     "type": "strong"
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "currIndex": 0
                                                         },
                                                         {
                                                             "text": " The emotions, values, ideals, and obsessions that drive human ingenuity.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 1
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 4
                                         },
                                         {
                                             "type": "list_item",
@@ -671,15 +2204,19 @@ export default {
                                                                 {
                                                                     "type": "strong"
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "currIndex": 0
                                                         },
                                                         {
                                                             "text": " The big ideas and political debates that animate Frankenstein and help us understand it today.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 1
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 5
                                         },
                                         {
                                             "type": "list_item",
@@ -697,15 +2234,19 @@ export default {
                                                                 {
                                                                     "type": "strong"
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "currIndex": 0
                                                         },
                                                         {
                                                             "text": " Natural science yesterday and today, from ancients and alchemists to Humphry Davy to Marie Curie.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 1
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 6
                                         },
                                         {
                                             "type": "list_item",
@@ -723,23 +2264,29 @@ export default {
                                                                 {
                                                                     "type": "strong"
                                                                 }
-                                                            ]
+                                                            ],
+                                                            "currIndex": 0
                                                         },
                                                         {
                                                             "text": " Historical and emerging Frankensteinian technologies, from steam engines to AI.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 1
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 7
                                         }
-                                    ]
+                                    ],
+                                    "currIndex": 10
                                 },
                                 {
                                     "type": "paragraph",
                                     "attrs": {
                                         "class": null
-                                    }
+                                    },
+                                    "currIndex": 11
                                 },
                                 {
                                     "type": "heading",
@@ -750,9 +2297,11 @@ export default {
                                     "content": [
                                         {
                                             "text": "The Details",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 0
                                         }
-                                    ]
+                                    ],
+                                    "currIndex": 12
                                 },
                                 {
                                     "type": "paragraph",
@@ -762,7 +2311,8 @@ export default {
                                     "content": [
                                         {
                                             "text": "Frankenbook is powered by ",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 0
                                         },
                                         {
                                             "text": "PubPub",
@@ -776,11 +2326,13 @@ export default {
                                                         "target": null
                                                     }
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 1
                                         },
                                         {
                                             "text": ", an open-source digital publication platform developed at The MIT Media Lab and The MIT Press. The project is edited and moderated by the ",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 2
                                         },
                                         {
                                             "text": "Center for Science and the Imagination",
@@ -794,13 +2346,16 @@ export default {
                                                         "target": null
                                                     }
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 3
                                         },
                                         {
                                             "text": " at Arizona State University, in partnership with MIT.",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 4
                                         }
-                                    ]
+                                    ],
+                                    "currIndex": 13
                                 },
                                 {
                                     "type": "paragraph",
@@ -810,7 +2365,8 @@ export default {
                                     "content": [
                                         {
                                             "text": "The foundation for the experience is the book ",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 0
                                         },
                                         {
                                             "text": "Frankenstein: Annotated for Scientists, Engineers, and Creators of All Kinds",
@@ -824,19 +2380,23 @@ export default {
                                                         "target": null
                                                     }
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 1
                                         },
                                         {
                                             "text": ", published by The MIT Press in 2017. Frankenbook builds on that foundation with new multimedia content and an expanded set of annotations, sorted into lenses dedicated to specific themes and subjects, which can be switched on and off at will.",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 2
                                         }
-                                    ]
+                                    ],
+                                    "currIndex": 14
                                 },
                                 {
                                     "type": "paragraph",
                                     "attrs": {
                                         "class": null
-                                    }
+                                    },
+                                    "currIndex": 15
                                 },
                                 {
                                     "type": "heading",
@@ -847,9 +2407,11 @@ export default {
                                     "content": [
                                         {
                                             "text": "Community Guidelines",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 0
                                         }
-                                    ]
+                                    ],
+                                    "currIndex": 16
                                 },
                                 {
                                     "type": "paragraph",
@@ -859,9 +2421,11 @@ export default {
                                     "content": [
                                         {
                                             "text": "Frankenbook is both a digital reading experience and a place to build community around Mary Wollstonecraft Shelley’s Frankenstein and its reverberations throughout culture, politics, philosophy, science, technology, and society. We encourage members to engage in thoughtful, constructive, and sometimes playful conversations around the text, building on one another’s ideas and illuminating the interplay between creativity and responsibility that animates the novel. Frankenbook is a place for imaginative intellectual engagement, open and inclusive discussion, and an exchange of information, ideas, and diverse perspectives. We welcome everyone to join the Frankenbook community, from literature scholars, historians, and bioengineers to students, artists, Frankenstein aficionados, monster movie fans, and book lovers of all stripes.",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 0
                                         }
-                                    ]
+                                    ],
+                                    "currIndex": 17
                                 },
                                 {
                                     "type": "paragraph",
@@ -871,7 +2435,8 @@ export default {
                                     "content": [
                                         {
                                             "text": "Members of the Frankenbook community agree to the following guidelines, to ensure that the site is an inclusive and welcoming place for all kinds of people. Remember that your use of Frankenbook is subject to these Community Guidelines and our ",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 0
                                         },
                                         {
                                             "text": "Terms of Service",
@@ -885,13 +2450,16 @@ export default {
                                                         "target": null
                                                     }
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 1
                                         },
                                         {
                                             "text": ":",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 2
                                         }
-                                    ]
+                                    ],
+                                    "currIndex": 18
                                 },
                                 {
                                     "type": "bullet_list",
@@ -907,11 +2475,14 @@ export default {
                                                     "content": [
                                                         {
                                                             "text": "You are responsible for all activity that occurs under your user name.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 0
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 0
                                         },
                                         {
                                             "type": "list_item",
@@ -924,11 +2495,14 @@ export default {
                                                     "content": [
                                                         {
                                                             "text": "You must not make comments that are threatening, knowingly false, or unlawful, or engage in personal attacks.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 0
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 1
                                         },
                                         {
                                             "type": "list_item",
@@ -941,11 +2515,14 @@ export default {
                                                     "content": [
                                                         {
                                                             "text": "You must not impersonate any person or entity or create a false identity on Frankenbook.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 0
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 2
                                         },
                                         {
                                             "type": "list_item",
@@ -958,11 +2535,14 @@ export default {
                                                     "content": [
                                                         {
                                                             "text": "You must not harass, threaten, stalk, embarrass or cause distress, unwanted attention or discomfort to any user of Frankenbook.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 0
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 3
                                         },
                                         {
                                             "type": "list_item",
@@ -975,11 +2555,14 @@ export default {
                                                     "content": [
                                                         {
                                                             "text": "You must not disseminate or transmit spam, unsolicited messages, chain letters, advertisements, solicitations, or other unsolicited commercial communications, including (but not limited to) communications describing investment opportunities.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 0
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 4
                                         },
                                         {
                                             "type": "list_item",
@@ -992,11 +2575,14 @@ export default {
                                                     "content": [
                                                         {
                                                             "text": "You must not post material that infringes a copyright, trademark or patent right, trade secret or other legal right of any person, corporation or institution.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 0
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 5
                                         },
                                         {
                                             "type": "list_item",
@@ -1009,11 +2595,14 @@ export default {
                                                     "content": [
                                                         {
                                                             "text": "You must not knowingly disseminate or transmit viruses, Trojan horses, worms, defects, date bombs, time bombs, malware, spyware, or other items of a destructive nature or any other malicious code or program.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 0
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 6
                                         },
                                         {
                                             "type": "list_item",
@@ -1026,13 +2615,17 @@ export default {
                                                     "content": [
                                                         {
                                                             "text": "Frankenbook reserves the right, in its sole and absolute discretion, to reject, refuse to post or remove any posting by you, or to restrict, suspend, or terminate your access to all of any part of Frankenbook at any time, for any or no reason, without prior notice or warning, and without liability.",
-                                                            "type": "text"
+                                                            "type": "text",
+                                                            "currIndex": 0
                                                         }
-                                                    ]
+                                                    ],
+                                                    "currIndex": 0
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 7
                                         }
-                                    ]
+                                    ],
+                                    "currIndex": 19
                                 },
                                 {
                                     "type": "paragraph",
@@ -1042,7 +2635,8 @@ export default {
                                     "content": [
                                         {
                                             "text": "A full list of credits for the project can be found on the ",
-                                            "type": "text"
+                                            "type": "text",
+                                            "currIndex": 0
                                         },
                                         {
                                             "text": "Credits page",
@@ -1056,31 +2650,227 @@ export default {
                                                         "target": null
                                                     }
                                                 }
-                                            ]
+                                            ],
+                                            "currIndex": 1
                                         },
                                         {
                                             "text": ".",
+                                            "type": "text",
+                                            "currIndex": 2
+                                        }
+                                    ],
+                                    "currIndex": 20
+                                }
+                            ]
+                        },
+                        "title": "About Frankenbook"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "632bfbc1-a8a3-4829-be61-fa20db405d90",
+            "title": "Media",
+            "description": "",
+            "slug": "media",
+            "isPublic": true,
+            "viewHash": "192yzcm5",
+            "layout": [
+                {
+                    "id": "kruw36cv",
+                    "type": "text",
+                    "content": {
+                        "text": {
+                            "type": "doc",
+                            "attrs": {
+                                "meta": {}
+                            },
+                            "content": [
+                                {
+                                    "type": "heading",
+                                    "attrs": {
+                                        "id": "step-into-the-lab-to-build-solutions-to-todays-vexing-questions",
+                                        "level": 2
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Step into the lab to build solutions to today’s vexing questions",
                                             "type": "text"
                                         }
                                     ]
+                                },
+                                {
+                                    "type": "image",
+                                    "attrs": {
+                                        "url": "https://assets.pubpub.org/_testing/41522771208287.jpg",
+                                        "size": 50,
+                                        "align": "full",
+                                        "caption": ""
+                                    }
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Click to step into the lab.",
+                                            "type": "text",
+                                            "marks": [
+                                                {
+                                                    "type": "link",
+                                                    "attrs": {
+                                                        "href": "http://www.bluecadet.com/projects/modern-monsters/#/",
+                                                        "title": null,
+                                                        "target": null
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    }
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    }
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    }
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    }
+                                },
+                                {
+                                    "type": "heading",
+                                    "attrs": {
+                                        "id": "a-year-without-a-summer",
+                                        "level": 2
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "A Year Without a Summer",
+                                            "type": "text"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "iframe",
+                                    "attrs": {
+                                        "url": "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/269203861&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true",
+                                        "size": 75,
+                                        "align": "full",
+                                        "height": 150,
+                                        "caption": ""
+                                    }
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    }
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    }
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    }
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    }
+                                },
+                                {
+                                    "type": "heading",
+                                    "attrs": {
+                                        "id": "lab-assistant",
+                                        "level": 2
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Lab Assistant",
+                                            "type": "text"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "image",
+                                    "attrs": {
+                                        "url": "https://assets.pubpub.org/_testing/11522771260672.jpg",
+                                        "size": 50,
+                                        "align": "full",
+                                        "caption": ""
+                                    }
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    },
+                                    "content": [
+                                        {
+                                            "text": "Click to play Lab Assistant",
+                                            "type": "text",
+                                            "marks": [
+                                                {
+                                                    "type": "link",
+                                                    "attrs": {
+                                                        "href": "https://lizfiacco.itch.io/lab-assistant",
+                                                        "title": null,
+                                                        "target": null
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    }
+                                },
+                                {
+                                    "type": "paragraph",
+                                    "attrs": {
+                                        "class": null
+                                    }
                                 }
                             ]
-                        }
+                        },
+                        "title": "Media"
                     }
                 }
-            ],
-            "createPubHash": "ca5nyw6r",
-            "createPubMessage": null
+            ]
         },
         {
             "id": "dd0d1dd0-30c2-4f27-9ef1-dec455c84177",
             "title": "Credits",
             "description": "",
             "slug": "credits",
-            "isPage": true,
             "isPublic": true,
-            "isOpenSubmissions": false,
-            "isOpenPublish": false,
+            "viewHash": "nbk8mw2q",
             "layout": [
                 {
                     "id": "kruw36cv",
@@ -2819,22 +4609,19 @@ export default {
                                     ]
                                 }
                             ]
-                        }
+                        },
+                        "title": "Credits"
                     }
                 }
-            ],
-            "createPubHash": "nbk8mw2q",
-            "createPubMessage": null
+            ]
         },
         {
             "id": "35d1cbbd-2e54-4334-8443-2df07fbd7383",
             "title": "Terms of Service",
             "description": "",
             "slug": "terms",
-            "isPage": true,
             "isPublic": true,
-            "isOpenSubmissions": false,
-            "isOpenPublish": false,
+            "viewHash": "f4j0b1l9",
             "layout": [
                 {
                     "id": "kruw36cv",
@@ -3690,1132 +5477,50 @@ export default {
                                     ]
                                 }
                             ]
-                        }
-                    }
-                }
-            ],
-            "createPubHash": "f4j0b1l9",
-            "createPubMessage": null
-        },
-        {
-            "id": "8b10fb64-0cb4-4176-b46a-8610c2a48223",
-            "title": "Privacy Policy",
-            "description": "",
-            "slug": "privacy",
-            "isPage": true,
-            "isPublic": true,
-            "isOpenSubmissions": false,
-            "isOpenPublish": false,
-            "layout": [
-                {
-                    "id": "kruw36cv",
-                    "type": "text",
-                    "content": {
-                        "text": {
-                            "type": "doc",
-                            "attrs": {
-                                "meta": {}
-                            },
-                            "content": [
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "Frankenbook",
-                                            "type": "text",
-                                            "marks": [
-                                                {
-                                                    "type": "em"
-                                                }
-                                            ],
-                                            "currIndex": 0
-                                        },
-                                        {
-                                            "text": " is a project of the Center for Science and the Imagination at Arizona State University (“ASU”) and the Media Lab and The MIT Press at the Massachusetts Institute of Technology (“MIT”).",
-                                            "type": "text",
-                                            "currIndex": 1
-                                        }
-                                    ],
-                                    "currIndex": 0
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "Frankenbook",
-                                            "type": "text",
-                                            "marks": [
-                                                {
-                                                    "type": "em"
-                                                }
-                                            ],
-                                            "currIndex": 0
-                                        },
-                                        {
-                                            "text": " is committed to respecting the privacy of users who access the ",
-                                            "type": "text",
-                                            "currIndex": 1
-                                        },
-                                        {
-                                            "text": "Frankenbook",
-                                            "type": "text",
-                                            "marks": [
-                                                {
-                                                    "type": "em"
-                                                }
-                                            ],
-                                            "currIndex": 2
-                                        },
-                                        {
-                                            "text": "website (the “Site,” which includes all pages within the frankenbook.org host directory and subdomains, and all associated services.",
-                                            "type": "text",
-                                            "currIndex": 3
-                                        }
-                                    ],
-                                    "currIndex": 1
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "currIndex": 2
-                                },
-                                {
-                                    "type": "heading",
-                                    "attrs": {
-                                        "id": "web-server-logs",
-                                        "level": 2
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "Web Server Logs",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 3
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "When you visit the Site, our web server may record the following information in its server log:",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 4
-                                },
-                                {
-                                    "type": "bullet_list",
-                                    "content": [
-                                        {
-                                            "type": "list_item",
-                                            "content": [
-                                                {
-                                                    "type": "paragraph",
-                                                    "attrs": {
-                                                        "class": null
-                                                    },
-                                                    "content": [
-                                                        {
-                                                            "text": "your IP Address,",
-                                                            "type": "text",
-                                                            "currIndex": 0
-                                                        }
-                                                    ],
-                                                    "currIndex": 0
-                                                }
-                                            ],
-                                            "currIndex": 0
-                                        },
-                                        {
-                                            "type": "list_item",
-                                            "content": [
-                                                {
-                                                    "type": "paragraph",
-                                                    "attrs": {
-                                                        "class": null
-                                                    },
-                                                    "content": [
-                                                        {
-                                                            "text": "the URLs you have requested to access,",
-                                                            "type": "text",
-                                                            "currIndex": 0
-                                                        }
-                                                    ],
-                                                    "currIndex": 0
-                                                }
-                                            ],
-                                            "currIndex": 1
-                                        },
-                                        {
-                                            "type": "list_item",
-                                            "content": [
-                                                {
-                                                    "type": "paragraph",
-                                                    "attrs": {
-                                                        "class": null
-                                                    },
-                                                    "content": [
-                                                        {
-                                                            "text": "the dates and methods of requests,",
-                                                            "type": "text",
-                                                            "currIndex": 0
-                                                        }
-                                                    ],
-                                                    "currIndex": 0
-                                                }
-                                            ],
-                                            "currIndex": 2
-                                        },
-                                        {
-                                            "type": "list_item",
-                                            "content": [
-                                                {
-                                                    "type": "paragraph",
-                                                    "attrs": {
-                                                        "class": null
-                                                    },
-                                                    "content": [
-                                                        {
-                                                            "text": "the status code of your requests,",
-                                                            "type": "text",
-                                                            "currIndex": 0
-                                                        }
-                                                    ],
-                                                    "currIndex": 0
-                                                }
-                                            ],
-                                            "currIndex": 3
-                                        },
-                                        {
-                                            "type": "list_item",
-                                            "content": [
-                                                {
-                                                    "type": "paragraph",
-                                                    "attrs": {
-                                                        "class": null
-                                                    },
-                                                    "content": [
-                                                        {
-                                                            "text": "URLs of pages that referred you to the Site,",
-                                                            "type": "text",
-                                                            "currIndex": 0
-                                                        }
-                                                    ],
-                                                    "currIndex": 0
-                                                }
-                                            ],
-                                            "currIndex": 4
-                                        },
-                                        {
-                                            "type": "list_item",
-                                            "content": [
-                                                {
-                                                    "type": "paragraph",
-                                                    "attrs": {
-                                                        "class": null
-                                                    },
-                                                    "content": [
-                                                        {
-                                                            "text": "the number of bytes transferred, and",
-                                                            "type": "text",
-                                                            "currIndex": 0
-                                                        }
-                                                    ],
-                                                    "currIndex": 0
-                                                }
-                                            ],
-                                            "currIndex": 5
-                                        },
-                                        {
-                                            "type": "list_item",
-                                            "content": [
-                                                {
-                                                    "type": "paragraph",
-                                                    "attrs": {
-                                                        "class": null
-                                                    },
-                                                    "content": [
-                                                        {
-                                                            "text": "your web browser and operating system platform.",
-                                                            "type": "text",
-                                                            "currIndex": 0
-                                                        }
-                                                    ],
-                                                    "currIndex": 0
-                                                }
-                                            ],
-                                            "currIndex": 6
-                                        }
-                                    ],
-                                    "currIndex": 5
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "We use server log information to help diagnose problems with our server and to administer our website by identifying which parts or features of our site are most heavily used. We also use this information to tailor site content to user needs and to generate aggregate statistical reports. Web server logs are retained on a temporary basis, during which time their contents are accessible to Site administrators, and then deleted completely from our systems. Unless required by legal process, we do not link IP addresses to any personally identifiable information. This means that user sessions will be tracked by IP address, but a user’s identity will remain anonymous.",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 6
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "In addition, we ordinarily do not disclose to third parties site usage by individual IP addresses, but we may do so in very limited circumstances when complying with law or legal process, working with consultants assisting us with fixing or improving the Site, or monitoring and improving the security of our network.",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 7
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "currIndex": 8
-                                },
-                                {
-                                    "type": "heading",
-                                    "attrs": {
-                                        "id": "user-registration-and-user-generated-content",
-                                        "level": 2
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "User Registration and User Generated Content",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 9
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "To obtain user registration, you must submit your email address to the Site, and a password that you create for user authentication purposes. We also ask you to provide a first and last name. You may use a pseudonym if you wish.",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 10
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "The Site allows registered users to post content, images, multimedia presentations, and other scholarly works, as well as reviews, comments and other user-generated content in certain areas. The content you post will be available for all registered users to view and will identify you as the poster by the user name you have selected. If you do not wish to be identified as the source of content you post to the Site, you should select a pseudonymous user name.",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 11
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "Frankenbook",
-                                            "type": "text",
-                                            "marks": [
-                                                {
-                                                    "type": "em"
-                                                }
-                                            ],
-                                            "currIndex": 0
-                                        },
-                                        {
-                                            "text": " creates a profile page for each registered user. The profile pages are public-facing. By default, the profile page includes your user name and information about your contributions to ",
-                                            "type": "text",
-                                            "currIndex": 1
-                                        },
-                                        {
-                                            "text": "Frankenbook",
-                                            "type": "text",
-                                            "marks": [
-                                                {
-                                                    "type": "em"
-                                                }
-                                            ],
-                                            "currIndex": 2
-                                        },
-                                        {
-                                            "text": " and other activities on the Site. You may (but do not need to) augment your profile page with additional information, including a picture.",
-                                            "type": "text",
-                                            "currIndex": 3
-                                        }
-                                    ],
-                                    "currIndex": 12
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "We will not disclose your email address anywhere on the Site (see below, “Email”) unless requested by you.",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 13
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "From time to time we may solicit feedback from you about your use of the Site and its features (your “Feedback”). You are not required to provide Feedback. We solicit Feedback for internal purposes only, so that we can evaluate the Site and its features, and we will not publish or otherwise disclose your Feedback without first obtaining your consent to do so.",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 14
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "currIndex": 15
-                                },
-                                {
-                                    "type": "heading",
-                                    "attrs": {
-                                        "id": "programming-analytics",
-                                        "level": 2
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "Programming Analytics",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 16
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "In order to refine the resources on offer through the Site and to optimize ",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        },
-                                        {
-                                            "text": "Frankenbook",
-                                            "type": "text",
-                                            "marks": [
-                                                {
-                                                    "type": "em"
-                                                }
-                                            ],
-                                            "currIndex": 1
-                                        },
-                                        {
-                                            "text": "’s programming, ",
-                                            "type": "text",
-                                            "currIndex": 2
-                                        },
-                                        {
-                                            "text": "Frankenbook",
-                                            "type": "text",
-                                            "marks": [
-                                                {
-                                                    "type": "em"
-                                                }
-                                            ],
-                                            "currIndex": 3
-                                        },
-                                        {
-                                            "text": " may elect to conduct internal analytics of content submitted by users. Any such internal analytics will be conducted on an anonymized set of user-generated content.",
-                                            "type": "text",
-                                            "currIndex": 4
-                                        }
-                                    ],
-                                    "currIndex": 17
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "currIndex": 18
-                                },
-                                {
-                                    "type": "heading",
-                                    "attrs": {
-                                        "id": "google-analytics-and-mixpanel",
-                                        "level": 2
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "Google Analytics and Mixpanel",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 19
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "We use Google Analytics and Mixpanel software to perform Site usage analytics. Google Analytics collects anonymous information from users to help us track Site usage and referrals from other websites. These data are used primarily to optimize the website experience for our visitors, but we may use the data as well to assist us in our marketing of the Site.",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 20
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "Information collected and processed by Google Analytics and Mixpanel include the user’s IP address, network location, and geographic location. Google Analytics and Mixpanel acquires all its information directly from the user, by installing a cookie (see below) on JavaScript-enabled computers. The Site does not share any information it collects with Google or Mixpanel, and neither Google nor Mixpanel collect any personal identifying information such as names, contact information, social security numbers or financial information.",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 21
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "currIndex": 22
-                                },
-                                {
-                                    "type": "heading",
-                                    "attrs": {
-                                        "id": "cookies",
-                                        "level": 2
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "Cookies",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 23
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "Cookies are unique bits of computer data that many major websites will transfer to your computer the first time that you visit. Cookies are stored on your hard drive and may be later accessed by the website to track prior usage. As noted above, Google Analytics and Mixpanel will install a cookie on the hard drives of Site visitors.",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 24
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "currIndex": 25
-                                },
-                                {
-                                    "type": "heading",
-                                    "attrs": {
-                                        "id": "email",
-                                        "level": 2
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "Email",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 26
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "We will only record your email address if you send us a message or submit it to us as part of the user registration process. We will only use your email address for the purpose for which you have provided it — i.e., to respond to a message from you or to communicate with you regarding your user account or your contributions to ",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        },
-                                        {
-                                            "text": "Frankenbook",
-                                            "type": "text",
-                                            "marks": [
-                                                {
-                                                    "type": "em"
-                                                }
-                                            ],
-                                            "currIndex": 1
-                                        },
-                                        {
-                                            "text": ".",
-                                            "type": "text",
-                                            "currIndex": 2
-                                        }
-                                    ],
-                                    "currIndex": 27
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "When you submit your email address to the Site during registration, we will ask you whether you want to receive periodic announcements from the Site by email. Accepting emailed announcements is entirely optional and not a condition of registration, and you may change your email settings at any time to subscribe or unsubscribe to these mailings.",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 28
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "In the event we contract with a third-party service to assist with email delivery of newsletters and other mailings containing information about the Site, that service will be prohibited from using or sharing Site user information for any purpose other than facilitating communications on behalf of the Site.",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 29
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "currIndex": 30
-                                },
-                                {
-                                    "type": "heading",
-                                    "attrs": {
-                                        "id": "disclosure-to-third-parties",
-                                        "level": 2
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "Disclosure to Third Parties",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 31
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "We will not sell, lend, or disclose to third parties any personally identifiable information collected from users, except as described in this Policy or in the event we are required by law to do so. We may disclose information to ASU and MIT’s employees, fellows, students, consultants and agents who have a legitimate need to know the information for the purpose of fixing or improving the Site and monitoring and improving the security of our network. We may also disclose this information when special circumstances call for it, such as when disclosure is required by law or court order or when disclosure is, in our sole discretion, necessary to protect our legal rights, including intellectual property rights.",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 32
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "currIndex": 33
-                                },
-                                {
-                                    "type": "heading",
-                                    "attrs": {
-                                        "id": "other-websites",
-                                        "level": 2
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "Other Websites",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 34
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "This Site may contain links to other web resources, including websites of organizations other than Arizona State University and the Massachusetts Institute of Technology. The websites to which the Site links may also install cookies on your computer, log your access to their web pages, or collect user-identifying information directly from you, once you proceed to browse those sites. We are not responsible for the privacy policies of other sites to which the Site provides links. Please visit the relevant sites to review their privacy policies.",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 35
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "currIndex": 36
-                                },
-                                {
-                                    "type": "heading",
-                                    "attrs": {
-                                        "id": "data-security",
-                                        "level": 2
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "Data Security",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 37
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "We have in place physical, electronic and managerial procedures to protect the information we collect online. However, as effective as these measures are, no security system is impenetrable. We cannot completely guarantee the security of our database, nor can we guarantee that the information you supply will not be intercepted while being transmitted to us over the Internet.",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 38
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "currIndex": 39
-                                },
-                                {
-                                    "type": "heading",
-                                    "attrs": {
-                                        "id": "notification-of-changes-in-the-privacy-policy",
-                                        "level": 2
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "Notification of Changes in the Privacy Policy",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 40
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "We will review our security measures and Privacy Policy on a periodic basis, and we may modify our policies as appropriate. We may also change or update our Privacy Policy if we add new services or features. If any changes are made, we will make appropriate amendments to this policy and post them at the Site. By accessing the Site after modifications to this Privacy Policy have been posted, you agree to be bound by the modified terms. We encourage you to review our Privacy Policy on a regular basis.",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 41
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "If you have any questions about this Privacy Policy, the practices of this Site, or your dealings with this Site, you can contact Pubpub@media.mit.edu.",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 42
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "currIndex": 43
-                                },
-                                {
-                                    "type": "heading",
-                                    "attrs": {
-                                        "id": "effective-date",
-                                        "level": 2
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "Effective Date",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 44
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "This Privacy Policy is in effect as of as of January 1, 2018.",
-                                            "type": "text",
-                                            "currIndex": 0
-                                        }
-                                    ],
-                                    "currIndex": 45
-                                }
-                            ]
                         },
-                        "width": "wide"
+                        "title": "Terms of Service"
                     }
                 }
-            ],
-            "createPubHash": "5mc4qy7d",
-            "createPubMessage": null
-        },
-        {
-            "id": "632bfbc1-a8a3-4829-be61-fa20db405d90",
-            "title": "Media",
-            "description": "",
-            "slug": "media",
-            "isPage": true,
-            "isPublic": true,
-            "isOpenSubmissions": false,
-            "isOpenPublish": false,
-            "layout": [
-                {
-                    "id": "kruw36cv",
-                    "type": "text",
-                    "content": {
-                        "text": {
-                            "type": "doc",
-                            "attrs": {
-                                "meta": {}
-                            },
-                            "content": [
-                                {
-                                    "type": "heading",
-                                    "attrs": {
-                                        "id": "step-into-the-lab-to-build-solutions-to-todays-vexing-questions",
-                                        "level": 2
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "Step into the lab to build solutions to today’s vexing questions",
-                                            "type": "text"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "type": "image",
-                                    "attrs": {
-                                        "url": "https://assets.pubpub.org/_testing/41522771208287.jpg",
-                                        "size": 50,
-                                        "align": "full",
-                                        "caption": ""
-                                    }
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "Click to step into the lab.",
-                                            "type": "text",
-                                            "marks": [
-                                                {
-                                                    "type": "link",
-                                                    "attrs": {
-                                                        "href": "http://www.bluecadet.com/projects/modern-monsters/#/",
-                                                        "title": null,
-                                                        "target": null
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    }
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    }
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    }
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    }
-                                },
-                                {
-                                    "type": "heading",
-                                    "attrs": {
-                                        "id": "a-year-without-a-summer",
-                                        "level": 2
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "A Year Without a Summer",
-                                            "type": "text"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "type": "iframe",
-                                    "attrs": {
-                                        "url": "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/269203861&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true",
-                                        "size": 75,
-                                        "align": "full",
-                                        "height": 150,
-                                        "caption": ""
-                                    }
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    }
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    }
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    }
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    }
-                                },
-                                {
-                                    "type": "heading",
-                                    "attrs": {
-                                        "id": "lab-assistant",
-                                        "level": 2
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "Lab Assistant",
-                                            "type": "text"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "type": "image",
-                                    "attrs": {
-                                        "url": "https://assets.pubpub.org/_testing/11522771260672.jpg",
-                                        "size": 50,
-                                        "align": "full",
-                                        "caption": ""
-                                    }
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    },
-                                    "content": [
-                                        {
-                                            "text": "Click to play Lab Assistant",
-                                            "type": "text",
-                                            "marks": [
-                                                {
-                                                    "type": "link",
-                                                    "attrs": {
-                                                        "href": "https://lizfiacco.itch.io/lab-assistant",
-                                                        "title": null,
-                                                        "target": null
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    }
-                                },
-                                {
-                                    "type": "paragraph",
-                                    "attrs": {
-                                        "class": null
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            ],
-            "createPubHash": "192yzcm5",
-            "createPubMessage": null
-        },
-        {
-            "id": "0fd7f42c-d8a1-4275-bf2b-cd641416959c",
-            "title": "Home",
-            "description": "",
-            "slug": "",
-            "isPage": false,
-            "isPublic": true,
-            "isOpenSubmissions": false,
-            "isOpenPublish": false,
-            "layout": [
-                {
-                    "id": "0kyj32ay",
-                    "type": "pubs",
-                    "content": {
-                        "size": "large",
-                        "limit": 1,
-                        "title": "",
-                        "pubIds": [
-                            "7ed63c06-5050-44d8-a255-abc72c3b079e"
-                        ]
-                    }
-                },
-                {
-                    "id": "gruw36cv",
-                    "type": "pubs",
-                    "content": {
-                        "size": "medium",
-                        "limit": 0,
-                        "title": "",
-                        "pubIds": []
-                    }
-                },
-                {
-                    "id": "xmms0ze1",
-                    "type": "pubs",
-                    "content": {
-                        "size": "large",
-                        "limit": 0,
-                        "title": "Featured Essays",
-                        "pubIds": [
-                            "5d113a4f-1aee-47ce-9ffc-1416da647b37"
-                        ]
-                    }
-                }
-            ],
-            "createPubHash": "kh128d20",
-            "createPubMessage": null
+            ]
         },
         {
             "id": "72a43321-6b86-4d94-8412-288c3d28fd6a",
             "title": "Notes",
             "description": "",
             "slug": "notes",
-            "isPage": false,
             "isPublic": false,
-            "isOpenSubmissions": true,
-            "isOpenPublish": false,
+            "viewHash": "qf23mt38",
             "layout": [
                 {
-                    "id": "0kyj32ay",
-                    "type": "pubs",
+                    "id": "bx75vins",
+                    "type": "banner",
                     "content": {
-                        "size": "large",
-                        "limit": 1,
-                        "title": "",
-                        "pubIds": []
+                        "text": "Team Notes",
+                        "align": "left",
+                        "buttonText": "Create",
+                        "showButton": true,
+                        "defaultTagIds": [
+                            "72a43321-6b86-4d94-8412-288c3d28fd6a"
+                        ],
+                        "backgroundSize": "standard",
+                        "backgroundColor": "#141413",
+                        "backgroundImage": ""
                     }
                 },
                 {
                     "id": "gruw36cv",
                     "type": "pubs",
                     "content": {
-                        "size": "medium",
                         "limit": 0,
+                        "tagId": "72a43321-6b86-4d94-8412-288c3d28fd6a",
                         "title": "",
-                        "pubIds": []
+                        "pubIds": [
+                            "4c350f9e-4dd3-41c3-bbe6-7cd855ce414f"
+                        ],
+                        "tagIds": [
+                            "72a43321-6b86-4d94-8412-288c3d28fd6a"
+                        ],
+                        "pubPreviewType": "small"
                     }
                 },
                 {
@@ -4825,59 +5530,15 @@ export default {
                         "title": "Open Drafts"
                     }
                 }
-            ],
-            "createPubHash": "qf23mt38",
-            "createPubMessage": null
+            ]
         }
     ],
     "admins": [
-        {
-            "id": "52441948-93f6-4e03-950a-b5ed061c635b",
-            "slug": "coty-greenfelder8042",
-            "fullName": "Coty Greenfelder",
-            "initials": "CG",
-            "avatar": "https://assets.pubpub.org/_testing/01519309255968.jpg"
-        },
-        {
-            "id": "b44ff0b6-9514-46aa-9383-cbeb05a10bb9",
-            "slug": "ed-finn2",
-            "fullName": "Ed Finn",
-            "initials": "EF",
-            "avatar": "https://assets.pubpub.org/_testing/51523544351515.jpg"
-        },
-        {
-            "id": "09133b86-52cc-4c6a-92e9-9f1a74b33910",
-            "slug": "joey-eschrich2",
-            "fullName": "Joey Eschrich",
-            "initials": "JE",
-            "avatar": "https://assets.pubpub.org/_testing/61523543394170.jpg"
-        },
-        {
-            "id": "bf7a2905-119d-473c-9ad1-8ecf4bd87f51",
-            "slug": "bob-beard2",
-            "fullName": "Bob Beard",
-            "initials": "BB",
-            "avatar": "https://assets.pubpub.org/_testing/11523543858911.jpg"
-        },
-        {
-            "id": "9d940f47-ed89-4a5e-a076-f2931a219582",
-            "slug": "travis-rich-5",
-            "fullName": "Travis Rich!!",
-            "initials": "TR",
-            "avatar": null
-        },
         {
             "id": "2a487ca4-2a61-442d-8a73-fe5f50d8d778",
             "slug": "gabriel-stein",
             "fullName": "Gabriel Stein",
             "initials": "GS",
-            "avatar": null
-        },
-        {
-            "id": "ef54628a-9638-4fdf-9d27-d5377309632b",
-            "slug": "catherine-ahearn",
-            "fullName": "Catherine Ahearn",
-            "initials": "CA",
             "avatar": null
         },
         {
@@ -4888,23 +5549,159 @@ export default {
             "avatar": "https://assets.pubpub.org/_testing/41517257807614.jpg"
         },
         {
-            "id": "63c9d1b8-ecb4-48cb-9946-eb2dac0e3cdb",
-            "slug": "mallory-ankunding2109",
-            "fullName": "Mallory Ankunding",
-            "initials": "MA",
-            "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/coreyweb/128.jpg"
+            "id": "52441948-93f6-4e03-950a-b5ed061c635b",
+            "slug": "coty-greenfelder8042",
+            "fullName": "Coty Greenfelder",
+            "initials": "CG",
+            "avatar": "https://assets.pubpub.org/_testing/01519309255968.jpg"
+        },
+        {
+            "id": "9d940f47-ed89-4a5e-a076-f2931a219582",
+            "slug": "travis-rich-5",
+            "fullName": "Travis Rich!!",
+            "initials": "TR",
+            "avatar": null
+        },
+        {
+            "id": "b44ff0b6-9514-46aa-9383-cbeb05a10bb9",
+            "slug": "ed-finn2",
+            "fullName": "Ed Finn",
+            "initials": "EF",
+            "avatar": "https://assets.pubpub.org/_testing/51523544351515.jpg"
+        },
+        {
+            "id": "ef54628a-9638-4fdf-9d27-d5377309632b",
+            "slug": "catherine-ahearn",
+            "fullName": "Catherine Ahearn",
+            "initials": "CA",
+            "avatar": null
         }
     ],
     "tags": [
         {
-            "id": "315c8a93-7bcc-453b-a42e-e5c82aeb5271",
-            "title": "Issue 3",
+            "id": "af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b",
+            "title": "Essays",
+            "isRestricted": true,
+            "isPublic": true,
+            "pageId": "af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b",
+            "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+            "createdAt": "2018-08-06T15:26:05.468Z",
+            "updatedAt": "2018-08-06T15:26:05.468Z",
+            "page": {
+                "id": "af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b",
+                "title": "Essays",
+                "slug": "essays"
+            }
+        },
+        {
+            "id": "35d1cbbd-2e54-4334-8443-2df07fbd7383",
+            "title": "Terms of Service",
+            "isRestricted": true,
+            "isPublic": true,
+            "pageId": "35d1cbbd-2e54-4334-8443-2df07fbd7383",
+            "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+            "createdAt": "2018-08-06T15:26:05.468Z",
+            "updatedAt": "2018-08-06T15:26:05.468Z",
+            "page": {
+                "id": "35d1cbbd-2e54-4334-8443-2df07fbd7383",
+                "title": "Terms of Service",
+                "slug": "terms"
+            }
+        },
+        {
+            "id": "8b10fb64-0cb4-4176-b46a-8610c2a48223",
+            "title": "Privacy Policy",
+            "isRestricted": true,
+            "isPublic": true,
+            "pageId": "8b10fb64-0cb4-4176-b46a-8610c2a48223",
+            "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+            "createdAt": "2018-08-06T15:26:05.468Z",
+            "updatedAt": "2018-08-06T15:26:05.468Z",
+            "page": {
+                "id": "8b10fb64-0cb4-4176-b46a-8610c2a48223",
+                "title": "Privacy Policy",
+                "slug": "privacy"
+            }
+        },
+        {
+            "id": "632bfbc1-a8a3-4829-be61-fa20db405d90",
+            "title": "Media",
+            "isRestricted": true,
+            "isPublic": true,
+            "pageId": "632bfbc1-a8a3-4829-be61-fa20db405d90",
+            "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+            "createdAt": "2018-08-06T15:26:05.468Z",
+            "updatedAt": "2018-08-06T15:26:05.468Z",
+            "page": {
+                "id": "632bfbc1-a8a3-4829-be61-fa20db405d90",
+                "title": "Media",
+                "slug": "media"
+            }
+        },
+        {
+            "id": "0fd7f42c-d8a1-4275-bf2b-cd641416959c",
+            "title": "Home",
+            "isRestricted": true,
+            "isPublic": true,
+            "pageId": "0fd7f42c-d8a1-4275-bf2b-cd641416959c",
+            "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+            "createdAt": "2018-08-06T15:26:05.468Z",
+            "updatedAt": "2018-08-06T15:26:05.468Z",
+            "page": {
+                "id": "0fd7f42c-d8a1-4275-bf2b-cd641416959c",
+                "title": "Home",
+                "slug": ""
+            }
+        },
+        {
+            "id": "58b9179b-4553-4f38-9edf-4fb89a88848f",
+            "title": "Physics",
+            "isRestricted": true,
+            "isPublic": true,
+            "pageId": null,
+            "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+            "createdAt": "2018-08-08T18:05:17.887Z",
+            "updatedAt": "2018-08-08T18:05:17.887Z"
+        },
+        {
+            "id": "72a43321-6b86-4d94-8412-288c3d28fd6a",
+            "title": "Dev Notes",
+            "isRestricted": true,
+            "isPublic": false,
+            "pageId": "72a43321-6b86-4d94-8412-288c3d28fd6a",
+            "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+            "createdAt": "2018-08-06T15:26:05.468Z",
+            "updatedAt": "2018-08-09T16:25:16.033Z",
+            "page": {
+                "id": "72a43321-6b86-4d94-8412-288c3d28fd6a",
+                "title": "Notes",
+                "slug": "notes"
+            }
+        },
+        {
+            "id": "dd0d1dd0-30c2-4f27-9ef1-dec455c84177",
+            "title": "Credits",
+            "isRestricted": true,
+            "isPublic": true,
+            "pageId": "dd0d1dd0-30c2-4f27-9ef1-dec455c84177",
+            "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+            "createdAt": "2018-08-06T15:26:05.468Z",
+            "updatedAt": "2018-08-06T15:39:29.077Z",
+            "page": {
+                "id": "dd0d1dd0-30c2-4f27-9ef1-dec455c84177",
+                "title": "Credits",
+                "slug": "credits"
+            }
+        },
+        {
+            "id": "5b763da8-d0c7-4d90-8e56-9d1ac0e49a5a",
+            "title": "About Frankenbook",
             "isRestricted": true,
             "isPublic": true,
             "pageId": "5b763da8-d0c7-4d90-8e56-9d1ac0e49a5a",
             "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
-            "createdAt": "2018-08-02T12:05:07.254Z",
-            "updatedAt": "2018-08-02T13:34:38.748Z",
+            "createdAt": "2018-08-06T15:26:05.468Z",
+            "updatedAt": "2018-08-09T18:48:44.191Z",
             "page": {
                 "id": "5b763da8-d0c7-4d90-8e56-9d1ac0e49a5a",
                 "title": "About Frankenbook",
@@ -4912,26 +5709,14 @@ export default {
             }
         },
         {
-            "id": "fb13b7ae-8e7f-4e64-a755-5097942336c6",
-            "title": "Editor's Pick",
-            "isRestricted": true,
-            "isPublic": null,
-            "pageId": null,
-            "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
-            "createdAt": "2018-08-02T13:45:01.558Z",
-            "updatedAt": "2018-08-02T13:45:01.558Z",
-            "page": null
-        },
-        {
-            "id": "bb3cd79a-bc4d-4721-8755-0a3bf5457cea",
+            "id": "7a8bb3b2-a197-4062-a0b3-5c283d7f1df1",
             "title": "Neuroscience",
             "isRestricted": true,
-            "isPublic": null,
+            "isPublic": true,
             "pageId": null,
             "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
-            "createdAt": "2018-08-02T13:45:33.744Z",
-            "updatedAt": "2018-08-02T13:45:33.744Z",
-            "page": null
+            "createdAt": "2018-08-08T18:04:59.916Z",
+            "updatedAt": "2018-08-08T18:04:59.916Z"
         }
     ]
 };

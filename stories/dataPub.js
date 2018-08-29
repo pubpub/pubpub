@@ -4,9 +4,9 @@ export default {
     "title": "Introduction",
     "description": "",
     "avatar": "https://assets.pubpub.org/_testing/51517935062313.jpg",
-    "useHeaderImage": false,
+    "useHeaderImage": true,
     "firstPublishedAt": "2018-02-06T16:37:59.317Z",
-    "lastPublishedAt": "2018-07-13T23:24:50.338Z",
+    "lastPublishedAt": "2018-08-15T15:59:44.918Z",
     "collaborationMode": "private",
     "adminPermissions": "none",
     "draftEditHash": "hurq0gtl",
@@ -20,34 +20,45 @@ export default {
             "publicApply": false
         }
     ],
-    "isCommunityAdminManaged": true,
+    "isCommunityAdminManaged": false,
     "communityAdminDraftPermissions": "view",
     "draftPermissions": "private",
+    "review": {
+        "status": "submitted"
+    },
     "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
     "createdAt": "2018-02-06T16:35:39.526Z",
-    "updatedAt": "2018-08-01T14:23:40.018Z",
+    "updatedAt": "2018-08-15T16:00:25.212Z",
     "collections": [
-        {
-            "id": "af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b",
-            "title": "Essays",
-            "slug": "essays",
-            "isPublic": true,
-            "isOpenPublish": true
-        },
         {
             "id": "0fd7f42c-d8a1-4275-bf2b-cd641416959c",
             "title": "Home",
             "slug": "",
             "isPublic": true,
             "isOpenPublish": false
+        },
+        {
+            "id": "af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b",
+            "title": "Essays",
+            "slug": "essays",
+            "isPublic": true,
+            "isOpenPublish": true
         }
     ],
     "versions": [
         {
+            "createdAt": "2018-08-15T15:59:44.960Z",
+            "id": "6cd78a32-5873-4188-888c-26dc2bdeb74b",
+            "description": null,
+            "isPublic": null,
+            "isCommunityAdminShared": null,
+            "viewHash": "ptr4qx62"
+        },
+        {
             "createdAt": "2018-07-13T23:24:50.401Z",
             "id": "427a3c55-993a-4083-918c-85c682bedccf",
             "description": null,
-            "isPublic": false,
+            "isPublic": true,
             "isCommunityAdminShared": true,
             "viewHash": "55rdhiqq"
         },
@@ -92,6 +103,23 @@ export default {
                 "slug": "lavina-medhurst2023",
                 "initials": "LM",
                 "title": null
+            }
+        },
+        {
+            "id": "17c8dd72-552a-42df-b085-8504adf30221",
+            "userId": "9d940f47-ed89-4a5e-a076-f2931a219582",
+            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
+            "createdAt": "2018-08-03T21:15:40.930Z",
+            "updatedAt": "2018-08-03T21:15:40.930Z",
+            "user": {
+                "id": "9d940f47-ed89-4a5e-a076-f2931a219582",
+                "firstName": "Travis",
+                "lastName": "Rich!!",
+                "fullName": "Travis Rich!!",
+                "avatar": null,
+                "slug": "travis-rich-5",
+                "initials": "TR",
+                "title": ""
             }
         },
         {
@@ -403,6 +431,52 @@ export default {
             }
         }
     ],
+    "pubTags": [
+        {
+            "id": "526e506e-4ece-4d69-99e1-23814af4921e",
+            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
+            "tagId": "af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b",
+            "createdAt": "2018-08-06T15:26:05.647Z",
+            "updatedAt": "2018-08-06T15:26:05.647Z",
+            "tag": {
+                "id": "af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b",
+                "title": "Essays",
+                "isRestricted": true,
+                "isPublic": true,
+                "pageId": "af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b",
+                "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+                "createdAt": "2018-08-06T15:26:05.468Z",
+                "updatedAt": "2018-08-06T15:26:05.468Z",
+                "page": {
+                    "id": "af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b",
+                    "title": "Essays",
+                    "slug": "essays"
+                }
+            }
+        },
+        {
+            "id": "368c8c18-9f74-4c9b-872c-338752d53844",
+            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
+            "tagId": "0fd7f42c-d8a1-4275-bf2b-cd641416959c",
+            "createdAt": "2018-08-06T15:26:05.647Z",
+            "updatedAt": "2018-08-06T15:26:05.647Z",
+            "tag": {
+                "id": "0fd7f42c-d8a1-4275-bf2b-cd641416959c",
+                "title": "Home",
+                "isRestricted": true,
+                "isPublic": true,
+                "pageId": "0fd7f42c-d8a1-4275-bf2b-cd641416959c",
+                "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+                "createdAt": "2018-08-06T15:26:05.468Z",
+                "updatedAt": "2018-08-06T15:26:05.468Z",
+                "page": {
+                    "id": "0fd7f42c-d8a1-4275-bf2b-cd641416959c",
+                    "title": "Home",
+                    "slug": ""
+                }
+            }
+        }
+    ],
     "discussions": [
         {
             "id": "54e7e200-5dc7-474c-aae3-fe64cdeb6e1b",
@@ -464,6 +538,7 @@ export default {
             "userId": "52441948-93f6-4e03-950a-b5ed061c635b",
             "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
             "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+            "discussionChannelId": null,
             "createdAt": "2018-07-05T19:02:49.270Z",
             "updatedAt": "2018-07-05T19:02:49.270Z",
             "author": {
@@ -535,6 +610,7 @@ export default {
             "userId": "52441948-93f6-4e03-950a-b5ed061c635b",
             "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
             "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+            "discussionChannelId": null,
             "createdAt": "2018-07-05T19:03:00.471Z",
             "updatedAt": "2018-07-05T19:03:00.471Z",
             "author": {
@@ -584,6 +660,7 @@ export default {
             "userId": "52441948-93f6-4e03-950a-b5ed061c635b",
             "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
             "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+            "discussionChannelId": null,
             "createdAt": "2018-07-14T02:39:46.919Z",
             "updatedAt": "2018-07-14T02:39:52.554Z",
             "author": {
@@ -659,6 +736,7 @@ export default {
             "userId": "52441948-93f6-4e03-950a-b5ed061c635b",
             "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
             "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+            "discussionChannelId": null,
             "createdAt": "2018-07-14T02:42:41.369Z",
             "updatedAt": "2018-07-14T02:42:41.369Z",
             "author": {
@@ -708,6 +786,7 @@ export default {
             "userId": "52441948-93f6-4e03-950a-b5ed061c635b",
             "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
             "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+            "discussionChannelId": null,
             "createdAt": "2018-07-14T14:23:31.228Z",
             "updatedAt": "2018-07-14T14:23:31.228Z",
             "author": {
@@ -718,74 +797,314 @@ export default {
                 "initials": "CG",
                 "title": "EAPS 2020. Interested in studying oceanography and spelunking."
             }
-        }
-    ],
-    "pubTags": [
+        },
         {
-            "id": "e28750e8-a285-4834-8d6f-7d514125eaa2",
+            "id": "01425f0b-a652-4c9f-bd98-ddcce4eac035",
+            "title": "New Discussion on Aug 9",
+            "threadNumber": 4,
+            "text": "test",
+            "content": {
+                "type": "doc",
+                "attrs": {
+                    "meta": {},
+                    "trackChangesData": {}
+                },
+                "content": [
+                    {
+                        "type": "highlightQuote",
+                        "attrs": {
+                            "id": "hh1cv1k0e",
+                            "to": 188,
+                            "from": 163,
+                            "exact": "leaves behind his idyllic",
+                            "prefix": "kenstein) ",
+                            "suffix": " childhood",
+                            "section": "",
+                            "version": "427a3c55-993a-4083-918c-85c682bedccf",
+                            "trackChangesData": {}
+                        }
+                    },
+                    {
+                        "type": "highlightQuote",
+                        "attrs": {
+                            "id": "hg2fwqahq",
+                            "to": 548,
+                            "from": 522,
+                            "exact": "cautionary tale. And it is",
+                            "prefix": "tein is a ",
+                            "suffix": " now for t",
+                            "section": null,
+                            "version": "427a3c55-993a-4083-918c-85c682bedccf",
+                            "trackChangesData": {}
+                        }
+                    },
+                    {
+                        "type": "paragraph",
+                        "attrs": {
+                            "class": null,
+                            "trackChangesData": {}
+                        },
+                        "content": [
+                            {
+                                "text": "test",
+                                "type": "text"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "attachments": null,
+            "suggestions": null,
+            "highlights": [
+                {
+                    "id": "hh1cv1k0e",
+                    "to": 188,
+                    "from": 163,
+                    "exact": "leaves behind his idyllic",
+                    "prefix": "kenstein) ",
+                    "suffix": " childhood",
+                    "section": "",
+                    "version": "427a3c55-993a-4083-918c-85c682bedccf",
+                    "trackChangesData": {}
+                },
+                {
+                    "id": "hg2fwqahq",
+                    "to": 548,
+                    "from": 522,
+                    "exact": "cautionary tale. And it is",
+                    "prefix": "tein is a ",
+                    "suffix": " now for t",
+                    "section": null,
+                    "version": "427a3c55-993a-4083-918c-85c682bedccf",
+                    "trackChangesData": {}
+                }
+            ],
+            "submitHash": null,
+            "submitApprovedAt": null,
+            "isArchived": null,
+            "isPublic": true,
+            "labels": null,
+            "userId": "2a487ca4-2a61-442d-8a73-fe5f50d8d778",
             "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
-            "tagId": "fb13b7ae-8e7f-4e64-a755-5097942336c6",
-            "createdAt": "2018-08-02T16:14:32.104Z",
-            "updatedAt": "2018-08-02T16:14:32.104Z",
-            "tag": {
-                "id": "fb13b7ae-8e7f-4e64-a755-5097942336c6",
-                "title": "Editor's Pick",
-                "isRestricted": true,
-                "isPublic": null,
-                "pageId": null,
-                "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
-                "createdAt": "2018-08-02T13:45:01.558Z",
-                "updatedAt": "2018-08-02T16:48:05.649Z",
-                "page": null
+            "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+            "discussionChannelId": null,
+            "createdAt": "2018-08-09T14:32:20.748Z",
+            "updatedAt": "2018-08-09T14:32:20.748Z",
+            "author": {
+                "id": "2a487ca4-2a61-442d-8a73-fe5f50d8d778",
+                "fullName": "Gabriel Stein",
+                "avatar": null,
+                "slug": "gabriel-stein",
+                "initials": "GS",
+                "title": ""
             }
         },
         {
-            "id": "8780b525-56b3-4386-8412-d20630369e1d",
-            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
-            "tagId": "315c8a93-7bcc-453b-a42e-e5c82aeb5271",
-            "createdAt": "2018-08-02T12:05:07.279Z",
-            "updatedAt": "2018-08-02T12:05:07.279Z",
-            "tag": {
-                "id": "315c8a93-7bcc-453b-a42e-e5c82aeb5271",
-                "title": "Issue 3!",
-                "isRestricted": true,
-                "isPublic": true,
-                "pageId": "5b763da8-d0c7-4d90-8e56-9d1ac0e49a5a",
-                "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
-                "createdAt": "2018-08-02T12:05:07.254Z",
-                "updatedAt": "2018-08-02T16:24:40.875Z",
-                "page": {
-                    "id": "5b763da8-d0c7-4d90-8e56-9d1ac0e49a5a",
-                    "title": "About Frankenbook",
-                    "slug": "about"
+            "id": "0be6fbd2-2955-4281-8cb8-0c83408b439c",
+            "title": "New Discussion on Aug 9",
+            "threadNumber": 5,
+            "text": "hey this is greatnot so much here, please change, duhlove this lmao",
+            "content": {
+                "type": "doc",
+                "attrs": {
+                    "meta": {},
+                    "trackChangesData": {}
+                },
+                "content": [
+                    {
+                        "type": "highlightQuote",
+                        "attrs": {
+                            "id": "hlyhu1f5p",
+                            "to": 325,
+                            "from": 282,
+                            "exact": "procedures, creates an unnamed monster, and",
+                            "prefix": "d medical ",
+                            "suffix": " suffers t",
+                            "section": "",
+                            "version": "427a3c55-993a-4083-918c-85c682bedccf",
+                            "trackChangesData": {}
+                        }
+                    },
+                    {
+                        "type": "paragraph",
+                        "attrs": {
+                            "class": null,
+                            "trackChangesData": {}
+                        },
+                        "content": [
+                            {
+                                "text": "hey this is great",
+                                "type": "text"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "highlightQuote",
+                        "attrs": {
+                            "id": "hlpqya6qc",
+                            "to": 2200,
+                            "from": 2122,
+                            "exact": "the birth of the new revolutionary age, in the shadows of which we still live.",
+                            "prefix": "ffects of ",
+                            "suffix": "/Frank",
+                            "section": null,
+                            "version": "427a3c55-993a-4083-918c-85c682bedccf",
+                            "trackChangesData": {}
+                        }
+                    },
+                    {
+                        "type": "paragraph",
+                        "attrs": {
+                            "class": null,
+                            "trackChangesData": {}
+                        },
+                        "content": [
+                            {
+                                "text": "not so much here, please change, duh",
+                                "type": "text"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "highlightQuote",
+                        "attrs": {
+                            "id": "hp5v1qdm2",
+                            "to": 4783,
+                            "from": 4678,
+                            "exact": "and his earlier student textbook Introduction to Natural Philosophy (2 vols., 1782; fifth edition, 1805).",
+                            "prefix": "on, 1796) ",
+                            "suffix": " As Willia",
+                            "section": null,
+                            "version": "427a3c55-993a-4083-918c-85c682bedccf",
+                            "trackChangesData": {}
+                        }
+                    },
+                    {
+                        "type": "paragraph",
+                        "attrs": {
+                            "class": null,
+                            "trackChangesData": {}
+                        },
+                        "content": [
+                            {
+                                "text": "love this lmao",
+                                "type": "text"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "attachments": null,
+            "suggestions": null,
+            "highlights": [
+                {
+                    "id": "hlyhu1f5p",
+                    "to": 325,
+                    "from": 282,
+                    "exact": "procedures, creates an unnamed monster, and",
+                    "prefix": "d medical ",
+                    "suffix": " suffers t",
+                    "section": "",
+                    "version": "427a3c55-993a-4083-918c-85c682bedccf",
+                    "trackChangesData": {}
+                },
+                {
+                    "id": "hlpqya6qc",
+                    "to": 2200,
+                    "from": 2122,
+                    "exact": "the birth of the new revolutionary age, in the shadows of which we still live.",
+                    "prefix": "ffects of ",
+                    "suffix": "/Frank",
+                    "section": null,
+                    "version": "427a3c55-993a-4083-918c-85c682bedccf",
+                    "trackChangesData": {}
+                },
+                {
+                    "id": "hp5v1qdm2",
+                    "to": 4783,
+                    "from": 4678,
+                    "exact": "and his earlier student textbook Introduction to Natural Philosophy (2 vols., 1782; fifth edition, 1805).",
+                    "prefix": "on, 1796) ",
+                    "suffix": " As Willia",
+                    "section": null,
+                    "version": "427a3c55-993a-4083-918c-85c682bedccf",
+                    "trackChangesData": {}
                 }
+            ],
+            "submitHash": null,
+            "submitApprovedAt": null,
+            "isArchived": null,
+            "isPublic": true,
+            "labels": null,
+            "userId": "2a487ca4-2a61-442d-8a73-fe5f50d8d778",
+            "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
+            "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+            "discussionChannelId": null,
+            "createdAt": "2018-08-09T14:33:33.891Z",
+            "updatedAt": "2018-08-09T14:33:33.891Z",
+            "author": {
+                "id": "2a487ca4-2a61-442d-8a73-fe5f50d8d778",
+                "fullName": "Gabriel Stein",
+                "avatar": null,
+                "slug": "gabriel-stein",
+                "initials": "GS",
+                "title": ""
             }
         },
         {
-            "id": "d0f73854-125f-4ca4-9e05-b718175115c4",
+            "id": "0562fe4f-d151-4187-86eb-b3d55a1d9e5f",
+            "title": "",
+            "threadNumber": 4,
+            "text": "https://dev.pubpub.org/pub/zw3syn5h/discussions/4",
+            "content": {
+                "type": "doc",
+                "attrs": {
+                    "meta": {},
+                    "trackChangesData": {}
+                },
+                "content": [
+                    {
+                        "type": "paragraph",
+                        "attrs": {
+                            "class": null,
+                            "trackChangesData": {}
+                        },
+                        "content": [
+                            {
+                                "text": "https://dev.pubpub.org/pub/zw3syn5h/discussions/4",
+                                "type": "text"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "attachments": null,
+            "suggestions": null,
+            "highlights": null,
+            "submitHash": null,
+            "submitApprovedAt": null,
+            "isArchived": null,
+            "isPublic": true,
+            "labels": null,
+            "userId": "2a487ca4-2a61-442d-8a73-fe5f50d8d778",
             "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
-            "tagId": "bb3cd79a-bc4d-4721-8755-0a3bf5457cea",
-            "createdAt": "2018-08-02T16:16:39.954Z",
-            "updatedAt": "2018-08-02T16:16:39.954Z",
-            "tag": {
-                "id": "bb3cd79a-bc4d-4721-8755-0a3bf5457cea",
-                "title": "Neuroscience",
-                "isRestricted": true,
-                "isPublic": null,
-                "pageId": "5b763da8-d0c7-4d90-8e56-9d1ac0e49a5a",
-                "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
-                "createdAt": "2018-08-02T13:45:33.744Z",
-                "updatedAt": "2018-08-02T16:06:29.154Z",
-                "page": {
-                    "id": "5b763da8-d0c7-4d90-8e56-9d1ac0e49a5a",
-                    "title": "About Frankenbook",
-                    "slug": "about"
-                }
+            "communityId": "da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4",
+            "discussionChannelId": null,
+            "createdAt": "2018-08-09T14:40:00.727Z",
+            "updatedAt": "2018-08-09T14:40:00.727Z",
+            "author": {
+                "id": "2a487ca4-2a61-442d-8a73-fe5f50d8d778",
+                "fullName": "Gabriel Stein",
+                "avatar": null,
+                "slug": "gabriel-stein",
+                "initials": "GS",
+                "title": ""
             }
         }
     ],
+    "discussionChannels": [],
     "activeVersion": {
-        "id": "427a3c55-993a-4083-918c-85c682bedccf",
+        "id": "6cd78a32-5873-4188-888c-26dc2bdeb74b",
         "description": null,
         "content": {
             "type": "doc",
@@ -795,44 +1114,20 @@ export default {
             },
             "content": [
                 {
-                    "type": "paragraph",
-                    "attrs": {
-                        "class": null,
-                        "trackChangesData": {}
-                    },
-                    "content": [
-                        {
-                            "text": "Well this is nifty!",
-                            "type": "text",
-                            "currIndex": 0
-                        }
-                    ],
-                    "currIndex": 0
-                },
-                {
                     "type": "heading",
                     "attrs": {
-                        "id": "hello-there--k",
+                        "id": "introduction",
                         "level": 1,
                         "trackChangesData": {}
                     },
                     "content": [
                         {
-                            "text": "Hello there! 🤓 k",
+                            "text": "Introduction",
                             "type": "text",
                             "currIndex": 0
-                        },
-                        {
-                            "type": "equation",
-                            "attrs": {
-                                "html": "<span class=\"katex\"><span class=\"katex-mathml\"><math><semantics><mrow><msub><mo>∑</mo><mi>i</mi></msub><msup><mi>x</mi><mi>i</mi></msup><mn>2</mn><mn>1</mn></mrow><annotation encoding=\"application/x-tex\">\\sum_ix^i21</annotation></semantics></math></span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"strut\" style=\"height:0.824664em;\"></span><span class=\"strut bottom\" style=\"height:1.124374em;vertical-align:-0.29971000000000003em;\"></span><span class=\"base\"><span class=\"mop\"><span class=\"mop op-symbol small-op\" style=\"position:relative;top:-0.0000050000000000050004em;\">∑</span><span class=\"msupsub\"><span class=\"vlist-t vlist-t2\"><span class=\"vlist-r\"><span class=\"vlist\" style=\"height:0.16195399999999993em;\"><span style=\"top:-2.40029em;margin-left:0em;margin-right:0.05em;\"><span class=\"pstrut\" style=\"height:2.7em;\"></span><span class=\"sizing reset-size6 size3 mtight\"><span class=\"mord mathit mtight\">i</span></span></span></span><span class=\"vlist-s\">​</span></span><span class=\"vlist-r\"><span class=\"vlist\" style=\"height:0.29971000000000003em;\"></span></span></span></span></span><span class=\"mord rule\" style=\"margin-right:0.16666666666666666em;\"></span><span class=\"mord\"><span class=\"mord mathit\">x</span><span class=\"msupsub\"><span class=\"vlist-t\"><span class=\"vlist-r\"><span class=\"vlist\" style=\"height:0.824664em;\"><span style=\"top:-3.063em;margin-right:0.05em;\"><span class=\"pstrut\" style=\"height:2.7em;\"></span><span class=\"sizing reset-size6 size3 mtight\"><span class=\"mord mathit mtight\">i</span></span></span></span></span></span></span></span><span class=\"mord\">2</span><span class=\"mord\">1</span></span></span></span>",
-                                "value": "\\sum_ix^i21",
-                                "trackChangesData": {}
-                            },
-                            "currIndex": 1
                         }
                     ],
-                    "currIndex": 1
+                    "currIndex": 0
                 },
                 {
                     "type": "paragraph",
@@ -845,18 +1140,28 @@ export default {
                             "text": "In this novel written by Mary Wollstonecraft Shelley (1797–1851), Victor Frankenstein (never called “Dr.” Frankenstein) leaves behind his idyllic childhood and Edenic Geneva, goes to university, studies the latest technologies and medical procedures, creates an unnamed monster, and suffers the dangerous consequences of his pursuit of knowledge when his creature destroys his brother William; his wife, Elizabeth; and his best friend, Henry Clerval.",
                             "type": "text",
                             "currIndex": 0
-                        },
+                        }
+                    ],
+                    "currIndex": 1
+                },
+                {
+                    "type": "paragraph",
+                    "attrs": {
+                        "class": null,
+                        "trackChangesData": {}
+                    },
+                    "content": [
                         {
                             "type": "hard_break",
                             "attrs": {
                                 "trackChangesData": {}
                             },
-                            "currIndex": 1
+                            "currIndex": 0
                         },
                         {
                             "text": "In short, ",
                             "type": "text",
-                            "currIndex": 2
+                            "currIndex": 1
                         },
                         {
                             "text": "Frankenstein",
@@ -866,12 +1171,12 @@ export default {
                                     "type": "em"
                                 }
                             ],
-                            "currIndex": 3
+                            "currIndex": 2
                         },
                         {
                             "text": " is a cautionary tale. And it is now for the first time published by an institute of technology for the purposes of educating students who are pursuing science, technology, engineering, and mathematics (STEM). (Some readers may wish or need to substitute ",
                             "type": "text",
-                            "currIndex": 4
+                            "currIndex": 3
                         },
                         {
                             "text": "medicine",
@@ -881,12 +1186,12 @@ export default {
                                     "type": "em"
                                 }
                             ],
-                            "currIndex": 5
+                            "currIndex": 4
                         },
                         {
                             "text": " for ",
                             "type": "text",
-                            "currIndex": 6
+                            "currIndex": 5
                         },
                         {
                             "text": "mathematics",
@@ -896,12 +1201,12 @@ export default {
                                     "type": "em"
                                 }
                             ],
-                            "currIndex": 7
+                            "currIndex": 6
                         },
                         {
                             "text": " in this acronym.) Up until this edition, ",
                             "type": "text",
-                            "currIndex": 8
+                            "currIndex": 7
                         },
                         {
                             "text": "Frankenstein",
@@ -911,15 +1216,31 @@ export default {
                                     "type": "em"
                                 }
                             ],
-                            "currIndex": 9
+                            "currIndex": 8
                         },
                         {
                             "text": " has been primarily edited and published for and read by humanities students, students equally in need of reading this cautionary tale about forbidden knowledge and playing God. And to embrace the largest audience, we are publishing what may also be defined as a “STEAM edition” of Frankenstein, the A edited in for the arts, design, and humanities.",
                             "type": "text",
-                            "currIndex": 10
+                            "currIndex": 9
                         }
                     ],
                     "currIndex": 2
+                },
+                {
+                    "type": "heading",
+                    "attrs": {
+                        "id": "reviews",
+                        "level": 1,
+                        "trackChangesData": {}
+                    },
+                    "content": [
+                        {
+                            "text": "Reviews",
+                            "type": "text",
+                            "currIndex": 0
+                        }
+                    ],
+                    "currIndex": 3
                 },
                 {
                     "type": "paragraph",
@@ -938,18 +1259,18 @@ export default {
                             "currIndex": 0
                         }
                     ],
-                    "currIndex": 3
+                    "currIndex": 4
                 },
                 {
                     "type": "video",
                     "attrs": {
                         "url": "https://assets.pubpub.org/_testing/31530108357713.webm",
                         "size": 68,
-                        "align": "center",
+                        "align": "full",
                         "caption": "",
                         "trackChangesData": {}
                     },
-                    "currIndex": 4
+                    "currIndex": 5
                 },
                 {
                     "type": "paragraph",
@@ -994,22 +1315,23 @@ export default {
                             "currIndex": 4
                         }
                     ],
-                    "currIndex": 5
+                    "currIndex": 6
                 },
                 {
-                    "type": "paragraph",
+                    "type": "heading",
                     "attrs": {
-                        "class": null,
+                        "id": "analysis",
+                        "level": 1,
                         "trackChangesData": {}
                     },
                     "content": [
                         {
-                            "text": "/",
+                            "text": "Analysis",
                             "type": "text",
                             "currIndex": 0
                         }
                     ],
-                    "currIndex": 6
+                    "currIndex": 7
                 },
                 {
                     "type": "paragraph",
@@ -1039,7 +1361,23 @@ export default {
                             "currIndex": 2
                         }
                     ],
-                    "currIndex": 7
+                    "currIndex": 8
+                },
+                {
+                    "type": "heading",
+                    "attrs": {
+                        "id": "data",
+                        "level": 2,
+                        "trackChangesData": {}
+                    },
+                    "content": [
+                        {
+                            "text": "Data",
+                            "type": "text",
+                            "currIndex": 0
+                        }
+                    ],
+                    "currIndex": 9
                 },
                 {
                     "type": "paragraph",
@@ -1114,7 +1452,23 @@ export default {
                             "currIndex": 8
                         }
                     ],
-                    "currIndex": 8
+                    "currIndex": 10
+                },
+                {
+                    "type": "heading",
+                    "attrs": {
+                        "id": "visualizations",
+                        "level": 2,
+                        "trackChangesData": {}
+                    },
+                    "content": [
+                        {
+                            "text": "Visualizations",
+                            "type": "text",
+                            "currIndex": 0
+                        }
+                    ],
+                    "currIndex": 11
                 },
                 {
                     "type": "paragraph",
@@ -1174,7 +1528,7 @@ export default {
                             "currIndex": 6
                         }
                     ],
-                    "currIndex": 9
+                    "currIndex": 12
                 },
                 {
                     "type": "image",
@@ -1185,7 +1539,7 @@ export default {
                         "caption": "<p><strong>Fig 1.</strong> This is the title of the image.</p>",
                         "trackChangesData": {}
                     },
-                    "currIndex": 10
+                    "currIndex": 13
                 },
                 {
                     "type": "paragraph",
@@ -1230,7 +1584,7 @@ export default {
                             "currIndex": 4
                         }
                     ],
-                    "currIndex": 11
+                    "currIndex": 14
                 },
                 {
                     "type": "paragraph",
@@ -1260,7 +1614,7 @@ export default {
                             "currIndex": 2
                         }
                     ],
-                    "currIndex": 12
+                    "currIndex": 15
                 },
                 {
                     "type": "paragraph",
@@ -1275,7 +1629,7 @@ export default {
                             "currIndex": 0
                         }
                     ],
-                    "currIndex": 13
+                    "currIndex": 16
                 },
                 {
                     "type": "blockquote",
@@ -1299,7 +1653,7 @@ export default {
                             "currIndex": 0
                         }
                     ],
-                    "currIndex": 14
+                    "currIndex": 17
                 },
                 {
                     "type": "blockquote",
@@ -1323,7 +1677,7 @@ export default {
                             "currIndex": 0
                         }
                     ],
-                    "currIndex": 15
+                    "currIndex": 18
                 },
                 {
                     "type": "paragraph",
@@ -1338,7 +1692,7 @@ export default {
                             "currIndex": 0
                         }
                     ],
-                    "currIndex": 16
+                    "currIndex": 19
                 },
                 {
                     "type": "blockquote",
@@ -1362,7 +1716,7 @@ export default {
                             "currIndex": 0
                         }
                     ],
-                    "currIndex": 17
+                    "currIndex": 20
                 },
                 {
                     "type": "paragraph",
@@ -1377,7 +1731,7 @@ export default {
                             "currIndex": 0
                         }
                     ],
-                    "currIndex": 18
+                    "currIndex": 21
                 },
                 {
                     "type": "blockquote",
@@ -1401,7 +1755,7 @@ export default {
                             "currIndex": 0
                         }
                     ],
-                    "currIndex": 19
+                    "currIndex": 22
                 },
                 {
                     "type": "paragraph",
@@ -1416,7 +1770,7 @@ export default {
                             "currIndex": 0
                         }
                     ],
-                    "currIndex": 20
+                    "currIndex": 23
                 },
                 {
                     "type": "paragraph",
@@ -1476,7 +1830,7 @@ export default {
                             "currIndex": 6
                         }
                     ],
-                    "currIndex": 21
+                    "currIndex": 24
                 },
                 {
                     "type": "paragraph",
@@ -1521,7 +1875,7 @@ export default {
                             "currIndex": 4
                         }
                     ],
-                    "currIndex": 22
+                    "currIndex": 25
                 },
                 {
                     "type": "paragraph",
@@ -1536,7 +1890,7 @@ export default {
                             "currIndex": 0
                         }
                     ],
-                    "currIndex": 23
+                    "currIndex": 26
                 },
                 {
                     "type": "paragraph",
@@ -1551,7 +1905,7 @@ export default {
                             "currIndex": 0
                         }
                     ],
-                    "currIndex": 24
+                    "currIndex": 27
                 },
                 {
                     "type": "paragraph",
@@ -1611,7 +1965,7 @@ export default {
                             "currIndex": 6
                         }
                     ],
-                    "currIndex": 25
+                    "currIndex": 28
                 },
                 {
                     "type": "paragraph",
@@ -1626,7 +1980,7 @@ export default {
                             "currIndex": 0
                         }
                     ],
-                    "currIndex": 26
+                    "currIndex": 29
                 },
                 {
                     "type": "paragraph",
@@ -1671,7 +2025,7 @@ export default {
                             "currIndex": 4
                         }
                     ],
-                    "currIndex": 27
+                    "currIndex": 30
                 },
                 {
                     "type": "paragraph",
@@ -1791,7 +2145,7 @@ export default {
                             "currIndex": 14
                         }
                     ],
-                    "currIndex": 28
+                    "currIndex": 31
                 },
                 {
                     "type": "paragraph",
@@ -1836,7 +2190,7 @@ export default {
                             "currIndex": 4
                         }
                     ],
-                    "currIndex": 29
+                    "currIndex": 32
                 },
                 {
                     "type": "paragraph",
@@ -1896,35 +2250,36 @@ export default {
                             "currIndex": 6
                         }
                     ],
-                    "currIndex": 30
+                    "currIndex": 33
                 }
             ]
         },
-        "isPublic": false,
-        "isCommunityAdminShared": true,
-        "viewHash": "55rdhiqq",
+        "isPublic": null,
+        "isCommunityAdminShared": null,
         "pubId": "3ecac2f5-8065-4bde-aa0e-c1ab222fd673",
-        "createdAt": "2018-07-13T23:24:50.401Z",
-        "updatedAt": "2018-07-31T16:18:13.304Z"
+        "createdAt": "2018-08-15T15:59:44.960Z",
+        "updatedAt": "2018-08-15T15:59:44.960Z"
     },
     "isManager": true,
     "isDraftEditor": false,
     "isDraftViewer": true,
     "isVersionViewer": true,
+    "isDraft": false,
+    "hasDraftAccess": true,
+    "hasVersionAccess": true,
     "citationData": {
         "pub": {
-            "apa": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"3ecac2f5-8065-4bde-aa0e-c1ab222fd673\" class=\"csl-entry\">Hessel, H., Rolfson, H., G, F., &#38; E. Robinson, C. (2018). Introduction. <i>Frankenbook</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h</div></div>",
-            "harvard": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"3ecac2f5-8065-4bde-aa0e-c1ab222fd673\" class=\"csl-entry\">Hessel, H., Rolfson, H., G, F., &#38; E. Robinson, C. (2018). Introduction. <i>Frankenbook</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h</div></div>",
-            "vancouver": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"3ecac2f5-8065-4bde-aa0e-c1ab222fd673\" class=\"csl-entry\">    <div class=\"csl-left-margin\">1. </div><div class=\"csl-right-inline\">Hessel H, Rolfson H, G F, E. Robinson C. Introduction. Frankenbook [Internet]. 2018 Aug 1; Available from: https://frankdev.pubpub.org/pub/zw3syn5h</div>  </div></div>",
-            "bibtex": "<div class=\"csl-bib-body><div class=\"csl-entry>@article{Hessel2018Introduction,<ul style=\"list-style-type:none\"><li>journal={Frankenbook},</li><li>note={https://frankdev.pubpub.org/pub/zw3syn5h},</li><li>title={{Introduction}},</li><li>url={https://frankdev.pubpub.org/pub/zw3syn5h},</li><li>author={Hessel, Hope and Rolfson, Heather and G, Frank and E. Robinson, Charles},</li><li>date={2018-08-01},</li><li>year=2018,</li><li>month=8,</li><li>day=1,</li></ul>}</div></div>"
+            "apa": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"3ecac2f5-8065-4bde-aa0e-c1ab222fd673\" class=\"csl-entry\">Hessel, H., Rolfson, H., G, F., &#38; E. Robinson, C. (2018). Introduction. <i>PubPub Dev</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h</div></div>",
+            "harvard": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"3ecac2f5-8065-4bde-aa0e-c1ab222fd673\" class=\"csl-entry\">Hessel, H., Rolfson, H., G, F., &#38; E. Robinson, C. (2018). Introduction. <i>PubPub Dev</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h</div></div>",
+            "vancouver": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"3ecac2f5-8065-4bde-aa0e-c1ab222fd673\" class=\"csl-entry\">    <div class=\"csl-left-margin\">1. </div><div class=\"csl-right-inline\">Hessel H, Rolfson H, G F, E. Robinson C. Introduction. PubPub Dev [Internet]. 2018 Aug 15; Available from: https://frankdev.pubpub.org/pub/zw3syn5h</div>  </div></div>",
+            "bibtex": "<div class=\"csl-bib-body><div class=\"csl-entry>@article{Hessel2018Introduction,<ul style=\"list-style-type:none\"><li>journal={PubPub Dev},</li><li>note={https://frankdev.pubpub.org/pub/zw3syn5h},</li><li>title={{Introduction}},</li><li>url={https://frankdev.pubpub.org/pub/zw3syn5h},</li><li>author={Hessel, Hope and Rolfson, Heather and G, Frank and E. Robinson, Charles},</li><li>date={2018-08-15},</li><li>year=2018,</li><li>month=8,</li><li>day=15,</li></ul>}</div></div>"
         },
         "version": {
-            "apa": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"427a3c55-993a-4083-918c-85c682bedccf\" class=\"csl-entry\">Hessel, H., Rolfson, H., G, F., &#38; E. Robinson, C. (2018). Introduction. <i>Frankenbook</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h?version=427a3c55-993a-4083-918c-85c682bedccf</div></div>",
-            "harvard": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"427a3c55-993a-4083-918c-85c682bedccf\" class=\"csl-entry\">Hessel, H., Rolfson, H., G, F., &#38; E. Robinson, C. (2018). Introduction. <i>Frankenbook</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h?version=427a3c55-993a-4083-918c-85c682bedccf</div></div>",
-            "vancouver": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"427a3c55-993a-4083-918c-85c682bedccf\" class=\"csl-entry\">    <div class=\"csl-left-margin\">1. </div><div class=\"csl-right-inline\">Hessel H, Rolfson H, G F, E. Robinson C. Introduction. Frankenbook [Internet]. 2018 Jul 31; Available from: https://frankdev.pubpub.org/pub/zw3syn5h?version=427a3c55-993a-4083-918c-85c682bedccf</div>  </div></div>",
-            "bibtex": "<div class=\"csl-bib-body><div class=\"csl-entry>@article{Hessel2018Introduction,<ul style=\"list-style-type:none\"><li>journal={Frankenbook},</li><li>note={https://frankdev.pubpub.org/pub/zw3syn5h?version=427a3c55-993a-4083-918c-85c682bedccf},</li><li>title={{Introduction}},</li><li>url={https://frankdev.pubpub.org/pub/zw3syn5h?version=427a3c55-993a-4083-918c-85c682bedccf},</li><li>author={Hessel, Hope and Rolfson, Heather and G, Frank and E. Robinson, Charles},</li><li>date={2018-07-31},</li><li>year=2018,</li><li>month=7,</li><li>day=31,</li></ul>}</div></div>"
+            "apa": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"6cd78a32-5873-4188-888c-26dc2bdeb74b\" class=\"csl-entry\">Hessel, H., Rolfson, H., G, F., &#38; E. Robinson, C. (n.d.). Introduction. <i>PubPub Dev</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h?version=6cd78a32-5873-4188-888c-26dc2bdeb74b</div></div>",
+            "harvard": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"6cd78a32-5873-4188-888c-26dc2bdeb74b\" class=\"csl-entry\">Hessel, H., Rolfson, H., G, F., &#38; E. Robinson, C. (n.d.). Introduction. <i>PubPub Dev</i>. Retrieved from https://frankdev.pubpub.org/pub/zw3syn5h?version=6cd78a32-5873-4188-888c-26dc2bdeb74b</div></div>",
+            "vancouver": "<div class=\"csl-bib-body\">  <div data-csl-entry-id=\"6cd78a32-5873-4188-888c-26dc2bdeb74b\" class=\"csl-entry\">    <div class=\"csl-left-margin\">1. </div><div class=\"csl-right-inline\">Hessel H, Rolfson H, G F, E. Robinson C. Introduction. PubPub Dev [Internet]. Available from: https://frankdev.pubpub.org/pub/zw3syn5h?version=6cd78a32-5873-4188-888c-26dc2bdeb74b</div>  </div></div>",
+            "bibtex": "<div class=\"csl-bib-body><div class=\"csl-entry>@article{HesselIntroduction,<ul style=\"list-style-type:none\"><li>journal={PubPub Dev},</li><li>note={https://frankdev.pubpub.org/pub/zw3syn5h?version=6cd78a32-5873-4188-888c-26dc2bdeb74b},</li><li>title={{Introduction}},</li><li>url={https://frankdev.pubpub.org/pub/zw3syn5h?version=6cd78a32-5873-4188-888c-26dc2bdeb74b},</li><li>author={Hessel, Hope and Rolfson, Heather and G, Frank and E. Robinson, Charles},</li></ul>}</div></div>"
         }
     },
-    "isDraft": false,
     "editorKey": "pub-3ecac2f5-8065-4bde-aa0e-c1ab222fd673"
 };

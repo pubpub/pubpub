@@ -1,22 +1,22 @@
 import React from 'react';
-import NewLanding from 'containers/NewLanding/NewLanding';
+import NewFeatures from 'containers/NewFeatures/NewFeatures';
 import Html from '../Html';
 import app from '../server';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 
-app.get('/new/landing', (req, res, next)=> {
+app.get('/new/features', (req, res, next)=> {
 	return getInitialData(req)
 	.then((initialData)=> {
 		return renderToNodeStream(res,
 			<Html
-				chunkName="NewLanding"
+				chunkName="NewFeatures"
 				initialData={initialData}
 				headerComponents={generateMetaComponents({
 					initialData: initialData,
-					title: 'PubPub · Community Publishing',
+					title: 'PubPub · Features',
 				})}
 			>
-				<NewLanding {...initialData} />
+				<NewFeatures {...initialData} />
 			</Html>
 		);
 	})

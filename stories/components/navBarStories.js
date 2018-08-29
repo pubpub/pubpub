@@ -1,48 +1,48 @@
-import React from 'react';
-import { storiesOf } from '@storybook/react';
-import NavBar from 'components/NavBar/NavBar';
-import AccentStyle from 'components/AccentStyle/AccentStyle';
-import { populateNavigationIds } from 'utilities';
-import { communityData, accentDataDark, accentDataLight } from '../data';
+// import React from 'react';
+// import { storiesOf } from '@storybook/react';
+// import NavBar from 'components/NavBar/NavBar';
+// import AccentStyle from 'components/AccentStyle/AccentStyle';
+// import { populateNavigationIds } from 'utilities';
+// import { communityData, accentDataDark, accentDataLight } from '../data';
 
-const navItems = populateNavigationIds(communityData.collections, communityData.navigation);
+// const navItems = populateNavigationIds(communityData.collections, communityData.navigation);
 
-const wrapperStyle = { margin: '1em', boxShadow: '0px 0px 1px rgba(0, 0, 0, 0.25)' };
-const titleStyle = { margin: '1em 1em -0.5em' };
+// const wrapperStyle = { margin: '1em', boxShadow: '0px 0px 1px rgba(0, 0, 0, 0.25)' };
+// const titleStyle = { margin: '1em 1em -0.5em' };
 
-const emptyItems = [];
-const fewItems = [...navItems].slice(0, 5);
-const manyItems = [...navItems];
+// const emptyItems = [];
+// const fewItems = [...navItems].slice(0, 5);
+// const manyItems = [...navItems];
 
-const navBars = (
-	<div>
-		<h4 style={titleStyle}>No Items</h4>
-		<div style={wrapperStyle}>
-			<NavBar navItems={emptyItems} />
-		</div>
+// const navBars = (
+// 	<div>
+// 		<h4 style={titleStyle}>No Items</h4>
+// 		<div style={wrapperStyle}>
+// 			<NavBar navItems={emptyItems} />
+// 		</div>
 
-		<h4 style={titleStyle}>Few Items</h4>
-		<div style={wrapperStyle}>
-			<NavBar navItems={fewItems} />
-		</div>
+// 		<h4 style={titleStyle}>Few Items</h4>
+// 		<div style={wrapperStyle}>
+// 			<NavBar navItems={fewItems} />
+// 		</div>
 
-		<h4 style={titleStyle}>Many Items</h4>
-		<div style={wrapperStyle}>
-			<NavBar navItems={manyItems} />
-		</div>
-	</div>
-);
+// 		<h4 style={titleStyle}>Many Items</h4>
+// 		<div style={wrapperStyle}>
+// 			<NavBar navItems={manyItems} />
+// 		</div>
+// 	</div>
+// );
 
-storiesOf('Components', module)
-.add('NavBar - Dark', () => (
-	<div>
-		<AccentStyle {...accentDataDark} />
-		{navBars}
-	</div>
-))
-.add('NavBar - Light', () => (
-	<div>
-		<AccentStyle {...accentDataLight} />
-		{navBars}
-	</div>
-));
+// storiesOf('Components', module)
+// .add('NavBar - Dark', () => (
+// 	<div>
+// 		<AccentStyle {...accentDataDark} />
+// 		{navBars}
+// 	</div>
+// ))
+// .add('NavBar - Light', () => (
+// 	<div>
+// 		<AccentStyle {...accentDataLight} />
+// 		{navBars}
+// 	</div>
+// ));

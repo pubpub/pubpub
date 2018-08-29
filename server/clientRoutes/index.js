@@ -7,7 +7,11 @@ require('./about');				// Route: '/about'
 require('./pubRedirect');		// Route: '/pub/:slug'
 require('./landing');			// Route: '/'
 
-require('./newLanding');			// Route: '/landing'
+require('./newLanding');		// Route: '/new/landing'
+require('./newAbout');			// Route: '/new/about'
+require('./newFeatures');		// Route: '/new/features'
+require('./newPricing');		// Route: '/new/pricing'
+require('./newContact');		// Route: '/new/contact'
 
 /* Routes for Communities */
 require('./dashboard');			// Route: ['/dashboard', '/dashboard/:mode', '/dashboard/:mode/:slug']

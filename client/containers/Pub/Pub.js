@@ -195,6 +195,8 @@ class Pub extends Component {
 				query: newQuery,
 				queryString: newQueryString
 			}
+		}, ()=> {
+			dispatchEmptyTransaction(this.state.editorChangeObject.view);
 		});
 		window.history.replaceState({}, '', `${this.state.locationData.path}${newQueryString}`);
 	}
@@ -377,7 +379,7 @@ class Pub extends Component {
 	}
 
 	handleEditorChange(changeObject) {
-		console.log(changeObject);
+		// console.log(changeObject);
 		if (!this.state.editorChangeObject.view) {
 			/* Sometimes the bounding boxes need updating */
 			/* after initial load. */
