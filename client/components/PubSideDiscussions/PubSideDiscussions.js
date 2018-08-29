@@ -29,6 +29,13 @@ const defaultProps = {
 };
 
 class PubSideDiscussions extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			activeHighlightId: undefined,
+		};
+	}
+
 	render() {
 		// TODO: handling discussion flows
 		// Iterate over all discussionSidePreviews
@@ -43,6 +50,9 @@ class PubSideDiscussions extends Component {
 
 		return (
 			<div className="pub-side-discussions-component">
+				{this.state.activeHighlightId &&
+					<style>{`.${this.state.activeHighlightId} { background-color: rgba(0, 0, 0, 0.2); !important; }`}</style>
+				}
 				{this.props.activeThread === 'new' &&
 					<div
 						style={{
@@ -86,6 +96,12 @@ class PubSideDiscussions extends Component {
 							style={{
 								position: 'absolute',
 								...this.props.getAbsolutePosition(highlightBoundingBox.top, 0, true),
+							}}
+							onMouseEnter={()=> {
+								this.setState({ activeHighlightId: highlightId });
+							}}
+							onMouseLeave={()=> {
+								this.setState({ activeHighlightId: undefined });
 							}}
 						>
 							<DiscussionThread

@@ -378,6 +378,13 @@ class Pub extends Component {
 
 	handleEditorChange(changeObject) {
 		console.log(changeObject);
+		if (!this.state.editorChangeObject.view) {
+			/* Sometimes the bounding boxes need updating */
+			/* after initial load. */
+			setTimeout(()=> {
+				dispatchEmptyTransaction(this.state.editorChangeObject.view);
+			}, 1000);
+		}
 		this.setState({
 			editorChangeObject: {
 				...changeObject,
@@ -385,8 +392,6 @@ class Pub extends Component {
 			},
 		});
 	}
-
-
 
 	render() {
 		const pubData = this.state.pubData;
