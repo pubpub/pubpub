@@ -16,6 +16,7 @@ import PubLinkMenu from 'components/PubLinkMenu/PubLinkMenu';
 import PubSideControls from 'components/PubSideControls/PubSideControls';
 import PubSectionNav from 'components/PubSectionNav/PubSectionNav';
 import DiscussionList from 'components/DiscussionListNew/DiscussionList';
+import { dispatchEmptyTransaction } from '@pubpub/editor';
 // import DiscussionViewer from 'components/DiscussionViewer/DiscussionViewer';
 // import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import queryString from 'query-string';
@@ -165,12 +166,12 @@ class Pub extends Component {
 	}
 
 	getAbsolutePosition(top, left, placeInSideMargin) {
-		// const container = this.state.editorRefNode.editorRef.current;
-		// const page = this.pageRef.current;
 		const sideContainer = this.sideMarginRef.current;
-		// debugger;
+
+		/* The editorObject does not refresh on scroll - so we need to calculate the */
+		/* y offset as 'the location of the highlight and the moment of update */
 		return {
-			top: top + window.scrollY,
+			top: top + this.state.editorChangeObject.currentScroll,
 			left: placeInSideMargin
 				? sideContainer.getBoundingClientRect().left
 				: left,
@@ -220,7 +221,7 @@ class Pub extends Component {
 	}
 
 	handleEditorRef(ref) {
-		console.log(ref);
+		// console.log(ref);
 		this.setState({ editorRefNode: ref });
 		/*if (!this.state.editorRefNode) {
 			//Need to set timeout so DOM can render
@@ -334,7 +335,7 @@ class Pub extends Component {
 		.then((result)=> {
 			this.setState({
 				postDiscussionIsLoading: false,
-				activeThreadNumber: result.threadNumber,
+				activeThreadNumber: this.state.activeThreadNumber === 'new' ? result.threadNumber : this.state.activeThreadNumber,
 				pubData: {
 					...this.state.pubData,
 					discussions: [
@@ -342,6 +343,8 @@ class Pub extends Component {
 						result,
 					],
 				},
+			}, ()=> {
+				dispatchEmptyTransaction(this.state.editorChangeObject.view);
 			});
 		})
 		.catch(()=> {
@@ -375,7 +378,12 @@ class Pub extends Component {
 
 	handleEditorChange(changeObject) {
 		console.log(changeObject);
-		this.setState({ editorChangeObject: changeObject });
+		this.setState({
+			editorChangeObject: {
+				...changeObject,
+				currentScroll: window.scrollY,
+			},
+		});
 	}
 
 
@@ -501,10 +509,9 @@ class Pub extends Component {
 										content={activeContent}
 										threads={threads}
 										slug={pubData.slug}
-										highlights={this.state.docReadyForHighlights ? highlights : []}
+										highlights={highlights}
 										hoverBackgroundColor={this.props.communityData.accentMinimalColor}
 										setActiveThread={this.setActiveThread}
-										onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
 										onChange={this.handleEditorChange}
 
 										// Props from CollabEditor
@@ -559,10 +566,16 @@ class Pub extends Component {
 										threads={threads}
 										pubData={pubData}
 										locationData={this.state.locationData}
+										editorChangeObject={this.state.editorChangeObject}
 										loginData={this.props.loginData}
 										onPostDiscussion={this.handlePostDiscussion}
 										onPutDiscussion={this.handlePutDiscussion}
 										getHighlightContent={this.getHighlightContent}
+										activeThread={this.state.activeThreadNumber}
+										setActiveThread={this.setActiveThread}
+										activeDiscussionChannel={activeDiscussionChannel}
+										initialContent={this.state.initialDiscussionContent}
+										getAbsolutePosition={this.getAbsolutePosition}
 									/>
 								</div>
 							</div>
@@ -596,6 +609,8 @@ class Pub extends Component {
 						pubData={pubData}
 						editorChangeObject={this.state.editorChangeObject}
 						getAbsolutePosition={this.getAbsolutePosition}
+						onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
+						sectionId={sectionId}
 					/>
 					<PubLinkMenu
 						pubData={pubData}

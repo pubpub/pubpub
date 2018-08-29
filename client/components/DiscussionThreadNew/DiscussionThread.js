@@ -18,6 +18,13 @@ const propTypes = {
 	onPutDiscussion: PropTypes.func.isRequired,
 	getHighlightContent: PropTypes.func.isRequired,
 	handleQuotePermalink: PropTypes.func.isRequired,
+	setActiveThread: PropTypes.func,
+	activeThread: PropTypes.string,
+};
+
+const defaultProps = {
+	setActiveThread: undefined,
+	activeThread: undefined,
 };
 
 
@@ -37,6 +44,7 @@ class DiscussionThread extends Component {
 		this.archiveDiscussion = this.archiveDiscussion.bind(this);
 		this.handleThreadEdit = this.handleThreadEdit.bind(this);
 		this.handleReplySubmit = this.handleReplySubmit.bind(this);
+		this.handleExpand = this.handleExpand.bind(this);
 	}
 
 	archiveDiscussion() {
@@ -52,6 +60,22 @@ class DiscussionThread extends Component {
 			discussionId: sortedDiscussions[0].id,
 			userId: sortedDiscussions[0].userId,
 		});
+	}
+
+	handleExpand() {
+		const isExpanded = this.state.isExpanded || this.props.activeThread === this.props.thread[0].threadNumber;
+		if (!isExpanded && this.props.setActiveThread) {
+			this.props.setActiveThread(this.props.thread[0].threadNumber);
+		}
+		if (!isExpanded && !this.props.setActiveThread) {
+			this.setState({ isExpanded: true });
+		}
+		if (isExpanded && this.props.setActiveThread) {
+			this.props.setActiveThread(undefined);
+		}
+		if (isExpanded && !this.props.setActiveThread) {
+			this.setState({ isExpanded: false });
+		}
 	}
 
 	handleReplySubmit(replyObject) {
@@ -96,6 +120,7 @@ class DiscussionThread extends Component {
 	}
 
 	render() {
+		// TODO: sortedDiscussions is unnecessary. getnestedhtreads in utilities sorts.
 		const sortedDiscussions = this.props.thread.sort((foo, bar)=> {
 			if (foo.createdAt > bar.createdAt) { return 1; }
 			if (foo.createdAt < bar.createdAt) { return -1; }
@@ -115,15 +140,14 @@ class DiscussionThread extends Component {
 		});
 		const labels = sortedDiscussions[0].labels || [];
 
+		const isExpanded = this.state.isExpanded || this.props.activeThread === this.props.thread[0].threadNumber;
 		return (
 			<div className="discussion-thread-component">
 				{/* Discussion Preview */}
-				{!this.state.isExpanded &&
+				{!isExpanded &&
 					<div
 						className={`preview ${this.props.isMinimal ? 'minimal' : ''}`}
-						onClick={()=> {
-							this.setState({ isExpanded: true });
-						}}
+						onClick={this.handleExpand}
 						role="button"
 						tabIndex="-1"
 					>
@@ -178,13 +202,11 @@ class DiscussionThread extends Component {
 				}
 
 				{/* Full Discussion */}
-				{this.state.isExpanded &&
+				{isExpanded &&
 					<div className={`full ${this.props.isMinimal ? 'minimal' : ''}`}>
 						<Button
 							className="pt-minimal pt-small"
-							onClick={()=> {
-								this.setState({ isExpanded: false });
-							}}
+							onClick={this.handleExpand}
 							text="Collapse"
 						/>
 						{isArchived &&
@@ -293,4 +315,5 @@ class DiscussionThread extends Component {
 }
 
 DiscussionThread.propTypes = propTypes;
+DiscussionThread.defaultProps = defaultProps;
 export default DiscussionThread;

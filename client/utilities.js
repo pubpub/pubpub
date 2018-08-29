@@ -173,7 +173,15 @@ export const nestDiscussionsToThreads = function(discussions) {
 		tempThreads[item.threadNumber - 1] = [...tempThreads[item.threadNumber - 1], item];
 	});
 
-	return tempThreads.filter((item)=> { return item.length; });
+	return tempThreads.filter((thread)=> {
+		return thread.length;
+	}).map((thread)=> {
+		return thread.sort((foo, bar)=> {
+			if (foo.createdAt > bar.createdAt) { return 1; }
+			if (foo.createdAt < bar.createdAt) { return -1; }
+			return 0;
+		});
+	});
 };
 
 export const populateNavigationIds = function(collections, navigation) {

@@ -27,7 +27,6 @@ const AccentStyle = function(props) {
 			.pt-slider-progress, .pt-dark .pt-slider-progress { background: ${props.accentColor}; }
 			.pt-slider-handle .pt-slider-label { background: ${props.accentColor}; color: ${props.accentTextColor}; }
 			.footnote-text a { text-decoration: underline; }
-			.highlight-background:before, .highlight-quote .highlight-text { background-color: ${props.accentMinimalColor}; }
 			.highlight-dot-wrapper .highlight-dot { background-color: ${props.accentColor}; }
 		` }}
 		/>
@@ -36,6 +35,7 @@ const AccentStyle = function(props) {
 
 // .pub-body-component sup.footnote { color: ${props.accentColor}; }
 // .pub-body-component span.citation { color: ${props.accentColor}; }
-			
+// .highlight-background:before, .highlight-quote .highlight-text { background-color: ${props.accentMinimalColor}; }
+
 AccentStyle.propTypes = propTypes;
 export default AccentStyle;

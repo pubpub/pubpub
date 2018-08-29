@@ -9,6 +9,12 @@ const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	editorChangeObject: PropTypes.object.isRequired,
 	getAbsolutePosition: PropTypes.func.isRequired,
+	onNewHighlightDiscussion: PropTypes.func.isRequired,
+	sectionId: PropTypes.string,
+};
+
+const defaultProps = {
+	sectionId: undefined,
 };
 
 const PubInlineMenu = (props)=> {
@@ -51,12 +57,23 @@ const PubInlineMenu = (props)=> {
 			<Button
 				className="pt-minimal"
 				icon={<Icon icon="chat" />}
+				onClick={()=> {
+					props.onNewHighlightDiscussion({
+						from: props.editorChangeObject.selection.from,
+						to: props.editorChangeObject.selection.to,
+						version: props.pubData.activeVersion.id,
+						section: props.sectionId,
+						exact: props.editorChangeObject.selectedText.exact,
+						prefix: props.editorChangeObject.selectedText.prefix,
+						suffix: props.editorChangeObject.selectedText.suffix,
+					});
+				}}
 			/>
 
 		</div>
 	);
 };
 
-
 PubInlineMenu.propTypes = propTypes;
+PubInlineMenu.defaultProps = defaultProps;
 export default PubInlineMenu;

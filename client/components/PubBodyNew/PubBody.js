@@ -122,9 +122,7 @@ class PubBody extends Component {
 						}
 						: undefined
 					}
-					getHighlights={()=> {
-						return this.props.highlights;
-					}}
+					highlights={this.props.highlights}
 				/>
 			</div>
 		);
