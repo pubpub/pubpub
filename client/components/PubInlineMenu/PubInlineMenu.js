@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
+import Icon from 'components/Icon/Icon';
 
 require('./pubInlineMenu.scss');
 
@@ -25,15 +26,15 @@ const PubInlineMenu = (props)=> {
 		return { ...prev, [curr.title]: curr };
 	}, {});
 	const formattingItems = [
-		{ key: 'header1', icon: 'header-one' },
-		{ key: 'header2', icon: 'header-two' },
-		{ key: 'strong', icon: 'bold' },
-		{ key: 'em', icon: 'italic' },
-		{ key: 'link', icon: 'link' },
+		{ key: 'header1', icon: <Icon icon="header-one" /> },
+		{ key: 'header2', icon: <Icon icon="header-two" /> },
+		{ key: 'strong', icon: <Icon icon="bold" /> },
+		{ key: 'em', icon: <Icon icon="italic" /> },
+		{ key: 'link', icon: <Icon icon="link" /> },
 	];
 	return (
 		<div className="pub-inline-menu-component pt-elevation-2" style={menuStyle}>
-			{formattingItems.map((item)=> {
+			{props.pubData.isDraft && formattingItems.map((item)=> {
 				if (!menuItemsObject[item.key]) { return null; }
 				return (
 					<Button
@@ -47,6 +48,11 @@ const PubInlineMenu = (props)=> {
 					/>
 				);
 			})}
+			<Button
+				className="pt-minimal"
+				icon={<Icon icon="chat" />}
+			/>
+
 		</div>
 	);
 };

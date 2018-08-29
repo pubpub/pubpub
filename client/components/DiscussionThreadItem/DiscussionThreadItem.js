@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import TimeAgo from 'react-timeago';
 import { Button } from '@blueprintjs/core';
 import Avatar from 'components/Avatar/Avatar';
+import Editor, { getText, getJSON } from '@pubpub/editor';
 // import { Editor } from '@pubpub/editor';
 // import Image from '@pubpub/editor/addons/Image';
 // import Video from '@pubpub/editor/addons/Video';
@@ -39,13 +40,14 @@ class DiscussionThreadItem extends Component {
 		this.state = {
 			isEditing: false,
 			submitDisabled: false,
-			body: props.discussion.content,
+			// body: props.discussion.content,
+			editorChangeObject: undefined,
 			isLoading: false,
 		};
 		this.editorRef = undefined;
 		this.onEditToggle = this.onEditToggle.bind(this);
 		this.onBodyChange = this.onBodyChange.bind(this);
-		this.focusEditor = this.focusEditor.bind(this);
+		// this.focusEditor = this.focusEditor.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
 	}
 
@@ -55,7 +57,8 @@ class DiscussionThreadItem extends Component {
 		if (oldEditedAt !== newEditedAt) {
 			this.setState({
 				isEditing: false,
-				body: nextProps.discussion.content,
+				editorChangeObject: undefined,
+				// body: nextProps.discussion.content,
 				isLoading: false,
 			});
 		}
@@ -65,16 +68,17 @@ class DiscussionThreadItem extends Component {
 		this.setState({ isEditing: !this.state.isEditing });
 	}
 
-	onBodyChange(val) {
+	onBodyChange(changeObject) {
 		this.setState({
-			body: val,
-			submitDisabled: !this.editorRef.view.state.doc.textContent,
+			// body: val,
+			editorChangeObject: changeObject,
+			submitDisabled: !getText(changeObject.view),
 		});
 	}
 
-	focusEditor() {
-		this.editorRef.focus();
-	}
+	// focusEditor() {
+	// 	this.editorRef.focus();
+	// }
 
 	onSubmit(evt) {
 		evt.preventDefault();
@@ -85,8 +89,8 @@ class DiscussionThreadItem extends Component {
 			return item.attrs;
 		});
 		this.props.onReplyEdit({
-			content: this.state.body,
-			text: this.editorRef.view.state.doc.textContent,
+			content: getJSON(this.state.editorChangeObject.view),
+			text: getText(this.state.editorChangeObject.view),
 			pubId: this.props.discussion.pubId,
 			discussionId: this.props.discussion.id,
 			userId: this.props.discussion.userId,
@@ -153,7 +157,21 @@ class DiscussionThreadItem extends Component {
 
 				</div>
 
-				<div className="text" {...editingProps} key="editor-wrapper" id={`pubpub-editor-container-${discussion.id}`}>
+				<div className="text" {...editingProps}>
+					<Editor
+						key={this.state.isEditing ? `discussion-${discussion.id}-editing` : `discussion-${discussion.id}`}
+						initialContent={discussion.content}
+						isReadOnly={!this.state.isEditing}
+						placeholder="Reply..."
+						onChange={this.onBodyChange}
+						getHighlightContent={this.props.getHighlightContent}
+						nodeOptions={{
+							image: {
+								onResizeUrl: getResizedUrl,
+							},
+						}}
+					/>
+
 					{/*<Editor
 						key={this.state.isEditing ? `discussion-${discussion.id}-editing` : `discussion-${discussion.id}`}
 						ref={(ref)=> { this.editorRef = ref; }}

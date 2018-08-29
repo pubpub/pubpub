@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
+import Editor, { getText, getJSON } from '@pubpub/editor';
 // import { Editor } from '@pubpub/editor';
 // import Image from '@pubpub/editor/addons/Image';
 // import Video from '@pubpub/editor/addons/Video';
@@ -38,15 +39,15 @@ class DiscussionInput extends Component {
 		super(props);
 		this.state = {
 			title: '',
-			body: '',
-			isPublic: true,
+			editorChangeObject: undefined,
+			// isPublic: true,
 			submitDisabled: true,
 			key: props.inputKey || new Date().getTime(),
 		};
 		this.onTitleChange = this.onTitleChange.bind(this);
 		this.onBodyChange = this.onBodyChange.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
-		this.editorRef = undefined;
+		// this.editorRef = undefined;
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -54,7 +55,8 @@ class DiscussionInput extends Component {
 			this.setState({
 				key: new Date().getTime(),
 				title: '',
-				body: '',
+				// body: '',
+				editorChangeObject: undefined,
 				submitDisabled: true,
 			});
 		}
@@ -64,25 +66,25 @@ class DiscussionInput extends Component {
 		this.setState({ title: evt.target.value });
 	}
 
-	onBodyChange(val) {
+	onBodyChange(changeObject) {
 		this.setState({
-			body: val,
-			submitDisabled: !this.editorRef.view.state.doc.textContent,
+			editorChangeObject: changeObject,
+			submitDisabled: !getText(changeObject.view),
 		});
 	}
 
 	onSubmit(evt) {
 		evt.preventDefault();
-		const highlights = this.editorRef.view.state.doc.content.content.filter((item)=> {
+		const highlights = this.state.editorChangeObject.view.state.doc.content.content.filter((item)=> {
 			return item.type.name === 'highlightQuote';
 		}).map((item)=> {
 			return item.attrs;
 		});
 		this.props.handleSubmit({
 			title: this.state.title,
-			content: this.state.body,
-			text: this.editorRef.view.state.doc.textContent,
-			isPublic: this.state.isPublic,
+			content: getJSON(this.state.editorChangeObject.view),
+			text: getText(this.state.editorChangeObject.view),
+			// isPublic: this.state.isPublic,
 			highlights: highlights.length ? highlights : undefined,
 		});
 	}
@@ -98,7 +100,19 @@ class DiscussionInput extends Component {
 						onChange={this.onTitleChange}
 					/>
 				}
-				<div className="input-text" tabIndex={-1} role="textbox" id={`pubpub-editor-container-${this.state.key}`}>
+				<div className="input-text">
+					<Editor
+						key={this.state.key}
+						placeholder="Type here..."
+						onChange={this.onBodyChange}
+						initialContent={this.props.initialContent}
+						getHighlightContent={this.props.getHighlightContent}
+						nodeOptions={{
+							image: {
+								onResizeUrl: getResizedUrl,
+							},
+						}}
+					/>
 					{/*<Editor
 						key={this.state.key}
 						ref={(ref)=> { this.editorRef = ref; }}
