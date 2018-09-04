@@ -36,17 +36,18 @@ const PubSideControls = (props)=> {
 
 	const attrs = selectedNode.attrs;
 	const updateFunc = props.editorChangeObject.updateNode;
+	const changeNodeFunc = props.editorChangeObject.changeNode;
 	const nodeType = selectedNode.type ? selectedNode.type.name : 'table';
 	// TODO: Bug on trying to remove empty link. Firebase sync bug it looks like.
-	// Inline-selection creates discussion with highlightquote pasted
-	// Discussion box at bottom
 	// ?Inline permalink
-	// Discussions place themselves well in margin
 	const controlsProps = {
 		attrs: attrs,
 		updateAttrs: updateFunc,
+		changeNode: changeNodeFunc,
 		menuItems: menuItems,
 		threads: props.threads,
+		selectedNode: selectedNode,
+		editorChangeObject: props.editorChangeObject,
 	};
 	return (
 		<div className="pub-side-controls-component" style={menuStyle}>
@@ -69,13 +70,12 @@ const PubSideControls = (props)=> {
 				{nodeType === 'table' &&
 					<PubSideControlsTable {...controlsProps} />
 				}
-				{nodeType === 'equation' &&
+				{(nodeType === 'equation' || nodeType === 'block_equation') &&
 					<PubSideControlsEquation {...controlsProps} />
 				}
 				{nodeType === 'discussion' &&
 					<PubSideControlsDiscussion {...controlsProps} />
 				}
-				{/* TODO: Add Discussion Addon Support */}
 			</div>
 		</div>
 	);

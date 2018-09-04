@@ -1,50 +1,68 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from '@blueprintjs/core';
 import { renderLatexString } from 'utilities';
 
 const propTypes = {
 	attrs: PropTypes.object.isRequired,
 	updateAttrs: PropTypes.func.isRequired,
+	changeNode: PropTypes.func.isRequired,
+	selectedNode: PropTypes.object.isRequired,
+	editorChangeObject: PropTypes.object.isRequired,
 };
 
 class PubSideControlsEquation extends Component {
 	constructor(props) {
 		super(props);
-
+		this.state = {
+			value: props.attrs.value,
+		};
 		this.handleValueChange = this.handleValueChange.bind(this);
 		this.handleHTMLChange = this.handleHTMLChange.bind(this);
-		// this.changeToInline = this.changeToInline.bind(this);
-		// this.changeToBlock = this.changeToBlock.bind(this);
+		this.changeToInline = this.changeToInline.bind(this);
+		this.changeToBlock = this.changeToBlock.bind(this);
 	}
 
 	handleValueChange(evt) {
-		this.props.updateAttrs({ value: evt.target.value });
-		renderLatexString(evt.target.value, false, this.handleHTMLChange);
+		this.setState({ value: evt.target.value });
+		const isBlock = this.props.selectedNode.type.name === 'block_equation';
+		renderLatexString(evt.target.value, isBlock, this.handleHTMLChange);
 	}
 
 	handleHTMLChange(html) {
-		this.props.updateAttrs({ html: html });
+		this.props.updateAttrs({ value: this.state.value, html: html });
 	}
 
-	// changeToInline() {
-	// 	if (this.props.isBlock) {
-	// 		this.props.changeNode(this.props.view.state.schema.nodes.equation, {
-	// 			value: this.props.value,
-	// 			html: this.props.html,
-	// 		}, null);
-	// 	}
-	// }
+	changeToInline() {
+		const isBlock = this.props.selectedNode.type.name === 'block_equation';
+		if (isBlock) {
+			const nodeType = this.props.editorChangeObject.view.state.schema.nodes.equation;
+			renderLatexString(this.state.value, false, (newHtml)=> {
+				this.props.changeNode(nodeType, {
+					value: this.props.attrs.value,
+					html: newHtml,
+				}, null);
+			});
+		}
+	}
 
-	// changeToBlock() {
-	// 	if (!this.props.isBlock) {
-	// 		this.props.changeNode(this.props.view.state.schema.nodes.block_equation, {
-	// 			value: this.props.value,
-	// 			html: this.props.html,
-	// 		}, null);
-	// 	}
-	// }
+	changeToBlock() {
+		const isBlock = this.props.selectedNode.type.name === 'block_equation';
+		if (!isBlock) {
+			const nodeType = this.props.editorChangeObject.view.state.schema.nodes.block_equation;
+			renderLatexString(this.state.value, true, (newHtml)=> {
+				this.props.changeNode(nodeType, {
+					value: this.props.attrs.value,
+					html: newHtml,
+				}, null);
+			});
+		}
+	}
 
 	render() {
+		// <div>TODO: Not all of these are equations. Rename it to 'math'</div>
+		const isBlock = this.props.selectedNode.type.name === 'block_equation';
+
 		return (
 			<div className="pub-side-controls-citation-component">
 				<div className="options-title">Equation Details</div>
@@ -63,24 +81,19 @@ class PubSideControlsEquation extends Component {
 				<div className="form-label">
 					Display
 				</div>
-				<div>TODO: This section needs to be fixed. Solution for toggling inline vs block.</div>
-				<div>TODO: Not all of these are equations. Rename it to 'math'</div>
-				{/*
+
 				<div className="pt-button-group pt-fill">
-					<button
-						className={`pt-button pt-icon-align-left ${!this.props.isBlock ? 'pt-active' : ''}`}
+					<Button
+						className={`pt-button pt-icon-align-left ${!isBlock ? 'pt-active' : ''}`}
 						onClick={this.changeToInline}
-					>
-						Inline
-					</button>
-					<button
-						className={`pt-button pt-icon-align-justify ${this.props.isBlock ? 'pt-active' : ''}`}
+						text="Inline"
+					/>
+					<Button
+						className={`pt-button pt-icon-align-justify ${isBlock ? 'pt-active' : ''}`}
 						onClick={this.changeToBlock}
-					>
-						Block
-					</button>
+						text="Block"
+					/>
 				</div>
-				*/}
 			</div>
 		);
 	}

@@ -57,7 +57,6 @@ class PubDraftHeader extends Component {
 	}
 
 	handleInsertFunction(insertItem) {
-		console.log('insertItem', insertItem);
 		const insertFunctions = this.props.editorChangeObject.insertFunctions || {};
 
 		const uploadKeys = ['image', 'video', 'file'];

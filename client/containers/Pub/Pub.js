@@ -414,7 +414,6 @@ class Pub extends Component {
 			const activeDiscussionChannelId = activeDiscussionChannel ? activeDiscussionChannel.id : null;
 			return activeDiscussionChannelId === thread[0].discussionChannelId;
 		});
-		console.log('in get threads func', threads);
 		return threads;
 	}
 
@@ -500,7 +499,7 @@ class Pub extends Component {
 			}
 		}
 
-		const shortcutValues = this.state.editorChangeObject.shortcutValues || {};
+		// const shortcutValues = this.state.editorChangeObject.shortcutValues || {};
 		return (
 			<div id="pub-container" ref={this.pageRef}>
 				<PageWrapper
@@ -552,9 +551,9 @@ class Pub extends Component {
 										onStatusChange={this.handleStatusChange}
 										discussionNodeOptions={{
 											// getThreads: this.getThreads,
-											// getThreads: ()=> { return this.getThreads(); },
+											getThreads: ()=> { return this.getThreads(); },
 											// getThreads: ()=> { return ()=>{ return threads; }; },
-											getThreads: function() { return threads; },
+											// getThreads: function() { return threads; },
 											getPubData: ()=> { return pubData; },
 											getLocationData: ()=> { return this.props.locationData; },
 											getLoginData: ()=> { return loginData; },

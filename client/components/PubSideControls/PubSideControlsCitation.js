@@ -10,18 +10,24 @@ const propTypes = {
 class PubSideControlsCitation extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			value: props.attrs.value,
+			html: props.attrs.html,
+		};
 
 		this.handleValueChange = this.handleValueChange.bind(this);
 		this.handleHTMLChange = this.handleHTMLChange.bind(this);
 	}
 
 	handleValueChange(evt) {
-		this.props.updateAttrs({ value: evt.target.value });
+		this.setState({ value: evt.target.value });
 		formatCitationString(evt.target.value, this.handleHTMLChange);
 	}
 
 	handleHTMLChange(html) {
-		this.props.updateAttrs({ html: html });
+		const newAttrs = { value: this.state.value, html: html };
+		this.props.updateAttrs(newAttrs);
+		this.setState(newAttrs);
 	}
 
 	render() {
@@ -36,7 +42,7 @@ class PubSideControlsCitation extends Component {
 				<textarea
 					placeholder="Enter bibtex, DOI, wikidata url, or bibjson..."
 					className="pt-input pt-fill"
-					value={this.props.attrs.value}
+					value={this.state.value}
 					onChange={this.handleValueChange}
 				/>
 
@@ -46,7 +52,7 @@ class PubSideControlsCitation extends Component {
 				</div>
 				<div
 					className="rendered-citation"
-					dangerouslySetInnerHTML={{ __html: this.props.attrs.html }}
+					dangerouslySetInnerHTML={{ __html: this.state.html }}
 				/>
 
 			</div>
