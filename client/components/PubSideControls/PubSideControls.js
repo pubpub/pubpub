@@ -7,11 +7,13 @@ import PubSideControlsCitation from 'components/PubSideControls/PubSideControlsC
 import PubSideControlsFootnote from 'components/PubSideControls/PubSideControlsFootnote';
 import PubSideControlsTable from 'components/PubSideControls/PubSideControlsTable';
 import PubSideControlsEquation from 'components/PubSideControls/PubSideControlsEquation';
+import PubSideControlsDiscussion from 'components/PubSideControls/PubSideControlsDiscussion';
 
 require('./pubSideControls.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
+	threads: PropTypes.array.isRequired,
 	editorChangeObject: PropTypes.object.isRequired,
 	getAbsolutePosition: PropTypes.func.isRequired,
 };
@@ -44,6 +46,7 @@ const PubSideControls = (props)=> {
 		attrs: attrs,
 		updateAttrs: updateFunc,
 		menuItems: menuItems,
+		threads: props.threads,
 	};
 	return (
 		<div className="pub-side-controls-component" style={menuStyle}>
@@ -68,6 +71,9 @@ const PubSideControls = (props)=> {
 				}
 				{nodeType === 'equation' &&
 					<PubSideControlsEquation {...controlsProps} />
+				}
+				{nodeType === 'discussion' &&
+					<PubSideControlsDiscussion {...controlsProps} />
 				}
 				{/* TODO: Add Discussion Addon Support */}
 			</div>

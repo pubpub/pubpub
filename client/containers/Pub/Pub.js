@@ -92,6 +92,8 @@ class Pub extends Component {
 		this.handlePostDiscussion = this.handlePostDiscussion.bind(this);
 		this.handlePutDiscussion = this.handlePutDiscussion.bind(this);
 		this.handleEditorChange = this.handleEditorChange.bind(this);
+		this.handleQuotePermalink = this.handleQuotePermalink.bind(this);
+		this.getThreads = this.getThreads.bind(this);
 	}
 
 	componentDidMount() {
@@ -220,6 +222,15 @@ class Pub extends Component {
 			...this.state.pubData,
 			sectionsData: newSectionsData,
 		});
+	}
+
+	handleQuotePermalink(quoteObject) {
+		const hasChapters = !!quoteObject.section;
+		const chapterString = hasChapters ? `/content/${quoteObject.section}` : '';
+		const toFromString = `?to=${quoteObject.to}&from=${quoteObject.from}`;
+		const versionString = quoteObject.version ? `&version=${quoteObject.version}` : '';
+		const permalinkPath = `/pub/${this.props.pubData.slug}${chapterString}${toFromString}${versionString}`;
+		window.open(permalinkPath);
 	}
 
 	handleEditorRef(ref) {
@@ -395,6 +406,18 @@ class Pub extends Component {
 		});
 	}
 
+	getThreads() {
+		const pubData = this.state.pubData;
+		const discussions = pubData.discussions || [];
+		const activeDiscussionChannel = this.getActiveDiscussionChannel();
+		const threads = nestDiscussionsToThreads(discussions).filter((thread)=> {
+			const activeDiscussionChannelId = activeDiscussionChannel ? activeDiscussionChannel.id : null;
+			return activeDiscussionChannelId === thread[0].discussionChannelId;
+		});
+		console.log('in get threads func', threads);
+		return threads;
+	}
+
 	render() {
 		const pubData = this.state.pubData;
 		const loginData = this.props.loginData;
@@ -408,7 +431,7 @@ class Pub extends Component {
 			const activeDiscussionChannelId = activeDiscussionChannel ? activeDiscussionChannel.id : null;
 			return activeDiscussionChannelId === thread[0].discussionChannelId;
 		});
-
+		// console.log('Threads in render is ', threads);
 		/* The activeThread can either be the one selected in state, */
 		/* or one hardcoded in the URL */
 		const activeThread = threads.reduce((prev, curr)=> {
@@ -527,6 +550,19 @@ class Pub extends Component {
 										clientData={this.state.activeCollaborators[0]}
 										onClientChange={this.handleClientChange}
 										onStatusChange={this.handleStatusChange}
+										discussionNodeOptions={{
+											// getThreads: this.getThreads,
+											// getThreads: ()=> { return this.getThreads(); },
+											// getThreads: ()=> { return ()=>{ return threads; }; },
+											getThreads: function() { return threads; },
+											getPubData: ()=> { return pubData; },
+											getLocationData: ()=> { return this.props.locationData; },
+											getLoginData: ()=> { return loginData; },
+											getOnPostDiscussion: ()=> { return this.handlePostDiscussion; },
+											getOnPutDiscussion: ()=> { return this.handlePutDiscussion; },
+											getGetHighlightContent: ()=> { return this.getHighlightContent; },
+											getHandleQuotePermalink: ()=> { return this.handleQuotePermalink; },
+										}}
 										// menuWrapperRefNode={this.state.menuWrapperRefNode}
 									/>
 
@@ -605,6 +641,7 @@ class Pub extends Component {
 										getHighlightContent={this.getHighlightContent}
 										activeDiscussionChannel={activeDiscussionChannel}
 										setDiscussionChannel={this.setDiscussionChannel}
+										handleQuotePermalink={this.handleQuotePermalink}
 										// showAll={queryObject.all}
 									/>
 								</div>
@@ -627,6 +664,7 @@ class Pub extends Component {
 					/>
 					<PubSideControls
 						pubData={pubData}
+						threads={threads}
 						editorChangeObject={this.state.editorChangeObject}
 						getAbsolutePosition={this.getAbsolutePosition}
 					/>

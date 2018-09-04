@@ -24,6 +24,7 @@ const propTypes = {
 	getHighlightContent: PropTypes.func.isRequired,
 	setDiscussionChannel: PropTypes.func.isRequired,
 	activeDiscussionChannel: PropTypes.object,
+	handleQuotePermalink: PropTypes.func.isRequired,
 	// showAll: PropTypes.bool,
 };
 
@@ -53,7 +54,7 @@ class DiscussionList extends Component {
 		this.setSortMode = this.setSortMode.bind(this);
 		this.filterAndSortThreads = this.filterAndSortThreads.bind(this);
 		this.handlePostNewThread = this.handlePostNewThread.bind(this);
-		this.handleQuotePermalink = this.handleQuotePermalink.bind(this);
+		// this.handleQuotePermalink = this.handleQuotePermalink.bind(this);
 		// this.handlePreviousPage = this.handlePreviousPage.bind(this);
 		// this.handleNextPage = this.handleNextPage.bind(this);
 		// this.setOffset = this.setOffset.bind(this);
@@ -85,14 +86,14 @@ class DiscussionList extends Component {
 	// 	window.scrollBy(0, top);
 	// }
 
-	handleQuotePermalink(quoteObject) {
-		const hasChapters = !!quoteObject.section;
-		const chapterString = hasChapters ? `/content/${quoteObject.section}` : '';
-		const toFromString = `?to=${quoteObject.to}&from=${quoteObject.from}`;
-		const versionString = quoteObject.version ? `&version=${quoteObject.version}` : '';
-		const permalinkPath = `/pub/${this.props.pubData.slug}${chapterString}${toFromString}${versionString}`;
-		window.open(permalinkPath);
-	}
+	// handleQuotePermalink(quoteObject) {
+	// 	const hasChapters = !!quoteObject.section;
+	// 	const chapterString = hasChapters ? `/content/${quoteObject.section}` : '';
+	// 	const toFromString = `?to=${quoteObject.to}&from=${quoteObject.from}`;
+	// 	const versionString = quoteObject.version ? `&version=${quoteObject.version}` : '';
+	// 	const permalinkPath = `/pub/${this.props.pubData.slug}${chapterString}${toFromString}${versionString}`;
+	// 	window.open(permalinkPath);
+	// }
 
 	handlePostNewThread(discussionObject) {
 		this.setState({ newThreadLoading: true });
@@ -377,7 +378,7 @@ class DiscussionList extends Component {
 							onPostDiscussion={this.props.onPostDiscussion}
 							onPutDiscussion={this.props.onPutDiscussion}
 							getHighlightContent={this.props.getHighlightContent}
-							handleQuotePermalink={this.handleQuotePermalink}
+							handleQuotePermalink={this.props.handleQuotePermalink}
 						/>
 					);
 				})}

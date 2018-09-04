@@ -69,11 +69,13 @@ class DiscussionThreadItem extends Component {
 	}
 
 	onBodyChange(changeObject) {
-		this.setState({
-			// body: val,
-			editorChangeObject: changeObject,
-			submitDisabled: !getText(changeObject.view),
-		});
+		if (changeObject) {
+			this.setState({
+				// body: val,
+				editorChangeObject: changeObject,
+				submitDisabled: !getText(changeObject.view),
+			});
+		}
 	}
 
 	// focusEditor() {
@@ -83,7 +85,7 @@ class DiscussionThreadItem extends Component {
 	onSubmit(evt) {
 		evt.preventDefault();
 		this.setState({ isLoading: true });
-		const highlights = this.editorRef.view.state.doc.content.content.filter((item)=> {
+		const highlights = this.state.editorChangeObject.view.state.doc.content.content.filter((item)=> {
 			return item.type.name === 'highlightQuote';
 		}).map((item)=> {
 			return item.attrs;

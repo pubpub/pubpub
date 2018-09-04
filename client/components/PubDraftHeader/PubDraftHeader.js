@@ -15,7 +15,7 @@ const propTypes = {
 	// locationData: PropTypes.object,
 	editorChangeObject: PropTypes.object.isRequired,
 	setOptionsMode: PropTypes.func.isRequired,
-	onRef: PropTypes.func.isRequired,
+	// onRef: PropTypes.func.isRequired,
 	bottomCutoffId: PropTypes.string,
 	collabStatus: PropTypes.string.isRequired,
 	activeCollaborators: PropTypes.array.isRequired,
@@ -57,6 +57,7 @@ class PubDraftHeader extends Component {
 	}
 
 	handleInsertFunction(insertItem) {
+		console.log('insertItem', insertItem);
 		const insertFunctions = this.props.editorChangeObject.insertFunctions || {};
 
 		const uploadKeys = ['image', 'video', 'file'];
@@ -202,7 +203,7 @@ class PubDraftHeader extends Component {
 				icon: <Icon icon="code" />
 			},
 			{
-				key: 'discussion_thread',
+				key: 'discussion',
 				title: 'Discussion Thread',
 				icon: <Icon icon="chat" />
 			},

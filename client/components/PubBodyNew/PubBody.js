@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { NonIdealState } from '@blueprintjs/core';
 import Editor from '@pubpub/editor';
+import discussionSchema from 'components/DiscussionAddon/discussionSchema';
 // import HeaderMenu from '@pubpub/editor/addons/HeaderMenu';
 // import Collaborative from '@pubpub/editor/addons/Collaborative';
 // import Image from '@pubpub/editor/addons/Image';
@@ -41,6 +42,7 @@ const propTypes = {
 	onStatusChange: PropTypes.func,
 	// menuWrapperRefNode: PropTypes.object,
 	onChange: PropTypes.func,
+	discussionNodeOptions: PropTypes.object.isRequired,
 };
 const defaultProps = {
 	onRef: ()=>{},
@@ -108,6 +110,15 @@ class PubBody extends Component {
 
 				<Editor
 					ref={this.props.onRef}
+					customNodes={{
+						...discussionSchema,
+					}}
+					nodeOptions={{
+						image: {
+							onResizeUrl: (url)=> { return getResizedUrl(url, 'fit-in', '800x0'); },
+						},
+						discussion: this.props.discussionNodeOptions,
+					}}
 					placeholder={this.props.isDraft ? 'Begin writing here...' : undefined}
 					initialContent={this.props.isDraft ? undefined : this.props.content}
 					isReadOnly={this.props.isReadOnly}
