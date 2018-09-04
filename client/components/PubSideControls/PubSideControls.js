@@ -24,7 +24,8 @@ const PubSideControls = (props)=> {
 		if (curr.title === 'table-delete') { return true; }
 		return prev;
 	}, false);
-	if (!props.pubData.isDraft || (!selectedNode.attrs && !isTable)) { return null; }
+	const isHorizontalRule = selectedNode.type && selectedNode.type.name === 'horizontal_rule';
+	if (!props.pubData.isDraft || isHorizontalRule || (!selectedNode.attrs && !isTable)) { return null; }
 
 	const menuStyle = {
 		position: 'absolute',

@@ -11,6 +11,7 @@ const propTypes = {
 	isMinimal: PropTypes.bool,
 	isDisabled: PropTypes.bool,
 	isSmall: PropTypes.bool,
+	isOpen: PropTypes.bool,
 	children: PropTypes.node.isRequired,
 };
 
@@ -21,6 +22,7 @@ const defaultProps = {
 	isDisabled: false,
 	isRightAligned: false,
 	isSmall: false,
+	isOpen: undefined,
 };
 
 const DropdownButton = function(props) {
@@ -35,7 +37,7 @@ const DropdownButton = function(props) {
 			tetherOptions={{
 				constraints: [{ attachment: 'together', to: 'window' }]
 			}}
-
+			isOpen={props.isOpen}
 		>
 			{props.icon && !props.label
 				? <button disabled={props.isDisabled} type="button" className={`dropdown-button pt-button ${props.icon} ${props.isSmall ? 'pt-small' : ''} ${props.isMinimal ? 'pt-minimal' : ''}`} />

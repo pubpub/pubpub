@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import throttle from 'lodash.throttle';
-import { Button, Tooltip } from '@blueprintjs/core';
+import { Button, Tooltip, Spinner } from '@blueprintjs/core';
 import Avatar from 'components/Avatar/Avatar';
 import Icon from 'components/Icon/Icon';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
+import { s3Upload } from 'utilities';
 
 require('./pubDraftHeader.scss');
 
@@ -30,9 +31,16 @@ class PubDraftHeader extends Component {
 		super(props);
 		this.state = {
 			isFixed: false,
+			insertFunction: undefined,
+			insertKey: undefined,
+			insertLoading: false,
+			randKey: Math.round(Math.random() * 99999),
 		};
 
 		this.calculateIfFixed = this.calculateIfFixed.bind(this);
+		this.handleInsertFunction = this.handleInsertFunction.bind(this);
+		this.handleFileSelect = this.handleFileSelect.bind(this);
+		this.handleUploadFinish = this.handleUploadFinish.bind(this);
 		this.headerRef = React.createRef();
 		this.bottomCutoffElem = null;
 		this.handleScroll = throttle(this.calculateIfFixed, 50, { leading: true, trailing: true });
@@ -46,6 +54,42 @@ class PubDraftHeader extends Component {
 
 	componentWillUnmount() {
 		window.removeEventListener('scroll', this.handleScroll);
+	}
+
+	handleInsertFunction(insertItem) {
+		const insertFunctions = this.props.editorChangeObject.insertFunctions || {};
+
+		const uploadKeys = ['image', 'video', 'file'];
+		if (uploadKeys.indexOf(insertItem.key) > -1) {
+			return this.setState({
+				insertFunction: insertFunctions[insertItem.key],
+				insertKey: insertItem.key,
+			});
+		}
+		return insertFunctions[insertItem.key]();
+	}
+
+	handleFileSelect(evt) {
+		if (evt.target.files.length) {
+			s3Upload(evt.target.files[0], ()=>{}, this.handleUploadFinish, 0);
+			this.setState({ insertLoading: true });
+		}
+	}
+
+	handleUploadFinish(evt, index, type, filename) {
+		/* This timeout is due to S3 returning a 404 if we render the */
+		/* image immediately after upload. S3 seems to have read-after-write */
+		/* consistency - but I am still seeing problems with it. 500ms */
+		/* seems to do the trick, but this is pretty hand-wavy. */
+		setTimeout(()=> {
+			this.state.insertFunction({ url: `https://assets.pubpub.org/${filename}` });
+			this.setState({
+				insertFunction: undefined,
+				insertKey: undefined,
+				insertLoading: false,
+				randKey: Math.round(Math.random() * 99999)
+			});
+		}, 500);
 	}
 
 	calculateIfFixed() {
@@ -141,7 +185,6 @@ class PubDraftHeader extends Component {
 			},
 		];
 
-		const insertFunctions = this.props.editorChangeObject.insertFunctions || {};
 		const insertItems = [
 			{
 				key: 'citation',
@@ -247,18 +290,42 @@ class PubDraftHeader extends Component {
 										label="Insert"
 										isSmall={true}
 										isMinimal={true}
+										isOpen={this.state.insertFunction ? true : undefined}
+										key={this.state.randKey}
 									>
 										{insertItems.map((item)=> {
+											const uploadTypes = {
+												image: 'image/png, image/jpeg, image/gif',
+												video: 'video/mp4, video/webm',
+												file: '*',
+											};
 											return (
 												<label
-													className="pt-menu-item pt-popover-dismiss insert-menu-item"
+													className={`pt-menu-item insert-menu-item ${this.state.insertFunction ? '' : ' pt-popover-dismiss'}`}
 													key={item.key}
-													onClick={insertFunctions[item.key]}
-													// htmlFor="thing"
+													onClick={()=> {
+														this.handleInsertFunction(item);
+													}}
+													id={`label-${item.key}`}
+													htmlFor={item.key}
 												>
 													{item.icon}
 													<span>{item.title}</span>
-													{/* <input type="file" id="thing" style={{display: 'none'}} /> */}
+													{!!this.state.insertLoading && item.key === this.state.insertKey &&
+														<span className="pt-menu-item-label">
+															<Spinner small={true} />
+														</span>
+													}
+													{Object.keys(uploadTypes).indexOf(item.key) > -1 &&
+														<input
+															type="file"
+															id={item.key}
+															name={item.key}
+															style={{ display: 'none' }}
+															onChange={this.handleFileSelect}
+															accept={uploadTypes[item.key]}
+														/>
+													}
 												</label>
 											);
 										})}
