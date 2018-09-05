@@ -16,12 +16,8 @@ require('./newContact');		// Route: '/new/contact'
 /* Routes for Communities */
 require('./dashboard');			// Route: ['/dashboard', '/dashboard/:mode', '/dashboard/:mode/:slug']
 require('./notifications');		// Route: '/notifications'
-require('./pubCreate');			// Route: '/pub/create'
-// require('./pubCollaboration');	// Route: '/pub/:slug/collaborate'
-// require('./pubPresentation');	// Route: ['/pub/:slug', '/pub/:slug/:mode', '/pub/:slug/:mode/:subMode']
 require('./pub');				// Route: ['/pub/:slug', '/pub/:slug/content/:chapterId', '/pub/:slug/draft', '/pub/:slug/draft/content/:chapterId', '/pub/:slug/:mode', '/pub/:slug/:mode/:subMode']
 require('./page');		 		// Route: ['/', '/:slug']
-// require('./collectionSubmit'); 	// Route: ['/:slug/submit', '/:slug/submit/:hash']
 
 /* Routes for all */
 require('./login'); 			// Route: '/login'

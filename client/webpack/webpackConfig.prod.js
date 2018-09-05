@@ -23,7 +23,7 @@ module.exports = {
 		baseStyle: resolve(__dirname, '../baseStyle.scss'),
 	},
 	resolve: {
-		modules: [resolve(__dirname, '../'), 'node_modules', resolve(__dirname, '../../static/objectEntriesPolyfill.js')]
+		modules: [resolve(__dirname, '../'), 'node_modules']
 	},
 	devtool: '#source-map',
 	output: {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import DiscussionThread from 'components/DiscussionThreadNew/DiscussionThread';
+import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
 import DiscussionInput from 'components/DiscussionInput/DiscussionInput';
 
 require('./pubSideDiscussions.scss');

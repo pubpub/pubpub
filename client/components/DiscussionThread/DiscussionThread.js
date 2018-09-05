@@ -1,125 +1,60 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import TimeAgo from 'react-timeago';
-import { Button, NonIdealState } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import DiscussionInput from 'components/DiscussionInput/DiscussionInput';
 import DiscussionLabels from 'components/DiscussionLabels/DiscussionLabels';
 import DiscussionThreadItem from 'components/DiscussionThreadItem/DiscussionThreadItem';
+import Avatar from 'components/Avatar/Avatar';
 
 require('./discussionThread.scss');
 
 const propTypes = {
+	thread: PropTypes.array.isRequired,
+	isMinimal: PropTypes.bool.isRequired,
 	pubData: PropTypes.object.isRequired,
-	discussions: PropTypes.array.isRequired,
-	canManage: PropTypes.bool,
-	slug: PropTypes.string.isRequired,
-	loginData: PropTypes.object,
-	pathname: PropTypes.string.isRequired,
-	handleReplySubmit: PropTypes.func.isRequired,
-	handleReplyEdit: PropTypes.func.isRequired,
-	submitIsLoading: PropTypes.bool,
-	hideScrollButton: PropTypes.bool,
-	onPublish: PropTypes.func,
-	publishIsLoading: PropTypes.bool,
-	getHighlightContent: PropTypes.func,
-	handleQuotePermalink: PropTypes.func,
-	hoverBackgroundColor: PropTypes.string,
-	setThread: PropTypes.func.isRequired,
+	locationData: PropTypes.object.isRequired,
+	loginData: PropTypes.object.isRequired,
+	onPostDiscussion: PropTypes.func.isRequired,
+	onPutDiscussion: PropTypes.func.isRequired,
+	getHighlightContent: PropTypes.func.isRequired,
+	handleQuotePermalink: PropTypes.func.isRequired,
+	setActiveThread: PropTypes.func,
+	activeThread: PropTypes.string,
 };
+
 const defaultProps = {
-	canManage: false,
-	loginData: {},
-	submitIsLoading: false,
-	hideScrollButton: false,
-	onPublish: ()=>{},
-	publishIsLoading: false,
-	getHighlightContent: undefined,
-	handleQuotePermalink: undefined,
-	hoverBackgroundColor: undefined,
+	setActiveThread: undefined,
+	activeThread: undefined,
 };
+
 
 class DiscussionThread extends Component {
 	constructor(props) {
 		super(props);
-
-		const sortedDiscussions = this.props.discussions.sort((foo, bar)=> {
-			if (foo.createdAt > bar.createdAt) { return 1; }
-			if (foo.createdAt < bar.createdAt) { return -1; }
-			return 0;
-		});
-
 		this.state = {
+			isExpanded: false,
 			isEditing: false,
-			submitDisabled: false,
-			title: sortedDiscussions[0] ? sortedDiscussions[0].title : '',
-			isLoading: false,
-			archiveIsLoading: false,
+			isLoadingArchive: false,
+			isLoadingThreadEdit: false,
+			isLoadingReply: false,
+			title: this.props.thread.reduce((prev, curr)=> {
+				return curr.title || prev;
+			}, ''),
 		};
-
-		this.editorRef = undefined;
-		this.onEditToggle = this.onEditToggle.bind(this);
-		this.handleTitleChange = this.handleTitleChange.bind(this);
-		this.handlePublish = this.handlePublish.bind(this);
-		this.onSubmit = this.onSubmit.bind(this);
-		this.saveLabels = this.saveLabels.bind(this);
 		this.archiveDiscussion = this.archiveDiscussion.bind(this);
-		this.onReplySubmit = this.onReplySubmit.bind(this);
-	}
-
-	componentWillReceiveProps(nextProps) {
-		const oldSortedDiscussions = this.props.discussions.sort((foo, bar)=> {
-			if (foo.createdAt > bar.createdAt) { return 1; }
-			if (foo.createdAt < bar.createdAt) { return -1; }
-			return 0;
-		});
-		const newSortedDiscussions = nextProps.discussions.sort((foo, bar)=> {
-			if (foo.createdAt > bar.createdAt) { return 1; }
-			if (foo.createdAt < bar.createdAt) { return -1; }
-			return 0;
-		});
-
-		const oldEditedAt = oldSortedDiscussions[0].updatedAt;
-		const newEditedAt = newSortedDiscussions[0].updatedAt;
-		if (oldEditedAt !== newEditedAt) {
-			this.setState({
-				isEditing: false,
-				title: newSortedDiscussions[0].title,
-				isLoading: false,
-				archiveIsLoading: false,
-			});
-		}
-	}
-
-	onEditToggle() {
-		this.setState({ isEditing: !this.state.isEditing });
-	}
-
-	onSubmit(evt) {
-		evt.preventDefault();
-		const sortedDiscussions = this.props.discussions.sort((foo, bar)=> {
-			if (foo.createdAt > bar.createdAt) { return 1; }
-			if (foo.createdAt < bar.createdAt) { return -1; }
-			return 0;
-		});
-
-		this.setState({ isLoading: true });
-		this.props.handleReplyEdit({
-			title: this.state.title,
-			labels: this.state.labels,
-			pubId: sortedDiscussions[0].pubId,
-			discussionId: sortedDiscussions[0].id,
-			userId: sortedDiscussions[0].userId,
-		});
+		this.handleThreadEdit = this.handleThreadEdit.bind(this);
+		this.handleReplySubmit = this.handleReplySubmit.bind(this);
+		this.handleExpand = this.handleExpand.bind(this);
 	}
 
 	archiveDiscussion() {
-		const sortedDiscussions = this.props.discussions.sort((foo, bar)=> {
+		const sortedDiscussions = this.props.thread.sort((foo, bar)=> {
 			if (foo.createdAt > bar.createdAt) { return 1; }
 			if (foo.createdAt < bar.createdAt) { return -1; }
 			return 0;
 		});
-		this.setState({ archiveIsLoading: true });
-		this.props.handleReplyEdit({
+		this.setState({ isLoadingArchive: true });
+		this.props.onPutDiscussion({
 			isArchived: !sortedDiscussions[0].isArchived,
 			pubId: sortedDiscussions[0].pubId,
 			discussionId: sortedDiscussions[0].id,
@@ -127,217 +62,250 @@ class DiscussionThread extends Component {
 		});
 	}
 
-	handleTitleChange(evt) {
-		this.setState({
-			title: evt.target.value,
-			submitDisabled: !evt.target.value,
-		});
-	}
-	saveLabels(newLabels) {
-		const sortedDiscussions = this.props.discussions.sort((foo, bar)=> {
-			if (foo.createdAt > bar.createdAt) { return 1; }
-			if (foo.createdAt < bar.createdAt) { return -1; }
-			return 0;
-		});
-
-		this.props.handleReplyEdit({
-			labels: newLabels,
-			pubId: sortedDiscussions[0].pubId,
-			discussionId: sortedDiscussions[0].id,
-			userId: sortedDiscussions[0].userId,
-		});
+	handleExpand() {
+		const isExpanded = this.state.isExpanded || this.props.activeThread === this.props.thread[0].threadNumber;
+		if (!isExpanded && this.props.setActiveThread) {
+			this.props.setActiveThread(this.props.thread[0].threadNumber);
+		}
+		if (!isExpanded && !this.props.setActiveThread) {
+			this.setState({ isExpanded: true });
+		}
+		if (isExpanded && this.props.setActiveThread) {
+			this.props.setActiveThread(undefined);
+		}
+		if (isExpanded && !this.props.setActiveThread) {
+			this.setState({ isExpanded: false });
+		}
 	}
 
-	onReplySubmit(replyObject) {
-		this.props.handleReplySubmit({
+	handleReplySubmit(replyObject) {
+		this.setState({ isLoadingReply: true });
+		this.props.onPostDiscussion({
 			userId: this.props.loginData.id,
-			threadNumber: this.props.discussions[0].threadNumber,
-			isPublic: this.props.discussions[0].isPublic,
-			pubId: this.props.discussions[0].pubId,
+			threadNumber: this.props.thread[0].threadNumber,
+			// isPublic: this.props.thread[0].isPublic,
+			discussionChannelId: this.props.thread[0].discussionChannelId,
+			pubId: this.props.thread[0].pubId,
 			content: replyObject.content,
 			text: replyObject.text,
 			highlights: replyObject.highlights,
+		})
+		.then(()=> {
+			this.setState({ isLoadingReply: false });
 		});
 	}
-	handlePublish() {
-		const sortedDiscussions = this.props.discussions.sort((foo, bar)=> {
+
+	handleThreadEdit(evt) {
+		evt.preventDefault();
+		const sortedDiscussions = this.props.thread.sort((foo, bar)=> {
 			if (foo.createdAt > bar.createdAt) { return 1; }
 			if (foo.createdAt < bar.createdAt) { return -1; }
 			return 0;
 		});
-		const submitHash = sortedDiscussions[0].submitHash;
-		this.props.onPublish(submitHash);
+
+		this.setState({ isLoadingThreadEdit: true });
+		this.props.onPutDiscussion({
+			title: this.state.title,
+			labels: this.state.labels,
+			pubId: sortedDiscussions[0].pubId,
+			discussionId: sortedDiscussions[0].id,
+			userId: sortedDiscussions[0].userId,
+		})
+		.then(()=> {
+			this.setState({
+				isLoadingThreadEdit: false,
+				isEditing: false,
+			});
+		});
 	}
 
 	render() {
-		const sortedDiscussions = this.props.discussions.sort((foo, bar)=> {
+		// TODO: sortedDiscussions is unnecessary. getnestedhtreads in utilities sorts.
+		const sortedDiscussions = this.props.thread.sort((foo, bar)=> {
 			if (foo.createdAt > bar.createdAt) { return 1; }
 			if (foo.createdAt < bar.createdAt) { return -1; }
 			return 0;
 		});
 
-		if (!sortedDiscussions.length) {
-			return (
-				<NonIdealState
-					title="Discussion Thread Not Found"
-					visual="pt-icon-widget"
-				/>
-			);
-		}
-
 		const canManageThread =
-			sortedDiscussions[0].userId === this.props.loginData.id || // User is author of thread
-			this.props.canManage; // User has pub-level admin permissions (individual or community)
+			sortedDiscussions[0].userId === this.props.loginData.id || /* User is author of thread */
+			this.props.pubData.isManager; /* or, User is a pub manager */
 
 		const isArchived = sortedDiscussions[0].isArchived;
-		const isPublic = sortedDiscussions[0].isPublic;
 
+		const availableLabels = this.props.pubData.labels || [];
+		const labelsById = {};
+		availableLabels.forEach((label)=> {
+			labelsById[label.id] = label;
+		});
+		const labels = sortedDiscussions[0].labels || [];
+
+		const isExpanded = this.state.isExpanded || this.props.activeThread === this.props.thread[0].threadNumber;
 		return (
 			<div className="discussion-thread-component">
-				{/*!this.props.isPresentation &&
-					<a
-						// href={`/pub/${this.props.slug}/collaborate`}
-						onClick={()=> { this.props.setThread(undefined); }}
-						className="top-button pt-button pt-minimal"
+				{/* Discussion Preview */}
+				{!isExpanded &&
+					<div
+						className={`preview ${this.props.isMinimal ? 'minimal' : ''}`}
+						onClick={this.handleExpand}
+						role="button"
+						tabIndex="-1"
 					>
-						Show all threads
-					</a>
-				*/}
-
-				{isArchived &&
-					<div className={`pt-callout ${sortedDiscussions[0].submitApprovedAt ? 'pt-intent-success' : 'pt-intent-danger'}`}>
-						{!sortedDiscussions[0].submitHash && 'Thread is Archived'}
-						{sortedDiscussions[0].submitHash && !sortedDiscussions[0].submitApprovedAt && 'Submission Cancelled'}
-						{sortedDiscussions[0].submitHash && sortedDiscussions[0].submitApprovedAt &&
-							<div>
-								<div>Submission Approved and Published</div>
-								<TimeAgo date={sortedDiscussions[0].submitApprovedAt} />
+						{/* If not minimal mode, show title and labels */}
+						{!this.props.isMinimal &&
+							<div className="title">
+								<span className="text">
+									{sortedDiscussions[0].title}
+								</span>
+								{labels.filter((labelId)=> {
+									return labelsById[labelId];
+								}).sort((foo, bar)=> {
+									if (labelsById[foo].title < labelsById[bar].title) { return -1; }
+									if (labelsById[foo].title > labelsById[bar].title) { return 1; }
+									return 0;
+								}).map((labelId)=> {
+									const label = labelsById[labelId];
+									return <span className="pt-tag" style={{ backgroundColor: label.color }}>{label.title}</span>;
+								})}
 							</div>
 						}
-						{canManageThread && !sortedDiscussions[0].submitHash &&
-							<Button
-								type="button"
-								text="Unarchive"
-								className="pt-small"
-								loading={this.state.archiveIsLoading}
-								onClick={this.archiveDiscussion}
-							/>
+
+						{/* Show first three replies */}
+						{sortedDiscussions.slice(0, 3).map((discussion, index, array)=> {
+							/* If isMinimal, and string is sufficently long, replace with ellipsis */
+							const previewLimit = this.props.isMinimal ? 45 : 200;
+							const previewText = discussion.text.length > previewLimit
+								? `${discussion.text.substring(0, previewLimit - 3)}...`
+								: discussion.text;
+							return (
+								<div className="discussion" key={`discussion-preview-${discussion.id}`}>
+									{index + 1 !== array.length &&
+										<div className="line" />
+									}
+									<Avatar
+										width={20}
+										userInitials={discussion.author.initials}
+										userAvatar={discussion.author.avatar}
+									/>
+									<div className="text"><b>{discussion.author.fullName}: </b>{previewText}</div>
+								</div>
+							);
+						})}
+
+						{/* Show data about thread. Date created and replies */}
+						{sortedDiscussions.length > 3 &&
+							<div className="more">
+								{sortedDiscussions.length - 3} more...
+							</div>
 						}
 					</div>
 				}
 
-				{!isPublic &&
-					<div className="pt-callout">
-						<h5>Thread is Private</h5>
-						<div>Visible to those with view, edit, or manage permissions.</div>
-					</div>
-				}
-
-				{!sortedDiscussions[0].submitHash && canManageThread && !this.state.isEditing && !isArchived &&
-					<div className="thread-buttons pt-button-group pt-small">
-						<button type="button" className="pt-button" onClick={this.onEditToggle}>
-							Edit
-						</button>
+				{/* Full Discussion */}
+				{isExpanded &&
+					<div className={`full ${this.props.isMinimal ? 'minimal' : ''}`}>
 						<Button
-							type="button"
-							text="Archive"
-							loading={this.state.archiveIsLoading}
-							onClick={this.archiveDiscussion}
+							className="pt-minimal pt-small"
+							onClick={this.handleExpand}
+							text="Collapse"
 						/>
-					</div>
-				}
-
-				{this.state.isEditing &&
-					<div>
-						<input
-							value={this.state.title}
-							onChange={this.handleTitleChange}
-							className="pt-input pt-fill"
-							type="text"
+						{isArchived &&
+							<div className="pt-callout pt-intent-danger">
+								{!sortedDiscussions[0].submitHash && 'Thread is Archived'}
+								{canManageThread &&
+									<Button
+										type="button"
+										text="Unarchive"
+										className="pt-small"
+										loading={this.state.isLoadingArchive}
+										onClick={this.archiveDiscussion}
+									/>
+								}
+							</div>
+						}
+						{canManageThread && !this.state.isEditing && !isArchived &&
+							<div className="thread-buttons pt-button-group pt-small">
+								<Button
+									text="Edit"
+									onClick={()=> {
+										this.setState({ isEditing: true });
+									}}
+								/>
+								<Button
+									text="Archive"
+									loading={this.state.isLoadingArchive}
+									onClick={this.archiveDiscussion}
+								/>
+							</div>
+						}
+						{this.state.isEditing &&
+							<div>
+								<input
+									value={this.state.title}
+									onChange={(evt)=> {
+										this.setState({ title: evt.target.value });
+									}}
+									className="pt-input pt-fill"
+									type="text"
+								/>
+								<div className="editing-buttons">
+									<Button
+										text="Cancel Edit"
+										className="pt-small"
+										onClick={()=> {
+											this.setState({ isEditing: false });
+										}}
+									/>
+									<Button
+										name="submit"
+										type="submit"
+										text="Edit Title"
+										className="pt-small pt-intent-primary"
+										onClick={this.handleThreadEdit}
+										loading={this.state.isLoadingThreadEdit}
+									/>
+								</div>
+							</div>
+						}
+						{!this.state.isEditing &&
+							<b>{sortedDiscussions[0].title}</b>
+						}
+						<DiscussionLabels
+							availableLabels={this.props.pubData.labels || []}
+							labelsData={sortedDiscussions[0].labels || []}
+							onLabelsSave={this.saveLabels}
+							isAdmin={this.props.loginData.isAdmin}
+							canManageThread={canManageThread}
 						/>
-						<div className="editing-buttons">
-							<Button
-								text="Cancel Edit"
-								className="pt-small"
-								onClick={this.onEditToggle}
-							/>
-							<Button
-								name="submit"
-								type="submit"
-								text="Edit Title"
-								className="pt-small pt-intent-primary"
-								onClick={this.onSubmit}
-								disabled={this.state.submitDisabled}
-								loading={this.state.isLoading}
-							/>
-						</div>
-					</div>
-				}
-
-				{!this.state.isEditing &&
-					<div className="title">{sortedDiscussions[0].title}</div>
-				}
-
-				<DiscussionLabels
-					availableLabels={this.props.pubData.labels || []}
-					labelsData={sortedDiscussions[0].labels || []}
-					onLabelsSave={this.saveLabels}
-					isAdmin={this.props.canManage}
-					canManageThread={canManageThread}
-				/>
-
-				{sortedDiscussions[0].submitHash && !isArchived &&
-					<div className="submission-buttons">
-						{this.props.loginData.isAdmin &&
-							<Button
-								type="button"
-								className="pt-intent-primary pt-small"
-								text="Accept and Publish"
-								loading={this.props.publishIsLoading}
-								onClick={this.handlePublish}
-							/>
-						}
-						{(this.props.loginData.isAdmin || this.props.canManage) &&
-							<Button
-								type="button"
-								className="pt-small"
-								text="Cancel Submission"
-								loading={this.state.archiveIsLoading}
-								onClick={this.archiveDiscussion}
-							/>
-						}
-					</div>
-				}
-
-				<div>
-					{sortedDiscussions.map((discussion)=> {
-						return (
-							<DiscussionThreadItem
-								key={`discussion-${discussion.id}`}
-								discussion={discussion}
-								isAuthor={isArchived ? false : discussion.userId === this.props.loginData.id || this.props.loginData.id === 'b242f616-7aaa-479c-8ee5-3933dcf70859'}
-								onReplyEdit={this.props.handleReplyEdit}
-								hideScrollButton={this.props.hideScrollButton}
-								getHighlightContent={this.props.getHighlightContent}
-								handleQuotePermalink={this.props.handleQuotePermalink}
-								hoverBackgroundColor={this.props.hoverBackgroundColor}
-							/>
-						);
-					})}
-				</div>
-
-				{!isArchived &&
-					<div>
-						{this.props.loginData.id
-							? <DiscussionInput
-								handleSubmit={this.onReplySubmit}
-								submitIsLoading={this.props.submitIsLoading}
-								getHighlightContent={this.props.getHighlightContent}
-								inputKey={'thread-reply'}
-							/>
-							: <a href={`/login?redirect=${this.props.pathname}`} className="pt-button pt-fill">
-								Login to Reply
-							</a>
+						{sortedDiscussions.map((discussion)=> {
+							return (
+								<DiscussionThreadItem
+									key={`discussion-${discussion.id}`}
+									discussion={discussion}
+									isAuthor={isArchived ? false : discussion.userId === this.props.loginData.id || this.props.loginData.id === 'b242f616-7aaa-479c-8ee5-3933dcf70859'}
+									onReplyEdit={this.props.onPutDiscussion}
+									// hideScrollButton={this.props.hideScrollButton}
+									getHighlightContent={this.props.getHighlightContent}
+									handleQuotePermalink={this.props.handleQuotePermalink}
+									// hoverBackgroundColor={this.props.hoverBackgroundColor}
+									hoverBackgroundColor="rgba(0, 80, 200, 0.2)"
+								/>
+							);
+						})}
+						{!isArchived &&
+							<div>
+								{this.props.loginData.id
+									? <DiscussionInput
+										handleSubmit={this.handleReplySubmit}
+										submitIsLoading={this.state.isLoadingReply}
+										getHighlightContent={this.props.getHighlightContent}
+										inputKey="thread-reply"
+									/>
+									: <a href={`/login?redirect=${this.props.locationData.pathpathname}`} className="pt-button pt-fill">
+										Login to Reply
+									</a>
+								}
+							</div>
 						}
 					</div>
 				}

@@ -1,6 +1,4 @@
 require('./analytics');
-require('./collaborators');
-require('./collectionPubs');
 require('./communities');
 require('./communityAdmins');
 require('./discussions');
