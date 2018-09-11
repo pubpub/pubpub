@@ -108,18 +108,19 @@ const Landing = (props)=> {
 							<h2>Empowered Publishing</h2>
 							<div className="subtitle">Take control of your research and how it's communicated. PubPub lets you publish with and for your community.</div>
 						</div>
-
-						{features.map((item)=> {
-							return (
-								<div className="col-6" key={`feature-${item.icon}`}>
-									<LandingFeature
-										title={item.title}
-										icon={item.icon}
-										description={item.description}
-									/>
-								</div>
-							);
-						})}
+						<div class="row flex">
+							{features.map((item)=> {
+								return (
+									<div className="col-6" key={`feature-${item.icon}`}>
+										<LandingFeature
+											title={item.title}
+											icon={item.icon}
+											description={item.description}
+										/>
+									</div>
+								);
+							})}
+						</div>
 					</div>
 				</div>
 			</PageWrapper>
@@ -131,4 +132,3 @@ Landing.propTypes = propTypes;
 export default Landing;
 
 hydrateWrapper(Landing);
-
