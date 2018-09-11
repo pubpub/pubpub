@@ -60,11 +60,10 @@ const Landing = (props)=> {
 					<div className="row">
 						<div className="col-12">
 							<h1>Collaborative Community Publishing</h1>
-							<div className="subtitle">Build empowered communities of researchers to publish, review, organize, and progress towards discovery.</div>
+							<div className="subtitle">Build empowered communities of researchers to publish, review, organize, and progress towards discovery. Launching in beta on October 15.</div>
 							<div className="action">
-								<a className="pt-button pt-intent-primary pt-large" href="/signup">Join to Collaborate</a>
+									<a className="pt-button pt-intent-primary pt-large" target="_blank" href="http://eepurl.com/dyRqBr">Signup for launch updates</a>
 							</div>
-
 							<div className="image-wrapper pt-elevation-3">
 								<img src={getResizedUrl('https://assets.pubpub.org/_site/landing-responsive-framed.png', null, '800x0')} alt="PubPub Community" />
 								{/*
