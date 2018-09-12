@@ -54,7 +54,7 @@ const Landing = (props)=> {
 		},
 		{
 			title: 'Cite And Be Cited',
-			description: 'Easily create DOIs for you work, and add citations by DOI.',
+			description: 'Easily create DOIs for you work, add citations by DOI, and allow others to cite excerpts and discussions.',
 			icon: 'citation',
 		}
 	];
@@ -69,10 +69,10 @@ const Landing = (props)=> {
 				<div className="container narrow">
 					<div className="row">
 						<div className="col-12">
-							<h2>Higher quality, more transparent publishing</h2>
+							<h2>High quality, transparent publishing</h2>
 							<div className="subtitle">Research, draft, review, and publish with your community, all in one place. Launching in beta on October 15.</div>
 							<div className="action">
-									<a className="pt-button pt-intent-primary pt-large" target="_blank" href="http://eepurl.com/dyRqBr">Signup for launch updates</a>
+									<a className="pt-button pt-intent-primary pt-large" target="_blank" href="http://eepurl.com/dyRqBr">Signup for updates</a>
 							</div>
 							<div className="image-wrapper pt-elevation-3">
 								<img src={getResizedUrl('https://assets.pubpub.org/_site/landing-responsive-framed.png', null, '800x0')} alt="PubPub Community" />
@@ -86,7 +86,7 @@ const Landing = (props)=> {
 
 						<div className="col-12">
 							<h2>Explore Active Communities</h2>
-							<div className="subtitle">Journals, book publishers, conferences, and labs use PubPub to make their work more accessible, interactive, and transparent.</div>
+							<div className="subtitle">Journals, book publishers, conferences, and research groups use PubPub to make their work more accessible, interactive, and transparent.</div>
 						</div>
 
 						{landingData.activeCommunities.map((item)=> {
@@ -133,7 +133,7 @@ const Landing = (props)=> {
 						</div>
 						<div className="col-12">
 							<h2>Free, open access, and open-source</h2>
-							<div className="subtitle">Part of MIT’s <a href="https://mitpress.mit.edu/kfg">Knowledge Futures Group</a>, we are committed to providing PubPub for free forever, releasing open-source code, and operating under non-profit, researcher-friendly business models. We sustain PubPub with donations and by charging for advanced setup and features, not by charging for access to knowledge or running ads.</div>
+							<div className="subtitle">Part of MIT’s <a href="https://mitpress.mit.edu/kfg" target="_blank">Knowledge Futures Group</a>, we are committed to providing PubPub for free forever, releasing <a href="https://github.com/pubpub" target="_blank">open-source code</a>, and operating under non-profit, researcher-friendly business models. We sustain PubPub with donations and by charging for advanced setup and features, not by charging for access to knowledge or running ads.</div>
 						</div>
 					</div>
 				</div>
