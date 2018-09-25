@@ -118,6 +118,7 @@ class User extends Component {
 							}
 							<div className="container narrow content">
 								{pubsToRender.map((pub)=> {
+									const attributions = pub.attributions || [];
 									return (
 										<div key={`pub-${pub.id}`} className="row">
 											<div className="col-12">
@@ -129,10 +130,10 @@ class User extends Component {
 													bannerImage={pub.avatar}
 													size="medium"
 													publicationDate={dateFormat(pub.firstPublishedAt, 'mmm dd, yyyy')}
-													collaborators={pub.attributions.filter((item)=> {
+													collaborators={attributions.filter((item)=> {
 														return !item.isAuthor;
 													})}
-													authors={pub.attributions.filter((item)=> {
+													authors={attributions.filter((item)=> {
 														return item.isAuthor;
 													})}
 												/>
