@@ -26,8 +26,10 @@ const PubSideControls = (props)=> {
 		if (curr.title === 'table-delete') { return true; }
 		return prev;
 	}, false);
-	const isHorizontalRule = selectedNode.type && selectedNode.type.name === 'horizontal_rule';
-	if (!props.pubData.isDraft || isHorizontalRule || (!selectedNode.attrs && !isTable)) { return null; }
+
+	const uncontrolledNodes = ['paragraph', 'blockquote', 'horizontal_rule', 'heading', 'ordered_list', 'bullet_list', 'list_item', 'code_block'];
+	const isUncontrolledNode = selectedNode.type && uncontrolledNodes.indexOf(selectedNode.type.name) > -1;
+	if (!props.pubData.isDraft || isUncontrolledNode || (!selectedNode.attrs && !isTable)) { return null; }
 
 	const menuStyle = {
 		position: 'absolute',
@@ -38,7 +40,7 @@ const PubSideControls = (props)=> {
 	const updateFunc = props.editorChangeObject.updateNode;
 	const changeNodeFunc = props.editorChangeObject.changeNode;
 	const nodeType = selectedNode.type ? selectedNode.type.name : 'table';
-	// TODO: Bug on trying to remove empty link. Firebase sync bug it looks like.
+
 	// ?Inline permalink
 	const controlsProps = {
 		attrs: attrs,
