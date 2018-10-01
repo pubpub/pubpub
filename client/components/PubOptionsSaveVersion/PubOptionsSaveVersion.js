@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 import PubCollabDropdownPrivacy from 'components/PubCollabDropdownPrivacy/PubCollabDropdownPrivacy';
 import { apiFetch } from 'utilities';
+import { getCollabJSONs } from '@pubpub/editor';
 
 require('./pubOptionsSaveVersion.scss');
 
@@ -12,7 +13,7 @@ const propTypes = {
 	locationData: PropTypes.object.isRequired,
 	setOptionsMode: PropTypes.func.isRequired,
 	setPubData: PropTypes.func.isRequired,
-	editorRefNode: PropTypes.object.isRequired,
+	editorView: PropTypes.object.isRequired,
 };
 
 class PubOptionsSaveVersion extends Component {
@@ -58,7 +59,7 @@ class PubOptionsSaveVersion extends Component {
 			return `${this.props.pubData.editorKey}/${item.id}`;
 		});
 
-		this.props.editorRefNode.getCollabJSONs(editorRefs)
+		getCollabJSONs(this.props.editorView, editorRefs)
 		.then((content)=> {
 			const newContent = content.length === 1
 				? content[0]
@@ -83,7 +84,7 @@ class PubOptionsSaveVersion extends Component {
 			window.location.href = `/pub/${this.props.locationData.params.slug}`;
 		})
 		.catch((err)=> {
-			console.log('Error Publishing', err);
+			console.error('Error Publishing', err);
 			this.setState({ isLoading: false });
 		});
 	}
@@ -94,7 +95,7 @@ class PubOptionsSaveVersion extends Component {
 			return prev;
 		}, true);
 
-		if (!this.props.editorRefNode) { return null; }
+		if (!this.props.editorView) { return null; }
 
 		return (
 			<div className="pub-options-save-version-component">

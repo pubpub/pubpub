@@ -27,7 +27,7 @@ const propTypes = {
 	loginData: PropTypes.object.isRequired,
 	locationData: PropTypes.object.isRequired,
 	firebaseRef: PropTypes.object,
-	editorRefNode: PropTypes.object,
+	editorView: PropTypes.object,
 	optionsMode: PropTypes.string,
 	setOptionsMode: PropTypes.func.isRequired,
 	setPubData: PropTypes.func.isRequired,
@@ -35,7 +35,7 @@ const propTypes = {
 
 const defaultProps = {
 	firebaseRef: undefined,
-	editorRefNode: undefined,
+	editorView: undefined,
 	optionsMode: undefined,
 };
 
@@ -51,7 +51,7 @@ const PubOptions = (props)=> {
 		loginData: props.loginData,
 		locationData: props.locationData,
 		firebaseRef: props.firebaseRef,
-		editorRefNode: props.editorRefNode,
+		editorView: props.editorView,
 		setOptionsMode: props.setOptionsMode,
 		setPubData: props.setPubData,
 	};

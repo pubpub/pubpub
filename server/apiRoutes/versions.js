@@ -5,12 +5,7 @@ import { submitDoiData, generateHash } from '../utilities';
 
 app.post('/api/versions', (req, res)=> {
 	const user = req.user || {};
-	// const findCollaborator = Collaborator.findOne({
-	// 	where: {
-	// 		userId: user.id,
-	// 		pubId: req.body.pubId,
-	// 	}
-	// });
+
 	const findPubManager = PubManager.findOne({
 		where: {
 			userId: user.id,
@@ -32,30 +27,17 @@ app.post('/api/versions', (req, res)=> {
 			through: { attributes: [] },
 		}]
 	});
-	const findSubmitDiscussion = Discussion.findOne({
-		where: {
-			submitHash: req.body.submitHash,
-			pubId: req.body.pubId,
-			communityId: req.body.communityId || null,
-			isArchived: { $not: true },
-		}
-	});
+
 	const currentTimestamp = new Date();
 	let firstPublishedAtValue;
 
-	Promise.all([findPubManager, findCommunityAdmin, findPub, findSubmitDiscussion])
-	.then(([pubManagerData, communityAdminData, pubData, discussionData])=> {
-		// const isManager = collaboratorData && collaboratorData.permissions === 'manage';
-		const accessAsCommunityAdmin = communityAdminData && (pubData.adminPermissions === 'manage' || pubManagerData);
-		const canApproveSubmission = communityAdminData && discussionData;
-		const canOpenPublish = pubManagerData && pubData.collections.reduce((prev, curr)=> {
-			if (prev && curr.isOpenPublish) { return prev; }
-			return false;
-		}, true);
+	Promise.all([findPubManager, findCommunityAdmin, findPub])
+	.then(([pubManagerData, communityAdminData, pubData])=> {
+		const accessAsCommunityAdmin = communityAdminData && pubData.isCommunityAdminManaged;
+
 		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859'
-			&& !canOpenPublish
 			&& !accessAsCommunityAdmin
-			&& !canApproveSubmission
+			&& !pubManagerData
 		) {
 			throw new Error('Not Authorized to update this pub');
 		}
@@ -105,7 +87,7 @@ app.post('/api/versions', (req, res)=> {
 app.put('/api/versions', (req, res)=> {
 	const user = req.user || {};
 
-	// Filter to only allow certain fields to be updated
+	/* Filter to only allow certain fields to be updated */
 	const updatedVersion = {};
 	Object.keys(req.body).forEach((key)=> {
 		if (['isPublic', 'isCommunityAdminShared'].indexOf(key) > -1) {
@@ -127,7 +109,10 @@ app.put('/api/versions', (req, res)=> {
 	});
 	Promise.all([findCommunityAdmin, findPubManager])
 	.then(([communityAdminData, pubManagerData])=> {
-		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859' && !communityAdminData && !pubManagerData) {
+		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859'
+			&& !communityAdminData
+			&& !pubManagerData
+		) {
 			throw new Error('Not Authorized to edit this pub');
 		}
 		return Version.update(updatedVersion, {

@@ -8,13 +8,13 @@ const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	locationData: PropTypes.object.isRequired,
 	setOptionsMode: PropTypes.func.isRequired,
-	editorRefNode: PropTypes.object,
+	// editorRefNode: PropTypes.object,
 	activeContent: PropTypes.object,
 	editorChangeObject: PropTypes.object.isRequired,
 };
 
 const defaultProps = {
-	editorRefNode: undefined,
+	// editorRefNode: undefined,
 	activeContent: undefined,
 };
 

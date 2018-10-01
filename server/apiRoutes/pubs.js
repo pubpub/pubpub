@@ -61,7 +61,7 @@ app.post('/api/pubs', (req, res)=> {
 		return res.status(201).json(`/pub/${newPubSlug}/draft`);
 	})
 	.catch((err)=> {
-		console.log('Error creating Pub', err);
+		console.error('Error creating Pub', err);
 		return res.status(500).json(err);
 	});
 });
@@ -99,7 +99,7 @@ app.put('/api/pubs', (req, res)=> {
 	Promise.all([findPubManager, findCommunityAdmin, findPub])
 	.then(([pubManagerData, communityAdminData, pubData])=> {
 		// const isManager = collaboratorData && collaboratorData.permissions === 'manage';
-		const accessAsCommunityAdmin = communityAdminData && pubData.adminPermissions === 'manage';
+		const accessAsCommunityAdmin = communityAdminData && pubData.isCommunityAdminManaged;
 		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859'
 			&& !pubManagerData
 			&& !accessAsCommunityAdmin
@@ -114,7 +114,7 @@ app.put('/api/pubs', (req, res)=> {
 		return res.status(201).json(updatedPub);
 	})
 	.catch((err)=> {
-		console.log('Error putting Pub', req.body, err);
+		console.error('Error putting Pub', req.body, err);
 		return res.status(500).json(err);
 	});
 });
@@ -131,12 +131,15 @@ app.delete('/api/pubs', (req, res)=> {
 
 	const findCommunityAdmin = CommunityAdmin.findOne({
 		where: {
-			userId: req.user && req.user.id,
+			userId: user.id,
 			communityId: req.body.communityId || null,
 		}
 	});
 	const findPub = Pub.findOne({
-		where: { id: req.body.pubId, communityId: req.body.communityId }
+		where: {
+			id: req.body.pubId,
+			communityId: req.body.communityId
+		}
 	});
 	Promise.all([findPubManager, findCommunityAdmin, findPub])
 	.then(([pubManagerData, communityAdminData, pubData])=> {
@@ -144,12 +147,12 @@ app.delete('/api/pubs', (req, res)=> {
 		// Managers can delete their own unpublished pubs
 		// const isManager = collaboratorData && collaboratorData.permissions === 'manage';
 		const accessAsManager = !pubData.firstPublishedAt && pubManagerData;
-		const accessAsCommunityAdmin = communityAdminData && (pubData.adminPermissions === 'manage' || pubManagerData);
+		const accessAsCommunityAdmin = communityAdminData && pubData.isCommunityAdminManaged;
 		if (user.id !== 'b242f616-7aaa-479c-8ee5-3933dcf70859'
 			&& !accessAsManager
 			&& !accessAsCommunityAdmin
 		) {
-			throw new Error('Not Authorized to update this pub');
+			throw new Error('Not Authorized to delete this pub');
 		}
 		return Pub.destroy({
 			where: { id: req.body.pubId, communityId: req.body.communityId }
@@ -159,7 +162,7 @@ app.delete('/api/pubs', (req, res)=> {
 		return res.status(201).json(req.body.pubId);
 	})
 	.catch((err)=> {
-		console.log('Error putting Pub', err);
+		console.error('Error putting Pub', err);
 		return res.status(500).json(err);
 	});
 });
