@@ -1,6 +1,5 @@
 import app from '../server';
 import { PubManager, User, CommunityAdmin, VersionPermission } from '../models';
-// import { generateNewCollaboratorNotification } from '../notifications';
 
 app.post('/api/versionPermissions', (req, res)=> {
 	// Authenticate user. Make sure they have edit permissions on the given pub.
@@ -39,11 +38,10 @@ app.post('/api/versionPermissions', (req, res)=> {
 				{ model: User, as: 'user', attributes: ['id', 'firstName', 'lastName', 'fullName', 'avatar', 'slug', 'initials', 'title'] }
 			]
 		});
-		// const generateNotification = generateNewCollaboratorNotification(newCollaborator.pubId, req.body.communityId, req.body.userId);
-		const generateNotification = undefined;
-		return Promise.all([findNewVersionPermission, generateNotification]);
+
+		return findNewVersionPermission;
 	})
-	.then(([newVersionPermissionData])=> {
+	.then((newVersionPermissionData)=> {
 		// const collaboratorUser = newCollaboratorData.user || {};
 		// const output = {
 		// 	id: collaboratorUser.id || newCollaboratorData.id,

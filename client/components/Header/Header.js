@@ -122,17 +122,6 @@ class Header extends Component {
 															</a>
 														</li>
 													}
-													{!isBasePubPub &&
-														<MenuItem
-															className="pt-popover-dismiss"
-															href="/notifications"
-															text="Notifications"
-															label={this.props.loginData.notificationCount
-																? <span className="notification-count">{this.props.loginData.notificationCount}</span>
-																: null
-															}
-														/>
-													}
 													<MenuItem text="Logout" onClick={this.handleLogout} />
 												</Menu>
 											}
@@ -147,9 +136,6 @@ class Header extends Component {
 													userAvatar={this.props.loginData.avatar}
 													width={30}
 												/>
-												{!!this.props.loginData.notificationCount &&
-													<div className="notification-count">{this.props.loginData.notificationCount}</div>
-												}
 											</button>
 										</Popover>
 									}

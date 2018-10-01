@@ -1,6 +1,5 @@
 import app from '../server';
 import { PubManager, User, CommunityAdmin, PubAttribution } from '../models';
-// import { generateNewCollaboratorNotification } from '../notifications';
 
 app.post('/api/pubAttributions', (req, res)=> {
 	// Authenticate user. Make sure they have edit permissions on the given pub.
@@ -40,11 +39,10 @@ app.post('/api/pubAttributions', (req, res)=> {
 				{ model: User, as: 'user', required: false, attributes: ['id', 'firstName', 'lastName', 'fullName', 'avatar', 'slug', 'initials', 'title'] }
 			]
 		});
-		// const generateNotification = generateNewCollaboratorNotification(newCollaborator.pubId, req.body.communityId, req.body.userId);
-		const generateNotification = undefined;
-		return Promise.all([findNewPubAttribution, generateNotification]);
+
+		return findNewPubAttribution;
 	})
-	.then(([newPubAttributionData])=> {
+	.then((newPubAttributionData)=> {
 		const output = newPubAttributionData.toJSON();
 		if (!output.user) {
 			output.user = {

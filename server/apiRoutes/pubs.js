@@ -1,7 +1,6 @@
 import app from '../server';
 import { Collection, Pub, Collaborator, CollectionPub, CommunityAdmin, PubManager, PubAttribution, PubTag } from '../models';
 import { generateHash } from '../utilities';
-import { generatePubCreateNotification } from '../notifications';
 
 app.post('/api/pubs', (req, res)=> {
 	const user = req.user || {};
@@ -44,8 +43,6 @@ app.post('/api/pubs', (req, res)=> {
 			isAuthor: true,
 			order: 0.5,
 		});
-		// const createNotification = generatePubCreateNotification(newPub, user.id);
-		const createNotification = undefined;
 
 		const defaultTagIds = req.body.defaultTagIds || [];
 		const newPubTagObjects = defaultTagIds.map((tagId)=> {
@@ -55,7 +52,7 @@ app.post('/api/pubs', (req, res)=> {
 			};
 		});
 		const createPubTags = PubTag.bulkCreate(newPubTagObjects);
-		return Promise.all([createPubManager, createPubAttribution, createPubTags, createNotification]);
+		return Promise.all([createPubManager, createPubAttribution, createPubTags]);
 	})
 	.then(()=> {
 		return res.status(201).json(`/pub/${newPubSlug}/draft`);

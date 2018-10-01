@@ -1,6 +1,5 @@
 import app from '../server';
 import { Pub, Version, CommunityAdmin, Discussion, Collection, PubManager } from '../models';
-import { generateNewVersionNotification } from '../notifications';
 import { submitDoiData, generateHash } from '../utilities';
 
 app.post('/api/versions', (req, res)=> {
@@ -55,13 +54,8 @@ app.post('/api/versions', (req, res)=> {
 		}, {
 			where: { id: req.body.pubId }
 		});
-		const generateNotification = generateNewVersionNotification(
-			req.body.pubId,
-			req.body.communityId,
-			user.id,
-			!firstPublishedAtValue
-		);
-		return Promise.all([updatePub, generateNotification]);
+
+		return updatePub;
 	})
 	.then(()=> {
 		const updateDiscussion = Discussion.update({ isArchived: true, submitApprovedAt: currentTimestamp }, {

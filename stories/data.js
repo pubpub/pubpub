@@ -21,5 +21,4 @@ export const loginData = initialData.loginData;
 // export const communityData = initialData.communityData;
 export const communityData = require('./dataCommunity.js');
 export const collectionData = require('./dataCollection.js');
-export const notificationsData = require('./dataNotifications.js');
 export const pubData = require('./dataPub.js');

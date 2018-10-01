@@ -8,7 +8,6 @@ import builder from 'xmlbuilder';
 import request from 'request-promise';
 import amqplib from 'amqplib';
 import { Community, Collection, User, Pub, Version, PubAttribution, Tag, Page } from './models';
-import { getNotificationsCount } from './notifications';
 
 const doiSubmissionUrl = process.env.DOI_SUBMISSION_URL;
 const doiLoginId = process.env.DOI_LOGIN_ID;
@@ -154,20 +153,8 @@ export const getInitialData = (req)=> {
 			loginData: loginData,
 			locationData: locationData,
 		};
-		const notificationCount = loginData.id
-			// ? getNotificationsCount(communityData.id, loginData.id)
-			? 0
-			: 0;
-		return Promise.all([outputData, notificationCount]);
-	})
-	.then(([outputData, notificationCount])=> {
-		return {
-			...outputData,
-			loginData: {
-				...loginData,
-				notificationCount: notificationCount
-			}
-		};
+
+		return outputData;
 	});
 };
 

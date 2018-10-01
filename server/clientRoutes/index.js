@@ -15,7 +15,6 @@ require('./newContact');		// Route: '/new/contact'
 
 /* Routes for Communities */
 require('./dashboard');			// Route: ['/dashboard', '/dashboard/:mode', '/dashboard/:mode/:slug']
-require('./notifications');		// Route: '/notifications'
 require('./pub');				// Route: ['/pub/:slug', '/pub/:slug/content/:chapterId', '/pub/:slug/draft', '/pub/:slug/draft/content/:chapterId', '/pub/:slug/:mode', '/pub/:slug/:mode/:subMode']
 require('./page');		 		// Route: ['/', '/:slug']
 
