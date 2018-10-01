@@ -1,6 +1,6 @@
 import app from '../server';
 import { Collection, Pub, Collaborator, CollectionPub, CommunityAdmin, PubManager, PubAttribution, PubTag } from '../models';
-import { generateHash } from '../utilities';
+import { generateHash, slugifyString } from '../utilities';
 
 app.post('/api/pubs', (req, res)=> {
 	const user = req.user || {};
@@ -72,7 +72,7 @@ app.put('/api/pubs', (req, res)=> {
 		if (['slug', 'title', 'description', 'avatar', 'useHeaderImage', 'isCommunityAdminManaged', 'communityAdminDraftPermissions', 'draftPermissions', 'labels', 'review'].indexOf(key) > -1) {
 			updatedPub[key] = req.body[key] && req.body[key].trim ? req.body[key].trim() : req.body[key];
 			if (key === 'slug') {
-				updatedPub.slug = updatedPub.slug.replace(/[^a-zA-Z0-9-]/gi, '').replace(/ /g, '-').toLowerCase();
+				updatedPub.slug = slugifyString(updatedPub.slug);
 			}
 		}
 	});

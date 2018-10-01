@@ -2,7 +2,7 @@ import uuidv4 from 'uuid/v4';
 import Color from 'color';
 import app from '../server';
 import { Community, Collection, CommunityAdmin } from '../models';
-import { generateHash } from '../utilities';
+import { generateHash, slugifyString } from '../utilities';
 
 app.post('/api/communities', (req, res)=> {
 	const user = req.user || {};
@@ -123,7 +123,7 @@ app.put('/api/communities', (req, res)=> {
 		}
 	});
 	if (updatedCommunity.subdomain) {
-		updatedCommunity.subdomain = updatedCommunity.subdomain.replace(/[^a-zA-Z0-9-]/gi, '').replace(/ /g, '-').toLowerCase();
+		updatedCommunity.subdomain = slugifyString(updatedCommunity.subdomain);
 	}
 	if (updatedCommunity.accentColor) {
 		const accentColor = updatedCommunity.accentColor;

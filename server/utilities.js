@@ -7,11 +7,21 @@ import Cite from 'citation-js';
 import builder from 'xmlbuilder';
 import request from 'request-promise';
 import amqplib from 'amqplib';
+import { remove as removeDiacritics } from 'diacritics';
 import { Community, Collection, User, Pub, Version, PubAttribution, Tag, Page } from './models';
 
 const doiSubmissionUrl = process.env.DOI_SUBMISSION_URL;
 const doiLoginId = process.env.DOI_LOGIN_ID;
 const doiLoginPassword = process.env.DOI_LOGIN_PASSWORD;
+
+export const slugifyString = (input)=> {
+	if (typeof input !== 'string') {
+		console.error('input is not a valid string');
+		return '';
+	}
+
+	return removeDiacritics(input).replace(/[^a-zA-Z0-9-]/gi, '').replace(/ /g, '-').toLowerCase();
+};
 
 export const hostIsValid = (req, access)=> {
 	const isBasePubPub = req.hostname === 'www.pubpub.org';

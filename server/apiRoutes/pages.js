@@ -2,7 +2,7 @@
 import sanitizeHtml from 'sanitize-html';
 import app from '../server';
 import { Page, Community, CommunityAdmin } from '../models';
-import { generateHash } from '../utilities';
+import { generateHash, slugifyString } from '../utilities';
 
 
 app.post('/api/pages', (req, res)=> {
@@ -67,7 +67,7 @@ app.put('/api/pages', (req, res)=> {
 				? req.body[key].trim()
 				: req.body[key];
 			if (key === 'slug') {
-				updatedPage.slug = updatedPage.slug.replace(/[^a-zA-Z0-9-]/gi, '').replace(/ /g, '-').toLowerCase();
+				updatedPage.slug = slugifyString(updatedPage.slug);
 			}
 			if (key === 'layout') {
 				updatedPage.layout = updatedPage.layout.map((block)=> {

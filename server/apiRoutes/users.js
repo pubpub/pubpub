@@ -2,6 +2,7 @@ import Promise from 'bluebird';
 import passport from 'passport';
 import app from '../server';
 import { User, Signup } from '../models';
+import { slugifyString } from '../utilities';
 
 app.post('/api/users', (req, res)=> {
 	// Check that hash and email sync up
@@ -13,7 +14,7 @@ app.post('/api/users', (req, res)=> {
 	const lastName = req.body.lastName.trim();
 	const fullName = `${firstName} ${lastName}`;
 	const initials = `${firstName[0]}${lastName[0]}`;
-	const newSlug = fullName.replace(/\s/gi, '-').toLowerCase();
+	const newSlug = slugifyString(fullName);
 	Signup.findOne({
 		where: { hash: req.body.hash, email: req.body.email.toLowerCase() },
 		attributes: ['email', 'hash', 'completed']
@@ -96,7 +97,7 @@ app.put('/api/users', (req, res)=> {
 		return res.status(201).json('success');
 	})
 	.catch((err)=> {
-		console.log('Error putting User', err);
+		console.error('Error putting User', err);
 		return res.status(500).json(err);
 	});
 });
