@@ -1,10 +1,9 @@
 import Promise from 'bluebird';
-import postmark from 'postmark';
 import app from '../server';
 import { User } from '../models';
 import { generateHash } from '../utilities';
+import { sendPasswordResetEmail } from '../emailHelpers';
 
-const client = new postmark.Client(process.env.POSTMARK_API_KEY);
 
 app.post('/api/password-reset', (req, res)=> {
 	User.findOne({
@@ -23,13 +22,9 @@ app.post('/api/password-reset', (req, res)=> {
 		});
 	}).then((updatedUserData)=> {
 		const updatedUser = updatedUserData[1][0];
-		return client.sendEmailWithTemplate({
-			From: 'pubpub@media.mit.edu',
-			To: updatedUser.email,
-			TemplateId: '3668905',
-			TemplateModel: {
-				action_url: `https://${req.hostname}/password-reset/${updatedUser.resetHash}/${updatedUser.slug}`
-			}
+		return sendPasswordResetEmail({
+			toEmail: updatedUser.email,
+			resetUrl: `https://${req.hostname}/password-reset/${updatedUser.resetHash}/${updatedUser.slug}`,
 		});
 	})
 	.then(()=> {
@@ -58,7 +53,7 @@ app.put('/api/password-reset', (req, res)=> {
 		if (!userData) { throw new Error('User doesn\'t exist'); }
 		if (!user.id && resetHash && userData.resetHashExpiration < currentTime) { throw new Error('Hash is expired'); }
 
-		// Promisify the setPassword function, and use .update to match API convention
+		/* Promisify the setPassword function, and use .update to match API convention */
 		const setPassword = Promise.promisify(userData.setPassword, { context: userData });
 		return setPassword(req.body.password);
 	})

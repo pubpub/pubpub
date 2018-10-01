@@ -1,14 +1,12 @@
-import postmark from 'postmark';
 import app from '../server';
 import { generateHash } from '../utilities';
 import { sequelize, Signup, User } from '../models';
-
-const client = new postmark.Client(process.env.POSTMARK_API_KEY);
+import { sendSignupEmail } from '../emailHelpers';
 
 app.post('/api/signup', (req, res)=> {
-	// First, try to update the emailSentCount.
-	// If there are no records to update, then we create a new one.
-	// If this fails, it is because the email must be unique and it is already used
+	/* First, try to update the emailSentCount. */
+	/* If there are no records to update, then we create a new one. */
+	/* If this fails, it is because the email must be unique and it is already used */
 	const email = req.body.email.toLowerCase().trim();
 	User.findOne({
 		where: { email: email }
@@ -35,13 +33,9 @@ app.post('/api/signup', (req, res)=> {
 		return Signup.findOne({ where: { email: req.body.email } });
 	})
 	.then((signUpData)=> {
-		return client.sendEmailWithTemplate({
-			From: 'pubpub@media.mit.edu',
-			To: signUpData.email,
-			TemplateId: '3270742',
-			TemplateModel: {
-				action_url: `https://${req.hostname}/user/create/${signUpData.hash}`
-			}
+		return sendSignupEmail({
+			toEmail: signUpData.email,
+			signupUrl: `https://${req.hostname}/user/create/${signUpData.hash}`
 		});
 	})
 	.then(()=> {
