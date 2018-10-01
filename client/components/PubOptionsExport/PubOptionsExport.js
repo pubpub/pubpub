@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 import { apiFetch } from 'utilities';
+import { getCollabJSONs } from '@pubpub/editor';
 
 require('./pubOptionsExport.scss');
 
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
-	editorRefNode: PropTypes.object.isRequired,
+	editorView: PropTypes.object.isRequired,
 	// loginData: PropTypes.object.isRequired,
 	// setPubData: PropTypes.func.isRequired,
 	// TODO: we should pass in content in the case that we are in the working draft
@@ -40,7 +41,7 @@ class PubOptionsExport extends Component {
 			});
 		}
 
-		return this.props.editorRefNode.getCollabJSONs(editorRefs)
+		return getCollabJSONs(this.props.editorView, editorRefs)
 		.then((content)=> {
 			const newContent = content.length === 1
 				? content[0]

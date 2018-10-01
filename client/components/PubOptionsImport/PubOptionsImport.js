@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { AnchorButton } from '@blueprintjs/core';
-import { apiFetch } from 'utilities';
-import { s3Upload } from 'utilities';
-
+import { apiFetch, s3Upload } from 'utilities';
+import { importHtml } from '@pubpub/editor';
 require('./pubOptionsImport.scss');
 
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
-	editorRefNode: PropTypes.object.isRequired,
+	editorView: PropTypes.object.isRequired,
 	setOptionsMode: PropTypes.func.isRequired,
 	// loginData: PropTypes.object.isRequired,
 	// setPubData: PropTypes.func.isRequired,
@@ -68,7 +67,7 @@ class PubOptionsImport extends Component {
 				}, 1500);
 			} else {
 				console.log(taskData);
-				this.props.editorRefNode.importHtml(taskData.output.html);
+				importHtml(this.props.editorView, taskData.output.html);
 				this.props.setOptionsMode(undefined);
 			}
 		})
