@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import DropdownButton from 'components/DropdownButton/DropdownButton';
+import { Button } from '@blueprintjs/core';
 
 require('./pubSectionNav.scss');
 
@@ -14,7 +16,6 @@ const propTypes = {
 const PubSectionNav = function(props) {
 	const pubData = props.pubData;
 	const sectionsData = pubData.isDraft ? pubData.sectionsData : pubData.activeVersion.content;
-	console.log(sectionsData);
 
 	const sectionIds = props.hasSections
 		? sectionsData.map((section)=> {
@@ -35,20 +36,41 @@ const PubSectionNav = function(props) {
 		<div className="pub-section-nav-component">
 			<div className="pt-button-group pt-fill pt-large">
 				<a
-					href={`/pub/${pubData.slug}/${prevSectionId ? 'content/' : ''}${prevSectionId}${props.queryObject.version ? `?version=${props.queryObject.version}` : ''}`}
+					href={`/pub/${pubData.slug}/${pubData.isDraft ? 'draft/' : ''}${prevSectionId ? 'content/' : ''}${prevSectionId}${props.queryObject.version ? `?version=${props.queryObject.version}` : ''}`}
 					className={`pt-button pt-icon-arrow-left ${prevSectionId || currentSectionIndex > 0 ? '' : ' disabled'}`}
 				>
 					Previous
 				</a>
-				<button
-					onClick={()=> { props.setOptionsMode('sections'); }}
-					className="pt-button pt-icon-properties"
-					type="button"
+				<DropdownButton
+					label={sectionsData[currentSectionIndex].title}
+					usePortal={false}
 				>
-					Contents
-				</button>
+					<ul className="pt-menu pt-large">
+						{sectionsData.map((section, index)=> {
+							const isActive = index === currentSectionIndex;
+							const href = `/pub/${pubData.slug}/${pubData.isDraft ? 'draft/' : ''}content/${section.id}${props.queryObject.version ? `?version=${props.queryObject.version}` : ''}`;
+							return (
+								<li key={`section-link-${section.id}`}>
+									<a className={`pt-menu-item ${isActive ? 'pt-active' : ''}`} tabIndex="0" href={href}>
+										{section.title}
+									</a>
+								</li>
+							);
+						})}
+						{pubData.isDraft && (pubData.isDraftEditor || pubData.isManager) && [
+							<li className="pt-menu-divider" />,
+							<li>
+								<Button
+									className="pt-menu-item pt-popover-dismiss pt-minimal"
+									onClick={()=> { props.setOptionsMode('sections'); }}
+									text="Manage Sections"
+								/>
+							</li>
+						]}
+					</ul>
+				</DropdownButton>
 				<a
-					href={`/pub/${pubData.slug}/content/${nextSectionId}${props.queryObject.version ? `?version=${props.queryObject.version}` : ''}`}
+					href={`/pub/${pubData.slug}/${pubData.isDraft ? 'draft/' : ''}content/${nextSectionId}${props.queryObject.version ? `?version=${props.queryObject.version}` : ''}`}
 					className={`pt-button ${nextSectionId ? '' : ' disabled'}`}
 				>
 					Next

@@ -12,6 +12,7 @@ const propTypes = {
 	isDisabled: PropTypes.bool,
 	isSmall: PropTypes.bool,
 	isOpen: PropTypes.bool,
+	usePortal: PropTypes.bool,
 	children: PropTypes.node.isRequired,
 };
 
@@ -22,6 +23,7 @@ const defaultProps = {
 	isDisabled: false,
 	isRightAligned: false,
 	isSmall: false,
+	usePortal: true,
 	isOpen: undefined,
 };
 
@@ -38,16 +40,19 @@ const DropdownButton = function(props) {
 				constraints: [{ attachment: 'together', to: 'window' }]
 			}}
 			isOpen={props.isOpen}
+			usePortal={props.usePortal}
 		>
 			{props.icon && !props.label
 				? <button disabled={props.isDisabled} type="button" className={`dropdown-button pt-button ${props.icon} ${props.isSmall ? 'pt-small' : ''} ${props.isMinimal ? 'pt-minimal' : ''}`} />
-				: <button disabled={props.isDisabled} type="button" className={`dropdown-button pt-button ${props.isSmall ? 'pt-small' : ''} ${props.isMinimal ? 'pt-minimal' : ''}`}>
-					{props.icon &&
-						<span className={`pt-icon-standard ${props.icon}`} />
-					}
-					{props.label.trim()}
-					<span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
-				</button>
+				: (
+					<button disabled={props.isDisabled} type="button" className={`dropdown-button pt-button ${props.isSmall ? 'pt-small' : ''} ${props.isMinimal ? 'pt-minimal' : ''}`}>
+						{props.icon &&
+							<span className={`pt-icon-standard ${props.icon}`} />
+						}
+						{props.label.trim()}
+						<span className="pt-icon-standard pt-icon-caret-down pt-align-right" />
+					</button>
+				)
 			}
 		</Popover>
 	);

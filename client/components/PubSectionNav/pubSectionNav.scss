@@ -1,7 +1,25 @@
 .pub-section-nav-component {
-	margin: 4em 0em;
-	.pt-button {
-		padding: 15px;
+	margin-bottom: 4em;
+	&:not(:first-child) {
+		margin-top: 4em;	
+	}
+	.pt-button-group.pt-fill .pt-button:not(.pt-fixed) {
+		flex: 0 1 auto;
+		&.dropdown-button {
+			flex: 1 1 auto;
+			width: 100%;
+		}
+	}
+	.pt-popover-wrapper {
+		flex: 1 1 auto;
+		margin-right: -1px;
+		margin-left: -1px;
+	}
+	.pt-overlay-content {
+		width: 100%;
+		.pt-popover {
+			width: 100%;
+		}
 	}
 	.disabled {
 		opacity: 0.5;

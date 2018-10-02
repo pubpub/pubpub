@@ -504,6 +504,17 @@ class Pub extends Component {
 						<div className="row">
 							<div className="col-12 pub-columns">
 								<div className="main-content">
+									{/* Prev/Content/Next Buttons */}
+									{hasSections &&
+										<PubSectionNav
+											pubData={pubData}
+											queryObject={queryObject}
+											hasSections={hasSections}
+											sectionId={sectionId}
+											setOptionsMode={this.setOptionsMode}
+										/>
+									}
+
 									<PubBody
 										isDraft={pubData.isDraft}
 										versionId={activeVersion && activeVersion.id}
