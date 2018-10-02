@@ -483,8 +483,10 @@ class Pub extends Component {
 				>
 					<PubHeader
 						pubData={pubData}
+						communityData={this.props.communityData}
 						locationData={this.props.locationData}
 						setOptionsMode={this.setOptionsMode}
+						setPubData={this.setPubData}
 					/>
 
 					{pubData.isDraft &&

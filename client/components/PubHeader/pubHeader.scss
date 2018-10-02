@@ -65,6 +65,11 @@
 		padding: 50px 0px 10px;
 		font-weight: 800;
 		letter-spacing: 1px;
+		.editable-text-match {
+			/* This padding is to match the mystery 3 pixels added by EditableText */
+			display: block;
+			padding-bottom: 3px;
+		}
 	}
 	h2 {
 		color: inherit;
