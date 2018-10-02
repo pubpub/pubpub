@@ -37,13 +37,16 @@
 				display: inline-block;
 				text-align: right;
 				text-decoration: underline;
-				&.toggle-on, &.toggle-off {
-					animation: fadeinout 6s linear;
+				transition: opacity .75s;
+				&.landing-header-exit-active, &.landing-header-enter, &.landing-header-exit {
+					opacity: 0;
 				}
-				@keyframes fadeinout {
-					0% { opacity: 0 }
-					50% { opacity: 1 }
-					100% { opacity: 0 }
+				&.landing-header-enter {
+					position: absolute;
+				}
+				&.landing-header-enter-done {
+					opacity: 1;
+					position: relative;
 				}
 			}
 			h1 {

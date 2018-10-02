@@ -1,4 +1,5 @@
 import React from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import PropTypes from 'prop-types';
 import { hydrateWrapper } from 'utilities';
 
@@ -27,7 +28,10 @@ class Landing extends React.Component {
 				landingHeaderToggle: !this.state.landingHeaderToggle
 			})
 			i >= landingHeaders.length-1 ? i=0 : i++
-		}, 6000)
+			this.setState({
+				landingHeaderToggle: !this.state.landingHeaderToggle
+			})
+		}, 4000)
 	}
 	render() {
 		return (
@@ -54,7 +58,18 @@ class Landing extends React.Component {
 					<div className="container">
 						<div className="row">
 							<div className="col-12 content">
-								<h1><span className={this.state.landingHeaderToggle ? `landing-header toggle-on` : `landing-header toggle-off`}>{this.state.landingHeader}</span> use PubPub to make their research stronger.</h1>
+									<h1>
+										<TransitionGroup className="landing-header" component='span'>
+										<CSSTransition
+											timeout={750}
+											classNames="landing-header"
+											appear={true}
+											key={this.state.landingHeader}>
+											<span className="landing-header">{this.state.landingHeader}</span>
+										</CSSTransition>
+										</TransitionGroup>
+										&nbsp;use PubPub to make their research stronger.
+									</h1>
 								<p>Collaboratively research, draft, review, and publish in a single, integrated process – as it should be!</p>
 								<button className="pt-button pt-intent-primary pt-large">Join PubPub</button>
 								<button className="pt-button pt-large">Create your Community</button>
