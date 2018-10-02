@@ -14,6 +14,7 @@ const propTypes = {
 const PubSectionNav = function(props) {
 	const pubData = props.pubData;
 	const sectionsData = pubData.isDraft ? pubData.sectionsData : pubData.activeVersion.content;
+	console.log(sectionsData);
 
 	const sectionIds = props.hasSections
 		? sectionsData.map((section)=> {

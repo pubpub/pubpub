@@ -558,8 +558,6 @@ class Pub extends Component {
 									{/* Table of Contents */}
 									<PubSideToc
 										pubData={pubData}
-										locationData={this.props.locationData}
-										setOptionsMode={this.setOptionsMode}
 										activeContent={activeContent}
 										editorChangeObject={this.state.editorChangeObject}
 									/>
