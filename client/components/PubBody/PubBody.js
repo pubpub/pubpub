@@ -8,7 +8,6 @@ import { getFirebaseConfig, getResizedUrl } from 'utilities';
 require('./pubBody.scss');
 
 const propTypes = {
-	onRef: PropTypes.func,
 	isDraft: PropTypes.bool.isRequired,
 	versionId: PropTypes.string.isRequired,
 	sectionId: PropTypes.string,
@@ -32,7 +31,6 @@ const propTypes = {
 	discussionNodeOptions: PropTypes.object.isRequired,
 };
 const defaultProps = {
-	onRef: ()=>{},
 	sectionId: undefined,
 	highlights: [],
 	threads: [],
@@ -96,7 +94,6 @@ class PubBody extends Component {
 				}
 
 				<Editor
-					ref={this.props.onRef}
 					customNodes={{
 						...discussionSchema,
 					}}

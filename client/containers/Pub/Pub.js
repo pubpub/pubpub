@@ -64,7 +64,6 @@ class Pub extends Component {
 			fixIt: true,
 			scrolledToPermanent: false,
 			// sectionsData: [{ id: '', order: 0, title: 'Introduction' }],
-			editorRefNode: undefined,
 			menuWrapperRefNode: undefined,
 			editorChangeObject: {},
 		};
@@ -80,7 +79,6 @@ class Pub extends Component {
 		this.setDiscussionChannel = this.setDiscussionChannel.bind(this);
 		this.getAbsolutePosition = this.getAbsolutePosition.bind(this);
 		this.handleSectionsChange = this.handleSectionsChange.bind(this);
-		this.handleEditorRef = this.handleEditorRef.bind(this);
 		this.handleMenuWrapperRef = this.handleMenuWrapperRef.bind(this);
 		this.handleNewHighlightDiscussion = this.handleNewHighlightDiscussion.bind(this);
 		this.handleStatusChange = this.handleStatusChange.bind(this);
@@ -127,7 +125,7 @@ class Pub extends Component {
 	}
 
 	getHighlightContent(from, to) {
-		const primaryEditorState = this.state.editorRefNode.state.editorState;
+		const primaryEditorState = this.state.editorChangeObject.view.state;
 		if (!primaryEditorState || primaryEditorState.doc.nodeSize < from || primaryEditorState.doc.nodeSize < to) { return {}; }
 		const exact = primaryEditorState.doc.textBetween(from, to);
 		const prefix = primaryEditorState.doc.textBetween(Math.max(0, from - 10), Math.max(0, from));
@@ -229,28 +227,6 @@ class Pub extends Component {
 		const versionString = quoteObject.version ? `&version=${quoteObject.version}` : '';
 		const permalinkPath = `/pub/${this.props.pubData.slug}${chapterString}${toFromString}${versionString}`;
 		window.open(permalinkPath);
-	}
-
-	handleEditorRef(ref) {
-		// console.log(ref);
-		this.setState({ editorRefNode: ref });
-		/*if (!this.state.editorRefNode) {
-			//Need to set timeout so DOM can render
-			//When in draft, this timeout is how long we think
-			//it will take the firebase server to
-			//initalize the most recent doc and steps.
-			//It doesn't hurt to be a bit conservative here
-			const timeoutDelay = this.state.pubData.isDraft
-				? 2500
-				: 0;
-			setTimeout(()=> {
-				this.setState({
-					docReadyForHighlights: true,
-					editorRefNode: ref,
-				});
-			}, timeoutDelay);
-		}
-		*/
 	}
 
 	handleMenuWrapperRef(ref) {
@@ -479,8 +455,8 @@ class Pub extends Component {
 
 		/* Add a permalink highlight if the URL mandates one */
 		const hasPermanentHighlight = pubData.isDraft
-			? typeof window !== 'undefined' && this.state.editorRefNode && queryObject.from && queryObject.to
-			: typeof window !== 'undefined' && this.state.editorRefNode && queryObject.from && queryObject.to && queryObject.version;
+			? typeof window !== 'undefined' && this.state.editorChangeObject.view && queryObject.from && queryObject.to
+			: typeof window !== 'undefined' && this.state.editorChangeObject.view && queryObject.from && queryObject.to && queryObject.version;
 		if (hasPermanentHighlight) {
 			highlights.push({
 				...this.getHighlightContent(Number(queryObject.from), Number(queryObject.to)),
@@ -529,7 +505,6 @@ class Pub extends Component {
 							<div className="col-12 pub-columns">
 								<div className="main-content">
 									<PubBody
-										onRef={this.handleEditorRef}
 										isDraft={pubData.isDraft}
 										versionId={activeVersion && activeVersion.id}
 										sectionId={sectionId}
@@ -585,7 +560,6 @@ class Pub extends Component {
 										pubData={pubData}
 										locationData={this.props.locationData}
 										setOptionsMode={this.setOptionsMode}
-										editorRefNode={this.state.editorRefNode}
 										activeContent={activeContent}
 										editorChangeObject={this.state.editorChangeObject}
 									/>
