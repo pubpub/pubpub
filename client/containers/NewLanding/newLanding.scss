@@ -32,6 +32,20 @@
 		}
 		.content {
 			text-align: center;
+			.landing-header {
+				min-width: 212px;
+				display: inline-block;
+				text-align: right;
+				text-decoration: underline;
+				&.toggle-on, &.toggle-off {
+					animation: fadeinout 6s linear;
+				}
+				@keyframes fadeinout {
+					0% { opacity: 0 }
+					50% { opacity: 1 }
+					100% { opacity: 0 }
+				}
+			}
 			h1 {
 				color: white;
 				font-weight: 600;
@@ -120,7 +134,7 @@
 			&.flipped {
 				.content {
 					margin: 1em 0em 3em;
-				}	
+				}
 			}
 			.content {
 				margin: 1em 0em 3em;
