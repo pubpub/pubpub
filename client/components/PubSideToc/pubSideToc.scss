@@ -2,7 +2,11 @@
 	border-left: 2px solid #CCC;
 	padding-left: 10px;
 	font-size: 14px;
-	margin-bottom: 4em;
+	margin-bottom: 3em;
+	overflow: auto;
+	background-color: white;
+	z-index: 1;
+	position: relative;
 	.section-header, a {
 		width: 100%;
 		white-space: nowrap;
