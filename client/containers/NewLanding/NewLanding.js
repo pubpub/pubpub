@@ -2,6 +2,7 @@ import React from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import PropTypes from 'prop-types';
 import { hydrateWrapper } from 'utilities';
+import Icon from 'components/Icon/Icon';
 
 require('./newLanding.scss');
 
@@ -70,7 +71,7 @@ class Landing extends React.Component {
 										</TransitionGroup>
 										&nbsp;use PubPub to make their research stronger.
 									</h1>
-								<p>Collaboratively research, draft, review, and publish in a single, integrated process – as it should be!</p>
+								<p className="subtitle">Collaboratively research, draft, review, and publish in a single, integrated process – as it should be!</p>
 								<button className="pt-button pt-intent-primary pt-large">Join PubPub</button>
 								<button className="pt-button pt-large">Create your Community</button>
 								<img src="/static/hero.png" />
@@ -82,23 +83,23 @@ class Landing extends React.Component {
 					<div className="container">
 						<div className="row">
 							<div className="col-12">
-								<h2>For Communities of all types</h2>
+								<h2>One PubPub, Any Community</h2>
 								{/* Journals */}
 								<div className="type-block">
 									<div className="content">
 										<div className="title">For Journals</div>
-										<div className="description">Host and publish your open access journal, with one-click DOI creation, support for citations, equations, submissions, peer review, import and export, analytics, and more.</div>
-										<button className="pt-button">Create your Community</button>
+										<div className="description">Host and publish your entire journal on PubPub. Accept submissions, manage peer review, publish to the web with one-click DOI generation, export to print, and more.</div>
+										<button className="pt-button">Create your Journal</button>
 									</div>
-									<div className="image"></div>
+									<div className="image pt-elevation-3"><img src="/static/jods.png" /></div>
 								</div>
 
 								{/* Books */}
 								<div className="type-block flipped">
 									<div className="content">
 										<div className="title">For Book Publishers</div>
-										<div className="description">Publish beautiful digital editions of your books with bonus multimedia content, interactive discussions and annotations, and analytics to help you make smarter publishing decisions.</div>
-										<button className="pt-button">Create your Community</button>
+										<div className="description">Publish beautiful digital editions of your books on PubPub. Embed bonus multimedia content, include interactive discussions and annotations, and use analytics to make smarter publishing decisions.</div>
+										<button className="pt-button">Create your Book</button>
 									</div>
 									<div className="image"></div>
 								</div>
@@ -107,8 +108,8 @@ class Landing extends React.Component {
 								<div className="type-block">
 									<div className="content">
 										<div className="title">For Research Labs</div>
-										<div className="description">Host your lab’s online presence in one place. Publicly post papers and citations, blogs, resources, and use private channels for lab notes and journal clubs.</div>
-										<button className="pt-button">Create your Community</button>
+										<div className="description">Host your lab’s online presence on PubPub. Publicly post papers and citations, publish a lab blog, host resources, and use private channels for lab notes and journal clubs.</div>
+										<button className="pt-button">Create your Lab Site</button>
 									</div>
 									<div className="image"></div>
 								</div>
@@ -117,8 +118,8 @@ class Landing extends React.Component {
 								<div className="type-block flipped">
 									<div className="content">
 										<div className="title">For Conferences</div>
-										<div className="description">Host your interactive conference website. Solicit and review submissions, publish accepted papers, post blogs and recaps, and encourage private and public conversation before and after your gathering.</div>
-										<button className="pt-button">Create your Community</button>
+										<div className="description">Host your interactive conference website on PubPub. Solicit and review submissions, publish accepted papers, post blogs and recaps, and encourage private and public conversation before and after your gathering.</div>
+										<button className="pt-button">Create your Conference</button>
 									</div>
 									<div className="image"></div>
 								</div>
@@ -131,8 +132,8 @@ class Landing extends React.Component {
 					<div className="container">
 						<div className="row">
 							<div className="col-12">
-								<h2>For you!</h2>
-								<p>PubPub is designed with flexibility in mind. If you’re a company or community that needs to collaboratively draft, review, edit and publish documents, we want to support you. </p>
+								<h2>For You!</h2>
+								<p>We designed PubPub with flexibility in mind. Use every feature, or just the ones you need. If you’re a company or community that needs to collaboratively draft, review, edit and publish documents, we want to support you.</p>
 								<button className="pt-button">Get in touch</button>
 								<button className="pt-button">Explore the possibilities</button>
 							</div>
@@ -143,24 +144,22 @@ class Landing extends React.Component {
 					<div className="container">
 						<div className="row">
 							<div className="col-12">
-								<h2>Rich features for community publishing</h2>
-								<p>Take control of your research. PubPub allows you to publish complex documents with and for your community, not arbitrary standards.</p>
+								<h2>Rich Features for Community Publishing</h2>
+								<p className="subtitle">Everything you need to write, review, publish, and discuss, all in one place.</p>
 								<div className="type-block">
 									<ul className="content">
-										<li>Real-time, collaborative writing and editing</li>
-										<li>Rich media embeds like videos, photos, and tables</li>
-										<li>Import and export MS Word, LaTex, XML, and more</li>
-										<li>Citations, footnotes, and figures</li>
-										<li>LaTex equation support</li>
-										<li>One-click DOI creation</li>
-										<li>Chapters and sections</li>
-										<li>Public and private discussions</li>
-										<li>Customizable review processes with review maps</li>
-										<li>Beautiful, customizable page layouts</li>
-										<li>Community permissions</li>
-										<li>Version control</li>
-										<li>SEO friendly</li>
-										<li>Mobile Responsive</li>
+										<li><Icon icon="edit" /> Real-time, collaborative writing and editing</li>
+										<li><Icon icon="media" /> Rich media embeds like videos, photos, and tables</li>
+										<li><Icon icon="changes" /> Import and export MS Word, LaTex, XML, and more</li>
+										<li><Icon icon="citation" /> Add citations, footnotes, and figures</li>
+										<li><Icon icon="function" /> Embed LaTex equations</li>
+										<li><Icon icon="badge" /> Create DOIs in one click, for free</li>
+										<li><Icon icon="book" />Include chapters and sections</li>
+										<li><Icon icon="comment" /> Host public and private discussions and annotations</li>
+										<li><Icon icon="shield" /> Manage submissions and peer review</li>
+										<li><Icon icon="page-layout" /> Create beautiful, customizable, mobile-friendly page layouts</li>
+										<li><Icon icon="people" /> Allow anyone to access your community, or just people you choose</li>
+										<li><Icon icon="more" /> And much more. Full feature list coming soon.</li>
 									</ul>
 									<div className="image"></div>
 								</div>
@@ -172,14 +171,16 @@ class Landing extends React.Component {
 					<div className="container">
 						<div className="row">
 							<div className="col-12">
-								<h2>Free, open access, and open source</h2>
-								<p>A member of MIT’s Knowledge Futures Groups, we are committed to providing PubPub for free forever, releasing open-source code, and operating under non-profit, researcher-friendly business models. We make money from donations and by charging for enterprise setup and features, not by charging for access or running ads.</p>
+								<h2>Free, Open Access, and Open Source</h2>
+								<p>A member of MIT’s <a href="https://mitpress.mit.edu/kfg" target="_blank">Knowledge Futures Group</a>, we are committed to providing PubPub for free forever, releasing open-source code, and operating under non-profit, researcher-friendly business models. We make money from donations and by charging for enterprise setup and features, not by charging for access or running ads.</p>
 								<div>
 									<button className="pt-button">PubPub Mission</button>
 								</div>
-								<a>pubpub</a>
-								<a>pubpub-editor</a>
-								<a>review-maps</a>
+								<div className="pubpub-links">
+									<a><Icon icon="git-repo" /> pubpub</a>
+									<a><Icon icon="git-repo" /> pubpub-editor</a>
+									<a>review-maps</a>
+								</div>
 							</div>
 						</div>
 					</div>
