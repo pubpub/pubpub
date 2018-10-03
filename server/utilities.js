@@ -322,10 +322,15 @@ export function generateHash(length) {
 }
 
 export function generateCitationHTML(pubData, communityData) {
-	if (!pubData.versions.length) { return null; }
+	// if (!pubData.versions.length) { return null; }
+	const isDraft = !pubData.versions.length;
 
-	const pubIssuedDate = new Date(pubData.updatedAt);
-	const versionIssuedDate = new Date(pubData.activeVersion.updatedAt);
+	const pubIssuedDate = isDraft
+		? new Date()
+		: new Date(pubData.updatedAt);
+	const versionIssuedDate = isDraft
+		? new Date()
+		: new Date(pubData.activeVersion.updatedAt);
 	const communityHostname = communityData.domain || `${communityData.subdomain}.pubpub.org`;
 	const pubLink = `https://${communityHostname}/pub/${pubData.slug}`;
 	// const authorData = pubData.collaborators.filter((item)=> {
