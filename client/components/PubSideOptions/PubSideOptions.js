@@ -60,7 +60,7 @@ class PubSideOptions extends Component {
 			? 73 /* Height of draftHeaderBar */
 			: 0;
 		const wrapperStyle = {
-			position: this.state.isPositionFixed ? 'fixed' : 'relative',
+			position: this.state.isPositionFixed ? 'fixed' : 'static',
 			paddingTop: this.state.isPositionFixed ? '1em' : '0em',
 			top: `${topOffset}px`,
 		};

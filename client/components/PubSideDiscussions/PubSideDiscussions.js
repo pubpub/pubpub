@@ -51,7 +51,9 @@ class PubSideDiscussions extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		this.setPositions(false, prevProps);
+		if (!this.props.pubData.isDraft || this.props.editorChangeObject.isCollabLoaded) {
+			this.setPositions(false, prevProps);
+		}
 	}
 
 	componentWillUnmount() {
@@ -231,9 +233,9 @@ class PubSideDiscussions extends Component {
 						return prev;
 					}, undefined);
 					const isActive = this.props.activeThread === thread[0].threadNumber;
-					const isVisible = threadRef.current;
 					const top = threadPositionData.top || 0;
 					const thisOffset = threadPositionData.offset || 0;
+					const isVisible = threadRef.current && top;
 					return (
 						<div
 							key={`thread-${thread[0].id}`}
