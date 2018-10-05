@@ -51,7 +51,7 @@ const TagMultiSelect = function(props) {
 			selectedItems={props.selectedTagIds}
 			tagRenderer={(item)=> {
 				const tag = tagsById[item];
-				return tag.title;
+				return tag && tag.title;
 			}}
 			tagInputProps={{
 				onRemove: props.onRemove,
