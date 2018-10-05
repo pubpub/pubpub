@@ -10,6 +10,7 @@ import PubSideToc from 'components/PubSideToc/PubSideToc';
 import PubSideCollaborators from 'components/PubSideCollaborators/PubSideCollaborators';
 import PubSideOptions from 'components/PubSideOptions/PubSideOptions';
 import PubSideDiscussions from 'components/PubSideDiscussions/PubSideDiscussions';
+import PubInlineImport from 'components/PubInlineImport/PubInlineImport';
 import PubLicense from 'components/PubLicense/PubLicense';
 import PubLoadingBars from 'components/PubLoadingBars/PubLoadingBars';
 import PubInlineMenu from 'components/PubInlineMenu/PubInlineMenu';
@@ -513,9 +514,7 @@ class Pub extends Component {
 									{isCollabLoading &&
 										<PubLoadingBars />
 									}
-									{!isCollabLoading && isEmptyDoc && pubData.isDraft &&
-										<h1>Import</h1>
-									}
+
 									{/* Prev/Content/Next Buttons */}
 									{!isCollabLoading && hasSections &&
 										<PubSectionNav
@@ -563,7 +562,13 @@ class Pub extends Component {
 										/>
 									</div>
 
-
+									{!isCollabLoading && isEmptyDoc && pubData.isDraft &&
+										<PubInlineImport
+											communityData={this.props.communityData}
+											pubData={pubData}
+											editorView={this.state.editorChangeObject.view}
+										/>
+									}
 
 									{/* Prev/Content/Next Buttons */}
 									{!isCollabLoading && hasSections &&
