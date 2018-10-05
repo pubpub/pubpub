@@ -16,7 +16,8 @@ class DashboardTags extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			newTagValue: ''
+			newTagValue: '',
+			error: undefined,
 		};
 		this.handleTagCreate = this.handleTagCreate.bind(this);
 		this.handleTagUpdate = this.handleTagUpdate.bind(this);
@@ -25,6 +26,16 @@ class DashboardTags extends Component {
 
 	handleTagCreate(evt) {
 		evt.preventDefault();
+		const isUniqueTitle = this.props.communityData.tags.reduce((prev, curr)=> {
+			if (curr.title === this.state.newTagValue) { return false; }
+			return prev;
+		}, true);
+
+		if (!isUniqueTitle) {
+			return this.setState({ error: `'${this.state.newTagValue}' already exists.` });
+		}
+
+		this.setState({ error: undefined });
 		return apiFetch('/api/tags', {
 			method: 'POST',
 			body: JSON.stringify({
@@ -107,6 +118,9 @@ class DashboardTags extends Component {
 							}}
 						/>
 					</form>
+					{this.state.error &&
+						<p className="error">{this.state.error}</p>
+					}
 				</div>
 
 				{this.props.communityData.tags.sort((foo, bar)=> {
