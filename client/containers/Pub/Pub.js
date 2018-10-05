@@ -11,12 +11,13 @@ import PubSideCollaborators from 'components/PubSideCollaborators/PubSideCollabo
 import PubSideOptions from 'components/PubSideOptions/PubSideOptions';
 import PubSideDiscussions from 'components/PubSideDiscussions/PubSideDiscussions';
 import PubLicense from 'components/PubLicense/PubLicense';
+import PubLoadingBars from 'components/PubLoadingBars/PubLoadingBars';
 import PubInlineMenu from 'components/PubInlineMenu/PubInlineMenu';
 import PubLinkMenu from 'components/PubLinkMenu/PubLinkMenu';
 import PubSideControls from 'components/PubSideControls/PubSideControls';
 import PubSectionNav from 'components/PubSectionNav/PubSectionNav';
 import DiscussionList from 'components/DiscussionList/DiscussionList';
-import { dispatchEmptyTransaction } from '@pubpub/editor';
+import { dispatchEmptyTransaction, docIsEmpty } from '@pubpub/editor';
 import queryString from 'query-string';
 import { apiFetch, hydrateWrapper, getFirebaseConfig, nestDiscussionsToThreads, getRandomColor, generateHash } from 'utilities';
 
@@ -473,7 +474,10 @@ class Pub extends Component {
 			}
 		}
 
+		const isCollabLoading = pubData.isDraft && !this.state.editorChangeObject.isCollabLoaded;
+		const isEmptyDoc = this.state.editorChangeObject.view && docIsEmpty(this.state.editorChangeObject.view.state.doc);
 		// const shortcutValues = this.state.editorChangeObject.shortcutValues || {};
+
 		return (
 			<div id="pub-container" ref={this.pageRef}>
 				<PageWrapper
@@ -506,8 +510,14 @@ class Pub extends Component {
 						<div className="row">
 							<div className="col-12 pub-columns">
 								<div className="main-content">
+									{isCollabLoading &&
+										<PubLoadingBars />
+									}
+									{!isCollabLoading && isEmptyDoc && pubData.isDraft &&
+										<h1>Import</h1>
+									}
 									{/* Prev/Content/Next Buttons */}
-									{hasSections &&
+									{!isCollabLoading && hasSections &&
 										<PubSectionNav
 											pubData={pubData}
 											queryObject={queryObject}
@@ -517,42 +527,46 @@ class Pub extends Component {
 										/>
 									}
 
-									<PubBody
-										isDraft={pubData.isDraft}
-										versionId={activeVersion && activeVersion.id}
-										sectionId={sectionId}
-										content={activeContent}
-										threads={threads}
-										slug={pubData.slug}
-										highlights={highlights}
-										hoverBackgroundColor={this.props.communityData.accentMinimalColor}
-										setActiveThread={this.setActiveThread}
-										onChange={this.handleEditorChange}
+									<div style={isCollabLoading ? { opacity: 0 } : {}}>
+										<PubBody
+											isDraft={pubData.isDraft}
+											versionId={activeVersion && activeVersion.id}
+											sectionId={sectionId}
+											content={activeContent}
+											threads={threads}
+											slug={pubData.slug}
+											highlights={highlights}
+											hoverBackgroundColor={this.props.communityData.accentMinimalColor}
+											setActiveThread={this.setActiveThread}
+											onChange={this.handleEditorChange}
 
-										// Props from CollabEditor
-										editorKey={`${this.props.pubData.editorKey}${sectionId ? '/' : ''}${sectionId || ''}`}
-										isReadOnly={!pubData.isDraft || (!pubData.isManager && !pubData.isDraftEditor)}
-										clientData={this.state.activeCollaborators[0]}
-										onClientChange={this.handleClientChange}
-										onStatusChange={this.handleStatusChange}
-										discussionNodeOptions={{
-											// getThreads: this.getThreads,
-											getThreads: ()=> { return this.getThreads(); },
-											// getThreads: ()=> { return ()=>{ return threads; }; },
-											// getThreads: function() { return threads; },
-											getPubData: ()=> { return pubData; },
-											getLocationData: ()=> { return this.props.locationData; },
-											getLoginData: ()=> { return loginData; },
-											getOnPostDiscussion: ()=> { return this.handlePostDiscussion; },
-											getOnPutDiscussion: ()=> { return this.handlePutDiscussion; },
-											getGetHighlightContent: ()=> { return this.getHighlightContent; },
-											getHandleQuotePermalink: ()=> { return this.handleQuotePermalink; },
-										}}
-										// menuWrapperRefNode={this.state.menuWrapperRefNode}
-									/>
+											// Props from CollabEditor
+											editorKey={`${this.props.pubData.editorKey}${sectionId ? '/' : ''}${sectionId || ''}`}
+											isReadOnly={!pubData.isDraft || (!pubData.isManager && !pubData.isDraftEditor)}
+											clientData={this.state.activeCollaborators[0]}
+											onClientChange={this.handleClientChange}
+											onStatusChange={this.handleStatusChange}
+											discussionNodeOptions={{
+												// getThreads: this.getThreads,
+												getThreads: ()=> { return this.getThreads(); },
+												// getThreads: ()=> { return ()=>{ return threads; }; },
+												// getThreads: function() { return threads; },
+												getPubData: ()=> { return pubData; },
+												getLocationData: ()=> { return this.props.locationData; },
+												getLoginData: ()=> { return loginData; },
+												getOnPostDiscussion: ()=> { return this.handlePostDiscussion; },
+												getOnPutDiscussion: ()=> { return this.handlePutDiscussion; },
+												getGetHighlightContent: ()=> { return this.getHighlightContent; },
+												getHandleQuotePermalink: ()=> { return this.handleQuotePermalink; },
+											}}
+											// menuWrapperRefNode={this.state.menuWrapperRefNode}
+										/>
+									</div>
+
+
 
 									{/* Prev/Content/Next Buttons */}
-									{hasSections &&
+									{!isCollabLoading && hasSections &&
 										<PubSectionNav
 											pubData={pubData}
 											queryObject={queryObject}
