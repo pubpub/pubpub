@@ -124,6 +124,8 @@ class PubOptionsExport extends Component {
 				<h1>Export Pub</h1>
 
 				<p>Export the current version or working draft.</p>
+
+				<h2>Format </h2>
 				<div className="pt-button-group">
 					{types.map((type)=> {
 						return (

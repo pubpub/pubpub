@@ -8,7 +8,7 @@ import PubOptionsDoi from 'components/PubOptionsDoi/PubOptionsDoi';
 import PubOptionsDetails from 'components/PubOptionsDetails/PubOptionsDetails';
 import PubOptionsDelete from 'components/PubOptionsDelete/PubOptionsDelete';
 import PubOptionsExport from 'components/PubOptionsExport/PubOptionsExport';
-import PubOptionsImport from 'components/PubOptionsImport/PubOptionsImport';
+// import PubOptionsImport from 'components/PubOptionsImport/PubOptionsImport';
 import PubOptionsTags from 'components/PubOptionsTags/PubOptionsTags';
 import PubOptionsSections from 'components/PubOptionsSections/PubOptionsSections';
 import PubOptionsSharing from 'components/PubOptionsSharing/PubOptionsSharing';
@@ -43,7 +43,24 @@ const PubOptions = (props)=> {
 	const optionsMode = props.optionsMode;
 	// TODO: Hide based on isManager, and other metrics
 	// TODO: Hide sections if we are not in draft, and there are no sections
-	const modes = ['details', 'attribution', 'versions', 'tags', 'sharing', 'cite', 'DOI', 'review', 'discussions', 'sections', 'social', 'export', 'import', 'analytics', 'delete'];
+	const adminModes = [
+		'details',
+		'tags',
+		'sharing',
+		'sections',
+		'DOI',
+		'delete'
+	];
+	const modes = [
+		'attribution',
+		'versions',
+		'cite',
+		'review',
+		'discussions',
+		'social',
+		'export',
+		'analytics',
+	];
 
 	const defaultChildProps = {
 		communityData: props.communityData,
@@ -70,6 +87,26 @@ const PubOptions = (props)=> {
 				{/* Left Navigation Buttons */}
 				<div className="left-column" style={leftColumnStyle}>
 					<ul className="pt-menu">
+						{props.pubData.isManager &&
+							<li className="pt-menu-header"><h6>Admin</h6></li>
+						}
+						{props.pubData.isManager && adminModes.map((mode)=> {
+							return (
+								<li key={mode}>
+									<button
+										type="button"
+										onClick={()=> { props.setOptionsMode(mode); }}
+										className={`pt-menu-item ${optionsMode === mode ? 'pt-active' : ''}`}
+										tabIndex="0"
+									>
+										{mode}
+									</button>
+								</li>
+							);
+						})}
+						{props.pubData.isManager &&
+							<li className="pt-menu-header"><h6>Public</h6></li>
+						}
 						{modes.map((mode)=> {
 							return (
 								<li key={mode}>
@@ -110,9 +147,9 @@ const PubOptions = (props)=> {
 					{optionsMode === 'export' &&
 						<PubOptionsExport key="export" {...defaultChildProps} />
 					}
-					{optionsMode === 'import' &&
+					{/* optionsMode === 'import' &&
 						<PubOptionsImport key="import" {...defaultChildProps} />
-					}
+					*/}
 					{optionsMode === 'tags' &&
 						<PubOptionsTags key="tags" {...defaultChildProps} />
 					}

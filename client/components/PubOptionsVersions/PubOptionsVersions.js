@@ -25,6 +25,15 @@ class PubOptionsVersions extends Component {
 			if (foo.createdAt > bar.createdAt) { return -1; }
 			return 0;
 		});
+
+		if (!versions.length) {
+			return (
+				<div className="pub-options-versions-component">
+					<h1>Versions</h1>
+					<p>No saved versions.</p>
+				</div>
+			);
+		}
 		return (
 			<div className="pub-options-versions-component">
 				<h1>Versions</h1>

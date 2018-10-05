@@ -146,21 +146,23 @@ class PubHeader extends Component {
 											className="pt-button pt-small"
 											type="button"
 											onClick={()=> {
-												this.props.setOptionsMode('details');
+												this.props.setOptionsMode(pubData.isManager ? 'details' : 'attribution');
 											}}
 										>
 											Options
 										</button>
 
-										<button
-											className="pt-button pt-small"
-											type="button"
-											onClick={()=> {
-												this.props.setOptionsMode('sharing');
-											}}
-										>
-											Share
-										</button>
+										{pubData.isManager &&
+											<button
+												className="pt-button pt-small"
+												type="button"
+												onClick={()=> {
+													this.props.setOptionsMode('sharing');
+												}}
+											>
+												Share
+											</button>
+										}
 									</div>
 								</div>
 

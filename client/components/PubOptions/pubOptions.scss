@@ -20,8 +20,14 @@
 			min-width: auto;
 		}
 		.pt-menu-item {
-			font-weight: bold;
+			// font-weight: bold;
 			text-transform: capitalize;
+		}
+		.pt-menu-header {
+			h6 {
+				font-weight: bold;
+				margin-left: -5px;
+			}
 		}
 	}
 	.right-column {
