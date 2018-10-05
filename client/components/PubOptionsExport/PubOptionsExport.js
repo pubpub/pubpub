@@ -30,16 +30,16 @@ class PubOptionsExport extends Component {
 	}
 
 	getDraftContent() {
-		const sectionsData = this.props.pubData.sectionsData;
-		const editorRefs = sectionsData.map((item)=> {
-			return `${this.props.pubData.editorKey}/${item.id}`;
-		});
-
 		if (!this.props.pubData.isDraft) {
 			return new Promise((resolve)=> {
 				resolve(undefined);
 			});
 		}
+
+		const sectionsData = this.props.pubData.sectionsData;
+		const editorRefs = sectionsData.map((item)=> {
+			return `${this.props.pubData.editorKey}/${item.id}`;
+		});
 
 		return getCollabJSONs(this.props.editorView, editorRefs)
 		.then((content)=> {

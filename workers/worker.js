@@ -47,6 +47,7 @@ const processTask = (channel)=> {
 				error: taskErr.message ? taskErr.message : taskErr,
 				output: null,
 			};
+			console.error(taskErr);
 		})
 		.finally(()=> {
 			/* On either success or failure, update */

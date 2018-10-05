@@ -5,16 +5,8 @@ import tmp from 'tmp-promise';
 import AWS from 'aws-sdk';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import { Editor } from '@pubpub/editor';
-import Image from '@pubpub/editor/addons/Image';
-import Video from '@pubpub/editor/addons/Video';
-import File from '@pubpub/editor/addons/File';
-import Iframe from '@pubpub/editor/addons/Iframe';
-import Latex from '@pubpub/editor/addons/Latex';
-import Footnote from '@pubpub/editor/addons/Footnote';
-import Table from '@pubpub/editor/addons/Table';
-import Citation from '@pubpub/editor/addons/Citation';
-import Discussion from 'components/DiscussionAddon/DiscussionAddon';
+import { buildSchema, renderStatic } from '@pubpub/editor';
+import discussionSchema from 'components/DiscussionAddon/discussionSchema';
 import { Pub, Version } from '../server/models';
 import { generateHash } from '../server/utilities';
 
@@ -63,28 +55,18 @@ export default (pubId, versionId, content, format)=> {
 
 	return Promise.all([findPub, findVersion])
 	.then(([pubData, versionData])=> {
+		const initialContent = versionData ? versionData.content : content;
 		return ReactDOMServer.renderToStaticMarkup(
 			<html lang="en">
 				<head>
 					<title>{pubData.title}</title>
 				</head>
 				<body>
-					<Editor
-						initialContent={versionData ? versionData.content : content}
-						renderStaticMarkup={true}
-					>
-						<Image
-							handleResizeUrl={(url)=> { return url; }}
-						/>
-						<Video />
-						<File />
-						<Iframe />
-						<Latex />
-						<Footnote />
-						<Table />
-						<Citation />
-						<Discussion />
-					</Editor>
+					{renderStatic(
+						buildSchema({ ...discussionSchema }),
+						initialContent.content,
+						{}
+					)}
 				</body>
 			</html>
 		);
