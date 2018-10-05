@@ -16,7 +16,6 @@ const propTypes = {
 	draftPermissions: PropTypes.string,
 	authors: PropTypes.array,
 	collaborators: PropTypes.array,
-	publicationDate: PropTypes.string,
 	bannerImage: PropTypes.string,
 	size: PropTypes.string,
 	communityData: PropTypes.object,
@@ -33,7 +32,6 @@ const defaultProps = {
 	draftPermissions: 'public',
 	authors: [],
 	collaborators: [],
-	publicationDate: undefined,
 	bannerImage: undefined,
 	size: 'large',
 	communityData: undefined,
@@ -142,9 +140,9 @@ const PubPreview = function(props) {
 					</div>
 				}
 
-				<div className="date-details">			
+				<div className="date-details">
 					{!earliestDate &&
-						<span className="date">Draft</span>
+						<span className="date">Working Draft</span>
 					}
 					{earliestDate &&
 						<span className="date">{dateFormat(earliestDate, 'mmm dd, yyyy')}</span>
@@ -175,54 +173,14 @@ const PubPreview = function(props) {
 						);
 					})}
 					{earliestDate && props.isDraftAccessible &&
-						<a className="date draft-link" href={`${pubLink}/draft`}>Go To Draft</a>
+						<a className="date draft-link" href={`${pubLink}/draft`}>Go To Working Draft</a>
 					}
 				</div>
 
 				{props.description &&
 					<div className="description">{props.description}</div>
 				}
-
-				{/* -------------- */}
-				{/*<div className="content-text">
-					{props.communityData &&
-						<a href={communityUrl} alt={props.communityData.title} className="community-banner" style={{ backgroundColor: props.communityData.accentColor }}>
-							<img
-								alt={`${props.communityData.title} logo`}
-								src={resizedSmallHeaderLogo}
-							/>
-						</a>
-					}
-					<a href={pubLink} alt={props.title}><h3 className="title">{props.title}</h3></a>
-					{props.description &&
-						<div className="description">{props.description}</div>
-					}
-				</div>
-
-				<div className="collaborators">
-					{!!props.authors.length &&
-						<div className="avatars">
-							{props.authors.map((author, index)=> {
-								return (
-									<Avatar
-										key={`author-${author.id}`}
-										width={35}
-										doesOverlap={index !== props.authors.length - 1}
-										borderColor="#FFF"
-										userAvatar={author.avatar}
-										userInitials={author.initials}
-									/>
-								);
-							})}
-						</div>
-					}
-					<div className="details">
-						<div className="subtext">{collaboratorsCount} collaborator{collaboratorsCount === 1 ? '' : 's'}</div>
-						<div className="subtext">{dateFormat(props.publicationDate, 'mmm dd, yyyy')}</div>
-					</div>
-				</div>*/}
 			</div>
-
 		</div>
 	);
 };

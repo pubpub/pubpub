@@ -58,7 +58,6 @@ const LayoutPubs = function(props) {
 										draftPermissions={selectedPub.draftPermissions}
 										bannerImage={selectedPub.avatar}
 										size={pubPreviewType}
-										publicationDate={selectedPub.firstPublishedAt}
 										collaborators={selectedPub.attributions.filter((collaborator)=> {
 											return !collaborator.isAuthor;
 										})}
