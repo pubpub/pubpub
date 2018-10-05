@@ -232,12 +232,12 @@ class PubHeader extends Component {
 
 											{/* If not draft, and newer versions, say numNewerVersions */}
 											{!pubData.isDraft && !!numNewerVersions &&
-												<span> ({numNewerVersions} Newer Version{pubData.versions.length === 1 ? '' : 's'})</span>
+												<span> ({numNewerVersions} Newer Version{numNewerVersions === 1 ? '' : 's'})</span>
 											}
 
 											{/* If not draft, and no newer versions, say numVersions - 1 Older Versions */}
 											{!pubData.isDraft && !numNewerVersions &&
-												<span> ({pubData.versions.length - 1} Older Version{pubData.versions.length === 1 ? '' : 's'})</span>
+												<span> ({pubData.versions.length - 1} Older Version{pubData.versions.length - 1 === 1 ? '' : 's'})</span>
 											}
 										</a>
 									}

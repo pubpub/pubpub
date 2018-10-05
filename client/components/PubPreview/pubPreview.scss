@@ -128,9 +128,18 @@
 			padding-right: 1em;
 			vertical-align: middle;
 		}
+		.draft-link {
+			font-style: normal;
+			margin-left: 2em;
+		}
 		.avatar-component {
 			vertical-align: top;
 		}
+	}
+	.pt-icon {
+		// vertical-align: middle;
+		margin-left: 0.25em;
+		margin-top: 3px;
 	}
 	.description {
 		padding-top: 15px;

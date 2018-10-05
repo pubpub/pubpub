@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dateFormat from 'dateformat';
 import Avatar from 'components/Avatar/Avatar';
+import Icon from 'components/Icon/Icon';
 import { getResizedUrl, generatePubBackground } from 'utilities';
 
 require('./pubPreview.scss');
@@ -10,6 +11,9 @@ const propTypes = {
 	title: PropTypes.string,
 	description: PropTypes.string,
 	slug: PropTypes.string,
+	versions: PropTypes.array,
+	isDraftAccessible: PropTypes.bool,
+	draftPermissions: PropTypes.string,
 	authors: PropTypes.array,
 	collaborators: PropTypes.array,
 	publicationDate: PropTypes.string,
@@ -24,6 +28,9 @@ const defaultProps = {
 	title: undefined,
 	slug: undefined,
 	description: undefined,
+	versions: [],
+	isDraftAccessible: false,
+	draftPermissions: 'public',
 	authors: [],
 	collaborators: [],
 	publicationDate: undefined,
@@ -45,6 +52,22 @@ const PubPreview = function(props) {
 	const communityHostname = props.communityData && (props.communityData.domain || `${props.communityData.subdomain}.pubpub.org`);
 	const communityUrl = props.communityData && (props.communityData.domain ? `https://${props.communityData.domain}` : `https://${props.communityData.subdomain}.pubpub.org`);
 	const pubLink = props.communityData ? `https://${communityHostname}/pub/${props.slug}` : `/pub/${props.slug}`;
+
+	const earliestDate = props.versions.reduce((prev, curr)=> {
+		if (!prev) { return curr.createdAt; }
+		if (curr.createdAt < prev) { return curr.createdAt; }
+		return prev;
+	}, undefined);
+	const latestDate = props.versions.reduce((prev, curr)=> {
+		const sameDayAsEarliest = earliestDate && new Date(earliestDate).toISOString().substring(0, 10) === new Date(curr.createdAt).toISOString().substring(0, 10);
+		if (!prev && !sameDayAsEarliest) { return curr.createdAt; }
+		if (curr.createdAt > prev) { return curr.createdAt; }
+		return prev;
+	}, undefined);
+	const isPrivate = (!props.versions && props.draftPermissions === 'private') || props.versions.reduce((prev, curr)=> {
+		if (curr.isPublic) { return false; }
+		return prev;
+	}, true);
 
 	/* Placeholder state */
 	if (!props.slug) {
@@ -83,7 +106,14 @@ const PubPreview = function(props) {
 							/>
 						</a>
 					}
-					<a href={pubLink} alt={props.title}><h3 className="title">{props.title}</h3></a>
+					<a href={pubLink} alt={props.title}>
+						<h3 className="title">
+							{props.title}
+							{isPrivate &&
+								<Icon icon="lock2" />
+							}
+						</h3>
+					</a>
 				</div>
 
 				{!!props.authors.length &&
@@ -112,8 +142,19 @@ const PubPreview = function(props) {
 					</div>
 				}
 
+				<div className="date-details">			
+					{!earliestDate &&
+						<span className="date">Draft</span>
+					}
+					{earliestDate &&
+						<span className="date">{dateFormat(earliestDate, 'mmm dd, yyyy')}</span>
+					}
+					{latestDate &&
+						<span className="date">Updated: {dateFormat(latestDate, 'mmm dd, yyyy')}</span>
+					}
+				</div>
+
 				<div className="date-details">
-					<span className="date">{dateFormat(props.publicationDate, 'mmm dd, yyyy')}</span>
 					{[...props.authors, ...props.collaborators].sort((foo, bar)=> {
 						if (foo.order < bar.order) { return -1; }
 						if (foo.order > bar.order) { return 1; }
@@ -133,6 +174,9 @@ const PubPreview = function(props) {
 							/>
 						);
 					})}
+					{earliestDate && props.isDraftAccessible &&
+						<a className="date draft-link" href={`${pubLink}/draft`}>Go To Draft</a>
+					}
 				</div>
 
 				{props.description &&

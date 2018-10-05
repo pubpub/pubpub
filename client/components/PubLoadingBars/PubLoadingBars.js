@@ -15,9 +15,9 @@ const PubLoadingBars = function() {
 		<div className="pub-loading-bars-component">
 			<p className="pt-skeleton" style={getStyle(100)} />
 			<p className="pt-skeleton" style={getStyle(80)} />
+			<p>Loading...</p>
 			<p className="pt-skeleton" style={getStyle(70)} />
 			<p className="pt-skeleton" style={getStyle(90)} />
-			<p>Loading...</p>
 		</div>
 	);
 };
