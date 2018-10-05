@@ -1,12 +1,28 @@
 .dashboard-pubs-component {
 	.pub-wrapper {
-		display: flex;
+			margin-bottom: 0.75em;
+			padding-bottom: 0.75em;
+			border-bottom: 1px solid #DDD;
+		.header {
+			display: flex;	
+		}
 		.title {
 			flex-shrink: 1;
 			flex-grow: 1;
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
+			font-weight: bold;
+			.draft {
+				font-weight: 400;
+				margin-left: 1em;
+			}
+		}
+		.authors {
+			font-style: italic;
+		}
+		.pt-tag {
+			margin-right: 0.5em;
 		}
 	}		
 }
