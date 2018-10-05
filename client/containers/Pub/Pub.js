@@ -562,7 +562,7 @@ class Pub extends Component {
 										/>
 									</div>
 
-									{!isCollabLoading && isEmptyDoc && pubData.isDraft &&
+									{!isCollabLoading && isEmptyDoc && pubData.isDraft && (pubData.isEditor || pubData.isManager) &&
 										<PubInlineImport
 											communityData={this.props.communityData}
 											pubData={pubData}
