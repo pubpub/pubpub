@@ -10,27 +10,14 @@ app.post('/api/pubs', (req, res)=> {
 	const date = new Date();
 	const dateString = `${months[date.getMonth()]} ${date.getDate()}`;
 
-	// verify that user is communityAdmin
-	const findCommunityAdmin = CommunityAdmin.findOne({
-		where: {
-			communityId: req.body.communityId,
-			userId: user.id,
-		}
-	});
-	return findCommunityAdmin
-	.then((communityAdminData)=> {
-		if (!communityAdminData) {
-			throw new Error('Not Authorized to create pub in this collection');
-		}
-		return Pub.create({
-			title: `New Pub on ${dateString}`,
-			slug: newPubSlug,
-			communityId: req.body.communityId,
-			draftPermissions: 'private',
-			isCommunityAdminManaged: true,
-			draftEditHash: generateHash(8),
-			draftViewHash: generateHash(8),
-		});
+	return Pub.create({
+		title: `New Pub on ${dateString}`,
+		slug: newPubSlug,
+		communityId: req.body.communityId,
+		draftPermissions: 'private',
+		isCommunityAdminManaged: true,
+		draftEditHash: generateHash(8),
+		draftViewHash: generateHash(8),
 	})
 	.then((newPub)=> {
 		const createPubManager = PubManager.create({
