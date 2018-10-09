@@ -129,26 +129,50 @@ export const apiFetch = function(path, opts) {
 };
 
 export const getFirebaseConfig = function() {
-	const prodConfig = {
-		apiKey: 'AIzaSyAkqGZZVlMiRzVyROlOwMUSbtbdHFPza7o',
-		authDomain: 'pubpub-v4-prod.firebaseapp.com',
-		databaseURL: 'https://pubpub-v4-prod.firebaseio.com',
-		projectId: 'pubpub-v4-prod',
-		storageBucket: 'pubpub-v4-prod.appspot.com',
-		messagingSenderId: '955699971712'
-	};
-	const devConfig = {
-		apiKey: 'AIzaSyBNlAp1EW5zhiPS8HWwXwZ8WMs-EdkMmKI',
-		authDomain: 'pubpub-v4-dev-60334.firebaseapp.com',
-		databaseURL: 'https://pubpub-v4-dev-60334.firebaseio.com',
-		projectId: 'pubpub-v4-dev-60334',
-		storageBucket: 'pubpub-v4-dev-60334.appspot.com',
-		messagingSenderId: '410839613714'
-	};
+	// TODO: Remove this once we don't need dev.pubpub.org to point to v4-dev firebase
+	if (typeof window === 'undefined'
+		|| window.location.origin.indexOf('dev.pubpub.org') > -1
+		|| window.location.origin.indexOf('localhost:') > -1
+	) {
+		return {
+			apiKey: 'AIzaSyBNlAp1EW5zhiPS8HWwXwZ8WMs-EdkMmKI',
+			authDomain: 'pubpub-v4-dev-60334.firebaseapp.com',
+			databaseURL: 'https://pubpub-v4-dev-60334.firebaseio.com',
+			projectId: 'pubpub-v4-dev-60334',
+			storageBucket: 'pubpub-v4-dev-60334.appspot.com',
+			messagingSenderId: '410839613714'
+		};
+	}
 
-	if (typeof window === 'undefined') { return devConfig; }
-	if (!isPubPubProduction) { return devConfig; }
-	return prodConfig;
+	return {
+		apiKey: 'AIzaSyBSzFrgIh2MQdWXwjVRGFnC30qv4uYZn08',
+		authDomain: 'pubpub-v5.firebaseapp.com',
+		projectId: 'pubpub-v5',
+		databaseURL: isPubPubProduction
+			? 'https://pubpub-v5-production.firebaseio.com'
+			: 'https://pubpub-v5-development.firebaseio.com',
+	};
+	// const prodConfig = {
+	// 	apiKey: 'AIzaSyAkqGZZVlMiRzVyROlOwMUSbtbdHFPza7o',
+	// 	authDomain: 'pubpub-v4-prod.firebaseapp.com',
+	// 	databaseURL: 'https://pubpub-v4-prod.firebaseio.com',
+	// 	projectId: 'pubpub-v4-prod',
+	// 	storageBucket: 'pubpub-v4-prod.appspot.com',
+	// 	messagingSenderId: '955699971712'
+	// };
+	/* v4 dev config */
+	// const devConfig = {
+	// 	apiKey: 'AIzaSyBNlAp1EW5zhiPS8HWwXwZ8WMs-EdkMmKI',
+	// 	authDomain: 'pubpub-v4-dev-60334.firebaseapp.com',
+	// 	databaseURL: 'https://pubpub-v4-dev-60334.firebaseio.com',
+	// 	projectId: 'pubpub-v4-dev-60334',
+	// 	storageBucket: 'pubpub-v4-dev-60334.appspot.com',
+	// 	messagingSenderId: '410839613714'
+	// };
+
+	// if (typeof window === 'undefined') { return devConfig; }
+	// if (!isPubPubProduction) { return devConfig; }
+	// return prodConfig;
 };
 
 export const getResizedUrl = function(url, type, dimensions) {
