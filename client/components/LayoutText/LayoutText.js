@@ -1,10 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { Editor } from '@pubpub/editor';
-// import Image from '@pubpub/editor/addons/Image';
-// import Video from '@pubpub/editor/addons/Video';
-// import File from '@pubpub/editor/addons/File';
-// import Iframe from '@pubpub/editor/addons/Iframe';
+import Editor from '@pubpub/editor';
 import { getResizedUrl } from 'utilities';
 
 require('./layoutText.scss');
@@ -36,17 +32,15 @@ const LayoutText = function(props) {
 					<div className="row">
 						<div className="col-12">
 							<div style={wrapperStyle}>
-								{/*<Editor
+								<Editor
+									nodeOptions={{
+										image: {
+											onResizeUrl: (url)=> { return getResizedUrl(url, 'fit-in', '1200x0'); },
+										},
+									}}
 									initialContent={props.content.text || undefined}
 									isReadOnly={true}
-								>
-									<Image
-										handleResizeUrl={(url)=> { return getResizedUrl(url, 'fit-in', '1200x0'); }}
-									/>
-									<Video />
-									<Iframe />
-									<File />
-								</Editor>*/}
+								/>
 							</div>
 						</div>
 					</div>
