@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Icon from 'components/Icon/Icon';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
 
 require('./pubSideOptions.scss');
@@ -85,13 +86,13 @@ class PubSideOptions extends Component {
 						<span>·</span>
 						<a onClick={()=> { this.props.setOptionsMode('export'); }}>Export</a>
 						<span>·</span>
-						<a><span className="pt-icon-standard pt-icon-facebook" /></a>
+						<a><Icon icon="facebook" /></a>
 						<span>·</span>
-						<a><span className="pt-icon-standard pt-icon-twitter" /></a>
+						<a><Icon icon="twitter" /></a>
 						<span>·</span>
-						<a><span className="pt-icon-standard pt-icon-reddit" /></a>
+						<a><Icon icon="reddit" /></a>
 						<span>·</span>
-						<a><span className="pt-icon-standard pt-icon-google-plus" /></a>
+						<a><Icon icon="google-plus" /></a>
 					</div>
 					<div className="discussion-options">
 						<DropdownButton
@@ -118,7 +119,7 @@ class PubSideOptions extends Component {
 								})}
 							</ul>
 						</DropdownButton>
-						<a>View All</a>
+						<a href="#discussions">View All</a>
 					</div>
 				</div>
 			</div>

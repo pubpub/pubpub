@@ -3,7 +3,7 @@ import React from 'react';
 import UserContainer from 'containers/User/User';
 import Html from '../Html';
 import app from '../server';
-import { Community, Pub, User } from '../models';
+import { Community, Pub, User, PubAttribution } from '../models';
 import { renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 
 app.get(['/user/:slug', '/user/:slug/:mode'], (req, res, next)=> {
@@ -16,23 +16,23 @@ app.get(['/user/:slug', '/user/:slug/:mode'], (req, res, next)=> {
 		},
 		include: [
 			{
-				model: Pub,
-				as: 'pubs',
+				model: PubAttribution,
+				as: 'attributions',
 				required: false,
-				through: { attributes: [] },
 				include: [
 					{
-						model: User,
-						as: 'collaborators',
-						attributes: ['id', 'avatar', 'initials', 'fullName'],
-						through: { attributes: ['isAuthor'] },
-					},
-					{
-						model: Community,
-						as: 'community',
-						attributes: ['id', 'subdomain', 'domain', 'title', 'smallHeaderLogo', 'accentColor'],
-					},
-				]
+						model: Pub,
+						as: 'pub',
+						attributes: ['id', 'title', 'description', 'slug', 'avatar', 'communityId'],
+						include: [
+							{
+								model: Community,
+								as: 'community',
+								attributes: ['id', 'subdomain', 'domain', 'title', 'smallHeaderLogo', 'accentColor'],
+							}
+						]
+					}
+				],
 			}
 		],
 	});

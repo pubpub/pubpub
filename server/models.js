@@ -249,21 +249,21 @@ const Version = sequelize.define('Version', {
 	pubId: { type: Sequelize.UUID, allowNull: false },
 });
 
-const Collection = sequelize.define('Collection', {
-	id: id,
-	title: { type: Sequelize.TEXT, allowNull: false },
-	description: { type: Sequelize.TEXT },
-	slug: { type: Sequelize.TEXT, allowNull: false },
-	isPage: { type: Sequelize.BOOLEAN, allowNull: false },
-	isPublic: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false, },
-	isOpenSubmissions: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false, },
-	isOpenPublish: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false, },
-	layout: { type: Sequelize.JSONB },
-	createPubHash: { type: Sequelize.TEXT },
-	createPubMessage: { type: Sequelize.JSONB },
-	/* Set by Associations */
-	communityId: { type: Sequelize.UUID, allowNull: false },
-});
+// const Collection = sequelize.define('Collection', {
+// 	id: id,
+// 	title: { type: Sequelize.TEXT, allowNull: false },
+// 	description: { type: Sequelize.TEXT },
+// 	slug: { type: Sequelize.TEXT, allowNull: false },
+// 	isPage: { type: Sequelize.BOOLEAN, allowNull: false },
+// 	isPublic: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false, },
+// 	isOpenSubmissions: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false, },
+// 	isOpenPublish: { type: Sequelize.BOOLEAN, allowNull: false, defaultValue: false, },
+// 	layout: { type: Sequelize.JSONB },
+// 	createPubHash: { type: Sequelize.TEXT },
+// 	createPubMessage: { type: Sequelize.JSONB },
+// 	/* Set by Associations */
+// 	communityId: { type: Sequelize.UUID, allowNull: false },
+// });
 
 const Page = sequelize.define('Page', {
 	id: id,
@@ -283,39 +283,39 @@ const Page = sequelize.define('Page', {
 	communityId: { type: Sequelize.UUID, allowNull: false },
 });
 
-const CollectionPub = sequelize.define('CollectionPub', {
-	id: id,
-	/* Set by Associations */
-	collectionId: { type: Sequelize.UUID, allowNull: false },
-	pubId: { type: Sequelize.UUID, allowNull: false },
-}, {
-	indexes: [
-		{ fields: ['collectionId'], method: 'BTREE' },
-		{ fields: ['pubId'], method: 'BTREE' },
-	]
-});
+// const CollectionPub = sequelize.define('CollectionPub', {
+// 	id: id,
+// 	/* Set by Associations */
+// 	collectionId: { type: Sequelize.UUID, allowNull: false },
+// 	pubId: { type: Sequelize.UUID, allowNull: false },
+// }, {
+// 	indexes: [
+// 		{ fields: ['collectionId'], method: 'BTREE' },
+// 		{ fields: ['pubId'], method: 'BTREE' },
+// 	]
+// });
 
-const Collaborator = sequelize.define('Collaborator', { // TODO: Delete this table
-	id: id,
-	name: { type: Sequelize.TEXT },
-	order: { type: Sequelize.DOUBLE },
-	permissions: {
-		// In this new version, we use this both to denote manager,
-		// and draft permissions. If set to manage, can't be added to draft, as they already have
-		// access through management.
-		type: Sequelize.ENUM,
-		values: ['manage', 'edit', 'view', 'none'], // Must be same as adminPermissions on Pub
-		defaultValue: 'none',
-	},
-	title: { type: Sequelize.TEXT }, // This could allow users to override their default title per-pub. I don't think I'll enable it yet - but it's good to have in place.
-	isAuthor: { type: Sequelize.BOOLEAN },
-	isContributor: { type: Sequelize.BOOLEAN },
-	roles: { type: Sequelize.JSONB },
-	versionAccessList: { type: Sequelize.JSONB },
-	/* Set by Associations */
-	userId: { type: Sequelize.UUID },
-	pubId: { type: Sequelize.UUID, allowNull: false },
-});
+// const Collaborator = sequelize.define('Collaborator', { // TODO: Delete this table
+// 	id: id,
+// 	name: { type: Sequelize.TEXT },
+// 	order: { type: Sequelize.DOUBLE },
+// 	permissions: {
+// 		// In this new version, we use this both to denote manager,
+// 		// and draft permissions. If set to manage, can't be added to draft, as they already have
+// 		// access through management.
+// 		type: Sequelize.ENUM,
+// 		values: ['manage', 'edit', 'view', 'none'], // Must be same as adminPermissions on Pub
+// 		defaultValue: 'none',
+// 	},
+// 	title: { type: Sequelize.TEXT }, // This could allow users to override their default title per-pub. I don't think I'll enable it yet - but it's good to have in place.
+// 	isAuthor: { type: Sequelize.BOOLEAN },
+// 	isContributor: { type: Sequelize.BOOLEAN },
+// 	roles: { type: Sequelize.JSONB },
+// 	versionAccessList: { type: Sequelize.JSONB },
+// 	/* Set by Associations */
+// 	userId: { type: Sequelize.UUID },
+// 	pubId: { type: Sequelize.UUID, allowNull: false },
+// });
 
 const CommunityAdmin = sequelize.define('CommunityAdmin', {
 	id: id,
@@ -416,18 +416,20 @@ User.belongsToMany(Community, { as: 'communities', through: 'CommunityAdmin', fo
 Community.belongsToMany(User, { as: 'admins', through: 'CommunityAdmin', foreignKey: 'communityId' });
 
 /* Pubs can have many Users. Users can belong to many Pubs. */
-User.belongsToMany(Pub, { as: 'pubs', through: 'Collaborator', foreignKey: 'userId' });
-Pub.belongsToMany(User, { as: 'collaborators', through: 'Collaborator', foreignKey: 'pubId' });
+// User.belongsToMany(Pub, { as: 'pubs', through: 'PubAttribution', foreignKey: 'userId' });
+// Pub.belongsToMany(User, { as: 'attributions', through: 'PubAttribution', foreignKey: 'pubId' });
 
 /* Add emptyCollaborators association so we can grab authors that don't have userId accounts */
-Pub.hasMany(Collaborator, { onDelete: 'CASCADE', as: 'emptyCollaborators', foreignKey: 'pubId' });
-Collaborator.belongsTo(User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' });
+// Pub.hasMany(Collaborator, { onDelete: 'CASCADE', as: 'emptyCollaborators', foreignKey: 'pubId' });
+// Collaborator.belongsTo(User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' });
 
 /* NEW MODELS */
 /* ---------- */
 /* Pubs have many PubAttributions. PubAttributions are associated with a single user */
 Pub.hasMany(PubAttribution, { onDelete: 'CASCADE', as: 'attributions', foreignKey: 'pubId' });
 PubAttribution.belongsTo(User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' });
+PubAttribution.belongsTo(Pub, { onDelete: 'CASCADE', as: 'pub', foreignKey: 'pubId' });
+User.hasMany(PubAttribution, { onDelete: 'CASCADE', as: 'attributions', foreignKey: 'userId' });
 /* Pubs have many VersionPermissions. */
 Pub.hasMany(VersionPermission, { onDelete: 'CASCADE', as: 'versionPermissions', foreignKey: 'pubId' });
 VersionPermission.belongsTo(User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' });
@@ -472,11 +474,11 @@ User.hasMany(Discussion, { onDelete: 'CASCADE', as: 'discussions', foreignKey: '
 Discussion.belongsTo(User, { onDelete: 'CASCADE', as: 'author', foreignKey: 'userId' });
 
 /* Collections can have many Pubs. Pubs can belong to many Collections. */
-Collection.belongsToMany(Pub, { as: 'pubs', through: 'CollectionPub', foreignKey: 'collectionId' });
-Pub.belongsToMany(Collection, { as: 'collections', through: 'CollectionPub', foreignKey: 'pubId' });
+// Collection.belongsToMany(Pub, { as: 'pubs', through: 'CollectionPub', foreignKey: 'collectionId' });
+// Pub.belongsToMany(Collection, { as: 'collections', through: 'CollectionPub', foreignKey: 'pubId' });
 
 /* Communities have many Collections. A Collection belongs to only one Community. */
-Community.hasMany(Collection, { onDelete: 'CASCADE', as: 'collections', foreignKey: 'communityId' });
+// Community.hasMany(Collection, { onDelete: 'CASCADE', as: 'collections', foreignKey: 'communityId' });
 
 /* Communities have many Pages. */
 Community.hasMany(Page, { onDelete: 'CASCADE', as: 'pages', foreignKey: 'communityId' });
@@ -484,9 +486,9 @@ Community.hasMany(Page, { onDelete: 'CASCADE', as: 'pages', foreignKey: 'communi
 const db = {
 	Community: Community,
 	CommunityAdmin: CommunityAdmin,
-	Collection: Collection,
-	CollectionPub: CollectionPub,
-	Collaborator: Collaborator,
+	// Collection: Collection,
+	// CollectionPub: CollectionPub,
+	// Collaborator: Collaborator,
 	Discussion: Discussion,
 	Pub: Pub,
 	Signup: Signup,

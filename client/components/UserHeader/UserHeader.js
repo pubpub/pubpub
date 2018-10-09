@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Avatar from 'components/Avatar/Avatar';
+import Icon from 'components/Icon/Icon';
 
 require('./userHeader.scss');
 
@@ -15,13 +16,13 @@ const defaultProps = {
 
 const UserHeader = function(props) {
 	const links = [
-		{ id: 0, value: props.userData.location, icon: 'pt-icon-map-marker no-click' },
-		{ id: 1, value: props.userData.website, icon: 'pt-icon-link', href: props.userData.website },
-		{ id: 2, value: props.userData.orcid, icon: 'pt-icon-orcid', href: `https://www.orcid.org/${props.userData.orcid}` },
-		{ id: 3, value: props.userData.github, icon: 'pt-icon-github', href: `https://github.com/${props.userData.github}` },
-		{ id: 4, value: props.userData.facebook, icon: 'pt-icon-facebook', href: `https://www.facebook.com/${props.userData.facebook}` },
-		{ id: 5, value: props.userData.twitter, icon: 'pt-icon-twitter', href: `https://twitter.com/${props.userData.twitter}` },
-		{ id: 6, value: props.userData.googleScholar, icon: 'pt-icon-google-scholar', href: `https://scholar.google.com/citations?user=${props.userData.googleScholar}` },
+		{ id: 0, value: props.userData.location, icon: <Icon icon="map-marker" /> },
+		{ id: 1, value: props.userData.website, icon: <Icon icon="link" />, href: props.userData.website },
+		{ id: 2, value: props.userData.orcid, icon: <Icon icon="orcid" />, href: `https://www.orcid.org/${props.userData.orcid}` },
+		{ id: 3, value: props.userData.github, icon: <Icon icon="github" />, href: `https://github.com/${props.userData.github}` },
+		{ id: 4, value: props.userData.facebook, icon: <Icon icon="facebook" />, href: `https://www.facebook.com/${props.userData.facebook}` },
+		{ id: 5, value: props.userData.twitter, icon: <Icon icon="twitter" />, href: `https://twitter.com/${props.userData.twitter}` },
+		{ id: 6, value: props.userData.googleScholar, icon: <Icon icon="google-scholar" />, href: `https://scholar.google.com/citations?user=${props.userData.googleScholar}` },
 
 	];
 	return (
@@ -50,7 +51,7 @@ const UserHeader = function(props) {
 					{links.filter((link)=> {
 						return link.value;
 					}).map((link)=> {
-						return <a key={`link-${link.id}`} className={`pt-button pt-minimal ${link.icon}`} href={link.href} rel="noopener noreferrer">{link.value}</a>;
+						return <a key={`link-${link.id}`} className={`pt-button pt-minimal ${!link.href ? 'no-click' : ''}`} href={link.href} rel="noopener noreferrer">{link.icon}{link.value}</a>;
 					})}
 				</div>
 			</div>

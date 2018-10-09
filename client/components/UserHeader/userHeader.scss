@@ -13,6 +13,9 @@
 			margin: 20px 0px;
 		}
 	}
+	.pt-button .pt-icon:first-child:last-child {
+		margin: 0px 5px 0px 0px;
+	}
 	.details {
 		margin-right: calc(150px + 2em);
 		.title {
@@ -30,7 +33,7 @@
 	
 }
 
-@media only screen and (max-width: 720px) {  /* Used to be 45em */
+@media only screen and (max-width: 720px) {
 	.user-header-component {
 		.avatar-wrapper {
 			float: none;

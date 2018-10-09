@@ -44,7 +44,9 @@ class User extends Component {
 
 	render() {
 		const userData = this.props.userData;
-		const pubs = userData.pubs || [];
+		const pubs = userData.attributions.map((attribution)=> {
+			return attribution.pub;
+		}) || [];
 		const loginData = this.props.loginData;
 		const selfProfile = loginData.id && userData.id === loginData.id;
 		const mode = this.props.locationData.params.mode;
@@ -118,7 +120,7 @@ class User extends Component {
 							}
 							<div className="container narrow content">
 								{pubsToRender.map((pub)=> {
-									const attributions = pub.attributions || [];
+									// const attributions = pub.attributions || [];
 									return (
 										<div key={`pub-${pub.id}`} className="row">
 											<div className="col-12">
@@ -130,12 +132,6 @@ class User extends Component {
 													bannerImage={pub.avatar}
 													size="medium"
 													publicationDate={dateFormat(pub.firstPublishedAt, 'mmm dd, yyyy')}
-													collaborators={attributions.filter((item)=> {
-														return !item.isAuthor;
-													})}
-													authors={attributions.filter((item)=> {
-														return item.isAuthor;
-													})}
 												/>
 											</div>
 										</div>
