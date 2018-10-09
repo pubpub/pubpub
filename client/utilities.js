@@ -6,6 +6,8 @@ import { FocusStyleManager } from '@blueprintjs/core';
 import KeenTracking from 'keen-tracking';
 import TimeMe from 'timeme.js';
 
+const isPubPubProduction = !!process.env.PUBPUB_PRODUCTION;
+
 export const hydrateWrapper = (Component)=> {
 	if (typeof window !== 'undefined' && window.location.origin !== 'http://localhost:9001') {
 		FocusStyleManager.onlyShowFocusOnTabs();
@@ -31,19 +33,14 @@ export const hydrateWrapper = (Component)=> {
 				currentPageName: document.title, // current page
 				idleTimeoutInSeconds: 30 // seconds
 			});
-			const keenEnvironment = (window.location.origin.indexOf('https://testing.pubpub.org') === 0
-				|| window.location.origin.indexOf('https://dev.pubpub.org') === 0
-				|| window.location.origin.indexOf('https://dev-cursor.pubpub.org') === 0
-				|| window.location.origin.indexOf('https://dev-jods.pubpub.org') === 0
-				|| window.location.origin.indexOf('localhost:9876') > -1
-			)
+			const keenEnvironment = isPubPubProduction
 				? {
-					projectId: '5b5791b9c9e77c000175ca3b',
-					writeKey: '44F36099BAA3DF17892D232C2D9A807E817FCA0D99461DBDCA05CB97E760D57409145F6E2045B616ED3BD16C3B4A75A467240F23CE78E09BB7515603C3DFD2061F430B27CDA4059F059EF58702514CDE5A09CD5134E6530CFAD8589D5341D185',
-				}
-				: {
 					projectId: '5b57a01ac9e77c0001eef181',
 					writeKey: 'BA7C339A2A000ADC20572BBE37F49872DD8AB8EECBAF03E23AB8EDEF47E56FE9D1A54F63A7FC9548B06D7FF9AA057141E029369E637317B1E276CCE8206745A8D96CAFFFF2D6C4DB15E9E2D5C410426821E8379D0760A482ECF37C2F3868881C',
+				}
+				: {
+					projectId: '5b5791b9c9e77c000175ca3b',
+					writeKey: '44F36099BAA3DF17892D232C2D9A807E817FCA0D99461DBDCA05CB97E760D57409145F6E2045B616ED3BD16C3B4A75A467240F23CE78E09BB7515603C3DFD2061F430B27CDA4059F059EF58702514CDE5A09CD5134E6530CFAD8589D5341D185',
 				};
 			const client = new KeenTracking(keenEnvironment);
 
@@ -150,13 +147,7 @@ export const getFirebaseConfig = function() {
 	};
 
 	if (typeof window === 'undefined') { return devConfig; }
-	if (window.location.origin.indexOf('dev.pubpub.org') > -1) { return devConfig; }
-	if (window.location.origin.indexOf('testing.pubpub.org') > -1) { return devConfig; }
-	if (window.location.origin.indexOf('dev-cursor.pubpub.org') > -1) { return devConfig; }
-	if (window.location.origin.indexOf('dev-jods.pubpub.org') > -1) { return devConfig; }
-	if (window.location.origin.indexOf('ssl.pubpub.org') > -1) { return devConfig; }
-	if (window.location.origin.indexOf('ssl.pubpub.org') > -1) { return devConfig; }
-	if (window.location.origin.indexOf('localhost:') > -1) { return devConfig; }
+	if (!isPubPubProduction) { return devConfig; }
 	return prodConfig;
 };
 
@@ -328,11 +319,7 @@ export function renderLatexString(value, isBlock, callback) {
 }
 export function s3Upload(file, progressEvent, finishEvent, index) {
 	function beginUpload() {
-		const folderName = window.location.hostname !== 'localhost'
-		&& window.location.hostname !== 'dev.pubpub.org'
-		&& window.location.hostname !== 'testing.pubpub.org'
-		&& window.location.hostname !== 'dev-cursor.pubpub.org'
-		&& window.location.hostname !== 'dev-jods.pubpub.org'
+		const folderName = isPubPubProduction
 			? generateHash(8)
 			: '_testing';
 
