@@ -4,6 +4,8 @@
 	background-position: center center;
 	background-color: #F8F8F8;
 	border-bottom: 1px solid #D2D2D2;
+	position: relative;
+	z-index: 1;
 	.wrapper {
 		padding-bottom: 40px;
 		&.dim {

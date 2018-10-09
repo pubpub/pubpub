@@ -1,8 +1,11 @@
 .pub-side-options-component {
-	margin: 2em 0em 0em;
+	// margin: 2em 0em 0em;
 	padding-top: 1em;
 	height: 85px;
+	// height: 113px;
 	position: relative;
+	z-index: 1;
+	background: white;
 	.side-options-wrapper {
 		width: 275px;
 		background: white;

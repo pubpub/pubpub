@@ -1,12 +1,16 @@
 .pub-side-toc-component {
-	border-left: 2px solid #CCC;
-	padding-left: 10px;
-	font-size: 14px;
-	margin-bottom: 3em;
+	margin-top: -3em;
+	padding-top: 3em;
+	padding-bottom: 3em;
 	overflow: auto;
 	background-color: white;
 	z-index: 1;
 	position: relative;
+	.toc {
+		border-left: 2px solid #CCC;
+		padding-left: 10px;
+		font-size: 14px;
+	}
 	.section-header, a {
 		width: 100%;
 		white-space: nowrap;

@@ -1,6 +1,8 @@
 .nav-bar-component {
 	height: 40px;
 	overflow: hidden;
+	position: relative;
+	z-index: 1;
 	a {
 		margin-right: 2em;
 		display: inline-block;
