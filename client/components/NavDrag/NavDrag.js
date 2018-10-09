@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import CollectionAutocomplete from './CollectionAutocomplete';
+import Icon from 'components/Icon/Icon';
 
 require('./navDrag.scss');
 
@@ -158,7 +159,7 @@ class NavDrag extends Component {
 														<span {...providedItem.dragHandleProps} className="dragger-horiz">
 															<span className="pt-icon-standard pt-icon-drag-handle-vertical" />
 															{!item.children && !item.isPublic &&
-																<span className="pt-icon-standard pt-icon-lock2 pt-align-left" />
+																<Icon icon="lock2" iconSize={14} />
 															}
 															{item.title}
 															{item.children &&
@@ -193,7 +194,7 @@ class NavDrag extends Component {
 																								<span {...providedItemSub.dragHandleProps} className="dragger-vert">
 																									<span className="pt-icon-standard pt-icon-drag-handle-horizontal" />
 																									{!child.children && !child.isPublic &&
-																										<span className="pt-icon-standard pt-icon-lock2 pt-align-left" />
+																										<Icon icon="lock2" iconSize={14} />
 																									}
 																									{child.title}
 																								</span>

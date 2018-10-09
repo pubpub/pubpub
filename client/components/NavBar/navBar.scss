@@ -49,20 +49,17 @@
 			// &:last-of-type {
 			// 	margin-right: 0em;
 			// }
-			svg.pt-icon {
-				vertical-align: middle;
-			}
 		}
 	}
 	li {
 		text-transform: uppercase;
 		text-decoration: inherit;
 		// font-weight: 500;
-		.pt-icon-lock2 {
+		.pt-icon {
 			font-size: 14px;
 			padding-right: 0.15em;
 			position: relative;
-			top: -1px;
+			top: -2px;
 		}
 	}
 }

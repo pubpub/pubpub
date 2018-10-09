@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Popover, PopoverInteractionKind, Position, Menu } from '@blueprintjs/core';
+import Icon from 'components/Icon/Icon';
 
 require('./navBar.scss');
 
@@ -25,7 +26,7 @@ const NavBar = function(props) {
 										<a href={`/${item.slug}`} key={`nav-item-${item.id}`}>
 											<li>
 												{!item.isPublic &&
-													<span className="pt-icon-standard pt-icon-lock2 pt-align-left" />
+													<Icon icon="lock2" iconSize={14} />
 												}
 												{item.title}
 											</li>
@@ -42,7 +43,7 @@ const NavBar = function(props) {
 														<a href={`/${subitem.slug}`} className="pt-menu-item pt-popover-dismiss" key={`nav-item-${subitem.id}`}>
 															<li>
 																{!subitem.isPublic &&
-																	<span className="pt-icon-standard pt-icon-lock2 pt-align-left" />
+																	<Icon icon="lock2" iconSize={14} />
 																}
 																{subitem.title}
 															</li>

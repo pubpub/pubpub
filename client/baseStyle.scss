@@ -29,6 +29,9 @@ sup {
 .no-click {
 	pointer-events: none;
 }
+svg.pt-icon {
+	vertical-align: middle;
+}
 .clearfix:after {
 	content: "";
 	display: table;

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import dateFormat from 'dateformat';
+import Icon from 'components/Icon/Icon';
 
 require('./pubOptionsVersions.scss');
 
@@ -46,7 +47,7 @@ class PubOptionsVersions extends Component {
 									<li key={`version-${version.id}`}>
 										<a href={`/pub/${pubData.slug}?version=${version.id}`} className={`pt-menu-item pt-popover-dismiss ${version.isActive ? 'pt-active' : ''}`}>
 											{dateFormat(version.createdAt, 'mmm dd, yyyy · h:MMTT')}
-											{!version.isPublic && <span className="pt-icon-standard pt-icon-lock2" />}
+											{!version.isPublic && <Icon icon="lock2" />}
 										</a>
 									</li>
 								);
@@ -59,7 +60,7 @@ class PubOptionsVersions extends Component {
 							<li>
 								<a href={`/pub/${pubData.slug}?version=${versions[versions.length - 1].id}`} className="pt-menu-item pt-popover-dismiss">
 									{dateFormat(versions[versions.length - 1].createdAt, 'mmm dd, yyyy · h:MMTT')}
-									{!versions[versions.length - 1].isPublic && <span className="pt-icon-standard pt-icon-lock2" />}
+									{!versions[versions.length - 1].isPublic && <Icon icon="lock2" />}
 								</a>
 							</li>
 						</ul>
@@ -70,7 +71,7 @@ class PubOptionsVersions extends Component {
 							<li>
 								<a href={`/pub/${pubData.slug}?version=${versions[0].id}`} className="pt-menu-item pt-popover-dismiss">
 									{dateFormat(versions[0].createdAt, 'mmm dd, yyyy · h:MMTT')}
-									{!versions[0].isPublic && <span className="pt-icon-standard pt-icon-lock2" />}
+									{!versions[0].isPublic && <Icon icon="lock2" />}
 								</a>
 							</li>
 						</ul>

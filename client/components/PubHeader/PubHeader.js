@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import dateFormat from 'dateformat';
 import { apiFetch, getResizedUrl } from 'utilities';
 import { EditableText } from '@blueprintjs/core';
+import Icon from 'components/Icon/Icon';
 
 require('./pubHeader.scss');
 
@@ -125,7 +126,7 @@ class PubHeader extends Component {
 												return (
 													<a key={`new-tag-collection-${item.id}`} href={item.tag.page ? `/${item.tag.page.slug}` : `/search?tag=${item.tag.title}`} className="pt-tag pt-intent-primary pt-minimal">
 														{!item.tag.isPublic &&
-															<span className="pt-icon-standard pt-icon-lock2" />
+															<Icon icon="lock2" />
 														}
 														{item.tag.title}
 													</a>
@@ -222,7 +223,7 @@ class PubHeader extends Component {
 											}}
 										>
 											{!activeVersion.isPublic && 
-												<span className="pt-icon-standard pt-icon-lock2" />
+												<Icon icon="lock2" />
 											}
 											<span>{sortedVersionsList[sortedVersionsList.length - 1].id !== activeVersion.id ? 'Updated ' : ''}{dateFormat(pubData.activeVersion.createdAt, 'mmm dd, yyyy')}</span>
 											{/* If is draft, say total number of saved versions */}

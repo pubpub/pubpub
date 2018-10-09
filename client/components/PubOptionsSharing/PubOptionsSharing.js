@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import dateFormat from 'dateformat';
 import { Checkbox, Spinner } from '@blueprintjs/core';
 import UserAutocomplete from 'components/UserAutocomplete/UserAutocomplete';
+import Icon from 'components/Icon/Icon';
 import PubOptionsSharingDropdownPrivacy from 'components/PubOptionsSharingDropdownPrivacy/PubOptionsSharingDropdownPrivacy';
 import PubOptionsSharingDropdownPermissions from 'components/PubOptionsSharingDropdownPermissions/PubOptionsSharingDropdownPermissions';
 import PubOptionsSharingCard from 'components/PubOptionsSharingCard/PubOptionsSharingCard';
@@ -364,7 +365,7 @@ class PubOptionsSharing extends Component {
 										{!isActive &&
 											<span>
 												{currentPrivacy === 'private' &&
-													<span className="pt-icon-standard pt-icon-lock2" />
+													<Icon icon="lock2" />
 												}
 												<span>{privacyTitle}</span>
 											</span>

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Position, Spinner, Tag, MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 import fuzzysearch from 'fuzzysearch';
+import Icon from 'components/Icon/Icon';
 import { apiFetch } from 'utilities';
 
 require('./pubOptionsTags.scss');
@@ -133,7 +134,7 @@ class PubOptionsTags extends Component {
 									{!item.id && <span>Create new tag: </span>}
 									<span className="autocomplete-name">
 										{item.id && !item.isPublic &&
-											<span className="pt-icon-standard pt-icon-lock2" />
+											<Icon icon="lock2" />
 										}
 										{item.title}
 									</span>
@@ -167,7 +168,7 @@ class PubOptionsTags extends Component {
 								}}
 							>
 								{!pubTag.tag.isPublic &&
-									<span className="pt-icon-standard pt-icon-lock2" />
+									<Icon icon="lock2" />
 								}
 								{pubTag.tag.title}
 							</Tag>
