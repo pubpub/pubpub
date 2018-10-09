@@ -174,17 +174,17 @@ const Pub = sequelize.define('Pub', {
 	// publishedAt: { type: Sequelize.DATE },
 	firstPublishedAt: { type: Sequelize.DATE },
 	lastPublishedAt: { type: Sequelize.DATE },
-	collaborationMode: { // TODO: DELETE
-		// Used to note the mode of the workingDraft
-		type: Sequelize.ENUM,
-		values: ['private', 'publicView', 'publicEdit'],
-		defaultValue: 'private',
-	},
-	adminPermissions: { // TODO: DELETE
-		type: Sequelize.ENUM,
-		values: ['manage', 'edit', 'view', 'none'], // Must be same as permissions on Collaborator
-		defaultValue: 'none',
-	},
+	// collaborationMode: { // TODO: DELETE
+	// 	// Used to note the mode of the workingDraft
+	// 	type: Sequelize.ENUM,
+	// 	values: ['private', 'publicView', 'publicEdit'],
+	// 	defaultValue: 'private',
+	// },
+	// adminPermissions: { // TODO: DELETE
+	// 	type: Sequelize.ENUM,
+	// 	values: ['manage', 'edit', 'view', 'none'], // Must be same as permissions on Collaborator
+	// 	defaultValue: 'none',
+	// },
 	draftEditHash: { type: Sequelize.STRING }, // TODO: This is used for draft
 	draftViewHash: { type: Sequelize.STRING }, // TODO: This is used for draft
 	doi: { type: Sequelize.TEXT },

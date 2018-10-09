@@ -368,8 +368,8 @@ export const getPubSearch = (query, initialData)=> {
 		{
 			$or: [
 				{ firstPublishedAt: { $ne: null } },
-				{ collaborationMode: 'publicView' },
-				{ collaborationMode: 'publicEdit' },
+				{ draftPermissions: 'publicView' },
+				{ draftPermissions: 'publicEdit' },
 			]
 		}
 	];

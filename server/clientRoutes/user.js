@@ -45,7 +45,7 @@ app.get(['/user/:slug', '/user/:slug/:mode'], (req, res, next)=> {
 		if (userDataJson.pubs) {
 			userDataJson.pubs = userDataJson.pubs.filter((item)=> {
 				const isOwnProfile = userDataJson.id === initialData.loginData.id;
-				const isPublicCollab = item.collaborationMode !== 'private';
+				const isPublicCollab = item.draftPermissions !== 'private';
 				return !!item.firstPublishedAt || isOwnProfile || isPublicCollab;
 			});
 		}
