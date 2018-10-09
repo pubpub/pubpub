@@ -6,6 +6,7 @@ import { Button, NonIdealState } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
 import ImageUpload from 'components/ImageUpload/ImageUpload';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
+import Icon from 'components/Icon/Icon';
 import { hydrateWrapper, apiFetch } from 'utilities';
 
 require('./userCreate.scss');
@@ -81,18 +82,23 @@ class UserCreate extends Component {
 	onFirstNameChange(evt) {
 		this.setState({ firstName: evt.target.value });
 	}
+
 	onLastNameChange(evt) {
 		this.setState({ lastName: evt.target.value });
 	}
+
 	onPasswordChange(evt) {
 		this.setState({ password: evt.target.value });
 	}
+
 	onTitleChange(evt) {
 		this.setState({ title: evt.target.value.substring(0, 70).replace(/\n/g, ' ') });
 	}
+
 	onBioChange(evt) {
 		this.setState({ bio: evt.target.value.substring(0, 280).replace(/\n/g, ' ') });
 	}
+
 	onAvatarChange(val) {
 		this.setState({ avatar: val });
 	}
@@ -102,7 +108,7 @@ class UserCreate extends Component {
 			{
 				label: 'Location',
 				showTextOnButton: true,
-				icon: 'pt-icon-map-marker',
+				icon: <Icon icon="map-marker" />,
 				action: ()=> { this.setState({ showLocation: true }); },
 				isVisible: this.state.showLocation,
 				value: this.state.location,
@@ -111,7 +117,7 @@ class UserCreate extends Component {
 			{
 				label: 'Website',
 				showTextOnButton: true,
-				icon: 'pt-icon-link',
+				icon: <Icon icon="link" />,
 				action: ()=> { this.setState({ showWebsite: true }); },
 				isVisible: this.state.showWebsite,
 				value: this.state.website,
@@ -119,7 +125,7 @@ class UserCreate extends Component {
 			},
 			{
 				label: 'Orcid',
-				icon: 'pt-icon-orcid',
+				icon: <Icon icon="orcid" />,
 				action: ()=> { this.setState({ showOrcid: true }); },
 				isVisible: this.state.showOrcid,
 				helperText: `https://orcid.org/${this.state.orcid}`,
@@ -128,7 +134,7 @@ class UserCreate extends Component {
 			},
 			{
 				label: 'Github',
-				icon: 'pt-icon-github',
+				icon: <Icon icon="github" />,
 				action: ()=> { this.setState({ showGithub: true }); },
 				helperText: `https://github.com/${this.state.github}`,
 				isVisible: this.state.showGithub,
@@ -137,7 +143,7 @@ class UserCreate extends Component {
 			},
 			{
 				label: 'Twitter',
-				icon: 'pt-icon-twitter',
+				icon: <Icon icon="twitter" />,
 				action: ()=> { this.setState({ showTwitter: true }); },
 				helperText: `https://twitter.com/${this.state.twitter}`,
 				isVisible: this.state.showTwitter,
@@ -146,7 +152,7 @@ class UserCreate extends Component {
 			},
 			{
 				label: 'Facebook',
-				icon: 'pt-icon-facebook',
+				icon: <Icon icon="facebook" />,
 				action: ()=> { this.setState({ showFacebook: true }); },
 				helperText: `https://facebook.com/${this.state.facebook}`,
 				isVisible: this.state.showFacebook,
@@ -155,7 +161,7 @@ class UserCreate extends Component {
 			},
 			{
 				label: 'Google Scholar',
-				icon: 'pt-icon-google-scholar',
+				icon: <Icon icon="google-scholar" />,
 				action: ()=> { this.setState({ showGoogleScholar: true }); },
 				helperText: `https://scholar.google.com/citations?user=${this.state.googleScholar}`,
 				isVisible: this.state.showGoogleScholar,
@@ -256,7 +262,8 @@ class UserCreate extends Component {
 														return !item.isVisible;
 													}).map((item)=> {
 														return (
-															<button type="button" key={`button-${item.label}`} className={`pt-button ${item.icon}`} onClick={item.action}>
+															<button type="button" key={`button-${item.label}`} className="pt-button expandable" onClick={item.action}>
+																{item.icon}
 																{item.showTextOnButton ? item.label : ''}
 															</button>
 														);

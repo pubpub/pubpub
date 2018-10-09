@@ -77,7 +77,7 @@ const NavBar = function(props) {
 									return (
 										<a href={item.url} key={`social-item-${item.id}`}>
 											<li>
-												<span className={`pt-icon-standard ${item.icon}`} />
+												{item.icon}
 											</li>
 										</a>
 									);

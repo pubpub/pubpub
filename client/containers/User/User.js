@@ -46,6 +46,8 @@ class User extends Component {
 		const userData = this.props.userData;
 		const pubs = userData.attributions.map((attribution)=> {
 			return attribution.pub;
+		}).filter((pub)=> {
+			return pub;
 		}) || [];
 		const loginData = this.props.loginData;
 		const selfProfile = loginData.id && userData.id === loginData.id;

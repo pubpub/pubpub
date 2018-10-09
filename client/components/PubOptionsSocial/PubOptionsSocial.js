@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Icon from 'components/Icon/Icon';
 
 require('./pubOptionsSocial.scss');
 
@@ -26,32 +27,32 @@ class PubOptionsSocial extends Component {
 		const links = [
 			{
 				title: 'Twitter',
-				icon: 'pt-icon-twitter',
+				icon: <Icon icon="twitter" />,
 				url: `https://twitter.com/intent/tweet?url=${pubLink}&text=${pubTitle}`,
 			},
 			{
 				title: 'Reddit',
-				icon: 'pt-icon-reddit',
+				icon: <Icon icon="reddit" />,
 				url: `https://reddit.com/submit?url=${pubLink}&title=${pubTitle}`,
 			},
 			{
 				title: 'Facebook',
-				icon: 'pt-icon-facebook',
+				icon: <Icon icon="facebook" />,
 				url: `https://www.facebook.com/sharer.php?u=${pubLink}`,
 			},
 			{
 				title: 'Google+',
-				icon: 'pt-icon-google-plus',
+				icon: <Icon icon="google-plus" />,
 				url: `https://plus.google.com/share?url=${pubLink}`,
 			},
 			{
 				title: 'LinkedIn',
-				icon: 'pt-icon-linkedin',
+				icon: <Icon icon="linkedin" />,
 				url: `https://www.linkedin.com/shareArticle?url=${pubLink}&title=${pubTitle}`,
 			},
 			{
 				title: 'Email',
-				icon: 'pt-icon-envelope',
+				icon: <Icon icon="envelope" />,
 				url: `mailto:?subject=${pubTitle}&body=${pubLink}`,
 			},
 		];
@@ -60,7 +61,8 @@ class PubOptionsSocial extends Component {
 				<div className="buttons">
 					{links.map((link)=> {
 						return (
-							<a href={link.url} className={`pt-button pt-large ${link.icon}`} rel="noopener noreferrer" target="_blank" key={link.title}>
+							<a href={link.url} className="pt-button pt-large" rel="noopener noreferrer" target="_blank" key={link.title}>
+								{link.icon}
 								{link.title}
 							</a>
 						);

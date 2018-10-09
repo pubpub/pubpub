@@ -4,6 +4,7 @@ import Header from 'components/Header/Header';
 import Footer from 'components/Footer/Footer';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
 import NavBar from 'components/NavBar/NavBar';
+import Icon from 'components/Icon/Icon';
 import { populateNavigationIds } from 'utilities';
 
 const propTypes = {
@@ -30,10 +31,10 @@ const PageWrapper = (props)=> {
 	const navigation = communityData.navigation || [];
 	const navItems = populateNavigationIds(pages, navigation);
 	const socialItems = [
-		{ id: 'si-0', icon: 'pt-icon-globe', title: 'Website', value: communityData.website, url: communityData.website },
-		{ id: 'si-1', icon: 'pt-icon-twitter', title: 'Twitter', value: communityData.twitter, url: `https://twitter.com/${communityData.twitter}` },
-		{ id: 'si-2', icon: 'pt-icon-facebook', title: 'Facebook', value: communityData.facebook, url: `https://facebook.com/${communityData.facebook}` },
-		{ id: 'si-3', icon: 'pt-icon-envelope', title: 'Contact', value: communityData.email, url: `mailto:${communityData.email}` },
+		{ id: 'si-0', icon: <Icon icon="globe" />, title: 'Website', value: communityData.website, url: communityData.website },
+		{ id: 'si-1', icon: <Icon icon="twitter" />, title: 'Twitter', value: communityData.twitter, url: `https://twitter.com/${communityData.twitter}` },
+		{ id: 'si-2', icon: <Icon icon="facebook" />, title: 'Facebook', value: communityData.facebook, url: `https://facebook.com/${communityData.facebook}` },
+		{ id: 'si-3', icon: <Icon icon="envelope" />, title: 'Contact', value: communityData.email, url: `mailto:${communityData.email}` },
 	].filter((item)=> {
 		return item.value;
 	});

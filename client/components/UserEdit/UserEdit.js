@@ -87,7 +87,7 @@ class UserEdit extends Component {
 			{
 				label: 'Location',
 				showTextOnButton: true,
-				icon: 'pt-icon-map-marker',
+				// icon: 'pt-icon-map-marker',
 				action: ()=> { this.setState({ showLocation: true }); },
 				value: this.state.location,
 				onChange: (evt)=> { this.setState({ location: evt.target.value, hasChanged: true }); }
@@ -95,14 +95,14 @@ class UserEdit extends Component {
 			{
 				label: 'Website',
 				showTextOnButton: true,
-				icon: 'pt-icon-link',
+				// icon: 'pt-icon-link',
 				action: ()=> { this.setState({ showWebsite: true }); },
 				value: this.state.website,
 				onChange: (evt)=> { this.setState({ website: evt.target.value, hasChanged: true }); }
 			},
 			{
 				label: 'Orcid',
-				icon: 'pt-icon-orcid',
+				// icon: 'pt-icon-orcid',
 				action: ()=> { this.setState({ showOrcid: true }); },
 				helperText: `https://orcid.org/${this.state.orcid}`,
 				value: this.state.orcid,
@@ -110,7 +110,7 @@ class UserEdit extends Component {
 			},
 			{
 				label: 'Github',
-				icon: 'pt-icon-github',
+				// icon: 'pt-icon-github',
 				action: ()=> { this.setState({ showGithub: true }); },
 				helperText: `https://github.com/${this.state.github}`,
 				value: this.state.github,
@@ -118,7 +118,7 @@ class UserEdit extends Component {
 			},
 			{
 				label: 'Twitter',
-				icon: 'pt-icon-twitter',
+				// icon: 'pt-icon-twitter',
 				action: ()=> { this.setState({ showTwitter: true }); },
 				helperText: `https://twitter.com/${this.state.twitter}`,
 				value: this.state.twitter,
@@ -126,7 +126,7 @@ class UserEdit extends Component {
 			},
 			{
 				label: 'Facebook',
-				icon: 'pt-icon-facebook',
+				// icon: 'pt-icon-facebook',
 				action: ()=> { this.setState({ showFacebook: true }); },
 				helperText: `https://facebook.com/${this.state.facebook}`,
 				value: this.state.facebook,
@@ -134,7 +134,7 @@ class UserEdit extends Component {
 			},
 			{
 				label: 'Google Scholar',
-				icon: 'pt-icon-google-scholar',
+				// icon: 'pt-icon-google-scholar',
 				action: ()=> { this.setState({ showGoogleScholar: true }); },
 				helperText: `https://scholar.google.com/citations?user=${this.state.googleScholar}`,
 				value: this.state.googleScholar,

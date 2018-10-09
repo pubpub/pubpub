@@ -2,6 +2,9 @@
 	.pt-button {
 		width: 45%;
 		margin: 20px 0px;
+		.pt-icon:first-child:last-child {
+			margin: 0px 5px 0px 0px;
+		}
 		&:nth-child(odd) {
 			margin-right: 10%;
 		}
