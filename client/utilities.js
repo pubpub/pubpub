@@ -132,7 +132,7 @@ export const getFirebaseConfig = function() {
 	// TODO: Remove this once we don't need dev.pubpub.org to point to v4-dev firebase
 	if (typeof window === 'undefined'
 		|| window.location.origin.indexOf('dev.pubpub.org') > -1
-		|| window.location.origin.indexOf('localhost:') > -1
+		// || window.location.origin.indexOf('localhost:') > -1
 	) {
 		return {
 			apiKey: 'AIzaSyBNlAp1EW5zhiPS8HWwXwZ8WMs-EdkMmKI',
@@ -148,6 +148,8 @@ export const getFirebaseConfig = function() {
 		apiKey: 'AIzaSyBSzFrgIh2MQdWXwjVRGFnC30qv4uYZn08',
 		authDomain: 'pubpub-v5.firebaseapp.com',
 		projectId: 'pubpub-v5',
+		storageBucket: 'pubpub-v5.appspot.com',
+		messagingSenderId: '865496864907',
 		databaseURL: isPubPubProduction
 			? 'https://pubpub-v5-production.firebaseio.com'
 			: 'https://pubpub-v5-development.firebaseio.com',

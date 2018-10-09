@@ -2,15 +2,19 @@ import React from 'react';
 import Promise from 'bluebird';
 import firebaseAdmin from 'firebase-admin';
 import Pub from 'containers/Pub/Pub';
+import { getFirebaseConfig } from 'utilities';
 import Html from '../Html';
 import app from '../server';
 import { hostIsValid, renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utilities';
 import { findPub } from '../queryHelpers';
 
+
+/* To encode: Buffer.from(JSON.stringify(serviceAccountJson)).toString('base64'); */
 const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64, 'base64').toString());
+console.log(getFirebaseConfig().databaseURL);
 firebaseAdmin.initializeApp({
 	credential: firebaseAdmin.credential.cert(serviceAccount),
-	databaseURL: process.env.FIREBASE_DATABASE_URL,
+	databaseURL: getFirebaseConfig().databaseURL,
 });
 
 app.get(['/pub/:slug', '/pub/:slug/content/:sectionId', '/pub/:slug/draft', '/pub/:slug/draft/content/:sectionId', '/pub/:slug/:mode', '/pub/:slug/:mode/:subMode'], (req, res, next)=> {
