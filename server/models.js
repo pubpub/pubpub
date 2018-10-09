@@ -222,7 +222,7 @@ const Discussion = sequelize.define('Discussion', {
 	submitHash: { type: Sequelize.TEXT },
 	submitApprovedAt: { type: Sequelize.DATE },
 	isArchived: { type: Sequelize.BOOLEAN },
-	isPublic: { type: Sequelize.BOOLEAN }, /* TODO: this field is deprecated once discussionChannels exist. Need to migrate isPublic=false to new channel */
+	// isPublic: { type: Sequelize.BOOLEAN }, /* TODO: this field is deprecated once discussionChannels exist. Need to migrate isPublic=false to new channel */
 	labels: { type: Sequelize.JSONB },
 	/* Set by Associations */
 	userId: { type: Sequelize.UUID, allowNull: false },

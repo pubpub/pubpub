@@ -92,7 +92,9 @@ export const formatAndAuthenticatePub = (pub, loginData, communityAdminData, req
 		}),
 		discussions: pub.discussions
 			? pub.discussions.filter((item)=> {
-				return item.isPublic || isManager;
+				// TODO: filter based on discussion group access
+				// return item.isPublic || isManager;
+				return !item.discussionChannelId || isManager;
 			}).map((item)=> {
 				if (!isManager && item.submitHash) {
 					return { ...item, submitHash: 'present' };
@@ -100,11 +102,11 @@ export const formatAndAuthenticatePub = (pub, loginData, communityAdminData, req
 				return item;
 			})
 			: undefined,
-		collections: pub.collections
-			? pub.collections.filter((item)=> {
-				return item.isPublic || communityAdminData;
-			})
-			: undefined,
+		// collections: pub.collections
+		// 	? pub.collections.filter((item)=> {
+		// 		return item.isPublic || communityAdminData;
+		// 	})
+		// 	: undefined,
 		pubTags: pub.pubTags.map((item)=> {
 			if (!isManager && item.tag && !item.tag.isPublic) {
 				return {
@@ -195,13 +197,13 @@ export const findPub = (req, initialData, isDraftRoute)=> {
 				as: 'discussionChannels',
 				include: [{ model: DiscussionChannelParticipant, as: 'participants', include: [{ model: User, as: 'user', attributes: ['id', 'fullName', 'avatar', 'slug', 'initials', 'title'] }] }]
 			},
-			{
-				required: false,
-				model: Collection,
-				as: 'collections',
-				attributes: ['id', 'title', 'slug', 'isPublic', 'isOpenPublish'],
-				through: { attributes: [] },
-			},
+			// {
+			// 	required: false,
+			// 	model: Page,
+			// 	as: 'pages',
+			// 	attributes: ['id', 'title', 'slug', 'isPublic'],
+			// 	through: { attributes: [] },
+			// },
 			{
 				required: false,
 				// separate: true,

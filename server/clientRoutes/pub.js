@@ -52,10 +52,10 @@ app.get(['/pub/:slug', '/pub/:slug/content/:sectionId', '/pub/:slug/draft', '/pu
 		/* or because there is no privately visible content. For the second */
 		/* case, this occurs when there are no visible saved versions and */
 		/* the draft is private */
-		const isUnlistedCollection = pubData.pages.reduce((prev, curr)=> {
-			if (curr.isPublic) { return false; }
-			return prev;
-		}, true);
+		// const isUnlistedCollection = pubData.pages.reduce((prev, curr)=> {
+		// 	if (curr.isPublic) { return false; }
+		// 	return prev;
+		// }, true);
 		const isUnlistedDraft = pubData.versions.length === 0 && pubData.draftPermissions === 'private';
 
 		const newInitialData = {
@@ -79,7 +79,8 @@ app.get(['/pub/:slug', '/pub/:slug/content/:sectionId', '/pub/:slug/draft', '/pu
 					attributions: pubData.attributions,
 					publishedAt: pubData.firstPublishedAt,
 					doi: pubData.doi,
-					unlisted: isUnlistedCollection || isUnlistedDraft,
+					// unlisted: isUnlistedCollection || isUnlistedDraft,
+					unlisted: isUnlistedDraft,
 				})}
 			>
 				<Pub {...newInitialData} />
