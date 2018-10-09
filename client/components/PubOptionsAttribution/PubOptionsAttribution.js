@@ -270,7 +270,7 @@ class PubOptionsAttribution extends Component {
 																			});
 																		}}
 																	>
-																		List as Author
+																		List on byline
 																	</Checkbox>
 																	<MultiSelect
 																		items={attribution.roles || []}

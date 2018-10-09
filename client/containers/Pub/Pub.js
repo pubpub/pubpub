@@ -528,6 +528,7 @@ class Pub extends Component {
 
 									<div style={isCollabLoading ? { opacity: 0 } : {}}>
 										<PubBody
+											showWorkingDraftButton={!pubData.isDraft && (pubData.isEditor || pubData.isManager)}
 											isDraft={pubData.isDraft}
 											versionId={activeVersion && activeVersion.id}
 											sectionId={sectionId}

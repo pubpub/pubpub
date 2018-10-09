@@ -3,4 +3,8 @@
 	background-color: white;
 	z-index: 1;
 	position: relative;
+	.header-title span:hover {
+		text-decoration: underline;
+		cursor: pointer;
+	}
 }

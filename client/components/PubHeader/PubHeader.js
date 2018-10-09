@@ -255,7 +255,7 @@ class PubHeader extends Component {
 										}}
 									>
 										{/* <span className="pt-icon-standard pt-icon-team" /> */}
-										{numAttributions} Collaborator{numAttributions === 1 ? '' : 's'}
+										{numAttributions} Contributor{numAttributions === 1 ? '' : 's'}
 									</a>
 								</div>
 							</div>

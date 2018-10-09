@@ -87,6 +87,14 @@
 			font-size: 15px;
 		}
 	}
+	.pt-callout.working-draft {
+		display: flex;
+		align-items: center;
+		span {
+			flex-grow: 1;
+			flex-shrink: 1;
+		}
+	}
 	// .pubpub-simple-editor {
 	// 	p {
 	// 		margin-bottom: 0em;

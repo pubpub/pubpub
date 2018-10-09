@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { NonIdealState } from '@blueprintjs/core';
+import { NonIdealState, Button } from '@blueprintjs/core';
 import Editor from '@pubpub/editor';
 import discussionSchema from 'components/DiscussionAddon/discussionSchema';
 import { getFirebaseConfig, getResizedUrl } from 'utilities';
@@ -9,6 +9,7 @@ require('./pubBody.scss');
 
 const propTypes = {
 	isDraft: PropTypes.bool.isRequired,
+	showWorkingDraftButton: PropTypes.bool.isRequired,
 	versionId: PropTypes.string.isRequired,
 	sectionId: PropTypes.string,
 	content: PropTypes.object.isRequired,
@@ -87,9 +88,20 @@ class PubBody extends Component {
 		return (
 			<div className="pub-body-component">
 				{this.props.isDraft && this.props.isReadOnly &&
-					<div className="pt-callout" style={{ marginBottom: '2em' }}>
+					<div className="pt-callout pt-intent-warning" style={{ marginBottom: '2em' }}>
 						<h5>Read Only</h5>
 						You have view permissions. You can see the working draft but cannot edit it.
+					</div>
+				}
+				{this.props.showWorkingDraftButton &&
+					<div className="pt-callout working-draft pt-intent-warning" style={{ marginBottom: '2em' }}>
+						<span>You are viewing a saved version</span>
+						<a
+							href={`/pub/${this.props.slug}/draft`}
+							className="pt-button"
+						>
+							Go to Working Draft
+						</a>
 					</div>
 				}
 
