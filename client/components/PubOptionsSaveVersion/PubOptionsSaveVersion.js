@@ -90,37 +90,37 @@ class PubOptionsSaveVersion extends Component {
 	}
 
 	render() {
-		const isUnlisted = this.props.pubData.collections.reduce((prev, curr)=> {
-			if (curr.isPublic) { return false; }
-			return prev;
-		}, true);
+		// const isUnlisted = this.props.pubData.collections.reduce((prev, curr)=> {
+		// 	if (curr.isPublic) { return false; }
+		// 	return prev;
+		// }, true);
 
 		if (!this.props.editorView) { return null; }
 
 		return (
 			<div className="pub-options-save-version-component">
 				<h1>Save Version</h1>
-				<div>Publishing creates a snapshot of the current working draft. This snapshot will be publicly available.</div>
+				<div>This will create a snapshot of the current working draft.</div>
 
 				<h6>Publication URL</h6>
 				<div className="input">https://{window.location.hostname}/pub/{this.props.pubData.slug}</div>
 				<div className="details">Use the <span tabIndex={-1} role="button" onClick={()=> { this.props.setOptionsMode('details'); }}>details panel</span> to change this URL.</div>
 
-				<div className="wrapper">
+				{/* <div className="wrapper">
 					<h6>Working Draft Privacy</h6>
 					<PubCollabDropdownPrivacy
 						value={this.state.collaborationMode}
 						onChange={this.handleCollaborationModeChange}
 					/>
-				</div>
+				</div> */}
 
-				{isUnlisted &&
+				{/* isUnlisted &&
 					<div className="pt-callout pt-intent-danger">
 						<h5>Pub will be Unlisted</h5>
 						<div>This pub is only included in Private collections. When published, it will be publicly available but will be unlisted.</div>
 						<div>Anyone with the link will be able to view the published snapshot, but it will not show up in search results, rss feds, or search engines.</div>
 					</div>
-				}
+				*/}
 				<div className="button-wrapper">
 					<Button
 						onClick={this.handlePublish}

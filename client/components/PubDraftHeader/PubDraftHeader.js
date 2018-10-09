@@ -265,9 +265,11 @@ class PubDraftHeader extends Component {
 										{this.props.collabStatus === 'saving' || this.props.collabStatus === 'connecting' ? '...' : ''}
 									</span>
 								</div>
-								<div className="right-section">
-									<button className="pt-button pt-intent-primary pt-small" type="button" onClick={()=> { this.props.setOptionsMode('saveVersion'); }}>Save Version</button>
-								</div>
+								{pubData.isManager &&
+									<div className="right-section">
+										<button className="pt-button pt-intent-primary pt-small" type="button" onClick={()=> { this.props.setOptionsMode('saveVersion'); }}>Save Version</button>
+									</div>
+								}
 							</div>
 							<div className="col-12">
 								<div className="left-section">
