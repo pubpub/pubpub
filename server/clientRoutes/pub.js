@@ -11,7 +11,6 @@ import { findPub } from '../queryHelpers';
 
 /* To encode: Buffer.from(JSON.stringify(serviceAccountJson)).toString('base64'); */
 const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64, 'base64').toString());
-console.log(getFirebaseConfig().databaseURL);
 firebaseAdmin.initializeApp({
 	credential: firebaseAdmin.credential.cert(serviceAccount),
 	databaseURL: getFirebaseConfig().databaseURL,

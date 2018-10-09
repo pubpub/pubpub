@@ -108,7 +108,7 @@ export const formatAndAuthenticatePub = (pub, loginData, communityAdminData, req
 		// 	})
 		// 	: undefined,
 		pubTags: pub.pubTags.map((item)=> {
-			if (!isManager && item.tag && !item.tag.isPublic) {
+			if (!communityAdminData && item.tag && !item.tag.isPublic) {
 				return {
 					...item,
 					tag: undefined
