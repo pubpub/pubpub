@@ -1,4 +1,3 @@
-/* global _paq */
 import React from 'react';
 import Raven from 'raven-js';
 import { hydrate } from 'react-dom';
@@ -124,27 +123,6 @@ export const getFirebaseConfig = function() {
 			? 'https://pubpub-v5-production.firebaseio.com'
 			: 'https://pubpub-v5-development.firebaseio.com',
 	};
-	// const prodConfig = {
-	// 	apiKey: 'AIzaSyAkqGZZVlMiRzVyROlOwMUSbtbdHFPza7o',
-	// 	authDomain: 'pubpub-v4-prod.firebaseapp.com',
-	// 	databaseURL: 'https://pubpub-v4-prod.firebaseio.com',
-	// 	projectId: 'pubpub-v4-prod',
-	// 	storageBucket: 'pubpub-v4-prod.appspot.com',
-	// 	messagingSenderId: '955699971712'
-	// };
-	/* v4 dev config */
-	// const devConfig = {
-	// 	apiKey: 'AIzaSyBNlAp1EW5zhiPS8HWwXwZ8WMs-EdkMmKI',
-	// 	authDomain: 'pubpub-v4-dev-60334.firebaseapp.com',
-	// 	databaseURL: 'https://pubpub-v4-dev-60334.firebaseio.com',
-	// 	projectId: 'pubpub-v4-dev-60334',
-	// 	storageBucket: 'pubpub-v4-dev-60334.appspot.com',
-	// 	messagingSenderId: '410839613714'
-	// };
-
-	// if (typeof window === 'undefined') { return devConfig; }
-	// if (!isPubPubProduction) { return devConfig; }
-	// return prodConfig;
 };
 
 export const getResizedUrl = function(url, type, dimensions) {
