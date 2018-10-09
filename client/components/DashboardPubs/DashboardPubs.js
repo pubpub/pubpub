@@ -32,16 +32,16 @@ class DashboardPubs extends Component {
 										<a className="draft" href={`/pub/${pub.slug}/draft`}>Go To Working Draft</a>
 									}
 								</div>
-								<div>
+								<div className="nowrap">
 									{pub.pubTags.map((pubTag)=> {
 										return <span className="pt-tag pt-minimal pt-small">{pubTag.tag.title}</span>;
 									})}
 								</div>
 								{!pub.versions.length &&
-									<div>Working Draft</div>
+									<div className="nowrap">Working Draft</div>
 								}
 								{!!pub.versions.length &&
-									<div>{pub.versions.length} Saved Version{pub.versions.length === 1 ? '' : 's'}</div>
+									<div className="nowrap">{pub.versions.length} Saved Version{pub.versions.length === 1 ? '' : 's'}</div>
 								}
 							</div>
 							<div className="authors">
