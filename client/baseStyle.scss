@@ -4,14 +4,6 @@
 @import "./blueprint.scss";
 @import "./grid.scss";
 
-/* I'm not sure why I need to import these                    */
-/* It seems that for other instances, (e.g. File Addon)       */
-/* the css that is imported within the package is sufficient. */
-/* But that doesn't seem to be the case for the following     */
-/* ------ */
-/* I'm not sure we do need it anymore if we import vendor.css  */
-// @import "~@pubpub/editor/dist/style.scss";
-// @import "~katex/dist/katex.css";
 
 // Set global styles
 // ****************************
@@ -59,25 +51,3 @@ sup {
 .pt-input {
 	-webkit-appearance: none;
 }
-
-@font-face {
-	font-family: "pubpub-icons";
-	src: url("../static/icons/pubpub-icons.woff") format("woff"),
-		url("../static/icons/pubpub-icons.eot") format("eot"),
-		url("../static/icons/pubpub-icons.ttf") format("ttg"),
-		url("../static/icons/pubpub-icons.svg") format("svg");
-}
-.pt-icon-team:before { font-family: 'pubpub-icons' !important; content: "\e903"; }
-.pt-icon-edit2:before { font-family: 'pubpub-icons' !important; content: "\e904"; }
-.pt-icon-doc:before { font-family: 'pubpub-icons' !important; content: "\e902"; }
-.pt-icon-admin:before { font-family: 'pubpub-icons' !important; content: "\e900"; }
-.pt-icon-lock2:before { font-family: 'pubpub-icons' !important; content: "\e901"; }
-.pt-icon-google-scholar:before { font-family: 'pubpub-icons' !important; content: "\e828"; }
-.pt-icon-doi:before { font-family: 'pubpub-icons' !important; content: "\e822"; }
-.pt-icon-orcid:before { font-family: 'pubpub-icons' !important; content: "\e840"; }
-.pt-icon-facebook:before { font-family: 'pubpub-icons' !important; content: "\ea90"; }
-.pt-icon-twitter:before { font-family: 'pubpub-icons' !important; content: "\ea96"; }
-.pt-icon-github:before { font-family: 'pubpub-icons' !important; content: "\eab0"; }
-.pt-icon-linkedin:before { font-family: 'pubpub-icons' !important; content: "\eaca"; }
-.pt-icon-reddit:before { font-family: 'pubpub-icons' !important; content: "\eac6"; }
-.pt-icon-google-plus:before { font-family: 'pubpub-icons' !important; content: "\ea8b"; }

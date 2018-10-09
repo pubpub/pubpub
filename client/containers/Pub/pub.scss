@@ -46,7 +46,7 @@ Print
 	}
 }
 
-print {
+@media print {
 	#pub-container {
 		.container.pub {
 			max-width: 100%;
