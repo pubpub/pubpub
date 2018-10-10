@@ -1,6 +1,5 @@
 import app from '../server';
-import { Collection, Pub, Collaborator, CollectionPub, CommunityAdmin, PubManager, PubAttribution, PubTag } from '../models';
-import { generateHash, slugifyString } from '../utilities';
+import { Pub, CommunityAdmin, PubManager} from '../models';
 
 app.put('/api/pubs/reviews', (req, res)=> {
 	const user = req.user || {};

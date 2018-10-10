@@ -183,8 +183,18 @@ class DashboardPage extends Component {
 						{pageData.slug &&
 							<InputField label="Privacy">
 								<div className="pt-button-group">
-									<button type="button" className={`pt-button pt-icon-globe ${this.state.isPublic ? 'pt-active' : ''}`} onClick={this.setPublic}>Public</button>
-									<button type="button" className={`pt-button pt-icon-lock ${this.state.isPublic ? '' : 'pt-active'}`} onClick={this.setPrivate}>Private</button>
+									<Button
+										className={this.state.isPublic ? 'pt-active' : ''}
+										onClick={this.setPublic}
+										text="Public"
+										icon="globe"
+									/>
+									<Button
+										className={this.state.isPublic ? '' : 'pt-active'}
+										onClick={this.setPrivate}
+										text="Private"
+										icon="lock"
+									/>
 								</div>
 							</InputField>
 						}

@@ -4,6 +4,7 @@ import { Button, Tooltip } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
 import ImageUpload from 'components/ImageUpload/ImageUpload';
 import NavDrag from 'components/NavDrag/NavDrag';
+import Icon from 'components/Icon/Icon';
 import { populateNavigationIds, apiFetch } from 'utilities';
 
 require('./dashboardDetails.scss');
@@ -179,7 +180,7 @@ class DashboardDetails extends Component {
 									content={<span>Used for browser icons. Must be square.<br />Recommended: 50*50px</span>}
 									tooltipClassName="pt-dark"
 								>
-									<span className="pt-icon-standard pt-icon-info-sign" />
+									<Icon icon="info-sign" />
 								</Tooltip>
 							</span>
 						}
@@ -195,7 +196,7 @@ class DashboardDetails extends Component {
 									content={<span>Used as default preview image for social sharing cards.<br />Recommended: 500*500px</span>}
 									tooltipClassName="pt-dark"
 								>
-									<span className="pt-icon-standard pt-icon-info-sign" />
+									<Icon icon="info-sign" />
 								</Tooltip>
 							</span>
 						}
@@ -213,7 +214,7 @@ class DashboardDetails extends Component {
 									content={<span>Used in the header bar.<br />Recommended: ~40*150px</span>}
 									tooltipClassName="pt-dark"
 								>
-									<span className="pt-icon-standard pt-icon-info-sign" />
+									<Icon icon="info-sign" />
 								</Tooltip>
 							</span>
 						}
@@ -232,7 +233,7 @@ class DashboardDetails extends Component {
 									content={<span>Used on the landing page.<br />Recommended: ~200*750px</span>}
 									tooltipClassName="pt-dark"
 								>
-									<span className="pt-icon-standard pt-icon-info-sign" />
+									<Icon icon="info-sign" />
 								</Tooltip>
 							</span>
 						}
@@ -251,7 +252,7 @@ class DashboardDetails extends Component {
 									content={<span>Used on the landing page.<br />Recommended: ~1200*800px</span>}
 									tooltipClassName="pt-dark"
 								>
-									<span className="pt-icon-standard pt-icon-info-sign" />
+									<Icon icon="info-sign" />
 								</Tooltip>
 							</span>
 						}

@@ -26,34 +26,12 @@ class PubOptionsReview extends Component {
 			selectedVersion: undefined,
 			messageContent: undefined,
 		};
-		// this.setStatus = this.setStatus.bind(this);
-		// this.setVersion = this.setVersion.bind(this);
-		// this.setMessage = this.setMessage.bind(this);
+
 		this.getStatusClassName = this.getStatusClassName.bind(this);
 		this.handleMessageChange = this.handleMessageChange.bind(this);
 		this.handleReviewUpdate = this.handleReviewUpdate.bind(this);
 	}
 
-	// setStatus() {
-	// 	this.handleReviewUpdate({
-	// 		status: this.state.selectedStatus,
-	// 	});
-	// }
-
-	// setVersion() {
-	// 	this.handleReviewUpdate({
-	// 		versionId: this.state.selectedVersion.id,
-	// 		content: this.state.messageContent,
-	// 		status: 'submitted',
-	// 	});
-	// }
-
-	// setMessage() {
-	// 	this.handleReviewUpdate({
-	// 		content: this.state.messageContent,
-	// 		status: this.state.selectedStatus,
-	// 	});
-	// }
 	getStatusClassName(status) {
 		if (status === 'unsubmitted' || status === 'closed') { return ''; }
 		if (status === 'submitted') { return 'pt-intent-warning'; }
@@ -139,8 +117,6 @@ class PubOptionsReview extends Component {
 		//  - Multiple reviewers in order, all in separate/same channel
 		//  - Multiple reviewers in private from author
 		// 	- Keep everything private from author until outline completed?
-		
-
 
 
 		// To begin a review, select a version (only pub managers can do this);
@@ -152,15 +128,6 @@ class PubOptionsReview extends Component {
 		// On all cases, present another version selection, but with different message.
 		const isAdmin = this.props.loginData.isAdmin;
 		const isManager = this.props.pubData.isManager;
-
-		/*
-		Elements:
-		Instructions
-		Version selector
-		Message box (placeholder)
-		Status selector
-		Submit button (language, isDisabled)
-		*/
 
 		let instructions;
 		let placeholder;
@@ -223,7 +190,7 @@ class PubOptionsReview extends Component {
 		const versionsById = {};
 		this.props.pubData.versions.forEach((version)=> {
 			versionsById[version.id] = version;
-		})
+		});
 
 		return (
 			<div className="pub-options-review-component">

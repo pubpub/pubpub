@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { getResizedUrl } from 'utilities';
+import Icon from 'components/Icon/Icon';
 
 require('./communityPreview.scss');
 
@@ -48,10 +49,10 @@ const CommunityPreview = function(props) {
 			<div className="description">{props.description}</div>
 			<div className="stats">
 				<div className="stat">
-					<span className="pt-icon-standard pt-icon-document" /> {props.numPubs}
+					<Icon icon="document" /> {props.numPubs}
 				</div>
 				<div className="stat">
-					<span className="pt-icon-standard pt-icon-chat" /> {props.numDiscussions}
+					<Icon icon="chat" /> {props.numDiscussions}
 				</div>
 			</div>
 		</a>
