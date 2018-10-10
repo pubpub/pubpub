@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
 import { hydrateWrapper } from 'utilities';
 
-require('./newPricing.scss');
+require('./pricing.scss');
 
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
@@ -11,13 +11,14 @@ const propTypes = {
 	locationData: PropTypes.object.isRequired,
 };
 
-const NewPricing = (props)=> {
+const Pricing = (props)=> {
 	return (
-		<div id="new-pricing-container">
+		<div id="pricing-container">
 			<PageWrapper
 				loginData={props.loginData}
 				communityData={props.communityData}
 				locationData={props.locationData}
+				hideNav={true}
 			>
 				<div className="container">
 					<div className="row">
@@ -38,7 +39,7 @@ const NewPricing = (props)=> {
 									<button className="pt-button pt-large">Create your Community</button>
 								</div>
 								<div className="option pt-card pt-interactive">
-									<h2>Premium</h2>
+									<h2>Professional</h2>
 									<p className="subtitle">Contact for pricing</p>
 									<ul className="features">
 										<li>All of PubPub's core drafting, review, publishing, and discussion features.</li>
@@ -73,7 +74,7 @@ const NewPricing = (props)=> {
 	);
 };
 
-NewPricing.propTypes = propTypes;
-export default NewPricing;
+Pricing.propTypes = propTypes;
+export default Pricing;
 
-hydrateWrapper(NewPricing);
+hydrateWrapper(Pricing);

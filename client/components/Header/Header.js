@@ -102,7 +102,7 @@ class Header extends Component {
 
 									{/* Dashboard panel button */}
 									{isAdmin &&
-										<a href="/dashboard" className="pt-button pt-large pt-minimal">Dashboard</a>
+										<a href="/dashboard" className="pt-button pt-large pt-minimal">manage</a>
 									}
 
 									{/* User avatar and menu */}

@@ -7,7 +7,7 @@
 }
 
 
-#new-landing-container {
+#landing-container {
 	/***** Globals *****/
 	.buttons {
 		margin: 3em 0;
@@ -258,7 +258,7 @@
 
 /***** Mobile *****/
 @media only screen and (max-width: 720px) {
-	#new-landing-container {
+	#landing-container {
 		#jumbotron {
 			img.hero {
 				width: 100%;

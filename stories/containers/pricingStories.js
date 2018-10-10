@@ -1,11 +1,11 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import NewPricing from 'containers/NewPricing/NewPricing';
+import Pricing from 'containers/Pricing/Pricing';
 import { locationData, loginData, communityData } from '../data';
 
 storiesOf('Containers', module)
-.add('NewPricing', () => (
-	<NewPricing
+.add('Pricing', () => (
+	<Pricing
 		locationData={locationData}
 		loginData={loginData}
 		communityData={communityData}

@@ -9,7 +9,7 @@ require('./landing');			// Route: '/'
 
 require('./newAbout');			// Route: '/new/about'
 require('./newFeatures');		// Route: '/new/features'
-require('./newPricing');		// Route: '/new/pricing'
+require('./pricing');			// Route: '/pricing'
 require('./newContact');		// Route: '/new/contact'
 
 /* Routes for Communities */
