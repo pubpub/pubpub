@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
-import { apiFetch } from 'utilities';
+import Editor, { docIsEmpty, getJSON } from '@pubpub/editor';
+import dateFormat from 'dateformat';
+import { apiFetch, generateHash } from 'utilities';
 
 require('./pubOptionsReview.scss');
 
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
-	// loginData: PropTypes.object.isRequired,
+	loginData: PropTypes.object.isRequired,
 	setPubData: PropTypes.func.isRequired,
 };
 
@@ -18,27 +20,86 @@ class PubOptionsReview extends Component {
 		super(props);
 		this.state = {
 			isLoading: false,
+			editorKey: generateHash(),
+			selectedStatus: undefined,
+			selectedVersion: undefined,
+			messageContent: undefined,
 		};
-
+		// this.setStatus = this.setStatus.bind(this);
+		// this.setVersion = this.setVersion.bind(this);
+		// this.setMessage = this.setMessage.bind(this);
+		this.getStatusClassName = this.getStatusClassName.bind(this);
+		this.handleMessageChange = this.handleMessageChange.bind(this);
 		this.handleReviewUpdate = this.handleReviewUpdate.bind(this);
 	}
 
-	handleReviewUpdate(newReviewObject) {
+	// setStatus() {
+	// 	this.handleReviewUpdate({
+	// 		status: this.state.selectedStatus,
+	// 	});
+	// }
+
+	// setVersion() {
+	// 	this.handleReviewUpdate({
+	// 		versionId: this.state.selectedVersion.id,
+	// 		content: this.state.messageContent,
+	// 		status: 'submitted',
+	// 	});
+	// }
+
+	// setMessage() {
+	// 	this.handleReviewUpdate({
+	// 		content: this.state.messageContent,
+	// 		status: this.state.selectedStatus,
+	// 	});
+	// }
+	getStatusClassName(status) {
+		if (status === 'unsubmitted' || status === 'closed') { return ''; }
+		if (status === 'submitted') { return 'pt-intent-warning'; }
+		if (status === 'accepted') { return 'pt-intent-success'; }
+		if (status === 'rejected') { return 'pt-intent-danger'; }
+		if (status === 'changes requested') { return 'pt-intent-warning'; }
+	}
+
+	handleMessageChange(changeObject) {
+		this.setState({
+			messageContent: docIsEmpty(changeObject.view.state.doc)
+				? undefined
+				: getJSON(changeObject.view),
+		});
+	}
+
+	handleReviewUpdate() {
 		this.setState({ isLoading: true });
 
-		return apiFetch('/api/pubs', {
+		return apiFetch('/api/pubs/reviews', {
 			method: 'PUT',
 			body: JSON.stringify({
-				review: newReviewObject,
+				reviewItem: {
+					versionId: this.state.selectedVersion
+						? this.state.selectedVersion.id
+						: undefined,
+					content: this.state.messageContent,
+					status: this.state.selectedVersion
+						? 'submitted'
+						: this.state.selectedStatus,
+				},
 				pubId: this.props.pubData.id,
 				communityId: this.props.communityData.id,
 			})
 		})
-		.then(()=> {
-			this.setState({ isLoading: false });
+		.then((result)=> {
+			this.setState({
+				isLoading: false,
+				editorKey: generateHash(),
+				selectedStatus: undefined,
+				selectedVersion: undefined,
+				messageContent: undefined,
+			});
+
 			this.props.setPubData({
 				...this.props.pubData,
-				review: newReviewObject,
+				review: result,
 			});
 		})
 		.catch((err)=> {
@@ -49,7 +110,11 @@ class PubOptionsReview extends Component {
 
 	render() {
 		const pubData = this.props.pubData;
-		const review = pubData.review || {};
+		const review = pubData.review || [];
+		const currentStatus = review.reduce((prev, curr)=> {
+			if (curr.status) { return curr.status; }
+			return prev;
+		}, 'unsubmitted');
 		// TODO: permissions in pub.js should let communityAdmins update review even if they are not pubManagers
 		// TODO: there are certain types of actions on a review object that only certain parties can make.
 		// TODO: who has access to comment/review
@@ -74,56 +139,227 @@ class PubOptionsReview extends Component {
 		//  - Multiple reviewers in private from author
 		// 	- Keep everything private from author until outline completed?
 		
+
+
+
+		// To begin a review, select a version (only pub managers can do this);
+		// If not manager: Reviews must be initiated by a pub manager
+		// If a review has been started:
+		// Leave comments
+		// Options: Cancel review
+		// Options: Approve, Request changes, reject
+		// On all cases, present another version selection, but with different message.
+		const isAdmin = this.props.loginData.isAdmin;
+		const isManager = this.props.pubData.isManager;
+
+		/*
+		Elements:
+		Instructions
+		Version selector
+		Message box (placeholder)
+		Status selector
+		Submit button (language, isDisabled)
+		*/
+
+		let instructions;
+		let placeholder;
+		let buttonLanguage;
+		let isDisabled;
+
+		if (currentStatus === 'unsubmitted' || currentStatus === 'closed') {
+			instructions = 'To begin a new review, select a version you would like to submit for consideration.';
+			placeholder = 'Add a message to the submission';
+			buttonLanguage = 'Submit version for review';
+			isDisabled = !this.state.selectedVersion;
+		}
+		if (currentStatus === 'submitted') {
+			instructions = 'Add a message or change the status of this submission.';
+			placeholder = 'Add a message to the review';
+			buttonLanguage = (
+				<span>
+					{this.state.selectedStatus ? 'Set ' : ''}
+					<span className="status">{this.state.selectedStatus}</span>
+					{this.state.selectedStatus && this.state.messageContent ? ' and ' : ''}
+					{this.state.messageContent ? 'Add message' : ''}
+					{!this.state.selectedStatus && !this.state.messageContent ? 'Update status or Add Message ' : ''}
+				</span>
+			);
+			isDisabled = !this.state.messageContent && !this.state.selectedStatus;
+		}
+		if (currentStatus === 'accepted') {
+			instructions = 'Your version has been accepted! You may begin a new review on a new version below.';
+			placeholder = 'Add a message to the review';
+			buttonLanguage = this.state.selectedVersion
+				? 'Submit version for review'
+				: 'Add message';
+			isDisabled = !this.state.selectedVersion && !this.state.messageContent;
+		}
+		if (currentStatus === 'rejected') {
+			instructions = 'Your version has been rejected. You may begin a new review on a new version below.';
+			placeholder = 'Add a message to the review';
+			buttonLanguage = this.state.selectedVersion
+				? 'Submit version for review'
+				: 'Add message';
+			isDisabled = !this.state.selectedVersion && !this.state.messageContent;
+		}
+		if (currentStatus === 'changes requested') {
+			instructions = 'Changes have been requested. You can make these changes, save them in a new version, and then select that version for review below.';
+			placeholder = 'Add a message to the review';
+			buttonLanguage = this.state.selectedVersion
+				? 'Submit changes for review'
+				: 'Add message';
+			isDisabled = !this.state.selectedVersion && !this.state.messageContent;
+		}
+
 		return (
 			<div className="pub-options-review-component">
-				<h1>Review</h1>
+				<div className="header-bar">
+					<h1>Review</h1>
+					<div>
+						<span className={`pt-tag ${this.getStatusClassName(currentStatus)}`}>Status: {currentStatus}</span>
+					</div>
+				</div>
 
-				<Select
-					items={this.props.pubData.versions}
-					filterable={false}
-					itemRenderer={(item, { handleClick, modifiers })=> {
-						return (
-							<button
-								type="button"
-								tabIndex={-1}
-								onClick={handleClick}
-								className={modifiers.active ? 'pt-menu-item pt-active' : 'pt-menu-item'}
-							>
-								{item.id}
-							</button>
-						);
+				<p>{instructions}</p>
+				{currentStatus !== 'submitted' &&
+					<Select
+						items={this.props.pubData.versions}
+						filterable={false}
+						itemRenderer={(item, { handleClick, modifiers })=> {
+							return (
+								<button
+									type="button"
+									tabIndex={-1}
+									onClick={handleClick}
+									className={modifiers.active ? 'pt-menu-item pt-active' : 'pt-menu-item'}
+								>
+									{item.id}
+								</button>
+							);
+						}}
+						onItemSelect={(item)=> {
+							this.setState({
+								selectedVersion: item,
+							});
+						}}
+						popoverProps={{ popoverClassName: 'pt-minimal' }}
+						inputProps={{ className: 'pt-fill' }}
+					>
+						<Button
+							text={this.state.selectedVersion ? `Version: ${this.state.selectedVersion.createdAt}` : 'Select a Version'}
+							rightIcon="caret-down"
+						/>
+					</Select>
+				}
+				<Editor
+					key={this.state.editorKey}
+					onChange={this.handleMessageChange}
+					customPlugins={{
+						headerIds: undefined,
+						highlights: undefined,
 					}}
-					onItemSelect={(item)=> {
-						console.log(item);
-					}}
-					popoverProps={{ popoverClassName: 'pt-minimal' }}
-				>
-					<Button text="Select a Version" rightIcon="caret-down" />
-				</Select>
-				<Button
-					className={review.status === 'none' ? 'pt-active' : ''}
-					text="None"
-					loading={this.state.isLoading}
-					onClick={()=> {
-						this.handleReviewUpdate({ status: 'none' });
-					}}
+					placeholder={placeholder}
 				/>
-				<Button
-					className={review.status === 'submitted' ? 'pt-active' : ''}
-					text="Submit"
-					loading={this.state.isLoading}
-					onClick={()=> {
-						this.handleReviewUpdate({ status: 'submitted' });
-					}}
-				/>
-				<Button
-					className={review.status === 'complete' ? 'pt-active' : ''}
-					text="Complete"
-					loading={this.state.isLoading}
-					onClick={()=> {
-						this.handleReviewUpdate({ status: 'complete' });
-					}}
-				/>
+				{currentStatus === 'submitted' &&
+					<div>Set Status:</div>
+				}
+				<div className="button-row">
+					{currentStatus === 'submitted' &&
+						<div className="statuses">
+							<div className="pt-button-group">
+								<Button
+									text="Submitted"
+									className={!this.state.selectedStatus ? 'pt-active' : ''}
+									onClick={()=> {
+										this.setState({ selectedStatus: undefined });
+									}}
+								/>
+								{isManager &&
+									<Button
+										text="Closed"
+										className={this.state.selectedStatus === 'closed' ? 'pt-active' : ''}
+										onClick={()=> {
+											this.setState({ selectedStatus: 'closed' });
+										}}
+									/>
+								}
+								{isAdmin &&
+									<Button
+										text="Accepted"
+										className={this.state.selectedStatus === 'accepted' ? 'pt-active' : ''}
+										onClick={()=> {
+											this.setState({ selectedStatus: 'accepted' });
+										}}
+									/>
+								}
+								{isAdmin &&
+									<Button
+										text="Rejected"
+										className={this.state.selectedStatus === 'rejected' ? 'pt-active' : ''}
+										onClick={()=> {
+											this.setState({ selectedStatus: 'rejected' });
+										}}
+									/>
+								}
+								{isAdmin &&
+									<Button
+										text="Changes Requested"
+										className={this.state.selectedStatus === 'changes requested' ? 'pt-active' : ''}
+										onClick={()=> {
+											this.setState({ selectedStatus: 'changes requested' });
+										}}
+									/>
+								}
+							</div>
+						</div>
+					}
+					<Button
+						text={buttonLanguage}
+						className="pt-intent-primary"
+						disabled={isDisabled}
+						loading={this.state.isLoading}
+						onClick={()=> {
+							this.handleReviewUpdate();
+						}}
+					/>
+				</div>
+
+				{/* History of events */}
+				{review.slice().sort((foo, bar)=> {
+					if (foo.createdAt > bar.createdAt) { return -1; }
+					if (foo.createdAt < bar.createdAt) { return 1; }
+					return 0;
+				}).map((reviewItem)=> {
+					return (
+						<div className="review-item" key={reviewItem.createdAt}>
+							<div className="item-header">
+								<div className="date">
+									{dateFormat(reviewItem.createdAt, 'mmm dd, yyyy · h:MMTT')}
+								</div>
+								{reviewItem.status &&
+									<div className="status-change">
+										Status Changed to: <span className={`pt-tag ${this.getStatusClassName(reviewItem.status)}`}>{reviewItem.status}</span>
+									</div>
+								}
+							</div>
+							{reviewItem.versionId &&
+								<div className="pt-callout">
+									Submitted Version {reviewItem.versionId}
+								</div>
+							}
+							{reviewItem.content &&
+								<Editor
+									customPlugins={{
+										headerIds: undefined,
+										highlights: undefined,
+									}}
+									initialContent={reviewItem.content}
+									isReadOnly={true}
+								/>
+							}
+						</div>
+					);
+				})}
 			</div>
 		);
 	}

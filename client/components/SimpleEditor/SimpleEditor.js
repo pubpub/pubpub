@@ -62,7 +62,7 @@ class SimpleEditor extends Component {
 					}}
 					customPlugins={{
 						headerIds: undefined,
-						higlights: undefined,
+						highlights: undefined,
 					}}
 					placeholder={this.props.placeholder}
 				/>

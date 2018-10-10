@@ -16,6 +16,7 @@ require('./pubs');
 require('./pubAttributions');
 require('./pubManagers');
 require('./pubTags');
+require('./reviews.js');
 require('./rss.js');
 require('./search');
 require('./signup');

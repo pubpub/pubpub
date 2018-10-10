@@ -1,3 +1,67 @@
 .pub-options-review-component {
-	
+	.header-bar {
+		display: flex;
+		h1 {
+			flex-grow: 1;
+			flex-shrink: 1;
+		}
+		span {
+			text-transform: capitalize;
+		}
+	}
+	.editor:not(.read-only) {
+		border: 1px solid #CCC;
+		border-radius: 2px;
+		padding: 1em;
+		margin: 0.5em 0em;
+	}
+	.editor.read-only {
+		margin-top: 0.5em;
+	}
+	.pt-tag, .status {
+		text-transform: capitalize;
+		&.pt-intent-warning {
+			background: #d9c72b;
+		}
+	}
+	.button-row {
+		margin-bottom: 4em;
+		display: flex;
+		flex-wrap: wrap;
+		.statuses {
+			flex-grow: 1;
+			flex-shrink: 1;
+			margin-bottom: 0.5em;
+		}
+		.pt-intent-primary {
+			margin-bottom: 0.5em;
+		}
+	}
+	.review-item {
+		padding-left: 1em;
+		padding-bottom: 2em;
+		position: relative;
+		&:not(:last-of-type) {
+			border-left: 1px solid #CCC;	
+		}
+		&:before {
+			content: "";
+			display: block;
+			position: absolute;
+			top: 0;
+			left: -9px;
+			width: 17px;
+			height: 17px;
+			border-radius: 17px;
+			background: #DDD;
+		}
+		.item-header {
+			display: flex;
+			.date {
+				flex-grow: 1;
+				flex-shrink: 1;
+				font-weight: 600;
+			}
+		}
+	}
 }
