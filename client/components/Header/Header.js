@@ -99,10 +99,11 @@ class Header extends Component {
 									}
 									{/* Search button */}
 									{/* <a href="/search" role="button" tabIndex="0" className="pt-button pt-large pt-minimal pt-icon-search" /> */}
+										<a className="pt-button pt-large pt-minimal">Search</a>
 
 									{/* Dashboard panel button */}
 									{isAdmin &&
-										<a href="/dashboard" className="pt-button pt-large pt-minimal">manage</a>
+										<a href="/dashboard" className="pt-button pt-large pt-minimal">Manage</a>
 									}
 
 									{/* User avatar and menu */}

@@ -4,12 +4,12 @@ require('./redirects');			// Redirect needed v3 routes;
 require('./communityCreate');	// Route: '/community/create'
 require('./explore');			// Route: '/explore'
 require('./about');				// Route: '/about'
+require('./pricing');			// Route: '/pricing'
 require('./pubRedirect');		// Route: '/pub/:slug'
 require('./landing');			// Route: '/'
 
 require('./newAbout');			// Route: '/new/about'
 require('./newFeatures');		// Route: '/new/features'
-require('./pricing');			// Route: '/pricing'
 require('./newContact');		// Route: '/new/contact'
 
 /* Routes for Communities */
