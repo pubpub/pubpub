@@ -4,6 +4,7 @@ import { Button } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import Editor, { docIsEmpty, getJSON } from '@pubpub/editor';
 import dateFormat from 'dateformat';
+import Avatar from 'components/Avatar/Avatar';
 import { apiFetch, generateHash } from 'utilities';
 
 require('./pubOptionsReview.scss');
@@ -211,6 +212,19 @@ class PubOptionsReview extends Component {
 			isDisabled = !this.state.selectedVersion && !this.state.messageContent;
 		}
 
+		const usersById = {};
+		this.props.communityData.admins.forEach((user)=> {
+			usersById[user.id] = user;
+		});
+		this.props.pubData.managers.forEach((manager)=> {
+			usersById[manager.user.id] = manager.user;
+		});
+
+		const versionsById = {};
+		this.props.pubData.versions.forEach((version)=> {
+			versionsById[version.id] = version;
+		})
+
 		return (
 			<div className="pub-options-review-component">
 				<div className="header-bar">
@@ -220,109 +234,113 @@ class PubOptionsReview extends Component {
 					</div>
 				</div>
 
-				<p>{instructions}</p>
-				{currentStatus !== 'submitted' &&
-					<Select
-						items={this.props.pubData.versions}
-						filterable={false}
-						itemRenderer={(item, { handleClick, modifiers })=> {
-							return (
-								<button
-									type="button"
-									tabIndex={-1}
-									onClick={handleClick}
-									className={modifiers.active ? 'pt-menu-item pt-active' : 'pt-menu-item'}
-								>
-									{item.id}
-								</button>
-							);
-						}}
-						onItemSelect={(item)=> {
-							this.setState({
-								selectedVersion: item,
-							});
-						}}
-						popoverProps={{ popoverClassName: 'pt-minimal' }}
-						inputProps={{ className: 'pt-fill' }}
-					>
-						<Button
-							text={this.state.selectedVersion ? `Version: ${this.state.selectedVersion.createdAt}` : 'Select a Version'}
-							rightIcon="caret-down"
-						/>
-					</Select>
-				}
-				<Editor
-					key={this.state.editorKey}
-					onChange={this.handleMessageChange}
-					customPlugins={{
-						headerIds: undefined,
-						highlights: undefined,
-					}}
-					placeholder={placeholder}
-				/>
-				{currentStatus === 'submitted' &&
-					<div>Set Status:</div>
-				}
-				<div className="button-row">
-					{currentStatus === 'submitted' &&
-						<div className="statuses">
-							<div className="pt-button-group">
+				{(isAdmin || isManager) &&
+					<div>
+						<p>{instructions}</p>
+						{currentStatus !== 'submitted' &&
+							<Select
+								items={this.props.pubData.versions}
+								filterable={false}
+								itemRenderer={(item, { handleClick, modifiers })=> {
+									return (
+										<button
+											type="button"
+											tabIndex={-1}
+											onClick={handleClick}
+											className={modifiers.active ? 'pt-menu-item pt-active' : 'pt-menu-item'}
+										>
+											Version {dateFormat(item.createdAt, 'mmm dd, yyyy · h:MMTT')}
+										</button>
+									);
+								}}
+								onItemSelect={(item)=> {
+									this.setState({
+										selectedVersion: item,
+									});
+								}}
+								popoverProps={{ popoverClassName: 'pt-minimal' }}
+								inputProps={{ className: 'pt-fill' }}
+							>
 								<Button
-									text="Submitted"
-									className={!this.state.selectedStatus ? 'pt-active' : ''}
-									onClick={()=> {
-										this.setState({ selectedStatus: undefined });
-									}}
+									text={this.state.selectedVersion ? `Version: ${this.state.selectedVersion.createdAt}` : 'Select a Version'}
+									rightIcon="caret-down"
 								/>
-								{isManager &&
-									<Button
-										text="Closed"
-										className={this.state.selectedStatus === 'closed' ? 'pt-active' : ''}
-										onClick={()=> {
-											this.setState({ selectedStatus: 'closed' });
-										}}
-									/>
-								}
-								{isAdmin &&
-									<Button
-										text="Accepted"
-										className={this.state.selectedStatus === 'accepted' ? 'pt-active' : ''}
-										onClick={()=> {
-											this.setState({ selectedStatus: 'accepted' });
-										}}
-									/>
-								}
-								{isAdmin &&
-									<Button
-										text="Rejected"
-										className={this.state.selectedStatus === 'rejected' ? 'pt-active' : ''}
-										onClick={()=> {
-											this.setState({ selectedStatus: 'rejected' });
-										}}
-									/>
-								}
-								{isAdmin &&
-									<Button
-										text="Changes Requested"
-										className={this.state.selectedStatus === 'changes requested' ? 'pt-active' : ''}
-										onClick={()=> {
-											this.setState({ selectedStatus: 'changes requested' });
-										}}
-									/>
-								}
-							</div>
+							</Select>
+						}
+						<Editor
+							key={this.state.editorKey}
+							onChange={this.handleMessageChange}
+							customPlugins={{
+								headerIds: undefined,
+								highlights: undefined,
+							}}
+							placeholder={placeholder}
+						/>
+						{currentStatus === 'submitted' &&
+							<div>Set Status:</div>
+						}
+						<div className="button-row">
+							{currentStatus === 'submitted' &&
+								<div className="statuses">
+									<div className="pt-button-group">
+										<Button
+											text="Submitted"
+											className={!this.state.selectedStatus ? 'pt-active' : ''}
+											onClick={()=> {
+												this.setState({ selectedStatus: undefined });
+											}}
+										/>
+										{isManager &&
+											<Button
+												text="Closed"
+												className={this.state.selectedStatus === 'closed' ? 'pt-active' : ''}
+												onClick={()=> {
+													this.setState({ selectedStatus: 'closed' });
+												}}
+											/>
+										}
+										{isAdmin &&
+											<Button
+												text="Accepted"
+												className={this.state.selectedStatus === 'accepted' ? 'pt-active' : ''}
+												onClick={()=> {
+													this.setState({ selectedStatus: 'accepted' });
+												}}
+											/>
+										}
+										{isAdmin &&
+											<Button
+												text="Rejected"
+												className={this.state.selectedStatus === 'rejected' ? 'pt-active' : ''}
+												onClick={()=> {
+													this.setState({ selectedStatus: 'rejected' });
+												}}
+											/>
+										}
+										{isAdmin &&
+											<Button
+												text="Changes Requested"
+												className={this.state.selectedStatus === 'changes requested' ? 'pt-active' : ''}
+												onClick={()=> {
+													this.setState({ selectedStatus: 'changes requested' });
+												}}
+											/>
+										}
+									</div>
+								</div>
+							}
+							<Button
+								text={buttonLanguage}
+								className="pt-intent-primary"
+								disabled={isDisabled}
+								loading={this.state.isLoading}
+								onClick={()=> {
+									this.handleReviewUpdate();
+								}}
+							/>
 						</div>
-					}
-					<Button
-						text={buttonLanguage}
-						className="pt-intent-primary"
-						disabled={isDisabled}
-						loading={this.state.isLoading}
-						onClick={()=> {
-							this.handleReviewUpdate();
-						}}
-					/>
-				</div>
+					</div>
+				}
 
 				{/* History of events */}
 				{review.slice().sort((foo, bar)=> {
@@ -330,12 +348,16 @@ class PubOptionsReview extends Component {
 					if (foo.createdAt < bar.createdAt) { return 1; }
 					return 0;
 				}).map((reviewItem)=> {
+					const user = usersById[reviewItem.userId];
+					const version = versionsById[reviewItem.versionId];
 					return (
 						<div className="review-item" key={reviewItem.createdAt}>
+							<Avatar width={25} userInitials={user.initials} userAvatar={user.avatar} />
 							<div className="item-header">
 								<div className="date">
 									{dateFormat(reviewItem.createdAt, 'mmm dd, yyyy · h:MMTT')}
 								</div>
+								<div className="name">{user.fullName}</div>
 								{reviewItem.status &&
 									<div className="status-change">
 										Status Changed to: <span className={`pt-tag ${this.getStatusClassName(reviewItem.status)}`}>{reviewItem.status}</span>
@@ -344,7 +366,7 @@ class PubOptionsReview extends Component {
 							</div>
 							{reviewItem.versionId &&
 								<div className="pt-callout">
-									Submitted Version {reviewItem.versionId}
+									Submitted Version {dateFormat(version.createdAt, 'mmm dd, yyyy · h:MMTT')}
 								</div>
 							}
 							{reviewItem.content &&

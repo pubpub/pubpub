@@ -48,7 +48,6 @@ const PubOptions = (props)=> {
 		'tags',
 		'sharing',
 		'sections',
-		'review',
 		'DOI',
 		'delete'
 	];
@@ -56,6 +55,7 @@ const PubOptions = (props)=> {
 		'attribution',
 		'versions',
 		'cite',
+		'review',
 		'discussions',
 		'social',
 		'export',
