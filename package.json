@@ -20,7 +20,8 @@
     "postinstall": "npm run build-prod",
     "start": "concurrently --kill-others \"npm run api-dev\" \"npm run build-dev\"",
     "storybook": "start-storybook -p 9001 -c .storybook -s ./",
-    "workers": "NODE_PATH=./client WORKER=true nodemon workers/init.js --watch workers"
+    "workers-dev": "NODE_PATH=./client WORKER=true nodemon workers/init.js --watch workers",
+    "workers-prod": "NODE_PATH=./client WORKER=true node workers/init.js"
   },
   "dependencies": {
     "@blueprintjs/core": "^2.3.1",

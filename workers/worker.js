@@ -11,6 +11,7 @@ if (process.env.NODE_ENV !== 'production') {
 const processTask = (channel)=> {
 	return (msg)=> {
 		const taskData = JSON.parse(msg.content.toString());
+		console.log('Beginning task ', taskData.id);
 		/* Specify which task function to run based on the type as set in the msg */
 		let taskFunction;
 		if (taskData.type === 'export') {
