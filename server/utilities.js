@@ -73,7 +73,7 @@ export const getInitialData = (req)=> {
 					title: 'PubPub',
 					description: 'Collaborative Community Publishing',
 					favicon: '/favicon.png',
-					avatar: '/static/icon.png',
+					avatar: '/static/logo.png',
 					smallHeaderLogo: locationData.path === '/'
 						? '/static/logoWhite.svg'
 						: '/static/logoBlack.svg',
