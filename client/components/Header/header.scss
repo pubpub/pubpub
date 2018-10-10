@@ -5,6 +5,7 @@
 	background-repeat: no-repeat;
 	background-position: center center;
 	transition: .2s linear box-shadow;
+	background-color: #f4f4f7;
 	&.has-image {
 		color: white;
 	}
@@ -12,6 +13,11 @@
 		background-image: linear-gradient(-180deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.0) 100%);
 		color: white;
 		.pt-button:not([class*="pt-intent-"]), .pt-button[class*="pt-icon-"]::before { color: inherit; }
+	}
+	.separator { 
+		color: inherit;
+		padding: 0px 10px;
+		font-size: 28px;
 	}
 	.header-items {
 		height: 40px;

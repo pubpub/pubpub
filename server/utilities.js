@@ -74,7 +74,9 @@ export const getInitialData = (req)=> {
 					description: 'Collaborative Community Publishing',
 					favicon: '/favicon.png',
 					avatar: '/static/icon.png',
-					smallHeaderLogo: '/static/icon.png',
+					smallHeaderLogo: locationData.path === '/'
+						? '/static/logoWhite.svg'
+						: '/static/logoBlack.svg',
 					accentColor: '#112233',
 					accentTextColor: '#FFFFFF',
 					accentActionColor: 'rgba(17, 34, 51, 0.6)',

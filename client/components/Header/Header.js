@@ -80,7 +80,7 @@ class Header extends Component {
 								{(!isLandingPage || isBasePubPub) &&
 									<div className="header-items header-items-left">
 										<a href="/">
-											<img alt="header logo" className="headerLogo" src={resizedSmallHeaderLogo} />
+											<img alt="header logo" className="headerLogo" style={isBasePubPub ? { padding: '3px 0px' } : {}} src={resizedSmallHeaderLogo} />
 											{/* this.props.communityData.title */}
 										</a>
 									</div>
@@ -88,12 +88,21 @@ class Header extends Component {
 
 								<div className="header-items header-items-right">
 
+									{isBasePubPub &&
+										[
+											<a href="/about" role="button" tabIndex="0" className="pt-button pt-large pt-minimal">About</a>,
+											<a href="/features" role="button" tabIndex="0" className="pt-button pt-large pt-minimal">Features</a>,
+											<a href="/pricing" role="button" tabIndex="0" className="pt-button pt-large pt-minimal">Pricing</a>,
+											<a href="/contact" role="button" tabIndex="0" className="pt-button pt-large pt-minimal">Contact</a>,
+											<span className="separator">·</span>,
+										]
+									}
 									{/* Search button */}
-									<a href="/search" role="button" tabIndex="0" className="pt-button pt-large pt-minimal pt-icon-search" />
+									{/* <a href="/search" role="button" tabIndex="0" className="pt-button pt-large pt-minimal pt-icon-search" /> */}
 
 									{/* Dashboard panel button */}
 									{isAdmin &&
-										<a href="/dashboard" className="pt-button pt-large pt-minimal pt-icon-page-layout" />
+										<a href="/dashboard" className="pt-button pt-large pt-minimal">Dashboard</a>
 									}
 
 									{/* User avatar and menu */}

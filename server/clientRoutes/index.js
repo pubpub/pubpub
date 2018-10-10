@@ -7,7 +7,6 @@ require('./about');				// Route: '/about'
 require('./pubRedirect');		// Route: '/pub/:slug'
 require('./landing');			// Route: '/'
 
-require('./newLanding');		// Route: '/new/landing'
 require('./newAbout');			// Route: '/new/about'
 require('./newFeatures');		// Route: '/new/features'
 require('./newPricing');		// Route: '/new/pricing'
