@@ -38,9 +38,10 @@ const PubInlineMenu = (props)=> {
 		{ key: 'em', icon: <Icon icon="italic" /> },
 		{ key: 'link', icon: <Icon icon="link" /> },
 	];
+	const isReadOnly = !props.pubData.isDraft || (!props.pubData.isManager && !props.pubData.isDraftEditor);
 	return (
 		<div className="pub-inline-menu-component pt-elevation-2" style={menuStyle}>
-			{props.pubData.isDraft && formattingItems.map((item)=> {
+			{!isReadOnly && formattingItems.map((item)=> {
 				if (!menuItemsObject[item.key]) { return null; }
 				return (
 					<Button

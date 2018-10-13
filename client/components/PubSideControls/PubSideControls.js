@@ -40,6 +40,9 @@ class PubSideControls extends Component {
 	}
 
 	render() {
+		const isReadOnly = !this.props.pubData.isDraft || (!this.props.pubData.isManager && !this.props.pubData.isDraftEditor);
+		if (isReadOnly) { return null; }
+
 		const selectedNode = this.props.editorChangeObject.selectedNode || {};
 		const selectionBoundingBox = this.props.editorChangeObject.selectionBoundingBox || {};
 		const menuItems = this.props.editorChangeObject.menuItems || [];

@@ -14,7 +14,8 @@ const PubLinkMenu = (props)=> {
 	const activeLink = props.editorChangeObject.activeLink || {};
 	// const selectionBoundingBox = props.editorChangeObject.selectionBoundingBox || {};
 
-	if (!activeLink.attrs) { return null; }
+	const isReadOnly = !props.pubData.isDraft || (!props.pubData.isManager && !props.pubData.isDraftEditor);
+	if (isReadOnly || !activeLink.attrs) { return null; }
 
 	const menuStyle = {
 		position: 'absolute',
