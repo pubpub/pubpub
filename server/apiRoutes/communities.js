@@ -1,7 +1,7 @@
 import uuidv4 from 'uuid/v4';
 import Color from 'color';
 import app from '../server';
-import { Community, Collection, CommunityAdmin } from '../models';
+import { Community, Page, CommunityAdmin } from '../models';
 import { generateHash, slugifyString } from '../utilities';
 
 app.post('/api/communities', (req, res)=> {
@@ -9,47 +9,57 @@ app.post('/api/communities', (req, res)=> {
 	if (!user.id) { return res.status(500).json('Must be logged in to create a community'); }
 
 	const newCommunityId = uuidv4();
-	const newCollectionIds = [uuidv4(), uuidv4(), uuidv4()];
-	const subdomain = req.body.subdomain.replace(/ /g, '-').replace(/[^a-zA-Z0-9-]/gi, '').toLowerCase();
+	const homePageId = uuidv4();
+	// const newCollectionIds = [uuidv4(), uuidv4(), uuidv4()];
+	const subdomain = slugifyString(req.body.subdomain);
 
-	const subdomainBlacklist = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'www', 'dev', 'assets', 'jake', 'resize'];
+	const subdomainBlacklist = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7', 'v8', 'www', 'dev', 'assets', 'jake', 'resize', 'help'];
 	if (subdomainBlacklist.indexOf(subdomain) > -1) { return res.status(500).json('URL already used'); }
 
-	const collections = [
-		{
-			id: newCollectionIds[0],
-			title: 'Home',
-			slug: '',
-			communityId: newCommunityId,
-			isPage: false,
-			isPublic: true,
-			isOpenSubmissions: false,
-			isOpenPublish: false,
-			createPubHash: generateHash(8),
-		},
-		{
-			id: newCollectionIds[1],
-			title: 'Open Submissions',
-			slug: 'open-submissions',
-			communityId: newCommunityId,
-			isPage: false,
-			isPublic: true,
-			isOpenSubmissions: true,
-			isOpenPublish: true,
-			createPubHash: generateHash(8),
-		},
-		{
-			id: newCollectionIds[2],
-			title: 'Private Pubs',
-			slug: 'private-pubs',
-			communityId: newCommunityId,
-			isPage: false,
-			isPublic: false,
-			isOpenSubmissions: true,
-			isOpenPublish: false,
-			createPubHash: generateHash(8),
-		}
-	];
+	const newpage = {
+		id: homePageId,
+		title: 'Home',
+		slug: '',
+		communityId: newCommunityId,
+		isPublic: true,
+		layout: null,
+		viewHash: generateHash(8),
+	};
+	// const collections = [
+	// 	{
+	// 		id: newCollectionIds[0],
+	// 		title: 'Home',
+	// 		slug: '',
+	// 		communityId: newCommunityId,
+	// 		isPage: false,
+	// 		isPublic: true,
+	// 		isOpenSubmissions: false,
+	// 		isOpenPublish: false,
+	// 		createPubHash: generateHash(8),
+	// 	},
+	// 	{
+	// 		id: newCollectionIds[1],
+	// 		title: 'Open Submissions',
+	// 		slug: 'open-submissions',
+	// 		communityId: newCommunityId,
+	// 		isPage: false,
+	// 		isPublic: true,
+	// 		isOpenSubmissions: true,
+	// 		isOpenPublish: true,
+	// 		createPubHash: generateHash(8),
+	// 	},
+	// 	{
+	// 		id: newCollectionIds[2],
+	// 		title: 'Private Pubs',
+	// 		slug: 'private-pubs',
+	// 		communityId: newCommunityId,
+	// 		isPage: false,
+	// 		isPublic: false,
+	// 		isOpenSubmissions: true,
+	// 		isOpenPublish: false,
+	// 		createPubHash: generateHash(8),
+	// 	}
+	// ];
 	return Community.findOne({
 		where: { subdomain: subdomain },
 		attributes: ['id', 'subdomain']
@@ -72,11 +82,11 @@ app.post('/api/communities', (req, res)=> {
 			accentHoverColor: Color(req.body.accentColor).fade(0.2).rgb().string(),
 			accentActionColor: Color(req.body.accentColor).fade(0.4).rgb().string(),
 			accentMinimalColor: Color(req.body.accentColor).fade(0.8).rgb().string(),
-			navigation: newCollectionIds,
+			navigation: [homePageId],
 		});
 	})
 	.then(()=> {
-		return Collection.bulkCreate(collections);
+		return Page.create(newpage);
 	})
 	.then(()=> {
 		return CommunityAdmin.create({
@@ -91,7 +101,7 @@ app.post('/api/communities', (req, res)=> {
 		if (err.message === 'URL already used') {
 			return res.status(500).json('URL already used');
 		}
-		console.log('Error posting Community', err);
+		console.error('Error posting Community', err);
 		return res.status(500).json('Error Creating Community');
 	});
 });

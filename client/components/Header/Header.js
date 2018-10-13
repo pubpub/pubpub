@@ -80,8 +80,12 @@ class Header extends Component {
 								{(!isLandingPage || isBasePubPub) &&
 									<div className="header-items header-items-left">
 										<a href="/">
-											<img alt="header logo" className="headerLogo" style={isBasePubPub ? { padding: '3px 0px' } : {}} src={resizedSmallHeaderLogo} />
-											{/* this.props.communityData.title */}
+											{communityData.smallHeaderLogo &&
+												<img alt="header logo" className="headerLogo" style={isBasePubPub ? { padding: '3px 0px' } : {}} src={resizedSmallHeaderLogo} />
+											}
+											{!communityData.smallHeaderLogo &&
+												<span className="headerTitle">{this.props.communityData.title}</span>
+											}
 										</a>
 									</div>
 								}
@@ -164,7 +168,12 @@ class Header extends Component {
 						<div className="container">
 							<div className="row">
 								<div className="col-12">
-									<img alt="community logo" className="logo" src={resizedLargeHeaderLogo} />
+									{communityData.largeHeaderLogo &&
+										<img alt="community logo" className="logo" src={resizedLargeHeaderLogo} />
+									}
+									{!communityData.largeHeaderLogo &&
+										<div className="title">{this.props.communityData.title}</div>
+									}
 									<div className="description">{communityData.largeHeaderDescription}</div>
 								</div>
 							</div>

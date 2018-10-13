@@ -36,6 +36,11 @@
 		height: 40px;
 		display: block;
 	}
+	.headerTitle {
+		font-weight: 800;
+		font-size: 30px;
+		letter-spacing: 1px;
+	}
 	.avatar-button.pt-button.pt-large, .pt-button.pt-large.pt-minimal {
 		padding: 0px 5px;
 	}
@@ -51,6 +56,11 @@
 			padding-top: 2em;
 			max-width: 100%;
 			max-height: 200px;
+		}
+		.title {
+			font-weight: 900;
+			letter-spacing: 1px;
+			font-size: 85px;
 		}
 		.description {
 			padding: 1em 0em 2em;

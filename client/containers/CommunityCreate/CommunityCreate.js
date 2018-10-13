@@ -61,15 +61,19 @@ class CommunityCreate extends Component {
 	onSubdomainChange(evt) {
 		this.setState({ subdomain: evt.target.value.replace(/ /g, '-').replace(/[^a-zA-Z0-9-]/gi, '').toLowerCase() });
 	}
+
 	onTitleChange(evt) {
 		this.setState({ title: evt.target.value });
 	}
+
 	onDescriptionChange(evt) {
 		this.setState({ description: evt.target.value.substring(0, 280).replace(/\n/g, ' ') });
 	}
+
 	onLargeHeaderLogoChange(val) {
 		this.setState({ largeHeaderLogo: val });
 	}
+
 	onAccentColorChange(evt) {
 		this.setState({ accentColor: evt.target.value });
 	}
@@ -121,7 +125,6 @@ class CommunityCreate extends Component {
 										<ImageUpload
 											htmlFor="large-header-logo-upload"
 											label="Community Logo"
-											isRequired={true}
 											defaultImage={this.state.largeHeaderLogo}
 											height={60}
 											width={150}
@@ -133,7 +136,7 @@ class CommunityCreate extends Component {
 											isRequired={true}
 											value={this.state.accentColor}
 											onChange={this.onAccentColorChange}
-											error={!colorRegex.test(this.state.accentColor) ? 'Must be of form #123456' : ''}
+											error={!colorRegex.test(this.state.accentColor) ? 'Must be a hex format color: e.g. #123456' : ''}
 											helperText={<div className="color-swatch" style={{ backgroundColor: this.state.accentColor }} />}
 										/>
 										<InputField error={this.state.createError}>
@@ -143,7 +146,7 @@ class CommunityCreate extends Component {
 												className="pt-button pt-intent-primary create-account-button"
 												onClick={this.onCreateSubmit}
 												text="Create Community"
-												disabled={!this.state.subdomain || !this.state.title || !this.state.largeHeaderLogo || !colorRegex.test(this.state.accentColor)}
+												disabled={!this.state.subdomain || !this.state.title || !colorRegex.test(this.state.accentColor)}
 												loading={this.state.createIsLoading}
 											/>
 										</InputField>
