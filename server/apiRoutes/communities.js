@@ -10,7 +10,6 @@ app.post('/api/communities', (req, res)=> {
 
 	const newCommunityId = uuidv4();
 	const homePageId = uuidv4();
-	// const newCollectionIds = [uuidv4(), uuidv4(), uuidv4()];
 	const subdomain = slugifyString(req.body.subdomain);
 
 	const subdomainBlacklist = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7', 'v8', 'www', 'dev', 'assets', 'jake', 'resize', 'help'];
@@ -25,41 +24,7 @@ app.post('/api/communities', (req, res)=> {
 		layout: null,
 		viewHash: generateHash(8),
 	};
-	// const collections = [
-	// 	{
-	// 		id: newCollectionIds[0],
-	// 		title: 'Home',
-	// 		slug: '',
-	// 		communityId: newCommunityId,
-	// 		isPage: false,
-	// 		isPublic: true,
-	// 		isOpenSubmissions: false,
-	// 		isOpenPublish: false,
-	// 		createPubHash: generateHash(8),
-	// 	},
-	// 	{
-	// 		id: newCollectionIds[1],
-	// 		title: 'Open Submissions',
-	// 		slug: 'open-submissions',
-	// 		communityId: newCommunityId,
-	// 		isPage: false,
-	// 		isPublic: true,
-	// 		isOpenSubmissions: true,
-	// 		isOpenPublish: true,
-	// 		createPubHash: generateHash(8),
-	// 	},
-	// 	{
-	// 		id: newCollectionIds[2],
-	// 		title: 'Private Pubs',
-	// 		slug: 'private-pubs',
-	// 		communityId: newCommunityId,
-	// 		isPage: false,
-	// 		isPublic: false,
-	// 		isOpenSubmissions: true,
-	// 		isOpenPublish: false,
-	// 		createPubHash: generateHash(8),
-	// 	}
-	// ];
+
 	return Community.findOne({
 		where: { subdomain: subdomain },
 		attributes: ['id', 'subdomain']
@@ -73,10 +38,8 @@ app.post('/api/communities', (req, res)=> {
 			subdomain: subdomain,
 			title: req.body.title,
 			description: req.body.description.substring(0, 280).replace(/\n/g, ' ') || '',
-			// favicon: 'https://assets.pubpub.org/1egggt4v/61507218546278.png',
 			smallHeaderLogo: req.body.smallHeaderLogo,
 			largeHeaderLogo: req.body.largeHeaderLogo,
-			// largeHeaderBackground: 'https://assets.pubpub.org/9s4gbj5y/51507218425793.png',
 			accentColor: req.body.accentColor,
 			accentTextColor: Color(req.body.accentColor).isLight() ? '#000000' : '#FFFFFF',
 			accentHoverColor: Color(req.body.accentColor).fade(0.2).rgb().string(),
