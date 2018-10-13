@@ -19,6 +19,7 @@ class LayoutEditorText extends Component {
 		super(props);
 		this.state = {
 			key: `text-block-${props.layoutIndex}`,
+			initialContent: this.props.content.text || undefined,
 		};
 		this.handleRemove = this.handleRemove.bind(this);
 		this.setAlignLeft = this.setAlignLeft.bind(this);
@@ -130,7 +131,7 @@ class LayoutEditorText extends Component {
 											},
 										}}
 										placeholder="Enter text..."
-										initialContent={this.props.content.text || undefined}
+										initialContent={this.state.initialContent}
 										onChange={(editorChangeObject)=> {
 											this.setText(getJSON(editorChangeObject.view));
 										}}
