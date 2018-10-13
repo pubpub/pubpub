@@ -122,7 +122,7 @@ app.put('/api/communities', (req, res)=> {
 		return res.status(201).json(updatedCommunity);
 	})
 	.catch((err)=> {
-		console.log('Error putting Pub', err);
+		console.error('Error putting Pub', err);
 		return res.status(500).json(err);
 	});
 });
