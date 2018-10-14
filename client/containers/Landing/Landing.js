@@ -141,7 +141,7 @@ class Landing extends React.Component {
 										</TransitionGroup>
 										&nbsp;use PubPub to make their research stronger.
 									</h1>
-									<p className="subtitle">Collaboratively draft, review, and publish in a single, integrated, iterative process.</p>
+									<p className="subtitle">Collaboratively draft, review, and publish in an integrated, iterative process.</p>
 									<div className="buttons">
 										<a href="/signup" className="pt-button pt-intent-primary pt-large">Join PubPub</a>
 										<a href="/community/create" className="pt-button pt-large">Create your Community</a>
