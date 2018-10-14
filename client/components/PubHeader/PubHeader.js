@@ -267,8 +267,8 @@ class PubHeader extends Component {
 												<span> ({numNewerVersions} Newer Version{numNewerVersions === 1 ? '' : 's'})</span>
 											}
 
-											{/* If not draft, and no newer versions, say numVersions - 1 Older Versions */}
-											{!pubData.isDraft && !numNewerVersions &&
+											{/* If not draft, and no newer versions, and more than one version, say numVersions - 1 Older Versions */}
+											{!pubData.isDraft && !numNewerVersions && pubData.versions.length > 1 &&
 												<span> ({pubData.versions.length - 1} Older Version{pubData.versions.length - 1 === 1 ? '' : 's'})</span>
 											}
 											<Icon icon="chevron-down" />
