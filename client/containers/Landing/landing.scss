@@ -111,7 +111,8 @@
 			color: #555;
 		}
 		.divider {
-			margin: 1em 0;
+			margin: 5px 0;
+			opacity: 0.6;
 		}
 		.bg {
 			padding: 2em 0;
@@ -122,20 +123,39 @@
 					color: #fff;
 				}
 				a, a:visited, a:active, a:hover {
-					color: #ccc;
+					&:not(.pt-button) {
+						color: #ccc;	
+					}
 				}
 			}
 			&#foryou, &#opensource {
 				p {
-					max-width: 350px;
+					max-width: 400px;
 					margin: 0 auto 10px;
+					font-size: 18px;
+				}
+			}
+			&#foryou {
+				padding: 4em 0em;
+			    margin-bottom: -36px;
+			    .buttons {
+			    	margin-bottom: 0em;
+			    }
+				.pt-intent-primary {
+					background-color: #BF8C0A;
+					&:hover {
+						background-color: #B2830A;
+					}
+					&:active {
+						background-color: #A67908;
+					}
 				}
 			}
 		}
 		/*** BEGIN type block ***/
 		.type-block {
 			display: flex;
-			margin: 4em 6em;
+			margin: 4em 6em 12em;
 			&.flipped {
 				flex-direction: row-reverse;
 				.content {
@@ -154,7 +174,7 @@
 						}
 					.buttons {
 						text-align: center;
-						button {
+						.pt-button {
 							margin: 0 .5em;
 						}
 					}
@@ -166,17 +186,19 @@
 				.buttons {
 					margin: 0;
 					text-align: left;
-					button {
+					.pt-button {
 						margin: 0;
 					}
 				}
 				.title {
-					font-size: 20px;
+					font-size: 2em;
 					font-weight: 800;
 					text-align: left;
 				}
 				.description {
 					margin: 1em 0;
+					font-size: 18px;
+					line-height: 1.4;
 				}
 			}
 			.image {
@@ -192,8 +214,9 @@
 	/*** END type block ***/
 
 	#features {
+		padding: 4em 0em;
 		.feature-list {
-			margin: 0 auto;
+			margin: 4em auto 0em;
 			padding: 0;
 			max-width: 1000px;
 			display: grid;
@@ -205,6 +228,7 @@
 				.icon {
 					margin: 0 .75em .75em 0;
 					float: left;
+					opacity: 0.6;
 				}
 				.title {
 					text-align: left;
@@ -212,7 +236,7 @@
 					font-size: 18px;
 				}
 				.description {
-					font-size: 13px;
+					font-size: 16px;
 					font-weight: 300;
 					padding: 0 .25em;
 					clear: both;
@@ -224,34 +248,46 @@
 
 	/**** BEGIN Open Source *****/
 	#opensource {
+		padding: 4em 0em;
 		.col-12 {
 			display: flex;
 			flex-wrap: wrap;
 			justify-content: space-evenly;
-			> * {
-				align-self: center;
-			}
+			margin: 2em 0em;
+			// > * {
+			// 	align-self: center;
+			// }
 			.header {
 				h2 {
 					text-align: left;
+					margin-bottom: 0.5em;
+					font-size: 25px;
 				}
 				.pt-icon {
-					padding-top: 4px;
+					// padding-top: 4px;
+					opacity: 0.6;
 				}
+			}
+			.content {
+				font-size: 18px;
 			}
 			.buttons {
-				margin: 1em 0;
+				margin: 0em;
+				.pt-button {
+					color: inherit;
+				}
 			}
 			.pubpub-links {
-				text-align: center;
-				.pt-icon {
-					vertical-align: middle;
-					a:hover {
-						text-decoration: none;
-					}
-				}
+				margin: 1.5em 0em 0em;
+				max-width: 400px;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
 				a {
-				margin: 0 1em;
+					white-space: nowrap;
+					&:not(:first-of-type) {
+						margin-left: 1em;
+					}
 				}
 			}
 		}
@@ -286,11 +322,11 @@
 				margin: 4em 1em;
 				&.flipped {
 					.content {
-						margin: 2em 0em 0em;
+						margin: 2em 0em 6em;
 					}
 				}
 				.content {
-					margin: 2em 0em 0em;
+					margin: 2em 0em 6em;
 				}
 				.image {
 					width: 100%;

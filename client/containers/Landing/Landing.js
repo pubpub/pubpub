@@ -67,7 +67,7 @@ class Landing extends React.Component {
 			{
 				icon: 'book',
 				title: 'Chapters & Sections',
-				desc: 'Break long documents into browsable chapters and sections – perfect for books and dissertations.',
+				desc: 'Break long documents into browsable chapters and sections.',
 			},
 			{
 				icon: 'comment',
@@ -141,12 +141,12 @@ class Landing extends React.Component {
 										</TransitionGroup>
 										&nbsp;use PubPub to make their research stronger.
 									</h1>
-									<p className="subtitle">Collaboratively research, draft, review, and publish in a single, integrated process – as it should be!</p>
+									<p className="subtitle">Collaboratively draft, review, and publish in a single, integrated, iterative process.</p>
 									<div className="buttons">
 										<a href="/signup" className="pt-button pt-intent-primary pt-large">Join PubPub</a>
 										<a href="/community/create" className="pt-button pt-large">Create your Community</a>
 									</div>
-									<img src="/static/hero.png" className="hero" />
+									<img src="/static/hero.png" alt="" className="hero" />
 								</div>
 							</div>
 						</div>
@@ -161,7 +161,7 @@ class Landing extends React.Component {
 								<div className="row">
 									<div className="col-12">
 										<p className="divider">
-											<Icon icon="people" iconSize={20} />
+											<Icon icon="people" iconSize={30} />
 										</p>
 										<h2>Start Your Community</h2>
 										{/* Books */}
@@ -170,7 +170,7 @@ class Landing extends React.Component {
 												<div className="title">For Journals</div>
 												<p className="description">Host and publish your entire journal on PubPub. Accept submissions, manage peer review, publish to the web with one-click DOI generation, export to print, and more.</p>
 												<div className="buttons">
-													<button className="pt-button">Create your Journal</button>
+													<a href="/community/create" className="pt-button pt-intent-primary pt-large">Create your Journal</a>
 												</div>
 											</div>
 											<div className="image pt-elevation-3"><img src="/static/jods.png" /></div>
@@ -182,7 +182,7 @@ class Landing extends React.Component {
 												<div className="title">For Book Publishers</div>
 												<p className="description">Publish beautiful digital editions of your books on PubPub. Embed bonus multimedia content, include interactive discussions and annotations, and use analytics to make smarter publishing decisions.</p>
 												<div className="buttons">
-													<button className="pt-button">Create your Book</button>
+													<a href="/community/create" className="pt-button pt-intent-primary pt-large">Create your Book</a>
 												</div>
 											</div>
 											<div className="image pt-elevation-3"><img src="/static/jods.png" /></div>
@@ -194,7 +194,7 @@ class Landing extends React.Component {
 												<div className="title">For Research Labs</div>
 												<p className="description">Host your lab’s online presence on PubPub. Publicly post papers and citations, publish a lab blog, host resources, and use private channels for lab notes and journal clubs.</p>
 												<div className="buttons">
-													<button className="pt-button">Create your Lab Site</button>
+													<a href="/community/create" className="pt-button pt-intent-primary pt-large">Create your Lab Site</a>
 												</div>
 											</div>
 											<div className="image pt-elevation-3"><img src="/static/jods.png" /></div>
@@ -206,7 +206,7 @@ class Landing extends React.Component {
 												<div className="title">For Conferences</div>
 												<p className="description">Host your interactive conference website on PubPub. Solicit and review submissions, publish accepted papers, post blogs and recaps, and encourage private and public conversation before and after your gathering.</p>
 												<div className="buttons">
-													<button className="pt-button">Create your Conference</button>
+													<a href="/community/create" className="pt-button pt-intent-primary pt-large">Create your Conference</a>
 												</div>
 											</div>
 											<div className="image pt-elevation-3"><img src="/static/jods.png" /></div>
@@ -250,27 +250,25 @@ class Landing extends React.Component {
 									<div className="col-12">
 										<div className="header">
 											<h2>
-												<Icon icon="endorsed" iconSize={28} /> Free
+												<Icon icon="tick" iconSize={28} /> Free
 											</h2>
 											<h2>
-												<Icon icon="endorsed" iconSize={28} /> Open Access
+												<Icon icon="tick" iconSize={28} /> Open Access
 											</h2>
 											<h2>
-												<Icon icon="endorsed" iconSize={28} /> Open Source
+												<Icon icon="tick" iconSize={28} /> Open Source
 											</h2>
 											<h2>
-												<Icon icon="endorsed" iconSize={28} /> Sustainable
+												<Icon icon="tick" iconSize={28} /> Sustainable
 											</h2>
 										</div>
 										<div className="content">
-											<p>A member of MIT’s <a href="https://mitpress.mit.edu/kfg" target="_blank">Knowledge Futures Group</a>, we are committed to providing PubPub for free forever, releasing open-source code, and operating under non-profit, sustainable, researcher-friendly business models.</p>
+											<p>A member of MIT’s <a href="https://mitpress.mit.edu/kfg" target="_blank" rel="noopener noreferrer">Knowledge Futures Group</a>, we are committed to providing PubPub for free forever, releasing open-source code, and operating under non-profit, sustainable, researcher-friendly business models.</p>
 											<div className="pubpub-links">
-												<a><Icon icon="git-repo" /> pubpub</a>
-												<a><Icon icon="git-repo" /> pubpub-editor</a>
-												<a>review-maps</a>
-											</div>
-											<div className="buttons">
-												<button className="pt-button">Our Mission</button>
+												<a href="/about" className="pt-button pt-large">Our Mission</a>
+												<a href="https://github.com/pubpub/pubpub"><Icon icon="git-repo" /> pubpub</a>
+												<a href="https://github.com/pubpub/pubpub-editor"><Icon icon="git-repo" /> pubpub-editor</a>
+												{/* <a>review-maps</a> */}
 											</div>
 										</div>
 									</div>
@@ -289,7 +287,7 @@ class Landing extends React.Component {
 											{features.map((feature)=> {
 												return (
 													<li key={feature.title}>
-														<div className="icon"><Icon icon={feature.icon} iconSize={30} /></div>
+														<div className="icon"><Icon icon={feature.icon} iconSize={24} /></div>
 														<div className="feature-description">
 															<p className="title">{feature.title}</p>
 															<p className="description">{feature.desc}</p>
@@ -309,8 +307,8 @@ class Landing extends React.Component {
 							<h2>Built For You</h2>
 							<p className="description">We designed PubPub with flexibility in mind. Use every feature, or just the ones you need. If you’re an individual, company, or community that needs to collaboratively draft, review, edit and publish documents, we want to support you.</p>
 							<div className="buttons">
-								<button className="pt-button pt-intent-primary">Get in touch</button>
-								<button className="pt-button">Explore the possibilities</button>
+								<a href="/explore" className="pt-button pt-intent-primary pt-large">Get in touch</a>
+								<a href="mailto:team@pubpub.org" className="pt-button pt-large">Explore the possibilities</a>
 							</div>
 						</div>
 						{/* END For You */}
