@@ -1,21 +1,33 @@
 #signup-container {
 	.page-content {
-		.container {
-			padding-top: 2em;
-		}
-		form {
-			margin-top: 40px;
-			font-size: 1.25em;
-		}
-		.success p {
-			font-size: 1em;
-			line-height: 1.5;
-			margin: 0px;
-		}
-		.switch-message {
-			margin: 25px 0em;
-			opacity: 0.8;
-			display: block;
-		}
+		padding: 40px 0px;
+		background-repeat: repeat;
+		background-position: center center;
+		background-color: #CCC;
+		background-image: url('/static/loginbg.png');
+		min-height: calc(100vh - 96px);
+	}
+	.container.small .col-12 {
+		padding: 2em;
+		background: white;
+		border-radius: 2px;
+		box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.15), 0 0 0 rgba(16, 22, 26, 0), 0 0 0 rgba(16, 22, 26, 0);
+	}
+	form {
+		margin-top: 40px;
+		font-size: 1.25em;
+	}
+	p a {
+		text-decoration: underline;
+	}
+	.switch-message {
+		margin-top: 25px;
+		opacity: 0.8;
+		display: block;
+	}
+	.success p {
+		font-size: 1em;
+		line-height: 1.5;
+		margin: 0px;
 	}
 }

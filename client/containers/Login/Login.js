@@ -67,9 +67,9 @@ class Login extends Component {
 				>
 					<div className="container small">
 						<div className="row">
-							<div className="col-12">
+							<div className="col-12 pt-elevation">
 								<h1>Login</h1>
-
+								<p>Login to <b>{this.props.communityData.title}</b> using your <a href="https://www.pubpub.org">PubPub</a> account.</p>
 								<form onSubmit={this.onLoginSubmit}>
 									<InputField
 										label="Email"
@@ -99,7 +99,7 @@ class Login extends Component {
 									</InputField>
 								</form>
 
-								<a href="/signup" className="switch-message">Don't have an account? Click to Signup</a>
+								<a href="/signup" className="switch-message">Don't have a PubPub account? Click to Signup</a>
 							</div>
 						</div>
 					</div>

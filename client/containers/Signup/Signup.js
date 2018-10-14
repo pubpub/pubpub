@@ -41,6 +41,7 @@ class Signup extends Component {
 			this.setState({ postSignupIsLoading: false, postSignupError: err });
 		});
 	}
+
 	onEmailChange(evt) {
 		this.setState({ email: evt.target.value });
 	}
@@ -61,6 +62,7 @@ class Signup extends Component {
 								{!this.state.isSuccessful &&
 									<div>
 										<h1>Signup</h1>
+										<p>Signup to create a <a href="https://www.pubpub.org">PubPub</a> account which will work on <b>{this.props.communityData.title}</b> and many more communities.</p>
 										<form onSubmit={this.onSignupSubmit}>
 											<InputField
 												label="Email"
@@ -79,7 +81,7 @@ class Signup extends Component {
 												loading={this.state.postSignupIsLoading}
 											/>
 										</form>
-										<a href="/login" className="switch-message">Already have an account? Click to Login</a>
+										<a href="/login" className="switch-message">Already have a PubPub account? Click to Login</a>
 									</div>
 								}
 
