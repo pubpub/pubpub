@@ -24,46 +24,45 @@ const Pricing = (props)=> {
 					<div className="row">
 						<div className="col-12">
 							<h1>Pricing</h1>
+							<p>PubPub's strives to provide communities with the tools to quickly begin working for free. To fulfill this mission, we achieve sustainability by offering paid features that we've found to be of primary concern to larger, commercial publishers.</p>
 							<div className="pricing-tiers">
-								<div className="option pt-card pt-interactive">
+								<div className="option pt-card pt-elevation-1">
 									<h2>Community</h2>
 									<p className="subtitle">Free, forever</p>
 									<ul className="features">
-										<li>All of PubPub's core drafting, review, publishing, and discussion features.</li>
+										<li>All of PubPub's core drafting, review, publishing, and discussion features</li>
 										<li>Unlimited publications</li>
-										<li>Your own pubpub.org domain name</li>
-										<li>Publish with Creative Commons licenses</li>
-										<li>Basic analytics</li>
-										<li>Community support</li>
+										<li>Your own pubpub.org subdomain</li>
+										<li>Publish with select CC licenses</li>
+										<li>E-mail support</li>
+										{/* <li>Basic analytics</li>
+										<li>Community support</li> */}
 									</ul>
-									<button className="pt-button pt-large">Create your Community</button>
+									<a href="/community/create" className="pt-button pt-large pt-intent-primary">Create your Community</a>
 								</div>
-								<div className="option pt-card pt-interactive">
+								<div className="option pt-card pt-elevation-1">
 									<h2>Professional</h2>
-									<p className="subtitle">Contact for pricing</p>
+									<p className="subtitle">Available Soon</p>
 									<ul className="features">
-										<li>All of PubPub's core drafting, review, publishing, and discussion features.</li>
-										<li>Unlimited publications</li>
-										<li><strong>Custom</strong> domain name</li>
-										<li>Publish with <strong>any license</strong> you choose</li>
-										<li><strong>Advanced</strong> analytics</li>
-										<li><strong>E-mail</strong> support from the PubPub team</li>
-										<li>Dashboard for managing multiple communities</li>
+										<li>All PubPub community features</li>
+										<li>Custom domain name</li>
+										<li>Publish with any license</li>
+										<li>Advanced analytics</li>
+										<li>Priority E-mail support</li>
+										<li>Multi-community management</li>
 										<li>Free archive mode for inactive communities</li>
 									</ul>
-									<button className="pt-button pt-large">Get In Touch</button>
+									<a href="mailto: team@pubpub.org?subject=PubPub Professional Waiting List" className="pt-button pt-large pt-intent-primary">Join Waiting List</a>
 								</div>
-								<div className="option pt-card pt-interactive">
+								<div className="option pt-card pt-elevation-1">
 									<h2>Full Service</h2>
 									<p className="subtitle">Contact for pricing</p>
 									<ul className="features">
-										<li>Everything in PubPub Premium, including a custom domain, unlimited pubs, and advanced analytics.</li>
-										<hr />
+										<li>All PubPub Professional features</li>
 										<li>Dedicated, hands-on support for setting up and managing your community</li>
-										<hr />
-										<li>Production, editorial, marketing, and community management support.</li>
+										<li>Production, editorial, marketing, and community management support</li>
 									</ul>
-									<button className="pt-button pt-large">Get In Touch</button>
+									<a href="mailto: team@pubpub.org?subject=Full Service Inquiry" className="pt-button pt-large pt-intent-primary">Get In Touch</a>
 								</div>
 							</div>
 						</div>

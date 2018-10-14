@@ -1,11 +1,20 @@
 #pricing-container {
+	h1 {
+		margin: 1em 0em 0.5em;
+		text-align: center;
+	}
+	p {
+		max-width: 800px;
+		margin: 0 auto;
+		font-size: 18px;
+	} 
 	p.subtitle {
-			color: #555;
-			font-weight: 300;
-			font-size: 24px;
-			padding: 0;
-			margin-bottom: 35px;
-			line-height: 1.4;
+		color: #555;
+		font-weight: 300;
+		font-size: 24px;
+		padding: 0;
+		margin-bottom: 35px;
+		line-height: 1.4;
 	}
 	.pricing-tiers {
 		display: flex;
@@ -15,17 +24,19 @@
 			text-align: center;
 			position: inline;
 			flex: 1;
-			margin: 0 2em;
+			margin: 4em 2em;
+			background: #F7F7F9;
 			ul {
 				flex-grow: 1;
 				text-align: left;
+				padding-left: 20px;
 				li {
 					font-size: 16px;
 					margin: 0.5em 0;
 				}
 			}
-			button {
-				margin: 0 auto;
+			a.pt-button {
+				margin-top: 1em;
 			}
 		}
 	}
@@ -33,5 +44,8 @@
 
 @media only screen and (max-width: 720px) {
 	#pricing-container {
+		.pricing-tiers {
+			display: block;
+		}
 	}
 }
