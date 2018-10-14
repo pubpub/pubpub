@@ -88,73 +88,74 @@ class CommunityCreate extends Component {
 					locationData={this.props.locationData}
 					hideNav={true}
 				>
-					{!this.props.loginData.id &&
-						<NonIdealState
-							title="Must be Logged In to Create"
-							visual="error"
-							action={<a href="/login" className="pt-button">Login</a>}
-						/>
-					}
-
-					{this.props.loginData.id &&
-						<div className="container small">
-							<div className="row">
-								<div className="col-12">
-									<h1>Create Community</h1>
-									<form onSubmit={this.onCreateSubmit}>
-										<InputField
-											label="URL"
-											isRequired={true}
-											value={this.state.subdomain}
-											onChange={this.onSubdomainChange}
-											helperText={`https://${this.state.subdomain || '[URL]'}.pubpub.org`}
-										/>
-										<InputField
-											label="Title"
-											isRequired={true}
-											value={this.state.title}
-											onChange={this.onTitleChange}
-										/>
-										<InputField
-											label="Description"
-											isTextarea={true}
-											value={this.state.description}
-											onChange={this.onDescriptionChange}
-											helperText={`${this.state.description.length}/280 characters`}
-										/>
-										<ImageUpload
-											htmlFor="large-header-logo-upload"
-											label="Community Logo"
-											defaultImage={this.state.largeHeaderLogo}
-											height={60}
-											width={150}
-											onNewImage={this.onLargeHeaderLogoChange}
-											helperText="Used on the landing page. Suggested height: 200px"
-										/>
-										<InputField
-											label="Accent Color"
-											isRequired={true}
-											value={this.state.accentColor}
-											onChange={this.onAccentColorChange}
-											error={!colorRegex.test(this.state.accentColor) ? 'Must be a hex format color: e.g. #123456' : ''}
-											helperText={<div className="color-swatch" style={{ backgroundColor: this.state.accentColor }} />}
-										/>
-										<InputField error={this.state.createError}>
-											<Button
-												name="create"
-												type="submit"
-												className="pt-button pt-intent-primary create-account-button"
-												onClick={this.onCreateSubmit}
-												text="Create Community"
-												disabled={!this.state.subdomain || !this.state.title || !colorRegex.test(this.state.accentColor)}
-												loading={this.state.createIsLoading}
+					<div className="container small">
+						<div className="row">
+							<div className="col-12">
+								{!this.props.loginData.id &&
+									<NonIdealState
+										title="Must be logged in to create a Community"
+										visual="error"
+										action={<a href="/login?redirect=/community/create" className="pt-button">Login</a>}
+									/>
+								}
+								{this.props.loginData.id &&
+									<div>
+										<h1>Create Community</h1>
+										<form onSubmit={this.onCreateSubmit}>
+											<InputField
+												label="URL"
+												isRequired={true}
+												value={this.state.subdomain}
+												onChange={this.onSubdomainChange}
+												helperText={`https://${this.state.subdomain || '[URL]'}.pubpub.org`}
 											/>
-										</InputField>
-									</form>
-								</div>
+											<InputField
+												label="Title"
+												isRequired={true}
+												value={this.state.title}
+												onChange={this.onTitleChange}
+											/>
+											<InputField
+												label="Description"
+												isTextarea={true}
+												value={this.state.description}
+												onChange={this.onDescriptionChange}
+												helperText={`${this.state.description.length}/280 characters`}
+											/>
+											<ImageUpload
+												htmlFor="large-header-logo-upload"
+												label="Community Logo"
+												defaultImage={this.state.largeHeaderLogo}
+												height={60}
+												width={150}
+												onNewImage={this.onLargeHeaderLogoChange}
+												helperText="Used on the landing page. Suggested height: 200px"
+											/>
+											<InputField
+												label="Accent Color"
+												isRequired={true}
+												value={this.state.accentColor}
+												onChange={this.onAccentColorChange}
+												error={!colorRegex.test(this.state.accentColor) ? 'Must be a hex format color: e.g. #123456' : ''}
+												helperText={<div className="color-swatch" style={{ backgroundColor: this.state.accentColor }} />}
+											/>
+											<InputField error={this.state.createError}>
+												<Button
+													name="create"
+													type="submit"
+													className="pt-button pt-intent-primary create-account-button"
+													onClick={this.onCreateSubmit}
+													text="Create Community"
+													disabled={!this.state.subdomain || !this.state.title || !colorRegex.test(this.state.accentColor)}
+													loading={this.state.createIsLoading}
+												/>
+											</InputField>
+										</form>
+									</div>
+								}
 							</div>
 						</div>
-					}
+					</div>
 				</PageWrapper>
 			</div>
 		);
