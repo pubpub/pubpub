@@ -143,8 +143,8 @@ class Landing extends React.Component {
 									</h1>
 									<p className="subtitle">Collaboratively research, draft, review, and publish in a single, integrated process – as it should be!</p>
 									<div className="buttons">
-										<button className="pt-button pt-intent-primary pt-large">Join PubPub</button>
-										<button className="pt-button pt-large">Create your Community</button>
+										<a href="/signup" className="pt-button pt-intent-primary pt-large">Join PubPub</a>
+										<a href="/community/create" className="pt-button pt-large">Create your Community</a>
 									</div>
 									<img src="/static/hero.png" className="hero" />
 								</div>

@@ -12,7 +12,7 @@
 	.buttons {
 		margin: 3em 0;
 		text-align: center;
-		button {
+		.pt-button {
 			margin: 0 0.5em;
 		}
 	}
@@ -84,6 +84,15 @@
 			}
 			.col-12 {
 				margin-bottom: 0;
+			}
+			.pt-intent-primary {
+				background-color: #BF8C0A;
+				&:hover {
+					background-color: #B2830A;
+				}
+				&:active {
+					background-color: #A67908;
+				}
 			}
 		}
 
