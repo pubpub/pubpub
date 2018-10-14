@@ -39,13 +39,21 @@ const PageWrapper = (props)=> {
 		return item.value;
 	});
 
+	const useBottomShadow = communityData.accentTextColor === '#000000';
 	return (
-		<div id="page-wrapper-component">
+		<div id="page-wrapper-component" className={useBottomShadow ? 'bottom-shadow' : ''}>
 			{props.fixHeader &&
 				<style>
 					{`
 						.header-component { position: fixed; width: 100%; z-index: 19; }
 						.page-content { padding-top: 56px; }
+					`}
+				</style>
+			}
+			{useBottomShadow &&
+				<style>
+					{`
+						nav:last-of-type { border-bottom: 1px solid #DDD; }
 					`}
 				</style>
 			}

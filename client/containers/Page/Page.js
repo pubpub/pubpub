@@ -75,6 +75,7 @@ class Page extends Component {
 			return prev;
 		}, false);
 		const pubRenderLists = generateRenderLists(layout, this.props.pageData.pubs);
+		const isNewHomepage = this.props.loginData.isAdmin && !this.props.pageData.layout && !this.props.pageData.slug;
 		return (
 			<div id="page-container">
 				<PageWrapper
@@ -131,7 +132,24 @@ class Page extends Component {
 							</div>
 						</div>
 					*/}
-
+					{isNewHomepage &&
+						<div className="welcome-message">
+							<h2>
+								<span role="img" aria-label="Party-popper">🎉</span>
+								<span>Welcome to your new Community!</span>
+								<span role="img" aria-label="Party-popper">🎉</span>
+							</h2>
+							<p>Get started by clicking the 'Manage' button in the top-right corner. There, you can:</p>
+							<ul>
+								<li>Create new <b>Pages</b> (<a href="dashboard/page">New Page tab</a>).</li>
+								<li>Add new Community <b>Admins</b> (<a href="dashboard/team">Team tab</a>).</li>
+								<li>Customize your <b>Site</b> - colors, images, access, etc (<a href="dashboard/details">Details tab</a>).</li>
+								<li>Customize the <b>layout</b> of individual Pages (<a href="dashboard/pages/">Home Page customization tab</a>).</li>
+								<li>Create <b>Tags</b> to organize the content in your community (<a href="dashboard/tags">Tags tab</a>).</li>
+							</ul>
+							<p>Or - begin by creating a <b>New Pub</b> using the button in the top-right corner.</p>
+						</div>
+					}
 					{layout.filter((item)=> {
 						// TODO - this filter is a bit broken.
 						if (pageData.id && !numPublished && item.type === 'pubs') {
@@ -185,7 +203,7 @@ class Page extends Component {
 						);
 					})}
 
-					{!publicDrafts.length && !!pageData.id && !numPublished && !pageData.isPage && !hasTextLayoutComponent &&
+					{!isNewHomepage && !publicDrafts.length && !!pageData.id && !numPublished && !pageData.isPage && !hasTextLayoutComponent &&
 						<NonIdealState
 							title="Empty Collection"
 							description="This collection has no Pubs."

@@ -35,6 +35,31 @@
 	.pt-non-ideal-state {
 		padding: 8em 0em 16em;
 	}
+	.welcome-message {
+		margin: 0 auto;
+		max-width: 800px;
+		padding: 4em 1em;
+		font-size: 18px;
+		h2 {
+			font-size: 2em;
+			font-weight: 800;
+			text-align: center;
+			margin-bottom: 1em;
+			line-height: 1;
+			display: flex;
+			span:nth-of-type(2) {
+				padding: 0em 0.5em;
+				flex-grow: 1;
+				flex-shrink: 1;
+			}
+		}
+		li {
+			margin: 1em 0em;
+		}
+		a {
+			text-decoration: underline;
+		}
+	}
 	.block-content {
 		h2.block-title {
 			margin: 0px;

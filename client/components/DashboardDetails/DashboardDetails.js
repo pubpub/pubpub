@@ -137,14 +137,14 @@ class DashboardDetails extends Component {
 				communityId: this.props.communityData.id,
 			})
 		})
-		.then(()=> {
+		.then((result)=> {
 			if (!this.props.communityData.domain && this.props.communityData.slug !== siteObject.slug) {
 				window.location.replace(`https://${siteObject.subdomain}.pubpub.org/dashboard/details`);
 			} else {
 				this.setState({ isLoading: false, error: undefined });
 				this.props.setCommunityData({
 					...this.props.communityData,
-					...siteObject
+					...result
 				});
 			}
 		})
