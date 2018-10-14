@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Icon from 'components/Icon/Icon';
+import { Button } from '@blueprintjs/core';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
 
 require('./pubSideOptions.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
+	communityData: PropTypes.object.isRequired,
 	setOptionsMode: PropTypes.func.isRequired,
 	setDiscussionChannel: PropTypes.func.isRequired,
 	activeDiscussionChannel: PropTypes.object,
@@ -78,6 +80,11 @@ class PubSideOptions extends Component {
 			{ title: 'public' },
 			...this.props.pubData.discussionChannels,
 		];
+
+		const pubData = this.props.pubData;
+		const communityHostname = this.props.communityData.domain || `${this.props.communityData.subdomain}.pubpub.org`;
+		const pubLink = `https://${communityHostname}/pub/${pubData.slug}/${pubData.isDraft ? 'draft' : ''}`;
+		const pubTitle = pubData.title;
 		return (
 			<div className="pub-side-options-component" ref={this.wrapperRef}>
 				<div className="side-options-wrapper" style={wrapperStyle}>
@@ -86,13 +93,21 @@ class PubSideOptions extends Component {
 						<span>·</span>
 						<a onClick={()=> { this.props.setOptionsMode('export'); }}>Export</a>
 						<span>·</span>
-						<a><Icon icon="facebook" /></a>
+						<a href={`https://www.facebook.com/sharer.php?u=${pubLink}`} rel="noopener noreferrer" target="_blank">
+							<Icon icon="facebook" />
+						</a>
 						<span>·</span>
-						<a><Icon icon="twitter" /></a>
+						<a href={`https://twitter.com/intent/tweet?url=${pubLink}&text=${pubTitle}`} rel="noopener noreferrer" target="_blank">
+							<Icon icon="twitter" />
+						</a>
 						<span>·</span>
-						<a><Icon icon="reddit" /></a>
+						<a href={`https://reddit.com/submit?url=${pubLink}&title=${pubTitle}`} rel="noopener noreferrer" target="_blank">
+							<Icon icon="reddit" />
+						</a>
 						<span>·</span>
-						<a><Icon icon="google-plus" /></a>
+						<a href={`https://plus.google.com/share?url=${pubLink}`} rel="noopener noreferrer" target="_blank">
+							<Icon icon="google-plus" />
+						</a>
 					</div>
 					<div className="discussion-options">
 						<DropdownButton
@@ -117,6 +132,16 @@ class PubSideOptions extends Component {
 										</li>
 									);
 								})}
+								<li className="pt-menu-divider" />
+								<li>
+									<Button
+										minimal={true}
+										text="Manage Discussion Channels"
+										onClick={()=> {
+											this.props.setOptionsMode('discussions');
+										}}
+									/>
+								</li>
 							</ul>
 						</DropdownButton>
 						<a href="#discussions">View All</a>

@@ -604,6 +604,7 @@ class Pub extends Component {
 									{/* Quick Options */}
 									<PubSideOptions
 										pubData={pubData}
+										communityData={this.props.communityData}
 										setOptionsMode={this.setOptionsMode}
 										activeDiscussionChannel={activeDiscussionChannel}
 										setDiscussionChannel={this.setDiscussionChannel}
