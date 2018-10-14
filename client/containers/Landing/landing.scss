@@ -78,6 +78,10 @@
 			.subtitle {
 				max-width: 500px;
 				margin: 0 auto;
+				font-size: 18px;
+			}
+			.buttons {
+				margin: 2em 0em 5em;
 			}
 			img.hero {
 				max-width: 800px;
@@ -220,8 +224,8 @@
 			padding: 0;
 			max-width: 1000px;
 			display: grid;
-			grid-template-columns: repeat(4, 1fr);
-			grid-template-rows: auto auto auto auto;
+			grid-template-columns: repeat(3, 1fr);
+			grid-template-rows: auto auto auto;
 			list-style-type: none;
 			li {
 				margin: 2em;
