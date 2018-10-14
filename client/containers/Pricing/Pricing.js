@@ -24,7 +24,7 @@ const Pricing = (props)=> {
 					<div className="row">
 						<div className="col-12">
 							<h1>Pricing</h1>
-							<p>PubPub's strives to provide communities with the tools to quickly begin working for free. To fulfill this mission, we achieve sustainability by offering paid features that we've found to be of primary concern to larger, commercial publishers.</p>
+							<p>PubPub strives to provide communities with the tools to get up and going for free. To fulfill this mission, we achieve sustainability by offering paid features that we've found to be of primary concern to larger, commercial publishers.</p>
 							<div className="pricing-tiers">
 								<div className="option pt-card pt-elevation-1">
 									<h2>Community</h2>
