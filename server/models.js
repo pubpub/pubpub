@@ -71,6 +71,8 @@ const Community = sequelize.define('Community', {
 	twitter: { type: Sequelize.TEXT },
 	email: { type: Sequelize.TEXT },
 	issn: { type: Sequelize.TEXT },
+	hideCreatePubButton: { type: Sequelize.BOOLEAN },
+	defaultPubTags: { type: Sequelize.JSONB },
 });
 
 const User = sequelize.define('User', {

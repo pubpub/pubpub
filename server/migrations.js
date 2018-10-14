@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { Sequelize } from 'sequelize';
-import { sequelize, Pub, Version, PubManager, Collaborator, VersionPermission, PubAttribution, Collection, Page, CollectionPub, Tag, PubTag } from './models';
+import { sequelize, Pub, Version, PubManager, Collaborator, VersionPermission, PubAttribution, Collection, Page, CollectionPub, Tag, PubTag, Community } from './models';
 import { generateHash } from './utilities';
 
 console.log('Beginning Migration');
@@ -354,6 +354,12 @@ new Promise((resolve)=> {
 // 	return sequelize.queryInterface.addColumn('Discussions', 'discussionChannelId', {
 // 		type: Sequelize.UUID
 // 	});
+// })
+// .then(()=> {
+// 	return sequelize.queryInterface.addColumn('Communities', 'hideCreatePubButton', { type: Sequelize.BOOLEAN });
+// })
+// .then(()=> {
+// 	return sequelize.queryInterface.addColumn('Communities', 'defaultPubTags', { type: Sequelize.JSONB });
 // })
 .catch((err)=> {
 	console.log('Error with Migration', err);

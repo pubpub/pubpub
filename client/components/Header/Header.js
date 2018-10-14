@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Avatar from 'components/Avatar/Avatar';
-import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import { Popover, PopoverInteractionKind, Position, Menu, MenuItem, MenuDivider, Button } from '@blueprintjs/core';
 import { apiFetch, getResizedUrl } from 'utilities';
 
 require('./header.scss');
@@ -27,10 +27,12 @@ const propTypes = {
 class Header extends Component {
 	constructor(props) {
 		super(props);
-		// this.state = {
+		this.state = {
 		// 	redirect: '',
-		// };
+			isLoading: false,
+		};
 		this.handleLogout = this.handleLogout.bind(this);
+		this.createPub = this.createPub.bind(this);
 	}
 
 	// componentDidMount() {
@@ -44,6 +46,24 @@ class Header extends Component {
 	handleLogout() {
 		apiFetch('/api/logout')
 		.then(()=> { window.location.href = '/'; });
+	}
+
+	createPub() {
+		this.setState({ isLoading: true });
+		return apiFetch('/api/pubs', {
+			method: 'POST',
+			body: JSON.stringify({
+				communityId: this.props.communityData.id,
+				defaultTagIds: this.props.communityData.defaultPubTags || [],
+			})
+		})
+		.then((result)=> {
+			window.location.href = result;
+		})
+		.catch((err)=> {
+			console.error(err);
+			this.setState({ isLoading: false });
+		});
 	}
 
 	render() {
@@ -106,6 +126,14 @@ class Header extends Component {
 										<a className="pt-button pt-large pt-minimal">Search</a>
 
 									{/* Dashboard panel button */}
+									{!isBasePubPub && loggedIn && (!communityData.hideCreatePubButton || isAdmin) &&
+										<Button
+											className="pt-large pt-minimal nav-link"
+											text="New Pub"
+											onClick={this.createPub}
+											loading={this.state.isLoading}
+										/>
+									}
 									{isAdmin &&
 										<a href="/dashboard" className="pt-button pt-large pt-minimal">Manage</a>
 									}
@@ -122,20 +150,20 @@ class Header extends Component {
 														</a>
 													</li>
 													<MenuDivider />
-													{!isBasePubPub &&
+													{/* !isBasePubPub &&
 														<li>
 															<a href="/pub/create" className="pt-menu-item pt-popover-dismiss">
 																Create New Pub
 															</a>
 														</li>
-													}
-													{!isBasePubPub && isAdmin &&
+													*/ }
+													{/* !isBasePubPub && isAdmin &&
 														<li>
 															<a href="/dashboard" className="pt-menu-item pt-popover-dismiss">
-																Dashboard
+																Manage Community
 															</a>
 														</li>
-													}
+													*/}
 													<MenuItem text="Logout" onClick={this.handleLogout} />
 												</Menu>
 											}

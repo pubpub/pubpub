@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Tooltip } from '@blueprintjs/core';
+import { Button, Tooltip, Checkbox } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
 import ImageUpload from 'components/ImageUpload/ImageUpload';
 import NavDrag from 'components/NavDrag/NavDrag';
 import Icon from 'components/Icon/Icon';
+import TagMultiSelect from 'components/TagMultiSelect/TagMultiSelect';
 import { populateNavigationIds, apiFetch } from 'utilities';
 
 require('./dashboardDetails.scss');
@@ -32,6 +33,8 @@ class DashboardDetails extends Component {
 			twitter: props.communityData.twitter || '',
 			facebook: props.communityData.facebook || '',
 			email: props.communityData.email || '',
+			hideCreatePubButton: props.communityData.hideCreatePubButton || false,
+			defaultPubTags: props.communityData.defaultPubTags || [],
 			isLoading: false,
 			error: undefined,
 		};
@@ -49,6 +52,8 @@ class DashboardDetails extends Component {
 		this.handleTwitterChange = this.handleTwitterChange.bind(this);
 		this.handleFacebookChange = this.handleFacebookChange.bind(this);
 		this.handleEmailChange = this.handleEmailChange.bind(this);
+		this.handleHideCreatePubButtonChange = this.handleHideCreatePubButtonChange.bind(this);
+		this.handleDefaultPubTagsChange = this.handleDefaultPubTagsChange.bind(this);
 		this.handleSaveClick = this.handleSaveClick.bind(this);
 	}
 
@@ -106,6 +111,14 @@ class DashboardDetails extends Component {
 
 	handleEmailChange(evt) {
 		this.setState({ email: evt.target.value });
+	}
+
+	handleHideCreatePubButtonChange(evt) {
+		this.setState({ hideCreatePubButton: !evt.target.checked });
+	}
+
+	handleDefaultPubTagsChange(items) {
+		this.setState({ defaultPubTags: items });
 	}
 
 	handleSaveClick(evt) {
@@ -170,7 +183,7 @@ class DashboardDetails extends Component {
 					value={this.state.description}
 					onChange={this.handleDescriptionChange}
 				/>
-				<div className="images-wrapper">
+				<div className="row-wrapper">
 					<ImageUpload
 						htmlFor="favicon-upload"
 						label={
@@ -204,7 +217,7 @@ class DashboardDetails extends Component {
 						onNewImage={this.handleAvatarChange}
 					/>
 				</div>
-				<div className="images-wrapper">
+				<div className="row-wrapper">
 					<ImageUpload
 						htmlFor="small-header-logo-upload"
 						label={
@@ -262,6 +275,42 @@ class DashboardDetails extends Component {
 						width={150}
 						canClear={true}
 					/>
+				</div>
+				<div className="row-wrapper">
+					<InputField
+						label={
+							<span>
+								Public 'New Pub' button
+								<Tooltip
+									content={<span>Toggles 'New Pub' button in header bar.<br />Button will always be available to community admins.</span>}
+									tooltipClassName="pt-dark"
+								>
+									<Icon icon="info-sign" />
+								</Tooltip>
+							</span>
+						}
+					>
+						<Checkbox checked={!this.state.hideCreatePubButton} onChange={this.handleHideCreatePubButtonChange} />
+					</InputField>
+					<InputField label="Default Pub Tag">
+						<TagMultiSelect
+							allTags={this.props.communityData.tags}
+							selectedTagIds={this.state.defaultPubTags || []}
+							onItemSelect={(newTagId)=> {
+								const existingTagIds = this.state.defaultPubTags || [];
+								const newTagIds = [...existingTagIds, newTagId];
+								this.handleDefaultPubTagsChange(newTagIds);
+							}}
+							onRemove={(evt, tagIndex)=> {
+								const existingTagIds = this.state.defaultPubTags || [];
+								const newTagIds = existingTagIds.filter((item, filterIndex)=> {
+									return filterIndex !== tagIndex;
+								});
+								this.handleDefaultPubTagsChange(newTagIds);
+							}}
+							placeholder="Select Tags..."
+						/>
+					</InputField>
 				</div>
 				<InputField
 					label="Website"
