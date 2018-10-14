@@ -6,6 +6,7 @@
 	background-position: center center;
 	transition: .2s linear box-shadow;
 	background-color: #F7F7F9;
+	height: 56px;
 	&.has-image {
 		color: white;
 	}
@@ -75,9 +76,14 @@
 }
 
 @media only screen and (max-width: 720px) {
-	.community-header {
-		.description {
-			max-width: 100%;
+	.header-component {
+		.hide-on-mobile {
+			display: none;
+		}
+		.community-header {
+			.description {
+				max-width: 100%;
+			}
 		}
 	}
 }

@@ -114,11 +114,11 @@ class Header extends Component {
 
 									{isBasePubPub &&
 										[
-											<a href="/about" role="button" tabIndex="0" className="pt-button pt-large pt-minimal">About</a>,
+											<a href="/about" role="button" tabIndex="0" className="hide-on-mobile pt-button pt-large pt-minimal">About</a>,
 											/* <a href="/features" role="button" tabIndex="0" className="pt-button pt-large pt-minimal">Features</a>, */
-											<a href="/pricing" role="button" tabIndex="0" className="pt-button pt-large pt-minimal">Pricing</a>,
-											<a href="mailto:team@pubpub.org" role="button" tabIndex="0" className="pt-button pt-large pt-minimal">Contact</a>,
-											<span className="separator">·</span>,
+											<a href="/pricing" role="button" tabIndex="0" className="hide-on-mobile pt-button pt-large pt-minimal">Pricing</a>,
+											<a href="mailto:team@pubpub.org" role="button" tabIndex="0" className="hide-on-mobile pt-button pt-large pt-minimal">Contact</a>,
+											<span className="hide-on-mobile separator">·</span>,
 										]
 									}
 									{/* Search button */}
