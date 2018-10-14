@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import dateFormat from 'dateformat';
 import { apiFetch, getResizedUrl } from 'utilities';
-import { EditableText } from '@blueprintjs/core';
+import { EditableText, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 import Icon from 'components/Icon/Icon';
 
 require('./pubHeader.scss');
@@ -214,21 +214,52 @@ class PubHeader extends Component {
 									</div>
 								}
 								<div className="details">
-									{!pubData.isDraft &&
+									<Popover
+										content={
+											<div className="pt-menu">
+												<li>
+													<a className={`pt-menu-item ${pubData.isDraft ? 'pt-active' : ''}`} tabIndex="0" href={`/pub/${pubData.slug}/draft`}>
+														Working Draft
+													</a>
+												</li>
+												{sortedVersionsList.map((version)=> {
+													return (
+														<li key={version.id}>
+															<a className={`pt-menu-item ${version.id === pubData.activeVersion.id ? 'pt-active' : ''}`} tabIndex="0" href={`/pub/${pubData.slug}?version=${version.id}`}>
+																{dateFormat(version.createdAt, 'mmm dd, yyyy · h:MMTT')}
+																{!version.isPublic && <Icon icon="lock2" />}
+															</a>
+														</li>
+													);
+												})}
+											</div>
+										}
+										interactionKind={PopoverInteractionKind.CLICK}
+										position={Position.BOTTOM_LEFT}
+										popoverClassName="versions-popover"
+										// transitionDuration={-1}
+										minimal={true}
+										// inline={true}
+										inheritDarkTheme={false}
+									>
 										<a
 											// href={`/pub/${pubData.slug}/versions`}
-											onClick={(evt)=> {
-												evt.preventDefault();
-												this.props.setOptionsMode('versions');
-											}}
+											// onClick={(evt)=> {
+											// 	evt.preventDefault();
+											// 	this.props.setOptionsMode('versions');
+											// }}
+											className="versions"
 										>
-											{!activeVersion.isPublic && 
+											{!pubData.isDraft && !activeVersion.isPublic &&
 												<Icon icon="lock2" />
 											}
-											<span>{sortedVersionsList[sortedVersionsList.length - 1].id !== activeVersion.id ? 'Updated ' : ''}{dateFormat(pubData.activeVersion.createdAt, 'mmm dd, yyyy')}</span>
+											{!pubData.isDraft &&
+												<span>{sortedVersionsList[sortedVersionsList.length - 1].id !== activeVersion.id ? 'Updated ' : ''}{dateFormat(pubData.activeVersion.createdAt, 'mmm dd, yyyy')}</span>
+											}
+											
 											{/* If is draft, say total number of saved versions */}
 											{pubData.isDraft &&
-												<span> ({pubData.versions.length} Saved Version{pubData.versions.length === 1 ? '' : 's'})</span>
+												<span>Working Draft ({pubData.versions.length} Saved Version{pubData.versions.length === 1 ? '' : 's'})</span>
 											}
 
 											{/* If not draft, and newer versions, say numNewerVersions */}
@@ -240,8 +271,9 @@ class PubHeader extends Component {
 											{!pubData.isDraft && !numNewerVersions &&
 												<span> ({pubData.versions.length - 1} Older Version{pubData.versions.length - 1 === 1 ? '' : 's'})</span>
 											}
+											<Icon icon="chevron-down" />
 										</a>
-									}
+									</Popover>
 									<a
 										href="#discussions"
 									>

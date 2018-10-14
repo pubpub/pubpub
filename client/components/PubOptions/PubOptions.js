@@ -53,7 +53,7 @@ const PubOptions = (props)=> {
 	];
 	const modes = [
 		'attribution',
-		'versions',
+		// 'versions',
 		'cite',
 		'review',
 		'discussions',
