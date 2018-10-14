@@ -117,7 +117,7 @@ class Header extends Component {
 											<a href="/about" role="button" tabIndex="0" className="hide-on-mobile pt-button pt-large pt-minimal">About</a>,
 											/* <a href="/features" role="button" tabIndex="0" className="pt-button pt-large pt-minimal">Features</a>, */
 											<a href="/pricing" role="button" tabIndex="0" className="hide-on-mobile pt-button pt-large pt-minimal">Pricing</a>,
-											<a href="mailto:team@pubpub.org" role="button" tabIndex="0" className="hide-on-mobile pt-button pt-large pt-minimal">Contact</a>,
+											<a href="mailto:team@pubpub.org" target="_blank" rel="noopener noreferrer" role="button" tabIndex="0" className="hide-on-mobile pt-button pt-large pt-minimal">Contact</a>,
 											<span className="hide-on-mobile separator">·</span>,
 										]
 									}
