@@ -87,6 +87,7 @@ class CommunityCreate extends Component {
 					communityData={this.props.communityData}
 					locationData={this.props.locationData}
 					hideNav={true}
+					hideFooter={true}
 				>
 					<div className="container small">
 						<div className="row">
