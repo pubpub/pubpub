@@ -204,11 +204,13 @@ class DiscussionThread extends Component {
 				{/* Full Discussion */}
 				{isExpanded &&
 					<div className={`full ${this.props.isMinimal ? 'minimal' : ''}`}>
-						<Button
-							className="pt-minimal pt-small"
-							onClick={this.handleExpand}
-							text="Collapse"
-						/>
+						<div className="collapse-wrapper">
+							<Button
+								className="pt-minimal pt-fill"
+								onClick={this.handleExpand}
+								text="Collapse Thread"
+							/>
+						</div>
 						{isArchived &&
 							<div className="pt-callout pt-intent-danger">
 								{!sortedDiscussions[0].submitHash && 'Thread is Archived'}

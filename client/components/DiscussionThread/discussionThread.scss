@@ -57,6 +57,12 @@
 	}
 	.full {
 		padding: 1em;
+		.collapse-wrapper {
+			margin-bottom: 14px;
+			margin-top: -14px;
+			margin-left: -14px;
+			margin-right: -14px;
+		}
 		&.minimal {
 			background-color: #F9F9F9;
 			margin-bottom: 0.5em;
@@ -65,6 +71,9 @@
 			box-shadow: inset 0px 0px 1px 0px rgba(0, 0, 0, 0.5);
 			// padding: 1em 0.5em 1em 0.5em;
 		    // margin: 0px 0px 2em -0.5em;
+		    .collapse-wrapper {
+		    	border-bottom: 1px solid #CCC;
+		    }
 		}
 
 	}

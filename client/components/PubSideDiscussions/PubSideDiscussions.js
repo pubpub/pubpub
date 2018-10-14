@@ -200,6 +200,7 @@ class PubSideDiscussions extends Component {
 							...this.props.getAbsolutePosition(this.props.editorChangeObject.selectionBoundingBox.top, 0, true),
 							top: this.state.newThreadTopPos,
 						}}
+						className="new-discussions"
 					>
 						<DiscussionInput
 							handleSubmit={this.props.onPostDiscussion}
@@ -209,15 +210,17 @@ class PubSideDiscussions extends Component {
 							showTitle={false}
 							activeDiscussionChannel={this.props.activeDiscussionChannel}
 							initialContent={this.props.initialContent}
+							isNew={true}
+							leftButtons={
+								<Button
+									className="pt-minimal pt-small"
+									onClick={()=> {
+										this.props.setActiveThread(undefined);
+									}}
+									text="Cancel"
+								/>
+							}
 						/>
-						<div>
-							<Button
-								onClick={()=> {
-									this.props.setActiveThread(undefined);
-								}}
-								text="Cancel"
-							/>
-						</div>
 					</div>
 				}
 				{this.props.threads.map((thread)=> {

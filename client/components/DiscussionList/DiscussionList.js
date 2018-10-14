@@ -254,15 +254,17 @@ class DiscussionList extends Component {
 					</DropdownButton>
 				</div>
 
-				<DiscussionInput
-					initialContent={undefined}
-					handleSubmit={this.handlePostNewThread}
-					showTitle={true}
-					submitIsLoading={this.state.newThreadLoading}
-					getHighlightContent={this.props.getHighlightContent}
-					inputKey="bottom-general"
-					activeDiscussionChannel={this.props.activeDiscussionChannel}
-				/>
+				<div className="new-discussion-wrapper">
+					<DiscussionInput
+						initialContent={undefined}
+						handleSubmit={this.handlePostNewThread}
+						showTitle={true}
+						submitIsLoading={this.state.newThreadLoading}
+						getHighlightContent={this.props.getHighlightContent}
+						inputKey="bottom-general"
+						activeDiscussionChannel={this.props.activeDiscussionChannel}
+					/>
+				</div>
 
 				{/* !this.props.mode &&
 					<button className="pt-button pt-intent-primary new-button" onClick={()=> { this.props.onPreviewClick('new'); }}>

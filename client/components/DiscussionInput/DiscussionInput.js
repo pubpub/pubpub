@@ -19,19 +19,23 @@ require('./discussionInput.scss');
 const propTypes = {
 	handleSubmit: PropTypes.func.isRequired,
 	showTitle: PropTypes.bool,
+	isNew: PropTypes.bool,
 	initialContent: PropTypes.object,
 	submitIsLoading: PropTypes.bool,
 	getHighlightContent: PropTypes.func,
 	inputKey: PropTypes.string,
 	activeDiscussionChannel: PropTypes.object.isRequired,
+	leftButtons: PropTypes.node,
 };
 
 const defaultProps = {
 	showTitle: false,
 	initialContent: undefined,
+	isNew: false,
 	submitIsLoading: false,
 	getHighlightContent: undefined,
 	inputKey: undefined,
+	leftButtons: undefined,
 };
 
 class DiscussionInput extends Component {
@@ -138,8 +142,9 @@ class DiscussionInput extends Component {
 				</div>
 				<div className="buttons">
 					<div className="buttons-left">
+						{this.props.leftButtons}
 						{/* <button type="button" className="pt-button pt-minimal pt-small">Attach</button> */}
-						<Popover
+						{/* <Popover
 							content={<FormattingHelp />}
 							interactionKind={PopoverInteractionKind.CLICK}
 							position={Position.TOP_LEFT}
@@ -148,8 +153,7 @@ class DiscussionInput extends Component {
 							inheritDarkTheme={false}
 						>
 							<button type="button" className="pt-button pt-minimal pt-small">Format</button>
-						</Popover>
-
+						</Popover> */}
 					</div>
 					<div className="buttons-right">
 						{/* this.props.showTitle &&
@@ -187,7 +191,7 @@ class DiscussionInput extends Component {
 							type="submit"
 							className="pt-button pt-intent-primary pt-small"
 							onClick={this.onSubmit}
-							text={this.props.showTitle ? `Post to #${this.props.activeDiscussionChannel.title}` : 'Submit Reply'}
+							text={this.props.isNew || this.props.showTitle ? `Post to #${this.props.activeDiscussionChannel.title}` : 'Submit Reply'}
 							disabled={this.state.submitDisabled}
 							loading={this.props.submitIsLoading}
 						/>
