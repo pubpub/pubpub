@@ -46,6 +46,16 @@ Print
 	}
 }
 
+@media only screen and (max-width: 750px) {
+	#pub-container {
+		.main-content {
+			margin-top: 2em;
+		}
+		.side-content {
+			display: none;
+		}
+	}
+}
 @media print {
 	#pub-container {
 		.container.pub {
