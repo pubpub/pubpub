@@ -221,10 +221,10 @@ class PubOptionsSections extends Component {
 																/>
 															}
 															{!isEditing &&
-																<button
-																	className="pt-button pt-minimal pt-icon-edit2"
+																<Button
+																	className="pt-minimal"
 																	onClick={()=> { this.handleSetEdit(index); }}
-																	type="button"
+																	icon={<Icon icon="edit2" />}
 																/>
 															}
 															<button

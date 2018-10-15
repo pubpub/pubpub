@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Popover, PopoverInteractionKind, Position, Tooltip } from '@blueprintjs/core';
+import Icon from 'components/Icon/Icon';
 import uuidv4 from 'uuid/v4';
 
 require('./discussionLabelsList.scss');
@@ -34,6 +35,7 @@ class DiscussionLabelsList extends Component {
 		this.addLabel = this.addLabel.bind(this);
 		this.handleSave = this.handleSave.bind(this);
 	}
+
 	componentWillReceiveProps(nextProps) {
 		this.setState({
 			labelsData: nextProps.labelsData,
@@ -57,6 +59,7 @@ class DiscussionLabelsList extends Component {
 		});
 		this.setState({ labelsData: newLabelsData, labelsDataChanged: true });
 	}
+
 	updateColor(id, newColor) {
 		const newLabelsData = this.state.labelsData.map((label)=> {
 			if (label.id !== id) { return label; }
@@ -67,6 +70,7 @@ class DiscussionLabelsList extends Component {
 		});
 		this.setState({ labelsData: newLabelsData, labelsDataChanged: true });
 	}
+
 	togglePublicApply(id) {
 		const newLabelsData = this.state.labelsData.map((label)=> {
 			if (label.id !== id) { return label; }
@@ -77,12 +81,14 @@ class DiscussionLabelsList extends Component {
 		});
 		this.setState({ labelsData: newLabelsData, labelsDataChanged: true });
 	}
+
 	removeLabel(id) {
 		const newLabelsData = this.state.labelsData.filter((label)=> {
 			return label.id !== id;
 		});
 		this.setState({ labelsData: newLabelsData, labelsDataChanged: true });
 	}
+
 	addLabel() {
 		const newLabelsData = [
 			...this.state.labelsData,
@@ -99,12 +105,17 @@ class DiscussionLabelsList extends Component {
 		this.setState({ isSaving: true });
 		this.props.onLabelsUpdate(this.state.labelsData);
 	}
+
 	render() {
 		const showEditMode = this.state.isEditMode || (!this.props.labelsData.length && this.props.isManager);
 		return (
 			<div className="discussion-labels-list-component pt-menu pt-elevation-1">
 				{this.props.isManager && !showEditMode &&
-					<button className="pt-button pt-icon-edit2 action-button" onClick={this.toggleEditMode} />
+					<Button
+						className="action-button"
+						onClick={this.toggleEditMode}
+						icon={<Icon icon="edit2" />}
+					/>
 				}
 				{this.props.isManager && showEditMode &&
 					<Button

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { AnchorButton } from '@blueprintjs/core';
 import Overlay from 'components/Overlay/Overlay';
 import ImageCropper from 'components/ImageCropper/ImageCropper';
+import Icon from 'components/Icon/Icon';
 import { s3Upload } from 'utilities';
 
 require('./imageUpload.scss');
@@ -145,7 +146,10 @@ class ImageUpload extends Component {
 
 					<div className="image-options">
 						{!this.state.uploading && this.state.imageBlob &&
-							<AnchorButton className="pt-button pt-minimal pt-icon-edit2" />
+							<AnchorButton
+								className="pt-minimal"
+								icon={<Icon icon="edit2" />}
+							/>
 						}
 						{!this.state.uploading && this.state.imageBlob && this.props.canClear &&
 							<button className="pt-button pt-minimal pt-icon-trash pt-intent-danger" onClick={this.clearImage} />
