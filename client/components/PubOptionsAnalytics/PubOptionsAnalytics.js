@@ -69,39 +69,88 @@ class PubOptionsAnalytics extends Component {
 				start: new Date(this.props.pubData.createdAt).toISOString(),
 				end: new Date().toISOString()
 			},
-			interval: 'daily'
+			interval: 'daily',
+			group_by: 'geo.country',
 		})
-		.then((result)=> {
-			console.log(result);
+		.then((res)=> {
+			const visitsData = res.result.map((item)=> {
+				return {
+					date: item.timeframe.start.substring(0, 10),
+					visits: item.value.reduce((prev, curr)=> {
+						return prev + curr.result;
+					}, 0)
+				};
+			});
+			const countryData = {};
+			res.result.forEach((item)=> {
+				item.value.forEach((itemValue)=> {
+					const previousCountryValue = countryData[itemValue['geo.country']] || 0;
+					countryData[itemValue['geo.country']] = previousCountryValue + itemValue.result;
+				});
+			});
+			this.setState({
+				visitsData: visitsData,
+				countryData: countryData,
+				totalVisits: visitsData.reduce((prev, curr)=> {
+					return prev + curr.visits;
+				}, 0),
+			});
 		})
 		.catch((err)=> {
 			console.error('Keen error: ', err);
 		});
 
-		fetch('/api/analytics')
-		.then((response)=> {
-			if (!response.ok) {
-				return response.json().then((err)=> { throw err; });
-			}
-			return response.json();
-		})
-		.then((data)=> {
-			const visitsData = data[0];
-			const countryData = {};
-			data[1].forEach((item)=> {
-				countryData[item.label] = item.nb_visits;
-			});
-			this.setState({
-				visitsData: visitsData,
-				countryData: countryData,
-				totalVisits: Object.values(visitsData).reduce((prev, curr)=> {
-					return prev + curr.nb_visits;
-				}, 0),
-			});
-		})
-		.catch((err)=> {
-			console.error('Error fetching analytics data');
-		});
+		// this.keenClient.query({
+		// 	analysis_type: 'count',
+		// 	event_collection: 'pageviews',
+		// 	cache: isPubPubProduction
+		// 		? { maxAge: 10 * 60 * 1000 } /* 10 minutes */
+		// 		: false,
+		// 	filters: [{
+		// 		property_name: 'pubpub_pubId',
+		// 		operator: 'eq',
+		// 		property_value: this.props.pubData.id,
+		// 	}],
+		// 	timeframe: {
+		// 		// TODO: We need to set the start date based on the earliest visible entry.
+		// 		start: new Date(this.props.pubData.createdAt).toISOString(),
+		// 		end: new Date().toISOString()
+		// 	},
+		// 	group_by: 'geo.country',
+		// })
+		// .then((res)=> {
+		// 	this.setState({
+		// 		newCountryData: res.result
+		// 	});
+		// })
+		// .catch((err)=> {
+		// 	console.error('Keen error: ', err);
+		// });
+
+		// fetch('/api/analytics')
+		// .then((response)=> {
+		// 	if (!response.ok) {
+		// 		return response.json().then((err)=> { throw err; });
+		// 	}
+		// 	return response.json();
+		// })
+		// .then((data)=> {
+		// 	const visitsData = data[0];
+		// 	const countryData = {};
+		// 	data[1].forEach((item)=> {
+		// 		countryData[item.label] = item.nb_visits;
+		// 	});
+		// 	this.setState({
+		// 		visitsData: visitsData,
+		// 		countryData: countryData,
+		// 		totalVisits: Object.values(visitsData).reduce((prev, curr)=> {
+		// 			return prev + curr.nb_visits;
+		// 		}, 0),
+		// 	});
+		// })
+		// .catch((err)=> {
+		// 	console.error('Error fetching analytics data');
+		// });
 	}
 
 	handleMouseMove(geography, evt) {
@@ -131,10 +180,16 @@ class PubOptionsAnalytics extends Component {
 			left: toolTipData.x,
 			position: 'fixed',
 		};
+		const hasPreAnalytics = new Date(this.props.pubData.createdAt).toISOString() < '2018-10-16T00:00:00.000Z';
 		return (
 			<div className="pub-options-analytics-component">
 				<h1>Analytics</h1>
 
+				{hasPreAnalytics &&
+					<div className="pt-callout pt-intent-warning" style={{ marginBottom: '2em' }}>
+						Pubs created before the launch of PubPub v5 only have analytics back to October 15th.
+					</div>
+				}
 				{this.state.toolTipData &&
 					<div className="pt-elevation-2" style={tooltipStyle}>
 						<div><b>Country: </b>{this.state.toolTipData.name}</div>
@@ -147,18 +202,19 @@ class PubOptionsAnalytics extends Component {
 				{this.state.visitsData &&
 					<ResponsiveContainer width="100%" height={150}>
 						<AreaChart
-							data={Object.keys(this.state.visitsData).sort((foo, bar)=> {
-								if (foo < bar) { return -1; }
-								if (foo > bar) { return 1; }
-								return 0;
-							}).map((item)=> {
-								return {
-									date: item,
-									visits: this.state.visitsData[item].nb_visits,
-									unique: this.state.visitsData[item].nb_uniq_visitors,
-									avgTime: this.state.visitsData[item].avg_time_on_site,
-								};
-							})}
+							// data={Object.keys(this.state.visitsData).sort((foo, bar)=> {
+							// 	if (foo < bar) { return -1; }
+							// 	if (foo > bar) { return 1; }
+							// 	return 0;
+							// }).map((item)=> {
+							// 	return {
+							// 		date: item,
+							// 		visits: this.state.visitsData[item].nb_visits,
+							// 		unique: this.state.visitsData[item].nb_uniq_visitors,
+							// 		avgTime: this.state.visitsData[item].avg_time_on_site,
+							// 	};
+							// })}
+							data={this.state.visitsData}
 							margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
 						>
 							<defs>
@@ -178,8 +234,9 @@ class PubOptionsAnalytics extends Component {
 										<div className="pt-elevation-2">
 											<div><b>{payload.date}</b></div>
 											<div>Visits: {payload.visits}</div>
-											<div>Unique Visits: {payload.unique}</div>
+											{/* <div>Unique Visits: {payload.unique}</div>
 											<div>Average Time on Page: {payload.avgTime}s</div>
+											*/}
 										</div>
 									);
 								}}
