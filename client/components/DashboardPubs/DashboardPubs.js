@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button, NonIdealState } from '@blueprintjs/core';
+import { apiFetch } from 'utilities';
 
 require('./dashboardPubs.scss');
 
@@ -11,13 +13,49 @@ const propTypes = {
 class DashboardPubs extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			isLoading: false,
+		};
 
+		this.createPub = this.createPub.bind(this);
+	}
+
+	createPub() {
+		this.setState({ isLoading: true });
+		return apiFetch('/api/pubs', {
+			method: 'POST',
+			body: JSON.stringify({
+				communityId: this.props.communityData.id,
+				defaultTagIds: this.props.communityData.defaultPubTags || [],
+			})
+		})
+		.then((result)=> {
+			window.location.href = result;
+		})
+		.catch((err)=> {
+			console.error(err);
+			this.setState({ isLoading: false });
+		});
 	}
 
 	render() {
 		return (
 			<div className="dashboard-pubs-component">
 				<h1 className="content-title">Pubs</h1>
+				{!this.props.pubsData.length &&
+					<NonIdealState
+						title="No Pubs"
+						description="All pubs in your community will be listed here. Get started by creating your first pub."
+						visual="widget"
+						action={
+							<Button
+								text="Create Pub"
+								onClick={this.createPub}
+								loading={this.state.isLoading}
+							/>
+						}
+					/>
+				}
 				{this.props.pubsData.sort((foo, bar)=> {
 					if (foo.title < bar.title) { return -1; }
 					if (foo.title > bar.title) { return 1; }
