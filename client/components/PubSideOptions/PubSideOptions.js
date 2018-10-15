@@ -105,8 +105,8 @@ class PubSideOptions extends Component {
 							<Icon icon="reddit" />
 						</a>
 						<span>·</span>
-						<a href={`https://plus.google.com/share?url=${pubLink}`} rel="noopener noreferrer" target="_blank">
-							<Icon icon="google-plus" />
+						<a href={`https://www.linkedin.com/shareArticle?url=${pubLink}&title=${pubTitle}`} rel="noopener noreferrer" target="_blank">
+							<Icon icon="linkedin" />
 						</a>
 					</div>
 					<div className="discussion-options">

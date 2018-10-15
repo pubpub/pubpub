@@ -40,11 +40,11 @@ class PubOptionsSocial extends Component {
 				icon: <Icon icon="facebook" />,
 				url: `https://www.facebook.com/sharer.php?u=${pubLink}`,
 			},
-			{
-				title: 'Google+',
-				icon: <Icon icon="google-plus" />,
-				url: `https://plus.google.com/share?url=${pubLink}`,
-			},
+			// {
+			// 	title: 'Google+',
+			// 	icon: <Icon icon="google-plus" />,
+			// 	url: `https://plus.google.com/share?url=${pubLink}`,
+			// },
 			{
 				title: 'LinkedIn',
 				icon: <Icon icon="linkedin" />,
