@@ -22,13 +22,13 @@ app.get('/rss.xml', (req, res)=> {
 				attributes: ['id', 'title', 'slug', 'firstPublishedAt', 'description', 'avatar', 'communityId'],
 				separate: true,
 				include: [
-					{
-						model: Collection,
-						as: 'collections',
-						where: { isPublic: true },
-						attributes: ['id', 'isPublic'],
-						through: { attributes: [] },
-					},
+					// {
+					// 	model: Collection,
+					// 	as: 'collections',
+					// 	where: { isPublic: true },
+					// 	attributes: ['id', 'isPublic'],
+					// 	through: { attributes: [] },
+					// },
 					// {
 					// 	model: User,
 					// 	as: 'collaborators',
