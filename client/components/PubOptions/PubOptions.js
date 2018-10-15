@@ -42,8 +42,8 @@ const defaultProps = {
 const PubOptions = (props)=> {
 	const optionsMode = props.optionsMode;
 	// TODO: Hide based on isManager, and other metrics
-	// TODO: Hide sections if we are not in draft, and there are no sections
-	const adminModes = [
+
+	let adminModes = [
 		'details',
 		'tags',
 		'sharing',
@@ -52,6 +52,12 @@ const PubOptions = (props)=> {
 		'DOI',
 		'delete'
 	];
+	if (!props.pubData.isDraft) {
+		adminModes = adminModes.filter((item)=> {
+			return item !== 'sections';
+		});
+	}
+
 	const modes = [
 		'attribution',
 		// 'versions',
