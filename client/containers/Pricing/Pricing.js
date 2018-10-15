@@ -24,7 +24,7 @@ const Pricing = (props)=> {
 					<div className="row">
 						<div className="col-12">
 							<h1>Pricing</h1>
-							<p>PubPub strives to provide communities with the tools to get up and going for free. To fulfill this mission, we achieve sustainability by offering paid features that we've found to be of primary concern to larger, commercial publishers.</p>
+							<p>We are committed to providing PubPub users with robust, free-forever tools to support their community publishing. To fulfill this mission and ensure our sustainability, PubPub offers paid options that we've found to be predominantly required by large publishers.</p>
 							<div className="pricing-tiers">
 								<div className="option pt-card pt-elevation-1">
 									<h2>Community</h2>
@@ -59,7 +59,7 @@ const Pricing = (props)=> {
 									<p className="subtitle">Contact for pricing</p>
 									<ul className="features">
 										<li>All PubPub Professional features</li>
-										<li>Dedicated, hands-on support for setting up and managing your community</li>
+										<li>Dedicated, hands-on support for setting up your community</li>
 										<li>Production, editorial, marketing, and community management support</li>
 									</ul>
 									<a href="mailto: team@pubpub.org?subject=Full Service Inquiry" target="_blank" rel="noopener noreferrer" className="pt-button pt-large pt-intent-primary">Get In Touch</a>
