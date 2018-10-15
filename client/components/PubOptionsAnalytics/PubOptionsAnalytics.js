@@ -54,6 +54,10 @@ class PubOptionsAnalytics extends Component {
 				: 'E4C526BC021F960D2C84AB1521E8D1D3F0D1089292947A27880D43F83997554C5F95F34DD9E16A18B5F5FC0809A415AF4A2E74AAF9379B51520924BF2B692598FF80D751E8E6EC63F3B931432DF394799EFC0E0E6C100ED64C1E628873E9D16C',
 		});
 
+		const startDate = new Date(this.props.pubData.createdAt).toISOString() < '2018-10-15T00:00:00.000Z'
+			? '2018-10-15T00:00:00.000Z'
+			: this.props.pubData.createdAt;
+
 		this.keenClient.query({
 			analysis_type: 'count',
 			event_collection: 'pageviews',
@@ -67,7 +71,7 @@ class PubOptionsAnalytics extends Component {
 			}],
 			timeframe: {
 				// TODO: We need to set the start date based on the earliest visible entry.
-				start: new Date(this.props.pubData.createdAt).toISOString(),
+				start: startDate,
 				end: new Date().toISOString()
 			},
 			interval: 'daily',
@@ -129,7 +133,7 @@ class PubOptionsAnalytics extends Component {
 			left: toolTipData.x,
 			position: 'fixed',
 		};
-		const hasPreAnalytics = new Date(this.props.pubData.createdAt).toISOString() < '2018-10-16T00:00:00.000Z';
+		const hasPreAnalytics = new Date(this.props.pubData.createdAt).toISOString() < '2018-10-15T00:00:00.000Z';
 		return (
 			<div className="pub-options-analytics-component">
 				<h1>Analytics</h1>
