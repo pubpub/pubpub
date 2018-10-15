@@ -123,9 +123,9 @@ class PubOptionsExport extends Component {
 			<div className="pub-options-export-component">
 				<h1>Export Pub</h1>
 
-				<p>Export the current version or working draft.</p>
-
-				<h2>Format </h2>
+				<div className="pt-callout working-draft pt-intent-warning" style={{ marginBottom: '2em' }}>
+					Export and import are still under development. Please excuse any bugs as we work to stabilize the functionality.
+				</div>
 				<div className="pt-button-group">
 					{types.map((type)=> {
 						return (
