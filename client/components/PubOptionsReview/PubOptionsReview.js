@@ -201,7 +201,13 @@ class PubOptionsReview extends Component {
 					</div>
 				</div>
 
-				{(isAdmin || isManager) &&
+				{!this.props.pubData.versions.length &&
+					<div className="pt-callout pt-intent-warning">
+						Reviews apply to specific versions. To begin a review you must first save a version of the working draft. You will then have options here to select the specific version you would like to submit for review.
+					</div>
+				}
+
+				{(isAdmin || isManager) && !!this.props.pubData.versions.length &&
 					<div>
 						<p>{instructions}</p>
 						{currentStatus !== 'submitted' &&
@@ -216,7 +222,7 @@ class PubOptionsReview extends Component {
 											onClick={handleClick}
 											className={modifiers.active ? 'pt-menu-item pt-active' : 'pt-menu-item'}
 										>
-											Version {dateFormat(item.createdAt, 'mmm dd, yyyy · h:MMTT')}
+											Version: {dateFormat(item.createdAt, 'mmm dd, yyyy · h:MMTT')}
 										</button>
 									);
 								}}
@@ -229,7 +235,7 @@ class PubOptionsReview extends Component {
 								inputProps={{ className: 'pt-fill' }}
 							>
 								<Button
-									text={this.state.selectedVersion ? `Version: ${this.state.selectedVersion.createdAt}` : 'Select a Version'}
+									text={this.state.selectedVersion ? `Version: ${dateFormat(this.state.selectedVersion.createdAt, 'mmm dd, yyyy · h:MMTT')}` : 'Select a Version'}
 									rightIcon="caret-down"
 								/>
 							</Select>
