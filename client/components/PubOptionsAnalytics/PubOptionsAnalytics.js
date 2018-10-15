@@ -31,14 +31,6 @@ class PubOptionsAnalytics extends Component {
 	}
 
 	componentDidMount() {
-		this.keenClient = new KeenAnalysis({
-			projectId: isPubPubProduction
-				? '5b57a01ac9e77c0001eef181'
-				: '5b5791b9c9e77c000175ca3b',
-			readKey: isPubPubProduction
-				? '5CF12741FA41DC030D092D2B6D247344B3C25183E9862A598D452F59B346BC5CD667E1C2B2DA03CFDE17339312D3880BC20C1051DAA146CAFF2ABA684FCE5B4B8985FF9C9EEC4406C3D851F0E81D67B33E65431FB39963378B9A8D8925B9C081'
-				: 'E4C526BC021F960D2C84AB1521E8D1D3F0D1089292947A27880D43F83997554C5F95F34DD9E16A18B5F5FC0809A415AF4A2E74AAF9379B51520924BF2B692598FF80D751E8E6EC63F3B931432DF394799EFC0E0E6C100ED64C1E628873E9D16C',
-		});
 		fetch('https://assets.pubpub.org/_site/world-50m.json')
 		.then((response)=> {
 			if (!response.ok) {
@@ -53,6 +45,15 @@ class PubOptionsAnalytics extends Component {
 			console.error('Error fetching map data', err);
 		});
 
+		this.keenClient = new KeenAnalysis({
+			projectId: isPubPubProduction
+				? '5b57a01ac9e77c0001eef181'
+				: '5b5791b9c9e77c000175ca3b',
+			readKey: isPubPubProduction
+				? '5CF12741FA41DC030D092D2B6D247344B3C25183E9862A598D452F59B346BC5CD667E1C2B2DA03CFDE17339312D3880BC20C1051DAA146CAFF2ABA684FCE5B4B8985FF9C9EEC4406C3D851F0E81D67B33E65431FB39963378B9A8D8925B9C081'
+				: 'E4C526BC021F960D2C84AB1521E8D1D3F0D1089292947A27880D43F83997554C5F95F34DD9E16A18B5F5FC0809A415AF4A2E74AAF9379B51520924BF2B692598FF80D751E8E6EC63F3B931432DF394799EFC0E0E6C100ED64C1E628873E9D16C',
+		});
+
 		this.keenClient.query({
 			analysis_type: 'count',
 			event_collection: 'pageviews',
@@ -60,7 +61,7 @@ class PubOptionsAnalytics extends Component {
 				? { maxAge: 10 * 60 * 1000 } /* 10 minutes */
 				: false,
 			filters: [{
-				property_name: 'pubpub_pubId',
+				property_name: 'pubpub.pubId',
 				operator: 'eq',
 				property_value: this.props.pubData.id,
 			}],
@@ -99,58 +100,6 @@ class PubOptionsAnalytics extends Component {
 		.catch((err)=> {
 			console.error('Keen error: ', err);
 		});
-
-		// this.keenClient.query({
-		// 	analysis_type: 'count',
-		// 	event_collection: 'pageviews',
-		// 	cache: isPubPubProduction
-		// 		? { maxAge: 10 * 60 * 1000 } /* 10 minutes */
-		// 		: false,
-		// 	filters: [{
-		// 		property_name: 'pubpub_pubId',
-		// 		operator: 'eq',
-		// 		property_value: this.props.pubData.id,
-		// 	}],
-		// 	timeframe: {
-		// 		// TODO: We need to set the start date based on the earliest visible entry.
-		// 		start: new Date(this.props.pubData.createdAt).toISOString(),
-		// 		end: new Date().toISOString()
-		// 	},
-		// 	group_by: 'geo.country',
-		// })
-		// .then((res)=> {
-		// 	this.setState({
-		// 		newCountryData: res.result
-		// 	});
-		// })
-		// .catch((err)=> {
-		// 	console.error('Keen error: ', err);
-		// });
-
-		// fetch('/api/analytics')
-		// .then((response)=> {
-		// 	if (!response.ok) {
-		// 		return response.json().then((err)=> { throw err; });
-		// 	}
-		// 	return response.json();
-		// })
-		// .then((data)=> {
-		// 	const visitsData = data[0];
-		// 	const countryData = {};
-		// 	data[1].forEach((item)=> {
-		// 		countryData[item.label] = item.nb_visits;
-		// 	});
-		// 	this.setState({
-		// 		visitsData: visitsData,
-		// 		countryData: countryData,
-		// 		totalVisits: Object.values(visitsData).reduce((prev, curr)=> {
-		// 			return prev + curr.nb_visits;
-		// 		}, 0),
-		// 	});
-		// })
-		// .catch((err)=> {
-		// 	console.error('Error fetching analytics data');
-		// });
 	}
 
 	handleMouseMove(geography, evt) {
@@ -202,18 +151,6 @@ class PubOptionsAnalytics extends Component {
 				{this.state.visitsData &&
 					<ResponsiveContainer width="100%" height={150}>
 						<AreaChart
-							// data={Object.keys(this.state.visitsData).sort((foo, bar)=> {
-							// 	if (foo < bar) { return -1; }
-							// 	if (foo > bar) { return 1; }
-							// 	return 0;
-							// }).map((item)=> {
-							// 	return {
-							// 		date: item,
-							// 		visits: this.state.visitsData[item].nb_visits,
-							// 		unique: this.state.visitsData[item].nb_uniq_visitors,
-							// 		avgTime: this.state.visitsData[item].avg_time_on_site,
-							// 	};
-							// })}
 							data={this.state.visitsData}
 							margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
 						>
