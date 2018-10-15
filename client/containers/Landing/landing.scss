@@ -25,7 +25,7 @@
 		background-repeat: no-repeat;
 		background-position: center center;
 		background-color: #454F60;
-		background-image: url('/static/herobg.jpg');
+		background-image: url('/static/landing/herobg.jpg');
 		color: #fff;
 		font-size: 16px;
 		/***** Nav *****/
@@ -128,7 +128,7 @@
 				}
 				a, a:visited, a:active, a:hover {
 					&:not(.pt-button) {
-						color: #ccc;	
+						color: #ccc;
 					}
 				}
 			}
@@ -163,7 +163,7 @@
 			&.flipped {
 				flex-direction: row-reverse;
 				.content {
-					margin: auto 0 auto 8em;
+					margin: 0.5em 0 auto 8em;
 				}
 			}
 			&.centered {
@@ -186,7 +186,7 @@
 			}
 
 			.content {
-				margin: auto 8em auto 0;
+				margin: 0.5em 8em auto 0;
 				.buttons {
 					margin: 0;
 					text-align: left;
@@ -212,6 +212,15 @@
 				min-height: 200px;
 				img {
 					width: 100%;
+				}
+				p.credit {
+					font-size: 10px;
+					text-align: center;
+					margin-top: 4px;
+					color: #999;
+					a {
+						color: #999;
+					}
 				}
 			}
 		}
