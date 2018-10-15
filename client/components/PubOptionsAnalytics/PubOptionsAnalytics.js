@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { ComposableMap, ZoomableGroup, Geographies, Geography } from 'react-simple-maps';
 import { ResponsiveContainer, AreaChart, XAxis, YAxis, Tooltip, Area } from 'recharts';
+import KeenAnalysis from 'keen-analysis';
 // Use Recharts
 
 require('./pubOptionsAnalytics.scss');
@@ -12,6 +13,8 @@ const propTypes = {
 	// loginData: PropTypes.object.isRequired,
 	// setPubData: PropTypes.func.isRequired,
 };
+
+const isPubPubProduction = !!process.env.PUBPUB_PRODUCTION;
 
 class PubOptionsAnalytics extends Component {
 	constructor(props) {
@@ -24,9 +27,18 @@ class PubOptionsAnalytics extends Component {
 		};
 		this.handleMouseMove = this.handleMouseMove.bind(this);
 		this.handleMouseLeave = this.handleMouseLeave.bind(this);
+		this.keenClient = undefined;
 	}
 
 	componentDidMount() {
+		this.keenClient = new KeenAnalysis({
+			projectId: isPubPubProduction
+				? '5b57a01ac9e77c0001eef181'
+				: '5b5791b9c9e77c000175ca3b',
+			readKey: isPubPubProduction
+				? '5CF12741FA41DC030D092D2B6D247344B3C25183E9862A598D452F59B346BC5CD667E1C2B2DA03CFDE17339312D3880BC20C1051DAA146CAFF2ABA684FCE5B4B8985FF9C9EEC4406C3D851F0E81D67B33E65431FB39963378B9A8D8925B9C081'
+				: 'E4C526BC021F960D2C84AB1521E8D1D3F0D1089292947A27880D43F83997554C5F95F34DD9E16A18B5F5FC0809A415AF4A2E74AAF9379B51520924BF2B692598FF80D751E8E6EC63F3B931432DF394799EFC0E0E6C100ED64C1E628873E9D16C',
+		});
 		fetch('https://assets.pubpub.org/_site/world-50m.json')
 		.then((response)=> {
 			if (!response.ok) {
@@ -38,7 +50,32 @@ class PubOptionsAnalytics extends Component {
 			this.setState({ mapData: data });
 		})
 		.catch((err)=> {
-			console.error('Error fetching map data');
+			console.error('Error fetching map data', err);
+		});
+
+		this.keenClient.query({
+			analysis_type: 'count',
+			event_collection: 'pageviews',
+			cache: isPubPubProduction
+				? { maxAge: 10 * 60 * 1000 } /* 10 minutes */
+				: false,
+			filters: [{
+				property_name: 'pubpub_pubId',
+				operator: 'eq',
+				property_value: this.props.pubData.id,
+			}],
+			timeframe: {
+				// TODO: We need to set the start date based on the earliest visible entry.
+				start: new Date(this.props.pubData.createdAt).toISOString(),
+				end: new Date().toISOString()
+			},
+			interval: 'daily'
+		})
+		.then((result)=> {
+			console.log(result);
+		})
+		.catch((err)=> {
+			console.error('Keen error: ', err);
 		});
 
 		fetch('/api/analytics')

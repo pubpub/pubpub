@@ -3,7 +3,7 @@ import Raven from 'raven-js';
 import { hydrate } from 'react-dom';
 import { FocusStyleManager } from '@blueprintjs/core';
 import KeenTracking from 'keen-tracking';
-import TimeMe from 'timeme.js';
+// import TimeMe from 'timeme.js';
 
 const isPubPubProduction = !!process.env.PUBPUB_PRODUCTION;
 
@@ -28,10 +28,10 @@ export const hydrateWrapper = (Component)=> {
 			Raven.setUserContext({ username: initialData.loginData.slug });
 
 			/* Keen Code */
-			TimeMe.initialize({
-				currentPageName: document.title, // current page
-				idleTimeoutInSeconds: 30 // seconds
-			});
+			// TimeMe.initialize({
+			// 	currentPageName: document.title, // current page
+			// 	idleTimeoutInSeconds: 30 // seconds
+			// });
 			const keenEnvironment = isPubPubProduction
 				? {
 					projectId: '5b57a01ac9e77c0001eef181',
@@ -59,21 +59,21 @@ export const hydrateWrapper = (Component)=> {
 			if (initialData.loginData.id) {
 				customEventData.userId = initialData.loginData.id;
 			}
-			client.extendEvent({ pubpub: customEventData });
+			client.extendEvents({ pubpub: customEventData });
 			client.initAutoTracking({
-				recordPageViews: false,
-				recordPageViewsOnExit: true,
+				recordPageViews: true,
+				// recordPageViewsOnExit: true,
 				recordClicks: false,
 				// TODO: recordClicks being true breaks functionality on file input overlays (e.g. pub header image upload)
 			});
 
-			window.onbeforeunload = ()=> {
-				client.recordEvent('time_spent', {
-					page: {
-						time_on_page_active: TimeMe.getTimeOnCurrentPageInSeconds(),
-					}
-				});
-			};
+			// window.onbeforeunload = ()=> {
+			// 	client.recordEvent('time_spent', {
+			// 		page: {
+			// 			time_on_page_active: TimeMe.getTimeOnCurrentPageInSeconds(),
+			// 		}
+			// 	});
+			// };
 		}
 
 		hydrate(<Component {...initialData} />, document.getElementById('root'));
