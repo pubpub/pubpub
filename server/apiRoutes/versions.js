@@ -19,12 +19,12 @@ app.post('/api/versions', (req, res)=> {
 	});
 	const findPub = Pub.findOne({
 		where: { id: req.body.pubId, communityId: req.body.communityId },
-		include: [{
-			model: Collection,
-			as: 'collections',
-			attributes: ['id', 'isOpenPublish'],
-			through: { attributes: [] },
-		}]
+		// include: [{
+		// 	// model: Collection,
+		// 	as: 'collections',
+		// 	attributes: ['id', 'isOpenPublish'],
+		// 	through: { attributes: [] },
+		// }]
 	});
 
 	const currentTimestamp = new Date();

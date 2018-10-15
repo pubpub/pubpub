@@ -58,7 +58,7 @@ class PubDraftHeader extends Component {
 
 	handleInsertFunction(insertItem) {
 		const insertFunctions = this.props.editorChangeObject.insertFunctions || {};
-
+		console.log(insertFunctions);
 		const uploadKeys = ['image', 'video', 'file'];
 		if (uploadKeys.indexOf(insertItem.key) > -1) {
 			return this.setState({
@@ -192,7 +192,7 @@ class PubDraftHeader extends Component {
 				icon: <Icon icon="bookmark" />
 			},
 			{
-				key: 'citation_list',
+				key: 'citationList',
 				title: 'Citation List',
 				icon: <Icon icon="numbered-list" />
 			},

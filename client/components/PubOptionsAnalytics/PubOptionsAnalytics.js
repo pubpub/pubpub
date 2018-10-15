@@ -140,7 +140,7 @@ class PubOptionsAnalytics extends Component {
 
 				{hasPreAnalytics &&
 					<div className="pt-callout pt-intent-warning" style={{ marginBottom: '2em' }}>
-						Pubs created before the launch of PubPub v5 only have analytics back to October 15th.
+						Pubs created before the launch of PubPub v5 display analytics back to October 15th.
 					</div>
 				}
 				{this.state.toolTipData &&

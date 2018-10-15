@@ -307,8 +307,8 @@ class Landing extends React.Component {
 							<h2>Built For You</h2>
 							<p className="description">We designed PubPub with flexibility in mind. Use every feature, or just the ones you need. If you’re an individual, company, or community that needs to collaboratively draft, review, edit and publish documents, we want to support you.</p>
 							<div className="buttons">
-								<a href="/explore" className="pt-button pt-intent-primary pt-large">Get in touch</a>
-								<a href="mailto:team@pubpub.org" className="pt-button pt-large">Explore the possibilities</a>
+								<a href="mailto:team@pubpub.org" className="pt-button pt-intent-primary pt-large">Get in touch</a>
+								<a href="/explore" className="pt-button pt-large">Explore the possibilities</a>
 							</div>
 						</div>
 						{/* END For You */}
