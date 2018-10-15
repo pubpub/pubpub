@@ -15,6 +15,7 @@ app.get('/api/analytics', (req, res)=> {
 		&urls[0]=${encodeURIComponent('method=VisitsSummary.get&period=day')}
 		&urls[1]=${encodeURIComponent('method=UserCountry.getCountry&period=range')}
 	`.replace(/\s/g, '');
+	// &urls[2]=${encodeURIComponent('method=CustomDimensions.getCustomDimension&idDimension=1&period=range')}
 	// &segment=browserCode==FF
 	// &segment=dimension1==7808da6b-94d1-436d-ad79-2e036a8e4428
 
