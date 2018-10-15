@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import SimpleEditor from 'components/SimpleEditor/SimpleEditor';
 import { formatCitationString } from 'utilities';
 
 const propTypes = {
@@ -48,13 +49,25 @@ class PubSideControlsCitation extends Component {
 
 				{/*  Output */}
 				<div className="form-label">
-					Data Output
+					Structured Data Output
 				</div>
 				<div
 					className="rendered-citation"
 					dangerouslySetInnerHTML={{ __html: this.state.html }}
 				/>
 
+				{/*  Content Adjustment */}
+				<div className="form-label">
+					Text
+				</div>
+				<div className="simple-editor-wrapper">
+					<SimpleEditor
+						initialHtmlString={this.props.attrs.unstructuredValue}
+						onChange={(htmlString)=> {
+							this.props.updateAttrs({ unstructuredValue: htmlString });
+						}}
+					/>
+				</div>
 			</div>
 		);
 	}

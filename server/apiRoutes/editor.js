@@ -19,6 +19,9 @@ app.post('/api/editor/citation-format', (req, res)=> {
 		} catch (err) {
 			return res.status(500).json(err);
 		}
+	})
+	.catch((err)=> {
+		return res.status(500).json(err);
 	});
 });
 

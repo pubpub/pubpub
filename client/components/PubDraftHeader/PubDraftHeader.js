@@ -222,7 +222,7 @@ class PubDraftHeader extends Component {
 				icon: <Icon icon="asterisk" />
 			},
 			{
-				key: 'footenote_list',
+				key: 'footnoteList',
 				title: 'Footnote List',
 				icon: <Icon icon="numbered-list" />
 			},

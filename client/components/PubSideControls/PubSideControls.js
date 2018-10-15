@@ -51,7 +51,7 @@ class PubSideControls extends Component {
 			return prev;
 		}, false);
 
-		const uncontrolledNodes = ['paragraph', 'blockquote', 'horizontal_rule', 'heading', 'ordered_list', 'bullet_list', 'list_item', 'code_block'];
+		const uncontrolledNodes = ['paragraph', 'blockquote', 'horizontal_rule', 'heading', 'ordered_list', 'bullet_list', 'list_item', 'code_block', 'citationList', 'footnoteList'];
 		const isUncontrolledNode = selectedNode.type && uncontrolledNodes.indexOf(selectedNode.type.name) > -1;
 		if (!this.props.pubData.isDraft || isUncontrolledNode || (!selectedNode.attrs && !isTable)) { return null; }
 
