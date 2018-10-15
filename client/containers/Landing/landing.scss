@@ -228,6 +228,10 @@
 
 	#features {
 		padding: 4em 0em;
+		background-repeat: repeat;
+		background-position: 50%;
+		background-color: #f9fafb;
+		background-image: url(/static/loginbg.png);
 		.feature-list {
 			margin: 4em auto 0em;
 			padding: 0;
