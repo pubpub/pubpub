@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import uuidv4 from 'uuid/v4';
+import { Button } from '@blueprintjs/core';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import Icon from 'components/Icon/Icon';
 
 require('./pubOptionsSections.scss');
 
@@ -168,10 +170,10 @@ class PubOptionsSections extends Component {
 								/>
 							}
 							{this.state.editIndex !== 0 &&
-								<button
-									className="pt-button pt-minimal pt-icon-edit2"
+								<Button
+									className="pt-minimal"
 									onClick={()=> { this.handleSetEdit(0); }}
-									type="button"
+									icon={<Icon icon="edit2" />}
 								/>
 							}
 						</div>
