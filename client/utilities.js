@@ -5,9 +5,16 @@ import { FocusStyleManager } from '@blueprintjs/core';
 import KeenTracking from 'keen-tracking';
 import { remove as removeDiacritics } from 'diacritics';
 
+const isStorybookEnv = () => (
+	typeof window !== 'undefined' && (
+		window.location.origin === 'http://localhost:9001' ||
+		window.STORYBOOK_ENV === 'react'
+	)
+);
+
 let isPubPubProduction = false;
 export const hydrateWrapper = (Component)=> {
-	if (typeof window !== 'undefined' && window.location.origin !== 'http://localhost:9001') {
+	if (!isStorybookEnv()) {
 		FocusStyleManager.onlyShowFocusOnTabs();
 
 		/* Remove any leftover service workers from last PubPub instance */

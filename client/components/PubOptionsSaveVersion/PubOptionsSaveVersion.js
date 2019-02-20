@@ -12,7 +12,7 @@ const propTypes = {
 	locationData: PropTypes.object.isRequired,
 	setOptionsMode: PropTypes.func.isRequired,
 	// setPubData: PropTypes.func.isRequired,
-	editorView: PropTypes.object.isRequired,
+	editorView: PropTypes.object,
 };
 
 class PubOptionsSaveVersion extends Component {
