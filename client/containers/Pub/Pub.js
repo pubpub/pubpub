@@ -67,6 +67,11 @@ class Pub extends Component {
 			// sectionsData: [{ id: '', order: 0, title: 'Introduction' }],
 			menuWrapperRefNode: undefined,
 			editorChangeObject: {},
+			// TODO(ian): I'm pretty sure this state is being propagated into
+			// the UI, but indirectly by way of a setState callback that
+			// uses this value to compute another state value. Refactor this
+			// code so it's not confusing to static analysis toools.
+			// eslint-disable-next-line react/no-unused-state
 			clickedMarks: [],
 			linkPopupIsOpen: false,
 		};
@@ -421,12 +426,14 @@ class Pub extends Component {
 				...changeObject,
 				currentScroll: window.scrollY,
 			},
+			// eslint-disable-next-line react/no-unused-state
 			clickedMarks: [],
 		}, this.calculateLinkPopupState);
 	}
 
 	handleEditorSingleClick(view) {
 		this.setState({
+			// eslint-disable-next-line react/no-unused-state
 			clickedMarks: marksAtSelection(view)
 		}, this.calculateLinkPopupState);
 	}
