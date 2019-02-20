@@ -15,8 +15,8 @@ initStoryShots({
 	// A regex to include stories in EXCLUDE_STORIES, using a negative
 	// lookahead with a union of possible words separated by word boundaries
 	// (the \b token). It would be nice if we could just give it a list :/
-	// eslint-disable-next-line prefer-template
 	storyKindRegex: new RegExp(
+		// eslint-disable-next-line prefer-template
 		'^(?!.*\\b(' +
 		EXCLUDE_STORIES.join('|') +
 		')\\b).*'

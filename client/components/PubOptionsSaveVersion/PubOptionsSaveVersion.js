@@ -16,6 +16,10 @@ const propTypes = {
 };
 
 class PubOptionsSaveVersion extends Component {
+	static defaultProps = {
+		editorView: null,
+	};
+
 	constructor(props) {
 		super(props);
 		this.state = {
