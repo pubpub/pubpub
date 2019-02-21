@@ -7,7 +7,7 @@ const awsDetails = {
 	secretKeyAws: process.env.AWS_SECRET_ACCESS_KEY,
 };
 
-app.get('/api/uploadPolicy', (req, res)=> {
+app.get('/api/uploadPolicy', (req, res) => {
 	const s3 = {
 		access_key: awsDetails.accessKeyAws,
 		secret_key: awsDetails.secretKeyAws,
@@ -17,7 +17,7 @@ app.get('/api/uploadPolicy', (req, res)=> {
 		error_message: '',
 		expiration_date: function() {
 			return new Date(Date.now() + 60000);
-		}
+		},
 	};
 
 	const bucket = s3.bucket; // the name you've chosen for the bucket
@@ -35,9 +35,11 @@ app.get('/api/uploadPolicy', (req, res)=> {
 			{ acl: acl },
 			{ success_action_status: '200' },
 			['starts-with', '$Content-Type', ''],
-		]
+		],
 	};
-	policy = Buffer.from(JSON.stringify(policy)).toString('base64').replace(/\n|\r/, '');
+	policy = Buffer.from(JSON.stringify(policy))
+		.toString('base64')
+		.replace(/\n|\r/, '');
 	const hmac = crypto.createHmac('sha1', s3.secret_key);
 	hmac.update(policy);
 	const signature = hmac.digest('base64');
@@ -50,6 +52,6 @@ app.get('/api/uploadPolicy', (req, res)=> {
 		redirect: successActionRedirect,
 		content_type: contentType,
 		policy: policy,
-		signature: signature
+		signature: signature,
 	});
 });

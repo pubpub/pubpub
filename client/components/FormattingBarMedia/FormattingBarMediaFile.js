@@ -38,7 +38,7 @@ class FormattingBarMediaFile extends Component {
 
 	onUploadProgress(evt) {
 		this.setState({
-			progress: evt.loaded / evt.total
+			progress: evt.loaded / evt.total,
 		});
 	}
 
@@ -52,28 +52,28 @@ class FormattingBarMediaFile extends Component {
 
 	render() {
 		return (
-			<Dropzone
-				onDrop={this.onDrop}
-			>
+			<Dropzone onDrop={this.onDrop}>
 				{({ getRootProps, getInputProps, isDragActive }) => {
 					return (
 						<div
 							{...getRootProps()}
-							className={`formatting-bar-media-component-content dropzone ${isDragActive ? 'dropzone--isActive' : ''}`}
+							className={`formatting-bar-media-component-content dropzone ${
+								isDragActive ? 'dropzone--isActive' : ''
+							}`}
 						>
 							<input {...getInputProps()} />
-							{!this.state.isUploading &&
+							{!this.state.isUploading && (
 								<div className="drag-message">
 									<Icon icon="circle-arrow-up" iconSize={50} />
 									<div className="drag-title">Drag & drop to upload a File</div>
 									<div className="drag-details">Or click to browse files</div>
 								</div>
-							}
-							{this.state.isUploading &&
+							)}
+							{this.state.isUploading && (
 								<div className="drag-message">
 									<Spinner value={this.state.progress} />
 								</div>
-							}
+							)}
 						</div>
 					);
 				}}

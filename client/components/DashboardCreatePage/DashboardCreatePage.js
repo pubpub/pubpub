@@ -46,7 +46,7 @@ class DashboardCreatePage extends Component {
 	handleCreateSubmit(evt) {
 		evt.preventDefault();
 
-		const pageSlugs = this.props.communityData.pages.map((item)=> {
+		const pageSlugs = this.props.communityData.pages.map((item) => {
 			return item.slug;
 		});
 		pageSlugs.push('home');
@@ -69,14 +69,14 @@ class DashboardCreatePage extends Component {
 				communityId: this.props.communityData.id,
 			}),
 		})
-		.then(()=> {
-			this.setState({ isLoading: false, error: undefined });
-			window.location.href = `/dashboard/pages/${newPageObject.slug}`;
-		})
-		.catch((err)=> {
-			console.error(err);
-			this.setState({ isLoading: false, error: err });
-		});
+			.then(() => {
+				this.setState({ isLoading: false, error: undefined });
+				window.location.href = `/dashboard/pages/${newPageObject.slug}`;
+			})
+			.catch((err) => {
+				console.error(err);
+				this.setState({ isLoading: false, error: err });
+			});
 	}
 
 	render() {
