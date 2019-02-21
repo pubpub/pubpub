@@ -14,6 +14,7 @@
     "api-prod": "NODE_PATH=./client node init.js",
     "build-dev": "webpack --config ./client/webpack/webpackConfig.dev.js --watch",
     "build-prod": "rm -rf ./dist && webpack --config ./client/webpack/webpackConfig.prod.js",
+    "install-git-hooks": "cp ./.githooks/* .git/hooks && chmod +x .git/hooks/*",
     "prod": "npm run build-prod && npm run api-prod",
     "lint": "eslint .",
     "migrate": "node initMigrations.js",
