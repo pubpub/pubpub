@@ -48,7 +48,7 @@ class FormattingBar extends Component {
 		this.closeMediaGallery();
 	}
 
-	render () {
+	render() {
 		const menuItems = this.props.editorChangeObject.menuItems || [];
 		const menuItemsObject = menuItems.reduce((prev, curr)=> {
 			return { ...prev, [curr.title]: curr };

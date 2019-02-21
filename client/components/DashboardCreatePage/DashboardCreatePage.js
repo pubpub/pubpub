@@ -33,13 +33,13 @@ class DashboardCreatePage extends Component {
 
 	handleSlugChange(evt) {
 		this.setState({
-			slug: slugifyString(evt.target.value)
+			slug: slugifyString(evt.target.value),
 		});
 	}
 
 	handleDescriptionChange(evt) {
 		this.setState({
-			description: evt.target.value.substring(0, 280).replace(/\n/g, ' ')
+			description: evt.target.value.substring(0, 280).replace(/\n/g, ' '),
 		});
 	}
 
@@ -67,7 +67,7 @@ class DashboardCreatePage extends Component {
 			body: JSON.stringify({
 				...newPageObject,
 				communityId: this.props.communityData.id,
-			})
+			}),
 		})
 		.then(()=> {
 			this.setState({ isLoading: false, error: undefined });

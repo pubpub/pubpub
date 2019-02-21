@@ -19,7 +19,7 @@ class Footer extends Component {
 		this.state = {
 			email: '',
 			isLoadingSubscribe: false,
-			isSubscribed: false
+			isSubscribed: false,
 		};
 		this.handleEmailChange = this.handleEmailChange.bind(this);
 		this.handleEmailSubmit = this.handleEmailSubmit.bind(this);
@@ -29,7 +29,7 @@ class Footer extends Component {
 				{ id: 1, title: 'Create your community', url: '/create/community' },
 				{ id: 2, title: 'Login', url: '/login' },
 				{ id: 3, title: 'Signup', url: '/signup' },
-				{ id: 4, title: 'Terms', url: '/tos' }
+				{ id: 4, title: 'Terms', url: '/tos' },
 				// { id: 6, title: 'Help', url: 'https://meta.pubpub.org/help' },
 
 			]
@@ -41,26 +41,26 @@ class Footer extends Component {
 			];
 	}
 
-	handleEmailChange(evt) {
+	handleEmailChange = (evt) => {
 		this.setState({ email: evt.target.value });
 	}
 
 	handleEmailSubmit(evt) {
 		evt.preventDefault();
 		this.setState({
-			isLoadingSubscribe: true
+			isLoadingSubscribe: true,
 		});
 		return apiFetch('/api/subscribe', {
 			method: 'POST',
 			body: JSON.stringify({
-				email: this.state.email
-			})
+				email: this.state.email,
+			}),
 		})
 		.then(()=> {
 			this.setState({
 				isLoadingSubscribe: false,
 				email: '',
-				isSubscribed: true
+				isSubscribed: true,
 			});
 		})
 		.catch((err)=> {

@@ -25,7 +25,7 @@ class FormattingBarMediaIframe extends Component {
 		});
 	}
 
-	render () {
+	render() {
 		const isValid = isHttpsUri(this.state.url);
 		return (
 			<div className="formatting-bar-media-component-content">

@@ -264,7 +264,7 @@ class UserCreate extends Component {
 											);
 										})}
 
-										{!!expandables.filter(item => !item.isVisible).length &&
+										{!!expandables.filter((item)=> !item.isVisible).length &&
 											<InputField label="Add More">
 												<div className="bp3-button-group">
 													{expandables.filter((item)=> {

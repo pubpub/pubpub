@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 let manifest;
 try {
+	/* eslint-disable-next-line global-require */
 	manifest = require('../dist/manifest.json');
 } catch (err) {
 	// No Manifest file. Must be dev mode.

@@ -15,7 +15,7 @@ export default {
 					threadNumber: node.getAttribute('data-thread-number') || null,
 					align: node.getAttribute('data-align') || null,
 				};
-			}
+			},
 		}],
 		toDOM: (node)=> {
 			return ['discussion', {
@@ -54,6 +54,6 @@ export default {
 					isEditable={isEditable}
 				/>
 			);
-		}
-	}
+		},
+	},
 };

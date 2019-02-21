@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+/* Firebase has some issues with their auth packages and importing */
+/* conflicting dependencies. https://github.com/firebase/firebase-js-sdk/issues/752 */
+/* eslint-disable-next-line import/no-extraneous-dependencies */
 import firebase from '@firebase/app';
 import checkIfMobile from 'is-mobile';
 // import applyDevTools from 'prosemirror-dev-tools';
@@ -24,7 +27,9 @@ import { dispatchEmptyTransaction, docIsEmpty, marksAtSelection } from '@pubpub/
 import queryString from 'query-string';
 import { apiFetch, hydrateWrapper, getFirebaseConfig, nestDiscussionsToThreads, getRandomColor, generateHash } from 'utilities';
 
+/* eslint-disable-next-line import/no-extraneous-dependencies */
 require('@firebase/auth');
+/* eslint-disable-next-line import/no-extraneous-dependencies */
 require('@firebase/database');
 require('./pub.scss');
 
@@ -102,14 +107,14 @@ class Pub extends Component {
 		if (this.state.pubData.isDraft) {
 			/* Setup Firebase App */
 			const firebaseAppName = `Pub-${this.props.pubData.editorKey}`;
-			const existingApp = firebase.apps.reduce((prev, curr)=> {
+			const existingApp = firebase.apps.reduce((prev, curr) => {
 				if (curr.name === firebaseAppName) { return curr; }
 				return prev;
 			}, undefined);
 			const firebaseApp = existingApp || firebase.initializeApp(getFirebaseConfig(), firebaseAppName);
 			const database = firebase.database(firebaseApp);
 			firebase.auth(firebaseApp).signInWithCustomToken(this.props.pubData.firebaseToken)
-			.then(()=> {
+			.then(() => {
 				this.firebaseRef = database.ref(`${this.props.pubData.editorKey}`);
 				/* Add listener event to update sectionsData when it changes in Firebase */
 				this.firebaseRef.child('/sections').on('value', this.handleSectionsChange);
@@ -208,7 +213,7 @@ class Pub extends Component {
 				...prevState.locationData.query,
 				channel: channelTitle === 'public' ? undefined : channelTitle,
 			};
-			const newQueryString = Object.values(newQuery).filter(item => !!item).length
+			const newQueryString = Object.values(newQuery).filter((item)=> !!item).length
 				? `?${queryString.stringify(newQuery)}`
 				: '';
 			return {

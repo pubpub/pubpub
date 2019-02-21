@@ -122,6 +122,6 @@ app.get('/api/admin-dashboard', (req, res)=> {
 			stats.activeUsers = activeUsersObj;
 			return res.status(200).json(stats);
 		})
-		.catch(err => { console.warn(err); return res.status(500).json('Internal server error'); });
+		.catch((err)=> { console.warn(err); return res.status(500).json('Internal server error'); });
 	});
 });

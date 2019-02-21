@@ -109,14 +109,14 @@ export default (sourceUrl)=> {
 		const localFilePaths = [];
 		const extractedMediaFiles = [];
 		if (fs.existsSync(`${tmpDir}`)) {
-			fs.readdirSync(`${tmpDir}`).forEach(file => {
+			fs.readdirSync(`${tmpDir}`).forEach((file)=> {
 				if (!fs.lstatSync(`${tmpDir}/${file}`).isDirectory()) {
 					extractedMediaFiles.push(`${tmpDir}/${file}`);
 				}
 			});
 		}
 		if (fs.existsSync(`${tmpDir}/media`)) {
-			fs.readdirSync(`${tmpDir}/media`).forEach(file => {
+			fs.readdirSync(`${tmpDir}/media`).forEach((file)=> {
 				extractedMediaFiles.push(`${tmpDir}/media/${file}`);
 			});
 		}

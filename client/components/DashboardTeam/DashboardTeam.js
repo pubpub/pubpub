@@ -25,7 +25,7 @@ class DashboardTeam extends Component {
 			body: JSON.stringify({
 				userId: user.id,
 				communityId: this.props.communityData.id,
-			})
+			}),
 		})
 		.then((result)=> {
 			this.props.setCommunityData({
@@ -33,7 +33,7 @@ class DashboardTeam extends Component {
 				admins: [
 					result,
 					...this.props.communityData.admins,
-				]
+				],
 			});
 		});
 	}
@@ -44,14 +44,14 @@ class DashboardTeam extends Component {
 			body: JSON.stringify({
 				userId: userId,
 				communityId: this.props.communityData.id,
-			})
+			}),
 		})
 		.then(()=> {
 			this.props.setCommunityData({
 				...this.props.communityData,
 				admins: this.props.communityData.admins.filter((admin)=> {
 					return admin.id !== userId;
-				})
+				}),
 			});
 		});
 	}

@@ -148,7 +148,7 @@ class DashboardDetails extends Component {
 			body: JSON.stringify({
 				...siteObject,
 				communityId: this.props.communityData.id,
-			})
+			}),
 		})
 		.then((result)=> {
 			if (!this.props.communityData.domain && this.props.communityData.slug !== siteObject.slug) {
@@ -157,7 +157,7 @@ class DashboardDetails extends Component {
 				this.setState({ isLoading: false, error: undefined });
 				this.props.setCommunityData({
 					...this.props.communityData,
-					...result
+					...result,
 				});
 			}
 		})

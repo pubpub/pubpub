@@ -53,7 +53,7 @@ class FormattingBarMediaVimeo extends Component {
 		});
 	}
 
-	render () {
+	render() {
 		return (
 			<div className="formatting-bar-media-component-content">
 				<InputGroup

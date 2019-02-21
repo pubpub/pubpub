@@ -27,7 +27,7 @@ class DashboardPubs extends Component {
 			body: JSON.stringify({
 				communityId: this.props.communityData.id,
 				defaultTagIds: this.props.communityData.defaultPubTags || [],
-			})
+			}),
 		})
 		.then((result)=> {
 			window.location.href = result;

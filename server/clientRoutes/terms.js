@@ -7,7 +7,8 @@ import { renderToNodeStream, getInitialData, handleErrors, generateMetaComponent
 app.get('/tos', (req, res, next)=> {
 	return getInitialData(req)
 	.then((initialData)=> {
-		return renderToNodeStream(res,
+		return renderToNodeStream(
+			res,
 			<Html
 				chunkName="Terms"
 				initialData={initialData}

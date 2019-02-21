@@ -2,6 +2,7 @@ const { resolve } = require('path');
 const { readdirSync } = require('fs');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
+const autoprefixer = require('autoprefixer');
 
 const containerEntries = readdirSync(resolve(__dirname, '../containers')).filter((item)=> {
 	if (item === '.DS_Store') { return false; }
@@ -51,7 +52,7 @@ module.exports = {
 				use: [
 					MiniCssExtractPlugin.loader,
 					{ loader: 'css-loader' },
-					{ loader: 'postcss-loader', options: { ident: 'postcss', plugins: [require('autoprefixer')({})] } },
+					{ loader: 'postcss-loader', options: { ident: 'postcss', plugins: [autoprefixer({})] } },
 					{ loader: 'sass-loader', options: { includePaths: [resolve(__dirname, '../')] } }
 				],
 			},

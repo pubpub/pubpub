@@ -27,7 +27,8 @@ app.get('/api/uploadPolicy', (req, res)=> {
 	const acl = s3.acl; // private or public-read
 
 	// THIS YOU DON'T
-	let policy = { expiration: s3.expiration_date(),
+	let policy = {
+		expiration: s3.expiration_date(),
 		conditions: [
 			{ bucket: bucket },
 			['starts-with', '$key', ''],

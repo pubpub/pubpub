@@ -43,7 +43,7 @@ class DashboardTags extends Component {
 			body: JSON.stringify({
 				title: this.state.newTagValue,
 				communityId: this.props.communityData.id,
-			})
+			}),
 		})
 		.then((newTag)=> {
 			this.setState({ newTagValue: '' });
@@ -52,7 +52,7 @@ class DashboardTags extends Component {
 				tags: [
 					...this.props.communityData.tags,
 					newTag,
-				]
+				],
 			});
 		});
 	}
@@ -63,7 +63,7 @@ class DashboardTags extends Component {
 			body: JSON.stringify({
 				...updatedTag,
 				communityId: this.props.communityData.id,
-			})
+			}),
 		})
 		.then(()=> {
 			this.props.setCommunityData({
@@ -77,9 +77,9 @@ class DashboardTags extends Component {
 						page: this.props.communityData.pages.reduce((prev, curr)=> {
 							if (curr.id === updatedTag.pageId) { return curr; }
 							return prev;
-						}, undefined)
+						}, undefined),
 					};
-				})
+				}),
 			});
 		});
 	}
@@ -90,14 +90,14 @@ class DashboardTags extends Component {
 			body: JSON.stringify({
 				tagId: tagId,
 				communityId: this.props.communityData.id,
-			})
+			}),
 		})
 		.then(()=> {
 			this.props.setCommunityData({
 				...this.props.communityData,
 				tags: this.props.communityData.tags.filter((tag)=> {
 					return tag.id !== tagId;
-				})
+				}),
 			});
 		});
 	}

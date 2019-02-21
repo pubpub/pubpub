@@ -44,7 +44,7 @@ class FormattingBarMediaAudio extends Component {
 		});
 	}
 
-	render () {
+	render() {
 		return (
 			<Dropzone
 				onDrop={this.onDrop}

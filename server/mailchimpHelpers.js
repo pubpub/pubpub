@@ -17,9 +17,9 @@ const callback = (error, response, body) => {
 		const member = response.body.id;
 		const tagsSent = JSON.parse(response.request.body).tags;
 		const tagsReceived = response.body.tags;
-		if (!tagsSent.every(val => tagsReceived.includes(val))) {
+		if (!tagsSent.every((val)=> tagsReceived.includes(val))) {
 			const tagsArr = [];
-			tagsSent.map(val => tagsArr.push({ name: val, status: 'active' }));
+			tagsSent.map((val)=> tagsArr.push({ name: val, status: 'active' }));
 			const options = {
 				method: 'POST',
 				auth: {

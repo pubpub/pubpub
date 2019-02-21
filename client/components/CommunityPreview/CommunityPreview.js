@@ -12,7 +12,7 @@ const propTypes = {
 	largeHeaderLogo: PropTypes.string,
 	largeHeaderBackground: PropTypes.string,
 	accentColor: PropTypes.string,
-	accentTextColor: PropTypes.string
+	accentTextColor: PropTypes.string,
 };
 
 const defaultProps = {

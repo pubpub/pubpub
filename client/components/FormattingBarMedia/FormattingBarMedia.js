@@ -35,7 +35,7 @@ class FormattingBarMedia extends Component {
 		this.props.editorChangeObject.view.focus();
 	}
 
-	render () {
+	render() {
 		const files = [
 			{ text: 'Image', icon: 'media' },
 			{ text: 'Video', icon: 'video' },

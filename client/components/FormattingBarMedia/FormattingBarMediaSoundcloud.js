@@ -54,7 +54,7 @@ class FormattingBarMediaSoundcloud extends Component {
 		});
 	}
 
-	render () {
+	render() {
 		return (
 			<div className="formatting-bar-media-component-content">
 				<InputGroup

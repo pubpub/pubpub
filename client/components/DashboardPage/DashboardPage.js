@@ -117,7 +117,7 @@ class DashboardPage extends Component {
 				...pageObject,
 				pageId: this.props.pageData.id,
 				communityId: this.props.communityData.id,
-			})
+			}),
 		})
 		.then(()=> {
 			this.setState({ isLoading: false, error: undefined, hasChanged: false });
@@ -129,7 +129,7 @@ class DashboardPage extends Component {
 						...page,
 						...pageObject,
 					};
-				})
+				}),
 			});
 			this.props.setPageData({
 				...this.props.pageData,
@@ -149,7 +149,7 @@ class DashboardPage extends Component {
 			body: JSON.stringify({
 				pageId: this.props.pageData.id,
 				communityId: this.props.communityData.id,
-			})
+			}),
 		})
 		.then(()=> {
 			window.location.href = '/dashboard';
