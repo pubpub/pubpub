@@ -19,7 +19,6 @@
         "comma-dangle": [2, "always-multiline"],
         "class-methods-use-this": 0,
         "func-names": 0,
-        "function-paren-newline": [2, "multiline"],
         "import/no-extraneous-dependencies": [2, { devDependencies: true }],
         "jsx-a11y/click-events-have-key-events": 0,
         "no-console": [1, { allow: ["warn", "error", "info"] }],
