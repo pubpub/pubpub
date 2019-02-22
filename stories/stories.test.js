@@ -17,9 +17,7 @@ initStoryShots({
 	// (the \b token). It would be nice if we could just give it a list :/
 	storyKindRegex: new RegExp(
 		// eslint-disable-next-line prefer-template
-		'^(?!.*\\b(' +
-		EXCLUDE_STORIES.join('|') +
-		')\\b).*'
+		'^(?!.*\\b(' + EXCLUDE_STORIES.join('|') + ')\\b).*',
 	),
 	test: renderWithOptions({ renderer: mount }),
 });
