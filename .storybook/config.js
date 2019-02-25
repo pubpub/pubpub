@@ -1,5 +1,6 @@
 import { configure } from '@storybook/react';
 import { setOptions } from '@storybook/addon-options';
+import { configureViewport } from '@storybook/addon-viewport';
 import { FocusStyleManager } from '@blueprintjs/core';
 
 FocusStyleManager.onlyShowFocusOnTabs();
