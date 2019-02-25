@@ -15,6 +15,10 @@ const propTypes = {
 	editorView: PropTypes.object,
 };
 
+const defaultProps = {
+	editorView: null,
+};
+
 class PubOptionsSaveVersion extends Component {
 	constructor(props) {
 		super(props);
@@ -142,9 +146,7 @@ class PubOptionsSaveVersion extends Component {
 	}
 }
 
-PubOptionsSaveVersion.defaultProps = {
-	editorView: null,
-};
+PubOptionsSaveVersion.defaultProps = defaultProps;
 
 PubOptionsSaveVersion.propTypes = propTypes;
 export default PubOptionsSaveVersion;
