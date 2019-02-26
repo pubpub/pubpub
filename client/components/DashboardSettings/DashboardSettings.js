@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ButtonGroup, Button, Tooltip, Checkbox, Switch } from '@blueprintjs/core';
+import { ButtonGroup, Button, Tooltip, Switch } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
 import ImageUpload from 'components/ImageUpload/ImageUpload';
 import ColorInput from 'components/ColorInput/ColorInput';
@@ -114,7 +114,7 @@ class DashboardSettings extends Component {
 		const heroTextColor = this.state.heroTextColor || this.props.communityData.accentTextColor;
 
 		return (
-			<div className="dashboard-details-component">
+			<div className="dashboard-settings-component">
 				<div className="content-buttons">
 					<InputField error={this.state.error}>
 						<Button

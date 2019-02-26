@@ -2,7 +2,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import HeaderNew from 'components/HeaderNew/HeaderNew';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
-import { accentDataDark, locationData, loginData } from '../data';
+import { accentDataLight, locationData, loginData } from '../data';
 
 const wrapperStyle = { margin: '2em 1em', border: '1px solid #CCC' };
 
@@ -16,8 +16,8 @@ const communityData = {};
 //	hideHeaderLogo: false,
 
 //	heroBackgroundColor: '#d4a3e1', (default is community accent)
+//	heroTextColor: '#fff', (default is community text color)
 //	heroBackgroundImage: undefined,
-//		heroTextColor: '#fff', (default is community text color)
 //		useHeaderGradient: false,
 //
 //	heroImage: 'https://assets.pubpub.org/_testing/31551104397980.png',
@@ -30,7 +30,7 @@ const communityData = {};
 
 storiesOf('Components/HeaderNew', module).add('default', () => (
 	<div>
-		<AccentStyle {...accentDataDark} />
+		<AccentStyle {...accentDataLight} />
 		<div style={wrapperStyle}>
 			<HeaderNew
 				communityData={{
@@ -103,7 +103,7 @@ storiesOf('Components/HeaderNew', module).add('default', () => (
 					hideHeaderLogo: false,
 					title: 'Timepal',
 					heroBackgroundImage: undefined,
-					// heroBackgroundColor: '#026',
+					heroBackgroundColor: '#fdfaf4',
 					heroTextColor: '#000000',
 					headerLogo: 'https://assets.pubpub.org/_testing/41551104374754.png',
 					heroImage: undefined,
