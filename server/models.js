@@ -61,6 +61,7 @@ const Community = sequelize.define('Community', {
 	avatar: { type: Sequelize.TEXT },
 	favicon: { type: Sequelize.TEXT },
 	accentColor: { type: Sequelize.STRING },
+
 	hideCreatePubButton: { type: Sequelize.BOOLEAN },
 
 	// To Remove

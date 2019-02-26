@@ -2,8 +2,6 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import CommunityPreview from 'components/CommunityPreview/CommunityPreview';
 
-require('components/CommunityPreview/communityPreview.scss');
-
 const data = {
 	subdomain: 'jods',
 	domain: 'jods.mitpress.mit.edu',

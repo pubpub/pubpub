@@ -1,9 +1,8 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import HeaderNew from 'components/HeaderNew/HeaderNew';
-import { locationData, loginData } from '../data';
-
-require('components/HeaderNew/headerNew.scss');
+import AccentStyle from 'components/AccentStyle/AccentStyle';
+import { accentDataDark, locationData, loginData } from '../data';
 
 const wrapperStyle = { margin: '2em 1em', border: '1px solid #CCC' };
 
@@ -31,6 +30,7 @@ const communityData = {};
 
 storiesOf('Components/HeaderNew', module).add('default', () => (
 	<div>
+		<AccentStyle {...accentDataDark} />
 		<div style={wrapperStyle}>
 			<HeaderNew
 				communityData={{
@@ -50,16 +50,16 @@ storiesOf('Components/HeaderNew', module).add('default', () => (
 					hideHero: false,
 					hideHeaderLogo: false,
 					heroBackgroundImage: undefined,
-					// heroBackgroundColor: '#249',
-					// heroTextColor: 'light',
+					heroBackgroundColor: '#FFF',
+					heroTextColor: '#000000',
 					headerLogo: 'https://assets.pubpub.org/_testing/01551104299949.png',
 					heroImage: 'https://assets.pubpub.org/_testing/31551104270100.png',
 					heroTitle: 'Get to market faster with continuous testing',
 					// heroLogo: 'https://assets.pubpub.org/_testing/01551104299949.png',
 					heroText:
 						'From idea to production, test your product continuously with Behavior Driven Development and Agile test management.',
-					heroPrimaryButton: 'Start your free trial',
-					heroSecondaryButton: 'Explore stuff',
+					heroPrimaryButton: { title: 'Start your free trial' },
+					heroSecondaryButton: { title: 'Explore stuff' },
 					heroAlign: undefined,
 				}}
 				locationData={{
@@ -104,13 +104,13 @@ storiesOf('Components/HeaderNew', module).add('default', () => (
 					title: 'Timepal',
 					heroBackgroundImage: undefined,
 					// heroBackgroundColor: '#026',
-					// heroTextColor: 'light',
+					heroTextColor: '#000000',
 					headerLogo: 'https://assets.pubpub.org/_testing/41551104374754.png',
 					heroImage: undefined,
 					heroTitle: 'Automatic and manual time-tracking finally united',
 					heroLogo: undefined,
 					heroText: 'Stressless timekeeping became a reality',
-					heroPrimaryButton: 'Download Free Trial',
+					heroPrimaryButton: { title: 'Download Free Trial' },
 					heroSecondaryButton: undefined,
 					heroAlign: 'center',
 				}}
@@ -134,8 +134,8 @@ storiesOf('Components/HeaderNew', module).add('default', () => (
 					heroTitle: 'Where did time go?',
 					heroLogo: undefined,
 					heroText: 'Turn your team on to productivity with Toggl the time tracker.',
-					heroPrimaryButton: 'Sign Up',
-					heroSecondaryButton: 'Find out more',
+					heroPrimaryButton: { title: 'Sign Up' },
+					heroSecondaryButton: { title: 'Find out more' },
 					heroAlign: 'center',
 				}}
 				locationData={{

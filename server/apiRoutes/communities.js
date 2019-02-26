@@ -133,6 +133,23 @@ app.put('/api/communities', (req, res) => {
 				'hideNav',
 				'hideLandingBanner',
 				'defaultPubTags',
+				// TODO: Cleanup unused fields here
+
+				'headerLogo',
+				'headerLinks',
+				'hideHero',
+				'hideHeaderLogo',
+				'heroLogo',
+				'heroBackgroundImage',
+				'heroBackgroundColor',
+				'heroTextColor',
+				'useHeaderGradient',
+				'heroImage',
+				'heroTitle',
+				'heroText',
+				'heroPrimaryButton',
+				'heroSecondaryButton',
+				'heroAlign',
 			].indexOf(key) > -1
 		) {
 			updatedCommunity[key] =

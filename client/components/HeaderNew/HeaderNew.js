@@ -11,6 +11,7 @@ import {
 	MenuDivider,
 	Button,
 	AnchorButton,
+	Intent,
 } from '@blueprintjs/core';
 import { apiFetch, getResizedUrl } from 'utilities';
 
@@ -63,8 +64,15 @@ class HeaderNew extends Component {
 	calculateComponentClasses(hideHero) {
 		let dynamicComponentClasses = '';
 
-		if (!this.props.locationData.isBasePubPub) {
-			dynamicComponentClasses += ' accent-background accent-color';
+		const backgroundColorChange =
+			this.props.communityData.accentColor !== this.props.communityData.heroBackgroundColor;
+		const textColorChange =
+			this.props.communityData.accentTextColor !== this.props.communityData.heroTextColor;
+		if (!this.props.locationData.isBasePubPub && !backgroundColorChange) {
+			dynamicComponentClasses += ' accent-background';
+		}
+		if (!this.props.locationData.isBasePubPub && !textColorChange) {
+			dynamicComponentClasses += ' accent-color';
 		}
 		if (this.props.locationData.isBasePubPub && this.props.locationData.path === '/') {
 			dynamicComponentClasses += ' bp3-dark';
@@ -72,7 +80,9 @@ class HeaderNew extends Component {
 		if (hideHero) {
 			return dynamicComponentClasses;
 		}
-		if (this.props.communityData.heroTextColor === '#FFFFFF') {
+		const heroTextColor =
+			this.props.communityData.heroTextColor || this.props.communityData.accentTextColor;
+		if (heroTextColor === '#FFFFFF') {
 			dynamicComponentClasses += ' bp3-dark';
 		}
 		return dynamicComponentClasses;
@@ -126,7 +136,9 @@ class HeaderNew extends Component {
 			);
 			backgroundStyle.backgroundImage = `url("${resizedBackgroundImage}")`;
 		}
-		if (this.props.communityData.heroBackgroundColor) {
+		const heroBackgroundColor =
+			this.props.communityData.heroBackgroundColor || this.props.communityData.accentColor;
+		if (heroBackgroundColor) {
 			backgroundStyle.backgroundColor = this.props.communityData.heroBackgroundColor;
 		}
 
@@ -136,8 +148,7 @@ class HeaderNew extends Component {
 	render() {
 		const headerLinks = this.props.communityData.headerLinks || [];
 		const hideHero = this.props.locationData.path !== '/' || this.props.communityData.hideHero;
-		const hideHeaderLogo =
-			this.props.locationData.path === '/' && this.props.communityData.hideHeaderLogo;
+		const hideHeaderLogo = !hideHero && this.props.communityData.hideHeaderLogo;
 		const componentClasses = this.calculateComponentClasses(hideHero);
 		const mainClasses = this.calculateMainClasses(hideHero);
 		const heroClasses = this.calculateHeroClasses(hideHero);
@@ -174,6 +185,8 @@ class HeaderNew extends Component {
 				? this.props.locationData.queryString
 				: ''
 		}`;
+		const heroPrimaryButton = this.props.communityData.heroPrimaryButton || {};
+		const heroSecondaryButton = this.props.communityData.heroSecondaryButton || {};
 
 		return (
 			<nav className={`header-new-component ${componentClasses}`} style={backgroundStyle}>
@@ -374,19 +387,20 @@ class HeaderNew extends Component {
 											</div>
 										)}
 										<div className="hero-button">
-											{this.props.communityData.heroPrimaryButton && (
-												<Button
-													text={
-														this.props.communityData.heroPrimaryButton
-													}
+											{heroPrimaryButton.title && (
+												<AnchorButton
+													intent={Intent.PRIMARY}
+													large={true}
+													text={heroPrimaryButton.title}
+													href={heroPrimaryButton.url}
 												/>
 											)}
-											{this.props.communityData.heroSecondaryButton && (
-												<Button
+											{heroSecondaryButton.title && (
+												<AnchorButton
+													large={true}
 													minimal={true}
-													text={
-														this.props.communityData.heroSecondaryButton
-													}
+													text={heroSecondaryButton.title}
+													href={heroSecondaryButton.url}
 												/>
 											)}
 										</div>
