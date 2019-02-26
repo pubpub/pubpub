@@ -10,16 +10,16 @@ const wrapperStyle = { margin: '2em 1em', border: '1px solid #CCC' };
 const communityData = {};
 
 // title: 'toggl',
-// smallLogo: 'https://assets.pubpub.org/_testing/71551104387305.png',
+// headerLogo: 'https://assets.pubpub.org/_testing/71551104387305.png',
 // headerLinks: [],
 
-// useLargeHeader: true,
-//	hideSmallLogo: false,
+// hideHero: true,
+//	hideHeaderLogo: false,
 
-//	headerBackgroundColor: '#d4a3e1', (default is community accent)
-//	headerBackgroundImage: undefined,
-//		headerTextColor: '#fff', (default is community text color)
-//		useGradient: false,
+//	heroBackgroundColor: '#d4a3e1', (default is community accent)
+//	heroBackgroundImage: undefined,
+//		heroTextColor: '#fff', (default is community text color)
+//		useHeaderGradient: false,
 //
 //	heroImage: 'https://assets.pubpub.org/_testing/31551104397980.png',
 //	heroTitle: 'Where did time go?',
@@ -47,12 +47,12 @@ storiesOf('Components/HeaderNew', module).add('default', () => (
 							],
 						},
 					],
-					useLargeHeader: true,
-					hideSmallLogo: false,
-					headerBackgroundImage: undefined,
-					// headerBackgroundColor: '#249',
-					// headerTextColor: 'light',
-					smallLogo: 'https://assets.pubpub.org/_testing/01551104299949.png',
+					hideHero: false,
+					hideHeaderLogo: false,
+					heroBackgroundImage: undefined,
+					// heroBackgroundColor: '#249',
+					// heroTextColor: 'light',
+					headerLogo: 'https://assets.pubpub.org/_testing/01551104299949.png',
 					heroImage: 'https://assets.pubpub.org/_testing/31551104270100.png',
 					heroTitle: 'Get to market faster with continuous testing',
 					// heroLogo: 'https://assets.pubpub.org/_testing/01551104299949.png',
@@ -62,7 +62,10 @@ storiesOf('Components/HeaderNew', module).add('default', () => (
 					heroSecondaryButton: 'Explore stuff',
 					heroAlign: undefined,
 				}}
-				locationData={locationData}
+				locationData={{
+					...locationData,
+					path: '/',
+				}}
 				loginData={loginData}
 			/>
 		</div>
@@ -70,14 +73,14 @@ storiesOf('Components/HeaderNew', module).add('default', () => (
 			<HeaderNew
 				communityData={{
 					...communityData,
-					hideSmallLogo: false,
+					hideHeaderLogo: false,
 					title: 'WHITEOUT',
-					useLargeHeader: true,
-					headerBackgroundImage: 'https://assets.pubpub.org/_testing/71551104341423.jpg',
-					useGradient: true,
-					headerBackgroundColor: undefined,
-					headerTextColor: 'light',
-					smallLogo: 'https://assets.pubpub.org/_testing/31551104320889.png',
+					hideHero: false,
+					heroBackgroundImage: 'https://assets.pubpub.org/_testing/71551104341423.jpg',
+					useHeaderGradient: true,
+					heroBackgroundColor: undefined,
+					heroTextColor: 'light',
+					headerLogo: 'https://assets.pubpub.org/_testing/31551104320889.png',
 					heroImage: undefined,
 					heroTitle: undefined,
 					heroLogo: 'https://assets.pubpub.org/_testing/71551104353671.png',
@@ -86,7 +89,10 @@ storiesOf('Components/HeaderNew', module).add('default', () => (
 					heroSecondaryButton: undefined,
 					heroAlign: 'center',
 				}}
-				locationData={locationData}
+				locationData={{
+					...locationData,
+					path: '/',
+				}}
 				loginData={loginData}
 			/>
 		</div>
@@ -94,13 +100,12 @@ storiesOf('Components/HeaderNew', module).add('default', () => (
 			<HeaderNew
 				communityData={{
 					...communityData,
-					hideSmallLogo: false,
+					hideHeaderLogo: false,
 					title: 'Timepal',
-					useLargeHeader: true,
-					headerBackgroundImage: undefined,
-					// headerBackgroundColor: '#026',
-					// headerTextColor: 'light',
-					smallLogo: 'https://assets.pubpub.org/_testing/41551104374754.png',
+					heroBackgroundImage: undefined,
+					// heroBackgroundColor: '#026',
+					// heroTextColor: 'light',
+					headerLogo: 'https://assets.pubpub.org/_testing/41551104374754.png',
 					heroImage: undefined,
 					heroTitle: 'Automatic and manual time-tracking finally united',
 					heroLogo: undefined,
@@ -109,7 +114,10 @@ storiesOf('Components/HeaderNew', module).add('default', () => (
 					heroSecondaryButton: undefined,
 					heroAlign: 'center',
 				}}
-				locationData={locationData}
+				locationData={{
+					...locationData,
+					path: '/',
+				}}
 				loginData={loginData}
 			/>
 		</div>
@@ -117,12 +125,11 @@ storiesOf('Components/HeaderNew', module).add('default', () => (
 			<HeaderNew
 				communityData={{
 					...communityData,
-					hideSmallLogo: false,
+					hideHeaderLogo: false,
 					title: 'toggl',
-					useLargeHeader: true,
-					headerBackgroundImage: undefined,
-					headerBackgroundColor: '#d4a3e1',
-					smallLogo: 'https://assets.pubpub.org/_testing/71551104387305.png',
+					heroBackgroundImage: undefined,
+					heroBackgroundColor: '#d4a3e1',
+					headerLogo: 'https://assets.pubpub.org/_testing/71551104387305.png',
 					heroImage: 'https://assets.pubpub.org/_testing/31551104397980.png',
 					heroTitle: 'Where did time go?',
 					heroLogo: undefined,
@@ -131,7 +138,10 @@ storiesOf('Components/HeaderNew', module).add('default', () => (
 					heroSecondaryButton: 'Find out more',
 					heroAlign: 'center',
 				}}
-				locationData={locationData}
+				locationData={{
+					...locationData,
+					path: '/',
+				}}
 				loginData={loginData}
 			/>
 		</div>
@@ -139,12 +149,12 @@ storiesOf('Components/HeaderNew', module).add('default', () => (
 			<HeaderNew
 				communityData={{
 					...communityData,
-					hideSmallLogo: false,
+					hideHeaderLogo: false,
 					title: 'Simple Community',
-					// useLargeHeader: true,
-					// headerBackgroundImage: undefined,
-					// headerBackgroundColor: '#d4a3e1',
-					// smallLogo: 'https://assets.pubpub.org/_testing/71551104387305.png',
+					hideHero: true,
+					// heroBackgroundImage: undefined,
+					// heroBackgroundColor: '#d4a3e1',
+					// headerLogo: 'https://assets.pubpub.org/_testing/71551104387305.png',
 					// heroImage: 'https://assets.pubpub.org/_testing/31551104397980.png',
 					// heroTitle: 'Where did time go?',
 					// heroLogo: undefined,
@@ -153,7 +163,10 @@ storiesOf('Components/HeaderNew', module).add('default', () => (
 					// heroSecondaryButton: 'Find out more',
 					// heroAlign: 'center',
 				}}
-				locationData={locationData}
+				locationData={{
+					...locationData,
+					path: '/',
+				}}
 				loginData={loginData}
 			/>
 		</div>

@@ -2,6 +2,8 @@
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center center;
+	z-index: 1;
+	position: relative;
 	&.bp3-dark {
 		a {
 			color: #fff;
@@ -10,7 +12,11 @@
 	.main {
 		// background-color: rgba(50, 50, 150, 0.5);
 		&.gradient {
-			background-image: linear-gradient(-180deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
+			background-image: linear-gradient(
+				-180deg,
+				rgba(0, 0, 0, 0.7) 0%,
+				rgba(0, 0, 0, 0) 100%
+			);
 			color: white;
 			a {
 				color: #fff;
@@ -29,6 +35,7 @@
 				font-weight: 800;
 				font-size: 28px;
 				letter-spacing: 1px;
+				line-height: 40px;
 				// background-color: rgba(100, 200, 50, 0.5);
 				img {
 					height: 35px;
@@ -40,6 +47,11 @@
 				// background-color: rgba(200, 100, 50, 0.5);
 				display: flex;
 				align-items: center;
+				position: relative;
+				left: 10px;
+				.bp3-button {
+					padding: 0px 10px;
+				}
 			}
 		}
 	}
@@ -70,24 +82,36 @@
 				display: flex;
 				flex-direction: column;
 				justify-content: center;
-				.hero-title {
-					font-size: 45px;
-					line-height: 50px;
-					font-weight: 600;
-					letter-spacing: -0.01em;
-				}
 				.hero-logo {
 					img {
 						max-width: 100%;
+						max-height: 175px;
+					}
+				}
+				.hero-title {
+					font-size: 65px;
+					line-height: 70px;
+					font-weight: 800;
+					letter-spacing: 1px;
+					word-wrap: break-word;
+					margin-top: 35px;
+					&:first-child {
+						margin-top: 0px;
 					}
 				}
 				.hero-text {
 					font-size: 18px;
 					line-height: 25px;
 					margin-top: 35px;
+					&:first-child {
+						margin-top: 0px;
+					}
 				}
 				.hero-button {
 					margin-top: 35px;
+					&:first-child {
+						margin-top: 0px;
+					}
 					.bp3-button {
 						margin-right: 1em;
 					}
@@ -108,10 +132,19 @@
 
 @media only screen and (max-width: 720px) {
 	.header-new-component {
+		.hide-on-mobile {
+			display: none;
+		}
 		.hero {
 			text-align: center;
 			.hero-content {
 				flex-direction: column;
+				.hero-copy {
+					.hero-title {
+						font-size: 45px;
+						line-height: 50px;
+					}
+				}
 				.hero-image {
 					max-width: 100%;
 					img {

@@ -205,8 +205,7 @@ class Header extends Component {
 									{/* <a className="bp3-button bp3-large bp3-minimal">Search</a> */}
 
 									{/* Dashboard panel button */}
-									{!isBasePubPub &&
-										loggedIn &&
+									{loggedIn &&
 										(!communityData.hideCreatePubButton || isAdmin) && (
 											<Button
 												className="bp3-large bp3-minimal nav-link"

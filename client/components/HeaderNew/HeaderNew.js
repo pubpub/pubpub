@@ -10,6 +10,7 @@ import {
 	MenuItem,
 	MenuDivider,
 	Button,
+	AnchorButton,
 } from '@blueprintjs/core';
 import { apiFetch, getResizedUrl } from 'utilities';
 
@@ -25,20 +26,15 @@ class HeaderNew extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			// 	redirect: '',
 			isLoading: false,
 		};
 		this.handleLogout = this.handleLogout.bind(this);
-		this.createPub = this.createPub.bind(this);
+		this.handleCreatePub = this.handleCreatePub.bind(this);
+		this.calculateComponentClasses = this.calculateComponentClasses.bind(this);
+		this.calculateMainClasses = this.calculateMainClasses.bind(this);
+		this.calculateHeroClasses = this.calculateHeroClasses.bind(this);
+		this.calculateBackgroundStyle = this.calculateBackgroundStyle.bind(this);
 	}
-
-	// componentDidMount() {
-	// 	if (window.location.pathname !== '/') {
-	// 		this.setState({
-	// 			redirect: `?redirect=${window.location.pathname}${window.location.search}`
-	// 		});
-	// 	}
-	// }
 
 	handleLogout() {
 		apiFetch('/api/logout').then(() => {
@@ -46,7 +42,7 @@ class HeaderNew extends Component {
 		});
 	}
 
-	createPub() {
+	handleCreatePub() {
 		this.setState({ isLoading: true });
 		return apiFetch('/api/pubs', {
 			method: 'POST',
@@ -64,68 +60,177 @@ class HeaderNew extends Component {
 			});
 	}
 
-	render() {
+	calculateComponentClasses(hideHero) {
 		let dynamicComponentClasses = '';
+
+		if (!this.props.locationData.isBasePubPub) {
+			dynamicComponentClasses += ' accent-background accent-color';
+		}
+		if (this.props.locationData.isBasePubPub && this.props.locationData.path === '/') {
+			dynamicComponentClasses += ' bp3-dark';
+		}
+		if (hideHero) {
+			return dynamicComponentClasses;
+		}
+		if (this.props.communityData.heroTextColor === '#FFFFFF') {
+			dynamicComponentClasses += ' bp3-dark';
+		}
+		return dynamicComponentClasses;
+	}
+
+	calculateMainClasses(hideHero) {
 		let dynamicMainClasses = 'main';
-		let dynamicHeroClasses = 'hero';
-		if (this.props.communityData.headerTextColor === 'light') {
-			dynamicComponentClasses += 'bp3-dark';
+		if (hideHero) {
+			return dynamicMainClasses;
 		}
 		if (
-			this.props.communityData.useLargeHeader &&
-			this.props.communityData.useGradient &&
-			this.props.communityData.headerBackgroundImage
+			!this.props.communityData.hideHero &&
+			this.props.communityData.useHeaderGradient &&
+			this.props.communityData.heroBackgroundImage
 		) {
 			dynamicMainClasses += ' gradient bp3-dark';
+		}
+		return dynamicMainClasses;
+	}
+
+	calculateHeroClasses(hideHero) {
+		let dynamicHeroClasses = 'hero';
+		if (hideHero) {
+			return dynamicHeroClasses;
 		}
 		if (this.props.communityData.heroAlign === 'center') {
 			dynamicHeroClasses += ' centered';
 		}
+		return dynamicHeroClasses;
+	}
+
+	calculateBackgroundStyle(hideHero) {
 		const backgroundStyle = {};
-		if (this.props.communityData.headerBackgroundImage) {
-			backgroundStyle.backgroundImage = `url("${
-				this.props.communityData.headerBackgroundImage
-			}")`;
+		if (this.props.locationData.isBasePubPub) {
+			backgroundStyle.boxShadow =
+				this.props.locationData.path === '/'
+					? ''
+					: '0 0 0 1px rgba(16, 22, 26, 0.1), 0 0 0 rgba(16, 22, 26, 0), 0 1px 1px rgba(16, 22, 26, 0.2)';
+			backgroundStyle.backgroundColor = this.props.locationData.path === '/' ? '' : '#f7f7f9';
 		}
-		if (this.props.communityData.headerBackgroundColor) {
-			backgroundStyle.backgroundColor = this.props.communityData.headerBackgroundColor;
+
+		if (hideHero) {
+			return backgroundStyle;
 		}
+
+		if (this.props.communityData.heroBackgroundImage) {
+			const resizedBackgroundImage = getResizedUrl(
+				this.props.communityData.heroBackgroundImage,
+				'fit-in',
+				'1500x600',
+			);
+			backgroundStyle.backgroundImage = `url("${resizedBackgroundImage}")`;
+		}
+		if (this.props.communityData.heroBackgroundColor) {
+			backgroundStyle.backgroundColor = this.props.communityData.heroBackgroundColor;
+		}
+
+		return backgroundStyle;
+	}
+
+	render() {
 		const headerLinks = this.props.communityData.headerLinks || [];
+		const hideHero = this.props.locationData.path !== '/' || this.props.communityData.hideHero;
+		const hideHeaderLogo =
+			this.props.locationData.path === '/' && this.props.communityData.hideHeaderLogo;
+		const componentClasses = this.calculateComponentClasses(hideHero);
+		const mainClasses = this.calculateMainClasses(hideHero);
+		const heroClasses = this.calculateHeroClasses(hideHero);
+		const backgroundStyle = this.calculateBackgroundStyle(hideHero);
+
+		const loggedIn = !!this.props.loginData.slug;
+		const isAdmin = this.props.loginData.isAdmin;
+		const isBasePubPub = this.props.locationData.isBasePubPub;
+		const isPage =
+			this.props.communityData.pages &&
+			this.props.communityData.pages.reduce((prev, curr) => {
+				if (
+					curr.slug === this.props.locationData.params.slug ||
+					(!curr.slug && this.props.locationData.path === '/')
+				) {
+					return true;
+				}
+				return prev;
+			}, false);
+
+		const resizedHeaderLogo = getResizedUrl(
+			this.props.communityData.headerLogo,
+			'fit-in',
+			'0x50',
+		);
+		const resizedHeroLogo = getResizedUrl(this.props.communityData.heroLogo, 'fit-in', '0x200');
+		const resizedHeroImage = getResizedUrl(
+			this.props.communityData.heroImage,
+			'fit-in',
+			'600x0',
+		);
+		const redirectString = `?redirect=${this.props.locationData.path}${
+			this.props.locationData.queryString.length > 1
+				? this.props.locationData.queryString
+				: ''
+		}`;
+
 		return (
-			<nav
-				className={`header-new-component ${dynamicComponentClasses}`}
-				style={this.props.communityData.useLargeHeader ? backgroundStyle : {}}
-			>
-				<div className={dynamicMainClasses}>
+			<nav className={`header-new-component ${componentClasses}`} style={backgroundStyle}>
+				<div className={mainClasses}>
 					<div className="container">
 						<div className="row">
 							<div className="col-12 main-content">
 								<div className="logo-wrapper">
-									{!this.props.communityData.hideSmallLogo && (
+									{!hideHeaderLogo && (
 										<a href="/">
-											{this.props.communityData.smallLogo && (
-												<img src={this.props.communityData.smallLogo} />
+											{this.props.communityData.headerLogo && (
+												<img
+													style={
+														isBasePubPub ? { padding: '1px 0px' } : {}
+													}
+													alt="Community Logo"
+													src={resizedHeaderLogo}
+												/>
 											)}
-											{!this.props.communityData.smallLogo && (
+											{!this.props.communityData.headerLogo && (
 												<span>{this.props.communityData.title}</span>
 											)}
 										</a>
 									)}
 								</div>
 								<div className="buttons-wrapper">
-									{headerLinks.map((linkItem) => {
+									{headerLinks.map((linkItem, index) => {
+										const key = `${index}-${linkItem.title}`;
 										if (linkItem.children) {
 											return (
 												<DropdownButton
+													key={key}
 													label={linkItem.title}
 													isMinimal={true}
+													isLarge={true}
+													className="hide-on-mobile"
 												>
 													<Menu>
-														{linkItem.children.map((child) => {
+														{linkItem.children.map((child, cIndex) => {
+															const childKey = `${cIndex}-${
+																child.title
+															}`;
 															return (
 																<MenuItem
+																	key={childKey}
 																	text={child.title}
 																	href={child.url}
+																	target={
+																		child.external
+																			? '_blank'
+																			: ''
+																	}
+																	rel={
+																		child.external
+																			? 'noopener noreferrer'
+																			: ''
+																	}
 																/>
 															);
 														})}
@@ -135,27 +240,127 @@ class HeaderNew extends Component {
 										}
 										return (
 											<Button
+												key={key}
 												minimal={true}
+												large={true}
 												text={linkItem.title}
 												href={linkItem.url}
+												target={linkItem.external ? '_blank' : ''}
+												rel={linkItem.external ? 'noopener noreferrer' : ''}
+												className="hide-on-mobile"
 											/>
 										);
 									})}
-									<Button minimal={true} text="Login" />
+									{!isBasePubPub &&
+										loggedIn &&
+										(!this.props.communityData.hideCreatePubButton ||
+											isAdmin) && (
+											<Button
+												large={true}
+												minimal={true}
+												text="New Pub"
+												onClick={this.createPub}
+												loading={this.state.isLoading}
+											/>
+										)}
+									{!isBasePubPub && (
+										<AnchorButton
+											href="/search"
+											minimal={true}
+											large={true}
+											text="Search"
+											className="hide-on-mobile"
+										/>
+									)}
+									{isAdmin && (
+										<AnchorButton
+											minimal={true}
+											large={true}
+											href={
+												isPage
+													? `/dashboard/pages/${this.props.locationData
+															.params.slug || ''}`
+													: '/dashboard'
+											}
+											text="Manage"
+										/>
+									)}
+									{loggedIn && (
+										<Popover
+											content={
+												<Menu>
+													<li>
+														<a
+															href={`/user/${
+																this.props.loginData.slug
+															}`}
+															className="bp3-menu-item bp3-popover-dismiss"
+														>
+															<div>
+																{this.props.loginData.fullName}
+															</div>
+															<div className="subtext">
+																View Profile
+															</div>
+														</a>
+													</li>
+													<MenuDivider />
+													{/* !isBasePubPub &&
+														<li>
+															<a href="/pub/create" className="bp3-menu-item bp3-popover-dismiss">
+																Create New Pub
+															</a>
+														</li>
+													*/}
+													{/* !isBasePubPub && isAdmin &&
+														<li>
+															<a href="/dashboard" className="bp3-menu-item bp3-popover-dismiss">
+																Manage Community
+															</a>
+														</li>
+													*/}
+													<MenuItem
+														text="Logout"
+														onClick={this.handleLogout}
+													/>
+												</Menu>
+											}
+											interactionKind={PopoverInteractionKind.CLICK}
+											position={Position.BOTTOM_RIGHT}
+											transitionDuration={-1}
+											inheritDarkTheme={false}
+										>
+											<Button large={true} minimal={true}>
+												<Avatar
+													userInitials={this.props.loginData.initials}
+													userAvatar={this.props.loginData.avatar}
+													width={30}
+												/>
+											</Button>
+										</Popover>
+									)}
+									{!loggedIn && (
+										<AnchorButton
+											large={true}
+											minimal={true}
+											text="Login or Signup"
+											href={`/login${redirectString}`}
+										/>
+									)}
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				{this.props.communityData.useLargeHeader && (
-					<div className={dynamicHeroClasses}>
+				{!hideHero && (
+					<div className={heroClasses}>
 						<div className="container">
 							<div className="row">
 								<div className="col-12 hero-content">
 									<div className="hero-copy">
 										{this.props.communityData.heroLogo && (
 											<div className="hero-logo">
-												<img src={this.props.communityData.heroLogo} />
+												<img alt="Community Logo" src={resizedHeroLogo} />
 											</div>
 										)}
 										{this.props.communityData.heroTitle && (
@@ -188,7 +393,7 @@ class HeaderNew extends Component {
 									</div>
 									{this.props.communityData.heroImage && (
 										<div className="hero-image">
-											<img src={this.props.communityData.heroImage} />
+											<img alt="Community banner" src={resizedHeroImage} />
 										</div>
 									)}
 								</div>
