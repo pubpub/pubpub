@@ -27,13 +27,13 @@ const defaultProps = {
 };
 
 const CommunityPreview = function(props) {
-	const resizedHeaderLogo = getResizedUrl(props.heroLogo, 'fit-in', '600x0');
-	const resizedHeaderBackground = getResizedUrl(props.heroBackgroundImage, 'fit-in', '800x0');
+	const resizedHeroLogo = getResizedUrl(props.heroLogo, 'fit-in', '600x0');
+	const resizedHeroBackground = getResizedUrl(props.heroBackgroundImage, 'fit-in', '800x0');
 	const logoStyle = { color: props.accentTextColor };
 	const backgroundStyle = {
 		backgroundColor: props.accentColor,
 		color: props.accentTextColor,
-		backgroundImage: props.heroBackgroundImage ? `url("${resizedHeaderBackground}")` : '',
+		backgroundImage: props.heroBackgroundImage ? `url("${resizedHeroBackground}")` : '',
 	};
 	const communityUrl = props.domain
 		? `https://${props.domain}`
@@ -42,7 +42,7 @@ const CommunityPreview = function(props) {
 		<a className="community-preview-component" href={communityUrl} style={backgroundStyle}>
 			<div className="logo-wrapper">
 				{props.heroLogo && (
-					<img className="logo" src={resizedHeaderLogo} alt={props.title} />
+					<img className="logo" src={resizedHeroLogo} alt={props.title} />
 				)}
 				{!props.heroLogo && <h3 style={logoStyle}>{props.title}</h3>}
 			</div>
