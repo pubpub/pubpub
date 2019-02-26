@@ -36,8 +36,7 @@ const PubPreview = function(props) {
 			? { backgroundImage: `url("${resizedBannerImage}")` }
 			: { background: generatePubBackground(pubData.title) };
 	const resizedSmallHeaderLogo =
-		props.communityData &&
-		getResizedUrl(props.communityData.smallHeaderLogo, 'fit-in', '125x35');
+		props.communityData && getResizedUrl(props.communityData.headerLogo, 'fit-in', '125x35');
 	const communityHostname =
 		props.communityData &&
 		(props.communityData.domain || `${props.communityData.subdomain}.pubpub.org`);

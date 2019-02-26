@@ -65,8 +65,8 @@ app.post('/api/communities', (req, res) => {
 				subdomain: subdomain,
 				title: req.body.title,
 				description: req.body.description.substring(0, 280).replace(/\n/g, ' ') || '',
-				smallHeaderLogo: req.body.smallHeaderLogo,
-				largeHeaderLogo: req.body.largeHeaderLogo,
+				headerLogo: req.body.headerLogo,
+				heroLogo: req.body.heroLogo,
 				accentColor: req.body.accentColor,
 				accentTextColor: Color(req.body.accentColor).isLight() ? '#000000' : '#FFFFFF',
 				accentHoverColor: Color(req.body.accentColor)
