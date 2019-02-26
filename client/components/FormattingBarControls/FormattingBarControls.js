@@ -19,6 +19,7 @@ const propTypes = {
 };
 
 const FormattingBarControls = (props) => {
+	const selectionKey = props.editorChangeObject.selection.$anchor.pos;
 	const selectedNode = props.editorChangeObject.selectedNode || {};
 	const attrs = selectedNode.attrs;
 	const updateFunc = props.editorChangeObject.updateNode;
@@ -28,6 +29,7 @@ const FormattingBarControls = (props) => {
 
 	// ?Inline permalink
 	const controlsProps = {
+		key: selectionKey,
 		attrs: attrs,
 		updateAttrs: updateFunc,
 		changeNode: changeNodeFunc,
