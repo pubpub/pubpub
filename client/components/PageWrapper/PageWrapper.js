@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import HeaderNew from 'components/HeaderNew/HeaderNew';
+import Header from 'components/Header/Header';
 import Footer from 'components/Footer/Footer';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
 import NavBar from 'components/NavBar/NavBar';
@@ -90,7 +90,7 @@ const PageWrapper = (props) => {
 				accentMinimalColor={communityData.accentMinimalColor}
 			/>
 
-			<HeaderNew
+			<Header
 				communityData={props.communityData}
 				locationData={props.locationData}
 				loginData={props.loginData}

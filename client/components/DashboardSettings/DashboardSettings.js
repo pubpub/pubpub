@@ -5,7 +5,7 @@ import InputField from 'components/InputField/InputField';
 import ImageUpload from 'components/ImageUpload/ImageUpload';
 import ColorInput from 'components/ColorInput/ColorInput';
 import NavDrag from 'components/NavDrag/NavDrag';
-import HeaderNew from 'components/HeaderNew/HeaderNew';
+import Header from 'components/Header/Header';
 import Icon from 'components/Icon/Icon';
 import SettingsSection from 'components/SettingsSection/SettingsSection';
 import TagMultiSelect from 'components/TagMultiSelect/TagMultiSelect';
@@ -573,7 +573,7 @@ class DashboardSettings extends Component {
 						</InputField>
 					</div>
 					<InputField label="Preview">
-						<HeaderNew
+						<Header
 							communityData={{
 								...this.props.communityData,
 								...this.state,

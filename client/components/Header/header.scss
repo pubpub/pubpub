@@ -1,4 +1,4 @@
-.header-new-component {
+.header-component {
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -126,7 +126,7 @@
 }
 
 @media only screen and (max-width: 720px) {
-	.header-new-component {
+	.header-component {
 		.hide-on-mobile {
 			display: none;
 		}

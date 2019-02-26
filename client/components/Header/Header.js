@@ -15,7 +15,7 @@ import {
 } from '@blueprintjs/core';
 import { apiFetch, getResizedUrl } from 'utilities';
 
-require('./headerNew.scss');
+require('./header.scss');
 
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
@@ -23,7 +23,7 @@ const propTypes = {
 	loginData: PropTypes.object.isRequired,
 };
 
-class HeaderNew extends Component {
+class Header extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -189,7 +189,7 @@ class HeaderNew extends Component {
 		const heroSecondaryButton = this.props.communityData.heroSecondaryButton || {};
 
 		return (
-			<nav className={`header-new-component ${componentClasses}`} style={backgroundStyle}>
+			<nav className={`header-component ${componentClasses}`} style={backgroundStyle}>
 				<div className={mainClasses}>
 					<div className="container">
 						<div className="row">
@@ -252,7 +252,7 @@ class HeaderNew extends Component {
 											);
 										}
 										return (
-											<Button
+											<AnchorButton
 												key={key}
 												minimal={true}
 												large={true}
@@ -421,5 +421,5 @@ class HeaderNew extends Component {
 }
 
 // Header.defaultProps = defaultProps;
-HeaderNew.propTypes = propTypes;
-export default HeaderNew;
+Header.propTypes = propTypes;
+export default Header;

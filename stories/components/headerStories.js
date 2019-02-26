@@ -1,6 +1,6 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import HeaderNew from 'components/HeaderNew/HeaderNew';
+import Header from 'components/Header/Header';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
 import { accentDataLight, locationData, loginData } from '../data';
 
@@ -28,11 +28,11 @@ const communityData = {};
 //		heroSecondaryButton: 'Find out more',
 //	heroAlign: 'center',
 
-storiesOf('Components/HeaderNew', module).add('default', () => (
+storiesOf('Components/Header', module).add('default', () => (
 	<div>
 		<AccentStyle {...accentDataLight} />
 		<div style={wrapperStyle}>
-			<HeaderNew
+			<Header
 				communityData={{
 					...communityData,
 					title: 'Hiptest',
@@ -70,7 +70,7 @@ storiesOf('Components/HeaderNew', module).add('default', () => (
 			/>
 		</div>
 		<div style={wrapperStyle}>
-			<HeaderNew
+			<Header
 				communityData={{
 					...communityData,
 					hideHeaderLogo: false,
@@ -97,7 +97,7 @@ storiesOf('Components/HeaderNew', module).add('default', () => (
 			/>
 		</div>
 		<div style={wrapperStyle}>
-			<HeaderNew
+			<Header
 				communityData={{
 					...communityData,
 					hideHeaderLogo: false,
@@ -122,7 +122,7 @@ storiesOf('Components/HeaderNew', module).add('default', () => (
 			/>
 		</div>
 		<div style={wrapperStyle}>
-			<HeaderNew
+			<Header
 				communityData={{
 					...communityData,
 					hideHeaderLogo: false,
@@ -146,7 +146,7 @@ storiesOf('Components/HeaderNew', module).add('default', () => (
 			/>
 		</div>
 		<div style={wrapperStyle}>
-			<HeaderNew
+			<Header
 				communityData={{
 					...communityData,
 					hideHeaderLogo: false,
