@@ -1,28 +1,20 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-/* Firebase has some issues with their auth packages and importing */
-/* conflicting dependencies. https://github.com/firebase/firebase-js-sdk/issues/752 */
-/* eslint-disable-next-line import/no-extraneous-dependencies */
-import firebase from '@firebase/app';
 import { dispatchEmptyTransaction, docIsEmpty, marksAtSelection } from '@pubpub/editor';
-import { apiFetch, hydrateWrapper, getFirebaseConfig } from 'utilities';
+import { apiFetch, hydrateWrapper } from 'utilities';
 
 import PubCollabManager from './PubCollabManager';
 import PubDiscussionsManager from './PubDiscussionsMananger';
 import PubPresentational from './PubPresentational';
 import { getHighlights, hasPermanentHighlight } from './highlights';
+import sharedPropTypes from './sharedPropTypes';
 
-/* eslint-disable-next-line import/no-extraneous-dependencies */
-require('@firebase/auth');
-/* eslint-disable-next-line import/no-extraneous-dependencies */
-require('@firebase/database');
 require('./pub.scss');
 
 const propTypes = {
-	communityData: PropTypes.object.isRequired,
-	loginData: PropTypes.object.isRequired,
-	locationData: PropTypes.object.isRequired,
-	pubData: PropTypes.object.isRequired,
+	communityData: sharedPropTypes.communityData.isRequired,
+	loginData: sharedPropTypes.loginData.isRequired,
+	locationData: sharedPropTypes.locationData.isRequired,
+	pubData: sharedPropTypes.pubData.isRequired,
 };
 
 class Pub extends Component {
@@ -48,7 +40,6 @@ class Pub extends Component {
 			clickedMarks: [],
 			linkPopupIsOpen: false,
 		};
-		this.firebaseRef = null;
 		this.setOptionsMode = this.setOptionsMode.bind(this);
 		this.setPubData = this.setPubData.bind(this);
 		this.handleSectionsChange = this.handleSectionsChange.bind(this);
@@ -61,25 +52,6 @@ class Pub extends Component {
 
 	componentDidMount() {
 		if (this.state.pubData.isDraft) {
-			/* Setup Firebase App */
-			const firebaseAppName = `Pub-${this.props.pubData.editorKey}`;
-			const existingApp = firebase.apps.reduce((prev, curr) => {
-				if (curr.name === firebaseAppName) {
-					return curr;
-				}
-				return prev;
-			}, undefined);
-			const firebaseApp =
-				existingApp || firebase.initializeApp(getFirebaseConfig(), firebaseAppName);
-			const database = firebase.database(firebaseApp);
-			firebase
-				.auth(firebaseApp)
-				.signInWithCustomToken(this.props.pubData.firebaseToken)
-				.then(() => {
-					this.firebaseRef = database.ref(`${this.props.pubData.editorKey}`);
-					/* Add listener event to update sectionsData when it changes in Firebase */
-					this.firebaseRef.child('/sections').on('value', this.handleSectionsChange);
-				});
 			window.addEventListener('keydown', this.handleKeyPressEvents);
 		}
 	}
@@ -104,9 +76,6 @@ class Pub extends Component {
 	}
 
 	componentWillUnmount() {
-		if (this.firebaseRef) {
-			this.firebaseRef.child('/sections').off('value', this.handleSectionsChange);
-		}
 		if (this.state.pubData.isDraft) {
 			window.removeEventListener('keydown', this.handleKeyPressEvents);
 		}
@@ -263,11 +232,13 @@ class Pub extends Component {
 			onSetPubData: this.setPubData,
 			onSingleClick: this.handleEditorSingleClick,
 		};
+
 		return (
 			<PubCollabManager
 				editorChangeObject={this.state.editorChangeObject}
 				loginData={this.props.loginData}
 				pubData={this.state.pubData}
+				onSectionsChange={this.handleSectionsChange}
 			>
 				{({
 					handleCollabStatusChange,
@@ -275,6 +246,7 @@ class Pub extends Component {
 					collabStatus,
 					activeCollaborators,
 					isCollabLoading,
+					firebaseRef,
 				}) => (
 					<PubDiscussionsManager
 						communityData={this.props.communityData}
@@ -294,8 +266,8 @@ class Pub extends Component {
 						}) => (
 							<PubPresentational
 								{...presentationalHandlers}
-								activeContent={this.getActiveContent()}
 								activeCollaborators={activeCollaborators}
+								activeContent={this.getActiveContent()}
 								activeDiscussionChannel={activeDiscussionChannel}
 								activeThreadNumber={activeThreadNumber}
 								collabStatus={collabStatus}
@@ -307,6 +279,7 @@ class Pub extends Component {
 									getLoginData: () => this.props.loginData,
 									getPubData: () => this.state.pubData,
 								}}
+								firebaseRef={firebaseRef}
 								editorChangeObject={this.state.editorChangeObject}
 								highlights={getHighlights(
 									this.state.pubData,

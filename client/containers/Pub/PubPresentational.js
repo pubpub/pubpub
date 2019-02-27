@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import checkIfMobile from 'is-mobile';
 
 import PageWrapper from 'components/PageWrapper/PageWrapper';
 import PubHeader from 'components/PubHeader/PubHeader';
@@ -17,8 +18,7 @@ import PubLinkMenu from 'components/PubLinkMenu/PubLinkMenu';
 import PubSectionNav from 'components/PubSectionNav/PubSectionNav';
 import DiscussionList from 'components/DiscussionList/DiscussionList';
 
-import checkIfMobile from 'is-mobile';
-import sharedPropTypes from './propTypes';
+import sharedPropTypes from './sharedPropTypes';
 
 const handlerTypes = {
 	onEditorChange: PropTypes.func.isRequired,
@@ -58,6 +58,7 @@ const propTypes = {
 	editorChangeObject: PropTypes.shape({
 		view: PropTypes.shape({}),
 	}).isRequired,
+	firebaseRef: PropTypes.shape({}),
 	highlights: PropTypes.arrayOf(PropTypes.shape({}.isRequired)).isRequired,
 	isEmptyDoc: PropTypes.bool.isRequired,
 	isCollabLoading: PropTypes.bool.isRequired,
@@ -73,6 +74,7 @@ const propTypes = {
 const defaultProps = {
 	activeContent: null,
 	activeThreadNumber: null,
+	firebaseRef: null,
 	initialDiscussionContent: null,
 	optionsMode: null,
 };
@@ -318,6 +320,7 @@ export default class PubPresentational extends React.Component {
 			locationData,
 			loginData,
 			editorChangeObject,
+			firebaseRef,
 			onSetOptionsMode,
 			onSetPubData,
 			optionsMode,
@@ -329,7 +332,7 @@ export default class PubPresentational extends React.Component {
 				pubData={pubData}
 				loginData={loginData}
 				locationData={locationData}
-				firebaseRef={this.firebaseRef}
+				firebaseRef={firebaseRef}
 				editorView={editorChangeObject.view}
 				optionsMode={optionsMode}
 				setOptionsMode={onSetOptionsMode}
@@ -342,10 +345,12 @@ export default class PubPresentational extends React.Component {
 		const {
 			activeCollaborators,
 			activeDiscussionChannel,
+			communityData,
 			collabStatus,
 			discussionHandlers,
 			editorChangeObject,
 			loginData,
+			locationData,
 			onSetOptionsMode,
 			onSetPubData,
 			pubData,
@@ -354,14 +359,14 @@ export default class PubPresentational extends React.Component {
 		return (
 			<div id="pub-container">
 				<PageWrapper
-					loginData={this.props.loginData}
-					communityData={this.props.communityData}
-					locationData={this.props.locationData}
+					loginData={loginData}
+					communityData={communityData}
+					locationData={locationData}
 				>
 					<PubHeader
 						pubData={pubData}
-						communityData={this.props.communityData}
-						locationData={this.props.locationData}
+						communityData={communityData}
+						locationData={locationData}
 						setOptionsMode={onSetOptionsMode}
 						setPubData={onSetPubData}
 						activeDiscussionChannel={activeDiscussionChannel}

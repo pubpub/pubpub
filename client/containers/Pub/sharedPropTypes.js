@@ -1,0 +1,45 @@
+import PropTypes from 'prop-types';
+
+export default {
+	communityData: PropTypes.shape({
+		accentActionColor: PropTypes.string.isRequired,
+		accentColor: PropTypes.string.isRequired,
+		accentHoverColor: PropTypes.string.isRequired,
+		accentMinimalColor: PropTypes.string.isRequired,
+		accentTextColor: PropTypes.string.isRequired,
+		admins: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+		avatar: PropTypes.string,
+		collections: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+		description: PropTypes.string,
+		domain: PropTypes.string,
+		favicon: PropTypes.string,
+		navigation: PropTypes.arrayOf(PropTypes.string).isRequired,
+		id: PropTypes.string.isRequired,
+		subdomain: PropTypes.string,
+		title: PropTypes.string.isRequired,
+	}),
+	loginData: PropTypes.shape({
+		avatar: PropTypes.string,
+		id: PropTypes.string.isRequired,
+		initials: PropTypes.string.isRequired,
+		isAdmin: PropTypes.bool.isRequired,
+		fullName: PropTypes.string.isRequired,
+		slug: PropTypes.string.isRequired,
+	}),
+	locationData: PropTypes.shape({
+		hostname: PropTypes.string.isRequired,
+		path: PropTypes.string.isRequired,
+		params: PropTypes.shape({}).isRequired,
+		query: PropTypes.shape({}).isRequired,
+		queryString: PropTypes.string.isRequired,
+		isBasePubPub: PropTypes.bool.isRequired,
+	}),
+	pubData: PropTypes.shape({
+		editorKey: PropTypes.string.isRequired,
+		isDraft: PropTypes.bool,
+		isDraftEditor: PropTypes.bool,
+		isEditor: PropTypes.bool,
+		isManager: PropTypes.bool,
+		slug: PropTypes.string.isRequired,
+	}),
+};

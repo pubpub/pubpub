@@ -5,7 +5,7 @@ import { dispatchEmptyTransaction } from '@pubpub/editor';
 
 import { apiFetch, generateHash } from 'utilities';
 
-import sharedPropTypes from './propTypes';
+import sharedPropTypes from './sharedPropTypes';
 import { getThreads, getActiveDiscussionChannel } from './threads';
 import { getPubHighlightContent } from './highlights';
 

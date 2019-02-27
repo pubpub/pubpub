@@ -1,8 +1,17 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+/* Firebase has some issues with their auth packages and importing */
+/* conflicting dependencies. https://github.com/firebase/firebase-js-sdk/issues/752 */
+/* eslint-disable-next-line import/no-extraneous-dependencies */
+import firebase from '@firebase/app';
 
-import { getRandomColor } from 'utilities';
-import sharedPropTypes from './propTypes';
+import { getRandomColor, getFirebaseConfig } from 'utilities';
+import sharedPropTypes from './sharedPropTypes';
+
+/* eslint-disable-next-line import/no-extraneous-dependencies */
+require('@firebase/auth');
+/* eslint-disable-next-line import/no-extraneous-dependencies */
+require('@firebase/database');
 
 const propTypes = {
 	children: PropTypes.func.isRequired,
@@ -10,6 +19,7 @@ const propTypes = {
 		isCollabLoaded: PropTypes.bool,
 	}).isRequired,
 	loginData: sharedPropTypes.loginData.isRequired,
+	onSectionsChange: PropTypes.func.isRequired,
 	pubData: sharedPropTypes.pubData.isRequired,
 };
 
@@ -30,6 +40,24 @@ const getLocalUser = (loginData, pubData) => {
 	};
 };
 
+const authenticateWithFirebase = (pubData) => {
+	const { editorKey, firebaseToken } = pubData;
+	/* Setup Firebase App */
+	const firebaseAppName = `Pub-${editorKey}`;
+	const existingApp = firebase.apps.reduce((prev, curr) => {
+		if (curr.name === firebaseAppName) {
+			return curr;
+		}
+		return prev;
+	}, undefined);
+	const firebaseApp = existingApp || firebase.initializeApp(getFirebaseConfig(), firebaseAppName);
+	const database = firebase.database(firebaseApp);
+	return firebase
+		.auth(firebaseApp)
+		.signInWithCustomToken(firebaseToken)
+		.then(() => database.ref(`${pubData.editorKey}`));
+};
+
 export default class PubCollabManager extends React.Component {
 	constructor(props) {
 		super(props);
@@ -37,10 +65,32 @@ export default class PubCollabManager extends React.Component {
 		this.state = {
 			collabStatus: 'connecting',
 			activeCollaborators: [this.localUser],
+			firebaseRef: null,
 		};
 		this.setSavingTimeout = null;
+		this.firebaseRef = null;
 		this.handleCollabStatusChange = this.handleCollabStatusChange.bind(this);
 		this.handleClientChange = this.handleClientChange.bind(this);
+	}
+
+	componentDidMount() {
+		const { onSectionsChange, pubData } = this.props;
+		if (pubData.isDraft) {
+			authenticateWithFirebase(pubData).then((firebaseRef) => {
+				firebaseRef.child('/sections').on('value', onSectionsChange);
+				this.setState({ firebaseRef: firebaseRef });
+				/* Add listener event to update sectionsData when it changes in Firebase */
+			});
+			window.addEventListener('keydown', this.handleKeyPressEvents);
+		}
+	}
+
+	componentWillUnmount() {
+		const { onSectionsChange } = this.props;
+		const { firebaseRef } = this.state;
+		if (firebaseRef) {
+			firebaseRef.child('/sections').off('value', onSectionsChange);
+		}
 	}
 
 	handleClientChange(clients) {
@@ -76,13 +126,14 @@ export default class PubCollabManager extends React.Component {
 
 	render() {
 		const { pubData, editorChangeObject } = this.props;
-		const { activeCollaborators, collabStatus } = this.state;
+		const { activeCollaborators, collabStatus, firebaseRef } = this.state;
 		return this.props.children({
 			activeCollaborators: activeCollaborators,
 			collabStatus: collabStatus,
 			handleCollabStatusChange: this.handleCollabStatusChange,
 			handleClientChange: this.handleClientChange,
 			isCollabLoading: pubData.isDraft && !editorChangeObject.isCollabLoaded,
+			firefbaseRef: firebaseRef,
 		});
 	}
 }
