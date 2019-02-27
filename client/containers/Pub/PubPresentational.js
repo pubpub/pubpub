@@ -83,6 +83,7 @@ export default class PubPresentational extends React.Component {
 	constructor(props) {
 		super(props);
 		this.sideMarginRef = React.createRef();
+		this.getAbsolutePosition = this.getAbsolutePosition.bind(this);
 	}
 
 	getAbsolutePosition(top, left, placeInSideMargin) {
