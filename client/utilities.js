@@ -136,7 +136,7 @@ export const getResizedUrl = function(url, type, dimensions) {
 	return `https://resize.pubpub.org/${prefix}${dimensions}/${filepath}`;
 };
 
-export const nestDiscussionsToThreads = (discussions) => {
+export const nestDiscussionsToThreads = function(discussions) {
 	const maxThreadNumber = discussions.reduce((prev, curr) => {
 		if (curr.threadNumber > prev) {
 			return curr.threadNumber;
