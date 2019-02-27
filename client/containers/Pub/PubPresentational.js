@@ -97,12 +97,57 @@ export default class PubPresentational extends React.Component {
 		};
 	}
 
+	renderPubSideContent() {
+		const {
+			activeContent,
+			activeDiscussionChannel,
+			activeThreadNumber,
+			discussionHandlers,
+			editorChangeObject,
+			initialDiscussionContent,
+			loginData,
+			locationData,
+			onSetOptionsMode,
+			pubData,
+			threads,
+		} = this.props;
+		return (
+			<div className="side-content" ref={this.sideMarginRef}>
+				<PubSideToc
+					pubData={pubData}
+					activeContent={activeContent}
+					editorChangeObject={editorChangeObject}
+				/>
+				<PubSideCollaborators pubData={pubData} setOptionsMode={onSetOptionsMode} />
+				{pubData.publicDiscussions && (
+					<PubSideDiscussions
+						key={
+							activeDiscussionChannel ? activeDiscussionChannel.id : 'public-channel'
+						}
+						threads={threads}
+						pubData={pubData}
+						locationData={locationData}
+						editorChangeObject={editorChangeObject}
+						loginData={loginData}
+						onPostDiscussion={discussionHandlers.onPostDiscussion}
+						onPutDiscussion={discussionHandlers.onPutDiscussion}
+						onQuotePermalink={discussionHandlers.onQuotePermalink}
+						getHighlightContent={discussionHandlers.onGetHighlightContent}
+						activeThread={activeThreadNumber}
+						setActiveThread={discussionHandlers.onSetActiveThread}
+						activeDiscussionChannel={activeDiscussionChannel}
+						initialContent={initialDiscussionContent}
+						getAbsolutePosition={this.getAbsolutePosition}
+					/>
+				)}
+			</div>
+		);
+	}
+
 	renderPubMain() {
 		const {
 			activeContent,
 			activeCollaborators,
-			activeDiscussionChannel,
-			activeThreadNumber,
 			communityData,
 			discussionHandlers,
 			discussionNodeOptions,
@@ -110,8 +155,6 @@ export default class PubPresentational extends React.Component {
 			editorChangeObject,
 			isCollabLoading,
 			isEmptyDoc,
-			initialDiscussionContent,
-			loginData,
 			locationData,
 			onClientChange,
 			onEditorChange,
@@ -197,40 +240,7 @@ export default class PubPresentational extends React.Component {
 							{/* License */}
 							{!pubData.isDraft && <PubLicense />}
 						</div>
-						<div className="side-content" ref={this.sideMarginRef}>
-							<PubSideToc
-								pubData={pubData}
-								activeContent={activeContent}
-								editorChangeObject={editorChangeObject}
-							/>
-							<PubSideCollaborators
-								pubData={pubData}
-								setOptionsMode={onSetOptionsMode}
-							/>
-							{pubData.publicDiscussions && (
-								<PubSideDiscussions
-									key={
-										activeDiscussionChannel
-											? activeDiscussionChannel.id
-											: 'public-channel'
-									}
-									threads={threads}
-									pubData={pubData}
-									locationData={locationData}
-									editorChangeObject={editorChangeObject}
-									loginData={loginData}
-									onPostDiscussion={discussionHandlers.onPostDiscussion}
-									onPutDiscussion={discussionHandlers.onPutDiscussion}
-									onQuotePermalink={discussionHandlers.onQuotePermalink}
-									getHighlightContent={discussionHandlers.onGetHighlightContent}
-									activeThread={activeThreadNumber}
-									setActiveThread={discussionHandlers.onSetActiveThread}
-									activeDiscussionChannel={activeDiscussionChannel}
-									initialContent={initialDiscussionContent}
-									getAbsolutePosition={this.getAbsolutePosition}
-								/>
-							)}
-						</div>
+						{this.renderPubSideContent()}
 					</div>
 				</div>
 			</div>
@@ -281,7 +291,7 @@ export default class PubPresentational extends React.Component {
 		);
 	}
 
-	renderOverlays() {
+	renderPubOverlays() {
 		const {
 			pubData,
 			discussionHandlers,
@@ -386,11 +396,10 @@ export default class PubPresentational extends React.Component {
 								threads={threads}
 							/>
 						)}
-
 						{this.renderPubMain()}
 					</div>
 					{this.renderPubDiscussions()}
-					{this.renderOverlays()}
+					{this.renderPubOverlays()}
 					{this.renderPubOptions()}
 				</PageWrapper>
 			</div>
