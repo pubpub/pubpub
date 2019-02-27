@@ -13,8 +13,7 @@ const hasPermanentHighlight = (pubData, editorChangeObject, queryObject) => {
 				queryObject.version;
 };
 
-export const getPubHighlightContent = (pubData, editorDoc, query, sectionId) => {
-	const { from, to } = query;
+export const getPubHighlightContent = (pubData, editorDoc, from, to, sectionId) => {
 	if (!editorDoc || editorDoc.nodeSize < from || editorDoc.nodeSize < to) {
 		return {};
 	}
@@ -45,6 +44,7 @@ export const getHighlights = (
 	activeDiscussionChannel,
 	sectionId,
 	queryObject,
+	editorDoc,
 	editorChangeObject,
 ) => {
 	const { activeVersion, discussions = [] } = pubData;
@@ -78,7 +78,13 @@ export const getHighlights = (
 		});
 	if (hasPermanentHighlight(pubData, queryObject, editorChangeObject)) {
 		highlights.push({
-			...getHighlightContent(Number(queryObject.from), Number(queryObject.to)),
+			...getPubHighlightContent(
+				pubData,
+				editorDoc,
+				Number(queryObject.from),
+				Number(queryObject.to),
+				sectionId,
+			),
 			permanent: true,
 		});
 	}

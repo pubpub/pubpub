@@ -5,11 +5,15 @@ import { getRandomColor } from 'utilities';
 import sharedPropTypes from './propTypes';
 
 const propTypes = {
-	loginData: sharedPropTypes.loginData,
 	children: PropTypes.func.isRequired,
+	editorChangeObject: PropTypes.shape({
+		isCollabLoaded: PropTypes.bool.isRequired,
+	}).isRequired,
+	loginData: sharedPropTypes.loginData.isRequired,
+	pubData: sharedPropTypes.pubData.isRequired,
 };
 
-const getLocalUser = ({ loginData, pubData }) => {
+const getLocalUser = (loginData, pubData) => {
 	const { isDraftEditor, isManager, firebaseToken } = pubData;
 	const { avatar, fullName, id, initials } = loginData;
 	const loginId = id || `anon-${Math.floor(Math.random() * 9999)}`;
@@ -29,13 +33,14 @@ const getLocalUser = ({ loginData, pubData }) => {
 export default class PubCollabManager extends React.Component {
 	constructor(props) {
 		super(props);
-		this.localUser = getLocalUser(props);
+		this.localUser = getLocalUser(props.loginData, props.pubData);
 		this.state = {
 			collabStatus: 'connecting',
 			activeCollaborators: [this.localUser],
 		};
 		this.setSavingTimeout = null;
-		this.handleStatusChange = this.handleStatusChange.bind(this);
+		this.handleCollabStatusChange = this.handleCollabStatusChange.bind(this);
+		this.handleClientChange = this.handleClientChange.bind(this);
 	}
 
 	handleClientChange(clients) {
@@ -70,11 +75,14 @@ export default class PubCollabManager extends React.Component {
 	}
 
 	render() {
+		const { pubData, editorChangeObject } = this.props;
 		const { activeCollaborators, collabStatus } = this.state;
 		return this.props.children({
 			activeCollaborators: activeCollaborators,
 			collabStatus: collabStatus,
-			updateCollabStatus: this.handleStatusChange,
+			handleCollabStatusChange: this.handleStatusChange,
+			handleClientChange: this.handleClientChange,
+			isCollabLoading: pubData.isDraft && !editorChangeObject.isCollabLoaded,
 		});
 	}
 }

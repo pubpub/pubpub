@@ -6,7 +6,6 @@ import { dispatchEmptyTransaction } from '@pubpub/editor';
 import { apiFetch, generateHash } from 'utilities';
 
 import sharedPropTypes from './propTypes';
-import { getHighlightContent } from './highlights';
 import { getThreads, getActiveDiscussionChannel } from './threads';
 
 const propTypes = {
@@ -17,7 +16,7 @@ const propTypes = {
 	pubData: sharedPropTypes.pubData.isRequired,
 };
 
-class PubDiscussionsManager extends React.Component {
+export default class PubDiscussionsManager extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -39,36 +38,22 @@ class PubDiscussionsManager extends React.Component {
 			getThreads: () => {
 				return this.getThreads();
 			},
-			getPubData: () => {
-				return this.props.pubData;
-			},
-			getLocationData: () => {
-				return this.state.locationData;
-			},
-			getLoginData: () => {
-				return this.props.loginData;
-			},
 			getOnPostDiscussion: () => {
 				return this.handlePostDiscussion;
 			},
 			getOnPutDiscussion: () => {
 				return this.handlePutDiscussion;
 			},
-			getGetHighlightContent: () => {
-				return this.getHighlightContent;
-			},
-			getHandleQuotePermalink: () => {
-				return this.handleQuotePermalink;
-			},
 		};
 	}
 
 	getDiscussionHandlers() {
 		return {
-			handlePostDiscussion: this.handlePostDiscussion,
-			handlePutDiscussion: this.handlePutDiscussion,
-			handleSetActiveThread: this.handleSetActiveThread,
-			handleSetDiscussionChannel: this.handleSetDiscussionChannel,
+			onNewHighlightDiscussion: this.handleNewHighlightDiscussion,
+			onPostDiscussion: this.handlePostDiscussion,
+			onPutDiscussion: this.handlePutDiscussion,
+			onSetActiveThread: this.handleSetActiveThread,
+			onSetDiscussionChannel: this.handleSetDiscussionChannel,
 		};
 	}
 
@@ -77,6 +62,7 @@ class PubDiscussionsManager extends React.Component {
 		this.handleSetActiveThread = this.handleSetActiveThread.bind(this);
 		this.handlePostDiscussion = this.handlePostDiscussion.bind(this);
 		this.handlePutDiscussion = this.handlePutDiscussion.bind(this);
+		this.handleNewHighlightDiscussion = this.handleNewHighlightDiscussion.bind(this);
 		// Not technically a handler, but we do weird scope things with this
 		this.getThreads = this.getThreads.bind(this);
 	}

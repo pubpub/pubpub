@@ -5,6 +5,7 @@ export default {
 		accentMinimalColor: PropTypes.string.isRequired,
 	}),
 	loginData: PropTypes.shape({}),
+	locationData: PropTypes.shape({}),
 	pubData: PropTypes.shape({
 		editorKey: PropTypes.string.isRequired,
 		isDraft: PropTypes.bool.isRequired,

@@ -18,29 +18,30 @@ import PubSectionNav from 'components/PubSectionNav/PubSectionNav';
 import DiscussionList from 'components/DiscussionList/DiscussionList';
 
 import checkIfMobile from 'is-mobile';
-import { getHighlights } from './highlights';
 import sharedPropTypes from './propTypes';
 
 const handlerTypes = {
 	onEditorChange: PropTypes.func.isRequired,
+	onClientChange: PropTypes.func.isRequired,
 	onSetOptionsMode: PropTypes.func.isRequired,
 	onSingleClick: PropTypes.func.isRequired,
-	onStatusChange: PropTypes.func.isRequired,
 	onSetPubData: PropTypes.func.isRequired,
+	onStatusChange: PropTypes.func.isRequired,
 };
 
 const propTypes = {
 	...handlerTypes,
+	activeCollaborators: PropTypes.array.isRequired,
 	activeContent: PropTypes.shape({}).isRequired,
 	activeThreadNumber: PropTypes.number.isRequired,
-	editorChangeObject: PropTypes.shape({
-		view: PropTypes.shape({}).isRequired,
+	collabStatus: PropTypes.string.isRequired,
+	discussionHandlers: PropTypes.shape({
+		onNewHighlightDiscussion: PropTypes.func.isRequired,
+		onPostDiscussion: PropTypes.func.isRequired,
+		onPutDiscussion: PropTypes.func.isRequired,
+		onSetActiveThread: PropTypes.func.isRequired,
+		onSetDiscussionChannel: PropTypes.func.isRequired,
 	}).isRequired,
-	isEmptyDoc: PropTypes.bool.isRequired,
-	isCollabLoading: PropTypes.bool.isRequired,
-	linkPopupIsOpen: PropTypes.bool.isRequired,
-	pubData: sharedPropTypes.pubData.isRequired,
-	threads: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
 	discussionNodeOptions: PropTypes.shape({
 		getThreads: PropTypes.func.isRequired,
 		getPubData: PropTypes.func.isRequired,
@@ -51,9 +52,39 @@ const propTypes = {
 		getGetHighlightContent: PropTypes.func.isRequired,
 		getHandleQuotePermalink: PropTypes.func.isRequired,
 	}).isRequired,
+	editorChangeObject: PropTypes.shape({
+		view: PropTypes.shape({}).isRequired,
+	}).isRequired,
+	highlights: PropTypes.arrayOf(PropTypes.shape({}.isRequired)).isRequired,
+	isEmptyDoc: PropTypes.bool.isRequired,
+	isCollabLoading: PropTypes.bool.isRequired,
+	initialDiscussionContent: PropTypes.shape({}).isRequired,
+	linkPopupIsOpen: PropTypes.bool.isRequired,
+	loginData: sharedPropTypes.loginData.isRequired,
+	optionsMode: PropTypes.string.isRequired,
+	pubData: sharedPropTypes.pubData.isRequired,
+	sectionId: PropTypes.string.isRequired,
+	threads: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
 };
 
-class PubPresentational extends React.Component {
+export default class PubPresentational extends React.Component {
+	constructor(props) {
+		super(props);
+		this.sideMarginRef = React.createRef();
+	}
+
+	getAbsolutePosition(top, left, placeInSideMargin) {
+		const { editorChangeObject } = this.props;
+		const sideContainer = this.sideMarginRef.current;
+		/* The editorObject does not refresh on scroll - so we need to calculate the */
+		/* y offset as 'the location of the highlight and the moment of update */
+		return {
+			top: top + editorChangeObject.currentScroll,
+			left: placeInSideMargin ? sideContainer.getBoundingClientRect().left : left,
+			width: placeInSideMargin ? sideContainer.getBoundingClientRect().width : undefined,
+		};
+	}
+
 	renderPubMain() {
 		const {
 			activeContent,
@@ -61,14 +92,23 @@ class PubPresentational extends React.Component {
 			activeDiscussionChannel,
 			activeThreadNumber,
 			communityData,
+			discussionHandlers,
 			discussionNodeOptions,
+			highlights,
 			editorChangeObject,
+			getAbsolutePosition,
 			isCollabLoading,
 			isEmptyDoc,
 			initialDiscussionContent,
 			loginData,
 			locationData,
+			onClientChange,
+			onEditorChange,
+			onSingleClick,
+			onSetOptionsMode,
+			onStatusChange,
 			pubData,
+			sectionId,
 			threads,
 		} = this.props;
 		const { activeVersion } = pubData;
@@ -76,14 +116,6 @@ class PubPresentational extends React.Component {
 		const hasSections = pubData.isDraft
 			? pubData.sectionsData.length > 1
 			: activeVersion && Array.isArray(activeVersion.content);
-		const sectionId = this.props.locationData.params.sectionId || '';
-		const highlights = getHighlights(
-			pubData,
-			activeDiscussionChannel,
-			sectionId,
-			queryObject,
-			editorChangeObject,
-		);
 		return (
 			<div className="container pub">
 				<div className="row">
@@ -98,7 +130,7 @@ class PubPresentational extends React.Component {
 									queryObject={queryObject}
 									hasSections={hasSections}
 									sectionId={sectionId}
-									setOptionsMode={this.setOptionsMode}
+									setOptionsMode={onSetOptionsMode}
 								/>
 							)}
 
@@ -115,11 +147,11 @@ class PubPresentational extends React.Component {
 									slug={pubData.slug}
 									highlights={highlights}
 									hoverBackgroundColor={communityData.accentMinimalColor}
-									setActiveThread={this.setActiveThread}
-									onChange={this.handleEditorChange}
-									onSingleClick={this.handleEditorSingleClick}
+									setActiveThread={discussionHandlers.onSetActiveThread}
+									onChange={onEditorChange}
+									onSingleClick={onSingleClick}
 									// Props from CollabEditor
-									editorKey={`${this.props.pubData.editorKey}${
+									editorKey={`${pubData.editorKey}${
 										sectionId ? '/' : ''
 									}${sectionId || ''}`}
 									isReadOnly={
@@ -127,8 +159,8 @@ class PubPresentational extends React.Component {
 										(!pubData.isManager && !pubData.isDraftEditor)
 									}
 									clientData={activeCollaborators[0]}
-									onClientChange={this.handleClientChange}
-									onStatusChange={this.handleStatusChange}
+									onClientChange={onClientChange}
+									onStatusChange={onStatusChange}
 									discussionNodeOptions={discussionNodeOptions}
 								/>
 							</div>
@@ -147,7 +179,7 @@ class PubPresentational extends React.Component {
 									queryObject={queryObject}
 									hasSections={hasSections}
 									sectionId={sectionId}
-									setOptionsMode={this.setOptionsMode}
+									setOptionsMode={onSetOptionsMode}
 								/>
 							)}
 
@@ -162,7 +194,7 @@ class PubPresentational extends React.Component {
 							/>
 							<PubSideCollaborators
 								pubData={pubData}
-								setOptionsMode={this.setOptionsMode}
+								setOptionsMode={onSetOptionsMode}
 							/>
 							{pubData.publicDiscussions && (
 								<PubSideDiscussions
@@ -176,14 +208,14 @@ class PubPresentational extends React.Component {
 									locationData={locationData}
 									editorChangeObject={editorChangeObject}
 									loginData={loginData}
-									onPostDiscussion={this.handlePostDiscussion}
-									onPutDiscussion={this.handlePutDiscussion}
-									getHighlightContent={this.getHighlightContent}
+									onPostDiscussion={discussionHandlers.onPostDiscussion}
+									onPutDiscussion={discussionHandlers.onPutDiscussion}
+									getHighlightContent={discussionHandlers.onGetHighlightContent}
 									activeThread={activeThreadNumber}
-									setActiveThread={this.setActiveThread}
+									setActiveThread={discussionHandlers.onSetActiveThread}
 									activeDiscussionChannel={activeDiscussionChannel}
 									initialContent={initialDiscussionContent}
-									getAbsolutePosition={this.getAbsolutePosition}
+									getAbsolutePosition={getAbsolutePosition}
 								/>
 							)}
 						</div>
@@ -231,7 +263,13 @@ class PubPresentational extends React.Component {
 	}
 
 	renderOverlays(isMobile, sectionId) {
-		const { pubData, editorChangeObject, linkPopupIsOpen, onOpenLinkMenu } = this.props;
+		const {
+			pubData,
+			discussionHandlers,
+			editorChangeObject,
+			linkPopupIsOpen,
+			onOpenLinkMenu,
+		} = this.props;
 		return (
 			<React.Fragment>
 				{!linkPopupIsOpen && !isMobile && (
@@ -239,7 +277,7 @@ class PubPresentational extends React.Component {
 						pubData={pubData}
 						editorChangeObject={editorChangeObject}
 						getAbsolutePosition={this.getAbsolutePosition}
-						onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
+						onNewHighlightDiscussion={discussionHandlers.onNewHighlightDiscussion}
 						sectionId={sectionId}
 						openLinkMenu={onOpenLinkMenu}
 					/>
@@ -261,6 +299,8 @@ class PubPresentational extends React.Component {
 			locationData,
 			loginData,
 			editorChangeObject,
+			onSetOptionsMode,
+			onSetPubData,
 			optionsMode,
 			pubData,
 		} = this.props;
@@ -273,8 +313,8 @@ class PubPresentational extends React.Component {
 				firebaseRef={this.firebaseRef}
 				editorView={editorChangeObject.view}
 				optionsMode={optionsMode}
-				setOptionsMode={this.setOptionsMode}
-				setPubData={this.setPubData}
+				setOptionsMode={onSetOptionsMode}
+				setPubData={onSetPubData}
 			/>
 		);
 	}
@@ -284,16 +324,19 @@ class PubPresentational extends React.Component {
 			activeCollaborators,
 			activeDiscussionChannel,
 			collabStatus,
+			discussionHandlers,
 			editorChangeObject,
 			locationData,
 			loginData,
+			onSetOptionsMode,
+			onSetPubData,
 			pubData,
 			threads,
 		} = this.props;
 		const sectionId = locationData.params.sectionId || '';
 		const isMobile = checkIfMobile();
 		return (
-			<div id="pub-container" ref={this.pageRef}>
+			<div id="pub-container">
 				<PageWrapper
 					loginData={this.props.loginData}
 					communityData={this.props.communityData}
@@ -303,10 +346,10 @@ class PubPresentational extends React.Component {
 						pubData={pubData}
 						communityData={this.props.communityData}
 						locationData={this.props.locationData}
-						setOptionsMode={this.setOptionsMode}
-						setPubData={this.setPubData}
+						setOptionsMode={onSetOptionsMode}
+						setPubData={onSetPubData}
 						activeDiscussionChannel={activeDiscussionChannel}
-						setDiscussionChannel={this.setDiscussionChannel}
+						setDiscussionChannel={discussionHandlers.setDiscussionChannel}
 					/>
 
 					<div>
@@ -315,9 +358,8 @@ class PubPresentational extends React.Component {
 								pubData={pubData}
 								loginData={loginData}
 								editorChangeObject={editorChangeObject}
-								setOptionsMode={this.setOptionsMode}
+								setOptionsMode={onSetOptionsMode}
 								bottomCutoffId="discussions"
-								onRef={this.handleMenuWrapperRef}
 								collabStatus={collabStatus}
 								activeCollaborators={activeCollaborators}
 								threads={threads}

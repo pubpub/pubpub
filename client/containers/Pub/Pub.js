@@ -4,8 +4,12 @@ import PropTypes from 'prop-types';
 /* conflicting dependencies. https://github.com/firebase/firebase-js-sdk/issues/752 */
 /* eslint-disable-next-line import/no-extraneous-dependencies */
 import firebase from '@firebase/app';
-import { dispatchEmptyTransaction, marksAtSelection } from '@pubpub/editor';
+import { dispatchEmptyTransaction, docIsEmpty, marksAtSelection } from '@pubpub/editor';
 import { apiFetch, hydrateWrapper, getFirebaseConfig } from 'utilities';
+
+import PubCollabManager from './PubCollabManager';
+import PubDiscussionsManager from './PubDiscussionsMananger';
+import PubPresentational from './PubPresentational';
 
 /* eslint-disable-next-line import/no-extraneous-dependencies */
 require('@firebase/auth');
@@ -31,11 +35,9 @@ class Pub extends Component {
 					? [{ id: '', order: 0, title: 'Introduction' }]
 					: undefined,
 			},
-			locationData: this.props.locationData,
 			optionsMode: undefined,
 			scrolledToPermanent: false,
 			// sectionsData: [{ id: '', order: 0, title: 'Introduction' }],
-			menuWrapperRefNode: undefined,
 			editorChangeObject: {},
 			// TODO(ian): I'm pretty sure this state is being propagated into
 			// the UI, but indirectly by way of a setState callback that
@@ -46,22 +48,15 @@ class Pub extends Component {
 			linkPopupIsOpen: false,
 		};
 		this.firebaseRef = null;
-		this.pageRef = React.createRef();
-		this.sideMarginRef = React.createRef();
 		this.setActiveThread = this.setActiveThread.bind(this);
 		this.setOptionsMode = this.setOptionsMode.bind(this);
 		this.setPubData = this.setPubData.bind(this);
-		this.setDiscussionChannel = this.setDiscussionChannel.bind(this);
-		this.getAbsolutePosition = this.getAbsolutePosition.bind(this);
 		this.handleSectionsChange = this.handleSectionsChange.bind(this);
-		this.handleMenuWrapperRef = this.handleMenuWrapperRef.bind(this);
 		this.handleNewHighlightDiscussion = this.handleNewHighlightDiscussion.bind(this);
 		this.handleStatusChange = this.handleStatusChange.bind(this);
 		this.handleClientChange = this.handleClientChange.bind(this);
 		this.handlePutLabels = this.handlePutLabels.bind(this);
 		this.closeThreadOverlay = this.closeThreadOverlay.bind(this);
-		this.handlePostDiscussion = this.handlePostDiscussion.bind(this);
-		this.handlePutDiscussion = this.handlePutDiscussion.bind(this);
 		this.handleEditorChange = this.handleEditorChange.bind(this);
 		this.handleEditorSingleClick = this.handleEditorSingleClick.bind(this);
 		this.handleQuotePermalink = this.handleQuotePermalink.bind(this);
@@ -113,18 +108,6 @@ class Pub extends Component {
 		if (typeof document !== 'undefined') {
 			document.title = this.state.pubData.title;
 		}
-	}
-
-	getAbsolutePosition(top, left, placeInSideMargin) {
-		const sideContainer = this.sideMarginRef.current;
-
-		/* The editorObject does not refresh on scroll - so we need to calculate the */
-		/* y offset as 'the location of the highlight and the moment of update */
-		return {
-			top: top + this.state.editorChangeObject.currentScroll,
-			left: placeInSideMargin ? sideContainer.getBoundingClientRect().left : left,
-			width: placeInSideMargin ? sideContainer.getBoundingClientRect().width : undefined,
-		};
 	}
 
 	getActiveContent() {
@@ -186,14 +169,6 @@ class Pub extends Component {
 			...this.state.pubData,
 			sectionsData: newSectionsData,
 		});
-	}
-
-	handleMenuWrapperRef(ref) {
-		if (!this.state.menuWrapperRefNode) {
-			this.setState({
-				menuWrapperRefNode: ref,
-			});
-		}
 	}
 
 	handlePutLabels(newLabels) {
@@ -262,6 +237,68 @@ class Pub extends Component {
 				linkPopupIsOpen: linkPopupIsOpen,
 			};
 		});
+	}
+
+	render() {
+		const isEmptyDoc =
+			this.state.editorChangeObject.view &&
+			docIsEmpty(this.state.editorChangeObject.view.state.doc);
+		const presentationalHandlers = {
+			onEditorChange: this.handleEditorChange,
+			onSetOptionsMode: this.setOptionsMode,
+			onSetPubData: this.setPubData,
+			onSingleClick: this.handleEditorSingleClick,
+		};
+		return (
+			<PubCollabManager>
+				{({
+					handleCollabStatusChange,
+					handleClientChange,
+					collabStatus,
+					activeCollaborators,
+					isCollabLoading,
+				}) => (
+					<PubDiscussionsManager>
+						{({
+							activeDiscussionChannel,
+							activeThreadNumber,
+							discussionHandlers,
+							discussionNodeOptionsPartial,
+							initialDiscussionContent,
+							locationData,
+							threads,
+						}) => (
+							<PubPresentational
+								{...presentationalHandlers}
+								activeContent={this.getActiveContent()}
+								activeCollaborators={activeCollaborators}
+								activeDiscussionChannel={activeDiscussionChannel}
+								activeThreadNumber={activeThreadNumber}
+								collabStatus={collabStatus}
+								communityData={this.props.communityData}
+								discussionHandlers={discussionHandlers}
+								discussionNodeOptions={{
+									...discussionNodeOptionsPartial,
+									getLocationData: () => this.props.locationData,
+									getLoginData: () => this.props.loginData,
+								}}
+								editorChangeObject={this.state.editorChangeObject}
+								initialDiscussionContent={initialDiscussionContent}
+								isCollabLoading={isCollabLoading}
+								isEmptyDoc={isEmptyDoc}
+								linkPopupIsOpen={this.state.linkPopupIsOpen}
+								loginData={this.props.loginData}
+								locationData={locationData}
+								onStatusChange={handleCollabStatusChange}
+								onClientChange={handleClientChange}
+								optionsMode={this.state.optionsMode}
+								threads={threads}
+							/>
+						)}
+					</PubDiscussionsManager>
+				)}
+			</PubCollabManager>
+		);
 	}
 }
 
