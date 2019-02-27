@@ -23,17 +23,19 @@ import sharedPropTypes from './propTypes';
 const handlerTypes = {
 	onEditorChange: PropTypes.func.isRequired,
 	onClientChange: PropTypes.func.isRequired,
+	onPutLabels: PropTypes.func.isRequired,
 	onSetOptionsMode: PropTypes.func.isRequired,
 	onSingleClick: PropTypes.func.isRequired,
 	onSetPubData: PropTypes.func.isRequired,
 	onStatusChange: PropTypes.func.isRequired,
+	onOpenLinkMenu: PropTypes.func.isRequired,
 };
 
 const propTypes = {
 	...handlerTypes,
 	activeCollaborators: PropTypes.array.isRequired,
-	activeContent: PropTypes.shape({}).isRequired,
-	activeThreadNumber: PropTypes.number.isRequired,
+	activeContent: PropTypes.shape({}),
+	activeThreadNumber: PropTypes.number,
 	collabStatus: PropTypes.string.isRequired,
 	discussionHandlers: PropTypes.shape({
 		onNewHighlightDiscussion: PropTypes.func.isRequired,
@@ -41,6 +43,7 @@ const propTypes = {
 		onPutDiscussion: PropTypes.func.isRequired,
 		onSetActiveThread: PropTypes.func.isRequired,
 		onSetDiscussionChannel: PropTypes.func.isRequired,
+		onQuotePermalink: PropTypes.func.isRequired,
 	}).isRequired,
 	discussionNodeOptions: PropTypes.shape({
 		getThreads: PropTypes.func.isRequired,
@@ -53,18 +56,25 @@ const propTypes = {
 		getHandleQuotePermalink: PropTypes.func.isRequired,
 	}).isRequired,
 	editorChangeObject: PropTypes.shape({
-		view: PropTypes.shape({}).isRequired,
+		view: PropTypes.shape({}),
 	}).isRequired,
 	highlights: PropTypes.arrayOf(PropTypes.shape({}.isRequired)).isRequired,
 	isEmptyDoc: PropTypes.bool.isRequired,
 	isCollabLoading: PropTypes.bool.isRequired,
-	initialDiscussionContent: PropTypes.shape({}).isRequired,
+	initialDiscussionContent: PropTypes.shape({}),
 	linkPopupIsOpen: PropTypes.bool.isRequired,
 	loginData: sharedPropTypes.loginData.isRequired,
-	optionsMode: PropTypes.string.isRequired,
+	optionsMode: PropTypes.string,
 	pubData: sharedPropTypes.pubData.isRequired,
 	sectionId: PropTypes.string.isRequired,
-	threads: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
+	threads: PropTypes.arrayOf(PropTypes.array.isRequired).isRequired,
+};
+
+const defaultProps = {
+	activeContent: null,
+	activeThreadNumber: null,
+	initialDiscussionContent: null,
+	optionsMode: null,
 };
 
 export default class PubPresentational extends React.Component {
@@ -96,7 +106,6 @@ export default class PubPresentational extends React.Component {
 			discussionNodeOptions,
 			highlights,
 			editorChangeObject,
-			getAbsolutePosition,
 			isCollabLoading,
 			isEmptyDoc,
 			initialDiscussionContent,
@@ -210,12 +219,13 @@ export default class PubPresentational extends React.Component {
 									loginData={loginData}
 									onPostDiscussion={discussionHandlers.onPostDiscussion}
 									onPutDiscussion={discussionHandlers.onPutDiscussion}
+									onQuotePermalink={discussionHandlers.onQuotePermalink}
 									getHighlightContent={discussionHandlers.onGetHighlightContent}
 									activeThread={activeThreadNumber}
 									setActiveThread={discussionHandlers.onSetActiveThread}
 									activeDiscussionChannel={activeDiscussionChannel}
 									initialContent={initialDiscussionContent}
-									getAbsolutePosition={getAbsolutePosition}
+									getAbsolutePosition={this.getAbsolutePosition}
 								/>
 							)}
 						</div>
@@ -225,10 +235,17 @@ export default class PubPresentational extends React.Component {
 		);
 	}
 
-	renderPubDiscussions(threads, activeDiscussionChannel) {
-		const { locationData, discussionHandlers, pubData } = this.props;
+	renderPubDiscussions() {
 		const {
+			activeDiscussionChannel,
+			discussionHandlers,
+			locationData,
+			loginData,
+			pubData,
+			threads,
 			onPutLabels,
+		} = this.props;
+		const {
 			onPostDiscussion,
 			onPutDiscussion,
 			onGetHighlightContent,
@@ -243,7 +260,7 @@ export default class PubPresentational extends React.Component {
 							<div className="col-12">
 								<DiscussionList
 									pubData={pubData}
-									loginData={this.props.loginData}
+									loginData={loginData}
 									threads={threads}
 									locationData={locationData}
 									onLabelsSave={onPutLabels}
@@ -262,14 +279,16 @@ export default class PubPresentational extends React.Component {
 		);
 	}
 
-	renderOverlays(isMobile, sectionId) {
+	renderOverlays() {
 		const {
 			pubData,
 			discussionHandlers,
 			editorChangeObject,
 			linkPopupIsOpen,
 			onOpenLinkMenu,
+			sectionId,
 		} = this.props;
+		const isMobile = checkIfMobile();
 		return (
 			<React.Fragment>
 				{!linkPopupIsOpen && !isMobile && (
@@ -326,15 +345,12 @@ export default class PubPresentational extends React.Component {
 			collabStatus,
 			discussionHandlers,
 			editorChangeObject,
-			locationData,
 			loginData,
 			onSetOptionsMode,
 			onSetPubData,
 			pubData,
 			threads,
 		} = this.props;
-		const sectionId = locationData.params.sectionId || '';
-		const isMobile = checkIfMobile();
 		return (
 			<div id="pub-container">
 				<PageWrapper
@@ -349,7 +365,7 @@ export default class PubPresentational extends React.Component {
 						setOptionsMode={onSetOptionsMode}
 						setPubData={onSetPubData}
 						activeDiscussionChannel={activeDiscussionChannel}
-						setDiscussionChannel={discussionHandlers.setDiscussionChannel}
+						setDiscussionChannel={discussionHandlers.onSetDiscussionChannel}
 					/>
 
 					<div>
@@ -368,8 +384,8 @@ export default class PubPresentational extends React.Component {
 
 						{this.renderPubMain()}
 					</div>
-					{this.renderPubDiscussions(pubData, activeDiscussionChannel)}
-					{this.renderOverlays(pubData, isMobile, sectionId)}
+					{this.renderPubDiscussions()}
+					{this.renderOverlays()}
 					{this.renderPubOptions()}
 				</PageWrapper>
 			</div>
@@ -378,3 +394,4 @@ export default class PubPresentational extends React.Component {
 }
 
 PubPresentational.propTypes = propTypes;
+PubPresentational.defaultProps = defaultProps;

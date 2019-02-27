@@ -8,10 +8,10 @@ export default {
 	locationData: PropTypes.shape({}),
 	pubData: PropTypes.shape({
 		editorKey: PropTypes.string.isRequired,
-		isDraft: PropTypes.bool.isRequired,
-		isDraftEditor: PropTypes.bool.isRequired,
-		isEditor: PropTypes.bool.isRequired,
-		isManager: PropTypes.bool.isRequired,
-		slug: PropTypes.bool.isRequired,
+		isDraft: PropTypes.bool,
+		isDraftEditor: PropTypes.bool,
+		isEditor: PropTypes.bool,
+		isManager: PropTypes.bool,
+		slug: PropTypes.string.isRequired,
 	}),
 };

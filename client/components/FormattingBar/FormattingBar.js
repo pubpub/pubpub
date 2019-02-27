@@ -369,7 +369,11 @@ class FormattingBar extends Component {
 					onClose={this.closeMediaGallery}
 					maxWidth={750}
 				>
-					<FormattingBarMedia onInsert={this.handleInsert} isSmall={this.props.isSmall} />
+					<FormattingBarMedia
+						onInsert={this.handleInsert}
+						isSmall={this.props.isSmall}
+						editorChangeObject={this.props.editorChangeObject}
+					/>
 				</Overlay>
 			</div>
 		);

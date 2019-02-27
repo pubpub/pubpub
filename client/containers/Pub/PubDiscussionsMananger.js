@@ -7,10 +7,12 @@ import { apiFetch, generateHash } from 'utilities';
 
 import sharedPropTypes from './propTypes';
 import { getThreads, getActiveDiscussionChannel } from './threads';
+import { getPubHighlightContent } from './highlights';
 
 const propTypes = {
 	children: PropTypes.func.isRequired,
 	communityData: sharedPropTypes.communityData.isRequired,
+	editorChangeObject: PropTypes.shape({}).isRequired,
 	initialLocationData: sharedPropTypes.locationData.isRequired,
 	loginData: sharedPropTypes.loginData.isRequired,
 	pubData: sharedPropTypes.pubData.isRequired,
@@ -44,6 +46,12 @@ export default class PubDiscussionsManager extends React.Component {
 			getOnPutDiscussion: () => {
 				return this.handlePutDiscussion;
 			},
+			getHandleQuotePermalink: () => {
+				return this.handleQuotePermalink;
+			},
+			getGetHighlightContent: () => {
+				return this.handleGetHighlightContent;
+			},
 		};
 	}
 
@@ -54,6 +62,8 @@ export default class PubDiscussionsManager extends React.Component {
 			onPutDiscussion: this.handlePutDiscussion,
 			onSetActiveThread: this.handleSetActiveThread,
 			onSetDiscussionChannel: this.handleSetDiscussionChannel,
+			onQuotePermalink: this.handleQuotePermalink,
+			onGetHighlightContent: this.handleGetHighlightContent,
 		};
 	}
 
@@ -63,6 +73,8 @@ export default class PubDiscussionsManager extends React.Component {
 		this.handlePostDiscussion = this.handlePostDiscussion.bind(this);
 		this.handlePutDiscussion = this.handlePutDiscussion.bind(this);
 		this.handleNewHighlightDiscussion = this.handleNewHighlightDiscussion.bind(this);
+		this.handleQuotePermalink = this.handleQuotePermalink.bind(this);
+		this.handleGetHighlightContent = this.handleGetHighlightContent.bind(this);
 		// Not technically a handler, but we do weird scope things with this
 		this.getThreads = this.getThreads.bind(this);
 	}
@@ -188,6 +200,23 @@ export default class PubDiscussionsManager extends React.Component {
 				);
 			},
 		);
+	}
+
+	handleQuotePermalink(quoteObject) {
+		const hasChapters = !!quoteObject.section;
+		const chapterString = hasChapters ? `/content/${quoteObject.section}` : '';
+		const toFromString = `?to=${quoteObject.to}&from=${quoteObject.from}`;
+		const versionString = quoteObject.version ? `&version=${quoteObject.version}` : '';
+		const permalinkPath = `/pub/${
+			this.props.pubData.slug
+		}${chapterString}${toFromString}${versionString}`;
+		window.open(permalinkPath);
+	}
+
+	handleGetHighlightContent(from, to) {
+		const { pubData, editorChangeObject } = this.props;
+		const { locationData } = this.state;
+		return getPubHighlightContent(pubData, locationData, editorChangeObject, from, to);
 	}
 
 	render() {

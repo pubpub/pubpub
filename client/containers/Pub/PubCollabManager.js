@@ -7,7 +7,7 @@ import sharedPropTypes from './propTypes';
 const propTypes = {
 	children: PropTypes.func.isRequired,
 	editorChangeObject: PropTypes.shape({
-		isCollabLoaded: PropTypes.bool.isRequired,
+		isCollabLoaded: PropTypes.bool,
 	}).isRequired,
 	loginData: sharedPropTypes.loginData.isRequired,
 	pubData: sharedPropTypes.pubData.isRequired,
@@ -80,7 +80,7 @@ export default class PubCollabManager extends React.Component {
 		return this.props.children({
 			activeCollaborators: activeCollaborators,
 			collabStatus: collabStatus,
-			handleCollabStatusChange: this.handleStatusChange,
+			handleCollabStatusChange: this.handleCollabStatusChange,
 			handleClientChange: this.handleClientChange,
 			isCollabLoading: pubData.isDraft && !editorChangeObject.isCollabLoaded,
 		});

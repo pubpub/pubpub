@@ -10,6 +10,7 @@ import { apiFetch, hydrateWrapper, getFirebaseConfig } from 'utilities';
 import PubCollabManager from './PubCollabManager';
 import PubDiscussionsManager from './PubDiscussionsMananger';
 import PubPresentational from './PubPresentational';
+import { getHighlights, hasPermanentHighlight } from './highlights';
 
 /* eslint-disable-next-line import/no-extraneous-dependencies */
 require('@firebase/auth');
@@ -48,21 +49,14 @@ class Pub extends Component {
 			linkPopupIsOpen: false,
 		};
 		this.firebaseRef = null;
-		this.setActiveThread = this.setActiveThread.bind(this);
 		this.setOptionsMode = this.setOptionsMode.bind(this);
 		this.setPubData = this.setPubData.bind(this);
 		this.handleSectionsChange = this.handleSectionsChange.bind(this);
-		this.handleNewHighlightDiscussion = this.handleNewHighlightDiscussion.bind(this);
-		this.handleStatusChange = this.handleStatusChange.bind(this);
-		this.handleClientChange = this.handleClientChange.bind(this);
 		this.handlePutLabels = this.handlePutLabels.bind(this);
-		this.closeThreadOverlay = this.closeThreadOverlay.bind(this);
 		this.handleEditorChange = this.handleEditorChange.bind(this);
 		this.handleEditorSingleClick = this.handleEditorSingleClick.bind(this);
-		this.handleQuotePermalink = this.handleQuotePermalink.bind(this);
 		this.calculateLinkPopupState = this.calculateLinkPopupState.bind(this);
 		this.handleKeyPressEvents = this.handleKeyPressEvents.bind(this);
-		this.getThreads = this.getThreads.bind(this);
 	}
 
 	componentDidMount() {
@@ -87,6 +81,25 @@ class Pub extends Component {
 					this.firebaseRef.child('/sections').on('value', this.handleSectionsChange);
 				});
 			window.addEventListener('keydown', this.handleKeyPressEvents);
+		}
+	}
+
+	componentDidUpdate() {
+		if (
+			hasPermanentHighlight(
+				this.state.pubData,
+				this.state.editorChangeObject,
+				this.props.locationData.query,
+			) &&
+			!this.state.scrolledToPermanent
+		) {
+			setTimeout(() => {
+				const thing = document.getElementsByClassName('permanent')[0];
+				if (thing) {
+					window.scrollTo(0, thing.getBoundingClientRect().top - 135);
+					this.setState({ scrolledToPermanent: true });
+				}
+			}, 100);
 		}
 	}
 
@@ -240,9 +253,10 @@ class Pub extends Component {
 	}
 
 	render() {
-		const isEmptyDoc =
+		const isEmptyDoc = !!(
 			this.state.editorChangeObject.view &&
-			docIsEmpty(this.state.editorChangeObject.view.state.doc);
+			docIsEmpty(this.state.editorChangeObject.view.state.doc)
+		);
 		const presentationalHandlers = {
 			onEditorChange: this.handleEditorChange,
 			onSetOptionsMode: this.setOptionsMode,
@@ -250,7 +264,11 @@ class Pub extends Component {
 			onSingleClick: this.handleEditorSingleClick,
 		};
 		return (
-			<PubCollabManager>
+			<PubCollabManager
+				editorChangeObject={this.state.editorChangeObject}
+				loginData={this.props.loginData}
+				pubData={this.state.pubData}
+			>
 				{({
 					handleCollabStatusChange,
 					handleClientChange,
@@ -258,7 +276,13 @@ class Pub extends Component {
 					activeCollaborators,
 					isCollabLoading,
 				}) => (
-					<PubDiscussionsManager>
+					<PubDiscussionsManager
+						communityData={this.props.communityData}
+						editorChangeObject={this.state.editorChangeObject}
+						initialLocationData={this.props.locationData}
+						loginData={this.props.loginData}
+						pubData={this.state.pubData}
+					>
 						{({
 							activeDiscussionChannel,
 							activeThreadNumber,
@@ -281,18 +305,31 @@ class Pub extends Component {
 									...discussionNodeOptionsPartial,
 									getLocationData: () => this.props.locationData,
 									getLoginData: () => this.props.loginData,
+									getPubData: () => this.state.pubData,
 								}}
 								editorChangeObject={this.state.editorChangeObject}
+								highlights={getHighlights(
+									this.state.pubData,
+									locationData,
+									activeDiscussionChannel,
+									this.state.editorChangeObject,
+								)}
 								initialDiscussionContent={initialDiscussionContent}
 								isCollabLoading={isCollabLoading}
 								isEmptyDoc={isEmptyDoc}
 								linkPopupIsOpen={this.state.linkPopupIsOpen}
-								loginData={this.props.loginData}
 								locationData={locationData}
-								onStatusChange={handleCollabStatusChange}
+								loginData={this.props.loginData}
 								onClientChange={handleClientChange}
+								onOpenLinkMenu={() => {
+									this.setState({ linkPopupIsOpen: true });
+								}}
+								onPutLabels={this.handlePutLabels}
+								onStatusChange={handleCollabStatusChange}
 								optionsMode={this.state.optionsMode}
+								pubData={this.state.pubData}
 								threads={threads}
+								sectionId={locationData.params.sectionId || ''}
 							/>
 						)}
 					</PubDiscussionsManager>

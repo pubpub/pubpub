@@ -14,6 +14,7 @@ const propTypes = {
 	loginData: PropTypes.object.isRequired,
 	onPostDiscussion: PropTypes.func.isRequired,
 	onPutDiscussion: PropTypes.func.isRequired,
+	onQuotePermalink: PropTypes.func.isRequired,
 	getHighlightContent: PropTypes.func.isRequired,
 	setActiveThread: PropTypes.func,
 	activeThread: PropTypes.string,
@@ -305,7 +306,7 @@ class PubSideDiscussions extends Component {
 								onPostDiscussion={this.props.onPostDiscussion}
 								onPutDiscussion={this.props.onPutDiscussion}
 								getHighlightContent={this.props.getHighlightContent}
-								handleQuotePermalink={this.handleQuotePermalink}
+								handleQuotePermalink={this.props.onQuotePermalink}
 								setActiveThread={this.props.setActiveThread}
 								activeThread={this.props.activeThread}
 							/>
