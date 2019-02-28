@@ -7,13 +7,8 @@
 			font-weight: 400;
 		}
 	}
-	.section-wrapper {
+	.settings-section-component {
 		margin-top: 3em;
-	}
-	.title {
-		font-weight: bold;
-		font-size: 16px;
-		padding-bottom: 1em;
 	}
 	// .bp3-form-content {
 	// 	max-width: 500px;
@@ -21,14 +16,15 @@
 	.html-input {
 		textarea {
 			font-family: 'Courier', monospace;
-			pre: nowrap;	
+			pre: nowrap;
 		}
 	}
 	// .bp3-callout {
 	// 	margin-top: 2em;
 	// }
 	.editor-wrapper {
-		box-shadow: 0 0 0 0 rgba(54, 54, 54, 0), 0 0 0 0 rgba(54, 54, 54, 0), inset 0 0 0 1px rgba(16, 22, 26, 0.15), inset 0 1px 1px rgba(16, 22, 26, 0.2);
+		box-shadow: 0 0 0 0 rgba(54, 54, 54, 0), 0 0 0 0 rgba(54, 54, 54, 0),
+			inset 0 0 0 1px rgba(16, 22, 26, 0.15), inset 0 1px 1px rgba(16, 22, 26, 0.2);
 		border-radius: 2px;
 		padding: 10px;
 	}
@@ -43,7 +39,7 @@
 	}
 	.edit-nav {
 		border-bottom: 1px solid #979797;
-		height: 41px; 
+		height: 41px;
 		overflow: hidden;
 		margin: 20px 0px 40px;
 		.bp3-tabs {
@@ -51,29 +47,8 @@
 			overflow-x: scroll;
 			padding-bottom: 50px;
 		}
-		.bp3-tab { 
+		.bp3-tab {
 			text-decoration: none;
-		}
-	}
-}
-
-@media only screen and (min-width: 750px) {
-	@supports (display: grid) {
-		.dashboard-page-component {
-			.section-wrapper {
-				display: grid;
-				grid-template-columns: 100px 1fr;
-				grid-template-areas: "title content";
-				grid-column-gap: 4%;
-			}
-			.title {
-				grid-area: title;
-			}
-			.content {
-				grid-area: content;
-				min-width: 0px;
-			}
-			
 		}
 	}
 }

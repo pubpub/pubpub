@@ -1,5 +1,8 @@
+import requireContext from 'require-context.macro';
+
 import { configure } from '@storybook/react';
 import { setOptions } from '@storybook/addon-options';
+import { configureViewport } from '@storybook/addon-viewport';
 import { FocusStyleManager } from '@blueprintjs/core';
 
 FocusStyleManager.onlyShowFocusOnTabs();
@@ -8,7 +11,7 @@ FocusStyleManager.onlyShowFocusOnTabs();
 require('baseStyle.scss');
 
 /* Require stories */
-const req = require.context('../stories/', true, /Stories\.js$/);
+const req = requireContext('../stories/', true, /Stories\.js$/);
 function loadStories() {
 	req.keys().forEach(req);
 }

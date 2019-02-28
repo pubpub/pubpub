@@ -7,7 +7,7 @@ import PubOptionsCite from 'components/PubOptionsCite/PubOptionsCite';
 import PubOptionsDoi from 'components/PubOptionsDoi/PubOptionsDoi';
 import PubOptionsDetails from 'components/PubOptionsDetails/PubOptionsDetails';
 import PubOptionsDelete from 'components/PubOptionsDelete/PubOptionsDelete';
-import PubOptionsExport from 'components/PubOptionsExport/PubOptionsExport';
+import PubOptionsDownload from 'components/PubOptionsDownload/PubOptionsDownload';
 // import PubOptionsImport from 'components/PubOptionsImport/PubOptionsImport';
 import PubOptionsTags from 'components/PubOptionsTags/PubOptionsTags';
 import PubOptionsSections from 'components/PubOptionsSections/PubOptionsSections';
@@ -17,7 +17,6 @@ import PubOptionsSaveVersion from 'components/PubOptionsSaveVersion/PubOptionsSa
 import PubOptionsVersions from 'components/PubOptionsVersions/PubOptionsVersions';
 import PubOptionsReview from 'components/PubOptionsReview/PubOptionsReview';
 import PubOptionsDiscussions from 'components/PubOptionsDiscussions/PubOptionsDiscussions';
-
 
 require('./pubOptions.scss');
 
@@ -39,26 +38,21 @@ const defaultProps = {
 	optionsMode: undefined,
 };
 
-const PubOptions = (props)=> {
+const PubOptions = (props) => {
 	const optionsMode = props.optionsMode;
 	// TODO: Hide based on isManager, and other metrics
 
-	let adminModes = [
-		'details',
-		'tags',
-		'sharing',
-		'sections',
-		'review',
-		'DOI',
-		'delete'
-	];
-	if (!props.pubData.isDraft || (props.pubData.sectionsData && props.pubData.sectionsData.length === 1)) {
-		adminModes = adminModes.filter((item)=> {
+	let adminModes = ['details', 'tags', 'sharing', 'sections', 'review', 'DOI', 'delete'];
+	if (
+		!props.pubData.isDraft ||
+		(props.pubData.sectionsData && props.pubData.sectionsData.length === 1)
+	) {
+		adminModes = adminModes.filter((item) => {
 			return item !== 'sections';
 		});
 	}
 	if (!props.loginData.isAdmin) {
-		adminModes = adminModes.filter((item)=> {
+		adminModes = adminModes.filter((item) => {
 			return item !== 'tags';
 		});
 	}
@@ -69,9 +63,9 @@ const PubOptions = (props)=> {
 		'cite',
 		'discussions',
 		'social',
-		'export',
+		'download',
 		'analytics',
-	].filter((item)=> {
+	].filter((item) => {
 		return item !== 'discussions' || props.pubData.publicDiscussions;
 	});
 
@@ -86,47 +80,60 @@ const PubOptions = (props)=> {
 		setPubData: props.setPubData,
 	};
 
-	const leftColumnStyle = optionsMode === 'saveVersion'
-		? { display: 'none' }
-		: {};
+	const leftColumnStyle = optionsMode === 'saveVersion' ? { display: 'none' } : {};
 
 	return (
 		<Overlay
 			isOpen={!!optionsMode}
-			onClose={()=> { props.setOptionsMode(undefined); }}
+			onClose={() => {
+				props.setOptionsMode(undefined);
+			}}
 			maxWidth={928}
 		>
 			<div className="pub-options-component">
 				{/* Left Navigation Buttons */}
 				<div className="left-column" style={leftColumnStyle}>
 					<ul className="bp3-menu">
+						{props.pubData.isManager && (
+							<li className="bp3-menu-header">
+								<h6>Admin</h6>
+							</li>
+						)}
 						{props.pubData.isManager &&
-							<li className="bp3-menu-header"><h6>Admin</h6></li>
-						}
-						{props.pubData.isManager && adminModes.map((mode)=> {
+							adminModes.map((mode) => {
+								return (
+									<li key={mode}>
+										<button
+											type="button"
+											onClick={() => {
+												props.setOptionsMode(mode);
+											}}
+											className={`bp3-menu-item ${
+												optionsMode === mode ? 'bp3-active' : ''
+											}`}
+											tabIndex="0"
+										>
+											{mode}
+										</button>
+									</li>
+								);
+							})}
+						{props.pubData.isManager && (
+							<li className="bp3-menu-header">
+								<h6>Public</h6>
+							</li>
+						)}
+						{modes.map((mode) => {
 							return (
 								<li key={mode}>
 									<button
 										type="button"
-										onClick={()=> { props.setOptionsMode(mode); }}
-										className={`bp3-menu-item ${optionsMode === mode ? 'bp3-active' : ''}`}
-										tabIndex="0"
-									>
-										{mode}
-									</button>
-								</li>
-							);
-						})}
-						{props.pubData.isManager &&
-							<li className="bp3-menu-header"><h6>Public</h6></li>
-						}
-						{modes.map((mode)=> {
-							return (
-								<li key={mode}>
-									<button
-										type="button"
-										onClick={()=> { props.setOptionsMode(mode); }}
-										className={`bp3-menu-item ${optionsMode === mode ? 'bp3-active' : ''}`}
+										onClick={() => {
+											props.setOptionsMode(mode);
+										}}
+										className={`bp3-menu-item ${
+											optionsMode === mode ? 'bp3-active' : ''
+										}`}
 										tabIndex="0"
 									>
 										{mode}
@@ -139,54 +146,48 @@ const PubOptions = (props)=> {
 
 				{/* Right Content Panel */}
 				<div className="right-column">
-					{optionsMode === 'analytics' &&
+					{optionsMode === 'analytics' && (
 						<PubOptionsAnalytics key="analytics" {...defaultChildProps} />
-					}
-					{optionsMode === 'attribution' &&
+					)}
+					{optionsMode === 'attribution' && (
 						<PubOptionsAttribution key="attribution" {...defaultChildProps} />
-					}
-					{optionsMode === 'cite' &&
-						<PubOptionsCite key="cite" {...defaultChildProps} />
-					}
-					{optionsMode === 'DOI' &&
-						<PubOptionsDoi key="doi" {...defaultChildProps} />
-					}
-					{optionsMode === 'details' &&
+					)}
+					{optionsMode === 'cite' && <PubOptionsCite key="cite" {...defaultChildProps} />}
+					{optionsMode === 'DOI' && <PubOptionsDoi key="doi" {...defaultChildProps} />}
+					{optionsMode === 'details' && (
 						<PubOptionsDetails key="details" {...defaultChildProps} />
-					}
-					{optionsMode === 'delete' &&
+					)}
+					{optionsMode === 'download' && (
+						<PubOptionsDownload key="download" {...defaultChildProps} />
+					)}
+					{optionsMode === 'delete' && (
 						<PubOptionsDelete key="delete" {...defaultChildProps} />
-					}
-					{optionsMode === 'export' &&
-						<PubOptionsExport key="export" {...defaultChildProps} />
-					}
+					)}
 					{/* optionsMode === 'import' &&
 						<PubOptionsImport key="import" {...defaultChildProps} />
 					*/}
-					{optionsMode === 'tags' &&
-						<PubOptionsTags key="tags" {...defaultChildProps} />
-					}
-					{optionsMode === 'sections' &&
+					{optionsMode === 'tags' && <PubOptionsTags key="tags" {...defaultChildProps} />}
+					{optionsMode === 'sections' && (
 						<PubOptionsSections key="sections" {...defaultChildProps} />
-					}
-					{optionsMode === 'sharing' &&
+					)}
+					{optionsMode === 'sharing' && (
 						<PubOptionsSharing key="sharing" {...defaultChildProps} />
-					}
-					{optionsMode === 'social' &&
+					)}
+					{optionsMode === 'social' && (
 						<PubOptionsSocial key="social" {...defaultChildProps} />
-					}
-					{optionsMode === 'saveVersion' &&
+					)}
+					{optionsMode === 'saveVersion' && (
 						<PubOptionsSaveVersion key="saveVersion" {...defaultChildProps} />
-					}
-					{optionsMode === 'versions' &&
+					)}
+					{optionsMode === 'versions' && (
 						<PubOptionsVersions key="versions" {...defaultChildProps} />
-					}
-					{optionsMode === 'review' &&
+					)}
+					{optionsMode === 'review' && (
 						<PubOptionsReview key="review" {...defaultChildProps} />
-					}
-					{optionsMode === 'discussions' &&
+					)}
+					{optionsMode === 'discussions' && (
 						<PubOptionsDiscussions key="discussions" {...defaultChildProps} />
-					}
+					)}
 				</div>
 			</div>
 		</Overlay>

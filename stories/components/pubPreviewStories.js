@@ -1,16 +1,15 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import PubPreview from 'components/PubPreview/PubPreview';
-import { collectionData } from '../data';
+import { collectionData, pubData } from '../data';
 
-
-storiesOf('Components/PubPreview', module)
-.add('default', () => (
+storiesOf('Components/PubPreview', module).add('default', () => (
 	<div className="container">
 		<h1 style={{ margin: '0em 0em 0.5em' }}>Large</h1>
 		<div className="row">
 			<div className="col-12">
 				<PubPreview
+					pubData={pubData}
 					title={collectionData.pubs[0].title}
 					description={collectionData.pubs[0].description}
 					slug={collectionData.pubs[0].slug}
@@ -18,7 +17,9 @@ storiesOf('Components/PubPreview', module)
 					size="large"
 					publicationDate={collectionData.pubs[0].firstPublishedAt}
 					collaborators={collectionData.pubs[0].collaborators}
-					authors={collectionData.pubs[0].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
+					authors={collectionData.pubs[0].collaborators.filter((item) => {
+						return item.Collaborator.isAuthor;
+					})}
 				/>
 			</div>
 		</div>
@@ -26,6 +27,7 @@ storiesOf('Components/PubPreview', module)
 		<div className="row">
 			<div className="col-6">
 				<PubPreview
+					pubData={pubData}
 					title={collectionData.pubs[1].title}
 					description={collectionData.pubs[1].description}
 					slug={collectionData.pubs[1].slug}
@@ -33,11 +35,14 @@ storiesOf('Components/PubPreview', module)
 					size="medium"
 					publicationDate={collectionData.pubs[1].firstPublishedAt}
 					collaborators={collectionData.pubs[1].collaborators}
-					authors={collectionData.pubs[1].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
+					authors={collectionData.pubs[1].collaborators.filter((item) => {
+						return item.Collaborator.isAuthor;
+					})}
 				/>
 			</div>
 			<div className="col-6">
 				<PubPreview
+					pubData={pubData}
 					title={collectionData.pubs[2].title}
 					description={collectionData.pubs[2].description}
 					slug={collectionData.pubs[2].slug}
@@ -45,11 +50,14 @@ storiesOf('Components/PubPreview', module)
 					size="medium"
 					publicationDate={collectionData.pubs[2].firstPublishedAt}
 					collaborators={collectionData.pubs[2].collaborators}
-					authors={collectionData.pubs[2].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
+					authors={collectionData.pubs[2].collaborators.filter((item) => {
+						return item.Collaborator.isAuthor;
+					})}
 				/>
 			</div>
 			<div className="col-6">
 				<PubPreview
+					pubData={pubData}
 					title={collectionData.pubs[1].title}
 					description={collectionData.pubs[1].description}
 					slug={collectionData.pubs[1].slug}
@@ -57,12 +65,14 @@ storiesOf('Components/PubPreview', module)
 					size="medium"
 					publicationDate={collectionData.pubs[1].firstPublishedAt}
 					collaborators={collectionData.pubs[1].collaborators}
-					authors={collectionData.pubs[1].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
+					authors={collectionData.pubs[1].collaborators.filter((item) => {
+						return item.Collaborator.isAuthor;
+					})}
 					communityData={{
 						accentColor: '#000000',
 						domain: 'jods.mitpress.mit.edu',
 						id: 'fake-id',
-						smallHeaderLogo: 'https://assets.pubpub.org/b5ftxm4v/51508255582371.png',
+						headerLogo: 'https://assets.pubpub.org/b5ftxm4v/51508255582371.png',
 						subdomain: 'jods',
 						title: 'Journal of Design and Science',
 					}}
@@ -74,6 +84,7 @@ storiesOf('Components/PubPreview', module)
 		<div className="row">
 			<div className="col-12">
 				<PubPreview
+					pubData={pubData}
 					title={collectionData.pubs[0].title}
 					description={collectionData.pubs[0].description}
 					slug={collectionData.pubs[0].slug}
@@ -81,11 +92,14 @@ storiesOf('Components/PubPreview', module)
 					size="small"
 					publicationDate={collectionData.pubs[0].firstPublishedAt}
 					collaborators={collectionData.pubs[0].collaborators}
-					authors={collectionData.pubs[0].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
+					authors={collectionData.pubs[0].collaborators.filter((item) => {
+						return item.Collaborator.isAuthor;
+					})}
 				/>
 			</div>
 			<div className="col-12">
 				<PubPreview
+					pubData={pubData}
 					title={collectionData.pubs[1].title}
 					description={collectionData.pubs[1].description}
 					slug={collectionData.pubs[1].slug}
@@ -93,7 +107,9 @@ storiesOf('Components/PubPreview', module)
 					size="small"
 					publicationDate={collectionData.pubs[1].firstPublishedAt}
 					collaborators={collectionData.pubs[1].collaborators}
-					authors={collectionData.pubs[1].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
+					authors={collectionData.pubs[1].collaborators.filter((item) => {
+						return item.Collaborator.isAuthor;
+					})}
 				/>
 			</div>
 		</div>
@@ -101,15 +117,13 @@ storiesOf('Components/PubPreview', module)
 		<h1 style={{ margin: '2em 0em 0.5em' }}>Placeholder</h1>
 		<div className="row">
 			<div className="col-12">
-				<PubPreview
-					size="large"
-					isPlaceholder={true}
-				/>
+				<PubPreview pubData={pubData} size="large" isPlaceholder={true} />
 			</div>
 		</div>
 		<div className="row">
 			<div className="col-6">
 				<PubPreview
+					pubData={pubData}
 					title="A sample title for placeholder"
 					size="medium"
 					isPlaceholder={true}
@@ -117,6 +131,7 @@ storiesOf('Components/PubPreview', module)
 			</div>
 			<div className="col-6">
 				<PubPreview
+					pubData={pubData}
 					title="A sample title for placeholder"
 					size="medium"
 					isPlaceholder={true}
@@ -126,10 +141,7 @@ storiesOf('Components/PubPreview', module)
 		</div>
 		<div className="row">
 			<div className="col-12">
-				<PubPreview
-					size="small"
-					isPlaceholder={true}
-				/>
+				<PubPreview pubData={pubData} size="small" isPlaceholder={true} />
 			</div>
 		</div>
 
@@ -137,57 +149,72 @@ storiesOf('Components/PubPreview', module)
 		<div className="row">
 			<div className="col-6">
 				<PubPreview
+					pubData={pubData}
 					title="a"
 					description={collectionData.pubs[0].description}
 					slug={collectionData.pubs[0].slug}
 					size="medium"
 					publicationDate={collectionData.pubs[0].firstPublishedAt}
 					collaborators={collectionData.pubs[0].collaborators}
-					authors={collectionData.pubs[0].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
+					authors={collectionData.pubs[0].collaborators.filter((item) => {
+						return item.Collaborator.isAuthor;
+					})}
 				/>
 			</div>
 			<div className="col-6">
 				<PubPreview
+					pubData={pubData}
 					title="b"
 					description={collectionData.pubs[0].description}
 					slug={collectionData.pubs[0].slug}
 					size="medium"
 					publicationDate={collectionData.pubs[0].firstPublishedAt}
 					collaborators={collectionData.pubs[0].collaborators}
-					authors={collectionData.pubs[0].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
+					authors={collectionData.pubs[0].collaborators.filter((item) => {
+						return item.Collaborator.isAuthor;
+					})}
 				/>
 			</div>
 			<div className="col-6">
 				<PubPreview
+					pubData={pubData}
 					title="c"
 					description={collectionData.pubs[0].description}
 					slug={collectionData.pubs[0].slug}
 					size="medium"
 					publicationDate={collectionData.pubs[0].firstPublishedAt}
 					collaborators={collectionData.pubs[0].collaborators}
-					authors={collectionData.pubs[0].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
+					authors={collectionData.pubs[0].collaborators.filter((item) => {
+						return item.Collaborator.isAuthor;
+					})}
 				/>
 			</div>
 			<div className="col-6">
 				<PubPreview
+					pubData={pubData}
 					title="d"
 					description={collectionData.pubs[0].description}
 					slug={collectionData.pubs[0].slug}
 					size="medium"
 					publicationDate={collectionData.pubs[0].firstPublishedAt}
 					collaborators={collectionData.pubs[0].collaborators}
-					authors={collectionData.pubs[0].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
+					authors={collectionData.pubs[0].collaborators.filter((item) => {
+						return item.Collaborator.isAuthor;
+					})}
 				/>
 			</div>
 			<div className="col-6">
 				<PubPreview
+					pubData={pubData}
 					title="e"
 					description={collectionData.pubs[0].description}
 					slug={collectionData.pubs[0].slug}
 					size="medium"
 					publicationDate={collectionData.pubs[0].firstPublishedAt}
 					collaborators={collectionData.pubs[0].collaborators}
-					authors={collectionData.pubs[0].collaborators.filter((item)=> { return item.Collaborator.isAuthor; })}
+					authors={collectionData.pubs[0].collaborators.filter((item) => {
+						return item.Collaborator.isAuthor;
+					})}
 				/>
 			</div>
 		</div>
