@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 /* eslint-disable-next-line import/no-extraneous-dependencies */
 import firebase from '@firebase/app';
 import checkIfMobile from 'is-mobile';
+import { TextSelection } from 'prosemirror-state';
 // import applyDevTools from 'prosemirror-dev-tools';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
 import PubHeader from 'components/PubHeader/PubHeader';
@@ -271,7 +272,11 @@ class Pub extends Component {
 		if (this.state.linkPopupIsOpen && (evt.key === 'Escape' || evt.key === 'Enter')) {
 			evt.preventDefault();
 			this.setState({ linkPopupIsOpen: false }, () => {
-				this.state.editorChangeObject.view.focus();
+				const { view } = this.state.editorChangeObject;
+				view.dispatch(
+					view.state.tr.setSelection(new TextSelection(view.state.selection.$to)),
+				);
+				view.focus();
 			});
 		}
 		if (evt.key === 'k' && evt.metaKey) {
