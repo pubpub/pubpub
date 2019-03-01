@@ -7,6 +7,8 @@ require('./pubInlineMenu.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
+	loginData: PropTypes.object.isRequired,
+	locationData: PropTypes.object.isRequired,
 	editorChangeObject: PropTypes.object.isRequired,
 	getAbsolutePosition: PropTypes.func.isRequired,
 	onNewHighlightDiscussion: PropTypes.func.isRequired,
@@ -50,6 +52,7 @@ const PubInlineMenu = (props) => {
 	if (isReadOnly && !props.pubData.publicDiscussions) {
 		return null;
 	}
+	const canAddDiscussion = !!props.loginData.slug;
 	return (
 		<div className="pub-inline-menu-component bp3-elevation-2" style={menuStyle}>
 			{!isReadOnly &&
@@ -78,21 +81,30 @@ const PubInlineMenu = (props) => {
 					);
 				})}
 			{props.pubData.publicDiscussions && (
-				<Button
-					className="bp3-minimal"
-					icon={<Icon icon="chat" />}
-					onClick={() => {
-						props.onNewHighlightDiscussion({
-							from: props.editorChangeObject.selection.from,
-							to: props.editorChangeObject.selection.to,
-							version: props.pubData.activeVersion.id,
-							section: props.sectionId,
-							exact: props.editorChangeObject.selectedText.exact,
-							prefix: props.editorChangeObject.selectedText.prefix,
-							suffix: props.editorChangeObject.selectedText.suffix,
-						});
-					}}
-				/>
+				<React.Fragment>
+					<Button
+						disabled={!canAddDiscussion}
+						className="bp3-minimal"
+						icon={<Icon icon="chat" />}
+						onClick={() => {
+							props.onNewHighlightDiscussion({
+								from: props.editorChangeObject.selection.from,
+								to: props.editorChangeObject.selection.to,
+								version: props.pubData.activeVersion.id,
+								section: props.sectionId,
+								exact: props.editorChangeObject.selectedText.exact,
+								prefix: props.editorChangeObject.selectedText.prefix,
+								suffix: props.editorChangeObject.selectedText.suffix,
+							});
+						}}
+					/>
+					{!canAddDiscussion && (
+						<span className="login-to-discuss-text">
+							<a href={`/login?redirect=${props.locationData.path}`}>Log in</a> to
+							annotate and discuss
+						</span>
+					)}
+				</React.Fragment>
 			)}
 		</div>
 	);

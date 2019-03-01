@@ -340,9 +340,7 @@ class DiscussionThread extends Component {
 									/>
 								) : (
 									<AnchorButton
-										href={`/login?redirect=${
-											this.props.locationData.pathpathname
-										}`}
+										href={`/login?redirect=${this.props.locationData.path}`}
 										className="bp3-fill"
 										text="Login to Reply"
 									/>
