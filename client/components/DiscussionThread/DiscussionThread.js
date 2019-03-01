@@ -336,6 +336,8 @@ class DiscussionThread extends Component {
 										handleSubmit={this.handleReplySubmit}
 										submitIsLoading={this.state.isLoadingReply}
 										getHighlightContent={this.props.getHighlightContent}
+										locationData={this.props.locationData}
+										loginData={this.props.loginData}
 										inputKey="thread-reply"
 									/>
 								) : (
