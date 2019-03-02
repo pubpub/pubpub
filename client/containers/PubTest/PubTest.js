@@ -70,13 +70,6 @@ class PubTest extends React.Component {
 								return output;
 							});
 
-							// const placeHolderElem = document.createElement('span');
-							// placeHolderElem.className = 'deletion';
-							// placeHolderElem.innerHTML = '^&^&^';
-							// const decorations = [
-							// 	Decoration.widget(5, placeHolderElem),
-							// 	Decoration.inline(10, 15, { class: 'addition' }),
-							// ];
 							const flattenArray = [].concat(...decorations);
 							return DecorationSet.create(doc, flattenArray);
 						},

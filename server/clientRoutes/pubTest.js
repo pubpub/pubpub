@@ -8,6 +8,7 @@
 		the end of load, write a new checkpoint. So - the current version of a doc is 
 		always checkpointed on page load. 
 	Will we always be able to squash changes down to a single 'commit'?
+		No - you can't always merge steps. 
 
 	---- Loading ----
 	Load document server side - essentially the same as when you have a checkpoint doc.
