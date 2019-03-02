@@ -104,11 +104,7 @@ class DiscussionInput extends Component {
 	}
 
 	getInputContent() {
-		try {
-			return getText(this.state.editorChangeObject.view);
-		} catch (_) {
-			return '';
-		}
+		return getText(this.state.editorChangeObject.view) || '';
 	}
 
 	render() {

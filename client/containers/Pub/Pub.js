@@ -514,7 +514,6 @@ class Pub extends Component {
 	render() {
 		const pubData = this.state.pubData;
 		const loginData = this.props.loginData;
-		const locationData = this.props.locationData;
 		const queryObject = this.props.locationData.query;
 		// const mode = this.props.locationData.params.mode;
 		// const subMode = this.props.locationData.params.subMode;
@@ -831,8 +830,6 @@ class Pub extends Component {
 					{!this.state.linkPopupIsOpen && !isMobile && (
 						<PubInlineMenu
 							pubData={pubData}
-							loginData={loginData}
-							locationData={locationData}
 							editorChangeObject={this.state.editorChangeObject}
 							getAbsolutePosition={this.getAbsolutePosition}
 							onNewHighlightDiscussion={this.handleNewHighlightDiscussion}
