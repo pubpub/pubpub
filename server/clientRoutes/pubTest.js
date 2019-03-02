@@ -1,6 +1,70 @@
 /* 
 	How do we mount on the client without redo-ing all the work?
 	How do we checkpoint more often/cleanly
+	Can we step backwards - and then forwards to get to a new point on a branch?
+	How will track changes work?
+	Can you actually watch another branch? Yes - but you need to map your decorations
+	Tempted to say we always apply new (non-checkpoint) steps client-side, and then at 
+		the end of load, write a new checkpoint. So - the current version of a doc is 
+		always checkpointed on page load. 
+	Will we always be able to squash changes down to a single 'commit'?
+
+	---- Loading ----
+	Load document server side - essentially the same as when you have a checkpoint doc.
+	The remaining step applications
+	can happen server side or client side. We'll always run the client-side version to make
+	sure we're up to date
+
+
+	---- Discussions in the doc ----
+	If discussions are in the doc as marks - we need to allow anyone to write to
+	the firebase instance. Could we have some server-side write? The client would 
+	pass their discussion data up to /api and then the api would attempt
+	to write to firebase steps from the admin account.
+
+	If discussions are in the doc - new branches need to not include those discussions.
+	You start on dev, add discussions, and then push it to master. The inline-marks are 
+	going to exist in the master branch. This does feel like discussions should be
+	decorations - but keeping track of them all feels so painful. Maybe it's not.
+	There needs to be a shared list of decorations that all are subscribed to. And 
+	that is atomically paired with the step write. Will that scale okay for many
+	decorations?
+
+	---- Is this v6? ----
+	- Big database schema migration. No more versions, reviews change, permissions format changes, new branches table
+	- Groundwork for a submission pipeline laid
+	- Pub view fundamentally different
+	- Design updates
+	- Document diffs
+	- Removing discussion channels
+	- Removing section support
+	- New url structure with redirects required for past permalinks
+	- Functional permalinks (they can point to any time in history)
+
+	---- Things to tackle if we're migrating firebase structures ----
+	- nested writes more than 6 (or was it 26) layers deep fail in firebase
+	- discussions lose their placement - inconsistent between draft and saved version
+	- change 'equation' to 'math'?
+	- Any other editor schema changes?
+
+
+
+	---- Firebase Schema ----
+	pub
+		metadata (used to sync metadata - not a ground truth)
+			title
+			abstract
+			description
+			attributions
+		branches
+			id: uuid
+			* steps: []
+			* checkpoint: { doc }
+			* selections: [decorations]
+			* discussions: [decorations]
+
+
+
 */
 
 import React from 'react';
@@ -72,6 +136,7 @@ app.get('/pub-test', (req, res, next) => {
 	const firebaseRef = database.ref(editorKey);
 	const editorSchema = buildSchema({ ...discussionSchema }, {});
 	let mostRecentRemoteKey;
+	const changeArray = [];
 	const findContent = firebaseRef
 		.child('checkpoint')
 		.once('value')
@@ -92,7 +157,7 @@ app.get('/pub-test', (req, res, next) => {
 				.child('changes')
 				.orderByKey()
 				.startAt(String(mostRecentRemoteKey + 1))
-				.endAt(String(mostRecentRemoteKey + 105))
+				// .endAt(String(mostRecentRemoteKey + 105))
 				.once('value');
 
 			return Promise.all([newDoc, getChanges]);
@@ -115,14 +180,21 @@ app.get('/pub-test', (req, res, next) => {
 					...new Array(compressedStepsJSON.length).fill(changesSnapshotVal[key].c),
 				);
 			});
-			const updatedDoc = steps.reduce((prev, curr) => {
+			const updatedDoc = steps.reduce((prev, curr, index) => {
 				const stepResult = curr.apply(prev);
 				if (stepResult.failed) {
 					console.error('Failed with ', stepResult.failed);
 				}
+				if (index % 10 === 0 || index === steps.length - 1) {
+					changeArray.push({ index: index, doc: stepResult.doc.toJSON() });
+				}
 				return stepResult.doc;
 			}, newDoc);
-			return { content: updatedDoc.toJSON() };
+			return {
+				content: updatedDoc.toJSON(),
+				changeArray: changeArray,
+				changesSnapshotVal: changesSnapshotVal,
+			};
 		})
 		.catch((firebaseErr) => {
 			console.error('firebase-firebaseErr', firebaseErr);
@@ -132,6 +204,8 @@ app.get('/pub-test', (req, res, next) => {
 		.then(([initialData, versionData]) => {
 			const pubData = {
 				content: versionData.content,
+				changeArray: versionData.changeArray,
+				changesSnapshotVal: versionData.changesSnapshotVal,
 			};
 			const newInitialData = {
 				...initialData,
