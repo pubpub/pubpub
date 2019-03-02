@@ -1,5 +1,8 @@
 require('./redirects'); // Redirect needed v3 routes;
 
+
+require('./pubTest'); // Route: '/pub-test'
+
 /* Routes for PubPub */
 require('./communityCreate'); // Route: '/community/create'
 require('./explore'); // Route: '/explore'
