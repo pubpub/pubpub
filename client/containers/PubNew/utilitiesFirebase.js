@@ -1,67 +1,41 @@
-import React from 'react';
-import Promise from 'bluebird';
 import firebaseAdmin from 'firebase-admin';
-import { Node } from 'prosemirror-model';
-import { Step } from 'prosemirror-transform';
-import { uncompressStateJSON, uncompressStepJSON } from 'prosemirror-compress-pubpub';
 import { buildSchema } from '@pubpub/editor';
-import PubTest from 'containers/PubTest/PubTest';
 import discussionSchema from 'components/DiscussionAddon/discussionSchema';
-import Html from '../Html';
-import app from '../server';
-// import { Version } from '../models';
-import {
-	hostIsValid,
-	renderToNodeStream,
-	getInitialData,
-	handleErrors,
-	generateMetaComponents,
-} from '../utilities';
+import { uncompressStateJSON, uncompressStepJSON } from 'prosemirror-compress-pubpub';
+import { Step } from 'prosemirror-transform';
 
 /* To encode: Buffer.from(JSON.stringify(serviceAccountJson)).toString('base64'); */
 const serviceAccount = JSON.parse(
 	Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64, 'base64').toString(),
 );
+
 const firebaseApp = firebaseAdmin.initializeApp(
 	{
 		credential: firebaseAdmin.credential.cert(serviceAccount),
 		databaseURL: 'https://pubpub-v5-development.firebaseio.com',
 	},
-	'firebasetest',
+	'firebase-pub-new',
 );
 
-app.get('/pub-test', (req, res, next) => {
-	if (!hostIsValid(req, 'community')) {
-		return next();
-	}
-	/* Get doc from Version */
-	// const findContent = Version.findOne({ where: { id: 'bc368357-0ef5-400f-a2f6-39b0268499ab' } });
+export const getBranchDoc = (pubId, branchId)=> {
+	const pubKey = `pub-${pubId}`;
+	const branchKey = `branch-${branchId}`;
 
-	/* Get doc from Checkpoint */
-	// const editorKey = 'pub-bb62c347-1bca-483b-9cc0-44c5d845462c';
-	// const database = firebaseApp.database();
-	// const firebaseRef = database.ref(editorKey);
-	// const findContent = firebaseRef
-	// 	.child('checkpoint')
-	// 	.once('value')
-	// 	.then((checkpointSnapshot) => {
-	// 		const checkpointSnapshotVal = checkpointSnapshot.val() || {
-	// 			k: '0',
-	// 			d: { type: 'doc', attrs: { meta: {} }, content: [{ type: 'paragraph' }] },
-	// 		};
-
-	// 		const content = uncompressStateJSON(checkpointSnapshotVal).doc;
-	// 		return { content: content };
-	// 	})
-	// 	.catch((firebaseErr) => {
-	// 		console.error('firebase-firebaseErr', firebaseErr);
-	// 	});
-
-	/* get doc from first steps */
-	const editorKey = 'pub-bb62c347-1bca-483b-9cc0-44c5d845462c';
 	const database = firebaseApp.database();
-	const firebaseRef = database.ref(editorKey);
+	const firebaseRef = database.ref(`${pubKey}/${branchKey}`);
+
+	/* TODO: Document expected structure of content at firebaseRef. For example: */
+	/*
+		pubKey/branchKey 
+			steps: []
+			selections: []
+	*/
+	return buildFirebaseDoc(firebaseRef);
+
+	
+
 	const editorSchema = buildSchema({ ...discussionSchema }, {});
+
 	let mostRecentRemoteKey;
 	const changeArray = [];
 	const findContent = firebaseRef
@@ -126,30 +100,6 @@ app.get('/pub-test', (req, res, next) => {
 		.catch((firebaseErr) => {
 			console.error('firebase-firebaseErr', firebaseErr);
 		});
+};
 
-	return Promise.all([getInitialData(req), findContent])
-		.then(([initialData, versionData]) => {
-			const pubData = {
-				content: versionData.content,
-				changeArray: versionData.changeArray,
-				changesSnapshotVal: versionData.changesSnapshotVal,
-			};
-			const newInitialData = {
-				...initialData,
-				pubData: pubData,
-			};
-			return renderToNodeStream(
-				res,
-				<Html
-					chunkName="PubTest"
-					initialData={newInitialData}
-					headerComponents={generateMetaComponents({
-						initialData: initialData,
-					})}
-				>
-					<PubTest {...newInitialData} />
-				</Html>,
-			);
-		})
-		.catch(handleErrors(req, res, next));
-});
+export const def = 5;
