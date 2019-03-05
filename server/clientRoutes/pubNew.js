@@ -37,14 +37,18 @@ app.get(
 			getFirebaseToken('testid', {}),
 		])
 			.then(([initialData, branchData, firebaseToken]) => {
-				const pubData = {};
+				const pubData = {
+					title: 'Original Title',
+					description: 'A quick little description',
+				};
 				const newInitialData = {
 					...initialData,
 					pubData: {
 						...pubData,
 						content: branchData.content,
 						initDocKey: branchData.mostRecentRemoteKey,
-						firebaseRootKey: `pub-${pubId}`,
+						branchId: branchId,
+						id: pubId,
 						firebaseToken: firebaseToken,
 					},
 				};

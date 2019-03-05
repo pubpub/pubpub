@@ -18,8 +18,8 @@ const database = firebaseApp.database();
 
 export const getBranchDoc = (pubId, branchId) => {
 	const pubKey = `pub-${pubId}`;
-	// const branchKey = `branch-${branchId}`;
-	const branchKey = '';
+	const branchKey = `branch-${branchId}`;
+	// const branchKey = '';
 
 	const firebaseRef = database.ref(`${pubKey}/${branchKey}`);
 
