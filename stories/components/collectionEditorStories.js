@@ -16,28 +16,33 @@ const TEST_AUTHORS = {
 	GRANT: { name: 'Grant Huang' },
 };
 
-const TEST_PUB_TAGS = {
-	GOOD: { tag: { title: 'Good' } },
-	BAD: { tag: { title: 'Bad' } },
+const TEST_COLLECTION_PUBS = {
+	GOOD: { collection: { title: 'Good' } },
+	BAD: { collection: { title: 'Bad' } },
 };
 
 const TEST_PUBS = [
-	{ id: '0', title: 'A pub', attributions: [TEST_AUTHORS.ANNE], pubTags: [TEST_PUB_TAGS.GOOD] },
-	{ id: '1', title: 'Another pub', attributions: [TEST_AUTHORS.CARLOS], pubTags: [] },
+	{
+		id: '0',
+		title: 'A pub',
+		attributions: [TEST_AUTHORS.ANNE],
+		collectionPubs: [TEST_COLLECTION_PUBS.GOOD],
+	},
+	{ id: '1', title: 'Another pub', attributions: [TEST_AUTHORS.CARLOS], collectionPubs: [] },
 	{
 		id: '2',
 		title: 'Wow, yet another pub',
 		attributions: [TEST_AUTHORS.ANNE, TEST_AUTHORS.EMILY],
-		pubTags: [],
+		collectionPubs: [],
 	},
 	{
 		id: '3',
 		title: 'Where are we getting all of these pubs?',
 		attributions: [TEST_AUTHORS.GRANT],
-		pubTags: [TEST_PUB_TAGS.BAD],
+		collectionPubs: [TEST_COLLECTION_PUBS.BAD],
 	},
 ];
 
 storiesOf('Components/Collections/CollectionEditor', module).add('default', () => (
-	<CollectionEditor collection={TEST_COLLECTION} pubs={TEST_PUBS} />
+	<CollectionEditor collection={TEST_COLLECTION} pubs={TEST_PUBS} selections={[]} />
 ));

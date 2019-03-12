@@ -37,8 +37,8 @@ app.get(['/dashboard', '/dashboard/:mode', '/dashboard/:mode/:slug'], (req, res,
 			if (mode === 'settings') {
 				activeItem.title = 'Settings';
 			}
-			if (mode === 'tags') {
-				activeItem.title = 'Tags';
+			if (mode === 'collections') {
+				activeItem.title = 'Collections';
 			}
 			if (mode === 'pubs') {
 				activeItem.title = 'Pubs';

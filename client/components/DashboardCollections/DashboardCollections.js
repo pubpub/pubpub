@@ -5,29 +5,29 @@ import { Select } from '@blueprintjs/select';
 import fuzzysearch from 'fuzzysearch';
 import { apiFetch } from 'utilities';
 
-require('./dashboardTags.scss');
+require('./dashboardCollections.scss');
 
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
 	setCommunityData: PropTypes.func.isRequired,
 };
 
-class DashboardTags extends Component {
+class DashboardCollections extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			newTagValue: '',
+			newCollectionValue: '',
 			error: undefined,
 		};
-		this.handleTagCreate = this.handleTagCreate.bind(this);
-		this.handleTagUpdate = this.handleTagUpdate.bind(this);
-		this.handleTagDelete = this.handleTagDelete.bind(this);
+		this.handleCollectionCreate = this.handleCollectionCreate.bind(this);
+		this.handleCollectionUpdate = this.handleCollectionUpdate.bind(this);
+		this.handleCollectionDelete = this.handleCollectionDelete.bind(this);
 	}
 
-	handleTagCreate(evt) {
+	handleCollectionCreate(evt) {
 		evt.preventDefault();
-		const isUniqueTitle = this.props.communityData.tags.reduce((prev, curr) => {
-			if (curr.title === this.state.newTagValue) {
+		const isUniqueTitle = this.props.communityData.collections.reduce((prev, curr) => {
+			if (curr.title === this.state.newCollectionValue) {
 				return false;
 			}
 			return prev;
@@ -35,48 +35,48 @@ class DashboardTags extends Component {
 
 		if (!isUniqueTitle) {
 			return this.setState((prevState) => {
-				return { error: `'${prevState.newTagValue}' already exists.` };
+				return { error: `'${prevState.newCollectionValue}' already exists.` };
 			});
 		}
 
 		this.setState({ error: undefined });
-		return apiFetch('/api/tags', {
+		return apiFetch('/api/collections', {
 			method: 'POST',
 			body: JSON.stringify({
-				title: this.state.newTagValue,
+				title: this.state.newCollectionValue,
 				communityId: this.props.communityData.id,
 			}),
-		}).then((newTag) => {
-			this.setState({ newTagValue: '' });
+		}).then((newCollection) => {
+			this.setState({ newCollectionValue: '' });
 			this.props.setCommunityData({
 				...this.props.communityData,
-				tags: [...this.props.communityData.tags, newTag],
+				collections: [...this.props.communityData.collections, newCollection],
 			});
 		});
 	}
 
-	handleTagUpdate(updatedTag) {
-		return apiFetch('/api/tags', {
+	handleCollectionUpdate(updatedCollection) {
+		return apiFetch('/api/collections', {
 			method: 'PUT',
 			body: JSON.stringify({
-				...updatedTag,
+				...updatedCollection,
 				communityId: this.props.communityData.id,
 			}),
 		}).then(() => {
 			this.props.setCommunityData({
 				...this.props.communityData,
-				tags: this.props.communityData.tags.map((tag) => {
-					if (tag.id !== updatedTag.tagId) {
-						return tag;
+				collections: this.props.communityData.collections.map((collection) => {
+					if (collection.id !== updatedCollection.collectionId) {
+						return collection;
 					}
-					if (!updatedTag.pageId) {
-						return { ...tag, ...updatedTag };
+					if (!updatedCollection.pageId) {
+						return { ...collection, ...updatedCollection };
 					}
 					return {
-						...tag,
-						...updatedTag,
+						...collection,
+						...updatedCollection,
 						page: this.props.communityData.pages.reduce((prev, curr) => {
-							if (curr.id === updatedTag.pageId) {
+							if (curr.id === updatedCollection.pageId) {
 								return curr;
 							}
 							return prev;
@@ -87,18 +87,18 @@ class DashboardTags extends Component {
 		});
 	}
 
-	handleTagDelete(tagId) {
-		return apiFetch('/api/tags', {
+	handleCollectionDelete(collectionId) {
+		return apiFetch('/api/collections', {
 			method: 'DELETE',
 			body: JSON.stringify({
-				tagId: tagId,
+				collectionId: collectionId,
 				communityId: this.props.communityData.id,
 			}),
 		}).then(() => {
 			this.props.setCommunityData({
 				...this.props.communityData,
-				tags: this.props.communityData.tags.filter((tag) => {
-					return tag.id !== tagId;
+				collections: this.props.communityData.collections.filter((collection) => {
+					return collection.id !== collectionId;
 				}),
 			});
 		});
@@ -106,28 +106,29 @@ class DashboardTags extends Component {
 
 	render() {
 		return (
-			<div className="dashboard-tags-component">
-				<h1 className="content-title">Tags</h1>
+			<div className="dashboard-collections-component">
+				<h1 className="content-title">Collections</h1>
 				<div className="details">
-					Tags can be used to organize content and can be used to flow content onto pages.
+					Collections can be used to organize content and can be used to flow content onto
+					pages.
 				</div>
 
 				<div className="autocomplete-wrapper">
-					<form onSubmit={this.handleTagCreate}>
+					<form onSubmit={this.handleCollectionCreate}>
 						<input
 							className="bp3-input bp3-large"
 							type="text"
-							placeholder="Create new tag..."
-							value={this.state.newTagValue}
+							placeholder="Create new collection..."
+							value={this.state.newCollectionValue}
 							onChange={(evt) => {
-								this.setState({ newTagValue: evt.target.value });
+								this.setState({ newCollectionValue: evt.target.value });
 							}}
 						/>
 					</form>
 					{this.state.error && <p className="error">{this.state.error}</p>}
 				</div>
 
-				{this.props.communityData.tags
+				{this.props.communityData.collections
 					.sort((foo, bar) => {
 						if (foo.title < bar.title) {
 							return -1;
@@ -137,16 +138,16 @@ class DashboardTags extends Component {
 						}
 						return 0;
 					})
-					.map((tag) => {
+					.map((collection) => {
 						return (
-							<div key={`tag-${tag.id}`} className="tag-wrapper">
+							<div key={`collection-${collection.id}`} className="collection-wrapper">
 								<div className="title">
 									<EditableText
-										defaultValue={tag.title}
+										defaultValue={collection.title}
 										onConfirm={(newTitle) => {
-											this.handleTagUpdate({
+											this.handleCollectionUpdate({
 												title: newTitle,
-												tagId: tag.id,
+												collectionId: collection.id,
 											});
 										}}
 									/>
@@ -178,28 +179,28 @@ class DashboardTags extends Component {
 										});
 									}}
 									onItemSelect={(item) => {
-										this.handleTagUpdate({
+										this.handleCollectionUpdate({
 											pageId: item.id,
-											tagId: tag.id,
+											collectionId: collection.id,
 										});
 									}}
 									popoverProps={{ popoverClassName: 'bp3-minimal' }}
 								>
 									<Button
 										text={
-											tag.page
-												? `Linked to: ${tag.page.title}`
+											collection.page
+												? `Linked to: ${collection.page.title}`
 												: 'Link to Page'
 										}
 										rightIcon="caret-down"
 									/>
 								</Select>
 								<Checkbox
-									checked={!tag.isPublic}
+									checked={!collection.isPublic}
 									onChange={(evt) => {
-										this.handleTagUpdate({
+										this.handleCollectionUpdate({
 											isPublic: !evt.target.checked,
-											tagId: tag.id,
+											collectionId: collection.id,
 										});
 									}}
 								>
@@ -209,7 +210,7 @@ class DashboardTags extends Component {
 									type="button"
 									className="bp3-button bp3-icon-small-cross bp3-minimal"
 									onClick={() => {
-										this.handleTagDelete(tag.id);
+										this.handleCollectionDelete(collection.id);
 									}}
 								/>
 							</div>
@@ -220,5 +221,5 @@ class DashboardTags extends Component {
 	}
 }
 
-DashboardTags.propTypes = propTypes;
-export default DashboardTags;
+DashboardCollections.propTypes = propTypes;
+export default DashboardCollections;

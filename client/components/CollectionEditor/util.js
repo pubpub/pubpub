@@ -22,7 +22,7 @@ export const fuzzyMatchPub = (pub, input) => {
 	const normalizedInput = normalize(input);
 	const normalizedSources = [pub.title]
 		.concat(authorsNamesFromPub(pub))
-		.concat(pub.pubTags.map((pt) => pt.tag.title))
+		.concat(pub.collectionPubs.map((pt) => pt.collection.title))
 		.filter((x) => x)
 		.map(normalize);
 	return normalizedSources.some((source) => source.includes(normalizedInput));

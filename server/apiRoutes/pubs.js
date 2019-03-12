@@ -48,8 +48,8 @@ app.post('/api/pubs', (req, res) => {
 				order: 0.5,
 			});
 
-			const defaultTagIds = req.body.defaultTagIds || [];
-			const newCollectionPubObjects = defaultTagIds.map((collectionId) => {
+			const defaultCollectionIds = req.body.defaultTagIds || [];
+			const newCollectionPubObjects = defaultCollectionIds.map((collectionId) => {
 				return {
 					kind: 'tag',
 					pubId: newPub.id,

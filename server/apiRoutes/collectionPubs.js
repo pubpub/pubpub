@@ -10,7 +10,7 @@ app.post(
 		const collectionPromise =
 			!req.body.collectionId && req.body.title
 				? Collection.create({
-						kind: 'tag',
+						kind: req.body.kind,
 						title: req.body.title.trim(),
 						isRestricted: true,
 						isPublic: true,
@@ -40,7 +40,7 @@ app.post(
 );
 
 app.delete(
-	'/api/pubCollections',
+	'/api/collectionPubs',
 	withCommunityAdmin((req, res) => {
 		return CollectionPub.destroy({
 			where: { id: req.body.pubCollectionId },

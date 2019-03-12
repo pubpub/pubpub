@@ -5784,6 +5784,25 @@ export default {
 		{
 			id: 'af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b',
 			title: 'Essays',
+			kind: 'tag',
+			isRestricted: true,
+			isPublic: true,
+			pageId: 'af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b',
+			communityId: 'da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4',
+			createdAt: '2018-08-06T15:26:05.468Z',
+			updatedAt: '2018-08-06T15:26:05.468Z',
+			page: {
+				id: 'af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b',
+				title: 'Essays',
+				slug: 'essays',
+			},
+		},
+	],
+	collections: [
+		{
+			id: 'af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b',
+			title: 'Essays',
+			kind: 'tag',
 			isRestricted: true,
 			isPublic: true,
 			pageId: 'af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b',
@@ -5799,6 +5818,7 @@ export default {
 		{
 			id: '35d1cbbd-2e54-4334-8443-2df07fbd7383',
 			title: 'Terms of Service',
+			kind: 'tag',
 			isRestricted: true,
 			isPublic: true,
 			pageId: '35d1cbbd-2e54-4334-8443-2df07fbd7383',

@@ -5,11 +5,11 @@ import DashboardSide from 'components/DashboardSide/DashboardSide';
 import DashboardCreatePage from 'components/DashboardCreatePage/DashboardCreatePage';
 import DashboardSettings from 'components/DashboardSettings/DashboardSettings';
 import DashboardTeam from 'components/DashboardTeam/DashboardTeam';
-import DashboardTags from 'components/DashboardTags/DashboardTags';
 import DashboardPubs from 'components/DashboardPubs/DashboardPubs';
 import DashboardPage from 'components/DashboardPage/DashboardPage';
 
 import { hydrateWrapper } from 'utilities';
+import DashboardCollections from '../../components/DashboardCollections/DashboardCollections';
 
 require('./dashboard.scss');
 
@@ -88,9 +88,9 @@ class Dashboard extends Component {
 														setCommunityData={this.setCommunityData}
 													/>
 												);
-											case 'tags':
+											case 'collections':
 												return (
-													<DashboardTags
+													<DashboardCollections
 														communityData={communityData}
 														setCommunityData={this.setCommunityData}
 													/>

@@ -34,9 +34,9 @@ const DashboardSide = function(props) {
 			id: 2,
 		},
 		{
-			title: 'Tags',
+			title: 'Collections',
 			icon: 'bp3-icon-tag',
-			slug: 'tags',
+			slug: 'collections',
 			id: 3,
 		},
 		{
