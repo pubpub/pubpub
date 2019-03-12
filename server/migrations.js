@@ -441,6 +441,17 @@ new Promise((resolve) => {
 	// .then(()=> {
 	// 	return sequelize.queryInterface.addColumn('Pubs', 'downloads', { type: Sequelize.JSONB });
 	// })
+	.then(() => {
+		return CollectionPub.sync()
+			.then(() => {
+				return PubTag.findAll().then(pubTags => {
+					const collectionPubs = pubTags.map(pt => {
+						return {pubId: pt.pubId, collectionId: pt.tagId};
+					});
+					return CollectionPub.bulkCreate(collectionPubs);
+				});
+			}).then(() => Tag.sync());
+	})
 	.catch((err) => {
 		console.log('Error with Migration', err);
 	})

@@ -66,7 +66,7 @@ app.get(['/dashboard', '/dashboard/:mode', '/dashboard/:mode/:slug'], (req, res,
 				: findPage(pageId, true, initialData);
 
 			const findPubs =
-				mode === 'pubs'
+				mode === 'pubs' || mode === 'tags'
 					? findPage(initialData.communityData.pages[0].id, true, initialData)
 					: { pubs: [] };
 

@@ -13,6 +13,7 @@ const operatorsAliases = {
 	$ilike: Sequelize.Op.iLike,
 	$in: Sequelize.Op.in,
 	$not: Sequelize.Op.not,
+	$notIn: Sequelize.Op.notIn,
 	$eq: Sequelize.Op.eq,
 	$ne: Sequelize.Op.ne,
 	$lt: Sequelize.Op.lt,
@@ -343,15 +344,49 @@ const Tag = sequelize.define('Tag', {
 	/* Set by Associations */
 	pageId: { type: Sequelize.UUID } /* Used to link a tag to a specific page */,
 	communityId: { type: Sequelize.UUID, allowNull: false },
+
+	metadata: { type: Sequelize.JSONB },
+	kind: { type: Sequelize.TEXT },
 });
 
 const PubTag = sequelize.define('PubTag', {
 	id: id,
-
 	/* Set by Associations */
 	pubId: { type: Sequelize.UUID },
 	tagId: { type: Sequelize.UUID },
 });
+
+const CollectionPub = sequelize.define(
+	'CollectionPub',
+	{
+		id: id,
+		pubId: { type: Sequelize.UUID, allowNull: false },
+		collectionId: { type: Sequelize.UUID, allowNull: false },
+		contextHint: { type: Sequelize.TEXT },
+		rank: { type: Sequelize.INTEGER },
+		isPrimary: { type: Sequelize.BOOLEAN, defaultValue: false, allowNull: false },
+	},
+	{
+		indexes: [
+			// Index to maintain invariant that every pub have at most one primary collection
+			{
+				fields: ['pubId'],
+				where: {
+					isPrimary: true,
+				},
+				unique: true,
+			},
+			// Index to enforce that there is one CollectionPub per (collection, pub) pair
+			{
+				fields: ['collectionId', 'pubId'],
+				unique: true,
+			},
+		],
+	},
+);
+
+Pub.hasMany(CollectionPub, { onDelete: 'CASCADE', as: 'pubCollections', foreignKey: 'pubId' });
+CollectionPub.belongsTo(Tag, { onDelete: 'CASCADE', as: 'collection', foreignKey: 'collectionId' });
 
 const DiscussionChannel = sequelize.define('DiscussionChannel', {
 	id: id,
@@ -490,6 +525,7 @@ Discussion.belongsTo(User, { onDelete: 'CASCADE', as: 'author', foreignKey: 'use
 Community.hasMany(Page, { onDelete: 'CASCADE', as: 'pages', foreignKey: 'communityId' });
 
 const db = {
+	CollectionPub: CollectionPub,
 	Community: Community,
 	CommunityAdmin: CommunityAdmin,
 	Discussion: Discussion,

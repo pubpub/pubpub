@@ -21,6 +21,7 @@ app.post('/api/tags', (req, res) => {
 				isRestricted: true,
 				isPublic: true,
 				communityId: req.body.communityId,
+				kind: req.body.kind,
 			});
 		})
 		.then((newTag) => {

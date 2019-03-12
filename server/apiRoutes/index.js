@@ -1,5 +1,6 @@
 require('./adminDashboard');
 require('./analytics');
+require('./collectionPubs');
 require('./communities');
 require('./communityAdmins');
 require('./discussions');
