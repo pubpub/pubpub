@@ -16,14 +16,14 @@ const createPubSelectionFromCollectionPub = (collectionPub, allPubs, collection)
 };
 
 export const loadPubSelections = (allPubs, collection, communityId) =>
-	apiFetch(`/api/collectionPubs?collectionId=${collection.id}&communityId=${communityId}`, {
+	apiFetch(`/api/collectionPubs/bulk?collectionId=${collection.id}&communityId=${communityId}`, {
 		method: 'GET',
 	}).then((collectionPubs) =>
 		collectionPubs.map((cp) => createPubSelectionFromCollectionPub(cp, allPubs, collection)),
 	);
 
 export const persistPubSelections = (selections, allPubs, collection, communityId) =>
-	apiFetch('/api/collectionPubs', {
+	apiFetch('/api/collectionPubs/bulk', {
 		method: 'POST',
 		body: JSON.stringify({
 			communityId: communityId,
