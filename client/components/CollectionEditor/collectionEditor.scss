@@ -1,0 +1,75 @@
+$pubs-pane-width: 300px;
+
+.collection-editor-component {
+    min-height: 500px;
+    height: 75vh;
+    display: flex;
+    .pane {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        height: 100%;
+    }
+    .pubs-pane {
+        width: $pubs-pane-width;
+        box-sizing: border-box;
+        .available-pubs-heading {
+            margin-bottom: 10px;
+        }
+    }
+    .selections-pane {
+        flex-grow: 1;
+        margin-left: 0px;
+    }
+    .listing {
+        position: relative;
+        flex-direction: column;
+        flex-grow: 1;
+        overflow-y: scroll;
+        .empty-state-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+    .pub-card {
+        background: none;
+        display: flex;
+        height: 45px;
+        padding: 0px;
+        border-radius: 0px;
+        .contents {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            justify-content: space-between;
+            padding: 10px;
+        }
+        .drag-handle {
+            width: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+    .pub-card.is-dragging {
+        .controls {
+            display: none;
+        }
+    }
+}
+
+.collection-editor-dialog {
+    max-width: 850px;
+    min-width: 600px;
+    width: 75vw;
+    padding-bottom: 8px;
+    .bottom-buttons {
+        justify-content: flex-end;
+        padding: 8px;
+        padding-top: 4px;
+        padding-bottom: 0px;
+    }
+}
