@@ -18,7 +18,7 @@ export const normalizeMetadataToKind = (metadata, kind, context) => {
 			}
 		}
 	});
-	return { __kind: kind, ...res };
+	return res;
 };
 
 export const enumerateMetadataFields = (metadata, kind) => {
