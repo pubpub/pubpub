@@ -1,5 +1,6 @@
 require('./adminDashboard');
 require('./analytics');
+require('./collections');
 require('./collectionPubs');
 require('./communities');
 require('./communityAdmins');
@@ -24,7 +25,7 @@ require('./rss.js');
 require('./search');
 require('./signup');
 require('./subscribe');
-require('./tags');
+require('./collections');
 require('./uploadPolicy.js');
 require('./users');
 require('./versions');
