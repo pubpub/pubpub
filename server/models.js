@@ -344,6 +344,19 @@ const Tag = sequelize.define('Tag', {
 	/* Set by Associations */
 	pageId: { type: Sequelize.UUID } /* Used to link a tag to a specific page */,
 	communityId: { type: Sequelize.UUID, allowNull: false },
+});
+
+const Collection = sequelize.define('Collection', {
+	id: id,
+	title: { type: Sequelize.TEXT },
+	isRestricted: {
+		type: Sequelize.BOOLEAN,
+	} /* Restricted tags can only be set by Community Admins */,
+	isPublic: { type: Sequelize.BOOLEAN } /* Only visible to community admins */,
+
+	/* Set by Associations */
+	pageId: { type: Sequelize.UUID } /* Used to link a tag to a specific page */,
+	communityId: { type: Sequelize.UUID },
 
 	metadata: { type: Sequelize.JSONB },
 	kind: { type: Sequelize.TEXT },
@@ -385,8 +398,12 @@ const CollectionPub = sequelize.define(
 	},
 );
 
-Pub.hasMany(CollectionPub, { onDelete: 'CASCADE', as: 'pubCollections', foreignKey: 'pubId' });
-CollectionPub.belongsTo(Tag, { onDelete: 'CASCADE', as: 'collection', foreignKey: 'collectionId' });
+Pub.hasMany(CollectionPub, { onDelete: 'CASCADE', as: 'collectionPubs', foreignKey: 'pubId' });
+CollectionPub.belongsTo(Collection, {
+	onDelete: 'CASCADE',
+	as: 'collection',
+	foreignKey: 'collectionId',
+});
 
 const DiscussionChannel = sequelize.define('DiscussionChannel', {
 	id: id,
@@ -525,6 +542,7 @@ Discussion.belongsTo(User, { onDelete: 'CASCADE', as: 'author', foreignKey: 'use
 Community.hasMany(Page, { onDelete: 'CASCADE', as: 'pages', foreignKey: 'communityId' });
 
 const db = {
+	Collection: Collection,
 	CollectionPub: CollectionPub,
 	Community: Community,
 	CommunityAdmin: CommunityAdmin,
@@ -537,9 +555,9 @@ const db = {
 	PubManager: PubManager,
 	VersionPermission: VersionPermission,
 	PubAttribution: PubAttribution,
-	Tag: Tag,
 	PubTag: PubTag,
 	Page: Page,
+	Tag: Tag,
 	DiscussionChannel: DiscussionChannel,
 	DiscussionChannelParticipant: DiscussionChannelParticipant,
 };

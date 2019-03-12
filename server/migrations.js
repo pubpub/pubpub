@@ -442,7 +442,16 @@ new Promise((resolve) => {
 	// 	return sequelize.queryInterface.addColumn('Pubs', 'downloads', { type: Sequelize.JSONB });
 	// })
 	.then(() => {
-		return CollectionPub.sync()
+		return Collection.sync()
+			.then(() => {
+				return Tag.findAll().then(tags => {
+					const collections = tags.map(tag => {
+						return {...tag.dataValues, kind: "tag"};
+					});
+					return Collection.bulkCreate(collections);
+				})
+			})
+			.then(() => CollectionPub.sync())
 			.then(() => {
 				return PubTag.findAll().then(pubTags => {
 					const collectionPubs = pubTags.map(pt => {
@@ -450,7 +459,7 @@ new Promise((resolve) => {
 					});
 					return CollectionPub.bulkCreate(collectionPubs);
 				});
-			}).then(() => Tag.sync());
+			});
 	})
 	.catch((err) => {
 		console.log('Error with Migration', err);
