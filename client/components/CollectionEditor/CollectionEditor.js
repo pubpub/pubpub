@@ -8,9 +8,8 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import { Divider, NonIdealState, InputGroup } from '@blueprintjs/core';
 
 import { getSchemaForKind } from 'shared/collections/schemas';
-import pubType from 'types/pub';
-import { getSchemaForKind } from 'shared/collections/schemas';
 import collectionType from 'types/collection';
+import pubType from 'types/pub';
 
 import PubCard from './PubCard';
 import PubDragDropListing from './PubDragDropListing';
