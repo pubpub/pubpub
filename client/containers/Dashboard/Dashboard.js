@@ -91,6 +91,7 @@ class Dashboard extends Component {
 											case 'collections':
 												return (
 													<DashboardCollections
+														pubsData={this.props.pubsData}
 														communityData={communityData}
 														setCommunityData={this.setCommunityData}
 													/>

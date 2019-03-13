@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Checkbox, EditableText, Button } from '@blueprintjs/core';
-import { Select } from '@blueprintjs/select';
-import fuzzysearch from 'fuzzysearch';
+import { ControlGroup, InputGroup, NonIdealState } from '@blueprintjs/core';
 import { apiFetch } from 'utilities';
+
+import { getSchemaForKind } from 'shared/collections/schemas';
+import CollectionKindDropdown from './CollectionKindDropdown';
+import CollectionRow from './CollectionRow';
 
 require('./dashboardCollections.scss');
 
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
+	pubsData: PropTypes.object.isRequired,
 	setCommunityData: PropTypes.func.isRequired,
 };
 
@@ -17,11 +20,29 @@ class DashboardCollections extends Component {
 		super(props);
 		this.state = {
 			newCollectionValue: '',
+			currentCollectionSchema: getSchemaForKind('tag'),
 			error: undefined,
 		};
 		this.handleCollectionCreate = this.handleCollectionCreate.bind(this);
 		this.handleCollectionUpdate = this.handleCollectionUpdate.bind(this);
 		this.handleCollectionDelete = this.handleCollectionDelete.bind(this);
+	}
+
+	getDisplayableCollections() {
+		const {
+			currentCollectionSchema: { kind: currentKind },
+		} = this.state;
+		return this.props.communityData.collections
+			.filter((collection) => collection.kind === currentKind)
+			.sort((foo, bar) => {
+				if (foo.title < bar.title) {
+					return -1;
+				}
+				if (foo.title > bar.title) {
+					return 1;
+				}
+				return 0;
+			});
 	}
 
 	handleCollectionCreate(evt) {
@@ -45,6 +66,7 @@ class DashboardCollections extends Component {
 			body: JSON.stringify({
 				title: this.state.newCollectionValue,
 				communityId: this.props.communityData.id,
+				kind: this.state.currentCollectionSchema.kind,
 			}),
 		}).then((newCollection) => {
 			this.setState({ newCollectionValue: '' });
@@ -104,118 +126,66 @@ class DashboardCollections extends Component {
 		});
 	}
 
+	renderTopControlGroup() {
+		const { currentCollectionSchema } = this.state;
+		const label = currentCollectionSchema.label.singular.toLowerCase();
+		// TODO(ian): figure out how to grow the InputGroup without resorting to CSS
+		return (
+			<form onSubmit={this.handleCollectionCreate}>
+				<ControlGroup>
+					<CollectionKindDropdown
+						selectedSchema={currentCollectionSchema}
+						onSelect={(schema) => this.setState({ currentCollectionSchema: schema })}
+						large={true}
+					/>
+
+					<InputGroup
+						placeholder={`Create a new ${label}...`}
+						onChange={(evt) => {
+							this.setState({ newCollectionValue: evt.target.value });
+						}}
+						large={true}
+						value={this.state.newCollectionValue}
+						className="add-collection-input"
+					/>
+				</ControlGroup>
+			</form>
+		);
+	}
+
 	render() {
+		const displayableCollections = this.getDisplayableCollections();
+		const {
+			currentCollectionSchema: {
+				label: { plural: emptyStateLabel },
+				bpDisplayIcon,
+			},
+		} = this.state;
 		return (
 			<div className="dashboard-collections-component">
 				<h1 className="content-title">Collections</h1>
-				<div className="details">
-					Collections can be used to organize content and can be used to flow content onto
-					pages.
-				</div>
-
+				<div className="details">You can use collections to yadda yadda yadda</div>
 				<div className="autocomplete-wrapper">
-					<form onSubmit={this.handleCollectionCreate}>
-						<input
-							className="bp3-input bp3-large"
-							type="text"
-							placeholder="Create new collection..."
-							value={this.state.newCollectionValue}
-							onChange={(evt) => {
-								this.setState({ newCollectionValue: evt.target.value });
-							}}
-						/>
-					</form>
+					{this.renderTopControlGroup()}
 					{this.state.error && <p className="error">{this.state.error}</p>}
 				</div>
-
-				{this.props.communityData.collections
-					.sort((foo, bar) => {
-						if (foo.title < bar.title) {
-							return -1;
-						}
-						if (foo.title > bar.title) {
-							return 1;
-						}
-						return 0;
-					})
-					.map((collection) => {
-						return (
-							<div key={`collection-${collection.id}`} className="collection-wrapper">
-								<div className="title">
-									<EditableText
-										defaultValue={collection.title}
-										onConfirm={(newTitle) => {
-											this.handleCollectionUpdate({
-												title: newTitle,
-												collectionId: collection.id,
-											});
-										}}
-									/>
-								</div>
-								<Select
-									items={this.props.communityData.pages}
-									itemRenderer={(item, { handleClick, modifiers }) => {
-										return (
-											<button
-												type="button"
-												tabIndex={-1}
-												onClick={handleClick}
-												className={
-													modifiers.active
-														? 'bp3-menu-item bp3-active'
-														: 'bp3-menu-item'
-												}
-											>
-												{item.title}
-											</button>
-										);
-									}}
-									itemListPredicate={(query, items) => {
-										return items.filter((item) => {
-											return fuzzysearch(
-												query.toLowerCase(),
-												item.title.toLowerCase(),
-											);
-										});
-									}}
-									onItemSelect={(item) => {
-										this.handleCollectionUpdate({
-											pageId: item.id,
-											collectionId: collection.id,
-										});
-									}}
-									popoverProps={{ popoverClassName: 'bp3-minimal' }}
-								>
-									<Button
-										text={
-											collection.page
-												? `Linked to: ${collection.page.title}`
-												: 'Link to Page'
-										}
-										rightIcon="caret-down"
-									/>
-								</Select>
-								<Checkbox
-									checked={!collection.isPublic}
-									onChange={(evt) => {
-										this.handleCollectionUpdate({
-											isPublic: !evt.target.checked,
-											collectionId: collection.id,
-										});
-									}}
-								>
-									Private
-								</Checkbox>
-								<button
-									type="button"
-									className="bp3-button bp3-icon-small-cross bp3-minimal"
-									onClick={() => {
-										this.handleCollectionDelete(collection.id);
-									}}
-								/>
-							</div>
-						);
-					})}
+				{displayableCollections.length === 0 && (
+					<NonIdealState
+						title={`Your community doesn't have any ${emptyStateLabel}!`}
+						description="Why don't you try creating one?"
+						icon={bpDisplayIcon}
+					/>
+				)}
+				{displayableCollections.map((collection) => (
+					<CollectionRow
+						communityData={this.props.communityData}
+						pubsData={this.props.pubsData}
+						collection={collection}
+						key={collection.id}
+						onCollectionUpdate={this.handleCollectionUpdate}
+						onCollectionDelete={this.handleCollectionDelete}
+					/>
+				))}
 			</div>
 		);
 	}
