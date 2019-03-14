@@ -4,12 +4,21 @@
  */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Button, ButtonGroup, FormGroup, InputGroup, NonIdealState } from '@blueprintjs/core';
+import {
+	Button,
+	ButtonGroup,
+	FormGroup,
+	InputGroup,
+	NonIdealState,
+	Tag,
+	MenuItem,
+} from '@blueprintjs/core';
 
 import collectionType from 'types/collection';
 
 import { enumerateMetadataFields, normalizeMetadataToKind } from 'shared/collections/metadata';
 import { getSchemaForKind } from 'shared/collections/schemas';
+import { MultiSelect } from '@blueprintjs/select';
 
 const propTypes = {
 	collection: collectionType.isRequired,
@@ -68,6 +77,29 @@ class CollectionMetadataForm extends React.Component {
 		this.props.onRequestDoi();
 	}
 
+	renderField(field) {
+		const { name, value, derived, isMulti } = field;
+		if (isMulti) {
+			return (
+				<MultiSelect
+					className="multi-select"
+					items={value}
+					selectedItems={value}
+					createNewItemFromQuery={(t) => t}
+					itemRenderer={(t) => <MenuItem text={t} />}
+					tagRenderer={(t) => <Tag>{t}</Tag>}
+				/>
+			);
+		}
+		return (
+			<InputGroup
+				value={value || ''}
+				disabled={derived}
+				onChange={(event) => this.handleInputChange(name, event.target.value)}
+			/>
+		);
+	}
+
 	renderFields() {
 		const { communityData, collection } = this.props;
 		const { kind } = this.state;
@@ -87,13 +119,9 @@ class CollectionMetadataForm extends React.Component {
 		}
 		return (
 			<div className="fields">
-				{fields.map(({ field, label, value, derived }) => (
-					<FormGroup key={field} label={label}>
-						<InputGroup
-							value={value || ''}
-							disabled={derived}
-							onChange={(event) => this.handleInputChange(field, event.target.value)}
-						/>
+				{fields.map((field) => (
+					<FormGroup key={field.name} label={field.label}>
+						{this.renderField(field)}
 					</FormGroup>
 				))}
 			</div>

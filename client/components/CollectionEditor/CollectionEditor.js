@@ -12,13 +12,14 @@ import collectionType from 'types/collection';
 import pubType from 'types/pub';
 
 import PubCard from './PubCard';
-import PubDragDropListing from './PubDragDropListing';
+import DragDropListing from '../DragDropListing/DragDropListing';
 import PubSelectionControls from './PubSelectionControls';
 import { createPubSelection, fuzzyMatchPub } from './util';
 
 // NOTE(ian): It's critical that this delimiter doesn't appear in actual ids!
 const ID_WRAPPER_DELIMITER = '__';
 const PUBS_DRAG_SOURCE = 'pubs';
+const DND_TYPE = 'collection-editor-entry';
 const SELECTIONS_DROP_TARGET = 'selections';
 
 require('./collectionEditor.scss');
@@ -122,23 +123,25 @@ const CollectionEditor = (props) => {
 							onChange={(e) => updateSearchQuery(e.target.value)}
 						/>
 					</div>
-					<PubDragDropListing
-						className="listing pubs-listing"
+					<DragDropListing
+						className="pubs-listing"
 						items={availablePubs}
 						itemId={(item) => wrapToId(PUBS_DRAG_SOURCE, item.id)}
 						renderItem={(pub) => <PubCard pub={pub} />}
 						droppableId={PUBS_DRAG_SOURCE}
+						droppableType={DND_TYPE}
 					/>
 				</div>
 				<Divider />
 				<div className="pane selections-pane">
-					<PubDragDropListing
-						className="listing selections-listing"
+					<DragDropListing
+						className="selections-listing"
 						items={selections}
 						itemId={(item) => wrapToId(SELECTIONS_DROP_TARGET, item.pub.id)}
 						droppableId={SELECTIONS_DROP_TARGET}
+						droppableType={DND_TYPE}
 						withDragHandles={true}
-						renderItem={(selection, isDragging, dragHandleProps) => (
+						renderItem={(selection, dragHandleProps, isDragging) => (
 							<PubCard
 								pub={selection.pub}
 								isDragging={isDragging}

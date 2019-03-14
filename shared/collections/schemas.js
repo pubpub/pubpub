@@ -1,3 +1,5 @@
+const urlForCommunity = () => '';
+
 const schemas = [
 	{
 		kind: 'book',
@@ -9,12 +11,31 @@ const schemas = [
 			{ value: 'chapter', label: 'Chapter', default: true },
 		],
 		metadata: [
-			{ field: 'title', label: 'Title', derivedFrom: ({ collection }) => collection.title },
-			{ field: 'doi', label: 'DOI', hintDerivedFrom: ({ collection }) => collection.doi },
-			{ field: 'isbn', label: 'ISBN' },
-			{ field: 'editions', label: 'Editions', kind: 'number' },
-			{ field: 'author', label: 'Author' },
-			{ field: 'editor', label: 'Editor' },
+			{
+				name: 'title',
+				label: 'Title',
+				hintDerivedFrom: ({ collection }) => collection.title,
+			},
+			{
+				name: 'doi',
+				label: 'DOI',
+				hintDerivedFrom: ({ collection }) => collection.doi,
+				disabled: true,
+			},
+			{
+				name: 'url',
+				label: 'URL',
+				hintDerivedFrom: ({ community }) => urlForCommunity(community),
+			},
+			{ name: 'isbn', label: 'ISBN' },
+			{ name: 'copyright-year', label: 'Copyright year', permitted: '^[0-9]*$' },
+			{ name: 'edition', label: 'Edition', permitted: '^[0-9]*$' },
+			{
+				name: 'contributors',
+				label: 'Contributors',
+				isMulti: true,
+				hintDerivedFrom: () => ['Test 1', 'Test 2', 'Test 3'],
+			},
 		],
 	},
 	{

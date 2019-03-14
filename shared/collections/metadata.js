@@ -5,16 +5,16 @@ export const getAllSchemaKinds = () => metadataSchemas.map((s) => s.kind);
 export const normalizeMetadataToKind = (metadata, kind, context) => {
 	const { metadata: shape } = getSchemaForKind(kind);
 	const res = {};
-	shape.forEach((entry) => {
-		const { field, derivedFrom, hintDerivedFrom } = entry;
+	shape.forEach((field) => {
+		const { name, derivedFrom, hintDerivedFrom } = field;
 		if (derivedFrom) {
-			res[field] = derivedFrom(context);
+			res[name] = derivedFrom(context);
 		} else {
-			const existingValue = metadata[field];
+			const existingValue = metadata[name];
 			if (typeof existingValue !== 'undefined') {
-				res[field] = existingValue;
+				res[name] = existingValue;
 			} else if (hintDerivedFrom) {
-				res[field] = hintDerivedFrom(context);
+				res[name] = hintDerivedFrom(context);
 			}
 		}
 	});
@@ -23,8 +23,14 @@ export const normalizeMetadataToKind = (metadata, kind, context) => {
 
 export const enumerateMetadataFields = (metadata, kind) => {
 	const { metadata: shape } = getSchemaForKind(kind);
-	return shape.map((entry) => {
-		const { field, label, derivedFrom } = entry;
-		return { field: field, label: label, value: metadata[field], derived: !!derivedFrom };
+	return shape.map((field) => {
+		const { name, label, derivedFrom, isMulti } = field;
+		return {
+			name: name,
+			label: label,
+			isMulti: isMulti,
+			value: metadata[name],
+			derived: !!derivedFrom,
+		};
 	});
 };

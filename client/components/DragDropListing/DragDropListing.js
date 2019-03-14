@@ -11,7 +11,8 @@ const DND_TYPE = 'collection-editor-entry';
 const propTypes = {
 	className: PropTypes.string.isRequired,
 	droppableId: PropTypes.string.isRequired,
-	items: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
+	droppableType: PropTypes.string.isRequired,
+	items: PropTypes.arrayOf(PropTypes.object).isRequired,
 	itemId: PropTypes.func.isRequired,
 	renderEmptyState: PropTypes.func,
 	renderItem: PropTypes.func.isRequired,
@@ -23,10 +24,11 @@ const defaultProps = {
 	withDragHandles: false,
 };
 
-const PubDragDropListing = (props) => {
+const DragDropListing = (props) => {
 	const {
 		className,
 		droppableId,
+		droppableType,
 		items,
 		itemId,
 		renderItem,
@@ -34,11 +36,11 @@ const PubDragDropListing = (props) => {
 		withDragHandles,
 	} = props;
 	return (
-		<Droppable type={DND_TYPE} droppableId={droppableId}>
+		<Droppable type={droppableType} droppableId={droppableId}>
 			{(droppableProvided) => (
 				<div
 					{...droppableProvided.droppableProps}
-					className={className}
+					className={classNames(className, 'drag-drop-listing-component')}
 					ref={droppableProvided.innerRef}
 				>
 					{renderEmptyState && items.length === 0 && (
@@ -70,8 +72,8 @@ const PubDragDropListing = (props) => {
 										>
 											{renderItem(
 												item,
-												isDragging,
 												withDragHandles && dragHandleProps,
+												isDragging,
 											)}
 										</div>
 									);
@@ -85,7 +87,7 @@ const PubDragDropListing = (props) => {
 	);
 };
 
-PubDragDropListing.propTypes = propTypes;
-PubDragDropListing.defaultProps = defaultProps;
+DragDropListing.propTypes = propTypes;
+DragDropListing.defaultProps = defaultProps;
 
-export default PubDragDropListing;
+export default DragDropListing;

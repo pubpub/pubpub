@@ -15,6 +15,13 @@ $form-padding: 12px;
     .bottom-button-group {
         justify-content: flex-end;
     }
+    .multi-select {
+        display: block;
+        width: 100%;
+        > span {
+            display: block;
+        }
+    }
 }
 
 .collection-metadata-dialog {

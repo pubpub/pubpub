@@ -1,6 +1,6 @@
 import app from '../server';
 import { Collection } from '../models';
-import withCommunityAdmin from './helpers/withCommunityAdmin';
+import withCommunityAdmin from './helpers/communityAdmin';
 
 app.post(
 	'/api/collections',

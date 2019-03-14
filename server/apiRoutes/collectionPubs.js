@@ -1,7 +1,7 @@
 import app from '../server';
 import { Collection, CollectionPub, Pub, sequelize } from '../models';
 
-import withCommunityAdmin from './helpers/withCommunityAdmin';
+import withCommunityAdmin from './helpers/communityAdmin';
 
 app.post(
 	'/api/collectionPubs',
