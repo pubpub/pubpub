@@ -1,5 +1,14 @@
+import uuidv4 from 'uuid/v4';
 import app from '../server';
-import { Pub, CommunityAdmin, PubManager, PubAttribution, PubTag } from '../models';
+import {
+	Pub,
+	CommunityAdmin,
+	PubManager,
+	PubAttribution,
+	PubTag,
+	Branch,
+	BranchPermission,
+} from '../models';
 import { generateHash, slugifyString } from '../utilities';
 import { setPubSearchData, deletePubSearchData } from '../searchUtilities';
 
@@ -31,10 +40,10 @@ app.post('/api/pubs', (req, res) => {
 		title: `New Pub on ${dateString}`,
 		slug: newPubSlug,
 		communityId: req.body.communityId,
-		draftPermissions: 'private',
+		// draftPermissions: 'private',
 		isCommunityAdminManaged: true,
-		draftEditHash: generateHash(8),
-		draftViewHash: generateHash(8),
+		// draftEditHash: generateHash(8),
+		// draftViewHash: generateHash(8),
 	})
 		.then((newPub) => {
 			const createPubManager = PubManager.create({
@@ -48,6 +57,23 @@ app.post('/api/pubs', (req, res) => {
 				order: 0.5,
 			});
 
+			const branchId = uuidv4();
+			const createBranch = Branch.create({
+				id: branchId,
+				shortId: 1,
+				title: 'draft',
+				order: 0.5,
+				viewHash: generateHash(8),
+				editHash: generateHash(8),
+				pubId: newPub.id,
+			});
+			const createBranchPermission = BranchPermission.create({
+				permissions: 'manage',
+				userId: user.id,
+				pubId: newPub.id,
+				branchId: branchId,
+			});
+
 			const defaultTagIds = req.body.defaultTagIds || [];
 			const newPubTagObjects = defaultTagIds.map((tagId) => {
 				return {
@@ -56,11 +82,18 @@ app.post('/api/pubs', (req, res) => {
 				};
 			});
 			const createPubTags = PubTag.bulkCreate(newPubTagObjects);
-			return Promise.all([newPub, createPubManager, createPubAttribution, createPubTags]);
+			return Promise.all([
+				newPub,
+				createPubManager,
+				createPubAttribution,
+				createPubTags,
+				createBranch,
+				createBranchPermission,
+			]);
 		})
 		.then(([newPub]) => {
 			setPubSearchData(newPub.id);
-			return res.status(201).json(`/pub/${newPub.slug}/draft`);
+			return res.status(201).json(`/pubnew/${newPub.slug}`);
 		})
 		.catch((err) => {
 			console.error('Error creating Pub', err);

@@ -10,45 +10,35 @@ import {
 	handleErrors,
 	generateMetaComponents,
 } from '../utilities';
-
-import { getBranchDoc, getFirebaseToken } from '../utilitiesFirebaseAdmin';
+import { getFirebaseToken } from '../utilities/firebaseAdmin';
+import { findPub } from '../utilities/pubQueries';
 
 app.get(
-	['/pubnew', '/pubnew/:slug', '/pubnew/:slug/branch/:branchShortId', '/pubnew/:slug/:mode'],
+	[
+		'/pubnew',
+		'/pubnew/:slug',
+		'/pubnew/:slug/branch/:branchShortId',
+		'/pubnew/:slug/branch/:branchShortId/:versionNumber',
+		// '/pubnew/:slug/submission',
+	],
 	(req, res, next) => {
 		if (!hostIsValid(req, 'community')) {
 			return next();
 		}
 
-		/*
-		get pubData from slug
-			branches
-			permissions
-
-		*/
-
-		const pubId = 'testpub';
-		const branchId = 'testbranch';
-		// const tokenClientId = initialData.loginData.clientId || 'anonymous';
-
-		return Promise.all([
-			getInitialData(req),
-			getBranchDoc(pubId, branchId),
-			getFirebaseToken('testid', {}),
-		])
-			.then(([initialData, branchData, firebaseToken]) => {
-				const pubData = {
-					title: 'Original Title',
-					description: 'A quick little description',
-				};
+		return getInitialData(req)
+			.then((initialData) => {
+				return Promise.all([
+					initialData,
+					findPub(req, initialData),
+					getFirebaseToken(initialData.loginData.id, {}),
+				]);
+			})
+			.then(([initialData, pubData, firebaseToken]) => {
 				const newInitialData = {
 					...initialData,
 					pubData: {
 						...pubData,
-						content: branchData.content,
-						initDocKey: branchData.mostRecentRemoteKey,
-						branchId: branchId,
-						id: pubId,
 						firebaseToken: firebaseToken,
 					},
 				};
