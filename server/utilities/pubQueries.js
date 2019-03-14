@@ -192,7 +192,7 @@ const formatAndAuthenticatePub = (pub, loginData, communityAdminData, req) => {
 		isEditor: isEditor,
 		isViewer: isViewer,
 		isBranchAdmin: isBranchAdmin,
-		isStaticDoc: req.params.versionNumber || !isEditor,
+		isStaticDoc: req.params.versionNumber,
 	};
 
 	return formattedPubData;
@@ -322,7 +322,11 @@ export const findPub = (req, initialData) => {
 
 			return Promise.all([
 				formattedPubData,
-				getBranchDoc(formattedPubData.id, formattedPubData.activeBranch.id, req.params.versionNumber),
+				getBranchDoc(
+					formattedPubData.id,
+					formattedPubData.activeBranch.id,
+					req.params.versionNumber,
+				),
 			]);
 		})
 		.then(([formattedPubData, branchDocData]) => {

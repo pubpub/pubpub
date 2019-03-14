@@ -48,7 +48,7 @@ class PubBody extends Component {
 						}}
 						placeholder={pubData.isStaticDoc ? 'Begin writing here...' : undefined}
 						initialContent={pubData.initialDoc}
-						isReadOnly={pubData.isStaticDoc}
+						isReadOnly={pubData.isStaticDoc || !pubData.isEditor}
 						onChange={(editorChangeObject) => {
 							updateLocalData('collab', { editorChangeObject: editorChangeObject });
 						}}

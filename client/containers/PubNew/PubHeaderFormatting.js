@@ -66,6 +66,9 @@ class PubHeaderFormatting extends Component {
 			};
 		}
 		const viewOnly = !pubData.isDraftEditor && !pubData.isManager;
+		if (pubData.isStaticDoc || !pubData.isEditor) {
+			return null;
+		}
 		return (
 			<div className="pub-draft-header-component">
 				{viewOnly && (
