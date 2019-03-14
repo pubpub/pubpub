@@ -76,6 +76,18 @@ const formatAndAuthenticatePub = (pub, loginData, communityAdminData, req) => {
 		return prev;
 	}, isCommunityAdminManager || isPubPubAdmin);
 
+	const isBranchAdmin = pub.branchPermissions
+		.filter((branchPermission) => {
+			return branchPermission.branchId === activeBranch.id;
+		})
+		.reduce((prev, curr) => {
+			if (curr.userId === loginData.id && curr.permissions === 'manage') {
+				return true;
+			}
+			return prev;
+		}, isCommunityAdminBranchAdmin);
+
+	// TODO: Change these to canView, canEdit, canDiscuss
 	const isViewer = pub.branchPermissions
 		.filter((branchPermission) => {
 			return branchPermission.branchId === activeBranch.id;
@@ -96,18 +108,7 @@ const formatAndAuthenticatePub = (pub, loginData, communityAdminData, req) => {
 				return true;
 			}
 			return prev;
-		}, isCommunityAdminEditor || isValidEditHash || allowedBranches[0].publicPermissions === 'edit');
-
-	const isBranchAdmin = pub.branchPermissions
-		.filter((branchPermission) => {
-			return branchPermission.branchId === activeBranch.id;
-		})
-		.reduce((prev, curr) => {
-			if (curr.userId === loginData.id && curr.permissions === 'admin') {
-				return true;
-			}
-			return prev;
-		}, isCommunityAdminBranchAdmin);
+		}, isCommunityAdminEditor || isBranchAdmin || isValidEditHash || allowedBranches[0].publicPermissions === 'edit');
 
 	/* Ensure access of some kind */
 	/* TODO: Something weird here. There shouldn't be a case where you have a Pub Manager */
@@ -191,6 +192,7 @@ const formatAndAuthenticatePub = (pub, loginData, communityAdminData, req) => {
 		isEditor: isEditor,
 		isViewer: isViewer,
 		isBranchAdmin: isBranchAdmin,
+		isStaticDoc: req.params.versionNumber || !isEditor,
 	};
 
 	return formattedPubData;

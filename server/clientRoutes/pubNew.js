@@ -15,7 +15,6 @@ import { findPub } from '../utilities/pubQueries';
 
 app.get(
 	[
-		'/pubnew',
 		'/pubnew/:slug',
 		'/pubnew/:slug/branch/:branchShortId',
 		'/pubnew/:slug/branch/:branchShortId/:versionNumber',
@@ -40,6 +39,7 @@ app.get(
 					pubData: {
 						...pubData,
 						firebaseToken: firebaseToken,
+						mode: 'document',
 					},
 				};
 				return renderToNodeStream(

@@ -14,34 +14,51 @@ class PubSyncManager extends React.Component {
 			firebaseRootRef: undefined,
 			firebaseBranchRef: undefined,
 			pubData: this.props.pubData,
+			collabData: {
+				editorChangeObject: {},
+			},
 		};
+		this.syncMetadata = this.syncMetadata.bind(this);
+		this.updatePubData = this.updatePubData.bind(this);
+		this.updateCollabData = this.updateCollabData.bind(this);
+		this.updateLocalData = this.updateLocalData.bind(this);
 	}
 
 	componentDidMount() {
 		const rootKey = `pub-${this.props.pubData.id}`;
 		const branchKey = `branch-${this.props.pubData.activeBranch.id}`;
 		initFirebase(rootKey, this.props.pubData.firebaseToken).then((rootRef) => {
-			this.firebaseRootRef = rootRef;
 			this.setState({
 				firebaseRootRef: rootRef,
 				firebaseBranchRef: rootRef.child(branchKey),
 			});
 
-			this.firebaseRootRef.child('metadata').on('child_changed', this.syncMetadata);
+			this.state.firebaseRootRef.child('metadata').on('child_changed', this.syncMetadata);
 		});
 	}
 
 	componentWillUnmount() {
 		if (this.state.firebaseRootRef) {
-			this.firebaseRootRef.child('metadata').off('child_changed', this.syncMetadata);
+			this.state.firebaseRootRef.child('metadata').off('child_changed', this.syncMetadata);
 		}
 	}
 
 	syncMetadata(snapshot) {
-		this.setState({ [snapshot.key]: snapshot.val() });
+		this.setState((prevState) => {
+			return {
+				pubData: {
+					...prevState.pubData,
+					[snapshot.key]: snapshot.val(),
+				},
+			};
+		});
 	}
 
-	updateLocalPubData(newPubData) {
+	updatePubData(newPubData) {
+		/* First, set the local state. */
+		/* Then, sync appropriate data to firebase. */
+		/* Other clients will receive updates which */
+		/* triggers the syncMetadata function. */
 		this.setState(
 			(prevState) => {
 				return {
@@ -76,16 +93,40 @@ class PubSyncManager extends React.Component {
 						firebaseSyncData[key] = newPubData[key];
 					}
 				});
-				this.firebaseRootRef.child('metadata').update(firebaseSyncData);
+				const hasUpdates = Object.keys(firebaseSyncData).length;
+				if (this.state.firebaseRootRef && hasUpdates) {
+					this.state.firebaseRootRef.child('metadata').update(firebaseSyncData);
+				}
 			},
 		);
+	}
+
+	updateCollabData(newCollabData) {
+		this.setState((prevState) => {
+			return {
+				collabData: {
+					...prevState.collabData,
+					...newCollabData,
+				},
+			};
+		});
+	}
+
+	updateLocalData(type, data) {
+		if (type === 'pub') {
+			this.updatePubData(data);
+		}
+		if (type === 'collab') {
+			this.updateCollabData(data);
+		}
 	}
 
 	render() {
 		return this.props.children({
 			pubData: this.state.pubData,
+			collabData: this.state.collabData,
 			firebaseBranchRef: this.state.firebaseBranchRef,
-			updateLocalPubData: this.updateLocalPubData,
+			updateLocalData: this.updateLocalData,
 		});
 	}
 }

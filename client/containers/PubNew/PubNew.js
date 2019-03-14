@@ -1,19 +1,24 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
-import Editor from '@pubpub/editor';
+// import Editor from '@pubpub/editor';
 // import { EditableText, Button, Portal } from '@blueprintjs/core';
-import discussionSchema from 'components/DiscussionAddon/discussionSchema';
+// import discussionSchema from 'components/DiscussionAddon/discussionSchema';
 import { hydrateWrapper } from 'utilities';
+import { communityDataProps, locationDataProps, loginDataProps } from 'utilities/sharedPropTypes';
 import PubSyncManager from './PubSyncManager';
+import PubHeader from './PubHeader';
+import PubHeaderFormatting from './PubHeaderFormatting';
+import PubBody from './PubBody';
+import { pubDataProps } from './sharedPropTypes';
 
 require('./pubNew.scss');
 
 const propTypes = {
-	communityData: PropTypes.object.isRequired,
-	loginData: PropTypes.object.isRequired,
-	locationData: PropTypes.object.isRequired,
-	pubData: PropTypes.object.isRequired,
+	communityData: communityDataProps.isRequired,
+	loginData: loginDataProps.isRequired,
+	locationData: locationDataProps.isRequired,
+	pubData: pubDataProps.isRequired,
 };
 
 class PubNew extends React.Component {
@@ -28,32 +33,53 @@ class PubNew extends React.Component {
 		return (
 			<div id="pub-new-container">
 				<PageWrapper
-					loginData={this.props.loginData}
-					communityData={this.props.communityData}
 					locationData={this.props.locationData}
+					communityData={this.props.communityData}
+					loginData={this.props.loginData}
 				>
 					<PubSyncManager pubData={this.props.pubData}>
-						{(pubData, firebaseBranchRef, updateLocalPubData) => (
+						{({ pubData, collabData, firebaseBranchRef, updateLocalData }) => (
 							<React.Fragment>
-								<h1>HEADER</h1>
-							</React.Fragment>
+								<PubHeader
+									locationData={this.props.locationData}
+									communityData={this.props.communityData}
+									pubData={pubData}
+									updateLocalData={updateLocalData}
+								/>
 
-							/*<PubHeader
-								mode={this.state.mode} // This should probably just come from locationData
-								pubData={pubData}
-								updateLocalPubData={updateLocalPubData}
-							/>
-							{this.state.mode === 'document' &&
-								<PubHeaderFormatting pubData={pubData} />
-								<PubBody pubData={pubData} />
-									<PubInlineMenu pubData={pubData} />
-									<PubInlineDiscussions pubData={pubData} />
-								<PubFooter pubData={pubData} />
-								<PubDiscussions pubData={pubData} />
-							}
-							{this.state.mode === 'submission' &&
-								<PubSubmission pubData={pubData} />
-							}*/
+								{pubData.mode === 'document' && (
+									<React.Fragment>
+										<PubHeaderFormatting
+											loginData={this.props.loginData}
+											pubData={pubData}
+											collabData={collabData}
+										/>
+										<PubBody
+											locationData={this.props.locationData}
+											communityData={this.props.communityData}
+											loginData={this.props.loginData}
+											pubData={pubData}
+											collabData={collabData}
+											firebaseBranchRef={firebaseBranchRef}
+											updateLocalData={updateLocalData}
+										/>
+										{/*
+											<PubHeaderFormatting pubData={pubData} />
+											<PubBody pubData={pubData} />
+												<PubInlineMenu pubData={pubData} />
+												<PubInlineDiscussions pubData={pubData} />
+											<PubFooter pubData={pubData} />
+											<PubDiscussions pubData={pubData} />
+										*/}
+									</React.Fragment>
+								)}
+
+								{pubData.mode === 'submission' && (
+									<React.Fragment>
+										<h1>Submission</h1>
+									</React.Fragment>
+								)}
+							</React.Fragment>
 						)}
 					</PubSyncManager>
 				</PageWrapper>
@@ -122,7 +148,7 @@ hydrateWrapper(PubNew);
 //					<Editor
 //						placeholder="Begin writing here..."
 //						initialContent={this.props.pubData.initialDoc}
-//						isReadOnly={this.props.locationData.params.versionNumber}
+//						isReadOnly={this.props.pubData.docIsStatic}
 //						onChange={(changeObject) => {
 //							this.setState({ changeObject: changeObject });
 //						}}
@@ -135,7 +161,7 @@ hydrateWrapper(PubNew);
 //							// version of Editor without the collabOptions while firebase
 //							// authenticates. Is there a cleaner way to hold off on collab
 //							// init until after authentication?
-//							firebaseBranchRef
+//							firebaseBranchRef && !this.props.pubData.docIsStatic
 //								? {
 //										firebaseRef: firebaseBranchRef,
 //										clientData: { id: 'testclientdataid' },

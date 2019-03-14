@@ -274,6 +274,7 @@ const Branch = sequelize.define('Branch', {
 		values: ['none', 'view', 'discuss', 'edit', 'manage'],
 		defaultValue: 'none',
 	},
+	// pubManagerPermissions
 	publicPermissions: {
 		type: Sequelize.ENUM,
 		values: ['none', 'view', 'discuss', 'edit'],
