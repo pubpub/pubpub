@@ -8,7 +8,16 @@ import builder from 'xmlbuilder';
 import request from 'request-promise';
 import amqplib from 'amqplib';
 import { remove as removeDiacritics } from 'diacritics';
-import { Community, User, Pub, Version, PubAttribution, Collection, Page } from './models';
+import {
+	CollectionAttribution,
+	Collection,
+	Community,
+	Page,
+	Pub,
+	PubAttribution,
+	User,
+	Version,
+} from './models';
 
 const isPubPubProduction = !!process.env.PUBPUB_PRODUCTION;
 const doiSubmissionUrl = process.env.DOI_SUBMISSION_URL;
@@ -135,7 +144,13 @@ export const getInitialData = (req) => {
 				model: Collection,
 				as: 'collections',
 				separate: true,
-				// include: [{ model: Page, as: 'page', required: false, attributes: ['id', 'title', 'slug'] }]
+				include: [
+					{
+						model: CollectionAttribution,
+						as: 'attributions',
+						required: false,
+					},
+				],
 			},
 		],
 	}).then((communityResult) => {

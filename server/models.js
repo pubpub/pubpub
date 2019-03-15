@@ -569,6 +569,7 @@ const PubTag = sequelize.define('PubTag', {
 
 const db = {
 	Collection: Collection,
+	CollectionAttribution: CollectionAttribution,
 	CollectionPub: CollectionPub,
 	Community: Community,
 	CommunityAdmin: CommunityAdmin,
