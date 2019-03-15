@@ -1,0 +1,23 @@
+.component-dashboard-collection {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    h1 {
+        a {
+            text-decoration: none;
+        }
+    }
+    .tab-container {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        .bp3-tab-panel {
+            flex-grow: 1;
+            position: relative;
+        }
+        .bp3-tab-panel > * {
+            position: absolute;
+            height: 100%;
+        }
+    }
+}

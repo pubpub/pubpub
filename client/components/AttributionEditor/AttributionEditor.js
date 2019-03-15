@@ -154,7 +154,6 @@ class AttributionEditor extends Component {
 						<Spinner small={true} /> Saving...
 					</div>
 				)}
-				<h1>Attribution</h1>
 				{canEdit && (
 					<UserAutocomplete
 						onSelect={this.handleAttributionAdd}

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import AttributionEditor from '../AttributionEditor/AttributionEditor';
 
+require('./pubOptionsAttribution.scss');
+
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
@@ -26,17 +28,20 @@ class PubOptionsAttribution extends React.Component {
 	render() {
 		const { communityData, pubData } = this.props;
 		return (
-			<AttributionEditor
-				apiRoute="/api/pubAttributions"
-				identifyingProps={{
-					communityId: communityData.id,
-					pubId: pubData.id,
-				}}
-				attributions={pubData.attributions}
-				canEdit={pubData.isManager}
-				communityData={communityData}
-				onUpdateAttributions={this.handleUpdateAttributions}
-			/>
+			<div className="component-pub-options-attribution">
+				<h1>Attribution</h1>
+				<AttributionEditor
+					apiRoute="/api/pubAttributions"
+					identifyingProps={{
+						communityId: communityData.id,
+						pubId: pubData.id,
+					}}
+					attributions={pubData.attributions}
+					canEdit={pubData.isManager}
+					communityData={communityData}
+					onUpdateAttributions={this.handleUpdateAttributions}
+				/>
+			</div>
 		);
 	}
 }

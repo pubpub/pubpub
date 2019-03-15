@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Checkbox, EditableText, Button, ControlGroup } from '@blueprintjs/core';
+import { Checkbox, EditableText, Button, ControlGroup, AnchorButton } from '@blueprintjs/core';
 
 import pubType from 'types/pub';
 import collectionType from 'types/collection';
@@ -48,32 +48,13 @@ const CollectionRow = ({
 					communityData={communityData}
 				/>
 				{canEditMetadata && (
-					<CollectionEditorDialog
-						collection={collection}
-						pubs={pubsData}
-						communityId={communityData.id}
+					<AnchorButton
+						href={`/dashboard/collections/${collection.id}`}
+						minimal={true}
+						icon="edit"
 					>
-						{(openDialog, isLoading) => (
-							<Button
-								minimal
-								text="Contents"
-								icon="edit"
-								onClick={openDialog}
-								loading={isLoading}
-							/>
-						)}
-					</CollectionEditorDialog>
-				)}
-				{canEditMetadata && (
-					<CollectionMetadataDialog
-						collection={collection}
-						communityData={communityData}
-						onRequestDoi={() => {}}
-					>
-						{(openDialog) => (
-							<Button minimal text="Metadata" icon="link" onClick={openDialog} />
-						)}
-					</CollectionMetadataDialog>
+						Edit
+					</AnchorButton>
 				)}
 			</ControlGroup>
 			<Checkbox

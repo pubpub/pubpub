@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
+require('./dragDropListing.scss');
+
 const DND_TYPE = 'collection-editor-entry';
 
 const propTypes = {
