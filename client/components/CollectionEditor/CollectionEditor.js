@@ -11,7 +11,7 @@ import { getSchemaForKind } from 'shared/collections/schemas';
 import collectionType from 'types/collection';
 import pubType from 'types/pub';
 
-import PubCard from './PubCard';
+import PubRow from './PubRow';
 import DragDropListing from '../DragDropListing/DragDropListing';
 import PubSelectionControls from './PubSelectionControls';
 import { createPubSelection, fuzzyMatchPub } from './util';
@@ -127,7 +127,7 @@ const CollectionEditor = (props) => {
 						className="pubs-listing"
 						items={availablePubs}
 						itemId={(item) => wrapToId(PUBS_DRAG_SOURCE, item.id)}
-						renderItem={(pub) => <PubCard pub={pub} />}
+						renderItem={(pub) => <PubRow pub={pub} />}
 						droppableId={PUBS_DRAG_SOURCE}
 						droppableType={DND_TYPE}
 					/>
@@ -142,7 +142,7 @@ const CollectionEditor = (props) => {
 						droppableType={DND_TYPE}
 						withDragHandles={true}
 						renderItem={(selection, dragHandleProps, isDragging) => (
-							<PubCard
+							<PubRow
 								pub={selection.pub}
 								isDragging={isDragging}
 								dragHandleProps={dragHandleProps}

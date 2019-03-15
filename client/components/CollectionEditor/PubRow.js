@@ -24,10 +24,10 @@ const defaultProps = {
 	controls: null,
 };
 
-const PubCard = (props) => {
+const PubRow = (props) => {
 	const { pub, isDragging, dragHandleProps, controls } = props;
 	return (
-		<div className={classNames('pub-card', isDragging && 'is-dragging')}>
+		<div className={classNames('pub-row', isDragging && 'is-dragging')}>
 			{dragHandleProps && (
 				<div {...dragHandleProps} className="drag-handle">
 					<Icon icon="drag-handle-vertical" />
@@ -46,7 +46,7 @@ const PubCard = (props) => {
 	);
 };
 
-PubCard.propTypes = propTypes;
-PubCard.defaultProps = defaultProps;
+PubRow.propTypes = propTypes;
+PubRow.defaultProps = defaultProps;
 
-export default PubCard;
+export default PubRow;

@@ -1,7 +1,8 @@
 require('./adminDashboard');
 require('./analytics');
-require('./attributions');
+require('./pubAttributions');
 require('./collections');
+require('./collectionAttributions');
 require('./collectionPubs');
 require('./communities');
 require('./communityAdmins');
@@ -18,7 +19,7 @@ require('./openSearch');
 require('./pages');
 require('./passwordReset');
 require('./pubs');
-require('./attributions');
+require('./pubAttributions');
 require('./pubManagers');
 require('./reviews.js');
 require('./rss.js');

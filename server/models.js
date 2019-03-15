@@ -544,6 +544,29 @@ Discussion.belongsTo(User, { onDelete: 'CASCADE', as: 'author', foreignKey: 'use
 /* Communities have many Pages. */
 Community.hasMany(Page, { onDelete: 'CASCADE', as: 'pages', foreignKey: 'communityId' });
 
+/* Read for deprecation */
+
+const Tag = sequelize.define('Tag', {
+	id: id,
+	title: { type: Sequelize.TEXT },
+	isRestricted: {
+		type: Sequelize.BOOLEAN,
+	} /* Restricted tags can only be set by Community Admins */,
+	isPublic: { type: Sequelize.BOOLEAN } /* Only visible to community admins */,
+
+	/* Set by Associations */
+	pageId: { type: Sequelize.UUID } /* Used to link a tag to a specific page */,
+	communityId: { type: Sequelize.UUID, allowNull: false },
+});
+
+const PubTag = sequelize.define('PubTag', {
+	id: id,
+
+	/* Set by Associations */
+	pubId: { type: Sequelize.UUID },
+	tagId: { type: Sequelize.UUID },
+});
+
 const db = {
 	Collection: Collection,
 	CollectionPub: CollectionPub,
@@ -561,6 +584,9 @@ const db = {
 	Page: Page,
 	DiscussionChannel: DiscussionChannel,
 	DiscussionChannelParticipant: DiscussionChannelParticipant,
+	/* Ready for deprecation */
+	Tag: Tag,
+	PubTag: PubTag,
 };
 
 db.sequelize = sequelize;

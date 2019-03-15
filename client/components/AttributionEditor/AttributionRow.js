@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 import { Checkbox, Icon, Position } from '@blueprintjs/core';
 import { MultiSelect } from '@blueprintjs/select';
@@ -11,26 +12,29 @@ import { getFilteredRoles } from './roles';
 
 const propTypes = {
 	attribution: attributionType.isRequired,
-	canManage: PropTypes.bool.isRequired,
+	canEdit: PropTypes.bool.isRequired,
 	dragHandleProps: PropTypes.shape({}),
+	isDragging: PropTypes.bool,
 	onAttributionDelete: PropTypes.func.isRequired,
 	onAttributionUpdate: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
 	dragHandleProps: null,
+	isDragging: false,
 };
 
 const AttributionRow = (props) => {
 	const {
 		attribution: { user, id, isAuthor, roles },
-		canManage,
+		canEdit,
 		dragHandleProps,
+		isDragging,
 		onAttributionDelete,
 		onAttributionUpdate,
 	} = props;
 	return (
-		<div className="attribution-wrapper">
+		<div className={classNames('attribution-row', isDragging && 'is-dragging')}>
 			{dragHandleProps && (
 				<div {...dragHandleProps} className="drag-handle">
 					<Icon icon="drag-handle-vertical" />
@@ -50,7 +54,7 @@ const AttributionRow = (props) => {
 							<span>{user.fullName}</span>
 						)}
 					</div>
-					{canManage && (
+					{canEdit && (
 						<button
 							className="bp3-button bp3-minimal"
 							type="button"
@@ -61,7 +65,7 @@ const AttributionRow = (props) => {
 					)}
 				</div>
 				<div className="bottom-content">
-					{!canManage && isAuthor && (
+					{!canEdit && isAuthor && (
 						<span
 							style={{
 								marginRight: '1em',
@@ -70,20 +74,20 @@ const AttributionRow = (props) => {
 							Listed on byline
 						</span>
 					)}
-					{!canManage &&
+					{!canEdit &&
 						roles.map((item) => {
 							return (
-								<span className="bp3-tag bp3-minimal bp3-intent-primary">
+								<span key={item} className="bp3-tag bp3-minimal bp3-intent-primary">
 									{item}
 								</span>
 							);
 						})}
-					{canManage && (
+					{canEdit && (
 						<Checkbox
 							checked={isAuthor}
 							onChange={(evt) =>
 								onAttributionUpdate({
-									pubAttributionId: id,
+									id: id,
 									isAuthor: evt.target.checked,
 								})
 							}
@@ -91,7 +95,7 @@ const AttributionRow = (props) => {
 							List on byline
 						</Checkbox>
 					)}
-					{canManage && (
+					{canEdit && (
 						<MultiSelect
 							items={roles || []}
 							itemListPredicate={getFilteredRoles}
@@ -123,7 +127,7 @@ const AttributionRow = (props) => {
 										return filterIndex !== roleIndex;
 									});
 									onAttributionUpdate({
-										pubAttributionId: id,
+										id: id,
 										roles: newRoles,
 									});
 								},
@@ -140,7 +144,7 @@ const AttributionRow = (props) => {
 								const existingRoles = roles || [];
 								const newRoles = [...existingRoles, newRole];
 								onAttributionUpdate({
-									pubAttributionId: id,
+									id: id,
 									roles: newRoles,
 								});
 							}}

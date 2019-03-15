@@ -21,7 +21,7 @@ $pubs-pane-width: 300px;
         flex-grow: 1;
         margin-left: 0px;
     }
-    .pub-card {
+    .pub-row {
         background: none;
         display: flex;
         height: 45px;
@@ -40,10 +40,14 @@ $pubs-pane-width: 300px;
             align-items: center;
             justify-content: center;
         }
-    }
-    .pub-card.is-dragging {
         .controls {
-            display: none;
+            opacity: 1;
+            transition: 0.1s ease-out opacity;   
+        }
+    }
+    .pub-row.is-dragging {
+        .controls {
+            opacity: 0;
         }
     }
 }

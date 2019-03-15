@@ -4,7 +4,7 @@ import { propTypes } from '../components/CollectionEditor/CollectionEditor';
 export default PropTypes.shape({
 	id: PropTypes.string.isRequired,
 	isAuthor: PropTypes.bool.isRequired,
-	roles: PropTypes.arrayOf(PropTypes.string).isRequired,
+	roles: PropTypes.arrayOf(PropTypes.string),
 	user: PropTypes.shape({
 		initials: PropTypes.string,
 		avatar: PropTypes.string,

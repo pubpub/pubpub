@@ -9,7 +9,7 @@ import { Draggable, Droppable } from 'react-beautiful-dnd';
 const DND_TYPE = 'collection-editor-entry';
 
 const propTypes = {
-	className: PropTypes.string.isRequired,
+	className: PropTypes.string,
 	droppableId: PropTypes.string.isRequired,
 	droppableType: PropTypes.string.isRequired,
 	items: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -20,6 +20,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+	className: null,
 	renderEmptyState: () => null,
 	withDragHandles: false,
 };
