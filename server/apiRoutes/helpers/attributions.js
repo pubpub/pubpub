@@ -4,6 +4,8 @@
  */
 import { User } from '../../models';
 
+const CAN_UPDATE_ATTRIBUTES = ['name', 'avatar', 'title', 'order', 'isAuthor', 'roles'];
+
 const INCLUDE_USER_ATTRIBUTES = {
 	model: User,
 	as: 'user',
@@ -32,8 +34,7 @@ const addFallbackUser = (attribution) => {
 	};
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export const attributionHandler = (AttributionModel, testPermissions) => (permissionsInput) =>
+export default (AttributionModel, testPermissions) => (permissionsInput) =>
 	testPermissions(permissionsInput).then(() => ({
 		createAttribution: (attribution) =>
 			AttributionModel.create(attribution)
@@ -45,7 +46,14 @@ export const attributionHandler = (AttributionModel, testPermissions) => (permis
 					}),
 				)
 				.then((newModelWithUser) => addFallbackUser(newModelWithUser.toJSON())),
-		updateAttribution: (modelId, updated) =>
-			AttributionModel.update(updated, { where: { id: modelId } }),
+		updateAttribution: (modelId, requestToUpdate) => {
+			const updatedAttribution = {};
+			Object.keys(requestToUpdate).forEach((key) => {
+				if (CAN_UPDATE_ATTRIBUTES.includes(key)) {
+					updatedAttribution[key] = requestToUpdate[key];
+				}
+			});
+			return AttributionModel.update(updatedAttribution, { where: { id: modelId } });
+		},
 		destroyAttribution: (modelId) => AttributionModel.destroy({ where: { id: modelId } }),
 	}));

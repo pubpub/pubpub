@@ -378,6 +378,32 @@ const CollectionPub = sequelize.define(
 	},
 );
 
+const CollectionAttribution = sequelize.define('CollectionAttribution', {
+	id: id,
+	name: { type: Sequelize.TEXT } /* Used for non-account attribution */,
+	avatar: { type: Sequelize.TEXT } /* Used for non-account attribution */,
+	title: { type: Sequelize.TEXT } /* Used for non-account attribution */,
+	order: { type: Sequelize.DOUBLE },
+	isAuthor: { type: Sequelize.BOOLEAN },
+	roles: { type: Sequelize.JSONB },
+
+	/* Set by Associations */
+	userId: { type: Sequelize.UUID },
+	collectionId: { type: Sequelize.UUID, allowNull: false },
+});
+
+Collection.hasMany(CollectionAttribution, {
+	onDelete: 'CASCADE',
+	as: 'attributions',
+	foreignKey: 'pubId',
+});
+CollectionAttribution.belongsTo(User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' });
+CollectionAttribution.belongsTo(Collection, {
+	onDelete: 'CASCADE',
+	as: 'collection',
+	foreignKey: 'collectionId',
+});
+
 const DiscussionChannel = sequelize.define('DiscussionChannel', {
 	id: id,
 	title: { type: Sequelize.TEXT },
