@@ -10,7 +10,82 @@ import {
 	handleErrors,
 	generateMetaComponents,
 } from '../utilities';
-import { findPage } from '../queryHelpers';
+import { findPage, getCollectionAttributions } from '../queryHelpers';
+
+const loadableExtras = [
+	{
+		retrieve: ({ initialData, mode }) => {
+			if (['collections', 'pubs'].includes(mode)) {
+				// TODO(ian): this looks like a bit of a hack, we should maybe just query for pubs?
+				return findPage(initialData.communityData.pages[0].id, true, initialData);
+			}
+			return { pubs: [] };
+		},
+		transform: (initialData, result) => ({
+			...initialData,
+			pubsData: result.pubs,
+		}),
+	},
+	{
+		retrieve: ({ activeItem, initialData, pageId }) => {
+			if (activeItem.title) {
+				return activeItem;
+			}
+			return findPage(pageId, true, initialData);
+		},
+		transform: (initialData, result) => ({
+			...initialData,
+			pageData: result,
+		}),
+	},
+	{
+		retrieve: ({ mode, slug: collectionId }) => {
+			if (mode === 'collections' && collectionId) {
+				return getCollectionAttributions(collectionId);
+			}
+			return [];
+		},
+		transform: (initialData, result, { slug: collectionId }) => {
+			const { communityData } = initialData;
+			const { collections } = communityData;
+			if (result === []) {
+				return initialData;
+			}
+			const newCollections = collections.map((collection) => {
+				if (collection.id === collectionId) {
+					return {
+						...collection,
+						attributions: result,
+					};
+				}
+				return collection;
+			});
+			return {
+				...initialData,
+				communityData: {
+					...communityData,
+					collections: newCollections,
+				},
+			};
+		},
+	},
+];
+
+const createTransformersForLoadableExtras = (context) =>
+	loadableExtras.map(
+		({ retrieve, transform }) =>
+			new Promise((resolve, reject) => {
+				const retrieved = retrieve(context);
+				const resolveWithTransformer = (result) =>
+					resolve((initialData) => transform(initialData, result, context));
+				if (typeof retrieved.then === 'function') {
+					return retrieved
+						.then((result) => resolveWithTransformer(result))
+						.catch((err) => reject(err));
+				}
+				return resolveWithTransformer(retrieved);
+			}),
+	);
 
 app.get(['/dashboard', '/dashboard/:mode', '/dashboard/:mode/:slug'], (req, res, next) => {
 	if (!hostIsValid(req, 'community')) {
@@ -61,35 +136,35 @@ app.get(['/dashboard', '/dashboard/:mode', '/dashboard/:mode/:slug'], (req, res,
 				throw new Error('Page Not Found');
 			}
 
-			const findPageData = activeItem.title
-				? activeItem
-				: findPage(pageId, true, initialData);
-
-			const findPubs =
-				mode === 'pubs' || mode === 'collections'
-					? findPage(initialData.communityData.pages[0].id, true, initialData)
-					: { pubs: [] };
-
-			return Promise.all([initialData, findPageData, findPubs]);
+			return Promise.all([
+				initialData,
+				...createTransformersForLoadableExtras({
+					activeItem: activeItem,
+					initialData: initialData,
+					mode: mode,
+					pageId: pageId,
+					slug: slug,
+				}),
+			]);
 		})
-		.then(([initialData, pageData, pubsData]) => {
-			const newInitialData = {
-				...initialData,
-				pageData: pageData,
-				pubsData: pubsData.pubs,
-			};
+		.then(([initialDataWithoutExtras, ...transformers]) => {
+			const initialData = transformers.reduce(
+				(data, nextTransformer) => nextTransformer(data),
+				initialDataWithoutExtras,
+			);
+			console.log('NCD', initialData.communityData.collections);
 			return renderToNodeStream(
 				res,
 				<Html
 					chunkName="Dashboard"
-					initialData={newInitialData}
+					initialData={initialData}
 					headerComponents={generateMetaComponents({
 						initialData: initialData,
-						title: `${pageData.title} · Dashboard`,
+						title: `${initialData.pageData.title} · Dashboard`,
 						unlisted: true,
 					})}
 				>
-					<Dashboard {...newInitialData} />
+					<Dashboard {...initialData} />
 				</Html>,
 			);
 		})

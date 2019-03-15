@@ -144,13 +144,6 @@ export const getInitialData = (req) => {
 				model: Collection,
 				as: 'collections',
 				separate: true,
-				include: [
-					{
-						model: CollectionAttribution,
-						as: 'attributions',
-						required: false,
-					},
-				],
 			},
 		],
 	}).then((communityResult) => {
