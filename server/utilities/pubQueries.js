@@ -198,7 +198,7 @@ const formatAndAuthenticatePub = (pub, loginData, communityAdminData, req) => {
 	return formattedPubData;
 };
 
-export const findPub = (req, initialData) => {
+export const findPub = (req, initialData, mode) => {
 	const getPubData = Pub.findOne({
 		where: {
 			slug: req.params.slug.toLowerCase(),
@@ -320,9 +320,12 @@ export const findPub = (req, initialData) => {
 				throw new Error('Pub Not Found');
 			}
 
+			/* We only want to get the branch doc if we're in document mode */
+			/* otherwise, it's an extra call we don't need. */
+			const getDocFunc = mode === 'document' ? getBranchDoc : () => ({});
 			return Promise.all([
 				formattedPubData,
-				getBranchDoc(
+				getDocFunc(
 					formattedPubData.id,
 					formattedPubData.activeBranch.id,
 					req.params.versionNumber,

@@ -13,23 +13,36 @@ import {
 import { getFirebaseToken } from '../utilities/firebaseAdmin';
 import { findPub } from '../utilities/pubQueries';
 
+const getMode = (path, slug) => {
+	if (path.indexOf(`/pubnew/${slug}/submission`) > -1) {
+		return 'submission';
+	}
+	if (path.indexOf(`/pubnew/${slug}/settings`) > -1) {
+		return 'settings';
+	}
+	return 'document';
+};
+
 app.get(
 	[
 		'/pubnew/:slug',
 		'/pubnew/:slug/branch/:branchShortId',
 		'/pubnew/:slug/branch/:branchShortId/:versionNumber',
-		// '/pubnew/:slug/submission',
+		'/pubnew/:slug/submission',
+		'/pubnew/:slug/settings/',
+		'/pubnew/:slug/settings/:settingsMode',
 	],
 	(req, res, next) => {
 		if (!hostIsValid(req, 'community')) {
 			return next();
 		}
 
+		const mode = getMode(req.path, req.params.slug);
 		return getInitialData(req)
 			.then((initialData) => {
 				return Promise.all([
 					initialData,
-					findPub(req, initialData),
+					findPub(req, initialData, mode),
 					getFirebaseToken(initialData.loginData.id, {}),
 				]);
 			})
@@ -39,7 +52,7 @@ app.get(
 					pubData: {
 						...pubData,
 						firebaseToken: firebaseToken,
-						mode: 'document',
+						mode: mode,
 					},
 				};
 				return renderToNodeStream(
