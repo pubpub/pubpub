@@ -8,16 +8,7 @@ import builder from 'xmlbuilder';
 import request from 'request-promise';
 import amqplib from 'amqplib';
 import { remove as removeDiacritics } from 'diacritics';
-import {
-	CollectionAttribution,
-	Collection,
-	Community,
-	Page,
-	Pub,
-	PubAttribution,
-	User,
-	Version,
-} from './models';
+import { Collection, Community, Page, Pub, PubAttribution, User, Version } from './models';
 
 const isPubPubProduction = !!process.env.PUBPUB_PRODUCTION;
 const doiSubmissionUrl = process.env.DOI_SUBMISSION_URL;

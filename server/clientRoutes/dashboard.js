@@ -12,7 +12,7 @@ import {
 } from '../utilities';
 import { findPage, getCollectionAttributions } from '../queryHelpers';
 
-const loadableExtras = [
+const extraContextualData = [
 	{
 		retrieve: ({ initialData, mode }) => {
 			if (['collections', 'pubs'].includes(mode)) {
@@ -71,20 +71,25 @@ const loadableExtras = [
 	},
 ];
 
-const createTransformersForLoadableExtras = (context) =>
-	loadableExtras.map(
-		({ retrieve, transform }) =>
-			new Promise((resolve, reject) => {
-				const retrieved = retrieve(context);
-				const resolveWithTransformer = (result) =>
-					resolve((initialData) => transform(initialData, result, context));
-				if (typeof retrieved.then === 'function') {
-					return retrieved
-						.then((result) => resolveWithTransformer(result))
-						.catch((err) => reject(err));
-				}
-				return resolveWithTransformer(retrieved);
-			}),
+const addExtraData = (initialDataPromise, context) =>
+	Promise.all([
+		initialDataPromise,
+		...extraContextualData.map(
+			({ retrieve, transform }) =>
+				new Promise((resolve, reject) => {
+					const retrieved = retrieve(context);
+					const resolveWithTransformer = (result) =>
+						resolve((initialData) => transform(initialData, result, context));
+					if (typeof retrieved.then === 'function') {
+						return retrieved
+							.then((result) => resolveWithTransformer(result))
+							.catch((err) => reject(err));
+					}
+					return resolveWithTransformer(retrieved);
+				}),
+		),
+	]).then(([initialData, ...transformers]) =>
+		transformers.reduce((data, nextTransformer) => nextTransformer(data), initialData),
 	);
 
 app.get(['/dashboard', '/dashboard/:mode', '/dashboard/:mode/:slug'], (req, res, next) => {
@@ -136,23 +141,15 @@ app.get(['/dashboard', '/dashboard/:mode', '/dashboard/:mode/:slug'], (req, res,
 				throw new Error('Page Not Found');
 			}
 
-			return Promise.all([
-				initialData,
-				...createTransformersForLoadableExtras({
-					activeItem: activeItem,
-					initialData: initialData,
-					mode: mode,
-					pageId: pageId,
-					slug: slug,
-				}),
-			]);
+			return addExtraData(initialData, {
+				activeItem: activeItem,
+				initialData: initialData,
+				mode: mode,
+				pageId: pageId,
+				slug: slug,
+			});
 		})
-		.then(([initialDataWithoutExtras, ...transformers]) => {
-			const initialData = transformers.reduce(
-				(data, nextTransformer) => nextTransformer(data),
-				initialDataWithoutExtras,
-			);
-			console.log('NCD', initialData.communityData.collections);
+		.then((initialData) => {
 			return renderToNodeStream(
 				res,
 				<Html
