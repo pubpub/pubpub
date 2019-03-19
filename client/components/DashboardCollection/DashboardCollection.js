@@ -14,8 +14,16 @@ const LINK_TO_COLLECTIONS = '/dashboard/collections';
 const propTypes = {};
 
 class DashboardCollection extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			collection: props.initialCollection,
+		};
+	}
+
 	renderContentsEditor() {
-		const { collection, communityData, pubsData } = this.props;
+		const { communityData, pubsData } = this.props;
+		const { collection } = this.state;
 		return (
 			<CollectionEditor
 				collection={collection}
@@ -26,13 +34,22 @@ class DashboardCollection extends React.Component {
 	}
 
 	renderAttributionEditor() {
-		const { collection, communityData } = this.props;
+		const { communityData } = this.props;
+		const { collection } = this.state;
 		return (
 			<AttributionEditor
 				apiRoute="/api/collectionAttributions"
 				canEdit={true}
 				attributions={collection.attributions}
 				identifyingProps={{ collectionId: collection.id, communityId: communityData.id }}
+				onUpdateAttributions={(attributions) =>
+					this.setState((state) => ({
+						collection: {
+							...state.collection,
+							attributions: attributions,
+						},
+					}))
+				}
 			/>
 		);
 	}
@@ -67,7 +84,8 @@ class DashboardCollection extends React.Component {
 	}
 
 	render() {
-		const { communityData, collection } = this.props;
+		const { communityData } = this.props;
+		const { collection } = this.state;
 		if (collection) {
 			return (
 				<div className="component-dashboard-collection">

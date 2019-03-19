@@ -139,6 +139,7 @@ const CollectionEditorView = (props) => {
 						renderItem={(selection, dragHandleProps, isDragging) => (
 							<PubRow
 								pub={selection.pub}
+								rank={selection.rank}
 								isDragging={isDragging}
 								dragHandleProps={dragHandleProps}
 								controls={

@@ -356,7 +356,7 @@ const CollectionPub = sequelize.define(
 		pubId: { type: Sequelize.UUID, allowNull: false },
 		collectionId: { type: Sequelize.UUID, allowNull: false },
 		contextHint: { type: Sequelize.TEXT },
-		rank: { type: Sequelize.INTEGER },
+		rank: { type: Sequelize.TEXT },
 		isPrimary: { type: Sequelize.BOOLEAN, defaultValue: false, allowNull: false },
 	},
 	{

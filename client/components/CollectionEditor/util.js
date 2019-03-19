@@ -1,7 +1,7 @@
 import { getSchemaForKind } from 'shared/collections/schemas';
 import findRank from 'shared/util/findRank';
 
-export const createPubSelection = (pub, collection, rank, contextHintValue = null, id = null) => {
+export const createPubSelection = (pub, collection, rank, id = null, contextHintValue = null) => {
 	const { contextHints } = getSchemaForKind(collection.kind);
 	const contextHint = contextHintValue
 		? contextHints.find((ch) => ch.value === contextHintValue)
@@ -22,7 +22,7 @@ export const createPubSelection = (pub, collection, rank, contextHintValue = nul
 export const createPubSelectionFromCollectionPub = (collectionPub, allPubs, collection) => {
 	const { contextHint, rank, id } = collectionPub;
 	const pub = allPubs.find((p) => p.id === collectionPub.pubId);
-	return createPubSelection(pub, collection, rank, contextHint, id);
+	return createPubSelection(pub, collection, rank, id, contextHint);
 };
 
 export const authorsNamesFromPub = (pub) =>

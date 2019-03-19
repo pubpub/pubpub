@@ -43,12 +43,13 @@ class CollectionEditor extends React.Component {
 		const fromApi = fnOfApi(collectionsApi(collection, communityId));
 		if (typeof fromApi.then === 'function') {
 			this.setState({ pendingOperationsCount: pendingOperationsCount + 1 });
-			fromApi.then(() =>
+			return fromApi.then(() =>
 				this.setState((stateNow) => ({
 					pendingOperationsCount: stateNow.pendingOperationsCount - 1,
 				})),
 			);
 		}
+		return Promise.resolve();
 	}
 
 	handleAddSelection(pubToAdd, index) {
@@ -59,7 +60,18 @@ class CollectionEditor extends React.Component {
 		this.setState({
 			selections: [...selections.slice(0, index), selection, ...selections.slice(index)],
 		});
-		this.persistWithApi((api) => api.addPubSelection(pubToAdd.id, rank));
+		this.persistWithApi((api) =>
+			api.addPubSelection(pubToAdd.id, rank).then(({ id }) =>
+				this.setState((stateNow) => ({
+					selections: stateNow.selections.map((s) => {
+						if (s === selection) {
+							return { ...s, id: id };
+						}
+						return s;
+					}),
+				})),
+			),
+		);
 	}
 
 	handleRemoveSelectionByPub(pubToRemove) {
@@ -75,13 +87,16 @@ class CollectionEditor extends React.Component {
 		const { selections } = this.state;
 		const nextSelections = [...selections];
 		const [removed] = nextSelections.splice(sourceIndex, 1);
+		const newRank = findRankForSelection(nextSelections, destinationIndex);
 		const updatedSelection = {
 			...removed,
-			rank: findRankForSelection(selections, destinationIndex),
+			rank: newRank,
 		};
 		nextSelections.splice(destinationIndex, 0, updatedSelection);
 		this.setState({ selections: nextSelections });
-		this.persistWithApi((api) => api.updatePubSelection(updatedSelection.id, updatedSelection));
+		this.persistWithApi((api) =>
+			api.updatePubSelection(updatedSelection.id, { rank: newRank }),
+		);
 	}
 
 	handleSetSelectionContextHint(selection, contextHint) {
@@ -98,7 +113,11 @@ class CollectionEditor extends React.Component {
 				return s;
 			}),
 		});
-		this.persistWithApi((api) => api.updatePubSelection(updatedSelection.id, updatedSelection));
+		this.persistWithApi((api) =>
+			api.updatePubSelection(updatedSelection.id, {
+				contextHint: contextHint.value,
+			}),
+		);
 	}
 
 	render() {

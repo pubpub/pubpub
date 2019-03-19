@@ -27,7 +27,7 @@ const credentialsFromRequest = (req) => ({
 app.post('/api/collectionPubs', (req, res) =>
 	collectionPubHandler(credentialsFromRequest(req))
 		.then(({ createCollectionPub }) =>
-			createCollectionPub(req.body.pubId, req.body.collectionId),
+			createCollectionPub(req.body.pubId, req.body.collectionId, req.body.rank),
 		)
 		.then((created) => res.status(201).json(created))
 		.catch((err) => res.status(401).json(err)),

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
+import * as ReactBeautifulDnD from 'react-beautiful-dnd';
 import { resolve } from 'path';
 import { Readable } from 'stream';
 import queryString from 'query-string';
@@ -40,6 +41,7 @@ export const hostIsValid = (req, access) => {
 
 export const renderToNodeStream = (res, reactElement) => {
 	res.setHeader('content-type', 'text/html');
+	ReactBeautifulDnD.resetServerContext();
 	return ReactDOMServer.renderToNodeStream(reactElement).pipe(res);
 };
 

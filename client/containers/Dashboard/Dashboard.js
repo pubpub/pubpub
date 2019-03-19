@@ -54,7 +54,7 @@ class Dashboard extends Component {
 			return (
 				<DashboardCollection
 					communityData={communityData}
-					collection={collection}
+					initialCollection={collection}
 					pubsData={pubsData}
 					collectionId={slug}
 				/>

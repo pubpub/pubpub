@@ -89,7 +89,7 @@ const addExtraData = (initialDataPromise, context) =>
 					const retrieved = retrieve(context);
 					const resolveWithTransformer = (result) =>
 						resolve((initialData) => transform(initialData, result, context));
-					if (typeof retrieved.then === 'function') {
+					if (retrieved && typeof retrieved.then === 'function') {
 						return retrieved
 							.then((result) => resolveWithTransformer(result))
 							.catch((err) => reject(err));

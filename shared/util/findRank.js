@@ -19,22 +19,22 @@
 import mudder from 'mudder';
 
 // All ranks will be greater than BOTTOM and less than TOP. These characters are the first and last
-// in the base62 "alphabet", which contains ten digits and all lowercase and uppercase letters.
+// in the base36 "alphabet", which contains ten digits and all lowercase letters.
 const BOTTOM = '0';
-const TOP = 'Z';
+const TOP = 'z';
 
 const getBounds = (ranks, index) => {
 	if (index === 0) {
 		return [BOTTOM, ranks[0] || TOP];
 	}
 	if (index === ranks.length) {
-		return [ranks[ranks.length - 1] || BOTTOM, TOP];
+		return [ranks[ranks.length - 1], TOP];
 	}
 	return ranks.slice(index - 1, index + 1);
 };
 
 export default (ranks, index) => {
 	const [above, below] = getBounds(ranks, index);
-	const [result] = mudder.base62.mudder(above, below, 1);
+	const [result] = mudder.base36.mudder(above, below, 1);
 	return result;
 };

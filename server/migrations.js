@@ -9,8 +9,9 @@ import {
 	VersionPermission,
 	PubAttribution,
 	Collection,
-	Page,
 	CollectionPub,
+	CollectionAttribution,
+	Page,
 	Tag,
 	PubTag,
 	Community,
@@ -459,7 +460,8 @@ new Promise((resolve) => {
 					});
 					return CollectionPub.bulkCreate(collectionPubs);
 				});
-			});
+			})
+			.then(() => CollectionAttribution.sync());
 	})
 	.catch((err) => {
 		console.log('Error with Migration', err);
