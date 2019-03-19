@@ -1,31 +1,21 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Checkbox, EditableText, Button, ControlGroup, AnchorButton } from '@blueprintjs/core';
+import { Checkbox, EditableText, ControlGroup, AnchorButton } from '@blueprintjs/core';
 
-import pubType from 'types/pub';
 import collectionType from 'types/collection';
 import communityType from 'types/community';
 import { getSchemaForKind } from 'shared/collections/schemas';
-import CollectionMetadataDialog from '../CollectionMetadata/CollectionMetadataDialog';
-import CollectionEditorDialog from '../CollectionEditor/CollectionEditorDialog';
 
 import LinkedPageSelect from './LinkedPageSelect';
 
 const propTypes = {
 	collection: collectionType.isRequired,
 	communityData: communityType.isRequired,
-	pubsData: PropTypes.arrayOf(pubType).isRequired,
 	onCollectionDelete: PropTypes.func.isRequired,
 	onCollectionUpdate: PropTypes.func.isRequired,
 };
 
-const CollectionRow = ({
-	communityData,
-	pubsData,
-	collection,
-	onCollectionUpdate,
-	onCollectionDelete,
-}) => {
+const CollectionRow = ({ communityData, collection, onCollectionUpdate, onCollectionDelete }) => {
 	const schema = getSchemaForKind(collection.kind);
 	const canEditMetadata = schema.metadata.length > 0;
 	return (

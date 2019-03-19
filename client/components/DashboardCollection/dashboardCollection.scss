@@ -7,6 +7,14 @@
             text-decoration: none;
         }
     }
+    .save-spinner {
+        display: inline-flex;
+        opacity: 0;
+        transition: 0.25s ease-out opacity;
+        &.visible {
+            opacity: 1;
+        }
+    }
     .tab-container {
         flex-grow: 1;
         display: flex;

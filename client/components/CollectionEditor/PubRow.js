@@ -25,7 +25,7 @@ const defaultProps = {
 };
 
 const PubRow = (props) => {
-	const { pub, isDragging, dragHandleProps, controls, rank} = props;
+	const { pub, isDragging, dragHandleProps, controls } = props;
 	return (
 		<div className={classNames('pub-row', isDragging && 'is-dragging')}>
 			{dragHandleProps && (
@@ -35,9 +35,7 @@ const PubRow = (props) => {
 			)}
 			<div className="contents">
 				<div className="info">
-					<div>
-						<b>{rank}</b> {pub.title}
-					</div>
+					<div>{pub.title}</div>
 					<div className="bp3-text-muted">
 						<em>{authorsNamesFromPub(pub).join(', ')}</em>
 					</div>

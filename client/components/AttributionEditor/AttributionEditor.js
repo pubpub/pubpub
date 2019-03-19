@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { apiFetch } from 'utilities';
-import { Spinner } from '@blueprintjs/core';
 
 import attributionType from 'types/attribution';
 import UserAutocomplete from 'components/UserAutocomplete/UserAutocomplete';
@@ -18,13 +17,11 @@ const propTypes = {
 	attributions: PropTypes.arrayOf(attributionType).isRequired,
 	identifyingProps: PropTypes.shape({}).isRequired,
 	onUpdateAttributions: PropTypes.func.isRequired,
+	onPersistStateChange: PropTypes.func.isRequired,
 };
 class AttributionEditor extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			isLoading: false,
-		};
 		this.handleDragEnd = this.handleDragEnd.bind(this);
 		this.handleAttributionAdd = this.handleAttributionAdd.bind(this);
 		this.handleAttributionUpdate = this.handleAttributionUpdate.bind(this);
@@ -68,7 +65,7 @@ class AttributionEditor extends Component {
 	}
 
 	handleAttributionUpdate(updatedAttribution) {
-		const { attributions, onUpdateAttributions } = this.props;
+		const { attributions, onUpdateAttributions, onPersistStateChange } = this.props;
 		const newAttributions = attributions.map((attribution) => {
 			if (attribution.id !== updatedAttribution.id) {
 				return attribution;
@@ -79,22 +76,18 @@ class AttributionEditor extends Component {
 			};
 		});
 		onUpdateAttributions(newAttributions);
-		this.setState({ isLoading: true }, () =>
-			this.persistAttribution(updatedAttribution, 'PUT').then(() =>
-				this.setState({ isLoading: false }),
-			),
-		);
+		onPersistStateChange(1);
+		this.persistAttribution(updatedAttribution, 'PUT').then(() => onPersistStateChange(-1));
 	}
 
 	handleAttributionDelete(attributionId) {
-		const { attributions, onUpdateAttributions } = this.props;
+		const { attributions, onUpdateAttributions, onPersistStateChange } = this.props;
 		onUpdateAttributions(
 			attributions.filter((attribution) => attribution.id !== attributionId),
 		);
-		this.setState({ isLoading: true }, () =>
-			this.persistAttribution({ attributionId: attributionId }, 'DELETE').then(() =>
-				this.setState({ isLoading: false }),
-			),
+		onPersistStateChange(1);
+		this.persistAttribution({ id: attributionId }, 'DELETE').then(() =>
+			onPersistStateChange(-1),
 		);
 	}
 
@@ -144,15 +137,9 @@ class AttributionEditor extends Component {
 
 	render() {
 		const { attributions, canEdit } = this.props;
-		const { isLoading } = this.state;
 		const sortedAttributions = attributions.sort((a, b) => a.order - b.order);
 		return (
 			<div className="attribution-editor-component">
-				{isLoading && (
-					<div className="save-wrapper">
-						<Spinner small={true} /> Saving...
-					</div>
-				)}
 				{canEdit && (
 					<UserAutocomplete
 						onSelect={this.handleAttributionAdd}

@@ -30,12 +30,6 @@ const schemas = [
 			{ name: 'isbn', label: 'ISBN' },
 			{ name: 'copyright-year', label: 'Copyright year', permitted: '^[0-9]*$' },
 			{ name: 'edition', label: 'Edition', permitted: '^[0-9]*$' },
-			{
-				name: 'contributors',
-				label: 'Contributors',
-				isMulti: true,
-				hintDerivedFrom: () => ['Test 1', 'Test 2', 'Test 3'],
-			},
 		],
 	},
 	{

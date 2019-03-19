@@ -3,22 +3,39 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { NonIdealState, Tabs, Tab } from '@blueprintjs/core';
+import classNames from 'classnames';
+import { NonIdealState, Tabs, Tab, Spinner } from '@blueprintjs/core';
+
+import collectionType from 'types/collection';
+import communityType from 'types/community';
+import pubType from 'types/pub';
+
 import CollectionEditor from '../CollectionEditor/CollectionEditor';
 import AttributionEditor from '../AttributionEditor/AttributionEditor';
+import CollectionMetadataEditor from '../CollectionMetadata/CollectionMetadataEditor';
 
 require('./dashboardCollection.scss');
 
 const LINK_TO_COLLECTIONS = '/dashboard/collections';
 
-const propTypes = {};
+const propTypes = {
+	communityData: communityType.isRequired,
+	initialCollection: collectionType.isRequired,
+	pubsData: PropTypes.arrayOf(pubType).isRequired,
+};
 
 class DashboardCollection extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			collection: props.initialCollection,
+			persistingCount: 0,
 		};
+		this.handlePersistStateChange = this.handlePersistStateChange.bind(this);
+	}
+
+	handlePersistStateChange(delta) {
+		this.setState((state) => ({ persistingCount: state.persistingCount + delta }));
 	}
 
 	renderContentsEditor() {
@@ -29,6 +46,7 @@ class DashboardCollection extends React.Component {
 				collection={collection}
 				pubs={pubsData}
 				communityId={communityData.id}
+				onPersistStateChange={this.handlePersistStateChange}
 			/>
 		);
 	}
@@ -42,6 +60,7 @@ class DashboardCollection extends React.Component {
 				canEdit={true}
 				attributions={collection.attributions}
 				identifyingProps={{ collectionId: collection.id, communityId: communityData.id }}
+				onPersistStateChange={this.handlePersistStateChange}
 				onUpdateAttributions={(attributions) =>
 					this.setState((state) => ({
 						collection: {
@@ -55,7 +74,9 @@ class DashboardCollection extends React.Component {
 	}
 
 	renderMetadataEditor() {
-		return null;
+		const { communityData } = this.props;
+		const { collection } = this.state;
+		return <CollectionMetadataEditor collection={collection} communityData={communityData} />;
 	}
 
 	renderEmptyState() {
@@ -85,7 +106,8 @@ class DashboardCollection extends React.Component {
 
 	render() {
 		const { communityData } = this.props;
-		const { collection } = this.state;
+		const { collection, persistingCount } = this.state;
+		const isPersisting = persistingCount > 0;
 		if (collection) {
 			return (
 				<div className="component-dashboard-collection">
@@ -93,7 +115,11 @@ class DashboardCollection extends React.Component {
 						<a style={{ color: communityData.accentColor }} href={LINK_TO_COLLECTIONS}>
 							Collections
 						</a>{' '}
-						&rsaquo; {collection.title}
+						&rsaquo; {collection.title}{' '}
+						<Spinner
+							size={25}
+							className={classNames('save-spinner', isPersisting && 'visible')}
+						/>
 					</h1>
 					{this.renderTabs()}
 				</div>

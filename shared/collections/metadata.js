@@ -24,11 +24,10 @@ export const normalizeMetadataToKind = (metadata, kind, context) => {
 export const enumerateMetadataFields = (metadata, kind) => {
 	const { metadata: shape } = getSchemaForKind(kind);
 	return shape.map((field) => {
-		const { name, label, derivedFrom, isMulti } = field;
+		const { name, label, derivedFrom } = field;
 		return {
 			name: name,
 			label: label,
-			isMulti: isMulti,
 			value: metadata[name],
 			derived: !!derivedFrom,
 		};

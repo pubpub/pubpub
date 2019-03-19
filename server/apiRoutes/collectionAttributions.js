@@ -38,14 +38,14 @@ app.post('/api/collectionAttributions', (req, res) =>
 
 app.put('/api/collectionAttributions', (req, res) =>
 	attributionsHandler(credentialsFromRequest(req))
-		.then(({ updateAttribution }) => updateAttribution(req.body.attributionId, req.body))
+		.then(({ updateAttribution }) => updateAttribution(req.body.id, req.body))
 		.then((updated) => res.status(201).json(updated))
 		.catch((err) => res.status(500).json(err)),
 );
 
 app.delete('/api/collectionAttributions', (req, res) =>
 	attributionsHandler(credentialsFromRequest(req))
-		.then(({ destroyAttribution }) => destroyAttribution(req.body.attributionId))
-		.then(() => res.status(201).json(req.body.attributionId))
+		.then(({ destroyAttribution }) => destroyAttribution(req.body.id))
+		.then(() => res.status(201).json(req.body.id))
 		.catch((err) => res.status(500).json(err)),
 );

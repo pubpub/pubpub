@@ -4,30 +4,22 @@
  */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {
-	Button,
-	ButtonGroup,
-	FormGroup,
-	InputGroup,
-	NonIdealState,
-	Tag,
-	MenuItem,
-} from '@blueprintjs/core';
+import { FormGroup, InputGroup, NonIdealState } from '@blueprintjs/core';
 
 import collectionType from 'types/collection';
 
 import { enumerateMetadataFields, normalizeMetadataToKind } from 'shared/collections/metadata';
 import { getSchemaForKind } from 'shared/collections/schemas';
-import { MultiSelect } from '@blueprintjs/select';
+
+require('./collectionMetadataEditor.scss');
 
 const propTypes = {
 	collection: collectionType.isRequired,
 	communityData: PropTypes.shape({}).isRequired,
 	onUpdateMetadata: PropTypes.func.isRequired,
-	onRequestDoi: PropTypes.func.isRequired,
 };
 
-class CollectionMetadataForm extends React.Component {
+class CollectionMetadataEditor extends React.Component {
 	constructor(props) {
 		super(props);
 		const kind = props.collection.kind;
@@ -39,9 +31,7 @@ class CollectionMetadataForm extends React.Component {
 			metadata: initialMetadata,
 			kind: kind,
 		};
-		this.handleUpdateMetadataKind = this.handleUpdateMetadataKind.bind(this);
-		this.handleRequestDoi = this.handleRequestDoi.bind(this);
-		this.handleSave = this.handleSave.bind(this);
+		this.handleInputChange = this.handleInputChange.bind(this);
 	}
 
 	handleInputChange(field, value) {
@@ -54,45 +44,11 @@ class CollectionMetadataForm extends React.Component {
 		});
 	}
 
-	handleRevertMetadata() {
-		const { initialMetadata } = this.state;
-		this.setState({ metadata: initialMetadata });
-	}
-
-	handleUpdateMetadataKind(kind) {
-		const { metadata } = this.state;
-		this.setState({ metadata: normalizeMetadataToKind(metadata, kind) });
-	}
-
-	handleSave() {
-		this.props.onUpdateMetadata(this.state.metadata);
-	}
-
-	hasUnsavedChanges() {
-		return this.state.initialMetadata !== this.state.metadata;
-	}
-
-	handleRequestDoi() {
-		this.setState({ requestedDoi: true });
-		this.props.onRequestDoi();
-	}
-
 	renderField(field) {
-		const { name, value, derived, isMulti } = field;
-		if (isMulti) {
-			return (
-				<MultiSelect
-					className="multi-select"
-					items={value}
-					selectedItems={value}
-					createNewItemFromQuery={(t) => t}
-					itemRenderer={(t) => <MenuItem text={t} />}
-					tagRenderer={(t) => <Tag>{t}</Tag>}
-				/>
-			);
-		}
+		const { name, value, derived } = field;
 		return (
 			<InputGroup
+				className="field"
 				value={value || ''}
 				disabled={derived}
 				onChange={(event) => this.handleInputChange(name, event.target.value)}
@@ -129,29 +85,10 @@ class CollectionMetadataForm extends React.Component {
 	}
 
 	render() {
-		const { collection } = this.props;
-		const { requestedDoi } = this.state;
-		return (
-			<div className="collection-metadata-form-wrapper">
-				{this.renderFields()}
-				<ButtonGroup className="bottom-button-group">
-					<Button
-						icon="link"
-						disabled={collection.doi}
-						loading={requestedDoi && !collection.doi}
-						onClick={this.handleRequestDoi}
-					>
-						Assign Crossref DOI
-					</Button>
-					<Button icon="tick" onClick={this.handleSave}>
-						Save and close
-					</Button>
-				</ButtonGroup>
-			</div>
-		);
+		return <div className="component-collection-metadata-editor">{this.renderFields()}</div>;
 	}
 }
 
-CollectionMetadataForm.propTypes = propTypes;
+CollectionMetadataEditor.propTypes = propTypes;
 
-export default CollectionMetadataForm;
+export default CollectionMetadataEditor;

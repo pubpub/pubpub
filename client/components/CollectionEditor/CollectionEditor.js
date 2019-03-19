@@ -19,6 +19,7 @@ import CollectionEditorView from './CollectionEditorView';
 const propTypes = {
 	communityId: PropTypes.string.isRequired,
 	collection: collectionType.isRequired,
+	onPersistStateChange: PropTypes.func.isRequired,
 	pubs: PropTypes.arrayOf(pubType).isRequired,
 };
 
@@ -43,11 +44,13 @@ class CollectionEditor extends React.Component {
 		const fromApi = fnOfApi(collectionsApi(collection, communityId));
 		if (typeof fromApi.then === 'function') {
 			this.setState({ pendingOperationsCount: pendingOperationsCount + 1 });
-			return fromApi.then(() =>
-				this.setState((stateNow) => ({
-					pendingOperationsCount: stateNow.pendingOperationsCount - 1,
-				})),
-			);
+			this.props.onPersistStateChange(1);
+			return fromApi.then(() => {
+				this.setState((state) => ({
+					pendingOperationsCount: state.pendingOperationsCount - 1,
+				}));
+				this.props.onPersistStateChange(-1);
+			});
 		}
 		return Promise.resolve();
 	}
