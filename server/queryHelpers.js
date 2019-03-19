@@ -672,3 +672,8 @@ export const getCollectionAttributions = (collectionId) =>
 			},
 		],
 	});
+
+export const getCollectionPubsInCollection = (collectionId) =>
+	CollectionPub.findAll({
+		where: { collectionId: collectionId },
+	});

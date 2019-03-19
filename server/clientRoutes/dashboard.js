@@ -10,7 +10,11 @@ import {
 	handleErrors,
 	generateMetaComponents,
 } from '../utilities';
-import { findPage, getCollectionAttributions } from '../queryHelpers';
+import {
+	findPage,
+	getCollectionAttributions,
+	getCollectionPubsInCollection,
+} from '../queryHelpers';
 
 const extraContextualData = [
 	{
@@ -41,21 +45,26 @@ const extraContextualData = [
 	{
 		retrieve: ({ mode, slug: collectionId }) => {
 			if (mode === 'collections' && collectionId) {
-				return getCollectionAttributions(collectionId);
+				return Promise.all([
+					getCollectionAttributions(collectionId),
+					getCollectionPubsInCollection(collectionId),
+				]);
 			}
-			return [];
+			return null;
 		},
 		transform: (initialData, result, { slug: collectionId }) => {
 			const { communityData } = initialData;
 			const { collections } = communityData;
-			if (result === []) {
+			if (!result) {
 				return initialData;
 			}
+			const [attributions, collectionPubs] = result;
 			const newCollections = collections.map((collection) => {
 				if (collection.id === collectionId) {
 					return {
 						...collection,
-						attributions: result,
+						attributions: attributions,
+						collectionPubs: collectionPubs,
 					};
 				}
 				return collection;

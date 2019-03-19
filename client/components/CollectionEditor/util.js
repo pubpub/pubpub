@@ -15,6 +15,16 @@ export const createPubSelection = (pub, collection, rank, contextHintValue = nul
 	};
 };
 
+// The backend model used to represent these collection editor selections is CollectionPub. We
+// abstract away that terminology on the frontend, but it's used here to indicate a function that
+// takes raw CollectionPub data from the server and creates a pub selection object that the
+// CollectionEditor component understands how to manipulate.
+export const createPubSelectionFromCollectionPub = (collectionPub, allPubs, collection) => {
+	const { contextHint, rank, id } = collectionPub;
+	const pub = allPubs.find((p) => p.id === collectionPub.pubId);
+	return createPubSelection(pub, collection, rank, contextHint, id);
+};
+
 export const authorsNamesFromPub = (pub) =>
 	pub.attributions.map((attr) => attr.name).filter((x) => x);
 

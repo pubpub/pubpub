@@ -6,8 +6,7 @@ import makeAttributionsHandler from './helpers/attributions';
 import { communityAdminFor } from './permissions/communityAdmin';
 import { pubManagerFor } from './permissions/pubManager';
 
-const attributionsHandler = makeAttributionsHandler(
-	PubAttribution,
+const attributionsHandler = makeAttributionsHandler(PubAttribution)(
 	({ pubId, userId, communityId }) =>
 		permissions.any({
 			communityAdmin: communityAdminFor(

@@ -15,8 +15,14 @@ const propTypes = {};
 
 class DashboardCollection extends React.Component {
 	renderContentsEditor() {
-		const { collection, pubsData } = this.props;
-		return <CollectionEditor collection={collection} pubs={pubsData} selections={[]} />;
+		const { collection, communityData, pubsData } = this.props;
+		return (
+			<CollectionEditor
+				collection={collection}
+				pubs={pubsData}
+				communityId={communityData.id}
+			/>
+		);
 	}
 
 	renderAttributionEditor() {

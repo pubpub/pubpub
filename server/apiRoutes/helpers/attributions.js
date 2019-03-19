@@ -3,6 +3,7 @@
  * (e.g. PubAttribution, CollectionAttribution)
  */
 import { User } from '../../models';
+import withPermissions from '../permissions/withPermissions';
 
 const CAN_UPDATE_ATTRIBUTES = ['name', 'avatar', 'title', 'order', 'isAuthor', 'roles'];
 
@@ -13,8 +14,8 @@ const INCLUDE_USER_ATTRIBUTES = {
 	attributes: ['id', 'firstName', 'lastName', 'fullName', 'avatar', 'slug', 'initials', 'title'],
 };
 
-export default (AttributionModel, testPermissions) => (permissionsInput) =>
-	testPermissions(permissionsInput).then(() => ({
+export default (AttributionModel) =>
+	withPermissions({
 		createAttribution: (attribution) =>
 			AttributionModel.create(attribution)
 				.then((newAttribution) =>
@@ -35,4 +36,4 @@ export default (AttributionModel, testPermissions) => (permissionsInput) =>
 			return AttributionModel.update(updatedAttribution, { where: { id: modelId } });
 		},
 		destroyAttribution: (modelId) => AttributionModel.destroy({ where: { id: modelId } }),
-	}));
+	});

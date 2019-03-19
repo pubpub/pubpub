@@ -9,7 +9,11 @@ import collectionType from 'types/collection';
 import pubType from 'types/pub';
 
 import collectionsApi from './api';
-import { createPubSelection, findRankForSelection } from './util';
+import {
+	createPubSelection,
+	createPubSelectionFromCollectionPub,
+	findRankForSelection,
+} from './util';
 import CollectionEditorView from './CollectionEditorView';
 
 const propTypes = {
@@ -23,7 +27,9 @@ class CollectionEditor extends React.Component {
 		super(props);
 		this.state = {
 			pendingOperationsCount: 0,
-			selections: [],
+			selections: props.collection.collectionPubs.map((cp) =>
+				createPubSelectionFromCollectionPub(cp, props.pubs, props.collection),
+			),
 		};
 		this.handleAddSelection = this.handleAddSelection.bind(this);
 		this.handleRemoveSelectionByPub = this.handleRemoveSelectionByPub.bind(this);
