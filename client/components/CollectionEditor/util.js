@@ -1,12 +1,16 @@
 import { getSchemaForKind } from 'shared/collections/schemas';
+import findRank from 'shared/util/findRank';
 
-export const createPubSelection = (pub, collection, contextHint = null, id = null) => {
-	const resultingContextHint =
-		contextHint || getSchemaForKind(collection.kind).contextHints.find((ch) => ch.default);
+export const createPubSelection = (pub, collection, rank, contextHintValue = null, id = null) => {
+	const { contextHints } = getSchemaForKind(collection.kind);
+	const contextHint = contextHintValue
+		? contextHints.find((ch) => ch.value === contextHintValue)
+		: contextHints.find((ch) => ch.default);
 	return {
 		pub: pub,
 		collection: collection,
-		contextHint: resultingContextHint,
+		rank: rank,
+		contextHint: contextHint,
 		id: id,
 	};
 };
@@ -27,3 +31,6 @@ export const fuzzyMatchPub = (pub, input) => {
 		.map(normalize);
 	return normalizedSources.some((source) => source.includes(normalizedInput));
 };
+
+export const findRankForSelection = (selections, index) =>
+	findRank(selections.map((s) => s.rank), index);

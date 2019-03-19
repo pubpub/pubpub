@@ -13,27 +13,6 @@ const INCLUDE_USER_ATTRIBUTES = {
 	attributes: ['id', 'firstName', 'lastName', 'fullName', 'avatar', 'slug', 'initials', 'title'],
 };
 
-const addFallbackUser = (attribution) => {
-	if (attribution.user) {
-		return attribution;
-	}
-	return {
-		...attribution,
-		user: {
-			id: attribution.id,
-			initials: attribution.name[0],
-			fullName: attribution.name,
-			firstName: attribution.name.split(' ')[0],
-			lastName: attribution.name
-				.split(' ')
-				.slice(1, attribution.name.split(' ').length)
-				.join(' '),
-			avatar: attribution.avatar,
-			title: attribution.title,
-		},
-	};
-};
-
 export default (AttributionModel, testPermissions) => (permissionsInput) =>
 	testPermissions(permissionsInput).then(() => ({
 		createAttribution: (attribution) =>
@@ -45,7 +24,7 @@ export default (AttributionModel, testPermissions) => (permissionsInput) =>
 						include: [INCLUDE_USER_ATTRIBUTES],
 					}),
 				)
-				.then((newModelWithUser) => addFallbackUser(newModelWithUser.toJSON())),
+				.then((newModelWithUser) => newModelWithUser.toJSON()),
 		updateAttribution: (modelId, requestToUpdate) => {
 			const updatedAttribution = {};
 			Object.keys(requestToUpdate).forEach((key) => {

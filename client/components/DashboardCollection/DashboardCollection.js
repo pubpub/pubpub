@@ -5,7 +5,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { NonIdealState, Tabs, Tab } from '@blueprintjs/core';
 import CollectionEditor from '../CollectionEditor/CollectionEditor';
-import CollectionEditorManaged from '../CollectionEditor/CollectionEditorManaged';
 import AttributionEditor from '../AttributionEditor/AttributionEditor';
 
 require('./dashboardCollection.scss');
@@ -17,7 +16,7 @@ const propTypes = {};
 class DashboardCollection extends React.Component {
 	renderContentsEditor() {
 		const { collection, pubsData } = this.props;
-		return <CollectionEditorManaged collection={collection} pubs={pubsData} selections={[]} />;
+		return <CollectionEditor collection={collection} pubs={pubsData} selections={[]} />;
 	}
 
 	renderAttributionEditor() {

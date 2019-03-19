@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import { propTypes } from '../components/CollectionEditor/CollectionEditor';
 
 export default PropTypes.shape({
 	id: PropTypes.string.isRequired,
@@ -8,7 +7,7 @@ export default PropTypes.shape({
 	user: PropTypes.shape({
 		initials: PropTypes.string,
 		avatar: PropTypes.string,
-		fullName: propTypes.string,
+		fullName: PropTypes.string,
 		slug: PropTypes.string,
 	}).isRequired,
 });

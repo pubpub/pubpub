@@ -20,6 +20,27 @@ const propTypes = {
 	onUpdateAttributions: PropTypes.func.isRequired,
 };
 
+const addFallbackUser = (attribution) => {
+	if (attribution.user) {
+		return attribution;
+	}
+	return {
+		...attribution,
+		user: {
+			id: attribution.id,
+			initials: attribution.name[0],
+			fullName: attribution.name,
+			firstName: attribution.name.split(' ')[0],
+			lastName: attribution.name
+				.split(' ')
+				.slice(1, attribution.name.split(' ').length)
+				.join(' '),
+			avatar: attribution.avatar,
+			title: attribution.title,
+		},
+	};
+};
+
 class AttributionEditor extends Component {
 	constructor(props) {
 		super(props);
@@ -159,9 +180,11 @@ class AttributionEditor extends Component {
 						onSelect={this.handleAttributionAdd}
 						allowCustomUser={true}
 						placeholder="Add new person..."
-						usedUserIds={attributions.map((item) => {
-							return item.user.id;
-						})}
+						usedUserIds={attributions
+							.map((item) => {
+								return item.user && item.user.id;
+							})
+							.filter((x) => x)}
 					/>
 				)}
 				<DragDropContext onDragEnd={this.handleDragEnd}>
@@ -173,7 +196,7 @@ class AttributionEditor extends Component {
 						withDragHandles={true}
 						renderItem={(attribution, dragHandleProps, isDragging) => (
 							<AttributionRow
-								attribution={attribution}
+								attribution={addFallbackUser(attribution)}
 								canEdit={canEdit}
 								isDragging={isDragging}
 								dragHandleProps={dragHandleProps}

@@ -102,6 +102,7 @@
 		"lodash.throttle": "^4.1.1",
 		"mailgun.js": "^2.0.1",
 		"mini-css-extract-plugin": "^0.5.0",
+		"mudder": "^1.0.4",
 		"newrelic": "^5.5.0",
 		"node-pandoc": "^0.3.0",
 		"node-sass": "^4.10.0",

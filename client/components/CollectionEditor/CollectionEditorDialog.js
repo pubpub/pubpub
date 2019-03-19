@@ -9,7 +9,7 @@ import collectionType from 'types/collection';
 import pubType from 'types/pub';
 
 import { loadPubSelections, persistPubSelections } from './api';
-import CollectionEditorManaged from './CollectionEditorManaged';
+import CollectionEditor from './CollectionEditor';
 
 const propTypes = {
 	collection: collectionType.isRequired,
@@ -56,7 +56,7 @@ class CollectionEditorDialog extends React.Component {
 		const { isSaving, selections } = this.state;
 		return (
 			<React.Fragment>
-				<CollectionEditorManaged
+				<CollectionEditor
 					collection={collection}
 					pubs={pubs}
 					selections={selections}

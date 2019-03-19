@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 
 import AttributionEditor from '../AttributionEditor/AttributionEditor';
 
-require('./pubOptionsAttribution.scss');
-
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
