@@ -1,4 +1,4 @@
-const urlForCommunity = () => '';
+import { communityUrl } from 'shared/util/canonicalUrls';
 
 const schemas = [
 	{
@@ -7,29 +7,24 @@ const schemas = [
 		bpDisplayIcon: 'book',
 		contextHints: [
 			{ value: 'foreword', label: 'Foreword' },
-			{ value: 'supplementary-material', label: 'Supplementary Material' },
+			{ value: 'supplementaryMaterial', label: 'Supplementary Material' },
 			{ value: 'chapter', label: 'Chapter', default: true },
 		],
 		metadata: [
 			{
-				name: 'title',
-				label: 'Title',
-				hintDerivedFrom: ({ collection }) => collection.title,
-			},
-			{
 				name: 'doi',
 				label: 'DOI',
-				hintDerivedFrom: ({ collection }) => collection.doi,
+				defaultDerivedFrom: ({ collection }) => collection.doi,
 				disabled: true,
 			},
 			{
 				name: 'url',
 				label: 'URL',
-				hintDerivedFrom: ({ community }) => urlForCommunity(community),
+				defaultDerivedFrom: ({ community }) => communityUrl(community),
 			},
 			{ name: 'isbn', label: 'ISBN' },
-			{ name: 'copyright-year', label: 'Copyright year', permitted: '^[0-9]*$' },
-			{ name: 'edition', label: 'Edition', permitted: '^[0-9]*$' },
+			{ name: 'copyrightYear', label: 'Copyright year', pattern: '^[0-9]*$' },
+			{ name: 'edition', label: 'Edition no.', pattern: '^[0-9]*$' },
 		],
 	},
 	{

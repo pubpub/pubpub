@@ -14,7 +14,6 @@ const propTypes = {
 	pubsData: PropTypes.object.isRequired,
 	setCommunityData: PropTypes.func.isRequired,
 };
-
 class DashboardCollections extends Component {
 	constructor(props) {
 		super(props);

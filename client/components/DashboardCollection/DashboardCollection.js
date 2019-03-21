@@ -32,10 +32,20 @@ class DashboardCollection extends React.Component {
 			persistingCount: 0,
 		};
 		this.handlePersistStateChange = this.handlePersistStateChange.bind(this);
+		this.handleUpdateCollection = this.handleUpdateCollection.bind(this);
 	}
 
 	handlePersistStateChange(delta) {
 		this.setState((state) => ({ persistingCount: state.persistingCount + delta }));
+	}
+
+	handleUpdateCollection(update) {
+		this.setState((state) => ({
+			collection: {
+				...state.collection,
+				...update,
+			},
+		}));
 	}
 
 	renderContentsEditor() {
@@ -76,7 +86,14 @@ class DashboardCollection extends React.Component {
 	renderMetadataEditor() {
 		const { communityData } = this.props;
 		const { collection } = this.state;
-		return <CollectionMetadataEditor collection={collection} communityData={communityData} />;
+		return (
+			<CollectionMetadataEditor
+				collection={collection}
+				communityData={communityData}
+				onPersistStateChange={this.handlePersistStateChange}
+				onUpdateCollection={this.handleUpdateCollection}
+			/>
+		);
 	}
 
 	renderEmptyState() {

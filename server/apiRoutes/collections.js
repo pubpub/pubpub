@@ -28,7 +28,7 @@ app.put(
 		// Filter to only allow certain fields to be updated
 		const updatedCollection = {};
 		Object.keys(req.body).forEach((key) => {
-			if (['title', 'isRestricted', 'isPublic', 'pageId'].indexOf(key) > -1) {
+			if (['title', 'isRestricted', 'isPublic', 'pageId', 'metadata'].indexOf(key) > -1) {
 				updatedCollection[key] = req.body[key];
 			}
 		});

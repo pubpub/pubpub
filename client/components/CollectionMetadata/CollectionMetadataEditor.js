@@ -4,10 +4,10 @@
  */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { FormGroup, InputGroup, NonIdealState } from '@blueprintjs/core';
+import { Button, FormGroup, InputGroup, NonIdealState, ButtonGroup } from '@blueprintjs/core';
 
 import collectionType from 'types/collection';
-
+import { apiFetch } from 'utilities';
 import { enumerateMetadataFields, normalizeMetadataToKind } from 'shared/collections/metadata';
 import { getSchemaForKind } from 'shared/collections/schemas';
 
@@ -16,53 +16,103 @@ require('./collectionMetadataEditor.scss');
 const propTypes = {
 	collection: collectionType.isRequired,
 	communityData: PropTypes.shape({}).isRequired,
-	onUpdateMetadata: PropTypes.func.isRequired,
+	onPersistStateChange: PropTypes.func.isRequired,
+	onUpdateCollection: PropTypes.func.isRequired,
 };
 
 class CollectionMetadataEditor extends React.Component {
 	constructor(props) {
 		super(props);
-		const kind = props.collection.kind;
-		const initialMetadata = normalizeMetadataToKind(props.collection.metadata || {}, kind, {
-			communityData: props.communityData,
-			collection: props.collection,
-		});
+		const initialMetadata = this.normalizeMetadata(props.collection.metadata || {});
 		this.state = {
+			title: props.collection.title,
 			metadata: initialMetadata,
-			kind: kind,
+			isSaving: false,
 		};
 		this.handleInputChange = this.handleInputChange.bind(this);
+		this.handleTitleChange = this.handleTitleChange.bind(this);
+		this.handleSaveClick = this.handleSaveClick.bind(this);
 	}
 
-	handleInputChange(field, value) {
+	normalizeMetadata(metadata) {
+		const { collection, communityData } = this.props;
+		return normalizeMetadataToKind(metadata, collection.kind, {
+			community: communityData,
+			collection: collection,
+		});
+	}
+
+	deriveInputDefault(defaultDerivedFrom) {
+		const { communityData: community } = this.props;
+		return defaultDerivedFrom({ community: community });
+	}
+
+	handleSaveClick() {
+		const { communityData, collection, onPersistStateChange, onUpdateCollection } = this.props;
+		const { metadata, title } = this.state;
+		this.setState({ isSaving: true });
+		onPersistStateChange(1);
+		return apiFetch('/api/collections', {
+			method: 'PUT',
+			body: JSON.stringify({
+				metadata: metadata,
+				title: title,
+				collectionId: collection.id,
+				communityId: communityData.id,
+			}),
+		}).then(() => {
+			onPersistStateChange(-1);
+			onUpdateCollection({ metadata: metadata, title: title });
+			this.setState({ isSaving: false });
+		});
+	}
+
+	handleInputChange(field, value, pattern) {
 		const { metadata } = this.state;
+		if (pattern && !new RegExp(pattern).test(value)) {
+			return;
+		}
 		this.setState({
-			metadata: {
+			metadata: this.normalizeMetadata({
 				...metadata,
 				[field]: value,
-			},
+			}),
 		});
+	}
+
+	handleTitleChange(e) {
+		this.setState({ title: e.target.value });
 	}
 
 	renderField(field) {
-		const { name, value, derived } = field;
+		const { name, value, derived, defaultDerivedFrom, pattern } = field;
+		const derivedHintValue = defaultDerivedFrom && this.deriveInputDefault(defaultDerivedFrom);
 		return (
 			<InputGroup
 				className="field"
 				value={value || ''}
 				disabled={derived}
-				onChange={(event) => this.handleInputChange(name, event.target.value)}
+				onChange={(event) => this.handleInputChange(name, event.target.value, pattern)}
+				rightElement={
+					derivedHintValue && (
+						<Button
+							minimal
+							icon="lightbulb"
+							disabled={value === derivedHintValue}
+							onClick={() => this.handleInputChange(name, derivedHintValue)}
+						>
+							Use default
+						</Button>
+					)
+				}
 			/>
 		);
 	}
 
 	renderFields() {
-		const { communityData, collection } = this.props;
-		const { kind } = this.state;
-		const metadata = normalizeMetadataToKind(this.state.metadata, kind, {
-			communityData: communityData,
-			collection: collection,
-		});
+		const { collection } = this.props;
+		const { title, metadata } = this.state;
+		const { kind } = collection;
 		const fields = enumerateMetadataFields(metadata, kind);
 		if (fields.length === 0) {
 			return (
@@ -75,17 +125,32 @@ class CollectionMetadataEditor extends React.Component {
 		}
 		return (
 			<div className="fields">
-				{fields.map((field) => (
-					<FormGroup key={field.name} label={field.label}>
-						{this.renderField(field)}
-					</FormGroup>
-				))}
+				<FormGroup label="Title">
+					<InputGroup className="field" value={title} onChange={this.handleTitleChange} />
+				</FormGroup>
+				{fields.map((field) =>
+					field.disabled ? null : (
+						<FormGroup key={field.name} label={field.label}>
+							{this.renderField(field)}
+						</FormGroup>
+					),
+				)}
 			</div>
 		);
 	}
 
 	render() {
-		return <div className="component-collection-metadata-editor">{this.renderFields()}</div>;
+		const { isSaving } = this.state;
+		return (
+			<div className="component-collection-metadata-editor">
+				{this.renderFields()}
+				<ButtonGroup>
+					<Button icon="tick" disabled={isSaving} onClick={this.handleSaveClick}>
+						Save changes
+					</Button>
+				</ButtonGroup>
+			</div>
+		);
 	}
 }
 
