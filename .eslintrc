@@ -36,6 +36,6 @@
         "react/jsx-indent-props": [2, "tab"],
         "react/jsx-one-expression-per-line": 0,
         "react/jsx-wrap-multilines": 0,
-        "space-before-function-paren": [2, "never"],
+        "space-before-function-paren": 0,
     },
 }

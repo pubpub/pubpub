@@ -2,7 +2,7 @@ import app from '../server';
 import { CollectionAttribution, Collection } from '../models';
 
 import permissions from './permissions/permissions';
-import makeAttributionsHandler from './helpers/attributions';
+import makeAttributionsHandler from './handlers/attributions';
 import { communityAdminFor } from './permissions/communityAdmin';
 
 const attributionsHandler = makeAttributionsHandler(CollectionAttribution)(

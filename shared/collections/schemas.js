@@ -14,13 +14,13 @@ const schemas = [
 			{
 				name: 'doi',
 				label: 'DOI',
-				defaultDerivedFrom: ({ collection }) => collection.doi,
+				defaultDerivedFrom: ({ collection }) => collection && collection.doi,
 				disabled: true,
 			},
 			{
 				name: 'url',
 				label: 'URL',
-				defaultDerivedFrom: ({ community }) => communityUrl(community),
+				defaultDerivedFrom: ({ community }) => community && communityUrl(community),
 			},
 			{ name: 'isbn', label: 'ISBN' },
 			{ name: 'copyrightYear', label: 'Copyright year', pattern: '^[0-9]*$' },

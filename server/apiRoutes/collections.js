@@ -1,63 +1,46 @@
 import app from '../server';
 import { Collection } from '../models';
-import { withCommunityAdmin } from './permissions/communityAdmin';
+import permissions from './permissions';
+import { communityAdminFor } from './permissions/communityAdmin';
+import makeCollectionsHandler from './handlers/collections';
 
-app.post(
-	'/api/collections',
-	withCommunityAdmin((req, res) => {
-		return Collection.create({
-			title: req.body.title.trim(),
-			isRestricted: true,
-			isPublic: true,
-			communityId: req.body.communityId,
-			kind: req.body.kind,
-		})
-			.then((newCollection) => {
-				return res.status(201).json(newCollection);
-			})
-			.catch((err) => {
-				console.error('Error in postCollection: ', err);
-				return res.status(500).json(err.message);
-			});
+const collectionsHandler = makeCollectionsHandler(({ userId, collectionId, communityId }) =>
+	permissions.all({
+		communityAdmin: communityAdminFor(
+			{ userId: userId, communityId: communityId, collectionId: collectionId },
+			{ collectionId: collectionId && [Collection, 'communityId'] },
+		),
 	}),
 );
 
-app.put(
-	'/api/collections',
-	withCommunityAdmin((req, res) => {
-		// Filter to only allow certain fields to be updated
-		const updatedCollection = {};
-		Object.keys(req.body).forEach((key) => {
-			if (['title', 'isRestricted', 'isPublic', 'pageId', 'metadata'].indexOf(key) > -1) {
-				updatedCollection[key] = req.body[key];
-			}
-		});
+const credentialsFromRequest = (req) => ({
+	collectionId: req.body.id,
+	communityId: req.body.communityId,
+	userId: req.user.id,
+});
 
-		return Collection.update(updatedCollection, {
-			where: { id: req.body.collectionId },
-		})
-			.then(() => {
-				return res.status(201).json(updatedCollection);
-			})
-			.catch((err) => {
-				console.error('Error in putCollection: ', err);
-				return res.status(500).json(err.message);
-			});
-	}),
+app.post('/api/collections', (req, res) =>
+	collectionsHandler(credentialsFromRequest(req))
+		.catch(() => res.status(401).send({}))
+		.then(({ createCollection }) =>
+			createCollection(req.body.title, req.body.kind, req.body.communityId),
+		)
+		.then((newCollection) => res.status(201).json(newCollection))
+		.catch((err) => res.status(500).json(err)),
 );
 
-app.delete(
-	'/api/collections',
-	withCommunityAdmin((req, res) => {
-		return Collection.destroy({
-			where: { id: req.body.collectionId },
-		})
-			.then(() => {
-				return res.status(201).json(req.body.collectionId);
-			})
-			.catch((err) => {
-				console.error('Error in deleteCollection: ', err);
-				return res.status(500).json(err.message);
-			});
-	}),
+app.put('/api/collections', (req, res) =>
+	collectionsHandler(credentialsFromRequest(req))
+		.catch(() => res.status(401).send({}))
+		.then(({ updateCollection }) => updateCollection(req.body.id, req.body))
+		.then((updatedCollection) => res.status(201).json(updatedCollection))
+		.catch((err) => res.status(500).json(err)),
+);
+
+app.delete('/api/collections', (req, res) =>
+	collectionsHandler(credentialsFromRequest(req))
+		.catch(() => res.status(401).send({}))
+		.then(({ destroyCollection }) => destroyCollection(req.body.id))
+		.then(() => res.status(201).json({}))
+		.catch((err) => res.status(500).json(err)),
 );

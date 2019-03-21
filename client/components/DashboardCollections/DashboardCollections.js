@@ -22,9 +22,9 @@ class DashboardCollections extends Component {
 			currentCollectionSchema: getSchemaForKind('tag'),
 			error: undefined,
 		};
-		this.handleCollectionCreate = this.handleCollectionCreate.bind(this);
-		this.handleCollectionUpdate = this.handleCollectionUpdate.bind(this);
-		this.handleCollectionDelete = this.handleCollectionDelete.bind(this);
+		this.handleCreateCollection = this.handleCreateCollection.bind(this);
+		this.handleUpdateCollection = this.handleUpdateCollection.bind(this);
+		this.handleDeleteCollection = this.handleDeleteCollection.bind(this);
 	}
 
 	getDisplayableCollections() {
@@ -44,7 +44,7 @@ class DashboardCollections extends Component {
 			});
 	}
 
-	handleCollectionCreate(evt) {
+	handleCreateCollection(evt) {
 		evt.preventDefault();
 		const isUniqueTitle = this.props.communityData.collections.reduce((prev, curr) => {
 			if (curr.title === this.state.newCollectionValue) {
@@ -76,7 +76,7 @@ class DashboardCollections extends Component {
 		});
 	}
 
-	handleCollectionUpdate(updatedCollection) {
+	handleUpdateCollection(updatedCollection) {
 		return apiFetch('/api/collections', {
 			method: 'PUT',
 			body: JSON.stringify({
@@ -87,7 +87,7 @@ class DashboardCollections extends Component {
 			this.props.setCommunityData({
 				...this.props.communityData,
 				collections: this.props.communityData.collections.map((collection) => {
-					if (collection.id !== updatedCollection.collectionId) {
+					if (collection.id !== updatedCollection.id) {
 						return collection;
 					}
 					if (!updatedCollection.pageId) {
@@ -108,11 +108,11 @@ class DashboardCollections extends Component {
 		});
 	}
 
-	handleCollectionDelete(collectionId) {
+	handleDeleteCollection(collectionId) {
 		return apiFetch('/api/collections', {
 			method: 'DELETE',
 			body: JSON.stringify({
-				collectionId: collectionId,
+				id: collectionId,
 				communityId: this.props.communityData.id,
 			}),
 		}).then(() => {
@@ -130,7 +130,7 @@ class DashboardCollections extends Component {
 		const label = currentCollectionSchema.label.singular.toLowerCase();
 		// TODO(ian): figure out how to grow the InputGroup without resorting to CSS
 		return (
-			<form onSubmit={this.handleCollectionCreate}>
+			<form onSubmit={this.handleCreateCollection}>
 				<ControlGroup>
 					<CollectionKindDropdown
 						selectedSchema={currentCollectionSchema}
@@ -181,8 +181,8 @@ class DashboardCollections extends Component {
 						pubsData={this.props.pubsData}
 						collection={collection}
 						key={collection.id}
-						onCollectionUpdate={this.handleCollectionUpdate}
-						onCollectionDelete={this.handleCollectionDelete}
+						onUpdateCollection={this.handleUpdateCollection}
+						onDeleteCollection={this.handleDeleteCollection}
 					/>
 				))}
 			</div>

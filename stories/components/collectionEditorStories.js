@@ -7,6 +7,7 @@ const TEST_COLLECTION = {
 	kind: 'book',
 	id: 'pretend-its-a-uuid',
 	title: 'A Real Life Book',
+	collectionPubs: [],
 };
 
 const TEST_AUTHORS = {

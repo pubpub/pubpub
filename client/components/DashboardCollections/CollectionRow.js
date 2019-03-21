@@ -11,11 +11,11 @@ import LinkedPageSelect from './LinkedPageSelect';
 const propTypes = {
 	collection: collectionType.isRequired,
 	communityData: communityType.isRequired,
-	onCollectionDelete: PropTypes.func.isRequired,
-	onCollectionUpdate: PropTypes.func.isRequired,
+	onDeleteCollection: PropTypes.func.isRequired,
+	onUpdateCollection: PropTypes.func.isRequired,
 };
 
-const CollectionRow = ({ communityData, collection, onCollectionUpdate, onCollectionDelete }) => {
+const CollectionRow = ({ communityData, collection, onUpdateCollection, onDeleteCollection }) => {
 	const schema = getSchemaForKind(collection.kind);
 	const canEditMetadata = schema.metadata.length > 0;
 	return (
@@ -24,9 +24,9 @@ const CollectionRow = ({ communityData, collection, onCollectionUpdate, onCollec
 				<EditableText
 					defaultValue={collection.title}
 					onConfirm={(newTitle) => {
-						onCollectionUpdate({
+						onUpdateCollection({
 							title: newTitle,
-							collectionId: collection.id,
+							id: collection.id,
 						});
 					}}
 				/>
@@ -34,8 +34,14 @@ const CollectionRow = ({ communityData, collection, onCollectionUpdate, onCollec
 			<ControlGroup>
 				<LinkedPageSelect
 					collection={collection}
-					onCollectionUpdate={onCollectionDelete}
+					onSelectPage={(pageId) =>
+						onUpdateCollection({
+							id: collection.id,
+							pageId: pageId,
+						})
+					}
 					communityData={communityData}
+					minimal={true}
 				/>
 				{canEditMetadata && (
 					<AnchorButton
@@ -50,9 +56,9 @@ const CollectionRow = ({ communityData, collection, onCollectionUpdate, onCollec
 			<Checkbox
 				checked={!collection.isPublic}
 				onChange={(evt) => {
-					onCollectionUpdate({
+					onUpdateCollection({
 						isPublic: !evt.target.checked,
-						collectionId: collection.id,
+						id: collection.id,
 					});
 				}}
 			>
@@ -62,7 +68,7 @@ const CollectionRow = ({ communityData, collection, onCollectionUpdate, onCollec
 				type="button"
 				className="bp3-button bp3-icon-small-cross bp3-minimal"
 				onClick={() => {
-					onCollectionDelete(collection.id);
+					onDeleteCollection(collection.id);
 				}}
 			/>
 		</div>

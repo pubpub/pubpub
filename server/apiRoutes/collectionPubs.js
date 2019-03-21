@@ -2,7 +2,7 @@ import app from '../server';
 
 import { Collection } from '../models';
 import permissions from './permissions';
-import makeCollectionPubHandler from './helpers/collectionPubs';
+import makeCollectionPubHandler from './handlers/collectionPubs';
 import { communityAdminFor } from './permissions/communityAdmin';
 
 const collectionPubHandler = makeCollectionPubHandler(({ userId, communityId, collectionId }) =>
@@ -43,6 +43,6 @@ app.put('/api/collectionPubs', (req, res) =>
 app.delete('/api/collectionPubs', (req, res) =>
 	collectionPubHandler(credentialsFromRequest(req))
 		.then(({ destroyCollectionPub }) => destroyCollectionPub(req.body.id))
-		.then(() => res.status(201).json())
-		.catch((err) => res.status(401).json(err)),
+		.then(() => res.status(201).json({}))
+		.catch(() => res.status(401).json({})),
 );

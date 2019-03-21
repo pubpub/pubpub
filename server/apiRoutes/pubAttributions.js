@@ -2,7 +2,7 @@ import app from '../server';
 import { PubAttribution, Pub } from '../models';
 
 import permissions from './permissions/permissions';
-import makeAttributionsHandler from './helpers/attributions';
+import makeAttributionsHandler from './handlers/attributions';
 import { communityAdminFor } from './permissions/communityAdmin';
 import { pubManagerFor } from './permissions/pubManager';
 

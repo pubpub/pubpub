@@ -177,7 +177,7 @@ export const getInitialData = (req) => {
 
 		communityData.tags = communityData.collections.filter((c) => c.kind === 'tag');
 
-		communityData.collection = communityData.collections.map((collection) => {
+		communityData.collections = communityData.collections.map((collection) => {
 			if (!collection.pageId) {
 				return collection;
 			}

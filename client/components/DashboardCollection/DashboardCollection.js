@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { NonIdealState, Tabs, Tab, Spinner } from '@blueprintjs/core';
 
+import { apiFetch } from 'utilities';
 import collectionType from 'types/collection';
 import communityType from 'types/community';
 import pubType from 'types/pub';
@@ -13,6 +14,7 @@ import pubType from 'types/pub';
 import CollectionEditor from '../CollectionEditor/CollectionEditor';
 import AttributionEditor from '../AttributionEditor/AttributionEditor';
 import CollectionMetadataEditor from '../CollectionMetadata/CollectionMetadataEditor';
+import CollectionDetailsEditor from './CollectionDetailsEditor';
 
 require('./dashboardCollection.scss');
 
@@ -33,19 +35,49 @@ class DashboardCollection extends React.Component {
 		};
 		this.handlePersistStateChange = this.handlePersistStateChange.bind(this);
 		this.handleUpdateCollection = this.handleUpdateCollection.bind(this);
+		this.handleDeleteCollection = this.handleDeleteCollection.bind(this);
 	}
 
 	handlePersistStateChange(delta) {
 		this.setState((state) => ({ persistingCount: state.persistingCount + delta }));
 	}
 
-	handleUpdateCollection(update) {
-		this.setState((state) => ({
+	handleUpdateCollection(updatedCollection, persistNow) {
+		const { communityData } = this.props;
+		const { collection } = this.state;
+		if (persistNow) {
+			this.handlePersistStateChange(1);
+			apiFetch('/api/collections', {
+				method: 'PUT',
+				body: JSON.stringify({
+					...updatedCollection,
+					id: collection.id,
+					communityId: this.props.communityData.id,
+				}),
+			}).then(() => this.handlePersistStateChange(-1));
+		}
+		const pageUpdate = updatedCollection.pageId
+			? { page: communityData.pages.find((page) => page.id === updatedCollection.pageId) }
+			: {};
+		this.setState({
 			collection: {
-				...state.collection,
-				...update,
+				...collection,
+				...updatedCollection,
+				...pageUpdate,
 			},
-		}));
+		});
+	}
+
+	handleDeleteCollection() {
+		const { collection } = this.state;
+		apiFetch('/api/collections', {
+			method: 'DELETE',
+			body: JSON.stringify({
+				id: collection.id,
+			}),
+		}).then(() => {
+			window.location = '/dashboard/collections';
+		});
 	}
 
 	renderContentsEditor() {
@@ -106,6 +138,19 @@ class DashboardCollection extends React.Component {
 		);
 	}
 
+	renderDetailsEditor() {
+		const { communityData } = this.props;
+		const { collection } = this.state;
+		return (
+			<CollectionDetailsEditor
+				communityData={communityData}
+				collection={collection}
+				onUpdateCollection={this.handleUpdateCollection}
+				onDeleteCollection={this.handleDeleteCollection}
+			/>
+		);
+	}
+
 	renderTabs() {
 		return (
 			<Tabs
@@ -117,6 +162,7 @@ class DashboardCollection extends React.Component {
 				<Tab id="contents" title="Contents" panel={this.renderContentsEditor()} />
 				<Tab id="attribution" title="Attribution" panel={this.renderAttributionEditor()} />
 				<Tab id="metadata" title="Metadata" panel={this.renderMetadataEditor()} />
+				<Tab id="details" title="Details" panel={this.renderDetailsEditor()} />
 			</Tabs>
 		);
 	}

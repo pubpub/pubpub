@@ -15,21 +15,24 @@ const PUBPUB_TEAM_ID = 'b242f616-7aaa-479c-8ee5-3933dcf70859';
 // By default, foreignKey is "communityId" -- this is what most models use to describe which
 // community they're related to.
 const checkForeignKeys = (identification, modelsMapping) =>
-	Object.entries(modelsMapping).map(
-		([modelId, [Model, foreignKey = 'communityId']]) =>
-			new Promise((resolve, reject) =>
-				Model.findOne({
-					where: { id: identification[modelId] },
-					attributes: [foreignKey],
-				}).then((model) => {
-					if (model && model[foreignKey] === identification.communityId) {
-						resolve();
-					} else {
-						reject();
-					}
-				}),
-			),
-	);
+	Object.entries(modelsMapping).map(([modelId], entry) => {
+		if (!entry) {
+			return Promise.resolve();
+		}
+		const [Model, foreignKey = 'communityId'] = entry;
+		return new Promise((resolve, reject) =>
+			Model.findOne({
+				where: { id: identification[modelId] },
+				attributes: [foreignKey],
+			}).then((model) => {
+				if (model && model[foreignKey] === identification.communityId) {
+					resolve();
+				} else {
+					reject();
+				}
+			}),
+		);
+	});
 
 export const communityAdminFor = (identification, modelsMapping) =>
 	new Promise((resolve, reject) => {

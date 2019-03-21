@@ -10,40 +10,40 @@ import communityType from 'types/community';
 const propTypes = {
 	collection: collectionType.isRequired,
 	communityData: communityType.isRequired,
-	onCollectionUpdate: PropTypes.func.isRequired,
+	onSelectPage: PropTypes.func.isRequired,
+	minimal: PropTypes.bool,
 };
 
-const LinkedPageSelect = ({ communityData, collection, onCollectionUpdate }) => (
+const defaultProps = {
+	minimal: false,
+};
+
+const LinkedPageSelect = ({ communityData, collection, onSelectPage, minimal }) => (
 	<Select
 		items={communityData.pages}
-		itemRenderer={(item, { handleClick, modifiers }) => {
+		itemRenderer={(page, { handleClick, modifiers }) => {
 			return (
 				<button
-					key={item.title}
+					key={page.title}
 					type="button"
 					tabIndex={-1}
 					onClick={handleClick}
 					className={modifiers.active ? 'bp3-menu-item bp3-active' : 'bp3-menu-item'}
 				>
-					{item.title}
+					{page.title}
 				</button>
 			);
 		}}
-		itemListPredicate={(query, items) => {
-			return items.filter((item) => {
-				return fuzzysearch(query.toLowerCase(), item.title.toLowerCase());
+		itemListPredicate={(query, pages) => {
+			return pages.filter((page) => {
+				return fuzzysearch(query.toLowerCase(), page.title.toLowerCase());
 			});
 		}}
-		onItemSelect={(item) => {
-			onCollectionUpdate({
-				pageId: item.id,
-				collectionId: collection.id,
-			});
-		}}
+		onItemSelect={(page) => onSelectPage(page.id)}
 		popoverProps={{ popoverClassName: 'bp3-minimal' }}
 	>
 		<Button
-			minimal
+			minimal={minimal}
 			text={collection.page ? `Linked to: ${collection.page.title}` : 'Link to Page'}
 			rightIcon="caret-down"
 		/>
@@ -51,4 +51,5 @@ const LinkedPageSelect = ({ communityData, collection, onCollectionUpdate }) => 
 );
 
 LinkedPageSelect.propTypes = propTypes;
+LinkedPageSelect.defaultProps = defaultProps;
 export default LinkedPageSelect;

@@ -57,7 +57,7 @@ class CollectionMetadataEditor extends React.Component {
 			body: JSON.stringify({
 				metadata: metadata,
 				title: title,
-				collectionId: collection.id,
+				id: collection.id,
 				communityId: communityData.id,
 			}),
 		}).then(() => {
