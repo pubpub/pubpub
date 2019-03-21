@@ -37,25 +37,57 @@ const processImages = (inputHtml) => {
 const processFootnotes = (inputHtml) => {
 	const htmlContext = cheerio.load(inputHtml);
 	const footnoteContents = [];
-	htmlContext('section.footnotes')
-		.find('li')
-		.each((index, elem) => {
-			htmlContext(elem)
-				.contents()
-				.find('a.footnote-back')
-				.remove();
-			footnoteContents.push(
-				htmlContext(elem)
+	/* Find footnote content, remove the backlink, and then stick the contents */
+	/* into an array to access later. */
+	const footnoteSelectors = [
+		{
+			wrapperSection: 'section.footnotes',
+			footnoteElem: 'li',
+			footnoteBackLink: 'a.footnote-back',
+		},
+		{
+			wrapperSection: 'section#notes',
+			footnoteElem: 'div.endnote',
+			footnoteBackLink: '.ennum',
+		},
+	];
+	footnoteSelectors.forEach((selector) => {
+		htmlContext(selector.wrapperSection)
+			.find(selector.footnoteElem)
+			.each((index, elem) => {
+				const elemContext = htmlContext(elem);
+				elemContext
 					.contents()
-					.html(),
+					.find(selector.footnoteBackLink)
+					.remove();
+
+				/* TODO - I can't get cheerio to play nicely here. */
+				/* hasContents works for footnoteSelectors[0] but is null for [1]. */
+				/* noContents works though for footnoteSelectors[1]. */
+				/* We probably want something that lets each selector */
+				/* specify their own function for grabbing content */
+				const hasContents = elemContext.contents().html();
+				const noContents = elemContext.html();
+				footnoteContents.push(hasContents || noContents);
+			});
+	});
+
+	/* Find all inline footnotes and replace their content with the content from above */
+	const footnoteRefSelectors = ['a.footnote-ref', 'a.enref'];
+	footnoteRefSelectors.forEach((selector) => {
+		htmlContext(selector).each((index, elem) => {
+			htmlContext(elem).replaceWith(
+				`<footnote data-value="${footnoteContents[index]}"></footnote>`,
 			);
 		});
-	htmlContext('a.footnote-ref').each((index, elem) => {
-		htmlContext(elem).replaceWith(
-			`<footnote data-value="${footnoteContents[index]}"></footnote>`,
-		);
 	});
-	htmlContext('section.footnotes').remove();
+
+	/* Remove the list of footnotes at the end of the doc */
+	const footnoteSectionSelectors = ['section.footnotes', 'section#notes'];
+	footnoteSectionSelectors.forEach((selector) => {
+		htmlContext(selector).remove();
+	});
+
 	return htmlContext('body').html();
 };
 
