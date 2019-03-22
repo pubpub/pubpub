@@ -20,6 +20,7 @@ const propTypes = {
 		}).isRequired,
 	}).isRequired,
 };
+
 const PubSelectionControls = ({ onRemove, onSetContext, pubSelection }) => (
 	<ControlGroup>
 		<Select
