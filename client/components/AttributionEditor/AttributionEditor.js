@@ -19,6 +19,7 @@ const propTypes = {
 	onUpdateAttributions: PropTypes.func.isRequired,
 	onPersistStateChange: PropTypes.func.isRequired,
 };
+
 class AttributionEditor extends Component {
 	constructor(props) {
 		super(props);

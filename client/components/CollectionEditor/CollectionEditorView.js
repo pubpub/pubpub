@@ -14,7 +14,7 @@ import pubType from 'types/pub';
 import PubRow from './PubRow';
 import DragDropListing from '../DragDropListing/DragDropListing';
 import PubSelectionControls from './PubSelectionControls';
-import { fuzzyMatchPub } from './util';
+import { fuzzyMatchPub } from './utils';
 
 // NOTE(ian): It's critical that this delimiter doesn't appear in actual ids!
 const ID_WRAPPER_DELIMITER = '__';
