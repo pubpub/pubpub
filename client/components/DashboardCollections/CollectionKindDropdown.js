@@ -22,7 +22,7 @@ const renderCollectionKindItem = (schema, { handleClick, modifiers: { active } }
 		active={active}
 		onClick={handleClick}
 		icon={schema.bpDisplayIcon}
-		text={capitalize(schema.label.plural)}
+		text={capitalize(schema.label.singular)}
 		key={schema.kind}
 	/>
 );

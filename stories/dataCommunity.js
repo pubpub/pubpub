@@ -5834,6 +5834,7 @@ export default {
 		{
 			id: '8b10fb64-0cb4-4176-b46a-8610c2a48223',
 			title: 'Privacy Policy',
+			kind: 'tag',
 			isRestricted: true,
 			isPublic: true,
 			pageId: '8b10fb64-0cb4-4176-b46a-8610c2a48223',
@@ -5849,6 +5850,7 @@ export default {
 		{
 			id: '632bfbc1-a8a3-4829-be61-fa20db405d90',
 			title: 'Media',
+			kind: 'tag',
 			isRestricted: true,
 			isPublic: true,
 			pageId: '632bfbc1-a8a3-4829-be61-fa20db405d90',
@@ -5864,6 +5866,7 @@ export default {
 		{
 			id: '0fd7f42c-d8a1-4275-bf2b-cd641416959c',
 			title: 'Home',
+			kind: 'tag',
 			isRestricted: true,
 			isPublic: true,
 			pageId: '0fd7f42c-d8a1-4275-bf2b-cd641416959c',
@@ -5879,6 +5882,7 @@ export default {
 		{
 			id: '58b9179b-4553-4f38-9edf-4fb89a88848f',
 			title: 'Physics',
+			kind: 'tag',
 			isRestricted: true,
 			isPublic: true,
 			pageId: null,
@@ -5889,6 +5893,7 @@ export default {
 		{
 			id: '72a43321-6b86-4d94-8412-288c3d28fd6a',
 			title: 'Dev Notes',
+			kind: 'tag',
 			isRestricted: true,
 			isPublic: false,
 			pageId: '72a43321-6b86-4d94-8412-288c3d28fd6a',
@@ -5904,6 +5909,7 @@ export default {
 		{
 			id: 'dd0d1dd0-30c2-4f27-9ef1-dec455c84177',
 			title: 'Credits',
+			kind: 'tag',
 			isRestricted: true,
 			isPublic: true,
 			pageId: 'dd0d1dd0-30c2-4f27-9ef1-dec455c84177',
@@ -5919,6 +5925,7 @@ export default {
 		{
 			id: '5b763da8-d0c7-4d90-8e56-9d1ac0e49a5a',
 			title: 'About Frankenbook',
+			kind: 'tag',
 			isRestricted: true,
 			isPublic: true,
 			pageId: '5b763da8-d0c7-4d90-8e56-9d1ac0e49a5a',
@@ -5934,6 +5941,7 @@ export default {
 		{
 			id: '7a8bb3b2-a197-4062-a0b3-5c283d7f1df1',
 			title: 'Neuroscience',
+			kind: 'tag',
 			isRestricted: true,
 			isPublic: true,
 			pageId: null,
