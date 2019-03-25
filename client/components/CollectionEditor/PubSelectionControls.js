@@ -1,6 +1,6 @@
 /**
  * A component that renders a card for an indivudal pub that's been selected in the
- * CollectionsEditor (and so lives in the right-side pane). It renders a PubCard with more controls.
+ * CollectionsEditor (and so lives in the right-side pane). It renders a PubRow with more controls.
  */
 import React from 'react';
 import PropTypes from 'prop-types';

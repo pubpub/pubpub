@@ -1,175 +1,144 @@
 /**
- * This is where the magic happens, for some pretty tame definition of "magic". This component
- * builds the entire collections editor, mostly from other adjacent helper components.
+ * A wrapper around CollectionEditor that understands how to translate user action into updated
+ * collection state -- basically a bunch of handlers.
  */
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { DragDropContext } from 'react-beautiful-dnd';
-import { Divider, NonIdealState, InputGroup } from '@blueprintjs/core';
 
-import { getSchemaForKind } from 'shared/collections/schemas';
 import collectionType from 'types/collection';
 import pubType from 'types/pub';
 
-import PubCard from './PubCard';
-import PubDragDropListing from './PubDragDropListing';
-import PubSelectionControls from './PubSelectionControls';
-import { createPubSelection, fuzzyMatchPub } from './util';
+import collectionsApi from './api';
+import {
+	createPubSelection,
+	createPubSelectionFromCollectionPub,
+	findRankForSelection,
+} from './util';
+import CollectionEditorView from './CollectionEditorView';
 
-// NOTE(ian): It's critical that this delimiter doesn't appear in actual ids!
-const ID_WRAPPER_DELIMITER = '__';
-const PUBS_DRAG_SOURCE = 'pubs';
-const SELECTIONS_DROP_TARGET = 'selections';
-
-require('./collectionEditor.scss');
-
-const handleTransferPub = ({
-	dragResult,
-	unwrapFromId,
-	createSelection,
-	addSelection,
-	reorderSelections,
-	removeSelectionByPub,
-}) => {
-	const { source, destination, draggableId } = dragResult;
-	if (!destination) {
-		return;
-	}
-	if (destination.droppableId === SELECTIONS_DROP_TARGET) {
-		if (source.droppableId === PUBS_DRAG_SOURCE) {
-			// We need to move a pub from the available pubs to the list of created selections
-			// Let's get the pub from the draggable id...
-			const pub = unwrapFromId(draggableId);
-			// Create a selection for it...
-			const selection = createSelection(pub);
-			// And add it to the selections list at the specified index!
-			addSelection(selection, destination.index);
-		} else if (source.droppableId === SELECTIONS_DROP_TARGET) {
-			// We need to reorder two items in the selection.
-			reorderSelections(source.index, destination.index);
-		}
-	} else if (destination.droppableId === PUBS_DRAG_SOURCE) {
-		if (source.droppableId === SELECTIONS_DROP_TARGET) {
-			// We dragged a selection back to a pub, so we want to remove it
-			// Let's get the pub from the draggable id...
-			const pub = unwrapFromId(draggableId);
-			// And now we remove it.
-			removeSelectionByPub(pub);
-		}
-	}
-};
-
-const makePubIdWrapping = (pubs) => {
-	const getPubById = (id) => pubs.find((pub) => pub.id === id);
-	return {
-		wrapToId: (listId, itemId) => listId + ID_WRAPPER_DELIMITER + itemId,
-		unwrapFromId: (wrappedId) => {
-			const itemId = wrappedId.split(ID_WRAPPER_DELIMITER)[1];
-			return getPubById(itemId);
-		},
-	};
-};
-
-export const propTypes = {
+const propTypes = {
+	communityId: PropTypes.string.isRequired,
 	collection: collectionType.isRequired,
-	onAddSelection: PropTypes.func.isRequired,
-	onRemoveSelectionByPub: PropTypes.func.isRequired,
-	onReorderSelections: PropTypes.func.isRequired,
-	onSetSelectionContextHint: PropTypes.func.isRequired,
-	selections: PropTypes.arrayOf(PropTypes.shape({ pub: pubType })).isRequired,
+	onPersistStateChange: PropTypes.func.isRequired,
 	pubs: PropTypes.arrayOf(pubType).isRequired,
 };
 
-const CollectionEditor = (props) => {
-	const {
-		collection,
-		onAddSelection,
-		onRemoveSelectionByPub,
-		onReorderSelections,
-		onSetSelectionContextHint,
-		pubs,
-		selections,
-	} = props;
-	const schema = getSchemaForKind(collection.kind);
-	const { wrapToId, unwrapFromId } = makePubIdWrapping(pubs);
-	const [searchQuery, updateSearchQuery] = useState('');
-	const availablePubs = pubs.filter(
-		(pub) =>
-			fuzzyMatchPub(pub, searchQuery) &&
-			!selections.some((selection) => selection.pub === pub),
-	);
-	return (
-		<div className="collection-editor-component">
-			<DragDropContext
-				onDragEnd={(dragResult) =>
-					handleTransferPub({
-						addSelection: onAddSelection,
-						removeSelectionByPub: onRemoveSelectionByPub,
-						reorderSelections: onReorderSelections,
-						dragResult: dragResult,
-						unwrapFromId: unwrapFromId,
-						collection: collection,
-						createSelection: (pub) => createPubSelection(pub, collection),
-					})
+class CollectionEditor extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			pendingOperationsCount: 0,
+			selections: props.collection.collectionPubs.map((cp) =>
+				createPubSelectionFromCollectionPub(cp, props.pubs, props.collection),
+			),
+		};
+		this.handleAddSelection = this.handleAddSelection.bind(this);
+		this.handleRemoveSelectionByPub = this.handleRemoveSelectionByPub.bind(this);
+		this.handleReorderSelections = this.handleReorderSelections.bind(this);
+		this.handleSetSelectionContextHint = this.handleSetSelectionContextHint.bind(this);
+	}
+
+	persistWithApi(fnOfApi) {
+		const { collection, communityId } = this.props;
+		const { pendingOperationsCount } = this.state;
+		const fromApi = fnOfApi(collectionsApi(collection, communityId));
+		if (typeof fromApi.then === 'function') {
+			this.setState({ pendingOperationsCount: pendingOperationsCount + 1 });
+			this.props.onPersistStateChange(1);
+			return fromApi.then(() => {
+				this.setState((state) => ({
+					pendingOperationsCount: state.pendingOperationsCount - 1,
+				}));
+				this.props.onPersistStateChange(-1);
+			});
+		}
+		return Promise.resolve();
+	}
+
+	handleAddSelection(pubToAdd, index) {
+		const { collection } = this.props;
+		const { selections } = this.state;
+		const rank = findRankForSelection(selections, index);
+		const selection = createPubSelection(pubToAdd, collection, rank);
+		this.setState({
+			selections: [...selections.slice(0, index), selection, ...selections.slice(index)],
+		});
+		this.persistWithApi((api) =>
+			api.addPubSelection(pubToAdd.id, rank).then(({ id }) =>
+				this.setState((stateNow) => ({
+					selections: stateNow.selections.map((s) => {
+						if (s === selection) {
+							return { ...s, id: id };
+						}
+						return s;
+					}),
+				})),
+			),
+		);
+	}
+
+	handleRemoveSelectionByPub(pubToRemove) {
+		const { selections } = this.state;
+		const selectionToRemove = selections.find((selection) => selection.pub === pubToRemove);
+		this.setState({
+			selections: selections.filter((selection) => selection !== selectionToRemove),
+		});
+		this.persistWithApi((api) => api.deletePubSelection(selectionToRemove.id));
+	}
+
+	handleReorderSelections(sourceIndex, destinationIndex) {
+		const { selections } = this.state;
+		const nextSelections = [...selections];
+		const [removed] = nextSelections.splice(sourceIndex, 1);
+		const newRank = findRankForSelection(nextSelections, destinationIndex);
+		const updatedSelection = {
+			...removed,
+			rank: newRank,
+		};
+		nextSelections.splice(destinationIndex, 0, updatedSelection);
+		this.setState({ selections: nextSelections });
+		this.persistWithApi((api) =>
+			api.updatePubSelection(updatedSelection.id, { rank: newRank }),
+		);
+	}
+
+	handleSetSelectionContextHint(selection, contextHint) {
+		const { selections } = this.state;
+		const updatedSelection = {
+			...selection,
+			contextHint: (contextHint.value && contextHint) || null,
+		};
+		this.setState({
+			selections: [...selections].map((s) => {
+				if (s === selection) {
+					return updatedSelection;
 				}
-			>
-				<div className="pane pubs-pane">
-					<div className="available-pubs-heading">
-						<InputGroup
-							round
-							leftIcon="search"
-							placeholder="Filter pubs"
-							onChange={(e) => updateSearchQuery(e.target.value)}
-						/>
-					</div>
-					<PubDragDropListing
-						className="listing pubs-listing"
-						items={availablePubs}
-						itemId={(item) => wrapToId(PUBS_DRAG_SOURCE, item.id)}
-						renderItem={(pub) => <PubCard pub={pub} />}
-						droppableId={PUBS_DRAG_SOURCE}
-					/>
-				</div>
-				<Divider />
-				<div className="pane selections-pane">
-					<PubDragDropListing
-						className="listing selections-listing"
-						items={selections}
-						itemId={(item) => wrapToId(SELECTIONS_DROP_TARGET, item.pub.id)}
-						droppableId={SELECTIONS_DROP_TARGET}
-						withDragHandles={true}
-						renderItem={(selection, isDragging, dragHandleProps) => (
-							<PubCard
-								pub={selection.pub}
-								isDragging={isDragging}
-								dragHandleProps={dragHandleProps}
-								controls={
-									<PubSelectionControls
-										pubSelection={selection}
-										onSetContext={(value) => {
-											onSetSelectionContextHint(selection, value);
-										}}
-										onRemove={() => onRemoveSelectionByPub(selection.pub)}
-									/>
-								}
-							/>
-						)}
-						renderEmptyState={() => (
-							<NonIdealState
-								icon={schema.bpDisplayIcon}
-								title={`This ${
-									schema.label.singular
-								} doesn't contain any pubs yet!`}
-								description="Try dragging some from the left-hand column"
-							/>
-						)}
-					/>
-				</div>
-			</DragDropContext>
-		</div>
-	);
-};
+				return s;
+			}),
+		});
+		this.persistWithApi((api) =>
+			api.updatePubSelection(updatedSelection.id, {
+				contextHint: contextHint.value,
+			}),
+		);
+	}
+
+	render() {
+		const { collection, pubs } = this.props;
+		const { selections } = this.state;
+		return (
+			<CollectionEditorView
+				pubs={pubs}
+				selections={selections}
+				collection={collection}
+				onAddSelection={this.handleAddSelection}
+				onRemoveSelectionByPub={this.handleRemoveSelectionByPub}
+				onReorderSelections={this.handleReorderSelections}
+				onSetSelectionContextHint={this.handleSetSelectionContextHint}
+			/>
+		);
+	}
+}
 
 CollectionEditor.propTypes = propTypes;
-
 export default CollectionEditor;

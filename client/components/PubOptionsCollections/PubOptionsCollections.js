@@ -67,7 +67,7 @@ class PubOptionsCollections extends Component {
 
 	handleCollectionPubAdd(collection) {
 		this.inputRef.focus();
-		return apiFetch('/api/collectionPubs', {
+		return apiFetch('/api/collectionPubs/legacy', {
 			method: 'POST',
 			body: JSON.stringify({
 				kind: 'tag',
@@ -97,7 +97,7 @@ class PubOptionsCollections extends Component {
 				return { collectionPubs: newCollectionPubs, isLoading: true };
 			},
 			() => {
-				apiFetch('/api/collectionPubs', {
+				apiFetch('/api/collectionPubs/legacy', {
 					method: 'DELETE',
 					body: JSON.stringify({
 						collectionPubId: collectionPubId,

@@ -3,6 +3,7 @@ import validator from 'validator';
 import {
 	User,
 	Collection,
+	CollectionAttribution,
 	CollectionPub,
 	Pub,
 	Collaborator,
@@ -649,3 +650,31 @@ export const getPubSearch = (query, initialData) => {
 		return output;
 	});
 };
+
+export const getCollectionAttributions = (collectionId) =>
+	CollectionAttribution.findAll({
+		where: { collectionId: collectionId },
+		include: [
+			{
+				model: User,
+				as: 'user',
+				required: false,
+				attributes: [
+					'id',
+					'firstName',
+					'lastName',
+					'fullName',
+					'avatar',
+					'slug',
+					'initials',
+					'title',
+				],
+			},
+		],
+	});
+
+export const getCollectionPubsInCollection = (collectionId) =>
+	CollectionPub.findAll({
+		where: { collectionId: collectionId },
+		order: [['rank', 'ASC']],
+	});

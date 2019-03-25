@@ -9,8 +9,9 @@ import {
 	VersionPermission,
 	PubAttribution,
 	Collection,
-	Page,
 	CollectionPub,
+	CollectionAttribution,
+	Page,
 	Tag,
 	PubTag,
 	Community,
@@ -421,6 +422,7 @@ new Promise((resolve) => {
 	// .then(() => {
 	// 	return Promise.all([
 	// 		sequelize.query('UPDATE "Communities" SET "hideHero" = "hideLandingBanner"'),
+	// 		sequelize.query('UPDATE "Communities" SET "headerLogo" = "smallHeaderLogo"'),
 	// 		sequelize.query('UPDATE "Communities" SET "heroLogo" = "largeHeaderLogo"'),
 	// 		sequelize.query('UPDATE "Communities" SET "heroBackgroundImage" = "largeHeaderBackground"'),
 	// 		sequelize.query('UPDATE "Communities" SET "heroTitle" = "title"'),
@@ -459,7 +461,8 @@ new Promise((resolve) => {
 					});
 					return CollectionPub.bulkCreate(collectionPubs);
 				});
-			});
+			})
+			.then(() => CollectionAttribution.sync());
 	})
 	.catch((err) => {
 		console.log('Error with Migration', err);

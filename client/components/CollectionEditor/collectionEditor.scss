@@ -1,40 +1,30 @@
 $pubs-pane-width: 300px;
 
 .collection-editor-component {
-    min-height: 500px;
-    height: 75vh;
     display: flex;
+    width: 100%;
     .pane {
         display: flex;
         flex-direction: column;
-        padding: 10px;
-        height: 100%;
     }
     .pubs-pane {
         width: $pubs-pane-width;
         box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
         .available-pubs-heading {
             margin-bottom: 10px;
+        }
+        .pubs-listing {
+            flex-grow: 1;
+            overflow: auto;
         }
     }
     .selections-pane {
         flex-grow: 1;
         margin-left: 0px;
     }
-    .listing {
-        position: relative;
-        flex-direction: column;
-        flex-grow: 1;
-        overflow-y: scroll;
-        .empty-state-container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    }
-    .pub-card {
+    .pub-row {
         background: none;
         display: flex;
         height: 45px;
@@ -53,23 +43,14 @@ $pubs-pane-width: 300px;
             align-items: center;
             justify-content: center;
         }
-    }
-    .pub-card.is-dragging {
         .controls {
-            display: none;
+            opacity: 1;
+            transition: 0.1s ease-out opacity;   
         }
     }
-}
-
-.collection-editor-dialog {
-    max-width: 850px;
-    min-width: 600px;
-    width: 75vw;
-    padding-bottom: 8px;
-    .bottom-buttons {
-        justify-content: flex-end;
-        padding: 8px;
-        padding-top: 4px;
-        padding-bottom: 0px;
+    .pub-row.is-dragging {
+        .controls {
+            opacity: 0;
+        }
     }
 }
