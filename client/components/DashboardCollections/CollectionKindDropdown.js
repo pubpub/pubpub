@@ -40,7 +40,7 @@ const CollectionKindDropdown = ({ large, onSelect, selectedSchema }) => {
 		>
 			<Button
 				icon={selectedSchema.bpDisplayIcon}
-				text={capitalize(selectedSchema.label.plural)}
+				text={capitalize(selectedSchema.label.singular)}
 				rightIcon="caret-down"
 				large={large}
 			/>

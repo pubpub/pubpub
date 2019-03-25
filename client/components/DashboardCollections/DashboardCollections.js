@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ControlGroup, InputGroup, NonIdealState } from '@blueprintjs/core';
+import { Button, ControlGroup, InputGroup, NonIdealState, Icon } from '@blueprintjs/core';
 import { apiFetch } from 'utilities';
 
 import { getSchemaForKind } from 'shared/collections/schemas';
@@ -14,6 +14,8 @@ const propTypes = {
 	pubsData: PropTypes.object.isRequired,
 	setCommunityData: PropTypes.func.isRequired,
 };
+
+const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 class DashboardCollections extends Component {
 	constructor(props) {
 		super(props);
@@ -27,21 +29,10 @@ class DashboardCollections extends Component {
 		this.handleDeleteCollection = this.handleDeleteCollection.bind(this);
 	}
 
-	getDisplayableCollections() {
-		const {
-			currentCollectionSchema: { kind: currentKind },
-		} = this.state;
-		return this.props.communityData.collections
-			.filter((collection) => collection.kind === currentKind)
-			.sort((foo, bar) => {
-				if (foo.title < bar.title) {
-					return -1;
-				}
-				if (foo.title > bar.title) {
-					return 1;
-				}
-				return 0;
-			});
+	getCollectionsByKind() {
+		const { collections } = this.props.communityData;
+		const hasKinds = Array.from(new Set(collections.map((c) => c.kind))).sort();
+		return hasKinds.map((kind) => [kind, collections.filter((c) => c.kind === kind)]);
 	}
 
 	handleCreateCollection(evt) {
@@ -132,12 +123,6 @@ class DashboardCollections extends Component {
 		return (
 			<form onSubmit={this.handleCreateCollection}>
 				<ControlGroup>
-					<CollectionKindDropdown
-						selectedSchema={currentCollectionSchema}
-						onSelect={(schema) => this.setState({ currentCollectionSchema: schema })}
-						large={true}
-					/>
-
 					<InputGroup
 						placeholder={`Create a new ${label}...`}
 						onChange={(evt) => {
@@ -147,13 +132,40 @@ class DashboardCollections extends Component {
 						value={this.state.newCollectionValue}
 						className="add-collection-input"
 					/>
+					<CollectionKindDropdown
+						selectedSchema={currentCollectionSchema}
+						onSelect={(schema) => this.setState({ currentCollectionSchema: schema })}
+						large={true}
+					/>
+					<Button large={true} type="submit">
+						Create
+					</Button>
 				</ControlGroup>
 			</form>
 		);
 	}
 
+	renderCollectionGroup(kind, collections) {
+		const schema = getSchemaForKind(kind);
+		const title = capitalize(schema.label.plural);
+		return (
+			<div>
+				<h2>{title}</h2>
+				{collections.map((collection) => (
+					<CollectionRow
+						communityData={this.props.communityData}
+						pubsData={this.props.pubsData}
+						collection={collection}
+						key={collection.id}
+						onUpdateCollection={this.handleUpdateCollection}
+						onDeleteCollection={this.handleDeleteCollection}
+					/>
+				))}
+			</div>
+		);
+	}
+
 	render() {
-		const displayableCollections = this.getDisplayableCollections();
 		const {
 			currentCollectionSchema: {
 				label: { plural: emptyStateLabel },
@@ -168,23 +180,9 @@ class DashboardCollections extends Component {
 					{this.renderTopControlGroup()}
 					{this.state.error && <p className="error">{this.state.error}</p>}
 				</div>
-				{displayableCollections.length === 0 && (
-					<NonIdealState
-						title={`Your community doesn't have any ${emptyStateLabel}!`}
-						description="Why don't you try creating one?"
-						icon={bpDisplayIcon}
-					/>
+				{this.getCollectionsByKind().map(([kind, collections]) =>
+					this.renderCollectionGroup(kind, collections),
 				)}
-				{displayableCollections.map((collection) => (
-					<CollectionRow
-						communityData={this.props.communityData}
-						pubsData={this.props.pubsData}
-						collection={collection}
-						key={collection.id}
-						onUpdateCollection={this.handleUpdateCollection}
-						onDeleteCollection={this.handleDeleteCollection}
-					/>
-				))}
 			</div>
 		);
 	}
