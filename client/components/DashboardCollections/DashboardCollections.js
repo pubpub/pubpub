@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, ControlGroup, InputGroup, NonIdealState, Icon } from '@blueprintjs/core';
+import { Button, ControlGroup, InputGroup } from '@blueprintjs/core';
 import { apiFetch } from 'utilities';
 
 import { getSchemaForKind } from 'shared/collections/schemas';
@@ -166,12 +166,6 @@ class DashboardCollections extends Component {
 	}
 
 	render() {
-		const {
-			currentCollectionSchema: {
-				label: { plural: emptyStateLabel },
-				bpDisplayIcon,
-			},
-		} = this.state;
 		return (
 			<div className="dashboard-collections-component">
 				<h1 className="content-title">Collections</h1>
