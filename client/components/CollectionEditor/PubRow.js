@@ -9,7 +9,7 @@ import classNames from 'classnames';
 import pubType from 'types/pub';
 import Icon from 'components/Icon/Icon';
 
-import { authorsNamesFromPub } from './util';
+import { authorsNamesFromPub } from './utils';
 
 const propTypes = {
 	controls: PropTypes.node,

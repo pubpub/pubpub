@@ -13,7 +13,7 @@ import {
 	createPubSelection,
 	createPubSelectionFromCollectionPub,
 	findRankForSelection,
-} from './util';
+} from './utils';
 import CollectionEditorView from './CollectionEditorView';
 
 const propTypes = {
