@@ -11,6 +11,7 @@ export default ({
 	publicationDate,
 	timestamp,
 	title,
+	url,
 }) => {
 	return {
 		book: {
@@ -22,7 +23,7 @@ export default ({
 				isbn: isbn,
 				edition: edition,
 				...contributors(attributions),
-				...doiData(doi, timestamp),
+				...doiData(doi, timestamp, url),
 				...date('publication_date', publicationDate),
 			},
 			...children,

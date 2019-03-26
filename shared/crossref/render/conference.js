@@ -6,9 +6,9 @@ import transformPub from '../transform/pub';
 import conference from '../schema/conference';
 import conferencePaper from '../schema/conferencePaper';
 
-export default ({ collection, pub }) => {
-	const collectionProps = transformCollection(collection);
-	const pubProps = transformPub(pub);
+export default ({ globals, collection, pub }) => {
+	const collectionProps = transformCollection({ globals: globals })(collection);
+	const pubProps = transformPub({ globals: globals })(pub);
 	return conference({
 		...collectionProps,
 		children: {

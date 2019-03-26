@@ -8,11 +8,7 @@ const withRoot = (component) => `${PUBPUB_DOI_ROOT}/${component}`;
 
 const splitId = (item) => item.id.split('-')[0];
 
-export const pubVersionComponentDoi = (pub, version) => {
-	const pubPart = splitId(pub);
-	const versionPart = splitId(version);
-	return withRoot(`${pubPart}/${versionPart}`);
-};
+export const pubVersionComponentDoi = (version) => withRoot(splitId(version));
 
 export const pubComponentDoi = (pub) => withRoot(splitId(pub));
 

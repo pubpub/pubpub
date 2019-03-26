@@ -18,7 +18,7 @@ export default ({
 				title: title,
 			},
 			contributors: contributors(attributions),
-			...doiData(getDoi(), timestamp, getResourceUrl),
+			...doiData(getDoi(), timestamp, getResourceUrl()),
 			...componentList(sortedVersions, timestamp, getDoi, getResourceUrl),
 		},
 	};

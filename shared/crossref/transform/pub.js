@@ -12,7 +12,7 @@ const resourceUrlGetter = (pubData, communityData) => (version) => {
 
 const doiGetter = (pubData) => (version) => {
 	if (version) {
-		return pubVersionComponentDoi(pubData, version);
+		return pubVersionComponentDoi(version);
 	}
 	return pubComponentDoi(pubData);
 };

@@ -11,14 +11,14 @@ import transformCollection from '../transform/collection';
 import transformPub from '../transform/pub';
 
 export default ({ globals, community, collection, pub }) => {
-	const communityProps = transformCommunity(community);
+	const communityProps = transformCommunity({ globals: globals })(community);
 	const pubProps = transformPub({ globals: globals, community: community })(pub);
 	const collectionProps =
 		collection && transformCollection({ globals: globals, community: community })(collection);
 	return journal({
 		...communityProps,
 		issn: collectionProps && collectionProps.issn,
-		language: communityProps.language,
+		timestamp: globals.timestamp,
 		children: {
 			...journalArticle(pubProps),
 			...(collectionProps ? journalIssue(collectionProps) : {}),
