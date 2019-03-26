@@ -8,13 +8,19 @@ const withRoot = (component) => `${PUBPUB_DOI_ROOT}/${component}`;
 
 const splitId = (item) => item.id.split('-')[0];
 
+export const pubVersionComponentDoi = (pub, version) => {
+	const pubPart = splitId(pub);
+	const versionPart = splitId(version);
+	return withRoot(`${pubPart}/${versionPart}`);
+};
+
 export const pubComponentDoi = (pub) => withRoot(splitId(pub));
 
 export const collectionComponentDoi = (collection) => withRoot(splitId(collection));
 
 export const communityComponentDoi = (community) => withRoot(splitId(community));
 
-export const makeComponentId = ({ community, collection, pub }) =>
+export const makeComponentId = (community, collection, pub) =>
 	[community && splitId(community), collection && splitId(collection), pub && splitId(pub)]
 		.map((result) => result || 'none')
 		.join('-');
