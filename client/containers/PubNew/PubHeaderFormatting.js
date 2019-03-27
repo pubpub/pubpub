@@ -12,19 +12,19 @@ const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	collabData: PropTypes.object.isRequired,
 	// loginData: PropTypes.object.isRequired,
-	formattingBarKey: PropTypes.string,
+	// formattingBarKey: PropTypes.string,
 	// editorChangeObject: PropTypes.object,
 	// setOptionsMode: PropTypes.func.isRequired,
-	collabStatus: PropTypes.string,
+	// collabStatus: PropTypes.string,
 	activeCollaborators: PropTypes.array,
 	threads: PropTypes.array,
 };
 
 const defaultProps = {
-	collabStatus: 'connecting',
+	// collabStatus: 'connecting',
 	threads: [],
 	activeCollaborators: [],
-	formattingBarKey: '',
+	// formattingBarKey: '',
 };
 
 const PubHeaderFormatting = (props) => {
@@ -79,7 +79,7 @@ const PubHeaderFormatting = (props) => {
 				<FormattingBar
 					editorChangeObject={props.collabData.editorChangeObject || {}}
 					threads={props.threads}
-					key={props.formattingBarKey}
+					// key={props.formattingBarKey}
 				/>
 			)}
 			{/* <div className="spacer" /> */}
@@ -112,10 +112,10 @@ const PubHeaderFormatting = (props) => {
 						);
 					})}
 				{!viewOnly && (
-					<span className={`collab-status ${props.collabStatus}`}>
+					<span className={`collab-status ${collabData.status}`}>
 						<span className="status-prefix">Working Draft </span>
-						{props.collabStatus}
-						{props.collabStatus === 'saving' || props.collabStatus === 'connecting'
+						{collabData.status}
+						{collabData.status === 'saving' || collabData.status === 'connecting'
 							? '...'
 							: ''}
 					</span>

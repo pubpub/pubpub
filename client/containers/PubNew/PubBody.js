@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Editor from '@pubpub/editor';
 import discussionSchema from 'components/DiscussionAddon/discussionSchema';
@@ -9,9 +9,6 @@ import { getResizedUrl } from 'utilities';
 require('./pubBody.scss');
 
 const propTypes = {
-	// locationData: PropTypes.object.isRequired,
-	// communityData: PropTypes.object.isRequired,
-	// loginData: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
 	collabData: PropTypes.object.isRequired,
 	firebaseBranchRef: PropTypes.object,
@@ -21,9 +18,39 @@ const defaultProps = {
 	firebaseBranchRef: undefined,
 };
 
+let setSavingTimeout;
+
 const PubBody = (props) => {
 	const { pubData, collabData, firebaseBranchRef, updateLocalData } = props;
 	const { loginData } = useContext(PageContext);
+	const prevStatusRef = useRef(null);
+	prevStatusRef.current = collabData.status;
+
+	const getNextStatus = (status, onComplete) => {
+		clearTimeout(setSavingTimeout);
+		const prevStatus = prevStatusRef.current;
+		const nextStatus = { status: status };
+
+		/* If loading, wait until 'connected' */
+		if (prevStatus === 'connecting' && status === 'connected') {
+			onComplete(nextStatus);
+		}
+
+		if (prevStatus !== 'connecting' && prevStatus !== 'disconnected') {
+			if (status === 'saving') {
+				setSavingTimeout = setTimeout(() => {
+					onComplete(nextStatus);
+				}, 250);
+			} else {
+				onComplete(nextStatus);
+			}
+		}
+		/* If disconnected, only set state if the new status is 'connected' */
+		if (prevStatus === 'disconnected' && status === 'connected') {
+			onComplete(nextStatus);
+		}
+	};
+
 	return (
 		<div className="pub-body-component">
 			<GridWrapper containerClassName="pub">
@@ -53,7 +80,11 @@ const PubBody = (props) => {
 									clientData: { id: loginData.id },
 									initialDocKey: pubData.initialDocKey,
 									onClientChange: () => {},
-									onStatusChange: () => {},
+									onStatusChange: (status) => {
+										getNextStatus(status, (nextStatus) => {
+											props.updateLocalData('collab', nextStatus);
+										});
+									},
 							  }
 							: undefined
 					}

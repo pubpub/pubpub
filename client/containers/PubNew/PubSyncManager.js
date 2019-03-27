@@ -16,6 +16,7 @@ class PubSyncManager extends React.Component {
 			pubData: this.props.pubData,
 			collabData: {
 				editorChangeObject: {},
+				status: 'connecting',
 			},
 		};
 		this.syncMetadata = this.syncMetadata.bind(this);
@@ -27,13 +28,21 @@ class PubSyncManager extends React.Component {
 	componentDidMount() {
 		const rootKey = `pub-${this.props.pubData.id}`;
 		const branchKey = `branch-${this.props.pubData.activeBranch.id}`;
-		initFirebase(rootKey, this.props.pubData.firebaseToken).then((rootRef) => {
+		initFirebase(rootKey, this.props.pubData.firebaseToken).then(([rootRef, connectionRef]) => {
 			this.setState({
 				firebaseRootRef: rootRef,
 				firebaseBranchRef: rootRef.child(branchKey),
 			});
 
 			this.state.firebaseRootRef.child('metadata').on('child_changed', this.syncMetadata);
+
+			connectionRef.on('value', (snapshot) => {
+				if (snapshot.val() === true) {
+					this.updateLocalData('collab', { status: 'connected' });
+				} else {
+					this.updateLocalData('collab', { status: 'disconnected' });
+				}
+			});
 		});
 	}
 

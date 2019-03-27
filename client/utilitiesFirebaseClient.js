@@ -20,7 +20,7 @@ export const initFirebase = (rootKey, authToken) => {
 		.auth(firebaseApp)
 		.signInWithCustomToken(authToken)
 		.then(() => {
-			return database.ref(`${rootKey}`);
+			return [database.ref(`${rootKey}`), database.ref('.info/connected')];
 		})
 		.catch((err) => {
 			console.error('Error authenticating firebase', err);
