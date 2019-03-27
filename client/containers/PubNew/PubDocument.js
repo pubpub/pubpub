@@ -1,33 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { communityDataProps, locationDataProps, loginDataProps } from 'utilities/sharedPropTypes';
 import PubHeaderFormatting from './PubHeaderFormatting';
 import PubBody from './PubBody';
 import PubFooter from './PubFooter';
 import { pubDataProps } from './sharedPropTypes';
 
 const propTypes = {
-	communityData: communityDataProps.isRequired,
-	loginData: loginDataProps.isRequired,
-	locationData: locationDataProps.isRequired,
 	pubData: pubDataProps.isRequired,
 	collabData: PropTypes.object.isRequired,
-	firebaseBranchRef: PropTypes.func.isRequired,
+	firebaseBranchRef: PropTypes.object,
 	updateLocalData: PropTypes.func.isRequired,
+};
+
+const defaultProps = {
+	firebaseBranchRef: undefined,
 };
 
 const PubDocument = (props) => {
 	return (
 		<React.Fragment>
-			<PubHeaderFormatting
-				loginData={props.loginData}
-				pubData={props.pubData}
-				collabData={props.collabData}
-			/>
+			<PubHeaderFormatting pubData={props.pubData} collabData={props.collabData} />
 			<PubBody
-				locationData={props.locationData}
-				communityData={props.communityData}
-				loginData={props.loginData}
 				pubData={props.pubData}
 				collabData={props.collabData}
 				firebaseBranchRef={props.firebaseBranchRef}
@@ -40,4 +33,5 @@ const PubDocument = (props) => {
 };
 
 PubDocument.propTypes = propTypes;
+PubDocument.defaultProps = defaultProps;
 export default PubDocument;

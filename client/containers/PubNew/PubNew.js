@@ -30,9 +30,6 @@ const PubNew = (props) => {
 					{({ pubData, collabData, firebaseBranchRef, updateLocalData }) => {
 						const mode = pubData.mode;
 						const modeProps = {
-							locationData: props.locationData,
-							communityData: props.communityData,
-							loginData: props.loginData,
 							pubData: pubData,
 							collabData: collabData,
 							firebaseBranchRef: firebaseBranchRef,
@@ -41,12 +38,7 @@ const PubNew = (props) => {
 
 						return (
 							<React.Fragment>
-								<PubHeader
-									locationData={props.locationData}
-									communityData={props.communityData}
-									pubData={pubData}
-									updateLocalData={updateLocalData}
-								/>
+								<PubHeader pubData={pubData} updateLocalData={updateLocalData} />
 
 								{mode === 'document' && <PubDocument {...modeProps} />}
 								{mode === 'submission' && <PubSubmission {...modeProps} />}

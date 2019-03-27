@@ -4,9 +4,6 @@ import { communityDataProps, locationDataProps, loginDataProps } from 'utilities
 import { pubDataProps } from './sharedPropTypes';
 
 const propTypes = {
-	communityData: communityDataProps.isRequired,
-	loginData: loginDataProps.isRequired,
-	locationData: locationDataProps.isRequired,
 	pubData: pubDataProps.isRequired,
 	collabData: PropTypes.object.isRequired,
 	firebaseBranchRef: PropTypes.func.isRequired,
