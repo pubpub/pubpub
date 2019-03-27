@@ -2,6 +2,15 @@ import app from '../server';
 import { CommunityAdmin } from '../models';
 import { findPub } from '../queryHelpers';
 import { getInitialData, submitDoiData } from '../utilities';
+import { getDoiData } from './handlers/doi';
+
+// TODO(ian): add some kind of authentication here
+app.get('/api/doi', (req, res) => {
+	const { pubId, collectionId, communityId } = req.query;
+	getDoiData({ communityId: communityId, collectionId: collectionId, pubId: pubId }).then(
+		(submission) => res.status(201).json(submission),
+	);
+});
 
 app.post('/api/doi', (req, res) => {
 	const user = req.user || {};
