@@ -20,8 +20,8 @@ export default ({ globals, community, collection, pub }) => {
 		issn: collectionProps && collectionProps.issn,
 		timestamp: globals.timestamp,
 		children: {
-			...journalArticle(pubProps),
 			...(collectionProps ? journalIssue(collectionProps) : {}),
+			...journalArticle(pubProps),
 		},
 	});
 };

@@ -1,6 +1,7 @@
 import contributors from './contributors';
 import date from './helpers/date';
 import doiData from './doiData';
+import renderIsbn from './isbn';
 
 export default ({
 	attributions,
@@ -25,7 +26,7 @@ export default ({
 				},
 				edition_number: edition || '1',
 				...date('publication_date', publicationDate),
-				...(isbn ? { isbn: isbn } : { noisbn: { '@reason': 'monograph' } }),
+				...renderIsbn(isbn),
 				publisher: {
 					publisher_name: publisherName,
 				},

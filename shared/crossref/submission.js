@@ -25,6 +25,7 @@ const renderBody = (context) => {
 const getDois = (context) => {
 	const { community, collection, pub } = context;
 	return {
+		communityDoi: createDoi({ community: community }),
 		collectionDoi: collection && createDoi({ community: community, collection: collection }),
 		pubDoi: pub && createDoi({ community: community, collection: collection, pub: pub }),
 		getPubVersionDoi:
@@ -39,21 +40,13 @@ const getDois = (context) => {
 	};
 };
 
-const postprocessJson = (json) => {
-	const next = {};
-	Object.keys(json).forEach((key) => {
-		const value = json[key];
-		if (Array.isArray(value)) {
-			next[key] = value.map(postprocessJson);
-		}
-		if (typeof value === 'object') {
-			next[key] = postprocessJson(value);
-		}
-		if (!(value === undefined || value === null)) {
-			next[key] = value;
-		}
+const removeEmptyKeys = (obj) => {
+	Object.keys(obj).forEach((key) => {
+		if (obj[key] && typeof obj[key] === 'object') removeEmptyKeys(obj[key]);
+		// eslint-disable-next-line no-param-reassign
+		else if (obj[key] === undefined) delete obj[key];
 	});
-	return next;
+	return obj;
 };
 
 export default ({ community, collection, pub }, issueOptions = {}) => {
@@ -65,7 +58,7 @@ export default ({ community, collection, pub }, issueOptions = {}) => {
 		collection: issueCollectionDoi && collection,
 		pub: issuePubDoi && pub,
 	});
-	const json = postprocessJson(
+	const json = removeEmptyKeys(
 		doiBatch({
 			body: renderBody({
 				globals: {
@@ -80,6 +73,7 @@ export default ({ community, collection, pub }, issueOptions = {}) => {
 			timestamp: timestamp,
 		}),
 	);
+	console.log(json.doi_batch.body.journal.journal_issue);
 	return {
 		json: json,
 		dois: dois,

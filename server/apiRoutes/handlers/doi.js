@@ -87,6 +87,7 @@ const submitDoiData = (json, timestamp) => {
 	readStream.push(xmlObject);
 	readStream.push(null);
 	readStream.path = `/${timestamp}.xml`;
+	console.log(xmlObject);
 	return request({
 		method: 'POST',
 		url: DOI_SUBMISSION_URL,

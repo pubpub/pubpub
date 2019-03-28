@@ -6,9 +6,13 @@ export default ({ title, attributions, volume, issue, publicationDate }) => ({
 		titles: {
 			title: title,
 		},
-		journal_volume: {
-			volume: volume,
-		},
+		...(volume
+			? {
+					journal_volume: {
+						volume: volume,
+					},
+			  }
+			: {}),
 		issue: issue,
 		...contributors(attributions),
 		...date('publication_date', publicationDate),

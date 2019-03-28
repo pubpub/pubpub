@@ -62,8 +62,8 @@ const schemas = [
 			{ name: 'issue', label: 'Issue' },
 			{ name: 'printPublicationDate', label: 'Print publication date', type: types.date },
 			{
-				name: 'electronicPublicationDate',
-				label: 'Electronic publication date',
+				name: 'publicationDate',
+				label: 'Publication date',
 				type: types.date,
 			},
 		],

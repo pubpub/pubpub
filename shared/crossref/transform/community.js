@@ -1,3 +1,5 @@
+import { communityUrl } from '../../util/canonicalUrls';
+
 const getLanguageForCommunity = () => 'en';
 
 export default ({ globals }) => (community) => {
@@ -8,5 +10,7 @@ export default ({ globals }) => (community) => {
 		issn: issn,
 		timestamp: globals.timestamp,
 		language: getLanguageForCommunity(community),
+		doi: globals.communityDoi,
+		url: communityUrl(community),
 	};
 };
