@@ -5,8 +5,10 @@ import doiData from './doiData';
 
 export default ({
 	attributions,
-	getDoi,
+	componentType,
+	doi,
 	getResourceUrl,
+	getVersionDoi,
 	publicationDate,
 	sortedVersions,
 	timestamp,
@@ -14,13 +16,14 @@ export default ({
 }) => {
 	return {
 		content_item: {
+			'@component_type': componentType,
+			...contributors(attributions),
 			titles: {
 				title: title,
 			},
-			...contributors(attributions),
 			...date('publication_date', publicationDate),
-			...doiData(getDoi(), timestamp, getResourceUrl()),
-			...componentList(sortedVersions, timestamp, getDoi, getResourceUrl),
+			...doiData(doi, timestamp, getResourceUrl()),
+			...componentList(sortedVersions, timestamp, getVersionDoi, getResourceUrl),
 		},
 	};
 };

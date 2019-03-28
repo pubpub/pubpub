@@ -1,3 +1,8 @@
+import { Readable } from 'stream';
+import request from 'request-promise';
+import xmlbuilder from 'xmlbuilder';
+
+import submission from 'shared/crossref/submission';
 import {
 	Collection,
 	CollectionAttribution,
@@ -7,15 +12,13 @@ import {
 	Version,
 	User,
 } from '../../models';
-import submission from '../../../shared/crossref/submission';
 
-const findPub = (pubId, communityId) =>
+const findPub = (pubId) =>
 	Pub.findOne({
-		where: { id: pubId, communityId: communityId },
+		where: { id: pubId },
 		include: [
-			{ model: Version, as: 'versions', where: { isPublic: true } },
-			// { model: User, as: 'collaborators' },
-			// { model: Collaborator, as: 'emptyCollaborators', where: { userId: null }, required: false }
+			// STOPSHIP(ian): include only public versions here
+			{ model: Version, as: 'versions' },
 			{
 				model: PubAttribution,
 				as: 'attributions',
@@ -75,12 +78,41 @@ const findCollection = (collectionId) =>
 		],
 	});
 
-export const getDoiData = ({ communityId, collectionId, pubId }) => {
-	Promise.all([
-		findPub(pubId, communityId),
-		findCommunity(communityId),
-		collectionId && findCollection(collectionId),
-	]).then(([pub, community, collection]) => {
-		return submission({ community: community, collection: collection, pub: pub });
+const submitDoiData = (json, timestamp) => {
+	const { DOI_SUBMISSION_URL, DOI_LOGIN_ID, DOI_LOGIN_PASSWORD } = process.env;
+	const xmlObject = xmlbuilder.create(json, { headless: true }).end({ pretty: true });
+	const readStream = new Readable();
+	// eslint-disable-next-line no-underscore-dangle
+	readStream._read = function noop() {};
+	readStream.push(xmlObject);
+	readStream.push(null);
+	readStream.path = `/${timestamp}.xml`;
+	return request({
+		method: 'POST',
+		url: DOI_SUBMISSION_URL,
+		formData: {
+			login_id: DOI_LOGIN_ID,
+			login_passwd: DOI_LOGIN_PASSWORD,
+			fname: readStream,
+		},
+		headers: {
+			'content-type': 'multipart/form-data',
+		},
 	});
 };
+
+export const getDoiData = ({ communityId, collectionId, pubId }, issueOptions) =>
+	Promise.all([
+		pubId && findPub(pubId),
+		findCommunity(communityId),
+		collectionId && findCollection(collectionId),
+	]).then(([pub, community, collection]) =>
+		submission({ community: community, collection: collection, pub: pub }, issueOptions),
+	);
+
+export const setDoiData = (context, issueOptions) =>
+	getDoiData(context, issueOptions).then(({ json, timestamp }) =>
+		submitDoiData(json, timestamp).then((...args) => {
+			return json;
+		}),
+	);

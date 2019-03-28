@@ -395,7 +395,7 @@ const CollectionAttribution = sequelize.define('CollectionAttribution', {
 Collection.hasMany(CollectionAttribution, {
 	onDelete: 'CASCADE',
 	as: 'attributions',
-	foreignKey: 'pubId',
+	foreignKey: 'collectionId',
 });
 CollectionAttribution.belongsTo(User, { onDelete: 'CASCADE', as: 'user', foreignKey: 'userId' });
 CollectionAttribution.belongsTo(Collection, {

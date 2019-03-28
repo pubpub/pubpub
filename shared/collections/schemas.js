@@ -1,4 +1,13 @@
+import moment from 'moment';
+
 import { communityUrl } from 'shared/util/canonicalUrls';
+
+const types = {
+	date: {
+		name: 'date',
+		deserialize: (str) => moment(str).toDate(),
+	},
+};
 
 const sharedFields = {
 	doi: {
@@ -35,6 +44,7 @@ const schemas = [
 			sharedFields.url,
 			{ name: 'isbn', label: 'ISBN' },
 			{ name: 'copyrightYear', label: 'Copyright year', pattern: '^[0-9]*$' },
+			{ name: 'publicationDate', label: 'Publication date', type: types.date },
 			{ name: 'edition', label: 'Edition no.', pattern: '^[0-9]*$' },
 		],
 	},
@@ -50,8 +60,12 @@ const schemas = [
 			{ name: 'electronicIssn', label: 'Electronic ISSN' },
 			{ name: 'volume', label: 'Volume' },
 			{ name: 'issue', label: 'Issue' },
-			{ name: 'printPublicationDate', label: 'Print publication date' },
-			{ name: 'electronicPublicationDate', label: 'Electronic publication date' },
+			{ name: 'printPublicationDate', label: 'Print publication date', type: types.date },
+			{
+				name: 'electronicPublicationDate',
+				label: 'Electronic publication date',
+				type: types.date,
+			},
 		],
 	},
 	{

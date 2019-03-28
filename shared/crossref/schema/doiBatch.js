@@ -14,13 +14,13 @@ const HEAD_METADATA = {
 	registrant: 'PubPub',
 };
 
-export default ({ body, componentId, timestamp }) => ({
+export default ({ body, doiBatchId, timestamp }) => ({
 	doi_batch: {
 		...SCHEMA_METADATA,
 		head: {
-			...HEAD_METADATA,
-			doi_batch_id: `${componentId}_${timestamp}`,
+			doi_batch_id: doiBatchId,
 			timestamp: timestamp,
+			...HEAD_METADATA,
 		},
 		body: body,
 	},

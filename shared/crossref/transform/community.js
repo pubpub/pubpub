@@ -1,5 +1,3 @@
-import { communityComponentDoi } from '../components';
-
 const getLanguageForCommunity = () => 'en';
 
 export default ({ globals }) => (community) => {
@@ -10,6 +8,5 @@ export default ({ globals }) => (community) => {
 		issn: issn,
 		timestamp: globals.timestamp,
 		language: getLanguageForCommunity(community),
-		doi: communityComponentDoi(community),
 	};
 };

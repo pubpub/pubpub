@@ -1,8 +1,8 @@
 /**
  * Helper functions for interacting with Collection models
  */
+import { normalizeMetadataToKind } from 'shared/collections/metadata';
 import { Community, Collection } from '../../models';
-import { normalizeMetadataToKind } from '../../../shared/collections/metadata';
 import withPermissions from '../permissions/withPermissions';
 
 const createCollection = (title, kind, communityId) => {

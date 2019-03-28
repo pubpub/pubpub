@@ -40,7 +40,7 @@ class AttributionEditor extends Component {
 	}
 
 	handleAttributionAdd(user) {
-		const { attributions, onUpdateAttributions } = this.props;
+		const { attributions, onUpdateAttributions, onPersistStateChange } = this.props;
 		const calculatedOrder =
 			attributions.length === 0
 				? 0.5
@@ -51,6 +51,7 @@ class AttributionEditor extends Component {
 						}
 						return b.createdAt - a.createdAt;
 				  })[0].order / 2;
+		onPersistStateChange(1);
 		this.persistAttribution(
 			{
 				userId: user.id,
@@ -61,6 +62,7 @@ class AttributionEditor extends Component {
 		).then((result) => {
 			const { attributions: attributionsNow } = this.props;
 			onUpdateAttributions([...attributionsNow, result]);
+			onPersistStateChange(-1);
 		});
 	}
 

@@ -9,22 +9,27 @@ export default ({
 	edition,
 	isbn,
 	publicationDate,
+	publisherName,
 	timestamp,
 	title,
 	url,
 }) => {
 	return {
 		book: {
-			'@publication_type': 'full_text',
-			titles: {
-				title: title,
-			},
+			// STOPSHIP(ian): fix this
+			'@book_type': 'other',
 			book_metadata: {
-				isbn: isbn,
-				edition: edition,
 				...contributors(attributions),
-				...doiData(doi, timestamp, url),
+				titles: {
+					title: title,
+				},
+				edition_number: edition || '1',
 				...date('publication_date', publicationDate),
+				...(isbn ? { isbn: isbn } : { noisbn: { '@reason': 'monograph' } }),
+				publisher: {
+					publisher_name: publisherName,
+				},
+				...doiData(doi, timestamp, url),
 			},
 			...children,
 		},

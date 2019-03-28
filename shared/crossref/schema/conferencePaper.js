@@ -4,8 +4,9 @@ import doiData from './doiData';
 
 export default ({
 	attributions,
-	getDoi,
+	doi,
 	getResourceUrl,
+	getVersionDoi,
 	language,
 	sortedVersions,
 	timestamp,
@@ -18,8 +19,8 @@ export default ({
 				title: title,
 			},
 			contributors: contributors(attributions),
-			...doiData(getDoi(), timestamp, getResourceUrl()),
-			...componentList(sortedVersions, timestamp, getDoi, getResourceUrl),
+			...doiData(doi, timestamp, getResourceUrl()),
+			...componentList(sortedVersions, timestamp, getVersionDoi, getResourceUrl),
 		},
 	};
 };

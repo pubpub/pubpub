@@ -8,11 +8,11 @@ import conferencePaper from '../schema/conferencePaper';
 
 export default ({ globals, collection, pub }) => {
 	const collectionProps = transformCollection({ globals: globals })(collection);
-	const pubProps = transformPub({ globals: globals })(pub);
+	const pubProps = pub && transformPub({ globals: globals })(pub);
 	return conference({
 		...collectionProps,
 		children: {
-			...conferencePaper(pubProps),
+			...(pubProps ? conferencePaper(pubProps) : {}),
 		},
 	});
 };
