@@ -192,7 +192,7 @@ const formatAndAuthenticatePub = (pub, loginData, communityAdminData, req) => {
 		isEditor: isEditor,
 		isViewer: isViewer,
 		isBranchAdmin: isBranchAdmin,
-		isStaticDoc: req.params.versionNumber,
+		isStaticDoc: !!req.params.versionNumber,
 	};
 
 	return formattedPubData;

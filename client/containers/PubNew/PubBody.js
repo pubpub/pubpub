@@ -13,6 +13,7 @@ const propTypes = {
 	collabData: PropTypes.object.isRequired,
 	firebaseBranchRef: PropTypes.object,
 	updateLocalData: PropTypes.func.isRequired,
+	onSingleClick: PropTypes.func.isRequired,
 };
 const defaultProps = {
 	firebaseBranchRef: undefined,
@@ -89,7 +90,7 @@ const PubBody = (props) => {
 							: undefined
 					}
 					highlights={[]}
-					handleSingleClick={() => {}}
+					handleSingleClick={props.onSingleClick}
 				/>
 			</GridWrapper>
 		</div>
