@@ -2,29 +2,32 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 import Icon from 'components/Icon/Icon';
+import uuidv4 from 'uuid/v4';
+import { setLocalHighlight } from '@pubpub/editor';
 
 require('./pubInlineMenu.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	collabData: PropTypes.object.isRequired,
-	onNewHighlightDiscussion: PropTypes.func,
+	// onNewHighlightDiscussion: PropTypes.func,
 	openLinkMenu: PropTypes.func,
 };
 
 const defaultProps = {
 	openLinkMenu: () => {},
-	onNewHighlightDiscussion: () => {},
+	// onNewHighlightDiscussion: () => {},
 };
 
 const PubInlineMenu = (props) => {
-	const selection = props.collabData.editorChangeObject.selection || {};
-	const selectionBoundingBox = props.collabData.editorChangeObject.selectionBoundingBox || {};
+	const { pubData, collabData } = props;
+	const selection = collabData.editorChangeObject.selection || {};
+	const selectionBoundingBox = collabData.editorChangeObject.selectionBoundingBox || {};
 
 	if (
-		!props.collabData.editorChangeObject.selection ||
+		!collabData.editorChangeObject.selection ||
 		selection.empty ||
-		props.collabData.editorChangeObject.selectedNode
+		collabData.editorChangeObject.selectedNode
 	) {
 		return null;
 	}
@@ -34,7 +37,7 @@ const PubInlineMenu = (props) => {
 		top: selectionBoundingBox.top - 50 + window.scrollY,
 		left: selectionBoundingBox.left,
 	};
-	const menuItems = props.collabData.editorChangeObject.menuItems;
+	const menuItems = collabData.editorChangeObject.menuItems;
 	const menuItemsObject = menuItems.reduce((prev, curr) => {
 		return { ...prev, [curr.title]: curr };
 	}, {});
@@ -45,10 +48,10 @@ const PubInlineMenu = (props) => {
 		{ key: 'em', icon: <Icon icon="italic" /> },
 		{ key: 'link', icon: <Icon icon="link" /> },
 	];
-	const isReadOnly = props.pubData.isStaticDoc || !props.pubData.isEditor;
+	const isReadOnly = pubData.isStaticDoc || !pubData.isEditor;
 
 	// TODO: Make discussions disable-able
-	// if (isReadOnly && !props.pubData.publicDiscussions) {
+	// if (isReadOnly && !pubData.publicDiscussions) {
 	// 	return null;
 	// }
 	return (
@@ -82,15 +85,17 @@ const PubInlineMenu = (props) => {
 				className="bp3-minimal"
 				icon={<Icon icon="chat" />}
 				onClick={() => {
-					props.onNewHighlightDiscussion({
-						from: props.collabData.editorChangeObject.selection.from,
-						to: props.collabData.editorChangeObject.selection.to,
-						version: props.pubData.activeVersion.id,
-						// section: props.sectionId,
-						exact: props.collabData.editorChangeObject.selectedText.exact,
-						prefix: props.collabData.editorChangeObject.selectedText.prefix,
-						suffix: props.collabData.editorChangeObject.selectedText.suffix,
-					});
+					const view = collabData.editorChangeObject.view;
+					setLocalHighlight(view, selection.from, selection.to, uuidv4());
+					// props.onNewHighlightDiscussion({
+					// 	from: collabData.editorChangeObject.selection.from,
+					// 	to: props.collabData.editorChangeObject.selection.to,
+					// 	version: pubData.activeVersion.id,
+					// 	// section: props.sectionId,
+					// 	exact: props.collabData.editorChangeObject.selectedText.exact,
+					// 	prefix: props.collabData.editorChangeObject.selectedText.prefix,
+					// 	suffix: props.collabData.editorChangeObject.selectedText.suffix,
+					// });
 				}}
 			/>
 		</div>

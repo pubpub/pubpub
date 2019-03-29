@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import uuidv4 from 'uuid/v4';
-import { ButtonGroup, Button } from '@blueprintjs/core';
-import {
-	marksAtSelection,
-	setLocalHighlight,
-	removeLocalHighlight,
-	convertLocalHighlightToDiscussion,
-} from '@pubpub/editor';
-import GridWrapper from 'components/GridWrapper/GridWrapper';
+import { marksAtSelection } from '@pubpub/editor';
 import PubHeaderFormatting from './PubHeaderFormatting';
 import PubBody from './PubBody';
 import PubInlineMenu from './PubInlineMenu';
@@ -31,7 +23,7 @@ const defaultProps = {
 const PubDocument = (props) => {
 	const [linkPopupIsOpen, setLinkPopupIsOpen] = useState(false);
 	const [clickedMarks, setClickedMarks] = useState([]);
-	const [tempId, setTempId] = useState(uuidv4());
+	// const [tempId, setTempId] = useState(uuidv4());
 	const editorChangeObject = props.collabData.editorChangeObject;
 
 	/* Calculate whether the link popup should be open */
@@ -63,53 +55,28 @@ const PubDocument = (props) => {
 		};
 	});
 
+	const editorFocused = editorChangeObject.view && editorChangeObject.view.hasFocus();
 	return (
 		<React.Fragment>
 			<PubHeaderFormatting pubData={props.pubData} collabData={props.collabData} />
-			<GridWrapper containerClassName="pub">
-				<ButtonGroup>
-					<Button
-						text="Prompt New Discussion"
-						onClick={() => {
-							const view = editorChangeObject.view;
-							const selection = view.state.selection;
-							setLocalHighlight(view, selection.from, selection.to, tempId);
-						}}
-					/>
-					<Button
-						text="Cancel New Discussion"
-						onClick={() => {
-							const view = editorChangeObject.view;
-							removeLocalHighlight(view, tempId);
-						}}
-					/>
-					<Button
-						text="Save New Discussion"
-						onClick={() => {
-							const view = editorChangeObject.view;
-							convertLocalHighlightToDiscussion(
-								view,
-								tempId,
-								props.firebaseBranchRef,
-							);
-							setTempId(uuidv4());
-						}}
-					/>
-				</ButtonGroup>
-			</GridWrapper>
 			<PubBody
 				pubData={props.pubData}
 				collabData={props.collabData}
 				firebaseBranchRef={props.firebaseBranchRef}
 				updateLocalData={props.updateLocalData}
 				onSingleClick={(view) => {
-					/* Used to trigger link popup to open */
-					/* if link mark is clicked */
+					/* Used to trigger link popup when link mark clicked */
 					setClickedMarks(marksAtSelection(view));
 				}}
 			/>
-			<PubDiscussions pubData={props.pubData} collabData={props.collabData} />
-			{!linkPopupIsOpen && (
+			{props.firebaseBranchRef && (
+				<PubDiscussions
+					pubData={props.pubData}
+					collabData={props.collabData}
+					firebaseBranchRef={props.firebaseBranchRef}
+				/>
+			)}
+			{!linkPopupIsOpen && editorFocused && (
 				<PubInlineMenu
 					pubData={props.pubData}
 					collabData={props.collabData}
@@ -122,7 +89,6 @@ const PubDocument = (props) => {
 				<PubLinkMenu pubData={props.pubData} collabData={props.collabData} />
 			)}
 			<PubFooter pubData={props.pubData} />
-			{/* <PubDiscussions pubData={pubData} /> */}
 		</React.Fragment>
 	);
 };

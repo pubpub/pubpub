@@ -1,55 +1,18 @@
-import React, { useState, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import Editor from '@pubpub/editor';
-import { Button } from '@blueprintjs/core';
+import PubDiscussionThread from './PubDiscussionThread';
+import PubDiscussionThreadNew from './PubDiscussionThreadNew';
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	collabData: PropTypes.object.isRequired,
-};
-
-const DiscussionThread = (props) => {
-	const { discussionId, discussionState, dispatch } = props;
-	const { isOpen, editorState } = discussionState;
-
-	return (
-		<React.Fragment>
-			<Button
-				style={{
-					position: 'absolute',
-					left: '100%',
-				}}
-				icon="swap-vertical"
-				onClick={() => {
-					dispatch({ id: discussionId, key: 'isOpen', value: !isOpen });
-				}}
-			/>
-			{isOpen && (
-				<div className="bp3-card bp3-elevation-2">
-					<Editor
-						placeholder="Begin writing here..."
-						// This calls .toJSON everytime which seems inefficient
-						// Why do we only need this for local changes to doc - and not remote edits?
-						initialContent={
-							editorState && editorState.doc ? editorState.doc.toJSON() : undefined
-						}
-						onChange={(editorChangeObject) => {
-							dispatch({
-								id: discussionId,
-								key: 'editorState',
-								value: editorChangeObject.view.state,
-							});
-						}}
-					/>
-				</div>
-			)}
-		</React.Fragment>
-	);
+	firebaseBranchRef: PropTypes.object.isRequired,
 };
 
 const PubDiscussions = (props) => {
-	const decorations = props.collabData.editorChangeObject.decorations || [];
+	const { pubData, collabData, firebaseBranchRef } = props;
+	const decorations = collabData.editorChangeObject.decorations || [];
 	const discussionIds = decorations
 		.filter((decoration) => {
 			const attrs = decoration.attrs || {};
@@ -63,7 +26,25 @@ const PubDiscussions = (props) => {
 			return id;
 		});
 
+	const newDiscussionIds = decorations
+		.filter((decoration) => {
+			const attrs = decoration.attrs || {};
+			const className = attrs.class || '';
+			return className.indexOf('local-highlight lh-') > -1;
+		})
+		.map((decoration) => {
+			const attrs = decoration.attrs || {};
+			const className = attrs.class || '';
+			const id = className.replace('local-highlight lh-', '');
+			return id;
+		});
+
 	const [discussionsState, discussionsDispatch] = useReducer((state, action) => {
+		if (action.delete) {
+			const newState = { ...state };
+			delete newState[action.id];
+			return newState;
+		}
 		return {
 			...state,
 			[action.id]: {
@@ -81,12 +62,32 @@ const PubDiscussions = (props) => {
 				})
 				.map((id) => {
 					return ReactDOM.createPortal(
-						<DiscussionThread
+						<PubDiscussionThread
+							pubData={pubData}
+							collabData={collabData}
+							firebaseBranchRef={firebaseBranchRef}
 							discussionId={id}
 							discussionState={discussionsState[id] || {}}
 							dispatch={discussionsDispatch}
 						/>,
 						document.getElementsByClassName(`dm-${id}`)[0],
+					);
+				})}
+			{newDiscussionIds
+				.filter((id) => {
+					return document && document.getElementsByClassName(`lm-${id}`)[0];
+				})
+				.map((id) => {
+					return ReactDOM.createPortal(
+						<PubDiscussionThreadNew
+							pubData={pubData}
+							collabData={collabData}
+							firebaseBranchRef={firebaseBranchRef}
+							discussionId={id}
+							discussionState={discussionsState[id] || {}}
+							dispatch={discussionsDispatch}
+						/>,
+						document.getElementsByClassName(`lm-${id}`)[0],
 					);
 				})}
 		</div>
