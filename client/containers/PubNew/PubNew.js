@@ -6,6 +6,7 @@ import PubSyncManager from './PubSyncManager';
 import PubHeader from './PubHeader';
 import PubDocument from './PubDocument';
 import PubSubmission from './PubSubmission';
+import PubMeta from './PubMeta';
 import PubSettings from './PubSettings';
 import { pubDataProps } from './sharedPropTypes';
 
@@ -39,7 +40,7 @@ const PubNew = (props) => {
 						return (
 							<React.Fragment>
 								<PubHeader pubData={pubData} updateLocalData={updateLocalData} />
-
+								<PubMeta pubData={pubData} />
 								{mode === 'document' && <PubDocument {...modeProps} />}
 								{mode === 'submission' && <PubSubmission {...modeProps} />}
 								{mode === 'settings' && <PubSettings {...modeProps} />}

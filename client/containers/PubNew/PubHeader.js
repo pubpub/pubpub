@@ -142,6 +142,11 @@ const PubHeader = (props) => {
 		pubTitle = title;
 	}
 
+	const metaModes = [
+		{ title: 'Details', icon: '...', key: 'details' },
+		{ title: 'Download', icon: 'download', key: 'download' },
+	];
+
 	return (
 		<div className="pub-header-component" style={backgroundStyle} ref={headerRef}>
 			<div className={`wrapper ${useHeaderImage ? 'dim' : ''}`}>
@@ -307,6 +312,21 @@ const PubHeader = (props) => {
 						</div>
 					)}
 					<div className="details">
+						{metaModes.map((mode) => {
+							const isActive = pubData.metaMode === mode.key;
+							return (
+								<Button
+									text={mode.icon}
+									active={isActive}
+									onClick={() => {
+										props.updateLocalData('pub', {
+											metaMode: isActive ? undefined : mode.key,
+										});
+									}}
+								/>
+							);
+						})}
+
 						{/* <Popover
 										content={
 											<div className="bp3-menu">
