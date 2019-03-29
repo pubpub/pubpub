@@ -124,7 +124,7 @@ const PubHeaderFormatting = (props) => {
 					Editing
 					<span className="bp3-icon-standard bp3-icon-caret-down bp3-align-right" />
 				</button> */}
-				<button
+				{/* <button
 					className="save-version-button bp3-button bp3-intent-primary bp3-small"
 					type="button"
 					onClick={() => {
@@ -132,7 +132,7 @@ const PubHeaderFormatting = (props) => {
 					}}
 				>
 					Save Version
-				</button>
+				</button> */}
 			</div>
 		</div>
 	);

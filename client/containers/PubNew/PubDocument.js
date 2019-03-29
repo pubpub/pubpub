@@ -8,10 +8,12 @@ import {
 	removeLocalHighlight,
 	convertLocalHighlightToDiscussion,
 } from '@pubpub/editor';
+import GridWrapper from 'components/GridWrapper/GridWrapper';
 import PubHeaderFormatting from './PubHeaderFormatting';
 import PubBody from './PubBody';
 import PubInlineMenu from './PubInlineMenu';
 import PubLinkMenu from './PubLinkMenu';
+import PubDiscussions from './PubDiscussions';
 import PubFooter from './PubFooter';
 import { pubDataProps } from './sharedPropTypes';
 
@@ -30,14 +32,15 @@ const PubDocument = (props) => {
 	const [linkPopupIsOpen, setLinkPopupIsOpen] = useState(false);
 	const [clickedMarks, setClickedMarks] = useState([]);
 	const [tempId, setTempId] = useState(uuidv4());
+	const editorChangeObject = props.collabData.editorChangeObject;
 
 	/* Calculate whether the link popup should be open */
-	const activeLink = props.collabData.editorChangeObject.activeLink || {};
+	const activeLink = editorChangeObject.activeLink || {};
 	const selectionIsLink = !!activeLink.attrs;
 	const clickedOnLink = clickedMarks.indexOf('link') > -1;
-	const newLinkPopupIsOpen = clickedOnLink || (linkPopupIsOpen && selectionIsLink);
-	if (newLinkPopupIsOpen !== linkPopupIsOpen) {
-		setLinkPopupIsOpen(newLinkPopupIsOpen);
+	const nextLinkPopupIsOpen = clickedOnLink || (linkPopupIsOpen && selectionIsLink);
+	if (nextLinkPopupIsOpen !== linkPopupIsOpen) {
+		setLinkPopupIsOpen(nextLinkPopupIsOpen);
 		setClickedMarks([]);
 	}
 
@@ -46,7 +49,7 @@ const PubDocument = (props) => {
 		if (linkPopupIsOpen && (evt.key === 'Escape' || evt.key === 'Enter')) {
 			evt.preventDefault();
 			setLinkPopupIsOpen(false);
-			props.collabData.editorChangeObject.view.focus();
+			editorChangeObject.view.focus();
 		}
 		if (evt.key === 'k' && evt.metaKey) {
 			setLinkPopupIsOpen(true);
@@ -59,31 +62,31 @@ const PubDocument = (props) => {
 			window.removeEventListener('keydown', handleKeyPressEvents);
 		};
 	});
-	console.log(setLocalHighlight);
+
 	return (
 		<React.Fragment>
 			<PubHeaderFormatting pubData={props.pubData} collabData={props.collabData} />
-			<div>
+			<GridWrapper containerClassName="pub">
 				<ButtonGroup>
 					<Button
-						text="Prompt New Discussions"
+						text="Prompt New Discussion"
 						onClick={() => {
-							const view = props.collabData.editorChangeObject.view;
+							const view = editorChangeObject.view;
 							const selection = view.state.selection;
 							setLocalHighlight(view, selection.from, selection.to, tempId);
 						}}
 					/>
 					<Button
-						text="Cancel New Discussions"
+						text="Cancel New Discussion"
 						onClick={() => {
-							const view = props.collabData.editorChangeObject.view;
+							const view = editorChangeObject.view;
 							removeLocalHighlight(view, tempId);
 						}}
 					/>
 					<Button
-						text="Save New Discussions"
+						text="Save New Discussion"
 						onClick={() => {
-							const view = props.collabData.editorChangeObject.view;
+							const view = editorChangeObject.view;
 							convertLocalHighlightToDiscussion(
 								view,
 								tempId,
@@ -93,7 +96,7 @@ const PubDocument = (props) => {
 						}}
 					/>
 				</ButtonGroup>
-			</div>
+			</GridWrapper>
 			<PubBody
 				pubData={props.pubData}
 				collabData={props.collabData}
@@ -105,6 +108,7 @@ const PubDocument = (props) => {
 					setClickedMarks(marksAtSelection(view));
 				}}
 			/>
+			<PubDiscussions pubData={props.pubData} collabData={props.collabData} />
 			{!linkPopupIsOpen && (
 				<PubInlineMenu
 					pubData={props.pubData}
