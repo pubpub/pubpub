@@ -1,7 +1,4 @@
 import app from '../server';
-import { CommunityAdmin } from '../models';
-import { findPub } from '../queryHelpers';
-import { getInitialData, submitDoiData } from '../utilities';
 import { getDoiData, setDoiData } from './handlers/doi';
 
 // TODO(ian): add some kind of authentication here
@@ -10,7 +7,6 @@ app.get('/api/doi', (req, res) => {
 	getDoiData({ communityId: communityId, collectionId: collectionId, pubId: pubId })
 		.then((submission) => res.status(201).json(submission.json))
 		.catch((err) => {
-			console.log(err);
 			res.status(500).json(err);
 		});
 });
@@ -24,7 +20,6 @@ app.post('/api/doi', (req, res) => {
 	})
 		.then((json) => res.status(201).json(json))
 		.catch((err) => {
-			console.log(err);
 			res.status(500).json(err);
 		});
 	// .then(() => {

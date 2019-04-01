@@ -13,8 +13,8 @@ const sharedFields = {
 	doi: {
 		name: 'doi',
 		label: 'DOI',
-		defaultDerivedFrom: ({ collection }) => collection && collection.doi,
-		disabled: true,
+		derivedFrom: ({ collection }) => collection && collection.doi,
+		derivedLabelInfo: '(Registered in Crossref and cannot be changed)',
 	},
 	url: {
 		name: 'url',

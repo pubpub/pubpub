@@ -48,14 +48,13 @@ const removeEmptyKeys = (obj) => {
 	return obj;
 };
 
-export default ({ community, collection, pub }, issueOptions = {}) => {
-	const { issuePubDoi = true, issueCollectionDoi = false } = issueOptions;
+export default ({ community, collection, pub }) => {
 	const timestamp = new Date().getTime();
 	const doiBatchId = `${timestamp}_${community.id.slice(0, 8)}`;
 	const dois = getDois({
 		community: community,
-		collection: issueCollectionDoi && collection,
-		pub: issuePubDoi && pub,
+		collection: collection,
+		pub: pub,
 	});
 	const json = removeEmptyKeys(
 		doiBatch({

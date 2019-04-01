@@ -2,7 +2,7 @@ import { Readable } from 'stream';
 import request from 'request-promise';
 import xmlbuilder from 'xmlbuilder';
 
-import submission from 'shared/crossref/submission';
+import deposit from 'shared/crossref/deposit';
 import {
 	Collection,
 	CollectionAttribution,
@@ -102,16 +102,34 @@ const submitDoiData = (json, timestamp) => {
 	});
 };
 
-export const getDoiData = ({ communityId, collectionId, pubId }, issueOptions) =>
+const persistDoiData = (ids, dois) => {
+	const { collectionId, pubId } = ids;
+	const { collectionDoi, pubDoi } = dois;
+	const updates = [];
+	if (collectionId && collectionDoi) {
+		updates.push(Collection.update({ doi: collectionDoi }, { where: { id: collectionId } }));
+	}
+	if (pubId && pubDoi) {
+		updates.push(Pub.update({ doi: pubDoi }, { where: { id: pubId } }));
+	}
+	return Promise.all(updates);
+};
+
+export const getDoiData = ({ communityId, collectionId, pubId }) =>
 	Promise.all([
 		pubId && findPub(pubId),
 		findCommunity(communityId),
 		collectionId && findCollection(collectionId),
 	]).then(([pub, community, collection]) =>
-		submission({ community: community, collection: collection, pub: pub }, issueOptions),
+		deposit({ community: community, collection: collection, pub: pub }),
 	);
 
-export const setDoiData = (context, issueOptions) =>
-	getDoiData(context, issueOptions).then(({ json, timestamp }) =>
-		submitDoiData(json, timestamp).then(() => json),
+export const setDoiData = ({ communityId, collectionId, pubId }) =>
+	getDoiData({ communityId: communityId, collectionId: collectionId, pubId: pubId }).then(
+		({ json, timestamp, dois }) =>
+			submitDoiData(json, timestamp)
+				.then(() => persistDoiData({ collectionId: collectionId, pubId: pubId }, dois))
+				.then(() => {
+					return { json: json, dois: dois };
+				}),
 	);

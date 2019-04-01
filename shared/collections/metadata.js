@@ -1,5 +1,7 @@
 import metadataSchemas, { getSchemaForKind } from './schemas';
 
+const isNullOrUndefined = (val) => val === null || val === undefined;
+
 const mapMetadataFields = (kind, fn) => {
 	const schema = getSchemaForKind(kind);
 	const res = {};
@@ -18,10 +20,13 @@ export const normalizeMetadataToKind = (metadata, kind, context) =>
 	mapMetadataFields(kind, (field) => {
 		const { name, derivedFrom, defaultDerivedFrom } = field;
 		if (derivedFrom) {
-			return derivedFrom(context);
+			const derived = derivedFrom(context);
+			if (!isNullOrUndefined(derived)) {
+				return derived;
+			}
 		}
 		const existingValue = metadata[name];
-		if (typeof existingValue !== 'undefined') {
+		if (!isNullOrUndefined(existingValue)) {
 			return existingValue;
 		}
 		if (defaultDerivedFrom) {
