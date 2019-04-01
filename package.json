@@ -137,7 +137,7 @@
 		"sanitize-html": "^1.20.0",
 		"sass-loader": "^7.1.0",
 		"sequelize": "^4.42.0",
-		"stickybits": "^3.6.3",
+		"stickybits": "^3.6.5",
 		"stopword": "^0.1.13",
 		"strip-indent": "^2.0.0",
 		"style-loader": "^0.23.1",

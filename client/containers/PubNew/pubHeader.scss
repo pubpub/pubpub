@@ -146,7 +146,14 @@
 		font-style: italic;
 		font-weight: 200;
 	}
+	.details-wrapper {
+		display: flex;
+	}
+	.meta-buttons {
+		flex: 0 0 auto;
+	}
 	.details {
+		flex: 1 1 auto;
 		font-style: italic;
 		font-weight: 200;
 

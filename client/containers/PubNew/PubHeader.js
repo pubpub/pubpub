@@ -311,23 +311,9 @@ const PubHeader = (props) => {
 								})}
 						</div>
 					)}
-					<div className="details">
-						{metaModes.map((mode) => {
-							const isActive = pubData.metaMode === mode.key;
-							return (
-								<Button
-									text={mode.icon}
-									active={isActive}
-									onClick={() => {
-										props.updateLocalData('pub', {
-											metaMode: isActive ? undefined : mode.key,
-										});
-									}}
-								/>
-							);
-						})}
-
-						{/* <Popover
+					<div className="details-wrapper">
+						<div className="details">
+							{/* <Popover
 										content={
 											<div className="bp3-menu">
 												{(pubData.isDraftViewer ||
@@ -441,7 +427,7 @@ const PubHeader = (props) => {
 											<Icon icon="chevron-down" />
 										</div>
 									</Popover> */}
-						{/* this.props.pubData.publicDiscussions && (
+							{/* this.props.pubData.publicDiscussions && (
 										<a
 											href="#discussions"
 											role="button"
@@ -453,28 +439,61 @@ const PubHeader = (props) => {
 											{activeDiscussionChannel.title})
 										</a>
 									) */}
-						{!!numAttributions && (
-							<div
-								role="button"
-								tabIndex={-1}
-								className="detail-button"
-								// href={`/pub/${pubData.slug}/collaborators`}
-								// onClick={(evt) => {
-								// 	evt.preventDefault();
-								// 	this.props.setOptionsMode('attribution');
-								// }}
-							>
-								{/* <span className="bp3-icon-standard bp3-icon-team" /> */}
-								{numAttributions} Contributor
-								{numAttributions === 1 ? '' : 's'}
-							</div>
-						)}
+							{!!numAttributions && (
+								<div
+									role="button"
+									tabIndex={-1}
+									className="detail-button"
+									// href={`/pub/${pubData.slug}/collaborators`}
+									// onClick={(evt) => {
+									// 	evt.preventDefault();
+									// 	this.props.setOptionsMode('attribution');
+									// }}
+								>
+									{/* <span className="bp3-icon-standard bp3-icon-team" /> */}
+									{numAttributions} Contributor
+									{numAttributions === 1 ? '' : 's'}
+								</div>
+							)}
+						</div>
+						<div className="meta-buttons">
+							{metaModes.map((mode) => {
+								const isActive = pubData.metaMode === mode.key;
+								return (
+									<Button
+										text={mode.icon}
+										active={isActive}
+										onClick={() => {
+											props.updateLocalData('pub', {
+												metaMode: isActive ? undefined : mode.key,
+											});
+										}}
+									/>
+								);
+							})}
+						</div>
 					</div>
 				</GridWrapper>
 				<div className="bottom-text">
 					<div className="bottom-title">{pubData.title}</div>
 					<div className="bottom-buttons">
-						<Button
+						{metaModes.map((mode) => {
+							const isActive = pubData.metaMode === mode.key;
+							return (
+								<Button
+									text={mode.icon}
+									active={isActive}
+									minimal={true}
+									small={true}
+									onClick={() => {
+										props.updateLocalData('pub', {
+											metaMode: isActive ? undefined : mode.key,
+										});
+									}}
+								/>
+							);
+						})}
+						{/*<Button
 							minimal={true}
 							small={true}
 							// onClick={() => {
@@ -491,7 +510,7 @@ const PubHeader = (props) => {
 							// }}
 							text="Download"
 						/>
-						<span className="dot">·</span>
+						<span className="dot">·</span>*/}
 						{/*this.props.pubData.publicDiscussions && (
 								<DropdownButton
 									label={`#${this.props.activeDiscussionChannel.title}`}

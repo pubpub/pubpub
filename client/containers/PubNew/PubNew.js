@@ -40,7 +40,7 @@ const PubNew = (props) => {
 						return (
 							<React.Fragment>
 								<PubHeader pubData={pubData} updateLocalData={updateLocalData} />
-								<PubMeta pubData={pubData} />
+								<PubMeta pubData={pubData} updateLocalData={updateLocalData} />
 								{mode === 'document' && <PubDocument {...modeProps} />}
 								{mode === 'submission' && <PubSubmission {...modeProps} />}
 								{mode === 'settings' && <PubSettings {...modeProps} />}

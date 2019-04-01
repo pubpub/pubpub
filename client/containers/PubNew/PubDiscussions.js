@@ -1,6 +1,7 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
+import { Button, Popover, Position, Menu, MenuItem } from '@blueprintjs/core';
 import PubDiscussionThread from './PubDiscussionThread';
 import PubDiscussionThreadNew from './PubDiscussionThreadNew';
 
@@ -54,6 +55,74 @@ const PubDiscussions = (props) => {
 		};
 	}, {});
 
+	const [groupTops, setGroupTops] = useState([]);
+	useEffect(() => {
+		const sortedDecorations = decorations.sort((foo, bar) => {
+			if (foo.boundingBox.top < bar.boundingBox.top) {
+				return -1;
+			}
+			if (foo.boundingBox.top > bar.boundingBox.top) {
+				return 1;
+			}
+			return 0;
+		});
+		let lastTop = 0;
+		const discussionTops = {};
+		console.log(decorations);
+		sortedDecorations
+			.filter((decoration) => {
+				return (
+					decoration.attrs &&
+					decoration.attrs.class &&
+					decoration.attrs.class.indexOf('discussion-range') > -1
+				);
+			})
+			.forEach((decoration) => {
+				const currentTop = decoration.boundingBox.top;
+
+				if (lastTop && currentTop - lastTop < 100) {
+					discussionTops[lastTop].push(decoration);
+					return null;
+				}
+				lastTop = currentTop;
+				discussionTops[currentTop] = [decoration];
+				return null;
+			});
+		const newGroupTops = [];
+		Object.keys(discussionTops)
+			.filter((topKey) => {
+				return discussionTops[topKey].length > 1;
+			})
+			.forEach((topKey) => {
+				const classNames = discussionTops[topKey].map((discussion) => {
+					return discussion.attrs.class;
+				});
+				newGroupTops.push({ key: Number(topKey) + window.scrollY, classNames: classNames });
+			});
+
+		const getCompareKey = (groupTopsArray) => {
+			return groupTopsArray.reduce((prev, curr) => {
+				return `${prev}${curr.key}${curr.classNames.join()}`;
+			}, '');
+		};
+		console.log(getCompareKey(groupTops), getCompareKey(newGroupTops));
+		console.log(getCompareKey(groupTops) === getCompareKey(newGroupTops));
+		console.log(discussionTops, newGroupTops);
+		if (getCompareKey(groupTops) !== getCompareKey(newGroupTops)) {
+			setGroupTops(newGroupTops);
+		}
+
+		// [...document.getElementsByClassName('discussion-mount')].forEach((item) => {
+		// 	const top = item.getBoundingClientRect().top + window.scrollY;
+		// 	const nextTopsValue = discussionTops[top] || [];
+		// 	nextTopsValue.push(item.className);
+		// 	discussionTops[top] = nextTopsValue;
+		// });
+		// setTops(discussionTops);
+		// console.log(discussionTops);
+	});
+	// console.log(collabData.editorChangeObject);
+
 	return (
 		<div className="pub-discussions-component">
 			{discussionIds
@@ -90,6 +159,44 @@ const PubDiscussions = (props) => {
 						document.getElementsByClassName(`lm-${id}`)[0],
 					);
 				})}
+
+			{groupTops.map((groupTop) => {
+				return (
+					<div style={{ position: 'absolute', top: groupTop.key }}>
+						<Popover
+							content={
+								<Menu>
+									{groupTop.classNames.map((item, index) => {
+										return (
+											<MenuItem
+												text={index}
+												onClick={() => {
+													const id = item.replace(
+														'discussion-range d-',
+														'',
+													);
+													console.log(
+														'select ',
+														id,
+														`.dm-${id} .bp3-button`,
+													);
+													const elem = document.querySelector(
+														`.dm-${id} .bp3-button`,
+													);
+													elem.click();
+												}}
+											/>
+										);
+									})}
+								</Menu>
+							}
+							target={<Button text="@" />}
+							minimal={true}
+							position={Position.BOTTOM}
+						/>
+					</div>
+				);
+			})}
 		</div>
 	);
 };
