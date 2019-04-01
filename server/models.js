@@ -347,6 +347,7 @@ const Collection = sequelize.define('Collection', {
 
 	metadata: { type: Sequelize.JSONB },
 	kind: { type: Sequelize.TEXT },
+	doi: { type: Sequelize.TEXT },
 });
 
 const CollectionPub = sequelize.define(

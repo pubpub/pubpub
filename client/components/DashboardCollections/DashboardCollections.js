@@ -149,7 +149,7 @@ class DashboardCollections extends Component {
 		const schema = getSchemaForKind(kind);
 		const title = capitalize(schema.label.plural);
 		return (
-			<div>
+			<div className="collection-group">
 				<h2>{title}</h2>
 				{collections.map((collection) => (
 					<CollectionRow

@@ -15,10 +15,10 @@ export default ({
 	return {
 		conference_paper: {
 			'@language': language,
+			...contributors(attributions),
 			titles: {
 				title: title,
 			},
-			contributors: contributors(attributions),
 			...doiData(doi, timestamp, getResourceUrl()),
 			...componentList(sortedVersions, timestamp, getVersionDoi, getResourceUrl),
 		},

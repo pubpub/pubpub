@@ -12,7 +12,7 @@ import transformPub from '../transform/pub';
 
 export default ({ globals, community, collection, pub }) => {
 	const communityProps = transformCommunity({ globals: globals })(community);
-	const pubProps = transformPub({ globals: globals, community: community })(pub);
+	const pubProps = pub && transformPub({ globals: globals, community: community })(pub);
 	const collectionProps =
 		collection && transformCollection({ globals: globals, community: community })(collection);
 	return journal({
@@ -20,8 +20,8 @@ export default ({ globals, community, collection, pub }) => {
 		issn: collectionProps && collectionProps.issn,
 		timestamp: globals.timestamp,
 		children: {
-			...(collectionProps ? journalIssue(collectionProps) : {}),
-			...journalArticle(pubProps),
+			...(collectionProps && journalIssue(collectionProps)),
+			...(pubProps && journalArticle(pubProps)),
 		},
 	});
 };

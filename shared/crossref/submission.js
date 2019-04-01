@@ -26,15 +26,14 @@ const getDois = (context) => {
 	const { community, collection, pub } = context;
 	return {
 		communityDoi: createDoi({ community: community }),
-		collectionDoi: collection && createDoi({ community: community, collection: collection }),
-		pubDoi: pub && createDoi({ community: community, collection: collection, pub: pub }),
+		collectionDoi: collection && createDoi({ community: community, target: collection }),
+		pubDoi: pub && createDoi({ community: community, target: pub }),
 		getPubVersionDoi:
 			pub &&
 			((version) =>
 				createDoi({
 					community: community,
-					collection: collection,
-					pub: pub,
+					target: pub,
 					version: version,
 				})),
 	};
@@ -73,7 +72,6 @@ export default ({ community, collection, pub }, issueOptions = {}) => {
 			timestamp: timestamp,
 		}),
 	);
-	console.log(json.doi_batch.body.journal.journal_issue);
 	return {
 		json: json,
 		dois: dois,

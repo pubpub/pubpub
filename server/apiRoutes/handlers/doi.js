@@ -87,7 +87,6 @@ const submitDoiData = (json, timestamp) => {
 	readStream.push(xmlObject);
 	readStream.push(null);
 	readStream.path = `/${timestamp}.xml`;
-	console.log(xmlObject);
 	return request({
 		method: 'POST',
 		url: DOI_SUBMISSION_URL,
@@ -98,6 +97,7 @@ const submitDoiData = (json, timestamp) => {
 		},
 		headers: {
 			'content-type': 'multipart/form-data',
+			'user-agent': 'PubPub (mailto:team@pubpub.org)',
 		},
 	});
 };
@@ -113,7 +113,5 @@ export const getDoiData = ({ communityId, collectionId, pubId }, issueOptions) =
 
 export const setDoiData = (context, issueOptions) =>
 	getDoiData(context, issueOptions).then(({ json, timestamp }) =>
-		submitDoiData(json, timestamp).then((...args) => {
-			return json;
-		}),
+		submitDoiData(json, timestamp).then(() => json),
 	);

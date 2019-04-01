@@ -2,9 +2,9 @@
  * Renders an isbn, or a noisbn if we don't have one.
  */
 
-export default (isbn) => {
+export default (isbn, noIsbnReason = 'monograph') => {
 	if (isbn) {
 		return { isbn: isbn };
 	}
-	return { noisbn: { '@reason': 'monograph' } };
+	return { noisbn: { '@reason': noIsbnReason } };
 };

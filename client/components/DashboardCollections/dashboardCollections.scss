@@ -13,6 +13,9 @@
 	.error {
 		color: #c23030;
 	}
+	.collection-group:not(:last-child) {
+		margin-bottom: 2em;
+	}
 	.collection-wrapper {
 		display: flex;
 		align-items: center;

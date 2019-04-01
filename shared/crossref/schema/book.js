@@ -1,6 +1,7 @@
 import contributors from './contributors';
 import date from './helpers/date';
 import doiData from './doiData';
+import publisher from './publisher';
 import renderIsbn from './isbn';
 
 export default ({
@@ -10,7 +11,6 @@ export default ({
 	edition,
 	isbn,
 	publicationDate,
-	publisherName,
 	timestamp,
 	title,
 	url,
@@ -27,9 +27,7 @@ export default ({
 				edition_number: edition || '1',
 				...date('publication_date', publicationDate),
 				...renderIsbn(isbn),
-				publisher: {
-					publisher_name: publisherName,
-				},
+				...publisher(),
 				...doiData(doi, timestamp, url),
 			},
 			...children,

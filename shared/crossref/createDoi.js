@@ -1,7 +1,3 @@
-/**
- * Exports a handful of functions that provide a component DOI for various parts of the PubPub
- * information hierarchy: pubs, collections, communities.
- */
 const PUBPUB_DOI_PREFIX = '10.21428';
 
 const withPubPubDoiPrefix = (component) => `${PUBPUB_DOI_PREFIX}/${component}`;
@@ -13,10 +9,9 @@ export const makeComponentId = (community, collection, pub) =>
 		.map((result) => result || 'none')
 		.join('-');
 
-export default ({ community, collection, pub, version }) => {
+export default ({ community, target, version }) => {
 	const communityPart = splitId(community);
-	const collectionPart = collection ? `.${splitId(collection)}` : '';
-	const pubPart = pub ? `.${splitId(pub)}` : '';
+	const targetPart = target ? `.${splitId(target)}` : '';
 	const versionPart = version ? `/${splitId(version)}` : '';
-	return withPubPubDoiPrefix(communityPart + collectionPart + pubPart + versionPart);
+	return withPubPubDoiPrefix(communityPart + targetPart + versionPart);
 };

@@ -9,7 +9,6 @@ const transformMetadata = (metadata, kind) =>
 		kind: kind,
 		fallback: (field) => {
 			const { type } = field;
-			console.log('FALLBACK', metadata, kind, field, type);
 			if (type && type.name === 'date') {
 				return new Date();
 			}

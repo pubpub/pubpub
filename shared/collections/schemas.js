@@ -79,7 +79,7 @@ const schemas = [
 			{ name: 'theme', label: 'Theme' },
 			{ name: 'acronym', label: 'Acronym' },
 			{ name: 'location', label: 'Location' },
-			{ name: 'date', label: 'Date' },
+			{ name: 'date', label: 'Date', type: types.date },
 		],
 	},
 ];

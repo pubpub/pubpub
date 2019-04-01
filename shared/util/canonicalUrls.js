@@ -10,4 +10,4 @@ export const communityUrl = (communityData) =>
 
 // STOPSHIP(ian): implement this route
 export const collectionUrl = (communityData, collection) =>
-	`${communityUrl(communityData)}/collections/${collection.id}`;
+	`${communityUrl(communityData)}/collection/${collection.id}`;

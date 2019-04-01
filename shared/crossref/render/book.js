@@ -15,9 +15,8 @@ export default ({ globals, community, collection, pub }) => {
 	);
 	return book({
 		...collectionProps,
-		publisherName: community.title,
 		children: {
-			...(pubProps ? contentItem({ ...pubProps, componentType: 'chapter' }) : {}),
+			...(pubProps && contentItem({ ...pubProps, componentType: 'chapter' })),
 		},
 	});
 };
