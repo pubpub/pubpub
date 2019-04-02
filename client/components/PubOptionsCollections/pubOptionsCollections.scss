@@ -16,13 +16,13 @@
 		display: flex;
 		align-items: center;
 		padding: 5px;
-		.private-icon {
-			padding-left: 2px;
-		}
 		.title {
 			flex: 1;
 			display: flex;
 			align-items: center;
+		}
+		.is-primary-notice {
+			margin-left: 4px;
 		}
 	}
 }

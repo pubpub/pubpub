@@ -1,5 +1,5 @@
 import findRank from 'shared/util/findRank';
-import { Collection, CollectionPub } from '../../models';
+import { Collection, CollectionPub, sequelize } from '../../models';
 import { getCollectionPubsInCollection } from '../../queryHelpers';
 import withPermissions from '../permissions/withPermissions';
 
@@ -15,7 +15,7 @@ const createCollectionPub = (pubId, collectionId, rank) => {
 		const isPrimary = pubLevelPeers.length === 0 && collection.kind !== 'tag';
 		// If a rank wasn't provided, move the CollectionPub to the end of the collection
 		if (!rank) {
-			const ranks = collectionLevelPeers.map((cp) => cp.rank).filter(r => r);
+			const ranks = collectionLevelPeers.map((cp) => cp.rank).filter((r) => r);
 			// eslint-disable-next-line no-param-reassign
 			rank = findRank(ranks, ranks.length);
 		}
@@ -38,8 +38,27 @@ const updateCollectionPub = (id, updateRequest) => {
 
 const destroyCollectionPub = (id) => CollectionPub.destroy({ where: { id: id } });
 
+const setCollectionPubAsPrimary = (id) =>
+	CollectionPub.findOne({ where: { id: id } }).then((collectionPub) =>
+		sequelize.transaction((txn) =>
+			CollectionPub.update(
+				{ isPrimary: false },
+				{
+					transaction: txn,
+					where: { pubId: collectionPub.pubId, id: { $ne: id } },
+				},
+			).then(() =>
+				CollectionPub.update(
+					{ isPrimary: true },
+					{ where: { id: id }, returning: true, transaction: txn },
+				),
+			),
+		),
+	);
+
 export default withPermissions({
 	createCollectionPub: createCollectionPub,
 	updateCollectionPub: updateCollectionPub,
 	destroyCollectionPub: destroyCollectionPub,
+	setCollectionPubAsPrimary: setCollectionPubAsPrimary,
 });

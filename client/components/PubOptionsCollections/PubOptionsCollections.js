@@ -140,6 +140,32 @@ class PubOptionsCollections extends Component {
 		);
 	}
 
+	handleCollectionPubSetPrimary(collectionPubId) {
+		this.setState(
+			(state) => ({
+				isLoading: true,
+				collectionPubs: state.collectionPubs.map((collectionPub) => ({
+					...collectionPub,
+					isPrimary: collectionPub.id === collectionPubId,
+				})),
+			}),
+			() =>
+				apiFetch('/api/collectionPubs/setPrimary', {
+					method: 'PUT',
+					body: JSON.stringify({
+						id: collectionPubId,
+						communityId: this.props.communityData.id,
+					}),
+				}).then(() => {
+					this.props.setPubData({
+						...this.props.pubData,
+						collectionPubs: this.state.collectionPubs,
+					});
+					this.setState({ isLoading: false });
+				}),
+		);
+	}
+
 	renderAddCollection() {
 		const { collectionPubs } = this.state;
 		return (
@@ -192,66 +218,65 @@ class PubOptionsCollections extends Component {
 		);
 	}
 
+	renderCollectionRow(collectionPub) {
+		const { collection, isPrimary, id } = collectionPub;
+		const { title } = collection;
+		const schema = getSchemaForKind(collection.kind);
+		return (
+			<div key={collectionPub.id}>
+				<div className="collection-row">
+					<div className="title">
+						<Icon icon={schema.bpDisplayIcon} />
+						{title}
+						{!collection.isPublic && <Icon icon="lock2" />}
+						{isPrimary && (
+							<span className="is-primary-notice bp3-text-muted">
+								(Citation home)
+							</span>
+						)}
+					</div>
+					<ButtonGroup className="buttons">
+						<Popover
+							position={Position.BOTTOM}
+							content={
+								<Menu>
+									{collection.kind !== 'tag' && !isPrimary && (
+										<MenuItem
+											icon="highlight"
+											text="Use as citation home"
+											onClick={() => this.handleCollectionPubSetPrimary(id)}
+										/>
+									)}
+									<MenuItem
+										intent="danger"
+										icon="trash"
+										onClick={() => this.handleCollectionPubDelete(id)}
+										text="Remove from collection"
+									/>
+								</Menu>
+							}
+						>
+							<Button minimal="true" icon="more" />
+						</Popover>
+					</ButtonGroup>
+				</div>
+				<Divider />
+			</div>
+		);
+	}
+
 	renderCollections() {
-		const { collectionPubs } = this.state;
 		return (
 			<div className="collections-wrapper">
 				<Divider />
-				{collectionPubs
+				{this.state.collectionPubs
 					.sort((a, b) => {
 						if (a.kind === 'tag' && b.kind !== 'tag') {
 							return 1;
 						}
 						return a.kind - b.kind;
 					})
-					.map((collectionPub) => {
-						const { collection } = collectionPub;
-						const { isPrimary, title } = collection;
-						const schema = getSchemaForKind(collection.kind);
-						return (
-							<div key={collectionPub.id}>
-								<div className="collection-row">
-									<div className="title">
-										<Icon icon={schema.bpDisplayIcon} />
-										{title}
-										{!collection.isPublic && <Icon icon="lock2" />}
-									</div>
-									<ButtonGroup className="buttons">
-										<Popover
-											position={Position.BOTTOM}
-											content={
-												<Menu>
-													{collection.kind !== 'tag' && (
-														<MenuItem
-															icon="highlight"
-															text={
-																isPrimary
-																	? "Don't use as citation home"
-																	: 'Use as citation home'
-															}
-														/>
-													)}
-													<MenuItem
-														intent="danger"
-														icon="trash"
-														onClick={() =>
-															this.handleCollectionPubDelete(
-																collectionPub.id,
-															)
-														}
-														text="Remove from collection"
-													/>
-												</Menu>
-											}
-										>
-											<Button minimal="true" icon="more" />
-										</Popover>
-									</ButtonGroup>
-								</div>
-								<Divider />
-							</div>
-						);
-					})}
+					.map((collectionPub) => this.renderCollectionRow(collectionPub))}
 			</div>
 		);
 	}

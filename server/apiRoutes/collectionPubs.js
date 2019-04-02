@@ -33,9 +33,19 @@ app.post('/api/collectionPubs', (req, res) =>
 		.then((created) => {
 			return res.status(201).json(created);
 		})
-		.catch((err) => {
-			res.status(500).json({});
-		}),
+		.catch(() => res.status(500).json({})),
+);
+
+app.put('/api/collectionPubs/setPrimary', (req, res) =>
+	collectionPubHandler(credentialsFromRequest(req))
+		.catch((err) => res.status(401).json(err))
+		.then(({ setCollectionPubAsPrimary }) => setCollectionPubAsPrimary(req.body.id))
+		.then((created) => {
+			return res.status(201).json(created);
+		})
+		.catch((err) => 
+			res.status(500).json({})
+		)
 );
 
 app.put('/api/collectionPubs', (req, res) =>
