@@ -4,7 +4,6 @@ require('./pubAttributions');
 require('./collections');
 require('./collectionAttributions');
 require('./collectionPubs');
-require('./collectionPubsLegacy');
 require('./communities');
 require('./communityAdmins');
 require('./discussions');

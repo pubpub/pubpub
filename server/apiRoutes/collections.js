@@ -23,7 +23,7 @@ app.post('/api/collections', (req, res) =>
 	collectionsHandler(credentialsFromRequest(req))
 		.catch(() => res.status(401).send({}))
 		.then(({ createCollection }) =>
-			createCollection(req.body.title, req.body.kind, req.body.communityId),
+			createCollection(req.body.title.trim(), req.body.kind, req.body.communityId),
 		)
 		.then((newCollection) => res.status(201).json(newCollection))
 		.catch((err) => res.status(500).json(err)),

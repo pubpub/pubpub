@@ -22,14 +22,14 @@ class PubOptionsDoi extends React.Component {
 	}
 
 	handleAssignDoi() {
+		const { pubData, communityData } = this.props;
 		this.setState({ isLoading: true });
 		return apiFetch('/api/doi', {
 			method: 'POST',
 			body: JSON.stringify({
-				pubId: this.props.pubData.id,
-				communityId: this.props.communityData.id,
-				versionId: this.props.pubData.activeVersion.id,
-				slug: this.props.pubData.slug,
+				pubId: pubData.id,
+				communityId: communityData.id,
+				versionId: pubData.activeVersion.id,
 			}),
 		})
 			.then((updatedPubData) => {

@@ -34,7 +34,7 @@ export default {
 			id: '0fd7f42c-d8a1-4275-bf2b-cd641416959c',
 			title: 'Home',
 			slug: '',
-			isPublic: true,
+			isPublic: false,
 			isOpenPublish: false,
 		},
 		{
@@ -441,7 +441,7 @@ export default {
 				kind: 'tag',
 				title: 'Essays',
 				isRestricted: true,
-				isPublic: true,
+				isPublic: false,
 				pageId: 'af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b',
 				communityId: 'da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4',
 				createdAt: '2018-08-06T15:26:05.468Z',

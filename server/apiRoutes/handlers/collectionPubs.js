@@ -1,13 +1,30 @@
-import { CollectionPub } from '../../models';
+import findRank from 'shared/util/findRank';
+import { Collection, CollectionPub } from '../../models';
+import { getCollectionPubsInCollection } from '../../queryHelpers';
 import withPermissions from '../permissions/withPermissions';
 
 const CAN_UPDATE_ATTRIBUTES = ['rank', 'contextHint'];
 
-const createCollectionPub = (pubId, collectionId, rank) =>
-	CollectionPub.create(
-		{ collectionId: collectionId, pubId: pubId, rank: rank },
-		{ returning: true },
-	);
+const createCollectionPub = (pubId, collectionId, rank) => {
+	return Promise.all([
+		Collection.findOne({ where: { id: collectionId } }),
+		CollectionPub.findAll({ where: { pubId: pubId } }),
+		getCollectionPubsInCollection(collectionId),
+	]).then(([collection, pubLevelPeers, collectionLevelPeers]) => {
+		// If this is the first non-tag collection in the bunch, make it the primary one
+		const isPrimary = pubLevelPeers.length === 0 && collection.kind !== 'tag';
+		// If a rank wasn't provided, move the CollectionPub to the end of the collection
+		if (!rank) {
+			const ranks = collectionLevelPeers.map((cp) => cp.rank).filter(r => r);
+			// eslint-disable-next-line no-param-reassign
+			rank = findRank(ranks, ranks.length);
+		}
+		return CollectionPub.create(
+			{ collectionId: collectionId, pubId: pubId, rank: rank, isPrimary: isPrimary },
+			{ returning: true },
+		);
+	});
+};
 
 const updateCollectionPub = (id, updateRequest) => {
 	const update = {};
