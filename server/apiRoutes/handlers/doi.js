@@ -14,39 +14,44 @@ import {
 	User,
 } from '../../models';
 
-const findPrimaryCollectionForPub = (pubId) =>
+const collectionIncludes = [
+	{
+		model: CollectionAttribution,
+		as: 'attributions',
+		include: [
+			{
+				model: User,
+				as: 'user',
+				required: false,
+				attributes: [
+					'id',
+					'firstName',
+					'lastName',
+					'fullName',
+					'avatar',
+					'slug',
+					'initials',
+					'title',
+				],
+			},
+		],
+	},
+];
+
+const findPrimaryCollectionPubForPub = (pubId) =>
 	CollectionPub.findOne({
 		where: { pubId: pubId, isPrimary: true },
 		include: [
 			{
 				model: Collection,
 				as: 'collection',
-				include: [
-					{
-						model: CollectionAttribution,
-						as: 'attributions',
-						include: [
-							{
-								model: User,
-								as: 'user',
-								required: false,
-								attributes: [
-									'id',
-									'firstName',
-									'lastName',
-									'fullName',
-									'avatar',
-									'slug',
-									'initials',
-									'title',
-								],
-							},
-						],
-					},
-				],
+				include: collectionIncludes,
 			},
 		],
 	});
+
+const findCollection = (collectionId) =>
+	Collection.findOne({ where: { id: collectionId }, include: collectionIncludes });
 
 const findPub = (pubId) =>
 	Pub.findOne({
@@ -122,14 +127,21 @@ const persistDoiData = (ids, dois) => {
 	return Promise.all(updates);
 };
 
-export const getDoiData = ({ communityId, pubId }) =>
+export const getDoiData = ({ communityId, collectionId, pubId }) =>
 	Promise.all([
-		pubId && findPub(pubId),
 		findCommunity(communityId),
-		findPrimaryCollectionForPub(pubId),
-	]).then(([pub, community, collectionPub]) =>
-		createDeposit({ community: community, collectionPub: collectionPub, pub: pub }),
-	);
+		collectionId && findCollection(collectionId),
+		pubId && findPrimaryCollectionPubForPub(pubId),
+		pubId && findPub(pubId),
+	]).then(([community, collection, collectionPub, pub]) => {
+		const resolvedCollection = collectionPub ? collectionPub.collection : collection;
+		return createDeposit({
+			collectionPub: collectionPub,
+			collection: resolvedCollection,
+			community: community,
+			pub: pub,
+		});
+	});
 
 export const setDoiData = ({ communityId, collectionId, pubId }) =>
 	getDoiData({ communityId: communityId, collectionId: collectionId, pubId: pubId }).then(

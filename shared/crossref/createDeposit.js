@@ -48,26 +48,31 @@ const removeEmptyKeys = (obj) => {
 	return obj;
 };
 
-export default ({ community, collectionPub, pub }) => {
-	const { collection } = collectionPub;
+const checkContextAssertions = (context) => {
+	const { collection, collectionPub } = context;
+	if (collectionPub) {
+		if (!collection && collection.id !== collectionPub.id) {
+			throw new Error(
+				'Cannot provide a CollectionPub to createDeposit without also providing a matching collection.',
+			);
+		}
+	}
+};
+
+export default (context) => {
+	checkContextAssertions(context);
+	const { community } = context;
 	const timestamp = new Date().getTime();
 	const doiBatchId = `${timestamp}_${community.id.slice(0, 8)}`;
-	const dois = getDois({
-		community: community,
-		collection: collection,
-		pub: pub,
-	});
+	const dois = getDois(context);
 	const deposit = removeEmptyKeys(
 		doiBatch({
 			body: renderBody({
+				...context,
 				globals: {
 					...dois,
 					timestamp: timestamp,
 				},
-				community: community,
-				collection: collection,
-				collectionPub: collectionPub,
-				pub: pub,
 			}),
 			doiBatchId: doiBatchId,
 			timestamp: timestamp,

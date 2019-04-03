@@ -7,18 +7,21 @@ app.get('/api/doi', (req, res) => {
 	getDoiData({ communityId: communityId, collectionId: collectionId, pubId: pubId })
 		.then((submission) => res.status(201).json(submission.json))
 		.catch((err) => {
+			console.log(err);
 			res.status(500).json(err);
 		});
 });
 
 app.post('/api/doi', (req, res) => {
-	const { pubId, communityId } = req.body;
+	const { pubId, collectionId, communityId } = req.body;
 	return setDoiData({
 		communityId: communityId,
+		collectionId,
 		pubId: pubId,
 	})
 		.then((json) => res.status(201).json(json))
 		.catch((err) => {
+			console.log(err);
 			res.status(500).json(err);
 		});
 });

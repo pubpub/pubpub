@@ -17,8 +17,8 @@ export default ({
 	return {
 		content_item: {
 			'@component_type': componentType,
+			...contributors(attributions),
 			titles: {
-				...contributors(attributions),
 				title: title,
 			},
 			...date('publication_date', publicationDate),
