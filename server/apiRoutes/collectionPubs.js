@@ -43,9 +43,7 @@ app.put('/api/collectionPubs/setPrimary', (req, res) =>
 		.then((created) => {
 			return res.status(201).json(created);
 		})
-		.catch((err) => 
-			res.status(500).json({})
-		)
+		.catch(() => res.status(500).json({})),
 );
 
 app.put('/api/collectionPubs', (req, res) =>

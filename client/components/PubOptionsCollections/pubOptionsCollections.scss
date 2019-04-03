@@ -20,6 +20,9 @@
 			flex: 1;
 			display: flex;
 			align-items: center;
+			.lock-icon {
+				margin-left: 4px;
+			}
 		}
 		.is-primary-notice {
 			margin-left: 4px;
@@ -33,9 +36,8 @@
 		align-items: center;
 		position: relative;
 		padding: 0px 10px;
-		.bp3-icon {
-			position: absolute;
-			left: -7px;
+		.lock-icon {
+			margin-left: 4px;
 		}
 	}
 }

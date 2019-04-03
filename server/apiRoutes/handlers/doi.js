@@ -2,16 +2,51 @@ import { Readable } from 'stream';
 import request from 'request-promise';
 import xmlbuilder from 'xmlbuilder';
 
-import deposit from 'shared/crossref/deposit';
+import createDeposit from 'shared/crossref/createDeposit';
 import {
 	Collection,
 	CollectionAttribution,
+	CollectionPub,
 	Community,
 	Pub,
 	PubAttribution,
 	Version,
 	User,
 } from '../../models';
+
+const findPrimaryCollectionForPub = (pubId) =>
+	CollectionPub.findOne({
+		where: { pubId: pubId, isPrimary: true },
+		include: [
+			{
+				model: Collection,
+				as: 'collection',
+				include: [
+					{
+						model: CollectionAttribution,
+						as: 'attributions',
+						include: [
+							{
+								model: User,
+								as: 'user',
+								required: false,
+								attributes: [
+									'id',
+									'firstName',
+									'lastName',
+									'fullName',
+									'avatar',
+									'slug',
+									'initials',
+									'title',
+								],
+							},
+						],
+					},
+				],
+			},
+		],
+	});
 
 const findPub = (pubId) =>
 	Pub.findOne({
@@ -48,34 +83,6 @@ const findCommunity = (communityId) =>
 	Community.findOne({
 		where: { id: communityId },
 		attributes: ['id', 'title', 'issn', 'domain', 'subdomain'],
-	});
-
-const findCollection = (collectionId) =>
-	Collection.findOne({
-		where: { id: collectionId },
-		include: [
-			{
-				model: CollectionAttribution,
-				as: 'attributions',
-				include: [
-					{
-						model: User,
-						as: 'user',
-						required: false,
-						attributes: [
-							'id',
-							'firstName',
-							'lastName',
-							'fullName',
-							'avatar',
-							'slug',
-							'initials',
-							'title',
-						],
-					},
-				],
-			},
-		],
 	});
 
 const submitDoiData = (json, timestamp) => {
@@ -115,21 +122,21 @@ const persistDoiData = (ids, dois) => {
 	return Promise.all(updates);
 };
 
-export const getDoiData = ({ communityId, collectionId, pubId }) =>
+export const getDoiData = ({ communityId, pubId }) =>
 	Promise.all([
 		pubId && findPub(pubId),
 		findCommunity(communityId),
-		collectionId && findCollection(collectionId),
-	]).then(([pub, community, collection]) =>
-		deposit({ community: community, collection: collection, pub: pub }),
+		findPrimaryCollectionForPub(pubId),
+	]).then(([pub, community, collectionPub]) =>
+		createDeposit({ community: community, collectionPub: collectionPub, pub: pub }),
 	);
 
 export const setDoiData = ({ communityId, collectionId, pubId }) =>
 	getDoiData({ communityId: communityId, collectionId: collectionId, pubId: pubId }).then(
-		({ json, timestamp, dois }) =>
-			submitDoiData(json, timestamp)
+		({ deposit, timestamp, dois }) =>
+			submitDoiData(deposit, timestamp)
 				.then(() => persistDoiData({ collectionId: collectionId, pubId: pubId }, dois))
 				.then(() => {
-					return { json: json, dois: dois };
+					return { deposit: deposit, dois: dois };
 				}),
 	);

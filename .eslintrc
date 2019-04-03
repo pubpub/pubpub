@@ -23,6 +23,7 @@
         "import/prefer-default-export": 0,
         "jsx-a11y/click-events-have-key-events": 0,
         "no-console": [1, { allow: ["warn", "error", "info"] }],
+        "no-nested-ternary": 0,
         "object-shorthand": [2, "never"],
         "object-curly-newline": 0,
         "prefer-destructuring": [2, { object: false, array: false }],

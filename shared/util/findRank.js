@@ -34,7 +34,6 @@ const getBounds = (ranks, index) => {
 };
 
 export default (ranks, index) => {
-	console.log(ranks, index);
 	const [above, below] = getBounds(ranks, index);
 	const [result] = mudder.base36.mudder(above, below, 1);
 	return result;

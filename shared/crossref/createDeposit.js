@@ -48,7 +48,8 @@ const removeEmptyKeys = (obj) => {
 	return obj;
 };
 
-export default ({ community, collection, pub }) => {
+export default ({ community, collectionPub, pub }) => {
+	const { collection } = collectionPub;
 	const timestamp = new Date().getTime();
 	const doiBatchId = `${timestamp}_${community.id.slice(0, 8)}`;
 	const dois = getDois({
@@ -56,7 +57,7 @@ export default ({ community, collection, pub }) => {
 		collection: collection,
 		pub: pub,
 	});
-	const json = removeEmptyKeys(
+	const deposit = removeEmptyKeys(
 		doiBatch({
 			body: renderBody({
 				globals: {
@@ -65,6 +66,7 @@ export default ({ community, collection, pub }) => {
 				},
 				community: community,
 				collection: collection,
+				collectionPub: collectionPub,
 				pub: pub,
 			}),
 			doiBatchId: doiBatchId,
@@ -72,7 +74,7 @@ export default ({ community, collection, pub }) => {
 		}),
 	);
 	return {
-		json: json,
+		deposit: deposit,
 		dois: dois,
 		timestamp: timestamp,
 	};

@@ -1,6 +1,7 @@
 import React from 'react';
 import Raven from 'raven-js';
 import { hydrate } from 'react-dom';
+import queryString from 'query-string';
 import { FocusStyleManager } from '@blueprintjs/core';
 import KeenTracking from 'keen-tracking';
 import { remove as removeDiacritics } from 'diacritics';
@@ -566,4 +567,13 @@ export const getEmbedType = (input) => {
 		}
 		return prev;
 	}, null);
+};
+
+// TODO(ian): please move this somewhere else
+export const updatePubCitationData = (pubData) => {
+	const versionId = pubData.activeVersion.id;
+	const slug = pubData.slug;
+	return apiFetch(`/api/citations?${queryString.stringify({ versionId: versionId, slug: slug })}`).then(
+		({ citationData }) => citationData,
+	);
 };

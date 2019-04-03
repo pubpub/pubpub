@@ -16,6 +16,7 @@ import fuzzysearch from 'fuzzysearch';
 import { getSchemaForKind } from 'shared/collections/schemas';
 import Icon from 'components/Icon/Icon';
 import { apiFetch } from 'utilities';
+import { updatePubCitationData } from '../../utilities';
 
 require('./pubOptionsCollections.scss');
 
@@ -141,6 +142,7 @@ class PubOptionsCollections extends Component {
 	}
 
 	handleCollectionPubSetPrimary(collectionPubId) {
+		const { communityData, pubData, setPubData } = this.props;
 		this.setState(
 			(state) => ({
 				isLoading: true,
@@ -154,14 +156,17 @@ class PubOptionsCollections extends Component {
 					method: 'PUT',
 					body: JSON.stringify({
 						id: collectionPubId,
-						communityId: this.props.communityData.id,
+						communityId: communityData.id,
 					}),
 				}).then(() => {
-					this.props.setPubData({
-						...this.props.pubData,
-						collectionPubs: this.state.collectionPubs,
+					updatePubCitationData(pubData).then((citationData) => {
+						setPubData({
+							...pubData,
+							citationData: citationData,
+							collectionPubs: this.state.collectionPubs,
+						});
+						this.setState({ isLoading: false });
 					});
-					this.setState({ isLoading: false });
 				}),
 		);
 	}
@@ -195,8 +200,10 @@ class PubOptionsCollections extends Component {
 							>
 								{!item.id && <span>Create new tag: </span>}
 								<span className="autocomplete-name">
-									{item.id && !item.isPublic && <Icon icon="lock2" />}
 									{item.title}
+									{item.id && !item.isPublic && (
+										<Icon className="lock-icon" icon="lock2" />
+									)}
 								</span>
 							</button>
 						</li>
@@ -207,7 +214,7 @@ class PubOptionsCollections extends Component {
 				noResults={<MenuItem disabled text="No results" />}
 				popoverProps={{
 					// isOpen: this.state.queryValue,
-					popoverClassName: 'bp3-minimal collection-autocomplete-popover',
+					popoverClassName: 'bp3-minimal collections-autocomplete-popover',
 					position: Position.BOTTOM_LEFT,
 					modifiers: {
 						preventOverflow: { enabled: false },
@@ -228,10 +235,10 @@ class PubOptionsCollections extends Component {
 					<div className="title">
 						<Icon icon={schema.bpDisplayIcon} />
 						{title}
-						{!collection.isPublic && <Icon icon="lock2" />}
+						{!collection.isPublic && <Icon icon="lock2" className="lock-icon" />}
 						{isPrimary && (
 							<span className="is-primary-notice bp3-text-muted">
-								(Citation home)
+								(Primary collection)
 							</span>
 						)}
 					</div>
@@ -243,7 +250,7 @@ class PubOptionsCollections extends Component {
 									{collection.kind !== 'tag' && !isPrimary && (
 										<MenuItem
 											icon="highlight"
-											text="Use as citation home"
+											text="Use as primary collection"
 											onClick={() => this.handleCollectionPubSetPrimary(id)}
 										/>
 									)}
@@ -291,6 +298,11 @@ class PubOptionsCollections extends Component {
 					</div>
 				)}
 				<h1>Collections</h1>
+				<p>
+					A pub can belong to many collections. You can choose here which (non-tag)
+					collection acts as its <em>primary collection</em>, and appears as part of the
+					pub&apos;s citations and DOI deposit information.
+				</p>
 				{this.renderAddCollection()}
 				{this.renderCollections()}
 			</div>
