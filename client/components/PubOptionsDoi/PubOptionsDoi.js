@@ -35,12 +35,10 @@ class PubOptionsDoi extends Component {
 				communityId: communityData.id,
 			}),
 		})
-			.then(({ dois: { pubDoi } }) =>
-				updatePubCitationData(pubData).then((citationData) => {
-					setPubData({ ...pubData, doi: pubDoi, citationData: citationData });
-					this.setState({ isLoading: false, justSetDoi: true });
-				}),
-			)
+			.then(({ dois: { pubDoi } }) => {
+				setPubData({ ...pubData, doi: pubDoi });
+				this.setState({ isLoading: false, justSetDoi: true });
+			})
 			.catch(() => {
 				this.setState({ isLoading: false });
 			});

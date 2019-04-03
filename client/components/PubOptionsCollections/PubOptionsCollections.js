@@ -159,14 +159,11 @@ class PubOptionsCollections extends Component {
 						communityId: communityData.id,
 					}),
 				}).then(() => {
-					updatePubCitationData(pubData).then((citationData) => {
-						setPubData({
-							...pubData,
-							citationData: citationData,
-							collectionPubs: this.state.collectionPubs,
-						});
-						this.setState({ isLoading: false });
+					setPubData({
+						...pubData,
+						collectionPubs: this.state.collectionPubs,
 					});
+					this.setState({ isLoading: false });
 				}),
 		);
 	}

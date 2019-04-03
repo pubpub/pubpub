@@ -568,12 +568,3 @@ export const getEmbedType = (input) => {
 		return prev;
 	}, null);
 };
-
-// TODO(ian): please move this somewhere else
-export const updatePubCitationData = (pubData) => {
-	const versionId = pubData.activeVersion.id;
-	const slug = pubData.slug;
-	return apiFetch(`/api/citations?${queryString.stringify({ versionId: versionId, slug: slug })}`).then(
-		({ citationData }) => citationData,
-	);
-};
