@@ -1,7 +1,6 @@
 import React from 'react';
 import Raven from 'raven-js';
 import { hydrate } from 'react-dom';
-import queryString from 'query-string';
 import { FocusStyleManager } from '@blueprintjs/core';
 import KeenTracking from 'keen-tracking';
 import { remove as removeDiacritics } from 'diacritics';

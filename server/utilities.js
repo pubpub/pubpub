@@ -2,19 +2,13 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import * as ReactBeautifulDnD from 'react-beautiful-dnd';
 import { resolve } from 'path';
-import { Readable } from 'stream';
 import queryString from 'query-string';
 import Cite from 'citation-js';
-import builder from 'xmlbuilder';
-import request from 'request-promise';
 import amqplib from 'amqplib';
 import { remove as removeDiacritics } from 'diacritics';
-import { Collection, Community, Page, Pub, PubAttribution, User, Version } from './models';
+import { Collection, Community, Page, User } from './models';
 
 const isPubPubProduction = !!process.env.PUBPUB_PRODUCTION;
-const doiSubmissionUrl = process.env.DOI_SUBMISSION_URL;
-const doiLoginId = process.env.DOI_LOGIN_ID;
-const doiLoginPassword = process.env.DOI_LOGIN_PASSWORD;
 
 export const slugifyString = (input) => {
 	if (typeof input !== 'string') {

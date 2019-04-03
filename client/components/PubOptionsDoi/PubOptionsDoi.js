@@ -4,7 +4,6 @@ import { Button, FormGroup } from '@blueprintjs/core';
 
 import { apiFetch } from 'utilities';
 import { getSchemaForKind } from 'shared/collections/schemas';
-import { updatePubCitationData } from '../../utilities';
 
 require('./pubOptionsDoi.scss');
 

@@ -16,7 +16,6 @@ import fuzzysearch from 'fuzzysearch';
 import { getSchemaForKind } from 'shared/collections/schemas';
 import Icon from 'components/Icon/Icon';
 import { apiFetch } from 'utilities';
-import { updatePubCitationData } from '../../utilities';
 
 require('./pubOptionsCollections.scss');
 
