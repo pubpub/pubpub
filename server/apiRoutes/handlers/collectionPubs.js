@@ -8,11 +8,16 @@ const CAN_UPDATE_ATTRIBUTES = ['rank', 'contextHint'];
 const createCollectionPub = (pubId, collectionId, rank) => {
 	return Promise.all([
 		Collection.findOne({ where: { id: collectionId } }),
-		CollectionPub.findAll({ where: { pubId: pubId } }),
+		CollectionPub.findAll({
+			where: { pubId: pubId },
+			include: [{ model: Collection, as: 'collection' }],
+		}),
 		getCollectionPubsInCollection(collectionId),
 	]).then(([collection, pubLevelPeers, collectionLevelPeers]) => {
 		// If this is the first non-tag collection in the bunch, make it the primary one
-		const isPrimary = pubLevelPeers.length === 0 && collection.kind !== 'tag';
+		const isPrimary =
+			pubLevelPeers.filter((peer) => peer.collection.kind !== 'tag').length === 0 &&
+			collection.kind !== 'tag';
 		// If a rank wasn't provided, move the CollectionPub to the end of the collection
 		if (!rank) {
 			const ranks = collectionLevelPeers.map((cp) => cp.rank).filter((r) => r);

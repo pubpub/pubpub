@@ -274,7 +274,7 @@ class PubOptionsCollections extends Component {
 				<Divider />
 				{this.state.collectionPubs
 					.sort((a, b) => {
-						if (a.kind === 'tag' && b.kind !== 'tag') {
+						if (a.collection.kind === 'tag' && b.collection.kind !== 'tag') {
 							return 1;
 						}
 						return a.kind - b.kind;
@@ -290,7 +290,7 @@ class PubOptionsCollections extends Component {
 			<div className="pub-options-collections-component">
 				{isLoading && (
 					<div className="save-wrapper">
-						<Spinner small={true} /> Saving...
+						<Spinner size={Spinner.SIZE_SMALL} /> Saving...
 					</div>
 				)}
 				<h1>Collections</h1>
