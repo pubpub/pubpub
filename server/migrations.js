@@ -374,7 +374,7 @@ new Promise((resolve) => {
 	// 	return sequelize.queryInterface.addColumn('Communities', 'hideCreatePubButton', { type: Sequelize.BOOLEAN });
 	// })
 	// .then(()=> {
-	// 	return sequelize.queryInterface.addColumn('Communities', 'defaultPubTags', { type: Sequelize.JSONB });
+	// 	return sequelize.queryInterface.addColumn('Communities', 'defaultPubCollections', { type: Sequelize.JSONB });
 	// })
 	// .then(()=> {
 	// 	return Promise.all([
@@ -445,6 +445,8 @@ new Promise((resolve) => {
 	// })
 	.then(() => {
 		return Collection.sync()
+			.then(() =>  sequelize.getQueryInterface()
+				.renameColumn('Communities', 'defaultPubCollections', 'defaultPubCollections'))
 			.then(() => {
 				return Tag.findAll().then(tags => {
 					const collections = tags.map(tag => {
@@ -462,7 +464,7 @@ new Promise((resolve) => {
 					return CollectionPub.bulkCreate(collectionPubs);
 				});
 			})
-			.then(() => CollectionAttribution.sync());
+			.then(() => CollectionAttribution.sync())
 	})
 	.catch((err) => {
 		console.log('Error with Migration', err);

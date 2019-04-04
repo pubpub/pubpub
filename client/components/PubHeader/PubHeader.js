@@ -192,8 +192,8 @@ class PubHeader extends Component {
 					<div className="container pub">
 						<div className="row">
 							<div className="col-12">
-								<div className="tags-buttons-wrapper">
-									<div className="tags">
+								<div className="collections-buttons-wrapper">
+									<div className="collections">
 										{pubData.collectionPubs
 											.filter((collectionPub) => {
 												return (

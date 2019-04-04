@@ -168,8 +168,6 @@ export const getInitialData = (req) => {
 			return loginData.isAdmin || item.isPublic;
 		});
 
-		communityData.tags = communityData.collections.filter((c) => c.kind === 'tag');
-
 		communityData.collections = communityData.collections.map((collection) => {
 			if (!collection.pageId) {
 				return collection;
