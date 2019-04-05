@@ -1,11 +1,9 @@
-import moment from 'moment';
-
 import { communityUrl } from 'shared/util/canonicalUrls';
 
 const types = {
 	date: {
 		name: 'date',
-		deserialize: (str) => moment(str).toDate(),
+		deserialize: (str) => new Date(str)
 	},
 };
 
@@ -14,7 +12,7 @@ const sharedFields = {
 		name: 'doi',
 		label: 'DOI',
 		derivedFrom: ({ collection }) => collection && collection.doi,
-		derivedLabelInfo: '(Registered in Crossref and cannot be changed)',
+		derivedLabelInfo: '(Registered and cannot be changed)',
 	},
 	url: {
 		name: 'url',
