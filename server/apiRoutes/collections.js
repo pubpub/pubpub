@@ -42,5 +42,8 @@ app.delete('/api/collections', (req, res) =>
 		.catch(() => res.status(401).send({}))
 		.then(({ destroyCollection }) => destroyCollection(req.body.id))
 		.then(() => res.status(201).json({}))
-		.catch((err) => res.status(500).json(err)),
+		.catch((err) => {
+			console.log(err);
+			res.status(500).json(err);
+		})
 );

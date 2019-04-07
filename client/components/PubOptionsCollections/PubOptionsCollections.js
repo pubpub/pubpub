@@ -223,7 +223,7 @@ class PubOptionsCollections extends Component {
 
 	renderCollectionRow(collectionPub) {
 		const { collection, isPrimary, id } = collectionPub;
-		const { title } = collection;
+		const { title, isPublic } = collection;
 		const schema = getSchemaForKind(collection.kind);
 		return (
 			<div key={collectionPub.id}>
@@ -243,7 +243,7 @@ class PubOptionsCollections extends Component {
 							position={Position.BOTTOM}
 							content={
 								<Menu>
-									{collection.kind !== 'tag' && !isPrimary && (
+									{collection.kind !== 'tag' && !isPrimary && isPublic && (
 										<MenuItem
 											icon="highlight"
 											text="Use as primary collection"
