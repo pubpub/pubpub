@@ -24,6 +24,6 @@ export default ({ globals, community }) => (collection) => {
 		title: title,
 		timestamp: globals.timestamp,
 		attributions: transformAttributions(attributions),
-		doi: globals.collectionDoi,
+		doi: globals.dois.collection,
 	};
 };

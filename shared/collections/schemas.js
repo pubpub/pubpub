@@ -3,7 +3,7 @@ import { communityUrl } from 'shared/util/canonicalUrls';
 const types = {
 	date: {
 		name: 'date',
-		deserialize: (str) => new Date(str)
+		deserialize: (str) => new Date(str),
 	},
 };
 

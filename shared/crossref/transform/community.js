@@ -10,7 +10,7 @@ export default ({ globals }) => (community) => {
 		issn: issn,
 		timestamp: globals.timestamp,
 		language: getLanguageForCommunity(community),
-		doi: globals.communityDoi,
+		doi: globals.dois.community,
 		url: communityUrl(community),
 	};
 };

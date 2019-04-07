@@ -59,10 +59,11 @@ class CollectionMetadataEditor extends React.Component {
 			body: JSON.stringify({
 				collectionId: collection.id,
 				communityId: communityData.id,
+				doiTarget: 'collection',
 			}),
 		}).then(({ dois }) => {
 			onPersistStateChange(-1);
-			onUpdateCollection({ doi: dois.collectionDoi });
+			onUpdateCollection({ doi: dois.collection });
 			this.setState({ isSaving: false });
 		});
 	}

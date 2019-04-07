@@ -32,10 +32,12 @@ const updateCollection = (collectionId, updateRequest) => {
 	return Collection.findOne({ where: { id: collectionId } }).then((collection) => {
 		return Promise.all([
 			collection.update(updatedCollection),
-			CollectionPub.update(
-				{ isPrimary: false },
-				{ where: { isPrimary: true, collectionId: collection.id } },
-			),
+			collection.isPublic &&
+				updateRequest.isPublic === false &&
+				CollectionPub.update(
+					{ isPrimary: false },
+					{ where: { isPrimary: true, collectionId: collection.id } },
+				),
 		]);
 	});
 };

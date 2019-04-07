@@ -32,9 +32,10 @@ class PubOptionsDoi extends Component {
 			body: JSON.stringify({
 				pubId: pubData.id,
 				communityId: communityData.id,
+				doiTarget: 'pub',
 			}),
 		})
-			.then(({ dois: { pubDoi } }) => {
+			.then(({ dois: { pub: pubDoi } }) => {
 				setPubData({ ...pubData, doi: pubDoi });
 				this.setState({ isLoading: false, justSetDoi: true });
 			})

@@ -116,7 +116,7 @@ const submitDoiData = (json, timestamp) => {
 
 const persistDoiData = (ids, dois) => {
 	const { collectionId, pubId } = ids;
-	const { collectionDoi, pubDoi } = dois;
+	const { collection: collectionDoi, pub: pubDoi } = dois;
 	const updates = [];
 	if (collectionId && collectionDoi) {
 		updates.push(Collection.update({ doi: collectionDoi }, { where: { id: collectionId } }));
@@ -127,7 +127,7 @@ const persistDoiData = (ids, dois) => {
 	return Promise.all(updates);
 };
 
-export const getDoiData = ({ communityId, collectionId, pubId }) =>
+export const getDoiData = ({ communityId, collectionId, pubId }, doiTarget) =>
 	Promise.all([
 		findCommunity(communityId),
 		collectionId && findCollection(collectionId),
@@ -135,20 +135,25 @@ export const getDoiData = ({ communityId, collectionId, pubId }) =>
 		pubId && findPub(pubId),
 	]).then(([community, collection, collectionPub, pub]) => {
 		const resolvedCollection = collectionPub ? collectionPub.collection : collection;
-		return createDeposit({
-			collectionPub: collectionPub,
-			collection: resolvedCollection,
-			community: community,
-			pub: pub,
-		});
+		return createDeposit(
+			{
+				collectionPub: collectionPub,
+				collection: resolvedCollection,
+				community: community,
+				pub: pub,
+			},
+			doiTarget,
+		);
 	});
 
-export const setDoiData = ({ communityId, collectionId, pubId }) =>
-	getDoiData({ communityId: communityId, collectionId: collectionId, pubId: pubId }).then(
-		({ deposit, timestamp, dois }) =>
-			submitDoiData(deposit, timestamp)
-				.then(() => persistDoiData({ collectionId: collectionId, pubId: pubId }, dois))
-				.then(() => {
-					return { deposit: deposit, dois: dois };
-				}),
+export const setDoiData = ({ communityId, collectionId, pubId }, doiTarget) =>
+	getDoiData(
+		{ communityId: communityId, collectionId: collectionId, pubId: pubId },
+		doiTarget,
+	).then(({ deposit, timestamp, dois }) =>
+		submitDoiData(deposit, timestamp)
+			.then(() => persistDoiData({ collectionId: collectionId, pubId: pubId }, dois))
+			.then(() => {
+				return { deposit: deposit, dois: dois };
+			}),
 	);

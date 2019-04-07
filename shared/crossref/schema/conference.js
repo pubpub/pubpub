@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dateFormat from 'dateformat';
 
 import contributors from './contributors';
 import renderDate from './helpers/date';
@@ -26,7 +26,7 @@ export default ({
 			conference_acronym: acronym,
 			conference_location: location,
 			conference_date: {
-				'#text': moment(date).format('YYYY-MM-DD'),
+				'#text': dateFormat(date, 'YYYY-MM-DD'),
 			},
 		},
 		proceedings_metadata: {

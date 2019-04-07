@@ -59,7 +59,7 @@ app.delete('/api/collectionPubs', (req, res) =>
 		.catch(() => res.status(401).json({}))
 		.then(({ destroyCollectionPub }) => destroyCollectionPub(req.body.id))
 		.then(() => res.status(201).json({}))
-		.catch((err) => {
+		.catch(() => {
 			res.status(500).json({});
 		}),
 );

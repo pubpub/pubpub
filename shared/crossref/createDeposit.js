@@ -8,6 +8,7 @@ import renderBook from './render/book';
 import renderConference from './render/conference';
 import renderJournal from './render/journal';
 import createDoi from './createDoi';
+import getCollectionDoi from '../collections/getCollectionDoi';
 
 const renderBody = (context) => {
 	const { collection } = context;
@@ -22,23 +23,6 @@ const renderBody = (context) => {
 	return renderJournal(context);
 };
 
-const getDois = (context) => {
-	const { community, collection, pub } = context;
-	return {
-		communityDoi: createDoi({ community: community }),
-		collectionDoi: collection && createDoi({ community: community, target: collection }),
-		pubDoi: pub && createDoi({ community: community, target: pub }),
-		getPubVersionDoi:
-			pub &&
-			((version) =>
-				createDoi({
-					community: community,
-					target: pub,
-					version: version,
-				})),
-	};
-};
-
 const removeEmptyKeys = (obj) => {
 	Object.keys(obj).forEach((key) => {
 		if (obj[key] && typeof obj[key] === 'object') removeEmptyKeys(obj[key]);
@@ -48,8 +32,12 @@ const removeEmptyKeys = (obj) => {
 	return obj;
 };
 
-const checkContextAssertions = (context) => {
+const checkDepositAssertions = (context, doiTarget) => {
 	const { collection, collectionPub } = context;
+	const allowableDoiTargets = ['pub', 'collection'];
+	if (!allowableDoiTargets.includes(doiTarget)) {
+		throw new Error('doiTarget must be one of', allowableDoiTargets.join(', '));
+	}
 	if (collectionPub) {
 		if (!collection && collection.id !== collectionPub.id) {
 			throw new Error(
@@ -59,18 +47,37 @@ const checkContextAssertions = (context) => {
 	}
 };
 
-export default (context) => {
-	checkContextAssertions(context);
+const getDois = (context, doiTarget) => {
+	const { pub, collection, community } = context;
+	const dois = {};
+	dois.community = createDoi({ community: community });
+	dois.pub =
+		pub &&
+		(doiTarget === 'pub'
+			? createDoi({ community: community, collection: collection, target: pub })
+			: pub.doi);
+	dois.getPubVersionDoi = (version) =>
+		createDoi({ community: community, collection: collection, target: pub, version: version });
+	dois.collection =
+		collection &&
+		(doiTarget === 'collection'
+			? createDoi({ community: community, target: collection })
+			: getCollectionDoi(collection));
+	return dois;
+};
+
+export default (context, doiTarget) => {
+	checkDepositAssertions(context, doiTarget);
 	const { community } = context;
 	const timestamp = new Date().getTime();
 	const doiBatchId = `${timestamp}_${community.id.slice(0, 8)}`;
-	const dois = getDois(context);
+	const dois = getDois(context, doiTarget);
 	const deposit = removeEmptyKeys(
 		doiBatch({
 			body: renderBody({
 				...context,
 				globals: {
-					...dois,
+					dois: dois,
 					timestamp: timestamp,
 				},
 			}),
