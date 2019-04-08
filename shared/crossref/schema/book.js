@@ -17,7 +17,7 @@ export default ({
 }) => {
 	return {
 		book: {
-			// STOPSHIP(ian): fix this
+			// TODO(ian): find out what book_type we should actually be using
 			'@book_type': 'other',
 			book_metadata: {
 				...contributors(attributions),

@@ -223,7 +223,7 @@ class PubHeader extends Component {
 														href={
 															item.collection.page
 																? `/${item.collection.page.slug}`
-																: `/search?tag=${
+																: `/search?q=${
 																		item.collection.title
 																  }`
 														}

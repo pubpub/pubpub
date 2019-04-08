@@ -33,9 +33,22 @@ const schemas = [
 		label: { singular: 'book', plural: 'books' },
 		bpDisplayIcon: 'book',
 		contextHints: [
-			{ value: 'foreword', label: 'Foreword' },
+			{ value: 'foreword', label: 'Foreword', crossrefComponentType: 'section' },
+			{ value: 'preface', label: 'Preface', crossrefComponentType: 'section' },
 			{ value: 'supplementaryMaterial', label: 'Supplementary Material' },
-			{ value: 'chapter', label: 'Chapter', default: true },
+			{
+				value: 'chapter',
+				label: 'Chapter',
+				isDefault: true,
+				crossrefComponentType: 'chapter',
+			},
+			{ value: 'appendix', label: 'Appendix', crossrefComponentType: 'reference_entry' },
+			{ value: 'glossary', label: 'Glossary', crossrefComponentType: 'reference_entry' },
+			{
+				value: 'acknowledgements',
+				label: 'Acknowledgements',
+				crossrefComponentType: 'section',
+			},
 		],
 		metadata: [
 			sharedFields.doi,

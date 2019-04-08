@@ -57,8 +57,7 @@ const findPub = (pubId) =>
 	Pub.findOne({
 		where: { id: pubId },
 		include: [
-			// STOPSHIP(ian): include only public versions here
-			{ model: Version, as: 'versions' },
+			{ model: Version, as: 'versions', where: { isPublic: true } },
 			{
 				model: PubAttribution,
 				as: 'attributions',
