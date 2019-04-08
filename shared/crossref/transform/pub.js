@@ -1,13 +1,6 @@
-import transformAttributions from './attributions';
+import { pubUrl } from 'shared/util/canonicalUrls';
 
-const resourceUrlGetter = (pub, community) => (version) => {
-	const communityHostname = community.domain || `${community.subdomain}.pubpub.org`;
-	const baseUrl = `https://${communityHostname}/pub/${pub.slug}`;
-	if (version) {
-		return `${baseUrl}?version=${version.id}`;
-	}
-	return baseUrl;
-};
+import transformAttributions from './attributions';
 
 export default ({ globals, community }) => (pub) => {
 	const { timestamp, dois } = globals;
@@ -20,7 +13,7 @@ export default ({ globals, community }) => (pub) => {
 		sortedVersions: sortedVersions,
 		publicationDate: publicationDate,
 		attributions: transformAttributions(pub.attributions),
-		getResourceUrl: resourceUrlGetter(pub, community),
+		getResourceUrl: (version) => pubUrl(community, pub, version),
 		doi: dois.pub,
 		getVersionDoi: dois.getPubVersionDoi,
 	};

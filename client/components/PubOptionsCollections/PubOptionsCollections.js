@@ -140,14 +140,20 @@ class PubOptionsCollections extends Component {
 		);
 	}
 
-	handleCollectionPubSetPrimary(collectionPubId) {
+	handleCollectionPubSetPrimary(collectionPubId, setPrimary = true) {
 		const { communityData, pubData, setPubData } = this.props;
+		const isPrimary = (collectionPub) => {
+			if (setPrimary) {
+				return collectionPub.id === collectionPubId;
+			}
+			return false;
+		};
 		this.setState(
 			(state) => ({
 				isLoading: true,
 				collectionPubs: state.collectionPubs.map((collectionPub) => ({
 					...collectionPub,
-					isPrimary: collectionPub.id === collectionPubId,
+					isPrimary: isPrimary(collectionPub),
 				})),
 			}),
 			() =>
@@ -243,11 +249,17 @@ class PubOptionsCollections extends Component {
 							position={Position.BOTTOM}
 							content={
 								<Menu>
-									{collection.kind !== 'tag' && !isPrimary && isPublic && (
+									{collection.kind !== 'tag' && isPublic && (
 										<MenuItem
 											icon="highlight"
-											text="Use as primary collection"
-											onClick={() => this.handleCollectionPubSetPrimary(id)}
+											text={
+												isPrimary
+													? 'Stop using as primary collection'
+													: 'Use as primary collection'
+											}
+											onClick={() =>
+												this.handleCollectionPubSetPrimary(id, !isPrimary)
+											}
 										/>
 									)}
 									<MenuItem
