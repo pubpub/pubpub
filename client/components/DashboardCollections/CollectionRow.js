@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Checkbox, EditableText, ControlGroup, AnchorButton } from '@blueprintjs/core';
+import { Button, Checkbox, EditableText, ControlGroup, AnchorButton } from '@blueprintjs/core';
 
 import collectionType from 'types/collection';
 import communityType from 'types/community';
@@ -73,13 +73,7 @@ const CollectionRow = ({ communityData, collection, onUpdateCollection, onDelete
 					onDeleteCollection(collection.id);
 				}}
 			>
-				{({ open }) => (
-					<button
-						type="button"
-						className="bp3-button bp3-icon-small-cross bp3-minimal"
-						onClick={open}
-					/>
-				)}
+				{({ open }) => <Button minimal={true} icon="cross" onClick={open} />}
 			</ConfirmDialog>
 		</div>
 	);

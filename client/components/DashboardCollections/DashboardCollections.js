@@ -1,6 +1,8 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, ControlGroup, InputGroup } from '@blueprintjs/core';
+import classNames from 'classnames';
+import { Button, Card, ControlGroup, InputGroup, Icon, Overlay } from '@blueprintjs/core';
+import { Classes as SelectClasses } from '@blueprintjs/select';
 import { apiFetch } from 'utilities';
 
 import { getSchemaForKind } from 'shared/collections/schemas';
@@ -8,6 +10,7 @@ import CollectionKindDropdown from './CollectionKindDropdown';
 import CollectionRow from './CollectionRow';
 
 require('./dashboardCollections.scss');
+require('@blueprintjs/select/src/blueprint-select.scss');
 
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
@@ -16,7 +19,53 @@ const propTypes = {
 };
 
 const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
-class DashboardCollections extends Component {
+
+const NewCollectionCard = ({ schema, description, header }) => {
+	const [isOpen, setIsOpen] = useState(false);
+	const {
+		bpDisplayIcon,
+		label: { singular: collectionLabel },
+	} = schema;
+	return (
+		<React.Fragment>
+			<Overlay
+				className={classNames('new-collection-card-overlay', SelectClasses.OMNIBAR_OVERLAY)}
+				isOpen={isOpen}
+				onClose={() => setIsOpen(false)}
+				hasBackdrop={true}
+				usePortal={true}
+			>
+				<div className={SelectClasses.OMNIBAR}>
+					<InputGroup
+						autoFocus={true}
+						leftIcon={bpDisplayIcon}
+						placeholder={`Name a new ${collectionLabel}...`}
+						large={true}
+					/>
+				</div>
+			</Overlay>
+			<Card className="top-controls-card" elevation={1} onClick={() => setIsOpen(true)}>
+				<h6>
+					<Icon icon={bpDisplayIcon} iconSize={20} />
+					{header}
+				</h6>
+				<p>{description}</p>
+			</Card>
+		</React.Fragment>
+	);
+};
+
+NewCollectionCard.propTypes = {
+	schema: PropTypes.shape({
+		bpDisplayIcon: PropTypes.string.isRequired,
+		label: {
+			singular: PropTypes.string,
+		},
+	}).isRequired,
+	header: PropTypes.string.isRequired,
+	description: PropTypes.node.isRequired,
+};
+class DashboardCollections extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -114,7 +163,7 @@ class DashboardCollections extends Component {
 		});
 	}
 
-	renderTopControlGroup() {
+	renderTopControlGroupNot() {
 		const { currentCollectionSchema, isCreatingCollection } = this.state;
 		const label = currentCollectionSchema.label.singular.toLowerCase();
 		// TODO(ian): figure out how to grow the InputGroup without resorting to CSS
@@ -143,6 +192,45 @@ class DashboardCollections extends Component {
 		);
 	}
 
+	renderTopControlGroup() {
+		return (
+			<div className="top-controls-cards">
+				<NewCollectionCard
+					schema={getSchemaForKind('tag')}
+					header="Create a tag"
+					description={
+						<React.Fragment>
+							A lightweight collection of thematically related pubs
+						</React.Fragment>
+					}
+				/>
+				<NewCollectionCard
+					schema={getSchemaForKind('issue')}
+					header="Create an issue"
+					description={
+						<React.Fragment>
+							Organize your pubs into an issue of your journal
+						</React.Fragment>
+					}
+				/>
+				<NewCollectionCard
+					schema={getSchemaForKind('book')}
+					header="Create a book"
+					description={
+						<React.Fragment>
+							Arrange pubs into chapters for a longer reading experience
+						</React.Fragment>
+					}
+				/>
+				<NewCollectionCard
+					schema={getSchemaForKind('conference')}
+					header="Create a conference"
+					description={<React.Fragment>Host a conference on PubPub</React.Fragment>}
+				/>
+			</div>
+		);
+	}
+
 	renderCollectionGroup(kind, collections) {
 		const schema = getSchemaForKind(kind);
 		const title = capitalize(schema.label.plural);
@@ -167,8 +255,7 @@ class DashboardCollections extends Component {
 		return (
 			<div className="dashboard-collections-component">
 				<h1 className="content-title">Collections</h1>
-				<div className="details">You can use collections to yadda yadda yadda</div>
-				<div className="autocomplete-wrapper">
+				<div className="top-controls">
 					{this.renderTopControlGroup()}
 					{this.state.error && <p className="error">{this.state.error}</p>}
 				</div>

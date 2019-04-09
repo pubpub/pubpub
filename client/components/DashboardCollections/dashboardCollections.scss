@@ -1,10 +1,33 @@
+
 .dashboard-collections-component {
-	// max-width: 600px;
-	// margin: 0 auto;
-	.autocomplete-wrapper {
-		padding: 2em 0em;
-		.bp3-input {
-			width: 100%;
+	.top-controls {
+		padding-bottom: 2em;
+		.top-controls-cards {
+			display: flex;
+			.top-controls-card {
+				padding: 10px;
+				width: 25%;
+				h6 {
+					display: flex;
+					align-items: center;
+					.bp3-icon {
+						margin-right: 5px;
+					}
+				}
+				&:not(:first-child) {
+					margin-left: 5px;
+				}
+				&:not(:last-child) {
+					margin-right: 5px;
+				}
+				&:hover {
+					cursor: pointer;
+					background: #F5F5F5;
+					.bp3-icon {
+						transform: rotate(-5deg);
+					}
+				}
+			}
 		}
 	}
 	.add-collection-input {
