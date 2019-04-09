@@ -9,8 +9,9 @@ import {
 	VersionPermission,
 	PubAttribution,
 	Collection,
-	Page,
 	CollectionPub,
+	CollectionAttribution,
+	Page,
 	Tag,
 	PubTag,
 	Community,
@@ -421,6 +422,7 @@ new Promise((resolve) => {
 	// .then(() => {
 	// 	return Promise.all([
 	// 		sequelize.query('UPDATE "Communities" SET "hideHero" = "hideLandingBanner"'),
+	// 		sequelize.query('UPDATE "Communities" SET "headerLogo" = "smallHeaderLogo"'),
 	// 		sequelize.query('UPDATE "Communities" SET "heroLogo" = "largeHeaderLogo"'),
 	// 		sequelize.query('UPDATE "Communities" SET "heroBackgroundImage" = "largeHeaderBackground"'),
 	// 		sequelize.query('UPDATE "Communities" SET "heroTitle" = "title"'),
@@ -441,6 +443,29 @@ new Promise((resolve) => {
 	// .then(()=> {
 	// 	return sequelize.queryInterface.addColumn('Pubs', 'downloads', { type: Sequelize.JSONB });
 	// })
+	.then(() => {
+		return Collection.sync()
+			.then(() =>  sequelize.getQueryInterface()
+				.renameColumn('Communities', 'defaultPubTags', 'defaultPubCollections'))
+			.then(() => {
+				return Tag.findAll().then(tags => {
+					const collections = tags.map(tag => {
+						return {...tag.dataValues, kind: "tag"};
+					});
+					return Collection.bulkCreate(collections);
+				})
+			})
+			.then(() => CollectionPub.sync())
+			.then(() => {
+				return PubTag.findAll().then(pubTags => {
+					const collectionPubs = pubTags.map(pt => {
+						return {pubId: pt.pubId, collectionId: pt.tagId};
+					});
+					return CollectionPub.bulkCreate(collectionPubs);
+				});
+			})
+			.then(() => CollectionAttribution.sync())
+	})
 	.catch((err) => {
 		console.log('Error with Migration', err);
 	})

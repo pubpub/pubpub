@@ -583,7 +583,7 @@ export default {
 						title: 'Essays',
 						buttonText: '',
 						showButton: true,
-						defaultTagIds: [
+						defaultCollectionIds: [
 							'632bfbc1-a8a3-4829-be61-fa20db405d90',
 							'72a43321-6b86-4d94-8412-288c3d28fd6a',
 							'8b10fb64-0cb4-4176-b46a-8610c2a48223',
@@ -601,7 +601,7 @@ export default {
 						align: 'center',
 						buttonText: '',
 						showButton: false,
-						defaultTags: [],
+						defaultCollections: [],
 						backgroundSize: 'full',
 						backgroundColor: '#112299',
 						backgroundImage: '',
@@ -622,10 +622,10 @@ export default {
 					type: 'pubs',
 					content: {
 						limit: 2,
-						tagId: 'af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b',
+						collectionId: 'af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b',
 						title: '',
 						pubIds: [],
-						tagIds: ['af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b'],
+						collectionIds: ['af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b'],
 						pubPreviewType: 'medium',
 					},
 				},
@@ -637,7 +637,7 @@ export default {
 						align: 'center',
 						buttonText: '',
 						showButton: false,
-						defaultTags: [],
+						defaultCollections: [],
 						backgroundSize: 'full',
 						backgroundColor: '#227799',
 						backgroundImage: '',
@@ -648,10 +648,10 @@ export default {
 					type: 'pubs',
 					content: {
 						limit: 0,
-						tagId: 'af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b',
+						collectionId: 'af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b',
 						title: '',
 						pubIds: [],
-						tagIds: ['af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b'],
+						collectionIds: ['af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b'],
 						pubPreviewType: 'medium',
 					},
 				},
@@ -683,7 +683,7 @@ export default {
 							'12e9dbbd-5261-4d7a-90be-ae818fcfaab1',
 							'dc42a249-9452-4946-98ab-7c9c0fe158ea',
 						],
-						tagIds: ['72a43321-6b86-4d94-8412-288c3d28fd6a'],
+						collectionIds: ['72a43321-6b86-4d94-8412-288c3d28fd6a'],
 						pubPreviewType: 'medium',
 					},
 				},
@@ -702,7 +702,7 @@ export default {
 						limit: 0,
 						title: 'Test Pages',
 						pubIds: [],
-						tagIds: ['0fd7f42c-d8a1-4275-bf2b-cd641416959c'],
+						collectionIds: ['0fd7f42c-d8a1-4275-bf2b-cd641416959c'],
 						pubPreviewType: 'medium',
 					},
 				},
@@ -713,7 +713,7 @@ export default {
 						size: 'large',
 						text: '',
 						align: 'left',
-						defaultTags: [],
+						defaultCollections: [],
 					},
 				},
 				{
@@ -5708,7 +5708,7 @@ export default {
 						align: 'left',
 						buttonText: 'Create',
 						showButton: true,
-						defaultTagIds: ['72a43321-6b86-4d94-8412-288c3d28fd6a'],
+						defaultCollectionIds: ['72a43321-6b86-4d94-8412-288c3d28fd6a'],
 						backgroundSize: 'standard',
 						backgroundColor: '#141413',
 						backgroundImage: '',
@@ -5719,10 +5719,10 @@ export default {
 					type: 'pubs',
 					content: {
 						limit: 0,
-						tagId: '72a43321-6b86-4d94-8412-288c3d28fd6a',
+						collectionId: '72a43321-6b86-4d94-8412-288c3d28fd6a',
 						title: '',
 						pubIds: ['4c350f9e-4dd3-41c3-bbe6-7cd855ce414f'],
-						tagIds: ['72a43321-6b86-4d94-8412-288c3d28fd6a'],
+						collectionIds: ['72a43321-6b86-4d94-8412-288c3d28fd6a'],
 						pubPreviewType: 'small',
 					},
 				},
@@ -5780,10 +5780,29 @@ export default {
 			avatar: null,
 		},
 	],
-	tags: [
+	collections: [
 		{
 			id: 'af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b',
 			title: 'Essays',
+			kind: 'tag',
+			isRestricted: true,
+			isPublic: true,
+			pageId: 'af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b',
+			communityId: 'da083fb3-8b6b-4f89-8e8e-b607f9ed1cf4',
+			createdAt: '2018-08-06T15:26:05.468Z',
+			updatedAt: '2018-08-06T15:26:05.468Z',
+			page: {
+				id: 'af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b',
+				title: 'Essays',
+				slug: 'essays',
+			},
+		},
+	],
+	collections: [
+		{
+			id: 'af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b',
+			title: 'Essays',
+			kind: 'tag',
 			isRestricted: true,
 			isPublic: true,
 			pageId: 'af1f0e57-6fc9-4cdf-9c15-e5e58af59d6b',
@@ -5799,6 +5818,7 @@ export default {
 		{
 			id: '35d1cbbd-2e54-4334-8443-2df07fbd7383',
 			title: 'Terms of Service',
+			kind: 'tag',
 			isRestricted: true,
 			isPublic: true,
 			pageId: '35d1cbbd-2e54-4334-8443-2df07fbd7383',
@@ -5814,6 +5834,7 @@ export default {
 		{
 			id: '8b10fb64-0cb4-4176-b46a-8610c2a48223',
 			title: 'Privacy Policy',
+			kind: 'tag',
 			isRestricted: true,
 			isPublic: true,
 			pageId: '8b10fb64-0cb4-4176-b46a-8610c2a48223',
@@ -5829,6 +5850,7 @@ export default {
 		{
 			id: '632bfbc1-a8a3-4829-be61-fa20db405d90',
 			title: 'Media',
+			kind: 'tag',
 			isRestricted: true,
 			isPublic: true,
 			pageId: '632bfbc1-a8a3-4829-be61-fa20db405d90',
@@ -5844,6 +5866,7 @@ export default {
 		{
 			id: '0fd7f42c-d8a1-4275-bf2b-cd641416959c',
 			title: 'Home',
+			kind: 'tag',
 			isRestricted: true,
 			isPublic: true,
 			pageId: '0fd7f42c-d8a1-4275-bf2b-cd641416959c',
@@ -5859,6 +5882,7 @@ export default {
 		{
 			id: '58b9179b-4553-4f38-9edf-4fb89a88848f',
 			title: 'Physics',
+			kind: 'tag',
 			isRestricted: true,
 			isPublic: true,
 			pageId: null,
@@ -5869,6 +5893,7 @@ export default {
 		{
 			id: '72a43321-6b86-4d94-8412-288c3d28fd6a',
 			title: 'Dev Notes',
+			kind: 'tag',
 			isRestricted: true,
 			isPublic: false,
 			pageId: '72a43321-6b86-4d94-8412-288c3d28fd6a',
@@ -5884,6 +5909,7 @@ export default {
 		{
 			id: 'dd0d1dd0-30c2-4f27-9ef1-dec455c84177',
 			title: 'Credits',
+			kind: 'tag',
 			isRestricted: true,
 			isPublic: true,
 			pageId: 'dd0d1dd0-30c2-4f27-9ef1-dec455c84177',
@@ -5899,6 +5925,7 @@ export default {
 		{
 			id: '5b763da8-d0c7-4d90-8e56-9d1ac0e49a5a',
 			title: 'About Frankenbook',
+			kind: 'tag',
 			isRestricted: true,
 			isPublic: true,
 			pageId: '5b763da8-d0c7-4d90-8e56-9d1ac0e49a5a',
@@ -5914,6 +5941,7 @@ export default {
 		{
 			id: '7a8bb3b2-a197-4062-a0b3-5c283d7f1df1',
 			title: 'Neuroscience',
+			kind: 'tag',
 			isRestricted: true,
 			isPublic: true,
 			pageId: null,

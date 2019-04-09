@@ -1,0 +1,23 @@
+.pub-options-collection-component {
+	.collections-wrapper {
+		margin-top: 1em;
+		.bp3-tag {
+			margin-right: 0.5em;
+			margin-bottom: 0.5em;
+		}
+		.bp3-icon {
+			margin-right: 0.25em;
+		}
+	}
+}
+
+.collections-autocomplete-popover {
+	.autocomplete-name {
+		position: relative;
+		padding: 0px 10px;
+		.bp3-icon {
+			position: absolute;
+			left: -7px;
+		}
+	}
+}

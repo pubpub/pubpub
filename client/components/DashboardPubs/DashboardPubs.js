@@ -26,7 +26,7 @@ class DashboardPubs extends Component {
 			method: 'POST',
 			body: JSON.stringify({
 				communityId: this.props.communityData.id,
-				defaultTagIds: this.props.communityData.defaultPubTags || [],
+				defaultCollectionIds: this.props.communityData.defaultPubCollections || [],
 			}),
 		})
 			.then((result) => {
@@ -88,10 +88,10 @@ class DashboardPubs extends Component {
 											)}
 									</div>
 									<div className="nowrap">
-										{pub.pubTags.map((pubTag) => {
+										{pub.collectionPubs.map(({ collection }) => {
 											return (
 												<span className="bp3-tag bp3-minimal bp3-small">
-													{pubTag.tag.title}
+													{collection.title}
 												</span>
 											);
 										})}

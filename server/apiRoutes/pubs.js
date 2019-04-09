@@ -5,7 +5,7 @@ import {
 	CommunityAdmin,
 	PubManager,
 	PubAttribution,
-	PubTag,
+	CollectionPub,
 	Branch,
 	BranchPermission,
 } from '../models';
@@ -73,20 +73,20 @@ app.post('/api/pubs', (req, res) => {
 				pubId: newPub.id,
 				branchId: branchId,
 			});
-
-			const defaultTagIds = req.body.defaultTagIds || [];
-			const newPubTagObjects = defaultTagIds.map((tagId) => {
+			const defaultCollectionIds = req.body.defaultCollectionIds || [];
+			const newCollectionPubObjects = defaultCollectionIds.map((collectionId) => {
 				return {
+					kind: 'tag',
 					pubId: newPub.id,
-					tagId: tagId,
+					collectionId: collectionId,
 				};
 			});
-			const createPubTags = PubTag.bulkCreate(newPubTagObjects);
+			const createCollectionPubs = CollectionPub.bulkCreate(newCollectionPubObjects);
 			return Promise.all([
 				newPub,
 				createPubManager,
 				createPubAttribution,
-				createPubTags,
+				createCollectionPubs,
 				createBranch,
 				createBranchPermission,
 			]);
@@ -215,7 +215,7 @@ app.delete('/api/pubs', (req, res) => {
 			return res.status(201).json(req.body.pubId);
 		})
 		.catch((err) => {
-			console.error('Error putting Pub', err);
+			console.error('Error deleting Pub', err);
 			return res.status(500).json(err);
 		});
 });
