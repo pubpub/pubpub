@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { Button, Card, ControlGroup, InputGroup, Icon, Overlay } from '@blueprintjs/core';
+import {
+	Button,
+	Card,
+	ControlGroup,
+	InputGroup,
+	Icon,
+	Overlay,
+	Tabs,
+	Tab,
+} from '@blueprintjs/core';
 import { Classes as SelectClasses } from '@blueprintjs/select';
 import { apiFetch } from 'utilities';
 
@@ -71,6 +80,7 @@ class DashboardCollections extends React.Component {
 		this.state = {
 			newCollectionValue: '',
 			currentCollectionSchema: getSchemaForKind('tag'),
+			selectedTab: 'tags',
 			error: undefined,
 			isCreatingCollection: false,
 		};
@@ -79,10 +89,13 @@ class DashboardCollections extends React.Component {
 		this.handleDeleteCollection = this.handleDeleteCollection.bind(this);
 	}
 
-	getCollectionsByKind() {
-		const { collections } = this.props.communityData;
-		const hasKinds = Array.from(new Set(collections.map((c) => c.kind))).sort();
-		return hasKinds.map((kind) => [kind, collections.filter((c) => c.kind === kind)]);
+	shouldShowTabs() {
+		const {
+			communityData: { collections },
+		} = this.props;
+		return (
+			collections.some((c) => c.kind === 'tag') && collections.some((c) => c.kind !== 'tag')
+		);
 	}
 
 	handleCreateCollection(evt) {
@@ -251,6 +264,20 @@ class DashboardCollections extends React.Component {
 		);
 	}
 
+	renderTabBar() {
+		const { selectedTab } = this.state;
+		return (
+			<Tabs
+				selectedTab={selectedTab}
+				onChange={(tabId) => this.setState({ selectedTab: tabId })}
+				id="dashboard-collections-kind-tabs"
+			>
+				<Tab id="tags" title="Tags" />
+				<Tab id="other-collections" title="Other collections" />
+			</Tabs>
+		);
+	}
+
 	render() {
 		return (
 			<div className="dashboard-collections-component">
@@ -259,9 +286,7 @@ class DashboardCollections extends React.Component {
 					{this.renderTopControlGroup()}
 					{this.state.error && <p className="error">{this.state.error}</p>}
 				</div>
-				{this.getCollectionsByKind().map(([kind, collections]) =>
-					this.renderCollectionGroup(kind, collections),
-				)}
+				{this.renderTabBar()}
 			</div>
 		);
 	}
