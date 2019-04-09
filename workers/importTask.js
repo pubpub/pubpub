@@ -60,6 +60,7 @@ const processFootnotes = (inputHtml) => {
 					.contents()
 					.find(selector.footnoteBackLink)
 					.remove();
+				elemContext.find(selector.footnoteBackLink).remove();
 
 				/* TODO - I can't get cheerio to play nicely here. */
 				/* hasContents works for footnoteSelectors[0] but is null for [1]. */
@@ -77,7 +78,7 @@ const processFootnotes = (inputHtml) => {
 	footnoteRefSelectors.forEach((selector) => {
 		htmlContext(selector).each((index, elem) => {
 			htmlContext(elem).replaceWith(
-				`<footnote data-value="${footnoteContents[index]}"></footnote>`,
+				`<footnote data-value='${footnoteContents[index]}'></footnote>`,
 			);
 		});
 	});
