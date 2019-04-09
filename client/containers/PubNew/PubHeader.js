@@ -8,16 +8,22 @@ import throttle from 'lodash.throttle';
 import { apiFetch, getResizedUrl } from 'utilities';
 import {
 	Button,
+	AnchorButton,
 	EditableText,
 	Popover,
 	PopoverInteractionKind,
 	Position,
 	Tag,
 	Intent,
+	ButtonGroup,
+	Menu,
+	MenuItem,
 } from '@blueprintjs/core';
 import Icon from 'components/Icon/Icon';
 import GridWrapper from 'components/GridWrapper/GridWrapper';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
+
+import PubHeaderActionButton from './PubHeaderActionButton';
 
 require('./pubHeader.scss');
 
@@ -151,8 +157,8 @@ const PubHeader = (props) => {
 		<div className="pub-header-component" style={backgroundStyle} ref={headerRef}>
 			<div className={`wrapper ${useHeaderImage ? 'dim' : ''}`}>
 				<GridWrapper containerClassName="pub">
-					<div className="tags-buttons-wrapper">
-						<div className="tags">
+					<div className="tags-bar">
+						<div className="left">
 							{pubData.pubTags
 								.filter((pubTag) => {
 									return pubTag.tag;
@@ -170,6 +176,7 @@ const PubHeader = (props) => {
 									return (
 										<a
 											key={item.id}
+											className="header-collection"
 											href={
 												item.tag.page
 													? `/${item.tag.page.slug}`
@@ -192,6 +199,10 @@ const PubHeader = (props) => {
 										</a>
 									);
 								})}
+						</div>
+						<div className="right">
+							<AnchorButton className="manager-button" text="Share" href="" />
+							<AnchorButton className="manager-button" text="Manage" href="" />
 						</div>
 						{/* <div className="buttons">
 										{!pubData.isDraft &&
@@ -311,189 +322,90 @@ const PubHeader = (props) => {
 								})}
 						</div>
 					)}
-					<div className="details-wrapper">
-						<div className="details">
-							{/* <Popover
-										content={
-											<div className="bp3-menu">
-												{(pubData.isDraftViewer ||
-													pubData.isDraftEditor ||
-													pubData.isManager) && (
-													<li>
-														<a
-															className={`bp3-menu-item ${
-																pubData.isDraft ? 'bp3-active' : ''
-															}`}
-															tabIndex="0"
-															href={`/pub/${pubData.slug}/draft`}
-														>
-															Working Draft
-														</a>
-													</li>
-												)}
-												{sortedVersionsList.map((version) => {
-													return (
-														<li key={version.id}>
-															<a
-																className={`bp3-menu-item ${
-																	version.id ===
-																	pubData.activeVersion.id
-																		? 'bp3-active'
-																		: ''
-																}`}
-																tabIndex="0"
-																href={`/pub/${
-																	pubData.slug
-																}?version=${version.id}`}
-															>
-																{dateFormat(
-																	version.createdAt,
-																	'mmm dd, yyyy · h:MMTT',
-																)}
-																{!version.isPublic && (
-																	<Icon icon="lock2" />
-																)}
-															</a>
-														</li>
-													);
-												})}
-											</div>
-										}
-										interactionKind={PopoverInteractionKind.CLICK}
-										position={Position.BOTTOM_LEFT}
-										popoverClassName="versions-popover"
-										// transitionDuration={-1}
-										minimal={true}
-										// inline={true}
-										inheritDarkTheme={false}
-									>
-										<div
-											// href={`/pub/${pubData.slug}/versions`}
-											// onClick={(evt)=> {
-											// 	evt.preventDefault();
-											// 	this.props.setOptionsMode('versions');
-											// }}
-											role="button"
-											tabIndex={-1}
-											className="detail-button versions"
-										>
-											{!pubData.isDraft && !activeVersion.isPublic && (
-												<Icon icon="lock2" />
-											)}
-											{!pubData.isDraft && (
-												<span>
-													{sortedVersionsList[
-														sortedVersionsList.length - 1
-													].id !== activeVersion.id
-														? 'Updated '
-														: ''}
-													{dateFormat(
-														pubData.activeVersion.createdAt,
-														'mmm dd, yyyy',
-													)}
-												</span>
-											)}
-											
-											{pubData.isDraft && (
-												<span>
-													Working Draft ({pubData.versions.length} Saved
-													Version
-													{pubData.versions.length === 1 ? '' : 's'})
-												</span>
-											)}
+					<div className="actions-bar">
+						<div className="left">
+							{/* History Button */}
+							<ButtonGroup className="action-group">
+								<PubHeaderActionButton
+									buttonProps={{
+										text: 'Mar 31, 2019',
+										rightIcon: 'history',
+									}}
+									isWide={true}
+								/>
+							</ButtonGroup>
+							{/* Branches Button */}
+							<ButtonGroup className="action-group">
+								<PubHeaderActionButton
+									buttonProps={{
+										text: 'Branch: Hello',
+										rightIcon: 'caret-down',
+									}}
+									isSkewed={true}
+									isWide={true}
+								/>
+							</ButtonGroup>
 
-											
-											{!pubData.isDraft && !!numNewerVersions && (
-												<span>
-													{' '}
-													({numNewerVersions} Newer Version
-													{numNewerVersions === 1 ? '' : 's'})
-												</span>
-											)}
-
-											
-											{!pubData.isDraft &&
-												!numNewerVersions &&
-												pubData.versions.length > 1 && (
-													<span>
-														{' '}
-														({pubData.versions.length - 1} Older Version
-														{pubData.versions.length - 1 === 1
-															? ''
-															: 's'}
-														)
-													</span>
-												)}
-											<Icon icon="chevron-down" />
-										</div>
-									</Popover> */}
-							{/* this.props.pubData.publicDiscussions && (
-										<a
-											href="#discussions"
-											role="button"
-											tabIndex={-1}
-											className="detail-button"
-										>
-											{numDiscussions} Discussion
-											{numDiscussions === 1 ? '' : 's'} (#
-											{activeDiscussionChannel.title})
-										</a>
-									) */}
-							{!!numAttributions && (
-								<div
-									role="button"
-									tabIndex={-1}
-									className="detail-button"
-									// href={`/pub/${pubData.slug}/collaborators`}
-									// onClick={(evt) => {
-									// 	evt.preventDefault();
-									// 	this.props.setOptionsMode('attribution');
-									// }}
-								>
-									{/* <span className="bp3-icon-standard bp3-icon-team" /> */}
-									{numAttributions} Contributor
-									{numAttributions === 1 ? '' : 's'}
-								</div>
-							)}
+							{/* Submit Button */}
+							<ButtonGroup className="action-group">
+								<PubHeaderActionButton
+									buttonProps={{
+										text: 'hello',
+										href: 'https://web.mit.edu',
+									}}
+									isSkewed={true}
+									isWide={true}
+								/>
+								<Popover
+									content={
+										<Menu>
+											<MenuItem text="Hello" />
+											<MenuItem text="Okay" />
+										</Menu>
+									}
+									minimal={true}
+									position={Position.BOTTOM_RIGHT}
+									target={
+										<PubHeaderActionButton
+											buttonProps={{
+												// text: 'hello',
+												rightIcon: 'caret-down',
+											}}
+											isSkewed={true}
+											isSkinny={true}
+										/>
+									}
+								/>
+							</ButtonGroup>
 						</div>
-						<div className="meta-buttons">
-							{metaModes.map((mode) => {
-								const isActive = pubData.metaMode === mode.key;
-								return (
-									<Button
-										text={mode.icon}
-										active={isActive}
-										onClick={() => {
-											props.updateLocalData('pub', {
-												metaMode: isActive ? undefined : mode.key,
-											});
-										}}
-									/>
-								);
-							})}
+						<div className="right">
+							
+							<PubHeaderActionButton
+								buttonProps={{
+									// text: 'hello',
+									icon: 'more',
+								}}
+							/>
+							<PubHeaderActionButton
+								buttonProps={{
+									// text: 'hello',
+									icon: 'timeline-bar-chart',
+								}}
+							/>
+							<PubHeaderActionButton
+								buttonProps={{
+									// text: 'hello',
+									icon: 'download',
+								}}
+							/>
+							
 						</div>
 					</div>
 				</GridWrapper>
 				<div className="bottom-text">
 					<div className="bottom-title">{pubData.title}</div>
 					<div className="bottom-buttons">
-						{metaModes.map((mode) => {
-							const isActive = pubData.metaMode === mode.key;
-							return (
-								<Button
-									text={mode.icon}
-									active={isActive}
-									minimal={true}
-									small={true}
-									onClick={() => {
-										props.updateLocalData('pub', {
-											metaMode: isActive ? undefined : mode.key,
-										});
-									}}
-								/>
-							);
-						})}
-						{/*<Button
+						<Button
 							minimal={true}
 							small={true}
 							// onClick={() => {
@@ -510,46 +422,7 @@ const PubHeader = (props) => {
 							// }}
 							text="Download"
 						/>
-						<span className="dot">·</span>*/}
-						{/*this.props.pubData.publicDiscussions && (
-								<DropdownButton
-									label={`#${this.props.activeDiscussionChannel.title}`}
-									// icon={items[props.value].icon}
-									isRightAligned={true}
-									isMinimal={true}
-									isSmall={true}
-								>
-									<ul className="channel-permissions-dropdown bp3-menu">
-										{discussionChannels.map((channel) => {
-											return (
-												<li key={`channel-option-${channel.title}`}>
-													<button
-														className="bp3-menu-item bp3-popover-dismiss"
-														onClick={() => {
-															this.props.setDiscussionChannel(
-																channel.title,
-															);
-														}}
-														type="button"
-													>
-														#{channel.title}
-													</button>
-												</li>
-											);
-										})}
-										<li className="bp3-menu-divider" />
-										<li>
-											<Button
-												minimal={true}
-												text="Manage Discussion Channels"
-												onClick={() => {
-													this.props.setOptionsMode('discussions');
-												}}
-											/>
-										</li>
-									</ul>
-								</DropdownButton>
-							) */}
+						<span className="dot">·</span>
 					</div>
 				</div>
 			</div>
@@ -560,3 +433,20 @@ const PubHeader = (props) => {
 PubHeader.propTypes = propTypes;
 // PubHeader.defaultProps = defaultProps;
 export default PubHeader;
+
+// <div className="meta-buttons">
+// 						{metaModes.map((mode) => {
+// 							const isActive = pubData.metaMode === mode.key;
+// 							return (
+// 								<Button
+// 									text={mode.icon}
+// 									active={isActive}
+// 									onClick={() => {
+// 										props.updateLocalData('pub', {
+// 											metaMode: isActive ? undefined : mode.key,
+// 										});
+// 									}}
+// 								/>
+// 							);
+// 						})}
+// 					</div>

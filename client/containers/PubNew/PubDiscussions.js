@@ -68,7 +68,6 @@ const PubDiscussions = (props) => {
 		});
 		let lastTop = 0;
 		const discussionTops = {};
-		console.log(decorations);
 		sortedDecorations
 			.filter((decoration) => {
 				return (
@@ -80,7 +79,8 @@ const PubDiscussions = (props) => {
 			.forEach((decoration) => {
 				const currentTop = decoration.boundingBox.top;
 
-				if (lastTop && currentTop - lastTop < 100) {
+				// if (lastTop && currentTop - lastTop < 100) {
+				if (lastTop === currentTop) {
 					discussionTops[lastTop].push(decoration);
 					return null;
 				}
@@ -88,40 +88,55 @@ const PubDiscussions = (props) => {
 				discussionTops[currentTop] = [decoration];
 				return null;
 			});
+		// console.log(discussionTops);
 		const newGroupTops = [];
 		Object.keys(discussionTops)
-			.filter((topKey) => {
-				return discussionTops[topKey].length > 1;
+			.sort((foo, bar) => {
+				if (Number(foo) < Number(bar)) {
+					return -1;
+				}
+				if (Number(foo) > Number(bar)) {
+					return 1;
+				}
+				return 0;
 			})
-			.forEach((topKey) => {
-				const classNames = discussionTops[topKey].map((discussion) => {
-					return discussion.attrs.class;
+			// .filter((topKey) => {
+			// 	return discussionTops[topKey].length > 1;
+			// })
+			.forEach((topKey, index, array) => {
+				const ids = discussionTops[topKey].map((discussion) => {
+					return discussion.attrs.class.replace('discussion-range d-', '');
 				});
-				newGroupTops.push({ key: Number(topKey) + window.scrollY, classNames: classNames });
+				const nextItemIsNear =
+					index < array.length - 1 && Number(array[index + 1]) < Number(topKey) + 100;
+				const isCollapsed = nextItemIsNear || ids.length > 1;
+				newGroupTops.push({
+					key: Number(topKey) + window.scrollY,
+					ids: ids,
+					isCollapsed: isCollapsed,
+				});
 			});
 
 		const getCompareKey = (groupTopsArray) => {
 			return groupTopsArray.reduce((prev, curr) => {
-				return `${prev}${curr.key}${curr.classNames.join()}`;
+				return `${prev}${curr.key}${curr.ids.join()}`;
 			}, '');
 		};
-		console.log(getCompareKey(groupTops), getCompareKey(newGroupTops));
-		console.log(getCompareKey(groupTops) === getCompareKey(newGroupTops));
-		console.log(discussionTops, newGroupTops);
+		console.log(newGroupTops);
 		if (getCompareKey(groupTops) !== getCompareKey(newGroupTops)) {
 			setGroupTops(newGroupTops);
 		}
-
-		// [...document.getElementsByClassName('discussion-mount')].forEach((item) => {
-		// 	const top = item.getBoundingClientRect().top + window.scrollY;
-		// 	const nextTopsValue = discussionTops[top] || [];
-		// 	nextTopsValue.push(item.className);
-		// 	discussionTops[top] = nextTopsValue;
-		// });
-		// setTops(discussionTops);
-		// console.log(discussionTops);
 	});
-	// console.log(collabData.editorChangeObject);
+
+	// TODO:
+	// I think what we do instead is have prosemirror include a mount point for a line-grouped
+	// set of discussions. When that exists, we mount into it and don't mount the other buttons
+	// Nope. We simply mount into one of existing dm- points on that line, and control it from there.
+	// It'd be nice if we didn't render the button at all when there were multiple.
+
+	// You want to calculate all the ones that are the same - and then look to see if there is
+	// a following one within 100. If there are multipe - collapse. If there is one within 100, collapse
+	// If there is only one, and none within a hundred - show full.
 
 	return (
 		<div className="pub-discussions-component">
@@ -166,20 +181,15 @@ const PubDiscussions = (props) => {
 						<Popover
 							content={
 								<Menu>
-									{groupTop.classNames.map((item, index) => {
+									{groupTop.ids.map((id, index) => {
 										return (
 											<MenuItem
 												text={index}
 												onClick={() => {
-													const id = item.replace(
-														'discussion-range d-',
-														'',
-													);
-													console.log(
-														'select ',
-														id,
-														`.dm-${id} .bp3-button`,
-													);
+													// const id = item.replace(
+													// 	'discussion-range d-',
+													// 	'',
+													// );
 													const elem = document.querySelector(
 														`.dm-${id} .bp3-button`,
 													);
