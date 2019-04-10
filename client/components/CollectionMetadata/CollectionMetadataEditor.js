@@ -21,6 +21,8 @@ const propTypes = {
 	onUpdateCollection: PropTypes.func.isRequired,
 };
 
+const validateField = ({ type, value }) => !value || !type || type.validate(value);
+
 class CollectionMetadataEditor extends React.Component {
 	constructor(props) {
 		super(props);
@@ -35,6 +37,15 @@ class CollectionMetadataEditor extends React.Component {
 		this.handleTitleChange = this.handleTitleChange.bind(this);
 		this.handleSaveClick = this.handleSaveClick.bind(this);
 		this.handleGetDoiClick = this.handleGetDoiClick.bind(this);
+	}
+
+	allFieldsValidate() {
+		const {
+			collection: { kind },
+		} = this.props;
+		const { metadata } = this.state;
+		const fields = enumerateMetadataFields(metadata, kind);
+		return fields.reduce((value, nextField) => value && validateField(nextField), true);
 	}
 
 	normalizeMetadata(metadata) {
@@ -108,22 +119,28 @@ class CollectionMetadataEditor extends React.Component {
 	renderField(field) {
 		const {
 			name,
-			value,
 			label,
 			derivedFrom,
 			defaultDerivedFrom,
 			derivedLabelInfo,
 			pattern,
+			type,
+			value: storedValue,
 		} = field;
 		const derivedValue = derivedFrom && this.deriveInputValue(derivedFrom);
 		const derivedHintValue = defaultDerivedFrom && this.deriveInputValue(defaultDerivedFrom);
-		const labelInfo = derivedValue ? derivedLabelInfo : '';
+		const value = derivedValue || storedValue || '';
 		return (
-			<FormGroup key={name} label={label} labelInfo={labelInfo}>
+			<FormGroup
+				key={name}
+				label={label}
+				labelInfo={derivedValue ? derivedLabelInfo : type && type.labelInfo}
+			>
 				<InputGroup
 					className="field"
-					value={derivedValue || value || ''}
+					value={value}
 					onChange={(event) => this.handleInputChange(name, event.target.value, pattern)}
+					intent={validateField(field) ? 'none' : 'danger'}
 					rightElement={
 						derivedHintValue && (
 							<Button
@@ -172,7 +189,11 @@ class CollectionMetadataEditor extends React.Component {
 			<div className="component-collection-metadata-editor">
 				{this.renderFields()}
 				<ButtonGroup>
-					<Button icon="tick" disabled={isSaving} onClick={this.handleSaveClick}>
+					<Button
+						icon="tick"
+						disabled={isSaving || !this.allFieldsValidate()}
+						onClick={this.handleSaveClick}
+					>
 						Save changes
 					</Button>
 					{!collection.doi && (

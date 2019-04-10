@@ -4,6 +4,8 @@ const types = {
 	date: {
 		name: 'date',
 		deserialize: (str) => new Date(str),
+		validate: (str) => /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(str),
+		labelInfo: '(in YYYY-MM-DD format)',
 	},
 };
 
