@@ -5923,7 +5923,7 @@ export default {
 		{
 			id: '7a8bb3b2-a197-4062-a0b3-5c283d7f1df1',
 			title: 'Neuroscience',
-			kind: 'conference',
+			kind: 'issue',
 			isRestricted: true,
 			isPublic: true,
 			pageId: null,

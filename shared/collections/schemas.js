@@ -30,6 +30,26 @@ const schemas = [
 		contextHints: [],
 	},
 	{
+		kind: 'issue',
+		label: { singular: 'issue', plural: 'issues' },
+		bpDisplayIcon: 'manual',
+		contextHints: [{ value: 'article', label: 'Article', default: true }],
+		metadata: [
+			sharedFields.doi,
+			sharedFields.url,
+			{ name: 'printIssn', label: 'Print ISSN' },
+			{ name: 'electronicIssn', label: 'Electronic ISSN' },
+			{ name: 'volume', label: 'Volume' },
+			{ name: 'issue', label: 'Issue' },
+			{ name: 'printPublicationDate', label: 'Print publication date', type: types.date },
+			{
+				name: 'publicationDate',
+				label: 'Publication date',
+				type: types.date,
+			},
+		],
+	},
+	{
 		kind: 'book',
 		label: { singular: 'book', plural: 'books' },
 		bpDisplayIcon: 'book',
@@ -58,26 +78,6 @@ const schemas = [
 			{ name: 'copyrightYear', label: 'Copyright year', pattern: '^[0-9]*$' },
 			{ name: 'publicationDate', label: 'Publication date', type: types.date },
 			{ name: 'edition', label: 'Edition no.', pattern: '^[0-9]*$' },
-		],
-	},
-	{
-		kind: 'issue',
-		label: { singular: 'issue', plural: 'issues' },
-		bpDisplayIcon: 'manual',
-		contextHints: [{ value: 'article', label: 'Article', default: true }],
-		metadata: [
-			sharedFields.doi,
-			sharedFields.url,
-			{ name: 'printIssn', label: 'Print ISSN' },
-			{ name: 'electronicIssn', label: 'Electronic ISSN' },
-			{ name: 'volume', label: 'Volume' },
-			{ name: 'issue', label: 'Issue' },
-			{ name: 'printPublicationDate', label: 'Print publication date', type: types.date },
-			{
-				name: 'publicationDate',
-				label: 'Publication date',
-				type: types.date,
-			},
 		],
 	},
 	{

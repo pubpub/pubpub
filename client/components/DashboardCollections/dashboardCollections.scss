@@ -1,6 +1,5 @@
 .dashboard-collections-component {
 	.top-controls {
-		padding-bottom: 1em;
 		.top-controls-cards {
 			display: flex;
 			.top-controls-card {
@@ -28,40 +27,34 @@
 				}
 			}
 		}
-	}
-	.collection-group:not(:last-child) {
-		margin-bottom: 2em;
-	}
-	.collection-row {
-		display: flex;
-		align-items: center;
-		padding-bottom: 1em;
-		margin-bottom: 1em;
-		border-bottom: 1px solid #ccc;
-		.title {
-			flex-grow: 1;
-			flex-shrink: 1;
+		.search-and-filter {
+			width: 100%;
 			display: flex;
-			.bp3-editable-text-content {
-				padding-right: 2em;
-				height: 18px !important;
-				line-height: 18px !important;
-			}
-			.bp3-editable-text-input {
-				height: 18px !important;
-				line-height: 18px !important;
+			margin-top: 1.5em;
+			margin-bottom: 1.5em;
+			.search-bar {
+				flex-grow: 1;
 			}
 		}
-		.bp3-checkbox {
-			margin: 0px 2em 0px;
+	}
+	.empty-state {
+		margin-top: 100px;
+	}
+	.collections {
+		display: grid;
+		grid-gap: 20px;
+		grid-template-columns: repeat(3, 1fr);
+		text-align:center;
+		@media screen and (max-width: 800px) {
+			grid-template-columns: repeat(2, 1fr);
+		}
+		@media screen and (max-width: 400px) {
+			grid-template-columns: 1fr;
 		}
 	}
 	.collection-tile {
 		display: inline-block;
-		min-width: 200px;
-		width: calc(33% - 20px);
-		height: 100px;
-		margin: 10px;
+		height: 120px;
 		align-items: center;
 		overflow: hidden;
 		padding: 0;
@@ -72,12 +65,12 @@
 			#eee 50%,
 			#eee
 		);
-		background-size: 100% 1px;
+		background-size: 100% 1.5px;
 		.inner {
 			display: flex;
 			position: relative;
 			flex-direction: row;
-			height: 98%;
+			height: 96%;
 			width: 100%;
 			border-bottom: 1px solid #DDD;
 			.binding {
@@ -87,43 +80,66 @@
 			}
 			.contents {
 				height: 100%;
-				flex-grow: 1;
-				display: flex;
+				width: calc(100% - 16px);
 				flex-direction: column;
 				background: white;
-				cursor: pointer;
 				font-size: 1.3em;
 				display: flex;
 				flex-direction: column;
 				flex-grow: 1;
 				padding: 10px;
-				word-break: break-word;
+				padding-bottom: 4px;
 				justify-content: flex-start;
-				&:hover {
-					.title {
-						text-decoration: underline;
-					}
-				}
-				a.title {
+				.title {
+					text-align: left;
 					display: block;
 					flex-grow: 1;
 					text-decoration: none;
+					overflow: hidden;
+					/* cut off at three lines of text*/
+					max-height: 4em;
+					&:hover {
+						text-decoration: underline;
+					}
 				}
 				.info-container {
 					width: 100%;
 					display: flex;
+					align-items: center;
+					margin-top: auto;
 					.info-label {
 						font-size: 12px;
-						display: flex;
+						text-align: center;
 						margin-right: 10px;
+						flex-shrink: 0;
 						align-items: center;
 						color: #BBB;
+						overflow: hidden;
+						text-overflow: ellipsis;
+						white-space: nowrap;
 						.bp3-icon {
 							margin-right: 2px;
+							margin-top: -2px;
+						}
+						&.shrinks {
+							flex-shrink: 1;
+						}
+					}
+					.more-options-menu {
+						margin-left: auto;
+						.bp3-icon {
+							color: #BBB;
 						}
 					}
 				}
 			}
 		}
+	}
+}
+
+.new-collection-card-overlay {
+	.bp3-input-group {
+		display: flex;
+		align-items: center;
 	}
 }
