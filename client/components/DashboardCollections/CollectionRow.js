@@ -21,7 +21,7 @@ const CollectionRow = ({ communityData, collection, onUpdateCollection, onDelete
 	const label = schema.label.singular;
 	const canEditMetadata = schema.metadata.length > 0;
 	return (
-		<div key={`collection-${collection.id}`} className="collection-wrapper">
+		<div key={`collection-${collection.id}`} className="collection-row">
 			<div className="title">
 				<EditableText
 					defaultValue={collection.title}

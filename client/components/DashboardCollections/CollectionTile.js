@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import geopattern from 'geopattern';
-import { Checkbox, Card, Icon } from '@blueprintjs/core';
+import { Button, Checkbox, Card, Icon } from '@blueprintjs/core';
 
 import collectionType from 'types/collection';
 import communityType from 'types/community';
@@ -23,65 +23,33 @@ const CollectionRow = ({ communityData, collection, onUpdateCollection, onDelete
 	const schema = getSchemaForKind(collection.kind);
 	const label = schema.label.singular;
 	return (
-		<Card key={`collection-${collection.id}`} elevation={1} className="collection-wrapper">
-			<div
-				className="binding"
-				style={{
-					background: geopattern
-						.generate(collection.id, {
-							color: communityData.accentColor,
-						})
-						.toDataUrl(),
-				}}
-			/>
-			<div className="contents">
-				<ConfirmDialog
-					text={`Are you sure you want to delete this ${label}?`}
-					confirmLabel="Delete"
-					onConfirm={() => {
-						onDeleteCollection(collection.id);
+		<Card key={`collection-${collection.id}`} elevation={1} className="collection-tile">
+			<div className="inner">
+				<div
+					className="binding"
+					style={{
+						background: geopattern
+							.generate(collection.id, {
+								color: communityData.accentColor,
+							})
+							.toDataUrl(),
 					}}
 				>
-					{({ open }) => (
-						<button
-							type="button"
-							className="bp3-button bp3-icon-small-cross bp3-minimal delete-button"
-							onClick={open}
-						/>
-					)}
-				</ConfirmDialog>
-				<div className="title">
-					<div className="kind-container">
-						<div className="kind-label">
+				</div>
+				<div className="contents">
+					<a href={`/dashboard/collections/${collection.id}`} className="title">
+						{collection.title}
+					</a>
+					<div className="info-container">
+						<div className="info-label">
 							<Icon iconSize={10} icon={schema.bpDisplayIcon} />
 							{capitalize(schema.label.singular)}
 						</div>
+						<div className="info-label">
+							<Icon iconSize={10} icon={collection.isPrivate ? 'lock' : 'unlock'} />
+							{collection.isPrivate ? 'Private' : 'Public'}
+						</div>
 					</div>
-					{collection.title}
-				</div>
-				<div className="controls">
-					<Checkbox
-						checked={!collection.isPublic}
-						onChange={(evt) => {
-							onUpdateCollection({
-								isPublic: !evt.target.checked,
-								id: collection.id,
-							});
-						}}
-					>
-						Private
-					</Checkbox>
-					<LinkedPageSelect
-						collection={collection}
-						onSelectPage={(pageId) =>
-							onUpdateCollection({
-								id: collection.id,
-								pageId: pageId,
-							})
-						}
-						communityData={communityData}
-						minimal={true}
-					/>
 				</div>
 			</div>
 		</Card>

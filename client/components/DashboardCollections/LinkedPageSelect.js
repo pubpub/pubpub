@@ -43,9 +43,10 @@ const LinkedPageSelect = ({ communityData, collection, onSelectPage, minimal }) 
 		popoverProps={{ popoverClassName: 'bp3-minimal' }}
 	>
 		<Button
+			className="linked-page-select-button"
 			minimal={minimal}
-			text={collection.page ? `Linked to: ${collection.page.title}` : 'Link to Page'}
-			rightIcon="caret-down"
+			text={collection.page ? collection.page.title : <em>Link to Page</em>}
+			icon="link"
 		/>
 	</Select>
 );

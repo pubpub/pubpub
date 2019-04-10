@@ -27,6 +27,7 @@ const schemas = [
 		label: { singular: 'tag', plural: 'tags' },
 		bpDisplayIcon: 'tag',
 		metadata: [],
+		contextHints: [],
 	},
 	{
 		kind: 'book',

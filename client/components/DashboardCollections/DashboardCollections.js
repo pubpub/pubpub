@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import fuzzysearch from 'fuzzysearch';
 import {
 	Button,
 	Card,
@@ -17,6 +18,7 @@ import { apiFetch } from 'utilities';
 import { getSchemaForKind } from 'shared/collections/schemas';
 import CollectionKindDropdown from './CollectionKindDropdown';
 import CollectionRow from './CollectionRow';
+import CollectionTile from './CollectionTile';
 
 require('./dashboardCollections.scss');
 require('@blueprintjs/select/src/blueprint-select.scss');
@@ -78,15 +80,24 @@ class DashboardCollections extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			newCollectionValue: '',
-			currentCollectionSchema: getSchemaForKind('tag'),
-			selectedTab: 'tags',
-			error: undefined,
-			isCreatingCollection: false,
+			error: null,
+			matchCollectionQuery: null,
 		};
 		this.handleCreateCollection = this.handleCreateCollection.bind(this);
 		this.handleUpdateCollection = this.handleUpdateCollection.bind(this);
 		this.handleDeleteCollection = this.handleDeleteCollection.bind(this);
+	}
+
+	getShownCollections() {
+		const {
+			communityData: { collections },
+		} = this.props;
+		const { matchCollectionQuery } = this.state;
+		return collections.filter(
+			(collection) =>
+				!matchCollectionQuery ||
+				fuzzysearch(matchCollectionQuery.toLowerCase(), collection.title.toLowerCase()),
+		);
 	}
 
 	shouldShowTabs() {
@@ -112,8 +123,7 @@ class DashboardCollections extends React.Component {
 				return { error: `'${prevState.newCollectionValue}' already exists.` };
 			});
 		}
-
-		this.setState({ error: undefined, isCreatingCollection: true });
+		this.setState({ error: null });
 		return apiFetch('/api/collections', {
 			method: 'POST',
 			body: JSON.stringify({
@@ -122,7 +132,6 @@ class DashboardCollections extends React.Component {
 				kind: this.state.currentCollectionSchema.kind,
 			}),
 		}).then((newCollection) => {
-			this.setState({ newCollectionValue: '', isCreatingCollection: false });
 			this.props.setCommunityData({
 				...this.props.communityData,
 				collections: [...this.props.communityData.collections, newCollection],
@@ -207,39 +216,41 @@ class DashboardCollections extends React.Component {
 
 	renderTopControlGroup() {
 		return (
-			<div className="top-controls-cards">
-				<NewCollectionCard
-					schema={getSchemaForKind('tag')}
-					header="Create a tag"
-					description={
-						<React.Fragment>
-							A lightweight collection of thematically related pubs
-						</React.Fragment>
-					}
-				/>
-				<NewCollectionCard
-					schema={getSchemaForKind('issue')}
-					header="Create an issue"
-					description={
-						<React.Fragment>
-							Organize your pubs into an issue of your journal
-						</React.Fragment>
-					}
-				/>
-				<NewCollectionCard
-					schema={getSchemaForKind('book')}
-					header="Create a book"
-					description={
-						<React.Fragment>
-							Arrange pubs into chapters for a longer reading experience
-						</React.Fragment>
-					}
-				/>
-				<NewCollectionCard
-					schema={getSchemaForKind('conference')}
-					header="Create a conference"
-					description={<React.Fragment>Host a conference on PubPub</React.Fragment>}
-				/>
+			<div className="top-controls">
+				<div className="top-controls-cards">
+					<NewCollectionCard
+						schema={getSchemaForKind('tag')}
+						header="Create a tag"
+						description={
+							<React.Fragment>
+								A lightweight collection of thematically related pubs
+							</React.Fragment>
+						}
+					/>
+					<NewCollectionCard
+						schema={getSchemaForKind('issue')}
+						header="Create an issue"
+						description={
+							<React.Fragment>
+								Organize your pubs into an issue of your journal
+							</React.Fragment>
+						}
+					/>
+					<NewCollectionCard
+						schema={getSchemaForKind('book')}
+						header="Create a book"
+						description={
+							<React.Fragment>
+								Arrange pubs into chapters for a longer reading experience
+							</React.Fragment>
+						}
+					/>
+					<NewCollectionCard
+						schema={getSchemaForKind('conference')}
+						header="Create a conference"
+						description={<React.Fragment>Host a conference on PubPub</React.Fragment>}
+					/>
+				</div>
 			</div>
 		);
 	}
@@ -265,16 +276,45 @@ class DashboardCollections extends React.Component {
 	}
 
 	renderTabBar() {
-		const { selectedTab } = this.state;
+		const { selectedTab, matchCollectionQuery } = this.state;
+		if (!this.shouldShowTabs()) {
+			return null;
+		}
 		return (
 			<Tabs
+				className="tabs"
 				selectedTab={selectedTab}
 				onChange={(tabId) => this.setState({ selectedTab: tabId })}
 				id="dashboard-collections-kind-tabs"
+				animate={false}
+				large={true}
 			>
 				<Tab id="tags" title="Tags" />
 				<Tab id="other-collections" title="Other collections" />
+				<Tabs.Expander />
+				<InputGroup
+					leftIcon="search"
+					value={matchCollectionQuery}
+					onChange={(e) => this.setState({ matchCollectionQuery: e.target.value })}
+					placeholder="Filter collections"
+				/>
 			</Tabs>
+		);
+	}
+
+	renderCollections() {
+		const { communityData } = this.props;
+		return (
+			<div className="collections">
+				{this.getShownCollections().map((collection) => (
+					<CollectionTile
+						communityData={communityData}
+						collection={collection}
+						onDeleteCollection={this.handleDeleteCollection}
+						onUpdateCollection={this.handleUpdateCollection}
+					/>
+				))}
+			</div>
 		);
 	}
 
@@ -282,11 +322,8 @@ class DashboardCollections extends React.Component {
 		return (
 			<div className="dashboard-collections-component">
 				<h1 className="content-title">Collections</h1>
-				<div className="top-controls">
-					{this.renderTopControlGroup()}
-					{this.state.error && <p className="error">{this.state.error}</p>}
-				</div>
-				{this.renderTabBar()}
+				{this.renderTopControlGroup()}
+				{this.renderCollections()}
 			</div>
 		);
 	}

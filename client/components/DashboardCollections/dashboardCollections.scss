@@ -1,4 +1,3 @@
-
 .dashboard-collections-component {
 	.top-controls {
 		padding-bottom: 1em;
@@ -30,16 +29,10 @@
 			}
 		}
 	}
-	.add-collection-input {
-		flex-grow: 1;
-	}
-	.error {
-		color: #c23030;
-	}
 	.collection-group:not(:last-child) {
 		margin-bottom: 2em;
 	}
-	.collection-wrapper {
+	.collection-row {
 		display: flex;
 		align-items: center;
 		padding-bottom: 1em;
@@ -61,6 +54,76 @@
 		}
 		.bp3-checkbox {
 			margin: 0px 2em 0px;
+		}
+	}
+	.collection-tile {
+		display: inline-block;
+		min-width: 200px;
+		width: calc(33% - 20px);
+		height: 100px;
+		margin: 10px;
+		align-items: center;
+		overflow: hidden;
+		padding: 0;
+		background: linear-gradient(
+			to bottom,
+			#fff,
+			#fff 50%,
+			#eee 50%,
+			#eee
+		);
+		background-size: 100% 1px;
+		.inner {
+			display: flex;
+			position: relative;
+			flex-direction: row;
+			height: 98%;
+			width: 100%;
+			border-bottom: 1px solid #DDD;
+			.binding {
+				width: 16px;
+				flex-shrink: 0;
+				height: 100%;
+			}
+			.contents {
+				height: 100%;
+				flex-grow: 1;
+				display: flex;
+				flex-direction: column;
+				background: white;
+				cursor: pointer;
+				font-size: 1.3em;
+				display: flex;
+				flex-direction: column;
+				flex-grow: 1;
+				padding: 10px;
+				word-break: break-word;
+				justify-content: flex-start;
+				&:hover {
+					.title {
+						text-decoration: underline;
+					}
+				}
+				a.title {
+					display: block;
+					flex-grow: 1;
+					text-decoration: none;
+				}
+				.info-container {
+					width: 100%;
+					display: flex;
+					.info-label {
+						font-size: 12px;
+						display: flex;
+						margin-right: 10px;
+						align-items: center;
+						color: #BBB;
+						.bp3-icon {
+							margin-right: 2px;
+						}
+					}
+				}
+			}
 		}
 	}
 }
