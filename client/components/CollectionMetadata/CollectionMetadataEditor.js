@@ -204,8 +204,7 @@ class CollectionMetadataEditor extends React.Component {
 	}
 
 	render() {
-		const { collection } = this.props;
-		const { isSaving, isGettingDoi } = this.state;
+		const { isSaving } = this.state;
 		return (
 			<div className="component-collection-metadata-editor">
 				{this.renderFields()}

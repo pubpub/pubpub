@@ -54,6 +54,10 @@ class DashboardCollections extends React.Component {
 				kind: kind,
 			}),
 		}).then((newCollection) => {
+			const { matchCollectionSchema } = this.state;
+			if (matchCollectionSchema && matchCollectionSchema.kind !== newCollection.kind) {
+				this.setState({ matchCollectionSchema: null });
+			}
 			this.props.setCommunityData({
 				...this.props.communityData,
 				collections: [...this.props.communityData.collections, newCollection],
