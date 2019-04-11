@@ -246,7 +246,7 @@ class PubOptionsCollections extends Component {
 					</div>
 					<ButtonGroup className="buttons">
 						<Popover
-							position={Position.BOTTOM}
+							minimal
 							content={
 								<Menu>
 									{collection.kind !== 'tag' && isPublic && (

@@ -1,4 +1,4 @@
-import { communityUrl } from 'shared/util/canonicalUrls';
+import { collectionUrl } from '../util/canonicalUrls';
 
 const types = {
 	date: {
@@ -19,7 +19,8 @@ const sharedFields = {
 	url: {
 		name: 'url',
 		label: 'URL',
-		defaultDerivedFrom: ({ community }) => community && communityUrl(community),
+		defaultDerivedFrom: ({ community, collection }) =>
+			community && collection && collection.id && collectionUrl(community, collection),
 	},
 };
 
