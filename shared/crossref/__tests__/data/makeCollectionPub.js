@@ -1,1 +1,5 @@
-export default (collection, pub) => ({ collection: collection, pub: pub });
+export default (collection, pub, contextHint) => ({
+	collection: collection,
+	pub: pub,
+	contextHint: contextHint,
+});

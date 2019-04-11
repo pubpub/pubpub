@@ -1,5 +1,7 @@
 /* global describe, it, expect */
 import { mapMetadataFields } from 'shared/collections/metadata';
+import { getSchemaForKind } from 'shared/collections/schemas';
+
 import createDepositPartial from '../createDeposit';
 
 import community from './data/community';
@@ -185,5 +187,24 @@ describe('createDeposit', () => {
 			month: '05',
 			year: '2019',
 		});
+	});
+
+	it('understands contextHints provided by a CollectionPub', () => {
+		const contextHintValue = 'glossary';
+		const { deposit } = createDeposit(
+			{
+				collection: book,
+				collectionPub: makeCollectionPub(book, pub, contextHintValue),
+				pub: pub,
+			},
+			'pub',
+		);
+		const {
+			content_item: { '@component_type': componentType },
+		} = deposit.doi_batch.body.book;
+		expect(componentType).toEqual(
+			getSchemaForKind('book').contextHints.find((ch) => ch.value === contextHintValue)
+				.crossrefComponentType,
+		);
 	});
 });
