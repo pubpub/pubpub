@@ -49,7 +49,7 @@ Object {
             "isbn": "this_is_an_isbn",
             "publication_date": Object {
               "@media_type": "online",
-              "day": "14",
+              "day": "02",
               "month": "03",
               "year": "2015",
             },
@@ -207,7 +207,7 @@ Object {
           "event_metadata": Object {
             "conference_acronym": "TCIHA",
             "conference_date": Object {
-              "#text": "2019-04-30",
+              "#text": "2019-05-01",
             },
             "conference_location": "Kalamazoo, MI",
             "conference_name": "This Conference Is Happening Again",
@@ -225,8 +225,8 @@ Object {
             "proceedings_title": "This Conference Is Happening Again",
             "publication_date": Object {
               "@media_type": "online",
-              "day": "30",
-              "month": "04",
+              "day": "01",
+              "month": "05",
               "year": "2019",
             },
             "publisher": Object {
@@ -369,7 +369,7 @@ Object {
                   },
                   "publication_date": Object {
                     "@media_type": "online",
-                    "day": "1",
+                    "day": "01",
                     "month": "03",
                     "year": "2019",
                   },
@@ -399,7 +399,7 @@ Object {
             },
             "publication_date": Object {
               "@media_type": "online",
-              "day": "1",
+              "day": "01",
               "month": "03",
               "year": "2019",
             },
@@ -489,7 +489,7 @@ Object {
             "isbn": "this_is_an_isbn",
             "publication_date": Object {
               "@media_type": "online",
-              "day": "14",
+              "day": "02",
               "month": "03",
               "year": "2015",
             },
@@ -513,7 +513,7 @@ Object {
                   },
                   "publication_date": Object {
                     "@media_type": "online",
-                    "day": "1",
+                    "day": "01",
                     "month": "03",
                     "year": "2019",
                   },
@@ -543,7 +543,7 @@ Object {
             },
             "publication_date": Object {
               "@media_type": "online",
-              "day": "1",
+              "day": "01",
               "month": "03",
               "year": "2019",
             },
@@ -623,7 +623,7 @@ Object {
             "isbn": "this_is_an_isbn",
             "publication_date": Object {
               "@media_type": "online",
-              "day": "14",
+              "day": "02",
               "month": "03",
               "year": "2015",
             },
@@ -647,7 +647,7 @@ Object {
                   },
                   "publication_date": Object {
                     "@media_type": "online",
-                    "day": "1",
+                    "day": "01",
                     "month": "03",
                     "year": "2019",
                   },
@@ -677,7 +677,7 @@ Object {
             },
             "publication_date": Object {
               "@media_type": "online",
-              "day": "1",
+              "day": "01",
               "month": "03",
               "year": "2019",
             },
@@ -757,7 +757,7 @@ Object {
             "isbn": "this_is_an_isbn",
             "publication_date": Object {
               "@media_type": "online",
-              "day": "14",
+              "day": "02",
               "month": "03",
               "year": "2015",
             },
@@ -781,7 +781,7 @@ Object {
                   },
                   "publication_date": Object {
                     "@media_type": "online",
-                    "day": "1",
+                    "day": "01",
                     "month": "03",
                     "year": "2019",
                   },
@@ -811,7 +811,7 @@ Object {
             },
             "publication_date": Object {
               "@media_type": "online",
-              "day": "1",
+              "day": "01",
               "month": "03",
               "year": "2019",
             },
@@ -892,7 +892,7 @@ Object {
             },
             "publication_date": Object {
               "@media_type": "online",
-              "day": "24",
+              "day": "25",
               "month": "03",
               "year": "2017",
             },

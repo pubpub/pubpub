@@ -1,10 +1,19 @@
 import { collectionUrl } from '../util/canonicalUrls';
 
+const dateRegex = /^([0-9]{4})-([0-9]{2})-([0-9]{2})$/;
+
 const types = {
 	date: {
 		name: 'date',
-		deserialize: (str) => new Date(str),
-		validate: (str) => /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(str),
+		deserialize: (str) => {
+			const [year, month, day] = dateRegex.exec(str).slice(1);
+			const date = new Date();
+			date.setFullYear(parseInt(year, 10));
+			date.setMonth(parseInt(month, 10) - 1);
+			date.setDate(parseInt(day, 10));
+			return date;
+		},
+		validate: (str) => dateRegex.test(str),
 		labelInfo: '(in YYYY-MM-DD format)',
 	},
 };
