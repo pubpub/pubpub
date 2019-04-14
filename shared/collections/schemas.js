@@ -68,7 +68,11 @@ const schemas = [
 		contextHints: [
 			{ value: 'foreword', label: 'Foreword', crossrefComponentType: 'section' },
 			{ value: 'preface', label: 'Preface', crossrefComponentType: 'section' },
-			{ value: 'supplementaryMaterial', label: 'Supplementary Material' },
+			{
+				value: 'supplementaryMaterial',
+				label: 'Supplementary Material',
+				crossrefComponentType: 'reference_entry',
+			},
 			{
 				value: 'chapter',
 				label: 'Chapter',

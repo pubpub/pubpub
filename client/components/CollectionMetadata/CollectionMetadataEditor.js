@@ -65,12 +65,11 @@ class CollectionMetadataEditor extends React.Component {
 		const { communityData, collection, onPersistStateChange, onUpdateCollection } = this.props;
 		this.setState({ isGettingDoi: true });
 		onPersistStateChange(1);
-		return apiFetch('/api/doi', {
+		return apiFetch('/api/doi/collection', {
 			method: 'POST',
 			body: JSON.stringify({
 				collectionId: collection.id,
 				communityId: communityData.id,
-				doiTarget: 'collection',
 			}),
 		}).then(({ dois }) => {
 			onPersistStateChange(-1);

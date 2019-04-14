@@ -54,83 +54,62 @@
 	}
 	.collection-tile {
 		display: inline-block;
-		height: 120px;
+		height: 90px;
 		align-items: center;
 		overflow: hidden;
 		padding: 0;
-		background: linear-gradient(
-			to bottom,
-			#fff,
-			#fff 50%,
-			#eee 50%,
-			#eee
-		);
-		background-size: 100% 1.5px;
-		.inner {
+		.contents {
 			display: flex;
 			position: relative;
-			flex-direction: row;
-			height: 96%;
+			height: 100%;
 			width: 100%;
 			border-bottom: 1px solid #DDD;
-			.binding {
-				width: 16px;
-				flex-shrink: 0;
-				height: 100%;
-			}
-			.contents {
-				height: 100%;
-				width: calc(100% - 16px);
-				flex-direction: column;
-				background: white;
-				font-size: 1.3em;
-				display: flex;
-				flex-direction: column;
+			flex-direction: column;
+			background: white;
+			font-size: 1.2em;
+			padding: 10px;
+			padding-bottom: 4px;
+			justify-content: flex-start;
+			.title {
+				text-align: left;
+				display: block;
 				flex-grow: 1;
-				padding: 10px;
-				padding-bottom: 4px;
-				justify-content: flex-start;
-				.title {
-					text-align: left;
-					display: block;
-					flex-grow: 1;
-					text-decoration: none;
+				text-decoration: none;
+				overflow: hidden;
+				/* cut off at two lines of text*/
+				max-height: 2.5em;
+				&:hover {
+					text-decoration: underline;
+				}
+			}
+			.info-container {
+				width: 100%;
+				display: flex;
+				align-items: center;
+				margin-top: auto;
+				.info-label {
+					font-size: 12px;
+					text-align: center;
+					margin-right: 10px;
+					flex-shrink: 0;
+					align-items: center;
+					color: #BBB;
 					overflow: hidden;
-					/* cut off at three lines of text*/
-					max-height: 4em;
-					&:hover {
-						text-decoration: underline;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					.bp3-icon {
+						margin-right: 2px;
+						margin-top: -2px;
+					}
+					&.shrinks {
+						flex-shrink: 1;
 					}
 				}
-				.info-container {
-					width: 100%;
-					display: flex;
-					align-items: center;
-					margin-top: auto;
-					.info-label {
-						font-size: 12px;
-						text-align: center;
-						margin-right: 10px;
-						flex-shrink: 0;
-						align-items: center;
+				.more-options-menu {
+					margin-left: auto;
+					margin-right: -5px;
+					.bp3-icon {
 						color: #BBB;
-						overflow: hidden;
-						text-overflow: ellipsis;
-						white-space: nowrap;
-						.bp3-icon {
-							margin-right: 2px;
-							margin-top: -2px;
-						}
-						&.shrinks {
-							flex-shrink: 1;
-						}
-					}
-					.more-options-menu {
-						margin-left: auto;
-						margin-right: -5px;
-						.bp3-icon {
-							color: #BBB;
-						}
 					}
 				}
 			}

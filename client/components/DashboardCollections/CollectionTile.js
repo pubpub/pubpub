@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import geopattern from 'geopattern';
 import { Alert, Button, Card, Menu, MenuDivider, MenuItem, Popover } from '@blueprintjs/core';
 
 import collectionType from 'types/collection';
@@ -68,7 +67,7 @@ const CollectionOptionsMenu = ({
 CollectionOptionsMenu.propTypes = { ...propTypes, onDeleteClick: PropTypes.func.isRequired };
 
 const CollectionTile = (props) => {
-	const { communityData, collection, onDeleteCollection } = props;
+	const { collection, onDeleteCollection } = props;
 	const [isDeleting, setIsDeleting] = useState(false);
 	const schema = getSchemaForKind(collection.kind);
 	return (
@@ -88,41 +87,26 @@ const CollectionTile = (props) => {
 			>
 				Are you sure you want to delete <em>{collection.title}</em>?
 			</Alert>
-			<div className="inner">
-				<div
-					className="binding"
-					style={{
-						background: geopattern
-							.generate(collection.id, {
-								color: communityData.accentColor,
-							})
-							.toDataUrl(),
-					}}
-				/>
-				<div className="contents">
-					<a href={`/dashboard/collections/${collection.id}`} className="title">
-						{collection.title}
-					</a>
-					<div className="info-container">
-						<div className="info-label">
-							<Icon iconSize={10} icon={schema.bpDisplayIcon} />
-							{capitalize(schema.label.singular)}
-						</div>
-						<div className="info-label">
-							<Icon iconSize={10} icon={collection.isPublic ? 'globe' : 'lock2'} />
-							{collection.isPublic ? 'Public' : 'Private'}
-						</div>
-						{collection.page && (
-							<div className="info-label shrinks">
-								<Icon iconSize={10} icon="link" />
-								{collection.page.title}
-							</div>
-						)}
-						<CollectionOptionsMenu
-							{...props}
-							onDeleteClick={() => setIsDeleting(true)}
-						/>
+			<div className="contents" title={collection.title}>
+				<a href={`/dashboard/collections/${collection.id}`} className="title">
+					{collection.title}
+				</a>
+				<div className="info-container">
+					<div className="info-label">
+						<Icon iconSize={10} icon={schema.bpDisplayIcon} />
+						{capitalize(schema.label.singular)}
 					</div>
+					<div className="info-label">
+						<Icon iconSize={10} icon={collection.isPublic ? 'globe' : 'lock2'} />
+						{collection.isPublic ? 'Public' : 'Private'}
+					</div>
+					{collection.page && (
+						<div className="info-label shrinks">
+							<Icon iconSize={10} icon="link" />
+							{collection.page.title}
+						</div>
+					)}
+					<CollectionOptionsMenu {...props} onDeleteClick={() => setIsDeleting(true)} />
 				</div>
 			</div>
 		</Card>
