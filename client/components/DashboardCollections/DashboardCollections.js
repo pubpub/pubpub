@@ -156,13 +156,13 @@ class DashboardCollections extends React.Component {
 					/>
 				</div>
 				{this.props.communityData.collections.length > 0 && (
-					<ControlGroup className="search-and-filter">
+					<ControlGroup className="search-and-filter bp3-large">
 						<CollectionKindDropdown
 							selectedSchema={matchCollectionSchema}
 							onSelect={(schema) => this.setState({ matchCollectionSchema: schema })}
 						/>
 						<InputGroup
-							className="search-bar"
+							className="search-bar bp3-large"
 							leftIcon="search"
 							value={matchCollectionQuery}
 							onChange={(e) =>

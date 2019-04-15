@@ -71,7 +71,7 @@ const CollectionTile = (props) => {
 	const [isDeleting, setIsDeleting] = useState(false);
 	const schema = getSchemaForKind(collection.kind);
 	return (
-		<Card elevation={1} className="collection-tile">
+		<Card className="collection-tile">
 			<Alert
 				isOpen={isDeleting}
 				intent="danger"

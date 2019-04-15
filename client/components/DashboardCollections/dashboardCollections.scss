@@ -21,16 +21,16 @@
 				&:hover {
 					cursor: pointer;
 					background: #F5F5F5;
-					.bp3-icon {
-						transform: rotate(-5deg);
-					}
+					// .bp3-icon {
+					// 	transform: rotate(-5deg);
+					// }
 				}
 			}
 		}
 		.search-and-filter {
 			width: 100%;
 			display: flex;
-			margin-top: 1.5em;
+			margin-top: 3.5em;
 			margin-bottom: 1.5em;
 			.search-bar {
 				flex-grow: 1;

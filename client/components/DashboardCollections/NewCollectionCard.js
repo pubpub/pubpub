@@ -60,7 +60,7 @@ const NewCollectionCard = ({ schema, description, header, onCreateCollection }) 
 					/>
 				</div>
 			</Overlay>
-			<Card className="top-controls-card" elevation={1} onClick={() => setIsOpen(true)}>
+			<Card className="top-controls-card" onClick={() => setIsOpen(true)}>
 				<h6>
 					<Icon icon={bpDisplayIcon} iconSize={20} />
 					{header}
