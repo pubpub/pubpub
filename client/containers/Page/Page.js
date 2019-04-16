@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import PageWrapper from 'components/PageWrapper/PageWrapper';
-import LayoutPubs from 'components/LayoutPubs/LayoutPubs';
-import LayoutHtml from 'components/LayoutHtml/LayoutHtml';
-import LayoutBanner from 'components/LayoutBanner/LayoutBanner';
-import LayoutText from 'components/LayoutText/LayoutText';
-import LayoutPages from 'components/LayoutPages/LayoutPages';
+import {
+	PageWrapper,
+	LayoutPubs,
+	LayoutHtml,
+	LayoutBanner,
+	LayoutText,
+	LayoutPages,
+} from 'components';
 import { hydrateWrapper, getDefaultLayout, generateRenderLists } from 'utilities';
 
 require('./page.scss');

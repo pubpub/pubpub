@@ -1,4 +1,4 @@
-import findRank from 'shared/util/findRank';
+import findRank from 'shared/utils/findRank';
 import { Collection, CollectionPub, sequelize } from '../../models';
 import { getCollectionPubsInCollection } from '../../queryHelpers';
 import withPermissions from '../permissions/withPermissions';

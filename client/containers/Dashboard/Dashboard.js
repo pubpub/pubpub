@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import PageWrapper from 'components/PageWrapper/PageWrapper';
-import DashboardSide from 'components/DashboardSide/DashboardSide';
-import DashboardCreatePage from 'components/DashboardCreatePage/DashboardCreatePage';
-import DashboardSettings from 'components/DashboardSettings/DashboardSettings';
-import DashboardTeam from 'components/DashboardTeam/DashboardTeam';
-import DashboardPubs from 'components/DashboardPubs/DashboardPubs';
-import DashboardPage from 'components/DashboardPage/DashboardPage';
-
+import {
+	PageWrapper,
+	DashboardSide,
+	DashboardCreatePage,
+	DashboardSettings,
+	DashboardTeam,
+	DashboardPubs,
+	DashboardPage,
+	DashboardCollections,
+	DashboardCollection,
+} from 'components';
 import { hydrateWrapper } from 'utilities';
-import DashboardCollections from '../../components/DashboardCollections/DashboardCollections';
-import DashboardCollection from '../../components/DashboardCollection/DashboardCollection';
 
 require('./dashboard.scss');
 

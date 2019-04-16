@@ -13,7 +13,7 @@ import pubType from 'types/pub';
 
 import CollectionEditor from '../CollectionEditor/CollectionEditor';
 import AttributionEditor from '../AttributionEditor/AttributionEditor';
-import CollectionMetadataEditor from '../CollectionMetadata/CollectionMetadataEditor';
+import CollectionMetadataEditor from '../CollectionMetadataEditor/CollectionMetadataEditor';
 import CollectionDetailsEditor from './CollectionDetailsEditor';
 
 require('./dashboardCollection.scss');

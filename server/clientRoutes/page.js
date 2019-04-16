@@ -1,6 +1,6 @@
 import React from 'react';
 import Promise from 'bluebird';
-import PageContainer from 'containers/Page/Page';
+import { Page as PageContainer } from 'containers';
 import Html from '../Html';
 import app from '../server';
 import {

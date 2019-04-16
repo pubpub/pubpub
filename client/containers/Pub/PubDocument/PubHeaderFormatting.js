@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { PageContext } from 'components/PageWrapper/PageWrapper';
 import { Tooltip } from '@blueprintjs/core';
 import stickybits from 'stickybits';
-import Avatar from 'components/Avatar/Avatar';
-import FormattingBar from 'components/FormattingBar/FormattingBar';
+import { Avatar, FormattingBar } from 'components';
 
 require('./pubHeaderFormatting.scss');
 

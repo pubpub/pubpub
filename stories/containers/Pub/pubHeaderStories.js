@@ -1,6 +1,6 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import PubHeader from 'containers/PubNew/PubHeader';
+import PubHeader from 'containers/Pub/PubHeader';
 import { pubData } from '../../data';
 
 const altPubData = {
@@ -11,7 +11,7 @@ const altPubData = {
 		'Are institutions, through compartmentalization, a root cause of the exploitation and reduction that spans relations from gender to ecology? A new language—and a new sense-making—to address the horrors of this exploitation.',
 };
 
-storiesOf('Containers/PubNew/PubHeader', module).add('default', () => (
+storiesOf('Containers/Pub/PubHeader', module).add('default', () => (
 	<div>
 		<PubHeader
 			pubData={{

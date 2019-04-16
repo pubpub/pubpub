@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import CommunityPreview from 'components/CommunityPreview/CommunityPreview';
-import PageWrapper from 'components/PageWrapper/PageWrapper';
+import { PageWrapper, CommunityPreview } from 'components';
 import { hydrateWrapper } from 'utilities';
 
 require('./explore.scss');

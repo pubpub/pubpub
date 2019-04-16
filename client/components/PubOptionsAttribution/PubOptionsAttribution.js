@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Spinner } from '@blueprintjs/core';
 
-import ensureUserForAttribution from 'shared/util/ensureUserForAttribution';
+import ensureUserForAttribution from 'shared/utils/ensureUserForAttribution';
 
 import AttributionEditor from '../AttributionEditor/AttributionEditor';
 

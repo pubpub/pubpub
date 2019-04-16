@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { NonIdealState } from '@blueprintjs/core';
-import UserHeader from 'components/UserHeader/UserHeader';
-import UserNav from 'components/UserNav/UserNav';
-import UserEdit from 'components/UserEdit/UserEdit';
-import PubPreview from 'components/PubPreview/PubPreview';
-import PageWrapper from 'components/PageWrapper/PageWrapper';
+import { PubPreview, PageWrapper } from 'components';
 import { hydrateWrapper } from 'utilities';
+import UserHeader from './UserHeader';
+import UserNav from './UserNav';
+import UserEdit from './UserEdit';
 
 require('./user.scss');
 

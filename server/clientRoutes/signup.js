@@ -1,5 +1,5 @@
 import React from 'react';
-import Signup from 'containers/Signup/Signup';
+import { Signup } from 'containers';
 import Html from '../Html';
 import app from '../server';
 import {

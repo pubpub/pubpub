@@ -1,8 +1,8 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import ActionButton from 'containers/PubNew/PubHeader/ActionButton';
+import ActionButton from 'containers/Pub/PubHeader/ActionButton';
 
-storiesOf('Containers/PubNew/PubHeader', module).add('actionButton', () => (
+storiesOf('Containers/Pub/PubHeader', module).add('actionButton', () => (
 	<div
 		style={{
 			padding: '50px',

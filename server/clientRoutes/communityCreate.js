@@ -1,5 +1,5 @@
 import React from 'react';
-import CommunityCreate from 'containers/CommunityCreate/CommunityCreate';
+import { CommunityCreate } from 'containers';
 import Html from '../Html';
 import app from '../server';
 import {

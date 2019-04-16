@@ -23,5 +23,6 @@ module.exports = ({ config }) => {
 	});
 
 	config.resolve.modules = [resolve(__dirname, '../client'), 'node_modules'];
+	config.resolve.alias['shared'] = resolve(__dirname, '../shared');
 	return config;
 };

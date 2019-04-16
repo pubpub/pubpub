@@ -1,5 +1,5 @@
 import React from 'react';
-import Pricing from 'containers/Pricing/Pricing';
+import { Pricing } from 'containers';
 import Html from '../Html';
 import app from '../server';
 import {

@@ -3,10 +3,7 @@ import PropTypes from 'prop-types';
 import SHA3 from 'crypto-js/sha3';
 import encHex from 'crypto-js/enc-hex';
 import { Button, NonIdealState, Checkbox } from '@blueprintjs/core';
-import InputField from 'components/InputField/InputField';
-import ImageUpload from 'components/ImageUpload/ImageUpload';
-import PageWrapper from 'components/PageWrapper/PageWrapper';
-import Icon from 'components/Icon/Icon';
+import { InputField, ImageUpload, PageWrapper, Icon } from 'components';
 import { hydrateWrapper, apiFetch } from 'utilities';
 
 require('./userCreate.scss');

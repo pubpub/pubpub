@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, NonIdealState } from '@blueprintjs/core';
-import InputField from 'components/InputField/InputField';
-import ImageUpload from 'components/ImageUpload/ImageUpload';
-import PageWrapper from 'components/PageWrapper/PageWrapper';
+import { InputField, ImageUpload, PageWrapper } from 'components';
 import { hydrateWrapper, apiFetch, slugifyString } from 'utilities';
 
 require('./communityCreate.scss');

@@ -5,7 +5,7 @@ import { Node } from 'prosemirror-model';
 import { Step } from 'prosemirror-transform';
 import { uncompressStateJSON, uncompressStepJSON } from 'prosemirror-compress-pubpub';
 import { buildSchema } from '@pubpub/editor';
-import PubTest from 'containers/PubTest/PubTest';
+import { PubTest } from 'containers';
 import discussionSchema from 'components/DiscussionAddon/discussionSchema';
 import Html from '../Html';
 import app from '../server';

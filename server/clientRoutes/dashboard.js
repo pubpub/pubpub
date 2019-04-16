@@ -1,6 +1,6 @@
 import React from 'react';
 import Promise from 'bluebird';
-import Dashboard from 'containers/Dashboard/Dashboard';
+import { Dashboard } from 'containers';
 import Html from '../Html';
 import app from '../server';
 import {

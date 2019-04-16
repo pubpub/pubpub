@@ -1,10 +1,10 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import Pub from 'containers/Pub/Pub';
+import PubOld from 'containers/PubOld/PubOld';
 import { locationData, loginData, communityData, pubData } from '../data';
 
-storiesOf('Containers/Pub', module).add('default', () => (
-	<Pub
+storiesOf('Containers/PubOld', module).add('default', () => (
+	<PubOld
 		locationData={locationData}
 		loginData={loginData}
 		communityData={communityData}

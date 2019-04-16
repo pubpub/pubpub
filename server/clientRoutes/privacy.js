@@ -1,5 +1,5 @@
 import React from 'react';
-import Privacy from 'containers/Privacy/Privacy';
+import { Privacy } from 'containers';
 import Html from '../Html';
 import app from '../server';
 import {

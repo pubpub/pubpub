@@ -1,7 +1,7 @@
 import Promise from 'bluebird';
 import React from 'react';
 import algoliasearch from 'algoliasearch';
-import Search from 'containers/Search/Search';
+import { Search } from 'containers';
 import Html from '../Html';
 import app from '../server';
 import {

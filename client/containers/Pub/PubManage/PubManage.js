@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { PageContext } from 'components/PageWrapper/PageWrapper';
 import { Menu, MenuItem, Intent } from '@blueprintjs/core';
-import GridWrapper from 'components/GridWrapper/GridWrapper';
-import { pubDataProps } from 'containers/PubNew/sharedPropTypes';
+import { pubDataProps } from 'containers/Pub/sharedPropTypes';
+import { GridWrapper } from 'components';
+import { PageContext } from 'components/PageWrapper/PageWrapper';
 
 require('./pubManage.scss');
 
@@ -32,7 +32,7 @@ const PubManage = (props) => {
 								<MenuItem
 									text={mode.text}
 									active={mode.active}
-									href={`/pubnew/${locationData.params.slug}/manage/${mode.path}`}
+									href={`/pub/${locationData.params.slug}/manage/${mode.path}`}
 									intent={mode.danger ? Intent.DANGER : undefined}
 								/>
 							);

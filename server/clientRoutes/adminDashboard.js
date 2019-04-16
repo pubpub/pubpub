@@ -1,5 +1,5 @@
 import React from 'react';
-import AdminDashboard from 'containers/AdminDashboard/AdminDashboard';
+import { AdminDashboard } from 'containers';
 import Html from '../Html';
 import app from '../server';
 import {

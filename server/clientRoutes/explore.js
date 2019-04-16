@@ -1,6 +1,6 @@
 import Promise from 'bluebird';
 import React from 'react';
-import Explore from 'containers/Explore/Explore';
+import { Explore } from 'containers';
 import Html from '../Html';
 import app from '../server';
 import { Community } from '../models';

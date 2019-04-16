@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { PageContext } from 'components/PageWrapper/PageWrapper';
-import { pubDataProps } from 'containers/PubNew/sharedPropTypes';
+import { pubDataProps } from 'containers/Pub/sharedPropTypes';
 
 require('./details.scss');
 

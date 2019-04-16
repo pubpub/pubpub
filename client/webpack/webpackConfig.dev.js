@@ -6,7 +6,7 @@ const autoprefixer = require('autoprefixer');
 
 const containerEntries = readdirSync(resolve(__dirname, '../containers'))
 	.filter((item) => {
-		if (item === '.DS_Store') {
+		if (item === '.DS_Store' || item === 'index.js') {
 			return false;
 		}
 		return true;
@@ -26,6 +26,9 @@ module.exports = {
 	},
 	resolve: {
 		modules: [resolve(__dirname, '../'), 'node_modules'],
+		alias: {
+			shared: resolve(__dirname, '../../shared'),
+		},
 	},
 	devtool: '#eval',
 	output: {
@@ -87,7 +90,7 @@ module.exports = {
 		splitChunks: {
 			cacheGroups: {
 				vendors: {
-					test: /[\\/]node_modules[\\/]/,
+					test: /([\\/]node_modules[\\/]|[\\/]components[\\/])/,
 					name: 'vendor',
 					chunks: 'all',
 					// minChunks: 2,

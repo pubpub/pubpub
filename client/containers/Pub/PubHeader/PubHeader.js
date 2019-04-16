@@ -16,8 +16,7 @@ import {
 	Menu,
 	MenuItem,
 } from '@blueprintjs/core';
-import Icon from 'components/Icon/Icon';
-import GridWrapper from 'components/GridWrapper/GridWrapper';
+import { Icon, GridWrapper } from 'components';
 import ActionButton from './ActionButton';
 import styleGenerator from './styleGenerator';
 
@@ -205,12 +204,12 @@ const PubHeader = (props) => {
 									<AnchorButton
 										className="manager-button"
 										text="Share"
-										href={`/pubnew/${pubData.slug}/manage/sharing`}
+										href={`/pub/${pubData.slug}/manage/sharing`}
 									/>
 									<AnchorButton
 										className="manager-button"
 										text="Manage"
-										href={`/pubnew/${pubData.slug}/manage`}
+										href={`/pub/${pubData.slug}/manage`}
 									/>
 								</React.Fragment>
 							)}
@@ -218,7 +217,7 @@ const PubHeader = (props) => {
 								<AnchorButton
 									className="manager-button"
 									text="Return to Document"
-									href={`/pubnew/${pubData.slug}`}
+									href={`/pub/${pubData.slug}`}
 								/>
 							)}
 						</div>

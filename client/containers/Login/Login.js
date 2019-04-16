@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import SHA3 from 'crypto-js/sha3';
 import encHex from 'crypto-js/enc-hex';
 import { AnchorButton, Button, NonIdealState } from '@blueprintjs/core';
-import Avatar from 'components/Avatar/Avatar';
-import InputField from 'components/InputField/InputField';
-import PageWrapper from 'components/PageWrapper/PageWrapper';
+import { Avatar, InputField, PageWrapper } from 'components';
 import { apiFetch, hydrateWrapper } from 'utilities';
 
 require('./login.scss');

@@ -1,6 +1,6 @@
 require('./redirects'); // Redirect needed v3 routes;
 
-require('./pubNew'); // Route: ['/pubnew/:slug', '/pubnew/:slug/branch/:branchShortId', '/pubnew/:slug/:mode']
+require('./pub'); // Route: ['/pub/:slug', '/pub/:slug/branch/:branchShortId', '/pub/:slug/:mode']
 require('./pubTest'); // Route: '/pub-test'
 
 /* Routes for PubPub */

@@ -10,8 +10,8 @@
 	},
 	"main": "init.js",
 	"scripts": {
-		"api-dev": "NODE_PATH=./client nodemon --delay 250ms --watch ./server --watch ./dist init.js",
-		"api-prod": "NODE_PATH=./client node init.js",
+		"api-dev": "NODE_PATH=./client:./ nodemon --delay 250ms --watch ./server --watch ./dist init.js",
+		"api-prod": "NODE_PATH=./client:./ node init.js",
 		"build-dev": "webpack --config ./client/webpack/webpackConfig.dev.js --watch",
 		"build-prod": "rm -rf ./dist && webpack --config ./client/webpack/webpackConfig.prod.js",
 		"prod": "npm run build-prod && npm run api-prod",
@@ -23,8 +23,8 @@
 		"start": "concurrently --kill-others \"npm run api-dev\" \"npm run build-dev\"",
 		"storybook": "start-storybook -p 9001 -c .storybook -s ./",
 		"test": "jest --silent",
-		"workers-dev": "NODE_PATH=./client WORKER=true nodemon workers/init.js --watch workers",
-		"workers-prod": "NODE_PATH=./client WORKER=true node workers/init.js"
+		"workers-dev": "NODE_PATH=./client:./ WORKER=true nodemon workers/init.js --watch workers",
+		"workers-prod": "NODE_PATH=./client:./ WORKER=true node workers/init.js"
 	},
 	"devDependencies": {
 		"@storybook/addon-options": "^5.0.6",

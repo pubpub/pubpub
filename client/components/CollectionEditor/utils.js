@@ -1,5 +1,5 @@
 import { getSchemaForKind } from 'shared/collections/schemas';
-import findRank from 'shared/util/findRank';
+import findRank from 'shared/utils/findRank';
 
 export const createPubSelection = (pub, collection, rank, id = null, contextHintValue = null) => {
 	const { contextHints } = getSchemaForKind(collection.kind);

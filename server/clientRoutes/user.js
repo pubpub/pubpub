@@ -1,6 +1,6 @@
 import Promise from 'bluebird';
 import React from 'react';
-import UserContainer from 'containers/User/User';
+import { UserContainer } from 'containers';
 import Html from '../Html';
 import app from '../server';
 import { Community, Pub, User, PubAttribution } from '../models';

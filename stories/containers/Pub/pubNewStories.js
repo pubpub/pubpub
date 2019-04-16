@@ -1,7 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 
-storiesOf('Containers/PubNew', module).add('default', () => (
+storiesOf('Containers/Pub', module).add('default', () => (
 	<div
 		style={{
 			padding: '50px',
@@ -10,6 +10,6 @@ storiesOf('Containers/PubNew', module).add('default', () => (
 			flexWrap: 'wrap',
 		}}
 	>
-		<h2>Put PubNew here</h2>
+		<h2>Put Pub here</h2>
 	</div>
 ));

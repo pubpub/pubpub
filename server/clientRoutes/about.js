@@ -1,5 +1,5 @@
 import React from 'react';
-import About from 'containers/About/About';
+import { About } from 'containers';
 import Html from '../Html';
 import app from '../server';
 import {

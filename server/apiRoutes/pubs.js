@@ -93,7 +93,7 @@ app.post('/api/pubs', (req, res) => {
 		})
 		.then(([newPub]) => {
 			setPubSearchData(newPub.id);
-			return res.status(201).json(`/pubnew/${newPub.slug}`);
+			return res.status(201).json(`/pub/${newPub.slug}`);
 		})
 		.catch((err) => {
 			console.error('Error creating Pub', err);
