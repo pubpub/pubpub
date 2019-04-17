@@ -4,7 +4,7 @@ import Editor from '@pubpub/editor';
 import discussionSchema from 'components/DiscussionAddon/discussionSchema';
 import { GridWrapper } from 'components';
 import { PageContext } from 'components/PageWrapper/PageWrapper';
-import { getResizedUrl } from 'utilities';
+import { getResizedUrl } from 'utils';
 
 require('./pubBody.scss');
 

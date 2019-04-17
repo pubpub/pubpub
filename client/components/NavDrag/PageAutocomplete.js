@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { MenuItem, Position } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 import fuzzysearch from 'fuzzysearch';
-import { generateHash } from 'utilities';
+import { generateHash } from 'utils';
 
 require('./pageAutocomplete.scss');
 

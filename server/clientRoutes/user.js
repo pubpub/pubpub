@@ -9,7 +9,7 @@ import {
 	getInitialData,
 	handleErrors,
 	generateMetaComponents,
-} from '../utilities';
+} from '../utils';
 
 app.get(['/user/:slug', '/user/:slug/:mode'], (req, res, next) => {
 	const getUserData = User.findOne({

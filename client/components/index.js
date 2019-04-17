@@ -40,7 +40,6 @@ export { default as Icon } from './Icon/Icon';
 export { default as ImageCropper } from './ImageCropper/ImageCropper';
 export { default as ImageUpload } from './ImageUpload/ImageUpload';
 export { default as InputField } from './InputField/InputField';
-export { default as LandingFeature } from './LandingFeature/LandingFeature';
 export { default as LayoutBanner } from './LayoutBanner/LayoutBanner';
 export { default as LayoutEditor } from './LayoutEditor/LayoutEditor';
 export { default as LayoutEditorBanner } from './LayoutEditorBanner/LayoutEditorBanner';

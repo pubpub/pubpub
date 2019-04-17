@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { InputGroup, Button, Intent, NonIdealState } from '@blueprintjs/core';
 import { isHttpsUri } from 'valid-url';
-import { getIframeSrc } from 'utilities';
+import { getIframeSrc } from 'utils';
 
 const propTypes = {
 	onInsert: PropTypes.func.isRequired,

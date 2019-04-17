@@ -11,7 +11,7 @@ import {
 	DashboardCollections,
 	DashboardCollection,
 } from 'components';
-import { hydrateWrapper } from 'utilities';
+import { hydrateWrapper } from 'utils';
 
 require('./dashboard.scss');
 

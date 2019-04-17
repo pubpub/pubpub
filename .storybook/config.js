@@ -8,7 +8,7 @@ import { FocusStyleManager } from '@blueprintjs/core';
 FocusStyleManager.onlyShowFocusOnTabs();
 
 /* Require default styles as done in Html.js */
-require('baseStyle.scss');
+require('styles/base.scss');
 
 /* Require stories */
 const req = requireContext('../stories/', true, /Stories\.js$/);

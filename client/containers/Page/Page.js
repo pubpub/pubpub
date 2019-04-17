@@ -8,7 +8,7 @@ import {
 	LayoutText,
 	LayoutPages,
 } from 'components';
-import { hydrateWrapper, getDefaultLayout, generateRenderLists } from 'utilities';
+import { hydrateWrapper, getDefaultLayout, generateRenderLists } from 'utils';
 
 require('./page.scss');
 

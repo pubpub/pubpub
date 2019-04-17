@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
-import { apiFetch, slugifyString } from 'utilities';
+import { apiFetch, slugifyString } from 'utils';
 
 require('./dashboardCreatePage.scss');
 

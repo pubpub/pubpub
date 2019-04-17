@@ -1,8 +1,8 @@
 import React from 'react';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
-import { hydrateWrapper } from 'utilities';
-import { communityDataProps, locationDataProps, loginDataProps } from 'utilities/sharedPropTypes';
-import { pubDataProps } from 'containers/Pub/sharedPropTypes';
+import { hydrateWrapper } from 'utils';
+import { communityDataProps, locationDataProps, loginDataProps } from 'types/base';
+import { pubDataProps } from 'types/pub';
 import PubSyncManager from './PubSyncManager';
 import PubHeader from './PubHeader';
 import PubDocument from './PubDocument';

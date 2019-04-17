@@ -1,7 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import PubPreview from 'components/PubPreview/PubPreview';
-import { collectionData, pubData } from '../data';
+import { collectionData, pubData } from 'data';
 
 storiesOf('Components/PubPreview', module).add('default', () => (
 	<div className="container">

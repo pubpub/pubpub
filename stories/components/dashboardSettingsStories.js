@@ -2,7 +2,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import DashboardSettings from 'components/DashboardSettings/DashboardSettings';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
-import { accentDataDark, pubData, communityData } from '../data';
+import { accentDataDark, pubData, communityData } from 'data';
 
 require('containers/Dashboard/dashboard.scss');
 

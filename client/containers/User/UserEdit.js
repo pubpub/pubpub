@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Callout, Intent } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
 import ImageUpload from 'components/ImageUpload/ImageUpload';
-import { apiFetch } from 'utilities';
+import { apiFetch } from 'utils';
 
 require('./userEdit.scss');
 

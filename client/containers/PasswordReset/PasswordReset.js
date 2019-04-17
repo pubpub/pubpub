@@ -4,7 +4,7 @@ import SHA3 from 'crypto-js/sha3';
 import encHex from 'crypto-js/enc-hex';
 import { AnchorButton, Button, NonIdealState } from '@blueprintjs/core';
 import { InputField, PageWrapper } from 'components';
-import { hydrateWrapper, apiFetch } from 'utilities';
+import { hydrateWrapper, apiFetch } from 'utils';
 
 require('./passwordReset.scss');
 

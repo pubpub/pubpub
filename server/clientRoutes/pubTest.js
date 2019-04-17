@@ -16,7 +16,7 @@ import {
 	getInitialData,
 	handleErrors,
 	generateMetaComponents,
-} from '../utilities';
+} from '../utils';
 
 /* To encode: Buffer.from(JSON.stringify(serviceAccountJson)).toString('base64'); */
 const serviceAccount = JSON.parse(

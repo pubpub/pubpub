@@ -10,7 +10,7 @@ import {
 	getInitialData,
 	handleErrors,
 	generateMetaComponents,
-} from '../utilities';
+} from '../utils';
 
 app.get('/explore', (req, res, next) => {
 	if (!hostIsValid(req, 'pubpub')) {

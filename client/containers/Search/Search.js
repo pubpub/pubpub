@@ -10,7 +10,7 @@ import {
 	getResizedUrl,
 	generatePubBackground,
 	generatePageBackground,
-} from 'utilities';
+} from 'utils';
 
 require('./search.scss');
 

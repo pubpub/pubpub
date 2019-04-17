@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, NonIdealState } from '@blueprintjs/core';
 import { InputField, PageWrapper } from 'components';
-import { hydrateWrapper, apiFetch } from 'utilities';
+import { hydrateWrapper, apiFetch } from 'utils';
 
 require('./signup.scss');
 

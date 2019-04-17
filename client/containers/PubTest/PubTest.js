@@ -11,7 +11,7 @@ import { ChangeSet, simplifyChanges } from 'prosemirror-changeset';
 import { buildSchema } from '@pubpub/editor';
 import discussionSchema from 'components/DiscussionAddon/discussionSchema';
 import PageWrapper from 'components/PageWrapper/PageWrapper';
-import { hydrateWrapper, getResizedUrl } from 'utilities';
+import { hydrateWrapper, getResizedUrl } from 'utils';
 
 require('./pubTest.scss');
 

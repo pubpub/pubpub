@@ -6,10 +6,10 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { NonIdealState, Tabs, Tab, Spinner } from '@blueprintjs/core';
 
-import { apiFetch } from 'utilities';
+import { apiFetch } from 'utils';
 import collectionType from 'types/collection';
 import communityType from 'types/community';
-import pubType from 'types/pub';
+import { pubDataProps } from 'types/pub';
 
 import CollectionEditor from '../CollectionEditor/CollectionEditor';
 import AttributionEditor from '../AttributionEditor/AttributionEditor';
@@ -23,7 +23,7 @@ const LINK_TO_COLLECTIONS = '/dashboard/collections';
 const propTypes = {
 	communityData: communityType.isRequired,
 	initialCollection: collectionType.isRequired,
-	pubsData: PropTypes.arrayOf(pubType).isRequired,
+	pubsData: PropTypes.arrayOf(pubDataProps).isRequired,
 };
 
 class DashboardCollection extends React.Component {

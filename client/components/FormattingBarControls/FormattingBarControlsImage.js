@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Slider, AnchorButton, ButtonGroup, Button } from '@blueprintjs/core';
 import SimpleEditor from 'components/SimpleEditor/SimpleEditor';
 import Icon from 'components/Icon/Icon';
-import { s3Upload } from 'utilities';
+import { s3Upload } from 'utils';
 
 const propTypes = {
 	attrs: PropTypes.object.isRequired,

@@ -6,7 +6,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import collectionType from 'types/collection';
-import pubType from 'types/pub';
+import { pubDataProps } from 'types/pub';
 
 import collectionsApi from './api';
 import {
@@ -20,7 +20,7 @@ const propTypes = {
 	communityId: PropTypes.string.isRequired,
 	collection: collectionType.isRequired,
 	onPersistStateChange: PropTypes.func.isRequired,
-	pubs: PropTypes.arrayOf(pubType).isRequired,
+	pubs: PropTypes.arrayOf(pubDataProps).isRequired,
 };
 
 class CollectionEditor extends React.Component {

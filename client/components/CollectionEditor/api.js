@@ -1,4 +1,4 @@
-import { apiFetch } from 'utilities';
+import { apiFetch } from 'utils';
 
 const API_ROOT = '/api/collectionPubs';
 

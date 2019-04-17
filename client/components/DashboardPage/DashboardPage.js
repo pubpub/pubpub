@@ -6,7 +6,7 @@ import InputField from 'components/InputField/InputField';
 import ImageUpload from 'components/ImageUpload/ImageUpload';
 import LayoutEditor from 'components/LayoutEditor/LayoutEditor';
 import SettingsSection from 'components/SettingsSection/SettingsSection';
-import { getDefaultLayout, apiFetch, slugifyString } from 'utilities';
+import { getDefaultLayout, apiFetch, slugifyString } from 'utils';
 
 require('./dashboardPage.scss');
 

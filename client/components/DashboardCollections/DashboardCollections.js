@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import fuzzysearch from 'fuzzysearch';
 import { ControlGroup, InputGroup, NonIdealState } from '@blueprintjs/core';
-import { apiFetch } from 'utilities';
+import { apiFetch } from 'utils';
 
 import { getSchemaForKind } from 'shared/collections/schemas';
 import CollectionKindDropdown from './CollectionKindDropdown';

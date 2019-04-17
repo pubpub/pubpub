@@ -8,7 +8,7 @@ import {
 	getInitialData,
 	handleErrors,
 	generateMetaComponents,
-} from '../utilities';
+} from '../utils';
 
 app.get('/about', (req, res, next) => {
 	if (!hostIsValid(req, 'pubpub')) {

@@ -6,7 +6,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import pubType from 'types/pub';
+import { pubDataProps } from 'types/pub';
 import Icon from 'components/Icon/Icon';
 
 import { authorsNamesFromPub } from './utils';
@@ -15,7 +15,7 @@ const propTypes = {
 	controls: PropTypes.node,
 	isDragging: PropTypes.bool,
 	dragHandleProps: PropTypes.shape({}),
-	pub: pubType.isRequired,
+	pub: pubDataProps.isRequired,
 };
 
 const defaultProps = {

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { pubDataProps } from 'containers/Pub/sharedPropTypes';
+import { pubDataProps } from 'types/pub';
 
 require('./pubFooter.scss');
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import PubOptionsVersions from 'components/PubOptionsVersions/PubOptionsVersions';
-import { pubData, communityData } from '../data';
+import { pubData, communityData } from 'data';
 
 require('components/PubOptions/pubOptions.scss');
 

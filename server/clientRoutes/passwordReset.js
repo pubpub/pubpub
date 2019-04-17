@@ -9,7 +9,7 @@ import {
 	getInitialData,
 	handleErrors,
 	generateMetaComponents,
-} from '../utilities';
+} from '../utils';
 
 app.get(['/password-reset', '/password-reset/:resetHash/:slug'], (req, res, next) => {
 	const findUser = User.findOne({

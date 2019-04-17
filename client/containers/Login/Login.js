@@ -4,7 +4,7 @@ import SHA3 from 'crypto-js/sha3';
 import encHex from 'crypto-js/enc-hex';
 import { AnchorButton, Button, NonIdealState } from '@blueprintjs/core';
 import { Avatar, InputField, PageWrapper } from 'components';
-import { apiFetch, hydrateWrapper } from 'utilities';
+import { apiFetch, hydrateWrapper } from 'utils';
 
 require('./login.scss');
 

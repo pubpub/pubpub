@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { storiesOf } from '@storybook/react';
 import FormattingBar from 'components/FormattingBar/FormattingBar';
 import Editor from '@pubpub/editor';
-import { plainDoc, fullDoc } from '../data';
+import { plainDoc, fullDoc } from 'data';
 
 class EditorUnit extends Component {
 	static propTypes = {

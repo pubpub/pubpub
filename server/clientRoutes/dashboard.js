@@ -9,12 +9,13 @@ import {
 	getInitialData,
 	handleErrors,
 	generateMetaComponents,
-} from '../utilities';
+} from '../utils';
+import { findPage } from '../utils/pageQueries';
+
 import {
-	findPage,
 	getCollectionAttributions,
 	getCollectionPubsInCollection,
-} from '../queryHelpers';
+} from '../utils/collectionQueries';
 
 const extraContextualData = [
 	{

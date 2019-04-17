@@ -9,7 +9,7 @@ import {
 	getInitialData,
 	handleErrors,
 	generateMetaComponents,
-} from '../utilities';
+} from '../utils';
 
 app.get('/user/create/:hash', (req, res, next) => {
 	const getSignup = Signup.findOne({

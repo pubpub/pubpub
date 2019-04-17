@@ -9,8 +9,8 @@ import {
 	Branch,
 	BranchPermission,
 } from '../models';
-import { generateHash, slugifyString } from '../utilities';
-import { setPubSearchData, deletePubSearchData } from '../searchUtilities';
+import { generateHash, slugifyString } from '../utils';
+import { setPubSearchData, deletePubSearchData } from '../utils/search';
 
 app.post('/api/pubs', (req, res) => {
 	const user = req.user || {};

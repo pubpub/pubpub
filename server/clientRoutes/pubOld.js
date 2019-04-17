@@ -2,7 +2,7 @@ import React from 'react';
 import Promise from 'bluebird';
 import firebaseAdmin from 'firebase-admin';
 import { PubOld } from 'containers';
-import { getFirebaseConfig } from 'utilities';
+import { getFirebaseConfig } from 'utils';
 import Html from '../Html';
 import app from '../server';
 import {
@@ -11,8 +11,9 @@ import {
 	getInitialData,
 	handleErrors,
 	generateMetaComponents,
-} from '../utilities';
-import { findPub } from '../queryHelpers';
+} from '../utils';
+// import { findPub } from '../queryHelpers';
+import { findPub } from '../utils/pubQueries';
 
 /* To encode: Buffer.from(JSON.stringify(serviceAccountJson)).toString('base64'); */
 const serviceAccount = JSON.parse(

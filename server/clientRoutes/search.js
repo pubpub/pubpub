@@ -9,7 +9,7 @@ import {
 	getInitialData,
 	handleErrors,
 	generateMetaComponents,
-} from '../utilities';
+} from '../utils';
 import { User, Community } from '../models';
 
 const client = algoliasearch(process.env.ALGOLIA_ID, process.env.ALGOLIA_KEY);

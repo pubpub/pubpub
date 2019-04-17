@@ -9,9 +9,9 @@ import {
 	getInitialData,
 	handleErrors,
 	generateMetaComponents,
-} from '../utilities';
-import { getFirebaseToken } from '../utilities/firebaseAdmin';
-import { findPub } from '../utilities/pubQueries';
+} from '../utils';
+import { getFirebaseToken } from '../utils/firebaseAdmin';
+import { findPub } from '../utils/pubQueries';
 
 const getMode = (path, slug) => {
 	if (path.indexOf(`/pub/${slug}/submission`) > -1) {

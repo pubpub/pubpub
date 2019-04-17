@@ -7,14 +7,14 @@ import PropTypes from 'prop-types';
 import { Button, ControlGroup, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 
-import pubType from 'types/pub';
+import { pubDataProps } from 'types/pub';
 import { getSchemaForKind } from 'shared/collections/schemas';
 
 const propTypes = {
 	onRemove: PropTypes.func.isRequired,
 	onSetContext: PropTypes.func.isRequired,
 	pubSelection: PropTypes.shape({
-		pub: pubType.isRequired,
+		pub: pubDataProps.isRequired,
 		contextHint: PropTypes.shape({
 			label: PropTypes.string.isRequired,
 		}).isRequired,

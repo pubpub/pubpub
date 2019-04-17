@@ -5,7 +5,7 @@ import Footer from 'components/Footer/Footer';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
 import Icon from 'components/Icon/Icon';
 
-import { accentDataDark, accentDataLight, communityData } from '../data';
+import { accentDataDark, accentDataLight, communityData } from 'data';
 
 const wrapperStyle = { margin: '1em 0em' };
 

@@ -5,7 +5,7 @@ import useWindowSize from 'react-use/lib/useWindowSize';
 import { PageContext } from 'components/PageWrapper/PageWrapper';
 import dateFormat from 'dateformat';
 import stickybits from 'stickybits';
-import { apiFetch, getResizedUrl } from 'utilities';
+import { apiFetch, getResizedUrl } from 'utils';
 import {
 	Button,
 	AnchorButton,

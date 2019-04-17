@@ -1,7 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import PubHeader from 'containers/Pub/PubHeader';
-import { pubData } from '../../data';
+import { pubData } from 'data';
 
 const altPubData = {
 	...pubData,

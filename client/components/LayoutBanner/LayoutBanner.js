@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { AnchorButton } from '@blueprintjs/core';
-import { apiFetch, getResizedUrl } from 'utilities';
+import { apiFetch, getResizedUrl } from 'utils';
 
 require('./layoutBanner.scss');
 

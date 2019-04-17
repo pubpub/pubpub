@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Menu, MenuItem, Intent } from '@blueprintjs/core';
-import { pubDataProps } from 'containers/Pub/sharedPropTypes';
+import { pubDataProps } from 'types/pub';
 import { GridWrapper } from 'components';
 import { PageContext } from 'components/PageWrapper/PageWrapper';
 

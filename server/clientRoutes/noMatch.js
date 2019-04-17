@@ -7,7 +7,7 @@ import {
 	getInitialData,
 	handleErrors,
 	generateMetaComponents,
-} from '../utilities';
+} from '../utils';
 
 app.get('/*', (req, res, next) => {
 	res.status(404);

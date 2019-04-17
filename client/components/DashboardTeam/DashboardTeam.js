@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Avatar from 'components/Avatar/Avatar';
 import UserAutocomplete from 'components/UserAutocomplete/UserAutocomplete';
-import { apiFetch } from 'utilities';
+import { apiFetch } from 'utils';
 
 require('./dashboardTeam.scss');
 

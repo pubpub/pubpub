@@ -4,7 +4,7 @@ import Editor, { getJSON } from '@pubpub/editor';
 import { Button } from '@blueprintjs/core';
 import InputField from 'components/InputField/InputField';
 import FormattingBar from 'components/FormattingBar/FormattingBar';
-import { getResizedUrl } from 'utilities';
+import { getResizedUrl } from 'utils';
 
 const propTypes = {
 	onChange: PropTypes.func.isRequired,

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, NonIdealState } from '@blueprintjs/core';
-import { apiFetch } from 'utilities';
+import { apiFetch } from 'utils';
 
 require('./dashboardPubs.scss');
 

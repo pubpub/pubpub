@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { InputGroup, Button, Intent, NonIdealState } from '@blueprintjs/core';
 import { isHttpsUri } from 'valid-url';
-import { apiFetch, getIframeSrc, getEmbedType } from 'utilities';
+import { apiFetch, getIframeSrc, getEmbedType } from 'utils';
 import Icon from 'components/Icon/Icon';
 
 const propTypes = {

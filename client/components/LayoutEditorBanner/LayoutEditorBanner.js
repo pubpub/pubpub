@@ -5,7 +5,7 @@ import CollectionMultiSelect from 'components/CollectionMultiSelect/CollectionMu
 import InputField from 'components/InputField/InputField';
 import ImageUpload from 'components/ImageUpload/ImageUpload';
 import ColorInput from 'components/ColorInput/ColorInput';
-import { getResizedUrl } from 'utilities';
+import { getResizedUrl } from 'utils';
 
 require('./layoutEditorBanner.scss');
 

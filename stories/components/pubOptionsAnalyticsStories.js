@@ -1,7 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import PubOptionsAnalytics from 'components/PubOptionsAnalytics/PubOptionsAnalytics';
-import { pubData, communityData, locationData } from '../data';
+import { pubData, communityData, locationData } from 'data';
 
 require('components/PubOptions/pubOptions.scss');
 

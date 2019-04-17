@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { marksAtSelection } from '@pubpub/editor';
-import { pubDataProps } from 'containers/Pub/sharedPropTypes';
+import { pubDataProps } from 'types/pub';
 import PubHeaderFormatting from './PubHeaderFormatting';
 import PubBody from './PubBody';
 import PubInlineMenu from './PubInlineMenu';

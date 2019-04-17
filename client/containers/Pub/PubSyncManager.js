@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { initFirebase } from 'utilitiesFirebaseClient';
+import { initFirebase } from 'utils/firebaseClient';
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,

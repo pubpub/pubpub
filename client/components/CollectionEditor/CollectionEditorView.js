@@ -9,7 +9,7 @@ import { Divider, NonIdealState, InputGroup } from '@blueprintjs/core';
 
 import { getSchemaForKind } from 'shared/collections/schemas';
 import collectionType from 'types/collection';
-import pubType from 'types/pub';
+import { pubDataProps } from 'types/pub';
 
 import PubRow from './PubRow';
 import DragDropListing from '../DragDropListing/DragDropListing';
@@ -74,8 +74,8 @@ export const propTypes = {
 	onRemoveSelectionByPub: PropTypes.func.isRequired,
 	onReorderSelections: PropTypes.func.isRequired,
 	onSetSelectionContextHint: PropTypes.func.isRequired,
-	selections: PropTypes.arrayOf(PropTypes.shape({ pub: pubType })).isRequired,
-	pubs: PropTypes.arrayOf(pubType).isRequired,
+	selections: PropTypes.arrayOf(PropTypes.shape({ pub: pubDataProps })).isRequired,
+	pubs: PropTypes.arrayOf(pubDataProps).isRequired,
 };
 
 const CollectionEditorView = (props) => {

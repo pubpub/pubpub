@@ -9,7 +9,7 @@ import Header from 'components/Header/Header';
 import Icon from 'components/Icon/Icon';
 import SettingsSection from 'components/SettingsSection/SettingsSection';
 import CollectionMultiSelect from 'components/CollectionMultiSelect/CollectionMultiSelect';
-import { populateNavigationIds, apiFetch, slugifyString } from 'utilities';
+import { populateNavigationIds, apiFetch, slugifyString } from 'utils';
 
 require('./dashboardSettings.scss');
 

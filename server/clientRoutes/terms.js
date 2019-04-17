@@ -7,7 +7,7 @@ import {
 	getInitialData,
 	handleErrors,
 	generateMetaComponents,
-} from '../utilities';
+} from '../utils';
 
 app.get('/tos', (req, res, next) => {
 	return getInitialData(req)

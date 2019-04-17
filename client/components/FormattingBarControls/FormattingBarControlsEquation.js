@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
-import { renderLatexString } from 'utilities';
+import { renderLatexString } from 'utils';
 import Icon from 'components/Icon/Icon';
 
 const propTypes = {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { NonIdealState } from '@blueprintjs/core';
 import { PubPreview, PageWrapper } from 'components';
-import { hydrateWrapper } from 'utilities';
+import { hydrateWrapper } from 'utils';
 import UserHeader from './UserHeader';
 import UserNav from './UserNav';
 import UserEdit from './UserEdit';

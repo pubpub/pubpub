@@ -42,7 +42,7 @@ import {
 	nestDiscussionsToThreads,
 	getRandomColor,
 	generateHash,
-} from 'utilities';
+} from 'utils';
 import PubEditorUserInputCapture from '../../components/PubEditorUserInputCapture/PubEditorUserInputCapture';
 
 /* eslint-disable-next-line import/no-extraneous-dependencies */

@@ -2,7 +2,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import Header from 'components/Header/Header';
 import AccentStyle from 'components/AccentStyle/AccentStyle';
-import { accentDataLight, locationData, loginData } from '../data';
+import { accentDataLight, locationData, loginData } from 'data';
 
 const wrapperStyle = { margin: '2em 1em', border: '1px solid #CCC' };
 

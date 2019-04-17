@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 import { PageContext } from 'components/PageWrapper/PageWrapper';
 import GridWrapper from 'components/GridWrapper/GridWrapper';
-import { pubDataProps } from 'containers/Pub/sharedPropTypes';
+import { pubDataProps } from 'types/pub';
 import Details from './Details';
 
 require('./pubMeta.scss');

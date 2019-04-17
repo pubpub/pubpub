@@ -9,8 +9,8 @@ import {
 	getInitialData,
 	handleErrors,
 	generateMetaComponents,
-} from '../utilities';
-import { findPage } from '../queryHelpers';
+} from '../utils';
+import { findPage } from '../utils/pageQueries';
 
 app.get(['/', '/:slug'], (req, res, next) => {
 	if (!hostIsValid(req, 'community')) {

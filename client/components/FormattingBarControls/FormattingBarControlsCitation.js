@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SimpleEditor from 'components/SimpleEditor/SimpleEditor';
-import { formatCitationString } from 'utilities';
+import { formatCitationString } from 'utils';
 
 const propTypes = {
 	attrs: PropTypes.object.isRequired,

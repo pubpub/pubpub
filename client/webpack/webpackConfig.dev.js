@@ -22,7 +22,7 @@ module.exports = {
 	mode: 'development',
 	entry: {
 		...containerEntries,
-		baseStyle: resolve(__dirname, '../baseStyle.scss'),
+		baseStyle: resolve(__dirname, '../styles/base.scss'),
 	},
 	resolve: {
 		modules: [resolve(__dirname, '../'), 'node_modules'],
@@ -90,7 +90,9 @@ module.exports = {
 		splitChunks: {
 			cacheGroups: {
 				vendors: {
-					test: /([\\/]node_modules[\\/]|[\\/]components[\\/])/,
+					// TODO: bundle components into vendor, I think...
+					// test: /([\\/]node_modules[\\/]|[\\/]components[\\/])/,
+					test: /([\\/]node_modules[\\/])/,
 					name: 'vendor',
 					chunks: 'all',
 					// minChunks: 2,

@@ -8,7 +8,7 @@ import LayoutEditorHtml from 'components/LayoutEditorHtml/LayoutEditorHtml';
 import LayoutEditorBanner from 'components/LayoutEditorBanner/LayoutEditorBanner';
 import { Button } from '@blueprintjs/core';
 import stickybits from 'stickybits';
-import { generateHash, generateRenderLists } from 'utilities';
+import { generateHash, generateRenderLists } from 'utils';
 
 require('./layoutEditor.scss');
 

@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { Button, FormGroup, InputGroup, NonIdealState, ButtonGroup } from '@blueprintjs/core';
 
 import collectionType from 'types/collection';
-import { apiFetch } from 'utilities';
+import { apiFetch } from 'utils';
 import { enumerateMetadataFields, normalizeMetadataToKind } from 'shared/collections/metadata';
 import { getSchemaForKind } from 'shared/collections/schemas';
 import ConfirmDialog from 'components/ConfirmDialog/ConfirmDialog';

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { PageWrapper, Icon } from 'components';
-import { hydrateWrapper } from 'utilities';
+import { hydrateWrapper } from 'utils';
 
 require('./landing.scss');
 

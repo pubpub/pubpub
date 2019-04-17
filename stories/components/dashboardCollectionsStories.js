@@ -1,7 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import DashboardCollections from 'components/DashboardCollections/DashboardCollections';
-import { pubData, communityData } from '../data';
+import { pubData, communityData } from 'data';
 
 const emptyCommunityData = { ...communityData, collections: [] };
 

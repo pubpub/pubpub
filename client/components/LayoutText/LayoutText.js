@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Editor from '@pubpub/editor';
-import { getResizedUrl } from 'utilities';
+import { getResizedUrl } from 'utils';
 
 const propTypes = {
 	content: PropTypes.object.isRequired,
