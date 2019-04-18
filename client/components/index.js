@@ -31,9 +31,6 @@ export { default as DropdownRichItem } from './DropdownRichItem/DropdownRichItem
 export { default as FileUploadButton } from './FileUploadButton/FileUploadButton';
 export { default as Footer } from './Footer/Footer';
 export { default as FormattingBar } from './FormattingBar/FormattingBar';
-export { default as FormattingBarControls } from './FormattingBarControls/FormattingBarControls';
-export { default as FormattingBarMedia } from './FormattingBarMedia/FormattingBarMedia';
-export { default as FormattingHelp } from './FormattingHelp/FormattingHelp';
 export { default as GridWrapper } from './GridWrapper/GridWrapper';
 export { default as Header } from './Header/Header';
 export { default as Icon } from './Icon/Icon';

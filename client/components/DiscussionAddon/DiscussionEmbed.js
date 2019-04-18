@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Card } from '@blueprintjs/core';
-import DiscussionThread from 'components/DiscussionThread/DiscussionThread';
+import DiscussionThread from 'deprecatedComponents/DiscussionThread/DiscussionThread';
 
 require('./discussionEmbed.scss');
 

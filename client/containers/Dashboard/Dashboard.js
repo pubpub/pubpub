@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
 	PageWrapper,
-	DashboardSide,
 	DashboardCreatePage,
-	DashboardSettings,
-	DashboardTeam,
 	DashboardPubs,
 	DashboardPage,
 	DashboardCollections,
 	DashboardCollection,
 } from 'components';
 import { hydrateWrapper } from 'utils';
+import Side from './Side';
+import Team from './Team';
+import Settings from './Settings';
 
 require('./dashboard.scss');
 
@@ -88,7 +88,7 @@ class Dashboard extends Component {
 						<div className="row">
 							<div className="col-12 dashboard-columns">
 								<div className="side-content">
-									<DashboardSide
+									<Side
 										pages={communityData.pages}
 										activeSlug={activeSlug}
 										activeMode={activeMode}
@@ -107,14 +107,14 @@ class Dashboard extends Component {
 												);
 											case 'team':
 												return (
-													<DashboardTeam
+													<Team
 														communityData={communityData}
 														setCommunityData={this.setCommunityData}
 													/>
 												);
 											case 'settings':
 												return (
-													<DashboardSettings
+													<Settings
 														communityData={communityData}
 														setCommunityData={this.setCommunityData}
 													/>
