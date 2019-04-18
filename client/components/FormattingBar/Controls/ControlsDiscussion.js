@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import Icon from 'components/Icon/Icon';
-import DiscussionAutocomplete from 'components/DiscussionAddon/DiscussionAutocomplete';
+import DiscussionAutocomplete from './DiscussionAutocomplete';
 
 const propTypes = {
 	attrs: PropTypes.object.isRequired,

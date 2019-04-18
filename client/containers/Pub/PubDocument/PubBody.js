@@ -1,10 +1,10 @@
 import React, { useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Editor from '@pubpub/editor';
-import discussionSchema from 'components/DiscussionAddon/discussionSchema';
 import { GridWrapper } from 'components';
 import { PageContext } from 'components/PageWrapper/PageWrapper';
 import { getResizedUrl } from 'utils';
+import discussionSchema from './DiscussionAddon/discussionSchema';
 
 require('./pubBody.scss');
 

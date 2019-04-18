@@ -1,6 +1,6 @@
 import firebaseAdmin from 'firebase-admin';
 import { buildSchema, getFirebaseDoc } from '@pubpub/editor';
-import discussionSchema from 'components/DiscussionAddon/discussionSchema';
+import discussionSchema from 'containers/Pub/PubDocument/DiscussionAddon/discussionSchema';
 import { getFirebaseConfig } from 'utils';
 /* To encode: Buffer.from(JSON.stringify(serviceAccountJson)).toString('base64'); */
 const serviceAccount = JSON.parse(
