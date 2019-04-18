@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Card } from '@blueprintjs/core';
-import DiscussionThread from 'deprecatedComponents/DiscussionThread/DiscussionThread';
+// import DiscussionThread from 'deprecatedComponents/DiscussionThread/DiscussionThread';
 
 require('./discussionEmbed.scss');
 
@@ -61,7 +61,7 @@ class DiscussionEmbed extends Component {
 					} ${this.props.isEditable ? 'isEditable' : ''}`}
 					style={figStyle}
 				>
-					{activeThread && (
+					{/* activeThread && (
 						<DiscussionThread
 							key={`thread-${activeThread[0].id}`}
 							thread={activeThread}
@@ -82,7 +82,7 @@ class DiscussionEmbed extends Component {
 							getHighlightContent={getHighlightContent}
 							handleQuotePermalink={handleQuotePermalink}
 						/>
-					)}
+					) */}
 					{!activeThread && (
 						<Card>Please select a discussion from the formatting bar.</Card>
 					)}

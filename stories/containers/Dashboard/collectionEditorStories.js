@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 
-import CollectionEditor from 'components/CollectionEditor/CollectionEditor';
+import CollectionEditor from 'containers/Dashboard/DashboardContent/Collection/CollectionEditor';
 
 const TEST_COLLECTION = {
 	kind: 'book',
@@ -44,6 +44,7 @@ const TEST_PUBS = [
 	},
 ];
 
-storiesOf('Components/Collections/CollectionEditor', module).add('default', () => (
-	<CollectionEditor collection={TEST_COLLECTION} pubs={TEST_PUBS} selections={[]} />
-));
+storiesOf('containers/Dashboard/DashboardContent/Collection/CollectionEditor', module).add(
+	'default',
+	() => <CollectionEditor collection={TEST_COLLECTION} pubs={TEST_PUBS} selections={[]} />,
+);

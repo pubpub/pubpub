@@ -1,12 +1,12 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import DashboardSettings from 'components/DashboardSettings/DashboardSettings';
-import AccentStyle from 'components/AccentStyle/AccentStyle';
+import DashboardSettings from 'containers/Dashboard/DashboardContent/';
+import { AccentStyle } from 'components';
 import { accentDataDark, pubData, communityData } from 'data';
 
 require('containers/Dashboard/dashboard.scss');
 
-storiesOf('Components/DashboardSettings', module).add('default', () => (
+storiesOf('containers/Dashboard/DashboardContent/Settings', module).add('default', () => (
 	<div id="dashboard-container">
 		<AccentStyle {...accentDataDark} />
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { storiesOf } from '@storybook/react';
-import FormattingBar from 'components/FormattingBar/FormattingBar';
+import { FormattingBar } from 'components';
 import Editor from '@pubpub/editor';
 import { plainDoc, fullDoc } from 'data';
 
@@ -59,7 +59,7 @@ const wrapperStyle = {
 	flexWrap: 'wrap',
 };
 
-storiesOf('Components/FormattingBar', module).add('default', () => (
+storiesOf('components/FormattingBar', module).add('default', () => (
 	<div style={wrapperStyle}>
 		<EditorUnit
 			hideMedia={false}

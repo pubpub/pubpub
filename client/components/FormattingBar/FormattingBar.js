@@ -14,8 +14,8 @@ import {
 	PopoverInteractionKind,
 } from '@blueprintjs/core';
 import { Overlay, DropdownButton } from 'components';
-import Controls from './Controls/Controls';
-import Media from './Media/Media';
+import Controls from './Controls';
+import Media from './Media';
 
 require('./formattingBar.scss');
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 
-storiesOf('Containers/Pub', module).add('default', () => (
+storiesOf('containers/Pub', module).add('default', () => (
 	<div
 		style={{
 			padding: '50px',

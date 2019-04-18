@@ -2,7 +2,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 import ActionButton from 'containers/Pub/PubHeader/ActionButton';
 
-storiesOf('Containers/Pub/PubHeader', module).add('actionButton', () => (
+storiesOf('containers/Pub/PubHeader', module).add('actionButton', () => (
 	<div
 		style={{
 			padding: '50px',

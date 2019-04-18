@@ -11,7 +11,7 @@ const altPubData = {
 		'Are institutions, through compartmentalization, a root cause of the exploitation and reduction that spans relations from gender to ecology? A new language—and a new sense-making—to address the horrors of this exploitation.',
 };
 
-storiesOf('Containers/Pub/PubHeader', module).add('default', () => (
+storiesOf('containers/Pub/PubHeader', module).add('default', () => (
 	<div>
 		<PubHeader
 			pubData={{

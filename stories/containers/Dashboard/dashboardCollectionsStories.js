@@ -1,11 +1,11 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import DashboardCollections from 'components/DashboardCollections/DashboardCollections';
+import DashboardCollections from 'containers/Dashboard/DashboardContent/Collections';
 import { pubData, communityData } from 'data';
 
 const emptyCommunityData = { ...communityData, collections: [] };
 
-storiesOf('Components/DashboardCollections', module)
+storiesOf('containers/Dashboard/DashboardContent/Collections', module)
 	.add('default', () => (
 		<div className="pub-options-component" style={{ padding: '20px' }}>
 			<div className="right-column">

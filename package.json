@@ -27,7 +27,6 @@
 		"workers-prod": "NODE_PATH=./client:./ WORKER=true node workers/init.js"
 	},
 	"devDependencies": {
-		"@storybook/addon-options": "^5.0.6",
 		"@storybook/addon-storyshots": "^5.0.6",
 		"@storybook/addon-viewport": "^5.0.6",
 		"@storybook/react": "^5.0.6",

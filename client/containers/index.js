@@ -11,8 +11,6 @@ export { default as PasswordReset } from './PasswordReset/PasswordReset';
 export { default as Pricing } from './Pricing/Pricing';
 export { default as Privacy } from './Privacy/Privacy';
 export { default as Pub } from './Pub/Pub';
-export { default as PubOld } from './PubOld/PubOld';
-export { default as PubTest } from './PubTest/PubTest';
 export { default as Search } from './Search/Search';
 export { default as Signup } from './Signup/Signup';
 export { default as Terms } from './Terms/Terms';
