@@ -3,6 +3,7 @@ const LineDiff = require('line-diff');
 const stableStringify = require('json-stable-stringify');
 
 const { storage, pubIds } = require('./setup');
+const { matchTransformHash } = require('./v6/transformHash');
 
 const printDiffs = (warnings) => {
 	warnings.forEach(({ payload }) => {
@@ -25,7 +26,7 @@ const printDiffs = (warnings) => {
 const getStatus = () =>
 	pubIds.reduce(
 		(current, pubId) => {
-			const { ok, warning, error, unstarted } = current;
+			const { transformed, warning, error, unstarted, uploaded } = current;
 			const pubDir = storage.within(`pubs/${pubId}`);
 			if (pubDir.exists('problems.json')) {
 				const problems = JSON.parse(pubDir.read('problems.json'));
@@ -36,18 +37,22 @@ const getStatus = () =>
 					return { ...current, warning: { ...warning, [pubId]: problems } };
 				}
 			}
-			if (!pubDir.exists('transformed.json')) {
-				return { ...current, unstarted: { ...unstarted, [pubId]: true } };
+			if (pubDir.exists('transformed.json')) {
+				if (matchTransformHash(pubDir)) {
+					return { ...current, uploaded: { ...uploaded, [pubId]: true } };
+				}
+				return { ...current, transformed: { ...transformed, [pubId]: true } };
 			}
-			return { ...current, ok: { ...ok, [pubId]: true } };
+			return { ...current, unstarted: { ...unstarted, [pubId]: true } };
 		},
-		{ ok: {}, warning: {}, error: {}, unstarted: {} },
+		{ uploaded: {}, transformed: {}, warning: {}, error: {}, unstarted: {} },
 	);
 
 const main = () => {
-	const shouldPrintKinds = [process.argv.find((x) => x.startsWith('--print-kind'))]
+	const shouldPrintStatuses = [process.argv.find((x) => x.startsWith('--print-status'))]
 		.filter((x) => x)
 		.map((arg) => arg.split('=')[1].split(','))[0];
+	const shouldPrintAllStatuses = shouldPrintStatuses[0] === 'all';
 	const shouldPrintDiffs = process.argv.includes('--print-warning-diffs');
 	const shouldPrintProblems = process.argv.includes('--print-problems');
 	const shouldPrintTotals = process.argv.includes('--print-totals');
@@ -57,7 +62,7 @@ const main = () => {
 		if (shouldPrintTotals) {
 			console.log(`${key}: ${pubIdsForKey.length}`);
 		}
-		if (shouldPrintKinds && shouldPrintKinds.includes(key)) {
+		if (shouldPrintAllStatuses || (shouldPrintStatuses && shouldPrintStatuses.includes(key))) {
 			pubIdsForKey.forEach((id) => {
 				console.log(id);
 				const problems = pubInfo[id];

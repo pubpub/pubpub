@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 const { freshProblemContext, getProblemContext } = require('../problems');
-const { toFirebaseJson } = require('../util/firebaseJson');
 
 const { queryPub } = require('./queryPub');
 const transformPub = require('./transformPub');
@@ -38,7 +37,7 @@ const getAndWriteTransformedJson = (pub, pubDir, bustCache = false) => {
 		const transformed = transformPub(pub, changes).serialize();
 		pubDir.write(
 			'transformed.json',
-			toFirebaseJson({
+			JSON.stringify({
 				transformed: transformed,
 				updatedAt: Date.now(),
 			}),
@@ -48,7 +47,7 @@ const getAndWriteTransformedJson = (pub, pubDir, bustCache = false) => {
 		const { updatedAt: transformUpdatedTime } = JSON.parse(pubDir.read('transformed.json'));
 		const lastChangeToPubTime = Math.max(
 			new Date(pub.updatedAt).getTime(),
-			Math.max(changes.map((change) => change.timestamp)),
+			Math.max(...changes.map((change) => change.timestamp)),
 		);
 		if (bustCache || !transformUpdatedTime || lastChangeToPubTime > transformUpdatedTime) {
 			transformAndUpdatePub();
@@ -71,8 +70,7 @@ module.exports = async (storage, pubId, pubUpdatedTimes, { current, total }, bus
 		try {
 			getAndWriteTransformedJson(pub, pubDir, bustCache);
 		} catch (err) {
-			console.log('OOF', err);
-			// Logged by problems.js
+			console.log(err);
 		} finally {
 			const problemContext = getProblemContext();
 			if (problemContext) {
