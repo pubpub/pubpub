@@ -35,7 +35,6 @@ const latestIntermediateStateBeforeVersion = (intermediateDocStates, version) =>
 const mapVersionsToChangeIndices = (versions, intermediateDocStates) => {
 	const versionIndexMap = new Map();
 	versions.forEach((version) => {
-		console.log('VERSION ID', version.id);
 		const doc = jsonToDoc(
 			Array.isArray(version.content) ? version.content[0] : version.content,
 		);
@@ -133,15 +132,17 @@ const assertBranchPointersAreCorrect = (versionToBranchPointerMap, intermediateD
 	});
 };
 
-const transformV5Pub = (pub, changes) => {
+const transformV5Pub = (pub, changes, checkBranchPointers = false) => {
 	const intermediateDocStates = [...reconstructDocument(changes)];
 	const versionToChangeIndexMap = mapVersionsToChangeIndices(pub.versions, intermediateDocStates);
 	const pubWithBranches = buildPubWithBranches(pub, changes, versionToChangeIndexMap);
 	addDiscussions(pub, pubWithBranches);
-	// assertBranchPointersAreCorrect(
-	// 	pubWithBranches.versionToBranchPointerMap,
-	// 	intermediateDocStates,
-	// );
+	if (checkBranchPointers) {
+		assertBranchPointersAreCorrect(
+			pubWithBranches.versionToBranchPointerMap,
+			intermediateDocStates,
+		);
+	}
 	return pubWithBranches;
 };
 
