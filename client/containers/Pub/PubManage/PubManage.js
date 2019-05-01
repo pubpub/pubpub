@@ -8,6 +8,8 @@ import Attribution from './Attribution';
 import Collections from './Collections';
 import Details from './Details';
 import Delete from './Delete';
+import Managers from './Managers';
+import Branches from './Branches';
 import Doi from './Doi';
 
 require('./pubManage.scss');
@@ -18,13 +20,14 @@ const propTypes = {
 };
 
 const PubManage = (props) => {
-	const { locationData, communityData } = useContext(PageContext);
+	const { locationData, communityData, loginData } = useContext(PageContext);
 	const manageMode = locationData.params.manageMode || 'details';
 	const modes = [
 		{ text: 'Details', active: manageMode === 'details', path: '' },
+		{ text: 'Managers', active: manageMode === 'managers', path: 'managers' },
 		{ text: 'Attribution', active: manageMode === 'attribution', path: 'attribution' },
+		{ text: 'Branches', active: manageMode === 'branches', path: 'branches' },
 		{ text: 'Collections', active: manageMode === 'collections', path: 'collections' },
-		{ text: 'Sharing', active: manageMode === 'sharing', path: 'sharing' },
 		{ text: 'DOI', active: manageMode === 'doi', path: 'doi' },
 		{ text: 'Delete', active: manageMode === 'delete', path: 'delete', danger: true },
 	];
@@ -66,12 +69,27 @@ const PubManage = (props) => {
 					{manageMode === 'collections' && (
 						<Collections
 							communityData={communityData}
+							loginData={loginData}
 							pubData={props.pubData}
 							updateLocalData={props.updateLocalData}
 						/>
 					)}
 					{manageMode === 'doi' && (
 						<Doi
+							communityData={communityData}
+							pubData={props.pubData}
+							updateLocalData={props.updateLocalData}
+						/>
+					)}
+					{manageMode === 'managers' && (
+						<Managers
+							communityData={communityData}
+							pubData={props.pubData}
+							updateLocalData={props.updateLocalData}
+						/>
+					)}
+					{manageMode === 'branches' && (
+						<Branches
 							communityData={communityData}
 							pubData={props.pubData}
 							updateLocalData={props.updateLocalData}
