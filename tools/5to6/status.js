@@ -3,7 +3,6 @@ const LineDiff = require('line-diff');
 const stableStringify = require('json-stable-stringify');
 
 const { storage, pubIds } = require('./setup');
-const { matchTransformHash } = require('./v6/transformHash');
 
 const printDiffs = (warnings) => {
 	warnings.forEach(({ payload }) => {
@@ -26,7 +25,7 @@ const printDiffs = (warnings) => {
 const getStatus = () =>
 	pubIds.reduce(
 		(current, pubId) => {
-			const { transformed, warning, error, unstarted, uploaded } = current;
+			const { transformed, warning, error, unstarted } = current;
 			const pubDir = storage.within(`pubs/${pubId}`);
 			if (pubDir.exists('problems.json')) {
 				const problems = JSON.parse(pubDir.read('problems.json'));
@@ -38,14 +37,11 @@ const getStatus = () =>
 				}
 			}
 			if (pubDir.exists('transformed.json')) {
-				if (matchTransformHash(pubDir)) {
-					return { ...current, uploaded: { ...uploaded, [pubId]: true } };
-				}
 				return { ...current, transformed: { ...transformed, [pubId]: true } };
 			}
 			return { ...current, unstarted: { ...unstarted, [pubId]: true } };
 		},
-		{ uploaded: {}, transformed: {}, warning: {}, error: {}, unstarted: {} },
+		{ transformed: {}, warning: {}, error: {}, unstarted: {} },
 	);
 
 const main = () => {
