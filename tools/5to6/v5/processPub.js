@@ -3,7 +3,7 @@ const { freshProblemContext, getProblemContext, error } = require('../problems')
 
 const { queryPub } = require('./queryPub');
 const transformPub = require('./transformPub');
-const { getChangesForPub } = require('./firebasePub');
+const { getChangesForPub } = require('./changes');
 
 const getAndWritePubModelJson = async (pubDir, pubId, pubUpdatedTimes) => {
 	const queryAndUpdatePub = async () => {

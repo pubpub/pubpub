@@ -1,10 +1,12 @@
 /* eslint-disable no-console, no-restricted-syntax */
 const { docToString, jsonToDoc } = require('../util/docUtils');
-const { error } = require('../problems');
+const { error, warn } = require('../problems');
+
+const { Change } = require('./changes');
 const addDiscussions = require('./addDiscussions');
-const reconstructDocument = require('./reconstructDocument');
 const Branch = require('./branch');
 const PubWithBranches = require('./pubWithBranches');
+const { IntermediateDocState, reconstructDocument } = require('./reconstructDocument');
 
 function BranchPointer(branch, v5ChangeIndex, v6MergeIndex) {
 	this.branch = branch;
@@ -25,39 +27,110 @@ const latestIntermediateStateBeforeVersion = (intermediateDocStates, version) =>
 	return null;
 };
 
+const splitIntermediateDocStates = (states, targetState, targetDoc) => {
+	const nextStates = [];
+	const passedTargetState = false;
+	const resultingState = null;
+	for (const state of states) {
+		const { change } = state;
+		if (state === targetState && change.steps) {
+			const stepSplit = change.steps.reduce(
+				(reduceState, nextStep) => {
+					const { firstSteps, secondSteps, seenTarget } = reduceState;
+					if (seenTarget) {
+						return { ...reduceState, secondSteps: [...secondSteps, nextStep] };
+					}
+					const isTargetStep = state.docsWithinChange.get(nextStep) === targetDoc;
+					return {
+						...reduceState,
+						firstSteps: [...firstSteps, nextStep],
+						seenTarget: isTargetStep,
+					};
+				},
+				{ firstSteps: [], secondSteps: [], seenTarget: false },
+			);
+			const { firstSteps, secondSteps } = stepSplit;
+			if (states.docsWithinChange.get(firstSteps[firstSteps.length - 1]) !== targetDoc) {
+				throw error(
+					"Assertion failed while splitting IDS: final step doesn't match target doc",
+				);
+			}
+			const changes = [
+				new Change(firstSteps, change.clientId, change.timestamp),
+				new Change(secondSteps, change.clientId, change.timestamp),
+			];
+			const resultingStates = reconstructDocument(changes, nextStates[nextStates.length - 1]);
+			if (resultingStates.length !== 2) {
+				throw error(
+					'Assertion failed while splitting IDS: wrong number of resulting states',
+				);
+			}
+			nextStates.push(...resultingStates);
+		} else if (passedTargetState) {
+			state.index += 1;
+			nextStates.push(
+				new IntermediateDocState(
+					state.doc,
+					state.change,
+					state.index + 1,
+					state.docsWithinChange,
+				),
+			);
+		} else {
+			nextStates.push(state);
+		}
+	}
+	return { nextStates: nextStates, resultingState: resultingState };
+};
+
 const mapVersionsToChangeIndices = (versions, intermediateDocStates) => {
 	const versionIndexMap = new Map();
 	versions.forEach((version) => {
-		const doc = jsonToDoc(
+		const versionDoc = jsonToDoc(
 			Array.isArray(version.content) ? version.content[0] : version.content,
 		);
-		const docAsString = docToString(doc);
+		const versionDocAsString = docToString(versionDoc);
 		console.log('Checking version id', version.id);
 		const likelyMatch = latestIntermediateStateBeforeVersion(intermediateDocStates, version);
 		const match = [likelyMatch]
 			.filter((x) => x)
 			.concat(intermediateDocStates)
-			.find((s) => docToString(s.doc) === docAsString);
+			.find((s) => docToString(s.doc) === versionDocAsString);
 		if (match) {
 			versionIndexMap.set(version, match.index);
 		} else {
-			const matchWithinChange = intermediateDocStates.find((ids) =>
-				ids.docsWithinChange.find(
-					(docWithinChange) => docToString(docWithinChange) === docAsString,
-				),
-			);
+			const matchWithinChange = intermediateDocStates
+				.map((state) => {
+					const docsWithinChange = [...state.docsWithinChange.values()];
+					const matchingDocWithinChange = docsWithinChange.find(
+						(docWithinChange) => docToString(docWithinChange) === versionDocAsString,
+					);
+					if (matchingDocWithinChange) {
+						return { doc: matchingDocWithinChange, state: state };
+					}
+					return null;
+				})
+				.filter((x) => x)[0];
 			if (matchWithinChange) {
-				error(`Version ${version.id} corresponds to an intra-change step.`);
+				const splitResult = splitIntermediateDocStates(
+					intermediateDocStates,
+					matchWithinChange.state,
+					matchWithinChange.doc,
+				);
+				// eslint-disable-next-line no-param-reassign
+				intermediateDocStates = splitResult.nextStates;
+				versionIndexMap.set(version, splitResult.resultingState.index);
+				warn(`Split state at {splitResult.nextState.index} into two new states`);
 			} else {
 				error(`Version ${version.id} has no corresponding intermediate doc state.`, {
 					isDiff: true,
 					closest: likelyMatch ? likelyMatch.doc.toJSON() : '',
-					actual: doc.toJSON(),
+					actual: versionDoc.toJSON(),
 				});
 			}
 		}
 	});
-	return versionIndexMap;
+	return { versionIndexMap: versionIndexMap, intermediateDocStates: intermediateDocStates };
 };
 
 const serializePubVersionPermissions = (pub, versionId) => {
@@ -126,8 +199,10 @@ const assertBranchPointersAreCorrect = (versionToBranchPointerMap, intermediateD
 };
 
 const transformV5Pub = (pub, changes, checkBranchPointers = false) => {
-	const intermediateDocStates = [...reconstructDocument(changes)];
-	const versionToChangeIndexMap = mapVersionsToChangeIndices(pub.versions, intermediateDocStates);
+	let intermediateDocStates = [...reconstructDocument(changes)];
+	const mapResult = mapVersionsToChangeIndices(pub.versions, intermediateDocStates);
+	const versionToChangeIndexMap = mapResult.versionIndexMap;
+	intermediateDocStates = mapResult.intermediateDocStates;
 	const pubWithBranches = buildPubWithBranches(pub, changes, versionToChangeIndexMap);
 	addDiscussions(pub, pubWithBranches);
 	if (checkBranchPointers) {
