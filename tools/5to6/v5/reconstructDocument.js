@@ -16,7 +16,7 @@ function IntermediateDocState(doc, change, index, docsWithinChange) {
 	this.docsWithinChange = docsWithinChange;
 }
 
-const newDoc = () =>
+const newDocument = () =>
 	editorSchema.nodeFromJSON({
 		type: 'doc',
 		attrs: { meta: {} },
@@ -24,7 +24,7 @@ const newDoc = () =>
 	});
 
 const reconstructDocument = function*(changes, startingState) {
-	let state = startingState || { index: -1, doc: newDoc() };
+	let state = startingState || { index: -1, doc: newDocument() };
 	for (const change of changes) {
 		let docWithinChange = state.doc;
 		const docsWithinChange = new Map();
@@ -54,4 +54,5 @@ const reconstructDocument = function*(changes, startingState) {
 module.exports = {
 	reconstructDocument: reconstructDocument,
 	IntermediateDocState: IntermediateDocState,
+	newDocument: newDocument,
 };

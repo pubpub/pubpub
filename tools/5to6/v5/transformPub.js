@@ -6,7 +6,7 @@ const { Change } = require('./changes');
 const addDiscussions = require('./addDiscussions');
 const Branch = require('./branch');
 const PubWithBranches = require('./pubWithBranches');
-const { IntermediateDocState, reconstructDocument } = require('./reconstructDocument');
+const { IntermediateDocState, reconstructDocument, newDocument } = require('./reconstructDocument');
 
 function BranchPointer(branch, v5ChangeIndex, v6MergeIndex) {
 	this.branch = branch;
@@ -86,11 +86,16 @@ const splitIntermediateDocStates = (states, targetState, targetDoc) => {
 const mapVersionsToChangeIndices = (versions, intermediateDocStates) => {
 	const versionIndexMap = new Map();
 	versions.forEach((version) => {
+		console.log('Checking version id', version.id);
 		const versionDoc = jsonToDoc(
 			Array.isArray(version.content) ? version.content[0] : version.content,
 		);
 		const versionDocAsString = docToString(versionDoc);
-		console.log('Checking version id', version.id);
+		if (versionDocAsString === docToString(newDocument())) {
+			warn(`version id ${version.id} corresponds to the empty document`);
+			versionIndexMap.set(version, 0);
+			return;
+		}
 		const likelyMatch = latestIntermediateStateBeforeVersion(intermediateDocStates, version);
 		const match = [likelyMatch]
 			.filter((x) => x)

@@ -49,6 +49,9 @@ const main = () => {
 	const shouldPrintStatuses = [process.argv.find((x) => x.startsWith('--print-status'))]
 		.filter((x) => x)
 		.map((arg) => arg.split('=')[1].split(','))[0];
+	const filterMessage = [process.argv.find((x) => x.startsWith('--filter-message'))]
+		.filter((x) => x)
+		.map((arg) => arg.split('=')[1])[0];
 	const shouldPrintAllStatuses = shouldPrintStatuses && shouldPrintStatuses[0] === 'all';
 	const shouldPrintDiffs = process.argv.includes('--print-diffs');
 	const shouldPrintProblems = process.argv.includes('--print-problems');
@@ -61,8 +64,23 @@ const main = () => {
 		}
 		if (shouldPrintAllStatuses || (shouldPrintStatuses && shouldPrintStatuses.includes(key))) {
 			pubIdsForKey.forEach((id) => {
-				console.log(id);
 				const problems = pubInfo[id];
+				if (filterMessage) {
+					if (problems) {
+						if (
+							![...problems.warnings, ...problems.errors].some((problem) => {
+								const message =
+									problem.message || (typeof problem === 'string' ? problem : '');
+								return message.toLowerCase().includes(filterMessage.toLowerCase());
+							})
+						) {
+							return;
+						}
+					} else {
+						return;
+					}
+				}
+				console.log(id);
 				if (shouldPrintProblems) {
 					console.log(
 						JSON.stringify(
