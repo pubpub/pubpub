@@ -1,22 +1,23 @@
 /* eslint-disable no-console */
-const LineDiff = require('line-diff');
+const diff = require('diff');
+const chalk = require('chalk');
 const stableStringify = require('json-stable-stringify');
 
 const { storage, pubIds } = require('./setup');
 
-const printDiffs = (warnings) => {
-	warnings.forEach(({ payload }) => {
+const printDiffs = (errors) => {
+	errors.forEach(({ payload }) => {
 		if (payload && payload.isDiff) {
 			const { closest, actual } = payload;
-			const closestString = stableStringify(closest, { space: '  ' });
-			const actualString = stableStringify(actual, { space: '  ' });
-			console.log(
-				new LineDiff(closestString, actualString)
-					.toString()
-					.split('\n')
-					.filter((line) => line.trim().startsWith('+') || line.trim().startsWith('-'))
-					.join('\n'),
-			);
+			const closestString = stableStringify(closest, { space: ' ' });
+			const actualString = stableStringify(actual, { space: ' ' });
+			diff.diffTrimmedLines(closestString, actualString).forEach((part) => {
+				if (part.added) {
+					console.log(chalk.green(part.value));
+				} else if (part.removed) {
+					console.log(chalk.red(part.value));
+				}
+			});
 			console.log('\n');
 		}
 	});
@@ -48,8 +49,8 @@ const main = () => {
 	const shouldPrintStatuses = [process.argv.find((x) => x.startsWith('--print-status'))]
 		.filter((x) => x)
 		.map((arg) => arg.split('=')[1].split(','))[0];
-	const shouldPrintAllStatuses = shouldPrintStatuses[0] === 'all';
-	const shouldPrintDiffs = process.argv.includes('--print-warning-diffs');
+	const shouldPrintAllStatuses = shouldPrintStatuses && shouldPrintStatuses[0] === 'all';
+	const shouldPrintDiffs = process.argv.includes('--print-diffs');
 	const shouldPrintProblems = process.argv.includes('--print-problems');
 	const shouldPrintTotals = process.argv.includes('--print-totals');
 	const status = getStatus();
@@ -63,10 +64,30 @@ const main = () => {
 				console.log(id);
 				const problems = pubInfo[id];
 				if (shouldPrintProblems) {
-					console.log(JSON.stringify(problems));
+					console.log(
+						JSON.stringify(
+							{
+								...problems,
+								errors: problems.errors.map((error) => {
+									if (typeof error === 'string') {
+										return error;
+									}
+									return {
+										...error,
+										payload:
+											error.payload && error.payload.isDiff
+												? '[Hiding large diff payload]'
+												: error.payload,
+									};
+								}),
+							},
+							null,
+							2,
+						),
+					);
 				}
 				if (shouldPrintDiffs) {
-					printDiffs(problems.warnings);
+					printDiffs(problems.errors);
 				}
 			});
 		}

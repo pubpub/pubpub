@@ -1,3 +1,10 @@
+class ProblemError extends Error {
+	constructor(err) {
+		super(err);
+		this.isLoggedProblem = true;
+	}
+}
+
 const makeProblemContext = () => {
 	return {
 		warnings: [],
@@ -26,7 +33,7 @@ const warn = (message, payload) => {
 const error = (message, payload) => {
 	console.error('ERROR', message);
 	problemContext.errors.push(payload ? { message: message, payload: payload } : message);
-	return new Error(message);
+	return new ProblemError(message);
 };
 
 module.exports = {

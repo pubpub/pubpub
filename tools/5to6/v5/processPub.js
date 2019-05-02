@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
-const { freshProblemContext, getProblemContext } = require('../problems');
+const { freshProblemContext, getProblemContext, error } = require('../problems');
 
 const { queryPub } = require('./queryPub');
 const transformPub = require('./transformPub');
-const getChangesForPub = require('./getChangesForPub');
+const { getChangesForPub } = require('./firebasePub');
 
 const getAndWritePubModelJson = async (pubDir, pubId, pubUpdatedTimes) => {
 	const queryAndUpdatePub = async () => {
@@ -70,7 +70,9 @@ module.exports = async (storage, pubId, pubUpdatedTimes, { current, total }, bus
 		try {
 			getAndWriteTransformedJson(pub, pubDir, bustCache);
 		} catch (err) {
-			console.log(err);
+			if (!err.isLoggedProblem) {
+				error(err);
+			}
 		} finally {
 			const problemContext = getProblemContext();
 			if (problemContext) {

@@ -14,15 +14,22 @@ const blacklist = [
 const main = async () => {
 	const pipedPubIds = await getPipedPubIds();
 	const pubUpdatedAtTimes = await queryPubUpdatedTimes();
+	const bustCache = process.argv.find((a) => a.startsWith('--bust-cache'));
 	pipedPubIds
 		.filter((pubId) => !blacklist.includes(pubId))
 		.reduce(
 			(promise, pubId, index, arr) =>
 				promise.then(() =>
-					processPub(storage, pubId, pubUpdatedAtTimes, {
-						current: index + 1,
-						total: arr.length,
-					}),
+					processPub(
+						storage,
+						pubId,
+						pubUpdatedAtTimes,
+						{
+							current: index + 1,
+							total: arr.length,
+						},
+						bustCache,
+					),
 				),
 			Promise.resolve(),
 		);

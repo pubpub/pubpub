@@ -1,5 +1,5 @@
 /* eslint-disable no-console, no-restricted-syntax */
-const { compressChange } = require('./change');
+const { compressChange } = require('./firebasePub');
 const getIntermediateDocStates = require('./reconstructDocument');
 
 const stringMapToObj = (strMap, processValue) => {

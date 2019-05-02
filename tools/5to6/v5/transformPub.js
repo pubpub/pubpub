@@ -1,17 +1,10 @@
 /* eslint-disable no-console, no-restricted-syntax */
-const { Node } = require('prosemirror-model');
-const stableStringify = require('json-stable-stringify');
-
-const { warn, error } = require('../problems');
-const editorSchema = require('../util/editorSchema');
-
+const { docToString, jsonToDoc } = require('../util/docUtils');
+const { error } = require('../problems');
 const addDiscussions = require('./addDiscussions');
 const reconstructDocument = require('./reconstructDocument');
 const Branch = require('./branch');
 const PubWithBranches = require('./pubWithBranches');
-
-const jsonToDoc = (json) => Node.fromJSON(editorSchema, json);
-const docToString = (doc) => stableStringify(doc.toJSON());
 
 function BranchPointer(branch, v5ChangeIndex, v6MergeIndex) {
 	this.branch = branch;
@@ -54,9 +47,9 @@ const mapVersionsToChangeIndices = (versions, intermediateDocStates) => {
 				),
 			);
 			if (matchWithinChange) {
-				warn(`Version ${version.id} corresponds to an intra-change step.`);
+				error(`Version ${version.id} corresponds to an intra-change step.`);
 			} else {
-				warn(`Version ${version.id} has no corresponding intermediate doc state.`, {
+				error(`Version ${version.id} has no corresponding intermediate doc state.`, {
 					isDiff: true,
 					closest: likelyMatch ? likelyMatch.doc.toJSON() : '',
 					actual: doc.toJSON(),

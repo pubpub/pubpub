@@ -1,5 +1,6 @@
 /* eslint-disable no-console, no-restricted-syntax, no-continue */
 const { error, warn } = require('../problems');
+const prosemirrorBisect = require('../util/prosemirrorBisect');
 
 const makeDiscussionEntry = (key, from, to) => ({
 	currentKey: key,
@@ -13,44 +14,71 @@ const makeDiscussionEntry = (key, from, to) => ({
 	},
 });
 
+const searchBranch = (branch, criterion) => {
+	for (const entry of branch.getIntermediateDocStates(null, true)) {
+		const test = criterion(entry);
+		if (test) {
+			return test;
+		}
+	}
+	return null;
+};
+
 const addDiscussionToBranch = (discussion, { branch, targetIndex }) => {
 	const { highlights } = discussion;
-	console.log('Processing discussion', discussion.id);
+	console.log('Checking discussion', discussion.id, 'against branch', branch.name);
 	if (highlights) {
 		const [highlight] = highlights;
-		let matchingEntry;
-		for (const entry of branch.getIntermediateDocStates(null, true)) {
-			const [indexInBranch, state] = entry;
+		const exactMatch = searchBranch(branch, (entry) => {
+			const [indexInBranch, { doc }] = entry;
 			if (targetIndex !== undefined && indexInBranch !== targetIndex) {
-				continue;
+				return null;
 			}
-			const { doc } = state;
-			try {
-				const highlightText = doc.textBetween(highlight.from, highlight.to);
-				if (highlightText === highlight.exact) {
-					matchingEntry = entry;
-					break;
+			const highlightText = doc.textBetween(highlight.from, highlight.to);
+			if (highlightText === highlight.exact) {
+				return { entry: entry, highlight: highlight };
+			}
+			return null;
+		});
+		const bestMatch =
+			exactMatch ||
+			searchBranch(branch, (entry) => {
+				const { doc } = entry[1];
+				if (doc.textContent.includes(highlight.exact)) {
+					const bounds = prosemirrorBisect(doc, highlight.exact);
+					if (bounds) {
+						warn(
+							`Making a best guess at highlight for discussion ${
+								discussion.id
+							} on branch ${branch.name}`,
+						);
+						return {
+							entry: entry,
+							highlight: { from: bounds.left, to: bounds.right },
+						};
+					}
 				}
-			} catch (_) {
-				continue;
-			}
-		}
-		if (matchingEntry) {
-			const [matchingIndex] = matchingEntry;
+				return null;
+			});
+		if (bestMatch) {
+			const {
+				entry: [bestIndex],
+				highlight: bestHighlight,
+			} = bestMatch;
 			branch.addDiscussion(
 				discussion.id,
-				makeDiscussionEntry(matchingIndex, highlight.from, highlight.to),
+				makeDiscussionEntry(bestIndex, bestHighlight.from, bestHighlight.to),
 			);
-		} else {
-			warn('Unable to map discussion to intermediate document');
+			return true;
 		}
-	} else {
-		branch.addDiscussion(discussion.id, makeDiscussionEntry(targetIndex || 1, null, null));
+		return false;
 	}
+	branch.addDiscussion(discussion.id, makeDiscussionEntry(targetIndex || 1, null, null));
+	return true;
 };
 
 const getCandidateBranchesForDiscussion = (pub, pubWithBranches, discussion) => {
-	const versionId =
+	const targetVersionId =
 		discussion.content &&
 		discussion.content.content &&
 		discussion.content.content.reduce((foundVersionId, contentItem) => {
@@ -62,9 +90,9 @@ const getCandidateBranchesForDiscussion = (pub, pubWithBranches, discussion) => 
 			}
 			return null;
 		}, null);
-	const version = pub.versions.find((v) => v.id === versionId);
-	if (version) {
-		const branchPointer = pubWithBranches.versionToBranchPointerMap.get(version);
+	const targetVersion = pub.versions.find((v) => v.id === targetVersionId);
+	if (targetVersion) {
+		const branchPointer = pubWithBranches.versionToBranchPointerMap.get(targetVersion);
 		return [
 			{
 				branch: branchPointer.branch,
@@ -96,14 +124,10 @@ module.exports = (pub, pubWithBranches, logAttempts = false) => {
 		const candidates = getCandidateBranchesForDiscussion(pub, pubWithBranches, discussion);
 		if (candidates.length) {
 			const succeeded = candidates.reduce((success, candidate) => {
-				if (success) return success;
-				let successHere;
-				try {
-					addDiscussionToBranch(discussion, candidate);
-					successHere = true;
-				} catch (_) {
-					successHere = false;
+				if (success) {
+					return true;
 				}
+				const successHere = addDiscussionToBranch(discussion, candidate);
 				if (logAttempts) {
 					logAttachAttempt(discussion, candidate, successHere);
 				}

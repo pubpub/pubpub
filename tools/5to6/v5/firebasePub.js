@@ -2,6 +2,7 @@
 const { Step } = require('prosemirror-transform');
 const { compressStepJSON, uncompressStepJSON } = require('prosemirror-compress-pubpub');
 
+const { fromFirebaseJson } = require('../util/firebaseJson');
 const editorSchema = require('../util/editorSchema');
 
 function Change(steps, clientId, timestamp) {
@@ -27,8 +28,23 @@ const compressChange = (change) => {
 	};
 };
 
+const getChangesForPub = (pubDir) => {
+	const { changes } = fromFirebaseJson(pubDir.read('firebase-v5.json').toString());
+	return (
+		(changes &&
+			Object.values(changes).reduce((changesArr, compressedChange) => {
+				if (compressedChange) {
+					return [...changesArr, uncompressChange(compressedChange)];
+				}
+				return changesArr;
+			}, [])) ||
+		[]
+	);
+};
+
 module.exports = {
 	uncompressChange: uncompressChange,
 	compressChange: compressChange,
+	getChangesForPub: getChangesForPub,
 	Change: Change,
 };
