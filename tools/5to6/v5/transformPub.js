@@ -2,11 +2,16 @@
 const { docToString, jsonToDoc } = require('../util/docUtils');
 const { error, warn } = require('../problems');
 
-const { Change } = require('./changes');
+const { Change, createReplaceWholeDocumentChange } = require('./changes');
 const addDiscussions = require('./addDiscussions');
 const Branch = require('./branch');
 const PubWithBranches = require('./pubWithBranches');
-const { IntermediateDocState, reconstructDocument, newDocument } = require('./reconstructDocument');
+const {
+	IntermediateDocState,
+	reconstructDocument,
+	reconstructDocumentWithCheckpointFallback,
+	newDocument,
+} = require('./reconstructDocument');
 
 function BranchPointer(branch, v5ChangeIndex, v6MergeIndex) {
 	this.branch = branch;
@@ -30,7 +35,7 @@ const latestIntermediateStateBeforeVersion = (intermediateDocStates, version) =>
 const splitIntermediateDocStates = (states, targetState, targetDoc) => {
 	const nextStates = [];
 	const passedTargetState = false;
-	const resultingState = null;
+	let newlyCreatedState = null;
 	for (const state of states) {
 		const { change } = state;
 		if (state === targetState && change.steps) {
@@ -50,7 +55,7 @@ const splitIntermediateDocStates = (states, targetState, targetDoc) => {
 				{ firstSteps: [], secondSteps: [], seenTarget: false },
 			);
 			const { firstSteps, secondSteps } = stepSplit;
-			if (states.docsWithinChange.get(firstSteps[firstSteps.length - 1]) !== targetDoc) {
+			if (state.docsWithinChange.get(firstSteps[firstSteps.length - 1]) !== targetDoc) {
 				throw error(
 					"Assertion failed while splitting IDS: final step doesn't match target doc",
 				);
@@ -59,13 +64,21 @@ const splitIntermediateDocStates = (states, targetState, targetDoc) => {
 				new Change(firstSteps, change.clientId, change.timestamp),
 				new Change(secondSteps, change.clientId, change.timestamp),
 			];
-			const resultingStates = reconstructDocument(changes, nextStates[nextStates.length - 1]);
+			const resultingStates = [
+				...reconstructDocument(changes, nextStates[nextStates.length - 1]),
+			];
 			if (resultingStates.length !== 2) {
 				throw error(
 					'Assertion failed while splitting IDS: wrong number of resulting states',
 				);
 			}
+			if (docToString(resultingStates[0].doc) !== docToString(targetDoc)) {
+				throw error(
+					"Assertion failed while splitting IDS: first IDS doc doesn't match target doc",
+				);
+			}
 			nextStates.push(...resultingStates);
+			newlyCreatedState = resultingStates[0];
 		} else if (passedTargetState) {
 			state.index += 1;
 			nextStates.push(
@@ -80,19 +93,23 @@ const splitIntermediateDocStates = (states, targetState, targetDoc) => {
 			nextStates.push(state);
 		}
 	}
-	return { nextStates: nextStates, resultingState: resultingState };
+	return { nextStates: nextStates, newlyCreatedState: newlyCreatedState };
 };
 
 const mapVersionsToChangeIndices = (versions, intermediateDocStates) => {
 	const versionIndexMap = new Map();
+	const orphanedVersions = [];
 	versions.forEach((version) => {
 		console.log('Checking version id', version.id);
-		const versionDoc = jsonToDoc(
-			Array.isArray(version.content) ? version.content[0] : version.content,
-		);
+		const extractedVersion = Array.isArray(version.content)
+			? version.content[0]
+			: version.content;
+		const extractedSomeMoreVersion =
+			extractedVersion.type === 'doc' ? extractedVersion : extractedVersion.content;
+		const versionDoc = jsonToDoc(extractedSomeMoreVersion);
 		const versionDocAsString = docToString(versionDoc);
-		if (versionDocAsString === docToString(newDocument())) {
-			warn(`version id ${version.id} corresponds to the empty document`);
+		if (versionDoc.content.childCount === 1 && versionDoc.content.child(0).content.size === 0) {
+			warn(`version id ${version.id} is empty`);
 			versionIndexMap.set(version, 0);
 			return;
 		}
@@ -124,16 +141,33 @@ const mapVersionsToChangeIndices = (versions, intermediateDocStates) => {
 				);
 				// eslint-disable-next-line no-param-reassign
 				intermediateDocStates = splitResult.nextStates;
-				versionIndexMap.set(version, splitResult.resultingState.index);
-				warn(`Split state at {splitResult.nextState.index} into two new states`);
+				versionIndexMap.set(version, splitResult.newlyCreatedState.index);
+				warn(`Split state at ${splitResult.newlyCreatedState.index} into two new states`);
 			} else {
-				error(`Version ${version.id} has no corresponding intermediate doc state.`, {
-					isDiff: true,
-					closest: likelyMatch ? likelyMatch.doc.toJSON() : '',
-					actual: versionDoc.toJSON(),
-				});
+				orphanedVersions.push({ version: version, versionDoc: versionDoc });
 			}
 		}
+	});
+	orphanedVersions.forEach(({ version, versionDoc }) => {
+		const mostRecentState = intermediateDocStates[intermediateDocStates.length - 1];
+		const { value: nextState } = reconstructDocument(
+			[
+				createReplaceWholeDocumentChange(
+					mostRecentState ? mostRecentState.doc : newDocument(),
+					versionDoc,
+					true,
+				),
+			],
+			mostRecentState,
+		).next();
+		versionIndexMap.set(version, nextState.index);
+		warn(
+			`creating ReplaceStep at index ${nextState.index} to accomodate orphan version ${
+				version.id
+			}`,
+		);
+		// eslint-disable-next-line no-param-reassign
+		intermediateDocStates = [...intermediateDocStates, nextState];
 	});
 	return { versionIndexMap: versionIndexMap, intermediateDocStates: intermediateDocStates };
 };
@@ -158,7 +192,10 @@ const buildPubWithBranches = (pub, changes, versionToChangeIndex) => {
 	const versionToBranchPointerMap = new Map();
 	// First, add a draft branch
 	const draftBranch = new Branch('draft');
-	changes.forEach((change) => draftBranch.addChange(change));
+	const nonOrphanedChanges = changes.filter((change) => !change.isOrphanedVersionChange);
+	(nonOrphanedChanges.length > 0 ? nonOrphanedChanges : changes).forEach((change) =>
+		draftBranch.addChange(change),
+	);
 	// Now create a new branch for every combination of permissions we see
 	Array.from(versionToChangeIndex.entries())
 		.sort((a, b) => a[1] - b[1])
@@ -203,11 +240,13 @@ const assertBranchPointersAreCorrect = (versionToBranchPointerMap, intermediateD
 	});
 };
 
-const transformV5Pub = (pub, changes, checkBranchPointers = false) => {
-	let intermediateDocStates = [...reconstructDocument(changes)];
+const transformV5Pub = (pub, { changes, checkpoint }, checkBranchPointers = true) => {
+	let intermediateDocStates = reconstructDocumentWithCheckpointFallback(changes, checkpoint);
 	const mapResult = mapVersionsToChangeIndices(pub.versions, intermediateDocStates);
 	const versionToChangeIndexMap = mapResult.versionIndexMap;
 	intermediateDocStates = mapResult.intermediateDocStates;
+	// eslint-disable-next-line no-param-reassign
+	changes = intermediateDocStates.map((state) => state.change);
 	const pubWithBranches = buildPubWithBranches(pub, changes, versionToChangeIndexMap);
 	addDiscussions(pub, pubWithBranches);
 	if (checkBranchPointers) {

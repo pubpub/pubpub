@@ -33,7 +33,7 @@ const warn = (message, payload) => {
 const error = (message, payload) => {
 	console.error('ERROR', message);
 	problemContext.errors.push(payload ? { message: message, payload: payload } : message);
-	return new ProblemError(message);
+	return new ProblemError(message.toString());
 };
 
 module.exports = {

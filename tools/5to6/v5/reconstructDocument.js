@@ -1,6 +1,11 @@
 /* eslint-disable no-restricted-syntax, no-loop-func */
-const { error } = require('../problems');
+const { uncompressStateJSON } = require('prosemirror-compress-pubpub');
+const { Transform } = require('prosemirror-transform');
+
+const { warn } = require('../problems');
 const editorSchema = require('../util/editorSchema');
+const { jsonToDoc, docToString } = require('../util/docUtils');
+const { createReplaceWholeDocumentChange } = require('./changes');
 
 /**
  * A container representing an intermediate state in reconstructing a doc from its changes
@@ -29,16 +34,12 @@ const reconstructDocument = function*(changes, startingState) {
 		let docWithinChange = state.doc;
 		const docsWithinChange = new Map();
 		for (const step of change.steps || []) {
-			try {
-				const { doc: nextDoc, failed } = step.apply(docWithinChange);
-				if (failed) {
-					throw new Error(failed);
-				} else {
-					docsWithinChange.set(step, nextDoc);
-					docWithinChange = nextDoc;
-				}
-			} catch (err) {
-				throw error(err.toString(), { changeIndex: state.index + 1, step: step });
+			const { doc: nextDoc, failed } = step.apply(docWithinChange);
+			if (failed) {
+				throw new Error(`${failed} at ${state.index}`);
+			} else {
+				docsWithinChange.set(step, nextDoc);
+				docWithinChange = nextDoc;
 			}
 		}
 		state = new IntermediateDocState(
@@ -51,8 +52,31 @@ const reconstructDocument = function*(changes, startingState) {
 	}
 };
 
+const reconstructDocumentWithCheckpointFallback = (changes, checkpoint) => {
+	try {
+		return [...reconstructDocument(changes)];
+	} catch (err) {
+		warn(`Full document reconstruction failed: ${err}. Falling back to checkpoint`);
+		const { k: checkpointKey } = checkpoint;
+		const checkpointDoc = jsonToDoc(uncompressStateJSON(checkpoint).doc);
+		const changesAfterCheckpoint = changes.slice(parseInt(checkpointKey, 10));
+		try {
+			return [
+				...reconstructDocument([
+					createReplaceWholeDocumentChange(newDocument(), checkpointDoc),
+					...changesAfterCheckpoint,
+				]),
+			];
+		} catch (e) {
+			warn(`Reconstruction from checkpoint failed: ${err}. The pub will have no history.`);
+			return [];
+		}
+	}
+};
+
 module.exports = {
-	reconstructDocument: reconstructDocument,
 	IntermediateDocState: IntermediateDocState,
 	newDocument: newDocument,
+	reconstructDocument: reconstructDocument,
+	reconstructDocumentWithCheckpointFallback: reconstructDocumentWithCheckpointFallback,
 };

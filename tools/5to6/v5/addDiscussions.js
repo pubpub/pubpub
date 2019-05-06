@@ -34,11 +34,16 @@ const addDiscussionToBranch = (discussion, { branch, targetIndex }) => {
 			if (targetIndex !== undefined && indexInBranch !== targetIndex) {
 				return null;
 			}
-			const highlightText = doc.textBetween(highlight.from, highlight.to);
-			if (highlightText === highlight.exact) {
-				return { entry: entry, highlight: highlight };
+			try {
+				const highlightText = doc.textBetween(highlight.from, highlight.to);
+				if (highlightText === highlight.exact) {
+					return { entry: entry, highlight: highlight };
+				}
+				return null;
+			} catch (e) {
+				warn(`highlight may be invalid`, highlight);
+				return null;
 			}
-			return null;
 		});
 		const bestMatch =
 			exactMatch ||

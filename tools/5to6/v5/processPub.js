@@ -3,7 +3,7 @@ const { freshProblemContext, getProblemContext, error } = require('../problems')
 
 const { queryPub } = require('./queryPub');
 const transformPub = require('./transformPub');
-const { getChangesForPub } = require('./changes');
+const { getChangesAndCheckpointForPub } = require('./changes');
 
 const getAndWritePubModelJson = async (pubDir, pubId, pubUpdatedTimes) => {
 	const queryAndUpdatePub = async () => {
@@ -32,9 +32,12 @@ const getAndWritePubModelJson = async (pubDir, pubId, pubUpdatedTimes) => {
 };
 
 const getAndWriteTransformedJson = (pub, pubDir, bustCache = false) => {
-	const changes = getChangesForPub(pubDir);
+	const { changes, checkpoint } = getChangesAndCheckpointForPub(pubDir);
 	const transformAndUpdatePub = () => {
-		const transformed = transformPub(pub, changes).serialize();
+		const transformed = transformPub(pub, {
+			changes: changes,
+			checkpoint: checkpoint,
+		}).serialize();
 		pubDir.write(
 			'transformed.json',
 			JSON.stringify({
@@ -47,7 +50,7 @@ const getAndWriteTransformedJson = (pub, pubDir, bustCache = false) => {
 		const { updatedAt: transformUpdatedTime } = JSON.parse(pubDir.read('transformed.json'));
 		const lastChangeToPubTime = Math.max(
 			new Date(pub.updatedAt).getTime(),
-			Math.max(...changes.map((change) => change.timestamp)),
+			changes.reduce((max, change) => Math.max(max, change), 0),
 		);
 		if (bustCache || !transformUpdatedTime || lastChangeToPubTime > transformUpdatedTime) {
 			transformAndUpdatePub();

@@ -1,14 +1,18 @@
 /* eslint-disable no-console, no-restricted-syntax */
-const { Step } = require('prosemirror-transform');
+const { Step, ReplaceStep } = require('prosemirror-transform');
+const { Slice } = require('prosemirror-model');
 const { compressStepJSON, uncompressStepJSON } = require('prosemirror-compress-pubpub');
 
 const { fromFirebaseJson } = require('../util/firebaseJson');
 const editorSchema = require('../util/editorSchema');
 
-function Change(steps, clientId, timestamp) {
+const PUBPUB_CLIENT_ID = 'clientId-b242f616-7aaa-479c-8ee5-3933dcf70859-migr8';
+
+function Change(steps, clientId, timestamp, isOrphanedVersionChange) {
 	this.steps = steps;
 	this.clientId = clientId;
 	this.timestamp = timestamp;
+	this.isOrphanedVersionChange = isOrphanedVersionChange;
 }
 
 const uncompressChange = (compressedChange) => {
@@ -28,23 +32,32 @@ const compressChange = (change) => {
 	};
 };
 
-const getChangesForPub = (pubDir) => {
-	const { changes } = fromFirebaseJson(pubDir.read('firebase-v5.json').toString());
-	return (
-		(changes &&
-			Object.values(changes).reduce((changesArr, compressedChange) => {
-				if (compressedChange) {
-					return [...changesArr, uncompressChange(compressedChange)];
-				}
-				return changesArr;
-			}, [])) ||
-		[]
-	);
+const getChangesAndCheckpointForPub = (pubDir) => {
+	const { changes, checkpoint } = fromFirebaseJson(pubDir.read('firebase-v5.json').toString());
+	return {
+		checkpoint: checkpoint,
+		changes:
+			(changes &&
+				Object.values(changes).reduce((changesArr, compressedChange) => {
+					if (compressedChange) {
+						return [...changesArr, uncompressChange(compressedChange)];
+					}
+					return changesArr;
+				}, [])) ||
+			[],
+	};
+};
+
+const createReplaceWholeDocumentChange = (startDocument, endDocument, isOrphanedVersionChange) => {
+	const replaceSlice = new Slice(endDocument.content, 0, 0);
+	const replaceStep = new ReplaceStep(0, startDocument.nodeSize - 2, replaceSlice);
+	return new Change([replaceStep], PUBPUB_CLIENT_ID, Date.now(), isOrphanedVersionChange);
 };
 
 module.exports = {
 	uncompressChange: uncompressChange,
 	compressChange: compressChange,
-	getChangesForPub: getChangesForPub,
+	getChangesAndCheckpointForPub: getChangesAndCheckpointForPub,
+	createReplaceWholeDocumentChange: createReplaceWholeDocumentChange,
 	Change: Change,
 };

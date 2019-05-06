@@ -1,6 +1,6 @@
 /* eslint-disable no-console, no-restricted-syntax */
 const { compressChange } = require('./changes');
-const getIntermediateDocStates = require('./reconstructDocument');
+const { reconstructDocument } = require('./reconstructDocument');
 
 const stringMapToObj = (strMap, processValue) => {
 	const res = {};
@@ -72,7 +72,7 @@ class Branch {
 				throw new Error(`Branch is missing an item at index ${index}`);
 			}
 			intermediateDocument = [
-				...getIntermediateDocStates(mergeAtIndex || [changeAtIndex], intermediateDocument),
+				...reconstructDocument(mergeAtIndex || [changeAtIndex], intermediateDocument),
 			].slice(-1)[0];
 			if (withIndex) {
 				yield [index, intermediateDocument];

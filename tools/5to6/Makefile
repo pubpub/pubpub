@@ -3,6 +3,9 @@
 
 transform:
 	echo $(pub) | node -r esm --max-old-space-size=12000 v5 --bust-cache
+	
+upload:
+	echo $(pub) | node -r esm --max-old-space-size=12000 v6
 
 transform-all:
 	node status.js --print-status=unstarted | node -r esm --max-old-space-size=12000 v5
