@@ -1,11 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { apiFetch } from 'utils';
+import queryString from 'query-string';
 import { initFirebase } from 'utils/firebaseClient';
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	children: PropTypes.func.isRequired,
 };
+
+const fetchVersionFromHistory = (pubData, historyKey) =>
+	apiFetch(
+		'/api/pubHistory?' +
+			queryString.stringify({
+				pubId: pubData.id,
+				communityId: pubData.communityId,
+				branchId: pubData.activeBranch.id,
+				historyKey: historyKey,
+			}),
+	);
 
 class PubSyncManager extends React.Component {
 	constructor(props) {
@@ -18,6 +31,7 @@ class PubSyncManager extends React.Component {
 				editorChangeObject: {},
 				status: 'connecting',
 			},
+			historyData: {},
 		};
 		this.syncMetadata = this.syncMetadata.bind(this);
 		this.updatePubData = this.updatePubData.bind(this);
@@ -132,6 +146,18 @@ class PubSyncManager extends React.Component {
 		});
 	}
 
+	updateHistoryData(newHistoryData) {
+		fetchVersionFromHistory(this.props.pubData, newHistoryData.historyKey).then((historyDoc) =>
+			this.setState((state) => ({
+				historyData: {
+					...state.historyData,
+					...newHistoryData,
+					historyDoc: historyDoc,
+				},
+			})),
+		);
+	}
+
 	updateLocalData(type, data) {
 		if (type === 'pub') {
 			this.updatePubData(data);
@@ -139,12 +165,16 @@ class PubSyncManager extends React.Component {
 		if (type === 'collab') {
 			this.updateCollabData(data);
 		}
+		if (type === 'history') {
+			this.updateHistoryData(data);
+		}
 	}
 
 	render() {
 		return this.props.children({
 			pubData: this.state.pubData,
 			collabData: this.state.collabData,
+			historyData: this.state.historyData,
 			firebaseBranchRef: this.state.firebaseBranchRef,
 			updateLocalData: this.updateLocalData,
 		});

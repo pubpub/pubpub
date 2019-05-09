@@ -67,12 +67,15 @@ const PubDocument = (props) => {
 	const editorFocused = editorChangeObject.view && editorChangeObject.view.hasFocus();
 	return (
 		<div className="pub-document-component">
-			<PubHeaderFormatting pubData={props.pubData} collabData={props.collabData} />
+			{props.pubData.metaMode !== 'history' && (
+				<PubHeaderFormatting pubData={props.pubData} collabData={props.collabData} />
+			)}
 			<GridWrapper containerClassName="pub" columnClassName="pub-columns">
 				<div className="main-content" ref={mainContentRef}>
 					<PubBody
 						pubData={props.pubData}
 						collabData={props.collabData}
+						historyData={props.historyData}
 						firebaseBranchRef={props.firebaseBranchRef}
 						updateLocalData={props.updateLocalData}
 						onSingleClick={(view) => {

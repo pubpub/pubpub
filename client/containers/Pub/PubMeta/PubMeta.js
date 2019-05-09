@@ -5,6 +5,7 @@ import GridWrapper from 'components/GridWrapper/GridWrapper';
 import { pubDataProps } from 'types/pub';
 import Details from './Details';
 import Download from './Download';
+import History from './History';
 import Metrics from './Metrics';
 import Social from './Social';
 
@@ -15,8 +16,10 @@ const propTypes = {
 	updateLocalData: PropTypes.func.isRequired,
 };
 
+const shouldShowHeader = (metaMode) => metaMode !== 'history';
+
 const PubMeta = (props) => {
-	const { pubData, updateLocalData } = props;
+	const { pubData, collabData, updateLocalData } = props;
 
 	if (!pubData.metaMode) {
 		return null;
@@ -24,24 +27,32 @@ const PubMeta = (props) => {
 	return (
 		<div className="pub-meta-component">
 			<GridWrapper containerClassName="pub">
-				<div className="header">
-					<h3>{pubData.metaMode}</h3>
-					<Button
-						icon="small-cross"
-						minimal={true}
-						small={true}
-						className="meta-close"
-						onClick={() => {
-							updateLocalData('pub', {
-								metaMode: undefined,
-							});
-						}}
-					/>
-				</div>
+				{shouldShowHeader(pubData.metaMode) && (
+					<div className="header">
+						<Button
+							icon="small-cross"
+							minimal={true}
+							small={true}
+							className="meta-close"
+							onClick={() => {
+								updateLocalData('pub', {
+									metaMode: undefined,
+								});
+							}}
+						/>
+					</div>
+				)}
 				{pubData.metaMode === 'details' && <Details pubData={pubData} />}
 				{pubData.metaMode === 'metrics' && <Metrics pubData={pubData} />}
 				{pubData.metaMode === 'social' && <Social pubData={pubData} />}
 				{pubData.metaMode === 'download' && <Download pubData={pubData} />}
+				{pubData.metaMode === 'history' && (
+					<History
+						pubData={pubData}
+						collabData={collabData}
+						updateLocalData={updateLocalData}
+					/>
+				)}
 			</GridWrapper>
 		</div>
 	);
