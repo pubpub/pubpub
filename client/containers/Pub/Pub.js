@@ -29,11 +29,12 @@ const Pub = (props) => {
 				loginData={props.loginData}
 			>
 				<PubSyncManager pubData={props.pubData}>
-					{({ pubData, collabData, firebaseBranchRef, updateLocalData }) => {
+					{({ pubData, collabData, firebaseBranchRef, updateLocalData, historyData }) => {
 						const mode = pubData.mode;
 						const modeProps = {
 							pubData: pubData,
 							collabData: collabData,
+							historyData: historyData,
 							firebaseBranchRef: firebaseBranchRef,
 							updateLocalData: updateLocalData,
 						};
@@ -41,7 +42,11 @@ const Pub = (props) => {
 						return (
 							<React.Fragment>
 								<PubHeader pubData={pubData} updateLocalData={updateLocalData} />
-								<PubMeta pubData={pubData} updateLocalData={updateLocalData} />
+								<PubMeta
+									pubData={pubData}
+									updateLocalData={updateLocalData}
+									collabData={collabData}
+								/>
 								{mode === 'document' && <PubDocument {...modeProps} />}
 								{mode === 'submissions' && <PubSubmission {...modeProps} />}
 								{mode === 'manage' && <PubManage {...modeProps} />}
