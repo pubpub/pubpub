@@ -1,9 +1,7 @@
 import app from '../server';
 import { getBranchDoc } from '../utils/firebaseAdmin';
-import { Branch, BranchPermission, User } from '../models';
+import { Branch, BranchPermission, User, CommunityAdmin, PubManager } from '../models';
 
-import { communityAdminFor } from './permissions/communityAdmin';
-import { pubManagerFor } from './permissions/pubManager';
 import calculateBranchPermissions from '../branchPermission/calculateBranchPermissions';
 
 app.get('/api/pubHistory', async (req, res) => {
@@ -28,8 +26,13 @@ app.get('/api/pubHistory', async (req, res) => {
 			],
 		});
 		const [communityAdmin, pubManager] = await Promise.all([
-			communityAdminFor({ userId: userId, communityId: communityId }).catch(() => null),
-			pubManagerFor({ userId: userId, pubId: pubId }).catch(() => null),
+			CommunityAdmin.findOne({ where: { userId: userId, communityId: communityId } }),
+			PubManager.findOne({
+				where: {
+					pubId: pubId,
+					userId: userId,
+				},
+			}),
 		]);
 		const { canView } = calculateBranchPermissions(
 			accessHash,
@@ -39,8 +42,8 @@ app.get('/api/pubHistory', async (req, res) => {
 			!!pubManager,
 		);
 		if (canView) {
-			const { content } = await getBranchDoc(pubId, branchId, historyKey);
-			return res.status(200).json(content);
+			const branchInfo = await getBranchDoc(pubId, branchId, historyKey);
+			return res.status(200).json(branchInfo);
 		}
 		return res.status(403).json({});
 	} catch (error) {

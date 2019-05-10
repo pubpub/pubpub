@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDebounce } from 'react-use';
-import stickybits from 'stickybits';
 import { Slider, Spinner } from '@blueprintjs/core';
+import dateFormat from 'dateformat';
 
 import { pubDataProps } from 'types/pub';
 
@@ -11,39 +11,25 @@ const propTypes = {
 	pubData: pubDataProps.isRequired,
 };
 
-const calculateLabelStepSize = (max) => {
-	const totalLabels = 10;
-	// A power of ten that we want our results to end up near
-	const snapToNearest = 10 ** (Math.floor(Math.log10(max)) - 1);
-	return Math.floor(max / totalLabels / snapToNearest) * snapToNearest;
-};
-
 const History = (props) => {
 	const {
 		pubData,
+		historyData,
 		collabData: { latestKey },
 		updateLocalData,
 	} = props;
 
 	const [value, setValue] = useState(latestKey);
-	const stickyInstanceRef = useRef();
+
+	const latestKeyNum = Number(latestKey);
+	const isLoading = !latestKey;
+	const nothingToShow = latestKey && latestKey <= 1;
 
 	useEffect(() => {
 		if (!value && latestKey) {
 			setValue(latestKey);
 		}
 	}, [latestKey, value]);
-
-	useEffect(() => {
-		stickyInstanceRef.current = stickybits('.pub-meta_history-component', {
-			stickyBitStickyOffset: 35, useFixed: true,
-		});
-		return () => {
-			if (stickyInstanceRef.current) {
-				stickyInstanceRef.current.cleanup();
-			}
-		};
-	});
 
 	useDebounce(
 		() => {
@@ -53,16 +39,33 @@ const History = (props) => {
 		[value],
 	);
 
+	const renderLabel = (step) => {
+		const labelDateFormat = (date, withTime) =>
+			dateFormat(date, 'mmm dd, yyyy' + (withTime ? ' HH:MM' : ''));
+		if (step === 1) {
+			return labelDateFormat(pubData.createdAt);
+		}
+		if (step === latestKeyNum) {
+			return labelDateFormat(Date.now());
+		}
+		const timestamp = historyData.timestampsForHistoryKeys[step];
+		if (timestamp) {
+			return labelDateFormat(timestamp, true);
+		}
+		return '...';
+	};
+
 	return (
 		<div className="pub-meta_history-component">
-			{!latestKey && <Spinner size={25} />}
-			{latestKey && (
+			{isLoading && <Spinner size={25} />}
+			{nothingToShow && 'This branch has no history (yet)'}
+			{!isLoading && !nothingToShow && (
 				<Slider
 					min={1}
-					max={Number(latestKey)}
+					max={latestKeyNum}
 					stepSize={1}
-					labelRenderer={(n) => (n === 0 ? 1 : n - 1).toString()}
-					labelStepSize={calculateLabelStepSize(latestKey)}
+					labelRenderer={renderLabel}
+					labelStepSize={latestKeyNum - 1}
 					value={value}
 					onChange={setValue}
 				/>

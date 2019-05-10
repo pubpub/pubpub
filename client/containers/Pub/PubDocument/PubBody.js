@@ -54,7 +54,8 @@ const PubBody = (props) => {
 	const isViewingHistory = pubData.metaMode === 'history';
 	const editorKey =
 		(isViewingHistory && historyData.historyKey) || (firebaseBranchRef ? 'ready' : 'unready');
-	const useCollaborativeOptions = firebaseBranchRef && !pubData.isStaticDoc && !isViewingHistory;
+	const useCollaborativeOptions =
+		firebaseBranchRef && !pubData.isStaticDoc && !(isViewingHistory && historyData.historyDoc);
 	const isReadOnly = !!(pubData.isStaticDoc || !pubData.canEditBranch || isViewingHistory);
 	const initialContent = (isViewingHistory && historyData.historyDoc) || pubData.initialDoc;
 

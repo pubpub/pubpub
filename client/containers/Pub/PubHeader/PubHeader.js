@@ -56,7 +56,7 @@ const PubHeader = (props) => {
 			How do you get to pub/slug/submissions?
 		Do we require an accent color with the block styles? Or can they be simple white/black text?
 	*/
-	const { pubData, updateLocalData } = props;
+	const { pubData, collabData, updateLocalData } = props;
 	const { communityData, locationData } = useContext(PageContext);
 	const headerRef = useRef(null);
 	const [title, setTitle] = useState(props.pubData.title);
@@ -377,6 +377,7 @@ const PubHeader = (props) => {
 											text: 'Mar 31, 2019',
 											rightIcon: 'history',
 											active: pubData.metaMode === 'history',
+											disabled: collabData.status === 'connecting',
 											onClick: () => {
 												updateLocalData('pub', {
 													metaMode:
