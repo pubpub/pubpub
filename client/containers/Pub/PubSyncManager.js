@@ -7,9 +7,10 @@ import { initFirebase } from 'utils/firebaseClient';
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	children: PropTypes.func.isRequired,
+	locationData: PropTypes.object.isRequired,
 };
 
-const fetchVersionFromHistory = (pubData, historyKey) =>
+const fetchVersionFromHistory = (pubData, historyKey, accessHash) =>
 	apiFetch(
 		'/api/pubHistory?' +
 			queryString.stringify({
@@ -17,6 +18,7 @@ const fetchVersionFromHistory = (pubData, historyKey) =>
 				communityId: pubData.communityId,
 				branchId: pubData.activeBranch.id,
 				historyKey: historyKey,
+				accessHash: accessHash,
 			}),
 	);
 
@@ -31,7 +33,9 @@ class PubSyncManager extends React.Component {
 				editorChangeObject: {},
 				status: 'connecting',
 			},
-			historyData: {},
+			historyData: {
+				timestampsForHistoryKeys: {},
+			},
 		};
 		this.syncMetadata = this.syncMetadata.bind(this);
 		this.updatePubData = this.updatePubData.bind(this);
@@ -147,14 +151,25 @@ class PubSyncManager extends React.Component {
 	}
 
 	updateHistoryData(newHistoryData) {
-		fetchVersionFromHistory(this.props.pubData, newHistoryData.historyKey).then((historyDoc) =>
-			this.setState((state) => ({
-				historyData: {
-					...state.historyData,
-					...newHistoryData,
-					historyDoc: historyDoc,
-				},
-			})),
+		const { pubData, locationData } = this.props;
+		const { historyKey } = newHistoryData;
+		fetchVersionFromHistory(pubData, historyKey, locationData.query.access).then(
+			({ content, timestamp }) =>
+				this.setState((state) => ({
+					historyData: {
+						...state.historyData,
+						...newHistoryData,
+						historyDoc: content,
+						timestampsForHistoryKeys: {
+							// TODO(ian): these are used in the pub history slider. It seems like it
+							// would make sense to keep all of these as we get new history data, but
+							// in practice it just feels like a bad experience, as dates are appearing
+							// and disappearing constantly. So we just overwrite the entire object
+							// save for the most recent key.
+							[historyKey]: timestamp,
+						},
+					},
+				})),
 		);
 	}
 

@@ -15,7 +15,7 @@ export const pubManagerFor = ({ userId, pubId }) =>
 			if (pubManager) {
 				resolve(pubManager);
 			} else {
-				reject('Not a valid pub manager');
+				reject();
 			}
 		});
 	});

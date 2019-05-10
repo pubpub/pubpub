@@ -1,3 +1,12 @@
 .pub-meta_history-component {
-    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    .bp3-slider {
+        margin-top: 5px;
+    }
+    .bp3-slider-label {
+        white-space: nowrap;
+    }
 }
