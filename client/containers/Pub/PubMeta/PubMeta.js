@@ -31,7 +31,11 @@ const PubMeta = (props) => {
 	useEffect(() => {
 		const cleanup = () => {
 			if (stickyRef.current) {
-				stickyRef.current.cleanup();
+				try {
+					stickyRef.current.cleanup();
+				} catch (_) {
+					// This sometimes fails if the element's parent has been unmounted. That's okay.
+				}
 			}
 		};
 		if (shouldUseSticky(metaMode)) {
