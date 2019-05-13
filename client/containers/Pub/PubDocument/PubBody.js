@@ -52,8 +52,9 @@ const PubBody = (props) => {
 	};
 
 	const isViewingHistory = pubData.metaMode === 'history';
-	const editorKey =
-		(isViewingHistory && historyData.currentKey) || (firebaseBranchRef ? 'ready' : 'unready');
+	const editorKeyHistory = isViewingHistory && historyData.historyDocKey;
+	const editorKeyCollab = firebaseBranchRef ? 'ready' : 'unready';
+	const editorKey = editorKeyHistory || editorKeyCollab;
 	const useCollaborativeOptions =
 		firebaseBranchRef && !pubData.isStaticDoc && !(isViewingHistory && historyData.historyDoc);
 	const isReadOnly = !!(pubData.isStaticDoc || !pubData.canEditBranch || isViewingHistory);
@@ -78,7 +79,9 @@ const PubBody = (props) => {
 				initialContent={initialContent}
 				isReadOnly={isReadOnly}
 				onChange={(editorChangeObject) => {
-					updateLocalData('collab', { editorChangeObject: editorChangeObject });
+					if (useCollaborativeOptions) {
+						updateLocalData('collab', { editorChangeObject: editorChangeObject });
+					}
 				}}
 				collaborativeOptions={
 					useCollaborativeOptions

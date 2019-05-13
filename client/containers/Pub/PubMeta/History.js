@@ -27,8 +27,8 @@ const History = (props) => {
 		updateLocalData,
 	} = props;
 
-	const isLoading = !latestKey;
-	const nothingToShow = latestKey && latestKey <= 1;
+	const isLoading = latestKey === undefined;
+	const nothingToShow = !isLoading && latestKey <= 1;
 
 	const [value, setValue] = useState(currentKey);
 	const { communityData } = useContext(PageContext);
