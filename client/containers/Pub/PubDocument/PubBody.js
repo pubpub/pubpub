@@ -53,7 +53,7 @@ const PubBody = (props) => {
 
 	const isViewingHistory = pubData.metaMode === 'history';
 	const editorKey =
-		(isViewingHistory && historyData.historyKey) || (firebaseBranchRef ? 'ready' : 'unready');
+		(isViewingHistory && historyData.currentKey) || (firebaseBranchRef ? 'ready' : 'unready');
 	const useCollaborativeOptions =
 		firebaseBranchRef && !pubData.isStaticDoc && !(isViewingHistory && historyData.historyDoc);
 	const isReadOnly = !!(pubData.isStaticDoc || !pubData.canEditBranch || isViewingHistory);
@@ -93,7 +93,10 @@ const PubBody = (props) => {
 									});
 								},
 								onUpdateLatestKey: (latestKey) => {
-									props.updateLocalData('collab', { latestKey: latestKey });
+									props.updateLocalData('history', {
+										latestKey: latestKey,
+										currentKey: latestKey,
+									});
 								},
 						  }
 						: undefined

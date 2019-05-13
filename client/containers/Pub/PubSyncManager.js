@@ -25,6 +25,7 @@ const fetchVersionFromHistory = (pubData, historyKey, accessHash) =>
 class PubSyncManager extends React.Component {
 	constructor(props) {
 		super(props);
+		const { historyData } = this.props.pubData;
 		this.state = {
 			firebaseRootRef: undefined,
 			firebaseBranchRef: undefined,
@@ -33,9 +34,7 @@ class PubSyncManager extends React.Component {
 				editorChangeObject: {},
 				status: 'connecting',
 			},
-			historyData: {
-				timestampsForHistoryKeys: {},
-			},
+			historyData: historyData,
 		};
 		this.syncMetadata = this.syncMetadata.bind(this);
 		this.updatePubData = this.updatePubData.bind(this);
@@ -152,25 +151,25 @@ class PubSyncManager extends React.Component {
 
 	updateHistoryData(newHistoryData) {
 		const { pubData, locationData } = this.props;
-		const { historyKey } = newHistoryData;
-		fetchVersionFromHistory(pubData, historyKey, locationData.query.access).then(
-			({ content, timestamp }) =>
+		if ('currentKey' in newHistoryData && !('latestKey' in newHistoryData)) {
+			fetchVersionFromHistory(
+				pubData,
+				newHistoryData.currentKey,
+				locationData.query.access,
+			).then(({ content, historyData: nextHistoryData }) =>
 				this.setState((state) => ({
 					historyData: {
 						...state.historyData,
-						...newHistoryData,
+						...nextHistoryData,
 						historyDoc: content,
-						timestampsForHistoryKeys: {
-							// TODO(ian): these are used in the pub history slider. It seems like it
-							// would make sense to keep all of these as we get new history data, but
-							// in practice it just feels like a bad experience, as dates are appearing
-							// and disappearing constantly. So we just overwrite the entire object
-							// save for the most recent key.
-							[historyKey]: timestamp,
-						},
 					},
 				})),
-		);
+			);
+		} else {
+			this.setState((state) => {
+				return { historyData: { ...state.historyData, newHistoryData: newHistoryData } };
+			});
+		}
 	}
 
 	updateLocalData(type, data) {
