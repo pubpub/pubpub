@@ -151,25 +151,60 @@ class PubSyncManager extends React.Component {
 
 	updateHistoryData(newHistoryData) {
 		const { pubData, locationData } = this.props;
-		if ('currentKey' in newHistoryData && !('latestKey' in newHistoryData)) {
-			fetchVersionFromHistory(
-				pubData,
-				newHistoryData.currentKey,
-				locationData.query.access,
-			).then(({ content, historyData: nextHistoryData }) =>
-				this.setState((state) => ({
-					historyData: {
-						...state.historyData,
-						...nextHistoryData,
-						historyDoc: content,
-					},
-				})),
-			);
-		} else {
-			this.setState((state) => {
-				return { historyData: { ...state.historyData, newHistoryData: newHistoryData } };
-			});
-		}
+		const { historyData: prevHistoryData } = this.state;
+		this.setState(
+			{
+				historyData: {
+					...prevHistoryData,
+					...newHistoryData,
+				},
+			},
+			() => {
+				const { historyData: nextHistoryData } = this.state;
+				if (prevHistoryData.currentKey !== nextHistoryData.currentKey) {
+					// First, check to see whether we have an editorChangeObject corresponding to
+					// the most recent document. If so, we don't need to do a fetch from the server
+					// for this version, because we already have it stored locally.
+					const {
+						collabData: { editorChangeObject },
+					} = this.state;
+					const currentCollabDoc =
+						editorChangeObject &&
+						editorChangeObject.view &&
+						editorChangeObject.view.state &&
+						editorChangeObject.view.state.doc;
+					if (
+						nextHistoryData.currentKey === nextHistoryData.latestKey &&
+						currentCollabDoc
+					) {
+						this.setState((state) => ({
+							historyData: {
+								...state.historyData,
+								historyDoc: currentCollabDoc.toJSON(),
+								historyDocKey: `history-${nextHistoryData.currentKey}`,
+							},
+						}));
+					} else {
+						// The new state wants a document from somewhere in the history other than
+						// the most recent version. We'll have to fetch that with the API.
+						fetchVersionFromHistory(
+							pubData,
+							newHistoryData.currentKey,
+							locationData.query.access,
+						).then(({ content, historyData: updatedHistoryData }) => {
+							this.setState((state) => ({
+								historyData: {
+									...state.historyData,
+									...updatedHistoryData,
+									historyDoc: content,
+									historyDocKey: `history-${nextHistoryData.currentKey}`,
+								},
+							}));
+						});
+					}
+				}
+			},
+		);
 	}
 
 	updateLocalData(type, data) {
