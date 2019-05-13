@@ -12,11 +12,9 @@ import { PageContext } from 'components/PageWrapper/PageWrapper';
 require('./history.scss');
 
 const propTypes = {
-	collabData: PropTypes.shape({
-		latestKey: PropTypes.string,
-	}).isRequired,
 	historyData: PropTypes.shape({
-		timestampsForHistoryKeys: PropTypes.object,
+		latestKey: PropTypes.number,
+		timestamps: PropTypes.object,
 	}).isRequired,
 	pubData: pubDataProps.isRequired,
 	updateLocalData: PropTypes.func.isRequired,
@@ -25,27 +23,25 @@ const propTypes = {
 const History = (props) => {
 	const {
 		pubData,
-		historyData: { timestampsForHistoryKeys },
-		collabData: { latestKey },
+		historyData: { timestamps, latestKey, currentKey },
 		updateLocalData,
 	} = props;
 
-	const latestKeyNum = Number(latestKey);
 	const isLoading = !latestKey;
 	const nothingToShow = latestKey && latestKey <= 1;
 
-	const [value, setValue] = useState(latestKey);
+	const [value, setValue] = useState(currentKey);
 	const { communityData } = useContext(PageContext);
 
 	useEffect(() => {
-		if (!value && latestKey) {
-			setValue(latestKey);
+		if (!value && currentKey) {
+			setValue(currentKey);
 		}
-	}, [latestKey, value]);
+	}, [currentKey, value]);
 
 	useDebounce(
 		() => {
-			updateLocalData('history', { historyKey: value });
+			updateLocalData('history', { currentKey: value });
 		},
 		100,
 		[value],
@@ -57,10 +53,10 @@ const History = (props) => {
 		if (step === 1) {
 			return labelDateFormat(pubData.createdAt);
 		}
-		if (step === latestKeyNum) {
+		if (step === latestKey) {
 			return labelDateFormat(Date.now());
 		}
-		const timestamp = timestampsForHistoryKeys[step];
+		const timestamp = timestamps[step];
 		if (timestamp) {
 			return labelDateFormat(timestamp, true);
 		}
@@ -75,10 +71,10 @@ const History = (props) => {
 				<React.Fragment>
 					<Slider
 						min={1}
-						max={latestKeyNum}
+						max={latestKey}
 						stepSize={1}
 						labelRenderer={renderLabel}
-						labelStepSize={latestKeyNum - 1}
+						labelStepSize={latestKey - 1}
 						value={value}
 						onChange={setValue}
 					/>
@@ -88,7 +84,7 @@ const History = (props) => {
 							communityData,
 							pubData,
 							pubData.activeBranch.shortId,
-							value.toString(),
+							value && value.toString(),
 						)}
 						beforeCopyPrompt="Copy a link to this version"
 					/>

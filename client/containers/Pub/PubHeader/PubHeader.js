@@ -377,7 +377,6 @@ const PubHeader = (props) => {
 											text: 'Mar 31, 2019',
 											rightIcon: 'history',
 											active: pubData.metaMode === 'history',
-											disabled: collabData.status === 'connecting',
 											onClick: () => {
 												updateLocalData('pub', {
 													metaMode:
