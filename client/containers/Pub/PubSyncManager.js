@@ -182,6 +182,10 @@ class PubSyncManager extends React.Component {
 								...state.historyData,
 								historyDoc: currentCollabDoc.toJSON(),
 								historyDocKey: `history-${nextHistoryData.currentKey}`,
+								timestamps: {
+									...state.historyData.timestamps,
+									[nextHistoryData.currentKey]: Date.now(),
+								},
 							},
 						}));
 					} else {
@@ -201,7 +205,7 @@ class PubSyncManager extends React.Component {
 									timestamps: {
 										...state.historyData.timestamps,
 										...updatedHistoryData.timestamps,
-									}
+									},
 								},
 							}));
 						});
