@@ -45,6 +45,7 @@ const Pub = (props) => {
 									pubData={pubData}
 									updateLocalData={updateLocalData}
 									collabData={collabData}
+									historyData={historyData}
 								/>
 								<PubMeta
 									pubData={pubData}

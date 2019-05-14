@@ -198,6 +198,10 @@ class PubSyncManager extends React.Component {
 									...updatedHistoryData,
 									historyDoc: content,
 									historyDocKey: `history-${nextHistoryData.currentKey}`,
+									timestamps: {
+										...state.historyData.timestamps,
+										...updatedHistoryData.timestamps,
+									}
 								},
 							}));
 						});
