@@ -177,38 +177,49 @@ class PubSyncManager extends React.Component {
 						nextHistoryData.currentKey === nextHistoryData.latestKey &&
 						currentCollabDoc
 					) {
-						this.setState((state) => ({
-							historyData: {
-								...state.historyData,
-								historyDoc: currentCollabDoc.toJSON(),
-								historyDocKey: `history-${nextHistoryData.currentKey}`,
-								timestamps: {
-									...state.historyData.timestamps,
-									[nextHistoryData.currentKey]: Date.now(),
+						this.setState(({ historyData }) => {
+							const nextTimestamp =
+								historyData.timestamps[nextHistoryData.currentKey] || Date.now();
+							return {
+								historyData: {
+									...historyData,
+									historyDoc: currentCollabDoc.toJSON(),
+									historyDocKey: `history-${nextHistoryData.currentKey}`,
+									timestamps: {
+										...historyData.timestamps,
+										[nextHistoryData.currentKey]: nextTimestamp,
+									},
 								},
-							},
-						}));
+							};
+						});
 					} else {
 						// The new state wants a document from somewhere in the history other than
 						// the most recent version. We'll have to fetch that with the API.
-						fetchVersionFromHistory(
-							pubData,
-							newHistoryData.currentKey,
-							locationData.query.access,
-						).then(({ content, historyData: updatedHistoryData }) => {
-							this.setState((state) => ({
-								historyData: {
-									...state.historyData,
-									...updatedHistoryData,
-									historyDoc: content,
-									historyDocKey: `history-${nextHistoryData.currentKey}`,
-									timestamps: {
-										...state.historyData.timestamps,
-										...updatedHistoryData.timestamps,
-									},
-								},
-							}));
-						});
+						this.setState(
+							({ historyData }) => ({
+								historyData: { ...historyData, isScrubbing: true },
+							}),
+							() =>
+								fetchVersionFromHistory(
+									pubData,
+									newHistoryData.currentKey,
+									locationData.query.access,
+								).then(({ content, historyData: updatedHistoryData }) => {
+									this.setState((state) => ({
+										historyData: {
+											...state.historyData,
+											...updatedHistoryData,
+											historyDoc: content,
+											historyDocKey: `history-${nextHistoryData.currentKey}`,
+											isScrubbing: false,
+											timestamps: {
+												...state.historyData.timestamps,
+												...updatedHistoryData.timestamps,
+											},
+										},
+									}));
+								}),
+						);
 					}
 				}
 			},

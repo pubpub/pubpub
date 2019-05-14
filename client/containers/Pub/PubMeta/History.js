@@ -23,7 +23,7 @@ const propTypes = {
 const History = (props) => {
 	const {
 		pubData,
-		historyData: { timestamps, latestKey, currentKey },
+		historyData: { isScrubbing, timestamps, latestKey, currentKey },
 		updateLocalData,
 	} = props;
 
@@ -50,15 +50,15 @@ const History = (props) => {
 	const renderLabel = (step) => {
 		const labelDateFormat = (date, withTime) =>
 			dateFormat(date, 'mmm dd, yyyy' + (withTime ? ' HH:MM' : ''));
+		const timestamp = timestamps[step];
 		if (step === 1) {
 			return labelDateFormat(pubData.createdAt);
 		}
 		if (step === latestKey) {
-			return labelDateFormat(Date.now());
+			return labelDateFormat(timestamp);
 		}
-		const timestamp = timestamps[step];
 		if (timestamp) {
-			return labelDateFormat(timestamp, true);
+			return labelDateFormat(timestamp);
 		}
 		return '...';
 	};

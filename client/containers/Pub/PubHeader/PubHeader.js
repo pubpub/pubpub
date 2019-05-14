@@ -147,9 +147,9 @@ const PubHeader = (props) => {
 	const headerStyleClassName = (isDocMode && pubData.headerStyle) || '';
 	const submissionButtons = generateSubmissionButtons(pubData);
 
-	const pubDateString = historyData.timestamps[historyData.currentKey]
-		? dateFormat(historyData.timestamps[historyData.currentKey], 'mmm dd, yyyy')
-		: '...';
+	const pubDateString = historyData.isScrubbing
+		? '...'
+		: dateFormat(historyData.timestamps[historyData.currentKey], 'mmm dd, yyyy');
 
 	return (
 		<div className="pub-header-component new" style={backgroundStyle} ref={headerRef}>
