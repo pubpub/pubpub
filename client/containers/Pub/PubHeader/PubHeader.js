@@ -148,7 +148,7 @@ const PubHeader = (props) => {
 	const submissionButtons = generateSubmissionButtons(pubData);
 
 	const pubDateString =
-		historyData.outstandingRequests > 0
+		historyData && historyData.outstandingRequests > 0
 			? '...'
 			: dateFormat(historyData.timestamps[historyData.currentKey], 'mmm dd, yyyy');
 
