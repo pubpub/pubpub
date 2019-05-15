@@ -34,7 +34,10 @@ class PubSyncManager extends React.Component {
 				editorChangeObject: {},
 				status: 'connecting',
 			},
-			historyData: historyData,
+			historyData: {
+				...historyData,
+				outstandingRequests: 0,
+			},
 		};
 		this.syncMetadata = this.syncMetadata.bind(this);
 		this.updatePubData = this.updatePubData.bind(this);
@@ -197,24 +200,27 @@ class PubSyncManager extends React.Component {
 						// the most recent version. We'll have to fetch that with the API.
 						this.setState(
 							({ historyData }) => ({
-								historyData: { ...historyData, isScrubbing: true },
+								historyData: {
+									...historyData,
+									outstandingRequests: historyData.outstandingRequests + 1,
+								},
 							}),
 							() =>
 								fetchVersionFromHistory(
 									pubData,
 									newHistoryData.currentKey,
 									locationData.query.access,
-								).then(({ content, historyData: updatedHistoryData }) => {
-									this.setState((state) => ({
+								).then(({ content, historyData: { timestamps } }) => {
+									this.setState(({ historyData }) => ({
 										historyData: {
-											...state.historyData,
-											...updatedHistoryData,
+											...historyData,
 											historyDoc: content,
 											historyDocKey: `history-${nextHistoryData.currentKey}`,
-											isScrubbing: false,
+											outstandingRequests:
+												historyData.outstandingRequests - 1,
 											timestamps: {
-												...state.historyData.timestamps,
-												...updatedHistoryData.timestamps,
+												...historyData.timestamps,
+												...timestamps,
 											},
 										},
 									}));

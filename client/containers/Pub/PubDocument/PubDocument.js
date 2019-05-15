@@ -90,10 +90,12 @@ const PubDocument = (props) => {
 							setClickedMarks(marksAtSelection(view));
 						}}
 					/>
-					<PubInlineImport
-						pubData={props.pubData}
-						editorView={props.collabData.editorChangeObject.view}
-					/>
+					{props.pubData.metaMode !== 'history' && (
+						<PubInlineImport
+							pubData={props.pubData}
+							editorView={props.collabData.editorChangeObject.view}
+						/>
+					)}
 					<PubFooter pubData={props.pubData} />
 
 					{areDiscussionsShown && (

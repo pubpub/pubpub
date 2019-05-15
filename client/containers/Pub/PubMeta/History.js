@@ -23,7 +23,7 @@ const propTypes = {
 const History = (props) => {
 	const {
 		pubData,
-		historyData: { isScrubbing, timestamps, latestKey, currentKey },
+		historyData: { timestamps, latestKey, currentKey },
 		updateLocalData,
 	} = props;
 
@@ -39,13 +39,7 @@ const History = (props) => {
 		}
 	}, [currentKey, value]);
 
-	useDebounce(
-		() => {
-			updateLocalData('history', { currentKey: value });
-		},
-		100,
-		[value],
-	);
+	useDebounce(() => updateLocalData('history', { currentKey: value }), 100, [value]);
 
 	const renderLabel = (step) => {
 		const labelDateFormat = (date, withTime) =>
