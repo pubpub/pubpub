@@ -1,5 +1,6 @@
 import { Branch, BranchPermission } from '../models';
 import { generateHash } from '../utils';
+import { createFirebaseBranch } from '../utils/firebaseAdmin';
 
 export const createBranch = (inputValues, userId) => {
 	return Branch.findAll({
@@ -51,9 +52,17 @@ export const createBranch = (inputValues, userId) => {
 			);
 		})
 		.then((newBranchPermissions) => {
+			const baseBranchId = inputValues.baseBranchId;
+			const newBranchId = newBranchPermissions[0].branchId;
+			return Promise.all([
+				newBranchId,
+				createFirebaseBranch(inputValues.pubId, baseBranchId, newBranchId),
+			]);
+		})
+		.then(([newBranchId]) => {
 			return Branch.findOne({
 				where: {
-					id: newBranchPermissions[0].branchId,
+					id: newBranchId,
 				},
 				attributes: ['id', 'shortId'],
 			});

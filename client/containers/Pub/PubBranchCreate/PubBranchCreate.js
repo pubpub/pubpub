@@ -49,6 +49,7 @@ const PubBranchCreate = (props) => {
 				pubManagerPermissions: pubManagerPermissions,
 				communityAdminPermissions: communityAdminPermissions,
 				userPermissions: userPermissions,
+				baseBranchId: selectedBranch.id,
 				pubId: pubData.id,
 				communityId: communityData.id,
 			}),
