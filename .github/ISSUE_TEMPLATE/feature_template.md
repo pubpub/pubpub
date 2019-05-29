@@ -1,3 +1,9 @@
+---
+title: 'Feature Request'
+labels: 'feature request'
+assignees: gabestein
+---
+
 **Who requested**
 
 **Stories**
