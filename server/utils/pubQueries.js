@@ -197,7 +197,9 @@ export const formatAndAuthenticatePub = (pub, loginData, communityAdminData, req
 		canEditBranch: activeBranch.canEdit,
 		canDiscussBranch: activeBranch.canDiscuss,
 		canViewBranch: activeBranch.canView,
-		isStaticDoc: !!req.params.versionNumber,
+		/* TODO-BRANCH: This check for title === public is only valid until */
+		/* we roll out full branch features */
+		isStaticDoc: activeBranch.title === 'public' || !!req.params.versionNumber,
 	};
 
 	return formattedPubData;
