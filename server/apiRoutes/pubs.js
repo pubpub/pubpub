@@ -57,21 +57,33 @@ app.post('/api/pubs', (req, res) => {
 				order: 0.5,
 			});
 
-			const branchId = uuidv4();
-			const createBranch = Branch.create({
-				id: branchId,
+			const draftBranchId = uuidv4();
+			const publicBranchId = uuidv4();
+			const createPublicBranch = Branch.create({
+				id: publicBranchId,
 				shortId: 1,
+				title: 'public',
+				order: 0.9,
+				viewHash: generateHash(8),
+				discussHash: generateHash(8),
+				editHash: generateHash(8),
+				publicPermissions: 'discuss',
+				pubManagerPermissions: 'manage',
+				communityAdminPermissions: 'manage',
+				pubId: newPub.id,
+			});
+			const createDraftBranch = Branch.create({
+				id: draftBranchId,
+				shortId: 2,
 				title: 'draft',
 				order: 0.5,
 				viewHash: generateHash(8),
+				discussHash: generateHash(8),
 				editHash: generateHash(8),
+				publicPermissions: 'none',
+				pubManagerPermissions: 'manage',
+				communityAdminPermissions: 'manage',
 				pubId: newPub.id,
-			});
-			const createBranchPermission = BranchPermission.create({
-				permissions: 'manage',
-				userId: user.id,
-				pubId: newPub.id,
-				branchId: branchId,
 			});
 			const defaultCollectionIds = req.body.defaultCollectionIds || [];
 			const newCollectionPubObjects = defaultCollectionIds.map((collectionId) => {
@@ -87,8 +99,8 @@ app.post('/api/pubs', (req, res) => {
 				createPubManager,
 				createPubAttribution,
 				createCollectionPubs,
-				createBranch,
-				createBranchPermission,
+				createPublicBranch,
+				createDraftBranch,
 			]);
 		})
 		.then(([newPub]) => {

@@ -66,6 +66,7 @@ app.get(
 						mode: mode,
 					},
 				};
+				// TODO: For submission mode, check to make sure branches exist - and are visible to client
 				return renderToNodeStream(
 					res,
 					<Html

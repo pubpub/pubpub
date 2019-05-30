@@ -1,26 +1,101 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
+import { Button, ButtonGroup, Intent, Position, MenuItem } from '@blueprintjs/core';
+import { Select } from '@blueprintjs/select';
 import { communityDataProps, locationDataProps, loginDataProps } from 'types/base';
 import { pubDataProps } from 'types/pub';
-import { GridWrapper } from 'components';
+import { GridWrapper, DropdownButton } from 'components';
+import { PageContext } from 'components/PageWrapper/PageWrapper';
+import { apiFetch } from 'utils';
 
 const propTypes = {
 	pubData: pubDataProps.isRequired,
-	collabData: PropTypes.object.isRequired,
-	firebaseBranchRef: PropTypes.func.isRequired,
-	updateLocalData: PropTypes.func.isRequired,
 };
 
 const PubSubmission = (props) => {
-	const sourceBranch = 0;
-	const destinationBranch = 0;
-	// Get branches
-	// Give their names
-	// Test if it is a 'push' or a 'submit'
-	// 
+	const { pubData } = props;
+	const { locationData, communityData } = useContext(PageContext);
+	const [isLoading, setIsLoading] = useState(false);
+	const sourceBranch = pubData.branches.find((branch) => {
+		return branch.shortId === Number(locationData.params.fromBranchShortId);
+	});
+	const destinationBranch = pubData.branches.find((branch) => {
+		return branch.shortId === Number(locationData.params.toBranchShortId);
+	});
+	const canMerge = destinationBranch.canManage;
+	const submitText = `Create Submission to #${destinationBranch.title}`;
+
+	const createReview = () => {
+		setIsLoading(true);
+		return apiFetch('/api/reviews', {
+			method: 'POST',
+			body: JSON.stringify({
+				sourceBranchId: sourceBranch.id,
+				destinationBranchId: destinationBranch.id,
+				pubId: pubData.id,
+				communityId: communityData.id,
+			}),
+		})
+			.then((newReview) => {
+				window.location.href = `/pub/${pubData.slug}/reviews/${newReview.shortId}`;
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	};
+
+	const mergeBranch = () => {
+		setIsLoading(true);
+		return apiFetch('/api/reviews/accept', {
+			method: 'POST',
+			body: JSON.stringify({
+				sourceBranchId: sourceBranch.id,
+				destinationBranchId: destinationBranch.id,
+				pubId: pubData.id,
+				communityId: communityData.id,
+			}),
+		})
+			.then(() => {
+				window.location.href = `/pub/${pubData.slug}/branch/${destinationBranch.shortId}`;
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	};
+
 	return (
 		<GridWrapper containerClassName="pub pub-branch-create-component">
 			<h1>Submission</h1>
+			<p>
+				{sourceBranch.title} -> {destinationBranch.title}
+			</p>
+			<ButtonGroup>
+				<Button
+					intent={Intent.PRIMARY}
+					text={canMerge ? `Merge into #${destinationBranch.title}` : submitText}
+					loading={isLoading}
+					onClick={canMerge ? mergeBranch : createReview}
+				/>
+				{canMerge && (
+					<Select
+						items={[0]}
+						filterable={false}
+						popoverProps={{ minimal: true, position: Position.BOTTOM_RIGHT }}
+						onItemSelect={createReview}
+						itemRenderer={(item, rendererProps) => {
+							return (
+								<MenuItem
+									key="static"
+									text={submitText}
+									onClick={rendererProps.handleClick}
+								/>
+							);
+						}}
+					>
+						<Button icon="caret-down" intent={Intent.PRIMARY} loading={isLoading} />
+					</Select>
+				)}
+			</ButtonGroup>
 		</GridWrapper>
 	);
 };
