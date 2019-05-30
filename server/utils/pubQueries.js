@@ -17,6 +17,7 @@ import {
 	Page,
 	Branch,
 	BranchPermission,
+	Review
 } from '../models';
 
 // const calculateBranchPermissions = (
@@ -291,6 +292,10 @@ export const findPub = (req, initialData, mode) => {
 						],
 					},
 				],
+			},
+			{
+				model: Review,
+				as: 'reviews',
 			},
 		],
 	});

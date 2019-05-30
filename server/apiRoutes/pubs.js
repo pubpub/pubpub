@@ -7,7 +7,6 @@ import {
 	PubAttribution,
 	CollectionPub,
 	Branch,
-	BranchPermission,
 } from '../models';
 import { generateHash, slugifyString } from '../utils';
 import { setPubSearchData, deletePubSearchData } from '../utils/search';

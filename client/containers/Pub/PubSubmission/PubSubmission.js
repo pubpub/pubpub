@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, ButtonGroup, Intent, Position, MenuItem } from '@blueprintjs/core';
+import { AnchorButton, Button, ButtonGroup, Intent, Position, MenuItem, NonIdealState } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { communityDataProps, locationDataProps, loginDataProps } from 'types/base';
 import { pubDataProps } from 'types/pub';
@@ -63,39 +63,65 @@ const PubSubmission = (props) => {
 			});
 	};
 
+	const existingReview = pubData.reviews.reduce((prev, curr) => {
+		if (
+			curr.destinationBranchId === destinationBranch.id &&
+			curr.sourceBranchId === sourceBranch.id &&
+			!curr.isClosed
+		) {
+			return curr;
+		}
+		return prev;
+	}, false);
 	return (
 		<GridWrapper containerClassName="pub pub-branch-create-component">
 			<h1>Submission</h1>
 			<p>
 				{sourceBranch.title} -> {destinationBranch.title}
 			</p>
-			<ButtonGroup>
-				<Button
-					intent={Intent.PRIMARY}
-					text={canMerge ? `Merge into #${destinationBranch.title}` : submitText}
-					loading={isLoading}
-					onClick={canMerge ? mergeBranch : createReview}
+
+			{existingReview && (
+				<NonIdealState
+					icon="issue"
+					title="Review already open"
+					action={
+						<AnchorButton
+							intent={Intent.PRIMARY}
+							text="Go to existing review"
+							href={`/pub/${pubData.slug}/reviews/${existingReview.shortId}`}
+						/>
+					}
 				/>
-				{canMerge && (
-					<Select
-						items={[0]}
-						filterable={false}
-						popoverProps={{ minimal: true, position: Position.BOTTOM_RIGHT }}
-						onItemSelect={createReview}
-						itemRenderer={(item, rendererProps) => {
-							return (
-								<MenuItem
-									key="static"
-									text={submitText}
-									onClick={rendererProps.handleClick}
-								/>
-							);
-						}}
-					>
-						<Button icon="caret-down" intent={Intent.PRIMARY} loading={isLoading} />
-					</Select>
-				)}
-			</ButtonGroup>
+			)}
+			{!existingReview && (
+				<ButtonGroup>
+					<Button
+						intent={Intent.PRIMARY}
+						text={canMerge ? `Merge into #${destinationBranch.title}` : submitText}
+						loading={isLoading}
+						onClick={canMerge ? mergeBranch : createReview}
+					/>
+					{canMerge && (
+						<Select
+							items={[0]}
+							filterable={false}
+							popoverProps={{ minimal: true, position: Position.BOTTOM_RIGHT }}
+							onItemSelect={createReview}
+							itemRenderer={(item, rendererProps) => {
+								return (
+									<MenuItem
+										key="static"
+										text={submitText}
+										onClick={rendererProps.handleClick}
+									/>
+								);
+							}}
+						>
+							<Button icon="caret-down" intent={Intent.PRIMARY} loading={isLoading} />
+						</Select>
+					)}
+				</ButtonGroup>
+			)}
 		</GridWrapper>
 	);
 };
