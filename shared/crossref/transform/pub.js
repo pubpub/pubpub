@@ -1,5 +1,5 @@
 import { pubUrlV5 } from 'shared/utils/canonicalUrls';
-import { getPubPublishedDate } from 'shared/utils/pubDates';
+import { getPubPublishedDate } from 'shared/pub/pubDates';
 
 import transformAttributions from './attributions';
 

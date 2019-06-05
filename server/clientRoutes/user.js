@@ -3,7 +3,7 @@ import React from 'react';
 import { User as UserContainer } from 'containers';
 import Html from '../Html';
 import app from '../server';
-import { Community, Pub, User, PubAttribution } from '../models';
+import { Branch, Community, Pub, PubAttribution, User } from '../models';
 import { renderToNodeStream, getInitialData, handleErrors, generateMetaComponents } from '../utils';
 
 app.get(['/user/:slug', '/user/:slug/:mode'], (req, res, next) => {
@@ -25,6 +25,7 @@ app.get(['/user/:slug', '/user/:slug/:mode'], (req, res, next) => {
 						as: 'pub',
 						attributes: ['id', 'title', 'description', 'slug', 'avatar', 'communityId'],
 						include: [
+							{ model: Branch, as: 'branches' },
 							{
 								model: Community,
 								as: 'community',
