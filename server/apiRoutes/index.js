@@ -31,8 +31,6 @@ require('./subscribe');
 require('./collections');
 require('./uploadPolicy.js');
 require('./users');
-require('./versions');
-require('./versionPermissions');
 require('./workerTasks');
 
 /* In new format */

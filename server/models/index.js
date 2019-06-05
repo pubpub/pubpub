@@ -43,8 +43,6 @@ export const Signup = sequelize.import('./signup.js');
 export const Review = sequelize.import('../review/model.js');
 export const Tag = sequelize.import('./tag.js');
 export const User = sequelize.import('./user.js');
-export const Version = sequelize.import('./version.js');
-export const VersionPermission = sequelize.import('./versionPermission.js');
 export const WorkerTask = sequelize.import('./workerTask.js');
 
 /* Create associations for models that have associate function */
