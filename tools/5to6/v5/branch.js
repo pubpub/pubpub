@@ -1,4 +1,6 @@
 /* eslint-disable no-console, no-restricted-syntax */
+const uuidv4 = require('uuid/v4');
+
 const { compressChange } = require('./changes');
 const { reconstructDocument } = require('./reconstructDocument');
 
@@ -12,6 +14,7 @@ const stringMapToObj = (strMap, processValue) => {
 class Branch {
 	constructor(name) {
 		this.name = name;
+		this.id = uuidv4();
 		this.merges = new Map();
 		this.changes = new Map();
 		this.discussions = new Map();
@@ -22,7 +25,8 @@ class Branch {
 	}
 
 	getNextKey() {
-		return 1 + this.changes.size + this.merges.size;
+		// return 1 + this.changes.size + this.merges.size;
+		return this.changes.size + this.merges.size;
 	}
 
 	addChange(change) {
@@ -51,9 +55,11 @@ class Branch {
 
 	serialize() {
 		const lastMergeKey = this.getHighestMergeIndex();
+		const compressChangeHere = (change) => compressChange(change, this.id);
 		return {
-			changes: stringMapToObj(this.changes, compressChange),
-			merges: stringMapToObj(this.merges, (changes) => changes.map(compressChange)),
+			id: this.id,
+			changes: stringMapToObj(this.changes, compressChangeHere),
+			merges: stringMapToObj(this.merges, (changes) => changes.map(compressChangeHere)),
 			discussions: stringMapToObj(this.discussions),
 			...(lastMergeKey !== -1 && { lastMergeKey: lastMergeKey.toString() }),
 		};
@@ -62,7 +68,7 @@ class Branch {
 	*getIntermediateDocStates(optionalHighestIndex, withIndex) {
 		const highestIndex = optionalHighestIndex || this.getHighestIndex();
 		let intermediateDocument = null;
-		for (let index = 1; index <= highestIndex; index += 1) {
+		for (let index = 0; index <= highestIndex; index += 1) {
 			const changeAtIndex = this.changes.get(index);
 			const mergeAtIndex = this.merges.get(index);
 			if (changeAtIndex && mergeAtIndex) {
