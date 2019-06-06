@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { Branch, BranchPermission } from '../../../server/models';
+import { Branch, BranchPermission, PubVersion } from '../../../server/models';
 
 const { matchTransformHash, updateTransformHash } = require('./transformHash');
 
@@ -18,7 +18,7 @@ const getBranchIdForVersionId = (versionPermission, transformed) => {
 	const { draftBranch, namedBranches, versionToBranch } = transformed;
 	const { versionId } = versionPermission;
 	if (versionId) {
-		const proposedBranchName = versionToBranch[versionId];
+		const proposedBranchName = versionToBranch[versionId].name;
 		if (proposedBranchName) {
 			return namedBranches[proposedBranchName].id;
 		}
@@ -69,6 +69,21 @@ const updateBranches = async (model, transformed) => {
 	);
 };
 
+const createVersions = async (transformed) => {
+	const { versionToBranch, versionToShortCode } = transformed;
+	return PubVersion.bulkCreate(
+		Object.keys(versionToBranch).map((versionId) => {
+			const { id: branchId, key: historyKey } = versionToBranch[versionId];
+			const shortCode = versionToShortCode[versionId];
+			return {
+				branchId: branchId,
+				shortCode: shortCode,
+				historyKey: historyKey,
+			};
+		}),
+	);
+};
+
 const stripExtraneousKeys = (branchObj, strip = ['id']) => {
 	const res = {};
 	Object.keys(branchObj).forEach((key) => {
@@ -103,6 +118,7 @@ const processPub = async (storage, pubId, writeToFirebase, { current, total }) =
 		try {
 			await updateBranches(model, transformed);
 			await writeToFirebase(pubId, firebaseJson);
+			await createVersions(transformed);
 			updateTransformHash(pubDir);
 			console.log('OK: wrote this pub successfully!');
 		} catch (error) {
