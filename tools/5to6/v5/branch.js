@@ -5,7 +5,7 @@ const { reconstructDocument } = require('./reconstructDocument');
 const stringMapToObj = (strMap, processValue) => {
 	const res = {};
 	for (const [key, value] of strMap) {
-		res[(key-1).toString()] = processValue ? processValue(value) : value;
+		res[(key - 1).toString()] = processValue ? processValue(value) : value;
 	}
 	return res;
 };
@@ -57,7 +57,7 @@ class Branch {
 			changes: stringMapToObj(this.changes, compressChange),
 			merges: stringMapToObj(this.merges, (changes) => changes.map(compressChange)),
 			discussions: stringMapToObj(this.discussions),
-			...(lastMergeKey !== -1 && { lastMergeKey: lastMergeKey.toString() }),
+			...(lastMergeKey !== -1 && { lastMergeKey: (lastMergeKey - 1).toString() }),
 		};
 	}
 

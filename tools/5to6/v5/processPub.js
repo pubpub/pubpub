@@ -9,7 +9,6 @@ const getAndWritePubModelJson = async (pubDir, pubId, pubUpdatedTimes) => {
 	const queryAndUpdatePub = async () => {
 		console.log('querying pub');
 		const updatedModel = await queryPub(pubId);
-		console.log('updatedModel', updatedModel);
 		if (updatedModel) {
 			pubDir.write('model.json', JSON.stringify(updatedModel));
 		}

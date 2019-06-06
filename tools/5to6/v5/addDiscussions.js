@@ -139,7 +139,7 @@ module.exports = (pub, pubWithBranches, logAttempts = false) => {
 				return successHere;
 			}, false);
 			if (!succeeded) {
-				throw error(`Failed to attach discussion ${discussion.id} to any branch`);
+				warn(`Failed to attach discussion ${discussion.id} to any branch`);
 			}
 		} else {
 			throw error('No candidate branches for pub');
