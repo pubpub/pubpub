@@ -70,14 +70,15 @@ const updateBranches = async (model, transformed) => {
 };
 
 const createVersions = async (transformed) => {
-	const { versionToBranch, versionToShortCode } = transformed;
+	// const { versionToBranch, versionToShortCode } = transformed;
+	const { versionToBranch } = transformed;
 	return PubVersion.bulkCreate(
 		Object.keys(versionToBranch).map((versionId) => {
 			const { id: branchId, key: historyKey } = versionToBranch[versionId];
-			const shortCode = versionToShortCode[versionId];
+			// const shortCode = versionToShortCode[versionId];
 			return {
 				branchId: branchId,
-				shortCode: shortCode,
+				// shortCode: shortCode,
 				historyKey: historyKey,
 			};
 		}),
@@ -90,7 +91,7 @@ const stripExtraneousKeys = (branchObj, strip = ['id']) => {
 		if (strip.includes(key)) {
 			return;
 		}
-		res[key] = branchObj;
+		res[key] = branchObj[key];
 	});
 	return res;
 };

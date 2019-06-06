@@ -6,7 +6,7 @@ const GOOGLE_SCOPES = [
 	'https://www.googleapis.com/auth/firebase.database',
 ];
 
-const FIREBASE_URL = 'https://pubpub-v6-dev.firebaseio.com/';
+const FIREBASE_URL = process.env.V6_FIREBASE_URL;
 
 const createWriterForToken = (accessToken) => (pubId, jsonBody) =>
 	new Promise((resolve, reject) => {

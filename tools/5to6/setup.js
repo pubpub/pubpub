@@ -1,8 +1,9 @@
+require('../../server/config.js');
 const makeStorage = require('./storage');
 
 const useProd = false;
 
-const workingDirectory = '/Users/ian/Desktop/migration';
+const workingDirectory = process.env.MIGRATION_WORKING_DIRECTORY;
 const storage = makeStorage(workingDirectory);
 
 const getFirebaseConfig = function() {

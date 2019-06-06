@@ -1,7 +1,8 @@
+require('../../server/config.js');
 const bigJson = require('big-json');
 const storage = require('./storage');
 
-const wd = storage('/Users/ian/Desktop/migration');
+const wd = storage(process.env.MIGRATION_WORKING_DIRECTORY);
 const parseStream = bigJson.createParseStream();
 parseStream.on('data', (pubs) => {
 	Object.keys(pubs).forEach((pubKey) => {

@@ -4,6 +4,6 @@ export default (sequelize) => {
 		id: sequelize.idType,
 		historyKey: { type: Sequelize.INTEGER },
 		branchId: { type: Sequelize.UUID },
-		shortCode: { type: Sequelize.TEXT },
+		// shortCode: { type: Sequelize.TEXT },
 	});
 };

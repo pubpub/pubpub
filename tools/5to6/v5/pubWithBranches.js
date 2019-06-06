@@ -11,7 +11,7 @@ class PubWithBranches {
 		const draftBranch = this.draftBranch.serialize();
 		const namedBranches = {};
 		const versionToBranch = {};
-		const versionToShortCode = {};
+		// const versionToShortCode = {};
 		for (const [key, value] of this.branchByNameMap) {
 			namedBranches[key] = value.serialize();
 		}
@@ -22,14 +22,14 @@ class PubWithBranches {
 				key: branchPointer.v6MergeIndex,
 			};
 		}
-		for (const version of this.pub.versions) {
-			versionToShortCode[version.id] = version.viewHash;
-		}
+		// for (const version of this.pub.versions) {
+		// 	versionToShortCode[version.id] = version.viewHash;
+		// }
 		return {
 			draftBranch: draftBranch,
 			namedBranches: namedBranches,
 			versionToBranch: versionToBranch,
-			versionToShortCode: versionToShortCode,
+			// versionToShortCode: versionToShortCode,
 		};
 	}
 }
