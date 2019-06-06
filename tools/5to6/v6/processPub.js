@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { Branch, BranchPermission } from './models';
+import { Branch, BranchPermission } from '../../../server/models';
 
 const { matchTransformHash, updateTransformHash } = require('./transformHash');
 
