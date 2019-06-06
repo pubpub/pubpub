@@ -1,16 +1,16 @@
 const { google } = require('googleapis');
 const request = require('request');
 
-const secrets = require('../secrets');
-
 const GOOGLE_SCOPES = [
 	'https://www.googleapis.com/auth/userinfo.email',
 	'https://www.googleapis.com/auth/firebase.database',
 ];
 
+const FIREBASE_URL = 'https://pubpub-v6-dev.firebaseio.com/';
+
 const createWriterForToken = (accessToken) => (pubId, jsonBody) =>
 	new Promise((resolve, reject) => {
-		const url = `${secrets.v6FirebaseUrl}/pub-${pubId}.json`;
+		const url = `${FIREBASE_URL}/pub-${pubId}.json`;
 		request(
 			url,
 			{
@@ -36,7 +36,7 @@ const createWriterForToken = (accessToken) => (pubId, jsonBody) =>
 const createFirebaseWriter = () =>
 	new Promise((resolve, reject) => {
 		const serviceAccount = JSON.parse(
-			Buffer.from(secrets.v6FirebaseServiceAccount, 'base64').toString(),
+			Buffer.from(process.env.V6_FIREBASE_SERVICE_ACCOUNT_BASE64, 'base64').toString(),
 		);
 		const jwtClient = new google.auth.JWT(
 			serviceAccount.client_email,

@@ -2,8 +2,6 @@
 const Sequelize = require('sequelize');
 const passportLocalSequelize = require('passport-local-sequelize');
 
-const secrets = require('../secrets');
-
 const operatorsAliases = {
 	$or: Sequelize.Op.or,
 	$and: Sequelize.Op.and,
@@ -15,7 +13,7 @@ const operatorsAliases = {
 	$lt: Sequelize.Op.lt,
 	$gt: Sequelize.Op.gt,
 };
-const sequelize = new Sequelize(secrets.v5PostgresUrl, {
+const sequelize = new Sequelize(process.env.V5_PROD_DATABASE_URL, {
 	logging: false,
 	dialectOptions: { ssl: true },
 	operatorsAliases: operatorsAliases,
