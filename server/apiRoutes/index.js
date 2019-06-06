@@ -1,7 +1,6 @@
 require('./adminDashboard');
 require('./analytics');
 require('./pubAttributions');
-require('./citations');
 require('./collections');
 require('./collectionAttributions');
 require('./collectionPubs');
