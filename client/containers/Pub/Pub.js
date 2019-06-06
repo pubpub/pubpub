@@ -6,9 +6,11 @@ import { pubDataProps } from 'types/pub';
 import PubSyncManager from './PubSyncManager';
 import PubHeader from './PubHeader';
 import PubDocument from './PubDocument';
-import PubSubmission from './PubSubmission';
 import PubMeta from './PubMeta';
+import PubMerge from './PubMerge';
 import PubManage from './PubManage';
+import PubReviewCreate from './PubReviewCreate';
+import PubReviews from './PubReviews';
 import PubBranchCreate from './PubBranchCreate';
 
 require('./pub.scss');
@@ -28,23 +30,40 @@ const Pub = (props) => {
 				communityData={props.communityData}
 				loginData={props.loginData}
 			>
-				<PubSyncManager pubData={props.pubData}>
-					{({ pubData, collabData, firebaseBranchRef, updateLocalData }) => {
+				<PubSyncManager
+					pubData={props.pubData}
+					locationData={props.locationData}
+					loginData={props.loginData}
+				>
+					{({ pubData, collabData, firebaseBranchRef, updateLocalData, historyData }) => {
 						const mode = pubData.mode;
 						const modeProps = {
 							pubData: pubData,
 							collabData: collabData,
+							historyData: historyData,
 							firebaseBranchRef: firebaseBranchRef,
 							updateLocalData: updateLocalData,
 						};
 
 						return (
 							<React.Fragment>
-								<PubHeader pubData={pubData} updateLocalData={updateLocalData} />
-								<PubMeta pubData={pubData} updateLocalData={updateLocalData} />
+								<PubHeader
+									pubData={pubData}
+									updateLocalData={updateLocalData}
+									collabData={collabData}
+									historyData={historyData}
+								/>
+								<PubMeta
+									pubData={pubData}
+									updateLocalData={updateLocalData}
+									collabData={collabData}
+									historyData={historyData}
+								/>
 								{mode === 'document' && <PubDocument {...modeProps} />}
-								{mode === 'submissions' && <PubSubmission {...modeProps} />}
 								{mode === 'manage' && <PubManage {...modeProps} />}
+								{mode === 'merge' && <PubMerge {...modeProps} />}
+								{mode === 'new review' && <PubReviewCreate {...modeProps} />}
+								{mode === 'reviews' && <PubReviews {...modeProps} />}
 								{mode === 'new branch' && <PubBranchCreate {...modeProps} />}
 							</React.Fragment>
 						);

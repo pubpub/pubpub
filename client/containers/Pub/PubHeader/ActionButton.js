@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import { Button, AnchorButton, ButtonGroup, Popover } from '@blueprintjs/core';
 import { Icon } from 'components';
 
@@ -23,6 +24,7 @@ const defaultProps = {
 };
 
 const ActionButton = function(props) {
+	const { isLarge, isSkewed } = props;
 	const buttons = props.buttons.map((buttonData) => {
 		const key = `${buttonData.text}-${buttonData.icon}-${buttonData.href}`;
 		const icon = buttonData.icon ? (
@@ -31,26 +33,8 @@ const ActionButton = function(props) {
 			undefined
 		);
 
-		let buttonClass = '';
-		if (buttonData.isWide) {
-			buttonClass += ' wide';
-		}
-		if (buttonData.isSkinny) {
-			buttonClass += ' skinny';
-		}
-		if (props.isLarge) {
-			buttonClass += ' large';
-		}
-
-		/* We don't want to apply isSkinny, isLarge, etc as dom attributes */
-		const buttonProps = { ...buttonData };
-		Object.keys(buttonProps).forEach((buttonPropKey) => {
-			const invalidProps = ['isWide', 'isSkinny', 'isLarge'];
-			if (invalidProps.includes(buttonPropKey)) {
-				delete buttonProps[buttonPropKey];
-			}
-		});
-
+		const { isWide, isSkinny, ...buttonProps } = buttonData;
+		const buttonClass = classNames(isWide && 'wide', isSkinny && 'skinny', isLarge && 'large');
 		const buttonComponent = buttonData.href ? (
 			<AnchorButton key={key} className={buttonClass} {...buttonProps} icon={icon} />
 		) : (
@@ -69,7 +53,7 @@ const ActionButton = function(props) {
 	});
 
 	let groupClass = 'action-button-component';
-	if (props.isSkewed) {
+	if (isSkewed) {
 		groupClass += ' skewed';
 	}
 

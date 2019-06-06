@@ -7,6 +7,8 @@ import NavBar from 'components/NavBar/NavBar';
 import Icon from 'components/Icon/Icon';
 import { populateNavigationIds } from 'utils';
 
+require('./pageWrapper.scss');
+
 const propTypes = {
 	communityData: PropTypes.object.isRequired,
 	loginData: PropTypes.object.isRequired,
@@ -91,11 +93,14 @@ const PageWrapper = (props) => {
 				)}
 
 				<AccentStyle
-					accentColor={communityData.accentColor}
-					accentTextColor={communityData.accentTextColor}
-					accentActionColor={communityData.accentActionColor}
-					accentHoverColor={communityData.accentHoverColor}
-					accentMinimalColor={communityData.accentMinimalColor}
+					communityData={communityData}
+					isNavHidden={props.hideNav}
+					// accentColorDark={communityData.accentColorDark}
+					// headerColorType={communityData.headerColorType}
+					// accentTextColor={communityData.accentTextColor}
+					// accentActionColor={communityData.accentActionColor}
+					// accentHoverColor={communityData.accentHoverColor}
+					// accentMinimalColor={communityData.accentMinimalColor}
 				/>
 
 				<Header

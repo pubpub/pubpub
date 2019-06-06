@@ -4,12 +4,9 @@
  * TODO(ian): I think we should move towards doing this normalization in the database.
  */
 export default (attribution) => {
-	if (attribution.user) {
-		return attribution;
-	}
-	return {
-		...attribution,
-		user: {
+	if (!attribution.user) {
+		// eslint-disable-next-line no-param-reassign
+		attribution.user = {
 			id: attribution.id,
 			initials: attribution.name[0],
 			fullName: attribution.name,
@@ -20,6 +17,7 @@ export default (attribution) => {
 				.join(' '),
 			avatar: attribution.avatar,
 			title: attribution.title,
-		},
-	};
+		};
+	}
+	return attribution;
 };

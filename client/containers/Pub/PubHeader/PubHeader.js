@@ -17,12 +17,14 @@ import {
 	Menu,
 	MenuItem,
 	MenuDivider,
+	Popover,
 } from '@blueprintjs/core';
+import PubToc from 'containers/Pub/PubDocument/PubToc';
 import { Icon, GridWrapper, Overlay } from 'components';
 import ActionButton from './ActionButton';
 import SharePanel from './SharePanel';
 import styleGenerator from './styleGenerator';
-import { generateSubmissionButtons } from './headerUtils';
+// import { generateSubmissionButtons } from './headerUtils';
 
 require('./pubHeader.scss');
 
@@ -43,6 +45,19 @@ const propTypes = {
 
 const PubHeader = (props) => {
 	/*
+	COMMUNITY:
+	accentColorDark
+	accentColorLight
+	headerColorType: ['light', 'dark', 'custom']
+
+	PUB:
+	headerStyle: ['white-blocks', 'black-blocks', null]
+	headerBackgroundType: color, image, 
+	headerBackgroundImage: https://
+	headerAccentType: ['light', 'dark', 'custom', null]
+	*/
+
+	/*
 		We need communityWide accentColor (dark and light)
 		We need pub headerStyle setting
 		We need pub headerStyle background (color, gradient, tile, stretch)
@@ -56,7 +71,7 @@ const PubHeader = (props) => {
 			How do you get to pub/slug/submissions?
 		Do we require an accent color with the block styles? Or can they be simple white/black text?
 	*/
-	const { pubData, updateLocalData } = props;
+	const { pubData, collabData, updateLocalData, historyData } = props;
 	const { communityData, locationData } = useContext(PageContext);
 	const headerRef = useRef(null);
 	const [title, setTitle] = useState(props.pubData.title);
@@ -65,7 +80,6 @@ const PubHeader = (props) => {
 	const [isShareOpen, setIsShareOpen] = useState(false);
 	const { width: windowWidth } = useWindowSize();
 	const isDocMode = pubData.mode === 'document';
-	const isSubmissionsMode = pubData.mode === 'submission';
 
 	useEffect(() => {
 		if (!isDocMode) {
@@ -120,10 +134,15 @@ const PubHeader = (props) => {
 	const authors = pubData.attributions.filter((attribution) => {
 		return attribution.isAuthor;
 	});
-	const useHeaderImage = pubData.useHeaderImage && pubData.avatar;
+	const useHeaderImage =
+		pubData.headerBackgroundType === 'image' && pubData.headerBackgroundImage;
 	const backgroundStyle = {};
 	if (useHeaderImage) {
-		const resizedBackground = getResizedUrl(pubData.avatar, 'fit-in', '1500x600');
+		const resizedBackground = getResizedUrl(
+			pubData.headerBackgroundImage,
+			'fit-in',
+			'1500x600',
+		);
 		backgroundStyle.backgroundImage = `url("${resizedBackground}")`;
 	}
 
@@ -138,14 +157,31 @@ const PubHeader = (props) => {
 		{ title: 'Details', icon: 'more', key: 'details' },
 		{ title: 'Download', icon: 'download2', key: 'download' },
 		{ title: 'Social Sharing', icon: 'share2', key: 'social' },
-		{ title: 'Metrics', icon: 'timeline-bar-chart', key: 'metrics' },
-		{ title: 'Discussions', icon: 'chat', key: 'discussions' },
+		// TODO(ian): re-enable these once we have something to put there
+		// { title: 'Metrics', icon: 'timeline-bar-chart', key: 'metrics' },
+		// { title: 'Discussions', icon: 'chat', key: 'discussions' },
 	];
 
 	const manageMode = locationData.params && locationData.params.manageMode;
-	const accentColor = pubData.headerStyle === 'white-blocks' ? '#A2273E' : '#ecd721';
+	const accentColor =
+		pubData.headerStyle === 'white-blocks'
+			? communityData.accentColorDark
+			: communityData.accentColorLight;
 	const headerStyleClassName = (isDocMode && pubData.headerStyle) || '';
-	const submissionButtons = generateSubmissionButtons(pubData);
+	// const submissionButtons = generateSubmissionButtons(pubData);
+
+	const pubDate =
+		(historyData && historyData.timestamps && historyData.timestamps[historyData.currentKey]) ||
+		pubData.updatedAt;
+	const pubDateString =
+		historyData && historyData.outstandingRequests > 0
+			? '...'
+			: dateFormat(pubDate, 'mmm dd, yyyy');
+
+	const publicBranch = pubData.branches.find((branch) => {
+		return branch.title === 'public';
+	});
+	const currentBranchIsPublicBranch = publicBranch.id === pubData.activeBranch.id;
 
 	return (
 		<div className="pub-header-component new" style={backgroundStyle} ref={headerRef}>
@@ -212,23 +248,26 @@ const PubHeader = (props) => {
 										);
 									})}
 							</div>
-							<div className="right">
-								<Button
-									className="manager-button"
-									text="Share"
-									icon="people"
-									intent={Intent.PRIMARY}
-									onClick={() => {
-										setIsShareOpen(true);
-									}}
-									// href={`/pub/${pubData.slug}/manage/sharing`}
-								/>
-								<AnchorButton
-									className="manager-button"
-									text="Manage"
-									href={`/pub/${pubData.slug}/manage`}
-								/>
-							</div>
+							{pubData.canManage && (
+								<React.Fragment>
+									<div className="right">
+										<Button
+											className="manager-button"
+											text="Share"
+											icon="people"
+											intent={Intent.PRIMARY}
+											onClick={() => {
+												setIsShareOpen(true);
+											}}
+										/>
+										<AnchorButton
+											className="manager-button"
+											text="Manage"
+											href={`/pub/${pubData.slug}/manage`}
+										/>
+									</div>
+								</React.Fragment>
+							)}
 
 							{/* <div className="buttons">
 										{!pubData.isDraft &&
@@ -374,7 +413,14 @@ const PubHeader = (props) => {
 								<ActionButton
 									buttons={[
 										{
-											text: 'Mar 31, 2019',
+											text: (
+												<div className="text-stack">
+													<span>History</span>
+													<span className="action-subtext">
+														{pubDateString}
+													</span>
+												</div>
+											),
 											rightIcon: 'history',
 											active: pubData.metaMode === 'history',
 											onClick: () => {
@@ -388,6 +434,7 @@ const PubHeader = (props) => {
 											isWide: true,
 										},
 									]}
+									isSkewed={true}
 								/>
 
 								{/* Branches Button */}
@@ -397,8 +444,10 @@ const PubHeader = (props) => {
 										{
 											text: (
 												<div className="text-stack">
-													<span className="subtext">now on branch</span>
-													<span>{pubData.activeBranch.title}</span>
+													<span className="action-subtext">
+														now on branch
+													</span>
+													<span>#{pubData.activeBranch.title}</span>
 												</div>
 											),
 											rightIcon: 'caret-down',
@@ -427,7 +476,8 @@ const PubHeader = (props) => {
 																	: '';
 																return (
 																	<MenuItem
-																		text={branch.title}
+																		key={branch.id}
+																		text={`#${branch.title}`}
 																		active={
 																			pubData.activeBranch
 																				.id === branch.id
@@ -440,10 +490,36 @@ const PubHeader = (props) => {
 															})}
 														<MenuDivider />
 														<MenuItem
-															icon="add"
-															text="Create New Branch"
-															href={`/pub/${pubData.slug}/branch/new`}
+															// intent={Intent.WARNING}
+															icon="issue-new"
+															text={
+																<span>
+																	Branches will be slowly rolling
+																	out in the coming months.
+																	<br />
+																	We would love your feedback
+																	about the exciting new
+																	possibilites.
+																	<br />
+																	Click to learn more and discuss.
+																</span>
+															}
+															href="https://discourse.knowledgefutures.org/"
 														/>
+														{/*
+															TODO-BRANCH: We're removing these items until full branch
+															capabilities are rolled out
+															
+															<MenuItem
+																icon="add"
+																text="Create New Branch"
+																href={`/pub/${
+																	pubData.slug
+																}/branch/new?init=${
+																	pubData.activeBranch.shortId
+																}`}
+															/>
+														*/}
 													</Menu>
 												),
 												minimal: true,
@@ -454,10 +530,59 @@ const PubHeader = (props) => {
 									isSkewed={true}
 								/>
 
-								{/* Submit Button */}
-								{submissionButtons && (
-									<ActionButton buttons={submissionButtons} isSkewed={true} />
+								{/* Merge Button */}
+								{!currentBranchIsPublicBranch &&
+									pubData.activeBranch.canManage &&
+									publicBranch.canManage && (
+										<ActionButton
+											buttons={[
+												{
+													text: (
+														<div className="text-stack">
+															<span>Publish</span>
+															<span className="action-subtext">
+																Merge into #public
+															</span>
+														</div>
+													),
+													href: `/pub/${pubData.slug}/merge/${
+														pubData.activeBranch.shortId
+													}/${publicBranch.shortId}`,
+													isWide: true,
+												},
+											]}
+											isSkewed={true}
+										/>
+									)}
+
+								{/* Submit for Review button */}
+								{!currentBranchIsPublicBranch && pubData.activeBranch.canManage && (
+									<ActionButton
+										buttons={[
+											{
+												text: (
+													<div className="text-stack">
+														<span>Submit for Review</span>
+														<span className="action-subtext">
+															to #public
+														</span>
+													</div>
+												),
+												href: `/pub/${pubData.slug}/reviews/new/${
+													pubData.activeBranch.shortId
+												}/${publicBranch.shortId}`,
+
+												isWide: true,
+											},
+										]}
+										isSkewed={true}
+									/>
 								)}
+
+								{/* Submit Button */}
+								{/* submissionButtons && (
+									<ActionButton buttons={submissionButtons} isSkewed={true} />
+								) */}
 							</div>
 							<div className="right">
 								{metaModes.map((mode) => {
@@ -465,7 +590,7 @@ const PubHeader = (props) => {
 									return (
 										<ActionButton
 											key={mode.title}
-											isLarge={true}
+											// isLarge={true}
 											buttons={[
 												{
 													icon: mode.icon,
@@ -499,24 +624,27 @@ const PubHeader = (props) => {
 					<div className="bottom-text">
 						<div className="bottom-title">{pubData.title}</div>
 						<div className="bottom-buttons">
-							<Button
+							<Popover
 								minimal={true}
-								small={true}
-								// onClick={() => {
-								// 	this.props.setOptionsMode('cite');
-								// }}
-								text="Cite"
+								position={Position.BOTTOM_RIGHT}
+								content={
+									<PubToc
+										pubData={pubData}
+										editorChangeObject={collabData.editorChangeObject}
+										useSideStyling={false}
+									/>
+								}
+								target={<Button minimal={true}>Contents</Button>}
 							/>
 							<span className="dot">·</span>
 							<Button
 								minimal={true}
-								small={true}
-								// onClick={() => {
-								// 	this.props.setOptionsMode('download');
-								// }}
-								text="Download"
-							/>
-							<span className="dot">·</span>
+								onClick={() =>
+									window.scrollTo({ left: 0, top: 0, behavior: 'auto' })
+								}
+							>
+								Back to top
+							</Button>
 						</div>
 					</div>
 				)}

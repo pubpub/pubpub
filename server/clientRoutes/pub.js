@@ -14,8 +14,14 @@ import { getFirebaseToken } from '../utils/firebaseAdmin';
 import { findPub } from '../utils/pubQueries';
 
 const getMode = (path, slug) => {
-	if (path.indexOf(`/pub/${slug}/submissions`) > -1) {
-		return 'submissions';
+	if (path.indexOf(`/pub/${slug}/merge/`) > -1) {
+		return 'merge';
+	}
+	if (path.indexOf(`/pub/${slug}/reviews/new`) > -1) {
+		return 'new review';
+	}
+	if (path.indexOf(`/pub/${slug}/reviews`) > -1) {
+		return 'reviews';
 	}
 	if (path.indexOf(`/pub/${slug}/manage`) > -1) {
 		return 'manage';
@@ -26,20 +32,17 @@ const getMode = (path, slug) => {
 	return 'document';
 };
 
-/*
-	What does the header do in Settings mode?
-	How do we get back to the 'doc'
-	How do we navigate when in a submission?
-
-*/
 app.get(
 	[
 		'/pub/:slug',
 		'/pub/:slug/branch/new',
 		'/pub/:slug/branch/:branchShortId',
 		'/pub/:slug/branch/:branchShortId/:versionNumber',
-		'/pub/:slug/submissions/new/:fromBranchShortId/:toBranchShortId',
-		'/pub/:slug/submissions/:submissionShortId',
+		'/pub/:slug/merge/:fromBranchShortId/:toBranchShortId',
+		'/pub/:slug/reviews/new/:fromBranchShortId/',
+		'/pub/:slug/reviews/new/:fromBranchShortId/:toBranchShortId',
+		'/pub/:slug/reviews',
+		'/pub/:slug/reviews/:reviewShortId',
 		'/pub/:slug/manage/',
 		'/pub/:slug/manage/:manageMode',
 	],

@@ -29,7 +29,7 @@ const defaultProps = {
 
 const Permissions = (props) => {
 	const { pubData, branchData, updateLocalData, setIsLoading } = props;
-	const { communityData, locationData } = useContext(PageContext);
+	const { communityData, locationData, loginData } = useContext(PageContext);
 	const tooltipTimeout = useRef(null);
 	const [showTooltip, setShowTooltip] = useState(false);
 	const [copied, copyToClipboard] = useCopyToClipboard();
@@ -181,6 +181,7 @@ const Permissions = (props) => {
 			accessHash: pubData.activeBranch.editHash,
 		},
 	];
+
 	return (
 		<div className="pub-manage_branches_permissions-component">
 			<div className="dropdown-bar">
@@ -192,7 +193,11 @@ const Permissions = (props) => {
 							<span>Public:</span>
 						</React.Fragment>
 					}
-					allowedTyped={['none', 'view', 'discuss', 'edit']}
+					allowedTypes={
+						branchData.title === 'public'
+							? ['none', 'view', 'discuss']
+							: ['none', 'view', 'discuss', 'edit']
+					}
 					isSmall={false}
 					value={branchData.publicPermissions}
 					onChange={(newPermission) => {
@@ -207,10 +212,15 @@ const Permissions = (props) => {
 					prefix={
 						<React.Fragment>
 							<Icon icon="id-number" />
-							<span>Pub Manager:</span>
+							<span>Pub Managers:</span>
 						</React.Fragment>
 					}
-					allowedTyped={['none', 'view', 'discuss', 'edit', 'manage']}
+					isDisabled={branchData.title === 'public' && !loginData.isAdmin}
+					allowedTypes={
+						branchData.title === 'public'
+							? ['none', 'view', 'discuss', 'manage']
+							: ['none', 'view', 'discuss', 'edit', 'manage']
+					}
 					isSmall={false}
 					value={branchData.pubManagerPermissions}
 					onChange={(newPermission) => {
@@ -226,10 +236,11 @@ const Permissions = (props) => {
 					prefix={
 						<React.Fragment>
 							<Icon icon="people" />
-							<span>Community Admin:</span>
+							<span>Community Admins:</span>
 						</React.Fragment>
 					}
-					allowedTyped={['none', 'view', 'discuss', 'edit', 'manage']}
+					isDisabled={branchData.title === 'public'}
+					allowedTypes={['none', 'view', 'discuss', 'edit', 'manage']}
 					isSmall={false}
 					value={branchData.communityAdminPermissions}
 					onChange={(newPermission) => {
@@ -254,37 +265,46 @@ const Permissions = (props) => {
 						// isMinimal={props.isMinimal}
 					>
 						<Menu>
-							{accessLinks.map((linkType) => {
-								const linkUrl = `${baseUrl}?access=${linkType.accessHash}`;
-								const showCopied = showTooltip && linkUrl === copied.value;
-								const confirmClasses = classNames({
-									confirmable: true,
-									confirmed: showCopied,
-								});
-								return (
-									<MenuItem
-										key={linkType.text}
-										onClick={() => {
-											copyToClipboard(linkUrl);
-											setShowTooltip(true);
-											clearTimeout(tooltipTimeout.current);
-											tooltipTimeout.current = setTimeout(() => {
-												setShowTooltip(false);
-											}, 2500);
-										}}
-										shouldDismissPopover={false}
-										text={
-											<div>
-												Anyone with this link can {linkType.text}
-												<div className="subtext">
-													Click to copy{' '}
-													<span className={confirmClasses}>Copied!</span>
+							{accessLinks
+								.filter((linkType) => {
+									/* TODO-BRANCH: */
+									return (
+										branchData.title !== 'public' || linkType.text !== 'edit'
+									);
+								})
+								.map((linkType) => {
+									const linkUrl = `${baseUrl}?access=${linkType.accessHash}`;
+									const showCopied = showTooltip && linkUrl === copied.value;
+									const confirmClasses = classNames({
+										confirmable: true,
+										confirmed: showCopied,
+									});
+									return (
+										<MenuItem
+											key={linkType.text}
+											onClick={() => {
+												copyToClipboard(linkUrl);
+												setShowTooltip(true);
+												clearTimeout(tooltipTimeout.current);
+												tooltipTimeout.current = setTimeout(() => {
+													setShowTooltip(false);
+												}, 2500);
+											}}
+											shouldDismissPopover={false}
+											text={
+												<div>
+													Anyone with this link can {linkType.text}
+													<div className="subtext">
+														Click to copy{' '}
+														<span className={confirmClasses}>
+															Copied!
+														</span>
+													</div>
 												</div>
-											</div>
-										}
-									/>
-								);
-							})}
+											}
+										/>
+									);
+								})}
 						</Menu>
 					</DropdownButton>
 				</div>
@@ -317,7 +337,7 @@ const Permissions = (props) => {
 								options={[
 									<PermissionsDropdown
 										key={permission.id}
-										allowedTyped={['view', 'discuss', 'edit', 'manage']}
+										allowedTypes={['view', 'discuss', 'edit', 'manage']}
 										value={permission.permissions}
 										onChange={(newPermission) => {
 											handleBranchPermissionUpdate({

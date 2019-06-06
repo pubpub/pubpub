@@ -1,5 +1,11 @@
 import firebaseAdmin from 'firebase-admin';
-import { buildSchema, getFirebaseDoc } from '@pubpub/editor';
+import {
+	buildSchema,
+	getFirebaseDoc,
+	restoreDiscussionMaps,
+	createBranch,
+	mergeBranch,
+} from '@pubpub/editor';
 import discussionSchema from 'containers/Pub/PubDocument/DiscussionAddon/discussionSchema';
 import { getFirebaseConfig } from 'utils';
 /* To encode: Buffer.from(JSON.stringify(serviceAccountJson)).toString('base64'); */
@@ -16,7 +22,7 @@ const firebaseApp = firebaseAdmin.initializeApp(
 );
 const database = firebaseApp.database();
 
-export const getBranchDoc = (pubId, branchId, versionNumber) => {
+export const getBranchDoc = (pubId, branchId, historyKey) => {
 	const pubKey = `pub-${pubId}`;
 	const branchKey = `branch-${branchId}`;
 	// const branchKey = '';
@@ -30,9 +36,34 @@ export const getBranchDoc = (pubId, branchId, versionNumber) => {
 			selections: []
 	*/
 	const editorSchema = buildSchema({ ...discussionSchema }, {});
-	return getFirebaseDoc(firebaseRef, editorSchema, versionNumber);
+
+	return getFirebaseDoc(firebaseRef, editorSchema, historyKey);
+	// return restoreDiscussionMaps(firebaseRef, editorSchema, true).then(() => {
+	// 	console.log('Finished with restoreDiscussionMaps');
+	// 	return getFirebaseDoc(firebaseRef, editorSchema, versionNumber);
+	// });
 };
 
 export const getFirebaseToken = (clientId, clientData) => {
 	return firebaseAdmin.auth(firebaseApp).createCustomToken(clientId, clientData);
+};
+
+export const createFirebaseBranch = (pubId, baseBranchId, newBranchId) => {
+	const pubKey = `pub-${pubId}`;
+	const baseBranchKey = `branch-${baseBranchId}`;
+	const newBranchKey = `branch-${newBranchId}`;
+
+	const baseFirebaseRef = database.ref(`${pubKey}/${baseBranchKey}`);
+	const newFirebaseRef = database.ref(`${pubKey}/${newBranchKey}`);
+	return createBranch(baseFirebaseRef, newFirebaseRef);
+};
+
+export const mergeFirebaseBranch = (pubId, sourceBranchId, destinationBranchId) => {
+	const pubKey = `pub-${pubId}`;
+	const sourceBranchKey = `branch-${sourceBranchId}`;
+	const destinationBranchKey = `branch-${destinationBranchId}`;
+
+	const sourceFirebaseRef = database.ref(`${pubKey}/${sourceBranchKey}`);
+	const destinationFirebaseRef = database.ref(`${pubKey}/${destinationBranchKey}`);
+	return mergeBranch(sourceFirebaseRef, destinationFirebaseRef);
 };

@@ -1,7 +1,8 @@
 /* eslint-disable import/prefer-default-export */
-import { attributesPublicUser, checkIfSuperAdmin } from '../utils';
+import { attributesPublicUser, checkIfSuperAdmin } from '.';
 import { generateCitationHTML } from './citations';
 import { getBranchDoc } from './firebaseAdmin';
+import calculateBranchAccess from '../branch/calculateBranchAccess';
 import {
 	User,
 	Pub,
@@ -16,74 +17,75 @@ import {
 	Page,
 	Branch,
 	BranchPermission,
+	Review,
 } from '../models';
 
-const calculateBranchPermissions = (
-	req,
-	branchData,
-	loginData,
-	communityAdminData,
-	canManagePub,
-	isSuperAdmin,
-) => {
-	/* Compute canManageBranch */
-	const isCommunityAdminBranchManager =
-		communityAdminData && branchData.communityAdminPermissions === 'manage';
-	const isPubManagerBranchManager = canManagePub && branchData.pubManagerPermissions === 'manage';
-	const canManageBranch = branchData.permissions.reduce((prev, curr) => {
-		if (curr.userId === loginData.id && curr.permissions === 'manage') {
-			return true;
-		}
-		return prev;
-	}, isCommunityAdminBranchManager || isPubManagerBranchManager || isSuperAdmin);
+// const calculateBranchPermissions = (
+// 	req,
+// 	branchData,
+// 	loginData,
+// 	communityAdminData,
+// 	canManagePub,
+// 	isSuperAdmin,
+// ) => {
+// 	/* Compute canManageBranch */
+// 	const isCommunityAdminBranchManager =
+// 		communityAdminData && branchData.communityAdminPermissions === 'manage';
+// 	const isPubManagerBranchManager = canManagePub && branchData.pubManagerPermissions === 'manage';
+// 	const canManageBranch = branchData.permissions.reduce((prev, curr) => {
+// 		if (curr.userId === loginData.id && curr.permissions === 'manage') {
+// 			return true;
+// 		}
+// 		return prev;
+// 	}, isCommunityAdminBranchManager || isPubManagerBranchManager || isSuperAdmin);
 
-	/* Compute canEditBranch */
-	const isValidEditHash = req.query.access === branchData.editHash;
-	const isCommunityAdminEditor =
-		communityAdminData && branchData.communityAdminPermissions === 'edit';
-	const isPubManagerBranchEditor = canManagePub && branchData.pubManagerPermissions === 'edit';
-	const isPublicBranchEditor = branchData.publicPermissions === 'edit';
-	const canEditBranch = branchData.permissions.reduce((prev, curr) => {
-		if (curr.userId === loginData.id && curr.permissions === 'edit') {
-			return true;
-		}
-		return prev;
-	}, canManageBranch || isValidEditHash || isCommunityAdminEditor || isPubManagerBranchEditor || isPublicBranchEditor);
+// 	/* Compute canEditBranch */
+// 	const isValidEditHash = req.query.access === branchData.editHash;
+// 	const isCommunityAdminEditor =
+// 		communityAdminData && branchData.communityAdminPermissions === 'edit';
+// 	const isPubManagerBranchEditor = canManagePub && branchData.pubManagerPermissions === 'edit';
+// 	const isPublicBranchEditor = branchData.publicPermissions === 'edit';
+// 	const canEditBranch = branchData.permissions.reduce((prev, curr) => {
+// 		if (curr.userId === loginData.id && curr.permissions === 'edit') {
+// 			return true;
+// 		}
+// 		return prev;
+// 	}, canManageBranch || isValidEditHash || isCommunityAdminEditor || isPubManagerBranchEditor || isPublicBranchEditor);
 
-	/* Compute canDiscussBranch */
-	const isValidDiscussHash = req.query.access === branchData.discussHash;
-	const isCommunityAdminDiscussor =
-		communityAdminData && branchData.communityAdminPermissions === 'discuss';
-	const isPubManagerBranchDiscussor =
-		canManagePub && branchData.pubManagerPermissions === 'discuss';
-	const isPublicBranchDiscussor = branchData.publicPermissions === 'discuss';
-	const canDiscussBranch = branchData.permissions.reduce((prev, curr) => {
-		if (curr.userId === loginData.id && curr.permissions === 'discuss') {
-			return true;
-		}
-		return prev;
-	}, canEditBranch || isValidDiscussHash || isCommunityAdminDiscussor || isPubManagerBranchDiscussor || isPublicBranchDiscussor);
+// 	/* Compute canDiscussBranch */
+// 	const isValidDiscussHash = req.query.access === branchData.discussHash;
+// 	const isCommunityAdminDiscussor =
+// 		communityAdminData && branchData.communityAdminPermissions === 'discuss';
+// 	const isPubManagerBranchDiscussor =
+// 		canManagePub && branchData.pubManagerPermissions === 'discuss';
+// 	const isPublicBranchDiscussor = branchData.publicPermissions === 'discuss';
+// 	const canDiscussBranch = branchData.permissions.reduce((prev, curr) => {
+// 		if (curr.userId === loginData.id && curr.permissions === 'discuss') {
+// 			return true;
+// 		}
+// 		return prev;
+// 	}, canEditBranch || isValidDiscussHash || isCommunityAdminDiscussor || isPubManagerBranchDiscussor || isPublicBranchDiscussor);
 
-	/* Compute canViewBranch */
-	const isValidViewHash = req.query.access === branchData.viewHash;
-	const isCommunityAdminViewer =
-		communityAdminData && branchData.communityAdminPermissions === 'view';
-	const isPubManagerBranchViewer = canManagePub && branchData.pubManagerPermissions === 'view';
-	const isPublicBranchViewer = branchData.publicPermissions === 'view';
-	const canViewBranch = branchData.permissions.reduce((prev, curr) => {
-		if (curr.userId === loginData.id && curr.permissions === 'view') {
-			return true;
-		}
-		return prev;
-	}, canDiscussBranch || isValidViewHash || isCommunityAdminViewer || isPubManagerBranchViewer || isPublicBranchViewer);
+// 	/* Compute canViewBranch */
+// 	const isValidViewHash = req.query.access === branchData.viewHash;
+// 	const isCommunityAdminViewer =
+// 		communityAdminData && branchData.communityAdminPermissions === 'view';
+// 	const isPubManagerBranchViewer = canManagePub && branchData.pubManagerPermissions === 'view';
+// 	const isPublicBranchViewer = branchData.publicPermissions === 'view';
+// 	const canViewBranch = branchData.permissions.reduce((prev, curr) => {
+// 		if (curr.userId === loginData.id && curr.permissions === 'view') {
+// 			return true;
+// 		}
+// 		return prev;
+// 	}, canDiscussBranch || isValidViewHash || isCommunityAdminViewer || isPubManagerBranchViewer || isPublicBranchViewer);
 
-	return {
-		canManage: canManageBranch,
-		canEdit: canEditBranch,
-		canDiscuss: canDiscussBranch,
-		canView: canViewBranch,
-	};
-};
+// 	return {
+// 		canManage: canManageBranch,
+// 		canEdit: canEditBranch,
+// 		canDiscuss: canDiscussBranch,
+// 		canView: canViewBranch,
+// 	};
+// };
 
 export const formatAndAuthenticatePub = (pub, loginData, communityAdminData, req) => {
 	/* Used to format pub JSON and to test */
@@ -91,7 +93,7 @@ export const formatAndAuthenticatePub = (pub, loginData, communityAdminData, req
 	const isSuperAdmin = checkIfSuperAdmin(loginData.id);
 	/* Compute canManage */
 	const isCommunityAdminManager = communityAdminData && pub.isCommunityAdminManaged;
-	const canManage = pub.managers.reduce((prev, curr) => {
+	const canManagePub = pub.managers.reduce((prev, curr) => {
 		if (curr.userId === loginData.id) {
 			return true;
 		}
@@ -109,20 +111,20 @@ export const formatAndAuthenticatePub = (pub, loginData, communityAdminData, req
 			return 0;
 		})
 		.map((branch) => {
-			const branchPermissions = calculateBranchPermissions(
-				req,
+			const branchAccess = calculateBranchAccess(
+				req.query.access,
 				branch,
-				loginData,
+				loginData.id,
 				communityAdminData,
-				canManage,
-				isSuperAdmin,
+				canManagePub,
 			);
+
 			return {
 				...branch,
-				...branchPermissions,
-				editHash: branchPermissions.canManage ? branch.editHash : undefined,
-				discussHash: branchPermissions.canManage ? branch.discussHash : undefined,
-				viewHash: branchPermissions.canManage ? branch.viewHash : undefined,
+				...branchAccess,
+				editHash: branchAccess.canManage ? branch.editHash : undefined,
+				discussHash: branchAccess.canManage ? branch.discussHash : undefined,
+				viewHash: branchAccess.canManage ? branch.viewHash : undefined,
 			};
 		})
 		.filter((branch) => {
@@ -191,12 +193,14 @@ export const formatAndAuthenticatePub = (pub, loginData, communityAdminData, req
 			.filter((item) => {
 				return !item.collection || item.collection.isPublic || communityAdminData;
 			}),
-		canManage: canManage,
+		canManage: canManagePub,
 		canManageBranch: activeBranch.canManage,
 		canEditBranch: activeBranch.canEdit,
 		canDiscussBranch: activeBranch.canDiscuss,
 		canViewBranch: activeBranch.canView,
-		isStaticDoc: !!req.params.versionNumber,
+		/* TODO-BRANCH: This check for title === public is only valid until */
+		/* we roll out full branch features */
+		isStaticDoc: activeBranch.title === 'public' || !!req.params.versionNumber,
 	};
 
 	return formattedPubData;
@@ -289,6 +293,10 @@ export const findPub = (req, initialData, mode) => {
 					},
 				],
 			},
+			{
+				model: Review,
+				as: 'reviews',
+			},
 		],
 	});
 
@@ -315,6 +323,47 @@ export const findPub = (req, initialData, mode) => {
 				throw new Error('Pub Not Found');
 			}
 
+			if (mode === 'merge') {
+				/* Validate that the user has permissions to merge */
+				/* and thus permissions to view this merge screen */
+				const sourceBranch = formattedPubData.branches.find((branch) => {
+					return branch.shortId === Number(req.params.fromBranchShortId);
+				});
+				const destinationBranch = formattedPubData.branches.find((branch) => {
+					return branch.shortId === Number(req.params.toBranchShortId);
+				});
+				if (
+					!sourceBranch ||
+					!destinationBranch ||
+					!sourceBranch.canView ||
+					!destinationBranch.canManage
+				) {
+					throw new Error('Pub Not Found');
+				}
+			}
+
+			if (mode === 'new review') {
+				/* Validate that the user has permissions to create a review from */
+				/* this branch and thus permissions to view this merge screen */
+				const sourceBranch = formattedPubData.branches.find((branch) => {
+					return branch.shortId === Number(req.params.fromBranchShortId);
+				});
+				if (!sourceBranch || !sourceBranch.canManage) {
+					throw new Error('Pub Not Found');
+				}
+			}
+
+			if (mode === 'review') {
+				/* Validate that the user has permissions to view a review */
+				/* and thus permissions to view this merge screen */
+				const activeReview = formattedPubData.reviews.find((review) => {
+					return review.shortId === Number(req.params.reviewShortId);
+				});
+				if (req.params.reviewShortId && !activeReview) {
+					throw new Error('Pub Not Found');
+				}
+			}
+
 			/* We only want to get the branch doc if we're in document mode */
 			/* otherwise, it's an extra call we don't need. */
 			const getDocFunc = mode === 'document' ? getBranchDoc : () => ({});
@@ -328,10 +377,12 @@ export const findPub = (req, initialData, mode) => {
 			]);
 		})
 		.then(([formattedPubData, branchDocData]) => {
+			const { content, historyData, mostRecentRemoteKey } = branchDocData;
 			return {
 				...formattedPubData,
-				initialDoc: branchDocData.content,
-				initialDocKey: branchDocData.mostRecentRemoteKey,
+				initialDoc: content,
+				initialDocKey: mostRecentRemoteKey,
+				historyData: historyData,
 				citationData: generateCitationHTML(formattedPubData, initialData.communityData),
 			};
 		});

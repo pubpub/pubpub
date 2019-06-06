@@ -60,8 +60,7 @@ const processTask = (channel) => {
 				if (taskData.type === 'export') {
 					taskFunction = exportTask(
 						taskData.input.pubId,
-						taskData.input.versionId,
-						taskData.input.content,
+						taskData.input.branchId,
 						taskData.input.format,
 					);
 				} else if (taskData.type === 'import') {
@@ -149,7 +148,7 @@ amqplib
 // });
 
 // importTask('https://assets.pubpub.org/_testing/31553876712636.html'); /* Smart Enough City */
-//importTask('https://assets.pubpub.org/_testing/31553876712636.html'); /* Smart Enough City */
+// importTask('https://assets.pubpub.org/_testing/31553876712636.html'); /* Smart Enough City */
 // importTask('https://assets.pubpub.org/_testing/71553878171064.html'); /* Hacking Life */
 
 // exportTask('3ecac2f5-8065-4bde-aa0e-c1ab222fd673', '427a3c55-993a-4083-918c-85c682bedccf', null, 'pdf')

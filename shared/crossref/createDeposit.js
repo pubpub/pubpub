@@ -36,7 +36,7 @@ const checkDepositAssertions = (context, doiTarget) => {
 	const { collection, collectionPub } = context;
 	const allowableDoiTargets = ['pub', 'collection'];
 	if (!allowableDoiTargets.includes(doiTarget)) {
-		throw new Error('doiTarget must be one of', allowableDoiTargets.join(', '));
+		throw new Error(`doiTarget must be one of: ${allowableDoiTargets.join(', ')}`);
 	}
 	if (collectionPub) {
 		if (!collection && collection.id !== collectionPub.id) {
@@ -56,8 +56,6 @@ const getDois = (context, doiTarget) => {
 		(doiTarget === 'pub'
 			? createDoi({ community: community, collection: collection, target: pub })
 			: pub.doi);
-	dois.getPubVersionDoi = (version) =>
-		createDoi({ community: community, collection: collection, target: pub, version: version });
 	dois.collection =
 		collection &&
 		(getCollectionDoi(collection) ||

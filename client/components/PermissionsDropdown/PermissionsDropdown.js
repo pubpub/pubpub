@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import { Menu, MenuItem } from '@blueprintjs/core';
 import { DropdownButton } from 'components';
 
@@ -11,13 +10,12 @@ const propTypes = {
 	value: PropTypes.string,
 	onChange: PropTypes.func,
 	isDisabled: PropTypes.bool,
-	allowedTyped: PropTypes.array.isRequired,
+	allowedTypes: PropTypes.array.isRequired,
 };
 const defaultProps = {
 	prefix: '',
 	isSmall: true,
 	isMinimal: false,
-	value: 'none',
 	onChange: () => {},
 	isDisabled: false,
 };
@@ -65,12 +63,12 @@ const PermissionsDropdown = function(props) {
 	};
 
 	Object.keys(items).forEach((type) => {
-		if (!props.allowedTyped.includes(type)) {
+		if (!props.allowedTypes.includes(type)) {
 			delete items[type];
 		}
 	});
 
-	const selectedKey = props.value || items[props.allowedTyped[0]].value;
+	const selectedKey = props.value || items[props.allowedTypes[0]].value;
 	const style = {
 		marginRight: props.prefix ? '1em' : '0em',
 	};
@@ -79,8 +77,10 @@ const PermissionsDropdown = function(props) {
 			<DropdownButton
 				label={
 					<React.Fragment>
-						<span style={style}>{props.prefix}</span>
-						<span>{items[selectedKey].title}</span>
+						<span style={style} key="prefix">
+							{props.prefix}
+						</span>
+						<span key="title">{items[selectedKey].title}</span>
 					</React.Fragment>
 				}
 				// icon={items[selectedKey].icon}

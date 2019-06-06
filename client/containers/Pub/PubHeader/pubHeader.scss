@@ -287,7 +287,7 @@
 		letter-spacing: 1px;
 		font-family: $header-font;
 		&.small {
-			font-size: 28px;
+			font-size: 24px;
 			padding: 15px 0px;
 			margin-bottom: -40px;
 			display: flex;
@@ -305,13 +305,12 @@
 			}
 			.breadcrumb {
 				font-family: $base-font;
-				font-size: 22px;
 				margin-left: 0.5em;
 				padding-left: 0.5em;
 				display: inline-block;
 				text-transform: capitalize;
 				&:before {
-					content: '>';
+					content: '›';
 					position: relative;
 					left: -0.5em;
 				}

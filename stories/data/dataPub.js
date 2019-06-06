@@ -10,7 +10,7 @@ export default {
 	lastPublishedAt: '2019-04-22T03:43:24.218Z',
 	draftEditHash: 'eyy8hltx',
 	draftViewHash: 's5mjfpdz',
-	doi: null,
+	doi: '10.21428/eea8ec7d.4c3a0515',
 	labels: null,
 	isCommunityAdminManaged: true,
 	review: null,
@@ -18,6 +18,7 @@ export default {
 	communityId: '7808da6b-94d1-436d-ad79-2e036a8e4428',
 	createdAt: '2019-04-02T18:12:05.538Z',
 	updatedAt: '2019-04-30T15:23:17.211Z',
+	reviews: [],
 	branches: [
 		{
 			createdAt: '2019-04-29T22:01:27.918Z',
@@ -115,6 +116,7 @@ export default {
 			avatar: null,
 			title: null,
 			order: 0.25,
+			affiliation: "Test University of North Testington",
 			isAuthor: true,
 			roles: ['Writing – Original Draft Preparation'],
 			userId: null,
