@@ -1,4 +1,6 @@
 /* eslint-disable no-console, no-restricted-syntax */
+const uuid = require('uuid');
+
 const { docToString, jsonToDoc } = require('../util/docUtils');
 const { error, warn } = require('../problems');
 
@@ -32,7 +34,7 @@ const latestIntermediateStateBeforeVersion = (intermediateDocStates, version) =>
 	return null;
 };
 
-const splitIntermediateDocStates = (states, targetState, targetDoc) => {
+const splitIntermediateDocStates = (states, targetState, targetDoc, draftBranchId) => {
 	const nextStates = [];
 	const passedTargetState = false;
 	let newlyCreatedState = null;
@@ -61,8 +63,8 @@ const splitIntermediateDocStates = (states, targetState, targetDoc) => {
 				);
 			}
 			const changes = [
-				new Change(firstSteps, change.clientId, change.timestamp),
-				new Change(secondSteps, change.clientId, change.timestamp),
+				new Change(firstSteps, change.clientId, change.timestamp, draftBranchId),
+				new Change(secondSteps, change.clientId, change.timestamp, draftBranchId),
 			];
 			const resultingStates = [
 				...reconstructDocument(changes, nextStates[nextStates.length - 1]),
@@ -96,7 +98,7 @@ const splitIntermediateDocStates = (states, targetState, targetDoc) => {
 	return { nextStates: nextStates, newlyCreatedState: newlyCreatedState };
 };
 
-const mapVersionsToChangeIndices = (versions, intermediateDocStates) => {
+const mapVersionsToChangeIndices = (versions, intermediateDocStates, draftBranchId) => {
 	const versionIndexMap = new Map();
 	const orphanedVersions = [];
 	versions.forEach((version) => {
@@ -138,6 +140,7 @@ const mapVersionsToChangeIndices = (versions, intermediateDocStates) => {
 					intermediateDocStates,
 					matchWithinChange.state,
 					matchWithinChange.doc,
+					draftBranchId,
 				);
 				// eslint-disable-next-line no-param-reassign
 				intermediateDocStates = splitResult.nextStates;
@@ -155,6 +158,7 @@ const mapVersionsToChangeIndices = (versions, intermediateDocStates) => {
 				createReplaceWholeDocumentChange(
 					mostRecentState ? mostRecentState.doc : newDocument(),
 					versionDoc,
+					draftBranchId,
 					true,
 				),
 			],
@@ -186,12 +190,12 @@ const serializePubVersionPermissions = (pub, versionId) => {
 	return publicOrPrivateString;
 };
 
-const buildPubWithBranches = (pub, changes, versionToChangeIndex) => {
+const buildPubWithBranches = (pub, changes, versionToChangeIndex, draftBranchId) => {
 	const branchByNameMap = new Map();
 	const versionPermissionStringToBranchPointerMap = new Map();
 	const versionToBranchPointerMap = new Map();
 	// First, add a draft branch
-	const draftBranch = new Branch('draft');
+	const draftBranch = new Branch('draft', draftBranchId);
 	const nonOrphanedChanges = changes.filter((change) => !change.isOrphanedVersionChange);
 	(nonOrphanedChanges.length > 0 ? nonOrphanedChanges : changes).forEach((change) =>
 		draftBranch.addChange(change),
@@ -208,7 +212,7 @@ const buildPubWithBranches = (pub, changes, versionToChangeIndex) => {
 				branchPointer = versionPermissionStringToBranchPointerMap.get(vpString);
 			} else {
 				// We need to start a new branch
-				const nextBranch = new Branch(vpString);
+				const nextBranch = new Branch(vpString, uuid.v4());
 				branchPointer = new BranchPointer(nextBranch, -1);
 				branchByNameMap.set(vpString, nextBranch);
 			}
@@ -240,14 +244,30 @@ const assertBranchPointersAreCorrect = (versionToBranchPointerMap, intermediateD
 	});
 };
 
-const transformV5Pub = (pub, { changes, checkpoint }, checkBranchPointers = true) => {
-	let intermediateDocStates = reconstructDocumentWithCheckpointFallback(changes, checkpoint);
-	const mapResult = mapVersionsToChangeIndices(pub.versions, intermediateDocStates);
+const transformV5Pub = (
+	pub,
+	{ changes, checkpoint, draftBranchId },
+	checkBranchPointers = true,
+) => {
+	let intermediateDocStates = reconstructDocumentWithCheckpointFallback(
+		changes,
+		checkpoint,
+		draftBranchId,
+	);
+	const mapResult = mapVersionsToChangeIndices(
+		pub.versions,
+		intermediateDocStates,
+		draftBranchId,
+	);
 	const versionToChangeIndexMap = mapResult.versionIndexMap;
 	intermediateDocStates = mapResult.intermediateDocStates;
-	// eslint-disable-next-line no-param-reassign
-	changes = intermediateDocStates.map((state) => state.change);
-	const pubWithBranches = buildPubWithBranches(pub, changes, versionToChangeIndexMap);
+	const finalChanges = intermediateDocStates.map((state) => state.change);
+	const pubWithBranches = buildPubWithBranches(
+		pub,
+		finalChanges,
+		versionToChangeIndexMap,
+		draftBranchId,
+	);
 	addDiscussions(pub, pubWithBranches);
 	if (checkBranchPointers) {
 		assertBranchPointersAreCorrect(

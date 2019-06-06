@@ -1,6 +1,4 @@
 /* eslint-disable no-console, no-restricted-syntax */
-const uuidv4 = require('uuid/v4');
-
 const { compressChange } = require('./changes');
 const { reconstructDocument } = require('./reconstructDocument');
 
@@ -12,9 +10,9 @@ const stringMapToObj = (strMap, processValue) => {
 	return res;
 };
 class Branch {
-	constructor(name) {
+	constructor(name, id) {
 		this.name = name;
-		this.id = uuidv4();
+		this.id = id;
 		this.merges = new Map();
 		this.changes = new Map();
 		this.discussions = new Map();
@@ -25,7 +23,6 @@ class Branch {
 	}
 
 	getNextKey() {
-		// return 1 + this.changes.size + this.merges.size;
 		return this.changes.size + this.merges.size;
 	}
 
@@ -55,11 +52,10 @@ class Branch {
 
 	serialize() {
 		const lastMergeKey = this.getHighestMergeIndex();
-		const compressChangeHere = (change) => compressChange(change, this.id);
 		return {
 			id: this.id,
-			changes: stringMapToObj(this.changes, compressChangeHere),
-			merges: stringMapToObj(this.merges, (changes) => changes.map(compressChangeHere)),
+			changes: stringMapToObj(this.changes, compressChange),
+			merges: stringMapToObj(this.merges, (changes) => changes.map(compressChange)),
 			discussions: stringMapToObj(this.discussions),
 			...(lastMergeKey !== -1 && { lastMergeKey: lastMergeKey.toString() }),
 		};

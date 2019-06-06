@@ -32,11 +32,12 @@ const getAndWritePubModelJson = async (pubDir, pubId, pubUpdatedTimes) => {
 };
 
 const getAndWriteTransformedJson = (pub, pubDir, bustCache = false) => {
-	const { changes, checkpoint } = getChangesAndCheckpointForPub(pubDir);
+	const { changes, checkpoint, draftBranchId } = getChangesAndCheckpointForPub(pubDir);
 	const transformAndUpdatePub = () => {
 		const transformed = transformPub(pub, {
 			changes: changes,
 			checkpoint: checkpoint,
+			draftBranchId: draftBranchId,
 		}).serialize();
 		pubDir.write(
 			'transformed.json',

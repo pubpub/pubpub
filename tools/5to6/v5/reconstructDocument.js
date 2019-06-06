@@ -52,7 +52,7 @@ const reconstructDocument = function*(changes, startingState) {
 	}
 };
 
-const reconstructDocumentWithCheckpointFallback = (changes, checkpoint) => {
+const reconstructDocumentWithCheckpointFallback = (changes, checkpoint, draftBranchId) => {
 	try {
 		return [...reconstructDocument(changes)];
 	} catch (err) {
@@ -63,7 +63,7 @@ const reconstructDocumentWithCheckpointFallback = (changes, checkpoint) => {
 		try {
 			return [
 				...reconstructDocument([
-					createReplaceWholeDocumentChange(newDocument(), checkpointDoc),
+					createReplaceWholeDocumentChange(newDocument(), checkpointDoc, draftBranchId),
 					...changesAfterCheckpoint,
 				]),
 			];
