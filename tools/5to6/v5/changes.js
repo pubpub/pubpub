@@ -1,4 +1,5 @@
 /* eslint-disable no-console, no-restricted-syntax */
+const uuidv4 = require('uuid/v4');
 const { Step, ReplaceStep } = require('prosemirror-transform');
 const { Slice } = require('prosemirror-model');
 const { compressStepJSON, uncompressStepJSON } = require('prosemirror-compress-pubpub');
@@ -24,10 +25,12 @@ const uncompressChange = (compressedChange) => {
 	return new Change(steps, clientId, timestamp);
 };
 
-const compressChange = (change) => {
+const compressChange = (change, branchId) => {
 	return {
+		id: uuidv4(),
+		cId: change.clientId,
+		bId: branchId,
 		t: change.timestamp,
-		c: change.clientId,
 		s: change.steps.map((step) => compressStepJSON(step.toJSON())),
 	};
 };
