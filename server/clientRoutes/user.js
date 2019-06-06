@@ -1,6 +1,7 @@
 import Promise from 'bluebird';
 import React from 'react';
 import { User as UserContainer } from 'containers';
+import { isPubPublic } from 'shared/pub/permissions';
 import Html from '../Html';
 import app from '../server';
 import { Branch, Community, Pub, PubAttribution, User } from '../models';
@@ -55,8 +56,7 @@ app.get(['/user/:slug', '/user/:slug/:mode'], (req, res, next) => {
 			if (userDataJson.pubs) {
 				userDataJson.pubs = userDataJson.pubs.filter((item) => {
 					const isOwnProfile = userDataJson.id === initialData.loginData.id;
-					const isPublicCollab = item.draftPermissions !== 'private';
-					return !!item.firstPublishedAt || isOwnProfile || isPublicCollab;
+					return isOwnProfile || isPubPublic(item);
 				});
 			}
 

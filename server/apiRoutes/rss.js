@@ -82,9 +82,6 @@ app.get('/rss.xml', (req, res) => {
 			communityData.pubs
 				.map((pub) => {
 					const pubJSON = pub.toJSON();
-					if (pub.draftPermissions !== 'private') {
-						pubJSON.listedDate = pub.createdAt;
-					}
 					const publishedDate = getPubPublishedDate(pub);
 					if (publishedDate) {
 						pubJSON.listedDate = publishedDate;
