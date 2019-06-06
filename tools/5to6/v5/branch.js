@@ -5,7 +5,7 @@ const { reconstructDocument } = require('./reconstructDocument');
 const stringMapToObj = (strMap, processValue) => {
 	const res = {};
 	for (const [key, value] of strMap) {
-		res[key.toString()] = processValue ? processValue(value) : value;
+		res[(key-1).toString()] = processValue ? processValue(value) : value;
 	}
 	return res;
 };
@@ -23,7 +23,7 @@ class Branch {
 	}
 
 	getNextKey() {
-		return this.changes.size + this.merges.size;
+		return 1 + this.changes.size + this.merges.size;
 	}
 
 	addChange(change) {
@@ -64,7 +64,7 @@ class Branch {
 	*getIntermediateDocStates(optionalHighestIndex, withIndex) {
 		const highestIndex = optionalHighestIndex || this.getHighestIndex();
 		let intermediateDocument = null;
-		for (let index = 0; index <= highestIndex; index += 1) {
+		for (let index = 1; index <= highestIndex; index += 1) {
 			const changeAtIndex = this.changes.get(index);
 			const mergeAtIndex = this.merges.get(index);
 			if (changeAtIndex && mergeAtIndex) {

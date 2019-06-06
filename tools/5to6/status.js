@@ -86,7 +86,7 @@ const main = () => {
 						JSON.stringify(
 							{
 								...problems,
-								errors: problems.errors.map((error) => {
+								errors: (problems.errors || []).map((error) => {
 									if (typeof error === 'string') {
 										return error;
 									}
