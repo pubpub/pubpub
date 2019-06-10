@@ -210,6 +210,8 @@ export const getInitialData = (req) => {
 export const generateMetaComponents = ({
 	initialData,
 	title,
+	citationTitle,
+	collectionTitle,
 	description,
 	image,
 	attributions,
@@ -221,6 +223,7 @@ export const generateMetaComponents = ({
 	const url = `https://${initialData.locationData.hostname}${initialData.locationData.path}`;
 	const favicon = initialData.communityData.favicon;
 	const avatar = image || initialData.communityData.avatar;
+	const citationJournalTitle = collectionTitle || siteName;
 	let outputComponents = [];
 
 	if (!initialData.locationData.isBasePubPub) {
@@ -243,8 +246,14 @@ export const generateMetaComponents = ({
 			<meta key="t2" property="og:title" content={title} />,
 			<meta key="t3" name="twitter:title" content={title} />,
 			<meta key="t4" name="twitter:image:alt" content={title} />,
-			<meta key="t5" name="citation_title" content={title} />,
-			<meta key="t6" name="dc.title" content={title} />,
+		];
+	}
+
+	if (citationTitle) {
+		outputComponents = [
+			...outputComponents,
+			<meta key="t5" name="citation_title" content={citationTitle} />,
+			<meta key="t6" name="dc.title" content={citationTitle} />,
 		];
 	}
 
@@ -252,7 +261,13 @@ export const generateMetaComponents = ({
 		outputComponents = [
 			...outputComponents,
 			<meta key="sn1" property="og:site_name" content={siteName} />,
-			<meta key="sn2" property="citation_journal_title" content={siteName} />,
+		];
+	}
+
+	if (citationJournalTitle) {
+		outputComponents = [
+			...outputComponents,
+			<meta key="sn2" property="citation_journal_title" content={citationJournalTitle} />,
 		];
 	}
 
