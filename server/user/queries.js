@@ -71,8 +71,11 @@ export const updateUser = (inputValues, updatePermissions, req) => {
 	if (filteredValues.lastName) {
 		filteredValues.lastName = filteredValues.lastName.trim();
 	}
-	filteredValues.fullName = `${filteredValues.firstName} ${filteredValues.lastName}`;
-	filteredValues.initials = `${filteredValues.firstName[0]}${filteredValues.lastName[0]}`;
+
+	if (filteredValues.firstName && filteredValues.lastName) {
+		filteredValues.fullName = `${filteredValues.firstName} ${filteredValues.lastName}`;
+		filteredValues.initials = `${filteredValues.firstName[0]}${filteredValues.lastName[0]}`;
+	}
 
 	return User.update(filteredValues, {
 		where: { id: inputValues.userId },
