@@ -36,7 +36,11 @@ const PubRow = (props) => {
 			<div className="contents">
 				<div className="info">
 					<div>
-						<a href={`/pub/${pub.slug}`}>{pub.title}</a>
+						{dragHandleProps ? (
+							<a href={`/pub/${pub.slug}`}>{pub.title}</a>
+						) : (
+							<span>{pub.title}</span>
+						)}
 					</div>
 					<div className="bp3-text-muted">
 						<em>{authorsNamesFromPub(pub).join(', ')}</em>
