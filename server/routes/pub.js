@@ -80,6 +80,9 @@ app.get(
 					return prev;
 				}, {});
 				const contextTitle = primaryCollection.title || initialData.communityData.title;
+				/* We calculate titleWithContext in generateMetaComponents. Since we will use */
+				/* titleWithContext in other locations (e.g. search), we should eventually */
+				/* write a helper function that generates these parameters. */
 				return renderToNodeStream(
 					res,
 					<Html
