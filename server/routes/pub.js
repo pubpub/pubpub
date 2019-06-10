@@ -73,14 +73,13 @@ app.get(
 						mode: mode,
 					},
 				};
-				let primaryCollection = false;
-				pubData.collectionPubs.forEach((collection) => {
-					if (collection.isPrimary && collection.collection.kind !== 'issue') {
-						primaryCollection = collection.collection;
+				const primaryCollection = pubData.collectionPubs.reduce((prev, curr) => {
+					if (curr.isPrimary && curr.collection.kind !== 'issue') {
+						return curr;
 					}
-				});
-				const collectionTitle = primaryCollection.title || initialData.communityData.title;
-				const pubTitle = `${pubData.title} · ${collectionTitle}`;
+					return prev;
+				}, {});
+				const contextTitle = primaryCollection.title || initialData.communityData.title;
 				return renderToNodeStream(
 					res,
 					<Html
@@ -88,15 +87,14 @@ app.get(
 						initialData={newInitialData}
 						headerComponents={generateMetaComponents({
 							initialData: initialData,
-							title: pubTitle,
-							citationTitle: pubData.title,
-							collectionTitle: collectionTitle,
+							title: pubData.title,
+							contextTitle: contextTitle,
 							description: pubData.description,
 							image: pubData.avatar,
 							attributions: pubData.attributions,
 							publishedAt: pubData.firstPublishedAt,
 							doi: pubData.doi,
-							//unlisted: isUnlistedDraft,
+							// unlisted: isUnlistedDraft,
 						})}
 					>
 						<Pub {...newInitialData} />

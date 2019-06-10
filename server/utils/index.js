@@ -210,8 +210,7 @@ export const getInitialData = (req) => {
 export const generateMetaComponents = ({
 	initialData,
 	title,
-	citationTitle,
-	collectionTitle,
+	contextTitle,
 	description,
 	image,
 	attributions,
@@ -223,7 +222,7 @@ export const generateMetaComponents = ({
 	const url = `https://${initialData.locationData.hostname}${initialData.locationData.path}`;
 	const favicon = initialData.communityData.favicon;
 	const avatar = image || initialData.communityData.avatar;
-	const citationJournalTitle = collectionTitle || siteName;
+	const titleWithContext = contextTitle ? `${title} · ${contextTitle}` : title;
 	let outputComponents = [];
 
 	if (!initialData.locationData.isBasePubPub) {
@@ -242,18 +241,12 @@ export const generateMetaComponents = ({
 	if (title) {
 		outputComponents = [
 			...outputComponents,
-			<title key="t1">{title}</title>,
-			<meta key="t2" property="og:title" content={title} />,
-			<meta key="t3" name="twitter:title" content={title} />,
-			<meta key="t4" name="twitter:image:alt" content={title} />,
-		];
-	}
-
-	if (citationTitle) {
-		outputComponents = [
-			...outputComponents,
-			<meta key="t5" name="citation_title" content={citationTitle} />,
-			<meta key="t6" name="dc.title" content={citationTitle} />,
+			<title key="t1">{titleWithContext}</title>,
+			<meta key="t2" property="og:title" content={titleWithContext} />,
+			<meta key="t3" name="twitter:title" content={titleWithContext} />,
+			<meta key="t4" name="twitter:image:alt" content={titleWithContext} />,
+			<meta key="t5" name="citation_title" content={title} />,
+			<meta key="t6" name="dc.title" content={title} />,
 		];
 	}
 
@@ -264,10 +257,10 @@ export const generateMetaComponents = ({
 		];
 	}
 
-	if (citationJournalTitle) {
+	if (contextTitle) {
 		outputComponents = [
 			...outputComponents,
-			<meta key="sn2" property="citation_journal_title" content={citationJournalTitle} />,
+			<meta key="sn2" property="citation_journal_title" content={contextTitle} />,
 		];
 	}
 
