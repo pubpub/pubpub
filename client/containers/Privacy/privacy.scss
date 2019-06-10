@@ -17,6 +17,9 @@
             .side-content {
                 grid-area: side;
             }
+            .side-menu {
+                background-color: #f4f4f4;
+            }
             .main-content {
                 grid-area: main;
                 min-width: 0;

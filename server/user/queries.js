@@ -35,6 +35,7 @@ export const createUser = (inputValues) => {
 				twitter: inputValues.twitter,
 				facebook: inputValues.facebook,
 				googleScholar: inputValues.googleScholar,
+				gdprConsent: inputValues.gdprConsent,
 				passwordDigest: 'sha512',
 			};
 

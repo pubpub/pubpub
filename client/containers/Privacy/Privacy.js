@@ -50,7 +50,10 @@ const Privacy = (props) => {
 							/>
 						</Menu>
 					</div>
-					<div className="main-content">{tab === 'settings' && <PrivacySettings />}</div>
+					<div className="main-content">
+						{tab === 'settings' && <PrivacySettings />}
+						{tab === 'policy' && <PrivacyPolicy />}
+					</div>
 				</GridWrapper>
 			</PageWrapper>
 		</div>

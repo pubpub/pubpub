@@ -3,6 +3,7 @@ import React from 'react';
 const PrivacyPolicy = function() {
 	return (
 		<div>
+			<h2>Privacy Policy</h2>
 			<p>
 				PubPub is a project of students and researchers in the Media Laboratory at the
 				Massachusetts Institute of Technology. PubPub is committed to respecting the privacy
@@ -11,7 +12,7 @@ const PrivacyPolicy = function() {
 				regardless of domain (including but not limited to Journal pages), and all
 				associated services).
 			</p>
-			<h2>Web Server Logs</h2>
+			<h3>Web Server Logs</h3>
 			<p>
 				When you visit the Site, our web server may record the following information in its
 				server log:
@@ -42,7 +43,7 @@ const PrivacyPolicy = function() {
 				or legal process, working with consultants assisting us with fixing or improving the
 				Site, or monitoring and improving the security of our network.
 			</p>
-			<h2>User Registration and User Generated Content</h2>
+			<h3>User Registration and User Generated Content</h3>
 			<p>
 				To obtain user registration, you must submit your email address to the Site, a
 				password that you create for user authentication purposes. We also ask you to
@@ -73,7 +74,7 @@ const PrivacyPolicy = function() {
 				features, and we will not publish or otherwise disclose your Feedback without first
 				obtaining your consent to do so.
 			</p>
-			<h2>Journals</h2>
+			<h3>Journals</h3>
 			<p>
 				Registered users may create Journals to aggregate their own and other users&apos;
 				Pubs, including yours. A Journal admin does not need your approval in order to
@@ -83,14 +84,14 @@ const PrivacyPolicy = function() {
 				appear. We may also send you a notification each time a Journal has elected to
 				include your Pub, if you have opted in to receiving email from PubPub.
 			</p>
-			<h2>Programming Analytics</h2>
+			<h3>Programming Analytics</h3>
 			<p>
 				In order to refine the resources on offer through the Site and to optimize PubPub’s
 				programming, PubPub may elect to conduct internal analytics of content submitted by
 				users. Any such internal analytics will be conducted on an anonymized set of
 				user-generated content.
 			</p>
-			<h2>Google Analytics and Mixpanel</h2>
+			<h3>Google Analytics and Mixpanel</h3>
 			<p>
 				We use Google Analytics and Mixpanel software to perform Site usage analytics.
 				Google Analytics collects anonymous information from users to help us track Site
@@ -107,7 +108,7 @@ const PrivacyPolicy = function() {
 				collect any personal identifying information such as names, contact information,
 				social security numbers or financial information.
 			</p>
-			<h2>Cookies</h2>
+			<h3>Cookies</h3>
 			<p>
 				Cookies are unique bits of computer data that many major websites will transfer to
 				your computer the first time that you visit. Cookies are stored on your hard drive
@@ -115,7 +116,7 @@ const PrivacyPolicy = function() {
 				Google Analytics and Mixpanel will install a cookie on the hard drives of Site
 				visitors.
 			</p>
-			<h2>Email</h2>
+			<h3>Email</h3>
 			<p>
 				We will only record your email address if you send us a message or submit it to us
 				as part of the user registration process. We will only use your email address for
@@ -135,7 +136,7 @@ const PrivacyPolicy = function() {
 				will be prohibited from using or sharing Site user information for any purpose other
 				than facilitating communications on behalf of the Site.
 			</p>
-			<h2>Disclosure to Third Parties</h2>
+			<h3>Disclosure to Third Parties</h3>
 			<p>
 				We will not sell, lend, or disclose to third parties any personally identifiable
 				information collected from users, except as described in this Policy or in the event
@@ -147,7 +148,7 @@ const PrivacyPolicy = function() {
 				court order or when disclosure is, in our sole discretion, necessary to protect our
 				legal rights, including intellectual property rights.
 			</p>
-			<h2>Other Websites</h2>
+			<h3>Other Websites</h3>
 			<p>
 				This Site may contain links to other web resources, including websites of
 				organizations other than the Massachusetts Institute of Technology. The websites to
@@ -157,7 +158,7 @@ const PrivacyPolicy = function() {
 				other sites to which the Site provides links. Please visit the relevant sites to
 				review their privacy policies.
 			</p>
-			<h2>Data Security</h2>
+			<h3>Data Security</h3>
 			<p>
 				We have in place physical, electronic and managerial procedures to protect the
 				information we collect online. However, as effective as these measures are, no
@@ -165,7 +166,7 @@ const PrivacyPolicy = function() {
 				database, nor can we guarantee that the information you supply will not be
 				intercepted while being transmitted to us over the Internet.
 			</p>
-			<h2>Notification of Changes in the Privacy Policy</h2>
+			<h3>Notification of Changes in the Privacy Policy</h3>
 			<p>
 				We will review our security measures and Privacy Policy on a periodic basis, and we
 				may modify our policies as appropriate. We may also change or update our Privacy

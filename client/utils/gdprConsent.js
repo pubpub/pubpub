@@ -6,11 +6,15 @@ const cookieKey = 'gdpr-consent';
 const persistSignupCookieKey = 'gdpr-consent-survives-login';
 const expireInOneThousandYears = { expires: 365 * 1000 };
 
+const odiousCookies = ['keen'];
+
+const deleteOdiousCookies = () => odiousCookies.map(Cookies.remove);
+
 export const gdprCookiePersistsSignup = () => Cookies.get(persistSignupCookieKey) === 'yes';
 
 export const getGdprConsentElection = (loginData = null) => {
 	const cookieValue = Cookies.get(cookieKey);
-	if (loginData && loginData.gdprConsent !== null) {
+	if (loginData && loginData.id && loginData.gdprConsent !== null) {
 		return loginData.gdprConsent === true;
 	}
 	if (cookieValue) {
@@ -23,6 +27,9 @@ export const updateGdprConsent = (loginData, doesUserConsent) => {
 	const loggedIn = !!loginData.id;
 	Cookies.set(cookieKey, doesUserConsent ? 'accept' : 'decline', expireInOneThousandYears);
 	Cookies.set(persistSignupCookieKey, 'yes', expireInOneThousandYears);
+	if (!doesUserConsent) {
+		deleteOdiousCookies();
+	}
 	if (loggedIn) {
 		return apiFetch('/api/users', {
 			method: 'PUT',

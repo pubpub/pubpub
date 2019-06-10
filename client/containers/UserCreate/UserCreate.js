@@ -70,7 +70,7 @@ class UserCreate extends Component {
 				twitter: this.state.twitter,
 				facebook: this.state.facebook,
 				googleScholar: this.state.googleScholar,
-				gdprConsent: gdprCookiePersistsSignup() && getGdprConsentElection(),
+				gdprConsent: gdprCookiePersistsSignup() ? getGdprConsentElection() : null,
 			}),
 		})
 			.then(() => {
