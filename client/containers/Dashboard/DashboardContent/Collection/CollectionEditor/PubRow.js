@@ -35,7 +35,9 @@ const PubRow = (props) => {
 			)}
 			<div className="contents">
 				<div className="info">
-					<div>{pub.title}</div>
+					<div>
+						<a href={`/pub/${pub.slug}`}>{pub.title}</a>
+					</div>
 					<div className="bp3-text-muted">
 						<em>{authorsNamesFromPub(pub).join(', ')}</em>
 					</div>
