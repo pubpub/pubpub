@@ -183,6 +183,7 @@ class Footer extends Component {
 									<div className="confirm">
 										<Checkbox
 											checked={this.state.isConfirmed}
+											disabled={this.state.isSubscribed}
 											required="required"
 											onChange={this.handleConfirmChange}
 											label={
