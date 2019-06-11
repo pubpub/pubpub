@@ -187,5 +187,3 @@ const PrivacyPolicy = function() {
 };
 
 export default PrivacyPolicy;
-
-
