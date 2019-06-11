@@ -7,7 +7,6 @@ const persistSignupCookieKey = 'gdpr-consent-survives-login';
 const expireInOneThousandYears = { expires: 365 * 1000 };
 
 const odiousCookies = ['keen'];
-
 const deleteOdiousCookies = () => odiousCookies.map(Cookies.remove);
 
 export const gdprCookiePersistsSignup = () => Cookies.get(persistSignupCookieKey) === 'yes';

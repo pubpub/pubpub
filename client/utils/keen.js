@@ -2,7 +2,7 @@ import KeenTracking from 'keen-tracking';
 
 import { isProd } from './isProd';
 import { getClientInitialData } from './initialData';
-import { userGivesGdprConsent } from './gdprConsent';
+import { getGdprConsentElection } from './gdprConsent';
 
 const keenEnvProd = {
 	projectId: '5b57a01ac9e77c0001eef181',
@@ -17,10 +17,10 @@ const keenEnvDev = {
 };
 
 export const setupKeen = () => {
-	if (!userGivesGdprConsent()) {
+	const { communityData, collectionData, pubData, loginData } = getClientInitialData();
+	if (!getGdprConsentElection(loginData)) {
 		return;
 	}
-	const { communityData, collectionData, pubData, loginData } = getClientInitialData();
 	const keenEnvironment = isProd() ? keenEnvProd : keenEnvDev;
 	const client = new KeenTracking(keenEnvironment);
 	const customEventData = {};
