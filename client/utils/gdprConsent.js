@@ -4,10 +4,15 @@ import { apiFetch } from './apiFetch';
 
 const cookieKey = 'gdpr-consent';
 const persistSignupCookieKey = 'gdpr-consent-survives-login';
-const expireInOneThousandYears = { expires: 365 * 1000 };
 
 const odiousCookies = ['keen'];
 const deleteOdiousCookies = () => odiousCookies.map(Cookies.remove);
+
+const getCookieOptions = () => ({
+	expires: 365 * 1000,
+	// If we're on pubpub.org or x.pubpub.org, make the cookie valid for [y.]pubpub.org
+	...(window.location.host.includes('pubpub.org') && { domain: '.pubpub.org' }),
+});
 
 export const gdprCookiePersistsSignup = () => Cookies.get(persistSignupCookieKey) === 'yes';
 
@@ -24,8 +29,9 @@ export const getGdprConsentElection = (loginData = null) => {
 
 export const updateGdprConsent = (loginData, doesUserConsent) => {
 	const loggedIn = !!loginData.id;
-	Cookies.set(cookieKey, doesUserConsent ? 'accept' : 'decline', expireInOneThousandYears);
-	Cookies.set(persistSignupCookieKey, 'yes', expireInOneThousandYears);
+	const cookieOptions = getCookieOptions();
+	Cookies.set(cookieKey, doesUserConsent ? 'accept' : 'decline', cookieOptions);
+	Cookies.set(persistSignupCookieKey, 'yes', cookieOptions);
 	if (!doesUserConsent) {
 		deleteOdiousCookies();
 	}
