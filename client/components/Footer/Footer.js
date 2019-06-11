@@ -4,7 +4,6 @@ import {
 	Button,
 	InputGroup,
 	Checkbox,
-	Tooltip,
 	Position,
 	Popover,
 	PopoverInteractionKind,
