@@ -50,7 +50,9 @@ const GdprBanner = (props) => {
 				</p>
 			</div>
 			<div className="buttons">
-				<Button onClick={() => closeWithConsent(true)}>Accept</Button>
+				<Button onClick={() => closeWithConsent(true)} intent="success">
+					Accept
+				</Button>
 				<Button onClick={() => closeWithConsent(false)}>Disable</Button>
 			</div>
 		</div>
