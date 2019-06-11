@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, InputGroup, Checkbox, Tooltip, Position } from '@blueprintjs/core';
+import {
+	Button,
+	InputGroup,
+	Checkbox,
+	Tooltip,
+	Position,
+	Popover,
+	PopoverInteractionKind,
+} from '@blueprintjs/core';
 import Icon from 'components/Icon/Icon';
 import { apiFetch } from 'utils';
 
@@ -188,21 +196,34 @@ class Footer extends Component {
 											onChange={this.handleConfirmChange}
 											label={
 												<span>
-													<Tooltip
-														position={Position.BOTTOM}
-														content={
-															<span>
+													<Popover
+														interactionKind={
+															PopoverInteractionKind.HOVER
+														}
+														popoverClassName="bp3-popover-content-sizing"
+														position={Position.RIGHT}
+													>
+														<p>
+															<em>
+																I agree to receive this newsletter.
+															</em>
+														</p>
+														<div>
+															<p>
 																We use a third party provider,
 																Mailchimp, to deliver our
 																newsletters. We never share your
 																data with anyone, and you can
 																unsubscribe using the link at the
-																bottom of every email.
-															</span>
-														}
-													>
-														<em>I agree to receive this newsletter.</em>
-													</Tooltip>
+																bottom of every email. Learn more by
+																visiting your&nbsp;
+																<a href="/privacy">
+																	privacy settings
+																</a>
+																.
+															</p>
+														</div>
+													</Popover>
 												</span>
 											}
 										/>
