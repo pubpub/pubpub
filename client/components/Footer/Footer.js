@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, InputGroup } from '@blueprintjs/core';
+import { Button, InputGroup, Checkbox, Tooltip, Position } from '@blueprintjs/core';
 import Icon from 'components/Icon/Icon';
 import { apiFetch } from 'utils';
 
@@ -20,9 +20,11 @@ class Footer extends Component {
 			email: '',
 			isLoadingSubscribe: false,
 			isSubscribed: false,
+			isConfirmed: false,
 		};
 		this.handleEmailChange = this.handleEmailChange.bind(this);
 		this.handleEmailSubmit = this.handleEmailSubmit.bind(this);
+		this.handleConfirmChange = this.handleConfirmChange.bind(this);
 		this.links = props.isBasePubPub
 			? [
 					{ id: 1, title: 'Create your community', url: '/create/community' },
@@ -48,6 +50,12 @@ class Footer extends Component {
 		this.setState({
 			isLoadingSubscribe: true,
 		});
+		if (!this.state.isConfirmed) {
+			this.setState({
+				isLoadingSubscribe: false,
+			});
+			return false;
+		}
 		return apiFetch('/api/subscribe', {
 			method: 'POST',
 			body: JSON.stringify({
@@ -67,6 +75,10 @@ class Footer extends Component {
 					isLoadingSubscribe: false,
 				});
 			});
+	}
+
+	handleConfirmChange(evt) {
+		this.setState({ isConfirmed: evt.target.checked });
 	}
 
 	render() {
@@ -149,24 +161,51 @@ class Footer extends Component {
 								<form onSubmit={this.handleEmailSubmit}>
 									<strong>Feature & Community Newsletter</strong>
 									<InputGroup
+										type="email"
 										placeholder="Your Email"
 										value={this.state.email}
 										onChange={this.handleEmailChange}
 										label="Feature & community newsletter"
 										rightElement={
 											<Button
+												type="submit"
 												icon={
 													!this.state.isSubscribed
 														? 'arrow-right'
 														: 'tick'
 												}
-												onClick={this.handleEmailSubmit}
 												minimal={true}
 												loading={this.state.isLoadingSubscribe}
 											/>
 										}
 										disabled={this.state.isSubscribed}
 									/>
+									<div className="confirm">
+										<Checkbox
+											checked={this.state.isConfirmed}
+											required="required"
+											onChange={this.handleConfirmChange}
+											label={
+												<span>
+													<Tooltip
+														position={Position.BOTTOM}
+														content={
+															<span>
+																We use a third party provider,
+																Mailchimp, to deliver our
+																newsletters. We never share your
+																data with anyone, and you can
+																unsubscribe using the link at the
+																bottom of every email.
+															</span>
+														}
+													>
+														<em>I agree to receive this newsletter.</em>
+													</Tooltip>
+												</span>
+											}
+										/>
+									</div>
 								</form>
 							</div>
 							<div className="right">
