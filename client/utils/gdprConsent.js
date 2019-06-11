@@ -27,6 +27,13 @@ export const getGdprConsentElection = (loginData = null) => {
 	return null;
 };
 
+export const shouldShowGdprBanner = (loginData) => {
+	if (loginData.id && loginData.gdprConsent === null) {
+		return true;
+	}
+	return getGdprConsentElection(loginData) === null;
+};
+
 export const updateGdprConsent = (loginData, doesUserConsent) => {
 	const loggedIn = !!loginData.id;
 	const cookieOptions = getCookieOptions();

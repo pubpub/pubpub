@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 
-import { getGdprConsentElection, updateGdprConsent } from 'utils/gdprConsent';
+import { shouldShowGdprBanner, updateGdprConsent } from 'utils/gdprConsent';
 import { useEffectOnce } from 'react-use';
 
 require('./gdprBanner.scss');
@@ -21,7 +21,7 @@ const GdprBanner = (props) => {
 	// After the component mounts on the client, check to see whether it should be shown.
 	// (it uses cookies, so it causes SSR problems if we try to do this at first render)
 	useEffectOnce(() => {
-		if (getGdprConsentElection(loginData) === null) {
+		if (shouldShowGdprBanner(loginData)) {
 			setIsShown(true);
 		}
 	});
