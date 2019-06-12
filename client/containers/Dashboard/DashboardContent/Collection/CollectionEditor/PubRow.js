@@ -40,16 +40,23 @@ const PubRow = (props) => {
 						{dragHandleProps ? (
 							<a href={`/pub/${pub.slug}`}>{pub.title}</a>
 						) : (
-							<span>
+							<span className="left-title">
 								{pub.title}
-								&nbsp;
-								<a
+								<AnchorButton
 									href={`/pub/${pub.slug}`}
 									target="_blank"
 									rel="noopener noreferrer"
-								>
-									<Icon icon="share" alt="open in new tab icon" iconSize={10} />
-								</a>
+									minimal={true}
+									small={true}
+									className="out-link"
+									icon={
+										<Icon
+											icon="share"
+											alt="open in new tab icon"
+											iconSize={11}
+										/>
+									}
+								/>
 							</span>
 						)}
 					</div>

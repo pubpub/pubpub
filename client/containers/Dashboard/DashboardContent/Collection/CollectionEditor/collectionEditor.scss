@@ -47,6 +47,13 @@ $pubs-pane-width: 300px;
             opacity: 1;
             transition: 0.1s ease-out opacity;
         }
+        .left-title {
+            display: flex;
+            align-items: center;
+            .out-link {
+                margin-left: 0.5em;
+            }
+        }
     }
     .pub-row.is-dragging {
         .controls {
