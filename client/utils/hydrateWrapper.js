@@ -5,6 +5,7 @@ import { FocusStyleManager } from '@blueprintjs/core';
 
 import { getClientInitialData } from './initialData';
 import { setupKeen } from './keen';
+import { setIsProd } from './isProd';
 
 const isStorybookEnv = (windowObj) =>
 	windowObj.location.origin === 'http://localhost:9001' || windowObj.STORYBOOK_ENV === 'react';
@@ -25,6 +26,7 @@ export const hydrateWrapper = (Component) => {
 		}
 
 		const initialData = getClientInitialData();
+		setIsProd(initialData.locationData.isPubPubProduction);
 
 		if (!isLocalEnv(window)) {
 			setupKeen();
