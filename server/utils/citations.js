@@ -19,14 +19,16 @@ const getCollectionLevelData = (primaryCollectionPub) => {
 		return { type: 'article-journal' };
 	}
 	const { collection } = primaryCollectionPub;
-	const { metadata = {}, title, kind } = collection;
+	const { metadata = {}, kind, title } = collection;
+	const useCollectionTitle = collection.kind !== 'issue';
 	return {
 		type: collectionKindToCitationJSPart(kind),
-		'container-title': title,
+		...(useCollectionTitle && { 'container-title': title }),
 		ISBN: metadata.isbn,
 		ISSN: metadata.issn || metadata.printIssn || metadata.electronicIssn,
 		edition: metadata.edition,
 		volume: metadata.volume,
+		issue: metadata.issue,
 	};
 };
 

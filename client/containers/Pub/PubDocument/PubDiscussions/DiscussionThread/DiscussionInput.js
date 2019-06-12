@@ -15,31 +15,31 @@ const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	collabData: PropTypes.object.isRequired,
 	firebaseBranchRef: PropTypes.object.isRequired,
-	discussionId: PropTypes.string.isRequired,
-	dispatch: PropTypes.func.isRequired,
 	threadData: PropTypes.array.isRequired,
 	updateLocalData: PropTypes.func.isRequired,
+	setActiveThread: PropTypes.func.isRequired,
 };
 
 const DiscussionInput = (props) => {
-	const { pubData, collabData, discussionId, dispatch, updateLocalData, threadData } = props;
+	const { pubData, collabData, updateLocalData, threadData, setActiveThread } = props;
 	const { loginData, communityData } = useContext(PageContext);
 	const pubView = collabData.editorChangeObject.view;
 	const [changeObject, setChangeObject] = useState({});
 	const [isLoading, setIsLoading] = useState(false);
-	const isNewThread = !threadData.length;
+	const [didFocus, setDidFocus] = useState(false);
+	const isNewThread = !threadData[0].threadNumber;
 	useEffect(() => {
-		if (isNewThread && changeObject.view) {
+		if ((isNewThread || didFocus) && changeObject.view) {
 			changeObject.view.focus();
 		}
-	}, [isNewThread, changeObject.view]);
+	}, [isNewThread, changeObject.view, didFocus]);
 
 	const handlePostDiscussion = () => {
 		setIsLoading(true);
 		return apiFetch('/api/discussions', {
 			method: 'POST',
 			body: JSON.stringify({
-				discussionId: isNewThread ? discussionId : undefined,
+				discussionId: isNewThread ? threadData[0].id : undefined,
 				threadNumber: isNewThread ? undefined : threadData[0].threadNumber,
 				userId: loginData.id,
 				pubId: pubData.id,
@@ -57,10 +57,9 @@ const DiscussionInput = (props) => {
 					discussionData,
 					convertLocalHighlightToDiscussion(
 						pubView,
-						discussionId,
+						threadData[0].id,
 						props.firebaseBranchRef,
 					),
-					dispatch({ id: discussionId, delete: true }),
 				]);
 			})
 			.then(([discussionData]) => {
@@ -68,10 +67,8 @@ const DiscussionInput = (props) => {
 					...pubData,
 					discussions: [...pubData.discussions, discussionData],
 				});
-			})
-			.then(() => {
 				if (isNewThread) {
-					dispatch({ id: discussionId, key: 'isOpen', value: true });
+					setActiveThread(discussionData.id);
 				}
 			});
 	};
@@ -79,44 +76,54 @@ const DiscussionInput = (props) => {
 	return (
 		<div className="discussion-item input">
 			<div className="avatar-wrapper">
-				<Avatar width={30} userInitials={loginData.intials} userAvatar={loginData.avatar} />
+				<Avatar width={18} userInitials={loginData.intials} userAvatar={loginData.avatar} />
 			</div>
-			<div className="content-wrapper">
-				<FormattingBar
-					editorChangeObject={changeObject || {}}
-					threads={[]}
-					hideBlocktypes={true}
-					hideExtraFormatting={true}
-					isSmall={true}
+			{!isNewThread && !didFocus && (
+				<input
+					type="text"
+					className="simple-input"
+					placeholder="Add a reply..."
+					onFocus={() => {
+						setDidFocus(true);
+					}}
 				/>
-				<div className="discussion-body-wrapper editable">
-					<Editor
-						placeholder={
-							isNewThread ? 'Type your discussion here...' : 'Type your reply here...'
-						}
-						onChange={(editorChangeObject) => {
-							setChangeObject(editorChangeObject);
-						}}
+			)}
+			{(isNewThread || didFocus) && (
+				<div className="content-wrapper">
+					<div className="discussion-body-wrapper editable">
+						<Editor
+							placeholder={isNewThread ? 'Add your discussion...' : 'Add a reply...'}
+							onChange={(editorChangeObject) => {
+								setChangeObject(editorChangeObject);
+							}}
+						/>
+					</div>
+					<FormattingBar
+						editorChangeObject={changeObject || {}}
+						threads={[]}
+						hideBlocktypes={true}
+						hideExtraFormatting={true}
+						isSmall={true}
 					/>
-				</div>
-				<Button
-					className="discussion-primary-button"
-					intent={Intent.PRIMARY}
-					text={isNewThread ? 'Post Discussion' : 'Post Reply'}
-					loading={isLoading}
-					disabled={!getText(changeObject.view)}
-					onClick={handlePostDiscussion}
-				/>
-				{isNewThread && (
 					<Button
-						text="Cancel"
-						onClick={() => {
-							removeLocalHighlight(pubView, discussionId);
-							dispatch({ id: discussionId, delete: true });
-						}}
+						className="discussion-primary-button"
+						intent={Intent.PRIMARY}
+						text={isNewThread ? 'Post Discussion' : 'Post Reply'}
+						loading={isLoading}
+						disabled={!getText(changeObject.view)}
+						onClick={handlePostDiscussion}
+						small={true}
 					/>
-				)}
-			</div>
+					{isNewThread && (
+						<Button
+							text="Cancel"
+							onClick={() => {
+								removeLocalHighlight(pubView, threadData[0].id);
+							}}
+						/>
+					)}
+				</div>
+			)}
 		</div>
 	);
 };
