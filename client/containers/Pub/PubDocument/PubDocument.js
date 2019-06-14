@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { marksAtSelection, setLocalHighlight, cursor } from '@pubpub/editor';
 import { pubDataProps } from 'types/pub';
-import { GridWrapper } from 'components';
 import { PageContext } from 'components/PageWrapper/PageWrapper';
 import PubHeaderFormatting from './PubHeaderFormatting';
 import PubBody from './PubBody';
@@ -12,6 +11,7 @@ import PubDiscussions from './PubDiscussions';
 import PubFooter from './PubFooter';
 import PubInlineImport from './PubInlineImport';
 import PubToc from './PubToc';
+import PubGrid from './PubGrid';
 import PubSideCollaborators from './PubSideCollaborators';
 
 require('./pubDocument.scss');
@@ -102,7 +102,7 @@ const PubDocument = (props) => {
 			{!pubData.isStaticDoc && pubData.metaMode !== 'history' && (
 				<PubHeaderFormatting pubData={pubData} collabData={collabData} />
 			)}
-			<GridWrapper containerClassName="pub" columnClassName="pub-columns">
+			<PubGrid>
 				<div className="main-content" ref={mainContentRef}>
 					<PubBody
 						pubData={pubData}
@@ -116,13 +116,11 @@ const PubDocument = (props) => {
 						}}
 					/>
 					{pubData.metaMode !== 'history' && (
-						<PubInlineImport
-							pubData={pubData}
-							editorView={collabData.editorChangeObject.view}
-						/>
-					)}
-					<PubFooter pubData={pubData} />
-
+				<PubInlineImport
+					pubData={pubData}
+					editorView={collabData.editorChangeObject.view}
+				/>
+			)}
 					{areDiscussionsShown && (
 						<PubDiscussions
 							pubData={pubData}
@@ -150,7 +148,8 @@ const PubDocument = (props) => {
 					<PubToc pubData={pubData} editorChangeObject={collabData.editorChangeObject} />
 					<PubSideCollaborators pubData={pubData} />
 				</div>
-			</GridWrapper>
+			</PubGrid>
+			<PubFooter pubData={pubData} />
 		</div>
 	);
 };
