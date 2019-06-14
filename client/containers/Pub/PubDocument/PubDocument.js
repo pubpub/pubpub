@@ -11,7 +11,6 @@ import PubDiscussions from './PubDiscussions';
 import PubFooter from './PubFooter';
 import PubInlineImport from './PubInlineImport';
 import PubToc from './PubToc';
-import PubGrid from './PubGrid';
 import PubSideCollaborators from './PubSideCollaborators';
 
 require('./pubDocument.scss');
@@ -36,7 +35,6 @@ const PubDocument = (props) => {
 	const [clickedMarks, setClickedMarks] = useState([]);
 	// const [tempId, setTempId] = useState(uuidv4());
 	const editorChangeObject = collabData.editorChangeObject;
-	const mainContentRef = useRef(null);
 	const sideContentRef = useRef(null);
 
 	/* Calculate whether the link popup should be open */
@@ -102,8 +100,8 @@ const PubDocument = (props) => {
 			{!pubData.isStaticDoc && pubData.metaMode !== 'history' && (
 				<PubHeaderFormatting pubData={pubData} collabData={collabData} />
 			)}
-			<PubGrid>
-				<div className="main-content" ref={mainContentRef}>
+			<div className="pub-grid">
+				<div className="main-content">
 					<PubBody
 						pubData={pubData}
 						collabData={collabData}
@@ -116,18 +114,17 @@ const PubDocument = (props) => {
 						}}
 					/>
 					{pubData.metaMode !== 'history' && (
-				<PubInlineImport
-					pubData={pubData}
-					editorView={collabData.editorChangeObject.view}
-				/>
-			)}
+						<PubInlineImport
+							pubData={pubData}
+							editorView={collabData.editorChangeObject.view}
+						/>
+					)}
 					{areDiscussionsShown && (
 						<PubDiscussions
 							pubData={pubData}
 							collabData={collabData}
 							firebaseBranchRef={firebaseBranchRef}
 							updateLocalData={props.updateLocalData}
-							mainContentRef={mainContentRef}
 							sideContentRef={sideContentRef}
 						/>
 					)}
@@ -148,7 +145,7 @@ const PubDocument = (props) => {
 					<PubToc pubData={pubData} editorChangeObject={collabData.editorChangeObject} />
 					<PubSideCollaborators pubData={pubData} />
 				</div>
-			</PubGrid>
+			</div>
 			<PubFooter pubData={pubData} />
 		</div>
 	);

@@ -13,7 +13,6 @@ const propTypes = {
 	threads: PropTypes.array.isRequired,
 	mountClassName: PropTypes.string.isRequired,
 	updateLocalData: PropTypes.func.isRequired,
-	mainContentRef: PropTypes.object.isRequired,
 	sideContentRef: PropTypes.object.isRequired,
 };
 
@@ -24,7 +23,6 @@ const ThreadGroup = (props) => {
 		firebaseBranchRef,
 		updateLocalData,
 		threads,
-		mainContentRef,
 		sideContentRef,
 		mountClassName,
 	} = props;
@@ -32,6 +30,9 @@ const ThreadGroup = (props) => {
 	const [activeThread, setActiveThread] = useState(undefined);
 	const [isExpanded, setExpanded] = useState(false);
 	const prevNewDiscussionIds = useRef([]);
+
+	const sideRect = sideContentRef.current.getBoundingClientRect();
+	const useCompactView = sideRect.width < 275;
 
 	useEffect(() => {
 		/* We want to set the activeThread to any newly created discussion */
@@ -66,14 +67,11 @@ const ThreadGroup = (props) => {
 		setActiveThread(undefined);
 	}
 
-	const mainWidth = mainContentRef.current.offsetWidth;
-	const sideWidth = sideContentRef.current.offsetWidth;
-	const left = (mainWidth + sideWidth) / 0.96 - sideWidth;
-
 	const style = {
-		left: isExpanded && activeThread ? 0 : left,
-		width: isExpanded && activeThread ? 'auto' : sideWidth,
+		left: isExpanded && activeThread ? 0 : sideRect.left,
+		width: isExpanded && activeThread ? 'auto' : sideRect.width,
 	};
+
 	return (
 		<span
 			className={classNames({
@@ -93,6 +91,7 @@ const ThreadGroup = (props) => {
 				setActiveThread={setActiveThread}
 				isExpanded={isExpanded}
 				setExpanded={setExpanded}
+				useCompactView={useCompactView}
 			/>
 			{activeThread && (
 				<DiscussionThread

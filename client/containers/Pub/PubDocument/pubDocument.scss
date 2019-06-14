@@ -1,3 +1,20 @@
+/* Below this width, comments will be forced to a minimized view */
+$compact-comments-cutoff-width: 750px;
+/* The pub won't grow beyond this width */
+$pub-max-width: 675px;
+/* The space available for comments */
+$comments-full-width: 275px;
+/* The space available for comments on smaller screens */
+$comments-compact-width: 25px;
+/* The maximum width of all the content */
+$content-max-width: $pub-max-width + $comments-full-width;
+/* Full width of the gutter */
+$gutter-full-width: 50px;
+/* The pub won't shrink beyond this width */
+$pub-min-width: $compact-comments-cutoff-width - $comments-full-width - $gutter-full-width;
+/* Compact width of the gutter */
+$gutter-compact-width: 15px;
+
 .pub-document-component {
 	.discussions {
 		background-color: #f8f8f8;
@@ -6,8 +23,47 @@
 	}
 }
 
-@media only screen and (min-width: 750px) {
-	@supports (display: grid) {
+@mixin has-grid($areas) {
+    display: grid;
+    grid-template-columns:
+        minmax(2%, auto)
+        minmax($pub-min-width, $pub-max-width)
+        $gutter-full-width
+        $comments-full-width
+        minmax(2%, auto);
+    grid-template-areas: $areas;
+    @media only screen and (max-width: $compact-comments-cutoff-width) {
+        grid-template-columns:
+            minmax(2%, auto)
+            1fr
+            $gutter-compact-width
+            $comments-compact-width
+            minmax(2%, auto);
+    }
+}
+
+@supports (display: grid) {
+    .pub-grid {
+        @include has-grid('. . . comments .');
+        width: 100%;
+        margin-top: 3em;
+        .main-content {
+            grid-column: 1 / -1;
+            grid-row-start: 1;
+        }
+        .side-content {
+            grid-area: comments;
+        }
+    }
+    .pub-body-component > .editor.ProseMirror {
+        @include has-grid('. pub . . .');
+        & > * {
+            grid-column-start: pub;
+            grid-column-end: pub;
+        }
+	}
+	
+	@media only screen and (min-width: $compact-comments-cutoff-width) {
 		.pub-document-component {
 			.pub-columns {
 				margin-top: 3em;
@@ -22,15 +78,23 @@
 			}
 		}
 	}
+
+    @media only screen and (max-width: $compact-comments-cutoff-width) {
+        .pub-grid {
+            margin-top: 3em;
+            .side-content > * {
+                display: none;
+            }
+		}
+		.pub-document-component {
+			.main-content {
+				margin-top: 2em;
+			}
+		}
+    }
 }
 
-@media only screen and (max-width: 750px) {
-	.pub-document-component {
-		.main-content {
-			margin-top: 2em;
-		}
-	}
-}
+
 @media print {
 	#pub-old-container {
 		.container.pub {
