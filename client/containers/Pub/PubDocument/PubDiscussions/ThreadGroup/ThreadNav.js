@@ -15,13 +15,11 @@ const propTypes = {
 	setActiveThread: PropTypes.func.isRequired,
 	isExpanded: PropTypes.bool.isRequired,
 	setExpanded: PropTypes.func.isRequired,
-	useCompactView: PropTypes.bool,
 };
 
 const defaultProps = {
 	activeThreadHover: undefined,
 	activeThread: undefined,
-	useCompactView: true,
 };
 
 const ThreadNav = (props) => {
@@ -33,7 +31,6 @@ const ThreadNav = (props) => {
 		setActiveThread,
 		isExpanded,
 		setExpanded,
-		useCompactView,
 	} = props;
 	const { communityData, loginData } = useContext(PageContext);
 
@@ -86,9 +83,6 @@ const ThreadNav = (props) => {
 						onClick={() => {
 							const setId = activeThread === thread[0].id ? undefined : thread[0].id;
 							setActiveThread(setId);
-							if (useCompactView) {
-								setExpanded(true);
-							}
 						}}
 					>
 						<span className="bubble" style={bubbleStyle}>
@@ -100,7 +94,7 @@ const ThreadNav = (props) => {
 								/>
 							)}
 						</span>
-						{!useCompactView && threads.length === 1 && thread[0].threadNumber && (
+						{threads.length === 1 && thread[0].threadNumber && (
 							<span className="names">
 								{threads[0]
 									.map((discussion) => {
@@ -155,32 +149,32 @@ const ThreadNav = (props) => {
 			)}
 			{activeThread && (
 				<div className="close-wrapper">
-					{!useCompactView && (
-						<Button
-							minimal={true}
-							small={true}
-							icon={
-								isExpanded ? (
-									<Icon
-										className="expand-icon"
-										icon="collapse-all"
-										iconSize={12}
-										color={communityData.accentColorDark}
-									/>
-								) : (
-									<Icon
-										className="expand-icon"
-										icon="expand-all"
-										iconSize={12}
-										color={communityData.accentColorDark}
-									/>
-								)
-							}
-							onClick={() => {
-								setExpanded(!isExpanded);
-							}}
-						/>
-					)}
+					<Button
+						className="expand-button"
+						minimal={true}
+						small={true}
+						icon={
+							isExpanded ? (
+								<Icon
+									className="expand-icon"
+									icon="collapse-all"
+									iconSize={12}
+									color={communityData.accentColorDark}
+								/>
+							) : (
+								<Icon
+									className="expand-icon"
+									icon="expand-all"
+									iconSize={12}
+									color={communityData.accentColorDark}
+								/>
+							)
+						}
+						onClick={() => {
+							setExpanded(!isExpanded);
+						}}
+					/>
+
 					<Button
 						minimal={true}
 						small={true}

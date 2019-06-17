@@ -32,7 +32,6 @@ const ThreadGroup = (props) => {
 	const prevNewDiscussionIds = useRef([]);
 
 	const sideRect = sideContentRef.current.getBoundingClientRect();
-	const useCompactView = sideRect.width < 275;
 
 	useEffect(() => {
 		/* We want to set the activeThread to any newly created discussion */
@@ -68,8 +67,8 @@ const ThreadGroup = (props) => {
 	}
 
 	const style = {
-		left: isExpanded && activeThread ? 0 : sideRect.left,
-		width: isExpanded && activeThread ? 'auto' : sideRect.width,
+		left: sideRect.left,
+		width: sideRect.width,
 	};
 
 	return (
@@ -91,7 +90,6 @@ const ThreadGroup = (props) => {
 				setActiveThread={setActiveThread}
 				isExpanded={isExpanded}
 				setExpanded={setExpanded}
-				useCompactView={useCompactView}
 			/>
 			{activeThread && (
 				<DiscussionThread
