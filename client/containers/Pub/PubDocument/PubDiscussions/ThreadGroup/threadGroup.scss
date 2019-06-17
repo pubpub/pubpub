@@ -4,9 +4,9 @@
 @mixin expanded {
 	position: relative;
 	padding: 1em 0em;
-	display: block;
+	display: inline-block;
 	left: 0 !important;
-	width: auto !important;
+	width: 100% !important;
 	&:before {
 		left: -21px;
 	}
@@ -55,6 +55,13 @@
 		}
 		&.active {
 			@include expanded;
+		}
+		&:not(.active) {
+			overflow: hidden;
+			.bubble-wrapper {
+				position: relative;
+				left: 3px;
+			}
 		}
 	}
 }
