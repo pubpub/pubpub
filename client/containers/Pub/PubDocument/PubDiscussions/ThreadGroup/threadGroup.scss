@@ -27,9 +27,7 @@
 	&.active {
 		background: white;
 		z-index: 1;
-		border: 10px solid white;
-		border-top: none;
-		border-left: none;
+		border-right: 10px solid white;
 		box-sizing: content-box;
 		& > * {
 			box-sizing: border-box;
@@ -43,7 +41,6 @@
 			border-left: 1px solid #E5E5E5;
 			background: white;
 			width: 20px;
-			height: calc(100% + 10px);
 		}
 	}
 	&.expanded {
