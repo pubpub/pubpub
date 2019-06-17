@@ -155,30 +155,32 @@ const ThreadNav = (props) => {
 			)}
 			{activeThread && (
 				<div className="close-wrapper">
-					{!useCompactView && <Button
-						minimal={true}
-						small={true}
-						icon={
-							isExpanded ? (
-								<Icon
-									className="expand-icon"
-									icon="collapse-all"
-									iconSize={12}
-									color={communityData.accentColorDark}
-								/>
-							) : (
-								<Icon
-									className="expand-icon"
-									icon="expand-all"
-									iconSize={12}
-									color={communityData.accentColorDark}
-								/>
-							)
-						}
-						onClick={() => {
-							setExpanded(!isExpanded);
-						}}
-					/>}
+					{!useCompactView && (
+						<Button
+							minimal={true}
+							small={true}
+							icon={
+								isExpanded ? (
+									<Icon
+										className="expand-icon"
+										icon="collapse-all"
+										iconSize={12}
+										color={communityData.accentColorDark}
+									/>
+								) : (
+									<Icon
+										className="expand-icon"
+										icon="expand-all"
+										iconSize={12}
+										color={communityData.accentColorDark}
+									/>
+								)
+							}
+							onClick={() => {
+								setExpanded(!isExpanded);
+							}}
+						/>
+					)}
 					<Button
 						minimal={true}
 						small={true}

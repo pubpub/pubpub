@@ -39,7 +39,10 @@ $gutter-compact-width: 15px;
             $gutter-compact-width
             $comments-compact-width
             minmax(2%, auto);
-    }
+	}
+	& > *[data-align-breakout] {
+		grid-column: 1 / -1;
+	}
 }
 
 @supports (display: grid) {
