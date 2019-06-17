@@ -14,6 +14,8 @@ $gutter-full-width: 50px;
 $pub-min-width: $compact-comments-cutoff-width - $comments-full-width - $gutter-full-width;
 /* Compact width of the gutter */
 $gutter-compact-width: 15px;
+/* The margin between the edge of the pub and the viewport (applied to the left and right side) */
+$pub-margin: 4%;
 
 .pub-document-component {
 	.discussions {
@@ -26,19 +28,19 @@ $gutter-compact-width: 15px;
 @mixin has-grid($areas) {
     display: grid;
     grid-template-columns:
-        minmax(2%, auto)
+        minmax($pub-margin, auto)
         minmax($pub-min-width, $pub-max-width)
         $gutter-full-width
         $comments-full-width
-        minmax(2%, auto);
+        minmax($pub-margin, auto);
     grid-template-areas: $areas;
     @media only screen and (max-width: $compact-comments-cutoff-width) {
         grid-template-columns:
-            minmax(2%, auto)
+            minmax($pub-margin, auto)
             1fr
             $gutter-compact-width
             $comments-compact-width
-            minmax(2%, auto);
+            minmax($pub-margin, auto);
 	}
 	& > *[data-align-breakout] {
 		grid-column: 1 / -1;
