@@ -1,15 +1,17 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useDebounce } from 'react-use';
 import { Slider, Spinner } from '@blueprintjs/core';
 import dateFormat from 'dateformat';
+import stickybits from 'stickybits';
 
 import { pubDataProps } from 'types/pub';
 import { pubUrl } from 'shared/utils/canonicalUrls';
-import ClickToCopyButton from 'components/ClickToCopyButton/ClickToCopyButton';
+import { GridWrapper } from 'components';
 import { PageContext } from 'components/PageWrapper/PageWrapper';
+import ClickToCopyButton from 'components/ClickToCopyButton/ClickToCopyButton';
 
-require('./history.scss');
+require('./pubHistory.scss');
 
 const propTypes = {
 	historyData: PropTypes.shape({
@@ -30,8 +32,25 @@ const History = (props) => {
 	const isLoading = latestKey === undefined;
 	const nothingToShow = !isLoading && latestKey <= 1;
 
+	const stickyRef = useRef();
 	const [value, setValue] = useState(currentKey);
 	const { communityData } = useContext(PageContext);
+
+	useEffect(() => {
+		stickyRef.current = stickybits('.pub-history-component', {
+			stickyBitStickyOffset: 35,
+			useStickyClasses: true,
+		});
+		return () => {
+			if (stickyRef.current) {
+				try {
+					stickyRef.current.cleanup();
+				} catch (_) {
+					// This sometimes fails if the element's parent has been unmounted. That's okay.
+				}
+			}
+		};
+	}, []);
 
 	useEffect(() => {
 		if (!value && currentKey) {
@@ -58,32 +77,36 @@ const History = (props) => {
 	};
 
 	return (
-		<div className="pub-meta_history-component">
-			{isLoading && <Spinner size={25} />}
-			{nothingToShow && 'This branch has no history (yet)'}
-			{!isLoading && !nothingToShow && (
-				<React.Fragment>
-					<Slider
-						min={1}
-						max={latestKey}
-						stepSize={1}
-						labelRenderer={renderLabel}
-						labelStepSize={latestKey - 1}
-						value={value}
-						onChange={setValue}
-					/>
-					<ClickToCopyButton
-						className="click-to-copy"
-						copyString={pubUrl(
-							communityData,
-							pubData,
-							pubData.activeBranch.shortId,
-							value && value.toString(),
-						)}
-						beforeCopyPrompt="Copy a link to this version"
-					/>
-				</React.Fragment>
-			)}
+		<div className="pub-history-component">
+			<GridWrapper containerClassName="pub pu">
+				<div className="pub-history-inner">
+					{isLoading && <Spinner size={25} />}
+					{nothingToShow && 'This branch has no history (yet)'}
+					{!isLoading && !nothingToShow && (
+						<React.Fragment>
+							<Slider
+								min={1}
+								max={latestKey}
+								stepSize={1}
+								labelRenderer={renderLabel}
+								labelStepSize={latestKey - 1}
+								value={value}
+								onChange={setValue}
+							/>
+							<ClickToCopyButton
+								className="click-to-copy"
+								copyString={pubUrl(
+									communityData,
+									pubData,
+									pubData.activeBranch.shortId,
+									value && value.toString(),
+								)}
+								beforeCopyPrompt="Copy a link to this version"
+							/>
+						</React.Fragment>
+					)}
+				</div>
+			</GridWrapper>
 		</div>
 	);
 };

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { marksAtSelection, setLocalHighlight, cursor } from '@pubpub/editor';
 import { pubDataProps } from 'types/pub';
 import { PageContext } from 'components/PageWrapper/PageWrapper';
-import PubHeaderFormatting from './PubHeaderFormatting';
 import PubBody from './PubBody';
 import PubInlineMenu from './PubInlineMenu';
 import PubLinkMenu from './PubLinkMenu';
@@ -11,7 +10,6 @@ import PubDiscussions from './PubDiscussions';
 import PubFooter from './PubFooter';
 import PubInlineImport from './PubInlineImport';
 import PubToc from './PubToc';
-import PubSideCollaborators from './PubSideCollaborators';
 
 require('./pubDocument.scss');
 
@@ -28,7 +26,8 @@ const defaultProps = {
 };
 
 const PubDocument = (props) => {
-	const { pubData, collabData, firebaseBranchRef } = props;
+	const { pubData, historyData, collabData, firebaseBranchRef } = props;
+	const { isViewingHistory } = historyData;
 	const { locationData } = useContext(PageContext);
 	const [linkPopupIsOpen, setLinkPopupIsOpen] = useState(false);
 	const [areDiscussionsShown, setDiscussionsShown] = useState(true);
@@ -91,15 +90,12 @@ const PubDocument = (props) => {
 	// We use the useEffect hook to wait until after the render to show or hide discussions, since
 	// they mount into portals that we rely on Prosemirror to create.
 	useEffect(() => {
-		setDiscussionsShown(pubData.metaMode !== 'history');
-	}, [pubData.metaMode]);
+		setDiscussionsShown(!isViewingHistory);
+	}, [isViewingHistory]);
 
 	const editorFocused = editorChangeObject.view && editorChangeObject.view.hasFocus();
 	return (
 		<div className="pub-document-component">
-			{!pubData.isStaticDoc && pubData.metaMode !== 'history' && (
-				<PubHeaderFormatting pubData={pubData} collabData={collabData} />
-			)}
 			<div className="pub-grid">
 				<div className="main-content">
 					<PubBody
@@ -113,7 +109,7 @@ const PubDocument = (props) => {
 							setClickedMarks(marksAtSelection(view));
 						}}
 					/>
-					{pubData.metaMode !== 'history' && (
+					{!isViewingHistory && (
 						<PubInlineImport
 							pubData={pubData}
 							editorView={collabData.editorChangeObject.view}
@@ -143,7 +139,6 @@ const PubDocument = (props) => {
 				</div>
 				<div className="side-content" ref={sideContentRef}>
 					<PubToc pubData={pubData} editorChangeObject={collabData.editorChangeObject} />
-					<PubSideCollaborators pubData={pubData} />
 				</div>
 			</div>
 			<PubFooter pubData={pubData} />

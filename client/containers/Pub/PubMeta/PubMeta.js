@@ -7,7 +7,6 @@ import GridWrapper from 'components/GridWrapper/GridWrapper';
 import { pubDataProps } from 'types/pub';
 import Details from './Details';
 import Download from './Download';
-import History from './History';
 import Social from './Social';
 
 require('./pubMeta.scss');
@@ -86,14 +85,6 @@ const PubMeta = (props) => {
 				{metaMode === 'social' && <Social pubData={pubData} />}
 				{metaMode === 'download' && (
 					<Download pubData={pubData} updateLocalData={updateLocalData} />
-				)}
-				{metaMode === 'history' && (
-					<History
-						pubData={pubData}
-						collabData={collabData}
-						updateLocalData={updateLocalData}
-						historyData={historyData}
-					/>
 				)}
 			</GridWrapper>
 		</div>

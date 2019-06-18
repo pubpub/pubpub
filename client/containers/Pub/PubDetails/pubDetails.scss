@@ -1,0 +1,39 @@
+.pub-details-component {
+    .expand-contract {
+        margin-left: auto;
+    }
+    &.compact {
+        display: flex;
+        height: 48px;
+        & > * {
+            display: flex;
+            align-items: center;
+            &:not(:last-child) {
+                margin-right: 66px;
+            }
+        }
+        h6 {
+            margin: 0;
+            margin-right: 10px;
+            line-height: initial;
+            color: #BCBCBC;
+        }
+        .collaborators {
+            & > *:not(:last-child):not(h6) {
+                margin-right: 6px;
+            }
+        }
+        .doi {
+            .click-to-copy {
+                margin-left: 3px;
+                opacity: 0;
+                transition: 50ms ease-out opacity;
+            }
+            &:hover {
+                .click-to-copy {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}

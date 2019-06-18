@@ -406,13 +406,10 @@ const PubHeader = (props) => {
 												</div>
 											),
 											rightIcon: 'history',
-											active: pubData.metaMode === 'history',
+											active: historyData.isViewingHistory,
 											onClick: () => {
-												updateLocalData('pub', {
-													metaMode:
-														pubData.metaMode === 'history'
-															? undefined
-															: 'history',
+												updateLocalData('history', {
+													isViewingHistory: !historyData.isViewingHistory,
 												});
 											},
 											isWide: true,
