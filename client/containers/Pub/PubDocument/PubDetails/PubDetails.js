@@ -52,21 +52,25 @@ const PubDetails = (props) => {
 					</Button>
 				</div>
 				<div className="section contributors">
-					<h6>Contributors</h6>
+					<h6>Contributors ({contributorsWithUser.length})</h6>
 					{!isExpanded && <CompactContributors contributors={contributorsWithUser} />}
 					{isExpanded && <Contributors contributors={contributorsWithUser} />}
 				</div>
 				{showSecondColumn && (
 					<div className="section citation-and-doi">
-						<h6>DOI</h6>
-						<span className="doi-and-button">
-							{pubData.doi}
-							<ClickToCopyButton
-								copyString={`https://doi.org/${pubData.doi}`}
-								className="click-to-copy"
-								beforeCopyPrompt="Copy a doi.org link"
-							/>
-						</span>
+						{pubData.doi && (
+							<React.Fragment>
+								<h6>DOI</h6>{' '}
+								<span className="doi-and-button">
+									{pubData.doi}
+									<ClickToCopyButton
+										copyString={`https://doi.org/${pubData.doi}`}
+										className="click-to-copy"
+										beforeCopyPrompt="Copy a doi.org link"
+									/>
+								</span>
+							</React.Fragment>
+						)}
 						{isExpanded && (
 							<React.Fragment>
 								<h6>Cite as</h6>
