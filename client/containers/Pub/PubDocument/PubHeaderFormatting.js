@@ -45,7 +45,7 @@ const PubHeaderFormatting = (props) => {
 	}
 	return (
 		<div className="pub-draft-header-component">
-			<GridWrapper columnClassName="pub-draft-header-controls" containerClassName="pub">
+			{/* <GridWrapper columnClassName="pub-draft-header-controls" containerClassName="pub"> */}
 				<FormattingBar
 					editorChangeObject={props.collabData.editorChangeObject || {}}
 					threads={props.threads}
@@ -59,7 +59,7 @@ const PubHeaderFormatting = (props) => {
 							: ''}
 					</span>
 				</div>
-			</GridWrapper>
+			{/* </GridWrapper> */}
 		</div>
 	);
 };
