@@ -53,7 +53,7 @@ const History = (props) => {
 	}, []);
 
 	useEffect(() => {
-		if (!value && currentKey) {
+		if (value === undefined && currentKey) {
 			setValue(currentKey);
 		}
 	}, [currentKey, value]);
@@ -64,7 +64,7 @@ const History = (props) => {
 		const labelDateFormat = (date, withTime) =>
 			dateFormat(date, 'mmm dd, yyyy' + (withTime ? ' HH:MM' : ''));
 		const timestamp = timestamps[step];
-		if (step === 1) {
+		if (step === 0) {
 			return labelDateFormat(pubData.createdAt);
 		}
 		if (step === latestKey) {
@@ -85,11 +85,11 @@ const History = (props) => {
 					{!isLoading && !nothingToShow && (
 						<React.Fragment>
 							<Slider
-								min={1}
-								max={latestKey}
+								min={0}
+								max={1}
 								stepSize={1}
 								labelRenderer={renderLabel}
-								labelStepSize={latestKey - 1}
+								labelStepSize={latestKey}
 								value={value}
 								onChange={setValue}
 							/>

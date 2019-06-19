@@ -1,4 +1,4 @@
-@import "../../pub.scss";
+@import '../../pub.scss';
 
 @mixin column {
     .section {
@@ -47,6 +47,7 @@
     position: relative;
     border-bottom: 1px solid #f0f0f7;
     display: flex;
+    margin-bottom: 1.5em;
     &.expanded {
         @include column;
         .contributors {
@@ -64,7 +65,8 @@
             display: flex;
             align-items: center;
             line-height: initial;
-            color: #BCBCBC;
+            color: #bcbcbc;
+            white-space: nowrap;
         }
     }
     .contributors {
@@ -74,6 +76,7 @@
         display: flex;
         align-items: center;
         height: 30px;
+        white-space: nowrap;
         & > *:not(:last-child):not(h6) {
             margin-right: 6px;
             flex-shrink: 0;
