@@ -1,8 +1,11 @@
-import React, { useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Editor from '@pubpub/editor';
 import { getResizedUrl } from 'utils';
+import { PageContext } from 'components/PageWrapper/PageWrapper';
 import discussionSchema from './DiscussionAddon/discussionSchema';
+import { nestDiscussionsToThreads } from './PubDiscussions/discussionUtils';
+import DiscussionThread from './PubDiscussions/DiscussionThread';
 
 require('./pubBody.scss');
 
@@ -22,6 +25,7 @@ let setSavingTimeout;
 
 const PubBody = (props) => {
 	const { pubData, collabData, firebaseBranchRef, updateLocalData, historyData } = props;
+	const tempContextValues = useContext(PageContext);
 	const prevStatusRef = useRef(null);
 	prevStatusRef.current = collabData.status;
 
@@ -71,7 +75,39 @@ const PubBody = (props) => {
 							return getResizedUrl(url, 'fit-in', '800x0');
 						},
 					},
-					// discussion: this.props.discussionNodeOptions,
+					discussion: {
+						getInputProps: () => {
+							return {
+								pubData: pubData,
+								collabData: collabData,
+								firebaseBranchRef: firebaseBranchRef,
+								updateLocalData: updateLocalData,
+							};
+						},
+						getThreadElement: (threadNumber) => {
+							const threads = nestDiscussionsToThreads(pubData.discussions);
+							const activeThread = threads.reduce((prev, curr) => {
+								if (curr[0].threadNumber === threadNumber) {
+									return curr;
+								}
+								return prev;
+							}, undefined);
+							if (!activeThread) {
+								return undefined;
+							}
+							return (
+								<DiscussionThread
+									pubData={pubData}
+									collabData={collabData}
+									firebaseBranchRef={firebaseBranchRef}
+									threadData={activeThread}
+									updateLocalData={updateLocalData}
+									setActiveThread={() => {}}
+									tempContextValues={tempContextValues}
+								/>
+							);
+						},
+					},
 				}}
 				placeholder={pubData.isStaticDoc ? undefined : 'Begin writing here...'}
 				initialContent={initialContent}

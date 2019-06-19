@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Card } from '@blueprintjs/core';
 // import DiscussionThread from 'deprecatedComponents/DiscussionThread/DiscussionThread';
+import DiscussionThread from '../PubDiscussions/DiscussionThread';
+import { nestDiscussionsToThreads } from '../PubDiscussions/discussionUtils';
 
 require('./discussionEmbed.scss');
 
@@ -37,7 +39,15 @@ class DiscussionEmbed extends Component {
 			float: figFloat,
 		};
 
-		const threads = this.props.options.getThreads();
+		const threadElement = this.props.options.getThreadElement(this.props.attrs.threadNumber);
+		// const {
+		// 	pubData,
+		// 	collabData,
+		// 	firebaseBranchRef,
+		// 	updateLocalData,
+		// } = this.props.options.getInputProps();
+		// const threads = nestDiscussionsToThreads(pubData.discussions);
+		// const threads = this.props.options.getThreads();
 		// const pubData = this.props.options.getPubData();
 		// const locationData = this.props.options.getLocationData();
 		// const loginData = this.props.options.getLoginData();
@@ -45,13 +55,12 @@ class DiscussionEmbed extends Component {
 		// const onPutDiscussion = this.props.options.getOnPutDiscussion();
 		// const getHighlightContent = this.props.options.getGetHighlightContent();
 		// const handleQuotePermalink = this.props.options.getHandleQuotePermalink();
-
-		const activeThread = threads.reduce((prev, curr) => {
-			if (curr[0].threadNumber === this.props.attrs.threadNumber) {
-				return curr;
-			}
-			return prev;
-		}, undefined);
+		// const activeThread = threads.reduce((prev, curr) => {
+		// 	if (curr[0].threadNumber === this.props.attrs.threadNumber) {
+		// 		return curr;
+		// 	}
+		// 	return prev;
+		// }, undefined);
 
 		return (
 			<div className="figure-wrapper">
@@ -61,6 +70,7 @@ class DiscussionEmbed extends Component {
 					} ${this.props.isEditable ? 'isEditable' : ''}`}
 					style={figStyle}
 				>
+					{threadElement}
 					{/* activeThread && (
 						<DiscussionThread
 							key={`thread-${activeThread[0].id}`}
@@ -83,7 +93,7 @@ class DiscussionEmbed extends Component {
 							handleQuotePermalink={handleQuotePermalink}
 						/>
 					) */}
-					{!activeThread && (
+					{!threadElement && (
 						<Card>Please select a discussion from the formatting bar.</Card>
 					)}
 				</figure>

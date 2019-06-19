@@ -12,10 +12,19 @@ const propTypes = {
 	threadData: PropTypes.array.isRequired,
 	updateLocalData: PropTypes.func.isRequired,
 	setActiveThread: PropTypes.func.isRequired,
+	tempContextValues: PropTypes.object,
+};
+
+const defaultProps = {
+	/* This is needed for the embedAddon */
+	/* Remove this if/when we refactor the way */
+	/* discussion embdeds work */
+	tempContextValues: undefined,
 };
 
 const DiscussionThread = (props) => {
 	const { pubData, threadData } = props;
+
 	return (
 		<div className="discussion-thread-component" tabIndex={-1}>
 			{threadData
@@ -29,4 +38,5 @@ const DiscussionThread = (props) => {
 };
 
 DiscussionThread.propTypes = propTypes;
+DiscussionThread.defaultProps = defaultProps;
 export default DiscussionThread;

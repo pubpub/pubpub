@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import stickybits from 'stickybits';
 
 import { FormattingBar } from 'components';
-
+import { nestDiscussionsToThreads } from 'containers/Pub/PubDocument/PubDiscussions/discussionUtils';
 import PubHeaderCollaborators from './PubHeaderCollaborators';
+
 
 require('./pubHeaderFormatting.scss');
 
@@ -16,12 +17,12 @@ const propTypes = {
 	// editorChangeObject: PropTypes.object,
 	// setOptionsMode: PropTypes.func.isRequired,
 	// collabStatus: PropTypes.string,
-	threads: PropTypes.array,
+	// threads: PropTypes.array,
 };
 
 const defaultProps = {
 	// collabStatus: 'connecting',
-	threads: [],
+	// threads: [],
 	// formattingBarKey: '',
 };
 
@@ -47,7 +48,7 @@ const PubHeaderFormatting = (props) => {
 		<div className="pub-draft-header-component">
 			<FormattingBar
 				editorChangeObject={props.collabData.editorChangeObject || {}}
-				threads={props.threads}
+				threads={nestDiscussionsToThreads(props.pubData.discussions)}
 				// key={props.formattingBarKey}
 			/>
 

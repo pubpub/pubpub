@@ -18,11 +18,28 @@ const propTypes = {
 	threadData: PropTypes.array.isRequired,
 	updateLocalData: PropTypes.func.isRequired,
 	setActiveThread: PropTypes.func.isRequired,
+	tempContextValues: PropTypes.object,
+};
+
+const defaultProps = {
+	/* This is needed for the embedAddon */
+	/* Remove this if/when we refactor the way */
+	/* discussion embdeds work */
+	tempContextValues: undefined,
 };
 
 const DiscussionInput = (props) => {
-	const { pubData, collabData, updateLocalData, threadData, setActiveThread } = props;
-	const { loginData, locationData, communityData } = useContext(PageContext);
+	const {
+		pubData,
+		collabData,
+		updateLocalData,
+		threadData,
+		setActiveThread,
+		tempContextValues,
+	} = props;
+	const pageWrapperContextValues = useContext(PageContext);
+	const { loginData, locationData, communityData } =
+		tempContextValues || pageWrapperContextValues;
 	const pubView = collabData.editorChangeObject.view;
 	const [changeObject, setChangeObject] = useState({});
 	const [isLoading, setIsLoading] = useState(false);
@@ -155,4 +172,5 @@ const DiscussionInput = (props) => {
 };
 
 DiscussionInput.propTypes = propTypes;
+DiscussionInput.defaultProps = defaultProps;
 export default DiscussionInput;
