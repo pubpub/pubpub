@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import stickybits from 'stickybits';
 
-import { FormattingBar, GridWrapper } from 'components';
+import { FormattingBar } from 'components';
 
 import PubHeaderCollaborators from './PubHeaderCollaborators';
 
@@ -46,19 +46,19 @@ const PubHeaderFormatting = (props) => {
 	return (
 		<div className="pub-draft-header-component">
 			{/* <GridWrapper columnClassName="pub-draft-header-controls" containerClassName="pub"> */}
-				<FormattingBar
-					editorChangeObject={props.collabData.editorChangeObject || {}}
-					threads={props.threads}
-				/>
-				<div className="right-content">
-					<PubHeaderCollaborators collabData={props.collabData} />
-					<span className={`collab-status ${collabData.status}`}>
-						{collabData.status}
-						{collabData.status === 'saving' || collabData.status === 'connecting'
-							? '...'
-							: ''}
-					</span>
-				</div>
+			<FormattingBar
+				editorChangeObject={props.collabData.editorChangeObject || {}}
+				threads={props.threads}
+			/>
+			<div className="right-content">
+				<PubHeaderCollaborators collabData={props.collabData} />
+				<span className={`collab-status ${collabData.status}`}>
+					{collabData.status}
+					{collabData.status === 'saving' || collabData.status === 'connecting'
+						? '...'
+						: ''}
+				</span>
+			</div>
 			{/* </GridWrapper> */}
 		</div>
 	);

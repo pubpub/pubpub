@@ -1,77 +1,139 @@
-import React, { useState, useContext } from 'react';
-import { Button } from '@blueprintjs/core';
+import React, { useState, useContext, useRef } from 'react';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import { Button, ButtonGroup } from '@blueprintjs/core';
 
+import { pubDataProps } from 'types/pub';
 import ensureUserForAttribution from 'shared/utils/ensureUserForAttribution';
 import { Icon, GridWrapper } from 'components';
 import { PageContext } from 'components/PageWrapper/PageWrapper';
 import Avatar from 'components/Avatar/Avatar';
 import ClickToCopyButton from 'components/ClickToCopyButton/ClickToCopyButton';
 
+import Contributors from './Contributors';
+import CitationsModal from './CitationsModal';
+
 require('./pubDetails.scss');
+
+const propTypes = {
+	pubData: pubDataProps.isRequired,
+};
 
 const maxContributorsInCompactView = 5;
 
-const PubDetailsCompact = (props) => {
-	const { pubData, accentColor } = props;
-	const collaboratorsWithAvatars = pubData.attributions
-		.slice(0, maxContributorsInCompactView)
-		.map(ensureUserForAttribution);
-	const leftoverCollaborators = pubData.attributions.length - maxContributorsInCompactView;
+const PubDetails = (props) => {
+	const { pubData } = props;
+	const contributorsWithUser = pubData.attributions.map(ensureUserForAttribution);
+	const [isExpanded, setIsExpanded] = useState(false);
+	const [isCitationModalOpen, setCitationModalOpen] = useState(false);
+	const copyableCitationRef = useRef();
+	const {
+		communityData: { accentColorDark },
+	} = useContext(PageContext);
+
+	const showSecondColumn = !!(pubData.doi || isExpanded);
+
 	return (
-		<div className="pub-details-component compact">
-			<div className="collaborators">
-				<h6>Contributors</h6>
-				{collaboratorsWithAvatars.map(({ user }, i) => (
-					<Avatar
-						key={i}
-						userInitials={user.initials}
-						userAvatar={user.avatar}
-						width={20}
-					/>
-				))}
-				{leftoverCollaborators > 0 && <span>&amp; {leftoverCollaborators} more</span>}
-			</div>
-			{pubData.doi && (
-				<div className="doi">
-					<h6>DOI</h6>
-					{pubData.doi}
-					<ClickToCopyButton
-						copyString={`https://doi.org/${pubData.doi}`}
-						icon="clipboard"
-						className="click-to-copy"
-					/>
+		<GridWrapper containerClassName="pub">
+			<div className={classNames('pub-details-component', isExpanded && 'expanded')}>
+				<div className="section contributors">
+					<h6>Contributors</h6>
+					{!isExpanded && <CompactContributors contributors={contributorsWithUser} />}
+					{isExpanded && <Contributors contributors={contributorsWithUser} />}
 				</div>
-			)}
-			<div className="expand-contract">
-				<Button minimal icon={<Icon icon="expand-all" />} style={{ color: accentColor }}>
-					Pub details
-				</Button>
+				{showSecondColumn && (
+					<div className="section citation-and-doi">
+						<h6>DOI</h6>
+						<span>
+							{pubData.doi}
+							<ClickToCopyButton
+								copyString={`https://doi.org/${pubData.doi}`}
+								className="click-to-copy"
+								beforeCopyPrompt="Copy a doi.org link"
+							/>
+						</span>
+						{isExpanded && (
+							<React.Fragment>
+								<h6>Cite as</h6>
+								<div
+									className="citation-body"
+									ref={copyableCitationRef}
+									dangerouslySetInnerHTML={{
+										__html: pubData.citationData.pub.apa,
+									}}
+								/>
+								<ButtonGroup>
+									<ClickToCopyButton
+										className="copy-button"
+										icon="duplicate"
+										copyString={() => {
+											if (copyableCitationRef.current) {
+												return copyableCitationRef.current.textContent;
+											}
+											return '';
+										}}
+									>
+										Copy
+									</ClickToCopyButton>
+									<Button
+										icon="more"
+										minimal
+										onClick={() => setCitationModalOpen(true)}
+									>
+										More
+									</Button>
+								</ButtonGroup>
+								<CitationsModal
+									isOpen={isCitationModalOpen}
+									citationData={pubData.citationData}
+									onClose={() => setCitationModalOpen(false)}
+								/>
+							</React.Fragment>
+						)}
+					</div>
+				)}
+				<div className="expand-contract">
+					<Button
+						minimal
+						icon={
+							<Icon
+								className="expand-icon"
+								icon={isExpanded ? 'collapse-all' : 'expand-all'}
+							/>
+						}
+						onClick={() => setIsExpanded(!isExpanded)}
+						style={{ color: accentColorDark }}
+					>
+						Pub details
+					</Button>
+				</div>
 			</div>
+		</GridWrapper>
+	);
+};
+const CompactContributors = (props) => {
+	const { contributors } = props;
+	const contributorsWithAvatars = contributors.slice(0, maxContributorsInCompactView);
+	const leftoverContributors = contributors.length - maxContributorsInCompactView;
+	return (
+		<div className="compact-contributors">
+			{contributorsWithAvatars.map(({ user }, index) => (
+				<Avatar
+					// eslint-disable-next-line react/no-array-index-key
+					key={index}
+					userInitials={user.initials}
+					userAvatar={user.avatar}
+					width={20}
+				/>
+			))}
+			{leftoverContributors > 0 && <span>&amp; {leftoverContributors} more</span>}
 		</div>
 	);
 };
 
-const PubDetails = (props) => {
-	const [isExpanded, setIsExpanded] = useState();
-	const { communityData } = useContext(PageContext);
-	return (
-		<GridWrapper containerClassName="pub">
-			{isExpanded && (
-				<PubDetailsExpanded
-					pubData={props.pubData}
-					onCollapse={() => setIsExpanded(false)}
-					accentColor={communityData.accentColorDark}
-				/>
-			)}
-			{!isExpanded && (
-				<PubDetailsCompact
-					pubData={props.pubData}
-					onExpand={() => setIsExpanded(true)}
-					accentColor={communityData.accentColorDark}
-				/>
-			)}
-		</GridWrapper>
-	);
+CompactContributors.propTypes = {
+	contributors: PropTypes.array.isRequired,
 };
 
+PubDetails.propTypes = propTypes;
 export default PubDetails;

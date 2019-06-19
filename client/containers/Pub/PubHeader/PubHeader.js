@@ -141,7 +141,6 @@ const PubHeader = (props) => {
 	}
 
 	const metaModes = [
-		{ title: 'Details', icon: 'more', key: 'details' },
 		{ title: 'Download', icon: 'download2', key: 'download' },
 		{ title: 'Social Sharing', icon: 'share2', key: 'social' },
 		// TODO(ian): re-enable these once we have something to put there

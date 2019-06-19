@@ -9,7 +9,6 @@ import PubLinkMenu from './PubLinkMenu';
 import PubDiscussions from './PubDiscussions';
 import PubFooter from './PubFooter';
 import PubInlineImport from './PubInlineImport';
-import PubToc from './PubToc';
 
 require('./pubDocument.scss');
 
@@ -137,9 +136,7 @@ const PubDocument = (props) => {
 					)}
 					{linkPopupIsOpen && <PubLinkMenu pubData={pubData} collabData={collabData} />}
 				</div>
-				<div className="side-content" ref={sideContentRef}>
-					<PubToc pubData={pubData} editorChangeObject={collabData.editorChangeObject} />
-				</div>
+				<div className="side-content" ref={sideContentRef} />
 			</div>
 			<PubFooter pubData={pubData} />
 		</div>
