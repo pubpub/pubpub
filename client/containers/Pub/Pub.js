@@ -13,9 +13,6 @@ import PubReviewCreate from './PubReviewCreate';
 import PubReviews from './PubReviews';
 import PubReview from './PubReview';
 import PubBranchCreate from './PubBranchCreate';
-import PubDetails from './PubDetails';
-import PubHeaderFormatting from './PubDocument/PubHeaderFormatting';
-import PubHistory from './PubHistory';
 
 require('./pub.scss');
 
@@ -41,7 +38,6 @@ const Pub = (props) => {
 				>
 					{({ pubData, collabData, firebaseBranchRef, updateLocalData, historyData }) => {
 						const mode = pubData.mode;
-						const { isViewingHistory } = historyData;
 						const modeProps = {
 							pubData: pubData,
 							collabData: collabData,
@@ -63,19 +59,7 @@ const Pub = (props) => {
 									collabData={collabData}
 									historyData={historyData}
 								/>
-								{mode === 'document' && (
-									<React.Fragment>
-										{!pubData.isStaticDoc && !isViewingHistory && (
-											<PubHeaderFormatting
-												pubData={pubData}
-												collabData={collabData}
-											/>
-										)}
-										{isViewingHistory && <PubHistory {...modeProps} />}
-										{!isViewingHistory && <PubDetails {...modeProps} />}
-										<PubDocument {...modeProps} />
-									</React.Fragment>
-								)}
+								{mode === 'document' && <PubDocument {...modeProps} />}
 								{mode === 'manage' && <PubManage {...modeProps} />}
 								{mode === 'merge' && <PubMerge {...modeProps} />}
 								{mode === 'review' && <PubReview {...modeProps} />}

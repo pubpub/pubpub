@@ -9,6 +9,9 @@ import PubLinkMenu from './PubLinkMenu';
 import PubDiscussions from './PubDiscussions';
 import PubFooter from './PubFooter';
 import PubInlineImport from './PubInlineImport';
+import PubDetails from './PubDetails';
+import PubHistory from './PubHistory';
+import PubHeaderFormatting from './PubHeaderFormatting';
 
 require('./pubDocument.scss');
 
@@ -95,6 +98,11 @@ const PubDocument = (props) => {
 	const editorFocused = editorChangeObject.view && editorChangeObject.view.hasFocus();
 	return (
 		<div className="pub-document-component">
+			{!pubData.isStaticDoc && !isViewingHistory && (
+				<PubHeaderFormatting pubData={pubData} collabData={collabData} />
+			)}
+			{isViewingHistory && <PubHistory {...props} />}
+			{!isViewingHistory && <PubDetails {...props} />}
 			<div className="pub-grid">
 				<div className="main-content">
 					<PubBody
