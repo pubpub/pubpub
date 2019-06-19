@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import uuid from 'uuid';
 import { Branch, BranchPermission, PubVersion } from '../../../server/models';
 
 const { matchTransformHash, updateTransformHash } = require('./transformHash');
@@ -28,29 +29,49 @@ const getBranchIdForVersionId = (versionPermission, transformed) => {
 	}
 };
 
+const cleanBranchNames = (transformed) => {
+	const { namedBranches, versionToBranch } = transformed;
+	const branchNames = Object.keys(namedBranches);
+	const overlyLongPublicBranchName = branchNames.find((name) => name.startsWith('public__'));
+	if (branchNames.length === 2 && overlyLongPublicBranchName) {
+		namedBranches.public = namedBranches[overlyLongPublicBranchName];
+		Object.keys(versionToBranch).forEach((key) => {
+			const branchObj = versionToBranch[key];
+			if (branchObj.name === overlyLongPublicBranchName) {
+				branchObj.name = 'public';
+			}
+		});
+		delete namedBranches[overlyLongPublicBranchName];
+	}
+	if (!namedBranches.public) {
+		namedBranches.public = { id: uuid.v4() };
+	}
+};
+
 const updateBranches = async (model, transformed) => {
 	const { id: pubId } = model;
 	const { draftBranch, namedBranches } = transformed;
 	await BranchPermission.destroy({ where: { pubId: pubId } });
 	await Branch.destroy({ where: { pubId: pubId } });
-	const preArray = [['draft', draftBranch]].concat(Object.entries(namedBranches));
-	const preArrayMapped = preArray.map(([title, branch], index, { length }) => {
-		return {
-			id: branch.id,
-			shortId: index + 1,
-			title: title,
-			order: title === 'public' ? 1 : index / length,
-			viewHash: generateHash(8),
-			discussHash: generateHash(8),
-			editHash: generateHash(8),
-			pubId: pubId,
-			publicPermissions: title === 'public' ? 'discuss' : 'none',
-			pubManagerPermissions: 'manage',
-			communityAdminPermissions: 'manage',
-		};
-	});
-
-	await Branch.bulkCreate(preArrayMapped);
+	await Branch.bulkCreate(
+		[['draft', draftBranch]]
+			.concat(Object.entries(namedBranches))
+			.map(([title, branch], index, { length }) => {
+				return {
+					id: branch.id,
+					shortId: index + 1,
+					title: title,
+					order: title === 'public' ? 1 : index / length,
+					viewHash: generateHash(8),
+					discussHash: generateHash(8),
+					editHash: generateHash(8),
+					pubId: pubId,
+					publicPermissions: title === 'public' ? 'discuss' : 'none',
+					pubManagerPermissions: 'manage',
+					communityAdminPermissions: 'manage',
+				};
+			}),
+	);
 	await BranchPermission.bulkCreate(
 		model.versionPermissions.map((versionPermission) => {
 			const { createdAt, permissions, updatedAt, userId } = versionPermission;
@@ -113,16 +134,17 @@ const processPub = async (storage, pubId, writeToFirebase, { current, total }) =
 	const firebaseJson = createFirebaseJson(transformed, pubDir);
 	const hasTransformBeenUploaded = matchTransformHash(pubDir);
 	if (hasTransformBeenUploaded) {
-		console.log('OK: already wrote this pub');
+		console.log(`OK: already wrote ${pubId}`);
 	} else {
 		try {
+			cleanBranchNames(transformed);
 			await updateBranches(model, transformed);
 			await createVersions(transformed);
 			await writeToFirebase(pubId, firebaseJson);
 			updateTransformHash(pubDir);
-			console.log('OK: wrote this pub successfully!');
+			console.log(`OK: wrote ${pubId} successfully!`);
 		} catch (error) {
-			console.log('FAILURE:', error.toString());
+			console.log(`FAILURE: ${pubId} - ${error.toString()}`);
 		}
 	}
 };
