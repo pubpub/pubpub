@@ -2,11 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import dateFormat from 'dateformat';
 
-import { getResizedUrl, generatePubBackground } from 'utils';
+import { getResizedUrl } from 'utils';
 import { getPubPublishedDate } from 'shared/pub/pubDates';
 import { isPubPublic } from 'shared/pub/permissions';
 import Avatar from 'components/Avatar/Avatar';
 import Icon from 'components/Icon/Icon';
+
+import PubPreviewImage from './PubPreviewImage';
 
 require('./pubPreview.scss');
 
@@ -31,12 +33,6 @@ const defaultProps = {
 
 const PubPreview = function(props) {
 	const pubData = props.pubData;
-
-	const resizedBannerImage = getResizedUrl(pubData.avatar, 'fit-in', '800x0');
-	const bannerStyle =
-		pubData.avatar || !pubData.slug
-			? { backgroundImage: `url("${resizedBannerImage}")` }
-			: { background: generatePubBackground(pubData.title) };
 	const resizedHeaderLogo =
 		props.communityData && getResizedUrl(props.communityData.headerLogo, 'fit-in', '125x35');
 	const communityHostname =
@@ -62,7 +58,7 @@ const PubPreview = function(props) {
 		<div className={`pub-preview-component ${props.size}-preview`}>
 			{props.size !== 'small' && (
 				<a href={pubLink} alt={pubData.title}>
-					<div className="banner-image" style={bannerStyle} />
+					<PubPreviewImage pubData={pubData} className="banner-image" />
 				</a>
 			)}
 			<div className="content">
