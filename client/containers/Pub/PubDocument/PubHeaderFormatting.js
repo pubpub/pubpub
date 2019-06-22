@@ -6,7 +6,6 @@ import { FormattingBar } from 'components';
 import { nestDiscussionsToThreads } from 'containers/Pub/PubDocument/PubDiscussions/discussionUtils';
 import PubHeaderCollaborators from './PubHeaderCollaborators';
 
-
 require('./pubHeaderFormatting.scss');
 
 const propTypes = {
@@ -31,6 +30,7 @@ const PubHeaderFormatting = (props) => {
 	useEffect(() => {
 		stickyInstanceRef.current = stickybits('.pub-draft-header-component', {
 			stickyBitStickyOffset: 35,
+			useStickyClasses: true,
 		});
 		return () => {
 			if (stickyInstanceRef.current) {
@@ -40,19 +40,16 @@ const PubHeaderFormatting = (props) => {
 	}, []);
 
 	const { pubData, collabData } = props;
-	// const viewOnly = !pubData.canEditBranch;
 	if (!pubData.canEditBranch) {
 		return null;
 	}
 	return (
 		<div className="pub-draft-header-component">
+			{/* <GridWrapper columnClassName="pub-draft-header-controls" containerClassName="pub"> */}
 			<FormattingBar
 				editorChangeObject={props.collabData.editorChangeObject || {}}
 				threads={nestDiscussionsToThreads(props.pubData.discussions)}
-				// key={props.formattingBarKey}
 			/>
-
-			{/* <div className="spacer" /> */}
 			<div className="right-content">
 				<PubHeaderCollaborators collabData={props.collabData} />
 				<span className={`collab-status ${collabData.status}`}>
@@ -62,6 +59,7 @@ const PubHeaderFormatting = (props) => {
 						: ''}
 				</span>
 			</div>
+			{/* </GridWrapper> */}
 		</div>
 	);
 };

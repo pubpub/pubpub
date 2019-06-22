@@ -1,9 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import { dispatchEmptyTransaction } from '@pubpub/editor';
 import useWindowSize from 'react-use/lib/useWindowSize';
+import { GridWrapper } from 'components';
+import { PageContext } from 'components/PageWrapper/PageWrapper';
 import ThreadGroup from './ThreadGroup';
+import DiscussionThread from './DiscussionThread';
+import DiscussionFilterBar from './DiscussionFilterBar';
 import { groupThreadsByLine, nestDiscussionsToThreads } from './discussionUtils';
 
 require('./pubDiscussions.scss');
@@ -14,6 +18,7 @@ const propTypes = {
 	firebaseBranchRef: PropTypes.object,
 	updateLocalData: PropTypes.func.isRequired,
 	sideContentRef: PropTypes.object.isRequired,
+	mainContentRef: PropTypes.object.isRequired,
 };
 
 const defaultProps = {
@@ -21,7 +26,15 @@ const defaultProps = {
 };
 
 const PubDiscussions = (props) => {
-	const { pubData, collabData, firebaseBranchRef, sideContentRef } = props;
+	const {
+		pubData,
+		collabData,
+		firebaseBranchRef,
+		updateLocalData,
+		mainContentRef,
+		sideContentRef,
+	} = props;
+	const { communityData } = useContext(PageContext);
 	const decorations = collabData.editorChangeObject.decorations || [];
 	const { width: windowWidth } = useWindowSize();
 
@@ -35,30 +48,77 @@ const PubDiscussions = (props) => {
 	}, [windowWidth]);
 	const threads = nestDiscussionsToThreads(pubData.discussions);
 	const groupsByLine = groupThreadsByLine(decorations, threads);
-
-	if (!props.firebaseBranchRef) {
-		return null;
-	}
+	const prevNewDiscussionIds = useRef([]);
+	const prevConvertedDiscussionIds = useRef([]);
 	return (
 		<div className="pub-discussions-component">
+			<style>
+				{`
+					.discussion-list .discussion-thread-component.preview:hover,
+					.discussion-list .discussion-thread-component.expanded-preview {
+						border-left: 3px solid ${communityData.accentColorDark};
+						padding-left: calc(1em - 2px);
+					}
+				`}
+			</style>
+
+			{/* Side Discussions */}
 			{groupsByLine.map((group) => {
 				const mountElement = document.getElementsByClassName(group.mountClassName)[0];
 				if (!mountElement) {
 					return null;
 				}
+				// console.log('about to render portal');
+				// console.log('mountElement', mountElement);
+				// console.log(group)
 				return ReactDOM.createPortal(
 					<ThreadGroup
+						key={group.mountClassName}
 						pubData={pubData}
 						collabData={collabData}
 						firebaseBranchRef={firebaseBranchRef}
 						threads={group.threads}
 						mountClassName={group.mountClassName}
-						updateLocalData={props.updateLocalData}
+						updateLocalData={updateLocalData}
 						sideContentRef={sideContentRef}
+						mainContentRef={mainContentRef}
+						prevNewDiscussionIds={prevNewDiscussionIds}
+						prevConvertedDiscussionIds={prevConvertedDiscussionIds}
 					/>,
 					mountElement,
 				);
 			})}
+
+			{/* Bottom Discussions */}
+			<GridWrapper containerClassName="pub discussion-list">
+				<h2>Discussions</h2>
+				<DiscussionFilterBar
+					pubData={pubData}
+					communityData={communityData}
+					threadData={threads}
+					updateLocalData={updateLocalData}
+				>
+					{(filteredThreads) => {
+						return (
+							<React.Fragment>
+								{filteredThreads.map((thread) => {
+									return (
+										<DiscussionThread
+											key={thread[0].id}
+											pubData={pubData}
+											collabData={collabData}
+											firebaseBranchRef={firebaseBranchRef}
+											threadData={thread}
+											updateLocalData={updateLocalData}
+											canPreview={true}
+										/>
+									);
+								})}
+							</React.Fragment>
+						);
+					}}
+				</DiscussionFilterBar>
+			</GridWrapper>
 		</div>
 	);
 };
@@ -66,8 +126,3 @@ const PubDiscussions = (props) => {
 PubDiscussions.propTypes = propTypes;
 PubDiscussions.defaultProps = defaultProps;
 export default PubDiscussions;
-
-// const truncateText = (text) => {
-// 	const previewLimit = 45;
-// 	return text.length > previewLimit ? `${text.substring(0, previewLimit - 3)}...` : text;
-// };

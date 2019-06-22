@@ -1,18 +1,23 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
+import { Button } from '@blueprintjs/core';
+import { Icon } from 'components';
+import { PageContext } from 'components/PageWrapper/PageWrapper';
 import DiscussionItem from './DiscussionItem';
 import DiscussionInput from './DiscussionInput';
+import LabelList from './LabelList';
 
 require('./discussionThread.scss');
 
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	collabData: PropTypes.object.isRequired,
-	firebaseBranchRef: PropTypes.object.isRequired,
+	firebaseBranchRef: PropTypes.object,
 	threadData: PropTypes.array.isRequired,
 	updateLocalData: PropTypes.func.isRequired,
-	setActiveThread: PropTypes.func.isRequired,
 	tempContextValues: PropTypes.object,
+	canPreview: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -20,19 +25,70 @@ const defaultProps = {
 	/* Remove this if/when we refactor the way */
 	/* discussion embdeds work */
 	tempContextValues: undefined,
+	firebaseBranchRef: undefined,
+	canPreview: false,
 };
 
 const DiscussionThread = (props) => {
-	const { pubData, threadData } = props;
+	const { pubData, threadData, canPreview, tempContextValues } = props;
+	const pageWrapperContextValues = useContext(PageContext);
+	const { communityData } = tempContextValues || pageWrapperContextValues;
+	const [previewExpanded, setPreviewExpanded] = useState(false);
+	const isPreview = canPreview && !previewExpanded;
 
 	return (
-		<div className="discussion-thread-component" tabIndex={-1}>
+		<div
+			tabIndex={-1}
+			role="button"
+			className={classNames(
+				'discussion-thread-component',
+				isPreview && 'preview',
+				previewExpanded && 'expanded-preview',
+			)}
+			onClick={() => {
+				if (isPreview) {
+					setPreviewExpanded(isPreview);
+				}
+			}}
+		>
+			{canPreview && !isPreview && (
+				<Button
+					minimal
+					small
+					className="collapse-button"
+					icon={
+						<Icon
+							icon="collapse-all"
+							iconSize={12}
+							color={communityData.accentColorDark}
+						/>
+					}
+					onClick={() => {
+						setPreviewExpanded(false);
+					}}
+				/>
+			)}
+			<LabelList pubData={pubData} threadData={threadData} />
 			{threadData
 				.filter((item) => item.threadNumber)
-				.map((item) => {
-					return <DiscussionItem key={item.id} discussionData={item} {...props} />;
+				.filter((item, index) => {
+					return !isPreview || index < 2;
+				})
+				.map((item, index) => {
+					return (
+						<DiscussionItem
+							key={item.id}
+							discussionData={item}
+							isPreview={isPreview}
+							isRootThread={index === 0}
+							{...props}
+						/>
+					);
 				})}
-			{pubData.canDiscussBranch && <DiscussionInput key={threadData.length} {...props} />}
+			{isPreview && threadData.length > 2 && <span> + {threadData.length - 2} more...</span>}
+			{!isPreview && pubData.canDiscussBranch && (
+				<DiscussionInput key={threadData.length} {...props} />
+			)}
 		</div>
 	);
 };

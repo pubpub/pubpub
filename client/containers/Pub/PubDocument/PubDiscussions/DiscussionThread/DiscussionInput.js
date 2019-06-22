@@ -14,10 +14,9 @@ import { apiFetch } from 'utils';
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	collabData: PropTypes.object.isRequired,
-	firebaseBranchRef: PropTypes.object.isRequired,
+	firebaseBranchRef: PropTypes.object,
 	threadData: PropTypes.array.isRequired,
 	updateLocalData: PropTypes.func.isRequired,
-	setActiveThread: PropTypes.func.isRequired,
 	tempContextValues: PropTypes.object,
 };
 
@@ -26,17 +25,11 @@ const defaultProps = {
 	/* Remove this if/when we refactor the way */
 	/* discussion embdeds work */
 	tempContextValues: undefined,
+	firebaseBranchRef: undefined,
 };
 
 const DiscussionInput = (props) => {
-	const {
-		pubData,
-		collabData,
-		updateLocalData,
-		threadData,
-		setActiveThread,
-		tempContextValues,
-	} = props;
+	const { pubData, collabData, updateLocalData, threadData, tempContextValues } = props;
 	const pageWrapperContextValues = useContext(PageContext);
 	const { loginData, locationData, communityData } =
 		tempContextValues || pageWrapperContextValues;
@@ -70,23 +63,20 @@ const DiscussionInput = (props) => {
 				if (!isNewThread) {
 					return Promise.all([discussionData]);
 				}
-				return Promise.all([
-					discussionData,
-					convertLocalHighlightToDiscussion(
-						pubView,
-						threadData[0].id,
-						props.firebaseBranchRef,
-					),
-				]);
+				const convertHighlight = props.firebaseBranchRef
+					? convertLocalHighlightToDiscussion(
+							pubView,
+							threadData[0].id,
+							props.firebaseBranchRef,
+					  )
+					: () => {};
+				return Promise.all([discussionData, convertHighlight]);
 			})
 			.then(([discussionData]) => {
 				updateLocalData('pub', {
 					...pubData,
 					discussions: [...pubData.discussions, discussionData],
 				});
-				if (isNewThread) {
-					setActiveThread(discussionData.id);
-				}
 			});
 	};
 
