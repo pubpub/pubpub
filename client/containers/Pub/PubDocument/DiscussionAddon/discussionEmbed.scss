@@ -19,7 +19,7 @@
 		text-align: left;
 		// display: inline-block;
 		// padding: 0px;
-		background-color: #f7f7f9;
+		// background-color: #f7f7f9;
 		.editor.ProseMirror {
 			min-height: auto;
 			p,
@@ -28,12 +28,12 @@
 					'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', sans-serif;
 			}
 		}
-		&.isEditable {
-			pointer-events: none;
-			&.isSelected {
-				pointer-events: auto;
-			}
-		}
+		// &.isEditable {
+		// 	pointer-events: none;
+		// 	&.isSelected {
+		// 		pointer-events: auto;
+		// 	}
+		// }
 		// &.isSelected {
 		// 	outline: 3px solid #BBBDC0;
 		// 	// background-color: #F0F0F0;

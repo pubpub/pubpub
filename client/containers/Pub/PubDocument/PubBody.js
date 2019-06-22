@@ -1,4 +1,5 @@
 import React, { useContext, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import Editor from '@pubpub/editor';
 import { getResizedUrl } from 'utils';
@@ -28,6 +29,7 @@ const PubBody = (props) => {
 	const tempContextValues = useContext(PageContext);
 	const { isViewingHistory } = historyData;
 	const prevStatusRef = useRef(null);
+	const embedDiscussions = useRef({});
 	prevStatusRef.current = collabData.status;
 
 	const getNextStatus = (status, onComplete) => {
@@ -61,6 +63,7 @@ const PubBody = (props) => {
 	const useCollaborativeOptions = firebaseBranchRef && !pubData.isStaticDoc && !isHistoryDoc;
 	const isReadOnly = !!(pubData.isStaticDoc || !pubData.canEditBranch || isViewingHistory);
 	const initialContent = (isViewingHistory && historyData.historyDoc) || pubData.initialDoc;
+	console.log('embedDiscussions', JSON.stringify(Object.keys(embedDiscussions.current)));
 	return (
 		<div className="pub-body-component">
 			<Editor
@@ -83,29 +86,67 @@ const PubBody = (props) => {
 								updateLocalData: updateLocalData,
 							};
 						},
-						getThreadElement: (threadNumber) => {
-							const threads = nestDiscussionsToThreads(pubData.discussions);
-							const activeThread = threads.reduce((prev, curr) => {
-								if (curr[0].threadNumber === threadNumber) {
-									return curr;
-								}
-								return prev;
-							}, undefined);
-							if (!activeThread) {
-								return undefined;
-							}
-							return (
-								<DiscussionThread
-									pubData={pubData}
-									collabData={collabData}
-									firebaseBranchRef={firebaseBranchRef}
-									threadData={activeThread}
-									updateLocalData={updateLocalData}
-									setActiveThread={() => {}}
-									tempContextValues={tempContextValues}
-								/>
-							);
+						addRef: (embedId, mountRef, threadNumber) => {
+							embedDiscussions.current[embedId] = {
+								mountRef: mountRef,
+								threadNumber: threadNumber,
+							};
 						},
+						removeRef: (embedId) => {
+							console.log('removing ref');
+							delete embedDiscussions.current[embedId];
+						},
+						// renderPortal: (mountRef, threadNumber) => {
+						// 	console.log('in render call');
+						// 	const threads = nestDiscussionsToThreads(pubData.discussions);
+						// 	const activeThread = threads.reduce((prev, curr) => {
+						// 		if (curr[0].threadNumber === threadNumber) {
+						// 			return curr;
+						// 		}
+						// 		return prev;
+						// 	}, undefined);
+						// 	console.log(threads, threadNumber, activeThread);
+						// 	if (!activeThread) {
+						// 		return undefined;
+						// 	}
+						// 	if (!mountRef.current) {
+						// 		return undefined;
+						// 	}
+						// 	console.log('About to render portal');
+						// 	return ReactDOM.createPortal(
+						// 		<DiscussionThread
+						// 			pubData={pubData}
+						// 			collabData={collabData}
+						// 			firebaseBranchRef={firebaseBranchRef}
+						// 			threadData={activeThread}
+						// 			updateLocalData={updateLocalData}
+						// 		/>,
+						// 		mountRef.current,
+						// 	);
+						// },
+						// getThreadElement: (threadNumber) => {
+						// 	const threads = nestDiscussionsToThreads(pubData.discussions);
+						// 	const activeThread = threads.reduce((prev, curr) => {
+						// 		if (curr[0].threadNumber === threadNumber) {
+						// 			return curr;
+						// 		}
+						// 		return prev;
+						// 	}, undefined);
+						// 	if (!activeThread) {
+						// 		return undefined;
+						// 	}
+						// 	return (
+						// 		<DiscussionThread
+						// 			pubData={pubData}
+						// 			collabData={collabData}
+						// 			firebaseBranchRef={firebaseBranchRef}
+						// 			threadData={activeThread}
+						// 			updateLocalData={updateLocalData}
+						// 			setActiveThread={() => {}}
+						// 			tempContextValues={tempContextValues}
+						// 		/>
+						// 	);
+						// },
 					},
 				}}
 				placeholder={pubData.isStaticDoc ? undefined : 'Begin writing here...'}
@@ -139,6 +180,35 @@ const PubBody = (props) => {
 				highlights={[]}
 				handleSingleClick={props.onSingleClick}
 			/>
+			{Object.keys(embedDiscussions.current).map((embedId) => {
+				const mountRef = embedDiscussions.current[embedId].mountRef;
+				const threadNumber = embedDiscussions.current[embedId].threadNumber;
+				const threads = nestDiscussionsToThreads(pubData.discussions);
+				const activeThread = threads.reduce((prev, curr) => {
+					if (curr[0].threadNumber === threadNumber) {
+						return curr;
+					}
+					return prev;
+				}, undefined);
+				// console.log(threads, threadNumber, activeThread);
+				if (!activeThread) {
+					return undefined;
+				}
+				if (!mountRef.current) {
+					return undefined;
+				}
+				return ReactDOM.createPortal(
+					<DiscussionThread
+						key={embedId}
+						pubData={pubData}
+						collabData={collabData}
+						firebaseBranchRef={firebaseBranchRef}
+						threadData={activeThread}
+						updateLocalData={updateLocalData}
+					/>,
+					mountRef.current,
+				);
+			})}
 		</div>
 	);
 };
