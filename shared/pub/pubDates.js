@@ -1,15 +1,18 @@
 export const getPubPublishedDate = (pub, branch = null) => {
 	// eslint-disable-next-line no-param-reassign
-	branch = branch || pub.branches.find((br) => br.title === 'public');
-	if (branch) {
-		if (!pub.branches.some((br) => br.id === branch.id)) {
-			throw new Error(`Branch ${branch.id} not a member of pub ${pub.id}!`);
+	if (!branch && !pub.branches) {
+		return null;
+	}
+	const selectedBranch = branch || pub.branches.find((br) => br.title === 'public');
+	if (selectedBranch) {
+		if (!pub.branches.some((br) => br.id === selectedBranch.id)) {
+			throw new Error(`Branch ${selectedBranch.id} not a member of pub ${pub.id}!`);
 		}
-		if (branch.publishedAt) {
-			return new Date(branch.publishedAt);
+		if (selectedBranch.publishedAt) {
+			return new Date(selectedBranch.publishedAt);
 		}
-		if (branch.updatedAt) {
-			return new Date(branch.updatedAt);
+		if (selectedBranch.updatedAt) {
+			return new Date(selectedBranch.updatedAt);
 		}
 	}
 	return null;
