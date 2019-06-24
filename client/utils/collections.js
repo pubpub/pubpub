@@ -40,7 +40,7 @@ export const chooseCollectionForPub = (pubData, locationData) => {
 export const useCollectionPubs = (updateLocalData, collection) => {
 	const [error, setError] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
-	const [pubs, setPubs] = useState(collection.pubs);
+	const [pubs, setPubs] = useState(collection && collection.pubs);
 
 	const updatePubs = (nextPubs) => {
 		setPubs(nextPubs);
@@ -62,6 +62,9 @@ export const useCollectionPubs = (updateLocalData, collection) => {
 	};
 
 	useEffect(() => {
+		if (!collection) {
+			return;
+		}
 		if (Array.isArray(collection.pubs)) {
 			setIsLoading(false);
 		}
@@ -75,7 +78,7 @@ export const useCollectionPubs = (updateLocalData, collection) => {
 				setIsLoading(false);
 			});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [collection.id]);
+	}, [collection && collection.id]);
 	return {
 		isLoading: isLoading,
 		error: error,

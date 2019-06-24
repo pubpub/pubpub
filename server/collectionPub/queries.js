@@ -79,7 +79,7 @@ export const setPrimaryCollectionPub = (inputValues) => {
 		include: [{ model: Collection, as: 'collection' }],
 	}).then((collectionPub) => {
 		return (
-			collectionPub.collection.isPublic &&
+			(!inputValues.collectionPubId || collectionPub.collection.isPublic) &&
 			sequelize.transaction((txn) => {
 				return CollectionPub.update(
 					{ isPrimary: false },
@@ -92,7 +92,7 @@ export const setPrimaryCollectionPub = (inputValues) => {
 					},
 				).then(() => {
 					return CollectionPub.update(
-						{ isPrimary: true },
+						{ isPrimary: inputValues.isPrimary },
 						{
 							where: { id: inputValues.collectionPubId },
 							returning: true,

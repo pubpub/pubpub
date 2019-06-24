@@ -4,6 +4,7 @@ $element-margin: 6px;
 .collections-bar-component {
     display: flex;
     align-items: center;
+    overflow: hidden;
     .bp3-button {
         height: $element-height;
     }
