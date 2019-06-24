@@ -11,18 +11,6 @@ require('./pubHeaderFormatting.scss');
 const propTypes = {
 	pubData: PropTypes.object.isRequired,
 	collabData: PropTypes.object.isRequired,
-	// loginData: PropTypes.object.isRequired,
-	// formattingBarKey: PropTypes.string,
-	// editorChangeObject: PropTypes.object,
-	// setOptionsMode: PropTypes.func.isRequired,
-	// collabStatus: PropTypes.string,
-	// threads: PropTypes.array,
-};
-
-const defaultProps = {
-	// collabStatus: 'connecting',
-	// threads: [],
-	// formattingBarKey: '',
 };
 
 const PubHeaderFormatting = (props) => {
@@ -43,9 +31,9 @@ const PubHeaderFormatting = (props) => {
 	if (!pubData.canEditBranch) {
 		return null;
 	}
+
 	return (
 		<div className="pub-draft-header-component">
-			{/* <GridWrapper columnClassName="pub-draft-header-controls" containerClassName="pub"> */}
 			<FormattingBar
 				editorChangeObject={props.collabData.editorChangeObject || {}}
 				threads={nestDiscussionsToThreads(props.pubData.discussions)}
@@ -59,11 +47,9 @@ const PubHeaderFormatting = (props) => {
 						: ''}
 				</span>
 			</div>
-			{/* </GridWrapper> */}
 		</div>
 	);
 };
 
 PubHeaderFormatting.propTypes = propTypes;
-PubHeaderFormatting.defaultProps = defaultProps;
 export default PubHeaderFormatting;

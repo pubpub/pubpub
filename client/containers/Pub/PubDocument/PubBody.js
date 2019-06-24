@@ -1,9 +1,9 @@
-import React, { useContext, useRef } from 'react';
+import React, { useRef } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import { Card } from '@blueprintjs/core';
 import Editor from '@pubpub/editor';
 import { getResizedUrl } from 'utils';
-import { PageContext } from 'components/PageWrapper/PageWrapper';
 import discussionSchema from './DiscussionAddon/discussionSchema';
 import { nestDiscussionsToThreads } from './PubDiscussions/discussionUtils';
 import DiscussionThread from './PubDiscussions/DiscussionThread';
@@ -26,7 +26,6 @@ let setSavingTimeout;
 
 const PubBody = (props) => {
 	const { pubData, collabData, firebaseBranchRef, updateLocalData, historyData } = props;
-	const tempContextValues = useContext(PageContext);
 	const { isViewingHistory } = historyData;
 	const prevStatusRef = useRef(null);
 	const embedDiscussions = useRef({});
@@ -63,7 +62,7 @@ const PubBody = (props) => {
 	const useCollaborativeOptions = firebaseBranchRef && !pubData.isStaticDoc && !isHistoryDoc;
 	const isReadOnly = !!(pubData.isStaticDoc || !pubData.canEditBranch || isViewingHistory);
 	const initialContent = (isViewingHistory && historyData.historyDoc) || pubData.initialDoc;
-	console.log('embedDiscussions', JSON.stringify(Object.keys(embedDiscussions.current)));
+
 	return (
 		<div className="pub-body-component">
 			<Editor
@@ -78,14 +77,6 @@ const PubBody = (props) => {
 						},
 					},
 					discussion: {
-						getInputProps: () => {
-							return {
-								pubData: pubData,
-								collabData: collabData,
-								firebaseBranchRef: firebaseBranchRef,
-								updateLocalData: updateLocalData,
-							};
-						},
 						addRef: (embedId, mountRef, threadNumber) => {
 							embedDiscussions.current[embedId] = {
 								mountRef: mountRef,
@@ -93,60 +84,8 @@ const PubBody = (props) => {
 							};
 						},
 						removeRef: (embedId) => {
-							console.log('removing ref');
 							delete embedDiscussions.current[embedId];
 						},
-						// renderPortal: (mountRef, threadNumber) => {
-						// 	console.log('in render call');
-						// 	const threads = nestDiscussionsToThreads(pubData.discussions);
-						// 	const activeThread = threads.reduce((prev, curr) => {
-						// 		if (curr[0].threadNumber === threadNumber) {
-						// 			return curr;
-						// 		}
-						// 		return prev;
-						// 	}, undefined);
-						// 	console.log(threads, threadNumber, activeThread);
-						// 	if (!activeThread) {
-						// 		return undefined;
-						// 	}
-						// 	if (!mountRef.current) {
-						// 		return undefined;
-						// 	}
-						// 	console.log('About to render portal');
-						// 	return ReactDOM.createPortal(
-						// 		<DiscussionThread
-						// 			pubData={pubData}
-						// 			collabData={collabData}
-						// 			firebaseBranchRef={firebaseBranchRef}
-						// 			threadData={activeThread}
-						// 			updateLocalData={updateLocalData}
-						// 		/>,
-						// 		mountRef.current,
-						// 	);
-						// },
-						// getThreadElement: (threadNumber) => {
-						// 	const threads = nestDiscussionsToThreads(pubData.discussions);
-						// 	const activeThread = threads.reduce((prev, curr) => {
-						// 		if (curr[0].threadNumber === threadNumber) {
-						// 			return curr;
-						// 		}
-						// 		return prev;
-						// 	}, undefined);
-						// 	if (!activeThread) {
-						// 		return undefined;
-						// 	}
-						// 	return (
-						// 		<DiscussionThread
-						// 			pubData={pubData}
-						// 			collabData={collabData}
-						// 			firebaseBranchRef={firebaseBranchRef}
-						// 			threadData={activeThread}
-						// 			updateLocalData={updateLocalData}
-						// 			setActiveThread={() => {}}
-						// 			tempContextValues={tempContextValues}
-						// 		/>
-						// 	);
-						// },
 					},
 				}}
 				placeholder={pubData.isStaticDoc ? undefined : 'Begin writing here...'}
@@ -180,8 +119,14 @@ const PubBody = (props) => {
 				highlights={[]}
 				handleSingleClick={props.onSingleClick}
 			/>
+
+			{/* For now, we have PubBody mount Portals for embedded Discussions */}
 			{Object.keys(embedDiscussions.current).map((embedId) => {
 				const mountRef = embedDiscussions.current[embedId].mountRef;
+				if (!mountRef.current) {
+					return null;
+				}
+
 				const threadNumber = embedDiscussions.current[embedId].threadNumber;
 				const threads = nestDiscussionsToThreads(pubData.discussions);
 				const activeThread = threads.reduce((prev, curr) => {
@@ -190,23 +135,24 @@ const PubBody = (props) => {
 					}
 					return prev;
 				}, undefined);
-				// console.log(threads, threadNumber, activeThread);
-				if (!activeThread) {
-					return undefined;
-				}
-				if (!mountRef.current) {
-					return undefined;
-				}
+
 				return ReactDOM.createPortal(
-					<DiscussionThread
-						key={embedId}
-						pubData={pubData}
-						collabData={collabData}
-						firebaseBranchRef={firebaseBranchRef}
-						threadData={activeThread}
-						updateLocalData={updateLocalData}
-						canPreview={true}
-					/>,
+					<React.Fragment>
+						{!activeThread && (
+							<Card>Please select a discussion from the formatting bar.</Card>
+						)}
+						{activeThread && (
+							<DiscussionThread
+								key={embedId}
+								pubData={pubData}
+								collabData={collabData}
+								firebaseBranchRef={firebaseBranchRef}
+								threadData={activeThread}
+								updateLocalData={updateLocalData}
+								canPreview={true}
+							/>
+						)}
+					</React.Fragment>,
 					mountRef.current,
 				);
 			})}
