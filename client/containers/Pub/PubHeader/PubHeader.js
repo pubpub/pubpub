@@ -566,6 +566,7 @@ const PubHeader = (props) => {
 									if (mode.title === 'History') {
 										return (
 											<ActionButton
+												key={mode.title}
 												buttons={[
 													{
 														icon: mode.icon,
