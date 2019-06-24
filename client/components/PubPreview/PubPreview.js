@@ -5,6 +5,7 @@ import dateFormat from 'dateformat';
 import { getResizedUrl } from 'utils';
 import { getPubPublishedDate } from 'shared/pub/pubDates';
 import { isPubPublic } from 'shared/pub/permissions';
+import { pubUrl, communityUrl } from 'shared/utils/canonicalUrls';
 import { PageContext } from 'components/PageWrapper/PageWrapper';
 import { Avatar, Icon } from 'components';
 
@@ -23,6 +24,7 @@ const propTypes = {
 	hideDescription: PropTypes.bool,
 	hideDates: PropTypes.bool,
 	hideContributors: PropTypes.bool,
+	customPubUrl: PropTypes.string,
 };
 
 const defaultProps = {
@@ -32,24 +34,14 @@ const defaultProps = {
 	hideDescription: false,
 	hideDates: false,
 	hideContributors: false,
+	customPubUrl: null,
 };
 
 const PubPreview = function(props) {
-	const { pubData, size } = props;
+	const { pubData, size, communityData, customPubUrl } = props;
 	const { communityData: localCommunityData } = useContext(PageContext);
 	const resizedHeaderLogo =
 		props.communityData && getResizedUrl(props.communityData.headerLogo, 'fit-in', '125x35');
-	const communityHostname =
-		props.communityData &&
-		(props.communityData.domain || `${props.communityData.subdomain}.pubpub.org`);
-	const communityUrl =
-		props.communityData &&
-		(props.communityData.domain
-			? `https://${props.communityData.domain}`
-			: `https://${props.communityData.subdomain}.pubpub.org`);
-	const pubLink = props.communityData
-		? `https://${communityHostname}/pub/${pubData.slug}`
-		: `/pub/${pubData.slug}`;
 	const attributions = pubData.attributions || [];
 	const authors = attributions.filter((attribution) => {
 		return attribution.isAuthor;
@@ -65,6 +57,7 @@ const PubPreview = function(props) {
 	const showDates = !props.hideDates && ['large', 'medium', 'small'].includes(size);
 	const showContributors = !props.hideContributors && ['large', 'medium', 'small'].includes(size);
 	const showDescription = pubData.description && !props.hideDescription;
+	const pubLink = customPubUrl || pubUrl(communityData, pubData);
 	return (
 		<div className={`pub-preview-component ${size}-preview`}>
 			{showBannerImage && (
@@ -81,7 +74,7 @@ const PubPreview = function(props) {
 				<div className="title-wrapper">
 					{props.communityData && (
 						<a
-							href={communityUrl}
+							href={communityUrl(communityData)}
 							alt={props.communityData.title}
 							className="community-banner"
 							style={{ backgroundColor: props.communityData.accentColorDark }}

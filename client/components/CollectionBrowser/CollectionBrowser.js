@@ -1,7 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { useEffectOnce } from 'react-use';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import queryString from 'query-string';
 import {
 	AnchorButton,
 	Button,
@@ -12,7 +10,11 @@ import {
 	Position,
 } from '@blueprintjs/core';
 
-import { apiFetch } from 'utils';
+import {
+	createReadingParamUrl,
+	useCollectionPubs,
+	getNeighborsInCollectionPub,
+} from 'utils/collections';
 import collectionType from 'types/collection';
 import { pubDataProps } from 'types/pub';
 import { pubUrl } from 'shared/utils/canonicalUrls';
@@ -26,6 +28,7 @@ const propTypes = {
 	className: PropTypes.string,
 	collection: collectionType.isRequired,
 	currentPub: pubDataProps.isRequired,
+	updateLocalData: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -33,46 +36,18 @@ const defaultProps = {
 };
 
 const CollectionBrowser = (props) => {
-	const { className, collection, currentPub } = props;
-	const [error, setError] = useState(false);
-	const [isLoading, setIsLoading] = useState(true);
-	const [pubs, setPubs] = useState(collection.pubs);
+	const { className, collection, currentPub, updateLocalData } = props;
 	const { communityData } = useContext(PageContext);
+	const { isLoading, pubs } = useCollectionPubs(updateLocalData, collection);
 	const { bpDisplayIcon } = getSchemaForKind(collection.kind);
-	useEffectOnce(() => {
-		if (Array.isArray(collection.pubs)) {
-			setIsLoading(false);
-		}
-		apiFetch(
-			'/api/collectionPubs?' +
-				queryString.stringify({
-					collectionId: collection.id,
-				}),
-		)
-			.then((res) => {
-				setPubs(res);
-				setIsLoading(false);
-			})
-			.catch((err) => {
-				setError(err);
-				setIsLoading(false);
-			});
-	});
-
-	if (error) {
-		return null;
-	}
-
-	const currentIndex = pubs && pubs.indexOf(pubs.find((p) => p.id === currentPub.id));
-	const previousPub = pubs && currentIndex > 0 && pubs[currentIndex - 1];
-	const nextPub = pubs && currentIndex !== pubs.length - 1 && pubs[currentIndex + 1];
-
+	const { previousPub, nextPub } = getNeighborsInCollectionPub(pubs, currentPub);
+	const readingPubUrl = (pub) => createReadingParamUrl(pubUrl(communityData, pub), collection);
 	return (
 		<div className="collection-browser-component">
 			<ButtonGroup className={className}>
 				<AnchorButton
 					disabled={!previousPub}
-					href={previousPub && pubUrl(communityData, previousPub)}
+					href={previousPub && readingPubUrl(previousPub)}
 					icon="arrow-left"
 				/>
 				<Popover
@@ -84,7 +59,7 @@ const CollectionBrowser = (props) => {
 							{pubs &&
 								pubs.map((pub) => (
 									<MenuItem
-										href={pubUrl(communityData, pub)}
+										href={readingPubUrl(pub)}
 										textClassName="menu-item-text"
 										icon={
 											<PubPreviewImage
@@ -106,7 +81,7 @@ const CollectionBrowser = (props) => {
 				</Popover>
 				<AnchorButton
 					disabled={!nextPub}
-					href={nextPub && pubUrl(communityData, nextPub)}
+					href={nextPub && readingPubUrl(nextPub)}
 					icon="arrow-right"
 				/>
 			</ButtonGroup>

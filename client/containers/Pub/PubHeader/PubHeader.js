@@ -228,7 +228,10 @@ const PubHeader = (props) => {
 					{isDocMode && (
 						<div className="top-bar">
 							<div className="left">
-								<CollectionsBar pubData={pubData} />
+								<CollectionsBar
+									pubData={pubData}
+									updateLocalData={updateLocalData}
+								/>
 							</div>
 							{pubData.canManage && (
 								<React.Fragment>

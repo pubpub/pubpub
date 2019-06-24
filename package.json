@@ -162,6 +162,7 @@
 		"terser-webpack-plugin": "^1.2.3",
 		"throng": "^4.0.0",
 		"tmp-promise": "^2.0.1",
+		"url-polyfill": "^1.1.5",
 		"uuid": "^3.3.0",
 		"valid-url": "^1.0.9",
 		"webpack": "^4.29.6",
