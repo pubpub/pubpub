@@ -55,6 +55,7 @@ const DiscussionEmbed = (props) => {
 			>
 				{/* props.options.renderPortal(containerRef, props.attrs.threadNumber) */}
 				{/* threadElement */}
+				<input type="text" />
 
 				{/* !threadElement && <Card>Please select a discussion from the formatting bar.</Card> */}
 			</figure>
