@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { AnchorButton, Button, OverflowList, Menu, MenuItem, Popover } from '@blueprintjs/core';
+import { Menu, MenuItem, OverflowList, Popover, Position, Tag } from '@blueprintjs/core';
 
 import { pubDataProps } from 'types/pub';
 import { collectionUrl } from 'shared/utils/canonicalUrls';
@@ -19,6 +19,7 @@ const CollectionsBar = (props) => {
 	const { pubData } = props;
 	const { communityData } = useContext(PageContext);
 	const primaryCollectionPub = pubData.collectionPubs.find((cp) => cp.isPrimary);
+	const currentCollectionPub = primaryCollectionPub;
 	return (
 		<div className="collections-bar-component">
 			{primaryCollectionPub && (
@@ -29,44 +30,51 @@ const CollectionsBar = (props) => {
 				/>
 			)}
 			<OverflowList
+				className="collections-list"
 				collapseFrom="end"
 				items={pubData.collectionPubs
-					.filter((collectionPub) => collectionPub.collection)
+					.filter(
+						(collectionPub) =>
+							collectionPub.collection && collectionPub !== currentCollectionPub,
+					)
 					.sort(
 						(a, b) =>
 							a.collection.title.toLowerCase() - b.collection.title.toLowerCase(),
 					)}
-				visibleItemRenderer={(collectionPub) => (
-					<div className="themed-button-component collections-bar-button">
-						<AnchorButton
-							key={collectionPub.id}
-							icon={iconForCollection(collectionPub.collection)}
-							href={collectionUrl(communityData, collectionPub.collection)}
-						>
-							{collectionPub.collection.title}
-						</AnchorButton>
-					</div>
+				visibleItemRenderer={({ collection }) => (
+					<a
+						className="header-collection"
+						href={collectionUrl(communityData, collection)}
+					>
+						<Tag key={collection.id} icon={iconForCollection(collection)}>
+							{collection.title}
+						</Tag>
+					</a>
 				)}
 				overflowRenderer={(collectionPubs) => (
 					<Popover
 						minimal
+						modifiers={{
+							preventOverflow: { enabled: false },
+							hide: { enabled: false },
+						}}
+						position={Position.TOP_LEFT}
+						className="header-collection"
 						content={
 							<Menu>
-								{collectionPubs.map((collectionPub) => (
+								{collectionPubs.map(({ collection }) => (
 									<MenuItem
-										text={collectionPub.collection.title}
-										href={collectionUrl(
-											communityData,
-											collectionPub.collection,
-										)}
+										icon={iconForCollection(collection)}
+										text={collection.title}
+										href={collectionUrl(communityData, collection)}
 									/>
 								))}
 							</Menu>
 						}
 					>
-						<div className="themed-button-component collections-bar-button">
-							<Button icon="more">{collectionPubs.length} more</Button>
-						</div>
+						<Tag icon="more" className="overflow-tag" interactive={true}>
+							{collectionPubs.length} more
+						</Tag>
 					</Popover>
 				)}
 			/>

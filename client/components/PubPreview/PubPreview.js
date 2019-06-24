@@ -35,7 +35,8 @@ const defaultProps = {
 };
 
 const PubPreview = function(props) {
-	const {pubData} = props;
+	const { pubData, size } = props;
+	const { communityData: localCommunityData } = useContext(PageContext);
 	const resizedHeaderLogo =
 		props.communityData && getResizedUrl(props.communityData.headerLogo, 'fit-in', '125x35');
 	const communityHostname =
