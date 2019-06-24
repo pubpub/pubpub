@@ -16,23 +16,17 @@ const propTypes = {
 	firebaseBranchRef: PropTypes.object,
 	threadData: PropTypes.array.isRequired,
 	updateLocalData: PropTypes.func.isRequired,
-	tempContextValues: PropTypes.object,
 	canPreview: PropTypes.bool,
 };
 
 const defaultProps = {
-	/* This is needed for the embedAddon */
-	/* Remove this if/when we refactor the way */
-	/* discussion embdeds work */
-	tempContextValues: undefined,
 	firebaseBranchRef: undefined,
 	canPreview: false,
 };
 
 const DiscussionThread = (props) => {
-	const { pubData, threadData, canPreview, tempContextValues } = props;
-	const pageWrapperContextValues = useContext(PageContext);
-	const { communityData } = tempContextValues || pageWrapperContextValues;
+	const { pubData, threadData, canPreview } = props;
+	const { communityData } = useContext(PageContext);
 	const [previewExpanded, setPreviewExpanded] = useState(false);
 	const isPreview = canPreview && !previewExpanded;
 

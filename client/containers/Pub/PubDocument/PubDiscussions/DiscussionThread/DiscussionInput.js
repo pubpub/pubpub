@@ -17,22 +17,15 @@ const propTypes = {
 	firebaseBranchRef: PropTypes.object,
 	threadData: PropTypes.array.isRequired,
 	updateLocalData: PropTypes.func.isRequired,
-	tempContextValues: PropTypes.object,
 };
 
 const defaultProps = {
-	/* This is needed for the embedAddon */
-	/* Remove this if/when we refactor the way */
-	/* discussion embdeds work */
-	tempContextValues: undefined,
 	firebaseBranchRef: undefined,
 };
 
 const DiscussionInput = (props) => {
-	const { pubData, collabData, updateLocalData, threadData, tempContextValues } = props;
-	const pageWrapperContextValues = useContext(PageContext);
-	const { loginData, locationData, communityData } =
-		tempContextValues || pageWrapperContextValues;
+	const { pubData, collabData, updateLocalData, threadData } = props;
+	const { loginData, locationData, communityData } = useContext(PageContext);
 	const pubView = collabData.editorChangeObject.view;
 	const [changeObject, setChangeObject] = useState({});
 	const [isLoading, setIsLoading] = useState(false);

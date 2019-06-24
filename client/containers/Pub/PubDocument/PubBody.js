@@ -205,6 +205,7 @@ const PubBody = (props) => {
 						firebaseBranchRef={firebaseBranchRef}
 						threadData={activeThread}
 						updateLocalData={updateLocalData}
+						canPreview={true}
 					/>,
 					mountRef.current,
 				);

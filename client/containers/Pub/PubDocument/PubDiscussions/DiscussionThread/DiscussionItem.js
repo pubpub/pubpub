@@ -13,30 +13,17 @@ const propTypes = {
 	discussionData: PropTypes.object.isRequired,
 	pubData: PropTypes.object.isRequired,
 	updateLocalData: PropTypes.func.isRequired,
-	tempContextValues: PropTypes.object,
 	isRootThread: PropTypes.bool.isRequired,
 	isPreview: PropTypes.bool,
 };
 
 const defaultProps = {
-	/* This is needed for the embedAddon */
-	/* Remove this if/when we refactor the way */
-	/* discussion embdeds work */
-	tempContextValues: undefined,
 	isPreview: false,
 };
 
 const DiscussionItem = (props) => {
-	const {
-		discussionData,
-		pubData,
-		updateLocalData,
-		tempContextValues,
-		isRootThread,
-		isPreview,
-	} = props;
-	const pageWrapperContextValues = useContext(PageContext);
-	const { loginData, communityData } = tempContextValues || pageWrapperContextValues;
+	const { discussionData, pubData, updateLocalData, isRootThread, isPreview } = props;
+	const { loginData, communityData } = useContext(PageContext);
 	const [isEditing, setIsEditing] = useState(false);
 	const [changeObject, setChangeObject] = useState({});
 	const [isLoadingEdit, setIsLoadingEdit] = useState(false);
