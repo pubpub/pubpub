@@ -57,7 +57,8 @@ const PubPreview = function(props) {
 	const showDates = !props.hideDates && ['large', 'medium', 'small'].includes(size);
 	const showContributors = !props.hideContributors && ['large', 'medium', 'small'].includes(size);
 	const showDescription = pubData.description && !props.hideDescription;
-	const pubLink = customPubUrl || pubUrl(communityData, pubData);
+	const pubLink =
+		customPubUrl || (communityData ? pubUrl(communityData, pubData) : `/pub/${pubData.slug}`);
 	return (
 		<div className={`pub-preview-component ${size}-preview`}>
 			{showBannerImage && (
