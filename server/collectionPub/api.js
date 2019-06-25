@@ -44,24 +44,6 @@ app.post('/api/collectionPubs', (req, res) => {
 		});
 });
 
-app.post('/api/collectionPubs', (req, res) => {
-	const requestIds = getRequestIds(req);
-	getPermissions(requestIds)
-		.then((permissions) => {
-			if (!permissions.create) {
-				throw new Error('Not Authorized');
-			}
-			return createCollectionPub(req.body);
-		})
-		.then((newPage) => {
-			return res.status(201).json(newPage);
-		})
-		.catch((err) => {
-			console.error('Error in postCollectionPub: ', err);
-			return res.status(500).json(err.message);
-		});
-});
-
 app.put('/api/collectionPubs/setPrimary', (req, res) => {
 	getPermissions(getRequestIds(req))
 		.then((permissions) => {
