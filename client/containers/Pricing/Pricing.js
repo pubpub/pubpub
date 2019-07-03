@@ -25,26 +25,36 @@ const Pricing = (props) => {
 				<GridWrapper>
 					<h1>Pricing</h1>
 					<p>
-						We are committed to providing PubPub users with robust, free-forever tools
-						to support their community publishing. To fulfill this mission and ensure
-						our sustainability, PubPub offers paid options that we&apos;ve found to be
-						predominantly required by large publishers.
+						PubPub's goal is to provide a high-quality, institution-owned, hosted
+						alternative to commercial publishing software. We're committed to giving
+						anyone the ability to start a community and publish without limitations for
+						free. For organizations who need advanced features (or just want to support
+						our mission), we offer paid options designed to scale to meet the needs of
+						any organization.
 					</p>
 					<div className="pricing-tiers">
 						<div className="option bp3-card bp3-elevation-1">
-							<h2>Community</h2>
+							<h2>Free</h2>
 							<p className="subtitle">Free, forever</p>
 							<ul className="features">
 								<li>
 									All of PubPub&apos;s core drafting, review, publishing, and
 									discussion features
 								</li>
-								<li>Unlimited publications</li>
 								<li>Your own pubpub.org subdomain</li>
 								<li>Publish with select CC licenses</li>
-								<li>E-mail support</li>
-								{/* <li>Basic analytics</li>
-										<li>Community support</li> */}
+								<li>Unlimited publications</li>
+								<li>1 PubPub Community</li>
+								<li>
+									Community support on our{` `}
+									<a
+										href="https://discourse.knowledgefutures.org"
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										Discourse forums
+									</a>
+								</li>
 							</ul>
 							<a
 								href="/community/create"
@@ -54,39 +64,50 @@ const Pricing = (props) => {
 							</a>
 						</div>
 						<div className="option bp3-card bp3-elevation-1">
-							<h2>Professional</h2>
-							<p className="subtitle">Available Soon</p>
+							<h2>Team</h2>
+							<p className="subtitle">Yearly Fee Per Active Admin</p>
 							<ul className="features">
-								<li>All PubPub community features</li>
-								<li>Custom domain name</li>
+								<li>
+									All of PubPub&apos;s core drafting, review, publishing, and
+									discussion features
+								</li>
+								<li>Your own custom domain name</li>
 								<li>Publish with any license</li>
-								<li>Advanced analytics</li>
-								<li>Priority E-mail support</li>
-								<li>Multi-community management</li>
-								<li>Free archive mode for inactive communities</li>
+								<li>Unlimited publications</li>
+								<li>1 PubPub Community</li>
+								<li>Email support</li>
 							</ul>
 							<a
-								href="https://mailchi.mp/pubpub/pro"
+								href="mailto:team@pubpub.org?subject=PubPub%20Team%20Inquiry"
 								target="_blank"
 								rel="noopener noreferrer"
 								className="bp3-button bp3-large bp3-intent-primary"
 							>
-								Join Waiting List
+								Get In Touch
 							</a>
 						</div>
 						<div className="option bp3-card bp3-elevation-1">
-							<h2>Full Service</h2>
-							<p className="subtitle">Contact for pricing</p>
+							<h2>Organization</h2>
+							<p className="subtitle">Yearly Fee Per Active Admin</p>
 							<ul className="features">
-								<li>All PubPub Professional features</li>
-								<li>Dedicated, hands-on support for setting up your community</li>
 								<li>
-									Production, editorial, marketing, and community management
-									support
+									All of PubPub&apos;s core drafting, review, publishing, and
+									discussion features
 								</li>
+								<li>Your own custom domain name</li>
+								<li>Publish with any license</li>
+								<li>Unlimited publications</li>
+								<li>Unlimited PubPub Communities</li>
+								<li>Dedicated support</li>
+								<li>Organization Dashboard for managing multiple Communities</li>
+								<li>
+									Organization Landing Page for displaying all of the content and
+									Communities in your organization
+								</li>
+								<li>Service-Level Agreement</li>
 							</ul>
 							<a
-								href="mailto:team@pubpub.org?subject=Full%20Service%20Inquiry"
+								href="mailto:team@pubpub.org?subject=PubPub%20Organization%20Inquiry"
 								target="_blank"
 								rel="noopener noreferrer"
 								className="bp3-button bp3-large bp3-intent-primary"
@@ -96,9 +117,11 @@ const Pricing = (props) => {
 						</div>
 					</div>
 					<p>
-						Interested in an institutional or enterprise license for your organization?{' '}
-						<a href="mailto:team@pubpub.org?subject=Institutional%20License">
-							Get in touch
+						We also provide article production, community design and setup, and training
+						workshops for communities of any size. If you're interested in these
+						services,{` `}
+						<a href="mailto:team@pubpub.org?subject=Additional%20Services">
+							feel free to get in touch
 						</a>
 						.
 					</p>
