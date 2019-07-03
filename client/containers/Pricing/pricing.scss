@@ -26,6 +26,11 @@
 	}
 	p.pricing {
 		margin-bottom: 1em;
+		em {
+			font-style: normal;
+			border-bottom: 1px dotted;
+			cursor: help;
+		}
 	}
 	.pricing-tiers {
 		display: flex;

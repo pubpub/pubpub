@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { Popover, PopoverInteractionKind } from '@blueprintjs/core';
 import { GridWrapper, PageWrapper } from 'components';
 import { hydrateWrapper } from 'utils';
 
@@ -65,10 +66,26 @@ const Pricing = (props) => {
 						</div>
 						<div className="option bp3-card bp3-elevation-1">
 							<h2>Team</h2>
-							<p className="subtitle">
-								For individual communities with advanced needs.
+							<p className="subtitle">For communities with advanced requirements.</p>
+							<p className="pricing">
+								Yearly Fee Per{` `}
+								<Popover
+									interactionKind={PopoverInteractionKind.HOVER}
+									popoverClassName="bp3-popover-content-sizing"
+								>
+									<em>Active Admin</em>
+									<div>
+										<p>
+											An Active Admin is any user account added to the team
+											page of your community. Usually this is the management
+											team, consisting of editors and project managers.
+											Authors, contributors, reviewers, and commenters will
+											typically not count not count towards your Active
+											Admins.
+										</p>
+									</div>
+								</Popover>
 							</p>
-							<p className="pricing">Yearly Fee Per Active Admin</p>
 							<ul className="features">
 								<li>
 									All of PubPub&apos;s core drafting, review, publishing, and
@@ -93,7 +110,25 @@ const Pricing = (props) => {
 							<p className="subtitle">
 								For organizations managing multiple communities.
 							</p>
-							<p className="pricing">Yearly Fee Per Active Admin</p>
+							<p className="pricing">
+								Yearly Fee Per{` `}
+								<Popover
+									interactionKind={PopoverInteractionKind.HOVER}
+									popoverClassName="bp3-popover-content-sizing"
+								>
+									<em>Active Admin</em>
+									<div>
+										<p>
+											An Active Admin is any user account added to the team
+											page of your community. Usually this is the management
+											team, consisting of editors and project managers.
+											Authors, contributors, reviewers, and commenters will
+											typically not count not count towards your Active
+											Admins.
+										</p>
+									</div>
+								</Popover>
+							</p>
 							<ul className="features">
 								<li>
 									All of PubPub&apos;s core drafting, review, publishing, and
