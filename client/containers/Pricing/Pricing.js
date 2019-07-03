@@ -24,18 +24,19 @@ const Pricing = (props) => {
 			>
 				<GridWrapper>
 					<h1>Pricing</h1>
-					<p>
-						PubPub's goal is to provide a high-quality, institution-owned, hosted
-						alternative to commercial publishing software. We're committed to giving
-						anyone the ability to start a community and publish without limitations for
-						free. For organizations who need advanced features (or just want to support
-						our mission), we offer paid options designed to scale to meet the needs of
-						any organization.
+					<p className="description">
+						PubPub's goal is to provide a high-quality open-source, institution-owned,
+						hosted alternative to commercial academic publishing software. We're
+						committed to giving anyone the ability to start a community and publish
+						without limitations for free. For organizations who need advanced features
+						(or who just want to support our mission), we offer paid options designed to
+						scale to meet the needs of any organization.
 					</p>
 					<div className="pricing-tiers">
 						<div className="option bp3-card bp3-elevation-1">
 							<h2>Free</h2>
-							<p className="subtitle">Free, forever</p>
+							<p className="subtitle">For publishing communities of all kinds.</p>
+							<p className="pricing">Free, Forever</p>
 							<ul className="features">
 								<li>
 									All of PubPub&apos;s core drafting, review, publishing, and
@@ -44,7 +45,6 @@ const Pricing = (props) => {
 								<li>Your own pubpub.org subdomain</li>
 								<li>Publish with select CC licenses</li>
 								<li>Unlimited publications</li>
-								<li>1 PubPub Community</li>
 								<li>
 									Community support on our{` `}
 									<a
@@ -65,16 +65,18 @@ const Pricing = (props) => {
 						</div>
 						<div className="option bp3-card bp3-elevation-1">
 							<h2>Team</h2>
-							<p className="subtitle">Yearly Fee Per Active Admin</p>
+							<p className="subtitle">
+								For individual communities with advanced needs.
+							</p>
+							<p className="pricing">Yearly Fee Per Active Admin</p>
 							<ul className="features">
 								<li>
 									All of PubPub&apos;s core drafting, review, publishing, and
 									discussion features
 								</li>
-								<li>Your own custom domain name</li>
+								<li>Use your own custom domain name</li>
 								<li>Publish with any license</li>
 								<li>Unlimited publications</li>
-								<li>1 PubPub Community</li>
 								<li>Email support</li>
 							</ul>
 							<a
@@ -88,7 +90,10 @@ const Pricing = (props) => {
 						</div>
 						<div className="option bp3-card bp3-elevation-1">
 							<h2>Organization</h2>
-							<p className="subtitle">Yearly Fee Per Active Admin</p>
+							<p className="subtitle">
+								For organizations managing multiple communities.
+							</p>
+							<p className="pricing">Yearly Fee Per Active Admin</p>
 							<ul className="features">
 								<li>
 									All of PubPub&apos;s core drafting, review, publishing, and
@@ -97,7 +102,7 @@ const Pricing = (props) => {
 								<li>Your own custom domain name</li>
 								<li>Publish with any license</li>
 								<li>Unlimited publications</li>
-								<li>Unlimited PubPub Communities</li>
+								<li>Unlimited communities</li>
 								<li>Dedicated support</li>
 								<li>Organization Dashboard for managing multiple Communities</li>
 								<li>
@@ -116,7 +121,7 @@ const Pricing = (props) => {
 							</a>
 						</div>
 					</div>
-					<p>
+					<p className="description">
 						We also provide article production, community design and setup, and training
 						workshops for communities of any size. If you're interested in these
 						services,{` `}
