@@ -26,10 +26,10 @@ const Pricing = (props) => {
 				<GridWrapper>
 					<h1>Pricing</h1>
 					<p className="description">
-						PubPub's goal is to provide a high-quality open-source, institution-owned,
-						hosted alternative to commercial academic publishing software. We're
+						PubPub's goal is to provide a high-quality, open-source, institution-owned,
+						hosted alternative to commercial publishing software. We're
 						committed to giving anyone the ability to start a community and publish
-						without limitations for free. For organizations who need advanced features
+						without limitations for free. For groups who need advanced features
 						(or who just want to support our mission), we offer paid options designed to
 						scale to meet the needs of any organization.
 					</p>
@@ -65,7 +65,7 @@ const Pricing = (props) => {
 							</a>
 						</div>
 						<div className="option bp3-card bp3-elevation-1">
-							<h2>Team</h2>
+							<h2>Premium</h2>
 							<p className="subtitle">For communities with advanced requirements.</p>
 							<p className="pricing">
 								Yearly Fee Per{` `}
