@@ -60,7 +60,6 @@ const DiscussionInput = (props) => {
 					? convertLocalHighlightToDiscussion(
 							pubView,
 							threadData[0].id,
-							threadData[0].id,
 							props.firebaseBranchRef,
 					  )
 					: () => {};

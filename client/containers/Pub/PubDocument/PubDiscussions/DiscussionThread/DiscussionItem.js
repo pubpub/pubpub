@@ -107,13 +107,17 @@ const DiscussionItem = (props) => {
 					)}
 
 					<span className="actions">
-						{!isPreview && pubData.canManage && isRootThread && firebaseBranchRef && (
-							<DiscussionReanchor
-								collabData={collabData}
-								firebaseBranchRef={firebaseBranchRef}
-								discussionId={discussionData.id}
-							/>
-						)}
+						{!isPreview &&
+							pubData.canManage &&
+							isRootThread &&
+							firebaseBranchRef &&
+							loginData.id === 'b242f616-7aaa-479c-8ee5-3933dcf70859' && (
+								<DiscussionReanchor
+									collabData={collabData}
+									firebaseBranchRef={firebaseBranchRef}
+									discussionId={discussionData.id}
+								/>
+							)}
 						{!isPreview && (isDiscussionAuthor || pubData.canManage) && isRootThread && (
 							<React.Fragment>
 								<LabelSelect
