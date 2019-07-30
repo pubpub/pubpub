@@ -1,8 +1,9 @@
-import React, { useRef, useContext } from 'react';
+import React, { useRef, useContext, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useBeforeUnload } from 'react-use';
 import PropTypes from 'prop-types';
-import { Card } from '@blueprintjs/core';
+import * as Sentry from '@sentry/browser';
+import { Card, Alert } from '@blueprintjs/core';
 import Editor from '@pubpub/editor';
 import { getResizedUrl } from 'utils';
 import { PageContext } from 'components/PageWrapper/PageWrapper';
@@ -34,6 +35,7 @@ const PubBody = (props) => {
 	const { isViewingHistory } = historyData;
 	const prevStatusRef = useRef(null);
 	const embedDiscussions = useRef({});
+	const [editorError, setEditorError] = useState(null);
 	prevStatusRef.current = collabData.status;
 
 	useBeforeUnload(
@@ -115,6 +117,15 @@ const PubBody = (props) => {
 						updateLocalData('collab', { editorChangeObject: editorChangeObject });
 					}
 				}}
+				onError={(err) => {
+					setEditorError(err);
+					if (window.sentryIsActive) {
+						Sentry.configureScope((scope) => {
+							scope.setTag('error_source', 'editor');
+						});
+						Sentry.captureException(err);
+					}
+				}}
 				collaborativeOptions={
 					useCollaborativeOptions
 						? {
@@ -138,7 +149,21 @@ const PubBody = (props) => {
 				highlights={[]}
 				handleSingleClick={props.onSingleClick}
 			/>
-
+			{!!editorError && (
+				<Alert
+					isOpen={editorError}
+					confirmButtonText="Refresh Page"
+					icon="error"
+					onConfirm={() => {
+						window.location.reload();
+					}}
+				>
+					<h5>Uh Oh - Editor error</h5>
+					<p>Apologies for the interuption.</p>
+					<p>We have logged this error and will look into the cause right away.</p>
+					<p>To continue editing, please refresh the page.</p>
+				</Alert>
+			)}
 			{/* For now, we have PubBody mount Portals for embedded Discussions */}
 			{Object.keys(embedDiscussions.current).map((embedId) => {
 				const mountRef = embedDiscussions.current[embedId].mountRef;
