@@ -199,7 +199,7 @@ const PubBody = (props) => {
 					)}
 					{!showErrorTime && (
 						<p className="error-time">
-							All previous changes have been succesfully saved.
+							All previous changes have been successfully saved.
 						</p>
 					)}
 					<p>To continue editing, please refresh the page.</p>
