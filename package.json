@@ -103,6 +103,7 @@
 		"express-session": "^1.14.1",
 		"express-sslify": "^1.2.0",
 		"file-loader": "^4.0.0",
+		"file-saver": "^2.0.2",
 		"filesize": "^4.1.2",
 		"firebase": "^6.1.1",
 		"firebase-admin": "^8.1.0",

@@ -4,8 +4,10 @@ import { useBeforeUnload } from 'react-use';
 import PropTypes from 'prop-types';
 import * as Sentry from '@sentry/browser';
 import { Card, Alert } from '@blueprintjs/core';
-import Editor from '@pubpub/editor';
+import Editor, { getJSON } from '@pubpub/editor';
 import { getResizedUrl } from 'utils';
+import TimeAgo from 'react-timeago';
+import { saveAs } from 'file-saver';
 import { PageContext } from 'components/PageWrapper/PageWrapper';
 import { PubSuspendWhileTypingContext } from '../PubSuspendWhileTyping';
 
@@ -36,12 +38,22 @@ const PubBody = (props) => {
 	const prevStatusRef = useRef(null);
 	const embedDiscussions = useRef({});
 	const [editorError, setEditorError] = useState(null);
+	const [editorErrorTime, setEditorErrorTime] = useState(null);
+	const [lastSavedTime, setLastSavedTime] = useState(null);
 	prevStatusRef.current = collabData.status;
 
 	useBeforeUnload(
-		collabData.status === 'saving',
+		(collabData.status === 'saving' || collabData.status === 'disconnected') && !editorError,
 		'Your pub has not finished saving. Are you sure you wish to leave?',
 	);
+
+	const downloadBackup = () => {
+		const docJson = getJSON(collabData.editorChangeObject.view);
+		const blob = new Blob([JSON.stringify(docJson, null, 2)], {
+			type: 'text/plain;charset=utf-8',
+		});
+		saveAs(blob, `${pubData.title}_backup.json`);
+	};
 
 	const getNextStatus = (status, onComplete) => {
 		clearTimeout(setSavingTimeout);
@@ -60,6 +72,7 @@ const PubBody = (props) => {
 				}, 250);
 			} else {
 				onComplete(nextStatus);
+				setLastSavedTime(Date.now());
 			}
 		}
 		/* If disconnected, only set state if the new status is 'connected' */
@@ -75,7 +88,7 @@ const PubBody = (props) => {
 	const isReadOnly = !!(pubData.isStaticDoc || !pubData.canEditBranch || isViewingHistory);
 	const initialContent = (isViewingHistory && historyData.historyDoc) || pubData.initialDoc;
 	const { markLastInput } = useContext(PubSuspendWhileTypingContext);
-
+	const showErrorTime = lastSavedTime && editorErrorTime - lastSavedTime > 500;
 	return (
 		<div className="pub-body-component">
 			<style>
@@ -119,6 +132,7 @@ const PubBody = (props) => {
 				}}
 				onError={(err) => {
 					setEditorError(err);
+					setEditorErrorTime(Date.now());
 					if (typeof window !== 'undefined' && window.sentryIsActive) {
 						Sentry.configureScope((scope) => {
 							scope.setTag('error_source', 'editor');
@@ -152,15 +166,38 @@ const PubBody = (props) => {
 			{!!editorError && (
 				<Alert
 					isOpen={editorError}
-					confirmButtonText="Refresh Page"
 					icon="error"
+					confirmButtonText="Refresh Page"
 					onConfirm={() => {
 						window.location.reload();
 					}}
+					cancelButtonText={showErrorTime ? 'Download backup' : undefined}
+					onCancel={showErrorTime ? downloadBackup : undefined}
 				>
-					<h5>Uh Oh - Editor error</h5>
-					<p>Apologies for the interuption.</p>
-					<p>We have logged this error and will look into the cause right away.</p>
+					<h5>Uh oh! An error has occured in the editor.</h5>
+					<p>We've logged the error and will look into the cause right away.</p>
+					{showErrorTime && (
+						<React.Fragment>
+							<p>
+								<b>
+									Your changes were last saved{' '}
+									<TimeAgo
+										formatter={(value, unit, suffix) => {
+											const unitSuffix = value === 1 ? '' : 's';
+											return `${value} ${unit}${unitSuffix} ${suffix}`;
+										}}
+										date={lastSavedTime}
+										now={() => editorErrorTime}
+									/>
+									.
+								</b>
+							</p>
+							<p>
+								If you are concerned about unsaved changes being lost, please
+								download a backup copy of your document below.
+							</p>
+						</React.Fragment>
+					)}
 					<p>To continue editing, please refresh the page.</p>
 				</Alert>
 			)}
