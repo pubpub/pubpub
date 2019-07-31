@@ -173,30 +173,34 @@ const PubBody = (props) => {
 					}}
 					cancelButtonText={showErrorTime ? 'Download backup' : undefined}
 					onCancel={showErrorTime ? downloadBackup : undefined}
+					className="pub-body-alert"
 				>
 					<h5>Uh oh! An error has occured in the editor.</h5>
 					<p>We've logged the error and will look into the cause right away.</p>
 					{showErrorTime && (
 						<React.Fragment>
-							<p>
-								<b>
-									Your changes were last saved{' '}
-									<TimeAgo
-										formatter={(value, unit, suffix) => {
-											const unitSuffix = value === 1 ? '' : 's';
-											return `${value} ${unit}${unitSuffix} ${suffix}`;
-										}}
-										date={lastSavedTime}
-										now={() => editorErrorTime}
-									/>
-									.
-								</b>
+							<p className="error-time">
+								Your changes were last saved{' '}
+								<TimeAgo
+									formatter={(value, unit, suffix) => {
+										const unitSuffix = value === 1 ? '' : 's';
+										return `${value} ${unit}${unitSuffix} ${suffix}`;
+									}}
+									date={lastSavedTime}
+									now={() => editorErrorTime}
+								/>
+								.
 							</p>
 							<p>
 								If you are concerned about unsaved changes being lost, please
 								download a backup copy of your document below.
 							</p>
 						</React.Fragment>
+					)}
+					{!showErrorTime && (
+						<p className="error-time">
+							All previous changes have been succesfully saved.
+						</p>
 					)}
 					<p>To continue editing, please refresh the page.</p>
 				</Alert>
