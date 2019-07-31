@@ -119,7 +119,7 @@ const PubBody = (props) => {
 				}}
 				onError={(err) => {
 					setEditorError(err);
-					if (window.sentryIsActive) {
+					if (typeof window !== 'undefined' && window.sentryIsActive) {
 						Sentry.configureScope((scope) => {
 							scope.setTag('error_source', 'editor');
 						});
