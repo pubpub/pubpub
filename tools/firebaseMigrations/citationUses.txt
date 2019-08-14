@@ -1,0 +1,1640 @@
+5c78902f-f033-4205-8840-0389bc105211
+[
+  {
+    "c": [
+      {
+        "m": [
+          {
+            "t": "s"
+          }
+        ],
+        "t": "t",
+        "te": "Roberts Klotins"
+      },
+      {
+        "t": "t",
+        "te": ", MD, Psychiatrist-Psychotherapist, "
+      },
+      {
+        "m": [
+          {
+            "a": {
+              "h": "http://efpt.eu/previous-members/"
+            },
+            "t": "l"
+          }
+        ],
+        "t": "t",
+        "te": "former EFPT President"
+      },
+      {
+        "t": "t",
+        "te": ", London, UK"
+      }
+    ],
+    "t": "p"
+  },
+  {
+    "a": {
+      "id": "bibliography",
+      "l": 2
+    },
+    "c": [
+      {
+        "t": "t",
+        "te": "Bibliography"
+      }
+    ],
+    "t": "h"
+  }
+]
+===========================
+1ed1598a-c550-47f7-9be2-ef8663cb8df3
+[
+  {
+    "t": "h_r"
+  },
+  {
+    "a": {
+      "id": "bibliography",
+      "l": 1
+    },
+    "c": [
+      {
+        "t": "t",
+        "te": "Bibliography "
+      }
+    ],
+    "t": "h"
+  }
+]
+===========================
+2bc8dbe4-9770-408a-b686-b4c1609d4027
+[
+  {
+    "c": [
+      {
+        "m": [
+          {
+            "t": "s"
+          }
+        ],
+        "t": "t",
+        "te": "Blakeley H. Payne | "
+      },
+      {
+        "t": "t",
+        "te": "Blakeley H. Payne is a graduate research assistant at the MIT Media Lab where she studies the ethics of artificial intelligence. Specifically, she develops educational materials to teach children to be both conscientious consumers and designers of AI systems. Before joining MIT, she completed her undergraduate studies at the University of South Carolina, where she earned a B.S. in Computer Science and Mathematics. While at the University of South Carolina, Blakeley founded several after school computer science programs for 3rd-5th grade students from low income families. She has also completed several AI internships at institutions such as Adobe, Inc. and U.C. Berkeley."
+      }
+    ],
+    "t": "p"
+  },
+  {
+    "c": [
+      {
+        "m": [
+          {
+            "t": "s"
+          }
+        ],
+        "t": "t",
+        "te": "Randi Williams | "
+      },
+      {
+        "t": "t",
+        "te": "Randi Williams is a graduate research assistant in the Personal Robots group at the MIT Media Lab. She received her S.M. (2019) in Media Arts in Sciences from MIT and her B.S. (2016) in Computer Engineering from the University of Maryland, Baltimore County. Randi has developed a number of AI education projects, including PopBots, social robot learning companions that teach AI through social interaction, and GenAI, a K-5tht grade AI curriculum. Additionally, she investigates children’s relationships with intelligent agents. Her research intersects human-robot interaction and early childhood education with a particular focus on engaging students from diverse backgrounds."
+      }
+    ],
+    "t": "p"
+  }
+]
+===========================
+87ff5bee-2ace-4c51-a036-74f3ad55f39b
+[
+  {
+    "c": [
+      {
+        "t": "t",
+        "te": "When we recognise how instrumental Wikimedia has become for the ways in which dominant views about the world are produced and how there is not necessarily a single view from within Wikimedia about how to progress the project, we will recognise the need for greater accountability and oversight. Rather than focusing on Wikipedia as a single (usually English language) encyclopaedia, we need investigations that recognise how Wikimedia is both a source for networked knowledge and filters sources from the broader Web according to local norms and rules of reliability (intersected by issues of gender, race and ethnicity). These include questions about the political economy of the Wikimedia federation (questions around transparency, funding inequalities and accountability of "
+      },
+      {
+        "m": [
+          {
+            "t": "e"
+          }
+        ],
+        "t": "t",
+        "te": "all"
+      },
+      {
+        "t": "t",
+        "te": " the projects and the ways in which they intersect with the wider Web) and debates from within Wikimedia such as those regarding new projects like Wikidata which some argue are set to fundamentally change who edits Wikipedia."
+      }
+    ],
+    "t": "p"
+  },
+  {
+    "c": [
+      {
+        "t": "t",
+        "te": "These need to be a public conversation which doesn’t require an understanding of a very particular culture in order to participate. Requiring every critique of Wikipedia to happen “on wiki” denies the stake that everyone (notably those outside the Wikimedia community) has in Wikimedia’s governance. Refusing to listen to critiques because commentators should have rather fixed the wiki denies how Wikipedia can have very real effects in the world now. Thinking that we might be able to solve some of these problems in the future denies the very real harm that can result from what happens on Wikipedia in the present. For that, we need more criticism and oversight – not because we want to denigrate Wikipedia but because we care about its continued (but improved) existence."
+      }
+    ],
+    "t": "p"
+  }
+]
+===========================
+5df09a94-733e-4732-ba33-39d576c6906e
+[
+  {
+    "c": [
+      {
+        "m": [
+          {
+            "a": {
+              "h": "http://www.tjoe.org/about"
+            },
+            "t": "l"
+          }
+        ],
+        "t": "t",
+        "te": "Learn more about TJOE"
+      },
+      {
+        "t": "t",
+        "te": " | "
+      },
+      {
+        "m": [
+          {
+            "a": {
+              "h": "https://www.tjoe.org/pub/create"
+            },
+            "t": "l"
+          }
+        ],
+        "t": "t",
+        "te": "Get started authoring your manuscript"
+      }
+    ],
+    "t": "p"
+  },
+  {
+    "a": {
+      "id": "citations",
+      "l": 3
+    },
+    "c": [
+      {
+        "t": "t",
+        "te": "Citations: "
+      }
+    ],
+    "t": "h"
+  }
+]
+===========================
+ffd7d1c6-8c8d-419e-9519-badaaad4eb71
+[
+  {
+    "c": [
+      {
+        "t": "t",
+        "te": "Citation lists should appear at the end of the piece."
+      }
+    ],
+    "t": "p"
+  },
+  {
+    "a": {
+      "id": "",
+      "l": 1
+    },
+    "c": [
+      {
+        "t": "t",
+        "te": "Citations"
+      }
+    ],
+    "t": "h"
+  }
+]
+===========================
+cf0b4b6a-e4e0-42a9-8c31-bf7ab6fb53a4
+[
+  {
+    "c": [
+      {
+        "m": [
+          {
+            "t": "e"
+          }
+        ],
+        "t": "t",
+        "te": "Illustrations by Steve Green"
+      }
+    ],
+    "t": "p"
+  },
+  {
+    "a": {
+      "id": "citations",
+      "l": 2
+    },
+    "c": [
+      {
+        "t": "t",
+        "te": "Citations"
+      }
+    ],
+    "t": "h"
+  }
+]
+===========================
+662356f8-f4af-4401-bfdf-f804abf1e065
+[
+  {
+    "c": [
+      {
+        "t": "t",
+        "te": "I lack sufficient  evidence to determine whether the incident that I observed reflected  scavenging or the outcome of intraspecific predation. The picnic table  on which the carcass was located was approximately 5 m from a two-lane  road with a posted speed of 25 mph, suggesting the possibility that the  individual was killed in collision with a motor vehicle and later  scavenged. Road-kill is a common source of mortality among Barred Owls "
+      },
+      {
+        "a": {
+          "count": 6,
+          "html": "<div class=\"csl-bib-body\">\n  <div data-csl-entry-id=\"gagne2015effects\" class=\"csl-entry\">Gagné, S. A., Bates, J. L., &#38; Bierregaard, R. O. (2015). The effects of road and landscape characteristics on the likelihood of a Barred Owl (<i>Strix varia</i>)-vehicle collision. <i>Urban Ecosystems</i>, <i>18</i>, 1007–1020.</div>\n</div>",
+          "unstructuredValue": "",
+          "value": "@article{gagne2015effects,\n  title={The effects of road and landscape characteristics on the likelihood of a Barred Owl (<i>Strix varia</i>)-vehicle collision},\n  author={Gagn{\\'e}, Sara A and Bates, Jennifer L and Bierregaard, Richard O},\n  journal={Urban Ecosystems},\n  volume={18},\n  pages={1007--1020},\n  year={2015}\n}"
+        },
+        "t": "citation"
+      },
+      {
+        "t": "t",
+        "te": ". Another possibility is that the individual died of starvation or  disease before being scavenged, although starvation is somewhat unlikely given the timing of the incident in early winter and that the winter up to that point had been fairly mild. Snowdepth at the time of the  observation was approximately 20 cm, but most of that snow had fallen within the past week and prior to that the ground had remained largely bare. Although the circumstances of this observation remain unresolved, it does demonstrate clearly that Barred Owls are opportunistic foragers that, given the opportunity, will consume conspecifics."
+      }
+    ],
+    "t": "p"
+  },
+  {
+    "a": {
+      "id": "citations",
+      "l": 3
+    },
+    "c": [
+      {
+        "t": "t",
+        "te": "Citations: "
+      }
+    ],
+    "t": "h"
+  }
+]
+===========================
+76694041-7e3d-459d-875e-7c07c032fb80
+[
+  {
+    "t": "p"
+  },
+  {
+    "a": {
+      "id": "citations",
+      "l": 2
+    },
+    "c": [
+      {
+        "t": "t",
+        "te": "Citations"
+      }
+    ],
+    "t": "h"
+  }
+]
+===========================
+ba574b3f-2822-4f90-a293-efc0228913c6
+[
+  {
+    "a": {
+      "listItems": [
+        {
+          "count": 1,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>From the archive, 12 May 1997: Deep Blue win a giant step for computerkind | From the Guardian | The Guardian [Internet]. [cited 2018 May 30]. Available from: https://www.theguardian.com/theguardian/2011/may/12/deep‐blue‐beats‐kasparov‐1997</p>"
+        },
+        {
+          "count": 2,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Kasparov G. The Chess Master and the Computer [Internet]. The New York Review of Books. [cited 2015 Dec 13]. Available from: http://www.nybooks.com/articles/2010/02/11/the‐chess‐master‐ and‐the‐computer/</p>"
+        },
+        {
+          "count": 3,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Silver D, Huang A, Maddison CJ, Guez A, Sifre L, van den Driessche G, et al. Mastering the game of Go with deep neural networks and tree search. Nature. 2016 Jan 27;529(7587):484–9.</p>"
+        },
+        {
+          "count": 4,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Lake BM, Ullman TD, Tenenbaum JB, Gershman SJ. Building machines that learn and think like people. Behav Brain Sci. 2017;40.</p>"
+        },
+        {
+          "count": 5,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Moravčík M, Schmid M, Burch N, Lisý V, Morrill D, Bard N, et al. DeepStack: Expert‐level artificial intelligence in heads‐up no‐limit poker. Science. 2017 May 5;356(6337):508–13.</p><p>Brown N, Sandholm T. Superhuman AI for heads‐up no‐limit poker: Libratus beats top professionals. Science. 2017;eaao1733.</p>"
+        },
+        {
+          "count": 6,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Knight W. A team of AI algorithms just crushed humans in a complex computer game [Internet]. MIT Technology Review. [cited 2018 Jun 28]. Available from: https://www.technologyreview.com/s/611536/a‐team‐of‐ai‐algorithms‐just‐crushed‐expert‐ humans‐in‐a‐complex‐computer‐game/</p>"
+        },
+        {
+          "count": 7,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Ito J. Resisting Reduction: A Manifesto. J Des Sci [Internet]. 2017 Nov 1 [cited 2018 May 30]; Available from: https://jods.mitpress.mit.edu/pub/resisting‐reduction</p>"
+        },
+        {
+          "count": 8,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Russell SJ, Norvig P. Artificial Intelligence: A Modern Approach. 3rd ed. Englewood Cliffs, N.J: Prentice Hall; 2010. 1132 p. (Prentice Hall Series in Artificial Intelligence).</p>"
+        },
+        {
+          "count": 9,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>March JG, Olsen JP. Ambiguity and Choice in Organizations. Bergen: Universitetsforlaget; 1976. 408 p.</p>"
+        },
+        {
+          "count": 10,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>McCullough M. Abstracting Craft: The Practiced Digital Hand. Cambridge, MA: MIT Press; 1996. 309 p.</p>"
+        },
+        {
+          "count": 11,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Summers D. Real Spaces: World Art History and the Rise of Western Modernism. London ; New York, NY: Phaidon Press; 2003. 687 p.</p>"
+        },
+        {
+          "count": 12,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Csikszentmihalyi M, Bennett S. An exploratory model of play. Am Anthropol. 1971;73(1):45–58.</p>"
+        },
+        {
+          "count": 13,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Gadamer H‐G. Truth and Method. 2nd ed. London; New York, NY: Continuum; 2004. 601 p. (Continuum Impacts).</p>"
+        },
+        {
+          "count": 14,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Huizinga J. Homo Ludens: A Study of the Play‐Element in Culture. Reprint. London; Boston, MA: Routledge &amp; Kegan Paul; 2014. 232 p.</p>"
+        },
+        {
+          "count": 15,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Huizinga J. Homo Ludens: A Study of the Play‐Element in Culture. Reprint. London; Boston, MA: Routledge &amp; Kegan Paul; 2014. 232 p.</p><p>Hein H. Play as an Aesthetic Concept. J Aesthet Art Crit. 1968;27(1):67–71.</p>"
+        },
+        {
+          "count": 16,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Hein H. Play as an Aesthetic Concept. J Aesthet Art Crit. 1968;27(1):67–71.</p>"
+        },
+        {
+          "count": 17,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>March JG, Olsen JP. Ambiguity and Choice in Organizations. Bergen: Universitetsforlaget; 1976. 408 p.</p>"
+        },
+        {
+          "count": 18,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Vygotsky LS. Imagination and Creativity in Childhood. J Russ East Eur Psychol. 2004;42(1):7–97.</p>"
+        },
+        {
+          "count": 19,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Bruner JS. On Knowing: Essays for the Left Hand. 2nd ed. Cambridge, MA: Belknap Press of Harvard University Press; 1979. 189 p.</p>"
+        },
+        {
+          "count": 20,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Sennett R. The Craftsman. New Haven: Yale Univ. Press; 2008. 326 p.</p>"
+        },
+        {
+          "count": 21,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Gadamer H‐G. Truth and Method. 2nd ed. London; New York, NY: Continuum; 2004. 601 p. (Continuum Impacts).</p>"
+        },
+        {
+          "count": 22,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Gadamer H‐G. Truth and Method. 2nd ed. London; New York, NY: Continuum; 2004. 601 p. (Continuum Impacts).</p><p>Huizinga J. Homo Ludens: A Study of the Play‐Element in Culture. Reprint. London; Boston, MA: Routledge &amp; Kegan Paul; 2014. 232 p.</p><p>Hein H. Play as an Aesthetic Concept. J Aesthet Art Crit. 1968;27(1):67–71.</p><p>Csikszentmihalyi M. Some Paradoxes in the Definition of Play. In: Cheska AT, editor. Play as Context: 1979 Proceedings of the Association for the Anthropological Study of Play. West Point, N.Y: Leisure Press; 1981. p. 14–25.</p>"
+        },
+        {
+          "count": 23,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Hein H. Play as an Aesthetic Concept. J Aesthet Art Crit. 1968;27(1):67–71.</p>"
+        },
+        {
+          "count": 24,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Wilf E. Swinging within the iron cage: Modernity, creativity, and embodied practice in American postsecondary jazz education. Am Ethnol. 2010 Aug;37(3):563–82.</p>"
+        },
+        {
+          "count": 25,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p class=\"ProseMirror-selectednode\" draggable=\"true\">Mothersill P. Inviting Feedback. J Des Sci [Internet]. 2018 Feb 4 [cited 2018 Mar 2];(3). Available from: https://jods.mitpress.mit.edu/pub/issue3mothersill</p>"
+        },
+        {
+          "count": 26,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>McCullough M. Abstracting Craft: The Practiced Digital Hand. Cambridge, MA: MIT Press; 1996. 309 p.</p>"
+        },
+        {
+          "count": 27,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Pye D. The Nature and Art of Workmanship. Revised. London: Herbert Press; 1995.</p>"
+        },
+        {
+          "count": 28,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Ingold T. The textility of making. Camb J Econ. 2010 Jan 1;34(1):91–102.</p>"
+        },
+        {
+          "count": 29,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Pye D. The Nature and Art of Workmanship. Revised. London: Herbert Press; 1995.</p>"
+        },
+        {
+          "count": 30,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Penman S. Ludus Ex Machina: Toward Computational Play. [Cambridge, MA]: Massachusetts Institute of Technology; 2018.</p>"
+        },
+        {
+          "count": 31,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Penman S. Ludus Ex Machina: Toward Computational Play. [Cambridge, MA]: Massachusetts Institute of Technology; 2018.</p>"
+        },
+        {
+          "count": 32,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>Csikszentmihalyi M. Finding Flow: The Psychology of Engagement with Everyday Life. 1st ed. New York, NY: Basic Books; 1997. 181 p. (MasterMinds).</p>"
+        }
+      ]
+    },
+    "t": "footnoteList"
+  },
+  {
+    "a": {
+      "id": "citations",
+      "l": 1
+    },
+    "c": [
+      {
+        "t": "t",
+        "te": "Citations"
+      }
+    ],
+    "t": "h"
+  }
+]
+===========================
+c75bace0-e6c0-43d7-8706-a49a55b572b1
+[
+  {
+    "c": [
+      {
+        "a": {
+          "count": 1,
+          "html": "<div class=\"csl-bib-body\">\n  <div data-csl-entry-id=\"bib:rjson\" class=\"csl-entry\">Couture-Beil, A. (2011). <i>The rjson package</i>.</div>\n  <div data-csl-entry-id=\"bib:libjson\" class=\"csl-entry\">Wallace, J. (2011). <i>libjson</i>. Retrieved from http://libjson.sourceforge.net</div>\n</div>",
+          "unstructuredValue": "",
+          "value": "\n@misc{bib:libjson,\ntitle = {libjson},\nauthor = {Wallace, Johnathan},\nurl = {http://libjson.sourceforge.net},\nyear = 2011\n}\n\n@misc{bib:rjson,\ntitle = {The rjson package},\nauthor = {Couture-Beil, Alex},\nyear = \"2011-6-26\"\n}\n"
+        },
+        "t": "citation"
+      },
+      {
+        "t": "t",
+        "te": " Selon "
+      },
+      {
+        "a": {
+          "count": 2,
+          "html": "<div class=\"csl-bib-body\">\n  <div data-csl-entry-id=\"bib:rjson\" class=\"csl-entry\">Couture-Beil, A. (2011). <i>The rjson package</i>.</div>\n  <div data-csl-entry-id=\"bib:libjson\" class=\"csl-entry\">Wallace, J. (2011). <i>libjson</i>. Retrieved from http://libjson.sourceforge.net</div>\n</div>",
+          "unstructuredValue": "<p>Ce texte vient en plus de la référence ? Weird<br><br><br><br><br><br><br></p>",
+          "value": "\n@misc{bib:libjson,\ntitle = {libjson},\nauthor = {Wallace, Johnathan},\nurl = {http://libjson.sourceforge.net},\nyear = 2011\n}\n\n@misc{bib:rjson,\ntitle = {The rjson package},\nauthor = {Couture-Beil, Alex},\nyear = \"2011-6-26\"\n}\n"
+        },
+        "t": "citation"
+      },
+      {
+        "t": "t",
+        "te": ", la nature de .."
+      }
+    ],
+    "t": "p"
+  },
+  {
+    "a": {
+      "id": "rfrences",
+      "l": 1
+    },
+    "c": [
+      {
+        "t": "t",
+        "te": "Références"
+      }
+    ],
+    "t": "h"
+  }
+]
+===========================
+b6ee8e08-75a8-44b8-beb7-536bd88d31e9
+[
+  {
+    "c": [
+      {
+        "c": [
+          {
+            "t": "t",
+            "te": "それ以前の段階では，社会は差異付けられた質的な位置の体系として整序されていた。それが今やバラバラに解体され同質化されて，量的な流れの運動の中に投じられるのである。というのは他でもない，近代資本制とは，すべてを，就中，脱コード化されてマルクスのいう二重の自由を身に帯びるに至った労働力の流れを，商品としての運動にひきずりこむことによって成立する社会なのである。そこでは質的な差異など一切問題にならない。マルクスのいう通り，貨幣とは急進的な平等主義者であって，すべてを量的な大小関係に還元してしまうのである。（170）"
+          }
+        ],
+        "t": "p"
+      },
+      {
+        "c": [
+          {
+            "t": "t",
+            "te": "ここでひとつ補足しておくが，質的な差異が全く消失すると考えるのは明らかに誤っている。ただ，そうした差異は，完結した差異の構造の一部を成すことをやめ，差異化の累積過程の中に取り込まれるのだ。次々と新たな差異を作り出すこと。それによって生じるポテンシャルの差を運動エネルギーに変換して，より先へ進んでいくこと。これは文字通り際限のないプロセスである。上野千鶴子はこれを「差別化の悪夢」と呼んだ（196）"
+          }
+        ],
+        "t": "p"
+      },
+      {
+        "c": [
+          {
+            "t": "t",
+            "te": "この現実を否認することは不可能である。我々にできることといえば，安定した《表象のハイアラーキー》の崩壊を嘆くか，《戴冠せるアナーキー》への希望を口にするか，ふたつにひとつしかない。そして，ここで選ぶべきは後者だと付け加えるなら，全くの蛇足ということになるだろう。なぜなら，それが我々に残された唯一の切り札だからである。（206）"
+          },
+          {
+            "t": "h_b"
+          },
+          {
+            "t": "t",
+            "te": "外へ出よ。外へ出よ。（226）"
+          }
+        ],
+        "t": "p"
+      },
+      {
+        "c": [
+          {
+            "t": "t",
+            "te": "近代における一方向化された前進運動は，そのつどパラドクスを飛びこえながらこけつまろびつ進行していくプロセスであった。（…）けれども，ニーチェードゥルーズが言うように，飛びこすことと舞踏することとは限りなく遠い。（…）流れを千に分岐させて砂漠へ導こうと思ったら，悦ばしく多数多様な舞踏の術を身につけねばならないのである。（228）"
+          }
+        ],
+        "t": "p"
+      }
+    ],
+    "t": "b"
+  },
+  {
+    "t": "p"
+  }
+]
+===========================
+e3853ef2-cd01-46f0-9bbd-48b0412f1e52
+[
+  {
+    "a": {
+      "id": "relative-mathematics",
+      "l": 2
+    },
+    "c": [
+      {
+        "t": "t",
+        "te": "Relative Mathematics"
+      }
+    ],
+    "t": "h"
+  },
+  {
+    "c": [
+      {
+        "t": "t",
+        "te": "Zalamea points to philosophy's blindness of the very creative process of making mathematics. He proposes three styles of contemporary mathematics: Eidal, Quiddital and Archeal and demonstrates that they exhibit process-like properties culminating in the notion of relative mathematics - a continual transit between the three styles and/or the contradistinction between particular mathematical objects and the physical exterior. "
+      },
+      {
+        "a": {
+          "count": 1,
+          "html": "<div class=\"csl-bib-body\">\n  <div data-csl-entry-id=\"zalamea_2012\" class=\"csl-entry\">Zalamea, F. (2012). <i>Synthetic philosophy of contemporary mathematics</i>. Urbanomic.</div>\n</div>",
+          "unstructuredValue": "",
+          "value": "@book{zalamea_2012, place={Falmouth}, title={Synthetic philosophy of contemporary mathematics}, publisher={Urbanomic}, author={Zalamea, Fernando}, year={2012}} "
+        },
+        "t": "citation"
+      }
+    ],
+    "t": "p"
+  }
+]
+===========================
+8ceef098-24a3-41d8-b64c-2a57ef676bef
+[
+  {
+    "c": [
+      {
+        "t": "h_b"
+      },
+      {
+        "m": [
+          {
+            "t": "s"
+          }
+        ],
+        "t": "t",
+        "te": "Continue reading: "
+      },
+      {
+        "m": [
+          {
+            "t": "s"
+          },
+          {
+            "a": {
+              "h": "https://handbook.pubpub.org/pub/archives-prototyping"
+            },
+            "t": "l"
+          }
+        ],
+        "t": "t",
+        "te": "Prototyping & Wireframing an Archival Project"
+      }
+    ],
+    "t": "p"
+  },
+  {
+    "a": {
+      "listItems": [
+        {
+          "count": 1,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p><strong>Record: </strong>a set of primary objects, people, or ideas stored with related information about them.</p>"
+        },
+        {
+          "count": 2,
+          "structuredHtml": "",
+          "structuredValue": "",
+          "value": "<p>This information is often termed “metadata.”</p>"
+        }
+      ]
+    },
+    "t": "footnoteList"
+  }
+]
+===========================
+62c465f4-deb9-4240-ace1-c039b73ac32c
+[
+  {
+    "c": [
+      {
+        "c": [
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "CMC"
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          },
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "Computed muscle control. An algorithm, which includes a proportional-derivative controller, used to calculate muscle forces."
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          }
+        ],
+        "t": "t_r"
+      },
+      {
+        "c": [
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "EMG"
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          },
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "Electromyography. Measurement of muscle excitations."
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          }
+        ],
+        "t": "t_r"
+      },
+      {
+        "c": [
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "RRA"
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          },
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "Residual reduction algorithm. Used to make dynamically consistent simulations."
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          }
+        ],
+        "t": "t_r"
+      },
+      {
+        "c": [
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "GM"
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          },
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "Gluteus medius muscle."
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          }
+        ],
+        "t": "t_r"
+      },
+      {
+        "c": [
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "RF"
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          },
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "Rectus femoris muscle."
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          }
+        ],
+        "t": "t_r"
+      },
+      {
+        "c": [
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "VL"
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          },
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "Vastus lateralis muscle."
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          }
+        ],
+        "t": "t_r"
+      },
+      {
+        "c": [
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "AL"
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          },
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "Adductor longus muscle."
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          }
+        ],
+        "t": "t_r"
+      },
+      {
+        "c": [
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "ST"
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          },
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "Semitendinosus muscle."
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          }
+        ],
+        "t": "t_r"
+      },
+      {
+        "c": [
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "TA"
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          },
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "Tibialis anterior muscle."
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          }
+        ],
+        "t": "t_r"
+      },
+      {
+        "c": [
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "GM"
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          },
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "Gastrocnemius muscle."
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          }
+        ],
+        "t": "t_r"
+      },
+      {
+        "c": [
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "PL"
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          },
+          {
+            "a": {
+              "colspan": 1,
+              "rowspan": 1
+            },
+            "c": [
+              {
+                "c": [
+                  {
+                    "t": "t",
+                    "te": "Peroneus longus muscle."
+                  }
+                ],
+                "t": "p"
+              }
+            ],
+            "t": "t_c"
+          }
+        ],
+        "t": "t_r"
+      }
+    ],
+    "t": "ta"
+  },
+  {
+    "a": {
+      "id": "references",
+      "l": 1
+    },
+    "c": [
+      {
+        "m": [
+          {
+            "t": "s"
+          }
+        ],
+        "t": "t",
+        "te": "REFERENCES"
+      }
+    ],
+    "t": "h"
+  }
+]
+===========================
+783e7e24-63ab-4018-b3f5-5be496e18096
+[
+  {
+    "c": [
+      {
+        "t": "t",
+        "te": "Creative misinterpretation is often key to the design process.  Just like Rorschach tests, we perceive in our surroundings the affordances that our intuition and emotions are attuned to at that particular moment "
+      },
+      {
+        "a": {
+          "count": 25,
+          "html": "<div class=\"csl-bib-body\">\n  <div data-csl-entry-id=\"Ackermann_2007\" class=\"csl-entry\">Ackermann, E. K. (2007). Experiences of Artifacts: People’s Appropriations / Objects ‘Affordances.’ In M. Larochelle (Ed.), <i>Ernst von Glasersfeld, Key works on radical constructivism</i>.</div>\n</div>",
+          "unstructuredValue": "",
+          "value": "@incollection{Ackermann_2007,\n  added-at = {2009-11-15T16:37:30.000+0100},\n  author = {Ackermann, Edith K.},\n  biburl = {https://www.bibsonomy.org/bibtex/25658f2efaef27edc42ee6404e40e4e1a/harveymellar},\n  booktitle = {Ernst von Glasersfeld, Key works on radical constructivism},\n  editor = {Larochelle, M.},\n  interhash = {d4a87e03c20a365d76f6975e299819b7},\n  intrahash = {5658f2efaef27edc42ee6404e40e4e1a},\n  keywords = {WLEFormativeEAssessment},\n  timestamp = {2009-11-15T16:37:31.000+0100},\n  title = {Experiences of Artifacts: People’s Appropriations / Objects ‘Affordances’},\n  year = 2007\n}"
+        },
+        "t": "citation"
+      },
+      {
+        "t": "t",
+        "te": ".  A colleague mistakenly responding to an upside-down version of one of your sketches can be key in breaking out of your ‘local optima’ and serendipitously considering a whole new approach to your design problem.  From "
+      },
+      {
+        "m": [
+          {
+            "a": {
+              "h": "https://www.youtube.com/watch?v=LY7x2Ihqjmc"
+            },
+            "t": "l"
+          }
+        ],
+        "t": "t",
+        "te": "Sunspring’s"
+      },
+      {
+        "t": "t",
+        "te": " machine-learning-generated sci-fi film script that was both nonsensical and profound, to the confusing yet thought-provoking list of unrelated interpretations that "
+      },
+      {
+        "m": [
+          {
+            "a": {
+              "h": "https://quickdraw.withgoogle.com/"
+            },
+            "t": "l"
+          }
+        ],
+        "t": "t",
+        "te": "Google’s Quick, Draw!"
+      },
+      {
+        "t": "t",
+        "te": " app applies to your sketch before guessing the ‘correct’ answer, the immaturity of our intelligent technologies can actually provide great creative inspiration.  The ‘answers’ we get from these interfaces may seem vague and hard to imagine, Nielsen acknowledges, but this is because these interactions allow us to invent “ways of thinking which haven't yet been invented”."
+      }
+    ],
+    "t": "p"
+  },
+  {
+    "c": [
+      {
+        "t": "t",
+        "te": "Renowned designer Kenya Hara writes in his book "
+      },
+      {
+        "m": [
+          {
+            "t": "e"
+          }
+        ],
+        "t": "t",
+        "te": "Designing Design"
+      },
+      {
+        "t": "t",
+        "te": " "
+      },
+      {
+        "a": {
+          "count": 26,
+          "html": "<div class=\"csl-bib-body\">\n  <div data-csl-entry-id=\"hara2007designing\" class=\"csl-entry\">Hara, K. (2007). <i>Designing design</i>. Lars Muller Publishers.</div>\n</div>",
+          "unstructuredValue": "",
+          "value": "@book{hara2007designing,\n  title={Designing design},\n  author={Hara, Kenya},\n  year={2007},\n  publisher={Lars Muller Publishers}\n}"
+        },
+        "t": "citation"
+      },
+      {
+        "t": "t",
+        "te": ": “Creativity is to discover a question that has never been asked”.  Rather than dictating queries to machines, how can we harness these principles of second-order cybernetics, of design as argumentation and conversation, to enable machines and their interfaces to provoke questions for us to answer?  Questions that may seem unrelated and strange but actually serve to reveal new connections, new insights, and new ‘answers’."
+      },
+      {
+        "m": [
+          {
+            "t": "e"
+          },
+          {
+            "t": "s"
+          }
+        ],
+        "t": "t",
+        "te": "  "
+      },
+      {
+        "t": "t",
+        "te": "Questions that can help us understand and take responsibility for our roles in the design of our future, and therefore help us to ask better questions of the machines in our present."
+      },
+      {
+        "t": "h_b"
+      }
+    ],
+    "t": "p"
+  }
+]
+===========================
+ccdc3697-af8d-428a-afc0-3573ff91e842
+[
+  {
+    "a": {
+      "align": "full",
+      "caption": "Gabbard video",
+      "size": 50,
+      "url": "https://assets.pubpub.org/gj8wo3ge/31515540815976.mp4"
+    },
+    "t": "video"
+  },
+  {
+    "a": {
+      "id": "",
+      "l": 2
+    },
+    "c": [
+      {
+        "t": "t",
+        "te": "Citations"
+      }
+    ],
+    "t": "h"
+  }
+]
+===========================
+0c5f1bf4-1335-4c1d-ad3d-83699cdf60b3
+[
+  {
+    "c": [
+      {
+        "t": "t",
+        "te": "16H04032 for T.T.) from the Ministry of Education, Culture, Sports, Science and Technology, Japan."
+      }
+    ],
+    "t": "p"
+  },
+  {
+    "a": {
+      "id": "references",
+      "l": 2
+    },
+    "c": [
+      {
+        "t": "t",
+        "te": "References"
+      }
+    ],
+    "t": "h"
+  }
+]
+===========================
+5ac343fc-dfa9-4dbe-9459-d954ed547c4f
+[
+  {
+    "c": [
+      {
+        "t": "t",
+        "te": "This  work was completed as part of the Interdisciplinary Research  Experiences in Robotics for Assistive Technology REU funded through NSF  Award # CNS-1560219."
+      }
+    ],
+    "t": "p"
+  },
+  {
+    "a": {
+      "id": "citations",
+      "l": 1
+    },
+    "c": [
+      {
+        "t": "t",
+        "te": "Citations"
+      }
+    ],
+    "t": "h"
+  }
+]
+===========================
+8f1adbdb-6625-457b-8aca-c2ac2a5265e6
+[
+  {
+    "c": [
+      {
+        "t": "t",
+        "te": "No, I guess I start in a private collection and then publish."
+      }
+    ],
+    "t": "p"
+  },
+  {
+    "c": [
+      {
+        "t": "t",
+        "te": "What’s the citation mechanism "
+      },
+      {
+        "a": {
+          "count": 1,
+          "html": "<div class=\"csl-bib-body\">\n  <div data-csl-entry-id=\"temp_id_28526443626999676\" class=\"csl-entry\">Kok, M. T. J., Alkemade, R., Bakkenes, M., van Eerdt, M., Janse, J., Mandryk, M., … van Vuuren, D. P. (2018). Pathways for agriculture and forestry to contribute to terrestrial biodiversity conservation: A global scenario-study. <i>Biological Conservation</i>, <i>221</i>, 137–150. https://doi.org/10.1016/j.biocon.2018.03.003</div>\n</div>",
+          "unstructuredValue": "",
+          "value": "10.1016/j.biocon.2018.03.003\n"
+        },
+        "t": "citation"
+      }
+    ],
+    "t": "p"
+  }
+]
+===========================
+3f86d174-6bef-4681-9aac-1ae6a0473d55
+[
+  {
+    "t": "p"
+  },
+  {
+    "a": {
+      "id": "references",
+      "l": 1
+    },
+    "c": [
+      {
+        "t": "t",
+        "te": "References"
+      }
+    ],
+    "t": "h"
+  }
+]
+===========================
+f875537b-6bfa-4ec2-8579-2e90214f672a
+[
+  {
+    "c": [
+      {
+        "t": "t",
+        "te": "The wildly heterogeneous nature of these different projects is characteristic of the Media Lab. But more than that, it is the embodiment of the very premise of EI: that intelligence, ideas, analysis and action are not formed in any one individual collection of neurons or code. All of these projects are exploring this central idea with different lenses, experiences and capabilities, and in our research as well as in our values, we believe this is how intelligence comes to life."
+      }
+    ],
+    "t": "p"
+  },
+  {
+    "a": {
+      "id": "citations",
+      "l": 3
+    },
+    "c": [
+      {
+        "t": "t",
+        "te": "Citations:"
+      }
+    ],
+    "t": "h"
+  }
+]
+===========================
+93543164-9d5a-465c-8bac-7e9b445395c2
+[
+  {
+    "a": {
+      "align": "center"
+    },
+    "t": "discussion"
+  },
+  {
+    "c": [
+      {
+        "t": "t",
+        "te": " "
+      }
+    ],
+    "t": "p"
+  }
+]
+===========================
+572e5da9-ea24-4913-a05e-d9ef41a198ef
+[
+  {
+    "c": [
+      {
+        "t": "t",
+        "te": "And Eq. (69) can be compared to Eq. (32) to identify terms "
+      },
+      {
+        "a": {
+          "html": "<span class=\"katex\"><span class=\"katex-mathml\"><math><semantics><mrow><mi>B</mi><msub><mi>C</mi><mn>1</mn></msub></mrow><annotation encoding=\"application/x-tex\">BC_1</annotation></semantics></math></span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"strut\" style=\"height:0.68333em;\"></span><span class=\"strut bottom\" style=\"height:0.83333em;vertical-align:-0.15em;\"></span><span class=\"base\"><span class=\"mord mathit\" style=\"margin-right:0.05017em;\">B</span><span class=\"mord\"><span class=\"mord mathit\" style=\"margin-right:0.07153em;\">C</span><span class=\"msupsub\"><span class=\"vlist-t vlist-t2\"><span class=\"vlist-r\"><span class=\"vlist\" style=\"height:0.30110799999999993em;\"><span style=\"top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;\"><span class=\"pstrut\" style=\"height:2.7em;\"></span><span class=\"sizing reset-size6 size3 mtight\"><span class=\"mord mathrm mtight\">1</span></span></span></span><span class=\"vlist-s\">​</span></span><span class=\"vlist-r\"><span class=\"vlist\" style=\"height:0.15em;\"></span></span></span></span></span></span></span></span>",
+          "value": "BC_1"
+        },
+        "t": "equation"
+      },
+      {
+        "t": "t",
+        "te": " through "
+      },
+      {
+        "a": {
+          "html": "<span class=\"katex\"><span class=\"katex-mathml\"><math><semantics><mrow><mi>B</mi><msub><mi>C</mi><mn>5</mn></msub></mrow><annotation encoding=\"application/x-tex\">BC_5</annotation></semantics></math></span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"strut\" style=\"height:0.68333em;\"></span><span class=\"strut bottom\" style=\"height:0.83333em;vertical-align:-0.15em;\"></span><span class=\"base\"><span class=\"mord mathit\" style=\"margin-right:0.05017em;\">B</span><span class=\"mord\"><span class=\"mord mathit\" style=\"margin-right:0.07153em;\">C</span><span class=\"msupsub\"><span class=\"vlist-t vlist-t2\"><span class=\"vlist-r\"><span class=\"vlist\" style=\"height:0.30110799999999993em;\"><span style=\"top:-2.5500000000000003em;margin-left:-0.07153em;margin-right:0.05em;\"><span class=\"pstrut\" style=\"height:2.7em;\"></span><span class=\"sizing reset-size6 size3 mtight\"><span class=\"mord mathrm mtight\">5</span></span></span></span><span class=\"vlist-s\">​</span></span><span class=\"vlist-r\"><span class=\"vlist\" style=\"height:0.15em;\"></span></span></span></span></span></span></span></span>",
+          "value": "BC_5"
+        },
+        "t": "equation"
+      },
+      {
+        "t": "t",
+        "te": "."
+      }
+    ],
+    "t": "p"
+  },
+  {
+    "a": {
+      "id": "",
+      "l": 3
+    },
+    "c": [
+      {
+        "t": "t",
+        "te": "Citations: "
+      }
+    ],
+    "t": "h"
+  }
+]
+===========================
+75339ead-1184-442a-a9e7-3c4eb2c50fb0
+[
+  {
+    "c": [
+      {
+        "c": [
+          {
+            "c": [
+              {
+                "t": "t",
+                "te": "Links to Societies"
+              }
+            ],
+            "t": "p"
+          }
+        ],
+        "t": "l_i"
+      },
+      {
+        "c": [
+          {
+            "c": [
+              {
+                "t": "t",
+                "te": "Courses offered"
+              }
+            ],
+            "t": "p"
+          }
+        ],
+        "t": "l_i"
+      }
+    ],
+    "t": "b_l"
+  },
+  {
+    "a": {
+      "id": "citations",
+      "l": 3
+    },
+    "c": [
+      {
+        "t": "t",
+        "te": "Citations:"
+      }
+    ],
+    "t": "h"
+  }
+]
+===========================
+c252e192-6ad1-4873-ae5b-ce9a96ef4916
+[
+  {
+    "c": [
+      {
+        "c": [
+          {
+            "c": [
+              {
+                "t": "t",
+                "te": "Aghia Sofia Children's University Hospital, Athens."
+              }
+            ],
+            "t": "p"
+          }
+        ],
+        "t": "l_i"
+      }
+    ],
+    "t": "b_l"
+  },
+  {
+    "a": {
+      "id": "citations",
+      "l": 3
+    },
+    "c": [
+      {
+        "t": "t",
+        "te": "Citations:"
+      }
+    ],
+    "t": "h"
+  }
+]
+===========================
+44dbb45c-b094-4922-9a43-f24549319221
+[
+  {
+    "t": "p"
+  },
+  {
+    "a": {
+      "id": "references",
+      "l": 2
+    },
+    "c": [
+      {
+        "t": "t",
+        "te": "References"
+      }
+    ],
+    "t": "h"
+  }
+]
+===========================
+Completed. 27 have citations.
