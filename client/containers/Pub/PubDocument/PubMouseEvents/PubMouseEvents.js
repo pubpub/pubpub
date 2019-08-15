@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useReducer } from 'react';
+import React, { useEffect, useRef, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import InlinePopover from './InlinePopover';
 import HeaderPopover from './HeaderPopover';
@@ -19,42 +19,64 @@ const PubMouseEvents = (props) => {
 		};
 	}, {});
 
-	const handleMouseEnter = (key, evt) => {
-		console.log('oi');
-		clearTimeout(timeouts.current[key]);
-		hoverElemsDispatch({ type: key, elem: evt.target });
-	};
+	/* Specify the types of elems we want events for */
+	const mouseElemTypes = [
+		{ key: 'footnote', querySelector: '.footnote, .citation' },
+		{ key: 'header', querySelector: 'h1, h2, h3, h4, h5, h6' },
+	];
 
-	const handleMouseLeave = (key) => {
-		timeouts.current[key] = setTimeout(() => {
-			hoverElemsDispatch({ type: key, elem: undefined });
-		}, 250);
-	};
+	/* Generate specific functions for all elemTypes */
+	const mouseEventHandlers = mouseElemTypes.reduce((prev, curr) => {
+		const key = curr.key;
+		const handleMouseEnter = (evt) => {
+			clearTimeout(timeouts.current[key]);
+			hoverElemsDispatch({ type: key, elem: evt.target });
+		};
 
+		const handleMouseLeave = () => {
+			timeouts.current[key] = setTimeout(() => {
+				hoverElemsDispatch({ type: key, elem: undefined });
+			}, 250);
+		};
+		return {
+			...prev,
+			[key]: [handleMouseEnter, handleMouseLeave],
+		};
+	}, {});
+
+	/* Manage event handler binding */
 	useEffect(() => {
-		const addEvents = (elemArray, key) => {
-			elemArray.forEach((elem) => {
-				elem.addEventListener('mouseenter', handleMouseEnter.bind(null, key));
-				elem.addEventListener('mouseleave', handleMouseLeave.bind(null, key));
-			});
-		};
-		const removeEvents = (elemArray, key) => {
-			elemArray.forEach((elem) => {
-				elem.removeEventListener('mouseenter', handleMouseEnter.bind(null, key));
-				elem.removeEventListener('mouseleave', handleMouseLeave.bind(null, key));
-			});
-		};
+		/* Query for all elements that will have event handlers */
+		const elemQueries = mouseElemTypes.map((elemType) => {
+			return document.querySelectorAll(elemType.querySelector);
+		});
 
-		const footnotes = document.querySelectorAll('.footnote, .citation');
-		const headers = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-
-		addEvents(footnotes, 'footnote');
-		addEvents(headers, 'header');
+		/* Add event handlers */
+		elemQueries.forEach((elemArray, index) => {
+			const key = mouseElemTypes[index].key;
+			const [enterHandler, leaveHandler] = mouseEventHandlers[key];
+			elemArray.forEach((elem) => {
+				elem.addEventListener('mouseenter', enterHandler);
+				elem.addEventListener('mouseleave', leaveHandler);
+			});
+		});
 		return () => {
-			removeEvents(footnotes);
-			removeEvents(headers);
+			/* Remove event handlers */
+			elemQueries.forEach((elemArray, index) => {
+				const key = mouseElemTypes[index].key;
+				const [enterHandler, leaveHandler] = mouseEventHandlers[key];
+				elemArray.forEach((elem) => {
+					elem.removeEventListener('mouseenter', enterHandler);
+					elem.removeEventListener('mouseleave', leaveHandler);
+				});
+			});
 		};
-	}, [collabData.editorChangeObject.isCollabLoaded, historyData.currentKey]);
+	}, [
+		mouseElemTypes,
+		mouseEventHandlers,
+		collabData.editorChangeObject.isCollabLoaded,
+		historyData.currentKey,
+	]);
 
 	return (
 		<div className="pub-mouse-events-component">
@@ -63,7 +85,7 @@ const PubMouseEvents = (props) => {
 					elem={hoverElems.footnote}
 					mainContentRef={mainContentRef}
 					timeouts={timeouts}
-					mouseLeave={handleMouseLeave.bind(null, 'footnote')}
+					mouseLeave={mouseEventHandlers.footnote[1]}
 					content="Weeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee!"
 				/>
 			)}
@@ -72,7 +94,7 @@ const PubMouseEvents = (props) => {
 					elem={hoverElems.header}
 					mainContentRef={mainContentRef}
 					timeouts={timeouts}
-					mouseLeave={handleMouseLeave.bind(null, 'header')}
+					mouseLeave={mouseEventHandlers.header[1]}
 				/>
 			)}
 		</div>
