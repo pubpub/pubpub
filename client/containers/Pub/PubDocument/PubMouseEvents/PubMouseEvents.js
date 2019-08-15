@@ -28,19 +28,19 @@ const PubMouseEvents = (props) => {
 	/* Generate specific functions for all elemTypes */
 	const mouseEventHandlers = mouseElemTypes.reduce((prev, curr) => {
 		const key = curr.key;
-		const handleMouseEnter = (evt) => {
-			clearTimeout(timeouts.current[key]);
-			hoverElemsDispatch({ type: key, elem: evt.target });
-		};
-
-		const handleMouseLeave = () => {
-			timeouts.current[key] = setTimeout(() => {
-				hoverElemsDispatch({ type: key, elem: undefined });
-			}, 250);
-		};
 		return {
 			...prev,
-			[key]: [handleMouseEnter, handleMouseLeave],
+			[key]: {
+				enterHandler: (evt) => {
+					clearTimeout(timeouts.current[key]);
+					hoverElemsDispatch({ type: key, elem: evt.target });
+				},
+				leaveHandler: () => {
+					timeouts.current[key] = setTimeout(() => {
+						hoverElemsDispatch({ type: key, elem: undefined });
+					}, 250);
+				},
+			},
 		};
 	}, {});
 
@@ -54,7 +54,7 @@ const PubMouseEvents = (props) => {
 		/* Add event handlers */
 		elemQueries.forEach((elemArray, index) => {
 			const key = mouseElemTypes[index].key;
-			const [enterHandler, leaveHandler] = mouseEventHandlers[key];
+			const { enterHandler, leaveHandler } = mouseEventHandlers[key];
 			elemArray.forEach((elem) => {
 				elem.addEventListener('mouseenter', enterHandler);
 				elem.addEventListener('mouseleave', leaveHandler);
@@ -64,7 +64,7 @@ const PubMouseEvents = (props) => {
 			/* Remove event handlers */
 			elemQueries.forEach((elemArray, index) => {
 				const key = mouseElemTypes[index].key;
-				const [enterHandler, leaveHandler] = mouseEventHandlers[key];
+				const { enterHandler, leaveHandler } = mouseEventHandlers[key];
 				elemArray.forEach((elem) => {
 					elem.removeEventListener('mouseenter', enterHandler);
 					elem.removeEventListener('mouseleave', leaveHandler);
@@ -85,7 +85,7 @@ const PubMouseEvents = (props) => {
 					elem={hoverElems.footnote}
 					mainContentRef={mainContentRef}
 					timeouts={timeouts}
-					mouseLeave={mouseEventHandlers.footnote[1]}
+					mouseLeave={mouseEventHandlers.footnote.leaveHandler}
 					content="Weeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee!"
 				/>
 			)}
@@ -94,7 +94,7 @@ const PubMouseEvents = (props) => {
 					elem={hoverElems.header}
 					mainContentRef={mainContentRef}
 					timeouts={timeouts}
-					mouseLeave={mouseEventHandlers.header[1]}
+					mouseLeave={mouseEventHandlers.header.leaveHandler}
 				/>
 			)}
 		</div>
