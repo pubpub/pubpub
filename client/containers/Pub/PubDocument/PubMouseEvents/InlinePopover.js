@@ -6,6 +6,8 @@ import { Card } from '@blueprintjs/core';
 const propTypes = {
 	elem: PropTypes.object.isRequired,
 	mainContentRef: PropTypes.object.isRequired,
+	timeouts: PropTypes.object.isRequired,
+	mouseLeave: PropTypes.func.isRequired,
 	content: PropTypes.node,
 };
 const defaultProps = {
@@ -13,10 +15,10 @@ const defaultProps = {
 };
 
 const InlinePopover = (props) => {
-	const { elem, mainContentRef, content } = props;
-	const ref = useRef();
+	const { elem, mainContentRef, content, timeouts, mouseLeave } = props;
+	const popoverRef = useRef();
 	useEffect(() => {
-		const popperObject = new Popper(elem, ref.current, {
+		const popperObject = new Popper(elem, popoverRef.current, {
 			placement: 'top-start',
 			modifiers: {
 				flip: {
@@ -30,10 +32,27 @@ const InlinePopover = (props) => {
 		return () => {
 			popperObject.destroy();
 		};
-	}, [elem, mainContentRef]);
+	}, [elem, mainContentRef, popoverRef]);
+
+	const inlinePopoverMouseEnter = () => {
+		clearTimeout(timeouts.current.footnote);
+	};
+
+	useEffect(() => {
+		const popoverElem = popoverRef.current;
+		if (!popoverElem) {
+			return () => {};
+		}
+		popoverElem.addEventListener('mouseenter', inlinePopoverMouseEnter);
+		popoverElem.addEventListener('mouseleave', mouseLeave);
+		return () => {
+			popoverElem.removeEventListener('mouseenter', inlinePopoverMouseEnter);
+			popoverElem.removeEventListener('mouseleave', mouseLeave);
+		};
+	});
 
 	return (
-		<div ref={ref} style={{ position: 'absolute', top: '-9999px' }}>
+		<div ref={popoverRef} style={{ position: 'absolute', top: '-9999px' }}>
 			<Card elevation={2}>{content}</Card>
 		</div>
 	);
