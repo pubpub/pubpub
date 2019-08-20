@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import Popper from 'popper.js';
 import { Card } from '@blueprintjs/core';
 
+require('./inlinePopover.scss');
+
 const propTypes = {
 	elem: PropTypes.object.isRequired,
 	mainContentRef: PropTypes.object.isRequired,
@@ -52,7 +54,11 @@ const InlinePopover = (props) => {
 	});
 
 	return (
-		<div ref={popoverRef} style={{ position: 'absolute', top: '-9999px' }}>
+		<div
+			className="inline-popover-component"
+			ref={popoverRef}
+			style={{ position: 'absolute', top: '-9999px' }}
+		>
 			<Card elevation={2}>{content}</Card>
 		</div>
 	);

@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useReducer } from 'react';
 import PropTypes from 'prop-types';
+import { RefContent } from 'components';
 import InlinePopover from './InlinePopover';
 import HeaderPopover from './HeaderPopover';
 
 const propTypes = {
+	pubData: PropTypes.object.isRequired,
 	collabData: PropTypes.object.isRequired,
 	historyData: PropTypes.object.isRequired,
 	mainContentRef: PropTypes.object.isRequired,
 };
 
 const PubMouseEvents = (props) => {
-	const { collabData, historyData, mainContentRef } = props;
+	const { pubData, collabData, historyData, mainContentRef } = props;
 	const timeouts = useRef({});
 	const [hoverElems, hoverElemsDispatch] = useReducer((state, action) => {
 		return {
@@ -77,7 +79,15 @@ const PubMouseEvents = (props) => {
 		collabData.editorChangeObject.isCollabLoaded,
 		historyData.currentKey,
 	]);
-
+	const activeInlineFootnote =
+		hoverElems.footnote &&
+		hoverElems.footnote.getAttribute('data-node-type') === 'footnote' &&
+		pubData.footnotes[Number(hoverElems.footnote.getAttribute('data-count')) - 1];
+	const activeInlineCitation =
+		hoverElems.footnote &&
+		hoverElems.footnote.getAttribute('data-node-type') === 'citation' &&
+		pubData.citations[Number(hoverElems.footnote.getAttribute('data-count')) - 1];
+	const activeInlineData = activeInlineFootnote || activeInlineCitation;
 	return (
 		<div className="pub-mouse-events-component">
 			{hoverElems.footnote && (
@@ -86,7 +96,12 @@ const PubMouseEvents = (props) => {
 					mainContentRef={mainContentRef}
 					timeouts={timeouts}
 					mouseLeave={mouseEventHandlers.footnote.leaveHandler}
-					content="Weeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee!"
+					content={
+						<RefContent
+							structured={activeInlineData.html}
+							unstructured={activeInlineData.unstructuredValue}
+						/>
+					}
 				/>
 			)}
 			{hoverElems.header && (

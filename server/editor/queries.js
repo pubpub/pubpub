@@ -16,7 +16,7 @@ export const generateCiteHtmls = (inputVals, format = 'citation-apa') => {
 					});
 					return { ...input, html: html };
 				})
-				.catch((err2) => {
+				.catch(() => {
 					return { ...input, html: 'Error' };
 				});
 		} catch (err) {

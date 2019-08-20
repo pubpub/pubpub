@@ -91,7 +91,6 @@ const PubBody = (props) => {
 
 	useEffect(() => {
 		const updateFootnotesAndCitations = (doc) => {
-			console.log(JSON.stringify(doc.toJSON(), null, 2));
 			const { footnotes, citations } = getFootnoteAndCitations(doc);
 			const footnotesKey = memoizeCiteContent(footnotes);
 			const citationsKey = memoizeCiteContent(citations);
@@ -216,19 +215,6 @@ const PubBody = (props) => {
 				handleSingleClick={props.onSingleClick}
 			/>
 
-			<div>
-				{pubData.footnotes.map((footnote, index) => {
-					return (
-						<div>
-							<b>{index + 1}:</b>
-							<span dangerouslySetInnerHTML={{ __html: footnote.html }} />
-							<span
-								dangerouslySetInnerHTML={{ __html: footnote.unstructuredValue }}
-							/>
-						</div>
-					);
-				})}
-			</div>
 			{!!editorError && (
 				<Alert
 					isOpen={editorError}

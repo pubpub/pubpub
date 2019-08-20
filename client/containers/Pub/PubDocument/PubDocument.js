@@ -142,6 +142,7 @@ const PubDocument = (props) => {
 			<PubFooter pubData={pubData} />
 			<PubReadNext pubData={pubData} updateLocalData={updateLocalData} />
 			<PubMouseEvents
+				pubData={pubData}
 				collabData={collabData}
 				historyData={historyData}
 				mainContentRef={mainContentRef}
