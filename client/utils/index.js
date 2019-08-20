@@ -142,6 +142,7 @@ export function getDefaultLayout() {
 }
 
 export function formatCitationString(item, callback) {
+	console.log('Deprecated. This shouldnt call');
 	fetch('/api/editor/citation-format', {
 		method: 'POST',
 		headers: {

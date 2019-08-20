@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SimpleEditor from 'components/SimpleEditor/SimpleEditor';
-import { formatCitationString } from 'utils';
+// import { formatCitationString } from 'utils';
 
 const propTypes = {
 	attrs: PropTypes.object.isRequired,
@@ -18,20 +18,23 @@ class ControlsFootnote extends Component {
 			structuredHtml: props.attrs.structuredHtml,
 		};
 
-		this.handleValueChange = this.handleValueChange.bind(this);
-		this.handleHTMLChange = this.handleHTMLChange.bind(this);
+		// this.handleValueChange = this.handleValueChange.bind(this);
+		// this.handleHTMLChange = this.handleHTMLChange.bind(this);
 	}
 
-	handleValueChange(evt) {
-		this.setState({ structuredValue: evt.target.value });
-		formatCitationString(evt.target.value, this.handleHTMLChange);
-	}
+	// handleValueChange(evt) {
+	// 	// this.setState({ structuredValue: evt.target.value });
+	// 	// formatCitationString(evt.target.value, this.handleHTMLChange);
+	// 	const newAttrs = { structuredValue: evt.target.value, value: this.props.attrs.value };
+	// 	this.props.updateAttrs(newAttrs);
+	// 	this.setState(newAttrs);
+	// }
 
-	handleHTMLChange(html) {
-		const newAttrs = { structuredValue: this.state.structuredValue, structuredHtml: html };
-		this.props.updateAttrs(newAttrs);
-		this.setState(newAttrs);
-	}
+	// handleHTMLChange(html) {
+	// 	const newAttrs = { structuredValue: this.state.structuredValue, structuredHtml: html };
+	// 	this.props.updateAttrs(newAttrs);
+	// 	this.setState(newAttrs);
+	// }
 
 	render() {
 		return (
@@ -61,7 +64,10 @@ class ControlsFootnote extends Component {
 							placeholder="Enter bibtex, DOI, wikidata url, or bibjson..."
 							className="bp3-input bp3-fill"
 							value={this.state.structuredValue}
-							onChange={this.handleValueChange}
+							onChange={(evt) => {
+								this.setState({ structuredValue: evt.target.value });
+								this.props.updateAttrs({ structuredValue: evt.target.value });
+							}}
 						/>
 					</div>
 				</div>

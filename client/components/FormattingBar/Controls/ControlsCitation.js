@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SimpleEditor from 'components/SimpleEditor/SimpleEditor';
-import { formatCitationString } from 'utils';
+// import { formatCitationString } from 'utils';
 
 const propTypes = {
 	attrs: PropTypes.object.isRequired,
@@ -19,19 +19,22 @@ class ControlsCitation extends Component {
 		};
 
 		this.handleValueChange = this.handleValueChange.bind(this);
-		this.handleHTMLChange = this.handleHTMLChange.bind(this);
+		// this.handleHTMLChange = this.handleHTMLChange.bind(this);
 	}
 
 	handleValueChange(evt) {
-		this.setState({ value: evt.target.value });
-		formatCitationString(evt.target.value, this.handleHTMLChange);
-	}
-
-	handleHTMLChange(html) {
-		const newAttrs = { value: this.state.value, html: html };
+		// this.setState({ value: evt.target.value });
+		// formatCitationString(evt.target.value, this.handleHTMLChange);
+		const newAttrs = { value: evt.target.value };
 		this.props.updateAttrs(newAttrs);
 		this.setState(newAttrs);
 	}
+
+	// handleHTMLChange(html) {
+	// 	const newAttrs = { value: this.state.value, html: html };
+	// 	this.props.updateAttrs(newAttrs);
+	// 	this.setState(newAttrs);
+	// }
 
 	render() {
 		return (
