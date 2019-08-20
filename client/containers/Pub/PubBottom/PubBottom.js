@@ -4,7 +4,6 @@ import fuzzysearch from 'fuzzysearch';
 
 import Footnotes, { footnotePropType } from './Footnotes';
 import PubBottomSection, { SectionBullets } from './PubBottomSection';
-import DiscussionsSection from './DiscussionsSection';
 
 require('./pubBottom.scss');
 
@@ -49,7 +48,6 @@ const PubBottom = (props) => {
 			<div className="inner">
 				<SearchableFootnoteSection title="Footnotes" items={footnotes} />
 				<SearchableFootnoteSection title="Citations" items={citations} />
-				<DiscussionsSection pubData={props.pubData} />
 			</div>
 		</div>
 	);
