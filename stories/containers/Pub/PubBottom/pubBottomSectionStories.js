@@ -1,9 +1,9 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 
-import PubBottomSection from 'containers/Pub/PubBottom/PubBottomSection';
+import PubBottomSection from 'containers/Pub/PubDocument/PubBottom/PubBottomSection';
 
-storiesOf('containers/Pub/PubBottom/PubBottomSection', module).add('default', () => (
+storiesOf('containers/Pub/PubDocument/PubBottom/PubBottomSection', module).add('default', () => (
 	<div style={{ background: '#F6F4F4', 'min-height': '100vh' }}>
 		<div style={{ width: 600, margin: 'auto' }}>
 			<PubBottomSection title="Comments" centerItems={[867, 5309]} isExpandable={false}>
