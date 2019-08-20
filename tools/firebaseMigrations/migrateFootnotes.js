@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import Promise from 'bluebird';
 // import { Op } from 'sequelize';
-import { Pub } from '../../server/models';
+import { Pub, PubManager, User } from '../../server/models';
 
 const createFirebaseClient = require('../5to6/util/createFirebaseClient');
 
@@ -9,7 +9,7 @@ const sourceFirebaseUrl = 'https://pubpub-v6-dev.firebaseio.com';
 // const destFirebaseUrl = 'https://pubpub-v6-dev.firebaseio.com';
 const hasFootnotes = [];
 const footnotePrior = {};
-
+const pubLookup = {};
 console.log('Starting Firebase sync');
 Pub.findAll({
 	// where: {
@@ -22,11 +22,21 @@ Pub.findAll({
 	// 		],
 	// 	},
 	// },
-	attributes: ['id'],
+	attributes: ['id', 'slug'],
+	include: [
+		{
+			model: PubManager,
+			as: 'managers',
+			include: [{ model: User, as: 'user', attributes: ['fullName', 'email'] }],
+		},
+	],
 	// limit: 200,
 })
 	.then((allPubs) => {
 		const pubIds = allPubs.map((pub) => pub.id);
+		allPubs.forEach((pub) => {
+			pubLookup[pub.id] = pub;
+		});
 		const createSourceClient = createFirebaseClient(
 			sourceFirebaseUrl,
 			process.env.FIREBASE_SERVICE_ACCOUNT_BASE64,
@@ -92,7 +102,11 @@ Pub.findAll({
 		// console.log(hasFootnotes);
 		Object.keys(footnotePrior).forEach((key) => {
 			console.log(key);
-			console.log(JSON.stringify(footnotePrior[key], null, 2));
+			console.log(pubLookup[key].slug);
+			pubLookup[key].managers.forEach((manager) => {
+				console.log(manager.user.fullName, manager.user.email);
+			});
+			// console.log(JSON.stringify(footnotePrior[key], null, 2));
 			console.log('===========================');
 		});
 		console.log(`Completed. ${[...new Set(hasFootnotes)].length} have footnotes.`);
