@@ -7,7 +7,7 @@ require('./pubBottomSection.scss');
 
 const propTypes = {
 	accentColor: PropTypes.string,
-	centerItems: PropTypes.arrayOf(PropTypes.node),
+	centerItems: PropTypes.oneOf([PropTypes.func, PropTypes.node]),
 	children: PropTypes.oneOf([PropTypes.func, PropTypes.node]),
 	iconItems: PropTypes.node,
 	isSearchable: PropTypes.bool,
@@ -24,7 +24,7 @@ const defaultProps = {
 	searchPlaceholder: 'Enter keywords to search for...',
 };
 
-const AccentedIconButton = (props) => {
+export const AccentedIconButton = (props) => {
 	const { accentColor, icon, ...buttonProps } = props;
 	return <Button minimal icon={<Icon color={accentColor} icon={icon} />} {...buttonProps} />;
 };
@@ -32,6 +32,15 @@ const AccentedIconButton = (props) => {
 AccentedIconButton.propTypes = {
 	accentColor: PropTypes.string.isRequired,
 	icon: PropTypes.string.isRequired,
+};
+
+export const SectionBullets = ({ children }) => {
+	return (Array.isArray(children) ? children : [children]).map((item, i) => (
+		// eslint-disable-next-line react/no-array-index-key
+		<div key={i} className="center-content-item">
+			{item}
+		</div>
+	));
 };
 
 const PubBottomSection = (props) => {
@@ -50,13 +59,28 @@ const PubBottomSection = (props) => {
 
 	const searchingTextStyle = isSearching ? { color: 'white' } : {};
 
+	const renderSearchBar = () => {
+		return (
+			<input
+				type="text"
+				className="search-bar"
+				onChange={(evt) => setSearchTerm(evt.target.value.trim())}
+				placeholder={searchPlaceholder}
+			/>
+		);
+	};
+
 	const renderCenterItems = () => {
-		return centerItems.map((item, i) => (
-			// eslint-disable-next-line react/no-array-index-key
-			<div key={i} className="center-content-item">
-				{item}
-			</div>
-		));
+		return typeof centerItems === 'function'
+			? centerItems({ isExpanded: isExpanded })
+			: centerItems;
+	};
+
+	const renderIconItems = () => {
+		const iconColor = isSearching ? 'white' : accentColor;
+		return typeof iconItems === 'function'
+			? iconItems({ isExpanded: isExpanded, isSearching: isSearching, iconColor: iconColor })
+			: iconItems;
 	};
 
 	const renderRightmostIcon = () => {
@@ -96,19 +120,9 @@ const PubBottomSection = (props) => {
 					{title}
 				</div>
 				<div className="center-content">
-					{isSearching ? (
-						<input
-							type="text"
-							className="search-bar"
-							onChange={(evt) => setSearchTerm(evt.target.value.trim())}
-							placeholder={searchPlaceholder}
-						/>
-					) : (
-						renderCenterItems()
-					)}
+					{isSearching ? renderSearchBar() : renderCenterItems()}
 				</div>
 				<div className="right-icons" style={searchingTextStyle}>
-					{iconItems}
 					{isExpanded && isSearchable && !isSearching && (
 						<AccentedIconButton
 							accentColor={accentColor}
@@ -116,6 +130,7 @@ const PubBottomSection = (props) => {
 							onClick={() => setSearchTerm('')}
 						/>
 					)}
+					{renderIconItems()}
 					{renderRightmostIcon()}
 				</div>
 			</div>

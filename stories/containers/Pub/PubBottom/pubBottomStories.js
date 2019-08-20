@@ -1,6 +1,7 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 
+import { discussionsData as discussions } from 'data';
 import PubBottom from 'containers/Pub/PubBottom/PubBottom';
 
 const footnotes = [
@@ -35,6 +36,7 @@ const citations = [
 const pubData = {
 	footnotes: footnotes,
 	citations: citations,
+	discussions: discussions,
 };
 
 storiesOf('containers/Pub/PubBottom/PubBottom', module).add('default', () => (
