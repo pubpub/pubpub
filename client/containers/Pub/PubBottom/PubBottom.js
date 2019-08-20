@@ -3,15 +3,41 @@ import PropTypes from 'prop-types';
 import fuzzysearch from 'fuzzysearch';
 
 import Footnotes, { footnotePropType } from './Footnotes';
-import PubBottomSection from './PubBottomSection';
+import PubBottomSection, { SectionBullets } from './PubBottomSection';
+import DiscussionsSection from './DiscussionsSection';
 
 require('./pubBottom.scss');
 
 const propTypes = {
 	pubData: PropTypes.shape({
-		citations: PropTypes.arrayOf(footnotePropType.node).isRequired,
+		citations: PropTypes.arrayOf(footnotePropType).isRequired,
 		footnotes: PropTypes.arrayOf(footnotePropType).isRequired,
 	}).isRequired,
+};
+
+const SearchableFootnoteSection = (props) => {
+	const { items, ...restProps } = props;
+	return (
+		<PubBottomSection
+			isSearchable={true}
+			centerItems={<SectionBullets>{items.length}</SectionBullets>}
+			{...restProps}
+		>
+			{({ searchTerm }) => (
+				<Footnotes
+					footnotes={items.filter(
+						(fn) =>
+							!searchTerm ||
+							fuzzysearch(searchTerm.toLowerCase(), fn.content.toLowerCase()),
+					)}
+				/>
+			)}
+		</PubBottomSection>
+	);
+};
+
+SearchableFootnoteSection.propTypes = {
+	items: PropTypes.arrayOf(footnotePropType).isRequired,
 };
 
 const PubBottom = (props) => {
@@ -21,28 +47,9 @@ const PubBottom = (props) => {
 	return (
 		<div className="pub-bottom-component">
 			<div className="inner">
-				<PubBottomSection title="References" isSearchable={true}>
-					{({ searchTerm }) => (
-						<Footnotes
-							footnotes={footnotes.filter(
-								(fn) =>
-									!searchTerm ||
-									fuzzysearch(searchTerm.toLowerCase(), fn.content.toLowerCase()),
-							)}
-						/>
-					)}
-				</PubBottomSection>
-				<PubBottomSection title="Citations" isSearchable={true}>
-					{({ searchTerm }) => (
-						<Footnotes
-							footnotes={citations.filter(
-								(ct) =>
-									!searchTerm ||
-									fuzzysearch(searchTerm.toLowerCase(), ct.content.toLowerCase()),
-							)}
-						/>
-					)}
-				</PubBottomSection>
+				<SearchableFootnoteSection title="Footnotes" items={footnotes} />
+				<SearchableFootnoteSection title="Citations" items={citations} />
+				<DiscussionsSection pubData={props.pubData} />
 			</div>
 		</div>
 	);
