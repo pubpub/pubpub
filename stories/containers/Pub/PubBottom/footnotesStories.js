@@ -1,9 +1,9 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 
-import Footnotes from 'containers/Pub/PubBottom/Footnotes';
+import Footnotes from 'containers/Pub/PubDocument/PubBottom/Footnotes';
 
-storiesOf('containers/Pub/PubBottom/Footnotes', module).add('default', () => (
+storiesOf('containers/Pub/PubDocument/PubBottom/Footnotes', module).add('default', () => (
 	<div style={{ background: '#F6F4F4', 'min-height': '100vh' }}>
 		<div style={{ width: 600, margin: 'auto' }}>
 			<Footnotes

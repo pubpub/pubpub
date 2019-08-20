@@ -2,7 +2,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 
 import { discussionsData as discussions } from 'data';
-import PubBottom from 'containers/Pub/PubBottom/PubBottom';
+import PubBottom from 'containers/Pub/PubDocument/PubBottom/PubBottom';
 
 const footnotes = [
 	'This footnote is purely for demonstration purposes. It is neither too long, nor too short, making it the perfect size to illustrate what an informal text block of footnote looks like in real life.',
@@ -39,7 +39,7 @@ const pubData = {
 	discussions: discussions,
 };
 
-storiesOf('containers/Pub/PubBottom/PubBottom', module).add('default', () => (
+storiesOf('containers/Pub/PubDocument/PubBottom/PubBottom', module).add('default', () => (
 	<div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
 		<PubBottom pubData={pubData} />
 	</div>
