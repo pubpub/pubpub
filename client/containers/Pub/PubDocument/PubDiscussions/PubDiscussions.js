@@ -26,7 +26,7 @@ const propTypes = {
 
 const defaultProps = {
 	firebaseBranchRef: undefined,
-	filterThreads: () => true,
+	filterThreads: () => [],
 };
 
 const PubDiscussions = (props) => {
