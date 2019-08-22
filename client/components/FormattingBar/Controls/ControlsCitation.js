@@ -1,8 +1,6 @@
-/* eslint-disable react/no-danger */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { PubNoteContent, SimpleEditor } from 'components';
-// import { formatCitationString } from 'utils';
 
 const propTypes = {
 	attrs: PropTypes.object.isRequired,
@@ -16,26 +14,17 @@ class ControlsCitation extends Component {
 		super(props);
 		this.state = {
 			value: props.attrs.value,
-			// html: props.attrs.html,
 		};
 
 		this.handleValueChange = this.handleValueChange.bind(this);
-		// this.handleHTMLChange = this.handleHTMLChange.bind(this);
 	}
 
 	handleValueChange(evt) {
-		// this.setState({ value: evt.target.value });
-		// formatCitationString(evt.target.value, this.handleHTMLChange);
 		const newAttrs = { value: evt.target.value };
 		this.props.updateAttrs(newAttrs);
 		this.setState(newAttrs);
 	}
 
-	// handleHTMLChange(html) {
-	// 	const newAttrs = { value: this.state.value, html: html };
-	// 	this.props.updateAttrs(newAttrs);
-	// 	this.setState(newAttrs);
-	// }
 
 	render() {
 		const hasRenderedContent = this.props.citations.length >= this.props.attrs.count;
