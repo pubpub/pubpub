@@ -134,7 +134,7 @@ const PubBody = (props) => {
 			}
 			return null;
 		};
-		if (collabData.editorChangeObject.view) {
+		if (collabData.editorChangeObject && collabData.editorChangeObject.view) {
 			updateFootnotesAndCitations(collabData.editorChangeObject.view.state.doc);
 		}
 	}, [collabData.editorChangeObject, updateLocalData]);
