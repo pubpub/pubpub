@@ -144,6 +144,7 @@ const PubDocument = (props) => {
 			<PubMouseEvents
 				pubData={pubData}
 				collabData={collabData}
+				locationData={locationData}
 				historyData={historyData}
 				mainContentRef={mainContentRef}
 			/>

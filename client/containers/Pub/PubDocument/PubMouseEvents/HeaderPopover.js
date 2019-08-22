@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Popper from 'popper.js';
-import { Button } from '@blueprintjs/core';
+import { ClickToCopyButton } from 'components';
 
 const propTypes = {
+	locationData: PropTypes.object.isRequired,
 	elem: PropTypes.object.isRequired,
 	mainContentRef: PropTypes.object.isRequired,
 	timeouts: PropTypes.object.isRequired,
@@ -11,7 +12,7 @@ const propTypes = {
 };
 
 const HeaderPopover = (props) => {
-	const { elem, mainContentRef, timeouts, mouseLeave } = props;
+	const { elem, mainContentRef, timeouts, mouseLeave, locationData } = props;
 	const popoverRef = useRef();
 	useEffect(() => {
 		const popperObject = new Popper(elem, popoverRef.current, {
@@ -41,7 +42,11 @@ const HeaderPopover = (props) => {
 
 	return (
 		<div ref={popoverRef} style={{ position: 'absolute', top: '-9999px' }}>
-			<Button icon="link" minimal />
+			<ClickToCopyButton
+				className="click-to-copy"
+				copyString={`https://${locationData.hostname}${locationData.path}#${elem.id}`}
+				beforeCopyPrompt="Copy link to header"
+			/>
 		</div>
 	);
 };

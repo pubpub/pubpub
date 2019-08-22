@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Popper from 'popper.js';
 import { Card } from '@blueprintjs/core';
 
-require('./inlinePopover.scss');
+require('./notePopover.scss');
 
 const propTypes = {
 	elem: PropTypes.object.isRequired,
@@ -16,7 +16,7 @@ const defaultProps = {
 	content: undefined,
 };
 
-const InlinePopover = (props) => {
+const NotePopover = (props) => {
 	const { elem, mainContentRef, content, timeouts, mouseLeave } = props;
 	const popoverRef = useRef();
 	useEffect(() => {
@@ -36,7 +36,7 @@ const InlinePopover = (props) => {
 		};
 	}, [elem, mainContentRef, popoverRef]);
 
-	const inlinePopoverMouseEnter = () => {
+	const notePopoverMouseEnter = () => {
 		clearTimeout(timeouts.current.footnote);
 	};
 
@@ -45,10 +45,10 @@ const InlinePopover = (props) => {
 		if (!popoverElem) {
 			return () => {};
 		}
-		popoverElem.addEventListener('mouseenter', inlinePopoverMouseEnter);
+		popoverElem.addEventListener('mouseenter', notePopoverMouseEnter);
 		popoverElem.addEventListener('mouseleave', mouseLeave);
 		return () => {
-			popoverElem.removeEventListener('mouseenter', inlinePopoverMouseEnter);
+			popoverElem.removeEventListener('mouseenter', notePopoverMouseEnter);
 			popoverElem.removeEventListener('mouseleave', mouseLeave);
 		};
 	});
@@ -63,6 +63,6 @@ const InlinePopover = (props) => {
 		</div>
 	);
 };
-InlinePopover.propTypes = propTypes;
-InlinePopover.defaultProps = defaultProps;
-export default InlinePopover;
+NotePopover.propTypes = propTypes;
+NotePopover.defaultProps = defaultProps;
+export default NotePopover;
