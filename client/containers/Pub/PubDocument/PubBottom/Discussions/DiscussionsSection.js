@@ -40,7 +40,11 @@ const DiscussionsSection = (props) => {
 	const [sortMode, setSortMode] = useState('newestThread');
 	const [filteredLabels, setFilteredLabels] = useState([]);
 
-	const renderCenterItems = () => <SectionBullets>{discussions.length}</SectionBullets>;
+	const nonArchivedDiscussions = discussions.filter((ds) => !ds.isArchived);
+
+	const renderCenterItems = () => (
+		<SectionBullets>{nonArchivedDiscussions.length}</SectionBullets>
+	);
 
 	// eslint-disable-next-line react/prop-types
 	const renderIconItems = ({ isExpanded, iconColor }) => {

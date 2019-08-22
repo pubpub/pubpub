@@ -6,13 +6,12 @@ import { PageContext } from 'components/PageWrapper/PageWrapper';
 import PubBody from './PubBody';
 import PubInlineMenu from './PubInlineMenu';
 import PubLinkMenu from './PubLinkMenu';
-import PubDiscussions from './PubDiscussions';
-import PubFooter from './PubFooter';
 import PubInlineImport from './PubInlineImport';
 import PubDetails from './PubDetails';
 import PubHistory from './PubHistory';
 import PubHeaderFormatting from './PubHeaderFormatting';
 import PubReadNext from './PubReadNext';
+import PubBottom from './PubBottom/PubBottom';
 
 require('./pubDocument.scss');
 
@@ -138,18 +137,16 @@ const PubDocument = (props) => {
 				</div>
 				<div className="side-content" ref={sideContentRef} />
 			</div>
-			<PubFooter pubData={pubData} />
 			<PubReadNext pubData={pubData} updateLocalData={updateLocalData} />
-			{areDiscussionsShown && (
-				<PubDiscussions
-					pubData={pubData}
-					collabData={collabData}
-					firebaseBranchRef={firebaseBranchRef}
-					updateLocalData={updateLocalData}
-					sideContentRef={sideContentRef}
-					mainContentRef={mainContentRef}
-				/>
-			)}
+			<PubBottom
+				pubData={pubData}
+				collabData={collabData}
+				firebaseBranchRef={firebaseBranchRef}
+				updateLocalData={updateLocalData}
+				sideContentRef={sideContentRef}
+				mainContentRef={mainContentRef}
+				showDiscussions={areDiscussionsShown}
+			/>
 		</div>
 	);
 };

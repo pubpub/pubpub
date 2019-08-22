@@ -19,10 +19,12 @@ const propTypes = {
 	updateLocalData: PropTypes.func.isRequired,
 	sideContentRef: PropTypes.object.isRequired,
 	mainContentRef: PropTypes.object.isRequired,
+	showDiscussions: PropTypes.bool,
 };
 
 const defaultProps = {
 	firebaseBranchRef: undefined,
+	showDiscussions: true,
 };
 
 const SearchableFootnoteSection = (props) => {
@@ -52,16 +54,21 @@ SearchableFootnoteSection.propTypes = {
 
 const PubBottom = (props) => {
 	const {
-		pubData: { citations, footnotes },
+		pubData: { citations = [], footnotes = [] },
+		showDiscussions,
 	} = props;
 	return (
 		<PubSuspendWhileTyping delay={1000}>
 			{() => (
 				<div className="pub-bottom-component">
 					<div className="inner">
-						<SearchableFootnoteSection title="Footnotes" items={footnotes} />
-						<SearchableFootnoteSection title="Citations" items={citations} />
-						<DiscussionsSection {...props} />
+						{footnotes.length > 0 && (
+							<SearchableFootnoteSection title="Footnotes" items={footnotes} />
+						)}
+						{citations.length > 0 && (
+							<SearchableFootnoteSection title="Citations" items={citations} />
+						)}
+						{showDiscussions && <DiscussionsSection {...props} />}
 					</div>
 				</div>
 			)}
