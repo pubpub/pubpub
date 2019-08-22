@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { buildSchema, jsonToNode, getFootnoteAndCitations } from '@pubpub/editor';
+import { buildSchema, jsonToNode, getNotes } from '@pubpub/editor';
 import discussionSchema from 'containers/Pub/PubDocument/DiscussionAddon/discussionSchema';
 import { attributesPublicUser, checkIfSuperAdmin } from '.';
 import { generateCitationHTML } from './citations';
@@ -364,7 +364,7 @@ export const findPub = (req, initialData, mode) => {
 		.then(([formattedPubData, branchDocData]) => {
 			const { content } = branchDocData;
 			const { footnotes: footnotesRaw, citations: citationsRaw } = content
-				? getFootnoteAndCitations(
+				? getNotes(
 						jsonToNode(content, buildSchema({ ...discussionSchema }, {})),
 				  )
 				: { footnotes: [], citations: [] };

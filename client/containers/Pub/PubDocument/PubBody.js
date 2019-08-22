@@ -4,7 +4,7 @@ import { useBeforeUnload } from 'react-use';
 import PropTypes from 'prop-types';
 import * as Sentry from '@sentry/browser';
 import { Card, Alert } from '@blueprintjs/core';
-import Editor, { getJSON, getFootnoteAndCitations } from '@pubpub/editor';
+import Editor, { getJSON, getNotes } from '@pubpub/editor';
 import { apiFetch, getResizedUrl } from 'utils';
 import TimeAgo from 'react-timeago';
 import { saveAs } from 'file-saver';
@@ -46,14 +46,14 @@ const PubBody = (props) => {
 	const prevStatusRef = useRef(null);
 	const embedDiscussions = useRef({});
 
-	const memoizeCiteContent = (items) => {
+	const memoizeNoteContent = (items) => {
 		return items.reduce((prev, curr) => {
 			return prev + curr.structuredValue + curr.unstructuredValue;
 		}, '');
 	};
 
-	const lastFootnotesMemo = useRef(memoizeCiteContent(pubData.footnotes));
-	const lastCitationsMemo = useRef(memoizeCiteContent(pubData.citations));
+	const lastFootnotesMemo = useRef(memoizeNoteContent(pubData.footnotes));
+	const lastCitationsMemo = useRef(memoizeNoteContent(pubData.citations));
 	const [editorError, setEditorError] = useState(null);
 	const [editorErrorTime, setEditorErrorTime] = useState(null);
 	const [lastSavedTime, setLastSavedTime] = useState(null);
@@ -99,9 +99,9 @@ const PubBody = (props) => {
 
 	useEffect(() => {
 		const updateFootnotesAndCitations = (doc) => {
-			const { footnotes, citations } = getFootnoteAndCitations(doc);
-			const footnotesKey = memoizeCiteContent(footnotes);
-			const citationsKey = memoizeCiteContent(citations);
+			const { footnotes, citations } = getNotes(doc);
+			const footnotesKey = memoizeNoteContent(footnotes);
+			const citationsKey = memoizeNoteContent(citations);
 
 			if (footnotesKey !== lastFootnotesMemo.current) {
 				/* TODO: We should debounce these calls */
@@ -187,7 +187,6 @@ const PubBody = (props) => {
 					if (!isHistoryDoc) {
 						updateLocalData('collab', { editorChangeObject: editorChangeObject });
 					}
-					// updateFootnotesAndCitations(editorChangeObject.view.state.doc);
 				}}
 				onError={(err) => {
 					setEditorError(err);
