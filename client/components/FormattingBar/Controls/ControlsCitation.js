@@ -25,7 +25,6 @@ class ControlsCitation extends Component {
 		this.setState(newAttrs);
 	}
 
-
 	render() {
 		const hasRenderedContent = this.props.citations.length >= this.props.attrs.count;
 		return (

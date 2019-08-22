@@ -364,10 +364,9 @@ export const findPub = (req, initialData, mode) => {
 		.then(([formattedPubData, branchDocData]) => {
 			const { content } = branchDocData;
 			const { footnotes: footnotesRaw, citations: citationsRaw } = content
-				? getNotes(
-						jsonToNode(content, buildSchema({ ...discussionSchema }, {})),
-				  )
+				? getNotes(jsonToNode(content, buildSchema({ ...discussionSchema }, {})))
 				: { footnotes: [], citations: [] };
+			/* eslint-disable-next-line no-console */
 			console.time('citationRenderTime');
 			return Promise.all([
 				formattedPubData,
@@ -377,6 +376,7 @@ export const findPub = (req, initialData, mode) => {
 			]);
 		})
 		.then(([formattedPubData, branchDocData, footnotesData, citationsData]) => {
+			/* eslint-disable-next-line no-console */
 			console.timeEnd('citationRenderTime');
 			const { content, historyData, mostRecentRemoteKey } = branchDocData;
 			const outputData = {
