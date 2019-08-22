@@ -88,7 +88,7 @@ const PubMouseEvents = (props) => {
 		hoverElems.note &&
 		hoverElems.note.getAttribute('data-node-type') === 'citation' &&
 		pubData.citations[Number(hoverElems.note.getAttribute('data-count')) - 1];
-	const activeInlineData = activeInlineFootnote || activeInlineCitation;
+	const activeInlineData = activeInlineFootnote || activeInlineCitation || {};
 	return (
 		<div className="pub-mouse-events-component">
 			{hoverElems.note && (
