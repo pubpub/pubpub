@@ -130,6 +130,7 @@ const DiscussionsSection = (props) => {
 			title="Comments"
 			centerItems={renderCenterItems}
 			iconItems={renderIconItems}
+			defaultExpanded={true}
 		>
 			{({ searchTerm, isSearching }) => (
 				<PubDiscussions

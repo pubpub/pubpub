@@ -25,9 +25,10 @@ $light-color: #C4C4C4;
         display: flex;
         align-items: center;
         height: $section-height;
+        user-select: none;
         .left-title {
             text-transform: uppercase;
-            width: 125px;
+            width: 120px;
         }
         .center-content {
             display: flex;

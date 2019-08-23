@@ -90,7 +90,7 @@ const PubDiscussions = (props) => {
 		const emptyMessage =
 			threads.length > 0
 				? 'No matching comments (some are hidden by filters)'
-				: 'No comments yet. Why not write one?';
+				: 'No comments yet. Why not start the discussion?';
 		return (
 			<React.Fragment>
 				{showBottomInput && (
