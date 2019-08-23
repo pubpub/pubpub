@@ -126,6 +126,7 @@ const DiscussionsSection = (props) => {
 
 	return (
 		<PubBottomSection
+			accentColor={communityData.accentColorDark}
 			isSearchable={true}
 			title="Comments"
 			centerItems={renderCenterItems}

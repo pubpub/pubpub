@@ -29,8 +29,11 @@ const defaultProps = {
 };
 
 const LicenseSection = () => {
+	const { communityData } = useContext(PageContext);
+
 	return (
 		<PubBottomSection
+			accentColor={communityData.accentColorDark}
 			className="pub-bottom-license"
 			title="License"
 			centerItems={
@@ -65,6 +68,7 @@ const SearchableFootnoteSection = (props) => {
 
 	return (
 		<PubBottomSection
+			accentColor={communityData.accentColorDark}
 			isSearchable={true}
 			centerItems={<SectionBullets>{items.length}</SectionBullets>}
 			{...restProps}
