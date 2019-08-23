@@ -12,6 +12,7 @@ import PubHistory from './PubHistory';
 import PubHeaderFormatting from './PubHeaderFormatting';
 import PubReadNext from './PubReadNext';
 import PubBottom from './PubBottom/PubBottom';
+import PubMouseEvents from './PubMouseEvents';
 
 require('./pubDocument.scss');
 
@@ -146,6 +147,13 @@ const PubDocument = (props) => {
 				sideContentRef={sideContentRef}
 				mainContentRef={mainContentRef}
 				showDiscussions={areDiscussionsShown}
+			/>
+			<PubMouseEvents
+				pubData={pubData}
+				collabData={collabData}
+				locationData={locationData}
+				historyData={historyData}
+				mainContentRef={mainContentRef}
 			/>
 		</div>
 	);
