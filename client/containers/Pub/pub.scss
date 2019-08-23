@@ -45,11 +45,11 @@ $breakout-simplify-cutoff: $compact-cutoff-width / (1 - 2 * $pub-margin-fraction
         minmax($pub-margin, auto);
     grid-template-areas: $areas;
     [data-align='breakout'] {
+        margin-left: 0;
+        position: relative;
         @for $i from 1 through 100 {
             &[data-size='#{$i}'] {
                 width: $i * 1vw;
-                margin-left: 0;
-                position: relative;
                 left: calc(-1 * ((#{$i} * 0.5vw) - (100% + #{$gutter-full-width} + #{$comments-full-width}) / 2));
             }
         }

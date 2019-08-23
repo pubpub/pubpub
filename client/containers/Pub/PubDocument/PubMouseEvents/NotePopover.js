@@ -9,7 +9,7 @@ const propTypes = {
 	elem: PropTypes.object.isRequired,
 	mainContentRef: PropTypes.object.isRequired,
 	timeouts: PropTypes.object.isRequired,
-	mouseLeave: PropTypes.func.isRequired,
+	onMouseLeave: PropTypes.func.isRequired,
 	content: PropTypes.node,
 };
 const defaultProps = {
@@ -17,7 +17,7 @@ const defaultProps = {
 };
 
 const NotePopover = (props) => {
-	const { elem, mainContentRef, content, timeouts, mouseLeave } = props;
+	const { elem, mainContentRef, content, timeouts, onMouseLeave } = props;
 	const popoverRef = useRef();
 	useEffect(() => {
 		const popperObject = new Popper(elem, popoverRef.current, {
@@ -46,10 +46,10 @@ const NotePopover = (props) => {
 			return () => {};
 		}
 		popoverElem.addEventListener('mouseenter', notePopoverMouseEnter);
-		popoverElem.addEventListener('mouseleave', mouseLeave);
+		popoverElem.addEventListener('mouseleave', onMouseLeave);
 		return () => {
 			popoverElem.removeEventListener('mouseenter', notePopoverMouseEnter);
-			popoverElem.removeEventListener('mouseleave', mouseLeave);
+			popoverElem.removeEventListener('mouseleave', onMouseLeave);
 		};
 	});
 

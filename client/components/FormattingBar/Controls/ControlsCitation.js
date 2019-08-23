@@ -27,6 +27,9 @@ class ControlsCitation extends Component {
 
 	render() {
 		const hasRenderedContent = this.props.citations.length >= this.props.attrs.count;
+		/* countToIndex: Citation that renders as '1' is stored in 0th index of citations array */
+		const countToIndex = this.props.attrs.count - 1;
+		const renderContent = this.props.citations[countToIndex];
 		return (
 			<div
 				className={`formatting-bar_controls-component ${this.props.isSmall ? 'small' : ''}`}
@@ -65,11 +68,8 @@ class ControlsCitation extends Component {
 					<div className="input wide">
 						{hasRenderedContent && (
 							<PubNoteContent
-								structured={this.props.citations[this.props.attrs.count - 1].html}
-								unstructured={
-									this.props.citations[this.props.attrs.count - 1]
-										.unstructuredValue
-								}
+								structured={renderContent.html}
+								unstructured={renderContent.unstructuredValue}
 							/>
 						)}
 					</div>

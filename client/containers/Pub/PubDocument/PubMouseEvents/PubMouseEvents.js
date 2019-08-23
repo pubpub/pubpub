@@ -12,6 +12,12 @@ const propTypes = {
 	mainContentRef: PropTypes.object.isRequired,
 };
 
+/* Specify the types of elems we want events for */
+const mouseElemTypes = [
+	{ key: 'note', querySelector: '.footnote, .citation' },
+	{ key: 'header', querySelector: 'h1, h2, h3, h4, h5, h6' },
+];
+
 const PubMouseEvents = (props) => {
 	const { pubData, collabData, historyData, mainContentRef, locationData } = props;
 	const timeouts = useRef({});
@@ -21,12 +27,6 @@ const PubMouseEvents = (props) => {
 			[action.type]: action.elem,
 		};
 	}, {});
-
-	/* Specify the types of elems we want events for */
-	const mouseElemTypes = [
-		{ key: 'note', querySelector: '.footnote, .citation' },
-		{ key: 'header', querySelector: 'h1, h2, h3, h4, h5, h6' },
-	];
 
 	/* Generate specific functions for all elemTypes */
 	const mouseEventHandlers = mouseElemTypes.reduce((prev, curr) => {

@@ -19,6 +19,9 @@ class ControlsFootnote extends Component {
 
 	render() {
 		const hasRenderedContent = this.props.footnotes.length >= this.props.attrs.count;
+		/* countToIndex: Footnote that renders as '1' is stored in 0th index of footnotes array */
+		const countToIndex = this.props.attrs.count - 1;
+		const renderContent = this.props.footnotes[countToIndex];
 		return (
 			<div
 				className={`formatting-bar_controls-component ${this.props.isSmall ? 'small' : ''}`}
@@ -60,11 +63,8 @@ class ControlsFootnote extends Component {
 					<div className="input wide">
 						{hasRenderedContent && (
 							<PubNoteContent
-								structured={this.props.footnotes[this.props.attrs.count - 1].html}
-								unstructured={
-									this.props.footnotes[this.props.attrs.count - 1]
-										.unstructuredValue
-								}
+								structured={renderContent.html}
+								unstructured={renderContent.unstructuredValue}
 							/>
 						)}
 					</div>
