@@ -148,7 +148,7 @@ const PubBottomSection = (props) => {
 			{/* We already have a fully interactive expand button -- this is a bonus */}
 			{/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
 			<div
-				role={largeExpandClickTarget && 'button'}
+				role={largeExpandClickTarget ? 'button' : 'none'}
 				onClick={largeExpandClickTarget && (() => setIsExpanded(!isExpanded))}
 				className="top-row"
 				style={{
