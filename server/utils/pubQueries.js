@@ -24,6 +24,26 @@ import {
 } from '../models';
 import { generateCiteHtmls } from '../editor/queries';
 
+const getBranches = ({ pub, loginData, communityAdminData, accessHash, canManagePub }) => {
+	const orderedBranches = pub.branches.sort((a, b) => a.order - b.order);
+	const branchesWithAccessData = orderedBranches.map((branch) => {
+		const branchAccess = getBranchAccess(
+			accessHash,
+			branch,
+			loginData.id,
+			communityAdminData,
+			canManagePub,
+		);
+		return {
+			...branch,
+			...branchAccess,
+			editHash: branchAccess.canManage && branch.editHash,
+			discussHash: branchAccess.canManage && branch.discussHash,
+			viewHash: branchAccess.canManage && branch.viewHash,
+		};
+	});
+};
+
 export const formatAndAuthenticatePub = (pub, loginData, communityAdminData, req) => {
 	/* Used to format pub JSON and to test */
 	/* whether the user has permissions */
