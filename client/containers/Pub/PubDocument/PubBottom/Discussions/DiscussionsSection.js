@@ -40,7 +40,9 @@ const DiscussionsSection = (props) => {
 	const [sortMode, setSortMode] = useState('newestThread');
 	const [filteredLabels, setFilteredLabels] = useState([]);
 
-	const nonArchivedDiscussions = discussions.filter((ds) => !ds.isArchived);
+	const nonArchivedDiscussions = discussions.filter(
+		(ds) => !ds.isArchived && ds.branchId === pubData.activeBranch.id,
+	);
 
 	const renderCenterItems = () => (
 		<SectionBullets>{nonArchivedDiscussions.length}</SectionBullets>
