@@ -14,7 +14,7 @@ import {
 	Review,
 } from '../models';
 import { attributesPublicUser } from '.';
-import { formatAndAuthenticatePub } from './pubQueries';
+import { formatAndAuthenticatePub } from './formatPub';
 
 export const findPage = (pageId, useIncludes, initialData) => {
 	const pageQuery = Page.findOne({
@@ -87,13 +87,12 @@ export const findPage = (pageId, useIncludes, initialData) => {
 		([pageData, communityAdminData, pubsData]) => {
 			const formattedPubsData = pubsData
 				.map((pubData) => {
-					return formatAndAuthenticatePub(
-						pubData.toJSON(),
-						initialData.loginData,
-						communityAdminData,
-						{ query: {}, params: {} },
-						false,
-					);
+					return formatAndAuthenticatePub({
+						pub: pubData.toJSON(),
+						loginData: initialData.loginData,
+						communityAdminData: communityAdminData,
+						req: { query: {}, params: {} },
+					});
 				})
 				.filter((formattedPub) => {
 					return formattedPub;

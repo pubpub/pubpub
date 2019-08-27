@@ -8,7 +8,8 @@
       "plugins": [
         "macros",
         "require-context-hook",
-        "@babel/plugin-proposal-class-properties"
+        "@babel/plugin-proposal-class-properties",
+        "dynamic-import-node-babel-7"
       ]
     }
   }
