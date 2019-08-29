@@ -12,6 +12,6 @@ export default async () => {
 		process.env.DATABASE_URL = await setupTestDatabase();
 	}
 	// eslint-disable-next-line global-require
-	const oof = import('../../server/models.js');
-	(await oof).sync({ force: false });
+	const oof = require('../../server/models.js');
+	oof.sync({ force: false });
 };
