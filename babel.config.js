@@ -3,7 +3,7 @@ module.exports = {
 	plugins: ['@babel/plugin-transform-runtime'],
 	env: {
 		test: {
-			plugins: ['macros', 'require-context-hook', '@babel/plugin-proposal-class-properties', "transform-es2015-modules-commonjs"],
+			plugins: ['macros', 'require-context-hook', '@babel/plugin-proposal-class-properties'],
 		},
 	},
 };
