@@ -2,8 +2,15 @@ import ensureUserForAttribution from 'shared/utils/ensureUserForAttribution';
 import { getBranchAccess } from '../branch/permissions';
 import { checkIfSuperAdmin } from '.';
 
-const canUserSeeBranch = ({ canView, canEdit, firstKeyAt }) => {
-	return canEdit || (canView && firstKeyAt);
+export class PubBranchNotVisibleError extends Error {
+	constructor(availableBranches) {
+		super();
+		this.availableBranches = availableBranches;
+	}
+}
+
+const canUserSeeBranch = ({ canView, canEdit, canManage, firstKeyAt }) => {
+	return canManage || canEdit || (canView && firstKeyAt);
 };
 
 const canUserManagePub = (pub, communityAdminData, user = {}) => {
@@ -44,13 +51,16 @@ const formatBranches = ({
 		};
 	});
 	const visibleBranches = branchesWithAccessData.filter((br) => canUserSeeBranch(br));
-	if (visibleBranches.length === 0) {
-		return {};
-	}
-	const publicBranch = visibleBranches.find((br) => br.title === 'public');
 	const activeBranch = branchShortId
-		? visibleBranches.find((br) => br.shortId === branchShortId)
-		: publicBranch || visibleBranches[0];
+		? // If we have a short ID, then grab the pub that matches it
+		  visibleBranches.find((br) => br.shortId.toString() === branchShortId.toString())
+		: // Otherwise, if we are able to see the first ordered branch...
+		visibleBranches.includes(branchesWithAccessData[0])
+		? // Then return it
+		  branchesWithAccessData[0]
+		: // Otherwise, return null. This will cause the caller to throw an error, triggering a
+		  // redirect to one of the other visibleBranches
+		  null;
 	return { activeBranch: activeBranch, branches: visibleBranches };
 };
 
@@ -88,14 +98,10 @@ export const filterCollectionPubs = ({ collectionPubs = [] }, isCommunityAdmin) 
 		return item.collection.isPublic || isCommunityAdmin;
 	});
 
-export const formatAndAuthenticatePub = ({
-	pub,
-	loginData,
-	communityAdminData,
-	accessHash,
-	branchShortId,
-	versionNumber,
-}) => {
+export const formatAndAuthenticatePub = (
+	{ pub, loginData, communityAdminData, accessHash, branchShortId, versionNumber },
+	matchActiveBranch = true,
+) => {
 	const canManagePub = canUserManagePub(pub, communityAdminData, loginData);
 
 	const { activeBranch, branches } = formatBranches({
@@ -108,7 +114,11 @@ export const formatAndAuthenticatePub = ({
 	});
 
 	if (!activeBranch) {
-		return null;
+		if (matchActiveBranch) {
+			throw new PubBranchNotVisibleError(branches);
+		} else {
+			return null;
+		}
 	}
 
 	return {

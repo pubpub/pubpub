@@ -101,15 +101,18 @@ app.get(['/user/:slug', '/user/:slug/:mode'], (req, res, next) => {
 					if (isOwnProfile) {
 						return true;
 					}
-					const formattedPub = formatAndAuthenticatePub({
-						pub: {
-							...attribution.pub,
-							attributions: [{ ...attribution, user: userDataJson }],
+					const formattedPub = formatAndAuthenticatePub(
+						{
+							pub: {
+								...attribution.pub,
+								attributions: [{ ...attribution, user: userDataJson }],
+							},
+							loginData: initialData.loginData,
+							communityAdminData: communityAdminData,
+							req: { query: {}, params: {} },
 						},
-						loginData: initialData.loginData,
-						communityAdminData: communityAdminData,
-						req: { query: {}, params: {} },
-					});
+						false,
+					);
 					return formattedPub && isPubPublic(formattedPub);
 				});
 			}

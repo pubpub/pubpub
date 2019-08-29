@@ -87,12 +87,15 @@ export const findPage = (pageId, useIncludes, initialData) => {
 		([pageData, communityAdminData, pubsData]) => {
 			const formattedPubsData = pubsData
 				.map((pubData) => {
-					return formatAndAuthenticatePub({
-						pub: pubData.toJSON(),
-						loginData: initialData.loginData,
-						communityAdminData: communityAdminData,
-						req: { query: {}, params: {} },
-					});
+					return formatAndAuthenticatePub(
+						{
+							pub: pubData.toJSON(),
+							loginData: initialData.loginData,
+							communityAdminData: communityAdminData,
+							req: { query: {}, params: {} },
+						},
+						false,
+					);
 				})
 				.filter((formattedPub) => {
 					return formattedPub;

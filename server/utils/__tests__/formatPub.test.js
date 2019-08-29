@@ -1,18 +1,16 @@
 /* global describe, it, expect, beforeAll, afterAll */
-import { makeUser, makeCommunity, setup, teardown, stub } from '../../../stubstub';
+import { makeUser, makeCommunity, setup, teardown, stubFirebaseAdmin } from '../../../stubstub';
 import { createBranch } from '../../branch/queries';
 import { createCollection } from '../../collection/queries';
 import { createCollectionPub } from '../../collectionPub/queries';
 import { createDiscussion } from '../../discussion/queries';
 import { createPub } from '../../pub/queries';
 import { createReview } from '../../review/queries';
-import * as firebaseAdmin from '../firebaseAdmin';
 
-import { formatAndAuthenticatePub } from '../formatPub';
+import { formatAndAuthenticatePub, PubBranchNotVisibleError } from '../formatPub';
 import { findPubQuery } from '../pubQueries';
 import { Branch } from '../../models';
 
-let firebaseStub;
 let testCommunity;
 let user;
 let haplessUser;
@@ -32,6 +30,8 @@ let visibleCollection;
 let invisibleCollection;
 let visibleCollectionPub;
 let invisibleCollectionPub;
+
+stubFirebaseAdmin();
 
 const makeDiscussion = ({
 	discussionId,
@@ -56,7 +56,6 @@ const makeDiscussion = ({
 });
 
 setup(beforeAll, async () => {
-	firebaseStub = stub(firebaseAdmin, ['createFirebaseBranch', 'updateFirebaseDiscussion']);
 	testCommunity = await makeCommunity();
 	haplessUser = await makeUser();
 	user = await makeUser();
@@ -69,7 +68,10 @@ setup(beforeAll, async () => {
 		{
 			pubId: pub.id,
 			title: 'a-visible-branch',
-			userPermissions: [{ user: { id: user.id }, permissions: 'manage' }],
+			userPermissions: [
+				{ user: { id: user.id }, permissions: 'manage' },
+				{ user: { id: testCommunity.admin.id }, permissions: 'edit' },
+			],
 		},
 		pubManager.id,
 	);
@@ -157,48 +159,58 @@ setup(beforeAll, async () => {
 
 describe('formatAndAuthenticatePub', () => {
 	// It returns null for users without any access
-	it('returns null for users without any access', () => {
-		const res = formatAndAuthenticatePub({ pub: pub, loginData: haplessUser });
-		expect(res).toEqual(null);
+	it('throws an error for users without any access', () => {
+		expect(() => formatAndAuthenticatePub({ pub: pub, loginData: haplessUser })).toThrow(
+			PubBranchNotVisibleError,
+		);
 	});
 
 	it('shows users the branches that they have access to', async () => {
 		// As a user with explicit permissions
 		expect(
-			formatAndAuthenticatePub({ pub: pub, loginData: user }).branches.map((br) => br.title),
+			formatAndAuthenticatePub({
+				pub: pub,
+				loginData: user,
+				branchShortId: visibleBranchA.shortId,
+			}).branches.map((br) => br.title),
 		).toEqual(['a-visible-branch', 'another-visible-branch']);
 		// As a pub manager
 		expect(
-			formatAndAuthenticatePub({ pub: pub, loginData: pubManager }).branches.map(
-				(br) => br.title,
-			),
+			formatAndAuthenticatePub({
+				pub: pub,
+				loginData: pubManager,
+				branchShortId: draftBranch.shortId,
+			}).branches.map((br) => br.title),
 		).toEqual(['draft', 'a-visible-branch', 'another-visible-branch', 'private']);
 		// #public is not included here because it has no content
 	});
 
 	it('accounts for accessHash when computing branch access', () => {
 		// We cannot edit the public branch, no matter what
-		expect(
+		expect(() =>
 			formatAndAuthenticatePub({
 				pub: pub,
 				loginData: user,
 				accessHash: publicBranch.editHash,
+				branchShortId: draftBranch.shortId,
 			}).branches.map((br) => br.title),
-		).toEqual(['a-visible-branch', 'another-visible-branch']);
+		).toThrow(PubBranchNotVisibleError);
 		// Passing the draft branch view hash does not let us access it, since it has no content
-		expect(
+		expect(() =>
 			formatAndAuthenticatePub({
 				pub: pub,
 				loginData: user,
 				accessHash: draftBranch.viewHash,
+				branchShortId: draftBranch.shortId,
 			}).branches.map((br) => br.title),
-		).toEqual(['a-visible-branch', 'another-visible-branch']);
+		).toThrow(PubBranchNotVisibleError);
 		// Passing the draft branch edit hash should allow us to access it
 		expect(
 			formatAndAuthenticatePub({
 				pub: pub,
 				loginData: user,
 				accessHash: draftBranch.editHash,
+				branchShortId: draftBranch.shortId,
 			}).branches.map((br) => br.title),
 		).toEqual(['draft', 'a-visible-branch', 'another-visible-branch']);
 	});
@@ -230,41 +242,36 @@ describe('formatAndAuthenticatePub', () => {
 		expect(activeBranch.title).toEqual('a-visible-branch');
 	});
 
-	it('does not let you select an otherwise inaccessible branch by passing branchShortId', () => {
-		const res = formatAndAuthenticatePub({
-			pub: pub,
-			loginData: user,
-			branchShortId: invisibleBranch.shortId,
-		});
-		expect(res).toEqual(null);
+	it('throws an error when trying to select an empty #public branch', () => {
+		expect(
+			() =>
+				formatAndAuthenticatePub({
+					pub: pub,
+					loginData: user,
+				}).activeBranch.title,
+		).toThrow(PubBranchNotVisibleError);
 	});
 
-	it('selects #public, if available, when no branchShortId is passed', () => {
-		// Pretend we've pushed something to #public
-		const pb = pub.branches.find((br) => br.title === 'public');
-		pb.firstKeyAt = new Date();
-		const { activeBranch } = formatAndAuthenticatePub({
-			pub: pub,
-			loginData: pubManager,
-		});
-		expect(activeBranch.title).toEqual('public');
-		// Restore the state of #public
-		pb.firstKeyAt = undefined;
-	});
-
-	it('selects as active the branch with lowest `order` when no branchShortId is passed', () => {
+	it('selects the #public branch when there is no branchShortId', () => {
+		// Make sure the #public branch has content, or it won't be visible
+		pub.branches.sort((a, b) => a - b)[0].firstKeyAt = new Date();
 		expect(
 			formatAndAuthenticatePub({
 				pub: pub,
 				loginData: user,
 			}).activeBranch.title,
-		).toEqual('a-visible-branch');
-		expect(
+		).toEqual('public');
+		pub.branches.sort((a, b) => a - b)[0].firstKeyAt = undefined;
+	});
+
+	it('does not let you select an otherwise inaccessible branch by passing branchShortId', () => {
+		expect(() =>
 			formatAndAuthenticatePub({
 				pub: pub,
-				loginData: pubManager,
-			}).activeBranch.title,
-		).toEqual('draft');
+				loginData: user,
+				branchShortId: invisibleBranch.shortId,
+			}),
+		).toThrow(PubBranchNotVisibleError);
 	});
 
 	it('marks the pub with isStaticDoc when a verisonNumber is passed', () => {
@@ -272,6 +279,7 @@ describe('formatAndAuthenticatePub', () => {
 			formatAndAuthenticatePub({
 				pub: pub,
 				loginData: user,
+				branchShortId: visibleBranchA.shortId,
 				versionNumber: '0',
 			}).isStaticDoc,
 		).toEqual(true);
@@ -283,6 +291,7 @@ describe('formatAndAuthenticatePub', () => {
 			formatAndAuthenticatePub({
 				pub: pub,
 				loginData: user,
+				branchShortId: visibleBranchA.shortId,
 			}).collectionPubs.map((cp) => cp.id),
 		).toEqual([visibleCollectionPub.id]);
 		// As a community admin
@@ -290,6 +299,7 @@ describe('formatAndAuthenticatePub', () => {
 			formatAndAuthenticatePub({
 				pub: pub,
 				loginData: testCommunity.admin,
+				branchShortId: visibleBranchA.shortId,
 				communityAdminData: true,
 			})
 				.collectionPubs.map((cp) => cp.id)
@@ -303,6 +313,7 @@ describe('formatAndAuthenticatePub', () => {
 			formatAndAuthenticatePub({
 				pub: pub,
 				loginData: user,
+				branchShortId: visibleBranchA.shortId,
 			}).reviews.map((rv) => rv.id),
 		).toEqual([visibleReview.id]);
 		// As a pub manager
@@ -310,6 +321,7 @@ describe('formatAndAuthenticatePub', () => {
 			formatAndAuthenticatePub({
 				pub: pub,
 				loginData: pubManager,
+				branchShortId: visibleBranchA.shortId,
 			})
 				.reviews.map((rv) => rv.id)
 				.sort(),
@@ -322,6 +334,7 @@ describe('formatAndAuthenticatePub', () => {
 			formatAndAuthenticatePub({
 				pub: pub,
 				loginData: user,
+				branchShortId: visibleBranchA.shortId,
 			})
 				.discussions.map((ds) => ds.id)
 				.sort(),
@@ -331,6 +344,7 @@ describe('formatAndAuthenticatePub', () => {
 			formatAndAuthenticatePub({
 				pub: pub,
 				loginData: pubManager,
+				branchShortId: visibleBranchA.shortId,
 			})
 				.discussions.map((ds) => ds.id)
 				.sort(),
@@ -342,7 +356,7 @@ describe('formatAndAuthenticatePub', () => {
 			formatAndAuthenticatePub({
 				pub: pub,
 				loginData: user,
-				branchShortId: visibleBranchA.branchShortId,
+				branchShortId: visibleBranchA.shortId,
 			})
 				.discussions.map((ds) => ds.id)
 				.sort(),
@@ -350,6 +364,4 @@ describe('formatAndAuthenticatePub', () => {
 	});
 });
 
-teardown(afterAll, () => {
-	firebaseStub.restore();
-});
+teardown(afterAll);
