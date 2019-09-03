@@ -108,6 +108,7 @@ const PubBottom = (props) => {
 			{() => (
 				<div className="pub-bottom-component">
 					<div className="inner">
+						<LicenseSection />
 						{footnotes.length > 0 && (
 							<SearchableFootnoteSection
 								title="Footnotes"
