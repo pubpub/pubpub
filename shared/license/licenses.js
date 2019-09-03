@@ -9,14 +9,14 @@ export const licenses = [
 	{
 		slug: 'cc-0',
 		full: 'Creative Commons Public Domain Dedication',
-		short: 'CC-0 4.0',
+		short: 'CC-0',
 		version: '4.0',
 		link: 'https://creativecommons.org/publicdomain/zero/1.0/',
 	},
 	{
 		slug: 'cc-by-nc',
 		full: 'Creative Commons Attribution-NonCommercial 4.0 International License',
-		short: 'CC-BY-NC 4.0',
+		short: 'CC-BY-NC',
 		version: '4.0',
 		link: 'https://creativecommons.org/licenses/by-nc/4.0/',
 	},
