@@ -83,7 +83,11 @@ app.get(
 				return res.redirect(`/pub/${req.params.slug}`);
 			}
 
-			if (!pubData.canEditBranch && isEmptyPubDoc(pubData.initialDoc)) {
+			if (
+				!pubData.canEditBranch &&
+				mode === 'document' &&
+				isEmptyPubDoc(pubData.initialDoc)
+			) {
 				throw new Error('Pub Not Found');
 			}
 

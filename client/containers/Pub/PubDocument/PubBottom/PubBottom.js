@@ -1,11 +1,13 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
+import { LicenseSelect } from 'components';
 import { PageContext } from 'components/PageWrapper/PageWrapper';
+import { getLicenseBySlug } from 'shared/license';
 import { PubSuspendWhileTyping } from '../../PubSuspendWhileTyping';
 
 import Footnotes, { footnotePropType } from './Footnotes';
-import PubBottomSection, { SectionBullets } from './PubBottomSection';
+import PubBottomSection, { SectionBullets, AccentedIconButton } from './PubBottomSection';
 import DiscussionsSection from './Discussions/DiscussionsSection';
 
 require('./pubBottom.scss');
@@ -28,8 +30,10 @@ const defaultProps = {
 	showDiscussions: true,
 };
 
-const LicenseSection = () => {
+const LicenseSection = (props) => {
+	const { pubData, updateLocalData } = props;
 	const { communityData } = useContext(PageContext);
+	const { link, full, short, version } = getLicenseBySlug(pubData.licenseSlug);
 
 	return (
 		<PubBottomSection
@@ -39,17 +43,38 @@ const LicenseSection = () => {
 			title="License"
 			centerItems={
 				<SectionBullets>
-					<a
-						target="_blank"
-						rel="license noopener noreferrer"
-						href="https://creativecommons.org/licenses/by/4.0/"
-					>
-						Creative Commons Attribution 4.0 International (CC-BY 4.0)
+					<a target="_blank" rel="license noopener noreferrer" href={link}>
+						{`${full} (${short} ${version})`}
 					</a>
 				</SectionBullets>
 			}
+			iconItems={({ iconColor }) => {
+				if (pubData.canManage) {
+					return (
+						<LicenseSelect pubData={pubData} updateLocalData={updateLocalData}>
+							{({ isPersisting }) => (
+								<AccentedIconButton
+									accentColor={iconColor}
+									icon="edit"
+									title="Select Pub license"
+									loading={isPersisting}
+								/>
+							)}
+						</LicenseSelect>
+					);
+				}
+				return null;
+			}}
 		/>
 	);
+};
+
+LicenseSection.propTypes = {
+	pubData: PropTypes.shape({
+		canManage: PropTypes.bool,
+		licenseSlug: PropTypes.string,
+	}).isRequired,
+	updateLocalData: PropTypes.func.isRequired,
 };
 
 const SearchableFootnoteSection = (props) => {
@@ -99,9 +124,12 @@ SearchableFootnoteSection.defaultProps = {
 const PubBottom = (props) => {
 	const {
 		collabData: { editorChangeObject },
-		pubData: { citations = [], footnotes = [] },
+		pubData,
 		showDiscussions,
+		updateLocalData,
 	} = props;
+
+	const { citations = [], footnotes = [] } = pubData;
 
 	return (
 		<PubSuspendWhileTyping delay={1000}>
@@ -134,7 +162,7 @@ const PubBottom = (props) => {
 								}
 							/>
 						)}
-						<LicenseSection />
+						<LicenseSection pubData={pubData} updateLocalData={updateLocalData} />
 						{showDiscussions && <DiscussionsSection {...props} />}
 					</div>
 				</div>
