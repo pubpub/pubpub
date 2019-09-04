@@ -53,7 +53,7 @@ module.exports = {
 					{ loader: 'css-loader' },
 					{
 						loader: 'postcss-loader',
-						options: { ident: 'postcss', plugins: [autoprefixer({})] },
+						options: { ident: 'postcss', plugins: [autoprefixer({ grid: 'no-autoplace' })] },
 					},
 					{
 						loader: 'sass-loader',
