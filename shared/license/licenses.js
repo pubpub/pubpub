@@ -36,6 +36,6 @@ export const licenses = [
 	},
 ];
 
-export const getLicenseBySlug = (slug) => {
+export const getLicenseBySlug = (slug = 'cc-by') => {
 	return licenses.find((ls) => ls.slug === slug);
 };
