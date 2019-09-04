@@ -171,11 +171,10 @@ class PubSyncManager extends React.Component {
 	}
 
 	updatePubData(newPubData) {
-		/* Firs t, set the local state. */
+		/* First, set the local state. */
 		/* Then, sync appropriate data to firebase. */
 		/* Other clients will receive updates which */
 		/* triggers the syncMetadata function. */
-		document.title = getPubPageTitle(this.state.pubData, this.props.communityData);
 		this.setState(
 			(prevState) => {
 				const nextData =
