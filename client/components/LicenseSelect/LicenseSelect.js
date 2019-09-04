@@ -59,6 +59,7 @@ const LicenseSelect = (props) => {
 			<Menu>
 				{licenses.map((license) => (
 					<MenuItem
+						key={license.slug}
 						onClick={() => selectLicense(license)}
 						className="license-select-component__menu-item"
 						text={

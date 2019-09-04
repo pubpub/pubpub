@@ -267,7 +267,9 @@ class Details extends Component {
 							pubData={{ ...this.props.pubData, licenseSlug: this.state.licenseSlug }}
 							onSelect={this.updateLicense}
 						>
-							{({ title, icon }) => <Button icon={icon} text={title} />}
+							{({ title, icon }) => (
+								<Button icon={icon} text={title} rightIcon="caret-down" />
+							)}
 						</LicenseSelect>
 					</InputField>
 				</SettingsSection>

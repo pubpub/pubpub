@@ -1,21 +1,19 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
-import { LicenseSelect } from 'components';
-import { PageContext } from 'components/PageWrapper/PageWrapper';
-import { getLicenseBySlug } from 'shared/license';
 import { PubSuspendWhileTyping } from '../../PubSuspendWhileTyping';
 
-import Footnotes, { footnotePropType } from './Footnotes';
-import PubBottomSection, { SectionBullets, AccentedIconButton } from './PubBottomSection';
+import { notePropType } from './Notes';
+import LicenseSection from './LicenseSection';
+import SearchableNoteSection from './SearchableNoteSection';
 import DiscussionsSection from './Discussions/DiscussionsSection';
 
 require('./pubBottom.scss');
 
 const propTypes = {
 	pubData: PropTypes.shape({
-		citations: PropTypes.arrayOf(footnotePropType).isRequired,
-		footnotes: PropTypes.arrayOf(footnotePropType).isRequired,
+		citations: PropTypes.arrayOf(notePropType).isRequired,
+		footnotes: PropTypes.arrayOf(notePropType).isRequired,
 	}).isRequired,
 	collabData: PropTypes.object.isRequired,
 	firebaseBranchRef: PropTypes.object,
@@ -28,97 +26,6 @@ const propTypes = {
 const defaultProps = {
 	firebaseBranchRef: undefined,
 	showDiscussions: true,
-};
-
-const LicenseSection = (props) => {
-	const { pubData, updateLocalData } = props;
-	const { communityData } = useContext(PageContext);
-	const { link, full, short, version } = getLicenseBySlug(pubData.licenseSlug);
-
-	return (
-		<PubBottomSection
-			accentColor={communityData.accentColorDark}
-			isExpandable={false}
-			className="pub-bottom-license"
-			title="License"
-			centerItems={
-				<SectionBullets>
-					<a target="_blank" rel="license noopener noreferrer" href={link}>
-						{`${full} (${short} ${version})`}
-					</a>
-				</SectionBullets>
-			}
-			iconItems={({ iconColor }) => {
-				if (pubData.canManage) {
-					return (
-						<LicenseSelect pubData={pubData} updateLocalData={updateLocalData}>
-							{({ isPersisting }) => (
-								<AccentedIconButton
-									accentColor={iconColor}
-									icon="edit"
-									title="Select Pub license"
-									loading={isPersisting}
-								/>
-							)}
-						</LicenseSelect>
-					);
-				}
-				return null;
-			}}
-		/>
-	);
-};
-
-LicenseSection.propTypes = {
-	pubData: PropTypes.shape({
-		canManage: PropTypes.bool,
-		licenseSlug: PropTypes.string,
-	}).isRequired,
-	updateLocalData: PropTypes.func.isRequired,
-};
-
-const SearchableFootnoteSection = (props) => {
-	const { items, nodeType, viewNode, ...restProps } = props;
-	const numberedItems = items.map((item, index) => ({ ...item, number: index + 1 }));
-	const { communityData } = useContext(PageContext);
-
-	const targetFootnoteElement = (fn) =>
-		viewNode &&
-		viewNode.querySelector(`*[data-node-type="${nodeType}"][data-count="${fn.number}"]`);
-
-	return (
-		<PubBottomSection
-			accentColor={communityData.accentColorDark}
-			isSearchable={true}
-			centerItems={<SectionBullets>{items.length}</SectionBullets>}
-			{...restProps}
-		>
-			{({ searchTerm }) => (
-				<Footnotes
-					accentColor={communityData.accentColorDark}
-					targetFootnoteElement={targetFootnoteElement}
-					footnotes={numberedItems.filter(
-						(fn) =>
-							!searchTerm ||
-							[fn.html, fn.unstructuredValue]
-								.filter((x) => x)
-								.map((source) => source.toLowerCase())
-								.some((source) => source.includes(searchTerm.toLowerCase())),
-					)}
-				/>
-			)}
-		</PubBottomSection>
-	);
-};
-
-SearchableFootnoteSection.propTypes = {
-	items: PropTypes.arrayOf(footnotePropType).isRequired,
-	nodeType: PropTypes.string.isRequired,
-	viewNode: PropTypes.object,
-};
-
-SearchableFootnoteSection.defaultProps = {
-	viewNode: null,
 };
 
 const PubBottom = (props) => {
@@ -137,7 +44,7 @@ const PubBottom = (props) => {
 				<div className="pub-bottom-component">
 					<div className="inner">
 						{footnotes.length > 0 && (
-							<SearchableFootnoteSection
+							<SearchableNoteSection
 								title="Footnotes"
 								items={footnotes}
 								nodeType="footnote"
@@ -150,7 +57,7 @@ const PubBottom = (props) => {
 							/>
 						)}
 						{citations.length > 0 && (
-							<SearchableFootnoteSection
+							<SearchableNoteSection
 								title="Citations"
 								items={citations}
 								nodeType="citation"
