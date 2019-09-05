@@ -18,7 +18,7 @@ const SimpleNotesList = (props) => {
 		return null;
 	}
 	return (
-		<div>
+		<React.Fragment>
 			<h1>{title}</h1>
 			<ol>
 				{notes.map((note, index) => (
@@ -31,7 +31,7 @@ const SimpleNotesList = (props) => {
 					</li>
 				))}
 			</ol>
-		</div>
+		</React.Fragment>
 	);
 };
 
