@@ -115,7 +115,7 @@ export const formatAndAuthenticatePub = (
 
 	/* If the activeBranch is note visible, throw an error that will trigger */
 	/* a redirect. */
-	if (!activeBranch.id && matchActiveBranch) {
+	if (!activeBranch || (!activeBranch.id && matchActiveBranch)) {
 		throw new PubBranchNotVisibleError(branches);
 	}
 

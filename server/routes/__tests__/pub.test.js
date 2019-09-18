@@ -104,6 +104,15 @@ describe('/pub', () => {
 			.expect(200);
 	});
 
+	it('200s for a pub manager seeking to visit /manage', async () => {
+		await publicBranch.update({ firstKeyAt: new Date() });
+		const agent = await login(pubManager);
+		await agent
+			.get(`/pub/${pub.slug}/manage`)
+			.set('Host', host)
+			.expect(200);
+	});
+
 	it('200s for a user seeking to visit #public, when it has content', async () => {
 		await publicBranch.update({ firstKeyAt: new Date() });
 		const agent = await login(visitor);
