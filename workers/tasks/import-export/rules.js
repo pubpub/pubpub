@@ -134,9 +134,9 @@ rules.fromPandoc('Code', (node) => {
 	};
 });
 
-rules.transformToMark('Link', 'link', (link) => {
+rules.transformToMark('Link', 'link', (link, { resource }) => {
 	return {
-		href: link.target.url,
+		href: resource(link.target.url, 'link'),
 		title: link.target.title,
 	};
 });
@@ -209,7 +209,7 @@ rules.fromPandoc('Image', (node, { resource }) => {
 	return {
 		type: 'image',
 		attrs: {
-			url: resource(node.target.url),
+			url: resource(node.target.url, 'image'),
 			caption: pandocInlineToHtmlString(node.content),
 			// TODO(ian): is there anything we can do about the image size here?
 		},

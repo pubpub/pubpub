@@ -8,6 +8,8 @@ import Editor, { getJSON, getNotes } from '@pubpub/editor';
 import { apiFetch, getResizedUrl } from 'utils';
 import TimeAgo from 'react-timeago';
 import { saveAs } from 'file-saver';
+
+import { FileImport } from 'components';
 import { PageContext } from 'components/PageWrapper/PageWrapper';
 import { PubSuspendWhileTypingContext } from '../PubSuspendWhileTyping';
 
@@ -156,6 +158,7 @@ const PubBody = (props) => {
 					}
 				`}
 			</style>
+			<FileImport />
 			<Editor
 				key={editorKey}
 				customNodes={{
