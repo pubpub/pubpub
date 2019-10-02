@@ -1,48 +1,62 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon, ProgressBar } from '@blueprintjs/core';
+import { Icon, ProgressBar, Tag, Button } from '@blueprintjs/core';
 
 const propTypes = {
 	file: PropTypes.shape({
-		path: PropTypes.string,
-		name: PropTypes.string,
+		localPath: PropTypes.string,
+		state: PropTypes.string,
+		loaded: PropTypes.number,
+		total: PropTypes.number,
+		label: PropTypes.string,
 	}).isRequired,
-	status: PropTypes.oneOfType([
-		PropTypes.shape({
-			state: 'pending',
-		}),
-		PropTypes.shape({
-			state: 'uploading',
-			loaded: PropTypes.number,
-			total: PropTypes.number,
-		}),
-		PropTypes.shape({
-			state: 'complete',
-			url: PropTypes.string,
-		}),
-	]).isRequired,
+	onSelectAsDocument: PropTypes.func.isRequired,
+	onDelete: PropTypes.func.isRequired,
 };
 
 require('./fileImportEntry.scss');
 
 const FileImportEntry = (props) => {
-	const { file, status } = props;
-	const { state, loaded, total } = status;
-	const displayTitle = file.path || file.name;
-	const displayTitleBreak = Math.max(displayTitle.length - 5, 0);
-	const displayTitleStart = displayTitle.slice(0, displayTitleBreak);
-	const displayTitleEnd = displayTitle.slice(displayTitleBreak);
+	const {
+		file: { loaded, total, state, localPath, label },
+		onDelete,
+		onSelectAsDocument,
+	} = props;
+	const displayTitleBreak = Math.max(localPath.length - 5, 0);
+	const displayTitleStart = localPath.slice(0, displayTitleBreak);
+	const displayTitleEnd = localPath.slice(displayTitleBreak);
 
 	const renderProgressContent = () => {
 		if (state === 'complete') {
 			return (
 				<React.Fragment>
-					<Icon icon="tick" />
+					<Icon icon="tick" iconSize={14} />
 					Upload complete
 				</React.Fragment>
 			);
 		}
-		return <ProgressBar value={state === 'uploading' ? loaded / total : undefined} />;
+		if (state === 'waiting') {
+			return 'Ready to upload';
+		}
+		return (
+			<React.Fragment>
+				<span className="screenreader-only">
+					{Math.round((100 * loaded) / total)}% complete
+				</span>
+				<ProgressBar value={state === 'uploading' ? loaded / total : undefined} />
+			</React.Fragment>
+		);
+	};
+
+	const renderLabel = () => {
+		if (label === 'potential-document') {
+			return (
+				<Tag interactive onClick={onSelectAsDocument} icon="locate">
+					select as document
+				</Tag>
+			);
+		}
+		return <Tag intent="success">{label}</Tag>;
 	};
 
 	return (
@@ -50,8 +64,16 @@ const FileImportEntry = (props) => {
 			<div className="file-title">
 				<span className="start">{displayTitleStart}</span>
 				<span className="end">{displayTitleEnd}</span>
+				{label && <div className="file-label">{renderLabel()}</div>}
 			</div>
 			<div className="file-progress">{renderProgressContent()}</div>
+			<Button
+				onClick={onDelete}
+				className="file-delete-button"
+				icon="small-cross"
+				small
+				minimal
+			/>
 		</div>
 	);
 };

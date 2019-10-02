@@ -1,7 +1,22 @@
 .file-import-component {
+    min-width: 500px;
     .drop-area {
-        width: 500px;
-        height: 200px;
-        background: #EEE;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 150px;
+        background: rgba(138, 155, 168, .15);
+        .drop-area-icon {
+            margin-bottom: 10px;
+        }
+    }
+    .import-warnings {
+        margin-top: 10px;
+    }
+    .files-listing {
+        margin-top: 10px;
     }
 }

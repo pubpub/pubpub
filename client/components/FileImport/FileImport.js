@@ -1,65 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import Dropzone from 'react-dropzone';
+import { Drawer, Classes, Icon, Callout } from '@blueprintjs/core';
 import { getDroppedOrSelectedFiles } from 'html5-file-selector';
-import { s3Upload } from '../../utils';
+
+import { apiFetch } from 'utils';
+import { pingTask } from 'utils/pingTask';
 
 import FileImportEntry from './FileImportEntry';
+import { useFileManager, extensionToPandocFormat } from './useFileManager';
 
 require('./fileImport.scss');
 
 const acceptedFileTypes = [
-	'.bib',
-	'.md',
-	'.txt',
-	'.xml',
-	'.odt',
-	'.html',
-	'.docx',
-	'.epub',
+	...Object.keys(extensionToPandocFormat).map((ext) => `.${ext}`),
 	'image/*',
 ].join(',');
-
-const usePubPubS3Uploader = () => {
-	const [filesMap, updateFilesMap] = useState(new Map());
-
-	const updateMap = (file, value) => {
-		updateFilesMap((currentMap) => {
-			const nextMap = new Map(currentMap);
-			nextMap.set(file, value);
-			return nextMap;
-		});
-	};
-
-	const onProgress = (file) => ({ loaded, total }) =>
-		updateMap(file, { state: 'uploading', loaded: loaded, total: total });
-
-	const onComplete = (file) => (_, __, ___, url) =>
-		updateMap(file, { state: 'complete', url: url });
-
-	const addFile = (file) => {
-		s3Upload(file, onProgress(file), onComplete(file));
-		updateMap(file, { state: 'pending' });
-	};
-
-	const getFiles = () => Array.from(filesMap.entries());
-
-	return { addFile: addFile, getFiles: getFiles };
-};
-
-const deriveMediaFileMapping = (importedFiles, internalPaths) => {
-	const pathToFileMap = new Map();
-	const usedFiles = [];
-	// First do a pass to scoop up files that have _identical_ paths
-	internalPaths.forEach((path) => {
-		const matchingFile = importedFiles.find(
-			(file) => file.webkitRelativePath === path && !usedFiles.includes(file),
-		);
-		if (matchingFile) {
-			usedFiles.push(matchingFile);
-			pathToFileMap.set(path, matchingFile);
-		}
-	});
-};
 
 const getFilesFromEvent = (evt) => {
 	return getDroppedOrSelectedFiles(evt).then((list) => {
@@ -68,27 +23,60 @@ const getFilesFromEvent = (evt) => {
 };
 
 const FileImport = () => {
-	const { addFile, getFiles } = usePubPubS3Uploader();
+	const { addFile, getFiles, deleteFileById, labelFileById } = useFileManager();
+	const currentFiles = getFiles();
+	const readyToAutoStart =
+		currentFiles.length > 0 && currentFiles.every((file) => file.state === 'complete');
+
+	useEffect(() => {
+		if (readyToAutoStart) {
+			apiFetch('/api/import', {
+				method: 'POST',
+				body: JSON.stringify({
+					sourceFiles: currentFiles,
+					useNewImporter: true,
+				}),
+			}).then((taskId) => pingTask(taskId, 1000));
+		}
+	}, [currentFiles, readyToAutoStart]);
+
 	return (
-		<div className="file-import-component">
-			<Dropzone
-				accept={acceptedFileTypes}
-				getDataTransferItems={getFilesFromEvent}
-				onDrop={(files) => files.map(addFile)}
-			>
-				{({ getRootProps, getInputProps }) => (
-					<div {...getRootProps()} className="drop-area">
-						Throw some files in here lad
-						<input {...getInputProps()} webkitdirectory="" />
+		<Drawer className="file-import-component" title="Import to Pub" isOpen={true}>
+			<div className={Classes.DRAWER_BODY}>
+				<div className={Classes.DIALOG_BODY}>
+					<Dropzone
+						accept={acceptedFileTypes}
+						getDataTransferItems={getFilesFromEvent}
+						onDrop={(files) => files.map(addFile)}
+					>
+						{({ getRootProps, getInputProps }) => (
+							<div {...getRootProps()} className="drop-area">
+								<Icon icon="paperclip" iconSize={50} className="drop-area-icon" />
+								Drag files here to upload them (or click to choose)
+								<input {...getInputProps()} webkitdirectory="" />
+							</div>
+						)}
+					</Dropzone>
+					<Callout className="import-warnings" title="Import warnings" intent="warning">
+						<ul>
+							<li>You're bad</li>
+							<li>You should feel bad</li>
+						</ul>
+					</Callout>
+					<div className="files-listing">
+						{currentFiles.map((file, index) => (
+							<FileImportEntry
+								// eslint-disable-next-line react/no-array-index-key
+								key={index}
+								file={file}
+								onDelete={() => deleteFileById(file.id)}
+								onSelectAsDocument={() => labelFileById(file.id, 'document')}
+							/>
+						))}
 					</div>
-				)}
-			</Dropzone>
-			<div className="upload-results">
-				{getFiles().map(([file, status]) => (
-					<FileImportEntry file={file} status={status} />
-				))}
+				</div>
 			</div>
-		</div>
+		</Drawer>
 	);
 };
 
