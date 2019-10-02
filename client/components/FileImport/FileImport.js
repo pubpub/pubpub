@@ -1,7 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { getDroppedOrSelectedFiles } from 'html5-file-selector';
 import { s3Upload } from '../../utils';
+
+import FileImportEntry from './FileImportEntry';
 
 require('./fileImport.scss');
 
@@ -31,8 +33,8 @@ const usePubPubS3Uploader = () => {
 	const onProgress = (file) => ({ loaded, total }) =>
 		updateMap(file, { state: 'uploading', loaded: loaded, total: total });
 
-	const onComplete = (file) => (_, __, ___, filename) =>
-		updateMap(file, { state: 'uploaded', filename: filename });
+	const onComplete = (file) => (_, __, ___, url) =>
+		updateMap(file, { state: 'complete', url: url });
 
 	const addFile = (file) => {
 		s3Upload(file, onProgress(file), onComplete(file));
@@ -67,7 +69,6 @@ const getFilesFromEvent = (evt) => {
 
 const FileImport = () => {
 	const { addFile, getFiles } = usePubPubS3Uploader();
-	console.log(getFiles());
 	return (
 		<div className="file-import-component">
 			<Dropzone
@@ -82,6 +83,11 @@ const FileImport = () => {
 					</div>
 				)}
 			</Dropzone>
+			<div className="upload-results">
+				{getFiles().map(([file, status]) => (
+					<FileImportEntry file={file} status={status} />
+				))}
+			</div>
 		</div>
 	);
 };

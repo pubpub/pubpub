@@ -1,0 +1,30 @@
+.file-import-entry {
+    display: flex;
+    padding: 5px;
+    .file-title {
+        width: 70%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        .start {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex-shrink: 1;
+          }
+          .end {
+            white-space: nowrap;
+            flex-basis: content;
+            flex-grow: 0;
+            flex-shrink: 0;
+          }
+    }
+    .file-progress {
+        width: 30%;
+        padding-left: 10px;
+        flex-shrink: 0;
+        overflow: hidden;
+        white-space: nowrap;
+    }   
+}
