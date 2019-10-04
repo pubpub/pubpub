@@ -8,7 +8,7 @@ import {
 const { flatten } = transformUtil;
 
 const getHtmlStringForPandocDoc = (document) =>
-	callPandoc(JSON.stringify(emitPandocJson(document)), 'json', 'html');
+	callPandoc(JSON.stringify(emitPandocJson(document)), 'json', 'html').trim();
 
 const getPandocDocForHtmlString = (htmlString) =>
 	parsePandocJson(JSON.parse(callPandoc(htmlString, 'html', 'json')));

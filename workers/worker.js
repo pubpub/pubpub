@@ -3,7 +3,6 @@
 import amqplib from 'amqplib';
 import * as Sentry from '@sentry/node';
 import exportTask from './tasks/export';
-import importTask from './tasks/import';
 import newImportTask from './tasks/import-export/import';
 import {
 	deletePageSearchData,
@@ -65,10 +64,8 @@ const processTask = (channel) => {
 						taskData.input.branchId,
 						taskData.input.format,
 					);
-				} else if (taskData.type === 'new-import') {
-					taskFunction = newImportTask(taskData.input.sourceFiles);
 				} else if (taskData.type === 'import') {
-					taskFunction = importTask(taskData.input);
+					taskFunction = newImportTask(taskData.input);
 				} else if (taskData.type === 'deletePageSearchData') {
 					taskFunction = deletePageSearchData(taskData.input);
 				} else if (taskData.type === 'setPageSearchData') {

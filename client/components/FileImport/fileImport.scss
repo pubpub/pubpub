@@ -12,11 +12,17 @@
         .drop-area-icon {
             margin-bottom: 10px;
         }
+        &.in-progress {
+            cursor: none;
+        }
     }
-    .import-warnings {
+    .import-result {
         margin-top: 10px;
     }
     .files-listing {
         margin-top: 10px;
+    }
+    .bp3-drawer-footer {
+        text-align: right;
     }
 }

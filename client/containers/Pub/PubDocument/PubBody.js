@@ -158,7 +158,10 @@ const PubBody = (props) => {
 					}
 				`}
 			</style>
-			<FileImport />
+			<FileImport
+				editorChangeObject={collabData.editorChangeObject}
+				updateLocalData={updateLocalData}
+			/>
 			<Editor
 				key={editorKey}
 				customNodes={{

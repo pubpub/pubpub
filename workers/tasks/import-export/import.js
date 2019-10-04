@@ -1,9 +1,11 @@
 /* eslint-disable no-restricted-syntax */
 import path from 'path';
-import fs from 'fs';
-import tmp from 'tmp-promise';
 import nodePandoc from 'node-pandoc';
-import AWS from 'aws-sdk';
+import { parsePandocJson, fromPandoc } from '@pubpub/prosemirror-pandoc';
+
+import pandocRules from './rules';
+import { buildTmpDirectory } from './tmpDirectory';
+import { extractBibliographyItems } from './bibliography';
 
 export const extensionToPandocFormat = {
 	docx: 'docx',
@@ -16,19 +18,14 @@ export const extensionToPandocFormat = {
 	tex: 'latex',
 };
 
-AWS.config.setPromisesDependency(Promise);
-const s3bucket = new AWS.S3({ params: { Bucket: 'assets.pubpub.org' } });
-
-tmp.setGracefulCleanup();
-
 const isPubPubProduction = !!process.env.PUBPUB_PRODUCTION;
 const dataRoot = process.env.NODE_ENV === 'production' ? '/app/.apt/usr/share/pandoc/data ' : '';
 
-const findUrlForReferencedFile = (sourceFiles, targetPath, resourceRelativePath) => {
+const createUrlGetter = (sourceFiles, documentLocalPath) => (resourceRelativePath) => {
 	// First, try to find a file in the uploads with the exact relative path
-	const targetContainer = path.dirname(targetPath);
+	const documentContainer = path.dirname(documentLocalPath);
 	for (const { localPath, url } of sourceFiles) {
-		if (resourceRelativePath === path.relative(targetContainer, localPath)) {
+		if (resourceRelativePath === path.relative(documentContainer, localPath)) {
 			return url;
 		}
 	}
@@ -48,30 +45,13 @@ const extensionFor = (filePath) =>
 		.pop()
 		.toLowerCase();
 
-const streamS3UrlToTmpFile = (sourceUrl) =>
-	new Promise(async (resolve, reject) => {
-		const tmpFile = await tmp.file({ extension: '.' + extensionFor(sourceUrl) });
-		console.log('TMP FILE FOR URL', sourceUrl, tmpFile);
-		const writeStream = fs.createWriteStream(tmpFile.path);
-		s3bucket
-			.getObject({ Key: sourceUrl.replace('https://assets.pubpub.org/', '') })
-			.createReadStream()
-			.on('end', () => {
-				return resolve(tmpFile);
-			})
-			.on('error', (error) => {
-				return reject(error);
-			})
-			.pipe(writeStream);
-	});
-
-const createPandocArgs = (pandocFormat, mediaDirPath, bibliographyPath) => {
+const createPandocArgs = (pandocFormat, tmpDirPath) => {
+	const shouldExtractMedia = ['odt', 'docx', 'epub'].includes(pandocFormat);
 	return [
 		[`--data-dir=${dataRoot}`],
 		['-f', pandocFormat],
 		['-t', 'json'],
-		mediaDirPath && [`--extract-media=${mediaDirPath}`],
-		bibliographyPath && [`--bibliography=${bibliographyPath}`],
+		shouldExtractMedia && [`--extract-media=${tmpDirPath}`],
 	]
 		.filter((x) => x)
 		.reduce((acc, next) => [...acc, ...next], []);
@@ -84,10 +64,6 @@ const callPandoc = (file, args) =>
 			if (err && err.message) {
 				console.warn(err.message);
 			}
-			/* This callback is called multiple times */
-			/* err is sent multiple times and includes warnings */
-			/* So to check if the file generated, check the size */
-			/* of the tmp file. */
 			if (result && !err) {
 				resolve(result);
 			}
@@ -97,7 +73,33 @@ const callPandoc = (file, args) =>
 		}),
 	);
 
-export default async (sourceFiles) => {
+const createTransformResourceGetter = (getUrlByLocalPath, getBibliographyItemById, warnings) => (
+	resource,
+	context,
+) => {
+	if (context === 'citation') {
+		const item = getBibliographyItemById(resource);
+		if (item) {
+			return item;
+		}
+		warnings.push({ type: 'missingCitation', id: resource });
+		return { structuredValue: '', unstructuredValue: '' };
+	}
+	if (context === 'image') {
+		if (resource.startsWith('http://') || resource.startsWith('https://')) {
+			return resource;
+		}
+		const url = getUrlByLocalPath(resource);
+		if (url) {
+			return `https://assets.pubpub.org/${url}`;
+		}
+		warnings.push({ type: 'missingImage', path: resource });
+		return resource;
+	}
+	return resource;
+};
+
+export default async ({ sourceFiles }) => {
 	const document = sourceFiles.find((file) => file.label === 'document');
 	const bibliography = sourceFiles.find((file) => file.label === 'bibliography');
 	if (!document) {
@@ -108,15 +110,26 @@ export default async (sourceFiles) => {
 	if (!pandocFormat) {
 		throw new Error(`Cannot find Pandoc format for .${extension} file.`);
 	}
-	const shouldExtractMedia = ['odt', 'docx', 'epub'].includes(pandocFormat);
-	const mediaDir = shouldExtractMedia && (await tmp.dir());
-	const documentFile = await streamS3UrlToTmpFile(document.url);
-	const bibliographyFile = bibliography && (await streamS3UrlToTmpFile(bibliography.url));
-	const pandocArgs = createPandocArgs(
-		pandocFormat,
-		mediaDir && mediaDir.path,
-		bibliographyFile && bibliographyFile.path,
+	const { tmpDir, getTmpPathByLocalPath } = await buildTmpDirectory(sourceFiles);
+	const pandocResult = JSON.parse(
+		await callPandoc(
+			getTmpPathByLocalPath(document.localPath),
+			createPandocArgs(pandocFormat, tmpDir.path),
+		),
 	);
-	const pandocResult = await callPandoc(documentFile.path, pandocArgs);
-	return pandocResult;
+	const pandocAst = parsePandocJson(pandocResult);
+	const getBibliographyItemById = extractBibliographyItems(
+		pandocAst,
+		bibliography && getTmpPathByLocalPath(bibliography.localPath),
+	);
+	const getUrlByLocalPath = createUrlGetter(sourceFiles, document.localPath);
+	const warnings = [];
+	const prosemirrorDoc = fromPandoc(pandocAst, pandocRules, {
+		resource: createTransformResourceGetter(
+			getUrlByLocalPath,
+			getBibliographyItemById,
+			warnings,
+		),
+	}).asNode();
+	return { doc: prosemirrorDoc, warnings: warnings };
 };

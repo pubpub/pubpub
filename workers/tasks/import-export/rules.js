@@ -1,5 +1,5 @@
 import { buildRuleset, commonTransformers, transformUtil } from '@pubpub/prosemirror-pandoc';
-import { nodes, marks } from '@pubpub/editor/dist/schemas';
+import { defaultNodes, defaultMarks } from '@pubpub/editor/dist/schemas';
 
 import * as katex from 'katex';
 
@@ -25,8 +25,8 @@ const {
 const { textFromStrSpace, textToStrSpace, createAttr, intersperse, flatten } = transformUtil;
 
 const rules = buildRuleset({
-	nodes: nodes,
-	marks: marks,
+	nodes: defaultNodes,
+	marks: defaultMarks,
 });
 
 // Top-level transformer for a doc
@@ -101,7 +101,7 @@ rules.transform('Header', 'heading', {
 			type: 'heading',
 			attrs: {
 				level: node.level,
-				id: node.attr.identifier,
+				fixedId: node.attr.identifier,
 			},
 			content: transform(node.content).asArray(),
 		};
@@ -236,16 +236,23 @@ rules.fromProsemirror('image', (node) => {
 // ~~~ Rules for citations and footnotes ~~~ //
 
 rules.transform('Cite', 'citation', {
-	fromPandoc: (node, { count }) => {
-		const { content } = node;
-		const unstructuredValue = pandocInlineToHtmlString(content);
-		return {
-			type: 'citation',
-			attrs: {
-				unstructuredValue: unstructuredValue,
-				count: 1 + count('Cite'),
-			},
-		};
+	fromPandoc: (node, { count, resource }) => {
+		const { citations } = node;
+		return citations.map((citation) => {
+			const { structuredValue, unstructuredValue } = resource(
+				citation.citationId,
+				'citation',
+			);
+			return {
+				type: 'citation',
+				attrs: {
+					value: structuredValue || unstructuredValue,
+					structuredValue: structuredValue,
+					unstructuredValue: unstructuredValue,
+					count: 1 + count('Cite'),
+				},
+			};
+		});
 	},
 	fromProsemirror: (node) => {
 		const inputHtml = node.attrs.html || node.attrs.unstructuredValue;
@@ -273,10 +280,11 @@ rules.transform('Cite', 'citation', {
 rules.transform('Note', 'footnote', {
 	fromPandoc: (node, { count }) => {
 		const { content } = node;
+		const value = pandocBlocksToHtmlString(content);
 		return {
 			type: 'footnote',
 			attrs: {
-				unstructuredValue: pandocBlocksToHtmlString(content),
+				value: value,
 				count: 1 + count('Note'),
 			},
 		};

@@ -59,7 +59,7 @@ const createNewImport = async (sourceFiles) => {
 	const input = { sourceFiles: sourceFiles };
 	const workerTask = await WorkerTask.create({
 		isProcessing: true,
-		type: 'new-import',
+		type: 'import',
 		input: input,
 	});
 	await addWorkerTask(
