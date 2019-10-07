@@ -8,7 +8,6 @@ export { default as CommunityPreview } from './CommunityPreview/CommunityPreview
 export { default as ConfirmDialog } from './ConfirmDialog/ConfirmDialog';
 export { default as DragDropListing } from './DragDropListing/DragDropListing';
 export { default as DropdownButton } from './DropdownButton/DropdownButton';
-export { default as FileImport } from './FileImport/FileImport';
 export { default as FileUploadButton } from './FileUploadButton/FileUploadButton';
 export { default as Footer } from './Footer/Footer';
 export { default as FormattingBar } from './FormattingBar/FormattingBar';

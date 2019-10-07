@@ -5,7 +5,9 @@ import { parsePandocJson, fromPandoc } from '@pubpub/prosemirror-pandoc';
 
 import pandocRules from './rules';
 import { buildTmpDirectory } from './tmpDirectory';
-import { extractBibliographyItems } from './bibliography';
+import { extractBibliographyItems, extractRefBlocks } from './bibliography';
+import { uploadExtractedMedia } from './extractedMedia';
+import { extensionFor } from './util';
 
 export const extensionToPandocFormat = {
 	docx: 'docx',
@@ -18,32 +20,7 @@ export const extensionToPandocFormat = {
 	tex: 'latex',
 };
 
-const isPubPubProduction = !!process.env.PUBPUB_PRODUCTION;
 const dataRoot = process.env.NODE_ENV === 'production' ? '/app/.apt/usr/share/pandoc/data ' : '';
-
-const createUrlGetter = (sourceFiles, documentLocalPath) => (resourceRelativePath) => {
-	// First, try to find a file in the uploads with the exact relative path
-	const documentContainer = path.dirname(documentLocalPath);
-	for (const { localPath, url } of sourceFiles) {
-		if (resourceRelativePath === path.relative(documentContainer, localPath)) {
-			return url;
-		}
-	}
-	// Having failed, just look for a source file with the same name as the requested file.
-	const baseName = path.basename(resourceRelativePath);
-	for (const { localPath, url } of sourceFiles) {
-		if (localPath === baseName) {
-			return url;
-		}
-	}
-	return null;
-};
-
-const extensionFor = (filePath) =>
-	filePath
-		.split('.')
-		.pop()
-		.toLowerCase();
 
 const createPandocArgs = (pandocFormat, tmpDirPath) => {
 	const shouldExtractMedia = ['odt', 'docx', 'epub'].includes(pandocFormat);
@@ -60,18 +37,38 @@ const createPandocArgs = (pandocFormat, tmpDirPath) => {
 const callPandoc = (file, args) =>
 	new Promise((resolve, reject) =>
 		nodePandoc(file, args, (err, result) => {
-			console.warn(err);
-			if (err && err.message) {
-				console.warn(err.message);
-			}
 			if (result && !err) {
 				resolve(result);
 			}
 			if (result && err) {
-				reject(new Error('Error in Pandoc'));
+				reject(err && err.message);
 			}
 		}),
 	);
+
+const createUrlGetter = (sourceFiles, documentLocalPath) => (resourcePath) => {
+	// First, try to find a file in the uploads with the exact path
+	for (const { localPath, url } of sourceFiles) {
+		if (resourcePath === localPath) {
+			return url;
+		}
+	}
+	// First, try to find a file in the uploads with the same relative path
+	const documentContainer = path.dirname(documentLocalPath);
+	for (const { localPath, url } of sourceFiles) {
+		if (resourcePath === path.relative(documentContainer, localPath)) {
+			return url;
+		}
+	}
+	// Having failed, just look for a source file with the same name as the requested file.
+	const baseName = path.basename(resourcePath);
+	for (const { localPath, url } of sourceFiles) {
+		if (path.basename(localPath) === baseName) {
+			return url;
+		}
+	}
+	return null;
+};
 
 const createTransformResourceGetter = (getUrlByLocalPath, getBibliographyItemById, warnings) => (
 	resource,
@@ -99,7 +96,7 @@ const createTransformResourceGetter = (getUrlByLocalPath, getBibliographyItemByI
 	return resource;
 };
 
-export default async ({ sourceFiles }) => {
+const importFiles = async ({ sourceFiles }) => {
 	const document = sourceFiles.find((file) => file.label === 'document');
 	const bibliography = sourceFiles.find((file) => file.label === 'bibliography');
 	if (!document) {
@@ -117,12 +114,19 @@ export default async ({ sourceFiles }) => {
 			createPandocArgs(pandocFormat, tmpDir.path),
 		),
 	);
-	const pandocAst = parsePandocJson(pandocResult);
+	if (typeof pandocResult !== 'object') {
+		throw new Error('Could not convert document.');
+	}
+	const extractedMedia = await uploadExtractedMedia(tmpDir);
+	const { pandocAst, refBlocks } = extractRefBlocks(parsePandocJson(pandocResult));
 	const getBibliographyItemById = extractBibliographyItems(
-		pandocAst,
+		refBlocks,
 		bibliography && getTmpPathByLocalPath(bibliography.localPath),
 	);
-	const getUrlByLocalPath = createUrlGetter(sourceFiles, document.localPath);
+	const getUrlByLocalPath = createUrlGetter(
+		[...sourceFiles, ...extractedMedia],
+		document.localPath,
+	);
 	const warnings = [];
 	const prosemirrorDoc = fromPandoc(pandocAst, pandocRules, {
 		resource: createTransformResourceGetter(
@@ -133,3 +137,6 @@ export default async ({ sourceFiles }) => {
 	}).asNode();
 	return { doc: prosemirrorDoc, warnings: warnings };
 };
+
+export default ({ sourceFiles }) =>
+	importFiles({ sourceFiles: sourceFiles }).catch((error) => ({ error: error.toString() }));

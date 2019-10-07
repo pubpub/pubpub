@@ -31,7 +31,7 @@ const FileImportEntry = (props) => {
 			return (
 				<React.Fragment>
 					<Icon icon="tick" iconSize={14} />
-					Upload complete
+					Uploaded
 				</React.Fragment>
 			);
 		}
@@ -61,7 +61,7 @@ const FileImportEntry = (props) => {
 
 	return (
 		<div className="file-import-entry">
-			<div className="file-title">
+			<div className="file-title" title={localPath}>
 				<span className="start">{displayTitleStart}</span>
 				<span className="end">{displayTitleEnd}</span>
 				{label && <div className="file-label">{renderLabel()}</div>}

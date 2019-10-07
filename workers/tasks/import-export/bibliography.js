@@ -1,6 +1,22 @@
 import { spawnSync } from 'child_process';
 import Cite from 'citation-js';
 
+export const extractRefBlocks = (pandocAst) => {
+	const refsBlock = pandocAst.blocks.find(
+		(block) => block.attrs && block.attrs.identifier === 'refs',
+	);
+	if (refsBlock) {
+		return {
+			pandocAst: {
+				...pandocAst,
+				blocks: pandocAst.blocks.filter((block) => block !== refsBlock),
+			},
+			refBlocks: refsBlock.content,
+		};
+	}
+	return { pandocAst: pandocAst, refBlocks: null };
+};
+
 const createIdToCiteGetter = (array, processEntry) => {
 	const map = new Map();
 	array.forEach((entry) => {
@@ -23,5 +39,5 @@ export const extractBibliographyItems = (pandocAst, bibliographyTmpPath) => {
 	if (bibliographyTmpPath) {
 		return extractUsingPandocCiteproc(bibliographyTmpPath);
 	}
-	return null;
+	return () => null;
 };

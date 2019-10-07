@@ -112,7 +112,6 @@
 		"firebase": "^6.1.1",
 		"firebase-admin": "^8.1.0",
 		"fuzzysearch": "^1.0.3",
-		"html5-file-selector": "^2.1.0",
 		"install": "^0.12.2",
 		"js-cookie": "^2.2.0",
 		"katex": "^0.10.1",

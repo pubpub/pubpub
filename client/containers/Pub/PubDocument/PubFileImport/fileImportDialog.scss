@@ -1,0 +1,59 @@
+.file-import-dialog-component {
+    width: 500px !important;
+    .drop-area {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 150px;
+        background: rgba(138, 155, 168, .15);
+        .drop-area-icon {
+            margin-bottom: 10px;
+        }
+        .supported-documents {
+            font-size: 0.8em;
+            font-style: italic;
+        }
+        &.in-progress {
+            cursor: default;
+        }
+        &.directory-drop-area {
+            height: 30px;
+            color: white;
+            background: #6e6e6e;
+        }
+    }
+    .import-result {
+        margin-top: 10px;
+    }
+    .files-listing {
+        margin-top: 10px;
+    }
+    .bp3-drawer-footer {
+        text-align: right;
+    }
+}
+
+.pub-file-import-button-component {
+	height: 0px;
+	position: relative;
+	top: -175px;
+	text-align: center;
+	.bp3-intent-primary {
+		-webkit-appearance: none;
+	}
+	input {
+		display: none;
+	}
+	.bp3-button-text {
+		div:first-child {
+			font-size: 1.25em;
+			padding: 3px 0px 7px;
+		}
+		div:last-child {
+			font-size: 0.95em;
+		}
+	}
+}

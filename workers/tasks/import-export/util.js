@@ -56,3 +56,9 @@ export const htmlStringToPandocBlocks = (htmlString) => {
 	const pandocAst = getPandocDocForHtmlString(htmlString);
 	return pandocAst.blocks;
 };
+
+export const extensionFor = (filePath) =>
+	filePath
+		.split('.')
+		.pop()
+		.toLowerCase();
