@@ -163,7 +163,12 @@ rules.fromPandoc('SoftBreak', nullTransformer);
 rules.fromPandoc('Span', pandocPassThroughTransformer);
 rules.fromPandoc('Quoted', pandocPassThroughTransformer);
 
-rules.fromPandoc('RawBlock', pandocRawTransformer('text'));
+rules.fromPandoc('RawBlock', (node) => {
+	return {
+		type: 'paragraph',
+		content: [{ type: 'text', text: node.content }],
+	};
+});
 
 rules.fromPandoc('RawInline', (node) => {
 	const { format, content } = node;
