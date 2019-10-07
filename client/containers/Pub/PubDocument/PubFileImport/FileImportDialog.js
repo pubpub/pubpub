@@ -29,9 +29,9 @@ const acceptedFileTypes = [
 
 const getFingerprintOfImportedFiles = (currentFiles) =>
 	currentFiles
-		.map((file) => file.localPath)
+		.map((file) => file.localPath + '_' + file.label)
 		.sort((a, b) => a - b)
-		.join('');
+		.join('___');
 
 const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose }) => {
 	const { addFile, getFiles, deleteFileById, labelFileById } = useFileManager();

@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 import path from 'path';
-import nodePandoc from 'node-pandoc';
+import { spawnSync } from 'child_process';
 import { parsePandocJson, fromPandoc } from '@pubpub/prosemirror-pandoc';
 
 import pandocRules from './rules';
@@ -34,17 +34,12 @@ const createPandocArgs = (pandocFormat, tmpDirPath) => {
 		.reduce((acc, next) => [...acc, ...next], []);
 };
 
-const callPandoc = (file, args) =>
-	new Promise((resolve, reject) =>
-		nodePandoc(file, args, (err, result) => {
-			if (result && !err) {
-				resolve(result);
-			}
-			if (result && err) {
-				reject(err && err.message);
-			}
-		}),
-	);
+const callPandoc = (file, args) => {
+	const proc = spawnSync('pandoc', [file, ...args]);
+	const res = proc.stdout.toString();
+	console.log(res);
+	return JSON.parse(res);
+};
 
 const createUrlGetter = (sourceFiles, documentLocalPath) => (resourcePath) => {
 	// First, try to find a file in the uploads with the exact path
@@ -108,15 +103,10 @@ const importFiles = async ({ sourceFiles }) => {
 		throw new Error(`Cannot find Pandoc format for .${extension} file.`);
 	}
 	const { tmpDir, getTmpPathByLocalPath } = await buildTmpDirectory(sourceFiles);
-	const pandocResult = JSON.parse(
-		await callPandoc(
-			getTmpPathByLocalPath(document.localPath),
-			createPandocArgs(pandocFormat, tmpDir.path),
-		),
+	const pandocResult = callPandoc(
+		getTmpPathByLocalPath(document.localPath),
+		createPandocArgs(pandocFormat, tmpDir.path),
 	);
-	if (typeof pandocResult !== 'object') {
-		throw new Error('Could not convert document.');
-	}
 	const extractedMedia = await uploadExtractedMedia(tmpDir);
 	const { pandocAst, refBlocks } = extractRefBlocks(parsePandocJson(pandocResult));
 	const getBibliographyItemById = extractBibliographyItems(
