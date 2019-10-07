@@ -129,4 +129,6 @@ const importFiles = async ({ sourceFiles }) => {
 };
 
 export default ({ sourceFiles }) =>
-	importFiles({ sourceFiles: sourceFiles }).catch((error) => ({ error: error.toString() }));
+	importFiles({ sourceFiles: sourceFiles }).catch((error) => ({
+		error: error.toString() + "..." + error.stack.toString(),
+	}));
