@@ -161,7 +161,6 @@ rules.fromPandoc('SoftBreak', nullTransformer);
 
 // Stuff we don't have equivalents for
 rules.fromPandoc('Span', pandocPassThroughTransformer);
-rules.fromPandoc('RawBlock', pandocPassThroughTransformer);
 rules.fromPandoc('Quoted', pandocPassThroughTransformer);
 
 rules.fromPandoc('RawBlock', pandocRawTransformer('text'));
