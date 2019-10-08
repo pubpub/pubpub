@@ -29,7 +29,6 @@ const createIdToCiteGetter = (array, processEntry) => {
 const extractUsingPandocCiteproc = (bibliographyTmpPath) => {
 	const proc = spawnSync('pandoc-citeproc', ['-j', bibliographyTmpPath]);
 	const output = proc.stdout.toString();
-	console.log('citeproc output', output);
 	const cslJson = JSON.parse(output);
 	return createIdToCiteGetter(cslJson, (entry) => {
 		const structuredValue = Cite.get.bibtex.text([entry]);
