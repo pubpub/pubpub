@@ -24,7 +24,7 @@ export const bibliographyFormats = [
 	'ris',
 ];
 
-export const exclusiveFileLabels = ['bibliography'];
+export const exclusiveFileLabels = ['document', 'bibliography'];
 
 const extensionOf = (fileName) => {
 	const pieces = fileName.split('.');

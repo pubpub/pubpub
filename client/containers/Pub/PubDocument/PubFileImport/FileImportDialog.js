@@ -75,7 +75,9 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 				setImportResult(result);
 				setLastImportedFiles(getFingerprintOfImportedFiles(currentFiles));
 			})
-			.catch((err) => setImportResult({ error: err.toString }));
+			.catch((err) =>
+				setImportResult({ error: { message: err.toString(), stack: err.stack } }),
+			);
 	};
 
 	const renderContentInDropzone = (fn) => {
@@ -110,7 +112,7 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 		return (
 			<React.Fragment>
 				<Tooltip content={formatsNode}>
-					<span className={Classes.TOOLTIP_INDICATOR}>What formats are supported?</span>
+					<span className={Classes.TOOLTIP_INDICATOR}>What can I import?</span>
 				</Tooltip>
 				<div className="screenreader-only">{formatsNode}</div>
 			</React.Fragment>
@@ -121,7 +123,13 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 		if (error) {
 			return (
 				<Callout className="import-result" title="Import error" intent="danger">
-					{error.toString()}
+					{error.message ? error.message : error.toString()}
+					{error.stack && (
+						<details>
+							<summary>The gory details</summary>
+							<pre>{error.stack}</pre>
+						</details>
+					)}
 				</Callout>
 			);
 		}
@@ -145,20 +153,26 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 							{missingImages.length > 0 && (
 								<li>
 									<i>
-										Your document contains references to these images, which you
-										may wish to upload:
-									</i>{' '}
-									{missingImages.join(', ')}.
+										Your document contains references external images which you
+										may wish to upload.
+									</i>
+									<details>
+										<summary>Missing images</summary>
+										{missingImages.join(', ')}.
+									</details>
 								</li>
 							)}
 							{missingCitations.length > 0 && (
 								<li>
 									<i>
-										Your document contains references to bibliography entries
-										with these IDs:
-									</i>{' '}
-									{missingCitations.join(', ')}. You may wish to upload a .bib
-									file.
+										Some citations in the document could not be matched to a
+										bibliography item. You may wish to upload an external
+										bibliography (e.g. a .bib file).
+									</i>
+									<details>
+										<summary>Missing citation IDs</summary>
+										{missingCitations.join(', ')}.
+									</details>
 								</li>
 							)}
 						</ul>
@@ -187,29 +201,35 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 		>
 			<div className={Classes.DRAWER_BODY}>
 				<div className={Classes.DIALOG_BODY}>
-					{!isImporting &&
-						renderContentInDropzone(({ getRootProps, getInputProps }) => (
-							<div {...getRootProps()} className="drop-area">
-								<Icon icon="paperclip" iconSize={50} className="drop-area-icon" />
-								Click here or drag in files to upload them
-								<div className="supported-formats">{renderFormatTooltip()}</div>
-								<input {...getInputProps()} multiple />
-							</div>
-						))}
-					{!isImporting &&
-						renderContentInDropzone(({ getRootProps, getInputProps }) => (
-							<div {...getRootProps()} className="drop-area directory-drop-area">
-								Or, click here to upload an entire directory
-								<input {...getInputProps()} webkitdirectory="" />
-							</div>
-						))}
+					<div className="drop-area-container">
+						{!isImporting &&
+							renderContentInDropzone(({ getRootProps, getInputProps }) => (
+								<div {...getRootProps()} className="drop-area">
+									<Icon
+										icon="paperclip"
+										iconSize={50}
+										className="drop-area-icon"
+									/>
+									Click here or drag in files to upload them
+									<div className="supported-formats">{renderFormatTooltip()}</div>
+									<input {...getInputProps()} multiple />
+								</div>
+							))}
+						{!isImporting &&
+							renderContentInDropzone(({ getRootProps, getInputProps }) => (
+								<div {...getRootProps()} className="drop-area directory-drop-area">
+									Or, click here to upload an entire directory
+									<input {...getInputProps()} webkitdirectory="" />
+								</div>
+							))}
+					</div>
 					{isImporting && (
 						<div className="drop-area in-progress">
 							<Spinner size={50} className="drop-area-icon" />
 							<span aria-live="assertive">Importing your document...</span>
 						</div>
 					)}
-					{renderImportResult()}
+					{!isImporting && renderImportResult()}
 					<div className="files-listing">
 						<div className="screenreader-only" aria-live="polite">
 							{incompleteUploads.length > 0

@@ -103,10 +103,15 @@ const importFiles = async ({ sourceFiles }) => {
 		throw new Error(`Cannot find Pandoc format for .${extension} file.`);
 	}
 	const { tmpDir, getTmpPathByLocalPath } = await buildTmpDirectory(sourceFiles);
-	const pandocResult = callPandoc(
-		[document, ...supplements].map((file) => getTmpPathByLocalPath(file.localPath)),
-		createPandocArgs(pandocFormat, tmpDir.path),
-	);
+	let pandocResult;
+	try {
+		pandocResult = callPandoc(
+			[document, ...supplements].map((file) => getTmpPathByLocalPath(file.localPath)),
+			createPandocArgs(pandocFormat, tmpDir.path),
+		);
+	} catch (err) {
+		throw new Error(`Conversion from ${path.basename(document.localPath)} failed.`);
+	}
 	const extractedMedia = await uploadExtractedMedia(tmpDir);
 	const { pandocAst, refBlocks } = extractRefBlocks(parsePandocJson(pandocResult));
 	const getBibliographyItemById = extractBibliographyItems(
@@ -130,5 +135,8 @@ const importFiles = async ({ sourceFiles }) => {
 
 export default ({ sourceFiles }) =>
 	importFiles({ sourceFiles: sourceFiles }).catch((error) => ({
-		error: error.toString() + '...' + error.stack.toString(),
+		error: {
+			message: error.toString(),
+			stack: error.stack.toString(),
+		},
 	}));
