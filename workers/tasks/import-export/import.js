@@ -37,7 +37,6 @@ const createPandocArgs = (pandocFormat, tmpDirPath) => {
 const callPandoc = (file, args) => {
 	const proc = spawnSync('pandoc', [file, ...args]);
 	const res = proc.stdout.toString();
-	console.log(res);
 	return JSON.parse(res);
 };
 

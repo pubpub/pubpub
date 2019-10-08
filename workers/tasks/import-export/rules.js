@@ -19,7 +19,6 @@ const {
 	nullTransformer,
 	pandocPassThroughTransformer,
 	tableTransformer,
-	pandocRawTransformer,
 } = commonTransformers;
 
 const { textFromStrSpace, textToStrSpace, createAttr, intersperse, flatten } = transformUtil;
