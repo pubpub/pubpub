@@ -5,7 +5,7 @@ import { parsePandocJson, fromPandoc } from '@pubpub/prosemirror-pandoc';
 
 import pandocRules from './rules';
 import { buildTmpDirectory } from './tmpDirectory';
-import { extractBibliographyItems, extractRefBlocks } from './bibliography';
+import { extractBibliographyItems } from './bibliography';
 import { uploadExtractedMedia } from './extractedMedia';
 import { extensionFor } from './util';
 
@@ -36,8 +36,9 @@ const createPandocArgs = (pandocFormat, tmpDirPath) => {
 
 const callPandoc = (files, args) => {
 	const proc = spawnSync('pandoc', [...files, ...args]);
-	const res = proc.stdout.toString();
-	return JSON.parse(res);
+	const output = proc.stdout.toString();
+	const error = proc.stderr.toString();
+	return { output: output, error: error };
 };
 
 const createUrlGetter = (sourceFiles, documentLocalPath) => (resourcePath) => {
@@ -103,19 +104,25 @@ const importFiles = async ({ sourceFiles }) => {
 		throw new Error(`Cannot find Pandoc format for .${extension} file.`);
 	}
 	const { tmpDir, getTmpPathByLocalPath } = await buildTmpDirectory(sourceFiles);
-	let pandocResult;
+	let pandocRawAst;
+	let pandocError;
 	try {
-		pandocResult = callPandoc(
+		const pandocResult = callPandoc(
 			[document, ...supplements].map((file) => getTmpPathByLocalPath(file.localPath)),
 			createPandocArgs(pandocFormat, tmpDir.path),
 		);
+		pandocError = pandocResult.error;
+		pandocRawAst = JSON.parse(pandocResult.output);
 	} catch (err) {
-		throw new Error(`Conversion from ${path.basename(document.localPath)} failed.`);
+		throw new Error(
+			`Conversion from ${path.basename(
+				document.localPath,
+			)} failed. Pandoc says: ${pandocError}`,
+		);
 	}
 	const extractedMedia = await uploadExtractedMedia(tmpDir);
-	const { pandocAst, refBlocks } = extractRefBlocks(parsePandocJson(pandocResult));
+	const pandocAst = parsePandocJson(pandocRawAst);
 	const getBibliographyItemById = extractBibliographyItems(
-		refBlocks,
 		bibliography && getTmpPathByLocalPath(bibliography.localPath),
 	);
 	const getUrlByLocalPath = createUrlGetter(

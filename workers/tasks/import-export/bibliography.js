@@ -36,7 +36,7 @@ const extractUsingPandocCiteproc = (bibliographyTmpPath) => {
 	});
 };
 
-export const extractBibliographyItems = (pandocAst, bibliographyTmpPath) => {
+export const extractBibliographyItems = (bibliographyTmpPath) => {
 	if (bibliographyTmpPath) {
 		return extractUsingPandocCiteproc(bibliographyTmpPath);
 	}

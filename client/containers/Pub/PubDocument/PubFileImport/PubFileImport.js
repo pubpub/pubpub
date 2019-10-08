@@ -44,7 +44,7 @@ const PubFileImport = (props) => {
 					onClick={() => setIsDialogOpen(true)}
 					text={
 						<div>
-							<div>Import File</div>
+							<div>Import Files</div>
 							<div>.docx, .epub, .html, .md, .odt, .txt, .xml, or .tex</div>
 						</div>
 					}
