@@ -34,8 +34,8 @@ const createPandocArgs = (pandocFormat, tmpDirPath) => {
 		.reduce((acc, next) => [...acc, ...next], []);
 };
 
-const callPandoc = (file, args) => {
-	const proc = spawnSync('pandoc', [file, ...args]);
+const callPandoc = (files, args) => {
+	const proc = spawnSync('pandoc', [...files, ...args]);
 	const res = proc.stdout.toString();
 	return JSON.parse(res);
 };
@@ -93,6 +93,7 @@ const createTransformResourceGetter = (getUrlByLocalPath, getBibliographyItemByI
 const importFiles = async ({ sourceFiles }) => {
 	const document = sourceFiles.find((file) => file.label === 'document');
 	const bibliography = sourceFiles.find((file) => file.label === 'bibliography');
+	const supplements = sourceFiles.filter((file) => file.label === 'supplement');
 	if (!document) {
 		throw new Error('No target document specified.');
 	}
@@ -103,7 +104,7 @@ const importFiles = async ({ sourceFiles }) => {
 	}
 	const { tmpDir, getTmpPathByLocalPath } = await buildTmpDirectory(sourceFiles);
 	const pandocResult = callPandoc(
-		getTmpPathByLocalPath(document.localPath),
+		[document, ...supplements].map((file) => getTmpPathByLocalPath(file.localPath)),
 		createPandocArgs(pandocFormat, tmpDir.path),
 	);
 	const extractedMedia = await uploadExtractedMedia(tmpDir);

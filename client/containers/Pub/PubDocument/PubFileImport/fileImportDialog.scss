@@ -12,7 +12,7 @@
         .drop-area-icon {
             margin-bottom: 10px;
         }
-        .supported-documents {
+        .supported-formats {
             font-size: 0.8em;
             font-style: italic;
         }
@@ -56,4 +56,11 @@
 			font-size: 0.95em;
 		}
 	}
+}
+
+.supported-formats-tooltip {
+    width: 300px;
+    li {
+        margin-bottom: 10px;
+    }
 }

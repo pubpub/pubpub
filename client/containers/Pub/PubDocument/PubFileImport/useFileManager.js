@@ -2,46 +2,9 @@ import { useState } from 'react';
 
 import { s3Upload } from '../../../../utils';
 
+import { exclusiveFileLabels, labelFiles } from './formats';
+
 let fileIdCounter = 0;
-
-export const extensionToPandocFormat = {
-	docx: 'docx',
-	epub: 'epub',
-	html: 'html',
-	md: 'markdown_strict',
-	odt: 'odt',
-	txt: 'plain',
-	xml: 'jats',
-	tex: 'latex',
-};
-
-const extensionOf = (fileName) => {
-	const pieces = fileName.split('.');
-	return pieces[pieces.length - 1];
-};
-
-const fileIsValidDocument = (file) =>
-	Object.keys(extensionToPandocFormat).includes(extensionOf(file.localPath));
-
-const labelFiles = (files) => {
-	const bibliography =
-		files.find((file) => file.label === 'bibliography') ||
-		files.find((file) => extensionOf(file.localPath) === 'bib');
-	const target =
-		files.find((file) => file.label === 'document') || files.find(fileIsValidDocument);
-	return files.map((file) => {
-		if (file === target) {
-			return { ...file, label: 'document' };
-		}
-		if (fileIsValidDocument(file)) {
-			return { ...file, label: 'potential-document' };
-		}
-		if (file === bibliography) {
-			return { ...file, label: 'bibliography' };
-		}
-		return file;
-	});
-};
 
 export const useFileManager = () => {
 	const [files, setFiles] = useState([]);
@@ -60,17 +23,23 @@ export const useFileManager = () => {
 			),
 		);
 
-	const labelFileById = (fileId, newLabel) =>
+	const labelFileById = (fileId, newLabel) => {
+		const isExclusiveLabel = exclusiveFileLabels.includes(newLabel);
 		setFiles((currentFiles) =>
 			labelFiles(
 				currentFiles.map((file) => {
 					const { label } = file;
 					const nextLabel =
-						fileId === file.id ? newLabel : label === newLabel ? null : label;
+						fileId === file.id
+							? newLabel
+							: label === newLabel && isExclusiveLabel
+							? null
+							: label;
 					return { ...file, label: nextLabel };
 				}),
 			),
 		);
+	};
 
 	const deleteFileById = (fileId) =>
 		setFiles((currentFiles) => labelFiles(currentFiles.filter((file) => file.id !== fileId)));

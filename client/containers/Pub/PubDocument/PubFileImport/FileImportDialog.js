@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
-import { Button, ButtonGroup, Callout, Classes, Drawer, Icon, Spinner } from '@blueprintjs/core';
+import {
+	Button,
+	ButtonGroup,
+	Callout,
+	Classes,
+	Drawer,
+	Icon,
+	Spinner,
+	Tooltip,
+} from '@blueprintjs/core';
 
 import { apiFetch } from 'utils';
 import { pingTask } from 'utils/pingTask';
 
 import FileImportEntry from './FileImportEntry';
-import { useFileManager, extensionToPandocFormat } from './useFileManager';
+import { useFileManager } from './useFileManager';
+import { extensionToPandocFormat, bibliographyFormats } from './formats';
 import { importDocToEditor } from './importDocToEditor';
 
 require('./fileImportDialog.scss');
@@ -21,11 +31,10 @@ const propTypes = {
 	onClose: PropTypes.func.isRequired,
 };
 
-const acceptedFileTypes = [
-	...Object.keys(extensionToPandocFormat).map((ext) => `.${ext}`),
-	'.bib',
-	'image/*',
-].join(',');
+const documentExtensions = Object.keys(extensionToPandocFormat).map((ext) => `.${ext}`);
+const bibliographyExtensions = bibliographyFormats.map((ext) => `.${ext}`);
+
+const acceptedFileTypes = [...documentExtensions, ...bibliographyExtensions, 'image/*'].join(',');
 
 const getFingerprintOfImportedFiles = (currentFiles) =>
 	currentFiles
@@ -36,14 +45,14 @@ const getFingerprintOfImportedFiles = (currentFiles) =>
 const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose }) => {
 	const { addFile, getFiles, deleteFileById, labelFileById } = useFileManager();
 	const currentFiles = getFiles();
-	const hasPendingUploads = currentFiles.some((file) => file.state !== 'complete');
+	const incompleteUploads = currentFiles.filter((file) => file.state !== 'complete');
 	const hasDocumentToImport = currentFiles.some((file) => file.label === 'document');
 	const [importResult, setImportResult] = useState({});
 	const [isImporting, setIsImporting] = useState(false);
 	const [lastImportedFiles, setLastImportedFiles] = useState('');
 	const importedFilesMatchCurrentFiles =
 		!!importResult && lastImportedFiles === getFingerprintOfImportedFiles(currentFiles);
-	const isImportDisabled = !hasDocumentToImport || hasPendingUploads || isImporting;
+	const isImportDisabled = !hasDocumentToImport || incompleteUploads.length > 0 || isImporting;
 	const { doc, warnings = [], error } = importResult;
 
 	const handleFinishImport = () => {
@@ -65,7 +74,8 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 				setIsImporting(false);
 				setImportResult(result);
 				setLastImportedFiles(getFingerprintOfImportedFiles(currentFiles));
-			});
+			})
+			.catch((err) => setImportResult({ error: err.toString }));
 	};
 
 	const renderContentInDropzone = (fn) => {
@@ -75,6 +85,35 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 				onDrop={(files) => files.map(addFile)}
 				children={fn}
 			/>
+		);
+	};
+
+	const renderFormatTooltip = () => {
+		const formatsNode = (
+			<ul className="supported-formats-tooltip">
+				<li>
+					Supports <i>documents</i> in these formats: {documentExtensions.join(', ')}. You
+					can also use one or more documents as <i>supplements</i> to be passed to the
+					converter, for instance if your document is a .tex file and relies on one or
+					more other .tex files.
+				</li>
+				<li>
+					Supports <i>bibliographies</i> in these formats:{' '}
+					{bibliographyExtensions.join(', ')}.
+				</li>
+				<li>
+					Supports all image formats, though you may wish to convert your images to a
+					format with wide browser support.
+				</li>
+			</ul>
+		);
+		return (
+			<React.Fragment>
+				<Tooltip content={formatsNode}>
+					<span className={Classes.TOOLTIP_INDICATOR}>What formats are supported?</span>
+				</Tooltip>
+				<div className="screenreader-only">{formatsNode}</div>
+			</React.Fragment>
 		);
 	};
 
@@ -96,7 +135,12 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 
 			if (missingImages.length > 0 || missingCitations.length > 0) {
 				return (
-					<Callout className="import-result" title="Import warnings" intent="warning">
+					<Callout
+						aria-live="assertive"
+						className="import-result"
+						title="Import warnings"
+						intent="warning"
+					>
 						<ul>
 							{missingImages.length > 0 && (
 								<li>
@@ -121,7 +165,14 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 					</Callout>
 				);
 			}
-			return <Callout className="import-result" title="Import succeeded" intent="success" />;
+			return (
+				<Callout
+					aria-live="polite"
+					className="import-result"
+					title="Import succeeded"
+					intent="success"
+				/>
+			);
 		}
 		return null;
 	};
@@ -141,10 +192,7 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 							<div {...getRootProps()} className="drop-area">
 								<Icon icon="paperclip" iconSize={50} className="drop-area-icon" />
 								Click here or drag in files to upload them
-								<div className="supported-documents">
-									Supports documents as .docx, .epub, .html, .md, .odt, .txt,
-									.xml, or .tex files.
-								</div>
+								<div className="supported-formats">{renderFormatTooltip()}</div>
 								<input {...getInputProps()} multiple />
 							</div>
 						))}
@@ -158,18 +206,25 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 					{isImporting && (
 						<div className="drop-area in-progress">
 							<Spinner size={50} className="drop-area-icon" />
-							Importing your document...
+							<span aria-live="assertive">Importing your document...</span>
 						</div>
 					)}
 					{renderImportResult()}
 					<div className="files-listing">
+						<div className="screenreader-only" aria-live="polite">
+							{incompleteUploads.length > 0
+								? `${currentFiles.length - incompleteUploads.length} of ${
+										currentFiles.length
+								  } files uploaded.`
+								: `${currentFiles.length} files uploaded.`}
+						</div>
 						{currentFiles.map((file, index) => (
 							<FileImportEntry
 								// eslint-disable-next-line react/no-array-index-key
 								key={index}
 								file={file}
 								onDelete={() => deleteFileById(file.id)}
-								onSelectAsDocument={() => labelFileById(file.id, 'document')}
+								onLabelFile={(label) => labelFileById(file.id, label)}
 							/>
 						))}
 					</div>

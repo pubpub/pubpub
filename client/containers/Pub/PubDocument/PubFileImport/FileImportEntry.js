@@ -1,6 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon, ProgressBar, Tag, Button } from '@blueprintjs/core';
+import {
+	Icon,
+	ProgressBar,
+	Tag,
+	Button,
+	Popover,
+	Menu,
+	MenuItem,
+	Classes,
+} from '@blueprintjs/core';
+
+import { getPotentialLabelsForFile } from './formats';
 
 const propTypes = {
 	file: PropTypes.shape({
@@ -10,18 +21,15 @@ const propTypes = {
 		total: PropTypes.number,
 		label: PropTypes.string,
 	}).isRequired,
-	onSelectAsDocument: PropTypes.func.isRequired,
+	onLabelFile: PropTypes.func.isRequired,
 	onDelete: PropTypes.func.isRequired,
 };
 
 require('./fileImportEntry.scss');
 
 const FileImportEntry = (props) => {
-	const {
-		file: { loaded, total, state, localPath, label },
-		onDelete,
-		onSelectAsDocument,
-	} = props;
+	const { file, onDelete, onLabelFile } = props;
+	const { loaded, total, state, localPath, label } = file;
 	const displayTitleBreak = Math.max(localPath.length - 5, 0);
 	const displayTitleStart = localPath.slice(0, displayTitleBreak);
 	const displayTitleEnd = localPath.slice(displayTitleBreak);
@@ -49,25 +57,53 @@ const FileImportEntry = (props) => {
 	};
 
 	const renderLabel = () => {
-		if (label === 'potential-document') {
-			return (
-				<Tag interactive onClick={onSelectAsDocument} icon="locate">
-					select as document
-				</Tag>
-			);
+		const potentialLabels = getPotentialLabelsForFile(file);
+		const hasLabel = label && label !== 'none';
+		if (potentialLabels.length === 0) {
+			return null;
 		}
-		return <Tag intent="success">{label}</Tag>;
+		return (
+			<Popover
+				content={
+					<Menu>
+						<h6 className={Classes.MENU_HEADER}>Use as...</h6>
+						{['none', ...potentialLabels].map((potentialLabel) => {
+							const text = potentialLabel === 'none' ? <i>(none)</i> : potentialLabel;
+							return (
+								<MenuItem text={text} onClick={() => onLabelFile(potentialLabel)} />
+							);
+						})}
+					</Menu>
+				}
+			>
+				{hasLabel && (
+					<Tag interactive intent="success">
+						{label}
+					</Tag>
+				)}
+				{!hasLabel && (
+					<Tag interactive icon="locate">
+						use as...
+					</Tag>
+				)}
+			</Popover>
+		);
 	};
 
 	return (
 		<div className="file-import-entry">
-			<div className="file-title" title={localPath}>
-				<span className="start">{displayTitleStart}</span>
-				<span className="end">{displayTitleEnd}</span>
-				{label && <div className="file-label">{renderLabel()}</div>}
+			<div className="file-title">
+				<span className="start" aria-label={localPath}>
+					<span aria-hidden="true">{displayTitleStart}</span>
+				</span>
+				<span className="end" aria-hidden="true">
+					{displayTitleEnd}
+				</span>
+				<div className="file-label">{renderLabel()}</div>
 			</div>
 			<div className="file-progress">{renderProgressContent()}</div>
 			<Button
+				aria-label="delete"
 				onClick={onDelete}
 				className="file-delete-button"
 				icon="small-cross"

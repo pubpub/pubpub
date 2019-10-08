@@ -25,6 +25,7 @@
     .file-label {
       flex-shrink: 0;
       margin: 0 5px;
+      user-select: none;
     }
     .file-progress {
         display: flex;
