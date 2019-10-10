@@ -171,6 +171,7 @@
 		"webpack": "^4.29.6",
 		"webpack-manifest-plugin": "^2.0.4",
 		"xmlbuilder": "^13.0.2",
+		"yaml": "^1.6.0",
 		"yargs": "^13.2.4"
 	},
 	"engines": {
