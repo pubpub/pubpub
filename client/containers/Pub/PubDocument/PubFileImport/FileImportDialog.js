@@ -203,38 +203,40 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 		>
 			<div className={Classes.DRAWER_BODY}>
 				<div className={Classes.DIALOG_BODY}>
-					<div className="drop-area-container">
-						{!isImporting &&
-							renderContentInDropzone(({ getRootProps, getInputProps }) => (
-								<div {...getRootProps()} className="drop-area">
-									<NonIdealState
-										icon="paperclip"
-										description={
-											<React.Fragment>
-												Click here or drag in files to upload them
-												<div className="supported-formats">
-													{renderFormatTooltip()}
-												</div>
-											</React.Fragment>
-										}
-									/>
+					{!isImporting && (
+						<ButtonGroup className="drop-area-container" vertical>
+							{renderContentInDropzone(({ getRootProps, getInputProps }) => (
+								<React.Fragment>
+									<Button {...getRootProps()} className="file-drop-area">
+										<NonIdealState
+											icon="paperclip"
+											description={
+												<React.Fragment>
+													Click here or drag in files to upload them
+													<div className="supported-formats">
+														{renderFormatTooltip()}
+													</div>
+												</React.Fragment>
+											}
+										/>
+									</Button>
 									<input {...getInputProps()} multiple />
-								</div>
+								</React.Fragment>
 							))}
-						{!isImporting &&
-							renderContentInDropzone(({ getRootProps, getInputProps }) => (
-								<div {...getRootProps()} className="drop-area directory-drop-area">
+							{renderContentInDropzone(({ getRootProps, getInputProps }) => (
+								<React.Fragment>
+									<input {...getInputProps()} webkitdirectory="" />
 									<Button
-										large
-										fill
+										{...getRootProps()}
+										className="directory-drop-area"
 										text="Or, click here to upload an entire directory"
 									/>
-									<input {...getInputProps()} webkitdirectory="" />
-								</div>
+								</React.Fragment>
 							))}
-					</div>
+						</ButtonGroup>
+					)}
 					{isImporting && (
-						<div className="drop-area in-progress">
+						<div className="in-progress">
 							<Spinner size={50} className="drop-area-icon" />
 							<span aria-live="assertive">Importing your document...</span>
 						</div>

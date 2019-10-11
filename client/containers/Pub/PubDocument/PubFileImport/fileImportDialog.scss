@@ -1,29 +1,48 @@
+$drop-area-bkg: rgba(138, 155, 168, .15);
+
+@mixin fix-button {
+    box-shadow: none;
+    border: 1px #ddd solid;
+    &:hover {
+        box-shadow: none;
+        border: 1px #ddd solid;
+    }
+}
+
 .file-import-dialog-component {
     width: 500px !important;
     .drop-area-container {
-        border-radius: 3px;
-        overflow: hidden;
+        width: 100%;
     }
-    .drop-area {
-        cursor: pointer;
+    .file-drop-area {
+        @include fix-button();
+        height: 150px;
+        background: $drop-area-bkg;
+        &:hover {
+            background: $drop-area-bkg;
+        }
+        .supported-formats {
+            margin-top: 4px;
+            font-size: 0.8em;
+            font-style: italic;
+            .bp3-popover-target {
+                justify-content: center;
+            }
+        }
+    }
+    .directory-drop-area {
+        @include fix-button();
+        height: 40px;
+    }
+    .in-progress {
+        height: 189px;
+        border-radius: 2px;
+        background: $drop-area-bkg;
+        border: 1px #ddd solid;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        width: 100%;
-        height: 150px;
-        background: rgba(138, 155, 168, .15);
-        .supported-formats {
-            font-size: 0.8em;
-            font-style: italic;
-        }
-        &.in-progress {
-            height: 190px;
-            cursor: default;
-        }
-        &.directory-drop-area {
-            height: 40px;
-        }
     }
     .import-result {
         margin-top: 10px;

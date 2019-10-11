@@ -10,18 +10,20 @@ export const useFileManager = () => {
 	const [files, setFiles] = useState([]);
 
 	const updateFileById = (fileId, value) =>
-		setFiles((currentFiles) =>
-			labelFiles(
-				currentFiles.some((file) => file.id === fileId)
-					? currentFiles.map((file) => {
-							if (file.id === fileId) {
-								return { ...file, ...value };
-							}
-							return file;
-					  })
-					: [...currentFiles, value],
-			),
-		);
+		setFiles((currentFiles) => {
+			const exists = currentFiles.some((file) => file.id === fileId);
+			if (exists) {
+				return labelFiles(
+					currentFiles.map((file) => {
+						if (file.id === fileId) {
+							return { ...file, ...value };
+						}
+						return file;
+					}),
+				);
+			}
+			return currentFiles;
+		});
 
 	const labelFileById = (fileId, newLabel) => {
 		const isExclusiveLabel = exclusiveFileLabels.includes(newLabel);
@@ -55,7 +57,10 @@ export const useFileManager = () => {
 		const localPath = file.path || file.name;
 		fileIdCounter += 1;
 		s3Upload(file, onProgress(fileId), onComplete(fileId));
-		updateFileById(fileId, { id: fileId, state: 'waiting', localPath: localPath });
+		setFiles((currentFiles) => [
+			...currentFiles,
+			{ id: fileId, state: 'waiting', localPath: localPath },
+		]);
 	};
 
 	const getFiles = () => files;
