@@ -7,7 +7,7 @@ import {
 	Callout,
 	Classes,
 	Drawer,
-	Icon,
+	NonIdealState,
 	Spinner,
 	Tooltip,
 } from '@blueprintjs/core';
@@ -105,7 +105,7 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 				</li>
 				<li>
 					Supports all image formats, though you may wish to convert your images to a
-					format with wide browser support.
+					format with wide browser support (.jpeg, .jpg, .png, or .gif).
 				</li>
 			</ul>
 		);
@@ -126,7 +126,7 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 					{error.message ? error.message : error.toString()}
 					{error.stack && (
 						<details>
-							<summary>The gory details</summary>
+							<summary>Technical details</summary>
 							<pre>{error.stack}</pre>
 						</details>
 					)}
@@ -205,20 +205,28 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 						{!isImporting &&
 							renderContentInDropzone(({ getRootProps, getInputProps }) => (
 								<div {...getRootProps()} className="drop-area">
-									<Icon
+									<NonIdealState
 										icon="paperclip"
-										iconSize={50}
-										className="drop-area-icon"
+										description={
+											<React.Fragment>
+												Click here or drag in files to upload them
+												<div className="supported-formats">
+													{renderFormatTooltip()}
+												</div>
+											</React.Fragment>
+										}
 									/>
-									Click here or drag in files to upload them
-									<div className="supported-formats">{renderFormatTooltip()}</div>
 									<input {...getInputProps()} multiple />
 								</div>
 							))}
 						{!isImporting &&
 							renderContentInDropzone(({ getRootProps, getInputProps }) => (
 								<div {...getRootProps()} className="drop-area directory-drop-area">
-									Or, click here to upload an entire directory
+									<Button
+										large
+										fill
+										text="Or, click here to upload an entire directory"
+									/>
 									<input {...getInputProps()} webkitdirectory="" />
 								</div>
 							))}

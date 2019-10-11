@@ -11,23 +11,18 @@
         align-items: center;
         justify-content: center;
         width: 100%;
-        height: 120px;
+        height: 150px;
         background: rgba(138, 155, 168, .15);
-        .drop-area-icon {
-            margin-bottom: 10px;
-        }
         .supported-formats {
             font-size: 0.8em;
             font-style: italic;
         }
         &.in-progress {
-            height: 150px;
+            height: 190px;
             cursor: default;
         }
         &.directory-drop-area {
-            height: 30px;
-            color: white;
-            background: #6e6e6e;
+            height: 40px;
         }
     }
     .import-result {
