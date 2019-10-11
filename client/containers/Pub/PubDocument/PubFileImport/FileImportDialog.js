@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import Dropzone from 'react-dropzone';
 import {
 	Button,
@@ -262,30 +263,28 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 					</div>
 				</div>
 			</div>
-			<div className={Classes.DRAWER_FOOTER}>
-				<ButtonGroup>
-					<Button onClick={onClose}>Cancel</Button>
-					{(!doc || !importedFilesMatchCurrentFiles) && (
-						<Button
-							intent="primary"
-							icon={doc ? 'refresh' : 'import'}
-							onClick={handleStartImportTask}
-							disabled={isImportDisabled}
-						>
-							{doc ? 'Retry import' : 'Import'}
-						</Button>
-					)}
-					{doc && importedFilesMatchCurrentFiles && (
-						<Button
-							intent="success"
-							icon="tick"
-							onClick={handleFinishImport}
-							disabled={isImporting}
-						>
-							Complete import
-						</Button>
-					)}
-				</ButtonGroup>
+			<div className={classNames(Classes.DRAWER_FOOTER, 'dialog-footer')}>
+				<Button onClick={onClose}>Cancel</Button>
+				{(!doc || !importedFilesMatchCurrentFiles) && (
+					<Button
+						intent="primary"
+						icon={doc ? 'refresh' : 'import'}
+						onClick={handleStartImportTask}
+						disabled={isImportDisabled}
+					>
+						{doc ? 'Retry import' : 'Import'}
+					</Button>
+				)}
+				{doc && importedFilesMatchCurrentFiles && (
+					<Button
+						intent="success"
+						icon="tick"
+						onClick={handleFinishImport}
+						disabled={isImporting}
+					>
+						Complete import
+					</Button>
+				)}
 			</div>
 		</Drawer>
 	);

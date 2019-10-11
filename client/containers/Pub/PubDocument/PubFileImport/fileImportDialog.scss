@@ -56,6 +56,11 @@ $drop-area-bkg: rgba(138, 155, 168, .15);
     .bp3-drawer-footer {
         text-align: right;
     }
+    .dialog-footer {
+        .bp3-button:not(:last-child) {
+            margin-right: 10px;
+        }
+    }
 }
 
 .pub-file-import-button-component {
