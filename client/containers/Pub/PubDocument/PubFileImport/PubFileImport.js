@@ -18,6 +18,7 @@ const PubFileImport = (props) => {
 	const {
 		editorChangeObject: { view },
 	} = props;
+	const [dialogKey, setDialogKey] = useState(Date.now());
 	const [isVisible, setIsVisible] = useState(false);
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const doc = view && view.state && view.state.doc;
@@ -27,35 +28,36 @@ const PubFileImport = (props) => {
 		if (isEmptyDoc) {
 			setIsVisible(true);
 		} else if (!isDialogOpen) {
+			setDialogKey(Date.now());
 			setIsVisible(false);
 		}
 	}, [doc, isDialogOpen]);
 
-	if (!isVisible) {
-		return null;
-	}
-
 	return (
-		<div className="pub-file-import-component">
-			<React.Fragment>
-				<AnchorButton
-					type="button"
-					className="bp3-intent-primary bp3-large"
-					onClick={() => setIsDialogOpen(true)}
-					text={
-						<div>
-							<div>Import Files</div>
-							<div>.docx, .epub, .html, .md, .odt, .txt, .xml, or .tex</div>
-						</div>
-					}
-				/>
-				<FileImportDialog
-					{...props}
-					isOpen={isDialogOpen}
-					onClose={() => setIsDialogOpen(false)}
-				/>
-			</React.Fragment>
-		</div>
+		<React.Fragment>
+			{isVisible && (
+				<div className="pub-file-import-component">
+					<AnchorButton
+						type="button"
+						className="bp3-intent-primary bp3-large"
+						onClick={() => setIsDialogOpen(true)}
+						text={
+							<div>
+								<div>Import Files</div>
+								<div>.docx, .epub, .html, .md, .odt, .txt, .xml, or .tex</div>
+							</div>
+						}
+					/>
+				</div>
+			)}
+			<FileImportDialog
+				{...props}
+				key={dialogKey}
+				isOpen={isDialogOpen}
+				onClose={() => setIsDialogOpen(false)}
+				onClosed={() => setDialogKey(Date.now())}
+			/>
+		</React.Fragment>
 	);
 };
 

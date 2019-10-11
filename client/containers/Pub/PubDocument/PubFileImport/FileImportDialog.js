@@ -29,6 +29,7 @@ const propTypes = {
 	updateLocalData: PropTypes.func.isRequired,
 	isOpen: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
+	onClosed: PropTypes.func.isRequired,
 };
 
 const documentExtensions = Object.keys(extensionToPandocFormat).map((ext) => `.${ext}`);
@@ -42,7 +43,7 @@ const getFingerprintOfImportedFiles = (currentFiles) =>
 		.sort((a, b) => a - b)
 		.join('___');
 
-const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose }) => {
+const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose, onClosed }) => {
 	const { addFile, getFiles, deleteFileById, labelFileById } = useFileManager();
 	const currentFiles = getFiles();
 	const incompleteUploads = currentFiles.filter((file) => file.state !== 'complete');
@@ -197,6 +198,7 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 			title="Import to Pub"
 			isOpen={isOpen}
 			onClose={onClose}
+			onClosed={onClosed}
 			canOutsideClickClose={false}
 		>
 			<div className={Classes.DRAWER_BODY}>
