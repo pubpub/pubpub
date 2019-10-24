@@ -1,3 +1,6 @@
-.bp3-menu > li[type='button'] {
-    -webkit-appearance: unset;
+.menu-component {
+    position: relative;
+    & [type='button'] {
+        -webkit-appearance: unset;
+    }
 }

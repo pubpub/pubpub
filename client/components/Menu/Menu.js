@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import classNames from 'classnames';
-import { MenuItem as BPMenuItem } from '@blueprintjs/core';
+import { MenuItem as BPMenuItem, Icon } from '@blueprintjs/core';
 import {
 	Menu as RKMenu,
 	MenuItem as RKMenuItem,
@@ -14,25 +14,37 @@ require('./menu.scss');
 const MenuContext = React.createContext(null);
 
 export const Menu = (props) => {
-	const { children, disclosure } = props;
+	const { children, disclosure, isRoot = true } = props;
 	const menu = useMenuState();
 	return (
-		<React.Fragment>
+		<div className="menu-component">
 			<RKMenuDisclosure {...menu}>
 				{(disclosureProps) => disclosure(disclosureProps)}
 			</RKMenuDisclosure>
 			<RKMenu {...menu} as="ul" className="bp3-menu bp3-elevation-1">
 				<MenuContext.Provider value={menu}>{children}</MenuContext.Provider>
 			</RKMenu>
-		</React.Fragment>
+		</div>
 	);
 };
 
 const DisplayMenuItem = React.forwardRef((props, ref) => {
-	const { children, ...restProps } = props;
+	const {
+		children,
+		disabled,
+		icon,
+		hasSubmenu,
+		rightElement: propRightElement,
+		...restProps
+	} = props;
+	const rightElement = hasSubmenu ? <Icon icon="caret-right" /> : propRightElement;
 	return (
 		<li {...restProps} ref={ref}>
-			<a className="bp3-menu-item">{children}</a>
+			<a className={classNames('bp3-menu-item', disabled && 'bp3-disabled')}>
+				{icon && <Icon icon={icon} />}
+				<div className="bp3-text-overflow-ellipsis bp3-fill">{children}</div>
+				{rightElement && <span className="bp3-menu-item-label">{rightElement}</span>}
+			</a>
 		</li>
 	);
 });
@@ -44,7 +56,13 @@ export const MenuItem = React.forwardRef((props, ref) => {
 		return (
 			<Menu
 				disclosure={(dProps) => (
-					<RKMenuItem as={DisplayMenuItem} {...dProps} {...parentMenu}>
+					<RKMenuItem
+						as={DisplayMenuItem}
+						{...dProps}
+						{...parentMenu}
+						{...restProps}
+						hasSubmenu={true}
+					>
 						{text}
 					</RKMenuItem>
 				)}
@@ -61,3 +79,11 @@ export const MenuItem = React.forwardRef((props, ref) => {
 });
 
 MenuItem.propTypes = {};
+
+export const MenuItemDivider = () => {
+	return (
+		<RKMenuSeparator>
+			{(props) => <li className="bp3-menu-divider" {...props} />}
+		</RKMenuSeparator>
+	);
+};
