@@ -243,6 +243,8 @@ class Header extends Component {
 							{loggedIn && (
 								<MenuButton
 									placement="auto-end"
+									// The z-index of the PubHeaderFormatting is 19
+									menuStyle={{ zIndex: 20 }}
 									buttonProps={{
 										minimal: true,
 										large: true,
