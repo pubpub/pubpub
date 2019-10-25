@@ -1,6 +1,6 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import { Menu, MenuItem, MenuItemDivider } from 'components/Menu/Menu';
+import { Menu, MenuItem, MenuItemDivider } from 'components/Menu';
 import { Button } from '@blueprintjs/core';
 
 const items = (
@@ -10,8 +10,11 @@ const items = (
 		<MenuItemDivider />
 		<MenuItem icon="paperclip" text="what's up">
 			<MenuItem text="hola — a longer item" />
-			<MenuItem text="你好">
-				<MenuItem text="还要菜单吗" onClick={() => alert('You found it!')} />
+			<MenuItem text="what's in here">
+				<MenuItem
+					text="i wonder if you can click me"
+					onClick={() => alert('You found it!')}
+				/>
 			</MenuItem>
 		</MenuItem>
 	</React.Fragment>
@@ -21,6 +24,7 @@ storiesOf('components/Menu', module)
 	.add('button', () => {
 		return (
 			<Menu
+				shift={100}
 				disclosure={(props) => {
 					const { ref, ...restProps } = props;
 					return (

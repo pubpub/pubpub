@@ -1,89 +1,50 @@
-import React, { useContext } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { MenuItem as BPMenuItem, Icon } from '@blueprintjs/core';
-import {
-	Menu as RKMenu,
-	MenuItem as RKMenuItem,
-	MenuDisclosure as RKMenuDisclosure,
-	MenuSeparator as RKMenuSeparator,
-	useMenuState,
-} from 'reakit/Menu';
+import { Classes } from '@blueprintjs/core';
+import * as RK from 'reakit/Menu';
 
-require('./menu.scss');
+import { MenuContext } from './menuContext';
 
-const MenuContext = React.createContext(null);
+const propTypes = {
+	children: PropTypes.node.isRequired,
+	disclosure: PropTypes.func.isRequired,
+	placement: PropTypes.string,
+	gutter: PropTypes.number,
+};
+
+const defaultProps = {
+	gutter: undefined,
+	placement: undefined,
+};
 
 export const Menu = (props) => {
-	const { children, disclosure, isRoot = true } = props;
-	const menu = useMenuState();
+	const { children, disclosure, placement, gutter } = props;
+	const menu = RK.useMenuState({
+		placement: placement,
+		gutter: gutter,
+		unstable_preventOverflow: false,
+	});
 	return (
-		<div className="menu-component">
-			<RKMenuDisclosure {...menu}>
-				{(disclosureProps) => disclosure(disclosureProps)}
-			</RKMenuDisclosure>
-			<RKMenu {...menu} as="ul" className="bp3-menu bp3-elevation-1">
-				<MenuContext.Provider value={menu}>{children}</MenuContext.Provider>
-			</RKMenu>
-		</div>
-	);
-};
-
-const DisplayMenuItem = React.forwardRef((props, ref) => {
-	const {
-		children,
-		disabled,
-		icon,
-		hasSubmenu,
-		rightElement: propRightElement,
-		...restProps
-	} = props;
-	const rightElement = hasSubmenu ? <Icon icon="caret-right" /> : propRightElement;
-	return (
-		<li {...restProps} ref={ref}>
-			<a className={classNames('bp3-menu-item', disabled && 'bp3-disabled')}>
-				{icon && <Icon icon={icon} />}
-				<div className="bp3-text-overflow-ellipsis bp3-fill">{children}</div>
-				{rightElement && <span className="bp3-menu-item-label">{rightElement}</span>}
-			</a>
-		</li>
-	);
-});
-
-export const MenuItem = React.forwardRef((props, ref) => {
-	const { children, text, ...restProps } = props;
-	const parentMenu = useContext(MenuContext);
-	if (children) {
-		return (
-			<Menu
-				disclosure={(dProps) => (
-					<RKMenuItem
-						as={DisplayMenuItem}
-						{...dProps}
-						{...parentMenu}
-						{...restProps}
-						hasSubmenu={true}
-					>
-						{text}
-					</RKMenuItem>
-				)}
+		<React.Fragment>
+			<RK.MenuDisclosure
+				style={{ display: 'inline-block', '-webkit-appearance': 'unset' }}
+				{...menu}
 			>
-				{children}
-			</Menu>
-		);
-	}
-	return (
-		<RKMenuItem as={DisplayMenuItem} ref={ref} {...parentMenu} {...restProps}>
-			{text}
-		</RKMenuItem>
-	);
-});
-
-MenuItem.propTypes = {};
-
-export const MenuItemDivider = () => {
-	return (
-		<RKMenuSeparator>
-			{(props) => <li className="bp3-menu-divider" {...props} />}
-		</RKMenuSeparator>
+				{(disclosureProps) => disclosure(disclosureProps)}
+			</RK.MenuDisclosure>
+			<RK.Menu
+				as="ul"
+				style={{ zIndex: 1 }}
+				className={classNames(Classes.MENU, Classes.ELEVATION_1)}
+				unstable_portal={true}
+				{...menu}
+			>
+				<MenuContext.Provider value={menu}>{children}</MenuContext.Provider>
+			</RK.Menu>
+		</React.Fragment>
 	);
 };
+
+Menu.propTypes = propTypes;
+Menu.defaultProps = defaultProps;

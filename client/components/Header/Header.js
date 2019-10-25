@@ -1,17 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
-	Popover,
-	PopoverInteractionKind,
-	Position,
-	Menu,
-	MenuItem,
-	MenuDivider,
-	Button,
-	AnchorButton,
-	Intent,
-} from '@blueprintjs/core';
+import { Button, AnchorButton, Intent } from '@blueprintjs/core';
+
 import { GridWrapper } from 'components';
+import { Menu, MenuItem } from 'components/Menu';
 import Avatar from 'components/Avatar/Avatar';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
 import { apiFetch, getResizedUrl } from 'utils';
@@ -296,57 +288,29 @@ class Header extends Component {
 								/>
 							)}
 							{loggedIn && (
-								<Popover
-									content={
-										<Menu>
-											<li>
-												<a
-													href={`/user/${this.props.loginData.slug}`}
-													className="bp3-menu-item bp3-popover-dismiss"
-												>
-													<div>{this.props.loginData.fullName}</div>
-													<div className="subtext">View Profile</div>
-												</a>
-											</li>
-											<li>
-												<a
-													href="/privacy/settings"
-													className="bp3-menu-item bp3-popover-dismiss"
-												>
-													<div>Privacy settings</div>
-												</a>
-											</li>
-											<MenuDivider />
-											{/* !isBasePubPub &&
-														<li>
-															<a href="/pub/create" className="bp3-menu-item bp3-popover-dismiss">
-																Create New Pub
-															</a>
-														</li>
-													*/}
-											{/* !isBasePubPub && isAdmin &&
-														<li>
-															<a href="/dashboard" className="bp3-menu-item bp3-popover-dismiss">
-																Manage Community
-															</a>
-														</li>
-													*/}
-											<MenuItem text="Logout" onClick={this.handleLogout} />
-										</Menu>
-									}
-									interactionKind={PopoverInteractionKind.CLICK}
-									position={Position.BOTTOM_RIGHT}
-									transitionDuration={-1}
-									inheritDarkTheme={false}
+								<Menu
+									disclosure={(discProps) => (
+										<button {...discProps} type="button">
+											<Avatar
+												userInitials={this.props.loginData.initials}
+												userAvatar={this.props.loginData.avatar}
+												width={30}
+											/>
+										</button>
+									)}
 								>
-									<Button large={true} minimal={true}>
-										<Avatar
-											userInitials={this.props.loginData.initials}
-											userAvatar={this.props.loginData.avatar}
-											width={30}
-										/>
-									</Button>
-								</Popover>
+									<MenuItem
+										href={`/user/${this.props.loginData.slug}`}
+										text={
+											<React.Fragment>
+												<div>{this.props.loginData.fullName}</div>
+												<div className="subtext">View Profile</div>
+											</React.Fragment>
+										}
+									/>
+									<MenuItem href="/privacy/settings" text="Privacy settings" />
+									<MenuItem onClick={this.handleLogout} text="Logout" />
+								</Menu>
 							)}
 							{!loggedIn && (
 								<AnchorButton
