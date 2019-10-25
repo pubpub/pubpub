@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import { Button, AnchorButton, Intent } from '@blueprintjs/core';
 
 import { GridWrapper } from 'components';
-import { Menu, MenuItem } from 'components/Menu';
+import { MenuButton, MenuItem } from 'components/Menu';
 import Avatar from 'components/Avatar/Avatar';
-import DropdownButton from 'components/DropdownButton/DropdownButton';
 import { apiFetch, getResizedUrl } from 'utils';
 
 require('./header.scss');
@@ -146,7 +145,6 @@ class Header extends Component {
 	}
 
 	render() {
-		const headerLinks = this.props.communityData.headerLinks || [];
 		const hideHero = this.props.locationData.path !== '/' || this.props.communityData.hideHero;
 		const hideHeaderLogo = !hideHero && this.props.communityData.hideHeaderLogo;
 		const componentClasses = this.calculateComponentClasses(hideHero);
@@ -209,51 +207,6 @@ class Header extends Component {
 							)}
 						</div>
 						<div className="buttons-wrapper">
-							{headerLinks.map((linkItem, index) => {
-								const key = `${index}-${linkItem.title}`;
-								if (linkItem.children) {
-									return (
-										<DropdownButton
-											key={key}
-											label={linkItem.title}
-											isMinimal={true}
-											isLarge={true}
-											className="hide-on-mobile"
-										>
-											<Menu>
-												{linkItem.children.map((child, cIndex) => {
-													const childKey = `${cIndex}-${child.title}`;
-													return (
-														<MenuItem
-															key={childKey}
-															text={child.title}
-															href={child.url}
-															target={child.external ? '_blank' : ''}
-															rel={
-																child.external
-																	? 'noopener noreferrer'
-																	: ''
-															}
-														/>
-													);
-												})}
-											</Menu>
-										</DropdownButton>
-									);
-								}
-								return (
-									<AnchorButton
-										key={key}
-										minimal={true}
-										large={true}
-										text={linkItem.title}
-										href={linkItem.url}
-										target={linkItem.external ? '_blank' : ''}
-										rel={linkItem.external ? 'noopener noreferrer' : ''}
-										className="hide-on-mobile"
-									/>
-								);
-							})}
 							{!isBasePubPub &&
 								loggedIn &&
 								(!this.props.communityData.hideCreatePubButton || isAdmin) && (
@@ -288,29 +241,35 @@ class Header extends Component {
 								/>
 							)}
 							{loggedIn && (
-								<Menu
-									disclosure={(discProps) => (
-										<button {...discProps} type="button">
-											<Avatar
-												userInitials={this.props.loginData.initials}
-												userAvatar={this.props.loginData.avatar}
-												width={30}
-											/>
-										</button>
-									)}
+								<MenuButton
+									placement="auto-end"
+									buttonProps={{
+										minimal: true,
+										large: true,
+										'aria-label': 'User menu',
+									}}
+									buttonContent={
+										<Avatar
+											userInitials={this.props.loginData.initials}
+											userAvatar={this.props.loginData.avatar}
+											width={30}
+										/>
+									}
 								>
 									<MenuItem
 										href={`/user/${this.props.loginData.slug}`}
 										text={
 											<React.Fragment>
-												<div>{this.props.loginData.fullName}</div>
-												<div className="subtext">View Profile</div>
+												{this.props.loginData.fullName}
+												<span className="subtext" style={{ marginLeft: 4 }}>
+													View Profile
+												</span>
 											</React.Fragment>
 										}
 									/>
 									<MenuItem href="/privacy/settings" text="Privacy settings" />
 									<MenuItem onClick={this.handleLogout} text="Logout" />
-								</Menu>
+								</MenuButton>
 							)}
 							{!loggedIn && (
 								<AnchorButton

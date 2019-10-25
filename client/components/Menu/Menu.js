@@ -8,30 +8,46 @@ import { MenuContext } from './menuContext';
 
 const propTypes = {
 	children: PropTypes.node.isRequired,
-	disclosure: PropTypes.func.isRequired,
-	placement: PropTypes.string,
+	disclosure: PropTypes.oneOf(PropTypes.func, PropTypes.node).isRequired,
 	gutter: PropTypes.number,
+	onDismiss: PropTypes.func,
+	placement: PropTypes.string,
 };
 
 const defaultProps = {
 	gutter: undefined,
+	onDismiss: () => {},
 	placement: undefined,
 };
 
+const renderDisclosure = (disclosure, disclosureProps) => {
+	if (typeof disclosure === 'function') {
+		return disclosure(disclosureProps);
+	}
+	return React.cloneElement(disclosure, disclosureProps);
+};
+
 export const Menu = (props) => {
-	const { children, disclosure, placement, gutter } = props;
+	const { children, disclosure, placement, onDismiss, gutter } = props;
+
 	const menu = RK.useMenuState({
 		placement: placement,
 		gutter: gutter,
 		unstable_preventOverflow: false,
 	});
+
+	const handleDismiss = () => {
+		menu.hide();
+		onDismiss();
+	};
+
 	return (
 		<React.Fragment>
 			<RK.MenuDisclosure
 				style={{ display: 'inline-block', '-webkit-appearance': 'unset' }}
 				{...menu}
 			>
-				{(disclosureProps) => disclosure(disclosureProps)}
+				{(disclosureProps) => renderDisclosure(disclosure, disclosureProps)}
 			</RK.MenuDisclosure>
 			<RK.Menu
 				as="ul"
@@ -40,7 +56,9 @@ export const Menu = (props) => {
 				unstable_portal={true}
 				{...menu}
 			>
-				<MenuContext.Provider value={menu}>{children}</MenuContext.Provider>
+				<MenuContext.Provider value={{ parentMenu: menu, dismissMenu: handleDismiss }}>
+					{children}
+				</MenuContext.Provider>
 			</RK.Menu>
 		</React.Fragment>
 	);

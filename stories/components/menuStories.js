@@ -1,6 +1,6 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import { Menu, MenuItem, MenuItemDivider } from 'components/Menu';
+import { Menu, MenuItem, MenuItemDivider, MenuButton } from 'components/Menu';
 import { Button } from '@blueprintjs/core';
 
 const items = (
@@ -13,6 +13,7 @@ const items = (
 			<MenuItem text="what's in here">
 				<MenuItem
 					text="i wonder if you can click me"
+					// eslint-disable-next-line no-alert
 					onClick={() => alert('You found it!')}
 				/>
 			</MenuItem>
@@ -21,10 +22,9 @@ const items = (
 );
 
 storiesOf('components/Menu', module)
-	.add('button', () => {
+	.add('manual-button', () => {
 		return (
 			<Menu
-				shift={100}
 				disclosure={(props) => {
 					const { ref, ...restProps } = props;
 					return (
@@ -38,6 +38,13 @@ storiesOf('components/Menu', module)
 			</Menu>
 		);
 	})
+	.add('menu-button', () => {
+		return (
+			<MenuButton buttonContent="Click me!" buttonProps={{ rightIcon: 'caret-down' }}>
+				{items}
+			</MenuButton>
+		);
+	})
 	.add('div', () => {
-		return <Menu disclosure={(props) => <div {...props}>Hello!</div>}>{items}</Menu>;
+		return <Menu disclosure={<div>Hello!</div>}>{items}</Menu>;
 	});

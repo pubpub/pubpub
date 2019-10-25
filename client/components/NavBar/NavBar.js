@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 
 import { GridWrapper } from 'components';
 import Icon from 'components/Icon/Icon';
-import { Menu, MenuItem } from 'components/Menu/Menu';
+import { Menu, MenuItem } from 'components/Menu';
 
 require('./navBar.scss');
 
@@ -37,12 +36,12 @@ const NavBar = function(props) {
 							/* Return Dropdown */
 							return (
 								<Menu
-									disclosure={(discProps) => (
-										<li {...discProps} className="dropdown">
+									disclosure={
+										<li className="dropdown">
 											{item.title}
 											<span className="bp3-icon-standard bp3-icon-caret-down bp3-align-right" />
 										</li>
-									)}
+									}
 								>
 									{item.children.map((subitem) => (
 										<MenuItem

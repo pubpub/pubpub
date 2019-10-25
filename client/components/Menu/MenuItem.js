@@ -10,19 +10,19 @@ import { Menu } from './Menu';
 const sharedPropTypes = {
 	disabled: PropTypes.boolean,
 	href: PropTypes.string,
-	target: PropTypes.string,
 	icon: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 	onClick: PropTypes.func,
 	rightElement: PropTypes.node,
+	target: PropTypes.string,
 };
 
 const sharedDefaultProps = {
 	disabled: false,
 	href: null,
-	target: '_self',
 	icon: null,
 	onClick: null,
 	rightElement: null,
+	target: '_self',
 };
 
 const DisplayMenuItem = React.forwardRef((props, ref) => {
@@ -34,6 +34,7 @@ const DisplayMenuItem = React.forwardRef((props, ref) => {
 		icon,
 		hasSubmenu,
 		onClick,
+		onDismiss,
 		rightElement,
 		...restProps
 	} = props;
@@ -43,6 +44,9 @@ const DisplayMenuItem = React.forwardRef((props, ref) => {
 	const onClickWithHref = (evt) => {
 		if (onClick) {
 			onClick(evt);
+		}
+		if (onDismiss) {
+			onDismiss();
 		}
 		if (href) {
 			window.open(href, target);
@@ -71,18 +75,21 @@ const DisplayMenuItem = React.forwardRef((props, ref) => {
 DisplayMenuItem.propTypes = {
 	...sharedPropTypes,
 	hasSubmenu: PropTypes.bool.isRequired,
+	onDismiss: PropTypes.func,
 };
 
 DisplayMenuItem.defaultProps = {
 	...sharedDefaultProps,
+	onDismiss: null,
 };
 
 export const MenuItem = React.forwardRef((props, ref) => {
-	const { children, text, ...restProps } = props;
-	const parentMenu = useContext(MenuContext);
+	const { children, text, dismissOnClick, ...restProps } = props;
+	const { dismissMenu, parentMenu } = useContext(MenuContext);
 	if (children) {
 		return (
 			<Menu
+				onDismiss={dismissMenu}
 				disclosure={(dProps) => (
 					<RK.MenuItem
 						as={DisplayMenuItem}
@@ -101,7 +108,13 @@ export const MenuItem = React.forwardRef((props, ref) => {
 		);
 	}
 	return (
-		<RK.MenuItem as={DisplayMenuItem} ref={ref} {...parentMenu} {...restProps}>
+		<RK.MenuItem
+			as={DisplayMenuItem}
+			ref={ref}
+			{...parentMenu}
+			{...restProps}
+			onDismiss={dismissOnClick && dismissMenu}
+		>
 			{text}
 		</RK.MenuItem>
 	);
@@ -111,11 +124,13 @@ MenuItem.propTypes = {
 	...sharedPropTypes,
 	children: PropTypes.arrayOf(PropTypes.node),
 	text: PropTypes.string.isRequired,
+	dismissOnClick: PropTypes.bool,
 };
 
 MenuItem.defaultProps = {
 	...sharedDefaultProps,
 	children: null,
+	dismissOnClick: true,
 };
 
 export const MenuItemDivider = () => {
