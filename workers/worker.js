@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved
 const { parentPort, isMainThread, workerData } = require('worker_threads');
 
 const {
