@@ -7,7 +7,7 @@ import * as Sentry from '@sentry/node';
 
 import { WorkerTask } from '../server/models';
 
-const maxWorkerTimeSeconds = 10000;
+const maxWorkerTimeSeconds = 120;
 const maxWorkerThreads = 5;
 let currentWorkerThreads = 0;
 

@@ -39,25 +39,23 @@ const Download = (props) => {
 		setIsError(false);
 
 		// Kicks off an export task on the backend
-		for (let i = 0; i < 50; i++) {
-			apiFetch('/api/export', {
-				method: 'POST',
-				body: JSON.stringify({
-					pubId: pubData.id,
-					branchId: activeBranch.id,
-					format: selectedType.format,
-				}),
+		apiFetch('/api/export', {
+			method: 'POST',
+			body: JSON.stringify({
+				pubId: pubData.id,
+				branchId: activeBranch.id,
+				format: selectedType.format,
+			}),
+		})
+			.then((newTaskId) => pingTask(newTaskId, 1500))
+			.then((taskOutput) => {
+				setIsLoading(false);
+				window.open(taskOutput.url);
 			})
-				.then((newTaskId) => pingTask(newTaskId, 1500))
-				.then((taskOutput) => {
-					setIsLoading(false);
-					window.open(taskOutput.url);
-				})
-				.catch(() => {
-					setIsError(true);
-					setIsLoading(false);
-				});
-		}
+			.catch(() => {
+				setIsError(true);
+				setIsLoading(false);
+			});
 	}, [isLoading, selectedType, pubData.id, activeBranch.id]);
 
 	const formattedDownload = getFormattedDownload(downloads);
