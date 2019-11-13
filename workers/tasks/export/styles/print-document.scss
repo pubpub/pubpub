@@ -1,0 +1,31 @@
+@import '~@pubpub/editor/src/styles/base.scss';
+@import 'containers/Pub/PubDocument/pubBody.scss';
+
+.csl-bib-body, .csl-entry {
+    display: inline;
+}
+
+.pub-body-component .editor.ProseMirror .pub-notes ol > li {
+    list-style-position: inside;
+    margin: inherit;
+    &:target {
+        background: cornsilk;
+    }
+    p:last-child {
+        display: inline;
+    }
+    .return-link {
+        font-size: 0.75em;
+    }
+    
+}
+
+@media screen {
+    body > * {
+        max-width: 50em;
+        margin: 0 auto;
+        &.pub-body-component {
+            font-size: initial !important;
+        }
+    }
+}
