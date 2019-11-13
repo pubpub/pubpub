@@ -49,8 +49,8 @@ export const createStaticHtml = async ({ prosemirrorDoc, pubMetadata, citations,
 					</div>
 				)}
 				{renderStatic(
-					prosemirrorSchema,
-					hideEquationChildren(filterNonExportableNodes(prosemirrorNodes)),
+					buildSchema(),
+					hideEquationChildren(filterNonExportableNodes(prosemirrorDoc.content)),
 					{},
 				)}
 				<SimpleNotesList title="Footnotes" notes={footnotes} />
