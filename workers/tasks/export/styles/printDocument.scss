@@ -1,0 +1,55 @@
+@import '~@pubpub/editor/src/styles/base.scss';
+
+@import 'styles/variables.scss';
+@import 'containers/Pub/PubDocument/pubBody.scss';
+
+@import './paged';
+
+.csl-bib-body,
+.csl-entry {
+    display: inline;
+}
+
+.pub-body-component {
+    margin-top: 0 !important;
+    .editor.ProseMirror .pub-notes ol > li {
+        list-style-position: inside;
+        margin: inherit;
+        &:target {
+            background: cornsilk;
+        }
+        p:last-child {
+            display: inline;
+        }
+        .return-link {
+            font-size: 0.75em;
+        }
+    }
+}
+
+section.cover {
+    font-family: $header-font;
+    h1, h3, h5 {
+        margin: 0;
+    }
+    h1 {
+        font-size: 3em;
+        margin-bottom: 1em;
+    }
+    .byline {
+        h5 {
+            margin-top: 0.5em;
+        }
+        margin-bottom:  1em;
+    }
+}
+
+@media screen {
+    body > * {
+        max-width: 50em;
+        margin: 0 auto;
+        &.pub-body-component {
+            font-size: initial !important;
+        }
+    }
+}
