@@ -120,7 +120,7 @@ const renderFrontMatterForHtml = ({
 	const affiliations = [...new Set(attributions.map((attr) => attr.affiliation))];
 	return (
 		<section className="cover">
-			<h2>
+			<h3>
 				<span className="community">{communityTitle}</span>
 				{primaryCollectionTitle && (
 					<React.Fragment>
@@ -128,55 +128,59 @@ const renderFrontMatterForHtml = ({
 						<span className="collection">{primaryCollectionTitle}</span>
 					</React.Fragment>
 				)}
-			</h2>
+			</h3>
 			<h1 className="title">{title}</h1>
-			<div className="byline">
-				<h3>
-					{attributions.map((attr, index) => {
-						const {
-							user: { fullName },
-							affiliation,
-						} = attr;
-						const affiliationNumber =
-							affiliation && affiliations.includes(affiliation)
-								? 1 + affiliations.indexOf(affiliation)
-								: null;
-						return (
-							<span key={index}>
-								{fullName}
-								{affiliationNumber && <sup>{affiliationNumber}</sup>}
-								{index < attributions.length - 1 && ', '}
-							</span>
-						);
-					})}
-				</h3>
-				{affiliations.length > 0 && (
-					<h5>
-						{affiliations.map((aff, index) => (
-							<span key={index}>
-								{<sup>{index + 1}</sup>}
-								{aff}
-								{index < affiliations.length - 1 && ', '}
-							</span>
-						))}
-					</h5>
+			{attributions.length > 0 && (
+				<div className="byline">
+					<h3>
+						{attributions.map((attr, index) => {
+							const {
+								user: { fullName },
+								affiliation,
+							} = attr;
+							const affiliationNumber =
+								affiliation && affiliations.includes(affiliation)
+									? 1 + affiliations.indexOf(affiliation)
+									: null;
+							return (
+								<span key={index}>
+									{fullName}
+									{affiliationNumber && <sup>{affiliationNumber}</sup>}
+									{index < attributions.length - 1 && ', '}
+								</span>
+							);
+						})}
+					</h3>
+					{affiliations.length > 0 && (
+						<h5>
+							{affiliations.map((aff, index) => (
+								<span key={index}>
+									{<sup>{index + 1}</sup>}
+									{aff}
+									{index < affiliations.length - 1 && ', '}
+								</span>
+							))}
+						</h5>
+					)}
+				</div>
+			)}
+			<div className="details">
+				{publishedDateString && (
+					<div>
+						<strong>Published on: </strong> {publishedDateString}
+					</div>
+				)}
+				{showUpdatedDate && (
+					<div>
+						<strong>Updated on:</strong> {updatedDateString}
+					</div>
+				)}
+				{doi && (
+					<div>
+						<strong>DOI:</strong> {doi}
+					</div>
 				)}
 			</div>
-			{publishedDateString && (
-				<div>
-					<strong>Published on: </strong> {publishedDateString}
-				</div>
-			)}
-			{showUpdatedDate && (
-				<div>
-					<strong>Updated on:</strong> {updatedDateString}
-				</div>
-			)}
-			{doi && (
-				<div>
-					<strong>DOI:</strong> {doi}
-				</div>
-			)}
 		</section>
 	);
 };

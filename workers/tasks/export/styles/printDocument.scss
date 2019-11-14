@@ -29,18 +29,24 @@
 
 section.cover {
     font-family: $header-font;
-    h1, h3, h5 {
-        margin: 0;
-    }
-    h1 {
+    .title {
+        margin-top: 0;
         font-size: 3em;
-        margin-bottom: 1em;
     }
     .byline {
+        h3 {
+            margin: 0;
+        }
         h5 {
+            margin: 0;
             margin-top: 0.5em;
         }
-        margin-bottom:  1em;
+    }
+    .details > *:not(:last-child) {
+        margin-bottom: 7px;
+    }
+    .title, .byline, .details {
+        margin-bottom: 30px !important;
     }
 }
 
