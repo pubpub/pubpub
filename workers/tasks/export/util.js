@@ -6,7 +6,7 @@ import { generateHash } from '../../../server/utils';
 
 const formatTypes = {
 	html: { extension: 'html' },
-	pdf: { extension: 'pdf' },
+	pdf: { extension: 'pdf', pagedTarget: true },
 	docx: { pandocTarget: 'docx', extension: 'docx' },
 	epub: { pandocTarget: 'epub', extension: 'epub' },
 	markdown: { pandocTarget: 'markdown_strict', extension: 'md' },
@@ -43,7 +43,7 @@ export const getTmpFileForExtension = (extension) => tmp.file({ postfix: `.${ext
 
 export const getFormatDetails = (key) => formatTypes[key];
 
-export const writeHtmlToFile = (html, file) => {
+export const writeToFile = (html, file) => {
 	return new Promise((resolve, reject) => {
 		fs.writeFile(file.path, html, {}, (err, res) => {
 			if (err) {

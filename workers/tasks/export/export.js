@@ -2,10 +2,11 @@ import { createStaticHtml } from './html';
 import { getPubMetadata } from './metadata';
 import { callPandoc } from './pandoc';
 import { getProsemirrorPubData } from './prosemirror';
-import { getFormatDetails, getTmpFileForExtension, uploadDocument, writeHtmlToFile } from './util';
+import { getFormatDetails, getTmpFileForExtension, uploadDocument, writeToFile } from './util';
+import { callPaged } from './paged';
 
 export const exportTask = async (pubId, branchId, format) => {
-	const { extension, pandocTarget } = getFormatDetails(format);
+	const { extension, pandocTarget, pagedTarget } = getFormatDetails(format);
 	const tmpFile = await getTmpFileForExtension(extension);
 	const pubMetadata = await getPubMetadata(pubId);
 	const { prosemirrorDoc, citations, footnotes } = await getProsemirrorPubData(pubId, branchId);
@@ -25,8 +26,10 @@ export const exportTask = async (pubId, branchId, format) => {
 			tmpFile: tmpFile,
 			pandocTarget: pandocTarget,
 		});
+	} else if (pagedTarget) {
+		await callPaged(staticHtml, tmpFile);
 	} else {
-		await writeHtmlToFile(staticHtml, tmpFile);
+		await writeToFile(staticHtml, tmpFile);
 	}
 	return uploadDocument(branchId, tmpFile, extension);
 };
