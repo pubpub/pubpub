@@ -1,8 +1,18 @@
-import { spawnSync } from 'child_process';
+import path from 'path';
+import { exec } from 'child_process';
 import { getTmpFileForExtension, writeToFile } from './util';
 
 export const callPaged = async (staticHtml, tmpFile) => {
 	const tmpHtmlFile = await getTmpFileForExtension('html');
 	await writeToFile(staticHtml, tmpHtmlFile);
-	spawnSync('pagedjs-cli', [tmpHtmlFile.path, '-o', tmpFile.path]);
+	return new Promise((resolve, reject) => {
+		const executable = path.join(process.env.PWD, 'node_modules', '.bin', 'pagedjs-cli');
+		exec(`${executable} ${tmpHtmlFile.path} -o ${tmpFile.path}`, (err) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve();
+			}
+		});
+	});
 };

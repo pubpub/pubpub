@@ -117,16 +117,18 @@ const renderFrontMatterForHtml = ({
 	attributions,
 }) => {
 	const showUpdatedDate = updatedDateString && updatedDateString !== publishedDateString;
-	const affiliations = [...new Set(attributions.map((attr) => attr.affiliation))];
+	const affiliations = [
+		...new Set(attributions.map((attr) => attr.affiliation).filter((x) => x)),
+	];
 	return (
 		<section className="cover">
 			<h3>
 				<span className="community">{communityTitle}</span>
 				{primaryCollectionTitle && (
-					<React.Fragment>
+					<span className="collection">
 						{bullet}
-						<span className="collection">{primaryCollectionTitle}</span>
-					</React.Fragment>
+						{primaryCollectionTitle}
+					</span>
 				)}
 			</h3>
 			<h1 className="title">{title}</h1>
@@ -154,7 +156,7 @@ const renderFrontMatterForHtml = ({
 					{affiliations.length > 0 && (
 						<h5>
 							{affiliations.map((aff, index) => (
-								<span key={index}>
+								<span className="affiliation" key={index}>
 									{<sup>{index + 1}</sup>}
 									{aff}
 									{index < affiliations.length - 1 && ', '}
@@ -205,6 +207,7 @@ export const createStaticHtml = async (
 		<html lang="en">
 			<head>
 				<title>{title}</title>
+				<meta charSet="utf-8" />
 				{!targetPandoc && (
 					<style type="text/css" dangerouslySetInnerHTML={{ __html: staticCss }} />
 				)}
