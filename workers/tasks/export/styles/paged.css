@@ -23,6 +23,7 @@
     h1, h2, h3, h4 {
       break-after: avoid;
     }
+
     tr, th {
       break-inside: avoid;
     }
@@ -34,26 +35,6 @@
     figcaption {
       font-size: 10px;
       color: #555;
-    }
-  
-    /* Duplicate pub styles outside editor */
-    p {
-      font-family: skolar-latin, Georgia, Cambria, "Times New Roman", Times, serif;
-    }
-  
-    h1, h2, h3, h4, h5, h6 {
-      font-family:
-            multi-display, 
-            -apple-system,
-            "BlinkMacSystemFont"，
-            "Segoe UI",
-            "Roboto",
-            "Oxygen",
-            "Ubuntu",
-            "Cantarell"
-             "Open Sans",
-             "Helvetica Neue",
-             sans-serif;
     }
   
     table {

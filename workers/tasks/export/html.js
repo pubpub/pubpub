@@ -143,7 +143,7 @@ const renderFrontMatterForHtml = ({
 									? 1 + affiliations.indexOf(affiliation)
 									: null;
 							return (
-								<span key={index}>
+								<span className="name" key={index}>
 									{fullName}
 									{affiliationNumber && <sup>{affiliationNumber}</sup>}
 									{index < attributions.length - 1 && ', '}
