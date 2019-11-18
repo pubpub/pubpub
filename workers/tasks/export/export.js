@@ -18,6 +18,7 @@ export const exportTask = async (pubId, branchId, format) => {
 			footnotes: footnotes,
 		},
 		pandocTarget,
+		pagedTarget,
 	);
 	if (pandocTarget) {
 		await callPandoc({

@@ -96,6 +96,8 @@ const addHrefsToNotes = (nodes) =>
 		nodes,
 	);
 
+const blankIframes = (nodes) => addAttrsToNodes({ url: 'about:blank' }, ['iframe'], nodes);
+
 const renderFrontMatterForPandoc = ({ updatedDateString, publishedDateString, doi }) => {
 	const showUpdatedDate = updatedDateString && updatedDateString !== publishedDateString;
 	return (
@@ -197,6 +199,7 @@ const renderFrontMatterForHtml = ({
 export const createStaticHtml = async (
 	{ prosemirrorDoc, pubMetadata, citations, footnotes },
 	targetPandoc,
+	targetPaged,
 ) => {
 	const { title } = pubMetadata;
 
@@ -204,6 +207,7 @@ export const createStaticHtml = async (
 		filterNonExportableNodes,
 		targetPandoc && renderEquationsAsScripts,
 		!targetPandoc && addHrefsToNotes,
+		targetPaged && blankIframes,
 	]
 		.filter((x) => x)
 		.reduce((nodes, fn) => fn(nodes), prosemirrorDoc.content);
