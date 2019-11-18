@@ -1,9 +1,8 @@
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable react/prop-types */
+/* eslint-disable no-underscore-dangle, react/no-array-index-key, react/prop-types, global-require */
 import path from 'path';
+import fs from 'fs';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import sass from 'node-sass';
 import { renderStatic, buildSchema } from '@pubpub/editor';
 
 import { SimpleNotesList } from 'components';
@@ -15,10 +14,16 @@ const footnotePrefix = 'fn';
 const bullet = ' • ';
 
 const createCss = () => {
-	const nodeModulesPath = path.join(process.env.PWD, 'node_modules');
-	const clientPath = path.join(process.env.PWD, 'client');
-	return (
-		sass
+	const cssPath = path.join(__dirname, 'styles', 'printDocument.css');
+	// HACK(ian): We use node-sass to build a CSS bundle that is used by our HTML/PDF exports.
+	// Unfortunately, the export task runs in a thread managed by the worker_threads API, which
+	// node-sass does not support (see https://github.com/sass/node-sass/issues/2746). So we will
+	// just generate the bundle once per Heroku deploy and save it to a file.
+	if (!fs.existsSync(cssPath)) {
+		const nodeSass = require('node-sass');
+		const nodeModulesPath = path.join(process.env.PWD, 'node_modules');
+		const clientPath = path.join(process.env.PWD, 'client');
+		const css = nodeSass
 			.renderSync({
 				file: path.join(__dirname, 'styles', 'printDocument.scss'),
 				includePaths: [nodeModulesPath, clientPath],
@@ -35,8 +40,10 @@ const createCss = () => {
 			.replace(
 				/url\((fonts\/KaTeX_(?:[A-z0-9\-_]*?).(?:[A-z0-9]+))\)/g,
 				(_, fontPath) => `url(${katexCdnPrefix + fontPath})`,
-			)
-	);
+			);
+		fs.writeFileSync(cssPath, css);
+	}
+	return fs.readFileSync(cssPath).toString();
 };
 
 const staticCss = createCss();
