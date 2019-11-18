@@ -7,7 +7,7 @@ export const callPaged = async (staticHtml, tmpFile) => {
 	await writeToFile(staticHtml, tmpHtmlFile);
 	return new Promise((resolve, reject) => {
 		const executable = path.join(process.env.PWD, 'node_modules', '.bin', 'pagedjs-cli');
-		exec(`${executable} ${tmpHtmlFile.path} -b -o ${tmpFile.path} --no-sandbox`, (err) => {
+		exec(`${executable} ${tmpHtmlFile.path} -b -o ${tmpFile.path} --noSandbox`, (err) => {
 			if (err) {
 				reject(err);
 			} else {
