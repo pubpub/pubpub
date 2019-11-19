@@ -109,9 +109,23 @@ section.cover {
         overflow-y: hidden;
     }
 
+    figure {
+        display: flex;
+        flex-direction: column;
+        break-inside: avoid;
+        max-height: 100%;
+        img, video {
+            width: 100%;
+            min-height: 0;
+            flex-shrink: 1;
+            object-fit: contain;
+        }
+    }
+
     figcaption {
         font-size: 10px;
         color: #555;
+        flex-shrink: 0;
     }
 
     table {
@@ -168,10 +182,5 @@ section.cover {
 
     .title {
         string-set: title content();
-    }
-
-    img {
-        max-width: 100%;
-        height: auto;
     }
 }
