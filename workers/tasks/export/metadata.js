@@ -57,6 +57,7 @@ export const getPubMetadata = async (pubId) => {
 		attributions: pubData.attributions
 			.concat()
 			.sort((a, b) => a.order - b.order)
+			.filter((attr) => attr.isAuthor)
 			.map((attr) => ensureUserForAttribution(attr)),
 	};
 };
