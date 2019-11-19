@@ -78,7 +78,7 @@ section.cover {
             color: #666;
             font-size: 10px;
             font-family: $header-font;
-            content: string(community) string(collection);
+            content: string(community-and-collection);
         }
         @top-right {
             color: #666;
@@ -162,16 +162,12 @@ section.cover {
         }
     }
 
-    .community {
-        string-set: community content(text);
-    }
-
-    .collection {
-        string-set: collection content(text);
+    .community-and-collection {
+        string-set: community-and-collection content();
     }
 
     .title {
-        string-set: title content(text);
+        string-set: title content();
     }
 
     img {

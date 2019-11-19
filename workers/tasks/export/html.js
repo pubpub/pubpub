@@ -129,17 +129,11 @@ const renderFrontMatterForHtml = ({
 	const affiliations = [
 		...new Set(attributions.map((attr) => attr.affiliation).filter((x) => x)),
 	];
+	const communityAndCollectionString =
+		communityTitle + (primaryCollectionTitle ? bullet + primaryCollectionTitle : '');
 	return (
 		<section className="cover">
-			<h3>
-				<span className="community">{communityTitle}</span>
-				{primaryCollectionTitle && (
-					<span className="collection">
-						{bullet}
-						{primaryCollectionTitle}
-					</span>
-				)}
-			</h3>
+			<h3 className="community-and-collection">{communityAndCollectionString}</h3>
 			<h1 className="title">{title}</h1>
 			{attributions.length > 0 && (
 				<div className="byline">
