@@ -5,7 +5,7 @@ import { Button, Icon, Menu, MenuItem, Spinner, Tooltip } from '@blueprintjs/cor
 import { apiFetch } from 'utils';
 import { pingTask } from 'utils/pingTask';
 import { getFormattedDownload } from './headerUtils';
-import { usePubHistory } from '../pubHooks';
+import { usePubHistory, usePageContext } from '../pubHooks';
 
 require('./download.scss');
 
@@ -35,6 +35,7 @@ const Download = (props) => {
 	const [selectedType, setSelectedType] = useState(null);
 	const [downloadUrl, setDownloadUrl] = useState(null);
 	const { latestKey } = usePubHistory();
+	const { locationData } = usePageContext();
 	const formattedDownload = getFormattedDownload(downloads);
 
 	const download = (url) => {
@@ -78,6 +79,7 @@ const Download = (props) => {
 				branchId: activeBranch.id,
 				format: selectedType.format,
 				historyKey: latestKey,
+				accessHash: locationData.query.access,
 			}),
 		}).then(({ taskId, url }) => {
 			if (url) {
@@ -91,7 +93,14 @@ const Download = (props) => {
 					});
 			}
 		});
-	}, [isLoading, selectedType, pubData.id, activeBranch.id, latestKey]);
+	}, [
+		isLoading,
+		selectedType,
+		pubData.id,
+		activeBranch.id,
+		latestKey,
+		locationData.query.access,
+	]);
 
 	return (
 		<div className="pub-download-component">
