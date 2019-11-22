@@ -2,6 +2,7 @@ import fs from 'fs';
 import AWS from 'aws-sdk';
 import tmp from 'tmp-promise';
 
+import { Export } from '../../../server/models';
 import { generateHash } from '../../../server/utils';
 
 const formatTypes = {
@@ -34,7 +35,7 @@ export const uploadDocument = (branchId, tmpFile, extension) => {
 			if (err) {
 				reject(err);
 			}
-			resolve({ url: `https://assets.pubpub.org/${key}` });
+			resolve(`https://assets.pubpub.org/${key}`);
 		});
 	});
 };
@@ -53,3 +54,8 @@ export const writeToFile = (html, file) => {
 		});
 	});
 };
+
+export const getExportById = (exportId) => Export.findOne({ where: { id: exportId } });
+
+export const assignFileToExportById = (exportId, fileUrl) =>
+	Export.update({ url: fileUrl }, { where: { id: exportId } });

@@ -1,27 +1,50 @@
+import Sequelize from 'sequelize';
+
 import { WorkerTask, Export } from '../models';
 import { addWorkerTask } from '../utils';
 
-export const startExportTask = async ({ pubId, branchId, format, historyKey }) => {
-	const taskData = {
-		pubId: pubId,
-		branchId: branchId,
-		format: format,
-		historyKey: historyKey,
-	};
-
+export const getOrStartExportTask = async ({ pubId, branchId, format, historyKey }) => {
+	const existingExport = await Export.findOne({
+		where: {
+			branchId: branchId,
+			format: format,
+			historyKey: {
+				[Sequelize.Op.gte]: historyKey,
+			},
+		},
+		include: [{ model: WorkerTask, as: 'workerTask' }],
+	});
+	if (existingExport) {
+		const { url, workerTask } = existingExport;
+		if (url) {
+			return { url: url };
+		}
+		const shouldAllowTaskToComplete = workerTask && !workerTask.error;
+		if (shouldAllowTaskToComplete) {
+			return { taskId: workerTask.id };
+		}
+	}
+	const theExport =
+		existingExport ||
+		(await Export.create({
+			pubId: pubId,
+			branchId: branchId,
+			format: format,
+			historyKey: historyKey,
+		}));
+	const taskInput = { exportId: theExport.id };
 	const task = await WorkerTask.create({
 		isProcessing: true,
 		type: 'export',
-		input: taskData,
+		input: taskInput,
 	});
-
 	await addWorkerTask(
 		JSON.stringify({
 			id: task.id,
 			type: task.type,
-			input: taskData,
+			input: taskInput,
 		}),
 	);
-
-	return Export.create({ ...taskData, workerTaskId: task.id });
+	await theExport.update({ workerTaskId: task.id });
+	return { taskId: task.id };
 };
