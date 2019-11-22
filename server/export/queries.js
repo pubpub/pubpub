@@ -1,29 +1,27 @@
-import { WorkerTask } from '../models';
+import { WorkerTask, Export } from '../models';
 import { addWorkerTask } from '../utils';
 
-export const createExport = (inputValues) => {
-	const input = {
-		pubId: inputValues.pubId,
-		branchId: inputValues.branchId,
-		format: inputValues.format,
+export const startExportTask = async ({ pubId, branchId, format, historyKey }) => {
+	const taskData = {
+		pubId: pubId,
+		branchId: branchId,
+		format: format,
+		historyKey: historyKey,
 	};
 
-	return WorkerTask.create({
+	const task = await WorkerTask.create({
 		isProcessing: true,
 		type: 'export',
-		input: input,
-	})
-		.then((workerTaskData) => {
-			const sendMessage = addWorkerTask(
-				JSON.stringify({
-					id: workerTaskData.id,
-					type: workerTaskData.type,
-					input: input,
-				}),
-			);
-			return Promise.all([workerTaskData, sendMessage]);
-		})
-		.then(([workerTaskData]) => {
-			return workerTaskData;
-		});
+		input: taskData,
+	});
+
+	await addWorkerTask(
+		JSON.stringify({
+			id: task.id,
+			type: task.type,
+			input: taskData,
+		}),
+	);
+
+	return Export.create({ ...taskData, workerTaskId: task.id });
 };
