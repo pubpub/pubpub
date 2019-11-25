@@ -5,18 +5,6 @@ import tmp from 'tmp-promise';
 import { Export } from '../../../server/models';
 import { generateHash } from '../../../server/utils';
 
-const formatTypes = {
-	html: { extension: 'html' },
-	pdf: { extension: 'pdf', pagedTarget: true },
-	docx: { pandocTarget: 'docx', extension: 'docx' },
-	epub: { pandocTarget: 'epub', extension: 'epub' },
-	markdown: { pandocTarget: 'markdown_strict', extension: 'md' },
-	odt: { pandocTarget: 'odt', extension: 'odt' },
-	plain: { pandocTarget: 'plain', extension: 'txt' },
-	jats: { pandocTarget: 'jats', extension: 'xml' },
-	tex: { pandocTarget: 'latex', extension: 'tex' },
-};
-
 tmp.setGracefulCleanup();
 
 AWS.config.setPromisesDependency(Promise);
@@ -41,8 +29,6 @@ export const uploadDocument = (branchId, tmpFile, extension) => {
 };
 
 export const getTmpFileForExtension = (extension) => tmp.file({ postfix: `.${extension}` });
-
-export const getFormatDetails = (key) => formatTypes[key];
 
 export const writeToFile = (html, file) => {
 	return new Promise((resolve, reject) => {

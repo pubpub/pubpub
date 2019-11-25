@@ -2,6 +2,8 @@ import Sequelize from 'sequelize';
 
 import { WorkerTask, Export } from '../models';
 import { addWorkerTask } from '../utils';
+import { getBranchDoc } from '../utils/firebaseAdmin';
+import { getExportFormats } from '../../shared/export/formats';
 
 export const getOrStartExportTask = async ({ pubId, branchId, format, historyKey }) => {
 	const existingExport = await Export.findOne({
@@ -47,4 +49,20 @@ export const getOrStartExportTask = async ({ pubId, branchId, format, historyKey
 	);
 	await theExport.update({ workerTaskId: task.id });
 	return { taskId: task.id };
+};
+
+export const createBranchExports = async (pubId, branchId) => {
+	const {
+		historyData: { latestKey },
+	} = await getBranchDoc(pubId, branchId);
+	await Promise.all(
+		getExportFormats().map((format) =>
+			getOrStartExportTask({
+				pubId: pubId,
+				branchId: branchId,
+				format: format,
+				historyKey: latestKey,
+			}),
+		),
+	);
 };

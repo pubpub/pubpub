@@ -1,10 +1,11 @@
+import { getExportFormatDetails } from 'shared/export/formats';
+
 import { createStaticHtml } from './html';
 import { getPubMetadata } from './metadata';
 import { callPandoc } from './pandoc';
 import { getProsemirrorPubData } from './prosemirror';
 import {
 	getExportById,
-	getFormatDetails,
 	getTmpFileForExtension,
 	uploadDocument,
 	writeToFile,
@@ -13,11 +14,15 @@ import {
 import { callPaged } from './paged';
 
 export const exportTask = async ({ exportId }, collectSubprocess) => {
-	const { pubId, branchId, format } = await getExportById(exportId);
-	const { extension, pandocTarget, pagedTarget } = getFormatDetails(format);
+	const { pubId, branchId, format, historyKey } = await getExportById(exportId);
+	const { extension, pandocTarget, pagedTarget } = getExportFormatDetails(format);
 	const tmpFile = await getTmpFileForExtension(extension);
 	const pubMetadata = await getPubMetadata(pubId);
-	const { prosemirrorDoc, citations, footnotes } = await getProsemirrorPubData(pubId, branchId);
+	const { prosemirrorDoc, citations, footnotes } = await getProsemirrorPubData(
+		pubId,
+		branchId,
+		historyKey,
+	);
 	const staticHtml = await createStaticHtml(
 		{
 			prosemirrorDoc: prosemirrorDoc,

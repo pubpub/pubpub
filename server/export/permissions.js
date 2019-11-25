@@ -1,25 +1,11 @@
-import { CommunityAdmin, PubManager, Branch } from '../models';
-import { getBranchAccess } from '../branch/permissions';
+import { getBranchAccessForUser } from '../branch/permissions';
 
 export const getPermissions = async ({ branchId, userId, accessHash }) => {
-	const branchData = await Branch.findOne({ where: { id: branchId } });
-	const [pubManager, communityAdmin] = Promise.all(
-		PubManager.findOne({
-			where: { userId: userId, pubId: branchData.pubId },
-			raw: true,
-		}),
-		CommunityAdmin.findOne({
-			where: { userId: userId, communityId: branchData.pubId },
-			raw: true,
-		}),
-	);
-	const branchAccess = getBranchAccess(
-		accessHash,
-		branchData,
-		userId,
-		communityAdmin,
-		pubManager,
-	);
+	const branchAccess = await getBranchAccessForUser({
+		branchId: branchId,
+		userId: userId,
+		accessHash: accessHash,
+	});
 	return {
 		create: branchAccess.canView,
 	};

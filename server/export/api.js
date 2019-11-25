@@ -6,7 +6,7 @@ import { getPermissions } from './permissions';
 
 const getRequestData = (req) => {
 	const user = req.user || {};
-	const { accessHash, branchId, format, historyKey, pubId } = req;
+	const { accessHash, branchId, format, historyKey, pubId } = req.body;
 	return {
 		accessHash: accessHash,
 		branchId: branchId,
