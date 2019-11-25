@@ -58,7 +58,7 @@ const Download = (props) => {
 	};
 
 	useEffect(() => {
-		const downloadOrShowDialog = (url) => {
+		const downloadOrShowButton = (url) => {
 			if (mustShowDownloadButton()) {
 				setDownloadUrl(url);
 				setIsLoading(false);
@@ -83,10 +83,10 @@ const Download = (props) => {
 			}),
 		}).then(({ taskId, url }) => {
 			if (url) {
-				downloadOrShowDialog(url);
+				downloadOrShowButton(url);
 			} else if (taskId) {
 				pingTask(taskId, 1500)
-					.then(({ url: laterUrl }) => downloadOrShowDialog(laterUrl))
+					.then(({ url: laterUrl }) => downloadOrShowButton(laterUrl))
 					.catch(() => {
 						setIsError(true);
 						setIsLoading(false);
