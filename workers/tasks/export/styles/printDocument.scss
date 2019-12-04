@@ -162,6 +162,11 @@ section.cover {
         font-size: 10px;
     }
 
+    [data-node-type='math-block'] {
+        font-size: 16px;
+        break-inside: avoid;
+    }
+
     section.cover {
         page: cover;
     }
