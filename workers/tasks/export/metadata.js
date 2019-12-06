@@ -50,6 +50,8 @@ export const getPubMetadata = async (pubId) => {
 		publishedDateString: publishedDateString,
 		updatedDateString: updatedDateString,
 		communityTitle: pubData.community.title,
+		communityAvatar: pubData.community.avatar,
+		communityAccentColorDark: pubData.community.accentColorDark,
 		primaryCollectionTitle: [pubData.collectionPubs.find((cp) => cp.isPrimary)]
 			.filter((x) => x)
 			.map((cp) => cp.collection.title)
