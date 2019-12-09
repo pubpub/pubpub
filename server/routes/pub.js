@@ -3,6 +3,7 @@ import uuidValidate from 'uuid-validate';
 import { Pub } from 'containers';
 
 import { getPubPageContextTitle } from 'shared/utils/pubPageTitle';
+import { getPubPublishedDate } from 'shared/pub/pubDates';
 import Html from '../Html';
 import app from '../server';
 import {
@@ -127,6 +128,7 @@ app.get(
 					mode: mode,
 				},
 			};
+
 			/* We calculate titleWithContext in generateMetaComponents. Since we will use */
 			/* titleWithContext in other locations (e.g. search), we should eventually */
 			/* write a helper function that generates these parameters. */
@@ -142,7 +144,7 @@ app.get(
 						description: pubData.description,
 						image: pubData.avatar,
 						attributions: pubData.attributions,
-						publishedAt: pubData.firstPublishedAt,
+						publishedAt: getPubPublishedDate(pubData, pubData.activeBranch),
 						doi: pubData.doi,
 						// unlisted: isUnlistedDraft,
 					})}
