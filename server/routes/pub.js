@@ -4,7 +4,7 @@ import { Pub } from 'containers';
 
 import { getPubPageContextTitle } from 'shared/utils/pubPageTitle';
 import { getPubPublishedDate } from 'shared/pub/pubDates';
-import { getPDFDownloads } from 'shared/pub/downloads';
+import { getPDFDownloads } from 'shared/pub/metadata';
 import { chooseCollectionForPub } from '../../client/utils/collections';
 import Html from '../Html';
 import app from '../server';
