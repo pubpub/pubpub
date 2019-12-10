@@ -224,6 +224,7 @@ export const generateMetaComponents = ({
 	doi,
 	publishedAt,
 	unlisted,
+	collection,
 }) => {
 	const siteName = initialData.communityData.title;
 	const url = `https://${initialData.locationData.hostname}${initialData.locationData.path}`;
@@ -267,8 +268,7 @@ export const generateMetaComponents = ({
 	if (contextTitle) {
 		outputComponents = [
 			...outputComponents,
-			<meta key="sn2" property="citation_journal_title" content={contextTitle} />,
-			<meta key="sn3" property="dc.source" content={contextTitle} />,
+			<meta key="sn2" name="citation_journal_title" content={contextTitle} />,
 		];
 	}
 
@@ -282,6 +282,21 @@ export const generateMetaComponents = ({
 				content={url.indexOf('/pub/') > -1 ? 'article' : 'website'}
 			/>,
 		];
+	}
+
+	if (collection) {
+		if (collection.metadata.volume) {
+			outputComponents = [
+				...outputComponents,
+				<meta key="c1" name="citation_volume" content={collection.metadata.volume} />,
+			];
+		}
+		if (collection.metadata.issue) {
+			outputComponents = [
+				...outputComponents,
+				<meta key="c2" name="citation_issue" content={collection.metadata.issue} />,
+			];
+		}
 	}
 
 	if (description) {
@@ -357,12 +372,8 @@ export const generateMetaComponents = ({
 		outputComponents = [
 			...outputComponents,
 			<meta key="pa1" property="article:published_time" content={publishedAt} />,
-			<meta
-				key="pa2"
-				property="citation_publication_date"
-				content={googleScholarPublishedAt}
-			/>,
-			<meta key="pub1" property="citation_publisher" content="PubPub" />,
+			<meta key="pa2" name="citation_publication_date" content={googleScholarPublishedAt} />,
+			<meta key="pub1" name="citation_publisher" content="PubPub" />,
 			<meta key="pub2" property="dc.publisher" content="PubPub" />,
 		];
 	}
@@ -370,7 +381,7 @@ export const generateMetaComponents = ({
 	if (doi) {
 		outputComponents = [
 			...outputComponents,
-			<meta key="doi1" property="citation_doi" content={`doi:${doi}`} />,
+			<meta key="doi1" name="citation_doi" content={`doi:${doi}`} />,
 			<meta key="doi2" property="dc.identifier" content={`doi:${doi}`} />,
 			<meta key="doi3" property="prism.doi" content={`doi:${doi}`} />,
 		];

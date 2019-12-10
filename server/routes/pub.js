@@ -4,6 +4,7 @@ import { Pub } from 'containers';
 
 import { getPubPageContextTitle } from 'shared/utils/pubPageTitle';
 import { getPubPublishedDate } from 'shared/pub/pubDates';
+import { chooseCollectionForPub } from '../../client/utils/collections';
 import Html from '../Html';
 import app from '../server';
 import {
@@ -146,6 +147,7 @@ app.get(
 						attributions: pubData.attributions,
 						publishedAt: getPubPublishedDate(pubData, pubData.activeBranch),
 						doi: pubData.doi,
+						collection: chooseCollectionForPub(pubData, initialData.locationData),
 						// unlisted: isUnlistedDraft,
 					})}
 				>
