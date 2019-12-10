@@ -4,6 +4,7 @@ import { Pub } from 'containers';
 
 import { getPubPageContextTitle } from 'shared/utils/pubPageTitle';
 import { getPubPublishedDate } from 'shared/pub/pubDates';
+import { getPDFDownloads } from 'shared/pub/downloads';
 import { chooseCollectionForPub } from '../../client/utils/collections';
 import Html from '../Html';
 import app from '../server';
@@ -129,7 +130,6 @@ app.get(
 					mode: mode,
 				},
 			};
-
 			/* We calculate titleWithContext in generateMetaComponents. Since we will use */
 			/* titleWithContext in other locations (e.g. search), we should eventually */
 			/* write a helper function that generates these parameters. */
@@ -148,6 +148,7 @@ app.get(
 						publishedAt: getPubPublishedDate(pubData, pubData.activeBranch),
 						doi: pubData.doi,
 						collection: chooseCollectionForPub(pubData, initialData.locationData),
+						downloads: getPDFDownloads(pubData),
 						// unlisted: isUnlistedDraft,
 					})}
 				>

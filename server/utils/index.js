@@ -225,6 +225,7 @@ export const generateMetaComponents = ({
 	publishedAt,
 	unlisted,
 	collection,
+	downloads,
 }) => {
 	const siteName = initialData.communityData.title;
 	const url = `https://${initialData.locationData.hostname}${initialData.locationData.path}`;
@@ -232,7 +233,6 @@ export const generateMetaComponents = ({
 	const avatar = image || initialData.communityData.avatar;
 	const titleWithContext = contextTitle ? `${title} · ${contextTitle}` : title;
 	let outputComponents = [];
-
 	if (!initialData.locationData.isBasePubPub) {
 		outputComponents = [
 			...outputComponents,
@@ -297,6 +297,15 @@ export const generateMetaComponents = ({
 				<meta key="c2" name="citation_issue" content={collection.metadata.issue} />,
 			];
 		}
+	}
+
+	/* Assumes the first PDF download is the canonical one, which is true right now
+	but in the future we may want to support multiple download URLs for various purposes. */
+	if (downloads && downloads.length > 0) {
+		outputComponents = [
+			...outputComponents,
+			<meta key="dl1" name="citation_pdf_url" content={downloads[0].url} />,
+		];
 	}
 
 	if (description) {
