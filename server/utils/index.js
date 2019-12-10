@@ -265,7 +265,7 @@ export const generateMetaComponents = ({
 		];
 	}
 
-	if (contextTitle) {
+	if (contextTitle && (!collection || collection.kind === 'issue')) {
 		outputComponents = [
 			...outputComponents,
 			<meta key="sn2" name="citation_journal_title" content={contextTitle} />,
@@ -295,6 +295,41 @@ export const generateMetaComponents = ({
 			outputComponents = [
 				...outputComponents,
 				<meta key="c2" name="citation_issue" content={collection.metadata.issue} />,
+			];
+		}
+		if (collection.metadata.electronic_issn) {
+			outputComponents = [
+				...outputComponents,
+				<meta
+					key="c3"
+					name="citation_issn"
+					content={collection.metadata.electronic_issn}
+				/>,
+			];
+		}
+		if (collection.metadata.print_issn) {
+			outputComponents = [
+				...outputComponents,
+				<meta key="c4" name="citation_issn" content={collection.metadata.print_issn} />,
+			];
+		}
+		if (collection.kind === 'book') {
+			outputComponents = [
+				...outputComponents,
+				<meta key="c5" name="citation_inbook_title" content={collection.title} />,
+				<meta key="c6" name="citation_book_title" content={collection.title} />,
+			];
+			if (collection.metadata.isbn) {
+				outputComponents = [
+					...outputComponents,
+					<meta key="c7" name="citation_isbn" content={collection.metadata.isbn} />,
+				];
+			}
+		}
+		if (collection.kind === 'conference') {
+			outputComponents = [
+				...outputComponents,
+				<meta key="c8" name="citation_conference_title" content={collection.title} />,
 			];
 		}
 	}
