@@ -268,6 +268,7 @@ export const generateMetaComponents = ({
 		outputComponents = [
 			...outputComponents,
 			<meta key="sn2" property="citation_journal_title" content={contextTitle} />,
+			<meta key="sn3" property="dc.source" content={contextTitle} />,
 		];
 	}
 
