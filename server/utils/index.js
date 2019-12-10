@@ -285,31 +285,16 @@ export const generateMetaComponents = ({
 	}
 
 	if (collection) {
-		if (collection.metadata.volume) {
+		if (collection.kind === 'issue') {
 			outputComponents = [
 				...outputComponents,
 				<meta key="c1" name="citation_volume" content={collection.metadata.volume} />,
-			];
-		}
-		if (collection.metadata.issue) {
-			outputComponents = [
-				...outputComponents,
 				<meta key="c2" name="citation_issue" content={collection.metadata.issue} />,
-			];
-		}
-		if (collection.metadata.electronic_issn) {
-			outputComponents = [
-				...outputComponents,
 				<meta
 					key="c3"
 					name="citation_issn"
 					content={collection.metadata.electronic_issn}
 				/>,
-			];
-		}
-		if (collection.metadata.print_issn) {
-			outputComponents = [
-				...outputComponents,
 				<meta key="c4" name="citation_issn" content={collection.metadata.print_issn} />,
 			];
 		}
@@ -318,13 +303,8 @@ export const generateMetaComponents = ({
 				...outputComponents,
 				<meta key="c5" name="citation_inbook_title" content={collection.title} />,
 				<meta key="c6" name="citation_book_title" content={collection.title} />,
+				<meta key="c7" name="citation_isbn" content={collection.metadata.isbn} />,
 			];
-			if (collection.metadata.isbn) {
-				outputComponents = [
-					...outputComponents,
-					<meta key="c7" name="citation_isbn" content={collection.metadata.isbn} />,
-				];
-			}
 		}
 		if (collection.kind === 'conference') {
 			outputComponents = [
