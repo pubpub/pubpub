@@ -150,7 +150,6 @@ app.get(
 						collection: chooseCollectionForPub(pubData, initialData.locationData),
 						downloads: getPDFDownloads(pubData),
 						textAbstract: getTextAbstract(pubData.initialDoc),
-
 						// unlisted: isUnlistedDraft,
 					})}
 				>

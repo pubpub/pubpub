@@ -22,6 +22,9 @@ export const getPDFDownloads = (pub) => {
 
 export const getTextAbstract = (content) => {
 	let abstract = '';
+	if (!content) {
+		return abstract;
+	}
 	if (
 		content.content[0].type === 'heading' &&
 		content.content[0].attrs.level === 1 &&
