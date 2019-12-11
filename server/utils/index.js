@@ -226,6 +226,7 @@ export const generateMetaComponents = ({
 	unlisted,
 	collection,
 	downloads,
+	textAbstract,
 }) => {
 	const siteName = initialData.communityData.title;
 	const url = `https://${initialData.locationData.hostname}${initialData.locationData.path}`;
@@ -320,6 +321,13 @@ export const generateMetaComponents = ({
 		outputComponents = [
 			...outputComponents,
 			<meta key="dl1" name="citation_pdf_url" content={downloads[0].url} />,
+		];
+	}
+
+	if (textAbstract) {
+		outputComponents = [
+			...outputComponents,
+			<meta key="a1" name="citation_abstract" content={textAbstract} />,
 		];
 	}
 

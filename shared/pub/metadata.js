@@ -19,3 +19,33 @@ export const getPDFDownloads = (pub) => {
 	}
 	return false;
 };
+
+export const getTextAbstract = (content) => {
+	let abstract = '';
+	if (
+		content.content[0].type === 'heading' &&
+		content.content[0].attrs.level === 1 &&
+		content.content[0].attrs.id === 'abstract'
+	) {
+		content.content[1].content.forEach((item) => {
+			switch (item.type) {
+				case 'text':
+					abstract += item.text;
+					if (item.marks) {
+						item.marks.forEach((mark) => {
+							if (mark.type === 'link') {
+								abstract += ` <${mark.attrs.href}> `;
+							}
+						});
+					}
+					break;
+				case 'equation':
+					abstract += item.attrs.value;
+					break;
+				default:
+					break;
+			}
+		});
+	}
+	return abstract;
+};
