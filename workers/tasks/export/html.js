@@ -132,7 +132,6 @@ const renderFrontMatterForHtml = ({
 	doi,
 	title,
 	communityTitle,
-	communityAvatar,
 	communityAccentColorDark,
 	attributions,
 }) => {
