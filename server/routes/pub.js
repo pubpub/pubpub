@@ -4,7 +4,7 @@ import { Pub } from 'containers';
 
 import { getPubPageContextTitle } from 'shared/utils/pubPageTitle';
 import { getPubPublishedDate } from 'shared/pub/pubDates';
-import { getPDFDownloads, getTextAbstract } from 'shared/pub/metadata';
+import { getPDFDownload, getTextAbstract } from 'shared/pub/metadata';
 import { chooseCollectionForPub } from '../../client/utils/collections';
 import Html from '../Html';
 import app from '../server';
@@ -148,7 +148,7 @@ app.get(
 						publishedAt: getPubPublishedDate(pubData, pubData.activeBranch),
 						doi: pubData.doi,
 						collection: chooseCollectionForPub(pubData, initialData.locationData),
-						downloads: getPDFDownloads(pubData),
+						download: getPDFDownload(pubData),
 						textAbstract: getTextAbstract(pubData.initialDoc),
 						// unlisted: isUnlistedDraft,
 					})}

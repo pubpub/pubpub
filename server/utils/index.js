@@ -225,7 +225,7 @@ export const generateMetaComponents = ({
 	publishedAt,
 	unlisted,
 	collection,
-	downloads,
+	download,
 	textAbstract,
 }) => {
 	const siteName = initialData.communityData.title;
@@ -317,10 +317,10 @@ export const generateMetaComponents = ({
 
 	/* Assumes the first PDF download is the canonical one, which is true right now
 	but in the future we may want to support multiple download URLs for various purposes. */
-	if (downloads && downloads.length > 0) {
+	if (download) {
 		outputComponents = [
 			...outputComponents,
-			<meta key="dl1" name="citation_pdf_url" content={downloads[0].url} />,
+			<meta key="dl1" name="citation_pdf_url" content={download.url} />,
 		];
 	}
 

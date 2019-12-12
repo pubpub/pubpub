@@ -1,54 +1,50 @@
-export const getPDFDownloads = (pub) => {
+export const getPDFDownload = (pub) => {
 	const downloads = pub.downloads;
 	const exports = pub.activeBranch.exports;
-	if (downloads && downloads.length > 0) {
-		return downloads.filter((download) => {
-			if (download.url.substring(download.url.length - 4) === '.pdf') {
-				return download;
-			}
-			return false;
-		});
+	if (downloads) {
+		const matchingDownload = downloads.find((dl) => dl.url.endsWith('.pdf'));
+		if (matchingDownload) return matchingDownload;
 	}
-	if (exports && exports.length > 0) {
-		return exports.filter((exportFile) => {
-			if (exportFile.format === 'pdf') {
-				return exportFile;
-			}
-			return false;
-		});
+	if (exports) {
+		const matchingExport = exports.find((exportFile) => exportFile.format === 'pdf');
+		if (matchingExport) return matchingExport;
 	}
 	return false;
 };
 
-export const getTextAbstract = (content) => {
+export const getTextAbstract = (docJson) => {
 	let abstract = '';
-	if (!content) {
-		return abstract;
-	}
-	if (
-		content.content[0].type === 'heading' &&
-		content.content[0].attrs.level === 1 &&
-		content.content[0].attrs.id === 'abstract'
-	) {
-		content.content[1].content.forEach((item) => {
-			switch (item.type) {
-				case 'text':
-					abstract += item.text;
-					if (item.marks) {
-						item.marks.forEach((mark) => {
-							if (mark.type === 'link') {
-								abstract += ` <${mark.attrs.href}> `;
-							}
-						});
-					}
-					break;
-				case 'equation':
-					abstract += item.attrs.value;
-					break;
-				default:
-					break;
-			}
-		});
+	const { content } = docJson;
+	const [firstChild, secondChild] = content;
+	const firstChildIsAbstractHeader =
+		firstChild &&
+		firstChild.type === 'heading' &&
+		firstChild.attrs.level === 1 &&
+		firstChild.content.length > 0 &&
+		firstChild.content[0].text.toUpperCase() === 'abstract'.toUpperCase();
+	if (firstChildIsAbstractHeader && secondChild) {
+		const { content: abstractContent } = secondChild;
+		if (abstractContent) {
+			abstractContent.forEach((item) => {
+				switch (item.type) {
+					case 'text':
+						abstract += item.text;
+						if (item.marks) {
+							item.marks.forEach((mark) => {
+								if (mark.type === 'link') {
+									abstract += ` <${mark.attrs.href}> `;
+								}
+							});
+						}
+						break;
+					case 'equation':
+						abstract += item.attrs.value;
+						break;
+					default:
+						break;
+				}
+			});
+		}
 	}
 	return abstract;
 };
