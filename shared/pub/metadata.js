@@ -14,6 +14,7 @@ export const getPDFDownload = (pub) => {
 
 export const getTextAbstract = (docJson) => {
 	let abstract = '';
+	if (!docJson) return abstract;
 	const { content } = docJson;
 	const [firstChild, secondChild] = content;
 	const firstChildIsAbstractHeader =

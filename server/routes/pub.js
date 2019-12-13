@@ -149,7 +149,7 @@ app.get(
 						doi: pubData.doi,
 						collection: chooseCollectionForPub(pubData, initialData.locationData),
 						download: getPDFDownload(pubData),
-						textAbstract: getTextAbstract(pubData.initialDoc),
+						textAbstract: pubData.initialDoc ? getTextAbstract(pubData.initialDoc) : '',
 						// unlisted: isUnlistedDraft,
 					})}
 				>
