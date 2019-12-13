@@ -227,6 +227,7 @@ export const generateMetaComponents = ({
 	collection,
 	download,
 	textAbstract,
+	notes,
 }) => {
 	const siteName = initialData.communityData.title;
 	const url = `https://${initialData.locationData.hostname}${initialData.locationData.path}`;
@@ -419,6 +420,14 @@ export const generateMetaComponents = ({
 		];
 	}
 
+	if (notes) {
+		const citationNoteTags = notes.map((note, i) => {
+			// https://github.com/yannickcr/eslint-plugin-react/issues/1123
+			// eslint-disable-next-line react/no-array-index-key
+			return <meta key={`n${i}`} name="citation_reference" content={note} />;
+		});
+		outputComponents = [...outputComponents, citationNoteTags];
+	}
 	if (unlisted) {
 		outputComponents = [
 			...outputComponents,
