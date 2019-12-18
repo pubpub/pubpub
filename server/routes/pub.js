@@ -145,7 +145,10 @@ app.get(
 						description: pubData.description,
 						image: pubData.avatar,
 						attributions: pubData.attributions,
-						publishedAt: getPubPublishedDate(pubData, pubData.activeBranch),
+						publishedAt: getPubPublishedDate(
+							pubData,
+							pubData.branches.find((br) => br.title === 'public'),
+						),
 						doi: pubData.doi,
 						collection: chooseCollectionForPub(pubData, initialData.locationData),
 						download: getPDFDownload(pubData),
