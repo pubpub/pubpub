@@ -145,12 +145,22 @@ app.get(
 						description: pubData.description,
 						image: pubData.avatar,
 						attributions: pubData.attributions,
+<<<<<<< HEAD
 						publishedAt: getPubPublishedDate(pubData, pubData.activeBranch),
+=======
+						publishedAt: getPubPublishedDate(
+							pubData,
+							pubData.branches.find((br) => br.title === 'public'),
+						),
+>>>>>>> dev
 						doi: pubData.doi,
 						collection: chooseCollectionForPub(pubData, initialData.locationData),
 						download: getPDFDownload(pubData),
 						textAbstract: pubData.initialDoc ? getTextAbstract(pubData.initialDoc) : '',
+<<<<<<< HEAD
 						notes: getGSNotes(pubData.citations.concat(pubData.footnotes)),
+=======
+>>>>>>> dev
 						// unlisted: isUnlistedDraft,
 					})}
 				>
