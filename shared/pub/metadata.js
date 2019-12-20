@@ -50,7 +50,7 @@ export const getTextAbstract = (docJson) => {
 	return abstract;
 };
 
-export const getGSNotes = (notes) => {
+export const getGoogleScholarNotes = (notes) => {
 	return notes.reduce((unique, note) => {
 		const noteArray = [];
 		const noteType = note.json[0].type;
