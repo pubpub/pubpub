@@ -17,10 +17,9 @@ const propTypes = {
 
 const Wrapper = (props) => {
 	const { chunkName, initialData, viewData } = props;
-	console.log('viewData', viewData);
 	const paths = {
-		Login: { activeComponent: <Login {...viewData} />, hideNav: true, hideFooter: true },
-		Pub: { activeComponent: <Pub {...viewData} /> },
+		Login: { activeComponent: () => <Login {...viewData} />, hideNav: true, hideFooter: true },
+		Pub: { activeComponent: () => <Pub {...viewData} /> },
 	};
 
 	const { activeComponent, hideNav, hideFooter, isDashboard } = paths[chunkName];
@@ -96,7 +95,7 @@ const Wrapper = (props) => {
 				{isDashboard && <Breadcrumbs />}
 
 				<div id="main-content" tabIndex="-1" className="page-content">
-					{activeComponent}
+					{activeComponent()}
 				</div>
 
 				{showFooter && (
@@ -110,8 +109,6 @@ const Wrapper = (props) => {
 			</div>
 		</PageContext.Provider>
 	);
-
-	// return paths[chunkName].component;
 };
 
 Wrapper.propTypes = propTypes;

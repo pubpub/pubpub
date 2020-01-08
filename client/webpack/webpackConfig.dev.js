@@ -85,17 +85,17 @@ module.exports = {
 	],
 	optimization: {
 		splitChunks: {
-			chunks: 'all',
-			// cacheGroups: {
-			// 	vendors: {
-			// 		// TODO: bundle components into vendor, I think...
-			// 		// test: /([\\/]node_modules[\\/]|[\\/]components[\\/])/,
-			// 		test: /([\\/]node_modules[\\/])/,
-			// 		name: 'vendor',
-			// 		chunks: 'all',
-			// 		// minChunks: 2,
-			// 	},
-			// },
+			// chunks: 'all',
+			cacheGroups: {
+				vendors: {
+					// TODO: bundle components into vendor, I think...
+					// test: /([\\/]node_modules[\\/]|[\\/]components[\\/])/,
+					test: /([\\/]node_modules[\\/])/,
+					name: 'vendor',
+					chunks: 'all',
+					// minChunks: 2,
+				},
+			},
 		},
 	},
 	node: {

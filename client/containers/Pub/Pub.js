@@ -1,7 +1,7 @@
 import React from 'react';
 import { usePageContext } from 'utils/hooks';
 // import PageWrapper from 'components/PageWrapper/PageWrapper';
-import { hydrateWrapper } from 'utils';
+// import { hydrateWrapper } from 'utils';
 // import { communityDataProps, locationDataProps, loginDataProps } from 'types/base';
 import { pubDataProps } from 'types/pub';
 import PubSyncManager from './PubSyncManager';
@@ -83,4 +83,4 @@ const Pub = (props) => {
 Pub.propTypes = propTypes;
 export default Pub;
 
-hydrateWrapper(Pub);
+// hydrateWrapper(Pub);
