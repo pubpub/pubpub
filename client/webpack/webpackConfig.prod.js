@@ -1,5 +1,4 @@
 const { resolve } = require('path');
-const { readdirSync } = require('fs');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
@@ -10,9 +9,7 @@ const autoprefixer = require('autoprefixer');
 module.exports = {
 	mode: 'production',
 	entry: {
-		// ...containerEntries,
 		main: resolve(__dirname, `../containers/Wrapper.js`),
-		baseStyle: resolve(__dirname, '../styles/base.scss'),
 	},
 	resolve: {
 		modules: [resolve(__dirname, '../'), 'node_modules'],
@@ -79,7 +76,9 @@ module.exports = {
 		new MiniCssExtractPlugin({
 			filename: '[name].[contenthash].css',
 		}),
-		new ManifestPlugin({ publicPath: 'https://static.pubpub.org/dist/' }),
+		new ManifestPlugin({
+			publicPath: '/dist/',
+		}),
 	],
 	optimization: {
 		minimizer: [
@@ -88,7 +87,6 @@ module.exports = {
 			}),
 		],
 		splitChunks: {
-			// chunks: 'all',
 			cacheGroups: {
 				vendors: {
 					// test: /[\\/]node_modules[\\/]/,

@@ -1,5 +1,4 @@
 const { resolve } = require('path');
-const { readdirSync } = require('fs');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const autoprefixer = require('autoprefixer');
@@ -7,9 +6,7 @@ const autoprefixer = require('autoprefixer');
 module.exports = {
 	mode: 'development',
 	entry: {
-		// ...containerEntries,
 		main: resolve(__dirname, `../containers/Wrapper.js`),
-		baseStyle: resolve(__dirname, '../styles/base.scss'),
 	},
 	resolve: {
 		modules: [resolve(__dirname, '../'), 'node_modules'],
@@ -81,11 +78,12 @@ module.exports = {
 		new MiniCssExtractPlugin({
 			filename: '[name].css',
 		}),
-		new ManifestPlugin({ publicPath: '/dist/' }),
+		new ManifestPlugin({
+			publicPath: '/dist/',
+		}),
 	],
 	optimization: {
 		splitChunks: {
-			// chunks: 'all',
 			cacheGroups: {
 				vendors: {
 					// TODO: bundle components into vendor, I think...

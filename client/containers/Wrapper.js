@@ -9,6 +9,8 @@ import { PageContext } from 'utils/hooks';
 import SideMenu from 'components/PageWrapper/SideMenu';
 import Breadcrumbs from 'components/PageWrapper/Breadcrumbs';
 
+require('../styles/base.scss');
+
 const propTypes = {
 	chunkName: PropTypes.string.isRequired,
 	initialData: PropTypes.object.isRequired,

@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Wrapper from 'containers/Wrapper';
 
-let manifest;
-try {
+// let manifest;
+// try {
 	/* eslint-disable-next-line global-require, import/no-unresolved */
-	manifest = require('../dist/manifest.json');
-} catch (err) {
+const manifest = require('../dist/manifest.json');
+// } catch (err) {
 	// No Manifest file. Must be dev mode.
-}
+// }
 
 const propTypes = {
 	// children: PropTypes.node.isRequired,
@@ -24,9 +24,10 @@ const defaultProps = {
 
 const Html = (props) => {
 	const getPath = (chunkName, extension) => {
-		let manifestUrl = manifest
-			? `${manifest[`${chunkName}.${extension}`]}`
-			: `${chunkName}.${extension}`;
+		return `${manifest[`${chunkName}.${extension}`]}`;
+		// return manifest
+		// 	? `${manifest[`${chunkName}.${extension}`]}`
+		// 	: `${chunkName}.${extension}`;
 
 		/* If we're on a hosted dev server, remove the static path */
 		/* Note that fonts will still be sourced from static.pubpub */
@@ -35,10 +36,10 @@ const Html = (props) => {
 
 		/* TODO: Uncomment when v6 is live */
 		// if (!props.initialData.locationData.isPubPubProduction) {
-		manifestUrl = manifestUrl.replace('https://static.pubpub.org', '');
+		// manifestUrl = manifestUrl.replace('https://static.pubpub.org', '');
 		// }
 
-		return manifestUrl;
+		// return manifestUrl;
 	};
 
 	return (
@@ -54,7 +55,7 @@ const Html = (props) => {
 					name="google-site-verification"
 					content="jmmJFnkSOeIEuS54adOzGMwc0kwpsa8wQ-L4GyPpPDg"
 				/>
-				<link rel="stylesheet" type="text/css" href={getPath('baseStyle', 'css')} />
+				{/* <link rel="stylesheet" type="text/css" href={getPath('baseStyle', 'css')} /> */}
 				<link rel="stylesheet" type="text/css" href={getPath('vendor', 'css')} />
 				<link rel="stylesheet" type="text/css" href={getPath('main', 'css')} />
 				<link
