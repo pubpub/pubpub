@@ -4,24 +4,11 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const autoprefixer = require('autoprefixer');
 
-const containerEntries = readdirSync(resolve(__dirname, '../containers'))
-	.filter((item) => {
-		if (item === '.DS_Store' || item === 'index.js') {
-			return false;
-		}
-		return true;
-	})
-	.reduce((prev, curr) => {
-		return {
-			...prev,
-			[curr]: resolve(__dirname, `../containers/${curr}/${curr}`),
-		};
-	}, {});
-
 module.exports = {
 	mode: 'development',
 	entry: {
-		...containerEntries,
+		// ...containerEntries,
+		main: resolve(__dirname, `../containers/Wrapper.js`),
 		baseStyle: resolve(__dirname, '../styles/base.scss'),
 	},
 	resolve: {
@@ -98,16 +85,17 @@ module.exports = {
 	],
 	optimization: {
 		splitChunks: {
-			cacheGroups: {
-				vendors: {
-					// TODO: bundle components into vendor, I think...
-					// test: /([\\/]node_modules[\\/]|[\\/]components[\\/])/,
-					test: /([\\/]node_modules[\\/])/,
-					name: 'vendor',
-					chunks: 'all',
-					// minChunks: 2,
-				},
-			},
+			chunks: 'all',
+			// cacheGroups: {
+			// 	vendors: {
+			// 		// TODO: bundle components into vendor, I think...
+			// 		// test: /([\\/]node_modules[\\/]|[\\/]components[\\/])/,
+			// 		test: /([\\/]node_modules[\\/])/,
+			// 		name: 'vendor',
+			// 		chunks: 'all',
+			// 		// minChunks: 2,
+			// 	},
+			// },
 		},
 	},
 	node: {

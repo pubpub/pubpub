@@ -5,26 +5,14 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const autoprefixer = require('autoprefixer');
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
-const containerEntries = readdirSync(resolve(__dirname, '../containers'))
-	.filter((item) => {
-		if (item === '.DS_Store' || item === 'index.js') {
-			return false;
-		}
-		return true;
-	})
-	.reduce((prev, curr) => {
-		return {
-			...prev,
-			[curr]: resolve(__dirname, `../containers/${curr}/${curr}`),
-		};
-	}, {});
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
 	mode: 'production',
 	entry: {
-		...containerEntries,
+		// ...containerEntries,
+		main: resolve(__dirname, `../containers/Wrapper.js`),
+		PubContainer: resolve(__dirname, `../containers/Pub/Pub`),
 		baseStyle: resolve(__dirname, '../styles/base.scss'),
 	},
 	resolve: {
@@ -83,7 +71,7 @@ module.exports = {
 		],
 	},
 	plugins: [
-		// new BundleAnalyzerPlugin(),
+		new BundleAnalyzerPlugin(),
 		new webpack.DefinePlugin({
 			'process.env': {
 				NODE_ENV: JSON.stringify('production'),
@@ -101,15 +89,16 @@ module.exports = {
 			}),
 		],
 		splitChunks: {
-			cacheGroups: {
-				vendors: {
-					// test: /[\\/]node_modules[\\/]/,
-					test: /([\\/]node_modules[\\/]|[\\/]components[\\/])/,
-					name: 'vendor',
-					chunks: 'all',
-					// minChunks: 2, // This was causing weird vendor.css issues where it wouldn't output.
-				},
-			},
+			chunks: 'all',
+			// cacheGroups: {
+			// 	vendors: {
+			// 		// test: /[\\/]node_modules[\\/]/,
+			// 		test: /([\\/]node_modules[\\/]|[\\/]components[\\/])/,
+			// 		name: 'vendor',
+			// 		chunks: 'all',
+			// 		// minChunks: 2, // This was causing weird vendor.css issues where it wouldn't output.
+			// 	},
+			// },
 		},
 	},
 	node: {

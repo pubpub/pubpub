@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Wrapper from 'containers/Wrapper';
 
 let manifest;
 try {
@@ -10,10 +11,15 @@ try {
 }
 
 const propTypes = {
-	children: PropTypes.node.isRequired,
+	// children: PropTypes.node.isRequired,
 	chunkName: PropTypes.string.isRequired,
 	initialData: PropTypes.object.isRequired,
+	viewData: PropTypes.object,
 	headerComponents: PropTypes.array.isRequired,
+};
+
+const defaultProps = {
+	viewData: {},
 };
 
 const Html = (props) => {
@@ -50,7 +56,7 @@ const Html = (props) => {
 				/>
 				<link rel="stylesheet" type="text/css" href={getPath('baseStyle', 'css')} />
 				<link rel="stylesheet" type="text/css" href={getPath('vendor', 'css')} />
-				<link rel="stylesheet" type="text/css" href={getPath(props.chunkName, 'css')} />
+				<link rel="stylesheet" type="text/css" href={getPath('main', 'css')} />
 				<link
 					rel="search"
 					type="application/opensearchdescription+xml"
@@ -59,7 +65,13 @@ const Html = (props) => {
 				/>
 			</head>
 			<body>
-				<div id="root">{props.children}</div>
+				<div id="root">
+					<Wrapper
+						initialData={props.initialData}
+						viewData={props.viewData}
+						chunkName={props.chunkName}
+					/>
+				</div>
 				<script
 					crossOrigin="anonymous"
 					src="https://polyfill.io/v3/polyfill.min.js?features=default,fetch,HTMLCanvasElement.prototype.toBlob,Object.entries,Object.values,URL,Promise,Object.assign,Number.isNaN,String.prototype.includes"
@@ -69,12 +81,23 @@ const Html = (props) => {
 					type="text/plain"
 					data-json={JSON.stringify(props.initialData)}
 				/>
+				<script
+					id="view-data"
+					type="text/plain"
+					data-json={JSON.stringify(props.viewData)}
+				/>
+				<script
+					id="chunk-name"
+					type="text/plain"
+					data-json={JSON.stringify(props.chunkName)}
+				/>
 				<script src={getPath('vendor', 'js')} />
-				<script src={getPath(props.chunkName, 'js')} />
+				<script src={getPath('main', 'js')} />
 			</body>
 		</html>
 	);
 };
 
 Html.propTypes = propTypes;
+Html.defaultProps = defaultProps;
 export default Html;

@@ -1,6 +1,6 @@
 import React from 'react';
 import uuidValidate from 'uuid-validate';
-import { Pub } from 'containers';
+// import { Pub } from 'containers';
 
 import { getPubPageContextTitle } from 'shared/utils/pubPageTitle';
 import Html from '../Html';
@@ -121,8 +121,7 @@ app.get(
 				userId: initialData.loginData.id,
 			});
 
-			const newInitialData = {
-				...initialData,
+			const viewData = {
 				pubData: {
 					...pubData,
 					firebaseToken: firebaseToken,
@@ -136,7 +135,8 @@ app.get(
 				res,
 				<Html
 					chunkName="Pub"
-					initialData={newInitialData}
+					initialData={initialData}
+					viewData={viewData}
 					headerComponents={generateMetaComponents({
 						initialData: initialData,
 						title: pubData.title,
@@ -148,9 +148,7 @@ app.get(
 						doi: pubData.doi,
 						// unlisted: isUnlistedDraft,
 					})}
-				>
-					<Pub {...newInitialData} />
-				</Html>,
+				/>,
 			);
 		} catch (err) {
 			return handleErrors(req, res, next)(err);
