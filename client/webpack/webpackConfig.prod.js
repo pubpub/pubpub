@@ -9,7 +9,7 @@ const autoprefixer = require('autoprefixer');
 module.exports = {
 	mode: 'production',
 	entry: {
-		main: resolve(__dirname, `../containers/Wrapper.js`),
+		main: resolve(__dirname, `../containers/App/App.js`),
 	},
 	resolve: {
 		modules: [resolve(__dirname, '../'), 'node_modules'],
