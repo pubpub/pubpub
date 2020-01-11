@@ -1,8 +1,5 @@
 import React from 'react';
 import { usePageContext } from 'utils/hooks';
-// import PageWrapper from 'components/PageWrapper/PageWrapper';
-// import { hydrateWrapper } from 'utils';
-// import { communityDataProps, locationDataProps, loginDataProps } from 'types/base';
 import { pubDataProps } from 'types/pub';
 import PubSyncManager from './PubSyncManager';
 import PubHeader from './PubHeader';
@@ -18,10 +15,6 @@ import { PubSuspendWhileTypingProvider, PubSuspendWhileTyping } from './PubSuspe
 require('./pub.scss');
 
 const propTypes = {
-	// communityData: communityDataProps.isRequired,
-	// loginData: loginDataProps.isRequired,
-	// locationData: locationDataProps.isRequired,
-	// scopeData: locationDataProps.isRequired,
 	pubData: pubDataProps.isRequired,
 };
 
@@ -30,12 +23,6 @@ const Pub = (props) => {
 	return (
 		<PubSuspendWhileTypingProvider>
 			<div id="pub-container">
-				{/*<PageWrapper
-					locationData={props.locationData}
-					communityData={props.communityData}
-					loginData={props.loginData}
-					scopeData={props.scopeData}
-				>*/}
 				<PubSyncManager
 					pubData={props.pubData}
 					locationData={locationData}
@@ -74,7 +61,6 @@ const Pub = (props) => {
 						);
 					}}
 				</PubSyncManager>
-				{/*</PageWrapper>*/}
 			</div>
 		</PubSuspendWhileTypingProvider>
 	);
@@ -82,5 +68,3 @@ const Pub = (props) => {
 
 Pub.propTypes = propTypes;
 export default Pub;
-
-// hydrateWrapper(Pub);

@@ -51,13 +51,66 @@ export default (viewData, locationData, chunkName) => {
 			activeComponent: () => <DashboardOverview {...viewData} />,
 			isDashboard: true,
 		},
+		Explore: {
+			activeComponent: () => <Explore {...viewData} />,
+			hideNav: true,
+		},
+		Landing: {
+			activeComponent: () => <Landing {...viewData} />,
+			hideNav: true,
+		},
 		Login: {
 			activeComponent: () => <Login {...viewData} />,
 			hideNav: true,
 			hideFooter: true,
 		},
+		NoMatch: {
+			activeComponent: () => <NoMatch {...viewData} />,
+			hideNav: locationData.isBasePubPub,
+			hideFooter: true,
+		},
+		Page: {
+			activeComponent: () => <Page {...viewData} />,
+		},
+		PasswordReset: {
+			activeComponent: () => <PasswordReset {...viewData} />,
+			hideNav: true,
+			hideFooter: true,
+		},
+		Pricing: {
+			activeComponent: () => <Pricing {...viewData} />,
+			hideNav: true,
+			hideFooter: true,
+		},
+		Privacy: {
+			activeComponent: () => <Privacy {...viewData} />,
+			hideNav: locationData.isBasePubPub,
+		},
 		Pub: {
 			activeComponent: () => <Pub {...viewData} />,
+		},
+		Search: {
+			activeComponent: () => <Search {...viewData} />,
+			hideNav: locationData.isBasePubPub,
+			hideFooter: true,
+		},
+		Signup: {
+			activeComponent: () => <Signup {...viewData} />,
+			hideNav: true,
+			hideFooter: true,
+		},
+		Terms: {
+			activeComponent: () => <Terms {...viewData} />,
+			hideNav: locationData.isBasePubPub,
+		},
+		User: {
+			activeComponent: () => <User {...viewData} />,
+			hideNav: locationData.isBasePubPub,
+		},
+		UserCreate: {
+			activeComponent: () => <UserCreate {...viewData} />,
+			hideNav: locationData.isBasePubPub,
+			hideFooter: true,
 		},
 	};
 	return paths[chunkName];
