@@ -35,7 +35,7 @@ const App = (props) => {
 	const showFooter = !hideFooter && !isDashboard;
 	return (
 		<PageContext.Provider value={pageContextProps}>
-			<div id="page-wrapper-component" className={classNames({ dashboard: isDashboard })}>
+			<div id="app" className={classNames({ dashboard: isDashboard })}>
 				<AccentStyle communityData={communityData} isNavHidden={!showNav} />
 
 				{locationData.isDuqDuq && (

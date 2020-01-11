@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import algoliasearch from 'algoliasearch';
 import { NonIdealState, Spinner, InputGroup, Button, Tabs, Tab } from '@blueprintjs/core';
 import dateFormat from 'dateformat';
-import { useDebounce } from 'react-use';
+import { useThrottleFn } from 'react-use';
 import { Icon } from 'components';
 import { getResizedUrl, generatePubBackground, generatePageBackground } from 'utils';
 import { usePageContext } from 'utils/hooks';
@@ -59,7 +59,7 @@ const Search = (props) => {
 		}
 	};
 
-	useDebounce(handleSearch, 1000, [searchQuery, page, mode]);
+	useThrottleFn(handleSearch, 1000, [searchQuery, page, mode]);
 	useEffect(() => {
 		setClient();
 		inputRef.current.focus();
