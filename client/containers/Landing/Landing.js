@@ -122,14 +122,12 @@ class Landing extends React.Component {
 									iterative process.
 								</p>
 								<div className="buttons">
-									{!this.props.loginData.id && (
-										<a
-											href="/signup"
-											className="bp3-button bp3-intent-primary bp3-large"
-										>
-											Join PubPub
-										</a>
-									)}
+									<a
+										href="/signup"
+										className="bp3-button bp3-intent-primary bp3-large"
+									>
+										Join PubPub
+									</a>
 									<a href="/community/create" className="bp3-button bp3-large">
 										Create your Community
 									</a>

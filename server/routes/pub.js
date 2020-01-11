@@ -1,7 +1,5 @@
 import React from 'react';
 import uuidValidate from 'uuid-validate';
-// import { Pub } from 'containers';
-
 import { getPubPageContextTitle } from 'shared/utils/pubPageTitle';
 import Html from '../Html';
 import app from '../server';

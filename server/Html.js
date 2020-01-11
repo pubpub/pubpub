@@ -1,17 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Wrapper from 'containers/Wrapper';
+import App from 'containers/App/App';
 
-// let manifest;
-// try {
-	/* eslint-disable-next-line global-require, import/no-unresolved */
 const manifest = require('../dist/manifest.json');
-// } catch (err) {
-	// No Manifest file. Must be dev mode.
-// }
 
 const propTypes = {
-	// children: PropTypes.node.isRequired,
 	chunkName: PropTypes.string.isRequired,
 	initialData: PropTypes.object.isRequired,
 	viewData: PropTypes.object,
@@ -25,21 +18,6 @@ const defaultProps = {
 const Html = (props) => {
 	const getPath = (chunkName, extension) => {
 		return `${manifest[`${chunkName}.${extension}`]}`;
-		// return manifest
-		// 	? `${manifest[`${chunkName}.${extension}`]}`
-		// 	: `${chunkName}.${extension}`;
-
-		/* If we're on a hosted dev server, remove the static path */
-		/* Note that fonts will still be sourced from static.pubpub */
-		/* so if viewing those needs to be tested, the webpack config */
-		/* needs to change. */
-
-		/* TODO: Uncomment when v6 is live */
-		// if (!props.initialData.locationData.isPubPubProduction) {
-		// manifestUrl = manifestUrl.replace('https://static.pubpub.org', '');
-		// }
-
-		// return manifestUrl;
 	};
 
 	return (
@@ -55,7 +33,6 @@ const Html = (props) => {
 					name="google-site-verification"
 					content="jmmJFnkSOeIEuS54adOzGMwc0kwpsa8wQ-L4GyPpPDg"
 				/>
-				{/* <link rel="stylesheet" type="text/css" href={getPath('baseStyle', 'css')} /> */}
 				<link rel="stylesheet" type="text/css" href={getPath('vendor', 'css')} />
 				<link rel="stylesheet" type="text/css" href={getPath('main', 'css')} />
 				<link
@@ -67,7 +44,7 @@ const Html = (props) => {
 			</head>
 			<body>
 				<div id="root">
-					<Wrapper
+					<App
 						initialData={props.initialData}
 						viewData={props.viewData}
 						chunkName={props.chunkName}

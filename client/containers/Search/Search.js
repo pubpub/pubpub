@@ -75,7 +75,7 @@ const Search = (props) => {
 			const modeString = mode !== 'pubs' ? `${queryString ? '&' : '?'}mode=${mode}` : '';
 			window.history.replaceState({}, '', `/search${queryString}${pageString}${modeString}`);
 		}
-	}, []);
+	}, []); /* eslint-disable-line react-hooks/exhaustive-deps */
 
 	const setMode = (nextMode) => {
 		if (nextMode !== mode) {

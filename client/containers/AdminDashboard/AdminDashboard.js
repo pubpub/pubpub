@@ -51,5 +51,4 @@ class AdminDashboard extends React.Component {
 	}
 }
 
-AdminDashboard.propTypes = propTypes;
 export default AdminDashboard;

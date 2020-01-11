@@ -1,7 +1,9 @@
 import React from 'react';
 import { GridWrapper } from 'components';
+import { usePageContext } from 'utils/hooks';
 
-const Terms = function(props) {
+const Terms = function() {
+	const { locationData } = usePageContext();
 	return (
 		<div id="terms-container">
 			<div className="legal-wrapper">
@@ -17,7 +19,7 @@ const Terms = function(props) {
 					<p>
 						PubPub reserves the right to change the terms of the Terms of Service
 						(&quot;TOS&quot;) or to modify its features at any time. The Site will post
-						changes to the terms of this User Agreement at {props.locationData.hostname}
+						changes to the terms of this User Agreement at {locationData.hostname}
 						/tos, and by accessing the Site after modifications to this User Agreement
 						have been posted, you agree to be bound by all the modified terms.
 					</p>
