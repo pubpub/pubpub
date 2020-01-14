@@ -14,27 +14,27 @@ const propTypes = {
 };
 
 const PasswordReset = (props) => {
-	const [email, emailSetter] = useState('');
-	const [password, passwordSetter] = useState('');
-	const [showConfirmation, showConfirmationSetter] = useState(false);
-	const [postIsLoading, postIsLoadingSetter] = useState(false);
-	const [postError, postErrorSetter] = useState(undefined);
-	const [putIsLoading, putIsLoadingSetter] = useState(false);
-	const [putError, putErrorSetter] = useState(undefined);
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [showConfirmation, setShowConfirmation] = useState(false);
+	const [postIsLoading, setPostIsLoading] = useState(false);
+	const [postError, setPostError] = useState(undefined);
+	const [putIsLoading, setPutIsLoading] = useState(false);
+	const [putError, setPutError] = useState(undefined);
 	const { passwordResetData } = props;
 	const { locationData } = usePageContext();
 
 	const onEmailChange = (evt) => {
-		emailSetter(evt.target.value);
+		setEmail(evt.target.value);
 	};
 
 	const onPasswordChange = (evt) => {
-		passwordSetter(evt.target.value);
+		setPassword(evt.target.value);
 	};
 
 	const handlePostPasswordReset = (evt) => {
 		evt.preventDefault();
-		postIsLoadingSetter(true);
+		setPostIsLoading(true);
 
 		return apiFetch('/api/password-reset', {
 			method: 'POST',
@@ -43,18 +43,18 @@ const PasswordReset = (props) => {
 			}),
 		})
 			.then(() => {
-				postIsLoadingSetter(false);
-				showConfirmationSetter(true);
+				setPostIsLoading(false);
+				setShowConfirmation(true);
 			})
 			.catch(() => {
-				postIsLoadingSetter(false);
-				postErrorSetter('Error');
+				setPostIsLoading(false);
+				setPostError('Error');
 			});
 	};
 
 	const handlePutPasswordReset = (evt) => {
 		evt.preventDefault();
-		putIsLoadingSetter(true);
+		setPutIsLoading(true);
 
 		return apiFetch('/api/password-reset', {
 			method: 'PUT',
@@ -65,12 +65,12 @@ const PasswordReset = (props) => {
 			}),
 		})
 			.then(() => {
-				putIsLoadingSetter(false);
-				showConfirmationSetter(true);
+				setPutIsLoading(false);
+				setShowConfirmation(true);
 			})
 			.catch(() => {
-				putIsLoadingSetter(false);
-				putErrorSetter('Error');
+				setPutIsLoading(false);
+				setPutError('Error');
 			});
 	};
 	const resetHash = locationData.params.resetHash;

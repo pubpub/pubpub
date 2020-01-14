@@ -8,13 +8,13 @@ require('./signup.scss');
 
 const Signup = () => {
 	const { locationData, communityData } = usePageContext();
-	const [email, emailSetter] = useState('');
-	const [isSuccessful, isSuccessfulSetter] = useState(false);
-	const [postSignupIsLoading, postSignupIsLoadingSetter] = useState(false);
-	const [postSignupError, postSignupErrorSetter] = useState(undefined);
+	const [email, setEmail] = useState('');
+	const [isSuccessful, setIsSuccessful] = useState(false);
+	const [postSignupIsLoading, setPostSignupIsLoading] = useState(false);
+	const [postSignupError, setPostSignupError] = useState(undefined);
 	const onSignupSubmit = (evt) => {
 		evt.preventDefault();
-		postSignupIsLoadingSetter(true);
+		setPostSignupIsLoading(true);
 		postSignupError(undefined);
 		return apiFetch('/api/signup', {
 			method: 'POST',
@@ -24,16 +24,16 @@ const Signup = () => {
 			}),
 		})
 			.then(() => {
-				postSignupIsLoadingSetter(false);
-				isSuccessfulSetter(true);
+				setPostSignupIsLoading(false);
+				setIsSuccessful(true);
 			})
 			.catch((err) => {
-				postSignupIsLoadingSetter(false);
-				postSignupErrorSetter(err);
+				setPostSignupIsLoading(false);
+				setPostSignupError(err);
 			});
 	};
 	const onEmailChange = (evt) => {
-		emailSetter(evt.target.value);
+		setEmail(evt.target.value);
 	};
 	return (
 		<div id="signup-container">

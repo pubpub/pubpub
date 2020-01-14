@@ -22,7 +22,7 @@ const App = (props) => {
 	const { chunkName, initialData, viewData } = props;
 	const { loginData, communityData, locationData, scopeData } = initialData;
 	const pathObject = getPaths(viewData, locationData, chunkName);
-	const { activeComponent, hideNav, hideFooter, isDashboard } = pathObject;
+	const { ActiveComponent, hideNav, hideFooter, isDashboard } = pathObject;
 
 	const pageContextProps = {
 		communityData: communityData,
@@ -37,31 +37,22 @@ const App = (props) => {
 		<PageContext.Provider value={pageContextProps}>
 			<div id="app" className={classNames({ dashboard: isDashboard })}>
 				<AccentStyle communityData={communityData} isNavHidden={!showNav} />
-
 				{locationData.isDuqDuq && (
 					<div className="duqduq-warning">Development Environment</div>
 				)}
-
 				<SkipLink targetId="main-content">Skip to main content</SkipLink>
-
 				<GdprBanner loginData={loginData} />
-
 				<Header />
-
 				{showNav && <NavBar />}
-
 				{isDashboard && (
-					<div className="side-content">
+					<React.Fragment>
 						<SideMenu />
-					</div>
+						<Breadcrumbs />
+					</React.Fragment>
 				)}
-
-				{isDashboard && <Breadcrumbs />}
-
 				<div id="main-content" tabIndex="-1" className="page-content">
-					{activeComponent()}
+					<ActiveComponent {...viewData} />
 				</div>
-
 				{showFooter && <Footer />}
 			</div>
 		</PageContext.Provider>

@@ -15,33 +15,33 @@ const propTypes = {
 
 const UserCreate = (props) => {
 	const { signupData } = props;
-	const [postUserIsLoading, postUserIsLoadingSetter] = useState(false);
-	const [postUserError, postUserErrorSetter] = useState(undefined);
-	const [subscribed, subscribedSetter] = useState(false);
-	const [firstName, firstNameSetter] = useState('');
-	const [lastName, lastNameSetter] = useState('');
-	const [password, passwordSetter] = useState('');
-	const [title, titleSetter] = useState('');
-	const [bio, bioSetter] = useState('');
-	const [avatar, avatarSetter] = useState(undefined);
-	const [location, locationSetter] = useState('');
-	const [website, websiteSetter] = useState('');
-	const [orcid, orcidSetter] = useState('');
-	const [github, githubSetter] = useState('');
-	const [twitter, twitterSetter] = useState('');
-	const [facebook, facebookSetter] = useState('');
-	const [googleScholar, googleScholarSetter] = useState('');
-	const [showLocation, showLocationSetter] = useState(false);
-	const [showWebsite, showWebsiteSetter] = useState(false);
-	const [showOrcid, showOrcidSetter] = useState(false);
-	const [showGithub, showGithubSetter] = useState(false);
-	const [showTwitter, showTwitterSetter] = useState(false);
-	const [showFacebook, showFacebookSetter] = useState(false);
-	const [showGoogleScholar, showGoogleScholarSetter] = useState(false);
+	const [postUserIsLoading, setPostUserIsLoading] = useState(false);
+	const [postUserError, setPostUserError] = useState(undefined);
+	const [subscribed, setSubscribed] = useState(false);
+	const [firstName, setFirstName] = useState('');
+	const [lastName, setLastName] = useState('');
+	const [password, setPassword] = useState('');
+	const [title, setTitle] = useState('');
+	const [bio, setBio] = useState('');
+	const [avatar, setAvatar] = useState(undefined);
+	const [location, setLocation] = useState('');
+	const [website, setWebsite] = useState('');
+	const [orcid, setOrcid] = useState('');
+	const [github, setGithub] = useState('');
+	const [twitter, setTwitter] = useState('');
+	const [facebook, setFacebook] = useState('');
+	const [googleScholar, setGoogleScholar] = useState('');
+	const [showLocation, setShowLocation] = useState(false);
+	const [showWebsite, setShowWebsite] = useState(false);
+	const [showOrcid, setShowOrcid] = useState(false);
+	const [showGithub, setShowGithub] = useState(false);
+	const [showTwitter, setShowTwitter] = useState(false);
+	const [showFacebook, setShowFacebook] = useState(false);
+	const [showGoogleScholar, setShowGoogleScholar] = useState(false);
 	const onCreateSubmit = (evt) => {
 		evt.preventDefault();
-		postUserIsLoadingSetter(true);
-		postUserErrorSetter(undefined);
+		setPostUserIsLoading(true);
+		setPostUserError(undefined);
 
 		return apiFetch('/api/users', {
 			method: 'POST',
@@ -69,36 +69,36 @@ const UserCreate = (props) => {
 				window.location.href = '/';
 			})
 			.catch((err) => {
-				postUserIsLoadingSetter(false);
-				postUserErrorSetter(err);
+				setPostUserIsLoading(false);
+				setPostUserError(err);
 			});
 	};
 	const onSubscribedChange = () => {
-		subscribedSetter(!subscribed);
+		setSubscribed(!subscribed);
 	};
 
 	const onFirstNameChange = (evt) => {
-		firstNameSetter(evt.target.value);
+		setFirstName(evt.target.value);
 	};
 
 	const onLastNameChange = (evt) => {
-		lastNameSetter(evt.target.value);
+		setLastName(evt.target.value);
 	};
 
 	const onPasswordChange = (evt) => {
-		passwordSetter(evt.target.value);
+		setPassword(evt.target.value);
 	};
 
 	const onTitleChange = (evt) => {
-		titleSetter(evt.target.value.substring(0, 70).replace(/\n/g, ' '));
+		setTitle(evt.target.value.substring(0, 70).replace(/\n/g, ' '));
 	};
 
 	const onBioChange = (evt) => {
-		bioSetter(evt.target.value.substring(0, 280).replace(/\n/g, ' '));
+		setBio(evt.target.value.substring(0, 280).replace(/\n/g, ' '));
 	};
 
 	const onAvatarChange = (val) => {
-		avatarSetter(val);
+		setAvatar(val);
 	};
 	const expandables = [
 		{
@@ -106,12 +106,12 @@ const UserCreate = (props) => {
 			showTextOnButton: true,
 			icon: <Icon icon="map-marker" />,
 			action: () => {
-				showLocationSetter(true);
+				setShowLocation(true);
 			},
 			isVisible: showLocation,
 			value: location,
 			onChange: (evt) => {
-				locationSetter(evt.target.value);
+				setLocation(evt.target.value);
 			},
 		},
 		{
@@ -119,77 +119,77 @@ const UserCreate = (props) => {
 			showTextOnButton: true,
 			icon: <Icon icon="link" />,
 			action: () => {
-				showWebsiteSetter(true);
+				setShowWebsite(true);
 			},
 			isVisible: showWebsite,
 			value: website,
 			onChange: (evt) => {
-				websiteSetter(evt.target.value);
+				setWebsite(evt.target.value);
 			},
 		},
 		{
 			label: 'Orcid',
 			icon: <Icon icon="orcid" />,
 			action: () => {
-				showOrcidSetter(true);
+				setShowOrcid(true);
 			},
 			isVisible: showOrcid,
 			helperText: `https://orcid.org/${orcid}`,
 			value: orcid,
 			onChange: (evt) => {
-				orcidSetter(evt.target.value);
+				setOrcid(evt.target.value);
 			},
 		},
 		{
 			label: 'Github',
 			icon: <Icon icon="github" />,
 			action: () => {
-				showGithubSetter(true);
+				setShowGithub(true);
 			},
 			helperText: `https://github.com/${github}`,
 			isVisible: showGithub,
 			value: github,
 			onChange: (evt) => {
-				githubSetter(evt.target.value);
+				setGithub(evt.target.value);
 			},
 		},
 		{
 			label: 'Twitter',
 			icon: <Icon icon="twitter" />,
 			action: () => {
-				showTwitterSetter(true);
+				setShowTwitter(true);
 			},
 			helperText: `https://twitter.com/${twitter}`,
 			isVisible: showTwitter,
 			value: twitter,
 			onChange: (evt) => {
-				twitterSetter(evt.target.value);
+				setTwitter(evt.target.value);
 			},
 		},
 		{
 			label: 'Facebook',
 			icon: <Icon icon="facebook" />,
 			action: () => {
-				showFacebookSetter(true);
+				setShowFacebook(true);
 			},
 			helperText: `https://facebook.com/${facebook}`,
 			isVisible: showFacebook,
 			value: facebook,
 			onChange: (evt) => {
-				facebookSetter(evt.target.value);
+				setFacebook(evt.target.value);
 			},
 		},
 		{
 			label: 'Google Scholar',
 			icon: <Icon icon="google-scholar" />,
 			action: () => {
-				showGoogleScholarSetter(true);
+				setShowGoogleScholar(true);
 			},
 			helperText: `https://scholar.google.com/citations?user=${googleScholar}`,
 			isVisible: showGoogleScholar,
 			value: googleScholar,
 			onChange: (evt) => {
-				googleScholarSetter(evt.target.value);
+				setGoogleScholar(evt.target.value);
 			},
 		},
 	];

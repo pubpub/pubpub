@@ -17,10 +17,10 @@ const propTypes = {
 const Search = (props) => {
 	const { searchData } = props;
 	const { locationData, communityData } = usePageContext();
-	const [searchQuery, searchQuerySetter] = useState('');
-	const [searchResults, searchResultsSetter] = useState([]);
-	const [isLoading, isLoadingSetter] = useState(locationData.query.q || false);
-	const [page, pageSetter] = useState(
+	const [searchQuery, setSearchQuery] = useState('');
+	const [searchResults, setSearchResults] = useState([]);
+	const [isLoading, setIsLoading] = useState(locationData.query.q || false);
+	const [page, setPage] = useState(
 		locationData.query.page ? Number(locationData.query.page) - 1 : 0,
 	);
 	const [numPages, numPagesSetter] = useState(0);
@@ -52,8 +52,8 @@ const Search = (props) => {
 					page: page,
 				})
 				.then((results) => {
-					isLoadingSetter(false);
-					searchResultsSetter(results.hits);
+					setIsLoading(false);
+					setSearchResults(results.hits);
 					numPagesSetter(Math.min(results.nbPages, 10));
 				});
 		}
@@ -68,8 +68,8 @@ const Search = (props) => {
 		inputRef.current.value = val;
 		const query = locationData.query.q;
 		if (query) {
-			isLoadingSetter(!!query);
-			searchQuerySetter(query);
+			setIsLoading(!!query);
+			setSearchQuery(query);
 			const queryString = query ? `?q=${query}` : '';
 			const pageString = page ? `&page=${page + 1}` : '';
 			const modeString = mode !== 'pubs' ? `${queryString ? '&' : '?'}mode=${mode}` : '';
@@ -80,9 +80,9 @@ const Search = (props) => {
 	const setMode = (nextMode) => {
 		if (nextMode !== mode) {
 			modeSetter(nextMode);
-			pageSetter(0);
-			searchResultsSetter([]);
-			isLoadingSetter(!!searchQuery);
+			setPage(0);
+			setSearchResults([]);
+			setIsLoading(!!searchQuery);
 			setClient();
 			const queryString = searchQuery ? `?q=${searchQuery}` : '';
 			const pageString = page ? `&page=${page + 1}` : '';
@@ -93,9 +93,9 @@ const Search = (props) => {
 
 	const handleSearchChange = (evt) => {
 		const query = evt.target.value;
-		isLoadingSetter(!!query);
-		searchQuerySetter(query);
-		pageSetter(0);
+		setIsLoading(!!query);
+		setSearchQuery(query);
+		setPage(0);
 		const queryString = query ? `?q=${query}` : '';
 		const pageString = page ? `&page=${page + 1}` : '';
 		const modeString = mode !== 'pubs' ? `${queryString ? '&' : '?'}mode=${mode}` : '';
@@ -103,9 +103,9 @@ const Search = (props) => {
 	};
 
 	const handleSetPage = (pageIndex) => {
-		isLoadingSetter(pageIndex !== page);
-		pageSetter(pageIndex);
-		searchResultsSetter([]);
+		setIsLoading(pageIndex !== page);
+		setPage(pageIndex);
+		setSearchResults([]);
 		const queryString = searchQuery ? `?q=${searchQuery}` : '';
 		const pageString = page ? `&page=${page + 1}` : '';
 		const modeString = mode !== 'pubs' ? `${queryString ? '&' : '?'}mode=${mode}` : '';

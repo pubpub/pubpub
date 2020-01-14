@@ -1,4 +1,3 @@
-import React from 'react';
 import {
 	About,
 	AdminDashboard,
@@ -25,90 +24,90 @@ import {
 export default (viewData, locationData, chunkName) => {
 	const paths = {
 		About: {
-			activeComponent: () => <About {...viewData} />,
+			ActiveComponent: About,
 			hideNav: locationData.isBasePubPub,
 		},
 		AdminDashboard: {
-			activeComponent: () => <AdminDashboard {...viewData} />,
+			ActiveComponent: AdminDashboard,
 			hideNav: true,
 			hideFooter: true,
 		},
 		CommunityCreate: {
-			activeComponent: () => <CommunityCreate {...viewData} />,
+			ActiveComponent: CommunityCreate,
 			hideNav: true,
 			hideFooter: true,
 		},
 		Dashboard: {
-			activeComponent: () => <Dashboard {...viewData} />,
+			ActiveComponent: Dashboard,
 			hideNav: true,
 			hideFooter: true,
 		},
 		DashboardMembers: {
-			activeComponent: () => <DashboardMembers {...viewData} />,
+			ActiveComponent: DashboardMembers,
 			isDashboard: true,
 		},
 		DashboardOverview: {
-			activeComponent: () => <DashboardOverview {...viewData} />,
+			ActiveComponent: DashboardOverview,
 			isDashboard: true,
 		},
 		Explore: {
-			activeComponent: () => <Explore {...viewData} />,
+			ActiveComponent: Explore,
 			hideNav: true,
 		},
 		Landing: {
-			activeComponent: () => <Landing {...viewData} />,
+			ActiveComponent: Landing,
 			hideNav: true,
 		},
 		Login: {
-			activeComponent: () => <Login {...viewData} />,
+			ActiveComponent: Login,
 			hideNav: true,
 			hideFooter: true,
 		},
 		NoMatch: {
-			activeComponent: () => <NoMatch {...viewData} />,
+			ActiveComponent: NoMatch,
 			hideNav: locationData.isBasePubPub,
 			hideFooter: true,
 		},
 		Page: {
-			activeComponent: () => <Page {...viewData} />,
+			ActiveComponent: Page,
 		},
 		PasswordReset: {
-			activeComponent: () => <PasswordReset {...viewData} />,
+			ActiveComponent: PasswordReset,
 			hideNav: true,
 			hideFooter: true,
 		},
 		Pricing: {
-			activeComponent: () => <Pricing {...viewData} />,
+			ActiveComponent: Pricing,
 			hideNav: true,
 			hideFooter: true,
 		},
 		Privacy: {
-			activeComponent: () => <Privacy {...viewData} />,
+			ActiveComponent: Privacy,
 			hideNav: locationData.isBasePubPub,
 		},
 		Pub: {
-			activeComponent: () => <Pub {...viewData} />,
+			ActiveComponent: Pub,
 		},
 		Search: {
-			activeComponent: () => <Search {...viewData} />,
+			ActiveComponent: Search,
 			hideNav: locationData.isBasePubPub,
 			hideFooter: true,
 		},
 		Signup: {
-			activeComponent: () => <Signup {...viewData} />,
+			ActiveComponent: Signup,
 			hideNav: true,
 			hideFooter: true,
 		},
 		Terms: {
-			activeComponent: () => <Terms {...viewData} />,
+			ActiveComponent: Terms,
 			hideNav: locationData.isBasePubPub,
 		},
 		User: {
-			activeComponent: () => <User {...viewData} />,
+			ActiveComponent: User,
 			hideNav: locationData.isBasePubPub,
 		},
 		UserCreate: {
-			activeComponent: () => <UserCreate {...viewData} />,
+			ActiveComponent: UserCreate,
 			hideNav: locationData.isBasePubPub,
 			hideFooter: true,
 		},

@@ -8,19 +8,19 @@ require('./communityCreate.scss');
 
 const CommunityCreate = () => {
 	const { loginData } = usePageContext();
-	const [subdomain, subdomainSetter] = useState('');
-	const [title, titleSetter] = useState('');
-	const [description, descriptionSetter] = useState('');
-	const [heroLogo, heroLogoSetter] = useState('');
-	const [accentColorDark, accentColorDarkSetter] = useState('#2D2E2F');
-	const [accentColorLight, accentColorLightSetter] = useState('#FFFFFF');
-	const [createIsLoading, createIsLoadingSetter] = useState(false);
-	const [createError, createErrorSetter] = useState(undefined);
+	const [subdomain, setSubdomain] = useState('');
+	const [title, setTitle] = useState('');
+	const [description, setDescription] = useState('');
+	const [heroLogo, setHeroLogo] = useState('');
+	const [accentColorDark, setAccentColorDark] = useState('#2D2E2F');
+	const [accentColorLight, setAccentColorLight] = useState('#FFFFFF');
+	const [createIsLoading, setCreateIsLoading] = useState(false);
+	const [createError, setCreateError] = useState(undefined);
 
 	const onCreateSubmit = (evt) => {
 		evt.preventDefault();
-		createIsLoadingSetter(true);
-		createErrorSetter(true);
+		setCreateIsLoading(true);
+		setCreateError(true);
 		return apiFetch('/api/communities', {
 			method: 'POST',
 			body: JSON.stringify({
@@ -34,30 +34,30 @@ const CommunityCreate = () => {
 			}),
 		})
 			.then(() => {
-				createIsLoadingSetter(false);
-				createErrorSetter(undefined);
+				setCreateIsLoading(false);
+				setCreateError(undefined);
 
 				window.location.href = `https://${subdomain}.pubpub.org`;
 			})
 			.catch((err) => {
-				createIsLoadingSetter(false);
-				createErrorSetter(err);
+				setCreateIsLoading(false);
+				setCreateError(err);
 			});
 	};
 	const onSubdomainChange = (evt) => {
-		subdomainSetter(slugifyString(evt.target.value));
+		setSubdomain(slugifyString(evt.target.value));
 	};
 
 	const onTitleChange = (evt) => {
-		titleSetter(evt.target.value);
+		setTitle(evt.target.value);
 	};
 
 	const onDescriptionChange = (evt) => {
-		descriptionSetter(evt.target.value.substring(0, 280).replace(/\n/g, ' '));
+		setDescription(evt.target.value.substring(0, 280).replace(/\n/g, ' '));
 	};
 
 	const onHeroHeaderLogoChange = (val) => {
-		heroLogoSetter(val);
+		setHeroLogo(val);
 	};
 	return (
 		<div id="community-create-container">
@@ -110,7 +110,7 @@ const CommunityCreate = () => {
 								<ColorInput
 									value={accentColorLight}
 									onChange={(val) => {
-										accentColorLightSetter(val.hex);
+										setAccentColorLight(val.hex);
 									}}
 								/>
 							</InputField>
@@ -118,7 +118,7 @@ const CommunityCreate = () => {
 								<ColorInput
 									value={accentColorDark}
 									onChange={(val) => {
-										accentColorDarkSetter(val.hex);
+										setAccentColorDark(val.hex);
 									}}
 								/>
 							</InputField>

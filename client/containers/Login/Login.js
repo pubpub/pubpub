@@ -9,9 +9,9 @@ import { apiFetch } from 'utils';
 require('./login.scss');
 
 const Login = () => {
-	const [loginLoading, loginLoadingSetter] = useState(false);
-	const [loginError, loginErrorSetter] = useState(undefined);
-	const [logoutLoading, logoutLoadingSetter] = useState(false);
+	const [loginLoading, setLoginLoading] = useState(false);
+	const [loginError, setLoginError] = useState(undefined);
+	const [logoutLoading, setLogoutLoading] = useState(false);
 	const emailRef = useRef(null);
 	const passwordRef = useRef(null);
 	const { locationData, loginData, communityData } = usePageContext();
@@ -23,12 +23,12 @@ const Login = () => {
 			!passwordRef.current ||
 			!passwordRef.current.value
 		) {
-			loginLoadingSetter(false);
-			loginErrorSetter('Invalid Email or Password');
+			setLoginLoading(false);
+			setLoginError('Invalid Email or Password');
 			return null;
 		}
-		loginLoadingSetter(true);
-		loginErrorSetter(undefined);
+		setLoginLoading(true);
+		setLoginError(undefined);
 		return apiFetch('/api/login', {
 			method: 'POST',
 			body: JSON.stringify({
@@ -40,12 +40,12 @@ const Login = () => {
 				window.location.href = locationData.query.redirect || '/';
 			})
 			.catch(() => {
-				loginLoadingSetter(false);
-				loginErrorSetter('Invalid Email or Password');
+				setLoginLoading(false);
+				setLoginError('Invalid Email or Password');
 			});
 	};
 	const onLogoutSubmit = () => {
-		logoutLoadingSetter(true);
+		setLogoutLoading(true);
 		apiFetch('/api/logout').then(() => {
 			window.location.href = '/';
 		});
