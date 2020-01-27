@@ -1,10 +1,22 @@
-.gdpr-banner-component {
+$viewport-padding: 10px;
+$small-viewport-cutoff: 720px;
+
+.legal-banner-component {
+    position: fixed;
+    bottom: $viewport-padding;
+    right: $viewport-padding;
+    z-index: 9999;
     display: flex;
     background: black;
     padding: 10px;
+    width: calc(100vw - #{2 * $viewport-padding});
+    border-radius: 2px;
     .logo {
         display: flex;
         align-items: center;
+        @media screen and (max-width: $small-viewport-cutoff) {
+            align-items: unset;
+        }
         img {
             height: 50px;
             display: block;
@@ -12,7 +24,6 @@
         padding-right: 15px;
     }
     .notice {
-        flex-grow: 1;
         color: white;
         h3 {
             color: white;
@@ -21,10 +32,15 @@
             color: white;
         }
     }
-    .gdpr-buttons {
+    .legal-buttons {
+        flex-grow: 1;
+        flex-shrink: 0;
+        .bp3-button {
+            flex-shrink: 0;
+        }
         display: flex;
         align-items: center;
-        @media screen and (max-width: 720px) {
+        @media screen and (max-width: $small-viewport-cutoff) {
             flex-direction: column;
             padding-top: 10px;
             padding-left: 15px;
