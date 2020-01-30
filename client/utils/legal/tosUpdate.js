@@ -1,4 +1,5 @@
 import Cookie from 'js-cookie';
+import { getCookieOptions } from './cookieOptions';
 
 const cookieKey = 'tos-update';
 const tosLastUpdated = Date.parse('2020-01-01');
@@ -13,5 +14,5 @@ export const shouldShowTosUpdate = () => {
 
 export const markTosUpdateSeen = () => {
 	const seenAt = Date.now();
-	Cookie.set(cookieKey, seenAt);
+	Cookie.set(cookieKey, seenAt, getCookieOptions());
 };
