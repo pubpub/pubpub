@@ -596,7 +596,7 @@ const Terms = function(props) {
 						<h2>Effective Date of Agreement</h2>
 						<p>
 							The effective date of the current version of these Terms of Service is
-							January 28, 2020.
+							January 30, 2020.
 						</p>
 					</GridWrapper>
 				</div>
