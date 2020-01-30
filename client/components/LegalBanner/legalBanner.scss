@@ -7,12 +7,13 @@ $small-viewport-cutoff: 720px;
     right: $viewport-padding;
     z-index: 9999;
     display: flex;
-    background: black;
-    padding: 10px;
+    background: #eee;
+    padding: 20px;
     width: calc(100vw - #{2 * $viewport-padding});
     border-radius: 2px;
+    border: 3px #ddd solid;
     .logo {
-        display: flex;
+        display: none;
         align-items: center;
         @media screen and (max-width: $small-viewport-cutoff) {
             align-items: unset;
@@ -24,19 +25,19 @@ $small-viewport-cutoff: 720px;
         padding-right: 15px;
     }
     .notice {
-        color: white;
+        flex-grow: 1;
+        color: black;
         h3 {
-            color: white;
+            color: inherit;
         }
         a, a:visited, a:hover {
-            color: white;
+            color: inherit;
         }
     }
     .legal-buttons {
-        flex-grow: 1;
-        flex-shrink: 0;
         .bp3-button {
             flex-shrink: 0;
+            min-width: 120px;
         }
         display: flex;
         align-items: center;

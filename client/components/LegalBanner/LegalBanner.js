@@ -22,7 +22,7 @@ const banners = [
 			return (
 				<p>
 					PubPub uses third-party cookies to help our team and our communities understand
-					which features and content on PubPub are receiving traffic.{' '}
+					which features and content on PubPub are receiving traffic. <br />
 					<b>We don't sell this data or share it with anyone else</b>, and we don't use
 					third-party processors who aggregate and sell data. Visit your{' '}
 					<a href="/privacy/settings">privacy settings</a> to learn more.
@@ -37,10 +37,12 @@ const banners = [
 			};
 			return (
 				<>
-					<Button onClick={() => closeWithConsent(true)} intent="success">
+					<Button large onClick={() => closeWithConsent(true)} intent="success">
 						Accept
 					</Button>
-					<Button onClick={() => closeWithConsent(false)}>Disable</Button>
+					<Button large onClick={() => closeWithConsent(false)}>
+						Disable
+					</Button>
 				</>
 			);
 		},
@@ -60,15 +62,17 @@ const banners = [
 			return (
 				<>
 					<Button
+						large
 						onClick={() => {
 							markTosUpdateSeen();
 							next();
 						}}
 						intent="success"
 					>
-						Accept
+						Got it
 					</Button>
 					<Button
+						large
 						onClick={() => {
 							window.open('https://www.pubpub.org/tos', '_blank');
 							next();
@@ -103,9 +107,9 @@ const LegalBanner = (props) => {
 	}
 
 	return (
-		<div className="legal-banner-component bp3-dark bp3-elevation-1">
+		<div className="legal-banner-component">
 			<div className="logo">
-				<img src="/static/logoWhite.png" alt="" />
+				<img src="/static/logo.png" alt="" />
 			</div>
 			<div className="notice">{bannerToShow.notice()}</div>
 			<div className="legal-buttons">{bannerToShow.buttons(props, findNextBannerToShow)}</div>
