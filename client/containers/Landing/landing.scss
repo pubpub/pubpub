@@ -9,6 +9,14 @@
 // 	}
 // }
 
+/**** Variables and Mixins ****/
+$textColorLight: #FFF9E9;
+$textColorDark: #000;
+@mixin backgroundGradient {
+	background: rgb(255,255,255);
+	background: linear-gradient(0deg, #fff6c9 0%, #fff 100%);
+}
+
 #landing-container {
 	/***** Globals *****/
 	.buttons {
@@ -22,6 +30,14 @@
 		}
 	}
 
+	/***** Top Nav ****/
+	.header-component {
+		color: #999;
+		&.bp3-dark a {
+			color: #999;
+		}
+	}
+
 	/***** Jumbotron and Nav *****/
 	#jumbotron {
 		margin-top: -56px;
@@ -29,9 +45,8 @@
 		background-size: cover;
 		background-repeat: no-repeat;
 		background-position: center center;
-		background-color: #454f60;
-		background-image: url('/static/landing/herobg.jpg');
-		color: #fff;
+		@include backgroundGradient;
+		color: #999;
 		font-size: 16px;
 		/***** Nav *****/
 		// nav {
@@ -58,9 +73,7 @@
 
 		/***** Header Content *****/
 		.content {
-			text-align: center;
 			h1 {
-				color: #fff;
 				margin: 1em 0;
 			}
 			.landing-header {
@@ -110,220 +123,55 @@
 
 	/***** Main Content *****/
 	#main {
-		h2,
-		h3,
-		.subtitle,
-		.title,
-		.divider {
-			color: #454f60;
-			text-align: center;
-		}
-		.subtitle {
-			font-size: 18px;
-			font-weight: 300;
-			color: #555;
-		}
-		.divider {
-			margin: 5px 0;
-			opacity: 0.6;
-		}
-		.bg {
-			padding: 2em 0;
-			&#opensource,
-			&#foryou {
-				background-color: #454f60;
-				color: #fff;
-				h2,
-				.subtitle,
-				.title {
-					color: #fff;
-				}
-				a,
-				a:visited,
-				a:active,
-				a:hover {
-					&:not(.bp3-button) {
-						color: #ccc;
-					}
+		.container {
+			display: grid;
+			grid-template-rows: auto;
+			grid-template-columns: 240px auto;
+			grid-column-gap: 4px;
+			grid-row-gap: 2em;
+			align-items: center;
+			background-repeat-x: no-repeat;
+			background-size: 2px 12px;
+			background-position-x: 240px;
+			padding-top: 2em;
+			padding-bottom: 2em;
+			.heading {
+				text-transform: uppercase;
+				&.number {
+					font-size: 1.25em;
 				}
 			}
-			&#foryou,
-			&#opensource {
-				p {
-					max-width: 400px;
-					margin: 0 auto 10px;
-					font-size: 18px;
-				}
+			.left {
+				text-align: right;
+				padding-right: 2em;
 			}
-			&#foryou {
-				padding: 4em 0em;
-				.buttons {
-					margin-bottom: 0em;
-				}
-				.bp3-intent-primary {
-					background-color: #bf8c0a;
-					&:hover {
-						background-color: #b2830a;
-					}
-					&:active {
-						background-color: #a67908;
-					}
-				}
+			.right {
+				padding-left: 1em;
+				padding-right: 10em;
 			}
 		}
-		/*** BEGIN type block ***/
-		.type-block {
-			display: flex;
-			margin: 4em 6em 12em;
-			&.flipped {
-				flex-direction: row-reverse;
-				.content {
-					margin: 0.5em 0 auto 8em;
-				}
+		/**** BEGIN Mission, Open Source ****/
+		#mission {
+			background-color: #2C3654;
+			color: $textColorLight;
+			a {
+				color: $textColorLight;
+				text-decoration: underline;
 			}
-			&.centered {
-				display: block;
-				text-align: center;
-				margin: 1em auto;
-				max-width: 400px;
-				.content {
-					margin: 0;
-					.title {
-						text-align: center;
-					}
-					.buttons {
-						text-align: center;
-						.bp3-button {
-							margin: 0 0.5em;
-						}
-					}
-				}
+			.container {
+				background-image: linear-gradient(0deg, transparent 50%, $textColorLight 50%);
 			}
-
-			.content {
-				margin: 0.5em 8em auto 0;
-				.buttons {
-					margin: 0;
-					text-align: left;
-					.bp3-button {
-						margin: 0;
-					}
-				}
-				.title {
-					font-size: 2em;
-					font-weight: 800;
-					text-align: left;
-				}
-				.description {
-					margin: 1em 0;
-					font-size: 18px;
-					line-height: 1.4;
-				}
-			}
-			.image {
-				flex-shrink: 0;
-				flex-grow: 1;
-				width: 50%;
-				min-height: 200px;
-				img {
-					width: 100%;
-				}
-				p.credit {
-					font-size: 10px;
-					text-align: center;
-					margin-top: 4px;
-					color: #999;
-					a {
-						color: #999;
-					}
-				}
+			.git {
+				margin-right: 6em;
 			}
 		}
-		/*** END type block ***/
-
 		#features {
-			padding: 4em 0em;
-			background-repeat: repeat;
-			background-position: 50%;
-			background-color: #f9fafb;
-			background-image: url(/static/landing/featuresbg.png);
-			.feature-list {
-				margin: 4em auto 0em;
-				padding: 0;
-				max-width: 1000px;
-				display: grid;
-				grid-template-columns: repeat(3, 1fr);
-				grid-template-rows: auto auto auto;
-				list-style-type: none;
-				li {
-					margin: 2em;
-					.icon {
-						margin: 0 0.75em 0.75em 0;
-						float: left;
-						opacity: 0.6;
-					}
-					.title {
-						text-align: left;
-						font-weight: 600;
-						font-size: 18px;
-					}
-					.description {
-						font-size: 16px;
-						font-weight: 300;
-						padding: 0 0.25em;
-						clear: both;
-					}
-				}
+			@include backgroundGradient;
+			.container {
+				background-image: linear-gradient(0deg, transparent 50%, #000 50%);
 			}
 		}
-		/***** END Features *****/
-
-		/**** BEGIN Open Source *****/
-		#opensource {
-			padding: 4em 0em;
-			.col-12 {
-				display: flex;
-				flex-wrap: wrap;
-				justify-content: space-evenly;
-				margin: 2em 0em;
-				// > * {
-				// 	align-self: center;
-				// }
-				.header {
-					h2 {
-						text-align: left;
-						margin-bottom: 0.5em;
-						font-size: 25px;
-					}
-					.bp3-icon {
-						// padding-top: 4px;
-						opacity: 0.6;
-					}
-				}
-				.content {
-					font-size: 18px;
-				}
-				.buttons {
-					margin: 0em;
-					.bp3-button {
-						color: inherit;
-					}
-				}
-				.pubpub-links {
-					margin: 1.5em 0em 0em;
-					max-width: 400px;
-					display: flex;
-					justify-content: space-between;
-					align-items: center;
-					a {
-						white-space: nowrap;
-						&:not(:first-of-type) {
-							margin-left: 1em;
-						}
-					}
-				}
-			}
-		}
+		/**** END Mission, Open Source ****/
 	}
 	/*** End Main Block ***/
 	/**** Footer *****/
