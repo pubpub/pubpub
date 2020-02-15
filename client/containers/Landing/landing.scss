@@ -12,9 +12,10 @@
 /**** Variables and Mixins ****/
 $textColorLight: #FFF9E9;
 $textColorDark: #000;
+$linearGradient: linear-gradient(0deg, #fff6c9 0%, #fff 100%);
 @mixin backgroundGradient {
 	background: rgb(255,255,255);
-	background: linear-gradient(0deg, #fff6c9 0%, #fff 100%);
+	background: $linearGradient;
 }
 
 #landing-container {
@@ -40,12 +41,14 @@ $textColorDark: #000;
 
 	/***** Jumbotron and Nav *****/
 	#jumbotron {
+		min-height: 815px;
 		margin-top: -56px;
 		padding-top: 56px;
-		background-size: cover;
+		background-color: #fff; // fallback
+		background-image: url('/static/landing/headerbg.png'); // fallback
+		background-image: url('/static/landing/headerbg.png'), $linearGradient;
 		background-repeat: no-repeat;
-		background-position: center center;
-		@include backgroundGradient;
+		background-position: 90%;
 		color: #999;
 		font-size: 16px;
 		/***** Nav *****/
@@ -126,34 +129,43 @@ $textColorDark: #000;
 		.container {
 			display: grid;
 			grid-template-rows: auto;
-			grid-template-columns: 240px auto;
+			grid-template-columns: 300px auto;
 			grid-column-gap: 4px;
 			grid-row-gap: 2em;
-			align-items: center;
+			align-items: top;
 			background-repeat-x: no-repeat;
 			background-size: 2px 12px;
-			background-position-x: 240px;
+			background-position-x: 300px;
 			padding-top: 2em;
 			padding-bottom: 2em;
-			.heading {
+			h3, .feature-number {
+				font-size: 1em;
+				line-height: 1.25em;
+				font-weight: normal;
 				text-transform: uppercase;
-				&.number {
-					font-size: 1.25em;
-				}
 			}
-			.left {
+			h4 {
+				font-size: 1.25em;
+				line-height: 1.5em;
+			}
+			div:nth-child(odd) {
 				text-align: right;
 				padding-right: 2em;
+				grid-column-start: 1;
 			}
-			.right {
+			div:nth-child(even) {
+				grid-column-start: 2;
 				padding-left: 1em;
-				padding-right: 10em;
+				padding-right: 20em;
 			}
 		}
 		/**** BEGIN Mission, Open Source ****/
 		#mission {
 			background-color: #2C3654;
 			color: $textColorLight;
+			h3 {
+				color: $textColorLight;
+			}
 			a {
 				color: $textColorLight;
 				text-decoration: underline;
@@ -165,13 +177,30 @@ $textColorDark: #000;
 				margin-right: 6em;
 			}
 		}
+		/**** END Mission, Open Source ****/
+		/**** BEGIN Features ****/
 		#features {
 			@include backgroundGradient;
 			.container {
 				background-image: linear-gradient(0deg, transparent 50%, #000 50%);
 			}
+			.feature-number {
+				font-size: 1.4em;
+				line-height: 1.3em;
+			}
+			ul {
+				margin-top: 4em;
+				list-style-type: none;
+				li {
+					margin: 2.4em 0;
+				}
+			}
+			img {
+				max-width: 777px;
+				height: auto;
+			}
 		}
-		/**** END Mission, Open Source ****/
+		/*** END Features ***/
 	}
 	/*** End Main Block ***/
 	/**** Footer *****/

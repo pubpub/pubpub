@@ -122,9 +122,7 @@ class Landing extends React.Component {
 										collaborative publishing platform for communities small and
 										large.
 									</p>
-									<p className="subtitle large">
-										Manage, evolve & perfect your publishing process
-									</p>
+									<h2>Manage, evolve & perfect your publishing process</h2>
 									<div className="buttons">
 										{!this.props.loginData.id && (
 											<a
@@ -153,18 +151,18 @@ class Landing extends React.Component {
 						<div id="mission">
 							<div className="container">
 								<div className="left">
-									<p className="heading">Mission</p>
+									<h3>Mission</h3>
 								</div>
 								<div className="right">
-									As part of the <em>Knowledge Futures Group</em>, we’re committed
-									to making PubPub not just open, but easily accessible to a wide
-									range of groups. That means we’ve committed to providing a free
-									version of PubPub forever, releasing open-source code, and
-									operating under non-profit, sustainable, researcher-friendly
-									business models.
+									As part of the <strong>Knowledge Futures Group</strong>, we’re
+									committed to making PubPub not just open, but easily accessible
+									to a wide range of groups. That means we’ve committed to
+									providing a free version of PubPub forever, releasing
+									open-source code, and operating under non-profit, sustainable,
+									researcher-friendly business models.
 								</div>
 								<div className="left">
-									<p className="heading">Open Source</p>
+									<h3>Open Source</h3>
 								</div>
 								<div className="right">
 									<a className="git" href="https://github.com/pubpub/pubpub">
@@ -183,33 +181,48 @@ class Landing extends React.Component {
 						{/* BEGIN Features Block */}
 						<div id="features">
 							<div className="container">
-								<div className="left features">
-									<p className="heading">Key Features</p>
+								<div>
+									<h3>Key Features</h3>
 								</div>
-								<div className="right">&nbsp;</div>
-								<div className="left">
-									<p className="heading number">01</p>
+							</div>
+							<div className="container">
+								<div>
+									<p className="feature-number">01</p>
+									<ul>
+										<li>No emailing back and forth</li>
+										<li>Live authoring updates</li>
+										<li>Assign roles on-the-fly</li>
+									</ul>
 								</div>
-								<div className="right">
-									<h3 className="feature">
-										Collaborate & edit with co-authors in real time
-									</h3>
+								<div>
+									<h4>Collaborate & edit with co-authors in real time</h4>
+									<img
+										src="/static/landing/authoring.png"
+										alt="Screenshot of a PubPub editor interface with multiple users editing at the same time."
+									/>
 								</div>
-								<div className="left">Open Source</div>
-								<div className="right">
-									<a className="git" href="https://github.com/pubpub/pubpub">
-										<Icon icon="git-repo" /> pubpub
-									</a>
-									<a
-										className="git"
-										href="https://github.com/pubpub/pubpub-editor"
-									>
-										<Icon icon="git-repo" /> pubpub-editor
-									</a>
+							</div>
+							<div className="container">
+								<div>
+									<p className="feature-number">02</p>
+									<ul>
+										<li>Streamlined multi-file imports</li>
+										<li>Complex-content friendly</li>
+										<li>Markdown, Word and even LaTeX</li>
+									</ul>
+								</div>
+								<div>
+									<h4>Import your work from any source</h4>
+									<img
+										src="/static/landing/importing.png"
+										alt="You can see multiple users editing at the same time."
+									/>
 								</div>
 							</div>
 						</div>
 						{/* END Features Block */}
+						{/* BEGIN Case Study Block */}
+						{/* END Case Study Block */}
 					</div>
 					{/* END Main content */}
 				</PageWrapper>
