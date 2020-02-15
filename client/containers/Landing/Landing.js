@@ -153,7 +153,7 @@ class Landing extends React.Component {
 								<div className="left">
 									<h3>Mission</h3>
 								</div>
-								<div className="right">
+								<div>
 									As part of the <strong>Knowledge Futures Group</strong>, we’re
 									committed to making PubPub not just open, but easily accessible
 									to a wide range of groups. That means we’ve committed to
@@ -161,7 +161,7 @@ class Landing extends React.Component {
 									open-source code, and operating under non-profit, sustainable,
 									researcher-friendly business models.
 								</div>
-								<div className="left">
+								<div>
 									<h3>Open Source</h3>
 								</div>
 								<div className="right">
@@ -201,8 +201,6 @@ class Landing extends React.Component {
 										alt="Screenshot of a PubPub editor interface with multiple users editing at the same time."
 									/>
 								</div>
-							</div>
-							<div className="container">
 								<div>
 									<p className="feature-number">02</p>
 									<ul>
@@ -222,7 +220,57 @@ class Landing extends React.Component {
 						</div>
 						{/* END Features Block */}
 						{/* BEGIN Case Study Block */}
+						<div id="case-study">
+							<div className="container">
+								<div>
+									<h3>Case Study</h3>
+								</div>
+								<div>
+									<p>Stuff</p>
+								</div>
+							</div>
+						</div>
 						{/* END Case Study Block */}
+						{/* BEGIN Communities Block */}
+						<div id="communities">
+							<div className="container">
+								<div>
+									<h3>Communities</h3>
+								</div>
+								<div>
+									<p>Stuff</p>
+								</div>
+							</div>
+						</div>
+						{/* END Communities Block */}
+						{/* BEGIN Create Block */}
+						<div id="create">
+							<div className="container">
+								<div>
+									<h3>Create</h3>
+								</div>
+								<div>
+									<p>Stuff</p>
+								</div>
+							</div>
+						</div>
+						{/* END Create Block */}
+						{/* BEGIN Pitch Block */}
+						<div id="pitch">
+							<div className="container">
+								<div>
+									<p>
+										With PubPub, one tool supports your entire publishing
+										workflow, including • drafting the content • editorial
+										review process • power to publish • and engaging the
+										community to spark conversations around your content
+										allowing you to work efficiently, flexibly, and
+										collaboratively.
+									</p>
+								</div>
+							</div>
+						</div>
+						{/* END Create Block */}
 					</div>
 					{/* END Main content */}
 				</PageWrapper>

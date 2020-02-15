@@ -12,10 +12,45 @@
 /**** Variables and Mixins ****/
 $textColorLight: #FFF9E9;
 $textColorDark: #000;
-$linearGradient: linear-gradient(0deg, #fff6c9 0%, #fff 100%);
-@mixin backgroundGradient {
+$bgColorDark: #2C3654;
+$bgGradientWhiteFirst: linear-gradient(0deg, #fff6c9 0%, #fff 100%);
+$bgGradientYellowFirst: linear-gradient(0deg, #fff 0%, #fff6c9 100%);
+$borderGradientLight: linear-gradient(0deg, transparent 50%, $textColorLight 50%);
+$borderGradientDark: linear-gradient(0deg, transparent 50%, #000 50%);
+$columnGap: 90px;
+$leftColumnWidth: 300px;
+@mixin backgroundGradient($whiteFirst) {
 	background: rgb(255,255,255);
-	background: $linearGradient;
+	@if $whiteFirst {
+		background: $bgGradientWhiteFirst;
+	}
+	@else {
+		background: $bgGradientYellowFirst;
+	}
+}
+@mixin light($border, $whiteFirst) {
+	@include backgroundGradient($whiteFirst);
+	color: $textColorDark;
+	h1, h2, h3, h4, a {
+		color: $textColorDark;
+	}
+	@if $border {
+		.container {
+			background-image: $borderGradientDark;
+		}
+	}
+}
+@mixin dark($border) {
+	background-color: $bgColorDark;
+	color: $textColorLight;
+	h1, h2, h3, h4, a {
+		color: $textColorLight;
+	}
+	@if $border {
+		.container {
+			background-image: $borderGradientLight;
+		}
+	}
 }
 
 #landing-container {
@@ -44,36 +79,10 @@ $linearGradient: linear-gradient(0deg, #fff6c9 0%, #fff 100%);
 		min-height: 815px;
 		margin-top: -56px;
 		padding-top: 56px;
-		background-color: #fff; // fallback
-		background-image: url('/static/landing/headerbg.png'); // fallback
-		background-image: url('/static/landing/headerbg.png'), $linearGradient;
+		@include light(false, false);
+		background-image: url('/static/landing/headerbg.png'), $bgGradientWhiteFirst;
 		background-repeat: no-repeat;
 		background-position: 90%;
-		color: #999;
-		font-size: 16px;
-		/***** Nav *****/
-		// nav {
-		// 	display: flex;
-		// 	align-items: center;
-		// 	img {
-		// 		height: 35px;
-		// 		display: block;
-		// 		margin-right: 0.5em;
-		// 	}
-		// 	.title {
-		// 		font-family: 'Raleway', sans-serif;
-		// 		font-size: 32px;
-		// 	}
-		// 	.spacer {
-		// 		flex-grow: 1;
-		// 		flex-shrink: 1;
-		// 	}
-		// 	.link, .separator {
-		// 		margin-left: 1em;
-		// 		color: inherit;
-		// 	}
-		// }
-
 		/***** Header Content *****/
 		.content {
 			h1 {
@@ -129,13 +138,13 @@ $linearGradient: linear-gradient(0deg, #fff6c9 0%, #fff 100%);
 		.container {
 			display: grid;
 			grid-template-rows: auto;
-			grid-template-columns: 300px auto;
-			grid-column-gap: 4px;
-			grid-row-gap: 2em;
+			grid-template-columns: $leftColumnWidth auto;
+			grid-column-gap: $columnGap;
+			grid-row-gap: $columnGap;
 			align-items: top;
-			background-repeat-x: no-repeat;
+			background-repeat: repeat-y;
 			background-size: 2px 12px;
-			background-position-x: 300px;
+			background-position-x: ($leftColumnWidth + ($columnGap / 2));
 			padding-top: 2em;
 			padding-bottom: 2em;
 			h3, .feature-number {
@@ -150,29 +159,15 @@ $linearGradient: linear-gradient(0deg, #fff6c9 0%, #fff 100%);
 			}
 			div:nth-child(odd) {
 				text-align: right;
-				padding-right: 2em;
 				grid-column-start: 1;
 			}
 			div:nth-child(even) {
 				grid-column-start: 2;
-				padding-left: 1em;
-				padding-right: 20em;
 			}
 		}
 		/**** BEGIN Mission, Open Source ****/
 		#mission {
-			background-color: #2C3654;
-			color: $textColorLight;
-			h3 {
-				color: $textColorLight;
-			}
-			a {
-				color: $textColorLight;
-				text-decoration: underline;
-			}
-			.container {
-				background-image: linear-gradient(0deg, transparent 50%, $textColorLight 50%);
-			}
+			@include dark(true);
 			.git {
 				margin-right: 6em;
 			}
@@ -180,10 +175,7 @@ $linearGradient: linear-gradient(0deg, #fff6c9 0%, #fff 100%);
 		/**** END Mission, Open Source ****/
 		/**** BEGIN Features ****/
 		#features {
-			@include backgroundGradient;
-			.container {
-				background-image: linear-gradient(0deg, transparent 50%, #000 50%);
-			}
+			@include light(true, true);
 			.feature-number {
 				font-size: 1.4em;
 				line-height: 1.3em;
@@ -196,11 +188,36 @@ $linearGradient: linear-gradient(0deg, #fff6c9 0%, #fff 100%);
 				}
 			}
 			img {
-				max-width: 777px;
+				width: 100%;
 				height: auto;
+				max-width: 777px;
 			}
 		}
 		/*** END Features ***/
+		/*** START Case Study ***/
+		#case-study {
+			@include dark(true);
+		}
+		/*** END Case Study ***/
+		/*** START Communities ***/
+		#communities {
+			@include light(true, false);
+			border-bottom: 2px dashed #000;
+			.container {
+				background-image: none;
+			}
+		}
+		/*** END Communities ***/
+		/*** START Pitch ***/
+		#pitch {
+			@include dark(true);
+			.container {
+				> div {
+					grid-column-start: 2;
+					text-align: left;
+				}
+			}
+		}
 	}
 	/*** End Main Block ***/
 	/**** Footer *****/
@@ -274,3 +291,26 @@ $linearGradient: linear-gradient(0deg, #fff6c9 0%, #fff 100%);
 		}
 	}
 }
+
+/***** Nav *****/
+// nav {
+// 	display: flex;
+// 	align-items: center;
+// 	img {
+// 		height: 35px;
+// 		display: block;
+// 		margin-right: 0.5em;
+// 	}
+// 	.title {
+// 		font-family: 'Raleway', sans-serif;
+// 		font-size: 32px;
+// 	}
+// 	.spacer {
+// 		flex-grow: 1;
+// 		flex-shrink: 1;
+// 	}
+// 	.link, .separator {
+// 		margin-left: 1em;
+// 		color: inherit;
+// 	}
+// }
