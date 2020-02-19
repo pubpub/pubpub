@@ -198,7 +198,7 @@ class Landing extends React.Component {
 						{/* BEGIN Mission Block */}
 						<div id="mission">
 							<div className="container">
-								<div className="left">
+								<div>
 									<h3>Mission</h3>
 								</div>
 								<div>
@@ -212,7 +212,7 @@ class Landing extends React.Component {
 								<div>
 									<h3>Open Source</h3>
 								</div>
-								<div className="right">
+								<div>
 									<a className="git" href="https://github.com/pubpub/pubpub">
 										<Icon icon="git-repo" /> pubpub
 									</a>
@@ -228,12 +228,19 @@ class Landing extends React.Component {
 						{/* END Mission Block */}
 						{/* BEGIN Features Block */}
 						<div id="features">
-							<div className="container">
+							<div className="container key">
 								<div>
 									<h3>Key Features</h3>
 								</div>
 							</div>
-							<div className="container">
+							<div className="container reverse">
+								<div>
+									<h4>Collaborate & edit with co-authors in real time</h4>
+									<img
+										src="/static/landing/authoring.png"
+										alt="Screenshot of a PubPub editor interface with multiple users editing at the same time."
+									/>
+								</div>
 								<div>
 									<p className="feature-number">01</p>
 									<ul>
@@ -243,10 +250,10 @@ class Landing extends React.Component {
 									</ul>
 								</div>
 								<div>
-									<h4>Collaborate & edit with co-authors in real time</h4>
+									<h4>Import your work from any source</h4>
 									<img
-										src="/static/landing/authoring.png"
-										alt="Screenshot of a PubPub editor interface with multiple users editing at the same time."
+										src="/static/landing/importing.png"
+										alt="You can see multiple users editing at the same time."
 									/>
 								</div>
 								<div>
@@ -258,9 +265,9 @@ class Landing extends React.Component {
 									</ul>
 								</div>
 								<div>
-									<h4>Import your work from any source</h4>
+									<h4>Embed rich multimedia in your publication</h4>
 									<img
-										src="/static/landing/importing.png"
+										src="/static/landing/multimedia.png"
 										alt="You can see multiple users editing at the same time."
 									/>
 								</div>
@@ -271,13 +278,6 @@ class Landing extends React.Component {
 										<li>Images, videos, tables, and math</li>
 										<li>Code, embedded interactives & more</li>
 									</ul>
-								</div>
-								<div>
-									<h4>Embed rich multimedia in your publication</h4>
-									<img
-										src="/static/landing/multimedia.png"
-										alt="You can see multiple users editing at the same time."
-									/>
 								</div>
 								<div className="other-features">
 									<h3>Other Features</h3>
