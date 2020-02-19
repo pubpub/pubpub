@@ -40,44 +40,9 @@ class Landing extends React.Component {
 	render() {
 		const features = [
 			{
-				icon: 'edit',
-				title: 'Collaborative Editor',
-				desc: 'Draft with colleagues around the world in real-time.',
-			},
-			{
-				icon: 'media',
-				title: 'Rich Media Embeds',
-				desc: 'Add videos, photos, tables, and interactives to your publications.',
-			},
-			{
-				icon: 'changes',
-				title: 'Import & Export',
-				desc: 'Support for MS Word, LaTex, XML, ePub, and more.',
-			},
-			{
-				icon: 'citation',
-				title: 'Citation Management',
-				desc: 'Easily add and manage citations, footnotes, and figure notes.',
-			},
-			{
-				icon: 'function',
-				title: 'Equation Editor',
-				desc: 'Embed and edit LaTex equations right in your documents.',
-			},
-			{
 				icon: 'badge',
 				title: 'DOI Support',
-				desc: 'Generate CrossRef DOIs for your documents in one click, for free.',
-			},
-			{
-				icon: 'book',
-				title: 'Chapters & Sections',
-				desc: 'Break long documents into browsable chapters and sections.',
-			},
-			{
-				icon: 'comment',
-				title: 'Discussions & Annotations',
-				desc: 'Host public and private discussions with your readers and community.',
+				desc: 'Generate CrossRef DOIs for your documents in one click.',
 			},
 			{
 				icon: 'shield',
@@ -85,23 +50,106 @@ class Landing extends React.Component {
 				desc: 'Manage submissions and peer review right from within PubPub.',
 			},
 			{
+				icon: 'comment',
+				title: 'Discussions & Annotations',
+				desc: 'Host public and private discussions with your readers and community.',
+			},
+			{
 				icon: 'page-layout',
-				title: 'Beautiful Layouts',
+				title: 'Beautiful, Customizable Layouts',
+				desc: 'Create your custom site without writing a line of code.',
+			},
+			{
+				icon: 'book',
+				title: 'Collection Metadata',
 				desc:
-					'Host your entire site on PubPub with customizable, mobile-friendly page layouts.',
+					'Including article & collection-level metadata for easier organization of content.',
+			},
+			{
+				icon: 'changes',
+				title: 'Branches as versions',
+				desc:
+					'Work on multiple versions by spawning different branches and merging when ready.',
 			},
 			{
 				icon: 'people',
-				title: 'Access Levels',
+				title: 'Access Control',
 				desc: 'Allow anyone to access your community, or just the people you choose.',
 			},
 			{
 				icon: 'lightbulb',
-				title: 'More To Come',
+				title: 'Suggest a feature',
 				desc:
 					"We're constantly adding new features, and love hearing ideas from users like you.",
 			},
 		];
+		const featureGrid = features.map((feature) => {
+			return (
+				<div className="feature">
+					<Icon icon={feature.icon} className="icon" />
+					<div className="description">
+						<h4>{feature.title}</h4>
+						<p>{feature.desc}</p>
+					</div>
+				</div>
+			);
+		});
+		const communities = [
+			{
+				name: 'Harvard Data Science Review',
+				description: 'A Microscopic, Telescopic & Kaleidoscopic View of Data Science',
+				logo: '/static/landing/hdsr.png',
+				type: 'Journal',
+				category: 'Science',
+			},
+			{
+				name: 'Harvard Data Science Review',
+				description: 'A Microscopic, Telescopic & Kaleidoscopic View of Data Science',
+				logo: '/static/landing/hdsr.png',
+				type: 'Journal',
+				category: 'Science',
+			},
+			{
+				name: 'Harvard Data Science Review',
+				description: 'A Microscopic, Telescopic & Kaleidoscopic View of Data Science',
+				logo: '/static/landing/hdsr.png',
+				type: 'Journal',
+				category: 'Science',
+			},
+			{
+				name: 'Harvard Data Science Review',
+				description: 'A Microscopic, Telescopic & Kaleidoscopic View of Data Science',
+				logo: '/static/landing/hdsr.png',
+				type: 'Journal',
+				category: 'Science',
+			},
+			{
+				name: 'Harvard Data Science Review',
+				description: 'A Microscopic, Telescopic & Kaleidoscopic View of Data Science',
+				logo: '/static/landing/hdsr.png',
+				type: 'Journal',
+				category: 'Science',
+			},
+			{
+				name: 'Harvard Data Science Review',
+				description: 'A Microscopic, Telescopic & Kaleidoscopic View of Data Science',
+				logo: '/static/landing/hdsr.png',
+				type: 'Journal',
+				category: 'Science',
+			},
+		];
+		const communityGrid = communities.map((community) => {
+			return (
+				<div className="community">
+					<div className="type">
+						<strong>{community.type}</strong> / {community.category}
+					</div>
+					<h4 className="name">{community.name}</h4>
+					<img className="logo" src={community.logo} alt={`Logo of ${community.name}`} />
+					<p className="description">{community.description}</p>
+				</div>
+			);
+		});
 		return (
 			<div id="landing-container">
 				<PageWrapper
@@ -154,7 +202,7 @@ class Landing extends React.Component {
 									<h3>Mission</h3>
 								</div>
 								<div>
-									As part of the <strong>Knowledge Futures Group</strong>, we’re
+									As part of the <strong>Knowledge Futures Group</strong>,  we’re
 									committed to making PubPub not just open, but easily accessible
 									to a wide range of groups. That means we’ve committed to
 									providing a free version of PubPub forever, releasing
@@ -216,6 +264,25 @@ class Landing extends React.Component {
 										alt="You can see multiple users editing at the same time."
 									/>
 								</div>
+								<div>
+									<p className="feature-number">03</p>
+									<ul>
+										<li>Data visualizations</li>
+										<li>Images, videos, tables, and math</li>
+										<li>Code, embedded interactives & more</li>
+									</ul>
+								</div>
+								<div>
+									<h4>Embed rich multimedia in your publication</h4>
+									<img
+										src="/static/landing/multimedia.png"
+										alt="You can see multiple users editing at the same time."
+									/>
+								</div>
+								<div className="other-features">
+									<h3>Other Features</h3>
+								</div>
+								<div className="feature-grid">{featureGrid}</div>
 							</div>
 						</div>
 						{/* END Features Block */}
@@ -226,7 +293,10 @@ class Landing extends React.Component {
 									<h3>Case Study</h3>
 								</div>
 								<div>
-									<p>Stuff</p>
+									<p>
+										Learn how <strong>the MIT Press</strong> uses PubPub for
+										collaborative community review.{' '}
+									</p>
 								</div>
 							</div>
 						</div>
@@ -238,7 +308,14 @@ class Landing extends React.Component {
 									<h3>Communities</h3>
 								</div>
 								<div>
-									<p>Stuff</p>
+									<p>
+										Communities are groups focused on a particular topic, theme,
+										or expertise. While their focus may be narrow, they invite
+										perspective and contribution from all. You can start your
+										own community (including your own private space!), or browse
+										any of the existing communities:
+									</p>
+									<div className="community-grid">{communityGrid}</div>
 								</div>
 							</div>
 						</div>
@@ -250,7 +327,12 @@ class Landing extends React.Component {
 									<h3>Create</h3>
 								</div>
 								<div>
-									<p>Stuff</p>
+									<h4>Start experimenting today</h4>
+									<button>Create your community</button>
+									<p>
+										* A community can be just your individual space to create
+										content, or you can invite others to collaborate with you!
+									</p>
 								</div>
 							</div>
 						</div>

@@ -11,7 +11,7 @@
 
 /**** Variables and Mixins ****/
 $textColorLight: #FFF9E9;
-$textColorDark: #000;
+$textColorDark: #2C3654;
 $bgColorDark: #2C3654;
 $bgGradientWhiteFirst: linear-gradient(0deg, #fff6c9 0%, #fff 100%);
 $bgGradientYellowFirst: linear-gradient(0deg, #fff 0%, #fff6c9 100%);
@@ -29,7 +29,6 @@ $leftColumnWidth: 300px;
 	}
 }
 @mixin light($border, $whiteFirst) {
-	@include backgroundGradient($whiteFirst);
 	color: $textColorDark;
 	h1, h2, h3, h4, a {
 		color: $textColorDark;
@@ -39,6 +38,7 @@ $leftColumnWidth: 300px;
 			background-image: $borderGradientDark;
 		}
 	}
+	@include backgroundGradient($whiteFirst);
 }
 @mixin dark($border) {
 	background-color: $bgColorDark;
@@ -55,16 +55,12 @@ $leftColumnWidth: 300px;
 
 #landing-container {
 	/***** Globals *****/
-	.buttons {
-		margin: 3em 0;
-		text-align: center;
-		.bp3-button {
-			margin: 0 0.5em;
-			&:focus {
-				outline: 2px solid white;
-			}
-		}
-	}
+	font-family: upgrade, sans-serif;
+	font-weight: 300;
+	font-style: normal;
+	font-size: 1em;
+	line-height: 2em;
+	letter-spacing: 1px;
 
 	/***** Top Nav ****/
 	.header-component {
@@ -76,18 +72,21 @@ $leftColumnWidth: 300px;
 
 	/***** Jumbotron and Nav *****/
 	#jumbotron {
+		.container .row.content {
+			h1, h2, .subtitle {
+				color: #000;
+			}
+		}
 		min-height: 815px;
 		margin-top: -56px;
 		padding-top: 56px;
 		@include light(false, false);
 		background-image: url('/static/landing/headerbg.png'), $bgGradientWhiteFirst;
+		background-size: contain;
 		background-repeat: no-repeat;
-		background-position: 90%;
+		background-position: 75% 0;
 		/***** Header Content *****/
 		.content {
-			h1 {
-				margin: 1em 0;
-			}
 			.landing-header {
 				min-width: 212px;
 				display: inline-block;
@@ -107,28 +106,32 @@ $leftColumnWidth: 300px;
 					position: relative;
 				}
 			}
+			h1 {
+				margin: 1em 0 0.5em 0;
+				font-weight: 400;
+				font-style: normal;
+				font-size: 4em;
+			}
+			h2 {
+				margin: 0.75em 0;
+				font-weight: 300;
+				font-style: normal;
+				font-size: 2em;
+			}
+			h2:before {
+				content: '';
+				display: block;
+				width: 20%;
+				border-top: 1px #000 solid;
+				padding-top: 0.75em;
+			}
 			.subtitle {
 				max-width: 500px;
 				margin: 0 auto;
-				font-size: 18px;
-			}
-			.buttons {
-				margin: 2em 0em 5em;
-			}
-			img.hero {
-				max-width: 800px;
-			}
-			.col-12 {
-				margin-bottom: 0;
-			}
-			.bp3-intent-primary {
-				background-color: #bf8c0a;
-				&:hover {
-					background-color: #b2830a;
-				}
-				&:active {
-					background-color: #a67908;
-				}
+				font-size: 1.5em;
+				font-family: upgrade-lights, sans-serif;
+				font-weight: 500;
+				font-style: normal;
 			}
 		}
 	}
@@ -149,19 +152,20 @@ $leftColumnWidth: 300px;
 			padding-bottom: 2em;
 			h3, .feature-number {
 				font-size: 1em;
-				line-height: 1.25em;
-				font-weight: normal;
+				line-height: 2em;
+				font-weight: 200;
 				text-transform: uppercase;
 			}
 			h4 {
 				font-size: 1.25em;
-				line-height: 1.5em;
+				line-height: 2em;
+				font-weight: 400;
 			}
-			div:nth-child(odd) {
+			> div:nth-child(odd) {
 				text-align: right;
 				grid-column-start: 1;
 			}
-			div:nth-child(even) {
+			> div:nth-child(even) {
 				grid-column-start: 2;
 			}
 		}
@@ -171,6 +175,9 @@ $leftColumnWidth: 300px;
 			.git {
 				margin-right: 6em;
 			}
+			.container > div:nth-child(even) {
+				max-width: 560px;
+			}
 		}
 		/**** END Mission, Open Source ****/
 		/**** BEGIN Features ****/
@@ -178,11 +185,13 @@ $leftColumnWidth: 300px;
 			@include light(true, true);
 			.feature-number {
 				font-size: 1.4em;
-				line-height: 1.3em;
+				line-height: 1.8em;
 			}
 			ul {
 				margin-top: 4em;
 				list-style-type: none;
+				font-family: upgrade-lights;
+				font-weight: 500;
 				li {
 					margin: 2.4em 0;
 				}
@@ -191,6 +200,31 @@ $leftColumnWidth: 300px;
 				width: 100%;
 				height: auto;
 				max-width: 777px;
+			}
+			.other-features h3 {
+				line-height: 1em;
+			}
+			.feature-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, 315px);
+				grid-template-rows: auto;
+				grid-column-gap: 1em;
+				grid-row-gap: 4em;
+				justify-content: space-between;
+				.feature {
+					display: flex;
+					.description {
+						border-left: 1px dashed #000;
+						padding-left: 0.7em;
+						margin-left: 0.7em;
+						p {
+							margin-bottom: 0;
+						}
+						h4 {
+							line-height: 1em;
+						}
+					}
+				}
 			}
 		}
 		/*** END Features ***/
@@ -203,8 +237,19 @@ $leftColumnWidth: 300px;
 		#communities {
 			@include light(true, false);
 			border-bottom: 2px dashed #000;
-			.container {
-				background-image: none;
+			.community-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, 240px);
+				grid-template-rows: auto;
+				grid-column-gap: 1em;
+				grid-row-gap: 4em;
+				justify-content: space-between;
+				.community {
+					img {
+						max-width: 240px;
+						height: auto;
+					}
+				}
 			}
 		}
 		/*** END Communities ***/
