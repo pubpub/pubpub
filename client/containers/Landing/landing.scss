@@ -1,11 +1,7 @@
-// .header-component {
-// 	color: white;
-// 	background-color: transparent;
-// 	.bp3-button:not([class*='bp3-intent-']),
-// 	.bp3-button[class*='bp3-icon-']::before {
-// 		color: white;
-// 	}
-// }
+/*** Global PubPub Header Overrides ***/
+.header-component {
+	z-index: 10;
+ }
 
 /**** Variables and Mixins ****/
 $textColorLight: #FFF9E9;
@@ -62,6 +58,32 @@ $leftColumnWidth: 20%;
 	strong {
 		font-weight: 500;
 	}
+	.buttons {
+		margin: 3em 0;
+		> * {
+			margin: 0 1em 0 0;
+		}
+	}
+	.custom-button, a.custom-button {
+		padding: 0.5em 1em;
+		min-width: 100px;
+		font-weight: 300;
+		font-size: 1.2em;
+		color: $textColorLight !important;
+		text-decoration: none;
+		background-color: $textColorDark;
+		border: 1px solid $textColorDark;
+		&.light {
+			color: $textColorLight !important;
+			border: 1px solid $textColorLight;
+			background-color: $textColorDark;
+		}
+		&.black {
+			color: #fff !important;
+			border: 1px solid #000;
+			background-color: #000;
+		}
+	}
 	/***** Top Nav ****/
 	.header-component {
 		color: #999;
@@ -69,10 +91,10 @@ $leftColumnWidth: 20%;
 			color: #999;
 		}
 	}
-
 	/***** Jumbotron and Nav *****/
 	#jumbotron {
 		position: relative;
+		z-index: 1;
 		margin-top: -56px;
 		padding-top: 56px;
 		@include light(false, false);
@@ -81,6 +103,7 @@ $leftColumnWidth: 20%;
 		&:before {
 			content: '';
 			position: absolute;
+			z-index: -1;
 			top: 0;
 			left: 0;
 			bottom: 0;
@@ -129,8 +152,11 @@ $leftColumnWidth: 20%;
 	/***** Main Content *****/
 	#main {
 		.container {
+			display: -ms-grid;
 			display: grid;
+			-ms-grid-rows: auto;
 			grid-auto-rows: auto;
+			-ms-grid-columns: $leftColumnWidth auto;
 			grid-template-columns: $leftColumnWidth auto;
 			grid-column-gap: $columnGap;
 			grid-row-gap: 4em;
@@ -141,6 +167,11 @@ $leftColumnWidth: 20%;
 			background-position-x: ($leftColumnWidth + ($columnGap / 2));
 			padding-top: 2em;
 			padding-bottom: 2em;
+			&.restricted-width {
+				> div {
+					max-width: 560px;
+				}
+			}
 			h3, .feature-number {
 				font-size: 1em;
 				line-height: 2em;
@@ -154,18 +185,22 @@ $leftColumnWidth: 20%;
 			}
 			> div:nth-child(odd) {
 				text-align: right;
+				-ms-grid-column: 1;
 				grid-column-start: 1;
 			}
 			> div:nth-child(even) {
+				-ms-grid-column: 2;
 				grid-column-start: 2;
 			}
 			&.reverse {
 				> div:nth-child(odd) {
 					text-align: left;
+					-ms-grid-column: 2;
 					grid-column-start: 2;
 				}
 				> div:nth-child(even) {
 					text-align: right;
+					-ms-grid-column: 1;
 					grid-column-start: 1;
 				}
 			}
@@ -178,9 +213,6 @@ $leftColumnWidth: 20%;
 			@include dark(true);
 			.git {
 				margin-right: 6em;
-			}
-			.container > div:nth-child(even) {
-				max-width: 560px;
 			}
 		}
 		/**** END Mission, Open Source ****/
@@ -213,10 +245,13 @@ $leftColumnWidth: 20%;
 				}
 			}
 			.feature-grid {
+				display: -ms-grid;
 				display: grid;
 				grid-column-start: 2;
 				text-align: left;
+				-ms-grid-columns: 48% 48%;
 				grid-template-columns: repeat(auto-fit, 48%);
+				-ms-grid-rows: auto;
 				grid-auto-rows: auto;
 				grid-column-gap: 1em;
 				grid-row-gap: 4em;
@@ -241,6 +276,18 @@ $leftColumnWidth: 20%;
 		/*** START Case Study ***/
 		#case-study {
 			@include dark(true);
+			.container > div {
+				max-width: 900px;
+			}
+			.logo {
+				float: right;
+				text-align: right;
+				max-width: 200px;
+				img {
+					max-width: 145px;
+					height: auto;
+				}
+			}
 		}
 		/*** END Case Study ***/
 		/*** START Communities ***/
@@ -248,26 +295,90 @@ $leftColumnWidth: 20%;
 			@include light(true, false);
 			border-bottom: 2px dashed #000;
 			.community-grid {
+				display: -ms-grid;
 				display: grid;
+				-ms-grid-rows: auto;
+				grid-auto-rows: auto;
+				-ms-grid-columns: 240px 240px 240px;
 				grid-template-columns: repeat(auto-fill, 240px);
-				grid-template-rows: auto;
 				grid-column-gap: 1em;
 				grid-row-gap: 4em;
 				justify-content: space-between;
+				margin-top: 3em;
 				.community {
+					.type {
+						line-height: 2em;
+						font-size: 0.6em;
+						font-weight: 200;
+						font-style: italic;
+						strong {
+							text-transform: uppercase;
+							font-weight: 400;
+							font-style: normal;
+						}
+					}
+					h4.name {
+						font-size: 1.2em;
+						line-height: 1.2em;
+						margin-bottom: 0.3em;
+						a {
+							text-decoration: none;
+						}
+					}
 					img {
 						max-width: 240px;
 						height: auto;
+						margin-bottom: 0.5em;
+					}
+					.description {
+						font-size: 0.8em;
+						line-height: 1.2em;
+						font-family: upgrade-light;
+						font-weight: 300;
+						font-style: italic;
 					}
 				}
 			}
 		}
 		/*** END Communities ***/
+		/*** START Create ***/
+		#create {
+			position: relative;
+			z-index: 1;
+			&:before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				z-index: -1;
+				background-image: url('/static/landing/createbg.png');
+				background-size: 14%;
+				background-position: 80% 7em;
+				background-repeat: no-repeat;
+			}
+			.container {
+				h4 {
+					font-size: 2em;
+					font-weight: 300;
+					line-height: 1.2em;
+				}
+				p.disclaimer {
+					font-family: upgrade-lights;
+					font-weight: 200;
+					font-style: italic;
+				}
+			}
+		}
+		/*** END Create ***/
 		/*** START Pitch ***/
 		#pitch {
 			@include dark(true);
+			font-size: 1.4em;
 			.container {
 				> div {
+					-ms-grid-column: 2;
 					grid-column-start: 2;
 					text-align: left;
 				}
@@ -281,21 +392,37 @@ $leftColumnWidth: 20%;
 	}
 }
 
+/**** Tablets ****/
+@media only screen and (max-width: 1100px) {
+	#landing-container {
+		#jumbotron {
+			&:before {
+				background-size: 50%;
+				background-position: 90%;
+			}
+		}
+	}
+}
+
 /***** Mobile *****/
 @media only screen and (max-width: 720px) {
 	#landing-container {
 		#jumbotron {
 			&:before {
-				background-image: none;
+				opacity: 0.2;
+				background-size: 200%;
+				background-position: 50% 25%;
 			}
 			min-height: 500px;
 		}
 		#main {
 			.container, .container.reverse {
+				-ms-grid-columns: 1fr;
 				grid-template-columns: 1fr;
 				grid-column-gap: 0;
 				grid-row-gap: 0;
 				> div:nth-child(even), > div:nth-child(odd) {
+					-ms-grid-column: 1;
 					grid-column-start: 1;
 					text-align: left;
 				}
@@ -306,6 +433,7 @@ $leftColumnWidth: 20%;
 			#features {
 				.container {
 					.other-features, .feature-grid {
+						-ms-grid-column: 1;
 						grid-column-start: 1;
 						text-align: left;
 					}
@@ -339,6 +467,12 @@ $leftColumnWidth: 20%;
 					}
 				}
 			}
+			#create {
+				&:before {
+					opacity: 0.2;
+					background-size: 30%;
+				}
+			}
 			#mission, #features, #case-study, #communities, #create, #pitch {
 				.container {
 					background-image: none;
@@ -362,10 +496,20 @@ $leftColumnWidth: 20%;
 			#communities {
 				.community-grid {
 					display: block;
-					text-align: center;
 				}
 				.community {
-					margin-bottom: 2em;
+					margin: 2em 0;
+					padding-top: 2em;
+					border-top: 1px #ccc dashed;
+				}
+				.buttons {
+					margin: 0;
+					padding-top: 2em;
+					border-top: 1px #ccc dashed;
+					.custom-button {
+						width: 240px;
+						display: block;
+					}
 				}
 			}
 		}
