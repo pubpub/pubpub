@@ -84,6 +84,68 @@ $leftColumnWidth: 20%;
 			background-color: #000;
 		}
 	}
+	/**** BEGIN IE Grid Overrides ****/
+	#main {
+		.container {
+			@for $i from 1 through 12 {
+				> div:nth-child(#{$i}) {
+					-ms-grid-row: ceil($i / 2);
+				}
+			}
+			display: -ms-grid;
+			-ms-grid-columns: $leftColumnWidth 1fr;
+			@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    		> div:nth-child(odd) {
+					margin-left: 0;
+				}
+				> div:nth-child(even) {
+					margin-left: ($columnGap + 2%);
+					margin-bottom: 3em;
+				}
+				&.reverse {
+					> div:nth-child(odd) {
+						margin-left: ($columnGap + 2%);
+						margin-bottom: 3em;
+					}
+					> div:nth-child(even) {
+						margin-left: 0;
+					}
+					> div.other-features {
+						margin-left: 0;
+					}
+					> div.feature-grid {
+						margin-left: ($columnGap + 2%);
+						margin-bottom: 3em;
+						.feature {
+							margin-bottom: 1em;
+						}
+					}
+				}
+			}
+			> div:nth-child(odd) {
+				-ms-grid-column: 1;
+			}
+			> div:nth-child(even) {
+				-ms-grid-column: 2;
+			}
+			&.reverse {
+				> div:nth-child(odd) {
+					-ms-grid-column: 2;
+				}
+				> div:nth-child(even) {
+					-ms-grid-column: 1;
+				}
+				> div.other-features {
+					-ms-grid-column: 1;
+				}
+				> div.feature-grid {
+					-ms-grid-column: 2;
+				}
+			}
+		}
+	}
+	/**** END IE Grid Overrides ****/
+
 	/***** Top Nav ****/
 	.header-component {
 		color: #999;
@@ -152,11 +214,8 @@ $leftColumnWidth: 20%;
 	/***** Main Content *****/
 	#main {
 		.container {
-			display: -ms-grid;
 			display: grid;
-			-ms-grid-rows: auto;
 			grid-auto-rows: auto;
-			-ms-grid-columns: $leftColumnWidth auto;
 			grid-template-columns: $leftColumnWidth auto;
 			grid-column-gap: $columnGap;
 			grid-row-gap: 4em;
@@ -185,22 +244,18 @@ $leftColumnWidth: 20%;
 			}
 			> div:nth-child(odd) {
 				text-align: right;
-				-ms-grid-column: 1;
 				grid-column-start: 1;
 			}
 			> div:nth-child(even) {
-				-ms-grid-column: 2;
 				grid-column-start: 2;
 			}
 			&.reverse {
 				> div:nth-child(odd) {
 					text-align: left;
-					-ms-grid-column: 2;
 					grid-column-start: 2;
 				}
 				> div:nth-child(even) {
 					text-align: right;
-					-ms-grid-column: 1;
 					grid-column-start: 1;
 				}
 			}
@@ -245,13 +300,10 @@ $leftColumnWidth: 20%;
 				}
 			}
 			.feature-grid {
-				display: -ms-grid;
 				display: grid;
 				grid-column-start: 2;
 				text-align: left;
-				-ms-grid-columns: 48% 48%;
 				grid-template-columns: repeat(auto-fit, 48%);
-				-ms-grid-rows: auto;
 				grid-auto-rows: auto;
 				grid-column-gap: 1em;
 				grid-row-gap: 4em;
@@ -295,11 +347,8 @@ $leftColumnWidth: 20%;
 			@include light(true, false);
 			border-bottom: 2px dashed #000;
 			.community-grid {
-				display: -ms-grid;
 				display: grid;
-				-ms-grid-rows: auto;
 				grid-auto-rows: auto;
-				-ms-grid-columns: 240px 240px 240px;
 				grid-template-columns: repeat(auto-fill, 240px);
 				grid-column-gap: 1em;
 				grid-row-gap: 4em;
@@ -378,8 +427,6 @@ $leftColumnWidth: 20%;
 			font-size: 1.4em;
 			.container {
 				> div {
-					-ms-grid-column: 2;
-					grid-column-start: 2;
 					text-align: left;
 				}
 			}
@@ -417,12 +464,10 @@ $leftColumnWidth: 20%;
 		}
 		#main {
 			.container, .container.reverse {
-				-ms-grid-columns: 1fr;
 				grid-template-columns: 1fr;
 				grid-column-gap: 0;
 				grid-row-gap: 0;
 				> div:nth-child(even), > div:nth-child(odd) {
-					-ms-grid-column: 1;
 					grid-column-start: 1;
 					text-align: left;
 				}
@@ -433,7 +478,6 @@ $leftColumnWidth: 20%;
 			#features {
 				.container {
 					.other-features, .feature-grid {
-						-ms-grid-column: 1;
 						grid-column-start: 1;
 						text-align: left;
 					}

@@ -340,7 +340,7 @@ const Landing = (props) => {
 					{/* END Create Block */}
 					{/* BEGIN Pitch Block */}
 					<div id="pitch">
-						<div className="container restricted-width">
+						<div className="container restricted-width reverse">
 							<div>
 								<p>
 									With PubPub, one tool supports your entire publishing workflow,
