@@ -148,9 +148,11 @@ $leftColumnWidth: 20%;
 
 	/***** Top Nav ****/
 	.header-component {
-		color: #999;
+		// color: #111;
+		font-family: -apple-system, 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen',
+					'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', sans-serif;
 		&.bp3-dark a {
-			color: #999;
+			color: #111;
 		}
 	}
 	/***** Jumbotron and Nav *****/

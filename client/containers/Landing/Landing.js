@@ -21,12 +21,13 @@ const Landing = (props) => {
 		{
 			icon: 'shield',
 			title: 'Submissions & Review',
-			desc: 'Manage submissions and peer review right from within PubPub.',
+			desc: 'Manage submissions and peer review directly on PubPub.',
 		},
 		{
 			icon: 'comment',
 			title: 'Discussions & Annotations',
-			desc: 'Host public and private discussions with your readers and community.',
+			desc:
+				'Host public and private discussions with your readers and community, whether their in your classroom or across the world.',
 		},
 		{
 			icon: 'page-layout',
@@ -37,18 +38,18 @@ const Landing = (props) => {
 			icon: 'book',
 			title: 'Collection Metadata',
 			desc:
-				'Including article & collection-level metadata for easier organization of content.',
+				'Including article & collection-level metadata for easier organization of content and improved discovery.',
 		},
 		{
 			icon: 'changes',
 			title: 'Branches as versions',
 			desc:
-				'Work on multiple versions by spawning different branches and merging when ready.',
+				'Work on multiple versions by creating different branches and merging when ready.',
 		},
 		{
 			icon: 'people',
 			title: 'Access Control',
-			desc: 'Allow anyone to access your community, or just the people you choose.',
+			desc: 'Allow anyone to access your content, or just the people you choose.',
 		},
 		{
 			icon: 'lightbulb',
@@ -153,9 +154,8 @@ const Landing = (props) => {
 							<div className="col-4">
 								<h1>PubPub</h1>
 								<p className="subtitle">
-									The open-source, privacy-respecting, turnkey, all-in-one
-									collaborative publishing platform for communities small and
-									large.
+									The open-source, privacy-respecting, all-in-one collaborative
+									publishing platform for communities small and large.
 								</p>
 								<h2>Manage, evolve & perfect your publishing process</h2>
 								<div className="buttons">
@@ -178,9 +178,12 @@ const Landing = (props) => {
 								<h3>Mission</h3>
 							</div>
 							<div>
-								As part of the <strong>Knowledge Futures Group</strong>,  we’re
-								committed to making PubPub not just open, but easily accessible to a
-								wide range of groups. That means we’ve committed to providing a free
+								As part of the{' '}
+								<a href="https://www.knowledgefutures.org">
+									<strong>Knowledge Futures Group</strong>
+								</a>
+								,  we’re committed to making PubPub open and easily accessible to a
+								wide range of groups. That means we’re committed to providing a free
 								version of PubPub forever, releasing open-source code, and operating
 								under non-profit, sustainable, researcher-friendly business models.
 							</div>
@@ -216,8 +219,8 @@ const Landing = (props) => {
 							<div>
 								<p className="feature-number">01</p>
 								<ul>
-									<li key="01-01">No emailing back and forth</li>
-									<li key="01-02">Live authoring updates</li>
+									<li key="01-01">Keep everyone in the loop</li>
+									{/* <li key="01-02">Collaborate in real-time</li> */}
 									<li key="01-03">Assign roles on-the-fly</li>
 								</ul>
 							</div>
@@ -231,9 +234,9 @@ const Landing = (props) => {
 							<div>
 								<p className="feature-number">02</p>
 								<ul>
-									<li key="02-01">Streamlined multi-file imports</li>
+									<li key="02-01">Easy multi-file imports</li>
 									<li key="02-02">Complex-content friendly</li>
-									<li key="02-03">Markdown, Word and even LaTeX</li>
+									<li key="02-03">Markdown, Word, and LaTeX</li>
 								</ul>
 							</div>
 							<div>
@@ -247,8 +250,8 @@ const Landing = (props) => {
 								<p className="feature-number">03</p>
 								<ul>
 									<li key="03-01">Data visualizations</li>
-									<li key="03-02">Images, videos, tables, and math</li>
-									<li key="03-03">Code, embedded interactives & more</li>
+									<li key="03-02">Images, videos, and math</li>
+									<li key="03-03">Code, interactives, and more</li>
 								</ul>
 							</div>
 							<div className="other-features">
@@ -301,11 +304,11 @@ const Landing = (props) => {
 							</div>
 							<div>
 								<p>
-									Communities are groups focused on a particular topic, theme, or
-									expertise. While their focus may be narrow, they invite
-									perspective and contribution from all. You can start your own
-									community (including your own private space!), or browse any of
-									the existing communities:
+									Communities are publishing groups focused on a particular topic,
+									theme, or expertise. They can be a university press or a single
+									monograph; they can be a journal, research group, or conference.
+									You can start your community or browse any of the existing
+									PubPub communities today.
 								</p>
 								<div className="community-grid">{communityGrid}</div>
 								<div className="buttons">
@@ -331,8 +334,8 @@ const Landing = (props) => {
 									</a>
 								</div>
 								<p className="disclaimer">
-									* A community can be just your individual space to create
-									content, or you can invite others to collaborate with you!
+									* A community can be your individual space to create content, or
+									you can invite others to collaborate with you!
 								</p>
 							</div>
 						</div>
@@ -343,11 +346,10 @@ const Landing = (props) => {
 						<div className="container restricted-width reverse">
 							<div>
 								<p>
-									With PubPub, one tool supports your entire publishing workflow,
-									including • drafting the content • editorial review process •
-									power to publish • and engaging the community to spark
-									conversations around your content allowing you to work
-									efficiently, flexibly, and collaboratively.
+									With PubPub, one tool supports your entire content workflow from
+									drafting to review, publication, and reader engagement. Work
+									efficiently, flexibly, and collaboratively to better support
+									knowledge creation and dissemination.
 								</p>
 							</div>
 						</div>
