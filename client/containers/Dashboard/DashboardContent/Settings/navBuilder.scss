@@ -10,9 +10,11 @@
 		}
 	}
 	.nav-builder-row {
-		
-			display: flex;
-			align-items: flex-start;
+		display: flex;
+		align-items: flex-start;
+		padding-bottom: 1em;
+		margin-bottom: 1em;
+		border-bottom: 1px solid #CCC;
 		.top {
 			display: flex;
 		}

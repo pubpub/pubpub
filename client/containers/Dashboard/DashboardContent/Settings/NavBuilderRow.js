@@ -68,7 +68,7 @@ const NavBuilderRow = (props) => {
 							placeholder="Add Page"
 							onSelect={(newItem) => {
 								updateItem(dropdownId, index, {
-									children: [newItem, ...item.children],
+									children: [newItem.id, ...item.children],
 								});
 							}}
 						/>

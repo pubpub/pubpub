@@ -6,7 +6,6 @@ import { Button } from '@blueprintjs/core';
 // import Icon from 'components/Icon/Icon';
 import PageAutocomplete from './NavDrag/PageAutocomplete';
 import NavBuilderList from './NavBuilderList';
-import NavBuilderRow from './NavBuilderRow';
 
 require('./navBuilder.scss');
 
@@ -96,14 +95,14 @@ const NavBuilder = (props) => {
 		const nextUserElements =
 			dropdownId === 'main-list'
 				? userSetElements.filter((item) => {
-						return item.id !== itemId;
+						return item.id !== itemId && item !== itemId;
 				  })
 				: userSetElements.map((item) => {
 						if (item.id === dropdownId) {
 							return {
 								...item,
 								children: item.children.filter((subItem) => {
-									return subItem.id !== itemId;
+									return subItem.id !== itemId  && subItem !== itemId;
 								}),
 							};
 						}

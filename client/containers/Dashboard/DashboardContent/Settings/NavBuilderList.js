@@ -56,7 +56,7 @@ const NavBuilderList = (props) => {
 											minimal
 											small
 											onClick={() => {
-												removeItem(item.id, id);
+												removeItem(itemId, id);
 											}}
 										/>
 										<NavBuilderRow

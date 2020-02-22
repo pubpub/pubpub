@@ -10,6 +10,7 @@ storiesOf('containers/Dashboard/DashboardContent', module).add('NavBuilder', () 
 		<div style={{ padding: '20px' }}>
 			<NavBuilder
 				initialNav={communityData.navigation}
+				prefix={[communityData.navigation[0]]}
 				pages={communityData.pages}
 				onChange={(nav) => {
 					/* eslint-disable-next-line no-console */
