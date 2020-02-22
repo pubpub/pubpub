@@ -1,0 +1,23 @@
+.nav-builder-component {
+	.new-items {
+		.page-autocomplete-component {
+			display: inline-block;
+			width: 200px;
+			margin-right: 2em;
+		}
+		button {
+			margin-right: 2em;
+		}
+	}
+	.nav-builder-row {
+		
+			display: flex;
+			align-items: flex-start;
+		.top {
+			display: flex;
+		}
+		.children {
+			padding-left: 100px;
+		}
+	}
+}
