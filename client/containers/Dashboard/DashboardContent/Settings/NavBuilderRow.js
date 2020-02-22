@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, InputGroup } from '@blueprintjs/core';
 import PageAutocomplete from './NavDrag/PageAutocomplete';
-// import NavBuilderList from './NavBuilderList';
 
 const propTypes = {
 	NavBuilderList: PropTypes.func,

@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { generateHash } from 'utils';
 import { Button } from '@blueprintjs/core';
-// import Icon from 'components/Icon/Icon';
 import PageAutocomplete from './NavDrag/PageAutocomplete';
 import NavBuilderList from './NavBuilderList';
+import NavBuilderRow from './NavBuilderRow';
 
 require('./navBuilder.scss');
 
@@ -63,12 +63,6 @@ const NavBuilder = (props) => {
 		onChange(newNav);
 	};
 	const updateItem = (dropdownId, index, newItemValues) => {
-		// console.log(index, newItemValues);
-		// const nextUserElements = [...userSetElements];
-		// nextUserElements[index] = { ...nextUserElements[index], ...newItemValues };
-		// const newNav = [...prefix, ...nextUserElements, ...suffix];
-		// setCurrentNav(newNav);
-		// onChange(newNav);
 		const nextUserElements =
 			dropdownId === 'main-list'
 				? userSetElements.map((item, currIndex) => {
@@ -102,7 +96,7 @@ const NavBuilder = (props) => {
 							return {
 								...item,
 								children: item.children.filter((subItem) => {
-									return subItem.id !== itemId  && subItem !== itemId;
+									return subItem.id !== itemId && subItem !== itemId;
 								}),
 							};
 						}
@@ -140,7 +134,20 @@ const NavBuilder = (props) => {
 			</div>
 			<DragDropContext onDragEnd={onDragEnd}>
 				<div className="items">
-					Hello
+					{prefix.map((item) => {
+						return (
+							<NavBuilderRow
+								dropdownId={null}
+								index={0}
+								item={item}
+								removeItem={() => {}}
+								updateItem={() => {}}
+								pages={pages}
+								newLink={() => {}}
+								NavBuilderList={() => {}}
+							/>
+						);
+					})}
 					<NavBuilderList
 						id="main-list"
 						items={userSetElements}
@@ -149,6 +156,20 @@ const NavBuilder = (props) => {
 						pages={pages}
 						newLink={newLink}
 					/>
+					{suffix.map((item) => {
+						return (
+							<NavBuilderRow
+								dropdownId={null}
+								index={0}
+								item={item}
+								removeItem={() => {}}
+								updateItem={() => {}}
+								pages={pages}
+								newLink={() => {}}
+								NavBuilderList={() => {}}
+							/>
+						);
+					})}
 				</div>
 			</DragDropContext>
 		</div>
