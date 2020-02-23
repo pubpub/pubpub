@@ -82,7 +82,6 @@ class PageAutocomplete extends Component {
 	handleSelect(data) {
 		this.props.onSelect(data);
 		this.filterItems('');
-		// this.setState({ value: '' });
 	}
 
 	render() {
@@ -94,6 +93,7 @@ class PageAutocomplete extends Component {
 					inputProps={{
 						placeholder: this.props.placeholder,
 						rightElement: <Icon icon="caret-down" />,
+						small: true,
 					}}
 					query={this.state.value}
 					onQueryChange={this.filterItems}

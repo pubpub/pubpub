@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { generateHash } from 'utils';
 import { Button } from '@blueprintjs/core';
-import PageAutocomplete from './NavDrag/PageAutocomplete';
+import PageAutocomplete from './PageAutocomplete';
 import NavBuilderList from './NavBuilderList';
 import NavBuilderRow from './NavBuilderRow';
 
@@ -15,15 +15,17 @@ const propTypes = {
 	suffix: PropTypes.array,
 	pages: PropTypes.array.isRequired,
 	onChange: PropTypes.func.isRequired,
+	disableDropdown: PropTypes.bool,
 };
 
 const defaultProps = {
 	prefix: [],
 	suffix: [],
+	disableDropdown: false,
 };
 
 const NavBuilder = (props) => {
-	const { initialNav, pages, onChange, prefix, suffix } = props;
+	const { initialNav, pages, onChange, prefix, suffix, disableDropdown } = props;
 	const [currentNav, setCurrentNav] = useState(initialNav);
 	const userSetElements = currentNav.slice(prefix.length, currentNav.length - suffix.length);
 
@@ -107,45 +109,48 @@ const NavBuilder = (props) => {
 		onChange(newNav);
 	};
 
-	const newLink = { id: generateHash(8), title: 'Link', href: '' };
-	const newDropdown = { id: generateHash(8), title: 'Dropdown Menu', children: [] };
+	const newLink = { id: generateHash(8), title: 'Link Title', href: '' };
+	const newDropdown = { id: generateHash(8), title: 'Menu Title', children: [] };
 	return (
 		<div className="nav-builder-component">
+			<style>{`body { height: 100vh; overflow: scroll }`}</style>
 			<div className="new-items">
 				<PageAutocomplete
 					pages={pages}
 					placeholder="Add Page"
+					usedItems={pages.filter((item) => {
+						return currentNav.includes(item.id);
+					})}
 					onSelect={(newItem) => {
 						addItem(newItem.id);
 					}}
 				/>
 				<Button
+					small
 					text="Add Link"
 					onClick={() => {
 						addItem(newLink);
 					}}
 				/>
-				<Button
-					text="Add Dropdown Menu"
-					onClick={() => {
-						addItem(newDropdown);
-					}}
-				/>
+				{!disableDropdown && (
+					<Button
+						small
+						text="Add Dropdown Menu"
+						onClick={() => {
+							addItem(newDropdown);
+						}}
+					/>
+				)}
 			</div>
 			<DragDropContext onDragEnd={onDragEnd}>
 				<div className="items">
-					{prefix.map((item) => {
+					{prefix.map((item, index) => {
+						const key = `prefix-${index}`;
+						/* Use wrapper div to get margin-collapse styling right */
 						return (
-							<NavBuilderRow
-								dropdownId={null}
-								index={0}
-								item={item}
-								removeItem={() => {}}
-								updateItem={() => {}}
-								pages={pages}
-								newLink={() => {}}
-								NavBuilderList={() => {}}
-							/>
+							<div key={key} className="nav-builder-row">
+								<NavBuilderRow item={item} pages={pages} isStatic={true} />
+							</div>
 						);
 					})}
 					<NavBuilderList
@@ -155,19 +160,15 @@ const NavBuilder = (props) => {
 						updateItem={updateItem}
 						pages={pages}
 						newLink={newLink}
+						disableDropdown={disableDropdown}
 					/>
-					{suffix.map((item) => {
+					{suffix.map((item, index) => {
+						const key = `suffix-${index}`;
+						/* Use wrapper div to get margin-collapse styling right */
 						return (
-							<NavBuilderRow
-								dropdownId={null}
-								index={0}
-								item={item}
-								removeItem={() => {}}
-								updateItem={() => {}}
-								pages={pages}
-								newLink={() => {}}
-								NavBuilderList={() => {}}
-							/>
+							<div key={key} className="nav-builder-row">
+								<NavBuilderRow item={item} pages={pages} isStatic={true} />
+							</div>
 						);
 					})}
 				</div>

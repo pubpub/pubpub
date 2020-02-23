@@ -24,7 +24,7 @@ app.use((req, res, next) => {
 			'/pub/zmxeo3dv': 'https://notes.knowledgefutures.org/pub/zmxeo3dv',
 			'/pub/ek9zpak0': 'https://notes.knowledgefutures.org/pub/ek9zpak0',
 		},
-		'baas.pubpub.org': {
+		'baas.aas.org': {
 			'/obituaries/*': 'https://aasjournals.github.io/aas-obits-mirror/$1.html',
 			'/wp-content/uploads/*':
 				'https://113qx216in8z1kdeyi404hgf-wpengine.netdna-ssl.com/wp-content/uploads/$1',
@@ -33,22 +33,22 @@ app.use((req, res, next) => {
 			'/community/astro2020-science-white-papers/':
 				'https://aasjournals.github.io/aas-obits-mirror/astro2020-science-index.html',
 			'/community/final-report-of-the-2018-aas-task-force-on-diversity-and-inclusion-in-astronomy-graduate-education/':
-				'https://baas.pubpub.org/pub/2019i0101',
+				'https://baas.aas.org/pub/2019i0101',
 			'/community/gender-and-sexual-minorities-in-astronomy-and-planetary-science/':
-				'https://baas.pubpub.org/pub/2019i0206',
+				'https://baas.aas.org/pub/2019i0206',
 			'/community/logistics-is-a-key-enabler-of-sustainable-human-mars-missions/':
-				'https://baas.pubpub.org/pub/2019i0202',
-			'/community-reports-listing': 'https://baas.pubpub.org/community-reports',
+				'https://baas.aas.org/pub/2019i0202',
+			'/community-reports-listing': 'https://baas.aas.org/community-reports',
 			'/community/ten-years-of-astronomy-scientific-and-cultural-impact/':
-				'https://baas.pubpub.org/pub/2019i0203',
+				'https://baas.aas.org/pub/2019i0203',
 			'/community/women-in-astronomy-in-a-post-gre-world/':
-				'https://baas.pubpub.org/pub/2019i0204',
-			'/meeting-abstracts-listing': 'https://baas.pubpub.org/abstracts',
-			'/news/anniversaries-in-2019/': 'https://baas.pubpub.org/pub/2019i0205',
-			'/news/lifetimes-of-astronomical-papers/': 'https://baas.pubpub.org/pub/2019i0207',
-			'/news-listing': 'https://baas.pubpub.org/news',
-			'/news/principles-of-editing/': 'https://baas.pubpub.org/pub/2019i0201',
-			'/obituaries-listing': 'https://baas.pubpub.org/obituaries',
+				'https://baas.aas.org/pub/2019i0204',
+			'/meeting-abstracts-listing': 'https://baas.aas.org/abstracts',
+			'/news/anniversaries-in-2019/': 'https://baas.aas.org/pub/2019i0205',
+			'/news/lifetimes-of-astronomical-papers/': 'https://baas.aas.org/pub/2019i0207',
+			'/news-listing': 'https://baas.aas.org/news',
+			'/news/principles-of-editing/': 'https://baas.aas.org/pub/2019i0201',
+			'/obituaries-listing': 'https://baas.aas.org/obituaries',
 		},
 	};
 

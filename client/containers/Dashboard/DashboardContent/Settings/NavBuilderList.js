@@ -33,8 +33,8 @@ const NavBuilderList = (props) => {
 						const itemId = typeof item === 'string' ? item : item.id;
 						return (
 							<Draggable
-								key={`draggable-${itemId}`}
-								draggableId={itemId}
+								key={`draggable-${itemId}-${id}`}
+								draggableId={`draggable-${itemId}-${id}`}
 								index={index}
 								type={id}
 							>
@@ -48,27 +48,32 @@ const NavBuilderList = (props) => {
 										}
 										{...providedItem.draggableProps}
 									>
-										<span {...providedItem.dragHandleProps}>
-											<Icon icon="drag-handle-horizontal" />
-										</span>
-										<Button
-											icon="small-cross"
-											minimal
-											small
-											onClick={() => {
-												removeItem(itemId, id);
-											}}
-										/>
-										<NavBuilderRow
-											dropdownId={id}
-											index={index}
-											item={item}
-											removeItem={removeItem}
-											updateItem={updateItem}
-											pages={pages}
-											newLink={newLink}
-											NavBuilderList={NavBuilderList}
-										/>
+										<div className="shadow">
+											<span {...providedItem.dragHandleProps}>
+												<Icon
+													className="drag-handle"
+													icon="drag-handle-horizontal"
+												/>
+											</span>
+											<NavBuilderRow
+												dropdownId={id}
+												index={index}
+												item={item}
+												removeItem={removeItem}
+												updateItem={updateItem}
+												pages={pages}
+												newLink={newLink}
+												NavBuilderList={NavBuilderList}
+											/>
+											<Button
+												icon="small-cross"
+												minimal
+												small
+												onClick={() => {
+													removeItem(itemId, id);
+												}}
+											/>
+										</div>
 									</div>
 								)}
 							</Draggable>

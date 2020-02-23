@@ -1,21 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import { Button, InputGroup } from '@blueprintjs/core';
-import PageAutocomplete from './NavDrag/PageAutocomplete';
+import PageAutocomplete from './PageAutocomplete';
 
 const propTypes = {
-	NavBuilderList: PropTypes.func,
-	dropdownId: PropTypes.string.isRequired,
-	index: PropTypes.number.isRequired,
+	dropdownId: PropTypes.string,
+	index: PropTypes.number,
 	item: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-	updateItem: PropTypes.func.isRequired,
-	removeItem: PropTypes.func.isRequired,
+	updateItem: PropTypes.func,
+	removeItem: PropTypes.func,
 	pages: PropTypes.array.isRequired,
-	newLink: PropTypes.object.isRequired,
+	newLink: PropTypes.object,
+	isStatic: PropTypes.bool,
+	NavBuilderList: PropTypes.func,
 };
 
 const defaultProps = {
+	dropdownId: undefined,
 	NavBuilderList: undefined,
+	isStatic: false,
+	newLink: undefined,
+	updateItem: () => {},
+	removeItem: () => {},
+	index: undefined,
 };
 
 const NavBuilderRow = (props) => {
@@ -28,10 +36,11 @@ const NavBuilderRow = (props) => {
 		updateItem,
 		removeItem,
 		newLink,
+		isStatic,
 	} = props;
 	const data = typeof item === 'string' ? pages.find((page) => page.id === item) : item;
 	let type = 'page';
-	if (typeof data.href === 'string') {
+	if (typeof data.href === 'string' && !isStatic) {
 		type = 'link';
 	}
 	if (data.children) {
@@ -39,11 +48,12 @@ const NavBuilderRow = (props) => {
 	}
 
 	return (
-		<div className="nav-builder-row-component">
+		<div className={classNames({ 'nav-builder-row-component': true, static: isStatic })}>
 			<div className="top">
-				{type === 'page' && <div className="title">{data.title}</div>}
+				{type === 'page' && <div className="nav-title">{data.title}</div>}
 				{type !== 'page' && (
 					<InputGroup
+						small
 						placeholder="Title"
 						onChange={(evt) => {
 							updateItem(dropdownId, index, { title: evt.target.value });
@@ -53,6 +63,7 @@ const NavBuilderRow = (props) => {
 				)}
 				{type === 'link' && (
 					<InputGroup
+						small
 						placeholder="https://www.example.com"
 						onChange={(evt) => {
 							updateItem(dropdownId, index, { href: evt.target.value });
@@ -65,6 +76,9 @@ const NavBuilderRow = (props) => {
 						<PageAutocomplete
 							pages={pages}
 							placeholder="Add Page"
+							usedItems={pages.filter((page) => {
+								return data.children.includes(page.id);
+							})}
 							onSelect={(newItem) => {
 								updateItem(dropdownId, index, {
 									children: [newItem.id, ...item.children],
@@ -72,6 +86,7 @@ const NavBuilderRow = (props) => {
 							}}
 						/>
 						<Button
+							small
 							text="Add Link"
 							onClick={() => {
 								updateItem(dropdownId, index, {
