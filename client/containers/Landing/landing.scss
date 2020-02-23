@@ -1,12 +1,12 @@
 /*** Global PubPub Header Overrides ***/
 .header-component {
 	z-index: 10;
- }
+}
 
 /**** Variables and Mixins ****/
-$textColorLight: #FFF9E9;
-$textColorDark: #2C3654;
-$bgColorDark: #2C3654;
+$textColorLight: #fff9e9;
+$textColorDark: #2c3654;
+$bgColorDark: #2c3654;
 $bgGradientWhiteFirst: linear-gradient(0deg, #fff6c9 0%, #fff 100%);
 $bgGradientYellowFirst: linear-gradient(0deg, #fff 0%, #fff6c9 100%);
 $borderGradientLight: linear-gradient(0deg, transparent 50%, $textColorLight 50%);
@@ -14,17 +14,20 @@ $borderGradientDark: linear-gradient(0deg, transparent 50%, #000 50%);
 $columnGap: 5%;
 $leftColumnWidth: 20%;
 @mixin backgroundGradient($whiteFirst) {
-	background: rgb(255,255,255);
+	background: rgb(255, 255, 255);
 	@if $whiteFirst {
 		background: $bgGradientWhiteFirst;
-	}
-	@else {
+	} @else {
 		background: $bgGradientYellowFirst;
 	}
 }
 @mixin light($border, $whiteFirst) {
 	color: $textColorDark;
-	h1, h2, h3, h4, a {
+	h1,
+	h2,
+	h3,
+	h4,
+	a {
 		color: $textColorDark;
 	}
 	@if $border {
@@ -37,7 +40,11 @@ $leftColumnWidth: 20%;
 @mixin dark($border) {
 	background-color: $bgColorDark;
 	color: $textColorLight;
-	h1, h2, h3, h4, a {
+	h1,
+	h2,
+	h3,
+	h4,
+	a {
 		color: $textColorLight;
 	}
 	@if $border {
@@ -47,7 +54,12 @@ $leftColumnWidth: 20%;
 	}
 }
 
-#landing-container {
+/***** Top Nav ****/
+.header-component {
+	color: #111;
+}
+
+#landing-container .page-content {
 	/***** Globals *****/
 	font-family: upgrade, sans-serif;
 	font-weight: 300;
@@ -64,7 +76,8 @@ $leftColumnWidth: 20%;
 			margin: 0 1em 0 0;
 		}
 	}
-	.custom-button, a.custom-button {
+	.custom-button,
+	a.custom-button {
 		padding: 0.5em 1em;
 		min-width: 100px;
 		font-weight: 300;
@@ -95,7 +108,7 @@ $leftColumnWidth: 20%;
 			display: -ms-grid;
 			-ms-grid-columns: $leftColumnWidth 1fr;
 			@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-    		> div:nth-child(odd) {
+				> div:nth-child(odd) {
 					margin-left: 0;
 				}
 				> div:nth-child(even) {
@@ -146,15 +159,6 @@ $leftColumnWidth: 20%;
 	}
 	/**** END IE Grid Overrides ****/
 
-	/***** Top Nav ****/
-	.header-component {
-		// color: #111;
-		font-family: -apple-system, 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen',
-					'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', sans-serif;
-		&.bp3-dark a {
-			color: #111;
-		}
-	}
 	/***** Jumbotron and Nav *****/
 	#jumbotron {
 		position: relative;
@@ -178,7 +182,9 @@ $leftColumnWidth: 20%;
 			background-repeat: no-repeat;
 		}
 		.container .row.content {
-			h1, h2, .subtitle {
+			h1,
+			h2,
+			.subtitle {
 				color: #000;
 			}
 		}
@@ -233,7 +239,8 @@ $leftColumnWidth: 20%;
 					max-width: 560px;
 				}
 			}
-			h3, .feature-number {
+			h3,
+			.feature-number {
 				font-size: 1em;
 				line-height: 2em;
 				font-weight: 200;
@@ -359,7 +366,8 @@ $leftColumnWidth: 20%;
 				.community {
 					.type {
 						line-height: 2em;
-						font-size: 0.6em;
+						font-size: 0.8em;
+						opacity: 0.7;
 						font-weight: 200;
 						font-style: italic;
 						strong {
@@ -382,7 +390,7 @@ $leftColumnWidth: 20%;
 						margin-bottom: 0.5em;
 					}
 					.description {
-						font-size: 0.8em;
+						font-size: 0.9em;
 						line-height: 1.2em;
 						font-family: upgrade-light;
 						font-weight: 300;
@@ -443,7 +451,7 @@ $leftColumnWidth: 20%;
 
 /**** Tablets ****/
 @media only screen and (max-width: 1100px) {
-	#landing-container {
+	#landing-container .page-content {
 		#jumbotron {
 			&:before {
 				background-size: 50%;
@@ -455,21 +463,23 @@ $leftColumnWidth: 20%;
 
 /***** Mobile *****/
 @media only screen and (max-width: 720px) {
-	#landing-container {
+	#landing-container .page-content {
 		#jumbotron {
 			&:before {
-				opacity: 0.2;
+				opacity: 0.1;
 				background-size: 200%;
 				background-position: 50% 25%;
 			}
 			min-height: 500px;
 		}
 		#main {
-			.container, .container.reverse {
+			.container,
+			.container.reverse {
 				grid-template-columns: 1fr;
 				grid-column-gap: 0;
 				grid-row-gap: 0;
-				> div:nth-child(even), > div:nth-child(odd) {
+				> div:nth-child(even),
+				> div:nth-child(odd) {
 					grid-column-start: 1;
 					text-align: left;
 				}
@@ -479,7 +489,8 @@ $leftColumnWidth: 20%;
 			}
 			#features {
 				.container {
-					.other-features, .feature-grid {
+					.other-features,
+					.feature-grid {
 						grid-column-start: 1;
 						text-align: left;
 					}
@@ -519,20 +530,29 @@ $leftColumnWidth: 20%;
 					background-size: 30%;
 				}
 			}
-			#mission, #features, #case-study, #communities, #create, #pitch {
+			#mission,
+			#features,
+			#case-study,
+			#communities,
+			#create,
+			#pitch {
 				.container {
 					background-image: none;
 				}
 				border: 0;
 			}
-			#mission, #case-study, #pitch {
+			#mission,
+			#case-study,
+			#pitch {
 				> div:nth-child(odd) {
 					h3 {
 						border-bottom: 2px $textColorLight dashed;
 					}
 				}
 			}
-			#features, #communities, #create {
+			#features,
+			#communities,
+			#create {
 				> div:nth-child(odd) {
 					h3 {
 						border-bottom: 2px $textColorDark dashed;

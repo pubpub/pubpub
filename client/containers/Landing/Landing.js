@@ -169,7 +169,7 @@ const Landing = (props) => {
 					{/* END Jumbotron Content */}
 				</div>
 				{/* END Jumbotron */}
-				{/* BEGIN Main content */}
+				{/* BEGIN Main; content */}
 				<div id="main">
 					{/* BEGIN Mission Block */}
 					<div id="mission">
