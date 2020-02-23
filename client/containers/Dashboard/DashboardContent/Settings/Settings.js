@@ -19,7 +19,6 @@ import {
 	populateSocialItems,
 	defaultFooterLinks,
 } from 'utils';
-// import NavDrag from './NavDrag/NavDrag';
 import NavBuilder from './NavBuilder';
 
 require('./settings.scss');
