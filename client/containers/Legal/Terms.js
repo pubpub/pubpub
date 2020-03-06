@@ -385,8 +385,7 @@ const Terms = function(props) {
 				>
 					click here for more information
 				</Button>
-				<Dialog isOpen={isOpen} onClose={toggleOverlay}>
-					<p className={Classes.DIALOG_HEADER}>DMCA Agent Information</p>
+				<Dialog isOpen={isOpen} onClose={toggleOverlay} title="DMCA Agent Information">
 					<p className={Classes.DIALOG_BODY}>
 						PubPub DMCA Agent
 						<br />
