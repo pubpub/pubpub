@@ -52,7 +52,7 @@ const CollectionOverview = (props) => {
 
 	const renderCollectionPubControls = (collectionPub) => {
 		return (
-			<>
+			<React.Fragment>
 				<MenuButton
 					aria-label="More pub options"
 					buttonProps={{ small: true, minimal: true, icon: 'more' }}
@@ -87,7 +87,7 @@ const CollectionOverview = (props) => {
 					aria-label="Remove this Pub from collection"
 					onClick={() => removeCollectionPub(collectionPub)}
 				/>
-			</>
+			</React.Fragment>
 		);
 	};
 
@@ -109,7 +109,7 @@ const CollectionOverview = (props) => {
 
 	const renderControls = () => {
 		return (
-			<>
+			<React.Fragment>
 				<ButtonGroup>
 					<MenuButton
 						aria-label="Set collection public or private"
@@ -145,7 +145,7 @@ const CollectionOverview = (props) => {
 					</PubSelect>
 				</ButtonGroup>
 				<Button icon="edit" text="New Pub" />
-			</>
+			</React.Fragment>
 		);
 	};
 

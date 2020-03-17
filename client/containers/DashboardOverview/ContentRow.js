@@ -97,11 +97,11 @@ const ContentRow = (props) => {
 
 	const renderSubtitle = () => {
 		return (
-			<>
+			<React.Fragment>
 				{label}
 				{label && hasAuthors && ' • '}
 				{authorString}
-			</>
+			</React.Fragment>
 		);
 	};
 
@@ -135,10 +135,10 @@ const ContentRow = (props) => {
 
 	const renderRightSide = () => {
 		return (
-			<>
+			<React.Fragment>
 				{renderCounts()}
 				{controls && <div className="controls">{controls}</div>}
-			</>
+			</React.Fragment>
 		);
 	};
 

@@ -3,9 +3,13 @@
 $hover-background: #f9f9f9;
 
 .content-row-component {
+    .inner {
+        background: transparent;
+    }
     &.is-dragging {
         border: none;
         border-radius: 4px;
+        background: #f7f7f7;
     }
 
     &.minimal {

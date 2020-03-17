@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { usePageContext } from 'utils/hooks';
+import { DashboardFrame } from 'components';
 
-import CollectionOverview from './CollectionOverview';
-import CommunityOverview from './CommunityOverview';
+import OverviewDetails from './OverviewDetails';
+import OverviewControls from './OverviewControls';
+import OverviewBlocks from './OverviewBlocks';
+import OverviewTable from './OverviewTable';
 
 require('./contentOverview.scss');
 
@@ -14,19 +16,17 @@ const propTypes = {
 
 const ContentOverview = (props) => {
 	const { overviewData } = props;
-	const {
-		scopeData: {
-			elements: { activeTargetType },
-		},
-	} = usePageContext();
 
-	if (activeTargetType === 'community') {
-		return <CommunityOverview overviewData={overviewData} />;
-	}
-	if (activeTargetType === 'collection') {
-		return <CollectionOverview overviewData={overviewData} />;
-	}
-	return null;
+	return (
+		<DashboardFrame
+			className="content-overview-component"
+			details={<OverviewDetails />}
+			controls={<OverviewControls overviewData={overviewData} />}
+		>
+			<OverviewBlocks overviewData={overviewData} />
+			<OverviewTable overviewData={overviewData} />
+		</DashboardFrame>
+	);
 };
 
 ContentOverview.propTypes = propTypes;

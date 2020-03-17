@@ -1,0 +1,121 @@
+.overview-row-component {
+	font-size: 14px;
+	text-align: center;
+	padding: 12px 0px;
+	&:not(.list-header):hover {
+		background: #f2f2f2;
+	}
+	&.is-dragging {
+        border: none;
+        border-radius: 4px;
+        background: #f2f2f2;
+    }
+	&.list-header,
+	.inner {
+		display: flex;
+	}
+	&.list-header {
+		text-transform: uppercase;
+		opacity: 0.6;
+		font-size: 12px;
+		padding-top: 25px;
+	}
+	.handle {
+		width: 30px;
+		flex: 0 0 auto;
+		// background: blue;
+		.arrow {
+			cursor: pointer;
+			background: none;
+			border: none;
+			// padding: 0;
+			// text-align: left;
+			// width: 26px;
+			height: 100%;
+			border-radius: 2px;
+			// flex: 0 0 auto;
+			opacity: 0.5;
+			.bp3-icon {
+				margin-top: -1px;
+			}
+			&.opened {
+				.bp3-icon {
+					transform: rotate(90deg);
+				}
+			}
+			&:hover {
+				opacity: 1;
+			}
+		}
+	}
+	.type {
+		// background: yellow;
+		width: 50px;
+		flex: 0 0 auto;
+		.bp3-icon {
+			opacity: 0.8;
+			padding-top: 4px;
+		}
+	}
+	.title {
+		flex: 1 1 auto;
+		padding: 0em 1em;
+		// background: orange;
+		text-decoration: none;
+		text-align: left;
+		.item-title {
+			font-size: 16px;
+		}
+		.subtitle {
+			font-style: italic;
+			opacity: 0.8;
+		}
+		&:hover {
+			.item-title {
+				text-decoration: underline;
+			}
+		}
+	}
+	.pubs {
+		// background: green;
+		width: 50px;
+		flex: 0 0 auto;
+	}
+	.released {
+		// background: red;
+		width: 115px;
+		flex: 0 0 auto;
+	}
+	.discussions {
+		// background: purple;
+		width: 100px;
+		flex: 0 0 auto;
+	}
+	.reviews {
+		// background: magenta;
+		width: 100px;
+		flex: 0 0 auto;
+	}
+	.child-rows {
+		// position: relative;
+		padding: 12px 0px;
+		margin-top: 12px;
+		background: #eee;
+		box-shadow: inset 0px 11px 3px -10px #CCC, inset 0px -11px 3px -10px #CCC;
+		margin-bottom: -12px;
+		// padding: 0;
+		// margin: 0;
+		// margin-left: 32px;
+		// list-style: none;
+		// &:before {
+		// 	content: '';
+		// 	position: absolute;
+		// 	background: #ccc;
+		// 	width: 2px;
+		// 	// z-index: -1;
+		// 	top: -6px;
+		// 	bottom: 0px;
+		// 	left: 15px;
+		// }
+	}
+}

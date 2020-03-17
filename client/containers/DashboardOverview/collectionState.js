@@ -12,6 +12,9 @@ const findRankForSelection = (selections, index) =>
 	);
 
 const linkCollectionPubs = (overviewData, collection) => {
+	if (!collection) {
+		return [];
+	}
 	const { pubs, collections } = overviewData;
 	const { collectionPubs } = collections.find((col) => col.id === collection.id);
 	return collectionPubs
@@ -30,6 +33,9 @@ const linkCollectionPubs = (overviewData, collection) => {
 };
 
 const linkCollection = (collection, community) => {
+	if (!collection) {
+		return {};
+	}
 	const page = community.pages.find((pg) => pg.id === collection.pageId);
 	const attributions = collection.attributions.map(ensureUserForAttribution);
 	return { ...collection, page: page, attributions: attributions };
@@ -46,7 +52,9 @@ export const useCollectionPubs = ({
 	const [collectionPubs, setCollectionPubs] = useState(
 		linkCollectionPubs(overviewData, activeCollection),
 	);
-
+	if (!activeCollection) {
+		return {};
+	}
 	const communityId = activeCommunity.id;
 	const collectionId = activeCollection.id;
 
