@@ -208,6 +208,7 @@ const OverviewRow = (props) => {
 				<div className="released">{renderInitialRelease(content)}</div>
 				<div className="discussions">{countConversations}</div>
 				<div className="reviews">{countReviews}</div>
+				<div className="pub-options">{controls}</div>
 			</div>
 			{showChildren && <div className="child-rows">{children}</div>}
 		</div>

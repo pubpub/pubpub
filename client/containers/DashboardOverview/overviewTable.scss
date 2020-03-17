@@ -3,11 +3,20 @@
 		font-weight: 500;
 		font-size: 16px;
 		text-transform: uppercase;
-		margin-bottom: 5px;
+		margin-bottom: 10px;
 	}	
 	.list {
-		margin-top: 5px;
+		margin-top: 10px;
 		background: #f7f7f7;
-
+		&.collection-list {
+			.pubs {
+				display: none;
+			}
+		}
+		&:not(.collection-list) {
+			.pub-options {
+				display: none;
+			}
+		}
 	}
 }

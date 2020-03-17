@@ -82,7 +82,7 @@ const OverviewTable = (props) => {
 					setFilterText(evt.target.value);
 				}}
 			/>
-			<div className={classNames({ list: true, collectionList: isCollectionView })}>
+			<div className={classNames({ list: true, 'collection-list': isCollectionView })}>
 				<div className="list-header overview-row-component">
 					<span className="handle" />
 					<span className="type">Type</span>
@@ -91,6 +91,7 @@ const OverviewTable = (props) => {
 					<span className="released">Released</span>
 					<span className="discussions">Discussions</span>
 					<span className="reviews">Reviews</span>
+					<span className="pub-options" />
 				</div>
 				<DragDropContext
 					onDragEnd={(dragResult) =>
@@ -136,7 +137,9 @@ const OverviewTable = (props) => {
 								>
 									{item.pubs &&
 										item.pubs.map((pub) => {
-											const slug = item.slug || item.title.toLowerCase().replace(/ /gi, '-');
+											const slug =
+												item.slug ||
+												item.title.toLowerCase().replace(/ /gi, '-');
 											return (
 												<OverviewRow
 													key={`${item.id}-${pub.id}`}

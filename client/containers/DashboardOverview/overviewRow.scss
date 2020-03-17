@@ -18,7 +18,7 @@
 		text-transform: uppercase;
 		opacity: 0.6;
 		font-size: 12px;
-		padding-top: 25px;
+		padding-top: 15px;
 	}
 	.handle {
 		width: 30px;
@@ -95,6 +95,9 @@
 		// background: magenta;
 		width: 100px;
 		flex: 0 0 auto;
+	}
+	.pub-options {
+		width: 100px;
 	}
 	.child-rows {
 		// position: relative;
