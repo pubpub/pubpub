@@ -15,24 +15,27 @@ const OverviewBlocks = (props) => {
 
 	const countItems = (type) => {
 		const activeList = collectionPubs ? collectionPubs.map((cp) => cp.pub) : overviewData.pubs;
-		return activeList.reduce((prev, curr) => {
-			return prev + curr[type].length;
+		if (type === 'pubs') {
+			return activeList.length;
+		}
+		return activeList.reduce((count, pub) => {
+			return count + pub[type].length;
 		}, 0);
 	};
 	const types = [
+		{ type: 'pubs', icon: 'pubDoc' },
 		{ type: 'discussions', icon: 'chat' },
+		{ type: 'forks', icon: 'git-branch' },
 		{ type: 'reviews', icon: 'social-media' },
-		{ type: 'releases', icon: 'pubDoc' },
 	];
 	return (
 		<div className="overview-blocks-component">
 			{types.map((item) => {
 				return (
 					<div className="overview-block" key={item.type}>
-						<Icon icon={item.icon} iconSize={36} />
+						<Icon icon={item.icon} iconSize={18} />
 						<div className="text">
-							{countItems(item.type)}
-							<div>{item.type}</div>
+							<span className="count">{countItems(item.type)}</span> {item.type}
 						</div>
 					</div>
 				);

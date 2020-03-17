@@ -6,8 +6,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 30%;
-		height: 100px;
+		width: 22%;
+		height: 75px;
 		border: 1px solid #ccc;
 		border-radius: 2px;
 		background: #f7f7f7;
@@ -16,11 +16,13 @@
 			margin-right: 1em;
 		}
 		.text {
-			font-size: 24px;
-			div {
-				font-size: 16px;
-				text-transform: uppercase;
+			.count {
+				font-size: 18px;
+				font-weight: 500;
 			}
+
+			font-size: 14px;
+			text-transform: uppercase;
 		}
 	}
 }

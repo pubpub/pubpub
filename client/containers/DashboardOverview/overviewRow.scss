@@ -13,6 +13,9 @@
 	&.list-header,
 	.inner {
 		display: flex;
+		& > * {
+			flex: 0 0 auto;
+		}
 	}
 	&.list-header {
 		text-transform: uppercase;
@@ -22,7 +25,6 @@
 	}
 	.handle {
 		width: 30px;
-		flex: 0 0 auto;
 		.arrow {
 			cursor: pointer;
 			background: none;
@@ -45,7 +47,6 @@
 	}
 	.type {
 		width: 50px;
-		flex: 0 0 auto;
 		.bp3-icon {
 			opacity: 0.8;
 			padding-top: 4px;
@@ -71,19 +72,15 @@
 	}
 	.pubs {
 		width: 50px;
-		flex: 0 0 auto;
 	}
 	.released {
 		width: 115px;
-		flex: 0 0 auto;
 	}
 	.discussions {
 		width: 100px;
-		flex: 0 0 auto;
 	}
 	.reviews {
 		width: 100px;
-		flex: 0 0 auto;
 	}
 	.pub-options {
 		width: 100px;
