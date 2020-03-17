@@ -61,7 +61,7 @@ const OverviewTable = (props) => {
 			.filter((coll) => !!coll);
 	};
 
-	const pubList = isCollectionView ? collectionPubs : pubs;
+	const pubList = isCollectionView ? collectionPubs.map((cp) => cp.pub) : pubs;
 	const filterPubs = () => {
 		return pubList.filter((pub) => fuzzyMatchPub(pub, filterText));
 	};

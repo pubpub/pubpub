@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { Button } from 'reakit';
 import dateFormat from 'dateformat';
 
-import { Icon, DashboardRow } from 'components';
+import { Icon } from 'components';
 import { generateAuthorString } from 'components/PubPreview/pubPreviewUtils';
 import { splitThreads } from 'utils';
 import { getDashUrl } from 'utils/dashboard';
@@ -218,30 +218,3 @@ const OverviewRow = (props) => {
 OverviewRow.propTypes = propTypes;
 OverviewRow.defaultProps = defaultProps;
 export default OverviewRow;
-
-// <DashboardRow
-// 	onClick={onClick}
-// 	className={classNames(
-// 		'overview-row-component',
-// 		isDragging && 'is-dragging bp3-elevation-2',
-// 		minimal && 'minimal',
-// 	)}
-// 	href={href}
-// 	handle={renderHandle()}
-// 	title={content.title}
-// 	subtitle={renderSubtitle()}
-// 	rightSideElements={renderRightSide()}
-// 	icon={isCollection ? 'collection' : 'pubDoc'}
-// 	selected={selected}
-// >
-// 	{isCollection &&
-// 		content.pubs.map((pub) => {
-// 			return (
-// 				<OverviewRow
-// 					key={`${content.id}-${pub.id}`}
-// 					content={pub}
-// 					parentSlug={slug}
-// 				/>
-// 			);
-// 		})}
-// </DashboardRow>
