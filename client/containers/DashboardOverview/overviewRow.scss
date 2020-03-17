@@ -23,17 +23,12 @@
 	.handle {
 		width: 30px;
 		flex: 0 0 auto;
-		// background: blue;
 		.arrow {
 			cursor: pointer;
 			background: none;
 			border: none;
-			// padding: 0;
-			// text-align: left;
-			// width: 26px;
 			height: 100%;
 			border-radius: 2px;
-			// flex: 0 0 auto;
 			opacity: 0.5;
 			.bp3-icon {
 				margin-top: -1px;
@@ -49,7 +44,6 @@
 		}
 	}
 	.type {
-		// background: yellow;
 		width: 50px;
 		flex: 0 0 auto;
 		.bp3-icon {
@@ -60,7 +54,6 @@
 	.title {
 		flex: 1 1 auto;
 		padding: 0em 1em;
-		// background: orange;
 		text-decoration: none;
 		text-align: left;
 		.item-title {
@@ -77,22 +70,18 @@
 		}
 	}
 	.pubs {
-		// background: green;
 		width: 50px;
 		flex: 0 0 auto;
 	}
 	.released {
-		// background: red;
 		width: 115px;
 		flex: 0 0 auto;
 	}
 	.discussions {
-		// background: purple;
 		width: 100px;
 		flex: 0 0 auto;
 	}
 	.reviews {
-		// background: magenta;
 		width: 100px;
 		flex: 0 0 auto;
 	}
@@ -100,25 +89,10 @@
 		width: 100px;
 	}
 	.child-rows {
-		// position: relative;
 		padding: 12px 0px;
 		margin-top: 12px;
 		background: #eee;
 		box-shadow: inset 0px 11px 3px -10px #CCC, inset 0px -11px 3px -10px #CCC;
 		margin-bottom: -12px;
-		// padding: 0;
-		// margin: 0;
-		// margin-left: 32px;
-		// list-style: none;
-		// &:before {
-		// 	content: '';
-		// 	position: absolute;
-		// 	background: #ccc;
-		// 	width: 2px;
-		// 	// z-index: -1;
-		// 	top: -6px;
-		// 	bottom: 0px;
-		// 	left: 15px;
-		// }
 	}
 }

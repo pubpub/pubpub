@@ -21,7 +21,6 @@ const propTypes = {
 	minimal: PropTypes.bool,
 	onClick: PropTypes.func,
 	parentSlug: PropTypes.string,
-	// selected: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -33,7 +32,6 @@ const defaultProps = {
 	onClick: null,
 	parentSlug: undefined,
 	minimal: false,
-	// selected: false,
 };
 
 const getCounts = (isCollection, content) => {
@@ -80,7 +78,6 @@ const OverviewRow = (props) => {
 		onClick,
 		parentSlug,
 		minimal,
-		// selected,
 		children,
 	} = props;
 	const isCollection = content.pubs;
@@ -88,7 +85,7 @@ const OverviewRow = (props) => {
 	const hasAuthors = content.attributions && content.attributions.some((a) => a.isAuthor);
 	const slug = content.slug || content.title.toLowerCase().replace(/ /gi, '-');
 	const href = !onClick && getHref(isCollection, slug, parentSlug);
-	const { countConversations, countForks, countReviews } = getCounts(isCollection, content);
+	const { countConversations, countReviews } = getCounts(isCollection, content);
 	const [showChildren, setShowChildren] = useState(false);
 	const showArrow = React.Children.count(children) > 0;
 
@@ -122,42 +119,6 @@ const OverviewRow = (props) => {
 		}, null);
 		return firstRelease ? dateFormat(firstRelease, 'mmm dd, yyyy') : '-';
 	};
-	// const renderCounts = () => {
-	// 	if (minimal) {
-	// 		return null;
-	// 	}
-	// 	return (
-	// 		<div className="counts">
-	// 			{isCollection && (
-	// 				<div className="pubs" aria-label={`${content.pubs.length} pubs`}>
-	// 					<Icon icon="pubDoc" iconSize={14} />
-	// 					<span aria-hidden="true">{content.pubs.length}</span>
-	// 				</div>
-	// 			)}
-	// 			<div className="conversations" aria-label={`${countConversations} conversations`}>
-	// 				<Icon icon="chat2" iconSize={14} />
-	// 				<span aria-hidden="true">{countConversations}</span>
-	// 			</div>
-	// 			<div className="merges" aria-label={`${countForks} forks`}>
-	// 				<Icon icon="git-pull" iconSize={14} />
-	// 				<span aria-hidden="true">{countForks}</span>
-	// 			</div>
-	// 			<div className="reviews" aria-label={`${countReviews} reviews`}>
-	// 				<Icon icon="social-media" iconSize={14} />
-	// 				<span aria-hidden="true">{countReviews}</span>
-	// 			</div>
-	// 		</div>
-	// 	);
-	// };
-
-	// const renderRightSide = () => {
-	// 	return (
-	// 		<React.Fragment>
-	// 			{renderCounts()}
-	// 			{controls && <div className="controls">{controls}</div>}
-	// 		</React.Fragment>
-	// 	);
-	// };
 
 	return (
 		<div
