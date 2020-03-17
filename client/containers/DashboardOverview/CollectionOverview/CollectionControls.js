@@ -10,21 +10,20 @@ import PubSelect from './PubSelect';
 
 const propTypes = {
 	overviewData: PropTypes.object.isRequired,
-	useCollectionStateObject: PropTypes.object.isRequired,
-	useCollectionPubsObject: PropTypes.object.isRequired,
+	collection: PropTypes.object.isRequired,
+	updateCollection: PropTypes.func.isRequired,
+	collectionPubs: PropTypes.array.isRequired,
+	addCollectionPub: PropTypes.func.isRequired,
 };
 
-const OverviewControls = (props) => {
-	const { overviewData, useCollectionStateObject, useCollectionPubsObject } = props;
+const CollectionControls = (props) => {
+	const { overviewData, collection, updateCollection, collectionPubs, addCollectionPub } = props;
 	const { scopeData } = usePageContext();
 	const { canManage } = scopeData.activePermissions;
-	const { activeCommunity, activeTargetType } = scopeData.elements;
-	const isCollectionView = activeTargetType === 'collection';
-	const { collection, updateCollection } = useCollectionStateObject;
-	const { collectionPubs, addCollectionPub } = useCollectionPubsObject;
-
+	const { activeCommunity } = scopeData.elements;
 	const { isPublic } = collection;
-	if (!canManage || !isCollectionView) {
+
+	if (!canManage) {
 		return null;
 	}
 	return (
@@ -68,5 +67,5 @@ const OverviewControls = (props) => {
 	);
 };
 
-OverviewControls.propTypes = propTypes;
-export default OverviewControls;
+CollectionControls.propTypes = propTypes;
+export default CollectionControls;

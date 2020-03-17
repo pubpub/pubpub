@@ -6,48 +6,49 @@ import classNames from 'classnames';
 
 import { DragDropListing } from 'components';
 import { usePageContext } from 'utils/hooks';
-import { groupPubs } from 'utils/dashboard';
-import { getSchemaForKind } from 'shared/collections/schemas';
 
 import { fuzzyMatchCollection, fuzzyMatchPub } from './util';
 import OverviewRow from './OverviewRow';
-import PubControls from './PubControls';
 
 require('./overviewTable.scss');
 
 const propTypes = {
-	overviewData: PropTypes.object.isRequired,
-	useCollectionPubsObject: PropTypes.object.isRequired,
+	title: PropTypes.string.isRequired,
+	collectionList: PropTypes.array,
+	pubList: PropTypes.array.isRequired,
+	onReorder: PropTypes.func,
+	generateLabel: PropTypes.func,
+	rowControls: PropTypes.func,
+	emptyState: PropTypes.node.isRequired,
 };
+
+const defaultProps = {
+	collectionList: [],
+	generateLabel: () => {},
+	onReorder: undefined,
+	rowControls: () => {},
+};
+
 const handleDragDrop = ({ dragResult, reorderCollectionPubs }) => {
 	const { source, destination } = dragResult;
 	reorderCollectionPubs(source.index, destination.index);
 };
 
 const OverviewTable = (props) => {
-	const { overviewData, useCollectionPubsObject } = props;
+	const {
+		title,
+		collectionList,
+		pubList,
+		onReorder,
+		generateLabel,
+		rowControls,
+		emptyState,
+	} = props;
 	const [filterText, setFilterText] = useState('');
 	const { scopeData } = usePageContext();
-	const { canManage } = scopeData.activePermissions;
-	const { activeTargetType, activeCollection } = scopeData.elements;
-	const isCollectionView = activeTargetType === 'collection';
-	const title = isCollectionView ? 'Pubs' : 'Pubs & Collections';
-	const { pubs, collections } = groupPubs(overviewData);
-
-	const {
-		collectionPubs,
-		reorderCollectionPubs,
-		setCollectionPubContextHint,
-		setCollectionPubIsPrimary,
-		removeCollectionPub,
-	} = useCollectionPubsObject;
-
-	const collectionSchema = isCollectionView ? getSchemaForKind(activeCollection.kind) : undefined;
+	const { activeCollection } = scopeData.elements;
 	const filterCollections = () => {
-		if (isCollectionView) {
-			return [];
-		}
-		return collections
+		return collectionList
 			.map((cl) => {
 				if (fuzzyMatchCollection(cl, filterText)) {
 					return cl;
@@ -61,9 +62,8 @@ const OverviewTable = (props) => {
 			.filter((coll) => !!coll);
 	};
 
-	const pubList = isCollectionView ? collectionPubs : pubs;
 	const filterPubs = () => {
-		return pubList.filter((item) => fuzzyMatchPub(item.pub || item, filterText));
+		return pubList.filter((item) => fuzzyMatchPub(item, filterText));
 	};
 
 	const filteredItems = [...filterCollections(), ...filterPubs()];
@@ -82,7 +82,7 @@ const OverviewTable = (props) => {
 					setFilterText(evt.target.value);
 				}}
 			/>
-			<div className={classNames({ list: true, 'collection-list': isCollectionView })}>
+			<div className={classNames({ list: true, 'collection-list': onReorder })}>
 				<div className="list-header overview-row-component">
 					<span className="handle" />
 					<span className="type">Type</span>
@@ -97,40 +97,22 @@ const OverviewTable = (props) => {
 					onDragEnd={(dragResult) =>
 						handleDragDrop({
 							dragResult: dragResult,
-							reorderCollectionPubs: reorderCollectionPubs,
+							reorderCollectionPubs: onReorder,
 						})
 					}
 				>
 					<DragDropListing
-						disabled={!canManage}
+						disabled={!onReorder}
 						itemId={(item) => item.pubId || item.id}
 						items={filteredItems}
 						renderItem={(item, dragHandleProps, isDragging) => {
-							const contextHint =
-								collectionSchema &&
-								collectionSchema.contextHints.find(
-									(ch) => ch.value === item.contextHint,
-								);
 							return (
 								<OverviewRow
-									label={contextHint && contextHint.label}
+									label={generateLabel(item)}
 									content={item.pub || item}
-									dragHandleProps={isCollectionView ? dragHandleProps : null}
+									dragHandleProps={onReorder ? dragHandleProps : null}
 									isDragging={isDragging}
-									controls={
-										item.pub && (
-											<PubControls
-												collectionPub={item}
-												setCollectionPubContextHint={
-													setCollectionPubContextHint
-												}
-												setCollectionPubIsPrimary={
-													setCollectionPubIsPrimary
-												}
-												removeCollectionPub={removeCollectionPub}
-											/>
-										)
-									}
+									controls={rowControls(item)}
 									parentSlug={
 										activeCollection ? activeCollection.slug : undefined
 									}
@@ -160,17 +142,11 @@ const OverviewTable = (props) => {
 									/>
 								);
 							}
-							return (
-								<NonIdealState
-									icon={collectionSchema.bpDisplayIcon}
-									title={`This ${collectionSchema.label.singular} doesn't contain any pubs yet!`}
-									description="Choose 'Add Pubs' from above to add some."
-								/>
-							);
+							return emptyState;
 						}}
 						droppableId="collectionsListing"
 						droppableType="COLLECTION_PUB"
-						withDragHandles={canManage}
+						withDragHandles={!!onReorder}
 					/>
 				</DragDropContext>
 			</div>
@@ -179,4 +155,5 @@ const OverviewTable = (props) => {
 };
 
 OverviewTable.propTypes = propTypes;
+OverviewTable.defaultProps = defaultProps;
 export default OverviewTable;

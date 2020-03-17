@@ -13,7 +13,7 @@ const propTypes = {
 	removeCollectionPub: PropTypes.func.isRequired,
 };
 
-const PubControls = (props) => {
+const PubMenu = (props) => {
 	const {
 		collectionPub,
 		setCollectionPubContextHint,
@@ -72,5 +72,5 @@ const PubControls = (props) => {
 	);
 };
 
-PubControls.propTypes = propTypes;
-export default PubControls;
+PubMenu.propTypes = propTypes;
+export default PubMenu;

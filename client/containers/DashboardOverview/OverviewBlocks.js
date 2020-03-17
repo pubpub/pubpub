@@ -5,20 +5,17 @@ import { Icon } from 'components';
 require('./overviewBlocks.scss');
 
 const propTypes = {
-	overviewData: PropTypes.object.isRequired,
-	useCollectionPubsObject: PropTypes.object.isRequired,
+	pubs: PropTypes.array.isRequired,
 };
 
 const OverviewBlocks = (props) => {
-	const { overviewData, useCollectionPubsObject } = props;
-	const { collectionPubs } = useCollectionPubsObject;
+	const { pubs } = props;
 
 	const countItems = (type) => {
-		const activeList = collectionPubs ? collectionPubs.map((cp) => cp.pub) : overviewData.pubs;
 		if (type === 'pubs') {
-			return activeList.length;
+			return pubs.length;
 		}
-		return activeList.reduce((count, pub) => {
+		return pubs.reduce((count, pub) => {
 			return count + pub[type].length;
 		}, 0);
 	};

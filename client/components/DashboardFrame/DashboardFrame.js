@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { usePageContext } from 'utils/hooks';
-import { capitalize } from 'utils';
 
 require('./dashboardFrame.scss');
 
@@ -21,18 +20,17 @@ const defaultProps = {
 
 const DashboardFrame = (props) => {
 	const { className, children, controls, details, title } = props;
-	const { scopeData, locationData } = usePageContext();
+	const { scopeData } = usePageContext();
 	const {
 		elements: { activeTargetType },
 	} = scopeData;
-	const { path } = locationData;
-	const frameTitle = title || capitalize(path.split('/').pop());
+
 	return (
 		<div className={className}>
 			<div className="dashboard-content-header">
 				<div className="dashboard-header-left">
 					<div className="title">
-						<span className="target-type">{activeTargetType}</span> {frameTitle}
+						<span className="target-type">{activeTargetType}</span> {title}
 					</div>
 					{details && <div className="details">{details}</div>}
 				</div>

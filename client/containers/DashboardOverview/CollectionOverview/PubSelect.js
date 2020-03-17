@@ -6,7 +6,7 @@ import { QueryList } from '@blueprintjs/select';
 
 import { generateAuthorString } from 'components/PubPreview/pubPreviewUtils';
 
-import { fuzzyMatchPub } from './util';
+import { fuzzyMatchPub } from '../util';
 
 require('./pubSelect.scss');
 
