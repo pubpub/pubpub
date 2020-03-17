@@ -6,24 +6,22 @@ import { LinkedPageSelect } from 'components';
 import { MenuButton, MenuItem } from 'components/Menu';
 import { usePageContext } from 'utils/hooks';
 
-import { useCollectionState, useCollectionPubs } from './collectionState';
 import PubSelect from './PubSelect';
 
 const propTypes = {
 	overviewData: PropTypes.object.isRequired,
+	useCollectionStateObject: PropTypes.object.isRequired,
+	useCollectionPubsObject: PropTypes.object.isRequired,
 };
 
 const OverviewControls = (props) => {
-	const { overviewData } = props;
+	const { overviewData, useCollectionStateObject, useCollectionPubsObject } = props;
 	const { scopeData } = usePageContext();
 	const { canManage } = scopeData.activePermissions;
 	const { activeCommunity, activeTargetType } = scopeData.elements;
 	const isCollectionView = activeTargetType === 'collection';
-	const { collection, updateCollection } = useCollectionState(scopeData);
-	const { collectionPubs, addCollectionPub } = useCollectionPubs({
-		scopeData: scopeData,
-		overviewData: overviewData,
-	});
+	const { collection, updateCollection } = useCollectionStateObject;
+	const { collectionPubs, addCollectionPub } = useCollectionPubsObject;
 
 	const { isPublic } = collection;
 	if (!canManage || !isCollectionView) {

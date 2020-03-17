@@ -1,22 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from 'components';
-import { usePageContext } from 'utils/hooks';
-import { useCollectionPubs } from './collectionState';
 
 require('./overviewBlocks.scss');
 
 const propTypes = {
 	overviewData: PropTypes.object.isRequired,
+	useCollectionPubsObject: PropTypes.object.isRequired,
 };
 
 const OverviewBlocks = (props) => {
-	const { overviewData } = props;
-	const { scopeData } = usePageContext();
-	const { collectionPubs } = useCollectionPubs({
-		overviewData: overviewData,
-		scopeData: scopeData,
-	});
+	const { overviewData, useCollectionPubsObject } = props;
+	const { collectionPubs } = useCollectionPubsObject;
 
 	const countItems = (type) => {
 		const activeList = collectionPubs ? collectionPubs.map((cp) => cp.pub) : overviewData.pubs;

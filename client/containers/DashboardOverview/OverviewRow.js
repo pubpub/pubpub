@@ -21,7 +21,7 @@ const propTypes = {
 	minimal: PropTypes.bool,
 	onClick: PropTypes.func,
 	parentSlug: PropTypes.string,
-	selected: PropTypes.bool,
+	// selected: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -33,7 +33,7 @@ const defaultProps = {
 	onClick: null,
 	parentSlug: undefined,
 	minimal: false,
-	selected: false,
+	// selected: false,
 };
 
 const getCounts = (isCollection, content) => {
@@ -80,7 +80,7 @@ const OverviewRow = (props) => {
 		onClick,
 		parentSlug,
 		minimal,
-		selected,
+		// selected,
 		children,
 	} = props;
 	const isCollection = content.pubs;

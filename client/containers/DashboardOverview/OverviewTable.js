@@ -9,7 +9,6 @@ import { usePageContext } from 'utils/hooks';
 import { groupPubs } from 'utils/dashboard';
 import { getSchemaForKind } from 'shared/collections/schemas';
 
-import { useCollectionPubs } from './collectionState';
 import { fuzzyMatchCollection, fuzzyMatchPub } from './util';
 import OverviewRow from './OverviewRow';
 import PubControls from './PubControls';
@@ -18,6 +17,7 @@ require('./overviewTable.scss');
 
 const propTypes = {
 	overviewData: PropTypes.object.isRequired,
+	useCollectionPubsObject: PropTypes.object.isRequired,
 };
 const handleDragDrop = ({ dragResult, reorderCollectionPubs }) => {
 	const { source, destination } = dragResult;
@@ -25,7 +25,7 @@ const handleDragDrop = ({ dragResult, reorderCollectionPubs }) => {
 };
 
 const OverviewTable = (props) => {
-	const { overviewData } = props;
+	const { overviewData, useCollectionPubsObject } = props;
 	const [filterText, setFilterText] = useState('');
 	const { scopeData } = usePageContext();
 	const { canManage } = scopeData.activePermissions;
@@ -40,7 +40,7 @@ const OverviewTable = (props) => {
 		setCollectionPubContextHint,
 		setCollectionPubIsPrimary,
 		removeCollectionPub,
-	} = useCollectionPubs({ scopeData: scopeData, overviewData: overviewData });
+	} = useCollectionPubsObject;
 
 	const collectionSchema = isCollectionView ? getSchemaForKind(activeCollection.kind) : undefined;
 	const filterCollections = () => {
@@ -61,9 +61,9 @@ const OverviewTable = (props) => {
 			.filter((coll) => !!coll);
 	};
 
-	const pubList = isCollectionView ? collectionPubs.map((cp) => cp.pub) : pubs;
+	const pubList = isCollectionView ? collectionPubs : pubs;
 	const filterPubs = () => {
-		return pubList.filter((pub) => fuzzyMatchPub(pub, filterText));
+		return pubList.filter((item) => fuzzyMatchPub(item.pub || item, filterText));
 	};
 
 	const filteredItems = [...filterCollections(), ...filterPubs()];
