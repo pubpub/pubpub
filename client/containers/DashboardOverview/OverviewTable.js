@@ -6,6 +6,7 @@ import classNames from 'classnames';
 
 import { DragDropListing } from 'components';
 import { usePageContext } from 'utils/hooks';
+import { useSticky } from 'utils/useSticky';
 
 import { fuzzyMatchCollection, fuzzyMatchPub } from './util';
 import OverviewRow from './OverviewRow';
@@ -67,31 +68,37 @@ const OverviewTable = (props) => {
 	};
 
 	const filteredItems = [...filterCollections(), ...filterPubs()];
-
+	useSticky({
+		selector: '.top-sticky',
+		offset: 129,
+	});
 	return (
 		<div className="overview-table-component">
 			<div className="table-title">{title}</div>
-			<InputGroup
-				className="filter-input"
-				fill
-				large
-				leftIcon="search"
-				placeholder={`Filter ${title}`}
-				value={filterText}
-				onChange={(evt) => {
-					setFilterText(evt.target.value);
-				}}
-			/>
+
 			<div className={classNames({ list: true, 'collection-list': onReorder })}>
-				<div className="list-header overview-row-component">
-					<span className="handle" />
-					<span className="type">Type</span>
-					<span className="title">Title</span>
-					<span className="pubs">Pubs</span>
-					<span className="released">Released</span>
-					<span className="discussions">Discussions</span>
-					<span className="reviews">Reviews</span>
-					<span className="pub-options" />
+				<div className="top-sticky">
+					<InputGroup
+						className="filter-input"
+						fill
+						large
+						leftIcon="search"
+						placeholder={`Filter ${title}`}
+						value={filterText}
+						onChange={(evt) => {
+							setFilterText(evt.target.value);
+						}}
+					/>
+					<div className="list-header overview-row-component">
+						<span className="handle" />
+						<span className="type">Type</span>
+						<span className="title">Title</span>
+						<span className="pubs">Pubs</span>
+						<span className="released">Released</span>
+						<span className="discussions">Discussions</span>
+						<span className="reviews">Reviews</span>
+						<span className="pub-options" />
+					</div>
 				</div>
 				<DragDropContext
 					onDragEnd={(dragResult) =>
