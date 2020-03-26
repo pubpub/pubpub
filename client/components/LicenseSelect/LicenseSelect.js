@@ -16,7 +16,6 @@ const propTypes = {
 		id: PropTypes.string,
 		licenseSlug: PropTypes.string,
 		collectionPubs: PropTypes.object,
-		activeBranch: PropTypes.object,
 	}).isRequired,
 	onSelect: PropTypes.func,
 	updateLocalData: PropTypes.func,
@@ -36,10 +35,13 @@ const LicenseSelect = (props) => {
 
 	const currentLicense = getLicenseBySlug(pubData.licenseSlug);
 	const primaryCollectionPub = pubData.collectionPubs.find((cp) => cp.isPrimary);
-	let pubCopyrightDate = dateFormat(getPubPublishedDate(pubData, pubData.activeBranch), 'yyyy');
-	if (primaryCollectionPub && primaryCollectionPub.collection.metadata.copyrightYear) {
-		pubCopyrightDate = primaryCollectionPub.collection.metadata.copyrightYear;
-	}
+	const collectionPubDate = primaryCollectionPub
+		? primaryCollectionPub.collection.metadata.copyrightYear ||
+		  primaryCollectionPub.collection.metadata.date ||
+		  primaryCollectionPub.collection.metadata.publicationDate
+		: null;
+	const pubCopyrightDate =
+		dateFormat(collectionPubDate, 'yyyy') || dateFormat(getPubPublishedDate(pubData), 'yyyy');
 	let pubPublisher = communityData.title;
 	if (communityData.id === '78810858-8c4a-4435-a669-6bb176b61d40') {
 		pubPublisher = 'Massachusetts Institute of Technology';
