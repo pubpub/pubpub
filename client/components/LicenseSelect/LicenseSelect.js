@@ -44,6 +44,9 @@ const LicenseSelect = (props) => {
 	if (communityData.id === '78810858-8c4a-4435-a669-6bb176b61d40') {
 		pubPublisher = 'Massachusetts Institute of Technology';
 	}
+	if (currentLicense.slug === 'copyright') {
+		currentLicense.full = `Copyright © ${pubCopyrightDate} ${pubPublisher}. All rights reserved.`;
+	}
 	const selectLicense = (license) => {
 		onSelect(license);
 		if (persistSelections) {
