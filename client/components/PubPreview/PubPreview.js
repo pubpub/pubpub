@@ -93,24 +93,14 @@ const PubPreview = function(props) {
 				</div>
 
 				{showLowerByline && (
-					<div className="authors">
+					<div className="authors" style={{ color: localCommunityData.accentColorDark }}>
 						<span>by </span>
 						{generateAuthorString(pubData)}
 					</div>
 				)}
 
-				{showDates && (
-					<div className="date-details">
-						{publishedDate && (
-							<span className="date">
-								Published: {dateFormat(publishedDate, 'mmm dd, yyyy')}
-							</span>
-						)}
-					</div>
-				)}
-
 				{showContributors && (
-					<div className="date-details">
+					<div className="author-avatars">
 						{attributions
 							.sort((foo, bar) => {
 								if (foo.order < bar.order) {
@@ -140,6 +130,16 @@ const PubPreview = function(props) {
 									/>
 								);
 							})}
+					</div>
+				)}
+
+				{showDates && (
+					<div className="date-details">
+						{publishedDate && (
+							<span className="date">
+								Published: {dateFormat(publishedDate, 'mmm dd, yyyy')}
+							</span>
+						)}
 					</div>
 				)}
 
