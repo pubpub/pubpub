@@ -8,7 +8,11 @@ const cookieKey = 'gdpr-consent';
 const persistSignupCookieKey = 'gdpr-consent-survives-login';
 
 const odiousCookies = ['keen', 'heap'];
-const deleteOdiousCookies = () => odiousCookies.map((key) => Cookies.remove(key, { path: '' }));
+const deleteOdiousCookies = () => {
+	odiousCookies.map((key) => Cookies.remove(key, { path: '' }));
+	window.heap.resetIdentity();
+	window.heap.clearEventProperties();
+};
 
 export const gdprCookiePersistsSignup = () => Cookies.get(persistSignupCookieKey) === 'yes';
 
