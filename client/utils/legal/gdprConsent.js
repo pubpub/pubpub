@@ -7,7 +7,7 @@ import { getCookieOptions } from './cookieOptions';
 const cookieKey = 'gdpr-consent';
 const persistSignupCookieKey = 'gdpr-consent-survives-login';
 
-const odiousCookies = ['keen'];
+const odiousCookies = ['keen', 'heap'];
 const deleteOdiousCookies = () => odiousCookies.map((key) => Cookies.remove(key, { path: '' }));
 
 export const gdprCookiePersistsSignup = () => Cookies.get(persistSignupCookieKey) === 'yes';
