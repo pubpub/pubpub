@@ -135,9 +135,13 @@ const PubPreview = function(props) {
 
 				{showDates && (
 					<div className="date-details">
-						{publishedDate && (
+						{publishedDate ? (
 							<span className="date">
 								Published: {dateFormat(publishedDate, 'mmm dd, yyyy')}
+							</span>
+						) : (
+							<span className="date">
+								Unpublished
 							</span>
 						)}
 					</div>
