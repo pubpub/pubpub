@@ -29,10 +29,9 @@ export const hydrateWrapper = (Component) => {
 		const initialData = getClientInitialData();
 		setIsProd(initialData.locationData.isPubPubProduction);
 
-		setupHeap();
-
 		if (!isLocalEnv(window)) {
 			setupKeen();
+			setupHeap();
 			window.sentryIsActive = true;
 			Sentry.init({ dsn: 'https://abe1c84bbb3045bd982f9fea7407efaa@sentry.io/1505439' });
 			Sentry.setUser({
