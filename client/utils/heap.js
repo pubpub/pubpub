@@ -13,7 +13,6 @@ export const setupHeap = () => {
 		pubId: null,
 		branchId: null,
 	};
-	const customUserData = {};
 	if (communityData) {
 		customEventData.communityId = communityData.id;
 	}
@@ -25,8 +24,8 @@ export const setupHeap = () => {
 		customEventData.branchId = pubData.activeBranch.id;
 	}
 	if (hasGdprConsent && loginData.id) {
-		customUserData.userId = loginData.id;
+		customEventData.loggedIn = 'true';
+		window.heap.identify(loginData.id);
 	}
 	window.heap.addEventProperties(customEventData);
-	window.heap.addUserProperties(customUserData);
 };
