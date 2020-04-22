@@ -38,18 +38,28 @@
 		height: 350px;
 		margin-bottom: 1em;
 		.banner-image {
-			width: 65%;
+			width: 55%;
 			height: 100%;
 			float: left;
 			border-right: 1px solid #f0f0f0;
 		}
 		.content {
 			float: left;
-			width: 35%;
+			width: 44%;
 			height: 100%;
+			padding-left: 1.5em;
 		}
+
 		.title-wrapper {
-			padding-bottom: 10px;
+			padding: 5px 5px 10px 5px;
+			&:hover {
+				text-decoration: underline;
+			}
+			.pub-title {
+				font-weight: 400;
+				font-size: 24px;
+				line-height: 1.33 !important;
+			}
 		}
 		.authors {
 			font-style: italic;
@@ -57,12 +67,15 @@
 			font-size: 16px;
 			line-height: 1.25;
 			padding-bottom: 5px;
+			padding-left: 5px;
 		}
 		.date-details {
 			margin-top: 10px;
+			padding-left: 5px;
 		}
 		.description {
 			font-size: 14px;
+			padding-left: 5px;
 		}
 	}
 	&.medium-preview {
@@ -79,14 +92,29 @@
 			width: 65%;
 			height: 100%;
 		}
+		.title-wrapper {
+			padding: 0px 5px 5px 5px;
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+		.authors {
+			padding-left: 5px;
+		}
 		.date-details {
-			margin-top: 8px;
+			margin-top: 15px;
+			padding-left: 5px;
+		}
+		.description {
+			padding-left: 5px;
+			padding-top: 15px;
 		}
 	}
 	&.small-preview {
 		box-shadow: 0px 0px 0px transparent;
 		border: 0px solid transparent;
 		border-left: 1px solid #e0e0e0;
+		border-radius: 0px;
 		padding-left: 20px;
 		margin-bottom: 1em;
 		.banner-image {
@@ -98,17 +126,32 @@
 				display: none;
 			}
 		}
+		.title-wrapper {
+			padding: 5px 0px 2px;
+			&:hover {
+				text-decoration: underline;
+			}
+			.pub-title {
+				font-weight: 400;
+				font-size: 22px;
+				line-height: 1.33 !important;
+			}
+		}
 		.description {
 			padding-top: 5px;
 		}
 		.date-details {
-			margin-top: 7px;
+			margin-top: 10px;
+		}
+		.author-avatars {
+			padding-left: 0px;
 		}
 	}
 	&.minimal-preview {
 		box-shadow: 0px 0px 0px transparent;
 		border: 0px solid transparent;
 		border-left: 1px solid #e0e0e0;
+		border-radius: 0px;
 		padding-left: 20px;
 		font-size: 16px;
 		margin-bottom: 1em;
@@ -148,9 +191,9 @@
 			'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', sans-serif;
 	}
 	.pub-title {
-		line-height: 1.2 !important;
+		line-height: 1.25 !important;
 		display: inline;
-		font-weight: 500;
+		font-weight: 400;
 	}
 	.authors {
 		font-size: 14px;
@@ -185,6 +228,7 @@
 		font-style: italic;
 		color: #555;
 		margin-top: 5px;
+		padding-left: 5px;
 		.avatar-component {
 			vertical-align: top;
 		}
