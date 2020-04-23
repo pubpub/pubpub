@@ -1,9 +1,8 @@
 import { isProd } from './isProd';
-import { getClientInitialData } from './initialData';
 import { getGdprConsentElection } from './legal/gdprConsent';
 
-export const setupHeap = () => {
-	const { communityData, collectionData, pubData, loginData } = getClientInitialData();
+export const setupHeap = (initialData) => {
+	const { communityData, collectionData, pubData, loginData } = initialData;
 	const hasGdprConsent = getGdprConsentElection(loginData);
 	const heapEnvironment = isProd() ? '422727431' : '3777990325';
 	// eslint-disable-next-line
