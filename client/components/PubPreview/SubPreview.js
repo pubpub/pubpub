@@ -171,7 +171,11 @@ const SubPreview = function(props) {
 				{
 					prefix: 'Commentary by:',
 					elements: [
-						{ text: 'Kathleen Gregory, Paul Groth, Andrea Scharnhorst, and Sally Wyatt', href: 'pub/3howud7k' },
+						{
+							text:
+								'Kathleen Gregory, Paul Groth, Andrea Scharnhorst, and Sally Wyatt',
+							href: 'pub/3howud7k',
+						},
 					],
 				},
 			],
