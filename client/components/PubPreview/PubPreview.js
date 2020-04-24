@@ -93,7 +93,7 @@ const PubPreview = function(props) {
 				</div>
 
 				{showLowerByline && (
-					<div className="authors" style={{ color: localCommunityData.accentColorDark }}>
+					<div className="authors">
 						<span>by </span>
 						{generateAuthorString(pubData)}
 					</div>
