@@ -7,6 +7,7 @@ import {
 	ThreadComment,
 	ThreadEvent,
 	Visibility,
+	Branch,
 } from '../models';
 import { updateFirebaseDiscussion } from '../utils/firebaseAdmin';
 
@@ -120,8 +121,13 @@ export const createDiscussion = async (inputValues, user) => {
 		userId: user.id,
 		threadId: newThread.id,
 	});
+
+	const branchData = await Branch.findOne({
+		where: { id: inputValues.branchId || null },
+		attributes: ['id', 'title'],
+	});
 	const newVisibility = await Visibility.create({
-		access: 'members',
+		access: (branchData || {}).title === 'public' ? 'public' : 'members',
 	});
 	const newDiscussion = await DiscussionNew.create({
 		id: inputValues.discussionId,

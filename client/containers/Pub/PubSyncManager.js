@@ -143,9 +143,10 @@ class PubSyncManager extends React.Component {
 						.child('metadata')
 						.on('child_changed', this.syncMetadata);
 
-					this.state.firebaseBranchRef
-						.child('discussionsContentLive')
-						.on('value', this.syncDiscussionsContent);
+					/* Disabled for initial dashboard launch */
+					// this.state.firebaseBranchRef
+					// 	.child('discussionsContentLive')
+					// 	.on('value', this.syncDiscussionsContent);
 
 					this.state.firebaseBranchRef
 						.child('cursors')
@@ -167,11 +168,12 @@ class PubSyncManager extends React.Component {
 		if (this.state.firebaseRootRef) {
 			this.state.firebaseRootRef.child('metadata').off('child_changed', this.syncMetadata);
 		}
-		if (this.state.firebaseBranchRef) {
-			this.state.firebaseBranchRef
-				.child('discussionsContentLive')
-				.off('child_changed', this.syncDiscussionsContent);
-		}
+		/* Disabled for initial dashboard launch */
+		// if (this.state.firebaseBranchRef) {
+		// 	this.state.firebaseBranchRef
+		// 		.child('discussionsContentLive')
+		// 		.off('child_changed', this.syncDiscussionsContent);
+		// }
 	}
 
 	syncMetadata(snapshot) {
