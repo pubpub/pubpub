@@ -9,7 +9,6 @@ import {
 	Visibility,
 	Branch,
 } from '../models';
-import { updateFirebaseDiscussion } from '../utils/firebaseAdmin';
 
 const findDiscussionWithUser = (id) =>
 	DiscussionNew.findOne({
@@ -140,7 +139,6 @@ export const createDiscussion = async (inputValues, user) => {
 		pubId: inputValues.pubId,
 	});
 	const discussionWithUser = await findDiscussionWithUser(newDiscussion.id);
-	updateFirebaseDiscussion(discussionWithUser.toJSON(), inputValues.branchId);
 	return discussionWithUser;
 };
 
@@ -155,8 +153,6 @@ export const updateDiscussion = (inputValues, updatePermissions) => {
 	return DiscussionNew.update(filteredValues, {
 		where: { id: inputValues.discussionId },
 	}).then(async () => {
-		const discussionWithUser = await findDiscussionWithUser(inputValues.discussionId);
-		updateFirebaseDiscussion(discussionWithUser.toJSON(), inputValues.branchId);
 		return {
 			...filteredValues,
 			id: inputValues.discussionId,
