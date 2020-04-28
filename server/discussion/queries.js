@@ -7,7 +7,6 @@ import {
 	ThreadComment,
 	ThreadEvent,
 	Visibility,
-	Branch,
 } from '../models';
 
 const findDiscussionWithUser = (id) =>
@@ -121,12 +120,8 @@ export const createDiscussion = async (inputValues, user) => {
 		threadId: newThread.id,
 	});
 
-	const branchData = await Branch.findOne({
-		where: { id: inputValues.branchId || null },
-		attributes: ['id', 'title'],
-	});
 	const newVisibility = await Visibility.create({
-		access: (branchData || {}).title === 'public' ? 'public' : 'members',
+		access: inputValues.visibilityAccess,
 	});
 	const newDiscussion = await DiscussionNew.create({
 		id: inputValues.discussionId,
