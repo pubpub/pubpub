@@ -1,7 +1,5 @@
 {
-	"addons": [
-		"cloudamqp"
-	],
+	"addons": ["cloudamqp:lemur"],
 	"buildpacks": [
 		{ "url": "https://github.com/heroku/heroku-buildpack-apt.git" },
 		{ "url": "heroku/nodejs" }
