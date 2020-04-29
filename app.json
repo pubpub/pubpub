@@ -1,4 +1,8 @@
 {
+	"buildpacks": [
+		{ "url": "https://github.com/heroku/heroku-buildpack-apt.git" },
+		{ "url": "heroku/nodejs" }
+	],
 	"env": {
 		"ERROR_PAGE_URL": {
 			"value": "https://s3.amazonaws.com/assets.pubpub.org/_site/error.html"
@@ -7,6 +11,14 @@
 	"environments": {
 		"test": {
 			"addons": ["heroku-postgresql:in-dyno"]
+		},
+		"review": {
+			"formation": {
+				"web": {
+					"quantity": 1,
+					"size": "standard-1X"
+				}
+			}
 		}
 	}
 }
