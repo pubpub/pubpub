@@ -1,4 +1,7 @@
 {
+	"addons": [
+		"cloudamqp"
+	],
 	"buildpacks": [
 		{ "url": "https://github.com/heroku/heroku-buildpack-apt.git" },
 		{ "url": "heroku/nodejs" }
@@ -15,6 +18,10 @@
 		"review": {
 			"formation": {
 				"web": {
+					"quantity": 1,
+					"size": "standard-1X"
+				},
+				"worker": {
 					"quantity": 1,
 					"size": "standard-1X"
 				}
