@@ -92,9 +92,6 @@ $mobile-bottom-buttons-spacing: 10px;
         font-size: 18px;
         font-weight: normal;
         font-family: $header-font;
-        span.text-wrapper:empty {
-            display: none;
-        }
     }
 
     .byline {
@@ -123,6 +120,12 @@ $mobile-bottom-buttons-spacing: 10px;
         }
     }
 
+    @include in-blocks-theme {
+        .pub-header-content-component {
+            column-gap: 20px;
+        }
+    }
+
     .pub-header-content-component {
         display: grid;
         grid-template-rows: $top-bar-total-height auto auto;
@@ -131,7 +134,6 @@ $mobile-bottom-buttons-spacing: 10px;
             'top top'
             'middle-left middle-right'
             'bottom bottom';
-        column-gap: 20px;
 
         .pub-header-top-area {
             overflow: hidden;
