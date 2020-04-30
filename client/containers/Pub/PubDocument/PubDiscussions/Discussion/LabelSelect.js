@@ -9,7 +9,7 @@ const propTypes = {
 	availableLabels: PropTypes.array.isRequired,
 	labelsData: PropTypes.array.isRequired,
 	onPutDiscussion: PropTypes.func.isRequired,
-	canManagePub: PropTypes.bool.isRequired,
+	canAdminPub: PropTypes.bool.isRequired,
 	canManageThread: PropTypes.bool.isRequired,
 };
 
@@ -60,7 +60,7 @@ class LabelSelect extends Component {
 		});
 
 		const availableLabels = this.props.availableLabels.filter((label) => {
-			return this.props.canManagePub || label.publicApply;
+			return this.props.canAdminPub || label.publicApply;
 		});
 
 		return (
@@ -111,7 +111,7 @@ class LabelSelect extends Component {
 												}
 												text={label.title}
 												labelElement={
-													this.props.canManagePub && (
+													this.props.canAdminPub && (
 														<Tooltip
 															content={
 																label.publicApply
@@ -144,7 +144,9 @@ class LabelSelect extends Component {
 								small
 								onClick={this.toggleEditMode}
 								icon={<Icon icon="tag2" iconSize={12} />}
-							/>
+							>
+								Labels
+							</Button>
 						}
 					/>
 				)}
