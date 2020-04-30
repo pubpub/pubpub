@@ -92,6 +92,9 @@ $mobile-bottom-buttons-spacing: 10px;
         font-size: 18px;
         font-weight: normal;
         font-family: $header-font;
+        span.text-wrapper:empty {
+            display: none;
+        }
     }
 
     .byline {
