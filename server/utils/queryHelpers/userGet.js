@@ -39,9 +39,6 @@ export default async (slug, initialData) => {
 	userData = userData.toJSON();
 	userData.attributions = (userData.attributions || [])
 		.map((attribution) => {
-			if (attribution.pub.slug === 'nq0u8spr') {
-				console.log(attribution.pub);
-			}
 			const sanitizedPub = sanitizePub(attribution.pub, initialData);
 			return {
 				...attribution,

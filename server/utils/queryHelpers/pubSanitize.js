@@ -38,15 +38,6 @@ export default (pubData, initialData, releaseNumber) => {
 	/* If there are no releases and the user does not have view access, they don't have scope-level */
 	/* We then must check if they have pub-level access and community-level access, otherwise */
 	/* we return null. Returning null will cause a 404 error to be returned. */
-	if (pubData.slug === 'nq0u8spr') {
-		console.log(
-			!pubData.releases.length,
-			!canView,
-			!canViewDraft,
-			!hasPubMemberAccess,
-			!hasCollectionMemberAccess,
-		);
-	}
 	if (
 		!pubData.releases.length &&
 		!canView &&
