@@ -9,7 +9,6 @@ import LabelSelect from './LabelSelect';
 import DiscussionReanchor from './DiscussionReanchor';
 
 const propTypes = {
-	isDiscussionAuthor: PropTypes.bool.isRequired,
 	pubData: PropTypes.shape({ labels: PropTypes.array }).isRequired,
 	discussionData: PropTypes.shape({
 		isClosed: PropTypes.bool,
@@ -20,7 +19,7 @@ const propTypes = {
 };
 
 const ManageTools = (props) => {
-	const { pubData, discussionData, onUpdateDiscussion, isDiscussionAuthor } = props;
+	const { pubData, discussionData, onUpdateDiscussion } = props;
 	const { scopeData } = usePageContext();
 	const { canAdmin, isSuperAdmin } = scopeData.activePermissions;
 	const { isClosed } = discussionData;
@@ -65,7 +64,6 @@ const ManageTools = (props) => {
 				labelsData={discussionData.labels || []}
 				onPutDiscussion={onUpdateDiscussion}
 				canAdminPub={canAdmin}
-				canManageThread={canAdmin || isDiscussionAuthor}
 			/>
 			{renderArchiveButton()}
 			{isSuperAdmin && <DiscussionReanchor discussionData={discussionData} />}

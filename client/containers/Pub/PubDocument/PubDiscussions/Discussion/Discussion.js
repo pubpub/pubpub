@@ -192,7 +192,6 @@ const Discussion = (props) => {
 				<>
 					{showManageTools && (
 						<ManageTools
-							isDiscussionAuthor={isDiscussionAuthor}
 							pubData={pubData}
 							discussionData={discussionData}
 							onUpdateDiscussion={handleUpdateDiscussion}

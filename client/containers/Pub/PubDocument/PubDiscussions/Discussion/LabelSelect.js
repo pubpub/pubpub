@@ -10,7 +10,6 @@ const propTypes = {
 	labelsData: PropTypes.array.isRequired,
 	onPutDiscussion: PropTypes.func.isRequired,
 	canAdminPub: PropTypes.bool.isRequired,
-	canManageThread: PropTypes.bool.isRequired,
 };
 
 class LabelSelect extends Component {
@@ -63,94 +62,91 @@ class LabelSelect extends Component {
 			return this.props.canAdminPub || label.publicApply;
 		});
 
+		if (availableLabels.length === 0) {
+			return null;
+		}
+
 		return (
-			<span className="label-select-component">
-				{this.props.canManageThread && !!availableLabels.length && (
-					<Popover
-						content={
-							<Menu>
-								<Button
-									fill
-									text="Save"
-									onClick={this.handleSave}
-									loading={this.state.isSaving}
-									disabled={!this.state.labelsDataChanged}
-								/>
-								{availableLabels
-									.sort((foo, bar) => {
-										if (foo.title < bar.title) {
-											return -1;
+			<Popover
+				popoverClassName="label-select-component"
+				content={
+					<Menu>
+						<Button
+							fill
+							className="save-button"
+							text="Save"
+							onClick={this.handleSave}
+							loading={this.state.isSaving}
+							disabled={!this.state.labelsDataChanged}
+						/>
+						{availableLabels
+							.sort((foo, bar) => {
+								if (foo.title < bar.title) {
+									return -1;
+								}
+								if (foo.title > bar.title) {
+									return 1;
+								}
+								return 0;
+							})
+							.map((label) => {
+								const isActive = this.state.labelsData.indexOf(label.id) > -1;
+								return (
+									<MenuItem
+										key={label.id}
+										shouldDismissPopover={false}
+										onClick={() => {
+											if (isActive) {
+												return this.removeLabel(label.id);
+											}
+											return this.applyLabel(label.id);
+										}}
+										icon={
+											<div
+												className="color"
+												style={{ backgroundColor: label.color }}
+											>
+												{isActive && <Icon icon="tick" iconSize={14} />}
+											</div>
 										}
-										if (foo.title > bar.title) {
-											return 1;
-										}
-										return 0;
-									})
-									.map((label) => {
-										const isActive =
-											this.state.labelsData.indexOf(label.id) > -1;
-										return (
-											<MenuItem
-												key={label.id}
-												shouldDismissPopover={false}
-												onClick={() => {
-													if (isActive) {
-														return this.removeLabel(label.id);
+										text={label.title}
+										labelElement={
+											this.props.canAdminPub && (
+												<Tooltip
+													content={
+														label.publicApply
+															? 'All discussion authors can apply this label.'
+															: 'Only managers can apply this label.'
 													}
-													return this.applyLabel(label.id);
-												}}
-												icon={
-													<div
-														className="color"
-														style={{ backgroundColor: label.color }}
-													>
-														{isActive && (
-															<Icon icon="tick" iconSize={14} />
-														)}
-													</div>
-												}
-												text={label.title}
-												labelElement={
-													this.props.canAdminPub && (
-														<Tooltip
-															content={
-																label.publicApply
-																	? 'All discussion authors can apply this label.'
-																	: 'Only managers can apply this label.'
-															}
-														>
-															<Icon
-																icon="endorsed"
-																className={
-																	label.publicApply
-																		? ''
-																		: 'active'
-																}
-															/>
-														</Tooltip>
-													)
-												}
-											/>
-										);
-									})}
-							</Menu>
-						}
-						position={Position.BOTTOM_RIGHT}
-						transitionDuration={-1}
-						usePortal={false}
-						target={
-							<Button
-								minimal
-								small
-								onClick={this.toggleEditMode}
-								icon={<Icon icon="tag2" iconSize={12} />}
-							>
-								Labels
-							</Button>
-						}
-					/>
-				)}
-			</span>
+												>
+													<Icon
+														icon="endorsed"
+														className={
+															label.publicApply ? '' : 'active'
+														}
+													/>
+												</Tooltip>
+											)
+										}
+									/>
+								);
+							})}
+					</Menu>
+				}
+				position={Position.BOTTOM_RIGHT}
+				transitionDuration={-1}
+				minimal
+				target={
+					<Button
+						minimal
+						small
+						onClick={this.toggleEditMode}
+						icon={<Icon icon="tag2" iconSize={12} />}
+					>
+						Labels
+					</Button>
+				}
+			/>
 		);
 	}
 }
