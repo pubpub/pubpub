@@ -18,7 +18,7 @@ const DiscussionReanchor = (props) => {
 	const [isActive, setIsActive] = useState(false);
 
 	const { selection } = collabData.editorChangeObject;
-	const { anchor = {} } = discussionData;
+	const { anchor } = discussionData;
 
 	const handleReanchor = () => {
 		const { view } = collabData.editorChangeObject;
@@ -41,11 +41,13 @@ const DiscussionReanchor = (props) => {
 				ReactDOM.createPortal(
 					<Card className="discussion-reanchor-component">
 						<p>Make a highlight in the document and then click "Re-anchor".</p>
-						<p>
-							{anchor.prefix}
-							<em style={{ fontWeight: 'bold' }}>{anchor.exact}</em>
-							{anchor.suffix}
-						</p>
+						{anchor && (
+							<p>
+								{anchor.prefix}
+								<em style={{ fontWeight: 'bold' }}>{anchor.exact}</em>
+								{anchor.suffix}
+							</p>
+						)}
 						<ButtonGroup>
 							<Button onClick={() => setIsActive(false)} style={{ marginRight: 10 }}>
 								Cancel
