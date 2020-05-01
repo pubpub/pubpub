@@ -175,7 +175,8 @@ export const updateDiscussion = async (values, permissions) => {
 
 	if ('labels' in values) {
 		const labels = [];
-		const hasRemovedManagedLabels = discussion.labels.some((labelId) => {
+		const existingLabels = discussion.labels || [];
+		const hasRemovedManagedLabels = existingLabels.some((labelId) => {
 			const labelDefinition = pub.labels.find((label) => label.id === labelId);
 			const missingFromUpdate = !values.labels.includes(labelId);
 			return labelDefinition && !labelDefinition.publicApply && missingFromUpdate;
@@ -184,7 +185,7 @@ export const updateDiscussion = async (values, permissions) => {
 			throw new ForbiddenError();
 		}
 		for (const labelId of values.labels) {
-			const isExistingLabel = discussion.labels.includes(labelId);
+			const isExistingLabel = existingLabels.includes(labelId);
 			const labelDefinition = pub.labels.find((label) => label.id === labelId);
 			if (labelDefinition) {
 				const { publicApply } = labelDefinition;
