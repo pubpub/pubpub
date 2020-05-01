@@ -40,7 +40,7 @@ const ManageTools = (props) => {
 		return (
 			<ConfirmDialog
 				onConfirm={handleToggleArchive}
-				confirmLabel="Archive"
+				confirmLabel={verb}
 				text={`Are you sure you want to ${verb.toLowerCase()} this discussion?`}
 			>
 				{({ open }) => (
