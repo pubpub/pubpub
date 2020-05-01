@@ -12,7 +12,7 @@ export const getCollectionPubs = async ({ communityId, collectionId, userId }) =
 		loginId: userId,
 	});
 	const overviewData = await getOverview({ scopeData: scopeData });
-	const { pubs, collections } = await sanitizeOverview(
+	const { pubs, collections } = sanitizeOverview(
 		{ loginData: { id: userId }, scopeData: scopeData },
 		overviewData,
 	);

@@ -20,7 +20,12 @@ export default async (slug, initialData) => {
 					{
 						model: Pub,
 						as: 'pub',
-						...buildPubOptions({ isPreview: true, getCommunity: true }),
+						...buildPubOptions({
+							isPreview: true,
+							getMembers: true,
+							getCommunity: true,
+							getCollections: true,
+						}),
 					},
 				],
 			},
@@ -34,6 +39,9 @@ export default async (slug, initialData) => {
 	userData = userData.toJSON();
 	userData.attributions = (userData.attributions || [])
 		.map((attribution) => {
+			if (attribution.pub.slug === 'nq0u8spr') {
+				console.log(attribution.pub);
+			}
 			const sanitizedPub = sanitizePub(attribution.pub, initialData);
 			return {
 				...attribution,

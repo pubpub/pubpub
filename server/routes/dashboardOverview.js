@@ -32,7 +32,7 @@ app.get(
 			.then((initialData) => {
 				return Promise.all([initialData, getOverview(initialData)]);
 			})
-			.then(async ([initialData, overviewData]) => {
+			.then(([initialData, overviewData]) => {
 				console.time('overviewSanitize');
 				const sanitizedOverviewData = sanitizeOverview(initialData, overviewData);
 				console.timeEnd('overviewSanitize');
