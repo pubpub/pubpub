@@ -2,6 +2,7 @@ import ensureUserForAttribution from 'shared/utils/ensureUserForAttribution';
 import sanitizeDiscussions from './discussionsSanitize';
 import sanitizeForks from './forksSanitize';
 import sanitizeReviews from './reviewsSanitize';
+import getScope from './scopeGet';
 
 const sanitizeHashes = (pubData, activePermissions) => {
 	const { editHash, viewHash } = pubData;
@@ -12,15 +13,27 @@ const sanitizeHashes = (pubData, activePermissions) => {
 	};
 };
 
-export default (pubData, initialData, releaseNumber) => {
+export default async (pubData, initialData, releaseNumber) => {
 	const { loginData, scopeData } = initialData;
 	const { activePermissions } = scopeData;
 	const { canView, canViewDraft, canEdit, canEditDraft, canAdminCommunity } = activePermissions;
 
-	/* If there are no releases and the user does not have view access, they don't have access to the pub. */
+	/* If there are no releases and the user does not have view access, they don't have scope-level */
+	/* We then must check if they have pub-level access, otherwise we return null. */
 	/* Returning null will cause a 404 error to be returned. */
 	if (!pubData.releases.length && !canView && !canViewDraft) {
-		return null;
+		const pubScopeData = await getScope({
+			communityId: initialData.communityData.id,
+			pubId: pubData.id,
+			loginId: initialData.loginData.id,
+		});
+		const {
+			canView: canViewPubScope,
+			canViewDraft: canViewDraftPubScope,
+		} = pubScopeData.activePermissions;
+		if (!canViewPubScope && !canViewDraftPubScope) {
+			return null;
+		}
 	}
 
 	const isRelease = !!(releaseNumber || releaseNumber === 0);

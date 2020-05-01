@@ -32,8 +32,10 @@ app.get(
 			.then((initialData) => {
 				return Promise.all([initialData, getOverview(initialData)]);
 			})
-			.then(([initialData, overviewData]) => {
-				const sanitizedOverviewData = sanitizeOverview(initialData, overviewData);
+			.then(async ([initialData, overviewData]) => {
+				console.time('overviewSanitize');
+				const sanitizedOverviewData = await sanitizeOverview(initialData, overviewData);
+				console.timeEnd('overviewSanitize');
 				return renderToNodeStream(
 					res,
 					<Html
