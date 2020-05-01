@@ -17,7 +17,7 @@ export default (pubData, initialData, releaseNumber) => {
 	const { activePermissions } = scopeData;
 	const { canView, canViewDraft, canEdit, canEditDraft } = activePermissions;
 
-	const hasPubMemberAccess = !!pubData.members.find((member) => {
+	const hasPubMemberAccess = pubData.members.some((member) => {
 		return member.userId === initialData.loginData.id;
 	});
 	const visibleCollectionIds = initialData.communityData.collections.map((cl) => cl.id);
@@ -30,14 +30,14 @@ export default (pubData, initialData, releaseNumber) => {
 		const currCollection = initialData.communityData.collections.find((cl) => {
 			return currCp.collectionId === cl.id;
 		});
-		const hasCurrCollectionMemberAccess = !!currCollection.members.find((member) => {
+		const hasCurrCollectionMemberAccess = currCollection.members.some((member) => {
 			return member.userId === initialData.loginData.id;
 		});
 		return prev || hasCurrCollectionMemberAccess;
 	}, false);
-	/* If there are no releases and the user does not have view access, they don't have scope-level */
-	/* We then must check if they have pub-level access and community-level access, otherwise */
-	/* we return null. Returning null will cause a 404 error to be returned. */
+	/* If there are no releases and the user does not have view access, */
+	/* we then must check if they have pub-level access or */
+	/* community-level access, otherwise we return null. */
 	if (
 		!pubData.releases.length &&
 		!canView &&
