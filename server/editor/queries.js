@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import Cite from 'citation-js';
 import crypto from 'crypto';
+import Cite from 'citation-js';
 
 /* Different styles available here: */
 /* https://github.com/citation-style-language/styles */
@@ -20,6 +20,10 @@ styles.forEach((style) => {
 	const fileString = fs.readFileSync(path.join(__dirname, style.path), { encoding: 'utf8' });
 	config.templates.add(style.name, fileString);
 });
+// remove sync
+Cite.plugins.input.removeDataParser('@else/url', false);
+// remove async
+Cite.plugins.input.removeDataParser('@else/url', true);
 
 export const generateCiteHtmls = async (inputVals, citationStyle = 'apa') => {
 	const citeObjects = await Promise.all(
