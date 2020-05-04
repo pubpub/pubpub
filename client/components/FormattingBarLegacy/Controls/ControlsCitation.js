@@ -38,7 +38,7 @@ class ControlsCitation extends Component {
 					<div className="label">Structured Data</div>
 					<div className="input wide">
 						<textarea
-							placeholder="Enter bibtex, DOI, wikidata url, or bibjson..."
+							placeholder="Enter bibtex, DOI, wikidata url, PubMed ID, ISBN, or bibjson..."
 							className="bp3-input bp3-fill"
 							value={this.state.value}
 							onChange={this.handleValueChange}

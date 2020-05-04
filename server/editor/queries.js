@@ -3,6 +3,9 @@ import path from 'path';
 import crypto from 'crypto';
 import Cite from 'citation-js';
 
+require('@citation-js/plugin-pubmed');
+require('@citation-js/plugin-isbn');
+
 /* Different styles available here: */
 /* https://github.com/citation-style-language/styles */
 /* ['apa', 'harvard', 'vancouver'] built-in to citation-js */
@@ -20,9 +23,9 @@ styles.forEach((style) => {
 	const fileString = fs.readFileSync(path.join(__dirname, style.path), { encoding: 'utf8' });
 	config.templates.add(style.name, fileString);
 });
-// remove sync
+/* Remove @else/url parser. See Freshdesk ticket #1308. Second term specifies sync/async component.  */
+/* https://github.com/citation-js/citation-js/blob/master/packages/core/src/plugins/input/data.js#L90-L97 */
 Cite.plugins.input.removeDataParser('@else/url', false);
-// remove async
 Cite.plugins.input.removeDataParser('@else/url', true);
 
 export const generateCiteHtmls = async (inputVals, citationStyle = 'apa') => {
