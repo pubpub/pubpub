@@ -3,9 +3,6 @@ import path from 'path';
 import crypto from 'crypto';
 import Cite from 'citation-js';
 
-require('@citation-js/plugin-pubmed');
-require('@citation-js/plugin-isbn');
-
 /* Different styles available here: */
 /* https://github.com/citation-style-language/styles */
 /* ['apa', 'harvard', 'vancouver'] built-in to citation-js */
@@ -32,7 +29,8 @@ export const generateCiteHtmls = async (inputVals, citationStyle = 'apa') => {
 	const citeObjects = await Promise.all(
 		inputVals.map((input) => {
 			return input.structuredValue
-				? Cite.async(input.structuredValue).catch(() => {
+				? Cite.async(input.structuredValue).catch((err) => {
+						console.log(err);
 						return 'error';
 				  })
 				: undefined;

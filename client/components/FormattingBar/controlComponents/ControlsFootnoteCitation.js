@@ -94,7 +94,7 @@ const ControlsFootnoteCitation = (props) => {
 			<div className="title">Structured Data</div>
 			<textarea
 				className="structured-data"
-				placeholder="Enter bibtex, DOI, wikidata url, PubMed ID, ISBN, or bibjson..."
+				placeholder="Enter bibtex, DOI, wikidata url, or bibjson..."
 				value={structuredValue}
 				onChange={(evt) => updateAttrs({ structuredValue: evt.target.value })}
 			/>
