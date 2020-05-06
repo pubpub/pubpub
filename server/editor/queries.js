@@ -29,8 +29,7 @@ export const generateCiteHtmls = async (inputVals, citationStyle = 'apa') => {
 	const citeObjects = await Promise.all(
 		inputVals.map((input) => {
 			return input.structuredValue
-				? Cite.async(input.structuredValue).catch((err) => {
-						console.log(err);
+				? Cite.async(input.structuredValue).catch(() => {
 						return 'error';
 				  })
 				: undefined;
