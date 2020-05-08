@@ -48,6 +48,7 @@ app.get('/api/editor/embed', (req, res) => {
 			})
 				.then((result) => {
 					return res.status(200).json({
+						title: `${result.description}`,
 						html: `<html><head></head><body><style type="text/css">.gist-file .gist-data {max-height: 730px;}</style><script src="${result.html_url}.js"></script></body></html>`,
 					});
 				})
