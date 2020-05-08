@@ -92,7 +92,7 @@ class MediaYoutube extends Component {
 									text="Load Sample URL"
 									onClick={() => {
 										this.handleInput(
-											'https://www.youtube.com/watch?v=UA4QLH_Llv0',
+											'https://www.youtube.com/watch?v=k5Q6-hh49mU',
 										);
 									}}
 								/>
