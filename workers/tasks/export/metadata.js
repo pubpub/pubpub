@@ -61,6 +61,10 @@ export const getPubMetadata = async (pubId) => {
 			.filter((x) => x)
 			.map((cp) => cp.collection.title)
 			.pop(),
+		primaryCollectionMetadata: [pubData.collectionPubs.find((cp) => cp.isPrimary)]
+			.filter((x) => x)
+			.map((cp) => cp.collection.metadata)
+			.pop(),
 		attributions: pubData.attributions
 			.concat()
 			.sort((a, b) => a.order - b.order)

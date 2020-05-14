@@ -6,7 +6,7 @@ const exportFormatTypes = {
 	markdown: { pandocTarget: 'markdown_strict', extension: 'md', title: 'Markdown' },
 	odt: { pandocTarget: 'odt', extension: 'odt', title: 'OpenDocument' },
 	plain: { pandocTarget: 'plain', extension: 'txt', title: 'Plain Text' },
-	jats: { pandocTarget: 'jats_articleauthoring', extension: 'xml', title: 'JATS XML' },
+	jats: { pandocTarget: 'jats', extension: 'xml', title: 'JATS XML' },
 	tex: { pandocTarget: 'latex', extension: 'tex', title: 'LaTeX' },
 };
 
