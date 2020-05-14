@@ -2,11 +2,12 @@ import fs from 'fs';
 import nodePandoc from 'node-pandoc';
 import YAML from 'yaml';
 
+import { isProd, isDuqDuq } from 'shared/utils/environment';
 import { getTmpFileForExtension } from './util';
 
 const dataRoot = '/app/.apt/usr/share/pandoc/data ';
 
-// const dataRoot = process.env.NODE_ENV === 'production' ? '/app/.apt/usr/share/pandoc/data ' : '';
+// const dataRoot = isProd() || isDuqDuq() ? '/app/.apt/usr/share/pandoc/data ' : '';
 
 const createPandocArgs = (pandocTarget, tmpFile, metadataFile) => {
 	return [
