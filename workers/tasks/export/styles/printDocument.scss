@@ -27,6 +27,10 @@ https://gitlab.pagedmedia.org/tools/pagedjs-cli/issues/11 */
     display: inline;
 }
 
+.pub-body-component .editor.ProseMirror li p {
+    font-size: inherit;
+}
+
 .pub-body-component {
     margin-top: 0 !important;
     .editor.ProseMirror .pub-notes ol > li {
