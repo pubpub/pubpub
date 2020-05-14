@@ -15,6 +15,7 @@ const createPandocArgs = (pandocTarget, tmpFile, metadataFile) => {
 		['-f', 'html'],
 		['-t', pandocTarget],
 		['-o', tmpFile.path],
+		['-D'],
 		metadataFile && [`--metadata-file=${metadataFile.path}`],
 	]
 		.filter((x) => x)
