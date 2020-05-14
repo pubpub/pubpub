@@ -27,10 +27,6 @@ https://gitlab.pagedmedia.org/tools/pagedjs-cli/issues/11 */
     display: inline;
 }
 
-.pub-body-component .editor.ProseMirror li p {
-    font-size: inherit;
-}
-
 .pub-body-component {
     margin-top: 0 !important;
     .editor.ProseMirror .pub-notes ol > li {
@@ -83,12 +79,17 @@ section.cover {
     }
 }
 
+/* Default pub font size is too large for PDF, so we reset to initial here
+ including an override of list items. */
 @media screen {
     body > * {
         max-width: 50em;
         margin: 0 auto;
         &.pub-body-component {
             font-size: initial !important;
+            .editor.ProseMirror li p {
+                font-size: inherit !important;
+            }
         }
     }
 }
