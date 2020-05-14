@@ -2,7 +2,7 @@ import fs from 'fs';
 import nodePandoc from 'node-pandoc';
 import YAML from 'yaml';
 
-import { isProd, isDuqDuq } from 'shared/utils/environment';
+// import { isProd, isDuqDuq } from 'shared/utils/environment';
 import { getLicenseBySlug } from 'shared/license';
 import { getTmpFileForExtension } from './util';
 
@@ -11,8 +11,6 @@ import { getTmpFileForExtension } from './util';
 	isProd() || isDuqDuq()
 		? '/app/.apt/usr/share/pandoc/data'
 		: '/usr/local/Cellar/pandoc/2.9.2.1/share/x86_64-osx-ghc-8.8.3/pandoc-2.9.2.1/data'; */
-
-console.warn('duqduq', isDuqDuq());
 
 const createPandocArgs = (pandocTarget, tmpFile, metadataFile) => {
 	// pandoc inexplicably does not include a default template for docx or odt
