@@ -1,12 +1,27 @@
-/* Editor Base Without Figures As Of 12/2019 */
+/* Imports the equivalent of components/Editor/styles/base.scss,
+but without the media query mixin, which breaks PagedJS-cli:
+https://gitlab.pagedmedia.org/tools/pagedjs-cli/issues/11 */
+@import '~prosemirror-view/style/prosemirror';
+@import '~prosemirror-gapcursor/style/gapcursor';
+@import '~prosemirror-tables/style/tables';
 
-@import './editorBase.scss';
+@import './latex.scss';
 
+.editor {
+    @import './main.scss';
+    @import './collab.scss';
+    @import './figure.scss';
+    @import './file.scss';
+    @import './table.scss';
+}
+
+/* Import some global variables and styles, including fonts */
 @import 'styles/variables.scss';
 @import 'containers/Pub/PubDocument/pubBody.scss';
 
 @import url('https://use.typekit.net/kmi0tdo.css');
 
+/* Paged-specific overrides */
 .csl-bib-body,
 .csl-entry {
     display: inline;

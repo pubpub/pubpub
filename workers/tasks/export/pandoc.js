@@ -19,8 +19,14 @@ const createPandocArgs = (pandocTarget, tmpFile, metadataFile) => {
 };
 
 const createYamlMetadataFile = async ({ attributions, publishedDateString }) => {
+	const formattedAttributions = attributions.map((attr) => {
+		return {
+			name: attr.user.fullName,
+			affiliation: attr.user.title || attr.affiliation,
+		};
+	});
 	const metadata = YAML.stringify({
-		author: attributions,
+		author: formattedAttributions,
 		...(publishedDateString && { date: publishedDateString }),
 	});
 	const file = await getTmpFileForExtension('yaml');

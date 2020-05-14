@@ -4,7 +4,7 @@ import fs from 'fs';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { renderStatic, buildSchema } from 'components/Editor';
-
+import { getLicenseBySlug } from 'shared/license';
 import { SimpleNotesList } from 'components';
 
 const nonExportableNodeTypes = ['discussion'];
@@ -107,46 +107,20 @@ const blankIframes = (nodes) =>
 		nodes,
 	);
 
-const renderFrontMatterForPandoc = ({ updatedDateString, publishedDateString, doi }) => {
-	const showUpdatedDate = updatedDateString && updatedDateString !== publishedDateString;
-	return (
-		<React.Fragment>
-			{showUpdatedDate && (
-				<div>
-					<strong>Updated on:</strong> {updatedDateString}
-				</div>
-			)}
-			{doi && (
-				<div>
-					<strong>DOI:</strong> {doi}
-				</div>
-			)}
-		</React.Fragment>
-	);
-};
-
-const renderFrontMatterForHtml = ({
+const renderSharedFrontMatter = ({
 	updatedDateString,
 	publishedDateString,
-	primaryCollectionTitle,
 	doi,
-	title,
-	communityTitle,
-	accentColor,
+	licenseSlug,
 	attributions,
 }) => {
 	const showUpdatedDate = updatedDateString && updatedDateString !== publishedDateString;
 	const affiliations = [
 		...new Set(attributions.map((attr) => attr.affiliation).filter((x) => x)),
 	];
-	const communityAndCollectionString =
-		communityTitle + (primaryCollectionTitle ? bullet + primaryCollectionTitle : '');
+	const license = getLicenseBySlug(licenseSlug);
 	return (
-		<section className="cover">
-			<h3 className="community-and-collection">{communityAndCollectionString}</h3>
-			<h1 className="title" style={{ color: accentColor }}>
-				{title}
-			</h1>
+		<React.Fragment>
 			{attributions.length > 0 && (
 				<div className="byline">
 					<h3>
@@ -197,7 +171,46 @@ const renderFrontMatterForHtml = ({
 						<strong>DOI:</strong> {doi}
 					</div>
 				)}
+				{license && (
+					<div>
+						<strong>License: </strong>{' '}
+						<a href={license.link}>
+							{license.full} ({license.slug.toUpperCase()} {license.version})
+						</a>
+					</div>
+				)}
 			</div>
+		</React.Fragment>
+	);
+};
+
+const renderFrontMatterForPandoc = (
+	{ primaryCollectionTitle, communityTitle },
+	sharedFrontMatter,
+) => {
+	const communityAndCollectionString =
+		communityTitle + (primaryCollectionTitle ? bullet + primaryCollectionTitle : '');
+	return (
+		<React.Fragment>
+			<h3>{communityAndCollectionString}</h3>
+			{sharedFrontMatter}
+		</React.Fragment>
+	);
+};
+
+const renderFrontMatterForHtml = (
+	{ primaryCollectionTitle, title, communityTitle, accentColor },
+	sharedFrontMatter,
+) => {
+	const communityAndCollectionString =
+		communityTitle + (primaryCollectionTitle ? bullet + primaryCollectionTitle : '');
+	return (
+		<section className="cover">
+			<h3 className="community-and-collection">{communityAndCollectionString}</h3>
+			<h1 className="title" style={{ color: accentColor }}>
+				{title}
+			</h1>
+			{sharedFrontMatter}
 		</section>
 	);
 };
@@ -233,6 +246,8 @@ export const createStaticHtml = async (
 		{},
 	);
 
+	const sharedFrontMatter = renderSharedFrontMatter(pubMetadata);
+
 	return ReactDOMServer.renderToStaticMarkup(
 		<html lang="en">
 			<head>
@@ -245,8 +260,8 @@ export const createStaticHtml = async (
 			</head>
 			<body>
 				{targetPandoc
-					? renderFrontMatterForPandoc(pubMetadata)
-					: renderFrontMatterForHtml(pubMetadata)}
+					? renderFrontMatterForPandoc(pubMetadata, sharedFrontMatter)
+					: renderFrontMatterForHtml(pubMetadata, sharedFrontMatter)}
 				<div className="pub-body-component">
 					<div className="editor Prosemirror">
 						{docContent}

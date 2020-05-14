@@ -52,6 +52,7 @@ export const getPubMetadata = async (pubId) => {
 	return {
 		title: pubData.title,
 		doi: pubData.doi,
+		licenseSlug: pubData.licenseSlug,
 		publishedDateString: publishedDateString,
 		updatedDateString: updatedDateString,
 		communityTitle: pubData.community.title,
