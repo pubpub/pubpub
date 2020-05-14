@@ -16,14 +16,14 @@ console.warn('duqduq', isDuqDuq());
 
 const createPandocArgs = (pandocTarget, tmpFile, metadataFile) => {
 	// pandoc inexplicably does not include a default template for docx or odt
-	const template = pandocTarget !== 'docx' && pandocTarget !== 'odt';
+	// const template = pandocTarget !== 'docx' && pandocTarget !== 'odt';
 	return [
-		//dataRoot && [`--data-dir=${dataRoot}`],
+		// dataRoot && [`--data-dir=${dataRoot}`],
 		['-f', 'html'],
 		['-t', pandocTarget],
 		['-o', tmpFile.path],
-		['-D']
-		//template && [`--template=${dataRoot}/templates/default.${pandocTarget}`],
+		['-D'],
+		// template && [`--template=${dataRoot}/templates/default.${pandocTarget}`],
 		// ['-D'],
 		metadataFile && [`--metadata-file=${metadataFile.path}`],
 	]
