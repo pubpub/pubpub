@@ -71,6 +71,7 @@ class AttributionEditor extends Component {
 				userId: user.id,
 				name: user.name,
 				order: calculatedOrder,
+				isAuthor: true,
 			},
 			'POST',
 		).then((result) => {
