@@ -116,7 +116,6 @@ const renderFrontMatterForPandoc = (
 		primaryCollectionTitle,
 		doi,
 		licenseSlug,
-		title,
 	},
 	targetPandoc,
 ) => {
