@@ -18,11 +18,12 @@ const createPandocArgs = (pandocTarget, tmpFile, metadataFile) => {
 	// pandoc inexplicably does not include a default template for docx or odt
 	const template = pandocTarget !== 'docx' && pandocTarget !== 'odt';
 	return [
-		dataRoot && [`--data-dir=${dataRoot}`],
+		//dataRoot && [`--data-dir=${dataRoot}`],
 		['-f', 'html'],
 		['-t', pandocTarget],
 		['-o', tmpFile.path],
-		template && [`--template=${dataRoot}/templates/default.${pandocTarget}`],
+		['-D']
+		//template && [`--template=${dataRoot}/templates/default.${pandocTarget}`],
 		// ['-D'],
 		metadataFile && [`--metadata-file=${metadataFile.path}`],
 	]
@@ -64,11 +65,15 @@ const createYamlMetadataFile = async (
 			type: license.short,
 			...(license.link && { link: license.link }),
 		},
-		article: {
-			...(primaryCollectionMetadata.issue && { issue: primaryCollectionMetadata.issue }),
-			...(primaryCollectionMetadata.volume && { volume: primaryCollectionMetadata.volume }),
-			...(doi && { doi: doi }),
-		},
+		...(primaryCollectionMetadata && {
+			article: {
+				...(primaryCollectionMetadata.issue && { issue: primaryCollectionMetadata.issue }),
+				...(primaryCollectionMetadata.volume && {
+					volume: primaryCollectionMetadata.volume,
+				}),
+				...(doi && { doi: doi }),
+			},
+		}),
 	});
 	const file = await getTmpFileForExtension('yaml');
 	fs.writeFileSync(file.path, metadata);
