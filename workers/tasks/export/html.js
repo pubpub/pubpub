@@ -4,8 +4,9 @@ import fs from 'fs';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { renderStatic, buildSchema } from 'components/Editor';
-import { getLicenseBySlug } from 'shared/license';
+
 import { SimpleNotesList } from 'components';
+import { getLicenseBySlug } from 'shared/license';
 
 const nonExportableNodeTypes = ['discussion'];
 const katexCdnPrefix = 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/';
@@ -107,20 +108,74 @@ const blankIframes = (nodes) =>
 		nodes,
 	);
 
-const renderSharedFrontMatter = ({
+const renderFrontMatterForPandoc = (
+	{
+		updatedDateString,
+		publishedDateString,
+		communityTitle,
+		primaryCollectionTitle,
+		doi,
+		licenseSlug,
+		title,
+	},
+	targetPandoc,
+) => {
+	const showUpdatedDate = updatedDateString && updatedDateString !== publishedDateString;
+	const communityAndCollectionString =
+		communityTitle + (primaryCollectionTitle ? bullet + primaryCollectionTitle : '');
+	const license = getLicenseBySlug(licenseSlug);
+
+	return (
+		<React.Fragment>
+			{(targetPandoc === 'docx' || targetPandoc === 'plain' || targetPandoc === 'odt') && (
+				<h3>{communityAndCollectionString}</h3>
+			)}
+			{showUpdatedDate && (
+				<div>
+					<strong>Updated on:</strong> {updatedDateString}
+				</div>
+			)}
+			{doi && (
+				<div>
+					<strong>DOI:</strong> {doi}
+				</div>
+			)}
+			{license && (
+				<div>
+					<strong>License:</strong>{' '}
+					<a href={license.link}>
+						{license.full} ({license.slug.toUpperCase()} {license.version})
+					</a>
+				</div>
+			)}
+		</React.Fragment>
+	);
+};
+
+const renderFrontMatterForHtml = ({
 	updatedDateString,
 	publishedDateString,
+	primaryCollectionTitle,
 	doi,
-	licenseSlug,
+	title,
+	communityTitle,
+	accentColor,
 	attributions,
+	licenseSlug,
 }) => {
 	const showUpdatedDate = updatedDateString && updatedDateString !== publishedDateString;
 	const affiliations = [
 		...new Set(attributions.map((attr) => attr.affiliation).filter((x) => x)),
 	];
+	const communityAndCollectionString =
+		communityTitle + (primaryCollectionTitle ? bullet + primaryCollectionTitle : '');
 	const license = getLicenseBySlug(licenseSlug);
 	return (
-		<React.Fragment>
+		<section className="cover">
+			<h3 className="community-and-collection">{communityAndCollectionString}</h3>
+			<h1 className="title" style={{ color: accentColor }}>
+				{title}
+			</h1>
 			{attributions.length > 0 && (
 				<div className="byline">
 					<h3>
@@ -173,44 +228,13 @@ const renderSharedFrontMatter = ({
 				)}
 				{license && (
 					<div>
-						<strong>License: </strong>{' '}
+						<strong>License:</strong>{' '}
 						<a href={license.link}>
 							{license.full} ({license.slug.toUpperCase()} {license.version})
 						</a>
 					</div>
 				)}
 			</div>
-		</React.Fragment>
-	);
-};
-
-const renderFrontMatterForPandoc = (
-	{ primaryCollectionTitle, communityTitle },
-	sharedFrontMatter,
-) => {
-	const communityAndCollectionString =
-		communityTitle + (primaryCollectionTitle ? bullet + primaryCollectionTitle : '');
-	return (
-		<React.Fragment>
-			<h3>{communityAndCollectionString}</h3>
-			{sharedFrontMatter}
-		</React.Fragment>
-	);
-};
-
-const renderFrontMatterForHtml = (
-	{ primaryCollectionTitle, title, communityTitle, accentColor },
-	sharedFrontMatter,
-) => {
-	const communityAndCollectionString =
-		communityTitle + (primaryCollectionTitle ? bullet + primaryCollectionTitle : '');
-	return (
-		<section className="cover">
-			<h3 className="community-and-collection">{communityAndCollectionString}</h3>
-			<h1 className="title" style={{ color: accentColor }}>
-				{title}
-			</h1>
-			{sharedFrontMatter}
 		</section>
 	);
 };
@@ -246,8 +270,6 @@ export const createStaticHtml = async (
 		{},
 	);
 
-	const sharedFrontMatter = renderSharedFrontMatter(pubMetadata);
-
 	return ReactDOMServer.renderToStaticMarkup(
 		<html lang="en">
 			<head>
@@ -260,8 +282,8 @@ export const createStaticHtml = async (
 			</head>
 			<body>
 				{targetPandoc
-					? renderFrontMatterForPandoc(pubMetadata, sharedFrontMatter)
-					: renderFrontMatterForHtml(pubMetadata, sharedFrontMatter)}
+					? renderFrontMatterForPandoc(pubMetadata, targetPandoc)
+					: renderFrontMatterForHtml(pubMetadata)}
 				<div className="pub-body-component">
 					<div className="editor Prosemirror">
 						{docContent}

@@ -12,7 +12,8 @@ const dataRoot =
 		: '/usr/local/Cellar/pandoc/2.9.2.1/share/x86_64-osx-ghc-8.8.3/pandoc-2.9.2.1/data';
 
 const createPandocArgs = (pandocTarget, tmpFile, metadataFile) => {
-	const template = pandocTarget === 'jats_archiving';
+	// pandoc inexplicably does not include a default template for docx or odt
+	const template = pandocTarget !== 'docx' && pandocTarget !== 'odt';
 	return [
 		dataRoot && [`--data-dir=${dataRoot}`],
 		['-f', 'html'],
@@ -31,7 +32,6 @@ const createYamlMetadataFile = async (
 		attributions,
 		publishedDateString,
 		licenseSlug,
-		primaryCollectionTitle,
 		primaryCollectionMetadata,
 		communityTitle,
 		doi,
@@ -42,10 +42,10 @@ const createYamlMetadataFile = async (
 	const formattedAttributions = attributions.map((attr) => {
 		if (pandocTarget === 'jats_archiving') {
 			return {
-				surname: attr.user.lastName,
-				'given-names': attr.user.firstName,
-				email: attr.user.publicEmail,
-				orcid: attr.user.orcid,
+				...(attr.user.lastName && { surname: attr.user.lastName }),
+				...(attr.user.firstName && { 'given-names': attr.user.firstName }),
+				...(attr.user.publicEmail && { email: attr.user.publicEmail }),
+				...(attr.user.orcid && { orcid: attr.user.orcid }),
 			};
 		}
 		return attr.user.fullName;
@@ -59,14 +59,14 @@ const createYamlMetadataFile = async (
 		copyright: {
 			text: license.full,
 			type: license.short,
-			link: license.link,
+			...(license.link && { link: license.link }),
 		},
 		article: {
-			issue: primaryCollectionTitle,
-			doi: doi,
+			...(primaryCollectionMetadata.issue && { issue: primaryCollectionMetadata.issue }),
+			...(primaryCollectionMetadata.volume && { volume: primaryCollectionMetadata.volume }),
+			...(doi && { doi: doi }),
 		},
 	});
-	console.log('metadata', primaryCollectionMetadata);
 	const file = await getTmpFileForExtension('yaml');
 	fs.writeFileSync(file.path, metadata);
 	return file;
