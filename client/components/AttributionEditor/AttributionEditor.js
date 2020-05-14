@@ -190,8 +190,8 @@ class AttributionEditor extends Component {
 									hasEmptyState && (
 										<NonIdealState
 											icon="person"
-											title="No attribution yet!"
-											description="Start typing a person's name above to add attribution."
+											title="No contributors yet!"
+											description="Start typing a person's name above to add a contributor."
 										/>
 									)
 								}

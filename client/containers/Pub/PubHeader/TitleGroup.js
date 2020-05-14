@@ -53,6 +53,18 @@ const TitleGroup = (props) => {
 		);
 	};
 
+	const renderBylineEmptyState = () => {
+		if (isRelease || !canManage) {
+			return null;
+		}
+		return (
+			<>
+				<span className="pub-header-themed-secondary">Edit byline</span>
+				{renderBylineEditor()}
+			</>
+		);
+	};
+
 	return (
 		<div className="title-group-component">
 			<EditableHeaderText
@@ -72,7 +84,11 @@ const TitleGroup = (props) => {
 					placeholder="Add a description for this Pub"
 				/>
 			)}
-			<Byline pubData={pubData} renderSuffix={() => !isRelease && renderBylineEditor()} />
+			<Byline
+				pubData={pubData}
+				renderSuffix={() => !isRelease && renderBylineEditor()}
+				renderEmptyState={renderBylineEmptyState}
+			/>
 			{publishedDate && (
 				<div className="published-date">
 					<span className="pub-header-themed-secondary">Published on</span>
