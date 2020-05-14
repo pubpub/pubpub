@@ -2,7 +2,7 @@ import fs from 'fs';
 import nodePandoc from 'node-pandoc';
 import YAML from 'yaml';
 
-import { isProd, isDuqDuq } from 'shared/utils/environment';
+// import { isProd, isDuqDuq } from 'shared/utils/environment';
 import { getTmpFileForExtension } from './util';
 
 const dataRoot = '/app/.apt/usr/share/pandoc/data ';
