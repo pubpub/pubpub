@@ -54,15 +54,10 @@ const TitleGroup = (props) => {
 	};
 
 	const renderBylineEmptyState = () => {
-		if (isRelease || !canManage) {
-			return null;
+		if (canManage && !isRelease) {
+			return <span className="pub-header-themed-secondary">Edit byline</span>;
 		}
-		return (
-			<>
-				<span className="pub-header-themed-secondary">Edit byline</span>
-				{renderBylineEditor()}
-			</>
-		);
+		return null;
 	};
 
 	return (

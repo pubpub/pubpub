@@ -62,7 +62,6 @@ const Byline = (props) => {
 						</span>
 					);
 				})}
-				{renderSuffix && renderSuffix()}
 			</>
 		);
 	};
@@ -72,6 +71,7 @@ const Byline = (props) => {
 			<span className="text-wrapper">
 				{authors.length > 0 && renderContent()}
 				{authors.length === 0 && renderEmptyState()}
+				{renderSuffix && renderSuffix()}
 			</span>
 		</div>
 	);
