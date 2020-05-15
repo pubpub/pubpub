@@ -146,7 +146,7 @@ const ControlsFootnoteCitation = (props) => {
 
 		return (
 			<>
-				<div className="title">Inline content</div>
+				<div className="title">Inline format</div>
 				<InlineLabelEditor
 					defaultLabel={defaultLabel}
 					customLabel={customLabel}

@@ -13,7 +13,7 @@ const propTypes = {
 const InlineLabelEditor = (props) => {
 	const { customLabel, defaultLabel, onUpdateCustomLabel } = props;
 	const [usingCustomLabel, setUsingCustomLabel] = useState(!!customLabel);
-	const buttonLabel = usingCustomLabel ? 'Custom' : 'Default';
+	const buttonLabel = usingCustomLabel ? 'Custom' : 'Pub default';
 
 	const handleSelectDefault = () => {
 		setUsingCustomLabel(false);
