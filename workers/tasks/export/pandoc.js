@@ -1,28 +1,21 @@
+import path from 'path';
 import fs from 'fs';
 import nodePandoc from 'node-pandoc';
 import YAML from 'yaml';
 
-// import { isProd, isDuqDuq } from 'shared/utils/environment';
 import { getLicenseBySlug } from 'shared/license';
 import { getTmpFileForExtension } from './util';
 
-// This is assuming a brew installation of pandoc locally
-/* const dataRoot =
-	isProd() || isDuqDuq()
-		? '/app/.apt/usr/share/pandoc/data'
-		: '/usr/local/Cellar/pandoc/2.9.2.1/share/x86_64-osx-ghc-8.8.3/pandoc-2.9.2.1/data'; */
+const dataRoot = path.dirname('templates');
 
 const createPandocArgs = (pandocTarget, tmpFile, metadataFile) => {
 	// pandoc inexplicably does not include a default template for docx or odt
-	// const template = pandocTarget !== 'docx' && pandocTarget !== 'odt';
+	const template = pandocTarget !== 'docx' && pandocTarget !== 'odt';
 	return [
-		// dataRoot && [`--data-dir=${dataRoot}`],
 		['-f', 'html'],
 		['-t', pandocTarget],
 		['-o', tmpFile.path],
-		['-D'],
-		// template && [`--template=${dataRoot}/templates/default.${pandocTarget}`],
-		// ['-D'],
+		template && [`--template=${dataRoot}/templates/default.${pandocTarget}`],
 		metadataFile && [`--metadata-file=${metadataFile.path}`],
 	]
 		.filter((x) => x)
