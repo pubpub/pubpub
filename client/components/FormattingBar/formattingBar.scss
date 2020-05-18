@@ -17,7 +17,7 @@
 @mixin hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
-    &::-webkit-scrollbar { 
+    &::-webkit-scrollbar {
         display: none;
     }
 }
@@ -161,7 +161,7 @@
         z-index: 2;
     }
     &.full-screen-width:not(.floating) {
-        width: 100vw;
+        width: 100%;
     }
     textarea, .minimal-editor-component {
         border-radius: 4px;

@@ -72,6 +72,9 @@ $mobile-bottom-buttons-spacing: 10px;
 
     .row > .pub-header-column {
         position: relative;
+        width: 100%;
+        margin-left: 0px;
+        margin-right: 0px;
         margin-top: $header-margin-top;
         margin-bottom: $header-margin-bottom;
         @include mobile {
@@ -132,7 +135,7 @@ $mobile-bottom-buttons-spacing: 10px;
     .pub-header-content-component {
         display: grid;
         grid-template-rows: $top-bar-total-height auto auto;
-        grid-template-columns: 1fr 120px;
+        grid-template-columns: 1fr 200px;
         grid-template-areas:
             'top top'
             'middle-left middle-right'

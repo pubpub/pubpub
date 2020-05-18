@@ -33,23 +33,25 @@ const PubHeaderFormatting = (props) => {
 
 	return (
 		<div className={classNames('pub-draft-header-component', disabled && 'disabled')}>
-			<FormattingBar
-				buttons={buttons.fullButtonSet}
-				editorChangeObject={props.collabData.editorChangeObject || {}}
-				popoverContainerRef={props.editorWrapperRef}
-				footnotes={pubData.footnotes}
-				citations={pubData.citations}
-				citationStyle={pubData.citationStyle}
-				isFullScreenWidth={true}
-			/>
-			<div className="right-content">
-				<PubHeaderCollaborators collabData={props.collabData} />
-				<span className={`collab-status ${collabData.status}`}>
-					{collabData.status}
-					{collabData.status === 'saving' || collabData.status === 'connecting'
-						? '...'
-						: ''}
-				</span>
+			<div className="header-parts">
+				<FormattingBar
+					buttons={buttons.fullButtonSet}
+					editorChangeObject={props.collabData.editorChangeObject || {}}
+					popoverContainerRef={props.editorWrapperRef}
+					footnotes={pubData.footnotes}
+					citations={pubData.citations}
+					citationStyle={pubData.citationStyle}
+					isFullScreenWidth={true}
+				/>
+				<div className="right-content">
+					<PubHeaderCollaborators collabData={props.collabData} />
+					<span className={`collab-status ${collabData.status}`}>
+						{collabData.status}
+						{collabData.status === 'saving' || collabData.status === 'connecting'
+							? '...'
+							: ''}
+					</span>
+				</div>
 			</div>
 		</div>
 	);

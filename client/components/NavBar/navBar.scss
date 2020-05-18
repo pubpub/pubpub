@@ -14,8 +14,10 @@
 		text-decoration: none;
 	}
 	.row [class^='col'] {
+		width: 100%;
 		margin-top: 0em;
 		margin-bottom: 0em;
+		margin: 0px;
 	}
 	.col-12 {
 		display: flex;
