@@ -146,11 +146,12 @@ const renderFrontMatterForPandoc = (
 	},
 	targetPandoc,
 ) => {
+	const pandocFormatsWithoutTemplate = ['docx', 'plain', 'odt'];
 	const communityAndCollectionString =
 		communityTitle + (primaryCollectionTitle ? bullet + primaryCollectionTitle : '');
 	return (
 		<>
-			{(targetPandoc === 'docx' || targetPandoc === 'plain' || targetPandoc === 'odt') && (
+			{pandocFormatsWithoutTemplate.includes(targetPandoc) && (
 				<h3>{communityAndCollectionString}</h3>
 			)}
 			{renderSharedDetails({
