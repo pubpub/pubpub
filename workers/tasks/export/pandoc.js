@@ -6,7 +6,9 @@ import YAML from 'yaml';
 import { getLicenseBySlug } from 'shared/license';
 import { getTmpFileForExtension } from './util';
 
-const dataRoot = path.dirname('templates');
+const getTemplatePath = (pandocTarget) => {
+	return path.join(__dirname, 'templates', `default.${pandocTarget}`);
+};
 
 const createPandocArgs = (pandocTarget, tmpFile, metadataFile) => {
 	// pandoc inexplicably does not include a default template for docx or odt
@@ -15,7 +17,7 @@ const createPandocArgs = (pandocTarget, tmpFile, metadataFile) => {
 		['-f', 'html'],
 		['-t', pandocTarget],
 		['-o', tmpFile.path],
-		template && [`--template=${dataRoot}/templates/default.${pandocTarget}`],
+		template && [`--template=${getTemplatePath(pandocTarget)}`],
 		metadataFile && [`--metadata-file=${metadataFile.path}`],
 	]
 		.filter((x) => x)
