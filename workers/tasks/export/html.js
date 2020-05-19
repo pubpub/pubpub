@@ -108,27 +108,11 @@ const blankIframes = (nodes) =>
 		nodes,
 	);
 
-const renderFrontMatterForPandoc = (
-	{
-		updatedDateString,
-		publishedDateString,
-		communityTitle,
-		primaryCollectionTitle,
-		doi,
-		licenseSlug,
-	},
-	targetPandoc,
-) => {
+const renderSharedDetails = ({ updatedDateString, publishedDateString, doi, licenseSlug }) => {
 	const showUpdatedDate = updatedDateString && updatedDateString !== publishedDateString;
-	const communityAndCollectionString =
-		communityTitle + (primaryCollectionTitle ? bullet + primaryCollectionTitle : '');
 	const license = getLicenseBySlug(licenseSlug);
-
 	return (
-		<React.Fragment>
-			{(targetPandoc === 'docx' || targetPandoc === 'plain' || targetPandoc === 'odt') && (
-				<h3>{communityAndCollectionString}</h3>
-			)}
+		<>
 			{showUpdatedDate && (
 				<div>
 					<strong>Updated on:</strong> {updatedDateString}
@@ -147,7 +131,35 @@ const renderFrontMatterForPandoc = (
 					</a>
 				</div>
 			)}
-		</React.Fragment>
+		</>
+	);
+};
+
+const renderFrontMatterForPandoc = (
+	{
+		updatedDateString,
+		publishedDateString,
+		communityTitle,
+		primaryCollectionTitle,
+		doi,
+		licenseSlug,
+	},
+	targetPandoc,
+) => {
+	const communityAndCollectionString =
+		communityTitle + (primaryCollectionTitle ? bullet + primaryCollectionTitle : '');
+	return (
+		<>
+			{(targetPandoc === 'docx' || targetPandoc === 'plain' || targetPandoc === 'odt') && (
+				<h3>{communityAndCollectionString}</h3>
+			)}
+			{renderSharedDetails({
+				updatedDateString: updatedDateString,
+				publishedDateString: publishedDateString,
+				doi: doi,
+				licenseSlug: licenseSlug,
+			})}
+		</>
 	);
 };
 
@@ -162,13 +174,11 @@ const renderFrontMatterForHtml = ({
 	attributions,
 	licenseSlug,
 }) => {
-	const showUpdatedDate = updatedDateString && updatedDateString !== publishedDateString;
 	const affiliations = [
 		...new Set(attributions.map((attr) => attr.affiliation).filter((x) => x)),
 	];
 	const communityAndCollectionString =
 		communityTitle + (primaryCollectionTitle ? bullet + primaryCollectionTitle : '');
-	const license = getLicenseBySlug(licenseSlug);
 	return (
 		<section className="cover">
 			<h3 className="community-and-collection">{communityAndCollectionString}</h3>
@@ -215,24 +225,12 @@ const renderFrontMatterForHtml = ({
 						<strong>Published on: </strong> {publishedDateString}
 					</div>
 				)}
-				{showUpdatedDate && (
-					<div>
-						<strong>Updated on:</strong> {updatedDateString}
-					</div>
-				)}
-				{doi && (
-					<div>
-						<strong>DOI:</strong> {doi}
-					</div>
-				)}
-				{license && (
-					<div>
-						<strong>License:</strong>{' '}
-						<a href={license.link}>
-							{license.full} ({license.slug.toUpperCase()} {license.version})
-						</a>
-					</div>
-				)}
+				{renderSharedDetails({
+					updatedDateString: updatedDateString,
+					publishedDateString: publishedDateString,
+					doi: doi,
+					licenseSlug: licenseSlug,
+				})}
 			</div>
 		</section>
 	);
