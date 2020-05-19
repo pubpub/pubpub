@@ -39,7 +39,8 @@ figure {
 	}
 }
 
-/* Making this a mixin allows us to import this into pdf export styles directly */
+// These are contained within a mixin so we can avoid applying them in the paged.js exporter, which
+// operates at mobile-like viewports but will fail to paginate when these styles are applied.
 @mixin figure-queries {
 	@media only screen and (max-width: 720px) {
 		figure {
