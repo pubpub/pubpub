@@ -33,7 +33,7 @@ const InlineLabelEditor = (props) => {
 				}}
 				buttonContent={buttonLabel}
 			>
-				<MenuItem text="Default" onClick={handleSelectDefault} />
+				<MenuItem text="Pub default" onClick={handleSelectDefault} />
 				<MenuItem text="Custom" onClick={handleSelectCustom} />
 			</MenuButton>
 			<InputGroup
