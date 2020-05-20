@@ -40,6 +40,7 @@ const propTypes = {
 	isTranslucent: PropTypes.bool,
 	isFullScreenWidth: PropTypes.bool,
 	citationStyle: PropTypes.string,
+	citationInlineStyle: PropTypes.string,
 };
 
 const defaultProps = {
@@ -48,6 +49,7 @@ const defaultProps = {
 	isSmall: false,
 	isFullScreenWidth: false,
 	citationStyle: 'apa',
+	citationInlineStyle: 'count',
 };
 
 const useControlsKey = (latestDomEvent) => {
@@ -119,6 +121,7 @@ const FormattingBar = (props) => {
 		isTranslucent,
 		isFullScreenWidth,
 		citationStyle,
+		citationInlineStyle,
 	} = props;
 	const { menuItems, insertFunctions, view } = editorChangeObject;
 	const { communityData } = usePageContext();
@@ -282,6 +285,7 @@ const FormattingBar = (props) => {
 							onClose={onClose}
 							isSmall={isSmall}
 							citationStyle={citationStyle}
+							citationInlineStyle={citationInlineStyle}
 						/>
 					)}
 				</FormattingBarPopover>
