@@ -28,8 +28,7 @@ export default {
 		],
 		toDOM: (node) => {
 			const { href, id, count, customLabel } = node.attrs;
-			const { citationsRef } = node.type.spec.defaultOptions;
-			const { citationInlineStyle } = node.type.spec.defaultOptions;
+			const { citationsRef, citationInlineStyle } = node.type.spec.defaultOptions;
 			/*	There is a two-fold approach here. toDOM will render the
 				citations from citationsRef so that server-side and PDF rendering will function as
 				intended (that is, take the citationInlineStyle regardless of node.attrs.label).
