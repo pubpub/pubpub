@@ -40,6 +40,7 @@ const PubHeaderFormatting = (props) => {
 				footnotes={pubData.footnotes}
 				citations={pubData.citations}
 				citationStyle={pubData.citationStyle}
+				citationInlineStyle={pubData.citationInlineStyle}
 				isFullScreenWidth={true}
 			/>
 			<div className="right-content">

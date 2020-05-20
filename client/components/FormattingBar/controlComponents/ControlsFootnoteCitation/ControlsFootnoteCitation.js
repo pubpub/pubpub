@@ -35,6 +35,7 @@ const propTypes = {
 		}),
 	}).isRequired,
 	citationStyle: PropTypes.string.isRequired,
+	citationInlineStyle: PropTypes.string.isRequired,
 };
 
 const unwrapPendingAttrs = (pendingAttrs, isFootnote) => {
@@ -68,7 +69,7 @@ const wrapUpdateAttrs = (updateAttrs, isFootnote) => {
 };
 
 const ControlsFootnoteCitation = (props) => {
-	const { editorChangeObject, onClose, pendingAttrs, citationStyle } = props;
+	const { editorChangeObject, onClose, pendingAttrs, citationStyle, citationInlineStyle } = props;
 	const { selectedNode } = editorChangeObject;
 	const { count } = selectedNode.attrs;
 	const { citations = [] } = usePubData();
@@ -151,6 +152,7 @@ const ControlsFootnoteCitation = (props) => {
 					defaultLabel={defaultLabel}
 					customLabel={customLabel}
 					onUpdateCustomLabel={(label) => updateAttrs({ customLabel: label })}
+					citationInlineStyle={citationInlineStyle}
 				/>
 			</>
 		);

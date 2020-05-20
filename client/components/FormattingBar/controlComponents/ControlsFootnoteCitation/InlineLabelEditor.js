@@ -4,16 +4,26 @@ import { ControlGroup, InputGroup } from '@blueprintjs/core';
 
 import { MenuButton, MenuItem } from 'components/Menu';
 
+require('./inlineLabelEditor.scss');
+
 const propTypes = {
 	customLabel: PropTypes.string.isRequired,
 	defaultLabel: PropTypes.func.isRequired,
 	onUpdateCustomLabel: PropTypes.func.isRequired,
+	citationInlineStyle: PropTypes.string.isRequired,
 };
 
 const InlineLabelEditor = (props) => {
-	const { customLabel, defaultLabel, onUpdateCustomLabel } = props;
+	const { customLabel, defaultLabel, onUpdateCustomLabel, citationInlineStyle } = props;
 	const [usingCustomLabel, setUsingCustomLabel] = useState(!!customLabel);
-	const buttonLabel = usingCustomLabel ? 'Custom' : 'Pub default';
+	const citationInlineStyleStrings = {
+		count: 'Pub default: [count]',
+		authorYear: 'Pub default: (Author, Year)',
+		author: 'Pub default: (Author)',
+		label: 'Pub default: (Label)',
+	};
+	const citationInlineStyleString = citationInlineStyleStrings[citationInlineStyle];
+	const buttonLabel = usingCustomLabel ? 'Custom' : citationInlineStyleString;
 
 	const handleSelectDefault = () => {
 		setUsingCustomLabel(false);
@@ -33,7 +43,7 @@ const InlineLabelEditor = (props) => {
 				}}
 				buttonContent={buttonLabel}
 			>
-				<MenuItem text="Default" onClick={handleSelectDefault} />
+				<MenuItem text={citationInlineStyleString} onClick={handleSelectDefault} />
 				<MenuItem text="Custom" onClick={handleSelectCustom} />
 			</MenuButton>
 			<InputGroup
