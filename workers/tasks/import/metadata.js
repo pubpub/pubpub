@@ -13,13 +13,13 @@ export const getProposedMetadata = async (meta) => {
 	}
 	if (author && Array.isArray(author.content)) {
 		const authorNames = author.content.map(metaValueToString);
-		const attributions = await Promise.all(
+		const authors = await Promise.all(
 			authorNames.map(async (authorName) => {
 				const users = await getSearchUsers(authorName);
 				return { name: authorName, users: users.map((user) => user.toJSON()) };
 			}),
 		);
-		proposedMetadata.attributions = attributions;
+		proposedMetadata.authors = authors;
 	}
 	return proposedMetadata;
 };

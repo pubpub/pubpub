@@ -18,13 +18,15 @@ import {
 	Tooltip,
 } from '@blueprintjs/core';
 
+import { MenuConfigProvider } from 'components/Menu';
 import { apiFetch } from 'utils';
 import { pingTask } from 'utils/pingTask';
 
-import FileImportEntry from './FileImportEntry';
 import { useFileManager } from './useFileManager';
 import { extensionToPandocFormat, bibliographyFormats } from './formats';
 import { importDocToEditor } from './importDocToEditor';
+import FileImportEntry from './FileImportEntry';
+import MetadataEditor from './MetadataEditor';
 
 require('./fileImportDialog.scss');
 
@@ -63,13 +65,17 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 	const importedFilesMatchCurrentFiles =
 		!!importResult && lastImportedFiles === getFingerprintOfImportedFiles(currentFiles);
 	const isImportDisabled = !hasDocumentToImport || incompleteUploads.length > 0 || isImporting;
-	const { doc, warnings = [], error } = importResult;
+	const { doc, warnings = [], error, proposedMetadata } = importResult;
 
 	useKeyPressEvent('/', (evt) => {
 		if (evt.metaKey) {
 			setIsNerdModeShown(true);
 		}
 	});
+
+	const handleClearImportResult = () => {
+		setImportResult({});
+	};
 
 	const handleFinishImport = () => {
 		importDocToEditor(editorChangeObject.view, doc, updateLocalData);
@@ -193,6 +199,7 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 								</li>
 							)}
 						</ul>
+						<Button onClick={handleClearImportResult}>Add more files</Button>
 					</Callout>
 				);
 			}
@@ -249,79 +256,100 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 		);
 	};
 
-	return (
-		<Drawer
-			className="file-import-dialog-component"
-			title="Import to Pub"
-			isOpen={isOpen}
-			onClose={onClose}
-			onClosed={onClosed}
-			canOutsideClickClose={false}
-		>
-			<div className={Classes.DRAWER_BODY}>
-				<div className={Classes.DIALOG_BODY}>
-					{!isImporting && (
-						<ButtonGroup className="drop-area-container" vertical>
-							{renderContentInDropzone(({ getRootProps, getInputProps }) => (
-								<React.Fragment>
-									<Button {...getRootProps()} className="file-drop-area">
-										<NonIdealState
-											icon="paperclip"
-											description={
-												<React.Fragment>
-													Click here or drag in files to upload them
-													<div className="supported-formats">
-														{renderFormatTooltip()}
-													</div>
-												</React.Fragment>
-											}
-										/>
-									</Button>
-									<input {...getInputProps()} multiple />
-								</React.Fragment>
-							))}
-							{renderContentInDropzone(({ getRootProps, getInputProps }) => (
-								<React.Fragment>
-									<input {...getInputProps()} webkitdirectory="" />
-									<Button
-										{...getRootProps()}
-										className="directory-drop-area"
-										text="Or, click here to upload an entire directory"
-									/>
-								</React.Fragment>
-							))}
-						</ButtonGroup>
-					)}
-					{isImporting && (
-						<div className="in-progress">
-							<Spinner size={50} className="drop-area-icon" />
-							<span aria-live="assertive">Importing your document...</span>
-						</div>
-					)}
-					{!isImporting && renderImportResult()}
-					<div className="files-listing">
-						<div className="screenreader-only" aria-live="polite">
-							{incompleteUploads.length > 0
-								? `${currentFiles.length - incompleteUploads.length} of ${
-										currentFiles.length
-								  } files uploaded.`
-								: `${currentFiles.length} files uploaded.`}
-						</div>
-						{currentFiles.map((file, index) => (
-							<FileImportEntry
-								// eslint-disable-next-line react/no-array-index-key
-								key={index}
-								file={file}
-								onDelete={() => deleteFileById(file.id)}
-								onLabelFile={(label) => labelFileById(file.id, label)}
-							/>
-						))}
-					</div>
+	const maybeRenderDropArea = () => {
+		if (doc) {
+			return null;
+		}
+		if (isImporting) {
+			return (
+				<div className="in-progress">
+					<Spinner size={50} className="drop-area-icon" />
+					<span aria-live="assertive">Importing your document...</span>
 				</div>
+			);
+		}
+		return (
+			<ButtonGroup className="drop-area-container" vertical>
+				{renderContentInDropzone(({ getRootProps, getInputProps }) => (
+					<React.Fragment>
+						<Button {...getRootProps()} className="file-drop-area">
+							<NonIdealState
+								icon="paperclip"
+								description={
+									<React.Fragment>
+										Click here or drag in files to upload them
+										<div className="supported-formats">
+											{renderFormatTooltip()}
+										</div>
+									</React.Fragment>
+								}
+							/>
+						</Button>
+						<input {...getInputProps()} multiple />
+					</React.Fragment>
+				))}
+				{renderContentInDropzone(({ getRootProps, getInputProps }) => (
+					<React.Fragment>
+						<input {...getInputProps()} webkitdirectory="" />
+						<Button
+							{...getRootProps()}
+							className="directory-drop-area"
+							text="Or, click here to upload an entire directory"
+						/>
+					</React.Fragment>
+				))}
+			</ButtonGroup>
+		);
+	};
+
+	const renderFileListing = () => {
+		return (
+			<div className="files-listing">
+				<div className="screenreader-only" aria-live="polite">
+					{incompleteUploads.length > 0
+						? `${currentFiles.length - incompleteUploads.length} of ${
+								currentFiles.length
+						  } files uploaded.`
+						: `${currentFiles.length} files uploaded.`}
+				</div>
+				{currentFiles.map((file, index) => (
+					<FileImportEntry
+						// eslint-disable-next-line react/no-array-index-key
+						key={index}
+						file={file}
+						onDelete={() => deleteFileById(file.id)}
+						onLabelFile={(label) => labelFileById(file.id, label)}
+					/>
+				))}
 			</div>
+		);
+	};
+
+	const maybeRenderMetadataEditor = () => {
+		if (!proposedMetadata || Object.keys(proposedMetadata).length === 0) {
+			return null;
+		}
+		return (
+			<>
+				<p className="metadata-info">
+					Some metadata was found in the imported document that you may wish to apply to
+					your Pub. You can always change these values later.
+				</p>
+				<MetadataEditor proposedMetadata={proposedMetadata} />
+			</>
+		);
+	};
+
+	const renderFooter = () => {
+		return (
 			<div className={classNames(Classes.DRAWER_FOOTER, 'dialog-footer')}>
 				{renderNerdMode()}
 				<Button onClick={onClose}>Cancel</Button>
+				{doc && (
+					<Button onClick={handleClearImportResult} icon="chevron-left">
+						Add files
+					</Button>
+				)}
 				{(!doc || !importedFilesMatchCurrentFiles) && (
 					<Button
 						intent="primary"
@@ -343,6 +371,29 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 					</Button>
 				)}
 			</div>
+		);
+	};
+
+	return (
+		<Drawer
+			className="file-import-dialog-component"
+			title="Import to Pub"
+			isOpen={isOpen}
+			onClose={onClose}
+			onClosed={onClosed}
+			canOutsideClickClose={false}
+		>
+			<MenuConfigProvider config={{ usePortal: false }}>
+				<div className={Classes.DRAWER_BODY}>
+					<div className={Classes.DIALOG_BODY}>
+						{maybeRenderDropArea()}
+						{!isImporting && renderImportResult()}
+						{!doc && renderFileListing()}
+						{maybeRenderMetadataEditor()}
+					</div>
+				</div>
+				{renderFooter()}
+			</MenuConfigProvider>
 		</Drawer>
 	);
 };
