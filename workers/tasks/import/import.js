@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 import path from 'path';
 import { spawnSync } from 'child_process';
-import { parsePandocJson, fromPandoc } from '@pubpub/prosemirror-pandoc';
+import { parsePandocJson, fromPandoc, setPandocApiVersion } from '@pubpub/prosemirror-pandoc';
 
 import pandocRules from './rules';
 import { buildTmpDirectory } from './tmpDirectory';
@@ -11,13 +11,15 @@ import { extensionFor } from './util';
 import { runTransforms } from './transforms/runTransforms';
 import { getProposedMetadata } from './metadata';
 
+setPandocApiVersion([1, 20]);
+
 export const extensionToPandocFormat = {
 	docx: 'docx',
 	epub: 'epub',
 	html: 'html',
 	md: 'markdown',
 	odt: 'odt',
-	txt: 'plain',
+	txt: 'markdown_strict',
 	xml: 'jats',
 	tex: 'latex',
 };
@@ -142,6 +144,7 @@ const importFiles = async ({ sourceFiles, importerFlags = {} }) => {
 			getBibliographyItemById,
 			warnings,
 		),
+		useSmartQuotes: !importerFlags.keepStraightQuotes,
 	}).asNode();
 	const proposedMetadata = await getProposedMetadata(pandocAst.meta);
 	return { doc: prosemirrorDoc, warnings: warnings, proposedMetadata: proposedMetadata };
