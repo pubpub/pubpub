@@ -2,14 +2,14 @@
     .field-entry {
         margin-bottom: 10px;
     }
-    .proposed-author {
+    .proposed-attribution {
         display: flex;
         align-items: center;
         margin-bottom: 4px;
         .avatar-component {
             margin-right: 4px;
         }
-        .author-name {
+        .name {
             flex-grow: 1;
             &.ignored {
                 text-decoration: line-through;

@@ -44,7 +44,7 @@ const FileImportEntry = (props) => {
 			);
 		}
 		if (state === 'waiting') {
-			return 'Ready to upload';
+			return 'Preparing to upload';
 		}
 		return (
 			<React.Fragment>
