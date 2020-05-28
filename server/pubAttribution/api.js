@@ -52,7 +52,9 @@ app.post(
 				),
 		);
 
-		return res.status(201).json(newAttributions);
+		return res
+			.status(201)
+			.json([...existingAttributions, ...newAttributions].sort((a, b) => a.order - b.order));
 	}),
 );
 
