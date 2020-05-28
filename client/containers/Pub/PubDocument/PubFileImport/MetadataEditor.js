@@ -59,13 +59,25 @@ const ProposedAttribution = ({ attribution, onUpdateAttribution }) => {
 
 		return (
 			<MenuButton
-				aria-label="Match  to PubPub user"
+				aria-label="Match to PubPub user"
 				buttonProps={{
 					minimal: true,
 					small: true,
 					rightIcon: 'chevron-down',
+					icon: (
+						<span className="matched-users-avatars">
+							{users.slice(0, 3).map((user) => (
+								<Avatar
+									width={20}
+									avatar={user.avatar}
+									borderColor="white"
+									doesOverlap={true}
+								/>
+							))}
+						</span>
+					),
 				}}
-				buttonContent="Match user"
+				buttonContent={`${users.length} matching ${users.length === 1 ? 'user' : 'users'}`}
 				placement="bottom-end"
 			>
 				{users.map((user) => (

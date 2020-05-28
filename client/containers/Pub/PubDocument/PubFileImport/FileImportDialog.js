@@ -64,7 +64,7 @@ const FileImportDialog = ({ editorChangeObject, updatePubData, isOpen, onClose, 
 	const [isFinalizing, setIsFinishing] = useState(false);
 	const [isNerdModeShown, setIsNerdModeShown] = useState(false);
 	const [lastImportedFilesFingerprint, setLastImportedFilesFingerprint] = useState('');
-	const [metadataUpdater, setMetadataUpdater] = useState(() => {});
+	const [metadataUpdater, setMetadataUpdater] = useState(null);
 
 	const importedFilesMatchCurrentFiles =
 		!!importResult &&
@@ -82,12 +82,14 @@ const FileImportDialog = ({ editorChangeObject, updatePubData, isOpen, onClose, 
 
 	const handleClearImportResult = () => {
 		setImportResult({});
-		setMetadataUpdater(() => {});
+		setMetadataUpdater(null);
 	};
 
 	const handleFinishImport = async () => {
 		setIsFinishing(true);
-		await metadataUpdater();
+		if (metadataUpdater) {
+			await metadataUpdater();
+		}
 		importDocToEditor(editorChangeObject.view, doc, updatePubData);
 		onClose();
 	};
