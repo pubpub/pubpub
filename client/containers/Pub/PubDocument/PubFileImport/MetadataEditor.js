@@ -154,14 +154,24 @@ const MetadataEditor = (props) => {
 	}, [proposedMetadata]);
 
 	useEffect(() => {
-		onSetMetadataUpdater(() => async () => {
+		const persistUpdatedPubData = async () => {
 			const updatedPubData = {};
 			Object.keys(pubFields).forEach((key) => {
 				if (!ignoredFields[key]) {
 					updatedPubData[key] = pubFields[key];
 				}
 			});
-			updatePubData(updatedPubData);
+			if (Object.keys(updatedPubData).length > 0) {
+				await apiFetch.put('/api/pubs', {
+					pubId: pubData.id,
+					communityId: communityData.id,
+					...updatedPubData,
+				});
+				updatePubData(updatedPubData);
+			}
+		};
+
+		const persistPubAttributions = async () => {
 			if (attributions) {
 				const newAttributions = attributions
 					.filter((attr) => !attr.ignored)
@@ -181,7 +191,11 @@ const MetadataEditor = (props) => {
 					updatePubData({ attributions: updatedAttributions });
 				}
 			}
-		});
+		};
+
+		onSetMetadataUpdater(() => () =>
+			Promise.all([persistUpdatedPubData(), persistPubAttributions()]),
+		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [ignoredFields, metadata]);
 
