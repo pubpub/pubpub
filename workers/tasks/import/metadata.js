@@ -1,6 +1,6 @@
 import { metaValueToString } from '@pubpub/prosemirror-pandoc';
 
-import { getSearchUsers } from '../../../server/search/queries';
+import { getSearchUsers } from 'server/search/queries';
 
 export const getProposedMetadata = async (meta) => {
 	const { title, subtitle, author } = meta;
@@ -15,7 +15,7 @@ export const getProposedMetadata = async (meta) => {
 		const authorNames = author.content.map(metaValueToString);
 		const attributions = await Promise.all(
 			authorNames.map(async (authorName) => {
-				const users = await getSearchUsers(authorName);
+				const users = await getSearchUsers(authorName, null);
 				return { name: authorName, users: users.map((user) => user.toJSON()) };
 			}),
 		);
