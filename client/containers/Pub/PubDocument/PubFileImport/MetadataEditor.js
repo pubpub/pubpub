@@ -161,18 +161,25 @@ const MetadataEditor = (props) => {
 					updatedPubData[key] = pubFields[key];
 				}
 			});
-			const newAttributions = attributions
-				.filter((attr) => !attr.ignored)
-				.map(({ name, matchedUser }) => {
-					return { name: name, userId: matchedUser && matchedUser.id, isAuthor: true };
-				});
-			if (newAttributions.length > 0) {
-				const updatedAttributions = await apiFetch.post('/api/pubAttributions/batch', {
-					communityId: communityData.id,
-					pubId: pubData.id,
-					attributions: newAttributions,
-				});
-				updatePubData({ ...updatedPubData, attributions: updatedAttributions });
+			updatePubData(updatedPubData);
+			if (attributions) {
+				const newAttributions = attributions
+					.filter((attr) => !attr.ignored)
+					.map(({ name, matchedUser }) => {
+						return {
+							name: name,
+							userId: matchedUser && matchedUser.id,
+							isAuthor: true,
+						};
+					});
+				if (newAttributions.length > 0) {
+					const updatedAttributions = await apiFetch.post('/api/pubAttributions/batch', {
+						communityId: communityData.id,
+						pubId: pubData.id,
+						attributions: newAttributions,
+					});
+					updatePubData({ attributions: updatedAttributions });
+				}
 			}
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
