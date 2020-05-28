@@ -34,7 +34,7 @@ const propTypes = {
 	editorChangeObject: PropTypes.shape({
 		view: PropTypes.shape({}),
 	}).isRequired,
-	updateLocalData: PropTypes.func.isRequired,
+	updatePubData: PropTypes.func.isRequired,
 	isOpen: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
 	onClosed: PropTypes.func.isRequired,
@@ -52,20 +52,27 @@ const getFingerprintOfImportedFiles = (currentFiles) =>
 		.sort((a, b) => a - b)
 		.join('___');
 
-const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose, onClosed }) => {
+const FileImportDialog = ({ editorChangeObject, updatePubData, isOpen, onClose, onClosed }) => {
 	const { addFile, getFiles, deleteFileById, labelFileById } = useFileManager();
 	const currentFiles = getFiles();
 	const incompleteUploads = currentFiles.filter((file) => file.state !== 'complete');
 	const hasDocumentToImport = currentFiles.some((file) => file.label === 'document');
+
+	const [importerFlags, setImporterFlags] = useState({});
 	const [importResult, setImportResult] = useState({});
 	const [isImporting, setIsImporting] = useState(false);
-	const [lastImportedFiles, setLastImportedFiles] = useState('');
-	const [importerFlags, setImporterFlags] = useState({});
+	const [isFinalizing, setIsFinishing] = useState(false);
 	const [isNerdModeShown, setIsNerdModeShown] = useState(false);
+	const [lastImportedFilesFingerprint, setLastImportedFilesFingerprint] = useState('');
+	const [metadataUpdater, setMetadataUpdater] = useState(() => {});
+
 	const importedFilesMatchCurrentFiles =
-		!!importResult && lastImportedFiles === getFingerprintOfImportedFiles(currentFiles);
+		!!importResult &&
+		lastImportedFilesFingerprint === getFingerprintOfImportedFiles(currentFiles);
+
 	const isImportDisabled = !hasDocumentToImport || incompleteUploads.length > 0 || isImporting;
 	const { doc, warnings = [], error, proposedMetadata } = importResult;
+	const hasProposedMetadata = proposedMetadata && Object.keys(proposedMetadata).length > 0;
 
 	useKeyPressEvent('/', (evt) => {
 		if (evt.metaKey) {
@@ -75,10 +82,13 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 
 	const handleClearImportResult = () => {
 		setImportResult({});
+		setMetadataUpdater(() => {});
 	};
 
-	const handleFinishImport = () => {
-		importDocToEditor(editorChangeObject.view, doc, updateLocalData);
+	const handleFinishImport = async () => {
+		setIsFinishing(true);
+		await metadataUpdater();
+		importDocToEditor(editorChangeObject.view, doc, updatePubData);
 		onClose();
 	};
 
@@ -96,7 +106,7 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 			.then((result) => {
 				setIsImporting(false);
 				setImportResult(result);
-				setLastImportedFiles(getFingerprintOfImportedFiles(currentFiles));
+				setLastImportedFilesFingerprint(getFingerprintOfImportedFiles(currentFiles));
 			})
 			.catch((err) =>
 				setImportResult({ error: { message: err.toString(), stack: err.stack } }),
@@ -256,10 +266,7 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 		);
 	};
 
-	const maybeRenderDropArea = () => {
-		if (doc) {
-			return null;
-		}
+	const renderDropArea = () => {
 		if (isImporting) {
 			return (
 				<div className="in-progress">
@@ -325,17 +332,18 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 		);
 	};
 
-	const maybeRenderMetadataEditor = () => {
-		if (!proposedMetadata || Object.keys(proposedMetadata).length === 0) {
-			return null;
-		}
+	const renderMetadataEditor = () => {
 		return (
 			<>
 				<p className="metadata-info">
 					Some metadata was found in the imported document that you may wish to apply to
 					your Pub. You can always change these values later.
 				</p>
-				<MetadataEditor proposedMetadata={proposedMetadata} />
+				<MetadataEditor
+					proposedMetadata={proposedMetadata}
+					onSetMetadataUpdater={setMetadataUpdater}
+					updatePubData={updatePubData}
+				/>
 			</>
 		);
 	};
@@ -345,7 +353,7 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 			<div className={classNames(Classes.DRAWER_FOOTER, 'dialog-footer')}>
 				{renderNerdMode()}
 				<Button onClick={onClose}>Cancel</Button>
-				{doc && (
+				{hasProposedMetadata && (
 					<Button onClick={handleClearImportResult} icon="chevron-left">
 						Add files
 					</Button>
@@ -366,6 +374,7 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 						icon="tick"
 						onClick={handleFinishImport}
 						disabled={isImporting}
+						loading={isFinalizing}
 					>
 						Complete import
 					</Button>
@@ -386,10 +395,10 @@ const FileImportDialog = ({ editorChangeObject, updateLocalData, isOpen, onClose
 			<MenuConfigProvider config={{ usePortal: false }}>
 				<div className={Classes.DRAWER_BODY}>
 					<div className={Classes.DIALOG_BODY}>
-						{maybeRenderDropArea()}
+						{!hasProposedMetadata && renderDropArea()}
 						{!isImporting && renderImportResult()}
-						{!doc && renderFileListing()}
-						{maybeRenderMetadataEditor()}
+						{!hasProposedMetadata && renderFileListing()}
+						{hasProposedMetadata && renderMetadataEditor()}
 					</div>
 				</div>
 				{renderFooter()}
