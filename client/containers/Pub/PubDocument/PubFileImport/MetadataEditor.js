@@ -8,6 +8,7 @@ import { usePageContext } from 'utils/hooks';
 import { Avatar } from 'components';
 import { MenuButton, MenuItem } from 'components/Menu';
 import { profileUrl } from 'shared/utils/canonicalUrls';
+import { getPartsOfFullName } from 'shared/utils/names';
 import { usePubContext } from '../../pubHooks';
 
 require('./metadataEditor.scss');
@@ -22,15 +23,6 @@ const propTypes = {
 	proposedMetadata: PropTypes.shape({
 		attributions: PropTypes.arrayOf(attributionShape),
 	}).isRequired,
-};
-
-const guessInitials = (name) => {
-	const firstName = name
-		.split(' ')
-		.slice(0, -1)
-		.join(' ');
-	const lastName = name.split(' ').pop();
-	return firstName.charAt(0) + lastName.charAt(0);
 };
 
 const ProposedAttribution = ({ attribution, onUpdateAttribution }) => {
@@ -83,7 +75,7 @@ const ProposedAttribution = ({ attribution, onUpdateAttribution }) => {
 				{users.map((user) => (
 					<MenuItem
 						text={user.fullName}
-						icon={<Avatar width={20} avatar={user.avatar} />}
+						icon={<Avatar width={20} avatar={user.avatar} initials={user.initials} />}
 						key={user.id}
 						onClick={() => onUpdateAttribution({ matchedUser: user })}
 					/>
@@ -123,7 +115,7 @@ const ProposedAttribution = ({ attribution, onUpdateAttribution }) => {
 		<div className="proposed-attribution">
 			<Avatar
 				width={20}
-				initials={matchedUser ? matchedUser.initials : guessInitials(name)}
+				initials={matchedUser ? matchedUser.initials : getPartsOfFullName(name)}
 				avatar={matchedUser && matchedUser.avatar}
 			/>
 			<div className={classNames('name', ignored && 'ignored')}>{renderName()}</div>
