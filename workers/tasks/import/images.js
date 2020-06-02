@@ -19,7 +19,3 @@ export const convertFileTypeIfNecessary = async (tmpFilePath) => {
 	}
 	return tmpFilePath;
 };
-
-export const convertImagesInSourceFiles = (sourceFiles) => {
-    return Promise.all(sourceFiles.map(
-}

@@ -17,8 +17,8 @@ function getFullPathsInDir(dir) {
 	return paths;
 }
 
-export const uploadExtractedMedia = async (tmpDir, mediaDirName = 'media') => {
-	const mediaPath = path.join(tmpDir.path, mediaDirName);
+export const uploadExtractedMedia = async (tmpDirPath, mediaDirName = 'media') => {
+	const mediaPath = path.join(tmpDirPath, mediaDirName);
 	if (!fs.existsSync(mediaPath)) {
 		return [];
 	}
