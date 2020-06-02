@@ -1,4 +1,5 @@
 let environment;
+let release;
 
 const PRODUCTION = 'production';
 const DUQDUQ = 'duqduq';
@@ -24,4 +25,11 @@ export const isDuqDuq = () => {
 
 export const isDevelopment = () => {
 	return environment === DEVELOPMENT;
+};
+
+export const setRelease = (releaseHash) => {
+	release = releaseHash;
+};
+export const getRelease = () => {
+	return release;
 };
