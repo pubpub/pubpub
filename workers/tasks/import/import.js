@@ -4,7 +4,7 @@ import { spawnSync } from 'child_process';
 import { parsePandocJson, fromPandoc, setPandocApiVersion } from '@pubpub/prosemirror-pandoc';
 
 import pandocRules from './rules';
-import { buildTmpDirectory } from './tmpDirectory';
+import { downloadAndConvertFiles } from './download';
 import { extractBibliographyItems } from './bibliography';
 import { uploadExtractedMedia } from './extractedMedia';
 import { extensionFor } from './util';
@@ -117,7 +117,7 @@ const importFiles = async ({ sourceFiles, importerFlags = {} }) => {
 	if (!pandocFormat) {
 		throw new Error(`Cannot find Pandoc format for .${extension} file.`);
 	}
-	const { tmpDir, getTmpPathByLocalPath } = await buildTmpDirectory(sourceFiles);
+	const { tmpDir, getTmpPathByLocalPath } = await downloadAndConvertFiles(sourceFiles);
 	let pandocRawAst;
 	let pandocError;
 	try {
