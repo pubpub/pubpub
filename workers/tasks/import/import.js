@@ -59,7 +59,15 @@ const createUrlGetter = (sourceFiles, documentLocalPath) => (resourcePath) => {
 	// Then, try to find a file in the uploads with the same relative path
 	const documentContainer = path.dirname(documentLocalPath);
 	for (const { localPath, url } of sourceFiles) {
-		if (resourcePath === path.relative(documentContainer, localPath)) {
+		const relativePathWithExtension = path.relative(documentContainer, localPath);
+		const relativePathSansExtension = relativePathWithExtension
+			.split('.')
+			.slice(0, -1)
+			.join('.');
+		if (
+			resourcePath === relativePathWithExtension ||
+			resourcePath === relativePathSansExtension
+		) {
 			return url;
 		}
 	}
@@ -139,10 +147,10 @@ const getPandocAst = ({ documentPath, supplementPaths, tmpDirPath, importerFlags
 	return runTransforms(parsePandocJson(pandocRawAst), importerFlags);
 };
 
-const importFiles = async ({ sourceFiles: rawSourceFiles, importerFlags = {} }) => {
+const importFiles = async ({ sourceFiles: clientSourceFiles, importerFlags = {} }) => {
 	const { keepStraightQuotes, skipJatsBibExtraction } = importerFlags;
 	const tmpDirPath = await getTmpDirectoryPath();
-	const sourceFiles = await downloadAndConvertFiles(rawSourceFiles, tmpDirPath);
+	const sourceFiles = await downloadAndConvertFiles(clientSourceFiles, tmpDirPath);
 	const { document, bibliography, supplements } = categorizeSourceFiles(sourceFiles);
 	const pandocAst = getPandocAst({
 		documentPath: document.tmpPath,
