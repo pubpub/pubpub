@@ -59,7 +59,7 @@ export const uploadFileToS3 = (filePath) => {
 			if (err) {
 				reject(err);
 			}
-			resolve({ url: key, localPath: filePath });
+			resolve(key);
 		});
 	});
 };
