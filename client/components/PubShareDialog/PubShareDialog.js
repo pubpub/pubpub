@@ -22,6 +22,7 @@ const propTypes = {
 	pubData: PropTypes.shape({
 		editHash: PropTypes.string,
 		viewHash: PropTypes.string,
+		isRelease: PropTypes.bool,
 		membersData: PropTypes.shape({
 			members: PropTypes.arrayOf(PropTypes.shape({})),
 		}),
@@ -43,10 +44,13 @@ const getHelperText = (activeTargetName, activeTargetType, canModifyMembers) => 
 const AccessHashOptions = (props) => {
 	const { pubData } = props;
 	const { communityData } = usePageContext();
-	const { viewHash, editHash } = pubData;
+	const { viewHash, editHash, isRelease } = pubData;
 
 	const renderHashRow = (label, hash) => {
-		const url = pubUrl(communityData, pubData, { accessHash: hash, isDraft: true });
+		const url = pubUrl(communityData, pubData, {
+			accessHash: hash,
+			isDraft: !isRelease,
+		});
 		return (
 			<ControlGroup className="hash-row">
 				<ClickToCopyButton minimal={false} copyString={url}>
@@ -73,6 +77,7 @@ AccessHashOptions.propTypes = {
 	pubData: PropTypes.shape({
 		editHash: PropTypes.string,
 		viewHash: PropTypes.string,
+		isRelease: PropTypes.bool,
 	}).isRequired,
 };
 
