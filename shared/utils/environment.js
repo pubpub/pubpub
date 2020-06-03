@@ -1,5 +1,5 @@
 let environment;
-let release;
+let appCommit;
 
 const PRODUCTION = 'production';
 const DUQDUQ = 'duqduq';
@@ -27,9 +27,9 @@ export const isDevelopment = () => {
 	return environment === DEVELOPMENT;
 };
 
-export const setRelease = (releaseHash) => {
-	release = releaseHash;
+export const setAppCommit = (appCommitHash) => {
+	appCommit = appCommitHash;
 };
-export const getRelease = () => {
-	return release;
+export const getAppCommit = () => {
+	return appCommit;
 };

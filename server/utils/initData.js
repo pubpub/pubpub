@@ -1,6 +1,6 @@
 import queryString from 'query-string';
 
-import { isProd, isDuqDuq, getRelease } from 'shared/utils/environment';
+import { isProd, isDuqDuq, getAppCommit } from 'shared/utils/environment';
 
 import { getScope, getCommunity, sanitizeCommunity } from './queryHelpers';
 
@@ -31,7 +31,7 @@ export const getInitialData = async (req, isDashboard) => {
 		isBasePubPub: hostname === 'www.pubpub.org',
 		isProd: isProd(),
 		isDuqDuq: isDuqDuq(),
-		release: getRelease(),
+		release: getAppCommit(),
 	};
 
 	/* If basePubPub - return fixed data */

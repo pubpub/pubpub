@@ -6,7 +6,7 @@ import { Worker } from 'worker_threads';
 import amqplib from 'amqplib';
 import * as Sentry from '@sentry/node';
 
-import { isProd, getRelease } from '../shared/utils/environment';
+import { isProd, getAppCommit } from '../shared/utils/environment';
 import { WorkerTask } from '../server/models';
 
 const maxWorkerTimeSeconds = 120;
@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'production') {
 	Sentry.init({
 		dsn: 'https://abe1c84bbb3045bd982f9fea7407efaa@sentry.io/1505439',
 		environment: isProd() ? 'prod' : 'dev',
-		release: getRelease(),
+		release: getAppCommit(),
 	});
 }
 

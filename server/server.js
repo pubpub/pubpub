@@ -8,13 +8,13 @@ import noSlash from 'no-slash';
 import passport from 'passport';
 import * as Sentry from '@sentry/node';
 
-import { setEnvironment, setRelease, isProd, getRelease } from 'shared/utils/environment';
+import { setEnvironment, setAppCommit, isProd, getAppCommit } from 'shared/utils/environment';
 
 import { sequelize, User } from './models';
 import { HTTPStatusError } from './errors';
 
 setEnvironment(process.env.PUBPUB_PRODUCTION, process.env.IS_DUQDUQ);
-setRelease(process.env.HEROKU_SLUG_COMMIT);
+setAppCommit(process.env.HEROKU_SLUG_COMMIT);
 require('shared/utils/serverModuleOverwrite');
 
 // Wrapper for app.METHOD() handlers. Though we need this to properly catch errors in handlers that
@@ -43,7 +43,7 @@ if (process.env.NODE_ENV === 'production') {
 	Sentry.init({
 		dsn: 'https://abe1c84bbb3045bd982f9fea7407efaa@sentry.io/1505439',
 		environment: isProd() ? 'prod' : 'dev',
-		release: getRelease(),
+		release: getAppCommit(),
 	});
 	app.use(Sentry.Handlers.requestHandler({ user: ['id', 'slug'] }));
 	app.use(enforce.HTTPS({ trustProtoHeader: true }));
