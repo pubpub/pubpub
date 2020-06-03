@@ -26,7 +26,7 @@ export const uploadExtractedMedia = async (tmpDirPath, mediaDirName = 'media') =
 		getFullPathsInDir(mediaPath).map(async (unconvertedFilePath) => {
 			const filePath = await convertFileTypeIfNecessary(unconvertedFilePath);
 			const url = await uploadFileToS3(filePath);
-			return { url: url, localPath: filePath };
+			return { url: url, localPath: unconvertedFilePath };
 		}),
 	);
 };
