@@ -110,6 +110,7 @@
 		"js-cookie": "^2.2.0",
 		"json-stable-stringify": "^1.0.1",
 		"jsonpath": "^1.0.2",
+		"jsonwebtoken": "^8.5.1",
 		"katex": "^0.11.1",
 		"keen-analysis": "^3.3.1",
 		"keen-tracking": "^4.4.0",
