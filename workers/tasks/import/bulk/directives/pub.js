@@ -2,7 +2,7 @@ import { createPub as createPubQuery } from 'server/pub/queries';
 import { PubAttribution } from 'server/models';
 
 import { BulkImportError } from '../errors';
-import { expectParentCommunity, getAttributionAttributes, cloneWithKeys } from './util';
+import { getAttributionAttributes, cloneWithKeys } from './util';
 
 const pubAttributesFromDirective = ['title', 'description'];
 
@@ -39,30 +39,33 @@ const createPubAttributions = async (pub, proposedMetadata, directive) => {
 	if (sources.directive && Array.isArray(directive.attributions)) {
 		attributionsAttrs = [...attributionsAttrs, ...directive.attributions];
 	}
-	await Promise.all(attributionsAttrs).map((attrDirective, index, { length }) =>
-		PubAttribution.create({
-			pubId: pub.id,
-			order: 1 / 2 ** (length - index),
-			...getAttributionAttributes(attrDirective),
-		}),
+	await Promise.all(attributionsAttrs).then((res) =>
+		res.map((attrDirective, index, { length }) =>
+			PubAttribution.create({
+				pubId: pub.id,
+				order: 1 / 2 ** (length - index),
+				...getAttributionAttributes(attrDirective),
+			}),
+		),
 	);
 };
 
-const createPub = (directive, proposedMetadata, actor) => {
+const createPub = (communityId, directive, proposedMetadata, actor) => {
 	const sources = getSourcesForMetadataStrategy(directive);
 	const attributes = {
+		communityId: communityId,
 		...(sources.import && cloneWithKeys(proposedMetadata, ['title', 'description'])),
 		...(sources.directive && cloneWithKeys(directive, pubAttributesFromDirective)),
 	};
-	return createPubQuery(attributes, actor);
+	return createPubQuery(attributes, actor.id);
 };
 
-export const resolvePubDirective = async (directive, target, context) => {
-	const { parents, markCreated } = context;
+export const resolvePubDirective = async ({ directive, targetPath, community, actor }) => {
 	const proposedMetadata = {};
-	expectParentCommunity(directive, target, parents);
-	const pub = await createPub(directive, proposedMetadata, context.actor);
+	const pub = await createPub(community.id, proposedMetadata, directive, actor);
 	await createPubAttributions(pub, proposedMetadata, directive);
-	markCreated(pub);
-	return pub;
+	return {
+		pub: pub,
+		created: true,
+	};
 };

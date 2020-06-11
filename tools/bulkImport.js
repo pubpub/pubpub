@@ -1,11 +1,11 @@
 import { runBulkImportFromDirectory } from '../workers/tasks/import/bulk/bulk';
 
 const {
-	argv: { directory },
+	argv: { directory, ...args },
 } = require('yargs');
 
 const main = async () => {
-	runBulkImportFromDirectory(directory);
+	runBulkImportFromDirectory(directory, args);
 };
 
 main();

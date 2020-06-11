@@ -13,23 +13,20 @@ const findOrCreateCommunity = (directive) => {
 			navigation: [],
 		});
 	}
-	const foundCommunity = Community.findOne({ where: { slug: directive.slug } });
+	const foundCommunity = Community.findOne({ where: { subdomain: directive.subdomain } });
 	if (!foundCommunity) {
 		throw new BulkImportError(
 			{ directive: directive },
-			`No existing Community with slug ${directive.slug}. If you meant to create one, use "create: true"`,
+			`No existing Community with subdomain ${directive.subdomain}. If you meant to create one, use "create: true"`,
 		);
 	}
 	return foundCommunity;
 };
 
-export const resolveCommunityDirective = async (directive, target, context) => {
-	const { markCreated } = context;
+export const resolveCommunityDirective = async ({ directive }) => {
 	const community = await findOrCreateCommunity(directive);
-	markCreated(community);
 	return {
 		community: community,
-		target: target,
-		context: context.extendParents({ community: community }),
+		created: directive.create,
 	};
 };

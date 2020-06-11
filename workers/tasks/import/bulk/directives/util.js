@@ -1,16 +1,5 @@
 import { User } from 'server/models';
 
-import { BulkImportError } from '../errors';
-
-export const expectParentCommunity = (directive, target, parents) => {
-	if (!parents.community) {
-		throw new BulkImportError(
-			{ target: target, directive: directive },
-			'Expected parent community directive',
-		);
-	}
-};
-
 export const getAttributionAttributes = async (attributionDirective) => {
 	if (typeof attributionDirective === 'string') {
 		return { name: attributionDirective, isAuthor: true };

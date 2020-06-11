@@ -20,6 +20,19 @@ const throwInvalidDirectiveTypeError = (directives, allowedTypes, filePath) => {
 	throw new Error(message);
 };
 
+const maybeThrowNestedCollectionError = (parentDirectives, matchedDirectives) => {
+	const parentCollection = parentDirectives.find((d) => d.type === 'collection');
+	const matchedCollection = matchedDirectives.find((d) => d.type === 'collection');
+	if (parentCollection && matchedCollection) {
+		const message = `
+        Found illegally nested collection diretives:
+            in ${parentCollection.path}
+            in ${matchedCollection.path}
+        `;
+		throw new Error(message);
+	}
+};
+
 const checkAllFilesExistForPubDirective = async (directive, directoryPath) => {
 	const { files } = directive;
 	if (!files) {
@@ -28,7 +41,7 @@ const checkAllFilesExistForPubDirective = async (directive, directoryPath) => {
 	const stat = await fs.lstat(directoryPath);
 	if (!stat.isDirectory()) {
 		throw new Error(
-			`Directive at ${directive.path} with 'files' key must target a directory, not a file.`,
+			`Directive at ${directive.$meta.path} with 'files' key must target a directory, not a file.`,
 		);
 	}
 	const { document, bibliography, supplements = [], metadata } = files;
@@ -47,7 +60,7 @@ const checkAllFilesExistForPubDirective = async (directive, directoryPath) => {
 	if (missingFiles.length > 0) {
 		throw new Error(
 			`
-            Directive at ${directive.path} refers to 'files' that do not exist:
+            Directive at ${directive.$meta.path} refers to 'files' that do not exist:
             ${missingFiles.join('\t')}`,
 		);
 	}
@@ -60,18 +73,18 @@ const checkDirectiveForRequiredKeys = (directive) => {
 	}
 	if (create && !title) {
 		throw new Error(
-			`Directive at ${directive.path} would create a new ${type} and requires a 'title'`,
+			`Directive at ${directive.$meta.path} would create a new ${type} and requires a 'title'`,
 		);
 	}
 	if (type === 'community' && !create && !subdomain) {
 		throw new Error(
-			`Directive at ${directive.path} will look up a Community and requires a 'subdomain'.` +
+			`Directive at ${directive.$meta.path} will look up a Community and requires a 'subdomain'.` +
 				` Specify 'create: true' to create a new Community instead.`,
 		);
 	}
 	if (type === 'collection' && !create && !slug) {
 		throw new Error(
-			`Directive at ${directive.path} will look up a Collection and requires a 'slug'.` +
+			`Directive at ${directive.$meta.path} will look up a Collection and requires a 'slug'.` +
 				` Specify 'create: true' to create a new Collection instead.`,
 		);
 	}
@@ -91,7 +104,7 @@ const getDirectiveFilePriority = (fileName) => {
 };
 
 const pathMatchesDirective = (filePath, directive) => {
-	return filePath === directive.match;
+	return filePath === directive.$meta.match;
 };
 
 const matchDirectivesToPath = async (filePath, directives) => {
@@ -115,7 +128,19 @@ const matchDirectivesToPath = async (filePath, directives) => {
 };
 
 const extractDirectives = (matchingPath, directivePath, directive) => {
-	const directives = [{ ...directive, match: matchingPath, path: directivePath }];
+	if (!directive) {
+		return [];
+	}
+	const directives = [
+		{
+			...directive,
+			$meta: {
+				path: directivePath,
+				match: matchingPath,
+				name: path.basename(matchingPath),
+			},
+		},
+	];
 	if (directive.children) {
 		Object.entries(directive.children).forEach(([matchingSubPath, subdirective]) => {
 			directives.push(
@@ -167,6 +192,7 @@ export const buildImportPlan = (rootDirectory) => {
 		const { directives, directiveFiles } = await getDirectivesFromFiles(directoryPath, files);
 		const nextDirectives = [...parentDirectives, ...directives];
 		const matchedDirectives = await matchDirectivesToPath(directoryPath, nextDirectives);
+		maybeThrowNestedCollectionError(parentDirectives, matchedDirectives);
 		const plan = {
 			path: directoryPath,
 			type: 'directory',
@@ -199,7 +225,7 @@ export const printImportPlan = (importPlan, depth = 0) => {
 	const { directives, children } = importPlan;
 	const prefix = ' '.repeat(depth * 4);
 	const indent = '  ';
-	const shouldPrint = directives.length > 0 || children.length > 0;
+	const shouldPrint = directives.length > 0 || (children && children.length > 0);
 	if (shouldPrint) {
 		log(`${prefix}[${importPlan.type}] ${importPlan.path}`);
 	}

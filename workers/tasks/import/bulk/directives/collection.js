@@ -3,7 +3,7 @@ import { Collection, CollectionPub, CollectionAttribution } from 'server/models'
 import findRank from 'shared/utils/findRank';
 
 import { BulkImportError } from '../errors';
-import { expectParentCommunity, getAttributionAttributes } from './util';
+import { getAttributionAttributes } from './util';
 
 const createCollectionAttributions = async (collection, directive) => {
 	const { attributions } = directive;
@@ -21,16 +21,15 @@ const createCollectionAttributions = async (collection, directive) => {
 	);
 };
 
-const findOrCreateCollection = async (directive, community, target, markCreated) => {
+const findOrCreateCollection = async (directive, community) => {
 	if (directive.create) {
-		const { title: directiveTitle, kind } = directive;
-		const title = directiveTitle || target.name;
+		const title = directive.title || directive.$meta.name;
 		const collection = await createCollection({
 			communityId: community.id,
 			title: title,
-			kind: kind,
+			kind: directive.kind || 'tag',
 		});
-		return markCreated(collection);
+		return collection;
 	}
 	const foundCollection = await Collection.findOne({ where: { slug: directive.slug } });
 	if (!foundCollection) {
@@ -42,27 +41,27 @@ const findOrCreateCollection = async (directive, community, target, markCreated)
 	return foundCollection;
 };
 
-const expectAllChildrenArePubs = (children, directive, target) => {
-	if (!children.every((child) => child.pub)) {
+const extractPubsFromResolvedChildren = (resolvedChildren, directive, path) => {
+	return resolvedChildren.map((child) => {
+		if (child.pub) {
+			return child.pub;
+		}
 		throw new BulkImportError(
-			{ directive: directive, target: target },
+			{ directive: directive, path: path },
 			'All children of a Collection must be Pubs',
 		);
-	}
+	});
 };
 
-const getChildPubSortIndex = (child, order) => {
-	const { pub, target } = child;
-	return order.findIndex(
-		(entry) => pub.slug === entry || pub.title === entry || entry === target.path,
-	);
+const getChildPubSortIndex = (pub, path, order) => {
+	return order.findIndex((entry) => pub.slug === entry || pub.title === entry || entry === path);
 };
 
-const maybeSortChildren = (children, order) => {
+const maybeSortChildPubs = (pubs, order) => {
 	if (!order) {
-		return children;
+		return pubs;
 	}
-	return children.sort((first, second) => {
+	return pubs.sort((first, second) => {
 		const indexOfFirst = getChildPubSortIndex(first, order);
 		const indexOfSecond = getChildPubSortIndex(second, order);
 		if (indexOfFirst === -1 && indexOfSecond === -1) {
@@ -78,7 +77,7 @@ const maybeSortChildren = (children, order) => {
 	});
 };
 
-const prepareRanksForNewChildren = async (collection, numberOfNewChildren) => {
+const prepareRanksForNewPubs = async (collection, numberOfNewChildren) => {
 	const existingChildren = await CollectionPub.findAll({
 		where: { collectionId: collection.id },
 	});
@@ -89,40 +88,32 @@ const prepareRanksForNewChildren = async (collection, numberOfNewChildren) => {
 	);
 };
 
-const createCollectionPubs = (collection, children, ranks) =>
+const createCollectionPubs = (collection, pubs, ranks) =>
 	Promise.all(
-		children.map((child, index) =>
+		pubs.map((pub, index) =>
 			CollectionPub.create({
 				collectionId: collection.id,
-				pubId: child.pub.id,
+				pubId: pub.id,
 				rank: ranks[index],
 				isPrimary: true,
 			}),
 		),
 	);
 
-export const resolveCollectionDirective = async (directive, target, context) => {
-	const { parents, markCreated } = context;
-	expectParentCommunity(directive, target);
-	if (parents.collection) {
-		throw new BulkImportError(
-			{ directive: directive, target: target },
-			`Cannot created nested collection inside ${parents.collection}`,
-		);
-	}
-	const collection = await findOrCreateCollection(directive, parents.community, markCreated);
+export const resolveCollectionDirective = async ({ directive, community }) => {
+	const collection = await findOrCreateCollection(directive, community);
 	await createCollectionAttributions(collection, directive);
 
-	const handleChildren = async (unsortedChildren) => {
-		expectAllChildrenArePubs(unsortedChildren);
-		const children = maybeSortChildren(unsortedChildren, directive.order);
-		const ranks = await prepareRanksForNewChildren(collection, children.length);
-		await createCollectionPubs(children, ranks);
+	const handleResolvedChildren = async (resolvedChildren) => {
+		const unsortedPubs = extractPubsFromResolvedChildren(resolvedChildren);
+		const pubs = maybeSortChildPubs(unsortedPubs, directive.order);
+		const ranks = await prepareRanksForNewPubs(collection, pubs.length);
+		await createCollectionPubs(collection, pubs, ranks);
 	};
+
 	return {
 		collection: collection,
-		target: target,
-		onChildren: handleChildren,
-		context: context.extendParents({ collection: collection }),
+		created: directive.create,
+		onResolvedChildren: handleResolvedChildren,
 	};
 };
