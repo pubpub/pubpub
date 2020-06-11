@@ -39,6 +39,7 @@ const findOrCreateCollection = async (directive, community, target, markCreated)
 			`No existing Collection with slug ${directive.slug}. If you meant to create one, use "create: true"`,
 		);
 	}
+	return foundCollection;
 };
 
 const expectAllChildrenArePubs = (children, directive, target) => {
@@ -101,7 +102,7 @@ const createCollectionPubs = (collection, children, ranks) =>
 	);
 
 export const resolveCollectionDirective = async (directive, target, context) => {
-	const { parents, markCreated, resolveChildren } = context;
+	const { parents, markCreated } = context;
 	expectParentCommunity(directive, target);
 	if (parents.collection) {
 		throw new BulkImportError(
@@ -111,10 +112,17 @@ export const resolveCollectionDirective = async (directive, target, context) => 
 	}
 	const collection = await findOrCreateCollection(directive, parents.community, markCreated);
 	await createCollectionAttributions(collection, directive);
-	const unsortedChildren = await resolveChildren();
-	expectAllChildrenArePubs(unsortedChildren);
-	const children = maybeSortChildren(unsortedChildren, directive.order);
-	const ranks = await prepareRanksForNewChildren(collection, children.length);
-	await createCollectionPubs(children, ranks);
-	return { collection: collection, target: target };
+
+	const handleChildren = async (unsortedChildren) => {
+		expectAllChildrenArePubs(unsortedChildren);
+		const children = maybeSortChildren(unsortedChildren, directive.order);
+		const ranks = await prepareRanksForNewChildren(collection, children.length);
+		await createCollectionPubs(children, ranks);
+	};
+	return {
+		collection: collection,
+		target: target,
+		onChildren: handleChildren,
+		context: context.extendParents({ collection: collection }),
+	};
 };

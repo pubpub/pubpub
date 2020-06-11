@@ -23,7 +23,13 @@ const findOrCreateCommunity = (directive) => {
 	return foundCommunity;
 };
 
-export const resolveCommunityDirective = (directive, target) => {
-	const community = findOrCreateCommunity(directive);
-	return { community: community, target: target };
+export const resolveCommunityDirective = async (directive, target, context) => {
+	const { markCreated } = context;
+	const community = await findOrCreateCommunity(directive);
+	markCreated(community);
+	return {
+		community: community,
+		target: target,
+		context: context.extendParents({ community: community }),
+	};
 };

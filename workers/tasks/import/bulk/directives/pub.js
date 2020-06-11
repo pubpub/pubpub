@@ -1,5 +1,5 @@
 import { createPub as createPubQuery } from 'server/pub/queries';
-import { Pub, PubAttribution } from 'server/models';
+import { PubAttribution } from 'server/models';
 
 import { BulkImportError } from '../errors';
 import { expectParentCommunity, getAttributionAttributes, cloneWithKeys } from './util';
@@ -58,8 +58,11 @@ const createPub = (directive, proposedMetadata, actor) => {
 };
 
 export const resolvePubDirective = async (directive, target, context) => {
-	const { parents } = context;
+	const { parents, markCreated } = context;
 	const proposedMetadata = {};
 	expectParentCommunity(directive, target, parents);
-	await createPub(directive, proposedMetadata, context.actor);
+	const pub = await createPub(directive, proposedMetadata, context.actor);
+	await createPubAttributions(pub, proposedMetadata, directive);
+	markCreated(pub);
+	return pub;
 };
