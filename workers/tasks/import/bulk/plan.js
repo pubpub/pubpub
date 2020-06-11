@@ -16,8 +16,65 @@ const throwConflictingDirectiveError = (first, second, filePath) => {
 const throwInvalidDirectiveTypeError = (directives, allowedTypes, filePath) => {
 	const message = `
     Found invalid directive types for ${filePath} (expected ${allowedTypes.map((t) => `'${t}'`)}):
-    ${directives.map((d) => `\t'${d.type}' in ${d.path}\n`)}`;
+    ${directives.map((d) => `\t'${d.type}' in ${d.path}`).join('\n')}`;
 	throw new Error(message);
+};
+
+const checkAllFilesExistForPubDirective = async (directive, directoryPath) => {
+	const { files } = directive;
+	if (!files) {
+		return;
+	}
+	const stat = await fs.lstat(directoryPath);
+	if (!stat.isDirectory()) {
+		throw new Error(
+			`Directive at ${directive.path} with 'files' key must target a directory, not a file.`,
+		);
+	}
+	const { document, bibliography, supplements = [], metadata } = files;
+	const pathsToCheck = [document, bibliography, metadata, ...supplements];
+	const missingFiles = await Promise.all(
+		pathsToCheck
+			.filter((x) => x)
+			.map(async (filePath) => {
+				const exists = await fs.exists(path.join(directoryPath, filePath));
+				if (exists) {
+					return null;
+				}
+				return filePath;
+			}),
+	).then((res) => res.filter((x) => x));
+	if (missingFiles.length > 0) {
+		throw new Error(
+			`
+            Directive at ${directive.path} refers to 'files' that do not exist:
+            ${missingFiles.join('\t')}`,
+		);
+	}
+};
+
+const checkDirectiveForRequiredKeys = (directive) => {
+	const { type, title, create, slug, subdomain } = directive;
+	if (type === 'pub') {
+		return;
+	}
+	if (create && !title) {
+		throw new Error(
+			`Directive at ${directive.path} would create a new ${type} and requires a 'title'`,
+		);
+	}
+	if (type === 'community' && !create && !subdomain) {
+		throw new Error(
+			`Directive at ${directive.path} will look up a Community and requires a 'subdomain'.` +
+				` Specify 'create: true' to create a new Community instead.`,
+		);
+	}
+	if (type === 'collection' && !create && !slug) {
+		throw new Error(
+			`Directive at ${directive.path} will look up a Collection and requires a 'slug'.` +
+				` Specify 'create: true' to create a new Collection instead.`,
+		);
+	}
 };
 
 const getDirectiveFilePriority = (fileName) => {
@@ -37,10 +94,11 @@ const pathMatchesDirective = (filePath, directive) => {
 	return filePath === directive.match;
 };
 
-const matchDirectivesToPath = (filePath, directives) => {
+const matchDirectivesToPath = async (filePath, directives) => {
 	const matchingDirectives = directives.filter((directive) =>
 		pathMatchesDirective(filePath, directive),
 	);
+	matchingDirectives.forEach(checkDirectiveForRequiredKeys);
 	if (matchingDirectives.length > 1) {
 		const pub = matchingDirectives.find((d) => d.type === 'pub');
 		const collection = matchingDirectives.find((d) => d.type === 'collection');
@@ -48,13 +106,18 @@ const matchDirectivesToPath = (filePath, directives) => {
 			throwConflictingDirectiveError(pub, collection, filePath);
 		}
 	}
+	await Promise.all(
+		matchingDirectives.map((directive) =>
+			checkAllFilesExistForPubDirective(directive, filePath),
+		),
+	);
 	return matchingDirectives;
 };
 
 const extractDirectives = (matchingPath, directivePath, directive) => {
 	const directives = [{ ...directive, match: matchingPath, path: directivePath }];
-	if (directive.files) {
-		Object.entries(directive.files).forEach(([matchingSubPath, subdirective]) => {
+	if (directive.children) {
+		Object.entries(directive.children).forEach(([matchingSubPath, subdirective]) => {
 			directives.push(
 				...extractDirectives(
 					`${matchingPath}/${matchingSubPath}`,
@@ -83,8 +146,8 @@ const getDirectivesFromFiles = async (directory, files) => {
 };
 
 export const buildImportPlan = (rootDirectory) => {
-	const visitFile = (filePath, directives) => {
-		const matchingDirectives = matchDirectivesToPath(filePath, directives);
+	const visitFile = async (filePath, directives) => {
+		const matchingDirectives = await matchDirectivesToPath(filePath, directives);
 		const invalidDirectives = matchingDirectives.filter((d) => d.type !== 'pub');
 		if (invalidDirectives.length > 0) {
 			throwInvalidDirectiveTypeError(invalidDirectives, ['pub'], filePath);
@@ -103,10 +166,11 @@ export const buildImportPlan = (rootDirectory) => {
 		const files = await fs.readdir(directoryPath);
 		const { directives, directiveFiles } = await getDirectivesFromFiles(directoryPath, files);
 		const nextDirectives = [...parentDirectives, ...directives];
+		const matchedDirectives = await matchDirectivesToPath(directoryPath, nextDirectives);
 		const plan = {
 			path: directoryPath,
 			type: 'directory',
-			directives: matchDirectivesToPath(directoryPath, nextDirectives),
+			directives: matchedDirectives,
 		};
 		const childPlans = await Promise.all(
 			files
@@ -127,4 +191,41 @@ export const buildImportPlan = (rootDirectory) => {
 	};
 
 	return visitDirectory(rootDirectory);
+};
+
+export const printImportPlan = (importPlan, depth = 0) => {
+	// eslint-disable-next-line no-console
+	const log = console.log;
+	const { directives, children } = importPlan;
+	const prefix = ' '.repeat(depth * 4);
+	const indent = '  ';
+	const shouldPrint = directives.length > 0 || children.length > 0;
+	if (shouldPrint) {
+		log(`${prefix}[${importPlan.type}] ${importPlan.path}`);
+	}
+	if (directives.length > 0) {
+		directives.forEach((directive) => {
+			const { type, create, slug, subdomain, title } = directive;
+			const sharedPrefix = `${prefix}${indent}`;
+			if (type === 'pub') {
+				const effectiveTitle = title || 'No title given';
+				log(`${sharedPrefix}NEW PUB title=${effectiveTitle}`);
+			}
+			if (type === 'collection') {
+				const specifier = create
+					? `NEW COLLECTION title=${title}`
+					: `EXISTING COLLECTION slug=${slug}`;
+				log(`${sharedPrefix}${specifier}`);
+			}
+			if (type === 'community') {
+				const specifier = create
+					? `NEW COMMUNITY title=${title}`
+					: `EXISTING COMMUNITY subdomain=${subdomain}`;
+				log(`${sharedPrefix}${specifier}`);
+			}
+		});
+	}
+	if (children) {
+		children.forEach((child) => printImportPlan(child, depth + 1));
+	}
 };

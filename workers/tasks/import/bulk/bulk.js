@@ -9,7 +9,7 @@ import {
 	resolveCommunityDirective,
 } from './directives';
 import { createTarget } from './target';
-import { buildImportPlan } from './plan';
+import { buildImportPlan, printImportPlan } from './plan';
 
 const findUserForSlug = async (slug) => {
 	const user = await User.findOne({ where: { slug: slug } });
@@ -37,5 +37,5 @@ const applyDirective = async (filePath, directive, context) => {
 
 export const runBulkImportFromDirectory = async (rootDirectory, args) => {
 	const plan = await buildImportPlan(rootDirectory);
-	console.log(JSON.stringify(plan));
+	printImportPlan(plan);
 };
