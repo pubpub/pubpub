@@ -2,6 +2,16 @@ import { metaValueToString } from '@pubpub/prosemirror-pandoc';
 
 import { getSearchUsers } from 'server/search/queries';
 
+const getAuthorsArray = (author) => {
+	if (author.type === 'MetaList') {
+		return author.content;
+	}
+	if (author.type === 'MetaInlines') {
+		return [author];
+	}
+	return null;
+};
+
 export const getProposedMetadata = async (meta) => {
 	const { title, subtitle, author } = meta;
 	const proposedMetadata = {};
@@ -11,8 +21,9 @@ export const getProposedMetadata = async (meta) => {
 	if (subtitle) {
 		proposedMetadata.description = metaValueToString(subtitle);
 	}
-	if (author && Array.isArray(author.content)) {
-		const authorNames = author.content.map(metaValueToString);
+	const authorsArray = getAuthorsArray(author);
+	if (authorsArray) {
+		const authorNames = authorsArray.map(metaValueToString);
 		const attributions = await Promise.all(
 			authorNames.map(async (authorName) => {
 				const users = await getSearchUsers(authorName, null);

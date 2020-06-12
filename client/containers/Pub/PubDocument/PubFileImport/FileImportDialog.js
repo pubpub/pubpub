@@ -21,9 +21,10 @@ import {
 import { MenuConfigProvider } from 'components/Menu';
 import { apiFetch } from 'utils';
 import { pingTask } from 'utils/pingTask';
+import { extensionToPandocFormat, bibliographyFormats } from 'shared/import/formats';
 
 import { useFileManager } from './useFileManager';
-import { extensionToPandocFormat, bibliographyFormats, extensionFor } from './formats';
+import { extensionFor } from './formats';
 import { importDocToEditor } from './importDocToEditor';
 import FileImportEntry from './FileImportEntry';
 import MetadataEditor from './MetadataEditor';

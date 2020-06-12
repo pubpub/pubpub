@@ -3,6 +3,8 @@ import path from 'path';
 import { spawnSync } from 'child_process';
 import { parsePandocJson, fromPandoc, setPandocApiVersion } from '@pubpub/prosemirror-pandoc';
 
+import { extensionToPandocFormat } from 'shared/import/formats';
+
 import pandocRules from './rules';
 import { downloadAndConvertFiles } from './download';
 import { extractBibliographyItems } from './bibliography';
@@ -14,17 +16,6 @@ import { getTmpDirectoryPath } from './tmpDirectory';
 import { createResourceTransformer } from './resources';
 
 setPandocApiVersion([1, 20]);
-
-export const extensionToPandocFormat = {
-	docx: 'docx',
-	epub: 'epub',
-	html: 'html',
-	md: 'markdown',
-	odt: 'odt',
-	txt: 'markdown_strict',
-	xml: 'jats',
-	tex: 'latex',
-};
 
 const dataRoot = process.env.NODE_ENV === 'production' ? '/app/.apt/usr/share/pandoc/data ' : '';
 
@@ -51,6 +42,7 @@ const callPandoc = (tmpDirPath, files, args) => {
 };
 
 const categorizeSourceFiles = (sourceFiles) => {
+	const preambles = sourceFiles.filter((file) => file.label === 'preamble');
 	const document = sourceFiles.find((file) => file.label === 'document');
 	const bibliography = sourceFiles.find((file) => file.label === 'bibliography');
 	const supplements = sourceFiles.filter((file) => file.label === 'supplement');
@@ -58,13 +50,20 @@ const categorizeSourceFiles = (sourceFiles) => {
 		throw new Error('No target document specified.');
 	}
 	return {
+		preambles: preambles,
 		document: document,
 		bibliography: bibliography,
 		supplements: supplements,
 	};
 };
 
-const getPandocAst = ({ documentPath, supplementPaths, tmpDirPath, importerFlags }) => {
+const getPandocAst = ({
+	documentPath,
+	preamblePaths,
+	supplementPaths,
+	tmpDirPath,
+	importerFlags,
+}) => {
 	const extension = extensionFor(documentPath);
 	const pandocFormat = extensionToPandocFormat[extension];
 	if (!pandocFormat) {
@@ -75,7 +74,7 @@ const getPandocAst = ({ documentPath, supplementPaths, tmpDirPath, importerFlags
 	try {
 		const pandocResult = callPandoc(
 			path.dirname(documentPath),
-			[documentPath, ...supplementPaths],
+			[...preamblePaths, documentPath, ...supplementPaths],
 			createPandocArgs(pandocFormat, tmpDirPath),
 		);
 		pandocError = pandocResult.error;
@@ -90,11 +89,17 @@ const getPandocAst = ({ documentPath, supplementPaths, tmpDirPath, importerFlags
 	return runTransforms(parsePandocJson(pandocRawAst), importerFlags);
 };
 
-const importFiles = async ({ sourceFiles, tmpDirPath, importerFlags = {} }) => {
+export const importFiles = async ({
+	sourceFiles,
+	tmpDirPath,
+	importerFlags = {},
+	resourceReplacements = {},
+}) => {
 	const { keepStraightQuotes, skipJatsBibExtraction } = importerFlags;
-	const { document, bibliography, supplements } = categorizeSourceFiles(sourceFiles);
+	const { preambles, document, bibliography, supplements } = categorizeSourceFiles(sourceFiles);
 	const pandocAst = getPandocAst({
 		documentPath: document.tmpPath,
+		preamblePaths: preambles.map((p) => p.tmpPath),
 		supplementPaths: supplements.map((s) => s.tmpPath),
 		tmpDirPath: tmpDirPath,
 		importerFlags: importerFlags,
@@ -111,6 +116,7 @@ const importFiles = async ({ sourceFiles, tmpDirPath, importerFlags = {} }) => {
 		sourceFiles: [...sourceFiles, ...extractedMedia],
 		document: document,
 		bibliographyItems: bibliographyItems,
+		resourceReplacements: resourceReplacements,
 	});
 	const prosemirrorDoc = fromPandoc(pandocAst, pandocRules, {
 		resource: resourceTransformer.getResource,

@@ -15,7 +15,7 @@ const resolveDirective = async ({ directive, actor, targetPath, parents }) => {
 				'Cannot create a Community when one is already defined in scope.',
 			);
 		}
-		const resolved = await resolveCommunityDirective({ directive: directive });
+		const resolved = await resolveCommunityDirective({ directive: directive, actor: actor });
 		return { resolved: resolved, parents: { community: resolved.community } };
 	}
 	if (directive.type === 'collection') {
@@ -42,7 +42,6 @@ const resolveDirective = async ({ directive, actor, targetPath, parents }) => {
 			directive: directive,
 			targetPath: targetPath,
 			community: community,
-			actor: actor,
 		});
 		return { resolved: resolved };
 	}

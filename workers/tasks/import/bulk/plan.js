@@ -55,8 +55,8 @@ const checkAllFilesExistForPubDirective = async (directive, directoryPath) => {
 			`Directive ${directive.$meta.source} with 'files' key must target a directory, not a file.`,
 		);
 	}
-	const { document, bibliography, supplements = [], metadata } = files;
-	const pathsToCheck = [document, bibliography, metadata, ...supplements];
+	const { document, bibliography, supplements = [] } = files;
+	const pathsToCheck = [document, bibliography, ...supplements];
 	const missingFiles = await Promise.all(
 		pathsToCheck
 			.filter((x) => x)

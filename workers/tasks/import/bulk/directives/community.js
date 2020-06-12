@@ -1,17 +1,23 @@
-import uuid from 'uuid';
-
+import { generateHash } from 'server/utils/strings';
+import { createCommunity } from 'server/community/queries';
 import { Community } from 'server/models';
 
 import { BulkImportError } from '../errors';
 
-const findOrCreateCommunity = (directive) => {
+const findOrCreateCommunity = async (directive, actor) => {
+	const { title, description, subdomain, accentColorDark, accentColorLight } = directive;
 	if (directive.create) {
-		const unique = uuid.v4();
-		return Community.create({
-			title: directive.title || 'Community ' + unique,
-			subdomain: directive.subdomain || unique,
-			navigation: [],
-		});
+		const { subdomain: createdSubdomain } = await createCommunity(
+			{
+				title: title || 'Imported Community',
+				description: description || 'This Community was created with the bulk importer',
+				subdomain: subdomain || generateHash(6),
+				accentColorDark: accentColorDark || 'black',
+				accentColorLight: accentColorLight || 'white',
+			},
+			actor,
+		);
+		return Community.findOne({ where: { subdomain: createdSubdomain } });
 	}
 	const foundCommunity = Community.findOne({ where: { subdomain: directive.subdomain } });
 	if (!foundCommunity) {
@@ -23,8 +29,8 @@ const findOrCreateCommunity = (directive) => {
 	return foundCommunity;
 };
 
-export const resolveCommunityDirective = async ({ directive }) => {
-	const community = await findOrCreateCommunity(directive);
+export const resolveCommunityDirective = async ({ directive, actor }) => {
+	const community = await findOrCreateCommunity(directive, actor);
 	return {
 		community: community,
 		created: directive.create,

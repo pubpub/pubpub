@@ -4,6 +4,9 @@ import path from 'path';
 import { generateAssetKeyForFile, uploadFileToAssetStore } from './assetStore';
 import { downloadRemoteUrlToTmpPath } from './download';
 
+const rewriteResource = (resource, replacements) =>
+	Object.entries(replacements).reduce((string, [from, to]) => string.replace(from, to), resource);
+
 const getSourceFileForResource = (resourcePath, sourceFiles, document) => {
 	// First, try to find a file in the uploads with the exact path
 	for (const sourceFile of sourceFiles) {
@@ -47,7 +50,12 @@ const uploadPendingSourceFile = async (sourceFile, newAssetKey) => {
 	throw new Error('Pending source file must have a tmpPath or remoteUrl');
 };
 
-export const createResourceTransformer = ({ sourceFiles, document, bibliographyItems }) => {
+export const createResourceTransformer = ({
+	sourceFiles,
+	document,
+	bibliographyItems,
+	resourceReplacements,
+}) => {
 	const warnings = [];
 	const pendingUploadsMap = new Map();
 
@@ -81,6 +89,8 @@ export const createResourceTransformer = ({ sourceFiles, document, bibliographyI
 			return { structuredValue: '', unstructuredValue: '' };
 		}
 		if (context === 'image') {
+			// eslint-disable-next-line no-param-reassign
+			resource = rewriteResource(resource, resourceReplacements);
 			const isUrl = resource.startsWith('http://') || resource.startsWith('https://');
 			const assetKey = isUrl
 				? getAssetKeyForRemoteUrl(resource)

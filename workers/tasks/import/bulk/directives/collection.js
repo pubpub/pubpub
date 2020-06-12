@@ -11,13 +11,14 @@ const createCollectionAttributions = async (collection, directive) => {
 		return;
 	}
 	await Promise.all(
-		attributions.map((attrDirective, index, { length }) =>
-			CollectionAttribution.create({
+		attributions.map(async (attrDirective, index, { length }) => {
+			const resolvedAttrs = await getAttributionAttributes(attrDirective);
+			return CollectionAttribution.create({
 				collectionId: collection.id,
 				order: 1 / 2 ** (length - index),
-				...getAttributionAttributes(attrDirective),
-			}),
-		),
+				...resolvedAttrs,
+			});
+		}),
 	);
 };
 

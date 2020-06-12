@@ -1,4 +1,6 @@
 import uuidv4 from 'uuid/v4';
+
+import { isProd } from 'shared/utils/environment';
 import { Community, Page, Member } from '../models';
 import { generateHash, slugifyString } from '../utils';
 import { subscribeUser } from '../utils/mailchimp';
@@ -72,8 +74,10 @@ export const createCommunity = (inputValues, userData) => {
 			return Page.create(newpage);
 		})
 		.then(() => {
-			subscribeUser(userData.email, 'be26e45660', ['Community Admins']);
-			alertNewCommunity(inputValues.title, subdomain, userData.fullName, userData.email);
+			if (isProd()) {
+				subscribeUser(userData.email, 'be26e45660', ['Community Admins']);
+				alertNewCommunity(inputValues.title, subdomain, userData.fullName, userData.email);
+			}
 			return Member.create({
 				communityId: newCommunityId,
 				userId: userData.id,
