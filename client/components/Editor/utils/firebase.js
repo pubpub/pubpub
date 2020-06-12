@@ -39,7 +39,7 @@ export const createFirebaseChange = (steps, branchId, clientId) => {
 	return {
 		id: uuid.v4(), // Keyable Id
 		cId: clientId, // Client Id
-		bId: branchId,
+		bId: branchId, // Origin Branch Id
 		s: steps.map((step) => compressStepJSON(step.toJSON())),
 		t: firebaseTimestamp,
 	};
