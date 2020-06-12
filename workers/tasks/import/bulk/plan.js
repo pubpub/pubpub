@@ -228,7 +228,7 @@ export const buildImportPlan = (rootDirectory) => {
 		}
 		if (matchingDirectives) {
 			return {
-				source: filePath,
+				path: filePath,
 				type: 'file',
 				directives: matchingDirectives,
 			};
@@ -269,21 +269,33 @@ export const buildImportPlan = (rootDirectory) => {
 };
 
 export const printImportPlan = (importPlan, depth = 0) => {
-	// eslint-disable-next-line no-console
-	const log = console.log;
 	const { directives, children } = importPlan;
 	const prefix = ' '.repeat(depth * 4);
 	const indent = '  ';
-	const shouldPrint = directives.length > 0 || (children && children.length > 0);
-	if (shouldPrint) {
-		log(`${prefix}[${importPlan.type}] ${importPlan.path}`);
+
+	const childResults = (children || [])
+		.map((child) => printImportPlan(child, depth + 1))
+		.join('');
+
+	const shouldPrint = directives.length > 0 || childResults;
+
+	if (!shouldPrint) {
+		return '';
 	}
+
+	const lines = [];
+	const log = (str) => {
+		lines.push(str);
+	};
+
+	log(`${prefix}[${importPlan.type}] ${importPlan.path}`);
+
 	if (directives.length > 0) {
 		directives.forEach((directive) => {
 			const { type, create, slug, subdomain, title } = directive;
 			const sharedPrefix = `${prefix}${indent}`;
 			if (type === 'pub') {
-				const effectiveTitle = title || 'No title given';
+				const effectiveTitle = title || '(derived)';
 				log(`${sharedPrefix}NEW PUB title=${effectiveTitle}`);
 			}
 			if (type === 'collection') {
@@ -300,7 +312,11 @@ export const printImportPlan = (importPlan, depth = 0) => {
 			}
 		});
 	}
-	if (children) {
-		children.forEach((child) => printImportPlan(child, depth + 1));
+	log(childResults);
+	const output = lines.join('\n');
+	if (depth === 0) {
+		// eslint-disable-next-line no-console
+		console.log(output);
 	}
+	return output;
 };
