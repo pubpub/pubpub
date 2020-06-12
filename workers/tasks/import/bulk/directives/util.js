@@ -20,7 +20,7 @@ export const getAttributionAttributes = async (attributionDirective) => {
 export const cloneWithKeys = (object, keys) => {
 	const res = {};
 	Object.entries(object).forEach(([key, value]) => {
-		if (keys.includes(key)) {
+		if (keys.includes(key) && value !== undefined) {
 			res[key] = value;
 		}
 	});

@@ -4,6 +4,17 @@ import YAML from 'yaml';
 
 import { directiveFileSuffix } from './constants';
 
+const zipArrays = (first, second) => {
+	const length = Math.max(first.length, second.length);
+	const firstFilled = [...first, ...new Array(length - first.length).fill(null)];
+	const secondFilled = [...second, ...new Array(length - second.length).fill(null)];
+	const res = [];
+	for (let i = 0; i < length; i++) {
+		res.push([firstFilled[i], secondFilled[i]]);
+	}
+	return res;
+};
+
 const throwConflictingDirectiveError = (first, second, filePath) => {
 	const message = `
         Found conflicting directive types for ${filePath}:
@@ -41,7 +52,7 @@ const checkAllFilesExistForPubDirective = async (directive, directoryPath) => {
 	const stat = await fs.lstat(directoryPath);
 	if (!stat.isDirectory()) {
 		throw new Error(
-			`Directive at ${directive.$meta.path} with 'files' key must target a directory, not a file.`,
+			`Directive ${directive.$meta.source} with 'files' key must target a directory, not a file.`,
 		);
 	}
 	const { document, bibliography, supplements = [], metadata } = files;
@@ -60,7 +71,7 @@ const checkAllFilesExistForPubDirective = async (directive, directoryPath) => {
 	if (missingFiles.length > 0) {
 		throw new Error(
 			`
-            Directive at ${directive.$meta.path} refers to 'files' that do not exist:
+            Directive ${directive.$meta.source} refers to 'files' that do not exist:
             ${missingFiles.join('\t')}`,
 		);
 	}
@@ -73,38 +84,73 @@ const checkDirectiveForRequiredKeys = (directive) => {
 	}
 	if (create && !title) {
 		throw new Error(
-			`Directive at ${directive.$meta.path} would create a new ${type} and requires a 'title'`,
+			`Directive ${directive.$meta.source} would create a new ${type} and requires a 'title'`,
 		);
 	}
 	if (type === 'community' && !create && !subdomain) {
 		throw new Error(
-			`Directive at ${directive.$meta.path} will look up a Community and requires a 'subdomain'.` +
+			`Directive ${directive.$meta.source} will look up a Community and requires a 'subdomain'.` +
 				` Specify 'create: true' to create a new Community instead.`,
 		);
 	}
 	if (type === 'collection' && !create && !slug) {
 		throw new Error(
-			`Directive at ${directive.$meta.path} will look up a Collection and requires a 'slug'.` +
+			`Directive ${directive.$meta.source} will look up a Collection and requires a 'slug'.` +
 				` Specify 'create: true' to create a new Collection instead.`,
 		);
 	}
 };
 
-const getDirectiveFilePriority = (fileName) => {
-	if (fileName.startsWith('community')) {
-		return 0;
+const pathMatchesDirective = (filePath, directive) => {
+	const {
+		$meta: { merged, match, source },
+	} = directive;
+	if (merged) {
+		throw new Error(`Cannot match against directive ${source}`);
 	}
-	if (fileName.startsWith('collection')) {
-		return 1;
-	}
-	if (fileName.startsWith('pub')) {
-		return 2;
-	}
-	return 3;
+	const filePathParts = filePath.split('/');
+	const matchParts = match.split('/');
+	return zipArrays(matchParts, filePathParts).every(([pathPart, matchPart]) => {
+		if (pathPart === null || matchPart === null) {
+			return false;
+		}
+		const pathDotSegments = pathPart.split('.');
+		const matchDotSegments = matchPart.split('.');
+		return zipArrays(matchDotSegments, pathDotSegments).every(
+			([pathSegment, matchSegment]) => pathSegment === matchSegment || matchSegment === '*',
+		);
+	});
 };
 
-const pathMatchesDirective = (filePath, directive) => {
-	return filePath === directive.$meta.match;
+const mergeDirectives = (directives) => {
+	if (directives.length <= 1) {
+		return directives;
+	}
+	const $meta = {
+		// Take `name` from the directive closest to its target in the filesystem
+		name: directives[directives.length - 1].$meta.name,
+		source: `merged from ${directives.map((d) => d.$meta.source).join(', ')}`,
+		merged: directives,
+	};
+	return [
+		{
+			...directives.reduce((a, b) => ({ ...a, ...b }), {}),
+			$meta: $meta,
+		},
+	];
+};
+
+const mergeDirectivesByType = (directives) => {
+	const pubs = directives.filter((d) => d.type === 'pub');
+	const collections = directives.filter((d) => d.type === 'collection');
+	const communities = directives.filter((d) => d.type === 'community');
+	// Scope order is important to maintain here, so that we can specify higher scopes and lower
+	// scopes in the same directory, and they will be resolved in the right order.
+	return [
+		...mergeDirectives(communities),
+		...mergeDirectives(collections),
+		...mergeDirectives(pubs),
+	];
 };
 
 const matchDirectivesToPath = async (filePath, directives) => {
@@ -124,18 +170,23 @@ const matchDirectivesToPath = async (filePath, directives) => {
 			checkAllFilesExistForPubDirective(directive, filePath),
 		),
 	);
-	return matchingDirectives;
+	return mergeDirectivesByType(matchingDirectives);
 };
 
 const extractDirectives = (matchingPath, directivePath, directive) => {
 	if (!directive) {
 		return [];
 	}
+	if (directive && !directive.type) {
+		throw new Error(
+			`${directivePath} must specify a type: 'pub', 'collection', or 'community'`,
+		);
+	}
 	const directives = [
 		{
 			...directive,
 			$meta: {
-				path: directivePath,
+				source: directivePath,
 				match: matchingPath,
 				name: path.basename(matchingPath),
 			},
@@ -156,9 +207,7 @@ const extractDirectives = (matchingPath, directivePath, directive) => {
 };
 
 const getDirectivesFromFiles = async (directory, files) => {
-	const directiveFiles = files
-		.filter((fileName) => fileName.endsWith(directiveFileSuffix))
-		.sort((a, b) => getDirectiveFilePriority(a) - getDirectiveFilePriority(b));
+	const directiveFiles = files.filter((fileName) => fileName.endsWith(directiveFileSuffix));
 	const directives = await Promise.all(
 		directiveFiles.map(async (fileName) => {
 			const directivePath = path.join(directory, fileName);
@@ -179,7 +228,7 @@ export const buildImportPlan = (rootDirectory) => {
 		}
 		if (matchingDirectives) {
 			return {
-				path: filePath,
+				source: filePath,
 				type: 'file',
 				directives: matchingDirectives,
 			};

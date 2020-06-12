@@ -35,5 +35,6 @@ export const runBulkImportFromDirectory = async (rootDirectory, args) => {
 		parents: { community: community },
 		actor: actor,
 	});
+	// eslint-disable-next-line no-console
 	console.log(JSON.stringify(resolvedPlan));
 };

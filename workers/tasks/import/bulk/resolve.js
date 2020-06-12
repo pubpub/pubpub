@@ -46,6 +46,10 @@ const resolveDirective = async ({ directive, actor, targetPath, parents }) => {
 		});
 		return { resolved: resolved };
 	}
+	throw new BulkImportError(
+		{ directive: directive },
+		`Cannot resolve directive of type ${directive.type}`,
+	);
 };
 
 export const resolveImportPlan = async ({ importPlan, actor, parents }) => {
