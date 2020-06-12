@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { uploadFileToS3 } from './s3';
+import { uploadFileToAssetStore } from './assetStore';
 import { convertFileTypeIfNecessary } from './images';
 
 function getFullPathsInDir(dir) {
@@ -25,8 +25,8 @@ export const uploadExtractedMedia = async (tmpDirPath, mediaDirName = 'media') =
 	return Promise.all(
 		getFullPathsInDir(mediaPath).map(async (unconvertedFilePath) => {
 			const filePath = await convertFileTypeIfNecessary(unconvertedFilePath);
-			const url = await uploadFileToS3(filePath);
-			return { url: url, localPath: unconvertedFilePath };
+			const assetKey = await uploadFileToAssetStore(filePath);
+			return { assetKey: assetKey, clientPath: unconvertedFilePath };
 		}),
 	);
 };

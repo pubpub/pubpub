@@ -11,6 +11,7 @@ import { extensionFor } from './util';
 import { runTransforms } from './transforms/runTransforms';
 import { getProposedMetadata } from './metadata';
 import { getTmpDirectoryPath } from './tmpDirectory';
+import { createResourceTransformer } from './resources';
 
 setPandocApiVersion([1, 20]);
 
@@ -49,64 +50,6 @@ const callPandoc = (tmpDirPath, files, args) => {
 	return { output: output, error: error };
 };
 
-const createUrlGetter = (sourceFiles, documentLocalPath) => (resourcePath) => {
-	// First, try to find a file in the uploads with the exact path
-	for (const { localPath, url } of sourceFiles) {
-		if (resourcePath === localPath) {
-			return url;
-		}
-	}
-	// Then, try to find a file in the uploads with the same relative path
-	const documentContainer = path.dirname(documentLocalPath);
-	for (const { localPath, url } of sourceFiles) {
-		const relativePathWithExtension = path.relative(documentContainer, localPath);
-		const relativePathSansExtension = relativePathWithExtension
-			.split('.')
-			.slice(0, -1)
-			.join('.');
-		if (
-			resourcePath === relativePathWithExtension ||
-			resourcePath === relativePathSansExtension
-		) {
-			return url;
-		}
-	}
-	// Having failed, just look for a source file with the same name as the requested file.
-	const baseName = path.basename(resourcePath);
-	for (const { localPath, url } of sourceFiles) {
-		if (path.basename(localPath) === baseName) {
-			return url;
-		}
-	}
-	return null;
-};
-
-const createTransformResourceGetter = (getUrlByLocalPath, getBibliographyItemById, warnings) => (
-	resource,
-	context,
-) => {
-	if (context === 'citation') {
-		const item = getBibliographyItemById(resource);
-		if (item) {
-			return item;
-		}
-		warnings.push({ type: 'missingCitation', id: resource });
-		return { structuredValue: '', unstructuredValue: '' };
-	}
-	if (context === 'image') {
-		if (resource.startsWith('http://') || resource.startsWith('https://')) {
-			return resource;
-		}
-		const url = getUrlByLocalPath(resource);
-		if (url) {
-			return `https://assets.pubpub.org/${url}`;
-		}
-		warnings.push({ type: 'missingImage', path: resource });
-		return resource;
-	}
-	return resource;
-};
-
 const categorizeSourceFiles = (sourceFiles) => {
 	const document = sourceFiles.find((file) => file.label === 'document');
 	const bibliography = sourceFiles.find((file) => file.label === 'bibliography');
@@ -140,17 +83,15 @@ const getPandocAst = ({ documentPath, supplementPaths, tmpDirPath, importerFlags
 	} catch (err) {
 		throw new Error(
 			`Conversion from ${path.basename(
-				document.localPath,
+				document.clientPath,
 			)} failed. Pandoc says: ${pandocError}`,
 		);
 	}
 	return runTransforms(parsePandocJson(pandocRawAst), importerFlags);
 };
 
-const importFiles = async ({ sourceFiles: clientSourceFiles, importerFlags = {} }) => {
+const importFiles = async ({ sourceFiles, tmpDirPath, importerFlags = {} }) => {
 	const { keepStraightQuotes, skipJatsBibExtraction } = importerFlags;
-	const tmpDirPath = await getTmpDirectoryPath();
-	const sourceFiles = await downloadAndConvertFiles(clientSourceFiles, tmpDirPath);
 	const { document, bibliography, supplements } = categorizeSourceFiles(sourceFiles);
 	const pandocAst = getPandocAst({
 		documentPath: document.tmpPath,
@@ -158,32 +99,43 @@ const importFiles = async ({ sourceFiles: clientSourceFiles, importerFlags = {} 
 		tmpDirPath: tmpDirPath,
 		importerFlags: importerFlags,
 	});
-	const extractedMedia = await uploadExtractedMedia(tmpDirPath);
-	const getBibliographyItemById = await extractBibliographyItems({
-		bibliographyTmpPath: bibliography && bibliography.tmpPath,
-		documentTmpPath: !skipJatsBibExtraction && document.tmpPath,
+	const [extractedMedia, bibliographyItems] = await Promise.all([
+		uploadExtractedMedia(tmpDirPath),
+		extractBibliographyItems({
+			bibliography: bibliography,
+			document: document,
+			extractBibFromJats: !skipJatsBibExtraction,
+		}),
+	]);
+	const resourceTransformer = createResourceTransformer({
+		sourceFiles: [...sourceFiles, ...extractedMedia],
+		document: document,
+		bibliographyItems: bibliographyItems,
 	});
-	const getUrlByLocalPath = createUrlGetter(
-		[...sourceFiles, ...extractedMedia],
-		document.localPath,
-	);
-	const warnings = [];
 	const prosemirrorDoc = fromPandoc(pandocAst, pandocRules, {
-		resource: createTransformResourceGetter(
-			getUrlByLocalPath,
-			getBibliographyItemById,
-			warnings,
-		),
+		resource: resourceTransformer.getResource,
 		useSmartQuotes: !keepStraightQuotes,
 	}).asNode();
-	const proposedMetadata = await getProposedMetadata(pandocAst.meta);
-	return { doc: prosemirrorDoc, warnings: warnings, proposedMetadata: proposedMetadata };
+	const [proposedMetadata] = await Promise.all([
+		getProposedMetadata(pandocAst.meta),
+		resourceTransformer.uploadPendingResources(),
+	]);
+	return {
+		doc: prosemirrorDoc,
+		warnings: resourceTransformer.getWarnings(),
+		proposedMetadata: proposedMetadata,
+	};
 };
 
-export const importTask = ({ sourceFiles, importerFlags }) =>
-	importFiles({ sourceFiles: sourceFiles, importerFlags: importerFlags }).catch((error) => ({
-		error: {
-			message: error.toString(),
-			stack: error.stack.toString(),
-		},
-	}));
+export const importTask = async ({ sourceFiles: clientSourceFilesList, importerFlags }) => {
+	const tmpDirPath = await getTmpDirectoryPath();
+	const sourceFiles = await downloadAndConvertFiles(clientSourceFilesList, tmpDirPath);
+	return importFiles({ sourceFiles: sourceFiles, importerFlags: importerFlags }).catch(
+		(error) => ({
+			error: {
+				message: error.toString(),
+				stack: error.stack.toString(),
+			},
+		}),
+	);
+};

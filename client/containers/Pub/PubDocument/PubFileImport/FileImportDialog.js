@@ -53,7 +53,7 @@ const acceptedFileTypes = [
 
 const getFingerprintOfImportedFiles = (currentFiles) =>
 	currentFiles
-		.map((file) => file.localPath + '_' + file.label)
+		.map((file) => file.clientPath + '_' + file.label)
 		.sort((a, b) => a - b)
 		.join('___');
 
@@ -231,7 +231,7 @@ const FileImportDialog = ({ editorChangeObject, updatePubData, isOpen, onClose, 
 		}
 		if (
 			currentFiles.length > 0 &&
-			currentFiles.every((file) => extensionFor(file.localPath) === 'pdf')
+			currentFiles.every((file) => extensionFor(file.clientPath) === 'pdf')
 		) {
 			return (
 				<Callout

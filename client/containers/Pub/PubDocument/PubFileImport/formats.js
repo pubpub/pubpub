@@ -32,21 +32,21 @@ export const extensionFor = (fileName) => {
 };
 
 const fileIsValidDocument = (file) =>
-	Object.keys(extensionToPandocFormat).includes(extensionFor(file.localPath));
+	Object.keys(extensionToPandocFormat).includes(extensionFor(file.clientPath));
 
 export const getPotentialLabelsForFile = (file) => {
 	const isDoc = fileIsValidDocument(file);
 	return [
 		isDoc && 'document',
 		isDoc && 'supplement',
-		bibliographyFormats.includes(extensionFor(file.localPath)) && 'bibliography',
+		bibliographyFormats.includes(extensionFor(file.clientPath)) && 'bibliography',
 	].filter((x) => x);
 };
 
 export const labelFiles = (files) => {
 	const bibliography =
 		files.find((file) => file.label === 'bibliography') ||
-		files.find((file) => extensionFor(file.localPath) === 'bib' && !file.label);
+		files.find((file) => extensionFor(file.clientPath) === 'bib' && !file.label);
 	const doc =
 		files.find((file) => file.label === 'document') ||
 		files.find((file) => fileIsValidDocument(file) && !file.label);
