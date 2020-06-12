@@ -186,6 +186,7 @@ const writeDocumentToPubDraft = async (pubId, document) => {
 export const resolvePubDirective = async ({ directive, targetPath, community }) => {
 	const { importerFlags = {}, resourceReplacements = {} } = directive;
 	const sourceFiles = await getImportableFiles(directive, targetPath);
+
 	const tmpDir = await tmp.dir();
 	const { doc, warnings, proposedMetadata } = await importFiles({
 		tmpDirPath: tmpDir.path,
@@ -194,6 +195,7 @@ export const resolvePubDirective = async ({ directive, targetPath, community }) 
 		resourceReplacements: resourceReplacements,
 	});
 	const pub = await createPub(community.id, directive, proposedMetadata);
+	console.log(pub.title);
 	await createPubAttributions(pub, proposedMetadata, directive);
 	await writeDocumentToPubDraft(pub.id, doc);
 	return {

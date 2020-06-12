@@ -3,11 +3,13 @@ import { metaValueToString } from '@pubpub/prosemirror-pandoc';
 import { getSearchUsers } from 'server/search/queries';
 
 const getAuthorsArray = (author) => {
-	if (author.type === 'MetaList') {
-		return author.content;
-	}
-	if (author.type === 'MetaInlines') {
-		return [author];
+	if (author) {
+		if (author.type === 'MetaList') {
+			return author.content;
+		}
+		if (author.type === 'MetaInlines') {
+			return [author];
+		}
 	}
 	return null;
 };

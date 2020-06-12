@@ -226,7 +226,7 @@ export const buildImportPlan = (rootDirectory) => {
 		if (invalidDirectives.length > 0) {
 			throwInvalidDirectiveTypeError(invalidDirectives, ['pub'], filePath);
 		}
-		if (matchingDirectives) {
+		if (matchingDirectives.length > 0) {
 			return {
 				path: filePath,
 				type: 'file',
@@ -262,7 +262,10 @@ export const buildImportPlan = (rootDirectory) => {
 		if (childPlans.length > 0) {
 			return { ...plan, children: childPlans };
 		}
-		return plan;
+		if (plan.directives.length > 0) {
+			return plan;
+		}
+		return null;
 	};
 
 	return visitDirectory(rootDirectory);

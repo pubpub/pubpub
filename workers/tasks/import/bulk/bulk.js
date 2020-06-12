@@ -30,9 +30,11 @@ export const runBulkImportFromDirectory = async (rootDirectory, args) => {
 	const community = await getCommunity(args.community);
 	const actor = await getActor(args.actor);
 	printImportPlan(plan);
-	await resolveImportPlan({
+	const resolvedPlan = await resolveImportPlan({
 		importPlan: plan,
 		parents: { community: community },
 		actor: actor,
 	});
+	// eslint-disable-next-line no-console
+	console.log(JSON.stringify(resolvedPlan));
 };

@@ -1,4 +1,6 @@
 /* eslint-disable no-restricted-syntax */
+import Promise from 'bluebird';
+
 import {
 	resolveCommunityDirective,
 	resolveCollectionDirective,
@@ -73,10 +75,11 @@ export const resolveImportPlan = async ({ importPlan, actor, parents }) => {
 	}
 
 	if (children && children.length > 0) {
-		const resolvedChildPlans = await Promise.all(
-			children.map((childPlan) =>
+		const resolvedChildPlans = await Promise.map(
+			children,
+			(childPlan) =>
 				resolveImportPlan({ importPlan: childPlan, actor: actor, parents: currentParents }),
-			),
+			{ concurrency: 1 },
 		);
 
 		const resolvedByChildren = resolvedChildPlans
