@@ -4,8 +4,8 @@ import { OverflowList } from '@blueprintjs/core';
 
 import { pubDataProps } from 'types/pub';
 import { chooseCollectionForPub } from 'utils/collections';
-import { collectionUrl } from 'shared/utils/canonicalUrls';
-import { getSchemaForKind } from 'shared/collections/schemas';
+import { collectionUrl } from 'utils/canonicalUrls';
+import { getSchemaForKind } from 'utils/collections/schemas';
 import { usePageContext } from 'utils/hooks';
 import { Menu, MenuItem } from 'components/Menu';
 

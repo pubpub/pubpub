@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { Button, Icon, Spinner, Tooltip } from '@blueprintjs/core';
 
 import { Menu, MenuItem } from 'components/Menu';
-import { apiFetch } from 'utils';
+import { apiFetch } from 'client/utils/apiFetch';
 import { pingTask } from 'utils/pingTask';
 import { usePageContext } from 'utils/hooks';
+
 import { usePubHistory } from '../pubHooks';
 import { getFormattedDownload } from './headerUtils';
 
