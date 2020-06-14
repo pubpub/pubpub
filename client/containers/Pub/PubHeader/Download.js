@@ -4,7 +4,7 @@ import { Button, Icon, Spinner, Tooltip } from '@blueprintjs/core';
 
 import { Menu, MenuItem } from 'components/Menu';
 import { apiFetch } from 'client/utils/apiFetch';
-import { pingTask } from 'utils/pingTask';
+import { pingTask } from 'client/utils/pingTask';
 import { usePageContext } from 'utils/hooks';
 
 import { usePubHistory } from '../pubHooks';

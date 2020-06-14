@@ -9,7 +9,7 @@ import {
 	createReadingParamUrl,
 	getNeighborsInCollectionPub,
 	useCollectionPubs,
-} from 'utils/collections';
+} from 'client/utils/collections';
 
 import PubBottomSection, { SectionBullets } from './PubBottomSection';
 

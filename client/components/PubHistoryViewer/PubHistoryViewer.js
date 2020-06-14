@@ -5,7 +5,7 @@ import { Button, ButtonGroup, Menu, MenuItem, Slider, Spinner } from '@blueprint
 
 import { ClickToCopyButton } from 'components';
 import { usePageContext } from 'utils/hooks';
-import { useSticky } from 'utils/useSticky';
+import { useSticky } from 'client/utils/useSticky';
 import { formatDate } from 'utils/dates';
 import { pubUrl } from 'utils/canonicalUrls';
 

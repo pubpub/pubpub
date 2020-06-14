@@ -19,7 +19,7 @@ import {
 
 import { MenuConfigProvider } from 'components/Menu';
 import { apiFetch } from 'client/utils/apiFetch';
-import { pingTask } from 'utils/pingTask';
+import { pingTask } from 'client/utils/pingTask';
 
 import { useFileManager } from './useFileManager';
 import { extensionToPandocFormat, bibliographyFormats, extensionFor } from './formats';

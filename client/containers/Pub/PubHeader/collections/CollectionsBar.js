@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { OverflowList } from '@blueprintjs/core';
 
 import { pubDataProps } from 'types/pub';
-import { chooseCollectionForPub } from 'utils/collections';
+import { chooseCollectionForPub } from 'client/utils/collections';
 import { collectionUrl } from 'utils/canonicalUrls';
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { usePageContext } from 'utils/hooks';

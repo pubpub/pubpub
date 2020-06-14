@@ -73,7 +73,7 @@ Do not use `utils/index.js` files. Separate utils files and be specific in calli
 
 ```
 import { buildUrl } from 'utils/urls';
-import { usePageContext } from 'client/utils/hooks';
+import { usePageContext } from 'utils/hooks';
 ```
 
 

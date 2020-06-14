@@ -6,7 +6,7 @@ import { Byline } from 'components';
 import { Menu, MenuItem, MenuItemDivider } from 'components/Menu';
 import { pubDataProps } from 'types/pub';
 import { usePageContext } from 'utils/hooks';
-import { createReadingParamUrl, useCollectionPubs } from 'utils/collections';
+import { createReadingParamUrl, useCollectionPubs } from 'client/utils/collections';
 import { pubUrl, collectionUrl } from 'utils/canonicalUrls';
 import { getSchemaForKind } from 'utils/collections/schemas';
 

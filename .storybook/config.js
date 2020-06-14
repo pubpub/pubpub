@@ -3,8 +3,8 @@ import requireContext from 'require-context.macro';
 import { addDecorator, addParameters, configure } from '@storybook/react';
 import { configureViewport } from '@storybook/addon-viewport';
 import { FocusStyleManager } from '@blueprintjs/core';
-import { communityData, locationData, loginData, scopeData } from 'utils/data';
-import { PageContext } from 'client/utils/hooks';
+import { communityData, locationData, loginData, scopeData } from 'utils/storybook/data';
+import { PageContext } from 'utils/hooks';
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
