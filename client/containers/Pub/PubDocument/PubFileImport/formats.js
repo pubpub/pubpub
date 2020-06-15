@@ -1,5 +1,7 @@
 import { extensionToPandocFormat, bibliographyFormats } from 'shared/import/formats';
 
+export const exclusiveFileLabels = ['document', 'bibliography'];
+
 export const extensionFor = (fileName) => {
 	const pieces = fileName.split('.');
 	return pieces[pieces.length - 1];

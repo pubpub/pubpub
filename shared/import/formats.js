@@ -23,5 +23,3 @@ export const bibliographyFormats = [
 	'nbib',
 	'ris',
 ];
-
-export const exclusiveFileLabels = ['document', 'bibliography'];
