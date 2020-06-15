@@ -9,6 +9,7 @@ import { ReplaceStep } from 'prosemirror-transform';
 import { buildSchema, createFirebaseChange } from 'components/Editor/utils';
 import { getBranchRef } from 'server/utils/firebaseAdmin';
 import { createPub as createPubQuery } from 'server/pub/queries';
+import { createCollectionPub } from 'server/collectionPub/queries';
 import { Branch, PubAttribution } from 'server/models';
 import { extensionToPandocFormat, bibliographyFormats } from 'shared/import/formats';
 
@@ -18,7 +19,7 @@ import { BulkImportError } from '../errors';
 import { getAttributionAttributes, cloneWithKeys } from './util';
 
 const pubAttributesFromMetadata = ['title', 'description'];
-const pubAttributesFromDirective = ['title', 'description'];
+const pubAttributesFromDirective = ['title', 'description', 'slug'];
 const documentExtensions = Object.keys(extensionToPandocFormat);
 const documentSchema = buildSchema();
 
@@ -77,9 +78,8 @@ const createPub = (communityId, directive, proposedMetadata) => {
 	return createPubQuery(attributes);
 };
 
-const gatherLocalSourceFilesForPub = async (targetPath) => {
-	const stat = await fs.lstat(targetPath);
-	if (stat.isDirectory()) {
+const gatherLocalSourceFilesForPub = async (targetPath, isTargetDirectory) => {
+	if (isTargetDirectory) {
 		return getFullPathsInDir(targetPath).map((tmpPath) => {
 			return { tmpPath: tmpPath, clientPath: path.relative(targetPath, path) };
 		});
@@ -87,34 +87,61 @@ const gatherLocalSourceFilesForPub = async (targetPath) => {
 	return [{ tmpPath: targetPath, clientPath: path.basename(targetPath) }];
 };
 
-const gatherNonLocalSourceFilesForPub = async (targetPath, directive) => {
-	const { sources } = directive;
-	if (sources) {
-		return Object.entries(sources).map(([relativePathFromTarget, rewrittenPathPrefix]) => {
-			const pathToEntrypoint = path.join(targetPath, relativePathFromTarget);
-			return getFullPathsInDir(pathToEntrypoint).map((tmpPath) => {
-				const relativePath = path.relative(pathToEntrypoint, tmpPath);
-				const clientPath = path.join(rewrittenPathPrefix, relativePath);
-				return {
-					tmpPath: tmpPath,
-					clientPath: clientPath,
-				};
-			});
-		});
+const gatherNonLocalSourceFilesForPub = async (targetPath, isTargetDirectory, directive) => {
+	const { resolve: sources } = directive;
+
+	if (!sources) {
+		return [];
 	}
-	return [];
+
+	const fullPathToTargetDirectory = isTargetDirectory ? targetPath : path.dirname(targetPath);
+
+	const getRelativePathAndOptions = (entry) => {
+		if (typeof entry === 'string') {
+			return { pathToEntrypoint: entry, options: {} };
+		}
+		const [[relativePathToEntrypoint, options]] = Object.entries(entry);
+		return { relativePathToEntrypoint: relativePathToEntrypoint, options: options };
+	};
+
+	const resolveEntry = async (entry) => {
+		const { relativePathToEntrypoint, options } = getRelativePathAndOptions(entry);
+		const fullPathToEntrypoint = path.join(fullPathToTargetDirectory, relativePathToEntrypoint);
+		const stat = await fs.stat(fullPathToEntrypoint);
+
+		const resolveFile = (fullPathToFile) => {
+			const { as, into, label } = options;
+			if (as) {
+				return { tmpPath: fullPathToFile, clientPath: as, label: label };
+			}
+			const pathFromEntrypointToFile = path.relative(fullPathToEntrypoint, fullPathToFile);
+			const clientPath = into
+				? path.join(into, pathFromEntrypointToFile)
+				: relativePathToEntrypoint;
+			return { tmpPath: fullPathToFile, clientPath: clientPath, label: label };
+		};
+
+		if (stat.isDirectory()) {
+			return getFullPathsInDir(fullPathToEntrypoint).map(resolveFile);
+		}
+		return [resolveFile(fullPathToEntrypoint)];
+	};
+
+	return Promise.all(sources.map(resolveEntry)).then((arr) =>
+		arr.reduce((a, b) => [...a, ...b], []),
+	);
 };
 
 const labelGatheredSourceFiles = (sourceFiles, directive) => {
 	const {
-		files: {
+		labels: {
 			document: documentPath,
 			bibliography: bibliographyPath,
 			supplements: supplementPaths = [],
 		} = {},
 	} = directive;
-	let hasDocument = false;
-	let hasBibliography = false;
+	let hasDocument = sourceFiles.some((file) => file.label === 'document');
+	let hasBibliography = sourceFiles.some((file) => file.label === 'bibliography');
 	const labelledFiles = [];
 	for (const sourceFile of sourceFiles) {
 		const { clientPath } = sourceFile;
@@ -149,21 +176,27 @@ const createPreambleFiles = async (directive) => {
 	if (pandocMetadata) {
 		const metadata = YAML.stringify(pandocMetadata);
 		const contents = `---\n${metadata}\n---`;
-		const { tmpPath } = await tmp.file();
+		const { path: tmpPath } = await tmp.file();
 		await fs.writeFile(tmpPath, contents);
-		pandocMetadataFile = { tmpPath: tmpPath };
+		pandocMetadataFile = { tmpPath: tmpPath, label: 'preamble' };
 	}
 	if (preamble) {
-		const { tmpPath } = await tmp.file();
+		const { path: tmpPath } = await tmp.file();
 		await fs.writeFile(tmpPath, preamble);
-		preambleFile = { tmpPath: tmpPath };
+		preambleFile = { tmpPath: tmpPath, label: 'preamble' };
 	}
 	return [pandocMetadataFile, preambleFile].filter((x) => x);
 };
 
 const getImportableFiles = async (directive, targetPath) => {
-	const localFiles = await gatherLocalSourceFilesForPub(targetPath);
-	const nonLocalFiles = await gatherNonLocalSourceFilesForPub(targetPath, directive);
+	const stat = await fs.lstat(targetPath);
+	const isTargetDirectory = stat.isDirectory();
+	const localFiles = await gatherLocalSourceFilesForPub(targetPath, isTargetDirectory);
+	const nonLocalFiles = await gatherNonLocalSourceFilesForPub(
+		targetPath,
+		isTargetDirectory,
+		directive,
+	);
 	const gatheredSourceFiles = [...localFiles, ...nonLocalFiles];
 	const sourceFiles = labelGatheredSourceFiles(gatheredSourceFiles, directive);
 	const preambleFiles = await createPreambleFiles(directive);
@@ -183,10 +216,9 @@ const writeDocumentToPubDraft = async (pubId, document) => {
 		.set(change);
 };
 
-export const resolvePubDirective = async ({ directive, targetPath, community }) => {
+export const resolvePubDirective = async ({ directive, targetPath, community, collection }) => {
 	const { importerFlags = {}, resourceReplacements = {} } = directive;
 	const sourceFiles = await getImportableFiles(directive, targetPath);
-
 	const tmpDir = await tmp.dir();
 	const { doc, warnings, proposedMetadata } = await importFiles({
 		tmpDirPath: tmpDir.path,
@@ -195,9 +227,11 @@ export const resolvePubDirective = async ({ directive, targetPath, community }) 
 		resourceReplacements: resourceReplacements,
 	});
 	const pub = await createPub(community.id, directive, proposedMetadata);
-	console.log(pub.title);
 	await createPubAttributions(pub, proposedMetadata, directive);
 	await writeDocumentToPubDraft(pub.id, doc);
+	if (collection) {
+		await createCollectionPub({ collectionId: collection.id, pubId: pub.id, isPrimary: true });
+	}
 	return {
 		pub: pub,
 		warnings: warnings,

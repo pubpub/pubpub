@@ -4,19 +4,17 @@ import path from 'path';
 import { generateAssetKeyForFile, uploadFileToAssetStore } from './assetStore';
 import { downloadRemoteUrlToTmpPath } from './download';
 
-const rewriteResource = (resource, replacements) =>
-	Object.entries(replacements).reduce((string, [from, to]) => string.replace(from, to), resource);
-
 const getSourceFileForResource = (resourcePath, sourceFiles, document) => {
+	const possibleSourceFiles = sourceFiles.filter((file) => file.clientPath);
 	// First, try to find a file in the uploads with the exact path
-	for (const sourceFile of sourceFiles) {
+	for (const sourceFile of possibleSourceFiles) {
 		if (resourcePath === sourceFile.clientPath) {
 			return sourceFile;
 		}
 	}
 	// Then, try to find a file in the uploads with the same relative path
 	const documentContainer = path.dirname(document.clientPath);
-	for (const sourceFile of sourceFiles) {
+	for (const sourceFile of possibleSourceFiles) {
 		const relativePathWithExtension = path.relative(documentContainer, sourceFile.clientPath);
 		const relativePathSansExtension = relativePathWithExtension
 			.split('.')
@@ -31,9 +29,9 @@ const getSourceFileForResource = (resourcePath, sourceFiles, document) => {
 	}
 	// Having failed, just look for a source file with the same name as the requested file.
 	const baseName = path.basename(resourcePath);
-	for (const sourceFile of sourceFiles) {
+	for (const sourceFile of possibleSourceFiles) {
 		if (path.basename(sourceFile.clientPath) === baseName) {
-			return sourceFiles;
+			return possibleSourceFiles;
 		}
 	}
 	return null;
@@ -50,12 +48,7 @@ const uploadPendingSourceFile = async (sourceFile, newAssetKey) => {
 	throw new Error('Pending source file must have a tmpPath or remoteUrl');
 };
 
-export const createResourceTransformer = ({
-	sourceFiles,
-	document,
-	bibliographyItems,
-	resourceReplacements,
-}) => {
+export const createResourceTransformer = ({ sourceFiles, document, bibliographyItems }) => {
 	const warnings = [];
 	const pendingUploadsMap = new Map();
 
@@ -89,8 +82,6 @@ export const createResourceTransformer = ({
 			return { structuredValue: '', unstructuredValue: '' };
 		}
 		if (context === 'image') {
-			// eslint-disable-next-line no-param-reassign
-			resource = rewriteResource(resource, resourceReplacements);
 			const isUrl = resource.startsWith('http://') || resource.startsWith('https://');
 			const assetKey = isUrl
 				? getAssetKeyForRemoteUrl(resource)

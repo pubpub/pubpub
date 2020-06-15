@@ -9,7 +9,7 @@ import {
 import { BulkImportError } from './errors';
 
 const resolveDirective = async ({ directive, actor, targetPath, parents }) => {
-	const { community } = parents;
+	const { community, collection } = parents;
 	if (directive.type === 'community') {
 		if (community) {
 			throw new BulkImportError(
@@ -44,6 +44,7 @@ const resolveDirective = async ({ directive, actor, targetPath, parents }) => {
 			directive: directive,
 			targetPath: targetPath,
 			community: community,
+			collection: collection,
 		});
 		return { resolved: resolved };
 	}
@@ -56,7 +57,6 @@ const resolveDirective = async ({ directive, actor, targetPath, parents }) => {
 export const resolveImportPlan = async ({ importPlan, actor, parents }) => {
 	let currentParents = { ...parents };
 	const { directives, path, children } = importPlan;
-	const toResolveWithChildren = [];
 	const resolvedValues = [];
 
 	for (const directive of directives) {
@@ -69,24 +69,13 @@ export const resolveImportPlan = async ({ importPlan, actor, parents }) => {
 		});
 		resolvedValues.push(resolved);
 		currentParents = { ...currentParents, ...nextParents };
-		if (resolved.onResolvedChildren) {
-			toResolveWithChildren.push(resolved.onResolvedChildren);
-		}
 	}
 
 	if (children && children.length > 0) {
-		const resolvedChildPlans = await Promise.map(
-			children,
-			(childPlan) =>
-				resolveImportPlan({ importPlan: childPlan, actor: actor, parents: currentParents }),
-			{ concurrency: 1 },
+		const resolvedChildPlans = await Promise.each(children, (childPlan) =>
+			resolveImportPlan({ importPlan: childPlan, actor: actor, parents: currentParents }),
 		);
 
-		const resolvedByChildren = resolvedChildPlans
-			.map((plan) => plan.resolved)
-			.reduce((a, b) => [...a, ...b], []);
-
-		await Promise.all(toResolveWithChildren.map((callback) => callback(resolvedByChildren)));
 		return { ...importPlan, resolved: resolvedValues, children: resolvedChildPlans };
 	}
 

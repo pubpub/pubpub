@@ -4,6 +4,17 @@ import YAML from 'yaml';
 
 import { directiveFileSuffix } from './constants';
 
+const createDirectiveCounter = () => {
+	let i = 0;
+	return {
+		count: () => {
+			const res = i;
+			++i;
+			return res;
+		},
+	};
+};
+
 const zipArrays = (first, second) => {
 	const length = Math.max(first.length, second.length);
 	const firstFilled = [...first, ...new Array(length - first.length).fill(null)];
@@ -100,6 +111,15 @@ const checkDirectiveForRequiredKeys = (directive) => {
 	}
 };
 
+const sortPlansByPubDirectiveOrder = (plans) => {
+	const map = new Map();
+	plans.forEach((plan) => {
+		const pubDirectives = plan.directives.filter((d) => d.type === 'pub');
+		map.set(plan, pubDirectives.length ? pubDirectives[0].$meta.order : Infinity);
+	});
+	return plans.concat().sort((a, b) => map.get(a) - map.get(b));
+};
+
 const pathMatchesDirective = (filePath, directive) => {
 	const {
 		$meta: { merged, match, source },
@@ -122,12 +142,18 @@ const pathMatchesDirective = (filePath, directive) => {
 };
 
 const mergeDirectives = (directives) => {
+	if (directives.every((directive) => directive.partial)) {
+		return [];
+	}
 	if (directives.length <= 1) {
 		return directives;
 	}
 	const $meta = {
 		// Take `name` from the directive closest to its target in the filesystem
 		name: directives[directives.length - 1].$meta.name,
+		order: directives
+			.map((directive) => directive.$meta.order)
+			.reduce((a, b) => Math.max(a, b), -Infinity),
 		source: `merged from ${directives.map((d) => d.$meta.source).join(', ')}`,
 		merged: directives,
 	};
@@ -172,7 +198,7 @@ const matchDirectivesToPath = async (filePath, directives) => {
 	return mergeDirectivesByType(matchingDirectives);
 };
 
-const extractDirectives = (matchingPath, directivePath, directive) => {
+const extractDirectives = (matchingPath, directivePath, directive, directiveCounter) => {
 	if (!directive) {
 		return [];
 	}
@@ -188,6 +214,7 @@ const extractDirectives = (matchingPath, directivePath, directive) => {
 				source: directivePath,
 				match: matchingPath,
 				name: path.basename(matchingPath),
+				order: directiveCounter.count(),
 			},
 		},
 	];
@@ -198,6 +225,7 @@ const extractDirectives = (matchingPath, directivePath, directive) => {
 					`${matchingPath}/${matchingSubPath}`,
 					directivePath,
 					subdirective,
+					directiveCounter,
 				),
 			);
 		});
@@ -205,20 +233,22 @@ const extractDirectives = (matchingPath, directivePath, directive) => {
 	return directives;
 };
 
-const getDirectivesFromFiles = async (directory, files) => {
+const getDirectivesFromFiles = async (directory, files, directiveCounter) => {
 	const directiveFiles = files.filter((fileName) => fileName.endsWith(directiveFileSuffix));
 	const directives = await Promise.all(
 		directiveFiles.map(async (fileName) => {
 			const directivePath = path.join(directory, fileName);
 			const contents = await fs.readFile(directivePath);
 			const directive = YAML.parse(contents.toString());
-			return extractDirectives(directory, directivePath, directive);
+			return extractDirectives(directory, directivePath, directive, directiveCounter);
 		}),
 	).then((res) => res.reduce((a, b) => [...a, ...b], []));
 	return { directiveFiles: directiveFiles, directives: directives };
 };
 
 export const buildImportPlan = (rootDirectory) => {
+	const directiveCounter = createDirectiveCounter();
+
 	const visitFile = async (filePath, directives) => {
 		const matchingDirectives = await matchDirectivesToPath(filePath, directives);
 		const invalidDirectives = matchingDirectives.filter((d) => d.type !== 'pub');
@@ -237,7 +267,11 @@ export const buildImportPlan = (rootDirectory) => {
 
 	const visitDirectory = async (directoryPath, parentDirectives = []) => {
 		const files = await fs.readdir(directoryPath);
-		const { directives, directiveFiles } = await getDirectivesFromFiles(directoryPath, files);
+		const { directives, directiveFiles } = await getDirectivesFromFiles(
+			directoryPath,
+			files,
+			directiveCounter,
+		);
 		const nextDirectives = [...parentDirectives, ...directives];
 		const matchedDirectives = await matchDirectivesToPath(directoryPath, nextDirectives);
 		maybeThrowNestedCollectionError(matchedDirectives);
@@ -259,7 +293,7 @@ export const buildImportPlan = (rootDirectory) => {
 				}),
 		).then((arr) => arr.filter((x) => x));
 		if (childPlans.length > 0) {
-			return { ...plan, children: childPlans };
+			return { ...plan, children: sortPlansByPubDirectiveOrder(childPlans) };
 		}
 		if (plan.directives.length > 0) {
 			return plan;

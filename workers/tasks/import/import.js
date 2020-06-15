@@ -89,12 +89,7 @@ const getPandocAst = ({
 	return runTransforms(parsePandocJson(pandocRawAst), importerFlags);
 };
 
-export const importFiles = async ({
-	sourceFiles,
-	tmpDirPath,
-	importerFlags = {},
-	resourceReplacements = {},
-}) => {
+export const importFiles = async ({ sourceFiles, tmpDirPath, importerFlags = {} }) => {
 	const { keepStraightQuotes, skipJatsBibExtraction } = importerFlags;
 	const { preambles, document, bibliography, supplements } = categorizeSourceFiles(sourceFiles);
 	const pandocAst = getPandocAst({
@@ -116,7 +111,6 @@ export const importFiles = async ({
 		sourceFiles: [...sourceFiles, ...extractedMedia],
 		document: document,
 		bibliographyItems: bibliographyItems,
-		resourceReplacements: resourceReplacements,
 	});
 	const prosemirrorDoc = fromPandoc(pandocAst, pandocRules, {
 		resource: resourceTransformer.getResource,
