@@ -31,14 +31,13 @@ const throwInvalidDirectiveTypeError = (directives, allowedTypes, filePath) => {
 	throw new Error(message);
 };
 
-const maybeThrowNestedCollectionError = (parentDirectives, matchedDirectives) => {
-	const parentCollection = parentDirectives.find((d) => d.type === 'collection');
-	const matchedCollection = matchedDirectives.find((d) => d.type === 'collection');
-	if (parentCollection && matchedCollection) {
+const maybeThrowNestedCollectionError = (matchedDirectives) => {
+	const collections = matchedDirectives.filter((d) => d.type === 'collection');
+	if (collections.length > 1) {
 		const message = `
-        Found illegally nested collection diretives:
-            in ${parentCollection.path}
-            in ${matchedCollection.path}
+        Found illegally nested collection directives:
+            in ${collections[0].$meta.source}
+            in ${collections[1].$meta.source}
         `;
 		throw new Error(message);
 	}
@@ -241,7 +240,7 @@ export const buildImportPlan = (rootDirectory) => {
 		const { directives, directiveFiles } = await getDirectivesFromFiles(directoryPath, files);
 		const nextDirectives = [...parentDirectives, ...directives];
 		const matchedDirectives = await matchDirectivesToPath(directoryPath, nextDirectives);
-		maybeThrowNestedCollectionError(parentDirectives, matchedDirectives);
+		maybeThrowNestedCollectionError(matchedDirectives);
 		const plan = {
 			path: directoryPath,
 			type: 'directory',
