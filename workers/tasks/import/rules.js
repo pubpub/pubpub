@@ -176,8 +176,12 @@ rules.fromPandoc('RawBlock', (node) => {
 	};
 });
 
-rules.fromPandoc('RawInline', (node) => {
+rules.fromPandoc('RawInline', (node, { transform }) => {
 	const { format, content } = node;
+	if (format === 'html') {
+		const pandocAst = htmlStringToPandocInline(content);
+		return transform(pandocAst);
+	}
 	if (format === 'tex') {
 		return {
 			type: 'equation',
