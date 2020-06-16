@@ -65,7 +65,7 @@ const getPandocAst = ({
 	importerFlags,
 }) => {
 	const extension = extensionFor(documentPath);
-	const pandocFormat = extensionToPandocFormat[extension];
+	const pandocFormat = importerFlags.pandocFormat || extensionToPandocFormat[extension];
 	if (!pandocFormat) {
 		throw new Error(`Cannot find Pandoc format for .${extension} file.`);
 	}
