@@ -96,6 +96,13 @@ const gatherNonLocalSourceFilesForPub = async (targetPath, isTargetDirectory, di
 
 	const fullPathToTargetDirectory = isTargetDirectory ? targetPath : path.dirname(targetPath);
 
+	const joinPaths = (prefix, suffix) => {
+		if (prefix.startsWith('http')) {
+			return prefix + suffix;
+		}
+		return path.join(prefix, suffix);
+	};
+
 	const getRelativePathAndOptions = (entry) => {
 		if (typeof entry === 'string') {
 			return { pathToEntrypoint: entry, options: {} };
@@ -116,7 +123,7 @@ const gatherNonLocalSourceFilesForPub = async (targetPath, isTargetDirectory, di
 			}
 			const pathFromEntrypointToFile = path.relative(fullPathToEntrypoint, fullPathToFile);
 			const clientPath = into
-				? path.join(into, pathFromEntrypointToFile)
+				? joinPaths(into, pathFromEntrypointToFile)
 				: relativePathToEntrypoint;
 			return { tmpPath: fullPathToFile, clientPath: clientPath, label: label };
 		};

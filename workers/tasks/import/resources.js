@@ -31,7 +31,7 @@ const getSourceFileForResource = (resourcePath, sourceFiles, document) => {
 	const baseName = path.basename(resourcePath);
 	for (const sourceFile of possibleSourceFiles) {
 		if (path.basename(sourceFile.clientPath) === baseName) {
-			return possibleSourceFiles;
+			return sourceFile;
 		}
 	}
 	return null;
@@ -66,10 +66,14 @@ export const createResourceTransformer = ({ sourceFiles, document, bibliographyI
 	};
 
 	const getAssetKeyForRemoteUrl = (remoteUrl) => {
-		const newKey = generateAssetKeyForFile(remoteUrl);
-		const sourceFile = { remoteUrl: remoteUrl };
-		pendingUploadsMap.set(sourceFile, newKey);
-		return newKey;
+		const isUrl = remoteUrl.startsWith('http://') || remoteUrl.startsWith('https://');
+		if (isUrl) {
+			const newKey = generateAssetKeyForFile(remoteUrl);
+			const sourceFile = { remoteUrl: remoteUrl };
+			pendingUploadsMap.set(sourceFile, newKey);
+			return newKey;
+		}
+		return null;
 	};
 
 	const getResource = (resource, context) => {
@@ -82,10 +86,8 @@ export const createResourceTransformer = ({ sourceFiles, document, bibliographyI
 			return { structuredValue: '', unstructuredValue: '' };
 		}
 		if (context === 'image') {
-			const isUrl = resource.startsWith('http://') || resource.startsWith('https://');
-			const assetKey = isUrl
-				? getAssetKeyForRemoteUrl(resource)
-				: getAssetKeyForLocalResource(resource);
+			const assetKey =
+				getAssetKeyForLocalResource(resource) || getAssetKeyForRemoteUrl(resource);
 			if (assetKey) {
 				return `https://assets.pubpub.org/${assetKey}`;
 			}
