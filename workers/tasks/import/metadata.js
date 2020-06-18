@@ -15,7 +15,7 @@ const getAuthorsArray = (author) => {
 };
 
 export const getProposedMetadata = async (meta) => {
-	const { title, subtitle, author } = meta;
+	const { title, subtitle, author, date } = meta;
 	const proposedMetadata = {};
 	if (title) {
 		proposedMetadata.title = metaValueToString(title);
@@ -33,6 +33,9 @@ export const getProposedMetadata = async (meta) => {
 			}),
 		);
 		proposedMetadata.attributions = attributions;
+	}
+	if (date) {
+		proposedMetadata.customPublishedAt = new Date(metaValueToString(date)).toUTCString();
 	}
 	return proposedMetadata;
 };

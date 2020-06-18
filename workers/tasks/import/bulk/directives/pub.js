@@ -18,7 +18,7 @@ import { importFiles } from '../../import';
 import { BulkImportError } from '../errors';
 import { getAttributionAttributes, cloneWithKeys } from './util';
 
-const pubAttributesFromMetadata = ['title', 'description'];
+const pubAttributesFromMetadata = ['title', 'description', 'slug', 'customPublishedAt'];
 const pubAttributesFromDirective = ['title', 'description', 'slug'];
 const documentExtensions = Object.keys(extensionToPandocFormat);
 const documentSchema = buildSchema();
@@ -81,7 +81,7 @@ const createPub = (communityId, directive, proposedMetadata) => {
 const gatherLocalSourceFilesForPub = async (targetPath, isTargetDirectory) => {
 	if (isTargetDirectory) {
 		return getFullPathsInDir(targetPath).map((tmpPath) => {
-			return { tmpPath: tmpPath, clientPath: path.relative(targetPath, path) };
+			return { tmpPath: tmpPath, clientPath: path.relative(targetPath, tmpPath) };
 		});
 	}
 	return [{ tmpPath: targetPath, clientPath: path.basename(targetPath) }];
@@ -234,6 +234,8 @@ export const resolvePubDirective = async ({ directive, targetPath, community, co
 		resourceReplacements: resourceReplacements,
 	});
 	const pub = await createPub(community.id, directive, proposedMetadata);
+	// eslint-disable-next-line no-console
+	console.log(pub.title);
 	await createPubAttributions(pub, proposedMetadata, directive);
 	await writeDocumentToPubDraft(pub.id, doc);
 	if (collection) {
