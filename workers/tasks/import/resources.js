@@ -40,10 +40,11 @@ const getSourceFileForResource = (resourcePath, sourceFiles, document) => {
 const uploadPendingSourceFile = async (sourceFile, newAssetKey) => {
 	const { tmpPath, remoteUrl } = sourceFile;
 	if (tmpPath) {
-		await uploadFileToAssetStore(tmpPath, newAssetKey);
-	} else if (remoteUrl) {
+		return uploadFileToAssetStore(tmpPath, newAssetKey);
+	}
+	if (remoteUrl) {
 		const newTmpPath = await downloadRemoteUrlToTmpPath(remoteUrl);
-		await uploadFileToAssetStore(newTmpPath, newAssetKey);
+		return uploadFileToAssetStore(newTmpPath, newAssetKey);
 	}
 	throw new Error('Pending source file must have a tmpPath or remoteUrl');
 };
@@ -91,7 +92,11 @@ export const createResourceTransformer = ({ sourceFiles, document, bibliographyI
 			if (assetKey) {
 				return `https://assets.pubpub.org/${assetKey}`;
 			}
-			warnings.push({ type: 'missingImage', path: resource });
+			warnings.push({
+				type: 'missingImage',
+				path: resource,
+				unableToFind: true,
+			});
 			return resource;
 		}
 		return resource;
@@ -100,9 +105,12 @@ export const createResourceTransformer = ({ sourceFiles, document, bibliographyI
 	const uploadPendingResources = () =>
 		Promise.all(
 			[...pendingUploadsMap.entries()].map(([sourceFile, newAssetKey]) =>
-				uploadPendingSourceFile(sourceFile, newAssetKey).catch(() =>
+				uploadPendingSourceFile(sourceFile, newAssetKey).catch((error) =>
 					warnings.push({
 						type: 'missingImage',
+						unableToUpload: true,
+						error: error.message,
+						sourceFile: sourceFile,
 						path: sourceFile.tmpPath || sourceFile.remoteUrl,
 					}),
 				),

@@ -72,10 +72,9 @@ export const resolveImportPlan = async ({ importPlan, actor, parents }) => {
 	}
 
 	if (children && children.length > 0) {
-		const resolvedChildPlans = await Promise.each(children, (childPlan) =>
+		const resolvedChildPlans = await Promise.mapSeries(children, (childPlan) =>
 			resolveImportPlan({ importPlan: childPlan, actor: actor, parents: currentParents }),
 		);
-
 		return { ...importPlan, resolved: resolvedValues, children: resolvedChildPlans };
 	}
 

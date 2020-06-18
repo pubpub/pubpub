@@ -304,55 +304,95 @@ export const buildImportPlan = (rootDirectory) => {
 	return visitDirectory(rootDirectory);
 };
 
-export const printImportPlan = (importPlan, depth = 0) => {
-	const { directives, children } = importPlan;
-	const prefix = ' '.repeat(depth * 4);
-	const indent = '  ';
+export const printImportPlan = (importPlan, { verb = 'CREATE' } = {}) => {
+	// eslint-disable-next-line no-param-reassign
+	verb = verb.toUpperCase();
+	const printInner = (plan, depth) => {
+		const { directives, children } = plan;
+		const prefix = ' '.repeat(depth * 4);
+		const indent = '  ';
 
-	const childResults = (children || [])
-		.map((child) => printImportPlan(child, depth + 1))
-		.join('');
+		const childResults = (children || []).map((child) => printInner(child, depth + 1)).join('');
+		const shouldPrint = directives.length > 0 || childResults;
 
-	const shouldPrint = directives.length > 0 || childResults;
+		if (!shouldPrint) {
+			return '';
+		}
 
-	if (!shouldPrint) {
-		return '';
-	}
+		const lines = [];
+		const log = (str) => {
+			lines.push(str);
+		};
 
-	const lines = [];
-	const log = (str) => {
-		lines.push(str);
+		log(`${prefix}[${plan.type}] ${plan.path}`);
+
+		if (directives.length > 0) {
+			directives.forEach((directive, index) => {
+				const { type, create, slug, subdomain, title } = directive;
+				const resolvedByDirective = plan.resolved && plan.resolved[index];
+				const sharedPrefix = `${prefix}${indent}`;
+				if (type === 'pub') {
+					const effectiveTitle =
+						(resolvedByDirective &&
+							resolvedByDirective.pub &&
+							resolvedByDirective.pub.title) ||
+						title ||
+						'(derived)';
+					log(`${sharedPrefix}${verb} PUB title=${effectiveTitle}`);
+				}
+				if (type === 'collection') {
+					const specifier = create
+						? `${verb} COLLECTION title=${title}`
+						: `EXISTING COLLECTION slug=${slug}`;
+					log(`${sharedPrefix}${specifier}`);
+				}
+				if (type === 'community') {
+					const specifier = create
+						? `${verb} COMMUNITY title=${title}`
+						: `EXISTING COMMUNITY subdomain=${subdomain}`;
+					log(`${sharedPrefix}${specifier}`);
+				}
+			});
+		}
+		log(childResults);
+		const output = lines.join('\n');
+		if (depth === 0) {
+			// eslint-disable-next-line no-console
+			console.log(output);
+		}
+		return output;
 	};
+	return printInner(importPlan, 0);
+};
 
-	log(`${prefix}[${importPlan.type}] ${importPlan.path}`);
-
-	if (directives.length > 0) {
-		directives.forEach((directive) => {
-			const { type, create, slug, subdomain, title } = directive;
-			const sharedPrefix = `${prefix}${indent}`;
-			if (type === 'pub') {
-				const effectiveTitle = title || '(derived)';
-				log(`${sharedPrefix}NEW PUB title=${effectiveTitle}`);
-			}
-			if (type === 'collection') {
-				const specifier = create
-					? `NEW COLLECTION title=${title}`
-					: `EXISTING COLLECTION slug=${slug}`;
-				log(`${sharedPrefix}${specifier}`);
-			}
-			if (type === 'community') {
-				const specifier = create
-					? `NEW COMMUNITY title=${title}`
-					: `EXISTING COMMUNITY subdomain=${subdomain}`;
-				log(`${sharedPrefix}${specifier}`);
+export const getCreatedItemsFromPlan = (importPlan) => {
+	const { resolved, children } = importPlan;
+	const communities = [];
+	const collections = [];
+	const pubs = [];
+	if (resolved) {
+		resolved.forEach((entry) => {
+			const { community, pub, collection, created } = entry;
+			if (created) {
+				if (community) {
+					communities.push(community);
+				}
+				if (collection) {
+					collections.push(collection);
+				}
+				if (pub) {
+					pubs.push(pub);
+				}
 			}
 		});
 	}
-	log(childResults);
-	const output = lines.join('\n');
-	if (depth === 0) {
-		// eslint-disable-next-line no-console
-		console.log(output);
+	if (children) {
+		const childItems = children.map(getCreatedItemsFromPlan);
+		childItems.forEach((child) => {
+			communities.push(...child.communities);
+			collections.push(...child.collections);
+			pubs.push(...child.pubs);
+		});
 	}
-	return output;
+	return { communities: communities, collections: collections, pubs: pubs };
 };
