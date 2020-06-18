@@ -15,7 +15,9 @@ import { extensionToPandocFormat, bibliographyFormats } from 'shared/import/form
 
 import { getFullPathsInDir, extensionFor } from '../../util';
 import { importFiles } from '../../import';
+import { uploadFileToAssetStore, getUrlForAssetKey } from '../../assetStore';
 import { BulkImportError } from '../errors';
+import { pathMatchesPattern } from '../paths';
 import { getAttributionAttributes, cloneWithKeys } from './util';
 
 const pubAttributesFromMetadata = ['title', 'description', 'slug', 'customPublishedAt'];
@@ -68,12 +70,33 @@ const createPubAttributions = async (pub, proposedMetadata, directive) => {
 	);
 };
 
-const createPub = (communityId, directive, proposedMetadata) => {
+const resolveAndUploadLocalFile = async (pathLike, sourceFiles) => {
+	const sourceFile = sourceFiles.find((sf) => pathMatchesPattern(sf.clientPath, pathLike));
+	if (sourceFile) {
+		const assetKey = await uploadFileToAssetStore(sourceFile.tmpPath);
+		return getUrlForAssetKey(assetKey);
+	}
+	console.warn(`warning: cannot find sourceFile matching ${pathLike}`);
+	return null;
+};
+
+const resolveUploadablePubAttributes = async (directive, sourceFiles) => {
+	const { avatar, headerBackgroundImage } = directive;
+	return {
+		avatar: avatar && (await resolveAndUploadLocalFile(avatar, sourceFiles)),
+		headerBackgroundImage:
+			headerBackgroundImage &&
+			(await resolveAndUploadLocalFile(headerBackgroundImage, sourceFiles)),
+	};
+};
+
+const createPub = async ({ communityId, directive, proposedMetadata, resolvedAttributes }) => {
 	const sources = getSourcesForMetadataStrategy(directive);
 	const attributes = {
 		communityId: communityId,
 		...(sources.import && cloneWithKeys(proposedMetadata, pubAttributesFromMetadata)),
 		...(sources.directive && cloneWithKeys(directive, pubAttributesFromDirective)),
+		...resolvedAttributes,
 	};
 	return createPubQuery(attributes);
 };
@@ -233,14 +256,20 @@ export const resolvePubDirective = async ({ directive, targetPath, community, co
 		importerFlags: importerFlags,
 		resourceReplacements: resourceReplacements,
 	});
-	const pub = await createPub(community.id, directive, proposedMetadata);
-	// eslint-disable-next-line no-console
-	console.log(pub.title);
+	const resolvedAttributes = await resolveUploadablePubAttributes(directive, sourceFiles);
+	const pub = await createPub({
+		communityId: community.id,
+		directive: directive,
+		proposedMetadata: proposedMetadata,
+		resolvedAttributes: resolvedAttributes,
+	});
 	await createPubAttributions(pub, proposedMetadata, directive);
 	await writeDocumentToPubDraft(pub.id, doc);
 	if (collection) {
 		await createCollectionPub({ collectionId: collection.id, pubId: pub.id, isPrimary: true });
 	}
+	// eslint-disable-next-line no-console
+	console.log('created Pub:', pub.title);
 	return {
 		pub: pub,
 		warnings: warnings,

@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 import path from 'path';
 
-import { generateAssetKeyForFile, uploadFileToAssetStore } from './assetStore';
+import { generateAssetKeyForFile, uploadFileToAssetStore, getUrlForAssetKey } from './assetStore';
 import { downloadRemoteUrlToTmpPath } from './download';
 
 const getSourceFileForResource = (resourcePath, sourceFiles, document) => {
@@ -90,7 +90,7 @@ export const createResourceTransformer = ({ sourceFiles, document, bibliographyI
 			const assetKey =
 				getAssetKeyForLocalResource(resource) || getAssetKeyForRemoteUrl(resource);
 			if (assetKey) {
-				return `https://assets.pubpub.org/${assetKey}`;
+				return getUrlForAssetKey(assetKey);
 			}
 			warnings.push({
 				type: 'missingImage',

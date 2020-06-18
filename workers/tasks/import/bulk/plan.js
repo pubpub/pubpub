@@ -3,6 +3,7 @@ import path from 'path';
 import YAML from 'yaml';
 
 import { directiveFileSuffix } from './constants';
+import { pathMatchesPattern } from './paths';
 
 const createDirectiveCounter = () => {
 	let i = 0;
@@ -13,17 +14,6 @@ const createDirectiveCounter = () => {
 			return res;
 		},
 	};
-};
-
-const zipArrays = (first, second) => {
-	const length = Math.max(first.length, second.length);
-	const firstFilled = [...first, ...new Array(length - first.length).fill(null)];
-	const secondFilled = [...second, ...new Array(length - second.length).fill(null)];
-	const res = [];
-	for (let i = 0; i < length; i++) {
-		res.push([firstFilled[i], secondFilled[i]]);
-	}
-	return res;
 };
 
 const throwConflictingDirectiveError = (first, second, filePath) => {
@@ -127,18 +117,7 @@ const pathMatchesDirective = (filePath, directive) => {
 	if (merged) {
 		throw new Error(`Cannot match against directive ${source}`);
 	}
-	const filePathParts = filePath.split('/');
-	const matchParts = match.split('/');
-	return zipArrays(matchParts, filePathParts).every(([pathPart, matchPart]) => {
-		if (pathPart === null || matchPart === null) {
-			return false;
-		}
-		const pathDotSegments = pathPart.split('.');
-		const matchDotSegments = matchPart.split('.');
-		return zipArrays(matchDotSegments, pathDotSegments).every(
-			([pathSegment, matchSegment]) => pathSegment === matchSegment || matchSegment === '*',
-		);
-	});
+	return pathMatchesPattern(filePath, match);
 };
 
 const mergeDirectives = (directives) => {

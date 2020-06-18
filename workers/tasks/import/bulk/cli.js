@@ -86,7 +86,7 @@ const main = async () => {
 		if (exists) {
 			await promptOkay(
 				`There is already a file at the receipt path ${receipt} which will be overwritten during import. Proceed?`,
-				{ throwIfNo: true, yesIsDefault: false },
+				{ throwIfNo: true, yesIsDefault: false, yes: yes },
 			);
 		}
 		const plan = await runBulkImportFromDirectory({

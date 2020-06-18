@@ -9,6 +9,8 @@ import { extensionFor } from './util';
 AWS.config.setPromisesDependency(Promise);
 const s3bucket = new AWS.S3({ params: { Bucket: 'assets.pubpub.org' } });
 
+export const getUrlForAssetKey = (assetKey) => `https://assets.pubpub.org/${assetKey}`;
+
 export const generateAssetKeyForFile = (filePath) => {
 	const fileExtension = extensionFor(filePath);
 	const folderName = isProd() ? generateHash(8) : '_testing';
@@ -50,9 +52,10 @@ export const downloadFileFromAssetStore = (assetKey, filePath) =>
 			.on('close', () => resolve(filePath));
 	});
 
-export const uploadFileToAssetStore = (filePath, assetKey) => {
+export const uploadFileToAssetStore = (filePath, givenAssetKey) => {
+	const assetKey = givenAssetKey || generateAssetKeyForFile(filePath);
 	const params = {
-		Key: assetKey || generateAssetKeyForFile(filePath),
+		Key: assetKey,
 		Body: fs.createReadStream(filePath),
 		ACL: 'public-read',
 	};
