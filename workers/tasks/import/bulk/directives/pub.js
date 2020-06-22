@@ -18,6 +18,7 @@ import { importFiles } from '../../import';
 import { uploadFileToAssetStore, getUrlForAssetKey } from '../../assetStore';
 import { BulkImportError } from '../errors';
 import { pathMatchesPattern } from '../paths';
+import { runMacrosOnSourceFiles } from '../macros';
 import { getAttributionAttributes, cloneWithKeys } from './util';
 
 const pubAttributesFromMetadata = ['title', 'description', 'slug', 'customPublishedAt'];
@@ -219,6 +220,7 @@ const createPreambleFiles = async (directive) => {
 };
 
 const getImportableFiles = async (directive, targetPath) => {
+	const { macros } = directive;
 	const stat = await fs.lstat(targetPath);
 	const isTargetDirectory = stat.isDirectory();
 	const localFiles = await gatherLocalSourceFilesForPub(targetPath, isTargetDirectory);
@@ -230,7 +232,11 @@ const getImportableFiles = async (directive, targetPath) => {
 	const gatheredSourceFiles = [...localFiles, ...nonLocalFiles];
 	const sourceFiles = labelGatheredSourceFiles(gatheredSourceFiles, directive);
 	const preambleFiles = await createPreambleFiles(directive);
-	return [...preambleFiles, ...sourceFiles];
+	const combinedFiles = [...preambleFiles, ...sourceFiles];
+	if (macros) {
+		return runMacrosOnSourceFiles(combinedFiles, macros);
+	}
+	return combinedFiles;
 };
 
 const writeDocumentToPubDraft = async (pubId, document) => {
