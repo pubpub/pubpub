@@ -16,6 +16,7 @@ const findOrCreateCommunity = async (directive, actor) => {
 				accentColorLight: accentColorLight || 'white',
 			},
 			actor,
+			false,
 		);
 		return Community.findOne({ where: { subdomain: createdSubdomain } });
 	}

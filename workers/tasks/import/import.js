@@ -41,7 +41,7 @@ const callPandoc = (tmpDirPath, files, args) => {
 	return { output: output, error: error };
 };
 
-const categorizeSourceFiles = (sourceFiles) => {
+export const categorizeSourceFiles = (sourceFiles) => {
 	const preambles = sourceFiles.filter((file) => file.label === 'preamble');
 	const document = sourceFiles.find((file) => file.label === 'document');
 	const bibliography = sourceFiles.find((file) => file.label === 'bibliography');

@@ -139,6 +139,9 @@ const mergeDirectives = (directives) => {
 	return [
 		{
 			...directives.reduce((a, b) => ({ ...a, ...b }), {}),
+			resolve: directives
+				.map((directive) => directive.resolve || [])
+				.reduce((a, b) => [...a, ...b], []),
 			$meta: $meta,
 		},
 	];

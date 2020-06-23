@@ -1,10 +1,17 @@
-/* eslint-disable no-restricted-syntax, no-loop-func, no-param-reassign */
+/* eslint-disable no-restricted-syntax, no-loop-func, no-param-reassign, no-constant-condition */
 import fs from 'fs-extra';
 import tmp from 'tmp-promise';
 import { extensionFor } from '../util';
 
-const isConcatableFile = (sourceFile) =>
-	['document', 'supplement', 'preamble'].includes(sourceFile.label);
+const getConcatableFilesAndDocument = (sourceFiles) => {
+	const document = sourceFiles.find((s) => s.label === 'document');
+	const concatableFiles = [
+		...sourceFiles.filter((s) => s.label === 'preamble'),
+		document,
+		...sourceFiles.filter((s) => s.label === 'supplement'),
+	];
+	return { document: document, concatableFiles: concatableFiles };
+};
 
 const asArray = (something) => (Array.isArray(something) ? something : [something]);
 
@@ -25,7 +32,7 @@ const transformSourceWithMacros = (sourceText, compiledMacros, definitions) => {
 			transformations.forEach((transformation) => {
 				const interpolateArgs = [definitions, [match, ...parts]];
 				if (typeof transformation === 'string') {
-					returnValue = interpolateString(returnValue, ...interpolateArgs);
+					returnValue = interpolateString(transformation, ...interpolateArgs);
 				} else if (transformation.define) {
 					const [rawKey, rawValue] = transformation.define;
 					const key = interpolateString(rawKey, ...interpolateArgs);
@@ -51,8 +58,7 @@ const compileMacros = (macros) => {
 export const runMacrosOnSourceFiles = async (sourceFiles, macros, maxLoopsPermitted = 10) => {
 	const definitions = {};
 	const compiledMacros = compileMacros(macros);
-	const concatableFiles = sourceFiles.filter(isConcatableFile);
-	const document = concatableFiles.find((file) => file.label === 'document');
+	const { concatableFiles, document } = getConcatableFilesAndDocument(sourceFiles);
 	let sourceText = await Promise.all(
 		concatableFiles.map((file) => fs.readFile(file.tmpPath)),
 	).then((buffs) => buffs.map((buff) => buff.toString()).join('\n\n'));
@@ -69,13 +75,11 @@ export const runMacrosOnSourceFiles = async (sourceFiles, macros, maxLoopsPermit
 				`Exceeded maximum loop count of ${maxLoopsPermitted} while expanding macros`,
 			);
 		}
-		console.log(sourceText);
-	// eslint-disable-next-line no-constant-condition
 	} while (true);
 	const { path: tmpPath } = await tmp.file({ postfix: `.${extensionFor(document.tmpPath)}` });
 	await fs.writeFileSync(tmpPath, sourceText);
 	return [
-		{ tmpPath: tmpPath, label: 'document' },
+		{ tmpPath: tmpPath, label: 'document', clientPath: document.clientPath },
 		...sourceFiles.filter((file) => !concatableFiles.includes(file)),
 	];
 };

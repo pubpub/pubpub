@@ -7,7 +7,7 @@ import { subscribeUser } from '../utils/mailchimp';
 import { alertNewCommunity } from '../utils/webhooks';
 import { updateCommunityData } from '../utils/search';
 
-export const createCommunity = (inputValues, userData) => {
+export const createCommunity = (inputValues, userData, alertAndSubscribe = true) => {
 	const newCommunityId = uuidv4();
 	const homePageId = uuidv4();
 	const subdomain = slugifyString(inputValues.subdomain);
@@ -74,7 +74,7 @@ export const createCommunity = (inputValues, userData) => {
 			return Page.create(newpage);
 		})
 		.then(() => {
-			if (isProd()) {
+			if (alertAndSubscribe && isProd()) {
 				subscribeUser(userData.email, 'be26e45660', ['Community Admins']);
 				alertNewCommunity(inputValues.title, subdomain, userData.fullName, userData.email);
 			}
