@@ -69,6 +69,8 @@ If you want to discard all _created_ objects (preserving those that were targete
 npm run tools bulkimport -- --actor user-slug --receipt /path/to/receipt --discard
 ```
 
+By default, all of these commands will interface with the development (`duqduq`) instance. When you're ready to write things to prod, prepend all of these commands with `PUBPUB_PRODUCTION=true`.
+
 # Writing directives
 
 There is a kitchen sink of directive options available, but a conceptual overview of important ones might be useful before we list them all.
