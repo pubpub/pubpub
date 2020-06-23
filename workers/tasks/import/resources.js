@@ -2,7 +2,6 @@
 import path from 'path';
 
 import { generateAssetKeyForFile, uploadFileToAssetStore, getUrlForAssetKey } from './assetStore';
-import { downloadRemoteUrlToTmpPath } from './download';
 
 const getSourceFileForResource = (resourcePath, sourceFiles, document) => {
 	const possibleSourceFiles = sourceFiles.filter((file) => file.clientPath);
@@ -38,15 +37,11 @@ const getSourceFileForResource = (resourcePath, sourceFiles, document) => {
 };
 
 const uploadPendingSourceFile = async (sourceFile, newAssetKey) => {
-	const { tmpPath, remoteUrl } = sourceFile;
+	const { tmpPath } = sourceFile;
 	if (tmpPath) {
 		return uploadFileToAssetStore(tmpPath, newAssetKey);
 	}
-	if (remoteUrl) {
-		const newTmpPath = await downloadRemoteUrlToTmpPath(remoteUrl);
-		return uploadFileToAssetStore(newTmpPath, newAssetKey);
-	}
-	throw new Error('Pending source file must have a tmpPath or remoteUrl');
+	throw new Error('Pending source file must have a tmpPath');
 };
 
 export const createResourceTransformer = ({ sourceFiles, document, bibliographyItems }) => {
@@ -66,17 +61,6 @@ export const createResourceTransformer = ({ sourceFiles, document, bibliographyI
 		return null;
 	};
 
-	const getAssetKeyForRemoteUrl = (remoteUrl) => {
-		const isUrl = remoteUrl.startsWith('http://') || remoteUrl.startsWith('https://');
-		if (isUrl) {
-			const newKey = generateAssetKeyForFile(remoteUrl);
-			const sourceFile = { remoteUrl: remoteUrl };
-			pendingUploadsMap.set(sourceFile, newKey);
-			return newKey;
-		}
-		return null;
-	};
-
 	const getResource = (resource, context) => {
 		if (context === 'citation') {
 			const item = bibliographyItems[resource];
@@ -87,8 +71,7 @@ export const createResourceTransformer = ({ sourceFiles, document, bibliographyI
 			return { structuredValue: '', unstructuredValue: '' };
 		}
 		if (context === 'image') {
-			const assetKey =
-				getAssetKeyForLocalResource(resource) || getAssetKeyForRemoteUrl(resource);
+			const assetKey = getAssetKeyForLocalResource(resource);
 			if (assetKey) {
 				return getUrlForAssetKey(assetKey);
 			}

@@ -1,12 +1,10 @@
 /* eslint-disable no-restricted-syntax */
 import path from 'path';
-import { ensureDir, createWriteStream } from 'fs-extra';
+import { ensureDir } from 'fs-extra';
 import tmp from 'tmp-promise';
-import request from 'request';
 
 import { downloadFileFromAssetStore, uploadFileToAssetStore } from './assetStore';
 import { convertFileTypeIfNecessary } from './images';
-import { extensionFor } from './util';
 
 tmp.setGracefulCleanup();
 
@@ -26,13 +24,3 @@ export const downloadAndConvertFiles = async (sourceFiles, tmpDirectoryPath) => 
 		}),
 	);
 };
-
-export const downloadRemoteUrlToTmpPath = (remoteUrl) =>
-	new Promise(async (resolve, reject) => {
-		const tmpFile = await tmp.file({ postfix: `.${extensionFor(remoteUrl)}` });
-		const writeStream = createWriteStream(tmpFile.path);
-		request(remoteUrl)
-			.pipe(writeStream)
-			.on('error', (error) => reject(error))
-			.on('close', () => resolve(tmpFile.path));
-	});
