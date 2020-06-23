@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TimeAgo from 'react-timeago';
 
-import { usePageContext } from 'utils/hooks';
 import { DialogLauncher, PubReleaseDialog, PubReleaseReviewDialog } from 'components';
 import { Menu, MenuItem } from 'components/Menu';
-import { pubUrl } from 'shared/utils/canonicalUrls';
-import { formatDate } from 'shared/utils/dates';
+import { pubUrl } from 'utils/canonicalUrls';
+import { formatDate } from 'utils/dates';
+import { usePageContext } from 'utils/hooks';
 
 import ResponsiveHeaderButton from './ResponsiveHeaderButton';
 
@@ -41,14 +41,9 @@ const getHistoryButtonLabelForTimestamp = (timestamp, label, noTimestampLabel) =
 
 const DraftReleaseButtons = (props) => {
 	const { historyData, pubData, updateHistoryData, updatePubData } = props;
-	const {
-		communityData,
-		scopeData,
-		loginData: { id: userId },
-	} = usePageContext();
-	const { canView, canViewDraft, canAdmin } = scopeData.activePermissions;
+	const { communityData, scopeData } = usePageContext();
+	const { canView, canViewDraft, canAdmin, canCreateReviews } = scopeData.activePermissions;
 	const { isRelease } = pubData;
-	const canRequestReview = !canAdmin && !!userId;
 
 	const renderForRelease = () => {
 		const { releases, releaseNumber } = pubData;
@@ -153,7 +148,7 @@ const DraftReleaseButtons = (props) => {
 						)}
 					</DialogLauncher>
 				)}
-				{canRequestReview && (
+				{canCreateReviews && (
 					<DialogLauncher
 						renderLauncherElement={({ openDialog }) => (
 							<ResponsiveHeaderButton

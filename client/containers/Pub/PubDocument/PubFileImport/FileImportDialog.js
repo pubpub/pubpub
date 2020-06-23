@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Dropzone from 'react-dropzone';
 import { useKeyPressEvent } from 'react-use';
-
 import {
 	Button,
 	ButtonGroup,
@@ -19,9 +18,9 @@ import {
 } from '@blueprintjs/core';
 
 import { MenuConfigProvider } from 'components/Menu';
-import { apiFetch } from 'utils';
-import { pingTask } from 'utils/pingTask';
-import { extensionToPandocFormat, bibliographyFormats } from 'shared/import/formats';
+import { extensionToPandocFormat, bibliographyFormats } from 'utils/import/formats';
+import { apiFetch } from 'client/utils/apiFetch';
+import { pingTask } from 'client/utils/pingTask';
 
 import { useFileManager } from './useFileManager';
 import { extensionFor } from './formats';

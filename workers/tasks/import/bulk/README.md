@@ -287,12 +287,12 @@ Pub or Collection directives can specify attribution information that will be tu
 ```
 type: pub
 attributions:
-    - Deng Jinghan
+    - Author One
     - {
-        name: "Kenneth Fieldman",
-        affiliation: "YeTI"
+        name: "Author Two",
+        affiliation: "Some University of Something"
     }
-    - slug: jennifer-xu
+    - slug: author-three
 ```
 
 As shown here, a string is sufficient, but an object with `Pub/CollectionAttribution` properties is also accepted. Where a `slug` is provided, it is resolved to a PubPub user.

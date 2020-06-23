@@ -1,17 +1,18 @@
 import uuidv4 from 'uuid/v4';
 
-import { isProd } from 'shared/utils/environment';
-import { Community, Page, Member } from '../models';
-import { generateHash, slugifyString } from '../utils';
-import { subscribeUser } from '../utils/mailchimp';
-import { alertNewCommunity } from '../utils/webhooks';
-import { updateCommunityData } from '../utils/search';
+import { Community, Page, Member } from 'server/models';
+import { slugifyString } from 'utils/strings';
+import { generateHash } from 'utils/hashes';
+import { isProd } from 'utils/environment';
+import { subscribeUser } from 'server/utils/mailchimp';
+import { alertNewCommunity } from 'server/utils/webhooks';
+import { updateCommunityData } from 'server/utils/search';
 
 export const createCommunity = (inputValues, userData, alertAndSubscribe = true) => {
 	const newCommunityId = uuidv4();
 	const homePageId = uuidv4();
 	const subdomain = slugifyString(inputValues.subdomain);
-	const subdomainBlacklist = [
+	const forbiddenSubdomains = [
 		'v1',
 		'v2',
 		'v3',
@@ -30,7 +31,7 @@ export const createCommunity = (inputValues, userData, alertAndSubscribe = true)
 		'testing',
 		'test',
 	];
-	if (subdomainBlacklist.indexOf(subdomain) > -1) {
+	if (forbiddenSubdomains.indexOf(subdomain) > -1) {
 		throw new Error('URL already used');
 	}
 	return Community.findOne({

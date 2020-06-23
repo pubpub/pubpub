@@ -1,17 +1,19 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useContext, useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { useBeforeUnload } from 'react-use';
 import PropTypes from 'prop-types';
+import { useBeforeUnload } from 'react-use';
 import * as Sentry from '@sentry/browser';
 import { Card, Alert } from '@blueprintjs/core';
-
-import Editor, { getJSON, getNotes, dispatchEmptyTransaction } from 'components/Editor';
-import { apiFetch, getResizedUrl } from 'utils';
 import TimeAgo from 'react-timeago';
 import { saveAs } from 'file-saver';
 import { debounce } from 'debounce';
+
+import Editor, { getJSON, getNotes, dispatchEmptyTransaction } from 'components/Editor';
+import { getResizedUrl } from 'utils/images';
+import { apiFetch } from 'client/utils/apiFetch';
 import { usePageContext } from 'utils/hooks';
 
+import { PubSuspendWhileTypingContext } from '../PubSuspendWhileTyping';
 import discussionSchema from './DiscussionAddon/discussionSchema';
 import Discussion from './PubDiscussions/Discussion';
 
@@ -155,6 +157,7 @@ const PubBody = (props) => {
 	const editorKey = editorKeyHistory || editorKeyCollab;
 	const isReadOnly = pubData.isReadOnly || isViewingHistory;
 	const initialContent = (isViewingHistory && historyData.historyDoc) || pubData.initialDoc;
+	const { markLastInput } = useContext(PubSuspendWhileTypingContext);
 	const showErrorTime = lastSavedTime && editorErrorTime - lastSavedTime > 500;
 	return (
 		<main className="pub-body-component" ref={editorWrapperRef}>
@@ -195,6 +198,7 @@ const PubBody = (props) => {
 				placeholder={pubData.isReadOnly ? undefined : 'Begin writing here...'}
 				initialContent={initialContent}
 				isReadOnly={isReadOnly}
+				onKeyPress={markLastInput}
 				onChange={(editorChangeObject) => {
 					if (!isViewingHistory) {
 						updateLocalData('collab', { editorChangeObject: editorChangeObject });

@@ -1,5 +1,5 @@
-import { Release, Branch } from '../models';
-import { mergeFirebaseBranch, getLatestKey } from '../utils/firebaseAdmin';
+import { Release, Branch } from 'server/models';
+import { mergeFirebaseBranch, getLatestKey } from 'server/utils/firebaseAdmin';
 
 export const createRelease = async ({ userId, pubId, draftKey, noteContent, noteText }) => {
 	const pubBranches = await Branch.findAll({ where: { pubId: pubId } });

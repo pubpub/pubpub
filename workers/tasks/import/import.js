@@ -3,7 +3,7 @@ import path from 'path';
 import { spawnSync } from 'child_process';
 import { parsePandocJson, fromPandoc, setPandocApiVersion } from '@pubpub/prosemirror-pandoc';
 
-import { extensionToPandocFormat } from 'shared/import/formats';
+import { extensionToPandocFormat } from 'utils/import/formats';
 
 import pandocRules from './rules';
 import { downloadAndConvertFiles } from './download';

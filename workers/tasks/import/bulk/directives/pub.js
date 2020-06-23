@@ -11,7 +11,7 @@ import { getBranchRef } from 'server/utils/firebaseAdmin';
 import { createPub as createPubQuery } from 'server/pub/queries';
 import { createCollectionPub } from 'server/collectionPub/queries';
 import { Branch, PubAttribution } from 'server/models';
-import { extensionToPandocFormat, bibliographyFormats } from 'shared/import/formats';
+import { extensionToPandocFormat, bibliographyFormats } from 'utils/import/formats';
 
 import { getFullPathsInDir, extensionFor } from '../../util';
 import { importFiles } from '../../import';

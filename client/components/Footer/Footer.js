@@ -8,10 +8,12 @@ import {
 	Popover,
 	PopoverInteractionKind,
 } from '@blueprintjs/core';
+
 import { GridWrapper } from 'components';
 import Icon from 'components/Icon/Icon';
-import { populateNavigationIds, apiFetch, defaultFooterLinks, populateSocialItems } from 'utils';
+import { apiFetch } from 'client/utils/apiFetch';
 import { usePageContext } from 'utils/hooks';
+import { populateNavigationIds, defaultFooterLinks, populateSocialItems } from 'utils/community';
 
 require('./footer.scss');
 
@@ -32,7 +34,7 @@ const Footer = (props) => {
 	const { isBasePubPub } = locationData;
 	const links = isBasePubPub
 		? [
-				{ id: 1, title: 'Create your community', href: '/create/community' },
+				{ id: 1, title: 'Create your community', href: '/community/create' },
 				{ id: 2, title: 'Login', href: '/login' },
 				{ id: 3, title: 'Signup', href: '/signup' },
 				{ id: 4, title: 'Legal', href: '/legal' },

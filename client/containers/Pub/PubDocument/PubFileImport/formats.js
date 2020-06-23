@@ -1,4 +1,4 @@
-import { extensionToPandocFormat, bibliographyFormats } from 'shared/import/formats';
+import { extensionToPandocFormat, bibliographyFormats } from 'utils/import/formats';
 
 export const exclusiveFileLabels = ['document', 'bibliography'];
 
