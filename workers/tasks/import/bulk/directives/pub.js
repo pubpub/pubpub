@@ -22,12 +22,23 @@ import { runMacrosOnSourceFiles } from '../macros';
 import { getAttributionAttributes, cloneWithKeys } from './util';
 
 const pubAttributesFromMetadata = ['title', 'description', 'slug', 'customPublishedAt'];
-const pubAttributesFromDirective = ['title', 'description', 'slug'];
+const pubAttributesFromDirective = [
+	'title',
+	'description',
+	'slug',
+	'headerStyle',
+	'headerBackgroundColor',
+	'customPublishedAt',
+	'doi',
+	'licenseSlug',
+	'citationStyle',
+	'citationInlineStyle',
+];
 const documentExtensions = Object.keys(extensionToPandocFormat);
 const documentSchema = buildSchema();
 
-const getSourcesForMetadataStrategy = (directive) => {
-	const { metadataStrategy: strategy } = directive;
+const getSourcesForAttributeStrategy = (directive) => {
+	const { attributeStrategy: strategy } = directive;
 	if (!strategy || strategy === 'merge') {
 		return { import: true, directive: true };
 	}
@@ -39,14 +50,14 @@ const getSourcesForMetadataStrategy = (directive) => {
 	}
 	throw new BulkImportError(
 		{ directive: directive },
-		`Invalid metadataStrategy ${strategy}. Must be one of "merge", "import", "directive"`,
+		`Invalid attributeStrategy ${strategy}. Must be one of "merge", "import", "directive"`,
 	);
 };
 
 const createPubAttributions = async (pub, proposedMetadata, directive) => {
 	const { attributions: proposedAttributions = [] } = proposedMetadata;
 	const { matchSlugsToAttributions = [] } = directive;
-	const sources = getSourcesForMetadataStrategy(directive);
+	const sources = getSourcesForAttributeStrategy(directive);
 	let attributionsAttrs = [];
 	if (sources.import) {
 		const matchedProposedAttributions = proposedAttributions.map(({ name, users }) => {
@@ -92,7 +103,7 @@ const resolveUploadablePubAttributes = async (directive, sourceFiles) => {
 };
 
 const createPub = async ({ communityId, directive, proposedMetadata, resolvedAttributes }) => {
-	const sources = getSourcesForMetadataStrategy(directive);
+	const sources = getSourcesForAttributeStrategy(directive);
 	const attributes = {
 		communityId: communityId,
 		...(sources.import && cloneWithKeys(proposedMetadata, pubAttributesFromMetadata)),
@@ -169,6 +180,7 @@ const labelGatheredSourceFiles = (sourceFiles, directive) => {
 			document: documentPath,
 			bibliography: bibliographyPath,
 			supplements: supplementPaths = [],
+			preambles: preamblePaths = [],
 		} = {},
 	} = directive;
 	let hasDocument = sourceFiles.some((file) => file.label === 'document');
@@ -193,6 +205,8 @@ const labelGatheredSourceFiles = (sourceFiles, directive) => {
 			labelledFiles.push({ ...sourceFile, label: 'bibliography' });
 		} else if (supplementPaths.includes(clientPath)) {
 			labelledFiles.push({ ...sourceFile, label: 'supplement' });
+		} else if (preamblePaths.includes(clientPath)) {
+			labelledFiles.push({ ...sourceFile, label: 'preamble' });
 		} else {
 			labelledFiles.push(sourceFile);
 		}
@@ -253,14 +267,13 @@ const writeDocumentToPubDraft = async (pubId, document) => {
 };
 
 export const resolvePubDirective = async ({ directive, targetPath, community, collection }) => {
-	const { importerFlags = {}, resourceReplacements = {} } = directive;
+	const { importerFlags = {} } = directive;
 	const sourceFiles = await getImportableFiles(directive, targetPath);
 	const tmpDir = await tmp.dir();
 	const { doc, warnings, proposedMetadata } = await importFiles({
 		tmpDirPath: tmpDir.path,
 		sourceFiles: sourceFiles,
 		importerFlags: importerFlags,
-		resourceReplacements: resourceReplacements,
 	});
 	const resolvedAttributes = await resolveUploadablePubAttributes(directive, sourceFiles);
 	const pub = await createPub({

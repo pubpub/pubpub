@@ -44,39 +44,6 @@ const maybeThrowNestedCollectionError = (matchedDirectives) => {
 	}
 };
 
-const checkAllFilesExistForPubDirective = async (directive, directoryPath) => {
-	const { files } = directive;
-	if (!files) {
-		return;
-	}
-	const stat = await fs.lstat(directoryPath);
-	if (!stat.isDirectory()) {
-		throw new Error(
-			`Directive ${directive.$meta.source} with 'files' key must target a directory, not a file.`,
-		);
-	}
-	const { document, bibliography, supplements = [] } = files;
-	const pathsToCheck = [document, bibliography, ...supplements];
-	const missingFiles = await Promise.all(
-		pathsToCheck
-			.filter((x) => x)
-			.map(async (filePath) => {
-				const exists = await fs.exists(path.join(directoryPath, filePath));
-				if (exists) {
-					return null;
-				}
-				return filePath;
-			}),
-	).then((res) => res.filter((x) => x));
-	if (missingFiles.length > 0) {
-		throw new Error(
-			`
-            Directive ${directive.$meta.source} refers to 'files' that do not exist:
-            ${missingFiles.join('\t')}`,
-		);
-	}
-};
-
 const checkDirectiveForRequiredKeys = (directive) => {
 	const { type, title, create, slug, subdomain } = directive;
 	if (type === 'pub') {
@@ -127,6 +94,7 @@ const mergeDirectives = (directives) => {
 	if (directives.length <= 1) {
 		return directives;
 	}
+
 	const $meta = {
 		// Take `name` from the directive closest to its target in the filesystem
 		name: directives[directives.length - 1].$meta.name,
@@ -139,6 +107,9 @@ const mergeDirectives = (directives) => {
 	return [
 		{
 			...directives.reduce((a, b) => ({ ...a, ...b }), {}),
+			attributions: directives
+				.map((directive) => directive.attributions || [])
+				.reduce((a, b) => [...a, ...b], []),
 			resolve: directives
 				.map((directive) => directive.resolve || [])
 				.reduce((a, b) => [...a, ...b], []),
@@ -172,11 +143,6 @@ const matchDirectivesToPath = async (filePath, directives) => {
 			throwConflictingDirectiveError(pub, collection, filePath);
 		}
 	}
-	await Promise.all(
-		matchingDirectives.map((directive) =>
-			checkAllFilesExistForPubDirective(directive, filePath),
-		),
-	);
 	return mergeDirectivesByType(matchingDirectives);
 };
 
@@ -319,7 +285,7 @@ export const printImportPlan = (importPlan, { verb = 'CREATE' } = {}) => {
 							resolvedByDirective.pub &&
 							resolvedByDirective.pub.title) ||
 						title ||
-						'(derived)';
+						'(to be derived)';
 					log(`${sharedPrefix}${verb} PUB title=${effectiveTitle}`);
 				}
 				if (type === 'collection') {

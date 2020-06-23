@@ -38,6 +38,7 @@ const transformSourceWithMacros = (sourceText, compiledMacros, definitions) => {
 					const key = interpolateString(rawKey, ...interpolateArgs);
 					const value = interpolateString(rawValue, ...interpolateArgs);
 					definitions[key] = value;
+					returnValue = '';
 				}
 			});
 			return returnValue;

@@ -23,13 +23,12 @@ const createCollectionAttributions = async (collection, directive) => {
 
 const findOrCreateCollection = async (directive, community) => {
 	if (directive.create) {
-		const title = directive.title || directive.$meta.name;
-		const collection = await createCollection({
+		return createCollection({
 			communityId: community.id,
-			title: title,
+			title: directive.title || directive.$meta.name,
 			kind: directive.kind || 'tag',
+			doi: directive.doi || null,
 		});
-		return collection;
 	}
 	const foundCollection = await Collection.findOne({ where: { slug: directive.slug } });
 	if (!foundCollection) {

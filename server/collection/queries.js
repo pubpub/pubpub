@@ -2,7 +2,14 @@ import { normalizeMetadataToKind } from 'shared/collections/metadata';
 import { slugifyString, generateHash } from 'utils';
 import { Collection, CollectionPub, Community } from '../models';
 
-export const createCollection = ({ communityId, title, kind, pageId = null, isPublic = false }) => {
+export const createCollection = ({
+	communityId,
+	title,
+	kind,
+	pageId = null,
+	doi = null,
+	isPublic = false,
+}) => {
 	return Community.findOne({ where: { id: communityId } }).then((community) => {
 		const collection = {
 			title: title.trim(),
@@ -13,6 +20,7 @@ export const createCollection = ({ communityId, title, kind, pageId = null, isPu
 			editHash: generateHash(8),
 			communityId: communityId,
 			pageId: pageId,
+			doi: doi,
 			kind: kind,
 		};
 		const metadata = normalizeMetadataToKind({}, kind, {
