@@ -16,17 +16,16 @@ export const usePendingChanges = () => {
 	return useContext(PendingChanges);
 };
 
-export const useThrottled = (value, timeout, throttleOptions) => {
-	const { leading, trailing } = throttleOptions;
+export const useThrottled = (value, timeout, { leading, trailing } = {}) => {
 	const [throttledValue, setThrottledValue] = useState(value);
 	const throttledSetState = useMemo(
-		() => throttle(setThrottledValue, timeout, throttleOptions),
-		[timeout, leading, trailing]
+		() => throttle(setThrottledValue, timeout, { leading: leading, trailing: trailing }),
+		[timeout, leading, trailing],
 	);
 
 	useEffect(() => {
 		throttledSetState(value);
-	}, [value]);
+	}, [throttledSetState, value]);
 
 	return throttledValue;
 };

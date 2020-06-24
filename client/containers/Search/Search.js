@@ -19,7 +19,7 @@ const propTypes = {
 const Search = (props) => {
 	const { searchData } = props;
 	const { locationData, communityData } = usePageContext();
-	const [searchQuery, setSearchQuery] = useState(locationData.query.q);
+	const [searchQuery, setSearchQuery] = useState(locationData.query.q || '');
 	const [searchResults, setSearchResults] = useState([]);
 	const [isLoading, setIsLoading] = useState(locationData.query.q || false);
 	const [page, setPage] = useState(
@@ -27,6 +27,7 @@ const Search = (props) => {
 	);
 	const [numPages, numPagesSetter] = useState(0);
 	const [mode, modeSetter] = useState(locationData.query.mode || 'pubs');
+	const throttledSearchQuery = useThrottled(searchQuery, 1000, { leading: false });
 	const inputRef = useRef(null);
 	const clientRef = useRef(undefined);
 	const indexRef = useRef(undefined);
@@ -47,20 +48,18 @@ const Search = (props) => {
 	};
 
 	const handleSearch = () => {
-		indexRef.current
-			.search(throttledSearchQuery, {
-				page: page,
-			})
-			.then((results) => {
-				setIsLoading(false);
-				setSearchResults(results.hits);
-				numPagesSetter(Math.min(results.nbPages, 10));
-			});
+		if (throttledSearchQuery.length > 0) {
+			indexRef.current
+				.search(throttledSearchQuery, {
+					page: page,
+				})
+				.then((results) => {
+					setIsLoading(false);
+					setSearchResults(results.hits);
+					numPagesSetter(Math.min(results.nbPages, 10));
+				});
+		}
 	};
-
-	const throttledSearchQuery = useThrottled(searchQuery, 1000, { leading: false });
-
-	useEffect(handleSearch, [throttledSearchQuery]);
 
 	useEffect(() => {
 		setClient();
@@ -71,6 +70,8 @@ const Search = (props) => {
 		inputRef.current.value = '';
 		inputRef.current.value = val;
 	}, []); /* eslint-disable-line react-hooks/exhaustive-deps */
+
+	useEffect(handleSearch, [throttledSearchQuery]);
 
 	const setMode = (nextMode) => {
 		if (nextMode !== mode) {
