@@ -17,7 +17,7 @@ my-blog/
 
 Here is a minimal configuration file that will create a new Community and import every Markdown file as a new Pub:
 
-```
+```yaml
 # (config.pubpub.yaml)
 
 type: community
@@ -25,7 +25,7 @@ create: true
 title: My Blog
 
 children:
-    *.md:
+    "*.md":
         type: pub
 ```
 
@@ -42,7 +42,7 @@ It's okay to gloss over this. A full list of possible values to provide here is 
 Bulk import of Pubs is accomplished using a command-line tool whose contents live in this directory. It is invoked as a two-step process. The first step is as follows:
 
 ```
-npm run tools bulkimport -- --directory /path/to/target --actor user-slug --receipt /path/to/receipt
+npm run tools bulkimport -- --directory /path/to/target --actor=pubpub-user-slug --receipt /path/to/receipt
 ```
 
 where:
@@ -57,23 +57,23 @@ these arguments are optional:
 - `--dry-run` to print a description of what will be imported, without doing it.
 - `--yes` to skip all confirmation prompts.
 
-Any Communities, Collections, and Pubs created will be immediately visible online, though Collections will be private and Pubs will remain unreleased. If you're happy with the way things look on PubPub, you can take the second step of publishing these changes — creating a Release for newly created Pubs, and making Collections public — as follows:
+Any Communities, Collections, and Pubs created will be immediately visible online, though Collections will be private and Pubs will remain unreleased. A record of what was created will be stored in the `receipt` file, which will be referenced later when publishing or discarding changes. If you're happy with the way things look on PubPub, you can take the second step of publishing these changes — creating a Release for newly created Pubs, and making Collections public — as follows:
 
 ```
-npm run tools bulkimport -- --actor user-slug --receipt /path/to/receipt --publish
+npm run tools bulkimport -- --actor=pubpub-user-slug --receipt /path/to/receipt --publish
 ```
 
 If you want to discard all _created_ objects (preserving those that were targeted by directives but not created by them), then run:
 
 ```
-npm run tools bulkimport -- --actor user-slug --receipt /path/to/receipt --discard
+npm run tools bulkimport -- --actor=pubpub-user-slug --receipt /path/to/receipt --discard
 ```
 
 By default, all of these commands will interface with the development (`duqduq`) instance. When you're ready to write things to prod, prepend all of these commands with `PUBPUB_PRODUCTION=true`.
 
 # Writing directives
 
-There is a kitchen sink of directive options available, but a conceptual overview of important ones might be useful before we list them all.
+There is a [kitchen sink](#directive-options) of directive options available, but a conceptual overview of important ones might be useful before we list them all.
 
 ## Understanding how directives are resolved
 
@@ -98,7 +98,7 @@ my-import/
       ...
 ```
 
-```
+```yaml
 # (config.pubpub.yaml)
 
 type: community
@@ -119,9 +119,11 @@ children:
 
 There are three directives in this file. The outermost one has `type: community` and _matches_ the outermost directory. The two other directives are inside of `children`, and you'll notice that they both have `type: pub`, and both of them _match_ the file `posts/2020/march/guest-post.md`! When this happens, the directives will be merged, and only one Pub will be created for that Markdown file.
 
+### The `partial` option
+
 When working with structures like this, the `partial: true` option is very helpful. If _all_ of the directives of a given type matching a file are _partial_, they will be discarded and no object will be created. This lets you use a wildcard to specify shared properties across many matched files, without importing all files that could possibly be matched. In the above example, if we were to write:
 
-```
+```yaml
 posts/*/*/*.md:
     type: pub
     partial: true
@@ -133,7 +135,7 @@ Only one Pub would be created from the entire import, from `guest-post.md`.
 
 Depending on whether the Community or Collection you wish to import Pubs to already exists or not, you will want to either pass `create: true`, or specify an existing Community or Collection by `subdomain` and `slug`, respectively:
 
-```
+```yaml
 # creating a new Collection
 type: collection
 create: true
@@ -141,7 +143,7 @@ title: My New Collection
 slug: my-new-collection # optional
 ```
 
-```
+```yaml
 # targeting an existing Collection
 type: collection
 slug: this-one-already-exists
@@ -149,7 +151,7 @@ slug: this-one-already-exists
 
 (Recall that the above directive must be nested inside one targeting a Community, or must be invoked with the `--community` flag, for this to work.)
 
-```
+```yaml
 # creating a new Community
 type: community
 create: true
@@ -158,7 +160,7 @@ description: Pretty cool, no? # optional
 subdomain: my-new-community # optional
 ```
 
-```
+```yaml
 # targeting an existing Community
 type: community
 subdomain: an-existing-community
@@ -184,7 +186,7 @@ a-bunch-of-articles/
 
 Rather than placing a `.pubpub.yaml` with a `type: pub` directive inside of each `article-` directory, you can use `children` to accomplish the same thing:
 
-```
+```yaml
 children:
     "*":
         type: pub
@@ -193,7 +195,7 @@ children:
 The keys of `children` can be paths to files or folders, including a simple wildcard syntax in which:
 
 -  `*.ext` will match any `.ext` file
-- `foo.*` will match any file named `foo`
+- `foo.*` will match any file named `foo` (minus the extension)
 -  `*` will match any directory
 -  `*.*` will match any file (you usually don't want this one)
 
@@ -207,7 +209,7 @@ It is important to understand that directives can target either entire directori
 
 When you need fine-grained control over the roles that individual files play in a Pub import, use the `labels` directive option, e.g.:
 
-```
+```yaml
 labels:
     document: my-tex-file.tex
     bibliography: sources.bib
@@ -228,7 +230,7 @@ The `biblography` is not passed directly into Pandoc and is used to extract a bi
 
 When you need to bring extra files into the Pub import that are not inside of its directory, use the `resolve` directive option, e.g.;
 
-```
+```yaml
 resolve:
     ../path/to/images:
         into: images/
@@ -239,12 +241,12 @@ resolve:
 
 The `into` option rewrites file paths for use in the import. For instance, a document expecting to see `images/dog.png` will be redirected to find it in `../path/to/images/dog.png` instead. Likewise, `as` resolves individual files outside of the target directory by a specific name.
 
-This can be very helpful if you're dealing with TeX bundles which give references to resources such as images as paths relative from the root of the bundle rather than the containing file. The `alias` and `as` values do not even need to be file paths — if your source material references URLs that are mirrored in a local directory structure, you can do something like:
+This can be very helpful if you're dealing with TeX bundles which give references to resources such as images as paths relative from the root of the bundle rather than the containing file. The `into` and `as` values do not even need to be file paths — if your source material references URLs that are mirrored in a local directory structure, you can do something like:
 
-```
+```yaml
 resolve:
     ../../wp-content:
-        alias: http://my-site.com/wp-content/
+        into: http://my-site.com/wp-content/
 ```
 
 **Important:** paths given to `resolve` are relative to the file or directory matched by the directive, not to the file in which the directive is written._ For instance, given the following structure:
@@ -260,7 +262,7 @@ my-import/
 
 We would turn `my-first-post.md` into a Pub as follows:
 
-```
+```yaml
 # config.pubpub.yaml
 
 children:
@@ -276,7 +278,7 @@ The thing to note here is `../images` is the relative path from `my-first-post.m
 
 Pub directives can contain basic metadata information like:
 
-```
+```yaml
 title: Some New Pub
 description: It's a description
 slug: a-pub-we-made
@@ -286,7 +288,7 @@ But all of these are optional. Where they are omitted, they may be derived from 
 
 Pub or Collection directives can specify attribution information that will be turned into `PubAttribution` or `CollectionAttribution` objects, e.g.:
 
-```
+```yaml
 type: pub
 attributions:
     - Author One
@@ -297,7 +299,7 @@ attributions:
     - slug: author-three
 ```
 
-As shown here, a string is sufficient, but an object with `Pub/CollectionAttribution` properties is also accepted. Where a `slug` is provided, it is resolved to a PubPub user.
+As shown here, a string is sufficient, but an object with `PubAttribution`/`CollectionAttribution` properties is also accepted. Where a `slug` is provided, it is resolved to a PubPub user.
 
 Attribution information will likewise be inferred from the Pandoc import unless `attributeStrategy` is configured to ignore it.
 
@@ -305,20 +307,20 @@ Attribution information will likewise be inferred from the Pandoc import unless 
 
 As something of a last resort, the importer can run automated find-and-replace operations ('macros') on the text that will be passed into Pandoc. A simple macro looks like this:
 
-```
+```yaml
 macros:
     "find me": "replace me with this"
 ```
 But of course, the keys here are compiled to regular expressions, and the values take regex-interpolated style positional arguments, e.g.
 
-```
+```yaml
 macros:
     "do (.*) before (.*)": "do $2 after $1"
 ```
 
 The real power of macros is the `define` feature. Intead of inserting a new string, specifying an object with `define` will replace the matched text with an empty string, and record a value for later retrieval instead.
 
-```
+```yaml
 macros:
     "\\sepfootnotecontent{(.*)}{(.*)}:
         define: ["footnote-$1", "$2"]
@@ -332,6 +334,8 @@ This can be helpful for mocking out some complicated TeX commands that Pandoc do
 **`type: string`**: universally required. One of `pub`, `collection`, `community`.
 
 **`create: boolean`**: required to create a new Community or Collection. Implied `true` when `type: pub`.
+
+**`partial: boolean`**: [see more](#the-partial-option)
 
 **`subdomain: string`**: required to target an existing Community.
 
@@ -370,7 +374,7 @@ This can be helpful for mocking out some complicated TeX commands that Pandoc do
 
 **`pandocMetadata: object`**: an arbitrary object that will be written as YAML to a separate file and given to the Pandoc import process as a metadata block.
 
-**`importerFlags: string[]`**: flags passed to the importer (the same ones available from the `meta+/` menu in the single-Pub importer).
+**`importerFlags: string[]`**: flags passed to the importer (the same ones available from the `Meta+/` "nerd mode" menu in the single-Pub importer).
 
 **`macros: {
     [regex: string]: string | {define: [string, string]}
@@ -414,12 +418,12 @@ root/
 
 transform each `.md` file into a Pub using this directive:
 
-```
+```yaml
 type: community
 create: true
 
 children:
-    *.md:
+    "*.md":
         type: pub
 ```
 
@@ -442,7 +446,7 @@ root/
 
 transform each `post-` directory into a Pub using this directive:
 
-```
+```yaml
 type: community
 create: true
 
@@ -471,7 +475,7 @@ root/
 
 tranform each immediate subdirectory into a Collection, and _its_ subdirectories into Pubs, using this directive:
 
-```
+```yaml
 type: community
 create: true
 
@@ -497,6 +501,59 @@ You may want to specify a Collectin and a Community at the root of the import, w
 
 - Target an existing Community with the CLI's `--community` argument instead.
 
+## Referencing source files in a shared resource directory
+
+Given this directory structure:
+
+```
+root/
+  config.pubpub.yaml
+  posts/
+    post-one.html
+    post-two-html
+    ...
+    post-10000.html
+  resources/
+    cat.png
+    dog.png
+    hyena.png
+```
+
+You might find HTML files with content like:
+
+```html
+<img src="resources/hyena.png">
+```
+
+To tell the importer where to find these images, use the `resolve` directive option:
+
+```yaml
+children:
+  posts/*.html:
+    type: pub
+    resolve:
+      ../resources:
+        into: resources
+```
+
+The result is as if the `resources/` directory were a sibling of each HTML file. You might even find something like this:
+
+```html
+<img src="https://best-exam-dumps-2020-here.info/resources/hyena.png">
+```
+
+If you have a local copy of the `resources` directory, you can resolve these URLs this way:
+
+```yaml
+children:
+  posts/*.html:
+    type: pub
+    resolve:
+      ../resources:
+        into: https://best-exam-dumps-2020-here.info/resources/
+```
+
+(Note the trailing slash here)
 
 ## Splitting a LaTeX book
 
@@ -519,7 +576,7 @@ book/
 
 The `entrypoint.tex` file looks like this:
 
-```
+```latex
 % ...a million lines of layout cruft
 
 % ...some potentially useful commands
@@ -536,7 +593,7 @@ The `entrypoint.tex` file looks like this:
 
 We cannot import this from `entrypoint.tex` because Pandoc will not split the book into chapter-Pubs. Instead, we can do that with a `children` directive:
 
-```
+```yaml
 children:
     chapters/*.tex:
         type: pub
@@ -548,8 +605,8 @@ children:
 
 But there is a problem — each of the chapters implicitly relies on the content from the `footnote-definitions.tex` file, and from the useful `\newcommand` definitions in the entrypoint file. We can solve the first problem using `resolve`:
 
-```
-children/
+```yaml
+children:
     chapters/*.tex:
         type: pub
         ...
@@ -582,8 +639,8 @@ book/
 
 We could simply accept the fact that `cruft.tex` will create a Pub, or we could take this opportunity to split the chapters out into individual directives:
 
-```
-children/
+```yaml
+children:
     chapters/chapter-one.tex:
         type: pub
         title: Chapter One: The Way Things Are
@@ -606,7 +663,7 @@ children/
 
 But look at all of this duplicated information between directives! Luckily, we can factor their common features into a wildcard-matched directive with `partial: true` as follows:
 
-```
+```yaml
 type: collection
 create: true
 kind: book
@@ -635,21 +692,21 @@ Here, although `chapters/*.tex` matches `cruft.tex`, it does so only "partially"
 
 Our final problem with this book is that its footnotes are written using the `sepfootnotes` LaTeX package, which allows you to define footnotes in one file and then reference them by ID in another file, as shown here:
 
-```
-# footnote-definitions.tex
+```latex
+% footnote-definitions.tex
 
 \sepfootnotecontent{F-25}{private correspondence}
 ```
 
-```
-# chapter-three.tex
+```latex
+% chapter-three.tex
 
 ...the inventor of pizza has explained that it was originally intended to be eaten with pineapple\sepfootnote{F-25}, but many people...
 ```
 
 Even when we `resolve` the footnotes file into each chapter, Pandoc does not know what to do with the `\sepfootnotecontent{}{}` and `\sepfootnote{}` commands that respectively define and reference footnotes. Luckily(?) we can use the `macros` directive option to mock up this feature:
 
-```
+```yaml
 chapters/*.tex:
     type: pub
     partial: true
