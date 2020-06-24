@@ -1,5 +1,5 @@
 import React, { useContext, useCallback, useEffect } from 'react';
-import throttle from "lodash.throttle";
+import throttle from 'lodash.throttle';
 
 export const PageContext = React.createContext({});
 
@@ -16,10 +16,11 @@ export const usePendingChanges = () => {
 	return useContext(PendingChanges);
 };
 
+
 export const useCallbackThrottled = (fn, timeout, throttleOptions, deps = []) => 
 	useCallback(throttle(fn, timeout, throttleOptions), deps);
 
 export const useEffectThrottled = (fn, timeout, throttleOptions, args = []) => {
-	const execute = useCallbackThrottled(fn, 1000, throttleOptions);
+	const execute = useCallbackThrottled(fn, timeout, throttleOptions);
 	useEffect(() => execute(...args), [execute, ...args]);
 };
