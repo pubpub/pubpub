@@ -8,7 +8,7 @@ import { Icon } from 'components';
 import { getResizedUrl } from 'utils/images';
 import { generatePageBackground } from 'utils/pages';
 import { generatePubBackground } from 'utils/pubs';
-import { usePageContext, useEffectThrottled } from 'utils/hooks';
+import { usePageContext, useThrottled } from 'utils/hooks';
 
 require('./search.scss');
 
@@ -46,21 +46,21 @@ const Search = (props) => {
 		}
 	};
 
-	const handleSearch = (searchQuery, page, mode) => {
-		if (!searchQuery) {
-			return;
-		}
-
-		indexRef.current.search(searchQuery, {
-			page
-		}).then((results) => {
-			setIsLoading(false);
-			setSearchResults(results.hits);
-			numPagesSetter(Math.min(results.nbPages, 10));
-		});
+	const handleSearch = () => {
+		indexRef.current
+			.search(throttledSearchQuery, {
+				page: page,
+			})
+			.then((results) => {
+				setIsLoading(false);
+				setSearchResults(results.hits);
+				numPagesSetter(Math.min(results.nbPages, 10));
+			});
 	};
 
-	useEffectThrottled(handleSearch, 1000, { leading: false }, [searchQuery, page, mode]);
+	const throttledSearchQuery = useThrottled(searchQuery, 1000, { leading: false });
+
+	useEffect(handleSearch, [throttledSearchQuery]);
 
 	useEffect(() => {
 		setClient();
