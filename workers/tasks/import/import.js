@@ -130,12 +130,14 @@ export const importFiles = async ({ sourceFiles, tmpDirPath, importerFlags = {} 
 export const importTask = async ({ sourceFiles: clientSourceFilesList, importerFlags }) => {
 	const tmpDirPath = await getTmpDirectoryPath();
 	const sourceFiles = await downloadAndConvertFiles(clientSourceFilesList, tmpDirPath);
-	return importFiles({ sourceFiles: sourceFiles, importerFlags: importerFlags }).catch(
-		(error) => ({
-			error: {
-				message: error.toString(),
-				stack: error.stack.toString(),
-			},
-		}),
-	);
+	return importFiles({
+		sourceFiles: sourceFiles,
+		importerFlags: importerFlags,
+		tmpDirPath: tmpDirPath,
+	}).catch((error) => ({
+		error: {
+			message: error.toString(),
+			stack: error.stack.toString(),
+		},
+	}));
 };
