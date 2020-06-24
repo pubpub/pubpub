@@ -303,7 +303,7 @@ Attribution information will likewise be inferred from the Pandoc import unless 
 
 ## Macros
 
-As something of a last resort, the importer can run automated find-and-replace operations ('macros') on the text that will be passed into Pandoc. A simple macro look like this:
+As something of a last resort, the importer can run automated find-and-replace operations ('macros') on the text that will be passed into Pandoc. A simple macro looks like this:
 
 ```
 macros:
