@@ -3,13 +3,12 @@ import PropTypes from 'prop-types';
 import algoliasearch from 'algoliasearch';
 import { NonIdealState, Spinner, InputGroup, Button, Tabs, Tab } from '@blueprintjs/core';
 import dateFormat from 'dateformat';
-import { useThrottleFn } from 'react-use';
 
 import { Icon } from 'components';
 import { getResizedUrl } from 'utils/images';
 import { generatePageBackground } from 'utils/pages';
 import { generatePubBackground } from 'utils/pubs';
-import { usePageContext } from 'utils/hooks';
+import { usePageContext, useEffectThrottled } from 'utils/hooks';
 
 require('./search.scss');
 
@@ -47,19 +46,21 @@ const Search = (props) => {
 		}
 	};
 
-	const handleSearch = () => {
-		if (searchQuery) {
-			indexRef.current
-				.search(searchQuery, {
-					page: page,
-				})
-				.then((results) => {
-					setIsLoading(false);
-					setSearchResults(results.hits);
-					numPagesSetter(Math.min(results.nbPages, 10));
-				});
+	const handleSearch = (searchQuery, page, mode) => {
+		if (!searchQuery) {
+			return;
 		}
+
+		indexRef.current.search(searchQuery, {
+			page
+		}).then((results) => {
+			setIsLoading(false);
+			setSearchResults(results.hits);
+			numPagesSetter(Math.min(results.nbPages, 10));
+		});
 	};
+
+	useEffectThrottled(handleSearch, 1000, { leading: false }, [searchQuery, page, mode]);
 
 	useEffect(() => {
 		setClient();
@@ -71,7 +72,6 @@ const Search = (props) => {
 		inputRef.current.value = val;
 	}, []); /* eslint-disable-line react-hooks/exhaustive-deps */
 
-	useThrottleFn(handleSearch, 1000, [searchQuery, page, mode]);
 	const setMode = (nextMode) => {
 		if (nextMode !== mode) {
 			modeSetter(nextMode);
