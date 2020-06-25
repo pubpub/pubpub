@@ -245,7 +245,7 @@ const createPandocMetadataFile = async (directive, extractedPandocYamlString) =>
 	const yamlString = pandocMetadata ? YAML.stringify(pandocMetadata) : extractedPandocYamlString;
 	if (yamlString) {
 		const { path: tmpPath } = await tmp.file({ postfix: '.yaml' });
-		fs.writeFileSync(tmpPath, yamlString);
+		await fs.writeFile(tmpPath, yamlString);
 		return { tmpPath: tmpPath, label: 'metadata' };
 	}
 	return null;
