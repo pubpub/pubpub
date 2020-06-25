@@ -43,8 +43,8 @@ const DashboardImpact = () => {
 			<h2 className="dashboard-content-header">Impact</h2>
 			{displayDataWarning && (
 				<Callout intent="warning">
-					Analytics data collected before April 29, 2020 used a different analytics system
-					than data collected after April 29, 2020. Users, pageviews, and other metrics
+					Analytics data collected before April 30, 2020 used a different analytics system
+					than data collected after April 30, 2020. Users, pageviews, and other metrics
 					will be inconsistent between these two periods, and should not be used for
 					direct comparisons.
 				</Callout>
