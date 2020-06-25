@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { usePageContext } from 'utils/hooks';
-import { apiFetch } from 'utils';
+import { apiFetch } from 'client/utils/apiFetch';
+import { Callout } from '@blueprintjs/core';
 
 require('./dashboardImpact.scss');
 
-const propTypes = {
-	impactData: PropTypes.object.isRequired,
-};
+const propTypes = {};
 
-const DashboardImpact = (props) => {
+const DashboardImpact = () => {
 	const [metabaseUrl, setMetabaseUrl] = useState(null);
-	const { impactData } = props;
 	const { scopeData } = usePageContext();
 	const {
 		elements: { activeTargetType },
 		activePermissions: { canView },
 	} = scopeData;
+	const displayDataWarning = scopeData.elements.activeTarget.createdAt < '2020-04-29';
 
 	let apiUrl = `/api/metabase/`;
 	if (activeTargetType === 'community') {
@@ -43,6 +41,13 @@ const DashboardImpact = (props) => {
 	return (
 		<div className="dashboard-impact-container">
 			<h2 className="dashboard-content-header">Impact</h2>
+			{displayDataWarning && (
+				<Callout intent="warning">
+					Analytics data collected before 4/29 used a different analytics system than data
+					collected after 4/29. Users, pageviews, and other metrics will be inconsistent
+					between these two periods, and should not be used for direct comparisons.
+				</Callout>
+			)}
 			{canView ? (
 				<iframe className="metabase" src={metabaseUrl} title="Analytics" frameBorder="0" />
 			) : (
