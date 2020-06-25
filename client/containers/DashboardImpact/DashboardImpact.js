@@ -45,9 +45,9 @@ const DashboardImpact = () => {
 			{!isCollection && displayDataWarning && (
 				<Callout intent="warning">
 					Analytics data collected before April 30, 2020 used a different analytics system
-					than data collected after April 30, 2020. Users, pageviews, and other metrics
-					will be inconsistent between these two periods, and should not be used for
-					direct comparisons.
+					than data collected after April 30, 2020. As a result, the Users metrics will be
+					inconsistent between these two periods, and should not be used for direct
+					comparisons.
 				</Callout>
 			)}
 			{canView ? (
