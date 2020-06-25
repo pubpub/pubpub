@@ -265,7 +265,6 @@ export const createStaticHtml = async (
 			},
 		),
 		renderableNodes,
-		{},
 	);
 
 	return ReactDOMServer.renderToStaticMarkup(

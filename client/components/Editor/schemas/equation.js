@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { renderHtmlChildren } from '../utils/render';
+import { renderHtmlChildren } from '../utils/renderHtml';
 
 export default {
 	equation: {
