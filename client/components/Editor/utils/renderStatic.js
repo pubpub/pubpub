@@ -104,8 +104,8 @@ const wrapOutputSpecInMarks = (outputSpec, marks, schema) => {
 };
 
 const createOutputSpecFromNode = (node, schema) => {
-	const { marks, content, attrs = {} } = node;
-	const nodeType = schema.nodes[node.type];
+	const { type, marks, content, attrs = {} } = node;
+	const nodeType = schema.nodes[type];
 	const { spec: nodeSpec } = nodeType;
 
 	const childSpecs = Array.isArray(content)
