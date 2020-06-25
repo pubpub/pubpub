@@ -15,7 +15,6 @@ const DashboardImpact = () => {
 		activePermissions: { canView },
 	} = scopeData;
 	const displayDataWarning = scopeData.elements.activeTarget.createdAt < '2020-04-29';
-
 	let apiUrl = `/api/metabase/`;
 	if (activeTargetType === 'community') {
 		apiUrl += `community/${scopeData.elements.activeIds.communityId}`;
@@ -23,6 +22,7 @@ const DashboardImpact = () => {
 	if (activeTargetType === 'pub') {
 		apiUrl += `pub/${scopeData.elements.activeIds.pubId}`;
 	}
+	const isCollection = activeTargetType === 'collection';
 
 	useEffect(() => {
 		apiFetch(apiUrl, {
@@ -41,7 +41,8 @@ const DashboardImpact = () => {
 	return (
 		<div className="dashboard-impact-container">
 			<h2 className="dashboard-content-header">Impact</h2>
-			{displayDataWarning && (
+			{isCollection && <Callout>Collection-level impact data coming soon.</Callout>}
+			{!isCollection && displayDataWarning && (
 				<Callout intent="warning">
 					Analytics data collected before April 30, 2020 used a different analytics system
 					than data collected after April 30, 2020. Users, pageviews, and other metrics
@@ -52,7 +53,7 @@ const DashboardImpact = () => {
 			{canView ? (
 				<iframe className="metabase" src={metabaseUrl} title="Analytics" frameBorder="0" />
 			) : (
-				<p>Ask your community administrator for access to impact data.</p>
+				<p>Login or ask the community administrator for access to impact data.</p>
 			)}
 		</div>
 	);
