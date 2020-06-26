@@ -41,11 +41,13 @@ const DashboardImpact = () => {
 	return (
 		<div className="dashboard-impact-container">
 			<h2 className="dashboard-content-header">Impact</h2>
-			{isCollection && <Callout>Collection-level impact data coming soon.</Callout>}
-			{!isCollection && displayDataWarning && (
+			{canView && isCollection && (
+				<Callout>Collection-level impact data coming soon.</Callout>
+			)}
+			{canView && !isCollection && displayDataWarning && (
 				<Callout intent="warning">
 					Analytics data collected before April 30, 2020 used a different analytics system
-					than data collected after April 30, 2020. As a result, the Users metrics will be
+					than data collected after April 30, 2020. As a result, the Users metric will be
 					inconsistent between these two periods, and should not be used for direct
 					comparisons.
 				</Callout>
