@@ -44,23 +44,22 @@ const Search = (props) => {
 	const clientRef = useRef(undefined);
 	const indexRef = useRef(undefined);
 
-	const setClient = (nextMode) => {
+	const setClient = () => {
 		const allowedModes = ['pubs', 'pages'];
-		if (allowedModes.indexOf(nextMode) > -1) {
+		if (allowedModes.indexOf(mode) > -1) {
 			let key;
-			if (nextMode === 'pubs') {
+			if (mode === 'pubs') {
 				key = searchData.pubsSearchKey;
 			}
-			if (nextMode === 'pages') {
+			if (mode === 'pages') {
 				key = searchData.pagesSearchKey;
 			}
 			clientRef.current = algoliasearch(searchData.searchId, key);
-			indexRef.current = clientRef.current.initIndex(nextMode);
+			indexRef.current = clientRef.current.initIndex(mode);
 		}
 	};
 
 	useEffect(() => {
-		setClient(mode);
 		inputRef.current.focus();
 		/* This inputRef manipulation is to ensure that the cursor starts */
 		/* at the end of the text in the search input */
@@ -69,10 +68,12 @@ const Search = (props) => {
 		inputRef.current.value = val;
 	}, []); /* eslint-disable-line react-hooks/exhaustive-deps */
 
+	// Update search client when mode changes
+	useEffect(setClient, [mode]);
+
 	useEffect(() => {
 		// Execute search when search text (throttled), page, or mode changes
 		if (throttledSearchQuery.length > 0) {
-			setSearchResults([]);
 			setIsLoading(true);
 
 			indexRef.current
@@ -97,12 +98,13 @@ const Search = (props) => {
 	const handleSetPage = (pageIndex) => {
 		setPage(pageIndex);
 		window.scrollTo(0, 0);
+		setSearchResults([]);
 	};
 
 	const handleModeChange = (nextMode) => {
 		setMode(nextMode);
 		setPage(0);
-		setClient(nextMode);
+		setSearchResults([]);
 	};
 
 	const pages = new Array(numPages).fill('');
