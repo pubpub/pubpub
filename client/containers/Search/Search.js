@@ -16,6 +16,18 @@ const propTypes = {
 	searchData: PropTypes.object.isRequired,
 };
 
+const getSearchPath = (query, page, mode) => {
+	const queryString = query ? `?q=${query}` : '';
+	const pageString = page ? `&page=${page + 1}` : '';
+	const modeString = mode !== 'pubs' ? `${queryString ? '&' : '?'}mode=${mode}` : '';
+
+	return `/search${queryString}${pageString}${modeString}`;
+};
+
+const updateHistory = (query, page, mode) => {
+	window.history.replaceState({}, '', getSearchPath(query, page, mode));
+};
+
 const Search = (props) => {
 	const { searchData } = props;
 	const { locationData, communityData } = usePageContext();
@@ -26,29 +38,43 @@ const Search = (props) => {
 		locationData.query.page ? Number(locationData.query.page) - 1 : 0,
 	);
 	const [numPages, numPagesSetter] = useState(0);
-	const [mode, modeSetter] = useState(locationData.query.mode || 'pubs');
+	const [mode, setMode] = useState(locationData.query.mode || 'pubs');
 	const throttledSearchQuery = useThrottled(searchQuery, 1000, false);
 	const inputRef = useRef(null);
 	const clientRef = useRef(undefined);
 	const indexRef = useRef(undefined);
 
-	const setClient = () => {
+	const setClient = (nextMode) => {
 		const allowedModes = ['pubs', 'pages'];
-		if (allowedModes.indexOf(mode) > -1) {
+		if (allowedModes.indexOf(nextMode) > -1) {
 			let key;
-			if (mode === 'pubs') {
+			if (nextMode === 'pubs') {
 				key = searchData.pubsSearchKey;
 			}
-			if (mode === 'pages') {
+			if (nextMode === 'pages') {
 				key = searchData.pagesSearchKey;
 			}
 			clientRef.current = algoliasearch(searchData.searchId, key);
-			indexRef.current = clientRef.current.initIndex(mode);
+			indexRef.current = clientRef.current.initIndex(nextMode);
 		}
 	};
 
-	const handleSearch = () => {
+	useEffect(() => {
+		setClient(mode);
+		inputRef.current.focus();
+		/* This inputRef manipulation is to ensure that the cursor starts */
+		/* at the end of the text in the search input */
+		const val = inputRef.current.value;
+		inputRef.current.value = '';
+		inputRef.current.value = val;
+	}, []); /* eslint-disable-line react-hooks/exhaustive-deps */
+
+	useEffect(() => {
+		// Execute search when search text (throttled), page, or mode changes
 		if (throttledSearchQuery.length > 0) {
+			setSearchResults([]);
+			setIsLoading(true);
+
 			indexRef.current
 				.search(throttledSearchQuery, {
 					page: page,
@@ -59,61 +85,29 @@ const Search = (props) => {
 					numPagesSetter(Math.min(results.nbPages, 10));
 				});
 		}
-	};
-
-	useEffect(() => {
-		setClient();
-		inputRef.current.focus();
-		/* This inputRef manipulation is to ensure that the cursor starts */
-		/* at the end of the text in the search input */
-		const val = inputRef.current.value;
-		inputRef.current.value = '';
-		inputRef.current.value = val;
-	}, []); /* eslint-disable-line react-hooks/exhaustive-deps */
-
-	useEffect(handleSearch, [throttledSearchQuery]);
-
-	const setMode = (nextMode) => {
-		if (nextMode !== mode) {
-			modeSetter(nextMode);
-			setPage(0);
-			setSearchResults([]);
-			setIsLoading(!!searchQuery);
-			setClient();
-			const queryString = searchQuery ? `?q=${searchQuery}` : '';
-			const pageString = page ? `&page=${page + 1}` : '';
-			const modeString = mode !== 'pubs' ? `${queryString ? '&' : '?'}mode=${mode}` : '';
-			window.history.replaceState({}, '', `/search${queryString}${pageString}${modeString}`);
-		}
-	};
+		// Sync URL with search state
+		updateHistory(throttledSearchQuery, page, mode);
+	}, [throttledSearchQuery, page, mode]);
 
 	const handleSearchChange = (evt) => {
-		const query = evt.target.value;
-		setIsLoading(!!query);
-		setSearchQuery(query);
+		setSearchQuery(evt.target.value);
 		setPage(0);
-		const queryString = query ? `?q=${query}` : '';
-		const pageString = page ? `&page=${page + 1}` : '';
-		const modeString = mode !== 'pubs' ? `${queryString ? '&' : '?'}mode=${mode}` : '';
-		window.history.replaceState({}, '', `/search${queryString}${pageString}${modeString}`);
 	};
 
 	const handleSetPage = (pageIndex) => {
-		setIsLoading(pageIndex !== page);
 		setPage(pageIndex);
-		setSearchResults([]);
-		const queryString = searchQuery ? `?q=${searchQuery}` : '';
-		const pageString = page ? `&page=${page + 1}` : '';
-		const modeString = mode !== 'pubs' ? `${queryString ? '&' : '?'}mode=${mode}` : '';
-		window.history.replaceState({}, '', `/search${queryString}${pageString}${modeString}`);
 		window.scrollTo(0, 0);
 	};
 
+	const handleModeChange = (nextMode) => {
+		setMode(nextMode);
+		setPage(0);
+		setClient(nextMode);
+	};
+
 	const pages = new Array(numPages).fill('');
-	const queryString = searchQuery ? `?q=${searchQuery}` : '';
-	const pageString = page ? `&page=${page + 1}` : '';
-	const modeString = mode !== 'pubs' ? `${queryString ? '&' : '?'}mode=${mode}` : '';
-	const searchString = `/search${queryString}${pageString}${modeString}`;
+	const searchString = getSearchPath(throttledSearchQuery, page, mode);
+
 	return (
 		<div id="search-container">
 			<div className="container narrow">
@@ -138,7 +132,12 @@ const Search = (props) => {
 				</div>
 				<div className="row">
 					<div className="col-12">
-						<Tabs onChange={setMode} selectedTabId={mode} large={true} animate={false}>
+						<Tabs
+							onChange={handleModeChange}
+							selectedTabId={mode}
+							large={true}
+							animate={false}
+						>
 							<Tab id="pubs" title="Pubs" />
 							<Tab id="pages" title="Pages" />
 						</Tabs>
