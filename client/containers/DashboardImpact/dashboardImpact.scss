@@ -1,13 +1,12 @@
 .dashboard-impact-container {
 	iframe.metabase {
-		height: 2000px;
+		height: 1500px;
 		width: 100%;
 	}
 
-	@media only screen and (max-width: 1130px) {
+	@media only screen and (max-width: 1125px) {
 		iframe.metabase {
-			height: 3000px;
+			height: 5500px;
 		}
 	}
-
 }
