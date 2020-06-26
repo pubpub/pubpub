@@ -103,7 +103,7 @@ const Pricing = () => {
 								interactionKind={PopoverInteractionKind.HOVER}
 								popoverClassName="bp3-popover-content-sizing"
 							>
-								<em>Unique Member</em>
+								<em>Member</em>
 								<div>
 									<p>
 										Members are any user added to the Member tab at the
