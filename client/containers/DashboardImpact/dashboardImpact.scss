@@ -3,10 +3,17 @@
 		height: 1500px;
 		width: 100%;
 	}
+	iframe.metabase.benchmark {
+		height: 450px
+	}
 
 	@media only screen and (max-width: 1125px) {
 		iframe.metabase {
 			height: 5500px;
 		}
+		iframe.metabase.benchmark {
+			height: 1200px;
+		}
 	}
+
 }
