@@ -11,11 +11,12 @@ const Pricing = () => {
 			<GridWrapper>
 				<h1>Pricing</h1>
 				<p className="description">
-					PubPub's goal is to provide a high-quality, open-source, institution-owned,
-					hosted alternative to commercial publishing software. We offer a Free tier with
-					no user or publishing limits, as well as a Pro tier for individual communities
-					who need more advanced features (or just want to support our mission), and an
-					Organization tier for those who need to manage multiple communities.
+					PubPub's goal is to provide an affordable, high-quality, open-source,
+					institution-owned, hosted alternative to commercial publishing software. We
+					offer a Free tier with no user or publishing limits, as well as a Pro tier for
+					individual communities who need more advanced features (or just want to support
+					our mission), and an Organization tier for those who need to manage multiple
+					communities.
 				</p>
 				<div className="pricing-tiers">
 					<div className="option bp3-card bp3-elevation-1">
