@@ -149,9 +149,9 @@ const Pricing = () => {
 					<p className="description">
 						Need advanced features, but unsure you can afford PubPub Pro or
 						Organization? We offer substantial discounts for small, mission-driven
-						communities. information,{' '}
+						communities. For more information,{' '}
 						<a href="mailto:partnerships@pubpub.org?subject=Discounts">
-							please reach out
+							please reach out and tell us about your work and needs
 						</a>
 						.
 					</p>
