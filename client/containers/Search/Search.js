@@ -17,11 +17,23 @@ const propTypes = {
 };
 
 const getSearchPath = (query, page, mode) => {
-	const queryString = query ? `?q=${query}` : '';
-	const pageString = page ? `&page=${page + 1}` : '';
-	const modeString = mode !== 'pubs' ? `${queryString ? '&' : '?'}mode=${mode}` : '';
+	const params = new URLSearchParams();
 
-	return `/search${queryString}${pageString}${modeString}`;
+	if (query) {
+		params.append('q', query);
+	}
+
+	if (page) {
+		params.append('page', page + 1);
+	}
+
+	if (mode !== 'pubs') {
+		params.append('mode', mode);
+	}
+
+	const queryString = params.toString();
+
+	return `/search${queryString.length > 0 ? `?${queryString}` : ''}`;
 };
 
 const updateHistory = (query, page, mode) => {
