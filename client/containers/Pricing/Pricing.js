@@ -109,11 +109,11 @@ const Pricing = () => {
 								<div>
 									<p>
 										Seats are calculated as the number of users added to the
-										Community or Collection level with permissions of edit or
-										above. View-only Members and Members added to single Pubs
-										(often used for authors or reviews) are free. Members are
-										only counted once across the entire organization, no matter
-										how many communities they belong to.
+										Member tab at the Community or Collection level with
+										permissions of edit or above. View-only Members and Members
+										added to single Pubs (often used for authors or reviews) are
+										free. Members are only counted once across the entire
+										organization, no matter how many communities they belong to.
 									</p>
 								</div>
 							</Popover>
