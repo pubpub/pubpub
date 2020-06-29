@@ -44,6 +44,7 @@ export { default as PubReleaseDialog } from './PubReleaseDialog/PubReleaseDialog
 export { default as PubReleaseReviewDialog } from './PubReleaseReviewDialog/PubReleaseReviewDialog';
 export { default as PubShareDialog } from './PubShareDialog/PubShareDialog';
 export { default as PubThemePicker } from './PubThemePicker/PubThemePicker';
+export { default as RelatedObject } from './RelatedObject/RelatedObject';
 export { default as ScopeDropdown } from './ScopeDropdown/ScopeDropdown';
 export { default as SettingsSection } from './SettingsSection/SettingsSection';
 export { default as SharingCard } from './SharingCard/SharingCard';
