@@ -12,8 +12,8 @@ const Pricing = () => {
 				<h1>Pricing</h1>
 				<p className="description">
 					PubPub's goal is to provide an affordable, high-quality, open-source,
-					institution-owned, hosted alternative to commercial publishing software. We
-					offer a Free tier with no user or publishing limits, as well as a Pro tier for
+					institution-led, hosted alternative to commercial publishing software. We offer
+					a Free tier with no user or publishing limits, as well as a Pro tier for
 					individual communities who need more advanced features (or just want to support
 					our mission), and an Organization tier for those who need to manage multiple
 					communities.
@@ -56,7 +56,7 @@ const Pricing = () => {
 						</a>
 					</div>
 					<div className="option bp3-card bp3-elevation-1">
-						<h2>Professional</h2>
+						<h2>Pro</h2>
 						<p className="subtitle">For individual communities with advanced needs.</p>
 						<p className="pricing">
 							Monthly or Yearly Fee Per{' '}
@@ -64,13 +64,14 @@ const Pricing = () => {
 								interactionKind={PopoverInteractionKind.HOVER}
 								popoverClassName="bp3-popover-content-sizing"
 							>
-								<em>Member</em>
+								<em>Seat</em>
 								<div>
 									<p>
-										Members are any user added to the Member tab at the
-										Community or Collection level with permissions of edit or
-										above. View-only Members and Members added to single Pubs
-										(often used for authors or reviews) are free.
+										Seats are calculated as the number of users added to the
+										Member tab at the Community or Collection level with
+										permissions of edit or above. View-only Members and Members
+										added to single Pubs (often used for authors or reviews) are
+										free.
 									</p>
 								</div>
 							</Popover>
@@ -78,7 +79,7 @@ const Pricing = () => {
 						<ul className="features">
 							<li>Everything in the free version, plus:</li>
 							<li>Use your own custom domain name</li>
-							<li>Publish with restrictive/custom licenses</li>
+							<li>Publish with custom licenses</li>
 							<li>
 								Up to 25 free DOIs per year ($1 each after, or free if you have a
 								crossref membership).
@@ -104,21 +105,21 @@ const Pricing = () => {
 								interactionKind={PopoverInteractionKind.HOVER}
 								popoverClassName="bp3-popover-content-sizing"
 							>
-								<em>Member</em>
+								<em>Seat</em>
 								<div>
 									<p>
-										Members are any user added to the Member tab at the
-										Community or Collection level with permissions of edit or
-										above. View-only Members and Members added to single Pubs
-										(often used for authors or reviews) are free. Members are
-										only counted once across the entire organization, no matter
-										how many communities they belong to.
+										Seats are calculated as the number of users added to the
+										Member tab at the Community or Collection level with
+										permissions of edit or above. View-only Members and Members
+										added to single Pubs (often used for authors or reviews) are
+										free. Members are only counted once across the entire
+										organization, no matter how many communities they belong to.
 									</p>
 								</div>
 							</Popover>
 						</p>
 						<ul className="features">
-							<li>Everything in the Professional version, plus:</li>
+							<li>Everything in the Pro version, plus:</li>
 							<li>Unlimited Communities</li>
 							<li>
 								Organization Dashboard for managing users, branding, and settings
