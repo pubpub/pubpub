@@ -83,16 +83,6 @@ export default (sequelize, dataTypes) => {
 						as: 'community',
 						foreignKey: 'communityId',
 					});
-					// Pub.hasMany(Discussion, {
-					// 	onDelete: 'CASCADE',
-					// 	as: 'discussions',
-					// 	foreignKey: 'pubId',
-					// });
-					// Pub.hasMany(Thread, {
-					// 	onDelete: 'CASCADE',
-					// 	as: 'threads',
-					// 	foreignKey: 'pubId',
-					// });
 					Pub.hasMany(DiscussionNew, {
 						onDelete: 'CASCADE',
 						as: 'discussions',
@@ -123,21 +113,11 @@ export default (sequelize, dataTypes) => {
 						as: 'releases',
 						foreignKey: 'pubId',
 					});
-					// Pub.hasMany(Merge, {
-					// 	onDelete: 'CASCADE',
-					// 	as: 'merges',
-					// 	foreignKey: 'pubId',
-					// });
 					Pub.hasMany(PubVersion, {
 						onDelete: 'CASCADE',
 						as: 'pubVersions',
 						foreignKey: 'pubId',
 					});
-					// Pub.hasMany(Review, {
-					// 	onDelete: 'CASCADE',
-					// 	as: 'reviews',
-					// 	foreignKey: 'pubId',
-					// });
 				},
 			},
 		},
