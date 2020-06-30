@@ -1,7 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { usePageContext } from 'utils/hooks';
-import { Callout, Button, Intent, Tooltip, Position } from '@blueprintjs/core';
+import {
+	Callout,
+	Button,
+	Intent,
+	Tooltip,
+	Position,
+	PopoverInteractionKind,
+} from '@blueprintjs/core';
 import IframeResizer from 'iframe-resizer-react';
 
 require('./dashboardImpact.scss');
@@ -41,7 +48,11 @@ const DashboardImpact = (props) => {
 									result, the Users metric will be inconsistent between these two
 									periods, and should not be used for direct comparisons. For more
 									information, see our{' '}
-									<a href="https://discourse.knowledgefutures.org/t/user-metric-discrepancies-between-july-12-2019-and-april-30-2020/259">
+									<a
+										href="https://discourse.knowledgefutures.org/t/user-metric-discrepancies-between-july-12-2019-and-april-30-2020/259"
+										target="_blank"
+										rel="noopener noreferrer"
+									>
 										explanatory Discourse post
 									</a>{' '}
 									and the{' '}
@@ -51,8 +62,10 @@ const DashboardImpact = (props) => {
 									, below.
 								</div>
 							}
+							hoverCloseDelay={300}
 							intent={Intent.WARNING}
-							position={Position.BOTTOM}
+							position={Position.BOTTOM_LEFT}
+							interactionKind={PopoverInteractionKind.HOVER}
 						>
 							<Button
 								className="warning-button"
@@ -93,13 +106,19 @@ const DashboardImpact = (props) => {
 										April 30, 2020) graphed against the new user metric during
 										an overlap period, for making comparisons between the two.
 										For more information, see our{' '}
-										<a href="https://discourse.knowledgefutures.org/t/user-metric-discrepancies-between-july-12-2019-and-april-30-2020/259">
+										<a
+											href="https://discourse.knowledgefutures.org/t/user-metric-discrepancies-between-july-12-2019-and-april-30-2020/259"
+											target="_blank"
+											rel="noopener noreferrer"
+										>
 											explanatory Discourse post
 										</a>
 									</div>
 								}
+								hoverCloseDelay={300}
 								intent={Intent.WARNING}
-								position={Position.BOTTOM}
+								position={Position.BOTTOM_LEFT}
+								interactionKind={PopoverInteractionKind.HOVER}
 							>
 								<Button
 									className="warning-button"
