@@ -1,7 +1,6 @@
 export { default as AccentStyle } from './AccentStyle/AccentStyle';
 export { default as AttributionEditor } from './AttributionEditor/AttributionEditor';
 export { default as Avatar } from './Avatar/Avatar';
-export { default as Byline } from './Byline/Byline';
 export { default as CollectionMultiSelect } from './CollectionMultiSelect/CollectionMultiSelect';
 export { default as ColorInput } from './ColorInput/ColorInput';
 export { default as ClickToCopyButton } from './ClickToCopyButton/ClickToCopyButton';
@@ -37,6 +36,7 @@ export { default as PendingChangesProvider } from './PendingChangesProvider/Pend
 export { default as PermissionsDropdown } from './PermissionsDropdown/PermissionsDropdown';
 export { default as PubAttributionDialog } from './PubAttributionEditor/PubAttributionDialog';
 export { default as PubAttributionEditor } from './PubAttributionEditor/PubAttributionEditor';
+export { default as PubByline } from './PubByline/PubByline';
 export { default as PubPreview } from './PubPreview/PubPreview';
 export { default as PubNoteContent } from './PubNoteContent/PubNoteContent';
 export { default as PubHistoryViewer } from './PubHistoryViewer/PubHistoryViewer';
@@ -45,6 +45,7 @@ export { default as PubReleaseReviewDialog } from './PubReleaseReviewDialog/PubR
 export { default as PubShareDialog } from './PubShareDialog/PubShareDialog';
 export { default as PubThemePicker } from './PubThemePicker/PubThemePicker';
 export { default as RelatedObject } from './RelatedObject/RelatedObject';
+export { default as RelatedObject } from './RelatedObjectWrapper/RelatedObjectWrapper';
 export { default as ScopeDropdown } from './ScopeDropdown/ScopeDropdown';
 export { default as SettingsSection } from './SettingsSection/SettingsSection';
 export { default as SharingCard } from './SharingCard/SharingCard';

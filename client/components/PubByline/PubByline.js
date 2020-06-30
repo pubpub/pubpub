@@ -22,7 +22,7 @@ const defaultProps = {
 	renderSuffix: () => null,
 };
 
-const Byline = (props) => {
+const PubByline = (props) => {
 	const {
 		pubData,
 		bylinePrefix,
@@ -77,6 +77,6 @@ const Byline = (props) => {
 	);
 };
 
-Byline.propTypes = propTypes;
-Byline.defaultProps = defaultProps;
-export default Byline;
+PubByline.propTypes = propTypes;
+PubByline.defaultProps = defaultProps;
+export default PubByline;
