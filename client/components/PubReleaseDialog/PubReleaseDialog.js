@@ -45,7 +45,12 @@ const createRelease = ({
 
 const PubReleaseDialog = (props) => {
 	const { isOpen, onClose, historyData, pubData, updatePubData } = props;
-	const { communityData } = usePageContext();
+	const {
+		communityData,
+		scopeData: {
+			activePermissions: { isSuperAdmin },
+		},
+	} = usePageContext();
 	const [noteData, setNoteData] = useState({});
 	const [makeDraftDiscussionsPublic, setMakeDraftDiscussionsPublic] = useState(false);
 	const [isCreatingRelease, setIsCreatingRelease] = useState(false);
@@ -158,13 +163,15 @@ const PubReleaseDialog = (props) => {
 							focusOnLoad={true}
 							placeholder="Add a (publicly-visible) note describing this release."
 						/>
-						<Checkbox
-							checked={makeDraftDiscussionsPublic}
-							onChange={() =>
-								setMakeDraftDiscussionsPublic(!makeDraftDiscussionsPublic)
-							}
-							label="Make all discussions on the draft visible to the public"
-						/>
+						{isSuperAdmin && (
+							<Checkbox
+								checked={makeDraftDiscussionsPublic}
+								onChange={() =>
+									setMakeDraftDiscussionsPublic(!makeDraftDiscussionsPublic)
+								}
+								label="Make all discussions on the draft visible to the public"
+							/>
+						)}
 					</React.Fragment>
 				)}
 				{renderReleaseResult()}
