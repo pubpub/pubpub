@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { AnchorButton, Button, Callout, Classes, Dialog, Icon } from '@blueprintjs/core';
+import { AnchorButton, Button, Callout, Classes, Dialog, Icon, Checkbox } from '@blueprintjs/core';
 
 import { MinimalEditor } from 'components';
 import { usePageContext } from 'utils/hooks';
@@ -23,7 +23,14 @@ const propTypes = {
 
 const defaultProps = {};
 
-const createRelease = ({ draftKey, pubId, communityId, noteContent, noteText }) =>
+const createRelease = ({
+	draftKey,
+	pubId,
+	communityId,
+	noteContent,
+	noteText,
+	makeDraftDiscussionsPublic,
+}) =>
 	apiFetch('/api/releases', {
 		method: 'POST',
 		body: JSON.stringify({
@@ -32,6 +39,7 @@ const createRelease = ({ draftKey, pubId, communityId, noteContent, noteText }) 
 			noteContent: noteContent,
 			noteText: noteText,
 			draftKey: draftKey,
+			makeDraftDiscussionsPublic: makeDraftDiscussionsPublic,
 		}),
 	});
 
@@ -39,6 +47,7 @@ const PubReleaseDialog = (props) => {
 	const { isOpen, onClose, historyData, pubData, updatePubData } = props;
 	const { communityData } = usePageContext();
 	const [noteData, setNoteData] = useState({});
+	const [makeDraftDiscussionsPublic, setMakeDraftDiscussionsPublic] = useState(false);
 	const [isCreatingRelease, setIsCreatingRelease] = useState(false);
 	const [createdRelease, setCreatedRelease] = useState(false);
 	const [releaseError, setReleleaseError] = useState(null);
@@ -52,6 +61,7 @@ const PubReleaseDialog = (props) => {
 			noteContent: noteData.content,
 			noteText: noteData.text,
 			draftKey: historyData.latestKey,
+			makeDraftDiscussionsPublic: makeDraftDiscussionsPublic,
 		})
 			.then(({ release }) => {
 				setReleleaseError(null);
@@ -147,6 +157,13 @@ const PubReleaseDialog = (props) => {
 							}}
 							focusOnLoad={true}
 							placeholder="Add a (publicly-visible) note describing this release."
+						/>
+						<Checkbox
+							checked={makeDraftDiscussionsPublic}
+							onChange={() =>
+								setMakeDraftDiscussionsPublic(!makeDraftDiscussionsPublic)
+							}
+							label="Make all discussions on the draft visible to the public"
 						/>
 					</React.Fragment>
 				)}
