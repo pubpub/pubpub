@@ -1,0 +1,57 @@
+@mixin hover-top-border() {
+	position: absolute;
+	top: 0;
+	transform: translateY(-50%);
+	background-color: #fff;
+	padding: 0 8px;
+}
+
+.pub-edge-listing-component {
+	display: flex;
+	flex-direction: column;
+
+	> .top {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		margin-bottom: 12px;
+
+		> h5 {
+			flex: 1 0 auto;
+		}
+	}
+
+	> .card {
+		border-width: 1px;
+		border-style: solid;
+		position: relative;
+		margin-bottom: 24px;
+		padding: 24px 32px 18px;
+
+		> .relationship {
+			@include hover-top-border();
+			left: calc(24px - 8px);
+
+			.relationship-name {
+				border-bottom: 1px dotted;
+				font-weight: 600;
+			}
+
+			.pub-title {
+				font-style: italic;
+			}
+		}
+	}
+
+	.minimal-controls {
+		@include hover-top-border();
+		right: calc(24px);
+		display: flex;
+		align-items: center;
+	}
+}
+
+.pub-edge-listing-counter-component {
+	font-weight: 600;
+	margin-right: 6px;
+}

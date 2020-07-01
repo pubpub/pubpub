@@ -1,14 +1,13 @@
 @import 'styles/variables.scss';
 @import 'containers/Pub/PubDocument/pubBody.scss';
 
-.related-object-component {
+.pub-edge-component {
 	@include pub-body-styles();
 
 	display: flex;
 	flex-direction: column;
-	padding: 25px;
 
-	h5 {
+	h4 {
 		font-weight: 400;
 	}
 
@@ -19,7 +18,7 @@
 
 		.top-left {
 			flex: 0 0 120px;
-			margin: 0 25px 0 0;
+			margin: 0 16px 0 0;
 
 			img {
 				background: #e5e5e5;
@@ -31,7 +30,7 @@
 
 		.top-right {
 			display: flex;
-			flex: 1 0 auto;
+			flex: 1 1 auto;
 			flex-direction: column;
 			justify-content: space-evenly;
 		}
@@ -50,7 +49,7 @@
 		}
 
 		li + li:before {
-			content: "\00B7";
+			content: '\00B7';
 			margin: 4px;
 		}
 

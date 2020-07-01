@@ -1,82 +1,22 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
+import { Byline } from 'components';
 import { getAllPubContributors } from 'utils/pubContributors';
 
+const { contributors, ...bylinePropTypesWithoutContributors } = Byline.propTypes;
 const propTypes = {
 	pubData: PropTypes.shape({}).isRequired,
-	bylinePrefix: PropTypes.string,
-	hideAuthors: PropTypes.bool,
-	hideContributors: PropTypes.bool,
-	linkToUsers: PropTypes.bool,
-	renderEmptyState: PropTypes.func,
-	renderSuffix: PropTypes.func,
-};
-
-const defaultProps = {
-	bylinePrefix: 'by',
-	hideAuthors: false,
-	hideContributors: true,
-	linkToUsers: true,
-	renderEmptyState: () => null,
-	renderSuffix: () => null,
+	...bylinePropTypesWithoutContributors,
 };
 
 const PubByline = (props) => {
-	const {
-		pubData,
-		bylinePrefix,
-		hideAuthors,
-		hideContributors,
-		linkToUsers,
-		renderEmptyState,
-		renderSuffix,
-	} = props;
+	const { pubData, hideAuthors, hideContributors } = props;
 	const authors = getAllPubContributors(pubData, hideAuthors, hideContributors);
 
-	const renderContent = () => {
-		return (
-			<>
-				{bylinePrefix && <span>{bylinePrefix} </span>}
-				{authors.map((author, index) => {
-					const separator =
-						index === authors.length - 1 || authors.length === 2 ? '' : ', ';
-					const prefix = index === authors.length - 1 && index !== 0 ? ' and ' : '';
-					const user = author.user;
-					if (user.slug && linkToUsers) {
-						return (
-							<span key={`author-${user.id}`}>
-								{prefix}
-								<a href={`/user/${user.slug}`} className="hoverline">
-									{user.fullName}
-								</a>
-								{separator}
-							</span>
-						);
-					}
-					return (
-						<span key={`author-${user.id}`}>
-							{prefix}
-							{user.fullName}
-							{separator}
-						</span>
-					);
-				})}
-			</>
-		);
-	};
-
-	return (
-		<div className="byline-component byline">
-			<span className="text-wrapper">
-				{authors.length > 0 && renderContent()}
-				{authors.length === 0 && renderEmptyState()}
-				{renderSuffix && renderSuffix()}
-			</span>
-		</div>
-	);
+	return <Byline {...props} contributors={authors} />;
 };
 
 PubByline.propTypes = propTypes;
-PubByline.defaultProps = defaultProps;
+PubByline.defaultProps = Byline.defaultProps;
 export default PubByline;
