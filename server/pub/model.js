@@ -54,15 +54,12 @@ export default (sequelize, dataTypes) => {
 					const {
 						Pub,
 						PubAttribution,
+						PubEdge,
 						CollectionPub,
 						Community,
-						// Discussion,
 						Branch,
-						// Merge,
 						PubVersion,
-						// Review,
 						Release,
-						// Thread,
 						DiscussionNew,
 						Fork,
 						ReviewNew,
@@ -117,6 +114,16 @@ export default (sequelize, dataTypes) => {
 						onDelete: 'CASCADE',
 						as: 'pubVersions',
 						foreignKey: 'pubId',
+					});
+					Pub.hasMany(PubEdge, {
+						onDelete: 'CASCADE',
+						as: 'outboundEdges',
+						foreignKey: 'pubId',
+					});
+					Pub.hasMany(PubEdge, {
+						onDelete: 'CASCADE',
+						as: 'inboundEdges',
+						foreignKey: 'targetPubId',
 					});
 				},
 			},
