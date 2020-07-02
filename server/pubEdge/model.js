@@ -3,10 +3,11 @@ export default (sequelize, dataTypes) => {
 		'PubEdge',
 		{
 			pubId: { type: dataTypes.UUID, allowNull: false },
-			relationType: { type: dataTypes.STRING, allowNull: false },
-			pubIsParent: { type: dataTypes.BOOLEAN, allowNull: false },
 			targetForeignPublication: { type: dataTypes.UUID, allowNull: true },
 			targetPubId: { type: dataTypes.UUID, allowNull: true },
+			relationType: { type: dataTypes.STRING, allowNull: false },
+			rank: { type: dataTypes.TEXT, allowNull: false },
+			pubIsParent: { type: dataTypes.BOOLEAN, allowNull: false },
 			approvedByTarget: { type: dataTypes.BOOLEAN, allowNull: false },
 		},
 		{
