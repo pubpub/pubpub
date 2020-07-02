@@ -5,7 +5,6 @@ import { createPubEdge } from 'server/pubEdge/queries';
 import { ForeignPublication, PubEdge } from 'server/models';
 
 const models = modelize`
-	User yetAnotherPubManager {}
 	Community {
 		Member {
 			permissions: "manage"
