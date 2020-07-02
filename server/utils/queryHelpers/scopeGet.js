@@ -68,6 +68,17 @@ const getActiveIds = ({ activePub, activeCollection, activeCommunity }) => {
 	};
 };
 
+const getActivePubQuery = ({ id, slug, communityId }) => {
+	if (!communityId && slug) {
+		throw new Error('Pub slug must be passed to scopeGet with a communityId');
+	}
+	return {
+		...(id && { id: id }),
+		...(slug && { slug: slug }),
+		...(communityId && { communityId: communityId }),
+	};
+};
+
 getScopeElements = async (scopeInputs) => {
 	const {
 		communityId,
@@ -89,18 +100,19 @@ getScopeElements = async (scopeInputs) => {
 		activeTargetType = 'collection';
 	}
 
-	if (!activeCommunity) {
+	if (!activeCommunity && communityId) {
 		activeCommunity = await Community.findOne({
 			where: { id: communityId },
 		});
 	}
 
 	if (activeTargetType === 'pub') {
-		const query = pubId
-			? { id: pubId, communityId: activeCommunity.id }
-			: { slug: pubSlug, communityId: activeCommunity.id };
 		activePub = await Pub.findOne({
-			where: query,
+			where: getActivePubQuery({
+				communityId: activeCommunity && activeCommunity.id,
+				slug: pubSlug,
+				id: pubId,
+			}),
 			include: [
 				{
 					model: CollectionPub,
@@ -136,7 +148,9 @@ getScopeElements = async (scopeInputs) => {
 			return !isActive;
 		});
 		if (!activeCommunity) {
-			activeCommunity = await Community.findOne({ where: { id: activePub.communityId } });
+			activeCommunity = await Community.findOne({
+				where: { id: activePub.communityId },
+			});
 		}
 	}
 

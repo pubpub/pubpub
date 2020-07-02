@@ -20,14 +20,14 @@ export const createPubEdge = async ({
 	pubId,
 	relationType,
 	pubIsParent,
-	foreignPublication,
+	foreignPublication = null,
 	targetPubId = null,
 	approvedByTarget = false,
 	moveToTop = false,
 }) => {
 	const [foreignPublicationId, rank] = await Promise.all([
-		findRankForNewPubEdge(pubId, moveToTop),
 		getForeignPublicationId(foreignPublication),
+		findRankForNewPubEdge(pubId, moveToTop),
 	]);
 	return PubEdge.create({
 		pubId: pubId,
