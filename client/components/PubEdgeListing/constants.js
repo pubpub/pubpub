@@ -4,18 +4,17 @@ export const Filter = {
 	Child: 'child',
 };
 
+export const allFilters = Object.values(Filter);
+
 export const Mode = {
 	Carousel: 'carousel',
 	List: 'list',
 };
 
-export const RelationshipType = {
-	Discussion: 'discussion',
-	Review: 'review',
-};
-
-export const pluralFilterLookup = {
+const pluralFilterLookup = {
 	[Filter.Parent]: 'parents',
 	[Filter.Sibling]: 'siblings',
 	[Filter.Child]: 'children',
 };
+
+export const filterToPlural = (filter) => pluralFilterLookup[filter];

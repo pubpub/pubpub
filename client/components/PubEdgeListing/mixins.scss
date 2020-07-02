@@ -1,0 +1,7 @@
+@mixin hover-top-border() {
+	position: absolute;
+	top: 0;
+	transform: translateY(-50%);
+	background-color: #fff;
+	padding: 0 8px;
+}

@@ -1,0 +1,30 @@
+@import './mixins.scss';
+
+.pub-edge-listing-card-component {
+	border-width: 1px;
+	border-style: solid;
+	position: relative;
+	margin-bottom: 24px;
+	padding: 24px 32px 18px;
+
+	> .relationship {
+		@include hover-top-border();
+		left: calc(24px - 8px);
+
+		.relationship-name {
+			border-bottom: 1px dotted;
+			font-weight: 600;
+		}
+
+		.pub-title {
+			font-style: italic;
+		}
+
+		.drop-return {
+			transform: rotateY(180deg);
+			position: relative;
+			top: -3px;
+			margin-right: 4px;
+		}
+	}
+}

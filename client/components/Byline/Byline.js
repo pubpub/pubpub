@@ -2,11 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export const propTypes = {
-	contributors: PropTypes.arrayOf(PropTypes.oneOfType(PropTypes.string, PropTypes.shape({})))
-		.isRequired,
+	contributors: PropTypes.oneOfType([
+		// Array of authors (e.g. from pub data)
+		PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})])),
+		// Byline (e.g. from ForeignPublication)
+		PropTypes.string,
+	]).isRequired,
 	bylinePrefix: PropTypes.string,
-	hideAuthors: PropTypes.bool,
-	hideContributors: PropTypes.bool,
 	linkToUsers: PropTypes.bool,
 	renderEmptyState: PropTypes.func,
 	renderSuffix: PropTypes.func,
@@ -14,8 +16,6 @@ export const propTypes = {
 
 export const defaultProps = {
 	bylinePrefix: 'by',
-	hideAuthors: false,
-	hideContributors: true,
 	linkToUsers: true,
 	renderEmptyState: () => null,
 	renderSuffix: () => null,
@@ -27,42 +27,49 @@ const Byline = (props) => {
 		return (
 			<>
 				{bylinePrefix && <span>{bylinePrefix} </span>}
-				{contributors.map((author, index) => {
-					const separator =
-						index === contributors.length - 1 || contributors.length === 2 ? '' : ', ';
-					const prefix = index === contributors.length - 1 && index !== 0 ? ' and ' : '';
+				{typeof contributors === 'string' ? (
+					<span>{contributors}</span>
+				) : (
+					contributors.map((author, index) => {
+						const separator =
+							index === contributors.length - 1 || contributors.length === 2
+								? ''
+								: ', ';
+						const prefix =
+							index === contributors.length - 1 && index !== 0 ? ' and ' : '';
 
-					if (typeof author === 'string') {
-						return (
-							<span key={`author-${author}`}>
-								{prefix}
-								{author}
-								{separator}
-							</span>
-						);
-					}
+						if (typeof author === 'string') {
+							return (
+								<span key={`author-${author}`}>
+									{prefix}
+									{author}
+									{separator}
+								</span>
+							);
+						}
 
-					const user = author.user;
+						const user = author.user;
 
-					if (user.slug && linkToUsers) {
+						if (user.slug && linkToUsers) {
+							return (
+								<span key={`author-${user.id}`}>
+									{prefix}
+									<a href={`/user/${user.slug}`} className="hoverline">
+										{user.fullName}
+									</a>
+									{separator}
+								</span>
+							);
+						}
 						return (
 							<span key={`author-${user.id}`}>
 								{prefix}
-								<a href={`/user/${user.slug}`} className="hoverline">
-									{user.fullName}
-								</a>
+								{user.fullName}
 								{separator}
 							</span>
 						);
-					}
-					return (
-						<span key={`author-${user.id}`}>
-							{prefix}
-							{user.fullName}
-							{separator}
-						</span>
-					);
-				})}
+					})
+				)}
 			</>
 		);
 	};

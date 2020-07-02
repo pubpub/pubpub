@@ -1,97 +1,60 @@
+import { NonIdealState } from '@blueprintjs/core';
 import PropTypes from 'prop-types';
 import React, { useCallback, useState } from 'react';
 
-import { Icon, PubEdge } from 'components';
-import { toTitleCase } from '../../utils/string';
-import { PubEdgeListingControls } from './PubEdgeListingControls';
-import { Filter, Mode } from './constants';
-import { NonIdealState } from '@blueprintjs/core';
+import { Filter, Mode, allFilters } from './constants';
+import { pubEdgeType } from '../PubEdge/constants';
+import PubEdgeListingCard from './PubEdgeListingCard';
+import PubEdgeListingCounter from './PubEdgeListingCounter';
+import PubEdgeListingControls from './PubEdgeListingControls';
 
 require('./pubEdgeListing.scss');
 
-const relatedObjectType = PropTypes.shape({
-	...PubEdge.propTypes,
-	relationshipType: PropTypes.string.isRequired,
-	pubIsParent: PropTypes.bool.isRequired,
-});
-
 const propTypes = {
 	accentColor: PropTypes.string.isRequired,
-	minimal: PropTypes.boolean,
+	minimal: PropTypes.bool,
 	pubTitle: PropTypes.string,
-	objects: PropTypes.arrayOf(relatedObjectType),
+	pubEdges: PropTypes.arrayOf(pubEdgeType).isRequired,
 };
 
-const filterRelatedObjects = (filters, objects) => {
-	return objects.filter((o) => {
+const defaultProps = {
+	minimal: false,
+	pubTitle: '',
+};
+
+const filterPubEdges = (filters, pubEdges) =>
+	pubEdges.filter((pubEdge) => {
 		let result = false;
 
 		if (filters.indexOf(Filter.Parent) > -1) {
-			result = result || o.pubIsParent;
+			result = result || pubEdge.pubIsParent;
 		}
 
 		if (filters.indexOf(Filter.Child) > -1) {
-			result = result || !o.pubIsParent;
+			result = result || !pubEdge.pubIsParent;
 		}
 
 		return result;
 	});
-};
-
-const PubEdgeListingCounter = (props) => {
-	return (
-		<span className="pub-edge-listing-counter-component">
-			{props.count === 0 ? 0 : props.index + 1} of {props.count}
-		</span>
-	);
-};
-
-const PubEdgeListingCard = (props) => {
-	const { accentColor, children, minimal, object, pubTitle } = props;
-	const relationshipName = toTitleCase(object.relationshipType);
-	const relationshipTitle = minimal ? (
-		<>
-			<span>This pub is a </span>
-			<span className="relationship-name">{relationshipName}</span> on:
-		</>
-	) : (
-		<>
-			<span>Another </span>
-			<span className="relationship-name">{relationshipName}</span> of:
-			<span className="pub-title"> {pubTitle}</span>
-		</>
-	);
-
-	return (
-		<div className="card">
-			{children}
-			<div className="relationship">
-				{minimal && <Icon icon="arrow-drop-right" color={accentColor} iconSize={18} />}
-				{relationshipTitle}
-			</div>
-			<PubEdge {...object} />
-		</div>
-	);
-};
 
 const PubEdgeListing = (props) => {
-	const { accentColor, minimal = false, objects, pubTitle } = props;
+	const { accentColor, minimal, pubEdges, pubTitle } = props;
 	const [index, setIndex] = useState(0);
 	const [mode, setMode] = useState(Mode.Carousel);
 	const [filters, setFilters] = useState([Filter.Child]);
-	const filteredObjects = filterRelatedObjects(filters, objects);
-	const { [index]: active, length } = filteredObjects;
-	const next = useCallback(() => setIndex((i) => (i + 1) % length));
-	const back = useCallback(() => setIndex((i) => (i - 1 + length) % length));
+	const filteredPubEdges = filterPubEdges(filters, pubEdges);
+	const { [index]: active, length } = filteredPubEdges;
+	const next = useCallback(() => setIndex((i) => (i + 1) % length), [length]);
+	const back = useCallback(() => setIndex((i) => (i - 1 + length) % length), [length]);
 	const onFilterToggle = useCallback(
 		(filter) =>
 			setFilters((currentFilters) => {
-				const index = currentFilters.indexOf(filter);
+				const filterIndex = currentFilters.indexOf(filter);
 
-				if (index > -1) {
+				if (filterIndex > -1) {
 					setFilters([
-						...currentFilters.slice(0, index),
-						...currentFilters.slice(index + 1),
+						...currentFilters.slice(0, filterIndex),
+						...currentFilters.slice(filterIndex + 1),
 					]);
 				} else {
 					setFilters([...currentFilters, filter]);
@@ -99,60 +62,77 @@ const PubEdgeListing = (props) => {
 			}),
 		[],
 	);
+	const onAllFilterToggle = useCallback(() => {
+		if (filters.length === Object.keys(Filter).length) {
+			setFilters([]);
+		} else {
+			setFilters(allFilters);
+		}
+	}, [filters]);
 
-	const controls =
-		objects.length > 1 ? (
-			<>
-				<PubEdgeListingCounter index={index} count={length} />
-				<PubEdgeListingControls
+	const showControls = pubEdges.length > 1 && (!minimal || filteredPubEdges.length > 1);
+	const controls = showControls ? (
+		<>
+			<PubEdgeListingCounter index={index} count={length} />
+			<PubEdgeListingControls
+				accentColor={accentColor}
+				filters={filters}
+				mode={mode}
+				showFilterMenu={!minimal}
+				onBackClick={back}
+				onNextClick={next}
+				onFilterToggle={onFilterToggle}
+				onAllFilterToggle={onAllFilterToggle}
+				onModeChange={setMode}
+			/>
+		</>
+	) : null;
+
+	let content;
+
+	if (minimal) {
+		content = (
+			<PubEdgeListingCard pubEdge={active} minimal={minimal} accentColor={accentColor}>
+				<div className="minimal-controls">{controls}</div>
+			</PubEdgeListingCard>
+		);
+	} else {
+		const cards =
+			mode === Mode.Carousel ? (
+				<PubEdgeListingCard
+					pubTitle={pubTitle}
+					pubEdge={active}
 					accentColor={accentColor}
-					filters={filters}
-					mode={mode}
-					showFilterMenu={!minimal}
-					onBackClick={back}
-					onNextClick={next}
-					onFilterToggle={onFilterToggle}
-					onModeChange={setMode}
 				/>
-			</>
-		) : null;
-
-	return (
-		<div className="pub-edge-listing-component">
-			{minimal ? (
-				<PubEdgeListingCard object={active} minimal={minimal} accentColor={accentColor}>
-					<div className="minimal-controls">{controls}</div>
-				</PubEdgeListingCard>
 			) : (
-				<>
-					<div className="top">
-						<h5 style={{ color: accentColor }}>Related Pubs</h5>
-						{controls}
-					</div>
-					{!active || filteredObjects.length === 0 ? (
-						<NonIdealState title="No Results" icon="search" />
-					) : mode === Mode.Carousel ? (
-						<PubEdgeListingCard
-							pubTitle={pubTitle}
-							object={active}
-							accentColor={accentColor}
-						/>
-					) : (
-						filteredObjects.map((o) => (
-							<PubEdgeListingCard
-								key={o.url}
-								pubTitle={pubTitle}
-								object={o}
-								accentColor={accentColor}
-							/>
-						))
-					)}
-				</>
-			)}
-		</div>
-	);
+				pubEdges.map((pubEdge) => (
+					<PubEdgeListingCard
+						key={pubEdge.url}
+						pubTitle={pubTitle}
+						pubEdge={pubEdge}
+						accentColor={accentColor}
+					/>
+				))
+			);
+
+		content = (
+			<>
+				<div className="top">
+					<h5 style={{ color: accentColor }}>Related Pubs</h5>
+					{controls}
+				</div>
+				{!active || filteredPubEdges.length === 0 ? (
+					<NonIdealState title="No Results" icon="search" />
+				) : (
+					cards
+				)}
+			</>
+		);
+	}
+
+	return <div className="pub-edge-listing-component">{content}</div>;
 };
 
 PubEdgeListing.propTypes = propTypes;
-
+PubEdgeListing.defaultProps = defaultProps;
 export default PubEdgeListing;

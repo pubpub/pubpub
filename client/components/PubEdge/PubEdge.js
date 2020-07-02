@@ -1,48 +1,50 @@
 import dateFormat from 'dateformat';
-import PropTypes from 'prop-types';
 import React, { useCallback, useState } from 'react';
+import { Button } from 'reakit/Button';
 
 import { Byline } from 'components';
+import { pubEdgeType } from './constants';
 
 require('./pubEdge.scss');
 
 export const propTypes = {
-	title: PropTypes.string.isRequired,
-	contributors: PropTypes.arrayOf(PropTypes.string).isRequired,
-	image: PropTypes.string,
-	url: PropTypes.string.isRequired,
-	publishedAt: PropTypes.number.isRequired,
-	description: PropTypes.string.isRequired,
+	pubEdge: pubEdgeType.isRequired,
 };
 
 const PubEdge = (props) => {
+	const {
+		pubEdge: { avatar, contributors, description, publicationDate, title, url },
+	} = props;
 	const [open, setOpen] = useState(false);
-	const handleToggleDescriptionClick = useCallback((e) => {
-		e.preventDefault();
-		setOpen((open) => !open);
-	}, []);
-	const publishedAt = dateFormat(props.publishedAt, 'mmm dd, yyyy');
+	const handleToggleDescriptionClick = useCallback(
+		(e) => {
+			e.preventDefault();
+			setOpen(!open);
+		},
+		[open],
+	);
+	const publishedAt = dateFormat(publicationDate, 'mmm dd, yyyy');
 
 	return (
 		<article className="pub-edge-component">
 			<div className="top">
-				{props.image && (
+				{avatar && (
 					<div className="top-left">
-						<img src={props.image} alt="" />
+						<img src={avatar} alt="" />
 					</div>
 				)}
 				<div className="top-right">
-					<h4>{props.title}</h4>
-					<Byline contributors={props.contributors} />
+					<h4>{title}</h4>
+					<Byline contributors={contributors} />
 					<ul className="metadata">
 						<li>Published on {publishedAt}</li>
 						<li>
-							<a href={props.url}>{props.url}</a>
+							<a href={url}>{url}</a>
 						</li>
 						<li>
-							<a onClick={handleToggleDescriptionClick}>
+							<Button as="a" onClick={handleToggleDescriptionClick}>
 								{open ? 'Hide Description' : 'Show Description'}
-							</a>
+							</Button>
 						</li>
 					</ul>
 				</div>
@@ -50,7 +52,7 @@ const PubEdge = (props) => {
 			<details open={open}>
 				<summary>Description</summary>
 				<hr />
-				<p>{props.description}</p>
+				<p>{description}</p>
 			</details>
 		</article>
 	);
