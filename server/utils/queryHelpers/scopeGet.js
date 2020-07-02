@@ -135,6 +135,9 @@ getScopeElements = async (scopeInputs) => {
 			}
 			return !isActive;
 		});
+		if (!activeCommunity) {
+			activeCommunity = await Community.findOne({ where: { id: activePub.communityId } });
+		}
 	}
 
 	if (activeTargetType === 'collection') {
