@@ -5,8 +5,11 @@ import {
 	CollectionPub,
 	Community,
 	Export,
+	ExternalPublication,
 	Page,
+	Pub,
 	PubAttribution,
+	PubEdge,
 	Release,
 	DiscussionNew,
 	ReviewNew,
@@ -18,7 +21,7 @@ import {
 
 import { baseAuthor, baseThread, baseVisibility } from './util';
 
-export default ({ isAuth, isPreview, getCollections, getMembers, getCommunity }) => {
+export default ({ isAuth, isPreview, getCollections, getMembers, getCommunity, getEdges }) => {
 	/* Initialize values assuming all inputs are false. */
 	/* Then, iterate over each input and adjust */
 	/* variables as needed */
@@ -45,6 +48,7 @@ export default ({ isAuth, isPreview, getCollections, getMembers, getCommunity })
 		},
 	];
 	let pubMembers = [];
+	let pubEdges = [];
 	let pubReleases = [
 		{
 			model: Release,
@@ -89,6 +93,25 @@ export default ({ isAuth, isPreview, getCollections, getMembers, getCommunity })
 				model: Member,
 				as: 'members',
 			},
+		];
+	}
+	if (getEdges) {
+		pubEdges = [
+			{
+				model: PubEdge,
+				as: 'outboundEdges',
+				include: [
+					{
+						model: Pub,
+						as: 'targetPub',
+					},
+					{
+						model: ExternalPublication,
+						as: 'externalPublication',
+					},
+				],
+			},
+			{ model: PubEdge, as: 'inboundEdges' },
 		];
 	}
 	if (getCollections) {
@@ -148,6 +171,7 @@ export default ({ isAuth, isPreview, getCollections, getMembers, getCommunity })
 			...pubBranches,
 			...pubReleases,
 			...pubMembers,
+			...pubEdges,
 			{
 				separate: true,
 				model: DiscussionNew,
