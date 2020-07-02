@@ -69,7 +69,7 @@ it('does not let a manager create a Pub targeting their Pub', async () => {
 		.expect(403);
 });
 
-it('lets a manager can create a PubEdge to another Pub', async () => {
+it('lets a manager create a PubEdge to another Pub', async () => {
 	const { sourcePubManager, sourcePub, targetPub } = models;
 	const agent = await login(sourcePubManager);
 	const { body: resultingEdge } = await agent
@@ -87,7 +87,7 @@ it('lets a manager can create a PubEdge to another Pub', async () => {
 	expect(resultingEdge.approvedByTarget).toEqual(false);
 });
 
-it('lets a manager can create a PubEdge to a foreign publication', async () => {
+it('lets a manager create a PubEdge to a foreign publication', async () => {
 	const { sourcePubManager, sourcePub } = models;
 	const agent = await login(sourcePubManager);
 	const foreignPublication = {
@@ -187,7 +187,7 @@ it('lets the manager of a targetPub update approvedByTarget on an edge (but noth
 	expect(resultingEdge.approvedByTarget).toEqual(true);
 });
 
-it('lets a Pub manager can destroy a PubEdge', async () => {
+it('lets a Pub manager destroy a PubEdge', async () => {
 	const { anotherPub, anotherPubManager, sourcePub, sourcePubManager } = models;
 	const existingEdge = await createPubEdge({
 		pubId: sourcePub.id,
