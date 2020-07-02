@@ -1,38 +1,38 @@
 export const relationTypeDefinitions = {
 	comment: {
 		label: 'comment',
-		relationString: 'is a comment on',
-		passiveRelationString: 'is commented on by',
+		childRelationString: 'is a comment on',
+		parentRelationString: 'is commented on by',
 	},
 	preprint: {
 		label: 'preprint',
-		relationString: 'is a preprint of',
-		passiveRelationString: 'has preprint',
+		childRelationString: 'is a preprint of',
+		parentRelationString: 'has preprint',
 	},
 	reply: {
 		label: 'reply',
-		relationString: 'is a reply to',
-		passiveRelationString: 'is replied to by',
+		childRelationString: 'is a reply to',
+		parentRelationString: 'is replied to by',
 	},
 	review: {
 		label: 'review',
-		relationString: 'is a review of',
-		passiveRelationString: 'is reviewed by',
+		childRelationString: 'is a review of',
+		parentRelationString: 'is reviewed by',
 	},
 	supplement: {
 		label: 'supplement',
-		relationString: 'is a supplement to',
-		passiveRelationString: 'is supplemented by',
+		childRelationString: 'is a supplement to',
+		parentRelationString: 'is supplemented by',
 	},
 	translation: {
 		label: 'translation',
-		relationString: 'is a translation of',
-		passiveRelationString: 'is translated to another language in',
+		childRelationString: 'is a translation of',
+		parentRelationString: 'is translated to another language in',
 	},
 	version: {
 		label: 'version',
-		relationString: 'is a version of',
-		passiveRelationString: 'has another version in',
+		childRelationString: 'is a version of',
+		parentRelationString: 'has another version in',
 	},
 };
 
