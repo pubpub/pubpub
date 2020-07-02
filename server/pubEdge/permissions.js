@@ -15,14 +15,14 @@ export const canUpdateOrDestroyPubEdge = async ({ pubEdgeId, userId }) => {
 };
 
 export const canApprovePubEdgeWithTargetPubId = async ({ targetPubId, userId }) => {
-	const scope = await getScope({ pubId: targetPubId, loginId: userId });
-	return canManagePubEdges(scope);
+	if (targetPubId) {
+		const scope = await getScope({ pubId: targetPubId, loginId: userId });
+		return canManagePubEdges(scope);
+	}
+	return false;
 };
 
 export const canApprovePubEdge = async ({ pubEdgeId, userId }) => {
 	const { targetPubId } = await PubEdge.findOne({ where: { id: pubEdgeId } });
-	if (targetPubId) {
-		return canApprovePubEdgeWithTargetPubId({ targetPubId: targetPubId, userId: userId });
-	}
-	return false;
+	return canApprovePubEdgeWithTargetPubId({ targetPubId: targetPubId, userId: userId });
 };

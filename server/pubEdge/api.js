@@ -34,25 +34,6 @@ app.post(
 );
 
 app.put(
-	'/api/pubEdges/approvedByTarget',
-	wrap(async (req, res) => {
-		const { pubEdgeId, approvedByTarget } = req.body;
-		const canApproveEdge = await canApprovePubEdge({
-			pubEdgeId: pubEdgeId,
-			userId: req.user.id,
-		});
-		if (canApproveEdge) {
-			const edge = await updatePubEdge({
-				pubEdgeId: pubEdgeId,
-				approvedByTarget: approvedByTarget,
-			});
-			return res.status(200).json(edge);
-		}
-		throw new ForbiddenError();
-	}),
-);
-
-app.put(
 	'/api/pubEdges',
 	wrap(async (req, res) => {
 		const { pubEdgeId, rank } = req.body;
@@ -64,6 +45,25 @@ app.put(
 			const edge = await updatePubEdge({
 				pubEdgeId: pubEdgeId,
 				rank: rank,
+			});
+			return res.status(200).json(edge);
+		}
+		throw new ForbiddenError();
+	}),
+);
+
+app.put(
+	'/api/pubEdges/approvedByTarget',
+	wrap(async (req, res) => {
+		const { pubEdgeId, approvedByTarget } = req.body;
+		const canApproveEdge = await canApprovePubEdge({
+			pubEdgeId: pubEdgeId,
+			userId: req.user.id,
+		});
+		if (canApproveEdge) {
+			const edge = await updatePubEdge({
+				pubEdgeId: pubEdgeId,
+				approvedByTarget: approvedByTarget,
 			});
 			return res.status(200).json(edge);
 		}
