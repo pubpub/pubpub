@@ -56,9 +56,6 @@ const pubEdges = [
 ];
 
 const StoryContainer = (props) => <div style={{ padding: 24 }}>{props.children}</div>;
-const StoryContainerMobile = (props) => (
-	<div style={{ padding: 24, width: '320px' }}>{props.children}</div>
-);
 
 storiesOf('components/PubEdgeListing', module).add('header', () => (
 	<StoryContainer>

@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Button, ButtonGroup, Checkbox, Menu, Popover, Radio } from '@blueprintjs/core';
+import { Button, ButtonGroup, Checkbox, Popover, Radio } from '@blueprintjs/core';
 
 import { toTitleCase, joinOxford } from 'utils/strings';
 

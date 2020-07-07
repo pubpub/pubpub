@@ -1,4 +1,3 @@
-import dateFormat from 'dateformat';
 import React, { useCallback, useState } from 'react';
 import { Button } from 'reakit/Button';
 
