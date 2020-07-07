@@ -24,7 +24,7 @@ const DashboardImpact = (props) => {
 	const { baseToken, benchmarkToken } = impactData;
 	const { scopeData } = usePageContext();
 	const {
-		elements: { activeTargetType, activeTargetName, activeTarget},
+		elements: { activeTargetType, activeTargetName, activeTarget },
 		activePermissions: { canView },
 	} = scopeData;
 	const displayDataWarning = activeTarget.createdAt < '2020-04-29';
