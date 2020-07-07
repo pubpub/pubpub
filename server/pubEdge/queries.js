@@ -1,5 +1,5 @@
 import { PubEdge } from 'server/models';
-import { createForeignPublication } from 'server/foreignPublication/queries';
+import { createExternalPublication } from 'server/externalPublication/queries';
 import findRank from 'utils/findRank';
 
 const findRankForNewPubEdge = async (pubId, moveToTop) => {
@@ -8,10 +8,10 @@ const findRankForNewPubEdge = async (pubId, moveToTop) => {
 	return findRank(ranks, moveToTop ? 0 : ranks.length);
 };
 
-const getForeignPublicationId = async (maybeAttrs) => {
+const getExternalPublicationId = async (maybeAttrs) => {
 	if (maybeAttrs) {
-		const foreignPublication = await createForeignPublication(maybeAttrs);
-		return foreignPublication.id;
+		const externalPublication = await createExternalPublication(maybeAttrs);
+		return externalPublication.id;
 	}
 	return null;
 };
@@ -20,13 +20,13 @@ export const createPubEdge = async ({
 	pubId,
 	relationType,
 	pubIsParent,
-	foreignPublication = null,
+	externalPublication = null,
 	targetPubId = null,
 	approvedByTarget = false,
 	moveToTop = false,
 }) => {
-	const [foreignPublicationId, rank] = await Promise.all([
-		getForeignPublicationId(foreignPublication),
+	const [externalPublicationId, rank] = await Promise.all([
+		getExternalPublicationId(externalPublication),
 		findRankForNewPubEdge(pubId, moveToTop),
 	]);
 	return PubEdge.create({
@@ -36,7 +36,7 @@ export const createPubEdge = async ({
 		pubIsParent: pubIsParent,
 		targetPubId: targetPubId,
 		approvedByTarget: approvedByTarget,
-		foreignPublicationId: foreignPublicationId,
+		externalPublicationId: externalPublicationId,
 	});
 };
 

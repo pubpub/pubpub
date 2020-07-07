@@ -12,7 +12,7 @@ import { createPubEdge, updatePubEdge, destroyPubEdge } from './queries';
 app.post(
 	'/api/pubEdges',
 	wrap(async (req, res) => {
-		const { pubId, pubIsParent, relationType, targetPubId, foreignPublication } = req.body;
+		const { pubId, pubIsParent, relationType, targetPubId, externalPublication } = req.body;
 		const userId = req.user.id;
 		const [canCreate, approvedByTarget] = await Promise.all([
 			canCreatePubEdge({ userId: userId, pubId: pubId }),
@@ -22,7 +22,7 @@ app.post(
 			const edge = await createPubEdge({
 				pubId: pubId,
 				targetPubId: targetPubId,
-				foreignPublication: foreignPublication,
+				externalPublication: externalPublication,
 				pubIsParent: pubIsParent,
 				relationType: relationType,
 				approvedByTarget: approvedByTarget,

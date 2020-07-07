@@ -6,11 +6,11 @@ export const getParentsAndChildrenForPub = ({
 	const parents = [];
 	const children = [];
 	outboundEdges.forEach((edge) => {
-		const { targetPub, targetForeignPublication, pubIsParent, relationType } = edge;
+		const { targetPub, targetExternalPublication, pubIsParent, relationType } = edge;
 		(pubIsParent ? children : parents).push({
 			relationType: relationType,
 			...(targetPub && { pub: targetPub }),
-			...(targetForeignPublication && { foreignPublication: targetForeignPublication }),
+			...(targetExternalPublication && { externalPublication: targetExternalPublication }),
 		});
 	});
 	inboundEdges.forEach((edge) => {

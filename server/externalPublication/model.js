@@ -1,5 +1,5 @@
 export default (sequelize, dataTypes) => {
-	return sequelize.define('ForeignPublication', {
+	return sequelize.define('ExternalPublication', {
 		title: { type: dataTypes.TEXT, allowNull: false },
 		url: { type: dataTypes.TEXT, allowNull: false },
 		byline: { type: dataTypes.TEXT },

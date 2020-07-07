@@ -2,7 +2,7 @@
 import { setup, login, modelize } from 'stubstub';
 
 import { createPubEdge } from 'server/pubEdge/queries';
-import { ForeignPublication, PubEdge } from 'server/models';
+import { ExternalPublication, PubEdge } from 'server/models';
 
 const models = modelize`
 	Community {
@@ -87,10 +87,10 @@ it('lets a manager create a PubEdge to another Pub', async () => {
 	expect(resultingEdge.approvedByTarget).toEqual(false);
 });
 
-it('lets a manager create a PubEdge to a foreign publication', async () => {
+it('lets a manager create a PubEdge to an external publication', async () => {
 	const { sourcePubManager, sourcePub } = models;
 	const agent = await login(sourcePubManager);
-	const foreignPublication = {
+	const externalPublication = {
 		title: 'I am in another journal',
 		url: 'https://somewhere.else',
 		description: "It's not even on PubPub",
@@ -103,14 +103,14 @@ it('lets a manager create a PubEdge to a foreign publication', async () => {
 			pubId: sourcePub.id,
 			relationType: 'comment',
 			pubIsParent: false,
-			foreignPublication: foreignPublication,
+			externalPublication: externalPublication,
 		})
 		.expect(201);
-	const resultingForeignPublication = await ForeignPublication.findOne({
-		where: { id: resultingEdge.foreignPublicationId },
+	const resultingExternalPublication = await ExternalPublication.findOne({
+		where: { id: resultingEdge.externalPublicationId },
 	});
-	Object.entries(foreignPublication).forEach(([key, value]) =>
-		expect(resultingForeignPublication[key]).toEqual(value),
+	Object.entries(externalPublication).forEach(([key, value]) =>
+		expect(resultingExternalPublication[key]).toEqual(value),
 	);
 	expect(resultingEdge.approvedByTarget).toEqual(false);
 });

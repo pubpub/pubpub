@@ -1,6 +1,6 @@
-import { ForeignPublication } from 'server/models';
+import { ExternalPublication } from 'server/models';
 
-export const createForeignPublication = ({
+export const createExternalPublication = ({
 	title,
 	url,
 	byline = null,
@@ -9,7 +9,7 @@ export const createForeignPublication = ({
 	avatar = null,
 	publicationDate = null,
 }) => {
-	return ForeignPublication.create({
+	return ExternalPublication.create({
 		title: title,
 		url: url,
 		byline: byline,

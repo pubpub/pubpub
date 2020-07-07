@@ -3,7 +3,7 @@ export default (sequelize, dataTypes) => {
 		'PubEdge',
 		{
 			pubId: { type: dataTypes.UUID, allowNull: false },
-			targetForeignPublication: { type: dataTypes.UUID, allowNull: true },
+			targetExternalPublication: { type: dataTypes.UUID, allowNull: true },
 			targetPubId: { type: dataTypes.UUID, allowNull: true },
 			relationType: { type: dataTypes.STRING, allowNull: false },
 			rank: { type: dataTypes.TEXT, allowNull: false },
@@ -12,7 +12,7 @@ export default (sequelize, dataTypes) => {
 		},
 		{
 			classMethods: {
-				associate: ({ PubEdge, Pub, ForeignPublication }) => {
+				associate: ({ PubEdge, Pub, ExternalPublication }) => {
 					PubEdge.belongsTo(Pub, {
 						onDelete: 'CASCADE',
 						as: 'pub',
@@ -23,10 +23,10 @@ export default (sequelize, dataTypes) => {
 						as: 'targetPub',
 						foreignKey: 'targetPubId',
 					});
-					PubEdge.belongsTo(ForeignPublication, {
+					PubEdge.belongsTo(ExternalPublication, {
 						onDelete: 'CASCADE',
-						as: 'foreignPublication',
-						foreignKey: 'foreignPublicationId',
+						as: 'externalPublication',
+						foreignKey: 'externalPublicationId',
 					});
 				},
 			},
