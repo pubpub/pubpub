@@ -1,4 +1,5 @@
-import { flattenKeyables } from './firebase';
+import { flattenKeyables, storeCheckpoint } from './firebase';
+import { getFirebaseDoc } from './firebaseDoc';
 
 export const createBranch = (baseFirebaseRef, newFirebaseRef, versionNumber) => {
 	const getChanges = baseFirebaseRef
@@ -25,7 +26,7 @@ export const createBranch = (baseFirebaseRef, newFirebaseRef, versionNumber) => 
 	});
 };
 
-export const mergeBranch = (sourceFirebaseRef, destinationFirebaseRef) => {
+export const mergeBranch = (sourceFirebaseRef, destinationFirebaseRef, prosemirrorSchema) => {
 	/* TODO-BRANCH At the moment, this merge simply appends new changes in a merge */
 	/* It does not properly handle 'commonAncestor' or any similar */
 	/* concept which would be needed for multi-direction merging */
@@ -48,7 +49,7 @@ export const mergeBranch = (sourceFirebaseRef, destinationFirebaseRef) => {
 				.once('value');
 			return Promise.all([getSourceChanges, nextMergeKey]);
 		})
-		.then(([changesSnapshot, nextMergeKey]) => {
+		.then(async ([changesSnapshot, nextMergeKey]) => {
 			const changesSnapshotVal = changesSnapshot.val() || {};
 			if (!Object.values(changesSnapshotVal).length) {
 				/* If there are no new changes to add into a merge, simply return */
@@ -59,8 +60,16 @@ export const mergeBranch = (sourceFirebaseRef, destinationFirebaseRef) => {
 				.child('merges')
 				.child(nextMergeKey)
 				.set(Object.values(changesSnapshotVal));
-			return Promise.all([setLastMergeKey, appendMerge]).then(() => {
-				return { mergeKey: nextMergeKey };
-			});
+
+			await Promise.all([setLastMergeKey, appendMerge]);
+
+			const { doc } = await getFirebaseDoc(
+				destinationFirebaseRef,
+				prosemirrorSchema,
+				nextMergeKey,
+			);
+			await storeCheckpoint(destinationFirebaseRef, doc, nextMergeKey);
+
+			return { mergeKey: nextMergeKey };
 		});
 };
