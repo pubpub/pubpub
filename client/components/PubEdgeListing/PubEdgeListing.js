@@ -12,14 +12,18 @@ require('./pubEdgeListing.scss');
 
 const propTypes = {
 	accentColor: PropTypes.string.isRequired,
-	minimal: PropTypes.bool,
+	isolated: PropTypes.bool,
 	pubTitle: PropTypes.string,
 	pubEdges: PropTypes.arrayOf(pubEdgeType).isRequired,
+	initialMode: PropTypes.string,
+	initialFilters: PropTypes.arrayOf(PropTypes.string),
 };
 
 const defaultProps = {
-	minimal: false,
+	isolated: false,
 	pubTitle: '',
+	initialMode: Mode.Carousel,
+	initialFilters: [Filter.Child],
 };
 
 const filterPubEdges = (filters, pubEdges) =>
@@ -38,10 +42,10 @@ const filterPubEdges = (filters, pubEdges) =>
 	});
 
 const PubEdgeListing = (props) => {
-	const { accentColor, minimal, pubEdges, pubTitle } = props;
+	const { accentColor, initialMode, initialFilters, isolated, pubEdges, pubTitle } = props;
 	const [index, setIndex] = useState(0);
-	const [mode, setMode] = useState(Mode.Carousel);
-	const [filters, setFilters] = useState([Filter.Child]);
+	const [mode, setMode] = useState(initialMode);
+	const [filters, setFilters] = useState(initialFilters);
 	const filteredPubEdges = filterPubEdges(filters, pubEdges);
 	const { [index]: active, length } = filteredPubEdges;
 	const next = useCallback(() => setIndex((i) => (i + 1) % length), [length]);
@@ -62,23 +66,23 @@ const PubEdgeListing = (props) => {
 			}),
 		[],
 	);
-	const onAllFilterToggle = useCallback(() => {
-		if (filters.length === Object.keys(Filter).length) {
-			setFilters([]);
-		} else {
-			setFilters(allFilters);
-		}
-	}, [filters]);
+	const onAllFilterToggle = useCallback(
+		() =>
+			setFilters((currentFilters) =>
+				currentFilters.length === Object.keys(Filter).length ? [] : allFilters,
+			),
+		[],
+	);
 
-	const showControls = pubEdges.length > 1 && (!minimal || filteredPubEdges.length > 1);
-	const controls = showControls ? (
+	const showControls = pubEdges.length > 1 && (!isolated || filteredPubEdges.length > 1);
+	const controls = showControls && (
 		<>
 			<PubEdgeListingCounter index={index} count={length} />
 			<PubEdgeListingControls
 				accentColor={accentColor}
 				filters={filters}
 				mode={mode}
-				showFilterMenu={!minimal}
+				showFilterMenu={!isolated}
 				onBackClick={back}
 				onNextClick={next}
 				onFilterToggle={onFilterToggle}
@@ -86,24 +90,29 @@ const PubEdgeListing = (props) => {
 				onModeChange={setMode}
 			/>
 		</>
-	) : null;
+	);
 
-	let content;
-
-	if (minimal) {
-		content = (
-			<PubEdgeListingCard pubEdge={active} minimal={minimal} accentColor={accentColor}>
-				<div className="minimal-controls">{controls}</div>
-			</PubEdgeListingCard>
+	const renderContent = () => {
+		return (
+			!isolated && (
+				<div className="top">
+					<h5 style={{ color: accentColor }}>Related Pubs</h5>
+					{controls}
+				</div>
+			)
 		);
-	} else {
+	};
+	const renderCards = () => {
 		const cards =
 			mode === Mode.Carousel ? (
 				<PubEdgeListingCard
 					pubTitle={pubTitle}
 					pubEdge={active}
 					accentColor={accentColor}
-				/>
+					showIcon={isolated}
+				>
+					{isolated && <div className="isolated-controls">{controls}</div>}
+				</PubEdgeListingCard>
 			) : (
 				pubEdges.map((pubEdge) => (
 					<PubEdgeListingCard
@@ -115,22 +124,19 @@ const PubEdgeListing = (props) => {
 				))
 			);
 
-		content = (
-			<>
-				<div className="top">
-					<h5 style={{ color: accentColor }}>Related Pubs</h5>
-					{controls}
-				</div>
-				{!active || filteredPubEdges.length === 0 ? (
-					<NonIdealState title="No Results" icon="search" />
-				) : (
-					cards
-				)}
-			</>
+		return !isolated && (!active || filteredPubEdges.length === 0) ? (
+			<NonIdealState title="No Results" icon="search" />
+		) : (
+			cards
 		);
-	}
+	};
 
-	return <div className="pub-edge-listing-component">{content}</div>;
+	return (
+		<div className="pub-edge-listing-component">
+			{renderContent()}
+			{renderCards()}
+		</div>
+	);
 };
 
 PubEdgeListing.propTypes = propTypes;

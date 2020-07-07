@@ -2,8 +2,9 @@ import { Icon } from '@blueprintjs/core';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { toTitleCase } from 'utils/strings';
 import { PubEdge } from 'components';
-import { toTitleCase } from '../../utils/string';
+
 import { pubEdgeType } from '../PubEdge/constants';
 
 require('./pubEdgeListingCard.scss');
@@ -11,23 +12,23 @@ require('./pubEdgeListingCard.scss');
 const propTypes = {
 	accentColor: PropTypes.string.isRequired,
 	children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
-	minimal: PropTypes.bool,
 	pubEdge: pubEdgeType.isRequired,
 	pubTitle: PropTypes.string,
+	showIcon: PropTypes.bool,
 };
 
 const defaultProps = {
 	children: [],
-	minimal: false,
 	pubTitle: '',
+	showIcon: false,
 };
 
 const PubEdgeListingCard = (props) => {
-	const { accentColor, children, minimal, pubEdge, pubTitle } = props;
+	const { accentColor, children, pubEdge, pubTitle, showIcon } = props;
 	const relationshipName = toTitleCase(pubEdge.relationType);
-	const relationshipTitle = minimal ? (
+	const relationshipTitle = pubEdge.pubIsParent ? (
 		<>
-			<span>This pub is a </span>
+			<span>This Pub is a </span>
 			<span className="relationship-name">{relationshipName}</span> on:
 		</>
 	) : (
@@ -42,8 +43,13 @@ const PubEdgeListingCard = (props) => {
 		<div className="pub-edge-listing-card-component">
 			{children}
 			<div className="relationship">
-				{minimal && (
-					<Icon icon="return" color={accentColor} iconSize={14} className="drop-return" />
+				{showIcon && (
+					<Icon
+						icon="key-enter"
+						color={accentColor}
+						iconSize={14}
+						className="drop-return"
+					/>
 				)}
 				{relationshipTitle}
 			</div>

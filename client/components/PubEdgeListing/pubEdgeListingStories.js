@@ -3,6 +3,8 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 
 import { PubEdgeListing } from 'components';
+
+import { Filter } from './constants';
 import { RelationType } from '../PubEdge/constants';
 
 const pubEdges = [
@@ -54,10 +56,18 @@ const pubEdges = [
 ];
 
 const StoryContainer = (props) => <div style={{ padding: 24 }}>{props.children}</div>;
+const StoryContainerMobile = (props) => (
+	<div style={{ padding: 24, width: '320px' }}>{props.children}</div>
+);
 
 storiesOf('components/PubEdgeListing', module).add('header', () => (
 	<StoryContainer>
-		<PubEdgeListing accentColor="#A22E37" pubEdges={pubEdges} minimal />
+		<PubEdgeListing
+			accentColor="#A22E37"
+			pubEdges={pubEdges}
+			initialFilters={[Filter.Parent]}
+			isolated
+		/>
 	</StoryContainer>
 ));
 

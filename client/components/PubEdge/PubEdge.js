@@ -2,7 +2,9 @@ import dateFormat from 'dateformat';
 import React, { useCallback, useState } from 'react';
 import { Button } from 'reakit/Button';
 
+import { formatDate } from 'utils/dates';
 import { Byline } from 'components';
+
 import { pubEdgeType } from './constants';
 
 require('./pubEdge.scss');
@@ -23,7 +25,7 @@ const PubEdge = (props) => {
 		},
 		[open],
 	);
-	const publishedAt = dateFormat(publicationDate, 'mmm dd, yyyy');
+	const publishedAt = formatDate(publicationDate);
 
 	return (
 		<article className="pub-edge-component">
@@ -37,14 +39,16 @@ const PubEdge = (props) => {
 					<h4>{title}</h4>
 					<Byline contributors={contributors} />
 					<ul className="metadata">
-						<li>Published on {publishedAt}</li>
-						<li>
-							<a href={url}>{url}</a>
-						</li>
 						<li>
 							<Button as="a" onClick={handleToggleDescriptionClick}>
 								{open ? 'Hide Description' : 'Show Description'}
 							</Button>
+						</li>
+						<li>Published on {publishedAt}</li>
+						<li>
+							<a href={url} alt={url}>
+								{url}
+							</a>
 						</li>
 					</ul>
 				</div>
@@ -59,5 +63,4 @@ const PubEdge = (props) => {
 };
 
 PubEdge.propTypes = propTypes;
-
 export default PubEdge;

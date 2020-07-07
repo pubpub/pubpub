@@ -1,29 +1,35 @@
 @import './mixins.scss';
 
 .pub-edge-listing-component {
-	display: flex;
-	flex-direction: column;
+    display: flex;
+    flex-direction: column;
 
-	> .top {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		margin-bottom: 12px;
+    > .top {
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 12px;
 
-		> h5 {
-			flex: 1 0 auto;
-		}
-	}
+        > h5 {
+            flex: 1 0 auto;
+            margin: 0 12px 0 0;
+        }
+    }
 
-	.minimal-controls {
-		@include hover-top-border();
-		right: calc(24px);
-		display: flex;
-		align-items: center;
-	}
+    .isolated-controls {
+        @include bleed-top-border();
+        align-items: center;
+        display: flex;
+        right: 24px;
+    }
+
+    @media screen and (max-width: 720px) {
+        font-size: 12px;
+    }
 }
 
 .pub-edge-listing-counter-component {
-	font-weight: 600;
-	margin-right: 6px;
+    font-weight: 600;
+    margin-right: 6px;
+    flex: 0 0 auto;
 }
