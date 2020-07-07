@@ -55,7 +55,7 @@ it('does not create a PubEdge for a user with edit permissions', async () => {
 		.expect(403);
 });
 
-it('does not let a manager create a Pub targeting their Pub', async () => {
+it('does not let a manager create a PubEdge targeting their Pub', async () => {
 	const { targetPubManager, sourcePub, targetPub } = models;
 	const agent = await login(targetPubManager);
 	await agent
