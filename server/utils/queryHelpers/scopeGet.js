@@ -14,7 +14,7 @@ import buildPubOptions from './pubOptions';
 import sanitizeDiscussions from './discussionsSanitize';
 import sanitizeForks from './forksSanitize';
 import sanitizeReviews from './reviewsSanitize';
-import { ensureSerialized } from './util';
+import { ensureSerialized, stripFalsyIdsFromQuery } from './util';
 import { getCollection } from './collectionGet';
 
 let getScopeElements;
@@ -68,17 +68,6 @@ const getActiveIds = ({ activePub, activeCollection, activeCommunity }) => {
 	};
 };
 
-const getActivePubQuery = ({ id, slug, communityId }) => {
-	if (!communityId && slug) {
-		throw new Error('Pub slug must be passed to scopeGet with a communityId');
-	}
-	return {
-		...(id && { id: id }),
-		...(slug && { slug: slug }),
-		...(communityId && { communityId: communityId }),
-	};
-};
-
 getScopeElements = async (scopeInputs) => {
 	const {
 		communityId,
@@ -108,7 +97,7 @@ getScopeElements = async (scopeInputs) => {
 
 	if (activeTargetType === 'pub') {
 		activePub = await Pub.findOne({
-			where: getActivePubQuery({
+			where: stripFalsyIdsFromQuery({
 				communityId: activeCommunity && activeCommunity.id,
 				slug: pubSlug,
 				id: pubId,
@@ -147,20 +136,21 @@ getScopeElements = async (scopeInputs) => {
 			}
 			return !isActive;
 		});
-		if (!activeCommunity) {
-			activeCommunity = await Community.findOne({
-				where: { id: activePub.communityId },
-			});
-		}
 	}
 
 	if (activeTargetType === 'collection') {
 		activeCollection = await getCollection({
 			collectionSlug: collectionSlug,
 			collectionId: collectionId,
-			communityId: activeCommunity.id,
+			communityId: activeCommunity && activeCommunity.id,
 		});
 		activeTarget = activeCollection;
+	}
+
+	if (!activeCommunity && activeTarget) {
+		activeCommunity = await Community.findOne({
+			where: { id: activeTarget.communityId },
+		});
 	}
 
 	if (activeTargetType === 'community') {

@@ -1,6 +1,10 @@
 import { User, Thread, ThreadComment, ThreadEvent, Visibility } from 'server/models';
 import { attributesPublicUser } from 'server/utils/attributesPublicUser';
 
+export const stripFalsyIdsFromQuery = (whereQueryObject) => {
+	return Object.fromEntries(Object.entries(whereQueryObject).filter((entry) => entry[1]));
+};
+
 export const ensureSerialized = (item) => {
 	if (Array.isArray(item)) {
 		return item.map(ensureSerialized);
