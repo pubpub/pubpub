@@ -127,6 +127,7 @@ const SideMenu = () => {
 				pubSlug: pubSlug,
 				mode: 'related',
 			}),
+			validScopes: ['pub'],
 		},
 		{
 			title: 'Impact',
