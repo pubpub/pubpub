@@ -120,12 +120,12 @@ const SideMenu = () => {
 			// ],
 		},
 		{
-			title: 'Related',
+			title: 'Connections',
 			icon: 'layout-auto',
 			href: getDashUrl({
 				collectionSlug: collectionSlug,
 				pubSlug: pubSlug,
-				mode: 'related',
+				mode: 'connections',
 			}),
 			validScopes: ['pub'],
 		},

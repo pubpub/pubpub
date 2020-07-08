@@ -36,4 +36,13 @@ export const relationTypeDefinitions = {
 	},
 };
 
+const createRelationTypeEnum = () => {
+	const res = {};
+	Object.entries(relationTypeDefinitions).forEach(([key]) => {
+		res[key.toUpperCase()] = key;
+	});
+	return res;
+};
+
 export const relationTypes = Object.keys(relationTypeDefinitions);
+export const RelationType = createRelationTypeEnum();

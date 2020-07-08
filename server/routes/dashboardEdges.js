@@ -10,13 +10,16 @@ import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { getPub, getOverview, sanitizeOverview } from 'server/utils/queryHelpers';
 
 const getOverviewForEdges = async (initialData) => {
-	const rawOverview = await getOverview(initialData);
+	const rawOverview = await getOverview({
+		...initialData.scopeData.elements,
+		activeTargetType: 'community',
+	});
 	const { pubs } = sanitizeOverview(initialData, rawOverview);
 	return { pubs: pubs };
 };
 
 app.get(
-	'/dash/pub/:pubSlug/related',
+	'/dash/pub/:pubSlug/connections',
 	wrap(async (req, res, next) => {
 		try {
 			if (!hostIsValid(req, 'community')) {
@@ -36,7 +39,7 @@ app.get(
 					viewData={{ overviewData: overviewData, pubData: pubData }}
 					headerComponents={generateMetaComponents({
 						initialData: initialData,
-						title: `Related Objects · ${pubData.title}`,
+						title: `Connections · ${pubData.title}`,
 						unlisted: true,
 					})}
 				/>,

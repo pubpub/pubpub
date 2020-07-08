@@ -11,8 +11,3 @@ export const pubEdgeType = PropTypes.shape({
 	relationType: PropTypes.string.isRequired,
 	pubIsParent: PropTypes.bool.isRequired,
 });
-
-export const RelationType = {
-	Discussion: 'discussion',
-	Review: 'review',
-};

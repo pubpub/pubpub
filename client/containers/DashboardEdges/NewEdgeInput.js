@@ -1,98 +1,91 @@
-import React, {useState} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import {MenuItem} from '@blueprintjs/core';
+import { MenuItem, Position } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 import isUrl from 'is-url';
 
-import {apiFetch} from 'client/utils/apiFetch';
+import { PubMenuItem } from 'components';
+import { apiFetch } from 'client/utils/apiFetch';
 import { useThrottled } from 'utils/hooks';
+import { fuzzyMatchPub } from 'utils/fuzzyMatch';
 
-const propTypes = {};
+require('./newEdgeInput.scss');
+
+const propTypes = {
+	availablePubs: PropTypes.arrayOf(
+		PropTypes.shape({
+			title: PropTypes.string,
+			avatar: PropTypes.string,
+		}),
+	).isRequired,
+	onSelectPub: PropTypes.func.isRequired,
+	usedPubIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
 const defaultProps = {};
 
-const renderInputValue = () => "";
+const renderInputValue = () => '';
 
-const isUrlLike = (string) => {
-    if (string.startsWith("http://") || string.startsWith("https://")) {
-        return true;
-    }
-    if (string.includes(" ")) {
-        return false;
-    }
-    return 
-}
+const NewEdgeInput = (props) => {
+	const { availablePubs, usedPubIds, onSelectPub } = props;
+	const [queryValue, setQueryValue] = useState('');
+	const queryCountRef = useRef(-1);
+	const [suggestedPubs, setSuggestedPubs] = useState([]);
+	const throttledQueryValue = useThrottled(queryValue, 250, true, true);
 
-const Component = (props) => {
-    const [queryValue, setQueryValue] = useState("");
-    const queryCountRef = useRef(-1);
-    const [suggestableItems, setSuggestableItems] = useState([]);
-    const throttledQueryValue = useThrottled(queryValue, 250, true, true);
+	useEffect(() => {
+		if (isUrl(queryValue)) {
+			setSuggestedPubs([]);
+		} else if (queryValue) {
+			setSuggestedPubs(
+				availablePubs
+					.filter((pub) => fuzzyMatchPub(pub, queryValue) && !usedPubIds.includes(pub.id))
+					.slice(0, 5),
+			);
+		} else {
+			setSuggestedPubs([]);
+		}
+	}, [availablePubs, queryValue, throttledQueryValue, usedPubIds]);
 
-    useEffect(() => {
-        if (isUrl) {
-            setSuggestableItems([]);
-        } else {
-            ++queryCountRef.current;
-            const currentQuery = queryCountRef.current;
+	const renderPub = (pub, { handleClick, modifiers }) => {
+		return (
+			<PubMenuItem
+				pubData={pub}
+				active={modifiers.active}
+				onClick={handleClick}
+				showImage={true}
+			/>
+		);
+	};
 
-        }
-    }, [throttledQueryValue])
-
-    const renderItem = (item, {handleClick, modifiers}) => {
-        return <MenuItem text="item"/>
-    }
-
-    return <Suggest
-					items={suggestableItems}
-					inputProps={{large: true}}
-					inputValueRenderer={renderInputValue}
-					onQueryChange={(query) => setQueryValue(query.trim)}
-					itemRenderer={(item, { handleClick, modifiers }) => {
-						return (
-							<li key={item.id || 'empty-user-create'}>
-								<button
-									type="button"
-									tabIndex={-1}
-									onClick={handleClick}
-									className={
-										modifiers.active
-											? 'bp3-menu-item bp3-active'
-											: 'bp3-menu-item'
-									}
-								>
-									{item.fullName && (
-										<Avatar
-											initials={item.initials}
-											avatar={item.avatar}
-											width={25}
-										/>
-									)}
-									{item.name && <span>Add collaborator named: </span>}
-									<span className="autocomplete-name">
-										{item.name || item.fullName}
-									</span>
-								</button>
-							</li>
-						);
-					}}
-					resetOnSelect={true}
-					onItemSelect={this.handleSelect}
-					noResults={<MenuItem disabled text="No results" />}
-					popoverProps={{
-						popoverClassName: 'user-autocomplete-popover',
-						minimal: true,
-						position: Position.BOTTOM_LEFT,
-						modifiers: {
-							preventOverflow: { enabled: false },
-							hide: { enabled: false },
-						},
-					}}
-				/>
-			</div>
-
+	return (
+		<Suggest
+			className="new-edge-input-component"
+			items={suggestedPubs}
+			inputProps={{
+				large: true,
+				placeholder: 'Search for Pubs in this Community, or enter a URL',
+			}}
+			inputValueRenderer={renderInputValue}
+			onQueryChange={(query) => setQueryValue(query.trim())}
+			itemRenderer={renderPub}
+			resetOnSelect={true}
+			onItemSelect={onSelectPub}
+			noResults={queryValue ? <MenuItem disabled text="No results" /> : null}
+			popoverProps={{
+				wrapperTagName: 'div',
+				minimal: true,
+				position: Position.BOTTOM_LEFT,
+				modifiers: {
+					preventOverflow: { enabled: false },
+					hide: { enabled: false },
+				},
+				usePortal: false,
+			}}
+		/>
+	);
 };
 
-Component.propTypes = propTypes;
-Component.defaultProps = defaultProps;
-export default Component;
+NewEdgeInput.propTypes = propTypes;
+NewEdgeInput.defaultProps = defaultProps;
+export default NewEdgeInput;
