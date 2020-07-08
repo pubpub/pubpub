@@ -31,7 +31,7 @@ const pubEdges = [
 			description:
 				"This contribution gives a systematic overview how the question of illness and the global spreading of a disease affects our thoughts on creation, God's presence in the world, what Christians may hope for and how this shapes their actions.",
 		},
-		relationType: RelationType.Discussion,
+		relationType: RelationType.Comment,
 		pubIsParent: true,
 	},
 	{
@@ -45,7 +45,7 @@ const pubEdges = [
 			description:
 				'Während wir das ganze Jahr über von politischen und literarischen #Auferstehungen vergessener Demokraten und Schriftsteller lesen können, sind es solche Tweets und Hashtags, die wir jetzt, kurz vor Ostern und inmitten der Corona-Pandemie, bei Twitter wie scheinbar selbstverständlich finden können. Auferstehung ist ein Begriff, der auch – und gerade – dann im säkularen Kontext Verwendung findet, wenn es um die Beschreibung einschneidender und krisenhafter Erlebnisse geht. Die pandemische Ausbreitung der Atemwegserkrankung COVID-19 durch das Coronavirus SARS-CoV-2 ist zweifelsohne ein vielgestaltiger krisenhafter Prozess, dessen gesundheitliche, politische, wirtschaftliche und gesellschaftliche Auswirkungen uns noch lange beschäftigen werden.',
 		},
-		relationType: RelationType.Discussion,
+		relationType: RelationType.Comment,
 		pubIsParent: true,
 	},
 	{
