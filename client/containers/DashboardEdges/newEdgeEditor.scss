@@ -14,8 +14,11 @@ $margin-size: 15px;
 
     .controls-row {
         display: flex;
-        > :not(:last-child) {
+        > :not(.bp3-divider):not(:last-child) {
             margin-right: 10px;
+        }
+        .cancel-button {
+            margin-left: 10px;
         }
     }
 

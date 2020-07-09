@@ -113,8 +113,16 @@ const DashboardEdges = (props) => {
 			details={frameDetails}
 		>
 			<Tabs id="pub-dashboard-connections-tabs">
-				<Tab id="created-by-this-pub" panel={renderOutboundEdgesTab()} title="Created by this Pub" />
-				<Tab id="created-by-other-pubs" panel={renderInboundEdgesTab()} title="Created by other Pubs" />
+				<Tab
+					id="created-by-this-pub"
+					panel={renderOutboundEdgesTab()}
+					title="Created by this Pub"
+				/>
+				<Tab
+					id="created-by-other-pubs"
+					panel={renderInboundEdgesTab()}
+					title="Created by other Pubs"
+				/>
 			</Tabs>
 		</DashboardFrame>
 	);

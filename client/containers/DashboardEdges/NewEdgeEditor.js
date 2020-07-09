@@ -129,7 +129,9 @@ const NewEdgeEditor = (props) => {
 						)}
 					</MenuButton>
 					<Divider />
-					<Button onClick={() => setNewEdge(null)}>Cancel</Button>
+					<Button className="cancel-button" onClick={() => setNewEdge(null)}>
+						Cancel
+					</Button>
 					<Button intent="primary" onClick={handleCreateEdge} loading={isCreatingEdge}>
 						Add connection
 					</Button>
