@@ -1,45 +1,12 @@
-import fetch from 'node-fetch';
-
 import app, { wrap } from 'server/server';
 import { parseUrl } from 'utils/urls';
-import { isDoi } from 'utils/dois';
+import { isDoi } from 'utils/crossref/isDoi';
 
-import { getPubDataFromUrl } from './queries';
-
-const createPubEdgeProposalFromPub = (pub, url) => {
-	const { attributions, avatar, description, doi, lastPublishedAt, title } = pub;
-	const contributors = attributions.map((a) => a.name);
-
-	return {
-		targetPub: {
-			avatar: avatar,
-			contributors: contributors,
-			description: description,
-			doi: doi,
-			publicationDate: lastPublishedAt,
-			title: title,
-			url: url,
-		},
-	};
-};
-
-const createPubEdgeProposalFromCrossRefWork = (crossRefWork) => {
-	const {
-		message: { abstract, author, DOI, title, URL },
-	} = crossRefWork;
-	const contributors = author ? author.map(({ given, family }) => `${given} ${family}`) : [];
-
-	return {
-		externalPublication: {
-			avatar: null,
-			contributors: contributors,
-			description: abstract,
-			doi: DOI,
-			title: title,
-			url: URL,
-		},
-	};
-};
+import {
+	getPubDataFromUrl,
+	createPubEdgeProposalFromCrossrefDoi,
+	createPubEdgeProposalFromPub,
+} from './queries';
 
 app.get(
 	'/api/pubEdgeProposal',
@@ -60,10 +27,7 @@ app.get(
 
 			edge = createPubEdgeProposalFromPub(pub, url);
 		} else if (isDoi(object)) {
-			const response = await fetch(`https://api.crossref.org/works/${object}`);
-			const crossRefWork = await response.json();
-
-			edge = createPubEdgeProposalFromCrossRefWork(crossRefWork);
+			edge = await createPubEdgeProposalFromCrossrefDoi(object);
 		}
 
 		return edge ? res.status(200).json(edge) : res.status(404);
