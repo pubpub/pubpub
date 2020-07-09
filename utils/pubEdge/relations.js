@@ -6,10 +6,20 @@ export const relationTypeDefinitions = {
 		article: 'a',
 		preposition: 'on',
 	},
+	commentary: {
+		name: 'Commentary',
+		article: 'a',
+		preposition: 'on',
+	},
 	preprint: {
 		name: 'Preprint',
 		article: 'a',
 		preposition: 'of',
+	},
+	rejoinder: {
+		name: 'Rejoinder',
+		article: 'a',
+		preposition: 'to',
 	},
 	reply: {
 		name: 'Reply',
