@@ -1,24 +1,8 @@
 import { Op } from 'sequelize';
 import fetch from 'node-fetch';
 
-import { Community, Pub, PubAttribution } from 'server/models';
-
-export const createPubEdgeProposalFromPub = (pub, url) => {
-	const { attributions, avatar, description, doi, lastPublishedAt, title } = pub;
-	const contributors = attributions.map((a) => a.name);
-
-	return {
-		targetPub: {
-			avatar: avatar,
-			contributors: contributors,
-			description: description,
-			doi: doi,
-			publicationDate: lastPublishedAt,
-			title: title,
-			url: url,
-		},
-	};
-};
+import { Community, Pub } from 'server/models';
+import { getOptionsForIncludedPub } from 'server/utils/queryHelpers/edgeOptions';
 
 export const createPubEdgeProposalFromCrossrefDoi = async (doi) => {
 	const response = await fetch(`https://api.crossref.org/works/${doi}`);
@@ -75,11 +59,7 @@ export const getPubDataFromUrl = async (url) => {
 			communityId: community.id,
 			slug: slug,
 		},
-		include: {
-			model: PubAttribution,
-			as: 'attributions',
-			separate: true,
-		},
+		include: getOptionsForIncludedPub({ includeCommunity: false }),
 	});
 
 	return pub || null;
