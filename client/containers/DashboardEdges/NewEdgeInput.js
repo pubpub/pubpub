@@ -20,7 +20,17 @@ const propTypes = {
 	onSelectItem: PropTypes.func.isRequired,
 	usedPubIds: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
-const defaultProps = {};
+
+const suggestPopoverProps = {
+	wrapperTagName: 'div',
+	minimal: true,
+	position: Position.BOTTOM_LEFT,
+	modifiers: {
+		preventOverflow: { enabled: false },
+		hide: { enabled: false },
+	},
+	usePortal: false,
+};
 
 const renderInputValue = () => '';
 
@@ -31,19 +41,22 @@ const NewEdgeInput = (props) => {
 	const throttledQueryValue = useThrottled(queryValue, 250, true, true);
 
 	useEffect(() => {
-		if (isUrl(queryValue)) {
+		if (isUrl(throttledQueryValue)) {
 			setSuggestedItems([]);
-		} else if (queryValue) {
+		} else if (throttledQueryValue) {
 			setSuggestedItems(
 				availablePubs
-					.filter((pub) => fuzzyMatchPub(pub, queryValue) && !usedPubIds.includes(pub.id))
+					.filter(
+						(pub) =>
+							fuzzyMatchPub(pub, throttledQueryValue) && !usedPubIds.includes(pub.id),
+					)
 					.slice(0, 5)
 					.map((pub) => ({ type: 'pub', pub: pub })),
 			);
 		} else {
 			setSuggestedItems([]);
 		}
-	}, [availablePubs, queryValue, throttledQueryValue, usedPubIds]);
+	}, [availablePubs, throttledQueryValue, usedPubIds]);
 
 	const renderItem = (item, { handleClick, modifiers }) => {
 		const { type, pub } = item;
@@ -74,20 +87,10 @@ const NewEdgeInput = (props) => {
 			resetOnSelect={true}
 			onItemSelect={onSelectItem}
 			noResults={queryValue ? <MenuItem disabled text="No results" /> : null}
-			popoverProps={{
-				wrapperTagName: 'div',
-				minimal: true,
-				position: Position.BOTTOM_LEFT,
-				modifiers: {
-					preventOverflow: { enabled: false },
-					hide: { enabled: false },
-				},
-				usePortal: false,
-			}}
+			popoverProps={suggestPopoverProps}
 		/>
 	);
 };
 
 NewEdgeInput.propTypes = propTypes;
-NewEdgeInput.defaultProps = defaultProps;
 export default NewEdgeInput;
