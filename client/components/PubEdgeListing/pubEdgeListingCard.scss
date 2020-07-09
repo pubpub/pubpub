@@ -14,6 +14,9 @@
 		&:focus {
 			filter: grayscale(0%);
 		}
+		> .controls {
+			right: 4px;
+		}
 	}
 
 	> .relation,
@@ -28,7 +31,7 @@
 	> .controls {
 		align-items: center;
 		display: flex;
-		right: 4px;
+		right: 24px;
 	}
 
 	> .relation {
