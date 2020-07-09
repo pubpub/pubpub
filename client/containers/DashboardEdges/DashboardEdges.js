@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { NonIdealState, Tab, Tabs } from '@blueprintjs/core';
 
@@ -36,6 +36,7 @@ const frameDetails = (
 
 const DashboardEdges = (props) => {
 	const { overviewData, pubData } = props;
+	const [showOutboundEmptyState, setShowOutboundEmptyState] = useState(true);
 	const {
 		scopeData: {
 			activePermissions: { canManage: canManageEdges },
@@ -66,19 +67,24 @@ const DashboardEdges = (props) => {
 						usedPubIds={usedPubsIds}
 						pubData={pubData}
 						onCreateNewEdge={addCreatedOutboundEdge}
+						onChangeCreatingState={(isCreating) =>
+							setShowOutboundEmptyState(!isCreating)
+						}
 					/>
 				)}
 				<DashboardEdgesListing
 					pubEdges={outboundEdges}
 					onReorderEdges={canManageEdges && reorderOutboundEdges}
 					onRemoveEdge={canManageEdges && removeOutboundEdge}
-					renderEmptyState={() => (
-						<NonIdealState
-							icon="layout-auto"
-							title="No connections yet"
-							description="Start typing above to add a new connection."
-						/>
-					)}
+					renderEmptyState={() =>
+						showOutboundEmptyState && (
+							<NonIdealState
+								icon="layout-auto"
+								title="No connections yet"
+								description="Start typing above to add a new connection."
+							/>
+						)
+					}
 				/>
 			</>
 		);

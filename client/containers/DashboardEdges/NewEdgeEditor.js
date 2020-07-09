@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { Button, Callout } from '@blueprintjs/core';
+import { Button, Callout, Divider } from '@blueprintjs/core';
 
 import { PubEdgeListingCard } from 'components';
 import { MenuButton, MenuItem } from 'components/Menu';
@@ -21,6 +21,7 @@ const propTypes = {
 		}),
 	).isRequired,
 	onCreateNewEdge: PropTypes.func.isRequired,
+	onChangeCreatingState: PropTypes.func.isRequired,
 	pubData: PropTypes.shape({
 		title: PropTypes.string,
 		id: PropTypes.string,
@@ -37,7 +38,7 @@ const createCandidateEdge = (resource, relationType = RelationType.Reply) => {
 };
 
 const NewEdgeEditor = (props) => {
-	const { availablePubs, onCreateNewEdge, pubData, usedPubIds } = props;
+	const { availablePubs, onChangeCreatingState, onCreateNewEdge, pubData, usedPubIds } = props;
 	const [newEdge, setNewEdge] = useState(null);
 	const [isCreatingEdge, setIsCreatingEdge] = useState(false);
 	const [errorCreatingEdge, setErrorCreatingEdge] = useState(null);
@@ -46,6 +47,8 @@ const NewEdgeEditor = (props) => {
 		newEdge &&
 		relationTypeDefinitions[newEdge.relationType] &&
 		relationTypeDefinitions[newEdge.relationType].name;
+
+	useEffect(() => onChangeCreatingState(!!newEdge), [newEdge, onChangeCreatingState]);
 
 	const handleSelectItem = (item) => {
 		const { type, pub } = item;
@@ -100,7 +103,6 @@ const NewEdgeEditor = (props) => {
 					</Callout>
 				)}
 				<div className="controls-row">
-					<Button onClick={() => setNewEdge(null)}>Cancel</Button>
 					<Button icon="swap-vertical" onClick={handleEdgeDirectionSwitch}>
 						Switch direction
 					</Button>
@@ -108,7 +110,7 @@ const NewEdgeEditor = (props) => {
 						aria-label="Select relationship type"
 						buttonProps={{
 							rightIcon: 'chevron-down',
-							children: currentRelationName,
+							children: `Type: ${currentRelationName}`,
 						}}
 					>
 						{Object.entries(relationTypeDefinitions).map(
@@ -126,8 +128,10 @@ const NewEdgeEditor = (props) => {
 							},
 						)}
 					</MenuButton>
+					<Divider />
+					<Button onClick={() => setNewEdge(null)}>Cancel</Button>
 					<Button intent="primary" onClick={handleCreateEdge} loading={isCreatingEdge}>
-						Create
+						Add connection
 					</Button>
 				</div>
 			</div>
