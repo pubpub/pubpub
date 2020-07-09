@@ -6,6 +6,7 @@
 	font-family: $header-font;
 	text-decoration: none;
 	padding: 24px 32px 18px;
+	max-width: 1200px;
 
 	.title-container {
 		font-size: 1.6em;
@@ -80,6 +81,8 @@
 		padding: 0;
 
 		li {
+			display: flex;
+			align-items: center;
 			flex: 0 0 auto;
 			font-family: $base-font;
 			font-size: 0.8em;
@@ -163,5 +166,28 @@
 			margin: 0em 0em 1em;
 			word-break: break-word;
 		}
+	}
+}
+
+.pub-edge-editor-component {
+	.title-container {
+		margin-bottom: 4px;
+	}
+
+	.byline-container {
+		margin-bottom: 4px;
+	}
+
+	.editable-date {
+		display: inline;
+		margin-left: 4px;
+		margin-right: 4px;
+		.bp3-input {
+			font-size: 1em;
+		}
+	}
+
+	.editable-details {
+		margin-top: 8px;
 	}
 }
