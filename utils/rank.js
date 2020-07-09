@@ -45,6 +45,5 @@ export const findRankInRankedList = (rankedList, index) =>
 		index,
 	);
 
-export const sortByRank = (array) => {
-	return array.concat().sort((a, b) => (a.rank || '').localeCompare(b.rank || ''));
-};
+export const sortByRank = (array) =>
+	array.concat().sort((a, b) => (a.rank || '').localeCompare(b.rank || ''));
