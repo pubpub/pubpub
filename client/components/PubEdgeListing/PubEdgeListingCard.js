@@ -1,5 +1,6 @@
 import { Icon } from '@blueprintjs/core';
-import React from 'react';
+import classNames from 'classnames';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import { PubEdge } from 'components';
@@ -23,7 +24,7 @@ const propTypes = {
 const defaultProps = {
 	accentColor: null,
 	children: [],
-	pubTitle: '',
+	pubTitle: null,
 	showIcon: false,
 	viewingFromSibling: false,
 };
@@ -75,7 +76,7 @@ const PubEdgeListingCard = (props) => {
 			style={{ borderColor: accentColor || communityData.accentColorDark }}
 		>
 			{children && <div className="controls">{children}</div>}
-			<div className="relation">
+			<div className={classNames('relation', showIcon && 'show-icon')}>
 				{showIcon && (
 					<Icon
 						icon="key-enter"

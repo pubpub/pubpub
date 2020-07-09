@@ -1,17 +1,20 @@
 .pub-edge-listing-card-component {
 	border-color: #a1a1a1;
+	border-radius: 3px;
 	border-style: solid;
 	border-width: 1px;
-	border-radius: 3px;
+	cursor: pointer;
 	margin-bottom: 24px;
 	position: relative;
-
-	filter: grayscale(100%);
 	transition: filter 100ms linear;
 
-	&:hover,
-	&:active {
-		filter: grayscale(0%);
+	&.in-pub-body {
+		filter: grayscale(100%);
+		&:hover,
+		&:active,
+		&:focus {
+			filter: grayscale(0%);
+		}
 	}
 
 	> .relation,
@@ -26,7 +29,7 @@
 	> .controls {
 		align-items: center;
 		display: flex;
-		right: 24px;
+		right: 4px;
 	}
 
 	> .relation {
@@ -47,5 +50,9 @@
 			bottom: 3px;
 			transform: rotateY(180deg);
 		}
+	}
+
+	> .relation.show-icon {
+		left: 4px;
 	}
 }
