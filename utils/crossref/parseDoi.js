@@ -7,7 +7,7 @@ export const extractDoi = (value) => {
 	const matches = value.match(DOI_PATTERN);
 
 	if (!matches) {
-		return;
+		return null;
 	}
 
 	return matches[0];
@@ -20,5 +20,5 @@ export const extractDoiFromOrgUrl = (url) => {
 		return null;
 	}
 
-	return extractDoi(pathname) || null;
+	return extractDoi(pathname);
 };

@@ -1,6 +1,6 @@
 import app, { wrap } from 'server/server';
 import { parseUrl } from 'utils/urls';
-import { isDoi, extractDoiFromOrgUrl } from 'utils/crossref/isDoi';
+import { isDoi, extractDoiFromOrgUrl } from 'utils/crossref/parseDoi';
 
 import { getPubDataFromUrl, createPubEdgeProposalFromCrossrefDoi } from './queries';
 
