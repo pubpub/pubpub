@@ -42,10 +42,10 @@ const NewEdgeEditor = (props) => {
 	const [isCreatingEdge, setIsCreatingEdge] = useState(false);
 	const [errorCreatingEdge, setErrorCreatingEdge] = useState(null);
 	const { pendingPromise } = usePendingChanges();
-	const currentRelationLabel =
+	const currentRelationName =
 		newEdge &&
 		relationTypeDefinitions[newEdge.relationType] &&
-		relationTypeDefinitions[newEdge.relationType].label;
+		relationTypeDefinitions[newEdge.relationType].name;
 
 	const handleSelectItem = (item) => {
 		const { type, pub } = item;
@@ -108,16 +108,16 @@ const NewEdgeEditor = (props) => {
 						aria-label="Select relationship type"
 						buttonProps={{
 							rightIcon: 'chevron-down',
-							children: currentRelationLabel,
+							children: currentRelationName,
 						}}
 					>
 						{Object.entries(relationTypeDefinitions).map(
 							([relationType, definition]) => {
-								const { label } = definition;
+								const { name } = definition;
 								const selected = newEdge.relationType === relationType;
 								return (
 									<MenuItem
-										text={label}
+										text={name}
 										onClick={() => handleEdgeRelationTypeChange(relationType)}
 										key={relationType}
 										icon={selected ? 'tick' : 'blank'}

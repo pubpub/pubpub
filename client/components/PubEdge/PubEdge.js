@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import PropTypes from 'prop-types';
 import { Button } from 'reakit/Button';
 
 import { Byline } from 'components';
@@ -13,6 +14,7 @@ require('./pubEdge.scss');
 
 export const propTypes = {
 	pubEdge: pubEdgeType.isRequired,
+	viewingFromTarget: PropTypes.bool.isRequired,
 };
 
 const getUrlForPub = (pubData, communityData) => {
@@ -25,18 +27,18 @@ const getUrlForPub = (pubData, communityData) => {
 	return pubShortUrl(pubData);
 };
 
-const getValuesFromPubEdge = (pubEdge, communityData) => {
+const getValuesFromPubEdge = (pubEdge, communityData, viewingFromTarget) => {
 	const { externalPublication, targetPub, pub } = pubEdge;
-	const somePub = targetPub || pub;
-	if (somePub) {
-		const { title, description, attributions, avatar } = somePub;
-		const url = getUrlForPub(somePub, communityData);
+	const displayedPub = viewingFromTarget ? pub : targetPub;
+	if (displayedPub) {
+		const { title, description, attributions, avatar } = displayedPub;
+		const url = getUrlForPub(displayedPub, communityData);
 		return {
 			contributors: attributions,
 			title: title,
 			description: description,
 			avatar: avatar,
-			publicationDate: getPubPublishedDate(somePub),
+			publicationDate: getPubPublishedDate(displayedPub),
 			url: url,
 		};
 	}
@@ -62,7 +64,7 @@ const getValuesFromPubEdge = (pubEdge, communityData) => {
 };
 
 const PubEdge = (props) => {
-	const { pubEdge } = props;
+	const { pubEdge, viewingFromTarget } = props;
 	const [open, setOpen] = useState(false);
 	const { communityData } = usePageContext();
 
@@ -77,6 +79,7 @@ const PubEdge = (props) => {
 	const { avatar, contributors, description, publicationDate, title, url } = getValuesFromPubEdge(
 		pubEdge,
 		communityData,
+		viewingFromTarget,
 	);
 
 	const publishedAt = formatDate(publicationDate);

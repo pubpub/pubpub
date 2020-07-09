@@ -2,10 +2,10 @@ import { Icon } from '@blueprintjs/core';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { toTitleCase } from 'utils/strings';
 import { PubEdge } from 'components';
-
+import { toTitleCase } from 'utils/strings';
 import { usePageContext } from 'utils/hooks';
+import { relationTypeDefinitions } from 'utils/pubEdge';
 
 import { pubEdgeType } from '../PubEdge/constants';
 
@@ -17,6 +17,7 @@ const propTypes = {
 	pubEdge: pubEdgeType.isRequired,
 	pubTitle: PropTypes.string,
 	showIcon: PropTypes.bool,
+	viewingFromSibling: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -24,24 +25,49 @@ const defaultProps = {
 	children: [],
 	pubTitle: '',
 	showIcon: false,
+	viewingFromSibling: false,
 };
 
 const PubEdgeListingCard = (props) => {
-	const { accentColor, children, pubEdge, pubTitle, showIcon } = props;
+	const { accentColor, children, pubEdge, pubTitle, showIcon, viewingFromSibling } = props;
 	const { communityData } = usePageContext();
-	const relationshipName = toTitleCase(pubEdge.relationType);
-	const relationshipTitle = pubEdge.pubIsParent ? (
-		<>
-			<span>This Pub is a </span>
-			<span className="relationship-name">{relationshipName}</span> on:
-		</>
-	) : (
-		<>
-			<span>Another </span>
-			<span className="relationship-name">{relationshipName}</span> of:
-			<span className="pub-title"> {pubTitle}</span>
-		</>
-	);
+	// If `pub` is defined on the edge, that probably means we queried it as an inboundEdge
+	// and we're looking at it from the perspective of the target Pub, rather than the Pub
+	// that created the edge.
+	const viewingFromTarget = !!pubEdge.pub;
+
+	const renderRelation = () => {
+		const { relationType, pubIsParent } = pubEdge;
+		const viewingFromParent =
+			!viewingFromSibling && viewingFromTarget ? !pubIsParent : pubIsParent;
+		const relationDefinition = relationTypeDefinitions[relationType];
+		if (relationDefinition) {
+			const { article, preposition, name } = relationDefinition;
+			const relationName = <span className="relation-name">{name}</span>;
+			const pubTitleNode = pubTitle && <span className="pub-title">{pubTitle}</span>;
+			if (viewingFromSibling) {
+				return (
+					<>
+						Another {relationName} of {pubTitleNode || 'this Pub'}
+					</>
+				);
+			}
+			if (viewingFromParent) {
+				return (
+					<>
+						{toTitleCase(article)} {relationName} {preposition}{' '}
+						{pubTitleNode || 'this Pub'}
+					</>
+				);
+			}
+			return (
+				<>
+					{pubTitleNode || 'This Pub'} is {article} {relationName} {preposition}
+				</>
+			);
+		}
+		return null;
+	};
 
 	return (
 		<div
@@ -49,7 +75,7 @@ const PubEdgeListingCard = (props) => {
 			style={{ borderColor: accentColor || communityData.accentColorDark }}
 		>
 			{children && <div className="controls">{children}</div>}
-			<div className="relationship">
+			<div className="relation">
 				{showIcon && (
 					<Icon
 						icon="key-enter"
@@ -58,9 +84,9 @@ const PubEdgeListingCard = (props) => {
 						className="drop-return"
 					/>
 				)}
-				{relationshipTitle}
+				{renderRelation()}
 			</div>
-			<PubEdge pubEdge={pubEdge} />
+			<PubEdge pubEdge={pubEdge} viewingFromTarget={viewingFromTarget} />
 		</div>
 	);
 };

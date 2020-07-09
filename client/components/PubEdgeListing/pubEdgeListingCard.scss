@@ -14,7 +14,7 @@
 		filter: grayscale(0%);
 	}
 
-	> .relationship,
+	> .relation,
 	> .controls {
 		background-color: #fff;
 		padding: 0 8px;
@@ -29,10 +29,10 @@
 		right: 24px;
 	}
 
-	> .relationship {
+	> .relation {
 		left: calc(24px - 8px);
 
-		.relationship-name {
+		.relation-name {
 			border-bottom: 1px dotted;
 			font-weight: 600;
 		}

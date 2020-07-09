@@ -2,39 +2,39 @@ import { toTitleCase } from 'utils/strings';
 
 export const relationTypeDefinitions = {
 	comment: {
-		label: 'Comment',
-		childRelationString: 'is a comment on',
-		parentRelationString: 'is commented on by',
+		name: 'Comment',
+		article: 'a',
+		preposition: 'on',
 	},
 	preprint: {
-		label: 'Preprint',
-		childRelationString: 'is a preprint of',
-		parentRelationString: 'has preprint',
+		name: 'Preprint',
+		article: 'a',
+		preposition: 'of',
 	},
 	reply: {
-		label: 'Reply',
-		childRelationString: 'is a reply to',
-		parentRelationString: 'is replied to by',
+		name: 'Reply',
+		article: 'a',
+		preposition: 'to',
 	},
 	review: {
-		label: 'Review',
-		childRelationString: 'is a review of',
-		parentRelationString: 'is reviewed by',
+		name: 'Review',
+		article: 'a',
+		preposition: 'of',
 	},
 	supplement: {
-		label: 'Supplement',
-		childRelationString: 'is a supplement to',
-		parentRelationString: 'is supplemented by',
+		name: 'Supplement',
+		article: 'a',
+		preposition: 'of',
 	},
 	translation: {
-		label: 'Translation',
-		childRelationString: 'is a translation of',
-		parentRelationString: 'is translated to another language in',
+		name: 'Translation',
+		article: 'a',
+		preposition: 'of',
 	},
 	version: {
-		label: 'Version',
-		childRelationString: 'is a version of',
-		parentRelationString: 'has another version in',
+		name: 'Version',
+		article: 'a',
+		preposition: 'of',
 	},
 };
 
