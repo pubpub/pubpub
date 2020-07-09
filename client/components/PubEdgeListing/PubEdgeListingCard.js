@@ -1,6 +1,6 @@
 import { Icon } from '@blueprintjs/core';
 import classNames from 'classnames';
-import React, { useCallback } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { PubEdge } from 'components';

@@ -87,15 +87,6 @@ const PubEdge = (props) => {
 		[open],
 	);
 
-	const handleClick = useCallback(
-		(e) => {
-			if (e.type === 'click' || e.key === 'Enter') {
-				window.open(url, '_top');
-			}
-		},
-		[url],
-	);
-
 	return (
 		<article className="pub-edge-component">
 			<div className="top">
