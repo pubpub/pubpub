@@ -63,9 +63,11 @@ const DashboardEdgesListing = (props) => {
 					renderAsNotApproved && 'not-approved',
 				)}
 			>
-				<div {...dragHandleProps} className="drag-handle">
-					<Icon icon="drag-handle-vertical" />
-				</div>
+				{onReorderEdges && (
+					<div {...dragHandleProps} className="drag-handle">
+						<Icon icon="drag-handle-vertical" />
+					</div>
+				)}
 				<PubEdgeListingCard pubEdge={pubEdge} accentColor="#ccc">
 					{onRemoveEdge && renderRemoveEdgeButton(() => onRemoveEdge(pubEdge))}
 					{onUpdateEdgeApproval && (
