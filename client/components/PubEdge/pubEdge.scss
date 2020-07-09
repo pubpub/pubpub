@@ -134,14 +134,14 @@
 		cursor: pointer;
 		&:hover,
 		&:focus {
-			h4 a {
+			.title-container {
 				text-decoration: underline;
 			}
 		}
 	}
 
 	&:not(.acts-like-link) {
-		h4 a:hover {
+		.title-container a:hover {
 			text-decoration: underline;
 		}
 	}
