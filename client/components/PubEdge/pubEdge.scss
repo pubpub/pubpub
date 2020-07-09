@@ -1,37 +1,21 @@
 @import 'styles/variables.scss';
 
-.pub-edge-component {
+.pub-edge-layout {
 	display: flex;
 	flex-direction: column;
 	font-family: $header-font;
 	text-decoration: none;
 	padding: 24px 32px 18px;
 
-	a {
-		text-decoration: none;
-	}
-
-	&.acts-like-link {
-		cursor: pointer;
-		&:hover,
-		&:focus {
-			h4 a {
-				text-decoration: underline;
-			}
-		}
-	}
-
-	&:not(.acts-like-link) {
-		h4 a:hover {
-			text-decoration: underline;
-		}
-	}
-
-	h4 {
+	.title-container {
 		font-size: 1.6em;
 		font-weight: 400;
 		letter-spacing: 1px;
 		margin-bottom: 8px;
+		line-height: 21px;
+		a {
+			text-decoration: none;
+		}
 	}
 
 	.top {
@@ -62,7 +46,7 @@
 			width: 100%;
 		}
 
-		.byline {
+		.byline-container {
 			font-style: italic;
 		}
 
@@ -82,7 +66,7 @@
 				flex: 1 0 auto;
 			}
 
-			.byline {
+			.byline-container {
 				margin-bottom: 12px;
 			}
 		}
@@ -116,7 +100,6 @@
 
 		a {
 			text-decoration: none;
-
 			&:hover,
 			&:active,
 			&:focus {
@@ -139,6 +122,24 @@
 				white-space: nowrap;
 				width: 100%;
 			}
+		}
+	}
+}
+
+.pub-edge-component {
+	&.acts-like-link {
+		cursor: pointer;
+		&:hover,
+		&:focus {
+			h4 a {
+				text-decoration: underline;
+			}
+		}
+	}
+
+	&:not(.acts-like-link) {
+		h4 a:hover {
+			text-decoration: underline;
 		}
 	}
 
