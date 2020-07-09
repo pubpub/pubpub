@@ -5,19 +5,22 @@ import PropTypes from 'prop-types';
 import { toTitleCase } from 'utils/strings';
 import { PubEdge } from 'components';
 
+import { usePageContext } from 'utils/hooks';
+
 import { pubEdgeType } from '../PubEdge/constants';
 
 require('./pubEdgeListingCard.scss');
 
 const propTypes = {
-	accentColor: PropTypes.string.isRequired,
-	children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+	accentColor: PropTypes.string,
+	children: PropTypes.node,
 	pubEdge: pubEdgeType.isRequired,
 	pubTitle: PropTypes.string,
 	showIcon: PropTypes.bool,
 };
 
 const defaultProps = {
+	accentColor: null,
 	children: [],
 	pubTitle: '',
 	showIcon: false,
@@ -25,6 +28,7 @@ const defaultProps = {
 
 const PubEdgeListingCard = (props) => {
 	const { accentColor, children, pubEdge, pubTitle, showIcon } = props;
+	const { communityData } = usePageContext();
 	const relationshipName = toTitleCase(pubEdge.relationType);
 	const relationshipTitle = pubEdge.pubIsParent ? (
 		<>
@@ -40,8 +44,11 @@ const PubEdgeListingCard = (props) => {
 	);
 
 	return (
-		<div className="pub-edge-listing-card-component" style={{ borderColor: accentColor }}>
-			{children}
+		<div
+			className="pub-edge-listing-card-component"
+			style={{ borderColor: accentColor || communityData.accentColorDark }}
+		>
+			{children && <div className="controls">{children}</div>}
 			<div className="relationship">
 				{showIcon && (
 					<Icon

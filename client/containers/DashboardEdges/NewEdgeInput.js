@@ -1,12 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import { MenuItem, Position } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 import isUrl from 'is-url';
 
 import { PubMenuItem } from 'components';
-import { apiFetch } from 'client/utils/apiFetch';
 import { useThrottled } from 'utils/hooks';
 import { fuzzyMatchPub } from 'utils/fuzzyMatch';
 
@@ -19,7 +17,7 @@ const propTypes = {
 			avatar: PropTypes.string,
 		}),
 	).isRequired,
-	onSelectPub: PropTypes.func.isRequired,
+	onSelectItem: PropTypes.func.isRequired,
 	usedPubIds: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 const defaultProps = {};
@@ -27,50 +25,54 @@ const defaultProps = {};
 const renderInputValue = () => '';
 
 const NewEdgeInput = (props) => {
-	const { availablePubs, usedPubIds, onSelectPub } = props;
+	const { availablePubs, usedPubIds, onSelectItem } = props;
 	const [queryValue, setQueryValue] = useState('');
-	const queryCountRef = useRef(-1);
-	const [suggestedPubs, setSuggestedPubs] = useState([]);
+	const [suggestedItems, setSuggestedItems] = useState([]);
 	const throttledQueryValue = useThrottled(queryValue, 250, true, true);
 
 	useEffect(() => {
 		if (isUrl(queryValue)) {
-			setSuggestedPubs([]);
+			setSuggestedItems([]);
 		} else if (queryValue) {
-			setSuggestedPubs(
+			setSuggestedItems(
 				availablePubs
 					.filter((pub) => fuzzyMatchPub(pub, queryValue) && !usedPubIds.includes(pub.id))
-					.slice(0, 5),
+					.slice(0, 5)
+					.map((pub) => ({ type: 'pub', pub: pub })),
 			);
 		} else {
-			setSuggestedPubs([]);
+			setSuggestedItems([]);
 		}
 	}, [availablePubs, queryValue, throttledQueryValue, usedPubIds]);
 
-	const renderPub = (pub, { handleClick, modifiers }) => {
-		return (
-			<PubMenuItem
-				pubData={pub}
-				active={modifiers.active}
-				onClick={handleClick}
-				showImage={true}
-			/>
-		);
+	const renderItem = (item, { handleClick, modifiers }) => {
+		const { type, pub } = item;
+		if (type === 'pub') {
+			return (
+				<PubMenuItem
+					pubData={pub}
+					active={modifiers.active}
+					onClick={handleClick}
+					showImage={true}
+				/>
+			);
+		}
+		return null;
 	};
 
 	return (
 		<Suggest
 			className="new-edge-input-component"
-			items={suggestedPubs}
+			items={suggestedItems}
 			inputProps={{
 				large: true,
-				placeholder: 'Search for Pubs in this Community, or enter a URL',
+				placeholder: 'Search to add Pubs from this Community, or enter a URL',
 			}}
 			inputValueRenderer={renderInputValue}
 			onQueryChange={(query) => setQueryValue(query.trim())}
-			itemRenderer={renderPub}
+			itemRenderer={renderItem}
 			resetOnSelect={true}
-			onItemSelect={onSelectPub}
+			onItemSelect={onSelectItem}
 			noResults={queryValue ? <MenuItem disabled text="No results" /> : null}
 			popoverProps={{
 				wrapperTagName: 'div',

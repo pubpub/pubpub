@@ -1,5 +1,3 @@
-@import './mixins.scss';
-
 .pub-edge-listing-card-component {
 	border-color: #a1a1a1;
 	border-style: solid;
@@ -16,8 +14,22 @@
 		filter: grayscale(0%);
 	}
 
+	> .relationship,
+	> .controls {
+		background-color: #fff;
+		padding: 0 8px;
+		position: absolute;
+		top: 0;
+		transform: translateY(-50%);
+	}
+
+	> .controls {
+		align-items: center;
+		display: flex;
+		right: 24px;
+	}
+
 	> .relationship {
-		@include bleed-top-border();
 		left: calc(24px - 8px);
 
 		.relationship-name {

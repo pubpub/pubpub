@@ -1,0 +1,25 @@
+$margin-size: 15px;
+
+.new-edge-editor-component {
+    &.has-new-edge {
+        padding: $margin-size;
+        border-radius: 4px;
+        padding-top: 20px;
+        border: 1px dashed #bbb;
+    }
+
+    .pub-edge-listing-card-component {
+        margin-bottom: $margin-size;
+    }
+
+    .controls-row {
+        > :not(:last-child) {
+            margin-right: 10px;
+        }
+    }
+
+    .error-callout {
+        margin-top: $margin-size;
+        margin-bottom: $margin-size;
+    }
+}

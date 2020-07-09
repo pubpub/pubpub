@@ -15,20 +15,28 @@ export const propTypes = {
 	pubEdge: pubEdgeType.isRequired,
 };
 
+const getUrlForPub = (pubData, communityData) => {
+	if (communityData.id === pubData.communityId) {
+		return pubUrl(communityData, pubData);
+	}
+	if (pubData.community) {
+		return pubUrl(pubData.communityId, pubData);
+	}
+	return pubShortUrl(pubData);
+};
+
 const getValuesFromPubEdge = (pubEdge, communityData) => {
-	const { externalPublication, targetPub } = pubEdge;
-	if (targetPub) {
-		const { title, description, attributions, avatar } = targetPub;
-		const url =
-			communityData.id === targetPub.communityId
-				? pubUrl(communityData, targetPub)
-				: pubShortUrl(targetPub);
+	const { externalPublication, targetPub, pub } = pubEdge;
+	const somePub = targetPub || pub;
+	if (somePub) {
+		const { title, description, attributions, avatar } = somePub;
+		const url = getUrlForPub(somePub, communityData);
 		return {
 			contributors: attributions,
 			title: title,
 			description: description,
 			avatar: avatar,
-			publicationDate: getPubPublishedDate(targetPub),
+			publicationDate: getPubPublishedDate(somePub),
 			url: url,
 		};
 	}
@@ -85,11 +93,13 @@ const PubEdge = (props) => {
 					<h4>{title}</h4>
 					<Byline contributors={contributors} />
 					<ul className="metadata">
-						<li>
-							<Button as="a" onClick={handleToggleDescriptionClick}>
-								{open ? 'Hide Description' : 'Show Description'}
-							</Button>
-						</li>
+						{description && (
+							<li>
+								<Button as="a" onClick={handleToggleDescriptionClick}>
+									{open ? 'Hide Description' : 'Show Description'}
+								</Button>
+							</li>
+						)}
 						<li>Published on {publishedAt}</li>
 						<li>
 							<a href={url} alt={url}>

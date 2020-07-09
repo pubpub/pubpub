@@ -5,9 +5,7 @@ import {
 	CollectionPub,
 	Community,
 	Export,
-	ExternalPublication,
 	Page,
-	Pub,
 	PubAttribution,
 	PubEdge,
 	Release,
@@ -19,6 +17,7 @@ import {
 	includeUserModel,
 } from 'server/models';
 
+import { getPubEdgeIncludes } from './edgeOptions';
 import { baseAuthor, baseThread, baseVisibility } from './util';
 
 export default ({ isAuth, isPreview, getCollections, getMembers, getCommunity, getEdges }) => {
@@ -100,18 +99,13 @@ export default ({ isAuth, isPreview, getCollections, getMembers, getCommunity, g
 			{
 				model: PubEdge,
 				as: 'outboundEdges',
-				include: [
-					{
-						model: Pub,
-						as: 'targetPub',
-					},
-					{
-						model: ExternalPublication,
-						as: 'externalPublication',
-					},
-				],
+				include: getPubEdgeIncludes({ includeTargetPub: true }),
 			},
-			{ model: PubEdge, as: 'inboundEdges' },
+			{
+				model: PubEdge,
+				as: 'inboundEdges',
+				include: getPubEdgeIncludes({ includePub: true }),
+			},
 		];
 	}
 	if (getCollections) {
