@@ -59,8 +59,6 @@ app.get(
 			}
 
 			edge = createPubEdgeProposalFromPub(pub, url);
-
-			return res.status(200).json(edge);
 		} else if (isDoi(object)) {
 			const response = await fetch(`https://api.crossref.org/works/${object}`);
 			const crossRefWork = await response.json();
@@ -68,10 +66,6 @@ app.get(
 			edge = createPubEdgeProposalFromCrossRefWork(crossRefWork);
 		}
 
-		if (edge) {
-			return res.status(200).json(edge);
-		}
-
-		return res.status(404);
+		return edge ? res.status(200).json(edge) : res.status(404);
 	}),
 );
