@@ -27,7 +27,7 @@ const createPubEdgeProposalFromCrossRefWork = (crossRefWork) => {
 	const {
 		message: { abstract, author, DOI, title, URL },
 	} = crossRefWork;
-	const contributors = author.map(({ given, family }) => `${given} ${family}`);
+	const contributors = author ? author.map(({ given, family }) => `${given} ${family}`) : [];
 
 	return {
 		externalPublication: {

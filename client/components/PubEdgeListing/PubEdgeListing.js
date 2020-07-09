@@ -48,8 +48,20 @@ const PubEdgeListing = (props) => {
 	const [filters, setFilters] = useState(initialFilters);
 	const filteredPubEdges = filterPubEdges(filters, pubEdges);
 	const { [index]: active, length } = filteredPubEdges;
-	const next = useCallback(() => setIndex((i) => (i + 1) % length), [length]);
-	const back = useCallback(() => setIndex((i) => (i - 1 + length) % length), [length]);
+	const next = useCallback(
+		(e) => {
+			e.stopPropagation(e);
+			setIndex((i) => (i + 1) % length);
+		},
+		[length],
+	);
+	const back = useCallback(
+		(e) => {
+			e.stopPropagation();
+			setIndex((i) => (i - 1 + length) % length);
+		},
+		[length],
+	);
 	const onFilterToggle = useCallback(
 		(filter) =>
 			setFilters((currentFilters) => {
