@@ -11,6 +11,7 @@ export const queryDocument = (config, $) => {
 
 		let $el;
 		let process;
+		let multiple = false;
 
 		if (typeof query === 'string') {
 			// String form of query, e.g. "a.author"
@@ -21,14 +22,16 @@ export const queryDocument = (config, $) => {
 			$el = $(query.selector);
 
 			// Process only first element by default.
-			if (!query.multiple) {
-				$el = $($el[0]);
+			multiple = Boolean(query.multiple);
+
+			if (!multiple) {
+				$el = $($el.get(0));
 			}
 
 			process = query.process;
 		}
 
-		if ($el.length > 0) {
+		if (multiple || $el.length > 0) {
 			// Use default processor if none is specified (content attr value or innerText)
 			result = (process || defaultProcessor)($el, $);
 
@@ -56,10 +59,10 @@ export const pubEdgeQueries = {
 			multiple: true,
 		},
 		{
-			selector: '[rel="author"]',
+			selector: '[rel="author"], .author',
+			process: ($el, $) => $el.toArray().map((el) => $(el).text()),
 			multiple: true,
 		},
-		'.author',
 	],
 	doi: [
 		'meta[name="doi"]',
