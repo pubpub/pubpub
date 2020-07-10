@@ -15,7 +15,7 @@ export const queryDocument = (config, $) => {
 
 		if (typeof query === 'string') {
 			// String form of query, e.g. "a.author"
-			$el = $($(query).get(0));
+			$el = $(query);
 		} else {
 			// Object form of query, e.g.
 			//   { selector: "a.author", process: $el => $el.attr("href") }
@@ -23,12 +23,11 @@ export const queryDocument = (config, $) => {
 
 			// Process only first element by default.
 			multiple = Boolean(query.multiple);
-
-			if (!multiple) {
-				$el = $($el.get(0));
-			}
-
 			process = query.process;
+		}
+
+		if (!multiple) {
+			$el = $($el.get(0));
 		}
 
 		if (multiple || $el.length > 0) {
@@ -36,7 +35,7 @@ export const queryDocument = (config, $) => {
 			result = (process || defaultProcessor)($el, $);
 
 			// Stop on first result
-			if (result) {
+			if ((multiple && result.length > 0) || result) {
 				break;
 			}
 		}
