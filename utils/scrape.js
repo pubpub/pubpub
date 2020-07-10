@@ -53,6 +53,8 @@ export const pubEdgeQueries = {
 		{ selector: 'article img, .abstract img', process: ($el) => $el.attr('src') },
 	],
 	contributors: [
+		'meta[name="author"]',
+		'meta[property="article:author"]',
 		{
 			selector: 'meta[name="dc.creator"]',
 			process: ($el, $) => $el.toArray().map((el) => $(el).attr('content')),
