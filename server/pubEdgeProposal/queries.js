@@ -27,7 +27,7 @@ export const createPubEdgeProposalFromCrossrefDoi = async (doi) => {
 			description: abstract,
 			doi: DOI,
 			publicationDate: publicationDate,
-			title: Array.isArray(title) ? title.join(': ') : title,
+			title: Array.isArray(title) ? title[0] : title,
 			url: URL,
 		},
 	};
