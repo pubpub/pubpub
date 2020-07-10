@@ -5,6 +5,7 @@ export const defaultProcessor = ($el) => $el.attr('content') || $el.text().trim(
 export const queryDocument = (config, $) => {
 	let result;
 
+	// Execute queries in order
 	for (let i = 0; i < config.length; i++) {
 		const query = config[i];
 
@@ -12,10 +13,14 @@ export const queryDocument = (config, $) => {
 		let process;
 
 		if (typeof query === 'string') {
+			// String form of query, e.g. "a.author"
 			$el = $($(query).get(0));
 		} else {
+			// Object form of query, e.g.
+			//   { selector: "a.author", process: $el => $el.attr("href") }
 			$el = $(query.selector);
 
+			// Process only first element by default.
 			if (!query.multiple) {
 				$el = $($el[0]);
 			}
@@ -27,8 +32,10 @@ export const queryDocument = (config, $) => {
 			continue;
 		}
 
+		// Use default processor (content attr value or innerText)
 		result = (process || defaultProcessor)($el, $);
 
+		// Stop on first result
 		if (result) {
 			break;
 		}
@@ -59,7 +66,7 @@ export const pubEdgeQueries = {
 	doi: [
 		'meta[name="doi"]',
 		{
-			selector: ['meta[name="prism.doi"]', 'meta[name="dc.identifier"]'],
+			selector: 'meta[name="prism.doi"], meta[name="dc.identifier"]',
 			process: ($el) => $el.attr('content').split('doi:')[1] || null,
 		},
 	],
