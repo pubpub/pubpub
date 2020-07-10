@@ -1,6 +1,6 @@
 import app, { wrap } from 'server/server';
 import { parseUrl } from 'utils/urls';
-import { isDoi } from 'utils/crossref/isDoi';
+import { isDoi, extractDoiFromOrgUrl } from 'utils/crossref/parseDoi';
 
 import { getPubDataFromUrl, createPubEdgeProposalFromCrossrefDoi } from './queries';
 
@@ -13,10 +13,15 @@ app.get(
 
 		if (url) {
 			const pub = await getPubDataFromUrl(url);
+
 			if (pub) {
-				// URL is not PubPub
-				// TODO: Scrape target for DOI
 				edge = { targetPub: pub };
+			} else {
+				const doi = await extractDoiFromOrgUrl(url);
+
+				if (doi) {
+					edge = await createPubEdgeProposalFromCrossrefDoi(doi);
+				}
 			}
 		} else if (isDoi(object)) {
 			edge = await createPubEdgeProposalFromCrossrefDoi(object);

@@ -6,7 +6,7 @@ import isUrl from 'is-url';
 
 import { PubMenuItem } from 'components';
 import { apiFetch } from 'client/utils/apiFetch';
-import { isDoi } from 'utils/crossref/isDoi';
+import { isDoi } from 'utils/crossref/parseDoi';
 import { useThrottled } from 'utils/hooks';
 import { fuzzyMatchPub } from 'utils/fuzzyMatch';
 
