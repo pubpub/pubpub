@@ -47,7 +47,12 @@ const collateAndFilterPubEdges = (filters, pubData) => {
 	outboundEdges.forEach((edge) => {
 		const { pubIsParent } = edge;
 		const included = pubIsParent ? includeChildren : includeParents;
-		const edgeValue = { isSibling: false, edge: edge, pubTitle: null };
+		const edgeValue = {
+			isSibling: false,
+			isInboundEdge: false,
+			edge: edge,
+			pubTitle: null,
+		};
 		if (included) {
 			filteredPubEdges.push(edgeValue);
 		}
@@ -61,7 +66,12 @@ const collateAndFilterPubEdges = (filters, pubData) => {
 	inboundEdges.forEach((edge) => {
 		const { pubIsParent } = edge;
 		const included = pubIsParent ? includeParents : includeChildren;
-		const edgeValue = { isSibling: false, edge: edge, pubTitle: null };
+		const edgeValue = {
+			isSibling: false,
+			isInboundEdge: true,
+			edge: edge,
+			pubTitle: null,
+		};
 		if (included) {
 			filteredPubEdges.push(edgeValue);
 		}
@@ -76,6 +86,7 @@ const collateAndFilterPubEdges = (filters, pubData) => {
 		const { pubIsParent, pub, targetPub } = edge;
 		const edgeValue = {
 			isSibling: true,
+			isInboundEdge: false,
 			edge: edge,
 			pubTitle: pubIsParent ? pub.title : targetPub.title,
 		};
@@ -184,18 +195,20 @@ const PubEdgeListing = (props) => {
 							accentColor={accentColor}
 							showIcon={isolated}
 							viewingFromSibling={activeEdgeValue.isSibling}
+							isInboundEdge={activeEdgeValue.isInboundEdge}
 							inPubBody
 						>
 							{isolated && controls}
 						</PubEdgeListingCard>
 				  )
-				: filteredPubEdgeValues.map(({ edge, isSibling, pubTitle }) => (
+				: filteredPubEdgeValues.map(({ isInboundEdge, edge, isSibling, pubTitle }) => (
 						<PubEdgeListingCard
 							key={edge.url}
 							pubTitle={pubTitle}
 							pubEdge={edge}
 							accentColor={accentColor}
 							viewingFromSibling={isSibling}
+							isInboundEdge={isInboundEdge}
 							inPubBody
 						/>
 				  ));
