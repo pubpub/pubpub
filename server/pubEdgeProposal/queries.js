@@ -2,7 +2,7 @@ import { Op } from 'sequelize';
 import fetch from 'node-fetch';
 
 import { Community, Pub } from 'server/models';
-import { getOptionsForIncludedPub } from 'server/utils/queryHelpers/edgeOptions';
+import { getOptionsForIncludedPub } from 'server/utils/queryHelpers/pubEdgeOptions';
 
 export const createPubEdgeProposalFromCrossrefDoi = async (doi) => {
 	const response = await fetch(`https://api.crossref.org/works/${doi}`);

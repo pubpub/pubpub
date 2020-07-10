@@ -7,33 +7,9 @@ import { RelationType } from 'utils/pubEdge';
 
 import { Filter } from './constants';
 
-const pubEdges = [
-	{
-		externalPublication: {
-			title: 'Wunden verbinden',
-			contributors: ['Hildegund Keul'],
-			avatar: 'https://assets.pubpub.org/qsjyoz1y/61586620971745.png',
-			url: 'https://cursor.pubpub.org/pub/keul-wunden/release/2',
-			publicationDate: Date.now(),
-			description:
-				'Das Doppeldeutige erschließt sich auf den zweiten Blick: Wunden verbinden. Die Corona-Pandemie zeigt einerseits die Notwendigkeit, Wunden zu verbinden. Andererseits offenbart sie, dass Wunden dazu herausfordern, sich miteinander zu verbinden.',
-		},
-		relationType: RelationType.Review,
-		pubIsParent: true,
-	},
-	{
-		externalPublication: {
-			title: 'Theology in the Shadow of the Corona Crisis',
-			contributors: ['Guenter Thomas'],
-			avatar: 'https://assets.pubpub.org/m4ccobdf/51585552700986.jpg',
-			url: 'https://cursor.pubpub.org/pub/thomas-theologycorona/release/5',
-			publicationDate: Date.now(),
-			description:
-				"This contribution gives a systematic overview how the question of illness and the global spreading of a disease affects our thoughts on creation, God's presence in the world, what Christians may hope for and how this shapes their actions.",
-		},
-		relationType: RelationType.Comment,
-		pubIsParent: true,
-	},
+const inboundEdges = [];
+
+const outboundEdges = [
 	{
 		externalPublication: {
 			title:
@@ -50,6 +26,35 @@ const pubEdges = [
 	},
 	{
 		externalPublication: {
+			title: 'Wunden verbinden',
+			contributors: ['Hildegund Keul'],
+			avatar: 'https://assets.pubpub.org/qsjyoz1y/61586620971745.png',
+			url: 'https://cursor.pubpub.org/pub/keul-wunden/release/2',
+			publicationDate: Date.now(),
+			description:
+				'Das Doppeldeutige erschließt sich auf den zweiten Blick: Wunden verbinden. Die Corona-Pandemie zeigt einerseits die Notwendigkeit, Wunden zu verbinden. Andererseits offenbart sie, dass Wunden dazu herausfordern, sich miteinander zu verbinden.',
+		},
+		relationType: RelationType.Review,
+		pubIsParent: false,
+	},
+	{
+		externalPublication: {
+			title: 'Theology in the Shadow of the Corona Crisis',
+			contributors: ['Guenter Thomas'],
+			avatar: 'https://assets.pubpub.org/m4ccobdf/51585552700986.jpg',
+			url: 'https://cursor.pubpub.org/pub/thomas-theologycorona/release/5',
+			publicationDate: Date.now(),
+			description:
+				"This contribution gives a systematic overview how the question of illness and the global spreading of a disease affects our thoughts on creation, God's presence in the world, what Christians may hope for and how this shapes their actions.",
+		},
+		relationType: RelationType.Comment,
+		pubIsParent: true,
+	},
+];
+
+const siblingEdges = [
+	{
+		externalPublication: {
 			title: 'Liturgical Struggles in the Corona-Crisis',
 			contributors: ['Bent Flemming Nielsen', 'Mikkel Gabriel Christoffersen'],
 			avatar: 'https://assets.pubpub.org/1wuh04pc/41586276667772.jpg',
@@ -59,9 +64,17 @@ const pubEdges = [
 				"The Corona-virus has implications for the Christian church as a liturgical community. From within a Danish context, this article explores some possibilities and pitfalls of continuing to celebrate the Lord's Supper during this time of crisis.",
 		},
 		relationType: RelationType.Review,
-		pubIsParent: false,
+		pubIsParent: true,
 	},
 ];
+
+const pubData = {
+	title:
+		'The Porous Mask. A Theological Reflection on Concepts of Personhood and Personal Agency in the Digital Age',
+	inboundEdges: inboundEdges,
+	outboundEdges: outboundEdges,
+	siblingEdges: siblingEdges,
+};
 
 const StoryContainer = (props) => <div style={{ padding: 24 }}>{props.children}</div>;
 
@@ -69,7 +82,7 @@ storiesOf('components/PubEdgeListing', module).add('header', () => (
 	<StoryContainer>
 		<PubEdgeListing
 			accentColor="#A22E37"
-			pubEdges={pubEdges}
+			pubData={pubData}
 			initialFilters={[Filter.Parent]}
 			isolated
 		/>
@@ -81,7 +94,7 @@ storiesOf('components/PubEdgeListing', module).add('footer', () => (
 		<PubEdgeListing
 			accentColor="#A22E37"
 			pubTitle="Fear and Anxiety in Corona Isolation"
-			pubEdges={pubEdges}
+			pubData={pubData}
 		/>
 	</StoryContainer>
 ));

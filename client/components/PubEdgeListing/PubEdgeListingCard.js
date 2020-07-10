@@ -58,14 +58,19 @@ const PubEdgeListingCard = (props) => {
 		if (relationDefinition) {
 			const { article, preposition, name } = relationDefinition;
 			const relationName = <span className="relation-name">{name}</span>;
-			const pubTitleNode = pubTitle && <span className="pub-title">{pubTitle}</span>;
 			if (viewingFromSibling) {
+				const titlePart = pubTitle && (
+					<>
+						{preposition} <span className="pub-title">{pubTitle}</span>
+					</>
+				);
 				return (
 					<>
-						Another {relationName} of {pubTitleNode || 'this Pub'}
+						Another {relationName} {titlePart}
 					</>
 				);
 			}
+			const pubTitleNode = pubTitle && <span className="pub-title">{pubTitle}</span>;
 			if (viewingFromParent) {
 				return (
 					<>
