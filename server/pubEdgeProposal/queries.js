@@ -18,20 +18,6 @@ const ensureFullUrlForExternalPublication = (externalPublication, responseUrl) =
 	return externalPublication;
 };
 
-const mergeProposalWithCrossrefProposal = async (edge, doi) => {
-	const proposalFromDoi = await createPubEdgeProposalFromCrossrefDoi(doi);
-
-	return {
-		...edge,
-		externalPublication: mergewith(
-			{},
-			edge.externalPublication,
-			proposalFromDoi.externalPublication,
-			(a, b) => b ?? a,
-		),
-	};
-};
-
 export const createPubEdgeProposalFromCrossrefDoi = async (doi) => {
 	const response = await fetch(`https://api.crossref.org/works/${doi}`);
 	const { message } = await response.json();
@@ -61,6 +47,20 @@ export const createPubEdgeProposalFromCrossrefDoi = async (doi) => {
 	};
 };
 
+const mergeProposalWithCrossrefProposal = async (edge, doi) => {
+	const proposalFromDoi = await createPubEdgeProposalFromCrossrefDoi(doi);
+
+	return {
+		...edge,
+		externalPublication: mergewith(
+			{},
+			edge.externalPublication,
+			proposalFromDoi.externalPublication,
+			(a, b) => b ?? a,
+		),
+	};
+};
+
 export const createPubEdgeProposalFromArbitraryUrl = async (url) => {
 	const response = await fetch(url);
 	const externalPublication = await runQueries(pubEdgeQueries, response);
@@ -69,7 +69,7 @@ export const createPubEdgeProposalFromArbitraryUrl = async (url) => {
 	};
 	const { doi } = externalPublication;
 
-	return doi ? await mergeProposalWithCrossrefProposal(edge, doi) : edge;
+	return doi ? mergeProposalWithCrossrefProposal(edge, doi) : edge;
 };
 
 export const getPubDataFromUrl = async (url) => {

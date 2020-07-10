@@ -28,16 +28,14 @@ export const queryDocument = (config, $) => {
 			process = query.process;
 		}
 
-		if ($el.length === 0) {
-			continue;
-		}
+		if ($el.length > 0) {
+			// Use default processor if none is specified (content attr value or innerText)
+			result = (process || defaultProcessor)($el, $);
 
-		// Use default processor (content attr value or innerText)
-		result = (process || defaultProcessor)($el, $);
-
-		// Stop on first result
-		if (result) {
-			break;
+			// Stop on first result
+			if (result) {
+				break;
+			}
 		}
 	}
 
@@ -95,7 +93,6 @@ export const runQueries = async (queries, response) => {
 	const $ = cheerio.load(text);
 
 	return Object.entries(queries).reduce((results, [key, query]) => {
-		results[key] = queryDocument(query, $);
-		return results;
+		return { ...results, [key]: queryDocument(query, $) };
 	}, {});
 };
