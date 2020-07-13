@@ -23,11 +23,13 @@ const canViewPubEdge = (initialData, pubEdge) => {
 	}
 	const pubToInspect = targetPub || pub;
 	if (pubToInspect.communityId === activeCommunity.id) {
-		return (
+		if (
 			isPubMember(memberData, pubToInspect) ||
 			isCollectionMember(memberData, pubToInspect) ||
 			isCommunityMember(memberData, pubToInspect)
-		);
+		) {
+			return true;
+		}
 	}
 	return pubToInspect.releases && pubToInspect.releases.length > 0;
 };
