@@ -1,10 +1,11 @@
-import fetch from 'node-fetch';
 import { Op } from 'sequelize';
-import mergewith from 'lodash.mergewith';
+import cheerio from 'cheerio';
+import fetch from 'node-fetch';
 
-import { Community, Pub } from 'server/models';
-import { pubEdgeQueries, runQueries } from 'utils/scrape';
 import { parseUrl } from 'utils/urls';
+import { assignNotNull } from 'utils/objects';
+import { Community, Pub } from 'server/models';
+import { pubEdgeQueries, runQueries } from 'server/utils/scrape';
 import { getOptionsForIncludedPub } from 'server/utils/queryHelpers/edgeOptions';
 
 const ensureFullUrlForExternalPublication = (externalPublication, responseUrl) => {
@@ -52,18 +53,48 @@ const mergeProposalWithCrossrefProposal = async (edge, doi) => {
 
 	return {
 		...edge,
-		externalPublication: mergewith(
+		externalPublication: assignNotNull(
 			{},
 			edge.externalPublication,
 			proposalFromDoi.externalPublication,
-			(a, b) => b ?? a,
 		),
 	};
 };
 
+export const createExternalPublicationFromMicrodata = ($) => {
+	const script = $('script[type="application/ld+json"]').get(0);
+
+	if (script) {
+		try {
+			const parsed = JSON.parse($(script).html());
+
+			return {
+				title: parsed.headline || parsed.alternativeHeadline || null,
+				description: parsed.description || null,
+				contributors: parsed.author
+					? parsed.author.map((personOrOrganization) => personOrOrganization.name)
+					: [],
+				image: parsed.image ? parsed.image.url : null,
+				publicationDate: parsed.datePublished ? new Date(parsed.datePublished) : null,
+			};
+		} catch (error) {
+			return {};
+		}
+	}
+
+	return {};
+};
+
 export const createPubEdgeProposalFromArbitraryUrl = async (url) => {
 	const response = await fetch(url);
-	const externalPublication = await runQueries(pubEdgeQueries, response);
+	const $ = cheerio.load(await response.text());
+	const externalPublicationFromSelectors = runQueries($, pubEdgeQueries);
+	const externalPublicationFromMicrodata = createExternalPublicationFromMicrodata($);
+	const externalPublication = assignNotNull(
+		{},
+		externalPublicationFromMicrodata,
+		externalPublicationFromSelectors,
+	);
 	const edge = {
 		externalPublication: ensureFullUrlForExternalPublication(externalPublication, response.url),
 	};

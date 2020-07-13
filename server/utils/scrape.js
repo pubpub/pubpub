@@ -1,6 +1,6 @@
-import cheerio from 'cheerio';
-
 export const defaultProcessor = ($el) => $el.attr('content') || $el.text().trim();
+export const defaultMultipleProcessor = ($el, $) =>
+	$el.toArray().map((el) => defaultProcessor($(el)));
 
 export const queryDocument = (config, $) => {
 	let result;
@@ -32,10 +32,10 @@ export const queryDocument = (config, $) => {
 
 		if (multiple || $el.length > 0) {
 			// Use default processor if none is specified (content attr value or innerText)
-			result = (process || defaultProcessor)($el, $);
+			result = (process || (multiple ? defaultMultipleProcessor : defaultProcessor))($el, $);
 
 			// Stop on first result
-			if ((multiple && result.length > 0) || result) {
+			if (multiple ? result.length > 0 : result) {
 				break;
 			}
 		}
@@ -52,16 +52,14 @@ export const pubEdgeQueries = {
 		{ selector: 'article img, .abstract img', process: ($el) => $el.attr('src') },
 	],
 	contributors: [
-		'meta[name="author"]',
-		'meta[property="article:author"]',
+		{ selector: 'meta[name="author"]', multiple: true },
+		{ selector: 'meta[property="article:author"]', multiple: true },
 		{
 			selector: 'meta[name="dc.creator"]',
-			process: ($el, $) => $el.toArray().map((el) => $(el).attr('content')),
 			multiple: true,
 		},
 		{
 			selector: '[rel="author"], .author',
-			process: ($el, $) => $el.toArray().map((el) => $(el).text()),
 			multiple: true,
 		},
 	],
@@ -80,6 +78,10 @@ export const pubEdgeQueries = {
 			process: ($el) => new Date(defaultProcessor($el)),
 		},
 		{
+			selector: 'time',
+			process: ($el) => new Date($el.attr('datetime')),
+		},
+		{
 			selector: 'time, .date',
 			process: ($el) => new Date(defaultProcessor($el)),
 		},
@@ -92,11 +94,7 @@ export const pubEdgeQueries = {
 	],
 };
 
-export const runQueries = async (queries, response) => {
-	const text = await response.text();
-	const $ = cheerio.load(text);
-
-	return Object.entries(queries).reduce((results, [key, query]) => {
+export const runQueries = ($, queries) =>
+	Object.entries(queries).reduce((results, [key, query]) => {
 		return { ...results, [key]: queryDocument(query, $) };
 	}, {});
-};
