@@ -67,7 +67,7 @@ export const getBranchDoc = async (pubId, branchId, historyKey, createMissingChe
 		{ timestamp: firstTimestamp, key: firstKey },
 		{ timestamp: latestTimestamp, key: latestKey },
 	] = await Promise.all([
-		getFirebaseDoc(branchRef, editorSchema, historyKey, createMissingCheckpoints),
+		getFirebaseDoc(branchRef, editorSchema, historyKey),
 		getFirstKeyAndTimestamp(branchRef),
 		getLatestKeyAndTimestamp(branchRef),
 	]);
