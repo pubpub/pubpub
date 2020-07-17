@@ -48,7 +48,6 @@ const getValuesFromPubEdge = (pubEdge, communityData, viewingFromTarget) => {
 			avatar: avatar,
 			contributors: attributions,
 			description: description,
-			isExternal: false,
 			publicationDate: getPubPublishedDate(displayedPub),
 			title: title,
 			url: url,
@@ -67,7 +66,6 @@ const getValuesFromPubEdge = (pubEdge, communityData, viewingFromTarget) => {
 			avatar: avatar,
 			contributors: contributors,
 			description: description,
-			isExternal: true,
 			publicationDate: publicationDate,
 			title: title,
 			url: url,
@@ -77,10 +75,10 @@ const getValuesFromPubEdge = (pubEdge, communityData, viewingFromTarget) => {
 };
 
 const PubEdge = (props) => {
-	const { accentColor, actsLikeLink, isExternal, pubEdge, viewingFromTarget } = props;
+	const { accentColor, actsLikeLink, pubEdge, viewingFromTarget } = props;
 	const [open, setOpen] = useState(false);
 	const { communityData } = usePageContext();
-
+	const hasExternalPublication = Boolean(pubEdge.externalPublication);
 	const { avatar, contributors, description, publicationDate, title, url } = getValuesFromPubEdge(
 		pubEdge,
 		communityData,
@@ -146,7 +144,10 @@ const PubEdge = (props) => {
 				avatar ? (
 					<img src={avatar} alt="" />
 				) : (
-					<PubEdgePlaceholderThumbnail color={accentColor} external={isExternal} />
+					<PubEdgePlaceholderThumbnail
+						color={accentColor}
+						external={hasExternalPublication}
+					/>
 				),
 				{ tabIndex: '-1' },
 			)}
