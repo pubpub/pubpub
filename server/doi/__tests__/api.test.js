@@ -112,7 +112,7 @@ it('lets community admins create a DOI for pubs in their community', async () =>
 		.get('/api/doiPreview')
 		.query({ pubId: pub.id, communityId: community.id, target: 'pub' })
 		.expect(201);
-	console.log(previewDois);
+
 	expect(previewDois.pub).toEqual(expectedPubDoi);
 	expect(dois.pub).toEqual(expectedPubDoi);
 	expect(doiStub.called).toEqual(true);
@@ -139,6 +139,7 @@ it('lets community admins create a DOI for collections in their community', asyn
 		.get('/api/doiPreview')
 		.query({ collectionId: collection.id, communityId: community.id, target: 'collection' })
 		.expect(201);
+
 	expect(previewDois.collection).toEqual(expectedCollectionDoi);
 	expect(dois.collection).toEqual(expectedCollectionDoi);
 	expect(doiStub.called).toEqual(true);
