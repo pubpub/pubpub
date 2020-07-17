@@ -1,6 +1,7 @@
 .pub-edge-listing-component {
 	display: flex;
 	flex-direction: column;
+	padding: 20px 0;
 
 	> .top {
 		align-items: center;
@@ -14,9 +15,9 @@
 		}
 	}
 
-    @media screen and (max-width: 720px) {
-        font-size: 12px;
-    }
+	@media screen and (max-width: 720px) {
+		font-size: 12px;
+	}
 }
 
 .pub-edge-listing-counter-component {
