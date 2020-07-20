@@ -23,7 +23,7 @@ export const propTypes = {
 };
 
 const defaultProps = {
-	accentColor: '#dddddd',
+	accentColor: '#ddd',
 	actsLikeLink: false,
 	viewingFromTarget: false,
 };

@@ -51,6 +51,7 @@ const getIsViewingFromTarget = (pubEdge, viewingFromSibling, isInboundEdge) => {
 };
 
 const PubEdgeListingCard = (props) => {
+	const { communityData } = usePageContext();
 	const {
 		accentColor = communityData.accentColorDark,
 		children,
@@ -62,12 +63,11 @@ const PubEdgeListingCard = (props) => {
 		showIcon,
 		viewingFromSibling,
 	} = props;
-	const { communityData } = usePageContext();
 	const viewingFromTarget = getIsViewingFromTarget(pubEdge, viewingFromSibling, isInboundEdge);
 	const [hover, setHover] = useState(false);
 	const handleMouseEnter = useCallback(() => setHover(true), []);
 	const handleMouseLeave = useCallback(() => setHover(false), []);
-	const hoverAccentColor = hover ? accentColor : '#dddddd';
+	const hoverAccentColor = hover ? accentColor : '#ddd';
 	const style = { borderColor: hoverAccentColor };
 
 	const renderRelation = () => {
