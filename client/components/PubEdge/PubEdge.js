@@ -142,7 +142,7 @@ const PubEdge = (props) => {
 		<PubEdgeLayout
 			topLeftElement={maybeLink(
 				avatar ? (
-					<img src={avatar} alt="" />
+					<img src={avatar} alt={title} />
 				) : (
 					<PubEdgePlaceholderThumbnail
 						color={accentColor}
