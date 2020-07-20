@@ -3,28 +3,13 @@ import amqplib from 'amqplib';
 import { TaskPriority, taskQueueName } from 'utils/workers';
 import { createWorkerTask } from 'server/workerTask/queries';
 
-let openChannel;
+let openChannelPromise;
 
-const setOpenChannel = () => {
-	amqplib.connect(process.env.CLOUDAMQP_URL).then((conn) => {
-		return conn.createConfirmChannel().then((channel) => {
-			return channel
-				.assertQueue(taskQueueName, { durable: true, maxPriority: TaskPriority.Highest })
-				.then(() => {
-					openChannel = channel;
-				});
-		});
-	});
-};
-
-if (process.env.NODE_ENV !== 'test') {
-	setOpenChannel();
-}
-
-const ensureOpenChannel = () => {
-	if (!openChannel) {
-		setOpenChannel();
-	}
+const createChannel = async () => {
+	const connection = await amqplib.connect(process.env.CLOUDAMQP_URL);
+	const channel = await connection.createConfirmChannel();
+	await channel.assertQueue(taskQueueName, { durable: true, maxPriority: TaskPriority.Highest });
+	return channel;
 };
 
 const getDefaultTaskPriority = () => {
@@ -35,20 +20,33 @@ const getDefaultTaskPriority = () => {
 	return TaskPriority.Normal;
 };
 
-export const addWorkerTask = async ({ type, input, priority = getDefaultTaskPriority() }) => {
+const getOrCreateOpenChannel = async () => {
 	if (process.env.NODE_ENV === 'test') {
-		return null;
+		return {
+			sendToQueue: () => {},
+			waitForConfirms: () => {},
+		};
 	}
+	if (!openChannelPromise) {
+		openChannelPromise = createChannel();
+	}
+	return openChannelPromise;
+};
 
-	const workerTask = await createWorkerTask({ type: type, input: input, priority: priority });
-	const message = Buffer.from(JSON.stringify({ id: workerTask.id, type: type, input: input }));
+getOrCreateOpenChannel();
 
-	ensureOpenChannel();
+export const sendMessageToOpenChannel = async (message, priority) => {
+	const openChannel = await getOrCreateOpenChannel();
 	openChannel.sendToQueue(taskQueueName, message, {
 		deliveryMode: true,
 		priority: priority,
 	});
-
 	await openChannel.waitForConfirms();
+};
+
+export const addWorkerTask = async ({ type, input, priority = getDefaultTaskPriority() }) => {
+	const workerTask = await createWorkerTask({ type: type, input: input, priority: priority });
+	const message = Buffer.from(JSON.stringify({ id: workerTask.id, type: type, input: input }));
+	await sendMessageToOpenChannel(message, priority);
 	return workerTask;
 };
