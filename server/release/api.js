@@ -30,7 +30,6 @@ app.post(
 	wrap(async (req, res) => {
 		const {
 			communityId,
-			createExports,
 			draftKey,
 			makeDraftDiscussionsPublic,
 			noteContent,
@@ -55,7 +54,6 @@ app.post(
 			noteText: noteText,
 			noteContent: noteContent,
 			makeDraftDiscussionsPublic: makeDraftDiscussionsPublic,
-			createExports: createExports,
 		});
 
 		return res.status(201).json(release);
