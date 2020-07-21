@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, FormGroup } from '@blueprintjs/core';
+import { FormGroup } from '@blueprintjs/core';
 
 import { getSchemaForKind } from 'utils/collections/schemas';
-import { apiFetch } from 'client/utils/apiFetch';
 
 import { AssignDoi } from 'components';
 

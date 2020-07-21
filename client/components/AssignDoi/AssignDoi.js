@@ -1,4 +1,4 @@
-import React, { useCallback, useReducer, useEffect } from 'react';
+import React, { useCallback, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 
@@ -109,6 +109,8 @@ export function reducer(state, action) {
 				result: null,
 				error: action.payload,
 			};
+		default:
+			return state;
 	}
 }
 
@@ -156,14 +158,14 @@ function AssignDoi(props) {
 				method: 'POST',
 				body: body,
 			});
-			const doi = response.dois[target];
+			const targetDoi = response.dois[target];
 
 			dispatch({
 				type: AssignDoiActionType.FetchDepositSuccess,
-				payload: doi,
+				payload: targetDoi,
 			});
 
-			onDeposit(doi);
+			onDeposit(targetDoi);
 		} catch (error) {
 			dispatch({ type: AssignDoiActionType.Error, payload: error.message });
 			onError(error);
