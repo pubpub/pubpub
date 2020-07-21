@@ -157,8 +157,6 @@ const renderConferencePreview = (doi_batch) => {
 			<dl>
 				<dt>Conference Name</dt>
 				<dd>{conference_name}</dd>
-			</dl>
-			<dl>
 				<dt>Conference Date</dt>
 				<dd>{formatDate(new Date(conferenceDate))}</dd>
 			</dl>
