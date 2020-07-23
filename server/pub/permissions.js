@@ -18,6 +18,7 @@ export const getPermissions = async ({ userId, communityId, pubId, licenseSlug }
 		licenseSlug === 'cc-0';
 	const canManage = validLicenseSlug && scopeData.activePermissions.canManage;
 	const editProps = [
+		'doi',
 		'slug',
 		'title',
 		'description',
