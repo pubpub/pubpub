@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Button } from 'reakit/Button';
 
-import { Byline, PreviewImage } from 'components';
+import { Byline, PreviewImage, PubByline } from 'components';
 
 require('./pubMenuItem.scss');
 
@@ -16,6 +16,7 @@ const propTypes = {
 	onClick: PropTypes.func.isRequired,
 	showImage: PropTypes.bool,
 	title: PropTypes.string.isRequired,
+	pubData: PropTypes.object,
 };
 
 const defaultProps = {
@@ -24,10 +25,21 @@ const defaultProps = {
 	image: null,
 	isSkeleton: false,
 	showImage: false,
+	pubData: false,
 };
 
 const PubMenuItem = React.forwardRef((props, ref) => {
-	const { active, contributors, disabled, image, isSkeleton, onClick, showImage, title } = props;
+	const {
+		active,
+		contributors,
+		disabled,
+		image,
+		isSkeleton,
+		onClick,
+		showImage,
+		title,
+		pubData,
+	} = props;
 	const skeletonClass = classNames(isSkeleton && 'bp3-skeleton');
 	return (
 		<Button
@@ -46,7 +58,11 @@ const PubMenuItem = React.forwardRef((props, ref) => {
 			<div className="inner">
 				<div className={classNames('title', skeletonClass)}>{title}</div>
 				<div className={classNames('subtitle', skeletonClass)}>
-					<Byline contributors={contributors} linkToUsers={false} />
+					{pubData ? (
+						<PubByline pubData={pubData} linkToUsers={false} />
+					) : (
+						<Byline contributors={contributors} linkToUsers={false} />
+					)}
 				</div>
 			</div>
 		</Button>

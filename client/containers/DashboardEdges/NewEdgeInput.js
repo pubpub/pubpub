@@ -96,6 +96,7 @@ const NewEdgeInput = (props) => {
 					active={modifiers.active}
 					onClick={handleClick}
 					showImage={true}
+					pubData={targetPub}
 				/>
 			);
 		}

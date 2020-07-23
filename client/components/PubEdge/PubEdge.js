@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import { Byline } from 'components';
+import { Byline, PubByline } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { formatDate } from 'utils/dates';
 import { pubUrl, pubShortUrl } from 'utils/canonicalUrls';
@@ -86,6 +86,7 @@ const PubEdge = (props) => {
 	const { accentColor, actsLikeLink, pubEdge, viewingFromTarget } = props;
 	const [open, setOpen] = useState(false);
 	const { communityData } = usePageContext();
+	const displayedPub = viewingFromTarget ? pubEdge.pub : pubEdge.targetPub;
 	const hasExternalPublication = Boolean(pubEdge.externalPublication);
 	const { avatar, contributors, description, publicationDate, title, url } = getValuesFromPubEdge(
 		pubEdge,
@@ -160,7 +161,14 @@ const PubEdge = (props) => {
 				{ tabIndex: '-1' },
 			)}
 			titleElement={maybeLink(title, linkLikeProps)}
-			bylineElement={contributors.length > 0 && <Byline contributors={contributors} />}
+			bylineElement={
+				contributors.length > 0 &&
+				(displayedPub ? (
+					<PubByline pubData={displayedPub} />
+				) : (
+					<Byline contributors={contributors} />
+				))
+			}
 			metadataElements={[
 				description && (
 					<span
