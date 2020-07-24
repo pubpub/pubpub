@@ -1,8 +1,9 @@
 import { Op } from 'sequelize';
 
 import { managedDoiPrefixes } from 'utils/crossref/communities';
-import { promptOkay } from './utils/prompt';
 import { Pub, Collection, CrossrefDepositRecord } from 'server/models';
+
+import { promptOkay } from './utils/prompt';
 
 async function runForModel(model) {
 	const tableName = model.getTableName();
