@@ -178,8 +178,9 @@ const PubPreview = (props) => {
 				</div>
 				{showExpandButton && (
 					<ExpandButton
-						onClick={() => setIsExpanded(!isExpanded)}
+						accentColor={localCommunityData.accentColorDark}
 						isExpanded={isExpanded}
+						onClick={() => setIsExpanded(!isExpanded)}
 					/>
 				)}
 			</div>
