@@ -152,40 +152,55 @@ class Doi extends Component {
 		const intent = this.getIntent(invalidDoi);
 		const helperText = this.getHelperText(invalidDoi);
 
-		return doiIsEditable ? (
-			<FormGroup helperText={helperText} intent={intent}>
-				<ControlGroup>
-					<InputGroup
-						label="DOI"
-						placeholder="Enter a DOI..."
-						value={doi}
-						onChange={(e) => this.setState({ doi: e.target.value })}
-					/>
-					<Button
-						disabled={!doi || invalidDoi}
-						text="Update DOI"
-						loading={updating}
-						onClick={this.handleDoiUpdate}
-					/>
-				</ControlGroup>
-			</FormGroup>
-		) : (
-			<p>
-				Pub DOI:{' '}
-				<a className="doi-link" href={`https://doi.org/${pubData.doi}`}>
-					{pubData.doi}
-				</a>
-			</p>
+		if (doiIsEditable) {
+			return (
+				<FormGroup helperText={helperText} intent={intent}>
+					<ControlGroup>
+						<InputGroup
+							label="DOI"
+							placeholder="Enter a DOI..."
+							value={doi}
+							onChange={(e) => this.setState({ doi: e.target.value })}
+						/>
+						<Button
+							disabled={!doi || invalidDoi}
+							text="Update"
+							loading={updating}
+							onClick={this.handleDoiUpdate}
+						/>
+					</ControlGroup>
+				</FormGroup>
+			);
+		}
+
+		return (
+			pubData.doi && (
+				<p>
+					Pub DOI:{' '}
+					<a className="doi-link" href={`https://doi.org/${pubData.doi}`}>
+						{pubData.doi}
+					</a>
+				</p>
+			)
 		);
 	}
 
-	render() {
+	renderContent() {
 		const { pubData, canIssueDoi } = this.props;
 		const { justSetDoi } = this.state;
 		const hasExistingDeposit = justSetDoi || Boolean(pubData.crossrefDepositRecordId);
 
+		if (!canIssueDoi) {
+			return (
+				<>
+					{this.renderStatusMessage()}
+					{this.renderDoi()}
+				</>
+			);
+		}
+
 		return (
-			<div className="pub-settings-container_doi-component">
+			<>
 				{this.renderStatusMessage()}
 				{this.renderCollectionContextMessage()}
 				{this.renderDoi()}
@@ -213,15 +228,18 @@ class Doi extends Component {
 				>
 					<AssignDoi
 						communityData={this.props.communityData}
-						disabled={!canIssueDoi}
 						onDeposit={this.handleDeposit}
 						pubData={this.props.pubData}
 						hasExistingDeposit={hasExistingDeposit}
 						target="pub"
 					/>
 				</FormGroup>
-			</div>
+			</>
 		);
+	}
+
+	render() {
+		return <div className="pub-settings-container_doi-component">{this.renderContent()}</div>;
 	}
 }
 
