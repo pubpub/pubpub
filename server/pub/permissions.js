@@ -17,6 +17,7 @@ export const getPermissions = async ({ userId, communityId, pubId, licenseSlug }
 		licenseSlug === 'cc-by' ||
 		licenseSlug === 'cc-0';
 	const canManage = validLicenseSlug && scopeData.activePermissions.canManage;
+	const canAdmin = validLicenseSlug && scopeData.activePermissions.canAdmin;
 	const editProps = [
 		'slug',
 		'title',
@@ -32,6 +33,11 @@ export const getPermissions = async ({ userId, communityId, pubId, licenseSlug }
 		'citationStyle',
 		'citationInlineStyle',
 	];
+
+	if (canAdmin) {
+		editProps.push('doi');
+	}
+
 	return {
 		create: true,
 		update: canManage ? editProps : false,

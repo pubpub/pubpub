@@ -221,7 +221,7 @@ const PubSettings = (props) => {
 		return (
 			<SettingsSection title="DOI">
 				<Doi
-					pubData={pubData}
+					pubData={persistedPubData}
 					communityData={activeCommunity}
 					updatePubData={updatePersistedPubData}
 					canIssueDoi={canAdminCommunity}
