@@ -1,8 +1,17 @@
 import contributors from './contributors';
 import date from './helpers/date';
 import doiData from './doiData';
+import relations from './relations';
 
-export default ({ attributions, doi, publicationDate, resourceUrl, timestamp, title }) => {
+export default ({
+	attributions,
+	doi,
+	publicationDate,
+	resourceUrl,
+	timestamp,
+	title,
+	relatedItems,
+}) => {
 	return {
 		journal_article: {
 			'@publication_type': 'full_text',
@@ -12,6 +21,7 @@ export default ({ attributions, doi, publicationDate, resourceUrl, timestamp, ti
 			...contributors(attributions),
 			...date('publication_date', publicationDate),
 			...doiData(doi, timestamp, resourceUrl),
+			...relations(relatedItems),
 		},
 	};
 };

@@ -5,10 +5,9 @@ import {
 	CollectionPub,
 	Community,
 	Pub,
-	PubAttribution,
-	Release,
 	includeUserModel,
 } from 'server/models';
+import buildPubOptions from 'server/utils/queryHelpers/pubOptions';
 import {
 	createCrossrefDepositRecord,
 	updateCrossrefDepositRecord,
@@ -42,14 +41,9 @@ const findCollection = (collectionId) =>
 const findPub = (pubId) =>
 	Pub.findOne({
 		where: { id: pubId },
-		include: [
-			{ model: Release, as: 'releases' },
-			{
-				model: PubAttribution,
-				as: 'attributions',
-				include: [includeUserModel({ as: 'user' })],
-			},
-		],
+		...buildPubOptions({
+			getEdges: 'approved-only',
+		}),
 	});
 
 const findCommunity = (communityId) =>

@@ -16,6 +16,26 @@ const isBook = (doiBatch) => 'book' in doiBatch.body;
 const isJournal = (doiBatch) => 'journal' in doiBatch.body;
 const isConference = (doiBatch) => 'conference' in doiBatch.body;
 
+const renderRelations = (related_item) => {
+	return (
+		<dl>
+			{related_item.map(({ inter_work_relation, intra_work_relation }) => {
+				const { '#text': identifier, '@relationship-type': relationshipType } =
+					inter_work_relation || intra_work_relation;
+
+				return (
+					<React.Fragment key={identifier}>
+						<dt>Relationship Type</dt>
+						<dd>{relationshipType}</dd>
+						<dt>Identifier</dt>
+						<dd>{identifier}</dd>
+					</React.Fragment>
+				);
+			})}
+		</dl>
+	);
+};
+
 const renderTitles = (titles) => {
 	return (
 		<>
@@ -65,7 +85,12 @@ const renderArticlePreview = (doi_batch) => {
 	const {
 		body: {
 			journal: {
-				journal_article: { titles, publication_date, contributors },
+				journal_article: {
+					titles,
+					publication_date,
+					contributors,
+					program: { related_item },
+				},
 				journal_metadata: {
 					full_title: journalFullTitle,
 					doi_data: { doi: journalDoi },
@@ -89,6 +114,8 @@ const renderArticlePreview = (doi_batch) => {
 				<dt>DOI</dt>
 				<dd>{journalDoi}</dd>
 			</dl>
+			<h6>Relationships</h6>
+			{renderRelations(related_item)}
 		</>
 	);
 };

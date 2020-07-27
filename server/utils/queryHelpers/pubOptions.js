@@ -108,13 +108,15 @@ export default ({
 				model: PubEdge,
 				as: 'outboundEdges',
 				separate: true,
-				include: getPubEdgeIncludes({ includeTargetPub: true }),
+				include: getPubEdgeIncludes({
+					includeTargetPub: true,
+				}),
 			},
 			{
 				model: PubEdge,
 				as: 'inboundEdges',
 				separate: true,
-				include: getPubEdgeIncludes({ includePub: true }),
+				include: getPubEdgeIncludes({ includePub: true, includeCommunityForPubs: true }),
 				where: !allowUnapprovedEdges && { approvedByTarget: true },
 			},
 		];
