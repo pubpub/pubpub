@@ -1,6 +1,7 @@
 export default (relatedItems) => {
 	return {
-		program: {
+		'rel:program': {
+			'@xmlns': 'https://www.crossref.org/relations.xsd',
 			'@name': 'relations',
 			related_item: relatedItems.map(
 				({ isIntraWork, identifier, identifierType, relationshipType }) => {

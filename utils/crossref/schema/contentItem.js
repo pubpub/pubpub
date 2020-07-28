@@ -1,6 +1,7 @@
 import contributors from './contributors';
 import date from './helpers/date';
 import doiData from './doiData';
+import relations from './relations';
 
 export default ({
 	attributions,
@@ -10,6 +11,7 @@ export default ({
 	resourceUrl,
 	timestamp,
 	title,
+	relatedItems,
 }) => {
 	return {
 		content_item: {
@@ -19,6 +21,7 @@ export default ({
 				title: title,
 			},
 			...date('publication_date', publicationDate),
+			...(relatedItems.length > 0 && relations(relatedItems)),
 			...doiData(doi, timestamp, resourceUrl),
 		},
 	};

@@ -20,8 +20,8 @@ export default ({
 			},
 			...contributors(attributions),
 			...date('publication_date', publicationDate),
+			...(relatedItems.length > 0 && relations(relatedItems)),
 			...doiData(doi, timestamp, resourceUrl),
-			...relations(relatedItems),
 		},
 	};
 };

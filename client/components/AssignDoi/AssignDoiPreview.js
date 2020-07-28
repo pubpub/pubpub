@@ -89,7 +89,7 @@ const renderArticlePreview = (doi_batch) => {
 					titles,
 					publication_date,
 					contributors,
-					program: { related_item },
+					'rel:program': relProgram,
 				},
 				journal_metadata: {
 					full_title: journalFullTitle,
@@ -115,7 +115,7 @@ const renderArticlePreview = (doi_batch) => {
 				<dd>{journalDoi}</dd>
 			</dl>
 			<h6>Relationships</h6>
-			{renderRelations(related_item)}
+			{relProgram && renderRelations(relProgram.related_item)}
 		</>
 	);
 };
@@ -134,6 +134,7 @@ const renderBookPreview = (doi_batch) => {
 					titles: contentTitles,
 					contributors,
 					publication_date: contentPublicationDate,
+					'rel:program': relProgram,
 				},
 			},
 		},
@@ -155,6 +156,8 @@ const renderBookPreview = (doi_batch) => {
 				{renderContributors(contributors)}
 				{renderPublicationDate(contentPublicationDate)}
 			</dl>
+			<h6>Relationships</h6>
+			{relProgram && renderRelations(relProgram.related_item)}
 		</>
 	);
 };
@@ -163,7 +166,7 @@ const renderConferencePreview = (doi_batch) => {
 	const {
 		body: {
 			conference: {
-				conference_paper: { contributors, titles: paperTitles },
+				conference_paper: { contributors, titles: paperTitles, 'rel:program': relProgram },
 				event_metadata: {
 					conference_name,
 					conference_date: { '#text': conferenceDate },
@@ -194,6 +197,8 @@ const renderConferencePreview = (doi_batch) => {
 				{renderPublicationDate(publication_date)}
 				{renderPublisher(publisher)}
 			</dl>
+			<h6>Relationships</h6>
+			{relProgram && renderRelations(relProgram.related_item)}
 		</>
 	);
 };
