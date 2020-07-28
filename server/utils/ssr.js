@@ -201,7 +201,7 @@ export const generateMetaComponents = ({
 		outputComponents = [
 			...outputComponents,
 			<meta key="pa1" property="article:published_time" content={publishedAt} />,
-			<meta ket="pa2" property="dc.date" content={dcPublishedAt} />,
+			<meta key="pa2" property="dc.date" content={dcPublishedAt} />,
 			<meta key="pa3" name="citation_publication_date" content={googleScholarPublishedAt} />,
 			<meta key="pub1" name="citation_publisher" content="PubPub" />,
 			<meta key="pub2" property="dc.publisher" content="PubPub" />,
