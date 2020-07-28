@@ -43,6 +43,9 @@ const findPub = (pubId) =>
 		where: { id: pubId },
 		...buildPubOptions({
 			getEdges: 'approved-only',
+			getEdgesOptions: {
+				includeCommunityForPubs: true,
+			},
 		}),
 	});
 

@@ -27,6 +27,7 @@ export default ({
 	getMembers,
 	getCommunity,
 	getEdges = 'approved-only',
+	getEdgesOptions,
 }) => {
 	const allowUnapprovedEdges = getEdges === 'all';
 	/* Initialize values assuming all inputs are false. */
@@ -109,6 +110,7 @@ export default ({
 				as: 'outboundEdges',
 				separate: true,
 				include: getPubEdgeIncludes({
+					...getEdgesOptions,
 					includeTargetPub: true,
 				}),
 			},
@@ -116,7 +118,7 @@ export default ({
 				model: PubEdge,
 				as: 'inboundEdges',
 				separate: true,
-				include: getPubEdgeIncludes({ includePub: true, includeCommunityForPubs: true }),
+				include: getPubEdgeIncludes({ ...getEdgesOptions, includePub: true }),
 				where: !allowUnapprovedEdges && { approvedByTarget: true },
 			},
 		];
