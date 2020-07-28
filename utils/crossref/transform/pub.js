@@ -6,30 +6,24 @@ import transformAttributions from './attributions';
 
 function getIdentifierData(pubEdge, isInboundEdge) {
 	const { externalPublication } = pubEdge;
-	let targetPub = isInboundEdge ? pubEdge.pub : pubEdge.targetPub;
+	const targetPub = isInboundEdge ? pubEdge.pub : pubEdge.targetPub;
 
 	let identifier;
 	let identifierType;
 
 	if (externalPublication) {
-		if (externalPublication.doi) {
-			identifier = externalPublication.doi;
-			identifierType = 'doi';
-		} else {
-			identifier = externalPublication.url;
-			identifierType = 'uri';
-		}
+		const { doi, url } = externalPublication;
+
+		identifier = doi || url;
+		identifierType = doi ? 'doi' : 'uri';
 	} else {
-		if (targetPub.doi) {
-			identifier = targetPub.doi;
-			identifierType = 'doi';
-		} else {
-			identifier = pubUrl(targetPub.community, targetPub);
-			identifierType = 'uri';
-		}
+		const { doi, community } = targetPub;
+
+		identifier = doi || pubUrl(community, targetPub);
+		identifierType = doi ? 'doi' : 'uri';
 	}
 
-	return { identifier, identifierType };
+	return { identifier: identifier, identifierType: identifierType };
 }
 
 function getEdgeCrossrefRelationship(pubEdge, isInboundEdge = false) {
@@ -40,7 +34,7 @@ function getEdgeCrossrefRelationship(pubEdge, isInboundEdge = false) {
 
 	return {
 		...getIdentifierData(pubEdge, isInboundEdge),
-		isIntraWork,
+		isIntraWork: isIntraWork,
 		relationshipType: crossrefRelationshipType,
 	};
 }
