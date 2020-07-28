@@ -1,7 +1,6 @@
 export const getPDFDownload = (pub) => {
 	const downloads = pub.downloads;
 	const exports = pub.activeBranch.exports;
-	// console.log(exports);
 	if (downloads) {
 		const matchingDownload = downloads
 			.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
