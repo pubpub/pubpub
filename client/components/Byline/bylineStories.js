@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { storiesOf } from '@storybook/react';
+import { withKnobs, number } from '@storybook/addon-knobs';
 
 import Byline from './Byline';
 
@@ -25,27 +26,20 @@ const [A, B, C, D, E, F, G] = [
 	};
 });
 
-storiesOf('components/Byline', module).add('default', () => {
-	const [truncation, setTruncation] = useState(4);
-	return (
+storiesOf('components/Byline', module).add(
+	'default',
+	() => (
 		<div style={{ margin: '1em' }}>
 			<h4>Basic</h4>
 			<p>
 				<Byline contributors={[A, B, C, D]} />
 			</p>
-			<h4 style={{ display: 'flex', alignItems: 'center' }}>
-				Truncated at number of users ({truncation})
-				<input
-					style={{ marginLeft: '1em' }}
-					type="range"
-					min="0"
-					max="7"
-					value={truncation.toString()}
-					onChange={(e) => setTruncation(parseInt(e.target.value, 10))}
-				/>
-			</h4>
+			<h4>Truncated at number of users</h4>
 			<p>
-				<Byline contributors={[A, B, C, D, E, F, G]} truncateAt={truncation} />
+				<Byline
+					contributors={[A, B, C, D, E, F, G]}
+					truncateAt={number('truncateAt', 4, { max: 7, min: 0, range: true })}
+				/>
 			</p>
 			<h4>No linking to users</h4>
 			<p>
@@ -80,5 +74,6 @@ storiesOf('components/Byline', module).add('default', () => {
 				<Byline contributors={[B, F, G, E]} ampersand />
 			</p>
 		</div>
-	);
-});
+	),
+	{ decorators: [withKnobs] },
+);
