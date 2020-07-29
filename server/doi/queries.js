@@ -78,13 +78,13 @@ const persistCrossrefDepositRecord = async (ids, depositJson) => {
 			crossrefDepositRecordId: crossrefDepositRecordId,
 			depositJson: depositJson,
 		});
-	} else {
-		const crossrefDepositRecord = await createCrossrefDepositRecord({ depositJson });
-
-		await targetModel.update({
-			crossrefDepositRecordId: crossrefDepositRecord.id,
-		});
 	}
+
+	const crossrefDepositRecord = await createCrossrefDepositRecord({ depositJson: depositJson });
+
+	await targetModel.update({
+		crossrefDepositRecordId: crossrefDepositRecord.id,
+	});
 
 	return targetModel;
 };
