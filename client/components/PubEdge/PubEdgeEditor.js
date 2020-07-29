@@ -31,9 +31,16 @@ const PubEdgeEditor = (props) => {
 	}, [publicationDate]);
 
 	const handlePublicationDateChange = (evt) => {
-		const { valueAsDate } = evt.target;
-		const nextPublicationDate = valueAsDate ? valueAsDate.toUTCString() : null;
-		onUpdateExternalPublication({ publicationDate: nextPublicationDate });
+		const { valueAsDate, value } = evt.target;
+		if (valueAsDate) {
+			const nextPublicationDate = valueAsDate.toUTCString();
+			onUpdateExternalPublication({ publicationDate: nextPublicationDate });
+		} else {
+			const nextPublicationDate = new Date(value);
+			if (!Number.isNaN(nextPublicationDate.valueOf())) {
+				onUpdateExternalPublication({ publicationDate: nextPublicationDate });
+			}
+		}
 	};
 
 	const renderPublicationDate = () => {
@@ -47,6 +54,7 @@ const PubEdgeEditor = (props) => {
 						type="date"
 						ref={dateInputRef}
 						onChange={handlePublicationDateChange}
+						placeholder="YYYY-MM-DD"
 					/>
 				</>
 			);
