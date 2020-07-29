@@ -42,7 +42,6 @@ const findPub = (pubId) =>
 	Pub.findOne({
 		where: { id: pubId },
 		...buildPubOptions({
-			getEdges: 'approved-only',
 			getEdgesOptions: {
 				includeCommunityForPubs: true,
 			},
