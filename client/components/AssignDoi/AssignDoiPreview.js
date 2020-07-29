@@ -16,22 +16,27 @@ const isBook = (doiBatch) => 'book' in doiBatch.body;
 const isJournal = (doiBatch) => 'journal' in doiBatch.body;
 const isConference = (doiBatch) => 'conference' in doiBatch.body;
 
-const renderRelations = (related_item) => {
+const renderRelations = (relatedItems) => {
 	return (
 		<dl>
-			{related_item.map(({ inter_work_relation, intra_work_relation }) => {
-				const { '#text': identifier, '@relationship-type': relationshipType } =
-					inter_work_relation || intra_work_relation;
+			{relatedItems.map(
+				({
+					'rel:inter_work_relation': interWorkRelation,
+					'rel:intra_work_relation': intraWorkRelation,
+				}) => {
+					const { '#text': identifier, '@relationship-type': relationshipType } =
+						interWorkRelation || intraWorkRelation;
 
-				return (
-					<React.Fragment key={identifier}>
-						<dt>Relationship Type</dt>
-						<dd>{relationshipType}</dd>
-						<dt>Identifier</dt>
-						<dd>{identifier}</dd>
-					</React.Fragment>
-				);
-			})}
+					return (
+						<React.Fragment key={identifier}>
+							<dt>Relationship Type</dt>
+							<dd>{relationshipType}</dd>
+							<dt>Identifier</dt>
+							<dd>{identifier}</dd>
+						</React.Fragment>
+					);
+				},
+			)}
 		</dl>
 	);
 };
@@ -89,7 +94,7 @@ const renderArticlePreview = (doi_batch) => {
 					titles,
 					publication_date,
 					contributors,
-					'rel:program': relProgram,
+					'rel:program': { related_item: relatedItems },
 				},
 				journal_metadata: {
 					full_title: journalFullTitle,
@@ -115,7 +120,7 @@ const renderArticlePreview = (doi_batch) => {
 				<dd>{journalDoi}</dd>
 			</dl>
 			<h6>Relationships</h6>
-			{relProgram && renderRelations(relProgram.related_item)}
+			{relProgram && renderRelations(relatedItems)}
 		</>
 	);
 };
@@ -134,7 +139,7 @@ const renderBookPreview = (doi_batch) => {
 					titles: contentTitles,
 					contributors,
 					publication_date: contentPublicationDate,
-					'rel:program': relProgram,
+					'rel:program': { related_item: relatedItems },
 				},
 			},
 		},
@@ -157,7 +162,7 @@ const renderBookPreview = (doi_batch) => {
 				{renderPublicationDate(contentPublicationDate)}
 			</dl>
 			<h6>Relationships</h6>
-			{relProgram && renderRelations(relProgram.related_item)}
+			{relProgram && renderRelations(relatedItems)}
 		</>
 	);
 };
@@ -166,7 +171,11 @@ const renderConferencePreview = (doi_batch) => {
 	const {
 		body: {
 			conference: {
-				conference_paper: { contributors, titles: paperTitles, 'rel:program': relProgram },
+				conference_paper: {
+					contributors,
+					titles: paperTitles,
+					'rel:program': { related_item: relatedItems },
+				},
 				event_metadata: {
 					conference_name,
 					conference_date: { '#text': conferenceDate },
@@ -198,7 +207,7 @@ const renderConferencePreview = (doi_batch) => {
 				{renderPublisher(publisher)}
 			</dl>
 			<h6>Relationships</h6>
-			{relProgram && renderRelations(relProgram.related_item)}
+			{relProgram && renderRelations(relatedItems)}
 		</>
 	);
 };

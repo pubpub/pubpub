@@ -14,6 +14,7 @@ export default ({
 }) => {
 	return {
 		journal_article: {
+			'@xmlns:rel': 'http://www.crossref.org/relations.xsd',
 			'@publication_type': 'full_text',
 			titles: {
 				title: title,

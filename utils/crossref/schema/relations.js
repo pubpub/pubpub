@@ -2,7 +2,7 @@ export default (relatedItems) => {
 	return {
 		'rel:program': {
 			'@name': 'relations',
-			related_item: relatedItems.map(
+			'rel:related_item': relatedItems.map(
 				({ isIntraWork, identifier, identifierType, relationshipType }) => {
 					const attrs = {
 						'@identifier-type': identifierType,
@@ -10,7 +10,11 @@ export default (relatedItems) => {
 						'#text': identifier,
 					};
 
-					return { [isIntraWork ? 'intra_work_relation' : 'inter_work_relation']: attrs };
+					return {
+						[isIntraWork
+							? 'rel:intra_work_relation'
+							: 'rel:inter_work_relation']: attrs,
+					};
 				},
 			),
 		},
