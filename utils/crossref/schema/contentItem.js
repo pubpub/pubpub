@@ -15,6 +15,7 @@ export default ({
 }) => {
 	return {
 		content_item: {
+			'@xmlns:rel': 'http://www.crossref.org/relations.xsd',
 			'@component_type': componentType,
 			...contributors(attributions),
 			titles: {
