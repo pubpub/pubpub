@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { EditableText, TagInput, InputGroup } from '@blueprintjs/core';
 import { Button as RKButton } from 'reakit/Button';
-import dateFormat from 'dateformat';
 
 import { externalPublicationType } from './constants';
+import { getHostnameForUrl } from './util';
 import PubEdgeLayout from './PubEdgeLayout';
 import PubEdgePlaceholderThumbnail from './PubEdgePlaceholderThumbnail';
 
@@ -21,21 +21,19 @@ const PubEdgeEditor = (props) => {
 		onUpdateExternalPublication,
 	} = props;
 
-	const [publicationDateString, setPublicationDateString] = useState(
-		dateFormat(publicationDate, 'yyyy-mm-dd'),
-	);
+	const dateInputRef = useRef();
 
 	useEffect(() => {
-		if (publicationDate) {
-			setPublicationDateString(dateFormat(publicationDate, 'yyyy-mm-dd'));
+		const { current: dateInput } = dateInputRef;
+		if (publicationDate && dateInput) {
+			dateInput.valueAsDate = new Date(publicationDate);
 		}
 	}, [publicationDate]);
 
 	const handlePublicationDateChange = (evt) => {
-		const nextDateString = evt.target.value;
-		onUpdateExternalPublication({
-			publicationDate: nextDateString ? new Date(nextDateString).toString() : null,
-		});
+		const { valueAsDate } = evt.target;
+		const nextPublicationDate = valueAsDate ? valueAsDate.toUTCString() : null;
+		onUpdateExternalPublication({ publicationDate: nextPublicationDate });
 	};
 
 	const renderPublicationDate = () => {
@@ -47,14 +45,16 @@ const PubEdgeEditor = (props) => {
 						small
 						className="editable-date"
 						type="date"
-						value={publicationDateString}
+						ref={dateInputRef}
 						onChange={handlePublicationDateChange}
 					/>
 				</>
 			);
 		}
+
 		const addPublicationDate = () =>
-			onUpdateExternalPublication({ publicationDate: new Date() });
+			onUpdateExternalPublication({ publicationDate: new Date().toUTCString() });
+
 		return (
 			<RKButton
 				as="a"
@@ -95,7 +95,7 @@ const PubEdgeEditor = (props) => {
 			metadataElements={[
 				renderPublicationDate(),
 				<a href={url} alt={title}>
-					{url}
+					{getHostnameForUrl(url)}
 				</a>,
 			]}
 			detailsElement={
