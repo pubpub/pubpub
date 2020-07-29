@@ -52,7 +52,7 @@ const PubEdgeEditor = (props) => {
 						small
 						className="editable-date"
 						type="date"
-						ref={dateInputRef}
+						inputRef={dateInputRef}
 						onChange={handlePublicationDateChange}
 						placeholder="YYYY-MM-DD"
 					/>
