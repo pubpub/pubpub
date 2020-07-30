@@ -222,29 +222,32 @@ class Doi extends Component {
 				{this.renderCollectionContextMessage()}
 				{this.renderDoi()}
 
-				{!hasExistingDeposit && (
-					<p>Use the button below to have PubPub deposit this work to Crossref.</p>
-				)}
-
-				{this.isDoiEditable() && (
-					<p>
-						PubPub will automatically assign a DOI if the suffix is left blank. Please
-						note that <strong>once submit, the DOI will no longer be editable.</strong>
-					</p>
-				)}
-
 				<FormGroup
 					helperText={
 						pubData.doi &&
 						!justSetDoi && (
-							<React.Fragment>
+							<>
 								If you&apos;ve changed aspects of this pub and wish to update its
 								DOI deposit, you can do so here. In the future, PubPub will resubmit
-								such changes automatically.
-							</React.Fragment>
+								such changes automatically.{' '}
+								{this.isDoiEditable() && (
+									<>
+										{' '}
+										PubPub will automatically assign a DOI if the suffix is left
+										blank. Please note that{' '}
+										<strong>
+											once submit, the DOI will no longer be editable.
+										</strong>
+									</>
+								)}
+							</>
 						)
 					}
 				>
+					{!hasExistingDeposit && (
+						<p>Use the button below to deposit this work to Crossref.</p>
+					)}
+
 					<AssignDoi
 						communityData={this.props.communityData}
 						onDeposit={this.handleDeposit}
@@ -267,30 +270,32 @@ class Doi extends Component {
 
 		if (this.isDoiEditable()) {
 			return (
-				<FormGroup helperText={helperText} intent={intent}>
-					<ControlGroup>
-						<InputGroup
-							label="DOI Suffix"
-							placeholder="Enter a DOI suffix..."
-							value={doiSuffix}
-							onChange={(e) => this.setState({ doiSuffix: e.target.value })}
-							leftElement={<span className="doi-prefix">{this.getDoiPrefix()}/</span>}
-							style={{ zIndex: 0 }}
-						/>
-						<Button
-							disabled={!doiSuffix || invalidDoi || deleting}
-							text="Update"
-							loading={updating}
-							onClick={this.handleUpdateDoiClick}
-						/>
-						<Button
-							disabled={!pubData.doi || invalidDoi || updating}
-							text="Delete"
-							loading={deleting}
-							onClick={this.handleDeleteDoiClick}
-							intent="danger"
-						/>
-					</ControlGroup>
+				<FormGroup
+					helperText={helperText}
+					intent={intent}
+					className="doi"
+					label="DOI Suffix"
+				>
+					<InputGroup
+						placeholder="Enter a DOI suffix..."
+						value={doiSuffix}
+						onChange={(e) => this.setState({ doiSuffix: e.target.value })}
+						leftElement={<span className="doi-prefix">{this.getDoiPrefix()}/</span>}
+						style={{ zIndex: 0 }}
+					/>
+					<Button
+						disabled={!doiSuffix || invalidDoi || deleting}
+						text="Update"
+						loading={updating}
+						onClick={this.handleUpdateDoiClick}
+					/>
+					<Button
+						disabled={!pubData.doi || invalidDoi || updating}
+						text="Delete"
+						loading={deleting}
+						onClick={this.handleDeleteDoiClick}
+						intent="danger"
+					/>
 				</FormGroup>
 			);
 		}
