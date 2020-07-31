@@ -150,15 +150,16 @@ const initialState = {
 	error: null,
 };
 
+const contentVersionItems = [
+	{ title: '(None)', key: 'none' },
+	{ title: 'Preprint', key: 'preprint' },
+	{ title: 'Version of Record', key: 'vor' },
+	{ title: 'Advance Manuscript', key: 'am' },
+];
+
 function AssignDoi(props) {
 	const { communityData, disabled, pubData, onPreview, onDeposit, onError, target } = props;
 	const [{ state, result, error }, dispatch] = useReducer(reducer, initialState);
-	const contentVersionItems = [
-		{ title: '(None)', key: 'none' },
-		{ title: 'Preprint', key: 'preprint' },
-		{ title: 'Version of Record', key: 'vor' },
-		{ title: 'Advance Manuscript', key: 'am' },
-	];
 
 	// Extract the content version from current result (i.e. preview).
 	let contentVersion = getDepositRecordContentVersion(result);
