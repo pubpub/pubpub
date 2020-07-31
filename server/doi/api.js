@@ -8,7 +8,9 @@ import { getPermissions } from './permissions';
 const previewOrDepositDoi = async (req, options = { deposit: false }) => {
 	const { deposit } = options;
 	const user = req.user || {};
-	const { target, communityId, collectionId, pubId } = deposit ? req.body : req.query;
+	const { target, communityId, collectionId, pubId, contentVersion } = deposit
+		? req.body
+		: req.query;
 	const requestIds = {
 		userId: user.id,
 		communityId: communityId,
@@ -29,6 +31,7 @@ const previewOrDepositDoi = async (req, options = { deposit: false }) => {
 			communityId: communityId,
 			collectionId: collectionId,
 			pubId: pubId,
+			contentVersion: contentVersion,
 		},
 		target,
 	);
