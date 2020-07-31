@@ -1,3 +1,10 @@
+/**
+ * This component picks dates in UTC time, e.g.: March 10, 2018 is `Fri Mar 10 2018 00:00:00 GMT+0`.
+ * This means that without special handling, the dates it provides may render unexpectedly in
+ * certain timezones, very possibly the one in which you are reading this code! It is the caller's
+ * responsibility to handle these dates correctly, perhaps by using the inUtcTime option of
+ * formatDate(), or the getLocalDateMatchingUtcCalendarDate() utility.
+ */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { InputGroup } from '@blueprintjs/core';

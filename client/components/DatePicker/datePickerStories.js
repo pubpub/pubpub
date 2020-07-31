@@ -12,7 +12,7 @@ const StatefulDatePicker = ({ initialDate }) => {
 		<div>
 			<DatePicker date={date} onSelectDate={setDate} />
 			<div>
-				Selected date: {date ? formatDate(new Date(date), { inUTCTime: true }) : 'none'}
+				Selected date: {date ? formatDate(new Date(date), { inUtcTime: true }) : 'none'}
 			</div>
 		</div>
 	);
