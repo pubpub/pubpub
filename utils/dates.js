@@ -39,3 +39,11 @@ export const timeAgoBaseProps = {
 		return `${value} ${newUnit} ${suffix}`;
 	},
 };
+
+export const getLocalDateMatchingUtcCalendarDate = (utcDate) => {
+	const formattedUtcDate = dateFormat(utcDate, 'UTC:yyyy-mm-dd');
+	const localDateOnSameDay = new Date(formattedUtcDate);
+	const returnDate = new Date(utcDate);
+	returnDate.setMinutes(returnDate.getMinutes() + localDateOnSameDay.getTimezoneOffset());
+	return returnDate;
+};
