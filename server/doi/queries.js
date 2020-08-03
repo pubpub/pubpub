@@ -98,7 +98,10 @@ const persistDoiData = (ids, dois) => {
 	return Promise.all(updates);
 };
 
-export const getDoiData = ({ communityId, collectionId, pubId, contentVersion }, doiTarget) =>
+export const getDoiData = (
+	{ communityId, collectionId, pubId, contentVersion, reviewType, reviewRecommendation },
+	doiTarget,
+) =>
 	Promise.all([
 		findCommunity(communityId),
 		collectionId && findCollection(collectionId),
@@ -113,6 +116,8 @@ export const getDoiData = ({ communityId, collectionId, pubId, contentVersion },
 				community: community,
 				pub: pub,
 				contentVersion: contentVersion,
+				reviewType: reviewType,
+				reviewRecommendation: reviewRecommendation,
 			},
 			doiTarget,
 		);

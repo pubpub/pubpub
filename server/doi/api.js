@@ -7,7 +7,15 @@ import { getPermissions } from './permissions';
 
 const previewOrDepositDoi = async (user, body, options = { deposit: false }) => {
 	const { deposit } = options;
-	const { target, communityId, collectionId, pubId, contentVersion } = body;
+	const {
+		target,
+		communityId,
+		collectionId,
+		pubId,
+		contentVersion,
+		reviewType,
+		reviewRecommendation,
+	} = body;
 	const requestIds = {
 		userId: user.id,
 		communityId: communityId,
@@ -29,6 +37,8 @@ const previewOrDepositDoi = async (user, body, options = { deposit: false }) => 
 			collectionId: collectionId,
 			pubId: pubId,
 			contentVersion: contentVersion,
+			reviewType: reviewType,
+			reviewRecommendation: reviewRecommendation,
 		},
 		target,
 	);

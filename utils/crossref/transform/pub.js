@@ -41,7 +41,7 @@ function getEdgeCrossrefRelationship(pubEdge, isInboundEdge = false) {
 }
 
 export default ({ globals, community }) => (pub) => {
-	const { timestamp, dois, contentVersion } = globals;
+	const { timestamp, dois, contentVersion, reviewType, reviewRecommendation } = globals;
 	const { crossrefDepositRecord, title, inboundEdges, outboundEdges } = pub;
 	const publicationDate = getPubPublishedDate(pub);
 	const relatedItems = outboundEdges
@@ -65,5 +65,7 @@ export default ({ globals, community }) => (pub) => {
 		contentVersion:
 			contentVersion ||
 			(crossrefDepositRecord ? getDepositRecordContentVersion(crossrefDepositRecord) : null),
+		reviewType: reviewType,
+		reviewRecommendation: reviewRecommendation,
 	};
 };

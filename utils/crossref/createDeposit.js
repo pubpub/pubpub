@@ -1,3 +1,5 @@
+import { RelationType } from 'utils/pubEdge/relations';
+
 /**
  * Code that builds a submission that we can send to Crossref. We build JSON here, and let that
  * get converted to equivalent XML downstream.
@@ -6,15 +8,38 @@ import doiBatch from './schema/doiBatch';
 import renderBook from './render/book';
 import renderConference from './render/conference';
 import renderJournal from './render/journal';
+import renderReview from './render/review';
 import renderPreprint from './render/preprint';
+import renderSupplement from './render/supplement';
 import createDoi from './createDoi';
 import getCollectionDoi from '../collections/getCollectionDoi';
 
-const renderBody = (context) => {
-	const { collection, globals } = context;
+const isPubPreprint = (pub) =>
+	Boolean(pub.outboundEdges.find((pubEdge) => pubEdge.relationType === RelationType.Preprint));
+const isPubPeerReview = (pub) =>
+	Boolean(
+		pub.outboundEdges.find(
+			(pubEdge) =>
+				pubEdge.relationType === RelationType.Review ||
+				pubEdge.relationType === RelationType.Rejoinder,
+		),
+	);
+const isPubSupplement = (pub) =>
+	Boolean(pub.outboundEdges.find((pubEdge) => pubEdge.relationType === RelationType.Supplement));
 
-	if (globals.contentVersion === 'preprint') {
+const renderBody = (context) => {
+	const { collection, pub, globals } = context;
+
+	if ((pub && isPubPreprint(pub)) || globals.contentVersion === 'preprint') {
 		return renderPreprint(context);
+	}
+
+	if (pub && isPubSupplement(pub)) {
+		return renderSupplement(context);
+	}
+
+	if (pub && isPubPeerReview(pub)) {
+		return renderReview(context);
 	}
 
 	if (collection) {
@@ -71,7 +96,7 @@ const getDois = (context, doiTarget) => {
 
 export default (context, doiTarget, dateForTimestamp) => {
 	checkDepositAssertions(context, doiTarget);
-	const { community, contentVersion } = context;
+	const { community, contentVersion, reviewType, reviewRecommendation } = context;
 	const timestamp = (dateForTimestamp || new Date()).getTime();
 	const doiBatchId = `${timestamp}_${community.id.slice(0, 8)}`;
 	const dois = getDois(context, doiTarget);
@@ -83,6 +108,8 @@ export default (context, doiTarget, dateForTimestamp) => {
 					dois: dois,
 					timestamp: timestamp,
 					contentVersion: contentVersion,
+					reviewType: reviewType,
+					reviewRecommendation: reviewRecommendation,
 				},
 			}),
 			doiBatchId: doiBatchId,
