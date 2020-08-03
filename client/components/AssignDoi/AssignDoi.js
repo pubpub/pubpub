@@ -167,10 +167,7 @@ function AssignDoi(props) {
 	let contentVersion = getDepositRecordContentVersion(result);
 
 	// Assume preprint if no content version is present and body consists of posted_content.
-	if (
-		!contentVersion &&
-		(result ? isPreprint(result) : isPreprint(pubData.crossrefDepositRecord))
-	) {
+	if (!contentVersion && isPreprint(result || pubData.crossrefDepositRecord)) {
 		contentVersion = 'preprint';
 	}
 
