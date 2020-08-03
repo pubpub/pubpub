@@ -1,6 +1,5 @@
 /**
- * Renders a submission for a journal article within a journal, possibly including journal issue
- * data derived from an optional collection.
+ * Renders a preprint for a journal article.
  */
 import postedContent from '../schema/postedContent';
 
