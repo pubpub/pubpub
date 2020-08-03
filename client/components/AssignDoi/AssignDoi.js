@@ -34,7 +34,7 @@ const defaultProps = {
 	onPreview: noop,
 };
 
-const AssignDoiState = {
+const AssignDoiStatus = {
 	Initial: 'initial',
 	Previewing: 'previewing',
 	Previewed: 'previewed',
@@ -51,20 +51,20 @@ const AssignDoiActionType = {
 	Error: 'error',
 };
 
-const buttonTextByState = {
-	[AssignDoiState.Initial]: 'Preview Deposit',
-	[AssignDoiState.Previewing]: 'Getting Preview',
-	[AssignDoiState.Previewed]: 'Submit Deposit',
-	[AssignDoiState.Depositing]: 'Depositing',
-	[AssignDoiState.Deposited]: 'DOI Deposited',
+const buttonTextByStatus = {
+	[AssignDoiStatus.Initial]: 'Preview Deposit',
+	[AssignDoiStatus.Previewing]: 'Getting Preview',
+	[AssignDoiStatus.Previewed]: 'Submit Deposit',
+	[AssignDoiStatus.Depositing]: 'Depositing',
+	[AssignDoiStatus.Deposited]: 'DOI Deposited',
 };
 
-const getButtonText = (state, deposit) => {
-	if (state === AssignDoiState.Initial && deposit) {
+const getButtonText = (status, deposit) => {
+	if (status === AssignDoiStatus.Initial && deposit) {
 		return 'Resubmit DOI deposit';
 	}
 
-	return buttonTextByState[state];
+	return buttonTextByStatus[status];
 };
 
 export function reducer(state, action) {
@@ -72,70 +72,72 @@ export function reducer(state, action) {
 		case AssignDoiActionType.FetchPreview:
 			if (
 				!(
-					state.state === AssignDoiState.Initial ||
-					state.state === AssignDoiState.Error ||
+					state.status === AssignDoiStatus.Initial ||
+					state.status === AssignDoiStatus.Error ||
 					// re-fetch preview
-					state.state === AssignDoiState.Previewed
+					state.status === AssignDoiStatus.Previewed
 				)
 			) {
 				return state;
 			}
 
 			return {
-				state: AssignDoiState.Previewing,
+				status: AssignDoiStatus.Previewing,
 				result: null,
 				error: null,
 			};
 		case AssignDoiActionType.FetchPreviewSuccess:
-			if (state.state !== AssignDoiState.Previewing) {
+			if (state.status !== AssignDoiStatus.Previewing) {
 				return state;
 			}
 
 			return {
-				state: AssignDoiState.Previewed,
+				status: AssignDoiStatus.Previewed,
 				result: action.payload,
 				error: null,
 			};
 		case AssignDoiActionType.UpdateContentVersion:
-			if (state.state !== AssignDoiState.Previewed) {
+			if (state.status !== AssignDoiStatus.Previewed) {
 				return state;
 			}
+
+			const result = { ...state.result };
+
+			// Not totally necessary here to create a full deep copy of the
+			// object since we're not using a change detection algorithm
+			// like `react-redux`, but this is technically a "Bad Practice":
+			setDepositRecordContentVersion(
+				result,
+				action.payload === 'none' ? null : action.payload,
+			);
 
 			return {
 				...state,
-				state: AssignDoiState.Previewed,
-				// Not totally necessary here to create a full deep copy of the
-				// object since we're not using a change detection algorithm
-				// like `react-redux`, but this is technically a "Bad Practice":
-				result: {
-					...setDepositRecordContentVersion(
-						state.result,
-						action.payload === 'none' ? null : action.payload,
-					),
-				},
+				status: AssignDoiStatus.Previewed,
+				result: result,
 			};
 		case AssignDoiActionType.FetchDeposit:
-			if (state.state !== AssignDoiState.Previewed) {
+			if (state.status !== AssignDoiStatus.Previewed) {
 				return state;
 			}
 
 			return {
-				state: AssignDoiState.Depositing,
+				status: AssignDoiStatus.Depositing,
 				error: null,
 			};
 		case AssignDoiActionType.FetchDepositSuccess:
-			if (state.state !== AssignDoiState.Depositing) {
+			if (state.status !== AssignDoiStatus.Depositing) {
 				return state;
 			}
 
 			return {
-				state: AssignDoiState.Deposited,
+				status: AssignDoiStatus.Deposited,
 				result: action.payload,
 				error: null,
 			};
 		case AssignDoiActionType.Error:
 			return {
-				state: AssignDoiState.Initial,
+				status: AssignDoiStatus.Initial,
 				error: action.payload,
 			};
 		default:
@@ -144,7 +146,7 @@ export function reducer(state, action) {
 }
 
 const initialState = {
-	state: AssignDoiState.Initial,
+	status: AssignDoiStatus.Initial,
 	preview: null,
 	result: null,
 	error: null,
@@ -153,13 +155,13 @@ const initialState = {
 const contentVersionItems = [
 	{ title: '(None)', key: 'none' },
 	{ title: 'Preprint', key: 'preprint' },
-	{ title: 'Version of Record', key: 'vor' },
 	{ title: 'Advance Manuscript', key: 'am' },
+	{ title: 'Version of Record', key: 'vor' },
 ];
 
 function AssignDoi(props) {
 	const { communityData, disabled, pubData, onPreview, onDeposit, onError, target } = props;
-	const [{ state, result, error }, dispatch] = useReducer(reducer, initialState);
+	const [{ status, result, error }, dispatch] = useReducer(reducer, initialState);
 
 	// Extract the content version from current result (i.e. preview).
 	let contentVersion = getDepositRecordContentVersion(result);
@@ -246,9 +248,9 @@ function AssignDoi(props) {
 
 	let handleButtonClick;
 
-	if (state === AssignDoiState.Initial) {
+	if (status === AssignDoiStatus.Initial) {
 		handleButtonClick = handlePreviewClick;
-	} else if (state === AssignDoiState.Previewed) {
+	} else if (status === AssignDoiStatus.Previewed) {
 		handleButtonClick = handleDepositClick;
 	}
 
@@ -257,15 +259,16 @@ function AssignDoi(props) {
 			<InputField error={error && 'There was an error depositing the work.'}>
 				<Button
 					disabled={disabled || !handleButtonClick}
-					text={getButtonText(state, pubData.crossrefDepositRecord)}
+					text={getButtonText(status, pubData.crossrefDepositRecord)}
 					loading={
-						state === AssignDoiState.Previewing || state === AssignDoiState.Depositing
+						status === AssignDoiStatus.Previewing ||
+						status === AssignDoiStatus.Depositing
 					}
 					onClick={handleButtonClick}
-					icon={state === AssignDoiState.Deposited && 'tick'}
+					icon={status === AssignDoiStatus.Deposited && 'tick'}
 				/>
 			</InputField>
-			{state === AssignDoiState.Previewed && (
+			{status === AssignDoiStatus.Previewed && (
 				<InputField label="Content Version">
 					<Select
 						items={contentVersionItems}
@@ -288,7 +291,7 @@ function AssignDoi(props) {
 					</Select>
 				</InputField>
 			)}
-			{state === AssignDoiState.Previewed && (
+			{status === AssignDoiStatus.Previewed && (
 				<>
 					<p>
 						Review the information below, then click the "Submit Deposit" button to

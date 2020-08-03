@@ -244,6 +244,7 @@ function AssignDoiPreview(props) {
 		},
 		depositXml,
 	} = crossrefDepositRecord;
+	const contentVersion = getDepositRecordContentVersion(crossrefDepositRecord);
 
 	const renderPreviewTab = () => {
 		return (
@@ -254,8 +255,12 @@ function AssignDoiPreview(props) {
 					<dd>{communityDoi}</dd>
 					<dt>Pub</dt>
 					<dd>{doi || pubDoi}</dd>
-					<dt>Content Version</dt>
-					<dd>{getDepositRecordContentVersion(crossrefDepositRecord)}</dd>
+					{contentVersion && contentVersion !== 'none' && (
+						<>
+							<dt>Content Version</dt>
+							<dd>{contentVersion}</dd>
+						</>
+					)}
 				</dl>
 				{isJournal(crossrefDepositRecord) && renderArticlePreview(body)}
 				{isBook(crossrefDepositRecord) && renderBookPreview(body)}

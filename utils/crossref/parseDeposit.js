@@ -45,8 +45,6 @@ export const setDepositRecordContentVersion = (depositRecord, contentVersion) =>
 	} else {
 		doiData.resource['@content_version'] = contentVersion;
 	}
-
-	return depositRecord;
 };
 
 export const getDepositRecordContentVersion = (depositRecord) => {
