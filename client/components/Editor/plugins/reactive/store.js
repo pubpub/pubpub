@@ -31,7 +31,7 @@ class CellStore {
 	}
 
 	update(node, view, transactionState, attrTransactionState, updateValue) {
-		const nextValue = this.cellFn({
+		const nextValue = this.cellFn(this.value, {
 			node: node,
 			view: view,
 			transactionState: transactionState,

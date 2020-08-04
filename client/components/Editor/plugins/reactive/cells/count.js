@@ -13,7 +13,7 @@ const maybeInitializeTransactionState = (attrTransactionState) => {
 };
 
 export const countCell = (nodeFingerprintFn) => {
-	return ({ node, attrTransactionState }) => {
+	return (_, { node, attrTransactionState }) => {
 		const { highestCount, countsMap } = maybeInitializeTransactionState(attrTransactionState);
 		const hasFingerprint = !!nodeFingerprintFn;
 		const fingerprint = nodeFingerprintFn && serializeFingerprint(nodeFingerprintFn(node));
