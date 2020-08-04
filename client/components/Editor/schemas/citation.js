@@ -1,13 +1,21 @@
 import { getCitationInlineLabel } from '../utils/citation';
+import { countCell } from '../plugins/reactive/cells/count';
 
 export default {
 	citation: {
 		atom: true,
+		reactive: true,
 		attrs: {
 			value: { default: '' },
 			unstructuredValue: { default: '' },
-			count: { default: 0 },
-			label: { default: '' },
+			id: { default: '' },
+			count: {
+				default: 0,
+				reactive: countCell(({ attrs }) => [
+					attrs.unstructuredValue,
+					attrs.structuredValue,
+				]),
+			},
 			customLabel: { default: '' },
 		},
 		parseDOM: [
@@ -18,6 +26,7 @@ export default {
 						return false;
 					}
 					return {
+						id: node.getAttribute('id'),
 						value: node.getAttribute('data-value') || '',
 						unstructuredValue: node.getAttribute('data-unstructured-value') || '',
 						count: Number(node.getAttribute('data-count')) || undefined,

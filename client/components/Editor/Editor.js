@@ -7,6 +7,7 @@ import { getPlugins } from './plugins';
 import { collabDocPluginKey } from './plugins/collaborative';
 import { getChangeObject } from './plugins/onChange';
 import { renderStatic, buildSchema } from './utils';
+import { createReactiveNodeViews } from './plugins/reactive/nodeView';
 
 require('./styles/base.scss');
 
@@ -87,6 +88,7 @@ const Editor = (props) => {
 			{ mount: editorRef.current },
 			{
 				state: state,
+				nodeViews: createReactiveNodeViews(schema.current),
 				editable: (editorState) => {
 					const collaborativePluginState = collabDocPluginKey.getState(editorState) || {};
 					if (
@@ -109,6 +111,7 @@ const Editor = (props) => {
 				handleScrollToSelection: props.onScrollToSelection,
 			},
 		);
+		window.view = view;
 		// Sometimes the view will call its dispatchTransaction from the constructor, but the
 		// function itself references the `view` variable bound above. So we need to set this
 		// prop immediately after it's constructed.
