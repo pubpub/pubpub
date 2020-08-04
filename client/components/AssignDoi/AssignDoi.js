@@ -11,8 +11,8 @@ import {
 	setDepositRecordReviewType,
 	getDepositRecordReviewRecommendation,
 	setDepositRecordReviewRecommendation,
-	isPreprint,
-	isReview,
+	isPreprintDeposit,
+	isPeerReviewDeposit,
 	getDepositTypeTitle,
 } from 'utils/crossref/parseDeposit';
 import { apiFetch } from 'client/utils/apiFetch';
@@ -235,7 +235,7 @@ function AssignDoi(props) {
 	let contentVersion = getDepositRecordContentVersion(result);
 
 	// Assume preprint if no content version is present and body consists of posted_content.
-	if (!contentVersion && isPreprint(result || pubData.crossrefDepositRecord)) {
+	if (!contentVersion && isPreprintDeposit(result || pubData.crossrefDepositRecord)) {
 		contentVersion = 'preprint';
 	}
 
@@ -378,7 +378,7 @@ function AssignDoi(props) {
 						</Select>
 					</InputField>
 
-					{isReview(result) && (
+					{isPeerReviewDeposit(result) && (
 						<div className="dropdowns">
 							<InputField label="Review Type">
 								<Select

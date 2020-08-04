@@ -45,14 +45,8 @@ export default ({ globals, community }) => (pub) => {
 	const { crossrefDepositRecord, title, inboundEdges, outboundEdges } = pub;
 	const publicationDate = getPubPublishedDate(pub);
 	const relatedItems = outboundEdges
-		.map((pubEdge) => {
-			return getEdgeCrossrefRelationship(pubEdge);
-		})
-		.concat(
-			inboundEdges.map((pubEdge) => {
-				return getEdgeCrossrefRelationship(pubEdge, true);
-			}),
-		);
+		.map(getEdgeCrossrefRelationship)
+		.concat(inboundEdges.map((pubEdge) => getEdgeCrossrefRelationship(pubEdge, true)));
 
 	return {
 		title: title,

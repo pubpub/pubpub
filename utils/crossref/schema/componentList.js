@@ -1,28 +1,26 @@
 import contributors from './contributors';
 import doiData from './doiData';
 import date from './helpers/date';
-import relations from './relations';
 
 export default ({
-	// attributions,
-	// language,
+	attributions,
+	language,
 	doi,
-	// publicationDate,
+	publicationDate,
 	resourceUrl,
 	timestamp,
 	title,
-	relatedItems,
 }) => ({
 	component_list: {
-		'@xmlns:rel': 'http://www.crossref.org/relations.xsd',
-		sa_component: {
-			'@parent_doi': '',
+		component: {
+			'@language': language,
+			'@parent_relation': 'isPartOf',
+			titles: {
+				title: title,
+			},
+			...contributors(attributions),
+			...date('publication_date', publicationDate, 'print'),
+			...doiData(doi, timestamp, resourceUrl),
 		},
-		titles: {
-			title: title,
-		},
-		// ...date('posted_date', publicationDate, 'print'),
-		...(relatedItems.length > 0 && relations(relatedItems)),
-		...doiData(doi, timestamp, resourceUrl),
 	},
 });

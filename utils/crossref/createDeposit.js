@@ -1,4 +1,4 @@
-import { RelationType } from 'utils/pubEdge/relations';
+import { RelationType, findParentPubByRelationTypes } from 'utils/pubEdge/relations';
 
 /**
  * Code that builds a submission that we can send to Crossref. We build JSON here, and let that
@@ -14,32 +14,30 @@ import renderSupplement from './render/supplement';
 import createDoi from './createDoi';
 import getCollectionDoi from '../collections/getCollectionDoi';
 
-const isPubPreprint = (pub) =>
-	Boolean(pub.outboundEdges.find((pubEdge) => pubEdge.relationType === RelationType.Preprint));
-const isPubPeerReview = (pub) =>
-	Boolean(
-		pub.outboundEdges.find(
-			(pubEdge) =>
-				pubEdge.relationType === RelationType.Review ||
-				pubEdge.relationType === RelationType.Rejoinder,
-		),
-	);
-const isPubSupplement = (pub) =>
-	Boolean(pub.outboundEdges.find((pubEdge) => pubEdge.relationType === RelationType.Supplement));
-
 const renderBody = (context) => {
 	const { collection, pub, globals } = context;
 
-	if ((pub && isPubPreprint(pub)) || globals.contentVersion === 'preprint') {
-		return renderPreprint(context);
-	}
+	if (pub) {
+		const preprintOf = findParentPubByRelationTypes(pub, RelationType.Preprint);
+		const supplementOf = findParentPubByRelationTypes(pub, RelationType.Supplement);
+		const reviewOf = findParentPubByRelationTypes(
+			pub,
+			RelationType.Review,
+			RelationType.Rejoinder,
+		);
 
-	if (pub && isPubSupplement(pub)) {
-		return renderSupplement(context);
-	}
+		if (preprintOf || globals.contentVersion === 'preprint') {
+			return renderPreprint(context);
+		}
 
-	if (pub && isPubPeerReview(pub)) {
-		return renderReview(context);
+		if (supplementOf && supplementOf.doi) {
+			context.parentDoi = supplementOf.doi;
+			return renderSupplement(context);
+		}
+
+		if (reviewOf) {
+			return renderReview(context);
+		}
 	}
 
 	if (collection) {
@@ -50,6 +48,7 @@ const renderBody = (context) => {
 			return renderConference(context);
 		}
 	}
+
 	return renderJournal(context);
 };
 

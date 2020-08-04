@@ -126,25 +126,22 @@ export const setDepositRecordReviewRecommendation = (depositRecord, recommendati
 export const getDepositBody = (crossrefDepositRecord) =>
 	crossrefDepositRecord.depositJson.deposit.doi_batch.body;
 
-export const isBook = (crossrefDepositRecord) =>
-	crossrefDepositRecord && 'book' in getDepositBody(crossrefDepositRecord);
-export const isJournal = (crossrefDepositRecord) =>
-	crossrefDepositRecord && 'journal' in getDepositBody(crossrefDepositRecord);
-export const isConference = (crossrefDepositRecord) =>
-	crossrefDepositRecord && 'conference' in getDepositBody(crossrefDepositRecord);
-export const isPreprint = (crossrefDepositRecord) =>
-	crossrefDepositRecord && 'posted_content' in getDepositBody(crossrefDepositRecord);
-export const isReview = (crossrefDepositRecord) =>
-	crossrefDepositRecord && 'peer_review' in getDepositBody(crossrefDepositRecord);
-export const isSupplementaryMaterial = (crossrefDepositRecord) =>
-	crossrefDepositRecord && 'component_list' in getDepositBody(crossrefDepositRecord);
+const createIsDeposit = (key) => (crossrefDepositRecord) =>
+	crossrefDepositRecord && key in getDepositBody(crossrefDepositRecord);
+
+export const isBookDeposit = createIsDeposit('book');
+export const isJournalDeposit = createIsDeposit('journal');
+export const isConferenceDeposit = createIsDeposit('conference');
+export const isPreprintDeposit = createIsDeposit('posted_content');
+export const isPeerReviewDeposit = createIsDeposit('peer_review');
+export const isStandaloneComponentDeposit = createIsDeposit('sa_component');
 
 export const getDepositTypeTitle = (crossrefDepositRecord) => {
-	if (isBook(crossrefDepositRecord)) return 'Book';
-	if (isJournal(crossrefDepositRecord)) return 'Journal';
-	if (isConference(crossrefDepositRecord)) return 'Conference';
-	if (isPreprint(crossrefDepositRecord)) return 'Preprint';
-	if (isReview(crossrefDepositRecord)) return 'Peer Review';
-	if (isSupplementaryMaterial(crossrefDepositRecord)) return 'Supplementary Material';
+	if (isBookDeposit(crossrefDepositRecord)) return 'Book';
+	if (isJournalDeposit(crossrefDepositRecord)) return 'Journal';
+	if (isConferenceDeposit(crossrefDepositRecord)) return 'Conference';
+	if (isPreprintDeposit(crossrefDepositRecord)) return 'Preprint';
+	if (isPeerReviewDeposit(crossrefDepositRecord)) return 'Peer Review';
+	if (isStandaloneComponentDeposit(crossrefDepositRecord)) return 'Supplement';
 	return '';
 };

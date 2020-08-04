@@ -76,3 +76,28 @@ const createRelationTypeEnum = () => {
 
 export const relationTypes = Object.keys(relationTypeDefinitions);
 export const RelationType = createRelationTypeEnum();
+
+export const findParentPubFromEdges = (edges, relationTypes, inbound) => {
+	for (let i = 0; i < edges.length; i++) {
+		const { pubIsParent, pub, targetPub, relationType } = edges[i];
+
+		if (inbound ? pubIsParent : !pubIsParent) {
+			for (let j = 0; j < relationTypes.length; j++) {
+				if (relationType === relationTypes[j]) {
+					return inbound ? pub : targetPub;
+				}
+			}
+		}
+	}
+
+	return null;
+};
+
+export const findParentPubByRelationTypes = (pub, ...relationTypes) => {
+	const { inboundEdges, outboundEdges } = pub;
+
+	return (
+		findParentPubFromEdges(inboundEdges, relationTypes, true) ||
+		findParentPubFromEdges(outboundEdges, relationTypes)
+	);
+};
