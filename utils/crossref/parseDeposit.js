@@ -49,10 +49,17 @@ export const getDepositRecordContentVersion = (depositRecord) => {
 		return null;
 	}
 
+	if (doiData.resource['@content_version'] === 'none') {
+		throw new Error('What th efuck');
+	}
+
 	return doiData.resource['@content_version'];
 };
 
 export const setDepositRecordContentVersion = (depositRecord, contentVersion) => {
+	if (contentVersion === 'none') {
+		throw new Error('What th efuck');
+	}
 	const {
 		depositJson: { deposit },
 	} = depositRecord;

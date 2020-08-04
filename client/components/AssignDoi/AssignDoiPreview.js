@@ -237,7 +237,14 @@ const renderPreprintPreview = (body) => {
 
 const renderPeerReviewPreview = (body) => {
 	const {
-		peer_review: { contributors, titles, 'rel:program': relationships, review_date },
+		peer_review: {
+			'@type': type,
+			'@recommendation': recommendation,
+			contributors,
+			titles,
+			'rel:program': relationships,
+			review_date,
+		},
 	} = body;
 
 	return (
@@ -247,6 +254,18 @@ const renderPeerReviewPreview = (body) => {
 				{renderTitles(titles)}
 				{renderContributors(contributors)}
 				{renderPublicationDate(review_date, 'Review Date')}
+				{type && (
+					<>
+						<dt>Review Type</dt>
+						<dd>{type}</dd>
+					</>
+				)}
+				{recommendation && (
+					<>
+						<dt>Review Recommendation</dt>
+						<dd>{recommendation}</dd>
+					</>
+				)}
 			</dl>
 			{renderRelationships(relationships)}
 		</>

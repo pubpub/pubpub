@@ -25,7 +25,7 @@ export default ({
 		titles: {
 			title: title,
 		},
-		...date('review_date', publicationDate),
+		...date('review_date', publicationDate, null),
 		...(relatedItems.length > 0 && relations(relatedItems)),
 		...doiData(doi, timestamp, resourceUrl, contentVersion),
 	},

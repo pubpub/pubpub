@@ -7,9 +7,12 @@ export const makeComponentId = (community, collection, pub) =>
 		.map((result) => result || 'none')
 		.join('-');
 
-export default ({ community, target }) => {
+export default ({ community, target, pubEdge }) => {
 	const communityPart = splitId(community);
 	const targetPart = target ? `.${splitId(target)}` : '';
 	const component = communityPart + targetPart;
-	return `${choosePrefixByCommunityId(community.id)}/${component}`;
+
+	return `${choosePrefixByCommunityId(community.id)}/${component}${
+		pubEdge ? `/${splitId(pubEdge)}` : ''
+	}`;
 };

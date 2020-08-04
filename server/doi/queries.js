@@ -123,13 +123,18 @@ export const getDoiData = (
 		);
 	});
 
-export const setDoiData = ({ communityId, collectionId, pubId, contentVersion }, doiTarget) =>
+export const setDoiData = (
+	{ communityId, collectionId, pubId, contentVersion, reviewType, reviewRecommendation },
+	doiTarget,
+) =>
 	getDoiData(
 		{
 			communityId: communityId,
 			collectionId: collectionId,
 			pubId: pubId,
 			contentVersion: contentVersion,
+			reviewType: reviewType,
+			reviewRecommendation: reviewRecommendation,
 		},
 		doiTarget,
 	).then((depositJson) => {

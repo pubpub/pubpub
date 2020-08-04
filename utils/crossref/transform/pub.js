@@ -1,7 +1,6 @@
 import { pubUrl } from 'utils/canonicalUrls';
 import { getPubPublishedDate } from 'utils/pub/pubDates';
 import { relationTypeDefinitions } from 'utils/pubEdge/relations';
-import { getDepositRecordContentVersion } from 'utils/crossref/parseDeposit';
 
 import transformAttributions from './attributions';
 
@@ -42,7 +41,7 @@ function getEdgeCrossrefRelationship(pubEdge, isInboundEdge = false) {
 
 export default ({ globals, community }) => (pub) => {
 	const { timestamp, dois, contentVersion, reviewType, reviewRecommendation } = globals;
-	const { crossrefDepositRecord, title, inboundEdges, outboundEdges } = pub;
+	const { title, inboundEdges, outboundEdges } = pub;
 	const publicationDate = getPubPublishedDate(pub);
 	const relatedItems = outboundEdges
 		.map(getEdgeCrossrefRelationship)
@@ -56,9 +55,7 @@ export default ({ globals, community }) => (pub) => {
 		resourceUrl: pubUrl(community, pub),
 		doi: dois.pub,
 		relatedItems: relatedItems,
-		contentVersion:
-			contentVersion ||
-			(crossrefDepositRecord ? getDepositRecordContentVersion(crossrefDepositRecord) : null),
+		contentVersion: contentVersion,
 		reviewType: reviewType,
 		reviewRecommendation: reviewRecommendation,
 	};
