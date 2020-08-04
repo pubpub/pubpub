@@ -98,6 +98,7 @@ export const renderStatic = (schema, nodeArray) => {
 				return renderReactFromSpec(MarkComponent.toDOM(curr), currIndex, prev);
 			}, node.text);
 		}
+
 		const NodeComponent = schema.nodes[node.type].spec;
 		const output = renderReactFromSpec(
 			NodeComponent.toDOM({
