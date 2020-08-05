@@ -11,7 +11,7 @@ import renderJournal from './render/journal';
 import renderReview from './render/review';
 import renderPreprint from './render/preprint';
 import renderSupplement from './render/supplement';
-import createDoi from './createDoi';
+import createDoi, { createComponentDoi } from './createDoi';
 import getCollectionDoi from '../collections/getCollectionDoi';
 
 const renderBody = (context) => {
@@ -81,26 +81,48 @@ const checkDepositAssertions = (context, doiTarget) => {
 	}
 };
 
+const assertParentPubHasDoi = (parentPub) => {
+	if (!parentPub.doi) {
+		throw new Error('Parent Pub must have DOI when creating a DOI for a Supplement.');
+	}
+
+	return true;
+};
+
 const getDois = (context, doiTarget) => {
 	const { pub, collection, community, pubEdge } = context;
 	const dois = {};
+
 	dois.community = createDoi({ community: community });
-	dois.pub =
-		pub &&
-		(doiTarget === 'pub'
-			? pub.doi ||
-			  createDoi({
-					community: community,
-					collection: collection,
-					target: pub,
-					pubEdge: pubEdge,
-			  })
-			: pub.doi);
+
+	if (pub) {
+		if (doiTarget !== 'pub') {
+			dois.pub = pub.doi;
+		} else {
+			// Create component DOIs for supplementary material.
+			if (pubEdge && pubEdge.relationType === RelationType.Supplement) {
+				const parentPub = pubEdge.pubIsParent ? pubEdge.pub : pubEdge.targetPub;
+				assertParentPubHasDoi(parentPub);
+				doi.pub = createComponentDoi(parentPub, pubEdge);
+			} else {
+				dois.pub =
+					pub.doi ||
+					createDoi({
+						community: community,
+						collection: collection,
+						target: pub,
+						pubEdge: pubEdge,
+					});
+			}
+		}
+	}
+
 	dois.collection =
 		collection &&
 		(getCollectionDoi(collection) ||
 			(doiTarget === 'collection' &&
 				createDoi({ community: community, target: collection })));
+
 	return dois;
 };
 
@@ -123,7 +145,10 @@ export default (context, doiTarget, dateForTimestamp) => {
 	}
 
 	const contextWithPubEdge = { ...context, pubEdge: pubEdge };
-	const dois = getDois(contextWithPubEdge, doiTarget);
+	const dois = getDois(
+		pubEdge && pubEdge.relationType === RelationType.Supplement ? contextWithPubEdge : context,
+		doiTarget,
+	);
 	const deposit = removeEmptyKeys(
 		doiBatch({
 			body: renderBody({

@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Callout, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
@@ -14,6 +14,7 @@ import {
 	setDepositRecordReviewRecommendation,
 	isPreprintDeposit,
 	isPeerReviewDeposit,
+	isStandaloneComponentDeposit,
 	getDepositTypeTitle,
 } from 'utils/crossref/parseDeposit';
 import { apiFetch } from 'client/utils/apiFetch';
@@ -61,7 +62,7 @@ const AssignDoiActionType = {
 };
 
 const buttonTextByStatus = {
-	[AssignDoiStatus.Initial]: 'Preview Deposit',
+	[AssignDoiStatus.Initial]: 'Deposit to Crossref',
 	[AssignDoiStatus.Previewing]: 'Getting Preview',
 	[AssignDoiStatus.Previewed]: 'Submit Deposit',
 	[AssignDoiStatus.Depositing]: 'Depositing',
@@ -349,38 +350,50 @@ function AssignDoi(props) {
 		handleButtonClick = handleDepositClick;
 	}
 
+	const priorPubDoi = useRef(pubData.doi);
+
+	// Re-load the preview when the Pub's DOI changes.
+	useEffect(() => {
+		if (priorPubDoi.current !== pubData.doi && status === AssignDoiStatus.Previewed) {
+			fetchPreview();
+		}
+		priorPubDoi.current = pubData.doi;
+	}, [pubData.doi, status]);
+
 	return (
 		<div className="assign-doi-component">
 			{(status === AssignDoiStatus.Previewed || status === AssignDoiStatus.Previewing) && (
 				<>
 					<Callout intent="primary" title="Review Deposit">
 						This work is being deposited as a{' '}
-						<strong>{getDepositTypeTitle(crossrefDepositRecord)}</strong> based on its
-						Connections, primary collection, or selected Content Version. Review the
-						information below, then click the "Submit Deposit" button to submit the
+						<strong>{getDepositTypeTitle(crossrefDepositRecord) || '...'}</strong> based
+						on its Connections, primary collection, or selected Content Version. Review
+						the information below, then click the "Submit Deposit" button to submit the
 						deposit to Crossref.
 					</Callout>
-					<InputField label="Content Version">
-						<Select
-							items={contentVersionItems}
-							itemRenderer={(item, { handleClick }) => (
-								<MenuItem
-									key={item.key}
-									active={item === activeContentVersionItem}
-									onClick={handleClick}
-									text={<span>{item.title}</span>}
+					{!isStandaloneComponentDeposit(crossrefDepositRecord) && (
+						<InputField label="Content Version">
+							<Select
+								items={contentVersionItems}
+								itemRenderer={(item, { handleClick }) => (
+									<MenuItem
+										key={item.key}
+										active={item === activeContentVersionItem}
+										onClick={handleClick}
+										text={<span>{item.title}</span>}
+									/>
+								)}
+								onItemSelect={handleContentVersionItemSelect}
+								filterable={false}
+								popoverProps={{ minimal: true }}
+							>
+								<Button
+									text={<span>{activeContentVersionItem.title}</span>}
+									rightIcon="caret-down"
 								/>
-							)}
-							onItemSelect={handleContentVersionItemSelect}
-							filterable={false}
-							popoverProps={{ minimal: true }}
-						>
-							<Button
-								text={<span>{activeContentVersionItem.title}</span>}
-								rightIcon="caret-down"
-							/>
-						</Select>
-					</InputField>
+							</Select>
+						</InputField>
+					)}
 
 					{isPeerReviewDeposit(crossrefDepositRecord) && (
 						<div className="dropdowns">

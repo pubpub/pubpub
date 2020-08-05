@@ -4,6 +4,7 @@ const doiDataPaths = [
 	['journal', 'journal_article'],
 	['posted_content'],
 	['peer_review'],
+	['sa_component', 'component_list', 'component'],
 ];
 
 export const getDoiData = ({ doi_batch: { body } }) => {
@@ -49,17 +50,10 @@ export const getDepositRecordContentVersion = (depositRecord) => {
 		return null;
 	}
 
-	if (doiData.resource['@content_version'] === 'none') {
-		throw new Error('What th efuck');
-	}
-
 	return doiData.resource['@content_version'];
 };
 
 export const setDepositRecordContentVersion = (depositRecord, contentVersion) => {
-	if (contentVersion === 'none') {
-		throw new Error('What th efuck');
-	}
 	const {
 		depositJson: { deposit },
 	} = depositRecord;
@@ -144,9 +138,9 @@ export const isPeerReviewDeposit = createIsDeposit('peer_review');
 export const isStandaloneComponentDeposit = createIsDeposit('sa_component');
 
 export const getDepositTypeTitle = (crossrefDepositRecord) => {
-	if (isBookDeposit(crossrefDepositRecord)) return 'Book';
-	if (isJournalDeposit(crossrefDepositRecord)) return 'Journal';
-	if (isConferenceDeposit(crossrefDepositRecord)) return 'Conference';
+	if (isBookDeposit(crossrefDepositRecord)) return 'Book Chapter';
+	if (isJournalDeposit(crossrefDepositRecord)) return 'Journal Article';
+	if (isConferenceDeposit(crossrefDepositRecord)) return 'Conference Proceeding';
 	if (isPreprintDeposit(crossrefDepositRecord)) return 'Preprint';
 	if (isPeerReviewDeposit(crossrefDepositRecord)) return 'Peer Review';
 	if (isStandaloneComponentDeposit(crossrefDepositRecord)) return 'Supplement';

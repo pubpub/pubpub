@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { FormGroup, Button, InputGroup } from '@blueprintjs/core';
+import { FormGroup, Button, InputGroup, Callout } from '@blueprintjs/core';
 
 import {
 	choosePrefixByCommunityId,
@@ -10,6 +10,7 @@ import {
 import { apiFetch } from 'client/utils/apiFetch';
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { isDoi } from 'utils/crossref/parseDoi';
+import { RelationType, findParentEdgeByRelationType } from 'utils/pubEdge/relations';
 
 import { AssignDoi } from 'components';
 
@@ -89,6 +90,11 @@ class Doi extends Component {
 		updatePubData({ doi: doi });
 	}
 
+	findSupplementTo() {
+		const { pubData } = this.props;
+		return findParentEdgeByRelationType(pubData, RelationType.Supplement);
+	}
+
 	async updateDoi(doi, pendingStateKey, fallback) {
 		const { updating, deleting } = this.state;
 		const { communityData, pubData, updatePubData } = this.props;
@@ -151,9 +157,12 @@ class Doi extends Component {
 			canIssueDoi &&
 			// a deposit has not been submitted yet for this work
 			!(justSetDoi || pubData.crossrefDepositRecordId) &&
+			// a deposit record does not exist OR the deposit record does exist and is not a peer review
+			!this.findSupplementTo() &&
 			// and the community has a custom, hardcoded DOI prefix
 			managedDoiPrefixes.includes(doiPrefix) &&
-			doiPrefix !== PUBPUB_DOI_PREFIX
+			true
+			// doiPrefix !== PUBPUB_DOI_PREFIX
 		);
 	}
 
@@ -184,28 +193,50 @@ class Doi extends Component {
 
 		if (justSetDoi) {
 			return (
-				<React.Fragment>
+				<Callout intent="success" title="Success!">
 					<p>Successfully submitted a DOI registration for this pub.</p>
 					<p>
 						Registration may take a few hours to complete in Crossref&apos;s system. If
 						DOI URLs do not work immediately, the registration is likely still
 						processing.
 					</p>
-				</React.Fragment>
+				</Callout>
 			);
 		}
 
-		if (!pubData.doi) {
-			return <p>A DOI can be registered for each Pub by admins of this community.</p>;
-		}
+		return (
+			<>
+				{this.findSupplementTo() && (
+					<Callout intent="warning">
+						The DOI for this Pub is not editable because it is a{' '}
+						<strong>Supplement</strong> to another Pub.
+					</Callout>
+				)}
+				{!pubData.doi && this.isDoiEditable() && (
+					<p>A DOI can be set for each Pub by admins of this community.</p>
+				)}
+				{pubData.crossrefDepositRecordId && <p>DOIs have been registered for this pub.</p>}
+			</>
+		);
+	}
 
-		return <p>DOIs have been registered for this pub.</p>;
+	disabledDueToParentWithoutDoi() {
+		const supplementTo = this.findSupplementTo();
+		return (
+			supplementTo &&
+			!(supplementTo.pubIsParent ? supplementTo.pub : supplementTo.targetPub).doi
+		);
+	}
+
+	disabledDueToNoReleases() {
+		const { pubData } = this.props;
+		return pubData.releases.length === 0;
 	}
 
 	renderContent() {
 		const { pubData, canIssueDoi } = this.props;
 		const { justSetDoi } = this.state;
-		const hasExistingDeposit = justSetDoi || Boolean(pubData.crossrefDepositRecordId);
+		const supplementTo = this.findSupplementTo();
 
 		if (!canIssueDoi) {
 			return (
@@ -244,15 +275,26 @@ class Doi extends Component {
 						)
 					}
 				>
-					{!hasExistingDeposit && (
-						<p>Use the button below to deposit this work to Crossref.</p>
+					{this.disabledDueToParentWithoutDoi() && (
+						<Callout intent="warning">
+							This Pub cannot be deposited to Crossref because it is a{' '}
+							<strong>Supplement</strong> and its parent Pub does not have a DOI.
+						</Callout>
 					)}
-
+					{this.disabledDueToNoReleases() && (
+						<Callout intent="warning">
+							This Pub cannot be deposited to Crossref because it has no published
+							releases.
+						</Callout>
+					)}
 					<AssignDoi
 						communityData={this.props.communityData}
 						onDeposit={this.handleDeposit}
 						pubData={this.props.pubData}
 						target="pub"
+						disabled={
+							this.disabledDueToParentWithoutDoi() || this.disabledDueToNoReleases()
+						}
 					/>
 				</FormGroup>
 			</>
@@ -300,14 +342,16 @@ class Doi extends Component {
 		}
 
 		return (
-			pubData.doi && (
-				<p>
-					Pub DOI:{' '}
-					<a className="doi-link" href={`https://doi.org/${pubData.doi}`}>
-						{pubData.doi}
-					</a>
-				</p>
-			)
+			<>
+				{pubData.doi && (
+					<p>
+						Pub DOI:{' '}
+						<a className="doi-link" href={`https://doi.org/${pubData.doi}`}>
+							{pubData.doi}
+						</a>
+					</p>
+				)}
+			</>
 		);
 	}
 
