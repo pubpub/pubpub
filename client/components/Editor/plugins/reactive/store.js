@@ -44,6 +44,7 @@ class CellStore {
 		return [nextValue, isUpdated];
 	}
 }
+
 class NodeStore {
 	constructor(nodeType, reactiveAttrsDefinition) {
 		this.reactiveAttrs = {};
