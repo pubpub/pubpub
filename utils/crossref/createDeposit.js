@@ -89,7 +89,7 @@ const assertParentPubHasDoi = (parentPub) => {
 	return true;
 };
 
-const getDois = (context, doiTarget) => {
+export const getDois = (context, doiTarget) => {
 	const { pub, collection, community, pubEdge } = context;
 	const dois = {};
 

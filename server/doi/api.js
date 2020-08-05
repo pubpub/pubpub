@@ -2,8 +2,19 @@ import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
 import xmlbuilder from 'xmlbuilder';
 
-import { getDoiData, setDoiData } from './queries';
+import { getDoiData, setDoiData, generateDoi } from './queries';
 import { getPermissions } from './permissions';
+
+const assertUserAuthenticated = async (target, requestIds) => {
+	const permissions = await getPermissions(requestIds);
+	const isAuthenticated =
+		(target === 'pub' && permissions.pub) ||
+		(target === 'collection' && permissions.collection);
+
+	if (!isAuthenticated) {
+		throw new ForbiddenError();
+	}
+};
 
 const previewOrDepositDoi = async (user, body, options = { deposit: false }) => {
 	const { deposit } = options;
@@ -22,14 +33,8 @@ const previewOrDepositDoi = async (user, body, options = { deposit: false }) => 
 		collectionId: collectionId || null,
 		pubId: pubId || null,
 	};
-	const permissions = await getPermissions(requestIds);
-	const isAuthenticated =
-		(target === 'pub' && permissions.pub) ||
-		(target === 'collection' && permissions.collection);
 
-	if (!isAuthenticated) {
-		throw new ForbiddenError();
-	}
+	assertUserAuthenticated(target, requestIds);
 
 	const depositJson = await (deposit ? setDoiData : getDoiData)(
 		{
@@ -61,9 +66,29 @@ app.get(
 		const depositJson = await previewOrDepositDoi(req.user || {}, req.query);
 		const depositXml = xmlbuilder.create(depositJson, { headless: true }).end({ pretty: true });
 
-		return res.status(201).json({
+		return res.status(200).json({
 			depositJson: depositJson,
 			depositXml: depositXml,
+		});
+	}),
+);
+
+app.get(
+	'/api/generateDoi',
+	wrap(async (req, res) => {
+		const user = req.user || {};
+		const { communityId, collectionId, pubId, target } = req.query;
+		const requestIds = {
+			userId: user.id,
+			communityId: communityId,
+			collectionId: collectionId || null,
+			pubId: pubId || null,
+		};
+
+		assertUserAuthenticated(target, requestIds);
+
+		return res.status(200).json({
+			dois: await generateDoi({ communityId, collectionId, pubId }, target),
 		});
 	}),
 );

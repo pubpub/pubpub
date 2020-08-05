@@ -38,12 +38,14 @@ class Doi extends Component {
 			error: false,
 			justSetDoi: false,
 			deleting: false,
+			generating: false,
 			success: false,
 			updating: false,
 		};
 
 		this.handleDeposit = this.handleDeposit.bind(this);
 		this.handleUpdateDoiClick = this.handleUpdateDoiClick.bind(this);
+		this.handleGenerateDoiClick = this.handleGenerateDoiClick.bind(this);
 		this.handleDeleteDoiClick = this.handleDeleteDoiClick.bind(this);
 	}
 
@@ -139,6 +141,45 @@ class Doi extends Component {
 		this.updateDoi('', 'deleting', this.state.doiSuffix);
 	}
 
+	async handleGenerateDoiClick() {
+		const { updating, deleting, generating } = this.state;
+		const { communityData, pubData } = this.props;
+
+		if (updating || deleting || generating) {
+			return;
+		}
+
+		this.setState({
+			generating: true,
+			error: false,
+			success: false,
+		});
+
+		try {
+			const params = new URLSearchParams({
+				target: 'pub',
+				communityId: communityData.id,
+				pubId: pubData.id,
+			});
+
+			// Fetch a DOI preview which contains a newly generated DOI.
+			const response = await apiFetch(`/api/generateDoi?${params.toString()}`);
+
+			this.setState({
+				generating: false,
+				doiSuffix: extractDoiSuffix(response.dois.pub, communityData),
+				error: false,
+				success: false,
+			});
+		} catch (err) {
+			this.setState({
+				generating: false,
+				error: true,
+				success: false,
+			});
+		}
+	}
+
 	async handleUpdateDoiClick() {
 		const { pubData, communityData } = this.props;
 		const doi = this.getFullDoi();
@@ -161,8 +202,7 @@ class Doi extends Component {
 			!this.findSupplementTo() &&
 			// and the community has a custom, hardcoded DOI prefix
 			managedDoiPrefixes.includes(doiPrefix) &&
-			true
-			// doiPrefix !== PUBPUB_DOI_PREFIX
+			doiPrefix !== PUBPUB_DOI_PREFIX
 		);
 	}
 
@@ -303,7 +343,7 @@ class Doi extends Component {
 
 	renderDoi() {
 		const { pubData } = this.props;
-		const { doiSuffix, updating, deleting } = this.state;
+		const { doiSuffix, updating, generating, deleting } = this.state;
 		const fullDoi = this.getFullDoi();
 		const invalidDoi = doiSuffix && !isDoi(fullDoi);
 		const intent = this.getIntent(invalidDoi);
@@ -325,13 +365,19 @@ class Doi extends Component {
 						style={{ zIndex: 0 }}
 					/>
 					<Button
-						disabled={!doiSuffix || invalidDoi || deleting}
+						disabled={!doiSuffix || invalidDoi || deleting || generating}
 						text="Update"
 						loading={updating}
 						onClick={this.handleUpdateDoiClick}
 					/>
 					<Button
-						disabled={!pubData.doi || invalidDoi || updating}
+						disabled={invalidDoi || deleting || updating}
+						text="Generate"
+						loading={generating}
+						onClick={this.handleGenerateDoiClick}
+					/>
+					<Button
+						disabled={!pubData.doi || invalidDoi || updating || generating}
 						text="Delete"
 						loading={deleting}
 						onClick={this.handleDeleteDoiClick}

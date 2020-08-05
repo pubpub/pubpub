@@ -1,4 +1,5 @@
-import createDeposit from 'utils/crossref/createDeposit';
+import createDeposit, { getDois } from 'utils/crossref/createDeposit';
+
 import {
 	Collection,
 	CollectionAttribution,
@@ -151,3 +152,20 @@ export const setDoiData = (
 				return { deposit: deposit, dois: dois };
 			});
 	});
+
+export const generateDoi = async ({ communityId, collectionId, pubId }, target) => {
+	const [community, collection, pub] = await Promise.all([
+		findCommunity(communityId),
+		collectionId && findCollection(collectionId),
+		pubId && findPub(pubId),
+	]);
+
+	return getDois(
+		{
+			pub: pub,
+			community: community,
+			collection: collection,
+		},
+		target,
+	);
+};
