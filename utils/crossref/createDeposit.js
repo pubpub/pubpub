@@ -141,6 +141,22 @@ export const getDois = (context, doiTarget) => {
 	return dois;
 };
 
+const filterForMutuallyApprovedEdges = (pubEdges) => {
+	let i = 0;
+
+	while (i < pubEdges.length) {
+		const { approvedByTarget, relationType } = pubEdges[i];
+		if (
+			(relationType === RelationType.Supplement || relationType === RelationType.Preprint) &&
+			!approvedByTarget
+		) {
+			pubEdges.splice(i, 1);
+		} else {
+			i++;
+		}
+	}
+};
+
 export default (context, doiTarget, dateForTimestamp) => {
 	checkDepositAssertions(context, doiTarget);
 
@@ -151,7 +167,14 @@ export default (context, doiTarget, dateForTimestamp) => {
 	let pubEdge;
 
 	if (pub) {
+		// Remove unapproved PubEdges for RelationTypes that require bidirectional
+		// approval.
+		filterForMutuallyApprovedEdges(pub.inboundEdges);
+		filterForMutuallyApprovedEdges(pub.outboundEdges);
+
+		// Find the primary relationship (in order of Preprint > Supplement > Review).
 		pubEdge = findParentEdgeByRelationTypes(pub, [
+			pub,
 			RelationType.Preprint,
 			RelationType.Supplement,
 			RelationType.Review,

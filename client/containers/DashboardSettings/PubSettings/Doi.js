@@ -187,7 +187,7 @@ class Doi extends Component {
 		this.updateDoi(doi, 'updating', currentDoiSuffix);
 	}
 
-	isDoiEditable() {
+	isDoiEditableWithoutRelations() {
 		const { canIssueDoi, pubData } = this.props;
 		const { justSetDoi } = this.state;
 		const doiPrefix = this.getDoiPrefix();
@@ -199,10 +199,17 @@ class Doi extends Component {
 			// a deposit has not been submitted yet for this work
 			!(justSetDoi || pubData.crossrefDepositRecordId) &&
 			// the Pub is not a supplement to another work
-			!this.findSupplementTo() &&
 			// and the community has a custom, hardcoded DOI prefix
 			managedDoiPrefixes.includes(doiPrefix) &&
 			doiPrefix !== PUBPUB_DOI_PREFIX
+		);
+	}
+
+	isDoiEditable() {
+		return (
+			this.isDoiEditableWithoutRelations() &&
+			// the Pub is not a supplement to another work
+			!this.findSupplementTo()
 		);
 	}
 
@@ -248,7 +255,7 @@ class Doi extends Component {
 			<>
 				{!pubData.doi && <p>A DOI can be set for each Pub by admins of this community.</p>}
 				{pubData.crossrefDepositRecordId && <p>This Pub has been deposited to Crossref.</p>}
-				{this.findSupplementTo() && (
+				{this.isDoiEditableWithoutRelations() && this.findSupplementTo() && (
 					<Callout intent="warning">
 						The DOI for this Pub is not editable because it is a{' '}
 						<strong>Supplement</strong> to another Pub.
@@ -274,7 +281,6 @@ class Doi extends Component {
 	renderContent() {
 		const { pubData, canIssueDoi } = this.props;
 		const { justSetDoi } = this.state;
-		const supplementTo = this.findSupplementTo();
 
 		if (!canIssueDoi) {
 			return (
