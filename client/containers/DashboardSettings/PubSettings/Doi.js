@@ -246,16 +246,14 @@ class Doi extends Component {
 
 		return (
 			<>
+				{!pubData.doi && <p>A DOI can be set for each Pub by admins of this community.</p>}
+				{pubData.crossrefDepositRecordId && <p>This Pub has been deposited to Crossref.</p>}
 				{this.findSupplementTo() && (
 					<Callout intent="warning">
 						The DOI for this Pub is not editable because it is a{' '}
 						<strong>Supplement</strong> to another Pub.
 					</Callout>
 				)}
-				{!pubData.doi && this.isDoiEditable() && (
-					<p>A DOI can be set for each Pub by admins of this community.</p>
-				)}
-				{pubData.crossrefDepositRecordId && <p>DOIs have been registered for this pub.</p>}
 			</>
 		);
 	}
