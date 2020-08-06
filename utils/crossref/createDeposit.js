@@ -103,7 +103,7 @@ export const getDois = (context, doiTarget) => {
 			if (pubEdge && pubEdge.relationType === RelationType.Supplement) {
 				const parentPub = pubEdge.pubIsParent ? pubEdge.pub : pubEdge.targetPub;
 				assertParentPubHasDoi(parentPub);
-				doi.pub = createComponentDoi(parentPub, pubEdge);
+				dois.pub = createComponentDoi(parentPub, pubEdge);
 			} else {
 				dois.pub =
 					pub.doi ||

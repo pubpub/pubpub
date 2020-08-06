@@ -198,7 +198,7 @@ class Doi extends Component {
 			canIssueDoi &&
 			// a deposit has not been submitted yet for this work
 			!(justSetDoi || pubData.crossrefDepositRecordId) &&
-			// a deposit record does not exist OR the deposit record does exist and is not a peer review
+			// the Pub is not a supplement to another work
 			!this.findSupplementTo() &&
 			// and the community has a custom, hardcoded DOI prefix
 			managedDoiPrefixes.includes(doiPrefix) &&
