@@ -1,4 +1,4 @@
-import { RelationType, findParentEdgeByRelationType } from 'utils/pubEdge/relations';
+import { RelationType, findParentEdgeByRelationTypes } from 'utils/pubEdge/relations';
 
 /**
  * Code that builds a submission that we can send to Crossref. We build JSON here, and let that
@@ -89,45 +89,61 @@ const assertParentPubHasDoi = (parentPub) => {
 	return true;
 };
 
-export const getDois = (context, doiTarget) => {
+const getPubDoiPart = (context, doiTarget) => {
 	const { pub, collection, community, pubEdge } = context;
-	const dois = {};
 
-	dois.community = createDoi({ community: community });
+	let doi;
 
-	if (pub) {
-		if (doiTarget !== 'pub') {
-			dois.pub = pub.doi;
+	if (doiTarget !== 'pub') {
+		doi = pub.doi;
+	} else {
+		// Create component DOIs for supplementary material.
+		if (pubEdge && pubEdge.relationType === RelationType.Supplement) {
+			const parentPub = pubEdge.pubIsParent ? pubEdge.pub : pubEdge.targetPub;
+			assertParentPubHasDoi(parentPub);
+			doi = createComponentDoi(parentPub, pubEdge);
 		} else {
-			// Create component DOIs for supplementary material.
-			if (pubEdge && pubEdge.relationType === RelationType.Supplement) {
-				const parentPub = pubEdge.pubIsParent ? pubEdge.pub : pubEdge.targetPub;
-				assertParentPubHasDoi(parentPub);
-				dois.pub = createComponentDoi(parentPub, pubEdge);
-			} else {
-				dois.pub =
-					pub.doi ||
-					createDoi({
-						community: community,
-						collection: collection,
-						target: pub,
-						pubEdge: pubEdge,
-					});
-			}
+			doi =
+				pub.doi ||
+				createDoi({
+					community: community,
+					collection: collection,
+					target: pub,
+					pubEdge: pubEdge,
+				});
 		}
 	}
 
-	dois.collection =
+	return { pub: doi };
+};
+
+const getCollectionDoiPart = (context, doiTarget) => {
+	const { collection, community } = context;
+	const doi =
 		collection &&
 		(getCollectionDoi(collection) ||
 			(doiTarget === 'collection' &&
 				createDoi({ community: community, target: collection })));
+
+	return {
+		collection: doi,
+	};
+};
+
+export const getDois = (context, doiTarget) => {
+	const { community } = context;
+	const dois = {
+		community: createDoi({ community: community }),
+		...getPubDoiPart(context, doiTarget),
+		...getCollectionDoiPart(context, doiTarget),
+	};
 
 	return dois;
 };
 
 export default (context, doiTarget, dateForTimestamp) => {
 	checkDepositAssertions(context, doiTarget);
+
 	const { community, pub, contentVersion, reviewType, reviewRecommendation } = context;
 	const timestamp = (dateForTimestamp || new Date()).getTime();
 	const doiBatchId = `${timestamp}_${community.id.slice(0, 8)}`;
@@ -135,13 +151,12 @@ export default (context, doiTarget, dateForTimestamp) => {
 	let pubEdge;
 
 	if (pub) {
-		pubEdge = findParentEdgeByRelationType(
-			pub,
+		pubEdge = findParentEdgeByRelationTypes(pub, [
 			RelationType.Preprint,
 			RelationType.Supplement,
 			RelationType.Review,
 			RelationType.Rejoinder,
-		);
+		]);
 	}
 
 	const contextWithPubEdge = { ...context, pubEdge: pubEdge };

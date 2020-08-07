@@ -94,7 +94,7 @@ const findParentEdge = (pubEdges, relationTypes, inbound) => {
 	return null;
 };
 
-export const findParentEdgeByRelationType = (pub, ...relationTypes) => {
+export const findParentEdgeByRelationTypes = (pub, relationTypes) => {
 	const { inboundEdges, outboundEdges } = pub;
 
 	return (

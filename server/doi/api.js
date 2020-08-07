@@ -34,7 +34,7 @@ const previewOrDepositDoi = async (user, body, options = { deposit: false }) => 
 		pubId: pubId || null,
 	};
 
-	assertUserAuthenticated(target, requestIds);
+	await assertUserAuthenticated(target, requestIds);
 
 	const depositJson = await (deposit ? setDoiData : getDoiData)(
 		{
@@ -85,7 +85,7 @@ app.get(
 			pubId: pubId || null,
 		};
 
-		assertUserAuthenticated(target, requestIds);
+		await assertUserAuthenticated(target, requestIds);
 
 		return res.status(200).json({
 			dois: await generateDoi({ communityId, collectionId, pubId }, target),

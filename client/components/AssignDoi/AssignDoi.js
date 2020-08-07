@@ -1,10 +1,9 @@
 import React, { useReducer, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Callout, MenuItem } from '@blueprintjs/core';
-import { Select } from '@blueprintjs/select';
+import { Button, Callout } from '@blueprintjs/core';
 import pickBy from 'lodash.pickby';
 
-import { InputField } from 'components';
+import { InputField, Menu, MenuItem, DropdownButton, MenuButton } from 'components';
 import {
 	getDepositRecordContentVersion,
 	setDepositRecordContentVersion,
@@ -371,73 +370,61 @@ function AssignDoi(props) {
 						the information below, then click the "Submit Deposit" button to submit the
 						deposit to Crossref.
 					</Callout>
+
 					{!isStandaloneComponentDeposit(crossrefDepositRecord) && (
 						<InputField label="Content Version">
-							<Select
-								items={contentVersionItems}
-								itemRenderer={(item, { handleClick }) => (
+							<MenuButton
+								buttonContent={activeContentVersionItem.title}
+								buttonProps={{ rightIcon: 'caret-down' }}
+								aria-label="content-version"
+							>
+								{contentVersionItems.map((item) => (
 									<MenuItem
 										key={item.key}
 										active={item === activeContentVersionItem}
-										onClick={handleClick}
-										text={<span>{item.title}</span>}
+										onClick={() => handleContentVersionItemSelect(item)}
+										text={item.title}
 									/>
-								)}
-								onItemSelect={handleContentVersionItemSelect}
-								filterable={false}
-								popoverProps={{ minimal: true }}
-							>
-								<Button
-									text={<span>{activeContentVersionItem.title}</span>}
-									rightIcon="caret-down"
-								/>
-							</Select>
+								))}
+							</MenuButton>
 						</InputField>
 					)}
 
 					{isPeerReviewDeposit(crossrefDepositRecord) && (
 						<div className="dropdowns">
 							<InputField label="Review Type">
-								<Select
-									items={reviewTypeItems}
-									itemRenderer={(item, { handleClick }) => (
+								<MenuButton
+									buttonContent={activeReviewTypeItem.title}
+									buttonProps={{ rightIcon: 'caret-down' }}
+									aria-label="review-type"
+								>
+									{reviewTypeItems.map((item) => (
 										<MenuItem
 											key={item.key}
 											active={item === activeReviewTypeItem}
-											onClick={handleClick}
+											onClick={() => handleReviewTypeItemSelect(item)}
 											text={<span>{item.title}</span>}
 										/>
-									)}
-									onItemSelect={handleReviewTypeItemSelect}
-									filterable={false}
-									popoverProps={{ minimal: true }}
-								>
-									<Button
-										text={<span>{activeReviewTypeItem.title}</span>}
-										rightIcon="caret-down"
-									/>
-								</Select>
+									))}
+								</MenuButton>
 							</InputField>
 							<InputField label="Review Recommendation">
-								<Select
-									items={reviewRecommendationItems}
-									itemRenderer={(item, { handleClick }) => (
+								<MenuButton
+									buttonContent={activeReviewRecommendationItem.title}
+									buttonProps={{ rightIcon: 'caret-down' }}
+									aria-label="review-type"
+								>
+									{reviewRecommendationItems.map((item) => (
 										<MenuItem
 											key={item.key}
 											active={item === activeReviewRecommendationItem}
-											onClick={handleClick}
+											onClick={() =>
+												handleReviewRecommendationItemSelect(item)
+											}
 											text={<span>{item.title}</span>}
 										/>
-									)}
-									onItemSelect={handleReviewRecommendationItemSelect}
-									filterable={false}
-									popoverProps={{ minimal: true }}
-								>
-									<Button
-										text={<span>{activeReviewRecommendationItem.title}</span>}
-										rightIcon="caret-down"
-									/>
-								</Select>
+									))}
+								</MenuButton>
 							</InputField>
 						</div>
 					)}

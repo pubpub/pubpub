@@ -10,7 +10,7 @@ import {
 import { apiFetch } from 'client/utils/apiFetch';
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { isDoi } from 'utils/crossref/parseDoi';
-import { RelationType, findParentEdgeByRelationType } from 'utils/pubEdge/relations';
+import { RelationType, findParentEdgeByRelationTypes } from 'utils/pubEdge/relations';
 
 import { AssignDoi } from 'components';
 
@@ -94,7 +94,7 @@ class Doi extends Component {
 
 	findSupplementTo() {
 		const { pubData } = this.props;
-		return findParentEdgeByRelationType(pubData, RelationType.Supplement);
+		return findParentEdgeByRelationTypes(pubData, [RelationType.Supplement]);
 	}
 
 	async updateDoi(doi, pendingStateKey, fallback) {

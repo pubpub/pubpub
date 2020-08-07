@@ -138,11 +138,19 @@ export const isPeerReviewDeposit = createIsDeposit('peer_review');
 export const isStandaloneComponentDeposit = createIsDeposit('sa_component');
 
 export const getDepositTypeTitle = (crossrefDepositRecord) => {
-	if (isBookDeposit(crossrefDepositRecord)) return 'Book Chapter';
-	if (isJournalDeposit(crossrefDepositRecord)) return 'Journal Article';
-	if (isConferenceDeposit(crossrefDepositRecord)) return 'Conference Proceeding';
-	if (isPreprintDeposit(crossrefDepositRecord)) return 'Preprint';
-	if (isPeerReviewDeposit(crossrefDepositRecord)) return 'Peer Review';
-	if (isStandaloneComponentDeposit(crossrefDepositRecord)) return 'Supplement';
+	switch (true) {
+		case isBookDeposit(crossrefDepositRecord):
+			return 'Book Chapter';
+		case isJournalDeposit(crossrefDepositRecord):
+			return 'Journal Article';
+		case isConferenceDeposit(crossrefDepositRecord):
+			return 'Conference Proceeding';
+		case isPreprintDeposit(crossrefDepositRecord):
+			return 'Preprint';
+		case isPeerReviewDeposit(crossrefDepositRecord):
+			return 'Peer Review';
+		case isStandaloneComponentDeposit(crossrefDepositRecord):
+			return 'Supplement';
+	}
 	return '';
 };
