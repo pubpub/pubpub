@@ -6,6 +6,12 @@ import createDepositPartial from '../createDeposit';
 
 import community from './data/community';
 import pub from './data/pub';
+import pubIsReviewOf from './data/pubIsReviewOf';
+import pubHasReview from './data/pubHasReview';
+import pubIsSupplementTo from './data/pubIsSupplementTo';
+import pubHasSupplement from './data/pubHasSupplement';
+import pubIsPreprintOf from './data/pubIsPreprintOf';
+import pubHasPreprint from './data/pubHasPreprint';
 import makeCollectionPub from './data/makeCollectionPub';
 import { book, issue, conference } from './data/collections';
 
@@ -145,6 +151,133 @@ describe('createDeposit', () => {
 					collection: stripDatesFromCollectionMetadata(conference),
 				},
 				'collection',
+			),
+		).toMatchSnapshot();
+	});
+
+	it('creates relationships where the resource is a URL', () => {
+		const [edge] = pubIsReviewOf.outboundEdges;
+		const { doi, ...targetPubProps } = edge.targetPub;
+
+		expect(
+			createDeposit(
+				{
+					pub: {
+						...pubIsReviewOf,
+						outboundEdges: [
+							{
+								...edge,
+								targetPub: targetPubProps,
+							},
+						],
+					},
+				},
+				'pub',
+			),
+		).toMatchSnapshot();
+	});
+
+	it('creates relationships where the resource is a DOI', () => {
+		expect(
+			createDeposit(
+				{
+					pub: pubIsReviewOf,
+				},
+				'pub',
+			),
+		).toMatchSnapshot();
+	});
+
+	it('applies content version to the content version attribute of the resource element', () => {
+		expect(
+			createDeposit(
+				{
+					pub: pub,
+					contentVersion: 'am',
+				},
+				'pub',
+			),
+		).toMatchSnapshot();
+	});
+
+	it('creates a peer_review deposit for a pub with an isReviewOf connection', () => {
+		expect(
+			createDeposit(
+				{
+					pub: pubIsReviewOf,
+					reviewType: 'foo',
+					reviewRecommendation: 'bar',
+				},
+				'pub',
+			),
+		).toMatchSnapshot();
+	});
+
+	it('creates a journal_article deposit for a pub with a hasReview connection', () => {
+		expect(
+			createDeposit(
+				{
+					pub: pubHasReview,
+					reviewType: 'foo',
+					reviewRecommendation: 'bar',
+				},
+				'pub',
+			),
+		).toMatchSnapshot();
+	});
+
+	it('creates a sa_component deposit for a pub with a isSupplementTo connection', () => {
+		expect(
+			createDeposit(
+				{
+					pub: pubIsSupplementTo,
+				},
+				'pub',
+			),
+		).toMatchSnapshot();
+	});
+
+	it('creates a journal_article deposit for a pub with a hasSupplement connection', () => {
+		expect(
+			createDeposit(
+				{
+					pub: pubHasSupplement,
+				},
+				'pub',
+			),
+		).toMatchSnapshot();
+	});
+
+	it('creates a posted_content deposit for a pub with an isPreprintOf connection', () => {
+		expect(
+			createDeposit(
+				{
+					pub: pubIsPreprintOf,
+				},
+				'pub',
+			),
+		).toMatchSnapshot();
+	});
+
+	it('creates a posted_content deposit for a pub with a hasPreprint connection', () => {
+		expect(
+			createDeposit(
+				{
+					pub: pubHasPreprint,
+				},
+				'pub',
+			),
+		).toMatchSnapshot();
+	});
+
+	it('creates a posted_content deposit for a pub when contentVersion is "preprint"', () => {
+		expect(
+			createDeposit(
+				{
+					pub: pub,
+					contentVersion: 'preprint',
+				},
+				'pub',
 			),
 		).toMatchSnapshot();
 	});
