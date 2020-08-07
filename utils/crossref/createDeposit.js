@@ -103,14 +103,24 @@ const getPubDoiPart = (context, doiTarget) => {
 			assertParentPubHasDoi(parentPub);
 			doi = createComponentDoi(parentPub, pubEdge);
 		} else {
-			doi =
-				pub.doi ||
-				createDoi({
-					community: community,
-					collection: collection,
-					target: pub,
-					pubEdge: pubEdge,
-				});
+			// Create component DOIs for supplementary material.
+			if (pubEdge && pubEdge.relationType === RelationType.Supplement) {
+				const parentPub = pubEdge.pubIsParent ? pubEdge.pub : pubEdge.targetPub;
+				const childPub = pubEdge.pubIsParent ? pubEdge.targetPub : pubEdge.pub;
+
+				assertParentPubHasDoi(parentPub);
+
+				doi = createComponentDoi(parentPub, childPub);
+			} else {
+				doi =
+					pub.doi ||
+					createDoi({
+						community: community,
+						collection: collection,
+						target: pub,
+						pubEdge: pubEdge,
+					});
+			}
 		}
 	}
 
