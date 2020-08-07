@@ -96,32 +96,22 @@ const getPubDoiPart = (context, doiTarget) => {
 
 	if (doiTarget !== 'pub') {
 		doi = pub.doi;
-	} else {
+	} else if (pubEdge && pubEdge.relationType === RelationType.Supplement) {
 		// Create component DOIs for supplementary material.
-		if (pubEdge && pubEdge.relationType === RelationType.Supplement) {
-			const parentPub = pubEdge.pubIsParent ? pubEdge.pub : pubEdge.targetPub;
-			assertParentPubHasDoi(parentPub);
-			doi = createComponentDoi(parentPub, pubEdge);
-		} else {
-			// Create component DOIs for supplementary material.
-			if (pubEdge && pubEdge.relationType === RelationType.Supplement) {
-				const parentPub = pubEdge.pubIsParent ? pubEdge.pub : pubEdge.targetPub;
-				const childPub = pubEdge.pubIsParent ? pubEdge.targetPub : pubEdge.pub;
+		const parentPub = pubEdge.pubIsParent ? pubEdge.pub : pubEdge.targetPub;
 
-				assertParentPubHasDoi(parentPub);
+		assertParentPubHasDoi(parentPub);
 
-				doi = createComponentDoi(parentPub, childPub);
-			} else {
-				doi =
-					pub.doi ||
-					createDoi({
-						community: community,
-						collection: collection,
-						target: pub,
-						pubEdge: pubEdge,
-					});
-			}
-		}
+		doi = createComponentDoi(parentPub, pub);
+	} else {
+		doi =
+			pub.doi ||
+			createDoi({
+				community: community,
+				collection: collection,
+				target: pub,
+				pubEdge: pubEdge,
+			});
 	}
 
 	return { pub: doi };

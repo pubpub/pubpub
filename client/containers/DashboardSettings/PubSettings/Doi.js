@@ -85,16 +85,29 @@ class Doi extends Component {
 		return intent;
 	}
 
+	findSupplementTo() {
+		const { pubData } = this.props;
+		return findParentEdgeByRelationTypes(pubData, [RelationType.Supplement]);
+	}
+
+	disabledDueToParentWithoutDoi() {
+		const supplementTo = this.findSupplementTo();
+		return (
+			supplementTo &&
+			!(supplementTo.pubIsParent ? supplementTo.pub : supplementTo.targetPub).doi
+		);
+	}
+
+	disabledDueToNoReleases() {
+		const { pubData } = this.props;
+		return pubData.releases.length === 0;
+	}
+
 	handleDeposit(doi) {
 		const { updatePubData } = this.props;
 
 		this.setState({ justSetDoi: true });
 		updatePubData({ doi: doi });
-	}
-
-	findSupplementTo() {
-		const { pubData } = this.props;
-		return findParentEdgeByRelationTypes(pubData, [RelationType.Supplement]);
 	}
 
 	async updateDoi(doi, pendingStateKey, fallback) {
@@ -263,19 +276,6 @@ class Doi extends Component {
 				)}
 			</>
 		);
-	}
-
-	disabledDueToParentWithoutDoi() {
-		const supplementTo = this.findSupplementTo();
-		return (
-			supplementTo &&
-			!(supplementTo.pubIsParent ? supplementTo.pub : supplementTo.targetPub).doi
-		);
-	}
-
-	disabledDueToNoReleases() {
-		const { pubData } = this.props;
-		return pubData.releases.length === 0;
 	}
 
 	renderContent() {
