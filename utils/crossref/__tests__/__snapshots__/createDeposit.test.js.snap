@@ -44,7 +44,9 @@ Object {
             },
             "doi_data": Object {
               "doi": "an_utterly_fake_doi",
-              "resource": "https://test.com",
+              "resource": Object {
+                "#text": "https://test.com",
+              },
               "timestamp": 1555009335577,
             },
             "edition_number": "3",
@@ -67,7 +69,7 @@ Object {
       "head": Object {
         "depositor": Object {
           "depositor_name": "PubPub",
-          "email_address": "pubpub@media.mit.edu",
+          "email_address": "crossref@pubpub.org",
         },
         "doi_batch_id": "1555009335577_eea8ec7d",
         "registrant": "PubPub",
@@ -78,7 +80,6 @@ Object {
   "dois": Object {
     "collection": "an_utterly_fake_doi",
     "community": "10.21428/eea8ec7d",
-    "pub": undefined,
   },
   "timestamp": 1555009335577,
 }
@@ -128,7 +129,9 @@ Object {
             },
             "doi_data": Object {
               "doi": "an_utterly_fake_doi",
-              "resource": "https://test.com",
+              "resource": Object {
+                "#text": "https://test.com",
+              },
               "timestamp": 1555009335577,
             },
             "edition_number": "3",
@@ -151,7 +154,7 @@ Object {
       "head": Object {
         "depositor": Object {
           "depositor_name": "PubPub",
-          "email_address": "pubpub@media.mit.edu",
+          "email_address": "crossref@pubpub.org",
         },
         "doi_batch_id": "1555009335577_eea8ec7d",
         "registrant": "PubPub",
@@ -162,7 +165,6 @@ Object {
   "dois": Object {
     "collection": "an_utterly_fake_doi",
     "community": "10.21428/eea8ec7d",
-    "pub": undefined,
   },
   "timestamp": 1555009335577,
 }
@@ -220,7 +222,9 @@ Object {
           "proceedings_metadata": Object {
             "doi_data": Object {
               "doi": "yes_it_is_a_conference_doi",
-              "resource": "https://dev.pubpub.org/collection/4c3a0515",
+              "resource": Object {
+                "#text": "https://dev.pubpub.org/collection/4c3a0515",
+              },
               "timestamp": 1555009335577,
             },
             "noisbn": Object {
@@ -242,7 +246,7 @@ Object {
       "head": Object {
         "depositor": Object {
           "depositor_name": "PubPub",
-          "email_address": "pubpub@media.mit.edu",
+          "email_address": "crossref@pubpub.org",
         },
         "doi_batch_id": "1555009335577_eea8ec7d",
         "registrant": "PubPub",
@@ -253,7 +257,6 @@ Object {
   "dois": Object {
     "collection": "yes_it_is_a_conference_doi",
     "community": "10.21428/eea8ec7d",
-    "pub": undefined,
   },
   "timestamp": 1555009335577,
 }
@@ -311,7 +314,9 @@ Object {
           "proceedings_metadata": Object {
             "doi_data": Object {
               "doi": "yes_it_is_a_conference_doi",
-              "resource": "https://dev.pubpub.org/collection/4c3a0515",
+              "resource": Object {
+                "#text": "https://dev.pubpub.org/collection/4c3a0515",
+              },
               "timestamp": 1555009335577,
             },
             "noisbn": Object {
@@ -333,7 +338,7 @@ Object {
       "head": Object {
         "depositor": Object {
           "depositor_name": "PubPub",
-          "email_address": "pubpub@media.mit.edu",
+          "email_address": "crossref@pubpub.org",
         },
         "doi_batch_id": "1555009335577_eea8ec7d",
         "registrant": "PubPub",
@@ -344,7 +349,6 @@ Object {
   "dois": Object {
     "collection": "yes_it_is_a_conference_doi",
     "community": "10.21428/eea8ec7d",
-    "pub": undefined,
   },
   "timestamp": 1555009335577,
 }
@@ -362,6 +366,7 @@ Object {
         "journal": Object {
           "journal_article": Object {
             "@publication_type": "full_text",
+            "@xmlns:rel": "http://www.crossref.org/relations.xsd",
             "contributors": Object {
               "person_name": Array [
                 Object {
@@ -381,7 +386,9 @@ Object {
             },
             "doi_data": Object {
               "doi": "10.21428/eea8ec7d.1519656b",
-              "resource": "https://frankdev.pubpub.org/pub/h2muzdpv",
+              "resource": Object {
+                "#text": "https://frankdev.pubpub.org/pub/h2muzdpv",
+              },
               "timestamp": 1555009335577,
             },
             "publication_date": Object {
@@ -399,7 +406,9 @@ Object {
             "abbrev_title": "PubPub Dev",
             "doi_data": Object {
               "doi": "10.21428/eea8ec7d",
-              "resource": "https://frankdev.pubpub.org",
+              "resource": Object {
+                "#text": "https://frankdev.pubpub.org",
+              },
               "timestamp": 1555009335577,
             },
             "full_title": "PubPub Dev",
@@ -409,7 +418,7 @@ Object {
       "head": Object {
         "depositor": Object {
           "depositor_name": "PubPub",
-          "email_address": "pubpub@media.mit.edu",
+          "email_address": "crossref@pubpub.org",
         },
         "doi_batch_id": "1555009335577_eea8ec7d",
         "registrant": "PubPub",
@@ -470,7 +479,9 @@ Object {
             },
             "doi_data": Object {
               "doi": "an_utterly_fake_doi",
-              "resource": "https://test.com",
+              "resource": Object {
+                "#text": "https://test.com",
+              },
               "timestamp": 1555009335577,
             },
             "edition_number": "3",
@@ -490,6 +501,7 @@ Object {
           },
           "content_item": Object {
             "@component_type": "chapter",
+            "@xmlns:rel": "http://www.crossref.org/relations.xsd",
             "contributors": Object {
               "person_name": Array [
                 Object {
@@ -509,7 +521,9 @@ Object {
             },
             "doi_data": Object {
               "doi": "10.21428/eea8ec7d.1519656b",
-              "resource": "https://frankdev.pubpub.org/pub/h2muzdpv",
+              "resource": Object {
+                "#text": "https://frankdev.pubpub.org/pub/h2muzdpv",
+              },
               "timestamp": 1555009335577,
             },
             "publication_date": Object {
@@ -527,7 +541,7 @@ Object {
       "head": Object {
         "depositor": Object {
           "depositor_name": "PubPub",
-          "email_address": "pubpub@media.mit.edu",
+          "email_address": "crossref@pubpub.org",
         },
         "doi_batch_id": "1555009335577_eea8ec7d",
         "registrant": "PubPub",
@@ -555,6 +569,7 @@ Object {
       "body": Object {
         "conference": Object {
           "conference_paper": Object {
+            "@xmlns:rel": "http://www.crossref.org/relations.xsd",
             "contributors": Object {
               "person_name": Array [
                 Object {
@@ -574,7 +589,9 @@ Object {
             },
             "doi_data": Object {
               "doi": "10.21428/eea8ec7d.1519656b",
-              "resource": "https://frankdev.pubpub.org/pub/h2muzdpv",
+              "resource": Object {
+                "#text": "https://frankdev.pubpub.org/pub/h2muzdpv",
+              },
               "timestamp": 1555009335577,
             },
             "titles": Object {
@@ -623,7 +640,9 @@ Object {
           "proceedings_metadata": Object {
             "doi_data": Object {
               "doi": "yes_it_is_a_conference_doi",
-              "resource": "https://dev.pubpub.org/collection/4c3a0515",
+              "resource": Object {
+                "#text": "https://dev.pubpub.org/collection/4c3a0515",
+              },
               "timestamp": 1555009335577,
             },
             "noisbn": Object {
@@ -645,7 +664,7 @@ Object {
       "head": Object {
         "depositor": Object {
           "depositor_name": "PubPub",
-          "email_address": "pubpub@media.mit.edu",
+          "email_address": "crossref@pubpub.org",
         },
         "doi_batch_id": "1555009335577_eea8ec7d",
         "registrant": "PubPub",
@@ -674,6 +693,7 @@ Object {
         "journal": Object {
           "journal_article": Object {
             "@publication_type": "full_text",
+            "@xmlns:rel": "http://www.crossref.org/relations.xsd",
             "contributors": Object {
               "person_name": Array [
                 Object {
@@ -693,7 +713,9 @@ Object {
             },
             "doi_data": Object {
               "doi": "10.21428/eea8ec7d.1519656b",
-              "resource": "https://frankdev.pubpub.org/pub/h2muzdpv",
+              "resource": Object {
+                "#text": "https://frankdev.pubpub.org/pub/h2muzdpv",
+              },
               "timestamp": 1555009335577,
             },
             "publication_date": Object {
@@ -739,7 +761,9 @@ Object {
             },
             "doi_data": Object {
               "doi": "10.21428/eea8ec7d.e281f63f",
-              "resource": "https://dev.pubpub.org/collection/e281f63f",
+              "resource": Object {
+                "#text": "https://dev.pubpub.org/collection/e281f63f",
+              },
               "timestamp": 1555009335577,
             },
             "issue": "5",
@@ -761,7 +785,9 @@ Object {
             "abbrev_title": "PubPub Dev",
             "doi_data": Object {
               "doi": "10.21428/eea8ec7d",
-              "resource": "https://frankdev.pubpub.org",
+              "resource": Object {
+                "#text": "https://frankdev.pubpub.org",
+              },
               "timestamp": 1555009335577,
             },
             "full_title": "PubPub Dev",
@@ -771,7 +797,7 @@ Object {
       "head": Object {
         "depositor": Object {
           "depositor_name": "PubPub",
-          "email_address": "pubpub@media.mit.edu",
+          "email_address": "crossref@pubpub.org",
         },
         "doi_batch_id": "1555009335577_eea8ec7d",
         "registrant": "PubPub",
@@ -831,7 +857,9 @@ Object {
             },
             "doi_data": Object {
               "doi": "10.21428/eea8ec7d.e281f63f",
-              "resource": "https://dev.pubpub.org/collection/e281f63f",
+              "resource": Object {
+                "#text": "https://dev.pubpub.org/collection/e281f63f",
+              },
               "timestamp": 1555009335577,
             },
             "issue": "5",
@@ -853,7 +881,9 @@ Object {
             "abbrev_title": "PubPub Dev",
             "doi_data": Object {
               "doi": "10.21428/eea8ec7d",
-              "resource": "https://frankdev.pubpub.org",
+              "resource": Object {
+                "#text": "https://frankdev.pubpub.org",
+              },
               "timestamp": 1555009335577,
             },
             "full_title": "PubPub Dev",
@@ -863,7 +893,7 @@ Object {
       "head": Object {
         "depositor": Object {
           "depositor_name": "PubPub",
-          "email_address": "pubpub@media.mit.edu",
+          "email_address": "crossref@pubpub.org",
         },
         "doi_batch_id": "1555009335577_eea8ec7d",
         "registrant": "PubPub",
@@ -874,7 +904,6 @@ Object {
   "dois": Object {
     "collection": "10.21428/eea8ec7d.e281f63f",
     "community": "10.21428/eea8ec7d",
-    "pub": undefined,
   },
   "timestamp": 1555009335577,
 }
@@ -923,7 +952,9 @@ Object {
             },
             "doi_data": Object {
               "doi": "10.21428/eea8ec7d.e281f63f",
-              "resource": "https://dev.pubpub.org/collection/e281f63f",
+              "resource": Object {
+                "#text": "https://dev.pubpub.org/collection/e281f63f",
+              },
               "timestamp": 1555009335577,
             },
             "issue": "5",
@@ -945,7 +976,9 @@ Object {
             "abbrev_title": "PubPub Dev",
             "doi_data": Object {
               "doi": "10.21428/eea8ec7d",
-              "resource": "https://frankdev.pubpub.org",
+              "resource": Object {
+                "#text": "https://frankdev.pubpub.org",
+              },
               "timestamp": 1555009335577,
             },
             "full_title": "PubPub Dev",
@@ -955,7 +988,7 @@ Object {
       "head": Object {
         "depositor": Object {
           "depositor_name": "PubPub",
-          "email_address": "pubpub@media.mit.edu",
+          "email_address": "crossref@pubpub.org",
         },
         "doi_batch_id": "1555009335577_eea8ec7d",
         "registrant": "PubPub",
@@ -966,7 +999,6 @@ Object {
   "dois": Object {
     "collection": "10.21428/eea8ec7d.e281f63f",
     "community": "10.21428/eea8ec7d",
-    "pub": undefined,
   },
   "timestamp": 1555009335577,
 }

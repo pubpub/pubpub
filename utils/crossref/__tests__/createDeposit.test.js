@@ -162,7 +162,7 @@ describe('createDeposit', () => {
 			doi_data: { doi, resource },
 		} = deposit.doi_batch.body.book.book_metadata;
 		expect(doi).toEqual('an_utterly_fake_doi');
-		expect(resource).toEqual('https://test.com');
+		expect(resource['#text']).toEqual('https://test.com');
 	});
 
 	it('correctly handles date metadata provided by a collection', () => {

@@ -92,6 +92,10 @@ const assertParentPubHasDoi = (parentPub) => {
 const getPubDoiPart = (context, doiTarget) => {
 	const { pub, collection, community, pubEdge } = context;
 
+	if (!pub) {
+		return {};
+	}
+
 	let doi;
 
 	if (doiTarget !== 'pub') {
