@@ -19,7 +19,7 @@ export const getCollectionAttributions = (collectionId) =>
 export const getCollectionPubsInCollection = (collectionId) =>
 	CollectionPub.findAll({
 		where: { collectionId: collectionId },
-		order: [['createdAt', 'ASC']],
+		order: [['rank', 'ASC']],
 	});
 
 export const rerankCollection = async (collectionId) => {
