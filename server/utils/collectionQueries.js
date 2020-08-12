@@ -1,4 +1,5 @@
 import ensureUserForAttribution from 'utils/ensureUserForAttribution';
+import { generateRanks } from 'utils/rank';
 import { CollectionAttribution, CollectionPub, includeUserModel } from 'server/models';
 
 export const getCollectionAttributions = (collectionId) =>
@@ -18,5 +19,15 @@ export const getCollectionAttributions = (collectionId) =>
 export const getCollectionPubsInCollection = (collectionId) =>
 	CollectionPub.findAll({
 		where: { collectionId: collectionId },
-		order: [['rank', 'ASC']],
+		order: [['createdAt', 'ASC']],
 	});
+
+export const rerankCollection = async (collectionId) => {
+	const collectionPubs = await getCollectionPubsInCollection(collectionId);
+	const ranks = generateRanks(collectionPubs.length);
+	await Promise.all(
+		collectionPubs.map((collectionPub, index) =>
+			CollectionPub.update({ rank: ranks[index] }, { where: { id: collectionPub.id } }),
+		),
+	);
+};
