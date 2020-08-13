@@ -63,6 +63,8 @@ Any Communities, Collections, and Pubs created will be immediately visible onlin
 npm run tools bulkimport -- --actor=pubpub-user-slug --receipt /path/to/receipt --publish
 ```
 
+You can choose whether to create Pub exports (which you may not want during testing) using the `--create-exports` flag, which defaults to `true`.
+
 If you want to discard all _created_ objects (preserving those that were targeted by directives but not created by them), then run:
 
 ```
@@ -156,7 +158,7 @@ slug: this-one-already-exists
 type: community
 create: true
 title: My New Community
-description: Pretty cool, no? # optional
+description: "Pretty cool, no?" # optional
 subdomain: my-new-community # optional
 ```
 
@@ -232,9 +234,9 @@ When you need to bring extra files into the Pub import that are not inside of it
 
 ```yaml
 resolve:
-    ../path/to/images:
+    - ../path/to/images:
         into: images/
-    ../../path/to/specific/file.tex:
+    - ../../path/to/specific/file.tex:
         as: other-file.tex
         label: preamble # (or any other label, optional)
 ```
@@ -245,11 +247,11 @@ This can be very helpful if you're dealing with TeX bundles which give reference
 
 ```yaml
 resolve:
-    ../../wp-content:
-        into: http://my-site.com/wp-content/
+    - ../../wp-content:
+      into: http://my-site.com/wp-content/
 ```
 
-**Important:** paths given to `resolve` are relative to the file or directory matched by the directive, not to the file in which the directive is written._ For instance, given the following structure:
+**Important:** paths given to `resolve` are relative to the file or directory matched by the directive, not to the file in which the directive is written. For instance, given the following structure:
 
 ```
 my-import/
@@ -268,11 +270,13 @@ We would turn `my-first-post.md` into a Pub as follows:
 children:
     posts/my-first-post.md:
         resolve:
-            ../images:
+            - ../images:
                 into: images/
 ```
 
 The thing to note here is `../images` is the relative path from `my-first-post.md`, rather than from `config.pubpub.yaml`.
+
+If a path under `resolve` does not lead to a file or directory, it will throw an error. You can silence the error and press onward with the import by specifying the `ignoreIfMissing: true` option under the path.
 
 ## Attributes
 
@@ -329,6 +333,68 @@ macros:
 
 This can be helpful for mocking out some complicated TeX commands that Pandoc doesn't support, as described in [Mocking Latex Commands](#mocking-latex-commands).
 
+## The special `$metadata` and `$sourceFile` values
+
+Not all potentially useful directive options have statically-known values. You might, for instance, want to extract the description for a Pub from its embedded metadata header. Typically, this is only possible if the embedded description has the key `subtitle` — more commonly used in Pandoc-flavored markdown — but the `$metadata` option gives us more flexibility. In place of a string, you may pass an object like `{ $metadata: 'key' }` as a directive value, and its value will be taken from the metadata extracted from the imported document. In the example files below, the document itself has metadata we wish to use as the Pub's description:
+
+```
+---
+title: Please import me
+summary: Blah blah BLAH blah blah...
+---
+<h1>Lorem Ipsum Dolor Sid Amet...</h1>
+```
+
+The following Pub directive will extract the `summary` value (`"Blah blah BLAH..."`) as the Pub's `description`:
+
+```yaml
+# config.pubpub.yaml
+type: pub
+description:
+  $metadata: summary
+```
+
+The other special value of this kind of `$sourceFile`. It means "give me the URL of the uploaded source file corresponding to this path". In this example, every document to be imported is paired with an `thumb.png`:
+
+```
+import-root/
+  document-one/
+    doc.html
+    thumb.png
+  document-two/
+    doc.html
+    thumb.png
+```
+
+The following Pub directive will cause the corresponding `thumb.png` files to be used as the Pub's `avatar`:
+
+```yaml
+# config.pubpubb.yaml
+children:
+  "*/doc.html":
+    type: pub
+    avatar:
+      $sourceFile: thumb.png
+```
+
+Note that these special values can be composed, to useful effect. We might find a file specified in the document metadata:
+
+```
+---
+coverImage: cover-image-for-this-post.jpg
+---
+```
+
+We can extract the relative file path with `$metadata` and tell the importer to upload the resolved file as the Pub's `headerBackgroundImage` as follows: 
+
+```yaml
+# config.pubpub.yaml
+type: pub
+headerBackgroundImage:
+  $sourceFile:
+    $metadata: coverImage
+```
+
 # Directive options
 
 **`type: string`**: universally required. One of `pub`, `collection`, `community`.
@@ -360,8 +426,8 @@ This can be helpful for mocking out some complicated TeX commands that Pandoc do
 **`matchSlugsToAttributions: string[]`**: a list of PubPub slugs that will be cross-refrenced to possibly create user-linked `PubAttribution` objects from names found in imported attribution metadata. Potentially useful when importing a large Community with a few recurring names.
 
 **`resolve: {
-    [relativePath: string]: {as: string} | {into: string} & {label?: string}
-}`**: [see more](#the-resolve-option)
+    [relativePath: string]: ({as: string} | {into: string}) & {label?: string, ignoreIfMissing?: boolean}
+}[]`**: [see more](#the-resolve-option)
 
 **`labels: {
     document?: string,
@@ -378,6 +444,8 @@ This can be helpful for mocking out some complicated TeX commands that Pandoc do
 
 **`importerFlags: string[]`**: flags passed to the importer (the same ones available from the `Meta+/` "nerd mode" menu in the single-Pub importer).
 
+**`tags: string[]`**: a list of collections by title that will be applied to the Pub (creating a Tag collection if necessary)
+
 **`macros: {
     [regex: string]: string | {define: [string, string]}
 }`**: [see more](#macros)
@@ -386,13 +454,13 @@ _The remainder of the options map directly to attributes on the Pub model._
 
 **`description: string`**
 
-**`avatar: string`**: a path (supports wildcards) to a local file.
+**`avatar: string`**
 
 **`headerStyle: string`**
 
 **`headerBackgroundColor: string`**
 
-**`headerBackgroundImage: string`**: a path (supports wildcards) to a local file.
+**`headerBackgroundImage: string`**
 
 **`customPublishedAt: string`**: a date given in ISO 8601 format.
 
@@ -534,7 +602,7 @@ children:
   posts/*.html:
     type: pub
     resolve:
-      ../resources:
+      - ../resources:
         into: resources
 ```
 
@@ -551,7 +619,7 @@ children:
   posts/*.html:
     type: pub
     resolve:
-      ../resources:
+      - ../resources:
         into: https://best-exam-dumps-2020-here.info/resources/
 ```
 
@@ -613,7 +681,7 @@ children:
         type: pub
         ...
         resolve:
-            ../footnote-definitions.tex:
+            - ../footnote-definitions.tex:
                 as: _.tex
                 label: preamble
         preamble: |
@@ -645,18 +713,18 @@ We could simply accept the fact that `cruft.tex` will create a Pub, or we could 
 children:
     chapters/chapter-one.tex:
         type: pub
-        title: Chapter One: The Way Things Are
+        title: "Chapter One: The Way Things Are"
         resolve:
-            ../footnote-definitions.tex:
+            - ../footnote-definitions.tex:
                 as: _.tex
                 label: preamble
         preamble: |
             \newcommand{\emc2}{$E = mc^2$}
     chapters/chapter-two.tex:
         type: pub
-        title: Chapter One: The Way Things Ought to Be
+        title: "Chapter Two: The Way Things Ought to Be"
         resolve:
-            ../footnote-definitions.tex:
+            - ../footnote-definitions.tex:
                 as: _.tex
                 label: preamble
         preamble: |
@@ -675,7 +743,7 @@ children:
         type: pub
         partial: true
         resolve:
-            ../footnote-definitions.tex:
+            - ../footnote-definitions.tex:
                 as: _.tex
                 label: preamble
         preamble: |

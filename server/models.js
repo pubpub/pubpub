@@ -1,5 +1,6 @@
 /* eslint-disable global-require */
 import Sequelize from 'sequelize';
+import { createIncludeUserModel } from './utils/queryHelpers/includeUserModel';
 
 if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
 	require('./config.js');
@@ -40,14 +41,18 @@ export const CollectionAttribution = sequelize.import('./collectionAttribution/m
 export const CollectionPub = sequelize.import('./collectionPub/model.js');
 export const Community = sequelize.import('./community/model.js');
 export const CommunityAdmin = sequelize.import('./communityAdmin/model.js');
+export const CrossrefDepositRecord = sequelize.import('./crossrefDepositRecord/model.js');
 export const Discussion = sequelize.import('./discussion/model.js');
+export const Doc = sequelize.import('./doc/model.js');
 export const Export = sequelize.import('./export/model.js');
+export const ExternalPublication = sequelize.import('./externalPublication/model.js');
 export const Member = sequelize.import('./member/model.js');
 export const Merge = sequelize.import('./merge/model.js');
 export const Organization = sequelize.import('./organization/model.js');
 export const Page = sequelize.import('./page/model.js');
 export const Pub = sequelize.import('./pub/model.js');
 export const PubAttribution = sequelize.import('./pubAttribution/model.js');
+export const PubEdge = sequelize.import('./pubEdge/model.js');
 export const PubManager = sequelize.import('./pubManager/model.js');
 export const PubVersion = sequelize.import('./pubVersion/model.js');
 export const PublicPermissions = sequelize.import('./publicPermissions/model.js');
@@ -72,6 +77,8 @@ export const VisibilityUser = sequelize.import('./visibilityUser/model.js');
 
 export const User = sequelize.import('./user/model.js');
 export const WorkerTask = sequelize.import('./workerTask/model.js');
+
+export const includeUserModel = createIncludeUserModel(User);
 
 /* Create associations for models that have associate function */
 Object.values(sequelize.models).forEach((model) => {

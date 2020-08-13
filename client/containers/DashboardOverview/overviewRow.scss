@@ -25,11 +25,12 @@
 	}
 	.handle {
 		width: 30px;
+		display: flex;
+		justify-content: center;
 		.arrow {
 			cursor: pointer;
 			background: none;
 			border: none;
-			height: 100%;
 			border-radius: 2px;
 			opacity: 0.5;
 			.bp3-icon {
@@ -43,6 +44,9 @@
 			&:hover {
 				opacity: 1;
 			}
+		}
+		.drag-handle {
+			transform: translateY(2px);
 		}
 	}
 	.type {

@@ -1,5 +1,8 @@
-import { User, Thread, ThreadComment, ThreadEvent, Visibility } from 'server/models';
-import { attributesPublicUser } from 'server/utils/attributesPublicUser';
+import { Thread, ThreadComment, ThreadEvent, Visibility, includeUserModel } from 'server/models';
+
+export const stripFalsyIdsFromQuery = (whereQueryObject) => {
+	return Object.fromEntries(Object.entries(whereQueryObject).filter((entry) => entry[1]));
+};
 
 export const ensureSerialized = (item) => {
 	if (Array.isArray(item)) {
@@ -39,13 +42,7 @@ export const sanitizeOnVisibility = (objectsWithVisibility, activePermissions, l
 	});
 };
 
-export const baseAuthor = [
-	{
-		model: User,
-		as: 'author',
-		attributes: attributesPublicUser,
-	},
-];
+export const baseAuthor = [includeUserModel({ as: 'author' })];
 export const baseThread = [
 	{
 		model: Thread,
@@ -54,24 +51,12 @@ export const baseThread = [
 			{
 				model: ThreadComment,
 				as: 'comments',
-				include: [
-					{
-						model: User,
-						as: 'author',
-						attributes: attributesPublicUser,
-					},
-				],
+				include: [includeUserModel({ as: 'author' })],
 			},
 			{
 				model: ThreadEvent,
 				as: 'events',
-				include: [
-					{
-						model: User,
-						as: 'user',
-						attributes: attributesPublicUser,
-					},
-				],
+				include: [includeUserModel({ as: 'user' })],
 			},
 		],
 	},
@@ -80,12 +65,6 @@ export const baseVisibility = [
 	{
 		model: Visibility,
 		as: 'visibility',
-		include: [
-			{
-				model: User,
-				as: 'users',
-				attributes: attributesPublicUser,
-			},
-		],
+		include: [includeUserModel({ as: 'users' })],
 	},
 ];

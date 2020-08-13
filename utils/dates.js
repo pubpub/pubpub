@@ -7,10 +7,12 @@ export const formatDate = (
 		includeDate = true,
 		includePreposition = false,
 		use12HourDate = true,
+		inUtcTime = false,
 	} = {},
 ) => {
+	const formatMask = `${inUtcTime ? 'UTC:' : ''}mmm dd, yyyy`;
 	const formattedDate = includeDate
-		? (includePreposition ? 'on ' : '') + dateFormat(date, 'mmm dd, yyyy')
+		? (includePreposition ? 'on ' : '') + dateFormat(date, formatMask)
 		: '';
 	if (includeTime) {
 		const formattedTime =
@@ -36,4 +38,12 @@ export const timeAgoBaseProps = {
 		}
 		return `${value} ${newUnit} ${suffix}`;
 	},
+};
+
+export const getLocalDateMatchingUtcCalendarDate = (utcDate) => {
+	const formattedUtcDate = dateFormat(utcDate, 'UTC:yyyy-mm-dd');
+	const localDateOnSameDay = new Date(formattedUtcDate);
+	const returnDate = new Date(utcDate);
+	returnDate.setMinutes(returnDate.getMinutes() + localDateOnSameDay.getTimezoneOffset());
+	return returnDate;
 };

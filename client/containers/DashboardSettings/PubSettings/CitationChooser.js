@@ -37,10 +37,11 @@ const CitationChooser = (props) => {
 	const citationStyleItems = [
 		{ key: 'acm-siggraph', title: 'ACM SIGGRAPH' },
 		{ key: 'american-anthro', title: 'American Anthropological Association' },
-		{ key: 'apa', title: 'APA' },
+		{ key: 'apa', title: 'APA 6th Edition' },
+		{ key: 'apa-7', title: 'APA 7th Edition' },
 		{ key: 'cell', title: 'Cell' },
 		{ key: 'chicago', title: 'Chicago' },
-		{ key: 'harvard', title: 'Havard' },
+		{ key: 'harvard', title: 'Harvard' },
 		{ key: 'elife', title: 'ELife' },
 		{ key: 'frontiers', title: 'Frontiers' },
 		{ key: 'mla', title: 'MLA' },

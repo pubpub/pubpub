@@ -23,6 +23,10 @@ export const communityUrl = (community) => {
 export const collectionUrl = (community, collection) =>
 	`${communityUrl(community)}/collection/${collection.id.slice(0, 8)}`;
 
+export const pubShortUrl = (pub) => {
+	return `https://pubpub.org/pub/${pub.slug}`;
+};
+
 export const pubUrl = (community, pub, options = {}) => {
 	let baseUrl = `${communityUrl(community)}/pub/${pub.slug}`;
 	const { isDraft, historyKey, releaseNumber, accessHash, query } = options;
@@ -36,6 +40,13 @@ export const pubUrl = (community, pub, options = {}) => {
 		{ url: baseUrl, query: { access: accessHash, ...query } },
 		{ skipNull: true },
 	);
+};
+
+export const bestPubUrl = ({ pubData, communityData }, options = {}) => {
+	if (communityData) {
+		return pubUrl(communityData, pubData, options);
+	}
+	return pubShortUrl(pubData);
 };
 
 export const doiUrl = (doi) => `https://doi.org/${doi}`;

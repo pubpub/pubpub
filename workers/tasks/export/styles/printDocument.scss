@@ -28,10 +28,6 @@ https://gitlab.pagedmedia.org/tools/pagedjs-cli/issues/11 */
 }
 
 .pub-body-component {
-    // override bullet sizing for PDFs
-    .editor.ProseMirror li p {
-            font-size: inherit;
-        }
     .editor.ProseMirror .pub-notes ol > li {
         list-style-position: inside;
         margin: inherit;
@@ -84,14 +80,13 @@ section.cover {
 
 @media screen {
     body > * {
-        max-width: 50em;
+        max-width: 700px;
         margin: 0 auto;
         &.pub-body-component {
-            font-size: initial !important;
+            font-size: 20px !important;
         }
     }
 }
-
 
 @media print {
     /* Baseline page styles */
@@ -116,27 +111,6 @@ section.cover {
             content: counter(page);
         }
     }
-
-    // Manually resize main text elements to make them more palatable for print
-    $print-body-text-size: 14px;
-    .pub-body-component .editor.Prosemirror {
-        p, li, li p {
-            font-size: $print-body-text-size;
-        }
-        h1 {
-            font-size: $print-body-text-size * 1.4;
-        }
-        h2 {
-            font-size: $print-body-text-size * 1.3;
-        }
-        h3 {
-            font-size: $print-body-text-size * 1.2;
-        }
-        h4, h5, h6, [data-node-type='math-block'] {
-            font-size: $print-body-text-size * 1.1;
-        }
-    }
-
     /* Avoid being the last element on the page */
     h1,
     h2,
@@ -159,7 +133,8 @@ section.cover {
         display: flex;
         flex-direction: column;
         max-height: 800px;
-        img, video {
+        img,
+        video {
             break-inside: avoid;
             width: 100%;
             min-height: 0;

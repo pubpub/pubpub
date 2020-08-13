@@ -60,15 +60,21 @@ export const resolveImportPlan = async ({ importPlan, actor, parents }) => {
 	const resolvedValues = [];
 
 	for (const directive of directives) {
-		// eslint-disable-next-line no-await-in-loop
-		const { resolved, parents: nextParents } = await resolveDirective({
-			directive: directive,
-			actor: actor,
-			targetPath: path,
-			parents: currentParents,
-		});
-		resolvedValues.push(resolved);
-		currentParents = { ...currentParents, ...nextParents };
+		try {
+			// eslint-disable-next-line no-await-in-loop
+			const { resolved, parents: nextParents } = await resolveDirective({
+				directive: directive,
+				actor: actor,
+				targetPath: path,
+				parents: currentParents,
+			});
+			resolvedValues.push(resolved);
+			currentParents = { ...currentParents, ...nextParents };
+		} catch (error) {
+			// eslint-disable-next-line no-console
+			console.log(error.stack);
+			resolvedValues.push({ resolved: {}, error: error && error.stack });
+		}
 	}
 
 	if (children && children.length > 0) {

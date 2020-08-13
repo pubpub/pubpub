@@ -6,6 +6,7 @@ import { Button, Tooltip } from '@blueprintjs/core';
 import {
 	Icon,
 	DashboardFrame,
+	DatePicker,
 	SettingsSection,
 	ImageUpload,
 	InputField,
@@ -122,6 +123,18 @@ const PubSettings = (props) => {
 						error={!pubData.slug ? 'Required' : null}
 					/>
 					<InputField
+						label="Custom publication date"
+						helperText="If set, this will be shown instead of the first Release date."
+					>
+						<DatePicker
+							style={{ width: 200 }}
+							date={pubData.customPublishedAt}
+							onSelectDate={(date) =>
+								updatePubData({ customPublishedAt: date && date.toUTCString() })
+							}
+						/>
+					</InputField>
+					<InputField
 						label="Description"
 						placeholder="Enter description"
 						helperText={`${(pubData.description || '').length}/280 characters`}
@@ -221,7 +234,7 @@ const PubSettings = (props) => {
 		return (
 			<SettingsSection title="DOI">
 				<Doi
-					pubData={pubData}
+					pubData={persistedPubData}
 					communityData={activeCommunity}
 					updatePubData={updatePersistedPubData}
 					canIssueDoi={canAdminCommunity}

@@ -111,8 +111,6 @@ export const generateMetaComponents = ({
 		}
 	}
 
-	/* Assumes the first PDF download is the canonical one, which is true right now
-	but in the future we may want to support multiple download URLs for various purposes. */
 	if (download) {
 		outputComponents = [
 			...outputComponents,
@@ -197,10 +195,12 @@ export const generateMetaComponents = ({
 	if (publishedAt) {
 		const googleScholarPublishedAt = `${publishedAt.getFullYear()}/${publishedAt.getMonth() +
 			1}/${publishedAt.getDate()}`;
+		const dcPublishedAt = `${publishedAt.getFullYear()}-${publishedAt.getMonth()}-${publishedAt.getDate()}`;
 		outputComponents = [
 			...outputComponents,
 			<meta key="pa1" property="article:published_time" content={publishedAt} />,
-			<meta key="pa2" name="citation_publication_date" content={googleScholarPublishedAt} />,
+			<meta key="pa2" property="dc.date" content={dcPublishedAt} />,
+			<meta key="pa3" name="citation_publication_date" content={googleScholarPublishedAt} />,
 			<meta key="pub1" name="citation_publisher" content="PubPub" />,
 			<meta key="pub2" property="dc.publisher" content="PubPub" />,
 		];

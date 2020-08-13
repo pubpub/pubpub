@@ -4,23 +4,39 @@ import { ForbiddenError } from 'server/utils/errors';
 import { getPermissions } from './permissions';
 import { createRelease } from './queries';
 
-const getRequestIds = (req) => {
+const getRequestValues = (req) => {
 	const user = req.user || {};
-	const { communityId, pubId, draftKey, noteText, noteContent } = req.body;
+	const {
+		communityId,
+		draftKey,
+		makeDraftDiscussionsPublic,
+		noteContent,
+		noteText,
+		pubId,
+	} = req.body;
 	return {
-		userId: user.id,
 		communityId: communityId,
-		pubId: pubId,
 		draftKey: draftKey,
-		noteText: noteText,
+		makeDraftDiscussionsPublic: makeDraftDiscussionsPublic,
 		noteContent: noteContent,
+		noteText: noteText,
+		pubId: pubId,
+		userId: user.id,
 	};
 };
 
 app.post(
 	'/api/releases',
 	wrap(async (req, res) => {
-		const { userId, communityId, pubId, draftKey, noteText, noteContent } = getRequestIds(req);
+		const {
+			communityId,
+			draftKey,
+			makeDraftDiscussionsPublic,
+			noteContent,
+			noteText,
+			pubId,
+			userId,
+		} = getRequestValues(req);
 		const permissions = await getPermissions({
 			userId: userId,
 			pubId: pubId,
@@ -37,8 +53,9 @@ app.post(
 			draftKey: draftKey,
 			noteText: noteText,
 			noteContent: noteContent,
+			makeDraftDiscussionsPublic: makeDraftDiscussionsPublic,
 		});
 
-		return res.status(201).json({ release: release });
+		return res.status(201).json(release);
 	}),
 );

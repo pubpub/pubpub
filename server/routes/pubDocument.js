@@ -9,6 +9,7 @@ import { handleErrors, NotFoundError, ForbiddenError } from 'server/utils/errors
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
+import { getPubPublishedDate } from 'utils/pub/pubDates';
 import {
 	getPub,
 	getMembers,
@@ -16,6 +17,7 @@ import {
 	enrichPubFirebaseDoc,
 	enrichPubFirebaseToken,
 	enrichPubCitations,
+	enrichAndSanitizePubEdges,
 } from 'server/utils/queryHelpers';
 
 const renderPubDocument = (res, pubData, initialData) => {
@@ -32,7 +34,7 @@ const renderPubDocument = (res, pubData, initialData) => {
 				description: pubData.description,
 				image: pubData.avatar,
 				attributions: pubData.attributions,
-				publishedAt: pubData.originallyPublishedAt || pubData.firstPublishedAt,
+				publishedAt: getPubPublishedDate(pubData),
 				doi: pubData.doi,
 				collection: chooseCollectionForPub(pubData, initialData.locationData),
 				download: getPDFDownload(pubData),
@@ -62,6 +64,7 @@ const getEnrichedAndSanitizedPubData = async ({
 	pubData = await enrichPubFirebaseDoc(pubData, historyKey, branchType);
 	pubData = await enrichPubFirebaseToken(pubData, initialData);
 	pubData = await enrichPubCitations(pubData, initialData);
+	pubData = await enrichAndSanitizePubEdges(pubData, initialData);
 	return pubData;
 };
 

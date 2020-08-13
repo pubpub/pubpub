@@ -1,26 +1,11 @@
 import ensureUserForAttribution from 'utils/ensureUserForAttribution';
-import { User, CollectionAttribution, CollectionPub } from 'server/models';
+import { generateRanks, sortByRank } from 'utils/rank';
+import { CollectionAttribution, CollectionPub, includeUserModel } from 'server/models';
 
 export const getCollectionAttributions = (collectionId) =>
 	CollectionAttribution.findAll({
 		where: { collectionId: collectionId },
-		include: [
-			{
-				model: User,
-				as: 'user',
-				required: false,
-				attributes: [
-					'id',
-					'firstName',
-					'lastName',
-					'fullName',
-					'avatar',
-					'slug',
-					'initials',
-					'title',
-				],
-			},
-		],
+		include: [includeUserModel({ as: 'user', required: false })],
 	}).then((attributions) => {
 		return attributions.map((attribution) => {
 			const attributionJson = attribution.toJSON();
@@ -36,3 +21,14 @@ export const getCollectionPubsInCollection = (collectionId) =>
 		where: { collectionId: collectionId },
 		order: [['rank', 'ASC']],
 	});
+
+export const rerankCollection = async (collectionId) => {
+	const collectionPubs = await getCollectionPubsInCollection(collectionId);
+	const orderedCollectionPubs = sortByRank(collectionPubs);
+	const ranks = generateRanks(orderedCollectionPubs.length);
+	await Promise.all(
+		orderedCollectionPubs.map((collectionPub, index) =>
+			CollectionPub.update({ rank: ranks[index] }, { where: { id: collectionPub.id } }),
+		),
+	);
+};

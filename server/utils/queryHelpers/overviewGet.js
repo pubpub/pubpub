@@ -1,45 +1,39 @@
 import {
-	User,
 	Collection,
 	Pub,
 	Community,
 	CollectionAttribution,
 	CollectionPub,
+	includeUserModel,
 } from 'server/models';
-import { attributesPublicUser } from 'server/utils/attributesPublicUser';
 
 import buildPubOptions from './pubOptions';
 
 export default async (
-	{ scopeData },
+	{ activeCommunity, activePub, activeCollection, activeTargetType },
 	{ collectionOptions: { includeAttribution = true } = {} } = {},
 ) => {
-	const { activeTargetType, activeTarget } = scopeData.elements;
-
 	/* This is a bit of a hack for now. We likely will want
 	more targeted and nuanced queries for each scope type. */
 	const communityData = await Community.findOne({
-		where: { id: scopeData.elements.activeCommunity.id },
+		where: { id: activeCommunity.id },
 		attributes: {
 			exclude: ['createdAt', 'updatedAt'],
 		},
 		include: [
 			{
 				model: Collection,
-				where: activeTargetType !== 'community' ? { id: activeTarget.id } : {},
+				where:
+					activeCollection && activeTargetType === 'collection'
+						? { id: activeCollection.id }
+						: {},
 				as: 'collections',
 				separate: true,
 				include: [
 					includeAttribution && {
 						model: CollectionAttribution,
 						as: 'attributions',
-						include: [
-							{
-								model: User,
-								as: 'user',
-								attributes: attributesPublicUser,
-							},
-						],
+						include: [includeUserModel({ as: 'user' })],
 					},
 					{
 						model: CollectionPub,
@@ -50,7 +44,7 @@ export default async (
 			},
 			{
 				model: Pub,
-				where: activeTargetType === 'pub' ? { id: activeTarget.id } : {},
+				where: activePub && activeTargetType === 'pub' ? { id: activePub.id } : {},
 				as: 'pubs',
 				separate: true,
 				...buildPubOptions({ isPreview: true, getMembers: true, getCollections: true }),

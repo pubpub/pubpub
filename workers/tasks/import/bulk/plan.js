@@ -170,7 +170,7 @@ const extractDirectives = (matchingPath, directivePath, directive, directiveCoun
 		Object.entries(directive.children).forEach(([matchingSubPath, subdirective]) => {
 			directives.push(
 				...extractDirectives(
-					`${matchingPath}/${matchingSubPath}`,
+					path.join(matchingPath, matchingSubPath),
 					directivePath,
 					subdirective,
 					directiveCounter,
@@ -326,7 +326,11 @@ export const getCreatedItemsFromPlan = (importPlan) => {
 					communities.push(community);
 				}
 				if (collection) {
-					collections.push(collection);
+					if (Array.isArray(collection)) {
+						collections.push(...collection);
+					} else {
+						collections.push(collection);
+					}
 				}
 				if (pub) {
 					pubs.push(pub);

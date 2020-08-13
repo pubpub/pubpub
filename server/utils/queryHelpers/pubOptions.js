@@ -4,22 +4,33 @@ import {
 	CollectionAttribution,
 	CollectionPub,
 	Community,
+	CrossrefDepositRecord,
 	Export,
 	Page,
 	PubAttribution,
+	PubEdge,
 	Release,
 	DiscussionNew,
 	ReviewNew,
 	Fork,
 	Anchor,
-	User,
 	Member,
+	includeUserModel,
 } from 'server/models';
-import { attributesPublicUser } from 'server/utils/attributesPublicUser';
 
+import { getPubEdgeIncludes } from './pubEdgeOptions';
 import { baseAuthor, baseThread, baseVisibility } from './util';
 
-export default ({ isAuth, isPreview, getCollections, getMembers, getCommunity }) => {
+export default ({
+	isAuth,
+	isPreview,
+	getCollections,
+	getMembers,
+	getCommunity,
+	getEdges = 'approved-only',
+	getEdgesOptions,
+}) => {
+	const allowUnapprovedEdges = getEdges === 'all';
 	/* Initialize values assuming all inputs are false. */
 	/* Then, iterate over each input and adjust */
 	/* variables as needed */
@@ -29,13 +40,7 @@ export default ({ isAuth, isPreview, getCollections, getMembers, getCommunity })
 			model: PubAttribution,
 			as: 'attributions',
 			separate: true,
-			include: [
-				{
-					model: User,
-					as: 'user',
-					attributes: attributesPublicUser,
-				},
-			],
+			include: [includeUserModel({ as: 'user' })],
 		},
 	];
 	let pubBranches = [
@@ -52,6 +57,7 @@ export default ({ isAuth, isPreview, getCollections, getMembers, getCommunity })
 		},
 	];
 	let pubMembers = [];
+	let pubEdges = [];
 	let pubReleases = [
 		{
 			model: Release,
@@ -98,6 +104,28 @@ export default ({ isAuth, isPreview, getCollections, getMembers, getCommunity })
 			},
 		];
 	}
+	if (getEdges) {
+		pubEdges = [
+			{
+				model: PubEdge,
+				as: 'outboundEdges',
+				separate: true,
+				include: getPubEdgeIncludes({
+					...getEdgesOptions,
+					includeTargetPub: true,
+				}),
+				order: [['rank', 'ASC']],
+			},
+			{
+				model: PubEdge,
+				as: 'inboundEdges',
+				separate: true,
+				include: getPubEdgeIncludes({ ...getEdgesOptions, includePub: true }),
+				where: !allowUnapprovedEdges && { approvedByTarget: true },
+				order: [['rank', 'ASC']],
+			},
+		];
+	}
 	if (getCollections) {
 		collectionPubs = [
 			{
@@ -121,12 +149,7 @@ export default ({ isAuth, isPreview, getCollections, getMembers, getCommunity })
 							{
 								model: CollectionAttribution,
 								as: 'attributions',
-								include: [
-									{
-										model: User,
-										as: 'user',
-									},
-								],
+								include: [includeUserModel({ as: 'user' })],
 							},
 						],
 					},
@@ -160,6 +183,7 @@ export default ({ isAuth, isPreview, getCollections, getMembers, getCommunity })
 			...pubBranches,
 			...pubReleases,
 			...pubMembers,
+			...pubEdges,
 			{
 				separate: true,
 				model: DiscussionNew,
@@ -177,6 +201,10 @@ export default ({ isAuth, isPreview, getCollections, getMembers, getCommunity })
 				model: ReviewNew,
 				as: 'reviews',
 				include: [...author, ...visibility, ...thread],
+			},
+			{
+				model: CrossrefDepositRecord,
+				as: 'crossrefDepositRecord',
 			},
 			...collectionPubs,
 			...community,

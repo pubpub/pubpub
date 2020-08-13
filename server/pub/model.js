@@ -52,21 +52,19 @@ export default (sequelize, dataTypes) => {
 			classMethods: {
 				associate: (models) => {
 					const {
-						Pub,
-						PubAttribution,
+						Branch,
 						CollectionPub,
 						Community,
-						// Discussion,
-						Branch,
-						// Merge,
-						PubVersion,
-						// Review,
-						Release,
-						// Thread,
+						CrossrefDepositRecord,
 						DiscussionNew,
 						Fork,
-						ReviewNew,
 						Member,
+						Pub,
+						PubAttribution,
+						PubEdge,
+						PubVersion,
+						Release,
+						ReviewNew,
 					} = models;
 					Pub.hasMany(PubAttribution, {
 						onDelete: 'CASCADE',
@@ -83,16 +81,6 @@ export default (sequelize, dataTypes) => {
 						as: 'community',
 						foreignKey: 'communityId',
 					});
-					// Pub.hasMany(Discussion, {
-					// 	onDelete: 'CASCADE',
-					// 	as: 'discussions',
-					// 	foreignKey: 'pubId',
-					// });
-					// Pub.hasMany(Thread, {
-					// 	onDelete: 'CASCADE',
-					// 	as: 'threads',
-					// 	foreignKey: 'pubId',
-					// });
 					Pub.hasMany(DiscussionNew, {
 						onDelete: 'CASCADE',
 						as: 'discussions',
@@ -123,21 +111,25 @@ export default (sequelize, dataTypes) => {
 						as: 'releases',
 						foreignKey: 'pubId',
 					});
-					// Pub.hasMany(Merge, {
-					// 	onDelete: 'CASCADE',
-					// 	as: 'merges',
-					// 	foreignKey: 'pubId',
-					// });
 					Pub.hasMany(PubVersion, {
 						onDelete: 'CASCADE',
 						as: 'pubVersions',
 						foreignKey: 'pubId',
 					});
-					// Pub.hasMany(Review, {
-					// 	onDelete: 'CASCADE',
-					// 	as: 'reviews',
-					// 	foreignKey: 'pubId',
-					// });
+					Pub.hasMany(PubEdge, {
+						onDelete: 'CASCADE',
+						as: 'outboundEdges',
+						foreignKey: 'pubId',
+					});
+					Pub.hasMany(PubEdge, {
+						onDelete: 'CASCADE',
+						as: 'inboundEdges',
+						foreignKey: 'targetPubId',
+					});
+					Pub.belongsTo(CrossrefDepositRecord, {
+						as: 'crossrefDepositRecord',
+						foreignKey: 'crossrefDepositRecordId',
+					});
 				},
 			},
 		},

@@ -1,76 +1,105 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { getAllPubContributors } from 'utils/pubContributors';
+import ensureUserForAttribution from 'utils/ensureUserForAttribution';
+import { joinOxford, naivePluralize } from 'utils/strings';
 
-const propTypes = {
-	pubData: PropTypes.shape({}).isRequired,
+export const propTypes = {
+	ampersand: PropTypes.bool,
 	bylinePrefix: PropTypes.string,
-	hideAuthors: PropTypes.bool,
-	hideContributors: PropTypes.bool,
+	contributors: PropTypes.oneOfType([
+		// Array of authors (e.g. from pub data)
+		PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})])),
+		// Byline (e.g. from ExternalPublication)
+		PropTypes.string,
+	]).isRequired,
 	linkToUsers: PropTypes.bool,
 	renderEmptyState: PropTypes.func,
 	renderSuffix: PropTypes.func,
+	renderTruncation: PropTypes.func,
+	renderUserLabel: PropTypes.func,
+	truncateAt: PropTypes.number,
 };
 
-const defaultProps = {
+export const defaultProps = {
+	ampersand: false,
 	bylinePrefix: 'by',
-	hideAuthors: false,
-	hideContributors: true,
 	linkToUsers: true,
 	renderEmptyState: () => null,
 	renderSuffix: () => null,
+	renderTruncation: (n) => `${n} ${naivePluralize('other', n)}`,
+	renderUserLabel: (user) => user.fullName,
+	truncateAt: null,
 };
+
+const joinAndFlattenArrays = (...arrays) =>
+	arrays.reduce((acc, next) => {
+		if (Array.isArray(next)) {
+			return [...acc, ...next];
+		}
+		return [...acc, next];
+	}, []);
 
 const Byline = (props) => {
 	const {
-		pubData,
+		ampersand,
 		bylinePrefix,
-		hideAuthors,
-		hideContributors,
+		contributors,
 		linkToUsers,
 		renderEmptyState,
 		renderSuffix,
+		renderTruncation,
+		renderUserLabel,
+		truncateAt,
 	} = props;
-	const authors = getAllPubContributors(pubData, hideAuthors, hideContributors);
 
-	const renderContent = () => {
-		return (
-			<>
-				{bylinePrefix && <span>{bylinePrefix} </span>}
-				{authors.map((author, index) => {
-					const separator =
-						index === authors.length - 1 || authors.length === 2 ? '' : ', ';
-					const prefix = index === authors.length - 1 && index !== 0 ? ' and ' : '';
-					const user = author.user;
-					if (user.slug && linkToUsers) {
-						return (
-							<span key={`author-${user.id}`}>
-								{prefix}
-								<a href={`/user/${user.slug}`} className="hoverline">
-									{user.fullName}
-								</a>
-								{separator}
-							</span>
-						);
-					}
-					return (
-						<span key={`author-${user.id}`}>
-							{prefix}
-							{user.fullName}
-							{separator}
-						</span>
-					);
-				})}
-			</>
-		);
+	const renderContributor = (contributor, index) => {
+		if (typeof contributor === 'string') {
+			return <span key={`author-${contributor}`}>{contributor}</span>;
+		}
+		const { user } = ensureUserForAttribution(contributor);
+		const label = renderUserLabel(user, index);
+		if (user.slug && linkToUsers) {
+			return (
+				<span key={`author-${user.id}`}>
+					<a href={`/user/${user.slug}`} className="hoverline">
+						{label}
+					</a>
+				</span>
+			);
+		}
+		return <span key={`author-${user.id}`}>{label}</span>;
+	};
+
+	const renderContributors = () => {
+		if (typeof contributors === 'string') {
+			return contributors;
+		}
+		if (truncateAt !== null && contributors.length > truncateAt) {
+			const namedContributors = contributors.slice(0, truncateAt);
+			const remainingCount = contributors.length - namedContributors.length;
+			return joinOxford(
+				[...namedContributors.map(renderContributor), renderTruncation(remainingCount)],
+				{ joiner: joinAndFlattenArrays, ampersand: ampersand, empty: [] },
+			);
+		}
+		return joinOxford(contributors.map(renderContributor), {
+			joiner: joinAndFlattenArrays,
+			ampersand: ampersand,
+			empty: [],
+		});
 	};
 
 	return (
 		<div className="byline-component byline">
 			<span className="text-wrapper">
-				{authors.length > 0 && renderContent()}
-				{authors.length === 0 && renderEmptyState()}
+				{contributors.length > 0 && (
+					<>
+						{bylinePrefix && <span>{bylinePrefix} </span>}
+						{renderContributors()}
+					</>
+				)}
+				{contributors.length === 0 && renderEmptyState()}
 				{renderSuffix && renderSuffix()}
 			</span>
 		</div>

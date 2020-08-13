@@ -11,6 +11,8 @@ import {
 } from 'components/Editor';
 import discussionSchema from 'utils/editor/discussionSchema';
 import { getFirebaseConfig } from 'utils/editor/firebaseConfig';
+import { copyDiscussionMapsToBranch } from '../../client/components/Editor/utils/discussions';
+import { storeCheckpoint } from '../../client/components/Editor/utils';
 
 const getFirebaseApp = () => {
 	if (firebaseAdmin.apps.length > 0) {
@@ -42,6 +44,10 @@ const firebaseApp = getFirebaseApp();
 const database = firebaseApp && firebaseApp.database();
 export const editorSchema = buildSchema({ ...discussionSchema }, {});
 
+export const getPubRef = (pubId) => {
+	return database.ref(`pub-${pubId}`);
+};
+
 export const getBranchRef = (pubId, branchId) => {
 	return database.ref(`pub-${pubId}/branch-${branchId}`);
 };
@@ -53,18 +59,22 @@ const maybeAddKeyTimestampPair = (key, timestamp) => {
 	return null;
 };
 
-export const getBranchDoc = async (pubId, branchId, historyKey, updateOutdatedCheckpoint) => {
+export const getBranchDoc = async (pubId, branchId, historyKey, createMissingCheckpoints) => {
 	const branchRef = getBranchRef(pubId, branchId);
 
 	const [
-		{ doc, key: currentKey, timestamp: currentTimestamp, checkpointMap },
+		{ doc, docIsFromCheckpoint, key: currentKey, timestamp: currentTimestamp, checkpointMap },
 		{ timestamp: firstTimestamp, key: firstKey },
 		{ timestamp: latestTimestamp, key: latestKey },
 	] = await Promise.all([
-		getFirebaseDoc(branchRef, editorSchema, historyKey, updateOutdatedCheckpoint),
+		getFirebaseDoc(branchRef, editorSchema, historyKey),
 		getFirstKeyAndTimestamp(branchRef),
 		getLatestKeyAndTimestamp(branchRef),
 	]);
+
+	if (!docIsFromCheckpoint && createMissingCheckpoints && currentKey === latestKey) {
+		storeCheckpoint(branchRef, doc, latestKey);
+	}
 
 	return {
 		doc: doc,
@@ -100,11 +110,26 @@ export const createFirebaseBranch = (pubId, baseBranchId, newBranchId) => {
 	return createBranch(baseFirebaseRef, newFirebaseRef);
 };
 
-export const mergeFirebaseBranch = (pubId, sourceBranchId, destinationBranchId) => {
+export const mergeFirebaseBranch = (
+	pubId,
+	sourceBranchId,
+	destinationBranchId,
+	copyDiscussionMaps = false,
+) => {
 	const sourceFirebaseRef = getBranchRef(pubId, sourceBranchId);
 	const destinationFirebaseRef = getBranchRef(pubId, destinationBranchId);
-	return mergeBranch(sourceFirebaseRef, destinationFirebaseRef).then(async (res) => {
-		await restoreDiscussionMaps(destinationFirebaseRef, editorSchema, true);
-		return res;
-	});
+	return mergeBranch(sourceFirebaseRef, destinationFirebaseRef, editorSchema).then(
+		async (mergeResult) => {
+			const { mergeKey } = mergeResult;
+			await restoreDiscussionMaps(destinationFirebaseRef, editorSchema, true);
+			if (copyDiscussionMaps) {
+				await copyDiscussionMapsToBranch(
+					sourceFirebaseRef,
+					destinationFirebaseRef,
+					mergeKey,
+				);
+			}
+			return mergeResult;
+		},
+	);
 };
