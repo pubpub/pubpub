@@ -62,21 +62,19 @@ const getAttrsFromOutputSpec = (maybeAttrs) => {
 	return { attrs: attrs, hasAttrs: hasAttrs };
 };
 
-const createReactFromOutputSpec = (outputSpec, outermostKey) => {
-	const createReactInner = (spec, key) => {
-		if (!Array.isArray(spec)) {
-			return spec;
-		}
-		const [tagName, maybeAttrs, ...restItems] = spec;
-		const { attrs, hasAttrs } = getAttrsFromOutputSpec(maybeAttrs);
-		const children = hasAttrs ? restItems : [maybeAttrs, ...restItems];
-		return React.createElement(
-			tagName,
-			{ ...attrs, key: key },
-			...children.map((child, index) => createReactInner(child, `${key}-${index}`)),
-		);
-	};
-	return createReactInner(outputSpec, outermostKey);
+const createReactFromOutputSpec = (spec, key) => {
+	if (!Array.isArray(spec)) {
+		return spec;
+	}
+	const [tagName, maybeAttrs, ...restItems] = spec;
+	const { attrs, hasAttrs } = getAttrsFromOutputSpec(maybeAttrs);
+	const children = hasAttrs ? restItems : [maybeAttrs, ...restItems];
+	console.log(spec);
+	return React.createElement(
+		tagName,
+		{ ...attrs, key: key },
+		...children.map((child, index) => createReactFromOutputSpec(child, `${key}-${index}`)),
+	);
 };
 
 const isHole = (child) => child === 0;
@@ -120,8 +118,8 @@ const createOutputSpecFromNode = (node, schema) => {
 	return marks ? wrapOutputSpecInMarks(outputSpec, marks, schema) : outputSpec;
 };
 
-export const renderStatic = (schema, nodesJson) => {
-	return nodesJson.map((node, index) => {
+export const renderStatic = (schema, doc) => {
+	return doc.content.map((node, index) => {
 		const outputSpec = createOutputSpecFromNode(node, schema);
 		return createReactFromOutputSpec(outputSpec, index);
 	});

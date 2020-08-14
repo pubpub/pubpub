@@ -267,7 +267,7 @@ export const createStaticHtml = async (
 				},
 			},
 		),
-		renderableNodes,
+		{ type: 'doc', content: renderableNodes },
 	);
 
 	return ReactDOMServer.renderToStaticMarkup(
