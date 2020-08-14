@@ -17,7 +17,7 @@ require('./clientServerDiffStories.scss');
 const ServerEditor = (props) => {
 	const schema = buildSchema();
 	const serverHtml = ReactDOMServer.renderToStaticMarkup(
-		renderStatic(schema, props.initialContent, props),
+		renderStatic(schema, props.initialContent),
 	);
 	props.onChange(serverHtml);
 	/* eslint-disable-next-line react/no-danger */

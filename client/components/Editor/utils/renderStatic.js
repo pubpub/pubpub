@@ -103,26 +103,26 @@ const wrapOutputSpecInMarks = (outputSpec, marks, schema) => {
 	}, outputSpec);
 };
 
-const createOutputSpecFromNode = (node, schema) => {
+const createOutputSpecFromNode = (node, schema, context) => {
 	const { type, marks, content, attrs = {} } = node;
 	const nodeType = schema.nodes[type];
 	const { spec: nodeSpec } = nodeType;
 
 	const childSpecs = Array.isArray(content)
-		? content.map((child) => createOutputSpecFromNode(child, schema))
+		? content.map((child) => createOutputSpecFromNode(child, schema, context))
 		: [];
 
 	const outputSpec = fillHoleInSpec(
-		nodeSpec.toDOM({ ...node, type: nodeType, attrs: attrs }, { isReact: true }),
+		nodeSpec.toDOM({ ...node, type: nodeType, attrs: attrs }, { ...context, isReact: true }),
 		childSpecs,
 	);
 
 	return marks ? wrapOutputSpecInMarks(outputSpec, marks, schema) : outputSpec;
 };
 
-export const renderStatic = (schema, doc) => {
+export const renderStatic = (schema, doc, context = {}) => {
 	return doc.content.map((node, index) => {
-		const outputSpec = createOutputSpecFromNode(node, schema);
+		const outputSpec = createOutputSpecFromNode(node, schema, context);
 		return createReactFromOutputSpec(outputSpec, index);
 	});
 };
