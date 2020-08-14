@@ -47,7 +47,6 @@ const normalizeAttrs = (attrs) => {
 			if (typeof transformValue === 'function') {
 				resAttrs = { ...resAttrs, ...transformValue(value) };
 			} else {
-				console.log('transformValue', transformValue, key);
 				resAttrs[transformValue] = value;
 			}
 		} else {
