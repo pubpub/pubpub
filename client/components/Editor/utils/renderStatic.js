@@ -43,10 +43,11 @@ const normalizeAttrs = (attrs) => {
 	let resAttrs = {};
 	Object.entries(attrs).forEach(([key, value]) => {
 		if (key in attrsTransformations) {
-			const transformValue = attrsTransformations[value];
+			const transformValue = attrsTransformations[key];
 			if (typeof transformValue === 'function') {
 				resAttrs = { ...resAttrs, ...transformValue(value) };
 			} else {
+				console.log('transformValue', transformValue, key);
 				resAttrs[transformValue] = value;
 			}
 		} else {
@@ -69,7 +70,6 @@ const createReactFromOutputSpec = (spec, key) => {
 	const [tagName, maybeAttrs, ...restItems] = spec;
 	const { attrs, hasAttrs } = getAttrsFromOutputSpec(maybeAttrs);
 	const children = hasAttrs ? restItems : [maybeAttrs, ...restItems];
-	console.log(spec);
 	return React.createElement(
 		tagName,
 		{ ...attrs, key: key },
@@ -79,7 +79,7 @@ const createReactFromOutputSpec = (spec, key) => {
 
 const isHole = (child) => child === 0;
 
-const fillHoleInSpec = (outputSpec, children) => {
+const fillHoleInSpec = (outputSpec, children, isMark) => {
 	if (Array.isArray(outputSpec)) {
 		const holeIndex = outputSpec.findIndex(isHole);
 		if (holeIndex >= 0) {
@@ -89,6 +89,9 @@ const fillHoleInSpec = (outputSpec, children) => {
 				...outputSpec.slice(holeIndex + 1),
 			];
 		}
+		if (isMark) {
+			return [...outputSpec, ...children];
+		}
 		return outputSpec.map((outputSpecChild) => fillHoleInSpec(outputSpecChild, children));
 	}
 	return outputSpec;
@@ -97,7 +100,7 @@ const fillHoleInSpec = (outputSpec, children) => {
 const wrapOutputSpecInMarks = (outputSpec, marks, schema) => {
 	return marks.reduce((child, mark) => {
 		const { spec: markSpec } = schema.marks[mark.type];
-		return fillHoleInSpec(markSpec.toDOM(mark), [child]);
+		return fillHoleInSpec(markSpec.toDOM(mark), [child], true);
 	}, outputSpec);
 };
 
@@ -111,7 +114,7 @@ const createOutputSpecFromNode = (node, schema) => {
 		: [];
 
 	const outputSpec = fillHoleInSpec(
-		nodeSpec.toDOM({ ...node, type: nodeType, attrs: attrs }),
+		nodeSpec.toDOM({ ...node, type: nodeType, attrs: attrs }, { isReact: true }),
 		childSpecs,
 	);
 

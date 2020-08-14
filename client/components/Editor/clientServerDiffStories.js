@@ -12,7 +12,7 @@ import Editor from './Editor';
 import { buildSchema } from './utils/schema';
 import { renderStatic } from './utils/renderStatic';
 
-require('./renderTest.scss');
+require('./clientServerDiffStories.scss');
 
 const ServerEditor = (props) => {
 	const schema = buildSchema();
@@ -62,7 +62,7 @@ const RenderTest = (props) => {
 	);
 };
 
-storiesOf('RenderTest', module).add('default', () => (
+storiesOf('Editor/clientServerDiff', module).add('default', () => (
 	<React.Fragment>
 		{Object.keys(testDocs).map((key) => {
 			return <RenderTest key={key} title={key} doc={testDocs[key]} />;

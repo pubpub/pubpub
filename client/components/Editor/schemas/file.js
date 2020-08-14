@@ -25,7 +25,7 @@ export default {
 				},
 			},
 		],
-		toDOM: (node) => {
+		toDOM: (node, { isReact } = {}) => {
 			const attrs = node.attrs;
 			const extension = attrs.fileName ? attrs.fileName.split('.').pop() : '';
 			return [
@@ -78,7 +78,7 @@ export default {
 						},
 					],
 				],
-				['figcaption', {}, renderHtmlChildren(node, node.attrs.caption, 'div')],
+				['figcaption', {}, renderHtmlChildren(isReact, node.attrs.caption, 'div')],
 			];
 		},
 		inline: false,
