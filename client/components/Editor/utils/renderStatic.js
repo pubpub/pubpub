@@ -39,7 +39,7 @@ const attrsTransformations = {
 	},
 };
 
-const normalizeAttrs = (attrs) => {
+const normalizeAttrsForReact = (attrs) => {
 	let resAttrs = {};
 	Object.entries(attrs).forEach(([key, value]) => {
 		if (key in attrsTransformations) {
@@ -58,7 +58,7 @@ const normalizeAttrs = (attrs) => {
 
 const getAttrsFromOutputSpec = (maybeAttrs) => {
 	const hasAttrs = maybeAttrs && typeof maybeAttrs === 'object' && !Array.isArray(maybeAttrs);
-	const attrs = hasAttrs ? normalizeAttrs(maybeAttrs) : {};
+	const attrs = hasAttrs ? normalizeAttrsForReact(maybeAttrs) : {};
 	return { attrs: attrs, hasAttrs: hasAttrs };
 };
 
@@ -103,6 +103,19 @@ const wrapOutputSpecInMarks = (outputSpec, marks, schema) => {
 	}, outputSpec);
 };
 
+const normalizeAttrsForSpec = (attrs, spec) => {
+	if (spec.attrs) {
+		const keptAttrs = {};
+		Object.keys(attrs).forEach((key) => {
+			if (spec.attrs[key]) {
+				keptAttrs[key] = attrs[key];
+			}
+		});
+		return keptAttrs;
+	}
+	return null;
+};
+
 const createOutputSpecFromNode = (node, schema, context) => {
 	const { type, marks, content, attrs = {} } = node;
 	const nodeType = schema.nodes[type];
@@ -113,7 +126,10 @@ const createOutputSpecFromNode = (node, schema, context) => {
 		: [];
 
 	const outputSpec = fillHoleInSpec(
-		nodeSpec.toDOM({ ...node, type: nodeType, attrs: attrs }, { ...context, isReact: true }),
+		nodeSpec.toDOM(
+			{ ...node, type: nodeType, attrs: normalizeAttrsForSpec(attrs, nodeSpec) },
+			{ ...context, isReact: true },
+		),
 		childSpecs,
 	);
 
