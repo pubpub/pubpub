@@ -16,7 +16,7 @@ Sitemap: ${communityUrl(community)}/sitemap-index.xml`;
 
 app.get(
 	'/robots.txt',
-	wrap(async (req, res, next) => {
+	wrap(async (req, res) => {
 		if (!hostIsValid(req, 'community')) {
 			return buildRobotsFile();
 		}
