@@ -1,15 +1,15 @@
 import { history } from 'prosemirror-history';
 import { gapCursor } from 'prosemirror-gapcursor';
-import buildCitation from './citation';
+
 import buildCollaborative from './collaborative';
 import buildDomEvents from './domEvents';
-import buildFootnote from './footnote';
-import buildHeaderIds from './headerIds';
+import buildIds from './ids';
 import buildInputRules from './inputRules';
 import buildKeymap from './keymap';
 import buildLocalHighlights from './localHighlights';
 import buildOnChange from './onChange';
 import buildPlaceholder from './placeholder';
+import buildReactive from './reactive';
 import buildTable from './table';
 
 const buildGapCursor = () => {
@@ -28,13 +28,12 @@ export const requiredPlugins = {
 	keymap: buildKeymap,
 	table: buildTable,
 	collaborative: buildCollaborative,
-	citation: buildCitation,
-	footnote: buildFootnote,
+	ids: buildIds,
+	reactive: buildReactive,
 };
 
 export const optionalPlugins = {
 	inputRules: buildInputRules,
-	headerIds: buildHeaderIds,
 	placeholder: buildPlaceholder,
 	localHighlights: buildLocalHighlights,
 };

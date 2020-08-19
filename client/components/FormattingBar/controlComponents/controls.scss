@@ -21,7 +21,7 @@
     max-width: 1600px;
     height: 225px;
     margin: 0 auto;
-    
+
     @include text-fields();
 
     @include small-screen {
