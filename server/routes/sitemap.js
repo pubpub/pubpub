@@ -48,11 +48,7 @@ const maybeGenerateSitemapIndex = async (community) => {
 		return false;
 	}
 
-	const hostname = communityUrl({
-		where: {
-			communityId: community.id,
-		},
-	});
+	const hostname = communityUrl(community);
 	const pubs = await Pub.findAll({
 		where: {
 			communityId: community.id,
@@ -70,6 +66,7 @@ const maybeGenerateSitemapIndex = async (community) => {
 	const pages = await Page.findAll({
 		where: {
 			communityId: community.id,
+			isPublic: true,
 		},
 	});
 	// By default, SitemapAndIndexStream will partition sitemaps every 45,000 entries.
