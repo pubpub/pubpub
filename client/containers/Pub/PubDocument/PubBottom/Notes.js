@@ -1,13 +1,15 @@
-import React, { useState, useRef, useLayoutEffect } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import { Icon, PubNoteContent } from 'components';
 
+import { usePubContext } from '../../pubHooks';
+
 require('./notes.scss');
 
 export const notePropType = PropTypes.shape({
-	html: PropTypes.string,
+	structuredValue: PropTypes.string,
 	unstructuredValue: PropTypes.string,
 	count: PropTypes.number,
 });
@@ -45,6 +47,13 @@ const Note = (props) => {
 	const { note, accentColor, targetNoteElement } = props;
 	const contentRef = useRef();
 	const [returnLinkTarget, setReturnLinkTarget] = useState(null);
+	const { citationManager } = usePubContext();
+	const [citation, setCitation] = useState(citationManager.getSync(note.structuredValue));
+
+	useEffect(() => citationManager.subscribe(note.structuredValue, setCitation), [
+		citationManager,
+		note.structuredValue,
+	]);
 
 	useLayoutEffect(() => {
 		const contentNode = contentRef.current;
@@ -64,7 +73,7 @@ const Note = (props) => {
 			<div className="inner">
 				<PubNoteContent
 					ref={contentRef}
-					structured={note.html}
+					structured={citation && citation.html}
 					unstructured={note.unstructuredValue}
 				/>
 				{returnLinkTarget &&

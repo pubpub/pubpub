@@ -37,9 +37,6 @@ const PubHeaderFormatting = (props) => {
 				buttons={buttons.fullButtonSet}
 				editorChangeObject={props.collabData.editorChangeObject || {}}
 				popoverContainerRef={props.editorWrapperRef}
-				footnotes={pubData.footnotes}
-				citations={pubData.citations}
-				citationStyle={pubData.citationStyle}
 				isFullScreenWidth={true}
 			/>
 			<div className="right-content">
