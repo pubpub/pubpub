@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDebounce } from 'use-debounce';
 
-import { apiFetch } from 'client/utils/apiFetch';
 import { SimpleEditor, PubNoteContent } from 'components';
 import { getCitationInlineLabel } from 'components/Editor/utils/citation';
-import { usePubData, usePubContext } from 'containers/Pub/pubHooks';
+import { usePubContext } from 'containers/Pub/pubHooks';
 
 import { ControlsButton, ControlsButtonGroup } from '../ControlsButton';
 import InlineLabelEditor from './InlineLabelEditor';
@@ -34,7 +33,6 @@ const propTypes = {
 			}),
 		}),
 	}).isRequired,
-	citationStyle: PropTypes.string.isRequired,
 };
 
 const unwrapPendingAttrs = (pendingAttrs, isFootnote) => {

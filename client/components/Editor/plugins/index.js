@@ -4,6 +4,7 @@ import { gapCursor } from 'prosemirror-gapcursor';
 import buildCollaborative from './collaborative';
 import buildDomEvents from './domEvents';
 import buildIds from './ids';
+import buildHeaderIds from './headerIds';
 import buildInputRules from './inputRules';
 import buildKeymap from './keymap';
 import buildLocalHighlights from './localHighlights';
@@ -28,8 +29,8 @@ export const requiredPlugins = {
 	keymap: buildKeymap,
 	table: buildTable,
 	collaborative: buildCollaborative,
-	citation: buildCitation,
-	footnote: buildFootnote,
+	ids: buildIds,
+	reactive: buildReactive,
 };
 
 export const optionalPlugins = {
