@@ -5,9 +5,8 @@ import { promisify } from 'util';
 import { createGzip } from 'zlib';
 
 import { isProd } from 'utils/environment';
-import { Page, Pub } from 'server/models';
-import app from 'server/server';
-import { handleErrors } from 'server/utils/errors';
+import { Page, Pub, Release } from 'server/models';
+import app, { wrap } from 'server/server';
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
 import { communityUrl, pubUrl, pageUrl } from 'utils/canonicalUrls';
@@ -49,14 +48,30 @@ const maybeGenerateSitemapIndex = async (community) => {
 		return false;
 	}
 
-	const communityQuery = {
+	const hostname = communityUrl({
 		where: {
 			communityId: community.id,
 		},
-	};
-	const hostname = communityUrl(community);
-	const pubs = await Pub.findAll(communityQuery);
-	const pages = await Page.findAll(communityQuery);
+	});
+	const pubs = await Pub.findAll({
+		where: {
+			communityId: community.id,
+		},
+		include: [
+			{
+				model: Release,
+				as: 'releases',
+				required: true,
+				attributes: [],
+			},
+		],
+		attributes: ['slug'],
+	});
+	const pages = await Page.findAll({
+		where: {
+			communityId: community.id,
+		},
+	});
 	// By default, SitemapAndIndexStream will partition sitemaps every 45,000 entries.
 	const sitemapAndIndexStream = new SitemapAndIndexStream({
 		getSitemapStream: (i) => {
@@ -108,19 +123,20 @@ const getSitemapIndex = async (community, targetFilename) => {
 	return s3.getObject(indexParams).createReadStream();
 };
 
-app.get('/sitemap*', async (req, res, next) => {
-	if (!hostIsValid(req, 'community')) {
-		return next();
-	}
+app.get(
+	'/sitemap*',
+	wrap(async (req, res, next) => {
+		if (!hostIsValid(req, 'community')) {
+			return next();
+		}
 
-	const { path } = req;
-	const sitemapIndexOrSitemapFilename = path.replace(/^\//, '');
+		const { path } = req;
+		const sitemapIndexOrSitemapFilename = path.replace(/^\//, '');
 
-	if (!/^sitemap-([0-9]+|index)\.xml$/.test(sitemapIndexOrSitemapFilename)) {
-		return res.sendStatus(404);
-	}
+		if (!/^sitemap-([0-9]+|index)\.xml$/.test(sitemapIndexOrSitemapFilename)) {
+			return res.sendStatus(404);
+		}
 
-	try {
 		const { communityData } = await getInitialData(req, true);
 		const sitemapFileStream = await getSitemapIndex(
 			communityData,
@@ -135,7 +151,5 @@ app.get('/sitemap*', async (req, res, next) => {
 		}
 
 		return res.sendStatus(404);
-	} catch (err) {
-		return handleErrors(req, res, next)(err);
-	}
-});
+	}),
+);

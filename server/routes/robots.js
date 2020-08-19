@@ -1,5 +1,4 @@
-import app from 'server/server';
-import { handleErrors } from 'server/utils/errors';
+import app, { wrap } from 'server/server';
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
 import { communityUrl } from 'utils/canonicalUrls';
@@ -15,17 +14,17 @@ Sitemap: ${communityUrl(community)}/sitemap-index.xml`;
 	return BASE_ROBOTS;
 };
 
-app.get('/robots.txt', async (req, res, next) => {
-	if (!hostIsValid(req, 'community')) {
-		return buildRobotsFile();
-	}
+app.get(
+	'/robots.txt',
+	wrap(async (req, res, next) => {
+		if (!hostIsValid(req, 'community')) {
+			return buildRobotsFile();
+		}
 
-	try {
 		const { communityData } = await getInitialData(req, true);
 
 		res.header('Content-Type', 'text/plain');
+
 		return res.send(buildRobotsFile(communityData));
-	} catch (err) {
-		return handleErrors(req, res, next)(err);
-	}
-});
+	}),
+);
