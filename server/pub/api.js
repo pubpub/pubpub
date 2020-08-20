@@ -59,7 +59,7 @@ app.delete(
 		const canDestroy = await canDestroyPub({ userId: userId, pubId: pubId });
 		if (canDestroy) {
 			await destroyPub(pubId);
-			return res.status(200).end();
+			return res.status(200).json({});
 		}
 		throw new ForbiddenError();
 	}),
