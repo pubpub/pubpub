@@ -10,7 +10,7 @@ export const createPub = async ({ communityId, collectionId, ...restArgs }, user
 	const newPubSlug = generateHash(8);
 	const date = new Date();
 	const dateString = `${months[date.getMonth()]} ${date.getDate()}`;
-	const { defaultPubCollections = [] } = await Community.findOne({ where: { id: communityId } });
+	const { defaultPubCollections } = await Community.findOne({ where: { id: communityId } });
 
 	const newPub = await Pub.create({
 		title: `Untitled Pub on ${dateString}`,
@@ -54,7 +54,7 @@ export const createPub = async ({ communityId, collectionId, ...restArgs }, user
 	});
 
 	const createCollectionPubs = Promise.all(
-		[...defaultPubCollections, collectionId]
+		[...(defaultPubCollections || []), collectionId]
 			.filter((x) => x)
 			.map(async (collectionIdToAdd) => {
 				// defaultPubCollections isn't constrained by the database in any way and might contain IDs
