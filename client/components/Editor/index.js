@@ -1,4 +1,6 @@
-export default from './Editor';
+import Editor from './Editor';
+
+export default Editor;
 export * from './utils';
 
 /*

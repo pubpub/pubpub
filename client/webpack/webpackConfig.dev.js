@@ -9,6 +9,7 @@ module.exports = {
 		main: resolve(__dirname, `../containers/App/App.js`),
 	},
 	resolve: {
+		extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss'],
 		modules: [resolve(__dirname, '../'), 'node_modules'],
 		alias: {
 			client: resolve(__dirname, '../../client'),
@@ -43,7 +44,7 @@ module.exports = {
 				type: 'javascript/auto',
 			},
 			{
-				test: /\.(js|jsx)$/,
+				test: /\.(js|jsx|ts|tsx)$/,
 				include: [resolve(__dirname, '../'), resolve(__dirname, '../../utils')],
 				use: 'babel-loader',
 			},
