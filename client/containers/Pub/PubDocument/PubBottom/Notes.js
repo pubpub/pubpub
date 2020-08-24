@@ -17,16 +17,6 @@ export const notePropType = PropTypes.shape({
 const propTypes = {
 	accentColor: PropTypes.string.isRequired,
 	notes: PropTypes.arrayOf(notePropType).isRequired,
-	targetNoteElement: PropTypes.func.isRequired,
-};
-
-const scrollToNode = (node) => {
-	if (node) {
-		node.scrollIntoView();
-		const currentTop = document.body.scrollTop || document.documentElement.scrollTop;
-		document.body.scrollTop = currentTop - 75;
-		document.documentElement.scrollTop = currentTop - 75;
-	}
 };
 
 const findLastElementChild = (node) => {
@@ -44,7 +34,7 @@ const findLastElementChild = (node) => {
 };
 
 const Note = (props) => {
-	const { note, accentColor, targetNoteElement } = props;
+	const { note, accentColor } = props;
 	const contentRef = useRef();
 	const [returnLinkTarget, setReturnLinkTarget] = useState(null);
 	const { citationManager } = usePubContext();
@@ -78,20 +68,14 @@ const Note = (props) => {
 				/>
 				{returnLinkTarget &&
 					ReactDOM.createPortal(
-						<span
-							role="button"
-							aria-label="Jump back to source"
-							tabIndex="0"
-							style={{ cursor: 'pointer' }}
-							onClick={() => scrollToNode(targetNoteElement(note))}
-						>
+						<a aria-label="Jump back to source" href={`#${note.id}`}>
 							<Icon
 								className="jump-back-icon"
 								icon="return"
 								color={accentColor}
 								iconSize={10}
 							/>
-						</span>,
+						</a>,
 						returnLinkTarget,
 					)}
 			</div>
@@ -102,7 +86,6 @@ const Note = (props) => {
 Note.propTypes = {
 	accentColor: PropTypes.string.isRequired,
 	note: notePropType.isRequired,
-	targetNoteElement: PropTypes.func.isRequired,
 };
 
 const Notes = (props) => {
