@@ -15,7 +15,7 @@ export default {
 			customLabel: { default: '' },
 		},
 		reactiveAttrs: {
-			count: counter('citation', (node) => [node.attrs.value, node.attrs.structuredValue]),
+			count: counter('citation', (node) => [node.attrs.value, node.attrs.unstructuredValue]),
 			citation: structuredCitation('value'),
 		},
 		parseDOM: [
