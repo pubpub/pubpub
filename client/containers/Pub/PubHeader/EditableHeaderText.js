@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { EditableText } from '@blueprintjs/core';
-import classnames from 'classnames';
 
 import { LengthIndicator } from 'components';
-
-require('./editableHeaderText.scss');
 
 const propTypes = {
 	canEdit: PropTypes.bool.isRequired,
@@ -35,7 +32,7 @@ const EditableHeaderText = (props) => {
 
 	return React.createElement(
 		tagName,
-		{ className: classnames(className, 'editable-header-text-component') },
+		{ className: className },
 		useEditableTitle ? (
 			<>
 				<EditableText
