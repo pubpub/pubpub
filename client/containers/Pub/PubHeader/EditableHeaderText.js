@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { EditableText } from '@blueprintjs/core';
+import classnames from 'classnames';
+
+import { LengthIndicator } from 'components';
+
+require('./editableHeaderText.scss');
 
 const propTypes = {
 	canEdit: PropTypes.bool.isRequired,
@@ -9,16 +14,18 @@ const propTypes = {
 	tagName: PropTypes.string,
 	text: PropTypes.string,
 	updateText: PropTypes.func.isRequired,
+	maxLength: PropTypes.number,
 };
 
 const defaultProps = {
 	className: '',
 	tagName: 'h1',
 	text: null,
+	maxLength: Infinity,
 };
 
 const EditableHeaderText = (props) => {
-	const { canEdit, className, placeholder, tagName, text, updateText } = props;
+	const { canEdit, className, placeholder, tagName, text, updateText, maxLength } = props;
 	const [hasMounted, setHasMounted] = useState(false);
 	const [intermediateValue, setIntermediateValue] = useState(text);
 	const useEditableTitle = hasMounted && canEdit;
@@ -28,16 +35,20 @@ const EditableHeaderText = (props) => {
 
 	return React.createElement(
 		tagName,
-		{ className: className },
+		{ className: classnames(className, 'editable-header-text-component') },
 		useEditableTitle ? (
-			<EditableText
-				placeholder={placeholder}
-				onConfirm={(newText) => updateText(newText.replace(/\n/g, ''))}
-				onChange={setIntermediateValue}
-				value={intermediateValue}
-				multiline={true}
-				confirmOnEnterKey={true}
-			/>
+			<>
+				<EditableText
+					placeholder={placeholder}
+					onConfirm={(newText) => updateText(newText.replace(/\n/g, ''))}
+					onChange={setIntermediateValue}
+					value={intermediateValue}
+					multiline={true}
+					confirmOnEnterKey={true}
+					maxLength={maxLength}
+				/>
+				<LengthIndicator maxLength={maxLength} length={intermediateValue.length} />
+			</>
 		) : (
 			<span className="text-wrapper">{text}</span>
 		),
