@@ -24,7 +24,7 @@ const defaultProps = {
 const EditableHeaderText = (props) => {
 	const { canEdit, className, placeholder, tagName, text, updateText, maxLength } = props;
 	const [hasMounted, setHasMounted] = useState(false);
-	const [intermediateValue, setIntermediateValue] = useState(text || '');
+	const [intermediateValue, setIntermediateValue] = useState(text);
 	const useEditableTitle = hasMounted && canEdit;
 
 	useEffect(() => setHasMounted(true), []);
@@ -44,7 +44,7 @@ const EditableHeaderText = (props) => {
 					confirmOnEnterKey={true}
 					maxLength={maxLength}
 				/>
-				<LengthIndicator maxLength={maxLength} length={intermediateValue.length} />
+				<LengthIndicator maxLength={maxLength} length={(intermediateValue || '').length} />
 			</>
 		) : (
 			<span className="text-wrapper">{text}</span>
