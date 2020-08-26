@@ -2,10 +2,6 @@ import React from 'react';
 
 import { Byline } from 'components';
 import { getAllPubContributors } from 'utils/pub/contributors';
-// @ts-expect-error ts-migrate(2614) FIXME: Module '"../Byline/Byline"' has no exported member... Remove this comment to see the full error message
-import { propTypes as bylinePropTypes } from '../Byline/Byline';
-
-const { contributors, ...bylinePropTypesWithoutContributors } = bylinePropTypes;
 
 /*
 (ts-migrate) TODO: Migrate the remaining prop types
