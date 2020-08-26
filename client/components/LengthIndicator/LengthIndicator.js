@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
+import classNames from 'classnames';
+import { Classes } from '@blueprintjs/core';
 
 require('./lengthIndicator.scss');
 
@@ -25,9 +26,9 @@ function LengthIndicator(props) {
 
 	return (
 		<span
-			className={classnames(
+			className={classNames(
 				'length-indicator-component',
-				lengthRatio === 1 && 'at-max-length',
+				lengthRatio === 1 && Classes.INTENT_DANGER,
 			)}
 		>
 			{length} / {maxLength}
