@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { EditableText } from '@blueprintjs/core';
 
-type OwnProps = {
+import { LengthIndicator } from 'components';
+
+export type EditableHeaderTextProps = {
 	canEdit: boolean;
 	className?: string;
 	placeholder: string;
@@ -11,23 +13,22 @@ type OwnProps = {
 	maxLength: number;
 };
 
-const defaultProps = {
-	className: '',
-	tagName: 'h1',
-	text: null,
-	maxLength: Infinity,
-};
-
-type Props = OwnProps & typeof defaultProps;
-
-const EditableHeaderText = (props: Props) => {
-	const { canEdit, className, placeholder, tagName, text, updateText, maxLength } = props;
+const EditableHeaderText = (props: EditableHeaderTextProps) => {
+	const {
+		canEdit,
+		className = '',
+		placeholder,
+		tagName = 'h1',
+		text = null,
+		updateText,
+		maxLength = Infinity,
+	} = props;
 	const [hasMounted, setHasMounted] = useState(false);
-	const [intermediateValue, setIntermediateValue] = useState(text);
+	const [intermediateValue, setIntermediateValue] = useState(text || '');
 	const useEditableTitle = hasMounted && canEdit;
 
 	useEffect(() => setHasMounted(true), []);
-	useEffect(() => setIntermediateValue(text), [text]);
+	useEffect(() => setIntermediateValue(text || ''), [text]);
 
 	return React.createElement(
 		tagName,
@@ -36,9 +37,7 @@ const EditableHeaderText = (props: Props) => {
 			<>
 				<EditableText
 					placeholder={placeholder}
-					// @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures.
 					onConfirm={(newText) => updateText(newText.replace(/\n/g, ''))}
-					// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type '(prevStat... Remove this comment to see the full error message
 					onChange={setIntermediateValue}
 					value={intermediateValue}
 					multiline={true}
@@ -52,5 +51,5 @@ const EditableHeaderText = (props: Props) => {
 		),
 	);
 };
-EditableHeaderText.defaultProps = defaultProps;
+
 export default EditableHeaderText;
