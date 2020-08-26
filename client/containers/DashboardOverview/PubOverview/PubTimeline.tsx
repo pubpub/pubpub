@@ -1,6 +1,5 @@
 /* eslint-disable react/no-danger */
 import React from 'react';
-import PropTypes from 'prop-types';
 import { AnchorButton, Button, Classes, Popover } from '@blueprintjs/core';
 
 import { Icon, Timeline, TimelineItem, TimelineCondenser } from 'components';
@@ -10,15 +9,19 @@ import { pubUrl } from 'utils/canonicalUrls';
 
 require('./pubTimeline.scss');
 
-const propTypes = {
-	pubData: PropTypes.shape({
-		createdAt: PropTypes.any,
-		branches: PropTypes.arrayOf(PropTypes.shape({ title: PropTypes.string })),
-		releases: PropTypes.arrayOf(PropTypes.shape({ createdAt: PropTypes.any })),
-	}).isRequired,
+type Props = {
+	pubData: {
+		createdAt?: any;
+		branches?: {
+			title?: string;
+		}[];
+		releases?: {
+			createdAt?: any;
+		}[];
+	};
 };
 
-const PubTimeline = (props) => {
+const PubTimeline = (props: Props) => {
 	const { pubData } = props;
 	const {
 		communityData,
@@ -27,23 +30,34 @@ const PubTimeline = (props) => {
 		},
 	} = usePageContext();
 	const { releases } = pubData;
+	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const olderReleases = releases.slice(0, releases.length - 1);
+	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const latestRelease = releases[releases.length - 1];
 
+	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const draftBranch = pubData.branches.find((br) => br.title === 'draft');
+	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const hasDraftContent = !!draftBranch.latestKeyAt;
 
 	const draftLastEditedNotice = hasDraftContent
-		? `Last edited ${formatDate(draftBranch.latestKeyAt, { includeTime: true })}`
+		? // @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
+		  `Last edited ${formatDate(draftBranch.latestKeyAt, { includeTime: true })}`
 		: 'Get started by editing the Pub draft.';
 
 	const draftItem = (canView || canViewDraft) && (
 		<TimelineItem
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'true' is not assignable to type 'never'.
 			large
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'boolean' is not assignable to type 'never'.
 			hollow={hasDraftContent}
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			icon="edit"
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			title="Pub draft"
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			subtitle={draftLastEditedNotice}
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 			controls={
 				<AnchorButton outlined href={pubUrl(communityData, pubData, { isDraft: true })}>
 					Go to draft
@@ -55,10 +69,15 @@ const PubTimeline = (props) => {
 	const renderReleaseItem = (release, number, isLatest = false) => {
 		return (
 			<TimelineItem
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'true' is not assignable to type 'never'.
 				hollow
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'boolean' is not assignable to type 'never'.
 				large={isLatest}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				icon="document-open"
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 				key={release.id}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 				title={
 					<a
 						className="release-link"
@@ -70,7 +89,9 @@ const PubTimeline = (props) => {
 						{isLatest && ' (latest)'}
 					</a>
 				}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				subtitle={formatDate(release.createdAt, { includeTime: true })}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 				controls={
 					canManage &&
 					release.noteText && (
@@ -98,10 +119,15 @@ const PubTimeline = (props) => {
 
 		return (
 			<TimelineItem
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'true' is not assignable to type 'never'.
 				large
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				icon="document-open"
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 				title={<i>No releases yet</i>}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				subtitle="Create a Release to share this Pub with the world."
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 				controls={
 					<Popover
 						content={popoverContent}
@@ -115,25 +141,32 @@ const PubTimeline = (props) => {
 	};
 
 	return (
+		// @ts-expect-error ts-migrate(2746) FIXME: This JSX tag's 'children' prop expects a single ch... Remove this comment to see the full error message
 		<Timeline className="pub-timeline-component" accentColor={communityData.accentColorDark}>
+			{/* @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'. */}
 			{releases.length === 0 && hasDraftContent && renderNoReleasesItem()}
 			{draftItem}
+			{/* @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'. */}
 			{latestRelease && renderReleaseItem(latestRelease, releases.length, true)}
+			{/* @ts-expect-error ts-migrate(2786) FIXME: Type 'undefined' is not assignable to type 'Elemen... Remove this comment to see the full error message */}
 			<TimelineCondenser shownItemsLimit={4}>
 				{olderReleases
 					.map((release, index) => renderReleaseItem(release, index + 1))
 					.reverse()}
 			</TimelineCondenser>
 			<TimelineItem
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'true' is not assignable to type 'never'.
 				hollow
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'true' is not assignable to type 'never'.
 				large
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				title="Pub created"
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				subtitle={formatDate(pubData.createdAt, { includeTime: true })}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				icon="clean"
 			/>
 		</Timeline>
 	);
 };
-
-PubTimeline.propTypes = propTypes;
 export default PubTimeline;

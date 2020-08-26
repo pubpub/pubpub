@@ -1,18 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Editor, { getText, getJSON } from 'components/Editor';
 
 require('./minimalEditor.scss');
 
-const propTypes = {
-	constrainHeight: PropTypes.bool,
-	focusOnLoad: PropTypes.bool,
-	initialContent: PropTypes.object,
-	isTranslucent: PropTypes.bool,
-	onChange: PropTypes.func,
-	placeholder: PropTypes.string,
-	useFormattingBar: PropTypes.bool,
+type OwnProps = {
+	constrainHeight?: boolean;
+	focusOnLoad?: boolean;
+	initialContent?: any;
+	isTranslucent?: boolean;
+	onChange?: (...args: any[]) => any;
+	placeholder?: string;
+	useFormattingBar?: boolean;
 };
 
 const defaultProps = {
@@ -25,7 +24,9 @@ const defaultProps = {
 	useFormattingBar: false,
 };
 
-const MinimalEditor = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const MinimalEditor = (props: Props) => {
 	const {
 		initialContent,
 		constrainHeight,
@@ -40,7 +41,9 @@ const MinimalEditor = (props) => {
 	const editorWrapperRef = useRef(null);
 
 	useEffect(() => {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 		if (focusOnLoad && changeObject.view) {
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 			changeObject.view.focus();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -55,6 +58,7 @@ const MinimalEditor = (props) => {
 		// eslint-disable-next-line global-require
 		Promise.resolve(require('../FormattingBar')).then(
 			({ buttons, FormattingBar: FormattingBarComponent }) => {
+				// @ts-expect-error ts-migrate(2345) FIXME: Type '(innerProps: any) => Element' is not assigna... Remove this comment to see the full error message
 				setFormattingBar(() => (innerProps) => (
 					<FormattingBarComponent {...innerProps} buttons={buttons.minimalButtonSet} />
 				));
@@ -64,6 +68,7 @@ const MinimalEditor = (props) => {
 
 	const handleWrapperClick = () => {
 		if (changeObject) {
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 			const { view } = changeObject;
 			if (!view.hasFocus()) {
 				view.focus();
@@ -81,6 +86,7 @@ const MinimalEditor = (props) => {
 			)}
 		>
 			{useFormattingBar && FormattingBar && (
+				// @ts-expect-error ts-migrate(2604) FIXME: JSX element type 'FormattingBar' does not have any... Remove this comment to see the full error message
 				<FormattingBar
 					popoverContainerRef={editorWrapperRef}
 					editorChangeObject={changeObject}
@@ -95,7 +101,9 @@ const MinimalEditor = (props) => {
 				<Editor
 					initialContent={initialContent}
 					placeholder={placeholder}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type '() => boolean' is not assignable to type 'un... Remove this comment to see the full error message
 					onScrollToSelection={() => true}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type '(editorChangeObject: any) => void' is not as... Remove this comment to see the full error message
 					onChange={(editorChangeObject) => {
 						setChangeObject(editorChangeObject);
 						onChange({
@@ -113,7 +121,5 @@ const MinimalEditor = (props) => {
 		</div>
 	);
 };
-
-MinimalEditor.propTypes = propTypes;
 MinimalEditor.defaultProps = defaultProps;
 export default MinimalEditor;

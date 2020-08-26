@@ -32,13 +32,16 @@ export const hydrateWrapper = (Component) => {
 			});
 		}
 
+		// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 		const viewData = JSON.parse(document.getElementById('view-data').getAttribute('data-json'));
 		const chunkName = JSON.parse(
+			// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 			document.getElementById('chunk-name').getAttribute('data-json'),
 		);
 		if (!isLocalEnv(window)) {
 			setupKeen();
 			setupHeap(initialData);
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'sentryIsActive' does not exist on type '... Remove this comment to see the full error message
 			window.sentryIsActive = true;
 			Sentry.init({
 				dsn: 'https://abe1c84bbb3045bd982f9fea7407efaa@sentry.io/1505439',

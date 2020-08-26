@@ -1,18 +1,17 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useDebounce } from 'use-debounce';
 import { moveToEndOfSelection } from 'components/Editor';
 import { Button, AnchorButton, InputGroup } from '@blueprintjs/core';
 
-const propTypes = {
-	editorChangeObject: PropTypes.shape({
-		activeLink: PropTypes.object,
-		view: PropTypes.object,
-	}).isRequired,
-	onClose: PropTypes.func.isRequired,
+type Props = {
+	editorChangeObject: {
+		activeLink?: any;
+		view?: any;
+	};
+	onClose: (...args: any[]) => any;
 };
 
-const ControlsLink = (props) => {
+const ControlsLink = (props: Props) => {
 	const {
 		editorChangeObject: { activeLink, view },
 		onClose,
@@ -26,7 +25,9 @@ const ControlsLink = (props) => {
 	useEffect(() => activeLink.updateAttrs({ href: debouncedHref }), [debouncedHref]);
 
 	useEffect(() => {
+		// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 		if (inputRef.current && typeof inputRef.current.focus === 'function' && !href) {
+			// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 			inputRef.current.focus();
 		}
 	}, [href]);
@@ -51,6 +52,7 @@ const ControlsLink = (props) => {
 				value={href}
 				onChange={(evt) => setHref(evt.target.value)}
 				onKeyPress={handleKeyPress}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'MutableRefObject<undefined>' provides no mat... Remove this comment to see the full error message
 				inputRef={inputRef}
 			/>
 			<AnchorButton small minimal title="Visit" icon="share" href={href} target="_blank" />
@@ -58,6 +60,4 @@ const ControlsLink = (props) => {
 		</div>
 	);
 };
-
-ControlsLink.propTypes = propTypes;
 export default ControlsLink;

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { NonIdealState, Tab, Tabs } from '@blueprintjs/core';
 
 import { DashboardFrame } from 'components';
@@ -11,20 +10,18 @@ import { useDashboardEdges } from './useDashboardEdges';
 
 require('./dashboardEdges.scss');
 
-const propTypes = {
-	overviewData: PropTypes.shape({
-		pubs: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-	}).isRequired,
-	pubData: PropTypes.shape({
-		id: PropTypes.string,
-		outboundEdges: PropTypes.arrayOf(
-			PropTypes.shape({
-				targetPub: PropTypes.shape({
-					id: PropTypes.string,
-				}),
-			}),
-		),
-	}).isRequired,
+type Props = {
+	overviewData: {
+		pubs: {}[];
+	};
+	pubData: {
+		id?: string;
+		outboundEdges?: {
+			targetPub?: {
+				id?: string;
+			};
+		}[];
+	};
 };
 
 const frameDetails = (
@@ -34,7 +31,7 @@ const frameDetails = (
 	</>
 );
 
-const DashboardEdges = (props) => {
+const DashboardEdges = (props: Props) => {
 	const { overviewData, pubData } = props;
 	const [showOutboundEmptyState, setShowOutboundEmptyState] = useState(true);
 	const {
@@ -55,6 +52,7 @@ const DashboardEdges = (props) => {
 	const renderOutboundEdgesTab = () => {
 		const usedPubsIds = [
 			pubData.id,
+			// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 			...pubData.outboundEdges
 				.map((edge) => edge.targetPub && edge.targetPub.id)
 				.filter((x) => x),
@@ -64,6 +62,7 @@ const DashboardEdges = (props) => {
 				{canManageEdges && (
 					<NewEdgeEditor
 						availablePubs={overviewData.pubs}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'undefined' is not assignable to type 'string... Remove this comment to see the full error message
 						usedPubIds={usedPubsIds}
 						pubData={pubData}
 						onCreateNewEdge={addCreatedOutboundEdge}
@@ -73,10 +72,15 @@ const DashboardEdges = (props) => {
 					/>
 				)}
 				<DashboardEdgesListing
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 					pubEdges={outboundEdges}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type '(sourceIndex: any, destinationIndex: any) =>... Remove this comment to see the full error message
 					onReorderEdges={canManageEdges && reorderOutboundEdges}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type '(outboundEdge: any) => void' is not assignab... Remove this comment to see the full error message
 					onRemoveEdge={canManageEdges && removeOutboundEdge}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'false' is not assignable to type 'never'.
 					isInbound={false}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type '() => false | JSX.Element' is not assignable... Remove this comment to see the full error message
 					renderEmptyState={() =>
 						showOutboundEmptyState && (
 							<NonIdealState
@@ -98,9 +102,13 @@ const DashboardEdges = (props) => {
 	const renderInboundEdgesTab = () => {
 		return (
 			<DashboardEdgesListing
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 				pubEdges={inboundEdges}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type '(inboundEdge: any, approvedByTarget: any) =>... Remove this comment to see the full error message
 				onUpdateEdgeApproval={canManageEdges && updateInboundEdgeApproval}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'true' is not assignable to type 'never'.
 				isInbound={true}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type '() => JSX.Element' is not assignable to type... Remove this comment to see the full error message
 				renderEmptyState={() => (
 					<NonIdealState
 						icon="layout-auto"
@@ -113,9 +121,13 @@ const DashboardEdges = (props) => {
 	};
 
 	return (
+		// @ts-expect-error ts-migrate(2745) FIXME: This JSX tag's 'children' prop expects type 'never... Remove this comment to see the full error message
 		<DashboardFrame
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			className="dashboard-edges-container"
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			title="Connections"
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 			details={frameDetails}
 		>
 			<Tabs id="pub-dashboard-connections-tabs">
@@ -133,6 +145,4 @@ const DashboardEdges = (props) => {
 		</DashboardFrame>
 	);
 };
-
-DashboardEdges.propTypes = propTypes;
 export default DashboardEdges;

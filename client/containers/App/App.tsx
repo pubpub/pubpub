@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Provider as RKProvider } from 'reakit';
 import classNames from 'classnames';
 
@@ -15,13 +14,13 @@ import { usePageState } from './usePageState';
 require('../../styles/base.scss');
 require('./app.scss');
 
-const propTypes = {
-	chunkName: PropTypes.string.isRequired,
-	initialData: PropTypes.object.isRequired,
-	viewData: PropTypes.object.isRequired,
+type Props = {
+	chunkName: string;
+	initialData: any;
+	viewData: any;
 };
 
-const App = (props) => {
+const App = (props: Props) => {
 	const { chunkName, initialData, viewData } = props;
 	const pageContextProps = usePageState(initialData);
 	const { communityData, loginData, locationData } = pageContextProps;
@@ -32,6 +31,7 @@ const App = (props) => {
 	// Our debugging lifeline
 	if (typeof window !== 'undefined') {
 		// eslint-disable-next-line no-underscore-dangle
+		// @ts-expect-error ts-migrate(2339) FIXME: Property '__pubpub_pageContextProps__' does not ex... Remove this comment to see the full error message
 		window.__pubpub_pageContextProps__ = pageContextProps;
 	}
 
@@ -55,6 +55,7 @@ const App = (props) => {
 							<Breadcrumbs />
 						</React.Fragment>
 					)}
+					{/* @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'number | ... Remove this comment to see the full error message */}
 					<div id="main-content" tabIndex="-1">
 						<ActiveComponent {...viewData} />
 					</div>
@@ -64,8 +65,6 @@ const App = (props) => {
 		</PageContext.Provider>
 	);
 };
-
-App.propTypes = propTypes;
 export default App;
 
 hydrateWrapper(App);

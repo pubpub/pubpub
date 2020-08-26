@@ -1,13 +1,12 @@
 import React, { useState, useCallback } from 'react';
-import PropTypes from 'prop-types';
 
 import { PendingChanges } from 'utils/hooks';
 
-const propTypes = {
-	children: PropTypes.node.isRequired,
+type Props = {
+	children: React.ReactNode;
 };
 
-const PendingChangesProvider = (props) => {
+const PendingChangesProvider = (props: Props) => {
 	const { children } = props;
 	const [pendingCount, setPendingCount] = useState(0);
 
@@ -31,12 +30,11 @@ const PendingChangesProvider = (props) => {
 
 	return (
 		<PendingChanges.Provider
+			// @ts-expect-error ts-migrate(2322) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
 			value={{ pendingCount: pendingCount, pendingPromise: pendingPromise }}
 		>
 			{children}
 		</PendingChanges.Provider>
 	);
 };
-
-PendingChangesProvider.propTypes = propTypes;
 export default PendingChangesProvider;

@@ -159,6 +159,7 @@ const CommunitySettings = () => {
 					window.location.reload();
 				} else {
 					const communityPart = communityUrl(nextCommunityData);
+					// @ts-expect-error ts-migrate(2345) FIXME: Type '{ mode: string; }' is missing the following ... Remove this comment to see the full error message
 					const dashPart = getDashUrl({ mode: 'settings' });
 					window.location.href = communityPart + dashPart;
 				}
@@ -166,6 +167,7 @@ const CommunitySettings = () => {
 			.catch((err) => {
 				console.error(err);
 				setIsLoading(false);
+				// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '"Error Saving Settings"' is not ... Remove this comment to see the full error message
 				setError('Error Saving Settings');
 			});
 	};
@@ -220,6 +222,7 @@ const CommunitySettings = () => {
 				<div className="row-wrapper">
 					<ImageUpload
 						htmlFor="favicon-upload"
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'undefine... Remove this comment to see the full error message
 						label={
 							<span>
 								Favicon
@@ -231,6 +234,7 @@ const CommunitySettings = () => {
 											Recommended: 50*50px
 										</span>
 									}
+									// @ts-expect-error ts-migrate(2322) FIXME: Property 'tooltipClassName' does not exist on type... Remove this comment to see the full error message
 									tooltipClassName="bp3-dark"
 								>
 									<Icon icon="info-sign" />
@@ -238,12 +242,14 @@ const CommunitySettings = () => {
 							</span>
 						}
 						defaultImage={favicon}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '(val: any) => void' is not assignable to typ... Remove this comment to see the full error message
 						onNewImage={(val) => {
 							setFavicon(val);
 						}}
 					/>
 					<ImageUpload
 						htmlFor="avatar-upload"
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'undefine... Remove this comment to see the full error message
 						label={
 							<span>
 								Preview
@@ -255,6 +261,7 @@ const CommunitySettings = () => {
 											Recommended: 500*500px
 										</span>
 									}
+									// @ts-expect-error ts-migrate(2322) FIXME: Property 'tooltipClassName' does not exist on type... Remove this comment to see the full error message
 									tooltipClassName="bp3-dark"
 								>
 									<Icon icon="info-sign" />
@@ -262,6 +269,7 @@ const CommunitySettings = () => {
 							</span>
 						}
 						defaultImage={avatar}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '(val: any) => void' is not assignable to typ... Remove this comment to see the full error message
 						onNewImage={(val) => {
 							setAvatar(val);
 						}}
@@ -289,6 +297,7 @@ const CommunitySettings = () => {
 			<SettingsSection title="Header">
 				<ImageUpload
 					htmlFor="header-logo-upload"
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'undefine... Remove this comment to see the full error message
 					label={
 						<span>
 							Header Logo
@@ -300,6 +309,7 @@ const CommunitySettings = () => {
 										Recommended: ~40*150px
 									</span>
 								}
+								// @ts-expect-error ts-migrate(2322) FIXME: Property 'tooltipClassName' does not exist on type... Remove this comment to see the full error message
 								tooltipClassName="bp3-dark"
 							>
 								<Icon icon="info-sign" />
@@ -309,6 +319,7 @@ const CommunitySettings = () => {
 					defaultImage={headerLogo}
 					height={80}
 					width={150}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type '(val: any) => void' is not assignable to typ... Remove this comment to see the full error message
 					onNewImage={(val) => {
 						setHeaderLogo(val);
 					}}
@@ -353,6 +364,7 @@ const CommunitySettings = () => {
 				</InputField>
 				<InputField>
 					<Switch
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'string'.
 						label={
 							<span>
 								Public &apos;New Pub&apos; button
@@ -364,6 +376,7 @@ const CommunitySettings = () => {
 											Button will always be available to community admins.
 										</span>
 									}
+									// @ts-expect-error ts-migrate(2322) FIXME: Property 'tooltipClassName' does not exist on type... Remove this comment to see the full error message
 									tooltipClassName="bp3-dark"
 								>
 									<Icon icon="info-sign" />
@@ -372,6 +385,7 @@ const CommunitySettings = () => {
 						}
 						checked={!hideCreatePubButton}
 						onChange={(evt) => {
+							// @ts-expect-error ts-migrate(2339) FIXME: Property 'checked' does not exist on type 'EventTa... Remove this comment to see the full error message
 							setHideCreatePubButton(!evt.target.checked);
 						}}
 					/>
@@ -408,6 +422,7 @@ const CommunitySettings = () => {
 						label="Show Navigation Bar"
 						checked={!hideNav}
 						onChange={(evt) => {
+							// @ts-expect-error ts-migrate(2339) FIXME: Property 'checked' does not exist on type 'EventTa... Remove this comment to see the full error message
 							setHideNav(!evt.target.checked);
 						}}
 					/>
@@ -416,6 +431,7 @@ const CommunitySettings = () => {
 					<InputField label="Navigation">
 						<NavBuilder
 							initialNav={activeCommunity.navigation}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 							prefix={[activeCommunity.navigation[0]]}
 							pages={pages}
 							onChange={(val) => {
@@ -450,6 +466,7 @@ const CommunitySettings = () => {
 							label="Show Homepage Banner"
 							checked={!hideHero}
 							onChange={(evt) => {
+								// @ts-expect-error ts-migrate(2339) FIXME: Property 'checked' does not exist on type 'EventTa... Remove this comment to see the full error message
 								setHideHero(!evt.target.checked);
 							}}
 						/>
@@ -459,6 +476,7 @@ const CommunitySettings = () => {
 					<div className="row-wrapper">
 						<ImageUpload
 							htmlFor="hero-logo-upload"
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'undefine... Remove this comment to see the full error message
 							label={
 								<span>
 									Banner Logo
@@ -470,6 +488,7 @@ const CommunitySettings = () => {
 												Recommended: ~200*750px
 											</span>
 										}
+										// @ts-expect-error ts-migrate(2322) FIXME: Property 'tooltipClassName' does not exist on type... Remove this comment to see the full error message
 										tooltipClassName="bp3-dark"
 									>
 										<Icon icon="info-sign" />
@@ -479,6 +498,7 @@ const CommunitySettings = () => {
 							defaultImage={heroLogo}
 							height={80}
 							width={150}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type '(val: any) => void' is not assignable to typ... Remove this comment to see the full error message
 							onNewImage={(val) => {
 								setHeroLogo(val);
 							}}
@@ -487,6 +507,7 @@ const CommunitySettings = () => {
 						/>
 						<ImageUpload
 							htmlFor="hero-background-upload"
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'undefine... Remove this comment to see the full error message
 							label={
 								<span>
 									Banner Background
@@ -498,6 +519,7 @@ const CommunitySettings = () => {
 												Recommended: ~1200*800px
 											</span>
 										}
+										// @ts-expect-error ts-migrate(2322) FIXME: Property 'tooltipClassName' does not exist on type... Remove this comment to see the full error message
 										tooltipClassName="bp3-dark"
 									>
 										<Icon icon="info-sign" />
@@ -505,6 +527,7 @@ const CommunitySettings = () => {
 								</span>
 							}
 							defaultImage={heroBackgroundImage}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type '(val: any) => void' is not assignable to typ... Remove this comment to see the full error message
 							onNewImage={(val) => {
 								setHeroBackgroundImage(val);
 							}}
@@ -514,6 +537,7 @@ const CommunitySettings = () => {
 						/>
 						<ImageUpload
 							htmlFor="hero-image-upload"
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'undefine... Remove this comment to see the full error message
 							label={
 								<span>
 									Banner Image
@@ -525,6 +549,7 @@ const CommunitySettings = () => {
 												Recommended: ~600*600px
 											</span>
 										}
+										// @ts-expect-error ts-migrate(2322) FIXME: Property 'tooltipClassName' does not exist on type... Remove this comment to see the full error message
 										tooltipClassName="bp3-dark"
 									>
 										<Icon icon="info-sign" />
@@ -532,6 +557,7 @@ const CommunitySettings = () => {
 								</span>
 							}
 							defaultImage={heroImage}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type '(val: any) => void' is not assignable to typ... Remove this comment to see the full error message
 							onNewImage={(val) => {
 								setHeroImage(val);
 							}}
@@ -563,6 +589,7 @@ const CommunitySettings = () => {
 								label="Hide Header Logo"
 								checked={hideHeaderLogo}
 								onChange={(evt) => {
+									// @ts-expect-error ts-migrate(2339) FIXME: Property 'checked' does not exist on type 'EventTa... Remove this comment to see the full error message
 									setHideHeaderLogo(evt.target.checked);
 								}}
 							/>
@@ -572,6 +599,7 @@ const CommunitySettings = () => {
 								label="Use Header Gradient"
 								checked={useHeaderGradient}
 								onChange={(evt) => {
+									// @ts-expect-error ts-migrate(2339) FIXME: Property 'checked' does not exist on type 'EventTa... Remove this comment to see the full error message
 									setUseHeaderGradient(evt.target.checked);
 								}}
 								disabled={!heroBackgroundImage}
@@ -747,10 +775,12 @@ const CommunitySettings = () => {
 				<ImageUpload
 					key={footerImageKey}
 					htmlFor="footer-logo-upload"
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'undefined... Remove this comment to see the full error message
 					label="Footer Logo"
 					defaultImage={footerImage}
 					height={80}
 					width={150}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type '(val: any) => void' is not assignable to typ... Remove this comment to see the full error message
 					onNewImage={(val) => {
 						setFooterImage(val);
 					}}
@@ -771,6 +801,7 @@ const CommunitySettings = () => {
 				<InputField label="Footer Links">
 					<NavBuilder
 						initialNav={activeCommunity.footerLinks || defaultFooterLinks}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '{ id: string; title: string; href: string; }... Remove this comment to see the full error message
 						suffix={defaultFooterLinks}
 						pages={pages}
 						onChange={(val) => {

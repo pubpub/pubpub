@@ -41,6 +41,7 @@ const initFirebase = (rootKey) => {
 	const firebaseAppName = `App-${rootKey}`;
 	/* Check if we've already initialized an Firebase App with the */
 	/* same name in this local environment */
+	// @ts-expect-error ts-migrate(2769) FIXME: Type 'App' is not assignable to type 'undefined'.
 	const existingApp = firebase.apps.reduce((prev, curr) => {
 		return curr.name === firebaseAppName ? curr : prev;
 	}, undefined);
@@ -60,6 +61,7 @@ const cursorCommands = {
 
 const rootKey = 'ttest11';
 const branchKey = 'branch-f4bf24f7-6184-4f5f-b2d3-2b9d2563cb62';
+// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 2.
 const firebaseRootRef = initFirebase(rootKey, '');
 const firebaseBranchRef = firebaseRootRef.child(branchKey);
 const newDiscussionId = String(Math.floor(Math.random() * 999999));
@@ -71,6 +73,7 @@ const CursorOptionsDemoPub = () => {
 		children: key,
 		onClick: () => {
 			cursorCommands[key](editorView);
+			// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 			editorView.focus();
 		},
 	}));
@@ -86,6 +89,7 @@ const CursorOptionsDemoPub = () => {
 				placeholder="Begin writing..."
 				initialContent={initialContent}
 				isReadOnly={false}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type '(editorChangeObject: any) => void' is not as... Remove this comment to see the full error message
 				onChange={(editorChangeObject) => setEditorView(editorChangeObject.view)}
 			/>
 		</div>
@@ -100,7 +104,9 @@ storiesOf('Editor', module)
 				placeholder="Begin writing..."
 				initialContent={initialContent}
 				// isReadOnly={true}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type '(err: any) => void' is not assignable to typ... Remove this comment to see the full error message
 				onError={(err) => console.error(err)}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type '(changeObject: any) => void' is not assignab... Remove this comment to see the full error message
 				onChange={(changeObject) => {
 					// console.log('====');
 					// console.log(JSON.stringify(changeObject.view.state.doc.toJSON(), null, 4));
@@ -172,8 +178,11 @@ storiesOf('Editor', module)
 						type="button"
 						onClick={() => {
 							setLocalHighlight(
+								// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 								changeObject.view,
+								// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 								changeObject.view.state.selection.from,
+								// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 								changeObject.view.state.selection.to,
 								newDiscussionId,
 							);
@@ -184,6 +193,7 @@ storiesOf('Editor', module)
 					<button
 						type="button"
 						onClick={() => {
+							// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 							removeLocalHighlight(changeObject.view, newDiscussionId);
 						}}
 					>
@@ -193,7 +203,9 @@ storiesOf('Editor', module)
 						type="button"
 						onClick={() => {
 							console.log(
+								// @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
 								convertLocalHighlightToDiscussion(
+									// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 									changeObject.view,
 									newDiscussionId,
 								),
@@ -206,9 +218,11 @@ storiesOf('Editor', module)
 					<Editor
 						key={firebaseBranchRef ? 'ready' : 'unready'}
 						placeholder="Begin writing..."
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '(evt: any) => void' is not assignable to typ... Remove this comment to see the full error message
 						onChange={(evt) => {
 							updatechangeObject(evt);
 						}}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '(err: any) => void' is not assignable to typ... Remove this comment to see the full error message
 						onError={(err) => console.error(err)}
 						collaborativeOptions={{
 							firebaseRef: firebaseBranchRef,
@@ -244,8 +258,11 @@ storiesOf('Editor', module)
 						type="button"
 						onClick={() => {
 							setLocalHighlight(
+								// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 								changeObject.view,
+								// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 								changeObject.view.state.selection.from,
+								// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 								changeObject.view.state.selection.to,
 								newDiscussionId,
 							);
@@ -256,6 +273,7 @@ storiesOf('Editor', module)
 					<button
 						type="button"
 						onClick={() => {
+							// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 							removeLocalHighlight(changeObject.view, newDiscussionId);
 						}}
 					>
@@ -265,7 +283,9 @@ storiesOf('Editor', module)
 						type="button"
 						onClick={() => {
 							console.log(
+								// @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
 								convertLocalHighlightToDiscussion(
+									// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 									changeObject.view,
 									newDiscussionId,
 								),
@@ -278,6 +298,7 @@ storiesOf('Editor', module)
 					<Editor
 						key={firebaseBranchRef ? 'ready' : 'unready'}
 						placeholder="Begin writing..."
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '(evt: any) => void' is not assignable to typ... Remove this comment to see the full error message
 						onChange={(evt) => {
 							// updatechangeObject(evt);
 							if (times < 15) {
@@ -292,6 +313,7 @@ storiesOf('Editor', module)
 								}, 1000);
 							}
 						}}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '(err: any) => void' is not assignable to typ... Remove this comment to see the full error message
 						onError={(err) => console.error(err)}
 						collaborativeOptions={{
 							firebaseRef: firebaseBranchRef,
@@ -312,6 +334,7 @@ storiesOf('Editor', module)
 				placeholder="Begin writing..."
 				initialContent={initialContent}
 				isReadOnly={true}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type '(changeObject: any) => void' is not assignab... Remove this comment to see the full error message
 				onChange={(changeObject) => {
 					console.log(changeObject.view);
 				}}

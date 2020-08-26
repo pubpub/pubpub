@@ -17,6 +17,7 @@ const propTypes = {
 };
 
 const FormattingBarMediaButton = React.forwardRef((props, ref) => {
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'editorChangeObject' does not exist on ty... Remove this comment to see the full error message
 	const { editorChangeObject, isSmall, onClick, isIndicated, isOpen, ...restProps } = props;
 	const [isModalOpen, setModalOpen] = useState(false);
 
@@ -40,6 +41,7 @@ const FormattingBarMediaButton = React.forwardRef((props, ref) => {
 			<FormattingBarButton
 				{...restProps}
 				ref={ref}
+				// @ts-expect-error ts-migrate(2322) FIXME: Property 'isIndicated' does not exist on type 'Int... Remove this comment to see the full error message
 				isIndicated={isIndicated}
 				isOpen={isOpen}
 				isSmall={isSmall}
@@ -50,5 +52,6 @@ const FormattingBarMediaButton = React.forwardRef((props, ref) => {
 	);
 });
 
+// @ts-expect-error ts-migrate(2559) FIXME: Type '{ editorChangeObject: Validator<InferProps<{... Remove this comment to see the full error message
 FormattingBarMediaButton.propTypes = propTypes;
 export default FormattingBarMediaButton;

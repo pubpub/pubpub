@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Spinner } from '@blueprintjs/core';
 import Dropzone from 'react-dropzone';
 import filesize from 'filesize';
@@ -7,13 +6,15 @@ import filesize from 'filesize';
 import Icon from 'components/Icon/Icon';
 import { s3Upload } from 'client/utils/upload';
 
-const propTypes = {
-	onInsert: PropTypes.func.isRequired,
-	isSmall: PropTypes.bool.isRequired,
+type Props = {
+	onInsert: (...args: any[]) => any;
+	isSmall: boolean;
 };
 
-class MediaFile extends Component {
-	constructor(props) {
+type State = any;
+
+class MediaFile extends Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			isUploading: false,
@@ -82,6 +83,4 @@ class MediaFile extends Component {
 		);
 	}
 }
-
-MediaFile.propTypes = propTypes;
 export default MediaFile;

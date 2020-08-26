@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Menu, MenuItem, NonIdealState, Tag } from '@blueprintjs/core';
 import dateFormat from 'dateformat';
 import { DashboardFrame } from 'components';
@@ -8,11 +7,11 @@ import { getDashUrl } from 'utils/dashboard';
 
 require('./dashboardReviews.scss');
 
-const propTypes = {
-	overviewData: PropTypes.object.isRequired,
+type Props = {
+	overviewData: any;
 };
 
-const DashboardReviews = (props) => {
+const DashboardReviews = (props: Props) => {
 	const { overviewData } = props;
 	const { scopeData } = usePageContext();
 	const { activeCollection, activeTargetType } = scopeData.elements;
@@ -28,9 +27,13 @@ const DashboardReviews = (props) => {
 		return pub.reviews.length;
 	});
 	return (
+		// @ts-expect-error ts-migrate(2746) FIXME: This JSX tag's 'children' prop expects a single ch... Remove this comment to see the full error message
 		<DashboardFrame
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			className="dashboard-reviews-container"
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			title="Reviews"
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			details="Reviews allow members of your Community to request feedback on their Pubs and release them to the world."
 		>
 			{!pubsWithReviews.length && (
@@ -39,6 +42,7 @@ const DashboardReviews = (props) => {
 				</Menu>
 			)}
 			{pubsWithReviews.map((pub) => {
+				// @ts-expect-error ts-migrate(2345) FIXME: Type '{ collectionSlug: any; pubSlug: any; }' is m... Remove this comment to see the full error message
 				const pubUrl = getDashUrl({
 					collectionSlug: activeCollection ? activeCollection.slug : undefined,
 					pubSlug: pub.slug,
@@ -101,6 +105,4 @@ const DashboardReviews = (props) => {
 		</DashboardFrame>
 	);
 };
-
-DashboardReviews.propTypes = propTypes;
 export default DashboardReviews;

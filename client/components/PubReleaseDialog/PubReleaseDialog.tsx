@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { AnchorButton, Button, Callout, Classes, Dialog, Icon, Checkbox } from '@blueprintjs/core';
 
 import { MinimalEditor } from 'components';
@@ -10,15 +9,17 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 require('./pubReleaseDialog.scss');
 
-const propTypes = {
-	historyData: PropTypes.shape({ latestKey: PropTypes.number }).isRequired,
-	isOpen: PropTypes.bool.isRequired,
-	pubData: PropTypes.shape({
-		id: PropTypes.string,
-		releases: PropTypes.arrayOf(PropTypes.shape({})),
-	}).isRequired,
-	onClose: PropTypes.func.isRequired,
-	updatePubData: PropTypes.func.isRequired,
+type OwnProps = {
+	historyData: {
+		latestKey?: number;
+	};
+	isOpen: boolean;
+	pubData: {
+		id?: string;
+		releases?: {}[];
+	};
+	onClose: (...args: any[]) => any;
+	updatePubData: (...args: any[]) => any;
 };
 
 const defaultProps = {};
@@ -43,7 +44,9 @@ const createRelease = ({
 		}),
 	});
 
-const PubReleaseDialog = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const PubReleaseDialog = (props: Props) => {
 	const { isOpen, onClose, historyData, pubData, updatePubData } = props;
 	const {
 		communityData,
@@ -56,6 +59,7 @@ const PubReleaseDialog = (props) => {
 	const [isCreatingRelease, setIsCreatingRelease] = useState(false);
 	const [createdRelease, setCreatedRelease] = useState(false);
 	const [releaseError, setReleleaseError] = useState(null);
+	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const latestRelease = pubData.releases[pubData.releases.length - 1];
 
 	const handleCreateRelease = async () => {
@@ -63,7 +67,9 @@ const PubReleaseDialog = (props) => {
 		createRelease({
 			communityId: communityData.id,
 			pubId: pubData.id,
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'content' does not exist on type '{}'.
 			noteContent: noteData.content,
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'text' does not exist on type '{}'.
 			noteText: noteData.text,
 			draftKey: historyData.latestKey,
 			makeDraftDiscussionsPublic: makeDraftDiscussionsPublic,
@@ -157,10 +163,12 @@ const PubReleaseDialog = (props) => {
 						</p>
 						{latestRelease && renderLatestReleaseInfo(latestRelease)}
 						<MinimalEditor
+							// @ts-expect-error ts-migrate(2322) FIXME: Type '(data: any) => void' is not assignable to ty... Remove this comment to see the full error message
 							onChange={(data) => {
 								setNoteData(data);
 							}}
 							focusOnLoad={true}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'undefined... Remove this comment to see the full error message
 							placeholder="Add a (publicly-visible) note describing this release."
 						/>
 						{isSuperAdmin && (
@@ -185,7 +193,5 @@ const PubReleaseDialog = (props) => {
 		</Dialog>
 	);
 };
-
-PubReleaseDialog.propTypes = propTypes;
 PubReleaseDialog.defaultProps = defaultProps;
 export default PubReleaseDialog;

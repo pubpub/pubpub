@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Spinner } from '@blueprintjs/core';
 import Dropzone from 'react-dropzone';
 import Icon from 'components/Icon/Icon';
 import { s3Upload } from 'client/utils/upload';
 
-const propTypes = {
-	onInsert: PropTypes.func.isRequired,
-	isSmall: PropTypes.bool.isRequired,
+type Props = {
+	onInsert: (...args: any[]) => any;
+	isSmall: boolean;
 };
 
-class MediaAudio extends Component {
-	constructor(props) {
+type State = any;
+
+class MediaAudio extends Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			isUploading: false,
@@ -80,6 +81,4 @@ class MediaAudio extends Component {
 		);
 	}
 }
-
-MediaAudio.propTypes = propTypes;
 export default MediaAudio;

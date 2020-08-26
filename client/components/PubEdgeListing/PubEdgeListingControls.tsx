@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-import PropTypes from 'prop-types';
 import { Button, ButtonGroup, Checkbox, Icon, Popover, Radio } from '@blueprintjs/core';
 
 import { toTitleCase, joinOxford } from 'utils/strings';
@@ -8,18 +7,18 @@ import { Mode, allFilters, filterToPlural } from './constants';
 
 require('./pubEdgeListingControls.scss');
 
-const propTypes = {
-	accentColor: PropTypes.string.isRequired,
-	carouselControlsDisabled: PropTypes.bool,
-	filters: PropTypes.arrayOf(PropTypes.string).isRequired,
-	mode: PropTypes.string.isRequired,
-	onAllFilterToggle: PropTypes.func.isRequired,
-	onBackClick: PropTypes.func.isRequired,
-	onFilterToggle: PropTypes.func.isRequired,
-	onModeChange: PropTypes.func.isRequired,
-	onNextClick: PropTypes.func.isRequired,
-	showFilterMenu: PropTypes.bool,
-	single: PropTypes.bool,
+type OwnProps = {
+	accentColor: string;
+	carouselControlsDisabled?: boolean;
+	filters: string[];
+	mode: string;
+	onAllFilterToggle: (...args: any[]) => any;
+	onBackClick: (...args: any[]) => any;
+	onFilterToggle: (...args: any[]) => any;
+	onModeChange: (...args: any[]) => any;
+	onNextClick: (...args: any[]) => any;
+	showFilterMenu?: boolean;
+	single?: boolean;
 };
 
 const defaultProps = {
@@ -28,7 +27,9 @@ const defaultProps = {
 	single: false,
 };
 
-const PubEdgeListingControls = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const PubEdgeListingControls = (props: Props) => {
 	const {
 		accentColor,
 		carouselControlsDisabled,
@@ -132,7 +133,5 @@ const PubEdgeListingControls = (props) => {
 		</nav>
 	);
 };
-
-PubEdgeListingControls.propTypes = propTypes;
 PubEdgeListingControls.defaultProps = defaultProps;
 export default PubEdgeListingControls;

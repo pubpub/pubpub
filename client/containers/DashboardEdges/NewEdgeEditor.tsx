@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Button, Callout, Divider } from '@blueprintjs/core';
 
@@ -13,20 +12,18 @@ import NewEdgeInput from './NewEdgeInput';
 
 require('./newEdgeEditor.scss');
 
-const propTypes = {
-	availablePubs: PropTypes.arrayOf(
-		PropTypes.shape({
-			title: PropTypes.string,
-			avatar: PropTypes.string,
-		}),
-	).isRequired,
-	onCreateNewEdge: PropTypes.func.isRequired,
-	onChangeCreatingState: PropTypes.func.isRequired,
-	pubData: PropTypes.shape({
-		title: PropTypes.string,
-		id: PropTypes.string,
-	}).isRequired,
-	usedPubIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+type Props = {
+	availablePubs: {
+		title?: string;
+		avatar?: string;
+	}[];
+	onCreateNewEdge: (...args: any[]) => any;
+	onChangeCreatingState: (...args: any[]) => any;
+	pubData: {
+		title?: string;
+		id?: string;
+	};
+	usedPubIds: string[];
 };
 
 const createCandidateEdge = (resource, relationType = RelationType.Reply) => {
@@ -46,7 +43,7 @@ const stripMarkupFromString = (string) => {
 	return string;
 };
 
-const NewEdgeEditor = (props) => {
+const NewEdgeEditor = (props: Props) => {
 	const { availablePubs, onChangeCreatingState, onCreateNewEdge, pubData, usedPubIds } = props;
 	const [newEdge, setNewEdge] = useState(null);
 	const [isCreatingEdge, setIsCreatingEdge] = useState(false);
@@ -55,7 +52,9 @@ const NewEdgeEditor = (props) => {
 
 	const currentRelationName =
 		newEdge &&
+		// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 		relationTypeDefinitions[newEdge.relationType] &&
+		// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 		relationTypeDefinitions[newEdge.relationType].name;
 
 	useEffect(() => onChangeCreatingState(!!newEdge), [newEdge, onChangeCreatingState]);
@@ -87,6 +86,7 @@ const NewEdgeEditor = (props) => {
 
 	const handleEdgeDirectionSwitch = () => {
 		setNewEdge({
+			// @ts-expect-error ts-migrate(2698) FIXME: Spread types may only be created from object types... Remove this comment to see the full error message
 			...newEdge,
 			pubIsParent: !newEdge.pubIsParent,
 		});
@@ -94,6 +94,7 @@ const NewEdgeEditor = (props) => {
 
 	const handleEdgeRelationTypeChange = (relationType) => {
 		setNewEdge({
+			// @ts-expect-error ts-migrate(2698) FIXME: Spread types may only be created from object types... Remove this comment to see the full error message
 			...newEdge,
 			relationType: relationType,
 		});
@@ -103,7 +104,9 @@ const NewEdgeEditor = (props) => {
 		setIsCreatingEdge(true);
 		setErrorCreatingEdge(null);
 		pendingPromise(
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'post' does not exist on type '(path: any... Remove this comment to see the full error message
 			apiFetch.post('/api/pubEdges', {
+				// @ts-expect-error ts-migrate(2698) FIXME: Spread types may only be created from object types... Remove this comment to see the full error message
 				...newEdge,
 				pubId: pubData.id,
 				// Don't send the whole Pub, just the ID
@@ -122,19 +125,24 @@ const NewEdgeEditor = (props) => {
 	};
 
 	const renderNewEdgeControls = () => {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'externalPublication' does not exist on t... Remove this comment to see the full error message
 		const { externalPublication, targetPub } = newEdge;
 		const canCreateEdge = targetPub || (externalPublication && externalPublication.title);
 		return (
 			<div className="new-edge-controls">
 				<PubEdgeListingCard
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'false' is not assignable to type 'never'.
 					isInboundEdge={false}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'null' is not assignable to type 'never'.
 					pubEdge={newEdge}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 					pubEdgeElement={
 						externalPublication && (
 							<PubEdgeEditor
 								externalPublication={externalPublication}
 								onUpdateExternalPublication={(update) =>
 									setNewEdge({
+										// @ts-expect-error ts-migrate(2698) FIXME: Spread types may only be created from object types... Remove this comment to see the full error message
 										...newEdge,
 										externalPublication: { ...externalPublication, ...update },
 									})
@@ -155,6 +163,7 @@ const NewEdgeEditor = (props) => {
 					<MenuButton
 						aria-label="Select relationship type"
 						buttonProps={{
+							// @ts-expect-error ts-migrate(2322) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
 							rightIcon: 'chevron-down',
 							children: `Type: ${currentRelationName}`,
 						}}
@@ -162,9 +171,11 @@ const NewEdgeEditor = (props) => {
 						{Object.entries(relationTypeDefinitions).map(
 							([relationType, definition]) => {
 								const { name } = definition;
+								// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 								const selected = newEdge.relationType === relationType;
 								return (
 									<MenuItem
+										// @ts-expect-error ts-migrate(2322) FIXME: Property 'text' does not exist on type 'IntrinsicA... Remove this comment to see the full error message
 										text={name}
 										onClick={() => handleEdgeRelationTypeChange(relationType)}
 										key={relationType}
@@ -207,6 +218,4 @@ const NewEdgeEditor = (props) => {
 		</div>
 	);
 };
-
-NewEdgeEditor.propTypes = propTypes;
 export default NewEdgeEditor;

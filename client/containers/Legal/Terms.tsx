@@ -400,7 +400,7 @@ const Terms = function(props) {
 					</p>
 				</Dialog>
 				, including the email address for our DMCA agent, to whom copyright infringement
-				notifications should be sent. 
+				notifications should be sent.
 			</p>
 			<h3>Prohibited Uses of the Site</h3>
 			<p>

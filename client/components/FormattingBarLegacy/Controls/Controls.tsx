@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import ControlsImage from './ControlsImage';
 import ControlsVideo from './ControlsVideo';
 import ControlsAudio from './ControlsAudio';
@@ -12,15 +11,15 @@ import ControlsDiscussion from './ControlsDiscussion';
 
 require('./controls.scss');
 
-const propTypes = {
-	editorChangeObject: PropTypes.object.isRequired,
-	threads: PropTypes.array.isRequired,
-	isSmall: PropTypes.bool.isRequired,
-	footnotes: PropTypes.array.isRequired,
-	citations: PropTypes.array.isRequired,
+type Props = {
+	editorChangeObject: any;
+	threads: any[];
+	isSmall: boolean;
+	footnotes: any[];
+	citations: any[];
 };
 
-const Controls = (props) => {
+const Controls = (props: Props) => {
 	const selectedNode = props.editorChangeObject.selectedNode || {};
 	const attrs = selectedNode.attrs;
 	const updateFunc = props.editorChangeObject.updateNode;
@@ -71,6 +70,4 @@ const Controls = (props) => {
 	}
 	return null;
 };
-
-Controls.propTypes = propTypes;
 export default Controls;

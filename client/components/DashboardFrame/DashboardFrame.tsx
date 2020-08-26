@@ -1,18 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { usePageContext } from 'utils/hooks';
 
 import { Icon } from 'components';
 
 require('./dashboardFrame.scss');
 
-const propTypes = {
-	children: PropTypes.node.isRequired,
-	className: PropTypes.string,
-	controls: PropTypes.node,
-	details: PropTypes.node,
-	icon: PropTypes.string,
-	title: PropTypes.node,
+type OwnProps = {
+	children: React.ReactNode;
+	className?: string;
+	controls?: React.ReactNode;
+	details?: React.ReactNode;
+	icon?: string;
+	title?: React.ReactNode;
 };
 const defaultProps = {
 	className: '',
@@ -22,7 +21,9 @@ const defaultProps = {
 	title: undefined,
 };
 
-const DashboardFrame = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const DashboardFrame = (props: Props) => {
 	const { className, children, controls, details, icon, title } = props;
 	const { scopeData } = usePageContext();
 	const {
@@ -53,7 +54,5 @@ const DashboardFrame = (props) => {
 		</div>
 	);
 };
-
-DashboardFrame.propTypes = propTypes;
 DashboardFrame.defaultProps = defaultProps;
 export default DashboardFrame;

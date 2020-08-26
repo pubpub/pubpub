@@ -1,19 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Switch } from '@blueprintjs/core';
+// @ts-expect-error ts-migrate(2614) FIXME: Module '"./LabelFilter"' has no exported member 'p... Remove this comment to see the full error message
 import LabelFilter, { propTypes as labelFilterPropTypes } from './LabelFilter';
 
 require('./filterMenu.scss');
 
-const propTypes = {
-	...labelFilterPropTypes,
-	isBrowsingArchive: PropTypes.bool.isRequired,
-	isShowingAnchoredComments: PropTypes.bool.isRequired,
-	onBrowseArchive: PropTypes.func.isRequired,
-	onShowAnchoredComments: PropTypes.func.isRequired,
+/*
+(ts-migrate) TODO: Migrate the remaining prop types
+...labelFilterPropTypes
+*/
+type Props = {
+	isBrowsingArchive: boolean;
+	isShowingAnchoredComments: boolean;
+	onBrowseArchive: (...args: any[]) => any;
+	onShowAnchoredComments: (...args: any[]) => any;
 };
 
-const FilterMenu = (props) => {
+const FilterMenu = (props: Props) => {
 	const {
 		isBrowsingArchive,
 		isShowingAnchoredComments,
@@ -25,17 +28,18 @@ const FilterMenu = (props) => {
 			<Switch
 				label="Browse archived comments"
 				checked={isBrowsingArchive}
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'checked' does not exist on type 'EventTa... Remove this comment to see the full error message
 				onChange={(e) => onBrowseArchive(e.target.checked)}
 			/>
 			<Switch
 				label="Show anchored comments"
 				checked={isShowingAnchoredComments}
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'checked' does not exist on type 'EventTa... Remove this comment to see the full error message
 				onChange={(e) => onShowAnchoredComments(e.target.checked)}
 			/>
+			{/* @ts-expect-error ts-migrate(2740) FIXME: Type '{ isBrowsingArchive: boolean; isShowingAncho... Remove this comment to see the full error message */}
 			<LabelFilter {...props} />
 		</div>
 	);
 };
-
-FilterMenu.propTypes = propTypes;
 export default FilterMenu;

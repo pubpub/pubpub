@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Dropzone from 'react-dropzone';
 import { useKeyPressEvent } from 'react-use';
@@ -29,11 +28,11 @@ import MetadataEditor from './MetadataEditor';
 
 require('./fileImportDialog.scss');
 
-const propTypes = {
-	updatePubData: PropTypes.func.isRequired,
-	isOpen: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	onClosed: PropTypes.func.isRequired,
+type Props = {
+	updatePubData: (...args: any[]) => any;
+	isOpen: boolean;
+	onClose: (...args: any[]) => any;
+	onClosed: (...args: any[]) => any;
 };
 
 const importerFlagNames = ['extractEndnotes', 'keepStraightQuotes', 'skipJatsBibExtraction'];
@@ -53,10 +52,12 @@ const getFingerprintOfImportedFiles = (currentFiles) =>
 		.sort((a, b) => a - b)
 		.join('___');
 
-const FileImportDialog = ({ updatePubData, isOpen, onClose, onClosed }) => {
+const FileImportDialog = ({ updatePubData, isOpen, onClose, onClosed }: Props) => {
 	const { addFile, getFiles, deleteFileById, labelFileById } = useFileManager();
 	const currentFiles = getFiles();
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'state' does not exist on type 'never'.
 	const incompleteUploads = currentFiles.filter((file) => file.state !== 'complete');
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'label' does not exist on type 'never'.
 	const hasDocumentToImport = currentFiles.some((file) => file.label === 'document');
 
 	const [importerFlags, setImporterFlags] = useState({});
@@ -72,6 +73,7 @@ const FileImportDialog = ({ updatePubData, isOpen, onClose, onClosed }) => {
 		lastImportedFilesFingerprint === getFingerprintOfImportedFiles(currentFiles);
 
 	const isImportDisabled = !hasDocumentToImport || incompleteUploads.length > 0 || isImporting;
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'doc' does not exist on type '{}'.
 	const { doc, warnings = [], error, proposedMetadata } = importResult;
 	const hasProposedMetadata = proposedMetadata && Object.keys(proposedMetadata).length > 0;
 
@@ -89,6 +91,7 @@ const FileImportDialog = ({ updatePubData, isOpen, onClose, onClosed }) => {
 	const handleFinishImport = async () => {
 		setIsFinishing(true);
 		if (metadataUpdater) {
+			// @ts-expect-error ts-migrate(2721) FIXME: Cannot invoke an object which is possibly 'null'.
 			await metadataUpdater();
 		}
 		onClose();
@@ -107,6 +110,7 @@ const FileImportDialog = ({ updatePubData, isOpen, onClose, onClosed }) => {
 			.then((taskId) => pingTask(taskId, 1000))
 			.then((result) => {
 				setIsImporting(false);
+				// @ts-expect-error ts-migrate(2345) FIXME: Type 'unknown' is not assignable to type '(prevSta... Remove this comment to see the full error message
 				setImportResult(result);
 				setLastImportedFilesFingerprint(getFingerprintOfImportedFiles(currentFiles));
 			})
@@ -226,6 +230,7 @@ const FileImportDialog = ({ updatePubData, isOpen, onClose, onClosed }) => {
 		}
 		if (
 			currentFiles.length > 0 &&
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'clientPath' does not exist on type 'neve... Remove this comment to see the full error message
 			currentFiles.every((file) => extensionFor(file.clientPath) === 'pdf')
 		) {
 			return (
@@ -342,7 +347,9 @@ const FileImportDialog = ({ updatePubData, isOpen, onClose, onClosed }) => {
 						// eslint-disable-next-line react/no-array-index-key
 						key={index}
 						file={file}
+						// @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type 'never'.
 						onDelete={() => deleteFileById(file.id)}
+						// @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type 'never'.
 						onLabelFile={(label) => labelFileById(file.id, label)}
 					/>
 				))}
@@ -360,6 +367,7 @@ const FileImportDialog = ({ updatePubData, isOpen, onClose, onClosed }) => {
 				<MetadataEditor
 					proposedMetadata={proposedMetadata}
 					onSetMetadataUpdater={setMetadataUpdater}
+					// @ts-expect-error ts-migrate(2322) FIXME: Property 'updatePubData' does not exist on type 'I... Remove this comment to see the full error message
 					updatePubData={updatePubData}
 				/>
 			</>
@@ -424,6 +432,4 @@ const FileImportDialog = ({ updatePubData, isOpen, onClose, onClosed }) => {
 		</Drawer>
 	);
 };
-
-FileImportDialog.propTypes = propTypes;
 export default FileImportDialog;

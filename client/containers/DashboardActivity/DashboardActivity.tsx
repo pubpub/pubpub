@@ -1,14 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { usePageContext } from 'utils/hooks';
 
 require('./dashboardActivity.scss');
 
-const propTypes = {
-	activityData: PropTypes.object.isRequired,
+type Props = {
+	activityData: any;
 };
 
-const DashboardActivity = (props) => {
+const DashboardActivity = (props: Props) => {
 	const { activityData } = props;
 	const { scopeData } = usePageContext();
 
@@ -23,6 +22,4 @@ const DashboardActivity = (props) => {
 		</div>
 	);
 };
-
-DashboardActivity.propTypes = propTypes;
 export default DashboardActivity;

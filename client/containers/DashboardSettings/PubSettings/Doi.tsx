@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { FormGroup, Button, InputGroup, Callout } from '@blueprintjs/core';
 
 import {
@@ -20,11 +19,11 @@ import { AssignDoi } from 'components';
 
 require('./doi.scss');
 
-const propTypes = {
-	canIssueDoi: PropTypes.bool.isRequired,
-	communityData: PropTypes.object.isRequired,
-	pubData: PropTypes.object.isRequired,
-	updatePubData: PropTypes.func.isRequired,
+type Props = {
+	canIssueDoi: boolean;
+	communityData: any;
+	pubData: any;
+	updatePubData: (...args: any[]) => any;
 };
 
 const extractDoiSuffix = (doi, community) => {
@@ -33,8 +32,10 @@ const extractDoiSuffix = (doi, community) => {
 	return doi.replace(`${prefix}/`, '');
 };
 
-class Doi extends Component {
-	constructor(props) {
+type State = any;
+
+class Doi extends Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 
 		this.state = {
@@ -200,6 +201,7 @@ class Doi extends Component {
 			});
 
 			// Fetch a DOI preview which contains a newly generated DOI.
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 			const response = await apiFetch(`/api/generateDoi?${params.toString()}`);
 
 			this.setState({
@@ -280,6 +282,7 @@ class Doi extends Component {
 			const schema = getSchemaForKind(collection.kind);
 			return (
 				<p>
+					{/* @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'. */}
 					This pub will be cited as a member of the {schema.label.singular},{' '}
 					<b>{collection.title}</b>. You can change this by updating the{' '}
 					<em>primary collection</em> of the pub from the Collections tab.
@@ -376,6 +379,7 @@ class Doi extends Component {
 					)}
 					<AssignDoi
 						communityData={this.props.communityData}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '(doi: any) => void' is not assignable to typ... Remove this comment to see the full error message
 						onDeposit={this.handleDeposit}
 						pubData={this.props.pubData}
 						target="pub"
@@ -400,6 +404,7 @@ class Doi extends Component {
 			return (
 				<FormGroup
 					helperText={helperText}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type '"success"... Remove this comment to see the full error message
 					intent={intent}
 					className="doi"
 					label="DOI Suffix"
@@ -452,6 +457,4 @@ class Doi extends Component {
 		return <div className="pub-settings-container_doi-component">{this.renderContent()}</div>;
 	}
 }
-
-Doi.propTypes = propTypes;
 export default Doi;

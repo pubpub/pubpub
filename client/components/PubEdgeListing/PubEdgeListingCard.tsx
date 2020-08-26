@@ -1,7 +1,6 @@
 import { Icon } from '@blueprintjs/core';
 import classNames from 'classnames';
 import React, { useState, useCallback } from 'react';
-import PropTypes from 'prop-types';
 
 import { PubEdge } from 'components';
 import { toTitleCase } from 'utils/strings';
@@ -13,18 +12,18 @@ import { pubEdgeType } from '../PubEdge/constants';
 
 require('./pubEdgeListingCard.scss');
 
-const propTypes = {
-	accentColor: PropTypes.string,
-	children: PropTypes.node,
-	inPubBody: PropTypes.bool,
-	isInboundEdge: PropTypes.bool.isRequired,
-	parentPub: PropTypes.shape({
-		title: PropTypes.string,
-	}),
-	pubEdge: pubEdgeType.isRequired,
-	pubEdgeElement: PropTypes.node,
-	showIcon: PropTypes.bool,
-	viewingFromSibling: PropTypes.bool,
+type OwnProps = {
+	accentColor?: string;
+	children?: React.ReactNode;
+	inPubBody?: boolean;
+	isInboundEdge: boolean;
+	parentPub?: {
+		title?: string;
+	};
+	pubEdge: pubEdgeType;
+	pubEdgeElement?: React.ReactNode;
+	showIcon?: boolean;
+	viewingFromSibling?: boolean;
 };
 
 const defaultProps = {
@@ -50,7 +49,9 @@ const getIsViewingFromTarget = (pubEdge, viewingFromSibling, isInboundEdge) => {
 	return isInboundEdge;
 };
 
-const PubEdgeListingCard = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const PubEdgeListingCard = (props: Props) => {
 	const { communityData } = usePageContext();
 	const {
 		accentColor = communityData.accentColorDark,
@@ -85,6 +86,7 @@ const PubEdgeListingCard = (props) => {
 					<>
 						{preposition}{' '}
 						<a className="pub-title" href={pubShortUrl(parentPub)}>
+							{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'title' does not exist on type 'never'. */}
 							{parentPub.title}
 						</a>
 					</>
@@ -96,6 +98,7 @@ const PubEdgeListingCard = (props) => {
 				);
 			}
 
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'title' does not exist on type 'never'.
 			const pubTitleNode = parentPub && <span className="pub-title">{parentPub.title}</span>;
 
 			if (viewingFromParent) {
@@ -134,6 +137,7 @@ const PubEdgeListingCard = (props) => {
 						color={accentColor}
 						iconSize={14}
 						className="drop-return"
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'alt' does not exist on type 'IntrinsicAt... Remove this comment to see the full error message
 						alt=""
 					/>
 				)}
@@ -150,7 +154,5 @@ const PubEdgeListingCard = (props) => {
 		</div>
 	);
 };
-
-PubEdgeListingCard.propTypes = propTypes;
 PubEdgeListingCard.defaultProps = defaultProps;
 export default PubEdgeListingCard;

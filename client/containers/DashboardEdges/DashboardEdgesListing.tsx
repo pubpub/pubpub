@@ -1,18 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Button, Icon, Switch } from '@blueprintjs/core';
 import { DragDropContext } from 'react-beautiful-dnd';
 import classNames from 'classnames';
 
 import { ConfirmDialog, DragDropListing, PubEdgeListingCard } from 'components';
 
-const propTypes = {
-	onRemoveEdge: PropTypes.func,
-	onReorderEdges: PropTypes.func,
-	onUpdateEdgeApproval: PropTypes.func,
-	isInbound: PropTypes.bool.isRequired,
-	pubEdges: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-	renderEmptyState: PropTypes.func.isRequired,
+type OwnProps = {
+	onRemoveEdge?: (...args: any[]) => any;
+	onReorderEdges?: (...args: any[]) => any;
+	onUpdateEdgeApproval?: (...args: any[]) => any;
+	isInbound: boolean;
+	pubEdges: {}[];
+	renderEmptyState: (...args: any[]) => any;
 };
 
 const defaultProps = {
@@ -37,7 +36,9 @@ const renderRemoveEdgeButton = (callback) => {
 	);
 };
 
-const DashboardEdgesListing = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const DashboardEdgesListing = (props: Props) => {
 	const {
 		isInbound,
 		onRemoveEdge,
@@ -50,6 +51,7 @@ const DashboardEdgesListing = (props) => {
 	const handleDragEnd = (dragResult) => {
 		const { source, destination } = dragResult;
 		if (onReorderEdges) {
+			// @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures.
 			onReorderEdges(source.index, destination.index);
 		}
 	};
@@ -70,11 +72,14 @@ const DashboardEdgesListing = (props) => {
 						<Icon icon="drag-handle-vertical" />
 					</div>
 				)}
+				{/* @ts-expect-error ts-migrate(2746) FIXME: This JSX tag's 'children' prop expects a single ch... Remove this comment to see the full error message */}
 				<PubEdgeListingCard pubEdge={pubEdge} isInboundEdge={isInbound} accentColor="#ccc">
+					{/* @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures. */}
 					{onRemoveEdge && renderRemoveEdgeButton(() => onRemoveEdge(pubEdge))}
 					{onUpdateEdgeApproval && (
 						<Switch
 							className="parent-approval-switch"
+							// @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures.
 							onChange={() => onUpdateEdgeApproval(pubEdge, !approvedByTarget)}
 							checked={approvedByTarget}
 							label="Show on this Pub"
@@ -88,20 +93,25 @@ const DashboardEdgesListing = (props) => {
 	return (
 		<DragDropContext onDragEnd={handleDragEnd}>
 			<DragDropListing
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				className="dashboard-edges-listing-component"
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'boolean' is not assignable to type 'never'.
 				disabled={!onReorderEdges}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type '(item: any) => any' is not assignable to typ... Remove this comment to see the full error message
 				itemId={(item) => item.id}
 				items={pubEdges}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type '(pubEdge: any, dragHandleProps: any, isDragg... Remove this comment to see the full error message
 				renderItem={renderEdgeListing}
 				renderEmptyState={renderEmptyState}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				droppableId="dashboardEdges"
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				droppableType="DASHBOARD_EDGE"
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'boolean' is not assignable to type 'never'.
 				withDragHandles={!!onReorderEdges}
 			/>
 		</DragDropContext>
 	);
 };
-
-DashboardEdgesListing.propTypes = propTypes;
 DashboardEdgesListing.defaultProps = defaultProps;
 export default DashboardEdgesListing;

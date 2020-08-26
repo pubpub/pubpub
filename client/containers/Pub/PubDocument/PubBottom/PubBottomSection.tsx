@@ -1,22 +1,21 @@
 import React, { useState, useRef, useEffect } from 'react';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
 import { Button, Icon } from '@blueprintjs/core';
 
 require('./pubBottomSection.scss');
 
-const propTypes = {
-	accentColor: PropTypes.string,
-	centerItems: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
-	children: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
-	className: PropTypes.string,
-	defaultExpanded: PropTypes.bool,
-	iconItems: PropTypes.func,
-	isExpandable: PropTypes.bool,
-	isSearchable: PropTypes.bool,
-	searchPlaceholder: PropTypes.string,
-	onSearch: PropTypes.func,
-	title: PropTypes.node.isRequired,
+type OwnPubBottomSectionProps = {
+	accentColor?: string;
+	centerItems?: ((...args: any[]) => any) | React.ReactNode;
+	children?: ((...args: any[]) => any) | React.ReactNode;
+	className?: string;
+	defaultExpanded?: boolean;
+	iconItems?: (...args: any[]) => any;
+	isExpandable?: boolean;
+	isSearchable?: boolean;
+	searchPlaceholder?: string;
+	onSearch?: (...args: any[]) => any;
+	title: React.ReactNode;
 };
 
 const defaultProps = {
@@ -32,7 +31,16 @@ const defaultProps = {
 	searchPlaceholder: 'Enter keywords to search for...',
 };
 
-export const AccentedIconButton = (props) => {
+type OwnAccentedIconButtonProps = {
+	accentColor: string;
+	icon: string;
+	title?: string;
+};
+
+// @ts-expect-error ts-migrate(2456) FIXME: Type alias 'AccentedIconButtonProps' circularly re... Remove this comment to see the full error message
+type AccentedIconButtonProps = OwnAccentedIconButtonProps & typeof AccentedIconButton.defaultProps;
+
+export const AccentedIconButton = (props: AccentedIconButtonProps) => {
 	const { accentColor, icon, title, ...buttonProps } = props;
 	return (
 		<Button
@@ -41,12 +49,6 @@ export const AccentedIconButton = (props) => {
 			{...buttonProps}
 		/>
 	);
-};
-
-AccentedIconButton.propTypes = {
-	accentColor: PropTypes.string.isRequired,
-	icon: PropTypes.string.isRequired,
-	title: PropTypes.string,
 };
 
 AccentedIconButton.defaultProps = {
@@ -62,7 +64,9 @@ export const SectionBullets = ({ children }) => {
 	));
 };
 
-const PubBottomSection = (props) => {
+type PubBottomSectionProps = OwnPubBottomSectionProps & typeof defaultProps;
+
+const PubBottomSection = (props: PubBottomSectionProps) => {
 	const {
 		accentColor,
 		centerItems,
@@ -85,6 +89,7 @@ const PubBottomSection = (props) => {
 
 	useEffect(() => {
 		if (isSearching && searchInputRef.current) {
+			// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 			searchInputRef.current.focus();
 		}
 	}, [isSearching]);
@@ -92,12 +97,14 @@ const PubBottomSection = (props) => {
 	const renderSearchBar = () => {
 		return (
 			<input
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'undefined' is not assignable to type 'HTMLIn... Remove this comment to see the full error message
 				ref={searchInputRef}
 				type="text"
 				className="search-bar"
 				onChange={(evt) => {
 					const value = evt.target.value.trim();
 					onSearch(value);
+					// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string' is not assignable to par... Remove this comment to see the full error message
 					setSearchTerm(value);
 				}}
 				placeholder={searchPlaceholder}
@@ -182,6 +189,7 @@ const PubBottomSection = (props) => {
 						<AccentedIconButton
 							accentColor={accentColor}
 							icon="search"
+							// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '""' is not assignable to paramet... Remove this comment to see the full error message
 							onClick={() => setSearchTerm('')}
 						/>
 					)}
@@ -192,14 +200,13 @@ const PubBottomSection = (props) => {
 			{isExpanded && (
 				<div className="section-content">
 					{typeof children === 'function'
-						? children({ searchTerm: searchTerm, isSearching: isSearching })
+						? // @ts-expect-error ts-migrate(2721) FIXME: Cannot invoke an object which is possibly 'null'.
+						  children({ searchTerm: searchTerm, isSearching: isSearching })
 						: children}
 				</div>
 			)}
 		</div>
 	);
 };
-
-PubBottomSection.propTypes = propTypes;
 PubBottomSection.defaultProps = defaultProps;
 export default PubBottomSection;

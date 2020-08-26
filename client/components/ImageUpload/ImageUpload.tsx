@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { AnchorButton } from '@blueprintjs/core';
 
 import Overlay from 'components/Overlay/Overlay';
@@ -9,20 +8,19 @@ import { s3Upload } from 'client/utils/upload';
 
 require('./imageUpload.scss');
 
-const propTypes = {
-	canClear: PropTypes.bool,
-	children: PropTypes.node,
-	defaultImage: PropTypes.string,
-	height: PropTypes.number,
-	helperText: PropTypes.node,
-	htmlFor: PropTypes.string,
-	isRequired: PropTypes.bool,
-	label: PropTypes.node,
-	onNewImage: PropTypes.func,
-	onImageSelect: PropTypes.func,
-	useAccentBackground: PropTypes.bool,
-	useCrop: PropTypes.bool,
-	width: PropTypes.number,
+type OwnProps = {
+	canClear?: boolean;
+	defaultImage?: string;
+	height?: number;
+	helperText?: React.ReactNode;
+	htmlFor?: string;
+	isRequired?: boolean;
+	label?: React.ReactNode;
+	onNewImage?: (...args: any[]) => any;
+	onImageSelect?: (...args: any[]) => any;
+	useAccentBackground?: boolean;
+	useCrop?: boolean;
+	width?: number;
 };
 
 const defaultProps = {
@@ -41,14 +39,21 @@ const defaultProps = {
 	width: 75,
 };
 
-class ImageUpload extends Component {
-	constructor(props) {
+type State = any;
+
+type Props = OwnProps & typeof defaultProps;
+
+class ImageUpload extends Component<Props, State> {
+	static defaultProps = defaultProps;
+
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			imageFile: undefined,
 			imageBlob: this.props.defaultImage,
 			uploading: false,
 		};
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'inputRef' does not exist on type 'ImageU... Remove this comment to see the full error message
 		this.inputRef = React.createRef();
 		this.onUploadFinish = this.onUploadFinish.bind(this);
 		this.onCropUploaded = this.onCropUploaded.bind(this);
@@ -79,12 +84,14 @@ class ImageUpload extends Component {
 	setBlob(image) {
 		const reader = new FileReader();
 		reader.onload = (imageBlob) => {
+			// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 			this.setState({ imageBlob: imageBlob.target.result });
 		};
 		reader.readAsDataURL(image);
 	}
 
 	openFileDialog() {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'inputRef' does not exist on type 'ImageU... Remove this comment to see the full error message
 		const { current: inputElement } = this.inputRef;
 		if (inputElement) {
 			inputElement.click();
@@ -127,6 +134,7 @@ class ImageUpload extends Component {
 	renderInput() {
 		return (
 			<input
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'inputRef' does not exist on type 'ImageU... Remove this comment to see the full error message
 				ref={this.inputRef}
 				id={`input-${this.props.htmlFor}`}
 				name="logo image"
@@ -219,6 +227,7 @@ class ImageUpload extends Component {
 					<ImageCropper
 						image={this.state.imageFile}
 						onCancel={this.cancelImageUpload}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '(newImageUrl: any, newImageBlob: any) => voi... Remove this comment to see the full error message
 						onUploaded={this.onCropUploaded}
 					/>
 				</Overlay>
@@ -233,6 +242,7 @@ class ImageUpload extends Component {
 			return (
 				<>
 					{this.renderInput()}
+					{/* @ts-expect-error ts-migrate(2721) FIXME: Cannot invoke an object which is possibly 'null'. */}
 					{children({
 						selectImage: this.openFileDialog,
 						clearImage: this.clearImage,
@@ -244,7 +254,4 @@ class ImageUpload extends Component {
 		return this.renderDefaultPicker();
 	}
 }
-
-ImageUpload.propTypes = propTypes;
-ImageUpload.defaultProps = defaultProps;
 export default ImageUpload;

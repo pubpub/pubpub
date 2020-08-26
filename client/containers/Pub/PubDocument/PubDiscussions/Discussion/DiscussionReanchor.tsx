@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 import { Button, ButtonGroup, Card, Icon } from '@blueprintjs/core';
 
 import { reanchorDiscussion } from 'components/Editor';
@@ -8,19 +7,21 @@ import { usePubContext } from 'containers/Pub/pubHooks';
 
 require('./discussionReanchor.scss');
 
-const propTypes = {
-	discussionData: PropTypes.object.isRequired,
+type Props = {
+	discussionData: any;
 };
 
-const DiscussionReanchor = (props) => {
+const DiscussionReanchor = (props: Props) => {
 	const { discussionData } = props;
 	const { collabData, firebaseBranchRef } = usePubContext();
 	const [isActive, setIsActive] = useState(false);
 
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'selection' does not exist on type '{}'.
 	const { selection } = collabData.editorChangeObject;
 	const { anchor } = discussionData;
 
 	const handleReanchor = () => {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 		const { view } = collabData.editorChangeObject;
 		reanchorDiscussion(view, firebaseBranchRef, discussionData.id);
 		setIsActive(false);
@@ -66,6 +67,4 @@ const DiscussionReanchor = (props) => {
 		</>
 	);
 };
-
-DiscussionReanchor.propTypes = propTypes;
 export default DiscussionReanchor;

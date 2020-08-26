@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { MenuItem, Position } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 import isUrl from 'is-url';
@@ -12,15 +11,13 @@ import { fuzzyMatchPub } from 'utils/fuzzyMatch';
 
 require('./newEdgeInput.scss');
 
-const propTypes = {
-	availablePubs: PropTypes.arrayOf(
-		PropTypes.shape({
-			title: PropTypes.string,
-			avatar: PropTypes.string,
-		}),
-	).isRequired,
-	onSelectItem: PropTypes.func.isRequired,
-	usedPubIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+type Props = {
+	availablePubs: {
+		title?: string;
+		avatar?: string;
+	}[];
+	onSelectItem: (...args: any[]) => any;
+	usedPubIds: string[];
 };
 
 const suggestPopoverProps = {
@@ -37,6 +34,7 @@ const suggestPopoverProps = {
 const indeterminateMenuItem = (
 	<PubMenuItem
 		key="indeterminate"
+		// @ts-expect-error ts-migrate(2322) FIXME: Property 'title' does not exist on type 'Intrinsic... Remove this comment to see the full error message
 		title={'X'.repeat(50)}
 		contributors={['ABC', 'XYZ']}
 		isSkeleton={true}
@@ -48,7 +46,7 @@ const indeterminateMenuItem = (
 
 const renderInputValue = () => '';
 
-const NewEdgeInput = (props) => {
+const NewEdgeInput = (props: Props) => {
 	const { availablePubs, usedPubIds, onSelectItem } = props;
 	const [queryValue, setQueryValue] = useState('');
 	const [suggestedItems, setSuggestedItems] = useState([]);
@@ -56,21 +54,27 @@ const NewEdgeInput = (props) => {
 
 	useEffect(() => {
 		if (isUrl(throttledQueryValue) || isDoi(throttledQueryValue)) {
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'true' is not assignable to type 'never'.
 			setSuggestedItems([{ indeterminate: true }]);
 			apiFetch
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'get' does not exist on type '(path: any,... Remove this comment to see the full error message
 				.get(`/api/pubEdgeProposal?object=${encodeURIComponent(throttledQueryValue)}`)
 				.then((res) => {
 					if (res) {
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 						setSuggestedItems([res]);
 					} else {
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 						setSuggestedItems([{ createNewFromUrl: throttledQueryValue }]);
 					}
 				});
 		} else if (throttledQueryValue) {
 			setSuggestedItems(
+				// @ts-expect-error ts-migrate(2345) FIXME: Type '{ targetPub: { title?: string | undefined; a... Remove this comment to see the full error message
 				availablePubs
 					.filter(
 						(pub) =>
+							// @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type '{ title?: st... Remove this comment to see the full error message
 							fuzzyMatchPub(pub, throttledQueryValue) && !usedPubIds.includes(pub.id),
 					)
 					.slice(0, 5)
@@ -90,6 +94,7 @@ const NewEdgeInput = (props) => {
 			return (
 				<PubMenuItem
 					key={targetPub.title}
+					// @ts-expect-error ts-migrate(2322) FIXME: Property 'title' does not exist on type 'Intrinsic... Remove this comment to see the full error message
 					title={targetPub.title}
 					contributors={targetPub.attributions}
 					image={targetPub.avatar}
@@ -104,6 +109,7 @@ const NewEdgeInput = (props) => {
 			return (
 				<PubMenuItem
 					key={title}
+					// @ts-expect-error ts-migrate(2322) FIXME: Property 'title' does not exist on type 'Intrinsic... Remove this comment to see the full error message
 					title={title}
 					contributors={contributors}
 					image={avatar}
@@ -136,10 +142,9 @@ const NewEdgeInput = (props) => {
 			resetOnSelect={true}
 			onItemSelect={onSelectItem}
 			noResults={queryValue ? <MenuItem disabled text="No results" /> : null}
+			// @ts-expect-error ts-migrate(2769) FIXME: Type '{ wrapperTagName: string; minimal: boolean; ... Remove this comment to see the full error message
 			popoverProps={suggestPopoverProps}
 		/>
 	);
 };
-
-NewEdgeInput.propTypes = propTypes;
 export default NewEdgeInput;

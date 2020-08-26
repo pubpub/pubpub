@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import PubPreview from 'components/PubPreview/PubPreview';
 import CollectionMultiSelect from 'components/CollectionMultiSelect/CollectionMultiSelect';
 import InputField from 'components/InputField/InputField';
@@ -7,19 +6,17 @@ import DropdownButton from 'components/DropdownButton/DropdownButton';
 import OrderPicker from 'components/OrderPicker/OrderPicker';
 import { Button, Checkbox, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 
-const propTypes = {
-	onChange: PropTypes.func.isRequired,
-	layoutIndex: PropTypes.number.isRequired,
-	content: PropTypes.object.isRequired,
-	pubs: PropTypes.array.isRequired,
-	pubRenderList: PropTypes.array.isRequired,
-	communityData: PropTypes.object.isRequired,
-	/* Expected content */
-	/* title, pubPreviewType, limit, pubIds, collectionIds, hideByline, hideDescription, hideDates, hideContributors */
+type Props = {
+	onChange: (...args: any[]) => any;
+	layoutIndex: number;
+	content: any;
+	pubs: any[];
+	pubRenderList: any[];
+	communityData: any;
 };
 
-class LayoutEditorPubs extends Component {
-	constructor(props) {
+class LayoutEditorPubs extends Component<Props> {
+	constructor(props: Props) {
 		super(props);
 		this.setMinimal = this.setMinimal.bind(this);
 		this.setSmall = this.setSmall.bind(this);
@@ -35,6 +32,7 @@ class LayoutEditorPubs extends Component {
 		this.setHideDates = this.setHideDates.bind(this);
 		this.setHideContributors = this.setHideContributors.bind(this);
 		this.setPubIds = this.setPubIds.bind(this);
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'orderPopoverRef' does not exist on type ... Remove this comment to see the full error message
 		this.orderPopoverRef = React.createRef();
 	}
 
@@ -186,6 +184,7 @@ class LayoutEditorPubs extends Component {
 		const displayLimit = this.props.content.limit || this.props.pubRenderList.length;
 		const emptyPreviews = [];
 		for (let index = 0; index < displayLimit; index += 1) {
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'null' is not assignable to param... Remove this comment to see the full error message
 			emptyPreviews.push(null);
 		}
 		const previews = [...this.props.content.pubIds, ...emptyPreviews].slice(0, displayLimit);
@@ -275,9 +274,11 @@ class LayoutEditorPubs extends Component {
 											})}
 										allItems={availablePubs}
 										onChange={this.setPubIds}
+										// @ts-expect-error ts-migrate(2322) FIXME: Type 'number' is not assignable to type '(...args:... Remove this comment to see the full error message
 										uniqueId={this.props.layoutIndex}
 										selectedTitle="Pinned Pubs"
 										availableTitle="Available Pubs"
+										// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'undefined... Remove this comment to see the full error message
 										selectedTitleTooltip="Pinned pubs will be displayed first, followed by newest pubs."
 									/>
 								</div>
@@ -287,10 +288,12 @@ class LayoutEditorPubs extends Component {
 							usePortal={false}
 							minimal={true}
 							popoverClassName="order-picker-popover"
+							// @ts-expect-error ts-migrate(2322) FIXME: Property 'popoverDidOpen' does not exist on type '... Remove this comment to see the full error message
 							popoverDidOpen={() => {
 								setTimeout(() => {
 									/* This is a hacky way to solve this bug: */
 									/* https://github.com/atlassian/react-beautiful-dnd/blob/master/docs/patterns/using-a-portal.md */
+									// @ts-expect-error ts-migrate(2339) FIXME: Property 'orderPopoverRef' does not exist on type ... Remove this comment to see the full error message
 									const overlayNode = this.orderPopoverRef.current.popoverElement
 										.parentNode;
 									const positions = overlayNode.style.transform
@@ -302,6 +305,7 @@ class LayoutEditorPubs extends Component {
 									overlayNode.style.willChange = '';
 								}, 0);
 							}}
+							// @ts-expect-error ts-migrate(2339) FIXME: Property 'orderPopoverRef' does not exist on type ... Remove this comment to see the full error message
 							ref={this.orderPopoverRef}
 						>
 							<DropdownButton label="Set custom order" />
@@ -407,12 +411,19 @@ class LayoutEditorPubs extends Component {
 								<div key={selectedPub.id} className="row">
 									<div className={isTwoColumn ? 'col-6' : 'col-12'}>
 										<PubPreview
+											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											pubData={selectedPub}
+											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											size={pubPreviewType}
+											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											hideByline={this.props.content.hideByline}
+											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											hideDescription={this.props.content.hideDescription}
+											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											hideDates={this.props.content.hideDates}
+											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											hideContributors={this.props.content.hideContributors}
+											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											hideEdges={this.props.content.hideEdges}
 										/>
 									</div>
@@ -420,12 +431,19 @@ class LayoutEditorPubs extends Component {
 									{nextPub && (
 										<div className={isTwoColumn ? 'col-6' : 'col-12'}>
 											<PubPreview
+												// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 												pubData={nextPub}
+												// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 												size={pubPreviewType}
+												// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 												hideByline={this.props.content.hideByline}
+												// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 												hideDescription={this.props.content.hideDescription}
+												// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 												hideDates={this.props.content.hideDates}
+												// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 												hideEdges={this.props.content.hideEdges}
+												// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 												hideContributors={
 													this.props.content.hideContributors
 												}
@@ -441,6 +459,4 @@ class LayoutEditorPubs extends Component {
 		);
 	}
 }
-
-LayoutEditorPubs.propTypes = propTypes;
 export default LayoutEditorPubs;

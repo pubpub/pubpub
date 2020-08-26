@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Button, AnchorButton, Intent } from '@blueprintjs/core';
 
@@ -10,35 +9,41 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 require('./header.scss');
 
-const propTypes = {
-	previewContext: PropTypes.object,
+type OwnProps = {
+	previewContext?: any;
 };
 
 const defaultProps = {
 	previewContext: undefined,
 };
 
-const Header = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const Header = (props: Props) => {
 	const { locationData, communityData, loginData, scopeData } = usePageContext(
 		props.previewContext,
 	);
 	const [isLoading, setIsLoading] = useState(false);
 	const handleLogout = () => {
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 		apiFetch('/api/logout').then(() => {
 			window.location.href = '/';
 		});
 	};
 	const handleCreatePub = () => {
 		setIsLoading(true);
-		return apiFetch
-			.post('/api/pubs', { communityId: communityData.id })
-			.then((newPub) => {
-				window.location.href = `/pub/${newPub.slug}`;
-			})
-			.catch((err) => {
-				console.error(err);
-				setIsLoading(false);
-			});
+		return (
+			apiFetch
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'post' does not exist on type '(path: any... Remove this comment to see the full error message
+				.post('/api/pubs', { communityId: communityData.id })
+				.then((newPub) => {
+					window.location.href = `/pub/${newPub.slug}`;
+				})
+				.catch((err) => {
+					console.error(err);
+					setIsLoading(false);
+				})
+		);
 	};
 
 	const calculateComponentClasses = (hideHero) => {
@@ -101,10 +106,12 @@ const Header = (props) => {
 	const calculateBackgroundStyle = (hideHero) => {
 		const backgroundStyle = {};
 		if (locationData.isBasePubPub) {
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'boxShadow' does not exist on type '{}'.
 			backgroundStyle.boxShadow =
 				locationData.path === '/'
 					? ''
 					: '0 0 0 1px rgba(16, 22, 26, 0.1), 0 0 0 rgba(16, 22, 26, 0), 0 1px 1px rgba(16, 22, 26, 0.2)';
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'backgroundColor' does not exist on type ... Remove this comment to see the full error message
 			backgroundStyle.backgroundColor = locationData.path === '/' ? '' : '#f7f7f9';
 		}
 
@@ -118,11 +125,13 @@ const Header = (props) => {
 				'fit-in',
 				'1500x600',
 			);
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'backgroundImage' does not exist on type ... Remove this comment to see the full error message
 			backgroundStyle.backgroundImage = `url("${resizedBackgroundImage}")`;
 		}
 		const heroBackgroundColor =
 			communityData.heroBackgroundColor || communityData.accentColorDark;
 		if (heroBackgroundColor) {
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'backgroundColor' does not exist on type ... Remove this comment to see the full error message
 			backgroundStyle.backgroundColor = communityData.heroBackgroundColor;
 		}
 
@@ -227,11 +236,13 @@ const Header = (props) => {
 								placement="bottom-end"
 								menuStyle={{ zIndex: 20 }}
 								buttonProps={{
+									// @ts-expect-error ts-migrate(2322) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
 									className: 'header-dashboard-button hide-on-mobile',
 									minimal: true,
 									large: true,
 									rightIcon: 'caret-down',
 								}}
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'null | un... Remove this comment to see the full error message
 								buttonContent="Dashboard"
 							>
 								<ScopeDropdown />
@@ -244,9 +255,11 @@ const Header = (props) => {
 								// The z-index of the PubHeaderFormatting is 19
 								menuStyle={{ zIndex: 20 }}
 								buttonProps={{
+									// @ts-expect-error ts-migrate(2322) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
 									minimal: true,
 									large: true,
 								}}
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'null'.
 								buttonContent={
 									<Avatar
 										initials={loginData.initials}
@@ -256,6 +269,7 @@ const Header = (props) => {
 								}
 							>
 								<MenuItem
+									// @ts-expect-error ts-migrate(2322) FIXME: Property 'href' does not exist on type 'IntrinsicA... Remove this comment to see the full error message
 									href={`/user/${loginData.slug}`}
 									text={
 										<React.Fragment>
@@ -266,7 +280,9 @@ const Header = (props) => {
 										</React.Fragment>
 									}
 								/>
+								{/* @ts-expect-error ts-migrate(2322) FIXME: Property 'href' does not exist on type 'IntrinsicA... Remove this comment to see the full error message */}
 								<MenuItem href="/legal/settings" text="Privacy settings" />
+								{/* @ts-expect-error ts-migrate(2322) FIXME: Property 'onClick' does not exist on type 'Intrins... Remove this comment to see the full error message */}
 								<MenuItem onClick={handleLogout} text="Logout" />
 							</MenuButton>
 						)}
@@ -326,7 +342,5 @@ const Header = (props) => {
 		</header>
 	);
 };
-
-Header.propTypes = propTypes;
 Header.defaultProps = defaultProps;
 export default Header;

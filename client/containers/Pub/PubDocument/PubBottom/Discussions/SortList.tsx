@@ -1,16 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Menu, MenuItem } from '@blueprintjs/core';
 import { Icon } from 'components';
 
 require('./sortList.scss');
 
-const propTypes = {
-	selected: PropTypes.string.isRequired,
-	onSelect: PropTypes.func.isRequired,
+type Props = {
+	selected: string;
+	onSelect: (...args: any[]) => any;
 };
 
-const SortList = (props) => {
+const SortList = (props: Props) => {
 	const onSelect = props.onSelect;
 	const options = [
 		{ id: 0, slug: 'newestThread', title: 'Newest Thread' },
@@ -44,6 +43,4 @@ const SortList = (props) => {
 		</Menu>
 	);
 };
-
-SortList.propTypes = propTypes;
 export default SortList;

@@ -117,8 +117,10 @@ export default (schema, props, collabDocPluginKey, localClientId) => {
 		}
 		pendingRemoteKeyables.forEach((snapshot) => {
 			try {
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'val' does not exist on type 'never'.
 				const { steps, clientIds } = extractSnapshot(snapshot.val());
 				const trans = receiveTransaction(view.state, steps, clientIds);
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'key' does not exist on type 'never'.
 				mostRecentRemoteKey = Number(snapshot.key);
 				view.dispatch(trans);
 				onUpdateLatestKey(mostRecentRemoteKey);
@@ -138,6 +140,7 @@ export default (schema, props, collabDocPluginKey, localClientId) => {
 	/* We store the new keyable in pendingRemoteKeyables, and then */
 	/* process all existing stored keyables. */
 	const receiveCollabChanges = (snapshot) => {
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 		pendingRemoteKeyables.push(snapshot);
 		processStoredKeyables();
 	};
@@ -160,7 +163,9 @@ export default (schema, props, collabDocPluginKey, localClientId) => {
 				/* Uncompress steps and add stepClientIds */
 				Object.keys(snapshotVal).forEach((key) => {
 					const { steps, clientIds } = extractSnapshot(snapshotVal[key]);
+					// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 					allSteps.push(...steps);
+					// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 					allStepClientIds.push(...clientIds);
 				});
 

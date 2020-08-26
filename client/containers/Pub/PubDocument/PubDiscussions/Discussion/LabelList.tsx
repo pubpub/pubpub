@@ -1,14 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 require('./labelList.scss');
 
-const propTypes = {
-	pubData: PropTypes.object.isRequired,
-	discussionData: PropTypes.object.isRequired,
+type Props = {
+	pubData: any;
+	discussionData: any;
 };
 
-const LabelList = (props) => {
+const LabelList = (props: Props) => {
 	const { pubData, discussionData } = props;
 	const pubLabels = pubData.labels || [];
 	const labelsById = {};
@@ -46,6 +45,4 @@ const LabelList = (props) => {
 		</div>
 	);
 };
-
-LabelList.propTypes = propTypes;
 export default LabelList;

@@ -1,20 +1,21 @@
 import React, { useMemo } from 'react';
-import PropTypes from 'prop-types';
 
 import { Icon } from 'components';
 
 require('./pubEdgePlaceholderThumbnail.scss');
 
-const propTypes = {
-	color: PropTypes.string.isRequired,
-	external: PropTypes.bool,
+type OwnProps = {
+	color: string;
+	external?: boolean;
 };
 
 const defaultProps = {
 	external: false,
 };
 
-function PubEdgePlaceholderThumbnail(props) {
+type Props = OwnProps & typeof defaultProps;
+
+function PubEdgePlaceholderThumbnail(props: Props) {
 	const style = useMemo(() => ({ backgroundColor: props.color }), [props.color]);
 
 	return (
@@ -23,7 +24,5 @@ function PubEdgePlaceholderThumbnail(props) {
 		</div>
 	);
 }
-
-PubEdgePlaceholderThumbnail.propTypes = propTypes;
 PubEdgePlaceholderThumbnail.defaultProps = defaultProps;
 export default PubEdgePlaceholderThumbnail;

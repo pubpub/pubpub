@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import TimeAgo from 'react-timeago';
 
 import { Avatar, Icon } from 'components';
@@ -8,11 +7,11 @@ import { timeAgoBaseProps } from 'utils/dates';
 
 require('./threadEvent.scss');
 
-const propTypes = {
-	eventData: PropTypes.object.isRequired,
+type Props = {
+	eventData: any;
 };
 
-const ThreadEvent = (props) => {
+const ThreadEvent = (props: Props) => {
 	const { type, data, user, createdAt } = props.eventData;
 	const { communityData } = usePageContext();
 	const { accentColorDark } = communityData;
@@ -32,6 +31,7 @@ const ThreadEvent = (props) => {
 				icon={icons[data.statusChange]}
 				color="#fff"
 			/>
+			{/* @ts-expect-error ts-migrate(2322) FIXME: Property 'intials' does not exist on type 'Intrins... Remove this comment to see the full error message */}
 			<Avatar width={18} intials={user.initials} avatar={user.avatar} />
 			<div>
 				<a className="hoverline" href={`/user/${user.slug}`}>
@@ -63,6 +63,4 @@ const ThreadEvent = (props) => {
 		</div>
 	);
 };
-
-ThreadEvent.propTypes = propTypes;
 export default ThreadEvent;

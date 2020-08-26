@@ -1,17 +1,16 @@
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { Toolbar, ToolbarItem, useToolbarState } from 'reakit';
 import { Button } from '@blueprintjs/core';
 
 import CommandMenu from '../CommandMenu';
 
-const propTypes = {
-	editorChangeObject: PropTypes.shape({
-		view: PropTypes.shape({
-			dom: PropTypes.object,
-		}),
-	}).isRequired,
-	onClose: PropTypes.func.isRequired,
+type Props = {
+	editorChangeObject: {
+		view?: {
+			dom?: any;
+		};
+	};
+	onClose: (...args: any[]) => any;
 };
 
 const rowCommands = [
@@ -35,7 +34,7 @@ const buttonCommands = [
 	{ key: 'table-delete', title: 'Remove table', icon: 'trash' },
 ];
 
-const ControlsTable = (props) => {
+const ControlsTable = (props: Props) => {
 	const { editorChangeObject, onClose } = props;
 	const { view } = editorChangeObject;
 	const toolbar = useToolbarState({ loop: true });
@@ -55,12 +54,15 @@ const ControlsTable = (props) => {
 	};
 
 	useEffect(() => {
+		// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 		view.dom.addEventListener('keydown', onClose);
+		// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 		return () => view.dom.removeEventListener('keydown', onClose);
 	}, [view, onClose]);
 
 	return (
 		<Toolbar {...toolbar} className="controls-table-component" aria-label="Table options">
+			{/* @ts-expect-error ts-migrate(2769) FIXME: Type 'ForwardRefExoticComponent<RefAttributes<unkn... Remove this comment to see the full error message */}
 			<ToolbarItem
 				aria-label="Table options"
 				as={CommandMenu}
@@ -73,6 +75,4 @@ const ControlsTable = (props) => {
 		</Toolbar>
 	);
 };
-
-ControlsTable.propTypes = propTypes;
 export default ControlsTable;

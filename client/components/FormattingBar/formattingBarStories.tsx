@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { storiesOf } from '@storybook/react';
 
 import { FormattingBar, buttons } from 'components/FormattingBar';
 import Editor from 'components/Editor';
 import { fullDoc } from 'utils/storybook/data';
 
-class EditorUnit extends Component {
-	static propTypes = {
-		showBlockTypes: PropTypes.bool.isRequired,
-		isSmall: PropTypes.bool.isRequired,
-		buttons: PropTypes.array.isRequired,
-	};
+type Props = {
+	showBlockTypes: boolean;
+	isSmall: boolean;
+	buttons: any[];
+};
 
-	constructor(props) {
+type State = any;
+
+class EditorUnit extends Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'containerRef' does not exist on type 'Ed... Remove this comment to see the full error message
 		this.containerRef = React.createRef();
 		this.state = {
 			editorChangeObject: null,
@@ -38,16 +40,19 @@ class EditorUnit extends Component {
 							showBlockTypes={this.props.showBlockTypes}
 							isSmall={this.props.isSmall}
 							buttons={this.props.buttons}
+							// @ts-expect-error ts-migrate(2339) FIXME: Property 'containerRef' does not exist on type 'Ed... Remove this comment to see the full error message
 							popoverContainerRef={this.containerRef}
 						/>
 					)}
 				</div>
 				<div
 					style={{ padding: '0.25em', height: '250px', overflow: 'scroll' }}
+					// @ts-expect-error ts-migrate(2339) FIXME: Property 'containerRef' does not exist on type 'Ed... Remove this comment to see the full error message
 					ref={this.containerRef}
 				>
 					<Editor
 						placeholder="hello"
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '(changeObject: any) => void' is not assignab... Remove this comment to see the full error message
 						onChange={(changeObject) => {
 							this.setState({ editorChangeObject: changeObject });
 						}}
@@ -67,8 +72,11 @@ const wrapperStyle = {
 };
 
 storiesOf('components/FormattingBar', module).add('default', () => (
+	// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type '"wrap" | ... Remove this comment to see the full error message
 	<div style={wrapperStyle}>
+		{/* @ts-expect-error ts-migrate(2741) FIXME: Property 'showBlockTypes' is missing in type '{ is... Remove this comment to see the full error message */}
 		<EditorUnit isSmall={false} buttons={buttons.fullButtonSet} />
+		{/* @ts-expect-error ts-migrate(2741) FIXME: Property 'showBlockTypes' is missing in type '{ is... Remove this comment to see the full error message */}
 		<EditorUnit isSmall={true} buttons={buttons.fullButtonSet} />
 		<EditorUnit showBlockTypes={true} isSmall={true} buttons={buttons.minimalButtonSet} />
 		<EditorUnit showBlockTypes={false} isSmall={true} buttons={buttons.minimalButtonSet} />

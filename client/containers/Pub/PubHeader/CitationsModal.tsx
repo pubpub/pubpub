@@ -1,24 +1,23 @@
 /* eslint-disable react/no-danger */
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Classes, Dialog } from '@blueprintjs/core';
 
 require('./citationsModal.scss');
 
-const propTypes = {
-	citationData: PropTypes.shape({
-		pub: PropTypes.shape({
-			apa: PropTypes.string,
-			harvard: PropTypes.string,
-			vancouver: PropTypes.string,
-			bibtex: PropTypes.string,
-		}),
-	}).isRequired,
-	isOpen: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
+type Props = {
+	citationData: {
+		pub?: {
+			apa?: string;
+			harvard?: string;
+			vancouver?: string;
+			bibtex?: string;
+		};
+	};
+	isOpen: boolean;
+	onClose: (...args: any[]) => any;
 };
 
-const CitationsModal = (props) => {
+const CitationsModal = (props: Props) => {
 	const { citationData, isOpen, onClose } = props;
 	return (
 		<Dialog
@@ -32,6 +31,7 @@ const CitationsModal = (props) => {
 					<div className="style-title">APA</div>
 					<div
 						className="style-content"
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'undefined' is not assignable to type 'string... Remove this comment to see the full error message
 						dangerouslySetInnerHTML={{ __html: citationData.pub.apa }}
 					/>
 				</div>
@@ -39,6 +39,7 @@ const CitationsModal = (props) => {
 					<div className="style-title">Harvard</div>
 					<div
 						className="style-content"
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'undefined' is not assignable to type 'string... Remove this comment to see the full error message
 						dangerouslySetInnerHTML={{ __html: citationData.pub.harvard }}
 					/>
 				</div>
@@ -46,6 +47,7 @@ const CitationsModal = (props) => {
 					<div className="style-title">Vancouver</div>
 					<div
 						className="style-content"
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'undefined' is not assignable to type 'string... Remove this comment to see the full error message
 						dangerouslySetInnerHTML={{ __html: citationData.pub.vancouver }}
 					/>
 				</div>
@@ -53,6 +55,7 @@ const CitationsModal = (props) => {
 					<div className="style-title">Bibtex</div>
 					<div
 						className="style-content bibtex"
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'undefined' is not assignable to type 'string... Remove this comment to see the full error message
 						dangerouslySetInnerHTML={{ __html: citationData.pub.bibtex }}
 					/>
 				</div>
@@ -60,6 +63,4 @@ const CitationsModal = (props) => {
 		</Dialog>
 	);
 };
-
-CitationsModal.propTypes = propTypes;
 export default CitationsModal;

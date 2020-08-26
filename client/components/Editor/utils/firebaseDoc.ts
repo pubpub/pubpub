@@ -15,6 +15,7 @@ const getMostRecentDocJson = async (firebaseRef, checkpointMap, versionNumber = 
 		// Find the highest key less than or equal to versionNumber, and get that doc.
 		// If there's no version number, we take the highest key.
 		const bestKey = checkpointKeys
+			// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 			.filter((key) => !hasVersionNumber || key <= versionNumber)
 			.reduce((a, b) => Math.max(a, b), -1);
 		if (bestKey >= 0) {
@@ -35,6 +36,7 @@ const getMostRecentDocJson = async (firebaseRef, checkpointMap, versionNumber = 
 	if (checkpoint) {
 		const { k: keyString } = checkpoint;
 		const key = parseInt(keyString, 10);
+		// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 		if (!hasVersionNumber || key <= versionNumber) {
 			const { doc } = uncompressStateJSON(checkpoint);
 			return { doc: doc, key: key };
@@ -133,7 +135,8 @@ export const getFirebaseDoc = async (firebaseRef, prosemirrorSchema, versionNumb
 
 	const currentTimestamp =
 		flattenedChanges.length > 0
-			? flattenedChanges[flattenedChanges.length - 1].t
+			? // @ts-expect-error ts-migrate(2339) FIXME: Property 't' does not exist on type 'string'.
+			  flattenedChanges[flattenedChanges.length - 1].t
 			: checkpointTimestamp;
 
 	const currentDoc = stepsJson.reduce((intermediateDoc, stepJson) => {

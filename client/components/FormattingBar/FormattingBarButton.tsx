@@ -63,16 +63,27 @@ const getIndicatorStyle = (accentColor) => {
 
 const FormattingBarButton = React.forwardRef((props, ref) => {
 	const {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'disabled' does not exist on type '{ chil... Remove this comment to see the full error message
 		disabled,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'formattingItem' does not exist on type '... Remove this comment to see the full error message
 		formattingItem,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'isActive' does not exist on type '{ chil... Remove this comment to see the full error message
 		isActive,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'isIndicated' does not exist on type '{ c... Remove this comment to see the full error message
 		isIndicated,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'isDetached' does not exist on type '{ ch... Remove this comment to see the full error message
 		isDetached,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'isOpen' does not exist on type '{ childr... Remove this comment to see the full error message
 		isOpen,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'isSmall' does not exist on type '{ child... Remove this comment to see the full error message
 		isSmall,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'label' does not exist on type '{ childre... Remove this comment to see the full error message
 		label,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'onClick' does not exist on type '{ child... Remove this comment to see the full error message
 		onClick,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'accentColor' does not exist on type '{ c... Remove this comment to see the full error message
 		accentColor,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'outerRef' does not exist on type '{ chil... Remove this comment to see the full error message
 		outerRef,
 		...restProps
 	} = props;
@@ -88,6 +99,7 @@ const FormattingBarButton = React.forwardRef((props, ref) => {
 			)}
 			style={getOuterStyle(accentColor, isOpen, isDetached)}
 		>
+			{/* @ts-expect-error ts-migrate(2769) FIXME: Type 'unknown' is not assignable to type 'HTMLButt... Remove this comment to see the full error message */}
 			<Button
 				ref={ref}
 				{...restProps}
@@ -115,6 +127,8 @@ const FormattingBarButton = React.forwardRef((props, ref) => {
 	);
 });
 
+// @ts-expect-error ts-migrate(2559) FIXME: Type '{ accentColor: Requireable<string>; formatti... Remove this comment to see the full error message
 FormattingBarButton.propTypes = propTypes;
+// @ts-expect-error ts-migrate(2559) FIXME: Type '{ accentColor: string; disabled: boolean; la... Remove this comment to see the full error message
 FormattingBarButton.defaultProps = defaultProps;
 export default FormattingBarButton;

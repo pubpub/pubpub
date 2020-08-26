@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { AnchorButton, Button } from '@blueprintjs/core';
 import { useBeforeUnload } from 'react-use';
 
@@ -23,15 +22,15 @@ import PageDelete from './PageDelete';
 
 require('./dashboardPage.scss');
 
-const propTypes = {
-	pageData: PropTypes.shape({
-		title: PropTypes.string,
-	}).isRequired,
+type Props = {
+	pageData: {
+		title?: string;
+	};
 };
 
 const defaultLayout = getDefaultLayout();
 
-const DashboardPages = (props) => {
+const DashboardPages = (props: Props) => {
 	const [persistedPageData, setPersistedPageData] = useState(props.pageData);
 	const [pendingPageData, setPendingPageData] = useState({});
 	const [isPersisting, setIsPersisting] = useState(false);
@@ -49,14 +48,22 @@ const DashboardPages = (props) => {
 	};
 
 	const {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'avatar' does not exist on type '{ title?... Remove this comment to see the full error message
 		avatar,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'description' does not exist on type '{ t... Remove this comment to see the full error message
 		description,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'isNarrowWidth' does not exist on type '{... Remove this comment to see the full error message
 		isNarrowWidth,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'isPublic' does not exist on type '{ titl... Remove this comment to see the full error message
 		isPublic,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'layout' does not exist on type '{ title?... Remove this comment to see the full error message
 		layout,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'pubs' does not exist on type '{ title?: ... Remove this comment to see the full error message
 		pubs,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'slug' does not exist on type '{ title?: ... Remove this comment to see the full error message
 		slug,
 		title,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'viewHash' does not exist on type '{ titl... Remove this comment to see the full error message
 		viewHash,
 	} = pageData;
 
@@ -76,6 +83,7 @@ const DashboardPages = (props) => {
 				method: 'PUT',
 				body: JSON.stringify({
 					...pendingPageData,
+					// @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type '{ title?: st... Remove this comment to see the full error message
 					pageId: pageData.id,
 					communityId: activeCommunity.id,
 				}),
@@ -88,6 +96,7 @@ const DashboardPages = (props) => {
 				setPersistedPageData(newPageData);
 				updateCommunity((communityData) => ({
 					pages: communityData.pages.map((page) => {
+						// @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type '{ title?: st... Remove this comment to see the full error message
 						if (page.id !== pageData.id) {
 							return page;
 						}
@@ -98,6 +107,7 @@ const DashboardPages = (props) => {
 					}),
 				}));
 				if (updatedValues.slug && locationData.params.slug !== updatedValues.slug) {
+					// @ts-expect-error ts-migrate(2345) FIXME: Type '{ mode: string; subMode: any; }' is missing ... Remove this comment to see the full error message
 					window.location.href = getDashUrl({
 						mode: 'pages',
 						subMode: updatedValues.slug,
@@ -111,6 +121,7 @@ const DashboardPages = (props) => {
 	};
 
 	const renderControls = () => {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'slug' does not exist on type '{ title?: ... Remove this comment to see the full error message
 		const canPersistChanges = hasPendingChanges && title && (slug || !persistedPageData.slug);
 		return (
 			<React.Fragment>
@@ -155,10 +166,13 @@ const DashboardPages = (props) => {
 				/>
 				<ImageUpload
 					htmlFor="dashboard-page-avatar"
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'undefined... Remove this comment to see the full error message
 					label="Preview Image"
 					defaultImage={avatar}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type '(value: any) => void' is not assignable to t... Remove this comment to see the full error message
 					onNewImage={(value) => updatePageData({ avatar: value })}
 					canClear={true}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'undefined... Remove this comment to see the full error message
 					helperText="Used in social media cards"
 				/>
 				{slug && (
@@ -204,10 +218,15 @@ const DashboardPages = (props) => {
 								icon="lock"
 							/>
 							{!isPublic && (
+								// @ts-expect-error ts-migrate(2745) FIXME: This JSX tag's 'children' prop expects type 'never... Remove this comment to see the full error message
 								<ClickToCopyButton
+									// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 									className="copy-button"
+									// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 									icon="duplicate"
+									// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 									beforeCopyPrompt="Anyone with this link can view the private Page."
+									// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 									copyString={`${communityUrl(
 										activeCommunity,
 									)}/${slug}?access=${viewHash}`}
@@ -244,9 +263,13 @@ const DashboardPages = (props) => {
 	};
 
 	return (
+		// @ts-expect-error ts-migrate(2746) FIXME: This JSX tag's 'children' prop expects a single ch... Remove this comment to see the full error message
 		<DashboardFrame
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			className="dashboard-page-container"
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			title={'Pages: ' + persistedPageData.title}
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 			controls={renderControls()}
 		>
 			{renderDetailsEditor()}
@@ -255,6 +278,4 @@ const DashboardPages = (props) => {
 		</DashboardFrame>
 	);
 };
-
-DashboardPages.propTypes = propTypes;
 export default DashboardPages;

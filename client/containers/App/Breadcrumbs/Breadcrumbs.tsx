@@ -37,18 +37,21 @@ const Breadcrumbs = () => {
 
 	const handleCreatePub = () => {
 		setNewPubIsLoading(true);
-		return apiFetch
-			.post('/api/pubs', {
-				communityId: communityData.id,
-				collectionId: activeCollection && activeCollection.id,
-			})
-			.then((newPub) => {
-				window.location.href = `/pub/${newPub.slug}`;
-			})
-			.catch((err) => {
-				console.error(err);
-				setNewPubIsLoading(false);
-			});
+		return (
+			apiFetch
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'post' does not exist on type '(path: any... Remove this comment to see the full error message
+				.post('/api/pubs', {
+					communityId: communityData.id,
+					collectionId: activeCollection && activeCollection.id,
+				})
+				.then((newPub) => {
+					window.location.href = `/pub/${newPub.slug}`;
+				})
+				.catch((err) => {
+					console.error(err);
+					setNewPubIsLoading(false);
+				})
+		);
 	};
 
 	const actions = {
@@ -91,6 +94,7 @@ const Breadcrumbs = () => {
 				<Avatar
 					avatar={avatar}
 					initials={title[0]}
+					// @ts-expect-error ts-migrate(2322) FIXME: Property 'communityData' does not exist on type 'I... Remove this comment to see the full error message
 					communityData={communityData}
 					width={40}
 					isBlock={true}
@@ -100,6 +104,7 @@ const Breadcrumbs = () => {
 						{title}
 					</div>
 					<div className="crumbs">
+						{/* @ts-expect-error ts-migrate(2345) FIXME: Type '{}' is missing the following properties from... Remove this comment to see the full error message */}
 						<a className="crumb truncate" href={getDashUrl({})}>
 							<Icon icon="office" iconSize={10} />
 							<span className="bottom-text">{communityData.title}</span>
@@ -109,6 +114,7 @@ const Breadcrumbs = () => {
 								<Icon icon="chevron-right" className="crumb-icon" iconSize={12} />
 								<a
 									className="crumb truncate"
+									// @ts-expect-error ts-migrate(2345) FIXME: Type '{ collectionSlug: any; }' is missing the fol... Remove this comment to see the full error message
 									href={getDashUrl({ collectionSlug: collectionSlug })}
 								>
 									<Icon icon="collection" iconSize={10} />
@@ -122,6 +128,7 @@ const Breadcrumbs = () => {
 								<Icon icon="chevron-right" className="crumb-icon" iconSize={12} />
 								<a
 									className="crumb truncate"
+									// @ts-expect-error ts-migrate(2345) FIXME: Type '{ collectionSlug: any; pubSlug: any; }' is m... Remove this comment to see the full error message
 									href={getDashUrl({
 										collectionSlug: collectionSlug,
 										pubSlug: pubSlug,
@@ -137,6 +144,7 @@ const Breadcrumbs = () => {
 								<Icon icon="chevron-right" className="crumb-icon" iconSize={12} />
 								<a
 									className="crumb capitalize no-shrink"
+									// @ts-expect-error ts-migrate(2345) FIXME: Property 'subMode' is missing in type '{ collectio... Remove this comment to see the full error message
 									href={getDashUrl({
 										collectionSlug: collectionSlug,
 										pubSlug: pubSlug,

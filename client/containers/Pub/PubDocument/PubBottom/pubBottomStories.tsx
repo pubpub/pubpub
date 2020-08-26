@@ -56,11 +56,13 @@ const pubData = {
 storiesOf('containers/Pub/PubDocument/PubBottom/PubBottom', module)
 	.add('default', () => (
 		<div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+			{/* @ts-expect-error ts-migrate(2739) FIXME: Type '{ pubData: { footnotes: { structuredValue: s... Remove this comment to see the full error message */}
 			<PubBottom pubData={pubData} collabData={{ editorChangeObject: {} }} />
 		</div>
 	))
 	.add('can-manage', () => (
 		<div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+			{/* @ts-expect-error ts-migrate(2739) FIXME: Type '{ pubData: { canManage: boolean; footnotes: ... Remove this comment to see the full error message */}
 			<PubBottom
 				pubData={{ ...pubData, canManage: true }}
 				collabData={{ editorChangeObject: {} }}
@@ -69,6 +71,7 @@ storiesOf('containers/Pub/PubDocument/PubBottom/PubBottom', module)
 	))
 	.add('cannot-discuss', () => (
 		<div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+			{/* @ts-expect-error ts-migrate(2739) FIXME: Type '{ pubData: { canDiscussBranch: boolean; foot... Remove this comment to see the full error message */}
 			<PubBottom
 				pubData={{ ...pubData, canDiscussBranch: false }}
 				collabData={{ editorChangeObject: {} }}
@@ -77,6 +80,7 @@ storiesOf('containers/Pub/PubDocument/PubBottom/PubBottom', module)
 	))
 	.add('no-pub-bottom-discussions', () => (
 		<div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+			{/* @ts-expect-error ts-migrate(2739) FIXME: Type '{ pubData: { discussions: ({ id: string; tit... Remove this comment to see the full error message */}
 			<PubBottom
 				pubData={{
 					...pubData,
@@ -88,6 +92,7 @@ storiesOf('containers/Pub/PubDocument/PubBottom/PubBottom', module)
 	))
 	.add('no-discussions', () => (
 		<div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+			{/* @ts-expect-error ts-migrate(2739) FIXME: Type '{ pubData: { discussions: never[]; footnotes... Remove this comment to see the full error message */}
 			<PubBottom
 				pubData={{
 					...pubData,

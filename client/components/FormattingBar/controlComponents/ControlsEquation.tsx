@@ -1,6 +1,5 @@
 /* eslint-disable react/no-danger */
 import React, { useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { useDebounce } from 'use-debounce';
 
 import { renderLatexString } from 'client/utils/editor';
@@ -9,29 +8,29 @@ import { ControlsButton, ControlsButtonGroup } from './ControlsButton';
 
 require('./controls.scss');
 
-const propTypes = {
-	onClose: PropTypes.func.isRequired,
-	pendingAttrs: PropTypes.object.isRequired,
-	editorChangeObject: PropTypes.shape({
-		changeNode: PropTypes.func.isRequired,
-		updateNode: PropTypes.func.isRequired,
-		selectedNode: PropTypes.shape({
-			type: PropTypes.shape({
-				name: PropTypes.string,
-			}),
-			attrs: PropTypes.shape({
-				value: PropTypes.string.isRequired,
-				html: PropTypes.string,
-			}),
-		}),
-	}).isRequired,
+type Props = {
+	onClose: (...args: any[]) => any;
+	pendingAttrs: any;
+	editorChangeObject: {
+		changeNode: (...args: any[]) => any;
+		updateNode: (...args: any[]) => any;
+		selectedNode?: {
+			type?: {
+				name?: string;
+			};
+			attrs?: {
+				value: string;
+				html?: string;
+			};
+		};
+	};
 };
 
 const getSchemaDefinitionForNodeType = (editorChangeObject, nodeTypeName) => {
 	return editorChangeObject.view.state.schema.nodes[nodeTypeName];
 };
 
-const ControlsEquation = (props) => {
+const ControlsEquation = (props: Props) => {
 	const { editorChangeObject, pendingAttrs, onClose } = props;
 	const { changeNode, selectedNode } = editorChangeObject;
 	const {
@@ -42,6 +41,7 @@ const ControlsEquation = (props) => {
 	} = pendingAttrs;
 	const [debouncedValue] = useDebounce(value, 250);
 	const hasMountedRef = useRef(false);
+	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const isBlock = selectedNode.type.name === 'block_equation';
 
 	useEffect(() => {
@@ -99,6 +99,4 @@ const ControlsEquation = (props) => {
 		</div>
 	);
 };
-
-ControlsEquation.propTypes = propTypes;
 export default ControlsEquation;

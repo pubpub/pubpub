@@ -1,6 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
+// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module 'types/pub' or its correspondin... Remove this comment to see the full error message
 import { pubDataProps } from 'types/pub';
 import { pubUrl } from 'utils/canonicalUrls';
 import { usePageContext } from 'utils/hooks';
@@ -13,12 +13,12 @@ import {
 
 import PubBottomSection, { SectionBullets } from './PubBottomSection';
 
-const propTypes = {
-	pubData: pubDataProps.isRequired,
-	updateLocalData: PropTypes.func.isRequired,
+type Props = {
+	pubData: pubDataProps;
+	updateLocalData: (...args: any[]) => any;
 };
 
-const ReadNextSection = (props) => {
+const ReadNextSection = (props: Props) => {
 	const { pubData, updateLocalData } = props;
 	const { locationData, communityData } = usePageContext();
 	const currentCollection = chooseCollectionForPub(pubData, locationData);
@@ -35,7 +35,9 @@ const ReadNextSection = (props) => {
 		<PubBottomSection
 			isExpandable={false}
 			title="Read Next"
+			// @ts-expect-error ts-migrate(2322) FIXME: Property 'children' is missing in type 'Element' b... Remove this comment to see the full error message
 			centerItems={
+				// @ts-expect-error ts-migrate(2786) FIXME: Type 'Element[]' is missing the following properti... Remove this comment to see the full error message
 				<SectionBullets>
 					<a
 						href={createReadingParamUrl(
@@ -50,6 +52,4 @@ const ReadNextSection = (props) => {
 		/>
 	);
 };
-
-ReadNextSection.propTypes = propTypes;
 export default ReadNextSection;

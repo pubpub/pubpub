@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Button, Tag, Callout, Intent } from '@blueprintjs/core';
 import TimeAgo from 'react-timeago';
 
@@ -10,11 +9,11 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 require('./dashboardReview.scss');
 
-const propTypes = {
-	reviewData: PropTypes.object.isRequired,
+type Props = {
+	reviewData: any;
 };
 
-const DashboardReview = (props) => {
+const DashboardReview = (props: Props) => {
 	const [localReviewData, setLocalReviewData] = useState(props.reviewData);
 	const [isClosing, setIsClosing] = useState(false);
 	const [isReleasing, setIsReleasing] = useState(false);
@@ -70,14 +69,18 @@ const DashboardReview = (props) => {
 	const isAuthor = loginData && loginData.id === author.id;
 	const canClose = isAuthor || canAdmin;
 	return (
+		// @ts-expect-error ts-migrate(2746) FIXME: This JSX tag's 'children' prop expects a single ch... Remove this comment to see the full error message
 		<DashboardFrame
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			className="dashboard-review-container"
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 			title={
 				<span>
 					Reviews: {localReviewData.title}
 					<span className="number">(R{localReviewData.number})</span>
 				</span>
 			}
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 			details={
 				<React.Fragment>
 					<Tag className={status} minimal={true} large={true}>
@@ -89,6 +92,7 @@ const DashboardReview = (props) => {
 					</span>
 				</React.Fragment>
 			}
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'false' is not assignable to type 'never'.
 			controls={
 				canClose &&
 				localReviewData.status === 'open' && (
@@ -106,6 +110,7 @@ const DashboardReview = (props) => {
 				parentId={localReviewData.id}
 				pubId={localReviewData.pubId}
 				threadData={thread}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type '(newThread: any) => void' is not assignable ... Remove this comment to see the full error message
 				onThreadUpdate={onThreadUpdate}
 			/>
 			{canAdmin && status === 'open' && releaseRequested && (
@@ -127,6 +132,4 @@ const DashboardReview = (props) => {
 		</DashboardFrame>
 	);
 };
-
-DashboardReview.propTypes = propTypes;
 export default DashboardReview;

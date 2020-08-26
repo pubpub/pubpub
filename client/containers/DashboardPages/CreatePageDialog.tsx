@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Button, Classes, Dialog } from '@blueprintjs/core';
 
 import InputField from 'components/InputField/InputField';
@@ -9,15 +8,17 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 require('./createPageDialog.scss');
 
-const propTypes = {
-	communityData: PropTypes.object.isRequired,
-	hostname: PropTypes.string.isRequired,
-	isOpen: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
+type Props = {
+	communityData: any;
+	hostname: string;
+	isOpen: boolean;
+	onClose: (...args: any[]) => any;
 };
 
-class CreatePageDialog extends Component {
-	constructor(props) {
+type State = any;
+
+class CreatePageDialog extends Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			title: '',
@@ -74,6 +75,7 @@ class CreatePageDialog extends Component {
 			}),
 		})
 			.then((newPageResult) => {
+				// @ts-expect-error ts-migrate(2345) FIXME: Type '{ mode: string; subMode: any; }' is missing ... Remove this comment to see the full error message
 				window.location.href = getDashUrl({ mode: 'pages', subMode: newPageResult.slug });
 			})
 			.catch((err) => {
@@ -135,6 +137,4 @@ class CreatePageDialog extends Component {
 		);
 	}
 }
-
-CreatePageDialog.propTypes = propTypes;
 export default CreatePageDialog;

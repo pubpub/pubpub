@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { Button } from '@blueprintjs/core';
 
@@ -11,13 +10,13 @@ import NavBuilderRow from './NavBuilderRow';
 
 require('./navBuilder.scss');
 
-const propTypes = {
-	initialNav: PropTypes.array.isRequired,
-	prefix: PropTypes.array,
-	suffix: PropTypes.array,
-	pages: PropTypes.array.isRequired,
-	onChange: PropTypes.func.isRequired,
-	disableDropdown: PropTypes.bool,
+type OwnProps = {
+	initialNav: any[];
+	prefix?: any[];
+	suffix?: any[];
+	pages: any[];
+	onChange: (...args: any[]) => any;
+	disableDropdown?: boolean;
 };
 
 const defaultProps = {
@@ -26,7 +25,9 @@ const defaultProps = {
 	disableDropdown: false,
 };
 
-const NavBuilder = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const NavBuilder = (props: Props) => {
 	const { initialNav, pages, onChange, prefix, suffix, disableDropdown } = props;
 	const [currentNav, setCurrentNav] = useState(initialNav);
 	const userSetElements = currentNav.slice(prefix.length, currentNav.length - suffix.length);
@@ -120,9 +121,11 @@ const NavBuilder = (props) => {
 				<PageAutocomplete
 					pages={pages}
 					placeholder="Add Page"
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 					usedItems={pages.filter((item) => {
 						return currentNav.includes(item.id);
 					})}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type '(newItem: any) => void' is not assignable to... Remove this comment to see the full error message
 					onSelect={(newItem) => {
 						addItem(newItem.id);
 					}}
@@ -157,6 +160,7 @@ const NavBuilder = (props) => {
 					})}
 					<NavBuilderList
 						id="main-list"
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'any[]' is not assignable to type 'never[]'.
 						items={userSetElements}
 						removeItem={removeItem}
 						updateItem={updateItem}
@@ -178,7 +182,5 @@ const NavBuilder = (props) => {
 		</div>
 	);
 };
-
-NavBuilder.propTypes = propTypes;
 NavBuilder.defaultProps = defaultProps;
 export default NavBuilder;

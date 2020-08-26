@@ -1,24 +1,25 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { Button } from '@blueprintjs/core';
 import Icon from 'components/Icon/Icon';
 import NavBuilderRow from './NavBuilderRow';
 
-const propTypes = {
-	id: PropTypes.string.isRequired,
-	items: PropTypes.array,
-	removeItem: PropTypes.func.isRequired,
-	updateItem: PropTypes.func.isRequired,
-	pages: PropTypes.array.isRequired,
-	newLink: PropTypes.object.isRequired,
+type OwnProps = {
+	id: string;
+	items?: any[];
+	removeItem: (...args: any[]) => any;
+	updateItem: (...args: any[]) => any;
+	pages: any[];
+	newLink: any;
 };
 
 const defaultProps = {
 	items: [],
 };
 
-const NavBuilderList = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const NavBuilderList = (props: Props) => {
 	const { id, items, updateItem, pages, newLink, removeItem } = props;
 
 	return (
@@ -56,13 +57,16 @@ const NavBuilderList = (props) => {
 												/>
 											</span>
 											<NavBuilderRow
+												// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'undefined... Remove this comment to see the full error message
 												dropdownId={id}
+												// @ts-expect-error ts-migrate(2322) FIXME: Type 'number' is not assignable to type 'undefined... Remove this comment to see the full error message
 												index={index}
 												item={item}
 												removeItem={removeItem}
 												updateItem={updateItem}
 												pages={pages}
 												newLink={newLink}
+												// @ts-expect-error ts-migrate(2322) FIXME: Type '{ (props: Props): JSX.Element; defaultProps:... Remove this comment to see the full error message
 												NavBuilderList={NavBuilderList}
 											/>
 											<Button
@@ -85,7 +89,5 @@ const NavBuilderList = (props) => {
 		</Droppable>
 	);
 };
-
-NavBuilderList.propTypes = propTypes;
 NavBuilderList.defaultProps = defaultProps;
 export default NavBuilderList;

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import { getDefaultLayout, generateRenderLists } from 'utils/pages';
@@ -13,11 +12,11 @@ import LayoutPages from './LayoutPages';
 
 require('./page.scss');
 
-const propTypes = {
-	pageData: PropTypes.object.isRequired,
+type Props = {
+	pageData: any;
 };
 
-const Page = (props) => {
+const Page = (props: Props) => {
 	const { locationData, communityData, loginData } = usePageContext();
 	const pageData = props.pageData;
 	const slug = locationData.params.slug;
@@ -87,6 +86,4 @@ const Page = (props) => {
 		</div>
 	);
 };
-
-Page.propTypes = propTypes;
 export default Page;

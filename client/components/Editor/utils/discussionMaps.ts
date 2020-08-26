@@ -31,7 +31,9 @@ export const restoreDiscussionMaps = (firebaseRef, schema, useMergeSteps) => {
 				}
 			});
 			const earliestKey = Object.values(discussions).reduce((prev, curr) => {
+				// @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
 				if (Number(curr.currentKey) < prev) {
+					// @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
 					return curr.currentKey;
 				}
 				return prev;
@@ -132,11 +134,13 @@ export const restoreDiscussionMaps = (firebaseRef, schema, useMergeSteps) => {
 						const uncompressedSteps = compressedStepsJSON.map((compressedStepJSON) => {
 							return Step.fromJSON(schema, uncompressStepJSON(compressedStepJSON));
 						});
+						// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 						currentSteps.push(...uncompressedSteps);
 					});
 
 					/* Update currentDoc with steps at current changeKey */
 					const nextDoc = currentSteps.reduce((prev, curr) => {
+						// @ts-expect-error ts-migrate(2339) FIXME: Property 'apply' does not exist on type 'never'.
 						const stepResult = curr.apply(prev);
 						if (stepResult.failed) {
 							console.error('Failed with ', stepResult.failed);
@@ -148,6 +152,7 @@ export const restoreDiscussionMaps = (firebaseRef, schema, useMergeSteps) => {
 
 					/* Map all discussions in newDiscussions */
 					const currentStepMaps = currentSteps.map((step) => {
+						// @ts-expect-error ts-migrate(2339) FIXME: Property 'getMap' does not exist on type 'never'.
 						return step.getMap();
 					});
 					const currentMapping = new Mapping(currentStepMaps);

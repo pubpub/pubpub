@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { AnchorButton, Card, Switch } from '@blueprintjs/core';
 
 import { usePageContext } from 'utils/hooks';
 import { getGdprConsentElection, updateGdprConsent } from 'client/utils/legal/gdprConsent';
 
-const propTypes = {
-	isLoggedIn: PropTypes.bool.isRequired,
+type PrivacySettingsProps = {
+	isLoggedIn: boolean;
 };
 
 const exportEmailBody = `
@@ -33,6 +32,7 @@ const ThirdPartyAnalyticsCard = () => {
 	// to check a cookie on the server side, which our SSR framework isn't set up to do.
 	useEffect(() => {
 		if (isEnabled === null) {
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'boolean' is not assignable to pa... Remove this comment to see the full error message
 			setIsEnabled(!!getGdprConsentElection(loginData));
 		}
 		if (hasUsedToggle) {
@@ -63,6 +63,7 @@ const ThirdPartyAnalyticsCard = () => {
 				checked={!!isEnabled}
 				onChange={() => {
 					setHasUsedToggle(true);
+					// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'true' is not assignable to param... Remove this comment to see the full error message
 					setIsEnabled(!isEnabled);
 				}}
 				label={'Third party analytics is ' + (isEnabled ? 'enabled' : 'disabled')}
@@ -71,7 +72,7 @@ const ThirdPartyAnalyticsCard = () => {
 	);
 };
 
-const PrivacySettings = (props) => {
+const PrivacySettings = (props: PrivacySettingsProps) => {
 	const { isLoggedIn } = props;
 	return (
 		<div className="privacy-settings">
@@ -112,6 +113,4 @@ const PrivacySettings = (props) => {
 		</div>
 	);
 };
-
-PrivacySettings.propTypes = propTypes;
 export default PrivacySettings;

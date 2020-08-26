@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { ClickToCopyButton } from 'components';
 import { getPubPublishedDate } from 'utils/pub/pubDates';
@@ -12,19 +11,19 @@ import DraftReleaseButtons from './DraftReleaseButtons';
 import TitleGroup from './TitleGroup';
 import UtilityButtons from './UtilityButtons';
 
-const propTypes = {
-	historyData: PropTypes.object.isRequired,
-	onShowHeaderDetails: PropTypes.func.isRequired,
-	pubData: PropTypes.shape({
-		id: PropTypes.string.isRequired,
-		doi: PropTypes.string,
-		isInMaintenanceMode: PropTypes.bool,
-	}).isRequired,
-	pubHeadings: PropTypes.array.isRequired,
-	updateLocalData: PropTypes.func.isRequired,
+type Props = {
+	historyData: any;
+	onShowHeaderDetails: (...args: any[]) => any;
+	pubData: {
+		id: string;
+		doi?: string;
+		isInMaintenanceMode?: boolean;
+	};
+	pubHeadings: any[];
+	updateLocalData: (...args: any[]) => any;
 };
 
-const PubHeaderContent = (props) => {
+const PubHeaderContent = (props: Props) => {
 	const { historyData, onShowHeaderDetails, pubData, pubHeadings, updateLocalData } = props;
 	const { doi, isInMaintenanceMode } = pubData;
 	const { communityData } = usePageContext();
@@ -65,10 +64,15 @@ const PubHeaderContent = (props) => {
 					{doi && (
 						<span className="metadata-pair doi-pair">
 							<b className="pub-header-themed-secondary">DOI</b>
+							{/* @ts-expect-error ts-migrate(2745) FIXME: This JSX tag's 'children' prop expects type 'never... Remove this comment to see the full error message */}
 							<ClickToCopyButton
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 								copyString={`https://doi.org/${doi}`}
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 								className="click-to-copy"
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 								beforeCopyPrompt="Copy doi.org link"
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'null' is not assignable to type 'never'.
 								icon={null}
 							>
 								{doi}
@@ -84,8 +88,10 @@ const PubHeaderContent = (props) => {
 	return (
 		<div className="pub-header-content-component">
 			{renderTop()}
+			{/* @ts-expect-error ts-migrate(2559) FIXME: Type '{ id: string; doi?: string | undefined; isIn... Remove this comment to see the full error message */}
 			<TitleGroup pubData={pubData} updatePubData={updateAndSavePubData} />
 			<UtilityButtons
+				// @ts-expect-error ts-migrate(2559) FIXME: Type '{ id: string; doi?: string | undefined; isIn... Remove this comment to see the full error message
 				pubData={pubData}
 				updatePubData={updateAndSavePubData}
 				pubHeadings={pubHeadings}
@@ -93,6 +99,7 @@ const PubHeaderContent = (props) => {
 			/>
 			{!isInMaintenanceMode && (
 				<DraftReleaseButtons
+					// @ts-expect-error ts-migrate(2741) FIXME: Property 'releases' is missing in type '{ id: stri... Remove this comment to see the full error message
 					pubData={pubData}
 					historyData={historyData}
 					updatePubData={updatePubData}
@@ -102,6 +109,4 @@ const PubHeaderContent = (props) => {
 		</div>
 	);
 };
-
-PubHeaderContent.propTypes = propTypes;
 export default PubHeaderContent;

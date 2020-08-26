@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 
 import { GridWrapper } from 'components';
@@ -8,17 +7,16 @@ import InputField from 'components/InputField/InputField';
 import FormattingBarLegacy from 'components/FormattingBarLegacy/FormattingBar';
 import { getResizedUrl } from 'utils/images';
 
-const propTypes = {
-	onChange: PropTypes.func.isRequired,
-	layoutIndex: PropTypes.number.isRequired,
-	content: PropTypes.object.isRequired,
-	/* Expected content */
-	/* deprecated: title, align, width, text */
-	/* align, text */
+type Props = {
+	onChange: (...args: any[]) => any;
+	layoutIndex: number;
+	content: any;
 };
 
-class LayoutEditorText extends Component {
-	constructor(props) {
+type State = any;
+
+class LayoutEditorText extends Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			key: `text-block-${props.layoutIndex}`,
@@ -28,6 +26,7 @@ class LayoutEditorText extends Component {
 		this.setAlignLeft = this.setAlignLeft.bind(this);
 		this.setAlignCenter = this.setAlignCenter.bind(this);
 		this.setText = this.setText.bind(this);
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'textChangesMade' does not exist on type ... Remove this comment to see the full error message
 		this.textChangesMade = false;
 	}
 
@@ -96,12 +95,15 @@ class LayoutEditorText extends Component {
 								}}
 								placeholder="Enter text..."
 								initialContent={this.state.initialContent}
+								// @ts-expect-error ts-migrate(2322) FIXME: Type '(editorChangeObject: any) => void' is not as... Remove this comment to see the full error message
 								onChange={(editorChangeObject) => {
 									if (editorChangeObject.view.state.history$.prevTime) {
 										/* history$.prevTime will be 0 if the transaction */
 										/* does not generate an undo item in the history */
+										// @ts-expect-error ts-migrate(2339) FIXME: Property 'textChangesMade' does not exist on type ... Remove this comment to see the full error message
 										this.textChangesMade = true;
 									}
+									// @ts-expect-error ts-migrate(2339) FIXME: Property 'textChangesMade' does not exist on type ... Remove this comment to see the full error message
 									if (this.textChangesMade) {
 										this.setText(getJSON(editorChangeObject.view));
 									}
@@ -117,6 +119,4 @@ class LayoutEditorText extends Component {
 		);
 	}
 }
-
-LayoutEditorText.propTypes = propTypes;
 export default LayoutEditorText;

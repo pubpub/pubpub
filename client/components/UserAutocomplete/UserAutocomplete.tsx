@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { MenuItem, Position } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 
@@ -8,11 +7,11 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 require('./userAutocomplete.scss');
 
-const propTypes = {
-	allowCustomUser: PropTypes.bool,
-	onSelect: PropTypes.func,
-	placeholder: PropTypes.string,
-	usedUserIds: PropTypes.array,
+type OwnProps = {
+	allowCustomUser?: boolean;
+	onSelect?: (...args: any[]) => any;
+	placeholder?: string;
+	usedUserIds?: any[];
 };
 
 const defaultProps = {
@@ -22,20 +21,28 @@ const defaultProps = {
 	usedUserIds: [],
 };
 
-class UserAutocomplete extends Component {
-	constructor(props) {
+type State = any;
+
+type Props = OwnProps & typeof defaultProps;
+
+class UserAutocomplete extends Component<Props, State> {
+	static defaultProps = defaultProps;
+
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			items: [],
 			queryValue: '',
 		};
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'inputRef' does not exist on type 'UserAu... Remove this comment to see the full error message
 		this.inputRef = undefined;
 		this.handleSelect = this.handleSelect.bind(this);
 	}
 
-	componentDidUpdate(_, prevState) {
+	componentDidUpdate(_: Props, prevState: State) {
 		const { queryValue } = this.state;
 		if (queryValue !== prevState.queryValue) {
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 			apiFetch(`/api/search/users?q=${queryValue}`).then((result) => {
 				const { usedUserIds } = this.props;
 				this.setState({
@@ -47,6 +54,7 @@ class UserAutocomplete extends Component {
 
 	handleSelect(data) {
 		this.props.onSelect(data);
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'inputRef' does not exist on type 'UserAu... Remove this comment to see the full error message
 		this.inputRef.focus();
 	}
 
@@ -69,6 +77,7 @@ class UserAutocomplete extends Component {
 						placeholder: this.props.placeholder,
 						large: true,
 						inputRef: (ref) => {
+							// @ts-expect-error ts-migrate(2339) FIXME: Property 'inputRef' does not exist on type 'UserAu... Remove this comment to see the full error message
 							this.inputRef = ref;
 						},
 					}}
@@ -121,7 +130,4 @@ class UserAutocomplete extends Component {
 		);
 	}
 }
-
-UserAutocomplete.propTypes = propTypes;
-UserAutocomplete.defaultProps = defaultProps;
 export default UserAutocomplete;

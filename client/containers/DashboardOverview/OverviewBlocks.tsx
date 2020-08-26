@@ -1,19 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Icon } from 'components';
 
 require('./overviewBlocks.scss');
 
-const propTypes = {
-	pubs: PropTypes.array.isRequired,
-	collections: PropTypes.array,
+type OwnProps = {
+	pubs: any[];
+	collections?: any[];
 };
 
 const defaultProps = {
 	collections: undefined,
 };
 
-const OverviewBlocks = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const OverviewBlocks = (props: Props) => {
 	const { pubs, collections } = props;
 
 	const countItems = (type) => {
@@ -21,6 +22,7 @@ const OverviewBlocks = (props) => {
 			return pubs.length;
 		}
 		if (type === 'collections') {
+			// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 			return collections.length;
 		}
 		return pubs.reduce((count, pub) => {
@@ -58,7 +60,5 @@ const OverviewBlocks = (props) => {
 		</div>
 	);
 };
-
-OverviewBlocks.propTypes = propTypes;
 OverviewBlocks.defaultProps = defaultProps;
 export default OverviewBlocks;

@@ -1,18 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Button } from 'reakit/Button';
 
 import { Icon } from 'components';
 
 require('./expandButton.scss');
 
-const propTypes = {
-	accentColor: PropTypes.string.isRequired,
-	isExpanded: PropTypes.bool.isRequired,
-	onClick: PropTypes.func.isRequired,
+type Props = {
+	accentColor: string;
+	isExpanded: boolean;
+	onClick: (...args: any[]) => any;
 };
 
-const ExpandButton = (props) => {
+const ExpandButton = (props: Props) => {
 	const { accentColor, isExpanded, onClick } = props;
 
 	return (
@@ -25,6 +24,4 @@ const ExpandButton = (props) => {
 		</Button>
 	);
 };
-
-ExpandButton.propTypes = propTypes;
 export default ExpandButton;

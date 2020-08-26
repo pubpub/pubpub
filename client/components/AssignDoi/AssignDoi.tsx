@@ -1,5 +1,4 @@
 import React, { useCallback, useReducer, useEffect, useMemo, useRef } from 'react';
-import PropTypes from 'prop-types';
 import { Button, Callout } from '@blueprintjs/core';
 import pickBy from 'lodash.pickby';
 
@@ -24,14 +23,14 @@ require('./assignDoi.scss');
 
 const noop = () => {};
 
-const propTypes = {
-	communityData: PropTypes.object.isRequired,
-	disabled: PropTypes.bool,
-	onDeposit: PropTypes.func,
-	onError: PropTypes.func,
-	onPreview: PropTypes.func,
-	pubData: PropTypes.object.isRequired,
-	target: PropTypes.string.isRequired,
+type OwnProps = {
+	communityData: any;
+	disabled?: boolean;
+	onDeposit?: (...args: any[]) => any;
+	onError?: (...args: any[]) => any;
+	onPreview?: (...args: any[]) => any;
+	pubData: any;
+	target: string;
 };
 
 const defaultProps = {
@@ -82,6 +81,7 @@ export function reducer(state, action) {
 			if (
 				!(
 					state.status === AssignDoiStatus.Initial ||
+					// @ts-expect-error ts-migrate(2339) FIXME: Property 'Error' does not exist on type '{ Initial... Remove this comment to see the full error message
 					state.status === AssignDoiStatus.Error ||
 					// re-fetch preview
 					state.status === AssignDoiStatus.Previewed
@@ -219,7 +219,9 @@ const reviewRecommendationItems = [
 
 const pickNonNullValues = (obj) => pickBy(obj, (value) => value !== null && value !== undefined);
 
-function AssignDoi(props) {
+type Props = OwnProps & typeof defaultProps;
+
+function AssignDoi(props: Props) {
 	const { communityData, disabled, pubData, onPreview, onDeposit, onError, target } = props;
 	const [state, dispatch] = useReducer(reducer, {
 		...initialState,
@@ -273,6 +275,7 @@ function AssignDoi(props) {
 						...nextParams,
 					}),
 				);
+				// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 				const preview = await apiFetch(`/api/doiPreview?${params.toString()}`);
 
 				onPreview(preview);
@@ -310,6 +313,7 @@ function AssignDoi(props) {
 		}
 	};
 
+	// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 	const handlePreviewClick = () => fetchPreview();
 	const handleDepositClick = () => fetchDeposit();
 	const handleContentVersionItemSelect = ({ key }) => {
@@ -359,6 +363,7 @@ function AssignDoi(props) {
 	// Re-load the preview when the Pub's DOI changes.
 	useEffect(() => {
 		if (priorPubDoi.current !== pubData.doi && status === AssignDoiStatus.Previewed) {
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 			fetchPreview();
 		}
 		priorPubDoi.current = pubData.doi;
@@ -379,13 +384,16 @@ function AssignDoi(props) {
 					{!isStandaloneComponentDeposit(crossrefDepositRecord) && (
 						<InputField label="Content Version">
 							<MenuButton
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'null | un... Remove this comment to see the full error message
 								buttonContent={activeContentVersionItem.title}
+								// @ts-expect-error ts-migrate(2322) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
 								buttonProps={{ rightIcon: 'caret-down' }}
 								aria-label="content-version"
 							>
 								{contentVersionItems.map((item) => (
 									<MenuItem
 										key={item.key}
+										// @ts-expect-error ts-migrate(2322) FIXME: Property 'active' does not exist on type 'Intrinsi... Remove this comment to see the full error message
 										active={item === activeContentVersionItem}
 										onClick={() => handleContentVersionItemSelect(item)}
 										text={item.title}
@@ -399,13 +407,16 @@ function AssignDoi(props) {
 						<div className="dropdowns">
 							<InputField label="Review Type">
 								<MenuButton
+									// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'null | un... Remove this comment to see the full error message
 									buttonContent={activeReviewTypeItem.title}
+									// @ts-expect-error ts-migrate(2322) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
 									buttonProps={{ rightIcon: 'caret-down' }}
 									aria-label="review-type"
 								>
 									{reviewTypeItems.map((item) => (
 										<MenuItem
 											key={item.key}
+											// @ts-expect-error ts-migrate(2322) FIXME: Property 'active' does not exist on type 'Intrinsi... Remove this comment to see the full error message
 											active={item === activeReviewTypeItem}
 											onClick={() => handleReviewTypeItemSelect(item)}
 											text={<span>{item.title}</span>}
@@ -415,13 +426,16 @@ function AssignDoi(props) {
 							</InputField>
 							<InputField label="Review Recommendation">
 								<MenuButton
+									// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'null | un... Remove this comment to see the full error message
 									buttonContent={activeReviewRecommendationItem.title}
+									// @ts-expect-error ts-migrate(2322) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
 									buttonProps={{ rightIcon: 'caret-down' }}
 									aria-label="review-type"
 								>
 									{reviewRecommendationItems.map((item) => (
 										<MenuItem
 											key={item.key}
+											// @ts-expect-error ts-migrate(2322) FIXME: Property 'active' does not exist on type 'Intrinsi... Remove this comment to see the full error message
 											active={item === activeReviewRecommendationItem}
 											onClick={() =>
 												handleReviewRecommendationItemSelect(item)
@@ -453,7 +467,5 @@ function AssignDoi(props) {
 		</div>
 	);
 }
-
-AssignDoi.propTypes = propTypes;
 AssignDoi.defaultProps = defaultProps;
 export default AssignDoi;

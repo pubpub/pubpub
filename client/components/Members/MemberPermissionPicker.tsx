@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import { Icon } from 'components';
@@ -9,11 +8,11 @@ import { permissionValues } from './permissionValues';
 
 require('./memberPermissionPicker.scss');
 
-const propTypes = {
-	activeTargetType: PropTypes.string.isRequired,
-	canAdmin: PropTypes.bool.isRequired,
-	activePermission: PropTypes.string.isRequired,
-	onSelect: PropTypes.func,
+type OwnProps = {
+	activeTargetType: string;
+	canAdmin: boolean;
+	activePermission: string;
+	onSelect?: (...args: any[]) => any;
 };
 
 const defaultProps = {
@@ -66,7 +65,9 @@ const privileges = {
 	],
 };
 
-const MemberPermissionPicker = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const MemberPermissionPicker = (props: Props) => {
 	const { activeTargetType, activePermission, onSelect, canAdmin } = props;
 	const { communityData } = usePageContext();
 	const activePrivileges = privileges[activeTargetType];
@@ -112,7 +113,5 @@ const MemberPermissionPicker = (props) => {
 		</div>
 	);
 };
-
-MemberPermissionPicker.propTypes = propTypes;
 MemberPermissionPicker.defaultProps = defaultProps;
 export default MemberPermissionPicker;

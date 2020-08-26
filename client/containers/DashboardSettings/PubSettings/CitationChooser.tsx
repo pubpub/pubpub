@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Button, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 
@@ -8,17 +7,17 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 require('./citationChooser.scss');
 
-const propTypes = {
-	pubData: PropTypes.shape({
-		id: PropTypes.string,
-		citationStyle: PropTypes.string,
-		citationInlineStyle: PropTypes.string,
-	}).isRequired,
-	communityId: PropTypes.string.isRequired,
-	onSetCitations: PropTypes.func.isRequired,
+type Props = {
+	pubData: {
+		id?: string;
+		citationStyle?: string;
+		citationInlineStyle?: string;
+	};
+	communityId: string;
+	onSetCitations: (...args: any[]) => any;
 };
 
-const CitationChooser = (props) => {
+const CitationChooser = (props: Props) => {
 	const { communityId, pubData, onSetCitations } = props;
 	const { citationStyle, citationInlineStyle } = pubData;
 
@@ -69,6 +68,7 @@ const CitationChooser = (props) => {
 						<MenuItem
 							onClick={handleClick}
 							key={item.key}
+							// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 							active={item.key === activeCitationStyle.key}
 							text={item.title}
 						/>
@@ -79,6 +79,7 @@ const CitationChooser = (props) => {
 						updateCitations({ citationStyle: item.key });
 					}}
 				>
+					{/* @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'. */}
 					<Button text={activeCitationStyle.title} rightIcon="caret-down" />
 				</Select>
 			</InputField>
@@ -90,6 +91,7 @@ const CitationChooser = (props) => {
 						<MenuItem
 							onClick={handleClick}
 							key={item.key}
+							// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 							active={item.key === activeCitationInlineStyle.key}
 							text={
 								<span>
@@ -108,8 +110,10 @@ const CitationChooser = (props) => {
 					<Button
 						text={
 							<span>
+								{/* @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'. */}
 								{activeCitationInlineStyle.title}
 								<span className="cite-example">
+									{/* @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'. */}
 									{activeCitationInlineStyle.example}
 								</span>
 							</span>
@@ -121,6 +125,4 @@ const CitationChooser = (props) => {
 		</div>
 	);
 };
-
-CitationChooser.propTypes = propTypes;
 export default CitationChooser;

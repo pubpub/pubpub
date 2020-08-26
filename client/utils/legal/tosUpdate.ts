@@ -15,5 +15,6 @@ export const shouldShowTosUpdate = () => {
 
 export const markTosUpdateSeen = () => {
 	const seenAt = Date.now();
+	// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'number' is not assignable to par... Remove this comment to see the full error message
 	Cookie.set(cookieKey, seenAt, getCookieOptions());
 };

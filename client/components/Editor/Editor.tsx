@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { keydownHandler } from 'prosemirror-keymap';
@@ -13,29 +12,22 @@ import nodeViews from './views';
 
 require('./styles/base.scss');
 
-const propTypes = {
-	citationManager: PropTypes.object,
-	/* Object of custom nodes. To remove default node, override. For example, { image: null, header: null } */
-	// eslint-disable-next-line react/no-unused-prop-types
-	customNodes: PropTypes.object,
-	// eslint-disable-next-line react/no-unused-prop-types
-	customMarks: PropTypes.object,
-	/* All customPlugins values should be a function, which is passed schema and props - and returns a Plugin */
-	customPlugins: PropTypes.object,
-	collaborativeOptions: PropTypes.object,
-	handleDoubleClick: PropTypes.func,
-	handleSingleClick: PropTypes.func,
-	// eslint-disable-next-line react/no-unused-prop-types
-	initialContent: PropTypes.object,
-	isReadOnly: PropTypes.bool,
-	/* An object with nodeName keys and values of objects of overriding options. For example: nodeOptions = { image: { linkToSrc: false } } */
-	// eslint-disable-next-line react/no-unused-prop-types
-	nodeOptions: PropTypes.object,
-	onChange: PropTypes.func,
-	onError: PropTypes.func,
-	onKeyPress: PropTypes.func,
-	onScrollToSelection: PropTypes.func,
-	placeholder: PropTypes.string,
+type OwnProps = {
+	citationManager?: any;
+	customNodes?: any;
+	customMarks?: any;
+	customPlugins?: any;
+	collaborativeOptions?: any;
+	handleDoubleClick?: (...args: any[]) => any;
+	handleSingleClick?: (...args: any[]) => any;
+	initialContent?: any;
+	isReadOnly?: boolean;
+	nodeOptions?: any;
+	onChange?: (...args: any[]) => any;
+	onError?: (...args: any[]) => any;
+	onKeyPress?: (...args: any[]) => any;
+	onScrollToSelection?: (...args: any[]) => any;
+	placeholder?: string;
 };
 
 const defaultProps = {
@@ -68,6 +60,7 @@ const getInitialArguments = (props) => {
 	const schema = buildSchema(customNodes, customMarks, nodeOptions);
 	const hydratedDoc = schema.nodeFromJSON(initialContent);
 	const initialDoc = isReadOnly ? addTemporaryIdsToDoc(hydratedDoc) : hydratedDoc;
+	// @ts-expect-error ts-migrate(2345) FIXME: Property 'reactedDoc' is missing in type '{ schema... Remove this comment to see the full error message
 	const staticContent = renderStatic({
 		schema: schema,
 		doc: props.initialContent,
@@ -76,15 +69,19 @@ const getInitialArguments = (props) => {
 	return { schema: schema, initialDoc: initialDoc, staticContent: staticContent };
 };
 
-const Editor = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const Editor = (props: Props) => {
 	const editorRef = useRef();
 	const initialArguments = useRef(null);
 
 	if (initialArguments.current === null) {
+		// @ts-expect-error ts-migrate(2322) FIXME: Type '{ schema: any; initialDoc: any; staticConten... Remove this comment to see the full error message
 		initialArguments.current = getInitialArguments(props);
 	}
 
 	useEffect(() => {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'initialDoc' does not exist on type 'null... Remove this comment to see the full error message
 		const { initialDoc, schema } = initialArguments.current;
 		const state = EditorState.create({
 			doc: initialDoc,
@@ -156,14 +153,14 @@ const Editor = (props) => {
 
 	return (
 		<div
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'undefined' is not assignable to type 'HTMLDi... Remove this comment to see the full error message
 			ref={editorRef}
 			className={`editor ProseMirror ${props.isReadOnly ? 'read-only' : ''}`}
 		>
+			{/* @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'. */}
 			{initialArguments.current.staticContent}
 		</div>
 	);
 };
-
-Editor.propTypes = propTypes;
 Editor.defaultProps = defaultProps;
 export default Editor;

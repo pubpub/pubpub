@@ -17,6 +17,7 @@ export const usePendingAttrs = ({ selectedNode, updateNode }) => {
 	const commitChanges = () => {
 		const nextAttrs = {};
 		pendingKeys.forEach((key) => {
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 			nextAttrs[key] = attrs[key];
 		});
 		updateNode(nextAttrs);
@@ -26,7 +27,9 @@ export const usePendingAttrs = ({ selectedNode, updateNode }) => {
 	const updateAttrs = (nextAttrs) => {
 		Object.keys(nextAttrs).forEach((possiblyNewKey) => {
 			const nextKeys = [];
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string' is not assignable to par... Remove this comment to see the full error message
 			if (!pendingKeys.includes(possiblyNewKey)) {
+				// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string' is not assignable to par... Remove this comment to see the full error message
 				nextKeys.push(possiblyNewKey);
 			}
 			if (nextKeys.length > 0) {

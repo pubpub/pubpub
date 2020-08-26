@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import {
 	Button,
 	InputGroup,
@@ -17,15 +16,17 @@ import { populateNavigationIds, defaultFooterLinks, populateSocialItems } from '
 
 require('./footer.scss');
 
-const propTypes = {
-	previewContext: PropTypes.object,
+type OwnProps = {
+	previewContext?: any;
 };
 
 const defaultProps = {
 	previewContext: undefined,
 };
 
-const Footer = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const Footer = (props: Props) => {
 	const [email, setEmail] = useState('');
 	const [isLoadingSubscribe, setIsLoadingSubscribe] = useState(false);
 	const [isSubscribed, setIsSubscribed] = useState(false);
@@ -150,6 +151,7 @@ const Footer = (props) => {
 									onChange={(evt) => {
 										setEmail(evt.target.value);
 									}}
+									// @ts-expect-error ts-migrate(2322) FIXME: Property 'label' does not exist on type 'Intrinsic... Remove this comment to see the full error message
 									label="Feature & community newsletter"
 									rightElement={
 										<Button
@@ -165,10 +167,13 @@ const Footer = (props) => {
 									<Checkbox
 										checked={isConfirmed}
 										disabled={isSubscribed}
+										// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'boolean |... Remove this comment to see the full error message
 										required="required"
 										onChange={(evt) => {
+											// @ts-expect-error ts-migrate(2339) FIXME: Property 'checked' does not exist on type 'EventTa... Remove this comment to see the full error message
 											setIsConfirmed(evt.target.checked);
 										}}
+										// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'string'.
 										label={
 											<span>
 												<Popover
@@ -268,7 +273,5 @@ const Footer = (props) => {
 		</div>
 	);
 };
-
-Footer.propTypes = propTypes;
 Footer.defaultProps = defaultProps;
 export default Footer;

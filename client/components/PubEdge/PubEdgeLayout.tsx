@@ -1,17 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 require('./pubEdge.scss');
 
-const propTypes = {
-	bylineElement: PropTypes.node.isRequired,
-	className: PropTypes.string,
-	detailsElement: PropTypes.node.isRequired,
-	metadataElements: PropTypes.arrayOf(PropTypes.node).isRequired,
-	outerElementProps: PropTypes.object,
-	titleElement: PropTypes.node.isRequired,
-	topLeftElement: PropTypes.node,
+type OwnProps = {
+	bylineElement: React.ReactNode;
+	className?: string;
+	detailsElement: React.ReactNode;
+	metadataElements: React.ReactNode[];
+	outerElementProps?: any;
+	titleElement: React.ReactNode;
+	topLeftElement?: React.ReactNode;
 };
 
 const defaultProps = {
@@ -20,7 +19,9 @@ const defaultProps = {
 	topLeftElement: null,
 };
 
-const PubEdgeLayout = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const PubEdgeLayout = (props: Props) => {
 	const {
 		bylineElement,
 		className,
@@ -39,6 +40,7 @@ const PubEdgeLayout = (props) => {
 					{bylineElement && <div className="byline-container">{bylineElement}</div>}
 					<ul className="metadata">
 						{metadataElements
+							// @ts-expect-error ts-migrate(2339) FIXME: Property 'map' does not exist on type 'never'.
 							.map(
 								(element, index) =>
 									element && (
@@ -54,7 +56,5 @@ const PubEdgeLayout = (props) => {
 		</article>
 	);
 };
-
-PubEdgeLayout.propTypes = propTypes;
 PubEdgeLayout.defaultProps = defaultProps;
 export default PubEdgeLayout;

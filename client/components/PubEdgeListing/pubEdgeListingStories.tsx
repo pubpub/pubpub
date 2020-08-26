@@ -129,6 +129,7 @@ storiesOf('components/PubEdgeListing', module).add('header', () => (
 	<StoryContainer>
 		<PubEdgeListing
 			accentColor="#A22E37"
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'null' is not assignable to type 'string | un... Remove this comment to see the full error message
 			pubData={pubData}
 			initialFilters={[Filter.Parent]}
 			isolated
@@ -141,6 +142,7 @@ storiesOf('components/PubEdgeListing', module).add('footer', () => (
 		<PubEdgeListing
 			accentColor="#A22E37"
 			pubTitle="Fear and Anxiety in Corona Isolation"
+			// @ts-expect-error ts-migrate(2322) FIXME: Type '{ title: string; inboundEdges: { pubIsParent... Remove this comment to see the full error message
 			pubData={pubData}
 		/>
 	</StoryContainer>

@@ -1,18 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Icon } from '@blueprintjs/core';
 
 require('./discussionBubble.scss');
 
-const propTypes = {
-	color: PropTypes.string.isRequired,
-	count: PropTypes.node,
-	isActive: PropTypes.bool.isRequired,
-	label: PropTypes.node,
-	onMouseEnter: PropTypes.func,
-	onMouseLeave: PropTypes.func,
-	onClick: PropTypes.func,
-	showDot: PropTypes.bool.isRequired,
+type OwnProps = {
+	color: string;
+	count?: React.ReactNode;
+	isActive: boolean;
+	label?: React.ReactNode;
+	onMouseEnter?: (...args: any[]) => any;
+	onMouseLeave?: (...args: any[]) => any;
+	onClick?: (...args: any[]) => any;
+	showDot: boolean;
 };
 
 const defaultProps = {
@@ -23,7 +22,9 @@ const defaultProps = {
 	onMouseLeave: null,
 };
 
-const DiscussionBubble = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const DiscussionBubble = (props: Props) => {
 	const { color, count, isActive, label, onClick, onMouseEnter, onMouseLeave, showDot } = props;
 	const accentStyleBubble = {
 		border: `1px solid ${color}`,
@@ -58,7 +59,5 @@ const DiscussionBubble = (props) => {
 		</span>
 	);
 };
-
-DiscussionBubble.propTypes = propTypes;
 DiscussionBubble.defaultProps = defaultProps;
 export default DiscussionBubble;

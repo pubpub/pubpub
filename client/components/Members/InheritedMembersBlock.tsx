@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 import { Avatar } from 'components';
 
@@ -10,9 +9,9 @@ import MemberRow from './MemberRow';
 
 require('./inheritedMembersBlock.scss');
 
-const propTypes = {
-	members: PropTypes.array.isRequired,
-	scope: PropTypes.string.isRequired,
+type Props = {
+	members: any[];
+	scope: string;
 };
 
 const renderExplanationForScope = (scope, currentScopeData) => {
@@ -31,6 +30,7 @@ const renderExplanationForScope = (scope, currentScopeData) => {
 		return (
 			<>
 				{users} You can manage this list of members from the{' '}
+				{/* @ts-expect-error ts-migrate(2345) FIXME: Type '{ mode: string; }' is missing the following ... Remove this comment to see the full error message */}
 				<a href={getDashUrl({ mode: 'members' })}>Community members tab.</a>
 			</>
 		);
@@ -38,7 +38,7 @@ const renderExplanationForScope = (scope, currentScopeData) => {
 	return users;
 };
 
-const InheritedBlock = (props) => {
+const InheritedBlock = (props: Props) => {
 	const { members, scope } = props;
 	const [isOpen, setIsOpen] = useState(false);
 	const { scopeData: currentScopeData } = usePageContext();
@@ -79,6 +79,7 @@ const InheritedBlock = (props) => {
 					<div className="members-block">
 						{members.map((member) => {
 							return (
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 								<MemberRow memberData={member} key={member.id} isReadOnly={true} />
 							);
 						})}
@@ -88,6 +89,4 @@ const InheritedBlock = (props) => {
 		</div>
 	);
 };
-
-InheritedBlock.propTypes = propTypes;
 export default InheritedBlock;

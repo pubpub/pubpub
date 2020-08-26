@@ -1,9 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Spinner } from '@blueprintjs/core';
 
 import { PubByline } from 'components';
 import { Menu, MenuItem, MenuItemDivider } from 'components/Menu';
+// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module 'types/pub' or its correspondin... Remove this comment to see the full error message
 import { pubDataProps } from 'types/pub';
 import { usePageContext } from 'utils/hooks';
 import { createReadingParamUrl, useCollectionPubs } from 'client/utils/collections';
@@ -14,27 +14,29 @@ import CollectionsBarButton from './CollectionsBarButton';
 
 require('./collectionBrowser.scss');
 
-const propTypes = {
-	collection: PropTypes.shape({
-		id: PropTypes.string,
-		kind: PropTypes.string,
-		title: PropTypes.string,
-		pageId: PropTypes.string,
-	}).isRequired,
-	currentPub: pubDataProps.isRequired,
-	updateLocalData: PropTypes.func.isRequired,
+type Props = {
+	collection: {
+		id?: string;
+		kind?: string;
+		title?: string;
+		pageId?: string;
+	};
+	currentPub: pubDataProps;
+	updateLocalData: (...args: any[]) => any;
 };
 
-const CollectionBrowser = (props) => {
+const CollectionBrowser = (props: Props) => {
 	const { collection, currentPub, updateLocalData } = props;
 	const { communityData } = usePageContext();
 	const { pubs, error, isLoading } = useCollectionPubs(updateLocalData, collection);
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'bpDisplayIcon' does not exist on type '{... Remove this comment to see the full error message
 	const { bpDisplayIcon } = getSchemaForKind(collection.kind);
 	const readingPubUrl = (pub) => createReadingParamUrl(pubUrl(communityData, pub), collection);
 
 	// eslint-disable-next-line react/prop-types
 	const renderDisclosure = ({ ref, ...disclosureProps }) => {
 		return (
+			// @ts-expect-error ts-migrate(2322) FIXME: Property 'children' does not exist on type 'Intrin... Remove this comment to see the full error message
 			<CollectionsBarButton
 				icon={bpDisplayIcon}
 				className="collection-browser-button"
@@ -48,6 +50,7 @@ const CollectionBrowser = (props) => {
 	};
 
 	return (
+		// @ts-expect-error ts-migrate(2322) FIXME: Property 'children' does not exist on type 'Intrin... Remove this comment to see the full error message
 		<Menu
 			className="collection-browser-component_menu"
 			disclosure={renderDisclosure}
@@ -56,6 +59,7 @@ const CollectionBrowser = (props) => {
 			{collection.pageId && (
 				<>
 					<MenuItem
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'icon' does not exist on type 'IntrinsicA... Remove this comment to see the full error message
 						icon="collection"
 						text={collection.title}
 						href={collectionUrl(communityData, collection)}
@@ -65,6 +69,7 @@ const CollectionBrowser = (props) => {
 			)}
 			{isLoading && (
 				<MenuItem
+					// @ts-expect-error ts-migrate(2322) FIXME: Property 'disabled' does not exist on type 'Intrin... Remove this comment to see the full error message
 					disabled
 					className="loading-menu-item"
 					textClassName="menu-item-text"
@@ -76,6 +81,7 @@ const CollectionBrowser = (props) => {
 				!isLoading &&
 				pubs.map((pub) => (
 					<MenuItem
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'active' does not exist on type 'Intrinsi... Remove this comment to see the full error message
 						active={currentPub.id === pub.id}
 						href={readingPubUrl(pub)}
 						textClassName="menu-item-text"
@@ -91,6 +97,7 @@ const CollectionBrowser = (props) => {
 				))}
 			{error && (
 				<MenuItem
+					// @ts-expect-error ts-migrate(2322) FIXME: Property 'disabled' does not exist on type 'Intrin... Remove this comment to see the full error message
 					disabled
 					className="loading-menu-item"
 					textClassName="menu-item-text"
@@ -100,6 +107,4 @@ const CollectionBrowser = (props) => {
 		</Menu>
 	);
 };
-
-CollectionBrowser.propTypes = propTypes;
 export default CollectionBrowser;

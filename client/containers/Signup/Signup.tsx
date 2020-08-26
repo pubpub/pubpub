@@ -63,6 +63,7 @@ const Signup = () => {
 								type="search"
 								className="confirm-email"
 								name="confirmEmail"
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'number | ... Remove this comment to see the full error message
 								tabIndex="-1"
 								autoComplete="new-user-street-address"
 								onChange={(evt) => setConfirmEmail(evt.target.value)}
@@ -94,6 +95,7 @@ const Signup = () => {
 								<p>Follow the link in that email to create your account.</p>
 							</div>
 						}
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'visual' does not exist on type 'Intrinsi... Remove this comment to see the full error message
 						visual="tick-circle"
 						action={
 							<Button

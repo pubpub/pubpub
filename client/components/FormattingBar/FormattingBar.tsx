@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Toolbar, ToolbarItem, useToolbarState } from 'reakit';
 
@@ -13,33 +12,31 @@ import { positionNearSelection } from './positioning';
 
 require('./formattingBar.scss');
 
-const propTypes = {
-	popoverContainerRef: PropTypes.object.isRequired,
-	editorChangeObject: PropTypes.shape({
-		latestDomEvent: PropTypes.object,
-		insertFunctions: PropTypes.object,
-		menuItems: PropTypes.arrayOf(PropTypes.shape({})),
-		view: PropTypes.shape({
-			focus: PropTypes.func,
-		}),
-		selectedNode: PropTypes.shape({
-			attrs: PropTypes.object,
-		}),
-	}).isRequired,
-	buttons: PropTypes.arrayOf(
-		PropTypes.shape({
-			key: PropTypes.string.isRequired,
-			title: PropTypes.string.isRequired,
-			ariaTitle: PropTypes.string,
-			icon: PropTypes.string.isRequired,
-			isToggle: PropTypes.bool,
-		}),
-	).isRequired,
-	showBlockTypes: PropTypes.bool,
-	isSmall: PropTypes.bool,
-	isTranslucent: PropTypes.bool,
-	isFullScreenWidth: PropTypes.bool,
-	citationStyle: PropTypes.string,
+type OwnProps = {
+	popoverContainerRef: any;
+	editorChangeObject: {
+		latestDomEvent?: any;
+		insertFunctions?: any;
+		menuItems?: {}[];
+		view?: {
+			focus?: (...args: any[]) => any;
+		};
+		selectedNode?: {
+			attrs?: any;
+		};
+	};
+	buttons: {
+		key: string;
+		title: string;
+		ariaTitle?: string;
+		icon: string;
+		isToggle?: boolean;
+	}[];
+	showBlockTypes?: boolean;
+	isSmall?: boolean;
+	isTranslucent?: boolean;
+	isFullScreenWidth?: boolean;
+	citationStyle?: string;
 };
 
 const defaultProps = {
@@ -57,7 +54,9 @@ const useControlsKey = (latestDomEvent) => {
 	if (latestDomEvent) {
 		const domEventsEqual =
 			previousDomEvent.current &&
+			// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 			previousDomEvent.current.type === latestDomEvent.type &&
+			// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 			previousDomEvent.current.timeStamp === latestDomEvent.timeStamp;
 
 		if (!domEventsEqual) {
@@ -82,12 +81,16 @@ const useControlsState = ({ buttons, editorChangeObject, popoverContainerRef }) 
 
 	const controlsComponent =
 		openedButton &&
+		// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 		openedButton.controls.show(editorChangeObject) &&
+		// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 		openedButton.controls.component;
 
 	const controlsPosition =
 		controlsComponent &&
+		// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 		openedButton.controls.position &&
+		// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 		openedButton.controls.position(editorChangeObject, popoverContainerRef);
 
 	useEffect(() => {
@@ -109,7 +112,9 @@ const useControlsState = ({ buttons, editorChangeObject, popoverContainerRef }) 
 	};
 };
 
-const FormattingBar = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const FormattingBar = (props: Props) => {
 	const {
 		buttons,
 		editorChangeObject,
@@ -134,6 +139,7 @@ const FormattingBar = (props) => {
 
 	const menuItemByKey = (key) => {
 		if (menuItems) {
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'title' does not exist on type '{}'.
 			return menuItems.find((menuItem) => menuItem.title === key);
 		}
 		return null;
@@ -147,9 +153,12 @@ const FormattingBar = (props) => {
 			const menuItem = menuItemByKey(item.key);
 			if (insertFunction) {
 				insertFunction();
+				// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 				view.focus();
 			} else if (menuItem) {
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'run' does not exist on type '{}'.
 				menuItem.run();
+				// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 				view.focus();
 			}
 		}
@@ -179,6 +188,7 @@ const FormattingBar = (props) => {
 
 	useEffect(() => {
 		if (openedButton) {
+			// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 			const ref = buttonElementRefs.get(openedButton.key);
 			if (ref && ref.current && typeof ref.current.scrollIntoView === 'function') {
 				const buttonElement = ref.current;
@@ -196,9 +206,11 @@ const FormattingBar = (props) => {
 	const renderButton = (button) => {
 		const matchingMenuItem = menuItemByKey(button.key);
 		const insertFunction = insertFunctions && insertFunctions[button.key];
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'canRun' does not exist on type '{}'.
 		const noFunction = !insertFunction && matchingMenuItem && !matchingMenuItem.canRun;
 		const isOpen = openedButton === button;
 		const isIndicated = indicatedButtons.includes(button) && !isOpen;
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'isActive' does not exist on type '{}'.
 		const isActive = !isOpen && !isIndicated && !!matchingMenuItem && matchingMenuItem.isActive;
 		const isDisabled =
 			noFunction || (openedButton && !isOpen && !isIndicated && !controlsPosition);
@@ -211,6 +223,7 @@ const FormattingBar = (props) => {
 				as={button.component || FormattingBarButton}
 				key={button.key}
 				formattingItem={button}
+				// @ts-expect-error ts-migrate(2769) FIXME: Type 'null' is not assignable to type 'boolean | u... Remove this comment to see the full error message
 				disabled={isDisabled}
 				isActive={isActive}
 				isIndicated={isIndicated && !isOpen}
@@ -218,6 +231,7 @@ const FormattingBar = (props) => {
 				isDetached={isOpen && !!controlsPosition}
 				isSmall={isSmall}
 				accentColor={communityData.accentColorDark}
+				// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 2.
 				onClick={(evt) => handleButtonClick(button, evt)}
 				{...maybeEditorChangeObject}
 			/>
@@ -235,6 +249,7 @@ const FormattingBar = (props) => {
 			<Toolbar aria-label="Formatting toolbar" className="toolbar" {...toolbar}>
 				{showBlockTypes && (
 					<React.Fragment>
+						{/* @ts-expect-error ts-migrate(2769) FIXME: Type 'ForwardRefExoticComponent<RefAttributes<unkn... Remove this comment to see the full error message */}
 						<ToolbarItem
 							as={BlockTypeSelector}
 							isSmall={isSmall}
@@ -261,21 +276,28 @@ const FormattingBar = (props) => {
 					}
 					captureFocusOnMount={
 						openedButton &&
+						// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 						openedButton.controls &&
+						// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 						openedButton.controls.captureFocusOnMount
 					}
 					showCloseButton={
 						openedButton &&
+						// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 						openedButton.controls &&
+						// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 						openedButton.controls.showCloseButton
 					}
 					disableClickProxying={
 						openedButton &&
+						// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 						openedButton.controls &&
+						// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 						openedButton.controls.disableClickProxying
 					}
 				>
 					{({ pendingAttrs, onClose }) => (
+						// @ts-expect-error ts-migrate(2604) FIXME: JSX element type 'ControlsComponent' does not have... Remove this comment to see the full error message
 						<ControlsComponent
 							editorChangeObject={editorChangeObject}
 							pendingAttrs={pendingAttrs}
@@ -289,7 +311,5 @@ const FormattingBar = (props) => {
 		</div>
 	);
 };
-
-FormattingBar.propTypes = propTypes;
 FormattingBar.defaultProps = defaultProps;
 export default FormattingBar;

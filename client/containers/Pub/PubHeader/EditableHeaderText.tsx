@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { EditableText } from '@blueprintjs/core';
 
-import { LengthIndicator } from 'components';
-
-const propTypes = {
-	canEdit: PropTypes.bool.isRequired,
-	className: PropTypes.string,
-	placeholder: PropTypes.string.isRequired,
-	tagName: PropTypes.string,
-	text: PropTypes.string,
-	updateText: PropTypes.func.isRequired,
-	maxLength: PropTypes.number,
+type OwnProps = {
+	canEdit: boolean;
+	className?: string;
+	placeholder: string;
+	tagName?: string;
+	text?: string;
+	updateText: (...args: any[]) => any;
+	maxLength: number;
 };
 
 const defaultProps = {
@@ -21,7 +18,9 @@ const defaultProps = {
 	maxLength: Infinity,
 };
 
-const EditableHeaderText = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const EditableHeaderText = (props: Props) => {
 	const { canEdit, className, placeholder, tagName, text, updateText, maxLength } = props;
 	const [hasMounted, setHasMounted] = useState(false);
 	const [intermediateValue, setIntermediateValue] = useState(text);
@@ -37,7 +36,9 @@ const EditableHeaderText = (props) => {
 			<>
 				<EditableText
 					placeholder={placeholder}
+					// @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures.
 					onConfirm={(newText) => updateText(newText.replace(/\n/g, ''))}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type '(prevStat... Remove this comment to see the full error message
 					onChange={setIntermediateValue}
 					value={intermediateValue}
 					multiline={true}
@@ -51,7 +52,5 @@ const EditableHeaderText = (props) => {
 		),
 	);
 };
-
-EditableHeaderText.propTypes = propTypes;
 EditableHeaderText.defaultProps = defaultProps;
 export default EditableHeaderText;

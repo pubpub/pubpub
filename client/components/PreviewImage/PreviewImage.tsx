@@ -1,15 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import { getResizedUrl } from 'utils/images';
 import { generatePubBackground } from 'utils/pubs';
 
-const propTypes = {
-	className: PropTypes.string,
-	fitIn: PropTypes.number,
-	src: PropTypes.string,
-	title: PropTypes.string.isRequired,
+type OwnProps = {
+	className?: string;
+	fitIn?: number;
+	src?: string;
+	title: string;
 };
 
 const defaultProps = {
@@ -18,7 +17,9 @@ const defaultProps = {
 	src: null,
 };
 
-const PreviewImage = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const PreviewImage = (props: Props) => {
 	const { className, fitIn, src, title } = props;
 	const resizedImage = getResizedUrl(src, 'fit-in', `${fitIn}x0`);
 	const style = src
@@ -26,7 +27,5 @@ const PreviewImage = (props) => {
 		: { background: generatePubBackground(title) };
 	return <div className={classNames('preview-image-component', className)} style={style} />;
 };
-
-PreviewImage.propTypes = propTypes;
 PreviewImage.defaultProps = defaultProps;
 export default PreviewImage;

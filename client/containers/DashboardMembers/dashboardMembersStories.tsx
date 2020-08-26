@@ -120,6 +120,7 @@ const membersData = {
 
 storiesOf('Containers/DashboardMembers', module).add('default', () => (
 	<DashboardMembers
+		// @ts-expect-error ts-migrate(2322) FIXME: Property 'locationData' does not exist on type 'In... Remove this comment to see the full error message
 		locationData={locationData}
 		loginData={loginData}
 		communityData={communityData}

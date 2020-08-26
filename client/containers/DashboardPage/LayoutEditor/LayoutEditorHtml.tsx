@@ -1,19 +1,15 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
 import { GridWrapper } from 'components';
 
-const propTypes = {
-	onChange: PropTypes.func.isRequired,
-	layoutIndex: PropTypes.number.isRequired,
-	content: PropTypes.object.isRequired,
-	/* Expected content */
-	/* deprecated: title, html */
-	/* html */
+type Props = {
+	onChange: (...args: any[]) => any;
+	layoutIndex: number;
+	content: any;
 };
 
-class LayoutEditorHtml extends Component {
-	constructor(props) {
+class LayoutEditorHtml extends Component<Props> {
+	constructor(props: Props) {
 		super(props);
 		this.setText = this.setText.bind(this);
 	}
@@ -43,6 +39,4 @@ class LayoutEditorHtml extends Component {
 		);
 	}
 }
-
-LayoutEditorHtml.propTypes = propTypes;
 export default LayoutEditorHtml;

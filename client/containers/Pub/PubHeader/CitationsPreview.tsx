@@ -1,22 +1,24 @@
 import React, { useState, useRef } from 'react';
-import PropTypes from 'prop-types';
 import { Button, ButtonGroup } from '@blueprintjs/core';
+// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module 'types/pub' or its correspondin... Remove this comment to see the full error message
 import { pubDataProps } from 'types/pub';
 import ClickToCopyButton from 'components/ClickToCopyButton/ClickToCopyButton';
 import CitationsModal from './CitationsModal';
 
 require('./citationsPreview.scss');
 
-const propTypes = {
-	pubData: pubDataProps.isRequired,
-	showHeader: PropTypes.bool,
+type OwnProps = {
+	pubData: pubDataProps;
+	showHeader?: boolean;
 };
 
 const defaultProps = {
 	showHeader: true,
 };
 
-const CitationsPreview = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const CitationsPreview = (props: Props) => {
 	const { pubData, showHeader } = props;
 	const [isCitationModalOpen, setCitationModalOpen] = useState(false);
 	const copyableCitationRef = useRef();
@@ -26,6 +28,7 @@ const CitationsPreview = (props) => {
 			{showHeader && <h6 className="pub-header-themed-secondary">Cite as</h6>}
 			<div
 				className="citation-body"
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'undefined' is not assignable to type 'HTMLDi... Remove this comment to see the full error message
 				ref={copyableCitationRef}
 				// eslint-disable-next-line react/no-danger
 				dangerouslySetInnerHTML={{
@@ -33,11 +36,16 @@ const CitationsPreview = (props) => {
 				}}
 			/>
 			<ButtonGroup>
+				{/* @ts-expect-error ts-migrate(2745) FIXME: This JSX tag's 'children' prop expects type 'never... Remove this comment to see the full error message */}
 				<ClickToCopyButton
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 					className="copy-button"
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 					icon="duplicate"
+					// @ts-expect-error ts-migrate(2322) FIXME: Type '() => any' is not assignable to type 'never'... Remove this comment to see the full error message
 					copyString={() => {
 						if (copyableCitationRef.current) {
+							// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 							return copyableCitationRef.current.textContent;
 						}
 						return '';
@@ -62,7 +70,5 @@ const CitationsPreview = (props) => {
 		</div>
 	);
 };
-
-CitationsPreview.propTypes = propTypes;
 CitationsPreview.defaultProps = defaultProps;
 export default CitationsPreview;

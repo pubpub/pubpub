@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Color from 'color';
 import { ButtonGroup, Button } from '@blueprintjs/core';
 
@@ -11,17 +10,15 @@ import { getResizedUrl } from 'utils/images';
 
 require('./layoutEditorBanner.scss');
 
-const propTypes = {
-	onChange: PropTypes.func.isRequired,
-	layoutIndex: PropTypes.number.isRequired,
-	content: PropTypes.object.isRequired,
-	communityData: PropTypes.object.isRequired,
-	/* Expected content */
-	/* text, align, backgroundColor, backgroundImage, backgroundSize, backgroundHeight, showButton, buttonType, buttonText, defaultCollectionIds, buttonUrl */
+type Props = {
+	onChange: (...args: any[]) => any;
+	layoutIndex: number;
+	content: any;
+	communityData: any;
 };
 
-class LayoutEditorBanner extends Component {
-	constructor(props) {
+class LayoutEditorBanner extends Component<Props> {
+	constructor(props: Props) {
 		super(props);
 		this.setAlign = this.setAlign.bind(this);
 		this.setBackgroundSize = this.setBackgroundSize.bind(this);
@@ -215,9 +212,11 @@ class LayoutEditorBanner extends Component {
 						</ButtonGroup>
 					</InputField>
 					<ImageUpload
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'undefined... Remove this comment to see the full error message
 						label="Image"
 						htmlFor={`section-title-${this.props.layoutIndex}`}
 						defaultImage={this.props.content.backgroundImage}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '(value: any) => void' is not assignable to t... Remove this comment to see the full error message
 						onNewImage={this.setBackgroundImage}
 						canClear={true}
 						width={50}
@@ -328,6 +327,4 @@ class LayoutEditorBanner extends Component {
 		);
 	}
 }
-
-LayoutEditorBanner.propTypes = propTypes;
 export default LayoutEditorBanner;

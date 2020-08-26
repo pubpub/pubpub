@@ -1,5 +1,4 @@
 import { NonIdealState } from '@blueprintjs/core';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import React, { useCallback, useState } from 'react';
 
@@ -11,18 +10,18 @@ import PubEdgeListingControls from './PubEdgeListingControls';
 
 require('./pubEdgeListing.scss');
 
-const propTypes = {
-	accentColor: PropTypes.string.isRequired,
-	className: PropTypes.string,
-	hideIfNoInitialMatches: PropTypes.bool,
-	isolated: PropTypes.bool,
-	pubData: PropTypes.shape({
-		inboundEdges: PropTypes.arrayOf(pubEdgeType).isRequired,
-		outboundEdges: PropTypes.arrayOf(pubEdgeType).isRequired,
-		siblingEdges: PropTypes.arrayOf(pubEdgeType).isRequired,
-	}).isRequired,
-	initialMode: PropTypes.string,
-	initialFilters: PropTypes.arrayOf(PropTypes.string),
+type OwnProps = {
+	accentColor: string;
+	className?: string;
+	hideIfNoInitialMatches?: boolean;
+	isolated?: boolean;
+	pubData: {
+		inboundEdges: pubEdgeType[];
+		outboundEdges: pubEdgeType[];
+		siblingEdges: pubEdgeType[];
+	};
+	initialMode?: string;
+	initialFilters?: string[];
 };
 
 const defaultProps = {
@@ -52,11 +51,14 @@ const collateAndFilterPubEdges = (filters, pubData) => {
 			edge: edge,
 		};
 		if (included) {
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ isSibling: boolean; isInboundE... Remove this comment to see the full error message
 			filteredPubEdges.push(edgeInContext);
 		}
 		if (pubIsParent) {
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ isSibling: boolean; isInboundE... Remove this comment to see the full error message
 			childEdgesInContext.push(edgeInContext);
 		} else {
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ isSibling: boolean; isInboundE... Remove this comment to see the full error message
 			parentEdgesInContext.push(edgeInContext);
 		}
 	});
@@ -70,11 +72,14 @@ const collateAndFilterPubEdges = (filters, pubData) => {
 			edge: edge,
 		};
 		if (included) {
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ isSibling: boolean; isInboundE... Remove this comment to see the full error message
 			filteredPubEdges.push(edgeInContext);
 		}
 		if (pubIsParent) {
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ isSibling: boolean; isInboundE... Remove this comment to see the full error message
 			parentEdgesInContext.push(edgeInContext);
 		} else {
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ isSibling: boolean; isInboundE... Remove this comment to see the full error message
 			childEdgesInContext.push(edgeInContext);
 		}
 	});
@@ -87,8 +92,10 @@ const collateAndFilterPubEdges = (filters, pubData) => {
 			edge: edge,
 			parentPub: pubIsParent ? pub : targetPub,
 		};
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ isSibling: boolean; isInboundE... Remove this comment to see the full error message
 		siblingEdgesInContext.push(edgeInContext);
 		if (includeSiblings) {
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ isSibling: boolean; isInboundE... Remove this comment to see the full error message
 			filteredPubEdges.push(edgeInContext);
 		}
 	});
@@ -103,7 +110,9 @@ const collateAndFilterPubEdges = (filters, pubData) => {
 	};
 };
 
-const PubEdgeListing = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const PubEdgeListing = (props: Props) => {
 	const {
 		accentColor,
 		className,
@@ -131,6 +140,7 @@ const PubEdgeListing = (props) => {
 	const back = useCallback(() => setIndex((i) => (i - 1 + length) % length), [length]);
 
 	const onFilterToggle = useCallback((filter) => {
+		// @ts-expect-error ts-migrate(2345) FIXME: Type 'void' is not assignable to type 'string[]'.
 		setFilters((currentFilters) => {
 			const filterIndex = currentFilters.indexOf(filter);
 
@@ -193,13 +203,21 @@ const PubEdgeListing = (props) => {
 		const cards =
 			mode === Mode.Carousel
 				? activeEdgeInContext && (
+						// @ts-expect-error ts-migrate(2745) FIXME: This JSX tag's 'children' prop expects type 'never... Remove this comment to see the full error message
 						<PubEdgeListingCard
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 							pubEdge={activeEdgeInContext.edge}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 							parentPub={activeEdgeInContext.parentPub}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 							accentColor={accentColor}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'boolean' is not assignable to type 'never'.
 							showIcon={isolated}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 							viewingFromSibling={activeEdgeInContext.isSibling}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 							isInboundEdge={activeEdgeInContext.isInboundEdge}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'true' is not assignable to type 'never'.
 							inPubBody
 						>
 							{isolated && controls}
@@ -207,12 +225,16 @@ const PubEdgeListing = (props) => {
 				  )
 				: filteredPubEdgesInContext.map(({ isInboundEdge, edge, isSibling }) => (
 						<PubEdgeListingCard
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 							key={edge.url}
 							pubEdge={edge}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 							parentPub={activeEdgeInContext.parentPub}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 							accentColor={accentColor}
 							viewingFromSibling={isSibling}
 							isInboundEdge={isInboundEdge}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'true' is not assignable to type 'never'.
 							inPubBody
 						/>
 				  ));
@@ -235,7 +257,5 @@ const PubEdgeListing = (props) => {
 		</div>
 	);
 };
-
-PubEdgeListing.propTypes = propTypes;
 PubEdgeListing.defaultProps = defaultProps;
 export default PubEdgeListing;

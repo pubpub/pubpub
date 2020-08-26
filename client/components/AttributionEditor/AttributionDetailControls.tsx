@@ -1,24 +1,23 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Checkbox, InputGroup, MenuItem, Position, Tag } from '@blueprintjs/core';
 import { MultiSelect } from '@blueprintjs/select';
 
 import { getFilteredRoles } from './roles';
 
-const propTypes = {
-	attribution: PropTypes.shape({
-		affiliation: PropTypes.string,
-		id: PropTypes.string,
-		isAuthor: PropTypes.bool,
-		orcid: PropTypes.string,
-	}).isRequired,
-	isShadowAttribution: PropTypes.bool.isRequired,
-	roles: PropTypes.array.isRequired,
-	listOnBylineText: PropTypes.bool.isRequired,
-	onAttributionUpdate: PropTypes.func.isRequired,
+type Props = {
+	attribution: {
+		affiliation?: string;
+		id?: string;
+		isAuthor?: boolean;
+		orcid?: string;
+	};
+	isShadowAttribution: boolean;
+	roles: any[];
+	listOnBylineText: boolean;
+	onAttributionUpdate: (...args: any[]) => any;
 };
 
-const AttributionDetailControls = (props) => {
+const AttributionDetailControls = (props: Props) => {
 	const {
 		attribution,
 		isShadowAttribution,
@@ -35,6 +34,7 @@ const AttributionDetailControls = (props) => {
 				onChange={(evt) =>
 					onAttributionUpdate({
 						id: id,
+						// @ts-expect-error ts-migrate(2339) FIXME: Property 'checked' does not exist on type 'EventTa... Remove this comment to see the full error message
 						isAuthor: evt.target.checked,
 					})
 				}
@@ -114,6 +114,7 @@ const AttributionDetailControls = (props) => {
 				/>
 				{isShadowAttribution && (
 					<InputGroup
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '""' is not assignable to type 'Element | und... Remove this comment to see the full error message
 						rightElement={orcid && <Tag minimal>ORCID</Tag>}
 						placeholder="ORCID"
 						defaultValue={orcid}
@@ -134,6 +135,4 @@ const AttributionDetailControls = (props) => {
 		</div>
 	);
 };
-
-AttributionDetailControls.propTypes = propTypes;
 export default AttributionDetailControls;

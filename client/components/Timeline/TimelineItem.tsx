@@ -1,20 +1,19 @@
 import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import { Icon } from 'components';
 
 import { TimelineContext } from './util';
 
-const propTypes = {
-	accentColor: PropTypes.string,
-	className: PropTypes.string,
-	controls: PropTypes.node,
-	hollow: PropTypes.bool,
-	large: PropTypes.bool,
-	icon: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-	title: PropTypes.node,
-	subtitle: PropTypes.node,
+type OwnProps = {
+	accentColor?: string;
+	className?: string;
+	controls?: React.ReactNode;
+	hollow?: boolean;
+	large?: boolean;
+	icon?: string | React.ReactNode;
+	title?: React.ReactNode;
+	subtitle?: React.ReactNode;
 };
 
 const defaultProps = {
@@ -28,7 +27,9 @@ const defaultProps = {
 	subtitle: null,
 };
 
-const TimelineItem = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const TimelineItem = (props: Props) => {
 	const {
 		accentColor: localAccentColor,
 		className,
@@ -73,7 +74,5 @@ const TimelineItem = (props) => {
 		</div>
 	);
 };
-
-TimelineItem.propTypes = propTypes;
 TimelineItem.defaultProps = defaultProps;
 export default TimelineItem;

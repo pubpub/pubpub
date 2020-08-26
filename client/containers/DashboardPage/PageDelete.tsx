@@ -1,20 +1,19 @@
 import React, { useCallback, useState } from 'react';
-import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 
 import { InputField } from 'components';
 import { usePendingChanges } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';
 
-const propTypes = {
-	communityId: PropTypes.string.isRequired,
-	pageData: PropTypes.shape({
-		id: PropTypes.string,
-		title: PropTypes.string,
-	}).isRequired,
+type Props = {
+	communityId: string;
+	pageData: {
+		id?: string;
+		title?: string;
+	};
 };
 
-const PageDelete = (props) => {
+const PageDelete = (props: Props) => {
 	const { pendingPromise } = usePendingChanges();
 	const { communityId, pageData } = props;
 	const [deleteString, setDeleteString] = useState('');
@@ -68,6 +67,4 @@ const PageDelete = (props) => {
 		</div>
 	);
 };
-
-PageDelete.propTypes = propTypes;
 export default PageDelete;

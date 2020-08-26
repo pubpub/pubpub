@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { NonIdealState } from '@blueprintjs/core';
 import { GridWrapper, PubPreview } from 'components';
 import { usePageContext } from 'utils/hooks';
@@ -9,11 +8,11 @@ import UserEdit from './UserEdit';
 
 require('./user.scss');
 
-const propTypes = {
-	userData: PropTypes.object.isRequired,
+type Props = {
+	userData: any;
 };
 
-const User = (props) => {
+const User = (props: Props) => {
 	const { userData } = props;
 	const { locationData, communityData, loginData } = usePageContext();
 	const pubs = (userData.attributions || []).map((attribution) => {
@@ -84,10 +83,13 @@ const User = (props) => {
 								<div key={`pub-${pub.id}`} className="row">
 									<div className="col-12">
 										<PubPreview
+											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											pubData={pub}
+											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											communityData={
 												localCommunityId ? undefined : pub.community
 											}
+											// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 											size="medium"
 										/>
 									</div>
@@ -96,6 +98,7 @@ const User = (props) => {
 						})}
 						{!pubsToRender.length && (
 							<NonIdealState
+								// @ts-expect-error ts-migrate(2322) FIXME: Property 'visual' does not exist on type 'Intrinsi... Remove this comment to see the full error message
 								visual="widget"
 								title="No Pubs"
 								action={
@@ -115,6 +118,4 @@ const User = (props) => {
 		</div>
 	);
 };
-
-User.propTypes = propTypes;
 export default User;

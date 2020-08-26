@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Popover, InputGroup } from '@blueprintjs/core';
 import { QueryList } from '@blueprintjs/select';
 
@@ -8,25 +7,28 @@ import { fuzzyMatchPub } from 'utils/fuzzyMatch';
 
 require('./pubSelect.scss');
 
-const propTypes = {
-	children: PropTypes.node.isRequired,
-	onSelectPub: PropTypes.func.isRequired,
-	position: PropTypes.string,
-	pubs: PropTypes.arrayOf(PropTypes.object).isRequired,
-	usedPubIds: PropTypes.arrayOf(PropTypes.string),
+type OwnProps = {
+	children: React.ReactNode;
+	onSelectPub: (...args: any[]) => any;
+	position?: string;
+	pubs: any[];
+	usedPubIds?: string[];
 };
 const defaultProps = {
 	position: 'bottom-right',
 	usedPubIds: [],
 };
 
-const PubSelect = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const PubSelect = (props: Props) => {
 	const { children, position, pubs, onSelectPub, usedPubIds } = props;
 
 	const renderPubItem = (pub, { handleClick, modifiers: { active } }) => {
 		return (
 			<PubMenuItem
 				key={pub.id}
+				// @ts-expect-error ts-migrate(2322) FIXME: Property 'onClick' does not exist on type 'Intrins... Remove this comment to see the full error message
 				onClick={handleClick}
 				title={pub.title}
 				contributors={pub.attributions}
@@ -56,6 +58,7 @@ const PubSelect = (props) => {
 			<Popover
 				minimal
 				popoverClassName="pub-select-popover"
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type '"bottom-r... Remove this comment to see the full error message
 				position={position}
 				content={renderPopoverContent(qlProps)}
 			>
@@ -75,7 +78,5 @@ const PubSelect = (props) => {
 		/>
 	);
 };
-
-PubSelect.propTypes = propTypes;
 PubSelect.defaultProps = defaultProps;
 export default PubSelect;

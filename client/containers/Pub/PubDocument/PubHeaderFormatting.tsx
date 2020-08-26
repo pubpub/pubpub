@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import { usePageContext } from 'utils/hooks';
@@ -9,13 +8,13 @@ import PubHeaderCollaborators from './PubHeaderCollaborators';
 
 require('./pubHeaderFormatting.scss');
 
-const propTypes = {
-	collabData: PropTypes.object.isRequired,
-	editorWrapperRef: PropTypes.any.isRequired,
-	disabled: PropTypes.bool.isRequired,
+type Props = {
+	collabData: any;
+	editorWrapperRef: any;
+	disabled: boolean;
 };
 
-const PubHeaderFormatting = (props) => {
+const PubHeaderFormatting = (props: Props) => {
 	const { collabData, disabled } = props;
 	const { scopeData } = usePageContext();
 	const { canEdit, canEditDraft } = scopeData.activePermissions;
@@ -50,6 +49,4 @@ const PubHeaderFormatting = (props) => {
 		</div>
 	);
 };
-
-PubHeaderFormatting.propTypes = propTypes;
 export default PubHeaderFormatting;

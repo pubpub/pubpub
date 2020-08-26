@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { usePageContext } from 'utils/hooks';
 
@@ -10,11 +9,11 @@ import { PubSuspendWhileTypingProvider, PubSuspendWhileTyping } from './PubSuspe
 
 require('./pub.scss');
 
-const propTypes = {
-	pubData: PropTypes.object.isRequired,
+type Props = {
+	pubData: any;
 };
 
-const Pub = (props) => {
+const Pub = (props: Props) => {
 	const { loginData, locationData, communityData } = usePageContext();
 	return (
 		<PubSuspendWhileTypingProvider>
@@ -47,6 +46,4 @@ const Pub = (props) => {
 		</PubSuspendWhileTypingProvider>
 	);
 };
-
-Pub.propTypes = propTypes;
 export default Pub;

@@ -4,6 +4,7 @@ let initialData;
 
 export const getClientInitialData = () => {
 	if (!initialData) {
+		// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 		initialData = JSON.parse(document.getElementById('initial-data').getAttribute('data-json'));
 	}
 	return initialData;

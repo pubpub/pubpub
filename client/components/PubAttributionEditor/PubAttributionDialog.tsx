@@ -1,17 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Classes, Dialog } from '@blueprintjs/core';
 
 import PubAttributionEditor from './PubAttributionEditor';
 
 require('./pubAttributionDialog.scss');
 
-const propTypes = {
-	isOpen: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
+type Props = {
+	isOpen: boolean;
+	onClose: (...args: any[]) => any;
 };
 
-const PubAttributionDialog = (props) => {
+const PubAttributionDialog = (props: Props) => {
 	const { isOpen, onClose, ...restProps } = props;
 	return (
 		<Dialog
@@ -21,11 +20,10 @@ const PubAttributionDialog = (props) => {
 			onClose={onClose}
 		>
 			<div className={Classes.DIALOG_BODY}>
+				{/* @ts-expect-error ts-migrate(2739) FIXME: Type '{}' is missing the following properties from... Remove this comment to see the full error message */}
 				<PubAttributionEditor {...restProps} />
 			</div>
 		</Dialog>
 	);
 };
-
-PubAttributionDialog.propTypes = propTypes;
 export default PubAttributionDialog;

@@ -18,6 +18,7 @@ storiesOf('components/PubPreview', module).add('default', () => (
 		<h1 style={{ margin: '0em 0em 0.5em' }}>Large</h1>
 		<div className="row">
 			<div className="col-12">
+				{/* @ts-expect-error ts-migrate(2322) FIXME: Type '{ id: string; slug: string; title: string; d... Remove this comment to see the full error message */}
 				<PubPreview pubData={pubData} communityData={communityData} size="large" />
 			</div>
 		</div>
@@ -25,12 +26,15 @@ storiesOf('components/PubPreview', module).add('default', () => (
 		<h1 style={{ margin: '2em 0em 0.5em' }}>Medium</h1>
 		<div className="row">
 			<div className="col-6">
+				{/* @ts-expect-error ts-migrate(2322) FIXME: Type '{ id: string; slug: string; title: string; d... Remove this comment to see the full error message */}
 				<PubPreview pubData={pubData} communityData={communityData} size="medium" />
 			</div>
 			<div className="col-6">
+				{/* @ts-expect-error ts-migrate(2322) FIXME: Type '{ id: string; slug: string; title: string; d... Remove this comment to see the full error message */}
 				<PubPreview pubData={pubData} communityData={communityData} size="medium" />
 			</div>
 			<div className="col-6">
+				{/* @ts-expect-error ts-migrate(2322) FIXME: Type '{ id: string; slug: string; title: string; d... Remove this comment to see the full error message */}
 				<PubPreview pubData={pubData} communityData={communityData} size="medium" />
 			</div>
 		</div>
@@ -38,9 +42,11 @@ storiesOf('components/PubPreview', module).add('default', () => (
 		<h1 style={{ margin: '2em 0em 0.5em' }}>Small</h1>
 		<div className="row">
 			<div className="col-12">
+				{/* @ts-expect-error ts-migrate(2322) FIXME: Type '{ id: string; slug: string; title: string; d... Remove this comment to see the full error message */}
 				<PubPreview pubData={pubData} communityData={communityData} size="small" />
 			</div>
 			<div className="col-12">
+				{/* @ts-expect-error ts-migrate(2322) FIXME: Type '{ id: string; slug: string; title: string; d... Remove this comment to see the full error message */}
 				<PubPreview pubData={pubData} communityData={communityData} size="small" />
 			</div>
 		</div>
@@ -48,12 +54,15 @@ storiesOf('components/PubPreview', module).add('default', () => (
 		<h1 style={{ margin: '2em 0em 0.5em' }}>Minimal</h1>
 		<div className="row">
 			<div className="col-6">
+				{/* @ts-expect-error ts-migrate(2322) FIXME: Type '{ id: string; slug: string; title: string; d... Remove this comment to see the full error message */}
 				<PubPreview pubData={pubData} communityData={communityData} size="minimal" />
 			</div>
 			<div className="col-6">
+				{/* @ts-expect-error ts-migrate(2322) FIXME: Type '{ id: string; slug: string; title: string; d... Remove this comment to see the full error message */}
 				<PubPreview pubData={pubData} communityData={communityData} size="minimal" />
 			</div>
 			<div className="col-6">
+				{/* @ts-expect-error ts-migrate(2322) FIXME: Type '{ id: string; slug: string; title: string; d... Remove this comment to see the full error message */}
 				<PubPreview pubData={pubData} communityData={communityData} size="minimal" />
 			</div>
 		</div>

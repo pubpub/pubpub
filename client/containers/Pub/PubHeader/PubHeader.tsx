@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { getJSON } from 'components/Editor';
 
@@ -26,12 +25,12 @@ const getPubHeadings = (pubData, collabData) => {
 
 require('./pubHeader.scss');
 
-const propTypes = {
-	collabData: PropTypes.object.isRequired,
-	historyData: PropTypes.object.isRequired,
-	pubData: PropTypes.object.isRequired,
-	updateLocalData: PropTypes.func.isRequired,
-	sticky: PropTypes.bool,
+type OwnPubHeaderProps = {
+	collabData: any;
+	historyData: any;
+	pubData: any;
+	updateLocalData: (...args: any[]) => any;
+	sticky?: boolean;
 };
 
 const defaultProps = {
@@ -44,6 +43,7 @@ const ToggleDetailsButton = ({ showingDetails, onClick }) => {
 	const icon = showingDetails ? 'cross' : 'expand-all';
 	return (
 		<SmallHeaderButton
+			// @ts-expect-error ts-migrate(2322) FIXME: Property 'className' does not exist on type 'Intri... Remove this comment to see the full error message
 			className={classNames('details-button', showingDetails && 'showing-details')}
 			label={label}
 			labelPosition="left"
@@ -53,7 +53,9 @@ const ToggleDetailsButton = ({ showingDetails, onClick }) => {
 	);
 };
 
-const PubHeader = (props) => {
+type PubHeaderProps = OwnPubHeaderProps & typeof defaultProps;
+
+const PubHeader = (props: PubHeaderProps) => {
 	const headerRef = useRef(null);
 	const { collabData, historyData, pubData, updateLocalData, sticky } = props;
 	const { communityData } = usePageContext();
@@ -62,11 +64,14 @@ const PubHeader = (props) => {
 	const { viewportWidth } = useViewport();
 
 	const pubHeadings = getPubHeadings(pubData, collabData);
+	// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 	const isMobile = viewportWidth <= mobileViewportCutoff;
 
 	useSticky({
+		// @ts-expect-error ts-migrate(2322) FIXME: Type 'null' is not assignable to type 'boolean | u... Remove this comment to see the full error message
 		isActive: sticky && headerRef.current,
 		selector: '.pub-header-component',
+		// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 		offset: headerRef.current ? 37 - headerRef.current.offsetHeight : 0,
 	});
 
@@ -76,11 +81,14 @@ const PubHeader = (props) => {
 				// Fill the viewport with details
 				// +1px to take care of that pesky bottom border
 				window.scrollTo(0, 0);
+				// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 				const boundingRect = headerRef.current.getBoundingClientRect();
+				// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'number' is not assignable to par... Remove this comment to see the full error message
 				setFixedHeight(1 + window.innerHeight - boundingRect.top);
 				setShowingDetails(true);
 			} else {
 				// Fix the height of the details to that of the main header content
+				// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 				const boundingRect = headerRef.current.getBoundingClientRect();
 				setFixedHeight(boundingRect.height);
 			}
@@ -89,6 +97,7 @@ const PubHeader = (props) => {
 	};
 
 	return (
+		// @ts-expect-error ts-migrate(2322) FIXME: Property 'children' does not exist on type 'Intrin... Remove this comment to see the full error message
 		<PubHeaderBackground
 			className={classNames('pub-header-component', showingDetails && 'showing-details')}
 			pubData={pubData}
@@ -118,11 +127,10 @@ const PubHeader = (props) => {
 				)}
 				<ToggleDetailsButton showingDetails={showingDetails} onClick={toggleDetails} />
 			</GridWrapper>
+			{/* @ts-expect-error ts-migrate(2322) FIXME: Property 'collabData' does not exist on type 'Intr... Remove this comment to see the full error message */}
 			<PubHeaderSticky pubData={pubData} collabData={collabData} pubHeadings={pubHeadings} />
 		</PubHeaderBackground>
 	);
 };
-
-PubHeader.propTypes = propTypes;
 PubHeader.defaultProps = defaultProps;
 export default PubHeader;

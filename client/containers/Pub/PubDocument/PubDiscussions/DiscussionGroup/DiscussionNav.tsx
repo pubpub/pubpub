@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import Color from 'color';
 import { Button, Popover, Menu, MenuItem } from '@blueprintjs/core';
 
@@ -10,14 +9,14 @@ import DiscussionBubble from './DiscussionBubble';
 
 require('./discussionNav.scss');
 
-const propTypes = {
-	discussions: PropTypes.array.isRequired,
-	activeThreadHover: PropTypes.string,
-	setActiveThreadHover: PropTypes.func.isRequired,
-	activeThread: PropTypes.string,
-	setActiveThread: PropTypes.func.isRequired,
-	isExpanded: PropTypes.bool.isRequired,
-	setExpanded: PropTypes.func.isRequired,
+type OwnProps = {
+	discussions: any[];
+	activeThreadHover?: string;
+	setActiveThreadHover: (...args: any[]) => any;
+	activeThread?: string;
+	setActiveThread: (...args: any[]) => any;
+	isExpanded: boolean;
+	setExpanded: (...args: any[]) => any;
 };
 
 const defaultProps = {
@@ -58,7 +57,9 @@ const makeBubbleRenderer = ({
 	);
 };
 
-const DiscussionNav = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const DiscussionNav = (props: Props) => {
 	const {
 		discussions,
 		activeThreadHover,
@@ -137,19 +138,27 @@ const DiscussionNav = (props) => {
 					}
 				>
 					<DiscussionBubble
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'boolean' is not assignable to type 'never'.
 						isActive={
 							!!isOverflowHovered ||
 							!!isOverflowShown ||
 							!!(
 								activeThread &&
+								// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 								overflowThreads.some((thread) => thread.id === activeThread.id)
 							)
 						}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '() => void' is not assignable to type 'never... Remove this comment to see the full error message
 						onMouseEnter={() => setOverflowHovered(true)}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '() => void' is not assignable to type 'never... Remove this comment to see the full error message
 						onMouseLeave={() => setOverflowHovered(false)}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '() => void' is not assignable to type 'never... Remove this comment to see the full error message
 						onClick={() => setOverflowShown(true)}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 						color={communityData.accentColorDark}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 						count={<Icon icon="more" iconSize={10} className="overflow-icon" />}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'boolean' is not assignable to type 'never'.
 						showDot={overflowThreads.some((thread) =>
 							thread.thread.comments.some(
 								(discussion) => discussion.userId === loginData.id,
@@ -232,7 +241,5 @@ const DiscussionNav = (props) => {
 		</span>
 	);
 };
-
-DiscussionNav.propTypes = propTypes;
 DiscussionNav.defaultProps = defaultProps;
 export default DiscussionNav;

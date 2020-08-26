@@ -1,14 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 import { Radio, RadioGroup, useRadioState } from 'reakit';
 
 import { Icon } from 'components';
 
-const propTypes = {
-	onChange: PropTypes.func.isRequired,
-	isSmall: PropTypes.bool.isRequired,
-	value: PropTypes.string.isRequired,
+type Props = {
+	onChange: (...args: any[]) => any;
+	isSmall: boolean;
+	value: string;
 };
 
 const alignOptions = [
@@ -19,7 +18,7 @@ const alignOptions = [
 	{ key: 'breakout', icon: 'fullscreen' },
 ];
 
-const AlignmentControl = (props) => {
+const AlignmentControl = (props: Props) => {
 	const { isSmall, onChange, value } = props;
 	const radio = useRadioState();
 	return (
@@ -28,6 +27,7 @@ const AlignmentControl = (props) => {
 			<RadioGroup className="controls" aria-label="Figure alignment" as="div">
 				{alignOptions.map((item) => {
 					return (
+						// @ts-expect-error ts-migrate(2769) FIXME: Property 'value' is missing in type '{ children: (... Remove this comment to see the full error message
 						<Radio
 							{...radio}
 							aria-label={item.key}
@@ -37,6 +37,7 @@ const AlignmentControl = (props) => {
 						>
 							{({ ref, ...restRadioProps }) => (
 								<Button
+									// @ts-expect-error ts-migrate(2322) FIXME: Type 'null' is not assignable to type '((ref: HTML... Remove this comment to see the full error message
 									elementRef={ref}
 									icon={<Icon icon={item.icon} iconSize={isSmall ? 12 : 16} />}
 									minimal={true}
@@ -52,6 +53,4 @@ const AlignmentControl = (props) => {
 		</div>
 	);
 };
-
-AlignmentControl.propTypes = propTypes;
 export default AlignmentControl;

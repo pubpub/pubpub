@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 
 import { InputField } from 'components';
 import { getDashUrl } from 'utils/dashboard';
 import { apiFetch } from 'client/utils/apiFetch';
 
-const propTypes = {
-	communityData: PropTypes.object.isRequired,
-	pubData: PropTypes.object.isRequired,
+type Props = {
+	communityData: any;
+	pubData: any;
 };
 
-class DeletePub extends Component {
-	constructor(props) {
+type State = any;
+
+class DeletePub extends Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			isLoading: false,
@@ -38,6 +39,7 @@ class DeletePub extends Component {
 			}),
 		})
 			.then(() => {
+				// @ts-expect-error ts-migrate(2345) FIXME: Type '{ mode: string; }' is missing the following ... Remove this comment to see the full error message
 				window.location.href = getDashUrl({ mode: 'overview' });
 			})
 			.catch(() => {
@@ -75,6 +77,4 @@ class DeletePub extends Component {
 		);
 	}
 }
-
-DeletePub.propTypes = propTypes;
 export default DeletePub;

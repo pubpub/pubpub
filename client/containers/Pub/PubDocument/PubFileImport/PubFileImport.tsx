@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { AnchorButton } from '@blueprintjs/core';
 import { docIsEmpty } from 'components/Editor';
 
@@ -7,14 +6,18 @@ import FileImportDialog from './FileImportDialog';
 
 require('./pubFileImport.scss');
 
-const propTypes = {
-	editorChangeObject: PropTypes.shape({
-		view: PropTypes.shape({ state: PropTypes.shape({ doc: PropTypes.shape({}) }) }),
-	}).isRequired,
-	updatePubData: PropTypes.func.isRequired,
+type Props = {
+	editorChangeObject: {
+		view?: {
+			state?: {
+				doc?: {};
+			};
+		};
+	};
+	updatePubData: (...args: any[]) => any;
 };
 
-const PubFileImport = (props) => {
+const PubFileImport = (props: Props) => {
 	const {
 		editorChangeObject: { view },
 	} = props;
@@ -60,6 +63,4 @@ const PubFileImport = (props) => {
 		</React.Fragment>
 	);
 };
-
-PubFileImport.propTypes = propTypes;
 export default PubFileImport;

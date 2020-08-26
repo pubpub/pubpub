@@ -1,14 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { usePageContext } from 'utils/hooks';
 
 require('./dashboardDiscussions.scss');
 
-const propTypes = {
-	discussionsData: PropTypes.object.isRequired,
+type Props = {
+	discussionsData: any;
 };
 
-const DashboardDiscussions = (props) => {
+const DashboardDiscussions = (props: Props) => {
 	const { discussionsData } = props;
 	const { scopeData } = usePageContext();
 
@@ -21,6 +20,4 @@ const DashboardDiscussions = (props) => {
 		</div>
 	);
 };
-
-DashboardDiscussions.propTypes = propTypes;
 export default DashboardDiscussions;

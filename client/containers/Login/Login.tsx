@@ -20,11 +20,14 @@ const Login = () => {
 		evt.preventDefault();
 		if (
 			!emailRef.current ||
+			// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 			!emailRef.current.value ||
 			!passwordRef.current ||
+			// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 			!passwordRef.current.value
 		) {
 			setLoginLoading(false);
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '"Invalid Email or Password"' is ... Remove this comment to see the full error message
 			setLoginError('Invalid Email or Password');
 			return null;
 		}
@@ -33,7 +36,9 @@ const Login = () => {
 		return apiFetch('/api/login', {
 			method: 'POST',
 			body: JSON.stringify({
+				// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 				email: emailRef.current.value.toLowerCase(),
+				// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 				password: SHA3(passwordRef.current.value).toString(encHex),
 			}),
 		})
@@ -42,11 +47,13 @@ const Login = () => {
 			})
 			.catch(() => {
 				setLoginLoading(false);
+				// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '"Invalid Email or Password"' is ... Remove this comment to see the full error message
 				setLoginError('Invalid Email or Password');
 			});
 	};
 	const onLogoutSubmit = () => {
 		setLogoutLoading(true);
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 		apiFetch('/api/logout').then(() => {
 			window.location.href = '/';
 		});
@@ -97,6 +104,7 @@ const Login = () => {
 				)}
 				{loginData.id && (
 					<NonIdealState
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'visual' does not exist on type 'Intrinsi... Remove this comment to see the full error message
 						visual={
 							<Avatar
 								initials={loginData.initials}

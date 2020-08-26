@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 
 import TimelineItem from './TimelineItem';
 
-const propTypes = {
-	children: PropTypes.node.isRequired,
-	shownItemsLimit: PropTypes.number.isRequired,
+type Props = {
+	children: React.ReactNode;
+	shownItemsLimit: number;
 };
 
-export const TimelineCondenser = (props) => {
+export const TimelineCondenser = (props: Props) => {
 	const [isExpanded, setIsExpanded] = useState(false);
 	const { children, shownItemsLimit, ...restProps } = props;
 	const childrenArr = React.Children.toArray(children);
@@ -17,10 +16,15 @@ export const TimelineCondenser = (props) => {
 		return [
 			...childrenArr.slice(0, shownItemsLimit),
 			<TimelineItem
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				key="__timeline-condenser-expand-element__"
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'true' is not assignable to type 'never'.
 				hollow
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				icon="expand-all"
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 				title={<i>{childrenArr.length - shownItemsLimit} more hidden</i>}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 				controls={
 					<Button outlined onClick={() => setIsExpanded(true)} {...restProps}>
 						Show all
@@ -31,6 +35,4 @@ export const TimelineCondenser = (props) => {
 	}
 	return children;
 };
-
-TimelineCondenser.propTypes = propTypes;
 export default TimelineCondenser;

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Button } from 'reakit';
 
@@ -8,17 +7,17 @@ import DashboardRowListing from './DashboardRowListing';
 
 require('./dashboardRow.scss');
 
-const propTypes = {
-	children: PropTypes.node,
-	className: PropTypes.string,
-	handle: PropTypes.node,
-	href: PropTypes.string,
-	icon: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
-	onClick: PropTypes.func,
-	rightSideElements: PropTypes.node,
-	selected: PropTypes.bool,
-	subtitle: PropTypes.node,
-	title: PropTypes.node.isRequired,
+type OwnProps = {
+	children?: React.ReactNode;
+	className?: string;
+	handle?: React.ReactNode;
+	href?: string;
+	icon: string | React.ReactNode;
+	onClick?: (...args: any[]) => any;
+	rightSideElements?: React.ReactNode;
+	selected?: boolean;
+	subtitle?: React.ReactNode;
+	title: React.ReactNode;
 };
 
 const defaultProps = {
@@ -32,7 +31,9 @@ const defaultProps = {
 	subtitle: null,
 };
 
-const DashboardRow = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const DashboardRow = (props: Props) => {
 	const {
 		children,
 		className,
@@ -99,7 +100,5 @@ const DashboardRow = (props) => {
 		</div>
 	);
 };
-
-DashboardRow.propTypes = propTypes;
 DashboardRow.defaultProps = defaultProps;
 export default DashboardRow;

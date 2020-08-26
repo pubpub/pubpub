@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import SHA3 from 'crypto-js/sha3';
 import encHex from 'crypto-js/enc-hex';
 import { AnchorButton, Button, NonIdealState } from '@blueprintjs/core';
@@ -10,11 +9,11 @@ import { usePageContext } from 'utils/hooks';
 
 require('./passwordReset.scss');
 
-const propTypes = {
-	passwordResetData: PropTypes.object.isRequired,
+type Props = {
+	passwordResetData: any;
 };
 
-const PasswordReset = (props) => {
+const PasswordReset = (props: Props) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [showConfirmation, setShowConfirmation] = useState(false);
@@ -49,6 +48,7 @@ const PasswordReset = (props) => {
 			})
 			.catch(() => {
 				setPostIsLoading(false);
+				// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '"Error"' is not assignable to pa... Remove this comment to see the full error message
 				setPostError('Error');
 			});
 	};
@@ -71,6 +71,7 @@ const PasswordReset = (props) => {
 			})
 			.catch(() => {
 				setPutIsLoading(false);
+				// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '"Error"' is not assignable to pa... Remove this comment to see the full error message
 				setPutError('Error');
 			});
 	};
@@ -114,6 +115,7 @@ const PasswordReset = (props) => {
 					<NonIdealState
 						description="Check your inbox for an email with a reset link"
 						title="Reset Password Email Sent"
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'visual' does not exist on type 'Intrinsi... Remove this comment to see the full error message
 						visual="envelope"
 					/>
 				)}
@@ -154,6 +156,7 @@ const PasswordReset = (props) => {
 					<NonIdealState
 						description="Your password has been successfully changed."
 						title="Reset Password Successful"
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'visual' does not exist on type 'Intrinsi... Remove this comment to see the full error message
 						visual="tick"
 						action={
 							<AnchorButton
@@ -168,6 +171,4 @@ const PasswordReset = (props) => {
 		</div>
 	);
 };
-
-PasswordReset.propTypes = propTypes;
 export default PasswordReset;

@@ -1,27 +1,24 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { Button, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import fuzzysearch from 'fuzzysearch';
 
-const propTypes = {
-	collection: PropTypes.shape({
-		page: PropTypes.shape({
-			title: PropTypes.string,
-		}),
-	}).isRequired,
-	communityData: PropTypes.shape({
-		pages: PropTypes.arrayOf(
-			PropTypes.shape({
-				title: PropTypes.string,
-				id: PropTypes.string,
-			}),
-		),
-	}).isRequired,
-	onSelectPage: PropTypes.func.isRequired,
-	targetElement: PropTypes.node,
-	minimal: PropTypes.bool,
-	selfContained: PropTypes.bool,
+type OwnProps = {
+	collection: {
+		page?: {
+			title?: string;
+		};
+	};
+	communityData: {
+		pages?: {
+			title?: string;
+			id?: string;
+		}[];
+	};
+	onSelectPage: (...args: any[]) => any;
+	targetElement?: React.ReactNode;
+	minimal?: boolean;
+	selfContained?: boolean;
 };
 
 const defaultProps = {
@@ -30,7 +27,9 @@ const defaultProps = {
 	selfContained: false,
 };
 
-const LinkedPageSelect = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const LinkedPageSelect = (props: Props) => {
 	const {
 		communityData,
 		collection,
@@ -59,6 +58,7 @@ const LinkedPageSelect = (props) => {
 
 	return (
 		<Select
+			// @ts-expect-error ts-migrate(2769) FIXME: Type 'undefined' is not assignable to type '{ titl... Remove this comment to see the full error message
 			items={[{ title: '(None)', id: null }].concat(communityData.pages)}
 			itemRenderer={(page, { handleClick }) => {
 				return <MenuItem key={page.title} onClick={handleClick} text={page.title} />;
@@ -82,7 +82,5 @@ const LinkedPageSelect = (props) => {
 		</Select>
 	);
 };
-
-LinkedPageSelect.propTypes = propTypes;
 LinkedPageSelect.defaultProps = defaultProps;
 export default LinkedPageSelect;

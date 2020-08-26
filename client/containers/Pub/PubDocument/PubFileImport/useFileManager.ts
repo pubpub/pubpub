@@ -11,11 +11,14 @@ export const useFileManager = () => {
 
 	const updateFileById = (fileId, value) =>
 		setFiles((currentFiles) => {
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type 'never'.
 			const exists = currentFiles.some((file) => file.id === fileId);
 			if (exists) {
 				return labelFiles(
 					currentFiles.map((file) => {
+						// @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type 'never'.
 						if (file.id === fileId) {
+							// @ts-expect-error ts-migrate(2698) FIXME: Spread types may only be created from object types... Remove this comment to see the full error message
 							return { ...file, ...value };
 						}
 						return file;
@@ -32,11 +35,13 @@ export const useFileManager = () => {
 				currentFiles.map((file) => {
 					const { label } = file;
 					const nextLabel =
+						// @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type 'never'.
 						fileId === file.id
 							? newLabel
 							: label === newLabel && isExclusiveLabel
 							? null
 							: label;
+					// @ts-expect-error ts-migrate(2698) FIXME: Spread types may only be created from object types... Remove this comment to see the full error message
 					return { ...file, label: nextLabel };
 				}),
 			),
@@ -44,6 +49,7 @@ export const useFileManager = () => {
 	};
 
 	const deleteFileById = (fileId) =>
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type 'never'.
 		setFiles((currentFiles) => labelFiles(currentFiles.filter((file) => file.id !== fileId)));
 
 	const onProgress = (fileId) => ({ loaded, total }) =>
@@ -56,7 +62,9 @@ export const useFileManager = () => {
 		const fileId = fileIdCounter;
 		const clientPath = file.path || file.name;
 		fileIdCounter += 1;
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
 		s3Upload(file, onProgress(fileId), onComplete(fileId));
+		// @ts-expect-error ts-migrate(2345) FIXME: Type '{ id: number; state: string; clientPath: any... Remove this comment to see the full error message
 		setFiles((currentFiles) => [
 			...currentFiles,
 			{ id: fileId, state: 'waiting', clientPath: clientPath },

@@ -25,8 +25,10 @@ const defaultProps = {
 };
 
 const CollectionsBarButton = React.forwardRef((props, ref) => {
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'className' does not exist on type '{ chi... Remove this comment to see the full error message
 	const { children, className, href, icon, onClick, rightIcon, ...restProps } = props;
 	return (
+		// @ts-expect-error ts-migrate(2769) FIXME: Property 'as' is missing in type '{ children: (str... Remove this comment to see the full error message
 		<Button
 			{...restProps}
 			onClick={onClick}
@@ -50,6 +52,8 @@ const CollectionsBarButton = React.forwardRef((props, ref) => {
 	);
 });
 
+// @ts-expect-error ts-migrate(2559) FIXME: Type '{ children: Validator<string | number | bool... Remove this comment to see the full error message
 CollectionsBarButton.propTypes = propTypes;
+// @ts-expect-error ts-migrate(2559) FIXME: Type '{ className: string; href: null; icon: null;... Remove this comment to see the full error message
 CollectionsBarButton.defaultProps = defaultProps;
 export default CollectionsBarButton;

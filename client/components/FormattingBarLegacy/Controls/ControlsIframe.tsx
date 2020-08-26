@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Slider, NumericInput, ButtonGroup, Button } from '@blueprintjs/core';
 import SimpleEditor from 'components/SimpleEditor/SimpleEditor';
 import Icon from 'components/Icon/Icon';
 
-const propTypes = {
-	attrs: PropTypes.object.isRequired,
-	updateAttrs: PropTypes.func.isRequired,
-	isSmall: PropTypes.bool.isRequired,
+type Props = {
+	attrs: any;
+	updateAttrs: (...args: any[]) => any;
+	isSmall: boolean;
 };
 
-const ControlsIframe = (props) => {
+const ControlsIframe = (props: Props) => {
 	const alignOptions = [
 		{ key: 'left', icon: 'align-left' },
 		{ key: 'center', icon: 'align-center' },
@@ -108,6 +107,7 @@ const ControlsIframe = (props) => {
 							onChange={(htmlString) => {
 								props.updateAttrs({ caption: htmlString });
 							}}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'undefined... Remove this comment to see the full error message
 							placeholder="Enter caption..."
 						/>
 					</div>
@@ -132,6 +132,4 @@ const ControlsIframe = (props) => {
 		</div>
 	);
 };
-
-ControlsIframe.propTypes = propTypes;
 export default ControlsIframe;

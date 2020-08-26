@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { ColorInput, ImageUpload } from 'components';
 import { calculateBackgroundColor } from 'utils/colors';
@@ -14,15 +13,15 @@ if (typeof Image !== 'undefined') {
 	new Image().src = '/static/transparency.png';
 }
 
-const propTypes = {
-	updatePubData: PropTypes.func.isRequired,
-	pubData: PropTypes.object.isRequired,
-	communityData: PropTypes.shape({
-		accentColorDark: PropTypes.string,
-	}).isRequired,
+type Props = {
+	updatePubData: (...args: any[]) => any;
+	pubData: any;
+	communityData: {
+		accentColorDark?: string;
+	};
 };
 
-const ThemePicker = (props) => {
+const ThemePicker = (props: Props) => {
 	const { updatePubData, pubData, communityData } = props;
 	const { headerBackgroundColor, headerBackgroundImage, headerStyle } = pubData;
 
@@ -54,9 +53,11 @@ const ThemePicker = (props) => {
 				<ImageUpload
 					key={headerBackgroundImage}
 					defaultImage={headerBackgroundImage}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type '(image: any) => any' is not assignable to ty... Remove this comment to see the full error message
 					onNewImage={updatePubHeaderImage}
 					width={150}
 					canClear={true}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'undefine... Remove this comment to see the full error message
 					helperText={
 						<span>
 							Suggested minimum dimensions: <br />
@@ -69,18 +70,21 @@ const ThemePicker = (props) => {
 				<div className="title">Background tint</div>
 				<div className="section-row">
 					<TintStyleChoice
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'label' does not exist on type 'Intrinsic... Remove this comment to see the full error message
 						label="Light"
 						color={calculateBackgroundColor('light')}
 						onClick={() => updatePubBackgroundColor('light')}
 						selected={headerBackgroundColor === 'light'}
 					/>
 					<TintStyleChoice
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'label' does not exist on type 'Intrinsic... Remove this comment to see the full error message
 						label="Community accent color"
 						color={calculateBackgroundColor('community', communityData.accentColorDark)}
 						onClick={() => updatePubBackgroundColor('community')}
 						selected={headerBackgroundColor === 'community'}
 					/>
 					<TintStyleChoice
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'label' does not exist on type 'Intrinsic... Remove this comment to see the full error message
 						label="Dark"
 						color={calculateBackgroundColor('dark')}
 						onClick={() => updatePubBackgroundColor('dark')}
@@ -96,6 +100,7 @@ const ThemePicker = (props) => {
 					>
 						{(color) => (
 							<TintStyleChoice
+								// @ts-expect-error ts-migrate(2322) FIXME: Property 'label' does not exist on type 'Intrinsic... Remove this comment to see the full error message
 								label="Custom"
 								className="light"
 								color={color}
@@ -109,6 +114,7 @@ const ThemePicker = (props) => {
 				<div className="title">Text style</div>
 				<div className="section-row">
 					<TextStyleChoice
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'pubData' does not exist on type 'Intrins... Remove this comment to see the full error message
 						pubData={pubData}
 						communityData={communityData}
 						label="Light"
@@ -117,6 +123,7 @@ const ThemePicker = (props) => {
 						selected={!headerStyle || headerStyle === 'light'}
 					/>
 					<TextStyleChoice
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'pubData' does not exist on type 'Intrins... Remove this comment to see the full error message
 						pubData={pubData}
 						communityData={communityData}
 						label="Dark"
@@ -125,6 +132,7 @@ const ThemePicker = (props) => {
 						selected={headerStyle === 'dark'}
 					/>
 					<TextStyleChoice
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'pubData' does not exist on type 'Intrins... Remove this comment to see the full error message
 						pubData={pubData}
 						communityData={communityData}
 						label="White Blocks"
@@ -133,6 +141,7 @@ const ThemePicker = (props) => {
 						selected={headerStyle === 'white-blocks'}
 					/>
 					<TextStyleChoice
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'pubData' does not exist on type 'Intrins... Remove this comment to see the full error message
 						pubData={pubData}
 						communityData={communityData}
 						label="Black Blocks"
@@ -145,6 +154,4 @@ const ThemePicker = (props) => {
 		</div>
 	);
 };
-
-ThemePicker.propTypes = propTypes;
 export default ThemePicker;

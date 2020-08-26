@@ -1,29 +1,29 @@
 import React, { useState, useRef } from 'react';
-import PropTypes from 'prop-types';
 import { AnchorButton, InputGroup } from '@blueprintjs/core';
 import uuid from 'uuid';
 
 import { Icon } from 'components';
 import { s3Upload } from 'client/utils/upload';
 
-const propTypes = {
-	updateNode: PropTypes.func.isRequired,
-	isSmall: PropTypes.bool.isRequired,
-	selectedNode: PropTypes.shape({
-		type: PropTypes.shape({
-			name: PropTypes.string.isRequired,
-		}).isRequired,
-		attrs: PropTypes.shape({
-			url: PropTypes.string.isRequired,
-		}),
-	}).isRequired,
+type Props = {
+	updateNode: (...args: any[]) => any;
+	isSmall: boolean;
+	selectedNode: {
+		type: {
+			name: string;
+		};
+		attrs?: {
+			url: string;
+		};
+	};
 };
 
-const SourceControls = (props) => {
+const SourceControls = (props: Props) => {
 	const { isSmall, selectedNode, updateNode } = props;
 	const { attrs } = selectedNode;
 	const iconSize = isSmall ? 12 : 16;
 	const [isUploading, setIsUploading] = useState(false);
+	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const [urlSource, setUrlSource] = useState(attrs.url);
 	const inputKey = useRef(uuid.v4());
 	const useUrlInput = selectedNode.type.name === 'iframe';
@@ -32,6 +32,7 @@ const SourceControls = (props) => {
 		const { files } = evt.target;
 		if (files.length > 0) {
 			const [file] = files;
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 4 arguments, but got 3.
 			s3Upload(
 				file,
 				() => {},
@@ -86,6 +87,7 @@ const SourceControls = (props) => {
 						aria-label="Download source file"
 						icon={<Icon icon="download" iconSize={iconSize} />}
 						minimal={true}
+						// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 						href={attrs.url}
 						target="_blank"
 						rel="noopener noreferrer"
@@ -96,6 +98,4 @@ const SourceControls = (props) => {
 		</div>
 	);
 };
-
-SourceControls.propTypes = propTypes;
 export default SourceControls;

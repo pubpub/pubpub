@@ -22,6 +22,7 @@ const CommunityCreate = () => {
 	const onCreateSubmit = (evt) => {
 		evt.preventDefault();
 		setCreateIsLoading(true);
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'true' is not assignable to param... Remove this comment to see the full error message
 		setCreateError(true);
 		return apiFetch('/api/communities', {
 			method: 'POST',
@@ -67,6 +68,7 @@ const CommunityCreate = () => {
 				{!loginData.id && (
 					<NonIdealState
 						title="To create your community, create an account or login."
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'visual' does not exist on type 'Intrinsi... Remove this comment to see the full error message
 						visual="error"
 						action={
 							<a href="/login?redirect=/community/create" className="bp3-button">
@@ -101,11 +103,15 @@ const CommunityCreate = () => {
 							/>
 							<ImageUpload
 								htmlFor="large-header-logo-upload"
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'undefined... Remove this comment to see the full error message
 								label="Community Logo"
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'undefined... Remove this comment to see the full error message
 								defaultImage={heroLogo}
 								height={60}
 								width={150}
+								// @ts-expect-error ts-migrate(2322) FIXME: Type '(val: any) => void' is not assignable to typ... Remove this comment to see the full error message
 								onNewImage={onHeroHeaderLogoChange}
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'undefined... Remove this comment to see the full error message
 								helperText="Used on the landing page. Suggested height: 200px"
 							/>
 							<InputField label="Light Accent Color">

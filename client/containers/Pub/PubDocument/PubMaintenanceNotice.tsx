@@ -1,16 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { AnchorButton, Callout } from '@blueprintjs/core';
 
 require('./pubMaintenanceNotice.scss');
 
-const propTypes = {
-	pubData: PropTypes.shape({
-		isInMaintenanceMode: PropTypes.bool,
-	}).isRequired,
+type Props = {
+	pubData: {
+		isInMaintenanceMode?: boolean;
+	};
 };
 
-const PubMaintenanceNotice = (props) => {
+const PubMaintenanceNotice = (props: Props) => {
 	const { pubData } = props;
 	const { isInMaintenanceMode } = pubData;
 
@@ -44,6 +43,4 @@ const PubMaintenanceNotice = (props) => {
 		</Callout>
 	);
 };
-
-PubMaintenanceNotice.propTypes = propTypes;
 export default PubMaintenanceNotice;

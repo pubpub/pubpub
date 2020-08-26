@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Tooltip, Button, Position } from '@blueprintjs/core';
 import { useCopyToClipboard } from 'react-use';
 
-const propTypes = {
-	afterCopyPrompt: PropTypes.string,
-	beforeCopyPrompt: PropTypes.string,
-	children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
-	className: PropTypes.string,
-	copyString: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
-	icon: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-	minimal: PropTypes.bool,
-	tooltipPosition: PropTypes.string,
-	usePortal: PropTypes.bool,
+type OwnProps = {
+	afterCopyPrompt?: string;
+	beforeCopyPrompt?: string;
+	children?: React.ReactNode | ((...args: any[]) => any);
+	className?: string;
+	copyString: string | ((...args: any[]) => any);
+	icon?: string | React.ReactNode;
+	minimal?: boolean;
+	tooltipPosition?: string;
+	usePortal?: boolean;
 };
 
 const defaultProps = {
@@ -26,7 +25,9 @@ const defaultProps = {
 	usePortal: true,
 };
 
-const ClickToCopyButton = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const ClickToCopyButton = (props: Props) => {
 	const {
 		afterCopyPrompt,
 		beforeCopyPrompt,
@@ -42,6 +43,7 @@ const ClickToCopyButton = (props) => {
 	const [copyState, copyToClipboard] = useCopyToClipboard();
 
 	const handleClick = () => {
+		// @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures.
 		copyToClipboard(typeof copyString === 'function' ? copyString() : copyString);
 		setHasCopied(true);
 	};
@@ -58,9 +60,11 @@ const ClickToCopyButton = (props) => {
 
 	const renderChildren = () => {
 		if (typeof children === 'function') {
+			// @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures.
 			return children(handleClick);
 		}
 		return (
+			// @ts-expect-error ts-migrate(2322) FIXME: Property 'position' does not exist on type 'Intrin... Remove this comment to see the full error message
 			<Button minimal={minimal} icon={icon} onClick={handleClick} position={tooltipPosition}>
 				{children}
 			</Button>
@@ -77,7 +81,5 @@ const ClickToCopyButton = (props) => {
 		/>
 	);
 };
-
-ClickToCopyButton.propTypes = propTypes;
 ClickToCopyButton.defaultProps = defaultProps;
 export default ClickToCopyButton;

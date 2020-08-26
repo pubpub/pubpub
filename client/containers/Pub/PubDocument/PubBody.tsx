@@ -1,6 +1,5 @@
 import React, { useRef, useContext, useState } from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 import { useBeforeUnload } from 'react-use';
 import * as Sentry from '@sentry/browser';
 import { Card, Alert } from '@blueprintjs/core';
@@ -19,13 +18,13 @@ import Discussion from './PubDiscussions/Discussion';
 
 require('./pubBody.scss');
 
-const propTypes = {
-	pubData: PropTypes.object.isRequired,
-	collabData: PropTypes.object.isRequired,
-	historyData: PropTypes.object.isRequired,
-	firebaseBranchRef: PropTypes.object,
-	updateLocalData: PropTypes.func.isRequired,
-	editorWrapperRef: PropTypes.any.isRequired,
+type OwnProps = {
+	pubData: any;
+	collabData: any;
+	historyData: any;
+	firebaseBranchRef?: any;
+	updateLocalData: (...args: any[]) => any;
+	editorWrapperRef: any;
 };
 const defaultProps = {
 	firebaseBranchRef: undefined,
@@ -41,7 +40,9 @@ const shouldSuppressEditorErrors = () => {
 	return false;
 };
 
-const PubBody = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const PubBody = (props: Props) => {
 	const {
 		pubData,
 		collabData,
@@ -90,6 +91,7 @@ const PubBody = (props) => {
 				}, 250);
 			} else {
 				onComplete(nextStatus);
+				// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'number' is not assignable to par... Remove this comment to see the full error message
 				setLastSavedTime(Date.now());
 			}
 		}
@@ -107,6 +109,7 @@ const PubBody = (props) => {
 	const initialContent = (isViewingHistory && historyData.historyDoc) || pubData.initialDoc;
 	const loadCollaborativeOptions = !isViewingHistory && !pubData.isInMaintenanceMode;
 	const { markLastInput } = useContext(PubSuspendWhileTypingContext);
+	// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 	const showErrorTime = lastSavedTime && editorErrorTime - lastSavedTime > 500;
 
 	return (
@@ -147,14 +150,18 @@ const PubBody = (props) => {
 				initialContent={initialContent}
 				isReadOnly={isReadOnly}
 				onKeyPress={markLastInput}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type '(editorChangeObject: any) => void' is not as... Remove this comment to see the full error message
 				onChange={(editorChangeObject) => {
 					if (!isViewingHistory) {
 						updateLocalData('collab', { editorChangeObject: editorChangeObject });
 					}
 				}}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type '(err: any) => void' is not assignable to typ... Remove this comment to see the full error message
 				onError={(err) => {
 					setEditorError(err);
+					// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'number' is not assignable to par... Remove this comment to see the full error message
 					setEditorErrorTime(Date.now());
+					// @ts-expect-error ts-migrate(2339) FIXME: Property 'sentryIsActive' does not exist on type '... Remove this comment to see the full error message
 					if (typeof window !== 'undefined' && window.sentryIsActive) {
 						Sentry.configureScope((scope) => {
 							scope.setTag('error_source', 'editor');
@@ -186,6 +193,7 @@ const PubBody = (props) => {
 			/>
 			{!!editorError && !shouldSuppressEditorErrors() && (
 				<Alert
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'null' is not assignable to type 'boolean | u... Remove this comment to see the full error message
 					isOpen={editorError}
 					icon="error"
 					confirmButtonText="Refresh Page"
@@ -245,11 +253,17 @@ const PubBody = (props) => {
 						)}
 						{activeDiscussion && (
 							<Discussion
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 								key={embedId}
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 								pubData={pubData}
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 								historyData={historyData}
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 								discussionData={activeDiscussion}
+								// @ts-expect-error ts-migrate(2322) FIXME: Type '(...args: any[]) => any' is not assignable t... Remove this comment to see the full error message
 								updateLocalData={updateLocalData}
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'true' is not assignable to type 'never'.
 								canPreview={true}
 							/>
 						)}
@@ -260,7 +274,5 @@ const PubBody = (props) => {
 		</main>
 	);
 };
-
-PubBody.propTypes = propTypes;
 PubBody.defaultProps = defaultProps;
 export default PubBody;

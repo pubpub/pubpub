@@ -1,15 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import ThreadComment from './ThreadComment';
 import ThreadEvent from './ThreadEvent';
 
 require('./thread.scss');
 
-const propTypes = {
-	threadData: PropTypes.object.isRequired,
+type Props = {
+	threadData: any;
 };
 
-const Thread = (props) => {
+const Thread = (props: Props) => {
 	const { threadData } = props;
 	const items = [...threadData.comments, ...threadData.events];
 	return (
@@ -36,6 +35,4 @@ const Thread = (props) => {
 		</div>
 	);
 };
-
-Thread.propTypes = propTypes;
 export default Thread;

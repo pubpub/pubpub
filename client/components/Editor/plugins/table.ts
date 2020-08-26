@@ -18,9 +18,12 @@ export default (schema, props) => {
 		return [columnResizing({ handleWidth: -1 })];
 	}
 
+	// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'false' is not assignable to para... Remove this comment to see the full error message
 	document.execCommand('enableObjectResizing', false, false);
+	// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'false' is not assignable to para... Remove this comment to see the full error message
 	document.execCommand('enableInlineTableEditing', false, false);
 	return [
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 		columnResizing(),
 		tableEditing(),
 		keymap({

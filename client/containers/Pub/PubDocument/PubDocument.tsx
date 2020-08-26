@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
 import { setLocalHighlight } from 'components/Editor';
 
 import { usePageContext } from 'utils/hooks';
@@ -22,19 +21,21 @@ import { PubSuspendWhileTyping } from '../PubSuspendWhileTyping';
 
 require('./pubDocument.scss');
 
-const propTypes = {
-	pubData: PropTypes.object.isRequired,
-	collabData: PropTypes.object.isRequired,
-	historyData: PropTypes.object.isRequired,
-	firebaseBranchRef: PropTypes.object,
-	updateLocalData: PropTypes.func.isRequired,
+type OwnProps = {
+	pubData: any;
+	collabData: any;
+	historyData: any;
+	firebaseBranchRef?: any;
+	updateLocalData: (...args: any[]) => any;
 };
 
 const defaultProps = {
 	firebaseBranchRef: undefined,
 };
 
-const PubDocument = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const PubDocument = (props: Props) => {
 	const { pubData, historyData, collabData, firebaseBranchRef, updateLocalData } = props;
 	const { isViewingHistory } = historyData;
 	const { editorChangeObject } = collabData;
@@ -156,7 +157,5 @@ const PubDocument = (props) => {
 		</div>
 	);
 };
-
-PubDocument.propTypes = propTypes;
 PubDocument.defaultProps = defaultProps;
 export default PubDocument;

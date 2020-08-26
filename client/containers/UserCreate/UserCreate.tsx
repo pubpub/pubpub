@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import SHA3 from 'crypto-js/sha3';
 import encHex from 'crypto-js/enc-hex';
 import { Button, NonIdealState, Checkbox } from '@blueprintjs/core';
@@ -10,11 +9,11 @@ import { gdprCookiePersistsSignup, getGdprConsentElection } from 'client/utils/l
 
 require('./userCreate.scss');
 
-const propTypes = {
-	signupData: PropTypes.object.isRequired,
+type Props = {
+	signupData: any;
 };
 
-const UserCreate = (props) => {
+const UserCreate = (props: Props) => {
 	const { signupData } = props;
 	const [postUserIsLoading, setPostUserIsLoading] = useState(false);
 	const [postUserError, setPostUserError] = useState(undefined);
@@ -207,6 +206,7 @@ const UserCreate = (props) => {
 							<p>Click below to restart the signup process.</p>
 						</div>
 					}
+					// @ts-expect-error ts-migrate(2322) FIXME: Property 'visual' does not exist on type 'Intrinsi... Remove this comment to see the full error message
 					visual="error"
 					action={
 						<a href="/signup" className="bp3-button">
@@ -244,13 +244,16 @@ const UserCreate = (props) => {
 							type="password"
 							name="confirmPassword"
 							className="confirm-password"
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'number | ... Remove this comment to see the full error message
 							tabIndex="-1"
 							autoComplete="new-user-street-address"
 							onChange={(evt) => setConfirmPasword(evt.target.value)}
 						/>
 						<ImageUpload
 							htmlFor="avatar-upload"
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'undefined... Remove this comment to see the full error message
 							label="Avatar Image"
+							// @ts-expect-error ts-migrate(2322) FIXME: Type '(val: any) => void' is not assignable to typ... Remove this comment to see the full error message
 							onNewImage={onAvatarChange}
 							useCrop={true}
 						/>
@@ -340,6 +343,4 @@ const UserCreate = (props) => {
 		</div>
 	);
 };
-
-UserCreate.propTypes = propTypes;
 export default UserCreate;

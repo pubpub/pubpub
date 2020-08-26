@@ -1,19 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 require('./dashboardRowListing.scss');
 
-const propTypes = {
-	children: PropTypes.node.isRequired,
-	className: PropTypes.string,
+type OwnProps = {
+	children: React.ReactNode;
+	className?: string;
 };
 
 const defaultProps = {
 	className: '',
 };
 
-const DashboardRowListing = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const DashboardRowListing = (props: Props) => {
 	const { children, className } = props;
 	return (
 		<ul className={classNames('dashboard-row-listing-component', className)}>
@@ -23,7 +24,5 @@ const DashboardRowListing = (props) => {
 		</ul>
 	);
 };
-
-DashboardRowListing.propTypes = propTypes;
 DashboardRowListing.defaultProps = defaultProps;
 export default DashboardRowListing;

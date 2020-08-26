@@ -4,16 +4,15 @@
  * attached to a Button onClick handler, or anything else.
  */
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Button, Classes, Dialog } from '@blueprintjs/core';
 
-const propTypes = {
-	children: PropTypes.func.isRequired,
-	cancelLabel: PropTypes.string,
-	confirmLabel: PropTypes.string.isRequired,
-	intent: PropTypes.string,
-	onConfirm: PropTypes.func.isRequired,
-	text: PropTypes.node.isRequired,
+type OwnProps = {
+	children: (...args: any[]) => any;
+	cancelLabel?: string;
+	confirmLabel: string;
+	intent?: string;
+	onConfirm: (...args: any[]) => any;
+	text: React.ReactNode;
 };
 
 const defaultProps = {
@@ -21,7 +20,9 @@ const defaultProps = {
 	cancelLabel: 'Cancel',
 };
 
-const ConfirmDialog = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const ConfirmDialog = (props: Props) => {
 	const { cancelLabel, children, confirmLabel, intent, onConfirm, text } = props;
 	const [isOpen, setIsOpen] = useState(false);
 	return (
@@ -33,6 +34,7 @@ const ConfirmDialog = (props) => {
 					<div className={Classes.DIALOG_FOOTER_ACTIONS}>
 						<Button onClick={() => setIsOpen(false)}>{cancelLabel}</Button>
 						<Button
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type '"none" | ... Remove this comment to see the full error message
 							intent={intent}
 							onClick={() => {
 								setIsOpen(false);
@@ -47,7 +49,5 @@ const ConfirmDialog = (props) => {
 		</React.Fragment>
 	);
 };
-
-ConfirmDialog.propTypes = propTypes;
 ConfirmDialog.defaultProps = defaultProps;
 export default ConfirmDialog;

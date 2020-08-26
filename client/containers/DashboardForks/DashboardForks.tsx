@@ -1,14 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { usePageContext } from 'utils/hooks';
 
 require('./dashboardForks.scss');
 
-const propTypes = {
-	forksData: PropTypes.object.isRequired,
+type Props = {
+	forksData: any;
 };
 
-const DashboardForks = (props) => {
+const DashboardForks = (props: Props) => {
 	const { forksData } = props;
 	const { scopeData } = usePageContext();
 
@@ -21,6 +20,4 @@ const DashboardForks = (props) => {
 		</div>
 	);
 };
-
-DashboardForks.propTypes = propTypes;
 export default DashboardForks;

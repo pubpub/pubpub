@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 import Icon from 'components/Icon/Icon';
 import { s3Upload } from 'client/utils/upload';
 
 require('./fileUploadButton.scss');
 
-const propTypes = {
-	onUploadFinish: PropTypes.func.isRequired,
-	text: PropTypes.string,
-	icon: PropTypes.string,
-	isLarge: PropTypes.bool,
-	isSmall: PropTypes.bool,
-	isMinimal: PropTypes.bool,
-	className: PropTypes.string,
-	accept: PropTypes.string,
+type OwnProps = {
+	onUploadFinish: (...args: any[]) => any;
+	text?: string;
+	icon?: string;
+	isLarge?: boolean;
+	isSmall?: boolean;
+	isMinimal?: boolean;
+	className?: string;
+	accept?: string;
 };
 
 const defaultProps = {
@@ -27,12 +26,19 @@ const defaultProps = {
 	accept: undefined,
 };
 
-class FileUploadButton extends Component {
-	constructor(props) {
+type State = any;
+
+type Props = OwnProps & typeof defaultProps;
+
+class FileUploadButton extends Component<Props, State> {
+	static defaultProps = defaultProps;
+
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			isUploading: false,
 		};
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'randKey' does not exist on type 'FileUpl... Remove this comment to see the full error message
 		this.randKey = Math.round(Math.random() * 99999);
 		this.handleUploadFinish = this.handleUploadFinish.bind(this);
 		this.handleFileSelect = this.handleFileSelect.bind(this);
@@ -63,8 +69,10 @@ class FileUploadButton extends Component {
 					text={
 						<React.Fragment>
 							{text}
+							{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'randKey' does not exist on type 'FileUpl... Remove this comment to see the full error message */}
 							<label htmlFor={this.randKey} className="file-select">
 								<input
+									// @ts-expect-error ts-migrate(2339) FIXME: Property 'randKey' does not exist on type 'FileUpl... Remove this comment to see the full error message
 									id={this.randKey}
 									name="file-input"
 									type="file"
@@ -75,6 +83,7 @@ class FileUploadButton extends Component {
 							</label>
 						</React.Fragment>
 					}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'undefined' is not assignable to type 'string... Remove this comment to see the full error message
 					icon={icon ? <Icon icon={icon} /> : null}
 					large={isLarge}
 					small={isSmall}
@@ -85,7 +94,4 @@ class FileUploadButton extends Component {
 		);
 	}
 }
-
-FileUploadButton.propTypes = propTypes;
-FileUploadButton.defaultProps = defaultProps;
 export default FileUploadButton;

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import TimeAgo from 'react-timeago';
 
 import { Avatar } from 'components';
@@ -8,11 +7,11 @@ import Editor from 'components/Editor';
 
 require('./threadComment.scss');
 
-const propTypes = {
-	commentData: PropTypes.object.isRequired,
+type Props = {
+	commentData: any;
 };
 
-const ThreadComment = (props) => {
+const ThreadComment = (props: Props) => {
 	const { commentData } = props;
 	const { author, content, createdAt } = commentData;
 
@@ -21,6 +20,7 @@ const ThreadComment = (props) => {
 	return (
 		<div className="thread-comment2-component">
 			<div className="header">
+				{/* @ts-expect-error ts-migrate(2322) FIXME: Property 'intials' does not exist on type 'Intrins... Remove this comment to see the full error message */}
 				<Avatar width={30} intials={author.initials} avatar={author.avatar} />
 				<div className="comment-title">
 					<a className="hoverline" href={`/user/${author.slug}`}>
@@ -35,6 +35,4 @@ const ThreadComment = (props) => {
 		</div>
 	);
 };
-
-ThreadComment.propTypes = propTypes;
 export default ThreadComment;

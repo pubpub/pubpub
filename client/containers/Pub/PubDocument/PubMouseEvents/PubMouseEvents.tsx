@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useReducer } from 'react';
-import PropTypes from 'prop-types';
 
 import HeaderPopover from './HeaderPopover';
 
-const propTypes = {
-	collabData: PropTypes.object.isRequired,
-	locationData: PropTypes.object.isRequired,
-	historyData: PropTypes.object.isRequired,
-	mainContentRef: PropTypes.object.isRequired,
+type Props = {
+	collabData: any;
+	locationData: any;
+	historyData: any;
+	mainContentRef: any;
 };
 
 /* Specify the types of elems we want events for */
@@ -20,7 +19,7 @@ const mouseElemTypes = [
 	},
 ];
 
-const PubMouseEvents = (props) => {
+const PubMouseEvents = (props: Props) => {
 	const { collabData, historyData, mainContentRef, locationData } = props;
 	const timeouts = useRef({});
 	const [hoverElems, hoverElemsDispatch] = useReducer((state, action) => {
@@ -53,6 +52,7 @@ const PubMouseEvents = (props) => {
 	useEffect(() => {
 		/* Query for all elements that will have event handlers */
 		const elemQueries = mouseElemTypes.map((elemType) => {
+			// @ts-expect-error ts-migrate(2769) FIXME: Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
 			return document.querySelectorAll(elemType.querySelector);
 		});
 
@@ -85,12 +85,11 @@ const PubMouseEvents = (props) => {
 					elem={hoverElems.header}
 					mainContentRef={mainContentRef}
 					timeouts={timeouts}
+					// @ts-expect-error ts-migrate(2339) FIXME: Property 'header' does not exist on type '{}'.
 					mouseLeave={mouseEventHandlers.header.leaveHandler}
 				/>
 			)}
 		</div>
 	);
 };
-
-PubMouseEvents.propTypes = propTypes;
 export default PubMouseEvents;

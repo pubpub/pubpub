@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Color from 'color';
 import { AnchorButton } from '@blueprintjs/core';
 
@@ -8,17 +7,17 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 require('./layoutBanner.scss');
 
-const propTypes = {
-	communityData: PropTypes.object.isRequired,
-	loginData: PropTypes.object.isRequired,
-	locationData: PropTypes.object.isRequired,
-	content: PropTypes.object.isRequired,
-	/* Expected content */
-	/* text, align, backgroundColor, backgroundImage, backgroundSize, backgroundHeight, showButton, buttonType, buttonText, defaultCollectionIds, buttonUrl */
+type Props = {
+	communityData: any;
+	loginData: any;
+	locationData: any;
+	content: any;
 };
 
-class LayoutBanner extends Component {
-	constructor(props) {
+type State = any;
+
+class LayoutBanner extends Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			isLoading: false,
@@ -134,6 +133,4 @@ class LayoutBanner extends Component {
 		);
 	}
 }
-
-LayoutBanner.propTypes = propTypes;
 export default LayoutBanner;

@@ -1,15 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import DropdownButton from 'components/DropdownButton/DropdownButton';
 
-const propTypes = {
-	menuItems: PropTypes.array.isRequired,
-	isSmall: PropTypes.bool.isRequired,
-	editorChangeObject: PropTypes.object.isRequired,
+type Props = {
+	menuItems: any[];
+	isSmall: boolean;
+	editorChangeObject: any;
 };
 
-const ControlsTable = (props) => {
+const ControlsTable = (props: Props) => {
 	const commands = {};
 	props.menuItems.forEach((menuItem) => {
 		commands[menuItem.title] = menuItem;
@@ -126,6 +125,4 @@ const ControlsTable = (props) => {
 		</div>
 	);
 };
-
-ControlsTable.propTypes = propTypes;
 export default ControlsTable;

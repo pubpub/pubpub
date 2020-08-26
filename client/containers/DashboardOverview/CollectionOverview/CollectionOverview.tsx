@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import dateFormat from 'dateformat';
 import { NonIdealState } from '@blueprintjs/core';
 
@@ -16,8 +15,8 @@ import OverviewTable from '../OverviewTable';
 
 require('./collectionOverview.scss');
 
-const propTypes = {
-	overviewData: PropTypes.object.isRequired,
+type Props = {
+	overviewData: any;
 };
 
 const collectionPubsByPubId = (collectionPubs) => {
@@ -28,12 +27,13 @@ const collectionPubsByPubId = (collectionPubs) => {
 	return res;
 };
 
-const CollectionOverview = (props) => {
+const CollectionOverview = (props: Props) => {
 	const { overviewData } = props;
 	const { scopeData } = usePageContext();
 	const { activeCollection } = scopeData.elements;
 	const { canManage } = scopeData.activePermissions;
 	const collectionSchema = getSchemaForKind(activeCollection.kind);
+	// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 	const label = capitalize(collectionSchema.label.singular);
 
 	const { collection, updateCollection } = useCollectionState(scopeData);
@@ -66,10 +66,15 @@ const CollectionOverview = (props) => {
 	};
 
 	return (
+		// @ts-expect-error ts-migrate(2746) FIXME: This JSX tag's 'children' prop expects a single ch... Remove this comment to see the full error message
 		<DashboardFrame
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			className="collection-overview-component"
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			title="Overview"
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			icon={collectionSchema.bpDisplayIcon}
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 			details={
 				<span>
 					This collection is a {label}. It was created on{' '}
@@ -77,6 +82,7 @@ const CollectionOverview = (props) => {
 					contains:
 				</span>
 			}
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 			controls={
 				<CollectionControls
 					overviewData={overviewData}
@@ -90,18 +96,24 @@ const CollectionOverview = (props) => {
 			<OverviewBlocks pubs={pubList} />
 			<OverviewTable
 				title="Pubs in this collection"
+				// @ts-expect-error ts-migrate(2322) FIXME: Type '(item: any) => any' is not assignable to typ... Remove this comment to see the full error message
 				generateLabel={(item) => {
+					// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 					const contextHint = collectionSchema.contextHints.find(
 						(ch) => ch.value === item.contextHint,
 					);
 					return contextHint && contextHint.label;
 				}}
 				pubList={pubList}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type '(sourceIndex: any, destinationIndex: any) =>... Remove this comment to see the full error message
 				onReorder={canManage ? reorderCollectionPubs : undefined}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type '(pub: any) => Element | null' is not assigna... Remove this comment to see the full error message
 				rowControls={renderRowControls}
 				emptyState={
 					<NonIdealState
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'false | E... Remove this comment to see the full error message
 						icon={collectionSchema.bpDisplayIcon}
+						// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 						title={`This ${collectionSchema.label.singular} doesn't contain any pubs yet!`}
 						description="Choose 'Add Pubs' from above to add some."
 					/>
@@ -110,6 +122,4 @@ const CollectionOverview = (props) => {
 		</DashboardFrame>
 	);
 };
-
-CollectionOverview.propTypes = propTypes;
 export default CollectionOverview;

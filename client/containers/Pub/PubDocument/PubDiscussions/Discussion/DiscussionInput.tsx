@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { AnchorButton, Button, Intent } from '@blueprintjs/core';
 
 import Editor, {
@@ -15,11 +14,11 @@ import { usePageContext } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';
 import { usePubContext } from 'containers/Pub/pubHooks';
 
-const propTypes = {
-	pubData: PropTypes.object.isRequired,
-	updateLocalData: PropTypes.func.isRequired,
-	discussionData: PropTypes.object.isRequired,
-	isPubBottomInput: PropTypes.bool,
+type OwnProps = {
+	pubData: any;
+	updateLocalData: (...args: any[]) => any;
+	discussionData: any;
+	isPubBottomInput?: boolean;
 };
 
 const defaultProps = {
@@ -33,10 +32,13 @@ const getPlaceholderText = (isNewThread, isPubBottomInput) => {
 	return isNewThread ? 'Add your discussion...' : 'Add a reply...';
 };
 
-const DiscussionInput = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const DiscussionInput = (props: Props) => {
 	const { discussionData, isPubBottomInput, pubData, updateLocalData } = props;
 	const { historyData, collabData, firebaseBranchRef } = usePubContext();
 	const { loginData, locationData, communityData } = usePageContext();
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 	const pubView = collabData.editorChangeObject.view;
 	const [changeObject, setChangeObject] = useState({});
 	const [isLoading, setIsLoading] = useState(false);
@@ -44,9 +46,12 @@ const DiscussionInput = (props) => {
 	const [editorKey, setEditorKey] = useState(Date.now());
 	const isNewThread = !discussionData.number;
 	useEffect(() => {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 		if (!isPubBottomInput && (isNewThread || didFocus) && changeObject.view) {
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 			changeObject.view.focus();
 		}
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 	}, [isNewThread, changeObject.view, didFocus, isPubBottomInput]);
 
 	const handlePostThreadComment = async () => {
@@ -59,7 +64,9 @@ const DiscussionInput = (props) => {
 				threadId: discussionData.thread.id,
 				pubId: pubData.id,
 				communityId: communityData.id,
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 				content: getJSON(changeObject.view),
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 				text: getText(changeObject.view) || '',
 			}),
 		});
@@ -95,9 +102,12 @@ const DiscussionInput = (props) => {
 				discussionId: discussionData.id,
 				pubId: pubData.id,
 				branchId: pubData.activeBranch.id,
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'currentKey' does not exist on type '{}'.
 				branchKey: historyData.currentKey,
 				communityId: communityData.id,
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 				content: getJSON(changeObject.view),
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 				text: getText(changeObject.view) || '',
 				initAnchorData: initAnchorData,
 				visibilityAccess: pubData.isRelease ? 'public' : 'members',
@@ -161,6 +171,7 @@ const DiscussionInput = (props) => {
 						<Editor
 							key={editorKey}
 							placeholder={getPlaceholderText(isNewThread, isPubBottomInput)}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type '(editorChangeObject: any) => void' is not as... Remove this comment to see the full error message
 							onChange={(editorChangeObject) => {
 								setChangeObject(editorChangeObject);
 							}}
@@ -178,6 +189,7 @@ const DiscussionInput = (props) => {
 						intent={Intent.PRIMARY}
 						text={isNewThread ? 'Post Discussion' : 'Post Reply'}
 						loading={isLoading}
+						// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 						disabled={!getText(changeObject.view)}
 						onClick={isNewThread ? handlePostDiscussion : handlePostThreadComment}
 						small={true}
@@ -197,7 +209,5 @@ const DiscussionInput = (props) => {
 		</div>
 	);
 };
-
-DiscussionInput.propTypes = propTypes;
 DiscussionInput.defaultProps = defaultProps;
 export default DiscussionInput;

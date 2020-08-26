@@ -1,14 +1,13 @@
 import React, { useRef, useCallback } from 'react';
-import PropTypes from 'prop-types';
 import { DOMSerializer } from 'prosemirror-model';
 import { buildSchema, getDocForHtmlString, docIsEmpty } from 'components/Editor';
 
 import { MinimalEditor } from 'components';
 
-const propTypes = {
-	initialHtmlString: PropTypes.string.isRequired,
-	onChange: PropTypes.func.isRequired, // Return HTML string of content
-	placeholder: PropTypes.string,
+type OwnProps = {
+	initialHtmlString: string;
+	onChange: (...args: any[]) => any;
+	placeholder?: string;
 };
 
 const defaultProps = {
@@ -17,7 +16,9 @@ const defaultProps = {
 
 const editorSchema = buildSchema();
 
-const SimpleEditor = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const SimpleEditor = (props: Props) => {
 	const { onChange, placeholder, initialHtmlString } = props;
 	const initialDoc = useRef(null);
 
@@ -43,6 +44,7 @@ const SimpleEditor = (props) => {
 
 	return (
 		<MinimalEditor
+			// @ts-expect-error ts-migrate(2322) FIXME: Type '({ view }: any) => void' is not assignable t... Remove this comment to see the full error message
 			onChange={handleChange}
 			placeholder={placeholder}
 			initialContent={initialDoc.current}
@@ -52,7 +54,5 @@ const SimpleEditor = (props) => {
 		/>
 	);
 };
-
-SimpleEditor.propTypes = propTypes;
 SimpleEditor.defaultProps = defaultProps;
 export default SimpleEditor;

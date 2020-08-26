@@ -31,6 +31,7 @@ const defaultProps = {
 };
 
 const PubHeaderBackground = React.forwardRef((props, ref) => {
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'className' does not exist on type '{ chi... Remove this comment to see the full error message
 	const { children, className, pubData, communityData, blur, style, safetyLayer } = props;
 	const { headerBackgroundColor, headerBackgroundImage } = pubData;
 
@@ -47,6 +48,7 @@ const PubHeaderBackground = React.forwardRef((props, ref) => {
 				className,
 			)}
 			style={style}
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'unknown' is not assignable to type 'HTMLDivE... Remove this comment to see the full error message
 			ref={ref}
 		>
 			<div className="background-element background-white-layer" />
@@ -76,6 +78,8 @@ const PubHeaderBackground = React.forwardRef((props, ref) => {
 	);
 });
 
+// @ts-expect-error ts-migrate(2559) FIXME: Type '{ children: Requireable<ReactNodeLike>; clas... Remove this comment to see the full error message
 PubHeaderBackground.propTypes = propTypes;
+// @ts-expect-error ts-migrate(2559) FIXME: Type '{ className: string; children: null; blur: b... Remove this comment to see the full error message
 PubHeaderBackground.defaultProps = defaultProps;
 export default PubHeaderBackground;

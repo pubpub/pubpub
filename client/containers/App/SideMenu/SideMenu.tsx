@@ -25,6 +25,7 @@ const SideMenu = () => {
 		{
 			title: 'Overview',
 			icon: 'home2',
+			// @ts-expect-error ts-migrate(2345) FIXME: Type '{ collectionSlug: any; pubSlug: any; }' is m... Remove this comment to see the full error message
 			href: getDashUrl({ collectionSlug: collectionSlug, pubSlug: pubSlug }),
 		},
 		// {
@@ -39,6 +40,7 @@ const SideMenu = () => {
 		{
 			title: 'Pages',
 			icon: 'page-layout',
+			// @ts-expect-error ts-migrate(2345) FIXME: Property 'subMode' is missing in type '{ collectio... Remove this comment to see the full error message
 			href: getDashUrl({
 				collectionSlug: collectionSlug,
 				pubSlug: pubSlug,
@@ -92,6 +94,7 @@ const SideMenu = () => {
 			title: 'Reviews',
 			icon: 'social-media',
 			count: activeCounts.reviewCount,
+			// @ts-expect-error ts-migrate(2345) FIXME: Property 'subMode' is missing in type '{ collectio... Remove this comment to see the full error message
 			href: getDashUrl({
 				collectionSlug: collectionSlug,
 				pubSlug: pubSlug,
@@ -122,6 +125,7 @@ const SideMenu = () => {
 		{
 			title: 'Connections',
 			icon: 'layout-auto',
+			// @ts-expect-error ts-migrate(2345) FIXME: Property 'subMode' is missing in type '{ collectio... Remove this comment to see the full error message
 			href: getDashUrl({
 				collectionSlug: collectionSlug,
 				pubSlug: pubSlug,
@@ -132,6 +136,7 @@ const SideMenu = () => {
 		{
 			title: 'Impact',
 			icon: 'dashboard',
+			// @ts-expect-error ts-migrate(2345) FIXME: Property 'subMode' is missing in type '{ collectio... Remove this comment to see the full error message
 			href: getDashUrl({
 				collectionSlug: collectionSlug,
 				pubSlug: pubSlug,
@@ -141,6 +146,7 @@ const SideMenu = () => {
 		{
 			title: 'Members',
 			icon: 'people',
+			// @ts-expect-error ts-migrate(2345) FIXME: Property 'subMode' is missing in type '{ collectio... Remove this comment to see the full error message
 			href: getDashUrl({
 				collectionSlug: collectionSlug,
 				pubSlug: pubSlug,
@@ -151,6 +157,7 @@ const SideMenu = () => {
 		{
 			title: 'Settings',
 			icon: 'cog',
+			// @ts-expect-error ts-migrate(2345) FIXME: Property 'subMode' is missing in type '{ collectio... Remove this comment to see the full error message
 			href: getDashUrl({
 				collectionSlug: collectionSlug,
 				pubSlug: pubSlug,
@@ -194,6 +201,7 @@ const SideMenu = () => {
 									href={item.href}
 									className={classNames({
 										'content-title': true,
+										// @ts-expect-error ts-migrate(2339) FIXME: Property 'children' does not exist on type '{ titl... Remove this comment to see the full error message
 										'has-children': item.children,
 										active: active,
 									})}

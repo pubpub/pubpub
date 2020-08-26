@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 import stickybits from 'stickybits';
 
@@ -15,15 +14,17 @@ import LayoutEditorBanner from './LayoutEditorBanner';
 
 require('./layoutEditor.scss');
 
-const propTypes = {
-	onChange: PropTypes.func.isRequired,
-	initialLayout: PropTypes.array.isRequired,
-	pubs: PropTypes.array.isRequired,
-	communityData: PropTypes.object.isRequired,
+type Props = {
+	onChange: (...args: any[]) => any;
+	initialLayout: any[];
+	pubs: any[];
+	communityData: any;
 };
 
-class LayoutEditor extends Component {
-	constructor(props) {
+type State = any;
+
+class LayoutEditor extends Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			layout: props.initialLayout,
@@ -34,10 +35,12 @@ class LayoutEditor extends Component {
 		this.handleRemove = this.handleRemove.bind(this);
 		this.handleMoveUp = this.handleMoveUp.bind(this);
 		this.handleMoveDown = this.handleMoveDown.bind(this);
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'stickyInstance' does not exist on type '... Remove this comment to see the full error message
 		this.stickyInstance = undefined;
 	}
 
 	componentDidMount() {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'stickyInstance' does not exist on type '... Remove this comment to see the full error message
 		this.stickyInstance = stickybits('.block-header', {
 			// TODO(ian): this is a magic number to make this work "for now" --
 			// it's the combined height of the global header and dashboard breadcrumbs
@@ -46,7 +49,9 @@ class LayoutEditor extends Component {
 	}
 
 	componentWillUnmount() {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'stickyInstance' does not exist on type '... Remove this comment to see the full error message
 		if (this.stickyInstance && this.stickyInstance.cleanUp) {
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'stickyInstance' does not exist on type '... Remove this comment to see the full error message
 			this.stickyInstance.cleanUp();
 		}
 	}
@@ -226,6 +231,4 @@ class LayoutEditor extends Component {
 		);
 	}
 }
-
-LayoutEditor.propTypes = propTypes;
 export default LayoutEditor;

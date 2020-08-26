@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Icon from 'components/Icon/Icon';
 import {
 	OverflowList,
@@ -19,15 +18,15 @@ import Media from './Media';
 
 require('./formattingBar.scss');
 
-const propTypes = {
-	editorChangeObject: PropTypes.object.isRequired,
-	hideMedia: PropTypes.bool,
-	hideBlocktypes: PropTypes.bool,
-	hideExtraFormatting: PropTypes.bool,
-	isSmall: PropTypes.bool,
-	threads: PropTypes.array,
-	footnotes: PropTypes.array,
-	citations: PropTypes.array,
+type OwnProps = {
+	editorChangeObject: any;
+	hideMedia?: boolean;
+	hideBlocktypes?: boolean;
+	hideExtraFormatting?: boolean;
+	isSmall?: boolean;
+	threads?: any[];
+	footnotes?: any[];
+	citations?: any[];
 };
 
 const defaultProps = {
@@ -40,8 +39,14 @@ const defaultProps = {
 	citations: [],
 };
 
-class FormattingBar extends Component {
-	constructor(props) {
+type State = any;
+
+type Props = OwnProps & typeof defaultProps;
+
+class FormattingBar extends Component<Props, State> {
+	static defaultProps = defaultProps;
+
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			mediaGalleryOpen: false,
@@ -174,6 +179,7 @@ class FormattingBar extends Component {
 				{/* Block Types Dropdown */}
 				{showBlockTypes && (
 					<DropdownButton
+						// @ts-expect-error ts-migrate(2769) FIXME: Type 'Element' is not assignable to type 'string'.
 						label={blockTypeItems.reduce((prev, curr) => {
 							const menuItem = menuItemsObject[curr.key] || {};
 							if (menuItem.isActive) {
@@ -221,6 +227,7 @@ class FormattingBar extends Component {
 						collapseFrom={Boundary.END}
 						observeParents={true}
 						items={formattingItems}
+						// @ts-expect-error ts-migrate(2769) FIXME: Type '(item: { key: string; title: string; icon: s... Remove this comment to see the full error message
 						visibleItemRenderer={(item) => {
 							if (item.key === 'expander') {
 								return <div key={item.key} style={{ width: '100vw' }} />;
@@ -241,6 +248,7 @@ class FormattingBar extends Component {
 								<Button
 									key={item.key}
 									aria-label={item.title}
+									// @ts-expect-error ts-migrate(2322) FIXME: Type 'undefined' is not assignable to type 'string... Remove this comment to see the full error message
 									icon={<Icon icon={item.icon} iconSize={iconSize} />}
 									active={menuItem.isActive || linkIsActive}
 									minimal={true}
@@ -289,6 +297,7 @@ class FormattingBar extends Component {
 													<MenuItem
 														key={item.key}
 														text={item.title}
+														// @ts-expect-error ts-migrate(2322) FIXME: Type 'undefined' is not assignable to type 'string... Remove this comment to see the full error message
 														icon={<Icon icon={item.icon} />}
 														onClick={() => {
 															if (insertFunction) {
@@ -390,7 +399,4 @@ class FormattingBar extends Component {
 		);
 	}
 }
-
-FormattingBar.propTypes = propTypes;
-FormattingBar.defaultProps = defaultProps;
 export default FormattingBar;

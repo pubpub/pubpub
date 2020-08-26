@@ -36,6 +36,7 @@ storiesOf('components/Header', module).add('default', () => (
 		/>
 		<div style={wrapperStyle}>
 			<Header
+				// @ts-expect-error ts-migrate(2322) FIXME: Property 'communityData' does not exist on type 'I... Remove this comment to see the full error message
 				communityData={{
 					...communityData,
 					accentColorLight: '#ffffff',
@@ -76,6 +77,7 @@ storiesOf('components/Header', module).add('default', () => (
 		</div>
 		<div style={wrapperStyle}>
 			<Header
+				// @ts-expect-error ts-migrate(2322) FIXME: Property 'communityData' does not exist on type 'I... Remove this comment to see the full error message
 				communityData={{
 					...communityData,
 					accentColorLight: '#ffffff',
@@ -105,6 +107,7 @@ storiesOf('components/Header', module).add('default', () => (
 		</div>
 		<div style={wrapperStyle}>
 			<Header
+				// @ts-expect-error ts-migrate(2322) FIXME: Property 'communityData' does not exist on type 'I... Remove this comment to see the full error message
 				communityData={{
 					...communityData,
 					accentColorLight: '#ffffff',
@@ -132,6 +135,7 @@ storiesOf('components/Header', module).add('default', () => (
 		</div>
 		<div style={wrapperStyle}>
 			<Header
+				// @ts-expect-error ts-migrate(2322) FIXME: Property 'communityData' does not exist on type 'I... Remove this comment to see the full error message
 				communityData={{
 					...communityData,
 					accentColorLight: '#ffffff',
@@ -158,6 +162,7 @@ storiesOf('components/Header', module).add('default', () => (
 		</div>
 		<div style={wrapperStyle}>
 			<Header
+				// @ts-expect-error ts-migrate(2322) FIXME: Property 'communityData' does not exist on type 'I... Remove this comment to see the full error message
 				communityData={{
 					...communityData,
 					accentColorLight: '#ffffff',

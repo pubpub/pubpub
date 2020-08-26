@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { AnchorButton, Button, Callout, Classes, Dialog } from '@blueprintjs/core';
 
 import { MinimalEditor } from 'components';
@@ -8,22 +7,26 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 require('./pubReleaseReviewDialog.scss');
 
-const propTypes = {
-	historyData: PropTypes.shape({ latestKey: PropTypes.number }).isRequired,
-	isOpen: PropTypes.bool.isRequired,
-	pubData: PropTypes.shape({
-		id: PropTypes.string,
-		releases: PropTypes.arrayOf(PropTypes.shape({})),
-		slug: PropTypes.string,
-		branches: PropTypes.array,
-	}).isRequired,
-	onClose: PropTypes.func.isRequired,
-	updatePubData: PropTypes.func.isRequired,
+type OwnProps = {
+	historyData: {
+		latestKey?: number;
+	};
+	isOpen: boolean;
+	pubData: {
+		id?: string;
+		releases?: {}[];
+		slug?: string;
+		branches?: any[];
+	};
+	onClose: (...args: any[]) => any;
+	updatePubData: (...args: any[]) => any;
 };
 
 const defaultProps = {};
 
-const PubReleaseReviewDialog = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const PubReleaseReviewDialog = (props: Props) => {
 	const { isOpen, onClose, pubData, updatePubData } = props;
 	const { communityData } = usePageContext();
 	const [noteData, setNoteData] = useState({});
@@ -38,7 +41,9 @@ const PubReleaseReviewDialog = (props) => {
 			body: JSON.stringify({
 				communityId: communityData.id,
 				pubId: pubData.id,
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'content' does not exist on type '{}'.
 				content: noteData.content,
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'text' does not exist on type '{}'.
 				text: noteData.text,
 				releaseRequested: true,
 			}),
@@ -92,6 +97,7 @@ const PubReleaseReviewDialog = (props) => {
 				<Button onClick={onClose}>Close</Button>
 				<AnchorButton
 					intent="primary"
+					// @ts-expect-error ts-migrate(2339) FIXME: Property 'number' does not exist on type 'boolean'... Remove this comment to see the full error message
 					href={`/dash/pub/${pubData.slug}/reviews/${createdReview.number}`}
 				>
 					Go to Review
@@ -117,10 +123,12 @@ const PubReleaseReviewDialog = (props) => {
 						</p>
 
 						<MinimalEditor
+							// @ts-expect-error ts-migrate(2322) FIXME: Type '(data: any) => void' is not assignable to ty... Remove this comment to see the full error message
 							onChange={(data) => {
 								setNoteData(data);
 							}}
 							focusOnLoad={true}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'undefined... Remove this comment to see the full error message
 							placeholder="Add a note for the community managers."
 						/>
 					</React.Fragment>
@@ -136,7 +144,5 @@ const PubReleaseReviewDialog = (props) => {
 		</Dialog>
 	);
 };
-
-PubReleaseReviewDialog.propTypes = propTypes;
 PubReleaseReviewDialog.defaultProps = defaultProps;
 export default PubReleaseReviewDialog;

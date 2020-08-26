@@ -1,23 +1,25 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Slider, AnchorButton, ButtonGroup, Button } from '@blueprintjs/core';
 
 import SimpleEditor from 'components/SimpleEditor/SimpleEditor';
 import Icon from 'components/Icon/Icon';
 import { s3Upload } from 'client/utils/upload';
 
-const propTypes = {
-	attrs: PropTypes.object.isRequired,
-	updateAttrs: PropTypes.func.isRequired,
-	isSmall: PropTypes.bool.isRequired,
+type Props = {
+	attrs: any;
+	updateAttrs: (...args: any[]) => any;
+	isSmall: boolean;
 };
 
-class ControlsAudio extends Component {
-	constructor(props) {
+type State = any;
+
+class ControlsAudio extends Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			isUploading: false,
 		};
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'randKey' does not exist on type 'Control... Remove this comment to see the full error message
 		this.randKey = Math.round(Math.random() * 99999);
 		this.onUploadFinish = this.onUploadFinish.bind(this);
 		this.handleAudioSelect = this.handleAudioSelect.bind(this);
@@ -101,6 +103,7 @@ class ControlsAudio extends Component {
 								onChange={(htmlString) => {
 									this.props.updateAttrs({ caption: htmlString });
 								}}
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'undefined... Remove this comment to see the full error message
 								placeholder="Enter caption..."
 							/>
 						</div>
@@ -119,6 +122,7 @@ class ControlsAudio extends Component {
 								target="_blank"
 								rel="noopener noreferrer"
 							/>
+							{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'randKey' does not exist on type 'Control... Remove this comment to see the full error message */}
 							<label htmlFor={this.randKey} className="file-select">
 								<AnchorButton
 									icon={<Icon icon="edit2" iconSize={iconSize} />}
@@ -126,6 +130,7 @@ class ControlsAudio extends Component {
 									loading={this.state.isUploading}
 								/>
 								<input
+									// @ts-expect-error ts-migrate(2339) FIXME: Property 'randKey' does not exist on type 'Control... Remove this comment to see the full error message
 									id={this.randKey}
 									name="audio"
 									type="file"
@@ -141,6 +146,4 @@ class ControlsAudio extends Component {
 		);
 	}
 }
-
-ControlsAudio.propTypes = propTypes;
 export default ControlsAudio;

@@ -25,14 +25,18 @@ export const flattenKeyables = (keyables) => {
 		const intKey = parseInt(key, 10);
 		objectWithIntKeys[intKey] = keyables[key];
 	});
-	return Object.keys(objectWithIntKeys)
-		.sort((a, b) => a - b)
-		.reduce((arr, intKey) => {
-			if (Array.isArray(keyables[intKey])) {
-				return [...arr, ...keyables[intKey]];
-			}
-			return [...arr, keyables[intKey]];
-		}, []);
+	return (
+		Object.keys(objectWithIntKeys)
+			// @ts-expect-error ts-migrate(2362) FIXME: The left-hand side of an arithmetic operation must... Remove this comment to see the full error message
+			.sort((a, b) => a - b)
+			// @ts-expect-error ts-migrate(2769) FIXME: Type 'any' is not assignable to type 'never'.
+			.reduce((arr, intKey) => {
+				if (Array.isArray(keyables[intKey])) {
+					return [...arr, ...keyables[intKey]];
+				}
+				return [...arr, keyables[intKey]];
+			}, [])
+	);
 };
 
 export const createFirebaseChange = (steps, branchId, clientId) => {

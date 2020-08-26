@@ -15,11 +15,13 @@ const NoMatch = () => {
 			<NonIdealState
 				title="Page Not Found"
 				visual="path-search"
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'null' is not assignable to type 'string | nu... Remove this comment to see the full error message
 				description={
 					loginData.id
 						? null // TODO: eventually, put text suggesting a search
 						: 'If you believe there should be a page at this URL, it may be private. Try logging in.'
 				}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'null' is not assignable to type 'Element | u... Remove this comment to see the full error message
 				action={
 					loginData.id ? null : ( // TODO: eventually, put a search box here.
 						<AnchorButton

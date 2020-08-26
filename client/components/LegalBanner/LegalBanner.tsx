@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useEffectOnce } from 'react-use';
 import { Button } from '@blueprintjs/core';
@@ -9,11 +8,11 @@ import { shouldShowGdprBanner, updateGdprConsent } from 'client/utils/legal/gdpr
 
 require('./legalBanner.scss');
 
-const propTypes = {
-	loginData: PropTypes.shape({
-		id: PropTypes.string,
-		gdprConsent: PropTypes.bool,
-	}).isRequired,
+type Props = {
+	loginData: {
+		id?: string;
+		gdprConsent?: boolean;
+	};
 };
 
 const banners = [
@@ -89,7 +88,7 @@ const banners = [
 	},
 ];
 
-const LegalBanner = (props) => {
+const LegalBanner = (props: Props) => {
 	const [bannerIndex, setBannerIndex] = useState(-1);
 	const bannerToShow = banners[bannerIndex];
 	const [allBannersToShow] = useState(banners.filter((banner) => banner.shouldShow(props)));
@@ -144,6 +143,4 @@ const LegalBanner = (props) => {
 		</div>
 	);
 };
-
-LegalBanner.propTypes = propTypes;
 export default LegalBanner;

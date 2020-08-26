@@ -1,22 +1,21 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { AttributionEditor } from 'components';
 import { usePendingChanges } from 'utils/hooks';
 
-const propTypes = {
-	canEdit: PropTypes.bool.isRequired,
-	communityData: PropTypes.shape({
-		id: PropTypes.string,
-	}).isRequired,
-	pubData: PropTypes.shape({
-		id: PropTypes.string,
-		attributions: PropTypes.array,
-	}).isRequired,
-	updatePubData: PropTypes.func.isRequired,
+type Props = {
+	canEdit: boolean;
+	communityData: {
+		id?: string;
+	};
+	pubData: {
+		id?: string;
+		attributions?: any[];
+	};
+	updatePubData: (...args: any[]) => any;
 };
 
-const PubAttributionEditor = (props) => {
+const PubAttributionEditor = (props: Props) => {
 	const { pubData, communityData, updatePubData, canEdit } = props;
 	const { pendingPromise } = usePendingChanges();
 	return (
@@ -26,6 +25,7 @@ const PubAttributionEditor = (props) => {
 				communityId: communityData.id,
 				pubId: pubData.id,
 			}}
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'undefined' is not assignable to type 'any[]'... Remove this comment to see the full error message
 			attributions={pubData.attributions}
 			canEdit={canEdit}
 			communityData={communityData}
@@ -34,6 +34,4 @@ const PubAttributionEditor = (props) => {
 		/>
 	);
 };
-
-PubAttributionEditor.propTypes = propTypes;
 export default PubAttributionEditor;

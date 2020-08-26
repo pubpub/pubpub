@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import dateFormat from 'dateformat';
 import { Button, Tag } from '@blueprintjs/core';
 
@@ -13,13 +12,13 @@ import MemberPermissionPicker from './MemberPermissionPicker';
 
 require('./memberRow.scss');
 
-const propTypes = {
-	memberData: PropTypes.object.isRequired,
-	isInvitation: PropTypes.bool,
-	isOnlyMemberInScope: PropTypes.bool,
-	isReadOnly: PropTypes.bool,
-	onUpdate: PropTypes.func,
-	onDelete: PropTypes.func,
+type OwnProps = {
+	memberData: any;
+	isInvitation?: boolean;
+	isOnlyMemberInScope?: boolean;
+	isReadOnly?: boolean;
+	onUpdate?: (...args: any[]) => any;
+	onDelete?: (...args: any[]) => any;
 };
 
 const defaultProps = {
@@ -29,6 +28,8 @@ const defaultProps = {
 	onUpdate: null,
 	onDelete: null,
 };
+
+type Props = OwnProps & typeof defaultProps;
 
 // const permissionTypes = [
 // 	{
@@ -117,7 +118,7 @@ const defaultProps = {
 // // - See all discussions and reviews
 // // - delete pubs
 
-const MemberRow = (props) => {
+const MemberRow = (props: Props) => {
 	const { memberData, isInvitation, isReadOnly, isOnlyMemberInScope, onDelete, onUpdate } = props;
 	const { scopeData, loginData } = usePageContext();
 	const [selfDestructiveAction, setSelfDestructiveAction] = useState(null);
@@ -125,17 +126,22 @@ const MemberRow = (props) => {
 	const { canAdmin } = scopeData.activePermissions;
 
 	const isOnlyMemberInCommunity = isOnlyMemberInScope && activeTargetType === 'community';
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'permissions' does not exist on type 'nev... Remove this comment to see the full error message
 	const outOfPermissionRange = !canAdmin && memberData.permissions === 'admin';
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'user' does not exist on type 'never'.
 	const user = memberData.user || { fullName: memberData.email, initials: '@' };
 	const isSelfUser = user.id && loginData.id === user.id;
 
 	const setMemberPermissions = (permissions) =>
+		// @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures.
 		onUpdate(memberData, { permissions: permissions });
 
+	// @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures.
 	const deleteMember = () => onDelete(memberData);
 
 	const commitSelfDestructiveAction = () => {
 		if (selfDestructiveAction) {
+			// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 			Promise.resolve(selfDestructiveAction.onConfirm()).then(() => window.location.reload());
 		}
 	};
@@ -145,9 +151,11 @@ const MemberRow = (props) => {
 	const handlePermissionsChange = (permissions) => {
 		const isDemotion =
 			permissionValues.indexOf(permissions) <
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'permissions' does not exist on type 'nev... Remove this comment to see the full error message
 			permissionValues.indexOf(memberData.permissions);
 		if (isSelfUser && isDemotion) {
 			setSelfDestructiveAction({
+				// @ts-expect-error ts-migrate(2345) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
 				dialogType: 'demote',
 				onConfirm: () => setMemberPermissions(permissions),
 			});
@@ -159,6 +167,7 @@ const MemberRow = (props) => {
 	const handleDeleteClick = () => {
 		if (isSelfUser) {
 			setSelfDestructiveAction({
+				// @ts-expect-error ts-migrate(2345) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
 				dialogType: 'delete',
 				onConfirm: deleteMember,
 			});
@@ -174,15 +183,18 @@ const MemberRow = (props) => {
 				className="member-permission-select bp3-elevation-3"
 				placement="bottom-end"
 				buttonProps={{
+					// @ts-expect-error ts-migrate(2322) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
 					className: 'permission-button',
 					rightIcon: 'caret-down',
 					outlined: true,
 				}}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'null | un... Remove this comment to see the full error message
 				buttonContent={`${memberData.permissions}`}
 			>
 				<MemberPermissionPicker
 					activeTargetType={activeTargetType}
 					canAdmin={canAdmin}
+					// @ts-expect-error ts-migrate(2339) FIXME: Property 'permissions' does not exist on type 'nev... Remove this comment to see the full error message
 					activePermission={memberData.permissions}
 					onSelect={handlePermissionsChange}
 				/>
@@ -210,8 +222,10 @@ const MemberRow = (props) => {
 		<div className="member-row-component">
 			{selfDestructiveAction && (
 				<SelfDestructiveActionDialog
+					// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 					key={`self-destructive-${selfDestructiveAction.dialogType}`}
 					isOpen={true}
+					// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 					dialogType={selfDestructiveAction.dialogType}
 					onConfirm={commitSelfDestructiveAction}
 					onCancel={cancelSelfDestructiveAction}
@@ -231,18 +245,18 @@ const MemberRow = (props) => {
 			)}
 			<div className="added">
 				{isInvitation ? 'Invited' : 'Added'}{' '}
+				{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'createdAt' does not exist on type 'never... Remove this comment to see the full error message */}
 				{dateFormat(memberData.createdAt, 'mmm dd, yyyy')}
 			</div>
 			{!(isReadOnly || outOfPermissionRange) && renderControls()}
 			{(isReadOnly || outOfPermissionRange) && (
 				<Tag minimal large>
+					{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'permissions' does not exist on type 'nev... Remove this comment to see the full error message */}
 					Can {memberData.permissions}
 				</Tag>
 			)}
 		</div>
 	);
 };
-
-MemberRow.propTypes = propTypes;
 MemberRow.defaultProps = defaultProps;
 export default MemberRow;

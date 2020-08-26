@@ -41,7 +41,9 @@ export const s3Upload = (file, progressEvent, finishEvent, index) => {
 		formData.append('key', filename);
 		formData.append('AWSAccessKeyId', 'AKIAIUXFM6YJQGAV7GRQ');
 		formData.append('acl', 'public-read');
+		// @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
 		formData.append('policy', JSON.parse(this.responseText).policy);
+		// @ts-expect-error ts-migrate(2683) FIXME: 'this' implicitly has type 'any' because it does n... Remove this comment to see the full error message
 		formData.append('signature', JSON.parse(this.responseText).signature);
 		formData.append('Content-Type', fileType);
 		formData.append('success_action_status', '200');

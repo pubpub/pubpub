@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Tab, Tabs } from '@blueprintjs/core';
 
 import { formatDate } from 'utils/dates';
@@ -16,8 +15,8 @@ import {
 
 require('./assignDoiPreview.scss');
 
-const propTypes = {
-	crossrefDepositRecord: PropTypes.object.isRequired,
+type OwnProps = {
+	crossrefDepositRecord: any;
 };
 const defaultProps = {};
 
@@ -83,6 +82,7 @@ const renderPublicationDate = (publication_date, title = 'Publication Date') => 
 	return (
 		<>
 			<dt>{title}</dt>
+			{/* @ts-expect-error ts-migrate(2769) FIXME: Type 'any[]' is not assignable to type 'string'. */}
 			<dd>{formatDate(new Date([month, day, year]))}</dd>
 		</>
 	);
@@ -302,7 +302,9 @@ const renderSupplementPreview = (body) => {
 	);
 };
 
-function AssignDoiPreview(props) {
+type Props = OwnProps & typeof defaultProps;
+
+function AssignDoiPreview(props: Props) {
 	const [selectedTab, setSelectedTab] = useState('preview');
 	const { crossrefDepositRecord } = props;
 	const body = getDepositBody(crossrefDepositRecord);
@@ -344,6 +346,7 @@ function AssignDoiPreview(props) {
 
 	return (
 		<Tabs
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'number' is not assignable to type 'SetStateA... Remove this comment to see the full error message
 			onChange={setSelectedTab}
 			selectedTabId={selectedTab}
 			className="assign-doi-preview-component"
@@ -353,8 +356,6 @@ function AssignDoiPreview(props) {
 		</Tabs>
 	);
 }
-
-AssignDoiPreview.propTypes = propTypes;
 AssignDoiPreview.defaultProps = defaultProps;
 
 export default AssignDoiPreview;

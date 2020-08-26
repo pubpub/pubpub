@@ -7,8 +7,10 @@ import Chart from './Chart';
 
 require('./adminDashboard.scss');
 
-class AdminDashboard extends React.Component {
-	constructor(props) {
+type State = any;
+
+class AdminDashboard extends React.Component<{}, State> {
+	constructor(props: {}) {
 		super(props);
 		this.state = {
 			pubPubData: {},

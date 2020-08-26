@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
 	Icon,
 	ProgressBar,
@@ -13,25 +12,28 @@ import {
 
 import { getPotentialLabelsForFile } from './formats';
 
-const propTypes = {
-	file: PropTypes.shape({
-		clientPath: PropTypes.string,
-		state: PropTypes.string,
-		loaded: PropTypes.number,
-		total: PropTypes.number,
-		label: PropTypes.string,
-	}).isRequired,
-	onLabelFile: PropTypes.func.isRequired,
-	onDelete: PropTypes.func.isRequired,
+type Props = {
+	file: {
+		clientPath?: string;
+		state?: string;
+		loaded?: number;
+		total?: number;
+		label?: string;
+	};
+	onLabelFile: (...args: any[]) => any;
+	onDelete: (...args: any[]) => any;
 };
 
 require('./fileImportEntry.scss');
 
-const FileImportEntry = (props) => {
+const FileImportEntry = (props: Props) => {
 	const { file, onDelete, onLabelFile } = props;
 	const { loaded, total, state, clientPath, label } = file;
+	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const displayTitleBreak = Math.max(clientPath.length - 5, 0);
+	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const displayTitleStart = clientPath.slice(0, displayTitleBreak);
+	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const displayTitleEnd = clientPath.slice(displayTitleBreak);
 
 	const renderProgressContent = () => {
@@ -49,8 +51,10 @@ const FileImportEntry = (props) => {
 		return (
 			<React.Fragment>
 				<span className="screenreader-only">
+					{/* @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'. */}
 					{Math.round((100 * loaded) / total)}% complete
 				</span>
+				{/* @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'. */}
 				<ProgressBar value={state === 'uploading' ? loaded / total : undefined} />
 			</React.Fragment>
 		);
@@ -71,6 +75,7 @@ const FileImportEntry = (props) => {
 							const text = potentialLabel === 'none' ? <i>(none)</i> : potentialLabel;
 							return (
 								<MenuItem
+									// @ts-expect-error ts-migrate(2322) FIXME: Type 'false' is not assignable to type 'string | n... Remove this comment to see the full error message
 									key={text}
 									text={text}
 									onClick={() => onLabelFile(potentialLabel)}
@@ -116,6 +121,4 @@ const FileImportEntry = (props) => {
 		</div>
 	);
 };
-
-FileImportEntry.propTypes = propTypes;
 export default FileImportEntry;

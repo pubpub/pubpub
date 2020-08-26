@@ -3,10 +3,10 @@
  * a collection that represents a structured collection of content like a journal issue or book.
  */
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { Button, FormGroup, InputGroup, NonIdealState, ButtonGroup } from '@blueprintjs/core';
 
 import ConfirmDialog from 'components/ConfirmDialog/ConfirmDialog';
+// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module 'types/collection' or its corre... Remove this comment to see the full error message
 import collectionType from 'types/collection';
 import { enumerateMetadataFields, normalizeMetadataToKind } from 'utils/collections/metadata';
 import { getSchemaForKind } from 'utils/collections/schemas';
@@ -14,16 +14,18 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 require('./collectionMetadataEditor.scss');
 
-const propTypes = {
-	collection: collectionType.isRequired,
-	communityData: PropTypes.object.isRequired,
-	onUpdateCollection: PropTypes.func.isRequired,
+type Props = {
+	collection: collectionType;
+	communityData: any;
+	onUpdateCollection: (...args: any[]) => any;
 };
 
 const validateField = ({ type, value }) => !value || !type || type.validate(value);
 
-class CollectionMetadataEditor extends React.Component {
-	constructor(props) {
+type State = any;
+
+class CollectionMetadataEditor extends React.Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		const initialMetadata = this.normalizeMetadata(props.collection.metadata || {});
 		this.state = {
@@ -146,6 +148,7 @@ class CollectionMetadataEditor extends React.Component {
 					minimal
 					icon="lightbulb"
 					disabled={value === derivedHintValue}
+					// @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
 					onClick={() => this.handleInputChange(name, derivedHintValue)}
 				>
 					Use default
@@ -168,6 +171,7 @@ class CollectionMetadataEditor extends React.Component {
 					value={derivedValue || value || ''}
 					onChange={(event) => this.handleInputChange(name, event.target.value, pattern)}
 					intent={validateField(field) ? 'none' : 'danger'}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'false' is not assignable to type 'Element | ... Remove this comment to see the full error message
 					rightElement={this.renderFieldRightElement(field)}
 				/>
 			</FormGroup>
@@ -183,6 +187,7 @@ class CollectionMetadataEditor extends React.Component {
 			return (
 				<NonIdealState
 					className="fields-empty-state"
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'false | E... Remove this comment to see the full error message
 					icon={getSchemaForKind(kind).bpDisplayIcon || 'help'}
 					title="This collection type has no metadata"
 				/>
@@ -216,6 +221,4 @@ class CollectionMetadataEditor extends React.Component {
 		);
 	}
 }
-
-CollectionMetadataEditor.propTypes = propTypes;
 export default CollectionMetadataEditor;

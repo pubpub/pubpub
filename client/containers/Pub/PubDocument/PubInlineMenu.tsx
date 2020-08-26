@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import uuidv4 from 'uuid/v4';
 import { Button } from '@blueprintjs/core';
 
@@ -11,12 +10,11 @@ import { pubUrl } from 'utils/canonicalUrls';
 
 require('./pubInlineMenu.scss');
 
-const propTypes = {
-	pubData: PropTypes.object.isRequired,
-	collabData: PropTypes.object.isRequired,
-	historyData: PropTypes.object.isRequired,
-	// onNewHighlightDiscussion: PropTypes.func,
-	openLinkMenu: PropTypes.func,
+type OwnProps = {
+	pubData: any;
+	collabData: any;
+	historyData: any;
+	openLinkMenu?: (...args: any[]) => any;
 };
 
 const defaultProps = {
@@ -30,7 +28,9 @@ const shouldOpenBelowSelection = () => {
 	);
 };
 
-const PubInlineMenu = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const PubInlineMenu = (props: Props) => {
 	const { pubData, collabData, historyData } = props;
 	const { communityData, scopeData } = usePageContext();
 	const { canView, canCreateDiscussions } = scopeData.activePermissions;
@@ -73,6 +73,7 @@ const PubInlineMenu = (props) => {
 	// 	return null;
 	// }
 	return (
+		// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type '"absolute... Remove this comment to see the full error message
 		<div className="pub-inline-menu-component bp3-elevation-2" style={menuStyle}>
 			{!pubData.isReadOnly &&
 				formattingItems.map((item) => {
@@ -111,20 +112,22 @@ const PubInlineMenu = (props) => {
 				/>
 			)}
 			<ClickToCopyButton
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				className="click-to-copy"
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				icon="clipboard"
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				copyString={pubUrl(communityData, pubData, {
 					isDraft: !pubData.isRelease,
 					releaseNumber: pubData.releaseNumber,
 					historyKey: historyData.currentKey,
 					query: { from: selection.from, to: selection.to },
 				})}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				beforeCopyPrompt="Copy a permalink"
 			/>
 		</div>
 	);
 };
-
-PubInlineMenu.propTypes = propTypes;
 PubInlineMenu.defaultProps = defaultProps;
 export default PubInlineMenu;

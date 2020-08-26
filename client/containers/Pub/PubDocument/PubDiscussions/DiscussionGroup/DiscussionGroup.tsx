@@ -1,24 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import DiscussionNav from './DiscussionNav';
 import Discussion from '../Discussion';
 
 require('./discussionGroup.scss');
 
-const propTypes = {
-	pubData: PropTypes.object.isRequired,
-	historyData: PropTypes.object.isRequired,
-	discussions: PropTypes.array.isRequired,
-	mountClassName: PropTypes.string.isRequired,
-	updateLocalData: PropTypes.func.isRequired,
-	sideContentRef: PropTypes.object.isRequired,
-	mainContentRef: PropTypes.object.isRequired,
-	prevNewDiscussionIds: PropTypes.object.isRequired,
-	prevConvertedDiscussionIds: PropTypes.object.isRequired,
+type Props = {
+	pubData: any;
+	historyData: any;
+	discussions: any[];
+	mountClassName: string;
+	updateLocalData: (...args: any[]) => any;
+	sideContentRef: any;
+	mainContentRef: any;
+	prevNewDiscussionIds: any;
+	prevConvertedDiscussionIds: any;
 };
 
-const DiscussionGroup = (props) => {
+const DiscussionGroup = (props: Props) => {
 	const {
 		pubData,
 		historyData,
@@ -75,6 +74,7 @@ const DiscussionGroup = (props) => {
 	useEffect(() => {
 		/* This effect is due to a Chrome rendering bug that causes */
 		/* the text to not reflow when moving back to position: absolute */
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'style' does not exist on type 'Element'.
 		document.getElementsByClassName(mountClassName)[0].style.display =
 			activeThread && isExpanded ? 'block' : 'inline';
 	}, [mountClassName, isExpanded, activeThread]);
@@ -100,6 +100,7 @@ const DiscussionGroup = (props) => {
 			tabIndex={-1}
 		>
 			<DiscussionNav
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'false' is not assignable to type 'string | n... Remove this comment to see the full error message
 				key={isExpanded && activeThread}
 				discussions={discussions}
 				activeThreadHover={activeThreadHover}
@@ -111,15 +112,17 @@ const DiscussionGroup = (props) => {
 			/>
 			{activeDiscussionData && (
 				<Discussion
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 					pubData={pubData}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 					historyData={historyData}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 					discussionData={activeDiscussionData}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type '(...args: any[]) => any' is not assignable t... Remove this comment to see the full error message
 					updateLocalData={updateLocalData}
 				/>
 			)}
 		</span>
 	);
 };
-
-DiscussionGroup.propTypes = propTypes;
 export default DiscussionGroup;

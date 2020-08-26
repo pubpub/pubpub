@@ -1,16 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Button } from 'reakit/Button';
 
 import { Icon } from 'components';
 
 require('./bylineEditButton.scss');
 
-const propTypes = {
-	onClick: PropTypes.func.isRequired,
+type Props = {
+	onClick: (...args: any[]) => any;
 };
 
-const BylineEditButton = (props) => {
+const BylineEditButton = (props: Props) => {
 	const { onClick } = props;
 	return (
 		<Button className="byline-edit-button-component" onClick={onClick} aria-label="Edit byline">
@@ -20,6 +19,4 @@ const BylineEditButton = (props) => {
 		</Button>
 	);
 };
-
-BylineEditButton.propTypes = propTypes;
 export default BylineEditButton;

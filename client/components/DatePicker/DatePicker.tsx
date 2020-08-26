@@ -6,13 +6,12 @@
  * formatDate(), or the getLocalDateMatchingUtcCalendarDate() utility.
  */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import { InputGroup } from '@blueprintjs/core';
 import dateFormat from 'dateformat';
 
-const propTypes = {
-	onSelectDate: PropTypes.func.isRequired,
-	date: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
+type Props = {
+	onSelectDate: (...args: any[]) => any;
+	date: string | any;
 };
 
 const isValidDate = (date) => !Number.isNaN(date.valueOf());
@@ -55,7 +54,7 @@ const getEarlyRenderableProps = (dateProp, hasMounted) => {
 	return {};
 };
 
-const DatePicker = (props) => {
+const DatePicker = (props: Props) => {
 	const { date: dateProp, onSelectDate, ...restProps } = props;
 	const inputRef = useRef();
 	const [hasMounted, setHasMounted] = useState(false);
@@ -67,6 +66,7 @@ const DatePicker = (props) => {
 		if (input) {
 			try {
 				const value = getInputValueFromDateProp(dateProp);
+				// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 				input.value = value;
 			} catch (_) {
 				// Don't do anything with an invalid date
@@ -92,11 +92,10 @@ const DatePicker = (props) => {
 			{...restProps}
 			{...getEarlyRenderableProps(dateProp, hasMounted)}
 			type="date"
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'MutableRefObject<undefined>' provides no mat... Remove this comment to see the full error message
 			inputRef={inputRef}
 			onInput={handleInput}
 		/>
 	);
 };
-
-DatePicker.propTypes = propTypes;
 export default DatePicker;

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Menu, MenuItem } from '@blueprintjs/core';
 import { Icon } from 'components';
 import MediaImage from './MediaImage';
@@ -14,14 +13,16 @@ import MediaSoundcloud from './MediaSoundcloud';
 
 require('./media.scss');
 
-const propTypes = {
-	onInsert: PropTypes.func.isRequired,
-	isSmall: PropTypes.bool.isRequired,
-	editorChangeObject: PropTypes.object.isRequired,
+type Props = {
+	onInsert: (...args: any[]) => any;
+	isSmall: boolean;
+	editorChangeObject: any;
 };
 
-class Media extends Component {
-	constructor(props) {
+type State = any;
+
+class Media extends Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			activeItem: 'Image',
@@ -121,6 +122,4 @@ class Media extends Component {
 		);
 	}
 }
-
-Media.propTypes = propTypes;
 export default Media;

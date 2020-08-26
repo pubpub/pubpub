@@ -1,21 +1,22 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 
 import Icon from 'components/Icon/Icon';
 import { renderLatexString } from 'client/utils/editor';
 
-const propTypes = {
-	attrs: PropTypes.object.isRequired,
-	updateAttrs: PropTypes.func.isRequired,
-	changeNode: PropTypes.func.isRequired,
-	selectedNode: PropTypes.object.isRequired,
-	editorChangeObject: PropTypes.object.isRequired,
-	isSmall: PropTypes.bool.isRequired,
+type Props = {
+	attrs: any;
+	updateAttrs: (...args: any[]) => any;
+	changeNode: (...args: any[]) => any;
+	selectedNode: any;
+	editorChangeObject: any;
+	isSmall: boolean;
 };
 
-class ControlsEquation extends Component {
-	constructor(props) {
+type State = any;
+
+class ControlsEquation extends Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			isEditing: false,
@@ -136,6 +137,4 @@ class ControlsEquation extends Component {
 		);
 	}
 }
-
-ControlsEquation.propTypes = propTypes;
 export default ControlsEquation;

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Button, Spinner } from '@blueprintjs/core';
 import { Button as RKButton } from 'reakit/Button';
@@ -8,18 +7,18 @@ import { Avatar, ImageUpload, Icon } from 'components';
 
 require('./editableAvatar.scss');
 
-const propTypes = {
-	attribution: PropTypes.shape({
-		avatar: PropTypes.string,
-		user: PropTypes.shape({
-			initials: PropTypes.string,
-		}),
-	}).isRequired,
-	onUpdateAvatar: PropTypes.func.isRequired,
-	width: PropTypes.number.isRequired,
+type Props = {
+	attribution: {
+		avatar?: string;
+		user?: {
+			initials?: string;
+		};
+	};
+	onUpdateAvatar: (...args: any[]) => any;
+	width: number;
 };
 
-const EditableAvatar = (props) => {
+const EditableAvatar = (props: Props) => {
 	const {
 		attribution: { avatar, user },
 		onUpdateAvatar,
@@ -48,6 +47,7 @@ const EditableAvatar = (props) => {
 					style={{ borderRadius: width / 2 }}
 					onClick={selectImage}
 				>
+					{/* @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'. */}
 					<Avatar width={width} initials={user.initials} avatar={avatar} />
 					<div
 						className={classNames(
@@ -76,12 +76,13 @@ const EditableAvatar = (props) => {
 
 	return (
 		<div className="editable-avatar-component">
+			{/* @ts-expect-error ts-migrate(2322) FIXME: Type '(image: any) => void' is not assignable to t... Remove this comment to see the full error message */}
 			<ImageUpload onImageSelect={handleImageSelect} onNewImage={handleNewImage}>
+				{/* @ts-expect-error ts-migrate(2578) FIXME: Unused '@ts-expect-error' directive. */}
+				{/* @ts-expect-error ts-migrate(2322) FIXME: Type '({ selectImage, clearImage }: { selectImage:... Remove this comment to see the full error message */}
 				{renderControls}
 			</ImageUpload>
 		</div>
 	);
 };
-
-EditableAvatar.propTypes = propTypes;
 export default EditableAvatar;

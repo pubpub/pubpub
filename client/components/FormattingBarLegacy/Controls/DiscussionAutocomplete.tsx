@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 import fuzzysearch from 'fuzzysearch';
@@ -7,10 +6,10 @@ import Avatar from 'components/Avatar/Avatar';
 
 require('./discussionAutocomplete.scss');
 
-const propTypes = {
-	threads: PropTypes.array.isRequired,
-	onSelect: PropTypes.func,
-	placeholder: PropTypes.string,
+type OwnProps = {
+	threads: any[];
+	onSelect?: (...args: any[]) => any;
+	placeholder?: string;
 };
 
 const defaultProps = {
@@ -18,8 +17,14 @@ const defaultProps = {
 	placeholder: 'Select a discussion thread...',
 };
 
-class DiscussionAutocomplete extends Component {
-	constructor(props) {
+type State = any;
+
+type Props = OwnProps & typeof defaultProps;
+
+class DiscussionAutocomplete extends Component<Props, State> {
+	static defaultProps = defaultProps;
+
+	constructor(props: Props) {
 		super(props);
 		this.getFilteredItems = this.getFilteredItems.bind(this);
 		this.state = {
@@ -30,7 +35,7 @@ class DiscussionAutocomplete extends Component {
 		this.handleSelect = this.handleSelect.bind(this);
 	}
 
-	componentWillReceiveProps(nextProps) {
+	componentWillReceiveProps(nextProps: Props) {
 		this.setState({
 			items: this.getFilteredItems(nextProps.threads, ''),
 		});
@@ -97,6 +102,7 @@ class DiscussionAutocomplete extends Component {
 					inputValueRenderer={(item) => {
 						return item.title;
 					}}
+					// @ts-expect-error ts-migrate(2339) FIXME: Property 'isActive' does not exist on type 'IItemR... Remove this comment to see the full error message
 					itemRenderer={(item, { handleClick, isActive }) => {
 						const discussion = item[0];
 						return (
@@ -137,7 +143,4 @@ class DiscussionAutocomplete extends Component {
 		);
 	}
 }
-
-DiscussionAutocomplete.propTypes = propTypes;
-DiscussionAutocomplete.defaultProps = defaultProps;
 export default DiscussionAutocomplete;

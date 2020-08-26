@@ -28,6 +28,7 @@ const blockTypes = [
 ];
 
 const BlockTypeSelector = React.forwardRef((props, ref) => {
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'editorChangeObject' does not exist on ty... Remove this comment to see the full error message
 	const { editorChangeObject, isSmall, ...restProps } = props;
 	const { menuItems = [] } = editorChangeObject;
 
@@ -55,9 +56,11 @@ const BlockTypeSelector = React.forwardRef((props, ref) => {
 
 	return (
 		<CommandMenu
+			// @ts-expect-error ts-migrate(2322) FIXME: Property 'className' does not exist on type 'Intri... Remove this comment to see the full error message
 			className="block-type-selector-menu"
 			aria-label="Choose text formatting"
 			ref={ref}
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'hideInMenu' does not exist on type '{ ke... Remove this comment to see the full error message
 			commands={blockTypes.filter((type) => !type.hideInMenu)}
 			disclosure={renderDisclosure}
 			editorChangeObject={editorChangeObject}
@@ -66,5 +69,6 @@ const BlockTypeSelector = React.forwardRef((props, ref) => {
 	);
 });
 
+// @ts-expect-error ts-migrate(2559) FIXME: Type '{ isSmall: Validator<boolean>; editorChangeO... Remove this comment to see the full error message
 BlockTypeSelector.propTypes = propTypes;
 export default BlockTypeSelector;

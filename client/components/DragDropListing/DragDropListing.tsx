@@ -2,22 +2,21 @@
  * Manages a drag-and-droppable listing of pubs using react-beautiful-dnd.
  */
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
 require('./dragDropListing.scss');
 
-const propTypes = {
-	className: PropTypes.string,
-	disabled: PropTypes.bool,
-	droppableId: PropTypes.string.isRequired,
-	droppableType: PropTypes.string.isRequired,
-	itemId: PropTypes.func,
-	items: PropTypes.arrayOf(PropTypes.object).isRequired,
-	renderEmptyState: PropTypes.func,
-	renderItem: PropTypes.func.isRequired,
-	withDragHandles: PropTypes.bool,
+type OwnProps = {
+	className?: string;
+	disabled?: boolean;
+	droppableId: string;
+	droppableType: string;
+	itemId?: (...args: any[]) => any;
+	items: any[];
+	renderEmptyState?: (...args: any[]) => any;
+	renderItem: (...args: any[]) => any;
+	withDragHandles?: boolean;
 };
 
 const defaultProps = {
@@ -28,7 +27,9 @@ const defaultProps = {
 	itemId: (item) => item.id,
 };
 
-const DragDropListing = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const DragDropListing = (props: Props) => {
 	const {
 		className,
 		droppableId,
@@ -49,10 +50,14 @@ const DragDropListing = (props) => {
 					role="list"
 					ref={droppableProvided.innerRef}
 				>
+					{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'length' does not exist on type 'never'. */}
 					{renderEmptyState && items.length === 0 && (
+						// @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures.
 						<div className="empty-state-container">{renderEmptyState()}</div>
 					)}
+					{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'map' does not exist on type 'never'. */}
 					{items.map((item, index) => {
+						// @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures.
 						const id = itemId(item);
 						return (
 							<Draggable
@@ -82,6 +87,7 @@ const DragDropListing = (props) => {
 											{...draggableProps}
 											{...effectiveDragHandleProps}
 										>
+											{/* @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures. */}
 											{renderItem(
 												item,
 												withDragHandles && dragHandleProps,
@@ -99,8 +105,6 @@ const DragDropListing = (props) => {
 		</Droppable>
 	);
 };
-
-DragDropListing.propTypes = propTypes;
 DragDropListing.defaultProps = defaultProps;
 
 export default DragDropListing;

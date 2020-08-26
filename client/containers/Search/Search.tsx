@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import algoliasearch from 'algoliasearch';
 import { NonIdealState, Spinner, InputGroup, Button, Tabs, Tab } from '@blueprintjs/core';
 import dateFormat from 'dateformat';
@@ -12,8 +11,8 @@ import { usePageContext, useThrottled } from 'utils/hooks';
 
 require('./search.scss');
 
-const propTypes = {
-	searchData: PropTypes.object.isRequired,
+type Props = {
+	searchData: any;
 };
 
 const getSearchPath = (query, page, mode) => {
@@ -40,7 +39,7 @@ const updateHistory = (query, page, mode) => {
 	window.history.replaceState({}, '', getSearchPath(query, page, mode));
 };
 
-const Search = (props) => {
+const Search = (props: Props) => {
 	const { searchData } = props;
 	const { locationData, communityData } = usePageContext();
 	const [searchQuery, setSearchQuery] = useState(locationData.query.q || '');
@@ -66,17 +65,23 @@ const Search = (props) => {
 			if (mode === 'pages') {
 				key = searchData.pagesSearchKey;
 			}
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'SearchClient' is not assignable to type 'und... Remove this comment to see the full error message
 			clientRef.current = algoliasearch(searchData.searchId, key);
+			// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 			indexRef.current = clientRef.current.initIndex(mode);
 		}
 	};
 
 	useEffect(() => {
+		// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 		inputRef.current.focus();
 		/* This inputRef manipulation is to ensure that the cursor starts */
 		/* at the end of the text in the search input */
+		// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 		const val = inputRef.current.value;
+		// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 		inputRef.current.value = '';
+		// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 		inputRef.current.value = val;
 	}, []); /* eslint-disable-line react-hooks/exhaustive-deps */
 
@@ -88,6 +93,7 @@ const Search = (props) => {
 		if (throttledSearchQuery.length > 0) {
 			setIsLoading(true);
 
+			// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 			indexRef.current
 				.search(throttledSearchQuery, {
 					page: page,
@@ -140,6 +146,7 @@ const Search = (props) => {
 							value={searchQuery}
 							onChange={handleSearchChange}
 							rightElement={isLoading && <Spinner size={35} />}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'MutableRefObject<null>' provides no match fo... Remove this comment to see the full error message
 							inputRef={inputRef}
 						/>
 					</div>
@@ -160,6 +167,7 @@ const Search = (props) => {
 				<div className="row">
 					<div className="col-12">
 						{!searchResults.length && searchQuery && !isLoading && (
+							// @ts-expect-error ts-migrate(2322) FIXME: Property 'visual' does not exist on type 'Intrinsi... Remove this comment to see the full error message
 							<NonIdealState title="No Results" visual="search" />
 						)}
 						{!!searchResults.length && (
@@ -170,44 +178,57 @@ const Search = (props) => {
 									let keyId;
 									let isPublic;
 									const resizedBannerImage = getResizedUrl(
+										// @ts-expect-error ts-migrate(2339) FIXME: Property 'avatar' does not exist on type 'never'.
 										item.avatar,
 										'fit-in',
 										'800x0',
 									);
 									const resizedCommunityLogo = getResizedUrl(
+										// @ts-expect-error ts-migrate(2339) FIXME: Property 'communityAvatar' does not exist on type ... Remove this comment to see the full error message
 										item.communityAvatar,
 										'fit-in',
 										'125x35',
 									);
 
 									if (mode === 'pubs') {
+										// @ts-expect-error ts-migrate(2339) FIXME: Property 'communityDomain' does not exist on type ... Remove this comment to see the full error message
 										link = `https://${item.communityDomain}/pub/${item.slug}`;
+										// @ts-expect-error ts-migrate(2339) FIXME: Property 'avatar' does not exist on type 'never'.
 										bannerStyle = item.avatar
 											? {
 													backgroundImage: `url("${resizedBannerImage}")`,
 											  }
 											: {
+													// @ts-expect-error ts-migrate(2339) FIXME: Property 'title' does not exist on type 'never'.
 													background: generatePubBackground(item.title),
 											  };
+										// @ts-expect-error ts-migrate(2339) FIXME: Property 'pubId' does not exist on type 'never'.
 										keyId = item.pubId;
+										// @ts-expect-error ts-migrate(2339) FIXME: Property 'branchIsPublic' does not exist on type '... Remove this comment to see the full error message
 										isPublic = item.branchIsPublic;
 									}
 									if (mode === 'pages') {
+										// @ts-expect-error ts-migrate(2339) FIXME: Property 'communityDomain' does not exist on type ... Remove this comment to see the full error message
 										link = `https://${item.communityDomain}/${item.slug}`;
+										// @ts-expect-error ts-migrate(2339) FIXME: Property 'avatar' does not exist on type 'never'.
 										bannerStyle = item.avatar
 											? {
 													backgroundImage: `url("${resizedBannerImage}")`,
 											  }
 											: {
+													// @ts-expect-error ts-migrate(2339) FIXME: Property 'title' does not exist on type 'never'.
 													background: generatePageBackground(item.title),
 											  };
+										// @ts-expect-error ts-migrate(2339) FIXME: Property 'pageId' does not exist on type 'never'.
 										keyId = item.pageId;
+										// @ts-expect-error ts-migrate(2339) FIXME: Property 'isPublic' does not exist on type 'never'... Remove this comment to see the full error message
 										isPublic = item.isPublic;
 									}
 
 									return (
 										<div className={`result ${mode}`} key={`result-${keyId}`}>
 											<div>
+												{/* @ts-expect-error ts-migrate(2322) FIXME: Property 'alt' does not exist on type 'DetailedHTM... Remove this comment to see the full error message */}
 												<a href={link} alt={item.title}>
 													<div
 														className="banner-image"
@@ -219,31 +240,39 @@ const Search = (props) => {
 												<div className="title">
 													<a
 														href={link}
+														// @ts-expect-error ts-migrate(2322) FIXME: Property 'alt' does not exist on type 'DetailedHTM... Remove this comment to see the full error message
 														alt={item.title}
 														className="pub-title"
 													>
+														{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'title' does not exist on type 'never'. */}
 														{item.title}
 														{!isPublic && <Icon icon="lock2" />}
 													</a>
 													{locationData.isBasePubPub && (
 														<div className="community-title">
 															<a
+																// @ts-expect-error ts-migrate(2339) FIXME: Property 'communityDomain' does not exist on type ... Remove this comment to see the full error message
 																href={`https://${item.communityDomain}`}
+																// @ts-expect-error ts-migrate(2322) FIXME: Property 'alt' does not exist on type 'DetailedHTM... Remove this comment to see the full error message
 																alt={item.communityTitle}
 																style={{
 																	backgroundColor:
+																		// @ts-expect-error ts-migrate(2339) FIXME: Property 'communityColor' does not exist on type '... Remove this comment to see the full error message
 																		item.communityColor,
+																	// @ts-expect-error ts-migrate(2339) FIXME: Property 'communityTextColor' does not exist on ty... Remove this comment to see the full error message
 																	color: item.communityTextColor,
 																}}
 															>
 																{resizedCommunityLogo && (
 																	<img
+																		// @ts-expect-error ts-migrate(2339) FIXME: Property 'communityTitle' does not exist on type '... Remove this comment to see the full error message
 																		alt={`${item.communityTitle} logo`}
 																		src={resizedCommunityLogo}
 																	/>
 																)}
 																{!resizedCommunityLogo && (
 																	<span>
+																		{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'communityTitle' does not exist on type '... Remove this comment to see the full error message */}
 																		{item.communityTitle}
 																	</span>
 																)}
@@ -254,15 +283,20 @@ const Search = (props) => {
 												{mode === 'pubs' && (
 													<div className="byline">
 														{dateFormat(
+															// @ts-expect-error ts-migrate(2339) FIXME: Property 'customPublishedAt' does not exist on typ... Remove this comment to see the full error message
 															item.customPublishedAt ||
+																// @ts-expect-error ts-migrate(2339) FIXME: Property 'branchCreatedAt' does not exist on type ... Remove this comment to see the full error message
 																item.branchCreatedAt,
 															'mmm dd, yyyy',
 														)}
+														{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'byline' does not exist on type 'never'. */}
 														{item.byline && <span> · </span>}
+														{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'byline' does not exist on type 'never'. */}
 														{item.byline}
 													</div>
 												)}
 												<div className="description">
+													{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'description' does not exist on type 'nev... Remove this comment to see the full error message */}
 													{item.description}
 												</div>
 											</div>
@@ -294,6 +328,4 @@ const Search = (props) => {
 		</div>
 	);
 };
-
-Search.propTypes = propTypes;
 export default Search;

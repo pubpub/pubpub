@@ -1,24 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import ensureUserForAttribution from 'utils/ensureUserForAttribution';
 import { joinOxford, naivePluralize } from 'utils/strings';
 
-export const propTypes = {
-	ampersand: PropTypes.bool,
-	bylinePrefix: PropTypes.string,
-	contributors: PropTypes.oneOfType([
-		// Array of authors (e.g. from pub data)
-		PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.shape({})])),
-		// Byline (e.g. from ExternalPublication)
-		PropTypes.string,
-	]).isRequired,
-	linkToUsers: PropTypes.bool,
-	renderEmptyState: PropTypes.func,
-	renderSuffix: PropTypes.func,
-	renderTruncation: PropTypes.func,
-	renderUserLabel: PropTypes.func,
-	truncateAt: PropTypes.number,
+type OwnProps = {
+	ampersand?: boolean;
+	bylinePrefix?: string;
+	contributors: (string | {})[] | string;
+	linkToUsers?: boolean;
+	renderEmptyState?: (...args: any[]) => any;
+	renderSuffix?: (...args: any[]) => any;
+	renderTruncation?: (...args: any[]) => any;
+	renderUserLabel?: (...args: any[]) => any;
+	truncateAt?: number;
 };
 
 export const defaultProps = {
@@ -40,7 +34,9 @@ const joinAndFlattenArrays = (...arrays) =>
 		return [...acc, next];
 	}, []);
 
-const Byline = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const Byline = (props: Props) => {
 	const {
 		ampersand,
 		bylinePrefix,
@@ -58,6 +54,7 @@ const Byline = (props) => {
 			return <span key={`author-${contributor}`}>{contributor}</span>;
 		}
 		const { user } = ensureUserForAttribution(contributor);
+		// @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures.
 		const label = renderUserLabel(user, index);
 		if (user.slug && linkToUsers) {
 			return (
@@ -75,17 +72,24 @@ const Byline = (props) => {
 		if (typeof contributors === 'string') {
 			return contributors;
 		}
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'length' does not exist on type 'never'.
 		if (truncateAt !== null && contributors.length > truncateAt) {
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'slice' does not exist on type 'never'.
 			const namedContributors = contributors.slice(0, truncateAt);
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'length' does not exist on type 'never'.
 			const remainingCount = contributors.length - namedContributors.length;
 			return joinOxford(
+				// @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures.
 				[...namedContributors.map(renderContributor), renderTruncation(remainingCount)],
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'never[]' is not assignable to type 'string'.
 				{ joiner: joinAndFlattenArrays, ampersand: ampersand, empty: [] },
 			);
 		}
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'map' does not exist on type 'never'.
 		return joinOxford(contributors.map(renderContributor), {
 			joiner: joinAndFlattenArrays,
 			ampersand: ampersand,
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'never[]' is not assignable to type 'string'.
 			empty: [],
 		});
 	};
@@ -93,19 +97,20 @@ const Byline = (props) => {
 	return (
 		<div className="byline-component byline">
 			<span className="text-wrapper">
+				{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'length' does not exist on type 'never'. */}
 				{contributors.length > 0 && (
 					<>
 						{bylinePrefix && <span>{bylinePrefix} </span>}
 						{renderContributors()}
 					</>
 				)}
+				{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'length' does not exist on type 'never'. */}
 				{contributors.length === 0 && renderEmptyState()}
+				{/* @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures. */}
 				{renderSuffix && renderSuffix()}
 			</span>
 		</div>
 	);
 };
-
-Byline.propTypes = propTypes;
 Byline.defaultProps = defaultProps;
 export default Byline;

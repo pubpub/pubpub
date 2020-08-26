@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Button, Popover, Position, Tooltip, Menu, MenuItem } from '@blueprintjs/core';
 import { Icon } from 'components';
 
 require('./labelSelect.scss');
 
-const propTypes = {
-	availableLabels: PropTypes.array.isRequired,
-	labelsData: PropTypes.array.isRequired,
-	onPutDiscussion: PropTypes.func.isRequired,
-	canAdminPub: PropTypes.bool.isRequired,
+type Props = {
+	availableLabels: any[];
+	labelsData: any[];
+	onPutDiscussion: (...args: any[]) => any;
+	canAdminPub: boolean;
 };
 
-class LabelSelect extends Component {
-	constructor(props) {
+type State = any;
+
+class LabelSelect extends Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			labelsData: props.labelsData,
@@ -140,6 +141,7 @@ class LabelSelect extends Component {
 					<Button
 						minimal
 						small
+						// @ts-expect-error ts-migrate(2339) FIXME: Property 'toggleEditMode' does not exist on type '... Remove this comment to see the full error message
 						onClick={this.toggleEditMode}
 						icon={<Icon icon="tag2" iconSize={12} />}
 					>
@@ -150,6 +152,4 @@ class LabelSelect extends Component {
 		);
 	}
 }
-
-LabelSelect.propTypes = propTypes;
 export default LabelSelect;

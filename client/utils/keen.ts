@@ -25,16 +25,21 @@ export const setupKeen = () => {
 	const client = new KeenTracking(keenEnvironment);
 	const customEventData = {};
 	if (communityData) {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'communityId' does not exist on type '{}'... Remove this comment to see the full error message
 		customEventData.communityId = communityData.id;
 	}
 	if (collectionData) {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'pageId' does not exist on type '{}'.
 		customEventData.pageId = collectionData.id;
 	}
 	if (pubData) {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'pubId' does not exist on type '{}'.
 		customEventData.pubId = pubData.id;
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'branchId' does not exist on type '{}'.
 		customEventData.branchId = pubData.activeBranch.id;
 	}
 	if (hasGdprConsent && loginData.id) {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'userId' does not exist on type '{}'.
 		customEventData.userId = loginData.id;
 	}
 	client.extendEvents({ pubpub: customEventData });

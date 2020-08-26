@@ -1,23 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 
 import { usePageContext } from 'utils/hooks';
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { MenuButton, MenuItem, MenuItemDivider } from 'components/Menu';
 
-const propTypes = {
-	collection: PropTypes.shape({
-		isPublic: PropTypes.bool,
-		kind: PropTypes.string,
-	}).isRequired,
-	collectionPub: PropTypes.object.isRequired,
-	setCollectionPubContextHint: PropTypes.func.isRequired,
-	setCollectionPubIsPrimary: PropTypes.func.isRequired,
-	removeCollectionPub: PropTypes.func.isRequired,
+type Props = {
+	collection: {
+		isPublic?: boolean;
+		kind?: string;
+	};
+	collectionPub: any;
+	setCollectionPubContextHint: (...args: any[]) => any;
+	setCollectionPubIsPrimary: (...args: any[]) => any;
+	removeCollectionPub: (...args: any[]) => any;
 };
 
-const PubMenu = (props) => {
+const PubMenu = (props: Props) => {
 	const {
 		collectionPub,
 		collection,
@@ -39,6 +38,7 @@ const PubMenu = (props) => {
 			<MenuButton
 				aria-label="More pub options"
 				buttonProps={{
+					// @ts-expect-error ts-migrate(2322) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
 					small: true,
 					minimal: true,
 					icon: 'more',
@@ -48,6 +48,7 @@ const PubMenu = (props) => {
 				{canSetCollectionAsPrimary && (
 					<>
 						<MenuItem
+							// @ts-expect-error ts-migrate(2322) FIXME: Property 'text' does not exist on type 'IntrinsicA... Remove this comment to see the full error message
 							text="Use as primary collection"
 							icon={collectionPub.isPrimary ? 'tick' : 'blank'}
 							onClick={() =>
@@ -58,13 +59,16 @@ const PubMenu = (props) => {
 					</>
 				)}
 				<MenuItem
+					// @ts-expect-error ts-migrate(2322) FIXME: Property 'text' does not exist on type 'IntrinsicA... Remove this comment to see the full error message
 					text={<i>(No label)</i>}
 					icon={!collectionPub.contextHint ? 'tick' : 'blank'}
 					onClick={() => setCollectionPubContextHint(collectionPub, null)}
 				/>
+				{/* @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'. */}
 				{collectionSchema.contextHints.map((hint) => (
 					<MenuItem
 						key={hint.value}
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'text' does not exist on type 'IntrinsicA... Remove this comment to see the full error message
 						text={hint.label}
 						icon={collectionPub.contextHint === hint.value ? 'tick' : 'blank'}
 						onClick={() => setCollectionPubContextHint(collectionPub, hint.value)}
@@ -81,6 +85,4 @@ const PubMenu = (props) => {
 		</React.Fragment>
 	);
 };
-
-PubMenu.propTypes = propTypes;
 export default PubMenu;

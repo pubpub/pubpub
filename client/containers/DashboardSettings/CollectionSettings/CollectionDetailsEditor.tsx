@@ -2,20 +2,21 @@
  * Dashboard collection tab pane that holds some miscellaneous options for collections
  */
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Checkbox, FormGroup, Button, MenuItem } from '@blueprintjs/core';
 
+// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module 'types/collection' or its corre... Remove this comment to see the full error message
 import collectionType from 'types/collection';
+// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module 'types/community' or its corres... Remove this comment to see the full error message
 import communityType from 'types/community';
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { ConfirmDialog, InputField, LinkedPageSelect } from 'components';
 import { Select } from '@blueprintjs/select';
 
-const propTypes = {
-	collection: collectionType.isRequired,
-	communityData: communityType.isRequired,
-	onDeleteCollection: PropTypes.func.isRequired,
-	onUpdateCollection: PropTypes.func.isRequired,
+type Props = {
+	collection: collectionType;
+	communityData: communityType;
+	onDeleteCollection: (...args: any[]) => any;
+	onUpdateCollection: (...args: any[]) => any;
 };
 
 const readNextLabels = {
@@ -25,8 +26,9 @@ const readNextLabels = {
 	'choose-best': 'Choose the best preview for each Pub',
 };
 
-const CollectionDetailsEditor = (props) => {
+const CollectionDetailsEditor = (props: Props) => {
 	const { collection, communityData, onUpdateCollection, onDeleteCollection } = props;
+	// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 	const collectionLabel = getSchemaForKind(collection.kind).label.singular;
 	return (
 		<div>
@@ -63,6 +65,7 @@ const CollectionDetailsEditor = (props) => {
 				<Checkbox
 					checked={!collection.isPublic}
 					onChange={(evt) => {
+						// @ts-expect-error ts-migrate(2339) FIXME: Property 'checked' does not exist on type 'EventTa... Remove this comment to see the full error message
 						onUpdateCollection({ isPublic: !evt.target.checked }, true);
 					}}
 				>
@@ -110,6 +113,4 @@ const CollectionDetailsEditor = (props) => {
 		</div>
 	);
 };
-
-CollectionDetailsEditor.propTypes = propTypes;
 export default CollectionDetailsEditor;

@@ -8,15 +8,23 @@ import { usePubContext } from '../../pubHooks';
 
 require('./notes.scss');
 
-export const notePropType = PropTypes.shape({
-	structuredValue: PropTypes.string,
-	unstructuredValue: PropTypes.string,
-	count: PropTypes.number,
-});
+type notePropType = {
+    structuredValue?: string;
+    unstructuredValue?: string;
+    count?: number;
+};
 
-const propTypes = {
-	accentColor: PropTypes.string.isRequired,
-	notes: PropTypes.arrayOf(notePropType).isRequired,
+// @ts-expect-error ts-migrate(2322) FIXME: Type 'null' is not assignable to type 'string | un... Remove this comment to see the full error message
+const notePropType: PropTypes.Requireable<notePropType> = PropTypes.shape({
+    structuredValue: PropTypes.string,
+    unstructuredValue: PropTypes.string,
+    count: PropTypes.number,
+});
+export { notePropType };
+
+type NotesProps = {
+    accentColor: string;
+    notes: notePropType[];
 };
 
 const scrollToNode = (node) => {
@@ -42,7 +50,12 @@ const findLastElementChild = (node) => {
 	return child;
 };
 
-const Note = (props) => {
+type NoteProps = {
+    accentColor: string;
+    note: notePropType;
+};
+
+const Note = (props: NoteProps) => {
 	const { note, accentColor } = props;
 	const contentRef = useRef();
 	const [returnLinkTarget, setReturnLinkTarget] = useState(null);
@@ -61,6 +74,7 @@ const Note = (props) => {
 			if (lastChild) {
 				const newReturnLinkTarget = document.createElement('span');
 				lastChild.appendChild(newReturnLinkTarget);
+// @ts-expect-error ts-migrate(2345) FIXME: Type 'HTMLSpanElement' provides no match for the s... Remove this comment to see the full error message
 				setReturnLinkTarget(newReturnLinkTarget);
 			}
 		}
@@ -68,10 +82,12 @@ const Note = (props) => {
 
 	return (
 		<li className="note">
+{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'number' does not exist on type 'noteProp... Remove this comment to see the full error message */}
 			<div className="number">{note.number}.</div>
 			<div className="inner">
 				<PubNoteContent
 					ref={contentRef}
+// @ts-expect-error ts-migrate(2322) FIXME: Property 'structured' does not exist on type 'Intr... Remove this comment to see the full error message
 					structured={citation && citation.html}
 					unstructured={note.unstructuredValue}
 				/>
@@ -80,8 +96,10 @@ const Note = (props) => {
 						<span
 							role="button"
 							aria-label="Jump back to source"
+// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'number | ... Remove this comment to see the full error message
 							tabIndex="0"
 							style={{ cursor: 'pointer' }}
+// @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type 'notePropType... Remove this comment to see the full error message
 							onClick={() => scrollToNode(document.getElementById(note.id))}
 						>
 							<Icon
@@ -98,21 +116,15 @@ const Note = (props) => {
 	);
 };
 
-Note.propTypes = {
-	accentColor: PropTypes.string.isRequired,
-	note: notePropType.isRequired,
-};
-
-const Notes = (props) => {
+const Notes = (props: NotesProps) => {
 	const { notes, ...restProps } = props;
 	return (
 		<ul className="notes-component">
 			{notes.map((fn) => (
+// @ts-expect-error ts-migrate(2339) FIXME: Property 'number' does not exist on type 'noteProp... Remove this comment to see the full error message
 				<Note key={fn.number} note={fn} {...restProps} />
 			))}
 		</ul>
 	);
 };
-
-Notes.propTypes = propTypes;
 export default Notes;

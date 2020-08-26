@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Button, ButtonGroup, Divider, Menu, MenuItem, Popover, Position } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 import fuzzysearch from 'fuzzysearch';
@@ -11,22 +10,25 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 require('./collections.scss');
 
-const propTypes = {
-	canCreateCollections: PropTypes.bool.isRequired,
-	communityData: PropTypes.object.isRequired,
-	pubData: PropTypes.object.isRequired,
-	updatePubData: PropTypes.func.isRequired,
-	promiseWrapper: PropTypes.func.isRequired,
+type Props = {
+	canCreateCollections: boolean;
+	communityData: any;
+	pubData: any;
+	updatePubData: (...args: any[]) => any;
+	promiseWrapper: (...args: any[]) => any;
 };
 
-class Collections extends Component {
-	constructor(props) {
+type State = any;
+
+class Collections extends Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			/* We store collectionPubs in state of this component so we can do immediate */
 			/* updates and save in the background without jumpy effects */
 			collectionPubs: this.props.pubData.collectionPubs,
 		};
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'inputRef' does not exist on type 'Collec... Remove this comment to see the full error message
 		this.inputRef = undefined;
 		this.getFilteredCollections = this.getFilteredCollections.bind(this);
 		this.handleCollectionPubAdd = this.handleCollectionPubAdd.bind(this);
@@ -63,10 +65,12 @@ class Collections extends Component {
 
 	apiFetch(...args) {
 		const { promiseWrapper } = this.props;
+		// @ts-expect-error ts-migrate(2556) FIXME: Expected 2 arguments, but got 0 or more.
 		return promiseWrapper(apiFetch(...args));
 	}
 
 	handleCollectionPubAdd(collection) {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'inputRef' does not exist on type 'Collec... Remove this comment to see the full error message
 		this.inputRef.focus();
 		const firstCreateCollectionPromise = collection.id
 			? Promise.resolve(collection)
@@ -166,6 +170,7 @@ class Collections extends Component {
 					placeholder: 'Add to collection...',
 					className: 'bp3-large',
 					inputRef: (ref) => {
+						// @ts-expect-error ts-migrate(2339) FIXME: Property 'inputRef' does not exist on type 'Collec... Remove this comment to see the full error message
 						this.inputRef = ref;
 					},
 				}}
@@ -219,6 +224,7 @@ class Collections extends Component {
 			<div key={collectionPub.id}>
 				<div className="collection-row">
 					<div className="title">
+						{/* @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'. */}
 						<Icon icon={schema.bpDisplayIcon} />
 						{title}
 						{!collection.isPublic && <Icon icon="lock2" className="lock-icon" />}
@@ -260,6 +266,7 @@ class Collections extends Component {
 								</Menu>
 							}
 						>
+							{/* @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'boolean |... Remove this comment to see the full error message */}
 							<Button minimal="true" icon="more" />
 						</Popover>
 					</ButtonGroup>
@@ -295,6 +302,7 @@ class Collections extends Component {
 				</p>
 				{this.props.canCreateCollections && (
 					<p>
+						{/* @ts-expect-error ts-migrate(2345) FIXME: Type '{ mode: string; }' is missing the following ... Remove this comment to see the full error message */}
 						Visit the <a href={getDashUrl({ mode: 'overview' })}>Community overview</a>{' '}
 						to create collections.
 					</p>
@@ -305,6 +313,4 @@ class Collections extends Component {
 		);
 	}
 }
-
-Collections.propTypes = propTypes;
 export default Collections;

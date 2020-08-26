@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { AnchorButton, Callout } from '@blueprintjs/core';
 
 import { formatDate, datesAreSameCalendarDate } from 'utils/dates';
@@ -9,25 +8,23 @@ import { usePageContext } from 'utils/hooks';
 
 require('./pubHistoricalNotice.scss');
 
-const propTypes = {
-	pubData: PropTypes.shape({
-		releaseNumber: PropTypes.number,
-		isRelease: PropTypes.bool,
-		releases: PropTypes.arrayOf(
-			PropTypes.shape({
-				createdAt: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
-			}),
-		).isRequired,
-	}).isRequired,
-	historyData: PropTypes.shape({
-		currentKey: PropTypes.number,
-		latestKey: PropTypes.number,
-		timestamps: PropTypes.object,
-		loadedIntoHistory: PropTypes.bool,
-	}).isRequired,
+type Props = {
+	pubData: {
+		releaseNumber?: number;
+		isRelease?: boolean;
+		releases: {
+			createdAt?: string | any; // TODO: PropTypes.instanceOf(Date)
+		}[];
+	};
+	historyData: {
+		currentKey?: number;
+		latestKey?: number;
+		timestamps?: any;
+		loadedIntoHistory?: boolean;
+	};
 };
 
-const PubHistoricalNotice = (props) => {
+const PubHistoricalNotice = (props: Props) => {
 	const { pubData, historyData } = props;
 	const { communityData } = usePageContext();
 	const { releases, releaseNumber, isRelease } = pubData;
@@ -42,6 +39,7 @@ const PubHistoricalNotice = (props) => {
 
 	const renderWarning = () => {
 		if (isRelease) {
+			// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 			const currentReleaseDate = new Date(releases[releaseNumber - 1].createdAt);
 			const latestReleaseDate = getPubLatestReleasedDate(pubData);
 			const includeTime = datesAreSameCalendarDate(currentReleaseDate, latestReleaseDate);
@@ -57,7 +55,9 @@ const PubHistoricalNotice = (props) => {
 				</p>
 			);
 		}
+		// @ts-expect-error ts-migrate(2538) FIXME: Type 'undefined' cannot be used as an index type.
 		const currentDate = new Date(timestamps[currentKey]);
+		// @ts-expect-error ts-migrate(2538) FIXME: Type 'undefined' cannot be used as an index type.
 		const latestDate = new Date(timestamps[latestKey]);
 		const includeTime = datesAreSameCalendarDate(currentDate, latestDate);
 		return (
@@ -94,6 +94,4 @@ const PubHistoricalNotice = (props) => {
 		</Callout>
 	);
 };
-
-PubHistoricalNotice.propTypes = propTypes;
 export default PubHistoricalNotice;

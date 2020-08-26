@@ -1,7 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import dateFormat from 'dateformat';
 
+// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module 'types/pub' or its correspondin... Remove this comment to see the full error message
 import { pubDataProps } from 'types/pub';
 import { collectionUrl } from 'utils/canonicalUrls';
 import { getPubPublishedDate, getPubUpdatedDate, getPubCreatedDate } from 'utils/pub/pubDates';
@@ -15,13 +15,13 @@ import Contributors from './Contributors';
 
 require('./pubDetails.scss');
 
-const propTypes = {
-	pubData: pubDataProps.isRequired,
-	onCloseHeaderDetails: PropTypes.func.isRequired,
-	communityData: PropTypes.shape({}).isRequired,
+type Props = {
+	pubData: pubDataProps;
+	onCloseHeaderDetails: (...args: any[]) => any;
+	communityData: {};
 };
 
-const PubDetails = (props) => {
+const PubDetails = (props: Props) => {
 	const { communityData, onCloseHeaderDetails, pubData } = props;
 	const { collectionPubs } = pubData;
 	const contributors = getAllPubContributors(pubData);
@@ -37,6 +37,7 @@ const PubDetails = (props) => {
 		<div className="pub-details-component">
 			<h3 className="pub-title">{pubData.title}</h3>
 			<SmallHeaderButton
+				// @ts-expect-error ts-migrate(2322) FIXME: Property 'className' does not exist on type 'Intri... Remove this comment to see the full error message
 				className="mobile-close-details-button"
 				onClick={onCloseHeaderDetails}
 				icon="cross"
@@ -74,9 +75,13 @@ const PubDetails = (props) => {
 					{pubData.doi && (
 						<React.Fragment>
 							<h6 className="pub-header-themed-secondary">DOI</h6>{' '}
+							{/* @ts-expect-error ts-migrate(2745) FIXME: This JSX tag's 'children' prop expects type 'never... Remove this comment to see the full error message */}
 							<ClickToCopyButton
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 								copyString={`https://doi.org/${pubData.doi}`}
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 								className="click-to-copy"
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 								beforeCopyPrompt="Copy doi.org link"
 							>
 								{pubData.doi}
@@ -115,6 +120,4 @@ const PubDetails = (props) => {
 		</div>
 	);
 };
-
-PubDetails.propTypes = propTypes;
 export default PubDetails;

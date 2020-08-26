@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Button, Slider } from '@blueprintjs/core';
 import AvatarEditor from 'react-avatar-editor';
 
@@ -7,12 +6,12 @@ import { s3Upload } from 'client/utils/upload';
 
 require('./imageCropper.scss');
 
-const propTypes = {
-	height: PropTypes.number,
-	width: PropTypes.number,
-	image: PropTypes.object,
-	onCancel: PropTypes.func,
-	onUploaded: PropTypes.func,
+type OwnProps = {
+	height?: number;
+	width?: number;
+	image?: any;
+	onCancel?: (...args: any[]) => any;
+	onUploaded?: (...args: any[]) => any;
 };
 
 const defaultProps = {
@@ -23,14 +22,21 @@ const defaultProps = {
 	onUploaded: () => {},
 };
 
-class ImageCropper extends Component {
-	constructor(props) {
+type State = any;
+
+type Props = OwnProps & typeof defaultProps;
+
+class ImageCropper extends Component<Props, State> {
+	static defaultProps = defaultProps;
+
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			scale: 1.5,
 			isUploading: false,
 			blob: undefined,
 		};
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'editor' does not exist on type 'ImageCro... Remove this comment to see the full error message
 		this.editor = undefined;
 		this.onFileFinish = this.onFileFinish.bind(this);
 		this.handleScaleChange = this.handleScaleChange.bind(this);
@@ -50,6 +56,7 @@ class ImageCropper extends Component {
 	}
 
 	handleSaveClick() {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'editor' does not exist on type 'ImageCro... Remove this comment to see the full error message
 		this.editor.getImage().toBlob(
 			(blob) => {
 				s3Upload(blob, () => {}, this.onFileFinish, 0);
@@ -73,6 +80,7 @@ class ImageCropper extends Component {
 				<div className="editor-wrapper">
 					<AvatarEditor
 						ref={(ref) => {
+							// @ts-expect-error ts-migrate(2339) FIXME: Property 'editor' does not exist on type 'ImageCro... Remove this comment to see the full error message
 							this.editor = ref;
 						}}
 						image={this.props.image}
@@ -89,6 +97,7 @@ class ImageCropper extends Component {
 					min={1}
 					max={5}
 					stepSize={0.1}
+					// @ts-expect-error ts-migrate(2322) FIXME: Property 'renderLabel' does not exist on type 'Int... Remove this comment to see the full error message
 					renderLabel={false}
 				/>
 
@@ -105,7 +114,4 @@ class ImageCropper extends Component {
 		);
 	}
 }
-
-ImageCropper.propTypes = propTypes;
-ImageCropper.defaultProps = defaultProps;
 export default ImageCropper;

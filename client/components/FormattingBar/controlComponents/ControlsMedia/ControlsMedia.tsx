@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { SimpleEditor } from 'components';
 import { ControlsButton, ControlsButtonGroup } from '../ControlsButton';
@@ -8,20 +7,20 @@ import AlignmentControl from './AlignmentControl';
 import SliderInputControl from './SliderInputControl';
 import SourceControls from './SourceControls';
 
-const propTypes = {
-	isSmall: PropTypes.bool.isRequired,
-	pendingAttrs: PropTypes.object.isRequired,
-	editorChangeObject: PropTypes.shape({
-		updateNode: PropTypes.func.isRequired,
-		selectedNode: PropTypes.shape({
-			attrs: PropTypes.shape({
-				size: PropTypes.number,
-				align: PropTypes.string,
-				height: PropTypes.number,
-				caption: PropTypes.string,
-			}),
-		}).isRequired,
-	}).isRequired,
+type Props = {
+	isSmall: boolean;
+	pendingAttrs: any;
+	editorChangeObject: {
+		updateNode: (...args: any[]) => any;
+		selectedNode: {
+			attrs?: {
+				size?: number;
+				align?: string;
+				height?: number;
+				caption?: string;
+			};
+		};
+	};
 };
 
 const getCanEditNodeHeight = (selectedNode) => selectedNode.type.name === 'iframe';
@@ -34,10 +33,11 @@ const getItemName = (selectedNode) => {
 	return name;
 };
 
-const ControlsMedia = (props) => {
+const ControlsMedia = (props: Props) => {
 	const { isSmall, editorChangeObject, pendingAttrs } = props;
 	const { updateNode, selectedNode } = editorChangeObject;
 	const { hasPendingChanges, commitChanges, updateAttrs } = pendingAttrs;
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'size' does not exist on type '{ size?: n... Remove this comment to see the full error message
 	const { size, align, height, caption } = selectedNode.attrs;
 	const canEditHeight = getCanEditNodeHeight(selectedNode);
 	const itemName = getItemName(selectedNode);
@@ -73,6 +73,7 @@ const ControlsMedia = (props) => {
 					onChange={(nextAlignment) => updateNode({ align: nextAlignment })}
 				/>
 				<SourceControls
+					// @ts-expect-error ts-migrate(2741) FIXME: Property 'type' is missing in type '{ attrs?: { si... Remove this comment to see the full error message
 					selectedNode={selectedNode}
 					updateNode={updateNode}
 					isSmall={isSmall}
@@ -80,6 +81,7 @@ const ControlsMedia = (props) => {
 			</div>
 			<div className="section hide-overflow">
 				<SimpleEditor
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'undefined... Remove this comment to see the full error message
 					placeholder={`Add a caption for this ${itemName}`}
 					initialHtmlString={caption}
 					onChange={(htmlString) => updateAttrs({ caption: htmlString })}
@@ -93,6 +95,4 @@ const ControlsMedia = (props) => {
 		</div>
 	);
 };
-
-ControlsMedia.propTypes = propTypes;
 export default ControlsMedia;

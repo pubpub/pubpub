@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import {
 	ButtonGroup,
 	Button,
@@ -15,22 +14,28 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 require('./labelFilter.scss');
 
-export const propTypes = {
-	pubData: PropTypes.object.isRequired,
-	communityData: PropTypes.object.isRequired,
-	labelsData: PropTypes.array,
-	selectedLabels: PropTypes.array.isRequired,
-	isManager: PropTypes.bool.isRequired,
-	onLabelSelect: PropTypes.func.isRequired,
-	updateLocalData: PropTypes.func.isRequired,
+type OwnProps = {
+	pubData: any;
+	communityData: any;
+	labelsData?: any[];
+	selectedLabels: any[];
+	isManager: boolean;
+	onLabelSelect: (...args: any[]) => any;
+	updateLocalData: (...args: any[]) => any;
 };
 
 const defaultProps = {
 	labelsData: [],
 };
 
-class LabelFilter extends Component {
-	constructor(props) {
+type State = any;
+
+type Props = OwnProps & typeof defaultProps;
+
+class LabelFilter extends Component<Props, State> {
+	static defaultProps = defaultProps;
+
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			isEditMode: false,
@@ -47,7 +52,7 @@ class LabelFilter extends Component {
 		this.handleSave = this.handleSave.bind(this);
 	}
 
-	componentWillReceiveProps(nextProps) {
+	componentWillReceiveProps(nextProps: Props) {
 		this.setState({
 			labelsData: nextProps.labelsData,
 			isSaving: false,
@@ -203,6 +208,7 @@ class LabelFilter extends Component {
 														</span>
 													)
 												}
+												// @ts-expect-error ts-migrate(2322) FIXME: Property 'tooltipClassName' does not exist on type... Remove this comment to see the full error message
 												tooltipClassName="bp3-dark"
 												position={Position.TOP}
 											>
@@ -272,6 +278,7 @@ class LabelFilter extends Component {
 										position={Position.TOP_LEFT}
 										popoverClassName="color-select-popover"
 										transitionDuration={-1}
+										// @ts-expect-error ts-migrate(2322) FIXME: Property 'inline' does not exist on type 'Intrinsi... Remove this comment to see the full error message
 										inline={true}
 										inheritDarkTheme={false}
 									>
@@ -296,6 +303,7 @@ class LabelFilter extends Component {
 												<span>Only managers can apply this label.</span>
 											)
 										}
+										// @ts-expect-error ts-migrate(2322) FIXME: Property 'tooltipClassName' does not exist on type... Remove this comment to see the full error message
 										tooltipClassName="bp3-dark"
 										position={Position.TOP}
 									>
@@ -338,7 +346,4 @@ class LabelFilter extends Component {
 		);
 	}
 }
-
-LabelFilter.propTypes = propTypes;
-LabelFilter.defaultProps = defaultProps;
 export default LabelFilter;

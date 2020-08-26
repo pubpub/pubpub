@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { InputGroup, Button, Intent, NonIdealState } from '@blueprintjs/core';
 import { isHttpsUri } from 'valid-url';
 
@@ -7,13 +6,14 @@ import Icon from 'components/Icon/Icon';
 import { apiFetch } from 'client/utils/apiFetch';
 import { getIframeSrc, getEmbedType } from 'client/utils/editor';
 
-const propTypes = {
-	onInsert: PropTypes.func.isRequired,
-	// isSmall: PropTypes.bool.isRequired,
+type Props = {
+	onInsert: (...args: any[]) => any;
 };
 
-class MediaGithub extends Component {
-	constructor(props) {
+type State = any;
+
+class MediaGithub extends Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			isValid: false,
@@ -39,6 +39,7 @@ class MediaGithub extends Component {
 				}
 
 				const queryParams = `?type=${getEmbedType(input)}&input=${input}`;
+				// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 				return apiFetch(`/api/editor/embed${queryParams}`).then((result) => {
 					this.setState({
 						embedUrl: `data:text/html;charset=utf-8,${result.html}`,
@@ -107,6 +108,4 @@ class MediaGithub extends Component {
 		);
 	}
 }
-
-MediaGithub.propTypes = propTypes;
 export default MediaGithub;

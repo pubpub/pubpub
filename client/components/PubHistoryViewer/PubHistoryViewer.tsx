@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Button, ButtonGroup, Menu, MenuItem, Slider, Spinner } from '@blueprintjs/core';
 
@@ -11,24 +10,22 @@ import { pubUrl } from 'utils/canonicalUrls';
 
 require('./pubHistoryViewer.scss');
 
-const propTypes = {
-	historyData: PropTypes.shape({
-		timestamps: PropTypes.object,
-		currentKey: PropTypes.number,
-		latestKey: PropTypes.number,
-		outstandingRequests: PropTypes.number,
-		loadedIntoHistory: PropTypes.bool,
-	}).isRequired,
-	onClose: PropTypes.func.isRequired,
-	pubData: PropTypes.shape({
-		createdAt: PropTypes.string.isRequired,
-		releases: PropTypes.arrayOf(
-			PropTypes.shape({
-				createdAt: PropTypes.string.isRequired,
-			}),
-		).isRequired,
-	}).isRequired,
-	updateHistoryData: PropTypes.func.isRequired,
+type OwnProps = {
+	historyData: {
+		timestamps?: any;
+		currentKey?: number;
+		latestKey?: number;
+		outstandingRequests?: number;
+		loadedIntoHistory?: boolean;
+	};
+	onClose: (...args: any[]) => any;
+	pubData: {
+		createdAt: string;
+		releases: {
+			createdAt: string;
+		}[];
+	};
+	updateHistoryData: (...args: any[]) => any;
 };
 const defaultProps = {};
 
@@ -48,25 +45,35 @@ const dateTimestamps = (timestamps, intervalMs = 1000 * 60 * 15) => {
 		const timestamp = timestamps[historyKey];
 		const bucketValue = bucketTimestamp(timestamp, intervalMs);
 		if (!currentBucketValue) {
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'number' is not assignable to type 'null'.
 			currentBucketValue = bucketValue;
 		}
 		if (bucketValue !== currentBucketValue) {
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'never[]' is not assignable to pa... Remove this comment to see the full error message
 			buckets.push(currentBucketItems);
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'number' is not assignable to type 'never'.
 			currentBucketItems = [[historyKey, timestamp]];
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'number' is not assignable to type 'null'.
 			currentBucketValue = bucketValue;
 		} else {
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'number' is not assignable to type 'never'.
 			currentBucketItems.push([historyKey, timestamp]);
 		}
 	}
+	// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'never[]' is not assignable to pa... Remove this comment to see the full error message
 	buckets.push(currentBucketItems);
-	return buckets
-		.filter((bucket) => bucket.length > 0)
-		.map((bucket) => {
-			const [startKey, startTimestamp] = bucket[0];
-			const [endKey] = bucket[bucket.length - 1];
-			const startDate = new Date(startTimestamp);
-			return { type: 'edits', date: startDate, range: [startKey, endKey] };
-		});
+	return (
+		buckets
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'length' does not exist on type 'never'.
+			.filter((bucket) => bucket.length > 0)
+			.map((bucket) => {
+				const [startKey, startTimestamp] = bucket[0];
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'length' does not exist on type 'never'.
+				const [endKey] = bucket[bucket.length - 1];
+				const startDate = new Date(startTimestamp);
+				return { type: 'edits', date: startDate, range: [startKey, endKey] };
+			})
+	);
 };
 
 const dateReleases = (releases) => {
@@ -105,7 +112,9 @@ const getDateForHistoryKey = (historyKey, timestamps) => {
 	return null;
 };
 
-const PubHistoryViewer = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const PubHistoryViewer = (props: Props) => {
 	const { historyData, pubData, updateHistoryData, onClose } = props;
 	const {
 		timestamps,
@@ -119,7 +128,9 @@ const PubHistoryViewer = (props) => {
 	const [sliderValue, setSliderValue] = useState(currentKey);
 	const historyScrollRef = useRef(null);
 	const hasScrolledRef = useRef(null);
+	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const isLoadingHistory = outstandingRequests > 0;
+	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const hasMeaningfulHistory = latestKey >= 0;
 
 	historyScrollRef.current = null;
@@ -139,11 +150,13 @@ const PubHistoryViewer = (props) => {
 	});
 
 	useEffect(() => {
+		// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 		setSliderValue(currentKey + 1);
 	}, [currentKey]);
 
 	useEffect(() => {
 		if (historyScrollRef.current) {
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'offsetParent' does not exist on type 'nu... Remove this comment to see the full error message
 			const { offsetParent, offsetTop } = historyScrollRef.current;
 			if (offsetParent && !Number.isNaN(offsetTop)) {
 				// Scroll to the current date minus some padding
@@ -153,6 +166,7 @@ const PubHistoryViewer = (props) => {
 				} else {
 					offsetParent.scrollTop = scrollTarget;
 				}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'true' is not assignable to type 'null'.
 				hasScrolledRef.current = true;
 			}
 		}
@@ -160,6 +174,7 @@ const PubHistoryViewer = (props) => {
 
 	const canChangeCurrentKeyBy = (step) => {
 		const proposedKey = currentKey + step;
+		// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 		return proposedKey >= 0 && proposedKey <= latestKey;
 	};
 
@@ -189,6 +204,7 @@ const PubHistoryViewer = (props) => {
 			const {
 				range: [startKey, endKey],
 			} = entry;
+			// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 			const containsCurrentKey = currentKey >= startKey && currentKey <= endKey;
 			const dateString = formatDate(date, { includeTime: true, includeDate: false });
 			return (
@@ -280,11 +296,15 @@ const PubHistoryViewer = (props) => {
 						disabled={!canChangeCurrentKeyBy(-1)}
 						onClick={() => changeCurrentKeyBy(-1)}
 					/>
+					{/* @ts-expect-error ts-migrate(2745) FIXME: This JSX tag's 'children' prop expects type 'never... Remove this comment to see the full error message */}
 					<ClickToCopyButton
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 						copyString={pubUrl(communityData, pubData, {
 							isDraft: true,
+							// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 							historyKey: currentKey.toString(),
 						})}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 						beforeCopyPrompt="Copy link to this point in history"
 					>
 						{(handleClick) => (
@@ -310,9 +330,11 @@ const PubHistoryViewer = (props) => {
 			{hasMeaningfulHistory && (
 				<Slider
 					min={0}
+					// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 					max={latestKey + 1}
 					stepSize={1}
 					labelRenderer={renderSliderLabel}
+					// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 					labelStepSize={latestKey + 1}
 					value={sliderValue}
 					onChange={setSliderValue}
@@ -327,7 +349,5 @@ const PubHistoryViewer = (props) => {
 		</div>
 	);
 };
-
-PubHistoryViewer.propTypes = propTypes;
 PubHistoryViewer.defaultProps = defaultProps;
 export default PubHistoryViewer;

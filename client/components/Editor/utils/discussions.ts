@@ -14,9 +14,11 @@ export const copyDiscussionMapsToBranch = async (
 	if (sourceDiscussions) {
 		await Object.entries(sourceDiscussions).map(async (entry) => {
 			const [discussionId, discussionInfo] = entry;
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 0 arguments, but got 1.
 			if (!idFilter(discussionId)) {
 				return;
 			}
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'selection' does not exist on type 'unkno... Remove this comment to see the full error message
 			const { selection: compressedSelection } = discussionInfo;
 			const { anchor, head, type } = uncompressSelectionJSON(compressedSelection);
 			const destinationBranchDiscussion = {

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Button } from 'reakit';
 import dateFormat from 'dateformat';
@@ -9,15 +8,15 @@ import { getDashUrl } from 'utils/dashboard';
 
 require('./overviewRow.scss');
 
-const propTypes = {
-	children: PropTypes.node,
-	content: PropTypes.object.isRequired,
-	controls: PropTypes.node,
-	dragHandleProps: PropTypes.object,
-	isDragging: PropTypes.bool,
-	label: PropTypes.node,
-	minimal: PropTypes.bool,
-	parentSlug: PropTypes.string,
+type OwnProps = {
+	children?: React.ReactNode;
+	content: any;
+	controls?: React.ReactNode;
+	dragHandleProps?: any;
+	isDragging?: boolean;
+	label?: React.ReactNode;
+	minimal?: boolean;
+	parentSlug?: string;
 };
 
 const defaultProps = {
@@ -58,13 +57,16 @@ const getCounts = (isCollection, content) => {
 };
 
 const getHref = (isCollection, slug, parentSlug) => {
+	// @ts-expect-error ts-migrate(2345) FIXME: Type '{ collectionSlug: any; pubSlug: any; }' is m... Remove this comment to see the full error message
 	return getDashUrl({
 		collectionSlug: isCollection ? slug : parentSlug,
 		pubSlug: isCollection ? undefined : slug,
 	});
 };
 
-const OverviewRow = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const OverviewRow = (props: Props) => {
 	const {
 		content,
 		controls,
@@ -98,6 +100,7 @@ const OverviewRow = (props) => {
 			<React.Fragment>
 				{label}
 				{label && hasAuthors && ' • '}
+				{/* @ts-expect-error ts-migrate(2322) FIXME: Type 'null' is not assignable to type 'string | un... Remove this comment to see the full error message */}
 				<PubByline pubData={content} linkToAuthors={false} bylinePrefix={null} />
 			</React.Fragment>
 		);
@@ -179,7 +182,5 @@ const OverviewRow = (props) => {
 		</div>
 	);
 };
-
-OverviewRow.propTypes = propTypes;
 OverviewRow.defaultProps = defaultProps;
 export default OverviewRow;

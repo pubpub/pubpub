@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Icon, Popover, Menu, MenuItem } from '@blueprintjs/core';
 import dateFormat from 'dateformat';
 
@@ -10,16 +9,16 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 require('./licenseSelect.scss');
 
-const propTypes = {
-	children: PropTypes.func.isRequired,
-	pubData: PropTypes.shape({
-		id: PropTypes.string,
-		licenseSlug: PropTypes.string,
-		collectionPubs: PropTypes.array,
-	}).isRequired,
-	onSelect: PropTypes.func,
-	updateLocalData: PropTypes.func,
-	persistSelections: PropTypes.bool,
+type OwnProps = {
+	children: (...args: any[]) => any;
+	pubData: {
+		id?: string;
+		licenseSlug?: string;
+		collectionPubs?: any[];
+	};
+	onSelect?: (...args: any[]) => any;
+	updateLocalData?: (...args: any[]) => any;
+	persistSelections?: boolean;
 };
 
 const defaultProps = {
@@ -28,12 +27,15 @@ const defaultProps = {
 	persistSelections: true,
 };
 
-const LicenseSelect = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const LicenseSelect = (props: Props) => {
 	const { children, onSelect, persistSelections, pubData, updateLocalData } = props;
 	const [isPersisting, setIsPersisting] = useState(false);
 	const { communityData } = usePageContext();
 
 	const currentLicense = getLicenseBySlug(pubData.licenseSlug);
+	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const primaryCollectionPub = pubData.collectionPubs.find((cp) => cp.isPrimary);
 	const collectionPubDate = primaryCollectionPub
 		? primaryCollectionPub.collection.metadata.copyrightYear ||
@@ -46,7 +48,9 @@ const LicenseSelect = (props) => {
 	if (communityData.id === '78810858-8c4a-4435-a669-6bb176b61d40') {
 		pubPublisher = 'Massachusetts Institute of Technology';
 	}
+	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	if (currentLicense.slug === 'copyright') {
+		// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 		currentLicense.full = `Copyright © ${pubCopyrightDate} ${pubPublisher}. All rights reserved.`;
 	}
 	const selectLicense = (license) => {
@@ -113,6 +117,7 @@ const LicenseSelect = (props) => {
 							}
 							icon={renderIcon(license)}
 							labelElement={
+								// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 								license.slug === currentLicense.slug && <Icon icon="tick" />
 							}
 						/>
@@ -125,13 +130,12 @@ const LicenseSelect = (props) => {
 		<Popover content={renderMenu()}>
 			{children({
 				icon: renderIcon(currentLicense),
+				// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 				title: currentLicense.full,
 				isPersisting: isPersisting,
 			})}
 		</Popover>
 	);
 };
-
-LicenseSelect.propTypes = propTypes;
 LicenseSelect.defaultProps = defaultProps;
 export default LicenseSelect;

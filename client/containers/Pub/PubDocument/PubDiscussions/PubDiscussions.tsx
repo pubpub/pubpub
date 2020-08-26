@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import useWindowSize from 'react-use/lib/useWindowSize';
 import { dispatchEmptyTransaction } from 'components/Editor';
@@ -15,13 +14,13 @@ import { groupDiscussionsByLine } from './discussionUtils';
 
 require('./pubDiscussions.scss');
 
-const propTypes = {
-	filterDiscussions: PropTypes.func,
-	mainContentRef: PropTypes.object.isRequired,
-	pubData: PropTypes.object.isRequired,
-	searchTerm: PropTypes.string,
-	showBottomInput: PropTypes.bool,
-	sideContentRef: PropTypes.object.isRequired,
+type OwnProps = {
+	filterDiscussions?: (...args: any[]) => any;
+	mainContentRef: any;
+	pubData: any;
+	searchTerm?: string;
+	showBottomInput?: boolean;
+	sideContentRef: any;
 };
 
 const defaultProps = {
@@ -30,7 +29,9 @@ const defaultProps = {
 	showBottomInput: false,
 };
 
-const PubDiscussions = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const PubDiscussions = (props: Props) => {
 	const {
 		pubData,
 		filterDiscussions,
@@ -48,12 +49,15 @@ const PubDiscussions = (props) => {
 
 	const { discussions } = pubData;
 	const { canView, canCreateDiscussions } = scopeData;
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'decorations' does not exist on type '{}'... Remove this comment to see the full error message
 	const decorations = collabData.editorChangeObject.decorations || [];
 	const groupsByLine = groupDiscussionsByLine(decorations, discussions);
 
 	useEffect(() => {
 		// This effect will cause boundingBoxes to recalculate on window resize.
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 		if (collabData.editorChangeObject.view) {
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 			dispatchEmptyTransaction(collabData.editorChangeObject.view);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -61,17 +65,22 @@ const PubDiscussions = (props) => {
 
 	const renderSideDiscussions = () => {
 		return groupsByLine.map((group) => {
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'mountClassName' does not exist on type '... Remove this comment to see the full error message
 			const mountElement = document.getElementsByClassName(group.mountClassName)[0];
 			if (!mountElement) {
 				return null;
 			}
 			return ReactDOM.createPortal(
 				<DiscussionGroup
+					// @ts-expect-error ts-migrate(2339) FIXME: Property 'mountClassName' does not exist on type '... Remove this comment to see the full error message
 					key={group.mountClassName}
 					pubData={pubData}
 					historyData={historyData}
+					// @ts-expect-error ts-migrate(2339) FIXME: Property 'discussions' does not exist on type 'nev... Remove this comment to see the full error message
 					discussions={group.discussions}
+					// @ts-expect-error ts-migrate(2339) FIXME: Property 'mountClassName' does not exist on type '... Remove this comment to see the full error message
 					mountClassName={group.mountClassName}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'null' is not assignable to type '(...args: a... Remove this comment to see the full error message
 					updateLocalData={updateLocalData}
 					sideContentRef={sideContentRef}
 					mainContentRef={mainContentRef}
@@ -84,8 +93,10 @@ const PubDiscussions = (props) => {
 	};
 
 	const renderBottomDiscussions = () => {
+		// @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures.
 		const filteredDiscussions = filterDiscussions(discussions);
 		const emptyMessage =
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'filter' does not exist on type 'never'.
 			discussions.filter((th) => th && !th.isClosed).length > 0
 				? 'No matching comments (some are hidden by filters)'
 				: canView || canCreateDiscussions
@@ -96,6 +107,7 @@ const PubDiscussions = (props) => {
 				{showBottomInput && (
 					<DiscussionInput
 						pubData={pubData}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'null' is not assignable to type '(...args: a... Remove this comment to see the full error message
 						updateLocalData={updateLocalData}
 						discussionData={{ id: undefined }}
 						isPubBottomInput={true}
@@ -112,10 +124,14 @@ const PubDiscussions = (props) => {
 				{filteredDiscussions.map((discussion) => {
 					return (
 						<Discussion
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 							key={discussion.id}
 							pubData={pubData}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 							discussionData={discussion}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'null' is not assignable to type 'never'.
 							updateLocalData={updateLocalData}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'true' is not assignable to type 'never'.
 							canPreview={true}
 							searchTerm={searchTerm}
 						/>
@@ -141,7 +157,5 @@ const PubDiscussions = (props) => {
 		</div>
 	);
 };
-
-PubDiscussions.propTypes = propTypes;
 PubDiscussions.defaultProps = defaultProps;
 export default PubDiscussions;

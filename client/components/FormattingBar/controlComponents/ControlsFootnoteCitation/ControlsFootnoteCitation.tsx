@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { useDebounce } from 'use-debounce';
 
 import { SimpleEditor, PubNoteContent } from 'components';
@@ -11,28 +10,28 @@ import InlineLabelEditor from './InlineLabelEditor';
 
 require('../controls.scss');
 
-const propTypes = {
-	onClose: PropTypes.func.isRequired,
-	pendingAttrs: PropTypes.object.isRequired,
-	editorChangeObject: PropTypes.shape({
-		updateNode: PropTypes.func.isRequired,
-		selectedNode: PropTypes.shape({
-			type: PropTypes.shape({
-				name: PropTypes.string,
-				spec: PropTypes.shape({
-					defaultOptions: PropTypes.shape({
-						citationInlineStyle: PropTypes.string,
-					}),
-				}),
-			}),
-			attrs: PropTypes.shape({
-				count: PropTypes.number,
-				unstructuredValue: PropTypes.string.isRequired,
-				value: PropTypes.string.isRequired,
-				html: PropTypes.string,
-			}),
-		}),
-	}).isRequired,
+type Props = {
+	onClose: (...args: any[]) => any;
+	pendingAttrs: any;
+	editorChangeObject: {
+		updateNode: (...args: any[]) => any;
+		selectedNode?: {
+			type?: {
+				name?: string;
+				spec?: {
+					defaultOptions?: {
+						citationInlineStyle?: string;
+					};
+				};
+			};
+			attrs?: {
+				count?: number;
+				unstructuredValue: string;
+				value: string;
+				html?: string;
+			};
+		};
+	};
 };
 
 const unwrapPendingAttrs = (pendingAttrs, isFootnote) => {
@@ -65,10 +64,11 @@ const wrapUpdateAttrs = (updateAttrs, isFootnote) => {
 	};
 };
 
-const ControlsFootnoteCitation = (props) => {
+const ControlsFootnoteCitation = (props: Props) => {
 	const { editorChangeObject, onClose, pendingAttrs } = props;
 	const { selectedNode } = editorChangeObject;
 	const { citationManager } = usePubContext();
+	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const isFootnote = selectedNode.type.name === 'footnote';
 	const { commitChanges, hasPendingChanges, updateAttrs: rawUpdateAttrs, attrs } = pendingAttrs;
 	const { structuredValue, unstructuredValue, customLabel } = unwrapPendingAttrs(
@@ -126,6 +126,7 @@ const ControlsFootnoteCitation = (props) => {
 
 		const defaultLabel = getCitationInlineLabel({
 			...selectedNode,
+			// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 			attrs: { ...selectedNode.attrs, citation: citation, customLabel: customLabel },
 		});
 
@@ -147,10 +148,12 @@ const ControlsFootnoteCitation = (props) => {
 			{showPreview && (
 				<div className="section preview">
 					<div className="title">Preview</div>
+					{/* @ts-expect-error ts-migrate(2322) FIXME: Property 'structured' does not exist on type 'Intr... Remove this comment to see the full error message */}
 					<PubNoteContent structured={html} unstructured={unstructuredValue} />
 					{!isFootnote && renderInlineStyleControls()}
 					<ControlsButtonGroup>
 						<ControlsButton disabled={!hasPendingChanges} onClick={handleUpdate}>
+							{/* @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'. */}
 							Update {selectedNode.type.name}
 						</ControlsButton>
 					</ControlsButtonGroup>
@@ -159,6 +162,4 @@ const ControlsFootnoteCitation = (props) => {
 		</div>
 	);
 };
-
-ControlsFootnoteCitation.propTypes = propTypes;
 export default ControlsFootnoteCitation;

@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Tooltip } from '@blueprintjs/core';
 import Icon from 'components/Icon/Icon';
 
 require('./orderPicker.scss');
 
-const propTypes = {
-	selectedItems: PropTypes.array.isRequired,
-	allItems: PropTypes.array.isRequired,
-	onChange: PropTypes.func.isRequired,
-	uniqueId: PropTypes.func.isRequired,
-	selectedTitle: PropTypes.string,
-	availableTitle: PropTypes.string,
-	selectedTitleTooltip: PropTypes.string,
-	availableTitleTooltip: PropTypes.string,
+type OwnProps = {
+	selectedItems: any[];
+	allItems: any[];
+	onChange: (...args: any[]) => any;
+	uniqueId: (...args: any[]) => any;
+	selectedTitle?: string;
+	availableTitle?: string;
+	selectedTitleTooltip?: string;
+	availableTitleTooltip?: string;
 };
 
 const defaultProps = {
@@ -24,8 +23,14 @@ const defaultProps = {
 	availableTitleTooltip: undefined,
 };
 
-class OrderPicker extends Component {
-	constructor(props) {
+type State = any;
+
+type Props = OwnProps & typeof defaultProps;
+
+class OrderPicker extends Component<Props, State> {
+	static defaultProps = defaultProps;
+
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			selectedItems: props.selectedItems,
@@ -236,7 +241,4 @@ class OrderPicker extends Component {
 		);
 	}
 }
-
-OrderPicker.propTypes = propTypes;
-OrderPicker.defaultProps = defaultProps;
 export default OrderPicker;

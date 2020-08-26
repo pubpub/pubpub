@@ -1,23 +1,24 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { NumericInput, Slider } from '@blueprintjs/core';
 
-const propTypes = {
-	disabled: PropTypes.bool,
-	leftLabel: PropTypes.node.isRequired,
-	maxValue: PropTypes.number.isRequired,
-	minValue: PropTypes.number.isRequired,
-	onChange: PropTypes.func.isRequired,
-	rightLabel: PropTypes.node.isRequired,
-	value: PropTypes.number.isRequired,
-	'aria-label': PropTypes.string.isRequired,
+type OwnProps = {
+	disabled?: boolean;
+	leftLabel: React.ReactNode;
+	maxValue: number;
+	minValue: number;
+	onChange: (...args: any[]) => any;
+	rightLabel: React.ReactNode;
+	value: number;
+	'aria-label': string;
 };
 
 const defaultProps = {
 	disabled: false,
 };
 
-const SliderInputControl = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const SliderInputControl = (props: Props) => {
 	const {
 		disabled,
 		leftLabel,
@@ -71,7 +72,5 @@ const SliderInputControl = (props) => {
 		</div>
 	);
 };
-
-SliderInputControl.propTypes = propTypes;
 SliderInputControl.defaultProps = defaultProps;
 export default SliderInputControl;

@@ -94,6 +94,7 @@ export default (schema, props, collabDocPluginKey) => {
 
 		const decorations = [];
 		decorations.push(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 			Decoration.widget(selectionHead, elem, {
 				key: `cursor-widget-${cursorData.id}`,
 				lastActive: cursorData.lastActive,
@@ -102,6 +103,7 @@ export default (schema, props, collabDocPluginKey) => {
 
 		if (selectionFrom !== selectionTo) {
 			decorations.push(
+				// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 				Decoration.inline(
 					selectionFrom,
 					selectionTo,

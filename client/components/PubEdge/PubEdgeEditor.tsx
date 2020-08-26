@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { EditableText, TagInput } from '@blueprintjs/core';
 import { Button as RKButton } from 'reakit/Button';
 
@@ -12,12 +11,12 @@ import PubEdgePlaceholderThumbnail from './PubEdgePlaceholderThumbnail';
 
 require('./pubEdge.scss');
 
-const propTypes = {
-	externalPublication: externalPublicationType.isRequired,
-	onUpdateExternalPublication: PropTypes.func.isRequired,
+type Props = {
+	externalPublication: externalPublicationType;
+	onUpdateExternalPublication: (...args: any[]) => any;
 };
 
-const PubEdgeEditor = (props) => {
+const PubEdgeEditor = (props: Props) => {
 	const {
 		externalPublication: { title, description, contributors, avatar, url, publicationDate },
 		onUpdateExternalPublication,
@@ -29,6 +28,7 @@ const PubEdgeEditor = (props) => {
 				<>
 					Published on{' '}
 					<DatePicker
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'small' does not exist on type 'Intrinsic... Remove this comment to see the full error message
 						small
 						className="editable-date"
 						onSelectDate={(date) =>
@@ -46,6 +46,7 @@ const PubEdgeEditor = (props) => {
 		return (
 			<RKButton
 				as="a"
+				// @ts-expect-error ts-migrate(2769) FIXME: Type 'string' is not assignable to type 'number | ... Remove this comment to see the full error message
 				tabIndex="0"
 				onKeyDown={(evt) => evt.key === 'Enter' && addPublicationDate()}
 				onClick={addPublicationDate}
@@ -57,7 +58,9 @@ const PubEdgeEditor = (props) => {
 
 	return (
 		<PubEdgeLayout
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			className="pub-edge-editor-component"
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 			topLeftElement={
 				avatar ? (
 					<img src={avatar} alt="" />
@@ -65,6 +68,7 @@ const PubEdgeEditor = (props) => {
 					<PubEdgePlaceholderThumbnail color="#ccc" external />
 				)
 			}
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 			titleElement={
 				<EditableText
 					placeholder="Add a title for this publication"
@@ -73,19 +77,24 @@ const PubEdgeEditor = (props) => {
 					onChange={(value) => onUpdateExternalPublication({ title: value })}
 				/>
 			}
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 			bylineElement={
 				<TagInput
 					placeholder="Add authors for this publication"
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'ReactNode... Remove this comment to see the full error message
 					values={contributors}
 					onChange={(value) => onUpdateExternalPublication({ contributors: value })}
 				/>
 			}
 			metadataElements={[
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 				renderPublicationDate(),
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 				<a href={url} alt={title}>
 					{getHostnameForUrl(url)}
 				</a>,
 			]}
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 			detailsElement={
 				<EditableText
 					className="editable-details"
@@ -98,6 +107,4 @@ const PubEdgeEditor = (props) => {
 		/>
 	);
 };
-
-PubEdgeEditor.propTypes = propTypes;
 export default PubEdgeEditor;

@@ -34,13 +34,20 @@ const renderDisclosure = (disclosure, disclosureProps) => {
 
 export const Menu = React.forwardRef((props, ref) => {
 	const {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'aria-label' does not exist on type '{ ch... Remove this comment to see the full error message
 		'aria-label': ariaLabel,
 		children,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'className' does not exist on type '{ chi... Remove this comment to see the full error message
 		className,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'disclosure' does not exist on type '{ ch... Remove this comment to see the full error message
 		disclosure,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'placement' does not exist on type '{ chi... Remove this comment to see the full error message
 		placement,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'onDismiss' does not exist on type '{ chi... Remove this comment to see the full error message
 		onDismiss,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'gutter' does not exist on type '{ childr... Remove this comment to see the full error message
 		gutter,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'menuStyle' does not exist on type '{ chi... Remove this comment to see the full error message
 		menuStyle,
 		...restProps
 	} = props;
@@ -61,6 +68,7 @@ export const Menu = React.forwardRef((props, ref) => {
 
 	return (
 		<React.Fragment>
+			{/* @ts-expect-error ts-migrate(2769) FIXME: Type 'unknown' is not assignable to type 'HTMLButt... Remove this comment to see the full error message */}
 			<RK.MenuDisclosure
 				ref={ref}
 				style={{ display: 'inline-flex', WebkitAppearance: 'unset' }}
@@ -79,6 +87,7 @@ export const Menu = React.forwardRef((props, ref) => {
 				unstable_portal={menuConfig.usePortal}
 				{...menu}
 			>
+				{/* @ts-expect-error ts-migrate(2322) FIXME: Type '{ parentMenu: RK.MenuStateReturn; dismissMen... Remove this comment to see the full error message */}
 				<MenuContext.Provider value={{ parentMenu: menu, dismissMenu: handleDismiss }}>
 					{children}
 				</MenuContext.Provider>
@@ -87,5 +96,7 @@ export const Menu = React.forwardRef((props, ref) => {
 	);
 });
 
+// @ts-expect-error ts-migrate(2559) FIXME: Type '{ 'aria-label': Validator<string>; children:... Remove this comment to see the full error message
 Menu.propTypes = propTypes;
+// @ts-expect-error ts-migrate(2559) FIXME: Type '{ className: string; gutter: undefined; menu... Remove this comment to see the full error message
 Menu.defaultProps = defaultProps;

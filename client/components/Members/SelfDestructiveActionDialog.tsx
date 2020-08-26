@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Button, Checkbox, Classes, Dialog } from '@blueprintjs/core';
 
 import { usePageContext } from 'utils/hooks';
 
-const propTypes = {
-	dialogType: PropTypes.oneOf(['delete', 'demote']).isRequired,
-	isOpen: PropTypes.bool.isRequired,
-	onCancel: PropTypes.func.isRequired,
-	onConfirm: PropTypes.func.isRequired,
+type OwnProps = {
+	dialogType: 'delete' | 'demote';
+	isOpen: boolean;
+	onCancel: (...args: any[]) => any;
+	onConfirm: (...args: any[]) => any;
 };
 const defaultProps = {};
 
@@ -40,7 +39,9 @@ const getCopyElements = (dialogType, activeTargetName) => {
 	return { explanation: null, checkboxLabel: null, confirmButtonLabel: null };
 };
 
-const SelfDestructiveActionDialog = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const SelfDestructiveActionDialog = (props: Props) => {
 	const { dialogType, isOpen, onConfirm, onCancel } = props;
 	const [hasChecked, setHasChecked] = useState(false);
 	const {
@@ -61,6 +62,7 @@ const SelfDestructiveActionDialog = (props) => {
 				<Checkbox
 					checked={hasChecked}
 					onChange={() => setHasChecked(!hasChecked)}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'null' is not assignable to type 'string | un... Remove this comment to see the full error message
 					label={checkboxLabel}
 				/>
 			</div>
@@ -75,7 +77,5 @@ const SelfDestructiveActionDialog = (props) => {
 		</Dialog>
 	);
 };
-
-SelfDestructiveActionDialog.propTypes = propTypes;
 SelfDestructiveActionDialog.defaultProps = defaultProps;
 export default SelfDestructiveActionDialog;

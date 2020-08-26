@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { useBeforeUnload } from 'react-use';
 import { Button, Tooltip } from '@blueprintjs/core';
 
@@ -26,13 +25,13 @@ import Collections from './Collections';
 import Doi from './Doi';
 import CitationChooser from './CitationChooser';
 
-const propTypes = {
-	settingsData: PropTypes.shape({
-		pubData: PropTypes.object.isRequired,
-	}).isRequired,
+type Props = {
+	settingsData: {
+		pubData: any;
+	};
 };
 
-const PubSettings = (props) => {
+const PubSettings = (props: Props) => {
 	const { settingsData } = props;
 	const { scopeData } = usePageContext();
 	const {
@@ -79,6 +78,7 @@ const PubSettings = (props) => {
 				setIsPersisting(false);
 				setPersistedPubData(nextPubData);
 				if (persistedPubData.slug !== nextPubData.slug) {
+					// @ts-expect-error ts-migrate(2345) FIXME: Type '{ pubSlug: any; mode: string; }' is missing ... Remove this comment to see the full error message
 					window.location.href = getDashUrl({
 						pubSlug: nextPubData.slug,
 						mode: 'settings',
@@ -127,6 +127,7 @@ const PubSettings = (props) => {
 						helperText="If set, this will be shown instead of the first Release date."
 					>
 						<DatePicker
+							// @ts-expect-error ts-migrate(2322) FIXME: Property 'style' does not exist on type 'Intrinsic... Remove this comment to see the full error message
 							style={{ width: 200 }}
 							date={pubData.customPublishedAt}
 							onSelectDate={(date) =>
@@ -149,6 +150,7 @@ const PubSettings = (props) => {
 					/>
 					<ImageUpload
 						htmlFor="avatar-upload"
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'undefine... Remove this comment to see the full error message
 						label={
 							<span>
 								Preview Image
@@ -161,6 +163,7 @@ const PubSettings = (props) => {
 											pubs.
 										</span>
 									}
+									// @ts-expect-error ts-migrate(2322) FIXME: Property 'tooltipClassName' does not exist on type... Remove this comment to see the full error message
 									tooltipClassName="bp3-dark"
 								>
 									<Icon icon="info-sign" />
@@ -170,8 +173,10 @@ const PubSettings = (props) => {
 						canClear={true}
 						key={pubData.avatar}
 						defaultImage={pubData.avatar}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '(value: any) => void' is not assignable to t... Remove this comment to see the full error message
 						onNewImage={(value) => updatePubData({ avatar: value })}
 						width={150}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'undefine... Remove this comment to see the full error message
 						helperText={
 							<span>
 								Suggested minimum dimensions: <br />
@@ -196,6 +201,7 @@ const PubSettings = (props) => {
 				<LicenseSelect
 					persistSelections={false}
 					pubData={pubData}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type '(license: any) => void' is not assignable to... Remove this comment to see the full error message
 					onSelect={(license) => updatePubData({ licenseSlug: license.slug })}
 				>
 					{({ title, icon }) => (
@@ -291,9 +297,13 @@ const PubSettings = (props) => {
 	};
 
 	return (
+		// @ts-expect-error ts-migrate(2746) FIXME: This JSX tag's 'children' prop expects a single ch... Remove this comment to see the full error message
 		<DashboardFrame
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			className="pub-settings-container"
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			title="Settings"
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 			controls={renderControls()}
 		>
 			{renderDetails()}
@@ -308,6 +318,4 @@ const PubSettings = (props) => {
 		</DashboardFrame>
 	);
 };
-
-PubSettings.propTypes = propTypes;
 export default PubSettings;

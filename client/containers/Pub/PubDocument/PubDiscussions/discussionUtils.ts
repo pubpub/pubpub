@@ -89,8 +89,11 @@ export const groupDiscussionsByLine = (decorations, discussions) => {
 					: mountDiscussion.attrs.class.replace('local-highlight lh-', 'lm-');
 
 			groupings.push({
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				key: bottomKey,
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 				mountClassName: mountClassName,
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 				discussions: containedDiscussions,
 			});
 		});

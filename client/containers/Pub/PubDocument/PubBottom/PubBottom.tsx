@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { getNotes } from 'components/Editor/utils';
 
@@ -10,20 +9,22 @@ import ReadNextSection from './ReadNextSection';
 
 require('./pubBottom.scss');
 
-const propTypes = {
-	pubData: PropTypes.object.isRequired,
-	collabData: PropTypes.object.isRequired,
-	updateLocalData: PropTypes.func.isRequired,
-	sideContentRef: PropTypes.object.isRequired,
-	mainContentRef: PropTypes.object.isRequired,
-	showDiscussions: PropTypes.bool,
+type OwnProps = {
+	pubData: any;
+	collabData: any;
+	updateLocalData: (...args: any[]) => any;
+	sideContentRef: any;
+	mainContentRef: any;
+	showDiscussions?: boolean;
 };
 
 const defaultProps = {
 	showDiscussions: true,
 };
 
-const PubBottom = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const PubBottom = (props: Props) => {
 	const {
 		collabData: { editorChangeObject },
 		pubData,
@@ -43,6 +44,7 @@ const PubBottom = (props) => {
 				<ReadNextSection pubData={pubData} updateLocalData={updateLocalData} />
 				{footnotes.length > 0 && (
 					<SearchableNoteSection
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'title' does not exist on type 'Intrinsic... Remove this comment to see the full error message
 						title="Footnotes"
 						items={footnotes}
 						nodeType="footnote"
@@ -56,6 +58,7 @@ const PubBottom = (props) => {
 				)}
 				{citations.length > 0 && (
 					<SearchableNoteSection
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'title' does not exist on type 'Intrinsic... Remove this comment to see the full error message
 						title="Citations"
 						items={citations}
 						nodeType="citation"
@@ -80,7 +83,5 @@ const PubBottom = (props) => {
 		</div>
 	);
 };
-
-PubBottom.propTypes = propTypes;
 PubBottom.defaultProps = defaultProps;
 export default PubBottom;

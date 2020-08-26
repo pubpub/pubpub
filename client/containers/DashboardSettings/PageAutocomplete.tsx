@@ -1,6 +1,5 @@
 /* eslint-disable react/no-unused-prop-types */
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { MenuItem, Position } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
 import fuzzysearch from 'fuzzysearch';
@@ -10,12 +9,12 @@ import { generateHash } from 'utils/hashes';
 
 require('./pageAutocomplete.scss');
 
-const propTypes = {
-	pages: PropTypes.array.isRequired,
-	usedItems: PropTypes.array,
-	onSelect: PropTypes.func,
-	placeholder: PropTypes.string,
-	allowCustom: PropTypes.bool,
+type OwnProps = {
+	pages: any[];
+	usedItems?: any[];
+	onSelect?: (...args: any[]) => any;
+	placeholder?: string;
+	allowCustom?: boolean;
 };
 
 const defaultProps = {
@@ -25,8 +24,14 @@ const defaultProps = {
 	allowCustom: false,
 };
 
-class PageAutocomplete extends Component {
-	constructor(props) {
+type State = any;
+
+type Props = OwnProps & typeof defaultProps;
+
+class PageAutocomplete extends Component<Props, State> {
+	static defaultProps = defaultProps;
+
+	constructor(props: Props) {
 		super(props);
 		this.getFilteredItems = this.getFilteredItems.bind(this);
 		this.state = {
@@ -37,7 +42,7 @@ class PageAutocomplete extends Component {
 		this.handleSelect = this.handleSelect.bind(this);
 	}
 
-	componentWillReceiveProps(nextProps) {
+	componentWillReceiveProps(nextProps: Props) {
 		this.setState({
 			items: this.getFilteredItems(nextProps, ''),
 		});
@@ -98,6 +103,7 @@ class PageAutocomplete extends Component {
 					}}
 					query={this.state.value}
 					onQueryChange={this.filterItems}
+					// @ts-expect-error ts-migrate(2769) FIXME: Type '() => void' is not assignable to type '(item... Remove this comment to see the full error message
 					inputValueRenderer={() => {}}
 					itemRenderer={(item = {}, { handleClick, modifiers }) => {
 						return (
@@ -137,7 +143,4 @@ class PageAutocomplete extends Component {
 		);
 	}
 }
-
-PageAutocomplete.propTypes = propTypes;
-PageAutocomplete.defaultProps = defaultProps;
 export default PageAutocomplete;

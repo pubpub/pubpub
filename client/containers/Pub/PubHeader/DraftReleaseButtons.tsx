@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import TimeAgo from 'react-timeago';
 
 import { DialogLauncher, PubReleaseDialog, PubReleaseReviewDialog } from 'components';
@@ -10,17 +9,18 @@ import { usePageContext } from 'utils/hooks';
 
 import ResponsiveHeaderButton from './ResponsiveHeaderButton';
 
-const propTypes = {
-	pubData: PropTypes.shape({
-		isRelease: PropTypes.bool,
-		releases: PropTypes.arrayOf(
-			PropTypes.shape({ createdAt: PropTypes.string, sourceBranchKey: PropTypes.number }),
-		).isRequired,
-		releaseNumber: PropTypes.number,
-	}).isRequired,
-	historyData: PropTypes.object.isRequired,
-	updatePubData: PropTypes.func.isRequired,
-	updateHistoryData: PropTypes.func.isRequired,
+type Props = {
+	pubData: {
+		isRelease?: boolean;
+		releases: {
+			createdAt?: string;
+			sourceBranchKey?: number;
+		}[];
+		releaseNumber?: number;
+	};
+	historyData: any;
+	updatePubData: (...args: any[]) => any;
+	updateHistoryData: (...args: any[]) => any;
 };
 
 const getHistoryButtonLabelForTimestamp = (timestamp, label, noTimestampLabel) => {
@@ -47,7 +47,7 @@ const getCanCreateRelease = (latestRelease, latestKey) => {
 	return latestKey !== -1;
 };
 
-const DraftReleaseButtons = (props) => {
+const DraftReleaseButtons = (props: Props) => {
 	const { historyData, pubData, updateHistoryData, updatePubData } = props;
 	const { communityData, scopeData } = usePageContext();
 	const { canView, canViewDraft, canAdmin, canCreateReviews } = scopeData.activePermissions;
@@ -55,11 +55,13 @@ const DraftReleaseButtons = (props) => {
 
 	const renderForRelease = () => {
 		const { releases, releaseNumber } = pubData;
+		// @ts-expect-error ts-migrate(2769) FIXME: Type 'undefined' is not assignable to type 'ReactT... Remove this comment to see the full error message
 		const latestReleaseTimestamp = new Date(releases[releases.length - 1].createdAt).valueOf();
 		return (
 			<React.Fragment>
 				{(canView || canViewDraft) && (
 					<ResponsiveHeaderButton
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'icon' does not exist on type 'IntrinsicA... Remove this comment to see the full error message
 						icon="edit"
 						tagName="a"
 						href={pubUrl(communityData, pubData, { isDraft: true })}
@@ -69,12 +71,15 @@ const DraftReleaseButtons = (props) => {
 						}}
 					/>
 				)}
+				{/* @ts-expect-error ts-migrate(2322) FIXME: Property 'children' does not exist on type 'Intrin... Remove this comment to see the full error message */}
 				<Menu
 					aria-label="Choose a historical release of this Pub"
 					disclosure={
 						<ResponsiveHeaderButton
+							// @ts-expect-error ts-migrate(2322) FIXME: Property 'icon' does not exist on type 'IntrinsicA... Remove this comment to see the full error message
 							icon="history"
 							showCaret={true}
+							// @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
 							outerLabel={getHistoryButtonLabelForTimestamp(
 								latestReleaseTimestamp,
 								'last released',
@@ -85,8 +90,11 @@ const DraftReleaseButtons = (props) => {
 					{releases
 						.map((release, index) => (
 							<MenuItem
+								// @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type '{ createdAt?... Remove this comment to see the full error message
 								key={release.id}
+								// @ts-expect-error ts-migrate(2322) FIXME: Property 'active' does not exist on type 'Intrinsi... Remove this comment to see the full error message
 								active={index === releaseNumber - 1}
+								// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 								icon={index === releaseNumber - 1 ? 'tick' : 'document-open'}
 								href={pubUrl(communityData, pubData, { releaseNumber: index + 1 })}
 								text={formatDate(release.createdAt, { includeTime: true })}
@@ -107,6 +115,7 @@ const DraftReleaseButtons = (props) => {
 		return (
 			<React.Fragment>
 				<ResponsiveHeaderButton
+					// @ts-expect-error ts-migrate(2322) FIXME: Property 'icon' does not exist on type 'IntrinsicA... Remove this comment to see the full error message
 					icon="history"
 					className="draft-history-button"
 					active={historyData.isViewingHistory}
@@ -124,6 +133,7 @@ const DraftReleaseButtons = (props) => {
 				/>
 				{!!latestRelease && (
 					<ResponsiveHeaderButton
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'icon' does not exist on type 'IntrinsicA... Remove this comment to see the full error message
 						icon="globe"
 						tagName="a"
 						href={pubUrl(communityData, pubData)}
@@ -134,6 +144,7 @@ const DraftReleaseButtons = (props) => {
 					<DialogLauncher
 						renderLauncherElement={({ openDialog }) => (
 							<ResponsiveHeaderButton
+								// @ts-expect-error ts-migrate(2322) FIXME: Property 'disabled' does not exist on type 'Intrin... Remove this comment to see the full error message
 								disabled={!canRelease}
 								icon="document-open"
 								onClick={openDialog}
@@ -157,6 +168,7 @@ const DraftReleaseButtons = (props) => {
 					<DialogLauncher
 						renderLauncherElement={({ openDialog }) => (
 							<ResponsiveHeaderButton
+								// @ts-expect-error ts-migrate(2322) FIXME: Property 'disabled' does not exist on type 'Intrin... Remove this comment to see the full error message
 								disabled={!canRelease}
 								icon="social-media"
 								onClick={openDialog}
@@ -189,6 +201,4 @@ const DraftReleaseButtons = (props) => {
 		</div>
 	);
 };
-
-DraftReleaseButtons.propTypes = propTypes;
 export default DraftReleaseButtons;

@@ -1,7 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import queryString from 'query-string';
 
+// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module 'types/base' or its correspondi... Remove this comment to see the full error message
 import { loginDataProps } from 'types/base';
 import { getRandomColor } from 'utils/colors';
 import { getPubPageTitle } from 'utils/pubPageTitle';
@@ -15,18 +15,19 @@ export const PubContext = React.createContext({
 	historyData: {},
 	firebaseBranchRef: null,
 	updateLocalData: null,
+	// @ts-expect-error ts-migrate(2554) FIXME: Expected 2-3 arguments, but got 0.
 	citationManager: new CitationManager(),
 });
 
-const propTypes = {
-	pubData: PropTypes.object.isRequired,
-	children: PropTypes.func.isRequired,
-	locationData: PropTypes.object.isRequired,
-	communityData: PropTypes.object.isRequired,
-	loginData: loginDataProps.isRequired,
+type Props = {
+	pubData: any;
+	locationData: any;
+	communityData: any;
+	loginData: loginDataProps;
 };
 
 const fetchVersionFromHistory = (pubData, historyKey, accessHash) =>
+	// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 	apiFetch(
 		'/api/pubHistory?' +
 			queryString.stringify({
@@ -61,12 +62,14 @@ const idleStateUpdater = (boundSetState, timeout = 50) => {
 			let state = prevState;
 			const itemsInQueue = queue.length;
 			queue.forEach(([update, maybeCallback]) => {
+				// @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures.
 				const partial = typeof update === 'function' ? update(state) : update;
 				state = {
 					...state,
 					...partial,
 				};
 				if (maybeCallback) {
+					// @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures.
 					maybeCallback(state);
 				}
 			});
@@ -75,8 +78,10 @@ const idleStateUpdater = (boundSetState, timeout = 50) => {
 		});
 
 	const setState = (...args) => {
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any[]' is not assignable to para... Remove this comment to see the full error message
 		queue.push(args);
 		if (!idleCallback) {
+			// @ts-expect-error ts-migrate(2304) FIXME: Cannot find name 'requestIdleCallback'.
 			idleCallback = requestIdleCallback(setStateNow, { timeout: timeout });
 		}
 	};
@@ -85,6 +90,7 @@ const idleStateUpdater = (boundSetState, timeout = 50) => {
 		return {
 			setState: (...args) => {
 				if (isImmediate) {
+					// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any[]' is not assignable to para... Remove this comment to see the full error message
 					queue.push(args);
 					setStateNow();
 				} else {
@@ -99,8 +105,10 @@ const idleStateUpdater = (boundSetState, timeout = 50) => {
 		immediately: immediately,
 	};
 };
-class PubSyncManager extends React.Component {
-	constructor(props) {
+
+type State = any;
+class PubSyncManager extends React.Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		const { pubData } = this.props;
 		const { historyData } = pubData;
@@ -130,6 +138,7 @@ class PubSyncManager extends React.Component {
 				pubData.initialStructuredCitations,
 			),
 		};
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'idleStateUpdater' does not exist on type... Remove this comment to see the full error message
 		this.idleStateUpdater = idleStateUpdater(this.setState.bind(this));
 		this.syncRemoteCollabUsers = this.syncRemoteCollabUsers.bind(this);
 		this.syncMetadata = this.syncMetadata.bind(this);
@@ -139,6 +148,7 @@ class PubSyncManager extends React.Component {
 		this.updateLocalData = this.updateLocalData.bind(this);
 		if (typeof window !== 'undefined') {
 			// eslint-disable-next-line no-underscore-dangle
+			// @ts-expect-error ts-migrate(2339) FIXME: Property '__pubId__' does not exist on type 'Windo... Remove this comment to see the full error message
 			window.__pubId__ = this.props.pubData.id;
 		}
 	}
@@ -146,6 +156,7 @@ class PubSyncManager extends React.Component {
 	componentDidMount() {
 		const rootKey = `pub-${this.props.pubData.id}`;
 		const branchKey = `branch-${this.props.pubData.activeBranch.id}`;
+		// @ts-expect-error ts-migrate(2569) FIXME: Type 'Reference[] | null' is not an array type or ... Remove this comment to see the full error message
 		initFirebase(rootKey, this.props.pubData.firebaseToken).then(([rootRef, connectionRef]) => {
 			this.setState(
 				{
@@ -203,12 +214,14 @@ class PubSyncManager extends React.Component {
 	}
 
 	syncDiscussionsContent(snapshot) {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'idleStateUpdater' does not exist on type... Remove this comment to see the full error message
 		this.idleStateUpdater.setState((prevState) => {
 			const val = snapshot.val();
 			if (val) {
 				const syncedDiscussions = Object.values(val);
 				const newSyncedDiscussions = syncedDiscussions.filter((item) => {
 					const exists = prevState.pubData.discussions.find((existingItem) => {
+						// @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
 						return item.id === existingItem.id;
 					});
 					return !exists;
@@ -216,10 +229,12 @@ class PubSyncManager extends React.Component {
 				const updatedDiscussions = prevState.pubData.discussions.map(
 					(existingDiscussion) => {
 						const syncedContent = syncedDiscussions.find((item) => {
+							// @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
 							return item.id === existingDiscussion.id;
 						});
 						return {
 							...existingDiscussion,
+							// @ts-expect-error ts-migrate(2698) FIXME: Spread types may only be created from object types... Remove this comment to see the full error message
 							...(syncedContent || {}),
 						};
 					},
@@ -240,6 +255,7 @@ class PubSyncManager extends React.Component {
 		const users = snapshot.val();
 		if (users) {
 			this.updateCollabData({
+				// @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
 				remoteCollabUsers: Object.values(users).filter((user) => user.id !== loginData.id),
 			});
 		}
@@ -250,6 +266,7 @@ class PubSyncManager extends React.Component {
 		/* Then, sync appropriate data to firebase. */
 		/* Other clients will receive updates which */
 		/* triggers the syncMetadata function. */
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'idleStateUpdater' does not exist on type... Remove this comment to see the full error message
 		this.idleStateUpdater.immediately(isImmediate).setState(
 			(prevState) => {
 				const nextData =
@@ -305,6 +322,7 @@ class PubSyncManager extends React.Component {
 	}
 
 	updateCollabData(newCollabData) {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'idleStateUpdater' does not exist on type... Remove this comment to see the full error message
 		this.idleStateUpdater.setState((prevState) => {
 			return {
 				collabData: {
@@ -326,6 +344,7 @@ class PubSyncManager extends React.Component {
 		const currentCollabDoc =
 			editorChangeObject && editorChangeObject.view && editorChangeObject.view.state.doc;
 		if (currentCollabDoc && nextHistoryData.currentKey === nextHistoryData.latestKey) {
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'idleStateUpdater' does not exist on type... Remove this comment to see the full error message
 			this.idleStateUpdater.setState(({ historyData }) => {
 				const nextTimestamp = historyData.timestamps[nextHistoryData.currentKey] || now;
 				// Don't add -1 (indicating a lack of entries) as a timestamp
@@ -402,12 +421,12 @@ class PubSyncManager extends React.Component {
 			updatePubData: this.updatePubData,
 		};
 		return (
+			// @ts-expect-error ts-migrate(2322) FIXME: Type '(type: any, data: any, { isImmediate }?: { i... Remove this comment to see the full error message
 			<PubContext.Provider value={context}>
+				{/* @ts-expect-error ts-migrate(2723) FIXME: Cannot invoke an object which is possibly 'null' o... Remove this comment to see the full error message */}
 				{this.props.children(context)}
 			</PubContext.Provider>
 		);
 	}
 }
-
-PubSyncManager.propTypes = propTypes;
 export default PubSyncManager;

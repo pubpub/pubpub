@@ -1,19 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Button, InputGroup } from '@blueprintjs/core';
 import PageAutocomplete from './PageAutocomplete';
 
-const propTypes = {
-	dropdownId: PropTypes.string,
-	index: PropTypes.number,
-	item: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-	updateItem: PropTypes.func,
-	removeItem: PropTypes.func,
-	pages: PropTypes.array.isRequired,
-	newLink: PropTypes.object,
-	isStatic: PropTypes.bool,
-	NavBuilderList: PropTypes.func,
+type OwnProps = {
+	dropdownId?: string;
+	index?: number;
+	item: string | any;
+	updateItem?: (...args: any[]) => any;
+	removeItem?: (...args: any[]) => any;
+	pages: any[];
+	newLink?: any;
+	isStatic?: boolean;
+	NavBuilderList?: (...args: any[]) => any;
 };
 
 const defaultProps = {
@@ -26,7 +25,9 @@ const defaultProps = {
 	index: undefined,
 };
 
-const NavBuilderRow = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const NavBuilderRow = (props: Props) => {
 	const {
 		dropdownId,
 		NavBuilderList,
@@ -79,9 +80,11 @@ const NavBuilderRow = (props) => {
 						<PageAutocomplete
 							pages={pages}
 							placeholder="Add Page"
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 							usedItems={pages.filter((page) => {
 								return data.children.includes(page.id);
 							})}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type '(newItem: any) => void' is not assignable to... Remove this comment to see the full error message
 							onSelect={(newItem) => {
 								updateItem(dropdownId, index, {
 									children: [newItem.id, ...item.children],
@@ -102,6 +105,7 @@ const NavBuilderRow = (props) => {
 			</div>
 			{type === 'dropdown' && (
 				<div className="children">
+					{/* @ts-expect-error ts-migrate(2604) FIXME: JSX element type 'NavBuilderList' does not have an... Remove this comment to see the full error message */}
 					<NavBuilderList
 						id={item.id}
 						items={item.children}
@@ -115,7 +119,5 @@ const NavBuilderRow = (props) => {
 		</div>
 	);
 };
-
-NavBuilderRow.propTypes = propTypes;
 NavBuilderRow.defaultProps = defaultProps;
 export default NavBuilderRow;

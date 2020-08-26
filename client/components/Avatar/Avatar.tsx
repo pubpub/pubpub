@@ -59,13 +59,16 @@ const Avatar = function(props) {
 	const resizedImageUrl = getResizedUrl(avatar, null, imageSize);
 
 	if (doesOverlap) {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'marginRight' does not exist on type '{ w... Remove this comment to see the full error message
 		avatarStyle.marginRight = `${width * 0.45 * -1}px`;
 	}
 	if (avatar) {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'backgroundImage' does not exist on type ... Remove this comment to see the full error message
 		avatarStyle.backgroundImage = `url("${resizedImageUrl}")`;
 	}
 
 	return (
+		// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'number | ... Remove this comment to see the full error message
 		<div className={classNames(['avatar-component', className])} style={avatarStyle}>
 			{!avatar && <div>{initials}</div>}
 		</div>

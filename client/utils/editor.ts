@@ -13,6 +13,7 @@ export const getEmbedType = (input) => {
 		github: ['https://gist.github.com'],
 	};
 
+	// @ts-expect-error ts-migrate(2769) FIXME: Type 'string' is not assignable to type 'null'.
 	return Object.keys(urls).reduce((prev, curr) => {
 		const currUrls = urls[curr];
 		const isMatch = currUrls.reduce((prevMatch, currUrl) => {

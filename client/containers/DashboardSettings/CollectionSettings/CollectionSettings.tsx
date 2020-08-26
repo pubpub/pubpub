@@ -16,6 +16,7 @@ const CollectionSettings = () => {
 	const { collection, updateCollection, deleteCollection } = useCollectionState(scopeData);
 
 	return (
+		// @ts-expect-error ts-migrate(2746) FIXME: This JSX tag's 'children' prop expects a single ch... Remove this comment to see the full error message
 		<DashboardFrame className="collection-settings-component" title="Settings">
 			<SettingsSection title="Details">
 				<CollectionDetailsEditor
@@ -24,6 +25,7 @@ const CollectionSettings = () => {
 					onUpdateCollection={updateCollection}
 					onDeleteCollection={() =>
 						deleteCollection().then(() => {
+							// @ts-expect-error ts-migrate(2345) FIXME: Type '{}' is missing the following properties from... Remove this comment to see the full error message
 							window.location.href = getDashUrl({});
 						})
 					}

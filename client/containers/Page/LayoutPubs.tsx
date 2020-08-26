@@ -15,6 +15,7 @@ const LayoutPubs = function(props) {
 	const displayLimit = props.content.limit || Math.max(4, props.pubRenderList.length);
 	const emptyPreviews = [];
 	for (let index = 0; index < displayLimit; index += 1) {
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'null' is not assignable to param... Remove this comment to see the full error message
 		emptyPreviews.push(null);
 	}
 	const previews = [...props.content.pubIds, ...emptyPreviews].slice(0, displayLimit);
@@ -53,12 +54,19 @@ const LayoutPubs = function(props) {
 							<div key={selectedPub.id} className="row">
 								<div className={isTwoColumn ? 'col-6' : 'col-12'}>
 									<PubPreview
+										// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 										pubData={selectedPub}
+										// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 										size={pubPreviewType}
+										// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 										hideByline={props.content.hideByline}
+										// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 										hideDescription={props.content.hideDescription}
+										// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 										hideDates={props.content.hideDates}
+										// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 										hideEdges={props.content.hideEdges}
+										// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 										hideContributors={props.content.hideContributors}
 									/>
 								</div>
@@ -66,12 +74,19 @@ const LayoutPubs = function(props) {
 								{nextPub && (
 									<div className={isTwoColumn ? 'col-6' : 'col-12'}>
 										<PubPreview
+											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											pubData={nextPub}
+											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											size={pubPreviewType}
+											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											hideByline={props.content.hideByline}
+											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											hideDescription={props.content.hideDescription}
+											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											hideDates={props.content.hideDates}
+											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											hideEdges={props.content.hideEdges}
+											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											hideContributors={props.content.hideContributors}
 										/>
 									</div>

@@ -18,9 +18,11 @@ const ServerEditor = (props) => {
 	const rendered = useRef();
 	const schema = buildSchema();
 	const serverHtml = ReactDOMServer.renderToStaticMarkup(
+		// @ts-expect-error ts-migrate(2345) FIXME: Type '{ schema: any; doc: any; }' is missing the f... Remove this comment to see the full error message
 		renderStatic({ schema: schema, doc: props.initialContent }),
 	);
 	if (!rendered.current) {
+		// @ts-expect-error ts-migrate(2322) FIXME: Type 'true' is not assignable to type 'undefined'.
 		rendered.current = true;
 		props.onChange(serverHtml);
 	}
@@ -44,6 +46,7 @@ const RenderTest = (props) => {
 						initialContent={props.doc}
 						/* We set readOnly for table so table plugins don't muck with diff */
 						isReadOnly={props.title === 'table'}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '(eco: any) => void' is not assignable to typ... Remove this comment to see the full error message
 						onChange={(eco) => {
 							setClientHtml(beautify.html(eco.view.dom.innerHTML, beautifyOptions));
 						}}

@@ -45,14 +45,23 @@ const defaultProps = {
 
 const LargeHeaderButton = React.forwardRef((props, ref) => {
 	const {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'active' does not exist on type '{ childr... Remove this comment to see the full error message
 		active,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'className' does not exist on type '{ chi... Remove this comment to see the full error message
 		className,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'disabled' does not exist on type '{ chil... Remove this comment to see the full error message
 		disabled,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'icon' does not exist on type '{ children... Remove this comment to see the full error message
 		icon,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'label' does not exist on type '{ childre... Remove this comment to see the full error message
 		label,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'onClick' does not exist on type '{ child... Remove this comment to see the full error message
 		onClick,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'outerLabel' does not exist on type '{ ch... Remove this comment to see the full error message
 		outerLabel,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'showCaret' does not exist on type '{ chi... Remove this comment to see the full error message
 		showCaret,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'tagName' does not exist on type '{ child... Remove this comment to see the full error message
 		tagName,
 		...restProps
 	} = props;
@@ -100,6 +109,8 @@ const LargeHeaderButton = React.forwardRef((props, ref) => {
 	);
 });
 
+// @ts-expect-error ts-migrate(2559) FIXME: Type '{ active: Requireable<boolean>; className: R... Remove this comment to see the full error message
 LargeHeaderButton.propTypes = propTypes;
+// @ts-expect-error ts-migrate(2559) FIXME: Type '{ active: boolean; className: string; disabl... Remove this comment to see the full error message
 LargeHeaderButton.defaultProps = defaultProps;
 export default LargeHeaderButton;

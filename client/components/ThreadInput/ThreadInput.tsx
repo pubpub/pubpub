@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { AnchorButton, Button, Intent } from '@blueprintjs/core';
 
 import { Avatar } from 'components';
@@ -10,18 +9,20 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 require('./threadInput.scss');
 
-const propTypes = {
-	parentId: PropTypes.string.isRequired,
-	pubId: PropTypes.string.isRequired,
-	threadData: PropTypes.object.isRequired,
-	onThreadUpdate: PropTypes.func,
+type OwnProps = {
+	parentId: string;
+	pubId: string;
+	threadData: any;
+	onThreadUpdate?: (...args: any[]) => any;
 };
 
 const defaultProps = {
 	onThreadUpdate: () => {},
 };
 
-const ThreadInput = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const ThreadInput = (props: Props) => {
 	const { parentId, threadData, pubId, onThreadUpdate } = props;
 	const { loginData, locationData, communityData } = usePageContext();
 	const [changeObject, setChangeObject] = useState({});
@@ -38,7 +39,9 @@ const ThreadInput = (props) => {
 				threadId: threadData.id,
 				pubId: pubId,
 				communityId: communityData.id,
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 				content: getJSON(changeObject.view),
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 				text: getText(changeObject.view) || '',
 			}),
 		});
@@ -71,6 +74,7 @@ const ThreadInput = (props) => {
 						<div className="header">
 							<Avatar
 								width={30}
+								// @ts-expect-error ts-migrate(2322) FIXME: Property 'intials' does not exist on type 'Intrins... Remove this comment to see the full error message
 								intials={loginData.initials}
 								avatar={loginData.avatar}
 							/>
@@ -87,6 +91,7 @@ const ThreadInput = (props) => {
 							<Editor
 								key={editorKey}
 								placeholder="Add a comment..."
+								// @ts-expect-error ts-migrate(2322) FIXME: Type '(editorChangeObject: any) => void' is not as... Remove this comment to see the full error message
 								onChange={(editorChangeObject) => {
 									setChangeObject(editorChangeObject);
 								}}
@@ -105,7 +110,5 @@ const ThreadInput = (props) => {
 		</div>
 	);
 };
-
-ThreadInput.propTypes = propTypes;
 ThreadInput.defaultProps = defaultProps;
 export default ThreadInput;

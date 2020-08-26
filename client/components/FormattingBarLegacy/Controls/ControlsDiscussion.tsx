@@ -1,17 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import Icon from 'components/Icon/Icon';
 import DiscussionAutocomplete from './DiscussionAutocomplete';
 
-const propTypes = {
-	attrs: PropTypes.object.isRequired,
-	updateAttrs: PropTypes.func.isRequired,
-	threads: PropTypes.array.isRequired,
-	isSmall: PropTypes.bool.isRequired,
+type Props = {
+	attrs: any;
+	updateAttrs: (...args: any[]) => any;
+	threads: any[];
+	isSmall: boolean;
 };
 
-const ControlsDiscussion = (props) => {
+const ControlsDiscussion = (props: Props) => {
 	const alignOptions = [
 		{ key: 'left', icon: 'align-left' },
 		{ key: 'center', icon: 'align-center' },
@@ -50,6 +49,7 @@ const ControlsDiscussion = (props) => {
 				<div className="input">
 					<DiscussionAutocomplete
 						threads={props.threads}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '(thread: any) => void' is not assignable to ... Remove this comment to see the full error message
 						onSelect={(thread) => {
 							props.updateAttrs({ threadNumber: thread[0].threadNumber });
 						}}
@@ -60,6 +60,4 @@ const ControlsDiscussion = (props) => {
 		</div>
 	);
 };
-
-ControlsDiscussion.propTypes = propTypes;
 export default ControlsDiscussion;

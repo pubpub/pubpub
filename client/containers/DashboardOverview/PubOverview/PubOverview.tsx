@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import dateFormat from 'dateformat';
 import { Menu, MenuItem, NonIdealState, Tag } from '@blueprintjs/core';
 
@@ -14,11 +13,11 @@ import PubTimeline from './PubTimeline';
 
 require('./pubOverview.scss');
 
-const propTypes = {
-	pubData: PropTypes.object.isRequired,
+type Props = {
+	pubData: any;
 };
 
-const PubOverview = (props) => {
+const PubOverview = (props: Props) => {
 	const { pubData } = props;
 	const { communityData } = usePageContext();
 	const { title, description } = pubData;
@@ -154,7 +153,9 @@ const PubOverview = (props) => {
 	};
 
 	return (
+		// @ts-expect-error ts-migrate(2746) FIXME: This JSX tag's 'children' prop expects a single ch... Remove this comment to see the full error message
 		<DashboardFrame className="pub-overview-component" title="Overview">
+			{/* @ts-expect-error ts-migrate(2322) FIXME: Property 'children' does not exist on type 'Intrin... Remove this comment to see the full error message */}
 			<PubHeaderBackground
 				className="pub-header-component"
 				pubData={pubData}
@@ -185,6 +186,4 @@ const PubOverview = (props) => {
 		</DashboardFrame>
 	);
 };
-
-PubOverview.propTypes = propTypes;
 export default PubOverview;

@@ -1,5 +1,4 @@
 import React, { useState, useRef, useLayoutEffect } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import dateFormat from 'dateformat';
 
@@ -17,23 +16,23 @@ import PubPreviewEdges from './PubPreviewEdges';
 
 require('./pubPreview.scss');
 
-const propTypes = {
-	pubData: PropTypes.shape({
-		attributions: PropTypes.array,
-		avatar: PropTypes.string,
-		description: PropTypes.string,
-		edges: PropTypes.array,
-		slug: PropTypes.slug,
-		title: PropTypes.string,
-	}).isRequired,
-	communityData: PropTypes.object,
-	size: PropTypes.string,
-	hideByline: PropTypes.bool,
-	hideDescription: PropTypes.bool,
-	hideDates: PropTypes.bool,
-	hideContributors: PropTypes.bool,
-	hideEdges: PropTypes.bool,
-	customPubUrl: PropTypes.string,
+type OwnProps = {
+	pubData: {
+		attributions?: any[];
+		avatar?: string;
+		description?: string;
+		edges?: any[];
+		slug?: any; // TODO: PropTypes.slug
+		title?: string;
+	};
+	communityData?: any;
+	size?: string;
+	hideByline?: boolean;
+	hideDescription?: boolean;
+	hideDates?: boolean;
+	hideContributors?: boolean;
+	hideEdges?: boolean;
+	customPubUrl?: string;
 };
 
 const defaultProps = {
@@ -47,7 +46,9 @@ const defaultProps = {
 	customPubUrl: null,
 };
 
-const PubPreview = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const PubPreview = (props: Props) => {
 	const {
 		communityData,
 		customPubUrl,
@@ -64,6 +65,7 @@ const PubPreview = (props) => {
 	const [canExpand, setCanExpand] = useState(false);
 	const contentRef = useRef(null);
 	const resizedHeaderLogo =
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'headerLogo' does not exist on type 'neve... Remove this comment to see the full error message
 		communityData && getResizedUrl(communityData.headerLogo, 'fit-in', '125x35');
 	const publishedDate = getPubPublishedDate(pubData);
 	const isPrivate = !isPubPublic(pubData, scopeData);
@@ -72,6 +74,7 @@ const PubPreview = (props) => {
 	const showLowerByline = !hideByline && ['large', 'medium', 'small'].includes(size);
 	const showDates = !hideDates && ['large', 'medium', 'small'].includes(size);
 	const showContributors = !hideContributors && ['large', 'medium', 'small'].includes(size);
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'description' does not exist on type 'nev... Remove this comment to see the full error message
 	const showDescription = pubData.description && !hideDescription;
 	const showExpandButton = canExpand && ['large', 'medium'].includes(size);
 	const pubLink =
@@ -82,6 +85,7 @@ const PubPreview = (props) => {
 		<ManyAuthorsByline
 			truncateAt={8}
 			pubData={pubData}
+			// @ts-expect-error ts-migrate(2322) FIXME: Property 'linkToUsers' does not exist on type 'Int... Remove this comment to see the full error message
 			linkToUsers={false}
 			isExpanded={isExpanded}
 		/>
@@ -89,6 +93,7 @@ const PubPreview = (props) => {
 
 	useLayoutEffect(() => {
 		const { current: contentEl } = contentRef;
+		// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 		if (contentEl && contentEl.scrollHeight - contentEl.clientHeight > 0) {
 			setCanExpand(true);
 		}
@@ -104,7 +109,9 @@ const PubPreview = (props) => {
 		>
 			<div className="preview-image-wrapper">
 				{showBannerImage && (
+					// @ts-expect-error ts-migrate(2322) FIXME: Property 'alt' does not exist on type 'DetailedHTM... Remove this comment to see the full error message
 					<a href={pubLink} alt={pubData.title}>
+						{/* @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'. */}
 						<PreviewImage src={pubData.avatar} title={pubData.title} />
 					</a>
 				)}
@@ -123,15 +130,20 @@ const PubPreview = (props) => {
 						{communityData && (
 							<a
 								href={communityUrl(communityData)}
+								// @ts-expect-error ts-migrate(2322) FIXME: Property 'alt' does not exist on type 'DetailedHTM... Remove this comment to see the full error message
 								alt={communityData.title}
 								className="community-banner"
+								// @ts-expect-error ts-migrate(2339) FIXME: Property 'accentColorDark' does not exist on type ... Remove this comment to see the full error message
 								style={{ backgroundColor: communityData.accentColorDark }}
 							>
+								{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'title' does not exist on type 'never'. */}
 								<img alt={`${communityData.title} logo`} src={resizedHeaderLogo} />
 							</a>
 						)}
+						{/* @ts-expect-error ts-migrate(2322) FIXME: Property 'alt' does not exist on type 'DetailedHTM... Remove this comment to see the full error message */}
 						<a href={pubLink} alt={pubData.title}>
 							<h3 className="pub-title">
+								{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'title' does not exist on type 'never'. */}
 								{pubData.title}
 								{isPrivate && <Icon className="lock-icon" icon="lock2" />}
 							</h3>
@@ -170,6 +182,7 @@ const PubPreview = (props) => {
 						</div>
 					)}
 
+					{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'description' does not exist on type 'nev... Remove this comment to see the full error message */}
 					{showDescription && <div className="description">{pubData.description}</div>}
 					{!hideEdges && (
 						<PubPreviewEdges
@@ -191,5 +204,4 @@ const PubPreview = (props) => {
 };
 
 PubPreview.defaultProps = defaultProps;
-PubPreview.propTypes = propTypes;
 export default PubPreview;

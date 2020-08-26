@@ -23,6 +23,7 @@ export const useDashboardEdges = (pubData) => {
 		};
 		nextOutboundEdges.splice(destinationIndex, 0, updatedValue);
 		pendingPromise(
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'put' does not exist on type '(path: any,... Remove this comment to see the full error message
 			apiFetch.put('/api/pubEdges', {
 				pubEdgeId: updatedValue.id,
 				rank: newRank,
@@ -32,6 +33,7 @@ export const useDashboardEdges = (pubData) => {
 	};
 
 	const removeOutboundEdge = (outboundEdge) => {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'delete' does not exist on type '(path: a... Remove this comment to see the full error message
 		pendingPromise(apiFetch.delete('/api/pubEdges', { pubEdgeId: outboundEdge.id }));
 		setOutboundEdges(outboundEdges.filter((edge) => edge.id !== outboundEdge.id));
 	};
@@ -49,6 +51,7 @@ export const useDashboardEdges = (pubData) => {
 			}),
 		);
 		pendingPromise(
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'put' does not exist on type '(path: any,... Remove this comment to see the full error message
 			apiFetch.put('/api/pubEdges/approvedByTarget', {
 				pubEdgeId: inboundEdge.id,
 				approvedByTarget: approvedByTarget,

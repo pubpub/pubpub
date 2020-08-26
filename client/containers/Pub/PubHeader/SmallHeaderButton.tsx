@@ -29,6 +29,7 @@ const defaultProps = {
 };
 
 const SmallHeaderButton = React.forwardRef((props, ref) => {
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'className' does not exist on type '{ chi... Remove this comment to see the full error message
 	const { className, disabled, href, icon, label, labelPosition, onClick, tagName } = props;
 	return (
 		<Button
@@ -52,6 +53,8 @@ const SmallHeaderButton = React.forwardRef((props, ref) => {
 	);
 });
 
+// @ts-expect-error ts-migrate(2559) FIXME: Type '{ className: Requireable<string>; disabled: ... Remove this comment to see the full error message
 SmallHeaderButton.propTypes = propTypes;
+// @ts-expect-error ts-migrate(2559) FIXME: Type '{ className: string; disabled: boolean; href... Remove this comment to see the full error message
 SmallHeaderButton.defaultProps = defaultProps;
 export default SmallHeaderButton;

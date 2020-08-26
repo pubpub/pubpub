@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Button, Callout, Card, ControlGroup, Overlay, InputGroup } from '@blueprintjs/core';
 import { RadioGroup, Radio, useRadioState } from 'reakit/Radio';
@@ -12,9 +11,9 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 require('./createCollectionDialog.scss');
 
-const propTypes = {
-	isOpen: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
+type Props = {
+	isOpen: boolean;
+	onClose: (...args: any[]) => any;
 };
 
 const kinds = [
@@ -36,7 +35,7 @@ const kinds = [
 	},
 ];
 
-const CreateCollectionDialog = (props) => {
+const CreateCollectionDialog = (props: Props) => {
 	const { isOpen, onClose } = props;
 	const { communityData } = usePageContext();
 	const [isCreating, setIsCreating] = useState(false);
@@ -56,6 +55,7 @@ const CreateCollectionDialog = (props) => {
 			}),
 		})
 			.then((newCollection) => {
+				// @ts-expect-error ts-migrate(2345) FIXME: Type '{ collectionSlug: any; }' is missing the fol... Remove this comment to see the full error message
 				window.location.href = getDashUrl({ collectionSlug: newCollection.slug });
 			})
 			.catch((err) => {
@@ -68,6 +68,7 @@ const CreateCollectionDialog = (props) => {
 		const { key, description } = kind;
 		return (
 			<Radio {...kindRadio} key={key} value={key}>
+				{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'checked' does not exist on type 'Pick<HT... Remove this comment to see the full error message */}
 				{({ checked, ...restProps }) => (
 					<button
 						type="button"
@@ -79,6 +80,7 @@ const CreateCollectionDialog = (props) => {
 						)}
 						{...restProps}
 					>
+						{/* @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'. */}
 						<Icon icon={getSchemaForKind(key).bpDisplayIcon} />
 						<div className="text">
 							<div className="title">{key}</div>
@@ -136,6 +138,4 @@ const CreateCollectionDialog = (props) => {
 		</Overlay>
 	);
 };
-
-CreateCollectionDialog.propTypes = propTypes;
 export default CreateCollectionDialog;

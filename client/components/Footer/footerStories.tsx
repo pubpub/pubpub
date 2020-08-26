@@ -22,6 +22,7 @@ storiesOf('components/Footer', module)
 
 				<div style={wrapperStyle}>
 					<Footer
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'isAdmin' does not exist on type 'Intrins... Remove this comment to see the full error message
 						isAdmin={true}
 						isBasePubPub={false}
 						socialItems={socialItems}
@@ -31,6 +32,7 @@ storiesOf('components/Footer', module)
 
 				<div style={wrapperStyle}>
 					<Footer
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'isAdmin' does not exist on type 'Intrins... Remove this comment to see the full error message
 						isAdmin={false}
 						isBasePubPub={false}
 						socialItems={socialItems}
@@ -40,6 +42,7 @@ storiesOf('components/Footer', module)
 
 				<div style={wrapperStyle}>
 					<Footer
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'isAdmin' does not exist on type 'Intrins... Remove this comment to see the full error message
 						isAdmin={false}
 						isBasePubPub={true}
 						communityData={communityData}
@@ -54,6 +57,7 @@ storiesOf('components/Footer', module)
 			<AccentStyle communityData={communityData} isNavHidden={false} />
 			<div style={wrapperStyle}>
 				<Footer
+					// @ts-expect-error ts-migrate(2322) FIXME: Property 'isAdmin' does not exist on type 'Intrins... Remove this comment to see the full error message
 					isAdmin={true}
 					isBasePubPub={false}
 					socialItems={socialItems}

@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { PubNoteContent, SimpleEditor } from 'components';
 
-const propTypes = {
-	attrs: PropTypes.object.isRequired,
-	updateAttrs: PropTypes.func.isRequired,
-	isSmall: PropTypes.bool.isRequired,
-	footnotes: PropTypes.array.isRequired,
+type Props = {
+	attrs: any;
+	updateAttrs: (...args: any[]) => any;
+	isSmall: boolean;
+	footnotes: any[];
 };
 
-class ControlsFootnote extends Component {
-	constructor(props) {
+type State = any;
+
+class ControlsFootnote extends Component<Props, State> {
+	constructor(props: Props) {
 		super(props);
 		this.state = {
 			structuredValue: props.attrs.structuredValue,
@@ -63,6 +64,7 @@ class ControlsFootnote extends Component {
 					<div className="input wide">
 						{hasRenderedContent && (
 							<PubNoteContent
+								// @ts-expect-error ts-migrate(2322) FIXME: Property 'structured' does not exist on type 'Intr... Remove this comment to see the full error message
 								structured={renderContent.html}
 								unstructured={renderContent.unstructuredValue}
 							/>
@@ -73,6 +75,4 @@ class ControlsFootnote extends Component {
 		);
 	}
 }
-
-ControlsFootnote.propTypes = propTypes;
 export default ControlsFootnote;

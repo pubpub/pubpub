@@ -1,7 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { OverflowList } from '@blueprintjs/core';
 
+// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module 'types/pub' or its correspondin... Remove this comment to see the full error message
 import { pubDataProps } from 'types/pub';
 import { chooseCollectionForPub } from 'client/utils/collections';
 import { collectionUrl } from 'utils/canonicalUrls';
@@ -14,12 +14,12 @@ import CollectionsBarButton from './CollectionsBarButton';
 
 require('./collectionsBar.scss');
 
-const propTypes = {
-	pubData: pubDataProps.isRequired,
-	updateLocalData: PropTypes.func.isRequired,
+type Props = {
+	pubData: pubDataProps;
+	updateLocalData: (...args: any[]) => any;
 };
 
-const CollectionsBar = (props) => {
+const CollectionsBar = (props: Props) => {
 	const { pubData, updateLocalData } = props;
 	const { communityData, locationData } = usePageContext();
 	const currentCollection = chooseCollectionForPub(pubData, locationData);
@@ -51,6 +51,7 @@ const CollectionsBar = (props) => {
 							a.collection.title.toLowerCase() - b.collection.title.toLowerCase(),
 					)}
 				visibleItemRenderer={({ collection }) => (
+					// @ts-expect-error ts-migrate(2322) FIXME: Property 'children' does not exist on type 'Intrin... Remove this comment to see the full error message
 					<CollectionsBarButton
 						key={collection.id}
 						href={collectionUrl(communityData, collection)}
@@ -70,19 +71,23 @@ const CollectionsBar = (props) => {
 							: 'collections'
 						: 'more';
 					return (
+						// @ts-expect-error ts-migrate(2322) FIXME: Property 'children' does not exist on type 'Intrin... Remove this comment to see the full error message
 						<Menu
 							placement="bottom-end"
 							aria-label={overflowCollections.length + ' ' + label}
 							disclosure={
+								// @ts-expect-error ts-migrate(2322) FIXME: Property 'children' does not exist on type 'Intrin... Remove this comment to see the full error message
 								<CollectionsBarButton icon={icon} rightIcon={rightIcon}>
 									{overflowCollections.length} {label}
 								</CollectionsBarButton>
 							}
 						>
+							{/* @ts-expect-error ts-migrate(2345) FIXME: Type 'unknown' is not assignable to type '{ collec... Remove this comment to see the full error message */}
 							{overflowCollections.map(({ collection }) => {
 								const schema = getSchemaForKind(collection.kind);
 								return (
 									<MenuItem
+										// @ts-expect-error ts-migrate(2322) FIXME: Property 'icon' does not exist on type 'IntrinsicA... Remove this comment to see the full error message
 										icon={schema && schema.bpDisplayIcon}
 										key={collection.id}
 										text={collection.title}
@@ -97,6 +102,4 @@ const CollectionsBar = (props) => {
 		</div>
 	);
 };
-
-CollectionsBar.propTypes = propTypes;
 export default CollectionsBar;

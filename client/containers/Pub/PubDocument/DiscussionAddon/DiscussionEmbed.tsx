@@ -1,17 +1,16 @@
 import React, { useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import uuidv4 from 'uuid/v4';
 
 require('./discussionEmbed.scss');
 
-const propTypes = {
-	attrs: PropTypes.object.isRequired,
-	options: PropTypes.object.isRequired,
-	isSelected: PropTypes.bool.isRequired,
-	isEditable: PropTypes.bool.isRequired,
+type Props = {
+	attrs: any;
+	options: any;
+	isSelected: boolean;
+	isEditable: boolean;
 };
 
-const DiscussionEmbed = (props) => {
+const DiscussionEmbed = (props: Props) => {
 	const { align, threadNumber } = props.attrs;
 	const { addRef, removeRef } = props.options;
 	const figFloat = align === 'left' || align === 'right' ? align : 'none';
@@ -50,6 +49,4 @@ const DiscussionEmbed = (props) => {
 		</div>
 	);
 };
-
-DiscussionEmbed.propTypes = propTypes;
 export default DiscussionEmbed;

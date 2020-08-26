@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Button, Classes, ControlGroup, Dialog, Divider, InputGroup } from '@blueprintjs/core';
 
 import {
@@ -16,17 +15,17 @@ import { pubUrl } from 'utils/canonicalUrls';
 
 require('./pubShareDialog.scss');
 
-const propTypes = {
-	isOpen: PropTypes.bool.isRequired,
-	onClose: PropTypes.func.isRequired,
-	pubData: PropTypes.shape({
-		editHash: PropTypes.string,
-		viewHash: PropTypes.string,
-		isRelease: PropTypes.bool,
-		membersData: PropTypes.shape({
-			members: PropTypes.arrayOf(PropTypes.shape({})),
-		}),
-	}).isRequired,
+type PubShareDialogProps = {
+	isOpen: boolean;
+	onClose: (...args: any[]) => any;
+	pubData: {
+		editHash?: string;
+		viewHash?: string;
+		isRelease?: boolean;
+		membersData?: {
+			members?: {}[];
+		};
+	};
 };
 
 const getHelperText = (activeTargetName, activeTargetType, canModifyMembers) => {
@@ -41,7 +40,15 @@ const getHelperText = (activeTargetName, activeTargetType, canModifyMembers) => 
 	return `Members can collaborate on this ${activeTargetName}${containingPubsString}`;
 };
 
-const AccessHashOptions = (props) => {
+type AccessHashOptionsProps = {
+	pubData: {
+		editHash?: string;
+		viewHash?: string;
+		isRelease?: boolean;
+	};
+};
+
+const AccessHashOptions = (props: AccessHashOptionsProps) => {
 	const { pubData } = props;
 	const { communityData } = usePageContext();
 	const { viewHash, editHash, isRelease } = pubData;
@@ -53,6 +60,7 @@ const AccessHashOptions = (props) => {
 		});
 		return (
 			<ControlGroup className="hash-row">
+				{/* @ts-expect-error ts-migrate(2746) FIXME: This JSX tag's 'children' prop expects a single ch... Remove this comment to see the full error message */}
 				<ClickToCopyButton minimal={false} copyString={url}>
 					Copy {label} URL
 				</ClickToCopyButton>
@@ -73,20 +81,22 @@ const AccessHashOptions = (props) => {
 	);
 };
 
-AccessHashOptions.propTypes = {
-	pubData: PropTypes.shape({
-		editHash: PropTypes.string,
-		viewHash: PropTypes.string,
-		isRelease: PropTypes.bool,
-	}).isRequired,
+type MembersOptionsProps = {
+	pubData: {
+		membersData?: {
+			members?: {}[];
+		};
+	};
 };
 
-const MembersOptions = (props) => {
+const MembersOptions = (props: MembersOptionsProps) => {
 	const {
 		pubData: {
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'members' does not exist on type '{ membe... Remove this comment to see the full error message
 			membersData: { members },
 		},
 	} = props;
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'pendingCount' does not exist on type '{ ... Remove this comment to see the full error message
 	const { pendingCount } = usePendingChanges();
 	const { scopeData } = usePageContext();
 	const { canManage } = scopeData.activePermissions;
@@ -102,6 +112,7 @@ const MembersOptions = (props) => {
 			{canManage && (
 				<ControlGroup className="add-member-controls">
 					<UserAutocomplete
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '(user: any) => any' is not assignable to typ... Remove this comment to see the full error message
 						onSelect={addMember}
 						usedUserIds={localMembers.map((member) => member.userId)}
 					/>
@@ -112,11 +123,17 @@ const MembersOptions = (props) => {
 				{membersByType[activeTargetType].map((member) => {
 					return (
 						<MemberRow
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 							memberData={member}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'boolean' is not assignable to type 'never'.
 							isOnlyMemberInScope={membersByType[activeTargetType].length === 1}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'boolean' is not assignable to type 'never'.
 							isReadOnly={!canManage}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type '(member: any, update: any) => any' is not as... Remove this comment to see the full error message
 							onUpdate={updateMember}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type '(member: any) => Promise<any>' is not assign... Remove this comment to see the full error message
 							onDelete={removeMember}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 							key={member.id}
 						/>
 					);
@@ -135,15 +152,7 @@ const MembersOptions = (props) => {
 	);
 };
 
-MembersOptions.propTypes = {
-	pubData: PropTypes.shape({
-		membersData: PropTypes.shape({
-			members: PropTypes.arrayOf(PropTypes.shape({})),
-		}),
-	}).isRequired,
-};
-
-const PubShareDialog = (props) => {
+const PubShareDialog = (props: PubShareDialogProps) => {
 	const { isOpen, onClose, pubData } = props;
 	const { viewHash, editHash } = pubData;
 	const hasHash = !!(viewHash || editHash);
@@ -186,6 +195,4 @@ const PubShareDialog = (props) => {
 		</Dialog>
 	);
 };
-
-PubShareDialog.propTypes = propTypes;
 export default PubShareDialog;

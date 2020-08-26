@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import TimeAgo from 'react-timeago';
 import classNames from 'classnames';
 import { Button, Intent } from '@blueprintjs/core';
@@ -12,19 +11,21 @@ import { apiFetch } from 'client/utils/apiFetch';
 
 require('./threadComment.scss');
 
-const propTypes = {
-	discussionData: PropTypes.object.isRequired,
-	threadCommentData: PropTypes.object.isRequired,
-	pubData: PropTypes.object.isRequired,
-	updateLocalData: PropTypes.func.isRequired,
-	isPreview: PropTypes.bool,
+type OwnProps = {
+	discussionData: any;
+	threadCommentData: any;
+	pubData: any;
+	updateLocalData: (...args: any[]) => any;
+	isPreview?: boolean;
 };
 
 const defaultProps = {
 	isPreview: false,
 };
 
-const ThreadComment = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const ThreadComment = (props: Props) => {
 	const { discussionData, threadCommentData, pubData, updateLocalData, isPreview } = props;
 	const { loginData, communityData, locationData } = usePageContext();
 	const [isEditing, setIsEditing] = useState(false);
@@ -130,6 +131,7 @@ const ThreadComment = (props) => {
 							key={`${isEditing}-${threadCommentData.text}`}
 							isReadOnly={!isEditing}
 							initialContent={threadCommentData.content}
+							// @ts-expect-error ts-migrate(2322) FIXME: Type '(editorChangeObject: any) => void' is not as... Remove this comment to see the full error message
 							onChange={(editorChangeObject) => {
 								if (isEditing) {
 									setChangeObject(editorChangeObject);
@@ -153,11 +155,14 @@ const ThreadComment = (props) => {
 							intent={Intent.PRIMARY}
 							text="Update Discussion"
 							loading={isLoadingEdit}
+							// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 							disabled={!getText(changeObject.view)}
 							onClick={() => {
 								setIsLoadingEdit(true);
 								handlePutThreadComment({
+									// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 									content: getJSON(changeObject.view),
+									// @ts-expect-error ts-migrate(2339) FIXME: Property 'view' does not exist on type '{}'.
 									text: getText(changeObject.view) || '',
 								}).then(() => {
 									setIsEditing(false);
@@ -172,7 +177,5 @@ const ThreadComment = (props) => {
 		</div>
 	);
 };
-
-ThreadComment.propTypes = propTypes;
 ThreadComment.defaultProps = defaultProps;
 export default ThreadComment;

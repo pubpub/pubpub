@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { usePageContext } from 'utils/hooks';
 import {
 	Callout,
@@ -15,11 +14,11 @@ import { DashboardFrame } from 'components';
 
 require('./dashboardImpact.scss');
 
-const propTypes = {
-	impactData: PropTypes.object.isRequired,
+type Props = {
+	impactData: any;
 };
 
-const DashboardImpact = (props) => {
+const DashboardImpact = (props: Props) => {
 	const { impactData } = props;
 	const { baseToken, benchmarkToken } = impactData;
 	const { scopeData } = usePageContext();
@@ -36,9 +35,13 @@ const DashboardImpact = (props) => {
 		return width < 960 ? 45 : 61;
 	};
 	return (
+		// @ts-expect-error ts-migrate(2746) FIXME: This JSX tag's 'children' prop expects a single ch... Remove this comment to see the full error message
 		<DashboardFrame
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			title="Impact"
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			className="dashboard-impact-container"
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			details={`Learn more about who your ${activeTargetName} is reaching.`}
 		>
 			<section>
@@ -149,6 +152,4 @@ const DashboardImpact = (props) => {
 		</DashboardFrame>
 	);
 };
-
-DashboardImpact.propTypes = propTypes;
 export default DashboardImpact;

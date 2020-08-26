@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { PubByline, DialogLauncher, PubAttributionDialog } from 'components';
 import { usePageContext } from 'utils/hooks';
@@ -9,16 +8,16 @@ import { formatDate } from 'utils/dates';
 import BylineEditButton from './BylineEditButton';
 import EditableHeaderText from './EditableHeaderText';
 
-const propTypes = {
-	pubData: PropTypes.shape({
-		title: PropTypes.string,
-		description: PropTypes.string,
-		isRelease: PropTypes.bool,
-	}).isRequired,
-	updatePubData: PropTypes.func.isRequired,
+type Props = {
+	pubData: {
+		title?: string;
+		description?: string;
+		isRelease?: boolean;
+	};
+	updatePubData: (...args: any[]) => any;
 };
 
-const TitleGroup = (props) => {
+const TitleGroup = (props: Props) => {
 	const { pubData, updatePubData } = props;
 	const { title, description, isRelease } = pubData;
 	const { communityData, scopeData } = usePageContext();
@@ -40,6 +39,7 @@ const TitleGroup = (props) => {
 				>
 					{({ isOpen, onClose }) => (
 						<PubAttributionDialog
+							// @ts-expect-error ts-migrate(2322) FIXME: Property 'canEdit' does not exist on type 'Intrins... Remove this comment to see the full error message
 							canEdit={true}
 							isOpen={isOpen}
 							onClose={onClose}
@@ -63,26 +63,39 @@ const TitleGroup = (props) => {
 	return (
 		<div className="title-group-component">
 			<EditableHeaderText
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'undefined' is not assignable to type 'never'... Remove this comment to see the full error message
 				text={title}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type '(text: any) => any' is not assignable to typ... Remove this comment to see the full error message
 				updateText={(text) => updatePubData({ title: text })}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'boolean' is not assignable to type 'never'.
 				canEdit={canModify}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				className="title"
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				placeholder="Add a Pub title"
 			/>
 			{(canModify || description) && (
 				<EditableHeaderText
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'undefined' is not assignable to type 'never'... Remove this comment to see the full error message
 					text={description}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type '(text: any) => any' is not assignable to typ... Remove this comment to see the full error message
 					updateText={(text) => updatePubData({ description: text })}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'boolean' is not assignable to type 'never'.
 					canEdit={canModify}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 					tagName="h3"
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 					className="description pub-header-themed-secondary"
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 					placeholder="Add a description for this Pub"
 					maxLength={280}
 				/>
 			)}
 			<PubByline
 				pubData={pubData}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'false' is not assignable to type 'null'.
 				renderSuffix={() => !isRelease && renderBylineEditor()}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'null'.
 				renderEmptyState={renderBylineEmptyState}
 			/>
 			{publishedDate && (
@@ -94,6 +107,4 @@ const TitleGroup = (props) => {
 		</div>
 	);
 };
-
-TitleGroup.propTypes = propTypes;
 export default TitleGroup;

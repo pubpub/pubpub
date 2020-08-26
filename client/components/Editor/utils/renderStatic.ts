@@ -93,6 +93,7 @@ const fillHoleInSpec = (outputSpec, children, isMark) => {
 		if (isMark) {
 			return [...outputSpec, ...children];
 		}
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
 		return outputSpec.map((outputSpecChild) => fillHoleInSpec(outputSpecChild, children));
 	}
 	return outputSpec;
@@ -127,6 +128,7 @@ const createOutputSpecFromNode = (node, schema, context) => {
 		? content.map((child) => createOutputSpecFromNode(child, schema, context))
 		: [];
 
+	// @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
 	const outputSpec = fillHoleInSpec(
 		nodeSpec.toDOM(
 			{ ...node, type: nodeType, attrs: normalizeAttrsForSpec(attrs, nodeSpec) },

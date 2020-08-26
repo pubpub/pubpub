@@ -1,12 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-const propTypes = {
-	count: PropTypes.number.isRequired,
-	index: PropTypes.number.isRequired,
+type Props = {
+	count: number;
+	index: number;
 };
 
-const PubEdgeListingCounter = (props) => {
+const PubEdgeListingCounter = (props: Props) => {
 	const { index, count } = props;
 
 	return (
@@ -15,6 +14,4 @@ const PubEdgeListingCounter = (props) => {
 		</span>
 	);
 };
-
-PubEdgeListingCounter.propTypes = propTypes;
 export default PubEdgeListingCounter;

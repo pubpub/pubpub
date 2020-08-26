@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import dateFormat from 'dateformat';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 
@@ -7,16 +6,16 @@ import { FileUploadButton } from 'components';
 import { getFormattedDownload } from 'containers/Pub/PubHeader/headerUtils';
 import { apiFetch } from 'client/utils/apiFetch';
 
-const propTypes = {
-	pubData: PropTypes.shape({
-		id: PropTypes.string,
-		downloads: PropTypes.array,
-	}).isRequired,
-	communityId: PropTypes.string.isRequired,
-	onSetDownloads: PropTypes.func.isRequired,
+type Props = {
+	pubData: {
+		id?: string;
+		downloads?: any[];
+	};
+	communityId: string;
+	onSetDownloads: (...args: any[]) => any;
 };
 
-const DownloadChooser = (props) => {
+const DownloadChooser = (props: Props) => {
 	const { communityId, pubData, onSetDownloads } = props;
 
 	const formattedDownload = getFormattedDownload(pubData.downloads);
@@ -55,6 +54,7 @@ const DownloadChooser = (props) => {
 				able to use the automatic export tools.
 			</p>
 			<ButtonGroup>
+				{/* @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'undefined... Remove this comment to see the full error message */}
 				<FileUploadButton onUploadFinish={updateDownloads} text="Upload new file" />
 				{formattedDownload && (
 					<div style={{ marginLeft: '1em' }}>
@@ -69,6 +69,4 @@ const DownloadChooser = (props) => {
 		</div>
 	);
 };
-
-DownloadChooser.propTypes = propTypes;
 export default DownloadChooser;

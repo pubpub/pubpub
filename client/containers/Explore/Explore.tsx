@@ -1,14 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { CommunityPreview } from 'components';
 
 require('./explore.scss');
 
-const propTypes = {
-	exploreData: PropTypes.object.isRequired,
+type Props = {
+	exploreData: any;
 };
 
-const Explore = (props) => {
+const Explore = (props: Props) => {
 	const exploreData = props.exploreData;
 
 	return (
@@ -64,6 +63,4 @@ const Explore = (props) => {
 		</div>
 	);
 };
-
-Explore.propTypes = propTypes;
 export default Explore;
