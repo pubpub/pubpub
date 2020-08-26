@@ -6,7 +6,7 @@ const autoprefixer = require('autoprefixer');
 module.exports = {
 	mode: 'development',
 	entry: {
-		main: resolve(__dirname, `../containers/App/App.js`),
+		main: resolve(__dirname, `../containers/App/App.tsx`),
 	},
 	resolve: {
 		extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss'],
