@@ -10,6 +10,8 @@ import { usePageContext } from 'utils/hooks';
 
 import ResponsiveHeaderButton from './ResponsiveHeaderButton';
 
+require('./draftReleaseButtons.scss');
+
 const propTypes = {
 	pubData: PropTypes.shape({
 		isRelease: PropTypes.bool,
@@ -70,6 +72,7 @@ const DraftReleaseButtons = (props) => {
 					/>
 				)}
 				<Menu
+					className="releases-menu"
 					aria-label="Choose a historical release of this Pub"
 					disclosure={
 						<ResponsiveHeaderButton
@@ -87,12 +90,19 @@ const DraftReleaseButtons = (props) => {
 							<MenuItem
 								key={release.id}
 								active={index === releaseNumber - 1}
-								icon={index === releaseNumber - 1 ? 'tick' : 'document-open'}
+								icon={index === releaseNumber - 1 ? 'tick' : 'document-share'}
 								href={pubUrl(communityData, pubData, { releaseNumber: index + 1 })}
-								text={formatDate(release.createdAt, { includeTime: true })}
+								className="release-menu-item"
+								text={<div className="release-metadata">
+												<p className="number">{'Release #' + (index + 1)}</p>
+												<p className="timestamp">{
+													formatDate(new Date(release.createdAt), {
+														includeTime: true
+													})}
+												</p>
+											</div>}
 							/>
-						))
-						.reverse()}
+						)).reverse()}
 				</Menu>
 			</React.Fragment>
 		);
