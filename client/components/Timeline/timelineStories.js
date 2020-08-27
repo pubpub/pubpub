@@ -30,7 +30,7 @@ storiesOf('components/Timeline', module).add('default', () => (
 				hollow
 				title="A bigger thing again"
 				accentColor="orange"
-				icon="document-open"
+				icon="document-share"
 				subtitle="Oh wow"
 			/>
 		</TimelineCondenser>

@@ -57,7 +57,7 @@ const PubTimeline = (props) => {
 			<TimelineItem
 				hollow
 				large={isLatest}
-				icon="document-open"
+				icon="document-share"
 				key={release.id}
 				title={
 					<a
@@ -99,7 +99,7 @@ const PubTimeline = (props) => {
 		return (
 			<TimelineItem
 				large
-				icon="document-open"
+				icon="document-share"
 				title={<i>No releases yet</i>}
 				subtitle="Create a Release to share this Pub with the world."
 				controls={

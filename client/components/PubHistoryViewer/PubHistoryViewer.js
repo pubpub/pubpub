@@ -213,7 +213,7 @@ const PubHistoryViewer = (props) => {
 				<MenuItem
 					text={`Release ${dateString}`}
 					intent="success"
-					icon="document-open"
+					icon="document-share"
 					key={key}
 					href={pubUrl(communityData, pubData, { releaseNumber: release.branchKey + 1 })}
 					target="_blank"

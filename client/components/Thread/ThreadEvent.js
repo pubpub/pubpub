@@ -21,7 +21,7 @@ const ThreadEvent = (props) => {
 		created: 'clean',
 		completed: 'tick',
 		closed: 'disable',
-		released: 'document-open',
+		released: 'document-share',
 	};
 	return (
 		<div className="thread-event-component">

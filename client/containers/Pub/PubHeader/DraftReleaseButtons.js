@@ -145,7 +145,7 @@ const DraftReleaseButtons = (props) => {
 						renderLauncherElement={({ openDialog }) => (
 							<ResponsiveHeaderButton
 								disabled={!canRelease}
-								icon="document-open"
+								icon="document-share"
 								onClick={openDialog}
 								label={{ bottom: 'Create a Release', top: 'Publish' }}
 							/>
