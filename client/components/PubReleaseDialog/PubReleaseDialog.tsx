@@ -28,7 +28,7 @@ type OwnProps = {
 	isOpen: boolean;
 	pubData: {
 		id?: string;
-		releases?: { createdAt: number }[];
+		releases?: { createdAt?: string }[];
 	};
 	onClose: (...args: any[]) => any;
 	updatePubData: (...args: any[]) => any;
