@@ -160,7 +160,7 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 							<ResponsiveHeaderButton
 								// @ts-expect-error ts-migrate(2322) FIXME: Property 'disabled' does not exist on type 'Intrin... Remove this comment to see the full error message
 								disabled={!canRelease}
-								icon="document-open"
+								icon="document-share"
 								onClick={openDialog}
 								label={{ bottom: 'Create a Release', top: 'Publish' }}
 							/>
