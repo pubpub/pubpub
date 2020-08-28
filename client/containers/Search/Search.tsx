@@ -146,7 +146,6 @@ const Search = (props: Props) => {
 							value={searchQuery}
 							onChange={handleSearchChange}
 							rightElement={isLoading && <Spinner size={35} />}
-							// @ts-expect-error ts-migrate(2322) FIXME: Type 'MutableRefObject<null>' provides no match fo... Remove this comment to see the full error message
 							inputRef={inputRef}
 						/>
 					</div>
