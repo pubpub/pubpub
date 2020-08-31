@@ -146,7 +146,7 @@ const Search = (props: Props) => {
 							value={searchQuery}
 							onChange={handleSearchChange}
 							rightElement={isLoading && <Spinner size={35} />}
-							inputRef={inputRef}
+							inputRef={inputRef as any}
 						/>
 					</div>
 				</div>
