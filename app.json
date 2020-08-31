@@ -12,8 +12,7 @@
 	},
 	"environments": {
 		"test": {
-			"addons": ["heroku-postgresql:in-dyno"],
-			"scripts": "npm run check && npm run test"
+			"addons": ["heroku-postgresql:in-dyno"]
 		},
 		"review": {
 			"formation": {
