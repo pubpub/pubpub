@@ -66,7 +66,7 @@ export const communityDoiOverrides = [
 		prefix: JOTE_DOI_PREFIX,
 		key: 'JOTE',
 	},
-		{
+	{
 		communityIds: [
 			'700f6ff1-4acc-4ca4-b740-8d04d89fea9e', // https://tmb.pubpub.org/
 		],
