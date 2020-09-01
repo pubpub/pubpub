@@ -71,6 +71,9 @@ const getButtonText = (status, deposit) => {
 	if (status === AssignDoiStatus.Initial && deposit) {
 		return 'Update & Preview Deposit';
 	}
+	if (status === AssignDoiStatus.Previewed && deposit) {
+		return 'Re-Submit Deposit';
+	}
 
 	return buttonTextByStatus[status];
 };
