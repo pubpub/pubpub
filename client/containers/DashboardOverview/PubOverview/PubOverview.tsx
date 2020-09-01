@@ -75,7 +75,7 @@ const PubOverview = (props: Props) => {
 				<div className="section-header">Reviews</div>
 				<Menu className="list-content">
 					{!pubData.reviews.length && (
-						<NonIdealState title="No Reviews Yet" icon="social-media" />
+						<NonIdealState title="No Reviews Yet" description={<>This Pub has not been reviewed using PubPub.</>} icon="social-media" />
 					)}
 					{pubData.reviews
 						.sort((a, b) => a.createdAt - b.createdAt)
