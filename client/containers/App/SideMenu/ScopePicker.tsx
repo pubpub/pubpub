@@ -74,7 +74,6 @@ const ScopePicker = () => {
 		<div className="scope-picker-component">
 			<MenuButton
 				aria-label="Dashboard Menu"
-				// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'null'.
 				buttonContent={
 					<React.Fragment>
 						<div className="top">{currentScopeTitle}</div>
@@ -83,7 +82,6 @@ const ScopePicker = () => {
 				}
 				buttonProps={{
 					icon: <Icon icon={icon} />,
-					// @ts-expect-error ts-migrate(2322) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
 					className: 'scope-button',
 					fill: true,
 					minimal: true,

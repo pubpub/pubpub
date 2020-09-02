@@ -66,7 +66,6 @@ const ProposedAttribution = ({ attribution, onUpdateAttribution }: ProposedAttri
 			<MenuButton
 				aria-label="Match to PubPub user"
 				buttonProps={{
-					// @ts-expect-error ts-migrate(2322) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
 					minimal: true,
 					small: true,
 					rightIcon: 'chevron-down',
@@ -84,7 +83,6 @@ const ProposedAttribution = ({ attribution, onUpdateAttribution }: ProposedAttri
 						</span>
 					),
 				}}
-				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'null | un... Remove this comment to see the full error message
 				buttonContent={`${users.length} matching ${users.length === 1 ? 'user' : 'users'}`}
 				placement="bottom-end"
 			>

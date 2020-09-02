@@ -29,17 +29,13 @@ const InlineLabelEditor = (props: Props) => {
 			<MenuButton
 				aria-label="Choose an inline label type"
 				buttonProps={{
-					// @ts-expect-error ts-migrate(2322) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
 					minimal: true,
 					rightIcon: 'chevron-down',
 					className: 'label-type-menu',
 				}}
-				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'null | un... Remove this comment to see the full error message
 				buttonContent={buttonLabel}
 			>
-				{/* @ts-expect-error ts-migrate(2322) FIXME: Property 'text' does not exist on type 'IntrinsicA... Remove this comment to see the full error message */}
 				<MenuItem text="Pub default" onClick={handleSelectDefault} />
-				{/* @ts-expect-error ts-migrate(2322) FIXME: Property 'text' does not exist on type 'IntrinsicA... Remove this comment to see the full error message */}
 				<MenuItem text="Custom" onClick={handleSelectCustom} />
 			</MenuButton>
 			<InputGroup

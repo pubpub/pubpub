@@ -1,95 +1,116 @@
-import React, { useEffect, useRef, useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 
-import HeaderPopover from './HeaderPopover';
+import { getHighestAncestorWithId } from 'client/utils/dom';
 
-type Props = {
-	collabData: any;
+import LinkPopover from './LinkPopover';
+
+export type PubMouseEventProps = {
 	locationData: any;
-	historyData: any;
 	mainContentRef: any;
 };
 
-/* Specify the types of elems we want events for */
-const mouseElemTypes = [
-	{
-		key: 'header',
-		querySelector: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].map(
-			(headerType) => `.pub-body-component > .editor >${headerType}`,
-		),
-	},
-];
+const clickToCopySelector = '.click-to-copy, .click-to-copy *';
 
-const PubMouseEvents = (props: Props) => {
-	const { collabData, historyData, mainContentRef, locationData } = props;
-	const timeouts = useRef({});
-	const [hoverElems, hoverElemsDispatch] = useReducer((state, action) => {
-		return {
-			...state,
-			[action.type]: action.elem,
-		};
-	}, {});
+enum HoverTargetTypes {
+	ClickToCopy = 'click-to-copy',
+}
 
-	/* Generate specific functions for all elemTypes */
-	const mouseEventHandlers = mouseElemTypes.reduce((prev, curr) => {
-		const key = curr.key;
-		return {
-			...prev,
-			[key]: {
-				enterHandler: (evt) => {
-					clearTimeout(timeouts.current[key]);
-					hoverElemsDispatch({ type: key, elem: evt.target });
-				},
-				leaveHandler: () => {
-					timeouts.current[key] = setTimeout(() => {
-						hoverElemsDispatch({ type: key, elem: undefined });
-					}, 250);
-				},
-			},
-		};
-	}, {});
+type PubMouseEventState = {
+	[hoverTargetType: string]: Element | undefined;
+};
 
-	/* Manage event handler binding */
+type PubMouseEventAction = {
+	type: string;
+	element?: Element;
+};
+
+function isValidLinkTarget(element: Element | null): element is Element {
+	if (!element) {
+		return false;
+	}
+
+	if (element.tagName === 'P' && element.textContent === '') {
+		return false;
+	}
+
+	return true;
+}
+
+const PubMouseEvents = (props: PubMouseEventProps) => {
+	const { mainContentRef, locationData } = props;
+	const [hoverTargets, hoverElemsDispatch] = useReducer(
+		(state: PubMouseEventState, action: PubMouseEventAction) => {
+			return {
+				...state,
+				[action.type]: action.element,
+			};
+		},
+		{},
+	);
+
 	useEffect(() => {
-		/* Query for all elements that will have event handlers */
-		const elemQueries = mouseElemTypes.map((elemType) => {
-			// @ts-expect-error ts-migrate(2769) FIXME: Argument of type 'string[]' is not assignable to p... Remove this comment to see the full error message
-			return document.querySelectorAll(elemType.querySelector);
-		});
+		let timeout: NodeJS.Timeout;
 
-		/* Add event handlers */
-		elemQueries.forEach((elemArray, index) => {
-			const key = mouseElemTypes[index].key;
-			const { enterHandler, leaveHandler } = mouseEventHandlers[key];
-			elemArray.forEach((elem) => {
-				elem.addEventListener('mouseenter', enterHandler);
-				elem.addEventListener('mouseleave', leaveHandler);
-			});
-		});
-		return () => {
-			/* Remove event handlers */
-			elemQueries.forEach((elemArray, index) => {
-				const key = mouseElemTypes[index].key;
-				const { enterHandler, leaveHandler } = mouseEventHandlers[key];
-				elemArray.forEach((elem) => {
-					elem.removeEventListener('mouseenter', enterHandler);
-					elem.removeEventListener('mouseleave', leaveHandler);
-				});
-			});
+		const handleMouseOver = (e: MouseEvent) => {
+			const element = e.target as Element | null;
+
+			if (!element) {
+				return;
+			}
+
+			const parent = getHighestAncestorWithId(
+				element,
+				document.querySelector('.pub-body-component > .editor')!,
+			);
+
+			if (isValidLinkTarget(parent)) {
+				hoverElemsDispatch({ type: HoverTargetTypes.ClickToCopy, element: parent });
+				clearTimeout(timeout);
+			} else if (element.matches(clickToCopySelector)) {
+				clearTimeout(timeout);
+			}
 		};
-	}, [mouseEventHandlers, collabData.editorChangeObject.isCollabLoaded, historyData.currentKey]);
+		const handleMouseOut = (e: MouseEvent) => {
+			const element = e.target as Element | null;
+
+			if (!element) {
+				return;
+			}
+
+			const parent = getHighestAncestorWithId(
+				element,
+				document.querySelector('.pub-body-component > .editor')!,
+			);
+
+			if (isValidLinkTarget(parent) || element.matches(clickToCopySelector)) {
+				timeout = setTimeout(() => {
+					hoverElemsDispatch({ type: HoverTargetTypes.ClickToCopy });
+				}, 250);
+			}
+		};
+
+		document.addEventListener('mouseover', handleMouseOver);
+		document.addEventListener('mouseout', handleMouseOut);
+
+		return () => {
+			document.removeEventListener('mouseover', handleMouseOver);
+			document.removeEventListener('mouseout', handleMouseOut);
+		};
+	}, []);
+
+	const clickToCopyTarget = hoverTargets[HoverTargetTypes.ClickToCopy];
+
 	return (
 		<div className="pub-mouse-events-component">
-			{hoverElems.header && (
-				<HeaderPopover
+			{clickToCopyTarget && (
+				<LinkPopover
 					locationData={locationData}
-					elem={hoverElems.header}
+					element={clickToCopyTarget}
 					mainContentRef={mainContentRef}
-					timeouts={timeouts}
-					// @ts-expect-error ts-migrate(2339) FIXME: Property 'header' does not exist on type '{}'.
-					mouseLeave={mouseEventHandlers.header.leaveHandler}
 				/>
 			)}
 		</div>
 	);
 };
+
 export default PubMouseEvents;

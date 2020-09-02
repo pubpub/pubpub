@@ -386,14 +386,12 @@ function AssignDoi(props: Props) {
 							<MenuButton
 								// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'null | un... Remove this comment to see the full error message
 								buttonContent={activeContentVersionItem.title}
-								// @ts-expect-error ts-migrate(2322) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
 								buttonProps={{ rightIcon: 'caret-down' }}
 								aria-label="content-version"
 							>
 								{contentVersionItems.map((item) => (
 									<MenuItem
 										key={item.key}
-										// @ts-expect-error ts-migrate(2322) FIXME: Property 'active' does not exist on type 'Intrinsi... Remove this comment to see the full error message
 										active={item === activeContentVersionItem}
 										onClick={() => handleContentVersionItemSelect(item)}
 										text={item.title}
@@ -409,14 +407,12 @@ function AssignDoi(props: Props) {
 								<MenuButton
 									// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'null | un... Remove this comment to see the full error message
 									buttonContent={activeReviewTypeItem.title}
-									// @ts-expect-error ts-migrate(2322) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
 									buttonProps={{ rightIcon: 'caret-down' }}
 									aria-label="review-type"
 								>
 									{reviewTypeItems.map((item) => (
 										<MenuItem
 											key={item.key}
-											// @ts-expect-error ts-migrate(2322) FIXME: Property 'active' does not exist on type 'Intrinsi... Remove this comment to see the full error message
 											active={item === activeReviewTypeItem}
 											onClick={() => handleReviewTypeItemSelect(item)}
 											text={<span>{item.title}</span>}
@@ -428,14 +424,12 @@ function AssignDoi(props: Props) {
 								<MenuButton
 									// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'null | un... Remove this comment to see the full error message
 									buttonContent={activeReviewRecommendationItem.title}
-									// @ts-expect-error ts-migrate(2322) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
 									buttonProps={{ rightIcon: 'caret-down' }}
 									aria-label="review-type"
 								>
 									{reviewRecommendationItems.map((item) => (
 										<MenuItem
 											key={item.key}
-											// @ts-expect-error ts-migrate(2322) FIXME: Property 'active' does not exist on type 'Intrinsi... Remove this comment to see the full error message
 											active={item === activeReviewRecommendationItem}
 											onClick={() =>
 												handleReviewRecommendationItemSelect(item)

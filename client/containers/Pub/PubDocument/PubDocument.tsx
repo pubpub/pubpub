@@ -148,12 +148,7 @@ const PubDocument = (props: Props) => {
 					/>
 				)}
 			</PubSuspendWhileTyping>
-			<PubMouseEvents
-				collabData={collabData}
-				locationData={locationData}
-				historyData={historyData}
-				mainContentRef={mainContentRef}
-			/>
+			<PubMouseEvents locationData={locationData} mainContentRef={mainContentRef} />
 		</div>
 	);
 };

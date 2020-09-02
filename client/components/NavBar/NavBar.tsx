@@ -33,7 +33,6 @@ const NavBar = function(props) {
 							/* Return Dropdown */
 							if (item.children) {
 								return (
-									// @ts-expect-error ts-migrate(2322) FIXME: Property 'children' does not exist on type 'Intrin... Remove this comment to see the full error message
 									<Menu
 										aria-label={item.title}
 										disclosure={
@@ -50,7 +49,6 @@ const NavBar = function(props) {
 												<MenuItem
 													// eslint-disable-next-line react/no-array-index-key
 													key={index}
-													// @ts-expect-error ts-migrate(2322) FIXME: Property 'href' does not exist on type 'IntrinsicA... Remove this comment to see the full error message
 													href={subitem.href || `/${subitem.slug}`}
 													icon={
 														subitem.slug &&

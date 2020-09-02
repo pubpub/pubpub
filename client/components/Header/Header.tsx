@@ -236,13 +236,11 @@ const Header = (props: Props) => {
 								placement="bottom-end"
 								menuStyle={{ zIndex: 20 }}
 								buttonProps={{
-									// @ts-expect-error ts-migrate(2322) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
 									className: 'header-dashboard-button hide-on-mobile',
 									minimal: true,
 									large: true,
 									rightIcon: 'caret-down',
 								}}
-								// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'null | un... Remove this comment to see the full error message
 								buttonContent="Dashboard"
 							>
 								<ScopeDropdown />
@@ -255,11 +253,9 @@ const Header = (props: Props) => {
 								// The z-index of the PubHeaderFormatting is 19
 								menuStyle={{ zIndex: 20 }}
 								buttonProps={{
-									// @ts-expect-error ts-migrate(2322) FIXME: Object literal may only specify known properties, ... Remove this comment to see the full error message
 									minimal: true,
 									large: true,
 								}}
-								// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'null'.
 								buttonContent={
 									<Avatar
 										initials={loginData.initials}
@@ -269,7 +265,6 @@ const Header = (props: Props) => {
 								}
 							>
 								<MenuItem
-									// @ts-expect-error ts-migrate(2322) FIXME: Property 'href' does not exist on type 'IntrinsicA... Remove this comment to see the full error message
 									href={`/user/${loginData.slug}`}
 									text={
 										<React.Fragment>
@@ -280,9 +275,7 @@ const Header = (props: Props) => {
 										</React.Fragment>
 									}
 								/>
-								{/* @ts-expect-error ts-migrate(2322) FIXME: Property 'href' does not exist on type 'IntrinsicA... Remove this comment to see the full error message */}
 								<MenuItem href="/legal/settings" text="Privacy settings" />
-								{/* @ts-expect-error ts-migrate(2322) FIXME: Property 'onClick' does not exist on type 'Intrins... Remove this comment to see the full error message */}
 								<MenuItem onClick={handleLogout} text="Logout" />
 							</MenuButton>
 						)}

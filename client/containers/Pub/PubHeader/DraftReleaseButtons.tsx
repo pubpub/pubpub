@@ -71,7 +71,6 @@ const DraftReleaseButtons = (props: Props) => {
 						}}
 					/>
 				)}
-				{/* @ts-expect-error ts-migrate(2322) FIXME: Property 'children' does not exist on type 'Intrin... Remove this comment to see the full error message */}
 				<Menu
 					aria-label="Choose a historical release of this Pub"
 					disclosure={

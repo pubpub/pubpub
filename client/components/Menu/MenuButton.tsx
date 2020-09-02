@@ -1,16 +1,15 @@
 import React from 'react';
-import { Button } from '@blueprintjs/core';
+import { Button, IButtonProps } from '@blueprintjs/core';
 
 import { Icon } from 'components';
-import { Menu } from './Menu';
+import { Menu, MenuProps } from './Menu';
 
-type OwnProps = {
+type MenuButtonProps = {
+	disabled?: boolean;
 	buttonContent?: React.ReactNode;
-	buttonProps?: {
-		icon?: string | React.ReactNode;
-	};
+	buttonProps?: IButtonProps & { children?: React.ReactNode };
 	children: React.ReactNode;
-};
+} & Omit<MenuProps, 'disclosure'>;
 
 const defaultProps = {
 	buttonProps: {},
@@ -24,24 +23,22 @@ const getIconProp = (icon) => {
 	return icon;
 };
 
-type Props = OwnProps & typeof defaultProps;
-
-export const MenuButton = (props: Props) => {
+export const MenuButton = (props: MenuButtonProps) => {
 	const { buttonContent, children, buttonProps, ...restProps } = props;
 
 	const buttonPropsWithIcon = {
 		...buttonProps,
-		icon: getIconProp(props.buttonProps.icon),
+		icon: getIconProp(props.buttonProps?.icon),
 	};
 
 	return (
-		// @ts-expect-error ts-migrate(2322) FIXME: Property 'children' does not exist on type 'Intrin... Remove this comment to see the full error message
 		<Menu
 			disclosure={({ ref, ...restDisclosureProps }) => (
 				<Button
 					children={buttonContent}
 					{...buttonPropsWithIcon}
 					{...restDisclosureProps}
+					// @ts-expect-error
 					elementRef={ref}
 				/>
 			)}
