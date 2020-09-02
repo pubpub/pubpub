@@ -78,7 +78,6 @@ const renderPublisher = (publisher) => {
 
 const renderPublicationDate = (publication_date, title = 'Publication Date') => {
 	const { day, month, year } = publication_date;
-	console.log(publication_date);
 
 	return (
 		<>
