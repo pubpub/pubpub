@@ -78,12 +78,13 @@ const renderPublisher = (publisher) => {
 
 const renderPublicationDate = (publication_date, title = 'Publication Date') => {
 	const { day, month, year } = publication_date;
+	console.log(publication_date);
 
 	return (
 		<>
 			<dt>{title}</dt>
 			{/* @ts-expect-error ts-migrate(2769) FIXME: Type 'any[]' is not assignable to type 'string'. */}
-			<dd>{formatDate(Date.parse([month, day, year]))}</dd>
+			<dd>{formatDate(`${year}-${month}-${day}`, {inUtcTime: true})}</dd>
 		</>
 	);
 };
