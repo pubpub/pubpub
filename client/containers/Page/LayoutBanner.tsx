@@ -26,16 +26,18 @@ class LayoutBanner extends Component<Props, State> {
 	}
 
 	createPub() {
+		const { communityData, content } = this.props;
 		this.setState({ isLoading: true });
 		return apiFetch('/api/pubs', {
 			method: 'POST',
 			body: JSON.stringify({
-				communityId: this.props.communityData.id,
-				defaultCollectionIds: this.props.content.defaultCollectionIds,
+				communityId: communityData.id,
+				createPubToken: content.createPubToken,
 			}),
 		})
 			.then((newPub) => {
 				window.location.href = `/pub/${newPub.slug}`;
+				this.setState({ isLoading: false });
 			})
 			.catch((err) => {
 				console.error(err);
