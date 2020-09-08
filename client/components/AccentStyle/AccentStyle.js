@@ -95,6 +95,14 @@ const AccentStyle = function(props) {
 
 			span.citation:hover { color: ${baseColor}; }
 
+			.overflow-gradient { background: linear-gradient(90deg, ${Color(baseColor)
+				.rgb()
+				.fade(1)
+				.string()} 0%,  ${Color(baseColor)
+					.rgb()
+					.fade(1)
+					.string()} 85%,  ${baseColor} 100%); }
+
 			${useHeaderTextAccent ? bottomBorder : ''}
 			${
 				!useHeaderTextAccent &&
