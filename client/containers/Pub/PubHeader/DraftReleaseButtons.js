@@ -16,7 +16,10 @@ const propTypes = {
 	pubData: PropTypes.shape({
 		isRelease: PropTypes.bool,
 		releases: PropTypes.arrayOf(
-			PropTypes.shape({ createdAt: PropTypes.string, sourceBranchKey: PropTypes.number }),
+			PropTypes.shape({
+				createdAt: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+				sourceBranchKey: PropTypes.number,
+			}),
 		).isRequired,
 		releaseNumber: PropTypes.number,
 	}).isRequired,
@@ -93,16 +96,19 @@ const DraftReleaseButtons = (props) => {
 								icon={index === releaseNumber - 1 ? 'tick' : 'document-share'}
 								href={pubUrl(communityData, pubData, { releaseNumber: index + 1 })}
 								className="release-menu-item"
-								text={<div className="release-metadata">
-												<p className="number">{'Release #' + (index + 1)}</p>
-												<p className="timestamp">{
-													formatDate(new Date(release.createdAt), {
-														includeTime: true
-													})}
-												</p>
-											</div>}
+								text={
+									<div className="release-metadata">
+										<p className="number">{'Release #' + (index + 1)}</p>
+										<p className="timestamp">
+											{formatDate(new Date(release.createdAt), {
+												includeTime: true,
+											})}
+										</p>
+									</div>
+								}
 							/>
-						)).reverse()}
+						))
+						.reverse()}
 				</Menu>
 			</React.Fragment>
 		);

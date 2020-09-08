@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { AnchorButton, Button, Callout, Classes, ControlGroup, InputGroup, Dialog, Icon, Checkbox } from '@blueprintjs/core';
+import {
+	AnchorButton,
+	Button,
+	Callout,
+	Classes,
+	ControlGroup,
+	InputGroup,
+	Dialog,
+	Icon,
+	Checkbox,
+} from '@blueprintjs/core';
 import TimeAgo from 'react-timeago';
 
-import {
-	ClickToCopyButton,
-	MinimalEditor
-} from 'components';
+import { ClickToCopyButton, MinimalEditor } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { formatDate, timeAgoBaseProps } from 'utils/dates';
 import { pubUrl } from 'utils/canonicalUrls';
@@ -19,7 +26,11 @@ const propTypes = {
 	isOpen: PropTypes.bool.isRequired,
 	pubData: PropTypes.shape({
 		id: PropTypes.string,
-		releases: PropTypes.arrayOf(PropTypes.shape({})),
+		releases: PropTypes.arrayOf(
+			PropTypes.shape({
+				createdAt: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+			}),
+		),
 	}).isRequired,
 	onClose: PropTypes.func.isRequired,
 	updatePubData: PropTypes.func.isRequired,
@@ -92,15 +103,39 @@ const PubReleaseDialog = (props) => {
 		const releaseUrl = pubUrl(communityData, pubData, { releaseNumber: release.branchKey + 1 });
 		return (
 			<React.Fragment>
-				<p><Icon icon="history" iconSize={12} color="#888888" /> {' The previous Release ('}
+				<p>
+					<Icon icon="history" iconSize={12} color="#888888" />{' '}
+					{' The previous Release ('}
 					<a href={releaseUrl} rel="noopener noreferrer" target="_blank">
 						{'#' + pubData.releases.length}
-					</a>{') '}
+					</a>
+					{') '}
 					was created <TimeAgo {...timeAgoBaseProps} date={release.createdAt} />.
 				</p>
-				<p>You are about to create the next Release {'(#'+(pubData.releases.length + 1)+')'}, making it the latest release of this Pub that readers will be shown by default.
+				<p>
+					You are about to create the next Release{' '}
+					{'(#' + (pubData.releases.length + 1) + ')'}, making it the latest release of
+					this Pub that readers will be shown by default.
 				</p>
 			</React.Fragment>
+		);
+	};
+
+	const renderURLForCopy = (label, url) => {
+		return (
+			<div>
+				<p className="text-info">{label}</p>
+				<ControlGroup className="url-select">
+					<InputGroup className="display-url" value={url} fill small={true} />
+					<ClickToCopyButton
+						minimal={true}
+						copyString={url}
+						icon="duplicate"
+						beforeCopyPrompt="Copy URL to clipboard"
+						afterCopyPrompt="Copied URL!"
+					/>
+				</ControlGroup>
+			</div>
 		);
 	};
 
@@ -109,38 +144,61 @@ const PubReleaseDialog = (props) => {
 			return <Callout intent="warning" title="There was an error creating this release." />;
 		}
 		if (createdRelease) {
-			if(pubData.releases.length == 1) {
-				const release = pubData.releases[pubData.releases.length-1].createdAt;
+			if (pubData.releases.length === 1) {
+				const release = pubData.releases[pubData.releases.length - 1];
 				const dateString = formatDate(release.createdAt, {
 					includeTime: true,
 					includePreposition: true,
 				});
 				return (
 					<React.Fragment>
-						<Callout intent="success" title={"Created Release #1"} icon="tick-circle">
+						<Callout intent="success" title="Created Release #1" icon="tick-circle">
 							<span className="release-date">{dateString}</span>
 						</Callout>
-						<p className="text-info">Congratulations! You have just created the first Release of this pub that is publicly viewable.</p>
-						{renderURLForCopy('Link that always points to the latest Release for this pub:', pubUrl(communityData, pubData))}
+						<p className="text-info">
+							Congratulations! You have just created the first Release of this pub
+							that is publicly viewable.
+						</p>
+						{renderURLForCopy(
+							'Link that always points to the latest Release for this pub:',
+							pubUrl(communityData, pubData),
+						)}
 					</React.Fragment>
 				);
 			}
-			if(pubData.releases.length > 1) {
-				const release = pubData.releases[pubData.releases.length-1].createdAt;
+			if (pubData.releases.length > 1) {
+				const release = pubData.releases[pubData.releases.length - 1];
 				const dateString = formatDate(release.createdAt, {
 					includeTime: true,
 					includePreposition: true,
 				});
-				const releaseUrl = pubUrl(communityData, pubData, { releaseNumber: pubData.releases.length});
+				const releaseUrl = pubUrl(communityData, pubData, {
+					releaseNumber: pubData.releases.length,
+				});
 				return (
 					<React.Fragment>
-						<Callout intent="success" title={"Created Release #" + pubData.releases.length} icon="tick-circle">
-							<span className="release-date">{dateString}. This is now the latest Release of this pub.</span>
+						<Callout
+							intent="success"
+							title={'Created Release #' + pubData.releases.length}
+							icon="tick-circle"
+						>
+							<span className="release-date">
+								{dateString}. This is now the latest Release of this pub.
+							</span>
 						</Callout>
-						{renderURLForCopy('Link to access Release #' + pubData.releases.length + ' specifically:', releaseUrl)}
-						{renderURLForCopy('Link that always points to the latest Release for this pub:', pubUrl(communityData, pubData))}
-						<p className="text-info">Older Releases can be viewed using the{' '}
-							<Icon icon="history" iconSize={12} color="#888888" /> History button in the Pub.</p>
+						{renderURLForCopy(
+							'Link to access Release #' + pubData.releases.length + ' specifically:',
+							releaseUrl,
+						)}
+						{renderURLForCopy(
+							'Link that always points to the latest Release for this pub:',
+							pubUrl(communityData, pubData),
+						)}
+						<p className="text-info">
+							Older Releases can be viewed using the{' '}
+							<Icon icon="history" iconSize={12} color="#888888" /> History button in
+							the Pub.
+						</p>
 					</React.Fragment>
 				);
 			}
@@ -155,7 +213,9 @@ const PubReleaseDialog = (props) => {
 					Return to Draft
 				</Button>
 				<Button loading={isCreatingRelease} intent="primary" onClick={handleCreateRelease}>
-					{(pubData.releases.length <1) ? 'Create Release' : 'Create Release #' + (pubData.releases.length+1)}
+					{pubData.releases.length < 1
+						? 'Create Release'
+						: 'Create Release #' + (pubData.releases.length + 1)}
 				</Button>
 			</React.Fragment>
 		);
@@ -166,24 +226,11 @@ const PubReleaseDialog = (props) => {
 			<React.Fragment>
 				<Button onClick={onClose}>Return to Draft</Button>
 				<AnchorButton intent="primary" href={pubUrl(communityData, pubData)}>
-					{'Go to latest Release'}
+					Go to latest Release
 				</AnchorButton>
 			</React.Fragment>
 		);
 	};
-
-	const renderURLForCopy = (label, url) => {
-			return (
-				<div>
-					<p className="text-info">{label}</p>
-					<ControlGroup className="url-select">
-							<InputGroup className="display-url" value={url} fill small={true} />
-							<ClickToCopyButton minimal={true} copyString={url} icon="duplicate" beforeCopyPrompt="Copy URL to clipboard" afterCopyPrompt="Copied URL!">
-							</ClickToCopyButton>
-					</ControlGroup>
-				</div>
-			);
-		};
 
 	return (
 		<Dialog
@@ -196,13 +243,17 @@ const PubReleaseDialog = (props) => {
 			<div className={Classes.DIALOG_BODY}>
 				{!createdRelease && (
 					<React.Fragment>
-						{(pubData.releases.length < 1) && (
+						{pubData.releases.length < 1 && (
 							<p>
-								To publish this pub, you can <i>create a Release</i> that will make the pub available at a publicly accessible URL.
+								To publish this pub, you can <i>create a Release</i> that will make
+								the pub available at a publicly accessible URL.
 							</p>
 						)}
 						{latestRelease && renderLatestReleaseInfo(latestRelease)}
-						<p className="notes-header"><Icon icon="manually-entered-data" iconSize={12} />{'  '}Release Note</p>
+						<p className="notes-header">
+							<Icon icon="manually-entered-data" iconSize={12} />
+							{'  '}Release Note
+						</p>
 						<MinimalEditor
 							onChange={(data) => {
 								setNoteData(data);

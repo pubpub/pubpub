@@ -5,11 +5,10 @@ import TimeAgo from 'react-timeago';
 
 import { ClickToCopyButton } from 'components';
 
-import { formatDate, datesAreSameCalendarDate } from 'utils/dates';
+import { formatDate, datesAreSameCalendarDate, timeAgoBaseProps } from 'utils/dates';
 import { getPubLatestReleasedDate } from 'utils/pub/pubDates';
 import { pubUrl } from 'utils/canonicalUrls';
 import { usePageContext } from 'utils/hooks';
-import { timeAgoBaseProps } from 'utils/dates';
 
 require('./pubHistoricalNotice.scss');
 
@@ -47,63 +46,88 @@ const PubHistoricalNotice = (props) => {
 	}
 
 	const toggleChangelog = () => {
-		(!showingChangelog ? setShowingChangelog(true) : setShowingChangelog(false));
+		if (!showingChangelog) {
+			setShowingChangelog(true);
+		} else {
+			setShowingChangelog(false);
+		}
 	};
 
 	const renderChangelog = () => {
-		if (isRelease) {
-			const items = releases.map((release, i) =>
-				<div className="release-item">
+		const items = releases
+			.map((release, i) => (
+				<div className="release-item" key={release.createdAt}>
 					<div className="item-block">
 						<div className="icon-button">
-							<Icon className="release-icon" icon={(releaseNumber==i+1) ? "tick" : "document-share"} iconSize={18} />
-							<ClickToCopyButton className="copy-button" minimal={true} icon="duplicate" tooltipPosition="right"
-								beforeCopyPrompt={'Copy link to Release #' + (i+1)}
-								afterCopyPrompt={'Copied link to Release #' + (i+1) + '!'}
+							<Icon
+								className="release-icon"
+								icon={releaseNumber === i + 1 ? 'tick' : 'document-share'}
+								iconSize={18}
+							/>
+							<ClickToCopyButton
+								className="copy-button"
+								minimal={true}
+								icon="duplicate"
+								tooltipPosition="right"
+								beforeCopyPrompt={'Copy link to Release #' + (i + 1)}
+								afterCopyPrompt={'Copied link to Release #' + (i + 1) + '!'}
 								copyString={pubUrl(communityData, pubData, {
-									releaseNumber: i+1,
-								})}>
-							</ClickToCopyButton>
+									releaseNumber: i + 1,
+								})}
+							/>
 						</div>
 						<div className="release-metadata">
-							<a className="release-num" href={
-								pubUrl(communityData, pubData, {
-									releaseNumber: i+1,
-								})}>
-								Release #{i+1}
+							<a
+								className="release-num"
+								href={pubUrl(communityData, pubData, {
+									releaseNumber: i + 1,
+								})}
+							>
+								Release #{i + 1}
 							</a>
-							<p className="release-timestamp-humanized"><TimeAgo {...timeAgoBaseProps} date={release.createdAt} /></p>
-							<p className="release-timestamp"> {
-								formatDate(new Date(release.createdAt), {
-									includeTime: true
-								})
-							}</p>
-							{((i+1==releases.length) || (releaseNumber==i+1)) && (
+							<p className="release-timestamp-humanized">
+								<TimeAgo {...timeAgoBaseProps} date={release.createdAt} />
+							</p>
+							<p className="release-timestamp">
+								{' '}
+								{formatDate(new Date(release.createdAt), {
+									includeTime: true,
+								})}
+							</p>
+							{(i + 1 === releases.length || releaseNumber === i + 1) && (
 								<p className="release-label">
-									{(i+1==releases.length) && 'latest'}
-									{(releaseNumber==i+1) && 'now viewing' }
+									{i + 1 === releases.length && 'latest'}
+									{releaseNumber === i + 1 && 'now viewing'}
 								</p>
 							)}
 						</div>
 					</div>
 					<div className="item-block">
 						<Icon className="note-icon" icon="manually-entered-data" iconSize={12} />
-						<div className={`note ${!release.noteText.length ? ' empty' : ''}`} dangerouslySetInnerHTML={{ __html: (!release.noteText.length) ? 'No Release Note' : release.noteText }} />
+						<div
+							className={`note ${!release.noteText.length ? ' empty' : ''}`}
+							dangerouslySetInnerHTML={{
+								__html: !release.noteText.length
+									? 'No Release Note'
+									: release.noteText,
+							}}
+						/>
 					</div>
-				</div>).reverse();
-			return (
-					<Collapse className="changelog" isOpen={showingChangelog}>
-						<Callout
-							icon="properties"
-							intent="primary"
-							className="changelog-callout"
-							title={`Changelog`}
-						>
-						{items}
-						</Callout>
-					</Collapse>
-			);
-		}
+				</div>
+			))
+			.reverse();
+		return (
+			<Collapse className="changelog" isOpen={showingChangelog}>
+				<Callout
+					icon="properties"
+					intent="primary"
+					className="changelog-callout"
+					title="Changelog"
+				>
+					{items}
+				</Callout>
+			</Collapse>
+		);
 	};
 
 	const renderWarning = () => {
@@ -114,16 +138,30 @@ const PubHistoricalNotice = (props) => {
 
 			return (
 				<ul className="warning-desc">
-					<li>This Release <b>(#{releaseNumber})</b>{' '}was created{' '}
-					{formatDate(currentReleaseDate, {
-						includeTime: includeTime,
-						includePreposition: true
-					})} <span className="humanized-time">{' ('}<TimeAgo {...timeAgoBaseProps} date={currentReleaseDate} />{').'}</span></li>
-					<li>The latest Release <b>(#{pubData.releases.length})</b>{' '}was created{' '}
-					{formatDate(latestReleaseDate, {
-						includeTime: includeTime,
-						includePreposition: true
-					})} <span className="humanized-time">{' ('}<TimeAgo {...timeAgoBaseProps} date={latestReleaseDate} />{').'}</span></li>
+					<li>
+						This Release <b>(#{releaseNumber})</b> was created{' '}
+						{formatDate(currentReleaseDate, {
+							includeTime: includeTime,
+							includePreposition: true,
+						})}{' '}
+						<span className="humanized-time">
+							{' ('}
+							<TimeAgo {...timeAgoBaseProps} date={currentReleaseDate} />
+							).
+						</span>
+					</li>
+					<li>
+						The latest Release <b>(#{pubData.releases.length})</b> was created{' '}
+						{formatDate(latestReleaseDate, {
+							includeTime: includeTime,
+							includePreposition: true,
+						})}{' '}
+						<span className="humanized-time">
+							{' ('}
+							<TimeAgo {...timeAgoBaseProps} date={latestReleaseDate} />
+							).
+						</span>
+					</li>
 				</ul>
 			);
 		}
@@ -137,7 +175,7 @@ const PubHistoricalNotice = (props) => {
 				It was most recently updated{' '}
 				{formatDate(latestDate, {
 					includeTime: includeTime,
-					includePreposition: true
+					includePreposition: true,
 				})}
 				. See the latest draft to make changes and view comments.
 			</p>
@@ -147,13 +185,23 @@ const PubHistoricalNotice = (props) => {
 	const renderAction = () => {
 		return (
 			<div>
-				<AnchorButton className="callout-button" intent="primary" outlined href={pubUrl(communityData, pubData, { isDraft: !isRelease })}>
+				<AnchorButton
+					className="callout-button"
+					intent="primary"
+					outlined
+					href={pubUrl(communityData, pubData, { isDraft: !isRelease })}
+				>
 					{isRelease ? 'Go to latest Release' : 'Go to latest draft'}
 				</AnchorButton>
 				{isRelease && (
-					<AnchorButton className="callout-button changelog-button" intent="primary" outlined onClick={toggleChangelog}
-						rightIcon={showingChangelog ? "collapse-all" : "expand-all"}>
-					 		{showingChangelog ? 'Hide Changelog' : 'Show Changelog'}
+					<AnchorButton
+						className="callout-button changelog-button"
+						intent="primary"
+						outlined
+						onClick={toggleChangelog}
+						rightIcon={showingChangelog ? 'collapse-all' : 'expand-all'}
+					>
+						{showingChangelog ? 'Hide Changelog' : 'Show Changelog'}
 					</AnchorButton>
 				)}
 			</div>
@@ -165,12 +213,14 @@ const PubHistoricalNotice = (props) => {
 			<Callout
 				icon="history"
 				intent="warning"
-				title={`You're viewing an older ${isRelease ? ('Release (#' + releaseNumber + ')') : 'draft'} of this Pub.`}
+				title={`You're viewing an older ${
+					isRelease ? 'Release (#' + releaseNumber + ')' : 'draft'
+				} of this Pub.`}
 			>
 				{renderWarning()}
 				{renderAction()}
 			</Callout>
-			{renderChangelog()}
+			{isRelease ? renderChangelog() : null}
 		</div>
 	);
 };

@@ -109,7 +109,11 @@ const DashboardReview = (props) => {
 				onThreadUpdate={onThreadUpdate}
 			/>
 			{canAdmin && status === 'open' && releaseRequested && (
-				<Callout intent={Intent.WARNING} icon="document-share" title="Publication Requested">
+				<Callout
+					intent={Intent.WARNING}
+					icon="document-share"
+					title="Publication Requested"
+				>
 					{author.fullName} has requested that a Release be published from the Draft. If
 					this review is satisfactory, you can create the Release here directly.{' '}
 					<div style={{ marginTop: '1em' }}>
