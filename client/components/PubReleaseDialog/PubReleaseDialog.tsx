@@ -9,13 +9,13 @@ import {
 	Icon,
 	InputGroup,
 } from '@blueprintjs/core';
-
 import React, { useState } from 'react';
 import TimeAgo from 'react-timeago';
 
 import { pubUrl } from 'utils/canonicalUrls';
 import { formatDate, timeAgoBaseProps } from 'utils/dates';
 import { usePageContext } from 'utils/hooks';
+
 import { apiFetch } from 'client/utils/apiFetch';
 import { ClickToCopyButton, MinimalEditor } from 'components';
 
@@ -126,6 +126,24 @@ const PubReleaseDialog = (props: Props) => {
 		);
 	};
 
+	const renderURLForCopy = (label, url) => {
+		return (
+			<div>
+				<p className="text-info">{label}</p>
+				<ControlGroup className="url-select">
+					<InputGroup className="display-url" value={url} fill small={true} />
+					<ClickToCopyButton
+						minimal={true}
+						copyString={url}
+						icon="duplicate"
+						beforeCopyPrompt="Copy URL to clipboard"
+						afterCopyPrompt="Copied URL!"
+					/>
+				</ControlGroup>
+			</div>
+		);
+	};
+
 	const renderReleaseResult = () => {
 		if (releaseError) {
 			return <Callout intent="warning" title="There was an error creating this release." />;
@@ -139,7 +157,7 @@ const PubReleaseDialog = (props: Props) => {
 				});
 				return (
 					<React.Fragment>
-						<Callout intent="success" title={'Created Release #1'} icon="tick-circle">
+						<Callout intent="success" title="Created Release #1" icon="tick-circle">
 							<span className="release-date">{dateString}</span>
 						</Callout>
 						<p className="text-info">
@@ -213,27 +231,9 @@ const PubReleaseDialog = (props: Props) => {
 			<React.Fragment>
 				<Button onClick={onClose}>Return to Draft</Button>
 				<AnchorButton intent="primary" href={pubUrl(communityData, pubData)}>
-					{'Go to latest Release'}
+					Go to latest Release
 				</AnchorButton>
 			</React.Fragment>
-		);
-	};
-
-	const renderURLForCopy = (label, url) => {
-		return (
-			<div>
-				<p className="text-info">{label}</p>
-				<ControlGroup className="url-select">
-					<InputGroup className="display-url" value={url} fill small={true} />
-					<ClickToCopyButton
-						minimal={true}
-						copyString={url}
-						icon="duplicate"
-						beforeCopyPrompt="Copy URL to clipboard"
-						afterCopyPrompt="Copied URL!"
-					></ClickToCopyButton>
-				</ControlGroup>
-			</div>
 		);
 	};
 

@@ -6,6 +6,7 @@ import { pubUrl } from 'utils/canonicalUrls';
 import { datesAreSameCalendarDate, formatDate, timeAgoBaseProps } from 'utils/dates';
 import { usePageContext } from 'utils/hooks';
 import { getPubLatestReleasedDate } from 'utils/pub/pubDates';
+
 import { ClickToCopyButton } from 'components';
 
 require('./pubHistoricalNotice.scss');
@@ -50,7 +51,7 @@ const PubHistoricalNotice = (props: Props) => {
 		if (isRelease) {
 			const items = releases
 				.map((release, i) => (
-					<div className="release-item">
+					<div className="release-item" key={release.createdAt}>
 						<div className="item-block">
 							<div className="icon-button">
 								<Icon
@@ -68,7 +69,7 @@ const PubHistoricalNotice = (props: Props) => {
 									copyString={pubUrl(communityData, pubData, {
 										releaseNumber: i + 1,
 									})}
-								></ClickToCopyButton>
+								/>
 							</div>
 							<div className="release-metadata">
 								<a
