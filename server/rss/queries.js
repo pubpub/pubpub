@@ -71,13 +71,14 @@ const pubsIdsQuery = `
 	LIMIT :limit
 `;
 
-const normalizeDate = (datelike) => dateFormat(new Date(datelike), 'yyyy-dd-mm');
+const normalizeDate = (datelike) => dateFormat(new Date(datelike), 'yyyy-mm-dd');
 
 const parseDateFilters = ({ publishedOn, publishedAfter, publishedBefore }) => {
 	if (publishedOn) {
+		const startTime = new Date(publishedOn).valueOf();
 		return {
-			publishedAfter: normalizeDate(publishedOn),
-			publishedBefore: normalizeDate(new Date(publishedOn).valueOf() + 86400 * 1000),
+			publishedAfter: normalizeDate(startTime),
+			publishedBefore: normalizeDate(startTime + 86400 * 1000),
 		};
 	}
 	return {

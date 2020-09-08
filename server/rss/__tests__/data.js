@@ -6,13 +6,20 @@ export const models = modelize`
             customPublishedAt: "2020-01-03"
         } 
         Pub p2 {
-            Release {
+            Release r0 {
                 createdAt: "2020-02-05"
             }
         }
         Pub p3 {
             Release {
-                createdAt: "2020-03-09"
+                createdAt: "2020-03-08 12:00:00"
+            }
+            outboundEdges: PubEdge {
+                relationType: "comment"
+                pubIsParent: false
+                approvedByTarget: true
+                rank: "0"
+                targetPub: p1
             }
         }
         Pub p4 {
@@ -23,9 +30,9 @@ export const models = modelize`
             outboundEdges: PubEdge {
                 relationType: "review"
                 pubIsParent: true
-                approvedByTarget: true
+                approvedByTarget: false
                 rank: "0"
-                targetPub: p2
+                targetPub: p5
             }
         }
         Pub p5 {
@@ -43,6 +50,8 @@ export const models = modelize`
             }
         }
         Collection c1 {
+            slug: "c1"
+            isPublic: true
             CollectionPub {
                 rank: "0"
                 p1
@@ -57,6 +66,8 @@ export const models = modelize`
             }
         }
         Collection c2 {
+            slug: "c2"
+            isPublic: true
             CollectionPub {
                 rank: "0"
                 p2
@@ -65,12 +76,14 @@ export const models = modelize`
                 rank: "1"
                 p3
             }
-            CollectionPub cp2 {
+            CollectionPub {
                 rank: "2"
                 p4
             }
         }
         Collection c3 {
+            slug: "c3"
+            isPublic: true
             CollectionPub {
                 rank: "0"
                 p3

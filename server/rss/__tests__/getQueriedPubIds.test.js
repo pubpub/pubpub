@@ -23,12 +23,28 @@ const expectQuery = (query) => {
 };
 
 it('returns only released Pubs', async () => {
-	const { p2, p3, p4, p5, p1, p6 } = models;
-	console.log([p1, p2, p3, p4, p5, p6].map((p) => p.id));
+	const { p2, p3, p4, p5 } = models;
 	await expectQuery({}).toReturn([p5, p4, p3, p2]);
 });
 
-it('filters out child pubs when connections=false', async () => {
-	const { p3, p4, p5 } = models;
-	await expectQuery({ connections: false }).toReturn([p5, p4, p3]);
+it('filters out child Pubs when connections=false', async () => {
+	const { p4, p5 } = models;
+	await expectQuery({ connections: false }).toReturn([p5, p4]);
+});
+
+it('filters Pubs by collection membership', async () => {
+	const { p2, p3, p4 } = models;
+	await expectQuery({ collections: 'c1,c2' }).toReturn([p4, p3, p2]);
+	await expectQuery({ collections: 'c2,-c3' }).toReturn([p2]);
+});
+
+it('filters Pubs by publication date', async () => {
+	const { p2, p3, p4, p5 } = models;
+	await expectQuery({ publishedOn: '2020-03-09' }).toReturn([p3]);
+	await expectQuery({ publishedBefore: '2020-05-15' }).toReturn([p4, p3, p2]);
+	await expectQuery({ publishedAfter: '2020-03-15' }).toReturn([p5, p4]);
+	await expectQuery({
+		publishedAfter: '2020-03-15',
+		publishedBefore: '2020-05-01',
+	}).toReturn([p4]);
 });
