@@ -1,20 +1,24 @@
+import RSS from 'rss';
 import dateFormat from 'dateformat';
 import { Op, QueryTypes } from 'sequelize';
-import RSS from 'rss';
 
 import { communityUrl as getCommunityUrl, pubUrl } from 'utils/canonicalUrls';
 import { getPubPublishedDate } from 'utils/pub/pubDates';
-import ensureUserForAttribution from 'utils/ensureUserForAttribution';
+import { getAllPubContributors, getContributorName } from 'utils/pub/contributors';
+import { getFormattedDownloadUrl, getPublicExportUrl } from 'utils/pub/downloads';
+
 import {
-	sequelize,
-	Community,
+	Branch,
 	Collection,
+	CollectionAttribution,
 	CollectionPub,
+	Export,
+	includeUserModel,
 	Pub,
 	PubAttribution,
 	PubEdge,
 	Release,
-	includeUserModel,
+	sequelize,
 } from 'server/models';
 
 const pubsIdsQuery = `
@@ -127,7 +131,7 @@ export const getQueriedPubIds = async ({ communityId, limit, query }) => {
 	return rows.map((row) => row.pubId);
 };
 
-const getPubData = async (pubIds) => {
+export const getPubData = async (pubIds) => {
 	const pubs = await Pub.findAll({
 		where: {
 			id: {
@@ -138,17 +142,21 @@ const getPubData = async (pubIds) => {
 			{
 				model: PubAttribution,
 				as: 'attributions',
-				required: false,
-				include: [
-					includeUserModel({
-						as: 'user',
-					}),
-				],
+				include: [includeUserModel({ as: 'user' })],
 			},
 			{
 				model: Release,
 				as: 'releases',
-				attributes: ['createdAt'],
+			},
+			{
+				model: Branch,
+				as: 'branches',
+				include: [
+					{
+						model: Export,
+						as: 'exports',
+					},
+				],
 			},
 			{
 				model: PubEdge,
@@ -161,12 +169,21 @@ const getPubData = async (pubIds) => {
 			{
 				model: CollectionPub,
 				as: 'collectionPubs',
-				attributes: ['collectionId', 'pubId'],
 				include: [
 					{
+						required: true,
+						where: {
+							isPublic: true,
+						},
 						model: Collection,
 						as: 'collection',
-						attributes: ['slug'],
+						include: [
+							{
+								model: CollectionAttribution,
+								as: 'attributions',
+								include: [includeUserModel({ as: 'user' })],
+							},
+						],
 					},
 				],
 			},
@@ -174,6 +191,44 @@ const getPubData = async (pubIds) => {
 	});
 	// pubIds are already in publication-date order, so sort results based on that.
 	return pubs.sort((a, b) => pubIds.indexOf(a.id) - pubIds.indexOf(b.id));
+};
+
+const createEnclosure = (url) => {
+	return {
+		enclosure: {
+			_attr: {
+				url: url,
+			},
+		},
+	};
+};
+
+export const getFeedItemForPub = (pubData, communityData) => {
+	const { title, description, collectionPubs, id } = pubData;
+	const formattedDownload = getFormattedDownloadUrl(pubData);
+	const pdfExport = getPublicExportUrl(pubData, 'pdf');
+	const xmlExport = getPublicExportUrl(pubData, 'jats');
+	const bestPdf = formattedDownload || pdfExport;
+	return {
+		title: title,
+		description: description,
+		url: pubUrl(communityData, pubData),
+		guid: id,
+		date: getPubPublishedDate(pubData),
+		categories: collectionPubs
+			.sort((a, b) => +b.isPrimary - +a.isPrimary)
+			.map(({ collection }) => collection.title),
+		custom_elements: [
+			...getAllPubContributors(pubData, false, true).map((attribution) => {
+				return {
+					'dc:creator': getContributorName(attribution),
+				};
+			}),
+			pubData.avatar && createEnclosure(pubData.avatar),
+			bestPdf && createEnclosure(bestPdf),
+			xmlExport && createEnclosure(xmlExport),
+		],
+	};
 };
 
 export const getCommunityRss = async (communityData, query) => {
@@ -197,18 +252,6 @@ export const getCommunityRss = async (communityData, query) => {
 		ttl: '60',
 	});
 
-	pubs.forEach((pubData) => {
-		feed.item({
-			title: pubData.title,
-			description: pubData.description,
-			url: pubUrl(communityData, pubData),
-			guid: pubData.id,
-			date: getPubPublishedDate(pubData),
-			enclosure: {
-				url: pubData.avatar,
-			},
-		});
-	});
-
+	pubs.forEach((pubData) => feed.item(getFeedItemForPub(pubData, communityData)));
 	return feed.xml();
 };

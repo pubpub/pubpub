@@ -48,3 +48,11 @@ it('filters Pubs by publication date', async () => {
 		publishedBefore: '2020-05-01',
 	}).toReturn([p4]);
 });
+
+it('filters Pubs by several things at once', async () => {
+	const { p3, p4 } = models;
+	await expectQuery({
+		publishedAfter: '2020-03-01',
+		collections: 'c2',
+	}).toReturn([p4, p3]);
+});

@@ -6,7 +6,7 @@ export const models = modelize`
             customPublishedAt: "2020-01-03"
         } 
         Pub p2 {
-            Release r0 {
+            Release {
                 createdAt: "2020-02-05"
             }
         }
