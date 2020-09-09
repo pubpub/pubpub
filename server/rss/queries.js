@@ -205,10 +205,11 @@ const createEnclosure = (url) => {
 
 export const getFeedItemForPub = (pubData, communityData) => {
 	const { title, description, collectionPubs, id } = pubData;
-	const formattedDownload = getFormattedDownloadUrl(pubData);
-	const pdfExport = getPublicExportUrl(pubData, 'pdf');
-	const xmlExport = getPublicExportUrl(pubData, 'jats');
-	const bestPdf = formattedDownload || pdfExport;
+	const formattedDownloadUrl = getFormattedDownloadUrl(pubData);
+	const pdfExportUrl = getPublicExportUrl(pubData, 'pdf');
+	const xmlExportUrl = getPublicExportUrl(pubData, 'jats');
+	// NB: Strictly speaking the formatted download is not required to be a PDF.
+	const bestPdfUrl = formattedDownloadUrl || pdfExportUrl;
 	return {
 		title: title,
 		description: description,
@@ -225,9 +226,9 @@ export const getFeedItemForPub = (pubData, communityData) => {
 				};
 			}),
 			pubData.avatar && createEnclosure(pubData.avatar),
-			bestPdf && createEnclosure(bestPdf),
-			xmlExport && createEnclosure(xmlExport),
-		],
+			bestPdfUrl && createEnclosure(bestPdfUrl),
+			xmlExportUrl && createEnclosure(xmlExportUrl),
+		].filter((x) => x),
 	};
 };
 
