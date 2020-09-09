@@ -36,7 +36,6 @@ const NavBar = function(props) {
 								/* Return Dropdown */
 								if (item.children) {
 									return (
-										// @ts-expect-error
 										<Menu
 											aria-label={item.title}
 											disclosure={
@@ -53,7 +52,6 @@ const NavBar = function(props) {
 													<MenuItem
 														// eslint-disable-next-line react/no-array-index-key
 														key={index}
-														// @ts-expect-error
 														href={subitem.href || `/${subitem.slug}`}
 														icon={
 															subitem.slug &&
