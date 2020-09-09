@@ -15,7 +15,7 @@ enum HoverTargetTypes {
 	ClickToCopy = 'click-to-copy',
 }
 
-type PubMouseEventState = {
+type PubLinkControllertate = {
 	[hoverTargetType: string]: Element | undefined;
 };
 
@@ -36,10 +36,10 @@ function isValidLinkTarget(element: Element | null): element is Element {
 	return true;
 }
 
-const PubMouseEvents = (props: PubMouseEventProps) => {
+const PubLinkController = (props: PubMouseEventProps) => {
 	const { mainContentRef, locationData } = props;
 	const [hoverTargets, hoverElemsDispatch] = useReducer(
-		(state: PubMouseEventState, action: PubMouseEventAction) => {
+		(state: PubLinkControllertate, action: PubMouseEventAction) => {
 			return {
 				...state,
 				[action.type]: action.element,
@@ -113,4 +113,4 @@ const PubMouseEvents = (props: PubMouseEventProps) => {
 	);
 };
 
-export default PubMouseEvents;
+export default PubLinkController;

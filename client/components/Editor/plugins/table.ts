@@ -9,8 +9,9 @@ class PubTableView extends TableView {
 	}
 
 	update(node) {
-		super.update(node);
+		const shouldUpdate = super.update(node);
 		this.syncId(node);
+		return shouldUpdate;
 	}
 
 	syncId(node) {

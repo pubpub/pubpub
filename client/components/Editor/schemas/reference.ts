@@ -15,7 +15,7 @@ export default {
 		reactiveAttrs: {
 			label: function(this: Hooks, node) {
 				const { targetId } = node.attrs;
-				const { blockNames } = node.type.spec.defaultOptions;
+				const { blockNames } = this.useDocumentState();
 
 				if (targetId) {
 					return this.useDeferredNode(targetId, (target) => {

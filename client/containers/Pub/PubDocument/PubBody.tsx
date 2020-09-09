@@ -127,12 +127,6 @@ const PubBody = (props: Props) => {
 					...discussionSchema,
 				}}
 				nodeOptions={{
-					reference: {
-						blockNames: {
-							image: 'Figure',
-							video: 'Video',
-						},
-					},
 					image: {
 						onResizeUrl: (url, align) => {
 							const width = align === 'breakout' ? 1920 : 800;

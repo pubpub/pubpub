@@ -1,20 +1,11 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
-import PropTypes from 'prop-types';
-import { Button } from '@blueprintjs/core';
 
 import { MenuButton, MenuItem } from 'components/Menu';
 import { getReferenceableNodes } from 'components/Editor/utils/references';
+import { EditorChangeObject } from 'client/types';
 
-const propTypes = {
-	editorChangeObject: PropTypes.shape({
-		selectedNode: PropTypes.shape({
-			attrs: PropTypes.shape({
-				targetId: PropTypes.string,
-			}),
-		}),
-		updateNode: PropTypes.func,
-		view: PropTypes.object,
-	}).isRequired,
+export type ControlsReferenceProps = {
+	editorChangeObject: EditorChangeObject;
 };
 
 const matchInitialTarget = (selectedNode, referenceableNodes) => {
@@ -24,7 +15,7 @@ const matchInitialTarget = (selectedNode, referenceableNodes) => {
 	return null;
 };
 
-const ControlsReference = (props) => {
+const ControlsReference = (props: ControlsReferenceProps) => {
 	const {
 		editorChangeObject: { updateNode, selectedNode, view },
 	} = props;
@@ -80,5 +71,4 @@ const ControlsReference = (props) => {
 	);
 };
 
-ControlsReference.propTypes = propTypes;
 export default ControlsReference;
