@@ -12,7 +12,7 @@ export const models = modelize`
         }
         Pub p3 {
             Release {
-                createdAt: "2020-03-08 12:00:00"
+                createdAt: "2020-03-09"
             }
             outboundEdges: PubEdge {
                 relationType: "comment"
