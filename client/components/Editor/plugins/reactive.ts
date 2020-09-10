@@ -4,11 +4,9 @@ export default (schema, props) => {
 	return createReactivePlugin({
 		schema: schema,
 		documentState: {
+			blockNames: props.blockNames,
 			citationManager: props.citationManager,
-			blockNames: {
-				image: 'Figure',
-				video: 'Video',
-			},
+			isReadOnly: props.isReadOnly,
 		},
 	});
 };

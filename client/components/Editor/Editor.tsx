@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { keydownHandler } from 'prosemirror-keymap';
+import { DOMSerializer } from 'prosemirror-model';
 import { addTemporaryIdsToDoc } from '@pubpub/prosemirror-reactive';
 
 import { getPlugins } from './plugins';
@@ -13,6 +14,7 @@ import nodeViews from './views';
 require('./styles/base.scss');
 
 type OwnProps = {
+	blockNames: { [key: string]: string };
 	citationManager?: any;
 	customNodes?: any;
 	customMarks?: any;
@@ -48,8 +50,25 @@ const defaultProps = {
 	placeholder: '',
 };
 
+function wrapDomSerializer(domSerializer: DOMSerializer) {
+	return Object.assign(Object.create(domSerializer), {
+		// Strip table captions when copying/pasting table elements.
+		serializeFragment(fragment, options) {
+			const result = domSerializer.serializeFragment(fragment, options);
+			const tableCaptions = result.querySelectorAll('table > caption');
+
+			tableCaptions.forEach((tableCaption) =>
+				tableCaption.parentElement.removeChild(tableCaption),
+			);
+
+			return result;
+		},
+	});
+}
+
 const getInitialArguments = (props) => {
 	const {
+		blockNames,
 		citationManager,
 		customMarks,
 		customNodes,
@@ -64,6 +83,7 @@ const getInitialArguments = (props) => {
 	const staticContent = renderStatic({
 		schema: schema,
 		doc: props.initialContent,
+		blockNames: blockNames,
 		citationManager: citationManager,
 	});
 	return { schema: schema, initialDoc: initialDoc, staticContent: staticContent };
@@ -72,7 +92,7 @@ const getInitialArguments = (props) => {
 type Props = OwnProps & typeof defaultProps;
 
 const Editor = (props: Props) => {
-	const editorRef = useRef();
+	const editorRef = useRef<HTMLElement>();
 	const initialArguments = useRef(null);
 
 	if (initialArguments.current === null) {
@@ -87,6 +107,7 @@ const Editor = (props: Props) => {
 			doc: initialDoc,
 			schema: schema,
 			plugins: getPlugins(schema, {
+				blockNames: props.blockNames,
 				citationManager: props.citationManager,
 				collaborativeOptions: props.collaborativeOptions,
 				customPlugins: props.customPlugins,
@@ -122,6 +143,7 @@ const Editor = (props: Props) => {
 				handleClickOn: props.handleSingleClick,
 				handleDoubleClickOn: props.handleDoubleClick,
 				handleScrollToSelection: props.onScrollToSelection,
+				clipboardSerializer: wrapDomSerializer(DOMSerializer.fromSchema(schema)),
 			},
 		);
 		// Sometimes the view will call its dispatchTransaction from the constructor, but the

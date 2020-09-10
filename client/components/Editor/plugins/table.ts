@@ -1,15 +1,19 @@
 import { keymap } from 'prosemirror-keymap';
 // @ts-ignore
 import { columnResizing, tableEditing, goToNextCell, TableView } from 'prosemirror-tables';
+import { counter } from '../schemas/reactive/counter';
 
+/**
+ * Synchronize the reactive id attribute of default prosemirror-tables NodeView.
+ */
 class PubTableView extends TableView {
 	constructor(node, whatever) {
 		super(node, whatever);
 		this.syncId(node);
 	}
 
-	update(node) {
-		const shouldUpdate = super.update(node);
+	update(node, decorations) {
+		const shouldUpdate = super.update(node, decorations);
 		this.syncId(node);
 		return shouldUpdate;
 	}
