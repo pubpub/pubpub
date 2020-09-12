@@ -11,7 +11,7 @@ export type Props = {
 	renderEmptyState?: () => React.ReactNode;
 	renderSuffix?: () => React.ReactNode;
 	renderTruncation?: (count: number) => React.ReactNode;
-	renderUserLabel?: (user: any, index?: number) => React.ReactNode;
+	renderUserLabel?: (user: any, index: number) => React.ReactNode;
 	truncateAt?: number;
 };
 

@@ -14,7 +14,8 @@ require('./newEdgeEditor.scss');
 
 type Props = {
 	availablePubs: {
-		title?: string;
+		id: string;
+		title: string;
 		avatar?: string;
 	}[];
 	onCreateNewEdge: (...args: any[]) => any;
