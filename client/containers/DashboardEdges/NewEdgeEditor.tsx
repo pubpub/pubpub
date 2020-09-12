@@ -131,7 +131,7 @@ const NewEdgeEditor = (props: Props) => {
 					// @ts-expect-error ts-migrate(2322) FIXME: Type 'null' is not assignable to type 'never'.
 					pubEdge={newEdge}
 					// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
-					pubEdgeElemSeent={
+					pubEdgeElement={
 						externalPublication && (
 							<PubEdgeEditor
 								externalPublication={externalPublication}
