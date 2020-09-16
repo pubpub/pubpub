@@ -129,7 +129,7 @@ const PubReleaseDialog = (props: Props) => {
 			<div>
 				<p className="text-info">{label}</p>
 				<ControlGroup className="url-select">
-					<InputGroup className="display-url" value={url} fill small={true} />
+					<InputGroup className="display-url" value={url} fill small />
 					<ClickToCopyButton
 						minimal={true}
 						copyString={url}
@@ -213,7 +213,7 @@ const PubReleaseDialog = (props: Props) => {
 		return (
 			<React.Fragment>
 				<Button disabled={isCreatingRelease} onClick={onClose}>
-					Return to Draft
+					Return to draft
 				</Button>
 				<Button loading={isCreatingRelease} intent="primary" onClick={handleCreateRelease}>
 					{releases && releaseCount < 1
@@ -227,7 +227,7 @@ const PubReleaseDialog = (props: Props) => {
 	const renderPostReleaseButtons = () => {
 		return (
 			<React.Fragment>
-				<Button onClick={onClose}>Return to Draft</Button>
+				<Button onClick={onClose}>Return to draft</Button>
 				<AnchorButton intent="primary" href={pubUrl(communityData, pubData)}>
 					Go to latest Release
 				</AnchorButton>
@@ -248,7 +248,7 @@ const PubReleaseDialog = (props: Props) => {
 					<React.Fragment>
 						{releaseCount < 1 && (
 							<p>
-								To publish this pub, you can <i>create a Release</i> that will make
+								To publish this Pub, you can <i>create a Release</i> that will make
 								the pub available at a publicly accessible URL.
 							</p>
 						)}
@@ -264,7 +264,7 @@ const PubReleaseDialog = (props: Props) => {
 							}}
 							focusOnLoad={true}
 							// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'undefined... Remove this comment to see the full error message
-							placeholder="(optional) Add a note describing this new release.&#13;&#10;This will be included in the publicly-visible changelog of this pub."
+							placeholder="(optional) Add a note describing this new Release.&#13;&#10;This will be included in the publicly-visible changelog of this Pub."
 						/>
 						{isSuperAdmin && (
 							<Checkbox
