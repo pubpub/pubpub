@@ -110,17 +110,15 @@ const PubReleaseDialog = (props: Props) => {
 		return (
 			<React.Fragment>
 				<p>
-					<Icon icon="history" iconSize={12} color="#888888" />{' '}
-					{' The previous Release ('}
+					<Icon icon="history" iconSize={12} color="#888888" /> The previous Release (
 					<a href={releaseUrl} rel="noopener noreferrer" target="_blank">
 						{'#' + releaseCount}
 					</a>
-					{') '}
-					was created <TimeAgo {...timeAgoBaseProps} date={release.createdAt} />.
+					) was created <TimeAgo {...timeAgoBaseProps} date={release.createdAt} />.
 				</p>
 				<p>
-					You are about to create the next Release {'(#' + (releaseCount + 1) + ')'},
-					making it the latest release of this Pub that readers will be shown by default.
+					You are about to create the next Release (#{releaseCount + 1}), making it the
+					latest release of this Pub that readers will be shown by default.
 				</p>
 			</React.Fragment>
 		);

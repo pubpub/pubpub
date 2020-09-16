@@ -57,7 +57,7 @@ const PubHistoricalNotice = (props: Props) => {
 								<Icon
 									className="release-icon"
 									icon={releaseNumber == i + 1 ? 'tick' : 'document-share'}
-									iconSize={18}
+									// iconSize={18}
 								/>
 								<ClickToCopyButton
 									className="copy-button"

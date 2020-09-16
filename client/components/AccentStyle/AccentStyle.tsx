@@ -58,6 +58,14 @@ const AccentStyle = function(props) {
 	const simpleBottomBorder = `.accent-color.${
 		isNavHidden ? 'header-component' : 'nav-bar-component'
 	} { border-bottom: 1px solid #DDD; }`;
+	const gradient = `linear-gradient(90deg, ${Color(baseColor)
+		.rgb()
+		.fade(1)
+		.string()} 0%,  ${Color(baseColor)
+		.rgb()
+		.fade(1)
+		.string()} 85%,  ${baseColor} 100%);`;
+
 	return (
 		<style
 			dangerouslySetInnerHTML={{
@@ -95,13 +103,7 @@ const AccentStyle = function(props) {
 
 			span.citation:hover { color: ${baseColor}; }
 
-			.overflow-gradient { background: linear-gradient(90deg, ${Color(baseColor)
-				.rgb()
-				.fade(1)
-				.string()} 0%,  ${Color(baseColor)
-					.rgb()
-					.fade(1)
-					.string()} 85%,  ${baseColor} 100%); }
+			.overflow-gradient { background: ${gradient} }
 
 			${useHeaderTextAccent ? bottomBorder : ''}
 			${
