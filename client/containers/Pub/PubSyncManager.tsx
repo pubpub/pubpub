@@ -134,7 +134,7 @@ class PubSyncManager extends React.Component<Props, State> {
 				historyDocKey: `history-${historyData.currentKey}`,
 			},
 			blockNames: {
-				image: 'Image',
+				image: 'Figure',
 				video: 'Video',
 				table: 'Table',
 			},
