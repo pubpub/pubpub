@@ -13,8 +13,8 @@ import nodeViews from './views';
 
 require('./styles/base.scss');
 
-type OwnProps = {
-	blockNames: { [key: string]: string };
+export type EditorProps = {
+	blockNames?: { [key: string]: string };
 	citationManager?: any;
 	customNodes?: any;
 	customMarks?: any;
@@ -33,6 +33,7 @@ type OwnProps = {
 };
 
 const defaultProps = {
+	blockNames: {},
 	citationManager: null,
 	collaborativeOptions: {},
 	customMarks: {}, // defaults: 'em', 'strong', 'link', 'sub', 'sup', 'strike', 'code'
@@ -89,7 +90,7 @@ const getInitialArguments = (props) => {
 	return { schema: schema, initialDoc: initialDoc, staticContent: staticContent };
 };
 
-type Props = OwnProps & typeof defaultProps;
+type Props = EditorProps & typeof defaultProps;
 
 const Editor = (props: Props) => {
 	const editorRef = useRef<HTMLElement>();

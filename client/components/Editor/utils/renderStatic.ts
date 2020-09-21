@@ -156,7 +156,7 @@ export const renderStatic = ({
 	doc,
 	reactedDoc,
 	citationManager,
-	blockNames,
+	blockNames = {},
 	context = {},
 }) => {
 	const finalDoc = reactedDoc || getReactedDocFromJson(doc, schema, citationManager, blockNames);
