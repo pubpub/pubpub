@@ -64,6 +64,7 @@ export default {
 		onInsert: (view, attrs) => {
 			const referenceNode = view.state.schema.nodes.reference.create(attrs);
 			const transaction = view.state.tr.replaceSelectionWith(referenceNode);
+
 			view.dispatch(transaction);
 		},
 	},
