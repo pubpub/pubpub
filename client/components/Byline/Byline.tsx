@@ -5,7 +5,7 @@ import { joinOxford, naivePluralize } from 'utils/strings';
 
 export type Props = {
 	ampersand?: boolean;
-	bylinePrefix?: string;
+	bylinePrefix?: null | string;
 	contributors: (string | {})[] | string;
 	linkToUsers?: boolean;
 	renderEmptyState?: () => React.ReactNode;
