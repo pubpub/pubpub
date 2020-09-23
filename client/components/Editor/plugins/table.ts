@@ -3,7 +3,6 @@ import { DOMSerializer } from 'prosemirror-model';
 import { Plugin } from 'prosemirror-state';
 // @ts-ignore
 import { columnResizing, tableEditing, goToNextCell, TableView } from 'prosemirror-tables';
-import { counter } from '../schemas/reactive/counter';
 
 function wrapDomSerializer(domSerializer: DOMSerializer) {
 	return Object.assign(Object.create(domSerializer), {
@@ -55,6 +54,8 @@ export default (schema, props) => {
 			handleWidth does appear in the documentation, but is initialized in the code:
 			https://github.com/ProseMirror/prosemirror-tables/blob/master/src/columnresizing.js#L10
 		*/
+		// @ts-expect-error The type definitions are incorrect for the View option,
+		// according to the docs, View accepts a NodeView constructor, not an instance.
 		return [columnResizing({ handleWidth: -1, View: PubTableView })];
 	}
 
@@ -65,6 +66,7 @@ export default (schema, props) => {
 
 	return [
 		columnResizing({
+			// @ts-expect-error See @ts-expect-error comment above.
 			View: PubTableView,
 		}),
 		tableEditing(),
