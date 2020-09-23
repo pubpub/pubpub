@@ -6,7 +6,6 @@ export default (schema, props) => {
 		documentState: {
 			blockNames: props.blockNames,
 			citationManager: props.citationManager,
-			isReadOnly: props.isReadOnly,
 		},
 	});
 };

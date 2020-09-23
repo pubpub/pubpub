@@ -1,3 +1,6 @@
+/* This clunky table, tableWrapper thing is because */
+/* isReadOnly removes the wrapping div, so margins don't */
+/* collapse as expected in all situations. */
 .tableWrapper {
 	margin: 1em 0;
 	table {
@@ -25,9 +28,6 @@ table caption {
 	}
 }
 
-/* This clunky table, tableWrapper thing is because */
-/* isReadOnly removes the wrapping div, so margins don't */
-/* collapse as expected in all situations. */
 table {
 	margin: 1em 0;
 	max-width: 100%;

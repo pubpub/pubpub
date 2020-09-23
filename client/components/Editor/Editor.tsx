@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { keydownHandler } from 'prosemirror-keymap';
-import { DOMSerializer } from 'prosemirror-model';
 import { addTemporaryIdsToDoc } from '@pubpub/prosemirror-reactive';
 
 import { getPlugins } from './plugins';
@@ -50,22 +49,6 @@ const defaultProps = {
 	onScrollToSelection: undefined,
 	placeholder: '',
 };
-
-function wrapDomSerializer(domSerializer: DOMSerializer) {
-	return Object.assign(Object.create(domSerializer), {
-		// Strip table captions when copying/pasting table elements.
-		serializeFragment(fragment, options) {
-			const result = domSerializer.serializeFragment(fragment, options);
-			const tableCaptions = result.querySelectorAll('table > caption');
-
-			tableCaptions.forEach((tableCaption) =>
-				tableCaption.parentElement.removeChild(tableCaption),
-			);
-
-			return result;
-		},
-	});
-}
 
 const getInitialArguments = (props) => {
 	const {
@@ -144,7 +127,6 @@ const Editor = (props: Props) => {
 				handleClickOn: props.handleSingleClick,
 				handleDoubleClickOn: props.handleDoubleClick,
 				handleScrollToSelection: props.onScrollToSelection,
-				clipboardSerializer: wrapDomSerializer(DOMSerializer.fromSchema(schema)),
 			},
 		);
 		// Sometimes the view will call its dispatchTransaction from the constructor, but the

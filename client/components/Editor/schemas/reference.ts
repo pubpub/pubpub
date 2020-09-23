@@ -27,11 +27,6 @@ export default {
 
 				return null;
 			},
-			isReadOnly: function(this: Hooks, node) {
-				const { isReadOnly } = this.useDocumentState();
-
-				return isReadOnly;
-			},
 		},
 		parseDOM: [
 			{
@@ -40,21 +35,25 @@ export default {
 					if (node.getAttribute('data-node-type') !== 'reference') {
 						return false;
 					}
+
+					const targetId = node.getAttribute('data-target-id');
+
 					return {
 						id: node.getAttribute('id'),
-						targetId: node.getAttribute('data-target-id'),
+						targetId: targetId,
+						href: `#${targetId}`,
 					};
 				},
 			},
 		],
 		toDOM(node) {
-			const { id, targetId, label, isReadOnly } = node.attrs;
+			const { id, targetId, label } = node.attrs;
 
 			return [
 				'a',
 				{
 					...(id && { id: id }),
-					...(isReadOnly && { href: `#${targetId}` }),
+					href: `#${targetId}`,
 					class: classNames('reference', !label && 'missing'),
 					'data-node-type': 'reference',
 					'data-target-id': targetId,
