@@ -20,7 +20,7 @@ export const getFormattedDownloadUrl = (pubData, requiredFormat) => {
 export const getPublicExportUrl = (pubData, format) => {
 	const { branches, releases } = pubData;
 	const publicBranch = branches.find((b) => b.title === 'public');
-	if (publicBranch && publicBranch.exports && releases) {
+	if (publicBranch && publicBranch.exports && releases && releases.length) {
 		const latestHistoryKey = releases.map((r) => r.branchKey).reduce((a, b) => Math.max(a, b));
 		if (typeof latestHistoryKey === 'number') {
 			const validExport = publicBranch.exports.find(
