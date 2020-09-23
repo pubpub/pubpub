@@ -3,7 +3,7 @@ import React from 'react';
 import ensureUserForAttribution from 'utils/ensureUserForAttribution';
 import { joinOxford, naivePluralize } from 'utils/strings';
 
-export type Props = {
+export type BylineProps = {
 	ampersand?: boolean;
 	bylinePrefix?: null | string;
 	contributors: (string | {})[] | string;
@@ -30,7 +30,7 @@ const joinAndFlattenArrays = (...arrays) =>
 		return [...acc, next];
 	}, []);
 
-const Byline = (props: Props) => {
+const Byline = (props: BylineProps) => {
 	const {
 		ampersand = false,
 		bylinePrefix = 'by',

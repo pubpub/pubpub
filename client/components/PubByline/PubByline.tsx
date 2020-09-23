@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Byline, { Props as BylineProps } from 'components/Byline/Byline';
+import Byline, { BylineProps } from 'components/Byline/Byline';
 import { getAllPubContributors } from 'utils/pub/contributors';
 
 type Props = {
