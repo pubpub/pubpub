@@ -5,6 +5,7 @@ import { buildLabel } from '../utils/references';
 
 export default {
 	reference: {
+		atom: true,
 		isLeaf: true,
 		inline: true,
 		reactive: true,

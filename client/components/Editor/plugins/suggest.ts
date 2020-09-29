@@ -1,75 +1,84 @@
 import { suggest, Suggester } from 'prosemirror-suggest';
-import { getReferenceableNodes, buildLabel, NodeReference } from '../utils/references';
+import { EditorView } from 'prosemirror-view';
 
-export default (schema, props) => {
-	const { blockNames } = props;
+import SuggestionManager from 'client/utils/suggestions/suggestionManager';
+import { getReferenceableNodes, buildLabel, NodeReference } from 'components/Editor/utils';
 
-	let selectedIndex = 0;
-	let showDropdown = false;
-	let references: NodeReference[] = [];
+type SuggestPluginProps = {
+	blockNames: { [key: string]: string };
+	suggestionManager: SuggestionManager<NodeReference>;
+};
 
-	const plugin: Suggester = {
-		noDecorations: true,
+export default (schema, props: SuggestPluginProps) => {
+	const { blockNames, suggestionManager } = props;
+	const normalizeQuery = (text: string) => text.toLowerCase().replace(/\s+/g, '');
+
+	function getNodeReferences(view: EditorView, query: string) {
+		const referenceableNodes = getReferenceableNodes(view.state);
+
+		if (query === '') {
+			return referenceableNodes;
+		}
+
+		return referenceableNodes.filter((target) => {
+			const label = buildLabel(target.node, blockNames[target.node.type.name]);
+
+			if (label === null) {
+				return false;
+			}
+
+			return normalizeQuery(label).indexOf(normalizeQuery(query)) > -1;
+		});
+	}
+
+	const suggester: Suggester = {
 		char: '@',
 		name: 'reference-suggestion',
-		appendText: '',
 		keyBindings: {
 			ArrowUp: () => {
-				if (showDropdown) {
-					selectedIndex = (selectedIndex - 1 + length) % length;
-					return true;
-				}
+				suggestionManager.previous();
+				return true;
 			},
-			ArrowDown: (...args) => {
-				console.log(args);
-				if (showDropdown) {
-					selectedIndex = (selectedIndex + 1) % length;
-					return true;
-				}
+			ArrowDown: () => {
+				suggestionManager.next();
+				return true;
 			},
-			Enter: ({ command }) => {
-				if (showDropdown) {
-					command(references[selectedIndex]);
-				}
+			Enter: () => {
+				suggestionManager.select();
+				return true;
 			},
 			Esc: () => {
-				showDropdown = false;
+				suggestionManager.close();
+				return true;
 			},
 		},
 		onChange: (params) => {
-			selectedIndex = 0;
-			showDropdown = true;
-			references = getReferenceableNodes(params.view.state).filter((target) => {
-				const label = buildLabel(target.node, blockNames[target.node.type.name]);
-
-				if (!label) {
-					return false;
-				}
-
-				return label.toLowerCase().indexOf(params.queryText.partial.toLowerCase()) > -1;
-			});
+			suggestionManager.load(
+				getNodeReferences(params.view, params.queryText.partial),
+				params,
+			);
 		},
 		onExit: () => {
-			showDropdown = false;
-			references = [];
-			selectedIndex = 0;
+			suggestionManager.close();
 		},
 		createCommand: ({ match, view }) => {
-			return (reference: NodeReference) => {
+			const command = (reference: NodeReference) => {
 				const tr = view.state.tr;
 				const { from, end: to } = match.range;
-
-				// Clear query text.
-				tr.deleteRange(from, to);
-				view.dispatch(tr);
-
-				// Insert reference node.
-				schema.nodes.reference.spec.onInsert(view, {
+				const referenceNode = view.state.schema.nodes.reference.create({
 					targetId: reference.node.attrs.id,
 				});
+
+				tr.replaceWith(from, to, referenceNode);
+
+				view.dispatch(tr);
 			};
+
+			return command;
 		},
 	};
 
-	return suggest(plugin);
+	const plugin = suggest(suggester);
+
+	return plugin;
 };
