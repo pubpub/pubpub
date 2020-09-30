@@ -5,14 +5,15 @@ type Community = {
 	twitter: string;
 };
 
-type Collection = {
+export type Collection = {
 	id: string;
 	title: string;
 	slug: string;
+	kind: string;
 	isPublic: boolean;
 };
 
-type Page = {
+export type Page = {
 	id: string;
 	title: string;
 	slug: string;
@@ -29,7 +30,7 @@ type CommunityNavigationChild =
 	| { id: string; type: 'page' | 'collection' }
 	| { id: string; title: string; href: string };
 
-type CommunityNavigationEntry =
+export type CommunityNavigationEntry =
 	| CommunityNavigationChild
 	| { id: string; title: string; children: CommunityNavigationChild[] };
 
