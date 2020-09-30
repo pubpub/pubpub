@@ -2,17 +2,17 @@ import { SuggestCallbackParams } from 'prosemirror-suggest';
 
 const modFloor = (a: number, n: number) => ((a % n) + n) % n;
 
-export enum Status {
+export enum SuggestionManagerStatus {
 	Closed,
 	Suggesting,
 }
 
 type SuggestionManagerStateClosed = Readonly<{
-	status: Status.Closed;
+	status: SuggestionManagerStatus.Closed;
 }>;
 
 type SuggestionManagerStateSuggesting<T> = Readonly<{
-	status: Status.Suggesting;
+	status: SuggestionManagerStatus.Suggesting;
 	index: number;
 	items: ReadonlyArray<T>;
 	params: SuggestCallbackParams;
@@ -25,7 +25,23 @@ export type SuggestionManagerSuggesting<T> = SuggestionManager<T> & {
 };
 
 export default class SuggestionManager<T> {
-	private _state: SuggestionManagerState<T> = { status: Status.Closed };
+	static getSuggestionDropdownPosition({
+		state: { params },
+	}: SuggestionManagerSuggesting<unknown>) {
+		const bounds = params.view.coordsAtPos(params.range.from + 1);
+		const parent = document.body.getBoundingClientRect();
+
+		return {
+			top: bounds.bottom - parent.top,
+			left: bounds.left - parent.left,
+		};
+	}
+
+	static getSelectedValue<T>({ state: { items, index } }: SuggestionManagerSuggesting<T>) {
+		return items[modFloor(index, items.length)];
+	}
+
+	private _state: SuggestionManagerState<T> = { status: SuggestionManagerStatus.Closed };
 
 	get state() {
 		return this._state;
@@ -33,7 +49,7 @@ export default class SuggestionManager<T> {
 
 	load(items: T[], params: SuggestCallbackParams) {
 		this._state = {
-			status: Status.Suggesting,
+			status: SuggestionManagerStatus.Suggesting,
 			index: this.isSuggesting() ? this.state.index : 0,
 			items: items,
 			params: params,
@@ -76,31 +92,22 @@ export default class SuggestionManager<T> {
 			params: { command },
 		} = this.state;
 
-		command(item !== undefined && items.includes(item) ? item : getSelectedValue(this));
+		command(
+			item !== undefined && items.includes(item)
+				? item
+				: SuggestionManager.getSelectedValue(this),
+		);
 
 		this.close();
 	}
 
 	close() {
 		this._state = {
-			status: Status.Closed,
+			status: SuggestionManagerStatus.Closed,
 		};
 	}
 
 	isSuggesting(): this is SuggestionManagerSuggesting<T> {
-		return this.state.status === Status.Suggesting;
+		return this.state.status === SuggestionManagerStatus.Suggesting;
 	}
 }
-
-export const getPosition = ({ state: { params } }: SuggestionManagerSuggesting<unknown>) => {
-	const bounds = params.view.coordsAtPos(params.range.from + 1);
-	const parent = document.body.getBoundingClientRect();
-
-	return {
-		top: bounds.bottom - parent.top,
-		left: bounds.left - parent.left,
-	};
-};
-
-export const getSelectedValue = <T>({ state: { items, index } }: SuggestionManagerSuggesting<T>) =>
-	items[modFloor(index, items.length)];

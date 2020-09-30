@@ -1,8 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { Menu, MenuItem } from '@blueprintjs/core';
 
-import {
-	getSelectedValue,
+import SuggestionManager, {
 	SuggestionManagerSuggesting,
 } from 'client/utils/suggestions/suggestionManager';
 
@@ -23,7 +22,7 @@ const ReferenceFinder = (props: ReferenceFinderProps) => {
 	const onItemSelect = useCallback((reference: NodeReference) => {
 		suggestionManager.select(reference);
 	}, []);
-	const active = getSelectedValue(suggestionManager);
+	const active = SuggestionManager.getSelectedValue(suggestionManager);
 	const menuItems = useMemo(
 		() =>
 			items.map((reference) => (

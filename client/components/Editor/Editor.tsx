@@ -4,7 +4,7 @@ import { EditorView } from 'prosemirror-view';
 import { keydownHandler } from 'prosemirror-keymap';
 import { addTemporaryIdsToDoc } from '@pubpub/prosemirror-reactive';
 
-import SuggestionManager, { getPosition } from 'client/utils/suggestions/suggestionManager';
+import SuggestionManager from 'client/utils/suggestions/suggestionManager';
 import ReferenceFinder from './ReferenceFinder';
 
 import { getPlugins } from './plugins';
@@ -174,7 +174,12 @@ const Editor = (props: Props) => {
 				{initialArguments.current.staticContent}
 			</div>
 			{suggestionManager.isSuggesting() && (
-				<div style={{ position: 'absolute', ...getPosition(suggestionManager) }}>
+				<div
+					style={{
+						position: 'absolute',
+						...SuggestionManager.getSuggestionDropdownPosition(suggestionManager),
+					}}
+				>
 					<ReferenceFinder
 						suggestionManager={suggestionManager}
 						blockNames={props.blockNames}
