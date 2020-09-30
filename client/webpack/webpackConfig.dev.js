@@ -2,7 +2,6 @@ const { resolve } = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const autoprefixer = require('autoprefixer');
-const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 module.exports = {
 	mode: 'development',

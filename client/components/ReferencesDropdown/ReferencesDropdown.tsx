@@ -10,7 +10,7 @@ export type ReferencesDropdownProps = {
 	onSelect: (reference: NodeReference) => unknown;
 };
 
-export default (props: ReferencesDropdownProps) => {
+const ReferencesDropdown = (props: ReferencesDropdownProps) => {
 	const { blockNames, references, selectedReference, onSelect } = props;
 	const currentIcon = selectedReference ? selectedReference.icon : 'disable';
 	const currentLabel = selectedReference
@@ -49,3 +49,5 @@ export default (props: ReferencesDropdownProps) => {
 		</div>
 	);
 };
+
+export default ReferencesDropdown;
