@@ -4,7 +4,7 @@ import { Button, InputGroup } from '@blueprintjs/core';
 
 import { Icon } from 'components';
 import { getSchemaForKind } from 'utils/collections/schemas';
-import { CommunityNavigationEntry } from 'client/utils/navigation';
+import { CommunityNavigationEntry, isCommunityNavigationMenu } from 'client/utils/navigation';
 
 import PageCollectionAutocomplete from './PageCollectionAutocomplete';
 import { NavBuilderContext } from './navBuilderContext';
@@ -88,7 +88,7 @@ const NavBuilderRow = (props: Props) => {
 				</>
 			);
 		}
-		if ('children' in item) {
+		if (isCommunityNavigationMenu(item)) {
 			return (
 				<>
 					<PageCollectionAutocomplete
@@ -137,7 +137,7 @@ const NavBuilderRow = (props: Props) => {
 	};
 
 	const renderChildren = () => {
-		if (typeof item === 'object' && 'children' in item) {
+		if (isCommunityNavigationMenu(item)) {
 			return (
 				<div className="children">
 					{/* @ts-expect-error ts-migrate(2604) FIXME: JSX element type 'NavBuilderList' does not have an... Remove this comment to see the full error message */}

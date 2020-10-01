@@ -3,7 +3,7 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import { Button } from '@blueprintjs/core';
 
 import { generateHash } from 'utils/hashes';
-import { CommunityNavigationEntry } from 'client/utils/navigation';
+import { CommunityNavigationEntry, isCommunityNavigationMenu } from 'client/utils/navigation';
 
 import PageCollectionAutocomplete from './PageCollectionAutocomplete';
 import NavBuilderList from './NavBuilderList';
@@ -49,8 +49,7 @@ const NavBuilder = (props: Props) => {
 					? reorder(userSetElements, result.source.index, result.destination.index)
 					: userSetElements.map((item) => {
 							if (
-								typeof item === 'object' &&
-								'children' in item &&
+								isCommunityNavigationMenu(item) &&
 								item.id === result.destination.droppableId
 							) {
 								return {
