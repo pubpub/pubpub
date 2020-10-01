@@ -12,14 +12,14 @@
 		user-select: none;
 		cursor: pointer;
 		text-decoration: none;
-		&:hover {
+		&:hover,
+		&:focus {
 			.title {
 				text-decoration: underline;
 			}
 		}
 		&:focus {
 			.title {
-				text-decoration: underline;
 				text-decoration-style: dotted;
 			}
 		}

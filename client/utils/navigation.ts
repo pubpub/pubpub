@@ -41,7 +41,10 @@ type NavbarChild = {
 	isExternal?: true;
 };
 
-export type NavbarItem = NavbarChild | { title: string; id: string; children: NavbarChild[] };
+export type NavbarMenu = { title: string; id: string; children: NavbarChild[] };
+export type NavbarItem = NavbarChild | NavbarMenu;
+
+export const isNavbarMenu = (item: NavbarItem): item is NavbarMenu => 'children' in item;
 
 export const defaultFooterLinks: CommunityNavigationEntry[] = [
 	{ id: 'rss', title: 'RSS', href: '/rss.xml' },
