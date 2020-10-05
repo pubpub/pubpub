@@ -4,7 +4,9 @@ import { EditorView } from 'prosemirror-view';
 import { keydownHandler } from 'prosemirror-keymap';
 import { addTemporaryIdsToDoc } from '@pubpub/prosemirror-reactive';
 
-import SuggestionManager from 'client/utils/suggestions/suggestionManager';
+import SuggestionManager, {
+	SuggestionManagerStateSuggesting,
+} from 'client/utils/suggestions/suggestionManager';
 import ReferenceFinder from './ReferenceFinder';
 
 import { getPlugins } from './plugins';
@@ -12,7 +14,6 @@ import { collabDocPluginKey } from './plugins/collaborative';
 import { getChangeObject } from './plugins/onChange';
 import { renderStatic, buildSchema, NodeReference } from './utils';
 import nodeViews from './views';
-import ReferencesDropdown from '../ReferencesDropdown/ReferencesDropdown';
 
 require('./styles/base.scss');
 
@@ -82,7 +83,14 @@ type Props = EditorProps & typeof defaultProps;
 const Editor = (props: Props) => {
 	const editorRef = useRef<HTMLElement>();
 	const initialArguments = useRef(null);
+	const [suggesting, setSuggesting] = useState<SuggestionManagerStateSuggesting<
+		NodeReference
+	> | null>();
 	const suggestionManager = useMemo(() => new SuggestionManager<NodeReference>(), []);
+	const onSuggestionManagerTransition = useCallback(
+		() => setSuggesting(suggestionManager.isSuggesting() ? suggestionManager.state : null),
+		[],
+	);
 
 	if (initialArguments.current === null) {
 		// @ts-expect-error ts-migrate(2322) FIXME: Type '{ schema: any; initialDoc: any; staticConten... Remove this comment to see the full error message
@@ -154,8 +162,11 @@ const Editor = (props: Props) => {
 				}
 			},
 		});
+
 		props.onChange(getChangeObject(view));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
+
+		return suggestionManager.transitioned.subscribe(onSuggestionManagerTransition);
 	}, []);
 
 	/* Before createEditor is called from componentDidMount, we */
@@ -173,16 +184,18 @@ const Editor = (props: Props) => {
 				{/* @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'. */}
 				{initialArguments.current.staticContent}
 			</div>
-			{suggestionManager.isSuggesting() && (
+			{suggesting && (
 				<div
 					style={{
 						position: 'absolute',
-						...SuggestionManager.getSuggestionDropdownPosition(suggestionManager),
+						...suggestionManager.getPosition(),
 					}}
 				>
 					<ReferenceFinder
-						suggestionManager={suggestionManager}
 						blockNames={props.blockNames}
+						references={suggesting.items}
+						activeReference={suggestionManager.getSelectedValue()}
+						onReferenceSelect={(reference) => suggestionManager.select(reference)}
 					/>
 				</div>
 			)}

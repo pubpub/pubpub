@@ -3,15 +3,17 @@ import { EditorView } from 'prosemirror-view';
 
 import SuggestionManager from 'client/utils/suggestions/suggestionManager';
 import { getReferenceableNodes, buildLabel, NodeReference } from 'components/Editor/utils';
+import { Schema } from 'prosemirror-model';
 
 type SuggestPluginProps = {
 	blockNames: { [key: string]: string };
 	suggestionManager: SuggestionManager<NodeReference>;
 };
 
-export default (schema, props: SuggestPluginProps) => {
+const normalizeQuery = (text: string) => text.toLowerCase().replace(/\s+/g, '');
+
+export default (schema: Schema, props: SuggestPluginProps) => {
 	const { blockNames, suggestionManager } = props;
-	const normalizeQuery = (text: string) => text.toLowerCase().replace(/\s+/g, '');
 
 	function getNodeReferences(view: EditorView, query: string) {
 		const referenceableNodes = getReferenceableNodes(view.state);

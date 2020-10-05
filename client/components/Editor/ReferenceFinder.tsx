@@ -11,30 +11,25 @@ require('./referenceFinder.scss');
 
 export type ReferenceFinderProps = {
 	blockNames: { [key: string]: string };
-	suggestionManager: SuggestionManagerSuggesting<NodeReference>;
+	references: ReadonlyArray<NodeReference>;
+	activeReference?: NodeReference;
+	onReferenceSelect: (reference: NodeReference) => unknown;
 };
 
 const ReferenceFinder = (props: ReferenceFinderProps) => {
-	const { blockNames, suggestionManager } = props;
-	const {
-		state: { items },
-	} = suggestionManager;
-	const onItemSelect = useCallback((reference: NodeReference) => {
-		suggestionManager.select(reference);
-	}, []);
-	const active = SuggestionManager.getSelectedValue(suggestionManager);
+	const { blockNames, references, activeReference, onReferenceSelect } = props;
 	const menuItems = useMemo(
 		() =>
-			items.map((reference) => (
+			references.map((reference) => (
 				<MenuItem
 					key={reference.node.attrs.id}
-					onClick={() => onItemSelect(reference)}
+					onClick={() => onReferenceSelect(reference)}
 					icon={reference.icon}
 					text={buildLabel(reference.node, blockNames[reference.node.type.name])}
-					active={reference === active}
+					active={reference === activeReference}
 				/>
 			)),
-		[items],
+		[references, activeReference],
 	);
 
 	return (
