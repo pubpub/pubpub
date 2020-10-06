@@ -13,7 +13,7 @@ import { NavBuilderContext } from './navBuilderContext';
 require('./navBuilder.scss');
 
 type Props = {
-	initialNav: CommunityNavgiationEntry[];
+	initialNav: CommunityNavigationEntry[];
 	prefix?: CommunityNavigationEntry[];
 	suffix?: CommunityNavigationEntry[];
 	pages: any[];
@@ -143,7 +143,8 @@ const NavBuilder = (props: Props) => {
 						addItem({ type: 'page', id: page.id });
 					}}
 				/>
-				<PageCollectionAutocomplete
+				{/* TODO(ian): Uncomment after Collection slugs resolve to a layout */}
+				{/* <PageCollectionAutocomplete
 					items={collections}
 					placeholder="Add Collection"
 					usedItems={collections.filter((collection) =>
@@ -153,7 +154,7 @@ const NavBuilder = (props: Props) => {
 					onSelect={(collection) => {
 						addItem({ type: 'collection', id: collection.id });
 					}}
-				/>
+				/> */}
 				<Button
 					small
 					text="Add Link"
