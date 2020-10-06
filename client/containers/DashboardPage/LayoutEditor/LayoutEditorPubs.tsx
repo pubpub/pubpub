@@ -278,7 +278,6 @@ class LayoutEditorPubs extends Component<Props> {
 										uniqueId={this.props.layoutIndex}
 										selectedTitle="Pinned Pubs"
 										availableTitle="Available Pubs"
-										// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'undefined... Remove this comment to see the full error message
 										selectedTitleTooltip="Pinned pubs will be displayed first, followed by newest pubs."
 									/>
 								</div>
