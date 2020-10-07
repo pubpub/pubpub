@@ -44,7 +44,7 @@ const PubPreview = (props: Props) => {
 	const { communityData: localCommunityData, scopeData } = usePageContext();
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [canExpand, setCanExpand] = useState(false);
-	const contentRef = useRef<HTMLElement>(null);
+	const contentRef = useRef<HTMLDivElement>(null);
 	const resizedHeaderLogo =
 		communityData && getResizedUrl(communityData.headerLogo, 'fit-in', '125x35');
 	const publishedDate = getPubPublishedDate(pubData);

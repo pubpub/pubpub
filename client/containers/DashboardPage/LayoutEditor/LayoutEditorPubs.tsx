@@ -410,19 +410,12 @@ class LayoutEditorPubs extends Component<Props> {
 								<div key={selectedPub.id} className="row">
 									<div className={isTwoColumn ? 'col-6' : 'col-12'}>
 										<PubPreview
-											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											pubData={selectedPub}
-											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											size={pubPreviewType}
-											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											hideByline={this.props.content.hideByline}
-											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											hideDescription={this.props.content.hideDescription}
-											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											hideDates={this.props.content.hideDates}
-											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											hideContributors={this.props.content.hideContributors}
-											// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 											hideEdges={this.props.content.hideEdges}
 										/>
 									</div>
@@ -430,19 +423,12 @@ class LayoutEditorPubs extends Component<Props> {
 									{nextPub && (
 										<div className={isTwoColumn ? 'col-6' : 'col-12'}>
 											<PubPreview
-												// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 												pubData={nextPub}
-												// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 												size={pubPreviewType}
-												// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 												hideByline={this.props.content.hideByline}
-												// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 												hideDescription={this.props.content.hideDescription}
-												// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 												hideDates={this.props.content.hideDates}
-												// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 												hideEdges={this.props.content.hideEdges}
-												// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 												hideContributors={
 													this.props.content.hideContributors
 												}
