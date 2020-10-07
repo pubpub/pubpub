@@ -1,4 +1,6 @@
 import React from 'react';
+
+import { LayoutBlockPages, LayoutBlockCollectionsPages } from 'utils/layout/types';
 import PagePreview from 'components/PagePreview/PagePreview';
 
 export type BlockItem = {
@@ -12,18 +14,8 @@ export type PageOrCollection = {
 	slug: string;
 };
 
-type LegacyContent = {
-	title: string;
-	pageIds: string[];
-};
-
-type CollectionsPagesContent = {
-	title: string;
-	items: BlockItem[];
-};
-
-export type Content = LegacyContent | CollectionsPagesContent;
-export const isLegacyContent = (c: Content): c is LegacyContent => 'pageIds' in c;
+export type Content = LayoutBlockPages['content'] | LayoutBlockCollectionsPages['content'];
+export const isLegacyContent = (c: Content): c is LayoutBlockPages['content'] => 'pageIds' in c;
 
 type Props = {
 	content: Content;
