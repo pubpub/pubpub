@@ -1,5 +1,7 @@
 import { DOMOutputSpec } from 'prosemirror-model';
 import React from 'react';
+import { pruneFalsyValues } from 'utils/arrays';
+import { withValue } from 'utils/fp';
 
 import { renderHtmlChildren } from '../utils/renderHtml';
 import { counter } from './reactive/counter';
@@ -102,7 +104,7 @@ export default {
 					/>
 				) as any;
 			}
-			return [
+			return pruneFalsyValues([
 				'div',
 				{
 					...(node.attrs.id && { id: node.attrs.id }),
@@ -111,8 +113,12 @@ export default {
 				},
 				['span'],
 				renderHtmlChildren(isReact, node.attrs.html),
-				['span', { class: 'equation-label' }, `(${node.attrs.count})`],
-			] as DOMOutputSpec;
+				withValue(node.atts.count, (count) => [
+					'span',
+					{ class: 'equation-label' },
+					`(${count})`,
+				]),
+			]) as DOMOutputSpec;
 		},
 
 		inline: false,

@@ -1,4 +1,6 @@
 import { DOMOutputSpec } from 'prosemirror-model';
+import { pruneFalsyValues } from 'utils/arrays';
+import { withValue } from 'utils/fp';
 import { buildLabel } from '../utils/references';
 import { renderHtmlChildren } from '../utils/renderHtml';
 import { counter } from './reactive/counter';
@@ -59,11 +61,11 @@ export default {
 				[
 					'figcaption',
 					{},
-					[
+					pruneFalsyValues([
 						'div',
-						['strong', buildLabel(node)],
+						withValue(buildLabel(node), (label) => ['strong', label]),
 						renderHtmlChildren(isReact, node.attrs.caption, 'div'),
-					],
+					]),
 				],
 			] as DOMOutputSpec;
 		},

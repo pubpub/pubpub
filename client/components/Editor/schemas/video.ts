@@ -3,6 +3,8 @@ import { counter } from './reactive/counter';
 import { label } from './reactive/label';
 import { buildLabel } from '../utils/references';
 import { DOMOutputSpec } from 'prosemirror-model';
+import { pruneFalsyValues } from 'utils/arrays';
+import { withValue } from 'utils/fp';
 
 export default {
 	video: {
@@ -58,11 +60,11 @@ export default {
 				[
 					'figcaption',
 					{},
-					[
+					pruneFalsyValues([
 						'div',
-						['strong', buildLabel(node)],
+						withValue(buildLabel(node), (label) => ['strong', label]),
 						renderHtmlChildren(isReact, node.attrs.caption, 'div'),
-					],
+					]),
 				],
 			] as DOMOutputSpec;
 		},

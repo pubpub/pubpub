@@ -52,7 +52,7 @@ const PubBody = (props: Props) => {
 		editorWrapperRef,
 	} = props;
 	const { communityData } = usePageContext();
-	const { blockNames, citationManager } = usePubContext();
+	const { citationManager } = usePubContext();
 	const { isViewingHistory } = historyData;
 	const prevStatusRef = useRef(null);
 	const embedDiscussions = useRef({});
@@ -145,7 +145,7 @@ const PubBody = (props: Props) => {
 						},
 					},
 				}}
-				blockNames={blockNames}
+				nodeLabels={pubData.nodeLabels}
 				citationManager={citationManager}
 				placeholder={pubData.isReadOnly ? undefined : 'Begin writing here...'}
 				initialContent={initialContent}

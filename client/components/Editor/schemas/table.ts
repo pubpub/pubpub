@@ -3,6 +3,8 @@ import { DOMOutputSpec, Fragment, Node as ProsemirrorNode } from 'prosemirror-mo
 import { counter } from './reactive/counter';
 import { label } from './reactive/label';
 import { buildLabel } from '../utils/references';
+import { pruneFalsyValues } from 'utils/arrays';
+import { withValue } from 'utils/fp';
 
 const pmTableNodes = tableNodes({
 	tableGroup: 'block',
@@ -65,12 +67,12 @@ table.parseDOM![0].getAttrs = (node) => {
 table.toDOM = (node: ProsemirrorNode) => {
 	const spec = tableToDOM!(node);
 
-	return [
+	return pruneFalsyValues([
 		spec[0],
 		{ id: node.attrs.id },
-		['caption', buildLabel(node)],
+		withValue(buildLabel(node), (label) => ['caption', label]),
 		spec[1],
-	] as DOMOutputSpec;
+	]) as DOMOutputSpec;
 };
 
 export default pmTableNodes;
