@@ -1,4 +1,4 @@
-import { DOMOutputSpec } from 'prosemirror-model';
+import { DOMOutputSpec, Node } from 'prosemirror-model';
 import React from 'react';
 import { pruneFalsyValues } from 'utils/arrays';
 import { withValue } from 'utils/fp';
@@ -94,7 +94,7 @@ export default {
 			},
 		],
 		// @ts-expect-error ts-migrate(2525) FIXME: Initializer provides no value for this binding ele... Remove this comment to see the full error message
-		toDOM: (node, { isReact } = {}) => {
+		toDOM: (node: Node, { isReact } = {}) => {
 			if (node.attrs.renderForPandoc) {
 				return (
 					<script
@@ -113,7 +113,7 @@ export default {
 				},
 				['span'],
 				renderHtmlChildren(isReact, node.attrs.html),
-				withValue(node.atts.count, (count) => [
+				withValue(node.attrs.count, (count) => [
 					'span',
 					{ class: 'equation-label' },
 					`(${count})`,
