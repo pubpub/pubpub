@@ -2,6 +2,7 @@
 import Cite from 'citation-js';
 
 import { getPubPublishedDate } from 'utils/pub/pubDates';
+import getCollectionDoi from 'utils/collections/getCollectionDoi';
 import { pubUrl } from 'utils/canonicalUrls';
 
 const getDatePartsObject = (date) => ({
@@ -26,7 +27,7 @@ const getCollectionLevelData = (primaryCollectionPub) => {
 	return {
 		type: collectionKindToCitationJSPart(kind),
 		...(useCollectionTitle && { 'container-title': title }),
-		containerDoi: metadata.doi || collection.doi,
+		containerDoi: getCollectionDoi(collection),
 		ISBN: metadata.isbn,
 		ISSN: metadata.issn || metadata.printIssn || metadata.electronicIssn,
 		edition: metadata.edition,
