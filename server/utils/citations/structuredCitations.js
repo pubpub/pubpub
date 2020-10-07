@@ -3,14 +3,14 @@ import path from 'path';
 import crypto from 'crypto';
 import Cite from 'citation-js';
 import { getNotes } from 'components/Editor';
-import { citationStyles as styles } from 'utils/citations';
+import { citationStyles } from 'utils/citations';
 
 /* Different styles available here: */
 /* https://github.com/citation-style-language/styles */
 const config = Cite.plugins.config.get('@csl');
-styles.forEach((style) => {
-	/* ['apa', 'harvard', 'vancouver'] built-in to citation-js */
+citationStyles.forEach((style) => {
 	if (!style.path) return;
+	/* ['apa', 'harvard', 'vancouver'] built-in to citation-js */
 	const fileString = fs.readFileSync(
 		path.join(__dirname, style.path !== '' ? style.path : null),
 		{ encoding: 'utf8' },
