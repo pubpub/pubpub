@@ -75,7 +75,6 @@ export const generateCitationHtml = async (pubData, communityData) => {
 		note: pubLink,
 		URL: pubLink,
 	});
-	console.log(pubCiteObject);
 	return {
 		pub: {
 			default: pubCiteObject
