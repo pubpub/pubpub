@@ -195,7 +195,7 @@ const Editor = (props: Props) => {
 					<ReferenceFinder
 						nodeLabels={props.nodeLabels}
 						references={suggesting.items}
-						activeReference={suggestionManager.getSelectedValue()}
+						activeReference={suggestionManager.getSelectedValue() || undefined}
 						onReferenceSelect={(reference) => suggestionManager.select(reference)}
 					/>
 				</div>

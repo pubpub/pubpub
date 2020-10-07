@@ -21,9 +21,10 @@ const ControlsReference = (props: ControlsReferenceProps) => {
 		editorChangeObject: { updateNode, selectedNode, view },
 	} = props;
 	const { pubData } = usePubContext();
-	const nodeReferences = useMemo(() => getReferenceableNodes(view.state, pubData.nodeLabels), [
-		view.state,
-	]);
+	const nodeReferences = useMemo(
+		() => (pubData.nodeLabels ? getReferenceableNodes(view.state, pubData.nodeLabels) : []),
+		[view.state],
+	);
 	const [target, setTarget] = useState(() => matchInitialTarget(selectedNode, nodeReferences));
 	const targetId = target && target.node && target.node.attrs.id;
 	const changed = useRef(false);
