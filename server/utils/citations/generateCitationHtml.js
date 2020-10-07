@@ -26,7 +26,7 @@ const getCollectionLevelData = (primaryCollectionPub) => {
 	return {
 		type: collectionKindToCitationJSPart(kind),
 		...(useCollectionTitle && { 'container-title': title }),
-		containerDoi: metadata.doi,
+		containerDoi: metadata.doi || collection.doi,
 		ISBN: metadata.isbn,
 		ISSN: metadata.issn || metadata.printIssn || metadata.electronicIssn,
 		edition: metadata.edition,
