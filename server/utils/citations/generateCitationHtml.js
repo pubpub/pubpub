@@ -77,6 +77,14 @@ export const generateCitationHtml = async (pubData, communityData) => {
 
 	return {
 		pub: {
+			default: pubCiteObject
+				.get({
+					format: 'string',
+					type: 'html',
+					style: `citation-${pubData.citationStyle}`,
+					lang: 'en-US',
+				})
+				.replace(/\n/gi, ''),
 			apa: pubCiteObject
 				.get({ format: 'string', type: 'html', style: 'citation-apa', lang: 'en-US' })
 				.replace(/\n/gi, ''),
