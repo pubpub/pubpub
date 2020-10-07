@@ -26,6 +26,7 @@ const getCollectionLevelData = (primaryCollectionPub) => {
 	return {
 		type: collectionKindToCitationJSPart(kind),
 		...(useCollectionTitle && { 'container-title': title }),
+		containerDoi: metadata.doi,
 		ISBN: metadata.isbn,
 		ISSN: metadata.issn || metadata.printIssn || metadata.electronicIssn,
 		edition: metadata.edition,
@@ -68,13 +69,13 @@ export const generateCitationHtml = async (pubData, communityData) => {
 	};
 	const pubCiteObject = await Cite.async({
 		...commonData,
-		DOI: pubData.doi,
+		DOI: pubData.doi || commonData.containerDoi,
 		ISSN: pubData.doi ? communityData.issn : null,
 		issued: pubIssuedDate && [getDatePartsObject(pubIssuedDate)],
 		note: pubLink,
 		URL: pubLink,
 	});
-
+	console.log(pubCiteObject);
 	return {
 		pub: {
 			default: pubCiteObject
