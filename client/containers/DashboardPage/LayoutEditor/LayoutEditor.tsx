@@ -5,8 +5,6 @@ import stickybits from 'stickybits';
 import { generateHash } from 'utils/hashes';
 import { getPubsByBlockIndex } from 'utils/layout';
 
-import { validBlockTypes } from 'utils/layout';
-
 import LayoutEditorInsert from './LayoutEditorInsert';
 import LayoutEditorPubs from './LayoutEditorPubs';
 import LayoutEditorPagesCollections from './LayoutEditorPagesCollections';
@@ -24,6 +22,15 @@ type Props = {
 };
 
 type State = any;
+
+const validBlockTypes = [
+	'pubs',
+	'text',
+	'html',
+	'banner',
+	'pages', // TODO(ian): Remove this after migration
+	'collections-pages',
+];
 
 const getTitleKindForBlock = (blockType: string) => {
 	if (blockType === 'collections-pages') {

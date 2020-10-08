@@ -1,7 +1,12 @@
 type PubPreviewType = 'minimal' | 'small' | 'medium' | 'large';
-type PubSortOrder = 'latest' | 'collection-rank';
 type BannerButtonType = 'create-pub' | 'signup' | 'link';
 type TextAlign = 'left' | 'center';
+
+export type PubSortOrder = 'latest' | 'collection-rank';
+
+export type LayoutRenderContext = {
+	collectionId?: string;
+};
 
 export type PubsContentOptions = {
 	hideByline?: boolean;
@@ -19,7 +24,7 @@ export type LayoutOptions = {
 
 export type LayoutBlockPubs = {
 	type: 'pubs';
-	content: PubsContentOptions & { title?: string; pubIds: string[] };
+	content: PubsContentOptions & { title?: string; pubIds?: string[]; collectionIds?: string[] };
 };
 
 export type LayoutBlockCollection = {

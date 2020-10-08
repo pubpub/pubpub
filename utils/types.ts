@@ -141,6 +141,7 @@ export type CrossrefDepositRecord = {
 };
 
 export type Pub = {
+	createdAt: string;
 	id: string;
 	slug: string;
 	title: string;

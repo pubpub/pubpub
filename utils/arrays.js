@@ -9,3 +9,16 @@ export const intersperse = (arr, val) => {
 	});
 	return res;
 };
+
+export const partitionOn = (array, test) => {
+	const pass = [];
+	const fail = [];
+	array.forEach((el) => {
+		if (test(el)) {
+			pass.push(el);
+		} else {
+			fail.push(el);
+		}
+	});
+	return [pass, fail];
+};
