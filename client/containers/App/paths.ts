@@ -3,6 +3,7 @@ import {
 	AdminDashboard,
 	CommunityCreate,
 	DashboardActivity,
+	DashboardCollectionLayout,
 	DashboardDiscussions,
 	DashboardEdges,
 	DashboardForks,
@@ -91,6 +92,10 @@ export default (viewData, locationData, chunkName) => {
 		},
 		DashboardSettings: {
 			ActiveComponent: DashboardSettings,
+			isDashboard: true,
+		},
+		DashboardCollectionLayout: {
+			ActiveComponent: DashboardCollectionLayout,
 			isDashboard: true,
 		},
 		Explore: {

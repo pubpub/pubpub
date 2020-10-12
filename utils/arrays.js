@@ -22,3 +22,11 @@ export const partitionOn = (array, test) => {
 	});
 	return [pass, fail];
 };
+
+export const indexByProperty = (array, property) => {
+	const res = {};
+	array.forEach((el) => {
+		res[el[property]] = el;
+	});
+	return res;
+};

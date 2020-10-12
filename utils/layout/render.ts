@@ -9,46 +9,54 @@ import { sortByRank } from 'utils/rank';
 import { partitionOn } from 'utils/arrays';
 
 type PubQuery = {
-	pinnedPubIds: string[];
 	collectionIds: string[];
-	sort: PubSortOrder;
 	limit: number;
+	pinnedPubIds: string[];
+	sort: PubSortOrder;
+	sortCollectionIds: string[];
 };
+
+type RankedPub = { pub: Pub; rank: string };
 
 const sortPubsByCreationDate = (pubs: Pub[]) =>
 	pubs.sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
 
 const sortPubsByCollectionRank = (pubs: Pub[], collectionIds: string[]): Pub[] => {
 	const partitionedPubIds = new Set<string>();
-	const collectionIdsToPubsMap: Record<string, Pub[]> = {};
+	const collectionIdsToRankedPubsMap: Record<string, RankedPub[]> = {};
 
 	pubs.forEach((pub) => {
 		if (pub.collectionPubs) {
-			pub.collectionPubs.forEach(({ collectionId }) => {
-				if (!collectionIdsToPubsMap[collectionId]) {
-					collectionIdsToPubsMap[collectionId] = [];
+			pub.collectionPubs.forEach((collectionPub) => {
+				const { collectionId, rank } = collectionPub;
+				if (!collectionIdsToRankedPubsMap[collectionId]) {
+					collectionIdsToRankedPubsMap[collectionId] = [];
 				}
-				collectionIdsToPubsMap[collectionId].push(pub);
+				collectionIdsToRankedPubsMap[collectionId].push({ pub: pub, rank: rank });
 			});
 		}
 	});
 
-	return collectionIds
+	const sortedPubs = collectionIds
 		.map((collectionId) => {
-			const pubsInCollection = collectionIdsToPubsMap[collectionId];
+			const pubsInCollection = collectionIdsToRankedPubsMap[collectionId];
 			if (pubsInCollection) {
-				const partition: Pub[] = [];
-				pubsInCollection.forEach((pub) => {
+				const partition: RankedPub[] = [];
+				pubsInCollection.forEach((rankedPub) => {
+					const { pub } = rankedPub;
 					if (!partitionedPubIds.has(pub.id)) {
 						partitionedPubIds.add(pub.id);
-						partition.push(pub);
+						partition.push(rankedPub);
 					}
 				});
-				return sortByRank(pubsInCollection);
+				return sortByRank(partition).map((rp) => rp.pub);
 			}
 			return [];
 		})
 		.reduce((a, b) => [...a, ...b], []);
+
+	const unsortedPubs = pubs.filter((pub) => !partitionedPubIds.has(pub.id));
+	return [...sortedPubs, ...unsortedPubs];
 };
 
 const getPubsForCollectionIds = (pubs: Pub[], collectionIds: string[]): Pub[] => {
@@ -69,7 +77,7 @@ const createPubsPool = (pubs: Pub[]) => {
 	const consumedPubIds = new Set<string>();
 
 	const queryAndConsumePubs = (query: PubQuery): Pub[] => {
-		const { pinnedPubIds, collectionIds, sort, limit } = query;
+		const { pinnedPubIds, collectionIds, sort, sortCollectionIds, limit } = query;
 		const pinnedPubIdSet = new Set(pinnedPubIds);
 		const matchingPubs = getPubsForCollectionIds(pubs, collectionIds).filter(
 			(pub) => !consumedPubIds.has(pub.id),
@@ -79,7 +87,7 @@ const createPubsPool = (pubs: Pub[]) => {
 		);
 		const sortedPubs =
 			sort === 'collection-rank'
-				? sortPubsByCollectionRank(restPubs, collectionIds)
+				? sortPubsByCollectionRank(restPubs, sortCollectionIds)
 				: sortPubsByCreationDate(restPubs);
 		const resolvedPubs = [...pinnedPubs, ...sortedPubs].slice(0, limit);
 		const consumedPubs = resolvedPubs.slice(pinnedPubs.length);
@@ -100,20 +108,13 @@ export const getPubsByBlockIndex = (
 	return blocks.map((block) => {
 		if (block.type === 'pubs') {
 			const { content } = block;
+			const collectionIds = content.collectionIds || [];
 			return pool.queryAndConsumePubs({
 				pinnedPubIds: content.pubIds || [],
-				collectionIds: content.collectionIds || [],
+				collectionIds: collectionIds,
 				limit: content.limit || Infinity,
-				sort: 'latest',
-			});
-		}
-		if (block.type === 'collection') {
-			const { content } = block;
-			return pool.queryAndConsumePubs({
-				pinnedPubIds: [],
-				collectionIds: [collectionId],
-				limit: content.limit || Infinity,
-				sort: content.sort,
+				sort: content.sort || 'creation-date',
+				sortCollectionIds: collectionId ? [collectionId] : collectionIds,
 			});
 		}
 		return [];

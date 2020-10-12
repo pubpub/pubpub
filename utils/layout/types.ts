@@ -1,39 +1,38 @@
-type PubPreviewType = 'minimal' | 'small' | 'medium' | 'large';
 type BannerButtonType = 'create-pub' | 'signup' | 'link';
 type TextAlign = 'left' | 'center';
 
-export type PubSortOrder = 'latest' | 'collection-rank';
+export type PubPreviewType = 'minimal' | 'small' | 'medium' | 'large';
+export type PubSortOrder = 'creation-date' | 'collection-rank';
+
+export type LayoutOptions = {
+	isNarrow?: boolean;
+};
 
 export type LayoutRenderContext = {
 	collectionId?: string;
 };
 
-export type PubsContentOptions = {
-	hideByline?: boolean;
-	hideContributors?: boolean;
-	hideDates?: boolean;
-	hideDescription?: boolean;
-	hideEdges?: boolean;
-	limit?: number;
-	pubPreviewType: PubPreviewType;
-};
-
-export type LayoutOptions = {
-	isNarrow: boolean;
-};
-
 export type LayoutBlockPubs = {
 	type: 'pubs';
-	content: PubsContentOptions & { title?: string; pubIds?: string[]; collectionIds?: string[] };
-};
-
-export type LayoutBlockCollection = {
-	type: 'collection';
-	content: PubsContentOptions & { sort: PubSortOrder };
+	id: string;
+	content: {
+		collectionIds?: string[];
+		hideByline?: boolean;
+		hideContributors?: boolean;
+		hideDates?: boolean;
+		hideDescription?: boolean;
+		hideEdges?: boolean;
+		limit?: number;
+		pubIds?: string[];
+		pubPreviewType: PubPreviewType;
+		sort?: PubSortOrder;
+		title?: string;
+	};
 };
 
 export type LayoutBlockText = {
 	type: 'text';
+	id: string;
 	content: {
 		text?: string;
 		align?: TextAlign;
@@ -42,6 +41,7 @@ export type LayoutBlockText = {
 
 export type LayoutBlockHtml = {
 	type: 'html';
+	id: string;
 	content: {
 		html?: string;
 	};
@@ -49,6 +49,7 @@ export type LayoutBlockHtml = {
 
 export type LayoutBlockBanner = {
 	type: 'banner';
+	id: string;
 	content: {
 		align?: TextAlign;
 		backgroundColor?: string;
@@ -66,6 +67,7 @@ export type LayoutBlockBanner = {
 // TODO(ian): Remove after migration
 export type LayoutBlockPages = {
 	type: 'pages';
+	id: string;
 	content: {
 		pageIds: string[];
 		title?: string;
@@ -74,6 +76,7 @@ export type LayoutBlockPages = {
 
 export type LayoutBlockCollectionsPages = {
 	type: 'collections-pages';
+	id: string;
 	content: {
 		items: { type: 'collection' | 'page'; id: string }[];
 		title?: string;
@@ -82,7 +85,6 @@ export type LayoutBlockCollectionsPages = {
 
 export type LayoutBlock =
 	| LayoutBlockBanner
-	| LayoutBlockCollection
 	| LayoutBlockCollectionsPages
 	| LayoutBlockHtml
 	| LayoutBlockPages

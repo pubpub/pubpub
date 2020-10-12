@@ -1,29 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 require('./settingsSection.scss');
 
-const propTypes = {
-	className: PropTypes.string,
-	title: PropTypes.string,
-	children: PropTypes.node,
+type Props = {
+	className?: string;
+	children: React.ReactNode;
+	title: React.ReactNode;
 };
 
-const defaultProps = {
-	className: '',
-	title: '',
-	children: undefined,
-};
-
-const SettingsSection = function(props) {
+const SettingsSection = (props: Props) => {
+	const { title, className = '', children } = props;
 	return (
-		<div className={`settings-section-component ${props.className}`}>
-			<div className="title">{props.title}</div>
-			<div className="content">{props.children}</div>
+		<div className={classNames('settings-section-component', className)}>
+			<div className="title">{title}</div>
+			<div className="content">{children}</div>
 		</div>
 	);
 };
 
-SettingsSection.defaultProps = defaultProps;
-SettingsSection.propTypes = propTypes;
 export default SettingsSection;
