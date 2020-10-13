@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { SimpleEditor } from 'components';
 import { ControlsButton, ControlsButtonGroup } from '../ControlsButton';
@@ -43,8 +43,10 @@ const ControlsMedia = (props: Props) => {
 	const { size, align, height, caption, hideLabel } = selectedNode.attrs;
 	const canEditHeight = getCanEditNodeHeight(selectedNode);
 	const itemName = getItemName(selectedNode);
-	const toggleLabel = (e: React.MouseEvent) =>
-		updateNode({ hideLabel: (e.target as HTMLInputElement).checked });
+	const toggleLabel = useCallback(
+		(e: React.MouseEvent) => updateNode({ hideLabel: (e.target as HTMLInputElement).checked }),
+		[updateNode],
+	);
 
 	return (
 		<div className="controls-media-component">

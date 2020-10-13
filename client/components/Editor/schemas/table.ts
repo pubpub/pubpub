@@ -51,7 +51,7 @@ table.onInsert = (view) => {
 // Enhance table node with reactive attributes.
 const { toDOM: tableToDOM } = table;
 
-table.attrs = { ...table.attrs, id: { default: null } };
+table.attrs = { ...table.attrs, id: { default: null }, hideLabel: { default: false } };
 table.reactive = true;
 table.reactiveAttrs = {
 	count: counter(),

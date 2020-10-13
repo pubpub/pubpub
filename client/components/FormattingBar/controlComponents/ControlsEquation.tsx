@@ -1,5 +1,5 @@
 /* eslint-disable react/no-danger */
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import { useDebounce } from 'use-debounce';
 
 import { renderLatexString } from 'client/utils/editor';
@@ -43,11 +43,10 @@ const ControlsEquation = (props: Props) => {
 	} = pendingAttrs;
 	const [debouncedValue] = useDebounce(value, 250);
 	const hasMountedRef = useRef(false);
-	const toggleLabel = (e: React.MouseEvent) => {
-		// @ts-ignore
-		console.log(e.target.checked);
-		updateNode({ hideLabel: (e.target as HTMLInputElement).checked });
-	};
+	const toggleLabel = (e: React.MouseEvent) =>
+		useCallback(() => updateNode({ hideLabel: (e.target as HTMLInputElement).checked }), [
+			updateNode,
+		]);
 	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const isBlock = selectedNode.type.name === 'block_equation';
 
