@@ -5,6 +5,7 @@ import { useDebounce } from 'use-debounce';
 import { renderLatexString } from 'client/utils/editor';
 
 import { ControlsButton, ControlsButtonGroup } from './ControlsButton';
+import { Checkbox } from '@blueprintjs/core';
 
 require('./controls.scss');
 
@@ -21,6 +22,7 @@ type Props = {
 			attrs?: {
 				value: string;
 				html?: string;
+				hideLabel: boolean;
 			};
 		};
 	};
@@ -32,7 +34,7 @@ const getSchemaDefinitionForNodeType = (editorChangeObject, nodeTypeName) => {
 
 const ControlsEquation = (props: Props) => {
 	const { editorChangeObject, pendingAttrs, onClose } = props;
-	const { changeNode, selectedNode } = editorChangeObject;
+	const { changeNode, updateNode, selectedNode } = editorChangeObject;
 	const {
 		commitChanges,
 		hasPendingChanges,
@@ -41,6 +43,11 @@ const ControlsEquation = (props: Props) => {
 	} = pendingAttrs;
 	const [debouncedValue] = useDebounce(value, 250);
 	const hasMountedRef = useRef(false);
+	const toggleLabel = (e: React.MouseEvent) => {
+		// @ts-ignore
+		console.log(e.target.checked);
+		updateNode({ hideLabel: (e.target as HTMLInputElement).checked });
+	};
 	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const isBlock = selectedNode.type.name === 'block_equation';
 
@@ -86,6 +93,16 @@ const ControlsEquation = (props: Props) => {
 				<div className="section">
 					<div className="title">Preview</div>
 					<div className="preview" dangerouslySetInnerHTML={{ __html: html }} />
+					{isBlock && (
+						<div className="controls-row">
+							<Checkbox
+								onClick={toggleLabel}
+								alignIndicator="right"
+								label="Hide label"
+								checked={selectedNode?.attrs?.hideLabel}
+							/>
+						</div>
+					)}
 					<ControlsButtonGroup>
 						<ControlsButton onClick={handleChangeNodeType}>
 							Change to {isBlock ? 'inline' : 'block'}

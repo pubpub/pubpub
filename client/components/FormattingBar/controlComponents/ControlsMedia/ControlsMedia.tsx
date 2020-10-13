@@ -6,6 +6,7 @@ import { ControlsButton, ControlsButtonGroup } from '../ControlsButton';
 import AlignmentControl from './AlignmentControl';
 import SliderInputControl from './SliderInputControl';
 import SourceControls from './SourceControls';
+import { Checkbox } from '@blueprintjs/core';
 
 type Props = {
 	isSmall: boolean;
@@ -18,6 +19,7 @@ type Props = {
 				align?: string;
 				height?: number;
 				caption?: string;
+				hideLabel: boolean;
 			};
 		};
 	};
@@ -38,9 +40,11 @@ const ControlsMedia = (props: Props) => {
 	const { updateNode, selectedNode } = editorChangeObject;
 	const { hasPendingChanges, commitChanges, updateAttrs } = pendingAttrs;
 	// @ts-expect-error ts-migrate(2339) FIXME: Property 'size' does not exist on type '{ size?: n... Remove this comment to see the full error message
-	const { size, align, height, caption } = selectedNode.attrs;
+	const { size, align, height, caption, hideLabel } = selectedNode.attrs;
 	const canEditHeight = getCanEditNodeHeight(selectedNode);
 	const itemName = getItemName(selectedNode);
+	const toggleLabel = (e: React.MouseEvent) =>
+		updateNode({ hideLabel: (e.target as HTMLInputElement).checked });
 
 	return (
 		<div className="controls-media-component">
@@ -78,6 +82,14 @@ const ControlsMedia = (props: Props) => {
 					updateNode={updateNode}
 					isSmall={isSmall}
 				/>
+				<div className="controls-row">
+					<Checkbox
+						onClick={toggleLabel}
+						alignIndicator="right"
+						label="Hide label"
+						checked={hideLabel}
+					/>
+				</div>
 			</div>
 			<div className="section hide-overflow">
 				<SimpleEditor
