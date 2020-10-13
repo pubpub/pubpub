@@ -1,17 +1,25 @@
 import { Hooks } from '@pubpub/prosemirror-reactive/dist/store/types';
 import { Node } from 'prosemirror-model';
+import { NodeLabelMap, ReferenceableNodeType } from '../../types';
 
 import { isNodeLabelEnabled } from '../../utils';
 
-export const counter = (counterType: string, nodeFingerprintFn?) => {
+export const counter = (counterType?: string, nodeFingerprintFn?) => {
 	const hasFingerprint = !!nodeFingerprintFn;
 
 	return function(this: Hooks, node: Node) {
 		const { nodeLabels } = this.useDocumentState();
-		const counterState = this.useTransactionState(['counter', counterType], {
-			countsMap: {},
-			maxCount: 0,
-		});
+		const counterState = this.useTransactionState(
+			[
+				'counter',
+				counterType ||
+					(nodeLabels as NodeLabelMap)[node.type.name as ReferenceableNodeType].text,
+			],
+			{
+				countsMap: {},
+				maxCount: 0,
+			},
+		);
 
 		if (hasFingerprint) {
 			const fingerprint = JSON.stringify(nodeFingerprintFn(node));

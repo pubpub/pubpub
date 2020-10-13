@@ -54,7 +54,7 @@ const { toDOM: tableToDOM } = table;
 table.attrs = { ...table.attrs, id: { default: null } };
 table.reactive = true;
 table.reactiveAttrs = {
-	count: counter('table'),
+	count: counter(),
 	label: label(),
 };
 
@@ -70,7 +70,7 @@ table.toDOM = (node: ProsemirrorNode) => {
 	return pruneFalsyValues([
 		spec[0],
 		{ id: node.attrs.id },
-		withValue(buildLabel(node), (label) => ['caption', label]),
+		withValue(buildLabel(node), (label) => ['caption', { spellcheck: false }, label]),
 		spec[1],
 	]) as DOMOutputSpec;
 };

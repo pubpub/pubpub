@@ -75,7 +75,7 @@ export default {
 			renderForPandoc: { default: false },
 		},
 		reactiveAttrs: {
-			count: counter('equation'),
+			count: counter(),
 		},
 		parseDOM: [
 			{
@@ -115,7 +115,7 @@ export default {
 				renderHtmlChildren(isReact, node.attrs.html),
 				withValue(node.attrs.count, (count) => [
 					'span',
-					{ class: 'equation-label' },
+					{ class: 'equation-label', spellcheck: false },
 					`(${count})`,
 				]),
 			]) as DOMOutputSpec;

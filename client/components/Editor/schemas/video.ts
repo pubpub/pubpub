@@ -18,7 +18,7 @@ export default {
 			caption: { default: '' },
 		},
 		reactiveAttrs: {
-			count: counter('video'),
+			count: counter(),
 			label: label(),
 		},
 		parseDOM: [
@@ -62,7 +62,11 @@ export default {
 					{},
 					pruneFalsyValues([
 						'div',
-						withValue(buildLabel(node), (label) => ['strong', label]),
+						withValue(buildLabel(node), (label) => [
+							'strong',
+							{ spellcheck: false },
+							label,
+						]),
 						renderHtmlChildren(isReact, node.attrs.caption, 'div'),
 					]),
 				],
