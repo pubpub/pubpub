@@ -23,6 +23,7 @@ import { domEventsPluginKey } from './domEvents';
 import { findParentNodeClosestToPos } from '../utils';
 import { EditorView } from 'prosemirror-view';
 import { ReferenceableNodeType } from '../types';
+import { EditorProps } from '../Editor';
 // import { collaborativePluginKey } from './plugins/collaborative';
 
 const getInsertFunctions = (editorView) => {
@@ -44,7 +45,7 @@ const getInsertFunctions = (editorView) => {
 		}, {});
 };
 
-const toggleTableLabel = (editorView: EditorView, editorProps: any, dryRun = false) => {
+const toggleTableLabel = (editorView: EditorView, editorProps: EditorProps, dryRun = false) => {
 	if (!editorProps.nodeLabels[ReferenceableNodeType.Table].enabled) {
 		return false;
 	}
@@ -70,7 +71,7 @@ const toggleTableLabel = (editorView: EditorView, editorProps: any, dryRun = fal
 	return false;
 };
 
-const getMenuItems = (editorView: EditorView, editorProps) => {
+const getMenuItems = (editorView: EditorView, editorProps: EditorProps) => {
 	const schema = editorView.state.schema;
 
 	/* Marks */
@@ -593,8 +594,8 @@ const getSelectedNode = (editorState) => {
 	return getReactedCopyOfNode(node, editorState) || node;
 };
 
-export const getChangeObject = (editorView, editorProps) => {
-	const isNode = !!editorView.state.selection.node;
+export const getChangeObject = (editorView: EditorView, editorProps: EditorProps) => {
+	const isNode = !!(editorView.state.selection as any).node;
 	const collaborativePluginState = collabDocPluginKey.getState(editorView.state) || {};
 	const { latestDomEvent } = domEventsPluginKey.getState(editorView.state);
 	// const hasFocus = editorView.hasFocus();
