@@ -149,7 +149,6 @@ const PubSettings = (props: Props) => {
 					/>
 					<ImageUpload
 						htmlFor="avatar-upload"
-						// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'undefine... Remove this comment to see the full error message
 						label={
 							<span>
 								Preview Image
@@ -172,10 +171,8 @@ const PubSettings = (props: Props) => {
 						canClear={true}
 						key={pubData.avatar}
 						defaultImage={pubData.avatar}
-						// @ts-expect-error ts-migrate(2322) FIXME: Type '(value: any) => void' is not assignable to t... Remove this comment to see the full error message
 						onNewImage={(value) => updatePubData({ avatar: value })}
 						width={150}
-						// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'undefine... Remove this comment to see the full error message
 						helperText={
 							<span>
 								Suggested minimum dimensions: <br />
