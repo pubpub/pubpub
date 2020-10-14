@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useBeforeUnload, useUpdateEffect } from 'react-use';
-import { AnchorButton, Button, ButtonGroup, RadioGroup, Radio } from '@blueprintjs/core';
+import { Button, ButtonGroup, RadioGroup, Radio } from '@blueprintjs/core';
 
 import {
 	DashboardFrame,
@@ -70,9 +70,6 @@ const DashboardCollectionLayout = (props: Props) => {
 	const renderControls = () => {
 		return (
 			<React.Fragment>
-				<AnchorButton icon="share" href={`/${collection.slug}`}>
-					Visit Collection
-				</AnchorButton>
 				<Button
 					type="button"
 					intent="primary"
