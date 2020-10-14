@@ -1,12 +1,7 @@
 import { Pub } from 'utils/types';
-import {
-	LayoutBlock,
-	LayoutBlockPubs,
-	LayoutRenderContext,
-	PubSortOrder,
-} from 'utils/layout/types';
+import { LayoutBlock, LayoutRenderContext, PubSortOrder } from 'utils/layout/types';
 import { sortByRank } from 'utils/rank';
-import { partitionOn } from 'utils/arrays';
+import { indexByProperty } from 'utils/arrays';
 
 type PubQuery = {
 	collectionIds: string[];
@@ -78,20 +73,19 @@ const createPubsPool = (pubs: Pub[]) => {
 
 	const queryAndConsumePubs = (query: PubQuery): Pub[] => {
 		const { pinnedPubIds, collectionIds, sort, sortCollectionIds, limit } = query;
+		const matchingPubs = getPubsForCollectionIds(pubs, collectionIds);
+		const matchingPubsById = indexByProperty(matchingPubs, 'id') as Record<string, Pub>;
+		const pinnedPubs = pinnedPubIds.map((id) => matchingPubsById[id]).filter((x) => x);
 		const pinnedPubIdSet = new Set(pinnedPubIds);
-		const matchingPubs = getPubsForCollectionIds(pubs, collectionIds).filter(
-			(pub) => !consumedPubIds.has(pub.id),
-		);
-		const [pinnedPubs, restPubs] = partitionOn(matchingPubs, (pub) =>
-			pinnedPubIdSet.has(pub.id),
+		const unusedPubs = matchingPubs.filter(
+			(pub) => !consumedPubIds.has(pub.id) && !pinnedPubIdSet.has(pub.id),
 		);
 		const sortedPubs =
 			sort === 'collection-rank'
-				? sortPubsByCollectionRank(restPubs, sortCollectionIds)
-				: sortPubsByCreationDate(restPubs);
+				? sortPubsByCollectionRank(unusedPubs, sortCollectionIds)
+				: sortPubsByCreationDate(unusedPubs);
 		const resolvedPubs = [...pinnedPubs, ...sortedPubs].slice(0, limit);
-		const consumedPubs = resolvedPubs.slice(pinnedPubs.length);
-		consumedPubs.forEach((pub) => consumedPubIds.add(pub.id));
+		resolvedPubs.forEach((pub) => consumedPubIds.add(pub.id));
 		return resolvedPubs;
 	};
 

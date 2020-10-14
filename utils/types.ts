@@ -40,7 +40,7 @@ export type Collection = {
 	kind?: 'tag' | 'issue' | 'book' | 'conference';
 	doi?: string;
 	readNextPreviewSize: 'none' | 'minimal' | 'medium' | 'choose-best';
-	pageId?: string;
+	pageId?: null | string;
 	communityId: string;
 	attributions?: CollectionAttribution[];
 	layout: CollectionLayout;

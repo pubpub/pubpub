@@ -153,7 +153,6 @@ const DashboardPages = (props: Props) => {
 				/>
 				<ImageUpload
 					htmlFor="dashboard-page-avatar"
-					// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'undefined... Remove this comment to see the full error message
 					label="Preview Image"
 					defaultImage={avatar}
 					onNewImage={(value) => updatePageData({ avatar: value })}

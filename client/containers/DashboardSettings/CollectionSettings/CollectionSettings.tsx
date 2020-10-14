@@ -20,7 +20,6 @@ const CollectionSettings = () => {
 			<SettingsSection title="Details">
 				<CollectionDetailsEditor
 					collection={collection}
-					communityData={activeCommunity}
 					onUpdateCollection={updateCollection}
 					onDeleteCollection={() =>
 						deleteCollection().then(() => {

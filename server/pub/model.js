@@ -1,5 +1,3 @@
-import { Op } from 'sequelize';
-
 export default (sequelize, dataTypes) => {
 	return sequelize.define(
 		'Pub',

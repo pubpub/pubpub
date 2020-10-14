@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button } from '@blueprintjs/core';
+import { Button, Tooltip } from '@blueprintjs/core';
 import stickybits from 'stickybits';
 
 import { generateHash } from 'utils/hashes';
@@ -158,15 +158,20 @@ class LayoutEditor extends Component<Props, State> {
 	}
 
 	render() {
+		const cannotRemoveLonePubsBlock =
+			!!this.props.collectionId &&
+			this.state.layout.filter((block) => block.type === 'pubs').length === 1;
 		return (
 			<div className="layout-editor-component">
 				<LayoutEditorInsert
 					insertIndex={0}
 					onInsert={this.handleInsert}
 					communityData={this.props.communityData}
+					pubSort={this.props.collectionId ? 'collection-rank' : 'creation-date'}
 				/>
 				{this.state.layout.map((item, index) => {
 					const validType = validBlockTypes.indexOf(item.type) > -1;
+					const cannotRemove = cannotRemoveLonePubsBlock && item.type === 'pubs';
 					if (!validType) {
 						return null;
 					}
@@ -192,12 +197,17 @@ class LayoutEditor extends Component<Props, State> {
 											this.handleMoveDown(index);
 										}}
 									/>
-									<Button
-										text="Remove"
-										onClick={() => {
-											this.handleRemove(index);
-										}}
-									/>
+									{!cannotRemove && (
+										<Button
+											text="Remove"
+											onClick={() => this.handleRemove(index)}
+										/>
+									)}
+									{cannotRemove && (
+										<Tooltip content="This layout requires at least one Pubs block.">
+											<Button text="Remove" disabled />
+										</Tooltip>
+									)}
 								</div>
 							</div>
 							<div key={`block-${item.id}`} className="component-wrapper">
@@ -253,6 +263,9 @@ class LayoutEditor extends Component<Props, State> {
 								insertIndex={index + 1}
 								onInsert={this.handleInsert}
 								communityData={this.props.communityData}
+								pubSort={
+									this.props.collectionId ? 'collection-rank' : 'creation-date'
+								}
 							/>
 						</div>
 					);
