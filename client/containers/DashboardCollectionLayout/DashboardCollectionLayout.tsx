@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { useBeforeUnload } from 'react-use';
+import { useBeforeUnload, useUpdateEffect } from 'react-use';
 import { AnchorButton, Button, ButtonGroup, RadioGroup, Radio } from '@blueprintjs/core';
 
 import {
@@ -56,7 +56,7 @@ const DashboardCollectionLayout = (props: Props) => {
 		[layout],
 	);
 
-	useEffect(() => {
+	useUpdateEffect(() => {
 		if (isUsingBlocks) {
 			updateCollection({ pageId: null });
 		}
