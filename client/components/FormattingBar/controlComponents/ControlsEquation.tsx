@@ -43,10 +43,10 @@ const ControlsEquation = (props: Props) => {
 	} = pendingAttrs;
 	const [debouncedValue] = useDebounce(value, 250);
 	const hasMountedRef = useRef(false);
-	const toggleLabel = (e: React.MouseEvent) =>
-		useCallback(() => updateNode({ hideLabel: (e.target as HTMLInputElement).checked }), [
-			updateNode,
-		]);
+	const toggleLabel = useCallback(
+		(e: React.MouseEvent) => updateNode({ hideLabel: (e.target as HTMLInputElement).checked }),
+		[updateNode],
+	);
 	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const isBlock = selectedNode.type.name === 'block_equation';
 

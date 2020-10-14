@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react';
+import { Checkbox } from '@blueprintjs/core';
 
 import { SimpleEditor } from 'components';
-import { ControlsButton, ControlsButtonGroup } from '../ControlsButton';
 
+import { ControlsButton, ControlsButtonGroup } from '../ControlsButton';
 import AlignmentControl from './AlignmentControl';
 import SliderInputControl from './SliderInputControl';
 import SourceControls from './SourceControls';
-import { Checkbox } from '@blueprintjs/core';
 
 type Props = {
 	isSmall: boolean;

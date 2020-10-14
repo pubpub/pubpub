@@ -1,6 +1,7 @@
 import { Plugin, NodeSelection, TextSelection } from 'prosemirror-state';
 import { lift, setBlockType, toggleMark, wrapIn } from 'prosemirror-commands';
 import { wrapInList } from 'prosemirror-schema-list';
+import { EditorView } from 'prosemirror-view';
 import {
 	isInTable,
 	deleteTable,
@@ -21,7 +22,6 @@ import { getReactedCopyOfNode } from '@pubpub/prosemirror-reactive';
 import { collabDocPluginKey } from './collaborative';
 import { domEventsPluginKey } from './domEvents';
 import { findParentNodeClosestToPos } from '../utils';
-import { EditorView } from 'prosemirror-view';
 import { ReferenceableNodeType } from '../types';
 import { EditorProps } from '../Editor';
 // import { collaborativePluginKey } from './plugins/collaborative';
