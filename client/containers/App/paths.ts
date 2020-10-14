@@ -15,6 +15,7 @@ import {
 	DashboardPages,
 	DashboardPage,
 	DashboardSettings,
+	Collection,
 	Explore,
 	Landing,
 	Login,
@@ -154,6 +155,9 @@ export default (viewData, locationData, chunkName) => {
 			ActiveComponent: UserCreate,
 			hideNav: locationData.isBasePubPub,
 			hideFooter: true,
+		},
+		Collection: {
+			ActiveComponent: Collection,
 		},
 	};
 	return paths[chunkName];

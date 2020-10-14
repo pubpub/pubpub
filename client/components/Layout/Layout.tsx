@@ -17,12 +17,13 @@ type Props = LayoutOptions & {
 	blocks: LayoutBlock[];
 	id?: string;
 	pubs: any[];
+	collectionId?: string;
 };
 
 const Layout = (props: Props) => {
 	const { locationData, loginData, communityData } = usePageContext();
-	const { blocks, isNarrow, pubs, id = '' } = props;
-	const pubBlocksLists = getPubsByBlockIndex(blocks, pubs);
+	const { blocks, isNarrow, pubs, id = '', collectionId } = props;
+	const pubBlocksLists = getPubsByBlockIndex(blocks, pubs, { collectionId: collectionId });
 
 	const renderBlock = (block: LayoutBlock, index: number) => {
 		if (block.type === 'pubs') {
