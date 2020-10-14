@@ -24,6 +24,7 @@ export { default as Icon } from './Icon/Icon';
 export { default as ImageCropper } from './ImageCropper/ImageCropper';
 export { default as ImageUpload } from './ImageUpload/ImageUpload';
 export { default as InputField } from './InputField/InputField';
+export { default as Layout } from './Layout/Layout';
 export { default as LegalBanner } from './LegalBanner/LegalBanner';
 export { default as LengthIndicator } from './LengthIndicator/LengthIndicator';
 export { default as LicenseSelect } from './LicenseSelect/LicenseSelect';

@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { Byline } from 'components';
+import Byline, { BylineProps } from 'components/Byline/Byline';
 import { naivePluralize } from 'utils/strings';
 import { getAllPubContributors } from 'utils/pub/contributors';
 
 require('./manyAuthorsByline.scss');
 
-type Props = {
+type Props = Omit<BylineProps, 'contributors'> & {
 	pubData: {
 		attributions?: any[];
 	};

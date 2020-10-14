@@ -7,7 +7,7 @@ import LayoutPagesCollections, {
 	BlockItem,
 	PageOrCollection,
 	isLegacyContent,
-} from 'client/containers/Page/LayoutPagesCollections';
+} from 'components/Layout/LayoutPagesCollections';
 
 type Props = {
 	onChange: (index: number, block: Content) => any;

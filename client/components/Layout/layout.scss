@@ -1,4 +1,4 @@
-#page-container {
+.layout-component {
 	&.narrow {
 		.block-content .container {
 			max-width: 800px;
@@ -69,7 +69,7 @@
 }
 
 @supports (display: grid) {
-	#page-container {
+	.layout-component {
 		.block-content {
 			.pages-wrapper {
 				display: grid;

@@ -3,9 +3,7 @@ import { Button } from '@blueprintjs/core';
 import stickybits from 'stickybits';
 
 import { generateHash } from 'utils/hashes';
-import { generateRenderLists } from 'utils/pages';
-
-import { validBlockTypes } from 'client/containers/Page/Page';
+import { getPubsByBlockIndex, validBlockTypes } from 'utils/layout';
 
 import LayoutEditorInsert from './LayoutEditorInsert';
 import LayoutEditorPubs from './LayoutEditorPubs';
@@ -40,7 +38,7 @@ class LayoutEditor extends Component<Props, State> {
 		super(props);
 		this.state = {
 			layout: props.initialLayout,
-			pubRenderLists: generateRenderLists(props.initialLayout, props.pubs),
+			pubRenderLists: getPubsByBlockIndex(props.initialLayout, props.pubs),
 		};
 		this.handleInsert = this.handleInsert.bind(this);
 		this.handleChange = this.handleChange.bind(this);
@@ -76,7 +74,7 @@ class LayoutEditor extends Component<Props, State> {
 				type: type,
 				content: newContent,
 			});
-			const newPubRenderList = generateRenderLists(newLayout, this.props.pubs);
+			const newPubRenderList = getPubsByBlockIndex(newLayout, this.props.pubs);
 			this.props.onChange(newLayout);
 			return {
 				layout: newLayout,
@@ -89,7 +87,7 @@ class LayoutEditor extends Component<Props, State> {
 		this.setState((prevState) => {
 			const newLayout = prevState.layout;
 			newLayout[index].content = newContent;
-			const newPubRenderList = generateRenderLists(newLayout, this.props.pubs);
+			const newPubRenderList = getPubsByBlockIndex(newLayout, this.props.pubs);
 			this.props.onChange(newLayout);
 			return {
 				layout: newLayout,
@@ -113,7 +111,7 @@ class LayoutEditor extends Component<Props, State> {
 			newLayout[index - 1] = newLayout[index];
 			newLayout[index] = prevState.layout[index - 1];
 
-			const newPubRenderList = generateRenderLists(newLayout, this.props.pubs);
+			const newPubRenderList = getPubsByBlockIndex(newLayout, this.props.pubs);
 			this.props.onChange(newLayout);
 			return {
 				layout: newLayout,
@@ -128,7 +126,7 @@ class LayoutEditor extends Component<Props, State> {
 			newLayout[index + 1] = newLayout[index];
 			newLayout[index] = prevState.layout[index + 1];
 
-			const newPubRenderList = generateRenderLists(newLayout, this.props.pubs);
+			const newPubRenderList = getPubsByBlockIndex(newLayout, this.props.pubs);
 			this.props.onChange(newLayout);
 			return {
 				layout: newLayout,
