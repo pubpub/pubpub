@@ -3,9 +3,7 @@ import { Button } from '@blueprintjs/core';
 import stickybits from 'stickybits';
 
 import { generateHash } from 'utils/hashes';
-import { getPubsByBlockIndex } from 'utils/layout';
-
-import { validBlockTypes } from 'utils/layout';
+import { getPubsByBlockIndex, validBlockTypes } from 'utils/layout';
 
 import LayoutEditorInsert from './LayoutEditorInsert';
 import LayoutEditorPubs from './LayoutEditorPubs';

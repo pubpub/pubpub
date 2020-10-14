@@ -140,7 +140,7 @@ const LayoutEditorPages = (props: Props) => {
 						interactionKind={PopoverInteractionKind.CLICK}
 						position={Position.BOTTOM_RIGHT}
 						usePortal={false}
-						minimal={true}
+						minimal
 						popoverClassName="order-picker-popover"
 					>
 						<Button rightIcon="caret-down">Choose {itemsLabel}</Button>
