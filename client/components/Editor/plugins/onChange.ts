@@ -46,7 +46,7 @@ const getInsertFunctions = (editorView) => {
 };
 
 const toggleTableLabel = (editorView: EditorView, editorProps: EditorProps, dryRun = false) => {
-	if (!editorProps.nodeLabels[ReferenceableNodeType.Table].enabled) {
+	if (!editorProps.nodeLabels[ReferenceableNodeType.Table]?.enabled) {
 		return false;
 	}
 
