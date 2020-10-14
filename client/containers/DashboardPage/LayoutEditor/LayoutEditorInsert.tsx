@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Popover, PopoverInteractionKind, Position, Menu, MenuItem } from '@blueprintjs/core';
-import Icon from 'components/Icon/Icon';
+
+import { usePageContext } from 'utils/hooks';
+import { Icon } from 'components';
 
 require('./layoutEditorInsert.scss');
 
@@ -11,9 +13,38 @@ const propTypes = {
 	communityData: PropTypes.object.isRequired,
 };
 
+const newCollectionsPagesBlock = (communityData, useLegacyBlock) => {
+	const pagesToShow = communityData.pages.slice(0, 3);
+	// TODO(ian): Remove this branch after migration
+	if (useLegacyBlock) {
+		return {
+			type: 'pages',
+			title: 'Default',
+			content: {
+				title: '',
+				pageIds: pagesToShow.map((p) => p.id),
+			},
+		};
+	}
+	return {
+		type: 'collections-pages',
+		// TODO(ian): Restore this title to 'Default'
+		title: 'Experimental (Pages & Collections)',
+		content: {
+			title: '',
+			items: pagesToShow,
+		},
+	};
+};
+
 const LayoutEditorInsert = function(props) {
-	const insertIndex = props.insertIndex;
-	const onInsert = props.onInsert;
+	const { insertIndex, onInsert } = props;
+	const {
+		scopeData: {
+			activePermissions: { isSuperAdmin },
+		},
+	} = usePageContext();
+
 	const pubsBlocks = [
 		{
 			title: 'Default',
@@ -75,17 +106,9 @@ const LayoutEditorInsert = function(props) {
 			},
 		},
 	];
-	const pagesBlocks = [
-		{
-			title: 'Default',
-			type: 'pages',
-			content: {
-				title: '',
-				pageIds: props.communityData.pages.slice(0, 3).map((page) => {
-					return page.id;
-				}),
-			},
-		},
+	const pagesCollectionsBlocks = [
+		newCollectionsPagesBlock(props.communityData, true),
+		isSuperAdmin && newCollectionsPagesBlock(props.communityData, false),
 	];
 	const htmlBlocks = [
 		{
@@ -166,7 +189,7 @@ const LayoutEditorInsert = function(props) {
 								<Icon icon="application" />
 							</h6>
 						</li>
-						{pagesBlocks.map((item) => {
+						{pagesCollectionsBlocks.map((item) => {
 							return generateMenuItem(item);
 						})}
 					</Menu>

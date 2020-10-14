@@ -8,13 +8,22 @@ import LayoutPubs from './LayoutPubs';
 import LayoutHtml from './LayoutHtml';
 import LayoutBanner from './LayoutBanner';
 import LayoutText from './LayoutText';
-import LayoutPages from './LayoutPages';
+import LayoutPagesCollections from './LayoutPagesCollections';
 
 require('./page.scss');
 
 type Props = {
 	pageData: any;
 };
+
+export const validBlockTypes = [
+	'pubs',
+	'text',
+	'html',
+	'banner',
+	'pages', // TODO(ian): Remove this after migration
+	'collections-pages',
+];
 
 const Page = (props: Props) => {
 	const { locationData, communityData, loginData } = usePageContext();
@@ -44,8 +53,7 @@ const Page = (props: Props) => {
 			})}
 		>
 			{layout.map((item, index) => {
-				const validType =
-					['pubs', 'text', 'html', 'banner', 'pages'].indexOf(item.type) > -1;
+				const validType = validBlockTypes.indexOf(item.type) > -1;
 				if (!validType) {
 					return null;
 				}
@@ -73,12 +81,15 @@ const Page = (props: Props) => {
 								locationData={locationData}
 							/>
 						)}
-						{item.type === 'pages' && (
-							<LayoutPages
-								key={`item-${item.id}`}
-								content={item.content}
-								pages={communityData.pages}
-							/>
+						{(item.type === 'pages' || item.type === 'collections-pages') && (
+							<div className="layout-pages-block">
+								<LayoutPagesCollections
+									key={`item-${item.id}`}
+									content={item.content}
+									pages={communityData.pages}
+									collections={communityData.collections}
+								/>
+							</div>
 						)}
 					</div>
 				);

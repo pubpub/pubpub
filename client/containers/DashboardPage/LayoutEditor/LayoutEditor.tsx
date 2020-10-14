@@ -5,9 +5,11 @@ import stickybits from 'stickybits';
 import { generateHash } from 'utils/hashes';
 import { generateRenderLists } from 'utils/pages';
 
+import { validBlockTypes } from 'client/containers/Page/Page';
+
 import LayoutEditorInsert from './LayoutEditorInsert';
 import LayoutEditorPubs from './LayoutEditorPubs';
-import LayoutEditorPages from './LayoutEditorPages';
+import LayoutEditorPagesCollections from './LayoutEditorPagesCollections';
 import LayoutEditorText from './LayoutEditorText';
 import LayoutEditorHtml from './LayoutEditorHtml';
 import LayoutEditorBanner from './LayoutEditorBanner';
@@ -22,6 +24,16 @@ type Props = {
 };
 
 type State = any;
+
+const getTitleKindForBlock = (blockType: string) => {
+	if (blockType === 'collections-pages') {
+		return 'Collections & Pages';
+	}
+	if (blockType === 'html') {
+		return 'HTML';
+	}
+	return blockType;
+};
 
 class LayoutEditor extends Component<Props, State> {
 	constructor(props: Props) {
@@ -134,17 +146,14 @@ class LayoutEditor extends Component<Props, State> {
 					communityData={this.props.communityData}
 				/>
 				{this.state.layout.map((item, index) => {
-					const validType =
-						['pubs', 'text', 'html', 'banner', 'pages'].indexOf(item.type) > -1;
+					const validType = validBlockTypes.indexOf(item.type) > -1;
 					if (!validType) {
 						return null;
 					}
 					return (
 						<div key={item.id}>
 							<div className="block-title">
-								<div className="text">
-									{item.type === 'html' ? 'HTML' : item.type} Block
-								</div>
+								<div className="text">{getTitleKindForBlock(item.type)} Block</div>
 
 								<div className="bp3-button-group bp3-minimal bp3-small">
 									<Button
@@ -208,13 +217,14 @@ class LayoutEditor extends Component<Props, State> {
 										communityData={this.props.communityData}
 									/>
 								)}
-								{item.type === 'pages' && (
-									<LayoutEditorPages
+								{(item.type === 'pages' || item.type === 'collections-pages') && (
+									<LayoutEditorPagesCollections
 										key={`item-${item.id}`}
 										onChange={this.handleChange}
 										layoutIndex={index}
 										content={item.content}
 										pages={this.props.communityData.pages}
+										collections={this.props.communityData.collections}
 									/>
 								)}
 							</div>
