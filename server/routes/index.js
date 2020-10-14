@@ -27,8 +27,7 @@ require('./about'); // Route: '/about'
 require('./pricing'); // Route: '/pricing'
 
 require('./adminDashboard'); // Route: '/admin'
-require('./landing'); // Route: '/'
-require('./collectionOrPage'); // Route: ['/', '/:slug']
+require('./page'); // Route: '/'
 
 /* Routes for all */
 require('./login'); // Route: '/login'
@@ -38,6 +37,7 @@ require('./signup'); // Route: '/signup'
 require('./passwordReset'); // Route: ['/password-reset', '/password-reset/:resetHash/:slug']
 require('./userCreate'); // Route: '/user/create/:hash'
 require('./user'); // Route: ['/user/:slug', '/user/:slug/:mode']
+require('./page'); // Route: ['/', '/:slug']
 require('./sitemap'); // Route: /sitemap-*.xml
 require('./robots'); // Route: /robots.txt
 require('./noMatch'); // Route: '/*'

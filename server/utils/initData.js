@@ -4,9 +4,8 @@ import { isProd, isDuqDuq, getAppCommit } from 'utils/environment';
 
 import { getScope, getCommunity, sanitizeCommunity } from './queryHelpers';
 
-export const getInitialData = async (req, isDashboard, context = {}) => {
-	const { collectionSlug } = context;
-	const { hostname } = req;
+export const getInitialData = async (req, isDashboard) => {
+	const hostname = req.hostname;
 
 	/* Gather user data */
 	const user = req.user || {};
@@ -70,7 +69,6 @@ export const getInitialData = async (req, isDashboard, context = {}) => {
 			? { subdomain: hostname.replace('.pubpub.org', '') }
 			: { domain: hostname };
 	const communityData = await getCommunity(locationData, whereQuery);
-
 	if (
 		communityData.domain &&
 		whereQuery.subdomain &&
@@ -79,19 +77,14 @@ export const getInitialData = async (req, isDashboard, context = {}) => {
 	) {
 		throw new Error(`UseCustomDomain:${communityData.domain}`);
 	}
-
 	if (req.headers.localhost) {
 		/* eslint-disable-next-line no-param-reassign */
 		communityData.domain = req.headers.localhost;
 	}
-
 	const scopeData = await getScope({
 		communityData: communityData,
 		pubSlug: locationData.params.pubSlug,
-		collectionSlug:
-			collectionSlug ||
-			locationData.params.collectionSlug ||
-			locationData.query.collectionSlug,
+		collectionSlug: locationData.params.collectionSlug || locationData.query.collectionSlug,
 		accessHash: locationData.query.access,
 		loginId: loginData.id,
 		isDashboard: isDashboard,

@@ -1,33 +1,79 @@
 import { Op } from 'sequelize';
+import React from 'react';
 
-import app from 'server/server';
-import { Collection, sequelize, Page } from 'server/models';
+import app, { wrap } from 'server/server';
+import Html from 'server/Html';
+import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
+import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
+import { getPubsForLayout } from 'server/utils/queryHelpers/layout';
+import { sequelize, Collection, Page } from 'server/models';
 
-app.get('/collection/:slug', (req, res, next) => {
-	const { slug } = req.params;
-	if (!hostIsValid(req, 'community')) {
-		return next();
-	}
+const findCollectionByPartialId = (maybePartialId) => {
 	return Collection.findOne({
 		where: [
-			{ isPublic: true },
 			sequelize.where(sequelize.cast(sequelize.col('Collection.id'), 'varchar'), {
-				[Op.iLike]: `${slug}%`,
+				[Op.iLike]: `${maybePartialId}%`,
 			}),
 		],
-		include: [{ model: Page, as: 'page', attributes: ['slug'] }],
-	})
-		.then((collection) => {
-			if (collection) {
-				if (collection.page) {
-					res.redirect('/' + collection.page.slug);
-				} else {
-					res.redirect(`/search?q=${collection.title}`);
+	});
+};
+
+app.get(
+	['/collection/:collectionSlug', '/:collectionSlug'],
+	wrap(async (req, res, next) => {
+		if (!hostIsValid(req, 'community')) {
+			return next();
+		}
+
+		const { collectionSlug } = req.params;
+		const initialData = await getInitialData(req);
+		const { communityData } = initialData;
+		const collection = communityData.collections.find((c) => c.slug === collectionSlug);
+
+		if (collection) {
+			const { pageId, layout } = collection;
+
+			if (pageId) {
+				const page = await Page.findOne({ where: { id: pageId } });
+				if (page) {
+					return res.redirect(`/${page.id}`);
 				}
-			} else {
-				res.status(404).json('Collection not found');
 			}
-		})
-		.catch((err) => res.status(500).json(err));
-});
+
+			if (layout) {
+				const { blocks } = layout;
+				const pubs = await getPubsForLayout({
+					blocks: blocks,
+					initialData: initialData,
+					scopedToCollectionId: collection.id,
+				});
+
+				return renderToNodeStream(
+					res,
+					<Html
+						chunkName="Collection"
+						initialData={initialData}
+						viewData={{ pubs: pubs, collection: collection }}
+						headerComponents={generateMetaComponents({
+							initialData: initialData,
+							title: `${collection.title} · ${communityData.title}`,
+							description: '',
+							image: collection.avatar,
+							unlisted: !collection.isPublic,
+						})}
+					/>,
+				);
+			}
+
+			return res.redirect(`/search?q=${collection.title}`);
+		}
+
+		const collectionByPartialId = await findCollectionByPartialId(collectionSlug);
+		if (collectionByPartialId) {
+			return res.redirect(`/${collectionByPartialId.slug}`);
+		}
+
+		return next();
+	}),
+);
