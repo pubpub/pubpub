@@ -10,9 +10,7 @@ const getPubIdsForCollectionIds = async (collectionIds) => {
 	if (collectionIds && collectionIds.length > 0) {
 		const collectionPubs = await CollectionPub.findAll({
 			where: {
-				collectionId: {
-					[Op.in]: collectionIds,
-				},
+				collectionId: { [Op.in]: collectionIds },
 			},
 		});
 		return collectionPubs.map((collectionPub) => collectionPub.pubId);
@@ -22,30 +20,26 @@ const getPubIdsForCollectionIds = async (collectionIds) => {
 
 const getPubIdQueryForPinnedPubs = (pinnedPubIds, scopedPubIds) => {
 	if (scopedPubIds) {
-		return pinnedPubIds.filter((id) => scopedPubIds.includes(id));
+		return { [Op.in]: pinnedPubIds.filter((id) => scopedPubIds.includes(id)) };
 	}
-	return pinnedPubIds;
+	return { [Op.in]: pinnedPubIds };
 };
 
 const getPubIdQueryForNonPinnedPubs = async (collectionIds, scopedPubIds) => {
-	const matchingCollectionPubIds = await getPubIdsForCollectionIds(collectionIds);
-	if (matchingCollectionPubIds) {
+	const matchingPubIds = await getPubIdsForCollectionIds(collectionIds);
+	if (matchingPubIds) {
 		const filteredPubIds = scopedPubIds
-			? matchingCollectionPubIds.filter((id) => scopedPubIds.includes(id))
-			: matchingCollectionPubIds;
-		return {
-			[Op.in]: filteredPubIds,
-		};
+			? matchingPubIds.filter((id) => scopedPubIds.includes(id))
+			: matchingPubIds;
+		return { [Op.in]: filteredPubIds };
 	}
 	if (scopedPubIds) {
-		return {
-			[Op.in]: scopedPubIds,
-		};
+		return { [Op.in]: scopedPubIds };
 	}
 	return {};
 };
 
-const getPubsForLayoutBlock = async (blockContent, initialData, scopedPubIds) => {
+const getPubsForLayoutBlock = async (blockContent, initialData, scopedPubIds, excludePubIds) => {
 	const {
 		communityData: { id: communityId },
 	} = initialData;
@@ -74,7 +68,7 @@ const getPubsForLayoutBlock = async (blockContent, initialData, scopedPubIds) =>
 			where: {
 				communityId: communityId,
 				id: {
-					[Op.notIn]: limitedPinnedPubIds,
+					[Op.notIn]: [...limitedPinnedPubIds, ...excludePubIds],
 					...(await getPubIdQueryForNonPinnedPubs(collectionIds, scopedPubIds)),
 				},
 			},
@@ -85,11 +79,8 @@ const getPubsForLayoutBlock = async (blockContent, initialData, scopedPubIds) =>
 	const sanitizedPubs = [...pinnedPubs, ...otherPubs]
 		.map((pub) => sanitizePub(pub.toJSON(), initialData))
 		.filter((pub) => !!pub);
-
-	if (limit) {
-		return sanitizedPubs.slice(0, limit);
-	}
-	return sanitizedPubs;
+	const limitedPubs = limit ? sanitizedPubs.slice(0, limit) : sanitizedPubs;
+	return limitedPubs;
 };
 
 export const getPubsForLayout = async ({
@@ -109,20 +100,18 @@ export const getPubsForLayout = async ({
 		});
 		return pubs.map((pub) => sanitizePub(pub.toJSON(), initialData)).filter((pub) => !!pub);
 	}
-
-	const pubsPerBlock = await Promise.all(
-		blocks
-			.filter((block) => block.type === 'pubs')
-			.map((block) => getPubsForLayoutBlock(block.content, initialData, scopedPubIds)),
-	);
-
-	return pubsPerBlock.reduce(
-		(acc, next) => [
-			...acc,
-			...next.filter((nextPub) => !acc.some((accPub) => accPub.id === nextPub.id)),
-		],
-		[],
-	);
+	const pubBlocks = blocks.filter((block) => block.type === 'pubs');
+	return pubBlocks.reduce(async (pubsPromise, block) => {
+		const pubs = await pubsPromise;
+		const nextPubs = await getPubsForLayoutBlock(
+			block.content,
+			initialData,
+			scopedPubIds,
+			pubs.map((p) => p.id),
+		);
+		const nextPubsToAdd = nextPubs.filter((nextPub) => !pubs.some((p) => p.id === nextPub.id));
+		return [...pubs, ...nextPubsToAdd];
+	}, Promise.resolve([]));
 };
 
 export const enrichLayoutWithPubTokens = (layoutBlocks, initialData) => {

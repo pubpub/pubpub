@@ -17,4 +17,5 @@ const Page = (props: Props) => {
 	const blocks = pageData.layout || getDefaultLayout();
 	return <Layout blocks={blocks} isNarrow={pageData.isNarrow} pubs={pageData.pubs} />;
 };
+
 export default Page;
