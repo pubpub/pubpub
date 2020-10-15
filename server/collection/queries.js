@@ -3,10 +3,37 @@ import { normalizeMetadataToKind } from 'utils/collections/metadata';
 import { slugifyString } from 'utils/strings';
 import { generateHash } from 'utils/hashes';
 
-export const generateDefaultCollectionLayout = () => {
+export const generateDefaultCollectionLayout = (title) => {
 	return {
 		isNarrow: false,
 		blocks: [
+			{
+				id: generateHash(8),
+				type: 'text',
+				content: {
+					text: {
+						type: 'doc',
+						attrs: {
+							meta: {},
+						},
+						content: [
+							{
+								type: 'heading',
+								attrs: {
+									level: 1,
+								},
+								content: [
+									{
+										text: title,
+										type: 'text',
+									},
+								],
+							},
+						],
+					},
+					align: 'left',
+				},
+			},
 			{
 				type: 'pubs',
 				id: generateHash(8),
@@ -30,8 +57,9 @@ export const createCollection = ({
 	slug = null,
 }) => {
 	return Community.findOne({ where: { id: communityId } }).then((community) => {
+		const normalizedTitle = title.trim();
 		const collection = {
-			title: title.trim(),
+			title: normalizedTitle,
 			slug: slug || slugifyString(title),
 			isRestricted: true,
 			isPublic: isPublic,
@@ -41,7 +69,7 @@ export const createCollection = ({
 			pageId: pageId,
 			doi: doi,
 			kind: kind,
-			layout: generateDefaultCollectionLayout(),
+			layout: generateDefaultCollectionLayout(normalizedTitle),
 			...(id && { id: id }),
 		};
 		const metadata = normalizeMetadataToKind({}, kind, {
