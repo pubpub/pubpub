@@ -79,7 +79,7 @@ const Breadcrumbs = () => {
 				text: 'Visit Collection',
 				href: `/${activeCollection.slug}`,
 			},
-		].filter(x=>x),
+		].filter((x) => x),
 		pub: [
 			{
 				text: 'Go to Pub',
