@@ -27,7 +27,7 @@ require('./about'); // Route: '/about'
 require('./pricing'); // Route: '/pricing'
 
 require('./adminDashboard'); // Route: '/admin'
-require('./page'); // Route: '/'
+require('./landing'); // Route: '/'
 
 /* Routes for all */
 require('./login'); // Route: '/login'
