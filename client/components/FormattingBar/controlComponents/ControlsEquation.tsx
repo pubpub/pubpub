@@ -1,11 +1,15 @@
 /* eslint-disable react/no-danger */
 import React, { useRef, useEffect, useCallback } from 'react';
+import { Checkbox } from '@blueprintjs/core';
 import { useDebounce } from 'use-debounce';
+import { Node } from 'prosemirror-model';
 
 import { renderLatexString } from 'client/utils/editor';
 
 import { ControlsButton, ControlsButtonGroup } from './ControlsButton';
-import { Checkbox } from '@blueprintjs/core';
+
+import { usePubData } from 'client/containers/Pub/pubHooks';
+import { NodeLabelMap, ReferenceableNodeType } from 'client/components/Editor/types';
 
 require('./controls.scss');
 
@@ -15,15 +19,10 @@ type Props = {
 	editorChangeObject: {
 		changeNode: (...args: any[]) => any;
 		updateNode: (...args: any[]) => any;
-		selectedNode?: {
-			type?: {
-				name?: string;
-			};
-			attrs?: {
-				value: string;
-				html?: string;
-				hideLabel: boolean;
-			};
+		selectedNode: Node & {
+			value: string;
+			html?: string;
+			hideLabel: boolean;
 		};
 	};
 };
@@ -47,8 +46,11 @@ const ControlsEquation = (props: Props) => {
 		(e: React.MouseEvent) => updateNode({ hideLabel: (e.target as HTMLInputElement).checked }),
 		[updateNode],
 	);
-	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const isBlock = selectedNode.type.name === 'block_equation';
+	const { nodeLabels } = usePubData();
+	const canHideLabel =
+		nodeLabels &&
+		(nodeLabels as NodeLabelMap)[selectedNode.type.name as ReferenceableNodeType]?.enabled;
 
 	useEffect(() => {
 		// Avoid an initial call to the server's LaTeX renderer on mount
@@ -92,7 +94,7 @@ const ControlsEquation = (props: Props) => {
 				<div className="section">
 					<div className="title">Preview</div>
 					<div className="preview" dangerouslySetInnerHTML={{ __html: html }} />
-					{isBlock && (
+					{isBlock && canHideLabel && (
 						<div className="controls-row">
 							<Checkbox
 								onClick={toggleLabel}

@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { Checkbox } from '@blueprintjs/core';
+import { Node } from 'prosemirror-model';
 
 import { SimpleEditor } from 'components';
 
@@ -7,18 +8,20 @@ import { ControlsButton, ControlsButtonGroup } from '../ControlsButton';
 import AlignmentControl from './AlignmentControl';
 import SliderInputControl from './SliderInputControl';
 import SourceControls from './SourceControls';
+import { usePubData } from 'client/containers/Pub/pubHooks';
+import { NodeLabelMap, ReferenceableNodeType } from 'client/components/Editor/types';
 
 type Props = {
 	isSmall: boolean;
 	pendingAttrs: any;
 	editorChangeObject: {
 		updateNode: (...args: any[]) => any;
-		selectedNode: {
+		selectedNode: Node & {
 			attrs?: {
-				size?: number;
-				align?: string;
-				height?: number;
-				caption?: string;
+				size: number;
+				align: string;
+				height: number;
+				caption: string;
 				hideLabel: boolean;
 			};
 		};
@@ -39,7 +42,6 @@ const ControlsMedia = (props: Props) => {
 	const { isSmall, editorChangeObject, pendingAttrs } = props;
 	const { updateNode, selectedNode } = editorChangeObject;
 	const { hasPendingChanges, commitChanges, updateAttrs } = pendingAttrs;
-	// @ts-expect-error ts-migrate(2339) FIXME: Property 'size' does not exist on type '{ size?: n... Remove this comment to see the full error message
 	const { size, align, height, caption, hideLabel } = selectedNode.attrs;
 	const canEditHeight = getCanEditNodeHeight(selectedNode);
 	const itemName = getItemName(selectedNode);
@@ -47,6 +49,10 @@ const ControlsMedia = (props: Props) => {
 		(e: React.MouseEvent) => updateNode({ hideLabel: (e.target as HTMLInputElement).checked }),
 		[updateNode],
 	);
+	const { nodeLabels } = usePubData();
+	const canHideLabel =
+		nodeLabels &&
+		(nodeLabels as NodeLabelMap)[selectedNode.type.name as ReferenceableNodeType]?.enabled;
 
 	return (
 		<div className="controls-media-component">
@@ -84,14 +90,16 @@ const ControlsMedia = (props: Props) => {
 					updateNode={updateNode}
 					isSmall={isSmall}
 				/>
-				<div className="controls-row">
-					<Checkbox
-						onClick={toggleLabel}
-						alignIndicator="right"
-						label="Hide label"
-						checked={hideLabel}
-					/>
-				</div>
+				{canHideLabel && (
+					<div className="controls-row">
+						<Checkbox
+							onClick={toggleLabel}
+							alignIndicator="right"
+							label="Hide label"
+							checked={hideLabel}
+						/>
+					</div>
+				)}
 			</div>
 			<div className="section hide-overflow">
 				<SimpleEditor
