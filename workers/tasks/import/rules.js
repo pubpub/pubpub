@@ -135,18 +135,6 @@ rules.fromPandoc('Code', (node) => {
 	};
 });
 
-rules.fromPandoc('Link', (node) => {
-	if (node.target.url.startsWith('#')) {
-		return {
-			type: 'reference',
-			attrs: {
-				targetId: node.target.url.slice(1),
-			},
-		};
-	}
-	return null;
-});
-
 rules.transformToMark('Link', 'link', (link, { resource }) => {
 	return {
 		href: resource(link.target.url, 'link'),
