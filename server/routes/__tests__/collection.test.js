@@ -9,11 +9,6 @@ const models = modelize`
 			permissions: "manage"
 			User communityManager {}
 		}
-		Collection noLayoutCollection {
-			kind: "issue"
-			title: "Issue Zero"
-			isPublic: true
-		}
 		Collection layoutCollection {
 			kind: "issue"
 			title: "Issue One"
