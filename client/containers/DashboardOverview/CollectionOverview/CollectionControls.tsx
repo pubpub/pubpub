@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 
-import { LinkedPageSelect } from 'components';
 import { MenuButton, MenuItem } from 'components/Menu';
 import { usePageContext } from 'utils/hooks';
 
@@ -19,7 +18,6 @@ const CollectionControls = (props: Props) => {
 	const { overviewData, collection, updateCollection, collectionPubs, addCollectionPub } = props;
 	const { scopeData } = usePageContext();
 	const { canManage } = scopeData.activePermissions;
-	const { activeCommunity } = scopeData.elements;
 	const { isPublic } = collection;
 
 	if (!canManage) {
@@ -49,12 +47,6 @@ const CollectionControls = (props: Props) => {
 						onClick={() => updateCollection({ isPublic: false })}
 					/>
 				</MenuButton>
-				<LinkedPageSelect
-					selfContained={true}
-					communityData={activeCommunity}
-					collection={collection}
-					onSelectPage={(page) => updateCollection({ pageId: page.id })}
-				/>
 				<PubSelect
 					pubs={overviewData.pubs}
 					// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.

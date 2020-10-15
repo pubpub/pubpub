@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { Button } from '@blueprintjs/core';
+import { Button, Tooltip } from '@blueprintjs/core';
 import stickybits from 'stickybits';
 
 import { generateHash } from 'utils/hashes';
-import { getPubsByBlockIndex, validBlockTypes } from 'utils/layout';
+import { getPubsByBlockIndex } from 'utils/layout';
+import { LayoutBlock } from 'utils/layout/types';
+import { Pub, Community } from 'utils/types';
 
 import LayoutEditorInsert from './LayoutEditorInsert';
 import LayoutEditorPubs from './LayoutEditorPubs';
@@ -15,13 +17,31 @@ import LayoutEditorBanner from './LayoutEditorBanner';
 require('./layoutEditor.scss');
 
 type Props = {
-	onChange: (...args: any[]) => any;
-	initialLayout: any[];
-	pubs: any[];
-	communityData: any;
+	onChange: (layout: LayoutBlock[]) => unknown;
+	initialLayout: LayoutBlock[];
+	collectionId?: string;
+	pubs: Pub[];
+	communityData: Community & {
+		pages: NonNullable<Community['pages']>;
+		collections: NonNullable<Community['collections']>;
+	};
 };
 
-type State = any;
+type State = {
+	layout: LayoutBlock[];
+	pubRenderLists: Pub[][];
+};
+
+type LayoutUpdateFn = (newLayout: LayoutBlock[]) => LayoutBlock[];
+
+const validBlockTypes = [
+	'pubs',
+	'text',
+	'html',
+	'banner',
+	'pages', // TODO(ian): Remove this after migration
+	'collections-pages',
+];
 
 const getTitleKindForBlock = (blockType: string) => {
 	if (blockType === 'collections-pages') {
@@ -34,23 +54,26 @@ const getTitleKindForBlock = (blockType: string) => {
 };
 
 class LayoutEditor extends Component<Props, State> {
+	stickyInstance: null | ReturnType<typeof stickybits> = null;
+
 	constructor(props: Props) {
 		super(props);
 		this.state = {
 			layout: props.initialLayout,
-			pubRenderLists: getPubsByBlockIndex(props.initialLayout, props.pubs),
+			pubRenderLists: getPubsByBlockIndex(props.initialLayout, props.pubs, {
+				collectionId: props.collectionId,
+			}),
 		};
+		this.updateLayout = this.updateLayout.bind(this);
 		this.handleInsert = this.handleInsert.bind(this);
 		this.handleChange = this.handleChange.bind(this);
+		this.handleChangePartial = this.handleChangePartial.bind(this);
 		this.handleRemove = this.handleRemove.bind(this);
 		this.handleMoveUp = this.handleMoveUp.bind(this);
 		this.handleMoveDown = this.handleMoveDown.bind(this);
-		// @ts-expect-error ts-migrate(2339) FIXME: Property 'stickyInstance' does not exist on type '... Remove this comment to see the full error message
-		this.stickyInstance = undefined;
 	}
 
 	componentDidMount() {
-		// @ts-expect-error ts-migrate(2339) FIXME: Property 'stickyInstance' does not exist on type '... Remove this comment to see the full error message
 		this.stickyInstance = stickybits('.block-header', {
 			// TODO(ian): this is a magic number to make this work "for now" --
 			// it's the combined height of the global header and dashboard breadcrumbs
@@ -59,92 +82,96 @@ class LayoutEditor extends Component<Props, State> {
 	}
 
 	componentWillUnmount() {
-		// @ts-expect-error ts-migrate(2339) FIXME: Property 'stickyInstance' does not exist on type '... Remove this comment to see the full error message
-		if (this.stickyInstance && this.stickyInstance.cleanUp) {
-			// @ts-expect-error ts-migrate(2339) FIXME: Property 'stickyInstance' does not exist on type '... Remove this comment to see the full error message
-			this.stickyInstance.cleanUp();
+		if (this.stickyInstance && this.stickyInstance.cleanup) {
+			this.stickyInstance.cleanup();
 		}
 	}
 
-	handleInsert(index, type, newContent) {
+	updateLayout(fn: LayoutUpdateFn) {
 		this.setState((prevState) => {
-			const newLayout = prevState.layout;
+			const { pubs, collectionId, onChange } = this.props;
+			const newLayout = [...prevState.layout];
+			const nextLayout = fn(newLayout);
+			onChange(nextLayout);
+			return {
+				layout: nextLayout,
+				pubRenderLists: getPubsByBlockIndex(nextLayout, pubs, {
+					collectionId: collectionId,
+				}),
+			};
+		});
+	}
+
+	handleInsert(index: number, type: LayoutBlock['type'], newContent: LayoutBlock['content']) {
+		this.updateLayout((newLayout) => {
 			newLayout.splice(index, 0, {
 				id: generateHash(8),
 				type: type,
 				content: newContent,
-			});
-			const newPubRenderList = getPubsByBlockIndex(newLayout, this.props.pubs);
-			this.props.onChange(newLayout);
-			return {
-				layout: newLayout,
-				pubRenderLists: newPubRenderList,
-			};
+			} as LayoutBlock);
+			return newLayout;
 		});
 	}
 
-	handleChange(index, newContent) {
-		this.setState((prevState) => {
-			const newLayout = prevState.layout;
+	handleChange(index: number, newContent: LayoutBlock['content']) {
+		this.updateLayout((newLayout) => {
 			newLayout[index].content = newContent;
-			const newPubRenderList = getPubsByBlockIndex(newLayout, this.props.pubs);
-			this.props.onChange(newLayout);
-			return {
-				layout: newLayout,
-				pubRenderLists: newPubRenderList,
-			};
+			return newLayout;
 		});
 	}
 
-	handleRemove(index) {
-		this.setState((prevState) => {
-			const newLayout = prevState.layout;
+	handleChangePartial(index: number, update: Partial<LayoutBlock['content']>) {
+		this.updateLayout((layout) => {
+			const block = layout[index];
+			const nextBlock = { ...block, content: { ...block.content, ...update } };
+			return [
+				...layout.slice(0, index),
+				nextBlock,
+				...layout.slice(index + 1),
+			] as LayoutBlock[];
+		});
+	}
+
+	handleRemove(index: number) {
+		this.updateLayout((newLayout) => {
 			newLayout.splice(index, 1);
-			this.props.onChange(newLayout);
-			return { layout: newLayout };
+			return newLayout;
 		});
 	}
 
-	handleMoveUp(index) {
-		this.setState((prevState) => {
-			const newLayout = [...prevState.layout];
+	handleMoveUp(index: number) {
+		this.updateLayout((newLayout) => {
+			const swap = newLayout[index - 1];
 			newLayout[index - 1] = newLayout[index];
-			newLayout[index] = prevState.layout[index - 1];
-
-			const newPubRenderList = getPubsByBlockIndex(newLayout, this.props.pubs);
-			this.props.onChange(newLayout);
-			return {
-				layout: newLayout,
-				pubRenderLists: newPubRenderList,
-			};
+			newLayout[index] = swap;
+			return newLayout;
 		});
 	}
 
-	handleMoveDown(index) {
-		this.setState((prevState) => {
-			const newLayout = [...prevState.layout];
+	handleMoveDown(index: number) {
+		this.updateLayout((newLayout) => {
+			const swap = newLayout[index + 1];
 			newLayout[index + 1] = newLayout[index];
-			newLayout[index] = prevState.layout[index + 1];
-
-			const newPubRenderList = getPubsByBlockIndex(newLayout, this.props.pubs);
-			this.props.onChange(newLayout);
-			return {
-				layout: newLayout,
-				pubRenderLists: newPubRenderList,
-			};
+			newLayout[index] = swap;
+			return newLayout;
 		});
 	}
 
 	render() {
+		const cannotRemoveLonePubsBlock =
+			!!this.props.collectionId &&
+			this.state.layout.filter((block) => block.type === 'pubs').length === 1;
 		return (
 			<div className="layout-editor-component">
 				<LayoutEditorInsert
 					insertIndex={0}
 					onInsert={this.handleInsert}
 					communityData={this.props.communityData}
+					pubSort={this.props.collectionId ? 'collection-rank' : 'creation-date'}
 				/>
 				{this.state.layout.map((item, index) => {
 					const validType = validBlockTypes.indexOf(item.type) > -1;
+					const cannotRemove = cannotRemoveLonePubsBlock && item.type === 'pubs';
 					if (!validType) {
 						return null;
 					}
@@ -170,23 +197,28 @@ class LayoutEditor extends Component<Props, State> {
 											this.handleMoveDown(index);
 										}}
 									/>
-									<Button
-										text="Remove"
-										onClick={() => {
-											this.handleRemove(index);
-										}}
-									/>
+									{!cannotRemove && (
+										<Button
+											text="Remove"
+											onClick={() => this.handleRemove(index)}
+										/>
+									)}
+									{cannotRemove && (
+										<Tooltip content="This layout requires at least one Pubs block.">
+											<Button text="Remove" disabled />
+										</Tooltip>
+									)}
 								</div>
 							</div>
 							<div key={`block-${item.id}`} className="component-wrapper">
 								{item.type === 'pubs' && (
 									<LayoutEditorPubs
 										key={`item-${item.id}`}
-										onChange={this.handleChange}
+										onChange={this.handleChangePartial}
 										layoutIndex={index}
-										content={item.content}
-										pubRenderList={this.state.pubRenderLists[index] || []}
-										pubs={this.props.pubs}
+										block={item}
+										pubsInBlock={this.state.pubRenderLists[index] || []}
+										allPubs={this.props.pubs}
 										communityData={this.props.communityData}
 									/>
 								)}
@@ -231,6 +263,9 @@ class LayoutEditor extends Component<Props, State> {
 								insertIndex={index + 1}
 								onInsert={this.handleInsert}
 								communityData={this.props.communityData}
+								pubSort={
+									this.props.collectionId ? 'collection-rank' : 'creation-date'
+								}
 							/>
 						</div>
 					);

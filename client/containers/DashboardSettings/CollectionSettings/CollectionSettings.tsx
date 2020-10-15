@@ -16,12 +16,10 @@ const CollectionSettings = () => {
 	const { collection, updateCollection, deleteCollection } = useCollectionState(scopeData);
 
 	return (
-		// @ts-expect-error ts-migrate(2746) FIXME: This JSX tag's 'children' prop expects a single ch... Remove this comment to see the full error message
 		<DashboardFrame className="collection-settings-component" title="Settings">
 			<SettingsSection title="Details">
 				<CollectionDetailsEditor
 					collection={collection}
-					communityData={activeCommunity}
 					onUpdateCollection={updateCollection}
 					onDeleteCollection={() =>
 						deleteCollection().then(() => {

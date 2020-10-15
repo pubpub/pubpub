@@ -3,6 +3,22 @@ import { normalizeMetadataToKind } from 'utils/collections/metadata';
 import { slugifyString } from 'utils/strings';
 import { generateHash } from 'utils/hashes';
 
+export const generateDefaultCollectionLayout = () => {
+	return {
+		isNarrow: false,
+		blocks: [
+			{
+				type: 'pubs',
+				id: generateHash(8),
+				content: {
+					sort: 'collection-rank',
+					pubPreviewType: 'medium',
+				},
+			},
+		],
+	};
+};
+
 export const createCollection = ({
 	communityId,
 	title,
@@ -25,6 +41,7 @@ export const createCollection = ({
 			pageId: pageId,
 			doi: doi,
 			kind: kind,
+			layout: generateDefaultCollectionLayout(),
 			...(id && { id: id }),
 		};
 		const metadata = normalizeMetadataToKind({}, kind, {

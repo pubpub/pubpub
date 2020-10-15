@@ -26,7 +26,11 @@ const Layout = (props: Props) => {
 
 	const renderBlock = (block: LayoutBlock, index: number) => {
 		if (block.type === 'pubs') {
-			return <LayoutPubs key={index} content={block.content} pubs={pubBlocksLists[index]} />;
+			return (
+				<div className="layout-pubs-block">
+					<LayoutPubs key={index} content={block.content} pubs={pubBlocksLists[index]} />
+				</div>
+			);
 		}
 		if (block.type === 'text') {
 			return <LayoutText key={index} content={block.content} />;

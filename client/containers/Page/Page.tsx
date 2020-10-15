@@ -12,18 +12,10 @@ type Props = {
 	};
 };
 
-export const validBlockTypes = [
-	'pubs',
-	'text',
-	'html',
-	'banner',
-	'pages', // TODO(ian): Remove this after migration
-	'collections-pages',
-];
-
 const Page = (props: Props) => {
 	const { pageData } = props;
 	const blocks = pageData.layout || getDefaultLayout();
 	return <Layout blocks={blocks} isNarrow={pageData.isNarrow} pubs={pageData.pubs} />;
 };
+
 export default Page;

@@ -128,7 +128,7 @@ const LayoutEditorPages = (props: Props) => {
 				<InputField label={isLegacy ? 'Pages' : 'Collections & Pages'}>
 					<Popover
 						content={
-							<OrderPicker<OrderableItem>
+							<OrderPicker
 								selectedItems={selectedItems}
 								allItems={allItems}
 								onChange={setSelectedItems}
@@ -140,7 +140,7 @@ const LayoutEditorPages = (props: Props) => {
 						interactionKind={PopoverInteractionKind.CLICK}
 						position={Position.BOTTOM_RIGHT}
 						usePortal={false}
-						minimal
+						minimal={true}
 						popoverClassName="order-picker-popover"
 					>
 						<Button rightIcon="caret-down">Choose {itemsLabel}</Button>

@@ -15,7 +15,8 @@
 		margin-bottom: 2em;
 		border: 1px solid #ccc;
 	}
-	.block-header {
+	// div is a specificity hack against an aggressive selection of .bp3-form-group in settingsSection.scss
+	div.block-header {
 		z-index: 1;
 		display: flex;
 		// align-items: flex-end;

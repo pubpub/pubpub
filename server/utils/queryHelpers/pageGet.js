@@ -10,7 +10,11 @@ export default async ({ query, forLayoutEditor, initialData }) => {
 		},
 	});
 
-	const pubsData = await getPubsForLayout(pageData.layout, forLayoutEditor, initialData);
+	const pubsData = await getPubsForLayout({
+		blocks: pageData.layout || [],
+		forLayoutEditor: forLayoutEditor,
+		initialData: initialData,
+	});
 
 	return {
 		...pageData.toJSON(),

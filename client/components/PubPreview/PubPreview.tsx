@@ -20,7 +20,7 @@ require('./pubPreview.scss');
 type Props = {
 	pubData: Pub;
 	communityData?: any;
-	size?: string;
+	size?: 'minimal' | 'small' | 'medium' | 'large';
 	hideByline?: boolean;
 	hideDescription?: boolean;
 	hideDates?: boolean;

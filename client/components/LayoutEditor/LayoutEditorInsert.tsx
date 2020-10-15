@@ -1,16 +1,24 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Popover, PopoverInteractionKind, Position, Menu, MenuItem } from '@blueprintjs/core';
 
+import { Page } from 'utils/types';
+import { LayoutBlock, PubSortOrder } from 'utils/layout/types';
 import { usePageContext } from 'utils/hooks';
 import { Icon } from 'components';
 
 require('./layoutEditorInsert.scss');
 
-const propTypes = {
-	insertIndex: PropTypes.number.isRequired,
-	onInsert: PropTypes.func.isRequired,
-	communityData: PropTypes.object.isRequired,
+type Props = {
+	communityData: {
+		pages: Page[];
+	};
+	insertIndex: number;
+	onInsert: (
+		index: number,
+		type: LayoutBlock['type'],
+		content: LayoutBlock['content'],
+	) => unknown;
+	pubSort: PubSortOrder;
 };
 
 const newCollectionsPagesBlock = (communityData, useLegacyBlock) => {
@@ -37,8 +45,8 @@ const newCollectionsPagesBlock = (communityData, useLegacyBlock) => {
 	};
 };
 
-const LayoutEditorInsert = function(props) {
-	const { insertIndex, onInsert } = props;
+const LayoutEditorInsert = (props: Props) => {
+	const { insertIndex, onInsert, pubSort } = props;
 	const {
 		scopeData: {
 			activePermissions: { isSuperAdmin },
@@ -55,6 +63,7 @@ const LayoutEditorInsert = function(props) {
 				limit: 0,
 				pubIds: [],
 				collectionIds: [],
+				sort: pubSort,
 			},
 		},
 		{
@@ -153,45 +162,35 @@ const LayoutEditorInsert = function(props) {
 								<Icon icon="widget-header" />
 							</h6>
 						</li>
-						{pubsBlocks.map((item) => {
-							return generateMenuItem(item);
-						})}
+						{pubsBlocks.map((item) => generateMenuItem(item))}
 						<li className="bp3-menu-header">
 							<h6>
 								Banner Block
 								<Icon icon="vertical-distribution" />
 							</h6>
 						</li>
-						{bannerBlocks.map((item) => {
-							return generateMenuItem(item);
-						})}
+						{bannerBlocks.map((item) => generateMenuItem(item))}
 						<li className="bp3-menu-header">
 							<h6>
 								Text Block
 								<Icon icon="new-text-box" />
 							</h6>
 						</li>
-						{textBlocks.map((item) => {
-							return generateMenuItem(item);
-						})}
+						{textBlocks.map((item) => generateMenuItem(item))}
 						<li className="bp3-menu-header">
 							<h6>
 								HTML Block
 								<Icon icon="code" />
 							</h6>
 						</li>
-						{htmlBlocks.map((item) => {
-							return generateMenuItem(item);
-						})}
+						{htmlBlocks.map((item) => generateMenuItem(item))}
 						<li className="bp3-menu-header">
 							<h6>
 								Pages Block
 								<Icon icon="application" />
 							</h6>
 						</li>
-						{pagesCollectionsBlocks.map((item) => {
-							return generateMenuItem(item);
-						})}
+						{pagesCollectionsBlocks.map((item) => generateMenuItem(item))}
 					</Menu>
 				}
 				interactionKind={PopoverInteractionKind.CLICK}
@@ -210,5 +209,4 @@ const LayoutEditorInsert = function(props) {
 	);
 };
 
-LayoutEditorInsert.propTypes = propTypes;
 export default LayoutEditorInsert;

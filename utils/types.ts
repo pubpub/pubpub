@@ -1,3 +1,6 @@
+import { LayoutBlock, CollectionLayout } from 'utils/layout/types';
+import { CommunityNavigationEntry } from 'client/utils/navigation';
+
 export type PubAttribution = {
 	id: string;
 	name?: string;
@@ -37,9 +40,10 @@ export type Collection = {
 	kind?: 'tag' | 'issue' | 'book' | 'conference';
 	doi?: string;
 	readNextPreviewSize: 'none' | 'minimal' | 'medium' | 'choose-best';
-	pageId?: string;
+	pageId?: null | string;
 	communityId: string;
 	attributions?: CollectionAttribution[];
+	layout: CollectionLayout;
 };
 
 export type CollectionPub = {
@@ -141,6 +145,7 @@ export type CrossrefDepositRecord = {
 };
 
 export type Pub = {
+	createdAt: string;
 	id: string;
 	slug: string;
 	title: string;
@@ -172,4 +177,65 @@ export type Pub = {
 	crossrefDepositRecord?: CrossrefDepositRecord;
 	inboundEdges?: InboundEdge[];
 	outboundEdges?: OutboundEdge[];
+};
+
+export type Page = {
+	id: string;
+	title: string;
+	slug: string;
+	description?: string;
+	avatar?: string;
+	isPublic: boolean;
+	isNarrowWidth?: boolean;
+	viewHash?: string;
+	layout: LayoutBlock[];
+};
+
+export type Community = {
+	id: string;
+	subdomain: string;
+	domain?: string;
+	createdAt: string;
+	title: string;
+	avatar?: string;
+	favicon?: string;
+	accentColorLight?: string;
+	accentColorDark?: string;
+	hideCreatePubButton?: boolean;
+	headerLogo?: string;
+	headerLinks?: string;
+	headerColorType?: 'light' | 'dark' | 'custom';
+	useHeaderTextAccent?: boolean;
+	hideHero?: boolean;
+	hideHeaderLogo?: boolean;
+	heroLogo?: string;
+	heroBackgroundImage?: string;
+	heroBackgroundColor?: string;
+	heroTextColor?: string;
+	useHeaderGradient?: boolean;
+	heroImage?: string;
+	heroTitle?: string;
+	heroText?: string;
+	heroPrimaryButton?: {};
+	heroSecondaryButton?: {};
+	heroAlign?: string;
+	navigation: CommunityNavigationEntry[];
+	hideNav?: boolean;
+	footerLinks?: CommunityNavigationEntry[];
+	footerTitle?: string;
+	footerImage?: string;
+	website?: string;
+	facebook?: string;
+	twitter?: string;
+	email?: string;
+	issn?: string;
+	isFeatured?: boolean;
+	viewHash?: string;
+	editHash?: string;
+	premiumLicenseFlag?: boolean;
+	defaultPubCollections: string[];
+	organizationId?: string;
+	collections?: Collection[];
+	pages?: Page[];
+	pubs?: Pub[];
 };
