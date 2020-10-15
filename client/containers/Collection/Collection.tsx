@@ -12,9 +12,7 @@ const Collection = (props: Props) => {
 	const { pubs, collection } = props;
 	if (collection.layout) {
 		const { blocks, isNarrow } = collection.layout;
-		return (
-			<Layout blocks={blocks} isNarrow={isNarrow} pubs={pubs} collectionId={collection.id} />
-		);
+		return <Layout blocks={blocks} isNarrow={isNarrow} pubs={pubs} collection={collection} />;
 	}
 	return null;
 };

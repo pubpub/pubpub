@@ -83,6 +83,17 @@ export type LayoutBlockCollectionsPages = {
 	};
 };
 
+export type LayoutBlockCollectionHeader = {
+	type: 'collection-header';
+	id: string;
+	content: {
+		hideByline?: boolean;
+		hideContributors?: boolean;
+		hideDoi?: boolean;
+		hideCollectionKind?: boolean;
+	}
+}
+
 export type LayoutBlock =
 	| LayoutBlockBanner
 	| LayoutBlockCollectionsPages

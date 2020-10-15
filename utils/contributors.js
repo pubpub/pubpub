@@ -12,21 +12,12 @@ const orderedContributors = (maybeContributors) =>
 		return 0;
 	});
 
-export const getAllPubContributors = (pubData, hideAuthors = false, hideContributors = false) => {
-	const { collectionPubs } = pubData;
-	const primaryCollectionPub = collectionPubs && collectionPubs.find((cp) => cp.isPrimary);
-	const primaryCollection = primaryCollectionPub && primaryCollectionPub.collection;
-
-	const contributors = [
-		...orderedContributors(pubData.attributions),
-		...orderedContributors(primaryCollection && primaryCollection.attributions),
-	].map(ensureUserForAttribution);
-
+const resolveContributors = (contributors, hideAuthors, hideNonAuthors) => {
 	const outputContributors = contributors.filter((attribution) => {
 		if (hideAuthors && attribution.isAuthor) {
 			return false;
 		}
-		if (hideContributors && !attribution.isAuthor) {
+		if (hideNonAuthors && !attribution.isAuthor) {
 			return false;
 		}
 		return true;
@@ -40,6 +31,27 @@ export const getAllPubContributors = (pubData, hideAuthors = false, hideContribu
 		uniqueAuthorIds.push(attribution.user.id);
 		return true;
 	});
+};
+
+export const getAllPubContributors = (pubData, hideAuthors = false, hideNonAuthors = false) => {
+	const { collectionPubs } = pubData;
+	const primaryCollectionPub = collectionPubs && collectionPubs.find((cp) => cp.isPrimary);
+	const primaryCollection = primaryCollectionPub && primaryCollectionPub.collection;
+
+	const contributors = [
+		...orderedContributors(pubData.attributions),
+		...orderedContributors(primaryCollection && primaryCollection.attributions),
+	].map(ensureUserForAttribution);
+
+	return resolveContributors(contributors, hideAuthors, hideNonAuthors);
+};
+
+export const getAllCollectionContributors = (collectionData, hideAuthors, hideNonAuthors) => {
+	return resolveContributors(
+		orderedContributors(collectionData.attributions),
+		hideAuthors,
+		hideNonAuthors,
+	);
 };
 
 export const getContributorName = (attribution) => {

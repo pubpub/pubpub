@@ -6,7 +6,7 @@ import { Pub } from 'utils/types';
 import { getResizedUrl } from 'utils/images';
 import { getPubPublishedDate } from 'utils/pub/pubDates';
 import { isPubPublic } from 'utils/pub/permissions';
-import { getAllPubContributors } from 'utils/pub/contributors';
+import { getAllPubContributors } from 'utils/contributors';
 import { communityUrl, bestPubUrl } from 'utils/canonicalUrls';
 import { usePageContext } from 'utils/hooks';
 import { Avatar, Icon, PreviewImage } from 'components';

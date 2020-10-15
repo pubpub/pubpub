@@ -5,7 +5,7 @@ import stickybits from 'stickybits';
 import { generateHash } from 'utils/hashes';
 import { getPubsByBlockIndex } from 'utils/layout';
 import { LayoutBlock } from 'utils/layout/types';
-import { Pub, Community } from 'utils/types';
+import { Pub, Community, Collection } from 'utils/types';
 
 import LayoutEditorInsert from './LayoutEditorInsert';
 import LayoutEditorPubs from './LayoutEditorPubs';
@@ -19,7 +19,7 @@ require('./layoutEditor.scss');
 type Props = {
 	onChange: (layout: LayoutBlock[]) => unknown;
 	initialLayout: LayoutBlock[];
-	collectionId?: string;
+	collection?: Collection;
 	pubs: Pub[];
 	communityData: Community & {
 		pages: NonNullable<Community['pages']>;
@@ -61,7 +61,7 @@ class LayoutEditor extends Component<Props, State> {
 		this.state = {
 			layout: props.initialLayout,
 			pubRenderLists: getPubsByBlockIndex(props.initialLayout, props.pubs, {
-				collectionId: props.collectionId,
+				collectionId: props.collection && props.collection.id,
 			}),
 		};
 		this.updateLayout = this.updateLayout.bind(this);
@@ -89,14 +89,14 @@ class LayoutEditor extends Component<Props, State> {
 
 	updateLayout(fn: LayoutUpdateFn) {
 		this.setState((prevState) => {
-			const { pubs, collectionId, onChange } = this.props;
+			const { pubs, collection, onChange } = this.props;
 			const newLayout = [...prevState.layout];
 			const nextLayout = fn(newLayout);
 			onChange(nextLayout);
 			return {
 				layout: nextLayout,
 				pubRenderLists: getPubsByBlockIndex(nextLayout, pubs, {
-					collectionId: collectionId,
+					collectionId: collection && collection.id,
 				}),
 			};
 		});
@@ -159,7 +159,7 @@ class LayoutEditor extends Component<Props, State> {
 
 	render() {
 		const cannotRemoveLonePubsBlock =
-			!!this.props.collectionId &&
+			!!this.props.collection &&
 			this.state.layout.filter((block) => block.type === 'pubs').length === 1;
 		return (
 			<div className="layout-editor-component">
@@ -167,7 +167,7 @@ class LayoutEditor extends Component<Props, State> {
 					insertIndex={0}
 					onInsert={this.handleInsert}
 					communityData={this.props.communityData}
-					pubSort={this.props.collectionId ? 'collection-rank' : 'creation-date'}
+					pubSort={this.props.collection ? 'collection-rank' : 'creation-date'}
 				/>
 				{this.state.layout.map((item, index) => {
 					const validType = validBlockTypes.indexOf(item.type) > -1;
@@ -264,7 +264,7 @@ class LayoutEditor extends Component<Props, State> {
 								onInsert={this.handleInsert}
 								communityData={this.props.communityData}
 								pubSort={
-									this.props.collectionId ? 'collection-rank' : 'creation-date'
+									this.props.collection ? 'collection-rank' : 'creation-date'
 								}
 							/>
 						</div>

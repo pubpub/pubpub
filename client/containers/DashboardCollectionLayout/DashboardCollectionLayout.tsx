@@ -138,7 +138,7 @@ const DashboardCollectionLayout = (props: Props) => {
 					<LayoutEditor
 						initialLayout={layout.blocks}
 						pubs={props.pubs}
-						collectionId={collection.id}
+						collection={collection}
 						communityData={communityData}
 						onChange={(blocks) => updateLayout({ blocks: blocks })}
 					/>

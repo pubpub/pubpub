@@ -2,7 +2,7 @@ import React from 'react';
 
 import Byline, { BylineProps } from 'components/Byline/Byline';
 import { naivePluralize } from 'utils/strings';
-import { getAllPubContributors } from 'utils/pub/contributors';
+import { getAllPubContributors } from 'utils/contributors';
 
 require('./manyAuthorsByline.scss');
 

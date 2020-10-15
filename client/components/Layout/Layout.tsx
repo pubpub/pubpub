@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
+import { Collection } from 'utils/types';
 import { getPubsByBlockIndex } from 'utils/layout';
 import { LayoutBlock, LayoutOptions } from 'utils/layout/types';
 import { usePageContext } from 'utils/hooks';
@@ -10,6 +11,7 @@ import LayoutHtml from './LayoutHtml';
 import LayoutBanner from './LayoutBanner';
 import LayoutText from './LayoutText';
 import LayoutPagesCollections from './LayoutPagesCollections';
+import LayoutCollectionHeader from './LayoutCollectionHeader';
 
 require('./layout.scss');
 
@@ -17,13 +19,16 @@ type Props = LayoutOptions & {
 	blocks: LayoutBlock[];
 	id?: string;
 	pubs: any[];
-	collectionId?: string;
+	collection?: Collection;
 };
 
 const Layout = (props: Props) => {
 	const { locationData, loginData, communityData } = usePageContext();
-	const { blocks, isNarrow, pubs, id = '', collectionId } = props;
-	const pubBlocksLists = getPubsByBlockIndex(blocks, pubs, { collectionId: collectionId });
+	const { blocks, isNarrow, pubs, id = '', collection } = props;
+
+	const pubBlocksLists = getPubsByBlockIndex(blocks, pubs, {
+		collectionId: collection && collection.id,
+	});
 
 	const renderBlock = (block: LayoutBlock, index: number) => {
 		if (block.type === 'pubs') {
@@ -74,6 +79,7 @@ const Layout = (props: Props) => {
 				locationData.query.display === 'ultrawide' && 'ultrawide',
 			)}
 		>
+			{collection && <LayoutCollectionHeader collection={collection} content={{}} />}
 			{blocks.map(renderBlock)}
 		</div>
 	);
