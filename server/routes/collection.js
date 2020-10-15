@@ -37,7 +37,7 @@ app.get(
 			if (pageId) {
 				const page = await Page.findOne({ where: { id: pageId } });
 				if (page) {
-					return res.redirect(`/${page.id}`);
+					return res.redirect(`/${page.slug}`);
 				}
 			}
 
