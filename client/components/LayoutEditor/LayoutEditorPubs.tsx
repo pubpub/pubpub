@@ -224,7 +224,7 @@ const LayoutEditorPubs = (props: Props) => {
 			<InputField label="Pinned Pubs">
 				<Popover
 					content={
-						<OrderPicker<Pub>
+						<OrderPicker
 							selectedItems={(pubIds || [])
 								.map((pubId) => pubsById[pubId])
 								.filter((x) => x)}

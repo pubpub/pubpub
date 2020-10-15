@@ -10,7 +10,7 @@ type Props = {
 };
 
 const SettingsSection = (props: Props) => {
-	const { title, className = '', children } = props;
+	const { title, className, children } = props;
 	return (
 		<div className={classNames('settings-section-component', className)}>
 			<div className="title">{title}</div>

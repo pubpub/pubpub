@@ -128,7 +128,7 @@ const LayoutEditorPages = (props: Props) => {
 				<InputField label={isLegacy ? 'Pages' : 'Collections & Pages'}>
 					<Popover
 						content={
-							<OrderPicker<OrderableItem>
+							<OrderPicker
 								selectedItems={selectedItems}
 								allItems={allItems}
 								onChange={setSelectedItems}
