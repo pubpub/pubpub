@@ -57,7 +57,7 @@ class MediaTwitter extends Component<Props, State> {
 
 	handleInsert() {
 		this.props.onInsert('iframe', {
-			url: `data:text/html;charset=utf-8,${encodeURI(this.state.embedUrl)}`,
+			url: `data:text/html;charset=utf-8,${encodeURIComponent(this.state.embedUrl)}`,
 			caption: this.state.embedTitle,
 			align: 'full',
 		});
@@ -89,7 +89,9 @@ class MediaTwitter extends Component<Props, State> {
 					<div className="preview-wrapper">
 						<iframe
 							frameBorder="none"
-							src={`data:text/html;charset=utf-8,${encodeURI(this.state.embedUrl)}`}
+							src={`data:text/html;charset=utf-8,${encodeURIComponent(
+								this.state.embedUrl,
+							)}`}
 							title="URL preview"
 						/>
 					</div>
