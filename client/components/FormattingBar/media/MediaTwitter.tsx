@@ -99,7 +99,7 @@ class MediaTwitter extends Component<Props, State> {
 				{!this.state.isValid && (
 					<div className="preview-wrapper">
 						<NonIdealState
-							title="Paste a Twitter URL above. You can embed a tweet, timline, list or search."
+							title="Paste a Twitter URL above. You can embed a tweet, profile, list, collection, or likes timeline."
 							icon={<Icon icon="twitter" iconSize={60} useColor={true} />}
 							action={
 								<Button
