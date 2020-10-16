@@ -1,4 +1,5 @@
 import React from 'react';
+import { useUpdateEffect } from 'react-use';
 
 import { usePageContext } from 'utils/hooks';
 import { getDashUrl } from 'utils/dashboard';
@@ -13,12 +14,30 @@ import CollectionMetadataEditor from './CollectionMetadataEditor';
 const CollectionSettings = () => {
 	const { scopeData } = usePageContext();
 	const { activeCommunity } = scopeData.elements;
-	const { collection, updateCollection, deleteCollection } = useCollectionState(scopeData);
+	const {
+		collection,
+		updateCollection,
+		deleteCollection,
+		fieldErrors,
+		hasChanges,
+	} = useCollectionState(scopeData);
+
+	useUpdateEffect(() => {
+		if (!hasChanges) {
+			window.history.replaceState(
+				{},
+				'',
+				getDashUrl({ collectionSlug: collection.slug, mode: 'settings' }),
+			);
+		}
+	}, [collection.slug, hasChanges]);
 
 	return (
 		<DashboardFrame className="collection-settings-component" title="Settings">
 			<SettingsSection title="Details">
 				<CollectionDetailsEditor
+					fieldErrors={fieldErrors}
+					communityData={activeCommunity}
 					collection={collection}
 					onUpdateCollection={updateCollection}
 					onDeleteCollection={() =>

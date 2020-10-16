@@ -12,6 +12,7 @@ import {
 	CollectionMultiSelect,
 	NavBar,
 	Footer,
+	DashboardFrame,
 } from 'components';
 import { slugifyString } from 'utils/strings';
 import { defaultFooterLinks } from 'client/utils/navigation';
@@ -175,8 +176,10 @@ const CommunitySettings = () => {
 	const activeHeroTextColor = heroTextColor || '#FFFFFF';
 
 	return (
-		<div className="community-settings-component">
-			<div className="content-buttons">
+		<DashboardFrame
+			title="Settings"
+			className="community-settings-component"
+			controls={
 				<InputField error={error}>
 					<Button
 						name="create"
@@ -188,8 +191,8 @@ const CommunitySettings = () => {
 						loading={isLoading}
 					/>
 				</InputField>
-			</div>
-			<h2 className="dashboard-content-header">Settings</h2>
+			}
+		>
 			<SettingsSection title="Details">
 				<InputField
 					label="Title"
@@ -844,7 +847,7 @@ const CommunitySettings = () => {
 					</AnchorButton>
 				</Card>
 			</SettingsSection>
-		</div>
+		</DashboardFrame>
 	);
 };
 

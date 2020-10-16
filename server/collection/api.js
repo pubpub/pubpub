@@ -33,14 +33,14 @@ app.put(
 		if (!permissions.update) {
 			throw new ForbiddenError();
 		}
-		const updatedValues = await updateCollection(
+		const result = await updateCollection(
 			{
 				...req.body,
 				collectionId: req.body.id,
 			},
 			permissions.update,
 		);
-		return res.status(200).json(updatedValues);
+		return res.status(200).json(result);
 	}),
 );
 
