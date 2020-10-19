@@ -43,7 +43,7 @@ const getPubsForLayoutBlock = async (blockContent, initialData, scopedPubIds, ex
 	const {
 		communityData: { id: communityId },
 	} = initialData;
-	const { limit, collectionIds, pubIds: pinnedPubIds } = blockContent;
+	const { limit, collectionIds = [], pubIds: pinnedPubIds = [] } = blockContent;
 
 	const sharedOptions = {
 		...buildPubOptions({

@@ -75,11 +75,11 @@ const Breadcrumbs = () => {
 				onClick: handleCreatePub,
 				minPermissions: 'manage',
 			},
-			{
+			activeCollection && {
 				text: 'Visit Collection',
 				href: `/${activeCollection.slug}`,
 			},
-		],
+		].filter((x) => x),
 		pub: [
 			{
 				text: 'Go to Pub',
