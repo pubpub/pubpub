@@ -5,10 +5,37 @@ import { slugifyString } from 'utils/strings';
 import { generateHash } from 'utils/hashes';
 import { PubPubError } from 'server/utils/errors';
 
-export const generateDefaultCollectionLayout = () => {
+export const generateDefaultCollectionLayout = (title) => {
 	return {
 		isNarrow: false,
 		blocks: [
+			{
+				id: generateHash(8),
+				type: 'text',
+				content: {
+					text: {
+						type: 'doc',
+						attrs: {
+							meta: {},
+						},
+						content: [
+							{
+								type: 'heading',
+								attrs: {
+									level: 1,
+								},
+								content: [
+									{
+										text: title,
+										type: 'text',
+									},
+								],
+							},
+						],
+					},
+					align: 'left',
+				},
+			},
 			{
 				type: 'pubs',
 				id: generateHash(8),
@@ -32,8 +59,9 @@ export const createCollection = ({
 	slug = null,
 }) => {
 	return Community.findOne({ where: { id: communityId } }).then(async (community) => {
+		const normalizedTitle = title.trim();
 		const collection = {
-			title: title.trim(),
+			title: normalizedTitle,
 			slug: await findAcceptableSlug(slug || slugifyString(title), communityId),
 			isRestricted: true,
 			isPublic: isPublic,
@@ -43,7 +71,7 @@ export const createCollection = ({
 			pageId: pageId,
 			doi: doi,
 			kind: kind,
-			layout: generateDefaultCollectionLayout(),
+			layout: generateDefaultCollectionLayout(normalizedTitle),
 			...(id && { id: id }),
 		};
 		const metadata = normalizeMetadataToKind({}, kind, {
