@@ -4,10 +4,16 @@ import { isHttpsUri } from 'valid-url';
 
 import Icon from 'components/Icon/Icon';
 import { apiFetch } from 'client/utils/apiFetch';
-import { getIframeSrc, getEmbedType } from 'client/utils/editor';
+import { getEmbedType } from 'client/utils/editor';
+
+type TwitterEmbedData = {
+	url: string;
+	caption: string;
+	align: string;
+};
 
 type Props = {
-	onInsert: (...args: any[]) => any;
+	onInsert: (nodeType: string, embedData: TwitterEmbedData) => unknown;
 };
 
 const sampleUrl =
@@ -15,7 +21,12 @@ const sampleUrl =
 		? 'https://twitter.com/pubpub'
 		: 'https://twitter.com/kfutures';
 
-type State = any;
+type State = {
+	isValid: boolean;
+	input: string;
+	embedUrl: string;
+	embedTitle: string;
+};
 
 class MediaTwitter extends Component<Props, State> {
 	constructor(props: Props) {
@@ -33,26 +44,20 @@ class MediaTwitter extends Component<Props, State> {
 	handleInput(url) {
 		const input = url;
 		const isValid = isHttpsUri(input) && getEmbedType(input) === 'twitter';
-		this.setState(
-			{
-				input: input,
-				isValid: isValid,
-			},
-			() => {
-				if (!this.state.isValid) {
-					return this.setState({ embedUrl: '', embedTitle: '' });
-				}
+		this.setState({ input: input, isValid: isValid });
+		if (!isValid) {
+			this.setState({ embedUrl: '', embedTitle: '' });
+			return;
+		}
 
-				const queryParams = `?type=${getEmbedType(input)}&input=${input}`;
-				// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
-				return apiFetch(`/api/editor/embed${queryParams}`).then((result) => {
-					this.setState({
-						embedUrl: result.html,
-						embedTitle: result.title,
-					});
-				});
-			},
-		);
+		const queryParams = `?type=${getEmbedType(input)}&input=${input}`;
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
+		apiFetch(`/api/editor/embed${queryParams}`).then((result) => {
+			this.setState({
+				embedUrl: result.html,
+				embedTitle: result.title,
+			});
+		});
 	}
 
 	handleInsert() {
@@ -68,9 +73,9 @@ class MediaTwitter extends Component<Props, State> {
 			<div className="formatting-bar_media-component-content">
 				<InputGroup
 					className="top-input"
-					fill={true}
+					fill
 					placeholder="Enter Twitter URL"
-					large={true}
+					large
 					value={this.state.input}
 					onChange={(evt) => {
 						this.handleInput(evt.target.value);
@@ -80,7 +85,7 @@ class MediaTwitter extends Component<Props, State> {
 							text="Insert"
 							intent={Intent.PRIMARY}
 							disabled={!this.state.embedUrl}
-							large={true}
+							large
 							onClick={this.handleInsert}
 						/>
 					}
