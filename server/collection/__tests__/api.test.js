@@ -60,7 +60,7 @@ it('creates a new collection', async () => {
 	expect(communityId).toEqual(community.id);
 	expect(title).toEqual('My test collection');
 	expect(kind).toEqual('issue');
-	expect(layout.blocks.length).toEqual(1);
+	expect(layout.blocks.length).toEqual(2);
 	expect(isPublic).toEqual(false);
 });
 
