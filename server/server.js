@@ -9,7 +9,7 @@ import passport from 'passport';
 import * as Sentry from '@sentry/node';
 
 import { setEnvironment, setAppCommit, isProd, getAppCommit } from 'utils/environment';
-import { HTTPStatusError, errorMiddleware, PubPubError } from 'server/utils/errors';
+import { HTTPStatusError, errorMiddleware } from 'server/utils/errors';
 
 import { sequelize, User } from './models';
 
@@ -24,10 +24,7 @@ export const wrap = (routeHandlerFn) => (...args) => {
 	Promise.resolve(routeHandlerFn(...args)).catch((err) => {
 		// Log the error if we're testing. Normally this is handled in the error middleware, but
 		// that isn't active while handling individual requests in a test environment.
-		if (
-			process.env.NODE_ENV === 'test' &&
-			!(err instanceof HTTPStatusError || err instanceof PubPubError)
-		) {
+		if (process.env.NODE_ENV === 'test' && !(err instanceof HTTPStatusError)) {
 			// eslint-disable-next-line no-console
 			console.log('Got an error in an API route while testing:', err);
 		}
