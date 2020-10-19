@@ -100,6 +100,6 @@ export const errorMiddleware = (err, _, res, next) => {
 		}
 	} else if (!res.headersSent) {
 		res.status(500);
-		next();
+		next(err);
 	}
 };
