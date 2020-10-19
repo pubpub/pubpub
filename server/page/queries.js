@@ -7,11 +7,11 @@ import { generateHash } from 'utils/hashes';
 
 import { sanitizePageHtml } from './sanitizePageHtml';
 
-export const createPage = (inputValues) => {
+export const createPage = async (inputValues) => {
 	return Page.create({
 		communityId: inputValues.communityId,
 		title: inputValues.title,
-		slug: findAcceptableSlug(inputValues.slug),
+		slug: await findAcceptableSlug(inputValues.slug),
 		description: inputValues.description,
 		isPublic: false,
 		viewHash: generateHash(8),
