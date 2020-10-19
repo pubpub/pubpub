@@ -69,6 +69,7 @@ app.get(
 			return res.redirect(`/search?q=${collection.title}`);
 		}
 
+		// Some Crossref deposits have occured with this scheme so we must continue to support it.
 		const collectionByPartialId = await findCollectionByPartialId(collectionSlug);
 		if (collectionByPartialId) {
 			return res.redirect(`/${collectionByPartialId.slug}`);
