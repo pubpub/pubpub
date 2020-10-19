@@ -1,6 +1,6 @@
 import { Page } from 'server/models';
 
-import { enrichLayoutWithPubTokens, getPubsForLayout } from './layout';
+import { enrichLayoutBlocksWithPubTokens, getPubsForLayout } from './layout';
 
 export default async ({ query, forLayoutEditor, initialData }) => {
 	const pageData = await Page.findOne({
@@ -18,7 +18,10 @@ export default async ({ query, forLayoutEditor, initialData }) => {
 
 	return {
 		...pageData.toJSON(),
-		layout: enrichLayoutWithPubTokens(pageData.layout, initialData),
+		layout: enrichLayoutBlocksWithPubTokens({
+			blocks: pageData.layout,
+			initialData: initialData,
+		}),
 		pubs: pubsData,
 	};
 };

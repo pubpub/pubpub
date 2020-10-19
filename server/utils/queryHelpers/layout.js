@@ -114,14 +114,18 @@ export const getPubsForLayout = async ({
 	}, Promise.resolve([]));
 };
 
-export const enrichLayoutWithPubTokens = (layoutBlocks, initialData) => {
+export const enrichLayoutBlocksWithPubTokens = ({ blocks, initialData, collectionId }) => {
 	const { loginData, communityData } = initialData;
 	const userId = loginData && loginData.id;
-	if (layoutBlocks && userId) {
-		return layoutBlocks.map((block) => {
+	if (blocks && userId) {
+		return blocks.map((block) => {
 			const { type, content } = block;
 			if (type === 'banner') {
 				const { buttonType, defaultCollectionIds } = content;
+				const createInCollectionIds = [
+					...(defaultCollectionIds || []),
+					collectionId,
+				].filter((x) => x);
 				if (buttonType === 'create-pub') {
 					return {
 						...block,
@@ -130,7 +134,7 @@ export const enrichLayoutWithPubTokens = (layoutBlocks, initialData) => {
 							createPubToken: issueCreatePubToken({
 								userId: userId,
 								communityId: communityData.id,
-								createInCollectionIds: defaultCollectionIds,
+								createInCollectionIds: createInCollectionIds,
 							}),
 						},
 					};
@@ -139,5 +143,20 @@ export const enrichLayoutWithPubTokens = (layoutBlocks, initialData) => {
 			return block;
 		});
 	}
-	return layoutBlocks;
+	return blocks;
+};
+
+export const enrichCollectionWithPubTokens = (collection, initialData) => {
+	const { layout, id: collectionId } = collection;
+	return {
+		...collection,
+		layout: {
+			...layout,
+			blocks: enrichLayoutBlocksWithPubTokens({
+				blocks: layout.blocks,
+				initialData: initialData,
+				collectionId: collectionId,
+			}),
+		},
+	};
 };
