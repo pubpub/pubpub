@@ -41,7 +41,7 @@ const LayoutPubs = (props: Props) => {
 					/>
 				</div>
 				{nextPub && (
-					<div className={isTwoColumn ? 'col-6' : 'col-12'}>
+					<div key={nextPub.id} className={isTwoColumn ? 'col-6' : 'col-12'}>
 						<PubPreview
 							pubData={nextPub}
 							size={pubPreviewType}
