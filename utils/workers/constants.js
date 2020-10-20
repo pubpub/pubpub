@@ -16,3 +16,5 @@ const prodTaskQueueName = 'pubpubTaskQueue-2020-07-20';
 const localTaskQueueName = isDevelopment() && process.env.PUBPUB_LOCAL_TASK_QUEUE;
 
 export const taskQueueName = localTaskQueueName || prodTaskQueueName;
+
+console.log(process.env.PUBPUB_LOCAL_TASK_QUEUE);

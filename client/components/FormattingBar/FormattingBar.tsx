@@ -9,6 +9,7 @@ import BlockTypeSelector from './BlockTypeSelector';
 import FormattingBarButton from './FormattingBarButton';
 import FormattingBarPopover from './FormattingBarPopover';
 import { positionNearSelection } from './positioning';
+import { usePubData } from 'client/containers/Pub/pubHooks';
 
 require('./formattingBar.scss');
 
@@ -127,6 +128,7 @@ const FormattingBar = (props: Props) => {
 	} = props;
 	const { menuItems, insertFunctions, view } = editorChangeObject;
 	const { communityData } = usePageContext();
+	const pubData = usePubData();
 	const buttonElementRefs = useRefMap();
 	const toolbar = useToolbarState({ loop: true });
 	const {
@@ -212,10 +214,14 @@ const FormattingBar = (props: Props) => {
 		const isIndicated = indicatedButtons.includes(button) && !isOpen;
 		// @ts-expect-error ts-migrate(2339) FIXME: Property 'isActive' does not exist on type '{}'.
 		const isActive = !isOpen && !isIndicated && !!matchingMenuItem && matchingMenuItem.isActive;
-		const isDisabled =
-			noFunction || (openedButton && !isOpen && !isIndicated && !controlsPosition);
+		const isDisabled = Boolean(
+			(typeof button.isDisabled === 'function' && button.isDisabled(pubData)) ||
+				noFunction ||
+				(openedButton && !isOpen && !isIndicated && !controlsPosition),
+		);
 		const maybeEditorChangeObject =
 			button.key === 'media' ? { editorChangeObject: editorChangeObject } : {};
+
 		return (
 			<ToolbarItem
 				{...toolbar}
@@ -223,16 +229,17 @@ const FormattingBar = (props: Props) => {
 				as={button.component || FormattingBarButton}
 				key={button.key}
 				formattingItem={button}
-				// @ts-expect-error ts-migrate(2769) FIXME: Type 'null' is not assignable to type 'boolean | u... Remove this comment to see the full error message
 				disabled={isDisabled}
 				isActive={isActive}
 				isIndicated={isIndicated && !isOpen}
 				isOpen={isOpen}
 				isDetached={isOpen && !!controlsPosition}
 				isSmall={isSmall}
+				renderPopover={button.renderPopover}
 				accentColor={communityData.accentColorDark}
 				// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 2.
 				onClick={(evt) => handleButtonClick(button, evt)}
+				pubData={pubData}
 				{...maybeEditorChangeObject}
 			/>
 		);

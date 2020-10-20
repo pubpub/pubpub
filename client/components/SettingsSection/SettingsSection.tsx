@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { slugifyString } from 'utils/strings';
 
 require('./settingsSection.scss');
 
@@ -17,7 +18,10 @@ const defaultProps = {
 
 const SettingsSection = function(props) {
 	return (
-		<div className={`settings-section-component ${props.className}`}>
+		<div
+			className={`settings-section-component ${props.className}`}
+			id={slugifyString(props.title)}
+		>
 			<div className="title">{props.title}</div>
 			<div className="content">{props.children}</div>
 		</div>

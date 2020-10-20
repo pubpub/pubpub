@@ -1,3 +1,5 @@
+import React from 'react';
+
 import ControlsEquation from './controlComponents/ControlsEquation';
 import ControlsFootnoteCitation from './controlComponents/ControlsFootnoteCitation/ControlsFootnoteCitation';
 import ControlsLink from './controlComponents/ControlsLink';
@@ -7,6 +9,9 @@ import ControlsMedia from './controlComponents/ControlsMedia/ControlsMedia';
 import ControlsTable from './controlComponents/ControlsTable';
 import MediaButton from './FormattingBarMediaButton';
 import { positionNearSelection, positionNearLink } from './positioning';
+import { usePubData } from 'client/containers/Pub/pubHooks';
+import { getDashUrl } from 'utils/dashboard';
+import { NodeLabelMap } from '../Editor/types';
 
 const triggerOnClick = (changeObject) => {
 	const { latestDomEvent } = changeObject;
@@ -129,6 +134,13 @@ export const citation = {
 	controls: nodeControls(ControlsFootnoteCitation, 'citation'),
 };
 
+const canInsertReference = (pubData: any) => {
+	return (
+		!pubData.nodeLabels ||
+		!Object.values(pubData.nodeLabels as NodeLabelMap).some((nodeLabel) => nodeLabel.enabled)
+	);
+};
+
 export const reference = {
 	key: 'reference',
 	title: 'Reference',
@@ -137,6 +149,28 @@ export const reference = {
 		position: positionNearSelection,
 		showCloseButton: false,
 	}),
+	isDisabled: canInsertReference,
+	renderPopover: (pubData: any) => {
+		if (!canInsertReference(pubData)) {
+			return null;
+		}
+
+		return (
+			<p style={{ maxWidth: 150, padding: '12 12 0' }}>
+				Visit{' '}
+				<a
+					href={getDashUrl({
+						pubSlug: pubData.slug,
+						mode: 'settings',
+						section: 'block-labels',
+					})}
+				>
+					Pub Settings
+				</a>{' '}
+				to turn on labeling and enable references.
+			</p>
+		);
+	},
 };
 
 export const equation = {
