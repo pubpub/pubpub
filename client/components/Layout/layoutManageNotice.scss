@@ -1,0 +1,18 @@
+.layout-manage-notice-component {
+    background: #eee;
+    color: #111;
+    .inner,
+    .inner > .notice {
+        display: flex;
+        align-items: center;
+    }
+    .inner {
+        justify-content: space-between;
+        .notice {
+            .bp3-icon {
+                color: #111;
+                margin-right: 5px;
+            }
+        }
+    }
+}

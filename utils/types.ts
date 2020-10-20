@@ -33,7 +33,7 @@ export type Collection = {
 	slug: string;
 	avatar?: string;
 	isRestricted?: string;
-	isPublic?: boolean;
+	isPublic: boolean;
 	viewHash?: string;
 	editHash?: string;
 	metadata?: string;
