@@ -1,4 +1,5 @@
 import React from 'react';
+import { getDashUrl } from 'utils/dashboard';
 
 import ControlsEquation from './controlComponents/ControlsEquation';
 import ControlsFootnoteCitation from './controlComponents/ControlsFootnoteCitation/ControlsFootnoteCitation';
@@ -9,8 +10,6 @@ import ControlsMedia from './controlComponents/ControlsMedia/ControlsMedia';
 import ControlsTable from './controlComponents/ControlsTable';
 import MediaButton from './FormattingBarMediaButton';
 import { positionNearSelection, positionNearLink } from './positioning';
-import { usePubData } from 'client/containers/Pub/pubHooks';
-import { getDashUrl } from 'utils/dashboard';
 import { NodeLabelMap } from '../Editor/types';
 
 const triggerOnClick = (changeObject) => {

@@ -1,41 +1,31 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Button } from 'reakit';
+import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 
 import { Icon } from 'components';
-import { Popover, PopoverInteractionKind, Position, Tooltip } from '@blueprintjs/core';
 
-const propTypes = {
-	accentColor: PropTypes.string,
-	formattingItem: PropTypes.shape({
-		ariaTitle: PropTypes.string,
-		title: PropTypes.string.isRequired,
-		isToggle: PropTypes.bool,
-		icon: PropTypes.string.isRequired,
-	}).isRequired,
-	disabled: PropTypes.bool,
-	isActive: PropTypes.bool,
-	isDetached: PropTypes.bool,
-	isIndicated: PropTypes.bool,
-	isOpen: PropTypes.bool,
-	isSmall: PropTypes.bool,
-	label: PropTypes.string,
-	onClick: PropTypes.func.isRequired,
-	outerRef: PropTypes.any,
-	pubData: PropTypes.object,
+type FormattingItem = {
+	ariaTitle?: string;
+	title: string;
+	isToggle?: string;
+	icon: string;
 };
 
-const defaultProps = {
-	accentColor: 'white',
-	disabled: false,
-	label: null,
-	isActive: false,
-	isIndicated: false,
-	isOpen: false,
-	isSmall: false,
-	isDetached: false,
-	outerRef: undefined,
+type FormattingBarButtonProps = {
+	accentColor: string;
+	formattingItem: FormattingItem;
+	disabled?: boolean;
+	isActive?: boolean;
+	isDetached?: boolean;
+	isIndicated?: boolean;
+	isOpen?: boolean;
+	isSmall?: boolean;
+	label: string;
+	onClick: (formattingItem: FormattingItem) => unknown;
+	outerRef: React.RefObject<any>;
+	renderPopover?: (pubData: any) => string;
+	pubData: any;
 };
 
 const getOuterStyle = (accentColor, isOpen, isDetached) => {
@@ -63,104 +53,84 @@ const getIndicatorStyle = (accentColor) => {
 	};
 };
 
-type FormattingBarButtonProps = {
-	renderPopover?: (pubData: any) => string;
-	pubData: any;
-};
+const FormattingBarButton = React.forwardRef<unknown, FormattingBarButtonProps>((props, ref) => {
+	const {
+		disabled = false,
+		formattingItem,
+		isActive = false,
+		isIndicated = false,
+		isDetached = false,
+		isOpen = false,
+		isSmall = false,
+		label = null,
+		onClick,
+		accentColor = 'white',
+		outerRef,
+		renderPopover,
+		pubData,
+		...restProps
+	} = props;
 
-const FormattingBarButton = React.forwardRef<typeof Button, FormattingBarButtonProps>(
-	(props, ref) => {
-		const {
-			// @ts-expect-error ts-migrate(2339) FIXME: Property 'disabled' does not exist on type '{ chil... Remove this comment to see the full error message
-			disabled,
-			// @ts-expect-error ts-migrate(2339) FIXME: Property 'formattingItem' does not exist on type '... Remove this comment to see the full error message
-			formattingItem,
-			// @ts-expect-error ts-migrate(2339) FIXME: Property 'isActive' does not exist on type '{ chil... Remove this comment to see the full error message
-			isActive,
-			// @ts-expect-error ts-migrate(2339) FIXME: Property 'isIndicated' does not exist on type '{ c... Remove this comment to see the full error message
-			isIndicated,
-			// @ts-expect-error ts-migrate(2339) FIXME: Property 'isDetached' does not exist on type '{ ch... Remove this comment to see the full error message
-			isDetached,
-			// @ts-expect-error ts-migrate(2339) FIXME: Property 'isOpen' does not exist on type '{ childr... Remove this comment to see the full error message
-			isOpen,
-			// @ts-expect-error ts-migrate(2339) FIXME: Property 'isSmall' does not exist on type '{ child... Remove this comment to see the full error message
-			isSmall,
-			// @ts-expect-error ts-migrate(2339) FIXME: Property 'label' does not exist on type '{ childre... Remove this comment to see the full error message
-			label,
-			// @ts-expect-error ts-migrate(2339) FIXME: Property 'onClick' does not exist on type '{ child... Remove this comment to see the full error message
-			onClick,
-			// @ts-expect-error ts-migrate(2339) FIXME: Property 'accentColor' does not exist on type '{ c... Remove this comment to see the full error message
-			accentColor,
-			// @ts-expect-error ts-migrate(2339) FIXME: Property 'outerRef' does not exist on type '{ chil... Remove this comment to see the full error message
-			outerRef,
-			renderPopover,
-			pubData,
-			...restProps
-		} = props;
+	let button = (
+		/* @ts-expect-error ts-migrate(2769) FIXME: Type 'unknown' is not assignable to type 'HTMLButt... Remove this comment to see the full error message */
+		<Button
+			ref={ref}
+			{...restProps}
+			role="button"
+			disabled={disabled}
+			focusable
+			title={formattingItem.title}
+			aria-label={formattingItem.ariaTitle || formattingItem.title}
+			aria-pressed={formattingItem.isToggle ? isActive : undefined}
+			className={classNames(
+				'bp3-button',
+				'bp3-minimal',
+				isActive && 'bp3-active',
+				isSmall && 'bp3-small',
+				disabled && 'bp3-disabled',
+			)}
+			style={getInnerStyle(accentColor, isOpen, isDetached)}
+			onClick={() => onClick(formattingItem)}
+		>
+			<Icon icon={formattingItem.icon} iconSize={isSmall ? 12 : 16} />
+			{label}
+		</Button>
+	);
 
-		let button = (
-			/* @ts-expect-error ts-migrate(2769) FIXME: Type 'unknown' is not assignable to type 'HTMLButt... Remove this comment to see the full error message */
-			<Button
-				ref={ref}
-				{...restProps}
-				role="button"
-				disabled={disabled}
-				focusable
-				title={formattingItem.title}
-				aria-label={formattingItem.ariaTitle || formattingItem.title}
-				aria-pressed={formattingItem.isToggle ? isActive : undefined}
-				className={classNames(
-					'bp3-button',
-					'bp3-minimal',
-					isActive && 'bp3-active',
-					isSmall && 'bp3-small',
-					disabled && 'bp3-disabled',
-				)}
-				style={getInnerStyle(accentColor, isOpen, isDetached)}
-				onClick={() => onClick(formattingItem)}
-			>
-				<Icon icon={formattingItem.icon} iconSize={isSmall ? 12 : 16} />
-				{label}
-			</Button>
-		);
+	const popoverContent = renderPopover && renderPopover(pubData);
 
-		const popoverContent = renderPopover && renderPopover(pubData);
-
-		if (popoverContent) {
-			button = (
-				<Popover
-					content={popoverContent}
-					position={Position.BOTTOM}
-					modifiers={{ preventOverflow: { enabled: false }, flip: { enabled: false } }}
-					openOnTargetFocus={true}
-					interactionKind={PopoverInteractionKind.HOVER}
-				>
-					{button}
-				</Popover>
-			);
-		}
-
-		return (
-			<span
-				ref={outerRef}
-				className={classNames(
-					'formatting-bar-button',
-					isOpen && 'open',
-					isDetached && 'detached',
-					!!label && 'has-label',
-				)}
-				style={getOuterStyle(accentColor, isOpen, isDetached)}
+	if (popoverContent) {
+		button = (
+			<Popover
+				content={popoverContent}
+				position={Position.BOTTOM}
+				modifiers={{ preventOverflow: { enabled: false }, flip: { enabled: false } }}
+				openOnTargetFocus={true}
+				interactionKind={PopoverInteractionKind.HOVER}
 			>
 				{button}
-				{isIndicated && (
-					<div className="indicator" style={getIndicatorStyle(accentColor)} />
-				)}
-			</span>
+			</Popover>
 		);
-	},
-);
+	}
 
-FormattingBarButton.propTypes = propTypes;
+	return (
+		<span
+			ref={outerRef}
+			className={classNames(
+				'formatting-bar-button',
+				isOpen && 'open',
+				isDetached && 'detached',
+				!!label && 'has-label',
+			)}
+			style={getOuterStyle(accentColor, isOpen, isDetached)}
+		>
+			{button}
+			{isIndicated && <div className="indicator" style={getIndicatorStyle(accentColor)} />}
+		</span>
+	);
+});
+
 // @ts-expect-error ts-migrate(2559) FIXME: Type '{ accentColor: string; disabled: boolean; la... Remove this comment to see the full error message
 FormattingBarButton.defaultProps = defaultProps;
+
 export default FormattingBarButton;

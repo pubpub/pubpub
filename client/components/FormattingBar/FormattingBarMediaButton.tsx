@@ -41,7 +41,6 @@ const FormattingBarMediaButton = React.forwardRef((props, ref) => {
 			<FormattingBarButton
 				{...restProps}
 				ref={ref}
-				// @ts-expect-error ts-migrate(2322) FIXME: Property 'isIndicated' does not exist on type 'Int... Remove this comment to see the full error message
 				isIndicated={isIndicated}
 				isOpen={isOpen}
 				isSmall={isSmall}
