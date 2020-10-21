@@ -211,7 +211,10 @@ const LayoutEditorPubs = (props: Props) => {
 						value={sort}
 						onChange={(evt) => setSort(evt.target.value as PubSortOrder)}
 					>
-						<option value="creation-date">Creation date</option>
+						<option value="publish-date-reversed">First published</option>
+						<option value="publish-date">Recently published</option>
+						<option value="creation-date-reversed">First created</option>
+						<option value="creation-date">Recently created</option>
 						<option value="collection-rank">Collection order</option>
 					</select>
 				</div>
@@ -242,7 +245,7 @@ const LayoutEditorPubs = (props: Props) => {
 					minimal={true}
 					popoverClassName="order-picker-popover"
 				>
-					<Button rightIcon="caret-down">Pin Pubs to top</Button>
+					<Button rightIcon="caret-down">Pin to top</Button>
 				</Popover>
 			</InputField>
 		);

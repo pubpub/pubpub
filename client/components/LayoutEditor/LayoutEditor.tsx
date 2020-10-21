@@ -167,7 +167,7 @@ class LayoutEditor extends Component<Props, State> {
 					insertIndex={0}
 					onInsert={this.handleInsert}
 					communityData={this.props.communityData}
-					pubSort={this.props.collectionId ? 'collection-rank' : 'creation-date'}
+					pubSort={this.props.collectionId ? 'collection-rank' : 'publish-date'}
 				/>
 				{this.state.layout.map((item, index) => {
 					const validType = validBlockTypes.indexOf(item.type) > -1;
@@ -264,7 +264,7 @@ class LayoutEditor extends Component<Props, State> {
 								onInsert={this.handleInsert}
 								communityData={this.props.communityData}
 								pubSort={
-									this.props.collectionId ? 'collection-rank' : 'creation-date'
+									this.props.collectionId ? 'collection-rank' : 'publish-date'
 								}
 							/>
 						</div>
