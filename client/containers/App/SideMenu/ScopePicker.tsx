@@ -76,7 +76,7 @@ const ScopePicker = () => {
 				placement="bottom-start"
 				className="scope-menu"
 			>
-				<ScopeDropdown />
+				<ScopeDropdown isDashboard />
 			</MenuButton>
 		</div>
 	);
