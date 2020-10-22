@@ -10,6 +10,8 @@ import FormattingBarButton from './FormattingBarButton';
 import FormattingBarPopover from './FormattingBarPopover';
 import { positionNearSelection } from './positioning';
 import { usePubData } from 'client/containers/Pub/pubHooks';
+import { FormattingBarButtonData } from './types';
+import { getButtonPopoverComponent } from './utils';
 
 require('./formattingBar.scss');
 
@@ -26,13 +28,7 @@ type OwnProps = {
 			attrs?: any;
 		};
 	};
-	buttons: {
-		key: string;
-		title: string;
-		ariaTitle?: string;
-		icon: string;
-		isToggle?: boolean;
-	}[];
+	buttons: FormattingBarButtonData[];
 	showBlockTypes?: boolean;
 	isSmall?: boolean;
 	isTranslucent?: boolean;
@@ -205,7 +201,7 @@ const FormattingBar = (props: Props) => {
 		setOpenedButton(null);
 	}, [setOpenedButton]);
 
-	const renderButton = (button) => {
+	const renderButton = (button: FormattingBarButtonData) => {
 		const matchingMenuItem = menuItemByKey(button.key);
 		const insertFunction = insertFunctions && insertFunctions[button.key];
 		// @ts-expect-error ts-migrate(2339) FIXME: Property 'canRun' does not exist on type '{}'.
@@ -221,6 +217,7 @@ const FormattingBar = (props: Props) => {
 		);
 		const maybeEditorChangeObject =
 			button.key === 'media' ? { editorChangeObject: editorChangeObject } : {};
+		const PopoverComponent = getButtonPopoverComponent(button, isDisabled);
 
 		return (
 			<ToolbarItem
@@ -235,7 +232,7 @@ const FormattingBar = (props: Props) => {
 				isOpen={isOpen}
 				isDetached={isOpen && !!controlsPosition}
 				isSmall={isSmall}
-				PopoverComponent={button.PopoverComponent}
+				popoverContent={PopoverComponent && <PopoverComponent />}
 				accentColor={communityData.accentColorDark}
 				// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 2.
 				onClick={(evt) => handleButtonClick(button, evt)}

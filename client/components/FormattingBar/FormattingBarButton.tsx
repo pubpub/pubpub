@@ -24,7 +24,7 @@ export type FormattingBarButtonProps = {
 	label: string;
 	onClick: (formattingItem: FormattingItem) => unknown;
 	outerRef: React.RefObject<any>;
-	PopoverComponent?: React.ComponentType<{ pubData: any }>;
+	popoverContent?: JSX.Element;
 	pubData: any;
 };
 
@@ -68,7 +68,7 @@ const FormattingBarButton = React.forwardRef<unknown, FormattingBarButtonProps>(
 		onClick,
 		accentColor = 'white',
 		outerRef,
-		PopoverComponent,
+		popoverContent,
 		pubData,
 		...restProps
 	} = props;
@@ -99,10 +99,10 @@ const FormattingBarButton = React.forwardRef<unknown, FormattingBarButtonProps>(
 		</Button>
 	);
 
-	if (PopoverComponent) {
+	if (popoverContent) {
 		button = (
 			<Popover
-				content={<PopoverComponent pubData={pubData} />}
+				content={popoverContent}
 				interactionKind={PopoverInteractionKind.HOVER}
 				modifiers={popoverModifiers}
 				openOnTargetFocus

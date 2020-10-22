@@ -11,6 +11,7 @@ import ControlsTable from './controlComponents/ControlsTable';
 import MediaButton from './FormattingBarMediaButton';
 import { positionNearSelection, positionNearLink } from './positioning';
 import { NodeLabelMap } from '../Editor/types';
+import { FormattingBarButtonData, FormattingBarPopoverCondition } from './types';
 
 const triggerOnClick = (changeObject) => {
 	const { latestDomEvent } = changeObject;
@@ -45,21 +46,21 @@ const showOrTriggerTable = (editorChangeObject) => {
 	);
 };
 
-export const strong = {
+export const strong: FormattingBarButtonData = {
 	key: 'strong',
 	title: 'Bold',
 	icon: 'bold',
 	isToggle: true,
 };
 
-export const em = {
+export const em: FormattingBarButtonData = {
 	key: 'em',
 	title: 'Italic',
 	icon: 'italic',
 	isToggle: true,
 };
 
-export const link = {
+export const link: FormattingBarButtonData = {
 	key: 'link',
 	title: 'Link',
 	icon: 'link',
@@ -79,46 +80,46 @@ export const link = {
 	},
 };
 
-export const bulletList = {
+export const bulletList: FormattingBarButtonData = {
 	key: 'bullet-list',
 	title: 'Bullet List',
 	icon: 'list-ul',
 };
 
-export const numberedList = {
+export const numberedList: FormattingBarButtonData = {
 	key: 'numbered-list',
 	title: 'Numbered List',
 	icon: 'list-ol',
 };
 
-export const blockquote = {
+export const blockquote: FormattingBarButtonData = {
 	key: 'blockquote',
 	title: 'Blockquote',
 	icon: 'citation',
 };
 
-export const code = {
+export const code: FormattingBarButtonData = {
 	key: 'code',
 	title: 'Code',
 	icon: 'code',
 	isToggle: true,
 };
 
-export const subscript = {
+export const subscript: FormattingBarButtonData = {
 	key: 'subscript',
 	title: 'Subscript',
 	icon: 'subscript',
 	isToggle: true,
 };
 
-export const superscript = {
+export const superscript: FormattingBarButtonData = {
 	key: 'superscript',
 	title: 'Superscript',
 	icon: 'superscript',
 	isToggle: true,
 };
 
-export const strikethrough = {
+export const strikethrough: FormattingBarButtonData = {
 	key: 'strikethrough',
 	title: 'Strikethrough',
 	ariaTitle: 'strike through',
@@ -126,7 +127,7 @@ export const strikethrough = {
 	isToggle: true,
 };
 
-export const citation = {
+export const citation: FormattingBarButtonData = {
 	key: 'citation',
 	title: 'Citation',
 	icon: 'bookmark',
@@ -135,12 +136,12 @@ export const citation = {
 
 const canInsertReference = (pubData: any) => {
 	return (
-		!pubData.nodeLabels ||
-		!Object.values(pubData.nodeLabels as NodeLabelMap).some((nodeLabel) => nodeLabel.enabled)
+		pubData.nodeLabels &&
+		Object.values(pubData.nodeLabels as NodeLabelMap).some((nodeLabel) => nodeLabel.enabled)
 	);
 };
 
-export const reference = {
+export const reference: FormattingBarButtonData = {
 	key: 'reference',
 	title: 'Reference',
 	icon: 'at',
@@ -148,31 +149,34 @@ export const reference = {
 		position: positionNearSelection,
 		showCloseButton: false,
 	}),
-	isDisabled: canInsertReference,
-	PopoverComponent: ControlsReferencePopover,
+	isDisabled: (pubData: any) => !canInsertReference(pubData),
+	popover: {
+		condition: FormattingBarPopoverCondition.Disabled,
+		component: ControlsReferencePopover,
+	},
 };
 
-export const equation = {
+export const equation: FormattingBarButtonData = {
 	key: 'equation',
 	title: 'Equation',
 	icon: 'function',
 	controls: nodeControls(ControlsEquation, ['equation', 'block_equation']),
 };
 
-export const footnote = {
+export const footnote: FormattingBarButtonData = {
 	key: 'footnote',
 	title: 'Footnote',
 	icon: 'asterisk',
 	controls: nodeControls(ControlsFootnoteCitation, 'footnote'),
 };
 
-export const horizontalRule = {
+export const horizontalRule: FormattingBarButtonData = {
 	key: 'horizontal_rule',
 	title: 'Horizontal Line',
 	icon: 'minus',
 };
 
-export const table = {
+export const table: FormattingBarButtonData = {
 	key: 'table',
 	title: 'Table',
 	icon: 'th',
@@ -187,7 +191,7 @@ export const table = {
 	},
 };
 
-export const media = {
+export const media: FormattingBarButtonData = {
 	key: 'media',
 	title: 'Media',
 	icon: 'media',

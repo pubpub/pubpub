@@ -3,7 +3,7 @@ import React, { useEffect, useState, useMemo, useRef, useCallback } from 'react'
 import { ReferencesDropdown } from 'components';
 import { getReferenceableNodes, NodeReference } from 'components/Editor/utils/references';
 import { EditorChangeObject } from 'client/types';
-import { usePubContext } from 'client/containers/Pub/pubHooks';
+import { usePubContext, usePubData } from 'client/containers/Pub/pubHooks';
 import { getDashUrl } from 'utils/dashboard';
 
 require('./controlsReference.scss');
@@ -56,12 +56,8 @@ const ControlsReference = (props: ControlsReferenceProps) => {
 	);
 };
 
-type ControlsReferencePopoverProps = {
-	pubData: any;
-};
-
-export const ControlsReferencePopover = (props: ControlsReferencePopoverProps) => {
-	const { pubData } = props;
+export const ControlsReferencePopover = () => {
+	const pubData = usePubData();
 
 	return (
 		<p className="controls-reference-popover-component">
