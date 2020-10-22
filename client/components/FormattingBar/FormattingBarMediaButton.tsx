@@ -42,7 +42,6 @@ const FormattingBarMediaButton = React.forwardRef<unknown, FormattingBarMediaBut
 					isSmall={isSmall}
 					label="Media"
 					onClick={isIndicated || isOpen ? onClick : () => setModalOpen(true)}
-					pubData={pubData}
 				/>
 			</>
 		);
