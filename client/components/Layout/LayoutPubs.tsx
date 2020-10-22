@@ -3,14 +3,16 @@ import React from 'react';
 import { PubPreview } from 'components';
 import { Pub } from 'utils/types';
 import { LayoutBlockPubs } from 'utils/layout/types';
+import { createReadingParamUrl } from 'client/utils/collections';
 
 type Props = {
 	content: LayoutBlockPubs['content'];
 	pubs: Pub[];
+	collectionId?: string;
 };
 
 const LayoutPubs = (props: Props) => {
-	const { pubs, content } = props;
+	const { pubs, content, collectionId } = props;
 	const {
 		hideByline,
 		hideContributors,
@@ -21,6 +23,10 @@ const LayoutPubs = (props: Props) => {
 		title,
 	} = content;
 	const isTwoColumn = ['medium', 'minimal'].includes(pubPreviewType);
+
+	const customizePubUrlProps = collectionId
+		? { customizePubUrl: (url) => createReadingParamUrl(url, collectionId) }
+		: {};
 
 	const renderPubRow = (currentPub: Pub, index: number, allPubs: Pub[]) => {
 		if (isTwoColumn && index % 2 === 1) {
@@ -38,6 +44,7 @@ const LayoutPubs = (props: Props) => {
 						hideDates={hideDates}
 						hideEdges={hideEdges}
 						hideContributors={hideContributors}
+						{...customizePubUrlProps}
 					/>
 				</div>
 				{nextPub && (
@@ -50,6 +57,7 @@ const LayoutPubs = (props: Props) => {
 							hideDates={hideDates}
 							hideEdges={hideEdges}
 							hideContributors={hideContributors}
+							{...customizePubUrlProps}
 						/>
 					</div>
 				)}

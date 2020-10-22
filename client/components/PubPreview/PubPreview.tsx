@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import classNames from 'classnames';
 import dateFormat from 'dateformat';
 
-import { Pub } from 'utils/types';
+import { Pub, Community } from 'utils/types';
 import { getResizedUrl } from 'utils/images';
 import { getPubPublishedDate } from 'utils/pub/pubDates';
 import { isPubPublic } from 'utils/pub/permissions';
@@ -26,13 +26,25 @@ type Props = {
 	hideDates?: boolean;
 	hideContributors?: boolean;
 	hideEdges?: boolean;
-	customPubUrl?: string;
+	customizePubUrl?: (url: string) => string;
+};
+
+const getPubUrl = (
+	pubData: Pub,
+	communityData: Community,
+	customizePubUrl: Props['customizePubUrl'],
+) => {
+	const proposedPubUrl = bestPubUrl({ pubData: pubData, communityData: communityData });
+	if (customizePubUrl) {
+		return customizePubUrl(proposedPubUrl);
+	}
+	return proposedPubUrl;
 };
 
 const PubPreview = (props: Props) => {
 	const {
 		communityData,
-		customPubUrl = null,
+		customizePubUrl,
 		hideByline = false,
 		hideContributors = false,
 		hideDates = false,
@@ -56,9 +68,7 @@ const PubPreview = (props: Props) => {
 	const showContributors = !hideContributors && ['large', 'medium', 'small'].includes(size);
 	const showDescription = pubData.description && !hideDescription;
 	const showExpandButton = canExpand && ['large', 'medium'].includes(size);
-	const pubLink =
-		customPubUrl ||
-		bestPubUrl({ pubData: pubData, communityData: communityData || localCommunityData });
+	const pubLink = getPubUrl(pubData, communityData || localCommunityData, customizePubUrl);
 
 	const renderByline = () => (
 		<ManyAuthorsByline

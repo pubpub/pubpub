@@ -29,7 +29,12 @@ const Layout = (props: Props) => {
 		if (block.type === 'pubs') {
 			return (
 				<div className="layout-pubs-block">
-					<LayoutPubs key={index} content={block.content} pubs={pubBlocksLists[index]} />
+					<LayoutPubs
+						key={index}
+						content={block.content}
+						pubs={pubBlocksLists[index]}
+						collectionId={collectionId}
+					/>
 				</div>
 			);
 		}
