@@ -34,10 +34,10 @@ const sortPubsByPublishDate = (pubs: Pub[], reversed = false) => {
 			return reverseFactor * (pubDateB - pubDateA);
 		}
 		if (pubDateA) {
-			return -1;
+			return -1 * reverseFactor;
 		}
 		if (pubDateB) {
-			return 1;
+			return reverseFactor;
 		}
 		return 0;
 	});
