@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { AnchorButton, Button } from '@blueprintjs/core';
-import { useBeforeUnload } from 'react-use';
+import { useUpdateEffect } from 'react-use';
 
 import { communityUrl } from 'utils/canonicalUrls';
 import { getDefaultLayout } from 'utils/pages';
@@ -18,6 +18,7 @@ import {
 	LayoutEditor,
 } from 'components';
 import { Page, Pub } from 'utils/types';
+import { usePersistableState } from 'client/utils/usePersistableState';
 
 import PageDelete from './PageDelete';
 
@@ -30,21 +31,42 @@ type Props = {
 const defaultLayout = getDefaultLayout();
 
 const DashboardPages = (props: Props) => {
-	const [persistedPageData, setPersistedPageData] = useState(props.pageData);
-	const [pendingPageData, setPendingPageData] = useState({});
-	const [isPersisting, setIsPersisting] = useState(false);
 	const { updateCommunity, locationData, scopeData } = usePageContext();
 	const { pendingPromise } = usePendingChanges();
-	const hasPendingChanges = Object.keys(pendingPageData).length > 0;
 
 	const {
 		elements: { activeCommunity },
 	} = scopeData;
 
-	const pageData = {
-		...persistedPageData,
-		...pendingPageData,
-	};
+	const {
+		error,
+		state: pageData,
+		persistedState: persistedPageData,
+		update: updatePageData,
+		hasChanges,
+		persist,
+		isPersisting,
+	} = usePersistableState(props.pageData, (update) =>
+		pendingPromise(
+			apiFetch('/api/pages', {
+				method: 'PUT',
+				body: JSON.stringify({
+					...update,
+					pageId: pageData.id,
+					communityId: activeCommunity.id,
+				}),
+			}),
+		).then(() => {
+			updateCommunity((communityData) => ({
+				pages: communityData.pages.map((page) => {
+					if (page.id !== pageData.id) {
+						return page;
+					}
+					return { ...page, ...update };
+				}),
+			}));
+		}),
+	);
 
 	const {
 		avatar,
@@ -57,59 +79,27 @@ const DashboardPages = (props: Props) => {
 		title,
 		viewHash,
 	} = pageData;
+	const isHome = !persistedPageData.slug;
 
-	useBeforeUnload(
-		hasPendingChanges,
-		'You have unsaved changes to this Page. Are you sure you want to navigate away?',
-	);
+	const slugError = error?.fields?.slug
+		? 'This slug is not available because it is in use by another Collection or Page.'
+		: '';
 
-	const updatePageData = (update) => {
-		setPendingPageData({ ...pendingPageData, ...update });
-	};
-
-	const handleSaveChanges = () => {
-		setIsPersisting(true);
-		return pendingPromise(
-			apiFetch('/api/pages', {
-				method: 'PUT',
-				body: JSON.stringify({
-					...pendingPageData,
-					pageId: pageData.id,
-					communityId: activeCommunity.id,
+	useUpdateEffect(() => {
+		if (!hasChanges) {
+			window.history.replaceState(
+				{},
+				'',
+				getDashUrl({
+					mode: 'pages',
+					subMode: slug,
 				}),
-			}),
-		)
-			.then((updatedValues) => {
-				const newPageData = { ...persistedPageData, ...pendingPageData };
-				setPendingPageData({});
-				setIsPersisting(false);
-				setPersistedPageData(newPageData);
-				updateCommunity((communityData) => ({
-					pages: communityData.pages.map((page) => {
-						if (page.id !== pageData.id) {
-							return page;
-						}
-						return {
-							...page,
-							...newPageData,
-						};
-					}),
-				}));
-				if (updatedValues.slug && locationData.params.slug !== updatedValues.slug) {
-					window.location.href = getDashUrl({
-						mode: 'pages',
-						subMode: updatedValues.slug,
-					});
-				}
-			})
-			.catch((err) => {
-				console.error(err);
-				setIsPersisting(false);
-			});
-	};
+			);
+		}
+	}, [slug, hasChanges]);
 
 	const renderControls = () => {
-		const canPersistChanges = hasPendingChanges && title && (slug || !persistedPageData.slug);
+		const canPersistChanges = hasChanges && title && (slug || !persistedPageData.slug);
 		return (
 			<React.Fragment>
 				<AnchorButton icon="share" href={`/${slug}`}>
@@ -121,7 +111,7 @@ const DashboardPages = (props: Props) => {
 					text="Save Changes"
 					disabled={!canPersistChanges}
 					loading={isPersisting}
-					onClick={handleSaveChanges}
+					onClick={persist}
 				/>
 			</React.Fragment>
 		);
@@ -159,17 +149,17 @@ const DashboardPages = (props: Props) => {
 					canClear={true}
 					helperText="Used in social media cards"
 				/>
-				{slug && (
+				{!isHome && (
 					<InputField
 						label="Link"
 						placeholder="Enter link"
 						isRequired={true}
 						helperText={`Page URL will be https://${locationData.hostname}/${slug}`}
 						value={slug}
+						error={slugError}
 						onChange={(evt) =>
 							updatePageData({ slug: slugifyString(evt.target.value) })
 						}
-						error={undefined}
 					/>
 				)}
 				<InputField label="Width">
@@ -186,7 +176,7 @@ const DashboardPages = (props: Props) => {
 						/>
 					</div>
 				</InputField>
-				{slug && (
+				{!isHome && (
 					<InputField label="Privacy">
 						<div className="bp3-button-group">
 							<Button

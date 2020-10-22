@@ -12,8 +12,8 @@ const SideMenu = () => {
 	const { locationData, communityData, scopeData } = usePageContext();
 	const { activeCounts, activePermissions, elements } = scopeData;
 	const { canManage } = activePermissions;
-	const { activeTargetType } = elements;
-	const collectionSlug = locationData.params.collectionSlug || locationData.query.collectionSlug;
+	const { activeTargetType, activeCollection } = elements;
+	const collectionSlug = activeCollection && activeCollection.slug;
 	const pubSlug = locationData.params.pubSlug;
 
 	const backgroundColor = Color(communityData.accentColorDark)

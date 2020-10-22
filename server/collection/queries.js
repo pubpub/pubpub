@@ -1,7 +1,9 @@
 import { Collection, CollectionPub, Community } from 'server/models';
+import { slugIsAvailable, findAcceptableSlug } from 'server/utils/slugs';
 import { normalizeMetadataToKind } from 'utils/collections/metadata';
 import { slugifyString } from 'utils/strings';
 import { generateHash } from 'utils/hashes';
+import { PubPubError } from 'server/utils/errors';
 
 export const generateDefaultCollectionLayout = (title) => {
 	return {
@@ -56,11 +58,11 @@ export const createCollection = ({
 	id = null,
 	slug = null,
 }) => {
-	return Community.findOne({ where: { id: communityId } }).then((community) => {
+	return Community.findOne({ where: { id: communityId } }).then(async (community) => {
 		const normalizedTitle = title.trim();
 		const collection = {
 			title: normalizedTitle,
-			slug: slug || slugifyString(title),
+			slug: await findAcceptableSlug(slug || slugifyString(title), communityId),
 			isRestricted: true,
 			isPublic: isPublic,
 			viewHash: generateHash(8),
@@ -80,7 +82,7 @@ export const createCollection = ({
 	});
 };
 
-export const updateCollection = (inputValues, updatePermissions) => {
+export const updateCollection = async (inputValues, updatePermissions) => {
 	// Filter to only allow certain fields to be updated
 	const filteredValues = {};
 	Object.keys(inputValues).forEach((key) => {
@@ -88,6 +90,18 @@ export const updateCollection = (inputValues, updatePermissions) => {
 			filteredValues[key] = inputValues[key];
 		}
 	});
+
+	if (filteredValues.slug) {
+		filteredValues.slug = slugifyString(filteredValues.slug);
+		const available = await slugIsAvailable({
+			slug: filteredValues.slug,
+			communityId: inputValues.communityId,
+			activeElementId: inputValues.collectionId,
+		});
+		if (!available) {
+			throw new PubPubError.InvalidFieldsError('slug');
+		}
+	}
 
 	return Collection.update(filteredValues, {
 		where: { id: inputValues.collectionId },
