@@ -25,7 +25,6 @@ export type FormattingBarButtonProps = {
 	onClick: (formattingItem: FormattingItem) => unknown;
 	outerRef: React.RefObject<any>;
 	popoverContent?: JSX.Element;
-	pubData: any;
 };
 
 const getOuterStyle = (accentColor, isOpen, isDetached) => {
@@ -69,7 +68,6 @@ const FormattingBarButton = React.forwardRef<unknown, FormattingBarButtonProps>(
 		accentColor = 'white',
 		outerRef,
 		popoverContent,
-		pubData,
 		...restProps
 	} = props;
 

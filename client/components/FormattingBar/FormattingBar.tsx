@@ -4,12 +4,12 @@ import { Toolbar, ToolbarItem, useToolbarState } from 'reakit';
 
 import { usePageContext } from 'utils/hooks';
 import { useRefMap } from 'client/utils/useRefMap';
+import { usePubData } from 'client/containers/Pub/pubHooks';
 
 import BlockTypeSelector from './BlockTypeSelector';
 import FormattingBarButton from './FormattingBarButton';
 import FormattingBarPopover from './FormattingBarPopover';
 import { positionNearSelection } from './positioning';
-import { usePubData } from 'client/containers/Pub/pubHooks';
 import { FormattingBarButtonData } from './types';
 import { getButtonPopoverComponent } from './utils';
 
