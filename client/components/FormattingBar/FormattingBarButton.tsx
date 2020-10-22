@@ -14,8 +14,8 @@ export type FormattingItem = {
 
 export type FormattingBarButtonProps = {
 	accentColor: string;
-	formattingItem: FormattingItem;
 	disabled?: boolean;
+	formattingItem: FormattingItem;
 	isActive?: boolean;
 	isDetached?: boolean;
 	isIndicated?: boolean;
@@ -52,6 +52,8 @@ const getIndicatorStyle = (accentColor) => {
 		background: accentColor,
 	};
 };
+
+const popoverModifiers = { preventOverflow: { enabled: false }, flip: { enabled: false } };
 
 const FormattingBarButton = React.forwardRef<unknown, FormattingBarButtonProps>((props, ref) => {
 	const {
@@ -101,10 +103,10 @@ const FormattingBarButton = React.forwardRef<unknown, FormattingBarButtonProps>(
 		button = (
 			<Popover
 				content={<PopoverComponent pubData={pubData} />}
-				position={Position.BOTTOM}
-				modifiers={{ preventOverflow: { enabled: false }, flip: { enabled: false } }}
-				openOnTargetFocus={true}
 				interactionKind={PopoverInteractionKind.HOVER}
+				modifiers={popoverModifiers}
+				openOnTargetFocus
+				position={Position.BOTTOM}
 			>
 				{button}
 			</Popover>
