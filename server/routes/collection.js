@@ -6,8 +6,9 @@ import Html from 'server/Html';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
-import { getPubsForLayout } from 'server/utils/queryHelpers/layout';
+import { enrichCollectionWithPubTokens, getPubsForLayout } from 'server/utils/queryHelpers/layout';
 import { sequelize, Collection, Page } from 'server/models';
+import { withValue } from 'utils/fp';
 
 const findCollectionByPartialId = (maybePartialId) => {
 	return Collection.findOne({
@@ -29,7 +30,11 @@ app.get(
 		const { collectionSlug } = req.params;
 		const initialData = await getInitialData(req);
 		const { communityData } = initialData;
-		const collection = communityData.collections.find((c) => c.slug === collectionSlug);
+
+		const collection = withValue(
+			communityData.collections.find((c) => c.slug === collectionSlug),
+			(c) => c && enrichCollectionWithPubTokens(c, initialData),
+		);
 
 		if (collection) {
 			const { pageId, layout } = collection;
@@ -42,9 +47,8 @@ app.get(
 			}
 
 			if (layout) {
-				const { blocks } = layout;
 				const pubs = await getPubsForLayout({
-					blocks: blocks,
+					blocks: layout.blocks,
 					initialData: initialData,
 					scopedToCollectionId: collection.id,
 				});
