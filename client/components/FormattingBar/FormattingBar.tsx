@@ -236,7 +236,6 @@ const FormattingBar = (props: Props) => {
 				accentColor={communityData.accentColorDark}
 				// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 2.
 				onClick={(evt) => handleButtonClick(button, evt)}
-				pubData={pubData}
 				{...maybeEditorChangeObject}
 			/>
 		);
@@ -308,6 +307,7 @@ const FormattingBar = (props: Props) => {
 							onClose={onClose}
 							isSmall={isSmall}
 							citationStyle={citationStyle}
+							pubData={pubData}
 						/>
 					)}
 				</FormattingBarPopover>
