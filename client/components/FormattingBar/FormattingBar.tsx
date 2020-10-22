@@ -235,7 +235,7 @@ const FormattingBar = (props: Props) => {
 				isOpen={isOpen}
 				isDetached={isOpen && !!controlsPosition}
 				isSmall={isSmall}
-				renderPopover={button.renderPopover}
+				PopoverComponent={button.PopoverComponent}
 				accentColor={communityData.accentColorDark}
 				// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 2.
 				onClick={(evt) => handleButtonClick(button, evt)}

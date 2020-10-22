@@ -5,14 +5,14 @@ import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 
 import { Icon } from 'components';
 
-type FormattingItem = {
+export type FormattingItem = {
 	ariaTitle?: string;
 	title: string;
 	isToggle?: string;
 	icon: string;
 };
 
-type FormattingBarButtonProps = {
+export type FormattingBarButtonProps = {
 	accentColor: string;
 	formattingItem: FormattingItem;
 	disabled?: boolean;
@@ -24,7 +24,7 @@ type FormattingBarButtonProps = {
 	label: string;
 	onClick: (formattingItem: FormattingItem) => unknown;
 	outerRef: React.RefObject<any>;
-	renderPopover?: (pubData: any) => string;
+	PopoverComponent?: React.ComponentType<{ pubData: any }>;
 	pubData: any;
 };
 
@@ -66,7 +66,7 @@ const FormattingBarButton = React.forwardRef<unknown, FormattingBarButtonProps>(
 		onClick,
 		accentColor = 'white',
 		outerRef,
-		renderPopover,
+		PopoverComponent,
 		pubData,
 		...restProps
 	} = props;
@@ -97,12 +97,10 @@ const FormattingBarButton = React.forwardRef<unknown, FormattingBarButtonProps>(
 		</Button>
 	);
 
-	const popoverContent = renderPopover && renderPopover(pubData);
-
-	if (popoverContent) {
+	if (PopoverComponent) {
 		button = (
 			<Popover
-				content={popoverContent}
+				content={<PopoverComponent pubData={pubData} />}
 				position={Position.BOTTOM}
 				modifiers={{ preventOverflow: { enabled: false }, flip: { enabled: false } }}
 				openOnTargetFocus={true}
@@ -129,8 +127,5 @@ const FormattingBarButton = React.forwardRef<unknown, FormattingBarButtonProps>(
 		</span>
 	);
 });
-
-// @ts-expect-error ts-migrate(2559) FIXME: Type '{ accentColor: string; disabled: boolean; la... Remove this comment to see the full error message
-FormattingBarButton.defaultProps = defaultProps;
 
 export default FormattingBarButton;

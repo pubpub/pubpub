@@ -4,6 +4,9 @@ import { ReferencesDropdown } from 'components';
 import { getReferenceableNodes, NodeReference } from 'components/Editor/utils/references';
 import { EditorChangeObject } from 'client/types';
 import { usePubContext } from 'client/containers/Pub/pubHooks';
+import { getDashUrl } from 'utils/dashboard';
+
+require('./controlsReference.scss');
 
 export type ControlsReferenceProps = {
 	editorChangeObject: EditorChangeObject;
@@ -50,6 +53,30 @@ const ControlsReference = (props: ControlsReferenceProps) => {
 			selectedReference={target}
 			onSelect={onSelect}
 		/>
+	);
+};
+
+type ControlsReferencePopoverProps = {
+	pubData: any;
+};
+
+export const ControlsReferencePopover = (props: ControlsReferencePopoverProps) => {
+	const { pubData } = props;
+
+	return (
+		<p className="controls-reference-popover-component">
+			Visit{' '}
+			<a
+				href={getDashUrl({
+					pubSlug: pubData.slug,
+					mode: 'settings',
+					section: 'block-labels',
+				})}
+			>
+				Pub Settings
+			</a>{' '}
+			to turn on labeling and enable references.
+		</p>
 	);
 };
 

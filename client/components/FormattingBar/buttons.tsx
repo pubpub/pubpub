@@ -4,7 +4,7 @@ import { getDashUrl } from 'utils/dashboard';
 import ControlsEquation from './controlComponents/ControlsEquation';
 import ControlsFootnoteCitation from './controlComponents/ControlsFootnoteCitation/ControlsFootnoteCitation';
 import ControlsLink from './controlComponents/ControlsLink';
-import ControlsReference from './controlComponents/ControlsReference';
+import ControlsReference, { ControlsReferencePopover } from './controlComponents/ControlsReference';
 
 import ControlsMedia from './controlComponents/ControlsMedia/ControlsMedia';
 import ControlsTable from './controlComponents/ControlsTable';
@@ -140,6 +140,7 @@ const canInsertReference = (pubData: any) => {
 	);
 };
 
+const referencePopoverStyles = { maxWidth: 150, padding: '12 12 0' };
 export const reference = {
 	key: 'reference',
 	title: 'Reference',
@@ -149,27 +150,7 @@ export const reference = {
 		showCloseButton: false,
 	}),
 	isDisabled: canInsertReference,
-	renderPopover: (pubData: any) => {
-		if (!canInsertReference(pubData)) {
-			return null;
-		}
-
-		return (
-			<p style={{ maxWidth: 150, padding: '12 12 0' }}>
-				Visit{' '}
-				<a
-					href={getDashUrl({
-						pubSlug: pubData.slug,
-						mode: 'settings',
-						section: 'block-labels',
-					})}
-				>
-					Pub Settings
-				</a>{' '}
-				to turn on labeling and enable references.
-			</p>
-		);
-	},
+	PopoverComponent: ControlsReferencePopover,
 };
 
 export const equation = {
