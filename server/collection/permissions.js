@@ -16,7 +16,6 @@ export const getPermissions = async ({ userId, communityId, collectionId }) => {
 	const editProps = [
 		'title',
 		'slug',
-		'isRestricted',
 		'isPublic',
 		'pageId',
 		'metadata',

@@ -605,7 +605,6 @@ export default {
 			collection: {
 				id: '65fc8561-31ea-4e2c-8067-b315dd7c933f',
 				title: '5. Essays in Exploration: Resisting Reduction',
-				isRestricted: true,
 				isPublic: true,
 				pageId: 'f7c79073-8110-40c2-9d4f-9d090673cec0',
 				communityId: '7808da6b-94d1-436d-ad79-2e036a8e4428',
@@ -633,7 +632,6 @@ export default {
 			collection: {
 				id: '1e1c0f1f-1873-4705-b6e0-934f588889c6',
 				title: 'Home',
-				isRestricted: true,
 				isPublic: true,
 				pageId: '1e1c0f1f-1873-4705-b6e0-934f588889c6',
 				communityId: '7808da6b-94d1-436d-ad79-2e036a8e4428',
