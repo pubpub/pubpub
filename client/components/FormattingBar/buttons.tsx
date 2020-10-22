@@ -140,7 +140,6 @@ const canInsertReference = (pubData: any) => {
 	);
 };
 
-const referencePopoverStyles = { maxWidth: 150, padding: '12 12 0' };
 export const reference = {
 	key: 'reference',
 	title: 'Reference',
