@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'reakit/button';
+import { Button } from 'reakit/Button';
 
 import { Byline, GridWrapper, ContributorAvatars, Icon, ClickToCopyButton } from 'components';
 import { Collection } from 'utils/types';
@@ -16,7 +16,6 @@ type Props = {
 	collection: Collection;
 	content: LayoutBlockCollectionHeader['content'];
 };
-
 
 const LayoutCollectionHeader = (props: Props) => {
 	const {
