@@ -104,6 +104,7 @@ const FormattingBarButton = React.forwardRef<unknown, FormattingBarButtonProps>(
 				interactionKind={PopoverInteractionKind.HOVER}
 				modifiers={popoverModifiers}
 				openOnTargetFocus
+				minimal
 				position={Position.BOTTOM}
 			>
 				{button}
