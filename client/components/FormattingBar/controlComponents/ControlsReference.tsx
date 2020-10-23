@@ -79,7 +79,7 @@ export const ControlsReferenceSettingsLink = (props: ControlsReferencePopoverCon
 	return (
 		<span className={classNames('controls-reference-settings-link', props.dark && 'dark')}>
 			{props.small ? (
-				<>Enable block labeling in {link}</>
+				<>Enable item labeling in {link}</>
 			) : (
 				<>Visit {link} to turn on labeling and enable references.</>
 			)}

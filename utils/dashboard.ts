@@ -33,7 +33,7 @@ export const getDashUrl = ({
 				.replace(/ /gi, '-')}`
 		: '';
 
-	return `${baseHref}${modeString}${subModeString}${section && `#${section}`}${baseQuery}`;
+	return `${baseHref}${modeString}${subModeString}${baseQuery}${section && `#${section}`}`;
 };
 
 export const groupPubs = ({ pubs, collections }) => {
