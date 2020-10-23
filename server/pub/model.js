@@ -45,6 +45,13 @@ export default (sequelize, dataTypes) => {
 			editHash: { type: dataTypes.STRING },
 			nodeLabels: { type: dataTypes.JSONB },
 
+			connectionListingView: {
+				type: dataTypes.ENUM,
+				values: ['list', 'carousel'],
+				defaultValue: 'carousel',
+			},
+			connectionDescriptionVisible: { type: dataTypes.BOOLEAN },
+
 			/* Set by Associations */
 			communityId: { type: dataTypes.UUID, allowNull: false },
 		},
