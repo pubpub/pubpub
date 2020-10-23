@@ -7,7 +7,13 @@ import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
 import { enrichCollectionWithPubTokens, getPubsForLayout } from 'server/utils/queryHelpers/layout';
-import { sequelize, Collection, Page } from 'server/models';
+import {
+	sequelize,
+	Collection,
+	Page,
+	CollectionAttribution,
+	includeUserModel,
+} from 'server/models';
 import { withValue } from 'utils/fp';
 
 const findCollectionByPartialId = (maybePartialId) => {
@@ -17,6 +23,13 @@ const findCollectionByPartialId = (maybePartialId) => {
 				[Op.iLike]: `${maybePartialId}%`,
 			}),
 		],
+	});
+};
+
+const enrichCollectionWithAttributions = async (collection) => {
+	collection.attributions = await CollectionAttribution.findAll({
+		where: { collectionId: collection.id },
+		include: [includeUserModel({ as: 'user' })],
 	});
 };
 
@@ -38,6 +51,8 @@ app.get(
 
 		if (collection) {
 			const { pageId, layout } = collection;
+
+			await enrichCollectionWithAttributions(collection);
 
 			if (pageId) {
 				const page = await Page.findOne({ where: { id: pageId } });

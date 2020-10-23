@@ -19,7 +19,99 @@ type Props = {
 		content: LayoutBlock['content'],
 	) => unknown;
 	pubSort: PubSortOrder;
+	showCollectionHeaderBlock: boolean;
 };
+
+const collectionHeaderBlock = {
+	type: 'collection-header',
+	title: 'Default',
+	content: {},
+};
+
+const htmlBlocks = [
+	{
+		title: 'Default',
+		type: 'html',
+		content: {
+			html: '',
+		},
+	},
+];
+
+const textBlocks = [
+	{
+		title: 'Default',
+		type: 'text',
+		content: {
+			text: undefined,
+			align: 'left',
+		},
+	},
+];
+
+const getPubsBlocks = (pubSort: PubSortOrder) => [
+	{
+		title: 'Default',
+		type: 'pubs',
+		content: {
+			title: '',
+			pubPreviewType: 'medium',
+			limit: 0,
+			pubIds: [],
+			collectionIds: [],
+			sort: pubSort,
+		},
+	},
+	{
+		title: 'Table of Contents',
+		type: 'pubs',
+		content: {
+			title: '',
+			pubPreviewType: 'small',
+			limit: 0,
+			pubIds: [],
+			collectionIds: [],
+			hideByline: true,
+			hideDates: true,
+			hideContributors: true,
+		},
+	},
+];
+
+const bannerBlocks = [
+	{
+		title: 'Default',
+		type: 'banner',
+		content: {
+			text: 'Hello',
+			align: 'center',
+			backgroundColor: '#3275d8',
+			backgroundImage: '',
+			backgroundSize: 'full',
+			showButton: false,
+			buttonText: '',
+			defaultCollectionIds: [],
+			buttonUrl: '',
+			buttonType: 'none',
+		},
+	},
+	{
+		title: 'Submission Button Banner',
+		type: 'banner',
+		content: {
+			text: 'Create a pub to begin your submission.',
+			align: 'center',
+			backgroundColor: '#3275d8',
+			backgroundImage: '',
+			backgroundSize: 'full',
+			showButton: true,
+			buttonText: '',
+			defaultCollectionIds: [],
+			buttonUrl: '',
+			buttonType: 'create-pub',
+		},
+	},
+];
 
 const newCollectionsPagesBlock = (communityData, useLegacyBlock) => {
 	const pagesToShow = communityData.pages.slice(0, 3);
@@ -46,97 +138,16 @@ const newCollectionsPagesBlock = (communityData, useLegacyBlock) => {
 };
 
 const LayoutEditorInsert = (props: Props) => {
-	const { insertIndex, onInsert, pubSort } = props;
+	const { insertIndex, onInsert, pubSort, showCollectionHeaderBlock } = props;
 	const {
 		scopeData: {
 			activePermissions: { isSuperAdmin },
 		},
 	} = usePageContext();
 
-	const pubsBlocks = [
-		{
-			title: 'Default',
-			type: 'pubs',
-			content: {
-				title: '',
-				pubPreviewType: 'medium',
-				limit: 0,
-				pubIds: [],
-				collectionIds: [],
-				sort: pubSort,
-			},
-		},
-		{
-			title: 'Table of Contents',
-			type: 'pubs',
-			content: {
-				title: '',
-				pubPreviewType: 'small',
-				limit: 0,
-				pubIds: [],
-				collectionIds: [],
-				hideByline: true,
-				hideDates: true,
-				hideContributors: true,
-			},
-		},
-	];
-	const bannerBlocks = [
-		{
-			title: 'Default',
-			type: 'banner',
-			content: {
-				text: 'Hello',
-				align: 'center',
-				backgroundColor: '#3275d8',
-				backgroundImage: '',
-				backgroundSize: 'full',
-				showButton: false,
-				buttonText: '',
-				defaultCollectionIds: [],
-				buttonUrl: '',
-				buttonType: 'none',
-			},
-		},
-		{
-			title: 'Submission Button Banner',
-			type: 'banner',
-			content: {
-				text: 'Create a pub to begin your submission.',
-				align: 'center',
-				backgroundColor: '#3275d8',
-				backgroundImage: '',
-				backgroundSize: 'full',
-				showButton: true,
-				buttonText: '',
-				defaultCollectionIds: [],
-				buttonUrl: '',
-				buttonType: 'create-pub',
-			},
-		},
-	];
 	const pagesCollectionsBlocks = [
 		newCollectionsPagesBlock(props.communityData, true),
 		isSuperAdmin && newCollectionsPagesBlock(props.communityData, false),
-	];
-	const htmlBlocks = [
-		{
-			title: 'Default',
-			type: 'html',
-			content: {
-				html: '',
-			},
-		},
-	];
-	const textBlocks = [
-		{
-			title: 'Default',
-			type: 'text',
-			content: {
-				text: undefined,
-				align: 'left',
-			},
-		},
 	];
 
 	const generateMenuItem = (item) => {
@@ -144,25 +155,34 @@ const LayoutEditorInsert = (props: Props) => {
 			<MenuItem
 				key={`insert-${item.type}-${item.title}`}
 				onClick={() => {
-					onInsert(insertIndex, item.type, item.content);
+					onInsert(insertIndex, item.type, { ...item.content });
 				}}
 				text={item.title}
 				shouldDismissPopover={true}
 			/>
 		);
 	};
+
 	return (
 		<div className="layout-editor-insert-component">
 			<Popover
 				content={
 					<Menu>
+						{showCollectionHeaderBlock && (
+							<>
+								<li className="bp3-menu-header">
+									<h6>Collection Header Block</h6>
+								</li>
+								{generateMenuItem(collectionHeaderBlock)}
+							</>
+						)}
 						<li className="bp3-menu-header">
 							<h6>
 								Pubs Block
 								<Icon icon="widget-header" />
 							</h6>
 						</li>
-						{pubsBlocks.map((item) => generateMenuItem(item))}
+						{getPubsBlocks(pubSort).map((item) => generateMenuItem(item))}
 						<li className="bp3-menu-header">
 							<h6>
 								Banner Block

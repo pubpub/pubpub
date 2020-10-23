@@ -67,6 +67,9 @@ const Layout = (props: Props) => {
 				</div>
 			);
 		}
+		if (block.type === 'collection-header' && collection) {
+			return <LayoutCollectionHeader content={block.content} collection={collection} />;
+		}
 		return null;
 	};
 
@@ -79,7 +82,6 @@ const Layout = (props: Props) => {
 				locationData.query.display === 'ultrawide' && 'ultrawide',
 			)}
 		>
-			{collection && <LayoutCollectionHeader collection={collection} content={{}} />}
 			{blocks.map(renderBlock)}
 		</div>
 	);

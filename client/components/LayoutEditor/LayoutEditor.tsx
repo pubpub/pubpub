@@ -13,6 +13,7 @@ import LayoutEditorPagesCollections from './LayoutEditorPagesCollections';
 import LayoutEditorText from './LayoutEditorText';
 import LayoutEditorHtml from './LayoutEditorHtml';
 import LayoutEditorBanner from './LayoutEditorBanner';
+import LayoutEditorCollectionHeader from './LayoutEditorCollectionHeader';
 
 require('./layoutEditor.scss');
 
@@ -41,9 +42,13 @@ const validBlockTypes = [
 	'banner',
 	'pages', // TODO(ian): Remove this after migration
 	'collections-pages',
+	'collection-header',
 ];
 
 const getTitleKindForBlock = (blockType: string) => {
+	if (blockType === 'collection-header') {
+		return 'Collection Header';
+	}
 	if (blockType === 'collections-pages') {
 		return 'Collections & Pages';
 	}
@@ -158,6 +163,7 @@ class LayoutEditor extends Component<Props, State> {
 	}
 
 	render() {
+		const { collection } = this.props;
 		const cannotRemoveLonePubsBlock =
 			!!this.props.collection &&
 			this.state.layout.filter((block) => block.type === 'pubs').length === 1;
@@ -167,7 +173,8 @@ class LayoutEditor extends Component<Props, State> {
 					insertIndex={0}
 					onInsert={this.handleInsert}
 					communityData={this.props.communityData}
-					pubSort={this.props.collection ? 'collection-rank' : 'creation-date'}
+					showCollectionHeaderBlock={!!collection}
+					pubSort={collection ? 'collection-rank' : 'creation-date'}
 				/>
 				{this.state.layout.map((item, index) => {
 					const validType = validBlockTypes.indexOf(item.type) > -1;
@@ -257,15 +264,23 @@ class LayoutEditor extends Component<Props, State> {
 										collections={this.props.communityData.collections}
 									/>
 								)}
+								{!!collection && item.type === 'collection-header' && (
+									<LayoutEditorCollectionHeader
+										key={`item-${item.id}`}
+										layoutIndex={index}
+										onChange={this.handleChangePartial}
+										collection={collection}
+										block={item}
+									/>
+								)}
 							</div>
 							<LayoutEditorInsert
 								key={`insert-${item.id}`}
 								insertIndex={index + 1}
 								onInsert={this.handleInsert}
 								communityData={this.props.communityData}
-								pubSort={
-									this.props.collection ? 'collection-rank' : 'creation-date'
-								}
+								showCollectionHeaderBlock={!!collection}
+								pubSort={collection ? 'collection-rank' : 'creation-date'}
 							/>
 						</div>
 					);

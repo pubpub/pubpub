@@ -89,10 +89,11 @@ export type LayoutBlockCollectionHeader = {
 	content: {
 		hideByline?: boolean;
 		hideContributors?: boolean;
+		hideDate?: boolean;
 		hideDoi?: boolean;
 		hideCollectionKind?: boolean;
-	}
-}
+	};
+};
 
 export type LayoutBlock =
 	| LayoutBlockBanner
@@ -100,6 +101,7 @@ export type LayoutBlock =
 	| LayoutBlockHtml
 	| LayoutBlockPages
 	| LayoutBlockPubs
-	| LayoutBlockText;
+	| LayoutBlockText
+	| LayoutBlockCollectionHeader;
 
 export type CollectionLayout = LayoutOptions & { blocks: LayoutBlock[] };

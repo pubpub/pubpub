@@ -8,6 +8,8 @@ export { default as CollectionMultiSelect } from './CollectionMultiSelect/Collec
 export { default as ColorInput } from './ColorInput/ColorInput';
 export { default as CommunityPreview } from './CommunityPreview/CommunityPreview';
 export { default as ConfirmDialog } from './ConfirmDialog/ConfirmDialog';
+export { default as ContributorAvatars } from './ContributorAvatars/ContributorAvatars';
+export { default as ContributorsList } from './ContributorsList/ContributorsList';
 export { default as DashboardFrame } from './DashboardFrame/DashboardFrame';
 export { default as DashboardRow } from './DashboardRow/DashboardRow';
 export { default as DashboardRowListing } from './DashboardRow/DashboardRowListing';

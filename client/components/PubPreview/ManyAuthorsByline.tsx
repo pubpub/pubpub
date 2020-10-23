@@ -3,13 +3,12 @@ import React from 'react';
 import Byline, { BylineProps } from 'components/Byline/Byline';
 import { naivePluralize } from 'utils/strings';
 import { getAllPubContributors } from 'utils/contributors';
+import { Pub } from 'utils/types';
 
 require('./manyAuthorsByline.scss');
 
 type Props = Omit<BylineProps, 'contributors'> & {
-	pubData: {
-		attributions?: any[];
-	};
+	pubData: Pub;
 	isExpanded: boolean;
 	truncateAt: number;
 };

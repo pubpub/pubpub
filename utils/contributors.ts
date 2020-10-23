@@ -1,7 +1,8 @@
 import ensureUserForAttribution from 'utils/ensureUserForAttribution';
 import { joinOxford } from 'utils/strings';
+import { Attribution, AttributionWithUser, Collection, Pub } from 'utils/types';
 
-const orderedContributors = (maybeContributors) =>
+const orderedContributors = (maybeContributors: Attribution[] | undefined) =>
 	(maybeContributors || []).concat().sort((a, b) => {
 		if (a.order !== b.order) {
 			return a.order - b.order;
@@ -12,7 +13,11 @@ const orderedContributors = (maybeContributors) =>
 		return 0;
 	});
 
-const resolveContributors = (contributors, hideAuthors, hideNonAuthors) => {
+const resolveContributors = (
+	contributors: AttributionWithUser[],
+	hideAuthors: boolean,
+	hideNonAuthors: boolean,
+) => {
 	const outputContributors = contributors.filter((attribution) => {
 		if (hideAuthors && attribution.isAuthor) {
 			return false;
@@ -23,7 +28,7 @@ const resolveContributors = (contributors, hideAuthors, hideNonAuthors) => {
 		return true;
 	});
 
-	const uniqueAuthorIds = [];
+	const uniqueAuthorIds: string[] = [];
 	return outputContributors.filter((attribution) => {
 		if (uniqueAuthorIds.includes(attribution.user.id)) {
 			return false;
@@ -33,7 +38,11 @@ const resolveContributors = (contributors, hideAuthors, hideNonAuthors) => {
 	});
 };
 
-export const getAllPubContributors = (pubData, hideAuthors = false, hideNonAuthors = false) => {
+export const getAllPubContributors = (
+	pubData: Pub,
+	hideAuthors = false,
+	hideNonAuthors = false,
+) => {
 	const { collectionPubs } = pubData;
 	const primaryCollectionPub = collectionPubs && collectionPubs.find((cp) => cp.isPrimary);
 	const primaryCollection = primaryCollectionPub && primaryCollectionPub.collection;
@@ -46,15 +55,19 @@ export const getAllPubContributors = (pubData, hideAuthors = false, hideNonAutho
 	return resolveContributors(contributors, hideAuthors, hideNonAuthors);
 };
 
-export const getAllCollectionContributors = (collectionData, hideAuthors, hideNonAuthors) => {
+export const getAllCollectionContributors = (
+	collectionData: Collection,
+	hideAuthors = false,
+	hideNonAuthors = false,
+) => {
 	return resolveContributors(
-		orderedContributors(collectionData.attributions),
+		orderedContributors(collectionData.attributions).map(ensureUserForAttribution),
 		hideAuthors,
 		hideNonAuthors,
 	);
 };
 
-export const getContributorName = (attribution) => {
+export const getContributorName = (attribution: Attribution) => {
 	if (attribution.user) {
 		return attribution.user.fullName;
 	}

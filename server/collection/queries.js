@@ -5,36 +5,14 @@ import { slugifyString } from 'utils/strings';
 import { generateHash } from 'utils/hashes';
 import { PubPubError } from 'server/utils/errors';
 
-export const generateDefaultCollectionLayout = (title) => {
+export const generateDefaultCollectionLayout = () => {
 	return {
 		isNarrow: false,
 		blocks: [
 			{
 				id: generateHash(8),
-				type: 'text',
-				content: {
-					text: {
-						type: 'doc',
-						attrs: {
-							meta: {},
-						},
-						content: [
-							{
-								type: 'heading',
-								attrs: {
-									level: 1,
-								},
-								content: [
-									{
-										text: title,
-										type: 'text',
-									},
-								],
-							},
-						],
-					},
-					align: 'left',
-				},
+				type: 'collection-header',
+				content: {},
 			},
 			{
 				type: 'pubs',
@@ -71,7 +49,7 @@ export const createCollection = ({
 			pageId: pageId,
 			doi: doi,
 			kind: kind,
-			layout: generateDefaultCollectionLayout(normalizedTitle),
+			layout: generateDefaultCollectionLayout(),
 			...(id && { id: id }),
 		};
 		const metadata = normalizeMetadataToKind({}, kind, {

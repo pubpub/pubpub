@@ -1,31 +1,65 @@
 import { LayoutBlock, CollectionLayout } from 'utils/layout/types';
 import { CommunityNavigationEntry } from 'client/utils/navigation';
 
+export type AttributableUser = {
+	id: string;
+	initials: string;
+	fullName: string;
+	firstName: string;
+	lastName: string;
+	avatar: string;
+	title: string;
+	orcid: string;
+};
+
+export type User = AttributableUser & {
+	slug: string;
+	bio: string;
+	publicEmail: string;
+	location: string;
+	website: string;
+	facebook: string;
+	twitter: string;
+	github: string;
+	googleScholar: string;
+};
+
 export type PubAttribution = {
 	id: string;
-	name?: string;
+	name: string;
 	avatar?: string;
 	title?: string;
-	order?: number;
+	order: number;
 	isAuthor?: boolean;
 	roles?: {};
 	affiliation?: string;
 	orcid?: string;
 	userId?: string;
+	user?: AttributableUser;
+	createdAt: string;
 };
 
 export type CollectionAttribution = {
 	id: string;
-	name?: string;
+	name: string;
 	avatar?: string;
 	title?: string;
-	order?: number;
+	order: number;
 	isAuthor?: boolean;
 	roles?: {};
 	affiliation?: string;
 	orcid?: string;
 	userId?: string;
+	user?: AttributableUser;
+	createdAt: string;
 };
+
+export type Attribution = CollectionAttribution | PubAttribution;
+export type AttributionWithUser = Attribution & { user: AttributableUser };
+
+export const isAttributionWithUser = (
+	attribution: Attribution,
+): attribution is AttributionWithUser => 'user' in attribution && !!attribution.user;
 
 export type Collection = {
 	id: string;
@@ -44,6 +78,7 @@ export type Collection = {
 	communityId: string;
 	attributions?: CollectionAttribution[];
 	layout: CollectionLayout;
+	createdAt: string;
 };
 
 export type CollectionPub = {

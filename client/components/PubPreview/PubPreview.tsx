@@ -9,11 +9,12 @@ import { isPubPublic } from 'utils/pub/permissions';
 import { getAllPubContributors } from 'utils/contributors';
 import { communityUrl, bestPubUrl } from 'utils/canonicalUrls';
 import { usePageContext } from 'utils/hooks';
-import { Avatar, Icon, PreviewImage } from 'components';
+import { Icon, PreviewImage } from 'components';
 
 import ExpandButton from './ExpandButton';
 import ManyAuthorsByline from './ManyAuthorsByline';
 import PubPreviewEdges from './PubPreviewEdges';
+import ContributorAvatars from '../ContributorAvatars/ContributorAvatars';
 
 require('./pubPreview.scss');
 
@@ -126,21 +127,11 @@ const PubPreview = (props: Props) => {
 					{showLowerByline && <div className="authors">{renderByline()}</div>}
 
 					{showContributors && (
-						<div className="author-avatars">
-							{getAllPubContributors(pubData).map((contributor, index) => {
-								return (
-									<Avatar
-										key={`avatar-${contributor.id}`}
-										instanceNumber={index}
-										initials={contributor.user.initials}
-										avatar={contributor.user.avatar}
-										borderColor="rgba(255, 255, 255, 1.0)"
-										width={20}
-										doesOverlap={true}
-									/>
-								);
-							})}
-						</div>
+						<ContributorAvatars
+							attributions={getAllPubContributors(pubData)}
+							truncateAt={6}
+							className="contributor-avatars"
+						/>
 					)}
 
 					{showDates && (
