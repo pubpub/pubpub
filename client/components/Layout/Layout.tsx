@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { Collection } from 'utils/types';
+import { Collection, Pub } from 'utils/types';
 import { getPubsByBlockIndex } from 'utils/layout';
 import { LayoutBlock, LayoutOptions } from 'utils/layout/types';
 import { usePageContext } from 'utils/hooks';
@@ -18,7 +18,7 @@ require('./layout.scss');
 type Props = LayoutOptions & {
 	blocks: LayoutBlock[];
 	id?: string;
-	pubs: any[];
+	pubs: Pub[];
 	collection?: Collection;
 };
 
@@ -37,7 +37,7 @@ const Layout = (props: Props) => {
 					<LayoutPubs
 						content={block.content}
 						pubs={pubBlocksLists[index]}
-						collectionId={collectionId}
+						collectionId={collection && collection.id}
 					/>
 				</div>
 			);
