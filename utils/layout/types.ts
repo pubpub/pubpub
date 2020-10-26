@@ -2,7 +2,12 @@ type BannerButtonType = 'create-pub' | 'signup' | 'link';
 type TextAlign = 'left' | 'center';
 
 export type PubPreviewType = 'minimal' | 'small' | 'medium' | 'large';
-export type PubSortOrder = 'creation-date' | 'collection-rank';
+export type PubSortOrder =
+	| 'creation-date'
+	| 'creation-date-reversed'
+	| 'publish-date'
+	| 'publish-date-reversed'
+	| 'collection-rank';
 
 export type LayoutOptions = {
 	isNarrow?: boolean;

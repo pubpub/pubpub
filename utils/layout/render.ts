@@ -2,6 +2,7 @@ import { Pub } from 'utils/types';
 import { LayoutBlock, LayoutRenderContext, PubSortOrder } from 'utils/layout/types';
 import { sortByRank } from 'utils/rank';
 import { indexByProperty } from 'utils/arrays';
+import { getPubPublishedDate } from 'utils/pub/pubDates';
 
 type PubQuery = {
 	collectionIds: string[];
@@ -13,8 +14,34 @@ type PubQuery = {
 
 type RankedPub = { pub: Pub; rank: string };
 
-const sortPubsByCreationDate = (pubs: Pub[]) =>
-	pubs.sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
+const sortPubsByCreationDate = (pubs: Pub[], reversed = false) => {
+	const reverseFactor = reversed ? -1 : 1;
+	return pubs
+		.concat()
+		.sort((a, b) => (b.createdAt > a.createdAt ? reverseFactor * 1 : reverseFactor * -1));
+};
+
+const sortPubsByPublishDate = (pubs: Pub[], reversed = false) => {
+	const reverseFactor = reversed ? -1 : 1;
+	const publishDateById = {};
+	pubs.forEach((pub) => {
+		publishDateById[pub.id] = getPubPublishedDate(pub)?.valueOf();
+	});
+	return pubs.concat().sort((a, b) => {
+		const pubDateA = publishDateById[a.id];
+		const pubDateB = publishDateById[b.id];
+		if (pubDateA && pubDateB) {
+			return reverseFactor * (pubDateB - pubDateA);
+		}
+		if (pubDateA) {
+			return -1 * reverseFactor;
+		}
+		if (pubDateB) {
+			return reverseFactor;
+		}
+		return 0;
+	});
+};
 
 const sortPubsByCollectionRank = (pubs: Pub[], collectionIds: string[]): Pub[] => {
 	const partitionedPubIds = new Set<string>();
@@ -68,6 +95,19 @@ const getPubsForCollectionIds = (pubs: Pub[], collectionIds: string[]): Pub[] =>
 	);
 };
 
+const sortPubs = (pubs: Pub[], sort: PubSortOrder, sortCollectionIds: string[]) => {
+	if (sort === 'collection-rank') {
+		return sortPubsByCollectionRank(pubs, sortCollectionIds);
+	}
+	if (sort === 'creation-date' || sort === 'creation-date-reversed') {
+		return sortPubsByCreationDate(pubs, sort === 'creation-date-reversed');
+	}
+	if (sort === 'publish-date' || sort === 'publish-date-reversed') {
+		return sortPubsByPublishDate(pubs, sort === 'publish-date-reversed');
+	}
+	return pubs;
+};
+
 const createPubsPool = (pubs: Pub[]) => {
 	const consumedPubIds = new Set<string>();
 
@@ -80,10 +120,7 @@ const createPubsPool = (pubs: Pub[]) => {
 		const unusedPubs = matchingPubs.filter(
 			(pub) => !consumedPubIds.has(pub.id) && !pinnedPubIdSet.has(pub.id),
 		);
-		const sortedPubs =
-			sort === 'collection-rank'
-				? sortPubsByCollectionRank(unusedPubs, sortCollectionIds)
-				: sortPubsByCreationDate(unusedPubs);
+		const sortedPubs = sortPubs(unusedPubs, sort, sortCollectionIds);
 		const resolvedPubs = [...pinnedPubs, ...sortedPubs].slice(0, limit);
 		resolvedPubs.forEach((pub) => consumedPubIds.add(pub.id));
 		return resolvedPubs;
