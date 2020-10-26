@@ -33,8 +33,7 @@ const CollectionOverview = (props: Props) => {
 	const { activeCollection } = scopeData.elements;
 	const { canManage } = scopeData.activePermissions;
 	const collectionSchema = getSchemaForKind(activeCollection.kind);
-	// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
-	const label = capitalize(collectionSchema.label.singular);
+	const label = capitalize(collectionSchema?.label.singular);
 
 	const { collection, updateCollection } = useCollectionState(scopeData);
 	const {

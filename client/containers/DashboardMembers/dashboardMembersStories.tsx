@@ -27,7 +27,6 @@ const membersData = {
 			collection: {
 				id: '65fc8561-31ea-4e2c-8067-b315dd7c933f',
 				title: 'Issue 1',
-				isRestricted: true,
 				isPublic: true,
 				pageId: 'f7c79073-8110-40c2-9d4f-9d090673cec0',
 				communityId: '7808da6b-94d1-436d-ad79-2e036a8e4428',
@@ -58,7 +57,6 @@ const membersData = {
 			collection: {
 				id: '65f33561-31ea-4e2c-8067-b315ddcc933f',
 				title: 'Physics',
-				isRestricted: true,
 				isPublic: true,
 				pageId: 'f7c79073-8110-40c2-9d4f-9d090673cec0',
 				communityId: '7808da6b-94d1-436d-ad79-2e036a8e4428',

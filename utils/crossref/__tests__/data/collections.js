@@ -3,7 +3,6 @@ import attributions from './attributions';
 export const book = {
 	id: 'c489f75c-88b4-46cc-8547-95f7366132a5',
 	title: 'My new book full of pubs',
-	isRestricted: true,
 	isPublic: true,
 	pageId: null,
 	communityId: 'eea8ec7d-6ba0-4c31-98bd-1da69b5d2141',
@@ -26,7 +25,6 @@ export const book = {
 export const issue = {
 	id: 'e281f63f-02df-4153-9b7d-e5fe1386b0e3',
 	title: 'Another Great Issue',
-	isRestricted: true,
 	isPublic: false,
 	pageId: null,
 	communityId: 'eea8ec7d-6ba0-4c31-98bd-1da69b5d2141',
@@ -51,7 +49,6 @@ export const issue = {
 export const conference = {
 	id: '4c3a0515-bbc4-4f5d-b62e-0e903bee4c33',
 	title: 'This Conference Is Happening Again',
-	isRestricted: true,
 	isPublic: true,
 	pageId: null,
 	communityId: 'eea8ec7d-6ba0-4c31-98bd-1da69b5d2141',

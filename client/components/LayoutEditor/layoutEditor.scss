@@ -25,14 +25,9 @@
 		flex-wrap: wrap;
 		background-color: #f0f0f0;
 		border-bottom: 1px solid #ccc;
-		// .spacer {
-		// 	flex-shrink: 1;
-		// 	flex-grow: 1;
-		// }
 		.input-field-component,
 		.image-upload-component {
-			// margin-bottom: 0px;
-			margin: 0em 1em;
+			margin: 0em 0.5em;
 		}
 		.bp3-control.bp3-checkbox {
 			display: inline-block;
@@ -44,9 +39,6 @@
 			width: 100%;
 			margin-bottom: 1em;
 		}
-		// .bp3-form-group:not(:last-child) {
-		// 	padding-right: 1em;
-		// }
 		.formatting-wrapper {
 			flex: 1 1 auto;
 			max-width: 100%;

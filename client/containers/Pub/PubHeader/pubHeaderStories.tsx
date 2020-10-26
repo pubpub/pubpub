@@ -25,7 +25,6 @@ const aPrimaryCollection = {
 	collection: {
 		id: '1e1c0f1f-1873-4705-b6e0-934f588889c6',
 		title: 'I am a primary collection',
-		isRestricted: true,
 		isPublic: true,
 		pageId: '1e1c0f1f-1873-4705-b6e0-934f588889c6',
 		communityId: '7808da6b-94d1-436d-ad79-2e036a8e4428',

@@ -11,6 +11,7 @@ type Props = {
 		rightIcon?: string | React.ReactNode;
 		minimal?: boolean;
 		small?: boolean;
+		outlined?: boolean;
 	};
 	children: React.ReactNode;
 };

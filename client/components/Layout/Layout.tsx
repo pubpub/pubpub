@@ -33,8 +33,12 @@ const Layout = (props: Props) => {
 	const renderBlock = (block: LayoutBlock, index: number) => {
 		if (block.type === 'pubs') {
 			return (
-				<div className="layout-pubs-block">
-					<LayoutPubs key={index} content={block.content} pubs={pubBlocksLists[index]} />
+				<div className="layout-pubs-block" key={index}>
+					<LayoutPubs
+						content={block.content}
+						pubs={pubBlocksLists[index]}
+						collectionId={collectionId}
+					/>
 				</div>
 			);
 		}
@@ -57,9 +61,8 @@ const Layout = (props: Props) => {
 		}
 		if (block.type === 'pages' || block.type === 'collections-pages') {
 			return (
-				<div className="layout-pages-block">
+				<div className="layout-pages-block" key={index}>
 					<LayoutPagesCollections
-						key={index}
 						content={block.content}
 						pages={communityData.pages}
 						collections={communityData.collections}

@@ -41,7 +41,6 @@ export const createCollection = ({
 		const collection = {
 			title: normalizedTitle,
 			slug: await findAcceptableSlug(slug || slugifyString(title), communityId),
-			isRestricted: true,
 			isPublic: isPublic,
 			viewHash: generateHash(8),
 			editHash: generateHash(8),
