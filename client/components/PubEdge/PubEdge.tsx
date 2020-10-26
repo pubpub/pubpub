@@ -11,7 +11,6 @@ import { getAllPubContributors } from 'utils/pub/contributors';
 import { pubEdgeType } from './constants';
 import { getHostnameForUrl } from './util';
 import PubEdgeLayout from './PubEdgeLayout';
-import PubEdgePlaceholderThumbnail from './PubEdgePlaceholderThumbnail';
 
 require('./pubEdge.scss');
 
@@ -132,17 +131,9 @@ const PubEdge = (props: Props) => {
 	return maybeWrapWithLink(
 		<PubEdgeLayout
 			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
-			topLeftElement={maybeLink(
-				avatar ? (
-					<img src={avatar} alt={title} />
-				) : (
-					<PubEdgePlaceholderThumbnail
-						color={accentColor}
-						external={hasExternalPublication}
-					/>
-				),
-				{ tabIndex: '-1' },
-			)}
+			topLeftElement={maybeLink(avatar && <img src={avatar} alt={title} />, {
+				tabIndex: '-1',
+			})}
 			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 			titleElement={maybeLink(title)}
 			// @ts-expect-error ts-migrate(2322) FIXME: Type 'false' is not assignable to type 'never'.

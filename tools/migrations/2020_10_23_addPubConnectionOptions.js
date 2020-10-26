@@ -1,11 +1,10 @@
 module.exports = async ({ Sequelize, sequelize }) => {
-	await sequelize.queryInterface.addColumn('Pubs', 'connectionListingView', {
-		type: Sequelize.ENUM,
-		values: ['list', 'carousel'],
-		defaultValue: 'carousel',
-	});
-	await sequelize.queryInterface.addColumn('Pubs', 'connectionDescriptionVisible', {
+	await sequelize.queryInterface.addColumn('Pubs', 'pubEdgeListingDefaultsToCarousel', {
 		type: Sequelize.BOOLEAN,
-		defaultValue: false,
+		defaultValue: true,
+	});
+	await sequelize.queryInterface.addColumn('Pubs', 'pubEdgeDescriptionVisible', {
+		type: Sequelize.BOOLEAN,
+		defaultValue: true,
 	});
 };

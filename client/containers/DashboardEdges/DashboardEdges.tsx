@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { NonIdealState, Tab, Tabs } from '@blueprintjs/core';
+import React, { useCallback, useEffect, useState } from 'react';
+import { NonIdealState, Switch, Tab, Tabs } from '@blueprintjs/core';
+import { Radio } from '@blueprintjs/core';
 
 import { DashboardFrame } from 'components';
 import { usePageContext } from 'utils/hooks';
@@ -7,6 +8,7 @@ import { usePageContext } from 'utils/hooks';
 import DashboardEdgesListing from './DashboardEdgesListing';
 import NewEdgeEditor from './NewEdgeEditor';
 import { useDashboardEdges } from './useDashboardEdges';
+import { apiFetch } from 'client/utils/apiFetch';
 
 require('./dashboardEdges.scss');
 
@@ -25,13 +27,18 @@ type Props = {
 				id?: string;
 			};
 		}[];
+		pubEdgeListingDefaultsToCarousel: boolean;
+		pubEdgeDescriptionVisible: boolean;
 	};
 };
 
 const frameDetails = (
 	<>
-		Manage relationships between this Pub and others Pubs in your Community or publications
-		elsewhere on the internet.
+		<p>
+			Create & manage relationships between this Pub and other Pubs in your Community or
+			publications elsewhere on the internet.
+		</p>
+		<p>Connection previews will be shown near the header and footer of this Pub's layout.</p>
 	</>
 );
 
@@ -52,6 +59,40 @@ const DashboardEdges = (props: Props) => {
 		removeOutboundEdge,
 		updateInboundEdgeApproval,
 	} = useDashboardEdges(pubData);
+
+	const [pubEdgeListingDefaultsToCarousel, setPubEdgeListingDefaultsToCarousel] = useState(
+		pubData.pubEdgeListingDefaultsToCarousel,
+	);
+	const [pubEdgeDescriptionVisible, setPubEdgeDescriptionVisible] = useState(
+		pubData.pubEdgeDescriptionVisible,
+	);
+	const updatePubEdgeListingDefaultsToCarousel = (value: boolean) => {
+		setPubEdgeListingDefaultsToCarousel(value);
+
+		apiFetch('/api/pubs', {
+			method: 'PUT',
+			body: JSON.stringify({
+				pubId: pubData.id,
+				pubEdgeListingDefaultsToCarousel: value,
+			}),
+		}).catch(() => setPubEdgeListingDefaultsToCarousel(pubEdgeListingDefaultsToCarousel));
+	};
+	const updatePubEdgeDescriptionVisible = useCallback(
+		(event: React.FormEvent<HTMLInputElement>) => {
+			const value = (event.target as HTMLInputElement).checked;
+
+			setPubEdgeDescriptionVisible(value);
+
+			apiFetch('/api/pubs', {
+				method: 'PUT',
+				body: JSON.stringify({
+					pubId: pubData.id,
+					pubEdgeDescriptionVisible: value,
+				}),
+			}).catch(() => setPubEdgeDescriptionVisible(pubEdgeListingDefaultsToCarousel));
+		},
+		[],
+	);
 
 	const renderOutboundEdgesTab = () => {
 		const usedPubsIds = [
@@ -134,6 +175,37 @@ const DashboardEdges = (props: Props) => {
 			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 			details={frameDetails}
 		>
+			{canManageEdges && (
+				<div className="default-settings">
+					<div>
+						<span>Show multiple Connections as:</span>
+						<Radio
+							checked={pubEdgeListingDefaultsToCarousel}
+							onChange={() => updatePubEdgeListingDefaultsToCarousel(true)}
+							inline
+						>
+							Carousel
+						</Radio>
+						<Radio
+							checked={!pubEdgeListingDefaultsToCarousel}
+							onChange={() => updatePubEdgeListingDefaultsToCarousel(false)}
+							inline
+						>
+							List
+						</Radio>
+					</div>
+					<div>
+						<label>
+							<Switch
+								checked={pubEdgeDescriptionVisible}
+								onChange={updatePubEdgeDescriptionVisible}
+								inline
+							/>
+							Show Description by default
+						</label>
+					</div>
+				</div>
+			)}
 			<Tabs id="pub-dashboard-connections-tabs">
 				<Tab
 					id="created-by-this-pub"

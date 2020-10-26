@@ -7,7 +7,6 @@ import { DatePicker } from 'components';
 import { externalPublicationType } from './constants';
 import { getHostnameForUrl } from './util';
 import PubEdgeLayout from './PubEdgeLayout';
-import PubEdgePlaceholderThumbnail from './PubEdgePlaceholderThumbnail';
 
 require('./pubEdge.scss');
 
@@ -61,13 +60,7 @@ const PubEdgeEditor = (props: Props) => {
 			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			className="pub-edge-editor-component"
 			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
-			topLeftElement={
-				avatar ? (
-					<img src={avatar} alt="" />
-				) : (
-					<PubEdgePlaceholderThumbnail color="#ccc" external />
-				)
-			}
+			topLeftElement={avatar && <img src={avatar} alt="" />}
 			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 			titleElement={
 				<EditableText
