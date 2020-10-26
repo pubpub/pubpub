@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, ButtonGroup } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 
 import { MenuButton, MenuItem } from 'components/Menu';
 import { usePageContext } from 'utils/hooks';
@@ -24,39 +24,44 @@ const CollectionControls = (props: Props) => {
 		return null;
 	}
 	return (
-		<React.Fragment>
-			<ButtonGroup>
+		<>
+			<PubSelect
+				pubs={overviewData.pubs}
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
+				usedPubIds={collectionPubs.map((cp) => cp.pubId)}
+				onSelectPub={addCollectionPub}
+			>
+				<Button outlined icon="plus">
+					Add Pubs
+				</Button>
+			</PubSelect>
+			{!isPublic && (
+				<Button
+					intent="primary"
+					icon="globe"
+					onClick={() => updateCollection({ isPublic: true })}
+				>
+					Make public
+				</Button>
+			)}
+			{isPublic && (
 				<MenuButton
-					aria-label="Set collection public or private"
-					buttonContent={isPublic ? 'Public' : 'Private'}
+					aria-label="Make this collection private"
+					buttonContent="Public"
 					buttonProps={{
-						icon: isPublic ? 'globe' : 'lock2',
+						icon: 'tick',
 						rightIcon: 'caret-down',
+						outlined: true,
 					}}
 				>
 					<MenuItem
-						// @ts-expect-error ts-migrate(2322) FIXME: Property 'icon' does not exist on type 'IntrinsicA... Remove this comment to see the full error message
-						icon={isPublic ? 'tick' : 'blank'}
-						text="Public"
-						onClick={() => updateCollection({ isPublic: true })}
-					/>
-					<MenuItem
-						// @ts-expect-error ts-migrate(2322) FIXME: Property 'icon' does not exist on type 'IntrinsicA... Remove this comment to see the full error message
-						icon={isPublic ? 'blank' : 'tick'}
-						text="Private"
+						// @ts-expect-error
+						text="Make private"
 						onClick={() => updateCollection({ isPublic: false })}
 					/>
 				</MenuButton>
-				<PubSelect
-					pubs={overviewData.pubs}
-					// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
-					usedPubIds={collectionPubs.map((cp) => cp.pubId)}
-					onSelectPub={addCollectionPub}
-				>
-					<Button icon="plus">Add Pubs</Button>
-				</PubSelect>
-			</ButtonGroup>
-		</React.Fragment>
+			)}
+		</>
 	);
 };
 export default CollectionControls;
