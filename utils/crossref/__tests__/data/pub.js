@@ -110,7 +110,6 @@ export default {
 			collection: {
 				id: '3c8f65f8-05b9-4d90-8d5d-03137c929d79',
 				title: 'Beep beep',
-				isRestricted: true,
 				isPublic: true,
 				pageId: null,
 				communityId: 'eea8ec7d-6ba0-4c31-98bd-1da69b5d2141',
@@ -134,7 +133,6 @@ export default {
 			collection: {
 				id: 'd46c67cd-cb82-4114-a64d-1bf425edac95',
 				title: 'Best of Journal of Words 1990-2019',
-				isRestricted: true,
 				isPublic: false,
 				pageId: null,
 				communityId: 'eea8ec7d-6ba0-4c31-98bd-1da69b5d2141',
@@ -159,7 +157,6 @@ export default {
 				id: '461d4f05-3604-47d7-b157-dbe5927e72bc',
 				title:
 					'Collection with an Extremely Long Name That Ought To Wrap Onto The Next Line',
-				isRestricted: true,
 				isPublic: true,
 				pageId: '475774d6-61bf-4356-88b5-781b3268cc78',
 				communityId: 'eea8ec7d-6ba0-4c31-98bd-1da69b5d2141',
@@ -187,7 +184,6 @@ export default {
 			collection: {
 				id: '81144659-2495-4675-90eb-441b8fba4ec0',
 				title: 'Even more tags',
-				isRestricted: true,
 				isPublic: true,
 				pageId: '238d2f9a-d9aa-43de-8195-2a0dc4f76fea',
 				communityId: 'eea8ec7d-6ba0-4c31-98bd-1da69b5d2141',

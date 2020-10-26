@@ -14,9 +14,6 @@ export default (sequelize, dataTypes) => {
 				},
 			},
 			avatar: { type: dataTypes.TEXT },
-			isRestricted: {
-				type: dataTypes.BOOLEAN,
-			} /* Restricted collections can only be set by Community Admins */,
 			isPublic: { type: dataTypes.BOOLEAN } /* Only visible to community admins */,
 			viewHash: { type: dataTypes.STRING },
 			editHash: { type: dataTypes.STRING },
