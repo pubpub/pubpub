@@ -6,6 +6,7 @@ import { PubEdge, PubEdgeEditor } from 'components';
 import { RelationType } from 'utils/pubEdge';
 
 const pubEdge = {
+	id: 'pub-edge-id',
 	externalPublication: {
 		title: "Artificial Intelligence—The Revolution Hasn't Happened Yet",
 		description:
@@ -35,6 +36,9 @@ const StatefulPreviewWrapper = () => {
 			onUpdateExternalPublication={(next) =>
 				setExternalPublication({ ...externalPublication, ...next })
 			}
+			pubData={{
+				pubEdgeDescriptionVisible: true,
+			}}
 		/>
 	);
 };
