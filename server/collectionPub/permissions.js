@@ -22,16 +22,21 @@ export const getPermissions = async ({ userId, communityId, collectionId }) => {
 	};
 };
 
+const canManagePub = async ({ userId, communityId, pubId }) => {
+	const scopeData = await getScope({ loginId: userId, communityId: communityId, pubId: pubId });
+	return (
+		scopeData.activePermissions.canManage &&
+		scopeData.elements.activePub.communityId === communityId
+	);
+};
+
 export const canCreateCollectionPub = async ({ userId, communityId, collectionId }) => {
 	const { activePermissions } = await getScope({
 		communityId: communityId,
 		collectionId: collectionId,
 		loginId: userId,
 	});
-	if (activePermissions.canManage) {
-		return true;
-	}
-	return false;
+	return activePermissions.canManage;
 };
 
 export const getUpdatableFieldsForCollectionPub = async ({
@@ -39,14 +44,25 @@ export const getUpdatableFieldsForCollectionPub = async ({
 	communityId,
 	collectionPubId,
 }) => {
-	const { collectionId } = await CollectionPub.findOne({ where: { id: collectionPubId } });
-	const { activePermissions } = await getScope({
+	const { pubId, collectionId } = await CollectionPub.findOne({ where: { id: collectionPubId } });
+	const {
+		elements: { activeCollection },
+		activePermissions,
+	} = await getScope({
 		communityId: communityId,
 		collectionId: collectionId,
 		loginId: userId,
 	});
 	if (activePermissions.canManage) {
 		return ['rank', 'pubRank', 'contextHint'];
+	}
+	const canUpdatePubRank = await canManagePub({
+		userId: userId,
+		communityId: activeCollection.communityId,
+		pubId: pubId,
+	});
+	if (canUpdatePubRank) {
+		return ['pubRank'];
 	}
 	return null;
 };
@@ -58,8 +74,5 @@ export const canDestroyCollectionPub = async ({ userId, communityId, collectionP
 		collectionId: collectionId,
 		loginId: userId,
 	});
-	if (activePermissions.canManage) {
-		return true;
-	}
-	return false;
+	return activePermissions.canManage;
 };
