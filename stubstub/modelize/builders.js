@@ -95,6 +95,7 @@ builders.Release = (args) => {
 	return Release.create({ userId: userId, branchId: branchId, ...restArgs });
 };
 
-builders.CollectionPub = createCollectionPub;
+builders.CollectionPub = ({ isPrimary, ...restArgs }) =>
+	createCollectionPub({ ...restArgs, isPrimary: isPrimary || false });
 
 export { builders };
