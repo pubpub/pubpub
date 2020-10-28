@@ -12,14 +12,6 @@ export default (sequelize, dataTypes) => {
 		},
 		{
 			indexes: [
-				// Index to maintain invariant that every pub have at most one primary collection
-				{
-					fields: ['pubId'],
-					where: {
-						isPrimary: true,
-					},
-					unique: true,
-				},
 				// Index to enforce that there is one CollectionPub per (collection, pub) pair
 				{
 					fields: ['collectionId', 'pubId'],
