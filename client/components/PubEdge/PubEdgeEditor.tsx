@@ -11,13 +11,13 @@ import PubEdgeDescriptionButton from './PubEdgeDescriptionButton';
 
 require('./pubEdge.scss');
 
-type Props = {
-	pubData: any;
+export type PubEdgeEditorProps = {
 	externalPublication: externalPublicationType;
 	onUpdateExternalPublication: (...args: any[]) => any;
+	pubData: any;
 };
 
-const PubEdgeEditor = (props: Props) => {
+const PubEdgeEditor = (props: PubEdgeEditorProps) => {
 	const {
 		pubData,
 		externalPublication: { title, description, contributors, avatar, url, publicationDate },
@@ -25,9 +25,9 @@ const PubEdgeEditor = (props: Props) => {
 	} = props;
 	const [open, setOpen] = useState(pubData.pubEdgeDescriptionVisible);
 
-	useEffect(() => {
-		setOpen(pubData.pubEdgeDescriptionVisible);
-	}, [pubData.pubEdgeDescriptionVisible]);
+	useEffect(() => setOpen(pubData.pubEdgeDescriptionVisible), [
+		pubData.pubEdgeDescriptionVisible,
+	]);
 
 	const renderPublicationDate = () => {
 		if (publicationDate) {

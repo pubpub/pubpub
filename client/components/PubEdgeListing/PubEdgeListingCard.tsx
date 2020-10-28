@@ -12,7 +12,7 @@ import { pubEdgeType } from '../PubEdge/constants';
 
 require('./pubEdgeListingCard.scss');
 
-type OwnProps = {
+export type PubEdgeListingCardProps = {
 	accentColor?: string;
 	children?: React.ReactNode;
 	inPubBody?: boolean;
@@ -20,11 +20,11 @@ type OwnProps = {
 	parentPub?: {
 		title?: string;
 	};
+	pubData: any;
 	pubEdge: pubEdgeType;
 	pubEdgeElement?: React.ReactNode;
 	showIcon?: boolean;
 	viewingFromSibling?: boolean;
-	pubData: any;
 };
 
 const getIsViewingFromTarget = (pubEdge, viewingFromSibling, isInboundEdge) => {
@@ -40,7 +40,7 @@ const getIsViewingFromTarget = (pubEdge, viewingFromSibling, isInboundEdge) => {
 	return isInboundEdge;
 };
 
-type Props = OwnProps;
+type Props = PubEdgeListingCardProps;
 
 const PubEdgeListingCard = (props: Props) => {
 	const { communityData } = usePageContext();

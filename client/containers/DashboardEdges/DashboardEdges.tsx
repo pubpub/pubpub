@@ -61,6 +61,8 @@ const DashboardEdges = (props: Props) => {
 		updateInboundEdgeApproval,
 	} = useDashboardEdges(pubData);
 
+	// TODO(eric): Refactor to use new Pub type and usePersistableState when
+	// collection layouts feature is merged.
 	const updatePub = async (patch: { [k in keyof typeof pubData]?: typeof pubData[k] }) => {
 		try {
 			setPersistedPubData({ ...persistedPubData, ...patch });
