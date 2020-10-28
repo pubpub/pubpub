@@ -7,7 +7,7 @@ import { Draggable, Droppable } from 'react-beautiful-dnd';
 
 require('./dragDropListing.scss');
 
-type OwnProps = {
+export type DragDropListingProps = {
 	className?: string;
 	disabled?: boolean;
 	droppableId: string;
@@ -19,9 +19,7 @@ type OwnProps = {
 	withDragHandles?: boolean;
 };
 
-type Props = OwnProps;
-
-const DragDropListing = (props: Props) => {
+const DragDropListing = (props: DragDropListingProps) => {
 	const {
 		className = null,
 		droppableId,
