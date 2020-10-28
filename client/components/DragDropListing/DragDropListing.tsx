@@ -19,27 +19,19 @@ type OwnProps = {
 	withDragHandles?: boolean;
 };
 
-const defaultProps = {
-	className: null,
-	disabled: false,
-	renderEmptyState: () => null,
-	withDragHandles: false,
-	itemId: (item) => item.id,
-};
-
-type Props = OwnProps & typeof defaultProps;
+type Props = OwnProps;
 
 const DragDropListing = (props: Props) => {
 	const {
-		className,
+		className = null,
 		droppableId,
 		droppableType,
-		disabled,
+		disabled = false,
 		items,
-		itemId,
+		itemId = (item) => item.id,
 		renderItem,
-		renderEmptyState,
-		withDragHandles,
+		renderEmptyState = () => null,
+		withDragHandles = false,
 	} = props;
 	return (
 		<Droppable type={droppableType} droppableId={droppableId}>
@@ -50,14 +42,10 @@ const DragDropListing = (props: Props) => {
 					role="list"
 					ref={droppableProvided.innerRef}
 				>
-					{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'length' does not exist on type 'never'. */}
 					{renderEmptyState && items.length === 0 && (
-						// @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures.
 						<div className="empty-state-container">{renderEmptyState()}</div>
 					)}
-					{/* @ts-expect-error ts-migrate(2339) FIXME: Property 'map' does not exist on type 'never'. */}
 					{items.map((item, index) => {
-						// @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures.
 						const id = itemId(item);
 						return (
 							<Draggable
@@ -87,7 +75,6 @@ const DragDropListing = (props: Props) => {
 											{...draggableProps}
 											{...effectiveDragHandleProps}
 										>
-											{/* @ts-expect-error ts-migrate(2349) FIXME: Type 'never' has no call signatures. */}
 											{renderItem(
 												item,
 												withDragHandles && dragHandleProps,
@@ -105,6 +92,5 @@ const DragDropListing = (props: Props) => {
 		</Droppable>
 	);
 };
-DragDropListing.defaultProps = defaultProps;
 
 export default DragDropListing;

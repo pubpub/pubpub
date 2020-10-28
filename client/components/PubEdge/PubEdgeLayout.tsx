@@ -19,7 +19,7 @@ const defaultProps = {
 	topLeftElement: null,
 };
 
-type Props = OwnProps & typeof defaultProps;
+type Props = OwnProps;
 
 const PubEdgeLayout = (props: Props) => {
 	const {
@@ -40,7 +40,6 @@ const PubEdgeLayout = (props: Props) => {
 					{bylineElement && <div className="byline-container">{bylineElement}</div>}
 					<ul className="metadata">
 						{metadataElements
-							// @ts-expect-error ts-migrate(2339) FIXME: Property 'map' does not exist on type 'never'.
 							.map(
 								(element, index) =>
 									element && (

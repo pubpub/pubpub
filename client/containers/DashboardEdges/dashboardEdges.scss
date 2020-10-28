@@ -25,13 +25,18 @@
 	}
 	.default-settings {
 		display: flex;
+		margin-bottom: 10px;
 
-		> div {
-			flex: 1;
+		> div:first-child {
+			flex: 3;
+
+			> span:first-child {
+				margin-right: 1em;
+			}
 		}
 
-		> div > span:first-child {
-			margin-right: 1em;
+		> div:nth-child(2) {
+			flex: 2;
 		}
 	}
 }

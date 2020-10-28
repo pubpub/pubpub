@@ -40,6 +40,7 @@ const externalPublicationType: PropTypes.Requireable<externalPublicationType> = 
 export { externalPublicationType };
 
 type pubEdgeType = {
+	id: string;
 	externalPublication?: externalPublicationType;
 	targetPub?: {
 		title?: string;

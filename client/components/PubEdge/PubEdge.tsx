@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
 
 import { Byline } from 'components';
@@ -11,20 +11,16 @@ import { getAllPubContributors } from 'utils/pub/contributors';
 import { pubEdgeType } from './constants';
 import { getHostnameForUrl } from './util';
 import PubEdgeLayout from './PubEdgeLayout';
+import PubEdgeDescriptionButton from './PubEdgeDescriptionButton';
 
 require('./pubEdge.scss');
 
-type OwnProps = {
+export type PubEdgeProps = {
 	accentColor?: string;
 	actsLikeLink?: boolean;
 	pubEdge: pubEdgeType;
 	viewingFromTarget?: boolean;
-};
-
-const defaultProps = {
-	accentColor: '#ddd',
-	actsLikeLink: false,
-	viewingFromTarget: false,
+	showDescriptionByDefault?: boolean;
 };
 
 const getUrlForPub = (pubData, communityData) => {
@@ -74,25 +70,28 @@ const getValuesFromPubEdge = (pubEdge, communityData, viewingFromTarget) => {
 	return {};
 };
 
-type Props = OwnProps & typeof defaultProps;
+type Props = PubEdgeProps;
 
 const PubEdge = (props: Props) => {
-	const { accentColor, actsLikeLink, pubEdge, viewingFromTarget } = props;
-	const [open, setOpen] = useState(false);
+	const {
+		actsLikeLink = false,
+		pubEdge,
+		viewingFromTarget = false,
+		showDescriptionByDefault = false,
+	} = props;
+	const [open, setOpen] = useState(showDescriptionByDefault);
 	const { communityData } = usePageContext();
-	const hasExternalPublication = Boolean(pubEdge.externalPublication);
 	const { avatar, contributors, description, publishedAt, title, url } = getValuesFromPubEdge(
 		pubEdge,
 		communityData,
 		viewingFromTarget,
 	);
 
-	// @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type 'pubEdgeType'... Remove this comment to see the full error message
 	const detailsElementId = `edge-details-${pubEdge.id}`;
 
 	const handleToggleDescriptionClick = useCallback(
-		(e) => {
-			if (e.type === 'click' || e.key === 'Enter') {
+		(e: React.MouseEvent | React.KeyboardEvent) => {
+			if (e.type === 'click' || ('key' in e && e.key === 'Enter')) {
 				e.preventDefault();
 				e.stopPropagation();
 				setOpen(!open);
@@ -128,38 +127,28 @@ const PubEdge = (props: Props) => {
 		return <div {...restProps}>{element}</div>;
 	};
 
+	useEffect(() => {
+		setOpen(showDescriptionByDefault);
+	}, [showDescriptionByDefault]);
+
 	return maybeWrapWithLink(
 		<PubEdgeLayout
-			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 			topLeftElement={maybeLink(avatar && <img src={avatar} alt={title} />, {
 				tabIndex: '-1',
 			})}
-			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 			titleElement={maybeLink(title)}
-			// @ts-expect-error ts-migrate(2322) FIXME: Type 'false' is not assignable to type 'never'.
 			bylineElement={contributors.length > 0 && <Byline contributors={contributors} />}
 			metadataElements={[
-				// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 				description && (
-					<span
-						onClick={handleToggleDescriptionClick}
-						onKeyDown={handleToggleDescriptionClick}
-						// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'number | ... Remove this comment to see the full error message
-						tabIndex="0"
-						className="link description-toggle"
-						role="button"
-						aria-controls={detailsElementId}
-						aria-expanded={open}
-					>
-						{open ? 'Hide Description' : 'Show Description'}
-					</span>
+					<PubEdgeDescriptionButton
+						onToggle={handleToggleDescriptionClick}
+						open={open}
+						targetId={detailsElementId}
+					/>
 				),
-				// @ts-expect-error ts-migrate(2322) FIXME: Type 'undefined' is not assignable to type 'never'... Remove this comment to see the full error message
 				publishedAt && <>Published on {publishedAt}</>,
-				// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 				<span className="location">{getHostnameForUrl(url)}</span>,
 			]}
-			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Element' is not assignable to type 'never'.
 			detailsElement={
 				<details open={open} id={detailsElementId}>
 					<summary>Description</summary>
@@ -171,5 +160,5 @@ const PubEdge = (props: Props) => {
 		{ className: classNames('pub-edge-component', actsLikeLink && 'acts-like-link') },
 	);
 };
-PubEdge.defaultProps = defaultProps;
+
 export default PubEdge;
