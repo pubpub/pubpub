@@ -101,9 +101,11 @@ export type Export = {
 	workerTaskId?: string;
 };
 
+export type MemberPermission = 'view' | 'edit' | 'manage' | 'admin';
+
 export type Member = {
 	id?: string;
-	permissions: 'view' | 'edit' | 'manage' | 'admin';
+	permissions: MemberPermission;
 	isOwner?: boolean;
 	userId: string;
 	pubId?: string;
@@ -273,4 +275,31 @@ export type Community = {
 	collections?: Collection[];
 	pages?: Page[];
 	pubs?: Pub[];
+};
+
+export type ScopeData = {
+	activePermissions: {
+		activePermission: MemberPermission;
+		canAdmin: boolean;
+		canAdminCommunity: boolean;
+		canCreateDiscussions: boolean;
+		canCreateForks: boolean;
+		canCreateReviews: boolean;
+		canEdit: boolean;
+		canEditDraft: boolean;
+		canManage: boolean;
+		canManageCommunity: boolean;
+		canView: boolean;
+		canViewDraft: boolean;
+		isSuperAdmin: boolean;
+	};
+	elements: {
+		activeTargetType: 'community' | 'collection' | 'pub';
+		activeTargetName: string;
+		activeCommunity?: Community;
+		activeCollection?: Collection;
+		activePub?: Pub;
+		inactiveCollections?: Collection[];
+	};
+	memberData: Member[];
 };
