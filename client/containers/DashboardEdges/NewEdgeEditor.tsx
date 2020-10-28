@@ -160,7 +160,6 @@ const NewEdgeEditor = (props: Props) => {
 					pubEdgeElement={
 						externalPublication && (
 							<PubEdgeEditor
-								pubData={pubData}
 								externalPublication={externalPublication}
 								onUpdateExternalPublication={(update) =>
 									setNewEdge({
@@ -168,6 +167,7 @@ const NewEdgeEditor = (props: Props) => {
 										externalPublication: { ...externalPublication, ...update },
 									})
 								}
+								pubData={pubData}
 							/>
 						)
 					}

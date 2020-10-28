@@ -5,7 +5,7 @@ import classNames from 'classnames';
 
 import { ConfirmDialog, DragDropListing, PubEdgeListingCard } from 'components';
 
-type OwnProps = {
+export type DashboardEdgesListingProps = {
 	pubData: any;
 	onRemoveEdge?: (...args: any[]) => any;
 	onReorderEdges?: (...args: any[]) => any;
@@ -31,15 +31,13 @@ const renderRemoveEdgeButton = (callback) => {
 	);
 };
 
-type Props = OwnProps;
-
-const DashboardEdgesListing = (props: Props) => {
+const DashboardEdgesListing = (props: DashboardEdgesListingProps) => {
 	const {
-		pubData,
 		isInbound,
 		onRemoveEdge = null,
 		onReorderEdges = null,
 		onUpdateEdgeApproval = null,
+		pubData,
 		pubEdges,
 		renderEmptyState,
 	} = props;
