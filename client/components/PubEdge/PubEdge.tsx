@@ -127,9 +127,7 @@ const PubEdge = (props: Props) => {
 		return <div {...restProps}>{element}</div>;
 	};
 
-	useEffect(() => {
-		setOpen(showDescriptionByDefault);
-	}, [showDescriptionByDefault]);
+	useEffect(() => setOpen(showDescriptionByDefault), [showDescriptionByDefault]);
 
 	return maybeWrapWithLink(
 		<PubEdgeLayout
