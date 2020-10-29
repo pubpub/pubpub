@@ -172,9 +172,6 @@ class CollectionMetadataEditor extends React.Component<Props, State> {
 
 	renderFieldRightElement(field) {
 		const { name, defaultDerivedFrom, value } = field;
-		// if (field.name === 'doi') {
-		// 	return this.renderGetDoiButton();
-		// }
 		const derivedHintValue = defaultDerivedFrom && this.deriveInputValue(defaultDerivedFrom);
 		return (
 			derivedHintValue && (
