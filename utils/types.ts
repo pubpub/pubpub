@@ -87,6 +87,7 @@ export type CollectionPub = {
 	collectionId: string;
 	contextHint?: string;
 	rank: string;
+	pubRank: string;
 	isPrimary: boolean;
 	collection?: Collection;
 	pub?: Pub;
@@ -173,8 +174,8 @@ export type PubEdge = {
 	pub?: Pub;
 };
 
-type OutboundEdge = Omit<PubEdge, 'pub'>;
-type InboundEdge = Omit<PubEdge, 'targetPub'>;
+export type OutboundEdge = Omit<PubEdge, 'pub'>;
+export type InboundEdge = Omit<PubEdge, 'targetPub'>;
 
 export type CrossrefDepositRecord = {
 	id: string;
@@ -214,6 +215,8 @@ export type Pub = {
 	crossrefDepositRecord?: CrossrefDepositRecord;
 	inboundEdges?: InboundEdge[];
 	outboundEdges?: OutboundEdge[];
+	pubEdgeListingDefaultsToCarousel: boolean;
+	pubEdgeDescriptionVisible: boolean;
 };
 
 export type Page = {
