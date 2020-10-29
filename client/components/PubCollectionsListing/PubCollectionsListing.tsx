@@ -186,8 +186,8 @@ const PubCollectionsListing = (props: Props) => {
 					items={sortByRank(collectionPubs, 'pubRank')}
 					renderItem={renderCollectionPub}
 					renderEmptyState={() => null}
-					droppableId="dashboardEdges"
-					droppableType="DASHBOARD_EDGE"
+					droppableId="pubCollectionsListing"
+					droppableType="COLLECTION_PUB"
 					withDragHandles={canManage}
 				/>
 			</DragDropContext>
