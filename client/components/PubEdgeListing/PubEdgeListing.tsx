@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import React, { useCallback, useState } from 'react';
 
 import { Filter, Mode, allFilters } from './constants';
-import { pubEdgeType } from '../PubEdge/constants';
 import PubEdgeListingCard from './PubEdgeListingCard';
 import PubEdgeListingCounter from './PubEdgeListingCounter';
 import PubEdgeListingControls from './PubEdgeListingControls';
@@ -16,9 +15,9 @@ type OwnProps = {
 	hideIfNoInitialMatches?: boolean;
 	isolated?: boolean;
 	pubData: {
-		inboundEdges: pubEdgeType[];
-		outboundEdges: pubEdgeType[];
-		siblingEdges: pubEdgeType[];
+		inboundEdges: any[];
+		outboundEdges: any[];
+		siblingEdges: any[];
 	};
 	initialMode?: string;
 	initialFilters?: string[];

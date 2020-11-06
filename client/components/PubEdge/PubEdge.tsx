@@ -8,7 +8,6 @@ import { pubUrl, pubShortUrl } from 'utils/canonicalUrls';
 import { getPubPublishedDate } from 'utils/pub/pubDates';
 import { getAllPubContributors } from 'utils/pub/contributors';
 
-import { pubEdgeType } from './constants';
 import { getHostnameForUrl } from './util';
 import PubEdgeLayout from './PubEdgeLayout';
 import PubEdgeDescriptionButton from './PubEdgeDescriptionButton';
@@ -18,7 +17,7 @@ require('./pubEdge.scss');
 export type PubEdgeProps = {
 	accentColor?: string;
 	actsLikeLink?: boolean;
-	pubEdge: pubEdgeType;
+	pubEdge: any;
 	viewingFromTarget?: boolean;
 	showDescriptionByDefault?: boolean;
 };
@@ -70,9 +69,7 @@ const getValuesFromPubEdge = (pubEdge, communityData, viewingFromTarget) => {
 	return {};
 };
 
-type Props = PubEdgeProps;
-
-const PubEdge = (props: Props) => {
+const PubEdge = (props: PubEdgeProps) => {
 	const {
 		actsLikeLink = false,
 		pubEdge,

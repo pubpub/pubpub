@@ -8,8 +8,6 @@ import { usePageContext } from 'utils/hooks';
 import { relationTypeDefinitions } from 'utils/pubEdge';
 import { pubShortUrl } from 'utils/canonicalUrls';
 
-import { pubEdgeType } from '../PubEdge/constants';
-
 require('./pubEdgeListingCard.scss');
 
 export type PubEdgeListingCardProps = {
@@ -21,7 +19,7 @@ export type PubEdgeListingCardProps = {
 		title?: string;
 	};
 	pubData: any;
-	pubEdge: pubEdgeType;
+	pubEdge: any;
 	pubEdgeElement?: React.ReactNode;
 	showIcon?: boolean;
 	viewingFromSibling?: boolean;

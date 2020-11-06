@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { NonIdealState, Switch, Tab, Tabs } from '@blueprintjs/core';
 import { Radio } from '@blueprintjs/core';
 
 import { DashboardFrame } from 'components';
 import { usePageContext } from 'utils/hooks';
+import { apiFetch } from 'client/utils/apiFetch';
 
 import DashboardEdgesListing from './DashboardEdgesListing';
 import NewEdgeEditor from './NewEdgeEditor';
 import { useDashboardEdges } from './useDashboardEdges';
-import { apiFetch } from 'client/utils/apiFetch';
 
 require('./dashboardEdges.scss');
 
