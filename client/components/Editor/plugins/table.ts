@@ -28,16 +28,17 @@ function wrapDomSerializer(domSerializer: DOMSerializer) {
 class PubTableView extends TableView {
 	constructor(node, ...rest) {
 		super(node, ...rest);
-		this.syncDom(node);
+		this.syncId(node);
+		this.syncCaption(node);
 	}
 
 	update(node, decorations) {
 		const shouldUpdate = super.update(node, decorations);
-		this.syncDom(node);
+		this.syncId(node);
 		return shouldUpdate;
 	}
 
-	syncDom(node) {
+	syncCaption(node) {
 		const { dom } = (this as any) as { dom: HTMLElement };
 		const label = buildLabel(node);
 		if (label) {
@@ -48,6 +49,10 @@ class PubTableView extends TableView {
 				table.append(caption);
 			}
 		}
+	}
+
+	syncId(node) {
+		const { dom } = (this as any) as { dom: HTMLElement };
 		dom.setAttribute('id', node.attrs.id);
 	}
 }
