@@ -4,10 +4,12 @@ import { Plugin } from 'prosemirror-state';
 // @ts-ignore
 import { columnResizing, tableEditing, goToNextCell, TableView } from 'prosemirror-tables';
 
+import { buildLabel } from '../utils';
+
 function wrapDomSerializer(domSerializer: DOMSerializer) {
 	return Object.assign(Object.create(domSerializer), {
 		// Strip table captions when copying/pasting table elements.
-		serializeFragment(fragment, options) {
+		serializeFragment: function(fragment, options) {
 			const result = domSerializer.serializeFragment(fragment, options);
 			const tableCaptions = result.querySelectorAll('table > caption');
 
@@ -24,19 +26,29 @@ function wrapDomSerializer(domSerializer: DOMSerializer) {
  * Synchronize the reactive id attribute of default prosemirror-tables NodeView.
  */
 class PubTableView extends TableView {
-	constructor(node, whatever) {
-		super(node, whatever);
-		this.syncId(node);
+	constructor(node, ...rest) {
+		super(node, ...rest);
+		this.syncDom(node);
 	}
 
 	update(node, decorations) {
 		const shouldUpdate = super.update(node, decorations);
-		this.syncId(node);
+		this.syncDom(node);
 		return shouldUpdate;
 	}
 
-	syncId(node) {
-		((this as any) as { dom: HTMLElement }).dom.setAttribute('id', node.attrs.id);
+	syncDom(node) {
+		const { dom } = (this as any) as { dom: HTMLElement };
+		const label = buildLabel(node);
+		if (label) {
+			const table = dom.querySelector('table');
+			if (table) {
+				const caption = document.createElement('caption');
+				caption.innerHTML = label;
+				table.append(caption);
+			}
+		}
+		dom.setAttribute('id', node.attrs.id);
 	}
 }
 
