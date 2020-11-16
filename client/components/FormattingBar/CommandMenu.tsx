@@ -6,14 +6,14 @@ import { Menu, MenuItem, MenuItemDivider } from 'components/Menu';
 
 type commandPropType = {
 	key: string;
-	title: string;
+	title: string | React.ReactNode;
 	icon?: string;
 };
 
 // @ts-expect-error ts-migrate(2322) FIXME: Type 'null' is not assignable to type 'string | un... Remove this comment to see the full error message
 const commandPropType: PropTypes.Requireable<commandPropType> = PropTypes.shape({
 	key: PropTypes.string.isRequired,
-	title: PropTypes.string.isRequired,
+	title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
 	icon: PropTypes.string,
 });
 
