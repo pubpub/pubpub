@@ -149,12 +149,7 @@ class CollectionMetadataEditor extends React.Component<Props, State> {
 				onConfirm={this.handleGetDoiClick}
 				confirmLabel="Assign DOI"
 				intent="primary"
-				text={
-					<span>
-						This is the first time this collection has been deposited to Crossref. Once
-						assigned, the DOI for this collection cannot be changed.
-					</span>
-				}
+				text="This is the first time this collection has been deposited to Crossref. Once assigned, the DOI for this collection cannot be changed."
 			>
 				{({ open }) => (
 					<Button
