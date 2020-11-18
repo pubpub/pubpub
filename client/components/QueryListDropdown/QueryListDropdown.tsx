@@ -14,7 +14,7 @@ type Props<Item> = {
 	searchPlaceholder: string;
 	emptyListPlaceholder: React.ReactNode;
 	itemRenderer: ItemRenderer<Item>;
-	usePortal: boolean;
+	usePortal?: boolean;
 };
 
 const QueryListDropdown = <Item extends {}>(props: Props<Item>) => {
