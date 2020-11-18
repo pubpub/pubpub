@@ -204,6 +204,7 @@ const PubCollectionsListing = (props: Props) => {
 					onItemSelect={handleAddCollectionPub}
 					position="bottom-left"
 					onClose={onQueryListClose}
+					usePortal={false}
 				>
 					{triggerButton}
 				</QueryListDropdown>
