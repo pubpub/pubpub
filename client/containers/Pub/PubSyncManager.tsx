@@ -19,6 +19,7 @@ export const PubContext = React.createContext({
 	historyData: {},
 	firebaseBranchRef: null,
 	updateLocalData: null,
+	updatePubData: null as any,
 	// @ts-expect-error ts-migrate(2554) FIXME: Expected 2-3 arguments, but got 0.
 	citationManager: new CitationManager(),
 });

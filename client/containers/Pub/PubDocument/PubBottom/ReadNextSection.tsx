@@ -23,14 +23,21 @@ const ReadNextSection = (props: Props) => {
 	const { locationData, communityData } = usePageContext();
 	const currentCollection = chooseCollectionForPub(pubData, locationData);
 	const { pubs } = useCollectionPubs(updateLocalData, currentCollection);
+
+	if (!currentCollection) {
+		return null;
+	}
+
 	const { nextPub } = getNeighborsInCollectionPub(pubs, pubData);
 	const { readNextPreviewSize = 'choose-best' } = currentCollection || {};
+
 	if (readNextPreviewSize === 'none') {
 		return null;
 	}
 	if (!nextPub) {
 		return null;
 	}
+
 	return (
 		<PubBottomSection
 			isExpandable={false}
