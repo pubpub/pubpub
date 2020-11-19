@@ -1,19 +1,15 @@
 import React from 'react';
-import dateFormat from 'dateformat';
 
 import { LicenseSelect } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { getLicenseBySlug } from 'utils/licenses';
-import { getPubCopyrightYear, getPubPublishedDate } from 'utils/pub/pubDates';
+import { getPubCopyrightYear } from 'utils/pub/pubDates';
+import { Pub } from 'utils/types';
 
 import PubBottomSection, { SectionBullets, AccentedIconButton } from './PubBottomSection';
 
 type Props = {
-	pubData: {
-		canManage?: boolean;
-		licenseSlug?: string;
-		collectionPubs?: any[];
-	};
+	pubData: Pub;
 	updateLocalData: (...args: any[]) => any;
 };
 
@@ -21,7 +17,7 @@ const LicenseSection = (props: Props) => {
 	const { pubData, updateLocalData } = props;
 	const { communityData, scopeData } = usePageContext();
 	const { link, full, short, version, slug } = getLicenseBySlug(pubData.licenseSlug)!;
-	const pubCopyrightYear = getPubCopyrightYear(pubData);
+	const pubCopyrightYear = getPubCopyrightYear(pubData as any);
 	let pubPublisher = communityData.title;
 	if (communityData.id === '78810858-8c4a-4435-a669-6bb176b61d40') {
 		pubPublisher = 'Massachusetts Institute of Technology';
@@ -59,7 +55,7 @@ const LicenseSection = (props: Props) => {
 			iconItems={({ iconColor }) => {
 				if (scopeData.activePermissions.canManage) {
 					return (
-						<LicenseSelect pubData={pubData} updateLocalData={updateLocalData}>
+						<LicenseSelect pubData={pubData as any} updateLocalData={updateLocalData}>
 							{({ isPersisting }) => (
 								<AccentedIconButton
 									accentColor={iconColor}

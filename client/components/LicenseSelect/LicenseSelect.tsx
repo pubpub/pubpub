@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
 import { Icon, Popover, Menu, MenuItem } from '@blueprintjs/core';
-import dateFormat from 'dateformat';
 
 import { licenses, getLicenseBySlug } from 'utils/licenses';
 import { usePageContext } from 'utils/hooks';
 import { getPubCopyrightYear } from 'utils/pub/pubDates';
 import { apiFetch } from 'client/utils/apiFetch';
+import { Pub, CollectionPub } from 'utils/types';
 
 require('./licenseSelect.scss');
 
 type OwnProps = {
 	children: (...args: any[]) => any;
-	pubData: {
-		id?: string;
-		licenseSlug?: string;
-		collectionPubs?: any[];
+	pubData: DefinitelyHas<Pub, 'releases'> & {
+		collectionPubs: DefinitelyHas<CollectionPub, 'collection'>[];
 	};
 	onSelect?: (...args: any[]) => any;
 	updateLocalData?: (...args: any[]) => any;
@@ -106,7 +104,6 @@ const LicenseSelect = (props: Props) => {
 							}
 							icon={renderIcon(license)}
 							labelElement={
-								// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 								license.slug === currentLicense.slug && <Icon icon="tick" />
 							}
 						/>
@@ -119,7 +116,6 @@ const LicenseSelect = (props: Props) => {
 		<Popover content={renderMenu()}>
 			{children({
 				icon: renderIcon(currentLicense),
-				// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 				title: currentLicense.full,
 				isPersisting: isPersisting,
 			})}

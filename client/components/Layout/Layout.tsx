@@ -18,7 +18,7 @@ require('./layout.scss');
 type Props = LayoutOptions & {
 	blocks: LayoutBlock[];
 	id?: string;
-	pubs: Pub[];
+	pubs: DefinitelyHas<Pub, 'releases'>[];
 	collection?: Collection;
 };
 

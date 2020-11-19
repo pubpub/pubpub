@@ -4,7 +4,7 @@ import { Layout } from 'components';
 import { Pub, Collection as CollectionType } from 'utils/types';
 
 type Props = {
-	pubs: Pub[];
+	pubs: DefinitelyHas<Pub, 'releases'>[];
 	collection: CollectionType;
 };
 

@@ -5,7 +5,7 @@ import stickybits from 'stickybits';
 import { generateHash } from 'utils/hashes';
 import { getPubsByBlockIndex } from 'utils/layout';
 import { LayoutBlock } from 'utils/layout/types';
-import { Pub, Community, Collection } from 'utils/types';
+import { Pub as BarePub, Community, Collection } from 'utils/types';
 
 import LayoutEditorInsert from './LayoutEditorInsert';
 import LayoutEditorPubs from './LayoutEditorPubs';
@@ -16,6 +16,8 @@ import LayoutEditorBanner from './LayoutEditorBanner';
 import LayoutEditorCollectionHeader from './LayoutEditorCollectionHeader';
 
 require('./layoutEditor.scss');
+
+type Pub = DefinitelyHas<BarePub, 'releases'>;
 
 type Props = {
 	onChange: (layout: LayoutBlock[]) => unknown;
