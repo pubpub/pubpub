@@ -70,7 +70,7 @@ export type Collection = {
 	isPublic?: boolean;
 	viewHash?: string;
 	editHash?: string;
-	metadata?: string;
+	metadata?: { [k: string]: any };
 	kind?: 'tag' | 'issue' | 'book' | 'conference';
 	doi?: string;
 	readNextPreviewSize: 'none' | 'minimal' | 'medium' | 'choose-best';
@@ -141,6 +141,8 @@ export type Release = {
 	userId: string;
 	sourceBranchId: string;
 	sourceBranchKey: number;
+	createdAt: string;
+	updatedAt: string;
 };
 
 export type PubVersion = {
