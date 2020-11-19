@@ -19,7 +19,7 @@ import ContributorAvatars from '../ContributorAvatars/ContributorAvatars';
 require('./pubPreview.scss');
 
 type Props = {
-	pubData: DefinitelyHas<Pub, 'releases'>;
+	pubData: Pub;
 	communityData?: any;
 	size?: 'minimal' | 'small' | 'medium' | 'large';
 	hideByline?: boolean;

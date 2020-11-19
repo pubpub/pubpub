@@ -1,11 +1,9 @@
 import React from 'react';
 
 import { PubPreview } from 'components';
-import { Pub as BarePub } from 'utils/types';
+import { Pub } from 'utils/types';
 import { LayoutBlockPubs } from 'utils/layout/types';
 import { createReadingParamUrl } from 'client/utils/collections';
-
-type Pub = DefinitelyHas<BarePub, 'releases'>;
 
 type Props = {
 	content: LayoutBlockPubs['content'];

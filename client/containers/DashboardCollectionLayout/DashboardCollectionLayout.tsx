@@ -17,7 +17,7 @@ require('./dashboardCollectionLayout.scss');
 
 type Props = {
 	collection: Collection;
-	pubs: DefinitelyHas<Pub, 'releases'>[];
+	pubs: Pub[];
 };
 
 const DashboardCollectionLayout = (props: Props) => {

@@ -26,7 +26,7 @@ const sortPubsByPublishDate = (pubs: Pub[], reversed = false) => {
 	const publishDateById = {};
 	pubs.forEach((pub) => {
 		publishDateById[pub.id] = getPubPublishedDate(
-			pub as DefinitelyHas<Pub, 'releases'>,
+			pub
 		)?.valueOf();
 	});
 	return pubs.concat().sort((a, b) => {

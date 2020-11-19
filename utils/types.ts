@@ -212,7 +212,7 @@ export type Pub = {
 	exports?: Export[];
 	members?: Member[];
 	branches?: Branch[];
-	releases?: Release[];
+	releases: Release[];
 	pubVersions?: PubVersion[];
 	crossrefDepositRecord?: CrossrefDepositRecord;
 	inboundEdges?: InboundEdge[];

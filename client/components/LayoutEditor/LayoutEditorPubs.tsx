@@ -3,11 +3,10 @@ import { Button, Checkbox, Popover, PopoverInteractionKind, Position } from '@bl
 
 import { CollectionMultiSelect, InputField, OrderPicker } from 'components';
 import { LayoutPubs } from 'components/Layout';
-import { Community, Pub as BarePub, Collection } from 'utils/types';
+import { Community, Pub, Collection } from 'utils/types';
 import { indexByProperty } from 'utils/arrays';
 import { LayoutBlockPubs, PubPreviewType, PubSortOrder } from 'utils/layout/types';
 
-type Pub = DefinitelyHas<BarePub, 'releases'>;
 type Content = LayoutBlockPubs['content'];
 
 type Props = {

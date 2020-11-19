@@ -12,7 +12,7 @@ const selectBranch = (pub: DefinitelyHas<Pub, 'branches'>, branch: Maybe<Branch>
 	return branch || branches.find((br) => br.title === 'public');
 };
 
-export const getPubLatestReleasedDate = (pub: DefinitelyHas<Pub, 'releases'>) => {
+export const getPubLatestReleasedDate = (pub: Pub) => {
 	if (pub.releases.length === 0) {
 		return null;
 	}
@@ -27,7 +27,7 @@ export const getPubCreatedDate = (pub: Pub) => {
 	return pub.createdAt;
 };
 
-export const getPubPublishedDate = (pub: DefinitelyHas<Pub, 'releases'>) => {
+export const getPubPublishedDate = (pub: Pub) => {
 	if (pub.customPublishedAt) {
 		// This is a date string representing a time at midnight UTC for a given date.
 		// Unfortunately, that represents a time during the previous day in the Western hemisphere,
@@ -42,10 +42,7 @@ export const getPubPublishedDate = (pub: DefinitelyHas<Pub, 'releases'>) => {
 	return null;
 };
 
-export const getPubLatestReleaseDate = (
-	pub: DefinitelyHas<Pub, 'releases'>,
-	{ excludeFirstRelease = false } = {},
-) => {
+export const getPubLatestReleaseDate = (pub: Pub, { excludeFirstRelease = false } = {}) => {
 	const { releases } = pub;
 	if (releases.length === 1 && excludeFirstRelease) {
 		return null;
@@ -83,7 +80,7 @@ export const getPubUpdatedDate = ({
 };
 
 export const getPubCopyrightYear = (
-	pub: DefinitelyHas<Pub, 'releases'> & {
+	pub: Pub & {
 		collectionPubs: DefinitelyHas<CollectionPub, 'collection'>[];
 	},
 ): string => {

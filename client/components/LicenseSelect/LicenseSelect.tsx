@@ -11,7 +11,7 @@ require('./licenseSelect.scss');
 
 type OwnProps = {
 	children: (...args: any[]) => any;
-	pubData: DefinitelyHas<Pub, 'releases'> & {
+	pubData: Pub & {
 		collectionPubs: DefinitelyHas<CollectionPub, 'collection'>[];
 	};
 	onSelect?: (...args: any[]) => any;
