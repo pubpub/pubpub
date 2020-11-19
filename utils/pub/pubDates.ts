@@ -99,5 +99,6 @@ export const getPubCopyrightYear = (
 		}
 	}
 	const pubPublishedDate = getPubPublishedDate(pub);
+	// dateFormat defaults to today's date if its first argument is null
 	return dateFormat(pubPublishedDate, 'yyyy');
 };
