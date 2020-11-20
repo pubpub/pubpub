@@ -33,6 +33,7 @@ app.post(
 	wrap(async (req, res) => {
 		const { pubId, collectionId, communityId, actorId } = getRequestIds(req);
 		const { targetUserId, value } = req.body;
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ actorId: any; pubId: any; comm... Remove this comment to see the full error message
 		const permissions = await getPermissions({
 			actorId: actorId,
 			pubId: pubId,
@@ -41,10 +42,12 @@ app.post(
 			value: value,
 		});
 		if (!permissions.create) {
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 			throw new ForbiddenError();
 		}
 		const member = await createMember({
 			value: value,
+			// @ts-expect-error ts-migrate(2322) FIXME: Type '{ pubId: any; collectionId?: undefined; comm... Remove this comment to see the full error message
 			target: {
 				userId: targetUserId,
 				...chooseTargetFromRequestIds({
@@ -72,6 +75,7 @@ app.put(
 			value: value,
 		});
 		if (!permissions.update) {
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 			throw new ForbiddenError();
 		}
 		const member = await updateMember({
@@ -96,6 +100,7 @@ app.delete(
 			value: value,
 		});
 		if (!permissions.destroy) {
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 			throw new ForbiddenError();
 		}
 		await destroyMember({ memberId: id });

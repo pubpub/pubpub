@@ -29,6 +29,7 @@ app.post(
 			});
 			return res.status(201).json(edge);
 		}
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 		throw new ForbiddenError();
 	}),
 );
@@ -48,6 +49,7 @@ app.put(
 			});
 			return res.status(200).json(edge);
 		}
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 		throw new ForbiddenError();
 	}),
 );
@@ -67,6 +69,7 @@ app.put(
 			});
 			return res.status(200).json(edge);
 		}
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 		throw new ForbiddenError();
 	}),
 );
@@ -83,6 +86,7 @@ app.delete(
 			await destroyPubEdge(pubEdgeId);
 			return res.status(200).json({});
 		}
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 		throw new ForbiddenError();
 	}),
 );

@@ -18,6 +18,7 @@ export const getPermissions = async ({ userId, communityId, pubId }) => {
 
 	let editProps = [];
 	if (canManage) {
+		// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 		editProps = ['title', 'status', 'labels', 'releaseRequested'];
 	}
 

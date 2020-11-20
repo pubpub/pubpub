@@ -17,7 +17,7 @@ const PopoverButton = (props: Props) => {
 			{/* @ts-expect-error ts-migrate(2533) FIXME: Object is possibly 'null' or 'undefined'. */}
 			<PopoverDisclosure {...popover} {...children.props}>
 				{(disclosureProps) => {
-					// @ts-expect-error ts-migrate(2769) FIXME: Type 'undefined' is not assignable to type 'ReactE... Remove this comment to see the full error message
+					// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
 					return React.cloneElement(children, disclosureProps);
 				}}
 			</PopoverDisclosure>

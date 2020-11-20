@@ -22,6 +22,7 @@ export const getUploadPolicy = ({ contentType }) => {
 		.toString('base64')
 		.replace(/\n|\r/, '');
 
+	// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string | undefined' is not assig... Remove this comment to see the full error message
 	const hmac = crypto.createHmac('sha1', awsAccessKeySecret);
 	hmac.update(policy);
 	const signature = hmac.digest('base64');

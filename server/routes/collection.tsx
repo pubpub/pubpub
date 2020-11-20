@@ -30,6 +30,7 @@ const findCollectionByPartialId = (maybePartialId) => {
 const enrichCollectionWithAttributions = async (collection) => {
 	collection.attributions = await CollectionAttribution.findAll({
 		where: { collectionId: collection.id },
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ as: string; }' is not assignab... Remove this comment to see the full error message
 		include: [includeUserModel({ as: 'user' })],
 	});
 };
@@ -41,6 +42,7 @@ app.get(['/collection/:collectionSlug', '/:collectionSlug'], async (req, res, ne
 
 	try {
 		const { collectionSlug } = req.params;
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 		const initialData = await getInitialData(req);
 		const { communityData } = initialData;
 
@@ -62,6 +64,7 @@ app.get(['/collection/:collectionSlug', '/:collectionSlug'], async (req, res, ne
 			}
 
 			if (layout) {
+				// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ blocks: any; initialData: { co... Remove this comment to see the full error message
 				const pubs = await getPubsForLayout({
 					blocks: layout.blocks,
 					initialData: initialData,
@@ -74,6 +77,7 @@ app.get(['/collection/:collectionSlug', '/:collectionSlug'], async (req, res, ne
 						chunkName="Collection"
 						initialData={initialData}
 						viewData={{ pubs: pubs, collection: collection }}
+						// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ initialData: { communityData: ... Remove this comment to see the full error message
 						headerComponents={generateMetaComponents({
 							initialData: initialData,
 							title: `${collection.title} · ${communityData.title}`,

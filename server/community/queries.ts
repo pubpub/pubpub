@@ -98,7 +98,9 @@ export const updateCommunity = (inputValues, updatePermissions) => {
 			filteredValues[key] = inputValues[key];
 		}
 	});
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'subdomain' does not exist on type '{}'.
 	if (filteredValues.subdomain) {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'subdomain' does not exist on type '{}'.
 		filteredValues.subdomain = slugifyString(filteredValues.subdomain);
 	}
 

@@ -36,7 +36,6 @@ const CollectionBrowser = (props: Props) => {
 	// eslint-disable-next-line react/prop-types
 	const renderDisclosure = ({ ref, ...disclosureProps }) => {
 		return (
-			// @ts-expect-error ts-migrate(2322) FIXME: Property 'children' does not exist on type 'Intrin... Remove this comment to see the full error message
 			<CollectionsBarButton
 				icon={bpDisplayIcon}
 				className="collection-browser-button"

@@ -52,6 +52,7 @@ app.post('/api/login', (req, res, next) => {
 				512,
 				'sha1',
 			);
+			// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
 			const pubpubSha1Hash = Buffer.from(pubpubSha1HashRaw, 'binary').toString('hex');
 			const isPubPubSha1Valid = pubpubSha1Hash === userData.hash;
 
@@ -62,6 +63,7 @@ app.post('/api/login', (req, res, next) => {
 				512,
 				'sha1',
 			);
+			// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
 			const frankenbookHash = Buffer.from(frankenbookHashRaw, 'binary').toString('hex');
 			const isfrankenbookValid = frankenbookHash === userData.hash;
 

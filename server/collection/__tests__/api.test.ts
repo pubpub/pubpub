@@ -201,6 +201,7 @@ it('unsets a collectionPub as primary when its collection is made private', asyn
 		title: 'The Book of Tests',
 	});
 	await Collection.update({ isPublic: true }, { where: { id: issue.id } });
+	// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pubId: any; collectionId: any;... Remove this comment to see the full error message
 	const collectionPub = await createCollectionPub({ pubId: pub.id, collectionId: issue.id });
 	expect(collectionPub.isPrimary).toEqual(true);
 	const agent = await login(admin);

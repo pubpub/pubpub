@@ -98,6 +98,7 @@ it('allows a member at the Community scope to add other Community members', asyn
 	const agent = await login(communityManager);
 	const { body: member } = await agent
 		.post('/api/members')
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permissions: string; user: any... Remove this comment to see the full error message
 		.send(createMemberRequest({ permissions: 'view', user: willBeCommunityViewer }))
 		.expect(201);
 	expect(member.userId).toEqual(willBeCommunityViewer.id);
@@ -117,6 +118,7 @@ it('prevents a member from elevating their own permissions', async () => {
 		].map(async ([user, member]) =>
 			(await login(user))
 				.put('/api/members')
+				// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permissions: string; member: a... Remove this comment to see the full error message
 				.send(createMemberRequest({ permissions: 'admin', member: member }))
 				.expect(403),
 		),
@@ -129,6 +131,7 @@ it('allows a member to reduce their own permissions', async () => {
 	const { body: member } = await agent
 		.put('/api/members')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permissions: string; member: a... Remove this comment to see the full error message
 			createMemberRequest({
 				permissions: 'manage',
 				member: disillusionedCommunityAdminMember,
@@ -144,6 +147,7 @@ it('prevents a member from elevating another member higher than their own permis
 	await agent
 		.put('/api/members')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permissions: string; collectio... Remove this comment to see the full error message
 			createMemberRequest({
 				permissions: 'admin',
 				collection: collection,
@@ -159,6 +163,7 @@ it('allows a member to demote a peer of equal rank', async () => {
 	const { body: member } = await agent
 		.put('/api/members')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permissions: string; collectio... Remove this comment to see the full error message
 			createMemberRequest({
 				permissions: 'edit',
 				collection: collection,
@@ -175,6 +180,7 @@ it('prevents a Collection non-manager from creating a member in a Pub scope', as
 	await agent
 		.post('/api/members')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permissions: string; collectio... Remove this comment to see the full error message
 			createMemberRequest({
 				permissions: 'view',
 				collection: collection,
@@ -191,6 +197,7 @@ it('prevents an admin of a collection from creating a member in a Pub that does 
 	await agent
 		.post('/api/members')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permissions: string; collectio... Remove this comment to see the full error message
 			createMemberRequest({
 				permissions: 'view',
 				collection: collection,
@@ -207,6 +214,7 @@ it('allows a Community manager to create a member in a Collection scope', async 
 	const { body: member } = await agent
 		.post('/api/members')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permissions: string; collectio... Remove this comment to see the full error message
 			createMemberRequest({
 				permissions: 'view',
 				collection: collection,
@@ -223,6 +231,7 @@ it('allows a Collection manager to create a member in a Pub scope', async () => 
 	const { body: member } = await agent
 		.post('/api/members')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permissions: string; collectio... Remove this comment to see the full error message
 			createMemberRequest({
 				permissions: 'view',
 				collection: collection,
@@ -240,6 +249,7 @@ it('prevents a Community manager from promoting a member to admin in a Collectio
 	await agent
 		.put('/api/members')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permissions: string; collectio... Remove this comment to see the full error message
 			createMemberRequest({
 				permissions: 'admin',
 				collection: collection,
@@ -255,6 +265,7 @@ it('allows a Community manager to promote a member to manager in a Collection sc
 	const { body: member } = await agent
 		.put('/api/members')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permissions: string; collectio... Remove this comment to see the full error message
 			createMemberRequest({
 				permissions: 'manage',
 				collection: collection,
@@ -271,6 +282,7 @@ it('prevents a Community manager from promoting a member to admin in a Collectio
 	await agent
 		.put('/api/members')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permissions: string; collectio... Remove this comment to see the full error message
 			createMemberRequest({
 				permissions: 'admin',
 				collection: collection,
@@ -286,6 +298,7 @@ it('prevents a Collection manager from promoting a member to admin in a Pub scop
 	await agent
 		.put('/api/members')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permissions: string; collectio... Remove this comment to see the full error message
 			createMemberRequest({
 				permissions: 'admin',
 				collection: collection,
@@ -302,6 +315,7 @@ it('allows a Collection manager to promote a member to manager in a Pub scope', 
 	const { body: member } = await agent
 		.put('/api/members')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permissions: string; collectio... Remove this comment to see the full error message
 			createMemberRequest({
 				permissions: 'manage',
 				collection: collection,
@@ -319,6 +333,7 @@ it('prevents a Pub admin from adding members at higher scopes', async () => {
 	await agent
 		.post('/api/members')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permissions: string; member: a... Remove this comment to see the full error message
 			createMemberRequest({
 				permissions: 'view',
 				member: friendOfThePubAdmin,
@@ -333,6 +348,7 @@ it('prevents Community admins from wreaking havoc on other Communities', async (
 	await agent
 		.post('/api/members')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ permissions: string; pub: any;... Remove this comment to see the full error message
 			createMemberRequest({
 				permissions: 'view',
 				pub: pub,
@@ -348,6 +364,7 @@ it('allows a Pub admin to remove members with lower permissions in the same scop
 	await agent
 		.delete('/api/members')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; member: any; }' is n... Remove this comment to see the full error message
 			createMemberRequest({
 				pub: pub,
 				member: youCannotPromoteMeToAdmin,
@@ -364,6 +381,7 @@ it('allows a Collection manager to remove members with lower permissions in the 
 	await agent
 		.delete('/api/members')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; collection: any; mem... Remove this comment to see the full error message
 			createMemberRequest({
 				pub: pub,
 				collection: collection,
@@ -381,6 +399,7 @@ it('prevents a Collection manager from removing admins in a Pub scope', async ()
 	await agent
 		.delete('/api/members')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; collection: any; mem... Remove this comment to see the full error message
 			createMemberRequest({
 				pub: pub,
 				collection: collection,
@@ -399,6 +418,7 @@ it('allows a member who is a manager to remove themselves', async () => {
 	await agent
 		.delete('/api/members')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ member: any; }' is not assigna... Remove this comment to see the full error message
 			createMemberRequest({
 				member: disillusionedCommunityAdminMember,
 			}),

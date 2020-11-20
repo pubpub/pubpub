@@ -29,6 +29,7 @@ const processQueryData = function(baseObj, activeObj) {
 };
 
 app.get('/api/admin-dashboard', (req, res) => {
+	// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 	return getInitialData(req).then((initialData) => {
 		const user = req.user || {};
 		const users = [
@@ -138,9 +139,13 @@ app.get('/api/admin-dashboard', (req, res) => {
 							month: i.timeframe.start.split('T')[0],
 						};
 					});
+					// @ts-expect-error ts-migrate(2339) FIXME: Property 'users' does not exist on type '{}'.
 					stats.users = processQueryData(userCountData, activeUsersObj);
+					// @ts-expect-error ts-migrate(2339) FIXME: Property 'communities' does not exist on type '{}'... Remove this comment to see the full error message
 					stats.communities = processQueryData(communityCountData, activeCommunityData);
+					// @ts-expect-error ts-migrate(2339) FIXME: Property 'discussions' does not exist on type '{}'... Remove this comment to see the full error message
 					stats.discussions = processQueryData(discussionCountData);
+					// @ts-expect-error ts-migrate(2339) FIXME: Property 'activeCommunities' does not exist on typ... Remove this comment to see the full error message
 					stats.activeCommunities = activeCommunityData;
 
 					const subscribersObj = subscriberData.history.map((i) => {
@@ -151,8 +156,10 @@ app.get('/api/admin-dashboard', (req, res) => {
 							growth: (i.optins + i.imports) / i.existing,
 						};
 					});
+					// @ts-expect-error ts-migrate(2339) FIXME: Property 'subscribers' does not exist on type '{}'... Remove this comment to see the full error message
 					stats.subscribers = subscribersObj;
 
+					// @ts-expect-error ts-migrate(2339) FIXME: Property 'activeUsers' does not exist on type '{}'... Remove this comment to see the full error message
 					stats.activeUsers = activeUsersObj;
 					return res.status(200).json(stats);
 				},

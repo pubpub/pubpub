@@ -110,6 +110,7 @@ it('forbids logged-out visitors from making discussions on released pubs', async
 	const agent = await login();
 	await agent
 		.post('/api/discussions')
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; text: string; visibi... Remove this comment to see the full error message
 		.send(makeDiscussion({ pub: releasePub, text: 'Hello world!', visibilityAccess: 'public' }))
 		.expect(403);
 });
@@ -119,6 +120,7 @@ it('forbids guests from making comments with visibilityAccess=members', async ()
 	const agent = await login(guest);
 	await agent
 		.post('/api/discussions')
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; text: string; visibi... Remove this comment to see the full error message
 		.send(makeDiscussion({ pub: draftPub, text: 'Hello world!', visibilityAccess: 'members' }))
 		.expect(403);
 });
@@ -131,6 +133,7 @@ it('creates a database entry and updates Firebase', async () => {
 		body: { id: discussionId },
 	} = await agent
 		.post('/api/discussions')
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; text: string; visibi... Remove this comment to see the full error message
 		.send(makeDiscussion({ pub: releasePub, text: 'Hello world!', visibilityAccess: 'public' }))
 		.expect(201);
 
@@ -152,6 +155,7 @@ it('respects client-created discussion IDs', async () => {
 	} = await agent
 		.post('/api/discussions')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; discussionId: any; t... Remove this comment to see the full error message
 			makeDiscussion({
 				pub: releasePub,
 				discussionId: discussionId,
@@ -171,6 +175,7 @@ it('increments thread numbers correctly', async () => {
 	} = await agent
 		.post('/api/discussions')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; text: string; visibi... Remove this comment to see the full error message
 			makeDiscussion({
 				pub: releasePub,
 				text: "Like if you're watching this in 2019!",
@@ -183,6 +188,7 @@ it('increments thread numbers correctly', async () => {
 	} = await agent
 		.post('/api/discussions')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; text: string; visibi... Remove this comment to see the full error message
 			makeDiscussion({
 				pub: releasePub,
 				text: "Like if you're watching this in 2020!",
@@ -200,6 +206,7 @@ it('does not let random members update discussions', async () => {
 	await agent
 		.put('/api/discussions')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; discussionId: any; i... Remove this comment to see the full error message
 			makeDiscussion({
 				pub: releasePub,
 				discussionId: existingDiscussion.id,
@@ -211,6 +218,7 @@ it('does not let random members update discussions', async () => {
 	await agent
 		.put('/api/discussions')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; discussionId: any; l... Remove this comment to see the full error message
 			makeDiscussion({
 				pub: releasePub,
 				discussionId: existingDiscussion.id,
@@ -222,6 +230,7 @@ it('does not let random members update discussions', async () => {
 	await agent
 		.put('/api/discussions')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; discussionId: any; t... Remove this comment to see the full error message
 			makeDiscussion({
 				pub: releasePub,
 				discussionId: existingDiscussion.id,
@@ -238,6 +247,7 @@ it('lets users change the titles of their discussions', async () => {
 	const { body: discussion } = await agent
 		.put('/api/discussions')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; discussionId: any; t... Remove this comment to see the full error message
 			makeDiscussion({
 				pub: releasePub,
 				discussionId: existingDiscussion.id,
@@ -256,6 +266,7 @@ it('lets users close their discussions, but not re-open them', async () => {
 	const { body: discussion } = await agent
 		.put('/api/discussions')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; discussionId: any; i... Remove this comment to see the full error message
 			makeDiscussion({
 				pub: releasePub,
 				discussionId: existingDiscussion.id,
@@ -269,6 +280,7 @@ it('lets users close their discussions, but not re-open them', async () => {
 	await agent
 		.put('/api/discussions')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; discussionId: any; i... Remove this comment to see the full error message
 			makeDiscussion({
 				pub: releasePub,
 				discussionId: existingDiscussion.id,
@@ -285,6 +297,7 @@ it('lets admins close and open discussions at will', async () => {
 	const { body: discussion } = await agent
 		.put('/api/discussions')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; discussionId: any; i... Remove this comment to see the full error message
 			makeDiscussion({
 				pub: releasePub,
 				discussionId: existingDiscussion.id,
@@ -298,6 +311,7 @@ it('lets admins close and open discussions at will', async () => {
 	const { body: discussionAgain } = await agent
 		.put('/api/discussions')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; discussionId: any; i... Remove this comment to see the full error message
 			makeDiscussion({
 				pub: releasePub,
 				discussionId: existingDiscussion.id,
@@ -317,6 +331,7 @@ it('lets users apply public labels to their discussions', async () => {
 	const { body: discussion } = await agent
 		.put('/api/discussions')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; discussionId: any; l... Remove this comment to see the full error message
 			makeDiscussion({
 				pub: releasePub,
 				discussionId: existingDiscussion.id,
@@ -336,6 +351,7 @@ it('forbids users from applying managed labels to their discussions', async () =
 	await agent
 		.put('/api/discussions')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; discussionId: any; l... Remove this comment to see the full error message
 			makeDiscussion({
 				pub: releasePub,
 				discussionId: existingDiscussion.id,
@@ -353,6 +369,7 @@ it('lets admins apply managed labels to discussions', async () => {
 	const { body: discussion } = await agent
 		.put('/api/discussions')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; discussionId: any; l... Remove this comment to see the full error message
 			makeDiscussion({
 				pub: releasePub,
 				discussionId: existingDiscussion.id,
@@ -374,6 +391,7 @@ it('forbids users from removing managed labels from their discussions', async ()
 	await agent
 		.put('/api/discussions')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; discussionId: any; l... Remove this comment to see the full error message
 			makeDiscussion({
 				pub: releasePub,
 				discussionId: existingDiscussion.id,
@@ -394,6 +412,7 @@ it('lets admins remove managed labels from discussions', async () => {
 	const { body: discussion } = await agent
 		.put('/api/discussions')
 		.send(
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pub: any; discussionId: any; l... Remove this comment to see the full error message
 			makeDiscussion({
 				pub: releasePub,
 				discussionId: existingDiscussion.id,

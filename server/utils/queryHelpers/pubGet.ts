@@ -9,6 +9,7 @@ export default async (slug, communityId, options = {}) => {
 			slug: sanitizedSlug,
 			communityId: communityId,
 		},
+		// @ts-expect-error ts-migrate(2322) FIXME: Type 'true' is not assignable to type 'string | un... Remove this comment to see the full error message
 		...buildPubOptions({ getMembers: true, getCollections: true, getEdges: true, ...options }),
 	});
 

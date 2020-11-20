@@ -28,6 +28,7 @@ export const submitDoiData = (json, timestamp, communityId) => {
 	readStream._read = function noop() {};
 	readStream.push(xmlObject);
 	readStream.push(null);
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'path' does not exist on type 'Readable'.
 	readStream.path = `/${timestamp}.xml`;
 	return request({
 		method: 'POST',

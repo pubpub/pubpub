@@ -176,8 +176,10 @@ getScopeElements = async (scopeInputs) => {
 export const buildOrQuery = (scopeElements) => {
 	const { activePub, activeCollection, inactiveCollections, activeCommunity } = scopeElements;
 	const orQuery = [];
+	// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 	orQuery.push({ communityId: activeCommunity.id });
 	if (activePub) {
+		// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 		orQuery.push({ pubId: activePub.id });
 	}
 	if (activeCollection || inactiveCollections.length) {
@@ -187,6 +189,7 @@ export const buildOrQuery = (scopeElements) => {
 		}
 		orQuery.push({
 			collectionId: {
+				// @ts-expect-error ts-migrate(2418) FIXME: Type of computed property's value is 'any[]', whic... Remove this comment to see the full error message
 				[Op.in]: collectionsList.map((cl) => cl.id),
 			},
 		});
@@ -333,12 +336,14 @@ getActiveCounts = async (scopeInputs, scopeElements, activePermissions) => {
 	let reviewCount = 0;
 	let forkCount = 0;
 	let pubs = [];
+	// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ isAuth: boolean; }' is not ass... Remove this comment to see the full error message
 	const pubQueryOptions = buildPubOptions({ isAuth: true });
 	if (activeTargetType === 'pub') {
 		const pubData = await Pub.findOne({
 			where: { id: activeTarget.id },
 			...pubQueryOptions,
 		});
+		// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 		pubs = [pubData];
 	}
 
@@ -365,12 +370,15 @@ getActiveCounts = async (scopeInputs, scopeElements, activePermissions) => {
 		pubs = communityCountData.pubs;
 	}
 	pubs.forEach((pub) => {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'discussions' does not exist on type 'nev... Remove this comment to see the full error message
 		const openDiscussions = pub.discussions.filter((item) => !item.isClosed);
 		const discussions = sanitizeDiscussions(openDiscussions, activePermissions, loginId);
 
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'forks' does not exist on type 'never'.
 		const openForks = pub.forks.filter((item) => !item.isClosed);
 		const forks = sanitizeForks(openForks, activePermissions, loginId);
 
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'reviews' does not exist on type 'never'.
 		const openReviews = pub.reviews.filter((item) => item.status !== 'closed');
 		const reviews = sanitizeReviews(openReviews, activePermissions, loginId);
 

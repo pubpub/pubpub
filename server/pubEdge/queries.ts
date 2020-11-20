@@ -40,6 +40,7 @@ export const createPubEdge = async ({
 	});
 	return PubEdge.findOne({
 		where: { id: newEdge.id },
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ includeTargetPub: boolean; }' ... Remove this comment to see the full error message
 		include: getPubEdgeIncludes({ includeTargetPub: true }),
 	});
 };

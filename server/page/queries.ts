@@ -52,9 +52,12 @@ export const updatePage = async (inputValues, updatePermissions) => {
 			filteredValues[key] = inputValues[key];
 		}
 	});
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'slug' does not exist on type '{}'.
 	if (filteredValues.slug) {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'slug' does not exist on type '{}'.
 		filteredValues.slug = slugifyString(filteredValues.slug);
 		const available = await slugIsAvailable({
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'slug' does not exist on type '{}'.
 			slug: filteredValues.slug,
 			communityId: inputValues.communityId,
 			activeElementId: inputValues.pageId,
@@ -63,7 +66,9 @@ export const updatePage = async (inputValues, updatePermissions) => {
 			throw new PubPubError.InvalidFieldsError('slug');
 		}
 	}
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'layout' does not exist on type '{}'.
 	if (filteredValues.layout) {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'layout' does not exist on type '{}'.
 		filteredValues.layout = filteredValues.layout.map((block) => {
 			if (block.type !== 'html') {
 				return block;

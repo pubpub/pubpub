@@ -36,7 +36,6 @@ const PubDetails = (props: Props) => {
 		<div className="pub-details-component">
 			<h3 className="pub-title">{pubData.title}</h3>
 			<SmallHeaderButton
-				// @ts-expect-error ts-migrate(2322) FIXME: Property 'className' does not exist on type 'Intri... Remove this comment to see the full error message
 				className="mobile-close-details-button"
 				onClick={onCloseHeaderDetails}
 				icon="cross"
@@ -74,9 +73,13 @@ const PubDetails = (props: Props) => {
 					{pubData.doi && (
 						<React.Fragment>
 							<h6 className="pub-header-themed-secondary">DOI</h6>{' '}
+							{/* @ts-expect-error ts-migrate(2745) FIXME: This JSX tag's 'children' prop expects type 'never... Remove this comment to see the full error message */}
 							<ClickToCopyButton
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 								copyString={`https://doi.org/${pubData.doi}`}
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 								className="click-to-copy"
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 								beforeCopyPrompt="Copy doi.org link"
 							>
 								{pubData.doi}

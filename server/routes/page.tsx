@@ -14,6 +14,7 @@ app.get(['/', '/:slug'], async (req, res, next) => {
 	}
 
 	try {
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 		const initialData = await getInitialData(req);
 		const pageId = initialData.communityData.pages.reduce((prev, curr) => {
 			if (curr.slug === '' && req.params.slug === undefined) {
@@ -28,6 +29,7 @@ app.get(['/', '/:slug'], async (req, res, next) => {
 		if (!pageId) {
 			return next();
 		}
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ query: { id: any; }; initialDa... Remove this comment to see the full error message
 		const pageData = await getPage({ query: { id: pageId }, initialData: initialData });
 		const pageTitle = !pageData.slug
 			? initialData.communityData.title
@@ -39,6 +41,7 @@ app.get(['/', '/:slug'], async (req, res, next) => {
 				chunkName="Page"
 				initialData={initialData}
 				viewData={{ pageData: pageData }}
+				// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ initialData: { communityData: ... Remove this comment to see the full error message
 				headerComponents={generateMetaComponents({
 					initialData: initialData,
 					title: pageTitle,

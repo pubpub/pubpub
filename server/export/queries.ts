@@ -49,6 +49,7 @@ export const getOrStartExportTask = async ({ pubId, branchId, format, historyKey
 export const createBranchExports = async (pubId, branchId) => {
 	const {
 		historyData: { latestKey },
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 5 arguments, but got 2.
 	} = await getBranchDoc(pubId, branchId);
 	await Promise.all(
 		getExportFormats().map((format) =>

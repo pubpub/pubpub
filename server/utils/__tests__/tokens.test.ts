@@ -36,6 +36,7 @@ it('creates a valid JWT that can be decoded later', () => {
 
 it('refuses to create a JWT without required values', () => {
 	expect(() =>
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ communityId: string; type: str... Remove this comment to see the full error message
 		issueToken({
 			communityId: 'us',
 			type: 'test_token',
@@ -44,6 +45,7 @@ it('refuses to create a JWT without required values', () => {
 		}),
 	).toThrow();
 	expect(() =>
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ userId: string; type: string; ... Remove this comment to see the full error message
 		issueToken({
 			userId: 'me',
 			type: 'test_token',
@@ -52,6 +54,7 @@ it('refuses to create a JWT without required values', () => {
 		}),
 	).toThrow();
 	expect(() =>
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ userId: string; communityId: s... Remove this comment to see the full error message
 		issueToken({
 			userId: 'me',
 			communityId: 'us',
@@ -60,6 +63,7 @@ it('refuses to create a JWT without required values', () => {
 		}),
 	).toThrow();
 	expect(() =>
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ userId: string; communityId: s... Remove this comment to see the full error message
 		issueToken({
 			userId: 'me',
 			communityId: 'us',

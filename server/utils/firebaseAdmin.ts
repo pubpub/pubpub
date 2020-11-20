@@ -20,6 +20,7 @@ const getFirebaseApp = () => {
 	}
 	if (process.env.NODE_ENV === 'test') {
 		if (process.env.FIREBASE_TEST_DB_URL) {
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ databaseUrl: string; }' is not... Remove this comment to see the full error message
 			return firebaseAdmin.initializeApp({ databaseUrl: process.env.FIREBASE_TEST_DB_URL });
 		}
 		// TODO(ian): Make sure we always get something here
@@ -27,6 +28,7 @@ const getFirebaseApp = () => {
 	}
 	/* To encode: Buffer.from(JSON.stringify(serviceAccountJson)).toString('base64'); */
 	const serviceAccount = JSON.parse(
+		// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
 		Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64, 'base64').toString(),
 	);
 	/* eslint-disable-next-line no-console */
@@ -45,10 +47,12 @@ const database = firebaseApp && firebaseApp.database();
 export const editorSchema = buildSchema({ ...discussionSchema }, {});
 
 export const getPubRef = (pubId) => {
+	// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 	return database.ref(`pub-${pubId}`);
 };
 
 export const getBranchRef = (pubId, branchId) => {
+	// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 	return database.ref(`pub-${pubId}/branch-${branchId}`);
 };
 
@@ -111,12 +115,14 @@ export const getLatestKey = async (pubId, branchId) => {
 };
 
 export const getFirebaseToken = (clientId, clientData) => {
+	// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'App | null' is not assignable to... Remove this comment to see the full error message
 	return firebaseAdmin.auth(firebaseApp).createCustomToken(clientId, clientData);
 };
 
 export const createFirebaseBranch = (pubId, baseBranchId, newBranchId) => {
 	const baseFirebaseRef = getBranchRef(pubId, baseBranchId);
 	const newFirebaseRef = getBranchRef(pubId, newBranchId);
+	// @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
 	return createBranch(baseFirebaseRef, newFirebaseRef);
 };
 
@@ -130,6 +136,7 @@ export const mergeFirebaseBranch = (
 	const destinationFirebaseRef = getBranchRef(pubId, destinationBranchId);
 	return mergeBranch(sourceFirebaseRef, destinationFirebaseRef, editorSchema).then(
 		async (mergeResult) => {
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'mergeKey' does not exist on type '{ merg... Remove this comment to see the full error message
 			const { mergeKey } = mergeResult;
 			await restoreDiscussionMaps(destinationFirebaseRef, editorSchema, true);
 			if (copyDiscussionMaps) {

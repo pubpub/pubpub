@@ -25,6 +25,7 @@ export const getPermissions = async ({
 	communityId,
 	collectionId,
 	memberId,
+	// @ts-expect-error ts-migrate(2525) FIXME: Initializer provides no value for this binding ele... Remove this comment to see the full error message
 	value: { permissions } = {},
 }) => {
 	if (!actorId) {

@@ -39,6 +39,7 @@ afterEach(() => {
 	getBranchDocStub.restore();
 });
 
+// @ts-expect-error ts-migrate(2525) FIXME: Initializer provides no value for this binding ele... Remove this comment to see the full error message
 const makeHistoryQuery = ({ historyKey = 0, branchTitle, provideAccessHash = false } = {}) => {
 	const { community, pub } = models;
 	const branch = pub.branches.find((br) => br.title === branchTitle);

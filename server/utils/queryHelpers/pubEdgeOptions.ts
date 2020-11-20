@@ -24,14 +24,18 @@ export const getOptionsForIncludedPub = ({ includeCommunity }) => {
 			model: PubAttribution,
 			as: 'attributions',
 			order: [['order', 'ASC']],
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ as: string; }' is not assignab... Remove this comment to see the full error message
 			include: [includeUserModel({ as: 'user' })],
 		},
 	].filter((x) => x);
 };
 
 export const getPubEdgeIncludes = ({
+	// @ts-expect-error ts-migrate(2525) FIXME: Initializer provides no value for this binding ele... Remove this comment to see the full error message
 	includeCommunityForPubs,
+	// @ts-expect-error ts-migrate(2525) FIXME: Initializer provides no value for this binding ele... Remove this comment to see the full error message
 	includeTargetPub,
+	// @ts-expect-error ts-migrate(2525) FIXME: Initializer provides no value for this binding ele... Remove this comment to see the full error message
 	includePub,
 } = {}) => {
 	return [
