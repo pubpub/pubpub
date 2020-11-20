@@ -19,6 +19,7 @@ const uploadFromStream = (key) => {
 	const pass = new stream.PassThrough();
 	const params = { Key: key, Body: pass, ACL: 'public-read' };
 
+	// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
 	s3.upload(params, (err) => {
 		if (err) {
 			console.error(err);
@@ -29,14 +30,17 @@ const uploadFromStream = (key) => {
 	return pass;
 };
 
+// @ts-expect-error ts-migrate(2525) FIXME: Initializer provides no value for this binding ele... Remove this comment to see the full error message
 const getSitemapKey = (community, { filename, index = 'index' } = {}) =>
 	`${keyPrefix}/${community.id}/${filename || `sitemap-${index}.xml`}.gz`;
 
 const shouldGenerateSitemapIndex = async (community) => {
 	try {
+		// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
 		const metadata = await s3.headObject({ Key: getSitemapKey(community) }).promise();
 		// Re-generate the sitemap index if sitemap has not been updated within
 		// the last 24 hours.
+		// @ts-expect-error ts-migrate(2363) FIXME: The right-hand side of an arithmetic operation mus... Remove this comment to see the full error message
 		return Date.now() - metadata.LastModified >= 8.64e7;
 	} catch (err) {
 		return true;
@@ -79,6 +83,7 @@ const maybeGenerateSitemapIndex = async (community) => {
 
 			sitemapStream
 				.pipe(createGzip())
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'number' is not assignable to type 'string | ... Remove this comment to see the full error message
 				.pipe(uploadFromStream(getSitemapKey(community, { index: i })));
 
 			return [new URL(sitemapPath, hostname).toString(), sitemapStream];
@@ -115,8 +120,10 @@ const getSitemapIndex = async (community, targetFilename) => {
 		Key: getSitemapKey(community, { filename: targetFilename }),
 	};
 
+	// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
 	await s3.waitFor('objectExists', indexParams).promise();
 
+	// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
 	return s3.getObject(indexParams).createReadStream();
 };
 

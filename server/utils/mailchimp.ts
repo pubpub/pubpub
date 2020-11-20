@@ -19,6 +19,7 @@ const callback = (error, response, body) => {
 		const tagsReceived = response.body.tags;
 		if (!tagsSent.every((val) => tagsReceived.includes(val))) {
 			const tagsArr = [];
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 			tagsSent.map((val) => tagsArr.push({ name: val, status: 'active' }));
 			const options = {
 				method: 'POST',

@@ -42,7 +42,9 @@ export const enrichPubFirebaseDoc = async (pubData, versionNumber, branchType) =
 		doc,
 		historyData,
 		mostRecentRemoteKey,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'firstTimestamp' does not exist on type '... Remove this comment to see the full error message
 		firstTimestamp,
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'latestTimestamp' does not exist on type ... Remove this comment to see the full error message
 		latestTimestamp,
 	} = await getDocContentForBranch(pubData, activeBranch, versionNumber, branchType === 'draft');
 
@@ -115,6 +117,7 @@ export const enrichAndSanitizePubEdges = async (pubData, initialData) => {
 	const edgeIds = [...inboundEdges, ...outboundEdges].map((edge) => edge.id);
 
 	const siblingEdges = await PubEdge.findAll({
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ includePub: boolean; includeTa... Remove this comment to see the full error message
 		include: getPubEdgeIncludes({ includePub: true, includeTargetPub: true }),
 		where: {
 			id: { [Op.notIn]: edgeIds },

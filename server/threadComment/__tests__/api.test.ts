@@ -88,6 +88,7 @@ const createThreadComment = ({
 		communityId: community.id,
 		text: text,
 		content: {},
+		// @ts-expect-error ts-migrate(2698) FIXME: Spread types may only be created from object types... Remove this comment to see the full error message
 		...(threadComment && { threadCommentId: threadComment.id }),
 		...(discussion && { parentId: discussion.id }),
 	};

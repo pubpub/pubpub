@@ -18,6 +18,7 @@ app.get(
 	'/robots.txt',
 	wrap(async (req, res) => {
 		if (!hostIsValid(req, 'community')) {
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 			return buildRobotsFile();
 		}
 

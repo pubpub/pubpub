@@ -425,7 +425,7 @@ class PubSyncManager extends React.Component<Props, State> {
 			updatePubData: this.updatePubData,
 		};
 		return (
-			// @ts-expect-error ts-migrate(2322) FIXME: Type '(type: any, data: any, { isImmediate }?: { i... Remove this comment to see the full error message
+			// @ts-expect-error ts-migrate(2322) FIXME: Type '{ pubData: any; collabData: any; historyData... Remove this comment to see the full error message
 			<PubContext.Provider value={context}>
 				{/* @ts-expect-error ts-migrate(2723) FIXME: Cannot invoke an object which is possibly 'null' o... Remove this comment to see the full error message */}
 				{this.props.children(context)}

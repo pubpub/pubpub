@@ -1,13 +1,14 @@
 /* eslint-disable global-require */
 import path from 'path';
 import Sequelize from 'sequelize';
-import { createIncludeUserModel } from './utils/queryHelpers/includeUserModel';
 
 if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
 	require(path.join(process.cwd(), 'config.js'));
 }
 
+// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 const useSSL = process.env.DATABASE_URL.indexOf('localhost') === -1;
+// @ts-expect-error ts-migrate(2351) FIXME: This expression is not constructable.
 export const sequelize = new Sequelize(process.env.DATABASE_URL, {
 	logging: false,
 	dialectOptions: { ssl: useSSL ? { rejectUnauthorized: false } : false },
@@ -79,10 +80,35 @@ export const VisibilityUser = sequelize.import('./visibilityUser/model');
 export const User = sequelize.import('./user/model');
 export const WorkerTask = sequelize.import('./workerTask/model');
 
-export const includeUserModel = createIncludeUserModel(User);
+export const attributesPublicUser = [
+	'id',
+	'firstName',
+	'lastName',
+	'fullName',
+	'avatar',
+	'slug',
+	'initials',
+	'title',
+	'orcid',
+];
+
+export const includeUserModel = (() => {
+	return ({ attributes: providedAttrs, ...restOptions }) => {
+		const attributes = providedAttrs
+			? // @ts-expect-error ts-migrate(2569) FIXME: Type 'Set<any>' is not an array type or a string t... Remove this comment to see the full error message
+			  [...new Set([...attributesPublicUser, ...providedAttrs])]
+			: attributesPublicUser;
+		return {
+			model: User,
+			attributes: attributes,
+			...restOptions,
+		};
+	};
+})();
 
 /* Create associations for models that have associate function */
 Object.values(sequelize.models).forEach((model) => {
+	// @ts-expect-error ts-migrate(2571) FIXME: Object is of type 'unknown'.
 	const classMethods = model.options.classMethods || {};
 	if (classMethods.associate) {
 		classMethods.associate(sequelize.models);

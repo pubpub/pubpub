@@ -28,6 +28,7 @@ app.get(
 			accessHash: accessHash,
 		});
 		if (canCreateExport) {
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 5 arguments, but got 3.
 			const branchInfo = await getBranchDoc(pubId, branchId, parseInt(historyKey, 10));
 			return res.status(200).json(branchInfo);
 		}

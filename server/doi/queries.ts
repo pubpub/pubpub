@@ -20,6 +20,7 @@ const collectionIncludes = [
 	{
 		model: CollectionAttribution,
 		as: 'attributions',
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ as: string; required: boolean;... Remove this comment to see the full error message
 		include: [includeUserModel({ as: 'user', required: false })],
 	},
 ];
@@ -42,6 +43,7 @@ const findCollection = (collectionId) =>
 const findPub = (pubId) =>
 	Pub.findOne({
 		where: { id: pubId },
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ getEdgesOptions: { includePub:... Remove this comment to see the full error message
 		...buildPubOptions({
 			getEdgesOptions: {
 				// Include Pub for both inbound and outbound pub connections
@@ -94,9 +96,11 @@ const persistDoiData = (ids, dois) => {
 	const { collection: collectionDoi, pub: pubDoi } = dois;
 	const updates = [];
 	if (collectionId && collectionDoi) {
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 		updates.push(Collection.update({ doi: collectionDoi }, { where: { id: collectionId } }));
 	}
 	if (pubId && pubDoi) {
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 		updates.push(Pub.update({ doi: pubDoi }, { where: { id: pubId } }));
 	}
 	return Promise.all(updates);

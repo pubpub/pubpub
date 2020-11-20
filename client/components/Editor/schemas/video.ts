@@ -1,10 +1,10 @@
+import { DOMOutputSpec } from 'prosemirror-model';
+import { pruneFalsyValues } from 'utils/arrays';
+import { withValue } from 'utils/fp';
 import { renderHtmlChildren } from '../utils/renderHtml';
 import { counter } from './reactive/counter';
 import { label } from './reactive/label';
 import { buildLabel } from '../utils/references';
-import { DOMOutputSpec } from 'prosemirror-model';
-import { pruneFalsyValues } from 'utils/arrays';
-import { withValue } from 'utils/fp';
 
 export default {
 	video: {

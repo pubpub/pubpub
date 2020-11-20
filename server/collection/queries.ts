@@ -50,6 +50,7 @@ export const createCollection = ({
 			doi: doi,
 			kind: kind,
 			layout: generateDefaultCollectionLayout(),
+			// @ts-expect-error ts-migrate(2698) FIXME: Spread types may only be created from object types... Remove this comment to see the full error message
 			...(id && { id: id }),
 		};
 		const metadata = normalizeMetadataToKind({}, kind, {
@@ -69,9 +70,12 @@ export const updateCollection = async (inputValues, updatePermissions) => {
 		}
 	});
 
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'slug' does not exist on type '{}'.
 	if (filteredValues.slug) {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'slug' does not exist on type '{}'.
 		filteredValues.slug = slugifyString(filteredValues.slug);
 		const available = await slugIsAvailable({
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'slug' does not exist on type '{}'.
 			slug: filteredValues.slug,
 			communityId: inputValues.communityId,
 			activeElementId: inputValues.collectionId,
@@ -85,6 +89,7 @@ export const updateCollection = async (inputValues, updatePermissions) => {
 		where: { id: inputValues.collectionId },
 	})
 		.then(() => {
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'isPublic' does not exist on type '{}'.
 			if (filteredValues.isPublic === false) {
 				return CollectionPub.update(
 					{ isPrimary: false },

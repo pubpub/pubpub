@@ -81,6 +81,7 @@ export const createReviewRelease = async (inputValues, userData) => {
 		throw new Error('Invalid pubId or threadId');
 	}
 
+	// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ userId: any; pubId: any; draft... Remove this comment to see the full error message
 	const release = await createRelease({
 		userId: userData.id,
 		pubId: inputValues.pubId,

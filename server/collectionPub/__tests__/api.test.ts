@@ -222,7 +222,9 @@ it('does not set a private collection as a primary collection', async () => {
 it('sets a collectionPub to be the primary collection for a pub', async () => {
 	const { admin, community, pub, issue, book } = models;
 	await CollectionPub.destroy({ where: { pubId: pub.id } });
+	// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pubId: any; collectionId: any;... Remove this comment to see the full error message
 	const first = await createCollectionPub({ pubId: pub.id, collectionId: issue.id });
+	// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pubId: any; collectionId: any;... Remove this comment to see the full error message
 	const second = await createCollectionPub({ pubId: pub.id, collectionId: book.id });
 	expect(first.isPrimary).toEqual(true);
 	expect(second.isPrimary).toEqual(false);
@@ -260,6 +262,7 @@ it('sets a collectionPub to be the primary collection for a pub', async () => {
 it('updates reasonable values on a pubCollection', async () => {
 	const { admin, community, pub, issue } = models;
 	await CollectionPub.destroy({ where: { pubId: pub.id } });
+	// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pubId: any; collectionId: any;... Remove this comment to see the full error message
 	const collectionPub = await createCollectionPub({ pubId: pub.id, collectionId: issue.id });
 	const agent = await login(admin);
 	await agent
@@ -283,6 +286,7 @@ it('updates reasonable values on a pubCollection', async () => {
 it('deletes a pubCollection', async () => {
 	const { admin, community, pub, issue } = models;
 	await CollectionPub.destroy({ where: { pubId: pub.id } });
+	// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pubId: any; collectionId: any;... Remove this comment to see the full error message
 	const collectionPub = await createCollectionPub({ pubId: pub.id, collectionId: issue.id });
 	const agent = await login(admin);
 	await agent

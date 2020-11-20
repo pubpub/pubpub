@@ -1,14 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import App from 'containers/App/App';
 
 const manifest = require('../dist/manifest.json');
 
-const propTypes = {
-	chunkName: PropTypes.string.isRequired,
-	initialData: PropTypes.object.isRequired,
-	viewData: PropTypes.object,
-	headerComponents: PropTypes.array.isRequired,
+type OwnProps = {
+	chunkName: string;
+	initialData: any;
+	viewData?: any;
+	headerComponents: any[];
 };
 
 const defaultProps = {
@@ -32,7 +31,9 @@ const polyfills = [
 	'URLSearchParams',
 ].join(',');
 
-const Html = (props) => {
+type Props = OwnProps & typeof defaultProps;
+
+const Html = (props: Props) => {
 	const getPath = (chunkName, extension) => {
 		return `${manifest[`${chunkName}.${extension}`]}`;
 	};
@@ -92,7 +93,5 @@ const Html = (props) => {
 		</html>
 	);
 };
-
-Html.propTypes = propTypes;
 Html.defaultProps = defaultProps;
 export default Html;

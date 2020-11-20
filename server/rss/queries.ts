@@ -103,8 +103,10 @@ const parseCollectionConnectionFilters = ({ collections, children }) => {
 	const forbiddenCollectionSlugs = [];
 	(collections || '').split(',').forEach((slug) => {
 		if (slug.startsWith('-')) {
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 			forbiddenCollectionSlugs.push(slug.slice(1));
 		} else if (slug) {
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 			requiredCollectionSlugs.push(slug);
 		}
 	});
@@ -149,6 +151,7 @@ export const getPubData = async (pubIds) => {
 			{
 				model: PubAttribution,
 				as: 'attributions',
+				// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ as: string; }' is not assignab... Remove this comment to see the full error message
 				include: [includeUserModel({ as: 'user' })],
 			},
 			{
@@ -188,6 +191,7 @@ export const getPubData = async (pubIds) => {
 							{
 								model: CollectionAttribution,
 								as: 'attributions',
+								// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ as: string; }' is not assignab... Remove this comment to see the full error message
 								include: [includeUserModel({ as: 'user' })],
 							},
 						],

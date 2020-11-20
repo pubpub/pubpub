@@ -27,6 +27,7 @@ app.get(['/dash/pub/:pubSlug', '/dash/pub/:pubSlug/overview'], async (req, res, 
 		const initialData = await getInitialData(req, true);
 		const barePubData = await getPub(req.params.pubSlug, initialData.communityData.id);
 		const pubData = await enrichPubFirebaseDoc(barePubData, null, 'draft');
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 3 arguments, but got 2.
 		const sanitizedPub = await sanitizePub(pubData, initialData);
 		const enrichedPub = await enrichPubCitations(sanitizedPub, initialData);
 
@@ -36,8 +37,10 @@ app.get(['/dash/pub/:pubSlug', '/dash/pub/:pubSlug/overview'], async (req, res, 
 				chunkName="DashboardOverview"
 				initialData={initialData}
 				viewData={{ pubData: enrichedPub }}
+				// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ initialData: { communityData: ... Remove this comment to see the full error message
 				headerComponents={generateMetaComponents({
 					initialData: initialData,
+					// @ts-expect-error ts-migrate(2339) FIXME: Property 'elements' does not exist on type '{ elem... Remove this comment to see the full error message
 					title: `Overview · ${initialData.scopeData.elements.activeTarget.title}`,
 					unlisted: true,
 				})}

@@ -27,6 +27,7 @@ app.post(
 	wrap(async (req, res) => {
 		const permissions = await getPermissions(getRequestIds(req));
 		if (!permissions.create) {
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 			throw new ForbiddenError();
 		}
 		const newAttribution = await createCollectionAttribution({
@@ -42,6 +43,7 @@ app.put(
 	wrap(async (req, res) => {
 		const permissions = await getPermissions(getRequestIds(req));
 		if (!permissions.update) {
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 			throw new ForbiddenError();
 		}
 		const updatedValues = await updateCollectionAttribution(
@@ -60,6 +62,7 @@ app.delete(
 	wrap(async (req, res) => {
 		const permissions = await getPermissions(getRequestIds(req));
 		if (!permissions.destroy) {
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 			throw new ForbiddenError();
 		}
 		await destroyCollectionAttribution({

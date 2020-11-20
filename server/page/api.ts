@@ -21,6 +21,7 @@ app.post('/api/pages', (req, res) => {
 			if (!permissions.create) {
 				throw new Error('Not Authorized');
 			}
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 2.
 			return createPage(req.body, req.user);
 		})
 		.then((newPage) => {
@@ -38,6 +39,7 @@ app.put(
 		const ids = getRequestIds(req);
 		const permissions = await getPermissions(ids);
 		if (!permissions.update) {
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 			throw new ForbiddenError();
 		}
 		const updatedValues = await updatePage(req.body, permissions.update);

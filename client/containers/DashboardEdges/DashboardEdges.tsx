@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { NonIdealState, Switch, Tab, Tabs } from '@blueprintjs/core';
-import { Radio } from '@blueprintjs/core';
+import { NonIdealState, Switch, Tab, Tabs, Radio } from '@blueprintjs/core';
 
 import { DashboardFrame } from 'components';
 import { usePageContext } from 'utils/hooks';
@@ -91,7 +90,7 @@ const DashboardEdges = (props: Props) => {
 				{canManageEdges && (
 					<NewEdgeEditor
 						availablePubs={overviewData.pubs}
-						// @ts-expect-error ts-migrate(2322) FIXME: Type 'undefined' is not assignable to type 'string... Remove this comment to see the full error message
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '(string | undefined)[]' is not assignable to... Remove this comment to see the full error message
 						usedPubIds={usedPubsIds}
 						pubData={persistedPubData}
 						onCreateNewEdge={addCreatedOutboundEdge}

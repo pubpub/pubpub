@@ -9,6 +9,7 @@ import { getOptionsForIncludedPub } from 'server/utils/queryHelpers/pubEdgeOptio
 import { pubEdgeQueries, runQueries } from 'server/utils/scrape';
 
 const ensureFullUrlForExternalPublication = (externalPublication, responseUrl) => {
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'origin' does not exist on type 'URL | nu... Remove this comment to see the full error message
 	const { origin } = parseUrl(responseUrl);
 
 	if (externalPublication.url && /^\//.test(externalPublication.url)) {
@@ -43,6 +44,7 @@ export const createExternalPublicationFromCrossrefDoi = async (doi) => {
 	const date = publishedOnline || publishedPrint;
 
 	if (date) {
+		// @ts-expect-error ts-migrate(2322) FIXME: Type 'Date' is not assignable to type 'null'.
 		publicationDate = new Date(date['date-parts']);
 	}
 

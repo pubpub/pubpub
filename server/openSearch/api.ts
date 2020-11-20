@@ -4,6 +4,7 @@ import app from 'server/server';
 import { getInitialData } from 'server/utils/initData';
 
 app.get('/opensearch.xml', (req, res) => {
+	// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 	return getInitialData(req)
 		.then((initialData) => {
 			const domain =

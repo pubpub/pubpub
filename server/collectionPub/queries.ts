@@ -26,6 +26,7 @@ export const getPubsInCollection = async ({ communityId, collectionId, userId })
 					{
 						model: PubAttribution,
 						as: 'attributions',
+						// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ as: string; }' is not assignab... Remove this comment to see the full error message
 						include: [includeUserModel({ as: 'user' })],
 					},
 				],

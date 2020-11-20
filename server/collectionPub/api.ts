@@ -40,8 +40,10 @@ app.post(
 			userId: userId,
 		});
 		if (!permissions.create) {
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 			throw new ForbiddenError();
 		}
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ collectionId: any; pubId: any;... Remove this comment to see the full error message
 		const collectionPub = await createCollectionPub({
 			collectionId: collectionId,
 			pubId: pubId,
@@ -63,6 +65,7 @@ app.put(
 			userId: userId,
 		});
 		if (!permissions.create) {
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 			throw new ForbiddenError();
 		}
 		const updated = await setPrimaryCollectionPub({
@@ -83,6 +86,7 @@ app.put(
 			userId: userId,
 		});
 		if (!permissions.create) {
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 			throw new ForbiddenError();
 		}
 		const updated = await updateCollectionPub(
@@ -103,6 +107,7 @@ app.delete(
 			userId: userId,
 		});
 		if (!permissions.create) {
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 			throw new ForbiddenError();
 		}
 		await destroyCollectionPub({ collectionPubId: collectionPubId });

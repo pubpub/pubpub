@@ -29,11 +29,13 @@ app.post(
 		});
 		if (create) {
 			const newPub = await createPub(
+				// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ communityId: any; collectionId... Remove this comment to see the full error message
 				{ communityId: communityId, collectionIds: collectionIds },
 				userId,
 			);
 			return res.status(201).json(newPub);
 		}
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 		throw new ForbiddenError();
 	}),
 );
@@ -51,6 +53,7 @@ app.put(
 			const updateResult = await updatePub(req.body, updatableFields);
 			return res.status(200).json(updateResult);
 		}
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 		throw new ForbiddenError();
 	}),
 );
@@ -63,6 +66,7 @@ app.delete(
 			await destroyPub(pubId);
 			return res.status(200).json({});
 		}
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 0.
 		throw new ForbiddenError();
 	}),
 );
