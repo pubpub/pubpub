@@ -66,7 +66,7 @@ export type Collection = {
 	title: string;
 	slug: string;
 	avatar?: string;
-	isRestricted?: string;
+	isRestricted?: boolean;
 	isPublic?: boolean;
 	viewHash?: string;
 	editHash?: string;
@@ -88,7 +88,6 @@ export type CollectionPub = {
 	contextHint?: string;
 	rank: string;
 	pubRank: string;
-	isPrimary: boolean;
 	collection?: Collection;
 	pub?: Pub;
 };
