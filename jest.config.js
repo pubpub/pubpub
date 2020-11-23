@@ -1,6 +1,7 @@
 const esModules = ['react-stylable-diff'].join('|');
 
 module.exports = {
+	preset: 'ts-jest/presets/js-with-ts',
 	testEnvironment: 'node',
 	moduleDirectories: ['node_modules', '<rootDir>', '<rootDir>/client'],
 	transformIgnorePatterns: [`/node_modules/(?!${esModules})`],

@@ -159,7 +159,6 @@ class PubSyncManager extends React.Component<Props, State> {
 	componentDidMount() {
 		const rootKey = `pub-${this.props.pubData.id}`;
 		const branchKey = `branch-${this.props.pubData.activeBranch.id}`;
-		// @ts-expect-error ts-migrate(2569) FIXME: Type 'Reference[] | null' is not an array type or ... Remove this comment to see the full error message
 		initFirebase(rootKey, this.props.pubData.firebaseToken).then(([rootRef, connectionRef]) => {
 			this.setState(
 				{
