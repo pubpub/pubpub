@@ -1,21 +1,14 @@
 import React from 'react';
-import requireContext from 'require-context.macro';
-import { addDecorator, addParameters, configure } from '@storybook/react';
-import { configureViewport } from '@storybook/addon-viewport';
 import { FocusStyleManager } from '@blueprintjs/core';
-import { communityData, locationData, loginData, scopeData } from 'utils/storybook/data';
+import { addDecorator, addParameters } from '@storybook/react';
+
 import { PageContext } from 'utils/hooks';
+import { communityData, locationData, loginData, scopeData } from 'utils/storybook/data';
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
 /* Require default styles as done in Html.js */
 require('styles/base.scss');
-
-/* Require stories */
-const req = requireContext('../client', true, /Stories\.tsx?$/);
-function loadStories() {
-	req.keys().forEach(req);
-}
 
 addDecorator((storyFn) => {
 	return (
@@ -32,5 +25,3 @@ addParameters({
 		showPanel: false,
 	},
 });
-
-configure(loadStories, module);

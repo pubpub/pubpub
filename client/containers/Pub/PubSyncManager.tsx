@@ -159,7 +159,11 @@ class PubSyncManager extends React.Component<Props, State> {
 	componentDidMount() {
 		const rootKey = `pub-${this.props.pubData.id}`;
 		const branchKey = `branch-${this.props.pubData.activeBranch.id}`;
-		initFirebase(rootKey, this.props.pubData.firebaseToken).then(([rootRef, connectionRef]) => {
+		initFirebase(rootKey, this.props.pubData.firebaseToken).then((firebaseRefs) => {
+			if (!firebaseRefs) {
+				return;
+			}
+			const [rootRef, connectionRef] = firebaseRefs;
 			this.setState(
 				{
 					firebaseRootRef: rootRef,
