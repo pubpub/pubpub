@@ -37,6 +37,7 @@ const CollectionControls = (props: Props) => {
 			<MenuButton
 				aria-label="Choose whether this Collection is restricted"
 				buttonContent={isRestricted ? 'Restricted' : 'Open'}
+				placement="bottom-end"
 				buttonProps={{
 					minimal: true,
 					outlined: true,
