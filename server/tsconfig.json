@@ -1,6 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "noEmit": false
+    "noEmit": false,
+    "outDir": "../dist-server"
   }
 }
