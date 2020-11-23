@@ -52,6 +52,8 @@
 			"containers/*": ["./client/containers/*"],
 			"server": ["./server"],
 			"server/*": ["./server/*"],
+			"types": ["./client/types"],
+			"types/*": ["./client/types/*"],
 			"utils": ["./utils"],
 			"utils/*": ["./utils/*"]
 		} /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */,

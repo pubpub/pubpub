@@ -53,6 +53,7 @@ const PubHeaderContent = (props: Props) => {
 	const renderTop = () => {
 		return (
 			<div className="pub-header-top-area has-bottom-hairline">
+				{/* @ts-expect-error ts-migrate(2741) FIXME: Property 'slug' is missing in type '{ id: string; ... Remove this comment to see the full error message */}
 				<CollectionsBar pubData={pubData} updateLocalData={updateLocalData} />
 				<div className="basic-details">
 					<span className="metadata-pair">

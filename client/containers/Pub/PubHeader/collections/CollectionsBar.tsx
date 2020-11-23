@@ -1,7 +1,6 @@
 import React from 'react';
 import { OverflowList } from '@blueprintjs/core';
 
-// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module 'types/pub' or its correspondin... Remove this comment to see the full error message
 import { pubDataProps } from 'types/pub';
 import { chooseCollectionForPub } from 'client/utils/collections';
 import { collectionUrl } from 'utils/canonicalUrls';
@@ -24,6 +23,7 @@ const CollectionsBar = (props: Props) => {
 	const { communityData, locationData } = usePageContext();
 	const currentCollection = chooseCollectionForPub(pubData, locationData);
 
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'collectionPubs' does not exist on type '... Remove this comment to see the full error message
 	if (pubData.collectionPubs.length === 0) {
 		return null;
 	}
@@ -40,6 +40,7 @@ const CollectionsBar = (props: Props) => {
 			<OverflowList
 				className="collections-list"
 				collapseFrom="end"
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'collectionPubs' does not exist on type '... Remove this comment to see the full error message
 				items={pubData.collectionPubs
 					.filter(
 						(collectionPub) =>
@@ -62,6 +63,7 @@ const CollectionsBar = (props: Props) => {
 				)}
 				overflowRenderer={(overflowCollections) => {
 					const containsAllCollections =
+						// @ts-expect-error ts-migrate(2339) FIXME: Property 'collectionPubs' does not exist on type '... Remove this comment to see the full error message
 						overflowCollections.length === pubData.collectionPubs.length;
 					const icon = containsAllCollections ? null : 'more';
 					const rightIcon = containsAllCollections ? 'caret-down' : null;

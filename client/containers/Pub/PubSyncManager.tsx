@@ -1,7 +1,6 @@
 import React from 'react';
 import queryString from 'query-string';
 
-// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module 'types/base' or its correspondi... Remove this comment to see the full error message
 import { loginDataProps } from 'types/base';
 import { getRandomColor } from 'utils/colors';
 import { getPubPageTitle } from 'utils/pubPageTitle';

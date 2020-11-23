@@ -3,7 +3,6 @@ import { Spinner } from '@blueprintjs/core';
 
 import { PubByline } from 'components';
 import { Menu, MenuItem, MenuItemDivider } from 'components/Menu';
-// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module 'types/pub' or its correspondin... Remove this comment to see the full error message
 import { pubDataProps } from 'types/pub';
 import { usePageContext } from 'utils/hooks';
 import { createReadingParamUrl, useCollectionPubs } from 'client/utils/collections';
@@ -77,6 +76,7 @@ const CollectionBrowser = (props: Props) => {
 				!isLoading &&
 				pubs.map((pub) => (
 					<MenuItem
+						// @ts-expect-error ts-migrate(2339) FIXME: Property 'id' does not exist on type 'pubDataProps... Remove this comment to see the full error message
 						active={currentPub.id === pub.id}
 						href={readingPubUrl(pub)}
 						textClassName="menu-item-text"

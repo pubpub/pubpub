@@ -46,7 +46,7 @@ module.exports = {
 			{
 				test: /\.(js|jsx|ts|tsx)$/,
 				include: [resolve(__dirname, '../'), resolve(__dirname, '../../utils')],
-				use: 'babel-loader',
+				use: 'ts-loader',
 			},
 			{
 				test: /\.scss$/,

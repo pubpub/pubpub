@@ -72,7 +72,7 @@ const wrapperStyle = {
 };
 
 storiesOf('components/FormattingBar', module).add('default', () => (
-	// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type '"wrap" | ... Remove this comment to see the full error message
+	// @ts-expect-error ts-migrate(2322) FIXME: Type '{ padding: string; display: string; justifyC... Remove this comment to see the full error message
 	<div style={wrapperStyle}>
 		{/* @ts-expect-error ts-migrate(2741) FIXME: Property 'showBlockTypes' is missing in type '{ is... Remove this comment to see the full error message */}
 		<EditorUnit isSmall={false} buttons={buttons.fullButtonSet} />
