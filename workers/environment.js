@@ -11,8 +11,6 @@ Module.prototype.require = function(...args) {
 	return originalRequire.apply(this, args);
 };
 
-require('@babel/register')({ extensions: ['.js', '.jsx', '.ts', '.tsx'] });
-
 const { setEnvironment, setAppCommit } = require('utils/environment');
 
 setEnvironment(process.env.PUBPUB_PRODUCTION, process.env.IS_DUQDUQ);

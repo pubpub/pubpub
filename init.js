@@ -3,6 +3,7 @@ const {
 	argv: { watch },
 } = require('yargs');
 const throng = require('throng');
+
 const watchables = watch && (Array.isArray(watch) ? watch : [watch]).filter((x) => x);
 
 if (process.env.NODE_ENV === 'production') {
@@ -11,7 +12,7 @@ if (process.env.NODE_ENV === 'production') {
 
 throng({ workers: 1, lifetime: Infinity }, () => {
 	const loadServer = () => {
-		return require('./dist-server/server/server').startServer();
+		return require('./dist/server/server/server').startServer();
 	};
 
 	if (watchables) {

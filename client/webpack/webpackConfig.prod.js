@@ -25,7 +25,7 @@ module.exports = {
 	devtool: '#source-map',
 	output: {
 		filename: '[name].[chunkhash].js',
-		path: resolve(__dirname, '../../dist'),
+		path: resolve(__dirname, '../../dist/client'),
 		publicPath: '/',
 	},
 	module: {

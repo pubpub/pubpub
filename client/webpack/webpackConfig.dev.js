@@ -22,7 +22,7 @@ module.exports = {
 	devtool: '#eval',
 	output: {
 		filename: '[name].js',
-		path: resolve(__dirname, '../../dist'),
+		path: resolve(__dirname, '../../dist/client'),
 		publicPath: '/',
 	},
 	stats: {
