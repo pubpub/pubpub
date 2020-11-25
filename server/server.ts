@@ -16,7 +16,7 @@ import { sequelize, User } from './models';
 
 setEnvironment(process.env.PUBPUB_PRODUCTION, process.env.IS_DUQDUQ);
 setAppCommit(process.env.HEROKU_SLUG_COMMIT);
-require('server/utils/serverModuleOverwrite');
+require('utils/serverModuleOverwrite')();
 
 // Wrapper for app.METHOD() handlers. Though we need this to properly catch errors in handlers that
 // return a promise, i.e. those that use async/await, we should use it everywhere to be consistent.

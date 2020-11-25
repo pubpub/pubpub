@@ -28,7 +28,7 @@
 		"storybook": "start-storybook -p 9001 -c .storybook -s ./",
 		"test": "npm run lint && jest --forceExit --silent",
 		"test-dev": "jest --forceExit",
-		"tools": "NODE_PATH=./client:./ node -r esm --max-old-space-size=12000 ./tools",
+		"tools": "NODE_PATH=./client:./ node -r ts-node/register -r esm --max-old-space-size=12000 ./tools",
 		"workers-dev": "SEQUELIZE_MAX_CONNECTIONS=1 NODE_PATH=./client:./ WORKER=true nodemon workers/init.js --watch workers",
 		"workers-prod": "SEQUELIZE_MAX_CONNECTIONS=1 NODE_PATH=./client:./ WORKER=true node workers/init.js"
 	},
@@ -216,6 +216,7 @@
 		"eslint-plugin-react-hooks": "^4.1.0",
 		"jest": "^26.6.3",
 		"ts-jest": "^26.4.4",
-		"ts-loader": "^8.0.11"
+		"ts-loader": "^8.0.11",
+		"ts-node": "^9.0.0"
 	}
 }

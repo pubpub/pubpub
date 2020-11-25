@@ -4,5 +4,10 @@
     "noEmit": false,
     "outDir": "../dist/server",
     "incremental": true
-  }
+  },
+  "include": [
+    "./**/*",
+    "../client/**/*",
+    "../utils/**/*"
+  ]
 }
