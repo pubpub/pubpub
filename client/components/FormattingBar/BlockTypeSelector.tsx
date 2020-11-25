@@ -16,7 +16,7 @@ const propTypes = {
 const paragraphBlockType = {
 	key: 'paragraph',
 	title: <p>Paragraph</p>,
-	label: 'Paragraph'
+	label: 'Paragraph',
 };
 
 const blockTypes = [
@@ -27,7 +27,15 @@ const blockTypes = [
 	{ key: 'header4', title: <h4 className="h4">Header 4</h4>, label: 'Header 4' },
 	{ key: 'header5', title: <h5 className="h5">Header 5</h5>, label: 'Header 5' },
 	{ key: 'header6', title: <h6 className="h6">Header 6</h6>, label: 'Header 6' },
-	{ key: 'code_block', title: <pre><code>Code</code></pre>, label: 'Code' }
+	{
+		key: 'code_block',
+		title: (
+			<pre>
+				<code>Code</code>
+			</pre>
+		),
+		label: 'Code',
+	},
 ];
 
 const BlockTypeSelector = React.forwardRef((props, ref) => {
@@ -59,7 +67,6 @@ const BlockTypeSelector = React.forwardRef((props, ref) => {
 
 	return (
 		<CommandMenu
-			// @ts-expect-error ts-migrate(2322) FIXME: Property 'className' does not exist on type 'Intri... Remove this comment to see the full error message
 			className="block-type-selector-menu pub-body-styles"
 			aria-label="Choose text formatting"
 			ref={ref}
