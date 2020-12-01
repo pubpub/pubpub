@@ -1,7 +1,7 @@
 /* eslint-disable global-require, no-console */
 import path from 'path';
 // eslint-disable-next-line import/no-unresolved
-import { Worker } from 'worker_threads';
+import { Worker, WorkerOptions } from 'worker_threads';
 import amqplib from 'amqplib';
 import * as Sentry from '@sentry/node';
 
@@ -12,6 +12,27 @@ import { WorkerTask } from 'server/models';
 const maxWorkerTimeSeconds = 120;
 const maxWorkerThreads = 5;
 let currentWorkerThreads = 0;
+
+const workerTs = (file: string, workerOptions: WorkerOptions) => {
+	workerOptions.eval = true;
+
+	if (!workerOptions.workerData) {
+		workerOptions.workerData = {};
+	}
+
+	workerOptions.workerData.__filename = file;
+
+	return new Worker(
+		`
+					const wk = require('worker_threads');
+					require('ts-node').register();
+					let file = wk.workerData.__filename;
+					delete wk.workerData.__filename;
+					require(file);
+			`,
+		workerOptions,
+	);
+};
 
 if (process.env.NODE_ENV !== 'production') {
 	require('../config');
@@ -44,7 +65,8 @@ const processTask = (channel) => async (message) => {
 	const startTime = Date.now();
 	console.log(`Beginning ${taskData.id} (load ${currentWorkerThreads}/${maxWorkerThreads})`);
 
-	const worker = new Worker(path.join(__dirname, 'initWorker.js'), {
+	const worker = workerTs(path.join(__dirname, 'initWorker'), {
+		// @ts-ignore
 		execArgv: ['-r', 'esm'],
 		workerData: taskData,
 	});

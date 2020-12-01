@@ -39,10 +39,12 @@ const main = async (taskData) => {
 
 	parentPort.on('message', (message) => {
 		if (message === 'yield') {
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'kill' does not exist on type 'never'.
 			subprocesses.forEach((ps) => ps.kill());
 		}
 	});
 
+	// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 	const collectSubprocess = (ps) => subprocesses.push(ps);
 	const taskPromise = taskFn(input, collectSubprocess);
 

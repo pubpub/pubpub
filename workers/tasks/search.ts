@@ -2,6 +2,7 @@ import algoliasearch from 'algoliasearch';
 import { Community, PubAttribution } from '../../server/models';
 import { getPubSearchData, getPageSearchData } from '../utils/searchUtils';
 
+// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string | undefined' is not assig... Remove this comment to see the full error message
 const client = algoliasearch(process.env.ALGOLIA_ID, process.env.ALGOLIA_KEY);
 const pubsIndex = client.initIndex('pubs');
 const pagesIndex = client.initIndex('pages');
@@ -62,6 +63,7 @@ export const updateCommunityData = (communityId) => {
 				hits = hits.concat(batch);
 			},
 		});
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'objectID' does not exist on type 'never'... Remove this comment to see the full error message
 		return hits.map((hit) => hit.objectID);
 	};
 

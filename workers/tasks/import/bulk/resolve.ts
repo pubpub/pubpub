@@ -68,11 +68,13 @@ export const resolveImportPlan = async ({ importPlan, actor, parents }) => {
 				targetPath: path,
 				parents: currentParents,
 			});
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ community: any; created: any; ... Remove this comment to see the full error message
 			resolvedValues.push(resolved);
 			currentParents = { ...currentParents, ...nextParents };
 		} catch (error) {
 			// eslint-disable-next-line no-console
 			console.log(error.stack);
+			// @ts-expect-error ts-migrate(2322) FIXME: Type '{}' is not assignable to type 'never'.
 			resolvedValues.push({ resolved: {}, error: error && error.stack });
 		}
 	}

@@ -32,10 +32,13 @@ const transformSourceWithMacros = (sourceText, compiledMacros, definitions) => {
 			transformations.forEach((transformation) => {
 				const interpolateArgs = [definitions, [match, ...parts]];
 				if (typeof transformation === 'string') {
+					// @ts-expect-error ts-migrate(2556) FIXME: Expected 3 arguments, but got 1 or more.
 					returnValue = interpolateString(transformation, ...interpolateArgs);
 				} else if (transformation.define) {
 					const [rawKey, rawValue] = transformation.define;
+					// @ts-expect-error ts-migrate(2556) FIXME: Expected 3 arguments, but got 1 or more.
 					const key = interpolateString(rawKey, ...interpolateArgs);
+					// @ts-expect-error ts-migrate(2556) FIXME: Expected 3 arguments, but got 1 or more.
 					const value = interpolateString(rawValue, ...interpolateArgs);
 					definitions[key] = value;
 					returnValue = '';
@@ -51,6 +54,7 @@ const compileMacros = (macros) => {
 	const compiledMacros = [];
 	Object.entries(macros).forEach(([regexStr, transformations]) => {
 		const regex = new RegExp(regexStr, 'g');
+		// @ts-expect-error ts-migrate(2322) FIXME: Type 'RegExp' is not assignable to type 'never'.
 		compiledMacros.push({ regex: regex, transformations: asArray(transformations) });
 	});
 	return compiledMacros;

@@ -24,7 +24,9 @@ const createCss = () => {
 	// just generate the bundle once per Heroku deploy and save it to a file.
 	if (!fs.existsSync(cssPath)) {
 		const nodeSass = require('node-sass');
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string | undefined' is not assig... Remove this comment to see the full error message
 		const nodeModulesPath = path.join(process.env.PWD, 'node_modules');
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'string | undefined' is not assig... Remove this comment to see the full error message
 		const clientPath = path.join(process.env.PWD, 'client');
 		const entrypointContents = fs.readFileSync(entrypoint).toString();
 		const data = '$PUBPUB_PRINT: true;\n' + entrypointContents;
@@ -149,6 +151,7 @@ const renderSharedDetails = ({ updatedDateString, publishedDateString, doi, lice
 			{license && (
 				<div>
 					<strong>License:</strong>&nbsp;
+					{/* @ts-expect-error ts-migrate(2322) FIXME: Type 'string | null' is not assignable to type 'st... Remove this comment to see the full error message */}
 					<a href={license.link}>
 						{license.full} ({license.slug.toUpperCase()} {license.version})
 					</a>
@@ -275,8 +278,10 @@ export const renderStaticHtml = async ({
 		targetPaged && blankIframes,
 	]
 		.filter((x) => x)
+		// @ts-expect-error ts-migrate(2349) FIXME: This expression is not callable.
 		.reduce((nodes, fn) => fn(nodes), pubDoc.content);
 
+	// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ schema: Schema<"citation" | "f... Remove this comment to see the full error message
 	const docContent = renderStatic({
 		schema: editorSchema,
 		doc: { type: 'doc', content: renderableNodes },

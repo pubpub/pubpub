@@ -33,7 +33,9 @@ const joinAndFlattenArrays = (...arrays) =>
 		return [...acc, next];
 	}, []);
 
-type PrivateBylineProps = BylineProps;
+type OwnPrivateBylineProps = BylineProps;
+
+type PrivateBylineProps = OwnPrivateBylineProps & typeof defaultProps;
 
 const Byline = (props: PrivateBylineProps) => {
 	const {
@@ -53,6 +55,7 @@ const Byline = (props: PrivateBylineProps) => {
 			return <span key={`author-${contributor}`}>{contributor}</span>;
 		}
 		const { user } = ensureUserForAttribution(contributor);
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 1 arguments, but got 2.
 		const label = renderUserLabel(user, index);
 		if (isFullUser(user) && user.slug && linkToUsers) {
 			return (

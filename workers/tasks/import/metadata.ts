@@ -24,6 +24,7 @@ const getAttributions = async (author) => {
 		const attributions = await Promise.all(
 			authorEntries.map(async (authorEntry) => {
 				if (typeof authorEntry === 'string') {
+					// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'null' is not assignable to param... Remove this comment to see the full error message
 					const users = await getSearchUsers(authorEntry, null);
 					return { name: authorEntry, users: users.map((user) => user.toJSON()) };
 				}
@@ -36,6 +37,7 @@ const getAttributions = async (author) => {
 };
 
 const stripFalseyValues = (object) =>
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'fromEntries' does not exist on type 'Obj... Remove this comment to see the full error message
 	Object.fromEntries(Object.entries(object).filter((kv) => kv[1]));
 
 export const getProposedMetadata = async (meta) => {
@@ -51,6 +53,7 @@ export const getProposedMetadata = async (meta) => {
 };
 
 export const getRawMetadata = (meta) => {
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'fromEntries' does not exist on type 'Obj... Remove this comment to see the full error message
 	return Object.fromEntries(
 		Object.entries(meta).map(([key, value]) => [key, metaValueToJsonSerializable(value)]),
 	);

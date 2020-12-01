@@ -15,11 +15,14 @@ const defaultProps = {
 	hideContributors: true,
 };
 
-type Props = (OwnProps & typeof defaultProps) & Omit<BylineProps, 'contributors'>;
+type OwnPubBylineProps = (OwnProps & typeof defaultProps) & Omit<BylineProps, 'contributors'>;
+
+type Props = OwnPubBylineProps & typeof defaultProps;
 
 const PubByline = (props: Props) => {
 	const { pubData, hideAuthors = false, hideContributors = false } = props;
 	const authors = getAllPubContributors(pubData, hideAuthors, hideContributors);
+	// @ts-expect-error ts-migrate(2322) FIXME: Type '{ contributors: AttributionWithUser[]; pubDa... Remove this comment to see the full error message
 	return <Byline {...props} contributors={authors} />;
 };
 PubByline.defaultProps = defaultProps;

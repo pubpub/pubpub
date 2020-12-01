@@ -23,6 +23,7 @@ const blockForAssetFile = (assetKey) =>
 	new Promise((resolve, reject) => {
 		let attempts = 0;
 		const checkForFile = () => {
+			// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
 			s3bucket
 				.headObject({ Key: assetKey })
 				.promise()
@@ -44,6 +45,7 @@ export const downloadFileFromAssetStore = (assetKey, filePath) =>
 	new Promise(async (resolve, reject) => {
 		await blockForAssetFile(assetKey);
 		const writeStream = fs.createWriteStream(filePath);
+		// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
 		s3bucket
 			.getObject({ Key: assetKey })
 			.createReadStream()
@@ -60,6 +62,7 @@ export const uploadFileToAssetStore = (filePath, givenAssetKey) => {
 		ACL: 'public-read',
 	};
 	return new Promise((resolve, reject) => {
+		// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
 		s3bucket.upload(params, (err) => {
 			if (err) {
 				reject(err);

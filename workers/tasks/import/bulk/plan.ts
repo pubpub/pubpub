@@ -190,6 +190,7 @@ const getDirectivesFromFiles = async (directory, files, directiveCounter) => {
 			const directive = YAML.parse(contents.toString());
 			return extractDirectives(directory, directivePath, directive, directiveCounter);
 		}),
+		// @ts-expect-error ts-migrate(2488) FIXME: Type 'unknown' must have a '[Symbol.iterator]()' m... Remove this comment to see the full error message
 	).then((res) => res.reduce((a, b) => [...a, ...b], []));
 	return { directiveFiles: directiveFiles, directives: directives };
 };
@@ -220,6 +221,7 @@ export const buildImportPlan = (rootDirectory) => {
 			files,
 			directiveCounter,
 		);
+		// @ts-expect-error ts-migrate(2488) FIXME: Type 'unknown' must have a '[Symbol.iterator]()' m... Remove this comment to see the full error message
 		const nextDirectives = [...parentDirectives, ...directives];
 		const matchedDirectives = await matchDirectivesToPath(directoryPath, nextDirectives);
 		maybeThrowNestedCollectionError(matchedDirectives);
@@ -235,6 +237,7 @@ export const buildImportPlan = (rootDirectory) => {
 					const fullPath = path.join(directoryPath, filePath);
 					const stat = await fs.lstat(fullPath);
 					if (stat.isDirectory()) {
+						// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any[]' is not assignable to para... Remove this comment to see the full error message
 						return visitDirectory(fullPath, nextDirectives);
 					}
 					return visitFile(fullPath, nextDirectives);
@@ -269,6 +272,7 @@ export const printImportPlan = (importPlan, { verb = 'CREATE' } = {}) => {
 
 		const lines = [];
 		const log = (str) => {
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 			lines.push(str);
 		};
 
@@ -323,16 +327,20 @@ export const getCreatedItemsFromPlan = (importPlan) => {
 			const { community, pub, collection, created } = entry;
 			if (created) {
 				if (community) {
+					// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 					communities.push(community);
 				}
 				if (collection) {
 					if (Array.isArray(collection)) {
+						// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 						collections.push(...collection);
 					} else {
+						// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 						collections.push(collection);
 					}
 				}
 				if (pub) {
+					// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 					pubs.push(pub);
 				}
 			}
@@ -341,8 +349,11 @@ export const getCreatedItemsFromPlan = (importPlan) => {
 	if (children) {
 		const childItems = children.map(getCreatedItemsFromPlan);
 		childItems.forEach((child) => {
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 			communities.push(...child.communities);
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 			collections.push(...child.collections);
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'any' is not assignable to parame... Remove this comment to see the full error message
 			pubs.push(...child.pubs);
 		});
 	}

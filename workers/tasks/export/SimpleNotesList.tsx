@@ -2,22 +2,19 @@
  * This component is used in generated exports to render footnote and citation lists.
  */
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { PubNoteContent } from 'components';
 
-const propTypes = {
-	notes: PropTypes.arrayOf(
-		PropTypes.shape({
-			structuredHtml: PropTypes.string,
-			unstructuredValue: PropTypes.string,
-		}),
-	).isRequired,
-	getLinkage: PropTypes.func.isRequired,
-	title: PropTypes.string.isRequired,
+type Props = {
+	notes: {
+		structuredHtml?: string;
+		unstructuredValue?: string;
+	}[];
+	getLinkage: (...args: any[]) => any;
+	title: string;
 };
 
-const SimpleNotesList = (props) => {
+const SimpleNotesList = (props: Props) => {
 	const { notes, title, getLinkage } = props;
 	if (notes.length === 0) {
 		return null;
@@ -44,6 +41,4 @@ const SimpleNotesList = (props) => {
 		</React.Fragment>
 	);
 };
-
-SimpleNotesList.propTypes = propTypes;
 export default SimpleNotesList;

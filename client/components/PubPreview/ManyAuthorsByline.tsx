@@ -31,6 +31,7 @@ const ManyAuthorsByline = (props: Props) => {
 						'author',
 						authors.length,
 					)}: `}
+					// @ts-expect-error ts-migrate(2322) FIXME: Type '(user: any, index: any) => string' is not as... Remove this comment to see the full error message
 					renderUserLabel={(user, index) => `(${index + 1}) ${user.fullName}`}
 					linkToUsers={false}
 				/>
@@ -40,6 +41,7 @@ const ManyAuthorsByline = (props: Props) => {
 	return (
 		<Byline
 			contributors={authors}
+			// @ts-expect-error ts-migrate(2322) FIXME: Type '((count: number) => ReactNode) | ((n: any) =... Remove this comment to see the full error message
 			renderTruncation={(n) => `${n} more`}
 			truncateAt={truncateAt}
 			{...restProps}

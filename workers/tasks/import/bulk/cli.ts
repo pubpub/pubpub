@@ -67,6 +67,7 @@ export const getActor = async (userSlug) => {
 const readPlanFromFile = async (path) => {
 	const contents = await fs.readFile(path);
 	try {
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'Buffer' is not assignable to par... Remove this comment to see the full error message
 		return JSON.parse(contents);
 	} catch (err) {
 		throw new Error(`Expected a valid JSON file at ${path}`);
@@ -78,6 +79,7 @@ const writePlanToFile = async (path, plan) => {
 };
 
 const setLowWorkerPriority = () => {
+	// @ts-expect-error ts-migrate(2322) FIXME: Type 'number' is not assignable to type 'string | ... Remove this comment to see the full error message
 	process.env.DEFAULT_QUEUE_TASK_PRIORITY = TaskPriority.Low;
 };
 
@@ -102,7 +104,9 @@ const main = async () => {
 				'Please supply either --receipt=path/to/receipt to store a record of this import (or use --dry-run)',
 			);
 		}
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 		const exists = await fs.exists(receipt);
+		// @ts-expect-error ts-migrate(1345) FIXME: An expression of type 'void' cannot be tested for ... Remove this comment to see the full error message
 		if (exists) {
 			await promptOkay(
 				`There is already a file at the receipt path ${receipt} which will be overwritten during import. Proceed?`,

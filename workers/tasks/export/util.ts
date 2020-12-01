@@ -20,6 +20,7 @@ export const uploadDocument = (branchId, tmpFile, extension) => {
 		ACL: 'public-read',
 	};
 	return new Promise((resolve, reject) => {
+		// @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
 		s3bucket.upload(params, (err) => {
 			if (err) {
 				reject(err);
@@ -33,6 +34,7 @@ export const getTmpFileForExtension = (extension) => tmp.file({ postfix: `.${ext
 
 export const writeToFile = (html, file) => {
 	return new Promise((resolve, reject) => {
+		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '(err: any, res: any) => void' is... Remove this comment to see the full error message
 		fs.writeFile(file.path, html, {}, (err, res) => {
 			if (err) {
 				return reject(err);

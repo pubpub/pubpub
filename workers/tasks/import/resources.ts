@@ -67,6 +67,7 @@ export const createResourceTransformer = ({ sourceFiles, document, bibliographyI
 			if (item) {
 				return item;
 			}
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			warnings.push({ type: 'missingCitation', id: resource });
 			return { structuredValue: '', unstructuredValue: '' };
 		}
@@ -76,8 +77,11 @@ export const createResourceTransformer = ({ sourceFiles, document, bibliographyI
 				return getUrlForAssetKey(assetKey);
 			}
 			warnings.push({
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				type: 'missingImage',
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 				path: resource,
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'boolean' is not assignable to type 'never'.
 				unableToFind: true,
 			});
 			return resource;
@@ -90,10 +94,15 @@ export const createResourceTransformer = ({ sourceFiles, document, bibliographyI
 			[...pendingUploadsMap.entries()].map(([sourceFile, newAssetKey]) =>
 				uploadPendingSourceFile(sourceFile, newAssetKey).catch((error) =>
 					warnings.push({
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 						type: 'missingImage',
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'boolean' is not assignable to type 'never'.
 						unableToUpload: true,
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 						error: error.message,
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 						sourceFile: sourceFile,
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 						path: sourceFile.tmpPath || sourceFile.remoteUrl,
 					}),
 				),

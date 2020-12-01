@@ -18,15 +18,18 @@ const getTemplatePath = (pandocTarget) => {
 const createPandocArgs = (pandocTarget, tmpFile, metadataFile) => {
 	// pandoc inexplicably does not include a default template for docx or odt
 	const template = pandocTarget !== 'docx' && pandocTarget !== 'odt';
-	return [
-		['-f', 'html'],
-		['-t', pandocTarget],
-		['-o', tmpFile.path],
-		template && [`--template=${getTemplatePath(pandocTarget)}`],
-		metadataFile && [`--metadata-file=${metadataFile.path}`],
-	]
-		.filter((x) => x)
-		.reduce((acc, next) => [...acc, ...next], []);
+	return (
+		[
+			['-f', 'html'],
+			['-t', pandocTarget],
+			['-o', tmpFile.path],
+			template && [`--template=${getTemplatePath(pandocTarget)}`],
+			metadataFile && [`--metadata-file=${metadataFile.path}`],
+		]
+			.filter((x) => x)
+			// @ts-expect-error ts-migrate(2488) FIXME: Type 'false | any[]' must have a '[Symbol.iterator... Remove this comment to see the full error message
+			.reduce((acc, next) => [...acc, ...next], [])
+	);
 };
 
 const createYamlMetadataFile = async (
@@ -59,8 +62,11 @@ const createYamlMetadataFile = async (
 			title: communityTitle,
 		},
 		copyright: {
+			// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 			text: license.full,
+			// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 			type: license.short,
+			// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 			...(license.link && { link: license.link }),
 		},
 		...(primaryCollectionMetadata && {

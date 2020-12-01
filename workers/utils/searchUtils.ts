@@ -67,6 +67,7 @@ export const getPubSearchData = async (pubIds) => {
 				as: 'attributions',
 				required: false,
 				separate: true,
+				// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ as: string; }' is not assignab... Remove this comment to see the full error message
 				include: [includeUserModel({ as: 'user' })],
 			},
 			{
@@ -115,6 +116,7 @@ export const getPubSearchData = async (pubIds) => {
 				branchCreatedAt: branch.createdAt,
 				branchContent: undefined,
 			};
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pubId: any; title: any; slug: ... Remove this comment to see the full error message
 			branchesToSync.push(data);
 		});
 	}
@@ -122,9 +124,16 @@ export const getPubSearchData = async (pubIds) => {
 	const dataToSync = [];
 	const branchDocDataList = await Promise.all(
 		branchesToSync.map((branchData) => {
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 5 arguments, but got 2.
 			return getBranchDoc(branchData.pubId, branchData.branchId).catch((err) => {
 				console.error(
-					`Error with pub:${branchData.pubId} branch:${branchData.branchId}. ${err.message}`,
+					`Error with pub:${
+						// @ts-expect-error ts-migrate(2339) FIXME: Property 'pubId' does not exist on type 'never'.
+						branchData.pubId
+					} branch:${
+						// @ts-expect-error ts-migrate(2339) FIXME: Property 'branchId' does not exist on type 'never'... Remove this comment to see the full error message
+						branchData.branchId
+					}. ${err.message}`,
 				);
 				return null;
 			});
@@ -135,7 +144,9 @@ export const getPubSearchData = async (pubIds) => {
 		if (branchDocData && branchDocData.doc) {
 			jsonToTextChunks(branchDocData.doc).forEach((textChunk) => {
 				dataToSync.push({
+					// @ts-expect-error ts-migrate(2698) FIXME: Spread types may only be created from object types... Remove this comment to see the full error message
 					...branchData,
+					// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 					branchContent: textChunk,
 				});
 			});
@@ -196,11 +207,13 @@ export const getPageSearchData = async (pageIds) => {
 					hasContent = true;
 					dataToSync.push({
 						...data,
+						// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 						content: textChunk,
 					});
 				});
 			});
 		if (!hasContent) {
+			// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ pageId: any; title: any; slug:... Remove this comment to see the full error message
 			dataToSync.push(data);
 		}
 	}
