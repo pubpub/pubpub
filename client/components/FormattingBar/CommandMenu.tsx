@@ -10,26 +10,24 @@ type commandPropType = {
 	icon?: string;
 };
 
-// @ts-expect-error ts-migrate(2322) FIXME: Type 'null' is not assignable to type 'string | un... Remove this comment to see the full error message
+// @ts-expect-error ts-migrate(2322) FIXME: Type 'Requireable<InferProps<{ key: Validator<stri... Remove this comment to see the full error message
 const commandPropType: PropTypes.Requireable<commandPropType> = PropTypes.shape({
 	key: PropTypes.string.isRequired,
 	title: PropTypes.string.isRequired,
 	icon: PropTypes.string,
 });
 
-const propTypes = {
-	disclosure: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
-	className: PropTypes.string,
-	editorChangeObject: PropTypes.shape({
-		menuItems: PropTypes.arrayOf(PropTypes.shape({})),
-		view: PropTypes.shape({
-			focus: PropTypes.func,
-		}),
-	}).isRequired,
-	commands: PropTypes.arrayOf(
-		PropTypes.oneOfType([commandPropType, PropTypes.arrayOf(commandPropType)]),
-	).isRequired,
-	markActiveItems: PropTypes.bool,
+type Props = {
+	disclosure: ((...args: any[]) => any) | React.ReactNode;
+	className?: string;
+	editorChangeObject: {
+		menuItems?: {}[];
+		view?: {
+			focus?: (...args: any[]) => any;
+		};
+	};
+	commands: (commandPropType | commandPropType[])[];
+	markActiveItems?: boolean;
 };
 
 const defaultProps = {
@@ -37,34 +35,34 @@ const defaultProps = {
 	markActiveItems: true,
 };
 
-const CommandMenu = React.forwardRef((props, ref) => {
+const CommandMenu = React.forwardRef<any, Props>((props, ref) => {
 	const {
-		// @ts-expect-error ts-migrate(2339) FIXME: Property 'editorChangeObject' does not exist on ty... Remove this comment to see the full error message
 		editorChangeObject: { menuItems = [], view: editorView },
-		// @ts-expect-error ts-migrate(2339) FIXME: Property 'className' does not exist on type '{ chi... Remove this comment to see the full error message
 		className,
-		// @ts-expect-error ts-migrate(2339) FIXME: Property 'commands' does not exist on type '{ chil... Remove this comment to see the full error message
 		commands,
-		// @ts-expect-error ts-migrate(2339) FIXME: Property 'disclosure' does not exist on type '{ ch... Remove this comment to see the full error message
 		disclosure,
-		// @ts-expect-error ts-migrate(2339) FIXME: Property 'markActiveItems' does not exist on type ... Remove this comment to see the full error message
 		markActiveItems,
 		...restProps
 	} = props;
 
 	const renderMenuItemForCommand = (command) => {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'title' does not exist on type '{}'.
 		const menuItem = menuItems.find((item) => item.title === command.key);
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'canRun' does not exist on type '{}'.
 		if (!menuItem || !menuItem.canRun) {
 			return null;
 		}
 		return (
 			<MenuItem
 				key={command.key}
+				// @ts-expect-error ts-migrate(2339) FIXME: Property 'isActive' does not exist on type '{}'.
 				active={markActiveItems && menuItem.isActive}
 				text={command.title}
 				icon={command.icon}
 				onClick={() => {
+					// @ts-expect-error ts-migrate(2339) FIXME: Property 'run' does not exist on type '{}'.
 					menuItem.run();
+					// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 					editorView.focus();
 				}}
 			/>
@@ -86,6 +84,7 @@ const CommandMenu = React.forwardRef((props, ref) => {
 			menuStyle={{ zIndex: 20 }}
 			className={classNames('command-menu-component', className)}
 		>
+			{/* @ts-expect-error ts-migrate(2349) FIXME: This expression is not callable. */}
 			{getSectionsFromCommands().map((section, index) => {
 				return (
 					// eslint-disable-next-line react/no-array-index-key
@@ -98,9 +97,5 @@ const CommandMenu = React.forwardRef((props, ref) => {
 		</Menu>
 	);
 });
-
-// @ts-expect-error ts-migrate(2559) FIXME: Type '{ disclosure: Validator<string | number | bo... Remove this comment to see the full error message
-CommandMenu.propTypes = propTypes;
-// @ts-expect-error ts-migrate(2559) FIXME: Type '{ className: string; markActiveItems: boolea... Remove this comment to see the full error message
 CommandMenu.defaultProps = defaultProps;
 export default CommandMenu;

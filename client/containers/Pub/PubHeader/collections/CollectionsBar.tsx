@@ -51,10 +51,10 @@ const CollectionsBar = (props: Props) => {
 							a.collection.title.toLowerCase() - b.collection.title.toLowerCase(),
 					)}
 				visibleItemRenderer={({ collection }) => (
-					// @ts-expect-error ts-migrate(2322) FIXME: Property 'children' does not exist on type 'Intrin... Remove this comment to see the full error message
 					<CollectionsBarButton
 						key={collection.id}
 						href={collectionUrl(communityData, collection)}
+						// @ts-expect-error ts-migrate(2322) FIXME: Type '{ children: any; key: any; href: string; as:... Remove this comment to see the full error message
 						as="a"
 					>
 						{collection.title}
@@ -75,13 +75,13 @@ const CollectionsBar = (props: Props) => {
 							placement="bottom-end"
 							aria-label={overflowCollections.length + ' ' + label}
 							disclosure={
-								// @ts-expect-error ts-migrate(2322) FIXME: Property 'children' does not exist on type 'Intrin... Remove this comment to see the full error message
+								// @ts-expect-error ts-migrate(2322) FIXME: Type 'string | null' is not assignable to type 'st... Remove this comment to see the full error message
 								<CollectionsBarButton icon={icon} rightIcon={rightIcon}>
 									{overflowCollections.length} {label}
 								</CollectionsBarButton>
 							}
 						>
-							{/* @ts-expect-error ts-migrate(2345) FIXME: Type 'unknown' is not assignable to type '{ collec... Remove this comment to see the full error message */}
+							{/* @ts-expect-error ts-migrate(2345) FIXME: Argument of type '({ collection }: { collection: a... Remove this comment to see the full error message */}
 							{overflowCollections.map(({ collection }) => {
 								const schema = getSchemaForKind(collection.kind);
 								return (

@@ -1,14 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Button } from '@blueprintjs/core';
 
 import CommandMenu from './CommandMenu';
 
-const propTypes = {
-	isSmall: PropTypes.bool.isRequired,
-	editorChangeObject: PropTypes.shape({
-		menuItems: PropTypes.arrayOf(PropTypes.shape({})),
-	}).isRequired,
+type Props = {
+	isSmall: boolean;
+	editorChangeObject: {
+		menuItems?: {}[];
+	};
 };
 
 const paragraphBlockType = {
@@ -27,16 +26,17 @@ const blockTypes = [
 	{ key: 'code_block', title: 'Code Block' },
 ];
 
-const BlockTypeSelector = React.forwardRef((props, ref) => {
-	// @ts-expect-error ts-migrate(2339) FIXME: Property 'editorChangeObject' does not exist on ty... Remove this comment to see the full error message
+const BlockTypeSelector = React.forwardRef<any, Props>((props, ref) => {
 	const { editorChangeObject, isSmall, ...restProps } = props;
 	const { menuItems = [] } = editorChangeObject;
 
 	// eslint-disable-next-line react/prop-types
 	const renderDisclosure = ({ ref: innerRef, ...disclosureProps }) => {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'isActive' does not exist on type '{}'.
 		const activeMenuItem = menuItems.find((item) => item.isActive);
 		const activeBlockType =
 			activeMenuItem &&
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'title' does not exist on type '{}'.
 			blockTypes.find((blockType) => blockType.key === activeMenuItem.title);
 		const effectiveBlockType = activeBlockType || paragraphBlockType;
 		return (
@@ -56,7 +56,6 @@ const BlockTypeSelector = React.forwardRef((props, ref) => {
 
 	return (
 		<CommandMenu
-			// @ts-expect-error ts-migrate(2322) FIXME: Property 'className' does not exist on type 'Intri... Remove this comment to see the full error message
 			className="block-type-selector-menu"
 			aria-label="Choose text formatting"
 			ref={ref}
@@ -68,7 +67,4 @@ const BlockTypeSelector = React.forwardRef((props, ref) => {
 		/>
 	);
 });
-
-// @ts-expect-error ts-migrate(2559) FIXME: Type '{ isSmall: Validator<boolean>; editorChangeO... Remove this comment to see the full error message
-BlockTypeSelector.propTypes = propTypes;
 export default BlockTypeSelector;

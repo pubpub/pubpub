@@ -98,7 +98,7 @@ const CollectionOverview = (props: Props) => {
 					return contextHint && contextHint.label;
 				}}
 				pubList={pubList}
-				// @ts-expect-error ts-migrate(2322) FIXME: Type '(sourceIndex: any, destinationIndex: any) =>... Remove this comment to see the full error message
+				// @ts-expect-error ts-migrate(2322) FIXME: Type '((sourceIndex: any, destinationIndex: any) =... Remove this comment to see the full error message
 				onReorder={canManage ? reorderCollectionPubs : undefined}
 				// @ts-expect-error ts-migrate(2322) FIXME: Type '(pub: any) => Element | null' is not assigna... Remove this comment to see the full error message
 				rowControls={renderRowControls}
