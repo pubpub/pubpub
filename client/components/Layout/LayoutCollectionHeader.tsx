@@ -65,7 +65,6 @@ const LayoutCollectionHeader = (props: Props) => {
 				{bylineContributors && !hideByline && (
 					<Byline
 						contributors={bylineContributors}
-						// @ts-expect-error ts-migrate(2322) FIXME: Type '() => false | JSX.Element' is not assignable... Remove this comment to see the full error message
 						renderSuffix={() => {
 							return (
 								!hideContributors &&

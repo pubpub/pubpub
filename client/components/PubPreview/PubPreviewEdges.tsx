@@ -50,7 +50,6 @@ const renderEdgeLink = (edge: PubEdge) => {
 				<Byline
 					{...sharedBylineProps}
 					contributors={contributors}
-					// @ts-expect-error ts-migrate(2322) FIXME: Type '() => string' is not assignable to type '(()... Remove this comment to see the full error message
 					renderEmptyState={() => title}
 				/>
 			</a>
