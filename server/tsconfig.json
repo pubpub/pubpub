@@ -6,8 +6,13 @@
     "incremental": true
   },
   "include": [
-    "./**/*",
+    "**/*.ts",
     "../client/**/*",
     "../utils/**/*"
+  ],
+  "exclude": [
+    "**/*.test.ts",
+    "../client/**/*.stories.tsx",
+    "../utils/storybook/stories.test.js",
   ]
 }
