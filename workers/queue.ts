@@ -75,7 +75,6 @@ const processTask = (channel) => async (message) => {
 	console.log(`Beginning ${taskData.id} (load ${currentWorkerThreads}/${maxWorkerThreads})`);
 
 	const worker = workerTs(path.join(__dirname, 'initWorker'), {
-		// @ts-ignore
 		execArgv: ['-r', 'esm'],
 		workerData: taskData,
 	});
