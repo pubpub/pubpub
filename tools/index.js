@@ -8,7 +8,7 @@ if (process.env.NODE_ENV !== 'production') {
 	require('../config');
 }
 
-require('utils/serverModuleOverwrite')();
+require('server/utils/serverModuleOverwrite');
 require('utils/environment').setEnvironment(process.env.PUBPUB_PRODUCTION, process.env.IS_DUQDUQ);
 
 const command = process.argv[2];
