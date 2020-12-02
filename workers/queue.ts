@@ -13,6 +13,12 @@ const maxWorkerTimeSeconds = 120;
 const maxWorkerThreads = 5;
 let currentWorkerThreads = 0;
 
+/**
+ * Create a worker that can execute TypeScript modules using ts-node/register.
+ *
+ * @param file Path to worker file
+ * @param workerOptions Worker options
+ */
 const workerTs = (file: string, workerOptions: WorkerOptions) => {
 	workerOptions.eval = true;
 
@@ -20,8 +26,11 @@ const workerTs = (file: string, workerOptions: WorkerOptions) => {
 		workerOptions.workerData = {};
 	}
 
+	// Inject the file name into the worker.
 	workerOptions.workerData.__filename = file;
 
+	// Create a worker that evals a script which registers ts-node prior to
+	// requiring the entrypoint.
 	return new Worker(
 		`
 					const wk = require('worker_threads');
