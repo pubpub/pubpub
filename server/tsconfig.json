@@ -11,8 +11,8 @@
     "../utils/**/*"
   ],
   "exclude": [
-    "**/*.test.ts",
-    "../client/**/*.stories.tsx",
-    "../utils/storybook/stories.test.js",
+    "../**/*.test.ts",
+    "../**/*.test.js",
+    "../**/*.stories.tsx"
   ]
 }
