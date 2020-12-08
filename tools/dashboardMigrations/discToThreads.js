@@ -5,7 +5,7 @@ import {
 	Anchor,
 	Branch,
 	Discussion,
-	DiscussionNew,
+	//	DiscussionNew,
 	Thread,
 	ThreadComment,
 	Visibility,
@@ -25,12 +25,12 @@ export default async () => {
 		firebaseAdmin.apps.length > 0
 			? firebaseAdmin.apps[0]
 			: firebaseAdmin.initializeApp(
-					{
-						credential: firebaseAdmin.credential.cert(serviceAccount),
-						databaseURL: getFirebaseConfig().databaseURL,
-					},
-					'firebase-pub-new',
-			  );
+				{
+					credential: firebaseAdmin.credential.cert(serviceAccount),
+					databaseURL: getFirebaseConfig().databaseURL,
+				},
+				'firebase-pub-new',
+			);
 	const database = firebaseApp.database();
 
 	/* Migrate Discussions to Threads */
@@ -194,6 +194,6 @@ export default async () => {
 	console.log('Created ThreadComments');
 	await Visibility.bulkCreate(visibilities);
 	console.log('Created Visibilities');
-	await DiscussionNew.bulkCreate(discussions);
-	console.log('Created Discussions');
+	// await DiscussionNew.bulkCreate(discussions);
+	// console.log('Created Discussions');
 };
