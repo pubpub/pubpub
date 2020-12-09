@@ -127,10 +127,7 @@ const clonePub = async ({ pubId, newCommunityId, collectionIdMap }) => {
 		{ pubId: newPub.id },
 		async (discussion) => {
 			const [existingThread, newThread] = await cloneModel(Thread, discussion.threadId);
-			await Discussion.update(
-				{ threadId: newThread.id },
-				{ where: { id: discussion.id } },
-			);
+			await Discussion.update({ threadId: newThread.id }, { where: { id: discussion.id } });
 			await cloneManyModels(
 				ThreadComment,
 				{ threadId: existingThread.id },

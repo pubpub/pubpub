@@ -25,12 +25,12 @@ export default async () => {
 		firebaseAdmin.apps.length > 0
 			? firebaseAdmin.apps[0]
 			: firebaseAdmin.initializeApp(
-				{
-					credential: firebaseAdmin.credential.cert(serviceAccount),
-					databaseURL: getFirebaseConfig().databaseURL,
-				},
-				'firebase-pub-new',
-			);
+					{
+						credential: firebaseAdmin.credential.cert(serviceAccount),
+						databaseURL: getFirebaseConfig().databaseURL,
+					},
+					'firebase-pub-new',
+			  );
 	const database = firebaseApp.database();
 
 	/* Migrate Discussions to Threads */
