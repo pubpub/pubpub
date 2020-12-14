@@ -12,7 +12,7 @@ const Pricing = () => {
 					<br />
 					to Support Nonprofit Infrastructure
 				</h1>
-				<p className="description" id="top">
+				<p className="description top">
 					PubPub's goal is to provide an affordable, high-quality, open-source,
 					institution-led, hosted non-profit publishing software. We offer plans with no
 					user or publishing limits for everyone from individual communities to larger
@@ -161,7 +161,7 @@ const Pricing = () => {
 						.
 					</p>
 
-					<p className="description" id="doi">
+					<p className="description">
 						* The free DOI limit applies to DOIs published via PubPub's Crossref
 						membership. Once the limit is reached, PubPub passes on the Crossref fee of
 						$1 per DOI registered to the Community. For Communities with their own

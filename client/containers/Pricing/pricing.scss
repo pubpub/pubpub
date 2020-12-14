@@ -5,28 +5,15 @@
 	background-image: url('/static/loginbg.png');
 	padding-bottom: 2em;
 	h1 {
-		margin: 1em 0em 0.5em;
+		margin: 1em 0em;
 		text-align: center;
 	}
-	// h2 {
-	// 	text-transform: uppercase;
-	// }
-	p {
-		margin: 0 auto;
-		font-size: 18px;
-	}
 	p.description {
-		padding: 0 2em;
-		&#top {
-			margin: 2em 3em;
+		margin: 1.5em auto;
+		font-size: 16px;
+		max-width: 900px;
+		&.top {
 			text-align: center;
-			font-size: 14px;
-		}
-	}
-	.pricing-footer p.description {
-		margin-bottom: 2em;
-		&#doi {
-			font-size: 11px;
 		}
 	}
 	p.subtitle {
@@ -64,7 +51,6 @@
 			}
 		}
 	}
-
 	.pricing-tiers {
 		display: flex;
 		.option {
@@ -73,7 +59,7 @@
 			text-align: center;
 			position: inline;
 			flex: 1;
-			margin: 4em 0.75em;
+			margin: 3em 0.75em;
 			background: #f7f7f9;
 			ul {
 				flex-grow: 1;
