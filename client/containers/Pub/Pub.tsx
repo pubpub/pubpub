@@ -72,7 +72,7 @@ const Pub = (props: Props) => {
 			document.addEventListener('click', onClick);
 			return () => document.removeEventListener('click', onClick);
 		}
-	}, [communityData, pubData]);
+	}, [pubData]);
 
 	return (
 		<PubSuspendWhileTypingProvider>
