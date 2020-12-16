@@ -24,7 +24,7 @@
 				}
 			},
 			"scripts": {
-				"test-setup": "sudo apt-get install openjdk-8-jre && npm install -g firebase-tools"
+				"test-setup": "npm install -g firebase-tools"
 			}
 		},
 		"review": {
