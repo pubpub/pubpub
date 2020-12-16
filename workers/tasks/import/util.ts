@@ -81,7 +81,7 @@ export const extensionFor = (filePath) =>
 		.pop()
 		.toLowerCase();
 
-export const spawn = (command, args) =>
+export const spawn = (command, args): Promise<void> =>
 	new Promise((resolve, reject) => {
 		const ps = spawnChildProcess(command, args);
 		ps.on('close', () => resolve());

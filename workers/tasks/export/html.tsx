@@ -278,7 +278,6 @@ export const renderStaticHtml = async ({
 		targetPaged && blankIframes,
 	]
 		.filter((x) => x)
-		// @ts-expect-error ts-migrate(2349) FIXME: This expression is not callable.
 		.reduce((nodes, fn) => fn(nodes), pubDoc.content);
 
 	// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '{ schema: Schema<"citation" | "f... Remove this comment to see the full error message
