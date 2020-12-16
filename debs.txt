@@ -1,0 +1,1 @@
+openjdk|http://ftp.us.debian.org/debian/pool/main/o/openjdk-8/openjdk-8-jdk_8u275-b01-1_amd64.deb|418cae42f8e4a7154b7a5f2c97e2c313b359e40e

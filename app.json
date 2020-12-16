@@ -14,9 +14,8 @@
 		"test": {
 			"addons": ["heroku-postgresql:in-dyno"],
 			"buildpacks": [
-				{ "url": "https://github.com/heroku/heroku-buildpack-apt.git" },
-				{ "url": "heroku/java"},
-				{ "url": "heroku/nodejs" }
+				{ "url": "heroku/nodejs" },
+				{ "url": "hhttps://github.com/stickr-eng/heroku-buildpack-deb.git"}
 			],
 			"formation": {
 				"test": {
