@@ -21,11 +21,22 @@ export const editPub = async (pubId) => {
 			pendingSteps.push(...tr.steps);
 			return api;
 		},
-		flush: async () => {
+		writeChange: async () => {
 			const change = createFirebaseChange(pendingSteps, draftBranch.id, 'stubstub-firebase');
 			await branchRef.child(`changes/${currentKey + 1}`).set(change);
 			++currentKey;
 			pendingSteps = [];
+		},
+		clearChanges: async () => {
+			await branchRef.child(`changes`).remove();
+			pendingSteps = [];
+			currentKey = -1;
+		},
+		getDoc: () => {
+			return doc;
+		},
+		getKey: () => {
+			return currentKey;
 		},
 	};
 

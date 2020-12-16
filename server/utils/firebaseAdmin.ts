@@ -132,15 +132,16 @@ export const mergeFirebaseBranch = (
 	const destinationFirebaseRef = getBranchRef(pubId, destinationBranchId);
 	return mergeBranch(sourceFirebaseRef, destinationFirebaseRef, editorSchema).then(
 		async (mergeResult) => {
-			// @ts-expect-error ts-migrate(2339) FIXME: Property 'mergeKey' does not exist on type '{ merg... Remove this comment to see the full error message
-			const { mergeKey } = mergeResult;
-			await restoreDiscussionMaps(destinationFirebaseRef, editorSchema, true);
-			if (copyDiscussionMaps) {
-				await copyDiscussionMapsToBranch(
-					sourceFirebaseRef,
-					destinationFirebaseRef,
-					mergeKey,
-				);
+			if (mergeResult) {
+				const { mergeKey } = mergeResult;
+				await restoreDiscussionMaps(destinationFirebaseRef, editorSchema, true);
+				if (copyDiscussionMaps) {
+					await copyDiscussionMapsToBranch(
+						sourceFirebaseRef,
+						destinationFirebaseRef,
+						mergeKey,
+					);
+				}
 			}
 			return mergeResult;
 		},
