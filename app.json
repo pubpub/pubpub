@@ -15,7 +15,7 @@
 			"addons": ["heroku-postgresql:in-dyno"],
 			"buildpacks": [
 				{ "url": "https://github.com/heroku/heroku-buildpack-apt.git" },
-				{ "url": "https://github.com/heroku/heroku-buildpack-java.git"},
+				{ "url": "heroku/java"},
 				{ "url": "heroku/nodejs" }
 			],
 			"formation": {
