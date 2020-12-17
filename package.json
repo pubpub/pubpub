@@ -27,7 +27,7 @@
 		"postinstall": "npm run build-prod",
 		"start": "npm run build-dev-once && concurrently --kill-others \"npm run api-dev\" \"npm run build-dev\"",
 		"storybook": "start-storybook -p 9001 -c .storybook -s ./",
-		"test": "npm run lint && firebase emulators:exec \"jest --forceExit --silent\"",
+		"test": "npm run lint && firebase emulators:exec \"jest --runInBand --forceExit --silent\"",
 		"test-dev": "firebase emulators:exec \"jest --forceExit\"",
 		"tools": "NODE_PATH=./client:./ node -r ts-node/register -r esm --max-old-space-size=12000 ./tools",
 		"workers-dev": "SEQUELIZE_MAX_CONNECTIONS=1 NODE_PATH=./dist/server/client:./dist/server WORKER=true nodemon dist/server/workers/init --watch workers -e js",
