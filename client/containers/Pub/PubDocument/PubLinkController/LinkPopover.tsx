@@ -3,6 +3,7 @@ import Popper from 'popper.js';
 
 import { ClickToCopyButton } from 'components';
 import { getLowestAncestorWithId } from 'client/utils/dom';
+import { usePubData } from '../../pubHooks';
 
 export type HeaderPopoverProps = {
 	locationData: any;
@@ -13,6 +14,7 @@ export type HeaderPopoverProps = {
 const LinkPopover = (props: HeaderPopoverProps) => {
 	const { element, mainContentRef, locationData } = props;
 	const parent = getLowestAncestorWithId(element);
+	const pubData = usePubData();
 	const popoverRef = useRef();
 
 	useEffect(() => {
@@ -30,6 +32,8 @@ const LinkPopover = (props: HeaderPopoverProps) => {
 		};
 	}, [parent, mainContentRef]);
 
+	const unstableLink = Boolean(parent && /^r[0-9]*$/.test(parent.id));
+
 	return (
 		<div
 			// @ts-expect-error ts-migrate(2322) FIXME: Type 'MutableRefObject<undefined>' is not assignab... Remove this comment to see the full error message
@@ -40,8 +44,12 @@ const LinkPopover = (props: HeaderPopoverProps) => {
 			<ClickToCopyButton
 				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 				copyString={`https://${locationData.hostname}${locationData.path}#${parent.id}`}
-				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
-				beforeCopyPrompt="Copy link to this item"
+				beforeCopyPrompt={
+					pubData.isReadOnly && unstableLink
+						? 'You must create a new release to link to this block.'
+						: ''
+				}
+				disabled={unstableLink}
 			/>
 		</div>
 	);

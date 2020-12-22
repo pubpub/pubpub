@@ -13,7 +13,6 @@
     "../workers/**/*"
   ],
   "exclude": [
-    "../**/*.test.ts",
     "../**/*.test.js",
     "../**/*.stories.tsx"
   ]

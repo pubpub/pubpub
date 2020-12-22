@@ -16,7 +16,7 @@ const inPasteRange = (offset, transactions) => {
 const updatedNodeAttrsWithNewRandomId = (node) => {
 	return {
 		...node.attrs,
-		id: generateHash(10),
+		id: `p${generateHash(10)}`,
 	};
 };
 
