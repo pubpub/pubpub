@@ -1,4 +1,6 @@
 import { DOMOutputSpec } from 'prosemirror-model';
+
+import { getNotePopoverId } from '../utils';
 import { getCitationInlineLabel } from '../utils/citation';
 
 import { counter } from './reactive/counter';
@@ -46,7 +48,9 @@ export default {
 					'data-node-type': 'citation',
 					'data-value': value,
 					'data-unstructured-value': unstructuredValue,
+					'aria-describedby': getNotePopoverId(node),
 					class: 'citation',
+					...(!href && { role: 'button' }),
 				},
 				getCitationInlineLabel(node),
 			] as DOMOutputSpec;
