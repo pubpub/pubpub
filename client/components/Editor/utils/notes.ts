@@ -39,7 +39,3 @@ export const getNotes = (doc) => {
 		citations: citationItems,
 	};
 };
-
-export const getNotePopoverId = (note) => {
-	return `${note.attrs.id}-note-popover`;
-};

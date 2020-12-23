@@ -1,5 +1,4 @@
 import { DOMOutputSpec } from 'prosemirror-model';
-import { getNotePopoverId } from '../utils';
 import { counter } from './reactive/counter';
 import { structuredCitation } from './reactive/structuredCitation';
 
@@ -41,9 +40,7 @@ export default {
 					'data-node-type': 'footnote',
 					'data-value': value,
 					'date-structured-value': structuredValue,
-					'aria-describedby': getNotePopoverId(node),
 					class: 'footnote',
-					...(!href && { role: 'button' }),
 				},
 				String(count),
 			] as DOMOutputSpec;
