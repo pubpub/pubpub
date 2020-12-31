@@ -18,6 +18,8 @@ type Props = {
 
 const handleScrollToSelection = () => true;
 
+const handleScrollToSelection = () => true;
+
 const MinimalEditor = (props: Props) => {
 	const {
 		initialContent,
