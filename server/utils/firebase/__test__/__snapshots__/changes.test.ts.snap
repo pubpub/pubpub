@@ -1,0 +1,277 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getStepsInChangeRange returns expected steps 1`] = `
+Array [
+  Object {
+    "from": 0,
+    "slice": Object {
+      "content": Array [
+        Object {
+          "attrs": Object {
+            "class": null,
+            "id": null,
+          },
+          "content": Array [
+            Object {
+              "text": "Hello fellow human",
+              "type": "text",
+            },
+          ],
+          "type": "paragraph",
+        },
+      ],
+    },
+    "stepType": "replace",
+    "to": 0,
+  },
+  Object {
+    "from": 0,
+    "slice": Object {
+      "content": Array [
+        Object {
+          "attrs": Object {
+            "class": null,
+            "id": null,
+          },
+          "content": Array [
+            Object {
+              "text": "Here are some steps",
+              "type": "text",
+            },
+          ],
+          "type": "paragraph",
+        },
+      ],
+    },
+    "stepType": "replace",
+    "to": 0,
+  },
+  Object {
+    "from": 10,
+    "slice": Object {
+      "content": Array [
+        Object {
+          "text": "This is another step",
+          "type": "text",
+        },
+      ],
+    },
+    "stepType": "replace",
+    "to": 10,
+  },
+  Object {
+    "from": 5,
+    "slice": Object {
+      "content": Array [
+        Object {
+          "text": "Very cool",
+          "type": "text",
+        },
+      ],
+    },
+    "stepType": "replace",
+    "to": 5,
+  },
+  Object {
+    "from": 0,
+    "slice": Object {
+      "content": Array [
+        Object {
+          "attrs": Object {
+            "class": null,
+            "id": null,
+          },
+          "content": Array [
+            Object {
+              "text": "Okay just one more",
+              "type": "text",
+            },
+          ],
+          "type": "paragraph",
+        },
+      ],
+      "openEnd": 1,
+    },
+    "stepType": "replace",
+    "to": 10,
+  },
+]
+`;
+
+exports[`getStepsInChangeRange returns expected steps 2`] = `
+Array [
+  Object {
+    "from": 0,
+    "slice": Object {
+      "content": Array [
+        Object {
+          "attrs": Object {
+            "class": null,
+            "id": null,
+          },
+          "content": Array [
+            Object {
+              "text": "Hello fellow human",
+              "type": "text",
+            },
+          ],
+          "type": "paragraph",
+        },
+      ],
+    },
+    "stepType": "replace",
+    "to": 0,
+  },
+  Object {
+    "from": 0,
+    "slice": Object {
+      "content": Array [
+        Object {
+          "attrs": Object {
+            "class": null,
+            "id": null,
+          },
+          "content": Array [
+            Object {
+              "text": "Here are some steps",
+              "type": "text",
+            },
+          ],
+          "type": "paragraph",
+        },
+      ],
+    },
+    "stepType": "replace",
+    "to": 0,
+  },
+]
+`;
+
+exports[`getStepsInChangeRange returns expected steps 3`] = `
+Array [
+  Object {
+    "from": 0,
+    "slice": Object {
+      "content": Array [
+        Object {
+          "attrs": Object {
+            "class": null,
+            "id": null,
+          },
+          "content": Array [
+            Object {
+              "text": "Hello fellow human",
+              "type": "text",
+            },
+          ],
+          "type": "paragraph",
+        },
+      ],
+    },
+    "stepType": "replace",
+    "to": 0,
+  },
+  Object {
+    "from": 0,
+    "slice": Object {
+      "content": Array [
+        Object {
+          "attrs": Object {
+            "class": null,
+            "id": null,
+          },
+          "content": Array [
+            Object {
+              "text": "Here are some steps",
+              "type": "text",
+            },
+          ],
+          "type": "paragraph",
+        },
+      ],
+    },
+    "stepType": "replace",
+    "to": 0,
+  },
+  Object {
+    "from": 10,
+    "slice": Object {
+      "content": Array [
+        Object {
+          "text": "This is another step",
+          "type": "text",
+        },
+      ],
+    },
+    "stepType": "replace",
+    "to": 10,
+  },
+  Object {
+    "from": 5,
+    "slice": Object {
+      "content": Array [
+        Object {
+          "text": "Very cool",
+          "type": "text",
+        },
+      ],
+    },
+    "stepType": "replace",
+    "to": 5,
+  },
+]
+`;
+
+exports[`getStepsInChangeRange returns expected steps 4`] = `
+Array [
+  Object {
+    "from": 10,
+    "slice": Object {
+      "content": Array [
+        Object {
+          "text": "This is another step",
+          "type": "text",
+        },
+      ],
+    },
+    "stepType": "replace",
+    "to": 10,
+  },
+  Object {
+    "from": 5,
+    "slice": Object {
+      "content": Array [
+        Object {
+          "text": "Very cool",
+          "type": "text",
+        },
+      ],
+    },
+    "stepType": "replace",
+    "to": 5,
+  },
+  Object {
+    "from": 0,
+    "slice": Object {
+      "content": Array [
+        Object {
+          "attrs": Object {
+            "class": null,
+            "id": null,
+          },
+          "content": Array [
+            Object {
+              "text": "Okay just one more",
+              "type": "text",
+            },
+          ],
+          "type": "paragraph",
+        },
+      ],
+      "openEnd": 1,
+    },
+    "stepType": "replace",
+    "to": 10,
+  },
+]
+`;
