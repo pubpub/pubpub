@@ -7,7 +7,7 @@ import { createBranchExports } from 'server/export/queries';
 import { createDoc } from 'server/doc/queries';
 import { getStepsInChangeRange, getDocFromJson } from 'server/utils/firebase';
 import { createUpdatedDiscussionAnchorForNewSteps } from 'server/discussionAnchor/queries';
-import { Maybe, Release as ReleaseType, DefinitelyHas, Doc as DocType } from 'utils/types';
+import { Maybe, Release as ReleaseType, DefinitelyHas } from 'utils/types';
 
 type ReleaseErrorReason = 'merge-failed' | 'duplicate-release';
 export class ReleaseQueryError extends Error {
