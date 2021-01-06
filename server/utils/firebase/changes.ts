@@ -1,11 +1,11 @@
 import { Step } from 'prosemirror-transform';
-import { Reference } from '@firebase/database-types';
+import firebase from 'firebase-admin';
 import { uncompressStepJSON } from 'prosemirror-compress-pubpub';
 
 import { editorSchema } from '../firebaseAdmin';
 
 export const getStepsInChangeRange = async (
-	branchRef: Reference,
+	branchRef: firebase.database.Reference,
 	startIndex: number,
 	endIndex: number,
 ): Promise<Step[]> => {
