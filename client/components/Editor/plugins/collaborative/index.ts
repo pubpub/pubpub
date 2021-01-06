@@ -21,7 +21,7 @@ export default (schema, props) => {
 			clientID: localClientId,
 		}),
 		buildDocument(schema, props, collabDocPluginKey, localClientId),
-		buildDiscussions(schema, props, collabDocPluginKey),
+		// buildDiscussions(schema, props, collabDocPluginKey),
 		buildCursors(schema, props, collabDocPluginKey),
 	];
 };

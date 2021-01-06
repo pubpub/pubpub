@@ -80,6 +80,7 @@ const Editor = (props: Props) => {
 		pluginsOptions: {
 			citationManager: citationManager,
 			collaborativeOptions: collaborativeOptions,
+			initialDoc: initialDocNode,
 			isReadOnly: isReadOnly,
 			nodeLabels: nodeLabels,
 			onChange: onChange,

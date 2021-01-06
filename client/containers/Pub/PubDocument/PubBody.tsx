@@ -176,7 +176,7 @@ const PubBody = (props: Props) => {
 				}}
 				onError={handleError}
 				collaborativeOptions={
-					loadCollaborativeOptions
+					loadCollaborativeOptions && firebaseBranchRef
 						? {
 								firebaseRef: firebaseBranchRef,
 								clientData: props.collabData.localCollabUser,

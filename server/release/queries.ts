@@ -1,13 +1,19 @@
 import { Op } from 'sequelize';
 import admin from 'firebase-admin';
+import { Node } from 'prosemirror-model';
 
 import { Release, Branch, Doc, Discussion, DiscussionAnchor, sequelize } from 'server/models';
-import { mergeFirebaseBranch, getBranchDoc, getBranchRef } from 'server/utils/firebaseAdmin';
+import {
+	mergeFirebaseBranch,
+	getBranchDoc,
+	getBranchRef,
+	editorSchema,
+} from 'server/utils/firebaseAdmin';
 import { createBranchExports } from 'server/export/queries';
 import { createDoc } from 'server/doc/queries';
-import { getStepsInChangeRange, getDocFromJson } from 'server/utils/firebase';
 import { createUpdatedDiscussionAnchorForNewSteps } from 'server/discussionAnchor/queries';
 import { Maybe, Release as ReleaseType, DefinitelyHas } from 'utils/types';
+import { getStepsInChangeRange } from 'client/components/Editor';
 
 type ReleaseErrorReason = 'merge-failed' | 'duplicate-release';
 export class ReleaseQueryError extends Error {
@@ -35,7 +41,12 @@ const getStepsSinceLastRelease = async (
 ) => {
 	if (previousRelease) {
 		const { historyKey: previousHistoryKey } = previousRelease;
-		return getStepsInChangeRange(draftRef, previousHistoryKey + 1, currentHistoryKey);
+		return getStepsInChangeRange(
+			draftRef,
+			editorSchema,
+			previousHistoryKey + 1,
+			currentHistoryKey,
+		);
 	}
 	return [];
 };
@@ -50,8 +61,8 @@ const createDiscussionAnchorsForRelease = async (
 ) => {
 	const draftRef = getBranchRef(pubId, draftBranchId)!;
 	if (previousRelease) {
-		const previousDocHydrated = getDocFromJson(previousRelease.doc.content);
-		const currentDocHydrated = getDocFromJson(currentDocJson);
+		const previousDocHydrated = Node.fromJSON(editorSchema, previousRelease.doc.content);
+		const currentDocHydrated = Node.fromJSON(editorSchema, currentDocJson);
 		const steps = await getStepsSinceLastRelease(draftRef, previousRelease, currentHistoryKey);
 		const discussions = await Discussion.findAll({
 			where: { pubId: pubId },
@@ -69,7 +80,7 @@ const createDiscussionAnchorsForRelease = async (
 					anchor,
 					previousDocHydrated,
 					currentDocHydrated,
-					steps,
+					steps.reduce((a, b) => [...a, ...b], []),
 					currentHistoryKey,
 					postgresTransaction,
 				),

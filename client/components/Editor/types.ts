@@ -33,7 +33,7 @@ export type CollaborativeOptions = {
 	clientData: {
 		id: string;
 	};
-	firebaseRef?: Reference;
+	firebaseRef: Reference;
 	initialDocKey: number;
 	onStatusChange?: (status: 'saving' | 'saved') => unknown;
 	onUpdateLatestKey?: (key: number) => unknown;
@@ -42,6 +42,7 @@ export type CollaborativeOptions = {
 export type PluginsOptions = {
 	citationManager?: CitationManager;
 	collaborativeOptions?: CollaborativeOptions;
+	initialDoc: Node;
 	isReadOnly?: boolean;
 	nodeLabels: NodeLabelMap;
 	onChange?: (changeObject: EditorChangeObject) => unknown;
@@ -58,3 +59,10 @@ export type OnEditFn = (
 	newState: EditorState,
 	oldState: EditorState,
 ) => unknown;
+
+export type CompressedChange = {
+	t: number;
+	s: Record<string, any>[];
+};
+
+export type CompressedKeyable = CompressedChange | CompressedChange[];

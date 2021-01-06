@@ -13,11 +13,7 @@ type TransformFn = (t: Transform<EditorSchema>, s: EditorSchema) => void;
 type Reference = admin.database.Reference;
 
 export const editFirebaseDraftByRef = async (ref: Reference, { branchId = 'no-branch' } = {}) => {
-	const fetchDoc = async () => {
-		const { key, doc: docJson } = await getFirebaseDoc(ref, editorSchema);
-		const doc = Node.fromJSON(editorSchema, docJson);
-		return { key: key, doc: doc };
-	};
+	const fetchDoc = async () => getFirebaseDoc(ref, editorSchema);
 
 	let { doc, key: currentKey } = await fetchDoc();
 	let pendingSteps: Step[] = [];
