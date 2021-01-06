@@ -25,9 +25,277 @@ describe('getStepsInChangeRange', () => {
 			getStepsInChangeRange(editor.getRef(), -1, 2),
 		]);
 		expect(zeroToTwo).toEqual(negativeOneToTwo);
-		expect(zeroToTwo).toMatchInlineSnapshot();
-		expect(await getStepsInChangeRange(editor.getRef(), 0, 0)).toMatchInlineSnapshot();
-		expect(await getStepsInChangeRange(editor.getRef(), 0, 1)).toMatchInlineSnapshot();
-		expect(await getStepsInChangeRange(editor.getRef(), 1, 2)).toMatchInlineSnapshot();
+		expect(zeroToTwo).toMatchInlineSnapshot(`
+		Array [
+		  Object {
+		    "from": 0,
+		    "slice": Object {
+		      "content": Array [
+		        Object {
+		          "attrs": Object {
+		            "class": null,
+		            "id": null,
+		          },
+		          "content": Array [
+		            Object {
+		              "text": "Hello fellow human",
+		              "type": "text",
+		            },
+		          ],
+		          "type": "paragraph",
+		        },
+		      ],
+		    },
+		    "stepType": "replace",
+		    "to": 0,
+		  },
+		  Object {
+		    "from": 0,
+		    "slice": Object {
+		      "content": Array [
+		        Object {
+		          "attrs": Object {
+		            "class": null,
+		            "id": null,
+		          },
+		          "content": Array [
+		            Object {
+		              "text": "Here are some steps",
+		              "type": "text",
+		            },
+		          ],
+		          "type": "paragraph",
+		        },
+		      ],
+		    },
+		    "stepType": "replace",
+		    "to": 0,
+		  },
+		  Object {
+		    "from": 10,
+		    "slice": Object {
+		      "content": Array [
+		        Object {
+		          "text": "This is another step",
+		          "type": "text",
+		        },
+		      ],
+		    },
+		    "stepType": "replace",
+		    "to": 10,
+		  },
+		  Object {
+		    "from": 5,
+		    "slice": Object {
+		      "content": Array [
+		        Object {
+		          "text": "Very cool",
+		          "type": "text",
+		        },
+		      ],
+		    },
+		    "stepType": "replace",
+		    "to": 5,
+		  },
+		  Object {
+		    "from": 0,
+		    "slice": Object {
+		      "content": Array [
+		        Object {
+		          "attrs": Object {
+		            "class": null,
+		            "id": null,
+		          },
+		          "content": Array [
+		            Object {
+		              "text": "Okay just one more",
+		              "type": "text",
+		            },
+		          ],
+		          "type": "paragraph",
+		        },
+		      ],
+		      "openEnd": 1,
+		    },
+		    "stepType": "replace",
+		    "to": 10,
+		  },
+		]
+	`);
+		expect(await getStepsInChangeRange(editor.getRef(), 0, 0)).toMatchInlineSnapshot(`
+		Array [
+		  Object {
+		    "from": 0,
+		    "slice": Object {
+		      "content": Array [
+		        Object {
+		          "attrs": Object {
+		            "class": null,
+		            "id": null,
+		          },
+		          "content": Array [
+		            Object {
+		              "text": "Hello fellow human",
+		              "type": "text",
+		            },
+		          ],
+		          "type": "paragraph",
+		        },
+		      ],
+		    },
+		    "stepType": "replace",
+		    "to": 0,
+		  },
+		  Object {
+		    "from": 0,
+		    "slice": Object {
+		      "content": Array [
+		        Object {
+		          "attrs": Object {
+		            "class": null,
+		            "id": null,
+		          },
+		          "content": Array [
+		            Object {
+		              "text": "Here are some steps",
+		              "type": "text",
+		            },
+		          ],
+		          "type": "paragraph",
+		        },
+		      ],
+		    },
+		    "stepType": "replace",
+		    "to": 0,
+		  },
+		]
+	`);
+		expect(await getStepsInChangeRange(editor.getRef(), 0, 1)).toMatchInlineSnapshot(`
+		Array [
+		  Object {
+		    "from": 0,
+		    "slice": Object {
+		      "content": Array [
+		        Object {
+		          "attrs": Object {
+		            "class": null,
+		            "id": null,
+		          },
+		          "content": Array [
+		            Object {
+		              "text": "Hello fellow human",
+		              "type": "text",
+		            },
+		          ],
+		          "type": "paragraph",
+		        },
+		      ],
+		    },
+		    "stepType": "replace",
+		    "to": 0,
+		  },
+		  Object {
+		    "from": 0,
+		    "slice": Object {
+		      "content": Array [
+		        Object {
+		          "attrs": Object {
+		            "class": null,
+		            "id": null,
+		          },
+		          "content": Array [
+		            Object {
+		              "text": "Here are some steps",
+		              "type": "text",
+		            },
+		          ],
+		          "type": "paragraph",
+		        },
+		      ],
+		    },
+		    "stepType": "replace",
+		    "to": 0,
+		  },
+		  Object {
+		    "from": 10,
+		    "slice": Object {
+		      "content": Array [
+		        Object {
+		          "text": "This is another step",
+		          "type": "text",
+		        },
+		      ],
+		    },
+		    "stepType": "replace",
+		    "to": 10,
+		  },
+		  Object {
+		    "from": 5,
+		    "slice": Object {
+		      "content": Array [
+		        Object {
+		          "text": "Very cool",
+		          "type": "text",
+		        },
+		      ],
+		    },
+		    "stepType": "replace",
+		    "to": 5,
+		  },
+		]
+	`);
+		expect(await getStepsInChangeRange(editor.getRef(), 1, 2)).toMatchInlineSnapshot(`
+		Array [
+		  Object {
+		    "from": 10,
+		    "slice": Object {
+		      "content": Array [
+		        Object {
+		          "text": "This is another step",
+		          "type": "text",
+		        },
+		      ],
+		    },
+		    "stepType": "replace",
+		    "to": 10,
+		  },
+		  Object {
+		    "from": 5,
+		    "slice": Object {
+		      "content": Array [
+		        Object {
+		          "text": "Very cool",
+		          "type": "text",
+		        },
+		      ],
+		    },
+		    "stepType": "replace",
+		    "to": 5,
+		  },
+		  Object {
+		    "from": 0,
+		    "slice": Object {
+		      "content": Array [
+		        Object {
+		          "attrs": Object {
+		            "class": null,
+		            "id": null,
+		          },
+		          "content": Array [
+		            Object {
+		              "text": "Okay just one more",
+		              "type": "text",
+		            },
+		          ],
+		          "type": "paragraph",
+		        },
+		      ],
+		      "openEnd": 1,
+		    },
+		    "stepType": "replace",
+		    "to": 10,
+		  },
+		]
+	`);
 	});
 });
