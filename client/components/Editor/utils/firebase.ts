@@ -1,4 +1,3 @@
-import { Reference } from '@firebase/database-types';
 import { Node } from 'prosemirror-model';
 import uuid from 'uuid';
 import { compressStateJSON, compressStepJSON } from 'prosemirror-compress-pubpub';
@@ -8,7 +7,11 @@ import { CompressedChange, CompressedKeyable } from '../types';
 
 export const firebaseTimestamp = { '.sv': 'timestamp' };
 
-export const storeCheckpoint = async (firebaseRef: Reference, doc: Node, keyNumber: number) => {
+export const storeCheckpoint = async (
+	firebaseRef: firebase.database.Reference,
+	doc: Node,
+	keyNumber: number,
+) => {
 	const checkpoint = {
 		d: compressStateJSON({ doc: doc.toJSON() }).d,
 		k: keyNumber,

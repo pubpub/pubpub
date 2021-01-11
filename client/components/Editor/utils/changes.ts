@@ -1,10 +1,9 @@
 import { Node, Schema } from 'prosemirror-model';
 import { Step } from 'prosemirror-transform';
-import { Reference } from '@firebase/database-types';
 import { uncompressStepJSON } from 'prosemirror-compress-pubpub';
 
 export const getStepsInChangeRange = async (
-	branchRef: Reference,
+	branchRef: firebase.database.Reference,
 	schema: Schema,
 	startIndex: number,
 	endIndex: number,

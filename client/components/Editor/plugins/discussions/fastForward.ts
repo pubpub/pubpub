@@ -1,4 +1,3 @@
-import { Reference } from '@firebase/database-types';
 import { Schema, Node } from 'prosemirror-model';
 import { Step } from 'prosemirror-transform';
 
@@ -36,7 +35,7 @@ const getFastForwardedDiscussion = (
 
 export const getFastForwardedDiscussions = async <S extends Schema>(
 	discussionsById: NullableDiscussions,
-	draftRef: Reference,
+	draftRef: firebase.database.Reference,
 	schema: S,
 	latestDoc: Node<S>,
 	latestHistoryKey: number,

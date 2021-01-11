@@ -1,7 +1,9 @@
-import { DataSnapshot, Reference } from '@firebase/database-types';
 import { uncompressSelectionJSON, compressSelectionJSON } from 'prosemirror-compress-pubpub';
 
 import { DiscussionInfo, CompressedDiscussionInfo, DiscussionsHandler } from './types';
+
+type Reference = firebase.database.Reference;
+type DataSnapshot = firebase.database.DataSnapshot;
 
 const uncompressDiscussionInfo = (compressed: CompressedDiscussionInfo): DiscussionInfo => {
 	const { selection: compressedSelection } = compressed;

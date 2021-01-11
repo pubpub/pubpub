@@ -1,3 +1,4 @@
+import firebase from 'firebase';
 import firebaseAdmin from 'firebase-admin';
 
 import {
@@ -41,16 +42,16 @@ const firebaseApp = getFirebaseApp();
 const database = firebaseApp && firebaseApp.database();
 export const editorSchema = buildSchema({ ...discussionSchema }, {});
 
+export const getDatabaseRef = (key: string): firebase.database.Reference => {
+	return (database?.ref(key) as unknown) as firebase.database.Reference;
+};
+
 export const getPubRef = (pubId: string) => {
-	return database?.ref(`pub-${pubId}`);
+	return getDatabaseRef(`pub-${pubId}`);
 };
 
 export const getBranchRef = (pubId: string, branchId: string) => {
-	return database?.ref(`pub-${pubId}/branch-${branchId}`);
-};
-
-export const getDatabaseRef = (key: string) => {
-	return database?.ref(key);
+	return getDatabaseRef(`pub-${pubId}/branch-${branchId}`);
 };
 
 const maybeAddKeyTimestampPair = (key, timestamp) => {

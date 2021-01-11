@@ -1,4 +1,3 @@
-import { Reference } from '@firebase/database-types';
 import { Node, Schema } from 'prosemirror-model';
 import { Plugin, EditorState, Transaction } from 'prosemirror-state';
 
@@ -33,7 +32,7 @@ export type CollaborativeOptions = {
 	clientData: {
 		id: string;
 	};
-	firebaseRef: Reference;
+	firebaseRef: firebase.database.Reference;
 	initialDocKey: number;
 	onStatusChange?: (status: 'saving' | 'saved') => unknown;
 	onUpdateLatestKey?: (key: number) => unknown;

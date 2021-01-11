@@ -1,5 +1,4 @@
 import { Op } from 'sequelize';
-import admin from 'firebase-admin';
 import { Node } from 'prosemirror-model';
 
 import { Release, Branch, Doc, Discussion, DiscussionAnchor, sequelize } from 'server/models';
@@ -35,7 +34,7 @@ const getPubDraftDoc = async (pubId: string, draftBranchId: string, historyKey: 
 };
 
 const getStepsSinceLastRelease = async (
-	draftRef: admin.database.Reference,
+	draftRef: firebase.database.Reference,
 	previousRelease: Maybe<ReleaseType>,
 	currentHistoryKey: number,
 ) => {

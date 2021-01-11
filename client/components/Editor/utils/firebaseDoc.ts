@@ -1,10 +1,12 @@
-import { Reference, Query } from '@firebase/database-types';
 import { Node, Schema } from 'prosemirror-model';
 import { Step } from 'prosemirror-transform';
 import { uncompressStateJSON, uncompressStepJSON } from 'prosemirror-compress-pubpub';
 
 import { getEmptyDoc } from './doc';
 import { flattenKeyables } from './firebase';
+
+type Reference = firebase.database.Reference;
+type Query = firebase.database.Query;
 
 type Checkpoint = {
 	doc: Record<any, any>;

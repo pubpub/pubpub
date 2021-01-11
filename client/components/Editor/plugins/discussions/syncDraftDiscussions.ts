@@ -1,4 +1,3 @@
-import { Reference } from '@firebase/database-types';
 import { Schema, Node } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { Mapping, Step } from 'prosemirror-transform';
@@ -11,7 +10,7 @@ import { mapDiscussionThroughSteps, removeDiscussionsById } from './util';
 import { Discussions, DiscussionInfo, NullableDiscussions, DiscussionsUpdateResult } from './types';
 
 type Options = {
-	draftRef: Reference;
+	draftRef: firebase.database.Reference;
 	initialHistoryKey: number;
 	initialDoc: Node;
 	onUpdateDiscussions: (result: DiscussionsUpdateResult) => unknown;

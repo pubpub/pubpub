@@ -62,6 +62,7 @@ const Html = (props: Props) => {
 				/>
 			</head>
 			<body>
+				<script>0</script>
 				<div id="root">
 					<App
 						initialData={props.initialData}
