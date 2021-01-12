@@ -4,16 +4,16 @@ import { DecorationSet, EditorView } from 'prosemirror-view';
 
 import { PluginsOptions, CollaborativeOptions } from '../../types';
 import { getDecorationsForUpdateResult } from './decorations';
-import { syncDraftDiscussions } from './syncDraftDiscussions';
+import { connectToDraftDiscussions } from './draftDiscussions';
 import { DiscussionsUpdateResult } from './types';
 
 export const discussionsPluginKey = new PluginKey('discussions');
 
-type SyncDraftDiscussions = ReturnType<typeof syncDraftDiscussions>;
+type SyncDraftDiscussions = ReturnType<typeof connectToDraftDiscussions>;
 
 type SharedPluginState = {
 	decorations: DecorationSet;
-}
+};
 
 type PluginState = SharedPluginState & {
 	addDiscussion: SyncDraftDiscussions['addDiscussion'];
@@ -22,9 +22,9 @@ type PluginState = SharedPluginState & {
 const createDraftPlugin = (collaborativeOptions: CollaborativeOptions, initialDoc: Node) => {
 	let editorView: null | EditorView = null;
 
-	const { addDiscussion, handleTransaction } = syncDraftDiscussions({
-		draftRef: collaborativeOptions?.firebaseRef,
-		initialHistoryKey: collaborativeOptions?.initialDocKey,
+	const draftDiscussions = connectToDraftDiscussions({
+		draftRef: collaborativeOptions.firebaseRef,
+		initialHistoryKey: collaborativeOptions.initialDocKey,
 		initialDoc: initialDoc,
 		onUpdateDiscussions: (updateResult: DiscussionsUpdateResult) => {
 			if (editorView) {
@@ -43,13 +43,13 @@ const createDraftPlugin = (collaborativeOptions: CollaborativeOptions, initialDo
 		if (meta && meta.updateResult) {
 			return meta.updateResult;
 		}
-		return handleTransaction(tr, editorState);
+		return draftDiscussions.handleTransaction(tr, editorState);
 	};
 
 	const init = (): PluginState => {
 		return {
 			decorations: DecorationSet.create(initialDoc, []),
-			addDiscussion: addDiscussion,
+			addDiscussion: draftDiscussions.addDiscussion,
 		};
 	};
 
@@ -73,12 +73,15 @@ const createDraftPlugin = (collaborativeOptions: CollaborativeOptions, initialDo
 		state: { init: init, apply: apply },
 		view: (view) => {
 			editorView = view;
-			return {};
+			return {
+				destroy: () => {
+					draftDiscussions.disconnect();
+				},
+			};
 		},
 		props: {
 			decorations: (editorState: EditorState) => {
 				const pluginState = discussionsPluginKey.getState(editorState) as PluginState;
-				console.log(pluginState.decorations);
 				return pluginState.decorations;
 			},
 		},

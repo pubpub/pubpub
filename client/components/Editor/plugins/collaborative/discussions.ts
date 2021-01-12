@@ -99,7 +99,6 @@ export default (schema, props, collabDocPluginKey) => {
 					return true;
 				},
 				key: `discussion-widget-${discussionData.id}`,
-				marks: [],
 			});
 			return [inlineDecoration, widgetDecoration];
 		}

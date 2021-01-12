@@ -4,7 +4,7 @@ import { Decoration, DecorationSet } from 'prosemirror-view';
 import { flattenOnce } from './util';
 import { DiscussionsUpdateResult } from './types';
 
-type DiscussionDecoration = Decoration<{ key: string; discussionId: string }>;
+type DiscussionDecoration = Decoration<{ key: string }>;
 
 const createInlineDecoration = (
 	discussionId: string,
@@ -14,8 +14,8 @@ const createInlineDecoration = (
 	return Decoration.inline(
 		from,
 		to,
-		{ class: `discussion-range d-${discussionId}` },
-		{ key: `discussion-inline-${discussionId}`, discussionId: discussionId },
+		{ class: `discussion-range d-${discussionId}`, style: 'background:rgba(50,25,50,0.2)' },
+		{ key: `discussion-inline-${discussionId}` },
 	);
 };
 
@@ -24,7 +24,6 @@ const createWidgetDecoration = (discussionId: string, position: number): Discuss
 	element.className = `discussion-mount dm-${discussionId}`;
 	return Decoration.widget(position, element, {
 		stopEvent: () => true,
-		discussionId: discussionId,
 		key: `discussion-widget-${discussionId}`,
 		marks: [],
 	});
@@ -49,6 +48,21 @@ const getDecorationsToAdd = (updateResult: DiscussionsUpdateResult): DiscussionD
 	);
 };
 
+// const debug_rebuildDecorationsFromScratch = (updateResult: DiscussionsUpdateResult): DiscussionDecoration[] => {
+// 	return flattenOnce(
+// 		[...Object.keys(updateResult.discussions)].map((id) => {
+// 			const { selection } = updateResult.discussions[id];
+// 			if (selection) {
+// 				const { anchor, head } = selection;
+// 				const from = Math.min(anchor, head);
+// 				const to = Math.max(anchor, head);
+// 				return [createInlineDecoration(id, from, to)];
+// 			}
+// 			return [];
+// 		}),
+// 	);
+// };
+
 export const getDecorationsForUpdateResult = (
 	currentDecorations: DecorationSet,
 	updateResult: DiscussionsUpdateResult,
@@ -59,8 +73,10 @@ export const getDecorationsForUpdateResult = (
 		.find()
 		.filter((decoration) => shouldRemoveDecoration(decoration, updateResult));
 
-	return currentDecorations
+	const nextDecorations = currentDecorations
 		.remove(decorationsToRemove)
 		.map(updateResult.mapping, targetDoc)
 		.add(targetDoc, decorationsToAdd);
+
+	return nextDecorations;
 };

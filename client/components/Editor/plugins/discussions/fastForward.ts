@@ -36,10 +36,10 @@ const getFastForwardedDiscussion = (
 export const getFastForwardedDiscussions = async <S extends Schema>(
 	discussionsById: NullableDiscussions,
 	draftRef: firebase.database.Reference,
-	schema: S,
 	latestDoc: Node<S>,
 	latestHistoryKey: number,
 ): Promise<Record<string, DiscussionInfo>> => {
+	const { schema } = latestDoc.type;
 	const discussions = Object.values(discussionsById);
 	const outdatedDiscussions = discussions.filter((d) => d && d.currentKey < latestHistoryKey);
 

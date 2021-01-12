@@ -51,7 +51,6 @@ const PubDiscussions = (props: Props) => {
 	const { canView, canCreateDiscussions } = scopeData;
 	const decorations = collabData.editorChangeObject.decorations || [];
 	const groupsByLine = groupDiscussionsByLine(decorations, discussions);
-	console.log('...', decorations, groupsByLine);
 
 	useEffect(() => {
 		// This effect will cause boundingBoxes to recalculate on window resize.

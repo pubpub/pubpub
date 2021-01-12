@@ -17,11 +17,12 @@ const compressDiscussionInfo = (uncompressed: DiscussionInfo): CompressedDiscuss
 	return { ...uncompressed, selection: selection };
 };
 
-export const connectDiscussionsRef = (draftRef: Reference) => {
+export const connectToFirebaseDiscussions = (draftRef: Reference) => {
 	const discussionsRef = draftRef.child('discussions');
 	let onDiscussions: null | DiscussionsHandler = null;
+	let disconnect: null | (() => void) = null;
 
-	const childChangedHandler = (snapshot: DataSnapshot) => {
+	const childAddedHandler = (snapshot: DataSnapshot) => {
 		const discussion = snapshot.val();
 		if (discussion) {
 			onDiscussions?.({ [snapshot.key!]: uncompressDiscussionInfo(discussion) });
@@ -34,12 +35,17 @@ export const connectDiscussionsRef = (draftRef: Reference) => {
 
 	const sendDiscussions = (discussions: Record<string, DiscussionInfo>) => {
 		Object.entries(discussions).forEach(([id, discussion]) => {
-			discussionsRef.child(id).transaction((existingDiscussion: CompressedDiscussionInfo) => {
-				if (discussion.currentKey >= existingDiscussion.currentKey) {
-					return compressDiscussionInfo(discussion);
-				}
-				return undefined;
-			});
+			discussionsRef
+				.child(id)
+				.transaction((existingDiscussion: null | CompressedDiscussionInfo) => {
+					if (
+						!existingDiscussion ||
+						discussion.currentKey >= existingDiscussion.currentKey
+					) {
+						return compressDiscussionInfo(discussion);
+					}
+					return undefined;
+				});
 		});
 	};
 
@@ -47,9 +53,14 @@ export const connectDiscussionsRef = (draftRef: Reference) => {
 		onDiscussions = handler;
 	};
 
-	discussionsRef.once('child_added', childChangedHandler);
-	discussionsRef.once('child_changed', childChangedHandler);
-	discussionsRef.once('child_removed', childRemovedHandler);
+	const connect = () => {
+		discussionsRef.on('child_added', childAddedHandler);
+		discussionsRef.on('child_removed', childRemovedHandler);
+		return () => {
+			discussionsRef.on('child_added', childAddedHandler);
+			discussionsRef.on('child_removed', childRemovedHandler);
+		};
+	};
 
 	discussionsRef.once('value').then((snapshot) => {
 		const discussionsById = snapshot.val();
@@ -60,7 +71,12 @@ export const connectDiscussionsRef = (draftRef: Reference) => {
 			});
 			onDiscussions?.(uncompressedDiscussionsById);
 		}
+		disconnect = connect();
 	});
 
-	return { sendDiscussions: sendDiscussions, receiveDiscussions: connectHandler };
+	return {
+		sendDiscussions: sendDiscussions,
+		receiveDiscussions: connectHandler,
+		disconnect: () => disconnect?.(),
+	};
 };

@@ -1,11 +1,12 @@
-import { Schema, Node } from 'prosemirror-model';
+import { Node } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { Mapping, Step } from 'prosemirror-transform';
 
 import { collabDocPluginKey } from '../collaborative';
 
-import { connectDiscussionsRef } from './discussionsRef';
+import { connectToFirebaseDiscussions } from './firebase';
 import { getFastForwardedDiscussions } from './fastForward';
+import { createHistoryWatcher } from './historyWatcher';
 import { mapDiscussionThroughSteps, removeDiscussionsById } from './util';
 import { Discussions, DiscussionInfo, NullableDiscussions, DiscussionsUpdateResult } from './types';
 
@@ -77,14 +78,20 @@ const filterDiscussionsUpdate = (discussions: Discussions, update: NullableDiscu
 	};
 };
 
-export const syncDraftDiscussions = (options: Options) => {
-	const { draftRef, initialHistoryKey, initialDoc, onUpdateDiscussions } = options;
-	const schema: Schema = initialDoc.type.schema;
-	const { sendDiscussions, receiveDiscussions } = connectDiscussionsRef(draftRef);
+const getHighestCurrentKeyFromDiscussions = (discussions: NullableDiscussions) => {
+	return Object.values(discussions).reduce((max, discussion) => {
+		if (discussion) {
+			return Math.max(max, discussion.currentKey);
+		}
+		return max;
+	}, -1);
+};
 
+export const connectToDraftDiscussions = (options: Options) => {
+	const { draftRef, initialHistoryKey, initialDoc, onUpdateDiscussions } = options;
+	const firebase = connectToFirebaseDiscussions(draftRef);
+	const history = createHistoryWatcher(initialDoc, initialHistoryKey);
 	let discussions: Discussions = {};
-	let currentHistoryKey = initialHistoryKey;
-	let currentDoc = initialDoc;
 
 	const updateDiscussions = (update: NullableDiscussions) => {
 		const {
@@ -94,7 +101,7 @@ export const syncDraftDiscussions = (options: Options) => {
 			addedDiscussionIds,
 		} = filterDiscussionsUpdate(discussions, update);
 
-		sendDiscussions(sendableDiscussions);
+		firebase.sendDiscussions(sendableDiscussions);
 		discussions = removeDiscussionsById(
 			{ ...discussions, ...updatableDiscussions },
 			removedDiscussionIds,
@@ -107,36 +114,29 @@ export const syncDraftDiscussions = (options: Options) => {
 		};
 	};
 
-	const asynchronouslyUpdateDiscussions = (update: NullableDiscussions) => {
-		const { addedDiscussionIds, removedDiscussionIds } = updateDiscussions(update);
-		onUpdateDiscussions({
-			discussions: discussions,
-			addedDiscussionIds: addedDiscussionIds,
-			removedDiscussionIds: removedDiscussionIds,
-			mapping: new Mapping(),
-		});
-	};
-
 	const handleTransaction = (
 		tr: Transaction,
 		nextState: EditorState,
 	): null | DiscussionsUpdateResult => {
 		const { mostRecentRemoteKey } = collabDocPluginKey.getState(nextState);
-		const historyKeyHasAdvanced = mostRecentRemoteKey > currentHistoryKey;
+		const {
+			hasHistoryKeyAdvanced,
+			currentDoc,
+			currentHistoryKey,
+			previousDoc,
+			previousHistoryKey,
+		} = history.updateState(tr.doc, mostRecentRemoteKey);
 
 		const nextDiscussions = getUpdatedDiscussionsFromTransaction(
 			discussions,
 			tr.steps,
+			previousDoc,
 			currentDoc,
-			tr.doc,
+			previousHistoryKey,
 			currentHistoryKey,
-			mostRecentRemoteKey,
 		);
 
-		currentDoc = tr.doc;
-		currentHistoryKey = mostRecentRemoteKey;
-
-		if (tr.docChanged || historyKeyHasAdvanced) {
+		if (tr.steps.length || hasHistoryKeyAdvanced) {
 			return {
 				...updateDiscussions(nextDiscussions),
 				mapping: tr.mapping,
@@ -147,6 +147,7 @@ export const syncDraftDiscussions = (options: Options) => {
 	};
 
 	const addDiscussion = (discussionId: string, selection: DiscussionInfo['selection']) => {
+		const { currentHistoryKey } = history.getState();
 		updateDiscussions({
 			[discussionId]: {
 				initKey: currentHistoryKey,
@@ -158,19 +159,39 @@ export const syncDraftDiscussions = (options: Options) => {
 		});
 	};
 
-	receiveDiscussions((remoteDiscussions: NullableDiscussions) => {
-		asynchronouslyUpdateDiscussions(remoteDiscussions);
-		getFastForwardedDiscussions(
-			remoteDiscussions,
-			draftRef,
-			schema,
-			currentDoc,
-			currentHistoryKey,
-		).then(asynchronouslyUpdateDiscussions);
+	const asynchronouslyUpdateDiscussions = (update: NullableDiscussions) => {
+		if (Object.keys(update).length === 0) {
+			return;
+		}
+		console.log('async', update);
+		const { addedDiscussionIds, removedDiscussionIds } = updateDiscussions(update);
+		onUpdateDiscussions({
+			discussions: discussions,
+			addedDiscussionIds: addedDiscussionIds,
+			removedDiscussionIds: removedDiscussionIds,
+			mapping: new Mapping(),
+		});
+	};
+
+	firebase.receiveDiscussions((remoteDiscussions: NullableDiscussions) => {
+		const remoteKey = getHighestCurrentKeyFromDiscussions(remoteDiscussions);
+		console.log('deferring to', remoteKey);
+		history.whenKeyReaches(remoteKey, () => {
+			console.log('reached', remoteKey, remoteDiscussions);
+			const { currentDoc, currentHistoryKey } = history.getState();
+			asynchronouslyUpdateDiscussions(remoteDiscussions);
+			getFastForwardedDiscussions(
+				remoteDiscussions,
+				draftRef,
+				currentDoc,
+				currentHistoryKey,
+			).then(asynchronouslyUpdateDiscussions);
+		});
 	});
 
 	return {
 		addDiscussion: addDiscussion,
 		handleTransaction: handleTransaction,
+		disconnect: firebase.disconnect,
 	};
 };
