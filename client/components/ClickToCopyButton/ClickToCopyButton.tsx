@@ -70,7 +70,7 @@ const ClickToCopyButton = (props: Props) => {
 	return (
 		<Tooltip
 			usePortal={usePortal}
-			content={getTooltipText()}
+			content={getTooltipText() || undefined}
 			onClosed={() => setHasCopied(false)}
 			className={className}
 			children={renderChildren()}
