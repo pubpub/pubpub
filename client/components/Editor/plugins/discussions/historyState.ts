@@ -44,7 +44,7 @@ export const createHistoryState = (initialDoc: Node, initialHistoryKey: number) 
 
 	const updateState = (nextDoc: Node, nextHistoryKey: number) => {
 		const previousHistoryKey = historyKey;
-		const previousDoc = nextDoc;
+		const previousDoc = doc;
 
 		if (nextHistoryKey >= historyKey) {
 			historyKey = nextHistoryKey;
