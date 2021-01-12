@@ -5,7 +5,7 @@ import { DecorationSet, EditorView } from 'prosemirror-view';
 import { PluginsOptions, CollaborativeOptions } from '../../types';
 import { getDecorationsForUpdateResult } from './decorations';
 import { connectToDraftDiscussions } from './draftDiscussions';
-import { DiscussionsUpdateResult } from './types';
+import { DiscussionsUpdateResult, DiscussionInfo } from './types';
 
 export const discussionsPluginKey = new PluginKey('discussions');
 
@@ -58,11 +58,7 @@ const createDraftPlugin = (collaborativeOptions: CollaborativeOptions, initialDo
 		if (updateResult) {
 			return {
 				...pluginState,
-				decorations: getDecorationsForUpdateResult(
-					pluginState.decorations,
-					updateResult,
-					editorState.doc,
-				),
+				decorations: getDecorationsForUpdateResult(pluginState.decorations, updateResult),
 			};
 		}
 		return pluginState;
@@ -94,4 +90,16 @@ export default (_, options: PluginsOptions) => {
 		return createDraftPlugin(collaborativeOptions, initialDoc);
 	}
 	return [];
+};
+
+export const addDiscussionToView = (
+	view: EditorView,
+	id: string,
+	selection: DiscussionInfo['selection'],
+) => {
+	const pluginState = discussionsPluginKey.getState(view.state) as null | PluginState;
+	if (pluginState) {
+		return pluginState.addDiscussion(id, selection);
+	}
+	return null;
 };

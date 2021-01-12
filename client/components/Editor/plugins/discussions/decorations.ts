@@ -14,7 +14,7 @@ const createInlineDecoration = (
 	return Decoration.inline(
 		from,
 		to,
-		{ class: `discussion-range d-${discussionId}`, style: 'background:rgba(50,25,50,0.2)' },
+		{ class: `discussion-range d-${discussionId}` },
 		{ key: `discussion-inline-${discussionId}` },
 	);
 };
@@ -48,26 +48,11 @@ const getDecorationsToAdd = (updateResult: DiscussionsUpdateResult): DiscussionD
 	);
 };
 
-// const debug_rebuildDecorationsFromScratch = (updateResult: DiscussionsUpdateResult): DiscussionDecoration[] => {
-// 	return flattenOnce(
-// 		[...Object.keys(updateResult.discussions)].map((id) => {
-// 			const { selection } = updateResult.discussions[id];
-// 			if (selection) {
-// 				const { anchor, head } = selection;
-// 				const from = Math.min(anchor, head);
-// 				const to = Math.max(anchor, head);
-// 				return [createInlineDecoration(id, from, to)];
-// 			}
-// 			return [];
-// 		}),
-// 	);
-// };
-
 export const getDecorationsForUpdateResult = (
 	currentDecorations: DecorationSet,
 	updateResult: DiscussionsUpdateResult,
-	targetDoc: Node,
 ) => {
+	const { fromDoc, toDoc } = updateResult;
 	const decorationsToAdd = getDecorationsToAdd(updateResult);
 	const decorationsToRemove = currentDecorations
 		.find()
@@ -75,8 +60,8 @@ export const getDecorationsForUpdateResult = (
 
 	const nextDecorations = currentDecorations
 		.remove(decorationsToRemove)
-		.map(updateResult.mapping, targetDoc)
-		.add(targetDoc, decorationsToAdd);
+		.map(updateResult.mapping, toDoc)
+		.add(fromDoc, decorationsToAdd);
 
 	return nextDecorations;
 };

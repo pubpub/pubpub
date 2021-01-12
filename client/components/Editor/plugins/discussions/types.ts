@@ -1,3 +1,4 @@
+import { Node } from 'prosemirror-model';
 import { Mapping } from 'prosemirror-transform';
 
 export type DiscussionInfo = {
@@ -5,7 +6,7 @@ export type DiscussionInfo = {
 	initKey: number;
 	initHead: number;
 	initAnchor: number;
-	selection: null | { anchor: number; head: number };
+	selection: null | { type: 'text'; anchor: number; head: number };
 };
 
 export type CompressedDiscussionInfo = {
@@ -26,4 +27,6 @@ export type DiscussionsUpdateResult = {
 	removedDiscussionIds: Set<string>;
 	mapping: Mapping;
 	discussions: Discussions;
+	fromDoc: Node;
+	toDoc: Node;
 };

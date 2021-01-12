@@ -22,17 +22,15 @@ const getReadyCallbacks = (callbacks: KeyCallback[], historyKey: number) => {
 	return { ready: ready, notReady: notReady };
 };
 
-export const createHistoryWatcher = (initialDoc: Node, initialHistoryKey: number) => {
+export const createHistoryState = (initialDoc: Node, initialHistoryKey: number) => {
 	let historyKey = initialHistoryKey;
 	let doc = initialDoc;
 	let callbacks: KeyCallback[] = [];
 
-	const whenKeyReaches = (key: number, callback: Callback) => {
+	const onReachesKey = (key: number, callback: Callback) => {
 		if (historyKey >= key) {
-			console.log('immediate');
 			callback();
 		} else {
-			console.log('deferred');
 			callbacks.push({ key: key, callback: callback });
 		}
 	};
@@ -69,5 +67,5 @@ export const createHistoryWatcher = (initialDoc: Node, initialHistoryKey: number
 		};
 	};
 
-	return { whenKeyReaches: whenKeyReaches, updateState: updateState, getState: getState };
+	return { onReachesKey: onReachesKey, updateState: updateState, getState: getState };
 };

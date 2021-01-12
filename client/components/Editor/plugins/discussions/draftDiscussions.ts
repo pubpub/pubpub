@@ -6,7 +6,7 @@ import { collabDocPluginKey } from '../collaborative';
 
 import { connectToFirebaseDiscussions } from './firebase';
 import { getFastForwardedDiscussions } from './fastForward';
-import { createHistoryWatcher } from './historyWatcher';
+import { createHistoryState } from './historyState';
 import { mapDiscussionThroughSteps, removeDiscussionsById } from './util';
 import { Discussions, DiscussionInfo, NullableDiscussions, DiscussionsUpdateResult } from './types';
 
@@ -90,7 +90,7 @@ const getHighestCurrentKeyFromDiscussions = (discussions: NullableDiscussions) =
 export const connectToDraftDiscussions = (options: Options) => {
 	const { draftRef, initialHistoryKey, initialDoc, onUpdateDiscussions } = options;
 	const firebase = connectToFirebaseDiscussions(draftRef);
-	const history = createHistoryWatcher(initialDoc, initialHistoryKey);
+	const history = createHistoryState(initialDoc, initialHistoryKey);
 	let discussions: Discussions = {};
 
 	const updateDiscussions = (update: NullableDiscussions) => {
@@ -140,6 +140,8 @@ export const connectToDraftDiscussions = (options: Options) => {
 			return {
 				...updateDiscussions(nextDiscussions),
 				mapping: tr.mapping,
+				fromDoc: previousDoc,
+				toDoc: currentDoc,
 			};
 		}
 
@@ -163,21 +165,21 @@ export const connectToDraftDiscussions = (options: Options) => {
 		if (Object.keys(update).length === 0) {
 			return;
 		}
-		console.log('async', update);
 		const { addedDiscussionIds, removedDiscussionIds } = updateDiscussions(update);
+		const { currentDoc } = history.getState();
 		onUpdateDiscussions({
 			discussions: discussions,
 			addedDiscussionIds: addedDiscussionIds,
 			removedDiscussionIds: removedDiscussionIds,
 			mapping: new Mapping(),
+			fromDoc: currentDoc,
+			toDoc: currentDoc,
 		});
 	};
 
 	firebase.receiveDiscussions((remoteDiscussions: NullableDiscussions) => {
 		const remoteKey = getHighestCurrentKeyFromDiscussions(remoteDiscussions);
-		console.log('deferring to', remoteKey);
-		history.whenKeyReaches(remoteKey, () => {
-			console.log('reached', remoteKey, remoteDiscussions);
+		history.onReachesKey(remoteKey, () => {
 			const { currentDoc, currentHistoryKey } = history.getState();
 			asynchronouslyUpdateDiscussions(remoteDiscussions);
 			getFastForwardedDiscussions(

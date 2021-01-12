@@ -1,6 +1,5 @@
 export * from './branches';
 export * from './changes';
-export * from './discussions';
 export * from './doc';
 export * from './firebase';
 export * from './firebaseDoc';

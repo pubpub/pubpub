@@ -1,1 +1,1 @@
-export { default, discussionsPluginKey } from './plugin';
+export { default, discussionsPluginKey, addDiscussionToView } from './plugin';
