@@ -3,6 +3,8 @@ import Popper from 'popper.js';
 
 import { ClickToCopyButton } from 'components';
 import { getLowestAncestorWithId } from 'client/utils/dom';
+import { usePageContext } from 'utils/hooks';
+
 import { usePubData } from '../../pubHooks';
 
 export type HeaderPopoverProps = {
@@ -15,6 +17,11 @@ const LinkPopover = (props: HeaderPopoverProps) => {
 	const { element, mainContentRef, locationData } = props;
 	const parent = getLowestAncestorWithId(element);
 	const pubData = usePubData();
+	const {
+		scopeData: {
+			activePermissions: { canManage },
+		},
+	} = usePageContext();
 	const popoverRef = useRef<null | HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -32,6 +39,10 @@ const LinkPopover = (props: HeaderPopoverProps) => {
 	}, [parent, mainContentRef]);
 
 	const unstableLink = Boolean(parent && /^r[0-9]*$/.test(parent.id));
+	const beforeCopyPrompt =
+		pubData.isReadOnly && unstableLink && canManage
+			? 'You must create a new Release to link to this block.'
+			: '';
 
 	return (
 		<div
@@ -41,11 +52,7 @@ const LinkPopover = (props: HeaderPopoverProps) => {
 		>
 			<ClickToCopyButton
 				copyString={`https://${locationData.hostname}${locationData.path}#${parent?.id}`}
-				beforeCopyPrompt={
-					pubData.isReadOnly && unstableLink
-						? 'You must create a new release to link to this block.'
-						: ''
-				}
+				beforeCopyPrompt={beforeCopyPrompt}
 				disabled={unstableLink}
 			/>
 		</div>
