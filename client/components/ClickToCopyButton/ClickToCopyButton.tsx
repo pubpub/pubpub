@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { Tooltip, Button, Position } from '@blueprintjs/core';
 import { useCopyToClipboard } from 'react-use';
 
-type OwnProps = {
+type ClickHandler = () => unknown;
+
+type Props = {
 	afterCopyPrompt?: string;
 	beforeCopyPrompt?: string;
-	children?: React.ReactNode | ((...args: any[]) => any);
+	children?: React.ReactNode | ((handleClick: ClickHandler) => unknown);
 	className?: string;
-	copyString: string | ((...args: any[]) => any);
+	copyString: string | (() => string);
 	disabled?: boolean;
 	icon?: string | React.ReactNode;
 	minimal?: boolean;
@@ -16,33 +18,18 @@ type OwnProps = {
 	small?: boolean;
 };
 
-const defaultProps = {
-	afterCopyPrompt: 'Copied!',
-	beforeCopyPrompt: null,
-	children: null,
-	className: '',
-	icon: 'link',
-	minimal: true,
-	tooltipPosition: Position.TOP,
-	usePortal: true,
-};
-
-type OwnClickToCopyButtonProps = OwnProps;
-
-type Props = OwnClickToCopyButtonProps;
-
 const ClickToCopyButton = (props: Props) => {
 	const {
-		afterCopyPrompt,
-		beforeCopyPrompt,
-		children,
-		className,
+		afterCopyPrompt = 'Copied!',
+		beforeCopyPrompt = null,
+		children = null,
+		className = '',
 		copyString,
 		disabled = false,
-		icon,
-		minimal,
-		tooltipPosition,
-		usePortal,
+		icon = 'link',
+		minimal = true,
+		tooltipPosition = Position.TOP,
+		usePortal = true,
 		small = false,
 	} = props;
 	const [hasCopied, setHasCopied] = useState(false);
@@ -91,5 +78,5 @@ const ClickToCopyButton = (props: Props) => {
 		/>
 	);
 };
-ClickToCopyButton.defaultProps = defaultProps;
+
 export default ClickToCopyButton;

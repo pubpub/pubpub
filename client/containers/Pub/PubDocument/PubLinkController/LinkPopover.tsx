@@ -15,15 +15,14 @@ const LinkPopover = (props: HeaderPopoverProps) => {
 	const { element, mainContentRef, locationData } = props;
 	const parent = getLowestAncestorWithId(element);
 	const pubData = usePubData();
-	const popoverRef = useRef();
+	const popoverRef = useRef<null | HTMLDivElement>(null);
 
 	useEffect(() => {
 		if (!parent) {
-			return;
+			return () => {};
 		}
 
-		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'undefined' is not assignable to ... Remove this comment to see the full error message
-		const popperObject = new Popper(parent, popoverRef.current, {
+		const popperObject = new Popper(parent, popoverRef.current!, {
 			placement: parent.matches('h1, h2, h3, h4, h5, h6') ? 'left' : 'left-start',
 		});
 
@@ -36,14 +35,12 @@ const LinkPopover = (props: HeaderPopoverProps) => {
 
 	return (
 		<div
-			// @ts-expect-error ts-migrate(2322) FIXME: Type 'MutableRefObject<undefined>' is not assignab... Remove this comment to see the full error message
 			ref={popoverRef}
 			style={{ position: 'absolute', top: '-9999px' }}
 			className="click-to-copy"
 		>
 			<ClickToCopyButton
-				// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
-				copyString={`https://${locationData.hostname}${locationData.path}#${parent.id}`}
+				copyString={`https://${locationData.hostname}${locationData.path}#${parent?.id}`}
 				beforeCopyPrompt={
 					pubData.isReadOnly && unstableLink
 						? 'You must create a new release to link to this block.'
