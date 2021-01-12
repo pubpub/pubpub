@@ -38,6 +38,7 @@ const LinkPopover = (props: HeaderPopoverProps) => {
 		return () => {};
 	}, [parent, mainContentRef]);
 
+	// The prosemirror-reactive plugin will generate random, transient IDs starting with 'r'
 	const unstableLink = Boolean(parent && /^r[0-9]*$/.test(parent.id));
 	const managersEnableLinksPrompt =
 		pubData.isReadOnly && unstableLink && canManage
