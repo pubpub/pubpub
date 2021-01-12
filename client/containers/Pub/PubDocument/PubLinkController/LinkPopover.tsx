@@ -16,46 +16,51 @@ export type HeaderPopoverProps = {
 const LinkPopover = (props: HeaderPopoverProps) => {
 	const { element, mainContentRef, locationData } = props;
 	const parent = getLowestAncestorWithId(element);
+	const popoverRef = useRef<null | HTMLDivElement>(null);
 	const pubData = usePubData();
 	const {
 		scopeData: {
 			activePermissions: { canManage },
 		},
 	} = usePageContext();
-	const popoverRef = useRef<null | HTMLDivElement>(null);
 
 	useEffect(() => {
-		if (!parent) {
-			return () => {};
+		const popover = popoverRef.current;
+		if (parent && popover) {
+			const popperObject = new Popper(parent, popover, {
+				placement: parent.matches('h1, h2, h3, h4, h5, h6') ? 'left' : 'left-start',
+			});
+
+			return () => {
+				popperObject.destroy();
+			};
 		}
-
-		const popperObject = new Popper(parent, popoverRef.current!, {
-			placement: parent.matches('h1, h2, h3, h4, h5, h6') ? 'left' : 'left-start',
-		});
-
-		return () => {
-			popperObject.destroy();
-		};
+		return () => {};
 	}, [parent, mainContentRef]);
 
 	const unstableLink = Boolean(parent && /^r[0-9]*$/.test(parent.id));
-	const beforeCopyPrompt =
+	const managersEnableLinksPrompt =
 		pubData.isReadOnly && unstableLink && canManage
 			? 'You must create a new Release to link to this block.'
 			: '';
 
-	return (
-		<div
-			ref={popoverRef}
-			style={{ position: 'absolute', top: '-9999px' }}
-			className="click-to-copy"
-		>
-			<ClickToCopyButton
-				copyString={`https://${locationData.hostname}${locationData.path}#${parent?.id}`}
-				beforeCopyPrompt={beforeCopyPrompt}
-				disabled={unstableLink}
-			/>
-		</div>
-	);
+	const shown = !unstableLink || managersEnableLinksPrompt;
+
+	if (shown) {
+		return (
+			<div
+				ref={popoverRef}
+				style={{ position: 'absolute', top: '-9999px' }}
+				className="click-to-copy"
+			>
+				<ClickToCopyButton
+					copyString={`https://${locationData.hostname}${locationData.path}#${parent?.id}`}
+					beforeCopyPrompt={managersEnableLinksPrompt}
+					disabled={unstableLink}
+				/>
+			</div>
+		);
+	}
+	return null;
 };
 export default LinkPopover;
