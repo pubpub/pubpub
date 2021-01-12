@@ -1,4 +1,3 @@
-import { Node } from 'prosemirror-model';
 import { Decoration, DecorationSet } from 'prosemirror-view';
 
 import { flattenOnce } from './util';
@@ -14,7 +13,7 @@ const createInlineDecoration = (
 	return Decoration.inline(
 		from,
 		to,
-		{ class: `discussion-range d-${discussionId}` },
+		{ class: `discussion-range d-${discussionId}`, style: 'background:rgba(50,25,50,0.2)' },
 		{ key: `discussion-inline-${discussionId}` },
 	);
 };
