@@ -1,10 +1,9 @@
 import { Node } from 'prosemirror-model';
-import { Selection } from 'prosemirror-state';
 import { Mapping, Step } from 'prosemirror-transform';
 
 import { Discussions, DiscussionInfo } from './types';
 
-const isEmptySelection = (selection: DiscussionInfo['selection']) => {
+export const isEmptySelection = (selection: DiscussionInfo['selection']) => {
 	if (selection) {
 		return selection.anchor === selection.head;
 	}
@@ -17,16 +16,21 @@ export const mapDiscussionThroughSteps = (
 	toDoc: Node,
 	steps: Step[],
 ): DiscussionInfo => {
-	const { selection: selectionJson } = discussion;
-	if (isEmptySelection(selectionJson) || steps.length === 0) {
+	const { selection } = discussion;
+	if (isEmptySelection(selection) || steps.length === 0) {
 		return discussion;
 	}
-	const selection = Selection.fromJSON(fromDoc, selectionJson!);
+	const { head, anchor } = selection!;
 	const mapping = new Mapping(steps.map((step) => step.getMap()));
-	const nextSelection = selection.map(toDoc, mapping);
+	const nextHead = mapping.map(head, -1);
+	const nextAnchor = mapping.map(anchor, -1);
 	return {
 		...discussion,
-		selection: nextSelection.toJSON() as any,
+		selection: {
+			type: 'text',
+			anchor: nextAnchor,
+			head: nextHead,
+		},
 	};
 };
 

@@ -25,8 +25,7 @@ export type DiscussionsHandler = (discussionsById: NullableDiscussions) => unkno
 export type DiscussionsUpdateResult = {
 	addedDiscussionIds: Set<string>;
 	removedDiscussionIds: Set<string>;
-	mapping: Mapping;
 	discussions: Discussions;
-	fromDoc: Node;
-	toDoc: Node;
+	doc: Node;
+	mapping: Mapping;
 };

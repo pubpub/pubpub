@@ -3,6 +3,7 @@ import { Plugin, PluginKey, Transaction, EditorState } from 'prosemirror-state';
 import { DecorationSet, EditorView } from 'prosemirror-view';
 
 import { PluginsOptions, CollaborativeOptions } from '../../types';
+
 import { getDecorationsForUpdateResult } from './decorations';
 import { connectToDraftDiscussions } from './draftDiscussions';
 import { DiscussionsUpdateResult, DiscussionInfo } from './types';
@@ -64,7 +65,7 @@ const createDraftPlugin = (collaborativeOptions: CollaborativeOptions, initialDo
 		return pluginState;
 	};
 
-	return new Plugin({
+	return new Plugin<PluginState>({
 		key: discussionsPluginKey,
 		state: { init: init, apply: apply },
 		view: (view) => {
@@ -76,9 +77,9 @@ const createDraftPlugin = (collaborativeOptions: CollaborativeOptions, initialDo
 			};
 		},
 		props: {
-			decorations: (editorState: EditorState) => {
-				const pluginState = discussionsPluginKey.getState(editorState) as PluginState;
-				return pluginState.decorations;
+			decorations: function(this: Plugin<PluginState>, editorState: EditorState) {
+				const { decorations } = this.getState(editorState);
+				return decorations;
 			},
 		},
 	});

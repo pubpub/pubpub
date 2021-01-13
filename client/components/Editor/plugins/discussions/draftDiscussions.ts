@@ -140,8 +140,7 @@ export const connectToDraftDiscussions = (options: Options) => {
 			return {
 				...updateDiscussions(nextDiscussions),
 				mapping: tr.mapping,
-				fromDoc: previousDoc,
-				toDoc: currentDoc,
+				doc: currentDoc,
 			};
 		}
 
@@ -172,8 +171,7 @@ export const connectToDraftDiscussions = (options: Options) => {
 			addedDiscussionIds: addedDiscussionIds,
 			removedDiscussionIds: removedDiscussionIds,
 			mapping: new Mapping(),
-			fromDoc: currentDoc,
-			toDoc: currentDoc,
+			doc: currentDoc,
 		});
 	};
 

@@ -1,9 +1,16 @@
 import { Decoration, DecorationSet } from 'prosemirror-view';
 
-import { flattenOnce } from './util';
-import { DiscussionsUpdateResult } from './types';
+import { flattenOnce, isEmptySelection } from './util';
+import { DiscussionInfo, DiscussionsUpdateResult } from './types';
 
-type DiscussionDecoration = Decoration<{ key: string }>;
+type DiscussionDecoration = Decoration<{ key: string; widgetForDiscussionId?: string }>;
+
+const getRangeFromSelection = (selection: NonNullable<DiscussionInfo['selection']>) => {
+	const { anchor, head } = selection;
+	const from = Math.min(anchor, head);
+	const to = Math.max(anchor, head);
+	return { from: from, to: to };
+};
 
 const createInlineDecoration = (
 	discussionId: string,
@@ -24,22 +31,17 @@ const createWidgetDecoration = (discussionId: string, position: number): Discuss
 	return Decoration.widget(position, element, {
 		stopEvent: () => true,
 		key: `discussion-widget-${discussionId}`,
-		marks: [],
+		widgetForDiscussionId: discussionId,
+		side: -1,
 	});
 };
 
-const shouldRemoveDecoration = (decoration: Decoration, updateResult: DiscussionsUpdateResult) => {
-	return updateResult.removedDiscussionIds.has(decoration.spec.discussionId);
-};
-
-const getDecorationsToAdd = (updateResult: DiscussionsUpdateResult): DiscussionDecoration[] => {
+const getNewDecorations = (updateResult: DiscussionsUpdateResult): DiscussionDecoration[] => {
 	return flattenOnce(
 		[...updateResult.addedDiscussionIds].map((id) => {
 			const { selection } = updateResult.discussions[id];
 			if (selection) {
-				const { anchor, head } = selection;
-				const from = Math.min(anchor, head);
-				const to = Math.max(anchor, head);
+				const { from, to } = getRangeFromSelection(selection);
 				return [createInlineDecoration(id, from, to), createWidgetDecoration(id, to)];
 			}
 			return [];
@@ -47,20 +49,56 @@ const getDecorationsToAdd = (updateResult: DiscussionsUpdateResult): DiscussionD
 	);
 };
 
+const getWidgetDiscussionsToRebuild = (
+	removedDicussionIds: string[],
+	updateResult: DiscussionsUpdateResult,
+): DiscussionDecoration[] => {
+	const { discussions } = updateResult;
+	return removedDicussionIds
+		.map((discussionId) => {
+			const discussion = discussions[discussionId];
+			if (discussion) {
+				const { selection } = discussion;
+				if (selection && !isEmptySelection(selection)) {
+					const { to } = getRangeFromSelection(selection);
+					return createWidgetDecoration(discussionId, to);
+				}
+			}
+			return null;
+		})
+		.filter((x): x is DiscussionDecoration => !!x);
+};
+
+const shouldRemoveDecoration = (decoration: Decoration, updateResult: DiscussionsUpdateResult) => {
+	return updateResult.removedDiscussionIds.has(decoration.spec.discussionId);
+};
+
 export const getDecorationsForUpdateResult = (
 	currentDecorations: DecorationSet,
 	updateResult: DiscussionsUpdateResult,
 ) => {
-	const { fromDoc, toDoc } = updateResult;
-	const decorationsToAdd = getDecorationsToAdd(updateResult);
+	const discussionIdsremovedDuringMapping: string[] = [];
+	const { doc, mapping } = updateResult;
+
+	const handleRemovedDecoration = (spec: any) => {
+		const { widgetForDiscussionId } = spec as DiscussionDecoration['spec'];
+		if (widgetForDiscussionId) {
+			discussionIdsremovedDuringMapping.push(widgetForDiscussionId);
+		}
+	};
+
 	const decorationsToRemove = currentDecorations
 		.find()
 		.filter((decoration) => shouldRemoveDecoration(decoration, updateResult));
 
-	const nextDecorations = currentDecorations
+	const mappedDecorations = currentDecorations
 		.remove(decorationsToRemove)
-		.map(updateResult.mapping, toDoc)
-		.add(fromDoc, decorationsToAdd);
+		.map(mapping, doc, { onRemove: handleRemovedDecoration });
 
-	return nextDecorations;
+	const decorationsToAdd = [
+		...getNewDecorations(updateResult),
+		...getWidgetDiscussionsToRebuild(discussionIdsremovedDuringMapping, updateResult),
+	];
+
+	return mappedDecorations.add(doc, decorationsToAdd);
 };
