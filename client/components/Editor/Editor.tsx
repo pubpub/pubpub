@@ -8,6 +8,7 @@ import { CitationManager } from 'client/utils/citations/citationManager';
 import {
 	CollaborativeOptions,
 	Doc,
+	DiscussionsOptions,
 	EditorChangeObject,
 	NodeLabelMap,
 	OnEditFn,
@@ -24,6 +25,7 @@ require('./styles/base.scss');
 type Props = {
 	citationManager?: CitationManager;
 	collaborativeOptions?: CollaborativeOptions;
+	discussionsOptions?: DiscussionsOptions;
 	customMarks?: Record<string, MarkSpec>;
 	customNodes?: Record<string, NodeSpec>;
 	customPlugins?: Record<string, null | PluginLoader>;
@@ -50,6 +52,7 @@ const Editor = (props: Props) => {
 		customMarks = {},
 		customNodes = {},
 		customPlugins = {},
+		discussionsOptions,
 		enableSuggestions = false,
 		initialContent = emptyDoc,
 		isReadOnly = false,
@@ -79,6 +82,7 @@ const Editor = (props: Props) => {
 		customPlugins: customPlugins,
 		pluginsOptions: {
 			citationManager: citationManager,
+			discussionsOptions: discussionsOptions,
 			collaborativeOptions: collaborativeOptions,
 			initialDoc: initialDocNode,
 			isReadOnly: isReadOnly,

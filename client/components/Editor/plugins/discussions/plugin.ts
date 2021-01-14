@@ -1,32 +1,39 @@
-import { Node } from 'prosemirror-model';
 import { Plugin, PluginKey, Transaction, EditorState } from 'prosemirror-state';
 import { DecorationSet, EditorView } from 'prosemirror-view';
 
-import { PluginsOptions, CollaborativeOptions } from '../../types';
+import { PluginsOptions, DiscussionsOptions } from '../../types';
 
-import { getDecorationsForUpdateResult } from './decorations';
-import { connectToDraftDiscussions } from './draftDiscussions';
-import { DiscussionsUpdateResult, DiscussionInfo } from './types';
+import { getDiscussionsFromAnchors } from './anchors';
+import { getDecorationsForDiscussions, getDecorationsForUpdateResult } from './decorations';
+import { createDiscussionsState } from './discussionsState';
+import { createFastForwarder } from './fastForward';
+import { connectToFirebaseDiscussions } from './firebase';
+import { DiscussionsUpdateResult, DiscussionSelection } from './types';
 
 export const discussionsPluginKey = new PluginKey('discussions');
 
-type SyncDraftDiscussions = ReturnType<typeof connectToDraftDiscussions>;
+type SyncDraftDiscussions = ReturnType<typeof createDiscussionsState>;
 
-type SharedPluginState = {
+type PluginState = {
 	decorations: DecorationSet;
-};
-
-type PluginState = SharedPluginState & {
 	addDiscussion: SyncDraftDiscussions['addDiscussion'];
 };
 
-const createDraftPlugin = (collaborativeOptions: CollaborativeOptions, initialDoc: Node) => {
+const createPlugin = (discussionsOptions: DiscussionsOptions) => {
+	const { discussionAnchors, draftRef, initialDoc, initialHistoryKey } = discussionsOptions;
+	const discussionsRef = draftRef?.child('discussions');
+	const remote = discussionsRef && connectToFirebaseDiscussions(discussionsRef);
+	const fastForward = draftRef && createFastForwarder(draftRef);
+	const initialDiscussions = getDiscussionsFromAnchors(discussionAnchors);
+
 	let editorView: null | EditorView = null;
 
-	const draftDiscussions = connectToDraftDiscussions({
-		draftRef: collaborativeOptions.firebaseRef,
-		initialHistoryKey: collaborativeOptions.initialDocKey,
+	const { addDiscussion, handleTransaction } = createDiscussionsState({
+		initialDiscussions: initialDiscussions,
+		initialHistoryKey: initialHistoryKey,
 		initialDoc: initialDoc,
+		remoteDiscussions: remote || null,
+		fastForwardDiscussions: fastForward || null,
 		onUpdateDiscussions: (updateResult: DiscussionsUpdateResult) => {
 			if (editorView) {
 				const { tr } = editorView.state;
@@ -44,13 +51,14 @@ const createDraftPlugin = (collaborativeOptions: CollaborativeOptions, initialDo
 		if (meta && meta.updateResult) {
 			return meta.updateResult;
 		}
-		return draftDiscussions.handleTransaction(tr, editorState);
+		return handleTransaction(tr, editorState);
 	};
 
 	const init = (): PluginState => {
+		const initialDecorations = getDecorationsForDiscussions(initialDiscussions);
 		return {
-			decorations: DecorationSet.create(initialDoc, []),
-			addDiscussion: draftDiscussions.addDiscussion,
+			decorations: DecorationSet.create(initialDoc, initialDecorations),
+			addDiscussion: addDiscussion,
 		};
 	};
 
@@ -72,7 +80,7 @@ const createDraftPlugin = (collaborativeOptions: CollaborativeOptions, initialDo
 			editorView = view;
 			return {
 				destroy: () => {
-					draftDiscussions.disconnect();
+					remote?.disconnect();
 				},
 			};
 		},
@@ -85,22 +93,22 @@ const createDraftPlugin = (collaborativeOptions: CollaborativeOptions, initialDo
 	});
 };
 
-export default (_, options: PluginsOptions) => {
-	const { collaborativeOptions, initialDoc } = options;
-	if (collaborativeOptions) {
-		return createDraftPlugin(collaborativeOptions, initialDoc);
-	}
-	return [];
-};
-
 export const addDiscussionToView = (
 	view: EditorView,
 	id: string,
-	selection: DiscussionInfo['selection'],
+	selection: DiscussionSelection,
 ) => {
 	const pluginState = discussionsPluginKey.getState(view.state) as null | PluginState;
 	if (pluginState) {
 		return pluginState.addDiscussion(id, selection);
 	}
 	return null;
+};
+
+export default (_, options: PluginsOptions) => {
+	const { discussionsOptions } = options;
+	if (discussionsOptions) {
+		return createPlugin(discussionsOptions);
+	}
+	return [];
 };

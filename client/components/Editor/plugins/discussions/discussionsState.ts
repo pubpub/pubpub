@@ -2,22 +2,27 @@ import { Node } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { Mapping, Step } from 'prosemirror-transform';
 
-import { collabDocPluginKey } from '../collaborative';
-
-import { connectToFirebaseDiscussions } from './firebase';
-import { getFastForwardedDiscussions } from './fastForward';
 import { createHistoryState } from './historyState';
 import { mapDiscussionThroughSteps, removeDiscussionsById } from './util';
-import { Discussions, DiscussionInfo, NullableDiscussions, DiscussionsUpdateResult } from './types';
+import {
+	Discussions,
+	DiscussionSelection,
+	NullableDiscussions,
+	DiscussionsUpdateResult,
+	RemoteDiscussions,
+	DiscussionsFastForwardFn,
+} from './types';
 
 type Options = {
-	draftRef: firebase.database.Reference;
-	initialHistoryKey: number;
+	initialDiscussions: Discussions;
 	initialDoc: Node;
+	initialHistoryKey: number;
+	fastForwardDiscussions: null | DiscussionsFastForwardFn;
+	remoteDiscussions: null | RemoteDiscussions;
 	onUpdateDiscussions: (result: DiscussionsUpdateResult) => unknown;
 };
 
-const getUpdatedDiscussionsFromTransaction = (
+const getUpdatedDiscussionsForTransaction = (
 	discussions: Discussions,
 	steps: Step[],
 	previousDoc: Node,
@@ -87,11 +92,17 @@ const getHighestCurrentKeyFromDiscussions = (discussions: NullableDiscussions) =
 	}, -1);
 };
 
-export const connectToDraftDiscussions = (options: Options) => {
-	const { draftRef, initialHistoryKey, initialDoc, onUpdateDiscussions } = options;
-	const firebase = connectToFirebaseDiscussions(draftRef);
+export const createDiscussionsState = (options: Options) => {
+	const {
+		initialDiscussions,
+		initialHistoryKey,
+		initialDoc,
+		fastForwardDiscussions,
+		onUpdateDiscussions,
+		remoteDiscussions,
+	} = options;
 	const history = createHistoryState(initialDoc, initialHistoryKey);
-	let discussions: Discussions = {};
+	let discussions = initialDiscussions;
 
 	const updateDiscussions = (update: NullableDiscussions) => {
 		const {
@@ -101,7 +112,7 @@ export const connectToDraftDiscussions = (options: Options) => {
 			addedDiscussionIds,
 		} = filterDiscussionsUpdate(discussions, update);
 
-		firebase.sendDiscussions(sendableDiscussions);
+		remoteDiscussions?.sendDiscussions(sendableDiscussions);
 		discussions = removeDiscussionsById(
 			{ ...discussions, ...updatableDiscussions },
 			removedDiscussionIds,
@@ -118,25 +129,22 @@ export const connectToDraftDiscussions = (options: Options) => {
 		tr: Transaction,
 		nextState: EditorState,
 	): null | DiscussionsUpdateResult => {
-		const { mostRecentRemoteKey } = collabDocPluginKey.getState(nextState);
 		const {
-			hasHistoryKeyAdvanced,
 			currentDoc,
 			currentHistoryKey,
 			previousDoc,
 			previousHistoryKey,
-		} = history.updateState(tr.doc, mostRecentRemoteKey);
+		} = history.updateState(tr, nextState);
 
-		const nextDiscussions = getUpdatedDiscussionsFromTransaction(
-			discussions,
-			tr.steps,
-			previousDoc,
-			currentDoc,
-			previousHistoryKey,
-			currentHistoryKey,
-		);
-
-		if (tr.steps.length || hasHistoryKeyAdvanced) {
+		if (tr.steps.length > 0 || currentHistoryKey > previousHistoryKey) {
+			const nextDiscussions = getUpdatedDiscussionsForTransaction(
+				discussions,
+				tr.steps,
+				previousDoc,
+				currentDoc,
+				previousHistoryKey,
+				currentHistoryKey,
+			);
 			return {
 				...updateDiscussions(nextDiscussions),
 				mapping: tr.mapping,
@@ -147,15 +155,15 @@ export const connectToDraftDiscussions = (options: Options) => {
 		return null;
 	};
 
-	const addDiscussion = (discussionId: string, selection: DiscussionInfo['selection']) => {
+	const addDiscussion = (discussionId: string, selection: DiscussionSelection) => {
 		const { currentHistoryKey } = history.getState();
 		updateDiscussions({
 			[discussionId]: {
 				initKey: currentHistoryKey,
 				currentKey: currentHistoryKey,
 				selection: selection,
-				initHead: selection?.head!,
-				initAnchor: selection?.anchor!,
+				initHead: selection.head,
+				initAnchor: selection.anchor,
 			},
 		});
 	};
@@ -175,23 +183,19 @@ export const connectToDraftDiscussions = (options: Options) => {
 		});
 	};
 
-	firebase.receiveDiscussions((remoteDiscussions: NullableDiscussions) => {
-		const remoteKey = getHighestCurrentKeyFromDiscussions(remoteDiscussions);
+	remoteDiscussions?.receiveDiscussions((update: NullableDiscussions) => {
+		const remoteKey = getHighestCurrentKeyFromDiscussions(update);
 		history.onReachesKey(remoteKey, () => {
 			const { currentDoc, currentHistoryKey } = history.getState();
-			asynchronouslyUpdateDiscussions(remoteDiscussions);
-			getFastForwardedDiscussions(
-				remoteDiscussions,
-				draftRef,
-				currentDoc,
-				currentHistoryKey,
-			).then(asynchronouslyUpdateDiscussions);
+			asynchronouslyUpdateDiscussions(update);
+			fastForwardDiscussions?.(update, currentDoc, currentHistoryKey).then(
+				asynchronouslyUpdateDiscussions,
+			);
 		});
 	});
 
 	return {
 		addDiscussion: addDiscussion,
 		handleTransaction: handleTransaction,
-		disconnect: firebase.disconnect,
 	};
 };

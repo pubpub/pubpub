@@ -1,6 +1,12 @@
 import { uncompressSelectionJSON, compressSelectionJSON } from 'prosemirror-compress-pubpub';
 
-import { DiscussionInfo, CompressedDiscussionInfo, DiscussionsHandler } from './types';
+import {
+	DiscussionInfo,
+	CompressedDiscussionInfo,
+	DiscussionsHandler,
+	Discussions,
+	RemoteDiscussions,
+} from './types';
 
 type Reference = firebase.database.Reference;
 type DataSnapshot = firebase.database.DataSnapshot;
@@ -17,7 +23,7 @@ const compressDiscussionInfo = (uncompressed: DiscussionInfo): CompressedDiscuss
 	return { ...uncompressed, selection: selection };
 };
 
-export const connectToFirebaseDiscussions = (draftRef: Reference) => {
+export const connectToFirebaseDiscussions = (draftRef: Reference): RemoteDiscussions => {
 	const discussionsRef = draftRef.child('discussions');
 	let onDiscussions: null | DiscussionsHandler = null;
 	let disconnect: null | (() => void) = null;
@@ -33,7 +39,7 @@ export const connectToFirebaseDiscussions = (draftRef: Reference) => {
 		onDiscussions?.({ [snapshot.key!]: null });
 	};
 
-	const sendDiscussions = (discussions: Record<string, DiscussionInfo>) => {
+	const sendDiscussions = (discussions: Discussions) => {
 		Object.entries(discussions).forEach(([id, discussion]) => {
 			discussionsRef
 				.child(id)

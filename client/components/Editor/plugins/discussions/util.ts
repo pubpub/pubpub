@@ -1,9 +1,9 @@
 import { Node } from 'prosemirror-model';
 import { Mapping, Step } from 'prosemirror-transform';
 
-import { Discussions, DiscussionInfo } from './types';
+import { Discussions, DiscussionInfo, DiscussionSelection } from './types';
 
-export const isEmptySelection = (selection: DiscussionInfo['selection']) => {
+export const isEmptySelection = (selection: null | DiscussionSelection) => {
 	if (selection) {
 		return selection.anchor === selection.head;
 	}

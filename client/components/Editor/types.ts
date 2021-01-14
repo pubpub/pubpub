@@ -3,6 +3,7 @@ import { Plugin, EditorState, Transaction } from 'prosemirror-state';
 
 import { CitationManager } from 'client/utils/citations/citationManager';
 import SuggestionManager from 'client/utils/suggestions/suggestionManager';
+import { DiscussionAnchor } from 'utils/types';
 
 import { getChangeObject } from './plugins/onChange';
 import { NodeReference } from './utils';
@@ -38,9 +39,17 @@ export type CollaborativeOptions = {
 	onUpdateLatestKey?: (key: number) => unknown;
 };
 
+export type DiscussionsOptions = {
+	draftRef?: null | firebase.database.Reference;
+	initialDoc: Node;
+	initialHistoryKey: number;
+	discussionAnchors: DiscussionAnchor[];
+};
+
 export type PluginsOptions = {
 	citationManager?: CitationManager;
 	collaborativeOptions?: CollaborativeOptions;
+	discussionsOptions?: DiscussionsOptions;
 	initialDoc: Node;
 	isReadOnly?: boolean;
 	nodeLabels: NodeLabelMap;
