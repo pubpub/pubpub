@@ -310,7 +310,7 @@ export type DiscussionAnchor = {
 	id: string;
 	discussionId: string;
 	historyKey: number;
-	selection: null | {};
+	selection: null | { type: 'text'; anchor: number; head: number };
 	originalText: string;
 	originalTextPrefix: string;
 	originalTextSuffix: string;
