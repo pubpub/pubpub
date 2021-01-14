@@ -33,5 +33,3 @@ export const unique = (array, fn) => {
 };
 
 export const pruneFalsyValues = (arr) => arr.filter(Boolean);
-
-export const flatten = (arrayOfArrays) => arrayOfArrays.reduce(([a, b]) => [...a, ...b], []);

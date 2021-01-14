@@ -2,7 +2,7 @@
 	"extends": "./tsconfig.json",
 	"compilerOptions": {
 		"target": "es5",
-		"noEmit": false,
+		"noEmit": false
 	},
 	"include": [
 		"client/**/*",
