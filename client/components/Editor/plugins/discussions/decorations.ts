@@ -20,7 +20,7 @@ const createInlineDecoration = (
 	return Decoration.inline(
 		from,
 		to,
-		{ class: `discussion-range d-${discussionId}`, style: 'background:rgba(50,25,50,0.2)' },
+		{ class: `discussion-range d-${discussionId}` },
 		{ key: `discussion-inline-${discussionId}` },
 	);
 };
