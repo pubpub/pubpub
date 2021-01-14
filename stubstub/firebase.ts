@@ -1,6 +1,5 @@
-import admin from 'firebase-admin';
-import { Step, Transform } from 'prosemirror-transform';
 import uuid from 'uuid/v4';
+import { Step, Transform } from 'prosemirror-transform';
 
 import { createFirebaseChange, getFirebaseDoc } from 'client/components/Editor';
 import { Branch } from 'server/models';
@@ -8,13 +7,9 @@ import { getBranchRef, getDatabaseRef, editorSchema } from 'server/utils/firebas
 
 type EditorSchema = typeof editorSchema;
 type TransformFn = (t: Transform<EditorSchema>, s: EditorSchema) => void;
+type Reference = firebase.database.Reference;
 
-type Reference = admin.database.Reference;
-
-export const editFirebaseDraftByRef = async (
-	ref: firebase.database.Reference,
-	{ branchId = 'no-branch' } = {},
-) => {
+export const editFirebaseDraftByRef = async (ref: Reference, { branchId = 'no-branch' } = {}) => {
 	const fetchDoc = async () => getFirebaseDoc(ref, editorSchema);
 
 	let { doc, key: currentKey } = await fetchDoc();
