@@ -7,7 +7,16 @@ import { CitationManager } from 'client/utils/citations/citationManager';
 import { initFirebase } from 'client/utils/firebaseClient';
 import { apiFetch } from 'client/utils/apiFetch';
 import { NodeLabelMap } from 'client/components/Editor/types';
-import { Maybe, PatchFn, PubPageData, Community, LoginData, LocationData } from 'utils/types';
+import {
+	Maybe,
+	PatchFn,
+	PatchFnArg,
+	PubPageData,
+	Community,
+	LoginData,
+	LocationData,
+	DocJson,
+} from 'utils/types';
 
 const shimPubContextProps = {
 	pubData: {
@@ -49,6 +58,7 @@ type State = {
 		isViewingHistory: boolean;
 		loadedIntoHistory: boolean;
 		historyDocKey: string;
+		historyDoc: Maybe<DocJson>;
 		outstandingRequests: number;
 		latestKeyReceivedAt: Maybe<number>;
 		timestamps: Record<string, number>;
@@ -65,7 +75,7 @@ type State = {
 };
 
 type PubContextType = State & {
-	updateLocalData: PatchFn<any>;
+	updateLocalData: (type: string, patcher: PatchFnArg<any>) => unknown;
 	updatePubData: PatchFn<PubPageData>;
 };
 

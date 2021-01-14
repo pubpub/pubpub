@@ -1,3 +1,4 @@
+import { Node } from 'prosemirror-model';
 import { Plugin, PluginKey, Transaction, EditorState } from 'prosemirror-state';
 import { DecorationSet, EditorView } from 'prosemirror-view';
 
@@ -19,8 +20,8 @@ type PluginState = {
 	addDiscussion: SyncDraftDiscussions['addDiscussion'];
 };
 
-const createPlugin = (discussionsOptions: DiscussionsOptions) => {
-	const { discussionAnchors, draftRef, initialDoc, initialHistoryKey } = discussionsOptions;
+const createPlugin = (discussionsOptions: DiscussionsOptions, initialDoc: Node) => {
+	const { discussionAnchors, draftRef, initialHistoryKey } = discussionsOptions;
 	const discussionsRef = draftRef?.child('discussions');
 	const remote = discussionsRef && connectToFirebaseDiscussions(discussionsRef);
 	const fastForward = draftRef && createFastForwarder(draftRef);
@@ -106,9 +107,9 @@ export const addDiscussionToView = (
 };
 
 export default (_, options: PluginsOptions) => {
-	const { discussionsOptions } = options;
+	const { discussionsOptions, initialDoc } = options;
 	if (discussionsOptions) {
-		return createPlugin(discussionsOptions);
+		return createPlugin(discussionsOptions, initialDoc);
 	}
 	return [];
 };

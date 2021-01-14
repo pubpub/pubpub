@@ -41,7 +41,6 @@ export type CollaborativeOptions = {
 
 export type DiscussionsOptions = {
 	draftRef?: null | firebase.database.Reference;
-	initialDoc: Node;
 	initialHistoryKey: number;
 	discussionAnchors: DiscussionAnchor[];
 };
@@ -58,8 +57,6 @@ export type PluginsOptions = {
 	placeholder?: string;
 	suggestionManager: SuggestionManager<NodeReference>;
 };
-
-export type Doc = { type: 'doc'; attrs: any; content: any[] };
 
 export type OnEditFn = (
 	doc: Node,

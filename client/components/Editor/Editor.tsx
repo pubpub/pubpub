@@ -4,10 +4,10 @@ import { MarkSpec, NodeSpec } from 'prosemirror-model';
 import { EditorView } from 'prosemirror-view';
 
 import { CitationManager } from 'client/utils/citations/citationManager';
+import { DocJson, Maybe } from 'utils/types';
 
 import {
 	CollaborativeOptions,
-	Doc,
 	DiscussionsOptions,
 	EditorChangeObject,
 	NodeLabelMap,
@@ -25,12 +25,12 @@ require('./styles/base.scss');
 type Props = {
 	citationManager?: CitationManager;
 	collaborativeOptions?: CollaborativeOptions;
-	discussionsOptions?: DiscussionsOptions;
+	discussionsOptions?: Maybe<DiscussionsOptions>;
 	customMarks?: Record<string, MarkSpec>;
 	customNodes?: Record<string, NodeSpec>;
 	customPlugins?: Record<string, null | PluginLoader>;
 	enableSuggestions?: boolean;
-	initialContent?: Doc;
+	initialContent?: DocJson;
 	isReadOnly?: boolean;
 	nodeLabels?: NodeLabelMap;
 	nodeOptions?: Record<string, any>;

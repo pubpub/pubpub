@@ -13,21 +13,14 @@ import { usePageContext } from 'utils/hooks';
 
 import { usePubContext } from '../pubHooks';
 import { PubSuspendWhileTypingContext } from '../PubSuspendWhileTyping';
+
 import discussionSchema from './DiscussionAddon/discussionSchema';
 import Discussion from './PubDiscussions/Discussion';
 
 require('./pubBody.scss');
 
-type OwnProps = {
-	pubData: any;
-	collabData: any;
-	historyData: any;
-	firebaseBranchRef?: any;
-	updateLocalData: (...args: any[]) => any;
-	editorWrapperRef: any;
-};
-const defaultProps = {
-	firebaseBranchRef: undefined,
+type Props = {
+	editorWrapperRef: React.Ref<HTMLElement>;
 };
 
 let setSavingTimeout;
@@ -40,21 +33,19 @@ const shouldSuppressEditorErrors = () => {
 	return false;
 };
 
-type Props = OwnProps & typeof defaultProps;
-
 const PubBody = (props: Props) => {
+	const { editorWrapperRef } = props;
+	const { communityData } = usePageContext();
 	const {
 		pubData,
+		citationManager,
+		updateLocalData,
 		collabData,
 		firebaseBranchRef,
-		updateLocalData,
 		historyData,
-		editorWrapperRef,
-	} = props;
-	const { communityData } = usePageContext();
-	const { citationManager } = usePubContext();
+	} = usePubContext();
 	const { isViewingHistory } = historyData;
-	const prevStatusRef = useRef(null);
+	const prevStatusRef = useRef<string | null>(null);
 	const embedDiscussions = useRef({});
 	const [editorError, setEditorError] = useState<Error | null>(null);
 	const [editorErrorTime, setEditorErrorTime] = useState<number | null>(null);
@@ -175,19 +166,27 @@ const PubBody = (props: Props) => {
 					}
 				}}
 				onError={handleError}
+				discussionsOptions={
+					loadCollaborativeOptions &&
+					firebaseBranchRef && {
+						draftRef: firebaseBranchRef,
+						initialHistoryKey: pubData.initialDocKey,
+						discussionAnchors: [],
+					}
+				}
 				collaborativeOptions={
 					loadCollaborativeOptions && firebaseBranchRef
 						? {
 								firebaseRef: firebaseBranchRef,
-								clientData: props.collabData.localCollabUser,
+								clientData: collabData.localCollabUser,
 								initialDocKey: pubData.initialDocKey,
 								onStatusChange: debounce((status) => {
 									getNextStatus(status, (nextStatus) => {
-										props.updateLocalData('collab', nextStatus);
+										updateLocalData('collab', nextStatus);
 									});
 								}, 250),
 								onUpdateLatestKey: (latestKey) => {
-									props.updateLocalData('history', {
+									updateLocalData('history', {
 										latestKey: latestKey,
 										currentKey: latestKey,
 									});
@@ -272,5 +271,5 @@ const PubBody = (props: Props) => {
 		</main>
 	);
 };
-PubBody.defaultProps = defaultProps;
+
 export default PubBody;
