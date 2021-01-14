@@ -1,4 +1,7 @@
 import { Node } from 'prosemirror-model';
+import { EditorState, Transaction } from 'prosemirror-state';
+
+import { collabDocPluginKey } from '../collaborative';
 
 type Callback = () => unknown;
 
@@ -42,18 +45,20 @@ export const createHistoryState = (initialDoc: Node, initialHistoryKey: number) 
 		};
 	};
 
-	const updateState = (nextDoc: Node, nextHistoryKey: number) => {
+	const updateState = (tr: Transaction, nextState: EditorState) => {
 		const previousHistoryKey = historyKey;
 		const previousDoc = doc;
+
+		const collabState = collabDocPluginKey.getState(nextState);
+		const nextHistoryKey: number = collabState?.mostRecentRemoteKey ?? -1;
+		const nextDoc = tr.doc;
 
 		if (nextHistoryKey >= historyKey) {
 			historyKey = nextHistoryKey;
 			doc = nextDoc;
 		}
 
-		const hasHistoryKeyAdvanced = historyKey > previousHistoryKey;
-
-		if (hasHistoryKeyAdvanced) {
+		if (historyKey > previousHistoryKey) {
 			const { ready, notReady } = getReadyCallbacks(callbacks, historyKey);
 			callbacks = notReady;
 			ready.forEach((kc) => kc.callback());
@@ -61,7 +66,6 @@ export const createHistoryState = (initialDoc: Node, initialHistoryKey: number) 
 
 		return {
 			...getState(),
-			hasHistoryKeyAdvanced: hasHistoryKeyAdvanced,
 			previousHistoryKey: previousHistoryKey,
 			previousDoc: previousDoc,
 		};

@@ -6,6 +6,8 @@ import { applyStepsToDoc, getFirebaseDoc, getStepsInChangeRange } from '../../ut
 import { mapDiscussionThroughSteps, flattenOnce } from './util';
 import { DiscussionInfo, NullableDiscussions } from './types';
 
+type Reference = firebase.database.Reference;
+
 const getFastForwardedDiscussion = (
 	discussion: DiscussionInfo,
 	changesOfSteps: Step[][],
@@ -33,9 +35,8 @@ const getFastForwardedDiscussion = (
 	};
 };
 
-export const getFastForwardedDiscussions = async <S extends Schema>(
+export const createFastForwarder = (draftRef: Reference) => async <S extends Schema>(
 	discussionsById: NullableDiscussions,
-	draftRef: firebase.database.Reference,
 	latestDoc: Node<S>,
 	latestHistoryKey: number,
 ): Promise<Record<string, DiscussionInfo>> => {

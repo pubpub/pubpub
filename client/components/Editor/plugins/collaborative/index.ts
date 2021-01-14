@@ -12,7 +12,9 @@ export default (schema, props) => {
 	if (!props.collaborativeOptions?.firebaseRef) {
 		return [];
 	}
+
 	const localClientId = `${props.collaborativeOptions.clientData.id}-${generateHash(6)}`;
+
 	return [
 		collab({ clientID: localClientId }),
 		buildDocument(schema, props, collabDocPluginKey, localClientId),

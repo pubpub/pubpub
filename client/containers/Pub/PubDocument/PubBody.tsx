@@ -175,6 +175,14 @@ const PubBody = (props: Props) => {
 					}
 				}}
 				onError={handleError}
+				discussionsOptions={
+					loadCollaborativeOptions &&
+					firebaseBranchRef && {
+						initialHistoryKey: pubData.initialDocKey,
+						draftRef: firebaseBranchRef,
+						discussionAnchors: [],
+					}
+				}
 				collaborativeOptions={
 					loadCollaborativeOptions && firebaseBranchRef
 						? {

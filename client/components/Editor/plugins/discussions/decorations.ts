@@ -1,11 +1,11 @@
 import { Decoration, DecorationSet } from 'prosemirror-view';
 
 import { flattenOnce, isEmptySelection } from './util';
-import { DiscussionInfo, DiscussionsUpdateResult } from './types';
+import { DiscussionInfo, Discussions, DiscussionSelection, DiscussionsUpdateResult } from './types';
 
 type DiscussionDecoration = Decoration<{ key: string; widgetForDiscussionId?: string }>;
 
-const getRangeFromSelection = (selection: NonNullable<DiscussionInfo['selection']>) => {
+const getRangeFromSelection = (selection: DiscussionSelection) => {
 	const { anchor, head } = selection;
 	const from = Math.min(anchor, head);
 	const to = Math.max(anchor, head);
@@ -36,15 +36,23 @@ const createWidgetDecoration = (discussionId: string, position: number): Discuss
 	});
 };
 
+const getDecorationsForDiscussion = (discussionId: string, discussion: DiscussionInfo) => {
+	const { selection } = discussion;
+	if (selection) {
+		const { from, to } = getRangeFromSelection(selection);
+		return [
+			createInlineDecoration(discussionId, from, to),
+			createWidgetDecoration(discussionId, to),
+		];
+	}
+	return [];
+};
+
 const getNewDecorations = (updateResult: DiscussionsUpdateResult): DiscussionDecoration[] => {
 	return flattenOnce(
 		[...updateResult.addedDiscussionIds].map((id) => {
-			const { selection } = updateResult.discussions[id];
-			if (selection) {
-				const { from, to } = getRangeFromSelection(selection);
-				return [createInlineDecoration(id, from, to), createWidgetDecoration(id, to)];
-			}
-			return [];
+			const discussion = updateResult.discussions[id];
+			return getDecorationsForDiscussion(id, discussion);
 		}),
 	);
 };
@@ -101,4 +109,11 @@ export const getDecorationsForUpdateResult = (
 	];
 
 	return mappedDecorations.add(doc, decorationsToAdd);
+};
+
+export const getDecorationsForDiscussions = (discussions: Discussions): DiscussionDecoration[] => {
+	const decorationsByDiscussion = Object.entries(discussions).map(([id, discussion]) => {
+		return getDecorationsForDiscussion(id, discussion);
+	});
+	return flattenOnce(decorationsByDiscussion);
 };
