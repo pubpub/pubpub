@@ -4,7 +4,7 @@ import { Step } from 'prosemirror-transform';
 import { applyStepsToDoc, getFirebaseDoc, getStepsInChangeRange } from '../../utils';
 
 import { mapDiscussionThroughSteps, flattenOnce } from './util';
-import { DiscussionInfo, NullableDiscussions } from './types';
+import { DiscussionInfo, Discussions, NullableDiscussions } from './types';
 
 type Reference = firebase.database.Reference;
 
@@ -39,7 +39,7 @@ export const createFastForwarder = (draftRef: Reference) => async <S extends Sch
 	discussionsById: NullableDiscussions,
 	latestDoc: Node<S>,
 	latestHistoryKey: number,
-): Promise<Record<string, DiscussionInfo>> => {
+): Promise<Discussions> => {
 	const { schema } = latestDoc.type;
 	const discussions = Object.values(discussionsById);
 	const outdatedDiscussions = discussions.filter((d) => d && d.currentKey < latestHistoryKey);
@@ -58,7 +58,7 @@ export const createFastForwarder = (draftRef: Reference) => async <S extends Sch
 		getStepsInChangeRange(draftRef, schema, mostOutdatedKey + 1, latestHistoryKey),
 	]);
 
-	const resultingDiscussions: Record<string, DiscussionInfo> = {};
+	const resultingDiscussions: Discussions = {};
 	Object.entries(discussionsById).forEach(([discussionId, discussion]) => {
 		if (discussion && outdatedDiscussions.includes(discussion)) {
 			resultingDiscussions[discussionId] = getFastForwardedDiscussion(

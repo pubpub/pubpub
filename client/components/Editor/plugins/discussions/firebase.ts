@@ -71,7 +71,7 @@ export const connectToFirebaseDiscussions = (draftRef: Reference): RemoteDiscuss
 	discussionsRef.once('value').then((snapshot) => {
 		const discussionsById = snapshot.val();
 		if (discussionsById) {
-			const uncompressedDiscussionsById: Record<string, DiscussionInfo> = {};
+			const uncompressedDiscussionsById: Discussions = {};
 			Object.entries(discussionsById).forEach(([id, discussion]) => {
 				uncompressedDiscussionsById[id] = uncompressDiscussionInfo(discussion as any);
 			});
