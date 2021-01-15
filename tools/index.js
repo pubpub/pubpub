@@ -20,6 +20,7 @@ const commandFiles = {
 	checkpointBackfill: './dashboardMigrations/backfillCheckpoints.js',
 	clone: './clone.js',
 	devshell: './devshell.js',
+	emailUsers: './emailUsers.js',
 	firebaseDownload: './firebaseDownload.js',
 	flattenBranchHistory: './flattenBranchHistory.js',
 	migrate: './migrate.js',
