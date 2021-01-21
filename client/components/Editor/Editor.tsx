@@ -82,7 +82,7 @@ const Editor = (props: Props) => {
 		customPlugins: customPlugins,
 		pluginsOptions: {
 			citationManager: citationManager,
-			discussionsOptions: discussionsOptions,
+			discussionsOptions: discussionsOptions || null,
 			collaborativeOptions: collaborativeOptions,
 			initialDoc: initialDocNode,
 			isReadOnly: isReadOnly,

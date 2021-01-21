@@ -133,7 +133,7 @@ export type Branch = {
 
 export type Doc = {
 	id: string;
-	content: {};
+	content: DocJson;
 };
 
 export type Release = {
@@ -233,25 +233,30 @@ export type Pub = {
 
 export type DocJson = { type: 'doc'; attrs: any; content: any[] };
 
-export type PubPageData = DefinitelyHas<Pub, 'attributions' | 'collectionPubs'> & {
-	discussions: DefinitelyHas<Discussion, 'discussionAnchor'>[];
-	viewHash: Maybe<string>;
-	editHash: Maybe<string>;
-	isReadOnly: boolean;
-	isRelease: boolean;
+export type PubDocInfo = {
 	initialDoc: DocJson;
 	initialDocKey: number;
-	isInMaintenanceMode: boolean;
-	initialStructuredCitations: boolean;
-	releaseNumber: Maybe<number>;
+	mostRecentRemoteKey?: number;
 	historyData: {
+		timestamps: Record<string, number>;
 		currentKey: number;
 		latestKey: number;
-		timestamps: Record<string, number>;
 	};
-	activeBranch: Branch;
-	firebaseToken: string;
 };
+
+export type PubPageData = DefinitelyHas<Pub, 'attributions' | 'collectionPubs'> &
+	PubDocInfo & {
+		discussions: DefinitelyHas<Discussion, 'discussionAnchor'>[];
+		viewHash: Maybe<string>;
+		editHash: Maybe<string>;
+		isReadOnly: boolean;
+		isRelease: boolean;
+		isInMaintenanceMode?: boolean;
+		firebaseToken?: string;
+		initialStructuredCitations: boolean;
+		releaseNumber: Maybe<number>;
+		activeBranch?: Branch;
+	};
 
 export type Page = {
 	id: string;

@@ -5,13 +5,14 @@ export { default as sanitizeCommunity } from './communitySanitize';
 export { default as getCommunity } from './communityGet';
 export { default as getMembers, getMemberDataById } from './membersGet';
 export { default as getPage } from './pageGet';
-export { default as getPub } from './pubGet';
+export { getPub, getPubForRequest } from './pubGet';
 export {
-	enrichPubFirebaseDoc,
-	enrichPubFirebaseToken,
-	enrichPubCitations,
-	enrichAndSanitizePubEdges,
-} from './pubEnrich';
+	getPubFirebaseDraft,
+	getPubRelease,
+	getPubFirebaseToken,
+	getPubCitations,
+	getPubEdges,
+} from './pubEnrichments';
 export { default as sanitizePub } from './pubSanitize';
 export { default as getOverview } from './overviewGet';
 export { default as sanitizeOverview } from './overviewSanitize';
