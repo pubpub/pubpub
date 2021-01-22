@@ -9,7 +9,6 @@ import { getFormattedDownloadUrl, getPublicExportUrl } from 'utils/pub/downloads
 import { sortByPrimaryStatus } from 'utils/collections/primary';
 
 import {
-	Branch,
 	Collection,
 	CollectionAttribution,
 	CollectionPub,
@@ -157,16 +156,6 @@ export const getPubData = async (pubIds) => {
 			{
 				model: Release,
 				as: 'releases',
-			},
-			{
-				model: Branch,
-				as: 'branches',
-				include: [
-					{
-						model: Export,
-						as: 'exports',
-					},
-				],
 			},
 			{
 				model: PubEdge,

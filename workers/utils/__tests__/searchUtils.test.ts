@@ -66,7 +66,7 @@ let firebaseStub;
 setup(beforeAll, async () => {
 	await models.resolve();
 	firebaseStub = stub('server/utils/firebaseAdmin', {
-		getBranchDoc: (pubId) => {
+		getPubDraftDoc: (pubId) => {
 			return Promise.resolve({ doc: pubId === models.longPub.id ? fullDoc : plainDoc });
 		},
 	});
@@ -78,8 +78,6 @@ teardown(afterAll, () => {
 
 const determinizePubData = determinize([
 	'avatar',
-	'branchIsPublic',
-	'branchShortId',
 	'byline',
 	'communityDomain',
 	'communityTitle',

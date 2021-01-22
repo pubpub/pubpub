@@ -1,5 +1,4 @@
 import {
-	Branch,
 	Collection,
 	CollectionAttribution,
 	CollectionPub,
@@ -12,7 +11,6 @@ import {
 	Release,
 	Discussion,
 	ReviewNew,
-	Fork,
 	Anchor,
 	Member,
 	includeUserModel,
@@ -27,6 +25,7 @@ export type PubGetOptions = {
 	getCollections?: boolean;
 	getMembers?: boolean;
 	getCommunity?: boolean;
+	getExports?: boolean;
 	getEdges?: 'all' | 'approved-only';
 	getEdgesOptions?: PubEdgeIncludesOptions;
 };
@@ -39,6 +38,7 @@ export default ({
 	getCommunity,
 	getEdges = 'approved-only',
 	getEdgesOptions,
+	getExports,
 }: PubGetOptions) => {
 	const allowUnapprovedEdges = getEdges === 'all';
 	/* Initialize values assuming all inputs are false. */
@@ -53,19 +53,6 @@ export default ({
 			include: [includeUserModel({ as: 'user' })],
 		},
 	];
-	let pubBranches = [
-		{
-			model: Branch,
-			as: 'branches',
-			required: true,
-			include: [
-				{
-					model: Export,
-					as: 'exports',
-				},
-			],
-		},
-	];
 	let pubMembers: any = [];
 	let pubEdges: any = [];
 	let pubReleases = [
@@ -74,6 +61,7 @@ export default ({
 			as: 'releases',
 		},
 	];
+	let pubExports: any = [];
 	let collectionPubs: any = [];
 	let community: any = [];
 	let anchor = [{ model: Anchor, as: 'anchor' }];
@@ -92,14 +80,12 @@ export default ({
 			'customPublishedAt',
 			'createdAt',
 		];
-		pubBranches = [];
 		author = [];
 		thread = [];
 		anchor = [];
 	}
 	if (isAuth) {
 		pubAttributes = ['id'];
-		pubBranches = [];
 		pubReleases = [];
 		pubAttributions = [];
 		author = [];
@@ -181,12 +167,20 @@ export default ({
 			},
 		];
 	}
+	if (getExports) {
+		pubExports = [
+			{
+				model: Export,
+				as: 'exports',
+			},
+		];
+	}
 	const visibility = baseVisibility;
 	return {
 		attributes: pubAttributes,
 		include: [
 			...pubAttributions,
-			...pubBranches,
+			...pubExports,
 			...pubReleases,
 			...pubMembers,
 			...pubEdges,
@@ -195,12 +189,6 @@ export default ({
 				model: Discussion,
 				as: 'discussions',
 				include: [...author, ...anchor, ...visibility, ...thread],
-			},
-			{
-				separate: true,
-				model: Fork,
-				as: 'forks',
-				include: [...author, ...visibility, ...thread],
 			},
 			{
 				separate: true,

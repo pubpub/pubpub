@@ -1,6 +1,5 @@
 import { Op } from 'sequelize';
 import {
-	Branch,
 	Collection,
 	CollectionPub,
 	Community,
@@ -12,7 +11,6 @@ import {
 
 import buildPubOptions from './pubOptions';
 import sanitizeDiscussions from './discussionsSanitize';
-import sanitizeForks from './forksSanitize';
 import sanitizeReviews from './reviewsSanitize';
 import { ensureSerialized, stripFalsyIdsFromQuery } from './util';
 import { getCollection } from './collectionGet';
@@ -99,11 +97,6 @@ getScopeElements = async (scopeInputs) => {
 					model: CollectionPub,
 					as: 'collectionPubs',
 					attributes: ['id', 'pubId', 'collectionId'],
-				},
-				{
-					model: Branch,
-					as: 'branches',
-					attributes: ['id', 'title'],
 				},
 				{
 					model: Release,
@@ -265,7 +258,6 @@ getActivePermissions = async (
 
 	const initialOptions = {
 		isSuperAdmin: isSuperAdmin,
-		canCreateForks: null,
 		canCreateReviews: null,
 		canCreateDiscussions: true,
 		canViewDraft: null,
@@ -318,7 +310,7 @@ getActivePermissions = async (
 };
 
 getActiveCounts = async (scopeInputs, scopeElements, activePermissions) => {
-	/* Get counts for threads, reviews, and forks */
+	/* Get counts for threads and reviews */
 	const { loginId, isDashboard } = scopeInputs;
 	if (!isDashboard) {
 		return {};
@@ -327,7 +319,6 @@ getActiveCounts = async (scopeInputs, scopeElements, activePermissions) => {
 	const { activeTarget, activeTargetType } = scopeElements;
 	let discussionCount = 0;
 	let reviewCount = 0;
-	let forkCount = 0;
 	let pubs = [];
 	const pubQueryOptions = buildPubOptions({ isAuth: true });
 	if (activeTargetType === 'pub') {
@@ -366,22 +357,16 @@ getActiveCounts = async (scopeInputs, scopeElements, activePermissions) => {
 		const openDiscussions = pub.discussions.filter((item) => !item.isClosed);
 		const discussions = sanitizeDiscussions(openDiscussions, activePermissions, loginId);
 
-		// @ts-expect-error ts-migrate(2339) FIXME: Property 'forks' does not exist on type 'never'.
-		const openForks = pub.forks.filter((item) => !item.isClosed);
-		const forks = sanitizeForks(openForks, activePermissions, loginId);
-
 		// @ts-expect-error ts-migrate(2339) FIXME: Property 'reviews' does not exist on type 'never'.
 		const openReviews = pub.reviews.filter((item) => item.status !== 'closed');
 		const reviews = sanitizeReviews(openReviews, activePermissions, loginId);
 
 		discussionCount += discussions.length;
-		forkCount += forks.length;
 		reviewCount += reviews.length;
 	});
 
 	return {
 		discussionCount: discussionCount,
-		forkCount: forkCount,
 		reviewCount: reviewCount,
 	};
 };

@@ -4,7 +4,7 @@ import { setup, teardown, login, modelize } from 'stubstub';
 
 import * as firebaseAdmin from 'server/utils/firebaseAdmin';
 
-let getBranchDocStub;
+let getPubDraftDocStub;
 
 const models = modelize`
     Community community {
@@ -32,34 +32,31 @@ setup(beforeAll, async () => {
 teardown(afterAll);
 
 beforeEach(() => {
-	getBranchDocStub = sinon.stub(firebaseAdmin, 'getBranchDoc');
+	getPubDraftDocStub = sinon.stub(firebaseAdmin, 'getPubDraftDoc');
 });
 
 afterEach(() => {
-	getBranchDocStub.restore();
+	getPubDraftDocStub.restore();
 });
 
-// @ts-expect-error ts-migrate(2525) FIXME: Initializer provides no value for this binding ele... Remove this comment to see the full error message
-const makeHistoryQuery = ({ historyKey = 0, branchTitle, provideAccessHash = false } = {}) => {
+const makeHistoryQuery = ({ historyKey = 0, provideAccessHash = false } = {}) => {
 	const { community, pub } = models;
-	const branch = pub.branches.find((br) => br.title === branchTitle);
 	const accessHash = provideAccessHash ? pub.viewHash : null;
 	return {
 		communityId: community.id,
 		pubId: pub.id,
-		branchId: branch.id,
 		historyKey: historyKey,
 		accessHash: accessHash,
 	};
 };
 
-it('allows anyone to view the history of the public branch', async () => {
+it('allows anyone to view the history at the latest Release key', async () => {
 	const agent = await login();
 	await agent
 		.get('/api/pubHistory')
-		.query(makeHistoryQuery({ branchTitle: 'public' }))
+		.query(makeHistoryQuery())
 		.expect(200);
-	expect(getBranchDocStub.called).toEqual(true);
+	expect(getPubDraftDocStub.called).toEqual(true);
 });
 
 it('forbids guests from viewing the history of the draft', async () => {
@@ -69,7 +66,7 @@ it('forbids guests from viewing the history of the draft', async () => {
 		.get('/api/pubHistory')
 		.query(makeHistoryQuery({ branchTitle: 'draft' }))
 		.expect(403);
-	expect(getBranchDocStub.called).toEqual(false);
+	expect(getPubDraftDocStub.called).toEqual(false);
 });
 
 it('lets guest view the history of the draft with an access hash', async () => {
@@ -79,7 +76,7 @@ it('lets guest view the history of the draft with an access hash', async () => {
 		.get('/api/pubHistory')
 		.query(makeHistoryQuery({ branchTitle: 'draft', provideAccessHash: true }))
 		.expect(200);
-	expect(getBranchDocStub.called).toEqual(true);
+	expect(getPubDraftDocStub.called).toEqual(true);
 });
 
 it('lets members view the history of the draft', async () => {
@@ -89,5 +86,5 @@ it('lets members view the history of the draft', async () => {
 		.get('/api/pubHistory')
 		.query(makeHistoryQuery({ branchTitle: 'draft' }))
 		.expect(200);
-	expect(getBranchDocStub.called).toEqual(true);
+	expect(getPubDraftDocStub.called).toEqual(true);
 });

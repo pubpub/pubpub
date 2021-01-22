@@ -2,7 +2,6 @@ import ensureUserForAttribution from 'utils/ensureUserForAttribution';
 import { CollectionPub, Discussion, Pub, PubAttribution, Release } from 'utils/types';
 
 import sanitizeDiscussions from './discussionsSanitize';
-import sanitizeForks from './forksSanitize';
 import sanitizeReviews from './reviewsSanitize';
 
 export type SanitizedPubData = Pub & {
@@ -80,7 +79,6 @@ export default (
 		.sort((a, b) => (new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1));
 
 	const discussions = sanitizeDiscussions(pubData.discussions, activePermissions, loginData.id);
-	const forks = sanitizeForks(pubData.forks, activePermissions, loginData.id);
 	const reviews = sanitizeReviews(pubData.reviews, activePermissions, loginData.id);
 
 	return {
@@ -88,7 +86,6 @@ export default (
 		...sanitizeHashes(pubData, activePermissions),
 		attributions: pubData.attributions.map(ensureUserForAttribution),
 		discussions: discussions,
-		forks: forks,
 		reviews: reviews,
 		collectionPubs: filteredCollectionPubs,
 		isReadOnly: isRelease || !(canEdit || canEditDraft),

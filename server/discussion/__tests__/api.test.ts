@@ -1,10 +1,9 @@
 /* global it, expect, beforeAll, afterAll, afterEach */
 import uuid from 'uuid';
 
-import { setup, teardown, login, stub, modelize } from 'stubstub';
+import { setup, teardown, login, modelize } from 'stubstub';
 
 import { Discussion, DiscussionAnchor, Thread, ThreadComment } from 'server/models';
-import * as firebaseAdmin from 'server/utils/firebaseAdmin';
 
 let firebaseStub;
 
@@ -73,7 +72,6 @@ const models = modelize`
 `;
 
 setup(beforeAll, async () => {
-	firebaseStub = stub(firebaseAdmin, 'createFirebaseBranch');
 	await models.resolve();
 });
 

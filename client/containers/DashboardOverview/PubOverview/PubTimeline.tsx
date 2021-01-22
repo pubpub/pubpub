@@ -6,19 +6,12 @@ import { Icon, Timeline, TimelineItem, TimelineCondenser } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { formatDate } from 'utils/dates';
 import { pubUrl } from 'utils/canonicalUrls';
+import { PubPageData } from 'utils/types';
 
 require('./pubTimeline.scss');
 
 type Props = {
-	pubData: {
-		createdAt?: any;
-		branches?: {
-			title?: string;
-		}[];
-		releases?: {
-			createdAt?: any;
-		}[];
-	};
+	pubData: PubPageData;
 };
 
 const PubTimeline = (props: Props) => {
@@ -30,19 +23,12 @@ const PubTimeline = (props: Props) => {
 		},
 	} = usePageContext();
 	const { releases } = pubData;
-	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const olderReleases = releases.slice(0, releases.length - 1);
-	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const latestRelease = releases[releases.length - 1];
+	const latestKeyAt = pubData.draft?.latestKeyAt;
 
-	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
-	const draftBranch = pubData.branches.find((br) => br.title === 'draft');
-	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
-	const hasDraftContent = !!draftBranch.latestKeyAt;
-
-	const draftLastEditedNotice = hasDraftContent
-		? // @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
-		  `Last edited ${formatDate(draftBranch.latestKeyAt, { includeTime: true })}`
+	const draftLastEditedNotice = latestKeyAt
+		? `Last edited ${formatDate(latestKeyAt, { includeTime: true })}`
 		: 'Get started by editing the Pub draft.';
 
 	const draftItem = (canView || canViewDraft) && (
@@ -50,7 +36,7 @@ const PubTimeline = (props: Props) => {
 			// @ts-expect-error ts-migrate(2322) FIXME: Type 'boolean' is not assignable to type 'never'.
 			large
 			// @ts-expect-error ts-migrate(2322) FIXME: Type 'boolean' is not assignable to type 'never'.
-			hollow={hasDraftContent}
+			hollow={!!latestKeyAt}
 			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			icon="edit"
 			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
