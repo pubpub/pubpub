@@ -196,6 +196,7 @@ export type Pub = {
 	viewHash?: string;
 	editHash?: string;
 	communityId: string;
+	community?: Community;
 	discussions?: Discussion[];
 	attributions?: PubAttribution[];
 	collectionPubs?: CollectionPub[];
