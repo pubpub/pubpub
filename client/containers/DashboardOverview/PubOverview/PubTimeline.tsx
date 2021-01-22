@@ -26,6 +26,7 @@ const PubTimeline = (props: Props) => {
 	const olderReleases = releases.slice(0, releases.length - 1);
 	const latestRelease = releases[releases.length - 1];
 	const latestKeyAt = pubData.draft?.latestKeyAt;
+	const hasDraftContent = !!latestKeyAt;
 
 	const draftLastEditedNotice = latestKeyAt
 		? `Last edited ${formatDate(latestKeyAt, { includeTime: true })}`
@@ -36,7 +37,7 @@ const PubTimeline = (props: Props) => {
 			// @ts-expect-error ts-migrate(2322) FIXME: Type 'boolean' is not assignable to type 'never'.
 			large
 			// @ts-expect-error ts-migrate(2322) FIXME: Type 'boolean' is not assignable to type 'never'.
-			hollow={!!latestKeyAt}
+			hollow={hasDraftContent}
 			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
 			icon="edit"
 			// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'never'.
@@ -129,10 +130,8 @@ const PubTimeline = (props: Props) => {
 	return (
 		// @ts-expect-error ts-migrate(2746) FIXME: This JSX tag's 'children' prop expects a single ch... Remove this comment to see the full error message
 		<Timeline className="pub-timeline-component" accentColor={communityData.accentColorDark}>
-			{/* @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'. */}
 			{releases.length === 0 && hasDraftContent && renderNoReleasesItem()}
 			{draftItem}
-			{/* @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'. */}
 			{latestRelease && renderReleaseItem(latestRelease, releases.length, true)}
 			{/* @ts-expect-error ts-migrate(2786) FIXME: 'TimelineCondenser' cannot be used as a JSX compon... Remove this comment to see the full error message */}
 			<TimelineCondenser shownItemsLimit={4}>

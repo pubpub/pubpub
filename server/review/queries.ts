@@ -81,7 +81,12 @@ export const createReviewRelease = async (inputValues, userData) => {
 		pubId: inputValues.pubId,
 		historyKey: latestKey,
 	});
-	const releasedEvent = await createReleasedEvent(userData, inputValues.threadId, pubData.slug);
+	const releasedEvent = await createReleasedEvent(
+		userData,
+		inputValues.threadId,
+		pubData.slug,
+		release.id,
+	);
 	const completedEvent = await createCompletedThreadEvent(userData, inputValues.threadId);
 	const reviewEvents = [releasedEvent, completedEvent];
 

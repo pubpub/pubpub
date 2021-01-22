@@ -2,19 +2,16 @@ import React, { useState } from 'react';
 import { Popover, Position } from '@blueprintjs/core';
 
 import { usePageContext } from 'utils/hooks';
+import { PubPageData } from 'utils/types';
 
-import PubDiscussions from '../../PubDiscussions/PubDiscussions';
-import PubBottomSection, { SectionBullets, AccentedIconButton } from '../PubBottomSection';
 import SortList from './SortList';
 import FilterMenu from './FilterMenu';
+import PubDiscussions from '../../PubDiscussions/PubDiscussions';
+import PubBottomSection, { SectionBullets, AccentedIconButton } from '../PubBottomSection';
 import { filterAndSortDiscussions } from '../../PubDiscussions/discussionUtils';
 
 type Props = {
-	pubData: {
-		discussions?: {}[];
-		labels?: {}[];
-		canManage?: boolean;
-	};
+	pubData: PubPageData;
 	updateLocalData: (...args: any[]) => any;
 	sideContentRef: any;
 	mainContentRef: any;
@@ -30,7 +27,6 @@ const DiscussionsSection = (props: Props) => {
 	const [sortMode, setSortMode] = useState('newestThread');
 	const [filteredLabels, setFilteredLabels] = useState<string[]>([]);
 
-	// @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
 	const nonClosedDiscussions = discussions.filter((ds) => !ds.isClosed);
 
 	// @ts-expect-error ts-migrate(2786) FIXME: 'SectionBullets' cannot be used as a JSX component... Remove this comment to see the full error message
@@ -128,16 +124,11 @@ const DiscussionsSection = (props: Props) => {
 		>
 			{({ searchTerm, isSearching }) => (
 				<PubDiscussions
-					// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 					sideContentRef={sideContentRef}
-					// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 					mainContentRef={mainContentRef}
 					pubData={pubData}
-					// @ts-expect-error ts-migrate(2322) FIXME: Type '(threads: any) => any' is not assignable to ... Remove this comment to see the full error message
 					filterDiscussions={createDiscussionFilter(searchTerm)}
-					// @ts-expect-error ts-migrate(2322) FIXME: Type 'any' is not assignable to type 'never'.
 					searchTerm={searchTerm}
-					// @ts-expect-error ts-migrate(2322) FIXME: Type 'boolean' is not assignable to type 'never'.
 					showBottomInput={
 						(canView || canCreateDiscussions) && !isSearching && !isBrowsingArchive
 					}
