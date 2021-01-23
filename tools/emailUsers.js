@@ -223,7 +223,9 @@ Your PubPub Team
 Note: this email was sent to you because you have a PubPub user account, and we are
 required to send you updates to our Terms of Service (it's also the right thing to do).
 We will never share your email address with any third parties, period. And we won't
-send you promotional email without your explicit consent.
+send you promotional email without your explicit consent. If you would like to stop
+receiving emails from us entirely, you must request that your PubPub account be deleted.
+You can do so here: https://www.pubpub.org/legal/settings
 `);
 
 function validateEmail(email) {
