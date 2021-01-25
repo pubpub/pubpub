@@ -71,7 +71,7 @@ app.get('/pub/:slug', async (req, res, next) => {
 	}
 });
 
-/* Redirect /pub/slug/branch routes */
+/* Redirect legacy /pub/slug/branch routes */
 app.get(
 	['/pub/:slug/branch/:branchShortId', '/pub/:slug/branch/:branchShortId/:versionNumber'],
 	async (req, res, next) => {
@@ -86,37 +86,18 @@ app.get(
 				attributes: ['id', 'slug', 'viewHash', 'editHash'],
 				include: [{ model: Release, as: 'releases' }],
 			});
+
 			if (!pubData) {
 				throw new Error('Pub Not Found');
 			}
-			const activeBranch = pubData.branches.find((br) => {
-				return String(br.shortId) === req.params.branchShortId;
-			});
 
-			if (!activeBranch) {
-				throw new Error('Pub Not Found');
-			}
+			const releaseNumber = versionNumber
+				? parseInt(versionNumber, 10)
+				: pubData.releases.length;
 
-			const accessHash = req.query.access;
-			let accessHashString = '';
-			if (accessHash === activeBranch.viewHash || accessHash === activeBranch.discussHash) {
-				accessHashString = `?access=${pubData.viewHash}`;
-			}
-			if (accessHash === activeBranch.editHash) {
-				accessHashString = `?access=${pubData.editHash}`;
-			}
-			/* The + 1 in the two redirects below is because /branch/2/key routes */
-			/* were 0-indexed to align the the keyable index. historyNumber in URLs */
-			/* are now 1-indexed for better human-readability. Firebase keyables */
-			/* remain 0-indexed. */
-			if (activeBranch.title === 'public' && pubData.releases && pubData.releases.length) {
-				return versionNumber
-					? res.redirect(`${prefix}/release/${Number(versionNumber) + 1}`)
-					: res.redirect(`${prefix}/release/${pubData.releases.length}`);
-			}
-			return versionNumber
-				? res.redirect(`${prefix}/draft/${Number(versionNumber) + 1}${accessHashString}`)
-				: res.redirect(`${prefix}/draft${accessHashString}`);
+			const baseUrl = `${prefix}/release/${releaseNumber}`;
+			const redirectUrl = queryString.stringifyUrl({ url: baseUrl, query: req.query });
+			return res.redirect(redirectUrl);
 		} catch (err) {
 			return handleErrors(req, res, next)(err);
 		}

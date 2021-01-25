@@ -51,7 +51,7 @@ describe('/pub', () => {
 			.expect(404);
 	});
 
-	it('302s from /pub/:slug to the latest release for visitors', async () => {
+	it('302s from /pub/:slug to the latest Release for visitors', async () => {
 		const { releasePub, community } = models;
 		const agent = await login();
 		const host = getHost(community);
@@ -60,6 +60,32 @@ describe('/pub', () => {
 			.set('Host', host)
 			.expect(302);
 		expect(headers.location).toEqual(`https://${host}/pub/${releasePub.slug}/release/3`);
+	});
+
+	it('302s from /pub/:branch to the latest Release for visitors', async () => {
+		const { releasePub, community } = models;
+		const agent = await login();
+		const host = getHost(community);
+		const { headers } = await agent
+			.get(`/pub/${releasePub.slug}/branch/1?foo=bar`)
+			.set('Host', host)
+			.expect(302);
+		expect(headers.location).toEqual(
+			`https://${host}/pub/${releasePub.slug}/release/3?foo=bar`,
+		);
+	});
+
+	it('302s from /pub/:branch/:versionNumber to an older Release for visitors', async () => {
+		const { releasePub, community } = models;
+		const agent = await login();
+		const host = getHost(community);
+		const { headers } = await agent
+			.get(`/pub/${releasePub.slug}/branch/1/2?bar=baz&quz=baz_again`)
+			.set('Host', host)
+			.expect(302);
+		expect(headers.location).toEqual(
+			`https://${host}/pub/${releasePub.slug}/release/2?bar=baz&quz=baz_again`,
+		);
 	});
 });
 
