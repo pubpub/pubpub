@@ -12,34 +12,18 @@ import {
 import { getPubDraftDoc } from 'server/utils/firebaseAdmin';
 import { getScope, getMembers } from 'server/utils/queryHelpers';
 import { getAuthorString } from 'utils/contributors';
-import { DefinitelyHas, Release as ReleaseType, Pub as PubType } from 'utils/types';
+import {
+	DefinitelyHas,
+	Release as ReleaseType,
+	Pub as PubType,
+	AlgoliaPubEntry,
+} from 'utils/types';
 
 import stopWordList from './stopwords';
 
 type SearchPub = DefinitelyHas<PubType, 'attributions' | 'community'> & {
 	releases: DefinitelyHas<ReleaseType, 'doc'>[];
 };
-
-type PubSearchData = {
-	pubId: string;
-	title: string;
-	slug: string;
-	avatar: string;
-	description: string;
-	byline: string;
-	customPublishedAt: string;
-	communityId: string;
-	communityDomain: string;
-	communityTitle: string;
-	communityAccentColorLight: string;
-	communityAccentColorDark: string;
-	communityHeaderLogo: string;
-	communityHeaderColorType: string;
-	communityUseHeaderTextAccent: boolean;
-	userIdsWithAccess: string;
-	isPublic: boolean;
-	content: string[];
-} & ({ isPublic: false; userIdsWithAccess: string[] } | { isPublic: true });
 
 const lengthInUtf8Bytes = (str) => {
 	// Matches only the 10.. bytes that are non-initial characters in a multi-byte sequence.
@@ -86,12 +70,12 @@ const jsonToTextChunks = (docJson) => {
 	return validateTextSize(splitText);
 };
 
-const createSearchDataForPub = async (pub: SearchPub): Promise<PubSearchData[]> => {
+const createSearchDataForPub = async (pub: SearchPub): Promise<AlgoliaPubEntry[]> => {
 	const {
 		releases: [release],
 		community,
 	} = pub;
-	const searchEntries: PubSearchData[] = [];
+	const entries: AlgoliaPubEntry[] = [];
 	const scopeData = await getScope({ pubId: pub.id, communityId: pub.community.id });
 	const { members } = await getMembers({ scopeData: scopeData });
 	const userIdsWithAccess = members.map((m) => m.userId);
@@ -115,20 +99,20 @@ const createSearchDataForPub = async (pub: SearchPub): Promise<PubSearchData[]> 
 		userIdsWithAccess: userIdsWithAccess,
 	};
 	if (release) {
-		searchEntries.push({
+		entries.push({
 			...sharedFields,
 			isPublic: true,
 			content: jsonToTextChunks(release.doc.content),
 		});
 	}
 	const { doc } = await getPubDraftDoc(pub.id);
-	searchEntries.push({
+	entries.push({
 		...sharedFields,
 		isPublic: false,
 		userIdsWithAccess: userIdsWithAccess,
 		content: jsonToTextChunks(doc),
 	});
-	return searchEntries;
+	return entries;
 };
 
 export const getPubSearchData = async (pubIds) => {
