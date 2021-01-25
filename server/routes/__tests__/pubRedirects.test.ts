@@ -61,56 +61,6 @@ describe('/pub', () => {
 			.expect(302);
 		expect(headers.location).toEqual(`https://${host}/pub/${releasePub.slug}/release/3`);
 	});
-
-	// it('404s for a user who has no permission to view the pub', async () => {
-	// 	const agent = await login(visitor);
-	// 	await agent
-	// 		.get(`/pub/${pub.slug}`)
-	// 		.set('Host', host)
-	// 		.expect(404);
-	// });
-
-	// it('200s for a user seeking to visit the draft branch, when they have permission', async () => {
-	// 	const agent = await login(pubManager);
-	// 	await agent
-	// 		.get(`/pub/${pub.slug}/branch/${draftBranch.shortId}`)
-	// 		.set('Host', host)
-	// 		.expect(200);
-	// });
-
-	// it('200s for a user seeking to visit another branch, when they have permission', async () => {
-	// 	const agent = await login(userA);
-	// 	await agent
-	// 		.get(`/pub/${pub.slug}/branch/${branchA.shortId}`)
-	// 		.set('Host', host)
-	// 		.expect(200);
-	// });
-
-	// it('200s for a pub manager seeking to visit /manage', async () => {
-	// 	const agent = await login(pubManager);
-	// 	await agent
-	// 		.get(`/pub/${pub.slug}/manage`)
-	// 		.set('Host', host)
-	// 		.expect(200);
-	// });
-
-	// it('200s for a pub manager seeking to visit #public, when it has content', async () => {
-	// 	await publicBranch.update({ firstKeyAt: new Date() });
-	// 	const agent = await login(pubManager);
-	// 	await agent
-	// 		.get(`/pub/${pub.slug}`)
-	// 		.set('Host', host)
-	// 		.expect(200);
-	// });
-
-	// it('200s for a user seeking to visit #public, when it has content', async () => {
-	// 	await publicBranch.update({ firstKeyAt: new Date() });
-	// 	const agent = await login(visitor);
-	// 	await agent
-	// 		.get(`/pub/${pub.slug}`)
-	// 		.set('Host', host)
-	// 		.expect(200);
-	// });
 });
 
 teardown(afterAll);
