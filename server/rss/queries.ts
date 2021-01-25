@@ -154,6 +154,10 @@ export const getPubData = async (pubIds) => {
 				include: [includeUserModel({ as: 'user' })],
 			},
 			{
+				model: Export,
+				as: 'exports',
+			},
+			{
 				model: Release,
 				as: 'releases',
 			},

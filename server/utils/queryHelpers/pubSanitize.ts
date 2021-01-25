@@ -25,6 +25,15 @@ const sanitizeHashes = (pubData, activePermissions) => {
 	};
 };
 
+const getFilteredExports = (pubData, isRelease) => {
+	const { exports, releases } = pubData;
+	if (!isRelease) {
+		return exports;
+	}
+	const releaseHistoryKeys = new Set(releases.map((release) => release.historyKey));
+	return exports.filter((exp) => releaseHistoryKeys.has(exp.historyKey));
+};
+
 export default (
 	pubData,
 	initialData,
@@ -85,7 +94,9 @@ export default (
 		...pubData,
 		...sanitizeHashes(pubData, activePermissions),
 		attributions: pubData.attributions.map(ensureUserForAttribution),
+		draft: isRelease ? pubData.draft : null,
 		discussions: discussions,
+		exports: getFilteredExports(pubData, isRelease),
 		reviews: reviews,
 		collectionPubs: filteredCollectionPubs,
 		isReadOnly: isRelease || !(canEdit || canEditDraft),

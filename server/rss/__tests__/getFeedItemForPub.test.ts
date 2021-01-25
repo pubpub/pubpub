@@ -17,6 +17,11 @@ const models = modelize`
                 format: "jats"
                 url: "export.xml"
             }
+            Export {
+                historyKey: 5
+                format: "jats"
+                url: "draft_export.xml"
+            }
             PubAttribution {
                 name: "PA1"
                 isAuthor: true
