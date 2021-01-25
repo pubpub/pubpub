@@ -17,7 +17,9 @@ const models = modelize`
 				rank: "h"
                 Pub pub {
 					viewHash: "blah-blah-blah"
-                    Release {}
+                    Release {
+						historyKey: 10
+					}
                 }
             }
         }
@@ -39,7 +41,7 @@ afterEach(() => {
 	getPubDraftDocStub.restore();
 });
 
-const makeHistoryQuery = ({ historyKey = 0, provideAccessHash = false } = {}) => {
+const makeHistoryQuery = ({ historyKey, provideAccessHash = false }) => {
 	const { community, pub } = models;
 	const accessHash = provideAccessHash ? pub.viewHash : null;
 	return {
@@ -54,7 +56,7 @@ it('allows anyone to view the history at the latest Release key', async () => {
 	const agent = await login();
 	await agent
 		.get('/api/pubHistory')
-		.query(makeHistoryQuery())
+		.query(makeHistoryQuery({ historyKey: 10 }))
 		.expect(200);
 	expect(getPubDraftDocStub.called).toEqual(true);
 });
@@ -64,7 +66,7 @@ it('forbids guests from viewing the history of the draft', async () => {
 	const agent = await login(guest);
 	await agent
 		.get('/api/pubHistory')
-		.query(makeHistoryQuery({ branchTitle: 'draft' }))
+		.query(makeHistoryQuery({ historyKey: 5 }))
 		.expect(403);
 	expect(getPubDraftDocStub.called).toEqual(false);
 });
@@ -74,7 +76,7 @@ it('lets guest view the history of the draft with an access hash', async () => {
 	const agent = await login(guest);
 	await agent
 		.get('/api/pubHistory')
-		.query(makeHistoryQuery({ branchTitle: 'draft', provideAccessHash: true }))
+		.query(makeHistoryQuery({ historyKey: 5, provideAccessHash: true }))
 		.expect(200);
 	expect(getPubDraftDocStub.called).toEqual(true);
 });
@@ -84,7 +86,7 @@ it('lets members view the history of the draft', async () => {
 	const agent = await login(collectionMember);
 	await agent
 		.get('/api/pubHistory')
-		.query(makeHistoryQuery({ branchTitle: 'draft' }))
+		.query(makeHistoryQuery({ historyKey: 5 }))
 		.expect(200);
 	expect(getPubDraftDocStub.called).toEqual(true);
 });

@@ -101,7 +101,7 @@ getScopeElements = async (scopeInputs) => {
 				{
 					model: Release,
 					as: 'releases',
-					attributes: ['id'],
+					attributes: ['id', 'historyKey'],
 				},
 			],
 		});

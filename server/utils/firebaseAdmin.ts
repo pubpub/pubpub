@@ -12,7 +12,6 @@ import discussionSchema from 'utils/editor/discussionSchema';
 import { getFirebaseConfig } from 'utils/editor/firebaseConfig';
 import { storeCheckpoint } from 'client/components/Editor/utils';
 import { DocJson } from 'utils/types';
-import { getPub } from 'dist/server/server/utils/queryHelpers/pubGet';
 
 const getFirebaseApp = () => {
 	if (firebaseAdmin.apps.length > 0) {
@@ -105,6 +104,16 @@ export const getLatestKeyInPubDraft = async (pubId: string) => {
 	return key;
 };
 
-export const getFirebaseToken = (clientId: string, clientData: any) => {
+export const getFirebaseToken = (
+	clientId: string,
+	clientData: { canEdit: boolean; canView: boolean; draftPath: string },
+) => {
+	const { draftPath } = clientData;
+	const hasValidPrefix = ['pub', 'draft'].some((prefix) => draftPath.startsWith(`${prefix}-`));
+	if (!hasValidPrefix) {
+		throw new Error(
+			`Will not create Firebase token for potentially dangerous draft path ${draftPath}`,
+		);
+	}
 	return firebaseAdmin.auth(firebaseApp!).createCustomToken(clientId, clientData);
 };

@@ -2,7 +2,7 @@ import queryString from 'query-string';
 
 import { isDuqDuq } from 'utils/environment';
 import app from 'server/server';
-import { Community, Pub, Release, Branch } from 'server/models';
+import { Community, Pub, Release } from 'server/models';
 import { handleErrors } from 'server/utils/errors';
 import { hostIsValid } from 'server/utils/routes';
 
@@ -84,10 +84,7 @@ app.get(
 			const pubData = await Pub.findOne({
 				where: { slug: slug },
 				attributes: ['id', 'slug', 'viewHash', 'editHash'],
-				include: [
-					{ model: Branch, as: 'branches' },
-					{ model: Release, as: 'releases' },
-				],
+				include: [{ model: Release, as: 'releases' }],
 			});
 			if (!pubData) {
 				throw new Error('Pub Not Found');

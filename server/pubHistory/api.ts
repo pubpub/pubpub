@@ -10,7 +10,7 @@ const getRequestIds = (req) => {
 		userId: user.id,
 		pubId: pubId,
 		communityId: communityId,
-		historyKey: historyKey,
+		historyKey: parseInt(historyKey, 10),
 		accessHash: accessHash,
 	};
 };
@@ -27,7 +27,7 @@ app.get(
 			historyKey: historyKey,
 		});
 		if (canCreateExport) {
-			const draftDocInfo = await getPubDraftDoc(pubId, parseInt(historyKey, 10));
+			const draftDocInfo = await getPubDraftDoc(pubId, historyKey);
 			return res.status(200).json(draftDocInfo);
 		}
 		return res.status(403).json({});

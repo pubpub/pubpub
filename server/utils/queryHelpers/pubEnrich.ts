@@ -4,7 +4,7 @@ import { jsonToNode } from 'client/components/Editor/utils/doc';
 import { Doc, Draft, PubEdge } from 'server/models';
 import { generateCitationHtml, getStructuredCitationsForPub } from 'server/utils/citations';
 import { getPubDraftDoc, getFirebaseToken, editorSchema } from 'server/utils/firebaseAdmin';
-import { Pub as PubType, DefinitelyHas, PubDocInfo } from 'utils/types';
+import { Pub as PubType, DefinitelyHas, PubDocInfo, InitialData } from 'utils/types';
 
 import { SanitizedPubData } from './pubSanitize';
 import { sanitizePubEdge } from './sanitizePubEdge';
@@ -54,19 +54,17 @@ export const getPubRelease = async (
 	};
 };
 
-export const getPubFirebaseToken = async (pubData, initialData) => {
+export const getPubFirebaseToken = async (pubData: SanitizedPubData, initialData: InitialData) => {
 	const {
 		canView,
 		canViewDraft,
 		canEdit,
 		canEditDraft,
-		canManage,
 	} = initialData.scopeData.activePermissions;
 	const firebaseToken = await getFirebaseToken(initialData.loginData.id || 'anon', {
 		canEdit: canEdit || canEditDraft,
-		canView: canView || canViewDraft || pubData.isRelease,
-		canManage: canManage,
-		userId: initialData.loginData.id,
+		canView: canView || canViewDraft,
+		draftPath: pubData.draft?.firebasePath!,
 	});
 	return {
 		firebaseToken: firebaseToken,
