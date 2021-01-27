@@ -104,16 +104,32 @@ export const getLatestKeyInPubDraft = async (pubId: string) => {
 	return key;
 };
 
+const getFirebaseDraftPathParts = (draftPath: string) => {
+	const draftPathMatch = draftPath.match(/drafts\/draft-(.*)/);
+	if (draftPathMatch) {
+		const draftId = draftPathMatch[1];
+		return { draftId: `draft-${draftId}` };
+	}
+	if (draftPath.includes('/')) {
+		const [pubIdPart, branchIdPart] = draftPath.split('/');
+		if (pubIdPart.startsWith('pub-') && branchIdPart.startsWith('branch-')) {
+			return { pubId: pubIdPart, branchId: branchIdPart };
+		}
+	}
+	return null;
+};
+
 export const getFirebaseToken = (
 	clientId: string,
 	clientData: { canEdit: boolean; canView: boolean; draftPath: string },
 ) => {
 	const { draftPath } = clientData;
-	const hasValidPrefix = ['pub', 'draft'].some((prefix) => draftPath.startsWith(`${prefix}-`));
+	const hasValidPrefix = ['pub-', 'drafts/'].some((prefix) => draftPath.startsWith(prefix));
 	if (!hasValidPrefix) {
 		throw new Error(
 			`Will not create Firebase token for potentially dangerous draft path ${draftPath}`,
 		);
 	}
-	return firebaseAdmin.auth(firebaseApp!).createCustomToken(clientId, clientData);
+	const tokenData = { ...clientData, ...getFirebaseDraftPathParts(draftPath) };
+	return firebaseAdmin.auth(firebaseApp!).createCustomToken(clientId, tokenData);
 };

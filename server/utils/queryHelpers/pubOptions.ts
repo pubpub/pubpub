@@ -14,6 +14,7 @@ import {
 	Anchor,
 	Member,
 	includeUserModel,
+	Draft,
 } from 'server/models';
 
 import { getPubEdgeIncludes, PubEdgeIncludesOptions } from './pubEdgeOptions';
@@ -27,6 +28,7 @@ export type PubGetOptions = {
 	getCommunity?: boolean;
 	getExports?: boolean;
 	getEdges?: 'all' | 'approved-only';
+	getDraft?: boolean;
 	getEdgesOptions?: PubEdgeIncludesOptions;
 };
 
@@ -39,6 +41,7 @@ export default ({
 	getEdges = 'approved-only',
 	getEdgesOptions,
 	getExports,
+	getDraft,
 }: PubGetOptions) => {
 	const allowUnapprovedEdges = getEdges === 'all';
 	/* Initialize values assuming all inputs are false. */
@@ -62,6 +65,7 @@ export default ({
 		},
 	];
 	let pubExports: any = [];
+	let pubDraft: any = [];
 	let collectionPubs: any = [];
 	let community: any = [];
 	let anchor = [{ model: Anchor, as: 'anchor' }];
@@ -175,12 +179,21 @@ export default ({
 			},
 		];
 	}
+	if (getDraft) {
+		pubDraft = [
+			{
+				model: Draft,
+				as: 'draft',
+			},
+		];
+	}
 	const visibility = baseVisibility;
 	return {
 		attributes: pubAttributes,
 		include: [
 			...pubAttributions,
 			...pubExports,
+			...pubDraft,
 			...pubReleases,
 			...pubMembers,
 			...pubEdges,

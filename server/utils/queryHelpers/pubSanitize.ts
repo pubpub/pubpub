@@ -94,7 +94,7 @@ export default (
 		...pubData,
 		...sanitizeHashes(pubData, activePermissions),
 		attributions: pubData.attributions.map(ensureUserForAttribution),
-		draft: isRelease ? pubData.draft : null,
+		draft: isRelease ? null : pubData.draft,
 		discussions: discussions,
 		exports: getFilteredExports(pubData, isRelease),
 		reviews: reviews,
