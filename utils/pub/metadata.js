@@ -70,9 +70,6 @@ export const getGoogleScholarNotes = (notes) => {
 						break;
 					case 'author':
 						value.forEach((author) => {
-							if (author.literal) {
-								console.log(author.literal, author.given);
-							}
 							const authorText = author.literal || `${author.given} ${author.family}`;
 							noteArray.push(`citation_author=${authorText}`);
 						});
