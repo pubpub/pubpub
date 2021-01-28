@@ -167,6 +167,7 @@ export default {
 	locationData: {
 		hostname: 'localhost',
 		path: '/login',
+		params: {},
 		query: {},
 		queryString: '',
 		isBasePubPub: false,
