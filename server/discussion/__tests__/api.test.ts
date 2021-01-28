@@ -5,8 +5,6 @@ import { setup, teardown, login, modelize } from 'stubstub';
 
 import { Discussion, DiscussionAnchor, Thread, ThreadComment } from 'server/models';
 
-let firebaseStub;
-
 const alreadyAppliedManagedLabel = {
 	title: 'I have already been applied',
 	publicApply: false,
@@ -73,10 +71,6 @@ const models = modelize`
 
 setup(beforeAll, async () => {
 	await models.resolve();
-});
-
-afterEach(() => {
-	firebaseStub.restore();
 });
 
 const makeDiscussion = ({
@@ -464,8 +458,4 @@ it('lets admins remove managed labels from discussions', async () => {
 		.expect(200);
 
 	expect(discussion.labels).toEqual(targetLabels);
-});
-
-teardown(afterAll, () => {
-	firebaseStub.restore();
 });
