@@ -99,6 +99,7 @@ const determinizePubData = determinize([
 	'slug',
 	'title',
 	'content',
+	'isPublic',
 ]);
 
 const determinizePageData = determinize([

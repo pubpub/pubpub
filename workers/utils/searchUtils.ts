@@ -12,14 +12,30 @@ import {
 import { getPubDraftDoc } from 'server/utils/firebaseAdmin';
 import { getScope, getMembers } from 'server/utils/queryHelpers';
 import { getAuthorString } from 'utils/contributors';
-import {
-	DefinitelyHas,
-	Release as ReleaseType,
-	Pub as PubType,
-	AlgoliaPubEntry,
-} from 'utils/types';
+import { DefinitelyHas, Release as ReleaseType, Pub as PubType } from 'utils/types';
 
 import stopWordList from './stopwords';
+
+type AlgoliaPubEntry = {
+	pubId: string;
+	title: string;
+	slug: string;
+	avatar: string;
+	description: string;
+	byline: string;
+	customPublishedAt: string;
+	communityId: string;
+	communityDomain: string;
+	communityTitle: string;
+	communityAccentColorLight: string;
+	communityAccentColorDark: string;
+	communityHeaderLogo: string;
+	communityHeaderColorType: string;
+	communityUseHeaderTextAccent: boolean;
+	userIdsWithAccess: string;
+	isPublic: boolean;
+	content: string[];
+} & ({ isPublic: false; userIdsWithAccess: string[] } | { isPublic: true });
 
 type SearchPub = DefinitelyHas<PubType, 'attributions' | 'community'> & {
 	releases: DefinitelyHas<ReleaseType, 'doc'>[];
