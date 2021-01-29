@@ -16,7 +16,6 @@ import {
 	LoginData,
 	LocationData,
 	DocJson,
-	Pub,
 } from 'utils/types';
 
 const shimPubContextProps = {
