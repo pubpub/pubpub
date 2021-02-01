@@ -87,8 +87,11 @@ export default (
 		.concat()
 		.sort((a, b) => (new Date(a.createdAt) > new Date(b.createdAt) ? 1 : -1));
 
-	const discussions = sanitizeDiscussions(pubData.discussions, activePermissions, loginData.id);
-	const reviews = sanitizeReviews(pubData.reviews, activePermissions, loginData.id);
+	const discussions =
+		pubData.discussions &&
+		sanitizeDiscussions(pubData.discussions, activePermissions, loginData.id);
+	const reviews =
+		pubData.reviews && sanitizeReviews(pubData.reviews, activePermissions, loginData.id);
 
 	return {
 		...pubData,

@@ -227,7 +227,7 @@ export type PubDocInfo = {
 
 export type PubPageData = DefinitelyHas<Pub, 'attributions' | 'collectionPubs'> &
 	PubDocInfo & {
-		discussions: DefinitelyHas<Discussion, 'discussionAnchor'>[];
+		discussions: DefinitelyHas<Discussion, 'anchors'>[];
 		viewHash: Maybe<string>;
 		editHash: Maybe<string>;
 		isReadOnly: boolean;
