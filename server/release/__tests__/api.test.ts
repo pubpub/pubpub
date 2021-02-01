@@ -219,8 +219,8 @@ describe('/api/releases', () => {
 			createDiscussionForPub({
 				pubId: pub.id,
 				userId: rando.id,
-				from: 0,
-				to: 2,
+				from: 1,
+				to: 3,
 				historyKey: release.historyKey,
 			}),
 		]);
@@ -262,7 +262,7 @@ describe('/api/releases', () => {
 		]);
 
 		expect(discussion2Anchors).toEqual([
-			{ historyKey: 0, selection: { type: 'text', anchor: 0, head: 2 } },
+			{ historyKey: 0, selection: { type: 'text', anchor: 1, head: 3 } },
 			{ historyKey: 2, selection: null },
 			{ historyKey: 3, selection: null },
 		]);

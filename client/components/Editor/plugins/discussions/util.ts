@@ -1,4 +1,4 @@
-import { Mapping, Step } from 'prosemirror-transform';
+import { Step } from 'prosemirror-transform';
 
 import { Discussions, DiscussionInfo, DiscussionSelection, Range } from './types';
 
@@ -32,15 +32,23 @@ export const mapDiscussionSelectionThroughSteps = (
 	if (isEmptySelection(selection)) {
 		return null;
 	}
-	const mapping = new Mapping(steps.map((step) => step.getMap()));
 	const { from, to } = getRangeFromSelection(selection!);
 	// This matches the default mapping of inline Decorations, which we wish to emulate here.
 	// The default Selection mapping behavior is too greedy; for instance, if a selection is made
 	// at the beginning of the document, any text inserted before that selection is also mapped
 	// into that selection, which is not what we want for anchored Discussions.
 	// See: https://github.com/ProseMirror/prosemirror-view/blob/49889c576bc450a3008117249f9ef9beb6bf2969/src/decoration.js#L36
-	const nextFrom = mapping.map(from, 1);
-	const nextTo = mapping.map(to, -1);
+	const { from: nextFrom, to: nextTo } = steps.reduce(
+		(state, step) => {
+			const { from: currentFrom, to: currentTo } = state;
+			const stepMap = step.getMap();
+			return {
+				from: stepMap.map(currentFrom, -1),
+				to: stepMap.map(currentTo, -1),
+			};
+		},
+		{ from: from, to: to },
+	);
 	if (nextFrom === nextTo) {
 		return null;
 	}
