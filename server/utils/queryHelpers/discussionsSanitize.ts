@@ -1,6 +1,5 @@
-import { Discussion } from 'utils/types';
 import { sanitizeOnVisibility } from './util';
 
-export default (discussions: Discussion[], activePermissions, loginId) => {
+export default (discussions, activePermissions, loginId) => {
 	return sanitizeOnVisibility(discussions, activePermissions, loginId);
 };
