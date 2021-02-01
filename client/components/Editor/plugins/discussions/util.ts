@@ -43,7 +43,7 @@ export const mapDiscussionSelectionThroughSteps = (
 			const { from: currentFrom, to: currentTo } = state;
 			const stepMap = step.getMap();
 			return {
-				from: stepMap.map(currentFrom, -1),
+				from: stepMap.map(currentFrom, 1),
 				to: stepMap.map(currentTo, -1),
 			};
 		},
