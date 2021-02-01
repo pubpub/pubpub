@@ -7,6 +7,7 @@ import { usePageContext } from 'utils/hooks';
 import { useSticky } from 'client/utils/useSticky';
 import { useViewport } from 'client/utils/useViewport';
 
+import { PubPageData } from 'utils/types';
 import { getTocHeadings } from './headerUtils';
 import { mobileViewportCutoff } from './constants';
 import PubDetails from './details';
@@ -25,16 +26,12 @@ const getPubHeadings = (pubData, collabData) => {
 
 require('./pubHeader.scss');
 
-type OwnPubHeaderProps = {
+type Props = {
 	collabData: any;
 	historyData: any;
-	pubData: any;
+	pubData: PubPageData;
 	updateLocalData: (...args: any[]) => any;
 	sticky?: boolean;
-};
-
-const defaultProps = {
-	sticky: true,
 };
 
 // eslint-disable-next-line react/prop-types
@@ -52,11 +49,9 @@ const ToggleDetailsButton = ({ showingDetails, onClick }) => {
 	);
 };
 
-type PubHeaderProps = OwnPubHeaderProps & typeof defaultProps;
-
-const PubHeader = (props: PubHeaderProps) => {
+const PubHeader = (props: Props) => {
 	const headerRef = useRef(null);
-	const { collabData, historyData, pubData, updateLocalData, sticky } = props;
+	const { collabData, historyData, pubData, updateLocalData, sticky = true } = props;
 	const { communityData } = usePageContext();
 	const [showingDetails, setShowingDetails] = useState(false);
 	const [fixedHeight, setFixedHeight] = useState(null);
@@ -130,5 +125,5 @@ const PubHeader = (props: PubHeaderProps) => {
 		</PubHeaderBackground>
 	);
 };
-PubHeader.defaultProps = defaultProps;
+
 export default PubHeader;
