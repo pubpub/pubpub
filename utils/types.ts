@@ -311,6 +311,18 @@ export type DiscussionAnchor = {
 	isOriginal: boolean;
 };
 
+export type VisibilityUser = {
+	id: string;
+	visibilityId: string;
+	userId: string;
+};
+
+export type Visibility = {
+	id: string;
+	access: 'private' | 'members' | 'public';
+	users: VisibilityUser[];
+};
+
 export type Discussion = {
 	id: string;
 	title: string;
@@ -322,6 +334,7 @@ export type Discussion = {
 	userId: string;
 	pubId: string;
 	anchors?: DiscussionAnchor[];
+	visibility: Visibility;
 };
 
 export type LoginData = {
