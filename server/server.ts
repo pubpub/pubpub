@@ -112,7 +112,6 @@ app.use('/static', express.static(path.join(process.cwd(), 'static')));
 app.use('/service-worker.js', express.static(path.join(process.cwd(), 'static/service-worker.js')));
 app.use('/favicon.png', express.static(path.join(process.cwd(), 'static/favicon.png')));
 app.use('/favicon.ico', express.static(path.join(process.cwd(), 'static/favicon.png')));
-app.use('/robots.txt', express.static(path.join(process.cwd(), 'static/robots.txt')));
 
 /* -------------------- */
 /* Set Hostname for Dev */
@@ -121,7 +120,9 @@ app.use((req, res, next) => {
 	if (req.headers.communityhostname) {
 		req.headers.host = req.headers.communityhostname;
 	}
+	process.env.PUBPUB_LOCAL_COMMUNITY = 'demo';
 	if (process.env.PUBPUB_LOCAL_COMMUNITY || req.hostname.indexOf('localhost') > -1) {
+		
 		req.headers.localhost = req.headers.host;
 		if (process.env.PUBPUB_LOCAL_COMMUNITY) {
 			const subdomain = process.env.PUBPUB_LOCAL_COMMUNITY;
