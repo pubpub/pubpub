@@ -120,9 +120,7 @@ app.use((req, res, next) => {
 	if (req.headers.communityhostname) {
 		req.headers.host = req.headers.communityhostname;
 	}
-	process.env.PUBPUB_LOCAL_COMMUNITY = 'demo';
 	if (process.env.PUBPUB_LOCAL_COMMUNITY || req.hostname.indexOf('localhost') > -1) {
-		
 		req.headers.localhost = req.headers.host;
 		if (process.env.PUBPUB_LOCAL_COMMUNITY) {
 			const subdomain = process.env.PUBPUB_LOCAL_COMMUNITY;
