@@ -5,19 +5,18 @@ import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
 import { communityUrl } from 'utils/canonicalUrls';
 
-const BASE_ROBOTS = stripIndent(`
-	User-agent: *
-	Disallow:
-`);
-
 const buildRobotsFile = (community) => {
 	if (community) {
 		return stripIndent(`
-			${BASE_ROBOTS}
+			User-agent: *
+			Disallow:
 			Sitemap: ${communityUrl(community)}/sitemap-index.xml
-		`);
+		`).trim();
 	}
-	return BASE_ROBOTS;
+	return stripIndent(`
+		User-agent: *
+		Disallow:
+	`).trim();
 };
 
 app.get(
