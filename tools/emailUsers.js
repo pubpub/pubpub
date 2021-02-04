@@ -85,7 +85,7 @@ const main = async () => {
 				order: [['createdAt', 'ASC']],
 				// limit: 500,
 				// offset: 0,
-				where: { email: { [Op.notIn]: alreadySent } },
+				// where: { email: { [Op.notIn]: alreadySent } },
 		  }
 		: { where: { email: 'team@pubpub.org' } };
 	const users = await User.findAll(query);
