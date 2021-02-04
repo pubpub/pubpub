@@ -18,7 +18,7 @@ const crawl = async (pub) => {
 		const response = await fetch(url);
 		if (response.status === 404) {
 			console.log(
-				`DOI did not resolve: https://${pub.community.domain ||
+				`DOI did not resolve: ${pub.title} • https://${pub.community.domain ||
 					pub.community.subdomain}/pub/${pub.slug}`,
 			);
 		}
@@ -30,7 +30,7 @@ const crawl = async (pub) => {
 
 const main = async () => {
 	const query = {
-		attributes: ['doi', 'slug'],
+		attributes: ['doi', 'slug', 'title'],
 		include: [{ model: Community, as: 'community', where: { subdomain: subdomain } }],
 		order: [['createdAt', 'ASC']],
 		// limit: 500,
