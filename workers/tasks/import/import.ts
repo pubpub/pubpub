@@ -21,19 +21,16 @@ const dataRoot = process.env.NODE_ENV === 'production' ? '/app/.apt/usr/share/pa
 
 const createPandocArgs = (pandocFormat, tmpDirPath, metadataPath) => {
 	const shouldExtractMedia = ['odt', 'docx', 'epub'].includes(pandocFormat);
-	return (
-		[
-			dataRoot && [`--data-dir=${dataRoot}`],
-			['-f', pandocFormat],
-			['-t', 'json'],
-			metadataPath && [`--metadata-file=${metadataPath}`],
-			shouldExtractMedia && [`--extract-media=${path.join(tmpDirPath, 'media')}`],
-			pandocFormat === 'latex' && ['--verbose'],
-		]
-			.filter((x) => x)
-			// @ts-expect-error ts-migrate(2488) FIXME: Type 'string | false | any[]' must have a '[Symbol... Remove this comment to see the full error message
-			.reduce((acc, next) => [...acc, ...next], [])
-	);
+	return [
+		dataRoot && [`--data-dir=${dataRoot}`],
+		['-f', pandocFormat],
+		['-t', 'json'],
+		metadataPath && [`--metadata-file=${metadataPath}`],
+		shouldExtractMedia && [`--extract-media=${path.join(tmpDirPath, 'media')}`],
+		pandocFormat === 'latex' && ['--verbose'],
+	]
+		.filter((x) => x)
+		.reduce((acc, next) => [...acc, ...next], []);
 };
 
 const callPandoc = (tmpDirPath, files, args) => {
