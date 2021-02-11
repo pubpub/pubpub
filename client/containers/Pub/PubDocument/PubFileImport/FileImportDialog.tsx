@@ -80,7 +80,7 @@ const FileImportDialog = ({
 
 	const isImportDisabled = !hasDocumentToImport || incompleteUploads.length > 0 || isImporting;
 	// @ts-expect-error ts-migrate(2339) FIXME: Property 'doc' does not exist on type '{}'.
-	const { doc, warnings = [], pandocInfos, error, proposedMetadata } = importResult;
+	const { doc, warnings = [], pandocErrorOutput, error, proposedMetadata } = importResult;
 	const hasProposedMetadata = proposedMetadata && Object.keys(proposedMetadata).length > 0;
 
 	useKeyPressEvent('/', (evt) => {
@@ -186,15 +186,7 @@ const FileImportDialog = ({
 			const missingCitations = warnings
 				.filter((w) => w.type === 'missingCitation')
 				.map((w) => w.id);
-			const pandocWarnings = pandocInfos.split('\n').map((info) => {
-				return (
-					<span>
-						{info}
-						<br />
-					</span>
-				);
-			});
-			if (missingImages.length > 0 || missingCitations.length > 0 || pandocInfos) {
+			if (missingImages.length > 0 || missingCitations.length > 0 || pandocErrorOutput) {
 				return (
 					<Callout
 						aria-live="assertive"
@@ -228,16 +220,18 @@ const FileImportDialog = ({
 									</details>
 								</li>
 							)}
-							{pandocInfos && (
+							{pandocErrorOutput && (
 								<li>
 									<i>
 										Conversion from LaTeX to HTML succeeded, with information (
-										<a href="https://help.pubpub.org/pub/2gfph6h8/release/2">
+										<a href="https://help.pubpub.org/pub/latex-compatibility">
 											more about PubPub and LaTeX
 										</a>
 										):
 									</i>
-									<details>{pandocWarnings}</details>
+									<details>
+										<pre>{pandocErrorOutput}</pre>
+									</details>
 								</li>
 							)}
 						</ul>

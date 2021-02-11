@@ -29,7 +29,7 @@ const createPandocArgs = (pandocFormat, tmpDirPath, metadataPath) => {
 		shouldExtractMedia && [`--extract-media=${path.join(tmpDirPath, 'media')}`],
 		pandocFormat === 'latex' && ['--verbose'],
 	]
-		.filter((x) => x)
+		.filter((x): x is string[] => !!x)
 		.reduce((acc, next) => [...acc, ...next], []);
 };
 
@@ -90,7 +90,7 @@ const getPandocAst = ({
 		);
 	}
 	return {
-		pandocInfos: pandocError,
+		pandocErrorOutput: pandocError,
 		pandocAst: runTransforms(parsePandocJson(pandocRawAst), importerFlags),
 	};
 };
@@ -106,7 +106,7 @@ export const importFiles = async ({
 	const { preambles, document, bibliography, supplements, metadata } = categorizeSourceFiles(
 		sourceFiles,
 	);
-	const { pandocAst, pandocInfos } = getPandocAst({
+	const { pandocAst, pandocErrorOutput } = getPandocAst({
 		documentPath: document.tmpPath,
 		metadataPath: metadata && metadata.tmpPath,
 		preamblePaths: preambles.map((p) => p.tmpPath),
@@ -138,7 +138,7 @@ export const importFiles = async ({
 	return {
 		doc: prosemirrorDoc,
 		warnings: resourceTransformer.getWarnings(),
-		pandocInfos,
+		pandocErrorOutput,
 		proposedMetadata,
 		...(provideRawMetadata && { rawMetadata: getRawMetadata(pandocAst.meta) }),
 	};
