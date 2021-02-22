@@ -61,7 +61,7 @@ const LayoutEditor = (props: Props) => {
 		moveBlockUp,
 		moveBlockDown,
 	} = useLayout(initialLayout, onChange);
-	const { pubsByBlockId, allPubs, loadingPubs } = useLayoutPubs(
+	const { pubsByBlockId, allPubs } = useLayoutPubs(
 		initialLayoutPubsByBlock,
 		layout,
 		collection && collection.id,
@@ -126,7 +126,7 @@ const LayoutEditor = (props: Props) => {
 							pubsInBlock={pubsByBlockId[block.id] || []}
 							allPubs={allPubs}
 							communityData={communityData}
-							loading={loadingPubs}
+							hideOrderControl={!collection}
 						/>
 					)}
 					{block.type === 'text' && (
