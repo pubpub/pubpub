@@ -142,6 +142,10 @@
 	padding-bottom: 2px;
 	width: 300px;
 	user-select: none;
+	.bp3-control input {
+		// .bp3-control input has opacity: 0 in the default Blueprint styles. I have no idea why.
+		opacity: 1;
+	}
 }
 
 .layout-editor-pubs_preview-elements-component {

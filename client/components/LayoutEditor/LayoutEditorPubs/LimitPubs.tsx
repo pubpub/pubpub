@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { RadioGroup, Radio, Slider } from '@blueprintjs/core';
+import { RadioGroup, Radio } from '@blueprintjs/core';
 
+import { SliderInput } from 'components';
 import { maxPubsPerBlock } from 'utils/layout';
 
 type Props = {
@@ -9,11 +10,10 @@ type Props = {
 };
 
 const defaultCustomLimit = 10;
-const maxCustomLimit = 30;
 
 const LimitPubs = (props: Props) => {
 	const { limit, onChangeLimit } = props;
-	const [intermediateLimit, setIntermediateLimit] = useState(limit);
+	const [intermediateLimit, setIntermediateLimit] = useState(limit || defaultCustomLimit);
 
 	const handleRadioSelect = (value: string) => {
 		if (value === 'all') {
@@ -21,6 +21,13 @@ const LimitPubs = (props: Props) => {
 		} else {
 			onChangeLimit(defaultCustomLimit);
 			setIntermediateLimit(defaultCustomLimit);
+		}
+	};
+
+	const handleChange = (value: number, committed: boolean) => {
+		setIntermediateLimit(value);
+		if (committed) {
+			onChangeLimit(value);
 		}
 	};
 
@@ -37,14 +44,13 @@ const LimitPubs = (props: Props) => {
 						<>
 							Limit shown Pubs
 							{!!limit && (
-								<Slider
-									className="limit-slider"
+								<SliderInput
+									aria-label="Number of Pubs to display"
 									min={1}
-									max={maxCustomLimit}
-									onChange={setIntermediateLimit}
+									max={maxPubsPerBlock}
+									onChange={handleChange}
 									value={intermediateLimit}
-									labelStepSize={maxCustomLimit - 1}
-									onRelease={() => onChangeLimit(intermediateLimit!)}
+									labelStepSize={maxPubsPerBlock - 1}
 								/>
 							)}
 						</>
