@@ -4,6 +4,7 @@ import path from 'path';
 import YAML from 'yaml';
 import tmp from 'tmp-promise';
 import filesize from 'filesize';
+import jp from 'jsonpath';
 import { Op } from 'sequelize';
 import { Node, Fragment, Slice } from 'prosemirror-model';
 import { ReplaceStep } from 'prosemirror-transform';
@@ -97,8 +98,11 @@ const createPubAttributions = async (pub, proposedMetadata, directive) => {
 };
 
 const resolveDirectiveValue = async (value, context) => {
-	const { $fileSize, $sourceFile, $metadata } = value;
-	const { sourceFiles, rawMetadata, assetUrlForTmpPath } = context;
+	const { $fileSize, $sourceFile, $metadata, $docQuery } = value;
+	const { sourceFiles, rawMetadata, assetUrlForTmpPath, doc, withLeafValue = (x) => x } = context;
+	if ($docQuery) {
+		return jp.value(doc, $docQuery);
+	}
 	if ($fileSize) {
 		const pathLike = await resolveDirectiveValue($fileSize, context);
 		const sourceFile = sourceFiles.find(
@@ -129,8 +133,10 @@ const resolveDirectiveValue = async (value, context) => {
 		return null;
 	}
 	if ($metadata) {
-		const key = await resolveDirectiveValue($metadata, context);
-		return rawMetadata[key];
+		return resolveDirectiveValue($metadata, {
+			...context,
+			withLeafValue: (key) => rawMetadata[key],
+		});
 	}
 	if (Array.isArray(value)) {
 		return Promise.all(value.map((innerValue) => resolveDirectiveValue(innerValue, context)));
@@ -144,12 +150,12 @@ const resolveDirectiveValue = async (value, context) => {
 		);
 		return res;
 	}
-	return value;
+	return withLeafValue(value);
 };
 
-const resolveDirectiveValues = async (directive, sourceFiles, rawMetadata): Promise<any> => {
+const resolveDirectiveValues = async (directive, sourceFiles, rawMetadata, doc): Promise<any> => {
 	const resolvedDirective = {};
-	const context = { sourceFiles, rawMetadata, assetUrlForTmpPath: {} };
+	const context = { sourceFiles, rawMetadata, assetUrlForTmpPath: {}, doc };
 	await Promise.all(
 		Object.entries(directive).map(async ([key, value]) => {
 			const resolvedValue = await resolveDirectiveValue(value, context);
@@ -172,8 +178,16 @@ const createPub = async ({ communityId, directive, proposedMetadata }) => {
 const createPubTags = async (directive, pubId, communityId) => {
 	const { tags } = directive;
 	if (tags) {
+		const extractedTags = tags
+			.reduce((acc, next) => {
+				if (Array.isArray(next)) {
+					return [...acc, ...next];
+				}
+				return [...acc, next];
+			}, [])
+			.filter((x) => x);
 		return Promise.all(
-			tags.map(async (tagName) => {
+			extractedTags.map(async (tagName) => {
 				const existingCollection = await Collection.findOne({
 					where: {
 						title: {
@@ -437,7 +451,12 @@ export const resolvePubDirective = async ({ directive, targetPath, community, co
 	const { warnings, proposedMetadata, rawMetadata } = importResult;
 	let { doc } = importResult;
 
-	const resolvedDirective = await resolveDirectiveValues(directive, sourceFiles, rawMetadata);
+	const resolvedDirective = await resolveDirectiveValues(
+		directive,
+		sourceFiles,
+		rawMetadata,
+		doc,
+	);
 	const { inlineFile } = resolvedDirective;
 
 	const pub = await createPub({
