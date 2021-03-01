@@ -8,23 +8,7 @@ import {
 	PubGetOptions,
 	SanitizedPubData,
 } from 'server/utils/queryHelpers';
-import { InitialData } from 'utils/types';
-
-type PubQueryOrderingField = 'collectionRank' | 'publishDate' | 'updatedDate' | 'creationDate';
-export type PubQueryOrdering = { field: PubQueryOrderingField; direction: 'ASC' | 'DESC' };
-
-export type PubsQuery = {
-	collectionIds?: null | string[];
-	communityId: string;
-	excludePubIds?: null | string[];
-	isReleased?: boolean;
-	limit?: null | number;
-	offset?: number;
-	ordering?: PubQueryOrdering;
-	scopedCollectionId?: string;
-	withinPubIds?: null | string[];
-	title?: string;
-};
+import { InitialData, PubsQuery } from 'utils/types';
 
 const defaultColumns = {
 	pubId: 'Pubs.id',
@@ -44,7 +28,7 @@ const createColumns = (query: PubsQuery) => {
 };
 
 const createInnerWhereClause = (query: PubsQuery) => {
-	const { withinPubIds, excludePubIds, communityId, title } = query;
+	const { withinPubIds, excludePubIds, communityId, term } = query;
 	return (builder: QueryBuilder) => {
 		builder.where({ 'Pubs.communityId': communityId });
 		if (excludePubIds) {
@@ -53,8 +37,8 @@ const createInnerWhereClause = (query: PubsQuery) => {
 		if (withinPubIds) {
 			builder.where({ 'Pubs.id': knex.raw('some(?::uuid[])', [withinPubIds]) });
 		}
-		if (title) {
-			builder.whereRaw('"Pubs"."id" ilike ?', [`%${title}%`]);
+		if (term) {
+			builder.whereRaw('"Pubs"."title" ilike ?', [`%${term}%`]);
 		}
 	};
 };
@@ -157,7 +141,7 @@ export const queryPubIds = async (query: PubsQuery): Promise<string[]> => {
 export const getPubsById = (pubIds: string[], options: PubGetOptions = {}) => {
 	const pubsPromise = Pub.findAll({
 		where: { id: { [Op.in]: pubIds } },
-		...buildPubOptions({ ...options, getMembers: true }),
+		...buildPubOptions({ ...options, getMembers: true, getDraft: true }),
 	}).then((unsortedPubs) => sortPubsByListOfIds(unsortedPubs, pubIds));
 	return {
 		unsanitized: () => pubsPromise,

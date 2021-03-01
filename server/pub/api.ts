@@ -1,8 +1,52 @@
 import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
+import { getInitialData } from 'server/utils/initData';
+import { PubsQuery } from 'utils/types';
 
 import { canCreatePub, getUpdatablePubFields, canDestroyPub } from './permissions';
 import { createPub, updatePub, destroyPub } from './queries';
+import { queryPubIds, getPubsById } from './queryMany';
+
+type ManyRequestIds = Omit<PubsQuery, 'communityId'>;
+
+const getManyQueryParams = (req): ManyRequestIds => {
+	const {
+		collectionIds,
+		excludePubIds,
+		isReleased,
+		limit = 50,
+		offset = 0,
+		ordering,
+		scopedCollectionId,
+		withinPubIds,
+		term,
+	} = req.body.query;
+	return {
+		collectionIds,
+		excludePubIds,
+		isReleased,
+		limit,
+		offset,
+		ordering,
+		scopedCollectionId,
+		withinPubIds,
+		term,
+	};
+};
+
+app.post(
+	'/api/pubs/many',
+	wrap(async (req, res) => {
+		const initialData = await getInitialData(req);
+		const queryParamsPartial = getManyQueryParams(req);
+		const pubIds = await queryPubIds({
+			...queryParamsPartial,
+			communityId: initialData.communityData.id,
+		});
+		const pubs = await getPubsById(pubIds).sanitize(initialData);
+		return res.status(200).json(pubs);
+	}),
+);
 
 const getRequestIds = (req) => {
 	const user = req.user || {};
