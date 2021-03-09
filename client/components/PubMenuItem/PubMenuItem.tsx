@@ -10,7 +10,7 @@ type BylineProps = React.ComponentProps<typeof Byline>;
 interface Props {
 	active?: boolean;
 	disabled?: boolean;
-	contributors: any[];
+	contributors?: any[];
 	image?: string;
 	isSkeleton?: boolean;
 	onClick: null | (() => any);
@@ -47,9 +47,11 @@ const PubMenuItem = React.forwardRef((props: Props, ref: any) => {
 			{showImage && <PreviewImage src={image} title={title} className={skeletonClass} />}
 			<div className="inner">
 				<div className={classNames('title', skeletonClass)}>{title}</div>
-				<div className={classNames('subtitle', skeletonClass)}>
-					<Byline contributors={contributors} linkToUsers={false} {...bylineProps} />
-				</div>
+				{contributors && (
+					<div className={classNames('subtitle', skeletonClass)}>
+						<Byline contributors={contributors} linkToUsers={false} {...bylineProps} />
+					</div>
+				)}
 			</div>
 		</>
 	);

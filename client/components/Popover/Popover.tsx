@@ -38,7 +38,13 @@ const Popover = (props: Props) => {
 					)
 				}
 			</RkPopoverDisclosure>
-			<RkPopover aria-label={ariaLabel} className={className} modal {...popover}>
+			<RkPopover
+				aria-label={ariaLabel}
+				className={className}
+				modal
+				preventBodyScroll={false}
+				{...popover}
+			>
 				{content}
 			</RkPopover>
 		</>

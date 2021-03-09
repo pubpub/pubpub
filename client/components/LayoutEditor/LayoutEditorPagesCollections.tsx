@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
-import { Button } from '@blueprintjs/core';
+import { Button, FormGroup } from '@blueprintjs/core';
 
-import { InputField, Popover, OrderPicker } from 'components';
+import { InputField, Popover, OrderPicker, PubMenuItem } from 'components';
 import LayoutPagesCollections, {
 	Content,
 	BlockItem,
@@ -50,7 +50,7 @@ const LayoutEditorPages = (props: Props) => {
 	const { layoutIndex, onChange, content, collections, pages } = props;
 
 	const allItems = useMemo(() => getAllItems(collections, pages), [collections, pages]);
-	const [availableItems, selectedItems] = useMemo(
+	const [selectedItems, availableItems] = useMemo(
 		() =>
 			splitArrayOn(allItems, (item) =>
 				content.items.some((contentItem) => contentItem.id === item.id),
@@ -84,7 +84,7 @@ const LayoutEditorPages = (props: Props) => {
 					value={content.title}
 					onChange={(evt) => setTitle(evt.target.value)}
 				/>
-				<InputField label="Collections & Pages">
+				<FormGroup label="Collections & Pages">
 					<Popover
 						aria-label="Choose pinned Pubs for this block"
 						className="order-picker-popover"
@@ -94,35 +94,18 @@ const LayoutEditorPages = (props: Props) => {
 								availableItems={availableItems}
 								selectedItems={selectedItems}
 								onSelectedItems={setSelectedItems}
-								renderItem={(item) => item.title}
+								renderItem={(item, handleClick) => (
+									<PubMenuItem title={item.title} onClick={handleClick} />
+								)}
 							/>
 						}
 					>
-						<Button rightIcon="caret-down">
+						<Button rightIcon="caret-down" outlined>
 							Choose Items
 							{selectedItems.length ? ` (${selectedItems.length})` : ''}
 						</Button>
 					</Popover>
-					{/* <Popover
-						content={
-							<OrderPicker
-								selectedItems={selectedItems}
-								allItems={allItems}
-								onChange={setSelectedItems}
-								uniqueId={String(layoutIndex)}
-								selectedTitle="Displayed items"
-								availableTitle="Available items"
-							/>
-						}
-						interactionKind={PopoverInteractionKind.CLICK}
-						position={Position.BOTTOM_RIGHT}
-						usePortal={false}
-						minimal={true}
-						popoverClassName="order-picker-popover"
-					>
-						<Button rightIcon="caret-down">Choose items</Button>
-					</Popover> */}
-				</InputField>
+				</FormGroup>
 			</div>
 			<LayoutPagesCollections content={content} pages={pages} collections={collections} />
 		</div>

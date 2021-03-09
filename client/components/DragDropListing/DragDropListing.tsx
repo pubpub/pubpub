@@ -51,10 +51,10 @@ const getRenderItem = <Item extends MinimalItem>(props: Props<Item>) => (
 	const { innerRef, draggableProps, dragHandleProps: providedDragHandleProps } = provided;
 	const { isDragging } = snapshot;
 	const dragHandleProps = { ...providedDragHandleProps! };
-	if (isDragging) {
-		// Prevent dragged clone from taking focus and closing popovers
-		dragHandleProps.tabIndex = (undefined as unknown) as number;
-	}
+	// if (isDragging) {
+	// 	// Prevent dragged clone from taking focus and closing popovers
+	// 	dragHandleProps.tabIndex = (undefined as unknown) as number;
+	// }
 	const effectiveDragHandleProps = withDragHandles ? {} : dragHandleProps;
 	return (
 		<div
