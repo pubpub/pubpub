@@ -24,7 +24,7 @@ const orderingFunctions: Record<PubsQueryOrderingField, OrderByFn> = {
 			valueOrderedBelowAnyDate,
 		);
 	},
-	title: (pub) => pub.title,
+	title: (pub) => pub.title.toLowerCase(),
 };
 
 export const getOrderingValuesByPubId = (

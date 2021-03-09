@@ -1,4 +1,5 @@
 import React, { useState, useRef, useMemo } from 'react';
+import { useDebounce } from 'use-debounce';
 
 import { OrderPicker, PubMenuItem } from 'components';
 import { Pub } from 'utils/types';
@@ -48,6 +49,7 @@ const useSelectedAvailableState = (
 const PinnedPubs = (props: Props) => {
 	const { pubIds, pubsInBlock, onPubIds, scopedCollectionId } = props;
 	const [searchTerm, setSearchTerm] = useState('');
+	const [debouncedSearchTerm] = useDebounce(searchTerm, 200);
 
 	const {
 		currentQuery: { pubs: loadedPubs, loadMorePubs, hasLoadedAllPubs },
@@ -55,7 +57,7 @@ const PinnedPubs = (props: Props) => {
 	} = useManyPubs({
 		query: {
 			scopedCollectionId,
-			term: searchTerm,
+			term: debouncedSearchTerm,
 			ordering: { field: 'title', direction: 'ASC' },
 		},
 	});
@@ -64,7 +66,7 @@ const PinnedPubs = (props: Props) => {
 		pubIds,
 		pubsInBlock,
 		loadedPubs,
-		searchTerm,
+		debouncedSearchTerm,
 	);
 
 	return (

@@ -15,6 +15,7 @@ type Props = {
 	content: React.ReactNode;
 	placement?: PopoverInitialState['placement'];
 	gutter?: number;
+	lazy?: boolean;
 };
 
 const Popover = (props: Props) => {
@@ -25,6 +26,7 @@ const Popover = (props: Props) => {
 		content,
 		placement = 'bottom-start',
 		gutter = 5,
+		lazy = true,
 	} = props;
 	const popover = usePopoverState({ placement, gutter, unstable_fixed: false });
 	return (
@@ -45,7 +47,7 @@ const Popover = (props: Props) => {
 				preventBodyScroll={false}
 				{...popover}
 			>
-				{content}
+				{(!lazy || popover.visible) && content}
 			</RkPopover>
 		</>
 	);

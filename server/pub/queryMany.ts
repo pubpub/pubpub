@@ -12,7 +12,7 @@ import { InitialData, PubsQuery } from 'utils/types';
 
 const defaultColumns = {
 	pubId: 'Pubs.id',
-	title: 'Pubs.title',
+	title: knex.raw('lower("Pubs"."title")'),
 	creationDate: 'Pubs.createdAt',
 	isReleased: knex.raw('array_remove(array_agg("Releases"."id"), null) != Array[]::uuid[]'),
 	collectionIds: knex.raw('array_agg(distinct "CollectionPubs"."collectionId")'),
