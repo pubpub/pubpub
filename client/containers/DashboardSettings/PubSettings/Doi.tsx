@@ -312,6 +312,14 @@ class Doi extends Component<Props, State> {
 		return (
 			<>
 				{!pubData.doi && <p>A DOI can be set for each Pub by admins of this community.</p>}
+				{pubData.doi &&
+					!pubData.crossrefDepositRecordId &&
+					!this.disabledDueToNoReleases() && (
+						<Callout intent="warning">
+							A DOI has been assigned to this Pub, but it has not yet been deposited
+							to Crossref.
+						</Callout>
+					)}
 				{pubData.crossrefDepositRecordId && <p>This Pub has been deposited to Crossref.</p>}
 				{this.isDoiEditableWithoutRelations() && this.findSupplementTo() && (
 					<Callout intent="warning">
