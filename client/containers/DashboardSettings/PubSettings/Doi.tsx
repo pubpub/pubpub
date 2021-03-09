@@ -429,6 +429,7 @@ class Doi extends Component<Props, State> {
 						text="Update Suffix"
 						loading={updating}
 						onClick={this.handleUpdateDoiClick}
+						intent="success"
 					/>
 					<Button
 						disabled={invalidDoi || deleting || updating}
