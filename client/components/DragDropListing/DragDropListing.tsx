@@ -48,8 +48,13 @@ const getRenderItem = <Item extends MinimalItem>(props: Props<Item>) => (
 	// eslint-disable-next-line react/prop-types
 	const { items, withDragHandles, renderItem } = props;
 	const item = items[rubric.source.index];
-	const { innerRef, draggableProps, dragHandleProps } = provided;
+	const { innerRef, draggableProps, dragHandleProps: providedDragHandleProps } = provided;
 	const { isDragging } = snapshot;
+	const dragHandleProps = { ...providedDragHandleProps! };
+	if (isDragging) {
+		// Prevent dragged clone from taking focus and closing popovers
+		dragHandleProps.tabIndex = (undefined as unknown) as number;
+	}
 	const effectiveDragHandleProps = withDragHandles ? {} : dragHandleProps;
 	return (
 		<div

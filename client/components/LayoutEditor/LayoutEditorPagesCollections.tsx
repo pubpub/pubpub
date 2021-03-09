@@ -1,12 +1,13 @@
 import React, { useCallback, useMemo } from 'react';
-import { Button, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 
-import { InputField, OrderPicker } from 'components';
+import { InputField, Popover, OrderPicker } from 'components';
 import LayoutPagesCollections, {
 	Content,
 	BlockItem,
 	PageOrCollection,
 } from 'components/Layout/LayoutPagesCollections';
+import { splitArrayOn } from 'utils/arrays';
 
 type Props = {
 	onChange: (index: number, block: Content) => any;
@@ -45,32 +46,17 @@ const getAllItems = (
 	].sort((a, b) => (a.title > b.title ? 1 : -1));
 };
 
-const indexItemTitlesById = (allItems: OrderableItem[]): Record<string, string> => {
-	const res = {};
-	allItems.forEach((item) => {
-		res[item.id] = item.title;
-	});
-	return res;
-};
-
-const getSelectedItems = (
-	content: Content,
-	allItems: OrderableItem[],
-	titleIndex: Record<string, string>,
-): OrderableItem[] => {
-	return content.items.map((item) => ({ ...item, title: titleIndex[item.id] }));
-};
-
 const LayoutEditorPages = (props: Props) => {
 	const { layoutIndex, onChange, content, collections, pages } = props;
 
 	const allItems = useMemo(() => getAllItems(collections, pages), [collections, pages]);
-	const titleIndex = useMemo(() => indexItemTitlesById(allItems), [allItems]);
-	const selectedItems = useMemo(() => getSelectedItems(content, allItems, titleIndex), [
-		content,
-		allItems,
-		titleIndex,
-	]);
+	const [availableItems, selectedItems] = useMemo(
+		() =>
+			splitArrayOn(allItems, (item) =>
+				content.items.some((contentItem) => contentItem.id === item.id),
+			),
+		[content.items, allItems],
+	);
 
 	const setTitle = useCallback(
 		(title: string) =>
@@ -99,6 +85,24 @@ const LayoutEditorPages = (props: Props) => {
 					onChange={(evt) => setTitle(evt.target.value)}
 				/>
 				<InputField label="Collections & Pages">
+					<Popover
+						aria-label="Choose pinned Pubs for this block"
+						className="order-picker-popover"
+						placement="bottom-end"
+						content={
+							<OrderPicker
+								availableItems={availableItems}
+								selectedItems={selectedItems}
+								onSelectedItems={setSelectedItems}
+								renderItem={(item) => item.title}
+							/>
+						}
+					>
+						<Button rightIcon="caret-down">
+							Choose Items
+							{selectedItems.length ? ` (${selectedItems.length})` : ''}
+						</Button>
+					</Popover>
 					{/* <Popover
 						content={
 							<OrderPicker

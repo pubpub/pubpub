@@ -10,6 +10,7 @@
 			border-right: 1px solid #ccc;
 		}
 	}
+
 	.column-header {
 		background: #eee;
 		border-bottom: 1px solid #ccc;
@@ -22,13 +23,20 @@
 			opacity: 0.5;
 		}
 	}
+
 	.items-listing {
 		height: 350px;
 		overflow-y: auto;
+		> ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
 		.more-spinner {
 			margin: 7px 0;
 		}
 	}
+
 	.search-bar {
 		background: #f5f5f5;
 		border-bottom: 1px solid #ccc;

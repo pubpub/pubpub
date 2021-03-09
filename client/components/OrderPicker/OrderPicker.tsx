@@ -98,7 +98,11 @@ const OrderPicker = <Item extends MinimalItem>(props: Props<Item>) => {
 						/>
 					</div>
 				)}
-				{availableItems.map((item) => renderItem(item, () => handleAddItem(item)))}
+				<ul>
+					{availableItems.map((item) => (
+						<li key={item.id}>{renderItem(item, () => handleAddItem(item))}</li>
+					))}
+				</ul>
 				{isRequestingMoreItems && <Spinner size={25} className="more-spinner" />}
 			</div>
 		);
