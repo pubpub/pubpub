@@ -427,7 +427,8 @@ export type PubsQueryOrderingField =
 	| 'collectionRank'
 	| 'publishDate'
 	| 'updatedDate'
-	| 'creationDate';
+	| 'creationDate'
+	| 'title';
 export type PubsQueryOrdering = { field: PubsQueryOrderingField; direction: 'ASC' | 'DESC' };
 export type PubsQuery = {
 	collectionIds?: null | string[];

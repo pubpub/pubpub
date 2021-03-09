@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
 import classNames from 'classnames';
-import { Button, Popover, Position } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 
-import { CollectionMultiSelect, InputField } from 'components';
+import { CollectionMultiSelect, InputField, Popover } from 'components';
 import { LayoutPubs } from 'components/Layout';
 import { MenuSelect, MenuSelectItems } from 'components/Menu';
 import { Community, Pub, Collection } from 'utils/types';
@@ -21,6 +21,7 @@ type Props = {
 	block: LayoutBlockPubs;
 	pubsInBlock: Pub[];
 	communityData: Community & { collections: Collection[] };
+	scopedCollectionId?: string;
 };
 
 const previewTypes: MenuSelectItems<PubPreviewType> = [
@@ -38,18 +39,6 @@ const pubSortOrders: MenuSelectItems<PubSortOrder> = [
 	{ value: 'collection-rank', label: 'Collection order' },
 ];
 
-const pubIsInCollections = (pub: Pub, collectionIds: string[]) => {
-	if (collectionIds.length === 0) {
-		return true;
-	}
-	return (
-		pub.collectionPubs &&
-		pub.collectionPubs.some((collectionPub) =>
-			collectionIds.some((collectionId) => collectionId === collectionPub.collectionId),
-		)
-	);
-};
-
 const LayoutEditorPubs = (props: Props) => {
 	const {
 		onChange: fullOnChange,
@@ -58,6 +47,7 @@ const LayoutEditorPubs = (props: Props) => {
 		pubsInBlock,
 		communityData,
 		loading,
+		scopedCollectionId,
 	} = props;
 	const {
 		limit,
@@ -84,8 +74,9 @@ const LayoutEditorPubs = (props: Props) => {
 		(nextLimit: undefined | number) =>
 			onChange({
 				limit: nextLimit,
+				pubIds: pubIds.slice(0, nextLimit || Infinity),
 			}),
-		[onChange],
+		[onChange, pubIds],
 	);
 
 	const setSort = useCallback(
@@ -144,10 +135,8 @@ const LayoutEditorPubs = (props: Props) => {
 	const renderLimit = () => {
 		return (
 			<Popover
+				aria-label="Limit number of Pubs"
 				content={<LimitPubs limit={block.content.limit} onChangeLimit={setLimit} />}
-				position={Position.BOTTOM_LEFT}
-				usePortal={false}
-				minimal
 			>
 				<Button outlined icon="dashboard" rightIcon="caret-down">
 					Limit Pubs
@@ -174,17 +163,17 @@ const LayoutEditorPubs = (props: Props) => {
 	const renderPinnedPubs = () => {
 		return (
 			<Popover
+				aria-label="Choose pinned Pubs for this block"
+				className="order-picker-popover"
+				placement="bottom-end"
 				content={
 					<PinnedPubs
 						onPubIds={setPubIds}
 						pubIds={pubIds}
-						collectionIds={collectionIds}
+						pubsInBlock={pubsInBlock}
+						scopedCollectionId={scopedCollectionId}
 					/>
 				}
-				position={Position.BOTTOM_RIGHT}
-				usePortal={false}
-				minimal
-				popoverClassName="order-picker-popover"
 			>
 				<Button outlined icon="pin" rightIcon="caret-down">
 					Pinned Pubs
@@ -210,10 +199,8 @@ const LayoutEditorPubs = (props: Props) => {
 	const renderPreviewElements = () => {
 		return (
 			<Popover
-				minimal
-				position={Position.BOTTOM_LEFT}
+				aria-label="Choose preview elements"
 				content={<PreviewElements content={block.content} onChangeContent={onChange} />}
-				usePortal={false}
 			>
 				<Button outlined icon="settings" rightIcon="caret-down">
 					Pub elements

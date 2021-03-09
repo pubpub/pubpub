@@ -1,5 +1,5 @@
 import { queryPubIds, getPubsById } from 'server/pub/queryMany';
-import { sanitizePub, SanitizedPubData } from 'server/utils/queryHelpers';
+import { SanitizedPubData } from 'server/utils/queryHelpers';
 import {
 	LayoutBlockPubs,
 	LayoutBlock,

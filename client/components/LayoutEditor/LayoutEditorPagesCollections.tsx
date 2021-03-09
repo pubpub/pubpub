@@ -99,7 +99,7 @@ const LayoutEditorPages = (props: Props) => {
 					onChange={(evt) => setTitle(evt.target.value)}
 				/>
 				<InputField label="Collections & Pages">
-					<Popover
+					{/* <Popover
 						content={
 							<OrderPicker
 								selectedItems={selectedItems}
@@ -117,7 +117,7 @@ const LayoutEditorPages = (props: Props) => {
 						popoverClassName="order-picker-popover"
 					>
 						<Button rightIcon="caret-down">Choose items</Button>
-					</Popover>
+					</Popover> */}
 				</InputField>
 			</div>
 			<LayoutPagesCollections content={content} pages={pages} collections={collections} />
