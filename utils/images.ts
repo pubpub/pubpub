@@ -1,13 +1,13 @@
 import { Maybe } from './types';
 import { btoaUniversal } from './strings';
 
-type validFits = 'cover' | 'contain' | 'fill' | 'inside' | 'outside';
+type validFit = 'cover' | 'contain' | 'fill' | 'inside' | 'outside';
 
 const validExtensions = ['jpg', 'jpeg', 'png'];
 
 export const getResizedUrl = (
 	url: Maybe<string>,
-	fit: validFits,
+	fit: validFit,
 	width?: number,
 	height?: number,
 ) => {
