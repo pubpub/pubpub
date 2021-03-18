@@ -26,7 +26,7 @@ const ControlsReference = (props: ControlsReferenceProps) => {
 	} = props;
 	const { pubData } = usePubContext();
 	const nodeReferences = useMemo(
-		() => (pubData.nodeLabels ? getReferenceableNodes(view.state, pubData.nodeLabels) : []),
+		() => (pubData?.nodeLabels ? getReferenceableNodes(view.state, pubData.nodeLabels) : []),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[view.state],
 	);

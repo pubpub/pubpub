@@ -1,4 +1,5 @@
 import { EditorChangeObject } from '../Editor';
+import { CommandSpec } from '../Editor/commands/types';
 
 export enum FormattingBarPopoverCondition {
 	Always,
@@ -29,13 +30,13 @@ export type FormattingBarButtonDataControls = {
 };
 
 export type FormattingBarButtonData = {
+	key: string;
 	controls?: FormattingBarButtonDataControls;
 	component?: React.ComponentType<any>;
-	key: string;
 	popover?: FormattingBarPopover;
 	title: string;
 	ariaTitle?: string;
 	icon: string;
 	isToggle?: boolean;
-	isDisabled?: (pubData: any) => boolean;
-};
+	isDisabled?: EditorChangeObjectDecider;
+} & ({ command: CommandSpec } | { insertNodeType: string } | { isMedia: true });

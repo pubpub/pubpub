@@ -1,33 +1,37 @@
 import { Node, NodeType } from 'prosemirror-model';
-import { NodeSelection, EditorState } from 'prosemirror-state';
+import { NodeSelection } from 'prosemirror-state';
 import { lift, setBlockType, wrapIn } from 'prosemirror-commands';
 import { wrapInList } from 'prosemirror-schema-list';
 
-import { Attrs, Dispatch } from './types';
-import { createCommandEntry } from './util';
+import { Attrs, ToggleOptions, ToggleCommandFn } from './types';
+import { createTypeToggle } from './util';
 
-const nodeMatchesTypeAndAttrs = (node: Node, type: NodeType, attrs: Attrs) => {
+const nodeMatchesTypeAndAttrs = (node: Node, type: NodeType, attrs?: Attrs) => {
 	if (node.type === type) {
+		if (!attrs) {
+			return true;
+		}
 		return Object.keys(attrs).every((key) => attrs[key] === node.attrs[key]);
 	}
 	return false;
 };
 
-const blockTypeIsActive = (state: EditorState, type: NodeType, matchingAttrs: Attrs = {}) => {
+const blockTypeIsActive = (options: ToggleOptions<NodeType>) => {
+	const { state, type, withAttrs } = options;
 	if (!type) {
 		return false;
 	}
+
 	const { $from } = state.selection;
 	const selectedNode = (state.selection as NodeSelection).node;
-
-	if (selectedNode && nodeMatchesTypeAndAttrs(selectedNode, type, matchingAttrs)) {
+	if (selectedNode && nodeMatchesTypeAndAttrs(selectedNode, type, withAttrs)) {
 		return true;
 	}
 
 	let currentDepth = $from.depth;
 	while (currentDepth > 0) {
 		const currentNodeAtDepth = $from.node(currentDepth);
-		if (nodeMatchesTypeAndAttrs(currentNodeAtDepth, type, matchingAttrs)) {
+		if (nodeMatchesTypeAndAttrs(currentNodeAtDepth, type, withAttrs)) {
 			return true;
 		}
 		currentDepth -= 1;
@@ -36,52 +40,66 @@ const blockTypeIsActive = (state: EditorState, type: NodeType, matchingAttrs: At
 	return false;
 };
 
-const toggleBlockType = (
-	state: EditorState,
-	type: NodeType,
-	attrs: Attrs = {},
-	dispatch: undefined | Dispatch = undefined,
-) => {
+const toggleBlockType = (options: ToggleOptions<NodeType>) => {
+	const { state, type, withAttrs, dispatch } = options;
 	const { schema } = state;
-	const isActive = blockTypeIsActive(state, type, attrs);
+	const isActive = blockTypeIsActive(options);
 	const newNodeType = isActive ? schema.nodes.paragraph : type;
-	const setBlockFunction = setBlockType(newNodeType, attrs);
+	const setBlockFunction = setBlockType(newNodeType, withAttrs);
 	return setBlockFunction(state, dispatch);
 };
 
-const toggleWrap = (state: EditorState, type: NodeType, dispatch: Dispatch = undefined) => {
-	if (blockTypeIsActive(state, type)) {
+const toggleWrap = (options: ToggleOptions<NodeType>) => {
+	const { state, type, dispatch } = options;
+	if (blockTypeIsActive(options)) {
 		return lift(state, dispatch);
 	}
 	return wrapIn(type)(state, dispatch);
 };
 
-const toggleWrapList = (state: EditorState, type: NodeType, dispatch: Dispatch = undefined) => {
-	if (blockTypeIsActive(state, type)) {
+const toggleWrapList = (options: ToggleOptions<NodeType>) => {
+	const { state, type, dispatch } = options;
+	if (blockTypeIsActive(options)) {
 		return lift(state, dispatch);
 	}
 	return wrapInList(type)(state, dispatch);
 };
 
-const createBlockTypeToggle = (key: string, nodeTypeName: string = key, withAttrs: Attrs = {}) => {
-	return createCommandEntry((dispatch, state) => {
-		const nodeType = state.schema.nodes[nodeTypeName];
-		return {
-			key,
-			run: () => toggleBlockType(state, nodeType, withAttrs, dispatch),
-			canRun: toggleBlockType(state, nodeType, withAttrs),
-			isActive: nodeType && blockTypeIsActive(state, nodeType, withAttrs),
-		};
+const createBlockTypeToggle = (options: {
+	typeName: string;
+	withAttrs?: Attrs;
+	commandFn?: ToggleCommandFn<NodeType>;
+}) => {
+	const { typeName, withAttrs, commandFn = toggleBlockType } = options;
+	return createTypeToggle({
+		withAttrs,
+		commandFn,
+		isActiveFn: blockTypeIsActive,
+		getTypeFromSchema: (schema) => schema.nodes[typeName] as NodeType,
 	});
 };
 
 export const createHeadingBlockTypeToggle = (level: number) => {
-	const key = `heading${level}`;
-	return createBlockTypeToggle(key, 'heading', { level });
+	return createBlockTypeToggle({ typeName: 'heading', withAttrs: { level } });
 };
 
-export const paragraphToggle = createBlockTypeToggle('paragraph');
-export const codeBlockToggle = createBlockTypeToggle('code_block');
+export const createListTypeToggle = (typeName: string) => {
+	return createBlockTypeToggle({
+		typeName,
+		commandFn: toggleWrapList,
+	});
+};
+
+export const paragraphToggle = createBlockTypeToggle({ typeName: 'paragraph' });
+export const codeBlockToggle = createBlockTypeToggle({ typeName: 'code_block' });
+
+export const bulletListToggle = createListTypeToggle('bullet_list');
+export const orderedListToggle = createListTypeToggle('ordered_list');
+
+export const blockquoteToggle = createBlockTypeToggle({
+	typeName: 'blockquote',
+	commandFn: toggleWrap,
+});
 
 export const heading1Toggle = createHeadingBlockTypeToggle(1);
 export const heading2Toggle = createHeadingBlockTypeToggle(2);

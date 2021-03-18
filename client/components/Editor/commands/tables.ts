@@ -1,35 +1,75 @@
-import { Node, NodeType } from 'prosemirror-model';
-import { EditorView } from 'prosemirror-view';
+import { Command } from 'prosemirror-commands';
+import { EditorState } from 'prosemirror-state';
+import {
+	isInTable,
+	deleteTable,
+	mergeCells,
+	splitCell,
+	addRowBefore,
+	addRowAfter,
+	deleteRow,
+	addColumnBefore,
+	addColumnAfter,
+	deleteColumn,
+	toggleHeaderRow,
+	toggleHeaderColumn,
+	toggleHeaderCell,
+} from 'prosemirror-tables';
 
-const nodeMatchesTypeAndAttrs = (node: Node, type: NodeType, attrs: Record<string, any>) => {
-	if (node.type === type) {
-		return Object.keys(attrs).every((key) => attrs[key] === node.attrs[key]);
+import { ReferenceableNodeType } from '../types';
+import { getCurrentNodeLabels, findParentNodeClosestToPos } from '../utils';
+import { Dispatch } from './types';
+import { createCommandSpec } from './util';
+
+const toggleTableLabel: Command = (state: EditorState, dispatch?: Dispatch) => {
+	const nodeLabels = getCurrentNodeLabels(state);
+	if (!nodeLabels[ReferenceableNodeType.Table]?.enabled) {
+		return false;
 	}
+
+	const table = findParentNodeClosestToPos(
+		state.selection.$from,
+		(node) => node.type.name === 'table',
+	);
+
+	if (table) {
+		const transaction = state.tr.setNodeMarkup(table.pos, table.node.type, {
+			...table.node.attrs,
+			hideLabel: !table.node.attrs.hideLabel,
+		});
+		if (dispatch) {
+			dispatch(transaction);
+		}
+		return true;
+	}
+
 	return false;
 };
 
-const blockTypeIsActive = (
-	editorView: EditorView,
-	type: NodeType,
-	matchingAttrs: Record<string, any> = {},
-) => {
-	if (!type) {
-		return false;
-	}
-	const $from = editorView.state.selection.$from;
-	const selectedNode = (editorView.state.selection as any).node;
-	const isActive = false;
-
-	if (selectedNode) {
-		nodeMatchesTypeAndAttrs(selectedNode);
-	}
-
-	let currentDepth = $from.depth;
-	while (currentDepth > 0) {
-		const currentNodeAtDepth = $from.node(currentDepth);
-		nodeMatchesTypeAndAttrs(currentNodeAtDepth);
-		currentDepth -= 1;
-	}
-
-	return isActive;
+const createTableCommandSpec = (command: Command) => {
+	return createCommandSpec((dispatch, state) => {
+		const canRun = isInTable(state) && command(state);
+		return {
+			canRun,
+			run: () => command(state, dispatch),
+			isActive: false,
+		};
+	});
 };
+
+export const tableDelete = createTableCommandSpec(deleteTable);
+export const tableMergeCells = createTableCommandSpec(mergeCells);
+export const tableSplitCell = createTableCommandSpec(splitCell);
+
+export const tableAddRowBefore = createTableCommandSpec(addRowBefore);
+export const tableAddRowAfter = createTableCommandSpec(addRowAfter);
+export const tableDeleteRow = createTableCommandSpec(deleteRow);
+
+export const tableAddColumnBefore = createTableCommandSpec(addColumnBefore);
+export const tableAddColumnAfter = createTableCommandSpec(addColumnAfter);
+export const tableDeleteColumn = createTableCommandSpec(deleteColumn);
+
+export const tableToggleHeaderRow = createTableCommandSpec(toggleHeaderRow);
+export const tableToggleHeaderColumn = createTableCommandSpec(toggleHeaderColumn);
+export const tableToggleHeaderCell = createTableCommandSpec(toggleHeaderCell);
+export const tableToggleLabel = createTableCommandSpec(toggleTableLabel);

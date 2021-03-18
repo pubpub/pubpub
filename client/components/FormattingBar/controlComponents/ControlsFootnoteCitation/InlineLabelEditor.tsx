@@ -12,7 +12,7 @@ type Props = {
 const InlineLabelEditor = (props: Props) => {
 	const { customLabel, defaultLabel, onUpdateCustomLabel } = props;
 	const [usingCustomLabel, setUsingCustomLabel] = useState(!!customLabel);
-	const buttonLabel = usingCustomLabel ? 'Custom' : 'Pub default';
+	const buttonLabel = usingCustomLabel ? 'Custom' : 'Default';
 
 	const handleSelectDefault = () => {
 		setUsingCustomLabel(false);
@@ -35,7 +35,7 @@ const InlineLabelEditor = (props: Props) => {
 				}}
 				buttonContent={buttonLabel}
 			>
-				<MenuItem text="Pub default" onClick={handleSelectDefault} />
+				<MenuItem text="Default" onClick={handleSelectDefault} />
 				<MenuItem text="Custom" onClick={handleSelectCustom} />
 			</MenuButton>
 			<InputGroup
