@@ -43,7 +43,15 @@ export const getResizedUrl = (
 	return `https://resize-v3.pubpub.org/${btoaUniversal(JSON.stringify(imageRequest))}`;
 };
 
-export const getDefaultResizedUrl = (url: string, align?: string) => {
-	const width = align === 'breakout' ? 1920 : 800;
-	return getResizedUrl(url, 'inside', width);
+export const getSrcSet = (url: string, fit: validFit, widthBreakpoints: number[]) => {
+	return widthBreakpoints
+		.reduce((memo: number[], breakpoint) => {
+			return [...memo, breakpoint, breakpoint * 2, breakpoint * 3];
+		}, [])
+		.sort((a, b) => a - b)
+		.map((width) => {
+			const resizedUrl = getResizedUrl(url, fit, width);
+			return `${resizedUrl} ${width}w`;
+		})
+		.join(',');
 };

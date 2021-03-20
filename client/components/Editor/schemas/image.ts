@@ -1,7 +1,8 @@
 import { DOMOutputSpec } from 'prosemirror-model';
 import { pruneFalsyValues } from 'utils/arrays';
 import { withValue } from 'utils/fp';
-import { imageCanBeResized } from '../utils/media';
+import { getSrcSet, getResizedUrl } from 'utils/images';
+import { isResizeableFormat } from '../utils/media';
 import { buildLabel } from '../utils/references';
 import { renderHtmlChildren } from '../utils/renderHtml';
 import { counter } from './reactive/counter';
@@ -61,11 +62,18 @@ export default {
 		toDOM: (node, { isReact } = { isReact: false }) => {
 			const { url, align, id, altText, caption, fullResolution, size } = node.attrs;
 
-			const resizeFunc = node.type.spec.defaultOptions.onResizeUrl;
-			const maybeResizedSrc =
-				resizeFunc && !fullResolution && imageCanBeResized(url)
-					? resizeFunc(url, align)
-					: url;
+			const width = align === 'breakout' ? 1920 : 800;
+			// check here is for GIFs, which cannot be resized. Likewise, if the image ain't full res, don't resize. Keep these in place.
+			const isResizeable = isResizeableFormat(url) && !fullResolution;
+			const widthBreakpoints = [675, 650, 350];
+			const maybeResizedSrc = isResizeable ? getResizedUrl(url, 'inside', width) : url;
+			const srcSet = isResizeable ? getSrcSet(url, 'inside', widthBreakpoints) : '';
+			// TODO: where to specify breakpoints in the code? Since each component has it's own breakpoint widths, it has to be at the component level. Can this be abstracted to match scss? What are all image locations? (pub, pub tiles, heros, ...?)
+			const sizes = `
+			(max-width: 400px) 350px,
+			(max-width: 750px) 650px,
+			675px,
+			`;
 
 			const figcaptionId = `${id}-figure-caption`;
 
@@ -82,6 +90,8 @@ export default {
 				[
 					'img',
 					{
+						srcSet,
+						sizes,
 						src: maybeResizedSrc,
 						alt: altText || '',
 						...getFigcaptionRefrenceAttrs(altText, caption, figcaptionId),
@@ -111,12 +121,6 @@ export default {
 			const imageNode = view.state.schema.nodes.image.create(attrs);
 			const transaction = view.state.tr.replaceSelectionWith(imageNode);
 			view.dispatch(transaction);
-		},
-		defaultOptions: {
-			onResizeUrl: (url) => {
-				return url;
-			},
-			linkToSrc: true,
 		},
 	},
 };
