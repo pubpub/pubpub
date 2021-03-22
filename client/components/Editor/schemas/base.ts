@@ -48,7 +48,6 @@ export const baseNodes: { [key: string]: NodeSpec } = {
 		group: 'block',
 		attrs: {
 			id: { default: null },
-			textAlign: { default: null },
 		},
 		selectable: false,
 		parseDOM: [
@@ -57,7 +56,6 @@ export const baseNodes: { [key: string]: NodeSpec } = {
 				getAttrs: (node) => {
 					return {
 						id: (node as Element).getAttribute('id'),
-						textAlign: (node as Element).getAttribute('data-text-align'),
 					};
 				},
 			},
@@ -65,10 +63,7 @@ export const baseNodes: { [key: string]: NodeSpec } = {
 		toDOM: (node) => {
 			return [
 				'blockquote',
-				{
-					...(node.attrs.id && { id: node.attrs.id }),
-					...(node.attrs.textAlign && { 'data-text-align': node.attrs.textAlign }),
-				},
+				{ ...(node.attrs.id && { id: node.attrs.id }) },
 				0,
 			] as DOMOutputSpec;
 		},

@@ -22,3 +22,7 @@
 td {
     @include text-align-styles();
 }
+
+> blockquote {
+    @include text-align-styles();
+}

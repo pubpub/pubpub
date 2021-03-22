@@ -26,7 +26,7 @@ const unwrapAlignmentValue = (value: NodeAlignmentValue): AlignmentType =>
 
 const supportsAlignmentOfChildren = (node: Node) => {
 	const { name } = node.type;
-	return name === 'doc' || name === 'table_cell';
+	return name === 'doc' || name === 'table_cell' || name === 'blockquote';
 };
 
 const supportsAlignment = (node: Node) => {
