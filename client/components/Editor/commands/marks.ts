@@ -31,5 +31,5 @@ export const emToggle = createMarkToggle('em');
 export const codeToggle = createMarkToggle('code');
 export const subscriptToggle = createMarkToggle('sub');
 export const superscriptToggle = createMarkToggle('sup');
-export const strikethroughToggle = createMarkToggle('strikethrough');
+export const strikethroughToggle = createMarkToggle('strike');
 export const linkToggle = createMarkToggle('link');
