@@ -63,7 +63,6 @@ export default {
 			const { url, align, id, altText, caption, fullResolution, size } = node.attrs;
 
 			const width = align === 'breakout' ? 1920 : 800;
-			// check here is for GIFs, which cannot be resized. Likewise, if the image ain't full res, don't resize. Keep these in place.
 			const isResizeable = isResizeableFormat(url) && !fullResolution;
 			const widthBreakpoints = [675, 650, 350];
 			const maybeResizedSrc = isResizeable ? getResizedUrl(url, 'inside', width) : url;
