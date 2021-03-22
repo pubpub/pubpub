@@ -8,15 +8,12 @@ import { Falsy } from 'utils/types';
 import { EditorChangeObject, mouseEventSelectsNode } from '../Editor';
 
 import { PositioningFn } from './types';
-import { usePendingAttrs } from './hooks/usePendingAttrs';
-
-type PendingAttrs = ReturnType<typeof usePendingAttrs>;
 
 type Props = {
 	accentColor: string;
 	title: string;
 	captureFocusOnMount?: boolean;
-	children: (p: PendingAttrs) => React.ReactNode;
+	children: React.ReactNode;
 	containerRef?: React.RefObject<HTMLElement>;
 	editorChangeObject: EditorChangeObject;
 	floatingPosition: Falsy | ReturnType<PositioningFn>;
@@ -39,18 +36,6 @@ const FormattingBarPopover = (props: Props) => {
 		showCloseButton,
 	} = props;
 	const [capturesFocus, setCapturesFocus] = useState(captureFocusOnMount);
-	const { selectedNode, updateNode } = editorChangeObject;
-
-	const pendingAttrs = usePendingAttrs({
-		selectedNode,
-		updateNode,
-		editorView: editorChangeObject.view,
-	});
-
-	const handleClose = () => {
-		pendingAttrs?.commitChanges();
-		onClose();
-	};
 
 	const focusTrap = useFocusTrap({
 		isActive: capturesFocus,
@@ -58,11 +43,11 @@ const FormattingBarPopover = (props: Props) => {
 		restoreFocusTarget: editorChangeObject.view.dom,
 		onEscapeKeyPressed: (evt) => {
 			evt.stopPropagation();
-			handleClose();
+			onClose();
 		},
 		onMouseDownOutside: (evt: MouseEvent) => {
 			if (!mouseEventSelectsNode(editorChangeObject.view, evt)) {
-				handleClose();
+				onClose();
 			}
 		},
 	});
@@ -90,7 +75,7 @@ const FormattingBarPopover = (props: Props) => {
 			style={{ background: accentColor, ...floatingPosition }}
 			ref={focusTrap.ref}
 		>
-			<div className="inner">{children(pendingAttrs)}</div>
+			<div className="inner">{children}</div>
 			{showCloseButton && (
 				<div className="close-button-container">
 					<Button
@@ -98,7 +83,7 @@ const FormattingBarPopover = (props: Props) => {
 						small
 						icon="cross"
 						aria-label="Close options"
-						onClick={handleClose}
+						onClick={onClose}
 					/>
 				</div>
 			)}

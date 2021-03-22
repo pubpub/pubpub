@@ -12,6 +12,7 @@ import FormattingBarButton from './FormattingBarButton';
 import FormattingBarPopover from './FormattingBarPopover';
 import { FormattingBarButtonData } from './types';
 import { getButtonPopoverComponent } from './utils';
+import { usePendingAttrs } from './hooks/usePendingAttrs';
 import { useControlsState, ButtonState } from './hooks/useControlsState';
 
 require('./formattingBar.scss');
@@ -38,10 +39,17 @@ const FormattingBar = (props: Props) => {
 		citationStyle = 'apa',
 	} = props;
 
+	const { selectedNode, updateNode } = editorChangeObject;
 	const { communityData } = usePageContext();
 	const pubData = usePubData();
 	const buttonElementRefs = useRefMap();
 	const toolbar = useToolbarState({ loop: true });
+
+	const pendingAttrs = usePendingAttrs({
+		selectedNode,
+		updateNode,
+		editorView: editorChangeObject.view,
+	});
 
 	const {
 		openedButton,
@@ -133,17 +141,15 @@ const FormattingBar = (props: Props) => {
 					showCloseButton={openedButton.controls?.showCloseButton}
 					onClose={() => setOpenedButton(null)}
 				>
-					{(pendingAttrs) => (
-						<ControlsComponent
-							key={selectedNodeId}
-							editorChangeObject={editorChangeObject}
-							isSmall={isSmall}
-							citationStyle={citationStyle}
-							pubData={pubData}
-							pendingAttrs={pendingAttrs}
-							onClose={() => setOpenedButton(null)}
-						/>
-					)}
+					<ControlsComponent
+						key={selectedNodeId}
+						editorChangeObject={editorChangeObject}
+						isSmall={isSmall}
+						citationStyle={citationStyle}
+						pubData={pubData}
+						pendingAttrs={pendingAttrs}
+						onClose={() => setOpenedButton(null)}
+					/>
 				</FormattingBarPopover>
 			)}
 		</div>
