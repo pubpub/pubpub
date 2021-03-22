@@ -11,7 +11,7 @@ export type CommandState = {
 	isActive: boolean;
 };
 
-export type CommandSpecBuilder = (dispatch: Dispatch, state: EditorState) => CommandState;
+export type CommandStateBuilder = (dispatch: Dispatch, state: EditorState) => CommandState;
 export type CommandSpec = (view: EditorView) => (state: EditorState) => CommandState;
 
 export type SchemaType = NodeType | MarkType;
