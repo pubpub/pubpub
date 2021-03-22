@@ -68,7 +68,6 @@ export default {
 			const widthBreakpoints = [675, 650, 350];
 			const maybeResizedSrc = isResizeable ? getResizedUrl(url, 'inside', width) : url;
 			const srcSet = isResizeable ? getSrcSet(url, 'inside', widthBreakpoints) : '';
-			// TODO: where to specify breakpoints in the code? Since each component has it's own breakpoint widths, it has to be at the component level. Can this be abstracted to match scss? What are all image locations? (pub, pub tiles, heros, ...?)
 			const sizes = `
 			(max-width: 400px) 350px,
 			(max-width: 750px) 650px,
