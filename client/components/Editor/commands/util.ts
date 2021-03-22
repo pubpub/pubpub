@@ -1,14 +1,14 @@
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import {
-	CommandStateBuilder,
+	CommandSpecBuilder,
 	SchemaType,
 	CreateToggleOptions,
 	ToggleOptions,
 	CommandSpec,
 } from './types';
 
-export const createCommandSpec = (builder: CommandStateBuilder): CommandSpec => {
+export const createCommandSpec = (builder: CommandSpecBuilder): CommandSpec => {
 	return (view: EditorView) => (state: EditorState) => builder(view.dispatch, state);
 };
 

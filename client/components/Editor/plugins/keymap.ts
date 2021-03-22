@@ -9,11 +9,16 @@ import {
 	joinDown,
 	lift,
 	selectParentNode,
+	newlineInCode,
+	createParagraphNear,
+	liftEmptyBlock,
 } from 'prosemirror-commands';
 import { wrapInList, splitListItem, liftListItem, sinkListItem } from 'prosemirror-schema-list';
 import { undo, redo } from 'prosemirror-history';
 import { undoInputRule } from 'prosemirror-inputrules';
 import { keymap } from 'prosemirror-keymap';
+
+import { splitBlockPreservingTextAlign } from '../commands';
 
 const mac = typeof navigator !== 'undefined' ? /Mac/.test(navigator.platform) : false;
 
@@ -129,5 +134,16 @@ export default (schema) => {
 		});
 	}
 
-	return [keymap(keys), keymap(baseKeymap)];
+	return [
+		keymap(keys),
+		keymap({
+			...baseKeymap,
+			Enter: chainCommands(
+				newlineInCode,
+				createParagraphNear,
+				liftEmptyBlock,
+				splitBlockPreservingTextAlign,
+			),
+		}),
+	];
 };
