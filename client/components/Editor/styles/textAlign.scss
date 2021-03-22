@@ -1,11 +1,6 @@
 @mixin text-align-style($alignment) {
     > [data-text-align='#{$alignment}'] {
         text-align: #{$alignment};
-        @at-root {
-            ul#{&} {
-                opacity: 0.5;
-            }
-        }
     }
     > ul,
     > ol {
