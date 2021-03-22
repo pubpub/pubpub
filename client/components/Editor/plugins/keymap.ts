@@ -134,16 +134,15 @@ export default (schema) => {
 		});
 	}
 
-	return [
-		keymap(keys),
-		keymap({
-			...baseKeymap,
-			Enter: chainCommands(
-				newlineInCode,
-				createParagraphNear,
-				liftEmptyBlock,
-				splitBlockPreservingTextAlign,
-			),
-		}),
-	];
+	// All but the custom block splitting command in this chain are taken from the default
+	// chain in baseKeymap. We provide our own block splitter that preserves text align
+	// attributes between paragraphs.
+	const customEnterCommand = chainCommands(
+		newlineInCode,
+		createParagraphNear,
+		liftEmptyBlock,
+		splitBlockPreservingTextAlign,
+	);
+
+	return [keymap(keys), keymap({ ...baseKeymap, Enter: customEnterCommand })];
 };
