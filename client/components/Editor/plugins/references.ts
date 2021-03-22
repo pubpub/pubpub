@@ -1,5 +1,5 @@
 import { Schema } from 'prosemirror-model';
-import { EditorState, Plugin, PluginKey } from 'prosemirror-state';
+import { Plugin, PluginKey } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { suggest, Suggester } from 'prosemirror-suggest';
 
