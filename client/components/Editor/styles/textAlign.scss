@@ -23,7 +23,7 @@
 
 @include text-align-styles();
 
-td {
+td, th {
     @include text-align-styles();
 }
 
