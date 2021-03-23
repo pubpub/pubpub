@@ -1,3 +1,5 @@
+import { DefinitelyHas } from 'utils/types';
+
 import { EditorChangeObject } from '../Editor';
 import { CommandSpec } from '../Editor/commands/types';
 
@@ -12,6 +14,11 @@ export type FormattingBarPopover = {
 };
 
 export type EditorChangeObjectDecider = (eco: EditorChangeObject) => boolean;
+
+export type EditorChangeObjectWithNode = DefinitelyHas<
+	EditorChangeObject,
+	'selectedNode' | 'updateNode' | 'changeNode'
+>;
 
 export type PositioningFn = (
 	eco: EditorChangeObject,

@@ -4,7 +4,6 @@ import { Toolbar, ToolbarItem, useToolbarState } from 'reakit';
 
 import { usePageContext } from 'utils/hooks';
 import { useRefMap } from 'client/utils/useRefMap';
-import { usePubData } from 'client/containers/Pub/pubHooks';
 import { EditorChangeObject } from 'client/components/Editor';
 
 import BlockTypeSelector from './BlockTypeSelector';
@@ -41,7 +40,6 @@ const FormattingBar = (props: Props) => {
 
 	const { selectedNode, updateNode } = editorChangeObject;
 	const { communityData } = usePageContext();
-	const pubData = usePubData();
 	const buttonElementRefs = useRefMap();
 	const toolbar = useToolbarState({ loop: true });
 
@@ -146,7 +144,6 @@ const FormattingBar = (props: Props) => {
 						editorChangeObject={editorChangeObject}
 						isSmall={isSmall}
 						citationStyle={citationStyle}
-						pubData={pubData}
 						pendingAttrs={pendingAttrs}
 						onClose={() => setOpenedButton(null)}
 					/>
