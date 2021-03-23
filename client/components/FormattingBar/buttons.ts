@@ -2,7 +2,6 @@ import {
 	alignTextCenter,
 	alignTextLeft,
 	alignTextRight,
-	alignTextJustify,
 	blockquoteToggle,
 	bulletListToggle,
 	codeToggle,
@@ -83,13 +82,6 @@ export const alignRight: FormattingBarButtonData = {
 	title: 'Align right',
 	icon: 'align-right',
 	command: alignTextRight,
-};
-
-export const alignJustify: FormattingBarButtonData = {
-	key: 'align-justify',
-	title: 'Justify',
-	icon: 'align-justify',
-	command: alignTextJustify,
 };
 
 export const strong: FormattingBarButtonData = {
@@ -280,7 +272,7 @@ export const minimalButtonSet = [[strong, em, link, equation]];
 export const inlineMenuButtonSet = [[heading1, heading2, strong, em, link]];
 
 export const fullButtonSet = [
-	[alignLeft, alignCenter, alignRight, alignJustify],
+	[alignLeft, alignCenter, alignRight],
 	[
 		strong,
 		em,

@@ -1,9 +1,6 @@
 @mixin text-align-style($alignment) {
     > [data-text-align='#{$alignment}'] {
         text-align: #{$alignment};
-        @if $alignment == 'justify' {
-            text-align-last: left;
-        }
     }
     > ul,
     > ol {
@@ -18,7 +15,6 @@
 @mixin text-align-styles {
     @include text-align-style('center');
     @include text-align-style('right');
-    @include text-align-style('justify');
 }
 
 @include text-align-styles();
