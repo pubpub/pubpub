@@ -64,15 +64,8 @@ export default {
 
 			const width = align === 'breakout' ? 1920 : 800;
 			const isResizeable = isResizeableFormat(url) && !fullResolution;
-			const widthBreakpoints = [675, 650, 350];
 			const maybeResizedSrc = isResizeable ? getResizedUrl(url, 'inside', width) : url;
-			const srcSet = isResizeable ? getSrcSet(url, 'inside', widthBreakpoints) : '';
-			const sizes = `
-			(max-width: 400px) 350px,
-			(max-width: 750px) 650px,
-			675px,
-			`;
-
+			const srcSet = isResizeable ? getSrcSet(url, 'inside', width) : '';
 			const figcaptionId = `${id}-figure-caption`;
 
 			return [
@@ -89,7 +82,6 @@ export default {
 					'img',
 					{
 						srcSet,
-						sizes,
 						src: maybeResizedSrc,
 						alt: altText || '',
 						...getFigcaptionRefrenceAttrs(altText, caption, figcaptionId),

@@ -43,15 +43,12 @@ export const getResizedUrl = (
 	return `https://resize-v3.pubpub.org/${btoaUniversal(JSON.stringify(imageRequest))}`;
 };
 
-export const getSrcSet = (url: string, fit: validFit, widthBreakpoints: number[]) => {
-	return widthBreakpoints
-		.reduce((memo: number[], breakpoint) => {
-			return [...memo, breakpoint, breakpoint * 2, breakpoint * 3];
-		}, [])
-		.sort((a, b) => a - b)
-		.map((width) => {
-			const resizedUrl = getResizedUrl(url, fit, width);
-			return `${resizedUrl} ${width}w`;
+export const getSrcSet = (url: string, fit: validFit, width: number) => {
+	const pixelDensities = [1, 2, 3];
+	return pixelDensities
+		.map((density) => {
+			const resizedUrl = getResizedUrl(url, fit, width * density);
+			return `${resizedUrl} ${density}x`;
 		})
 		.join(',');
 };
