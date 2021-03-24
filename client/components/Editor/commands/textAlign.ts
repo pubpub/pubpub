@@ -16,7 +16,7 @@ type AlignableNodesResult = {
 };
 
 const alignAttr = 'textAlign';
-let alignableNodesCache: null | { state: EditorState; result: AlignableNodesResult } = null;
+const alignParentTypes = new Set(['doc', 'table_cell', 'table_header', 'blockquote']);
 
 const wrapAlignmentType = (alignment: AlignmentType): NodeAlignmentValue =>
 	alignment === 'left' ? null : alignment;
@@ -26,7 +26,7 @@ const unwrapAlignmentValue = (value: NodeAlignmentValue): AlignmentType =>
 
 const supportsAlignmentOfChildren = (node: Node) => {
 	const { name } = node.type;
-	return name === 'doc' || name === 'table_cell' || name === 'blockquote';
+	return alignParentTypes.has(name);
 };
 
 const supportsAlignment = (node: Node) => {
@@ -43,6 +43,7 @@ const getSharedAlignmentType = (nodes: NodePos[]) => {
 	return null;
 };
 
+let alignableNodesCache: null | { state: EditorState; result: AlignableNodesResult } = null;
 const getAlignableNodes = (state: EditorState): AlignableNodesResult => {
 	if (alignableNodesCache?.state === state) {
 		// Cheap way to cache the results of this function, which will be called several times
