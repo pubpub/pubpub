@@ -268,7 +268,7 @@ export const media: FormattingBarButtonData = {
 };
 
 export const minimalButtonSet = [[strong, em, link, equation]];
-
+export const discussionButtonSet = [...minimalButtonSet, [media]];
 export const inlineMenuButtonSet = [[heading1, heading2, strong, em, link]];
 
 export const fullButtonSet = [
@@ -287,6 +287,28 @@ export const fullButtonSet = [
 		horizontalRule,
 		equation,
 		reference,
+		citation,
+		footnote,
+		table,
+	],
+	[media],
+];
+
+export const layoutEditorButtonSet = [
+	[alignLeft, alignCenter, alignRight],
+	[
+		strong,
+		em,
+		link,
+		bulletList,
+		numberedList,
+		blockquote,
+		code,
+		subscript,
+		superscript,
+		strikethrough,
+		horizontalRule,
+		equation,
 		citation,
 		footnote,
 		table,

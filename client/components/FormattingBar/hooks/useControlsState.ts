@@ -3,14 +3,16 @@ import { useEffect, useMemo, useState } from 'react';
 import { EditorChangeObject, insertNodeIntoEditor } from 'components/Editor';
 
 import { FormattingBarButtonData } from '../types';
+import { positionNearSelection } from '../positioning';
+import { deepMap } from '../utils';
 import { useInteractionCount } from './useInteractionCount';
 import { useCommandStates, WithCommandState } from './useCommandStates';
-import { deepMap } from '../utils';
 
 type Options = {
 	buttons: FormattingBarButtonData[][];
 	containerRef?: React.RefObject<HTMLElement>;
 	editorChangeObject: EditorChangeObject;
+	floatPopovers?: boolean;
 };
 
 type IntermediateState = {
@@ -98,11 +100,30 @@ const getButtonStates = (
 	state: IntermediateState,
 ) => deepMap(buttons, (button) => getButtonState(button, state));
 
+const getControlsPosition = (
+	openedButton: FormattingBarButtonData,
+	floatPopovers: boolean,
+	editorChangeObject: EditorChangeObject,
+	container: HTMLElement,
+) => {
+	if (openedButton) {
+		const position = openedButton.controls?.position?.(editorChangeObject, container);
+		if (position) {
+			return position;
+		}
+		if (floatPopovers) {
+			return positionNearSelection(editorChangeObject, container);
+		}
+	}
+	return null;
+};
+
 export const useControlsState = (options: Options) => {
-	const { buttons, editorChangeObject, containerRef } = options;
+	const { buttons, editorChangeObject, containerRef, floatPopovers = false } = options;
 	const flatButtons = useMemo(() => buttons.reduce((a, b) => [...a, ...b], []), [buttons]);
 	const [openedButton, setOpenedButton] = useState<FormattingBarButtonData | null>(null);
 	const interactionCount = useInteractionCount(editorChangeObject.latestDomEvent);
+	const editorElement = editorChangeObject.view?.dom;
 
 	const buttonsWithCommandState = useCommandStates<FormattingBarButtonData>({
 		view: editorChangeObject.view,
@@ -127,10 +148,12 @@ export const useControlsState = (options: Options) => {
 
 	const controlsPosition =
 		controlsComponent &&
-		openedButton?.controls?.position &&
-		openedButton?.controls?.position(
+		openedButton &&
+		getControlsPosition(
+			openedButton,
+			floatPopovers,
 			editorChangeObject,
-			containerRef?.current! || document.body,
+			containerRef!.current || document.body,
 		);
 
 	useEffect(() => {
@@ -144,7 +167,7 @@ export const useControlsState = (options: Options) => {
 	useEffect(() => {
 		const handleOptions = { capture: true };
 		const handler = (evt) => {
-			if (evt.key === 'Enter') {
+			if (evt.key === 'Enter' && editorElement?.contains(document.activeElement)) {
 				if (indicatedButtons.length === 1 && !openedButton) {
 					const [openableButton] = indicatedButtons;
 					if (openableButton?.controls?.enterKeyTriggers) {
@@ -157,7 +180,7 @@ export const useControlsState = (options: Options) => {
 		};
 		document.addEventListener('keydown', handler, handleOptions);
 		return () => document.removeEventListener('keydown', handler, handleOptions);
-	}, [indicatedButtons, openedButton, setOpenedButton]);
+	}, [indicatedButtons, openedButton, setOpenedButton, editorElement]);
 
 	const buttonStates = getButtonStates(buttonsWithCommandState, {
 		indicatedButtons,
@@ -170,9 +193,9 @@ export const useControlsState = (options: Options) => {
 	return {
 		openedButton,
 		setOpenedButton,
-		controlsPosition,
 		selectedNodeId,
 		buttonStates,
+		controlsPosition: controlsPosition || null,
 		ControlsComponent: controlsComponent,
 	};
 };

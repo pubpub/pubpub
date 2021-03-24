@@ -97,8 +97,9 @@ const MinimalEditor = (props: Props) => {
 					containerRef={editorWrapperRef}
 					editorChangeObject={changeObject}
 					showBlockTypes={false}
-					isSmall={true}
 					isTranslucent={isTranslucent}
+					isSmall
+					floatPopovers
 				/>
 			)}
 			{/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}

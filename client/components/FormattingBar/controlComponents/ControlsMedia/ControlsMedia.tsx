@@ -135,7 +135,6 @@ const ControlsMedia = (props: Props) => {
 					/>
 				)}
 				<AlignmentControl
-					isSmall={isSmall}
 					value={align}
 					onChange={(nextAlignment) => updateNode({ align: nextAlignment })}
 				/>
@@ -155,23 +154,24 @@ const ControlsMedia = (props: Props) => {
 						/>
 					)}
 				</div>
-				<div className="controls-row">
-					<Checkbox
-						disabled={!canHideLabel}
-						onClick={toggleLabel}
-						alignIndicator="right"
-						label="Hide label"
-						checked={hideLabel}
-					>
-						{!canHideLabel && (
-							<>
-								{' '}
-								(
-								<ControlsReferenceSettingsLink dark small />)
-							</>
-						)}
-					</Checkbox>
-				</div>
+				{canHideLabel && (
+					<div className="controls-row">
+						<Checkbox
+							onClick={toggleLabel}
+							alignIndicator="right"
+							label="Hide label"
+							checked={hideLabel}
+						>
+							{!canHideLabel && (
+								<>
+									{' '}
+									(
+									<ControlsReferenceSettingsLink dark small />)
+								</>
+							)}
+						</Checkbox>
+					</div>
+				)}
 			</div>
 			{nodeSupportsAltText ? renderCaptionAltSelector() : renderCaptionPanel()}
 		</div>

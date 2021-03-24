@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import classNames from 'classnames';
 import { Toolbar, ToolbarItem, useToolbarState } from 'reakit';
+import { EditorView } from 'prosemirror-view';
 
 import { usePageContext } from 'utils/hooks';
 import { useRefMap } from 'client/utils/useRefMap';
@@ -25,19 +26,29 @@ type Props = {
 	isTranslucent?: boolean;
 	isFullScreenWidth?: boolean;
 	citationStyle?: string;
+	floatPopovers?: boolean;
 };
+
+const shimEditorChangeObject = ({
+	view: {} as EditorView,
+	selectedNode: null,
+	updateNode: () => {},
+} as unknown) as EditorChangeObject;
 
 const FormattingBar = (props: Props) => {
 	const {
-		editorChangeObject,
+		editorChangeObject: propsEditorChangeObject,
 		containerRef,
 		showBlockTypes = true,
 		isSmall = false,
 		isTranslucent = false,
 		isFullScreenWidth = false,
+		floatPopovers = false,
 		citationStyle = 'apa',
+		buttons,
 	} = props;
 
+	const editorChangeObject = propsEditorChangeObject || shimEditorChangeObject;
 	const { selectedNode, updateNode } = editorChangeObject;
 	const { communityData } = usePageContext();
 	const buttonElementRefs = useRefMap();
@@ -56,7 +67,7 @@ const FormattingBar = (props: Props) => {
 		selectedNodeId,
 		ControlsComponent,
 		buttonStates,
-	} = useControlsState(props);
+	} = useControlsState({ editorChangeObject, buttons, containerRef, floatPopovers });
 
 	useEffect(() => {
 		if (openedButton) {
@@ -96,11 +107,11 @@ const FormattingBar = (props: Props) => {
 		);
 	};
 
-	const renderButtonGroup = (buttons: ButtonState[], index: number) => {
+	const renderButtonGroup = (states: ButtonState[], index: number) => {
 		return (
 			<React.Fragment key={index}>
 				{index > 0 && <div className="separator" />}
-				{buttons.map(renderButtonState)}
+				{states.map(renderButtonState)}
 			</React.Fragment>
 		);
 	};
