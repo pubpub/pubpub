@@ -76,7 +76,7 @@ const alignNodes = (
 	const { tr } = state;
 	const alignAttrValue = wrapAlignmentType(type);
 	nodes.forEach(({ pos, node }) =>
-		tr.setNodeMarkup(pos, null as any, { ...node.attrs, [alignAttr]: alignAttrValue }),
+		tr.setNodeMarkup(pos, undefined, { ...node.attrs, [alignAttr]: alignAttrValue }),
 	);
 	dispatch(tr);
 };
