@@ -8,7 +8,7 @@ import Editor, {
 	convertLocalHighlightToDiscussion,
 	getLocalHighlightText,
 } from 'components/Editor';
-import { Avatar, MinimalEditor } from 'components';
+import { Avatar } from 'components';
 import { FormattingBar, buttons } from 'components/FormattingBar';
 import { usePageContext } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';

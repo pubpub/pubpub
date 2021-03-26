@@ -162,6 +162,7 @@
         padding: 10px;
         border-radius: 4px;
         z-index: 2;
+        width: max-content;
     }
     &.full-screen-width:not(.floating) {
         width: 100vw;

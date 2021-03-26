@@ -69,7 +69,6 @@ const ControlsMedia = (props: Props) => {
 	};
 
 	const renderCaptionPanel = () => {
-		console.log('IHTML', caption);
 		return (
 			<>
 				<SimpleEditor

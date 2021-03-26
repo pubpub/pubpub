@@ -10,7 +10,6 @@ require('./pubHeaderFormatting.scss');
 
 type Props = {
 	collabData: any;
-	editorWrapperRef: any;
 	disabled: boolean;
 };
 

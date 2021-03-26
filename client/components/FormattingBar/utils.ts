@@ -4,7 +4,8 @@ export const getButtonPopoverComponent = (button: FormattingBarButtonData, isDis
 	button.popover &&
 	Boolean(
 		FormattingBarButtonPopoverCondition.Always ||
-			(button.popover.condition === FormattingBarButtonPopoverCondition.Disabled && isDisabled),
+			(button.popover.condition === FormattingBarButtonPopoverCondition.Disabled &&
+				isDisabled),
 	)
 		? button.popover.component
 		: null;

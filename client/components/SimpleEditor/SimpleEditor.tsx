@@ -18,7 +18,6 @@ const SimpleEditor = (props: Props) => {
 
 	if (!initialDoc.current) {
 		initialDoc.current = getDocForHtmlString(initialHtmlString, editorSchema).toJSON();
-		console.log('Got initial doc', initialDoc.current);
 	}
 
 	const handleEdit = useCallback(

@@ -4,7 +4,7 @@ import { Checkbox } from '@blueprintjs/core';
 import { useDebounce } from 'use-debounce';
 
 import { renderLatexString } from 'client/utils/editor';
-import { NodeLabelMap, ReferenceableNodeType } from 'client/components/Editor/types';
+import { ReferenceableNodeType } from 'client/components/Editor/types';
 import { getCurrentNodeLabels } from 'client/components/Editor';
 
 import { EditorChangeObjectWithNode } from '../types';
