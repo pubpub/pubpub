@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useDebounce } from 'use-debounce';
+import React, { useCallback, useState } from 'react';
 import { Node } from 'prosemirror-model';
 
 import { GridWrapper } from 'components';
@@ -19,8 +18,6 @@ type Props = {
 
 const LayoutEditorText = (props: Props) => {
 	const { onChange, content, layoutIndex } = props;
-
-	const formattingWrapperRef = useRef<null | HTMLDivElement>(null);
 	const [editorChangeObject, setEditorChangeObject] = useState<EditorChangeObject>();
 
 	const handleEdit = useCallback(
@@ -31,11 +28,10 @@ const LayoutEditorText = (props: Props) => {
 	return (
 		<div className="layout-editor-text-component">
 			<div className="block-header">
-				<div className="formatting-wrapper" ref={formattingWrapperRef}>
+				<div className="formatting-wrapper">
 					<FormattingBar
 						editorChangeObject={editorChangeObject!}
 						buttons={buttons.layoutEditorButtonSet}
-						containerRef={formattingWrapperRef}
 					/>
 				</div>
 			</div>

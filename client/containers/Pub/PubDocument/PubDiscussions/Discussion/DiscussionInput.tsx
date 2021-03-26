@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AnchorButton, Button, Intent } from '@blueprintjs/core';
 
 import Editor, {
@@ -8,7 +8,7 @@ import Editor, {
 	convertLocalHighlightToDiscussion,
 	getLocalHighlightText,
 } from 'components/Editor';
-import { Avatar } from 'components';
+import { Avatar, MinimalEditor } from 'components';
 import { FormattingBar, buttons } from 'components/FormattingBar';
 import { usePageContext } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';
@@ -41,7 +41,6 @@ const DiscussionInput = (props: Props) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [didFocus, setDidFocus] = useState(false);
 	const [editorKey, setEditorKey] = useState(Date.now());
-	const discussionWrapperRef = useRef<null | HTMLDivElement>(null);
 	const isNewThread = !discussionData.number;
 
 	useEffect(() => {
@@ -157,12 +156,10 @@ const DiscussionInput = (props: Props) => {
 			)}
 			{isLoggedIn && (isNewThread || didFocus) && (
 				<div className="content-wrapper">
-					<div className="discussion-body-wrapper editable" ref={discussionWrapperRef}>
+					<div className="discussion-body-wrapper editable">
 						<FormattingBar
 							editorChangeObject={changeObject}
-							containerRef={discussionWrapperRef}
 							buttons={buttons.discussionButtonSet}
-							showBlockTypes={false}
 							isSmall
 						/>
 						<Editor

@@ -28,7 +28,7 @@ import {
 } from './controlComponents';
 import MediaButton from './FormattingBarMediaButton';
 import { positionNearSelection, positionNearLink } from './positioning';
-import { FormattingBarButtonData, FormattingBarPopoverCondition } from './types';
+import { FormattingBarButtonData, FormattingBarButtonPopoverCondition } from './types';
 
 const triggerOnClick = (changeObject) => {
 	const { latestDomEvent } = changeObject;
@@ -215,7 +215,7 @@ export const reference: FormattingBarButtonData = {
 		return true;
 	},
 	popover: {
-		condition: FormattingBarPopoverCondition.Disabled,
+		condition: FormattingBarButtonPopoverCondition.Disabled,
 		component: ControlsReferencePopover,
 	},
 };
@@ -267,8 +267,16 @@ export const media: FormattingBarButtonData = {
 	controls: nodeControls(ControlsMedia, ['image', 'video', 'audio', 'iframe']),
 };
 
+export const simpleMedia: FormattingBarButtonData = {
+	key: 'media',
+	title: 'Media',
+	icon: 'media',
+	component: MediaButton,
+	isMedia: true,
+};
+
 export const minimalButtonSet = [[strong, em, link, equation]];
-export const discussionButtonSet = [...minimalButtonSet, [media]];
+export const discussionButtonSet = [[strong, em, link], [simpleMedia]];
 export const inlineMenuButtonSet = [[heading1, heading2, strong, em, link]];
 
 export const fullButtonSet = [

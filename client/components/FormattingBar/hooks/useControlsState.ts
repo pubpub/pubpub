@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { EditorChangeObject, insertNodeIntoEditor } from 'components/Editor';
 
-import { FormattingBarButtonData } from '../types';
+import { FormattingBarButtonData, PopoverStyle } from '../types';
 import { positionNearSelection } from '../positioning';
 import { deepMap } from '../utils';
 import { useInteractionCount } from './useInteractionCount';
@@ -10,9 +10,9 @@ import { useCommandStates, WithCommandState } from './useCommandStates';
 
 type Options = {
 	buttons: FormattingBarButtonData[][];
-	containerRef?: React.RefObject<HTMLElement>;
+	positioningRootRef?: React.RefObject<HTMLElement>;
 	editorChangeObject: EditorChangeObject;
-	floatPopovers?: boolean;
+	popoverStyle: PopoverStyle;
 };
 
 type IntermediateState = {
@@ -68,8 +68,8 @@ const getButtonState = (
 		editorChangeObject: { view },
 	} = state;
 	const isDisabled = isButtonDisabled(button, state);
-	const isOpen = openedButton === button;
-	const isIndicated = indicatedButtons.includes(button);
+	const isOpen = openedButton?.key === button.key;
+	const isIndicated = indicatedButtons.some((b) => b.key === button.key);
 	const isActive = isButtonActive(button);
 	const isDetached = isOpen && controlsDetached;
 	return {
@@ -104,9 +104,10 @@ const getControlsPosition = (
 	openedButton: FormattingBarButtonData,
 	floatPopovers: boolean,
 	editorChangeObject: EditorChangeObject,
-	container: HTMLElement,
+	positioningRootRef?: React.RefObject<HTMLElement>,
 ) => {
 	if (openedButton) {
+		const container = positioningRootRef?.current ?? undefined;
 		const position = openedButton.controls?.position?.(editorChangeObject, container);
 		if (position) {
 			return position;
@@ -119,7 +120,7 @@ const getControlsPosition = (
 };
 
 export const useControlsState = (options: Options) => {
-	const { buttons, editorChangeObject, containerRef, floatPopovers = false } = options;
+	const { buttons, editorChangeObject, positioningRootRef, popoverStyle } = options;
 	const flatButtons = useMemo(() => buttons.reduce((a, b) => [...a, ...b], []), [buttons]);
 	const [openedButton, setOpenedButton] = useState<FormattingBarButtonData | null>(null);
 	const interactionCount = useInteractionCount(editorChangeObject.latestDomEvent);
@@ -141,6 +142,7 @@ export const useControlsState = (options: Options) => {
 	const indicatedButtonsString = indicatedButtons.map((button) => button.key).join('-');
 
 	const controlsComponent =
+		popoverStyle !== 'none' &&
 		openedButton &&
 		openedButton?.controls?.indicate(editorChangeObject) &&
 		openedButton?.controls?.show(editorChangeObject) &&
@@ -151,9 +153,9 @@ export const useControlsState = (options: Options) => {
 		openedButton &&
 		getControlsPosition(
 			openedButton,
-			floatPopovers,
+			popoverStyle === 'floating',
 			editorChangeObject,
-			containerRef!.current || document.body,
+			positioningRootRef,
 		);
 
 	useEffect(() => {

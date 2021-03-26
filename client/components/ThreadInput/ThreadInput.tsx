@@ -3,7 +3,6 @@ import { AnchorButton, Button, Intent } from '@blueprintjs/core';
 
 import { Avatar } from 'components';
 import Editor, { getText, getJSON } from 'components/Editor';
-import FormattingBarLegacy from 'components/FormattingBarLegacy/FormattingBar';
 import { usePageContext } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';
 
@@ -79,11 +78,11 @@ const ThreadInput = (props: Props) => {
 							/>
 							<div className="comment-title">Reply as {loginData.fullName}</div>
 							<div>
-								<FormattingBarLegacy
+								{/* <FormattingBarLegacy
 									editorChangeObject={changeObject}
 									hideBlocktypes={true}
 									hideExtraFormatting={true}
-								/>
+								/> */}
 							</div>
 						</div>
 						<div className="content">

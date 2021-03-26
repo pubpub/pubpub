@@ -34,7 +34,6 @@ const PubHeaderFormatting = (props: Props) => {
 			<FormattingBar
 				buttons={buttons.fullButtonSet}
 				editorChangeObject={props.collabData.editorChangeObject || {}}
-				containerRef={props.editorWrapperRef}
 				isFullScreenWidth={true}
 			/>
 			<div className="right-content">
