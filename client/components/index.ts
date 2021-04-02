@@ -22,7 +22,7 @@ export { default as Footer } from './Footer/Footer';
 export { default as FormattingBar } from './FormattingBar/FormattingBar';
 export { default as GridWrapper } from './GridWrapper/GridWrapper';
 export { default as Header } from './Header/Header';
-export { default as Icon } from './Icon/Icon';
+export { default as Icon, IconName } from './Icon/Icon';
 export { default as ImageCropper } from './ImageCropper/ImageCropper';
 export { default as ImageUpload } from './ImageUpload/ImageUpload';
 export { default as InputField } from './InputField/InputField';

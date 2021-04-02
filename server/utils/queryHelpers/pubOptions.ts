@@ -84,6 +84,7 @@ export default ({
 			'communityId',
 			'customPublishedAt',
 			'createdAt',
+			'updatedAt',
 		];
 		author = [];
 		thread = [];

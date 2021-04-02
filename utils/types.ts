@@ -210,10 +210,10 @@ export type Pub = {
 	crossrefDepositRecord?: CrossrefDepositRecord;
 	inboundEdges?: InboundEdge[];
 	outboundEdges?: OutboundEdge[];
-	pubEdgeListingDefaultsToCarousel: boolean;
-	pubEdgeDescriptionVisible: boolean;
-	nodeLabels: NodeLabelMap;
-	draftId: string;
+	pubEdgeListingDefaultsToCarousel?: boolean;
+	pubEdgeDescriptionVisible?: boolean;
+	nodeLabels?: NodeLabelMap;
+	draftId?: string;
 	draft?: Draft;
 };
 
