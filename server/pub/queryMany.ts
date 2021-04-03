@@ -154,3 +154,14 @@ export const getPubsById = (pubIds: string[], options: PubGetOptions = {}) => {
 		},
 	};
 };
+
+export const getManyPubs = async ({
+	query,
+	options = {},
+}: {
+	query: PubsQuery;
+	options?: PubGetOptions;
+}) => {
+	const pubIds = await queryPubIds(query);
+	return getPubsById(pubIds, options);
+};

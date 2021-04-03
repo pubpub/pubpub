@@ -3,12 +3,13 @@ import {
 	AdminDashboard,
 	CommunityCreate,
 	DashboardActivity,
+	DashboardCommunityOverview,
+	DashboardPubOverview,
 	DashboardCollectionLayout,
 	DashboardDiscussions,
 	DashboardEdges,
 	DashboardImpact,
 	DashboardMembers,
-	DashboardOverview,
 	DashboardReview,
 	DashboardReviews,
 	DashboardPages,
@@ -66,8 +67,12 @@ export default (viewData, locationData, chunkName) => {
 			ActiveComponent: DashboardMembers,
 			isDashboard: true,
 		},
-		DashboardOverview: {
-			ActiveComponent: DashboardOverview,
+		DashboardCommunityOverview: {
+			ActiveComponent: DashboardCommunityOverview,
+			isDashboard: true,
+		},
+		DashboardPubOverview: {
+			ActiveComponent: DashboardPubOverview,
 			isDashboard: true,
 		},
 		DashboardPages: {
