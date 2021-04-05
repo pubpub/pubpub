@@ -89,9 +89,17 @@ const LayoutEditorPubs = (props: Props) => {
 		[onChange],
 	);
 
-	const setPubIds = useCallback((nextPubIds: string[]) => onChange({ pubIds: nextPubIds }), [
-		onChange,
-	]);
+	const setPubIds = useCallback(
+		(nextPubIds: string[]) =>
+			onChange({
+				pubIds: nextPubIds,
+				limit:
+					typeof limit === 'number' && limit > 0
+						? Math.max(limit, nextPubIds.length)
+						: limit,
+			}),
+		[onChange, limit],
+	);
 
 	const setTitle = useCallback((title: string) => onChange({ title }), [onChange]);
 
