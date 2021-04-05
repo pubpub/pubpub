@@ -31,6 +31,7 @@ export type ManyPubsState = Record<QueryKey, QueryState>;
 export type ManyPubsOptions = {
 	query?: Omit<PubsQuery, 'communityId' | 'limit' | 'offset'>;
 	batchSize?: number;
+	isEager?: boolean;
 };
 
 export type ManyPubsReturnValues = {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
 import classNames from 'classnames';
 
 import { Icon, IconName } from 'client/components';
@@ -19,7 +19,7 @@ type Props = {
 	onClick?: React.MouseEventHandler<any>;
 };
 
-const OverviewRowSkeleton = (props: Props) => {
+const OverviewRowSkeleton = React.forwardRef((props: Props, ref: any) => {
 	const {
 		className,
 		leftIcon,
@@ -31,12 +31,28 @@ const OverviewRowSkeleton = (props: Props) => {
 		onClick,
 		href,
 	} = props;
+	const centerContainerRef = useRef<null | HTMLDivElement>(null);
+
+	const handleMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+		// Disable text selection on double-click of text-free areas
+		if (e.target === centerContainerRef.current) {
+			e.preventDefault();
+		}
+	}, []);
+
+	const handleClickTitle = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+		e.stopPropagation();
+	}, []);
+
 	return (
 		// This click handler is a convenience for mouse users; the same handler should be made
 		// available in the rightElement (e.g. to disclose a Collection row)
-		// eslint-disable-next-line jsx-a11y/no-static-element-interactions
+		// eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
 		<div
 			onClick={onClick}
+			ref={ref}
+			onMouseDown={handleMouseDown}
+			role="listitem"
 			className={classNames(
 				'overview-row-skeleton-component',
 				withBorder && 'with-border',
@@ -44,8 +60,8 @@ const OverviewRowSkeleton = (props: Props) => {
 			)}
 		>
 			<Icon icon={leftIcon} iconSize={iconSize} color={iconColor} />
-			<div className="center-container">
-				<a href={href} className="title">
+			<div className="center-container" ref={centerContainerRef}>
+				<a href={href} className="title" onClick={handleClickTitle}>
 					{title}
 				</a>
 				{byline && <div className="byline">{byline}</div>}
@@ -66,6 +82,6 @@ const OverviewRowSkeleton = (props: Props) => {
 			{rightElement}
 		</div>
 	);
-};
+});
 
 export default OverviewRowSkeleton;

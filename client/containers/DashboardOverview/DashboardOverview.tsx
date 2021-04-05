@@ -1,6 +1,6 @@
 import React from 'react';
 import { usePageContext } from 'utils/hooks';
-import CommunityOverview from './CommunityOverview/CommunityOverview';
+import CommunityOverview from './DashboardCommunityOverview';
 import CollectionOverview from './CollectionOverview/CollectionOverview';
 import PubOverview from './PubOverview/PubOverview';
 

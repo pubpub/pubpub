@@ -21,7 +21,7 @@ type Props = {
 
 const Icon = (props: Props) => {
 	const {
-		ariaHidden = false,
+		ariaHidden = true,
 		ariaLabel = '',
 		className,
 		color,

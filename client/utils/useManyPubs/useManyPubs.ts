@@ -28,7 +28,7 @@ const getQueryKey = (query: KeyedPubsQuery) => {
 };
 
 export const useManyPubs = (options: ManyPubsOptions): ManyPubsReturnValues => {
-	const { query: optionsQuery = {}, batchSize = 50 } = options;
+	const { query: optionsQuery = {}, batchSize = 50, isEager = true } = options;
 	const [manyPubsState, setManyPubsState] = useState<ManyPubsState>({});
 	const [pubsById, setPubsById] = useState<Record<string, Pub>>({});
 	const { communityData } = usePageContext();
@@ -79,13 +79,16 @@ export const useManyPubs = (options: ManyPubsOptions): ManyPubsReturnValues => {
 		const nextPubsById = { ...pubsById, ...newPubsById };
 		const resolvedPubs = pubIds.map((id) => nextPubsById[id]);
 		const resolvedPubsById = indexByProperty(resolvedPubs, 'id');
-
 		setState(getFinishedLoadingPubsState(nextState, query, resolvedPubsById, loadedAllPubs));
 		setPubsById(nextPubsById);
 	};
 
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	useEffect(() => void loadMorePubs(), []);
+	useEffect(() => {
+		if (isEager) {
+			loadMorePubs();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isEager]);
 
 	return {
 		currentQuery: {

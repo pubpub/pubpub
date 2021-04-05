@@ -201,7 +201,7 @@ export type Pub = {
 	communityId: string;
 	community?: Community;
 	discussions?: Discussion[];
-	attributions?: PubAttribution[];
+	attributions: PubAttribution[];
 	collectionPubs?: CollectionPub[];
 	exports?: Export[];
 	members?: Member[];

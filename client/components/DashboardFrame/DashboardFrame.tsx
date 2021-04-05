@@ -15,7 +15,7 @@ type Props = {
 };
 
 const DashboardFrame = (props: Props) => {
-	const { className = '', children, controls = null, details = null, icon, title } = props;
+	const { className, children, controls = null, details = null, icon, title } = props;
 	const { scopeData } = usePageContext();
 	const {
 		elements: { activeTargetType },

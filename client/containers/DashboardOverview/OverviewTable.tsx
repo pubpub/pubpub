@@ -66,7 +66,7 @@ const OverviewTable = (props: Props) => {
 
 	const filteredItems = [...filterCollections(), ...filterPubs()];
 	useSticky({
-		selector: '.top-sticky',
+		target: '.top-sticky',
 		offset: 141,
 	});
 	return (

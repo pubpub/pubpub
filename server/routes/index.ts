@@ -10,7 +10,7 @@ require('./dashboardDiscussions');
 require('./dashboardEdges');
 require('./dashboardImpact');
 require('./dashboardMembers');
-require('./dashboardOverview');
+require('./dashboardCommunityOverview');
 require('./dashboardPubOverview');
 require('./dashboardPage');
 require('./dashboardPages');

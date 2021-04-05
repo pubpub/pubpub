@@ -29,7 +29,7 @@ const getReleasedStateLabel = (pub: Pub) => {
 	const publishedDate = getPubPublishedDate(pub);
 	if (publishedDate) {
 		return {
-			label: <>Published {getDateLabel(publishedDate)}</>,
+			label: <>Published&nbsp;{getDateLabel(publishedDate)}</>,
 			icon: 'globe' as const,
 		};
 	}
