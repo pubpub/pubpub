@@ -30,10 +30,10 @@ const OverviewBlocks = (props: Props) => {
 		}, 0);
 	};
 	const types = [
-		{ type: 'collections', icon: 'collection' },
-		{ type: 'pubs', icon: 'pubDoc' },
-		{ type: 'discussions', icon: 'chat' },
-		{ type: 'reviews', icon: 'social-media' },
+		{ type: 'collections', icon: 'collection' as const },
+		{ type: 'pubs', icon: 'pubDoc' as const },
+		{ type: 'discussions', icon: 'chat' as const },
+		{ type: 'reviews', icon: 'social-media' as const },
 	];
 	return (
 		<div className="overview-blocks-component">

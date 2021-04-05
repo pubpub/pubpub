@@ -16,7 +16,7 @@ type Props = {
 	rightElement?: React.ReactNode;
 	iconLabelPairs: { icon: IconName; label: React.ReactNode }[];
 	withBorder?: boolean;
-	onClick?: (e: React.SyntheticEvent<MouseEvent>) => unknown;
+	onClick?: React.MouseEventHandler<any>;
 };
 
 const OverviewRowSkeleton = (props: Props) => {

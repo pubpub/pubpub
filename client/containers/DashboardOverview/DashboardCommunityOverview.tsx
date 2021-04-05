@@ -10,7 +10,8 @@ type Props = {
 	};
 };
 
-const DashboardCommunityOverview = () => {
+const DashboardCommunityOverview = (props: Props) => {
+	console.log(props);
 	return <DashboardFrame title="Overview">Hello there</DashboardFrame>;
 };
 

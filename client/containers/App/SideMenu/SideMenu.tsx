@@ -24,12 +24,12 @@ const SideMenu = () => {
 	const contentItems = [
 		{
 			title: 'Overview',
-			icon: 'home2',
+			icon: 'home2' as const,
 			href: getDashUrl({ collectionSlug, pubSlug }),
 		},
 		{
 			title: 'Pages',
-			icon: 'page-layout',
+			icon: 'page-layout' as const,
 			href: getDashUrl({
 				collectionSlug,
 				pubSlug,
@@ -40,7 +40,7 @@ const SideMenu = () => {
 		},
 		{
 			title: 'Layout',
-			icon: 'page-layout',
+			icon: 'page-layout' as const,
 			href: getDashUrl({
 				collectionSlug,
 				mode: 'layout',
@@ -50,7 +50,7 @@ const SideMenu = () => {
 		},
 		{
 			title: 'Reviews',
-			icon: 'social-media',
+			icon: 'social-media' as const,
 			count: activeCounts.reviewCount > 0 ? activeCounts.reviewCount : undefined,
 			href: getDashUrl({
 				collectionSlug,
@@ -60,7 +60,7 @@ const SideMenu = () => {
 		},
 		{
 			title: 'Connections',
-			icon: 'layout-auto',
+			icon: 'layout-auto' as const,
 			href: getDashUrl({
 				collectionSlug,
 				pubSlug,
@@ -70,7 +70,7 @@ const SideMenu = () => {
 		},
 		{
 			title: 'Impact',
-			icon: 'dashboard',
+			icon: 'dashboard' as const,
 			href: getDashUrl({
 				collectionSlug,
 				pubSlug,
@@ -80,7 +80,7 @@ const SideMenu = () => {
 		},
 		{
 			title: 'Members',
-			icon: 'people',
+			icon: 'people' as const,
 			href: getDashUrl({
 				collectionSlug,
 				pubSlug,
@@ -90,7 +90,7 @@ const SideMenu = () => {
 		},
 		{
 			title: 'Settings',
-			icon: 'cog',
+			icon: 'cog' as const,
 			href: getDashUrl({
 				collectionSlug,
 				pubSlug,
@@ -127,15 +127,7 @@ const SideMenu = () => {
 						const active = mode === itemMode;
 						return (
 							<div key={item.title} className={classNames({ menu: true, active })}>
-								<a
-									href={item.href}
-									className={classNames({
-										'content-title': true,
-										// @ts-expect-error ts-migrate(2339) FIXME: Property 'children' does not exist on type '{ titl... Remove this comment to see the full error message
-										'has-children': item.children,
-										active,
-									})}
-								>
+								<a href={item.href} className="content-title">
 									<Icon className="side-icon" icon={item.icon} />
 									<span className="side-text">{item.title}</span>
 									{item.count !== undefined && (
@@ -144,25 +136,6 @@ const SideMenu = () => {
 										</span>
 									)}
 								</a>
-								{/* active &&
-									item.children &&
-									item.children.map((child) => {
-										const childActive =
-											child.title.toLowerCase().replace(/ /gi, '-') ===
-											locationData.params.submode;
-										return (
-											<a
-												key={child.title}
-												href={child.href}
-												className={classNames({
-													child: true,
-													active: childActive,
-												})}
-											>
-												{child.title}
-											</a>
-										);
-									}) */}
 							</div>
 						);
 					})}

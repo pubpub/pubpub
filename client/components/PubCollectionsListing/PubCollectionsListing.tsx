@@ -109,7 +109,7 @@ const PubCollectionsListing = (props: Props) => {
 		const inner = (
 			<>
 				<Icon
-					icon={getIconForCollectionKind(collection.kind) as string}
+					icon={getIconForCollectionKind(collection.kind)!}
 					className="collection-kind-icon"
 				/>
 				{linkToCollection ? (

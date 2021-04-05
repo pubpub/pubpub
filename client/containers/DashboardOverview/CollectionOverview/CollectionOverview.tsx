@@ -32,7 +32,7 @@ const CollectionOverview = (props: Props) => {
 	const { scopeData } = usePageContext();
 	const { activeCollection } = scopeData.elements;
 	const { canManage } = scopeData.activePermissions;
-	const collectionSchema = getSchemaForKind(activeCollection.kind);
+	const collectionSchema = getSchemaForKind(activeCollection.kind)!;
 	const label = capitalize(collectionSchema?.label.singular);
 
 	const { collection, updateCollection } = useCollectionState();
@@ -68,7 +68,7 @@ const CollectionOverview = (props: Props) => {
 		<DashboardFrame
 			className="collection-overview-component"
 			title="Overview"
-			icon={collectionSchema ? collectionSchema.bpDisplayIcon : ''}
+			icon={collectionSchema.bpDisplayIcon}
 			details={
 				<span>
 					This collection is a {label}. It was created on{' '}
@@ -90,7 +90,6 @@ const CollectionOverview = (props: Props) => {
 			<OverviewTable
 				title="Pubs in this Collection"
 				generateLabel={(item) => {
-					// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 					const contextHint = collectionSchema.contextHints.find(
 						(ch) => ch.value === item.contextHint,
 					);
@@ -104,7 +103,6 @@ const CollectionOverview = (props: Props) => {
 					<NonIdealState
 						// @ts-expect-error ts-migrate(2322) FIXME: Type 'string' is not assignable to type 'false | E... Remove this comment to see the full error message
 						icon={collectionSchema.bpDisplayIcon}
-						// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 						title={`This ${collectionSchema.label.singular} doesn't contain any Pubs yet!`}
 						description="Choose 'Add Pubs' from above to add some."
 					/>

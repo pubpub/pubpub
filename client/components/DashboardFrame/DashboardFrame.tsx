@@ -1,7 +1,7 @@
 import React from 'react';
 import { usePageContext } from 'utils/hooks';
 
-import { Icon } from 'components';
+import { Icon, IconName } from 'components';
 
 require('./dashboardFrame.scss');
 
@@ -10,7 +10,7 @@ type Props = {
 	className?: string;
 	controls?: React.ReactNode;
 	details?: React.ReactNode;
-	icon?: string;
+	icon?: IconName;
 	title?: React.ReactNode;
 };
 
