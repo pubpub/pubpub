@@ -5,7 +5,12 @@ import { usePageContext } from 'utils/hooks';
 import { indexByProperty } from 'utils/arrays';
 import { apiFetch } from 'client/utils/apiFetch';
 
-import { getStartLoadingPubsState, getFinishedLoadingPubsState, initialQueryState } from './state';
+import {
+	getStartLoadingPubsState,
+	getFinishedLoadingPubsState,
+	initialQueryState,
+	getInitialPubsState,
+} from './state';
 import {
 	KeyedPubsQuery,
 	ManyPubsState,
@@ -28,9 +33,7 @@ const getQueryKey = (query: KeyedPubsQuery) => {
 };
 
 export const useManyPubs = (options: ManyPubsOptions): ManyPubsReturnValues => {
-	const { query: optionsQuery = {}, batchSize = 50, isEager = true } = options;
-	const [manyPubsState, setManyPubsState] = useState<ManyPubsState>({});
-	const [pubsById, setPubsById] = useState<Record<string, Pub>>({});
+	const { query: optionsQuery = {}, batchSize = 50, isEager = true, initialPubs = [] } = options;
 	const { communityData } = usePageContext();
 
 	const keyQuery: KeyedPubsQuery = {
@@ -40,6 +43,20 @@ export const useManyPubs = (options: ManyPubsOptions): ManyPubsReturnValues => {
 	};
 
 	const queryKey = getQueryKey(keyQuery);
+
+	const [pubsById, setPubsById] = useState<Record<string, Pub>>(() =>
+		indexByProperty(initialPubs, 'id'),
+	);
+
+	const [manyPubsState, setManyPubsState] = useState<ManyPubsState>(() => {
+		if (Object.keys(pubsById).length > 0) {
+			return {
+				[queryKey]: getInitialPubsState(keyQuery, pubsById),
+			};
+		}
+		return {};
+	});
+
 	const state = manyPubsState[queryKey] || initialQueryState;
 
 	const setState = useCallback(
@@ -84,11 +101,11 @@ export const useManyPubs = (options: ManyPubsOptions): ManyPubsReturnValues => {
 	};
 
 	useEffect(() => {
-		if (isEager) {
+		if (isEager && state.offset === 0) {
 			loadMorePubs();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isEager]);
+	}, [isEager, queryKey]);
 
 	return {
 		currentQuery: {

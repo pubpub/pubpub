@@ -26,10 +26,14 @@ export type QueryState = {
 };
 
 type QueryKey = string;
+
+type PartialQuery = Omit<PubsQuery, 'communityId' | 'limit' | 'offset'>;
+
 export type ManyPubsState = Record<QueryKey, QueryState>;
 
 export type ManyPubsOptions = {
-	query?: Omit<PubsQuery, 'communityId' | 'limit' | 'offset'>;
+	initialPubs?: Pub[];
+	query?: PartialQuery;
 	batchSize?: number;
 	isEager?: boolean;
 };

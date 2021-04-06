@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import classNames from 'classnames';
-import { Button, Spinner } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 
 import { Icon } from 'client/components';
 import { getDashUrl } from 'utils/dashboard';
@@ -49,22 +49,19 @@ const CollectionOverviewRow = React.forwardRef((props: Props, ref: any) => {
 		[onToggleOpen],
 	);
 
-	const innerIcon = isLoading ? (
-		<Spinner size={iconSize} />
-	) : (
-		<Icon
-			iconSize={iconSize}
-			icon={isOpen ? 'collapse-all' : 'expand-all'}
-			color={communityData.accentColorDark}
-		/>
-	);
-
 	const toggleButton = (
 		<Button
 			aria-label={isOpen ? 'collapse Collection' : 'expand Collection'}
 			onClick={onButtonClick}
 			minimal
-			icon={innerIcon}
+			icon={
+				<Icon
+					iconSize={iconSize}
+					icon={isOpen ? 'collapse-all' : 'expand-all'}
+					color={communityData.accentColorDark}
+				/>
+			}
+			loading={isLoading}
 		/>
 	);
 

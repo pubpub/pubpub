@@ -31,7 +31,7 @@ const ExpandableCollectionOverviewRow = (props: Props) => {
 	]);
 
 	const {
-		currentQuery: { pubs, loadMorePubs, hasLoadedAllPubs },
+		currentQuery: { pubs, loadMorePubs },
 		allQueries: { isLoading },
 	} = useManyPubs({
 		isEager: false,
