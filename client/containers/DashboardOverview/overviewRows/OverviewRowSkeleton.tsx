@@ -2,8 +2,9 @@ import React, { useCallback, useRef } from 'react';
 import classNames from 'classnames';
 
 import { Icon, IconName } from 'client/components';
+import { usePageContext } from 'utils/hooks';
 
-import { iconColor, iconSize } from './constants';
+import { iconSize } from './constants';
 
 require('./overviewRowSkeleton.scss');
 
@@ -16,6 +17,7 @@ type Props = {
 	rightElement?: React.ReactNode;
 	iconLabelPairs: { icon: IconName; label: React.ReactNode }[];
 	withBorder?: boolean;
+	withHoverEffect?: boolean;
 	onClick?: React.MouseEventHandler<any>;
 };
 
@@ -28,9 +30,12 @@ const OverviewRowSkeleton = React.forwardRef((props: Props, ref: any) => {
 		byline,
 		rightElement = null,
 		withBorder = true,
+		withHoverEffect = false,
 		onClick,
 		href,
 	} = props;
+
+	const { communityData } = usePageContext();
 	const centerContainerRef = useRef<null | HTMLDivElement>(null);
 
 	const handleMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -53,13 +58,15 @@ const OverviewRowSkeleton = React.forwardRef((props: Props, ref: any) => {
 			ref={ref}
 			onMouseDown={handleMouseDown}
 			role="listitem"
+			style={{ color: communityData.accentColorDark }}
 			className={classNames(
 				'overview-row-skeleton-component',
+				withHoverEffect && 'with-hover-effect',
 				withBorder && 'with-border',
 				className,
 			)}
 		>
-			<Icon icon={leftIcon} iconSize={iconSize} color={iconColor} />
+			<Icon icon={leftIcon} className="left-icon" iconSize={iconSize} />
 			<div className="center-container" ref={centerContainerRef}>
 				<a href={href} className="title" onClick={handleClickTitle}>
 					{title}

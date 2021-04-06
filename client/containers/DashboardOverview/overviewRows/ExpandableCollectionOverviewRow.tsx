@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, useEffect, useLayoutEffect, useCallback } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import Color from 'color';
 
@@ -10,6 +10,8 @@ import { usePageContext } from 'utils/hooks';
 import CollectionOverviewRow from './CollectionOverviewRow';
 import OverviewRows from './OverviewRows';
 import PubOverviewRow from './PubOverviewRow';
+import LoadMorePubsRow from './LoadMorePubsRow';
+import SpecialRow from './SpecialRow';
 
 require('./expandableCollectionOverviewRow.scss');
 
@@ -17,7 +19,8 @@ type Props = {
 	collection: Collection;
 };
 
-const breadcrumbsOffset = 85 + 56;
+// Global header + breadcrumbs - 1px top border of OverviewRowSkeleton
+const breadcrumbsOffset = 56 + 85 - 1;
 
 const ExpandableCollectionOverviewRow = (props: Props) => {
 	const { collection } = props;
@@ -31,7 +34,7 @@ const ExpandableCollectionOverviewRow = (props: Props) => {
 	]);
 
 	const {
-		currentQuery: { pubs, loadMorePubs },
+		currentQuery: { pubs, loadMorePubs, hasLoadedAllPubs },
 		allQueries: { isLoading },
 	} = useManyPubs({
 		isEager: false,
@@ -84,6 +87,12 @@ const ExpandableCollectionOverviewRow = (props: Props) => {
 					{pubs.map((pub) => (
 						<PubOverviewRow pub={pub} key={pub.id} />
 					))}
+					{!hasLoadedAllPubs && pubs.length > 0 && (
+						<LoadMorePubsRow isLoading={isLoading} onClick={loadMorePubs} isDark />
+					)}
+					{hasLoadedAllPubs && pubs.length === 0 && (
+						<SpecialRow isDark>No Pubs in this Collection yet.</SpecialRow>
+					)}
 				</OverviewRows>
 			)}
 		</>

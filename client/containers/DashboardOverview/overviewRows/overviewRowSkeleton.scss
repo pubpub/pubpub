@@ -7,16 +7,33 @@ $mobile-viewport-cutoff: 750px;
 }
 
 .overview-row-skeleton-component {
+    position: relative;
     display: flex;
     align-items: center;
     padding: 10px 25px;
     box-sizing: border-box;
+    margin-top: -1px;
 
     &.with-border {
-        border-bottom: 1px solid #ddd;
+        border: 1px solid #ddd;
+        border-left: none;
+        border-right: none;
+    }
+
+    &.with-hover-effect:hover {
+        z-index: 1;
+        border-color: currentColor;
+        .left-icon {
+            color: currentColor;
+        }
+    }
+
+    .left-icon {
+        color: #bdbdbd;
     }
 
     .center-container {
+        color: black;
         display: flex;
         flex-direction: column;
         align-items: flex-start;

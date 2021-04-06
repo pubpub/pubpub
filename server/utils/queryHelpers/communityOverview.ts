@@ -26,7 +26,7 @@ const getPubs = async (initialData: InitialData, limit: number): Promise<Sanitiz
 		query: {
 			communityId: communityData.id,
 			limit,
-			ordering: { field: 'updatedDate', direction: 'DESC' },
+			ordering: { field: 'title', direction: 'ASC' },
 		},
 	});
 	return result.sanitize(initialData);

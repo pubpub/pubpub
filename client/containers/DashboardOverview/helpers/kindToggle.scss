@@ -1,0 +1,26 @@
+.kind-toggle-component[type='checkbox'] {
+    cursor: pointer;
+    display: flex;
+    user-select: none;
+    align-items: center;
+    border-radius: 2px;
+    padding: 4px 8px;
+
+    .bp3-icon {
+        margin-right: 4px;
+    }
+
+    &[aria-checked='true'] {
+        .count {
+            color: #747474;
+        }
+    }
+
+    &[aria-checked='false'] {
+        color: #aaa;
+    }
+
+    &:hover {
+        background: rgba(black, 0.05);
+    }
+}

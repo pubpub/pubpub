@@ -1,38 +1,76 @@
 import React, { useMemo, useState } from 'react';
+import { NonIdealState } from '@blueprintjs/core';
 
 import { Collection, Pub, DefinitelyHas } from 'utils/types';
 import { useManyPubs } from 'client/utils/useManyPubs';
-
 import { fuzzyMatchCollection } from 'utils/fuzzyMatch';
-import { PubOverviewRow, ExpandableCollectionOverviewRow, OverviewRows } from '../overviewRows';
-import OverviewSearchGroup from '../OverviewSearchGroup';
+
+import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
+import {
+	PubOverviewRow,
+	ExpandableCollectionOverviewRow,
+	OverviewRows,
+	LoadMorePubsRow,
+	SpecialRow,
+} from '../overviewRows';
+import { KindToggle, OverviewSearchGroup } from '../helpers';
+
+require('./communityItems.scss');
 
 type Props = {
 	collections: Collection[];
 	initialPubs: DefinitelyHas<Pub, 'attributions'>[];
 };
 
-const CommunityItems = (props: Props) => {
-	const { collections, initialPubs } = props;
-	const [searchTerm, setSearchTerm] = useState('');
+const getDocumentElement = () => {
+	if (typeof document !== 'undefined') {
+		return document.documentElement;
+	}
+	return null;
+};
 
-	const matchingCollections = useMemo(
-		() => collections.filter((collection) => fuzzyMatchCollection(collection, searchTerm)),
-		[collections, searchTerm],
+const getSearchPlaceholderText = (showCollections: boolean, showPubs: boolean) => {
+	if (showCollections && showPubs) {
+		return 'Search Collections and Pubs';
+	}
+	if (showCollections) {
+		return 'Search Collections';
+	}
+	return 'Search Pubs';
+};
+
+const CommunityItems = (props: Props) => {
+	const { collections: allCollections, initialPubs } = props;
+	const [searchTerm, setSearchTerm] = useState('');
+	const [showPubs, setShowPubs] = useState(true);
+	const [showCollections, setShowCollections] = useState(true);
+
+	const collections = useMemo(
+		() => allCollections.filter((collection) => fuzzyMatchCollection(collection, searchTerm)),
+		[allCollections, searchTerm],
 	);
 
 	const {
-		currentQuery: { pubs, isLoading },
+		currentQuery: { pubs, isLoading, hasLoadedAllPubs: clientHasLoadedAllPubs, loadMorePubs },
 	} = useManyPubs({
 		isEager: !!searchTerm,
 		initialPubs,
+		batchSize: 200,
 		query: {
 			term: searchTerm,
+			ordering: { field: 'title', direction: 'ASC' },
 		},
+	});
+	const hasLoadedAllPubs = clientHasLoadedAllPubs || initialPubs.length === 0;
+
+	useInfiniteScroll({
+		enabled: !isLoading && !hasLoadedAllPubs,
+		element: getDocumentElement(),
+		onRequestMoreItems: loadMorePubs,
 	});
 
 	const renderCollections = () => {
-		return matchingCollections.map((collection) => (
+		return collections.map((collection) => (
 			<ExpandableCollectionOverviewRow collection={collection} key={collection.id} />
 		));
 	};
@@ -41,19 +79,68 @@ const CommunityItems = (props: Props) => {
 		return pubs.map((pub) => <PubOverviewRow pub={pub} key={pub.id} />);
 	};
 
+	const renderEmptyState = () => {
+		if (collections.length === 0) {
+			if (initialPubs.length === 0) {
+				return (
+					<NonIdealState
+						icon="clean"
+						title="This Community looks brand new!"
+						description="Try creating a Pub or Collection from above."
+					/>
+				);
+			}
+			if (pubs.length === 0 && clientHasLoadedAllPubs) {
+				if (searchTerm.length > 0) {
+					return <SpecialRow>No matching Pubs or Collections.</SpecialRow>;
+				}
+			}
+		}
+		return null;
+	};
+
 	return (
-		<>
+		<div className="community-items-component">
 			<OverviewSearchGroup
-				isLoading={isLoading}
-				placeholder="Search Pubs and Collections"
-				onUpdateSearchTerm={(term) => term === '' && setSearchTerm(term)}
+				placeholder={getSearchPlaceholderText(showCollections, showPubs)}
+				onUpdateSearchTerm={(t) => t === '' && setSearchTerm(t)}
 				onCommitSearchTerm={setSearchTerm}
+				rightControls={
+					<>
+						<KindToggle
+							selected={showCollections}
+							onSelect={() => {
+								setShowCollections(!showCollections);
+								if (showCollections && !showPubs) {
+									setShowPubs(true);
+								}
+							}}
+							icon="collection"
+							label="Collections"
+							count={collections.length}
+						/>
+						<KindToggle
+							selected={showPubs}
+							onSelect={() => {
+								setShowPubs(!showPubs);
+								if (showPubs && !showCollections) {
+									setShowCollections(true);
+								}
+							}}
+							icon="pubDoc"
+							label="Pubs"
+							count={hasLoadedAllPubs ? pubs.length : `${pubs.length}+`}
+						/>
+					</>
+				}
 			/>
 			<OverviewRows>
-				{renderCollections()}
-				{renderPubs()}
+				{showCollections && renderCollections()}
+				{showPubs && renderPubs()}
+				{!hasLoadedAllPubs && <LoadMorePubsRow isLoading />}
+				{renderEmptyState()}
 			</OverviewRows>
-		</>
+		</div>
 	);
 };
 

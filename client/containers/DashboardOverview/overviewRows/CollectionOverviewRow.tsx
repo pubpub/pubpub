@@ -73,6 +73,7 @@ const CollectionOverviewRow = React.forwardRef((props: Props, ref: any) => {
 			leftIcon="collection"
 			href={getDashUrl({ collectionSlug: slug })}
 			iconLabelPairs={[getPublicStateLabel(collection)]}
+			withHoverEffect={!isOpen || isLoading}
 			rightElement={toggleButton}
 			ref={ref}
 		/>

@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
 import classNames from 'classnames';
-import { Spinner } from '@blueprintjs/core';
 
 import { Icon } from 'components';
 
@@ -9,14 +8,14 @@ require('./overviewSearchGroup.scss');
 type SearchTermCallback = (q: string) => unknown;
 
 type Props = {
-	isLoading?: boolean;
 	placeholder: string;
 	onUpdateSearchTerm?: SearchTermCallback;
 	onCommitSearchTerm?: SearchTermCallback;
+	rightControls: React.ReactNode;
 };
 
 const OverviewSearchGroup = (props: Props) => {
-	const { isLoading, placeholder, onCommitSearchTerm, onUpdateSearchTerm } = props;
+	const { placeholder, onCommitSearchTerm, onUpdateSearchTerm, rightControls } = props;
 	const [isSearchFocused, setIsSearchFocused] = useState(false);
 
 	const handleChange = useCallback(
@@ -46,10 +45,7 @@ const OverviewSearchGroup = (props: Props) => {
 				isSearchFocused && 'search-focused',
 			)}
 		>
-			<div className="left-element">
-				{!isLoading && <Icon icon="search" className="search-icon" iconSize={16} />}
-				{isLoading && <Spinner size={18} />}
-			</div>
+			<Icon icon="search" className="search-icon" iconSize={16} />
 			<input
 				placeholder={placeholder}
 				onFocus={() => setIsSearchFocused(true)}
@@ -57,6 +53,7 @@ const OverviewSearchGroup = (props: Props) => {
 				onChange={handleChange}
 				onKeyDown={handleKeyDown}
 			/>
+			{rightControls && <div className="right-controls">{rightControls}</div>}
 		</div>
 	);
 };

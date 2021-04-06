@@ -80,7 +80,9 @@ const createOrderLimitOffset = (query: PubsQuery) => {
 		if (ordering) {
 			const { field, direction } = ordering;
 			const rawQueryString =
-				direction.toLowerCase() === 'asc' ? '?? asc nulls last' : '?? desc nulls last';
+				direction.toLowerCase() === 'asc'
+					? '?? collate "C" asc nulls last'
+					: '?? collate "C" desc nulls last';
 			builder.orderByRaw(rawQueryString, [field]);
 		}
 		if (typeof limit === 'number') {

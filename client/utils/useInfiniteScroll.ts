@@ -8,7 +8,7 @@ type Options = {
 };
 
 const isScrolledToBottom = (element: HTMLElement, tolerance: number) => {
-	return element.scrollHeight - element.scrollTop + tolerance <= element.clientHeight;
+	return element.scrollHeight - element.scrollTop - tolerance <= element.clientHeight;
 };
 
 export const useInfiniteScroll = (options: Options) => {
@@ -22,8 +22,9 @@ export const useInfiniteScroll = (options: Options) => {
 				}
 			};
 			measureElement();
-			element.addEventListener('scroll', measureElement);
-			return () => element.removeEventListener('scroll', measureElement);
+			const target = element === document.documentElement ? window : element;
+			target.addEventListener('scroll', measureElement);
+			return () => target.removeEventListener('scroll', measureElement);
 		}
 		return () => {};
 	}, [element, enabled, scrollTolerance, onRequestMoreItems]);

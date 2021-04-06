@@ -26,7 +26,7 @@ export const getFinishedLoadingPubsState = (
 	state: QueryState,
 	query: KeyedPubsQuery,
 	newPubsById: Record<string, Pub>,
-	hasLoadedAllPubs: boolean,
+	hasLoadedAllPubs: boolean = false,
 ): QueryState => {
 	const { orderedPubs } = state;
 	const { ordering, scopedCollectionId } = query;
@@ -53,5 +53,9 @@ export const getInitialPubsState = (
 	initialQuery: KeyedPubsQuery,
 	initialPubs: Record<string, Pub>,
 ) => {
-	return getFinishedLoadingPubsState(initialQueryState, initialQuery, initialPubs, false);
+	return getFinishedLoadingPubsState(
+		{ ...initialQueryState, offset: Object.keys(initialPubs).length },
+		initialQuery,
+		initialPubs,
+	);
 };
