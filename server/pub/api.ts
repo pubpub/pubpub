@@ -52,9 +52,11 @@ app.post(
 		const loadedAllPubs = limit && limit > pubIds.length;
 		const idsToFetch = pubIds.filter((id) => !alreadyFetchedPubIds.includes(id));
 		const pubs = await getPubsById(idsToFetch).sanitize(initialData);
-		return res
-			.status(200)
-			.json({ pubIds, pubsById: indexByProperty(pubs, 'id'), loadedAllPubs });
+		return res.status(200).json({
+			pubIds: pubIds.filter((id) => !!pubs[id]),
+			pubsById: indexByProperty(pubs, 'id'),
+			loadedAllPubs,
+		});
 	}),
 );
 
