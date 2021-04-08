@@ -4,6 +4,7 @@ import {
 	CommunityCreate,
 	DashboardActivity,
 	DashboardCommunityOverview,
+	DashboardCollectionOverview,
 	DashboardPubOverview,
 	DashboardCollectionLayout,
 	DashboardDiscussions,
@@ -69,6 +70,10 @@ export default (viewData, locationData, chunkName) => {
 		},
 		DashboardCommunityOverview: {
 			ActiveComponent: DashboardCommunityOverview,
+			isDashboard: true,
+		},
+		DashboardCollectionOverview: {
+			ActiveComponent: DashboardCollectionOverview,
 			isDashboard: true,
 		},
 		DashboardPubOverview: {

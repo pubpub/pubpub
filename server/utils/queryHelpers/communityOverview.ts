@@ -20,7 +20,7 @@ const getCollections = async (initialData: InitialData): Promise<CollectionType>
 		.filter((x) => x);
 };
 
-const getPubs = async (initialData: InitialData, limit: number): Promise<SanitizedPubData> => {
+const getPubs = async (initialData: InitialData, limit: number): Promise<SanitizedPubData[]> => {
 	const { communityData } = initialData;
 	const result = await getManyPubs({
 		query: {
@@ -41,5 +41,6 @@ export const getCommunityOverview = async (initialData: InitialData, options: Op
 	return {
 		pubs,
 		collections,
+		includesAllPubs: pubs.length < loadPubs,
 	};
 };

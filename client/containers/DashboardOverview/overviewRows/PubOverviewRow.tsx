@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import TimeAgo from 'react-timeago';
 
 import { DefinitelyHas, Pub as BasePub } from 'utils/types';
@@ -12,6 +13,9 @@ import OverviewRowSkeleton from './OverviewRowSkeleton';
 type Pub = DefinitelyHas<BasePub, 'attributions'>;
 
 type Props = {
+	leftIconElement?: React.ReactNode;
+	rightElement?: React.ReactNode;
+	className?: string;
 	pub: Pub;
 };
 
@@ -40,15 +44,16 @@ const getReleasedStateLabel = (pub: Pub) => {
 };
 
 const PubOverviewRow = (props: Props) => {
-	const { pub } = props;
+	const { pub, className, leftIconElement = null, rightElement } = props;
 	return (
 		<OverviewRowSkeleton
-			className="pub-overview-row-component"
+			className={classNames('pub-overview-row-component', className)}
 			href={getDashUrl({ pubSlug: pub.slug })}
 			title={pub.title}
 			byline={<PubByline pubData={pub} linkToUsers={false} truncateAt={8} />}
 			iconLabelPairs={[getReleasedStateLabel(pub)]}
-			leftIcon="pubDoc"
+			leftIcon={leftIconElement || 'pubDoc'}
+			rightElement={rightElement}
 		/>
 	);
 };

@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { NonIdealState } from '@blueprintjs/core';
 
-import { Collection, Pub, DefinitelyHas } from 'utils/types';
+import { Collection, Pub } from 'utils/types';
 import { useManyPubs } from 'client/utils/useManyPubs';
 import { fuzzyMatchCollection } from 'utils/fuzzyMatch';
 
@@ -19,14 +19,8 @@ require('./communityItems.scss');
 
 type Props = {
 	collections: Collection[];
-	initialPubs: DefinitelyHas<Pub, 'attributions'>[];
-};
-
-const getDocumentElement = () => {
-	if (typeof document !== 'undefined') {
-		return document.documentElement;
-	}
-	return null;
+	initialPubs: Pub[];
+	initiallyLoadedAllPubs: boolean;
 };
 
 const getSearchPlaceholderText = (showCollections: boolean, showPubs: boolean) => {
@@ -40,7 +34,7 @@ const getSearchPlaceholderText = (showCollections: boolean, showPubs: boolean) =
 };
 
 const CommunityItems = (props: Props) => {
-	const { collections: allCollections, initialPubs } = props;
+	const { collections: allCollections, initialPubs, initiallyLoadedAllPubs } = props;
 	const [searchTerm, setSearchTerm] = useState('');
 	const [showPubs, setShowPubs] = useState(true);
 	const [showCollections, setShowCollections] = useState(true);
@@ -55,17 +49,18 @@ const CommunityItems = (props: Props) => {
 	} = useManyPubs({
 		isEager: !!searchTerm,
 		initialPubs,
+		initiallyLoadedAllPubs,
 		batchSize: 200,
 		query: {
 			term: searchTerm,
 			ordering: { field: 'title', direction: 'ASC' },
 		},
 	});
-	const hasLoadedAllPubs = clientHasLoadedAllPubs || initialPubs.length === 0;
+	const hasLoadedAllPubs = clientHasLoadedAllPubs || initiallyLoadedAllPubs;
 
 	useInfiniteScroll({
 		enabled: !isLoading && !hasLoadedAllPubs,
-		element: getDocumentElement(),
+		useDocumentElement: true,
 		onRequestMoreItems: loadMorePubs,
 	});
 

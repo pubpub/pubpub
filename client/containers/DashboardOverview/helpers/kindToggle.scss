@@ -1,3 +1,5 @@
+@import '../overviewStyles.scss';
+
 .kind-toggle-component[type='checkbox'] {
     cursor: pointer;
     display: flex;
@@ -12,12 +14,12 @@
 
     &[aria-checked='true'] {
         .count {
-            color: #747474;
+            color: $dark-grey;
         }
     }
 
     &[aria-checked='false'] {
-        color: #aaa;
+        color: lighten($dark-grey, 20%);
     }
 
     &:hover {

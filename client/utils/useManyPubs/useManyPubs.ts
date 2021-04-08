@@ -32,9 +32,19 @@ const getQueryKey = (query: KeyedPubsQuery) => {
 	return JSON.stringify({ term, scopedCollectionId, field, direction });
 };
 
-export const useManyPubs = (options: ManyPubsOptions): ManyPubsReturnValues => {
-	const { query: optionsQuery = {}, batchSize = 50, isEager = true, initialPubs = [] } = options;
+export const useManyPubs = <P extends Pub = Pub>(
+	options: ManyPubsOptions,
+): ManyPubsReturnValues<P> => {
+	const {
+		query: optionsQuery = {},
+		pubOptions: initialPubOptions = {},
+		batchSize = 50,
+		isEager = true,
+		initialPubs = [],
+		initiallyLoadedAllPubs = false,
+	} = options;
 	const { communityData } = usePageContext();
+	const [pubOptions] = useState(initialPubOptions);
 
 	const keyQuery: KeyedPubsQuery = {
 		term: optionsQuery.term,
@@ -51,7 +61,7 @@ export const useManyPubs = (options: ManyPubsOptions): ManyPubsReturnValues => {
 	const [manyPubsState, setManyPubsState] = useState<ManyPubsState>(() => {
 		if (Object.keys(pubsById).length > 0) {
 			return {
-				[queryKey]: getInitialPubsState(keyQuery, pubsById),
+				[queryKey]: getInitialPubsState(keyQuery, pubsById, initiallyLoadedAllPubs),
 			};
 		}
 		return {};
@@ -89,6 +99,7 @@ export const useManyPubs = (options: ManyPubsOptions): ManyPubsReturnValues => {
 
 		const result: ManyPubsApiResult = await apiFetch.post('/api/pubs/many', {
 			query,
+			pubOptions,
 			alreadyFetchedPubIds: Object.keys(pubsById),
 		});
 
@@ -112,7 +123,7 @@ export const useManyPubs = (options: ManyPubsOptions): ManyPubsReturnValues => {
 			loadMorePubs,
 			isLoading: state.isLoading,
 			hasLoadedAllPubs: state.hasLoadedAllPubs,
-			pubs: state.orderedPubs.pubsInOrder,
+			pubs: state.orderedPubs.pubsInOrder as P[],
 		},
 		allQueries: {
 			isLoading: Object.values(manyPubsState).some((s) => s.isLoading),

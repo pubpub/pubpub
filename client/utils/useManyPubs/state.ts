@@ -52,9 +52,14 @@ export const getFinishedLoadingPubsState = (
 export const getInitialPubsState = (
 	initialQuery: KeyedPubsQuery,
 	initialPubs: Record<string, Pub>,
+	initiallyLoadedAllPubs: boolean,
 ) => {
 	return getFinishedLoadingPubsState(
-		{ ...initialQueryState, offset: Object.keys(initialPubs).length },
+		{
+			...initialQueryState,
+			offset: Object.keys(initialPubs).length,
+			hasLoadedAllPubs: initiallyLoadedAllPubs,
+		},
 		initialQuery,
 		initialPubs,
 	);

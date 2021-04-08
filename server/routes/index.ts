@@ -11,6 +11,7 @@ require('./dashboardEdges');
 require('./dashboardImpact');
 require('./dashboardMembers');
 require('./dashboardCommunityOverview');
+require('./dashboardCollectionOverview');
 require('./dashboardPubOverview');
 require('./dashboardPage');
 require('./dashboardPages');

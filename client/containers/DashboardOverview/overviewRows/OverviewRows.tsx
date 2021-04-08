@@ -13,10 +13,10 @@ const OverviewRows = (props: Props) => {
 	const { children, style, className } = props;
 	return (
 		<ul style={style} className={classNames('overview-rows-component', className)}>
-			{React.Children.map(children, (child, index) => (
+			{React.Children.map(children, (child, index) =>
 				// eslint-disable-next-line react/no-array-index-key
-				<li key={index}>{child}</li>
-			))}
+				child ? <li key={index}>{child}</li> : null,
+			)}
 		</ul>
 	);
 };

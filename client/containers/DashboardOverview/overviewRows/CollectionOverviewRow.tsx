@@ -6,6 +6,8 @@ import { Icon } from 'client/components';
 import { getDashUrl } from 'utils/dashboard';
 import { Collection } from 'utils/types';
 import { usePageContext } from 'utils/hooks';
+import { capitalize } from 'utils/strings';
+import { getSchemaForKind } from 'utils/collections/schemas';
 
 import { iconSize } from './constants';
 import OverviewRowSkeleton from './OverviewRowSkeleton';
@@ -37,7 +39,9 @@ const getPublicStateLabel = (collection: Collection) => {
 const CollectionOverviewRow = React.forwardRef((props: Props, ref: any) => {
 	const { className, collection, isOpen, onToggleOpen, isLoading } = props;
 	const { title, slug } = collection;
+
 	const { communityData } = usePageContext();
+	const schema = getSchemaForKind(collection.kind)!;
 
 	const onButtonClick = useCallback(
 		(e: React.MouseEvent<any>) => {
@@ -72,8 +76,14 @@ const CollectionOverviewRow = React.forwardRef((props: Props, ref: any) => {
 			title={title}
 			leftIcon="collection"
 			href={getDashUrl({ collectionSlug: slug })}
-			iconLabelPairs={[getPublicStateLabel(collection)]}
-			withHoverEffect={!isOpen || isLoading}
+			iconLabelPairs={[
+				getPublicStateLabel(collection),
+				{
+					label: capitalize(schema.label.singular),
+					icon: schema.bpDisplayIcon,
+				},
+			]}
+			withHoverEffect={!isOpen}
 			rightElement={toggleButton}
 			ref={ref}
 		/>

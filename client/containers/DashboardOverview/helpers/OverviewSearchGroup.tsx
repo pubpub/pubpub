@@ -11,7 +11,7 @@ type Props = {
 	placeholder: string;
 	onUpdateSearchTerm?: SearchTermCallback;
 	onCommitSearchTerm?: SearchTermCallback;
-	rightControls: React.ReactNode;
+	rightControls?: React.ReactNode;
 };
 
 const OverviewSearchGroup = (props: Props) => {

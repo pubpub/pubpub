@@ -10,7 +10,7 @@ require('./sideMenu.scss');
 
 const SideMenu = () => {
 	const { locationData, communityData, scopeData } = usePageContext();
-	const { activeCounts, activePermissions, elements } = scopeData;
+	const { activePermissions, elements } = scopeData;
 	const { canManage } = activePermissions;
 	const { activeTargetType, activeCollection } = elements;
 	const collectionSlug = activeCollection && activeCollection.slug;
@@ -51,7 +51,6 @@ const SideMenu = () => {
 		{
 			title: 'Reviews',
 			icon: 'social-media' as const,
-			count: activeCounts.reviewCount > 0 ? activeCounts.reviewCount : undefined,
 			href: getDashUrl({
 				collectionSlug,
 				pubSlug,
@@ -130,11 +129,6 @@ const SideMenu = () => {
 								<a href={item.href} className="content-title">
 									<Icon className="side-icon" icon={item.icon} />
 									<span className="side-text">{item.title}</span>
-									{item.count !== undefined && (
-										<span className="count-wrapper">
-											<span className="count">{item.count}</span>
-										</span>
-									)}
 								</a>
 							</div>
 						);

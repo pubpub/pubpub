@@ -1,4 +1,6 @@
-$accent-color: #bdbdbd;
+@import '../overviewStyles.scss';
+
+$accent-color: $light-grey;
 $active-color: #aaa;
 $transition-duration: 100ms;
 

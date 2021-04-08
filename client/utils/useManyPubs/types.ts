@@ -1,4 +1,4 @@
-import { Pub, PubsQuery, DefinitelyHas } from 'utils/types';
+import { Pub, PubsQuery, DefinitelyHas, PubGetOptions } from 'utils/types';
 
 export type ManyPubsQuery = DefinitelyHas<PubsQuery, 'ordering' | 'limit'>;
 export type KeyedPubsQuery = Pick<ManyPubsQuery, 'term' | 'scopedCollectionId' | 'ordering'>;
@@ -33,14 +33,16 @@ export type ManyPubsState = Record<QueryKey, QueryState>;
 
 export type ManyPubsOptions = {
 	initialPubs?: Pub[];
+	initiallyLoadedAllPubs?: boolean;
+	pubOptions?: PubGetOptions;
 	query?: PartialQuery;
 	batchSize?: number;
 	isEager?: boolean;
 };
 
-export type ManyPubsReturnValues = {
+export type ManyPubsReturnValues<P> = {
 	currentQuery: {
-		pubs: Pub[];
+		pubs: P[];
 		loadMorePubs: () => unknown;
 		isLoading: boolean;
 		hasLoadedAllPubs: boolean;

@@ -15,7 +15,7 @@ export { default as DashboardRow } from './DashboardRow/DashboardRow';
 export { default as DashboardRowListing } from './DashboardRow/DashboardRowListing';
 export { default as DatePicker } from './DatePicker/DatePicker';
 export { default as DialogLauncher } from './DialogLauncher/DialogLauncher';
-export { DragDropListing, DragDropOrdering } from './DragDropListing';
+export { DragDropListing, DragDropOrdering, DragHandle } from './DragDropListing';
 export { default as DropdownButton } from './DropdownButton/DropdownButton';
 export { default as FileUploadButton } from './FileUploadButton/FileUploadButton';
 export { default as Footer } from './Footer/Footer';

@@ -2,13 +2,8 @@ import { QueryTypes, Op } from 'sequelize';
 import { QueryBuilder } from 'knex';
 
 import { knex, sequelize, Pub } from 'server/models';
-import {
-	buildPubOptions,
-	sanitizePub,
-	PubGetOptions,
-	SanitizedPubData,
-} from 'server/utils/queryHelpers';
-import { InitialData, PubsQuery } from 'utils/types';
+import { buildPubOptions, sanitizePub, SanitizedPubData } from 'server/utils/queryHelpers';
+import { InitialData, PubsQuery, PubGetOptions } from 'utils/types';
 
 const defaultColumns = {
 	pubId: 'Pubs.id',
@@ -63,13 +58,16 @@ const createJoins = (query: PubsQuery) => {
 };
 
 const createOuterWhereClause = (query: PubsQuery) => {
-	const { isReleased, collectionIds } = query;
+	const { isReleased, collectionIds, excludeCollectionIds } = query;
 	return (builder: QueryBuilder) => {
 		if (typeof isReleased === 'boolean') {
 			builder.where({ isReleased });
 		}
 		if (collectionIds) {
 			builder.whereRaw('?::uuid[] && "collectionIds"', [collectionIds]);
+		}
+		if (excludeCollectionIds) {
+			builder.whereRaw('NOT(?::uuid[] && "collectionIds")', [excludeCollectionIds]);
 		}
 	};
 };

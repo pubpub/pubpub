@@ -7,28 +7,34 @@ import { handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { hostIsValid } from 'server/utils/routes';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
-import { getCommunityOverview } from 'server/utils/queryHelpers';
+import { getCollectionOverview } from 'server/utils/queryHelpers';
 
-app.get('/dash', (req, res) => {
-	res.redirect(queryString.stringifyUrl({ url: '/dash/overview', query: req.query }));
+app.get('/dash/collection/:collectionSlug', (req, res) => {
+	const { collectionSlug } = req.params;
+	res.redirect(
+		queryString.stringifyUrl({
+			url: `/dash/collection/${collectionSlug}/overview`,
+			query: req.query,
+		}),
+	);
 });
 
-app.get('/dash/overview', async (req, res, next) => {
+app.get('/dash/collection/:collectionSlug/overview', async (req, res, next) => {
 	try {
 		if (!hostIsValid(req, 'community')) {
 			next();
 		}
 		const initialData = await getInitialData(req, true);
-		const overviewData = await getCommunityOverview(initialData);
+		const overviewData = await getCollectionOverview(initialData);
 		return renderToNodeStream(
 			res,
 			<Html
-				chunkName="DashboardCommunityOverview"
+				chunkName="DashboardCollectionOverview"
 				initialData={initialData}
 				viewData={{ overviewData }}
 				headerComponents={generateMetaComponents({
 					initialData,
-					title: `Overview · ${initialData.communityData.title}`,
+					title: `Overview · ${overviewData.collection.title}`,
 					unlisted: true,
 				})}
 			/>,

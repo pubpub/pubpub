@@ -11,7 +11,7 @@ require('./overviewRowSkeleton.scss');
 type Props = {
 	className?: string;
 	href: string;
-	leftIcon: IconName;
+	leftIcon: React.ReactNode | IconName;
 	title: React.ReactNode;
 	byline?: React.ReactNode;
 	rightElement?: React.ReactNode;
@@ -49,15 +49,22 @@ const OverviewRowSkeleton = React.forwardRef((props: Props, ref: any) => {
 		e.stopPropagation();
 	}, []);
 
+	const leftIconElement =
+		typeof leftIcon === 'string' ? (
+			<Icon icon={leftIcon as IconName} className="left-icon" iconSize={iconSize} />
+		) : (
+			leftIcon
+		);
+
 	return (
 		// This click handler is a convenience for mouse users; the same handler should be made
 		// available in the rightElement (e.g. to disclose a Collection row)
 		// eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+		// eslint-disable-next-line jsx-a11y/no-static-element-interactions
 		<div
 			onClick={onClick}
 			ref={ref}
 			onMouseDown={handleMouseDown}
-			role="listitem"
 			style={{ color: communityData.accentColorDark }}
 			className={classNames(
 				'overview-row-skeleton-component',
@@ -66,7 +73,7 @@ const OverviewRowSkeleton = React.forwardRef((props: Props, ref: any) => {
 				className,
 			)}
 		>
-			<Icon icon={leftIcon} className="left-icon" iconSize={iconSize} />
+			{leftIconElement}
 			<div className="center-container" ref={centerContainerRef}>
 				<a href={href} className="title" onClick={handleClickTitle}>
 					{title}
