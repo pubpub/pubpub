@@ -45,7 +45,7 @@ const CommunityItems = (props: Props) => {
 	);
 
 	const {
-		currentQuery: { pubs, isLoading, hasLoadedAllPubs: clientHasLoadedAllPubs, loadMorePubs },
+		currentQuery: { pubs, isLoading, hasLoadedAllPubs, loadMorePubs },
 	} = useManyPubs({
 		isEager: !!searchTerm,
 		initialPubs,
@@ -56,7 +56,6 @@ const CommunityItems = (props: Props) => {
 			ordering: { field: 'title', direction: 'ASC' },
 		},
 	});
-	const hasLoadedAllPubs = clientHasLoadedAllPubs || initiallyLoadedAllPubs;
 
 	useInfiniteScroll({
 		enabled: !isLoading && !hasLoadedAllPubs,
@@ -85,7 +84,7 @@ const CommunityItems = (props: Props) => {
 					/>
 				);
 			}
-			if (pubs.length === 0 && clientHasLoadedAllPubs) {
+			if (pubs.length === 0 && hasLoadedAllPubs) {
 				if (searchTerm.length > 0) {
 					return <SpecialRow>No matching Pubs or Collections.</SpecialRow>;
 				}

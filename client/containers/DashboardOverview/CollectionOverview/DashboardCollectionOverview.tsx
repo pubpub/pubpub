@@ -39,19 +39,16 @@ const DashboardCollectionOverview = (props: Props) => {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [pubsAddedToCollection, setPubsAddedToCollection] = useState<PubWithCollections[]>([]);
 	const { collection, updateCollection } = useCollectionState(initialCollection);
+	const isSearching = searchTerm !== '';
 
 	const {
 		allQueries: { isLoading },
-		currentQuery: {
-			loadMorePubs,
-			pubs: pubsFoundInCollection,
-			hasLoadedAllPubs: clientHasLoadedAllPubs,
-		},
+		currentQuery: { loadMorePubs, pubs: pubsFoundInCollection, hasLoadedAllPubs },
 	} = useManyPubs<PubWithCollections>({
 		initialPubs,
 		initiallyLoadedAllPubs: includesAllPubs,
 		batchSize: 200,
-		isEager: false,
+		isEager: isSearching,
 		query: {
 			term: searchTerm,
 			ordering: { field: 'collectionRank', direction: 'ASC' },
@@ -61,9 +58,6 @@ const DashboardCollectionOverview = (props: Props) => {
 			getCollections: true,
 		},
 	});
-
-	const hasLoadedAllPubs = clientHasLoadedAllPubs || includesAllPubs;
-	const isSearching = searchTerm !== '';
 
 	const { pubs, pubsById, usedPubIds } = useMemo(() => {
 		const nextPubs = [...pubsFoundInCollection, ...pubsAddedToCollection];

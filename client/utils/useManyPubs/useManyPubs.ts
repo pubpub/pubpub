@@ -59,7 +59,7 @@ export const useManyPubs = <P extends Pub = Pub>(
 	);
 
 	const [manyPubsState, setManyPubsState] = useState<ManyPubsState>(() => {
-		if (Object.keys(pubsById).length > 0) {
+		if (Object.keys(pubsById).length > 0 || initiallyLoadedAllPubs) {
 			return {
 				[queryKey]: getInitialPubsState(keyQuery, pubsById, initiallyLoadedAllPubs),
 			};
@@ -116,7 +116,7 @@ export const useManyPubs = <P extends Pub = Pub>(
 			loadMorePubs();
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isEager, queryKey]);
+	}, [isEager, queryKey, state.offset]);
 
 	return {
 		currentQuery: {

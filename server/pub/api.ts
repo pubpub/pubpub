@@ -61,7 +61,7 @@ app.post(
 		const pubs = await getPubsById(idsToFetch, pubOptions).sanitize(initialData);
 		const pubsById = indexByProperty(pubs, 'id');
 		return res.status(200).json({
-			pubIds: pubIds.filter((id) => !!pubsById[id]),
+			pubIds: pubIds.filter((id) => !!pubsById[id] || alreadyFetchedPubIds.includes(id)),
 			pubsById,
 			loadedAllPubs,
 		});

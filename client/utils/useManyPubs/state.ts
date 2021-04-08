@@ -58,9 +58,9 @@ export const getInitialPubsState = (
 		{
 			...initialQueryState,
 			offset: Object.keys(initialPubs).length,
-			hasLoadedAllPubs: initiallyLoadedAllPubs,
 		},
 		initialQuery,
 		initialPubs,
+		initiallyLoadedAllPubs,
 	);
 };
