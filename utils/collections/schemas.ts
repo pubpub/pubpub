@@ -4,7 +4,7 @@ import { IconName } from 'client/components/Icon/Icon';
 type ContextHint = {
 	value: string;
 	label: string;
-	default?: boolean;
+	isDefault?: boolean;
 	crossrefComponentType?: string;
 };
 
@@ -61,7 +61,7 @@ const schemas: CollectionSchema[] = [
 		kind: 'issue',
 		label: { singular: 'issue', plural: 'issues' },
 		bpDisplayIcon: 'manual',
-		contextHints: [{ value: 'article', label: 'Article', default: true }],
+		contextHints: [{ value: 'article', label: 'Article', isDefault: true }],
 		metadata: [
 			sharedFields.doi,
 			sharedFields.url,
@@ -92,7 +92,7 @@ const schemas: CollectionSchema[] = [
 			{
 				value: 'chapter',
 				label: 'Chapter',
-				default: true,
+				isDefault: true,
 				crossrefComponentType: 'chapter',
 			},
 			{ value: 'appendix', label: 'Appendix', crossrefComponentType: 'reference_entry' },
@@ -116,7 +116,7 @@ const schemas: CollectionSchema[] = [
 		kind: 'conference',
 		label: { singular: 'conference', plural: 'conferences' },
 		bpDisplayIcon: 'presentation',
-		contextHints: [{ value: 'paper', label: 'Paper', default: true }],
+		contextHints: [{ value: 'paper', label: 'Paper', isDefault: true }],
 		metadata: [
 			sharedFields.doi,
 			sharedFields.url,
