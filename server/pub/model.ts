@@ -74,6 +74,7 @@ export default (sequelize, dataTypes) => {
 						PubVersion,
 						Release,
 						ReviewNew,
+						ScopeSummary,
 					} = models;
 					Pub.hasMany(PubAttribution, {
 						onDelete: 'CASCADE',
@@ -132,6 +133,11 @@ export default (sequelize, dataTypes) => {
 					Pub.belongsTo(CrossrefDepositRecord, {
 						as: 'crossrefDepositRecord',
 						foreignKey: 'crossrefDepositRecordId',
+					});
+					Pub.belongsTo(ScopeSummary, {
+						onDelete: 'CASCADE',
+						as: 'scopeSummary',
+						foreignKey: 'scopeSummaryId',
 					});
 				},
 			},
