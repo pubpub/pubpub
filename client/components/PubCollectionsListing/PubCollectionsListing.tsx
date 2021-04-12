@@ -5,7 +5,7 @@ import { Divider, Button, Tooltip } from '@blueprintjs/core';
 import { Button as RKButton } from 'reakit/Button';
 
 import { Collection, CollectionPub as BareCollectionPub, Pub } from 'utils/types';
-import { DragDropListing, Icon, QueryListDropdown } from 'components';
+import { DragDropListing, Icon, QueryListDropdown, PrimaryCollectionExplanation } from 'components';
 import { findRankInRankedList, sortByRank } from 'utils/rank';
 import { getIconForCollectionKind } from 'utils/collections/schemas';
 import { getUserManagedCollections } from 'utils/collections/permissions';
@@ -14,7 +14,6 @@ import { usePageContext, usePendingChanges } from 'utils/hooks';
 import { fuzzyMatchCollection } from 'utils/fuzzyMatch';
 import * as api from 'client/utils/collections/api';
 import { getDashUrl } from 'utils/dashboard';
-import PrimaryCollectionExplanation from '../PrimaryCollectionExplanation/PrimaryCollectionExplanation';
 
 require('./pubCollectionsListing.scss');
 
