@@ -57,8 +57,9 @@ const CommunityItems = (props: Props) => {
 		},
 	});
 
+	const canLoadMorePubs = !hasLoadedAllPubs && showPubs;
 	useInfiniteScroll({
-		enabled: !isLoading && !hasLoadedAllPubs,
+		enabled: !isLoading && canLoadMorePubs,
 		useDocumentElement: true,
 		onRequestMoreItems: loadMorePubs,
 	});
@@ -131,7 +132,7 @@ const CommunityItems = (props: Props) => {
 			<OverviewRows>
 				{showCollections && renderCollections()}
 				{showPubs && renderPubs()}
-				{!hasLoadedAllPubs && <LoadMorePubsRow isLoading />}
+				{canLoadMorePubs && <LoadMorePubsRow isLoading />}
 				{renderEmptyState()}
 			</OverviewRows>
 		</div>
