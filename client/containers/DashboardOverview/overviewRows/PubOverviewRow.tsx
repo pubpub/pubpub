@@ -50,7 +50,12 @@ const PubOverviewRow = (props: Props) => {
 	const { pub, className, leftIconElement = null, rightElement: providedRightElement } = props;
 	const { communityData } = usePageContext();
 	const rightElement = providedRightElement || (
-		<AnchorButton minimal icon="circle-arrow-right" href={pubUrl(communityData, pub)} />
+		<AnchorButton
+			minimal
+			icon="circle-arrow-right"
+			href={pubUrl(communityData, pub)}
+			target="_blank"
+		/>
 	);
 	return (
 		<OverviewRowSkeleton
