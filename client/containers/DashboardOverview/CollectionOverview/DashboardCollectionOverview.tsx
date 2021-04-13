@@ -134,7 +134,7 @@ const DashboardCollectionOverview = (props: Props) => {
 					className="collection-empty-state"
 					icon="clean"
 					title="This Collection looks brand new!"
-					description="Try creating a Pub or Collection from above."
+					description="Try adding a Pub from above."
 				/>
 			);
 		}
