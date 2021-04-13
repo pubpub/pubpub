@@ -2,10 +2,10 @@ import React, { useMemo, useState } from 'react';
 import { NonIdealState } from '@blueprintjs/core';
 
 import { Collection, Pub } from 'utils/types';
-import { useManyPubs } from 'client/utils/useManyPubs';
 import { fuzzyMatchCollection } from 'utils/fuzzyMatch';
-
+import { useManyPubs } from 'client/utils/useManyPubs';
 import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
+
 import {
 	PubOverviewRow,
 	ExpandableCollectionOverviewRow,

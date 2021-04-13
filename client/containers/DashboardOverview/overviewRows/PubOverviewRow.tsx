@@ -1,13 +1,16 @@
 import React from 'react';
 import classNames from 'classnames';
 import TimeAgo from 'react-timeago';
+import { AnchorButton } from '@blueprintjs/core';
 
 import { DefinitelyHas, Pub as BasePub } from 'utils/types';
 import { formatDate, timeAgoBaseProps } from 'utils/dates';
 import { getPubPublishedDate } from 'utils/pub/pubDates';
+import { pubUrl } from 'utils/canonicalUrls';
 import { PubByline } from 'components';
 
 import { getDashUrl } from 'utils/dashboard';
+import { usePageContext } from 'utils/hooks';
 import OverviewRowSkeleton from './OverviewRowSkeleton';
 
 type Pub = DefinitelyHas<BasePub, 'attributions'>;
@@ -44,7 +47,11 @@ const getReleasedStateLabel = (pub: Pub) => {
 };
 
 const PubOverviewRow = (props: Props) => {
-	const { pub, className, leftIconElement = null, rightElement } = props;
+	const { pub, className, leftIconElement = null, rightElement: providedRightElement } = props;
+	const { communityData } = usePageContext();
+	const rightElement = providedRightElement || (
+		<AnchorButton minimal icon="circle-arrow-right" href={pubUrl(communityData, pub)} />
+	);
 	return (
 		<OverviewRowSkeleton
 			className={classNames('pub-overview-row-component', className)}

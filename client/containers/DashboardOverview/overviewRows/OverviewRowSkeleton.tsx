@@ -15,7 +15,7 @@ type Props = {
 	title: React.ReactNode;
 	byline?: React.ReactNode;
 	rightElement?: React.ReactNode;
-	iconLabelPairs: { icon: IconName; label: React.ReactNode }[];
+	iconLabelPairs: { icon: IconName; label: React.ReactNode; className?: string }[];
 	withBorder?: boolean;
 	withHoverEffect?: boolean;
 	onClick?: React.MouseEventHandler<any>;
@@ -80,20 +80,32 @@ const OverviewRowSkeleton = React.forwardRef((props: Props, ref: any) => {
 				</a>
 				{byline && <div className="byline">{byline}</div>}
 				<div className="summary-icons">
-					{iconLabelPairs.map(({ icon, label }, index) => {
-						const iconElement =
-							typeof icon === 'string' ? <Icon icon={icon} iconSize={12} /> : icon;
-						return (
-							// eslint-disable-next-line react/no-array-index-key
-							<div className="summary-icon-pair" key={index}>
-								{iconElement}
-								{label}
-							</div>
-						);
-					})}
+					{iconLabelPairs.map(
+						({ icon, label, className: iconLabelPairClassName }, index) => {
+							const iconElement =
+								typeof icon === 'string' ? (
+									<Icon icon={icon} iconSize={12} />
+								) : (
+									icon
+								);
+							return (
+								<div
+									className={classNames(
+										'summary-icon-pair',
+										iconLabelPairClassName,
+									)}
+									// eslint-disable-next-line react/no-array-index-key
+									key={index}
+								>
+									{iconElement}
+									{label}
+								</div>
+							);
+						},
+					)}
 				</div>
 			</div>
-			{rightElement}
+			<div className="right-element">{rightElement}</div>
 		</div>
 	);
 });
