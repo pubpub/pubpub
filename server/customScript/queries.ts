@@ -16,7 +16,7 @@ export const setCustomScriptForCommunity = async (
 	await CustomScript.create({ communityId, type, content });
 };
 
-export const loadCustomScripts = async (communityId: string): Promise<CustomScripts> => {
+export const getCustomScriptsForCommunity = async (communityId: string): Promise<CustomScripts> => {
 	if (!communityCanUseCustomScripts(communityId)) {
 		return { js: null, css: null };
 	}
