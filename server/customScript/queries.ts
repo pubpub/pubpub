@@ -12,8 +12,9 @@ export const setCustomScriptForCommunity = async (
 	if (existingScriptForType) {
 		existingScriptForType.content = content;
 		await existingScriptForType.save();
+	} else {
+		await CustomScript.create({ communityId, type, content });
 	}
-	await CustomScript.create({ communityId, type, content });
 };
 
 export const getCustomScriptsForCommunity = async (communityId: string): Promise<CustomScripts> => {

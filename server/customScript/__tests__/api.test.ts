@@ -56,6 +56,16 @@ describe('/api/customScripts', () => {
 			where: { communityId: enabledCommunity.id, type: 'js' },
 		});
 		expect(script.content).toEqual(content);
+		// Make sure subsequent saves overwrite the existing model
+		await agent
+			.post('/api/customScripts')
+			.send({ communityId: enabledCommunity.id, type: 'js', content })
+			.expect(200);
+		const script2 = await CustomScript.findOne({
+			where: { communityId: enabledCommunity.id, type: 'js' },
+			order: [['createdAt', 'DESC']],
+		});
+		expect(script.id === script2.id);
 	});
 });
 
