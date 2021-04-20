@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { DashboardFrame } from 'components';
-import { Collection, Pub } from 'utils/types';
+import { Collection, Pub, UserScopeVisit } from 'utils/types';
 
 import CommunityItems from './CommunityItems';
 
@@ -10,6 +10,8 @@ type Props = {
 		collections: Collection[];
 		pubs: Pub[];
 		includesAllPubs: boolean;
+		userScopeVisits: UserScopeVisit[];
+		recentPubs: Pub[];
 	};
 };
 

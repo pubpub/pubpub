@@ -1,5 +1,6 @@
 import { Collection } from 'server/models';
 import { getManyPubs } from 'server/pub/queryMany';
+import { getUserScopeVisits } from 'server/userScopeVisit/queries';
 import { Collection as CollectionType, InitialData } from 'utils/types';
 
 import sanitizeCollection from './collectionSanitize';
@@ -32,15 +33,35 @@ const getPubs = async (initialData: InitialData, limit: number): Promise<Sanitiz
 	return result.sanitize(initialData);
 };
 
+const getRecentItems = async (initialData: InitialData) => {
+	const {
+		loginData: { id: userId },
+		communityData: { id: communityId },
+	} = initialData;
+	const userScopeVisits = await getUserScopeVisits({ userId, communityId });
+	const recentPubs = await getManyPubs({
+		query: {
+			withinPubIds: userScopeVisits.map(({ pubId }) => pubId).filter((x) => x),
+			communityId,
+		},
+	});
+	return {
+		userScopeVisits,
+		recentPubs: recentPubs.sanitize(initialData),
+	};
+};
+
 export const getCommunityOverview = async (initialData: InitialData, options: Options = {}) => {
 	const { loadPubs = 200 } = options;
-	const [pubs, collections] = await Promise.all([
+	const [pubs, collections, recentItems] = await Promise.all([
 		getPubs(initialData, loadPubs),
 		getCollections(initialData),
+		getRecentItems(initialData),
 	]);
 	return {
 		pubs,
 		collections,
+		...recentItems,
 		includesAllPubs: pubs.length < loadPubs,
 	};
 };

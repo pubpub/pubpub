@@ -8,3 +8,11 @@ export const createUserScopeVisit = (inputValues) => {
 		communityId,
 	});
 };
+
+export const getUserScopeVisits = ({ userId, communityId }) => {
+	return UserScopeVisit.findAll({
+		where: { userId, communityId },
+		order: [['createdAt', 'DESC']],
+		limit: 10,
+	});
+};
