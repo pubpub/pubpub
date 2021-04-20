@@ -6,7 +6,7 @@ import {
 	Collection,
 	CollectionPub,
 	Discussion,
-	Review,
+	ReviewNew,
 	ScopeSummary,
 } from 'server/models';
 import { ScopeSummary as ScopeSummaryType } from 'utils/types';
@@ -54,14 +54,14 @@ export const summarizeCommunity = async (communityId: string) => {
 
 	const pubsInCommunity = await Pub.findAll({
 		where: { communityId },
-		include: [{ mode: ScopeSummary, as: 'scopeSummary' }],
+		include: [{ model: ScopeSummary, as: 'scopeSummary' }],
 	});
 
 	const scopeSummaries: ScopeSummaryType[] = pubsInCommunity
 		.map((pub) => pub.scopeSummary)
 		.filter((x): x is ScopeSummaryType => !!x);
 
-	await persistScopeSummaryForModel(community, {
+	return persistScopeSummaryForModel(community, {
 		...mergeScopeSummaries(scopeSummaries),
 		pubs,
 		collections,
@@ -82,7 +82,7 @@ export const summarizeCollection = async (collectionId: string) => {
 		.map((cp) => cp.pub.scopeSummary)
 		.filter((x): x is ScopeSummaryType => !!x);
 
-	await persistScopeSummaryForModel(collection, {
+	return persistScopeSummaryForModel(collection, {
 		...mergeScopeSummaries(scopeSummaries),
 		pubs: collectionPubs.length,
 	});
@@ -92,7 +92,7 @@ export const summarizePub = async (pubId: string, summarizeParentScopes = true) 
 	const pub = await Pub.findOne({ where: { id: pubId } });
 	const [discussions, reviews] = await Promise.all([
 		Discussion.count({ where: { pubId } }),
-		Review.count({ where: { pubId } }),
+		ReviewNew.count({ where: { pubId } }),
 	]);
 	await persistScopeSummaryForModel(pub, {
 		discussions,
