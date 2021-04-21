@@ -34,6 +34,12 @@ $mobile-viewport-cutoff: 750px;
         color: $light-grey;
     }
 
+    .right-element {
+        .bp3-icon {
+            color: $light-grey;
+        }
+    }
+
     .center-container {
         color: black;
         display: flex;

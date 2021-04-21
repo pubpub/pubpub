@@ -77,7 +77,7 @@ const CollectionOverviewRow = React.forwardRef((props: Props, ref: any) => {
 			leftIcon="collection"
 			href={getDashUrl({ collectionSlug: slug })}
 			iconLabelPairs={[
-				getPublicStateLabel(collection),
+				{ ...getPublicStateLabel(collection), className: 'public-private-indicator' },
 				{
 					label: capitalize(schema.label.singular),
 					icon: schema.bpDisplayIcon,

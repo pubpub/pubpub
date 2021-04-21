@@ -15,7 +15,7 @@ const CollectionSettings = () => {
 	const {
 		communityData,
 		scopeData: {
-			activeElements: { activeCollection },
+			elements: { activeCollection },
 		},
 	} = usePageContext();
 	const {

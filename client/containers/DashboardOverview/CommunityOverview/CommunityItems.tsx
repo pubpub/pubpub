@@ -2,10 +2,10 @@ import React, { useMemo, useState } from 'react';
 import { NonIdealState } from '@blueprintjs/core';
 
 import { Collection, Pub } from 'utils/types';
-import { useManyPubs } from 'client/utils/useManyPubs';
 import { fuzzyMatchCollection } from 'utils/fuzzyMatch';
-
+import { useManyPubs } from 'client/utils/useManyPubs';
 import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
+
 import {
 	PubOverviewRow,
 	ExpandableCollectionOverviewRow,
@@ -57,8 +57,9 @@ const CommunityItems = (props: Props) => {
 		},
 	});
 
+	const canLoadMorePubs = !hasLoadedAllPubs && showPubs;
 	useInfiniteScroll({
-		enabled: !isLoading && !hasLoadedAllPubs,
+		enabled: !isLoading && canLoadMorePubs,
 		useDocumentElement: true,
 		onRequestMoreItems: loadMorePubs,
 	});
@@ -131,7 +132,7 @@ const CommunityItems = (props: Props) => {
 			<OverviewRows>
 				{showCollections && renderCollections()}
 				{showPubs && renderPubs()}
-				{!hasLoadedAllPubs && <LoadMorePubsRow isLoading />}
+				{canLoadMorePubs && <LoadMorePubsRow isLoading />}
 				{renderEmptyState()}
 			</OverviewRows>
 		</div>
