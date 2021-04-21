@@ -239,9 +239,11 @@ describe('scopeSummary hooks', () => {
 		]);
 	});
 
-	it('updates the ScopeSummary for a Collection when it receives a new Pub', async () => {
+	it('updates the ScopeSummary for a Collection when a Pub is added or removed', async () => {
 		const { p2, c2 } = models;
-		await createCollectionPub({ pubId: p2.id, collectionId: c2.id });
+		const collectionPub = await createCollectionPub({ pubId: p2.id, collectionId: c2.id });
 		await expectSummaryFor({ collectionId: c2.id }, { pubs: 4 });
+		await collectionPub.destroy();
+		await expectSummaryFor({ collectionId: c2.id }, { pubs: 3 });
 	});
 });

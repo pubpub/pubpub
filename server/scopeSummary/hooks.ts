@@ -5,6 +5,9 @@ import { summarizeCollection, summarizePub } from './queries';
 	Model.afterCreate(async ({ pubId }) => {
 		await summarizePub(pubId);
 	});
+	Model.afterDestroy(async ({ pubId }) => {
+		await summarizePub(pubId);
+	});
 });
 
 Pub.afterCreate(async ({ id }) => {
@@ -12,5 +15,9 @@ Pub.afterCreate(async ({ id }) => {
 });
 
 CollectionPub.afterCreate(async ({ collectionId }) => {
+	await summarizeCollection(collectionId);
+});
+
+CollectionPub.afterDestroy(async ({ collectionId }) => {
 	await summarizeCollection(collectionId);
 });
