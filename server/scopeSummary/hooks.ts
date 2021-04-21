@@ -1,5 +1,5 @@
-import { Discussion, ReviewNew, Pub, CollectionPub } from 'server/models';
-import { summarizeCollection, summarizePub } from './queries';
+import { Discussion, ReviewNew, Pub, CollectionPub, Collection, Community } from 'server/models';
+import { summarizeCollection, summarizeCommunity, summarizePub } from './queries';
 
 [Discussion, ReviewNew].forEach((Model) => {
 	Model.afterCreate(async ({ pubId }) => {
@@ -12,6 +12,14 @@ import { summarizeCollection, summarizePub } from './queries';
 
 Pub.afterCreate(async ({ id }) => {
 	await summarizePub(id);
+});
+
+Collection.afterCreate(async ({ id }) => {
+	await summarizeCollection(id);
+});
+
+Community.afterCreate(async ({ id }) => {
+	await summarizeCommunity(id);
 });
 
 CollectionPub.afterCreate(async ({ collectionId }) => {
