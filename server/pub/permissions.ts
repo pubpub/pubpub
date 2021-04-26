@@ -27,7 +27,11 @@ const managerUpdatableFields = [
 const adminUpdatableFields = ['doi'];
 
 const isValidLicenseSlugForCommunity = (community, licenseSlug) => {
-	return !licenses.find((l) => l.slug === licenseSlug)?.requiresPremium;
+	return (
+		!licenseSlug ||
+		community.premiumLicenseFlag ||
+		!licenses.find((l) => l.slug === licenseSlug)?.requiresPremium
+	);
 };
 
 export const canCreatePub = async ({ userId, communityId, collectionId, createPubToken }) => {
