@@ -39,15 +39,16 @@ const getRecentItems = async (initialData: InitialData) => {
 		communityData: { id: communityId },
 	} = initialData;
 	const userScopeVisits = await getUserScopeVisits({ userId, communityId });
-	const recentPubs = await getManyPubs({
+	const result = await getManyPubs({
 		query: {
 			withinPubIds: userScopeVisits.map(({ pubId }) => pubId).filter((x) => x),
 			communityId,
 		},
 	});
+	const recentPubs = await result.sanitize(initialData);
 	return {
 		userScopeVisits,
-		recentPubs: recentPubs.sanitize(initialData),
+		recentPubs,
 	};
 };
 
