@@ -27,7 +27,7 @@ const renderPubDocument = (res, pubData, initialData) => {
 		communityData: { id: communityId },
 		loginData: { id: userId },
 	} = initialData;
-	createUserScopeVisit({ userId, communityId });
+	createUserScopeVisit({ userId, communityId, pubId: pubData.id });
 	return renderToNodeStream(
 		res,
 		<Html
