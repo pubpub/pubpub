@@ -90,10 +90,8 @@ const CommunityItems = (props: Props) => {
 					/>
 				);
 			}
-			if (pubs.length === 0 && hasLoadedAllPubs) {
-				if (isSearchingOrFiltering) {
-					return <SpecialRow>No matching Pubs or Collections.</SpecialRow>;
-				}
+			if (pubs.length === 0 && hasLoadedAllPubs && isSearchingOrFiltering) {
+				return <SpecialRow>No matching Pubs or Collections.</SpecialRow>;
 			}
 		}
 		return null;
