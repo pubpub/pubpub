@@ -27,6 +27,7 @@ export const useCollectionPubs = (options: UseCollectionPubsOptions) => {
 	} = usePageContext();
 	const { pendingPromise } = usePendingChanges();
 	const [collectionPubs, setCollectionPubs] = useState(() => sortByRank(initialCollectionPubs));
+	const [pubsCount, setPubsCount] = useState(collection.scopeSummary?.pubs || 0);
 
 	const reorderCollectionPubs = (sourceIndex: number, destinationIndex: number) => {
 		const nextCollectionPubs = [...collectionPubs];
@@ -65,6 +66,7 @@ export const useCollectionPubs = (options: UseCollectionPubsOptions) => {
 				id: collectionPub.id,
 			}),
 		);
+		setPubsCount((c) => c - 1);
 		setCollectionPubs(collectionPubs.filter((cp) => cp.id !== collectionPub.id));
 	};
 
@@ -107,6 +109,7 @@ export const useCollectionPubs = (options: UseCollectionPubsOptions) => {
 					pubId: pub.id,
 				})
 				.then((collectionPub) => {
+					setPubsCount((c) => c + 1);
 					setCollectionPubs((newestCollectionPubs) =>
 						sortByRank([...newestCollectionPubs, collectionPub]),
 					);
@@ -121,6 +124,7 @@ export const useCollectionPubs = (options: UseCollectionPubsOptions) => {
 		reorderCollectionPubs,
 		setCollectionPubContextHint,
 		setCollectionPubIsPrimary,
+		pubsCount,
 	};
 };
 
