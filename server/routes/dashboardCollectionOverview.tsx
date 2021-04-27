@@ -42,7 +42,10 @@ app.get('/dash/collection/:collectionSlug/overview', async (req, res, next) => {
 			communityData: { id: communityId },
 			loginData: { id: userId },
 		} = initialData;
-		await createUserScopeVisit({ userId, communityId });
+		const {
+			collection: { id: collectionId, title },
+		} = overviewData;
+		await createUserScopeVisit({ userId, communityId, collectionId });
 		return renderToNodeStream(
 			res,
 			<Html
@@ -51,7 +54,7 @@ app.get('/dash/collection/:collectionSlug/overview', async (req, res, next) => {
 				viewData={{ overviewData }}
 				headerComponents={generateMetaComponents({
 					initialData,
-					title: `Overview · ${overviewData.collection.title}`,
+					title: `Overview · ${title}`,
 					unlisted: true,
 				})}
 			/>,

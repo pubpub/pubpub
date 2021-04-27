@@ -474,6 +474,7 @@ export type PubGetOptions = {
 };
 
 export type UserScopeVisit = {
+	id: string;
 	communityId: string;
 	createdAt: string;
 	collectionId: null | string;

@@ -1,10 +1,11 @@
 import { UserScopeVisit } from 'server/models';
 
 export const createUserScopeVisit = (inputValues) => {
-	const { userId, pubId, communityId } = inputValues;
+	const { userId, pubId, collectionId, communityId } = inputValues;
 	return UserScopeVisit.create({
 		userId,
 		pubId,
+		collectionId,
 		communityId,
 	});
 };

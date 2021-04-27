@@ -3,6 +3,7 @@ export default (sequelize, dataTypes) => {
 		id: sequelize.idType,
 		userId: { type: dataTypes.UUID, allowNull: true },
 		pubId: { type: dataTypes.UUID, allowNull: true },
+		collectionId: { type: dataTypes.UUID, allowNull: true },
 		communityId: { type: dataTypes.UUID, allowNull: true },
 	});
 };

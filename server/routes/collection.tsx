@@ -56,7 +56,7 @@ app.get(['/collection/:collectionSlug', '/:collectionSlug'], async (req, res, ne
 		);
 
 		if (collection) {
-			const { pageId, layout } = collection;
+			const { pageId, layout, id: collectionId } = collection;
 
 			await enrichCollectionWithAttributions(collection);
 
@@ -71,11 +71,12 @@ app.get(['/collection/:collectionSlug', '/:collectionSlug'], async (req, res, ne
 				const layoutPubsByBlock = await getLayoutPubsByBlock({
 					blocks: layout.blocks,
 					initialData,
-					collectionId: collection.id,
+					collectionId,
 				});
 
 				const customScripts = await getCustomScriptsForCommunity(communityData.id);
 				await createUserScopeVisit({ userId, communityId });
+				await createUserScopeVisit({ userId, communityId, collectionId });
 				return renderToNodeStream(
 					res,
 					<Html
