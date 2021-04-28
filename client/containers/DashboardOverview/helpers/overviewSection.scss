@@ -1,6 +1,8 @@
 @import '../overviewStyles.scss';
 
 .overview-section-component {
+    color: $darkest-grey;
+
     &.spaced {
         margin-bottom: 20px;
     }

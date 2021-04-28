@@ -147,6 +147,7 @@ const DashboardCollectionOverview = (props: Props) => {
 		const pub = pubsById[collectionPub.pubId]!;
 		return (
 			<PubOverviewRow
+				inCollection
 				className={classNames(isDragging && 'collection-overview-row-is-dragging')}
 				pub={pub}
 				leftIconElement={canDragDrop && <DragHandle dragHandleProps={dragHandleProps} />}
