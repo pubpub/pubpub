@@ -112,7 +112,7 @@ const DashboardCollectionOverview = (props: Props) => {
 		setCollectionPubContextHint,
 		setCollectionPubIsPrimary,
 		removeCollectionPub,
-		pubsCount,
+		scopeSummary,
 	} = useCollectionPubs({ collection, initialCollectionPubs, pubs });
 
 	const renderableCollectionPubs = useMemo(
@@ -208,17 +208,19 @@ const DashboardCollectionOverview = (props: Props) => {
 	};
 
 	const renderSecondaryContent = () => {
-		const collectionWithScopeSummary = {
-			...collection,
-			scopeSummary: { ...overviewData.collection.scopeSummary, pubs: pubsCount },
-		};
 		return (
 			<>
 				<OverviewSection title="Quick Actions" spaced>
 					<QuickActions actions={getQuickActionsForCollection(collection)} />
 				</OverviewSection>
 				<OverviewSection title="About">
-					<ScopeSummaryList scopeKind="collection" scope={collectionWithScopeSummary} />
+					<ScopeSummaryList
+						scopeKind="collection"
+						scope={{
+							...collection,
+							scopeSummary,
+						}}
+					/>
 				</OverviewSection>
 			</>
 		);
