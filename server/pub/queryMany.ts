@@ -54,6 +54,8 @@ const createJoins = (query: PubsQuery) => {
 		builder.leftOuterJoin('CollectionPubs', 'Pubs.id', 'CollectionPubs.pubId');
 		builder.leftOuterJoin('Releases', 'Pubs.id', 'Releases.pubId');
 		builder.leftOuterJoin('Drafts', 'Pubs.draftId', 'Drafts.id');
+		builder.leftOuterJoin('PubAttributions', 'Pubs.id', 'PubAttributions.pubId');
+		builder.leftOuterJoin('Users', 'PubAttributions.userId', 'Users.id');
 	};
 };
 
