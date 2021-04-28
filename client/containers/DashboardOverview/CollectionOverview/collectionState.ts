@@ -1,20 +1,21 @@
 import { useMemo, useState } from 'react';
 
-import { CollectionPub, Pub, Collection, Community } from 'utils/types';
+import { CollectionPub, Pub, Collection, Community, DefinitelyHas } from 'utils/types';
 import { findRankInRankedList, sortByRank } from 'utils/rank';
 import { usePendingChanges, usePageContext } from 'utils/hooks';
 import ensureUserForAttribution from 'utils/ensureUserForAttribution';
 import { usePersistableState } from 'client/utils/usePersistableState';
 import * as api from 'client/utils/collections/api';
+import { addScopeSummaries, subtractScopeSummaries } from 'utils/scopeSummaries';
 
-const linkCollection = (collection: Collection, community: Community) => {
+const linkCollection = <C extends Collection>(collection: C, community: Community) => {
 	const page = community.pages?.find((pg) => pg.id === collection.pageId);
 	const attributions = collection.attributions?.map(ensureUserForAttribution);
 	return { ...collection, page, attributions };
 };
 
 type UseCollectionPubsOptions = {
-	collection: Collection;
+	collection: DefinitelyHas<Collection, 'scopeSummary'>;
 	initialCollectionPubs: CollectionPub[];
 	pubs: Pub[];
 };
@@ -27,7 +28,7 @@ export const useCollectionPubs = (options: UseCollectionPubsOptions) => {
 	} = usePageContext();
 	const { pendingPromise } = usePendingChanges();
 	const [collectionPubs, setCollectionPubs] = useState(() => sortByRank(initialCollectionPubs));
-	const [pubsCount, setPubsCount] = useState(collection.scopeSummary?.pubs || 0);
+	const [scopeSummary, setScopeSummary] = useState(collection.scopeSummary);
 
 	const reorderCollectionPubs = (sourceIndex: number, destinationIndex: number) => {
 		const nextCollectionPubs = [...collectionPubs];
@@ -60,13 +61,19 @@ export const useCollectionPubs = (options: UseCollectionPubsOptions) => {
 	};
 
 	const removeCollectionPub = (collectionPub: CollectionPub) => {
+		const removedPub = pubs.find((p) => p.id === collectionPub.pubId);
+		if (removedPub) {
+			setScopeSummary((current) => ({
+				...subtractScopeSummaries(current, removedPub.scopeSummary),
+				pubs: current.pubs - 1,
+			}));
+		}
 		pendingPromise(
 			api.removeCollectionPub({
 				communityId,
 				id: collectionPub.id,
 			}),
 		);
-		setPubsCount((c) => c - 1);
 		setCollectionPubs(collectionPubs.filter((cp) => cp.id !== collectionPub.id));
 	};
 
@@ -109,7 +116,10 @@ export const useCollectionPubs = (options: UseCollectionPubsOptions) => {
 					pubId: pub.id,
 				})
 				.then((collectionPub) => {
-					setPubsCount((c) => c + 1);
+					setScopeSummary((current) => ({
+						...addScopeSummaries(current, pub.scopeSummary),
+						pubs: current.pubs + 1,
+					}));
 					setCollectionPubs((newestCollectionPubs) =>
 						sortByRank([...newestCollectionPubs, collectionPub]),
 					);
@@ -124,11 +134,11 @@ export const useCollectionPubs = (options: UseCollectionPubsOptions) => {
 		reorderCollectionPubs,
 		setCollectionPubContextHint,
 		setCollectionPubIsPrimary,
-		pubsCount,
+		scopeSummary,
 	};
 };
 
-export const useCollectionState = (initialCollection: Collection) => {
+export const useCollectionState = <C extends Collection>(initialCollection: C) => {
 	const { updateCollection: updateCollectionGlobally, communityData } = usePageContext();
 	const { pendingPromise } = usePendingChanges();
 
