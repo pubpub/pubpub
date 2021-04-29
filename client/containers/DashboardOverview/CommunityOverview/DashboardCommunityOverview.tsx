@@ -1,10 +1,11 @@
 import React from 'react';
 
-import { DashboardFrame, Icon, IconName } from 'components';
+import { DashboardFrame } from 'components';
 import { Collection, Pub, UserScopeVisit } from 'utils/types';
-import { getDashUrl } from 'utils/dashboard';
 
+import { usePageContext } from 'utils/hooks';
 import CommunityItems from './CommunityItems';
+import { OverviewFrame, OverviewSection, ScopeSummaryList } from '../helpers';
 
 require('./dashboardCommunityOverview.scss');
 
@@ -25,54 +26,28 @@ type Props = {
 
 const DashboardCommunityOverview = (props: Props) => {
 	const { overviewData } = props;
-	const { pubs, collections, recentPubs, userScopeVisits, includesAllPubs } = overviewData;
-	const recentVisits = userScopeVisits
-		.sort((visitA, visitB) => {
-			return visitA.createdAt > visitB.createdAt ? -1 : 1;
-		})
-		.map((visit) => {
-			const { pubId, collectionId } = visit;
-			const isPub = !!pubId;
-			const pub = recentPubs.find(({ id }) => id === pubId);
-			const collection = collections.find(({ id }) => id === collectionId);
-			return {
-				href: isPub
-					? getDashUrl({ pubSlug: pub?.slug })
-					: getDashUrl({ collectionSlug: collection?.slug }),
-				icon: isPub ? 'pubDoc' : 'collection',
-				id: visit.id,
-				title: isPub ? pub?.title : collection?.title,
-			};
-		});
+	const { pubs, collections, includesAllPubs } = overviewData;
+	const { communityData } = usePageContext();
+
 	return (
-		<div className="dashboard-community-overview-container">
-			<DashboardFrame title="Overview">
-				<CommunityItems
-					initialPubs={pubs}
-					collections={collections}
-					initiallyLoadedAllPubs={includesAllPubs}
-				/>
-			</DashboardFrame>
-			<div className="dashboard-sidebar-container">
-				<span className="title">recently viewed</span>
-				<ol className="recent-visits-component">
-					{recentVisits.map(({ id, title, icon, href }) => {
-						return (
-							<li key={id}>
-								<Icon
-									className="visit-icon"
-									icon={icon as IconName}
-									iconSize={12}
-								/>
-								<a className="visit-link" href={href}>
-									{title}
-								</a>
-							</li>
-						);
-					})}
-				</ol>
-			</div>
-		</div>
+		<DashboardFrame title="Overview">
+			<OverviewFrame
+				primary={
+					<OverviewSection title="Explore" icon="overview" descendTitle>
+						<CommunityItems
+							initialPubs={pubs}
+							collections={collections}
+							initiallyLoadedAllPubs={includesAllPubs}
+						/>
+					</OverviewSection>
+				}
+				secondary={
+					<OverviewSection title="About">
+						<ScopeSummaryList scope={communityData} scopeKind="community" />
+					</OverviewSection>
+				}
+			/>
+		</DashboardFrame>
 	);
 };
 
