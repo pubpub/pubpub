@@ -2,7 +2,7 @@ import { UserScopeVisit } from 'server/models';
 
 export const createUserScopeVisit = (inputValues) => {
 	const { userId, pubId, collectionId, communityId } = inputValues;
-	return UserScopeVisit.create({
+	return UserScopeVisit.upsert({
 		userId,
 		pubId,
 		collectionId,
@@ -13,7 +13,7 @@ export const createUserScopeVisit = (inputValues) => {
 export const getUserScopeVisits = ({ userId, communityId }) => {
 	return UserScopeVisit.findAll({
 		where: { userId, communityId },
-		order: [['createdAt', 'DESC']],
+		order: [['updatedAt', 'DESC']],
 		limit: 10,
 	});
 };

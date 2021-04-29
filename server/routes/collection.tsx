@@ -75,7 +75,6 @@ app.get(['/collection/:collectionSlug', '/:collectionSlug'], async (req, res, ne
 				});
 
 				const customScripts = await getCustomScriptsForCommunity(communityData.id);
-				await createUserScopeVisit({ userId, communityId });
 				await createUserScopeVisit({ userId, communityId, collectionId });
 				return renderToNodeStream(
 					res,

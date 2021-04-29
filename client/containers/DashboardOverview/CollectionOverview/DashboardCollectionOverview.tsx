@@ -7,11 +7,25 @@ import { DashboardFrame, DragDropListing, DragHandle } from 'components';
 import { useManyPubs } from 'client/utils/useManyPubs';
 import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 import { indexByProperty } from 'utils/arrays';
-import { Collection, CollectionPub, Maybe, PubsQuery, DefinitelyHas } from 'utils/types';
+import {
+	Collection,
+	CollectionPub,
+	Maybe,
+	PubsQuery,
+	DefinitelyHas,
+	Pub,
+	UserScopeVisit,
+} from 'utils/types';
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { usePageContext } from 'utils/hooks';
 
-import { OverviewFrame, OverviewSearchGroup, OverviewSection, ScopeSummaryList } from '../helpers';
+import {
+	OverviewFrame,
+	OverviewSearchGroup,
+	OverviewSection,
+	ScopeSummaryList,
+	RecentVisitList,
+} from '../helpers';
 import { PubOverviewRow, LoadMorePubsRow, SpecialRow } from '../overviewRows';
 import { PubWithCollections } from './types';
 import { useCollectionPubs, useCollectionState } from './collectionState';
@@ -25,6 +39,9 @@ type Props = {
 		collection: DefinitelyHas<Collection, 'scopeSummary'>;
 		collectionPubs: CollectionPub[];
 		pubs: PubWithCollections[];
+		userScopeVisits: UserScopeVisit[];
+		recentPubs: Pub[];
+		recentCollections: Collection[];
 		includesAllPubs: boolean;
 	};
 };
@@ -33,7 +50,10 @@ const DashboardCollectionOverview = (props: Props) => {
 	const { overviewData } = props;
 	const {
 		pubs: initialPubs,
+		recentPubs,
+		userScopeVisits,
 		collectionPubs: initialCollectionPubs,
+		recentCollections,
 		collection: initialCollection,
 		includesAllPubs,
 	} = overviewData;
@@ -180,6 +200,13 @@ const DashboardCollectionOverview = (props: Props) => {
 	const renderSecondaryContent = () => {
 		return (
 			<>
+				<OverviewSection title="recently viewed">
+					<RecentVisitList
+						userScopeVisits={userScopeVisits}
+						pubs={recentPubs}
+						collections={recentCollections}
+					/>
+				</OverviewSection>
 				<OverviewSection title="About">
 					<ScopeSummaryList
 						scopeKind="collection"

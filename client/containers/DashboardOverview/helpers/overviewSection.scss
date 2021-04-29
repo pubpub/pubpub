@@ -1,6 +1,9 @@
 @import '../overviewStyles.scss';
 
 .overview-section-component {
+	&:not(:first-child) {
+		margin-top: 30px;
+	}
     > .title {
         display: flex;
         align-items: center;

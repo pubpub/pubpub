@@ -5,7 +5,7 @@ import { Collection, Pub, UserScopeVisit } from 'utils/types';
 
 import { usePageContext } from 'utils/hooks';
 import CommunityItems from './CommunityItems';
-import { OverviewFrame, OverviewSection, ScopeSummaryList } from '../helpers';
+import { OverviewFrame, OverviewSection, ScopeSummaryList, RecentVisitList } from '../helpers';
 
 require('./dashboardCommunityOverview.scss');
 
@@ -26,7 +26,7 @@ type Props = {
 
 const DashboardCommunityOverview = (props: Props) => {
 	const { overviewData } = props;
-	const { pubs, collections, includesAllPubs } = overviewData;
+	const { pubs, recentPubs, userScopeVisits, collections, includesAllPubs } = overviewData;
 	const { communityData } = usePageContext();
 
 	return (
@@ -42,9 +42,18 @@ const DashboardCommunityOverview = (props: Props) => {
 					</OverviewSection>
 				}
 				secondary={
-					<OverviewSection title="About">
-						<ScopeSummaryList scope={communityData} scopeKind="community" />
-					</OverviewSection>
+					<>
+						<OverviewSection title="recently viewed">
+							<RecentVisitList
+								userScopeVisits={userScopeVisits}
+								pubs={recentPubs}
+								collections={collections}
+							/>
+						</OverviewSection>
+						<OverviewSection title="about">
+							<ScopeSummaryList scope={communityData} scopeKind="community" />
+						</OverviewSection>
+					</>
 				}
 			/>
 		</DashboardFrame>

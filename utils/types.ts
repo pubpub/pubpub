@@ -482,7 +482,7 @@ export type PubGetOptions = {
 export type UserScopeVisit = {
 	id: string;
 	communityId: string;
-	createdAt: string;
+	updatedAt: string;
 	collectionId: null | string;
 	pubId: null | string;
 	userId: string;
