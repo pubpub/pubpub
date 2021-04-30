@@ -4,8 +4,17 @@ import { DashboardFrame } from 'components';
 import { Collection, Pub, UserScopeVisit } from 'utils/types';
 
 import { usePageContext } from 'utils/hooks';
+import { getDashUrl } from 'utils/dashboard';
+
 import CommunityItems from './CommunityItems';
-import { OverviewFrame, OverviewSection, ScopeSummaryList, RecentVisitList } from '../helpers';
+import {
+	OverviewFrame,
+	OverviewSection,
+	ScopeSummaryList,
+	RecentVisitList,
+	QuickActions,
+	QuickAction,
+} from '../helpers';
 
 require('./dashboardCommunityOverview.scss');
 
@@ -23,6 +32,24 @@ type Props = {
 		recentPubs: Pub[];
 	};
 };
+
+const quickActions: QuickAction[] = [
+	{
+		label: 'Edit home page',
+		icon: 'page-layout',
+		href: getDashUrl({ mode: 'pages', subMode: 'home' }),
+	},
+	{
+		label: 'Edit nav bar',
+		icon: 'cog',
+		href: getDashUrl({ mode: 'settings', section: 'navigation' }),
+	},
+	{
+		label: 'Edit members/roles',
+		icon: 'people',
+		href: getDashUrl({ mode: 'members' }),
+	},
+];
 
 const DashboardCommunityOverview = (props: Props) => {
 	const { overviewData } = props;
@@ -50,7 +77,10 @@ const DashboardCommunityOverview = (props: Props) => {
 								collections={collections}
 							/>
 						</OverviewSection>
-						<OverviewSection title="about">
+						<OverviewSection title="Quick Actions" spaced>
+							<QuickActions actions={quickActions} />
+						</OverviewSection>
+						<OverviewSection title="About">
 							<ScopeSummaryList scope={communityData} scopeKind="community" />
 						</OverviewSection>
 					</>
