@@ -18,13 +18,16 @@ import {
 } from 'utils/types';
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { usePageContext } from 'utils/hooks';
+import { getDashUrl } from 'utils/dashboard';
 
 import {
 	OverviewFrame,
 	OverviewSearchGroup,
 	OverviewSection,
-	ScopeSummaryList,
 	RecentVisitList,
+	QuickActions,
+	QuickAction,
+	ScopeSummaryList,
 } from '../helpers';
 import { PubOverviewRow, LoadMorePubsRow, SpecialRow } from '../overviewRows';
 import { PubWithCollections } from './types';
@@ -44,6 +47,27 @@ type Props = {
 		recentCollections: Collection[];
 		includesAllPubs: boolean;
 	};
+};
+
+const getQuickActionsForCollection = (collection: Collection): QuickAction[] => {
+	const { slug: collectionSlug } = collection;
+	return [
+		{
+			label: 'Edit layout',
+			icon: 'page-layout',
+			href: getDashUrl({ collectionSlug, mode: 'layout' }),
+		},
+		{
+			label: 'Edit metadata',
+			icon: 'layers',
+			href: getDashUrl({ collectionSlug, mode: 'settings', section: 'metadata' }),
+		},
+		{
+			label: 'Edit attribution',
+			icon: 'edit',
+			href: getDashUrl({ collectionSlug, mode: 'settings', section: 'attribution' }),
+		},
+	];
 };
 
 const DashboardCollectionOverview = (props: Props) => {
@@ -138,6 +162,7 @@ const DashboardCollectionOverview = (props: Props) => {
 		const pub = pubsById[collectionPub.pubId]!;
 		return (
 			<PubOverviewRow
+				inCollection
 				className={classNames(isDragging && 'collection-overview-row-is-dragging')}
 				pub={pub}
 				leftIconElement={canDragDrop && <DragHandle dragHandleProps={dragHandleProps} />}
@@ -200,12 +225,15 @@ const DashboardCollectionOverview = (props: Props) => {
 	const renderSecondaryContent = () => {
 		return (
 			<>
-				<OverviewSection title="recently viewed">
+				<OverviewSection title="recently viewed" spaced>
 					<RecentVisitList
 						userScopeVisits={userScopeVisits}
 						pubs={recentPubs}
 						collections={recentCollections}
 					/>
+				</OverviewSection>
+				<OverviewSection title="Quick Actions" spaced>
+					<QuickActions actions={getQuickActionsForCollection(collection)} />
 				</OverviewSection>
 				<OverviewSection title="About">
 					<ScopeSummaryList

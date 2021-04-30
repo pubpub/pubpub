@@ -1,9 +1,12 @@
 @import '../overviewStyles.scss';
 
 .overview-section-component {
-	&:not(:first-child) {
-		margin-top: 30px;
-	}
+    color: $darkest-grey;
+
+    &.spaced {
+        margin-bottom: 20px;
+    }
+
     > .title {
         display: flex;
         align-items: center;
