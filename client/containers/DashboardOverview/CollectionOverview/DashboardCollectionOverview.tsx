@@ -13,7 +13,6 @@ import {
 	Maybe,
 	PubsQuery,
 	DefinitelyHas,
-	Pub,
 	UserScopeVisit,
 } from 'utils/types';
 import { getSchemaForKind } from 'utils/collections/schemas';
@@ -24,7 +23,6 @@ import {
 	OverviewFrame,
 	OverviewSearchGroup,
 	OverviewSection,
-	RecentVisitList,
 	QuickActions,
 	QuickAction,
 	ScopeSummaryList,
@@ -43,8 +41,6 @@ type Props = {
 		collectionPubs: CollectionPub[];
 		pubs: PubWithCollections[];
 		userScopeVisits: UserScopeVisit[];
-		recentPubs: Pub[];
-		recentCollections: Collection[];
 		includesAllPubs: boolean;
 	};
 };
@@ -74,10 +70,7 @@ const DashboardCollectionOverview = (props: Props) => {
 	const { overviewData } = props;
 	const {
 		pubs: initialPubs,
-		recentPubs,
-		userScopeVisits,
 		collectionPubs: initialCollectionPubs,
-		recentCollections,
 		collection: initialCollection,
 		includesAllPubs,
 	} = overviewData;
@@ -225,13 +218,6 @@ const DashboardCollectionOverview = (props: Props) => {
 	const renderSecondaryContent = () => {
 		return (
 			<>
-				<OverviewSection title="recently viewed" spaced>
-					<RecentVisitList
-						userScopeVisits={userScopeVisits}
-						pubs={recentPubs}
-						collections={recentCollections}
-					/>
-				</OverviewSection>
 				<OverviewSection title="Quick Actions" spaced>
 					<QuickActions actions={getQuickActionsForCollection(collection)} />
 				</OverviewSection>

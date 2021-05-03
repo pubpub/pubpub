@@ -16,13 +16,6 @@ import {
 	QuickAction,
 } from '../helpers';
 
-require('./dashboardCommunityOverview.scss');
-
-type RecentVisit = {
-	title: string;
-	id: string;
-};
-
 type Props = {
 	overviewData: {
 		collections: Collection[];
@@ -70,13 +63,15 @@ const DashboardCommunityOverview = (props: Props) => {
 				}
 				secondary={
 					<>
-						<OverviewSection title="recently viewed">
-							<RecentVisitList
-								userScopeVisits={userScopeVisits}
-								pubs={recentPubs}
-								collections={collections}
-							/>
-						</OverviewSection>
+						{userScopeVisits.length > 0 && (
+							<OverviewSection title="recently viewed">
+								<RecentVisitList
+									userScopeVisits={userScopeVisits}
+									pubs={recentPubs}
+									collections={collections}
+								/>
+							</OverviewSection>
+						)}
 						<OverviewSection title="Quick Actions" spaced>
 							<QuickActions actions={quickActions} />
 						</OverviewSection>

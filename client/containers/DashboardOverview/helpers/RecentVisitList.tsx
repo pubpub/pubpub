@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Icon } from 'components';
+import { Icon, IconName } from 'components';
 import { UserScopeVisit, Pub, Collection } from 'utils/types';
 import { getDashUrl } from 'utils/dashboard';
 
@@ -12,9 +12,15 @@ type Props = {
 	collections: Collection[];
 };
 
-const RecentVisitList = (props: Props) => {
-	const { userScopeVisits, pubs, collections } = props;
-	const recentVisits = userScopeVisits
+type Visit = {
+	href: string;
+	iconName: IconName;
+	id: string;
+	title: string;
+};
+
+const getRecentVisits = (userScopeVisits, pubs, collections): Visit[] =>
+	userScopeVisits
 		.sort((visitA, visitB) => (visitA.updatedAt > visitB.updatedAt ? -1 : 1))
 		.reduce((memo: any, visit) => {
 			const { pubId, collectionId } = visit;
@@ -35,6 +41,10 @@ const RecentVisitList = (props: Props) => {
 			];
 		}, [])
 		.slice(0, 5);
+
+const RecentVisitList = (props: Props) => {
+	const { userScopeVisits, pubs, collections } = props;
+	const recentVisits = getRecentVisits(userScopeVisits, pubs, collections);
 
 	return (
 		<ol className="recent-visit-list-component">
