@@ -86,21 +86,19 @@ const NewEdgeInput = (props: Props) => {
 		if ('indeterminate' in item && item.indeterminate) {
 			return indeterminateMenuItem;
 		}
-		if ('targetPub' in item) {
+		if ('targetPub' in item && item.targetPub) {
 			const { targetPub } = item;
-			if (targetPub) {
-				return (
-					<PubMenuItem
-						key={targetPub.id}
-						title={targetPub.title}
-						contributors={targetPub.attributions.filter((attr) => attr.isAuthor)}
-						image={targetPub.avatar}
-						active={modifiers.active}
-						onClick={handleClick}
-						showImage={true}
-					/>
-				);
-			}
+			return (
+				<PubMenuItem
+					key={targetPub.id}
+					title={targetPub.title}
+					contributors={targetPub.attributions.filter((attr) => attr.isAuthor)}
+					image={targetPub.avatar}
+					active={modifiers.active}
+					onClick={handleClick}
+					showImage={true}
+				/>
+			);
 		}
 		if (
 			'externalPublication' in item &&
