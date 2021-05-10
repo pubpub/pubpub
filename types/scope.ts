@@ -5,11 +5,21 @@ export type ScopeSummary = {
 	reviews: number;
 };
 
-export type UserScopeVisit = {
+type UserVisitBase = {
 	id: string;
 	communityId: string;
 	updatedAt: string;
-	collectionId: null | string;
-	pubId: null | string;
 	userId: string;
 };
+
+type UserPubVisit = UserVisitBase & {
+	collectionId: null;
+	pubId: string;
+};
+
+type UserCollectionVisit = UserVisitBase & {
+	collectionId: string;
+	pubId: null;
+};
+
+export type UserScopeVisit = UserCollectionVisit | UserPubVisit;
