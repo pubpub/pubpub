@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Node } from 'prosemirror-model';
 
 import { GridWrapper } from 'components';
@@ -19,6 +19,7 @@ type Props = {
 const LayoutEditorText = (props: Props) => {
 	const { onChange, content, layoutIndex } = props;
 	const [editorChangeObject, setEditorChangeObject] = useState<EditorChangeObject>();
+	const editorWrapperRef = useRef<null | HTMLDivElement>(null);
 
 	const handleEdit = useCallback(
 		(doc: Node) => onChange(layoutIndex, { text: doc.toJSON() as DocJson }),
@@ -32,18 +33,23 @@ const LayoutEditorText = (props: Props) => {
 					<FormattingBar
 						editorChangeObject={editorChangeObject!}
 						buttons={buttons.layoutEditorButtonSet}
+						controlsConfiguration={{
+							container: editorWrapperRef.current!,
+						}}
 					/>
 				</div>
 			</div>
 			<div className="block-content">
 				<GridWrapper>
-					<Editor
-						placeholder="Enter text..."
-						initialContent={content.text}
-						onChange={setEditorChangeObject}
-						onEdit={handleEdit}
-						debounceEditsMs={300}
-					/>
+					<div className="editor-wrapper" ref={editorWrapperRef}>
+						<Editor
+							placeholder="Enter text..."
+							initialContent={content.text}
+							onChange={setEditorChangeObject}
+							onEdit={handleEdit}
+							debounceEditsMs={300}
+						/>
+					</div>
 				</GridWrapper>
 			</div>
 		</div>
