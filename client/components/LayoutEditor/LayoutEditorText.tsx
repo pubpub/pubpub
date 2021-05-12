@@ -34,22 +34,21 @@ const LayoutEditorText = (props: Props) => {
 						editorChangeObject={editorChangeObject!}
 						buttons={buttons.layoutEditorButtonSet}
 						controlsConfiguration={{
+							isAbsolutelyPositioned: true,
 							container: editorWrapperRef.current!,
 						}}
 					/>
 				</div>
 			</div>
-			<div className="block-content">
+			<div className="block-content" ref={editorWrapperRef}>
 				<GridWrapper>
-					<div className="editor-wrapper" ref={editorWrapperRef}>
-						<Editor
-							placeholder="Enter text..."
-							initialContent={content.text}
-							onChange={setEditorChangeObject}
-							onEdit={handleEdit}
-							debounceEditsMs={300}
-						/>
-					</div>
+					<Editor
+						placeholder="Enter text..."
+						initialContent={content.text}
+						onChange={setEditorChangeObject}
+						onEdit={handleEdit}
+						debounceEditsMs={300}
+					/>
 				</GridWrapper>
 			</div>
 		</div>
