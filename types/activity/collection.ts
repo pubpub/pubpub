@@ -1,6 +1,6 @@
-import { ActivityItemBase, Diff } from './util';
+import { InsertableActivityItemBase, Diff } from './util';
 
-type CollectionActivityItemBase = ActivityItemBase & {
+type CollectionActivityItemBase = InsertableActivityItemBase & {
 	collectionId: string;
 	payload: {
 		collection: {

@@ -1,6 +1,6 @@
-import { ActivityItemBase } from './util';
+import { InsertableActivityItemBase } from './util';
 
-export type ThreadActivityItemBase = ActivityItemBase & {
+export type ThreadActivityItemBase = InsertableActivityItemBase & {
 	payload: {
 		threadId: string;
 		isReply: boolean;

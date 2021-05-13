@@ -1,10 +1,10 @@
 import { Review } from '../review';
 
-import { ActivityItemBase, Diff } from './util';
+import { InsertableActivityItemBase, Diff } from './util';
 import { DiscussionActivityItemBase } from './discussion';
 import { ThreadActivityItemBase } from './thread';
 
-type PubActivityItemBase = ActivityItemBase & {
+type PubActivityItemBase = InsertableActivityItemBase & {
 	pubId: string;
 	payload: {
 		pub: {

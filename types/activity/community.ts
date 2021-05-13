@@ -1,6 +1,6 @@
-import { ActivityItemBase, Diff } from './util';
+import { InsertableActivityItemBase, Diff } from './util';
 
-type CommunityActivityItemBase = ActivityItemBase & {
+type CommunityActivityItemBase = InsertableActivityItemBase & {
 	payload: {
 		community: {
 			title: string;

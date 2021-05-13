@@ -1,6 +1,6 @@
 export type Diff<T> = { from: T; to: T };
 
-export type ActivityItemBase = {
+export type InsertableActivityItemBase = {
 	id: string;
 	createdAt: string;
 	updatedAt: string;
