@@ -5,7 +5,8 @@ import { PubActivityItem } from './pub';
 export type InsertableActivityItem =
 	| CommunityActivityItem
 	| CollectionActivityItem
-	| PubActivityItem;
+	| PubActivityItem
+	| MemberActivityItem;
 
 export type ActivityItem = InsertableActivityItem & {
 	id: string;

@@ -11,14 +11,14 @@ type MemberActivityItemBase = InsertableActivityItemBase & {
 export type MemberCreated = MemberActivityItemBase & {
 	kind: 'member-created';
 	payload: {
-		memberPermission: MemberPermission;
+		permissions: MemberPermission;
 	};
 };
 
 export type MemberUpdatedActivityItem = MemberActivityItemBase & {
 	kind: 'member-updated';
 	payload: {
-		memberPermission: Diff<MemberPermission>;
+		permissions: Diff<MemberPermission>;
 	};
 };
 
