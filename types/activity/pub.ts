@@ -41,17 +41,21 @@ export type PubReleasedActivityItem = PubActivityItemBase & {
 type PubEdgeActivityItemBase = PubActivityItemBase & {
 	payload: {
 		pubEdgeId: string;
-		target: {
-			pub: {
-				id: string;
-				title: string;
-				slug: string;
-			};
-			externalPublication?: {
-				title: string;
-				url: string;
-			};
-		};
+		target:
+			| {
+					pub: {
+						id: string;
+						title: string;
+						slug: string;
+					};
+			  }
+			| {
+					externalPublication: {
+						id: string;
+						title: string;
+						url: string;
+					};
+			  };
 	};
 };
 
