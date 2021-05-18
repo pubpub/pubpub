@@ -21,7 +21,7 @@ const getDiffsForPayload = <
 	keys: EntryKey[],
 ): Diffs => {
 	return keys.reduce(
-		(memo: Diffs, key: keyof Entry) =>
+		(memo: Diffs, key: EntryKey) =>
 			oldEntry[key] === newEntry[key]
 				? memo
 				: {
@@ -45,10 +45,10 @@ const getChangeFlagsForPayload = <
 	keys: EntryKey[],
 ): Flags => {
 	return keys.reduce(
-		(memo: Flags, key: keyof Entry) =>
+		(memo: Flags, key: EntryKey) =>
 			oldEntry[key] === newEntry[key] ? memo : { ...memo, [key]: true },
 		{} as Flags,
-	) as Flags;
+	);
 };
 
 export const createPubActivityItem = async (
