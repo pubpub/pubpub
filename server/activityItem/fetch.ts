@@ -64,7 +64,11 @@ const createAssociationsArray = <T>(
 	return associations as Record<AssociationType, ReturnType<typeof getDefaultValue>>;
 };
 
+<<<<<<< HEAD
 const createAssociationsIdsArray = () => createAssociationsArray(() => new Set<string>());
+=======
+const createAssociationsIdsArray = () => createAssociationsArray(() => [] as string[]);
+>>>>>>> 7f12590b54fb73f0fcf8a80f5e231f178847c880
 const createAssociationsModelsArray = () => createAssociationsArray(() => ({}));
 
 const getPubsWhereQueryForScope = async (scope: Scope) => {
