@@ -1,47 +1,36 @@
 import { Op } from 'sequelize';
 
 import * as types from 'types';
-import { IdIndex } from 'types';
-import { ActivityItem, CollectionPub } from 'server/models';
+import {
+	ActivityAssociations,
+	ActivityAssociationType,
+	activityAssociationTypes,
+	ActivityAssociationIds,
+	WithId,
+	IdIndex,
+} from 'types';
+import {
+	ActivityItem,
+	Collection,
+	CollectionPub,
+	Community,
+	Discussion,
+	ExternalPublication,
+	Pub,
+	PubEdge,
+	Release,
+	Review,
+	Thread,
+	ThreadComment,
+	User,
+} from 'server/models';
+import { indexById } from 'utils/arrays';
 
-const associationTypes = [
-	'collectionPubs',
-	'collections',
-	'communities',
-	'discussions',
-	'externalPublications',
-	'pubEdges',
-	'pubs',
-	'reviews',
-	'releases',
-	'threadComments',
-	'threads',
-	'users',
-] as const;
+type PromiseRecord<T extends { [k: string]: any }> = {
+	[K in keyof T]: Promise<T[K]>;
+};
 
-type AssociationType = typeof associationTypes[number];
-type AssociationIds = Record<AssociationType, Set<string>>;
-type AssociationRecord<T> = T extends Record<AssociationType, any> ? T : never;
-
-type Associations = AssociationRecord<
-	IdIndexes<{
-		collectionPubs: types.CollectionPub;
-		collections: types.Collection;
-		communities: types.Community;
-		discussions: types.Discussion;
-		externalPublications: types.ExternalPublication;
-		pubEdges: types.PubEdge;
-		pubs: types.Pub;
-		releases: types.Release;
-		reviews: types.Review;
-		threadComments: types.ThreadComment;
-		threads: types.Thread;
-		users: types.User;
-	}>
->;
-
-type Scope = { communityId: string } & ({ pubId: string } | { collectionId: string });
-type IdIndexes<T extends { [k: string]: any }> = { [k in keyof T]: IdIndex<T[k]> };
+type Scope = { communityId: string } & ({ pubId: string } | { collectionId: string } | {});
 
 type FetchActivityItemsOptions = {
 	scope: Scope;
@@ -51,25 +40,16 @@ type FetchActivityItemsOptions = {
 
 type FetchActivityItemsResult = {
 	activityItems: types.ActivityItem[];
-	associations: Associations;
+	associations: ActivityAssociations;
 };
 
-const createAssociationsArray = <T>(
-	getDefaultValue: () => T,
-): Record<AssociationType, ReturnType<typeof getDefaultValue>> => {
+const createAssociationsArrays = (): Record<ActivityAssociationType, string[]> => {
 	const associations = {};
-	associationTypes.forEach((type) => {
-		associations[type] = getDefaultValue();
+	activityAssociationTypes.forEach((type) => {
+		associations[type] = [] as string[];
 	});
-	return associations as Record<AssociationType, ReturnType<typeof getDefaultValue>>;
+	return associations as Record<ActivityAssociationType, string[]>;
 };
-
-<<<<<<< HEAD
-const createAssociationsIdsArray = () => createAssociationsArray(() => new Set<string>());
-=======
-const createAssociationsIdsArray = () => createAssociationsArray(() => [] as string[]);
->>>>>>> 7f12590b54fb73f0fcf8a80f5e231f178847c880
-const createAssociationsModelsArray = () => createAssociationsArray(() => ({}));
 
 const getPubsWhereQueryForScope = async (scope: Scope) => {
 	if ('pubId' in scope) {
@@ -103,8 +83,8 @@ const fetchActivityItemModels = async (
 	});
 };
 
-const getActivityItemAssociationIds = (items: types.ActivityItem[]): AssociationIds => {
-	const associationIds = createAssociationsIdsArray();
+const getActivityItemAssociationIds = (items: types.ActivityItem[]): ActivityAssociationIds => {
+	const associationIds = createAssociationsArrays();
 	const {
 		collectionPubs,
 		collections,
@@ -120,39 +100,104 @@ const getActivityItemAssociationIds = (items: types.ActivityItem[]): Association
 		users,
 	} = associationIds;
 	items.forEach((item) => {
-		communities.add(item.communityId);
-		users.add(item.actorId);
+		communities.push(item.communityId);
+		users.push(item.actorId);
 		if (item.collectionId) {
-			collections.add(item.collectionId);
+			collections.push(item.collectionId);
 		}
 		if (item.pubId) {
-			pubs.add(item.pubId);
+			pubs.push(item.pubId);
 		}
 		if (item.kind === 'collection-pub-created' || item.kind === 'collection-pub-removed') {
-			collections.add(item.collectionId);
-			collectionPubs.add(item.payload.collectionPubId);
+			collections.push(item.collectionId);
+			collectionPubs.push(item.payload.collectionPubId);
 		} else if (item.kind === 'pub-discussion-comment-added') {
-			discussions.add(item.payload.discussionId);
-			threads.add(item.payload.threadId);
-			threadComments.add(item.payload.threadComment.id);
+			discussions.push(item.payload.discussionId);
+			threads.push(item.payload.threadId);
+			threadComments.push(item.payload.threadComment.id);
 		} else if (item.kind === 'pub-review-created' || item.kind === 'pub-review-updated') {
-			reviews.add(item.payload.reviewId);
+			reviews.push(item.payload.reviewId);
 		} else if (item.kind === 'pub-review-comment-added') {
-			reviews.add(item.payload.reviewId);
-			threads.add(item.payload.threadId);
-			threadComments.add(item.payload.threadComment.id);
+			reviews.push(item.payload.reviewId);
+			threads.push(item.payload.threadId);
+			threadComments.push(item.payload.threadComment.id);
 		} else if (item.kind === 'pub-edge-created' || item.kind === 'pub-edge-removed') {
-			pubEdges.add(item.payload.pubEdgeId);
+			pubEdges.push(item.payload.pubEdgeId);
 			if ('externalPublication' in item.payload.target) {
-				externalPublications.add(item.payload.target.externalPublication.id);
+				externalPublications.push(item.payload.target.externalPublication.id);
 			}
 		} else if (item.kind === 'pub-released') {
-			releases.add(item.payload.releaseId);
+			releases.push(item.payload.releaseId);
 		}
 	});
 	return associationIds;
 };
 
-const fetchActivityItems = async (options: FetchActivityItemsOptions) => {
-	const activityItemModels = await fetchActivityItemModels(options);
+const fetchModels = async <T extends WithId>(Model: any, ids: string[]): Promise<IdIndex<T>> => {
+	if (ids.length === 0) {
+		return {};
+	}
+	const models = await Model.findAll({ where: { id: { [Op.in]: [...new Set(ids)] } } });
+	return indexById(models as T[]);
+};
+
+const awaitAssociations = async (
+	promised: PromiseRecord<ActivityAssociations>,
+): Promise<ActivityAssociations> => {
+	const associations: Partial<ActivityAssociations> = {};
+	const keyValuePairs = await Promise.all(
+		Object.entries(promised).map(async ([key, promise]) => {
+			const value = await promise;
+			return [key, value] as const;
+		}),
+	);
+	keyValuePairs.forEach(([key, value]) => {
+		associations[key] = value;
+	});
+	return associations as ActivityAssociations;
+};
+
+const fetchAssociations = (
+	associationIds: ActivityAssociationIds,
+): Promise<ActivityAssociations> => {
+	const {
+		collectionPubs,
+		collections,
+		communities,
+		discussions,
+		externalPublications,
+		pubEdges,
+		pubs,
+		releases,
+		reviews,
+		threadComments,
+		threads,
+		users,
+	} = associationIds;
+	return awaitAssociations({
+		collectionPubs: fetchModels<types.CollectionPub>(CollectionPub, collectionPubs),
+		collections: fetchModels<types.Collection>(Collection, collections),
+		communities: fetchModels<types.Community>(Community, communities),
+		discussions: fetchModels<types.Discussion>(Discussion, discussions),
+		externalPublications: fetchModels<types.ExternalPublication>(
+			ExternalPublication,
+			externalPublications,
+		),
+		pubEdges: fetchModels<types.PubEdge>(PubEdge, pubEdges),
+		pubs: fetchModels<types.Pub>(Pub, pubs),
+		releases: fetchModels<types.Release>(Release, releases),
+		reviews: fetchModels<types.Review>(Review, reviews),
+		threadComments: fetchModels<types.ThreadComment>(ThreadComment, threadComments),
+		threads: fetchModels<types.Thread>(Thread, threads),
+		users: fetchModels<types.User>(User, users),
+	});
+};
+
+export const fetchActivityItems = async (
+	options: FetchActivityItemsOptions,
+): Promise<FetchActivityItemsResult> => {
+	const activityItems = await fetchActivityItemModels(options);
+	const associationIds = getActivityItemAssociationIds(activityItems);
+	const associations = await fetchAssociations(associationIds);
+	return { activityItems, associations };
 };
