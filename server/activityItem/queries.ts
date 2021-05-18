@@ -4,42 +4,72 @@ import {
 	Collection as CollectionType,
 	Community as CommunityType,
 	Member as MemberType,
+	Diff,
 } from 'types';
 
 import { Pub, ActivityItem, Collection, Member, Community } from 'server/models';
 
 const createActivityItem = (ai: InsertableActivityItem) => ActivityItem.create(ai);
 
-const getDiffsForPayload = (newEntry, oldEntry, keys) =>
-	keys.reduce((memo, key) =>
-		oldEntry[key] === newEntry[key]
-			? memo
-			: {
-					...memo,
-					[key]: {
-						from: oldEntry[key],
-						to: newEntry[key],
-					},
-			  },
+const getDiffsForPayload = <
+	Entry extends Record<string, any>,
+	EntryKey extends keyof Entry,
+	Diffs = Partial<{ [Key in EntryKey]: Diff<Entry[Key]> }>
+>(
+	newEntry: Entry,
+	oldEntry: Entry,
+	keys: EntryKey[],
+): Diffs => {
+	return keys.reduce(
+		(memo: Diffs, key: keyof Entry) =>
+			oldEntry[key] === newEntry[key]
+				? memo
+				: {
+						...memo,
+						[key]: {
+							from: oldEntry[key],
+							to: newEntry[key],
+						},
+				  },
+		{} as Diffs,
 	);
+};
+
+const getChangeFlagsForPayload = <
+	Entry extends Record<string, any>,
+	EntryKey extends keyof Entry,
+	Flags = Partial<{ [Key in EntryKey]: true }>
+>(
+	newEntry: Entry,
+	oldEntry: Entry,
+	keys: EntryKey[],
+): Flags => {
+	return keys.reduce(
+		(memo: Flags, key: keyof Entry) =>
+			oldEntry[key] === newEntry[key] ? memo : { ...memo, [key]: true },
+		{} as Flags,
+	) as Flags;
+};
 
 export const createPubActivityItem = async (
-	kind: 'pub-created' | 'pub-updated' | 'pub-released' | 'pub-removed',
+	kind: 'pub-created' | 'pub-updated' | 'pub-removed',
 	userId: string,
 	oldPub: PubType,
 	communityId: string,
 	pubId: string,
 ) => {
-	const pub = Pub.findOne({ where: pubId });
+	const pub: PubType = Pub.findOne({ where: pubId });
+	const diffs = getDiffsForPayload(pub, oldPub, ['title', 'doi']);
 	createActivityItem({
 		kind,
-		userId,
+		actorId: userId,
 		communityId,
+		pubId: pub.id,
 		payload: {
+			...diffs,
 			pub: {
 				title: pub.title,
 			},
-			...getDiffsForPayload(pub, oldPub, ['title', 'doi']),
 		},
 	});
 };
@@ -50,12 +80,18 @@ export const createCommunityActivityItem = async (
 	oldCommunity: CommunityType,
 	communityId: string,
 ) => {
-	const community = Community.findOne({ where: { id: communityId } });
+	const community: CommunityType = Community.findOne({ where: { id: communityId } });
+	const diffs = getDiffsForPayload(community, oldCommunity, ['title']);
 	createActivityItem({
-		userId,
+		actorId: userId,
 		kind,
 		communityId,
-		payload: getDiffsForPayload(community, oldCommunity, ['title']),
+		payload: {
+			...diffs,
+			community: {
+				title: community.title,
+			},
+		},
 	});
 };
 
@@ -67,7 +103,7 @@ export const createMemberActivityItem = async (
 	oldMember: MemberType,
 ) => {
 	const member = await Member.findOne({ where: { id: userId } });
-	const payloadDiffs = getDiffsForPayload(member, oldMember, ['permissions']);
+	const diffs = getDiffsForPayload(member, oldMember, ['permissions']);
 	createActivityItem({
 		kind,
 		actorId: userId,
@@ -75,7 +111,7 @@ export const createMemberActivityItem = async (
 		payload: {
 			userId: memberId,
 			permissions: member.permissions,
-			...payloadDiffs,
+			...diffs,
 		},
 	});
 };
@@ -87,13 +123,14 @@ export const createCollectionActivityItem = async (
 	communityId: string,
 	oldCollection: CollectionType,
 ) => {
-	const collection = await Collection.findOne({ where: { id: collectionId } });
+	const collection: CollectionType = await Collection.findOne({ where: { id: collectionId } });
 	const { title } = collection;
-	const payloadDiffs = getDiffsForPayload(collection, oldCollection, [
+	const diffs = getDiffsForPayload(collection, oldCollection, [
 		'isPublic',
 		'isRestricted',
 		'title',
 	]);
+	const flags = getChangeFlagsForPayload(collection, oldCollection, ['layout', 'metadata']);
 	createActivityItem({
 		kind,
 		collectionId,
@@ -103,9 +140,8 @@ export const createCollectionActivityItem = async (
 			collection: {
 				title,
 			},
-			layout: true as const,
-			metadata: true as const,
-			...payloadDiffs,
+			...flags,
+			...diffs,
 		},
 	});
 };

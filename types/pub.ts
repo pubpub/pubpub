@@ -63,7 +63,7 @@ export type Pub = {
 	firstPublishedAt?: string;
 	lastPublishedAt?: string;
 	customPublishedAt?: string;
-	doi?: string;
+	doi: null | string;
 	labels?: string;
 	downloads?: any[];
 	metadata?: {};

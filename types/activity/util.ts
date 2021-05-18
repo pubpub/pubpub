@@ -1,5 +1,3 @@
-export type Diff<T> = { from: T; to: T };
-
 export type InsertableActivityItemBase = {
 	kind: string;
 	communityId: string;

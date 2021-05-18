@@ -1,6 +1,7 @@
+import { Diff } from '../util';
 import { MemberPermission } from '../member';
 
-import { InsertableActivityItemBase, Diff } from './util';
+import { InsertableActivityItemBase } from './util';
 
 type MemberActivityItemBase = InsertableActivityItemBase & {
 	payload: {
