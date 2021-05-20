@@ -1,20 +1,13 @@
-import {
-	Pub as PubType,
-	InsertableActivityItem,
-	Collection as CollectionType,
-	Community as CommunityType,
-	Member as MemberType,
-	Diff,
-} from 'types';
+import * as types from 'types';
 
-import { Pub, ActivityItem, Collection, Member, Community } from 'server/models';
+import { Pub, ActivityItem, Collection, Member, Community, CollectionPub } from 'server/models';
 
-const createActivityItem = (ai: InsertableActivityItem) => ActivityItem.create(ai);
+const createActivityItem = (ai: types.InsertableActivityItem) => ActivityItem.create(ai);
 
 const getDiffsForPayload = <
 	Entry extends Record<string, any>,
 	EntryKey extends keyof Entry,
-	Diffs = Partial<{ [Key in EntryKey]: Diff<Entry[Key]> }>
+	Diffs = Partial<{ [Key in EntryKey]: types.Diff<Entry[Key]> }>
 >(
 	newEntry: Entry,
 	oldEntry: Entry,
@@ -52,13 +45,14 @@ const getChangeFlagsForPayload = <
 };
 
 export const createPubActivityItem = async (
-	kind: 'pub-created' | 'pub-updated' | 'pub-removed',
+	kind: 'pub-created' | 'pub-updated' | 'pub-removed' | 'pub-released',
 	userId: string,
-	oldPub: PubType,
+	oldPub: types.Pub,
 	communityId: string,
+	releaseId: string,
 	pubId: string,
 ) => {
-	const pub: PubType = Pub.findOne({ where: pubId });
+	const pub: types.Pub = Pub.findOne({ where: pubId });
 	const diffs = getDiffsForPayload(pub, oldPub, ['title', 'doi']);
 	createActivityItem({
 		kind,
@@ -66,6 +60,7 @@ export const createPubActivityItem = async (
 		communityId,
 		pubId: pub.id,
 		payload: {
+			releaseId,
 			...diffs,
 			pub: {
 				title: pub.title,
@@ -77,10 +72,10 @@ export const createPubActivityItem = async (
 export const createCommunityActivityItem = async (
 	kind: 'community-created' | 'community-updated',
 	userId: string,
-	oldCommunity: CommunityType,
+	oldCommunity: types.Community,
 	communityId: string,
 ) => {
-	const community: CommunityType = Community.findOne({ where: { id: communityId } });
+	const community: types.Community = Community.findOne({ where: { id: communityId } });
 	const diffs = getDiffsForPayload(community, oldCommunity, ['title']);
 	createActivityItem({
 		actorId: userId,
@@ -100,7 +95,7 @@ export const createMemberActivityItem = async (
 	userId: string,
 	communityId: string,
 	memberId: string,
-	oldMember: MemberType,
+	oldMember: types.Member,
 ) => {
 	const member = await Member.findOne({ where: { id: userId } });
 	const diffs = getDiffsForPayload(member, oldMember, ['permissions']);
@@ -116,14 +111,48 @@ export const createMemberActivityItem = async (
 	});
 };
 
+export const createCollectionPubActivityItem = async (
+	kind: 'collection-pub-created' | 'collection-pub-removed',
+	userId: string,
+	communityId: string,
+	collectionPubId: string,
+) => {
+	const collectionPub: types.DefinitelyHas<
+		types.CollectionPub,
+		'pub' | 'collection'
+	> = await CollectionPub.findOne({
+		where: { id: collectionPubId },
+		includes: [
+			{ model: Pub, as: 'pub' },
+			{ model: Collection, as: 'collection' },
+		],
+	});
+	createActivityItem({
+		kind,
+		pubId: collectionPub.pubId,
+		collectionId: collectionPub.collectionId,
+		actorId: userId,
+		communityId,
+		payload: {
+			collectionPubId,
+			pub: {
+				title: collectionPub.pub.title,
+			},
+			collection: {
+				title: collectionPub.collection.title,
+			},
+		},
+	});
+};
+
 export const createCollectionActivityItem = async (
 	kind: 'collection-created' | 'collection-updated' | 'collection-removed',
 	collectionId: string,
 	userId: string,
 	communityId: string,
-	oldCollection: CollectionType,
+	oldCollection: types.Collection,
 ) => {
-	const collection: CollectionType = await Collection.findOne({ where: { id: collectionId } });
+	const collection: types.Collection = await Collection.findOne({ where: { id: collectionId } });
 	const { title } = collection;
 	const diffs = getDiffsForPayload(collection, oldCollection, [
 		'isPublic',
