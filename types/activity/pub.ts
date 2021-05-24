@@ -1,6 +1,7 @@
 import { Review } from '../review';
+import { Diff } from '../util';
 
-import { InsertableActivityItemBase, Diff } from './util';
+import { InsertableActivityItemBase } from './util';
 import { DiscussionActivityItemBase } from './discussion';
 import { ThreadActivityItemBase } from './thread';
 

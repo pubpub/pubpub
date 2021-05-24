@@ -14,6 +14,8 @@ import {
 	User,
 } from 'types';
 
+import { ActivityItem } from '.';
+
 export const activityAssociationTypes = [
 	'collectionPubs',
 	'collections',
@@ -51,3 +53,8 @@ export type ActivityAssociations = AssociationRecord<
 		users: User;
 	}>
 >;
+
+export type ActivityItemsContext = {
+	activityItems: ActivityItem[];
+	associations: ActivityAssociations;
+};

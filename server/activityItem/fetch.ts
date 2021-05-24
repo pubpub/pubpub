@@ -6,6 +6,7 @@ import {
 	ActivityAssociationType,
 	activityAssociationTypes,
 	ActivityAssociationIds,
+	ActivityItemsContext,
 	WithId,
 	IdIndex,
 } from 'types';
@@ -38,11 +39,6 @@ type FetchActivityItemsOptions = {
 	offset?: number;
 };
 
-type FetchActivityItemsResult = {
-	activityItems: types.ActivityItem[];
-	associations: ActivityAssociations;
-};
-
 const createAssociationsArrays = (): Record<ActivityAssociationType, string[]> => {
 	const associations = {};
 	activityAssociationTypes.forEach((type) => {
@@ -73,14 +69,16 @@ const fetchActivityItemModels = async (
 	options: FetchActivityItemsOptions,
 ): Promise<types.ActivityItem[]> => {
 	const { scope, limit = 50, offset = 0 } = options;
-	return ActivityItem.findAll({
+	const models = await ActivityItem.findAll({
 		limit,
 		offset,
 		where: {
 			communityId: scope.communityId,
 			...(await getPubsWhereQueryForScope(scope)),
 		},
+		orderBy: [['createdAt', 'DESC']],
 	});
+	return models.map((model) => model.toJSON());
 };
 
 const getActivityItemAssociationIds = (items: types.ActivityItem[]): ActivityAssociationIds => {
@@ -195,7 +193,7 @@ const fetchAssociations = (
 
 export const fetchActivityItems = async (
 	options: FetchActivityItemsOptions,
-): Promise<FetchActivityItemsResult> => {
+): Promise<ActivityItemsContext> => {
 	const activityItems = await fetchActivityItemModels(options);
 	const associationIds = getActivityItemAssociationIds(activityItems);
 	const associations = await fetchAssociations(associationIds);
