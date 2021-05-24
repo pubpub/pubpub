@@ -1,4 +1,5 @@
 import { NodeLabelMap } from 'components/Editor';
+import { CitationInlineStyleKind, CitationStyleKind } from 'utils/citations';
 
 import { PubAttribution } from './attribution';
 import { CollectionPub } from './collection';
@@ -17,6 +18,13 @@ export type Draft = {
 	firebasePath: string;
 };
 
+export type Doc = {
+	id: string;
+	createdAt: string;
+	updatedAt: string;
+	content: DocJson;
+};
+
 export type Release = {
 	id: string;
 	noteContent?: {};
@@ -27,7 +35,7 @@ export type Release = {
 	updatedAt: string;
 	historyKey: number;
 	docId: string;
-	doc?: DocJson;
+	doc?: Doc;
 };
 
 export type Export = {
@@ -63,13 +71,13 @@ export type Pub = {
 	firstPublishedAt?: string;
 	lastPublishedAt?: string;
 	customPublishedAt?: string;
-	doi: null | string;
+	doi?: string;
 	labels?: string;
 	downloads?: any[];
 	metadata?: {};
 	licenseSlug?: string;
-	citationStyle?: string;
-	citationInlineStyle?: string;
+	citationStyle?: CitationStyleKind;
+	citationInlineStyle?: CitationInlineStyleKind;
 	viewHash?: string;
 	editHash?: string;
 	communityId: string;
