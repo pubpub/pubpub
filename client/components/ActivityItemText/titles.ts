@@ -3,10 +3,7 @@ import {
 	ActivityAssociations,
 	WithId,
 	ActivityAssociationModels,
-	ActivityItem,
 	CommunityActivityItem,
-	CommunityCreatedActivityItem,
-	CommunityUpdatedActivityItem,
 	CollectionActivityItem,
 	PubReleasedActivityItem,
 	PubActivityItem,
@@ -22,7 +19,7 @@ import {
 import { communityUrl, pubShortUrl, pubUrl } from 'utils/canonicalUrls';
 import { getDashUrl } from 'utils/dashboard';
 
-type Titled = {
+export type Titled = {
 	title: string;
 	href?: null | string;
 };

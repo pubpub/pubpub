@@ -1,9 +1,8 @@
 import React from 'react';
 
-import { ActivityItemsContext, ActivityAssociations, WithId, ActivityItem } from 'types';
-import { communityUrl, pubUrl } from 'utils/canonicalUrls';
-import { getDashUrl } from 'utils/dashboard';
-import { itemTitlers } from './titles';
+import { ActivityItemsContext, ActivityItem } from 'types';
+
+import { itemTitlers, Titled } from './titles';
 
 type Renderer<Item, Titles> = (
 	item: Item,
@@ -11,13 +10,40 @@ type Renderer<Item, Titles> = (
 	context: ActivityItemsContext,
 ) => React.ReactNode;
 
-type Renderers = {
+type MessageRenderers = {
 	[K in ActivityItem['kind']]: Renderer<
 		ActivityItem & { kind: K },
 		ReturnType<typeof itemTitlers[K]>
 	>;
 };
 
-const renderers: Renderers = {
-	'community-created': (item, { community }) => titled`created the community ${community}`,
+const renderTitled = (titled: Titled) => {
+	const { title, href } = titled;
+	const inner = href ? (
+		<a href={href} target="_blank" rel="noreferrer">
+			{title}
+		</a>
+	) : (
+		title
+	);
+	return <b>{inner}</b>;
+};
+
+const message = (strings: TemplateStringsArray, ...titles: Titled[]): React.ReactNode => {
+	const elements: React.ReactNode[] = [];
+	for (let i = 0; i < Math.max(strings.length, titles.length); i++) {
+		const string = strings[i];
+		const title = titles[i];
+		if (string) {
+			elements.push(string);
+		}
+		if (title) {
+			elements.push(renderTitled(title));
+		}
+	}
+	return elements;
+};
+
+const messageRenderers: MessageRenderers = {
+	'community-created': (item, { community }) => message`created the community ${community}`,
 };
