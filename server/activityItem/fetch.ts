@@ -84,48 +84,48 @@ const fetchActivityItemModels = async (
 const getActivityItemAssociationIds = (items: types.ActivityItem[]): ActivityAssociationIds => {
 	const associationIds = createAssociationsArrays();
 	const {
-		collectionPubs,
-		collections,
-		communities,
-		discussions,
-		externalPublications,
-		pubEdges,
-		pubs,
-		releases,
-		reviews,
-		threadComments,
-		threads,
-		users,
+		collectionPub,
+		collection,
+		community,
+		discussion,
+		externalPublication,
+		pubEdge,
+		pub,
+		release,
+		review,
+		threadComment,
+		thread,
+		user,
 	} = associationIds;
 	items.forEach((item) => {
-		communities.push(item.communityId);
-		users.push(item.actorId);
+		community.push(item.communityId);
+		user.push(item.actorId);
 		if (item.collectionId) {
-			collections.push(item.collectionId);
+			collection.push(item.collectionId);
 		}
 		if (item.pubId) {
-			pubs.push(item.pubId);
+			pub.push(item.pubId);
 		}
 		if (item.kind === 'collection-pub-created' || item.kind === 'collection-pub-removed') {
-			collections.push(item.collectionId);
-			collectionPubs.push(item.payload.collectionPubId);
+			collection.push(item.collectionId);
+			collectionPub.push(item.payload.collectionPubId);
 		} else if (item.kind === 'pub-discussion-comment-added') {
-			discussions.push(item.payload.discussionId);
-			threads.push(item.payload.threadId);
-			threadComments.push(item.payload.threadComment.id);
+			discussion.push(item.payload.discussionId);
+			thread.push(item.payload.threadId);
+			threadComment.push(item.payload.threadComment.id);
 		} else if (item.kind === 'pub-review-created' || item.kind === 'pub-review-updated') {
-			reviews.push(item.payload.reviewId);
+			review.push(item.payload.reviewId);
 		} else if (item.kind === 'pub-review-comment-added') {
-			reviews.push(item.payload.reviewId);
-			threads.push(item.payload.threadId);
-			threadComments.push(item.payload.threadComment.id);
+			review.push(item.payload.reviewId);
+			thread.push(item.payload.threadId);
+			threadComment.push(item.payload.threadComment.id);
 		} else if (item.kind === 'pub-edge-created' || item.kind === 'pub-edge-removed') {
-			pubEdges.push(item.payload.pubEdgeId);
+			pubEdge.push(item.payload.pubEdgeId);
 			if ('externalPublication' in item.payload.target) {
-				externalPublications.push(item.payload.target.externalPublication.id);
+				externalPublication.push(item.payload.target.externalPublication.id);
 			}
 		} else if (item.kind === 'pub-released') {
-			releases.push(item.payload.releaseId);
+			release.push(item.payload.releaseId);
 		}
 	});
 	return associationIds;
@@ -159,35 +159,35 @@ const fetchAssociations = (
 	associationIds: ActivityAssociationIds,
 ): Promise<ActivityAssociations> => {
 	const {
-		collectionPubs,
-		collections,
-		communities,
-		discussions,
-		externalPublications,
-		pubEdges,
-		pubs,
-		releases,
-		reviews,
-		threadComments,
-		threads,
-		users,
+		collectionPub,
+		collection,
+		community,
+		discussion,
+		externalPublication,
+		pubEdge,
+		pub,
+		release,
+		review,
+		threadComment,
+		thread,
+		user,
 	} = associationIds;
 	return awaitAssociations({
-		collectionPubs: fetchModels<types.CollectionPub>(CollectionPub, collectionPubs),
-		collections: fetchModels<types.Collection>(Collection, collections),
-		communities: fetchModels<types.Community>(Community, communities),
-		discussions: fetchModels<types.Discussion>(Discussion, discussions),
-		externalPublications: fetchModels<types.ExternalPublication>(
+		collectionPub: fetchModels<types.CollectionPub>(CollectionPub, collectionPub),
+		collection: fetchModels<types.Collection>(Collection, collection),
+		community: fetchModels<types.Community>(Community, community),
+		discussion: fetchModels<types.Discussion>(Discussion, discussion),
+		externalPublication: fetchModels<types.ExternalPublication>(
 			ExternalPublication,
-			externalPublications,
+			externalPublication,
 		),
-		pubEdges: fetchModels<types.PubEdge>(PubEdge, pubEdges),
-		pubs: fetchModels<types.Pub>(Pub, pubs),
-		releases: fetchModels<types.Release>(Release, releases),
-		reviews: fetchModels<types.Review>(Review, reviews),
-		threadComments: fetchModels<types.ThreadComment>(ThreadComment, threadComments),
-		threads: fetchModels<types.Thread>(Thread, threads),
-		users: fetchModels<types.User>(User, users),
+		pubEdge: fetchModels<types.PubEdge>(PubEdge, pubEdge),
+		pub: fetchModels<types.Pub>(Pub, pub),
+		release: fetchModels<types.Release>(Release, release),
+		review: fetchModels<types.Review>(Review, review),
+		threadComment: fetchModels<types.ThreadComment>(ThreadComment, threadComment),
+		thread: fetchModels<types.Thread>(Thread, thread),
+		user: fetchModels<types.User>(User, user),
 	});
 };
 

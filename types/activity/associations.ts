@@ -17,18 +17,18 @@ import {
 import { ActivityItem } from '.';
 
 export const activityAssociationTypes = [
-	'collectionPubs',
-	'collections',
-	'communities',
-	'discussions',
-	'externalPublications',
-	'pubEdges',
-	'pubs',
-	'reviews',
-	'releases',
-	'threadComments',
-	'threads',
-	'users',
+	'collectionPub',
+	'collection',
+	'community',
+	'discussion',
+	'externalPublication',
+	'pubEdge',
+	'pub',
+	'review',
+	'release',
+	'threadComment',
+	'thread',
+	'user',
 ] as const;
 
 type AssociationRecord<T> = T extends Record<ActivityAssociationType, any> ? T : never;
@@ -39,18 +39,18 @@ export type ActivityAssociationIds = Record<ActivityAssociationType, string[]>;
 
 export type ActivityAssociations = AssociationRecord<
 	IdIndexes<{
-		collectionPubs: CollectionPub;
-		collections: Collection;
-		communities: Community;
-		discussions: Discussion;
-		externalPublications: ExternalPublication;
-		pubEdges: PubEdge;
-		pubs: Pub;
-		releases: Release;
-		reviews: Review;
-		threadComments: ThreadComment;
-		threads: Thread;
-		users: User;
+		collectionPub: CollectionPub;
+		collection: Collection;
+		community: Community;
+		discussion: Discussion;
+		externalPublication: ExternalPublication;
+		pubEdge: PubEdge;
+		pub: Pub;
+		release: Release;
+		review: Review;
+		threadComment: ThreadComment;
+		thread: Thread;
+		user: User;
 	}>
 >;
 
