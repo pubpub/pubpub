@@ -3,6 +3,11 @@ import { CollectionActivityItem } from './collection';
 import { PubActivityItem } from './pub';
 import { MemberActivityItem } from './member';
 
+export * from './community';
+export * from './collection';
+export * from './pub';
+export * from './member';
+
 export type InsertableActivityItem =
 	| CommunityActivityItem
 	| CollectionActivityItem
@@ -15,10 +20,13 @@ export type ActivityItem = InsertableActivityItem & {
 	updatedAt: string;
 };
 
+export type ActivityItemRecord<T> = T extends Record<ActivityItem['kind'], any> ? T : never;
+
 export {
 	ActivityAssociationIds,
 	ActivityAssociations,
 	ActivityAssociationType,
 	activityAssociationTypes,
 	ActivityItemsContext,
+	ActivityAssociationModels,
 } from './associations';

@@ -54,19 +54,20 @@ export const createPubActivityItem = async (
 ) => {
 	const pub: types.Pub = Pub.findOne({ where: pubId });
 	const diffs = getDiffsForPayload(pub, oldPub, ['title', 'doi']);
-	createActivityItem({
-		kind,
-		actorId: userId,
-		communityId,
-		pubId: pub.id,
-		payload: {
-			releaseId,
-			...diffs,
-			pub: {
-				title: pub.title,
+	if (kind === 'pub-created') {
+		createActivityItem({
+			kind,
+			actorId: userId,
+			communityId,
+			pubId: pub.id,
+			payload: {
+				...diffs,
+				pub: {
+					title: pub.title,
+				},
 			},
-		},
-	});
+		});
+	}
 };
 
 export const createCommunityActivityItem = async (

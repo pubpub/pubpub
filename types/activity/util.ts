@@ -4,5 +4,4 @@ export type InsertableActivityItemBase = {
 	actorId: string;
 	collectionId?: string;
 	pubId?: string;
-	payload: Record<string, any>;
 };
