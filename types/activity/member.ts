@@ -3,11 +3,17 @@ import { MemberPermission } from '../member';
 
 import { InsertableActivityItemBase } from './util';
 
-type MemberActivityItemBase = InsertableActivityItemBase & {
-	payload: {
-		userId: string;
+type Scoped<T> =
+	| { communityId: string; payload: { community: T } }
+	| { collectionId: string; payload: { collection: T } }
+	| { pubId: string; payload: { pub: T } };
+
+type MemberActivityItemBase = InsertableActivityItemBase &
+	Scoped<{ title: string }> & {
+		payload: {
+			userId: string;
+		};
 	};
-};
 
 export type MemberCreated = MemberActivityItemBase & {
 	kind: 'member-created';

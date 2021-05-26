@@ -1,20 +1,23 @@
 import React from 'react';
 
-import { ActivityItemsContext, ActivityItem } from 'types';
+import { ActivityItemsContext, ActivityItem, ActivityItemKind } from 'types';
 
 import { itemTitlers, Titled } from './titles';
 
-type Renderer<Item, Titles> = (
+type Renderer<Item, Titles, Returned> = (
 	item: Item,
 	titles: Titles,
 	context: ActivityItemsContext,
-) => React.ReactNode;
+) => Returned;
 
-type MessageRenderers = {
-	[K in ActivityItem['kind']]: Renderer<
-		ActivityItem & { kind: K },
-		ReturnType<typeof itemTitlers[K]>
-	>;
+type ActivityItemRenderer<K extends ActivityItemKind, Returned> = Renderer<
+	ActivityItem & { kind: K },
+	ReturnType<typeof itemTitlers[K]> & { actor: Titled },
+	Returned
+>;
+
+type ActivityItemRenderers = {
+	[K in ActivityItemKind]: ActivityItemRenderer<K, React.ReactNode>;
 };
 
 const renderTitled = (titled: Titled) => {
@@ -44,6 +47,10 @@ const message = (strings: TemplateStringsArray, ...titles: Titled[]): React.Reac
 	return elements;
 };
 
-const messageRenderers: MessageRenderers = {
-	'community-created': (item, { community }) => message`created the community ${community}`,
+const messageRenderers: ActivityItemRenderers = {
+	'community-created': (item, { actor, community }) => {
+		return message`${actor} created ${community}`,
+	},
+	'member-created': (item, { actor, user }) =>
+		`${actor} added ${user} as a member with ${item.payload.permissions}`,
 };

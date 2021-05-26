@@ -1,7 +1,10 @@
+import { Scope } from '../scope';
+
 import { CommunityActivityItem } from './community';
 import { CollectionActivityItem } from './collection';
 import { PubActivityItem } from './pub';
 import { MemberActivityItem } from './member';
+import { ActivityAssociations } from './associations';
 
 export * from './community';
 export * from './collection';
@@ -20,13 +23,16 @@ export type ActivityItem = InsertableActivityItem & {
 	updatedAt: string;
 };
 
-export type ActivityItemRecord<T> = T extends Record<ActivityItem['kind'], any> ? T : never;
-
+export type ActivityItemKind = ActivityItem['kind'];
 export {
 	ActivityAssociationIds,
 	ActivityAssociations,
 	ActivityAssociationType,
 	activityAssociationTypes,
-	ActivityItemsContext,
 	ActivityAssociationModels,
 } from './associations';
+
+export type ActivityItemsFetchResult = {
+	activityItems: ActivityItem[];
+	associations: ActivityAssociations;
+};

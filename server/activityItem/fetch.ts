@@ -6,9 +6,10 @@ import {
 	ActivityAssociationType,
 	activityAssociationTypes,
 	ActivityAssociationIds,
-	ActivityItemsContext,
+	ActivityItemsFetchResult,
 	WithId,
 	IdIndex,
+	Scope,
 } from 'types';
 import {
 	ActivityItem,
@@ -30,8 +31,6 @@ import { indexById } from 'utils/arrays';
 type PromiseRecord<T extends { [k: string]: any }> = {
 	[K in keyof T]: Promise<T[K]>;
 };
-
-type Scope = { communityId: string } & ({ pubId: string } | { collectionId: string } | {});
 
 type FetchActivityItemsOptions = {
 	scope: Scope;
@@ -203,7 +202,7 @@ const fetchAssociations = (
 
 export const fetchActivityItems = async (
 	options: FetchActivityItemsOptions,
-): Promise<ActivityItemsContext> => {
+): Promise<ActivityItemsFetchResult> => {
 	const activityItems = await fetchActivityItemModels(options);
 	const associationIds = getActivityItemAssociationIds(activityItems, options.scope);
 	const associations = await fetchAssociations(associationIds);

@@ -5,3 +5,8 @@ export type InsertableActivityItemBase = {
 	collectionId?: string;
 	pubId?: string;
 };
+
+export type ActivityItemsFetchResult = {
+	activityItems: ActivityItem[];
+	associations: ActivityAssociations;
+};
