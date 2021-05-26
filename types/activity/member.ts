@@ -15,7 +15,7 @@ type MemberActivityItemBase = InsertableActivityItemBase &
 		};
 	};
 
-export type MemberCreated = MemberActivityItemBase & {
+export type MemberCreatedActivityItem = MemberActivityItemBase & {
 	kind: 'member-created';
 	payload: {
 		permissions: MemberPermission;
@@ -34,6 +34,6 @@ export type MemberRemovedActivityItem = MemberActivityItemBase & {
 };
 
 export type MemberActivityItem =
-	| MemberCreated
+	| MemberCreatedActivityItem
 	| MemberUpdatedActivityItem
 	| MemberRemovedActivityItem;

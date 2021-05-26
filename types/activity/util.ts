@@ -10,3 +10,7 @@ export type ActivityItemsFetchResult = {
 	activityItems: ActivityItem[];
 	associations: ActivityAssociations;
 };
+
+export type ActivityItemsRenderContext = ActivityItemsFetchResult & {
+	scope: Scope
+}

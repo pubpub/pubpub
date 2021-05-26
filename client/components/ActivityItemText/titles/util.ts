@@ -1,4 +1,4 @@
-import { ActivityAssociations, ActivityAssociationType, Pub } from 'types';
+import { ActivityAssociations, ActivityAssociationType } from 'types';
 
 import { ActivityRenderContext } from '../types';
 
