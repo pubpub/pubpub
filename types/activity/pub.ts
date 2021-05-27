@@ -39,20 +39,25 @@ export type PubReleasedActivityItem = PubActivityItemBase & {
 	};
 };
 
-type PubEdgeActivityItemBase = PubActivityItemBase & {
-	payload: {
-		pubEdgeId: string;
-		target: {
+type PubEdgeTarget =
+	| {
 			pub: {
 				id: string;
 				title: string;
 				slug: string;
 			};
+	  }
+	| {
 			externalPublication?: {
 				title: string;
 				url: string;
 			};
-		};
+	  };
+
+type PubEdgeActivityItemBase = PubActivityItemBase & {
+	payload: {
+		pubEdgeId: string;
+		target: PubEdgeTarget;
 	};
 };
 
@@ -75,9 +80,6 @@ type PubReviewActivityItemBase = PubActivityItemBase & { payload: { reviewId: st
 export type PubReviewCreatedActivityItem = PubReviewActivityItemBase &
 	ThreadActivityItemBase & {
 		kind: 'pub-review-created';
-		payload: {
-			userId: string;
-		};
 	};
 
 export type PubReviewCommentAddedActivityItem = PubReviewActivityItemBase &
@@ -88,7 +90,7 @@ export type PubReviewCommentAddedActivityItem = PubReviewActivityItemBase &
 export type PubReviewUpdatedActivityItem = PubReviewActivityItemBase & {
 	kind: 'pub-review-updated';
 	payload: {
-		status: Diff<Review['status']>;
+		status?: Diff<Review['status']>;
 	};
 };
 
