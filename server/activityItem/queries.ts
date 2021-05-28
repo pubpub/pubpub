@@ -37,15 +37,16 @@ export const createCommunityActivityItem = async (
 	});
 };
 
-export const createMemberActivityItem = async (
-	kind: 'member-created' | 'member-updated' | 'member-removed', // TODO the member-update kind brings trouble
-	// with member-updated only, TS seems to think there's a change permissions remains undefined
+export const createMemberUpdatedActivityItem = async (
+	kind: 'member-updated',
 	actorId: string,
 	communityId: string,
 	memberId: string,
-	oldMember: types.Member,
+	oldMember: types.DefinitelyHas<types.Member, 'permissions'>,
 ) => {
-	const member: types.Member = await Member.findOne({ where: { id: actorId } });
+	const member: types.DefinitelyHas<types.Member, 'permissions'> = await Member.findOne({
+		where: { id: actorId },
+	});
 	const diffs = getDiffsForPayload(member, oldMember, ['permissions']);
 	return createActivityItem({
 		kind,
@@ -53,8 +54,26 @@ export const createMemberActivityItem = async (
 		communityId,
 		payload: {
 			userId: memberId,
-			permissions: member.permissions,
 			...diffs,
+		},
+	});
+};
+
+export const createMemberActivityItem = async (
+	kind: 'member-created' | 'member-removed',
+	// with member-updated only, TS seems to think there's a change permissions remains undefined
+	actorId: string,
+	communityId: string,
+	memberId: string,
+) => {
+	const member: types.Member = await Member.findOne({ where: { id: actorId } });
+	return createActivityItem({
+		kind,
+		actorId,
+		communityId,
+		payload: {
+			userId: memberId,
+			permissions: member.permissions,
 		},
 	});
 };
