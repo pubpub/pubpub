@@ -21,6 +21,7 @@ export type ActivityItem = InsertableActivityItem & {
 	id: string;
 	createdAt: string;
 	updatedAt: string;
+	timestamp: string;
 };
 
 export type ActivityItemKind = ActivityItem['kind'];
@@ -35,4 +36,8 @@ export {
 export type ActivityItemsFetchResult = {
 	activityItems: ActivityItem[];
 	associations: ActivityAssociations;
+};
+
+export type ActivityItemsRenderContext = ActivityItemsFetchResult & {
+	scope: Scope;
 };

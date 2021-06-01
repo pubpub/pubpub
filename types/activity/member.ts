@@ -1,7 +1,7 @@
 import { Diff } from '../util';
 import { MemberPermission } from '../member';
 
-import { InsertableActivityItemBase } from './util';
+import { InsertableActivityItemBase } from './base';
 
 type Scoped<T> =
 	| { communityId: string; payload: { community: T } }

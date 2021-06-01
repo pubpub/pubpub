@@ -13,6 +13,8 @@ type AcceptedItem =
 	| CommunityUpdatedActivityItem
 	| MemberActivityItem;
 
+const prefix = 'the Community';
+
 export const titleCommunity: TitleRenderer<AcceptedItem> = (item, context) => {
 	const isInCommunityScope =
 		!('pubId' in context.scope) &&
@@ -28,6 +30,7 @@ export const titleCommunity: TitleRenderer<AcceptedItem> = (item, context) => {
 	const communityFromContext = getCommunityFromContext(item.communityId, context);
 	if (communityFromContext) {
 		return {
+			prefix,
 			title: communityFromContext.title,
 			href: communityUrl(communityFromContext),
 		};
@@ -35,6 +38,7 @@ export const titleCommunity: TitleRenderer<AcceptedItem> = (item, context) => {
 
 	if ('community' in item.payload) {
 		return {
+			prefix,
 			title: item.payload.community.title,
 		};
 	}

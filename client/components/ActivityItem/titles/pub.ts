@@ -15,6 +15,8 @@ type AcceptedItem =
 	| CollectionPubCreatedActivityItem
 	| CollectionPubRemovedActivityItem;
 
+const prefix = 'the Pub';
+
 export const titlePub: TitleRenderer<AcceptedItem> = (item, context) => {
 	const isInPubScope = 'pubId' in context.scope && item.pubId === context.scope.pubId;
 	if (isInPubScope) {
@@ -25,12 +27,14 @@ export const titlePub: TitleRenderer<AcceptedItem> = (item, context) => {
 	const pubFromContext = getPubFromContext(item.pubId, context);
 	if (pubFromContext) {
 		return {
+			prefix,
 			title: pubFromContext.title,
 			href: getDashUrl({ pubSlug: pubFromContext.slug }),
 		};
 	}
 	if ('pub' in item.payload) {
 		return {
+			prefix,
 			title: item.payload.pub.title,
 		};
 	}

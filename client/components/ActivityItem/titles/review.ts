@@ -26,5 +26,13 @@ export const titleReview: TitleRenderer<AcceptedItem> = (item, context) => {
 			  })
 			: null;
 
-	return { title: 'a Release', href };
+	if (reviewFromContext) {
+		return {
+			prefix: 'the Review',
+			title: reviewFromContext.title,
+			href,
+		};
+	}
+
+	return { title: 'a Review', href };
 };
