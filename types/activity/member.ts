@@ -25,7 +25,7 @@ export type MemberCreatedActivityItem = MemberActivityItemBase & {
 export type MemberUpdatedActivityItem = MemberActivityItemBase & {
 	kind: 'member-updated';
 	payload: {
-		permissions: Diff<MemberPermission>;
+		permissions?: Diff<MemberPermission>;
 	};
 };
 
