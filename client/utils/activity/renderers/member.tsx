@@ -37,10 +37,17 @@ export const renderMemberUpdated = itemRenderer<MemberUpdatedActivityItem, Title
 	message: ({ item, titles }) => {
 		const { actor, member, scope } = titles;
 		const { permissions } = item.payload;
+		if (permissions) {
+			return (
+				<>
+					{actor} changed the membership permissions of {member} in {scope} from{' '}
+					<i>{permissions.from}</i> to <i>{permissions.to}</i>
+				</>
+			);
+		}
 		return (
 			<>
-				{actor} changed the membership permissions of {member} in {scope} from{' '}
-				<i>{permissions.from}</i> to <i>{permissions.to}</i>
+				{actor} changed the membership permissions of {member} in {scope}
 			</>
 		);
 	},

@@ -1,5 +1,4 @@
 import * as types from 'types';
-
 import {
 	Collection,
 	Member,
@@ -15,6 +14,58 @@ import {
 } from 'server/models';
 
 import { getDiffsForPayload, getChangeFlagsForPayload, createActivityItem } from './utils';
+
+const resolvePartialMemberItem = async (member: types.Member) => {
+	if ('pubId' in member) {
+		const pub: types.Pub = await Pub.findOne({ where: { id: member.pubId } });
+		return {
+			tag: 'pub',
+			value: {
+				communityId: pub.communityId,
+				pubId: pub.id,
+				payload: {
+					pub: {
+						title: pub.title,
+					},
+				},
+			},
+		} as const;
+	}
+	if ('collectionId' in member) {
+		const collection: types.Collection = await Collection.findOne({
+			where: { id: member.collectionId },
+		});
+		return {
+			tag: 'collection',
+			value: {
+				communityId: collection.communityId,
+				collectionId: collection.id,
+				payload: {
+					collection: {
+						title: collection.title,
+					},
+				},
+			},
+		} as const;
+	}
+	if ('communityId' in member) {
+		const community: types.Community = await Community.findOne({
+			where: { id: member.communityId },
+		});
+		return {
+			tag: 'community',
+			value: {
+				communityId: community.id,
+				payload: {
+					community: {
+						title: community.title,
+					},
+				},
+			},
+		} as const;
+	}
+	throw new Error('Invalid Member');
+};
 
 export const createCommunityActivityItem = async (
 	kind: 'community-created' | 'community-updated',
@@ -37,42 +88,124 @@ export const createCommunityActivityItem = async (
 	});
 };
 
+export const createMemberCreatedActivityItem = async (actorId: string, memberId: string) => {
+	const member = await Member.findOne({ where: { id: memberId } });
+	const partial = await resolvePartialMemberItem(member);
+	const item = {
+		kind: 'member-created' as const,
+		actorId,
+		payload: {
+			userId: member.userId,
+			permissions: member.permissions,
+		},
+	};
+	if (partial.tag === 'pub') {
+		const { payload, ...rest } = partial.value;
+		return createActivityItem({
+			...item,
+			...rest,
+			payload: { ...item.payload, ...payload },
+		});
+	}
+	if (partial.tag === 'collection') {
+		const { payload, ...rest } = partial.value;
+		return createActivityItem({
+			...item,
+			...rest,
+			payload: { ...item.payload, ...payload },
+		});
+	}
+	if (partial.tag === 'community') {
+		const { payload, ...rest } = partial.value;
+		return createActivityItem({
+			...item,
+			...rest,
+			payload: { ...item.payload, ...payload },
+		});
+	}
+	throw new Error('Invalid Scope');
+};
+
+export const createMemberRemovedActivityItem = async (actorId: string, memberId: string) => {
+	const member = await Member.findOne({ where: { id: memberId } });
+	const partial = await resolvePartialMemberItem(member);
+	const item = {
+		kind: 'member-removed' as const,
+		actorId,
+		payload: {
+			userId: member.userId,
+		},
+	};
+	if (partial.tag === 'pub') {
+		const { payload, ...rest } = partial.value;
+		return createActivityItem({
+			...item,
+			...rest,
+			payload: { ...item.payload, ...payload },
+		});
+	}
+	if (partial.tag === 'collection') {
+		const { payload, ...rest } = partial.value;
+		return createActivityItem({
+			...item,
+			...rest,
+			payload: { ...item.payload, ...payload },
+		});
+	}
+	if (partial.tag === 'community') {
+		const { payload, ...rest } = partial.value;
+		return createActivityItem({
+			...item,
+			...rest,
+			payload: { ...item.payload, ...payload },
+		});
+	}
+	throw new Error('Invalid Scope');
+};
+
 export const createMemberUpdatedActivityItem = async (
-	kind: 'member-updated',
+	scope: types.Scope,
 	actorId: string,
-	communityId: string,
 	memberId: string,
 	oldMember: types.Member,
 ) => {
-	const member: types.Member = await Member.findOne({ where: { id: actorId } });
+	const member: types.Member = await Member.findOne({ where: { id: memberId } });
+	const partial = await resolvePartialMemberItem(member);
 	const diffs = getDiffsForPayload(member, oldMember, ['permissions']);
-	return createActivityItem({
-		kind,
+	const item = {
+		kind: 'member-updated' as const,
 		actorId,
-		communityId,
+		communityId: scope.communityId,
 		payload: {
-			userId: memberId,
+			userId: member.userId,
 			...diffs,
 		},
-	});
-};
-
-export const createMemberActivityItem = async (
-	kind: 'member-created' | 'member-removed',
-	actorId: string,
-	communityId: string,
-	memberId: string,
-) => {
-	const member: types.Member = await Member.findOne({ where: { id: actorId } });
-	return createActivityItem({
-		kind,
-		actorId,
-		communityId,
-		payload: {
-			userId: memberId,
-			permissions: member.permissions,
-		},
-	});
+	};
+	if (partial.tag === 'pub') {
+		const { payload, ...rest } = partial.value;
+		return createActivityItem({
+			...item,
+			...rest,
+			payload: { ...item.payload, ...payload },
+		});
+	}
+	if (partial.tag === 'collection') {
+		const { payload, ...rest } = partial.value;
+		return createActivityItem({
+			...item,
+			...rest,
+			payload: { ...item.payload, ...payload },
+		});
+	}
+	if (partial.tag === 'community') {
+		const { payload, ...rest } = partial.value;
+		return createActivityItem({
+			...item,
+			...rest,
+			payload: { ...item.payload, ...payload },
+		});
+	}
+	throw new Error('Invalid Scope');
 };
 
 export const createCollectionActivityItem = async (
