@@ -75,7 +75,7 @@ const fetchActivityItemModels = async (
 			communityId: scope.communityId,
 			...(await getPubsWhereQueryForScope(scope)),
 		},
-		orderBy: [['createdAt', 'DESC']],
+		order: [['timestamp', 'DESC']],
 	});
 	return models.map((model) => model.toJSON());
 };
