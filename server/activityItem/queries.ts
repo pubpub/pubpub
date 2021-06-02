@@ -164,7 +164,6 @@ export const createMemberRemovedActivityItem = async (actorId: string, memberId:
 };
 
 export const createMemberUpdatedActivityItem = async (
-	scope: types.Scope,
 	actorId: string,
 	memberId: string,
 	oldMember: types.Member,
@@ -175,7 +174,6 @@ export const createMemberUpdatedActivityItem = async (
 	const item = {
 		kind: 'member-updated' as const,
 		actorId,
-		communityId: scope.communityId,
 		payload: {
 			userId: member.userId,
 			...diffs,
