@@ -6,7 +6,9 @@ import { ActivityItem } from 'server/models';
 
 import { fetchActivityItems } from '../fetch';
 import {
+	createCollectionActivityItem,
 	createCollectionPubActivityItem,
+	createCollectionUpdatedActivityItem,
 	createCommunityCreatedActivityItem,
 	createCommunityUpdatedActivityItem,
 	createPubActivityItem,
@@ -69,6 +71,39 @@ describe('fetchActivityItems', () => {
 			},
 		});
 		expectAssociationIds(associations, { community: [community.id], user: [actor.id] });
+	});
+
+	it('fetches items for collection-created, collection-updated, and collection-removed', async () => {
+		const { community, collection, actor } = models;
+		await createCollectionActivityItem('collection-created', actor.id, collection.id);
+		await createCollectionUpdatedActivityItem(actor.id, collection.id, {
+			...collection,
+			isPublic: true,
+		});
+		await createCollectionActivityItem('collection-removed', actor.id, collection.id);
+		const {
+			activityItems: [removedItem, updatedItem, createdItem],
+			associations,
+		} = await fetchActivityItems({
+			scope: { communityId: community.id, collectionId: collection.id },
+		});
+		expect(createdItem).toMatchObject({
+			kind: 'collection-created',
+			payload: { collection: { title: collection.title } },
+		});
+		expect(updatedItem).toMatchObject({
+			kind: 'collection-updated',
+			payload: { isPublic: { from: true, to: false } },
+		});
+		expect(removedItem).toMatchObject({
+			kind: 'collection-removed',
+			payload: { collection: { title: collection.title } },
+		});
+		expectAssociationIds(associations, {
+			community: [community.id],
+			collection: [collection.id],
+			user: [actor.id],
+		});
 	});
 
 	it('fetches items for pub-created, pub-updated, and pub-removed', async () => {
@@ -145,6 +180,7 @@ describe('fetchActivityItems', () => {
 		expectAssociationIds(associations, {
 			community: [community.id],
 			collection: [collection.id],
+			collectionPub: [collectionPub.id],
 			pub: [pub.id],
 			user: [actor.id],
 		});

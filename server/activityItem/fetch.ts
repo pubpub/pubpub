@@ -46,7 +46,7 @@ const createAssociationsArrays = (): Record<ActivityAssociationType, string[]> =
 	return associations as Record<ActivityAssociationType, string[]>;
 };
 
-const getPubsWhereQueryForScope = async (scope: Scope) => {
+const getWhereQueryForChildScopes = async (scope: Scope) => {
 	if ('pubId' in scope) {
 		return { pubId: scope.pubId };
 	}
@@ -56,9 +56,14 @@ const getPubsWhereQueryForScope = async (scope: Scope) => {
 			attributes: ['pubId'],
 		});
 		return {
-			pubId: {
-				[Op.in]: collectionPubs.map((cp) => cp.pubId),
-			},
+			[Op.or]: [
+				{ collectionId: scope.collectionId },
+				{
+					pubId: {
+						[Op.in]: collectionPubs.map((cp) => cp.pubId),
+					},
+				},
+			],
 		};
 	}
 	return null;
@@ -73,7 +78,7 @@ const fetchActivityItemModels = async (
 		offset,
 		where: {
 			communityId: scope.communityId,
-			...(await getPubsWhereQueryForScope(scope)),
+			...(await getWhereQueryForChildScopes(scope)),
 		},
 		order: [['timestamp', 'DESC']],
 	});

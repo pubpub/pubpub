@@ -220,10 +220,28 @@ export const createMemberUpdatedActivityItem = async (
 };
 
 export const createCollectionActivityItem = async (
-	kind: 'collection-created' | 'collection-updated' | 'collection-removed',
-	collectionId: string,
+	kind: 'collection-created' | 'collection-removed',
 	actorId: string,
-	communityId: string,
+	collectionId: string,
+) => {
+	const collection: types.Collection = await Collection.findOne({ where: { id: collectionId } });
+	const { title } = collection;
+	return createActivityItem({
+		kind,
+		collectionId,
+		actorId,
+		communityId: collection.communityId,
+		payload: {
+			collection: {
+				title,
+			},
+		},
+	});
+};
+
+export const createCollectionUpdatedActivityItem = async (
+	actorId: string,
+	collectionId: string,
 	oldCollection: types.Collection,
 ) => {
 	const collection: types.Collection = await Collection.findOne({ where: { id: collectionId } });
@@ -235,10 +253,10 @@ export const createCollectionActivityItem = async (
 	]);
 	const flags = getChangeFlagsForPayload(collection, oldCollection, ['layout', 'metadata']);
 	return createActivityItem({
-		kind,
+		kind: 'collection-updated' as const,
 		collectionId,
 		actorId,
-		communityId,
+		communityId: collection.communityId,
 		payload: {
 			collection: {
 				title,
