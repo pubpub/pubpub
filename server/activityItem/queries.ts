@@ -37,8 +37,8 @@ export const createCommunityActivityItem = async (
 	});
 };
 
-export const createMemberActivityItem = async (
-	kind: 'member-created' | 'member-updated' | 'member-removed',
+export const createMemberUpdatedActivityItem = async (
+	kind: 'member-updated',
 	actorId: string,
 	communityId: string,
 	memberId: string,
@@ -52,8 +52,25 @@ export const createMemberActivityItem = async (
 		communityId,
 		payload: {
 			userId: memberId,
-			permissions: member.permissions,
 			...diffs,
+		},
+	});
+};
+
+export const createMemberActivityItem = async (
+	kind: 'member-created' | 'member-removed',
+	actorId: string,
+	communityId: string,
+	memberId: string,
+) => {
+	const member: types.Member = await Member.findOne({ where: { id: actorId } });
+	return createActivityItem({
+		kind,
+		actorId,
+		communityId,
+		payload: {
+			userId: memberId,
+			permissions: member.permissions,
 		},
 	});
 };
