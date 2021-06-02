@@ -2,12 +2,12 @@ import React from 'react';
 
 import { CommunityCreatedActivityItem, CommunityUpdatedActivityItem } from 'types';
 
-import { renderItem } from '../renderItem';
 import { titleCommunity } from '../titles';
+import { itemRenderer } from './itemRenderer';
 
 type Titles = 'community';
 
-export const renderCommunityCreated = renderItem<CommunityCreatedActivityItem, Titles>({
+export const renderCommunityCreated = itemRenderer<CommunityCreatedActivityItem, Titles>({
 	icon: 'office',
 	titles: {
 		community: titleCommunity,
@@ -22,7 +22,7 @@ export const renderCommunityCreated = renderItem<CommunityCreatedActivityItem, T
 	},
 });
 
-export const renderCommunityUpdated = renderItem<CommunityUpdatedActivityItem, Titles>({
+export const renderCommunityUpdated = itemRenderer<CommunityUpdatedActivityItem, Titles>({
 	icon: 'office',
 	titles: {
 		community: titleCommunity,

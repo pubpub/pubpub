@@ -13,7 +13,6 @@ import {
 	PubReviewUpdatedActivityItem,
 } from 'types';
 
-import { renderItem } from '../renderItem';
 import {
 	titlePub,
 	titlePubEdge,
@@ -22,6 +21,7 @@ import {
 	titleReview,
 	titleDiscussion,
 } from '../titles';
+import { itemRenderer } from './itemRenderer';
 
 type BaseTitles = 'pub';
 type ReleaseTitles = BaseTitles | 'release';
@@ -29,7 +29,7 @@ type PubEdgeTitles = BaseTitles | 'target' | 'edge';
 type DiscussionTitles = BaseTitles | 'discussion';
 type ReviewTitles = BaseTitles | 'review';
 
-export const renderPubCreated = renderItem<PubCreatedActivityItem, BaseTitles>({
+export const renderPubCreated = itemRenderer<PubCreatedActivityItem, BaseTitles>({
 	icon: 'pubDoc',
 	titles: {
 		pub: titlePub,
@@ -44,7 +44,7 @@ export const renderPubCreated = renderItem<PubCreatedActivityItem, BaseTitles>({
 	},
 });
 
-export const renderPubUpdated = renderItem<PubUpdatedActivityItem, BaseTitles>({
+export const renderPubUpdated = itemRenderer<PubUpdatedActivityItem, BaseTitles>({
 	icon: 'pubDoc',
 	titles: {
 		pub: titlePub,
@@ -89,7 +89,7 @@ export const renderPubUpdated = renderItem<PubUpdatedActivityItem, BaseTitles>({
 	},
 });
 
-export const renderPubRemoved = renderItem<PubRemovedActivityItem, BaseTitles>({
+export const renderPubRemoved = itemRenderer<PubRemovedActivityItem, BaseTitles>({
 	icon: 'pubDoc',
 	titles: {
 		pub: titlePub,
@@ -104,7 +104,7 @@ export const renderPubRemoved = renderItem<PubRemovedActivityItem, BaseTitles>({
 	},
 });
 
-export const renderPubReleased = renderItem<PubReleasedActivityItem, ReleaseTitles>({
+export const renderPubReleased = itemRenderer<PubReleasedActivityItem, ReleaseTitles>({
 	icon: 'document-share',
 	titles: {
 		pub: titlePub,
@@ -120,7 +120,7 @@ export const renderPubReleased = renderItem<PubReleasedActivityItem, ReleaseTitl
 	},
 });
 
-export const renderPubEdgeCreated = renderItem<PubEdgeCreatedActivityItem, PubEdgeTitles>({
+export const renderPubEdgeCreated = itemRenderer<PubEdgeCreatedActivityItem, PubEdgeTitles>({
 	icon: 'layout-auto',
 	titles: {
 		pub: titlePub,
@@ -137,7 +137,7 @@ export const renderPubEdgeCreated = renderItem<PubEdgeCreatedActivityItem, PubEd
 	},
 });
 
-export const renderPubEdgeRemoved = renderItem<PubEdgeRemovedActivityItem, PubEdgeTitles>({
+export const renderPubEdgeRemoved = itemRenderer<PubEdgeRemovedActivityItem, PubEdgeTitles>({
 	icon: 'layout-auto',
 	titles: {
 		pub: titlePub,
@@ -154,7 +154,7 @@ export const renderPubEdgeRemoved = renderItem<PubEdgeRemovedActivityItem, PubEd
 	},
 });
 
-export const renderPubDiscussionCommentAdded = renderItem<
+export const renderPubDiscussionCommentAdded = itemRenderer<
 	PubDiscussionCommentAddedActivityItem,
 	DiscussionTitles
 >({
@@ -176,7 +176,7 @@ export const renderPubDiscussionCommentAdded = renderItem<
 	},
 });
 
-export const renderPubReviewCreated = renderItem<PubReviewCreatedActivityItem, ReviewTitles>({
+export const renderPubReviewCreated = itemRenderer<PubReviewCreatedActivityItem, ReviewTitles>({
 	icon: 'social-media',
 	titles: {
 		pub: titlePub,
@@ -195,7 +195,7 @@ export const renderPubReviewCreated = renderItem<PubReviewCreatedActivityItem, R
 	},
 });
 
-export const renderPubReviewCommentAdded = renderItem<
+export const renderPubReviewCommentAdded = itemRenderer<
 	PubReviewCommentAddedActivityItem,
 	ReviewTitles
 >({
@@ -217,7 +217,7 @@ export const renderPubReviewCommentAdded = renderItem<
 	},
 });
 
-export const renderPubReviewUpdated = renderItem<PubReviewUpdatedActivityItem, ReviewTitles>({
+export const renderPubReviewUpdated = itemRenderer<PubReviewUpdatedActivityItem, ReviewTitles>({
 	icon: 'social-media',
 	titles: {
 		pub: titlePub,

@@ -8,13 +8,13 @@ import {
 	CollectionPubRemovedActivityItem,
 } from 'types';
 
-import { renderItem } from '../renderItem';
 import { titleCollection, titlePub } from '../titles';
+import { itemRenderer } from './itemRenderer';
 
 type BaseTitles = 'collection';
 type CollectionPubTitles = BaseTitles | 'pub';
 
-export const renderCollectionCreated = renderItem<CollectionCreatedActivityItem, BaseTitles>({
+export const renderCollectionCreated = itemRenderer<CollectionCreatedActivityItem, BaseTitles>({
 	icon: 'collection',
 	titles: {
 		collection: titleCollection,
@@ -29,7 +29,7 @@ export const renderCollectionCreated = renderItem<CollectionCreatedActivityItem,
 	},
 });
 
-export const renderCollectionUpdated = renderItem<CollectionUpdatedActivityItem, BaseTitles>({
+export const renderCollectionUpdated = itemRenderer<CollectionUpdatedActivityItem, BaseTitles>({
 	icon: 'collection',
 	titles: {
 		collection: titleCollection,
@@ -104,7 +104,7 @@ export const renderCollectionUpdated = renderItem<CollectionUpdatedActivityItem,
 	},
 });
 
-export const renderCollectionRemoved = renderItem<CollectionRemovedActivityItem, BaseTitles>({
+export const renderCollectionRemoved = itemRenderer<CollectionRemovedActivityItem, BaseTitles>({
 	icon: 'collection',
 	titles: {
 		collection: titleCollection,
@@ -119,7 +119,7 @@ export const renderCollectionRemoved = renderItem<CollectionRemovedActivityItem,
 	},
 });
 
-export const renderCollectionPubCreated = renderItem<
+export const renderCollectionPubCreated = itemRenderer<
 	CollectionPubCreatedActivityItem,
 	CollectionPubTitles
 >({
@@ -138,7 +138,7 @@ export const renderCollectionPubCreated = renderItem<
 	},
 });
 
-export const renderCollectionPubRemoved = renderItem<
+export const renderCollectionPubRemoved = itemRenderer<
 	CollectionPubRemovedActivityItem,
 	CollectionPubTitles
 >({

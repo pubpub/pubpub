@@ -94,7 +94,7 @@
 	},
 	"overrides": [
 		{
-			"files": "client/components/ActivityItem/renderers/*",
+			"files": "client/utils/activity/renderers/*",
 			"rules": {
 				"react/prop-types": 0
 			}

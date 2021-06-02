@@ -1,15 +1,15 @@
 import React from 'react';
 
 import { ActivityItem, InsertableActivityItem } from 'types';
-import { titleActor } from './titles';
 
+import { titleActor } from '../titles';
 import {
 	ActivityItemRenderOptions,
 	ActivityItemRenderer,
 	Title,
 	TitleRenderer,
 	ActivityRenderContext,
-} from './types';
+} from '../types';
 
 const renderTitleToReact = (title: Title) => {
 	const { title: titleString, href, prefix } = title;
@@ -44,7 +44,7 @@ const renderTitles = <Item extends InsertableActivityItem, Titles extends string
 	return renderedTitles as Record<Titles | 'actor', React.ReactNode>;
 };
 
-export const renderItem = <Item extends InsertableActivityItem, Titles extends string>(
+export const itemRenderer = <Item extends InsertableActivityItem, Titles extends string>(
 	options: ActivityItemRenderOptions<Item, Titles>,
 ): ActivityItemRenderer<Item> => {
 	const { icon, titles: titleRenderers, message, excerpt } = options;

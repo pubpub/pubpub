@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { ActivityItemKind, ActivityItemsFetchResult, InsertableActivityItem, Scope } from 'types';
-import { IconName } from '../Icon/Icon';
+import { IconName } from 'components';
 
 // Information we'll pass around about the current render
 export type ActivityRenderContext = ActivityItemsFetchResult & {

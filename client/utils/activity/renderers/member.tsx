@@ -6,12 +6,12 @@ import {
 	MemberRemovedActivityItem,
 } from 'types';
 
-import { renderItem } from '../renderItem';
 import { titleMember, titleMembershipScope } from '../titles';
+import { itemRenderer } from './itemRenderer';
 
 type Titles = 'member' | 'scope';
 
-export const renderMemberCreated = renderItem<MemberCreatedActivityItem, Titles>({
+export const renderMemberCreated = itemRenderer<MemberCreatedActivityItem, Titles>({
 	icon: 'people',
 	titles: {
 		member: titleMember,
@@ -28,7 +28,7 @@ export const renderMemberCreated = renderItem<MemberCreatedActivityItem, Titles>
 	},
 });
 
-export const renderMemberUpdated = renderItem<MemberUpdatedActivityItem, Titles>({
+export const renderMemberUpdated = itemRenderer<MemberUpdatedActivityItem, Titles>({
 	icon: 'people',
 	titles: {
 		member: titleMember,
@@ -46,7 +46,7 @@ export const renderMemberUpdated = renderItem<MemberUpdatedActivityItem, Titles>
 	},
 });
 
-export const renderMemberRemoved = renderItem<MemberRemovedActivityItem, Titles>({
+export const renderMemberRemoved = itemRenderer<MemberRemovedActivityItem, Titles>({
 	icon: 'people',
 	titles: {
 		member: titleMember,
