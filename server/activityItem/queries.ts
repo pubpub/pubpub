@@ -311,10 +311,10 @@ export const createPubDiscussionActivityItem = async (
 	discussionId: string,
 	threadCommentId: string,
 ) => {
-	const pub: types.Pub = await Pub.findOne({ where: { id: pubId } });
-	const threadComment: types.ThreadComment = await ThreadComment.findOne({
-		where: { id: threadCommentId },
-	});
+	const [pub, threadComment]: [types.Pub, types.ThreadComment] = await Promise.all([
+		Pub.findOne({ where: { id: pubId } }),
+		ThreadComment.findOne({ where: { id: threadCommentId } }),
+	]);
 	const discussion: types.DefinitelyHas<types.Discussion, 'thread'> = await Discussion.findOne({
 		where: { id: discussionId },
 	});
