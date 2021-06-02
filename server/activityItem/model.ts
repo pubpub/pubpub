@@ -5,7 +5,7 @@ export default (sequelize, dataTypes) => {
 		pubId: { type: dataTypes.UUID },
 		payload: { type: dataTypes.JSONB },
 		timestamp: {
-			type: dataTypes.DATETIME,
+			type: dataTypes.DATE,
 			defaultValue: sequelize.Sequelize.NOW,
 			allowNull: false,
 		},
