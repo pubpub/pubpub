@@ -44,14 +44,14 @@ export const createMemberUpdatedActivityItem = async (
 	memberId: string,
 	oldMember: types.Member,
 ) => {
-	const member: types.Member = await Member.findOne({ where: { id: actorId } });
+	const member: types.Member = await Member.findOne({ where: { id: memberId } });
 	const diffs = getDiffsForPayload(member, oldMember, ['permissions']);
 	return createActivityItem({
 		kind,
 		actorId,
 		communityId,
 		payload: {
-			userId: memberId,
+			userId: member.userId,
 			...diffs,
 		},
 	});
@@ -63,13 +63,13 @@ export const createMemberActivityItem = async (
 	communityId: string,
 	memberId: string,
 ) => {
-	const member: types.Member = await Member.findOne({ where: { id: actorId } });
+	const member: types.Member = await Member.findOne({ where: { id: memberId } });
 	return createActivityItem({
 		kind,
 		actorId,
 		communityId,
 		payload: {
-			userId: memberId,
+			userId: member.userId,
 			permissions: member.permissions,
 		},
 	});
@@ -141,35 +141,23 @@ export const createPubReviewCreatedActivityItem = async (
 
 export const createPubReviewUpdatedActivityItem = async (
 	kind: 'pub-review-updated',
-	isReply: boolean,
 	actorId: string,
 	communityId: string,
 	reviewId: string,
 	oldReview: types.Review,
-	threadCommentId: string,
 ) => {
-	const threadComment: types.ThreadComment = await ThreadComment.findOne({
-		where: { id: threadCommentId },
-	});
 	const review: types.Review = await ReviewNew.findOne({ where: { id: reviewId } });
 	const pub: types.Pub = await Pub.findOne({ where: { id: review.pubId } });
 	const diffs = getDiffsForPayload(review, oldReview, ['status']);
 	return createActivityItem({
 		kind,
-		pubId: threadComment.id,
+		pubId: pub.id,
 		actorId,
 		communityId,
 		payload: {
 			...diffs,
 			pub: {
 				title: pub.title,
-			},
-			threadId: review.threadId,
-			isReply,
-			threadComment: {
-				id: review.threadId,
-				text: threadComment.text,
-				userId: actorId,
 			},
 			reviewId,
 		},
@@ -217,7 +205,7 @@ export const createPubActivityItem = async (
 	communityId: string,
 	pubId: string,
 ) => {
-	const pub: types.Pub = await Pub.findOne({ where: pubId });
+	const pub: types.Pub = await Pub.findOne({ where: { id: pubId } });
 	const diffs = kind === 'pub-updated' && getDiffsForPayload(pub, oldPub, ['title', 'doi']);
 	return createActivityItem({
 		kind,
@@ -240,7 +228,7 @@ export const createPubReleaseActivityItem = async (
 	releaseId: string,
 	pubId: string,
 ) => {
-	const pub: types.Pub = await Pub.findOne({ where: pubId });
+	const pub: types.Pub = await Pub.findOne({ where: { id: pubId } });
 	return createActivityItem({
 		kind,
 		actorId,
