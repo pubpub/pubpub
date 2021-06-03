@@ -4,7 +4,7 @@ import { pubUrl } from 'utils/canonicalUrls';
 import { TitleRenderer } from '../types';
 import { getPubFromContext } from './util';
 
-export const titleDiscussion: TitleRenderer<PubDiscussionCommentAddedActivityItem> = (
+export const discussionTitle: TitleRenderer<PubDiscussionCommentAddedActivityItem> = (
 	item,
 	context,
 ) => {

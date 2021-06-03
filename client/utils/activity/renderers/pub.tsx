@@ -14,12 +14,12 @@ import {
 } from 'types';
 
 import {
-	titlePub,
-	titlePubEdge,
-	titlePubEdgeTarget,
-	titleRelease,
-	titleReview,
-	titleDiscussion,
+	pubTitle,
+	pubEdgeTitle,
+	pubEdgeTargetTitle,
+	releaseTitle,
+	reviewTitle,
+	discussionTitle,
 } from '../titles';
 import { itemRenderer } from './itemRenderer';
 
@@ -31,8 +31,8 @@ type ReviewTitles = BaseTitles | 'review';
 
 export const renderPubCreated = itemRenderer<PubCreatedActivityItem, BaseTitles>({
 	icon: 'pubDoc',
-	titles: {
-		pub: titlePub,
+	titleRenderers: {
+		pub: pubTitle,
 	},
 	message: ({ titles }) => {
 		const { actor, pub } = titles;
@@ -46,8 +46,8 @@ export const renderPubCreated = itemRenderer<PubCreatedActivityItem, BaseTitles>
 
 export const renderPubUpdated = itemRenderer<PubUpdatedActivityItem, BaseTitles>({
 	icon: 'pubDoc',
-	titles: {
-		pub: titlePub,
+	titleRenderers: {
+		pub: pubTitle,
 	},
 	message: ({ item, titles }) => {
 		const { payload } = item;
@@ -91,8 +91,8 @@ export const renderPubUpdated = itemRenderer<PubUpdatedActivityItem, BaseTitles>
 
 export const renderPubRemoved = itemRenderer<PubRemovedActivityItem, BaseTitles>({
 	icon: 'pubDoc',
-	titles: {
-		pub: titlePub,
+	titleRenderers: {
+		pub: pubTitle,
 	},
 	message: ({ titles }) => {
 		const { actor, pub } = titles;
@@ -106,9 +106,9 @@ export const renderPubRemoved = itemRenderer<PubRemovedActivityItem, BaseTitles>
 
 export const renderPubReleased = itemRenderer<PubReleasedActivityItem, ReleaseTitles>({
 	icon: 'document-share',
-	titles: {
-		pub: titlePub,
-		release: titleRelease,
+	titleRenderers: {
+		pub: pubTitle,
+		release: releaseTitle,
 	},
 	message: ({ titles }) => {
 		const { actor, pub, release } = titles;
@@ -122,10 +122,10 @@ export const renderPubReleased = itemRenderer<PubReleasedActivityItem, ReleaseTi
 
 export const renderPubEdgeCreated = itemRenderer<PubEdgeCreatedActivityItem, PubEdgeTitles>({
 	icon: 'layout-auto',
-	titles: {
-		pub: titlePub,
-		edge: titlePubEdge,
-		target: titlePubEdgeTarget,
+	titleRenderers: {
+		pub: pubTitle,
+		edge: pubEdgeTitle,
+		target: pubEdgeTargetTitle,
 	},
 	message: ({ titles }) => {
 		const { actor, edge, target, pub } = titles;
@@ -139,10 +139,10 @@ export const renderPubEdgeCreated = itemRenderer<PubEdgeCreatedActivityItem, Pub
 
 export const renderPubEdgeRemoved = itemRenderer<PubEdgeRemovedActivityItem, PubEdgeTitles>({
 	icon: 'layout-auto',
-	titles: {
-		pub: titlePub,
-		edge: titlePubEdge,
-		target: titlePubEdgeTarget,
+	titleRenderers: {
+		pub: pubTitle,
+		edge: pubEdgeTitle,
+		target: pubEdgeTargetTitle,
 	},
 	message: ({ titles }) => {
 		const { actor, edge, target, pub } = titles;
@@ -159,9 +159,9 @@ export const renderPubDiscussionCommentAdded = itemRenderer<
 	DiscussionTitles
 >({
 	icon: 'chat',
-	titles: {
-		pub: titlePub,
-		discussion: titleDiscussion,
+	titleRenderers: {
+		pub: pubTitle,
+		discussion: discussionTitle,
 	},
 	message: ({ titles }) => {
 		const { actor, pub, discussion } = titles;
@@ -178,9 +178,9 @@ export const renderPubDiscussionCommentAdded = itemRenderer<
 
 export const renderPubReviewCreated = itemRenderer<PubReviewCreatedActivityItem, ReviewTitles>({
 	icon: 'social-media',
-	titles: {
-		pub: titlePub,
-		review: titleReview,
+	titleRenderers: {
+		pub: pubTitle,
+		review: reviewTitle,
 	},
 	message: ({ titles }) => {
 		const { actor, pub, review } = titles;
@@ -200,9 +200,9 @@ export const renderPubReviewCommentAdded = itemRenderer<
 	ReviewTitles
 >({
 	icon: 'social-media',
-	titles: {
-		pub: titlePub,
-		review: titleReview,
+	titleRenderers: {
+		pub: pubTitle,
+		review: reviewTitle,
 	},
 	message: ({ titles }) => {
 		const { actor, pub, review } = titles;
@@ -219,9 +219,9 @@ export const renderPubReviewCommentAdded = itemRenderer<
 
 export const renderPubReviewUpdated = itemRenderer<PubReviewUpdatedActivityItem, ReviewTitles>({
 	icon: 'social-media',
-	titles: {
-		pub: titlePub,
-		review: titleReview,
+	titleRenderers: {
+		pub: pubTitle,
+		review: reviewTitle,
 	},
 	message: ({ titles, item }) => {
 		const { actor, pub, review } = titles;

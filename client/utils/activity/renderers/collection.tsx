@@ -8,7 +8,7 @@ import {
 	CollectionPubRemovedActivityItem,
 } from 'types';
 
-import { titleCollection, titlePub } from '../titles';
+import { collectionTitle, pubTitle } from '../titles';
 import { itemRenderer } from './itemRenderer';
 
 type BaseTitles = 'collection';
@@ -16,8 +16,8 @@ type CollectionPubTitles = BaseTitles | 'pub';
 
 export const renderCollectionCreated = itemRenderer<CollectionCreatedActivityItem, BaseTitles>({
 	icon: 'collection',
-	titles: {
-		collection: titleCollection,
+	titleRenderers: {
+		collection: collectionTitle,
 	},
 	message: ({ titles }) => {
 		const { actor, collection } = titles;
@@ -31,8 +31,8 @@ export const renderCollectionCreated = itemRenderer<CollectionCreatedActivityIte
 
 export const renderCollectionUpdated = itemRenderer<CollectionUpdatedActivityItem, BaseTitles>({
 	icon: 'collection',
-	titles: {
-		collection: titleCollection,
+	titleRenderers: {
+		collection: collectionTitle,
 	},
 	message: ({ titles, item }) => {
 		const { payload } = item;
@@ -106,8 +106,8 @@ export const renderCollectionUpdated = itemRenderer<CollectionUpdatedActivityIte
 
 export const renderCollectionRemoved = itemRenderer<CollectionRemovedActivityItem, BaseTitles>({
 	icon: 'collection',
-	titles: {
-		collection: titleCollection,
+	titleRenderers: {
+		collection: collectionTitle,
 	},
 	message: ({ titles }) => {
 		const { actor, collection } = titles;
@@ -124,9 +124,9 @@ export const renderCollectionPubCreated = itemRenderer<
 	CollectionPubTitles
 >({
 	icon: 'pubDoc',
-	titles: {
-		collection: titleCollection,
-		pub: titlePub,
+	titleRenderers: {
+		collection: collectionTitle,
+		pub: pubTitle,
 	},
 	message: ({ titles }) => {
 		const { actor, pub, collection } = titles;
@@ -143,9 +143,9 @@ export const renderCollectionPubRemoved = itemRenderer<
 	CollectionPubTitles
 >({
 	icon: 'pubDoc',
-	titles: {
-		collection: titleCollection,
-		pub: titlePub,
+	titleRenderers: {
+		collection: collectionTitle,
+		pub: pubTitle,
 	},
 	message: ({ titles }) => {
 		const { actor, pub, collection } = titles;

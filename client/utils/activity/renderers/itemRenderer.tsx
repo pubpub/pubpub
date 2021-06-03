@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ActivityItem, InsertableActivityItem } from 'types';
 
-import { titleActor } from '../titles';
+import { actorTitle } from '../titles';
 import {
 	ActivityItemRenderOptions,
 	ActivityItemRenderer,
@@ -34,7 +34,7 @@ const renderTitles = <Item extends InsertableActivityItem, Titles extends string
 	context: ActivityRenderContext,
 ): Record<Titles | 'actor', React.ReactNode> => {
 	const renderedTitles = {
-		actor: titleActor(item, context),
+		actor: actorTitle(item, context),
 	};
 	Object.keys(titleRenderers).forEach((key) => {
 		const renderer = titleRenderers[key as Titles];
@@ -47,7 +47,7 @@ const renderTitles = <Item extends InsertableActivityItem, Titles extends string
 export const itemRenderer = <Item extends InsertableActivityItem, Titles extends string>(
 	options: ActivityItemRenderOptions<Item, Titles>,
 ): ActivityItemRenderer<Item> => {
-	const { icon, titles: titleRenderers, message, excerpt } = options;
+	const { icon, titleRenderers, message, excerpt } = options;
 	return (item: Item, context: ActivityRenderContext) => {
 		const { communityId, collectionId, pubId } = item;
 		const titles = renderTitles(item, titleRenderers, context);
