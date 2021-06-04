@@ -67,8 +67,37 @@ const resolvePartialMemberItem = async (member: types.Member) => {
 	throw new Error('Invalid Member');
 };
 
-export const createCommunityActivityItem = async (
-	kind: 'community-created' | 'community-updated',
+const buildMemberActivityItemParams = <
+	SharedItem extends Record<string, any>,
+	Rest extends { communityId: string },
+	Payload extends Record<string, any>
+>(
+	item: SharedItem,
+	value: Rest & { payload: Payload },
+) => {
+	const { payload, ...rest } = value;
+	return {
+		...item,
+		...rest,
+		payload: { ...item.payload, ...payload },
+	};
+};
+
+export const createCommunityCreatedActivityItem = async (actorId: string, communityId: string) => {
+	const community: types.Community = await Community.findOne({ where: { id: communityId } });
+	return createActivityItem({
+		actorId,
+		kind: 'community-created' as const,
+		communityId,
+		payload: {
+			community: {
+				title: community.title,
+			},
+		},
+	});
+};
+
+export const createCommunityUpdatedActivityItem = async (
 	actorId: string,
 	oldCommunity: types.Community,
 	communityId: string,
@@ -77,7 +106,7 @@ export const createCommunityActivityItem = async (
 	const diffs = getDiffsForPayload(community, oldCommunity, ['title']);
 	return createActivityItem({
 		actorId,
-		kind,
+		kind: 'community-updated' as const,
 		communityId,
 		payload: {
 			...diffs,
@@ -99,29 +128,18 @@ export const createMemberCreatedActivityItem = async (actorId: string, memberId:
 			permissions: member.permissions,
 		},
 	};
+	// We're doing this hand-holding to remind TypeScript that the 'payload' and 'rest' parts
+	// of the discriminated union of partial.value must go together -- if you see a pubId in 'rest'
+	// then we can infer that 'payload' must have {pub: {title: string}} -- and we need TypeScript
+	// to understand this as well.
 	if (partial.tag === 'pub') {
-		const { payload, ...rest } = partial.value;
-		return createActivityItem({
-			...item,
-			...rest,
-			payload: { ...item.payload, ...payload },
-		});
+		return createActivityItem(buildMemberActivityItemParams(item, partial.value));
 	}
 	if (partial.tag === 'collection') {
-		const { payload, ...rest } = partial.value;
-		return createActivityItem({
-			...item,
-			...rest,
-			payload: { ...item.payload, ...payload },
-		});
+		return createActivityItem(buildMemberActivityItemParams(item, partial.value));
 	}
 	if (partial.tag === 'community') {
-		const { payload, ...rest } = partial.value;
-		return createActivityItem({
-			...item,
-			...rest,
-			payload: { ...item.payload, ...payload },
-		});
+		return createActivityItem(buildMemberActivityItemParams(item, partial.value));
 	}
 	throw new Error('Invalid Scope');
 };
@@ -137,28 +155,13 @@ export const createMemberRemovedActivityItem = async (actorId: string, memberId:
 		},
 	};
 	if (partial.tag === 'pub') {
-		const { payload, ...rest } = partial.value;
-		return createActivityItem({
-			...item,
-			...rest,
-			payload: { ...item.payload, ...payload },
-		});
+		return createActivityItem(buildMemberActivityItemParams(item, partial.value));
 	}
 	if (partial.tag === 'collection') {
-		const { payload, ...rest } = partial.value;
-		return createActivityItem({
-			...item,
-			...rest,
-			payload: { ...item.payload, ...payload },
-		});
+		return createActivityItem(buildMemberActivityItemParams(item, partial.value));
 	}
 	if (partial.tag === 'community') {
-		const { payload, ...rest } = partial.value;
-		return createActivityItem({
-			...item,
-			...rest,
-			payload: { ...item.payload, ...payload },
-		});
+		return createActivityItem(buildMemberActivityItemParams(item, partial.value));
 	}
 	throw new Error('Invalid Scope');
 };
@@ -180,28 +183,13 @@ export const createMemberUpdatedActivityItem = async (
 		},
 	};
 	if (partial.tag === 'pub') {
-		const { payload, ...rest } = partial.value;
-		return createActivityItem({
-			...item,
-			...rest,
-			payload: { ...item.payload, ...payload },
-		});
+		return createActivityItem(buildMemberActivityItemParams(item, partial.value));
 	}
 	if (partial.tag === 'collection') {
-		const { payload, ...rest } = partial.value;
-		return createActivityItem({
-			...item,
-			...rest,
-			payload: { ...item.payload, ...payload },
-		});
+		return createActivityItem(buildMemberActivityItemParams(item, partial.value));
 	}
 	if (partial.tag === 'community') {
-		const { payload, ...rest } = partial.value;
-		return createActivityItem({
-			...item,
-			...rest,
-			payload: { ...item.payload, ...payload },
-		});
+		return createActivityItem(buildMemberActivityItemParams(item, partial.value));
 	}
 	throw new Error('Invalid Scope');
 };
