@@ -336,7 +336,7 @@ export const createPubActivityItem = async (
 	communityId: string,
 	pubId: string,
 ) => {
-	const pub: types.Pub = await Pub.findOne({ where: pubId });
+	const pub: types.Pub = await Pub.findOne({ where: { id: pubId } });
 	const diffs = kind === 'pub-updated' && getDiffsForPayload(pub, oldPub, ['title', 'doi']);
 	return createActivityItem({
 		kind,
@@ -359,7 +359,7 @@ export const createPubReleaseActivityItem = async (
 	releaseId: string,
 	pubId: string,
 ) => {
-	const pub: types.Pub = await Pub.findOne({ where: pubId });
+	const pub: types.Pub = await Pub.findOne({ where: { id: pubId } });
 	return createActivityItem({
 		kind,
 		actorId,
@@ -431,10 +431,10 @@ export const createPubDiscussionActivityItem = async (
 	discussionId: string,
 	threadCommentId: string,
 ) => {
-	const pub: types.Pub = await Pub.findOne({ where: { id: pubId } });
-	const threadComment: types.ThreadComment = await ThreadComment.findOne({
-		where: { id: threadCommentId },
-	});
+	const [pub, threadComment]: [types.Pub, types.ThreadComment] = await Promise.all([
+		Pub.findOne({ where: { id: pubId } }),
+		ThreadComment.findOne({ where: { id: threadCommentId } }),
+	]);
 	const discussion: types.DefinitelyHas<types.Discussion, 'thread'> = await Discussion.findOne({
 		where: { id: discussionId },
 	});
