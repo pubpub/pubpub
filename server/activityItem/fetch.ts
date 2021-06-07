@@ -113,7 +113,9 @@ const getActivityItemAssociationIds = (
 	}
 	items.forEach((item) => {
 		community.push(item.communityId);
-		user.push(item.actorId);
+		if (item.actorId) {
+			user.push(item.actorId);
+		}
 		if (item.collectionId) {
 			collection.push(item.collectionId);
 		}
