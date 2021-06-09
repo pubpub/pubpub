@@ -6,6 +6,9 @@ import { ActivityItem } from 'server/models';
 
 import { fetchActivityItems } from '../fetch';
 import {
+	createMemberCreatedActivityItem,
+	createMemberUpdatedActivityItem,
+	createMemberRemovedActivityItem,
 	createCollectionActivityItem,
 	createCollectionPubActivityItem,
 	createCollectionUpdatedActivityItem,
@@ -17,6 +20,36 @@ import {
 
 const models = modelize`
     User actor {}
+		Member pubMember {
+			user: actor
+			permissions: "admin"
+			pub: pub
+		}
+		Member oldPubMember {
+			user: actor
+			permissions: "edit"
+			pub: pub
+		}
+		Member collectionMember {
+			user: actor
+			permissions: "admin"
+			collection: collection
+		}
+		Member oldCollectionMember {
+			user: actor
+			permissions: "edit"
+			collection: collection
+		}
+		Member communityMember {
+			user: actor
+			permissions: "admin"
+			community: community
+		}
+		Member oldCommunityMember {
+			user: actor
+			permissions: "edit"
+			community: community
+		}
     Community community {
         Collection collection {
             CollectionPub collectionPub {
@@ -71,6 +104,121 @@ describe('fetchActivityItems', () => {
 			},
 		});
 		expectAssociationIds(associations, { community: [community.id], user: [actor.id] });
+	});
+
+	it('fetches items for member-created, member-updated, and member-removed across pub, collection, and community membership', async () => {
+		const {
+			actor,
+			pub,
+			collection,
+			community,
+			pubMember,
+			oldPubMember,
+			collectionMember,
+			oldCollectionMember,
+			communityMember,
+			oldCommunityMember,
+		} = models;
+		await createMemberCreatedActivityItem(actor.id, pubMember.id);
+		await createMemberUpdatedActivityItem(actor.id, pubMember.id, oldPubMember);
+		await createMemberRemovedActivityItem(actor.id, pubMember.id);
+		await createMemberCreatedActivityItem(actor.id, collectionMember.id);
+		await createMemberUpdatedActivityItem(actor.id, collectionMember.id, oldCollectionMember);
+		await createMemberRemovedActivityItem(actor.id, collectionMember.id);
+		await createMemberCreatedActivityItem(actor.id, communityMember.id);
+		await createMemberUpdatedActivityItem(actor.id, communityMember.id, oldCommunityMember);
+		await createMemberRemovedActivityItem(actor.id, communityMember.id);
+		const {
+			activityItems: [
+				communityMemberRemovedItem,
+				communityMemberUpdatedItem,
+				communityMemberCreatedItem,
+				collectionMemberRemovedItem,
+				collectionMemberUpdatedItem,
+				collectionMemberCreatedItem,
+				pubMemberRemovedItem,
+				pubMemberUpdatedItem,
+				pubMemberCreatedItem,
+			],
+			associations,
+		} = await fetchActivityItems({
+			scope: { communityId: community.id },
+		});
+		expect(pubMemberCreatedItem).toMatchObject({
+			kind: 'member-created',
+			payload: {
+				userId: pubMember.userId,
+				permissions: pubMember.permissions,
+			},
+		});
+		expect(pubMemberUpdatedItem).toMatchObject({
+			kind: 'member-updated',
+			payload: {
+				userId: pubMember.userId,
+				permissions: {
+					from: oldPubMember.permissions,
+					to: pubMember.permissions,
+				},
+			},
+		});
+		expect(pubMemberRemovedItem).toMatchObject({
+			kind: 'member-removed',
+			payload: {
+				userId: pubMember.userId,
+			},
+		});
+		expect(collectionMemberCreatedItem).toMatchObject({
+			kind: 'member-created',
+			payload: {
+				userId: collectionMember.userId,
+				permissions: collectionMember.permissions,
+			},
+		});
+		expect(collectionMemberUpdatedItem).toMatchObject({
+			kind: 'member-updated',
+			payload: {
+				userId: collectionMember.userId,
+				permissions: {
+					from: oldCollectionMember.permissions,
+					to: collectionMember.permissions,
+				},
+			},
+		});
+		expect(collectionMemberRemovedItem).toMatchObject({
+			kind: 'member-removed',
+			payload: {
+				userId: collectionMember.userId,
+			},
+		});
+		expect(communityMemberCreatedItem).toMatchObject({
+			kind: 'member-created',
+			payload: {
+				userId: communityMember.userId,
+				permissions: communityMember.permissions,
+			},
+		});
+		expect(communityMemberUpdatedItem).toMatchObject({
+			kind: 'member-updated',
+			payload: {
+				userId: communityMember.userId,
+				permissions: {
+					from: oldCommunityMember.permissions,
+					to: communityMember.permissions,
+				},
+			},
+		});
+		expect(communityMemberRemovedItem).toMatchObject({
+			kind: 'member-removed',
+			payload: {
+				userId: communityMember.userId,
+			},
+		});
+		expectAssociationIds(associations, {
+			collection: [collection.id],
+			community: [community.id],
+			pub: [pub.id],
+			user: [actor.id],
+		});
 	});
 
 	it('fetches items for collection-created, collection-updated, and collection-removed', async () => {

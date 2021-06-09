@@ -16,7 +16,7 @@ import {
 import { getDiffsForPayload, getChangeFlagsForPayload, createActivityItem } from './utils';
 
 const resolvePartialMemberItem = async (member: types.Member) => {
-	if ('pubId' in member) {
+	if (member.pubId) {
 		const pub: types.Pub = await Pub.findOne({ where: { id: member.pubId } });
 		return {
 			tag: 'pub',
@@ -31,7 +31,7 @@ const resolvePartialMemberItem = async (member: types.Member) => {
 			},
 		} as const;
 	}
-	if ('collectionId' in member) {
+	if (member.collectionId) {
 		const collection: types.Collection = await Collection.findOne({
 			where: { id: member.collectionId },
 		});
@@ -48,7 +48,7 @@ const resolvePartialMemberItem = async (member: types.Member) => {
 			},
 		} as const;
 	}
-	if ('communityId' in member) {
+	if (member.communityId) {
 		const community: types.Community = await Community.findOne({
 			where: { id: member.communityId },
 		});
