@@ -1,16 +1,17 @@
 import * as types from 'types';
 import {
 	Collection,
-	Member,
+	CollectionPub,
 	Community,
-	PubEdge,
 	Discussion,
 	ExternalPublication,
-	ReviewNew,
+	Member,
 	Pub,
-	CollectionPub,
-	ThreadComment,
+	PubEdge,
+	Release,
+	ReviewNew,
 	Thread,
+	ThreadComment,
 } from 'server/models';
 
 import { getDiffsForPayload, getChangeFlagsForPayload, createActivityItem } from './utils';
@@ -242,34 +243,61 @@ export const createCollectionUpdatedActivityItem = async (
 	});
 };
 
-export const createPubReviewCreatedActivityItem = async (
-	kind: 'pub-review-created' | 'pub-review-comment-added',
-	actorId: string,
-	communityId: string,
-	reviewId: string,
-	isReply: boolean,
-) => {
+export const createPubReviewCreatedActivityItem = async (reviewId: string) => {
 	const review: types.DefinitelyHas<types.Review, 'thread'> = await ReviewNew.findOne({
 		where: { id: reviewId },
-		includes: [
-			{ model: Thread, as: 'thread', includes: [{ model: ThreadComment, as: 'comments' }] },
+		include: [
+			{ model: Thread, as: 'thread', include: [{ model: ThreadComment, as: 'comments' }] },
 		],
 	});
 	const threadComment: types.ThreadComment = review.thread.comments[0];
 	const pub: types.Pub = await Pub.findOne({ where: { id: review.pubId } });
+
+	const payloadThreadComment = threadComment && {
+		id: threadComment.id,
+		text: threadComment.text,
+		userId: threadComment.userId,
+	};
+
 	return createActivityItem({
-		communityId,
-		actorId,
-		kind,
+		communityId: pub.communityId,
+		actorId: review.userId,
+		kind: 'pub-review-created',
 		pubId: pub.id,
 		payload: {
 			reviewId,
 			threadId: review.threadId,
-			isReply,
+			isReply: false,
+			pub: { title: pub.title },
+			...(payloadThreadComment && { threadComment: payloadThreadComment }),
+		},
+	});
+};
+
+export const createPubReviewCommentAddedActivityItem = async (
+	reviewId: string,
+	threadCommentId: string,
+) => {
+	const [review, threadComment]: [types.Review, types.ThreadComment] = await Promise.all([
+		ReviewNew.findOne({
+			where: { id: reviewId },
+		}),
+		ThreadComment.findOne({ where: { id: threadCommentId } }),
+	]);
+	const pub = await Pub.findOne({ where: { id: review.pubId } });
+	return createActivityItem({
+		communityId: pub.communityId,
+		actorId: threadComment.userId,
+		kind: 'pub-review-comment-added' as const,
+		pubId: pub.id,
+		payload: {
+			reviewId,
+			threadId: review.threadId,
+			isReply: true,
 			threadComment: {
 				id: threadComment.id,
 				text: threadComment.text,
-				userId: actorId,
+				userId: threadComment.userId,
 			},
 			pub: { title: pub.title },
 		},
@@ -374,18 +402,13 @@ export const createPubUpdatedActivityItem = async (
 	});
 };
 
-export const createPubReleasedActivityItem = async (
-	kind: 'pub-released',
-	actorId: string,
-	communityId: string,
-	releaseId: string,
-	pubId: string,
-) => {
-	const pub: types.Pub = await Pub.findOne({ where: { id: pubId } });
+export const createPubReleasedActivityItem = async (actorId: string, releaseId: string) => {
+	const release: types.Release = await Release.findOne({ where: { id: releaseId } });
+	const pub: types.Pub = await Pub.findOne({ where: { id: release.pubId } });
 	return createActivityItem({
-		kind,
+		kind: 'pub-released' as const,
 		actorId,
-		communityId,
+		communityId: pub.communityId,
 		pubId: pub.id,
 		payload: {
 			releaseId,
@@ -400,7 +423,6 @@ export const createPubEdgeActivityItem = async (
 	kind: 'pub-edge-created' | 'pub-edge-removed',
 	actorId: string,
 	pubEdgeId: string,
-	communityId: string,
 ) => {
 	const pubEdge: types.DefinitelyHas<types.PubEdge, 'pub'> &
 		types.DefinitelyHas<
@@ -408,8 +430,9 @@ export const createPubEdgeActivityItem = async (
 			'targetPub' | 'externalPublication'
 		> = await PubEdge.findOne({
 		where: { id: pubEdgeId },
-		includes: [
+		include: [
 			{ model: Pub, as: 'pub' },
+			{ model: Pub, as: 'targetPub' },
 			{ model: ExternalPublication, as: 'externalPublication' },
 		],
 	});
@@ -432,7 +455,7 @@ export const createPubEdgeActivityItem = async (
 	return createActivityItem({
 		kind,
 		actorId,
-		communityId,
+		communityId: pubEdge.pub.communityId,
 		pubId: pubEdge.pubId,
 		payload: {
 			pub: {
@@ -444,27 +467,25 @@ export const createPubEdgeActivityItem = async (
 	});
 };
 
-export const createPubDiscussionActivityItem = async (
-	kind: 'pub-discussion-comment-added',
-	actorId: string,
-	communityId: string,
-	isReply: boolean,
-	pubId: string,
+export const createPubDiscussionCommentAddedActivityItem = async (
 	discussionId: string,
 	threadCommentId: string,
+	isReply: boolean,
 ) => {
-	const pub: types.Pub = await Pub.findOne({ where: { id: pubId } });
-	const threadComment: types.ThreadComment = await ThreadComment.findOne({
-		where: { id: threadCommentId },
-	});
-	const discussion: types.DefinitelyHas<types.Discussion, 'thread'> = await Discussion.findOne({
-		where: { id: discussionId },
-	});
+	const [threadComment, discussion]: [types.ThreadComment, types.Discussion] = await Promise.all([
+		ThreadComment.findOne({
+			where: { id: threadCommentId },
+		}),
+		Discussion.findOne({
+			where: { id: discussionId },
+		}),
+	]);
+	const pub: types.Pub = await Pub.findOne({ where: { id: discussion.pubId } });
 	return createActivityItem({
-		kind,
-		pubId,
-		actorId,
-		communityId,
+		kind: 'pub-discussion-comment-added',
+		pubId: discussion.pubId,
+		actorId: threadComment.userId,
+		communityId: pub.communityId,
 		payload: {
 			pub: {
 				title: pub.title,
@@ -475,7 +496,7 @@ export const createPubDiscussionActivityItem = async (
 			threadComment: {
 				id: threadCommentId,
 				text: threadComment.text,
-				userId: actorId,
+				userId: threadComment.userId,
 			},
 		},
 	});

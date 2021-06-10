@@ -12,6 +12,9 @@ import {
 	createCollectionActivityItem,
 	createCollectionPubActivityItem,
 	createCollectionUpdatedActivityItem,
+	createPubReviewCreatedActivityItem,
+	createPubReviewCommentAddedActivityItem,
+	createPubReviewUpdatedActivityItem,
 	createCommunityCreatedActivityItem,
 	createCommunityUpdatedActivityItem,
 	createPubActivityItem,
@@ -19,47 +22,50 @@ import {
 } from '../queries';
 
 const models = modelize`
-    User actor {}
-		Member pubMember {
-			user: actor
-			permissions: "admin"
-			pub: pub
+	User actor {}
+	User loudmouth {}
+	Member pubMember {
+		user: actor
+		permissions: "admin"
+		pub: pub
+	}
+	Member collectionMember {
+		user: actor
+		permissions: "admin"
+		collection: collection
+	}
+	Member communityMember {
+		user: actor
+		permissions: "admin"
+		community: community
+	}
+	Community community {
+		Collection collection {
+			CollectionPub collectionPub {
+				rank: "0"
+				Pub pub {
+					ReviewNew review {
+						author: actor
+						status: "open"
+						number: 7
+						visibility: Visibility {}
+						Thread thread {
+							ThreadComment releaseRequestComment {
+								author: actor
+								text: "Release me to the world!"
+								createdAt: "2017-10-11 00:26:09.571+00"
+							}
+							ThreadComment releaseDenialComment {
+								author: loudmouth
+								text: "You're not ready yet, kid."
+								createdAt: "2040-10-11 00:26:09.571+00"
+							}
+						}
+					}
+				}
+			}
 		}
-		Member oldPubMember {
-			user: actor
-			permissions: "edit"
-			pub: pub
-		}
-		Member collectionMember {
-			user: actor
-			permissions: "admin"
-			collection: collection
-		}
-		Member oldCollectionMember {
-			user: actor
-			permissions: "edit"
-			collection: collection
-		}
-		Member communityMember {
-			user: actor
-			permissions: "admin"
-			community: community
-		}
-		Member oldCommunityMember {
-			user: actor
-			permissions: "edit"
-			community: community
-		}
-    Community community {
-        Collection collection {
-            CollectionPub collectionPub {
-                rank: "0"
-                Pub pub {
-
-                }
-            }
-        }
-    }
+	}
 `;
 
 setup(beforeAll, models.resolve);
@@ -113,20 +119,26 @@ describe('fetchActivityItems', () => {
 			collection,
 			community,
 			pubMember,
-			oldPubMember,
 			collectionMember,
-			oldCollectionMember,
 			communityMember,
-			oldCommunityMember,
 		} = models;
 		await createMemberCreatedActivityItem(actor.id, pubMember.id);
-		await createMemberUpdatedActivityItem(actor.id, pubMember.id, oldPubMember);
+		await createMemberUpdatedActivityItem(actor.id, pubMember.id, {
+			...pubMember,
+			permissions: 'edit',
+		});
 		await createMemberRemovedActivityItem(actor.id, pubMember.id);
 		await createMemberCreatedActivityItem(actor.id, collectionMember.id);
-		await createMemberUpdatedActivityItem(actor.id, collectionMember.id, oldCollectionMember);
+		await createMemberUpdatedActivityItem(actor.id, collectionMember.id, {
+			...collectionMember,
+			permissions: 'edit',
+		});
 		await createMemberRemovedActivityItem(actor.id, collectionMember.id);
 		await createMemberCreatedActivityItem(actor.id, communityMember.id);
-		await createMemberUpdatedActivityItem(actor.id, communityMember.id, oldCommunityMember);
+		await createMemberUpdatedActivityItem(actor.id, communityMember.id, {
+			...communityMember,
+			permissions: 'edit',
+		});
 		await createMemberRemovedActivityItem(actor.id, communityMember.id);
 		const {
 			activityItems: [
@@ -156,7 +168,7 @@ describe('fetchActivityItems', () => {
 			payload: {
 				userId: pubMember.userId,
 				permissions: {
-					from: oldPubMember.permissions,
+					from: 'edit',
 					to: pubMember.permissions,
 				},
 			},
@@ -179,7 +191,7 @@ describe('fetchActivityItems', () => {
 			payload: {
 				userId: collectionMember.userId,
 				permissions: {
-					from: oldCollectionMember.permissions,
+					from: 'edit',
 					to: collectionMember.permissions,
 				},
 			},
@@ -202,7 +214,7 @@ describe('fetchActivityItems', () => {
 			payload: {
 				userId: communityMember.userId,
 				permissions: {
-					from: oldCommunityMember.permissions,
+					from: 'edit',
 					to: communityMember.permissions,
 				},
 			},
@@ -331,6 +343,92 @@ describe('fetchActivityItems', () => {
 			collectionPub: [collectionPub.id],
 			pub: [pub.id],
 			user: [actor.id],
+		});
+	});
+	it('fetches items for pub-review-created, pub-review-comment-added, and pub-review-updated', async () => {
+		const {
+			actor,
+			loudmouth,
+			community,
+			review,
+			pub,
+			thread,
+			releaseRequestComment,
+			releaseDenialComment,
+		} = models;
+		await createPubReviewCreatedActivityItem(review.id);
+		await createPubReviewCommentAddedActivityItem(review.id, releaseDenialComment.id);
+		await createPubReviewUpdatedActivityItem(
+			'pub-review-updated',
+			actor.id,
+			community.id,
+			review.id,
+			{
+				...review,
+				status: 'closed',
+			},
+		);
+		const {
+			activityItems: [updatedItem, commentAddedItem, createdItem],
+			associations,
+		} = await fetchActivityItems({
+			scope: { communityId: community.id, pubId: pub.id },
+		});
+		expect(createdItem).toMatchObject({
+			actorId: actor.id,
+			communityId: community.id,
+			kind: 'pub-review-created',
+			pubId: pub.id,
+			payload: {
+				isReply: false,
+				threadId: thread.id,
+				threadComment: {
+					id: releaseRequestComment.id,
+					text: releaseRequestComment.text,
+					userId: actor.id,
+				},
+				reviewId: review.id,
+				pub: { title: pub.title },
+			},
+		});
+		expect(commentAddedItem).toMatchObject({
+			actorId: loudmouth.id,
+			communityId: community.id,
+			kind: 'pub-review-comment-added',
+			pubId: pub.id,
+			payload: {
+				isReply: true,
+				threadId: thread.id,
+				threadComment: {
+					id: releaseDenialComment.id,
+					text: releaseDenialComment.text,
+					userId: loudmouth.id,
+				},
+				reviewId: review.id,
+				pub: { title: pub.title },
+			},
+		});
+		expect(updatedItem).toMatchObject({
+			actorId: actor.id,
+			communityId: community.id,
+			kind: 'pub-review-updated',
+			pubId: pub.id,
+			payload: {
+				reviewId: review.id,
+				pub: { title: pub.title },
+				status: {
+					from: 'closed',
+					to: review.status,
+				},
+			},
+		});
+		expectAssociationIds(associations, {
+			community: [community.id],
+			pub: [pub.id],
+			user: [actor.id, loudmouth.id],
+			review: [review.id],
+			thread: [thread.id],
+			threadComment: [releaseDenialComment.id, releaseRequestComment.id],
 		});
 	});
 });
