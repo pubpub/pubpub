@@ -19,6 +19,7 @@ import {
 	createCommunityUpdatedActivityItem,
 	createPubActivityItem,
 	createPubUpdatedActivityItem,
+	createPubReleasedActivityItem,
 } from '../queries';
 
 const models = modelize`
@@ -44,6 +45,10 @@ const models = modelize`
 			CollectionPub collectionPub {
 				rank: "0"
 				Pub pub {
+					Release release {
+						createdAt: "2021-01-01"
+						historyKey: 1
+					}
 					ReviewNew review {
 						author: actor
 						status: "open"
@@ -266,13 +271,14 @@ describe('fetchActivityItems', () => {
 		});
 	});
 
-	it('fetches items for pub-created, pub-updated, and pub-removed', async () => {
-		const { community, pub, actor } = models;
+	it('fetches items for pub-created, pub-updated, pub-removed, and pub-released', async () => {
+		const { community, pub, actor, release } = models;
 		await createPubActivityItem('pub-created', actor.id, pub.id);
 		await createPubUpdatedActivityItem(actor.id, pub.id, { ...pub, doi: 'some/old/doi' });
 		await createPubActivityItem('pub-removed', actor.id, pub.id);
+		await createPubReleasedActivityItem(actor.id, release.id);
 		const {
-			activityItems: [removedItem, updatedItem, createdItem],
+			activityItems: [releasedItem, removedItem, updatedItem, createdItem],
 			associations,
 		} = await fetchActivityItems({
 			scope: { communityId: community.id, pubId: pub.id },
@@ -291,6 +297,15 @@ describe('fetchActivityItems', () => {
 		expect(removedItem).toMatchObject({
 			kind: 'pub-removed',
 			payload: { pub: { title: pub.title } },
+		});
+		expect(releasedItem).toMatchObject({
+			kind: 'pub-released',
+			payload: {
+				pub: {
+					title: pub.title,
+				},
+				releaseId: release.id,
+			},
 		});
 		expectAssociationIds(associations, {
 			community: [community.id],
