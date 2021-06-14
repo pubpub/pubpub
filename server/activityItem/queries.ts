@@ -447,9 +447,9 @@ export const createPubEdgeActivityItem = async (
 		  }
 		: {
 				pub: {
-					id: pubEdge.pubId,
-					title: pubEdge.pub.title,
-					slug: pubEdge.pub.slug,
+					id: pubEdge.targetPub.id,
+					title: pubEdge.targetPub.title,
+					slug: pubEdge.targetPub.slug,
 				},
 		  };
 	return createActivityItem({

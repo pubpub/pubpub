@@ -146,6 +146,8 @@ const getActivityItemAssociationIds = (
 			pubEdge.add(item.payload.pubEdgeId);
 			if ('externalPublication' in item.payload.target) {
 				externalPublication.add(item.payload.target.externalPublication.id);
+			} else if ('pub' in item.payload.target) {
+				pub.add(item.payload.target.pub.id);
 			}
 		} else if (item.kind === 'pub-released') {
 			release.add(item.payload.releaseId);

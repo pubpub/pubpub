@@ -20,6 +20,7 @@ import {
 	createPubActivityItem,
 	createPubUpdatedActivityItem,
 	createPubReleasedActivityItem,
+	createPubEdgeActivityItem,
 } from '../queries';
 
 const models = modelize`
@@ -44,7 +45,11 @@ const models = modelize`
 		Collection collection {
 			CollectionPub collectionPub {
 				rank: "0"
+				Pub internalTarget {
+					title: "Target of internal pub edge"
+				}
 				Pub pub {
+					title: "Generic Pub"
 					Release release {
 						createdAt: "2021-01-01"
 						historyKey: 1
@@ -69,6 +74,25 @@ const models = modelize`
 					}
 				}
 			}
+		}
+	}
+	PubEdge internalEdge {
+		pub: pub
+		rank: 1
+		relationType: "review"
+		pubIsParent: false
+		approvedByTarget: false
+		targetPub: internalTarget
+	}
+	PubEdge externalEdge {
+		pub: pub
+		rank: 2
+		relationType: "comment"
+		pubIsParent: false
+		approvedByTarget: false
+		ExternalPublication externalTarget {
+			title: "Wahoo"
+			url: "thisshouldbe.a.url.com"
 		}
 	}
 `;
@@ -310,6 +334,105 @@ describe('fetchActivityItems', () => {
 		expectAssociationIds(associations, {
 			community: [community.id],
 			pub: [pub.id],
+			user: [actor.id],
+			release: [release.id],
+		});
+	});
+
+	it('fetches items for pub-edge-created and pub-edge-removed', async () => {
+		const {
+			actor,
+			community,
+			pub,
+			internalEdge,
+			internalTarget,
+			externalEdge,
+			externalTarget,
+		} = models;
+		await createPubEdgeActivityItem('pub-edge-created', actor.id, internalEdge.id);
+		await createPubEdgeActivityItem('pub-edge-created', actor.id, externalEdge.id);
+		await createPubEdgeActivityItem('pub-edge-removed', actor.id, internalEdge.id);
+		await createPubEdgeActivityItem('pub-edge-removed', actor.id, externalEdge.id);
+		const {
+			activityItems: [
+				externalEdgeRemovedItem,
+				internalEdgeRemovedItem,
+				externalEdgeCreatedItem,
+				internalEdgeCreatedItem,
+			],
+			associations,
+		} = await fetchActivityItems({
+			scope: { communityId: community.id },
+		});
+		expect(internalEdgeCreatedItem).toMatchObject({
+			kind: 'pub-edge-created',
+			payload: {
+				pubEdgeId: internalEdge.id,
+				target: {
+					pub: {
+						id: internalTarget.id,
+						title: internalTarget.title,
+						slug: internalTarget.slug,
+					},
+				},
+				pub: {
+					title: pub.title,
+				},
+			},
+		});
+		expect(externalEdgeCreatedItem).toMatchObject({
+			kind: 'pub-edge-created',
+			payload: {
+				pubEdgeId: externalEdge.id,
+				target: {
+					externalPublication: {
+						id: externalTarget.id,
+						title: externalTarget.title,
+						url: externalTarget.url,
+					},
+				},
+				pub: {
+					title: pub.title,
+				},
+			},
+		});
+		expect(internalEdgeRemovedItem).toMatchObject({
+			kind: 'pub-edge-removed',
+			payload: {
+				pubEdgeId: internalEdge.id,
+				target: {
+					pub: {
+						id: internalTarget.id,
+						title: internalTarget.title,
+						slug: internalTarget.slug,
+					},
+				},
+				pub: {
+					title: pub.title,
+				},
+			},
+		});
+		expect(externalEdgeRemovedItem).toMatchObject({
+			kind: 'pub-edge-removed',
+			payload: {
+				pubEdgeId: externalEdge.id,
+				target: {
+					externalPublication: {
+						id: externalTarget.id,
+						title: externalTarget.title,
+						url: externalTarget.url,
+					},
+				},
+				pub: {
+					title: pub.title,
+				},
+			},
+		});
+		expectAssociationIds(associations, {
+			community: [community.id],
+			pub: [pub.id, internalTarget.id],
+			pubEdge: [internalEdge.id, externalEdge.id],
+			externalPublication: [externalTarget.id],
 			user: [actor.id],
 		});
 	});
