@@ -21,6 +21,7 @@ import {
 	createPubUpdatedActivityItem,
 	createPubReleasedActivityItem,
 	createPubEdgeActivityItem,
+	createPubDiscussionCommentAddedActivityItem,
 } from '../queries';
 
 const models = modelize`
@@ -53,6 +54,18 @@ const models = modelize`
 					Release release {
 						createdAt: "2021-01-01"
 						historyKey: 1
+					}
+					Discussion discussion {
+						author: actor
+						number: 1
+						Visibility visibility {}
+						Thread discussionThread {
+							ThreadComment banterInPubDiscussion {
+								author: actor
+								text: "What repartee! What scintillating stuff!"
+								createdAt: "2042-10-11 00:26:09.571+00"
+							}
+						}
 					}
 					ReviewNew review {
 						author: actor
@@ -567,6 +580,48 @@ describe('fetchActivityItems', () => {
 			review: [review.id],
 			thread: [thread.id],
 			threadComment: [releaseDenialComment.id, releaseRequestComment.id],
+		});
+	});
+
+	it('fetches items for pub-discussion-comment-added', async () => {
+		const {
+			actor,
+			community,
+			pub,
+			discussionThread,
+			discussion,
+			banterInPubDiscussion,
+		} = models;
+		await createPubDiscussionCommentAddedActivityItem(
+			discussion.id,
+			banterInPubDiscussion.id,
+			true,
+		);
+		const {
+			activityItems: [createItem],
+			associations,
+		} = await fetchActivityItems({
+			scope: { communityId: community.id, pubId: pub.id },
+		});
+		expect(createItem).toMatchObject({
+			actorId: actor.id,
+			communityId: community.id,
+			kind: 'pub-discussion-comment-added',
+			pubId: pub.id,
+			payload: {
+				pub: { title: pub.title },
+				discussionId: discussion.id,
+				threadId: discussionThread.id,
+				isReply: true,
+				threadComment: {
+					id: banterInPubDiscussion.id,
+					text: banterInPubDiscussion.text,
+					userId: banterInPubDiscussion.userId, // or banterInPubDiscussion.author.id?
+				},
+			},
+		});
+		expectAssociationIds(associations, {
+			community: [community.id],
 		});
 	});
 });
