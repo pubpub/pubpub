@@ -83,6 +83,7 @@ export type LayoutBlockCollectionsPages = {
 	content: {
 		items: { type: 'collection' | 'page'; id: string }[];
 		title?: string;
+		justify?: 'space-around' | 'center';
 	};
 };
 
