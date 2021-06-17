@@ -102,37 +102,43 @@ const LayoutEditorPagesCollections = (props: Props) => {
 					onChange={(evt) => setTitle(evt.target.value)}
 				/>
 
-				<FormGroup label="Justify Content">
-					<MenuSelect
-						value={content.justify || 'space-between'}
-						items={justifiedContent}
-						onSelectValue={setJustify}
-						aria-label="Choose Justify Content"
-					/>
-				</FormGroup>
-
-				<FormGroup label="Collections & Pages">
-					<Popover
-						aria-label="Choose pinned Pubs for this block"
-						className="order-picker-popover"
-						placement="bottom-end"
-						content={
-							<OrderPicker
-								availableItems={availableItems}
-								selectedItems={selectedItems}
-								onSelectedItems={setSelectedItems}
-								renderItem={(item, handleClick) => (
-									<PubMenuItem title={item.title} onClick={handleClick} />
-								)}
+				<div className="dropdown-grouping">
+					<div className="dropdown">
+						<FormGroup label="Justify Content">
+							<MenuSelect
+								value={content.justify || 'space-between'}
+								items={justifiedContent}
+								onSelectValue={setJustify}
+								aria-label="Choose Justify Content"
 							/>
-						}
-					>
-						<Button rightIcon="caret-down" outlined>
-							Choose Items
-							{selectedItems.length ? ` (${selectedItems.length})` : ''}
-						</Button>
-					</Popover>
-				</FormGroup>
+						</FormGroup>
+					</div>
+
+					<div className="dropdown">
+						<FormGroup label="Collections & Pages">
+							<Popover
+								aria-label="Choose pinned Pubs for this block"
+								className="order-picker-popover"
+								placement="bottom-end"
+								content={
+									<OrderPicker
+										availableItems={availableItems}
+										selectedItems={selectedItems}
+										onSelectedItems={setSelectedItems}
+										renderItem={(item, handleClick) => (
+											<PubMenuItem title={item.title} onClick={handleClick} />
+										)}
+									/>
+								}
+							>
+								<Button rightIcon="caret-down" outlined>
+									Choose Items
+									{selectedItems.length ? ` (${selectedItems.length})` : ''}
+								</Button>
+							</Popover>
+						</FormGroup>
+					</div>
+				</div>
 			</div>
 			<LayoutPagesCollections content={content} pages={pages} collections={collections} />
 		</div>
