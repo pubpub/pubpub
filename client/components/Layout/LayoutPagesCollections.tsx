@@ -35,7 +35,6 @@ const resolveItemsFromContent = (
 		.filter((item): item is PageOrCollection => !!item);
 };
 
-
 const LayoutPagesCollections = (props: Props) => {
 	const { content, collections, pages } = props;
 	return (
