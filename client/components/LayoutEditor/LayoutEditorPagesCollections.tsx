@@ -1,7 +1,14 @@
 import React, { useCallback, useMemo } from 'react';
 import { Button, FormGroup } from '@blueprintjs/core';
 
-import { InputField, Popover, OrderPicker, PubMenuItem, MenuSelect, MenuSelectItems } from 'components';
+import {
+	InputField,
+	Popover,
+	OrderPicker,
+	PubMenuItem,
+	MenuSelect,
+	MenuSelectItems,
+} from 'components';
 import LayoutPagesCollections, {
 	Content,
 	BlockItem,
