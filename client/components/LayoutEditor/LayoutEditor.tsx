@@ -14,6 +14,7 @@ import LayoutEditorText from './LayoutEditorText';
 import LayoutEditorHtml from './LayoutEditorHtml';
 import LayoutEditorBanner from './LayoutEditorBanner';
 import LayoutEditorCollectionHeader from './LayoutEditorCollectionHeader';
+import LayoutEditorPopover from './LayoutEditorPopover';
 
 require('./layoutEditor.scss');
 
@@ -97,7 +98,12 @@ const LayoutEditor = (props: Props) => {
 						disabled={index === layout.length - 1}
 						onClick={() => moveBlockDown(index)}
 					/>
-					{!cannotRemove && <Button text="Remove" onClick={() => removeBlock(index)} />}
+					{!cannotRemove && (
+						<>
+							<Button text="Remove" onClick={() => removeBlock(index)} />
+							<LayoutEditorPopover />
+						</>
+					)}
 					{cannotRemove && (
 						<Tooltip content="This layout requires at least one Pubs block.">
 							<Button text="Remove" disabled />
