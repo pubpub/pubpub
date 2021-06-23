@@ -52,7 +52,7 @@ export type ActivityItemRenderOptions<
 	Item extends InsertableActivityItem,
 	Titles extends string
 > = {
-	icon: IconName;
+	icon: IconName | ((options: { context: ActivityRenderContext }) => IconName);
 	titleRenderers: Record<Titles, TitleRenderer<Item>>;
 	message: (options: {
 		item: Item;
