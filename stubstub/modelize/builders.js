@@ -3,7 +3,7 @@ import SHA3 from 'crypto-js/sha3';
 import encHex from 'crypto-js/enc-hex';
 
 import { createCollectionPub } from 'server/collectionPub/queries';
-import { ActivityItem, Community, Member, Release, User, UserSubscription } from 'server/models';
+import { Community, Member, Release, User, UserSubscription } from 'server/models';
 import { createPub } from 'server/pub/queries';
 import { createCollection } from 'server/collection/queries';
 import { createDoc } from 'server/doc/queries';
