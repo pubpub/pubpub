@@ -13,7 +13,7 @@ type AcceptedItem =
 	| PubReviewCommentAddedActivityItem
 	| PubReviewUpdatedActivityItem;
 
-export const titleReview: TitleRenderer<AcceptedItem> = (item, context) => {
+export const reviewTitle: TitleRenderer<AcceptedItem> = (item, context) => {
 	const pubFromContext = getPubFromContext(item.pubId, context);
 	const reviewFromContext = getReviewFromContext(item.payload.reviewId, context);
 

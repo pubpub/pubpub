@@ -4,7 +4,7 @@ import { pubUrl } from 'utils/canonicalUrls';
 import { TitleRenderer } from '../types';
 import { getPubFromContext } from './util';
 
-export const titleRelease: TitleRenderer<PubReleasedActivityItem> = (item, context) => {
+export const releaseTitle: TitleRenderer<PubReleasedActivityItem> = (item, context) => {
 	const pubFromContext = getPubFromContext(item.pubId, context);
 
 	const href = pubFromContext

@@ -8,7 +8,7 @@ type AcceptedItem = CollectionActivityItem | (MemberActivityItem & { collectionI
 
 const prefix = 'the Collection';
 
-export const titleCollection: TitleRenderer<AcceptedItem> = (item, context) => {
+export const collectionTitle: TitleRenderer<AcceptedItem> = (item, context) => {
 	const isInCollectionScope =
 		'collectionId' in context.scope && context.scope.collectionId === item.collectionId;
 

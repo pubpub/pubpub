@@ -15,7 +15,7 @@ type AcceptedItem =
 
 const prefix = 'the Community';
 
-export const titleCommunity: TitleRenderer<AcceptedItem> = (item, context) => {
+export const communityTitle: TitleRenderer<AcceptedItem> = (item, context) => {
 	const isInCommunityScope =
 		!('pubId' in context.scope) &&
 		!('collectionId' in context.scope) &&

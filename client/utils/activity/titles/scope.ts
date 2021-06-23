@@ -1,17 +1,17 @@
 import { MemberActivityItem } from 'types';
 
 import { TitleRenderer } from '../types';
-import { titleCollection } from './collection';
-import { titleCommunity } from './community';
-import { titlePub } from './pub';
+import { collectionTitle } from './collection';
+import { communityTitle } from './community';
+import { pubTitle } from './pub';
 
-export const titleMembershipScope: TitleRenderer<MemberActivityItem> = (item, context) => {
+export const membershipScopeTitle: TitleRenderer<MemberActivityItem> = (item, context) => {
 	const { pubId, collectionId, communityId } = item;
 	if (typeof pubId === 'string') {
-		return titlePub({ ...item, pubId }, context);
+		return pubTitle({ ...item, pubId }, context);
 	}
 	if (typeof collectionId === 'string') {
-		return titleCollection({ ...item, collectionId }, context);
+		return collectionTitle({ ...item, collectionId }, context);
 	}
-	return titleCommunity({ ...item, communityId }, context);
+	return communityTitle({ ...item, communityId }, context);
 };

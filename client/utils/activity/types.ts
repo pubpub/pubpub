@@ -50,7 +50,7 @@ export type ActivityItemRenderOptions<
 	Titles extends string
 > = {
 	icon: IconName;
-	titles: Record<Titles, TitleRenderer<Item>>;
+	titleRenderers: Record<Titles, TitleRenderer<Item>>;
 	message: (options: {
 		item: Item;
 		titles: Record<Titles | 'actor', React.ReactNode>;

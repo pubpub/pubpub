@@ -17,7 +17,7 @@ type AcceptedItem =
 
 const prefix = 'the Pub';
 
-export const titlePub: TitleRenderer<AcceptedItem> = (item, context) => {
+export const pubTitle: TitleRenderer<AcceptedItem> = (item, context) => {
 	const isInPubScope = 'pubId' in context.scope && item.pubId === context.scope.pubId;
 	if (isInPubScope) {
 		return {

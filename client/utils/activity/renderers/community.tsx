@@ -2,15 +2,15 @@ import React from 'react';
 
 import { CommunityCreatedActivityItem, CommunityUpdatedActivityItem } from 'types';
 
-import { titleCommunity } from '../titles';
+import { communityTitle } from '../titles';
 import { itemRenderer } from './itemRenderer';
 
 type Titles = 'community';
 
 export const renderCommunityCreated = itemRenderer<CommunityCreatedActivityItem, Titles>({
 	icon: 'office',
-	titles: {
-		community: titleCommunity,
+	titleRenderers: {
+		community: communityTitle,
 	},
 	message: ({ titles }) => {
 		const { actor, community } = titles;
@@ -24,8 +24,8 @@ export const renderCommunityCreated = itemRenderer<CommunityCreatedActivityItem,
 
 export const renderCommunityUpdated = itemRenderer<CommunityUpdatedActivityItem, Titles>({
 	icon: 'office',
-	titles: {
-		community: titleCommunity,
+	titleRenderers: {
+		community: communityTitle,
 	},
 	message: ({ titles, item }) => {
 		const { actor, community } = titles;

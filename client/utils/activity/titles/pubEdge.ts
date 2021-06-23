@@ -8,7 +8,7 @@ import { getPubEdgeFromContext, getPubFromContext } from './util';
 
 type AcceptedItem = PubEdgeCreatedActivityItem | PubEdgeRemovedActivityItem;
 
-export const titlePubEdgeTarget: TitleRenderer<AcceptedItem> = (item) => {
+export const pubEdgeTargetTitle: TitleRenderer<AcceptedItem> = (item) => {
 	const { target } = item.payload;
 	if ('pub' in target) {
 		const { pub } = target;
@@ -24,7 +24,7 @@ export const titlePubEdgeTarget: TitleRenderer<AcceptedItem> = (item) => {
 	};
 };
 
-export const titlePubEdge: TitleRenderer<AcceptedItem> = (item, context) => {
+export const pubEdgeTitle: TitleRenderer<AcceptedItem> = (item, context) => {
 	const pubEdgeFromContext = getPubEdgeFromContext(item.payload.pubEdgeId, context);
 	const pubFromContext = getPubFromContext(item.pubId, context);
 	if (pubEdgeFromContext && pubFromContext) {
