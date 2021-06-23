@@ -19,3 +19,9 @@ export type UserNotification = {
 export type UserNotificationWithActivityItem = UserNotification & {
 	activityItem: ActivityItemOfKind<'pub-discussion-comment-added' | 'pub-review-comment-added'>;
 };
+
+export type UserNotificationsFetchResult = {
+	notifications: UserNotificationWithActivityItem[];
+	associations: ActivityAssociations;
+	subscriptions: UserSubscription[];
+};

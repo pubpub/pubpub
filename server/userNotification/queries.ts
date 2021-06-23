@@ -3,7 +3,6 @@ import { Op } from 'sequelize';
 import * as types from 'types';
 import { ActivityItem, UserNotification, UserSubscription } from 'server/models';
 import { fetchAssociationsForActivityItems } from 'server/activityItem/fetch';
-import { getOrCreateUserNotificationPreferences } from 'server/userNotificationPreferences/queries';
 
 type FetchOptions = {
 	userId: string;
@@ -53,7 +52,7 @@ export const fetchUserNotifications = async (
 		'activityItem'
 	>[] = [...(maybeUnreadNotifications || []), ...readNotifications];
 
-	const [subscriptions, associations, notificationPreferences] = await Promise.all([
+	const [subscriptions, associations] = await Promise.all([
 		UserSubscription.findAll({
 			where: {
 				userId,
@@ -63,13 +62,11 @@ export const fetchUserNotifications = async (
 		fetchAssociationsForActivityItems(
 			allNotifications.map((notification) => notification.activityItem),
 		),
-		getOrCreateUserNotificationPreferences(userId),
 	]);
 	return {
 		notifications: allNotifications.map((n) => n.toJSON()),
 		associations,
 		subscriptions,
-		notificationPreferences,
 	};
 };
 
