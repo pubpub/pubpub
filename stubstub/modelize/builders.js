@@ -105,6 +105,11 @@ builders.Release = async (args) => {
 
 builders.CollectionPub = createCollectionPub;
 
+builders.ActivityItem = (args) => {
+	const { applyHooks = false, ...restArgs } = args;
+	return ActivityItem.create({ ...restArgs }, { hooks: applyHooks });
+};
+
 builders.UserSubscription = (args) => {
 	const modifiedArgs = { ...args };
 	// Modelize will try to associate this with a Pub if it's nested inside...
