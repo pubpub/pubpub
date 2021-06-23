@@ -3,7 +3,7 @@ import React from 'react';
 import { ActivityItem, InsertableActivityItem } from 'types';
 import { isExternalUrl } from 'utils/urls';
 
-import { titleActor } from '../titles';
+import { actorTitle } from '../titles';
 import {
 	ActivityItemRenderOptions,
 	ActivityItemRenderer,
@@ -35,7 +35,7 @@ const renderTitles = <Item extends InsertableActivityItem, Titles extends string
 	context: ActivityRenderContext,
 ): Record<Titles | 'actor', React.ReactNode> => {
 	const renderedTitles = {
-		actor: renderTitleToReact(titleActor(item, context)),
+		actor: renderTitleToReact(actorTitle(item, context)),
 	};
 	Object.keys(titleRenderers).forEach((key) => {
 		const renderer = titleRenderers[key as Titles];

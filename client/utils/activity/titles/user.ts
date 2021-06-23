@@ -25,10 +25,10 @@ const getUserTitleFromUserIdAndContext = (
 	};
 };
 
-export const titleActor: TitleRenderer<InsertableActivityItem> = (item, context) => {
+export const actorTitle: TitleRenderer<InsertableActivityItem> = (item, context) => {
 	return getUserTitleFromUserIdAndContext(item.actorId, context, 'someone');
 };
 
-export const titleMember: TitleRenderer<MemberActivityItem> = (item, context) => {
+export const memberTitle: TitleRenderer<MemberActivityItem> = (item, context) => {
 	return getUserTitleFromUserIdAndContext(item.payload.userId, context, 'unknown user');
 };
