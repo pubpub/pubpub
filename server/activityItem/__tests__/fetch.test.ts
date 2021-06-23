@@ -113,7 +113,7 @@ const models = modelize`
 setup(beforeAll, models.resolve);
 teardown(afterAll);
 
-beforeEach(() => ActivityItem.destroy({ where: {}, truncate: { cascade: true } }));
+beforeEach(() => ActivityItem.destroy({ where: {}, truncate: true }));
 
 const expectAssociationIds = (
 	associations: ActivityAssociations,
