@@ -38,7 +38,7 @@ type FetchActivityItemsOptions = {
 	offset?: number;
 };
 
-const createAssociationsArrays = (): Record<ActivityAssociationType, Set<string>> => {
+const createAssociationsSets = (): Record<ActivityAssociationType, Set<string>> => {
 	const associations = {};
 	activityAssociationTypes.forEach((type) => {
 		associations[type] = new Set() as Set<string>;
@@ -89,7 +89,7 @@ const getActivityItemAssociationIds = (
 	items: types.ActivityItem[],
 	scope: Scope,
 ): ActivityAssociationIds => {
-	const associationIds = createAssociationsArrays();
+	const associationIds = createAssociationsSets();
 	const {
 		collectionPub,
 		collection,
