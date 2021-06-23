@@ -19,3 +19,25 @@ export type UserNotification = {
 export type UserNotificationWithActivityItem = UserNotification & {
 	activityItem: ActivityItemOfKind<'pub-discussion-comment-added' | 'pub-review-comment-added'>;
 };
+
+export type UserNotificationMarkReadTrigger = 'seen' | 'clicked-through' | 'manual';
+
+export type UserNotificationPreferences = {
+	id: string;
+	createdAt: string;
+	updatedAt: string;
+	userId: string;
+	receiveNotifications: boolean;
+	subscribeToThreadsAsCommenter: boolean;
+	subscribeToPubsAsMember: boolean;
+	subscribeToPubsAsContributor: boolean;
+	notificationCadence: number;
+	markReadTrigger: UserNotificationMarkReadTrigger;
+};
+
+export type UserNotificationsFetchResult = {
+	notifications: UserNotificationWithActivityItem[];
+	associations: ActivityAssociations;
+	subscriptions: UserSubscription[];
+	notificationPreferences: UserNotificationPreferences;
+};
