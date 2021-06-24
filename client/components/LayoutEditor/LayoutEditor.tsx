@@ -115,7 +115,7 @@ const LayoutEditor = (props: Props) => {
 									</>
 								}
 							>
-								<Button outlined icon="dashboard" rightIcon="caret-down">
+								<Button outlined rightIcon="caret-down">
 									Remove Block
 								</Button>
 							</Popover>
