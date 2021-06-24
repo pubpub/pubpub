@@ -5,6 +5,7 @@ import stickybits from 'stickybits';
 import { LayoutBlock, LayoutPubsByBlock } from 'utils/layout';
 import { Pub, Community, Collection } from 'types';
 
+import { Popover } from 'components';
 import { useLayout } from './useLayout';
 import { useLayoutPubs } from './useLayoutPubs';
 import LayoutEditorInsert from './LayoutEditorInsert';
@@ -14,7 +15,6 @@ import LayoutEditorText from './LayoutEditorText';
 import LayoutEditorHtml from './LayoutEditorHtml';
 import LayoutEditorBanner from './LayoutEditorBanner';
 import LayoutEditorCollectionHeader from './LayoutEditorCollectionHeader';
-import LayoutEditorPopover from './LayoutEditorPopover';
 
 require('./layoutEditor.scss');
 
@@ -82,6 +82,7 @@ const LayoutEditor = (props: Props) => {
 
 	const renderLayoutBlockTitle = (block: LayoutBlock, index: number) => {
 		const cannotRemove = cannotRemoveLonePubsBlock && block.type === 'pubs';
+
 		return (
 			<div className="block-title">
 				<div className="text">{getTitleKindForBlock(block.type)} Block</div>
@@ -101,7 +102,20 @@ const LayoutEditor = (props: Props) => {
 					{!cannotRemove && (
 						<>
 							<Button text="Remove" onClick={() => removeBlock(index)} />
-							<LayoutEditorPopover />
+							<Popover
+								aria-label="Limit number of Pubs"
+								content={
+									<>
+										Do you, really, really wanna remove this, cause I mean. if
+										you dont you shouldn't
+										<Button text="Remove" onClick={() => removeBlock(index)} />
+									</>
+								}
+							>
+								<Button outlined icon="dashboard" rightIcon="caret-down">
+									Remove Block
+								</Button>
+							</Popover>
 						</>
 					)}
 					{cannotRemove && (
