@@ -10,9 +10,7 @@ type Props = {
 const AdminDashboard = (props: Props) => {
 	const { impactData } = props;
 	const { baseToken } = impactData;
-	const genUrl = (token) => {
-		return `https://metabase.pubpub.org/embed/dashboard/${token}#bordered=false&titled=false`;
-	};
+	const dashUrl = `https://metabase.pubpub.org/embed/dashboard/${baseToken}#bordered=false&titled=false`;
 	const getOffset = (width) => {
 		return width < 960 ? 45 : 61;
 	};
@@ -25,7 +23,7 @@ const AdminDashboard = (props: Props) => {
 				(
 				<IframeResizer
 					className="metabase main"
-					src={genUrl(baseToken)}
+					src={dashUrl}
 					title="Analytics"
 					frameBorder="0"
 					onResized={({ iframe, height, width }) => {
