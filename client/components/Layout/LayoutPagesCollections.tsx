@@ -58,7 +58,7 @@ const LayoutPagesCollections = (props: Props) => {
 							style={
 								content.justify
 									? {
-										justifyContent: content.justify,
+											justifyContent: content.justify,
 											gridTemplateColumns: `repeat(${gridTemplateColumnsCSSFill}, 175px)`,
 									  }
 									: {}
