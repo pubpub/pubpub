@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button, Tooltip } from '@blueprintjs/core';
+import { Button, Tooltip, Elevation, Card } from '@blueprintjs/core';
 import stickybits from 'stickybits';
 
 import { LayoutBlock, LayoutPubsByBlock } from 'utils/layout';
@@ -101,14 +101,17 @@ const LayoutEditor = (props: Props) => {
 					/>
 					{!cannotRemove && (
 						<>
-							<Button text="Remove" onClick={() => removeBlock(index)} />
 							<Popover
 								aria-label="Limit number of Pubs"
 								content={
 									<>
-										Do you, really, really wanna remove this, cause I mean. if
-										you dont you shouldn't
-										<Button text="Remove" onClick={() => removeBlock(index)} />
+										<Card interactive={true} elevation={Elevation.TWO}>
+											<p>Would you like to remove this block?</p>
+											<Button
+												text="Remove"
+												onClick={() => removeBlock(index)}
+											/>
+										</Card>
 									</>
 								}
 							>
