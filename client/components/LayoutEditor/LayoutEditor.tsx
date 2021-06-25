@@ -100,26 +100,23 @@ const LayoutEditor = (props: Props) => {
 						onClick={() => moveBlockDown(index)}
 					/>
 					{!cannotRemove && (
-						<>
-							<Popover
-								aria-label="Limit number of Pubs"
-								content={
-									<>
-										<Card interactive={true} elevation={Elevation.TWO}>
-											<p>Would you like to remove this block?</p>
-											<Button
-												text="Remove"
-												onClick={() => removeBlock(index)}
-											/>
-										</Card>
-									</>
-								}
-							>
-								<Button outlined rightIcon="caret-down">
-									Remove Block
-								</Button>
-							</Popover>
-						</>
+						<Popover
+							aria-label="block removal popover"
+							content={
+								<Card interactive elevation={Elevation.TWO}>
+									<p>Are you sure you want to delete this block?</p>
+									<Button
+										intent="danger"
+										text="Remove"
+										onClick={() => removeBlock(index)}
+									/>
+								</Card>
+							}
+						>
+							<Button outlined rightIcon="caret-down">
+								Remove Block
+							</Button>
+						</Popover>
 					)}
 					{cannotRemove && (
 						<Tooltip content="This layout requires at least one Pubs block.">
