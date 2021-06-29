@@ -14,6 +14,7 @@ export const createPage = async (inputValues) => {
 		title: inputValues.title,
 		slug: await findAcceptableSlug(inputValues.slug, inputValues.communityId),
 		description: inputValues.description,
+		avatar: inputValues.avatar || null,
 		isPublic: false,
 		layout: generateDefaultPageLayout(),
 		viewHash: generateHash(8),
