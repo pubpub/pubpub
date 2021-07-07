@@ -66,7 +66,7 @@ export const generateCitationHtml = async (pubData, communityData) => {
 		type: 'article-journal',
 		title: pubData.title,
 		...authorsEntry,
-		'container-title': communityData.title,
+		'container-title': communityData.citeAs || communityData.title,
 		...getCollectionLevelData(primaryCollection),
 	};
 	const pubCiteObject = await Cite.async({
