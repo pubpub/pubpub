@@ -87,6 +87,9 @@ app.get(['/user/:slug', '/user/:slug/:mode'], async (req, res, next) => {
 		const userData = await getUser(req.params.slug, initialData);
 		const isNewishUser = Date.now() - userData.createdAt.valueOf() < 1000 * 86400 * 30;
 		const isThisUserAPartOfThisCOmmunity = await getCountOfPubsOrCollections(userData.id, initialData.communityData.id);
+		if (!isThisUserAPartOfThisCOmmunity){
+			return res.redirect(`https://www.pubpub.org/user/${userData.slug}`)
+		}
 		console.log(isThisUserAPartOfThisCOmmunity)
 		return renderToNodeStream(
 			res,
