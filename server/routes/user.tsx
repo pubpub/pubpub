@@ -9,25 +9,25 @@ import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { Collection, CollectionAttribution, Member, PubAttribution, Pub } from 'server/models';
 
 // check if member has any pubs or collections for user
-const getCountOfPubsOrCollections = async (userId, communityId) => {
+const getCountOfPubsOrCollections = async (userData, communityData) => {
 	const promises = [
 		Member.count({
 			where: {
-				communityId: communityId,
-				userId: userId,
+				communityId: communityData,
+				userId: userData,
 			},
 		}),
 
 		Member.count({
 			where: {
-				userId: userId,
+				userId: userData,
 			},
 			include: [
 				{
 					model: Pub,
 					as: 'pub',
 					where: {
-						communityId: communityId,
+						communityId: communityData,
 					},
 				},
 			],
@@ -35,14 +35,14 @@ const getCountOfPubsOrCollections = async (userId, communityId) => {
 
 		Member.count({
 			where: {
-				userId: userId,
+				userId: userData,
 			},
 			include: [
 				{
 					model: Collection,
 					as: 'collection',
 					where: {
-						communityId: communityId,
+						communityId: communityData,
 					},
 				},
 			],
@@ -50,14 +50,14 @@ const getCountOfPubsOrCollections = async (userId, communityId) => {
 
 		PubAttribution.count({
 			where: {
-				userId: userId,
+				userId: userData,
 			},
 			include: [
 				{
 					model: Pub,
 					as: 'pub',
 					where: {
-						communityId: communityId,
+						communityId: communityData,
 					},
 				},
 			],
@@ -65,14 +65,14 @@ const getCountOfPubsOrCollections = async (userId, communityId) => {
 
 		CollectionAttribution.count({
 			where: {
-				userId: userId,
+				userId: userData,
 			},
 			include: [
 				{
 					model: Collection,
 					as: 'collection',
 					where: {
-						communityId: communityId,
+						communityId: communityData,
 					},
 				},
 			],
