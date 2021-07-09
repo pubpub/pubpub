@@ -15,11 +15,14 @@ const Explore = (props: Props) => {
 			<div className="container">
 				<div className="row">
 					<div className="col-12">
-						<h1>Explore PubPub Communities</h1>
+						<h1>Explore communities</h1>
 						<div className="details">
-							Communities are groups focused on a particular topic, theme, or
-							expertise. While their focus may be narrow, they invite perspective and
-							contribution from all.
+							There are currently about 3,000 PubPub communities—and counting! Anyone
+							is able to create a free PubPub community at any time; all you need is
+							an account and some very basic community details. Below are 40 PubPub
+							communities that we think form a good snapshot of what others like you
+							are doing with PubPub's spaces and features. We hope they enable you to
+							brainstorm ideas for your own spaces, designs, and workflows.
 						</div>
 					</div>
 
