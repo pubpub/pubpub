@@ -44,7 +44,11 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 		notes,
 		canonicalUrl,
 	} = metaProps;
-	const { title: communityTitle, citeAs: communityCiteAs, publishAs: communityPublisher } = initialData.communityData;
+	const {
+		title: communityTitle,
+		citeAs: communityCiteAs,
+		publishAs: communityPublisher,
+	} = initialData.communityData;
 	const url = `https://${initialData.locationData.hostname}${initialData.locationData.path}`;
 	const favicon = initialData.communityData.favicon;
 	const avatar = image || initialData.communityData.avatar;
@@ -96,11 +100,7 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 	if (communityPublisher) {
 		outputComponents = [
 			...outputComponents,
-			<meta
-				key="sn3"
-				name="citation_publisher"
-				content={communityPublisher}
-			/>,
+			<meta key="sn3" name="citation_publisher" content={communityPublisher} />,
 		];
 	}
 

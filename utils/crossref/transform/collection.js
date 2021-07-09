@@ -19,7 +19,7 @@ const transformMetadata = (metadata, collection) =>
 export default ({ globals, community }) => (collection) => {
 	const { timestamp, dois, contentVersion } = globals;
 	const { title, metadata, attributions } = collection;
-	const {publishAs} = community;
+	const { publishAs } = community;
 	return {
 		url: collectionUrl(community, collection),
 		...transformMetadata(metadata, collection, globals.timestamp),
