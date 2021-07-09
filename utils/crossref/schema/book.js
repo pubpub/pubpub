@@ -15,7 +15,7 @@ export default ({
 	title,
 	url,
 	contentVersion,
-	publishAs
+	publishAs,
 }) => {
 	return {
 		book: {
