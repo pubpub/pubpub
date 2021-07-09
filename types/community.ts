@@ -13,6 +13,7 @@ export type Community = {
 	createdAt: string;
 	title: string;
 	citeAs?: string;
+	publishAs?: string;
 	avatar?: string;
 	favicon?: string;
 	accentColorLight?: string;

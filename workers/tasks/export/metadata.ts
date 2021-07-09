@@ -59,6 +59,8 @@ export const getPubMetadata = async (pubId) => {
 		publishedDateString,
 		updatedDateString,
 		communityTitle: pubData.community.title,
+		publisher: pubData.community.publishAs,
+		citeAs: pubData.community.citeAs,
 		accentColor: pubData.community.accentColorDark,
 		attributions: pubData.attributions
 			.concat()

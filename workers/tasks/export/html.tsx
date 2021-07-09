@@ -163,15 +163,17 @@ const renderFrontMatterForPandoc = (
 		updatedDateString,
 		publishedDateString,
 		communityTitle,
+		citeAs,
 		primaryCollectionTitle,
 		doi,
 		licenseSlug,
+		publisher,
 	},
 	targetPandoc,
 ) => {
 	const pandocFormatsWithoutTemplate = ['docx', 'plain', 'odt'];
 	const communityAndCollectionString =
-		communityTitle + (primaryCollectionTitle ? bullet + primaryCollectionTitle : '');
+		(citeAs || communityTitle ) + (primaryCollectionTitle ? bullet + primaryCollectionTitle : '') + (publisher ? bullet + publisher : '');
 	return (
 		<>
 			{pandocFormatsWithoutTemplate.includes(targetPandoc) && (
@@ -194,15 +196,17 @@ const renderFrontMatterForHtml = ({
 	doi,
 	title,
 	communityTitle,
+	citeAs,
 	accentColor,
 	attributions,
 	licenseSlug,
+	publisher
 }) => {
 	const affiliations = [
 		...new Set(attributions.map((attr) => attr.affiliation).filter((x) => x)),
 	];
 	const communityAndCollectionString =
-		communityTitle + (primaryCollectionTitle ? bullet + primaryCollectionTitle : '');
+		(citeAs || communityTitle ) + (primaryCollectionTitle ? bullet + primaryCollectionTitle : '') + (publisher ? bullet + publisher : '');
 	return (
 		<section className="cover">
 			<h3 className="community-and-collection">{communityAndCollectionString}</h3>
