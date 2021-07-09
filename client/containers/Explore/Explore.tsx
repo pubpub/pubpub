@@ -17,12 +17,13 @@ const Explore = (props: Props) => {
 					<div className="col-12">
 						<h1>Explore communities</h1>
 						<div className="details">
-							There are currently about 3,000 PubPub communities—and counting! Anyone
-							is able to create a free PubPub community at any time; all you need is
-							an account and some very basic community details. Below are 40 PubPub
-							communities that we think form a good snapshot of what others like you
-							are doing with PubPub's spaces and features. We hope they enable you to
-							brainstorm ideas for your own spaces, designs, and workflows.
+							PubPub hosts more than 3,000 communities, with more added every day!
+							Anyone can <a href="/community/create">create</a> a free PubPub
+							community at any time; all you need is an account and some very basic
+							community details. Below are 40 PubPub communities that we think form a
+							good snapshot of what you can create with PubPub's spaces and features.
+							We hope they provide inspiration for your own spaces, designs, and
+							workflows.
 						</div>
 					</div>
 
