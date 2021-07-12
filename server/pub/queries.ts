@@ -7,8 +7,6 @@ import { createDraft } from 'server/draft/queries';
 import { slugifyString } from 'utils/strings';
 import { generateHash } from 'utils/hashes';
 import { getReadableDateInYear } from 'utils/dates';
-import { createPubActivityItem, createPubUpdatedActivityItem } from 'server/activityItem/queries';
-import { defer } from 'server/utils/deferred';
 
 export const createPub = async (
 	{
@@ -17,38 +15,41 @@ export const createPub = async (
 		slug,
 		...restArgs
 	}: { communityId: string; collectionIds?: string[]; slug?: string; [key: string]: any },
-	userId: null | string = null,
+	actorId?: string,
 ) => {
 	const newPubSlug = slug ? slug.toLowerCase().trim() : generateHash(8);
 	const dateString = getReadableDateInYear(new Date());
 	const { defaultPubCollections } = await Community.findOne({ where: { id: communityId } });
 	const draft = await createDraft();
 
-	const newPub = await Pub.create({
-		title: `Untitled Pub on ${dateString}`,
-		slug: newPubSlug,
-		communityId,
-		headerBackgroundColor: 'light',
-		headerStyle: 'dark',
-		viewHash: generateHash(8),
-		editHash: generateHash(8),
-		draftId: draft.id,
-		...restArgs,
-	});
+	const newPub = await Pub.create(
+		{
+			title: `Untitled Pub on ${dateString}`,
+			slug: newPubSlug,
+			communityId,
+			headerBackgroundColor: 'light',
+			headerStyle: 'dark',
+			viewHash: generateHash(8),
+			editHash: generateHash(8),
+			draftId: draft.id,
+			...restArgs,
+		},
+		{ actorId },
+	);
 
 	const createPubAttribution =
-		userId &&
+		actorId &&
 		PubAttribution.create({
-			userId,
+			userId: actorId,
 			pubId: newPub.id,
 			isAuthor: true,
 			order: 0.5,
 		});
 
 	const createMember =
-		userId &&
+		actorId &&
 		Member.create({
-			userId,
+			userId: actorId,
 			pubId: newPub.id,
 			permissions: 'manage',
 			isOwner: true,
@@ -75,16 +76,12 @@ export const createPub = async (
 	);
 
 	await Promise.all([createPubAttribution, createCollectionPubs, createMember].filter((x) => x));
+
 	setPubSearchData(newPub.id);
-	defer(() => createPubActivityItem('pub-created', userId ?? null, newPub.id));
 	return newPub;
 };
 
-export const updatePub = async (
-	inputValues: Record<string, any>,
-	updatePermissions: string[],
-	userId: null | string = null,
-) => {
+export const updatePub = (inputValues, updatePermissions, actorId) => {
 	// Filter to only allow certain fields to be updated
 	const filteredValues: any = {};
 	Object.keys(inputValues).forEach((key) => {
@@ -95,18 +92,22 @@ export const updatePub = async (
 	if (filteredValues.slug) {
 		filteredValues.slug = slugifyString(filteredValues.slug);
 	}
-	const existingPub = await Pub.findOne({ where: { id: inputValues.pubId } });
-	const previousPub = existingPub.toJSON();
-	await existingPub.update(filteredValues);
-	setPubSearchData(inputValues.pubId);
-	defer(() => createPubUpdatedActivityItem(userId, previousPub.id, previousPub));
-	return filteredValues;
+
+	return Pub.update(filteredValues, {
+		where: { id: inputValues.pubId },
+		individualHooks: true,
+		actorId,
+	}).then(() => {
+		setPubSearchData(inputValues.pubId);
+		return filteredValues;
+	});
 };
 
-export const destroyPub = async (pubId, userId: null | string = null) => {
-	await createPubActivityItem('pub-removed', userId, pubId);
+export const destroyPub = (pubId, actorId) => {
 	return Pub.destroy({
 		where: { id: pubId },
+		individualHooks: true,
+		actorId,
 	}).then(() => {
 		deletePubSearchData(pubId);
 		return true;

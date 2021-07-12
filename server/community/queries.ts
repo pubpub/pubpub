@@ -7,8 +7,6 @@ import { isProd } from 'utils/environment';
 import { subscribeUser } from 'server/utils/mailchimp';
 import { postToSlackAboutNewCommunity } from 'server/utils/slack';
 import { updateCommunityData } from 'server/utils/search';
-import { createCommunityCreatedActivityItem } from 'server/activityItem/queries';
-import { defer } from 'server/utils/deferred';
 
 export const createCommunity = (inputValues, userData, alertAndSubscribe = true) => {
 	const newCommunityId = uuidv4();
@@ -86,7 +84,6 @@ export const createCommunity = (inputValues, userData, alertAndSubscribe = true)
 					userData.email,
 				);
 			}
-			defer(() => createCommunityCreatedActivityItem(userData.id, newCommunityId));
 			return Member.create({
 				communityId: newCommunityId,
 				userId: userData.id,

@@ -4,11 +4,6 @@ import { normalizeMetadataToKind } from 'utils/collections/metadata';
 import { slugifyString } from 'utils/strings';
 import { generateHash } from 'utils/hashes';
 import { PubPubError } from 'server/utils/errors';
-import { defer } from 'server/utils/deferred';
-import {
-	createCollectionActivityItem,
-	createCollectionUpdatedActivityItem,
-} from 'server/activityItem/queries';
 
 export const generateDefaultCollectionLayout = () => {
 	return {
@@ -43,11 +38,11 @@ export const createCollection = (
 		id = null,
 		slug = null,
 	},
-	userId: null | string = null,
+	actorId?,
 ) => {
 	return Community.findOne({ where: { id: communityId } }).then(async (community) => {
 		const normalizedTitle = title.trim();
-		const collectionAttrs = {
+		const collection = {
 			title: normalizedTitle,
 			slug: await findAcceptableSlug(slug || slugifyString(title), communityId),
 			isRestricted,
@@ -64,35 +59,27 @@ export const createCollection = (
 		};
 		const metadata = normalizeMetadataToKind({}, kind, {
 			community,
-			collection: collectionAttrs,
+			collection,
 		});
-
-		const collection = await Collection.create(
-			{ ...collectionAttrs, metadata },
-			{ returning: true },
-		);
-
-		defer(() => createCollectionActivityItem('collection-created', userId, collection.id));
-		return collection;
+		return Collection.create({ ...collection, metadata }, { returning: true, actorId });
 	});
 };
 
-export const updateCollection = async (
-	inputValues: Record<string, any>,
-	updatePermissions: string[],
-	userId: null | string = null,
-) => {
+export const updateCollection = async (inputValues, updatePermissions, actorId?) => {
 	// Filter to only allow certain fields to be updated
-	const filteredValues: Record<string, any> = {};
+	const filteredValues = {};
 	Object.keys(inputValues).forEach((key) => {
 		if (updatePermissions.includes(key)) {
 			filteredValues[key] = inputValues[key];
 		}
 	});
 
+	// @ts-expect-error ts-migrate(2339) FIXME: Property 'slug' does not exist on type '{}'.
 	if (filteredValues.slug) {
+		// @ts-expect-error ts-migrate(2339) FIXME: Property 'slug' does not exist on type '{}'.
 		filteredValues.slug = slugifyString(filteredValues.slug);
 		const available = await slugIsAvailable({
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'slug' does not exist on type '{}'.
 			slug: filteredValues.slug,
 			communityId: inputValues.communityId,
 			activeElementId: inputValues.collectionId,
@@ -101,23 +88,18 @@ export const updateCollection = async (
 			throw new PubPubError.InvalidFieldsError('slug');
 		}
 	}
-	const existingCollection = await Collection.findOne({
+	await Collection.update(filteredValues, {
 		where: { id: inputValues.collectionId },
+		individualHooks: true,
+		actorId,
 	});
-	const previousCollection = existingCollection.toJSON();
-	await existingCollection.update(filteredValues);
-	defer(() =>
-		createCollectionUpdatedActivityItem(userId, existingCollection.id, previousCollection),
-	);
 	return filteredValues;
 };
 
-export const destroyCollection = async (
-	inputValues: { collectionId: string },
-	userId: null | string = null,
-) => {
-	await createCollectionActivityItem('collection-removed', userId, inputValues.collectionId);
+export const destroyCollection = (inputValues, actorId?) => {
 	return Collection.destroy({
 		where: { id: inputValues.collectionId },
+		individualHooks: true,
+		actorId,
 	});
 };
