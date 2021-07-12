@@ -46,7 +46,7 @@ const CommunitySettings = () => {
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState(undefined);
-	
+
 	/* Details */
 	const [title, setTitle] = useState(communityData.title);
 	const [subdomain, setSubdomain] = useState(communityData.subdomain);
@@ -55,8 +55,8 @@ const CommunitySettings = () => {
 	const [favicon, setFavicon] = useState(communityData.favicon);
 	const [accentColorLight, setAccentColorLight] = useState(communityData.accentColorLight);
 	const [accentColorDark, setAccentColorDark] = useState(communityData.accentColorDark);
-	const [citeAs, setCiteAs] = useState(communityData.subdomain);
-	const [publishAs, setPublishAs] = useState(communityData.description);
+	const [citeAs, setCiteAs] = useState(communityData.citeAs);
+	const [publishAs, setPublishAs] = useState(communityData.publishAs);
 
 	/* Header */
 	const [headerLogo, setHeaderLogo] = useState(communityData.headerLogo);
@@ -234,7 +234,7 @@ const CommunitySettings = () => {
 					isTextarea={true}
 					value={citeAs}
 					onChange={(evt) => {
-						setCiteAs(evt.target.value.substring(0, 280).replace(/\n/g, ' '));
+						setCiteAs(evt.target.value);
 					}}
 				/>
 				<InputField
@@ -243,7 +243,7 @@ const CommunitySettings = () => {
 					isTextarea={true}
 					value={publishAs}
 					onChange={(evt) => {
-						setPublishAs(evt.target.value.substring(0, 280).replace(/\n/g, ' '));
+						setPublishAs(evt.target.value);
 					}}
 				/>
 				<div className="row-wrapper">
