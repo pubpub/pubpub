@@ -7,7 +7,9 @@ import * as types from 'types';
 
 type ExpectCreatedActivityItemResult<Result> = {
 	toMatch: (
-		values: Partial<types.ActivityItem> | ((result: Result) => Partial<types.ActivityItem>),
+		values:
+			| types.DeepPartial<types.ActivityItem>
+			| ((result: Result) => types.DeepPartial<types.ActivityItem>),
 	) => Promise<Result>;
 };
 

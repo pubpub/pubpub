@@ -4,6 +4,11 @@ import { normalizeMetadataToKind } from 'utils/collections/metadata';
 import { slugifyString } from 'utils/strings';
 import { generateHash } from 'utils/hashes';
 import { PubPubError } from 'server/utils/errors';
+import { defer } from 'server/utils/deferred';
+import {
+	createCollectionActivityItem,
+	createCollectionUpdatedActivityItem,
+} from 'server/activityItem/queries';
 
 export const generateDefaultCollectionLayout = () => {
 	return {
@@ -26,20 +31,23 @@ export const generateDefaultCollectionLayout = () => {
 	};
 };
 
-export const createCollection = ({
-	communityId,
-	title,
-	kind,
-	pageId = null,
-	doi = null,
-	isPublic = false,
-	isRestricted = true,
-	id = null,
-	slug = null,
-}) => {
+export const createCollection = (
+	{
+		communityId,
+		title,
+		kind,
+		pageId = null,
+		doi = null,
+		isPublic = false,
+		isRestricted = true,
+		id = null,
+		slug = null,
+	},
+	userId: null | string = null,
+) => {
 	return Community.findOne({ where: { id: communityId } }).then(async (community) => {
 		const normalizedTitle = title.trim();
-		const collection = {
+		const collectionAttrs = {
 			title: normalizedTitle,
 			slug: await findAcceptableSlug(slug || slugifyString(title), communityId),
 			isRestricted,
@@ -56,27 +64,35 @@ export const createCollection = ({
 		};
 		const metadata = normalizeMetadataToKind({}, kind, {
 			community,
-			collection,
+			collection: collectionAttrs,
 		});
-		return Collection.create({ ...collection, metadata }, { returning: true });
+
+		const collection = await Collection.create(
+			{ ...collectionAttrs, metadata },
+			{ returning: true },
+		);
+
+		defer(() => createCollectionActivityItem('collection-created', userId, collection.id));
+		return collection;
 	});
 };
 
-export const updateCollection = async (inputValues, updatePermissions) => {
+export const updateCollection = async (
+	inputValues: Record<string, any>,
+	updatePermissions: string[],
+	userId: null | string = null,
+) => {
 	// Filter to only allow certain fields to be updated
-	const filteredValues = {};
+	const filteredValues: Record<string, any> = {};
 	Object.keys(inputValues).forEach((key) => {
 		if (updatePermissions.includes(key)) {
 			filteredValues[key] = inputValues[key];
 		}
 	});
 
-	// @ts-expect-error ts-migrate(2339) FIXME: Property 'slug' does not exist on type '{}'.
 	if (filteredValues.slug) {
-		// @ts-expect-error ts-migrate(2339) FIXME: Property 'slug' does not exist on type '{}'.
 		filteredValues.slug = slugifyString(filteredValues.slug);
 		const available = await slugIsAvailable({
-			// @ts-expect-error ts-migrate(2339) FIXME: Property 'slug' does not exist on type '{}'.
 			slug: filteredValues.slug,
 			communityId: inputValues.communityId,
 			activeElementId: inputValues.collectionId,
@@ -85,11 +101,22 @@ export const updateCollection = async (inputValues, updatePermissions) => {
 			throw new PubPubError.InvalidFieldsError('slug');
 		}
 	}
-	await Collection.update(filteredValues, { where: { id: inputValues.collectionId } });
+	const existingCollection = await Collection.findOne({
+		where: { id: inputValues.collectionId },
+	});
+	const previousCollection = existingCollection.toJSON();
+	await existingCollection.update(filteredValues);
+	defer(() =>
+		createCollectionUpdatedActivityItem(userId, existingCollection.id, previousCollection),
+	);
 	return filteredValues;
 };
 
-export const destroyCollection = (inputValues) => {
+export const destroyCollection = async (
+	inputValues: { collectionId: string },
+	userId: null | string = null,
+) => {
+	await createCollectionActivityItem('collection-removed', userId, inputValues.collectionId);
 	return Collection.destroy({
 		where: { id: inputValues.collectionId },
 	});

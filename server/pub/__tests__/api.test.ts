@@ -223,7 +223,6 @@ describe('/api/pubs', () => {
 			kind: 'pub-updated',
 			pubId: pub.id,
 			payload: {
-				pub: { title },
 				title: { from: pub.title, to: title },
 			},
 		});
@@ -246,10 +245,16 @@ describe('/api/pubs', () => {
 	it('allows a Pub admin to set a DOI on a Pub', async () => {
 		const { pub, pubAdmin } = models;
 		const agent = await login(pubAdmin);
-		await agent
-			.put('/api/pubs')
-			.send({ pubId: pub.id, doi: 'some_doi' })
-			.expect(200);
+		await expectCreatedActivityItem(
+			agent
+				.put('/api/pubs')
+				.send({ pubId: pub.id, doi: 'some_doi' })
+				.expect(200),
+		).toMatch({
+			kind: 'pub-updated',
+			pubId: pub.id,
+			payload: { doi: { from: null, to: 'some_doi' } },
+		});
 		const pubNow = await Pub.findOne({ where: { id: pub.id } });
 		expect(pubNow).toMatchObject({ doi: 'some_doi' });
 	});

@@ -17,7 +17,7 @@ export const createPub = async (
 		slug,
 		...restArgs
 	}: { communityId: string; collectionIds?: string[]; slug?: string; [key: string]: any },
-	userId?: string,
+	userId: null | string = null,
 ) => {
 	const newPubSlug = slug ? slug.toLowerCase().trim() : generateHash(8);
 	const dateString = getReadableDateInYear(new Date());
@@ -80,7 +80,11 @@ export const createPub = async (
 	return newPub;
 };
 
-export const updatePub = async (inputValues, updatePermissions, userId) => {
+export const updatePub = async (
+	inputValues: Record<string, any>,
+	updatePermissions: string[],
+	userId: null | string = null,
+) => {
 	// Filter to only allow certain fields to be updated
 	const filteredValues: any = {};
 	Object.keys(inputValues).forEach((key) => {
@@ -99,7 +103,7 @@ export const updatePub = async (inputValues, updatePermissions, userId) => {
 	return filteredValues;
 };
 
-export const destroyPub = async (pubId, userId) => {
+export const destroyPub = async (pubId, userId: null | string = null) => {
 	await createPubActivityItem('pub-removed', userId, pubId);
 	return Pub.destroy({
 		where: { id: pubId },
