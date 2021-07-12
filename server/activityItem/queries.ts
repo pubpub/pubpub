@@ -368,7 +368,7 @@ export const createCollectionPubActivityItem = async (
 
 export const createPubActivityItem = async (
 	kind: 'pub-created' | 'pub-removed',
-	actorId: string,
+	actorId: null | string,
 	pubId: string,
 ) => {
 	const pub: types.Pub = await Pub.findOne({ where: { id: pubId } });

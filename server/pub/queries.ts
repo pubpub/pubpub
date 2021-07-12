@@ -7,6 +7,8 @@ import { createDraft } from 'server/draft/queries';
 import { slugifyString } from 'utils/strings';
 import { generateHash } from 'utils/hashes';
 import { getReadableDateInYear } from 'utils/dates';
+import { createPubActivityItem, createPubUpdatedActivityItem } from 'server/activityItem/queries';
+import { defer } from 'server/utils/deferred';
 
 export const createPub = async (
 	{
@@ -73,12 +75,12 @@ export const createPub = async (
 	);
 
 	await Promise.all([createPubAttribution, createCollectionPubs, createMember].filter((x) => x));
-
 	setPubSearchData(newPub.id);
+	defer(() => createPubActivityItem('pub-created', userId ?? null, newPub.id));
 	return newPub;
 };
 
-export const updatePub = (inputValues, updatePermissions) => {
+export const updatePub = async (inputValues, updatePermissions, userId) => {
 	// Filter to only allow certain fields to be updated
 	const filteredValues: any = {};
 	Object.keys(inputValues).forEach((key) => {
@@ -89,16 +91,16 @@ export const updatePub = (inputValues, updatePermissions) => {
 	if (filteredValues.slug) {
 		filteredValues.slug = slugifyString(filteredValues.slug);
 	}
-
-	return Pub.update(filteredValues, {
-		where: { id: inputValues.pubId },
-	}).then(() => {
-		setPubSearchData(inputValues.pubId);
-		return filteredValues;
-	});
+	const existingPub = await Pub.findOne({ where: { id: inputValues.pubId } });
+	const previousPub = existingPub.toJSON();
+	await existingPub.update(filteredValues);
+	setPubSearchData(inputValues.pubId);
+	defer(() => createPubUpdatedActivityItem(userId, previousPub.id, previousPub));
+	return filteredValues;
 };
 
-export const destroyPub = (pubId) => {
+export const destroyPub = async (pubId, userId) => {
+	await createPubActivityItem('pub-removed', userId, pubId);
 	return Pub.destroy({
 		where: { id: pubId },
 	}).then(() => {
