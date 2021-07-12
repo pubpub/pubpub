@@ -173,7 +173,11 @@ describe('/api/pubs', () => {
 				.post('/api/pubs')
 				.send({ communityId: community.id })
 				.expect(201),
-		).toMatch((response) => ({ kind: 'pub-created', pubId: response.body.id }));
+		).toMatch((response) => ({
+			kind: 'pub-created',
+			pubId: response.body.id,
+			actorId: communityManager.id,
+		}));
 		const collectionPub = await CollectionPub.findOne({
 			where: {
 				pubId: pub.id,
@@ -222,6 +226,7 @@ describe('/api/pubs', () => {
 		).toMatch({
 			kind: 'pub-updated',
 			pubId: pub.id,
+			actorId: pubManager.id,
 			payload: {
 				title: { from: pub.title, to: title },
 			},
@@ -253,6 +258,7 @@ describe('/api/pubs', () => {
 		).toMatch({
 			kind: 'pub-updated',
 			pubId: pub.id,
+			actorId: pubAdmin.id,
 			payload: { doi: { from: null, to: 'some_doi' } },
 		});
 		const pubNow = await Pub.findOne({ where: { id: pub.id } });
@@ -285,7 +291,11 @@ describe('/api/pubs', () => {
 				.delete('/api/pubs')
 				.send({ pubId: destroyThisPub.id })
 				.expect(200),
-		).toMatch({ kind: 'pub-removed', pubId: destroyThisPub.id });
+		).toMatch({
+			kind: 'pub-removed',
+			pubId: destroyThisPub.id,
+			actorId: destructivePubManager.id,
+		});
 	});
 
 	it('allows a Community manager to delete a Pub', async () => {
