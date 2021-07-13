@@ -1,6 +1,6 @@
 import uuidv4 from 'uuid/v4';
 
-import { Community, Page, Member } from 'server/models';
+import { Community, Page, Member, Collection, CollectionAttribution, PubAttribution, Pub } from 'server/models';
 import { slugifyString } from 'utils/strings';
 import { generateHash } from 'utils/hashes';
 import { isProd } from 'utils/environment';
@@ -115,4 +115,81 @@ export const updateCommunity = (inputValues, updatePermissions) => {
 		updateCommunityData(inputValues.communityId);
 		return filteredValues;
 	});
+};
+
+export const getCountOfPubsOrCollections = async (userId: string, communityId: string) => {
+	const promises = [
+		Member.count({
+			where: {
+				communityId: communityId,
+				userId: userId,
+			},
+		}),
+
+		Member.count({
+			where: {
+				userId: userId,
+			},
+			include: [
+				{
+					model: Pub,
+					as: 'pub',
+					where: {
+						communityId: communityId,
+					},
+				},
+			],
+		}),
+
+		Member.count({
+			where: {
+				userId: userId,
+			},
+			include: [
+				{
+					model: Collection,
+					as: 'collection',
+					where: {
+						communityId: communityId,
+					},
+				},
+			],
+		}),
+
+		PubAttribution.count({
+			where: {
+				userId: userId,
+			},
+			include: [
+				{
+					model: Pub,
+					as: 'pub',
+					where: {
+						communityId: communityId,
+					},
+				},
+			],
+		}),
+
+		CollectionAttribution.count({
+			where: {
+				userId: userId,
+			},
+			include: [
+				{
+					model: Collection,
+					as: 'collection',
+					where: {
+						communityId: communityId,
+					},
+				},
+			],
+		}),
+	];
+
+	const counts = await Promise.all(promises);
+
+	// indicates if user is present
+	const isHere = counts.some((c) => c > 0);
+	return isHere;
 };

@@ -6,85 +6,8 @@ import { getUser } from 'server/utils/queryHelpers';
 import { handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
-import { Collection, CollectionAttribution, Member, PubAttribution, Pub } from 'server/models';
-
+import { getCountOfPubsOrCollections } from 'server/community/queries';
 // check if member has any pubs or collections for user
-const getCountOfPubsOrCollections = async (userData, communityData) => {
-	const promises = [
-		Member.count({
-			where: {
-				communityId: communityData,
-				userId: userData,
-			},
-		}),
-
-		Member.count({
-			where: {
-				userId: userData,
-			},
-			include: [
-				{
-					model: Pub,
-					as: 'pub',
-					where: {
-						communityId: communityData,
-					},
-				},
-			],
-		}),
-
-		Member.count({
-			where: {
-				userId: userData,
-			},
-			include: [
-				{
-					model: Collection,
-					as: 'collection',
-					where: {
-						communityId: communityData,
-					},
-				},
-			],
-		}),
-
-		PubAttribution.count({
-			where: {
-				userId: userData,
-			},
-			include: [
-				{
-					model: Pub,
-					as: 'pub',
-					where: {
-						communityId: communityData,
-					},
-				},
-			],
-		}),
-
-		CollectionAttribution.count({
-			where: {
-				userId: userData,
-			},
-			include: [
-				{
-					model: Collection,
-					as: 'collection',
-					where: {
-						communityId: communityData,
-					},
-				},
-			],
-		}),
-	];
-
-	const counts = await Promise.all(promises);
-
-	// indicates if user is present
-	const isHere = counts.some((c) => c > 0);
-	return isHere;
-};
 
 app.get(['/user/:slug', '/user/:slug/:mode'], async (req, res, next) => {
 	try {
