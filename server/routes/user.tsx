@@ -21,7 +21,7 @@ app.get(['/user/:slug', '/user/:slug/:mode'], async (req, res, next) => {
 		if (!isThisUserAPartOfThisCOmmunity) {
 			return res.redirect(`https://www.pubpub.org/user/${userData.slug}`);
 		}
-		console.log(isThisUserAPartOfThisCOmmunity);
+
 		return renderToNodeStream(
 			res,
 			<Html

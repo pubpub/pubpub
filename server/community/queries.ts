@@ -125,25 +125,25 @@ export const updateCommunity = (inputValues, updatePermissions) => {
 	});
 };
 
-export const getCountOfPubsOrCollections = async (userId: string, communityId: string) => {
+export const getCountOfPubsOrCollections = async (userData: string, communityData: string) => {
 	const promises = [
 		Member.count({
 			where: {
-				communityId: communityId,
-				userId: userId,
+				communityId: communityData,
+				userId: userData,
 			},
 		}),
 
 		Member.count({
 			where: {
-				userId: userId,
+				userId: userData,
 			},
 			include: [
 				{
 					model: Pub,
 					as: 'pub',
 					where: {
-						communityId: communityId,
+						communityId: communityData,
 					},
 				},
 			],
@@ -151,14 +151,14 @@ export const getCountOfPubsOrCollections = async (userId: string, communityId: s
 
 		Member.count({
 			where: {
-				userId: userId,
+				userId: userData,
 			},
 			include: [
 				{
 					model: Collection,
 					as: 'collection',
 					where: {
-						communityId: communityId,
+						communityId: communityData,
 					},
 				},
 			],
@@ -166,14 +166,14 @@ export const getCountOfPubsOrCollections = async (userId: string, communityId: s
 
 		PubAttribution.count({
 			where: {
-				userId: userId,
+				userId: userData,
 			},
 			include: [
 				{
 					model: Pub,
 					as: 'pub',
 					where: {
-						communityId: communityId,
+						communityId: communityData,
 					},
 				},
 			],
@@ -181,22 +181,20 @@ export const getCountOfPubsOrCollections = async (userId: string, communityId: s
 
 		CollectionAttribution.count({
 			where: {
-				userId: userId,
+				userId: userData,
 			},
 			include: [
 				{
 					model: Collection,
 					as: 'collection',
 					where: {
-						communityId: communityId,
+						communityId: communityData,
 					},
 				},
 			],
 		}),
 	];
-
 	const counts = await Promise.all(promises);
-
 	// indicates if user is present
 	const isHere = counts.some((c) => c > 0);
 	return isHere;
