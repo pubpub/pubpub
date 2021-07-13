@@ -1,6 +1,14 @@
 import uuidv4 from 'uuid/v4';
 
-import { Community, Page, Member, Collection, CollectionAttribution, PubAttribution, Pub } from 'server/models';
+import {
+	Community,
+	Page,
+	Member,
+	Collection,
+	CollectionAttribution,
+	PubAttribution,
+	Pub,
+} from 'server/models';
 import { slugifyString } from 'utils/strings';
 import { generateHash } from 'utils/hashes';
 import { isProd } from 'utils/environment';
