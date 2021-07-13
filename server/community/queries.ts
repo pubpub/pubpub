@@ -125,25 +125,25 @@ export const updateCommunity = (inputValues, updatePermissions) => {
 	});
 };
 
-export const getCountOfPubsOrCollections = async (userData: string, communityData: string) => {
+export const getCountOfPubsOrCollections = async (userId: string, communityId: string) => {
 	const promises = [
 		Member.count({
 			where: {
-				communityId: communityData,
-				userId: userData,
+				communityId,
+				userId,
 			},
 		}),
 
 		Member.count({
 			where: {
-				userId: userData,
+				userId,
 			},
 			include: [
 				{
 					model: Pub,
 					as: 'pub',
 					where: {
-						communityId: communityData,
+						communityId,
 					},
 				},
 			],
@@ -151,14 +151,14 @@ export const getCountOfPubsOrCollections = async (userData: string, communityDat
 
 		Member.count({
 			where: {
-				userId: userData,
+				userId,
 			},
 			include: [
 				{
 					model: Collection,
 					as: 'collection',
 					where: {
-						communityId: communityData,
+						communityId,
 					},
 				},
 			],
@@ -166,14 +166,14 @@ export const getCountOfPubsOrCollections = async (userData: string, communityDat
 
 		PubAttribution.count({
 			where: {
-				userId: userData,
+				userId,
 			},
 			include: [
 				{
 					model: Pub,
 					as: 'pub',
 					where: {
-						communityId: communityData,
+						communityId,
 					},
 				},
 			],
@@ -181,14 +181,14 @@ export const getCountOfPubsOrCollections = async (userData: string, communityDat
 
 		CollectionAttribution.count({
 			where: {
-				userId: userData,
+				userId,
 			},
 			include: [
 				{
 					model: Collection,
 					as: 'collection',
 					where: {
-						communityId: communityData,
+						communityId,
 					},
 				},
 			],
