@@ -232,13 +232,14 @@ const CommunitySettings = () => {
 					label="Cite as"
 					type="text"
 					isTextarea={true}
+					placeholder="Journal citation name can go here"
 					value={citeAs}
 					onChange={(evt) => {
 						setCiteAs(evt.target.value);
 					}}
 				/>
 				<InputField
-					label="Publish as"
+					label="Publish your book as"
 					type="text"
 					isTextarea={true}
 					value={publishAs}
