@@ -173,7 +173,7 @@ describe('/api/pubs', () => {
 				.post('/api/pubs')
 				.send({ communityId: community.id })
 				.expect(201),
-		).toMatch((response) => ({
+		).toMatchObject((response) => ({
 			kind: 'pub-created',
 			pubId: response.body.id,
 			actorId: communityManager.id,
@@ -223,7 +223,7 @@ describe('/api/pubs', () => {
 				.put('/api/pubs')
 				.send({ pubId: pub.id, title, doi: 'some_doi' })
 				.expect(200),
-		).toMatch({
+		).toMatchObject({
 			kind: 'pub-updated',
 			pubId: pub.id,
 			actorId: pubManager.id,
@@ -255,7 +255,7 @@ describe('/api/pubs', () => {
 				.put('/api/pubs')
 				.send({ pubId: pub.id, doi: 'some_doi' })
 				.expect(200),
-		).toMatch({
+		).toMatchObject({
 			kind: 'pub-updated',
 			pubId: pub.id,
 			actorId: pubAdmin.id,
@@ -291,7 +291,7 @@ describe('/api/pubs', () => {
 				.delete('/api/pubs')
 				.send({ pubId: destroyThisPub.id })
 				.expect(200),
-		).toMatch({
+		).toMatchObject({
 			kind: 'pub-removed',
 			pubId: destroyThisPub.id,
 			actorId: destructivePubManager.id,

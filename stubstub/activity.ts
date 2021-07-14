@@ -6,7 +6,7 @@ import { finishDeferredTasks } from 'server/utils/deferred';
 import * as types from 'types';
 
 type ExpectCreatedActivityItemResult<Result> = {
-	toMatch: (
+	toMatchObject: (
 		values:
 			| types.DeepPartial<types.ActivityItem>
 			| ((result: Result) => types.DeepPartial<types.ActivityItem>),
@@ -29,7 +29,7 @@ export const expectCreatedActivityItem = <Result extends Record<string, any>>(
 ): ExpectCreatedActivityItemResult<Result> => {
 	const cutoffTime = new Date();
 	return {
-		toMatch: async (values) => {
+		toMatchObject: async (values) => {
 			const result = await promise;
 			await finishDeferredTasks();
 			const resolvedValues = typeof values === 'function' ? values(result) : values;

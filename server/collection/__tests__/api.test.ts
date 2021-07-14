@@ -57,7 +57,7 @@ it('creates a new collection', async () => {
 				kind: 'issue',
 			})
 			.expect(201),
-	).toMatch((response) => ({
+	).toMatchObject((response) => ({
 		kind: 'collection-created',
 		collectionId: response.body.id,
 		actorId: admin.id,
@@ -159,7 +159,7 @@ it('updates only expected values on an existing collection', async () => {
 				doi: 'dont_change_me_lol',
 			})
 			.expect(200),
-	).toMatch({
+	).toMatchObject({
 		kind: 'collection-updated',
 		collectionId: collection.id,
 		actorId: admin.id,
@@ -219,7 +219,7 @@ it('deletes an existing collection with appropriate permissions', async () => {
 			.delete('/api/collections')
 			.send({ id: collection.id, communityId: community.id })
 			.expect(200),
-	).toMatch({ kind: 'collection-removed', collectionId: collection.id, actorId: admin.id });
+	).toMatchObject({ kind: 'collection-removed', collectionId: collection.id, actorId: admin.id });
 	const collectionNow = await Collection.findOne({ where: { id: collection.id } });
 	expect(collectionNow).toEqual(null);
 });
