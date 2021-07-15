@@ -56,7 +56,9 @@ describe('isUserAffiliatedWithCommunity', () => {
 
 	it('returns true if user is member of collection in the community', async () => {
 		const { theCommunity, collectionUser } = models;
-		expect(await isUserAffiliatedWithCommunity(collectionUser.id, theCommunity.id)).toEqual(true);
+		expect(await isUserAffiliatedWithCommunity(collectionUser.id, theCommunity.id)).toEqual(
+			true,
+		);
 	});
 
 	it('returns true if user is member of pub in the community', async () => {
@@ -78,15 +80,15 @@ describe('isUserAffiliatedWithCommunity', () => {
 
 	it('returns false if user is not in the community', async () => {
 		const { theCommunity, notACommunityMember } = models;
-		expect(await isUserAffiliatedWithCommunity(notACommunityMember.id, theCommunity.id)).toEqual(
-			false,
-		);
+		expect(
+			await isUserAffiliatedWithCommunity(notACommunityMember.id, theCommunity.id),
+		).toEqual(false);
 	});
 
 	it('returns false if user is an admin in another community but not in this community', async () => {
 		const { theCommunity, randoCommunityAdmin } = models;
-		expect(await isUserAffiliatedWithCommunity(randoCommunityAdmin.id, theCommunity.id)).toEqual(
-			false,
-		);
+		expect(
+			await isUserAffiliatedWithCommunity(randoCommunityAdmin.id, theCommunity.id),
+		).toEqual(false);
 	});
 });
