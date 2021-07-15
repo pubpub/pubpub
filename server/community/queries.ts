@@ -125,7 +125,7 @@ export const updateCommunity = (inputValues, updatePermissions) => {
 	});
 };
 
-export const getCountOfPubsOrCollections = async (userId: string, communityId: string) => {
+export const isUserAffiliatedWithCommunity = async (userId: string, communityId: string) => {
 	const promises = [
 		Member.count({
 			where: {
@@ -195,7 +195,7 @@ export const getCountOfPubsOrCollections = async (userId: string, communityId: s
 		}),
 	];
 	const counts = await Promise.all(promises);
-	// indicates if user is present
+
 	const isHere = counts.some((c) => c > 0);
 	return isHere;
 };
