@@ -19,7 +19,7 @@ const crawl = async (pub) => {
 		if (response.status === 404) {
 			console.log(
 				`DOI did not resolve: ${pub.title} • https://${pub.community.domain ||
-					pub.community.subdomain}/pub/${pub.slug}`,
+					pub.community.subdomain + `.pubpub.org`}/pub/${pub.slug}`,
 			);
 		}
 		return Promise.resolve(response);
