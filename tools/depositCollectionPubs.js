@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import Bluebird from 'bluebird';
-import { Sequelize } from 'sequelize';
 import { Community, Collection, CollectionPub, Pub, Release } from 'server/models';
 import { setDoiData } from 'server/doi/queries';
 
