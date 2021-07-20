@@ -118,7 +118,7 @@ export const getDoiData = (
 		pubId && findPub(pubId),
 	]).then(([community, collection, collectionPub, pub]) => {
 		const resolvedCollection = collectionPub ? collectionPub.collection : collection;
-		console.log("The community for this comes from::", community);
+		console.log('The community for this comes from::', community);
 		return createDeposit(
 			{
 				collectionPub,
