@@ -35,19 +35,15 @@ const main = async () => {
 			},
 		],
 	});
-	const releasedPubs = collectionPubs.reduce((acc, cp) => {
-		if (cp.pub.releases.length > 0) {
-			acc.push(cp);
-		}
-		return acc;
-	}, []);
-	console.log(`=== Will deposit 1 Collection and ${releasedPubs.length} Pubs`);
+	const releasedCollectionPubs = collectionPubs.filter((cp) => cp.pub.releases.length > 0);
+
+	console.log(`=== Will deposit 1 Collection and ${releasedCollectionPubs.length} Pubs`);
 	await setAndLogDoiData(
 		{ communityId: community.id, collectionId: collection.id },
 		'collection',
 	);
 	await Bluebird.map(
-		releasedPubs.map((cp) => cp.pubId),
+		releasedCollectionPubs.map((cp) => cp.pubId),
 		(pubId) =>
 			setAndLogDoiData(
 				{ communityId: community.id, collectionId: collection.id, pubId },
