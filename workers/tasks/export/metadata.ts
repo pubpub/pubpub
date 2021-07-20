@@ -52,6 +52,8 @@ export const getPubMetadata = async (pubId) => {
 	const updatedDate = getPubUpdatedDate({ pub: pubData });
 	const publishedDateString = publishedDate && dateFormat(publishedDate, 'mmm dd, yyyy');
 	const updatedDateString = updatedDate && dateFormat(updatedDate, 'mmm dd, yyyy');
+	const primaryCollection = getPrimaryCollection(pubData.collectionPubs);
+
 	return {
 		title: pubData.title,
 		doi: pubData.doi,
@@ -60,7 +62,6 @@ export const getPubMetadata = async (pubId) => {
 		updatedDateString,
 		communityTitle: pubData.community.title,
 		publisher: pubData.community.publishAs,
-		citeAs: pubData.community.citeAs,
 		accentColor: pubData.community.accentColorDark,
 		attributions: pubData.attributions
 			.concat()
@@ -70,6 +71,7 @@ export const getPubMetadata = async (pubId) => {
 		citationStyle: pubData.citationStyle,
 		citationInlineStyle: pubData.citationInlineStyle,
 		nodeLabels: pubData.nodeLabels,
+		...(primaryCollection?.kind === 'issue' && { citeAs: pubData.community.citeAs }),
 		...getPrimaryCollectionMetadata(pubData.collectionPubs),
 	};
 };
