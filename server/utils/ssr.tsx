@@ -130,7 +130,7 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 				<meta key="c5" name="citation_inbook_title" content={collection.title} />,
 				<meta key="c6" name="citation_book_title" content={collection.title} />,
 				<meta key="c7" name="citation_isbn" content={collection.metadata?.isbn} />,
-				// <meta key="c8" name="citation_publisher" content={communityPublisher} />,
+				<meta key="c8" name="citation_publisher" content={communityPublisher} />,
 			];
 		}
 		if (collection.kind === 'conference') {
@@ -231,8 +231,7 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 			<meta key="pa1" property="article:published_time" content={String(publishedAt)} />,
 			<meta key="pa2" property="dc.date" content={dcPublishedAt} />,
 			<meta key="pa3" name="citation_publication_date" content={googleScholarPublishedAt} />,
-			<meta key="pub1" name="citation_publisher" content={communityPublisher || 'PubPub'} />,
-			<meta key="pub2" property="dc.publisher" content="PubPub" />,
+			<meta key="pub1" property="dc.publisher" content="PubPub" />,
 		];
 	}
 

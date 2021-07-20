@@ -230,16 +230,18 @@ const CommunitySettings = () => {
 				/>
 				<InputField
 					label={
-						<span className="row-wrapper">
+						<div className="row-wrapper">
 							Journal Citation
 							<Tooltip
 								content={
 									<span>
 										When filled out, this field will be used as the journal
+										title for
 										<br />
-										title for issue collections in citations, PDF exports, and
+										issue collections in citations, PDF exports, and Crossref
+										deposits.
 										<br />
-										Crossref deposits. By default, the Community Title is used.
+										By default, the Community Title is used.
 									</span>
 								}
 								// @ts-expect-error ts-migrate(2322) FIXME: Type '{ children: Element; content: Element; toolt... Remove this comment to see the full error message
@@ -247,7 +249,7 @@ const CommunitySettings = () => {
 							>
 								<Icon icon="info-sign" />
 							</Tooltip>
-						</span>
+						</div>
 					}
 					type="text"
 					placeholder="This will show up in citations and BibTex as your journal name"
@@ -258,14 +260,15 @@ const CommunitySettings = () => {
 				/>
 				<InputField
 					label={
-						<span className="row-wrapper">
+						<div className="row-wrapper">
 							Publisher
 							<Tooltip
 								content={
 									<span>
 										When filled out, this field will be used as the publisher
+										for book and
 										<br />
-										for book and conference proceedings collections in
+										conference proceedings collections in
 										<br />
 										citations, PDF exports, and Crossref deposits.
 									</span>
@@ -275,7 +278,7 @@ const CommunitySettings = () => {
 							>
 								<Icon icon="info-sign" />
 							</Tooltip>
-						</span>
+						</div>
 					}
 					type="text"
 					placeholder="This will show up in citations and BibTex as your publisher name"
