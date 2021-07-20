@@ -230,7 +230,7 @@ const CommunitySettings = () => {
 				/>
 				<InputField
 					label={
-						<div className="row-wrapper">
+						<span>
 							Journal Citation
 							<Tooltip
 								content={
@@ -249,7 +249,7 @@ const CommunitySettings = () => {
 							>
 								<Icon icon="info-sign" />
 							</Tooltip>
-						</div>
+						</span>
 					}
 					type="text"
 					placeholder="This will show up in citations and BibTex as your journal name"
@@ -260,7 +260,7 @@ const CommunitySettings = () => {
 				/>
 				<InputField
 					label={
-						<div className="row-wrapper">
+						<span>
 							Publisher
 							<Tooltip
 								content={
@@ -278,7 +278,7 @@ const CommunitySettings = () => {
 							>
 								<Icon icon="info-sign" />
 							</Tooltip>
-						</div>
+						</span>
 					}
 					type="text"
 					placeholder="This will show up in citations and BibTex as your publisher name"
