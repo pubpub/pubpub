@@ -61,7 +61,6 @@ export const getPubMetadata = async (pubId) => {
 		publishedDateString,
 		updatedDateString,
 		communityTitle: pubData.community.title,
-		publisher: pubData.community.publishAs,
 		accentColor: pubData.community.accentColorDark,
 		attributions: pubData.attributions
 			.concat()
@@ -72,6 +71,9 @@ export const getPubMetadata = async (pubId) => {
 		citationInlineStyle: pubData.citationInlineStyle,
 		nodeLabels: pubData.nodeLabels,
 		...(primaryCollection?.kind === 'issue' && { citeAs: pubData.community.citeAs }),
+		...((primaryCollection?.kind === 'conference' || primaryCollection?.kind === 'book') && {
+			publisher: pubData.community.publishAs,
+		}),
 		...getPrimaryCollectionMetadata(pubData.collectionPubs),
 	};
 };
