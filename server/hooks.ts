@@ -1,4 +1,5 @@
 import './collection/hooks';
+import './collectionPub/hooks';
 import './community/hooks';
 import './member/hooks';
 import './pub/hooks';
