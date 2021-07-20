@@ -40,7 +40,7 @@ export const updateMember = async ({ memberId, value: { permissions }, actorId =
 };
 
 export const destroyMember = ({ memberId, actorId = null }) => {
-	return Member.destroy({ where: { id: memberId } }, { actorId, individualHooks: true });
+	return Member.destroy({ where: { id: memberId }, actorId, individualHooks: true });
 };
 
 export const getMembersForScope = async (

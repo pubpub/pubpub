@@ -87,11 +87,14 @@ export const createCommunity = (inputValues, userData, alertAndSubscribe = true)
 					userData.email,
 				);
 			}
-			return Member.create({
-				communityId: newCommunityId,
-				userId: userData.id,
-				permissions: 'admin',
-			});
+			return Member.create(
+				{
+					communityId: newCommunityId,
+					userId: userData.id,
+					permissions: 'admin',
+				},
+				{ hooks: false },
+			);
 		})
 		.then(() => {
 			return { subdomain };

@@ -48,12 +48,15 @@ export const createPub = async (
 
 	const createMember =
 		actorId &&
-		Member.create({
-			userId: actorId,
-			pubId: newPub.id,
-			permissions: 'manage',
-			isOwner: true,
-		});
+		Member.create(
+			{
+				userId: actorId,
+				pubId: newPub.id,
+				permissions: 'manage',
+				isOwner: true,
+			},
+			{ hooks: false },
+		);
 
 	const allCollectionIds = [...(defaultPubCollections || []), ...(collectionIds || [])];
 

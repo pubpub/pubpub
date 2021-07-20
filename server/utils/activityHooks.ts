@@ -14,16 +14,21 @@ type CreateActivityHooksOptions<Model> = {
 export const createActivityHooks = <Model>(options: CreateActivityHooksOptions<Model>) => {
 	const { Model, onModelCreated, onModelUpdated, onModelDestroyed } = options;
 	if (onModelCreated) {
-		Model.afterCreate((model, { actorId }) => defer(() => onModelCreated(actorId, model.id)));
+		Model.afterCreate((model, { actorId }) =>
+			defer(() => onModelCreated(actorId || null, model.id)),
+		);
 	}
 	if (onModelUpdated) {
 		Model.afterUpdate((model, { actorId }) =>
-			defer(() => onModelUpdated(actorId, model.id, model._previousDataValues)),
+			defer(async () => {
+				const previousModel = { ...model._previousDataValues };
+				await onModelUpdated(actorId || null, model.id, previousModel);
+			}),
 		);
 	}
 	if (onModelDestroyed) {
 		Model.beforeDestroy(async (model, { actorId }) => {
-			await onModelDestroyed(actorId, model.id);
+			await onModelDestroyed(actorId || null, model.id);
 		});
 	}
 };
