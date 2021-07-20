@@ -23,8 +23,7 @@ const CitationsPreview = (props: Props) => {
 	const { pubData, showHeader } = props;
 	const [isCitationModalOpen, setCitationModalOpen] = useState(false);
 	const copyableCitationRef = useRef();
-	console.log('BRING ME YOUR SOULS');
-	console.log(pubData);
+
 	return (
 		<div className="citations-preview-component">
 			{showHeader && <h6 className="pub-header-themed-secondary">Cite as</h6>}

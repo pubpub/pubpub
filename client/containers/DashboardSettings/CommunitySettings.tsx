@@ -229,7 +229,26 @@ const CommunitySettings = () => {
 					}}
 				/>
 				<InputField
-					label="Journal Citation"
+					label={
+						<span className="row-wrapper">
+							Journal Citation
+							<Tooltip
+								content={
+									<span>
+										When filled out, this field will be used as the journal
+										<br />
+										title for issue collections in citations, PDF exports, and
+										<br />
+										Crossref deposits. By default, the Community Title is used.
+									</span>
+								}
+								// @ts-expect-error ts-migrate(2322) FIXME: Type '{ children: Element; content: Element; toolt... Remove this comment to see the full error message
+								tooltipClassName="bp3-dark"
+							>
+								<Icon icon="info-sign" />
+							</Tooltip>
+						</span>
+					}
 					type="text"
 					placeholder="This will show up in citations and BibTex as your journal name"
 					value={citeAs}
@@ -238,7 +257,26 @@ const CommunitySettings = () => {
 					}}
 				/>
 				<InputField
-					label="Publisher"
+					label={
+						<span className="row-wrapper">
+							Publisher
+							<Tooltip
+								content={
+									<span>
+										When filled out, this field will be used as the publisher
+										<br />
+										for book and conference proceedings collections in
+										<br />
+										citations, PDF exports, and Crossref deposits.
+									</span>
+								}
+								// @ts-expect-error ts-migrate(2322) FIXME: Type '{ children: Element; content: Element; toolt... Remove this comment to see the full error message
+								tooltipClassName="bp3-dark"
+							>
+								<Icon icon="info-sign" />
+							</Tooltip>
+						</span>
+					}
 					type="text"
 					placeholder="This will show up in citations and BibTex as your publisher name"
 					value={publishAs}
