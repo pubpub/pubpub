@@ -231,7 +231,6 @@ const CommunitySettings = () => {
 				<InputField
 					label="Journal Citation"
 					type="text"
-					isTextarea={true}
 					placeholder="This will show up in citations and BibTex as your journal name"
 					value={citeAs}
 					onChange={(evt) => {
@@ -239,9 +238,8 @@ const CommunitySettings = () => {
 					}}
 				/>
 				<InputField
-					label="Publish your book as:"
+					label="Publisher"
 					type="text"
-					isTextarea={true}
 					placeholder="This will show up in citations and BibTex as your publisher name"
 					value={publishAs}
 					onChange={(evt) => {
