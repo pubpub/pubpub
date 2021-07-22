@@ -152,6 +152,7 @@ describe('/api/releases', () => {
 		).toMatchObject((response) => ({
 			kind: 'pub-released',
 			pubId: pub.id,
+			actorId: pubAdmin.id,
 			payload: { releaseId: response.body.id },
 		}));
 		expect(release.historyKey).toEqual(0);
