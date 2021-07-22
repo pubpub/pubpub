@@ -312,9 +312,7 @@ export const createPubReviewCommentAddedActivityItem = async (
 };
 
 export const createPubReviewUpdatedActivityItem = async (
-	kind: 'pub-review-updated',
 	actorId: null | string,
-	communityId: string,
 	reviewId: string,
 	oldReview: types.Review,
 ) => {
@@ -322,10 +320,10 @@ export const createPubReviewUpdatedActivityItem = async (
 	const pub: types.Pub = await Pub.findOne({ where: { id: review.pubId } });
 	const diffs = getDiffsForPayload(review, oldReview, ['status']);
 	return createActivityItem({
-		kind,
+		kind: 'pub-review-updated',
 		pubId: pub.id,
 		actorId,
-		communityId,
+		communityId: pub.communityId,
 		payload: {
 			...diffs,
 			pub: {
