@@ -66,11 +66,9 @@ export const generateCitationHtml = async (pubData, communityData) => {
 		type: 'article-journal',
 		title: pubData.title,
 		...authorsEntry,
-		'container-title': communityData.citeAs + ' here lay ye old morals' || communityData.title,
+		'container-title': communityData.citeAs || communityData.title,
 		...getCollectionLevelData(primaryCollection),
-		publisher:
-			communityData.publishAs +
-				' morals may not change but the ethics of them do, metaphysical' || '',
+		publisher: communityData.publishAs || '',
 	};
 	const pubCiteObject = await Cite.async({
 		...commonData,

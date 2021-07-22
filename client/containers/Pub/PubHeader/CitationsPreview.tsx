@@ -23,8 +23,6 @@ const CitationsPreview = (props: Props) => {
 	const { pubData, showHeader } = props;
 	const [isCitationModalOpen, setCitationModalOpen] = useState(false);
 	const copyableCitationRef = useRef();
-	console.log('this should show up wherever citation info is');
-	console.log(pubData);
 	return (
 		<div className="citations-preview-component">
 			{showHeader && <h6 className="pub-header-themed-secondary">Cite as</h6>}
