@@ -163,7 +163,6 @@ const renderFrontMatterForPandoc = (
 		updatedDateString,
 		publishedDateString,
 		communityTitle,
-		citeAs,
 		primaryCollectionTitle,
 		doi,
 		licenseSlug,
@@ -173,7 +172,7 @@ const renderFrontMatterForPandoc = (
 ) => {
 	const pandocFormatsWithoutTemplate = ['docx', 'plain', 'odt'];
 	const communityAndCollectionString =
-		(citeAs || communityTitle) +
+		communityTitle +
 		(primaryCollectionTitle ? bullet + primaryCollectionTitle : '') +
 		(publisher ? bullet + publisher : '');
 	return (
@@ -198,7 +197,6 @@ const renderFrontMatterForHtml = ({
 	doi,
 	title,
 	communityTitle,
-	citeAs,
 	accentColor,
 	attributions,
 	licenseSlug,
@@ -208,7 +206,7 @@ const renderFrontMatterForHtml = ({
 		...new Set(attributions.map((attr) => attr.affiliation).filter((x) => x)),
 	];
 	const communityAndCollectionString =
-		(citeAs || communityTitle) +
+		communityTitle +
 		(primaryCollectionTitle ? bullet + primaryCollectionTitle : '') +
 		(publisher ? bullet + publisher : '');
 	return (
