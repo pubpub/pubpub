@@ -7,7 +7,7 @@ import { handleErrors } from 'server/utils/errors';
 import { getInitialData } from 'server/utils/initData';
 import { generateMetaComponents, renderToNodeStream } from 'server/utils/ssr';
 import { isUserAffiliatedWithCommunity } from 'server/community/queries';
-// check if member has any pubs or collections for user
+
 
 app.get(['/user/:slug', '/user/:slug/:mode'], async (req, res, next) => {
 	try {
