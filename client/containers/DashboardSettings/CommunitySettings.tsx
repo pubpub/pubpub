@@ -235,13 +235,9 @@ const CommunitySettings = () => {
 							<Tooltip
 								content={
 									<span>
-										When filled out, this field will be used as the journal
-										title for
-										<br />
-										issue collections in citations, PDF exports, and Crossref
-										deposits.
-										<br />
-										By default, the Community Title is used.
+										When filled out, this field will be used as the Journal
+										Title for Issue Collections in citations, PDF exports, and
+										Crossref deposits.
 									</span>
 								}
 							>
@@ -250,7 +246,6 @@ const CommunitySettings = () => {
 						</span>
 					}
 					type="text"
-					placeholder="This will show up in citations and BibTex as your journal name"
 					value={citeAs}
 					onChange={(evt) => {
 						setCiteAs(evt.target.value);
@@ -263,11 +258,8 @@ const CommunitySettings = () => {
 							<Tooltip
 								content={
 									<span>
-										When filled out, this field will be used as the publisher
-										for book and
-										<br />
-										conference proceedings collections in
-										<br />
+										When filled out, this field will be used as the Publisher
+										for Book and Conference Proceedings Collections in
 										citations, PDF exports, and Crossref deposits.
 									</span>
 								}
@@ -277,7 +269,6 @@ const CommunitySettings = () => {
 						</span>
 					}
 					type="text"
-					placeholder="This will show up in citations and BibTex as your publisher name"
 					value={publishAs}
 					onChange={(evt) => {
 						setPublishAs(evt.target.value);
