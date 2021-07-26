@@ -235,7 +235,7 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 			<meta key="pa1" property="article:published_time" content={String(publishedAt)} />,
 			<meta key="pa2" property="dc.date" content={dcPublishedAt} />,
 			<meta key="pa3" name="citation_publication_date" content={googleScholarPublishedAt} />,
-			<meta key="pub1" property="dc.publisher" content="PubPub" />,
+			<meta key="pub1" property="dc.publisher" content={communityPublisher || 'PubPub'} />,
 		];
 	}
 
