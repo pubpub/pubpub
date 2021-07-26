@@ -229,6 +229,7 @@ const CommunitySettings = () => {
 					}}
 				/>
 				<InputField
+					htmlFor="journal-citation"
 					label={
 						<span>
 							Journal Citation
@@ -252,6 +253,7 @@ const CommunitySettings = () => {
 					}}
 				/>
 				<InputField
+					htmlFor="publisher"
 					label={
 						<span>
 							Publisher
