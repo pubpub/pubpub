@@ -6,7 +6,7 @@ import {
 	createPubDiscussionCommentAddedActivityItem,
 	createPubReviewCommentAddedActivityItem,
 } from 'server/activityItem/queries';
-import { setUserSubscriptionStatus } from 'server/userSubscription/shared/queries';
+import { setUserSubscriptionStatus } from 'server/userSubscription/queries';
 
 const createActivityItems = async (threadComment: types.ThreadComment) => {
 	const parent = await getParentModelForThread(threadComment.threadId);
