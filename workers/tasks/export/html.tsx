@@ -171,6 +171,7 @@ const renderFrontMatterForPandoc = (
 	targetPandoc,
 ) => {
 	const pandocFormatsWithoutTemplate = ['docx', 'plain', 'odt'];
+	// do not put community title if this is a book
 	const communityAndCollectionString =
 		communityTitle +
 		(primaryCollectionTitle ? bullet + primaryCollectionTitle : '') +
@@ -205,6 +206,7 @@ const renderFrontMatterForHtml = ({
 	const affiliations = [
 		...new Set(attributions.map((attr) => attr.affiliation).filter((x) => x)),
 	];
+	// do not put community title if this is a book
 	const communityAndCollectionString =
 		communityTitle +
 		(primaryCollectionTitle ? bullet + primaryCollectionTitle : '') +

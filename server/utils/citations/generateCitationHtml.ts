@@ -17,7 +17,7 @@ const collectionKindToCitationJSPart = (kind) =>
 		issue: 'article-journal',
 	}[kind] || 'article-journal');
 
-// pass in communitydata
+// pass in communitydata if i want to use this to set container title
 const getCollectionLevelData = (collection) => {
 	if (!collection) {
 		return { type: 'article-journal' };
@@ -27,10 +27,7 @@ const getCollectionLevelData = (collection) => {
 	const useCollectionTitle = collection.kind !== 'issue';
 	return {
 		type: collectionKindToCitationJSPart(kind),
-		// explicitly giving container title if not an issue, conflicts with review comment???
 		...(useCollectionTitle && { 'container-title': title }),
-		// if container title is being set all the time i can set the cite as info here if it is an issue
-		// 'container-title': useCollectionTitle ? title : communityData.citeAs || communityData.title,
 		containerDoi: getCollectionDoi(collection),
 		ISBN: metadata.isbn,
 		ISSN: metadata.issn || metadata.printIssn || metadata.electronicIssn,
@@ -70,7 +67,6 @@ export const generateCitationHtml = async (pubData, communityData) => {
 		type: 'article-journal',
 		title: pubData.title,
 		...authorsEntry,
-		// may be deleted
 		'container-title': communityData.citeAs || communityData.title,
 		...getCollectionLevelData(primaryCollection),
 		publisher: communityData.publishAs || '',

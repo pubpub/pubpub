@@ -53,7 +53,6 @@ export const getPubMetadata = async (pubId) => {
 	const publishedDateString = publishedDate && dateFormat(publishedDate, 'mmm dd, yyyy');
 	const updatedDateString = updatedDate && dateFormat(updatedDate, 'mmm dd, yyyy');
 	const primaryCollection = getPrimaryCollection(pubData.collectionPubs);
-	console.log(primaryCollection, 'is this a collection');
 	return {
 		title: pubData.title,
 		doi: pubData.doi,
