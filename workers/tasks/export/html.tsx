@@ -166,13 +166,14 @@ const renderFrontMatterForPandoc = (
 		primaryCollectionTitle,
 		doi,
 		licenseSlug,
+		publisher,
 	},
 	targetPandoc,
 ) => {
 	const pandocFormatsWithoutTemplate = ['docx', 'plain', 'odt'];
 	// do not put community title if this is a book
 	const communityAndCollectionString =
-		communityTitle + (primaryCollectionTitle ? bullet + primaryCollectionTitle : '');
+		(!publisher ? communityTitle + bullet : '') + (primaryCollectionTitle || '');
 	return (
 		<>
 			{pandocFormatsWithoutTemplate.includes(targetPandoc) && (
@@ -205,7 +206,7 @@ const renderFrontMatterForHtml = ({
 	];
 	// do not put community title if this is a book
 	const communityAndCollectionString =
-		communityTitle + (primaryCollectionTitle ? bullet + primaryCollectionTitle : '');
+		(!publisher ? communityTitle + bullet : '') + (primaryCollectionTitle || '');
 	return (
 		<section className="cover">
 			<h3 className="community-and-collection">{communityAndCollectionString}</h3>
@@ -288,7 +289,6 @@ export const renderStaticHtml = async ({
 		noteManager,
 		nodeLabels,
 	});
-	console.log(pubMetadata);
 	return ReactDOMServer.renderToStaticMarkup(
 		<html lang="en">
 			<head>
