@@ -75,6 +75,7 @@ export const getPubMetadata = async (pubId) => {
 		...((primaryCollection?.kind === 'conference' || primaryCollection?.kind === 'book') && {
 			publisher: pubData.community.publishAs,
 		}),
+		collection: primaryCollection || '',
 		...getPrimaryCollectionMetadata(pubData.collectionPubs),
 	};
 };
