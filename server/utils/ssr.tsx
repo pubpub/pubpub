@@ -111,6 +111,10 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 	}
 
 	if (collection) {
+		outputComponents = [
+			...outputComponents,
+			<meta key="c0" name="citation_publisher" content={communityPublisher || 'PubPub'} />,
+		];
 		if (collection.kind === 'issue') {
 			outputComponents = [
 				...outputComponents,
@@ -130,11 +134,6 @@ export const generateMetaComponents = (metaProps: MetaProps) => {
 				<meta key="c5" name="citation_inbook_title" content={collection.title} />,
 				<meta key="c6" name="citation_book_title" content={collection.title} />,
 				<meta key="c7" name="citation_isbn" content={collection.metadata?.isbn} />,
-				<meta
-					key="c8"
-					name="citation_publisher"
-					content={communityPublisher || 'PubPub'}
-				/>,
 			];
 		}
 		if (collection.kind === 'conference') {
