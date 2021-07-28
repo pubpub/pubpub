@@ -173,7 +173,7 @@ const renderFrontMatterForPandoc = (
 	const pandocFormatsWithoutTemplate = ['docx', 'plain', 'odt'];
 	// do not put community title if this is a book
 	const communityAndCollectionString =
-		(!publisher ? communityTitle + bullet : '') + (primaryCollectionTitle || '');
+		(publisher ? '' : communityTitle + bullet) + (primaryCollectionTitle || '');
 	return (
 		<>
 			{pandocFormatsWithoutTemplate.includes(targetPandoc) && (
@@ -206,7 +206,7 @@ const renderFrontMatterForHtml = ({
 	];
 	// do not put community title if this is a book
 	const communityAndCollectionString =
-		(!publisher ? communityTitle + bullet : '') + (primaryCollectionTitle || '');
+		(publisher ? '' : communityTitle + bullet) + (primaryCollectionTitle || '');
 	return (
 		<section className="cover">
 			<h3 className="community-and-collection">{communityAndCollectionString}</h3>
