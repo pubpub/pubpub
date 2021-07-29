@@ -17,7 +17,6 @@ const collectionKindToCitationJSPart = (kind) =>
 		issue: 'article-journal',
 	}[kind] || 'article-journal');
 
-// pass in communitydata if i want to use this to set container title
 const getCollectionLevelData = (collection) => {
 	if (!collection) {
 		return { type: 'article-journal' };
