@@ -6,7 +6,7 @@ import { TitleRenderer } from '../types';
 const prefix = 'the Page';
 
 export const pageTitle: TitleRenderer<PageActivityItem> = (item, context) => {
-	const pageFromContext = context.associations.page[item.payload.pageId];
+	const pageFromContext = context.associations.page[item.payload.page.id];
 	if (pageFromContext) {
 		return {
 			prefix,

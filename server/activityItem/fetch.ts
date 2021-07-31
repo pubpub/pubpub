@@ -211,7 +211,7 @@ const getActivityItemAssociationIds = (
 			item.kind === 'page-updated' ||
 			item.kind === 'page-removed'
 		) {
-			page.add(item.payload.pageId);
+			page.add(item.payload.page.id);
 		}
 	});
 	return associationIds;

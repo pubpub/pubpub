@@ -4,8 +4,8 @@ import { InsertableActivityItemBase } from './base';
 
 type PageActivityItemBase = InsertableActivityItemBase & {
 	payload: {
-		pageId: string;
 		page: {
+			id: string;
 			title: string;
 		};
 	};
