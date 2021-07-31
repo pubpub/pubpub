@@ -17,6 +17,7 @@ import {
 	Community,
 	Discussion,
 	ExternalPublication,
+	Page,
 	Pub,
 	PubEdge,
 	Release,
@@ -143,6 +144,7 @@ const getActivityItemAssociationIds = (
 		community,
 		discussion,
 		externalPublication,
+		page,
 		pubEdge,
 		pub,
 		release,
@@ -204,6 +206,12 @@ const getActivityItemAssociationIds = (
 			item.kind === 'member-removed'
 		) {
 			user.add(item.payload.userId);
+		} else if (
+			item.kind === 'page-created' ||
+			item.kind === 'page-updated' ||
+			item.kind === 'page-removed'
+		) {
+			page.add(item.payload.pageId);
 		}
 	});
 	return associationIds;
@@ -242,6 +250,7 @@ const fetchAssociations = (
 		community,
 		discussion,
 		externalPublication,
+		page,
 		pubEdge,
 		pub,
 		release,
@@ -259,6 +268,7 @@ const fetchAssociations = (
 			ExternalPublication,
 			externalPublication,
 		),
+		page: fetchModels<types.Page>(Page, page),
 		pubEdge: fetchModels<types.PubEdge>(PubEdge, pubEdge),
 		pub: fetchModels<types.Pub>(Pub, pub),
 		release: fetchModels<types.Release>(Release, release),
