@@ -8,7 +8,7 @@ import { itemRenderer } from './itemRenderer';
 type BaseTitles = 'page';
 
 export const renderPageCreated = itemRenderer<PageCreatedActivityItem, BaseTitles>({
-	icon: 'layout',
+	icon: 'page-layout',
 	titleRenderers: {
 		page: pageTitle,
 	},
@@ -23,7 +23,7 @@ export const renderPageCreated = itemRenderer<PageCreatedActivityItem, BaseTitle
 });
 
 export const renderPageUpdated = itemRenderer<PageUpdatedActivityItem, BaseTitles>({
-	icon: 'layout',
+	icon: 'page-layout',
 	titleRenderers: {
 		page: pageTitle,
 	},
@@ -98,7 +98,7 @@ export const renderPageUpdated = itemRenderer<PageUpdatedActivityItem, BaseTitle
 });
 
 export const renderPageRemoved = itemRenderer<PageRemovedActivityItem, BaseTitles>({
-	icon: 'layout',
+	icon: 'page-layout',
 	titleRenderers: {
 		page: pageTitle,
 	},

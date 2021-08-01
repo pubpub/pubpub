@@ -63,6 +63,7 @@ const filterDefinitions: Record<ActivityFilter, SequelizeFilter | SequelizeFilte
 	collection: {
 		collectionId: { [Op.not]: null },
 	},
+	page: itemKindFilter(['page-created', 'page-updated', 'page-removed']),
 	pub: {
 		pubId: { [Op.not]: null },
 	},

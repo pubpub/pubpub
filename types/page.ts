@@ -5,7 +5,7 @@ export type Page = {
 	title: string;
 	slug: string;
 	communityId: string;
-	description?: string;
+	description: null | string;
 	avatar?: string;
 	isPublic: boolean;
 	isNarrowWidth?: boolean;

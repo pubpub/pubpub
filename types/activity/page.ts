@@ -20,6 +20,7 @@ export type PageUpdatedActivityItem = PageActivityItemBase & {
 	payload: {
 		title?: Diff<string>;
 		slug?: Diff<string>;
+		description?: Diff<null | string>;
 		isPublic?: Diff<boolean>;
 		layout?: true;
 	};

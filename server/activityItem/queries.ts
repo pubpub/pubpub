@@ -273,7 +273,7 @@ export const createPageUpdatedActivityItem = async (
 	oldPage: types.Page,
 ) => {
 	const page: types.Page = await Page.findOne({ where: { id: pageId } });
-	const diffs = getDiffsForPayload(page, oldPage, ['isPublic', 'title', 'slug']);
+	const diffs = getDiffsForPayload(page, oldPage, ['isPublic', 'title', 'slug', 'description']);
 	const flags = getChangeFlagsForPayload(page, oldPage, ['layout']);
 	return createActivityItem({
 		kind: 'page-updated' as const,
