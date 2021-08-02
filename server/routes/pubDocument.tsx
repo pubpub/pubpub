@@ -143,6 +143,29 @@ app.get('/pub/:pubSlug/release-id/:releaseId', async (req, res, next) => {
 	}
 });
 
+app.get('/pub/:pubSlug/discussion-id/:discussionId', async (req, res, next) => {
+	if (!hostIsValid(req, 'community')) {
+		return next();
+	}
+	try {
+		const initialData = await getInitialData(req);
+		const { pubSlug, discussionId } = req.params;
+		const pub = await getPub(pubSlug, initialData.communityData.id, { getDiscussions: true });
+		const discussion = pub.discussions.find((disc) => disc.id === discussionId);
+		if (discussion) {
+			const isDiscussionOnDraft = discussion.visibility.access !== 'public';
+			const hash = `#discussion-${discussionId}`;
+			if (isDiscussionOnDraft) {
+				return res.redirect(`/pub/${pubSlug}/draft${hash}`);
+			}
+			return res.redirect(`/pub/${pubSlug}${hash}`);
+		}
+		throw new NotFoundError();
+	} catch (err) {
+		return handleErrors(req, res, next)(err);
+	}
+});
+
 app.get(['/pub/:pubSlug/draft', '/pub/:pubSlug/draft/:historyKey'], async (req, res, next) => {
 	if (!hostIsValid(req, 'community')) {
 		return next();
