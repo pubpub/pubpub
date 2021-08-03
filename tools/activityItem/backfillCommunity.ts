@@ -55,7 +55,7 @@ const backfillMembers = async (ctx: Context, scope: MembershipScope) => {
 };
 
 const backfillPages = async (ctx: Context) => {
-	const pages = await Page.findAll({ where: { id: ctx.community.id } });
+	const pages = await Page.findAll({ where: { communityId: ctx.community.id } });
 	await forEach(pages, async (page) => {
 		const item = await createPageActivityItem('page-created', ctx.defaultActorId, page.id);
 		await setItemTimestamp(item, page.createdAt);
