@@ -91,18 +91,14 @@ export const updatePage = async (inputValues, updatePermissions, actorId = null)
 };
 
 export const destroyPage = (inputValues, actorId = null) => {
-	return Page.destroy(
-		{
-			where: {
-				id: inputValues.pageId,
-				communityId: inputValues.communityId,
-			},
+	return Page.destroy({
+		where: {
+			id: inputValues.pageId,
+			communityId: inputValues.communityId,
 		},
-		{
-			actorId,
-			individualHooks: true,
-		},
-	)
+		actorId,
+		individualHooks: true,
+	})
 		.then(() => {
 			return Community.findOne({
 				where: { id: inputValues.communityId },
