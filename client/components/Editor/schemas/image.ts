@@ -38,6 +38,7 @@ export default {
 			altText: { default: '' },
 			hideLabel: { default: false },
 			fullResolution: { default: false },
+			href: { default: null },
 		},
 		reactiveAttrs: {
 			count: counter({ useNodeLabels: true }),
@@ -56,13 +57,14 @@ export default {
 						caption: node.getAttribute('data-caption') || '',
 						size: Number(node.getAttribute('data-size')) || 50,
 						align: node.getAttribute('data-align') || 'center',
-						altText: node.firstChild?.getAttribute('alt') || '',
+						altText: node.getAttribute('data-alt-text') || '',
+						href: node.getAttribute('data-href') || null,
 					};
 				},
 			},
 		],
 		toDOM: (node, { isReact } = { isReact: false }) => {
-			const { url, align, id, altText, caption, fullResolution, size } = node.attrs;
+			const { url, align, id, altText, caption, fullResolution, size, href } = node.attrs;
 
 			const width = align === 'breakout' ? 1920 : 800;
 			const isResizeable = isResizeableFormat(url) && !fullResolution;
@@ -79,16 +81,36 @@ export default {
 					'data-align': align,
 					'data-url': url,
 					'data-caption': caption,
+					'data-href': href,
+					'data-alt-text': altText,
 				},
-				[
-					'img',
-					{
-						srcSet,
-						src: maybeResizedSrc,
-						alt: altText || '',
-						...getFigcaptionRefrenceAttrs(altText, caption, figcaptionId),
-					},
-				],
+				href
+					? [
+							'a',
+							{
+								href,
+								target: '_blank',
+							},
+
+							[
+								'img',
+								{
+									srcSet,
+									src: maybeResizedSrc,
+									alt: altText || '',
+									...getFigcaptionRefrenceAttrs(altText, caption, figcaptionId),
+								},
+							],
+					  ]
+					: [
+							'img',
+							{
+								srcSet,
+								src: maybeResizedSrc,
+								alt: altText || '',
+								...getFigcaptionRefrenceAttrs(altText, caption, figcaptionId),
+							},
+					  ],
 				[
 					'figcaption',
 					{ id: figcaptionId },
