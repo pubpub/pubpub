@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Checkbox, Classes, Tab, Tabs, InputGroup } from '@blueprintjs/core';
+import { Checkbox, Classes, Tab, Tabs } from '@blueprintjs/core';
 
 import { SimpleEditor, SliderInput } from 'components';
 
@@ -9,6 +9,7 @@ import { getCurrentNodeLabels, isResizeableFormat } from 'client/components/Edit
 
 import { ControlsButton, ControlsButtonGroup } from '../ControlsButton';
 import AlignmentControl from './AlignmentControl';
+import AnchorControl from './AnchorControl';
 import SourceControls from './SourceControls';
 import { ControlsReferenceSettingsLink } from '../ControlsReference';
 import { EditorChangeObjectWithNode } from '../../types';
@@ -152,13 +153,10 @@ const ControlsMedia = (props: Props) => {
 					value={align}
 					onChange={(nextAlignment) => updateNode({ align: nextAlignment })}
 				/>
-				<div className="controls-row">
-					<div className="left-label">Link to</div>
-					<InputGroup
-						value={href || ''}
-						onChange={(evt) => updateNode({ href: evt.target.value })}
-					/>
-				</div>
+				<AnchorControl
+					onChange={(nextHref) => updateNode({ href: nextHref })}
+					value={href}
+				/>
 				<SourceControls
 					// @ts-expect-error ts-migrate(2322) FIXME: Type 'ProsemirrorNode<any> & { attrs?: { size: num... Remove this comment to see the full error message
 					selectedNode={selectedNode}
