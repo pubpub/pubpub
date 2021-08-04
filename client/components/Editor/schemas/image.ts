@@ -72,25 +72,26 @@ export default {
 			const srcSet = isResizeable ? getSrcSet(url, 'inside', width) : '';
 			const figcaptionId = `${id}-figure-caption`;
 
-			return href
-				? [
-						'a',
-						{
-							href,
-							target: '_blank',
-						},
-						[
-							'figure',
+			return [
+				'figure',
+				{
+					...(id && { id }),
+					'data-node-type': 'image',
+					'data-size': size,
+					'data-align': align,
+					'data-url': url,
+					'data-caption': caption,
+					'data-href': href,
+					'data-alt-text': altText,
+				},
+				href
+					? [
+							'a',
 							{
-								...(id && { id }),
-								'data-node-type': 'image',
-								'data-size': size,
-								'data-align': align,
-								'data-url': url,
-								'data-caption': caption,
-								'data-href': href,
-								'data-alt-text': altText,
+								href,
+								target: '_blank',
 							},
+
 							[
 								'img',
 								{
@@ -100,35 +101,8 @@ export default {
 									...getFigcaptionRefrenceAttrs(altText, caption, figcaptionId),
 								},
 							],
-							[
-								'figcaption',
-								{ id: figcaptionId },
-								pruneFalsyValues([
-									'div',
-									{},
-									withValue(buildLabel(node), (builtLabel) => [
-										'strong',
-										{ spellcheck: 'false' },
-										builtLabel,
-									]),
-									renderHtmlChildren(isReact, caption, 'div'),
-								]),
-							],
-						],
-				  ]
-				: ([
-						'figure',
-						{
-							...(id && { id }),
-							'data-node-type': 'image',
-							'data-size': size,
-							'data-align': align,
-							'data-url': url,
-							'data-caption': caption,
-							'data-href': href,
-							'data-alt-text': altText,
-						},
-						[
+					  ]
+					: [
 							'img',
 							{
 								srcSet,
@@ -136,22 +110,22 @@ export default {
 								alt: altText || '',
 								...getFigcaptionRefrenceAttrs(altText, caption, figcaptionId),
 							},
-						],
-						[
-							'figcaption',
-							{ id: figcaptionId },
-							pruneFalsyValues([
-								'div',
-								{},
-								withValue(buildLabel(node), (builtLabel) => [
-									'strong',
-									{ spellcheck: 'false' },
-									builtLabel,
-								]),
-								renderHtmlChildren(isReact, caption, 'div'),
-							]),
-						],
-				  ] as DOMOutputSpec);
+					  ],
+				[
+					'figcaption',
+					{ id: figcaptionId },
+					pruneFalsyValues([
+						'div',
+						{},
+						withValue(buildLabel(node), (builtLabel) => [
+							'strong',
+							{ spellcheck: 'false' },
+							builtLabel,
+						]),
+						renderHtmlChildren(isReact, caption, 'div'),
+					]),
+				],
+			] as DOMOutputSpec;
 		},
 		inline: false,
 		group: 'block',
