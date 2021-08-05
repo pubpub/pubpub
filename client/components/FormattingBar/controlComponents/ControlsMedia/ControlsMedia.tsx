@@ -9,7 +9,7 @@ import { getCurrentNodeLabels, isResizeableFormat } from 'client/components/Edit
 
 import { ControlsButton, ControlsButtonGroup } from '../ControlsButton';
 import AlignmentControl from './AlignmentControl';
-import AnchorControl from './AnchorControl';
+import UrlControl from './UrlControl';
 import SourceControls from './SourceControls';
 import { ControlsReferenceSettingsLink } from '../ControlsReference';
 import { EditorChangeObjectWithNode } from '../../types';
@@ -153,10 +153,7 @@ const ControlsMedia = (props: Props) => {
 					value={align}
 					onChange={(nextAlignment) => updateNode({ align: nextAlignment })}
 				/>
-				<AnchorControl
-					onChange={(nextHref) => updateNode({ href: nextHref })}
-					value={href}
-				/>
+				<UrlControl onChange={(nextHref) => updateNode({ href: nextHref })} value={href} />
 				<SourceControls
 					// @ts-expect-error ts-migrate(2322) FIXME: Type 'ProsemirrorNode<any> & { attrs?: { size: num... Remove this comment to see the full error message
 					selectedNode={selectedNode}

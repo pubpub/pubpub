@@ -6,7 +6,7 @@ type Props = {
 	value: string;
 };
 
-const AnchorControl = (props: Props) => {
+const UrlControl = (props: Props) => {
 	const [href, setHref] = useState(props.value);
 	return (
 		<div className="controls-row">
@@ -14,7 +14,7 @@ const AnchorControl = (props: Props) => {
 			<InputGroup
 				value={href}
 				onBlur={() => props.onChange(href)}
-				placeholder="https://www.example.com"
+				placeholder="https://example.com"
 				onChange={(evt) => setHref(evt.target.value)}
 				onKeyPress={(evt) => {
 					if (evt.key === 'Enter') {
@@ -27,4 +27,4 @@ const AnchorControl = (props: Props) => {
 	);
 };
 
-export default AnchorControl;
+export default UrlControl;
