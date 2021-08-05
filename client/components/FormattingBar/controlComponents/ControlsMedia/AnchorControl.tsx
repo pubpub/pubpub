@@ -22,7 +22,7 @@ const AnchorControl = (props: Props) => {
 					}
 				}}
 			/>
-			<AnchorButton small minimal title="Visit" icon="share" href={href} target="_blank" />
+			<AnchorButton minimal title="Visit" icon="share" href={href} target="_blank" />
 		</div>
 	);
 };
