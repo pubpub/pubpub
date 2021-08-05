@@ -12,6 +12,7 @@ const UrlControl = (props: Props) => {
 		<div className="controls-row">
 			<div className="left-label">Link to</div>
 			<InputGroup
+				fill
 				value={href}
 				onBlur={() => props.onChange(href)}
 				placeholder="https://example.com"
