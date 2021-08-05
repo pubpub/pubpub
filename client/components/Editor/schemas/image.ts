@@ -71,8 +71,17 @@ export default {
 			const maybeResizedSrc = isResizeable ? getResizedUrl(url, 'inside', width) : url;
 			const srcSet = isResizeable ? getSrcSet(url, 'inside', width) : '';
 			const figcaptionId = `${id}-figure-caption`;
+			const imgTag = [
+				'img',
+				{
+					srcSet,
+					src: maybeResizedSrc,
+					alt: altText || '',
+					...getFigcaptionRefrenceAttrs(altText, caption, figcaptionId),
+				},
+			];
 
-			return [
+			return ([
 				'figure',
 				{
 					...(id && { id }),
@@ -92,25 +101,9 @@ export default {
 								target: '_blank',
 							},
 
-							[
-								'img',
-								{
-									srcSet,
-									src: maybeResizedSrc,
-									alt: altText || '',
-									...getFigcaptionRefrenceAttrs(altText, caption, figcaptionId),
-								},
-							],
+							imgTag,
 					  ]
-					: [
-							'img',
-							{
-								srcSet,
-								src: maybeResizedSrc,
-								alt: altText || '',
-								...getFigcaptionRefrenceAttrs(altText, caption, figcaptionId),
-							},
-					  ],
+					: imgTag,
 				[
 					'figcaption',
 					{ id: figcaptionId },
@@ -125,7 +118,7 @@ export default {
 						renderHtmlChildren(isReact, caption, 'div'),
 					]),
 				],
-			] as DOMOutputSpec;
+			] as unknown) as DOMOutputSpec;
 		},
 		inline: false,
 		group: 'block',
