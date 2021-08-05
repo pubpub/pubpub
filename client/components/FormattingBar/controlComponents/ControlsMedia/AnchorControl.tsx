@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { InputGroup, AnchorButton } from '@blueprintjs/core';
 
 type Props = {
-	onChange: (...args: any[]) => any;
+	onChange: (href: string) => unknown;
 	value: string;
 };
 
