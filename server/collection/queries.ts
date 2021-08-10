@@ -42,9 +42,17 @@ export const createCollection = (
 ) => {
 	return Community.findOne({ where: { id: communityId } }).then(async (community) => {
 		const normalizedTitle = title.trim();
+		const available = await findAcceptableSlug(
+			// @ts-expect-error ts-migrate(2339) FIXME: Property 'slug' does not exist on type '{}'.
+			slug || slugifyString(title),
+			communityId,
+		);
+		if (!available) {
+			throw new PubPubError.InvalidFieldsError('slug');
+		}
 		const collection = {
 			title: normalizedTitle,
-			slug: await findAcceptableSlug(slug || slugifyString(title), communityId),
+			slug: available,
 			isRestricted,
 			isPublic,
 			viewHash: generateHash(8),

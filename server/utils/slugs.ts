@@ -2,9 +2,49 @@ import { Op } from 'sequelize';
 
 import { Page, Collection } from 'server/models';
 
-const definitelyForbiddenSlugs = ['dash'];
+const definitelyForbiddenSlugs = [
+	'dash',
+	'redirects',
+	'pubRedirects',
+	'pubDocument',
+	'pubDownloads',
+	'collection',
+	'dashboardActivity',
+	'dashboardDiscussions',
+	'dashboardEdges',
+	'dashboardImpact',
+	'dashboardMembers',
+	'dashboardCommunityOverview',
+	'dashboardCollectionOverview',
+	'dashboardCustomScripts',
+	'dashboardPubOverview',
+	'dashboardPage',
+	'dashboardPages',
+	'dashboardReview',
+	'dashboardReviews',
+	'dashboardSettings',
+	'dashboardCollectionLayout',
+	'communityCreate',
+	'explore',
+	'about',
+	'pricing',
+	'adminDashboard',
+	'landing',
+	'login',
+	'legal',
+	'search',
+	'signup',
+	'passwordReset',
+	'userCreate',
+	'user',
+	'page',
+	'sitemap',
+	'robots',
+	'noMatch',
+];
 
 export const slugIsAvailable = async ({ slug, communityId, activeElementId }) => {
+	console.log('The slug to be checked is', slug);
 	if (definitelyForbiddenSlugs.includes(slug)) {
 		return false;
 	}
@@ -20,6 +60,10 @@ export const slugIsAvailable = async ({ slug, communityId, activeElementId }) =>
 };
 
 export const findAcceptableSlug = async (desiredSlug, communityId) => {
+	console.log('The slug to be checked is', desiredSlug);
+	if (definitelyForbiddenSlugs.includes(desiredSlug)) {
+		return false;
+	}
 	const [pages, collections] = await Promise.all([
 		Page.findAll({
 			attributes: ['slug'],
