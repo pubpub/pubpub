@@ -44,7 +44,6 @@ const definitelyForbiddenSlugs = [
 ];
 
 export const slugIsAvailable = async ({ slug, communityId, activeElementId }) => {
-	console.log('The slug to be checked is', slug);
 	if (definitelyForbiddenSlugs.includes(slug)) {
 		return false;
 	}
@@ -60,10 +59,6 @@ export const slugIsAvailable = async ({ slug, communityId, activeElementId }) =>
 };
 
 export const findAcceptableSlug = async (desiredSlug, communityId) => {
-	console.log('The slug to be checked is', desiredSlug);
-	if (definitelyForbiddenSlugs.includes(desiredSlug)) {
-		return false;
-	}
 	const [pages, collections] = await Promise.all([
 		Page.findAll({
 			attributes: ['slug'],
