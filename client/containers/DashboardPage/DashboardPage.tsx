@@ -73,6 +73,7 @@ const DashboardPage = (props: Props) => {
 		title,
 		viewHash,
 	} = pageData;
+
 	const isHome = !persistedPageData.slug;
 
 	const slugError = error?.fields?.slug

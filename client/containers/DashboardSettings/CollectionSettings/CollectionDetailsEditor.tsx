@@ -6,7 +6,7 @@ import { Checkbox, FormGroup, Button, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 
 import { getSchemaForKind } from 'utils/collections/schemas';
-import { Collection, Community } from 'types';
+import { Collection, Community, SlugStatus } from 'types';
 import { slugifyString } from 'utils/strings';
 import { ConfirmDialog, InputField } from 'components';
 import { collectionUrl } from 'utils/canonicalUrls';
@@ -18,7 +18,7 @@ type Props = {
 	communityData: Community;
 	onDeleteCollection: () => unknown;
 	onUpdateCollection: (update: Partial<Collection>) => unknown;
-	fieldErrors: null | CollectionFieldErrors;
+	slugStatus: SlugStatus;
 };
 
 const readNextLabels = {
@@ -28,27 +28,24 @@ const readNextLabels = {
 	'choose-best': 'Choose the best preview for each Pub',
 };
 
-const getSlugError = (slug: string, fieldErrors: null | CollectionFieldErrors) => {
+const getSlugError = (slug: string, slugStatus: SlugStatus) => {
 	if (!slug) {
 		return 'Collection requires a slug';
 	}
-	if (fieldErrors && fieldErrors.slug) {
-		return 'This slug is not available because it is in use by another Collection or Page.';
+	if (slugStatus === 'used') {
+		return 'This URL is not available because it is in use by another Page or Collection.';
+	}
+	if (slugStatus === 'reserved') {
+		return 'This URL is not available because it is reserved by PubPub.';
 	}
 	return null;
 };
 
 const CollectionDetailsEditor = (props: Props) => {
-	const {
-		communityData,
-		collection,
-		onUpdateCollection,
-		onDeleteCollection,
-		fieldErrors,
-	} = props;
+	const { communityData, collection, onUpdateCollection, onDeleteCollection, slugStatus } = props;
 	const [slug, setSlug] = useState(collection.slug);
 	const collectionLabel = getSchemaForKind(collection.kind)?.label.singular;
-	const slugError = getSlugError(slug, fieldErrors);
+	const slugError = getSlugError(slug, slugStatus);
 
 	return (
 		<div>
