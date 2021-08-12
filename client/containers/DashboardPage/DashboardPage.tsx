@@ -219,9 +219,11 @@ const DashboardPage = (props: Props) => {
 
 	const renderPageDelete = () => {
 		return (
-			<SettingsSection title="Delete">
-				<PageDelete pageData={pageData} communityId={communityData.id} />
-			</SettingsSection>
+			pageData.slug && (
+				<SettingsSection title="Delete">
+					<PageDelete pageData={pageData} communityId={communityData.id} />
+				</SettingsSection>
+			)
 		);
 	};
 
