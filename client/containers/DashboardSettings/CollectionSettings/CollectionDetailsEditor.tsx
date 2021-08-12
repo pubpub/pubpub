@@ -10,6 +10,7 @@ import { Collection, Community, SlugStatus } from 'types';
 import { slugifyString } from 'utils/strings';
 import { ConfirmDialog, InputField } from 'components';
 import { collectionUrl } from 'utils/canonicalUrls';
+import { getSlugError } from 'client/utils/slug';
 
 type CollectionFieldErrors = { [key in keyof Collection]: any };
 
@@ -26,19 +27,6 @@ const readNextLabels = {
 	minimal: 'Use compact preview with no image',
 	medium: 'Use a larger preview with an image',
 	'choose-best': 'Choose the best preview for each Pub',
-};
-
-const getSlugError = (slug: string, slugStatus: SlugStatus) => {
-	if (!slug) {
-		return 'Collection requires a slug';
-	}
-	if (slugStatus === 'used') {
-		return 'This URL is not available because it is in use by another Page or Collection.';
-	}
-	if (slugStatus === 'reserved') {
-		return 'This URL is not available because it is reserved by PubPub.';
-	}
-	return null;
 };
 
 const CollectionDetailsEditor = (props: Props) => {

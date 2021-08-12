@@ -60,13 +60,14 @@ export const updatePage = async (inputValues, updatePermissions, actorId = null)
 	});
 	if (filteredValues.slug) {
 		filteredValues.slug = slugifyString(filteredValues.slug);
-		const available = await slugIsAvailable({
+		const slugStatus = await slugIsAvailable({
 			slug: filteredValues.slug,
 			communityId: inputValues.communityId,
-			activeElementId: inputValues.pageId,
+			activeElementId: inputValues.collectionId,
 		});
-		if (!available) {
-			throw new PubPubError.InvalidFieldsError('slug');
+		console.log('Servver slug status', slugStatus);
+		if (slugStatus !== 'available') {
+			throw new PubPubError.ForbiddenSlugError(slugStatus);
 		}
 	}
 	if (filteredValues.layout) {
