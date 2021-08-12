@@ -65,7 +65,6 @@ export const updatePage = async (inputValues, updatePermissions, actorId = null)
 			communityId: inputValues.communityId,
 			activeElementId: inputValues.collectionId,
 		});
-		console.log('Servver slug status', slugStatus);
 		if (slugStatus !== 'available') {
 			throw new PubPubError.ForbiddenSlugError(slugStatus);
 		}

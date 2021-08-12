@@ -22,7 +22,6 @@ import { Page, Pub, SlugStatus } from 'types';
 import { usePersistableState } from 'client/utils/usePersistableState';
 
 import PageDelete from './PageDelete';
-import { Status } from '@sentry/node';
 
 require('./dashboardPage.scss');
 
@@ -81,7 +80,6 @@ const DashboardPage = (props: Props) => {
 		error?.type === 'forbidden-slug' ? error.slugStatus : 'available';
 
 	const slugError = getSlugError(slug, slugStatus);
-	console.log('ERRRRRRRRR', slugError, 'Status', slugStatus);
 
 	useUpdateEffect(() => {
 		if (!hasChanges) {
