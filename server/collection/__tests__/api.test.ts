@@ -184,7 +184,7 @@ it('will not assign a slug belonging to another collection', async () => {
 			slug: 'i-exist',
 		})
 		.expect(400);
-	expect(type).toEqual('InvalidFields');
+	expect(type).toEqual('forbidden-slug');
 	expect(fields).toEqual({ slug: true });
 });
 
@@ -202,7 +202,7 @@ it('will not assign a slug belonging to a Page', async () => {
 			slug: 'i-am-a-page',
 		})
 		.expect(400);
-	expect(type).toEqual('InvalidFields');
+	expect(type).toEqual('forbidden-slug');
 	expect(fields).toEqual({ slug: true });
 });
 
