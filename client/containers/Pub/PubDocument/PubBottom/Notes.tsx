@@ -92,7 +92,7 @@ const Note = (props: NoteProps) => {
 								iconSize={10}
 							/>
 						</span>,
-						returnLinkTarget,
+						returnLinkTarget!,
 					)}
 			</div>
 		</li>
