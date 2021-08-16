@@ -175,7 +175,7 @@ it('will not assign a slug belonging to another collection', async () => {
 	const agent = await login(admin);
 
 	const {
-		body: { type, fields },
+		body: { type, slugStatus },
 	} = await agent
 		.put('/api/collections')
 		.send({
@@ -185,7 +185,7 @@ it('will not assign a slug belonging to another collection', async () => {
 		})
 		.expect(400);
 	expect(type).toEqual('forbidden-slug');
-	expect(fields).toEqual({ slug: true });
+	expect(slugStatus).toEqual('used');
 });
 
 it('will not assign a slug belonging to a Page', async () => {
@@ -193,7 +193,7 @@ it('will not assign a slug belonging to a Page', async () => {
 	const agent = await login(admin);
 
 	const {
-		body: { type, fields },
+		body: { type, slugStatus },
 	} = await agent
 		.put('/api/collections')
 		.send({
@@ -203,7 +203,7 @@ it('will not assign a slug belonging to a Page', async () => {
 		})
 		.expect(400);
 	expect(type).toEqual('forbidden-slug');
-	expect(fields).toEqual({ slug: true });
+	expect(slugStatus).toEqual('used');
 });
 
 it('deletes an existing collection with appropriate permissions', async () => {
