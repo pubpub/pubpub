@@ -6,7 +6,7 @@ import { TableWrapper } from './shared';
 const StyledTableWrapper = styled(TableWrapper).attrs({
 	align: 'center',
 	role: 'presentation',
-})`
+})<StyleProps>`
 	background-color: ${(props) => props.backgroundColor};
 	text-align: center;
 	width: ${(props) => props.width}px !important;
@@ -22,7 +22,7 @@ const StyledCellWrapper = styled.td.attrs({
 	text-align: center;
 `;
 
-const StyledButton = styled.a`
+const StyledButton = styled.a<StyleProps>`
 	border: none;
 	border-radius: 2px;
 	color: ${(props) => props.color};
@@ -37,12 +37,15 @@ const StyledButton = styled.a`
 	width: ${(props) => props.width}px !important;
 `;
 
-type Props = {
+type StyleProps = {
+	color?: string;
+	width?: string;
+	backgroundColor?: string;
+};
+
+type Props = StyleProps & {
 	children: React.ReactNode;
 	linkUrl?: string;
-	width?: string;
-	color?: string;
-	backgroundColor?: string;
 };
 
 export const Button = ({
@@ -72,18 +75,3 @@ export const Button = ({
 		</tbody>
 	</TableWrapper>
 );
-
-// Button.propTypes = {
-// 	children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.element), PropTypes.element]),
-// 	width: PropTypes.string,
-// 	linkUrl: PropTypes.string,
-// 	color: PropTypes.string,
-// 	backgroundColor: PropTypes.string,
-// };
-
-// Button.defaultProps = {
-// 	width: '200',
-// 	linkUrl: '#',
-// 	color: 'white',
-// 	backgroundColor: '#2d2e2f99',
-// };

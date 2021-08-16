@@ -3,12 +3,9 @@ import styled from 'styled-components';
 
 import { TableWrapper } from './shared';
 
-const StyledTableWrapper = styled(TableWrapper).attrs((props) => ({
-	fontFamily: props.fontFamily,
-	fontSize: props.fontSize,
-	width: props.width,
-	style: { backgroundColor: props.backgroundColor },
-}))`
+const StyledTableWrapper = styled(TableWrapper)<StyleProps>`
+	background-color: ${(props) => props.backgroundColor};
+	font-size: ${(props) => props.fontSize}px;
 	text-align: ${(props) => props.alignment};
 	max-width: ${(props) => props.width}px;
 	width: 100%;
@@ -25,7 +22,7 @@ export const Section = ({
 	width = 600,
 }: Props) => (
 	<StyledTableWrapper
-		fonSize={fontSize}
+		fontSize={fontSize}
 		fontFamily={fontFamily}
 		backgroundColor={backgroundColor}
 		alignment={alignment}
@@ -39,13 +36,16 @@ export const Section = ({
 	</StyledTableWrapper>
 );
 
-type Props = {
-	children: React.ReactNode;
-	alignment?: string;
+type StyleProps = {
 	fontFamily?: string;
+	alignment?: string;
 	fontSize?: number;
+	width?: number;
 	backgroundColor?: string;
+};
+
+type Props = StyleProps & {
+	children: React.ReactNode;
 	color?: string;
 	innerPadding?: string;
-	width?: number;
 };
