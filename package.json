@@ -43,6 +43,7 @@
 		"@pubpub/prosemirror-reactive": "^0.1.10",
 		"@sentry/browser": "^5.5.0",
 		"@sentry/node": "^5.5.0",
+		"@types/styled-components": "^5.1.12",
 		"algoliasearch": "^4.2.0",
 		"amqplib": "^0.5.3",
 		"aws-sdk": "^2.444.0",
