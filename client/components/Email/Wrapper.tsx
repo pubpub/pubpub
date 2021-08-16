@@ -9,7 +9,7 @@ const StyledTableWrapper = styled(TableWrapper).attrs({
 	width: '100%',
 })``;
 
-export const Wrapper = ({ children, backgroundColor }) => (
+export const Wrapper = ({ children, backgroundColor = 'white' }: Props) => (
 	<body
 		style={{
 			fontFamily: 'Helvetica, Arial, sans-serif',
@@ -17,7 +17,7 @@ export const Wrapper = ({ children, backgroundColor }) => (
 			backgroundColor,
 		}}
 	>
-		<center>
+		<div style={{ textAlign: 'center' }}>
 			<StyledTableWrapper>
 				<tbody>
 					<tr>
@@ -27,15 +27,11 @@ export const Wrapper = ({ children, backgroundColor }) => (
 					</tr>
 				</tbody>
 			</StyledTableWrapper>
-		</center>
+		</div>
 	</body>
 );
 
-Wrapper.propTypes = {
-	children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.element), PropTypes.element]),
-	backgroundColor: PropTypes.string,
-};
-
-Wrapper.defaultProps = {
-	backgroundColor: 'white',
+type Props = {
+	children: React.ReactNode;
+	backgroundColor?: string;
 };

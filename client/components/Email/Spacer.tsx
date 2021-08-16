@@ -12,7 +12,7 @@ const StyledWrapperCell = styled.td.attrs((props) => ({
 	line-height: ${(props) => props.height}px;
 `;
 
-export const Spacer = ({ children, height }) => (
+export const Spacer = ({ children, height = 50 }: Props) => (
 	<TableWrapper width="100%">
 		<tr>
 			<StyledWrapperCell height={height}>{children}</StyledWrapperCell>
@@ -20,11 +20,7 @@ export const Spacer = ({ children, height }) => (
 	</TableWrapper>
 );
 
-Spacer.propTypes = {
-	children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.element), PropTypes.element]),
-	height: PropTypes.number,
-};
-
-Spacer.defaultProps = {
-	height: 50,
+type Props = {
+	children: React.ReactNode;
+	height?: number;
 };
