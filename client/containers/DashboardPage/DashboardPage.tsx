@@ -21,7 +21,6 @@ import { Page, Pub } from 'types';
 import { usePersistableState } from 'client/utils/usePersistableState';
 
 import PageDelete from './PageDelete';
-import PageDeleteForbidden from './PageDeleteForbidden';
 
 require('./dashboardPage.scss');
 
@@ -221,11 +220,11 @@ const DashboardPage = (props: Props) => {
 	const renderPageDelete = () => {
 		return (
 			<SettingsSection title="Delete">
-				{!isHome ? (
-					<PageDelete pageData={pageData} communityId={communityData.id} />
-				) : (
-					<PageDeleteForbidden pageData={pageData} />
-				)}
+				<PageDelete
+					isForbidden={isHome}
+					pageData={pageData}
+					communityId={communityData.id}
+				/>
 			</SettingsSection>
 		);
 	};
