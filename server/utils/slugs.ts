@@ -30,7 +30,10 @@ export const findAcceptableSlug = async (desiredSlug: string, communityId: strin
 			where: { communityId },
 		}),
 	]);
-	const allSlugs = [...pages, ...collections].map((item) => item.slug);
+	const allSlugs = [
+		...[...pages, ...collections].map((item) => item.slug),
+		...definitelyForbiddenSlugs,
+	];
 	if (allSlugs.includes(desiredSlug)) {
 		let suffix = 2;
 		// eslint-disable-next-line no-constant-condition
