@@ -10,5 +10,5 @@ export const getSlugError = (slug: string, slugStatus: SlugStatus) => {
 	if (slugStatus === 'reserved') {
 		return 'This URL is not available because it is reserved by PubPub.';
 	}
-	return null;
+	return '';
 };
