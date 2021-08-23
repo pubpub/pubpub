@@ -26,7 +26,7 @@ export const generateDefaultCollectionLayout = () => {
 	};
 };
 
-export const createCollection = (
+export const createCollection = async (
 	{
 		communityId,
 		title,
@@ -40,8 +40,20 @@ export const createCollection = (
 	},
 	actorId?,
 ) => {
+	if (title) {
+		const slugStatus = await slugIsAvailable({
+			slug: slugifyString(slug) || slugifyString(title),
+			communityId,
+			activeElementId: id,
+		});
+
+		if (slugStatus !== 'available') {
+			throw new PubPubError.ForbiddenSlugError(slugStatus);
+		}
+	}
 	return Community.findOne({ where: { id: communityId } }).then(async (community) => {
 		const normalizedTitle = title.trim();
+		// call slugIsAvailable
 		const collection = {
 			title: normalizedTitle,
 			slug: await findAcceptableSlug(slug || slugifyString(title), communityId),

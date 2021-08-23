@@ -64,6 +64,7 @@ export const slugIsAvailable = async ({
 };
 
 export const findAcceptableSlug = async (desiredSlug, communityId) => {
+	// finds every slug for pages and collections, assuming this returns an array for both
 	const [pages, collections] = await Promise.all([
 		Page.findAll({
 			attributes: ['slug'],
@@ -74,12 +75,18 @@ export const findAcceptableSlug = async (desiredSlug, communityId) => {
 			where: { communityId, slug: desiredSlug },
 		}),
 	]);
+	console.log('what is returned?', pages, collections, '\n\n');
+	// spreads array, then uses array map function 
 	const allSlugs = [...pages, ...collections].map((item) => item.slug);
+	console.log('what are the slugs?', allSlugs, '\n\n');
+
 	if (allSlugs.includes(desiredSlug)) {
 		let suffix = 2;
 		// eslint-disable-next-line no-constant-condition
 		while (true) {
 			const proposedSlug = `${desiredSlug}-${suffix}`;
+			// perform another DB check for pages and collections with the slug
+			// extend the allSlugs array with new arr
 			if (!allSlugs.includes(proposedSlug)) {
 				return proposedSlug;
 			}
