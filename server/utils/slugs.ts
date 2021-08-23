@@ -76,7 +76,7 @@ export const findAcceptableSlug = async (desiredSlug, communityId) => {
 		}),
 	]);
 	console.log('what is returned?', pages, collections, '\n\n');
-	// spreads array, then uses array map function 
+	// spreads array, then uses array map function
 	const allSlugs = [...pages, ...collections].map((item) => item.slug);
 	console.log('what are the slugs?', allSlugs, '\n\n');
 

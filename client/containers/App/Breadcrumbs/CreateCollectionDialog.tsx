@@ -60,7 +60,7 @@ const CreateCollectionDialog = (props: Props) => {
 			.catch((err) => {
 				setIsCreating(false);
 				setCreatingError(err);
-			});
+				console.log(err)
 	};
 
 	const renderKindButton = (kind) => {
