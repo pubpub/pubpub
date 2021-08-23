@@ -9,6 +9,18 @@ import { generateDefaultPageLayout } from 'utils/pages';
 import { sanitizePageHtml } from './sanitizePageHtml';
 
 export const createPage = async (inputValues, actorId = null) => {
+	if (inputValues.slug) {
+		const slugStatus = await slugIsAvailable({
+			slug: slugifyString(inputValues.slug),
+			communityId: inputValues.communityId,
+			activeElementId: null,
+		});
+		console.log('is it herrrre tooooo?????', slugStatus, 'orrrr here', inputValues);
+
+		if (slugStatus !== 'available') {
+			throw new PubPubError.ForbiddenSlugError(slugStatus);
+		}
+	}
 	return Page.create(
 		{
 			communityId: inputValues.communityId,

@@ -56,7 +56,10 @@ export const createCollection = async (
 		// call slugIsAvailable
 		const collection = {
 			title: normalizedTitle,
-			slug: await findAcceptableSlug(slug || slugifyString(title), communityId),
+			slug: await findAcceptableSlug(
+				slugifyString(slug) || slugifyString(title),
+				communityId,
+			),
 			isRestricted,
 			isPublic,
 			viewHash: generateHash(8),
