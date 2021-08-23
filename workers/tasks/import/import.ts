@@ -130,6 +130,7 @@ export const importFiles = async ({
 	const prosemirrorDoc = fromPandoc(pandocAst, pandocRules, {
 		resource: resourceTransformer.getResource,
 		useSmartQuotes: !keepStraightQuotes,
+		prosemirrorDocWidth: 675,
 	}).asNode();
 	const [proposedMetadata] = await Promise.all([
 		getProposedMetadata(pandocAst.meta),

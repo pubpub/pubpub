@@ -1,4 +1,4 @@
-import { buildRuleset, commonTransformers, transformUtil } from '@pubpub/prosemirror-pandoc';
+import { buildRuleset, transformers, transformUtil } from '@pubpub/prosemirror-pandoc';
 import { defaultNodes, defaultMarks } from 'components/Editor/schemas';
 
 import * as katex from 'katex';
@@ -20,8 +20,8 @@ const {
 	nullTransformer,
 	pandocPassThroughTransformer,
 	pandocQuotedTransformer,
-	tableTransformer,
-} = commonTransformers;
+	pandocTableTransformer,
+} = transformers;
 
 const { textFromStrSpace, textToStrSpace, createAttr, intersperse, flatten } = transformUtil;
 
@@ -209,7 +209,7 @@ rules.fromPandoc('RawInline', (node, { transform }) => {
 });
 
 // Tables
-rules.transform('Table', 'table', tableTransformer);
+rules.fromPandoc('Table', pandocTableTransformer);
 
 // Equations
 rules.fromPandoc('Math', (node) => {
