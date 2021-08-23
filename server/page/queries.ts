@@ -15,8 +15,6 @@ export const createPage = async (inputValues, actorId = null) => {
 			communityId: inputValues.communityId,
 			activeElementId: null,
 		});
-		console.log('is it herrrre tooooo?????', slugStatus, 'orrrr here', inputValues);
-
 		if (slugStatus !== 'available') {
 			throw new PubPubError.ForbiddenSlugError(slugStatus);
 		}

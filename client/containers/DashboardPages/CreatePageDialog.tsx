@@ -68,7 +68,6 @@ class CreatePageDialog extends Component<Props, State> {
 			slug: this.state.slug,
 			description: this.state.description,
 		};
-		console.log('is it here?????');
 		return apiFetch('/api/pages', {
 			method: 'POST',
 			body: JSON.stringify({
@@ -80,11 +79,8 @@ class CreatePageDialog extends Component<Props, State> {
 				window.location.href = getDashUrl({ mode: 'pages', subMode: newPageResult.slug });
 			})
 			.catch((err) => {
-				console.log('is it herrrrrrrrrrrrrrrrrrrrrrre?????', err);
-
 				const slugStatus: SlugStatus =
 					err?.type === 'forbidden-slug' ? err.slugStatus : 'available';
-				console.log('itsssss herrrrrrrrrrrrrrrrrrrrrrre?????', slugStatus);
 				if (slugStatus !== 'available') {
 					// eslint-disable-next-line react/no-access-state-in-setstate
 					const slugError = getSlugError(this.state.slug, slugStatus);
@@ -92,8 +88,7 @@ class CreatePageDialog extends Component<Props, State> {
 				} else {
 					this.setState({
 						isLoading: false,
-						error:
-							'okay, here me out, it errors but i dont get the error i want, i just get the string passed into super in the errors file',
+						error: err,
 					});
 				}
 			});

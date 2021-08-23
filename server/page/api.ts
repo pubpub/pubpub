@@ -14,23 +14,18 @@ const getRequestIds = (req) => {
 	};
 };
 
-app.post('/api/pages', (req, res) => {
-	const requestIds = getRequestIds(req);
-	getPermissions(requestIds)
-		.then((permissions) => {
-			if (!permissions.create) {
-				throw new Error('Not Authorized');
-			}
-			return createPage(req.body, req.user.id);
-		})
-		.then((newPage) => {
-			return res.status(201).json(newPage);
-		})
-		.catch((err) => {
-			console.error('Error in postPage: ', err);
-			return res.status(500).json(err.message);
-		});
-});
+app.post(
+	'/api/pages',
+	wrap(async (req, res) => {
+		const requestIds = getRequestIds(req);
+		const permissions = await getPermissions(requestIds);
+		if (!permissions.create) {
+			throw new ForbiddenError();
+		}
+		const newPage = await createPage(req.body, req.user.id);
+		return res.status(201).json(newPage);
+	}),
+);
 
 app.put(
 	'/api/pages',
