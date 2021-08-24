@@ -23,7 +23,7 @@ export const extractRefBlocks = (pandocAst) => {
 	return { pandocAst, refBlocks: null };
 };
 
-const extractUsingPandocCiteproc = (bibliographyTmpPath) => {
+const extractCitationsUsingPandoc = (bibliographyTmpPath) => {
 	const proc = spawnSync('pandoc', [bibliographyTmpPath, '-t', 'csljson']);
 	const output = proc.stdout.toString();
 	const cslJson = JSON.parse(output);
@@ -44,11 +44,11 @@ const getBibPathFromXslTransform = async (documentTmpPath) => {
 
 export const extractBibliographyItems = async ({ bibliography, document, extractBibFromJats }) => {
 	if (bibliography) {
-		return extractUsingPandocCiteproc(bibliography.tmpPath);
+		return extractCitationsUsingPandoc(bibliography.tmpPath);
 	}
 	if (document && extensionFor(document.tmpPath) === 'xml' && extractBibFromJats) {
 		const generatedBibPath = await getBibPathFromXslTransform(document.tmpPath);
-		return extractUsingPandocCiteproc(generatedBibPath);
+		return extractCitationsUsingPandoc(generatedBibPath);
 	}
 	return {};
 };
