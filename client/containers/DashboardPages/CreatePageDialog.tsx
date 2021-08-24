@@ -128,18 +128,20 @@ class CreatePageDialog extends Component<Props, State> {
 						/>
 					</div>
 					<div className={Classes.DIALOG_FOOTER}>
-						<div className={Classes.DIALOG_FOOTER_ACTIONS}>
-							<InputField error={this.state.error}>
-								<Button
-									name="login"
-									type="submit"
-									className="bp3-button bp3-intent-primary"
-									onClick={this.handleCreateSubmit}
-									text="Create Page"
-									disabled={!this.state.title || !this.state.slug}
-									loading={this.state.isLoading}
-								/>
-							</InputField>
+						<div className="footer-dialog">
+							<div>
+								<InputField error={this.state.error}>
+									<Button
+										name="login"
+										type="submit"
+										className="bp3-button bp3-intent-primary"
+										onClick={this.handleCreateSubmit}
+										text="Create Page"
+										disabled={!this.state.title || !this.state.slug}
+										loading={this.state.isLoading}
+									/>
+								</InputField>
+							</div>
 						</div>
 					</div>
 				</form>
