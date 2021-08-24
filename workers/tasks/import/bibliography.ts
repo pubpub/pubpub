@@ -24,7 +24,7 @@ export const extractRefBlocks = (pandocAst) => {
 };
 
 const extractUsingPandocCiteproc = (bibliographyTmpPath) => {
-	const proc = spawnSync('pandoc-citeproc', ['-j', bibliographyTmpPath]);
+	const proc = spawnSync('pandoc', [bibliographyTmpPath, '-t', 'csljson']);
 	const output = proc.stdout.toString();
 	const cslJson = JSON.parse(output);
 	// @ts-expect-error ts-migrate(2339) FIXME: Property 'fromEntries' does not exist on type 'Obj... Remove this comment to see the full error message
