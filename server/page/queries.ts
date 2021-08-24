@@ -15,7 +15,8 @@ export const createPage = async (inputValues, actorId = null) => {
 			communityId: inputValues.communityId,
 			activeElementId: null,
 		});
-		if (slugStatus !== 'available') {
+
+		if (slugStatus === 'reserved') {
 			throw new PubPubError.ForbiddenSlugError(slugStatus);
 		}
 	}

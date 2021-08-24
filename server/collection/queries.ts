@@ -42,12 +42,12 @@ export const createCollection = async (
 ) => {
 	if (title) {
 		const slugStatus = await slugIsAvailable({
-			slug: slugifyString(slug) || slugifyString(title),
+			slug: slug || slugifyString(title),
 			communityId,
 			activeElementId: id,
 		});
 
-		if (slugStatus !== 'available') {
+		if (slugStatus === 'reserved') {
 			throw new PubPubError.ForbiddenSlugError(slugStatus);
 		}
 	}
@@ -56,10 +56,7 @@ export const createCollection = async (
 		// call slugIsAvailable
 		const collection = {
 			title: normalizedTitle,
-			slug: await findAcceptableSlug(
-				slugifyString(slug) || slugifyString(title),
-				communityId,
-			),
+			slug: await findAcceptableSlug(slug || slugifyString(title), communityId),
 			isRestricted,
 			isPublic,
 			viewHash: generateHash(8),
