@@ -171,6 +171,7 @@ rules.fromPandoc('SoftBreak', nullTransformer);
 
 // Stuff we don't have equivalents for
 rules.fromPandoc('Span', pandocPassThroughTransformer);
+rules.fromPandoc('Underline', pandocPassThroughTransformer);
 
 // Pandoc insists that text in quotes is actually its own node type
 rules.fromPandoc('Quoted', pandocQuotedTransformer);
