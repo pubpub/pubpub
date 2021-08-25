@@ -30,7 +30,7 @@ const extractCitationsUsingPandoc = (bibliographyTmpPath) => {
 	// @ts-expect-error ts-migrate(2339) FIXME: Property 'fromEntries' does not exist on type 'Obj... Remove this comment to see the full error message
 	return Object.fromEntries(
 		cslJson.map((entry) => {
-			const structuredValue = Cite.get.bibtex.text([entry]);
+			const structuredValue = new Cite(entry).format('bibtex');
 			return [entry.id, { structuredValue }];
 		}),
 	);
