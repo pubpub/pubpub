@@ -264,7 +264,7 @@ rules.fromProsemirror('image', (node) => {
 // ~~~ Rules for citations and footnotes ~~~ //
 
 rules.transform('Cite', 'citation', {
-	fromPandoc: (node, { count, resource }) => {
+	fromPandoc: (node, { resource }) => {
 		const { citations } = node;
 		return citations.map((citation) => {
 			const { structuredValue, unstructuredValue } = resource(
@@ -277,7 +277,6 @@ rules.transform('Cite', 'citation', {
 					value: structuredValue || unstructuredValue,
 					structuredValue,
 					unstructuredValue,
-					count: 1 + count('Cite'),
 					customLabel: pandocInlineToPlain(node.content) || '',
 				},
 			};
@@ -307,14 +306,13 @@ rules.transform('Cite', 'citation', {
 });
 
 rules.transform('Note', 'footnote', {
-	fromPandoc: (node, { count }) => {
+	fromPandoc: (node) => {
 		const { content } = node;
 		const value = pandocBlocksToHtmlString(content);
 		return {
 			type: 'footnote',
 			attrs: {
 				value,
-				count: 1 + count('Note'),
 			},
 		};
 	},
