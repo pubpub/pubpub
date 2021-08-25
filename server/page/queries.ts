@@ -69,7 +69,6 @@ export const updatePage = async (inputValues, updatePermissions, actorId = null)
 			filteredValues[key] = inputValues[key];
 		}
 	});
-	console.log(inputValues);
 	if (filteredValues.slug) {
 		filteredValues.slug = slugifyString(filteredValues.slug);
 		const slugStatus = await slugIsAvailable({
