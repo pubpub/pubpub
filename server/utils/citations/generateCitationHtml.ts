@@ -36,6 +36,20 @@ const getCollectionLevelData = (collection) => {
 	};
 };
 
+const getPublisherInfo = (collection, data) => {
+	if (collection?.kind === 'conference' || collection?.kind === 'book') {
+		return { publisher: data };
+	}
+	return {};
+};
+
+const getJournalInfo = (collection, data) => {
+	if (collection?.kind === 'issue') {
+		return { 'container-title': data };
+	}
+	return {};
+};
+
 export const generateCitationHtml = async (pubData, communityData) => {
 	// TODO: We need to set the updated times properly, which are likely stored in firebase.
 	const pubIssuedDate = getPubPublishedDate(pubData);
@@ -66,9 +80,9 @@ export const generateCitationHtml = async (pubData, communityData) => {
 		type: 'article-journal',
 		title: pubData.title,
 		...authorsEntry,
-		'container-title': communityData.citeAs || communityData.title,
+		...getJournalInfo(primaryCollection, communityData.citeAs || communityData.title),
 		...getCollectionLevelData(primaryCollection),
-		publisher: communityData.publishAs || '',
+		...getPublisherInfo(primaryCollection, communityData.publishAs),
 	};
 	const pubCiteObject = await Cite.async({
 		...commonData,
