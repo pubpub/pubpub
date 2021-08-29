@@ -36,18 +36,18 @@ const getCollectionLevelData = (collection) => {
 	};
 };
 
-const getPublisherInfo = (collection, data) => {
-	if (collection?.kind === 'conference' || collection?.kind === 'book') {
-		return { publisher: data };
-	}
-	return {};
-};
+// const getPublisherInfo = (collection, data) => {
+// 	if (collection?.kind === 'conference' || collection?.kind === 'book') {
+// 		return { publisher: data };
+// 	}
+// 	return {};
+// };
 
-const getJournalInfo = (collection, data) => {
+const getJournalInfo = (collection, data, commuityTitle) => {
 	if (collection?.kind === 'issue') {
 		return { 'container-title': data };
 	}
-	return {};
+	return { 'container-title': commuityTitle };
 };
 
 export const generateCitationHtml = async (pubData, communityData) => {
@@ -80,9 +80,13 @@ export const generateCitationHtml = async (pubData, communityData) => {
 		type: 'article-journal',
 		title: pubData.title,
 		...authorsEntry,
-		...getJournalInfo(primaryCollection, communityData.citeAs || communityData.title),
+		...getJournalInfo(
+			primaryCollection,
+			communityData.citeAs || communityData.title,
+			communityData.title,
+		),
 		...getCollectionLevelData(primaryCollection),
-		...getPublisherInfo(primaryCollection, communityData.publishAs),
+		publisher: communityData.publishAs || '',
 	};
 	const pubCiteObject = await Cite.async({
 		...commonData,
