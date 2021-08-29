@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import classNames from 'classnames';
 import { Button, Callout, Card, ControlGroup, Overlay, InputGroup } from '@blueprintjs/core';
 import { RadioGroup, Radio, useRadioState } from 'reakit/Radio';
-import { SlugStatus } from 'types';
 
 import { Icon } from 'components';
 import { usePageContext } from 'utils/hooks';
@@ -10,6 +9,7 @@ import { getDashUrl } from 'utils/dashboard';
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { apiFetch } from 'client/utils/apiFetch';
 import { getSlugError } from 'client/utils/slug';
+import { SlugStatus } from 'types';
 
 require('./createCollectionDialog.scss');
 

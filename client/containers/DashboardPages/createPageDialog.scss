@@ -6,14 +6,11 @@
 
     }
 
-
+    .footer-dialog {
+        display: flex;
+        justify-content: flex-end;
+        text-align: end;
+    }
 }
 
 
-.footer-dialog {
-    @extend .create-page-dialog-component;
-
-    display: flex;
-    justify-content: flex-end;
-    text-align: end;
-}

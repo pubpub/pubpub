@@ -82,9 +82,10 @@ class CreatePageDialog extends Component<Props, State> {
 				const slugStatus: SlugStatus =
 					err?.type === 'forbidden-slug' ? err.slugStatus : 'available';
 				if (slugStatus !== 'available') {
-					// eslint-disable-next-line react/no-access-state-in-setstate
-					const slugError = getSlugError(this.state.slug, slugStatus);
-					this.setState({ isLoading: false, error: slugError });
+					this.setState((currentState) => {
+						const slugError = getSlugError(currentState.slug, slugStatus);
+						return { isLoading: false, error: slugError };
+					});
 				} else {
 					this.setState({
 						isLoading: false,
@@ -129,19 +130,17 @@ class CreatePageDialog extends Component<Props, State> {
 					</div>
 					<div className={Classes.DIALOG_FOOTER}>
 						<div className="footer-dialog">
-							<div>
-								<InputField error={this.state.error}>
-									<Button
-										name="login"
-										type="submit"
-										className="bp3-button bp3-intent-primary"
-										onClick={this.handleCreateSubmit}
-										text="Create Page"
-										disabled={!this.state.title || !this.state.slug}
-										loading={this.state.isLoading}
-									/>
-								</InputField>
-							</div>
+							<InputField error={this.state.error}>
+								<Button
+									name="login"
+									type="submit"
+									className="bp3-button bp3-intent-primary"
+									onClick={this.handleCreateSubmit}
+									text="Create Page"
+									disabled={!this.state.title || !this.state.slug}
+									loading={this.state.isLoading}
+								/>
+							</InputField>
 						</div>
 					</div>
 				</form>

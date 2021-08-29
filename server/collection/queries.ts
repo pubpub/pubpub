@@ -53,7 +53,6 @@ export const createCollection = async (
 	}
 	return Community.findOne({ where: { id: communityId } }).then(async (community) => {
 		const normalizedTitle = title.trim();
-		// call slugIsAvailable
 		const collection = {
 			title: normalizedTitle,
 			slug: await findAcceptableSlug(slug || slugifyString(title), communityId),

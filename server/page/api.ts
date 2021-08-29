@@ -40,19 +40,15 @@ app.put(
 	}),
 );
 
-app.delete('/api/pages', (req, res) => {
-	getPermissions(getRequestIds(req))
-		.then((permissions) => {
-			if (!permissions.destroy) {
-				throw new Error('Not Authorized');
-			}
-			return destroyPage(req.body, req.user.id);
-		})
-		.then(() => {
-			return res.status(201).json(req.body.pageId);
-		})
-		.catch((err) => {
-			console.error('Error in deletePage: ', err);
-			return res.status(500).json(err.message);
-		});
-});
+app.delete(
+	'/api/pages',
+	wrap(async (req, res) => {
+		const ids = getRequestIds(req);
+		const permissions = await getPermissions(ids);
+		if (!permissions.update) {
+			throw new ForbiddenError();
+		}
+		await destroyPage(req.body, req.user.id);
+		return res.status(201).json(req.body.pageId);
+	}),
+);
