@@ -50,11 +50,16 @@ const renderBody = (context) => {
 	}
 
 	if (collection) {
+		console.log(collection.kind);
 		if (collection.kind === 'book') {
 			return renderBook(context);
 		}
 		if (collection.kind === 'conference') {
 			return renderConference(context);
+		}
+		if (collection.kind === 'issue') {
+			context.flag = { issue: true };
+			return renderJournal(context);
 		}
 	}
 
