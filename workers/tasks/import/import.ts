@@ -15,7 +15,7 @@ import { getProposedMetadata, getRawMetadata } from './metadata';
 import { getTmpDirectoryPath } from './tmpDirectory';
 import { createResourceTransformer } from './resources';
 
-setPandocApiVersion([1, 20]);
+setPandocApiVersion([1, 22]);
 
 const dataRoot = process.env.NODE_ENV === 'production' ? '/app/.apt/usr/share/pandoc/data ' : '';
 
