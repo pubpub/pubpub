@@ -36,13 +36,6 @@ const getCollectionLevelData = (collection) => {
 	};
 };
 
-// const getPublisherInfo = (collection, data) => {
-// 	if (collection?.kind === 'conference' || collection?.kind === 'book') {
-// 		return { publisher: data };
-// 	}
-// 	return {};
-// };
-
 const getJournalInfo = (collection, data, commuityTitle) => {
 	if (collection?.kind === 'issue') {
 		return { 'container-title': data };

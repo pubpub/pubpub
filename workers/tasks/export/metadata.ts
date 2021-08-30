@@ -22,6 +22,13 @@ const getPrimaryCollectionMetadata = (collectionPubs) => {
 	return null;
 };
 
+const getJournalInfo = (collection, data, commuityTitle) => {
+	if (collection?.kind === 'issue') {
+		return data;
+	}
+	return commuityTitle;
+};
+
 export const getPubMetadata = async (pubId) => {
 	const pubData = await Pub.findOne({
 		where: { id: pubId },
@@ -59,10 +66,11 @@ export const getPubMetadata = async (pubId) => {
 		licenseSlug: pubData.licenseSlug,
 		publishedDateString,
 		updatedDateString,
-		communityTitle:
-			primaryCollection?.kind === 'issue'
-				? pubData.community.citeAs
-				: pubData.community.title,
+		communityTitle: getJournalInfo(
+			primaryCollection,
+			pubData.community.citeAs || pubData.community.title,
+			pubData.community.title,
+		),
 		accentColor: pubData.community.accentColorDark,
 		attributions: pubData.attributions
 			.concat()
