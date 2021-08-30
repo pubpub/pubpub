@@ -262,20 +262,13 @@ const MetadataEditor = (props: MetadataEditorProps) => {
 		return null;
 	};
 
-	const titleEntry = renderFreeformFieldEntry('title');
-	const descriptionEntry = renderFreeformFieldEntry('description');
-	const attributionsEntry = renderAttributions();
-
-	const entries = [titleEntry, descriptionEntry, attributionsEntry];
-
-	if (entries.some((x) => x)) {
-		return (
-			<div className="metadata-editor-component">
-				<h6>Metadata</h6>
-				{entries}
-			</div>
-		);
-	}
-	return null;
+	return (
+		<div className="metadata-editor-component">
+			<h6>Metadata</h6>
+			{renderFreeformFieldEntry('title')}
+			{renderFreeformFieldEntry('description')}
+			{renderAttributions()}
+		</div>
+	);
 };
 export default MetadataEditor;
