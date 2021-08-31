@@ -1,18 +1,23 @@
 import React from 'react';
-import { render, Section, Wrapper } from '.';
+import { Section, Wrapper } from '.';
 
-const DigestEmail = ({ activityItems, communityColor }) =>
-	render(
-		<Wrapper>
-			<Section backgroundColor={communityColor} alignment="left">
-				<div>
-					{activityItems.map((item) => (
-						<p>{item.text}</p>
-					))}
-				</div>
-			</Section>
-		</Wrapper>,
-		'',
-	);
+export const Digest = (props: Props) => (
+	<Wrapper>
+		<Section backgroundColor={props.communityColor} alignment="left">
+			<div>
+				{props.activityItems.map((item) => (
+					<p key={item.text}>{item.text}</p>
+				))}
+			</div>
+		</Section>
+	</Wrapper>
+);
 
-export default DigestEmail;
+type ActivityItem = {
+	text: string;
+};
+
+type Props = {
+	activityItems: ActivityItem[];
+	communityColor: string;
+};

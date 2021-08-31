@@ -84,6 +84,7 @@
 		"fuzzysearch": "^1.0.3",
 		"googleapis": "^40.0.0",
 		"graphlib": "^2.1.8",
+		"html-minifier": "^4.0.0",
 		"iframe-resizer-react": "^1.0.4",
 		"install": "^0.12.2",
 		"is-url": "^1.2.4",
