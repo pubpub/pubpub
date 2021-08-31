@@ -1,8 +1,7 @@
 import doiData from './doiData';
 
-const getJournalInfo = (flag, citation, commuityTitle) => {
-	console.log(flag);
-	if (flag) {
+const getJournalInfo = (kind, citation, commuityTitle) => {
+	if (kind === 'issue') {
 		return citation !== '' ? citation : commuityTitle;
 	}
 	return commuityTitle;
@@ -18,12 +17,12 @@ export default ({
 	timestamp,
 	url,
 	contentVersion,
-	issue,
+	kind,
 }) => ({
 	journal: {
 		journal_metadata: {
 			'@language': language,
-			full_title: getJournalInfo(issue, citeAs, title),
+			full_title: getJournalInfo(kind, citeAs, title),
 			...(issn ? { '@media_type': 'electronic', '#text': issn } : {}),
 			...doiData(doi, timestamp, url, contentVersion),
 		},
