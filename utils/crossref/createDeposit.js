@@ -56,9 +56,6 @@ const renderBody = (context) => {
 		if (collection.kind === 'conference') {
 			return renderConference(context);
 		}
-		if (collection.kind === 'issue') {
-			return renderJournal(context);
-		}
 	}
 
 	return renderJournal(context);
