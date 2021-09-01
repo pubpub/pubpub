@@ -1,4 +1,4 @@
-import { renderCitationAs } from 'utils/citations';
+import { renderJournalCitation } from 'utils/citations';
 import doiData from './doiData';
 
 export default ({
@@ -16,7 +16,7 @@ export default ({
 	journal: {
 		journal_metadata: {
 			'@language': language,
-			full_title: renderCitationAs[0](kind, citeAs, title),
+			full_title: renderJournalCitation(kind, citeAs, title),
 			...(issn ? { '@media_type': 'electronic', '#text': issn } : {}),
 			...doiData(doi, timestamp, url, contentVersion),
 		},

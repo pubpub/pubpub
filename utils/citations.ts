@@ -1,20 +1,3 @@
-export const renderCitationAs: any[] = [
-	function renderJournalCitation(kind, citation, communityTitle) {
-		if (kind === 'issue') {
-			return citation === '' || citation === undefined ? communityTitle : citation;
-		}
-		return communityTitle;
-	},
-	function renderJournalCitation(kind, citation, communityTitle) {
-		if (kind === 'issue') {
-			return citation === '' || citation === undefined
-				? { 'container-title': communityTitle }
-				: { 'container-title': citation };
-		}
-		return { 'container-title': communityTitle };
-	},
-];
-
 export type CitationStyleKind =
 	| 'acm-siggraph'
 	| 'american-anthro'
@@ -70,3 +53,14 @@ export const citationInlineStyles: CitationInlineStyle[] = [
 	{ key: 'author', title: 'Author', example: '(Goodall)' },
 	{ key: 'label', title: 'Label', example: '(bibtexKey)' },
 ];
+
+export const renderJournalCitation = (kind, citation, communityTitle) => {
+	if (kind === 'issue') {
+		return citation || communityTitle;
+	}
+	return communityTitle;
+};
+
+export const renderJournalCitationForCitations = (kind, citation, communityTitle) => {
+	return { 'container-title': renderJournalCitation(kind, citation, communityTitle) };
+};
