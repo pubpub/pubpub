@@ -5,6 +5,7 @@ import getCollectionDoi from 'utils/collections/getCollectionDoi';
 import { getPubPublishedDate } from 'utils/pub/pubDates';
 import { pubUrl } from 'utils/canonicalUrls';
 import { getPrimaryCollection } from 'utils/collections/primary';
+import { renderCitationAs } from 'utils/citations';
 
 const getDatePartsObject = (date) => ({
 	'date-parts': [date.getFullYear(), date.getMonth() + 1, date.getDate()],
@@ -34,13 +35,6 @@ const getCollectionLevelData = (collection) => {
 		volume: metadata.volume,
 		issue: metadata.issue,
 	};
-};
-
-const getJournalInfo = (collection, data, commuityTitle) => {
-	if (collection?.kind === 'issue') {
-		return { 'container-title': data };
-	}
-	return { 'container-title': commuityTitle };
 };
 
 export const generateCitationHtml = async (pubData, communityData) => {
@@ -73,11 +67,7 @@ export const generateCitationHtml = async (pubData, communityData) => {
 		type: 'article-journal',
 		title: pubData.title,
 		...authorsEntry,
-		...getJournalInfo(
-			primaryCollection,
-			communityData.citeAs || communityData.title,
-			communityData.title,
-		),
+		...renderCitationAs[1](primaryCollection?.kind, communityData.citeAs, communityData.title),
 		...getCollectionLevelData(primaryCollection),
 		publisher: communityData.publishAs || '',
 	};

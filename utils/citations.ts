@@ -1,3 +1,20 @@
+export const renderCitationAs: any[] = [
+	function renderJournalCitationData(kind, citation, communityTitle) {
+		if (kind === 'issue') {
+			return citation === '' || citation === undefined ? communityTitle : citation;
+		}
+		return communityTitle;
+	},
+	function renderJournalCitationData(kind, citation, communityTitle) {
+		if (kind === 'issue') {
+			return citation === '' || citation === undefined
+				? { 'container-title': communityTitle }
+				: { 'container-title': citation };
+		}
+		return { 'container-title': communityTitle };
+	},
+];
+
 export type CitationStyleKind =
 	| 'acm-siggraph'
 	| 'american-anthro'

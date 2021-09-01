@@ -1,11 +1,5 @@
+import { renderCitationAs } from 'utils/citations';
 import doiData from './doiData';
-
-const getJournalInfo = (kind, citation, commuityTitle) => {
-	if (kind === 'issue') {
-		return citation !== '' ? citation : commuityTitle;
-	}
-	return commuityTitle;
-};
 
 export default ({
 	title,
@@ -22,7 +16,7 @@ export default ({
 	journal: {
 		journal_metadata: {
 			'@language': language,
-			full_title: getJournalInfo(kind, citeAs, title),
+			full_title: renderCitationAs[0](kind, citeAs, title),
 			...(issn ? { '@media_type': 'electronic', '#text': issn } : {}),
 			...doiData(doi, timestamp, url, contentVersion),
 		},
