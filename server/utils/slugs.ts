@@ -27,7 +27,6 @@ export const definitelyForbiddenSlugs = [
 	'dashboardCollectionLayout',
 	'communityCreate',
 	'explore',
-	'about',
 	'pricing',
 	'adminDashboard',
 	'landing',
