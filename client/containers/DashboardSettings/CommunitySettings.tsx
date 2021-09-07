@@ -342,6 +342,22 @@ const CommunitySettings = () => {
 						/>
 					</InputField>
 				</div>
+				<div className="row-wrapper">
+					<a href="/dash/scripts">Customize CSS</a>
+					<div style={{ paddingLeft: '5px' }}>
+						<Tooltip
+							content={
+								<span>
+									Used as default preview image for social sharing cards.
+									<br />
+									Recommended: 500*500px
+								</span>
+							}
+						>
+							<Icon icon="warning-sign" color="orange" />
+						</Tooltip>
+					</div>
+				</div>
 			</SettingsSection>
 			<SettingsSection title="Header">
 				<ImageUpload
