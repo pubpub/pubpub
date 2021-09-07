@@ -24,6 +24,10 @@ app.post(
 	'/api/customScripts',
 	wrap(async (req, res) => {
 		const { communityId, userId, content, type } = getRequestIds(req);
+		if (type === 'css') {
+			await setCustomScriptForCommunity(communityId, type, content);
+			return res.status(200).json({});
+		}
 		if (await canSetCustomScript({ communityId, userId })) {
 			await setCustomScriptForCommunity(communityId, type, content);
 			return res.status(200).json({});
