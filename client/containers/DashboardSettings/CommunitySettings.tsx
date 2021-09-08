@@ -347,11 +347,13 @@ const CommunitySettings = () => {
 					<div style={{ paddingLeft: '5px' }}>
 						<Tooltip
 							content={
-								<span>
-									Used as default preview image for social sharing cards.
-									<br />
-									Recommended: 500*500px
-								</span>
+								<div style={{ maxWidth: '400px' }}>
+									Warning: Experimental, use at your own risk. We do not guarantee
+									that future product updates will preserve existing page
+									structures of class names. Adding custom CSS can cause your
+									community to be unusable. We do not provide support for issues
+									caused by CSS customization.
+								</div>
 							}
 						>
 							<Icon icon="warning-sign" color="orange" />

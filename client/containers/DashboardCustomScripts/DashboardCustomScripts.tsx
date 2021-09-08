@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Spinner, Tabs, Tab } from '@blueprintjs/core';
+import { Callout, Spinner, Tabs, Tab } from '@blueprintjs/core';
 
 import { communityCanUseCustomScripts } from 'utils/customScripts';
 import { DashboardFrame } from 'components';
@@ -20,7 +20,6 @@ const DashboardCustomScripts = (props: Props) => {
 	const { js, css } = customScripts;
 	const { id } = communityId;
 	const [Editor, setEditor] = useState<null | EditorComponentType>(null);
-
 	useEffect(() => {
 		import('@monaco-editor/react').then(({ default: EditorComponent }) =>
 			setEditor(EditorComponent),
@@ -72,6 +71,15 @@ const DashboardCustomScripts = (props: Props) => {
 
 	return (
 		<DashboardFrame className="dashboard-custom-scripts-container" title="Custom Scripts">
+			<div className="callout-text">
+				<Callout className="error-callout" intent="warning" title="Warning: Experimental">
+					We do not guarantee that future product updates will preserve existing page
+					structures of class names. Adding custom CSS can cause your community to be
+					unusable. We do not provide support for issues caused by CSS customization. Use
+					at your own risk.
+				</Callout>
+			</div>
+
 			{!Editor && renderLoading()}
 			{Editor && renderTabs()}
 		</DashboardFrame>
