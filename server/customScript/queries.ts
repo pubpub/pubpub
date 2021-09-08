@@ -1,7 +1,7 @@
 import { CustomScript } from 'server/models';
 import { CustomScriptType, CustomScripts } from 'types';
 
-import { communityCanUseCustomScripts } from './permissions';
+import { communityCanUseCustomScripts } from 'utils/customScripts';
 
 export const setCustomScriptForCommunity = async (
 	communityId: string,

@@ -21,13 +21,13 @@ app.get('/dash/scripts', async (req, res, next) => {
 		}
 
 		const customScripts = await getCustomScriptsForCommunity(communityData.id);
-
+		const communityId = { id: communityData.id };
 		return renderToNodeStream(
 			res,
 			<Html
 				chunkName="DashboardCustomScripts"
 				initialData={initialData}
-				viewData={{ customScripts }}
+				viewData={{ customScripts, communityId }}
 				headerComponents={generateMetaComponents({
 					initialData,
 					title: `Custom Scripts · ${communityData.title}`,

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Spinner, Tabs, Tab } from '@blueprintjs/core';
 
+import { communityCanUseCustomScripts } from 'utils/customScripts';
 import { DashboardFrame } from 'components';
-import { CustomScripts } from 'types';
+import { CustomScripts, Community } from 'types';
 
 import { EditorComponentType } from './types';
 import CustomScriptPanel from './CustomScriptPanel';
@@ -11,11 +12,13 @@ require('./dashboardCustomScripts.scss');
 
 type Props = {
 	customScripts: CustomScripts;
+	communityId: Community;
 };
 
 const DashboardCustomScripts = (props: Props) => {
-	const { customScripts } = props;
+	const { customScripts, communityId } = props;
 	const { js, css } = customScripts;
+	const { id } = communityId;
 	const [Editor, setEditor] = useState<null | EditorComponentType>(null);
 
 	useEffect(() => {
@@ -48,19 +51,21 @@ const DashboardCustomScripts = (props: Props) => {
 						/>
 					}
 				/>
-				<Tab
-					id="js"
-					title="JavaScript"
-					panel={
-						<CustomScriptPanel
-							initialContent={js}
-							type="js"
-							language="javascript"
-							label="JavaScript"
-							EditorComponent={Editor!}
-						/>
-					}
-				/>
+				{communityCanUseCustomScripts(id) && (
+					<Tab
+						id="js"
+						title="JavaScript"
+						panel={
+							<CustomScriptPanel
+								initialContent={js}
+								type="js"
+								language="javascript"
+								label="JavaScript"
+								EditorComponent={Editor!}
+							/>
+						}
+					/>
+				)}
 			</Tabs>
 		);
 	};
