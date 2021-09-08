@@ -4,11 +4,13 @@ import { communityCanUseCustomScripts } from 'utils/customScripts';
 export const canSetCustomScript = async ({
 	userId,
 	communityId,
+	type,
 }: {
 	userId: string;
 	communityId: string;
+	type: string;
 }) => {
-	if (!communityCanUseCustomScripts(communityId)) {
+	if (type === 'js' && !communityCanUseCustomScripts(communityId)) {
 		return false;
 	}
 	const {
