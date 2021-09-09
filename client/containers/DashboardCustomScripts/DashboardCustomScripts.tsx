@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Callout, Spinner, Tabs, Tab } from '@blueprintjs/core';
 
+import { usePageContext } from 'utils/hooks';
 import { communityCanUseCustomScripts } from 'utils/customScripts';
 import { DashboardFrame } from 'components';
-import { CustomScripts, Community } from 'types';
+import { CustomScripts } from 'types';
 
 import { EditorComponentType } from './types';
 import CustomScriptPanel from './CustomScriptPanel';
@@ -12,13 +13,14 @@ require('./dashboardCustomScripts.scss');
 
 type Props = {
 	customScripts: CustomScripts;
-	communityId: Community;
 };
 
 const DashboardCustomScripts = (props: Props) => {
-	const { customScripts, communityId } = props;
+	const { customScripts } = props;
 	const { js, css } = customScripts;
-	const { id } = communityId;
+	const {
+		communityData: { id: communityId },
+	} = usePageContext();
 	const [Editor, setEditor] = useState<null | EditorComponentType>(null);
 	useEffect(() => {
 		import('@monaco-editor/react').then(({ default: EditorComponent }) =>
@@ -50,7 +52,7 @@ const DashboardCustomScripts = (props: Props) => {
 						/>
 					}
 				/>
-				{communityCanUseCustomScripts(id) && (
+				{communityCanUseCustomScripts(communityId) && (
 					<Tab
 						id="js"
 						title="JavaScript"
@@ -73,10 +75,13 @@ const DashboardCustomScripts = (props: Props) => {
 		<DashboardFrame className="dashboard-custom-scripts-container" title="Custom Scripts">
 			<div className="callout-text">
 				<Callout className="error-callout" intent="warning" title="Warning: Experimental">
-					We do not guarantee that future product updates will preserve existing page
-					structures of class names. Adding custom CSS can cause your community to be
-					unusable. We do not provide support for issues caused by CSS customization. Use
-					at your own risk.
+					Custom CSS lets you change the look and feel of your Community, but it also lets
+					you introduce bugs that make it hard or impossible to use. The PubPub team may
+					also make changes to our own source code that could break your CSS without
+					warning. We don't provide support for problems caused by Custom CSS. Use caution
+					(but have fun!) <br />
+					Note that Custom CSS is not loaded on your Dashboard — including this page — so
+					you can always return here to undo your changes if they are causing problems.
 				</Callout>
 			</div>
 
