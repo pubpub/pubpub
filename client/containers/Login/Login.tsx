@@ -43,8 +43,11 @@ const Login = () => {
 			}),
 		})
 			.then(() => {
-				window.location.href =
-					`/${trimStart(`${locationData.query.redirect}`, '/')}` || '/';
+				window.location.href = locationData.query.redirect
+					? `/${trimStart(locationData.query.redirect, '/')}`
+					: '/';
+				// window.location.href =
+				// 	`/${trimStart(`${locationData.query.redirect}`, '/')}` || '/';
 			})
 			.catch(() => {
 				setLoginLoading(false);
