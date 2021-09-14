@@ -82,6 +82,7 @@ const DashboardEdges = (props: Props) => {
 				<DashboardEdgesListing
 					pubData={persistedPubData}
 					pubEdges={outboundEdges}
+					onUpdateEdge={canManageEdges && (() => {})}
 					onReorderEdges={canManageEdges && reorderOutboundEdges}
 					onRemoveEdge={canManageEdges && removeOutboundEdge}
 					isInbound={false}

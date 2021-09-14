@@ -1,12 +1,13 @@
-import React from 'react';
 import { Button, Icon, Switch } from '@blueprintjs/core';
-import { DragDropContext } from 'react-beautiful-dnd';
 import classNames from 'classnames';
-
-import { ConfirmDialog, DragDropListing, PubEdgeListingCard } from 'components';
+import { ConfirmDialog, DragDropListing, PubEdgeEditor, PubEdgeListingCard } from 'components';
+import React, { useState } from 'react';
+import { DragDropContext } from 'react-beautiful-dnd';
+import { PubEdge } from 'types';
 
 export type DashboardEdgesListingProps = {
 	pubData: any;
+	onUpdateEdge?: (pubEdge: PubEdge) => unknown;
 	onRemoveEdge?: (...args: any[]) => any;
 	onReorderEdges?: (...args: any[]) => any;
 	onUpdateEdgeApproval?: (...args: any[]) => any;
@@ -34,6 +35,7 @@ const renderRemoveEdgeButton = (callback) => {
 const DashboardEdgesListing = (props: DashboardEdgesListingProps) => {
 	const {
 		isInbound,
+		onUpdateEdge = null,
 		onRemoveEdge = null,
 		onReorderEdges = null,
 		onUpdateEdgeApproval = null,
@@ -41,6 +43,7 @@ const DashboardEdgesListing = (props: DashboardEdgesListingProps) => {
 		pubEdges,
 		renderEmptyState,
 	} = props;
+	const [editing, setEditing] = useState<string | null>(null);
 
 	const handleDragEnd = (dragResult) => {
 		const { source, destination } = dragResult;
@@ -49,9 +52,12 @@ const DashboardEdgesListing = (props: DashboardEdgesListingProps) => {
 		}
 	};
 
-	const renderEdgeListing = (pubEdge, dragHandleProps, isDragging) => {
+	const renderEdgeListing = (pubEdge: PubEdge, dragHandleProps, isDragging) => {
 		const { approvedByTarget } = pubEdge;
 		const renderAsNotApproved = !!onUpdateEdgeApproval && !approvedByTarget;
+		if (editing === pubEdge.id) {
+			console.log(pubEdge);
+		}
 		return (
 			<div
 				className={classNames(
@@ -68,9 +74,21 @@ const DashboardEdgesListing = (props: DashboardEdgesListingProps) => {
 				<PubEdgeListingCard
 					pubData={pubData}
 					pubEdge={pubEdge}
+					pubEdgeElement={
+						editing === pubEdge.id ? (
+							<PubEdgeEditor
+								externalPublication={{} as any}
+								onUpdateExternalPublication={(update) => {}}
+								pubData={pubData}
+							/>
+						) : (
+							undefined
+						)
+					}
 					isInboundEdge={isInbound}
 					accentColor="#ccc"
 				>
+					{onUpdateEdge && <button onClick={() => setEditing(pubEdge.id)}>Edit</button>}
 					{onRemoveEdge && renderRemoveEdgeButton(() => onRemoveEdge(pubEdge))}
 					{onUpdateEdgeApproval && (
 						<Switch
@@ -87,6 +105,7 @@ const DashboardEdgesListing = (props: DashboardEdgesListingProps) => {
 
 	return (
 		<DragDropContext onDragEnd={handleDragEnd}>
+			{editing && 'EDITING!'}
 			<DragDropListing
 				className="dashboard-edges-listing-component"
 				disabled={!onReorderEdges}
