@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import SHA3 from 'crypto-js/sha3';
 import encHex from 'crypto-js/enc-hex';
 import { AnchorButton, Button, NonIdealState } from '@blueprintjs/core';
-import trimStart from 'lodash.trimstart';
 import { Avatar, GridWrapper, InputField } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';
@@ -44,7 +43,7 @@ const Login = () => {
 		})
 			.then(() => {
 				window.location.href = locationData.query.redirect
-					? `/${trimStart(locationData.query.redirect, '/')}`
+					? `/${locationData.query.redirect.replace(/^\/+/, '')}`
 					: '/';
 				// window.location.href =
 				// 	`/${trimStart(`${locationData.query.redirect}`, '/')}` || '/';
