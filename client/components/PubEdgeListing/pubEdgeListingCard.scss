@@ -46,6 +46,10 @@
 		display: flex;
 		right: 24px;
 		z-index: 1;
+
+		> * {
+			margin-right: 2px;
+		}
 	}
 
 	> .relation {

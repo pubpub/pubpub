@@ -1,9 +1,12 @@
 import { Button, Icon, Switch } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { ConfirmDialog, DragDropListing, PubEdgeEditor, PubEdgeListingCard } from 'components';
+import { ConfirmDialog, DragDropListing, PubEdgeListingCard } from 'components';
+import NewEdgeEditor from 'containers/DashboardEdges/NewEdgeEditor';
 import React, { useState } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { PubEdge } from 'types';
+import { usePendingChanges } from 'utils/hooks';
+import { apiFetch } from 'client/utils/apiFetch';
 
 export type DashboardEdgesListingProps = {
 	pubData: any;
@@ -43,7 +46,10 @@ const DashboardEdgesListing = (props: DashboardEdgesListingProps) => {
 		pubEdges,
 		renderEmptyState,
 	} = props;
-	const [editing, setEditing] = useState<string | null>(null);
+	const [editing, setEditing] = useState<PubEdge>();
+	const { pendingPromise } = usePendingChanges();
+	const [isCreatingEdge, setIsCreatingEdge] = useState(false);
+	const [errorCreatingEdge, setErrorCreatingEdge] = useState<string>();
 
 	const handleDragEnd = (dragResult) => {
 		const { source, destination } = dragResult;
@@ -52,12 +58,33 @@ const DashboardEdgesListing = (props: DashboardEdgesListingProps) => {
 		}
 	};
 
+	const updatePubEdge = (edge: PubEdge) => {
+		setIsCreatingEdge(true);
+		console.log(edge);
+		pendingPromise(
+			apiFetch.put('/api/pubEdges', {
+				pubEdgeId: edge.id,
+				...edge,
+				pubId: pubData.id,
+				// Don't send the whole Pub, just the ID
+				targetPub: undefined,
+			}),
+		)
+			.then((updatedEdge: PubEdge) => {
+				setEditing(undefined);
+				setIsCreatingEdge(false);
+				onUpdateEdge?.(updatedEdge);
+			})
+			.catch((err: Error) => {
+				setEditing(undefined);
+				setIsCreatingEdge(false);
+				setErrorCreatingEdge(err.message);
+			});
+	};
+
 	const renderEdgeListing = (pubEdge: PubEdge, dragHandleProps, isDragging) => {
 		const { approvedByTarget } = pubEdge;
 		const renderAsNotApproved = !!onUpdateEdgeApproval && !approvedByTarget;
-		if (editing === pubEdge.id) {
-			console.log(pubEdge);
-		}
 		return (
 			<div
 				className={classNames(
@@ -71,41 +98,52 @@ const DashboardEdgesListing = (props: DashboardEdgesListingProps) => {
 						<Icon icon="drag-handle-vertical" />
 					</div>
 				)}
-				<PubEdgeListingCard
-					pubData={pubData}
-					pubEdge={pubEdge}
-					pubEdgeElement={
-						editing === pubEdge.id ? (
-							<PubEdgeEditor
-								externalPublication={{} as any}
-								onUpdateExternalPublication={(update) => {}}
-								pubData={pubData}
+				{editing?.id === pubEdge.id ? (
+					<NewEdgeEditor
+						pubData={pubData}
+						pubEdge={editing}
+						usedPubIds={[]}
+						onCancel={() => setEditing(undefined)}
+						onChange={setEditing}
+						onSave={updatePubEdge}
+						saveButtonLabel="Save Connection"
+						loading={isCreatingEdge}
+						error={errorCreatingEdge}
+					/>
+				) : (
+					<PubEdgeListingCard
+						pubData={pubData}
+						pubEdge={pubEdge}
+						isInboundEdge={isInbound}
+						accentColor="#ccc"
+					>
+						{onUpdateEdge && (
+							<Button
+								onClick={() => setEditing(pubEdge)}
+								outlined
+								minimal
+								icon="edit"
+							>
+								Edit
+							</Button>
+						)}
+						{onRemoveEdge && renderRemoveEdgeButton(() => onRemoveEdge(pubEdge))}
+						{onUpdateEdgeApproval && (
+							<Switch
+								className="parent-approval-switch"
+								onChange={() => onUpdateEdgeApproval(pubEdge, !approvedByTarget)}
+								checked={approvedByTarget}
+								label="Show on this Pub"
 							/>
-						) : (
-							undefined
-						)
-					}
-					isInboundEdge={isInbound}
-					accentColor="#ccc"
-				>
-					{onUpdateEdge && <button onClick={() => setEditing(pubEdge.id)}>Edit</button>}
-					{onRemoveEdge && renderRemoveEdgeButton(() => onRemoveEdge(pubEdge))}
-					{onUpdateEdgeApproval && (
-						<Switch
-							className="parent-approval-switch"
-							onChange={() => onUpdateEdgeApproval(pubEdge, !approvedByTarget)}
-							checked={approvedByTarget}
-							label="Show on this Pub"
-						/>
-					)}
-				</PubEdgeListingCard>
+						)}
+					</PubEdgeListingCard>
+				)}
 			</div>
 		);
 	};
 
 	return (
 		<DragDropContext onDragEnd={handleDragEnd}>
-			{editing && 'EDITING!'}
 			<DragDropListing
 				className="dashboard-edges-listing-component"
 				disabled={!onReorderEdges}
