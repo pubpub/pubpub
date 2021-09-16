@@ -19,6 +19,7 @@ app.get('/signup', (req, res, next) => {
 						title: `Signup · ${initialData.communityData.title}`,
 						description: initialData.communityData.description,
 					})}
+					bodyClassPrefix="app"
 				/>,
 			);
 		})

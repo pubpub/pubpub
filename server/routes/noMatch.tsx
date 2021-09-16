@@ -20,6 +20,7 @@ app.get('/*', (req, res, next) => {
 						initialData,
 						title: `Not Found · ${initialData.communityData.title}`,
 					})}
+					bodyClassPrefix="layout"
 				/>,
 			);
 		})

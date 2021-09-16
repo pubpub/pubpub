@@ -11,10 +11,12 @@ type OwnProps = {
 	viewData?: any;
 	headerComponents: any[];
 	customScripts?: CustomScripts;
+	bodyClassPrefix?: string;
 };
 
 const defaultProps = {
 	viewData: {},
+	bodyClassPrefix: 'app',
 };
 const polyfills = [
 	'default',
@@ -71,7 +73,9 @@ const Html = (props: Props) => {
 					href="/opensearch.xml"
 				/>
 			</head>
-			<body className={props.initialData.scopeData.elements.activeTargetType}>
+			<body
+				className={`${props.bodyClassPrefix}-body-wrapper active-target-${props.initialData.scopeData.elements.activeTargetType}`}
+			>
 				{/* This script tag is here to prevent FOUC in Firefox: https://stackoverflow.com/questions/21147149/flash-of-unstyled-content-fouc-in-firefox-only-is-ff-slow-renderer */}
 				<script>0</script>
 				<div id="root">

@@ -36,6 +36,7 @@ app.get(
 						title: `Impact · ${initialData.scopeData.elements.activeTarget.title}`,
 						unlisted: true,
 					})}
+					bodyClassPrefix="dashboard"
 				/>,
 			);
 		} catch (err) {

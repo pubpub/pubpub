@@ -36,6 +36,7 @@ app.get(['/password-reset', '/password-reset/:resetHash/:slug'], (req, res, next
 						initialData,
 						title: 'Password Reset',
 					})}
+					bodyClassPrefix="app"
 				/>,
 			);
 		})

@@ -33,6 +33,7 @@ app.get(
 						title: `Members · ${initialData.scopeData.elements.activeTarget.title}`,
 						unlisted: true,
 					})}
+					bodyClassPrefix="dashboard"
 				/>,
 			);
 		} catch (err) {

@@ -23,6 +23,7 @@ app.get('/community/create', (req, res, next) => {
 						initialData,
 						title: 'Create New Community · PubPub',
 					})}
+					bodyClassPrefix="www"
 				/>,
 			);
 		})

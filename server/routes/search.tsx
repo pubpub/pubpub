@@ -83,6 +83,7 @@ app.get('/search', async (req, res, next) => {
 					title: `Search · ${initialData.communityData.title}`,
 					description: `Search for pubs in ${initialData.communityData.title}`,
 				})}
+				bodyClassPrefix="app"
 			/>,
 		);
 	} catch (err) {

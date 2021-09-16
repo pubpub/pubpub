@@ -46,6 +46,7 @@ app.get(
 						title: `Settings · ${initialData.scopeData.elements.activeTarget.title}`,
 						unlisted: true,
 					})}
+					bodyClassPrefix="dashboard"
 				/>,
 			);
 		} catch (err) {

@@ -39,6 +39,7 @@ app.get(
 						title: `Connections · ${pubData.title}`,
 						unlisted: true,
 					})}
+					bodyClassPrefix="dashboard"
 				/>,
 			);
 		} catch (err) {

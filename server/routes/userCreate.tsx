@@ -27,6 +27,7 @@ app.get('/user/create/:hash', (req, res, next) => {
 						title: `Create New user · ${initialData.communityData.title}`,
 						unlisted: true,
 					})}
+					bodyClassPrefix="app"
 				/>,
 			);
 		})

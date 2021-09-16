@@ -32,6 +32,7 @@ app.get('/dash/scripts', async (req, res, next) => {
 					title: `Custom Scripts · ${communityData.title}`,
 					unlisted: true,
 				})}
+				bodyClassPrefix="dashboard"
 			/>,
 		);
 	} catch (err) {

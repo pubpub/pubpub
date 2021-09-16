@@ -52,6 +52,7 @@ const renderPubDocument = (res, pubData, initialData, customScripts) => {
 				title: pubData.title,
 				unlisted: !pubData.isRelease,
 			})}
+			bodyClassPrefix="content"
 		/>,
 	);
 };

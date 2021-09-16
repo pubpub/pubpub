@@ -51,6 +51,7 @@ app.get(['/dash/pub/:pubSlug', '/dash/pub/:pubSlug/overview'], async (req, res, 
 					title: `Overview · ${initialData.scopeData.elements.activeTarget.title}`,
 					unlisted: true,
 				})}
+				bodyClassPrefix="dashboard"
 			/>,
 		);
 	} catch (err) {

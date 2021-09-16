@@ -23,6 +23,7 @@ app.get('/pricing', (req, res, next) => {
 						initialData,
 						title: 'Pricing · PubPub',
 					})}
+					bodyClassPrefix="www"
 				/>,
 			);
 		})
