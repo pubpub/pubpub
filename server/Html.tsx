@@ -43,6 +43,7 @@ const Html = (props: Props) => {
 	const getPath = (chunkName, extension) => {
 		return `${manifest[`${chunkName}.${extension}`]}`;
 	};
+	const activeTargetType = props.initialData.scopeData.elements.activeTargetType ?? 'community';
 
 	return (
 		<html lang="en">
@@ -74,7 +75,8 @@ const Html = (props: Props) => {
 				/>
 			</head>
 			<body
-				className={`${props.bodyClassPrefix}-body-wrapper active-target-${props.initialData.scopeData.elements.activeTargetType}`}
+				className={`${props.bodyClassPrefix}-body-wrapper active-target-${props.initialData
+					.scopeData.elements?.activeTargetType || 'community'}`}
 			>
 				{/* This script tag is here to prevent FOUC in Firefox: https://stackoverflow.com/questions/21147149/flash-of-unstyled-content-fouc-in-firefox-only-is-ff-slow-renderer */}
 				<script>0</script>
