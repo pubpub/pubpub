@@ -6,6 +6,7 @@ export type RenderedStructuredValue = {
 	html: string;
 	inline: string;
 	error?: boolean;
+	json: any;
 };
 
 type Notes = Record<StructuredValue, RenderedStructuredValue>;

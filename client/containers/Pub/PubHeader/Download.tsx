@@ -31,6 +31,7 @@ const formatTypes: FormatType[] = [
 	{ format: 'plain', title: 'Plain Text' },
 	{ format: 'jats', title: 'JATS XML' },
 	{ format: 'tex', title: 'LaTeX' },
+	{ format: 'json', title: 'JSON' },
 ];
 
 const mustShowDownloadButton = () => navigator.userAgent.match(/iP(ad|hone|od)/i);

@@ -5,7 +5,7 @@ import { parsePandocJson, fromPandoc, setPandocApiVersion } from '@pubpub/prosem
 
 import { extensionToPandocFormat } from 'utils/import/formats';
 
-import pandocRules from './rules';
+import { rules } from './rules';
 import { downloadAndConvertFiles } from './download';
 import { extractBibliographyItems } from './bibliography';
 import { uploadExtractedMedia } from './extractedMedia';
@@ -127,7 +127,7 @@ export const importFiles = async ({
 		document,
 		bibliographyItems,
 	});
-	const prosemirrorDoc = fromPandoc(pandocAst, pandocRules, {
+	const prosemirrorDoc = fromPandoc(pandocAst, rules, {
 		resource: resourceTransformer.getResource,
 		useSmartQuotes: !keepStraightQuotes,
 		prosemirrorDocWidth: 675,

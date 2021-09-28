@@ -30,10 +30,11 @@ export const exportTask = async ({ exportId }, collectSubprocess) => {
 	});
 	if (pandocTarget) {
 		await callPandoc({
-			staticHtml,
+			pubDoc,
 			pubMetadata,
 			tmpFile,
 			pandocTarget,
+			notesData,
 		});
 	} else if (pagedTarget) {
 		await callPaged(staticHtml, tmpFile, collectSubprocess);
