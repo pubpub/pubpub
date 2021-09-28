@@ -17,7 +17,7 @@ const bullet = ' • ';
 const createCJKFontScript = `
 (function(d) {
   var config = {
-	kitId: 'wgk2zjg',
+	kitId: 'seb8nix',
 	scriptTimeout: 3000,
 	async: true
   },
