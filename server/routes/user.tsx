@@ -38,7 +38,6 @@ app.get(['/user/:slug', '/user/:slug/:mode'], async (req, res, next) => {
 					canonicalUrl: `https://www.pubpub.org/user/${userData.slug}`,
 					unlisted: isNewishUser,
 				})}
-				bodyClassPrefix="app"
 			/>,
 		);
 	} catch (err) {

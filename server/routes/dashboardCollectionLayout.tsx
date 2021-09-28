@@ -34,7 +34,6 @@ app.get('/dash/collection/:collectionSlug/layout', async (req, res, next) => {
 					title: `Layout · ${initialData.scopeData.elements.activeTarget.title}`,
 					unlisted: true,
 				})}
-				bodyClassPrefix="dashboard"
 			/>,
 		);
 	} catch (err) {

@@ -35,7 +35,6 @@ app.get(['/dash/pages/:subMode'], async (req, res, next) => {
 					title: `Pages · ${initialData.scopeData.elements.activeTarget.title}`,
 					unlisted: true,
 				})}
-				bodyClassPrefix="dashboard"
 			/>,
 		);
 	} catch (err) {

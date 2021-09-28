@@ -27,7 +27,6 @@ app.get('/legal/:tab', (req, res, next) => {
 						title: `Legal · ${initialData.communityData.title}`,
 						description: initialData.communityData.description,
 					})}
-					bodyClassPrefix="app"
 				>
 					{/* @ts-expect-error ts-migrate(2322) FIXME: Type '{ communityData: { title: string; descriptio... Remove this comment to see the full error message */}
 					<Legal {...initialData} />

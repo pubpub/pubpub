@@ -1,7 +1,8 @@
 import path from 'path';
 import React from 'react';
+import classNames from 'classnames';
 import App from 'containers/App/App';
-import { CustomScripts } from 'types';
+import { CustomScripts, InitialData } from 'types';
 
 const manifest = require(path.join(process.cwd(), 'dist/client/manifest.json'));
 
@@ -16,7 +17,7 @@ type OwnProps = {
 
 const defaultProps = {
 	viewData: {},
-	bodyClassPrefix: 'app',
+	bodyClassPrefix: '',
 };
 const polyfills = [
 	'default',
@@ -38,17 +39,21 @@ const polyfills = [
 
 type Props = OwnProps & typeof defaultProps;
 
+const activeSlug = (initialData: InitialData, viewData?: any) => {
+	if (viewData?.pageData?.slug) {
+		return `active-page-${viewData.pageData.slug}`;
+	}
+	if (initialData.scopeData.elements && 'slug' in initialData.scopeData.elements.activeTarget) {
+		return `active-${initialData.scopeData.elements.activeTargetType}-${initialData.scopeData.elements.activeTarget.slug}`;
+	}
+	return '';
+};
+
 const Html = (props: Props) => {
 	const { customScripts } = props;
 	const getPath = (chunkName, extension) => {
 		return `${manifest[`${chunkName}.${extension}`]}`;
 	};
-
-	const activeTargetSlug =
-		props.initialData.scopeData.elements?.activeTarget.slug ||
-		(props.initialData.locationData.path.split('/')[1]
-			? props.initialData.locationData.path.substring(1).replace(/\//gi, '-')
-			: props.initialData.scopeData.elements?.activeTarget.subdomain || 'www');
 
 	return (
 		<html lang="en">
@@ -80,9 +85,10 @@ const Html = (props: Props) => {
 				/>
 			</head>
 			<body
-				className={`${props.bodyClassPrefix}-body-wrapper active-target-type-${props
-					.initialData.scopeData.elements?.activeTargetType ??
-					'community'} active-target-slug-${activeTargetSlug}`}
+				className={classNames(
+					props.bodyClassPrefix && `${props.bodyClassPrefix}-body-wrapper`,
+					activeSlug(props.initialData, props.viewData),
+				)}
 			>
 				{/* This script tag is here to prevent FOUC in Firefox: https://stackoverflow.com/questions/21147149/flash-of-unstyled-content-fouc-in-firefox-only-is-ff-slow-renderer */}
 				<script>0</script>

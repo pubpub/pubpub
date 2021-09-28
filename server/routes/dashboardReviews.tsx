@@ -49,7 +49,6 @@ app.get(
 						title: `Reviews · ${initialData.scopeData.elements.activeTarget.title}`,
 						unlisted: true,
 					})}
-					bodyClassPrefix="dashboard"
 				/>,
 			);
 		} catch (err) {

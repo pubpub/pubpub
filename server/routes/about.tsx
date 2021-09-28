@@ -23,7 +23,6 @@ app.get('/about', (req, res, next) => {
 						initialData,
 						title: 'About PubPub',
 					})}
-					bodyClassPrefix="www"
 				/>,
 			);
 		})

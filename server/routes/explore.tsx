@@ -47,7 +47,6 @@ app.get('/explore', (req, res, next) => {
 						title: 'Explore · PubPub',
 						description: 'Explore the active communities built on PubPub.',
 					})}
-					bodyClassPrefix="www"
 				/>,
 			);
 		})

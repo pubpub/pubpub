@@ -31,7 +31,6 @@ app.get('/dash/overview', async (req, res, next) => {
 					title: `Overview · ${initialData.communityData.title}`,
 					unlisted: true,
 				})}
-				bodyClassPrefix="dashboard"
 			/>,
 		);
 	} catch (err) {

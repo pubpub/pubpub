@@ -33,7 +33,6 @@ app.get(
 						title: `Discussions · ${initialData.scopeData.elements.activeTarget.title}`,
 						unlisted: true,
 					})}
-					bodyClassPrefix="dashboard"
 				/>,
 			);
 		} catch (err) {

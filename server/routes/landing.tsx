@@ -24,7 +24,6 @@ app.get('/', (req, res, next) => {
 						title: 'PubPub · Community Publishing',
 						description: initialData.communityData.description,
 					})}
-					bodyClassPrefix="www"
 				/>,
 			);
 		})

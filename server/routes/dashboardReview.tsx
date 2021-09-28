@@ -36,7 +36,6 @@ app.get(['/dash/pub/:pubSlug/reviews/:reviewNumber'], async (req, res, next) => 
 					title: `Review ${req.params.reviewNumber} · ${initialData.scopeData.elements.activeTarget.title}`,
 					unlisted: true,
 				})}
-				bodyClassPrefix="dashboard"
 			/>,
 		);
 	} catch (err) {

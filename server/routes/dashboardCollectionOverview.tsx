@@ -57,7 +57,6 @@ app.get('/dash/collection/:collectionSlug/overview', async (req, res, next) => {
 					title: `Overview · ${title}`,
 					unlisted: true,
 				})}
-				bodyClassPrefix="dashboard"
 			/>,
 		);
 	} catch (err) {

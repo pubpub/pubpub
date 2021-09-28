@@ -46,7 +46,6 @@ app.get('/admin', (req, res, next) => {
 						description: initialData.communityData.description,
 					})}
 					viewData={{ impactData }}
-					bodyClassPrefix="www"
 				/>,
 			);
 		})
