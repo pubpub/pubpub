@@ -5,6 +5,7 @@ import nodePandoc from 'node-pandoc';
 import { FileResult } from 'tmp-promise';
 import { fromProsemirror, emitPandocJson } from '@pubpub/prosemirror-pandoc';
 
+import { editorSchema, getReactedDocFromJson } from 'client/components/Editor';
 import { getLicenseBySlug } from 'utils/licenses';
 import { DocJson } from 'types';
 
@@ -118,12 +119,23 @@ type CallPandocOptions = {
 	notesData: NotesData;
 };
 
+const reactPubDoc = (options: CallPandocOptions) => {
+	const { pubDoc, pubMetadata, notesData } = options;
+	return getReactedDocFromJson(
+		pubDoc,
+		editorSchema,
+		notesData.noteManager,
+		pubMetadata.nodeLabels,
+	);
+};
+
 export const callPandoc = async (options: CallPandocOptions) => {
-	const { pubDoc, pandocTarget, pubMetadata, tmpFile, notesData } = options;
+	const { pandocTarget, pubMetadata, tmpFile, notesData } = options;
 	const pandocNotes = getPandocNotesByHash(
 		notesData.citations,
 		notesData.renderedStructuredValues,
 	);
+	const pubDoc = reactPubDoc(options);
 	const metadataFile = await createYamlMetadataFile(pubMetadata, pandocNotes, pandocTarget);
 	const args = createPandocArgs(pandocTarget, tmpFile, metadataFile);
 	const preTransformedPandocAst = fromProsemirror(pubDoc, rules, {

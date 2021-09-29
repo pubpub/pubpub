@@ -231,7 +231,7 @@ rules.fromProsemirrorNode('image', (node) => {
 					url: node.attrs.url.toString(),
 					title: '',
 				},
-				attr: createAttr(),
+				attr: createAttr(node.attrs.id),
 			},
 		],
 	};
@@ -332,6 +332,28 @@ rules.fromProsemirrorNode('block_equation', (node) => {
 
 rules.toProsemirrorNode('Table', pandocTableTransformer);
 rules.fromProsemirrorNode('table', prosemirrorTableTransformer);
+
+rules.fromProsemirrorNode('reference', (node) => {
+	return {
+		type: 'Link',
+		attr: createAttr(),
+		content: textToStrSpace(node.attrs.label),
+		target: {
+			url: `${node.attrs.targetId}`,
+			title: '',
+		},
+	};
+});
+
+rules.fromProsemirrorNode(
+	'file | iframe | video | audio | highlightQuote | citationList | footnoteList | discussion',
+	(node) => {
+		return {
+			type: 'Para',
+			content: textToStrSpace(`[${node.type} element]`),
+		};
+	},
+);
 
 rules.validate();
 
