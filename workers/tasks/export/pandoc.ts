@@ -91,6 +91,7 @@ const createYamlMetadataFile = async (
 			},
 		}),
 		references: getReferencesEntryForPandocNotes(pandocNotes),
+		// 'link-citations': true, // See https://github.com/jgm/pandoc/issues/6013#issuecomment-921409135
 	});
 	const file = await getTmpFileForExtension('yaml');
 	fs.writeFileSync(file.path, metadata);
@@ -128,7 +129,8 @@ export const callPandoc = async (options: CallPandocOptions) => {
 		prosemirrorDocWidth: 675,
 		resource: createResourceTransformer(pandocNotes),
 	}).asNode();
-	const pandocJsonString = JSON.stringify(emitPandocJson(pandocAst));
+	const pandocJson = emitPandocJson(pandocAst);
+	const pandocJsonString = JSON.stringify(pandocJson);
 	return new Promise((resolve, reject) => {
 		nodePandoc(pandocJsonString, args, (err, result) => {
 			if (err && err.message) {
