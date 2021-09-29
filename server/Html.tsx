@@ -39,7 +39,7 @@ const polyfills = [
 
 type Props = OwnProps & typeof defaultProps;
 
-const activeSlug = (initialData: InitialData, viewData?: any) => {
+const getActiveSlugClassName = (initialData: InitialData, viewData?: any) => {
 	if (viewData?.pageData?.slug) {
 		return `active-page-${viewData.pageData.slug}`;
 	}
@@ -87,7 +87,7 @@ const Html = (props: Props) => {
 			<body
 				className={classNames(
 					props.bodyClassPrefix && `${props.bodyClassPrefix}-body-wrapper`,
-					activeSlug(props.initialData, props.viewData),
+					getActiveSlugClassName(props.initialData, props.viewData),
 				)}
 			>
 				{/* This script tag is here to prevent FOUC in Firefox: https://stackoverflow.com/questions/21147149/flash-of-unstyled-content-fouc-in-firefox-only-is-ff-slow-renderer */}
