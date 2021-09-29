@@ -163,7 +163,7 @@ const filterForMutuallyApprovedEdges = (pubEdges) => {
 	}
 };
 
-export default (context, doiTarget, dateForTimestamp) => {
+export default (context, doiTarget, dateForTimestamp, includeRelationships = true) => {
 	checkDepositAssertions(context, doiTarget);
 
 	const { community, pub, contentVersion, reviewType, reviewRecommendation } = context;
@@ -185,6 +185,11 @@ export default (context, doiTarget, dateForTimestamp) => {
 			RelationType.Review,
 			RelationType.Rejoinder,
 		]);
+
+		if (!includeRelationships) {
+			pub.inboundEdges = [];
+			pub.outboundEdges = [];
+		}
 	}
 
 	const contextWithPubEdge = { ...context, pubEdge };

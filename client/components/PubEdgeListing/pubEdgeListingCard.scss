@@ -47,8 +47,8 @@
 		right: 24px;
 		z-index: 1;
 
-		> * {
-			margin-right: 2px;
+		> *:not(:last-child) {
+			margin-right: 6px;
 		}
 	}
 
