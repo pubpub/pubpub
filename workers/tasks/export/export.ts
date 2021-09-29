@@ -25,8 +25,6 @@ export const exportTask = async ({ exportId }, collectSubprocess) => {
 		pubDoc,
 		notesData,
 		pubMetadata,
-		targetPandoc: !!pandocTarget,
-		targetPaged: !!pagedTarget,
 	});
 	if (pandocTarget) {
 		await callPandoc({

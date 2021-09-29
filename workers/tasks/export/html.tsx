@@ -4,11 +4,13 @@ import fs from 'fs';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 
+import { DocJson } from 'types';
 import { renderStatic, editorSchema } from 'components/Editor';
 import { getLicenseBySlug } from 'utils/licenses';
 
-import SimpleNotesList from './SimpleNotesList';
+import { NotesData, PubMetadata } from './types';
 import { digestCitation } from './util';
+import SimpleNotesList from './SimpleNotesList';
 
 const nonExportableNodeTypes = ['discussion'];
 const katexCdnPrefix = 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/';
@@ -130,7 +132,7 @@ const blankIframes = (nodes) =>
 		nodes,
 	);
 
-const renderSharedDetails = ({ updatedDateString, publishedDateString, doi, licenseSlug }) => {
+const renderDetails = ({ updatedDateString, publishedDateString, doi, licenseSlug }) => {
 	const showUpdatedDate = updatedDateString && updatedDateString !== publishedDateString;
 	const license = getLicenseBySlug(licenseSlug);
 	return (
@@ -158,38 +160,7 @@ const renderSharedDetails = ({ updatedDateString, publishedDateString, doi, lice
 	);
 };
 
-const renderFrontMatterForPandoc = (
-	{
-		updatedDateString,
-		publishedDateString,
-		communityTitle,
-		primaryCollectionTitle,
-		doi,
-		licenseSlug,
-		publisher,
-	},
-	targetPandoc,
-) => {
-	const pandocFormatsWithoutTemplate = ['docx', 'plain', 'odt'];
-	// do not put community title if this is a book
-	const communityAndCollectionString =
-		(publisher ? '' : communityTitle + bullet) + (primaryCollectionTitle || '');
-	return (
-		<>
-			{pandocFormatsWithoutTemplate.includes(targetPandoc) && (
-				<h3>{communityAndCollectionString}</h3>
-			)}
-			{renderSharedDetails({
-				updatedDateString,
-				publishedDateString,
-				doi,
-				licenseSlug,
-			})}
-		</>
-	);
-};
-
-const renderFrontMatterForHtml = ({
+const renderFrontMatter = ({
 	updatedDateString,
 	publishedDateString,
 	primaryCollectionTitle,
@@ -200,7 +171,7 @@ const renderFrontMatterForHtml = ({
 	attributions,
 	licenseSlug,
 	publisher,
-}) => {
+}: PubMetadata) => {
 	const affiliations = [
 		...new Set(attributions.map((attr) => attr.affiliation).filter((x) => x)),
 	];
@@ -254,7 +225,7 @@ const renderFrontMatterForHtml = ({
 						<strong>Published on: </strong> {publishedDateString}
 					</div>
 				)}
-				{renderSharedDetails({
+				{renderDetails({
 					updatedDateString,
 					publishedDateString,
 					doi,
@@ -265,27 +236,23 @@ const renderFrontMatterForHtml = ({
 	);
 };
 
-export const renderStaticHtml = async ({
-	pubDoc,
-	pubMetadata,
-	targetPandoc,
-	targetPaged,
-	notesData,
-}) => {
+type RenderStaticHtmlOptions = {
+	pubDoc: DocJson;
+	pubMetadata: PubMetadata;
+	notesData: NotesData;
+};
+
+export const renderStaticHtml = async (options: RenderStaticHtmlOptions) => {
+	const { pubDoc, pubMetadata, notesData } = options;
 	const { title, nodeLabels } = pubMetadata;
 	const { footnotes, citations, noteManager } = notesData;
-	const renderableNodes = [
-		filterNonExportableNodes,
-		!targetPandoc && addHrefsToNotes,
-		targetPaged && blankIframes,
-	]
+	const renderableNodes = [filterNonExportableNodes, addHrefsToNotes, blankIframes]
 		.filter((x): x is (nodes: any) => any => !!x)
 		.reduce((nodes, fn) => fn(nodes), pubDoc.content);
 
 	const docContent = renderStatic({
 		schema: editorSchema,
 		doc: { type: 'doc', content: renderableNodes },
-		context: { isForPandoc: targetPandoc },
 		noteManager,
 		nodeLabels,
 	});
@@ -294,23 +261,11 @@ export const renderStaticHtml = async ({
 			<head>
 				<title>{title}</title>
 				<meta charSet="utf-8" />
-				{!targetPandoc && (
-					// eslint-disable-next-line react/no-danger
-					<style type="text/css" dangerouslySetInnerHTML={{ __html: staticCss }} />
-				)}
+				{/* eslint-disable-next-line react/no-danger */}
+				<style type="text/css" dangerouslySetInnerHTML={{ __html: staticCss }} />
 			</head>
 			<body>
-				{targetPandoc && (
-					<p>
-						<strong>Notice:</strong> This file is an auto-generated download and, as
-						such, might include minor display or rendering errors. For the version of
-						record, please visit the HTML version or download the PDF.
-						<hr />
-					</p>
-				)}
-				{targetPandoc
-					? renderFrontMatterForPandoc(pubMetadata, targetPandoc)
-					: renderFrontMatterForHtml(pubMetadata)}
+				{renderFrontMatter(pubMetadata)}
 				<div className="pub-body-component">
 					<div className="editor Prosemirror">
 						{docContent}
