@@ -130,3 +130,11 @@ export const getStructuredCitationsForPub = (pubData: Pub, pubDoc: DocJson) => {
 	];
 	return getStructuredCitations(structuredValuesInDoc, citationStyle, citationInlineStyle);
 };
+
+export const getPathToCslFileForCitationStyleKind = (kind: CitationStyleKind) => {
+	const citationStyle = citationStyles.find((style) => style.key === kind);
+	if (citationStyle && citationStyle.path) {
+		return path.join(__dirname, citationStyle.path);
+	}
+	return null;
+};

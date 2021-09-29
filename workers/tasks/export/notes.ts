@@ -67,19 +67,15 @@ export const getHashForNote = (note: Pick<Note, 'structuredValue' | 'unstructure
 export const getPandocNotesByHash = (
 	notes: Note[],
 	renderedStructuredValues: Record<string, RenderedStructuredValue>,
-) => {
-	const index: Record<string, PandocNote> = {};
+): PandocNotes => {
+	const index: PandocNotes = {};
 	notes.forEach((note) => {
 		const hash = getHashForNote(note);
 		if (note.structuredValue) {
 			const renderedStructuredValue = renderedStructuredValues[note.structuredValue];
 			const cslJson = renderedStructuredValue?.json[0];
 			if (cslJson) {
-				const citationLabel = cslJson['citation-label'];
-				let id = citationLabel;
-				for (let suffix = 2; Object.keys(index).includes(id); suffix++) {
-					id = `${citationLabel}-${suffix}`;
-				}
+				const { id } = cslJson;
 				index[hash] = { ...note, id, hash, cslJson };
 				return;
 			}
@@ -89,6 +85,10 @@ export const getPandocNotesByHash = (
 	return index;
 };
 
-export const getReferencesEntryForPandocNotes = (notes: PandocNotes) => {
-	return Object.values(notes).map((note) => note.cslJson);
+export const getCslJsonForPandocNotes = (notes: PandocNotes) => {
+	return Object.values(notes).map((note) => {
+		const json = { ...note.cslJson };
+		delete json._graph;
+		return json;
+	});
 };
