@@ -10,7 +10,7 @@ import { downloadAndConvertFiles } from './download';
 import { extractBibliographyItems } from './bibliography';
 import { uploadExtractedMedia } from './extractedMedia';
 import { extensionFor } from './util';
-import { runTransforms } from './transforms/runTransforms';
+import { runTransforms } from './transforms';
 import { getProposedMetadata, getRawMetadata } from './metadata';
 import { getTmpDirectoryPath } from './tmpDirectory';
 import { createResourceTransformer } from './resources';

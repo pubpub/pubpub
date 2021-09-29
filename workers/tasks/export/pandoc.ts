@@ -11,6 +11,7 @@ import { DocJson } from 'types';
 import { rules } from '../import/rules';
 import { getTmpFileForExtension } from './util';
 import { NotesData, PubMetadata } from './types';
+import { runTransforms } from './transforms';
 import {
 	getPandocNotesByHash,
 	getReferencesEntryForPandocNotes,
@@ -91,7 +92,7 @@ const createYamlMetadataFile = async (
 			},
 		}),
 		references: getReferencesEntryForPandocNotes(pandocNotes),
-		// 'link-citations': true, // See https://github.com/jgm/pandoc/issues/6013#issuecomment-921409135
+		'link-citations': true, // See https://github.com/jgm/pandoc/issues/6013#issuecomment-921409135
 	});
 	const file = await getTmpFileForExtension('yaml');
 	fs.writeFileSync(file.path, metadata);
@@ -125,10 +126,11 @@ export const callPandoc = async (options: CallPandocOptions) => {
 	);
 	const metadataFile = await createYamlMetadataFile(pubMetadata, pandocNotes, pandocTarget);
 	const args = createPandocArgs(pandocTarget, tmpFile, metadataFile);
-	const pandocAst = fromProsemirror(pubDoc, rules, {
+	const preTransformedPandocAst = fromProsemirror(pubDoc, rules, {
 		prosemirrorDocWidth: 675,
 		resource: createResourceTransformer(pandocNotes),
 	}).asNode();
+	const pandocAst = runTransforms(preTransformedPandocAst);
 	const pandocJson = emitPandocJson(pandocAst);
 	const pandocJsonString = JSON.stringify(pandocJson);
 	return new Promise((resolve, reject) => {
