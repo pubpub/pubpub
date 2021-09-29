@@ -14,7 +14,9 @@ const nonExportableNodeTypes = ['discussion'];
 const katexCdnPrefix = 'https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/';
 const bullet = ' • ';
 
-const createCJKFontScript = `
+// This script is provided by the "cjk-fonts" Web Fonts project that we manage from here:
+// https://fonts.adobe.com/my_fonts#web_projects-section
+const loadCjkFontsScript = `
 (function(d) {
   var config = {
 	kitId: 'seb8nix',
@@ -310,7 +312,7 @@ export const renderStaticHtml = async ({
 					<style type="text/css" dangerouslySetInnerHTML={{ __html: staticCss }} />
 				)}
 				{/* eslint-disable-next-line react/no-danger */}
-				<script dangerouslySetInnerHTML={{ __html: createCJKFontScript }} />
+				<script dangerouslySetInnerHTML={{ __html: loadCjkFontsScript }} />
 			</head>
 			<body>
 				{targetPandoc && (
