@@ -1,25 +1,17 @@
 import { Button, Callout } from '@blueprintjs/core';
 import classNames from 'classnames';
+import React from 'react';
+
+import { RelationType, relationTypeDefinitions } from 'utils/pubEdge';
+import { assert } from 'utils/assert';
+
+import { Pub, PubEdge } from 'types';
 import { PubEdgeEditor, PubEdgeListingCard } from 'components';
 import { MenuButton, MenuItem } from 'components/Menu';
-import React from 'react';
-import { Pub, PubEdge } from 'types';
-import { RelationType, relationTypeDefinitions } from 'utils/pubEdge';
+
 import NewEdgeInput from './NewEdgeInput';
 
 require('./newEdgeEditor.scss');
-
-class AssertionError extends Error {
-	constructor(message: string) {
-		super(message);
-	}
-}
-
-function assert(condition: boolean, message = ''): asserts condition {
-	if (!condition) {
-		throw new AssertionError(message);
-	}
-}
 
 type Props = {
 	onCancel: () => unknown;

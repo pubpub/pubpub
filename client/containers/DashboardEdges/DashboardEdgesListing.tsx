@@ -1,12 +1,14 @@
 import { Button, Icon, Switch } from '@blueprintjs/core';
 import classNames from 'classnames';
-import { ConfirmDialog, DragDropListing, PubEdgeListingCard } from 'components';
-import NewEdgeEditor from 'containers/DashboardEdges/NewEdgeEditor';
 import React, { useState } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { PubEdge } from 'types';
+
 import { usePendingChanges } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';
+
+import { ConfirmDialog, DragDropListing, PubEdgeListingCard } from 'components';
+import NewEdgeEditor from 'containers/DashboardEdges/NewEdgeEditor';
 
 export type DashboardEdgesListingProps = {
 	pubData: any;
@@ -60,7 +62,6 @@ const DashboardEdgesListing = (props: DashboardEdgesListingProps) => {
 
 	const updatePubEdge = (edge: PubEdge) => {
 		setIsCreatingEdge(true);
-		console.log(edge);
 		pendingPromise(
 			apiFetch.put('/api/pubEdges', {
 				pubEdgeId: edge.id,

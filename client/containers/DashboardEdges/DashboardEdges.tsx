@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { NonIdealState, Switch, Tab, Tabs, Radio, RadioGroup } from '@blueprintjs/core';
 
 import { DashboardFrame } from 'components';
