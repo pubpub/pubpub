@@ -107,7 +107,7 @@ const DashboardEdgesListing = (props: DashboardEdgesListingProps) => {
 						onCancel={() => setEditing(undefined)}
 						onChange={setEditing}
 						onSave={updatePubEdge}
-						saveButtonLabel="Save Connection"
+						saveButtonLabel="Save connection"
 						loading={isCreatingEdge}
 						error={errorCreatingEdge}
 					/>

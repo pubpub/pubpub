@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
-import { NonIdealState, Switch, Tab, Tabs, Radio, RadioGroup } from '@blueprintjs/core';
+import {
+	NonIdealState,
+	Switch,
+	Tab,
+	Tabs,
+	Radio,
+	RadioGroup,
+	Callout,
+	Intent,
+} from '@blueprintjs/core';
 
 import { DashboardFrame } from 'components';
 import { usePageContext, usePendingChanges } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';
 import { Pub, OutboundEdge, InboundEdge, PubEdge } from 'types';
+import { pubSettingsUrl } from 'utils/canonicalUrls';
 
 import DashboardEdgesListing from './DashboardEdgesListing';
 import NewEdgeEditor from './NewEdgeEditor';
@@ -29,6 +39,7 @@ const frameDetails = (
 const DashboardEdges = (props: Props) => {
 	const { pubData } = props;
 	const {
+		communityData,
 		scopeData: {
 			activePermissions: { canManage: canManageEdges },
 		},
@@ -155,7 +166,21 @@ const DashboardEdges = (props: Props) => {
 		<DashboardFrame
 			className="dashboard-edges-container"
 			title="Connections"
-			details={frameDetails}
+			details={
+				<>
+					{frameDetails}{' '}
+					{canManageEdges && pubData.crossrefDepositRecord && (
+						<Callout intent={Intent.WARNING} title="Redeposit Warning">
+							This Pub has been deposited to Crossref. If you choose to update this
+							Pub's connections, you will need to{' '}
+							<a href={pubSettingsUrl(communityData, pubData, 'doi')}>
+								re-deposit the Pub
+							</a>{' '}
+							for the updated relationships to appear in Crossref.
+						</Callout>
+					)}
+				</>
+			}
 		>
 			{canManageEdges && (
 				<div className="default-settings">
