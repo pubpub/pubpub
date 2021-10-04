@@ -71,12 +71,6 @@ export const bestPubUrl = ({ pubData, communityData }, options = {}) => {
 	return pubShortUrl(pubData);
 };
 
-export const pubSettingsUrl = (community, pub, section) => {
-	return `${community === null ? '' : communityUrl(community)}/dash/pub/${pub.slug}/settings${
-		section ? `#${section}` : ''
-	}`;
-};
-
 export const doiUrl = (doi) => `https://doi.org/${doi}`;
 
 export const pageUrl = (community, page) => `${communityUrl(community)}/${page.slug}`;

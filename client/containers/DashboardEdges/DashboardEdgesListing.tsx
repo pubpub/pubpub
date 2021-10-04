@@ -6,9 +6,9 @@ import { PubEdge } from 'types';
 
 import { usePendingChanges } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';
-
 import { ConfirmDialog, DragDropListing, PubEdgeListingCard } from 'components';
-import NewEdgeEditor from 'containers/DashboardEdges/NewEdgeEditor';
+
+import NewEdgeEditor from './NewEdgeEditor';
 
 export type DashboardEdgesListingProps = {
 	pubData: any;

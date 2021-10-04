@@ -166,10 +166,11 @@ const filterForMutuallyApprovedEdges = (pubEdges) => {
 export default (context, doiTarget, dateForTimestamp, includeRelationships = true) => {
 	checkDepositAssertions(context, doiTarget);
 
-	const { community, pub, contentVersion, reviewType, reviewRecommendation } = context;
+	const { community, contentVersion, reviewType, reviewRecommendation } = context;
 	const timestamp = (dateForTimestamp || new Date()).getTime();
 	const doiBatchId = `${timestamp}_${community.id.slice(0, 8)}`;
 
+	let pub = context.pub && { ...context.pub };
 	let pubEdge;
 
 	if (pub) {
@@ -192,9 +193,12 @@ export default (context, doiTarget, dateForTimestamp, includeRelationships = tru
 		}
 	}
 
-	const contextWithPubEdge = { ...context, pubEdge };
+	const contextFinal = { ...context, pub };
+	const contextWithPubEdge = { ...contextFinal, pubEdge };
 	const dois = getDois(
-		pubEdge && pubEdge.relationType === RelationType.Supplement ? contextWithPubEdge : context,
+		pubEdge && pubEdge.relationType === RelationType.Supplement
+			? contextWithPubEdge
+			: contextFinal,
 		doiTarget,
 	);
 	const deposit = removeEmptyKeys(

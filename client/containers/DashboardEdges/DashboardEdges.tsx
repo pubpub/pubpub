@@ -10,11 +10,11 @@ import {
 	Intent,
 } from '@blueprintjs/core';
 
+import { apiFetch } from 'client/utils/apiFetch';
 import { DashboardFrame } from 'components';
 import { usePageContext, usePendingChanges } from 'utils/hooks';
-import { apiFetch } from 'client/utils/apiFetch';
+import { getDashUrl } from 'utils/dashboard';
 import { Pub, OutboundEdge, InboundEdge, PubEdge } from 'types';
-import { pubSettingsUrl } from 'utils/canonicalUrls';
 
 import DashboardEdgesListing from './DashboardEdgesListing';
 import NewEdgeEditor from './NewEdgeEditor';
@@ -173,7 +173,7 @@ const DashboardEdges = (props: Props) => {
 						<Callout intent={Intent.WARNING} title="Redeposit Warning">
 							This Pub has been deposited to Crossref. If you choose to update this
 							Pub's connections, you will need to{' '}
-							<a href={pubSettingsUrl(communityData, pubData, 'doi')}>
+							<a href={getDashUrl({ pubSlug: pubData.slug, mode: 'settings' })}>
 								re-deposit the Pub
 							</a>{' '}
 							for the updated relationships to appear in Crossref.
