@@ -170,10 +170,11 @@ export default (context, doiTarget, dateForTimestamp, includeRelationships = tru
 	const timestamp = (dateForTimestamp || new Date()).getTime();
 	const doiBatchId = `${timestamp}_${community.id.slice(0, 8)}`;
 
-	let pub = context.pub && { ...context.pub };
 	let pubEdge;
+	let pub = context.pub;
 
 	if (pub) {
+		pub = { ...pub };
 		// Remove unapproved PubEdges for RelationTypes that require bidirectional
 		// approval.
 		filterForMutuallyApprovedEdges(pub.inboundEdges);
@@ -193,12 +194,10 @@ export default (context, doiTarget, dateForTimestamp, includeRelationships = tru
 		}
 	}
 
-	const contextFinal = { ...context, pub };
-	const contextWithPubEdge = { ...contextFinal, pubEdge };
+	const ctx = { ...context, pub };
+	const contextWithPubEdge = { ...ctx, pubEdge };
 	const dois = getDois(
-		pubEdge && pubEdge.relationType === RelationType.Supplement
-			? contextWithPubEdge
-			: contextFinal,
+		pubEdge && pubEdge.relationType === RelationType.Supplement ? contextWithPubEdge : ctx,
 		doiTarget,
 	);
 	const deposit = removeEmptyKeys(

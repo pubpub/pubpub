@@ -122,9 +122,9 @@ export const getDoiData = (
 		return createDeposit(
 			{
 				collectionPub,
-				collection: resolvedCollection,
-				community,
-				pub,
+				collection: resolvedCollection?.toJSON(),
+				community: community.toJSON(),
+				pub: pub?.toJSON(),
 				contentVersion,
 				reviewType,
 				reviewRecommendation,

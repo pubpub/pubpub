@@ -39,7 +39,6 @@ const frameDetails = (
 const DashboardEdges = (props: Props) => {
 	const { pubData } = props;
 	const {
-		communityData,
 		scopeData: {
 			activePermissions: { canManage: canManageEdges },
 		},
