@@ -130,6 +130,7 @@ export const getDoiData = (
 				reviewRecommendation,
 			},
 			doiTarget,
+			undefined,
 			includeRelationships,
 		);
 	});
