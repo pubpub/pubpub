@@ -269,6 +269,7 @@ export const renderStaticHtml = async (options: RenderStaticHtmlOptions) => {
 		noteManager,
 		nodeLabels,
 	});
+
 	return ReactDOMServer.renderToStaticMarkup(
 		<html lang="en">
 			<head>
