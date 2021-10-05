@@ -339,7 +339,7 @@ rules.fromProsemirrorNode('reference', (node) => {
 		attr: createAttr(),
 		content: textToStrSpace(node.attrs.label),
 		target: {
-			url: `${node.attrs.targetId}`,
+			url: `#${node.attrs.targetId}`,
 			title: '',
 		},
 	};
