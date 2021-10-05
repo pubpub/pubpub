@@ -37,7 +37,11 @@ const getPlainUnstructuredTextForNote = (note: Note): null | string => {
 	return null;
 };
 
-const getCslJsonForNote = (note: Note, renderedStructuredValues: RenderedStructuredValues) => {
+const getCslJsonForNote = (
+	note: Note,
+	hash: string,
+	renderedStructuredValues: RenderedStructuredValues,
+) => {
 	const renderedStructuredValue = note.structuredValue
 		? renderedStructuredValues[note.structuredValue]
 		: null;
@@ -121,7 +125,7 @@ export const getPandocNotesByHash = (
 	const index: PandocNotes = {};
 	notes.forEach((note) => {
 		const hash = getHashForNote(note);
-		const cslJson = getCslJsonForNote(note, renderedStructuredValues);
+		const cslJson = getCslJsonForNote(note, hash, renderedStructuredValues);
 		const html = getHtmlForNote(note, renderedStructuredValues);
 		const id = getIdForNote(cslJson, hash);
 		index[hash] = { ...note, id, hash, html, cslJson };
