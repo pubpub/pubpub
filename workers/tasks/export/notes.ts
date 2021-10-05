@@ -13,7 +13,7 @@ export type PandocNote = Note & {
 	id: string;
 	hash: string;
 	html: null | string;
-	cslJson: null | Record<string, any>;
+	cslJson: Record<string, any>;
 };
 
 export type PandocNotes = Record<string, PandocNote>;
@@ -45,20 +45,23 @@ const getCslJsonForNote = (
 	const renderedStructuredValue = note.structuredValue
 		? renderedStructuredValues[note.structuredValue]
 		: null;
+	const unstructuredValue = getPlainUnstructuredTextForNote(note);
+	const custom = unstructuredValue ? { note: unstructuredValue } : {};
 	if (renderedStructuredValue) {
 		const cslJson = renderedStructuredValue?.json[0];
 		if (cslJson) {
-			const unstructuredValue = getPlainUnstructuredTextForNote(note);
-			const noteAttrs = unstructuredValue ? { note: unstructuredValue } : {};
 			// Citation.js leaves a _graph property on here -- it's noise we don't need to expose
 			const normalizedCslJson = { ...cslJson, _graph: undefined };
 			return {
 				...normalizedCslJson,
-				...noteAttrs,
+				...custom,
 			};
 		}
 	}
-	return null;
+	return {
+		id: hash,
+		...custom,
+	};
 };
 
 const getHtmlForNote = (
@@ -134,7 +137,5 @@ export const getPandocNotesByHash = (
 };
 
 export const getCslJsonForPandocNotes = (notes: PandocNotes) => {
-	return Object.values(notes)
-		.map((note) => note.cslJson)
-		.filter((x): x is Record<string, any> => !!x);
+	return Object.values(notes).map((note) => note.cslJson);
 };
