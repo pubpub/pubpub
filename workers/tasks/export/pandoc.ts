@@ -6,7 +6,7 @@ import { FileResult } from 'tmp-promise';
 import { fromProsemirror, emitPandocJson } from '@pubpub/prosemirror-pandoc';
 
 import { DocJson } from 'types';
-import { editorSchema, getReactedDocFromJson } from 'client/components/Editor';
+import { editorSchema, getReactedDocFromJson, Note } from 'client/components/Editor';
 import { getPathToCslFileForCitationStyleKind } from 'server/utils/citations';
 import { getLicenseBySlug } from 'utils/licenses';
 
@@ -112,14 +112,13 @@ const createYamlMetadataFile = async (pubMetadata: PubMetadata, pandocTarget: st
 	return file.path;
 };
 
-const createResourceTransformer = (pandocNotes: PandocNotes) => {
-	return (input: any, context?: string) => {
-		if (context === 'note') {
-			const { structuredValue, unstructuredValue } = input;
+const createResources = (pandocNotes: PandocNotes) => {
+	return {
+		note: (note: Pick<Note, 'unstructuredValue' | 'structuredValue'>) => {
+			const { structuredValue, unstructuredValue } = note;
 			const hash = getHashForNote({ structuredValue, unstructuredValue });
 			return pandocNotes[hash];
-		}
-		return input;
+		},
 	};
 };
 
@@ -153,7 +152,7 @@ export const callPandoc = async (options: CallPandocOptions) => {
 	const args = createPandocArgs(pandocTarget, tmpFile.path, metadataFile, bibliographyFile);
 	const preTransformedPandocAst = fromProsemirror(pubDoc, rules, {
 		prosemirrorDocWidth: 675,
-		resource: createResourceTransformer(pandocNotes),
+		resources: createResources(pandocNotes),
 	}).asNode();
 	const pandocAst = runTransforms(preTransformedPandocAst);
 	const pandocJson = emitPandocJson(pandocAst);
