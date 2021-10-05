@@ -75,7 +75,8 @@ export const getPandocNotesByHash = (
 			const renderedStructuredValue = renderedStructuredValues[note.structuredValue];
 			const cslJson = renderedStructuredValue?.json[0];
 			if (cslJson) {
-				const { id } = cslJson;
+				const { id: providedId, 'citation-label': citationLabel } = cslJson;
+				const id = citationLabel || providedId;
 				index[hash] = { ...note, id, hash, cslJson };
 				return;
 			}
