@@ -9,6 +9,8 @@ export type RenderedStructuredValue = {
 	json: any;
 };
 
+export type RenderedStructuredValues = Record<string, RenderedStructuredValue>;
+
 type Notes = Record<StructuredValue, RenderedStructuredValue>;
 
 type RenderStructuredValuesFn = (

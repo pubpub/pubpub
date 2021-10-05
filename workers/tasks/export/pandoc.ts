@@ -114,8 +114,8 @@ const createYamlMetadataFile = async (pubMetadata: PubMetadata, pandocTarget: st
 
 const createResourceTransformer = (pandocNotes: PandocNotes) => {
 	return (input: any, context?: string) => {
-		if (context === 'citation') {
-			const { value: structuredValue, unstructuredValue } = input;
+		if (context === 'note') {
+			const { structuredValue, unstructuredValue } = input;
 			const hash = getHashForNote({ structuredValue, unstructuredValue });
 			return pandocNotes[hash];
 		}
@@ -144,7 +144,7 @@ const reactPubDoc = (options: CallPandocOptions) => {
 export const callPandoc = async (options: CallPandocOptions) => {
 	const { pandocTarget, pubMetadata, tmpFile, notesData } = options;
 	const pandocNotes = getPandocNotesByHash(
-		notesData.citations,
+		[...notesData.citations, ...notesData.footnotes],
 		notesData.renderedStructuredValues,
 	);
 	const pubDoc = reactPubDoc(options);
