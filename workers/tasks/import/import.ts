@@ -13,7 +13,7 @@ import { extensionFor } from './util';
 import { runTransforms } from './transforms';
 import { getProposedMetadata, getRawMetadata } from './metadata';
 import { getTmpDirectoryPath } from './tmpDirectory';
-import { createResourceTransformer } from './resources';
+import { createTransformResources } from './resources';
 
 setPandocApiVersion([1, 22]);
 
@@ -122,23 +122,23 @@ export const importFiles = async ({
 			extractBibFromJats: !skipJatsBibExtraction,
 		}),
 	]);
-	const resourceTransformer = createResourceTransformer({
+	const resources = createTransformResources({
 		sourceFiles: [...sourceFiles, ...extractedMedia],
 		document,
 		bibliographyItems,
 	});
 	const prosemirrorDoc = fromPandoc(pandocAst, rules, {
-		resource: resourceTransformer.getResource,
+		resources,
 		useSmartQuotes: !keepStraightQuotes,
 		prosemirrorDocWidth: 675,
 	}).asNode();
 	const [proposedMetadata] = await Promise.all([
 		getProposedMetadata(pandocAst.meta),
-		resourceTransformer.uploadPendingResources(),
+		resources.uploadPendingResources(),
 	]);
 	return {
 		doc: prosemirrorDoc,
-		warnings: resourceTransformer.getWarnings(),
+		warnings: resources.getWarnings(),
 		pandocErrorOutput,
 		proposedMetadata,
 		...(provideRawMetadata && { rawMetadata: getRawMetadata(pandocAst.meta) }),

@@ -24,7 +24,6 @@ const {
 	htmlStringToPandocBlocks,
 	htmlStringToPandocInline,
 	pandocBlocksToHtmlString,
-	pandocInlineToHtmlString,
 	pandocInlineToPlainString,
 } = pandocUtils;
 
@@ -206,11 +205,11 @@ rules.toProsemirrorNode('RawInline', (node) => {
 // These next rules for images don't use transform() because they're not inverses of each other --
 // the Prosemirror->Pandoc direction wraps an Image in a Para to make it block-level
 
-rules.toProsemirrorNode('Image', (node, { resource }) => {
+rules.toProsemirrorNode('Image', (node, { resources }) => {
 	return {
 		type: 'image',
 		attrs: {
-			url: resource(node.target.url),
+			url: resources.image(node.target.url),
 			altText: pandocInlineToPlainString(node.content),
 			// TODO(ian): is there anything we can do about the image size here?
 		},
@@ -242,16 +241,21 @@ rules.fromProsemirrorNode('image', (node) => {
 });
 
 rules.transform('Cite', 'citation', {
-	toProsemirrorNode: (node, { count }) => {
-		const { content } = node;
-		const unstructuredValue = pandocInlineToHtmlString(content);
-		return {
-			type: 'citation',
-			attrs: {
-				unstructuredValue,
-				count: 1 + count('Cite'),
-			},
-		};
+	toProsemirrorNode: (node, { resources }) => {
+		const { citations } = node;
+		return citations.map((citation) => {
+			const { structuredValue, unstructuredValue } = resources.citation(citation.citationId);
+			const customLabel = node.content.length && pandocInlineToPlainString(node.content);
+			const customLabelAttrs = customLabel ? { customLabel } : {};
+			return {
+				type: 'citation',
+				attrs: {
+					value: structuredValue,
+					unstructuredValue,
+					...customLabelAttrs,
+				},
+			};
+		});
 	},
 	fromProsemirrorNode: (node, { count, resource }) => {
 		const { value: structuredValue, unstructuredValue, html } = node.attrs;
