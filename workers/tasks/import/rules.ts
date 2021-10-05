@@ -265,20 +265,26 @@ rules.transform('Cite', 'citation', {
 		const { value: structuredValue, unstructuredValue, html } = node.attrs;
 		const inputHtml = (html || unstructuredValue) as string;
 		const citationNumber = 1 + count('citation');
-		const { id, hash } = resources.note({ structuredValue, unstructuredValue });
+		const { id, hash, cslJson } = resources.note({ structuredValue, unstructuredValue });
+		if (cslJson) {
+			return {
+				type: 'Cite',
+				content: htmlStringToPandocInline(inputHtml),
+				citations: [
+					{
+						citationPrefix: [],
+						citationSuffix: [],
+						citationId: id,
+						citationHash: parseInt(hash, 16),
+						citationNoteNum: citationNumber,
+						citationMode: 'NormalCitation',
+					},
+				],
+			};
+		}
 		return {
-			type: 'Cite',
-			content: htmlStringToPandocInline(inputHtml),
-			citations: [
-				{
-					citationPrefix: [],
-					citationSuffix: [],
-					citationId: id,
-					citationHash: parseInt(hash, 16),
-					citationNoteNum: citationNumber,
-					citationMode: 'NormalCitation',
-				},
-			],
+			type: 'Note',
+			content: htmlStringToPandocBlocks(unstructuredValue),
 		};
 	},
 });
