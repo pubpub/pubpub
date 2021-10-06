@@ -112,6 +112,32 @@ const bannerBlocks = [
 	},
 ];
 
+const metadataBlocks = [
+	{
+		title: 'Default',
+		type: 'collection-metadata',
+		content: {
+			doi: 'string',
+			url: 'string',
+			isbn: 'string',
+			copyrightYear: 'string',
+			publicationDate: 'string',
+			edition: 'string',
+			printIssn: 'string',
+			electronicIssn: 'string',
+			volume: 'string',
+			issue: 'string',
+			printPublicationDate: 'string',
+			// why aren't they shared in the metadata schema?
+			// publicationDate?: string,
+			theme: 'string',
+			acronym: 'string',
+			location: 'string',
+			date: 'string',
+		},
+	},
+];
+
 const newCollectionsPagesBlock = (communityData) => {
 	const pagesToShow = communityData.pages.slice(0, 3);
 	return {
@@ -189,6 +215,13 @@ const LayoutEditorInsert = (props: Props) => {
 							</h6>
 						</li>
 						{pagesCollectionsBlocks.map((item) => generateMenuItem(item))}
+						<li className="bp3-menu-header">
+							<h6>
+								Collection Metadata Block
+								<Icon icon="info-sign" />
+							</h6>
+						</li>
+						{metadataBlocks.map((item) => generateMenuItem(item))}
 					</Menu>
 				}
 				interactionKind={PopoverInteractionKind.CLICK}
