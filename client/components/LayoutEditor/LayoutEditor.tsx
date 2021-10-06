@@ -15,6 +15,7 @@ import LayoutEditorText from './LayoutEditorText';
 import LayoutEditorHtml from './LayoutEditorHtml';
 import LayoutEditorBanner from './LayoutEditorBanner';
 import LayoutEditorCollectionHeader from './LayoutEditorCollectionHeader';
+import LayoutEditorMetadata from './LayoutEditorMetadata';
 
 require('./layoutEditor.scss');
 
@@ -36,6 +37,7 @@ const validBlockTypes = [
 	'banner',
 	'collections-pages',
 	'collection-header',
+	'collection-metadata',
 ];
 
 const getTitleKindForBlock = (blockType: string) => {
@@ -47,6 +49,9 @@ const getTitleKindForBlock = (blockType: string) => {
 	}
 	if (blockType === 'html') {
 		return 'HTML';
+	}
+	if (blockType === 'collection-metadata') {
+		return 'Collection Metadata';
 	}
 	return blockType;
 };
@@ -189,6 +194,16 @@ const LayoutEditor = (props: Props) => {
 							onChange={changeLayoutPartial}
 							collection={collection}
 							block={block}
+						/>
+					)}
+					{block.type === 'collection-metadata' && (
+						<LayoutEditorMetadata
+							key={`item-${block.id}`}
+							onChange={changeLayout}
+							layoutIndex={index}
+							content={block.content}
+							pages={communityData.pages}
+							collections={communityData.collections}
 						/>
 					)}
 				</div>
