@@ -116,7 +116,7 @@ export type LayoutBlockMetadata = {
 		volume?: string;
 		issue?: string;
 		printPublicationDate?: string;
-		// why aren't they shared in the metadata schema?
+		// why aren't they shared in the metadat schema?
 		// publicationDate?: string;
 		theme?: string;
 		acronym?: string;

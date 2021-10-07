@@ -196,14 +196,13 @@ const LayoutEditor = (props: Props) => {
 							block={block}
 						/>
 					)}
-					{block.type === 'collection-metadata' && (
+					{!!collection && block.type === 'collection-metadata' && (
 						<LayoutEditorMetadata
 							key={`item-${block.id}`}
 							onChange={changeLayout}
 							layoutIndex={index}
 							content={block.content}
-							pages={communityData.pages}
-							collections={communityData.collections}
+							collection={collection}
 						/>
 					)}
 				</div>

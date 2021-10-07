@@ -120,20 +120,7 @@ const metadataBlocks = [
 			doi: 'string',
 			url: 'string',
 			isbn: 'string',
-			copyrightYear: 'string',
-			publicationDate: 'string',
-			edition: 'string',
-			printIssn: 'string',
-			electronicIssn: 'string',
-			volume: 'string',
-			issue: 'string',
-			printPublicationDate: 'string',
-			// why aren't they shared in the metadata schema?
-			// publicationDate?: string,
-			theme: 'string',
-			acronym: 'string',
-			location: 'string',
-			date: 'string',
+
 		},
 	},
 ];
