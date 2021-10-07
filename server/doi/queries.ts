@@ -150,7 +150,8 @@ export const setDoiData = async (
 	const depositJson = await getDoiData(depositParams, doiTarget);
 	const { deposit: detachedDeposit } = await getDoiData(depositParams, doiTarget, false);
 	const { deposit, timestamp, dois } = depositJson;
-	const secondDepositTimestamp = new Date(timestamp + 1).getTime();
+	const secondDepositTimestamp = timestamp + 1;
+	console.warn(timestamp, secondDepositTimestamp);
 	const ids = { collectionId, pubId };
 	// Crossref requires us to first delete any existing relationships (by
 	// submitting a deposit without them), and then submit a deposit with the
