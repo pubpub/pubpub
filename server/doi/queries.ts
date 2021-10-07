@@ -154,7 +154,7 @@ export const setDoiData = async (
 	const ids = { collectionId, pubId };
 	// Crossref requires us to first delete any existing relationships (by
 	// submitting a deposit without them), and then submit a deposit with the
-	// updated relationships.
+	// updated relationships. The second deposit must have a newer timestamp.
 	await submitDoiData(detachedDeposit, timestamp, communityId);
 	await submitDoiData(deposit, secondDepositTimestamp, communityId);
 	// Store the DOIs and Crossref deposit record.
