@@ -39,30 +39,30 @@ type PreviewConferenceElementField =
 	| 'hideUrl';
 
 const labelsForPreviewIssueElementFields: Record<PreviewIssueElementField, string> = {
-	hidePrintIssn: 'Byline',
-	hideElectronicIssn: 'Contributors',
-	hideVolume: 'Dates',
-	hideIssue: 'Description',
-	hidePrintPublicationDate: 'Connections',
-	hidePublicationDate: 'PublicationDate',
+	hidePrintIssn: 'Print ISSN',
+	hideElectronicIssn: 'Electronic ISSN',
+	hideVolume: 'Volume',
+	hideIssue: 'Issue',
+	hidePrintPublicationDate: 'Print Publication Date',
+	hidePublicationDate: 'Date',
 	hideDoi: 'DOI',
 	hideUrl: 'URL',
 };
 
 const labelsForPreviewBookElementFields: Record<PreviewBookElementField, string> = {
-	hideIsbn: 'Byline',
-	hideCopyrightYear: 'Contributors',
-	hidePublicationDate: 'Description',
-	hideEdition: 'Connections',
+	hideIsbn: 'ISBN',
+	hideCopyrightYear: 'Copyright Year',
+	hidePublicationDate: 'Publication Date',
+	hideEdition: 'Edition',
 	hideDoi: 'DOI',
 	hideUrl: 'URL',
 };
 
 const labelsForPreviewConferenceElementFields: Record<PreviewConferenceElementField, string> = {
-	hideTheme: 'Byline',
-	hideAcronym: 'Contributors',
+	hideTheme: 'Theme',
+	hideAcronym: 'Acronym',
 	hideDate: 'Dates',
-	hideLocation: 'Description',
+	hideLocation: 'Location',
 	hideDoi: 'DOI',
 	hideUrl: 'URL',
 };
@@ -75,11 +75,8 @@ const labelGroup = {
 
 const deriveFieldStatus = (content: Content, field: PreviewConferenceElementField) => {
 	const fieldValue = content[field];
-	const disabledBecauseMinimal =
-		field === 'hideTheme' || field === 'hideAcronym' || field === 'hideLocation';
 	return {
-		hidden: disabledBecauseMinimal ? true : fieldValue,
-		disabled: disabledBecauseMinimal,
+		hidden: fieldValue,
 	};
 };
 
@@ -88,22 +85,57 @@ const Metadata = (props: Props) => {
 	console.log(collection);
 	return (
 		<Card className="layout-editor-pubs_preview-elements-component">
-			{Object.entries(labelsForPreviewConferenceElementFields).map((entry) => {
-				const [field, label] = entry;
-				const { disabled, hidden } = deriveFieldStatus(
-					content,
-					field as PreviewConferenceElementField,
-				);
-				return (
-					<Checkbox
-						key={field}
-						disabled={disabled}
-						label={label}
-						checked={!hidden}
-						onChange={() => onChangeContent({ [field]: !hidden })}
-					/>
-				);
-			})}
+			{collection.kind === 'conference' &&
+				Object.entries(labelsForPreviewConferenceElementFields).map((entry) => {
+					const [field, label] = entry;
+					console.log(entry);
+					const { hidden } = deriveFieldStatus(
+						content,
+						field as PreviewConferenceElementField,
+					);
+					return (
+						<Checkbox
+							key={field}
+							label={label}
+							checked={!hidden}
+							onChange={() => onChangeContent({ [field]: !hidden })}
+						/>
+					);
+				})}
+			{collection.kind === 'book' &&
+				Object.entries(labelsForPreviewBookElementFields).map((entry) => {
+					const [field, label] = entry;
+					console.log(entry);
+					const { hidden } = deriveFieldStatus(
+						content,
+						field as PreviewConferenceElementField,
+					);
+					return (
+						<Checkbox
+							key={field}
+							label={label}
+							checked={!hidden}
+							onChange={() => onChangeContent({ [field]: !hidden })}
+						/>
+					);
+				})}
+			{collection.kind === 'issue' &&
+				Object.entries(labelsForPreviewIssueElementFields).map((entry) => {
+					const [field, label] = entry;
+					console.log(entry);
+					const { hidden } = deriveFieldStatus(
+						content,
+						field as PreviewConferenceElementField,
+					);
+					return (
+						<Checkbox
+							key={field}
+							label={label}
+							checked={!hidden}
+							onChange={() => onChangeContent({ [field]: !hidden })}
+						/>
+					);
+				})}
 		</Card>
 	);
 };
