@@ -25,7 +25,7 @@ const PreviewIssueElementFields = (props: CheckBoxProps) => {
 		hideVolume,
 		hideIssue,
 		hidePrintPublicationDate,
-		hidePublicationDate,
+		hideIssuePublicationDate,
 	} = content;
 
 	return (
@@ -56,8 +56,8 @@ const PreviewIssueElementFields = (props: CheckBoxProps) => {
 				label="Print Publication Date"
 			/>
 			<Checkbox
-				checked={!hidePublicationDate}
-				onChange={() => onChange({ hidePublicationDate: !hidePublicationDate })}
+				checked={!hideIssuePublicationDate}
+				onChange={() => onChange({ hideIssuePublicationDate: !hideIssuePublicationDate })}
 				label="Publication Date"
 			/>
 		</>
@@ -66,7 +66,7 @@ const PreviewIssueElementFields = (props: CheckBoxProps) => {
 
 const PreviewBookElementFields = (props: CheckBoxProps) => {
 	const { content, onChange } = props;
-	const { hideIsbn, hideCopyrightYear, hidePublicationDate, hideEdition } = content;
+	const { hideIsbn, hideCopyrightYear, hideBookPublicationDate, hideEdition } = content;
 
 	return (
 		<>
@@ -81,8 +81,8 @@ const PreviewBookElementFields = (props: CheckBoxProps) => {
 				label="Copyright Year"
 			/>
 			<Checkbox
-				checked={!hidePublicationDate}
-				onChange={() => onChange({ hidePublicationDate: !hidePublicationDate })}
+				checked={!hideBookPublicationDate}
+				onChange={() => onChange({ hideBookPublicationDate: !hideBookPublicationDate })}
 				label="Publication Date"
 			/>
 			<Checkbox

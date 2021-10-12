@@ -102,7 +102,8 @@ export type LayoutBlockCollectionHeader = {
 		hideVolume?: boolean;
 		hideIssue?: boolean;
 		hidePrintPublicationDate?: boolean;
-		hidePublicationDate?: boolean;
+		hideIssuePublicationDate?: boolean;
+		hideBookPublicationDate?: boolean;
 		hideDoi?: boolean;
 		hideUrl?: boolean;
 		hideIsbn?: boolean;
