@@ -67,12 +67,6 @@ const labelsForPreviewConferenceElementFields: Record<PreviewConferenceElementFi
 	hideUrl: 'URL',
 };
 
-const labelGroup = {
-	issue: labelsForPreviewIssueElementFields,
-	book: labelsForPreviewBookElementFields,
-	conference: labelsForPreviewConferenceElementFields,
-};
-
 const deriveFieldStatus = (content: Content, field: PreviewConferenceElementField) => {
 	const fieldValue = content[field];
 	return {
