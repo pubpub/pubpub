@@ -49,11 +49,7 @@ const LayoutEditorCollectionHeader = (props: Props) => {
 			<Popover
 				aria-label="Choose preview elements"
 				content={
-					<Metadata
-						content={block.content}
-						collection={collection}
-						onChangeContent={onChange}
-					/>
+					<Metadata content={block.content} collection={collection} onChange={onChange} />
 				}
 			>
 				<Button outlined icon="settings" rightIcon="caret-down">
