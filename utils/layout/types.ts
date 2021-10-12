@@ -104,6 +104,13 @@ export type LayoutBlockCollectionHeader = {
 		hidePrintPublicationDate?: boolean;
 		hidePublicationDate?: boolean;
 		hideDoi?: boolean;
+		hideUrl?: boolean;
+		hideIsbn?: boolean;
+		hideCopyrightYear?: boolean;
+		hideEdition?: boolean;
+		hideTheme?: boolean;
+		hideAcronym?: boolean;
+		hideLocation?: boolean;
 	};
 };
 
