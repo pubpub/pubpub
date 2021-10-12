@@ -14,7 +14,7 @@ require('./layoutCollectionHeader.scss');
 
 type Props = {
 	collection: Collection;
-	content: LayoutBlockCollectionHeader['content']['header'];
+	content: LayoutBlockCollectionHeader['content'];
 };
 
 const LayoutCollectionHeader = (props: Props) => {
@@ -26,7 +26,9 @@ const LayoutCollectionHeader = (props: Props) => {
 	const bylineContributors = contributors.filter((c) => c.isAuthor);
 	const schema = getSchemaForKind(collection.kind)!;
 	const doi = getCollectionDoi(collection);
-	console.log(schema);
+	const metadata = collection?.metadata;
+	console.log(metadata);
+
 	const detailsRowElements = [
 		!hideCollectionKind && (
 			<div className="collection-kind" key={0}>
