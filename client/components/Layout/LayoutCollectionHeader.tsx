@@ -52,9 +52,9 @@ const LayoutCollectionHeader = (props: Props) => {
 				)}
 			</ClickToCopyButton>
 		),
-		Object.entries(metadata).map((data) => {
-			return <div key={3}>{data[1]}</div>;
-		}),
+		// Object.entries(metadata).map((data) => {
+		// 	return <div key={3}>{data[1]}</div>;
+		// }),
 	].filter((x) => x);
 
 	return (

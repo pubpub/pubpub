@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react';
-import { Checkbox, Button } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 
 import { InputField, Popover } from 'components';
 import { LayoutCollectionHeader } from 'components/Layout';
 import { Collection } from 'types';
 import { LayoutBlockCollectionHeader } from 'utils/layout/types';
-import getCollectionDoi from 'utils/collections/getCollectionDoi';
 import Metadata from './getMetaDataChecklist';
+import PreviewElements from './PreviewElements';
 
 type Content = LayoutBlockCollectionHeader['content'];
 
@@ -19,13 +19,30 @@ type Props = {
 
 const LayoutEditorCollectionHeader = (props: Props) => {
 	const { onChange: fullOnChange, layoutIndex, block, collection } = props;
-	const { hideDoi, hideCollectionKind, hideByline, hideContributors, hideDate } = block.content;
-	const doi = getCollectionDoi(collection);
 
 	const onChange = useCallback((update: Partial<Content>) => fullOnChange(layoutIndex, update), [
 		fullOnChange,
 		layoutIndex,
 	]);
+
+	const renderPreviewElements = () => {
+		return (
+			<Popover
+				aria-label="Choose preview elements"
+				content={
+					<PreviewElements
+						content={block.content}
+						collection={collection}
+						onChange={onChange}
+					/>
+				}
+			>
+				<Button outlined icon="settings" rightIcon="caret-down">
+					Header fields
+				</Button>
+			</Popover>
+		);
+	};
 
 	const renderMetadataElements = () => {
 		return (
@@ -45,44 +62,21 @@ const LayoutEditorCollectionHeader = (props: Props) => {
 			</Popover>
 		);
 	};
-	const renderPreviewElements = () => {
+
+	const renderElements = () => {
 		return (
 			<InputField label="Preview Elements">
-				<Checkbox
-					checked={!hideByline}
-					onChange={() => onChange({ hideByline: !hideByline })}
-					label="Byline"
-				/>
-				<Checkbox
-					disabled={hideByline}
-					checked={hideByline ? false : !hideContributors}
-					onChange={() => onChange({ hideContributors: !hideContributors })}
-					label="Contributors"
-				/>
-				<Checkbox
-					checked={!hideCollectionKind}
-					onChange={() => onChange({ hideCollectionKind: !hideCollectionKind })}
-					label="Collection kind"
-				/>
-				<Checkbox
-					checked={!hideDate}
-					onChange={() => onChange({ hideDate: !hideDate })}
-					label="Creation date"
-				/>
-				<Checkbox
-					disabled={!doi}
-					checked={doi ? !hideDoi : false}
-					onChange={() => onChange({ hideDoi: !hideDoi })}
-					label="DOI"
-				/>
-				<div className="controls-row">{renderMetadataElements()}</div>
+				<div className="controls-row">
+					{renderPreviewElements()}
+					{renderMetadataElements()}
+				</div>
 			</InputField>
 		);
 	};
 
 	return (
 		<div className="layout-editor-collection-header-component">
-			<div className="block-header">{renderPreviewElements()}</div>
+			<div className="block-header">{renderElements()}</div>
 			<LayoutCollectionHeader collection={collection} content={block.content} />
 		</div>
 	);
