@@ -4,7 +4,10 @@ import styled from 'styled-components';
 import { TableWrapper } from './shared';
 
 const StyledTableWrapper = styled(TableWrapper)<StyleProps>`
-	background-color: ${(props) => props.backgroundColor};
+	background: ${(props) =>
+		`${props.backgroundColor}${
+			props.backgroundImage ? ` url("${props.backgroundImage}") no-repeat right` : ''
+		}`};
 	font-size: ${(props) => props.fontSize}px;
 	text-align: ${(props) => props.alignment};
 	max-width: ${(props) => props.width}px;
@@ -16,8 +19,9 @@ export const Section = ({
 	alignment = 'center',
 	fontSize = 18,
 	fontFamily = 'roboto,helvetica neue,helvetica,arial,sans-serif',
-	backgroundColor = '#2c3654',
-	color = '#fef6cf',
+	backgroundColor = '#FFFFFF',
+	backgroundImage,
+	color = '#333333',
 	innerPadding = '40px',
 	width = 600,
 }: Props) => (
@@ -25,6 +29,7 @@ export const Section = ({
 		fontSize={fontSize}
 		fontFamily={fontFamily}
 		backgroundColor={backgroundColor}
+		backgroundImage={backgroundImage}
 		alignment={alignment}
 		width={width}
 	>
@@ -42,6 +47,7 @@ type StyleProps = {
 	fontSize?: number;
 	width?: number;
 	backgroundColor?: string;
+	backgroundImage?: string;
 };
 
 type Props = StyleProps & {
