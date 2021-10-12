@@ -76,6 +76,7 @@ const deriveFieldStatus = (content: Content, field: PreviewConferenceElementFiel
 
 const Metadata = (props: Props) => {
 	const { content, onChangeContent, collection } = props;
+	
 	return (
 		<Card className="layout-editor-pubs_preview-elements-component">
 			{collection.kind === 'conference' &&

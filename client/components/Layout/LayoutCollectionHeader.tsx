@@ -26,7 +26,7 @@ const LayoutCollectionHeader = (props: Props) => {
 	const bylineContributors = contributors.filter((c) => c.isAuthor);
 	const schema = getSchemaForKind(collection.kind)!;
 	const doi = getCollectionDoi(collection);
-	// const metadata = collection?.metadata;
+	const metadata = collection.metadata;
 
 	const detailsRowElements = [
 		!hideCollectionKind && (
@@ -52,9 +52,10 @@ const LayoutCollectionHeader = (props: Props) => {
 				)}
 			</ClickToCopyButton>
 		),
-		// Object.entries(metadata).map((data) => {
-		// 	return <div key={3}>{data[1]}</div>;
-		// }),
+		metadata &&
+			Object.entries(metadata).map((data) => {
+				return <div key={3}>{data[1]}</div>;
+			}),
 	].filter((x) => x);
 
 	return (
