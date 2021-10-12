@@ -20,7 +20,27 @@ type Props = {
 const LayoutCollectionHeader = (props: Props) => {
 	const {
 		collection,
-		content: { hideByline, hideContributors, hideCollectionKind, hideDate, hideDoi },
+		content: {
+			hideByline,
+			hideContributors,
+			hideCollectionKind,
+			hideDate,
+			hideDoi,
+			hidePrintIssn,
+			hideElectronicIssn,
+			hideVolume,
+			hideIssue,
+			hidePrintPublicationDate,
+			hideBookPublicationDate,
+			hideIssuePublicationDate,
+			hideIsbn,
+			hideCopyrightYear,
+			hideEdition,
+			hideTheme,
+			hideAcronym,
+			hideConferenceDate,
+			hideLocation,
+		},
 	} = props;
 	const contributors = getAllCollectionContributors(collection);
 	const bylineContributors = contributors.filter((c) => c.isAuthor);
