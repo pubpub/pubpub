@@ -109,6 +109,7 @@ export type LayoutBlockCollectionHeader = {
 		hideCopyrightYear?: boolean;
 		hideEdition?: boolean;
 		hideTheme?: boolean;
+		hideConferenceDate?: boolean;
 		hideAcronym?: boolean;
 		hideLocation?: boolean;
 	};
