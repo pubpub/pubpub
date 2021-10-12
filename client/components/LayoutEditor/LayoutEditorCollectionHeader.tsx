@@ -16,6 +16,21 @@ type Props = {
 	collection: Collection;
 };
 
+type PreviewElementField =
+	| 'hideByline'
+	| 'hideContributors'
+	| 'hideDates'
+	| 'hideDescription'
+	| 'hideEdges';
+
+const labelsForPreviewElementFields: Record<PreviewElementField, string> = {
+	hideByline: 'Byline',
+	hideContributors: 'Contributors',
+	hideDates: 'Dates',
+	hideDescription: 'Description',
+	hideEdges: 'Connections',
+};
+
 const LayoutEditorCollectionHeader = (props: Props) => {
 	const { onChange: fullOnChange, layoutIndex, block, collection } = props;
 	const { hideDoi, hideCollectionKind, hideByline, hideContributors, hideDate } = block.content;

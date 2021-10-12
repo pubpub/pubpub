@@ -93,11 +93,23 @@ export type LayoutBlockCollectionHeader = {
 	type: 'collection-header';
 	id: string;
 	content: {
-		hideByline?: boolean;
-		hideContributors?: boolean;
-		hideDate?: boolean;
-		hideDoi?: boolean;
-		hideCollectionKind?: boolean;
+		header: {
+			hideByline?: boolean;
+			hideContributors?: boolean;
+			hideDate?: boolean;
+			hideDoi?: boolean;
+			hideCollectionKind?: boolean;
+		};
+
+		issue: {
+			hidePrintIssn?: boolean;
+			hideElectronicIssn?: boolean;
+			hideVolume?: boolean;
+			hideIssue?: boolean;
+			hidePrintPublicationDate?: boolean;
+			hidePublicationDate?: boolean;
+			hideDoi?: boolean;
+		};
 	};
 };
 

@@ -120,7 +120,6 @@ const metadataBlocks = [
 			doi: 'string',
 			url: 'string',
 			isbn: 'string',
-
 		},
 	},
 ];
