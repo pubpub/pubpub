@@ -142,7 +142,7 @@ const DashboardCollectionLayout = (props: Props) => {
 				)}
 			</SettingsSection>
 			{isUsingBlocks && (
-				<SettingsSection title="Blokes">
+				<SettingsSection title="Blocks">
 					<LayoutEditor
 						initialLayout={layout.blocks}
 						initialLayoutPubsByBlock={props.layoutPubsByBlock}
