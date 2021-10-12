@@ -26,7 +26,7 @@ const LayoutCollectionHeader = (props: Props) => {
 	const bylineContributors = contributors.filter((c) => c.isAuthor);
 	const schema = getSchemaForKind(collection.kind)!;
 	const doi = getCollectionDoi(collection);
-	const metadata = collection?.metadata;
+	// const metadata = collection?.metadata;
 
 	const detailsRowElements = [
 		!hideCollectionKind && (
