@@ -8,125 +8,136 @@ type Content = LayoutBlockCollectionHeader['content'];
 
 type Props = {
 	content: Content;
-	onChangeContent: (nextContent: Partial<Content>) => unknown;
+	onChange: (nextContent: Partial<Content>) => unknown;
 	collection: Collection;
 };
 
-type PreviewIssueElementField =
-	| 'hidePrintIssn'
-	| 'hideElectronicIssn'
-	| 'hideVolume'
-	| 'hideIssue'
-	| 'hidePrintPublicationDate'
-	| 'hidePublicationDate'
-	| 'hideDoi'
-	| 'hideUrl';
-
-type PreviewBookElementField =
-	| 'hideIsbn'
-	| 'hideCopyrightYear'
-	| 'hidePublicationDate'
-	| 'hideEdition'
-	| 'hideDoi'
-	| 'hideUrl';
-
-type PreviewConferenceElementField =
-	| 'hideTheme'
-	| 'hideAcronym'
-	| 'hideLocation'
-	| 'hideDate'
-	| 'hideDoi'
-	| 'hideUrl';
-
-const labelsForPreviewIssueElementFields: Record<PreviewIssueElementField, string> = {
-	hidePrintIssn: 'Print ISSN',
-	hideElectronicIssn: 'Electronic ISSN',
-	hideVolume: 'Volume',
-	hideIssue: 'Issue',
-	hidePrintPublicationDate: 'Print Publication Date',
-	hidePublicationDate: 'Date',
-	hideDoi: 'DOI',
-	hideUrl: 'URL',
+type CheckBoxProps = {
+	content: Content;
+	onChange: (nextContent: Partial<Content>) => unknown;
 };
 
-const labelsForPreviewBookElementFields: Record<PreviewBookElementField, string> = {
-	hideIsbn: 'ISBN',
-	hideCopyrightYear: 'Copyright Year',
-	hidePublicationDate: 'Publication Date',
-	hideEdition: 'Edition',
-	hideDoi: 'DOI',
-	hideUrl: 'URL',
+const PreviewIssueElementFields = (props: CheckBoxProps) => {
+	const { content, onChange } = props;
+	const {
+		hidePrintIssn,
+		hideElectronicIssn,
+		hideVolume,
+		hideIssue,
+		hidePrintPublicationDate,
+		hidePublicationDate,
+	} = content;
+
+	return (
+		<>
+			<Checkbox
+				checked={!hidePrintIssn}
+				onChange={() => onChange({ hidePrintIssn: !hidePrintIssn })}
+				label="Print ISSN"
+			/>
+			<Checkbox
+				checked={!hideElectronicIssn}
+				onChange={() => onChange({ hideElectronicIssn: !hideElectronicIssn })}
+				label="Electronic ISSN"
+			/>
+			<Checkbox
+				checked={!hideVolume}
+				onChange={() => onChange({ hideVolume: !hideVolume })}
+				label="Volume"
+			/>
+			<Checkbox
+				checked={!hideIssue}
+				onChange={() => onChange({ hideIssue: !hideIssue })}
+				label="Issue"
+			/>
+			<Checkbox
+				checked={!hidePrintPublicationDate}
+				onChange={() => onChange({ hidePrintPublicationDate: !hidePrintPublicationDate })}
+				label="Print Publication Date"
+			/>
+			<Checkbox
+				checked={!hidePublicationDate}
+				onChange={() => onChange({ hidePublicationDate: !hidePublicationDate })}
+				label="Publication Date"
+			/>
+		</>
+	);
 };
 
-const labelsForPreviewConferenceElementFields: Record<PreviewConferenceElementField, string> = {
-	hideTheme: 'Theme',
-	hideAcronym: 'Acronym',
-	hideDate: 'Dates',
-	hideLocation: 'Location',
-	hideDoi: 'DOI',
-	hideUrl: 'URL',
+const PreviewBookElementFields = (props: CheckBoxProps) => {
+	const { content, onChange } = props;
+	const { hideIsbn, hideCopyrightYear, hidePublicationDate, hideEdition } = content;
+
+	return (
+		<>
+			<Checkbox
+				checked={!hideIsbn}
+				onChange={() => onChange({ hideIsbn: !hideIsbn })}
+				label="ISBN"
+			/>
+			<Checkbox
+				checked={!hideCopyrightYear}
+				onChange={() => onChange({ hideCopyrightYear: !hideCopyrightYear })}
+				label="Copyright Year"
+			/>
+			<Checkbox
+				checked={!hidePublicationDate}
+				onChange={() => onChange({ hidePublicationDate: !hidePublicationDate })}
+				label="Publication Date"
+			/>
+			<Checkbox
+				checked={!hideEdition}
+				onChange={() => onChange({ hideEdition: !hideEdition })}
+				label="Edition"
+			/>
+		</>
+	);
 };
 
-const deriveFieldStatus = (content: Content, field: PreviewConferenceElementField) => {
-	const fieldValue = content[field];
-	return {
-		hidden: fieldValue,
-	};
+const PreviewConferenceElementFields = (props: CheckBoxProps) => {
+	const { content, onChange } = props;
+	const { hideTheme, hideAcronym, hideConferenceDate, hideLocation } = content;
+
+	return (
+		<>
+			<Checkbox
+				checked={!hideTheme}
+				onChange={() => onChange({ hideTheme: !hideTheme })}
+				label="ISBN"
+			/>
+			<Checkbox
+				checked={!hideAcronym}
+				onChange={() => onChange({ hideAcronym: !hideAcronym })}
+				label="Copyright Year"
+			/>
+			<Checkbox
+				checked={!hideConferenceDate}
+				onChange={() => onChange({ hideDate: !hideConferenceDate })}
+				label="Conference Date"
+			/>
+			<Checkbox
+				checked={!hideLocation}
+				onChange={() => onChange({ hideLocation: !hideLocation })}
+				label="Location"
+			/>
+		</>
+	);
 };
 
 const Metadata = (props: Props) => {
-	const { content, onChangeContent, collection } = props;
-	
+	const { content, onChange, collection } = props;
+
 	return (
 		<Card className="layout-editor-pubs_preview-elements-component">
-			{collection.kind === 'conference' &&
-				Object.entries(labelsForPreviewConferenceElementFields).map((entry) => {
-					const [field, label] = entry;
-					const { hidden } = deriveFieldStatus(
-						content,
-						field as PreviewConferenceElementField,
-					);
-					return (
-						<Checkbox
-							key={field}
-							label={label}
-							checked={!hidden}
-							onChange={() => onChangeContent({ [field]: !hidden })}
-						/>
-					);
-				})}
-			{collection.kind === 'book' &&
-				Object.entries(labelsForPreviewBookElementFields).map((entry) => {
-					const [field, label] = entry;
-					const { hidden } = deriveFieldStatus(
-						content,
-						field as PreviewConferenceElementField,
-					);
-					return (
-						<Checkbox
-							key={field}
-							label={label}
-							checked={!hidden}
-							onChange={() => onChangeContent({ [field]: !hidden })}
-						/>
-					);
-				})}
-			{collection.kind === 'issue' &&
-				Object.entries(labelsForPreviewIssueElementFields).map((entry) => {
-					const [field, label] = entry;
-					const { hidden } = deriveFieldStatus(
-						content,
-						field as PreviewConferenceElementField,
-					);
-					return (
-						<Checkbox
-							key={field}
-							label={label}
-							checked={!hidden}
-							onChange={() => onChangeContent({ [field]: !hidden })}
-						/>
-					);
-				})}
+			{collection.kind === 'conference' && (
+				<PreviewConferenceElementFields content={content} onChange={onChange} />
+			)}
+			{collection.kind === 'book' && (
+				<PreviewBookElementFields content={content} onChange={onChange} />
+			)}
+			{collection.kind === 'issue' && (
+				<PreviewIssueElementFields content={content} onChange={onChange} />
+			)}
 		</Card>
 	);
 };
