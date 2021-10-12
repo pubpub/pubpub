@@ -27,8 +27,7 @@ const LayoutCollectionHeader = (props: Props) => {
 	const schema = getSchemaForKind(collection.kind)!;
 	const doi = getCollectionDoi(collection);
 	const metadata = collection?.metadata;
-	console.table(metadata);
-	console.log(Object.entries(metadata));
+
 	const detailsRowElements = [
 		!hideCollectionKind && (
 			<div className="collection-kind" key={0}>
@@ -54,11 +53,7 @@ const LayoutCollectionHeader = (props: Props) => {
 			</ClickToCopyButton>
 		),
 		Object.entries(metadata).map((data) => {
-			return (
-				<div key={3} className="collection-kind">
-					{data[1]}
-				</div>
-			);
+			return <div key={3}>{data[1]}</div>;
 		}),
 	].filter((x) => x);
 
