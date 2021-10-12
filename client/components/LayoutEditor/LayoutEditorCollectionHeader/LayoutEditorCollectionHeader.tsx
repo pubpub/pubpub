@@ -75,7 +75,7 @@ const LayoutEditorCollectionHeader = (props: Props) => {
 					onChange={() => onChange({ hideDoi: !hideDoi })}
 					label="DOI"
 				/>
-				{renderMetadataElements()}
+				<div className="controls-row">{renderMetadataElements()}</div>
 			</InputField>
 		);
 	};
