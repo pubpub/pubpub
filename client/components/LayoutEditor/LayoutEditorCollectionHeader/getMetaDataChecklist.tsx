@@ -76,13 +76,11 @@ const deriveFieldStatus = (content: Content, field: PreviewConferenceElementFiel
 
 const Metadata = (props: Props) => {
 	const { content, onChangeContent, collection } = props;
-	console.log(collection);
 	return (
 		<Card className="layout-editor-pubs_preview-elements-component">
 			{collection.kind === 'conference' &&
 				Object.entries(labelsForPreviewConferenceElementFields).map((entry) => {
 					const [field, label] = entry;
-					console.log(entry);
 					const { hidden } = deriveFieldStatus(
 						content,
 						field as PreviewConferenceElementField,
@@ -99,7 +97,6 @@ const Metadata = (props: Props) => {
 			{collection.kind === 'book' &&
 				Object.entries(labelsForPreviewBookElementFields).map((entry) => {
 					const [field, label] = entry;
-					console.log(entry);
 					const { hidden } = deriveFieldStatus(
 						content,
 						field as PreviewConferenceElementField,
@@ -116,7 +113,6 @@ const Metadata = (props: Props) => {
 			{collection.kind === 'issue' &&
 				Object.entries(labelsForPreviewIssueElementFields).map((entry) => {
 					const [field, label] = entry;
-					console.log(entry);
 					const { hidden } = deriveFieldStatus(
 						content,
 						field as PreviewConferenceElementField,
