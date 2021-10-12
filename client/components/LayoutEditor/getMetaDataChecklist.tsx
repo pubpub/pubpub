@@ -4,7 +4,7 @@ import { Card, Checkbox } from '@blueprintjs/core';
 import { LayoutBlockCollectionHeader } from 'utils/layout';
 import { Collection } from 'types';
 
-type Content = LayoutBlockCollectionHeader['content'] ;
+type Content = LayoutBlockCollectionHeader['content'];
 
 type Props = {
 	content: Content;
