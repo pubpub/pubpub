@@ -12,7 +12,7 @@ const createUuidForFraction = (frac: number) => {
 };
 
 const expectFeatureFlagsToMatch = async (user: any, community: any, match: Record<string, any>) => {
-	const flags = await getFeatureFlagsForUserAndCommunity(user.id, community.id);
+	const flags = await getFeatureFlagsForUserAndCommunity(user?.id, community?.id);
 	expect(flags).toMatchObject(match);
 };
 
@@ -102,5 +102,9 @@ describe('getFeatureFlagsForUserAndCommunity', () => {
 			expectFeatureFlagsToMatch(u0, c1, { knees: true }),
 			expectFeatureFlagsToMatch(u0, c2, { knees: false }),
 		]);
+	});
+
+	it('works when user and community are null', async () => {
+		await expectFeatureFlagsToMatch(null, null, { bees: false, knees: false, trees: false });
 	});
 });

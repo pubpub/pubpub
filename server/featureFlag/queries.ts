@@ -63,7 +63,7 @@ export const getFeatureFlagsForUserAndCommunity = async (
 	const [featureFlags, featureFlagUsers, featureFlagCommunities] = await Promise.all([
 		FeatureFlag.findAll(),
 		userId ? FeatureFlagUser.findAll({ where: { userId } }) : [],
-		FeatureFlagCommunity.findAll({ where: { communityId } }),
+		communityId ? FeatureFlagCommunity.findAll({ where: { communityId } }) : [],
 	]);
 	const flags: Record<string, boolean> = {};
 	featureFlags.forEach((featureFlag) => {
