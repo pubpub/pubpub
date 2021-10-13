@@ -24,7 +24,7 @@ const PreviewIssueElementFields = (props: CheckBoxProps) => {
 		hideElectronicIssn,
 		hideVolume,
 		hideIssue,
-		hidePrintPublicationDate,
+		hideIssuePrintPublicationDate,
 		hideIssuePublicationDate,
 	} = content;
 
@@ -51,8 +51,10 @@ const PreviewIssueElementFields = (props: CheckBoxProps) => {
 				label="Issue"
 			/>
 			<Checkbox
-				checked={!hidePrintPublicationDate}
-				onChange={() => onChange({ hidePrintPublicationDate: !hidePrintPublicationDate })}
+				checked={!hideIssuePrintPublicationDate}
+				onChange={() =>
+					onChange({ hideIssuePrintPublicationDate: !hideIssuePrintPublicationDate })
+				}
 				label="Print Publication Date"
 			/>
 			<Checkbox
