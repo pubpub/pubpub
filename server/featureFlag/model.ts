@@ -8,6 +8,7 @@ export default (sequelize, dataTypes) => {
 			enabledCommunitiesFraction: { type: dataTypes.DOUBLE, defaultValue: 0 },
 		},
 		{
+			indexes: [{ unique: true, fields: ['name'] }],
 			classMethods: {
 				associate: (models) => {
 					const { FeatureFlag, FeatureFlagUser, FeatureFlagCommunity } = models;
