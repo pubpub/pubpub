@@ -77,3 +77,22 @@ export const getFeatureFlagsForUserAndCommunity = async (
 	});
 	return flags;
 };
+
+export const getFeatureFlagForUserAndCommunity = async (
+	userId: null | string,
+	communityId: null | string,
+	flagName: string,
+) => {
+	const featureFlag = await getFeatureFlagByName(flagName, true);
+	const [featureFlagUsers, featureFlagCommunities] = await Promise.all([
+		userId ? FeatureFlagUser.findAll({ where: { userId } }) : [],
+		communityId ? FeatureFlagCommunity.findAll({ where: { communityId } }) : [],
+	]);
+	return isFeatureFlagEnabledForUserInCommunity({
+		userId,
+		communityId,
+		featureFlag,
+		featureFlagUsers,
+		featureFlagCommunities,
+	});
+};

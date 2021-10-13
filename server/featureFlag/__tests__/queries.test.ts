@@ -1,7 +1,7 @@
 /* global describe, it, expect, beforeAll */
 import { modelize, setup } from 'stubstub';
 
-import { getFeatureFlagsForUserAndCommunity } from '../queries';
+import { getFeatureFlagForUserAndCommunity, getFeatureFlagsForUserAndCommunity } from '../queries';
 
 const createUuidForFraction = (frac: number) => {
 	const prefix = '00000000-0000-0000-0000-';
@@ -106,5 +106,19 @@ describe('getFeatureFlagsForUserAndCommunity', () => {
 
 	it('works when user and community are null', async () => {
 		await expectFeatureFlagsToMatch(null, null, { bees: false, knees: false, trees: false });
+	});
+});
+
+describe('getFeatureFlagForUser', () => {
+	it('returns expected values for a single feature flag', async () => {
+		const { u1, c1, c2 } = models;
+		expect(await getFeatureFlagForUserAndCommunity(u1.id, c1.id, 'bees')).toBe(true);
+		expect(await getFeatureFlagForUserAndCommunity(u1.id, c2.id, 'bees')).toBe(false);
+	});
+
+	it('returns expected values for another feature flag', async () => {
+		const { u0, u1, c1 } = models;
+		expect(await getFeatureFlagForUserAndCommunity(u0.id, c1.id, 'trees')).toBe(true);
+		expect(await getFeatureFlagForUserAndCommunity(u1.id, c1.id, 'trees')).toBe(false);
 	});
 });
