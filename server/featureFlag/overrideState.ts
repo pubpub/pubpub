@@ -13,11 +13,12 @@ export const createOverrideSetter = (OverrideModel: any, createWhereQuery: Creat
 			await OverrideModel.destroy({ where });
 		} else {
 			const existingEntry = await OverrideModel.findOne({ where });
+			const enabled = state === 'on';
 			if (existingEntry) {
-				existingEntry.enabled = state === 'on';
+				existingEntry.enabled = enabled;
 				await existingEntry.save();
 			} else {
-				await OverrideModel.create({ ...where, enabled: state === 'on' });
+				await OverrideModel.create({ ...where, enabled });
 			}
 		}
 	};

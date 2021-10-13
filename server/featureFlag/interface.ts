@@ -133,5 +133,6 @@ export const getFeatureFlag = async (name: string) => {
 };
 
 export const destroyFeatureFlag = async (name: string) => {
-	await destroyRawFeatureFlag(name);
+	const featureFlag = await getFeatureFlagByName(name, true);
+	await destroyRawFeatureFlag(featureFlag.id);
 };
