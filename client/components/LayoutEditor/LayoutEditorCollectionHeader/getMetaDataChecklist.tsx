@@ -103,16 +103,16 @@ const PreviewConferenceElementFields = (props: CheckBoxProps) => {
 			<Checkbox
 				checked={!hideTheme}
 				onChange={() => onChange({ hideTheme: !hideTheme })}
-				label="ISBN"
+				label="Theme"
 			/>
 			<Checkbox
 				checked={!hideAcronym}
 				onChange={() => onChange({ hideAcronym: !hideAcronym })}
-				label="Copyright Year"
+				label="Acronym"
 			/>
 			<Checkbox
 				checked={!hideConferenceDate}
-				onChange={() => onChange({ hideDate: !hideConferenceDate })}
+				onChange={() => onChange({ hideConferenceDate: !hideConferenceDate })}
 				label="Conference Date"
 			/>
 			<Checkbox

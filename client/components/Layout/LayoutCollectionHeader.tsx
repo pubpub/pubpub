@@ -23,12 +23,19 @@ const ConferenceDiv = (props: Props) => {
 		collection,
 		content: { hideTheme, hideAcronym, hideConferenceDate, hideLocation },
 	} = props;
-	const { theme, location, acronym, conferenceDate } = ConferenceMetadata(collection);
+	const { theme, acronym, location, conferenceDate } = ConferenceMetadata(collection);
 
 	const detailsRowConferenceElements = [
-		!hideTheme && 
-	]
+		!hideTheme && <div key={3}> {theme}</div>,
+		!hideAcronym && <div key={4}> {acronym}</div>,
+		!hideLocation && <div key={5}>{location}</div>,
+		!hideConferenceDate && <div key={6}>Date of conference {conferenceDate}</div>,
+	];
+
+	return detailsRowConferenceElements;
 };
+
+
 
 const LayoutCollectionHeader = (props: Props) => {
 	const {
@@ -55,9 +62,14 @@ const LayoutCollectionHeader = (props: Props) => {
 	const bylineContributors = contributors.filter((c) => c.isAuthor);
 	const schema = getSchemaForKind(collection.kind)!;
 	const doi = getCollectionDoi(collection);
-	const { theme, location, acronym, conferenceDate } = ConferenceMetadata(collection);
 	console.log(collection.metadata);
-
+	if (collection.kind === 'book') {
+		const collectionHeaderInfo = ConferenceDiv(props);
+	} else if (collection.kind === 'issue') {
+		const collectionHeaderInfo = ConferenceDiv(props);
+	} else if (collection.kind === 'conference') {
+		const collectionHeaderInfo = ConferenceDiv(props);
+	}
 	const detailsRowElements = [
 		!hideCollectionKind && (
 			<div className="collection-kind" key={0}>
