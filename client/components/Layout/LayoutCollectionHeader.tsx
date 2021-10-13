@@ -9,12 +9,25 @@ import getCollectionDoi from 'utils/collections/getCollectionDoi';
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { capitalize } from 'utils/strings';
 import { formatDate } from 'utils/dates';
+import { ConferenceMetadata } from 'utils/collections/getConferenceMetadata';
 
 require('./layoutCollectionHeader.scss');
 
 type Props = {
 	collection: Collection;
 	content: LayoutBlockCollectionHeader['content'];
+};
+
+const ConferenceDiv = (props: Props) => {
+	const {
+		collection,
+		content: { hideTheme, hideAcronym, hideConferenceDate, hideLocation },
+	} = props;
+	const { theme, location, acronym, conferenceDate } = ConferenceMetadata(collection);
+
+	const detailsRowConferenceElements = [
+		!hideTheme && 
+	]
 };
 
 const LayoutCollectionHeader = (props: Props) => {
@@ -36,17 +49,14 @@ const LayoutCollectionHeader = (props: Props) => {
 			hideIsbn,
 			hideCopyrightYear,
 			hideEdition,
-			hideTheme,
-			hideAcronym,
-			hideConferenceDate,
-			hideLocation,
 		},
 	} = props;
 	const contributors = getAllCollectionContributors(collection);
 	const bylineContributors = contributors.filter((c) => c.isAuthor);
 	const schema = getSchemaForKind(collection.kind)!;
 	const doi = getCollectionDoi(collection);
-	const metadata = collection.metadata;
+	const { theme, location, acronym, conferenceDate } = ConferenceMetadata(collection);
+	console.log(collection.metadata);
 
 	const detailsRowElements = [
 		!hideCollectionKind && (
@@ -72,10 +82,6 @@ const LayoutCollectionHeader = (props: Props) => {
 				)}
 			</ClickToCopyButton>
 		),
-		metadata &&
-			Object.entries(metadata).map((data) => {
-				return <div key={3}>{data[1]}</div>;
-			}),
 	].filter((x) => x);
 
 	return (
