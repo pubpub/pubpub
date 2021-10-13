@@ -10,11 +10,16 @@ export default (sequelize, dataTypes) => {
 		{
 			classMethods: {
 				associate: (models) => {
-					const { FeatureFlagUser, User } = models;
+					const { FeatureFlag, FeatureFlagUser, User } = models;
 					FeatureFlagUser.belongsTo(User, {
 						onDelete: 'CASCADE',
 						as: 'user',
 						foreignKey: 'userId',
+					});
+					FeatureFlagUser.belongsTo(FeatureFlag, {
+						onDelete: 'CASCADE',
+						as: 'featureFlag',
+						foreignKey: 'featureFlagId',
 					});
 				},
 			},

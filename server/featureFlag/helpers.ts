@@ -14,10 +14,10 @@ const getRandomFractionForUuid = (uuid: string) => {
 
 const passesThresholdFraction = (
 	featureFlagUuid: string,
-	targetModelUuid: string,
+	targetModelUuid: null | string,
 	threshold: number,
 ) => {
-	if (threshold === 0) {
+	if (threshold === 0 || !targetModelUuid) {
 		return false;
 	}
 	const featureFlagValue = getRandomFractionForUuid(featureFlagUuid);
@@ -34,22 +34,6 @@ export const getOverrideState = (
 		return matchingOverride.enabled ? 'on' : 'off';
 	}
 	return 'inert';
-};
-
-export const isEnabledForModel = (
-	featureFlagId: string,
-	modelId: null | string,
-	modelThreshold: number,
-	modelOverrides: FeatureFlagOverride[],
-) => {
-	if (modelId) {
-		const overrideState = getOverrideState(featureFlagId, modelOverrides);
-		if (overrideState === 'inert') {
-			return passesThresholdFraction(featureFlagId, modelId, modelThreshold);
-		}
-		return overrideState === 'on';
-	}
-	return false;
 };
 
 type GetEnabledForUserInCommunityOptions = {
@@ -70,13 +54,17 @@ export const isFeatureFlagEnabledForUserInCommunity = (
 		featureFlagUsers,
 		featureFlagCommunities,
 	} = options;
+	const overrideStates = [featureFlagUsers, featureFlagCommunities].map((overrides) =>
+		getOverrideState(featureFlagId, overrides),
+	);
+	if (overrideStates.some((state) => state === 'off')) {
+		return false;
+	}
+	if (overrideStates.some((state) => state === 'on')) {
+		return true;
+	}
 	return (
-		isEnabledForModel(featureFlagId, userId, enabledUsersFraction, featureFlagUsers) ||
-		isEnabledForModel(
-			featureFlagId,
-			communityId,
-			enabledCommunitiesFraction,
-			featureFlagCommunities,
-		)
+		passesThresholdFraction(featureFlagId, userId, enabledUsersFraction) ||
+		passesThresholdFraction(featureFlagId, communityId, enabledCommunitiesFraction)
 	);
 };
