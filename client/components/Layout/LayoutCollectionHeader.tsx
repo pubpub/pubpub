@@ -9,6 +9,8 @@ import getCollectionDoi from 'utils/collections/getCollectionDoi';
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { capitalize } from 'utils/strings';
 import { formatDate } from 'utils/dates';
+import { IssueMetadata } from 'utils/collections/getIssueMetadata';
+import { BookMetadata } from 'utils/collections/getBookMetadata';
 import { ConferenceMetadata } from 'utils/collections/getConferenceMetadata';
 
 require('./layoutCollectionHeader.scss');
@@ -16,6 +18,59 @@ require('./layoutCollectionHeader.scss');
 type Props = {
 	collection: Collection;
 	content: LayoutBlockCollectionHeader['content'];
+};
+
+const IssueDiv = (props: Props) => {
+	const {
+		collection,
+		content: {
+			hidePrintIssn,
+			hideElectronicIssn,
+			hideVolume,
+			hideIssuePrintPublicationDate,
+			hideIssuePublicationDate,
+			hideIssue,
+		},
+	} = props;
+
+	const {
+		printIssn,
+		electronicIssn,
+		volume,
+		printPublicationDate,
+		publicationDate,
+		issue,
+	} = IssueMetadata(collection);
+
+	const detailsRowIssueElements = [
+		!hidePrintIssn && <div key={3}> {printIssn}</div>,
+		!hideElectronicIssn && <div key={4}> {electronicIssn}</div>,
+		!hideVolume && <div key={5}>{volume}</div>,
+		!hideIssuePrintPublicationDate && (
+			<div key={6}>Published in print {printPublicationDate}</div>
+		),
+		!hideIssuePublicationDate && <div key={7}>Published {publicationDate}</div>,
+		!hideIssue && <div key={8}>Date of conference {issue}</div>,
+	];
+
+	return detailsRowIssueElements;
+};
+
+const BookDiv = (props: Props) => {
+	const {
+		collection,
+		content: { hideIsbn, hideBookPublicationDate, hideCopyrightYear, hideEdition },
+	} = props;
+	const { isbn, copyright, published, edition } = BookMetadata(collection);
+
+	const detailsRowBookElements = [
+		!hideIsbn && <div key={3}> {isbn}</div>,
+		!hideBookPublicationDate && <div key={4}> {copyright}</div>,
+		!hideCopyrightYear && <div key={5}>{published}</div>,
+		!hideEdition && <div key={6}>Date of conference {edition}</div>,
+	];
+
+	return detailsRowBookElements;
 };
 
 const ConferenceDiv = (props: Props) => {
@@ -35,41 +90,24 @@ const ConferenceDiv = (props: Props) => {
 	return detailsRowConferenceElements;
 };
 
-
-
 const LayoutCollectionHeader = (props: Props) => {
 	const {
 		collection,
-		content: {
-			hideByline,
-			hideContributors,
-			hideCollectionKind,
-			hideDate,
-			hideDoi,
-			hidePrintIssn,
-			hideElectronicIssn,
-			hideVolume,
-			hideIssue,
-			hidePrintPublicationDate,
-			hideBookPublicationDate,
-			hideIssuePublicationDate,
-			hideIsbn,
-			hideCopyrightYear,
-			hideEdition,
-		},
+		content: { hideByline, hideContributors, hideCollectionKind, hideDate, hideDoi },
 	} = props;
 	const contributors = getAllCollectionContributors(collection);
 	const bylineContributors = contributors.filter((c) => c.isAuthor);
 	const schema = getSchemaForKind(collection.kind)!;
 	const doi = getCollectionDoi(collection);
-	console.log(collection.metadata);
-	if (collection.kind === 'book') {
-		const collectionHeaderInfo = ConferenceDiv(props);
-	} else if (collection.kind === 'issue') {
-		const collectionHeaderInfo = ConferenceDiv(props);
-	} else if (collection.kind === 'conference') {
-		const collectionHeaderInfo = ConferenceDiv(props);
-	}
+
+	// if (collection.kind === 'issue') {
+	// 	const collectionHeaderInfo = IssueDiv(props);
+	// } else if (collection.kind === 'book') {
+	// 	const collectionHeaderInfo = BookDiv(props);
+	// } else if (collection.kind === 'conference') {
+	// 	const collectionHeaderInfo = ConferenceDiv(props);
+	// }
+
 	const detailsRowElements = [
 		!hideCollectionKind && (
 			<div className="collection-kind" key={0}>

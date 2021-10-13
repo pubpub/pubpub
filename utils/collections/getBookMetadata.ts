@@ -28,11 +28,11 @@ const getBookPublicationDate = (collection) => {
 	return collection.metadata && collection.metadata.publicationDate;
 };
 
-export const IssueMetadata = (collection: Collection) => {
-	const printIssn = getBookCopyright(collection);
-	const electronicIssn = getBookIsbn(collection);
-	const volume = getBookEdition(collection);
-	const printPublicationDate = getBookPublicationDate(collection);
+export const BookMetadata = (collection: Collection) => {
+	const isbn = getBookIsbn(collection);
+	const copyright = getBookCopyright(collection);
+	const published = getBookEdition(collection);
+	const edition = getBookPublicationDate(collection);
 
-	return { printIssn, electronicIssn, volume, printPublicationDate };
+	return { isbn, copyright, published, edition };
 };
