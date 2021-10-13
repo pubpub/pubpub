@@ -4,12 +4,12 @@ import ReactDOMServer from 'react-dom/server';
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
 import juice from 'juice';
 import { handleErrors } from 'server/utils/errors';
+import pickBy from 'lodash.pickby';
+import { GroupedActivityItems } from 'client/components/Email/Digest';
 
 import { hostIsValid } from 'server/utils/routes';
 import { getInitialData } from 'server/utils/initData';
 import { minify } from 'html-minifier';
-import util from 'util';
-import flatten from 'lodash.flatten';
 
 import { Digest } from 'components/Email';
 import { reset, globals } from 'components/Email/styles';
@@ -58,6 +58,7 @@ app.get('/email', async (req, res, next) => {
 		const initialData = await getInitialData(req, true);
 		const {
 			communityData: {
+				id: communityId,
 				headerLogo,
 				title: communityTitle,
 				accentColorDark = '#2D3752',
@@ -69,72 +70,55 @@ app.get('/email', async (req, res, next) => {
 		if (!hostIsValid(req, 'community') || process.env.NODE_ENV === 'production' || !userId) {
 			return next();
 		}
-		const activityData = await fetchActivityItems({ scope });
-		const { activityItems } = activityData;
-		const associations = createActivityAssociations();
+		const resizedHeaderLogo = getResizedUrl(headerLogo || '', 'inside', undefined, 50);
+		const { activityItems } = await fetchActivityItems({ scope });
 		const activityRenderContext: ActivityRenderContext = {
-			associations,
+			associations: createActivityAssociations(),
 			userId,
 			scope,
 		};
-		const resizedHeaderLogo = getResizedUrl(headerLogo || '', 'inside', undefined, 50);
-		const pubActivityItems = activityItems.filter(
-			({ pubId, collectionId, payload }) => pubId || collectionId || 'page' in payload,
-		);
-		const test = {
-			pub: { title: 'S-CRY-ed' },
-			target: {
-				pub: {
-					id: '606c5ee7-d74e-4190-8861-eb5a2094c2d7',
-					slug: 'cktyq7pk',
-					title: 'Ergo Proxy',
-				},
-			},
-		};
+		const renderActivityItemInContext = (item) =>
+			renderActivityItem(item, activityRenderContext);
+		const getAffectedObjectId = (item) =>
+			item.pubId ||
+			item.collectionId ||
+			('page' in item.payload && item.payload.page.id) ||
+			item.communityId;
 
-		const flattenKeys = (obj) =>
-			typeof obj && obj === 'object' && !Array.isArray(obj)
-				? [
-						...Object.keys(obj),
-						...flatten(Object.entries(obj).map(([, value]) => flattenKeys(value))),
-				  ]
-				: [];
-
-		const groupedByObjectId = activityItems.reduce((result, item) => {
-			const { pubId, collectionId, payload } = item;
-			const objectId = pubId || collectionId || ('page' in payload && payload.page.id);
-			console.log({ payload });
-			const displayKey = flattenKeys(payload)
+		const activityItemsGroupedByObjectId = activityItems.reduce((result, item) => {
+			const objectId = getAffectedObjectId(item);
+			const payloadKeys = Object.keys(item.payload)
 				.sort()
 				.join();
-			console.log({ displayKey });
-			return objectId
-				? { ...result, [objectId]: [...(result[objectId] || []), { ...item, displayKey }] }
-				: result;
+			const displayKey = `${item.kind} - ${payloadKeys}`;
+			return {
+				...result,
+				[objectId]: [...(result[objectId] || []), { ...item, displayKey }],
+			};
 		}, {});
-		const communityActivityItems = activityItems.filter(
-			({ pubId, collectionId, payload }) => !pubId && !collectionId && !('page' in payload),
+		const dedupedActivityItems = Object.keys(activityItemsGroupedByObjectId).reduce(
+			(memo, objectId) => ({
+				...memo,
+				[objectId]: activityItemsGroupedByObjectId[objectId]
+					.sort((first, second) => (first.timestamp > second.timestamp ? -1 : 1))
+					.reduce(
+						(result, item) =>
+							item.displayKey in result
+								? result
+								: { ...result, [item.displayKey]: item },
+						{},
+					),
+			}),
+			{},
 		);
-		const renderedPubItems = pubActivityItems.map((item) =>
-			renderActivityItem(item, activityRenderContext),
+		const pubItems: GroupedActivityItems = pickBy(
+			dedupedActivityItems,
+			(item, affectedObjectId) => affectedObjectId !== communityId,
 		);
-		const renderedCommunityItems = communityActivityItems.map((item) =>
-			renderActivityItem(item, activityRenderContext),
+		const communityItems: GroupedActivityItems = pickBy(
+			dedupedActivityItems,
+			(item, affectedObjectId) => affectedObjectId === communityId,
 		);
-		const sortedGroupedActivityItems = Object.keys(groupedByObjectId).map((objectId) => {
-			// console.log(util.inspect(groupedByObjectId[objectId], false, null, true));
-			const sorted = groupedByObjectId[objectId].sort((first, second) =>
-				first.timestamp > second.timestamp ? -1 : 1,
-			);
-			// console.log(util.inspect(sorted, false, null, true));
-			const returnable = sorted.reduce(
-				(result, item) => (item.kind in result ? result : { ...result, [item.kind]: item }),
-				{},
-			);
-			return returnable;
-		});
-		// console.log(util.inspect(sortedGroupedActivityItems, false, null, true));
-		if (!sortedGroupedActivityItems) console.log('never');
 		return res.send(
 			render(
 				Digest({
@@ -143,8 +127,9 @@ app.get('/email', async (req, res, next) => {
 					headerLogo: resizedHeaderLogo,
 					accentColorLight,
 					accentColorDark,
-					pubItems: renderedPubItems,
-					communityItems: renderedCommunityItems,
+					renderActivityItem: renderActivityItemInContext,
+					pubItems,
+					communityItems,
 				}),
 			),
 		);
