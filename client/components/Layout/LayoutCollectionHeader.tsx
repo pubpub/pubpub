@@ -53,7 +53,7 @@ const IssueDiv = (props: Props) => {
 			{publicationDate && !hideIssuePublicationDate && (
 				<div key={7}>Published {publicationDate}</div>
 			)}
-			{issue && !hideIssue && <div key={8}>Date of conference {issue}</div>}
+			{issue && !hideIssue && <div key={8}> {issue}</div>}
 		</>
 	);
 };
@@ -70,7 +70,7 @@ const BookDiv = (props: Props) => {
 			{isbn && !hideIsbn && <div key={3}> {isbn}</div>}
 			{copyright && !hideCopyrightYear && <div key={5}>{copyright}</div>}
 			{published && !hideBookPublicationDate && <div key={4}> {published}</div>}
-			{edition && !hideEdition && <div key={6}>Date of conference {edition}</div>}
+			{edition && !hideEdition && <div key={6}> {edition}</div>}
 		</>
 	);
 };
