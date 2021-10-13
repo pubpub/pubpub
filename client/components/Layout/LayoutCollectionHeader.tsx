@@ -42,18 +42,20 @@ const IssueDiv = (props: Props) => {
 		issue,
 	} = IssueMetadata(collection);
 
-	const detailsRowIssueElements = [
-		!hidePrintIssn && <div key={3}> {printIssn}</div>,
-		!hideElectronicIssn && <div key={4}> {electronicIssn}</div>,
-		!hideVolume && <div key={5}>{volume}</div>,
-		!hideIssuePrintPublicationDate && (
-			<div key={6}>Published in print {printPublicationDate}</div>
-		),
-		!hideIssuePublicationDate && <div key={7}>Published {publicationDate}</div>,
-		!hideIssue && <div key={8}>Date of conference {issue}</div>,
-	];
-
-	return detailsRowIssueElements;
+	return (
+		<>
+			{printIssn && !hidePrintIssn && <div key={3}> {printIssn}</div>}
+			{electronicIssn && !hideElectronicIssn && <div key={4}> {electronicIssn}</div>}
+			{volume && !hideVolume && <div key={5}>{volume}</div>}
+			{printPublicationDate && !hideIssuePrintPublicationDate && (
+				<div key={6}>Published in print on {printPublicationDate}</div>
+			)}
+			{publicationDate && !hideIssuePublicationDate && (
+				<div key={7}>Published {publicationDate}</div>
+			)}
+			{issue && !hideIssue && <div key={8}>Date of conference {issue}</div>}
+		</>
+	);
 };
 
 const BookDiv = (props: Props) => {
@@ -63,14 +65,14 @@ const BookDiv = (props: Props) => {
 	} = props;
 	const { isbn, copyright, published, edition } = BookMetadata(collection);
 
-	const detailsRowBookElements = [
-		!hideIsbn && <div key={3}> {isbn}</div>,
-		!hideBookPublicationDate && <div key={4}> {copyright}</div>,
-		!hideCopyrightYear && <div key={5}>{published}</div>,
-		!hideEdition && <div key={6}>Date of conference {edition}</div>,
-	];
-
-	return detailsRowBookElements;
+	return (
+		<>
+			{isbn && !hideIsbn && <div key={3}> {isbn}</div>}
+			{copyright && !hideCopyrightYear && <div key={5}>{copyright}</div>}
+			{published && !hideBookPublicationDate && <div key={4}> {published}</div>}
+			{edition && !hideEdition && <div key={6}>Date of conference {edition}</div>}
+		</>
+	);
 };
 
 const ConferenceDiv = (props: Props) => {
@@ -80,33 +82,28 @@ const ConferenceDiv = (props: Props) => {
 	} = props;
 	const { theme, acronym, location, conferenceDate } = ConferenceMetadata(collection);
 
-	const detailsRowConferenceElements = [
-		!hideTheme && <div key={3}> {theme}</div>,
-		!hideAcronym && <div key={4}> {acronym}</div>,
-		!hideLocation && <div key={5}>{location}</div>,
-		!hideConferenceDate && <div key={6}>Date of conference {conferenceDate}</div>,
-	];
-
-	return detailsRowConferenceElements;
+	return (
+		<>
+			{theme && !hideTheme && <div key={3}> {theme}</div>}
+			{acronym && !hideAcronym && <div key={4}> {acronym}</div>}
+			{location && !hideLocation && <div key={5}>{location}</div>}
+			{conferenceDate && !hideConferenceDate && (
+				<div key={6}>Date of conference {conferenceDate}</div>
+			)}
+		</>
+	);
 };
 
 const LayoutCollectionHeader = (props: Props) => {
 	const {
 		collection,
 		content: { hideByline, hideContributors, hideCollectionKind, hideDate, hideDoi },
+		content,
 	} = props;
 	const contributors = getAllCollectionContributors(collection);
 	const bylineContributors = contributors.filter((c) => c.isAuthor);
 	const schema = getSchemaForKind(collection.kind)!;
 	const doi = getCollectionDoi(collection);
-
-	// if (collection.kind === 'issue') {
-	// 	const collectionHeaderInfo = IssueDiv(props);
-	// } else if (collection.kind === 'book') {
-	// 	const collectionHeaderInfo = BookDiv(props);
-	// } else if (collection.kind === 'conference') {
-	// 	const collectionHeaderInfo = ConferenceDiv(props);
-	// }
 
 	const detailsRowElements = [
 		!hideCollectionKind && (
@@ -131,6 +128,11 @@ const LayoutCollectionHeader = (props: Props) => {
 					</Button>
 				)}
 			</ClickToCopyButton>
+		),
+		collection.kind === 'issue' && <IssueDiv collection={collection} content={content} />,
+		collection.kind === 'book' && <BookDiv collection={collection} content={content} />,
+		collection.kind === 'conference' && (
+			<ConferenceDiv collection={collection} content={content} />
 		),
 	].filter((x) => x);
 
