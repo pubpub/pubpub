@@ -31,8 +31,8 @@ const getBookPublicationDate = (collection) => {
 export const BookMetadata = (collection: Collection) => {
 	const isbn = getBookIsbn(collection);
 	const copyright = getBookCopyright(collection);
-	const published = getBookEdition(collection);
-	const edition = getBookPublicationDate(collection);
+	const published = getBookPublicationDate(collection);
+	const edition = getBookEdition(collection);
 
 	return { isbn, copyright, published, edition };
 };
