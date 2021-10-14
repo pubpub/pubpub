@@ -49,10 +49,10 @@ const IssueDiv = (props: Props) => {
 			{volume && !hideVolume && <div key={5}>Volume {volume}</div>}
 			{issue && !hideIssue && <div key={8}>Issue {issue}</div>}
 			{printPublicationDate && !hideIssuePrintPublicationDate && (
-				<div key={6}>Printed {printPublicationDate}</div>
+				<div key={6}>Printed {formatDate(printPublicationDate)}</div>
 			)}
 			{publicationDate && !hideIssuePublicationDate && (
-				<div key={7}>Published {publicationDate}</div>
+				<div key={7}>Published {formatDate(publicationDate)}</div>
 			)}
 		</>
 	);
@@ -69,7 +69,9 @@ const BookDiv = (props: Props) => {
 		<>
 			{isbn && !hideIsbn && <div key={3}>ISBN {isbn}</div>}
 			{copyright && !hideCopyrightYear && <div key={5}>Copyright © {copyright}</div>}
-			{published && !hideBookPublicationDate && <div key={4}>Published {published}</div>}
+			{published && !hideBookPublicationDate && (
+				<div key={4}>Published {formatDate(published)}</div>
+			)}
 			{edition && !hideEdition && <div key={6}>{edition} ed.</div>}
 		</>
 	);
@@ -87,7 +89,9 @@ const ConferenceDiv = (props: Props) => {
 			{theme && !hideTheme && <div key={3}> {theme}</div>}
 			{acronym && !hideAcronym && <div key={4}> {acronym}</div>}
 			{location && !hideLocation && <div key={5}>{location}</div>}
-			{conferenceDate && !hideConferenceDate && <div key={6}> {conferenceDate}</div>}
+			{conferenceDate && !hideConferenceDate && (
+				<div key={6}> {formatDate(conferenceDate)}</div>
+			)}
 		</>
 	);
 };
