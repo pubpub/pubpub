@@ -27,9 +27,9 @@ const IssueDiv = (props: Props) => {
 			hidePrintIssn,
 			hideElectronicIssn,
 			hideVolume,
+			hideIssue,
 			hideIssuePrintPublicationDate,
 			hideIssuePublicationDate,
-			hideIssue,
 		},
 	} = props;
 
@@ -37,23 +37,23 @@ const IssueDiv = (props: Props) => {
 		printIssn,
 		electronicIssn,
 		volume,
+		issue,
 		printPublicationDate,
 		publicationDate,
-		issue,
 	} = IssueMetadata(collection);
 
 	return (
 		<>
-			{printIssn && !hidePrintIssn && <div key={3}> {printIssn}</div>}
-			{electronicIssn && !hideElectronicIssn && <div key={4}> {electronicIssn}</div>}
-			{volume && !hideVolume && <div key={5}>{volume}</div>}
+			{printIssn && !hidePrintIssn && <div key={3}>ISSN {printIssn}</div>}
+			{electronicIssn && !hideElectronicIssn && <div key={4}>e-ISSN {electronicIssn}</div>}
+			{volume && !hideVolume && <div key={5}>Volume {volume}</div>}
+			{issue && !hideIssue && <div key={8}>Issue {issue}</div>}
 			{printPublicationDate && !hideIssuePrintPublicationDate && (
-				<div key={6}>Published in print on {printPublicationDate}</div>
+				<div key={6}>Printed {printPublicationDate}</div>
 			)}
 			{publicationDate && !hideIssuePublicationDate && (
 				<div key={7}>Published {publicationDate}</div>
 			)}
-			{issue && !hideIssue && <div key={8}> {issue}</div>}
 		</>
 	);
 };
@@ -67,10 +67,10 @@ const BookDiv = (props: Props) => {
 
 	return (
 		<>
-			{isbn && !hideIsbn && <div key={3}> {isbn}</div>}
-			{copyright && !hideCopyrightYear && <div key={5}>{copyright}</div>}
-			{published && !hideBookPublicationDate && <div key={4}> {published}</div>}
-			{edition && !hideEdition && <div key={6}> {edition}</div>}
+			{isbn && !hideIsbn && <div key={3}>ISBN {isbn}</div>}
+			{copyright && !hideCopyrightYear && <div key={5}>Copyright © {copyright}</div>}
+			{published && !hideBookPublicationDate && <div key={4}>Published {published}</div>}
+			{edition && !hideEdition && <div key={6}>{edition} ed.</div>}
 		</>
 	);
 };
@@ -87,9 +87,7 @@ const ConferenceDiv = (props: Props) => {
 			{theme && !hideTheme && <div key={3}> {theme}</div>}
 			{acronym && !hideAcronym && <div key={4}> {acronym}</div>}
 			{location && !hideLocation && <div key={5}>{location}</div>}
-			{conferenceDate && !hideConferenceDate && (
-				<div key={6}>Date of conference {conferenceDate}</div>
-			)}
+			{conferenceDate && !hideConferenceDate && <div key={6}> {conferenceDate}</div>}
 		</>
 	);
 };
@@ -113,11 +111,6 @@ const LayoutCollectionHeader = (props: Props) => {
 			</div>
 		),
 		!hideDate && <div key={1}>Created {formatDate(collection.createdAt)}</div>,
-		collection.kind === 'issue' && <IssueDiv collection={collection} content={content} />,
-		collection.kind === 'book' && <BookDiv collection={collection} content={content} />,
-		collection.kind === 'conference' && (
-			<ConferenceDiv collection={collection} content={content} />
-		),
 		doi && !hideDoi && (
 			<ClickToCopyButton
 				className="click-to-copy"
@@ -133,6 +126,11 @@ const LayoutCollectionHeader = (props: Props) => {
 					</Button>
 				)}
 			</ClickToCopyButton>
+		),
+		collection.kind === 'issue' && <IssueDiv collection={collection} content={content} />,
+		collection.kind === 'book' && <BookDiv collection={collection} content={content} />,
+		collection.kind === 'conference' && (
+			<ConferenceDiv collection={collection} content={content} />
 		),
 	].filter((x) => x);
 
