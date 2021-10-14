@@ -6,6 +6,7 @@ import { Collection } from 'types';
 import { IssueMetadata } from 'utils/collections/getIssueMetadata';
 import { BookMetadata } from 'utils/collections/getBookMetadata';
 import { ConferenceMetadata } from 'utils/collections/getConferenceMetadata';
+import getCollectionDoi from 'utils/collections/getCollectionDoi';
 
 type Content = LayoutBlockCollectionHeader['content'];
 
@@ -24,6 +25,7 @@ const PreviewIssueElementFields = (props: Props) => {
 		hideIssuePrintPublicationDate,
 		hideIssuePublicationDate,
 		hideIssue,
+		hideDoi,
 	} = content;
 
 	const {
@@ -34,6 +36,7 @@ const PreviewIssueElementFields = (props: Props) => {
 		publicationDate,
 		issue,
 	} = IssueMetadata(collection);
+	const doi = getCollectionDoi(collection);
 
 	return (
 		<>
@@ -75,14 +78,21 @@ const PreviewIssueElementFields = (props: Props) => {
 				onChange={() => onChange({ hideIssue: !hideIssue })}
 				label="Issue"
 			/>
+			<Checkbox
+				disabled={!doi}
+				checked={doi ? !hideDoi : false}
+				onChange={() => onChange({ hideDoi: !hideDoi })}
+				label="DOI"
+			/>
 		</>
 	);
 };
 
 const PreviewBookElementFields = (props: Props) => {
 	const { content, onChange, collection } = props;
-	const { hideIsbn, hideCopyrightYear, hideBookPublicationDate, hideEdition } = content;
+	const { hideIsbn, hideCopyrightYear, hideBookPublicationDate, hideEdition, hideDoi } = content;
 	const { isbn, copyright, published, edition } = BookMetadata(collection);
+	const doi = getCollectionDoi(collection);
 
 	return (
 		<>
@@ -110,14 +120,21 @@ const PreviewBookElementFields = (props: Props) => {
 				onChange={() => onChange({ hideEdition: !hideEdition })}
 				label="Edition"
 			/>
+			<Checkbox
+				disabled={!doi}
+				checked={doi ? !hideDoi : false}
+				onChange={() => onChange({ hideDoi: !hideDoi })}
+				label="DOI"
+			/>
 		</>
 	);
 };
 
 const PreviewConferenceElementFields = (props: Props) => {
 	const { content, onChange, collection } = props;
-	const { hideTheme, hideAcronym, hideConferenceDate, hideLocation } = content;
+	const { hideTheme, hideAcronym, hideConferenceDate, hideLocation, hideDoi } = content;
 	const { theme, acronym, location, conferenceDate } = ConferenceMetadata(collection);
+	const doi = getCollectionDoi(collection);
 
 	return (
 		<>
@@ -144,6 +161,12 @@ const PreviewConferenceElementFields = (props: Props) => {
 				checked={conferenceDate ? !hideConferenceDate : false}
 				onChange={() => onChange({ hideConferenceDate: !hideConferenceDate })}
 				label="Conference Date"
+			/>
+			<Checkbox
+				disabled={!doi}
+				checked={doi ? !hideDoi : false}
+				onChange={() => onChange({ hideDoi: !hideDoi })}
+				label="DOI"
 			/>
 		</>
 	);

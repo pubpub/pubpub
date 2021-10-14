@@ -1,23 +1,18 @@
 import React from 'react';
 import { Card, Checkbox } from '@blueprintjs/core';
-import { Collection } from 'types';
 
 import { LayoutBlockCollectionHeader } from 'utils/layout';
-import getCollectionDoi from 'utils/collections/getCollectionDoi';
 
 type Content = LayoutBlockCollectionHeader['content'];
 
 type Props = {
 	content: Content;
-	collection: Collection;
-
 	onChange: (nextContent: Partial<Content>) => unknown;
 };
 
 const PreviewElements = (props: Props) => {
-	const { content, onChange, collection } = props;
-	const { hideDoi, hideCollectionKind, hideByline, hideContributors, hideDate } = content;
-	const doi = getCollectionDoi(collection);
+	const { content, onChange } = props;
+	const { hideCollectionKind, hideByline, hideContributors, hideDate } = content;
 
 	return (
 		<Card className="layout-editor-pubs_preview-elements-component">
@@ -41,12 +36,6 @@ const PreviewElements = (props: Props) => {
 				checked={!hideDate}
 				onChange={() => onChange({ hideDate: !hideDate })}
 				label="Creation date"
-			/>
-			<Checkbox
-				disabled={!doi}
-				checked={doi ? !hideDoi : false}
-				onChange={() => onChange({ hideDoi: !hideDoi })}
-				label="DOI"
 			/>
 		</Card>
 	);

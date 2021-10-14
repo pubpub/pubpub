@@ -113,6 +113,11 @@ const LayoutCollectionHeader = (props: Props) => {
 			</div>
 		),
 		!hideDate && <div key={1}>Created {formatDate(collection.createdAt)}</div>,
+		collection.kind === 'issue' && <IssueDiv collection={collection} content={content} />,
+		collection.kind === 'book' && <BookDiv collection={collection} content={content} />,
+		collection.kind === 'conference' && (
+			<ConferenceDiv collection={collection} content={content} />
+		),
 		doi && !hideDoi && (
 			<ClickToCopyButton
 				className="click-to-copy"
@@ -128,11 +133,6 @@ const LayoutCollectionHeader = (props: Props) => {
 					</Button>
 				)}
 			</ClickToCopyButton>
-		),
-		collection.kind === 'issue' && <IssueDiv collection={collection} content={content} />,
-		collection.kind === 'book' && <BookDiv collection={collection} content={content} />,
-		collection.kind === 'conference' && (
-			<ConferenceDiv collection={collection} content={content} />
 		),
 	].filter((x) => x);
 

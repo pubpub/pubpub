@@ -29,16 +29,10 @@ const LayoutEditorCollectionHeader = (props: Props) => {
 		return (
 			<Popover
 				aria-label="Choose preview elements"
-				content={
-					<PreviewElements
-						content={block.content}
-						collection={collection}
-						onChange={onChange}
-					/>
-				}
+				content={<PreviewElements content={block.content} onChange={onChange} />}
 			>
 				<Button outlined icon="layout-grid" rightIcon="caret-down">
-					Details fields
+					Detail fields
 				</Button>
 			</Popover>
 		);
