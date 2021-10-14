@@ -46,9 +46,9 @@ export const IssueMetadata = (collection: Collection) => {
 	const printIssn = getIssuePrintIssn(collection);
 	const electronicIssn = getIssueElectronicIssn(collection);
 	const volume = getIssueVolume(collection);
+	const issue = getIssue(collection);
 	const printPublicationDate = getIssuePrintPublicationDate(collection);
 	const publicationDate = getIssuePublicationDate(collection);
-	const issue = getIssue(collection);
 
-	return { printIssn, electronicIssn, volume, printPublicationDate, publicationDate, issue };
+	return { printIssn, electronicIssn, volume, issue, printPublicationDate, publicationDate };
 };
