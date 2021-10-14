@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Button } from '@blueprintjs/core';
 
-import { InputField, Popover } from 'components';
+import { Popover } from 'components';
 import { LayoutCollectionHeader } from 'components/Layout';
 import { Collection } from 'types';
 import { LayoutBlockCollectionHeader } from 'utils/layout/types';
@@ -56,18 +56,6 @@ const LayoutEditorCollectionHeader = (props: Props) => {
 					Metadata fields
 				</Button>
 			</Popover>
-		);
-	};
-
-	const renderElements = () => {
-		return (
-			<div>
-				<div className="controls-row">Preview Elements</div>
-				<div className="controls-row">
-					{renderPreviewElements()}
-					{renderMetadataElements()}
-				</div>
-			</div>
 		);
 	};
 
