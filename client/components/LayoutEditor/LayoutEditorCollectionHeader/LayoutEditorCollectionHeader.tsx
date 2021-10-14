@@ -37,8 +37,8 @@ const LayoutEditorCollectionHeader = (props: Props) => {
 					/>
 				}
 			>
-				<Button outlined icon="settings" rightIcon="caret-down">
-					Header fields
+				<Button outlined icon="layout-grid" rightIcon="caret-down">
+					Details fields
 				</Button>
 			</Popover>
 		);
@@ -52,7 +52,7 @@ const LayoutEditorCollectionHeader = (props: Props) => {
 					<Metadata content={block.content} collection={collection} onChange={onChange} />
 				}
 			>
-				<Button outlined icon="settings" rightIcon="caret-down">
+				<Button outlined icon="property" rightIcon="caret-down">
 					Metadata fields
 				</Button>
 			</Popover>
@@ -61,18 +61,25 @@ const LayoutEditorCollectionHeader = (props: Props) => {
 
 	const renderElements = () => {
 		return (
-			<InputField label="Preview Elements">
+			<div>
+				<div className="controls-row">Preview Elements</div>
 				<div className="controls-row">
 					{renderPreviewElements()}
 					{renderMetadataElements()}
 				</div>
-			</InputField>
+			</div>
 		);
 	};
 
 	return (
 		<div className="layout-editor-collection-header-component">
-			<div className="block-header">{renderElements()}</div>
+			<div className="block-header rows">
+				<div className="controls-row">Preview Elements</div>
+				<div className="controls-row">
+					{renderPreviewElements()}
+					{renderMetadataElements()}
+				</div>
+			</div>
 			<LayoutCollectionHeader collection={collection} content={block.content} />
 		</div>
 	);
