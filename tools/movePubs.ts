@@ -4,8 +4,8 @@ import chalk from 'chalk';
 
 import * as types from 'types';
 import { Collection, CollectionPub, Community, Pub } from 'server/models';
-
 import { createCollectionPub } from 'server/collectionPub/queries';
+
 import { promptOkay } from './utils/prompt';
 
 type MovablePub = types.SequelizeModel<types.DefinitelyHas<types.Pub, 'community'>>;
