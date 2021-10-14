@@ -21,9 +21,9 @@ const PreviewIssueElementFields = (props: Props) => {
 		hidePrintIssn,
 		hideElectronicIssn,
 		hideVolume,
-		hideIssue,
 		hideIssuePrintPublicationDate,
 		hideIssuePublicationDate,
+		hideIssue,
 	} = content;
 
 	const {
