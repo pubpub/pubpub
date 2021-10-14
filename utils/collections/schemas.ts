@@ -145,11 +145,3 @@ export const getIconForCollectionKind = (kind) => {
 	}
 	return null;
 };
-
-export const getMetadataForCollectionKind = (kind) => {
-	const schema = getSchemaForKind(kind);
-	if (schema) {
-		return schema.metadata;
-	}
-	return null;
-};
