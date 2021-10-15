@@ -44,8 +44,8 @@ const IssueDiv = (props: Props) => {
 
 	return (
 		<>
-			{printIssn && !hidePrintIssn && <div key={3}>ISSN {printIssn}</div>}
-			{electronicIssn && !hideElectronicIssn && <div key={4}>e-ISSN {electronicIssn}</div>}
+			{printIssn && !hidePrintIssn && <div key={3}>ISSN: {printIssn}</div>}
+			{electronicIssn && !hideElectronicIssn && <div key={4}>e-ISSN: {electronicIssn}</div>}
 			{volume && !hideVolume && <div key={5}>Volume {volume}</div>}
 			{issue && !hideIssue && <div key={8}>Issue {issue}</div>}
 			{printPublicationDate && !hideIssuePrintPublicationDate && (
@@ -67,7 +67,7 @@ const BookDiv = (props: Props) => {
 
 	return (
 		<>
-			{isbn && !hideIsbn && <div key={3}>ISBN {isbn}</div>}
+			{isbn && !hideIsbn && <div key={3}>ISBN: {isbn}</div>}
 			{copyright && !hideCopyrightYear && <div key={5}>Copyright © {copyright}</div>}
 			{published && !hideBookPublicationDate && (
 				<div key={4}>Published {formatDate(published)}</div>
