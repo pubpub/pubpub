@@ -203,7 +203,14 @@ const PubCollectionsListing = (props: Props) => {
 					itemPredicate={(query, collection) => fuzzyMatchCollection(collection, query)}
 					items={canAddCollections}
 					itemRenderer={renderAvailableCollection}
-					emptyListPlaceholder="No Collections match this search."
+					emptyListPlaceholder={
+						<div>
+							Create new collection? &nbsp
+							<Button icon="plus" className="add-button">
+								Create Collection
+							</Button>
+						</div>
+					}
 					searchPlaceholder="Search for Collections"
 					onItemSelect={handleAddCollectionPub}
 					position="bottom-left"
@@ -230,6 +237,12 @@ const PubCollectionsListing = (props: Props) => {
 			{renderQueryList(
 				<Button icon="plus" className="add-button">
 					Add to Collections
+				</Button>,
+			)}
+			&nbsp;
+			{renderQueryList(
+				<Button icon="circle" className="add-button">
+					Create Tag
 				</Button>,
 			)}
 			{collectionPubs.length > 0 && (
