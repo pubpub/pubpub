@@ -49,10 +49,10 @@
 		.controls-row {
 			display: flex;
 			margin: 0 0.5em;
-			& > .input-field-component {
+			> .input-field-component {
 				margin: 0;
 			}
-			& > *:not(:last-child) {
+			> *:not(:last-child) {
 				margin-right: 0.5em;
 			}
 			&:not(:last-child) {
