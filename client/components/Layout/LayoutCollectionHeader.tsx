@@ -9,9 +9,9 @@ import getCollectionDoi from 'utils/collections/getCollectionDoi';
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { capitalize } from 'utils/strings';
 import { formatDate } from 'utils/dates';
-import { IssueMetadata } from 'utils/collections/getIssueMetadata';
-import { BookMetadata } from 'utils/collections/getBookMetadata';
-import { ConferenceMetadata } from 'utils/collections/getConferenceMetadata';
+import { issueMetadata } from 'utils/collections/getIssueMetadata';
+import { bookMetadata } from 'utils/collections/getBookMetadata';
+import { conferenceMetadata } from 'utils/collections/getConferenceMetadata';
 
 require('./layoutCollectionHeader.scss');
 
@@ -40,7 +40,7 @@ const IssueDiv = (props: Props) => {
 		issue,
 		printPublicationDate,
 		publicationDate,
-	} = IssueMetadata(collection);
+	} = issueMetadata(collection);
 
 	return (
 		<>
@@ -63,7 +63,7 @@ const BookDiv = (props: Props) => {
 		collection,
 		content: { hideIsbn, hideBookPublicationDate, hideCopyrightYear, hideEdition },
 	} = props;
-	const { isbn, copyright, published, edition } = BookMetadata(collection);
+	const { isbn, copyright, published, edition } = bookMetadata(collection);
 
 	return (
 		<>
@@ -82,7 +82,7 @@ const ConferenceDiv = (props: Props) => {
 		collection,
 		content: { hideTheme, hideAcronym, hideConferenceDate, hideLocation },
 	} = props;
-	const { theme, acronym, location, conferenceDate } = ConferenceMetadata(collection);
+	const { theme, acronym, location, conferenceDate } = conferenceMetadata(collection);
 
 	return (
 		<>

@@ -1,34 +1,11 @@
 import { Collection } from 'types';
 
-const getBookCopyright = (collection) => {
-	if (collection.metadata.copyrightYear) {
-		return collection.metadata.copyrightYear;
-	}
-	return collection.metadata && collection.metadata.copyrightYear;
-};
+const getBookCopyright = (collection: Collection) => collection.metadata?.copyrightYear;
+const getBookIsbn = (collection) => collection.metadata?.isbn;
+const getBookEdition = (collection) => collection.metadata?.edition;
+const getBookPublicationDate = (collection) => collection.metadata?.publicationDate;
 
-const getBookIsbn = (collection) => {
-	if (collection.metadata.isbn) {
-		return collection.metadata.isbn;
-	}
-	return collection.metadata && collection.metadata.isbn;
-};
-
-const getBookEdition = (collection) => {
-	if (collection.metadata.edition) {
-		return collection.metadata.edition;
-	}
-	return collection.metadata && collection.metadata.edition;
-};
-
-const getBookPublicationDate = (collection) => {
-	if (collection.metadata.publicationDate) {
-		return collection.metadata.publicationDate;
-	}
-	return collection.metadata && collection.metadata.publicationDate;
-};
-
-export const BookMetadata = (collection: Collection) => {
+export const bookMetadata = (collection: Collection) => {
 	const isbn = getBookIsbn(collection);
 	const copyright = getBookCopyright(collection);
 	const published = getBookPublicationDate(collection);

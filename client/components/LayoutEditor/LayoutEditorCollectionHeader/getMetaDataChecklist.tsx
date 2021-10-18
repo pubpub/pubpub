@@ -3,9 +3,9 @@ import { Card, Checkbox } from '@blueprintjs/core';
 
 import { LayoutBlockCollectionHeader } from 'utils/layout';
 import { Collection } from 'types';
-import { IssueMetadata } from 'utils/collections/getIssueMetadata';
-import { BookMetadata } from 'utils/collections/getBookMetadata';
-import { ConferenceMetadata } from 'utils/collections/getConferenceMetadata';
+import { issueMetadata } from 'utils/collections/getIssueMetadata';
+import { bookMetadata } from 'utils/collections/getBookMetadata';
+import { conferenceMetadata } from 'utils/collections/getConferenceMetadata';
 import getCollectionDoi from 'utils/collections/getCollectionDoi';
 
 type Content = LayoutBlockCollectionHeader['content'];
@@ -35,7 +35,7 @@ const PreviewIssueElementFields = (props: Props) => {
 		issue,
 		printPublicationDate,
 		publicationDate,
-	} = IssueMetadata(collection);
+	} = issueMetadata(collection);
 	const doi = getCollectionDoi(collection);
 
 	return (
@@ -91,7 +91,7 @@ const PreviewIssueElementFields = (props: Props) => {
 const PreviewBookElementFields = (props: Props) => {
 	const { content, onChange, collection } = props;
 	const { hideDoi, hideIsbn, hideCopyrightYear, hideBookPublicationDate, hideEdition } = content;
-	const { isbn, copyright, published, edition } = BookMetadata(collection);
+	const { isbn, copyright, published, edition } = bookMetadata(collection);
 	const doi = getCollectionDoi(collection);
 
 	return (
@@ -133,7 +133,7 @@ const PreviewBookElementFields = (props: Props) => {
 const PreviewConferenceElementFields = (props: Props) => {
 	const { content, onChange, collection } = props;
 	const { hideDoi, hideTheme, hideAcronym, hideConferenceDate, hideLocation } = content;
-	const { theme, acronym, location, conferenceDate } = ConferenceMetadata(collection);
+	const { theme, acronym, location, conferenceDate } = conferenceMetadata(collection);
 	const doi = getCollectionDoi(collection);
 
 	return (
@@ -172,32 +172,22 @@ const PreviewConferenceElementFields = (props: Props) => {
 	);
 };
 
+const metadataViewsByCollectionKind = {
+	issue: PreviewIssueElementFields,
+	book: PreviewBookElementFields,
+	conference: PreviewConferenceElementFields,
+};
+
 const Metadata = (props: Props) => {
 	const { content, onChange, collection } = props;
+	if (collection.kind === undefined || collection.kind === 'tag') {
+		return null;
+	}
+	const MetadataView = metadataViewsByCollectionKind[collection.kind];
 
 	return (
-		<Card className="layout-editor-pubs_preview-elements-component">
-			{collection.kind === 'issue' && (
-				<PreviewIssueElementFields
-					content={content}
-					onChange={onChange}
-					collection={collection}
-				/>
-			)}
-			{collection.kind === 'book' && (
-				<PreviewBookElementFields
-					content={content}
-					onChange={onChange}
-					collection={collection}
-				/>
-			)}
-			{collection.kind === 'conference' && (
-				<PreviewConferenceElementFields
-					content={content}
-					onChange={onChange}
-					collection={collection}
-				/>
-			)}
+		<Card>
+			<MetadataView content={content} onChange={onChange} collection={collection} />
 		</Card>
 	);
 };

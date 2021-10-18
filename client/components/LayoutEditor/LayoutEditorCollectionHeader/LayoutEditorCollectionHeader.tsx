@@ -41,7 +41,7 @@ const LayoutEditorCollectionHeader = (props: Props) => {
 	const renderMetadataElements = () => {
 		return (
 			<Popover
-				aria-label="Choose preview elements"
+				aria-label="Choose metadata elements"
 				content={
 					<Metadata content={block.content} collection={collection} onChange={onChange} />
 				}
