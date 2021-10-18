@@ -1,6 +1,6 @@
 # Feature flags in PubPub
 
-Feature flags can be used to selectively enable new features for certain Users or Communities. To a User viewing a Community, the value of a feature flag is always `true` (on) or `false` (off) —  this value can be set per User or Community, or the flag can be configured to allow a specific percentage of Users or Communities.
+Feature flags can be used to selectively enable new features for certain Users or Communities. To a User viewing a Community, the value of a feature flag is always `true` (on) or `false` (off) —  this value can be set per User or Community, or the flag can be configured to allow a specific percentage of Users or Communities. A `FeatureFlag` is stored in the database and has these important properties:
 
 - **`name: string`**: a short, camel-cased name like `submissions` or `newActivityDash`.
 - **`enabledUsersFraction: number`**: a number between 0 and 1 dictating the fraction of Users for whom the flag will be set to `true`, based on their UUIDs. If this value is `0.5`, then it will be 50% of users.
