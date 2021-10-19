@@ -3,9 +3,7 @@ import { Card, Checkbox } from '@blueprintjs/core';
 
 import { LayoutBlockCollectionHeader } from 'utils/layout';
 import { Collection } from 'types';
-import { issueMetadata } from 'utils/collections/getIssueMetadata';
-import { bookMetadata } from 'utils/collections/getBookMetadata';
-import { conferenceMetadata } from 'utils/collections/getConferenceMetadata';
+import { issueMetadata, bookMetadata, conferenceMetadata } from 'utils/collections/getMetadata';
 import getCollectionDoi from 'utils/collections/getCollectionDoi';
 
 type Content = LayoutBlockCollectionHeader['content'];
@@ -133,7 +131,7 @@ const PreviewBookElementFields = (props: Props) => {
 const PreviewConferenceElementFields = (props: Props) => {
 	const { content, onChange, collection } = props;
 	const { hideDoi, hideTheme, hideAcronym, hideConferenceDate, hideLocation } = content;
-	const { theme, acronym, location, conferenceDate } = conferenceMetadata(collection);
+	const { theme, acronym, location, date } = conferenceMetadata(collection);
 	const doi = getCollectionDoi(collection);
 
 	return (
@@ -163,8 +161,8 @@ const PreviewConferenceElementFields = (props: Props) => {
 				label="Location"
 			/>
 			<Checkbox
-				disabled={!conferenceDate}
-				checked={conferenceDate ? !hideConferenceDate : false}
+				disabled={!date}
+				checked={date ? !hideConferenceDate : false}
 				onChange={() => onChange({ hideConferenceDate: !hideConferenceDate })}
 				label="Conference Date"
 			/>

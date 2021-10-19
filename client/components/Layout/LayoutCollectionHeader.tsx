@@ -9,9 +9,8 @@ import getCollectionDoi from 'utils/collections/getCollectionDoi';
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { capitalize } from 'utils/strings';
 import { formatDate } from 'utils/dates';
-import { issueMetadata } from 'utils/collections/getIssueMetadata';
-import { bookMetadata } from 'utils/collections/getBookMetadata';
-import { conferenceMetadata } from 'utils/collections/getConferenceMetadata';
+import { deserializeMetadata } from 'utils/collections/metadata';
+import { issueMetadata, bookMetadata, conferenceMetadata } from 'utils/collections/getMetadata';
 
 require('./layoutCollectionHeader.scss');
 
@@ -44,15 +43,15 @@ const IssueDiv = (props: Props) => {
 
 	return (
 		<>
-			{printIssn && !hidePrintIssn && <div key={3}>ISSN: {printIssn}</div>}
-			{electronicIssn && !hideElectronicIssn && <div key={4}>e-ISSN: {electronicIssn}</div>}
-			{volume && !hideVolume && <div key={5}>Volume {volume}</div>}
-			{issue && !hideIssue && <div key={8}>Issue {issue}</div>}
+			{printIssn && !hidePrintIssn && <div>ISSN: {printIssn}</div>}
+			{electronicIssn && !hideElectronicIssn && <div>e-ISSN: {electronicIssn}</div>}
+			{volume && !hideVolume && <div>Volume {volume}</div>}
+			{issue && !hideIssue && <div>Issue {issue}</div>}
 			{printPublicationDate && !hideIssuePrintPublicationDate && (
-				<div key={6}>Printed {formatDate(printPublicationDate)}</div>
+				<div>Printed {formatDate(printPublicationDate)}</div>
 			)}
 			{publicationDate && !hideIssuePublicationDate && (
-				<div key={7}>Published {formatDate(publicationDate)}</div>
+				<div>Published {formatDate(publicationDate)}</div>
 			)}
 		</>
 	);
@@ -67,12 +66,10 @@ const BookDiv = (props: Props) => {
 
 	return (
 		<>
-			{isbn && !hideIsbn && <div key={3}>ISBN: {isbn}</div>}
-			{copyright && !hideCopyrightYear && <div key={5}>Copyright © {copyright}</div>}
-			{published && !hideBookPublicationDate && (
-				<div key={4}>Published {formatDate(published)}</div>
-			)}
-			{edition && !hideEdition && <div key={6}>{edition} ed.</div>}
+			{isbn && !hideIsbn && <div>ISBN: {isbn}</div>}
+			{copyright && !hideCopyrightYear && <div>Copyright © {copyright}</div>}
+			{published && !hideBookPublicationDate && <div>Published {formatDate(published)}</div>}
+			{edition && !hideEdition && <div>{edition} ed.</div>}
 		</>
 	);
 };
@@ -82,16 +79,14 @@ const ConferenceDiv = (props: Props) => {
 		collection,
 		content: { hideTheme, hideAcronym, hideConferenceDate, hideLocation },
 	} = props;
-	const { theme, acronym, location, conferenceDate } = conferenceMetadata(collection);
+	const { theme, acronym, location, date } = conferenceMetadata(collection);
 
 	return (
 		<>
-			{theme && !hideTheme && <div key={3}> {theme}</div>}
-			{acronym && !hideAcronym && <div key={4}> {acronym}</div>}
-			{location && !hideLocation && <div key={5}>{location}</div>}
-			{conferenceDate && !hideConferenceDate && (
-				<div key={6}> {formatDate(conferenceDate)}</div>
-			)}
+			{theme && !hideTheme && <div> {theme}</div>}
+			{acronym && !hideAcronym && <div> {acronym}</div>}
+			{location && !hideLocation && <div>{location}</div>}
+			{date && !hideConferenceDate && <div> {formatDate(date)}</div>}
 		</>
 	);
 };
@@ -106,6 +101,15 @@ const LayoutCollectionHeader = (props: Props) => {
 	const bylineContributors = contributors.filter((c) => c.isAuthor);
 	const schema = getSchemaForKind(collection.kind)!;
 	const doi = getCollectionDoi(collection);
+	const metahuman = deserializeMetadata({
+		metadata: collection.metadata,
+		kind: collection.kind,
+		fallback: null,
+	});
+
+	// can deserialize metdata
+
+	console.log(metahuman);
 
 	const detailsRowElements = [
 		!hideCollectionKind && (
@@ -131,7 +135,9 @@ const LayoutCollectionHeader = (props: Props) => {
 				)}
 			</ClickToCopyButton>
 		),
-		collection.kind === 'issue' && <IssueDiv collection={collection} content={content} />,
+		collection.kind === 'issue' && (
+			<IssueDiv key={2} collection={collection} content={content} />
+		),
 		collection.kind === 'book' && <BookDiv collection={collection} content={content} />,
 		collection.kind === 'conference' && (
 			<ConferenceDiv collection={collection} content={content} />

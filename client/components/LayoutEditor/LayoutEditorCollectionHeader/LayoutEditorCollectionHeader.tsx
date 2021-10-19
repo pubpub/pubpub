@@ -56,7 +56,6 @@ const LayoutEditorCollectionHeader = (props: Props) => {
 	return (
 		<div className="layout-editor-collection-header-component">
 			<div className="block-header rows">
-				<div className="controls-row">Preview Elements</div>
 				<div className="controls-row">
 					{renderPreviewElements()}
 					{renderMetadataElements()}
