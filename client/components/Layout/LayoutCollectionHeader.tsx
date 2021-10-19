@@ -9,7 +9,6 @@ import getCollectionDoi from 'utils/collections/getCollectionDoi';
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { capitalize } from 'utils/strings';
 import { formatDate } from 'utils/dates';
-import { deserializeMetadata } from 'utils/collections/metadata';
 import { issueMetadata, bookMetadata, conferenceMetadata } from 'utils/collections/getMetadata';
 
 require('./layoutCollectionHeader.scss');
@@ -42,7 +41,7 @@ const issueDiv = (props: Props) => {
 	} = issueMetadata(collection);
 
 	return [
-		printIssn && !hidePrintIssn && `ISSN: ${printIssn}`, // other elements...
+		printIssn && !hidePrintIssn && `ISSN: ${printIssn}`,
 		electronicIssn && !hideElectronicIssn && `e-ISSN: ${electronicIssn}`,
 		volume && !hideVolume && `Volume ${volume}`,
 		issue && !hideIssue && `Issue ${issue}`,
@@ -99,15 +98,6 @@ const LayoutCollectionHeader = (props: Props) => {
 	const bylineContributors = contributors.filter((c) => c.isAuthor);
 	const schema = getSchemaForKind(collection.kind)!;
 	const doi = getCollectionDoi(collection);
-	const metahuman = deserializeMetadata({
-		metadata: collection.metadata,
-		kind: collection.kind,
-		fallback: null,
-	});
-
-	// can deserialize metdata
-
-	console.log(metahuman);
 
 	const detailsRowElements = [
 		!hideCollectionKind && (

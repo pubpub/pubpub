@@ -5,6 +5,7 @@ import { LayoutBlockCollectionHeader } from 'utils/layout';
 import { Collection } from 'types';
 import { issueMetadata, bookMetadata, conferenceMetadata } from 'utils/collections/getMetadata';
 import getCollectionDoi from 'utils/collections/getCollectionDoi';
+import { getSchemaForKind } from 'utils/collections/schemas';
 
 type Content = LayoutBlockCollectionHeader['content'];
 
