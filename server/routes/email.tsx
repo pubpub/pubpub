@@ -16,10 +16,15 @@ import { reset, globals } from 'components/Email/styles';
 import { renderActivityItem } from 'client/utils/activity';
 import { getResizedUrl } from 'utils/images';
 import { ActivityRenderContext } from 'client/utils/activity/types';
+import { ActivityItem } from 'types/activity';
 import { fetchActivityItems } from 'server/activityItem/fetch';
 import { communityUrl } from 'utils/canonicalUrls';
 
 import { createActivityAssociations } from '../../utils/activity';
+
+type KeyedActivityItem = ActivityItem & {
+	displayKey: string;
+};
 
 const inlineStylesWithMarkup = (emailMarkup: React.ReactNode, extraStyles: string) => {
 	const stylesheet = new ServerStyleSheet();
@@ -85,7 +90,10 @@ app.get('/email', async (req, res, next) => {
 			('page' in item.payload && item.payload.page.id) ||
 			item.communityId;
 
-		const activityItemsGroupedByObjectId = activityItems.reduce((result, item) => {
+		const activityItemsGroupedByObjectId: Record<
+			string,
+			KeyedActivityItem[]
+		> = activityItems.reduce((result, item) => {
 			const objectId = getAffectedObjectId(item);
 			const payloadKeys = Object.keys(item.payload)
 				.sort()
@@ -111,6 +119,7 @@ app.get('/email', async (req, res, next) => {
 			}),
 			{},
 		);
+
 		const pubItems: GroupedActivityItems = pickBy(
 			dedupedActivityItems,
 			(item, affectedObjectId) => affectedObjectId !== communityId,
