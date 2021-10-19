@@ -29,7 +29,7 @@ export const getOverrideState = (
 	featureFlagId: string,
 	overrides: FeatureFlagOverride[],
 ): FeatureFlagOverrideState => {
-	const matchingOverride = overrides.find((om) => om.featureFlagId === featureFlagId);
+	const matchingOverride = overrides.find((o) => o.featureFlagId === featureFlagId);
 	if (matchingOverride) {
 		return matchingOverride.enabled ? 'on' : 'off';
 	}
