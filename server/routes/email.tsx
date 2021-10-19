@@ -4,7 +4,8 @@ import ReactDOMServer from 'react-dom/server';
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
 import juice from 'juice';
 import { handleErrors } from 'server/utils/errors';
-import pickBy from 'lodash.pickby';
+import pick from 'lodash.pick';
+import omit from 'lodash.omit';
 import { GroupedActivityItems } from 'client/components/Email/Digest';
 
 import { hostIsValid } from 'server/utils/routes';
@@ -120,14 +121,8 @@ app.get('/email', async (req, res, next) => {
 			{},
 		);
 
-		const pubItems: GroupedActivityItems = pickBy(
-			dedupedActivityItems,
-			(_item: ActivityItem, affectedObjectId: string) => affectedObjectId !== communityId,
-		);
-		const communityItems: GroupedActivityItems = pickBy(
-			dedupedActivityItems,
-			(_item: ActivityItem, affectedObjectId: string) => affectedObjectId === communityId,
-		);
+		const communityItems: GroupedActivityItems = pick(dedupedActivityItems, communityId);
+		const pubItems: GroupedActivityItems = omit(dedupedActivityItems, communityId);
 		return res.send(
 			render(
 				Digest({
