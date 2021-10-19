@@ -19,7 +19,7 @@ type Props = {
 	content: LayoutBlockCollectionHeader['content'];
 };
 
-const IssueDiv = (props: Props) => {
+const issueDiv = (props: Props) => {
 	const {
 		collection,
 		content: {
@@ -41,20 +41,18 @@ const IssueDiv = (props: Props) => {
 		publicationDate,
 	} = issueMetadata(collection);
 
-	return (
-		<>
-			{printIssn && !hidePrintIssn && <div>ISSN: {printIssn}</div>}
-			{electronicIssn && !hideElectronicIssn && <div>e-ISSN: {electronicIssn}</div>}
-			{volume && !hideVolume && <div>Volume {volume}</div>}
-			{issue && !hideIssue && <div>Issue {issue}</div>}
-			{printPublicationDate && !hideIssuePrintPublicationDate && (
-				<div>Printed {formatDate(printPublicationDate)}</div>
-			)}
-			{publicationDate && !hideIssuePublicationDate && (
-				<div>Published {formatDate(publicationDate)}</div>
-			)}
-		</>
-	);
+	return [
+		printIssn && !hidePrintIssn && `ISSN: ${printIssn}`, // other elements...
+		electronicIssn && !hideElectronicIssn && `e-ISSN: ${electronicIssn}`,
+		volume && !hideVolume && `Volume ${volume}`,
+		issue && !hideIssue && `Issue ${issue}`,
+		printPublicationDate &&
+			!hideIssuePrintPublicationDate &&
+			`Printed ${formatDate(printPublicationDate)}`,
+		publicationDate && !hideIssuePublicationDate && `Published ${formatDate(publicationDate)}`,
+	]
+		.filter((x: any): x is string => !!x)
+		.map((label) => <div key={label}>{label}</div>);
 };
 
 const BookDiv = (props: Props) => {
@@ -135,9 +133,7 @@ const LayoutCollectionHeader = (props: Props) => {
 				)}
 			</ClickToCopyButton>
 		),
-		collection.kind === 'issue' && (
-			<IssueDiv key={2} collection={collection} content={content} />
-		),
+		collection.kind === 'issue' && issueDiv(props),
 		collection.kind === 'book' && <BookDiv collection={collection} content={content} />,
 		collection.kind === 'conference' && (
 			<ConferenceDiv collection={collection} content={content} />
