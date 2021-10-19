@@ -82,9 +82,9 @@ app.get('/email', async (req, res, next) => {
 			userId,
 			scope,
 		};
-		const renderActivityItemInContext = (item) =>
+		const renderActivityItemInContext = (item: ActivityItem) =>
 			renderActivityItem(item, activityRenderContext);
-		const getAffectedObjectId = (item) =>
+		const getAffectedObjectId = (item: ActivityItem) =>
 			item.pubId ||
 			item.collectionId ||
 			('page' in item.payload && item.payload.page.id) ||
@@ -122,11 +122,11 @@ app.get('/email', async (req, res, next) => {
 
 		const pubItems: GroupedActivityItems = pickBy(
 			dedupedActivityItems,
-			(item, affectedObjectId) => affectedObjectId !== communityId,
+			(_item: ActivityItem, affectedObjectId: string) => affectedObjectId !== communityId,
 		);
 		const communityItems: GroupedActivityItems = pickBy(
 			dedupedActivityItems,
-			(item, affectedObjectId) => affectedObjectId === communityId,
+			(_item: ActivityItem, affectedObjectId: string) => affectedObjectId === communityId,
 		);
 		return res.send(
 			render(
