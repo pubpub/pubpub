@@ -9,34 +9,16 @@ import getCollectionDoi from 'utils/collections/getCollectionDoi';
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { capitalize } from 'utils/strings';
 import { formatDate } from 'utils/dates';
-import { getOrderedCollectionMetadataFields } from 'utils/collections/getMetadata';
+import {
+	getOrderedCollectionMetadataFields,
+	formattedMetadata,
+} from 'utils/collections/getMetadata';
 
 require('./layoutCollectionHeader.scss');
 
 type Props = {
 	collection: Collection;
 	content: LayoutBlockCollectionHeader['content'];
-};
-
-const FormattedMetadataDiv = (field: any, data: any) => {
-	if (field === 'printIssn') return <div>ISSN: {data}</div>;
-	if (field === 'electronicIssn') return <div>e-ISSN: {data}</div>;
-	if (field === 'volume') return <div>Volume {data}</div>;
-	if (field === 'issue') return <div>Issue {data}</div>;
-	if (field === 'printPublicationDate') return <div>Printed {formatDate(data)}</div>;
-	if (field === 'publicationDate') return <div>Published {formatDate(data)}</div>;
-
-	if (field === 'isbn') return <div>ISBN: {data}</div>;
-	if (field === 'copyrightYear') return <div>Copyright © {data}</div>;
-	if (field === 'publicationDate') return <div>Published {formatDate(data)}</div>;
-	if (field === 'edition') return <div>{data} ed.</div>;
-
-	if (field === 'theme') return <div>e-ISSN: {data}</div>;
-	if (field === 'acronym') return <div>e-ISSN: {data}</div>;
-	if (field === 'location') return <div>e-ISSN: {data}</div>;
-	if (field === 'date') return <div>e-ISSN: {formatDate(data)}</div>;
-
-	return <div>{data}</div>;
 };
 
 const MetadataDiv = (props: Props) => {
@@ -60,8 +42,8 @@ const MetadataDiv = (props: Props) => {
 				const name = field.name;
 				const data = metadata[name];
 				const isField = hiddenMetadataFields.includes(name);
-				console.log(<FormattedMetadataDiv field={name} data={data} />);
-				return <>{data && !isField && <div> {data}</div>}</>;
+				const formattedData = formattedMetadata(name, data);
+				return <>{data && !isField && <div> {formattedData}</div>}</>;
 			})}
 		</>
 	);
