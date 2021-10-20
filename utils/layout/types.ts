@@ -97,22 +97,8 @@ export type LayoutBlockCollectionHeader = {
 		hideContributors?: boolean;
 		hideDate?: boolean;
 		hideCollectionKind?: boolean;
-		hidePrintIssn?: boolean;
-		hideElectronicIssn?: boolean;
-		hideVolume?: boolean;
-		hideIssue?: boolean;
-		hideIssuePrintPublicationDate?: boolean;
-		hideIssuePublicationDate?: boolean;
 		hideDoi?: boolean;
-		hideUrl?: boolean;
-		hideIsbn?: boolean;
-		hideBookPublicationDate?: boolean;
-		hideCopyrightYear?: boolean;
-		hideEdition?: boolean;
-		hideTheme?: boolean;
-		hideConferenceDate?: boolean;
-		hideAcronym?: boolean;
-		hideLocation?: boolean;
+		hiddenMetadataFields?: string[];
 	};
 };
 

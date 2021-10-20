@@ -3,8 +3,7 @@ import { Card, Checkbox } from '@blueprintjs/core';
 
 import { LayoutBlockCollectionHeader } from 'utils/layout';
 import { Collection } from 'types';
-import { issueMetadata, bookMetadata, conferenceMetadata } from 'utils/collections/getMetadata';
-import getCollectionDoi from 'utils/collections/getCollectionDoi';
+import { getOrderedCollectionMetadataFields } from 'utils/collections/getMetadata';
 
 type Content = LayoutBlockCollectionHeader['content'];
 
@@ -14,166 +13,41 @@ type Props = {
 	collection: Collection;
 };
 
-const PreviewIssueElementFields = (props: Props) => {
+const MetadataCheckboxes = (props: Props) => {
 	const { content, onChange, collection } = props;
-	const {
-		hideDoi,
-		hidePrintIssn,
-		hideElectronicIssn,
-		hideVolume,
-		hideIssue,
-		hideIssuePrintPublicationDate,
-		hideIssuePublicationDate,
-	} = content;
+	const { metadata, kind } = collection;
+	if (!metadata || kind === 'tag') {
+		return null;
+	}
+	const fields = getOrderedCollectionMetadataFields(collection).filter((x) => x.name !== 'url');
 
-	const {
-		printIssn,
-		electronicIssn,
-		volume,
-		issue,
-		printPublicationDate,
-		publicationDate,
-	} = issueMetadata(collection);
-	const doi = getCollectionDoi(collection);
+	const { hiddenMetadataFields = [] } = content;
+
+	const handleToggleMetadataField = (fieldName: string) => {
+		const nextFields = hiddenMetadataFields.includes(fieldName)
+			? hiddenMetadataFields.filter((f) => f !== fieldName)
+			: [...hiddenMetadataFields, fieldName];
+		onChange({ hiddenMetadataFields: nextFields });
+	};
 
 	return (
 		<>
-			<Checkbox
-				disabled={!doi}
-				checked={doi ? !hideDoi : false}
-				onChange={() => onChange({ hideDoi: !hideDoi })}
-				label="DOI"
-			/>
-			<Checkbox
-				disabled={!printIssn}
-				checked={printIssn ? !hidePrintIssn : false}
-				onChange={() => onChange({ hidePrintIssn: !hidePrintIssn })}
-				label="Print ISSN"
-			/>
-			<Checkbox
-				disabled={!electronicIssn}
-				checked={electronicIssn ? !hideElectronicIssn : false}
-				onChange={() => onChange({ hideElectronicIssn: !hideElectronicIssn })}
-				label="Electronic ISSN"
-			/>
-			<Checkbox
-				disabled={!volume}
-				checked={volume ? !hideVolume : false}
-				onChange={() => onChange({ hideVolume: !hideVolume })}
-				label="Volume"
-			/>
-			<Checkbox
-				disabled={!issue}
-				checked={issue ? !hideIssue : false}
-				onChange={() => onChange({ hideIssue: !hideIssue })}
-				label="Issue"
-			/>
-			<Checkbox
-				disabled={!printPublicationDate}
-				checked={printPublicationDate ? !hideIssuePrintPublicationDate : false}
-				onChange={() =>
-					onChange({ hideIssuePrintPublicationDate: !hideIssuePrintPublicationDate })
-				}
-				label="Print Publication Date"
-			/>
-			<Checkbox
-				disabled={!publicationDate}
-				checked={publicationDate ? !hideIssuePublicationDate : false}
-				onChange={() => onChange({ hideIssuePublicationDate: !hideIssuePublicationDate })}
-				label="Publication Date"
-			/>
+			{fields.map((field) => {
+				const isFieldSet = !!metadata[field.name];
+				const hideField = hiddenMetadataFields.includes(field.name);
+				return (
+					<>
+						<Checkbox
+							disabled={!isFieldSet}
+							checked={isFieldSet ? !hideField : false}
+							onChange={() => handleToggleMetadataField(field.name)}
+							label={field.label}
+						/>
+					</>
+				);
+			})}
 		</>
 	);
-};
-
-const PreviewBookElementFields = (props: Props) => {
-	const { content, onChange, collection } = props;
-	const { hideDoi, hideIsbn, hideCopyrightYear, hideBookPublicationDate, hideEdition } = content;
-	const { isbn, copyright, published, edition } = bookMetadata(collection);
-	const doi = getCollectionDoi(collection);
-
-	return (
-		<>
-			<Checkbox
-				disabled={!doi}
-				checked={doi ? !hideDoi : false}
-				onChange={() => onChange({ hideDoi: !hideDoi })}
-				label="DOI"
-			/>
-			<Checkbox
-				disabled={!isbn}
-				checked={isbn ? !hideIsbn : false}
-				onChange={() => onChange({ hideIsbn: !hideIsbn })}
-				label="ISBN"
-			/>
-			<Checkbox
-				disabled={!copyright}
-				checked={copyright ? !hideCopyrightYear : false}
-				onChange={() => onChange({ hideCopyrightYear: !hideCopyrightYear })}
-				label="Copyright Year"
-			/>
-			<Checkbox
-				disabled={!published}
-				checked={published ? !hideBookPublicationDate : false}
-				onChange={() => onChange({ hideBookPublicationDate: !hideBookPublicationDate })}
-				label="Publication Date"
-			/>
-			<Checkbox
-				disabled={!edition}
-				checked={edition ? !hideEdition : false}
-				onChange={() => onChange({ hideEdition: !hideEdition })}
-				label="Edition"
-			/>
-		</>
-	);
-};
-
-const PreviewConferenceElementFields = (props: Props) => {
-	const { content, onChange, collection } = props;
-	const { hideDoi, hideTheme, hideAcronym, hideConferenceDate, hideLocation } = content;
-	const { theme, acronym, location, date } = conferenceMetadata(collection);
-	const doi = getCollectionDoi(collection);
-
-	return (
-		<>
-			<Checkbox
-				disabled={!doi}
-				checked={doi ? !hideDoi : false}
-				onChange={() => onChange({ hideDoi: !hideDoi })}
-				label="DOI"
-			/>
-			<Checkbox
-				disabled={!theme}
-				checked={theme ? !hideTheme : false}
-				onChange={() => onChange({ hideTheme: !hideTheme })}
-				label="Theme"
-			/>
-			<Checkbox
-				disabled={!acronym}
-				checked={acronym ? !hideAcronym : false}
-				onChange={() => onChange({ hideAcronym: !hideAcronym })}
-				label="Acronym"
-			/>
-			<Checkbox
-				disabled={!location}
-				checked={location ? !hideLocation : false}
-				onChange={() => onChange({ hideLocation: !hideLocation })}
-				label="Location"
-			/>
-			<Checkbox
-				disabled={!date}
-				checked={date ? !hideConferenceDate : false}
-				onChange={() => onChange({ hideConferenceDate: !hideConferenceDate })}
-				label="Conference Date"
-			/>
-		</>
-	);
-};
-
-const metadataViewsByCollectionKind = {
-	issue: PreviewIssueElementFields,
-	book: PreviewBookElementFields,
-	conference: PreviewConferenceElementFields,
 };
 
 const Metadata = (props: Props) => {
@@ -181,11 +55,10 @@ const Metadata = (props: Props) => {
 	if (collection.kind === undefined || collection.kind === 'tag') {
 		return null;
 	}
-	const MetadataView = metadataViewsByCollectionKind[collection.kind];
 
 	return (
 		<Card>
-			<MetadataView content={content} onChange={onChange} collection={collection} />
+			<MetadataCheckboxes content={content} onChange={onChange} collection={collection} />
 		</Card>
 	);
 };
