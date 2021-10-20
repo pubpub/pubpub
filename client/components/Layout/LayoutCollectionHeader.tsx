@@ -9,12 +9,7 @@ import getCollectionDoi from 'utils/collections/getCollectionDoi';
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { capitalize } from 'utils/strings';
 import { formatDate } from 'utils/dates';
-import {
-	issueMetadata,
-	bookMetadata,
-	conferenceMetadata,
-	getOrderedCollectionMetadataFields,
-} from 'utils/collections/getMetadata';
+import { getOrderedCollectionMetadataFields } from 'utils/collections/getMetadata';
 
 require('./layoutCollectionHeader.scss');
 
@@ -23,72 +18,51 @@ type Props = {
 	content: LayoutBlockCollectionHeader['content'];
 };
 
-const issueDiv = (props: Props) => {
+const FormattedMetadataDiv = (field: any, data: any) => {
+	if (field === 'printIssn') return <div>ISSN: {data}</div>;
+	if (field === 'electronicIssn') return <div>e-ISSN: {data}</div>;
+	if (field === 'volume') return <div>Volume {data}</div>;
+	if (field === 'issue') return <div>Issue {data}</div>;
+	if (field === 'printPublicationDate') return <div>Printed {formatDate(data)}</div>;
+	if (field === 'publicationDate') return <div>Published {formatDate(data)}</div>;
+
+	if (field === 'isbn') return <div>ISBN: {data}</div>;
+	if (field === 'copyrightYear') return <div>Copyright © {data}</div>;
+	if (field === 'publicationDate') return <div>Published {formatDate(data)}</div>;
+	if (field === 'edition') return <div>{data} ed.</div>;
+
+	if (field === 'theme') return <div>e-ISSN: {data}</div>;
+	if (field === 'acronym') return <div>e-ISSN: {data}</div>;
+	if (field === 'location') return <div>e-ISSN: {data}</div>;
+	if (field === 'date') return <div>e-ISSN: {formatDate(data)}</div>;
+
+	return <div>{data}</div>;
+};
+
+const MetadataDiv = (props: Props) => {
 	const {
 		collection,
 		content: { hiddenMetadataFields },
 	} = props;
-
-	const {
-		printIssn,
-		electronicIssn,
-		volume,
-		issue,
-		printPublicationDate,
-		publicationDate,
-	} = issueMetadata(collection);
-
-	if (!hiddenMetadataFields) {
+	const { metadata, kind } = collection;
+	if (!metadata || kind === 'tag') {
 		return null;
 	}
-	return [
-		printIssn && hiddenMetadataFields.includes('printIssn') && `ISSN: ${printIssn}`,
-		electronicIssn && !hiddenMetadataFields && `e-ISSN: ${electronicIssn}`,
-		volume && !hiddenMetadataFields && `Volume ${volume}`,
-		issue && !hiddenMetadataFields && `Issue ${issue}`,
-		printPublicationDate &&
-			!hiddenMetadataFields &&
-			`Printed ${formatDate(printPublicationDate)}`,
-		publicationDate && !hiddenMetadataFields && `Published ${formatDate(publicationDate)}`,
-	]
-		.filter((x: any): x is string => !!x)
-		.map((label) => <div key={label}>{label}</div>);
-};
-
-const BookDiv = (props: Props) => {
-	const {
-		collection,
-		content: { hiddenMetadataFields },
-	} = props;
-	const { isbn, copyright, published, edition } = bookMetadata(collection);
-
-	return (
-		<>
-			{isbn && !hiddenMetadataFields && <div>ISBN: {isbn}</div>}
-			{copyright && !hiddenMetadataFields && <div>Copyright © {copyright}</div>}
-			{published && !hiddenMetadataFields && <div>Published {formatDate(published)}</div>}
-			{edition && !hiddenMetadataFields && <div>{edition} ed.</div>}
-		</>
-	);
-};
-
-const ConferenceDiv = (props: Props) => {
-	const {
-		collection,
-		content: { hiddenMetadataFields },
-	} = props;
-	const { theme, acronym, location, date } = conferenceMetadata(collection);
-
 	if (!hiddenMetadataFields) {
 		return null;
 	}
 
+	const fields = getOrderedCollectionMetadataFields(collection).filter((x) => x.name !== 'url');
+
 	return (
 		<>
-			{theme && !hiddenMetadataFields.includes('theme') && <div> {theme}</div>}
-			{acronym && !hiddenMetadataFields.includes('acronym') && <div> {acronym}</div>}
-			{location && !hiddenMetadataFields.includes('location') && <div>{location}</div>}
-			{date && !hiddenMetadataFields.includes('date') && <div> {formatDate(date)}</div>}
+			{fields.map((field) => {
+				const name = field.name;
+				const data = metadata[name];
+				const isField = hiddenMetadataFields.includes(name);
+				console.log(<FormattedMetadataDiv field={name} data={data} />);
+				return <>{data && !isField && <div> {data}</div>}</>;
+			})}
 		</>
 	);
 };
@@ -96,7 +70,13 @@ const ConferenceDiv = (props: Props) => {
 const LayoutCollectionHeader = (props: Props) => {
 	const {
 		collection,
-		content: { hideByline, hideContributors, hideCollectionKind, hideDate, hideDoi },
+		content: {
+			hideByline,
+			hideContributors,
+			hideCollectionKind,
+			hideDate,
+			hiddenMetadataFields,
+		},
 		content,
 	} = props;
 	const contributors = getAllCollectionContributors(collection);
@@ -112,7 +92,7 @@ const LayoutCollectionHeader = (props: Props) => {
 			</div>
 		),
 		!hideDate && <div key={1}>Created {formatDate(collection.createdAt)}</div>,
-		doi && !hideDoi && (
+		doi && !hiddenMetadataFields?.includes('doi') && (
 			<ClickToCopyButton
 				className="click-to-copy"
 				copyString={`https://doi.org/${doi}`}
@@ -128,11 +108,7 @@ const LayoutCollectionHeader = (props: Props) => {
 				)}
 			</ClickToCopyButton>
 		),
-		collection.kind === 'issue' && issueDiv(props),
-		collection.kind === 'book' && <BookDiv collection={collection} content={content} />,
-		collection.kind === 'conference' && (
-			<ConferenceDiv collection={collection} content={content} />
-		),
+		<MetadataDiv collection={collection} content={content} />,
 	].filter((x) => x);
 
 	return (

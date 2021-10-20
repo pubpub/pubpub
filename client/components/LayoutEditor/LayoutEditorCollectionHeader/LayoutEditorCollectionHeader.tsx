@@ -58,7 +58,7 @@ const LayoutEditorCollectionHeader = (props: Props) => {
 			<div className="block-header rows">
 				<div className="controls-row">
 					{renderPreviewElements()}
-					{renderMetadataElements()}
+					{collection.kind !== 'tag' && renderMetadataElements()}
 				</div>
 			</div>
 			<LayoutCollectionHeader collection={collection} content={block.content} />
