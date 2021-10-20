@@ -24,13 +24,11 @@ type Props = {
 const MetadataDiv = (props: Props) => {
 	const {
 		collection,
-		content: { hiddenMetadataFields },
+		content: { hiddenMetadataFields = [] },
 	} = props;
 	const { metadata, kind } = collection;
+
 	if (!metadata || kind === 'tag') {
-		return null;
-	}
-	if (!hiddenMetadataFields) {
 		return null;
 	}
 
