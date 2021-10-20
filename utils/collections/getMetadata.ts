@@ -1,5 +1,6 @@
 import { Collection } from 'types';
 import { deserializeMetadata } from 'utils/collections/metadata';
+import { getSchemaForKind } from 'utils/collections/schemas';
 
 export const issueMetadata = (collection: Collection) => {
 	const metadata = deserializeMetadata({
@@ -39,4 +40,8 @@ export const conferenceMetadata = (collection: Collection) => {
 
 	const { theme, location, acronym, date } = metadata;
 	return { theme, location, acronym, date };
+};
+
+export const getOrderedCollectionMetadataFields = (collection: Collection) => {
+	return getSchemaForKind(collection.kind)!.metadata;
 };
