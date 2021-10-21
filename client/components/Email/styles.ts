@@ -51,6 +51,7 @@ html {
 }
 
 body {
+		overflow-wrap: anywhere;
     margin: 0;
     min-height: 100%;
 }

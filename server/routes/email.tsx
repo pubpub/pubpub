@@ -14,14 +14,8 @@ import { minify } from 'html-minifier';
 
 import { Digest } from 'components/Email';
 import { reset, globals } from 'components/Email/styles';
-import { renderActivityItem } from 'client/utils/activity';
-import { getResizedUrl } from 'utils/images';
-import { ActivityRenderContext } from 'client/utils/activity/types';
 import { ActivityItem } from 'types/activity';
 import { fetchActivityItems } from 'server/activityItem/fetch';
-import { communityUrl } from 'utils/canonicalUrls';
-
-import { createActivityAssociations } from '../../utils/activity';
 
 type KeyedActivityItem = ActivityItem & {
 	displayKey: string;
@@ -63,39 +57,37 @@ app.get('/email', async (req, res, next) => {
 	try {
 		const initialData = await getInitialData(req, true);
 		const {
-			communityData: {
-				id: communityId,
-				headerLogo,
-				title: communityTitle,
-				accentColorDark = '#2D3752',
-				accentColorLight = '#FFFFFF',
-			},
+			communityData: { id: communityId },
 			scopeData: { scope },
 			loginData: { id: userId },
 		} = initialData;
 		if (!hostIsValid(req, 'community') || process.env.NODE_ENV === 'production' || !userId) {
 			return next();
 		}
-		const resizedHeaderLogo = getResizedUrl(headerLogo || '', 'inside', undefined, 50);
-		const { activityItems } = await fetchActivityItems({ scope });
-		const activityRenderContext: ActivityRenderContext = {
-			associations: createActivityAssociations(),
-			userId,
-			scope,
-		};
-		const renderActivityItemInContext = (item: ActivityItem) =>
-			renderActivityItem(item, activityRenderContext);
-		const getAffectedObjectId = (item: ActivityItem) =>
-			item.pubId ||
-			item.collectionId ||
-			('page' in item.payload && item.payload.page.id) ||
-			item.communityId;
+		const { activityItems, associations } = await fetchActivityItems({ scope });
+		const getAffectedObjectIcon = (item: ActivityItem) =>
+			item.pubId
+				? 'pubDoc'
+				: item.collectionId
+				? 'collection'
+				: 'page' in item.payload && item.payload.page.id
+				? 'page-layout'
+				: 'office';
+
+		const getAffectedObject = (item: ActivityItem) =>
+			item.pubId
+				? associations.pub[item.pubId]
+				: item.collectionId
+				? associations.collection[item.collectionId]
+				: 'page' in item.payload && item.payload.page.id
+				? associations.page[item.payload.page.id]
+				: associations.community[item.communityId];
 
 		const activityItemsGroupedByObjectId: Record<
 			string,
 			KeyedActivityItem[]
 		> = activityItems.reduce((result, item) => {
-			const objectId = getAffectedObjectId(item);
+			const objectId = getAffectedObject(item).id;
 			const payloadKeys = Object.keys(item.payload)
 				.sort()
 				.join();
@@ -108,15 +100,19 @@ app.get('/email', async (req, res, next) => {
 		const dedupedActivityItems = Object.keys(activityItemsGroupedByObjectId).reduce(
 			(memo, objectId) => ({
 				...memo,
-				[objectId]: activityItemsGroupedByObjectId[objectId]
-					.sort((first, second) => (first.timestamp > second.timestamp ? -1 : 1))
-					.reduce(
-						(result, item) =>
-							item.displayKey in result
-								? result
-								: { ...result, [item.displayKey]: item },
-						{},
-					),
+				[objectId]: {
+					items: activityItemsGroupedByObjectId[objectId]
+						.sort((first, second) => (first.timestamp > second.timestamp ? -1 : 1))
+						.reduce(
+							(result, item) =>
+								item.displayKey in result
+									? result
+									: { ...result, [item.displayKey]: item },
+							{},
+						),
+					title: getAffectedObject(activityItemsGroupedByObjectId[objectId][0]).title,
+					icon: getAffectedObjectIcon(activityItemsGroupedByObjectId[objectId][0]),
+				},
 			}),
 			{},
 		);
@@ -126,12 +122,9 @@ app.get('/email', async (req, res, next) => {
 		return res.send(
 			render(
 				Digest({
-					communityUrl: communityUrl(initialData.communityData),
-					communityTitle,
-					headerLogo: resizedHeaderLogo,
-					accentColorLight,
-					accentColorDark,
-					renderActivityItem: renderActivityItemInContext,
+					userId, // replace this with email recipient's userId
+					community: initialData.communityData,
+					associations,
 					pubItems,
 					communityItems,
 				}),

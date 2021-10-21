@@ -1,99 +1,87 @@
 import React from 'react';
-import { RenderedActivityItem } from 'client/utils/activity/types';
 import { ActivityItem } from 'types/activity';
-import { formatDate } from 'utils/dates';
+import { ActivityAssociations, Community } from 'types';
 import dateFormat from 'dateformat';
-import { Icon } from 'client/components';
-import { Section, Wrapper, Button } from '.';
+import { Icon, IconName } from 'client/components';
+import Color from 'color';
+import { communityUrl } from 'utils/canonicalUrls';
+import { Spacer, Section, Wrapper, Button } from '.';
+import ActivityBundleRow from './ActivityBundleRow';
+import CommunityHeader from './CommunityHeader';
 
 const now = new Date();
 
-const AffectedObjectRow = (props: AffectedObjectRowProps) => {
-	const firstItem = props.renderedItems[0];
-	return (
-		<div key={props.objectId}>
-			<span>
-				<Icon icon={firstItem.icon} />
-			</span>
-			{props.renderedItems.map((item) => (
-				<ActivityItemRow item={item} />
-			))}
-		</div>
-	);
-};
-
-type AffectedObjectRowProps = {
-	objectId: string;
-	renderedItems: RenderedActivityItem[];
-};
-
-const ActivityItemRow = (props: ActivityItemRowProps) => (
-	<>
-		<span>{props.item.message}</span>
-		<div>
-			{props.item.excerpt && <span>{props.item.excerpt}</span>}
-			<span>{formatDate(props.item.timestamp, { includeTime: false })}</span>
-		</div>
-	</>
-);
-
-type ActivityItemRowProps = {
-	item: RenderedActivityItem;
-};
-
 export const Digest = (props: Props) => {
+	const fadedBackgroundColor = Color(props.community.accentColorDark || '#2D3752')
+		.fade(0.95)
+		.rgb()
+		.string();
+
+	const accentColorLight = props.community.accentColorLight || 'white';
+
 	return (
 		<Wrapper>
-			<Section alignment="left">
-				<Section
-					color={props.accentColorLight}
-					backgroundColor={props.accentColorDark}
-					backgroundImage={props.headerLogo || ''}
-					alignment="left"
-				>
-					<h1>Activity Digest</h1>
-					<h3>{dateFormat(now, 'mmmm yyyy')}</h3>
-					<div>
-						<p>
-							This digest is a compilation of activity in the{' '}
-							<a href={props.communityUrl}>{props.communityTitle}</a> community during
-							the week of{' '}
-							{dateFormat(now.setDate(now.getDate() - now.getDay()), 'dd mmmm yyyy')}.
-						</p>
-						<Button linkUrl="" width="160">
-							<span style={{ color: props.accentColorLight }}>
-								<Icon icon="pulse" />
-							</span>
-							<span>View latest activity</span>
-						</Button>
-					</div>
-				</Section>
+			<CommunityHeader community={props.community} title="Activity Digest" />
+			<Section backgroundColor={fadedBackgroundColor}>
 				<div>
-					<span style={{ color: props.accentColorLight }}>
+					This digest is a compilation of activity in the{' '}
+					<a href={communityUrl(props.community)}>{props.community.title}</a> community
+					during the week of{' '}
+					{dateFormat(now.setDate(now.getDate() - now.getDay()), 'dd mmmm yyyy')}.
+				</div>
+				<Button linkUrl="" width="160">
+					<span style={{ color: accentColorLight }}>
+						<Icon icon="pulse" />
+					</span>
+					<span>View latest activity</span>
+				</Button>
+			</Section>
+			<Section alignment="left">
+				<div>
+					<span style={{ color: accentColorLight }}>
 						<Icon icon="office" />
 					</span>
-					<h2>Community News</h2>
-					{Object.entries(props.communityItems).map(([objectId, groupedItems]) => (
-						<AffectedObjectRow
-							objectId={objectId}
-							renderedItems={Object.values(groupedItems).map(
-								props.renderActivityItem,
-							)}
-						/>
-					))}
-					<span style={{ color: props.accentColorLight }}>
-						<Icon icon="document-share" />
-					</span>
-					<h2>Pub News</h2>
-					{Object.entries(props.pubItems).map(([objectId, groupedItems]) => (
-						<AffectedObjectRow
-							objectId={objectId}
-							renderedItems={Object.values(groupedItems).map(
-								props.renderActivityItem,
-							)}
-						/>
-					))}
+					<span>Community News</span>
 				</div>
+				{Object.entries(props.communityItems).map(([objectId, groupedItems]) => (
+					<>
+						{groupedItems.title}
+						<ActivityBundleRow
+							associations={props.associations}
+							userId={props.userId}
+							objectId={objectId}
+							items={Object.values(groupedItems.items)}
+						/>
+					</>
+				))}
+				<Spacer height={40}>
+					<span>&nbsp;</span>
+				</Spacer>
+				<div>
+					<span style={{ color: accentColorLight }}>
+						<Icon icon="pubDoc" />
+					</span>
+					<span>Pub News</span>
+				</div>
+				{Object.entries(props.pubItems).map(([objectId, groupedItems]) => {
+					return (
+						<>
+							<Spacer height={40}>
+								<span>&nbsp;</span>
+							</Spacer>
+							<span style={{ color: accentColorLight }}>
+								<Icon icon={groupedItems.icon} />
+							</span>
+							{groupedItems.title}
+							<ActivityBundleRow
+								associations={props.associations}
+								userId={props.userId}
+								objectId={objectId}
+								items={Object.values(groupedItems.items)}
+							/>
+						</>
+					);
+				})}
 			</Section>
 		</Wrapper>
 	);
@@ -103,17 +91,18 @@ type DisplayKey = string;
 
 type AffectedObjectId = string;
 
-type DedupedActivityItems = Record<DisplayKey, ActivityItem>;
+type DedupedActivityItems = {
+	items: Record<DisplayKey, ActivityItem>;
+	title: string;
+	icon: IconName;
+};
 
 export type GroupedActivityItems = Record<AffectedObjectId, DedupedActivityItems>;
 
 type Props = {
-	communityTitle: string;
-	communityUrl: string;
-	headerLogo?: string;
-	renderActivityItem: any;
+	userId: string;
+	community: Community;
+	associations: ActivityAssociations;
 	pubItems: GroupedActivityItems;
 	communityItems: GroupedActivityItems;
-	accentColorDark: string;
-	accentColorLight: string;
 };

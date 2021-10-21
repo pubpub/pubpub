@@ -6,7 +6,9 @@ import { TableWrapper } from './shared';
 const StyledTableWrapper = styled(TableWrapper)<StyleProps>`
 	background: ${(props) =>
 		`${props.backgroundColor}${
-			props.backgroundImage ? ` url("${props.backgroundImage}") no-repeat right` : ''
+			props.backgroundImage
+				? ` url("${props.backgroundImage}") no-repeat right 40px center`
+				: ''
 		}`};
 	font-size: ${(props) => props.fontSize}px;
 	text-align: ${(props) => props.alignment};
