@@ -69,7 +69,7 @@ const Pricing = () => {
 							<li>Dedicated pubpub.org subdomain</li>
 							<li>Custom domains</li>
 							<li>Custom # of DOIs</li>
-							<li>Content Services</li>
+							<li>Content services as needed</li>
 						</ul>
 					</div>
 					<div className="option bp3-card bp3-elevation-1" id="content">
