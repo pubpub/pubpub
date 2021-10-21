@@ -10,8 +10,8 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
 	const headerLogo = getResizedUrl(props.community.headerLogo || '', 'inside', undefined, 50);
 	return (
 		<Section
-			color={props.community.accentColorLight}
-			backgroundColor={props.community.accentColorDark}
+			color={props.headerColor}
+			backgroundColor={props.backgroundColor}
 			backgroundImage={headerLogo || ''}
 			alignment="left"
 		>
@@ -23,6 +23,8 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
 
 type CommunityHeaderProps = {
 	title: string;
+	headerColor: string;
+	backgroundColor: string;
 	community: Community;
 };
 

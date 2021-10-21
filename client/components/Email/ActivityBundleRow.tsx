@@ -8,7 +8,6 @@ import { renderActivityItem } from 'client/utils/activity';
 type ActivityBundleRowProps = {
 	associations: ActivityAssociations;
 	userId: string;
-	objectId: string;
 	items: ActivityItem[];
 };
 
@@ -20,11 +19,11 @@ const ActivityBundleRow = (props: ActivityBundleRowProps) => {
 		scope,
 	};
 	return (
-		<div key={props.objectId}>
+		<ol>
 			{props.items
 				.map((item) => renderActivityItem(item, activityRenderContext))
 				.map((renderedItem) => (
-					<>
+					<li key={renderedItem.id}>
 						<span>{renderedItem.message}</span>
 						<div>
 							{renderedItem.excerpt && <span>{renderedItem.excerpt}</span>}
@@ -32,9 +31,9 @@ const ActivityBundleRow = (props: ActivityBundleRowProps) => {
 								{formatDate(renderedItem.timestamp, { includeTime: false })}
 							</span>
 						</div>
-					</>
+					</li>
 				))}
-		</div>
+		</ol>
 	);
 };
 

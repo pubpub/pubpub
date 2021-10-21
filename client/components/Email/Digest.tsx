@@ -17,16 +17,28 @@ const truncate = (str: string) =>
 	str.length > MAX_TITLE_CHARS ? str.substr(0, MAX_TITLE_CHARS - 1) + '…' : str;
 
 export const Digest = (props: Props) => {
-	const fadedBackgroundColor = Color(props.community.accentColorDark || '#2D3752')
+	const fadedBackgroundColor = Color(props.community.accentColorDark)
 		.fade(0.95)
 		.rgb()
 		.string();
 
-	const accentColorLight = props.community.accentColorLight || 'white';
+	const backgroundColor =
+		props.community.headerColorType === 'light'
+			? props.community.accentColorLight || 'white'
+			: props.community.accentColorDark || 'black';
+	const headerColor =
+		props.community.headerColorType === 'light'
+			? props.community.accentColorDark || 'black'
+			: props.community.accentColorLight || 'white';
 
 	return (
 		<Wrapper>
-			<CommunityHeader community={props.community} title="Activity Digest" />
+			<CommunityHeader
+				community={props.community}
+				headerColor={headerColor}
+				backgroundColor={props.community.heroBackgroundColor || backgroundColor}
+				title="Activity Digest"
+			/>
 			<Section backgroundColor={fadedBackgroundColor}>
 				<table>
 					<tr>
@@ -38,7 +50,7 @@ export const Digest = (props: Props) => {
 						</td>
 						<td style={{ verticalAlign: 'middle' }}>
 							<Button linkUrl="" width="160">
-								<span style={{ color: accentColorLight }}>
+								<span style={{ color: headerColor }}>
 									<Icon icon="pulse" />
 								</span>
 								<span>View latest activity</span>
@@ -49,7 +61,7 @@ export const Digest = (props: Props) => {
 			</Section>
 			<Section alignment="left">
 				<div>
-					<span style={{ color: accentColorLight }}>
+					<span style={{ color: headerColor }}>
 						<Icon icon="office" />
 					</span>
 					<h2 style={{ display: 'inline-block' }}>Community News</h2>
@@ -61,7 +73,6 @@ export const Digest = (props: Props) => {
 							<ActivityBundleRow
 								associations={props.associations}
 								userId={props.userId}
-								objectId={objectId}
 								items={Object.values(groupedItems.items)}
 							/>
 						</li>
@@ -71,7 +82,7 @@ export const Digest = (props: Props) => {
 					<span>&nbsp;</span>
 				</Spacer>
 				<div>
-					<span style={{ color: accentColorLight }}>
+					<span style={{ color: headerColor }}>
 						<Icon icon="pubDoc" />
 					</span>
 					<h2 style={{ display: 'inline-block' }}>Pub News</h2>
@@ -83,7 +94,7 @@ export const Digest = (props: Props) => {
 								<Spacer height={40}>
 									<span>&nbsp;</span>
 								</Spacer>
-								<span style={{ color: accentColorLight }}>
+								<span style={{ color: headerColor }}>
 									<Icon icon={groupedItems.icon} />
 								</span>
 								<h3 style={{ display: 'inline-block' }}>
@@ -92,7 +103,6 @@ export const Digest = (props: Props) => {
 								<ActivityBundleRow
 									associations={props.associations}
 									userId={props.userId}
-									objectId={objectId}
 									items={Object.values(groupedItems.items)}
 								/>
 							</li>
