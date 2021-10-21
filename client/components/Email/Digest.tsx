@@ -11,6 +11,11 @@ import CommunityHeader from './CommunityHeader';
 
 const now = new Date();
 
+const MAX_TITLE_CHARS = 65;
+
+const truncate = (str: string) =>
+	str.length > MAX_TITLE_CHARS ? str.substr(0, MAX_TITLE_CHARS - 1) + '…' : str;
+
 export const Digest = (props: Props) => {
 	const fadedBackgroundColor = Color(props.community.accentColorDark || '#2D3752')
 		.fade(0.95)
@@ -23,37 +28,45 @@ export const Digest = (props: Props) => {
 		<Wrapper>
 			<CommunityHeader community={props.community} title="Activity Digest" />
 			<Section backgroundColor={fadedBackgroundColor}>
-				<div>
-					This digest is a compilation of activity in the{' '}
-					<a href={communityUrl(props.community)}>{props.community.title}</a> community
-					during the week of{' '}
-					{dateFormat(now.setDate(now.getDate() - now.getDay()), 'dd mmmm yyyy')}.
-				</div>
-				<Button linkUrl="" width="160">
-					<span style={{ color: accentColorLight }}>
-						<Icon icon="pulse" />
-					</span>
-					<span>View latest activity</span>
-				</Button>
+				<table>
+					<tr>
+						<td>
+							This digest is a compilation of activity in the&nbsp;
+							<a href={communityUrl(props.community)}>{props.community.title}</a>
+							&nbsp;community during the week of&nbsp;
+							{dateFormat(now.setDate(now.getDate() - now.getDay()), 'dd mmmm yyyy')}.
+						</td>
+						<td style={{ verticalAlign: 'middle' }}>
+							<Button linkUrl="" width="160">
+								<span style={{ color: accentColorLight }}>
+									<Icon icon="pulse" />
+								</span>
+								<span>View latest activity</span>
+							</Button>
+						</td>
+					</tr>
+				</table>
 			</Section>
 			<Section alignment="left">
 				<div>
 					<span style={{ color: accentColorLight }}>
 						<Icon icon="office" />
 					</span>
-					<span>Community News</span>
+					<h2 style={{ display: 'inline-block' }}>Community News</h2>
 				</div>
-				{Object.entries(props.communityItems).map(([objectId, groupedItems]) => (
-					<>
-						{groupedItems.title}
-						<ActivityBundleRow
-							associations={props.associations}
-							userId={props.userId}
-							objectId={objectId}
-							items={Object.values(groupedItems.items)}
-						/>
-					</>
-				))}
+				<ol>
+					{Object.entries(props.communityItems).map(([objectId, groupedItems]) => (
+						<li key={objectId}>
+							<strong>{truncate(groupedItems.title)}</strong>
+							<ActivityBundleRow
+								associations={props.associations}
+								userId={props.userId}
+								objectId={objectId}
+								items={Object.values(groupedItems.items)}
+							/>
+						</li>
+					))}
+				</ol>
 				<Spacer height={40}>
 					<span>&nbsp;</span>
 				</Spacer>
@@ -61,27 +74,31 @@ export const Digest = (props: Props) => {
 					<span style={{ color: accentColorLight }}>
 						<Icon icon="pubDoc" />
 					</span>
-					<span>Pub News</span>
+					<h2 style={{ display: 'inline-block' }}>Pub News</h2>
 				</div>
-				{Object.entries(props.pubItems).map(([objectId, groupedItems]) => {
-					return (
-						<>
-							<Spacer height={40}>
-								<span>&nbsp;</span>
-							</Spacer>
-							<span style={{ color: accentColorLight }}>
-								<Icon icon={groupedItems.icon} />
-							</span>
-							{groupedItems.title}
-							<ActivityBundleRow
-								associations={props.associations}
-								userId={props.userId}
-								objectId={objectId}
-								items={Object.values(groupedItems.items)}
-							/>
-						</>
-					);
-				})}
+				<ol>
+					{Object.entries(props.pubItems).map(([objectId, groupedItems]) => {
+						return (
+							<li key={objectId}>
+								<Spacer height={40}>
+									<span>&nbsp;</span>
+								</Spacer>
+								<span style={{ color: accentColorLight }}>
+									<Icon icon={groupedItems.icon} />
+								</span>
+								<h3 style={{ display: 'inline-block' }}>
+									{truncate(groupedItems.title)}
+								</h3>
+								<ActivityBundleRow
+									associations={props.associations}
+									userId={props.userId}
+									objectId={objectId}
+									items={Object.values(groupedItems.items)}
+								/>
+							</li>
+						);
+					})}
+				</ol>
 			</Section>
 		</Wrapper>
 	);

@@ -8,7 +8,7 @@ const StyledTableWrapper = styled(TableWrapper).attrs({
 	width: '100%',
 })``;
 
-export const Wrapper = ({ children, backgroundColor = '#C0FFEE' }: Props) => (
+export const Wrapper = ({ children, backgroundColor = 'white' }: Props) => (
 	<body
 		style={{
 			fontFamily: 'Helvetica, Arial, sans-serif',

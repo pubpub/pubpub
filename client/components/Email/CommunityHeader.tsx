@@ -16,7 +16,7 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
 			alignment="left"
 		>
 			<h1>{props.title}</h1>
-			<h3>{dateFormat(now, 'mmmm yyyy')}</h3>
+			<span>{dateFormat(now, 'mmmm yyyy')}</span>
 		</Section>
 	);
 };
