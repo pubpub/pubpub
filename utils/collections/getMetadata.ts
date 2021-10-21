@@ -12,11 +12,11 @@ export const formattedMetadata = (field: any, data: any) => {
 	if (field === 'volume') return `Volume ${data}`;
 	if (field === 'issue') return `Issue ${data}`;
 	if (field === 'printPublicationDate') return `Printed ${formatDate(data)}`;
+
 	if (field === 'publicationDate') return `Published ${formatDate(data)}`;
 
 	if (field === 'isbn') return `ISBN: ${data}`;
 	if (field === 'copyrightYear') return `Copyright © ${data}`;
-	if (field === 'publicationDate') return `Published ${formatDate(data)}`;
 	if (field === 'edition') return `${data} ed.`;
 
 	if (field === 'theme') return `${data}`;

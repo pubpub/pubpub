@@ -21,7 +21,7 @@ type Props = {
 	content: LayoutBlockCollectionHeader['content'];
 };
 
-const MetadataDiv = (props: Props) => {
+const MetadataDetails = (props: Props) => {
 	const {
 		collection,
 		content: { hiddenMetadataFields = [] },
@@ -55,7 +55,7 @@ const LayoutCollectionHeader = (props: Props) => {
 			hideContributors,
 			hideCollectionKind,
 			hideDate,
-			hiddenMetadataFields,
+			hiddenMetadataFields = [],
 		},
 		content,
 	} = props;
@@ -88,7 +88,7 @@ const LayoutCollectionHeader = (props: Props) => {
 				)}
 			</ClickToCopyButton>
 		),
-		<MetadataDiv collection={collection} content={content} />,
+		<MetadataDetails collection={collection} content={content} />,
 	].filter((x) => x);
 
 	return (
