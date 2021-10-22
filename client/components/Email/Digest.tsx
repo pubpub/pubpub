@@ -35,7 +35,7 @@ export const Digest = (props: Props) => {
 		<Wrapper>
 			<CommunityHeader
 				community={props.community}
-				headerColor={headerColor}
+				headerColor={props.community.heroTextColor || headerColor}
 				backgroundColor={props.community.heroBackgroundColor || backgroundColor}
 				title="Activity Digest"
 			/>

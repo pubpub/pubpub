@@ -7,12 +7,24 @@ import { Section } from '.';
 const now = new Date();
 
 const CommunityHeader = (props: CommunityHeaderProps) => {
-	const headerLogo = getResizedUrl(props.community.headerLogo || '', 'inside', undefined, 50);
+	const logo = getResizedUrl(
+		props.community.heroLogo || props.community.headerLogo || '',
+		'inside',
+		undefined,
+		50,
+	);
+	const backgroundImage = getResizedUrl(
+		props.community.heroBackgroundImage || '',
+		'cover',
+		600,
+		undefined,
+	);
 	return (
 		<Section
 			color={props.headerColor}
 			backgroundColor={props.backgroundColor}
-			backgroundImage={headerLogo || ''}
+			backgroundImage={backgroundImage || ''}
+			logo={logo}
 			alignment="left"
 		>
 			<h1>{props.title}</h1>
