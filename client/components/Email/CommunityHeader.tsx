@@ -27,8 +27,17 @@ const CommunityHeader = (props: CommunityHeaderProps) => {
 			logo={logo}
 			alignment="left"
 		>
-			<h1>{props.title}</h1>
-			<span>{dateFormat(now, 'mmmm yyyy')}</span>
+			<h1 style={{ fontWeight: 400, fontSize: '20px', lineHeight: '28px' }}>{props.title}</h1>
+			<span
+				style={{
+					fontWeight: 400,
+					fontSize: '12px',
+					fontStyle: 'italic',
+					lineHeight: '17px',
+				}}
+			>
+				{dateFormat(now, 'mmmm yyyy')}
+			</span>
 		</Section>
 	);
 };

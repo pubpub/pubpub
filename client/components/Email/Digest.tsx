@@ -17,32 +17,42 @@ const truncate = (str: string) =>
 	str.length > MAX_TITLE_CHARS ? str.substr(0, MAX_TITLE_CHARS - 1) + '…' : str;
 
 export const Digest = (props: Props) => {
-	const fadedBackgroundColor = Color(props.community.accentColorDark)
-		.fade(0.95)
-		.rgb()
-		.string();
+	const {
+		community: { accentColorLight = 'white', accentColorDark = 'black' },
+	} = props;
 
 	const backgroundColor =
 		props.community.headerColorType === 'light'
-			? props.community.accentColorLight || 'white'
-			: props.community.accentColorDark || 'black';
+			? accentColorLight || 'white'
+			: accentColorDark || 'black';
 	const headerColor =
 		props.community.headerColorType === 'light'
-			? props.community.accentColorDark || 'black'
-			: props.community.accentColorLight || 'white';
+			? accentColorDark || 'black'
+			: accentColorLight || 'white';
+	const fadedBackgroundColor = Color(accentColorDark)
+		.fade(0.95)
+		.rgb()
+		.string();
 
 	return (
 		<Wrapper>
 			<CommunityHeader
 				community={props.community}
-				headerColor={props.community.heroTextColor || headerColor}
+				// headerColor={props.community.heroTextColor || headerColor}
+				headerColor={headerColor}
 				backgroundColor={props.community.heroBackgroundColor || backgroundColor}
 				title="Activity Digest"
 			/>
 			<Section backgroundColor={fadedBackgroundColor}>
 				<table>
 					<tr>
-						<td>
+						<td
+							style={{
+								fontSize: '12px',
+								lineHeight: '18px',
+								fontWeight: 400,
+							}}
+						>
 							This digest is a compilation of activity in the&nbsp;
 							<a href={communityUrl(props.community)}>{props.community.title}</a>
 							&nbsp;community during the week of&nbsp;
@@ -50,7 +60,7 @@ export const Digest = (props: Props) => {
 						</td>
 						<td style={{ verticalAlign: 'middle' }}>
 							<Button linkUrl="" width="160">
-								<span style={{ color: headerColor }}>
+								<span style={{ fill: accentColorDark, paddingRight: '10px' }}>
 									<Icon icon="pulse" />
 								</span>
 								<span>View latest activity</span>
@@ -60,15 +70,27 @@ export const Digest = (props: Props) => {
 				</table>
 			</Section>
 			<Section alignment="left">
-				<div>
-					<span style={{ color: headerColor }}>
+				<div
+					style={{
+						borderBottom: `1px solid ${accentColorDark}`,
+						paddingBottom: '15px',
+					}}
+				>
+					<span style={{ fill: accentColorDark, paddingRight: '10px' }}>
 						<Icon icon="office" />
 					</span>
-					<h2 style={{ display: 'inline-block' }}>Community News</h2>
+					<h2
+						style={{
+							display: 'inline-block',
+							color: accentColorDark,
+						}}
+					>
+						Community News
+					</h2>
 				</div>
 				<ol>
 					{Object.entries(props.communityItems).map(([objectId, groupedItems]) => (
-						<li key={objectId}>
+						<li key={objectId} style={{ paddingTop: '17px' }}>
 							<strong>{truncate(groupedItems.title)}</strong>
 							<ActivityBundleRow
 								associations={props.associations}
@@ -81,20 +103,29 @@ export const Digest = (props: Props) => {
 				<Spacer height={40}>
 					<span>&nbsp;</span>
 				</Spacer>
-				<div>
-					<span style={{ color: headerColor }}>
+				<div
+					style={{
+						borderBottom: `1px solid ${accentColorDark}`,
+						paddingBottom: '15px',
+					}}
+				>
+					<span style={{ fill: accentColorDark, paddingRight: '10px' }}>
 						<Icon icon="pubDoc" />
 					</span>
-					<h2 style={{ display: 'inline-block' }}>Pub News</h2>
+					<h2
+						style={{
+							display: 'inline-block',
+							color: accentColorDark,
+						}}
+					>
+						Pub News
+					</h2>
 				</div>
 				<ol>
 					{Object.entries(props.pubItems).map(([objectId, groupedItems]) => {
 						return (
-							<li key={objectId}>
-								<Spacer height={40}>
-									<span>&nbsp;</span>
-								</Spacer>
-								<span style={{ color: headerColor }}>
+							<li key={objectId} style={{ paddingTop: '17px' }}>
+								<span style={{ fill: accentColorDark, paddingRight: '10px' }}>
 									<Icon icon={groupedItems.icon} />
 								</span>
 								<h3 style={{ display: 'inline-block' }}>
