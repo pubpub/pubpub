@@ -57,11 +57,15 @@ body {
 }
 
 a {
-    color: #0096FF;
+    color: inherit;
 }
 
 a:hover {
-    color: #006ebb;
+    color: inherit;
+}
+
+strong {
+	font-weight: normal;
 }
 
 b {

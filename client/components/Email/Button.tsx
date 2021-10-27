@@ -23,15 +23,19 @@ const StyledCellWrapper = styled.td.attrs({
 `;
 
 const StyledButton = styled.a<StyleProps>`
-	border: none;
-	border-radius: 2px;
+	border: 1px solid ${(props) => props.color};
+	border-radius: 5px;
 	color: ${(props) => props.color};
 	display: inline-block;
-	font-size: 16px;
-	line-height: 34px;
-	mso-hide: all;
-	padding: 2px 10px 0 10px;
+	font-family: Arial;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 16px;
+	letter-spacing: 0.01em;
 	text-align: center;
+	mso-hide: all;
+	padding: 12px 18px;
 	text-decoration: none;
 	-webkit-text-size-adjust: none;
 	width: ${(props) => props.width}px !important;
@@ -53,7 +57,7 @@ export const Button = ({
 	linkUrl = '#',
 	width = '200',
 	color = 'white',
-	backgroundColor = '#2d2e2f99',
+	backgroundColor = 'transparent',
 }: Props) => (
 	<TableWrapper width="100%">
 		<tbody>

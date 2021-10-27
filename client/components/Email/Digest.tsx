@@ -5,9 +5,37 @@ import dateFormat from 'dateformat';
 import { Icon, IconName } from 'client/components';
 import Color from 'color';
 import { communityUrl } from 'utils/canonicalUrls';
+import styled from 'styled-components';
 import { Spacer, Section, Wrapper, Button } from '.';
 import ActivityBundleRow from './ActivityBundleRow';
 import CommunityHeader from './CommunityHeader';
+
+const H2 = styled.h2<H2StyleProps>`
+	font-family: Arial;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 18px;
+	text-align: left;
+	letter-spacing: 0.01em;
+	display: inline-block;
+	color: ${(props) => props.accentColorDark || 'black'};
+`;
+
+type H2StyleProps = {
+	accentColorDark?: string;
+};
+
+const H3 = styled.h3`
+	font-family: Arial;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: 16px;
+	text-align: left;
+	letter-spacing: 0.01em;
+	display: inline-block;
+`;
 
 const now = new Date();
 
@@ -48,9 +76,11 @@ export const Digest = (props: Props) => {
 					<tr>
 						<td
 							style={{
+								paddingRight: '40px',
 								fontSize: '12px',
 								lineHeight: '18px',
 								fontWeight: 400,
+								textAlign: 'justify',
 							}}
 						>
 							This digest is a compilation of activity in the&nbsp;
@@ -59,8 +89,8 @@ export const Digest = (props: Props) => {
 							{dateFormat(now.setDate(now.getDate() - now.getDay()), 'dd mmmm yyyy')}.
 						</td>
 						<td style={{ verticalAlign: 'middle' }}>
-							<Button linkUrl="" width="160">
-								<span style={{ fill: accentColorDark, paddingRight: '10px' }}>
+							<Button color="#333333" linkUrl="" width="160">
+								<span style={{ fill: '#333333', paddingRight: '9px' }}>
 									<Icon icon="pulse" />
 								</span>
 								<span>View latest activity</span>
@@ -76,17 +106,10 @@ export const Digest = (props: Props) => {
 						paddingBottom: '15px',
 					}}
 				>
-					<span style={{ fill: accentColorDark, paddingRight: '10px' }}>
-						<Icon icon="office" />
+					<span style={{ fill: accentColorDark, paddingRight: '9px' }}>
+						<Icon icon="office" iconSize={12} />
 					</span>
-					<h2
-						style={{
-							display: 'inline-block',
-							color: accentColorDark,
-						}}
-					>
-						Community News
-					</h2>
+					<H2 accentColorDark={accentColorDark}>Community News</H2>
 				</div>
 				<ol>
 					{Object.entries(props.communityItems).map(([objectId, groupedItems]) => (
@@ -109,28 +132,19 @@ export const Digest = (props: Props) => {
 						paddingBottom: '15px',
 					}}
 				>
-					<span style={{ fill: accentColorDark, paddingRight: '10px' }}>
-						<Icon icon="pubDoc" />
+					<span style={{ fill: accentColorDark, paddingRight: '9px' }}>
+						<Icon icon="pubDoc" iconSize={12} />
 					</span>
-					<h2
-						style={{
-							display: 'inline-block',
-							color: accentColorDark,
-						}}
-					>
-						Pub News
-					</h2>
+					<H2 accentColorDark={accentColorDark}>Pub News</H2>
 				</div>
 				<ol>
 					{Object.entries(props.pubItems).map(([objectId, groupedItems]) => {
 						return (
 							<li key={objectId} style={{ paddingTop: '17px' }}>
-								<span style={{ fill: accentColorDark, paddingRight: '10px' }}>
-									<Icon icon={groupedItems.icon} />
+								<span style={{ fill: accentColorDark, paddingRight: '9px' }}>
+									<Icon iconSize={12} icon={groupedItems.icon} />
 								</span>
-								<h3 style={{ display: 'inline-block' }}>
-									{truncate(groupedItems.title)}
-								</h3>
+								<H3>{truncate(groupedItems.title)}</H3>
 								<ActivityBundleRow
 									associations={props.associations}
 									userId={props.userId}
