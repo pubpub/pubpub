@@ -17,6 +17,14 @@ type Props<Item> = {
 	itemRenderer: ItemRenderer<Item>;
 	usePortal?: boolean;
 	query?: string;
+	newItemFromQuery?: (query: string) => Item;
+	newItemRenderer?:
+		| ((
+				query: string,
+				active: boolean,
+				handleClick: React.MouseEventHandler<HTMLElement>,
+		  ) => JSX.Element | undefined)
+		| undefined;
 };
 
 const QueryListDropdown = <Item extends {}>(props: Props<Item>) => {
@@ -33,10 +41,13 @@ const QueryListDropdown = <Item extends {}>(props: Props<Item>) => {
 		searchPlaceholder,
 		usePortal = true,
 		query,
+		newItemFromQuery,
+		newItemRenderer,
 	} = props;
 
 	const renderPopoverContent = (qlProps: IQueryListRendererProps<Item>) => {
-		const { handleKeyDown, handleKeyUp, handleQueryChange, itemList } = qlProps;
+		// eslint-disable-next-line no-shadow
+		const { handleKeyDown, handleKeyUp, handleQueryChange, itemList, query } = qlProps;
 		return (
 			// eslint-disable-next-line jsx-a11y/no-static-element-interactions
 			<div className="search-wrapper" onKeyDown={handleKeyDown} onKeyUp={handleKeyUp}>
@@ -76,6 +87,8 @@ const QueryListDropdown = <Item extends {}>(props: Props<Item>) => {
 			onQueryChange={onQueryChange}
 			query={query}
 			noResults={<div className="empty-list">{emptyListPlaceholder}</div>}
+			createNewItemFromQuery={newItemFromQuery}
+			createNewItemRenderer={newItemRenderer}
 		/>
 	);
 };

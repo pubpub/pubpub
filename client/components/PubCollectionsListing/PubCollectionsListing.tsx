@@ -18,7 +18,6 @@ import { getDashUrl } from 'utils/dashboard';
 require('./pubCollectionsListing.scss');
 
 type CollectionPub = BareCollectionPub & { collection: Collection };
-
 type Props = {
 	canManage: boolean;
 	allCollections: Collection[];
@@ -196,6 +195,42 @@ const PubCollectionsListing = (props: Props) => {
 		);
 	};
 
+	// create new collection
+	// add pub to collection
+	const createTag = async (title: string) => {
+		// await pendingPromise(
+		// 	api.createTagCollection({
+		// 		communityId: communityData.id,
+		// 		title,
+		// 	}),
+		// );
+		console.log(title);
+		console.log('is this firing');
+	};
+
+	const handleCreateTagFromQuery = (query: string) => {
+		createTag(query);
+		// if (!primaryCollection) {
+		// 	return;
+		// }
+		return canAddCollections[-1];
+	};
+
+	console.log(canAddCollections[-1]);
+
+	const renderNewItem = (
+		query: string,
+		active: boolean,
+		handleClick: React.MouseEventHandler<HTMLElement>,
+	) => {
+		return (
+			<div onClick={handleClick}>
+				{' '}
+				is this a {query} {}
+			</div>
+		);
+	};
+
 	const renderQueryList = (triggerButton) => {
 		if (canAddCollections.length > 0) {
 			return (
@@ -204,11 +239,13 @@ const PubCollectionsListing = (props: Props) => {
 					items={canAddCollections}
 					itemRenderer={renderAvailableCollection}
 					emptyListPlaceholder="Create new collection?"
-					searchPlaceholder="Search for Collections or Create a Tag"
+					searchPlaceholder="Search for Collections (or create a Tag)"
 					onItemSelect={handleAddCollectionPub}
 					position="bottom-left"
 					onClose={onQueryListClose}
 					usePortal={false}
+					newItemFromQuery={handleCreateTagFromQuery}
+					newItemRenderer={renderNewItem}
 				>
 					{triggerButton}
 				</QueryListDropdown>

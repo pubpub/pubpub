@@ -1,6 +1,17 @@
 import { apiFetch } from 'client/utils/apiFetch';
 
 const collectionPubsRoot = '/api/collectionPubs';
+const collection = '/api/collections';
+
+export const createTagCollection = ({ title, communityId }) =>
+	apiFetch(collection, {
+		method: 'POST',
+		body: JSON.stringify({
+			communityId,
+			title,
+			kind: 'tag',
+		}),
+	});
 
 export const addCollectionPub = ({ pubId, collectionId, communityId }) =>
 	apiFetch(collectionPubsRoot, {
