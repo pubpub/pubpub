@@ -48,6 +48,8 @@ html {
     height: 100%;
     font-size: 16px;
     line-height: 1.4;
+		color: #333333;
+		font-family: Arial;
 }
 
 body {

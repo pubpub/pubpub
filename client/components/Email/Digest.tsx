@@ -7,11 +7,11 @@ import Color from 'color';
 import { communityUrl } from 'utils/canonicalUrls';
 import styled from 'styled-components';
 import { Spacer, Section, Wrapper, Button } from '.';
+import { TableWrapper } from './shared';
 import ActivityBundleRow from './ActivityBundleRow';
 import CommunityHeader from './CommunityHeader';
 
 const H2 = styled.h2<H2StyleProps>`
-	font-family: Arial;
 	font-size: 16px;
 	font-style: normal;
 	font-weight: 400;
@@ -19,7 +19,7 @@ const H2 = styled.h2<H2StyleProps>`
 	text-align: left;
 	letter-spacing: 0.01em;
 	display: inline-block;
-	color: ${(props) => props.accentColorDark || 'black'};
+	color: ${(props) => props.accentColorDark};
 `;
 
 type H2StyleProps = {
@@ -27,7 +27,6 @@ type H2StyleProps = {
 };
 
 const H3 = styled.h3`
-	font-family: Arial;
 	font-size: 14px;
 	font-style: normal;
 	font-weight: 700;
@@ -35,6 +34,20 @@ const H3 = styled.h3`
 	text-align: left;
 	letter-spacing: 0.01em;
 	display: inline-block;
+`;
+
+const IntroCell = styled.td`
+	padding-right: 30px;
+	font-size: 12px;
+	line-height: 18px;
+	font-weight: 400;
+	text-align: justify;
+	width: 61%;
+`;
+
+const ActivityButtonCell = styled.td`
+	vertical-align: middle;
+	width: 39%;
 `;
 
 const now = new Date();
@@ -66,38 +79,29 @@ export const Digest = (props: Props) => {
 		<Wrapper>
 			<CommunityHeader
 				community={props.community}
-				// headerColor={props.community.heroTextColor || headerColor}
 				headerColor={headerColor}
 				backgroundColor={props.community.heroBackgroundColor || backgroundColor}
 				title="Activity Digest"
 			/>
 			<Section backgroundColor={fadedBackgroundColor}>
-				<table>
+				<TableWrapper>
 					<tr>
-						<td
-							style={{
-								paddingRight: '40px',
-								fontSize: '12px',
-								lineHeight: '18px',
-								fontWeight: 400,
-								textAlign: 'justify',
-							}}
-						>
+						<IntroCell>
 							This digest is a compilation of activity in the&nbsp;
 							<a href={communityUrl(props.community)}>{props.community.title}</a>
 							&nbsp;community during the week of&nbsp;
 							{dateFormat(now.setDate(now.getDate() - now.getDay()), 'dd mmmm yyyy')}.
-						</td>
-						<td style={{ verticalAlign: 'middle' }}>
-							<Button color="#333333" linkUrl="" width="160">
+						</IntroCell>
+						<ActivityButtonCell>
+							<Button linkUrl="" width="100%">
 								<span style={{ fill: '#333333', paddingRight: '9px' }}>
 									<Icon icon="pulse" />
 								</span>
 								<span>View latest activity</span>
 							</Button>
-						</td>
+						</ActivityButtonCell>
 					</tr>
-				</table>
+				</TableWrapper>
 			</Section>
 			<Section alignment="left">
 				<div
@@ -114,7 +118,6 @@ export const Digest = (props: Props) => {
 				<ol>
 					{Object.entries(props.communityItems).map(([objectId, groupedItems]) => (
 						<li key={objectId} style={{ paddingTop: '17px' }}>
-							<strong>{truncate(groupedItems.title)}</strong>
 							<ActivityBundleRow
 								associations={props.associations}
 								userId={props.userId}

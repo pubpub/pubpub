@@ -1,11 +1,10 @@
-import React from 'react';
 import styled from 'styled-components';
+import React from 'react';
 
 import { TableWrapper } from './shared';
 
 const StyledTableWrapper = styled(TableWrapper).attrs({
 	align: 'center',
-	role: 'presentation',
 })<StyleProps>`
 	background-color: ${(props) => props.backgroundColor};
 	text-align: center;
@@ -25,7 +24,7 @@ const StyledCellWrapper = styled.td.attrs({
 const StyledButton = styled.a<StyleProps>`
 	border: 1px solid ${(props) => props.color};
 	border-radius: 5px;
-	color: ${(props) => props.color};
+	color: ${(props) => props.color || 'inherit'};
 	display: inline-block;
 	font-family: Arial;
 	font-size: 14px;
@@ -56,26 +55,18 @@ export const Button = ({
 	children,
 	linkUrl = '#',
 	width = '200',
-	color = 'white',
+	color,
 	backgroundColor = 'transparent',
 }: Props) => (
-	<TableWrapper width="100%">
-		<tbody>
-			<tr>
-				<td align="center">
-					<StyledTableWrapper width={width} backgroundColor={backgroundColor}>
-						<StyledRowWrapper>
-							<StyledCellWrapper>
-								<div>
-									<StyledButton href={linkUrl} color={color} width={width}>
-										<span>{children}</span>
-									</StyledButton>
-								</div>
-							</StyledCellWrapper>
-						</StyledRowWrapper>
-					</StyledTableWrapper>
-				</td>
-			</tr>
-		</tbody>
-	</TableWrapper>
+	<StyledTableWrapper width={width} backgroundColor={backgroundColor}>
+		<StyledRowWrapper>
+			<StyledCellWrapper>
+				<div>
+					<StyledButton href={linkUrl} color={color} width={width}>
+						<span>{children}</span>
+					</StyledButton>
+				</div>
+			</StyledCellWrapper>
+		</StyledRowWrapper>
+	</StyledTableWrapper>
 );

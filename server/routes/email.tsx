@@ -5,6 +5,7 @@ import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
 import juice from 'juice';
 import { handleErrors } from 'server/utils/errors';
 import pick from 'lodash.pick';
+import util from 'util';
 import omit from 'lodash.omit';
 import { GroupedActivityItems } from 'client/components/Email/Digest';
 
@@ -14,8 +15,26 @@ import { minify } from 'html-minifier';
 
 import { Digest } from 'components/Email';
 import { reset, globals } from 'components/Email/styles';
-import { ActivityItem } from 'types/activity';
+import { ActivityItem } from 'types';
 import { fetchActivityItems } from 'server/activityItem/fetch';
+
+const getAffectedObject = (item) =>
+	item.pubId
+		? { id: item.pubId, title: item.payload.pub.title }
+		: item.collectionId
+		? { id: item.collectionId, title: item.payload.collection.title }
+		: 'page' in item.payload
+		? pick(item.payload.page, ['id', 'title'])
+		: { id: item.communityId, title: item.payload.community.title };
+
+const getAffectedObjectIcon = (item: ActivityItem) =>
+	item.pubId
+		? 'pubDoc'
+		: item.collectionId
+		? 'collection'
+		: 'page' in item.payload && item.payload.page.id
+		? 'page-layout'
+		: 'office';
 
 type KeyedActivityItem = ActivityItem & {
 	displayKey: string;
@@ -50,7 +69,10 @@ const inlineStylesWithMarkup = (emailMarkup: React.ReactNode, extraStyles: strin
 };
 
 export const render = (emailMarkup: React.ReactNode, extraStyles = '') => {
-	return `<html lang="en">${inlineStylesWithMarkup(emailMarkup, extraStyles)}</html>`;
+	return `<!DOCTYPE html><html lang="en">${inlineStylesWithMarkup(
+		emailMarkup,
+		extraStyles,
+	)}</html>`;
 };
 
 app.get('/email', async (req, res, next) => {
@@ -65,24 +87,6 @@ app.get('/email', async (req, res, next) => {
 			return next();
 		}
 		const { activityItems, associations } = await fetchActivityItems({ scope });
-		const getAffectedObjectIcon = (item: ActivityItem) =>
-			item.pubId
-				? 'pubDoc'
-				: item.collectionId
-				? 'collection'
-				: 'page' in item.payload && item.payload.page.id
-				? 'page-layout'
-				: 'office';
-
-		const getAffectedObject = (item: ActivityItem) =>
-			item.pubId
-				? associations.pub[item.pubId]
-				: item.collectionId
-				? associations.collection[item.collectionId]
-				: 'page' in item.payload && item.payload.page.id
-				? associations.page[item.payload.page.id]
-				: associations.community[item.communityId];
-
 		const activityItemsGroupedByObjectId: Record<
 			string,
 			KeyedActivityItem[]
@@ -110,7 +114,7 @@ app.get('/email', async (req, res, next) => {
 									: { ...result, [item.displayKey]: item },
 							{},
 						),
-					title: getAffectedObject(activityItemsGroupedByObjectId[objectId][0]).title,
+					title: getAffectedObject(activityItemsGroupedByObjectId[objectId][0])?.title,
 					icon: getAffectedObjectIcon(activityItemsGroupedByObjectId[objectId][0]),
 				},
 			}),
