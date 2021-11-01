@@ -44,7 +44,7 @@ export const citationStyles: CitationStyle[] = [
 	{ key: 'elife', name: 'ELife', path: './citeStyles/elife.csl' },
 	{ key: 'frontiers', name: 'Frontiers', path: './citeStyles/frontiers.csl' },
 	{ key: 'mla', name: 'MLA', path: './citeStyles/modern-language-association.csl' },
-	{ key: 'apa', name: 'AMA 11th edition', path: './citeStyles/american-medical-association.csl' },
+	{ key: 'apa', name: 'AMA', path: './citeStyles/american-medical-association.csl' },
 	{ key: 'vancouver', name: 'Vancouver' },
 ];
 
