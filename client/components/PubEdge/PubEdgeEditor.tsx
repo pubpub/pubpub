@@ -49,7 +49,7 @@ const PubEdgeEditor = (props: PubEdgeEditorProps) => {
 		}
 
 		const addPublicationDate = () =>
-			onUpdateExternalPublication({ publicationDate: new Date() });
+			onUpdateExternalPublication({ publicationDate: new Date().toISOString() });
 
 		return (
 			<RKButton
@@ -79,15 +79,16 @@ const PubEdgeEditor = (props: PubEdgeEditorProps) => {
 			bylineElement={
 				<TagInput
 					placeholder="Add authors for this publication"
-					// @ts-expect-error ts-migrate(2322) FIXME: Type 'string | (string | { name?: string | undefin... Remove this comment to see the full error message
 					values={contributors}
-					onChange={(value) => onUpdateExternalPublication({ contributors: value })}
+					onChange={(value) =>
+						void onUpdateExternalPublication({ contributors: value as string[] })
+					}
 				/>
 			}
 			metadataElements={[
 				<PubEdgeDescriptionButton
 					onToggle={() => setOpen((value) => !value)}
-					open={open}
+					open={!!open}
 					targetId=""
 				/>,
 				renderPublicationDate(),
