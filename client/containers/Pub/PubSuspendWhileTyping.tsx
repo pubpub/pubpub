@@ -24,7 +24,6 @@ export const PubSuspendWhileTypingProvider = (props: PubSuspendWhileTypingProvid
 		if (!lastInputTime.current) {
 			return 0;
 		}
-		// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 		const timeSinceLastInput = currentTime - lastInputTime.current;
 		return Math.max(0, delay - timeSinceLastInput);
 	}, []);

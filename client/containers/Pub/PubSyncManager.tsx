@@ -15,7 +15,7 @@ import {
 	Community,
 	LoginData,
 	LocationData,
-	DocJson,
+	PubHistoryState,
 } from 'types';
 
 const shimPubContextProps = {
@@ -55,17 +55,7 @@ type CollabUser = {
 
 type State = {
 	pubData: PubPageData;
-	historyData: {
-		currentKey: number;
-		latestKey: number;
-		isViewingHistory: boolean;
-		loadedIntoHistory: boolean;
-		historyDocKey: string;
-		historyDoc?: DocJson;
-		outstandingRequests: number;
-		latestKeyReceivedAt: Maybe<number>;
-		timestamps: Record<string, number>;
-	};
+	historyData: PubHistoryState;
 	collabData: {
 		editorChangeObject: any;
 		status: string;
