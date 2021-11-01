@@ -6,7 +6,7 @@ import { Section } from '.';
 
 const now = new Date();
 
-const CommunityHeader = (props: CommunityHeaderProps) => {
+export const CommunityHeader = (props: CommunityHeaderProps) => {
 	const logo = getResizedUrl(
 		props.community.heroLogo || props.community.headerLogo || '',
 		'inside',
@@ -48,5 +48,3 @@ type CommunityHeaderProps = {
 	backgroundColor: string;
 	community: Community;
 };
-
-export default CommunityHeader;

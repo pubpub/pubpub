@@ -6,10 +6,8 @@ import { Icon, IconName } from 'client/components';
 import Color from 'color';
 import { communityUrl } from 'utils/canonicalUrls';
 import styled from 'styled-components';
-import { Spacer, Section, Wrapper, Button } from '.';
-import { TableWrapper } from './shared';
+import { Spacer, Section, Wrapper, Button, CommunityHeader, TableWrapper } from '..';
 import ActivityBundleRow from './ActivityBundleRow';
-import CommunityHeader from './CommunityHeader';
 
 const H2 = styled.h2<H2StyleProps>`
 	font-size: 16px;

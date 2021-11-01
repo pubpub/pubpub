@@ -12,7 +12,7 @@ import { minify } from 'html-minifier';
 import { reset, globals } from 'components/Email/styles';
 import { Digest } from 'components/Email';
 
-import { getDigestData } from 'server/utils/email';
+import { getDigestData } from 'server/utils/email/digest';
 
 const inlineStylesWithMarkup = (emailMarkup: React.ReactNode, extraStyles: string) => {
 	const stylesheet = new ServerStyleSheet();
@@ -77,7 +77,7 @@ app.get('/email/:templateSlug', async (req, res, next) => {
 			render(
 				component({
 					community,
-					...prepData(initialData),
+					...(await prepData(initialData)),
 				}),
 			),
 		);

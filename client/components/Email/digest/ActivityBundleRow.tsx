@@ -5,7 +5,7 @@ import pick from 'lodash.pick';
 import styled from 'styled-components';
 import { formatDate } from 'utils/dates';
 import { renderActivityItem } from 'client/utils/activity';
-import { TableWrapper } from './shared';
+import { TableWrapper } from '../shared';
 
 type ActivityBundleRowProps = {
 	associations: ActivityAssociations;
