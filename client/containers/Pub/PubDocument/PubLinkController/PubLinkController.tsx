@@ -49,7 +49,7 @@ const PubLinkController = (props: PubMouseEventProps) => {
 	);
 
 	useEffect(() => {
-		let timeout: NodeJS.Timeout;
+		let timeout: number;
 
 		const handleMouseOver = (e: MouseEvent) => {
 			const element = e.target as Element | null;

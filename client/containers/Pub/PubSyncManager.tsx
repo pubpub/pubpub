@@ -1,5 +1,6 @@
 import React from 'react';
 import queryString from 'query-string';
+import firebase from 'firebase';
 
 import { getRandomColor } from 'utils/colors';
 import { getPubPageTitle } from 'utils/pubPageTitle';

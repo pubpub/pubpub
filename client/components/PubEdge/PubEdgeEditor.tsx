@@ -4,17 +4,17 @@ import { Button as RKButton } from 'reakit/Button';
 
 import { DatePicker } from 'components';
 import { getHostnameForUrl } from 'utils/pubEdge';
+import { ExternalPublication, Pub } from 'types';
 
-import { externalPublicationType } from './constants';
 import PubEdgeLayout from './PubEdgeLayout';
 import PubEdgeDescriptionButton from './PubEdgeDescriptionButton';
 
 require('./pubEdge.scss');
 
 export type PubEdgeEditorProps = {
-	externalPublication: externalPublicationType;
-	onUpdateExternalPublication: (...args: any[]) => any;
-	pubData: any;
+	externalPublication: ExternalPublication;
+	onUpdateExternalPublication: (patch: Partial<ExternalPublication>) => unknown;
+	pubData: Pub;
 };
 
 const PubEdgeEditor = (props: PubEdgeEditorProps) => {

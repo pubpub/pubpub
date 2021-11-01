@@ -9,7 +9,7 @@ type FocusTrapOptions = {
 	onClickOutside?: Maybe<EventHandler<MouseEvent>>;
 	isActive?: boolean;
 	ignoreMouseEvents?: boolean;
-	restoreFocusTarget?: Maybe<globalThis.Node>;
+	restoreFocusTarget?: Maybe<Node>;
 };
 
 const captureEventOptions = { capture: true };
