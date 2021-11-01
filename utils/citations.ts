@@ -9,7 +9,8 @@ export type CitationStyleKind =
 	| 'elife'
 	| 'frontiers'
 	| 'mla'
-	| 'vancouver';
+	| 'vancouver'
+	| 'ama';
 
 type CitationStyle = {
 	name: string;
