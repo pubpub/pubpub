@@ -47,7 +47,7 @@ const QueryListDropdown = <Item extends {}>(props: Props<Item>) => {
 
 	const renderPopoverContent = (qlProps: IQueryListRendererProps<Item>) => {
 		// eslint-disable-next-line no-shadow
-		const { handleKeyDown, handleKeyUp, handleQueryChange, itemList, query } = qlProps;
+		const { handleKeyDown, handleKeyUp, handleQueryChange, itemList } = qlProps;
 		return (
 			// eslint-disable-next-line jsx-a11y/no-static-element-interactions
 			<div className="search-wrapper" onKeyDown={handleKeyDown} onKeyUp={handleKeyUp}>

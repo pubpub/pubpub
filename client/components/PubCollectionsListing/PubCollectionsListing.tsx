@@ -28,6 +28,9 @@ type Props = {
 	renderTriggerButtonForQueryList?: () => React.ReactNode;
 	renderDragElementInPortal?: boolean;
 };
+type TagToCreate = {
+	tagNameToCreate: string;
+};
 
 const PubCollectionsListing = (props: Props) => {
 	const {
@@ -58,7 +61,14 @@ const PubCollectionsListing = (props: Props) => {
 
 	const primaryCollection = getPrimaryCollection(collectionPubs);
 
-	const handleAddCollectionPub = async (collection: Collection) => {
+	const handleAddCollectionPub = async (maybeCollection: Collection | TagToCreate) => {
+		const collection =
+			'tagNameToCreate' in maybeCollection
+				? await api.createTagCollection({
+						title: maybeCollection.tagNameToCreate,
+						communityId: communityData.id,
+				  })
+				: maybeCollection;
 		const newCollectionPub = await pendingPromise(
 			api.addCollectionPub({
 				communityId: communityData.id,
@@ -99,10 +109,10 @@ const PubCollectionsListing = (props: Props) => {
 	};
 
 	const renderCollectionTitle = (
-		collection: Collection,
+		collection: Pick<Collection, 'kind' | 'slug' | 'title' | 'isPublic' | 'id'>,
 		linkToCollection = true,
-		onClick?: () => unknown,
-		otherClassName?: string,
+		onClick?: React.MouseEventHandler<HTMLElement>,
+		active?: boolean,
 	) => {
 		const inner = (
 			<>
@@ -134,7 +144,7 @@ const PubCollectionsListing = (props: Props) => {
 		const className = classNames(
 			'pub-collections-listing-component_collection-title',
 			!!onClick && 'interactive',
-			otherClassName,
+			active && 'active',
 		);
 
 		if (onClick) {
@@ -156,7 +166,26 @@ const PubCollectionsListing = (props: Props) => {
 		collection: Collection,
 		{ handleClick, modifiers: { active } },
 	) => {
-		return renderCollectionTitle(collection, false, handleClick, active && 'active');
+		return renderCollectionTitle(collection, false, handleClick, active);
+	};
+
+	const renderNewItem = (
+		query: string,
+		active: boolean,
+		handleClick: React.MouseEventHandler<HTMLElement>,
+	) => {
+		return renderCollectionTitle(
+			{ title: query, kind: 'tag', slug: '', id: '', isPublic: false },
+			false,
+			handleClick,
+			active,
+		);
+	};
+
+	const handleCreateTagFromQuery = (query: string) => {
+		return ({
+			tagNameToCreate: query,
+		} as unknown) as Collection;
 	};
 
 	const renderCollectionPub = (
@@ -191,42 +220,6 @@ const PubCollectionsListing = (props: Props) => {
 					)}
 				</div>
 				<Divider />
-			</div>
-		);
-	};
-
-	// create new collection
-	// add pub to collection
-	const createTag = async (title: string) => {
-		// await pendingPromise(
-		// 	api.createTagCollection({
-		// 		communityId: communityData.id,
-		// 		title,
-		// 	}),
-		// );
-		console.log(title);
-		console.log('is this firing');
-	};
-
-	const handleCreateTagFromQuery = (query: string) => {
-		createTag(query);
-		// if (!primaryCollection) {
-		// 	return;
-		// }
-		return canAddCollections[-1];
-	};
-
-	console.log(canAddCollections[-1]);
-
-	const renderNewItem = (
-		query: string,
-		active: boolean,
-		handleClick: React.MouseEventHandler<HTMLElement>,
-	) => {
-		return (
-			<div onClick={handleClick}>
-				{' '}
-				is this a {query} {}
 			</div>
 		);
 	};
