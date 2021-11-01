@@ -3,19 +3,18 @@ import { ActivityItem } from 'types/activity';
 import { ActivityAssociations, Community } from 'types';
 import { IconName } from 'client/components';
 import { Spacer, Section, Wrapper, CommunityHeader } from '..';
-import { ActivityBundle, Intro, SectionTitle } from '.';
+import { ActivityBundle, DigestIntro, DigestSectionTitle, DigestFooter } from '.';
 
 export const Digest = (props: Props) => {
 	const {
 		community: { accentColorDark = 'black' },
 	} = props;
-
 	return (
 		<Wrapper>
 			<CommunityHeader community={props.community} title="Activity Digest" />
-			<Intro community={props.community} />
+			<DigestIntro community={props.community} accentColorDark={accentColorDark} />
 			<Section alignment="left">
-				<SectionTitle
+				<DigestSectionTitle
 					icon="office"
 					title="Community News"
 					accentColorDark={accentColorDark}
@@ -35,7 +34,11 @@ export const Digest = (props: Props) => {
 				<Spacer height={40}>
 					<span>&nbsp;</span>
 				</Spacer>
-				<SectionTitle icon="pubDoc" title="Pub News" accentColorDark={accentColorDark} />
+				<DigestSectionTitle
+					icon="pubDoc"
+					title="Pub News"
+					accentColorDark={accentColorDark}
+				/>
 				<ol>
 					{Object.entries(props.pubItems).map(([objectId, groupedItems]) => (
 						<ActivityBundle
@@ -48,6 +51,7 @@ export const Digest = (props: Props) => {
 						/>
 					))}
 				</ol>
+				<DigestFooter community={props.community} />
 			</Section>
 		</Wrapper>
 	);

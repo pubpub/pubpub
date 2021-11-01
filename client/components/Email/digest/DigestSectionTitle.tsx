@@ -27,10 +27,10 @@ type StyleProps = {
 	accentColorDark?: string;
 };
 
-export const SectionTitle = (props: PropTypes) => (
-	<DivStyle>
+export const DigestSectionTitle = (props: PropTypes) => (
+	<DivStyle accentColorDark={props.accentColorDark}>
 		<SpanStyle>
-			<Icon icon={props.icon} iconSize={12} />
+			<Icon icon={props.icon} iconSize={12} color={props.accentColorDark} />
 		</SpanStyle>
 		<H2Style accentColorDark={props.accentColorDark}>{props.title}</H2Style>
 	</DivStyle>

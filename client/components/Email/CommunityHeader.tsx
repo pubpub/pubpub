@@ -21,37 +21,31 @@ const SpanStyle = styled.span`
 const now = new Date();
 
 export const CommunityHeader = (props: CommunityHeaderProps) => {
-	const logo = getResizedUrl(
-		props.community.heroLogo || props.community.headerLogo || '',
-		'inside',
-		undefined,
-		50,
-	);
-	const backgroundImage = getResizedUrl(
-		props.community.heroBackgroundImage || '',
-		'cover',
-		600,
-		undefined,
-	);
-
 	const {
-		community: { accentColorLight = 'white', accentColorDark = 'black' },
+		community: {
+			heroLogo = '',
+			headerLogo = '',
+			heroBackgroundImage = '',
+			accentColorDark = 'black',
+			accentColorLight = 'white',
+		},
 	} = props;
+	const logo = getResizedUrl(heroLogo || headerLogo, 'inside', undefined, 50);
+	const backgroundImage = getResizedUrl(heroBackgroundImage, 'cover', 600, undefined);
 
-	const backgroundColor =
-		props.community.headerColorType === 'light'
-			? accentColorLight || 'white'
-			: accentColorDark || 'black';
+	const backgroundColor = props.community.heroBackgroundColor
+		? props.community.heroBackgroundColor
+		: props.community.headerColorType === 'light'
+		? accentColorLight
+		: accentColorDark;
 	const headerColor =
-		props.community.headerColorType === 'light'
-			? accentColorDark || 'black'
-			: accentColorLight || 'white';
+		props.community.headerColorType === 'light' ? accentColorDark : accentColorLight;
 
 	return (
 		<Section
 			color={headerColor}
-			backgroundColor={props.community.heroBackgroundColor || backgroundColor}
-			backgroundImage={backgroundImage || ''}
+			backgroundColor={backgroundColor}
+			backgroundImage={backgroundImage}
 			logo={logo}
 			alignment="left"
 		>
