@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const TableWrapper = styled.table.attrs({
+export const BaseTableStyle = styled.table.attrs({
 	border: 0,
 	tableLayout: 'fixed',
 	role: 'presentation',

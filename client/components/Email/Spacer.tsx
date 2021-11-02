@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { TableWrapper } from './shared';
+import { BaseTableStyle } from './shared';
 
-const StyledWrapperCell = styled.td.attrs((props) => ({
+const CellStyle = styled.td.attrs((props) => ({
 	valign: 'top',
 	height: props.height,
 }))`
@@ -12,11 +12,11 @@ const StyledWrapperCell = styled.td.attrs((props) => ({
 `;
 
 export const Spacer = ({ children, height = 50 }: Props) => (
-	<TableWrapper width="100%">
+	<BaseTableStyle width="100%">
 		<tr>
-			<StyledWrapperCell height={height}>{children}</StyledWrapperCell>
+			<CellStyle height={height}>{children}</CellStyle>
 		</tr>
-	</TableWrapper>
+	</BaseTableStyle>
 );
 
 type Props = {

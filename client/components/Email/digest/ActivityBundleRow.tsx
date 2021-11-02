@@ -5,7 +5,7 @@ import pick from 'lodash.pick';
 import styled from 'styled-components';
 import { formatDate } from 'utils/dates';
 import { renderActivityItem } from 'client/utils/activity';
-import { TableWrapper } from '../shared';
+import { BaseTableStyle } from '../shared';
 
 type ActivityBundleRowProps = {
 	associations: ActivityAssociations;
@@ -59,7 +59,7 @@ const ListStyle = styled.ol`
 	padding: 0 40px 0 20px;
 `;
 
-const TableStyle = styled(TableWrapper)`
+const TableStyle = styled(BaseTableStyle)`
 	width: 100%;
 	table-layout: fixed;
 	whitespace: nowrap;

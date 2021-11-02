@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { TableWrapper } from './shared';
+import { BaseTableStyle } from './shared';
 
-const StyledTableWrapper = styled(TableWrapper).attrs({
+const TableStyle = styled(BaseTableStyle).attrs({
 	height: '100%',
 	width: '100%',
 })``;
@@ -17,7 +17,7 @@ export const Wrapper = ({ children, backgroundColor = 'white' }: Props) => (
 		}}
 	>
 		<div style={{ textAlign: 'center' }}>
-			<StyledTableWrapper>
+			<TableStyle>
 				<tbody>
 					<tr>
 						<td align="center" valign="top">
@@ -25,7 +25,7 @@ export const Wrapper = ({ children, backgroundColor = 'white' }: Props) => (
 						</td>
 					</tr>
 				</tbody>
-			</StyledTableWrapper>
+			</TableStyle>
 		</div>
 	</body>
 );

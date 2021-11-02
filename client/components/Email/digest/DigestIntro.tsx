@@ -6,9 +6,9 @@ import { communityUrl } from 'utils/canonicalUrls';
 import { Icon } from 'client/components';
 import Color from 'color';
 import { Section, Button } from '..';
-import { TableWrapper } from '../shared';
+import { BaseTableStyle } from '../shared';
 
-const TableWrapperStyle = styled(TableWrapper)<StyleProps>`
+const TableStyle = styled(BaseTableStyle)<StyleProps>`
 	border-top: 1px solid ${(props) => props.accentColorDark};
 `;
 
@@ -44,11 +44,11 @@ export const DigestIntro = (props: PropTypes) => {
 		.string();
 
 	return (
-		<TableWrapperStyle accentColorDark={props.accentColorDark}>
+		<TableStyle accentColorDark={props.accentColorDark}>
 			<tr>
 				<td>
 					<Section backgroundColor={fadedBackgroundColor}>
-						<TableWrapper>
+						<BaseTableStyle>
 							<tr>
 								<TextCellStyle>
 									This digest is a compilation of activity in the&nbsp;
@@ -74,11 +74,11 @@ export const DigestIntro = (props: PropTypes) => {
 									</Button>
 								</ButtonCellStyle>
 							</tr>
-						</TableWrapper>
+						</BaseTableStyle>
 					</Section>
 				</td>
 			</tr>
-		</TableWrapperStyle>
+		</TableStyle>
 	);
 };
 

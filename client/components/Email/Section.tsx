@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { TableWrapper } from './shared';
+import { BaseTableStyle } from './shared';
 
-const StyledTableWrapper = styled(TableWrapper)<StyleProps>`
+const TableStyle = styled(BaseTableStyle)<StyleProps>`
 	background: ${(props) =>
 		`${props.logo ? ` url("${props.logo}") no-repeat right 40px center, ` : ''}${
 			props.backgroundImage ? ` url("${props.backgroundImage}") no-repeat right` : ''
@@ -27,7 +27,7 @@ export const Section = ({
 	innerPadding = '40px',
 	width = 600,
 }: Props) => (
-	<StyledTableWrapper
+	<TableStyle
 		fontSize={fontSize}
 		fontFamily={fontFamily}
 		backgroundColor={backgroundColor}
@@ -41,7 +41,7 @@ export const Section = ({
 				{children}
 			</td>
 		</tr>
-	</StyledTableWrapper>
+	</TableStyle>
 );
 
 type StyleProps = {
