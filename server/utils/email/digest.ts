@@ -33,7 +33,9 @@ export const getDigestData = async (initialData) => {
 		scopeData: { scope },
 		loginData: { id: userId },
 	} = initialData;
-	const { activityItems, associations } = await fetchActivityItems({ scope });
+	const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+
+	const { activityItems, associations } = await fetchActivityItems({ scope, limit: 150, since });
 	const activityItemsGroupedByObjectId: Record<
 		string,
 		KeyedActivityItem[]
