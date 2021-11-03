@@ -3,7 +3,7 @@ import { apiFetch } from 'client/utils/apiFetch';
 const collectionPubsRoot = '/api/collectionPubs';
 const collection = '/api/collections';
 
-export const createTagCollection = ({ title, communityId, isPublic }) =>
+export const createTagCollection = ({ title, communityId, isPublic = true }) =>
 	apiFetch(collection, {
 		method: 'POST',
 		body: JSON.stringify({

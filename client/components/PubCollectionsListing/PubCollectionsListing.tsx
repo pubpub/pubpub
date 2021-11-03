@@ -28,6 +28,7 @@ type Props = {
 	renderTriggerButtonForQueryList?: () => React.ReactNode;
 	renderDragElementInPortal?: boolean;
 };
+
 type TagToCreate = {
 	tagTitleToCreate: string;
 };
@@ -45,6 +46,7 @@ const PubCollectionsListing = (props: Props) => {
 	} = props;
 	const { communityData, scopeData } = usePageContext();
 	const { pendingPromise } = usePendingChanges();
+
 	const { canAddCollections, canRemoveCollectionIds } = useMemo(() => {
 		const addedCollectionIds = new Set(collectionPubs.map((cp) => cp.collectionId));
 		const userManagedCollections = getUserManagedCollections(allCollections, scopeData);
@@ -224,6 +226,18 @@ const PubCollectionsListing = (props: Props) => {
 		);
 	};
 
+	const emptyListPlaceholderText = scopeData.activePermissions.canManageCommunity
+		? 'Create a new Tag with this name'
+		: 'No Collections match this search.';
+
+	const searchPlaceholderText = scopeData.activePermissions.canManageCommunity
+		? 'Search for Collections (or create a Tag)'
+		: 'Search for Collections';
+
+	const createNewItemProps = scopeData.activePermissions.canManageCommunity
+		? { createNewItemFromQuery: handleCreateTagFromQuery, createNewItemRenderer: renderNewItem }
+		: {};
+
 	const renderQueryList = (triggerButton) => {
 		if (canAddCollections.length > 0) {
 			return (
@@ -231,14 +245,13 @@ const PubCollectionsListing = (props: Props) => {
 					itemPredicate={(query, collection) => fuzzyMatchCollection(collection, query)}
 					items={canAddCollections}
 					itemRenderer={renderAvailableCollection}
-					emptyListPlaceholder="Create a new Tag with this name"
-					searchPlaceholder="Search for Collections (or create a Tag)"
+					emptyListPlaceholder={emptyListPlaceholderText}
+					searchPlaceholder={searchPlaceholderText}
 					onItemSelect={handleAddCollectionPub}
 					position="bottom-left"
 					onClose={onQueryListClose}
 					usePortal={false}
-					newItemFromQuery={handleCreateTagFromQuery}
-					newItemRenderer={renderNewItem}
+					{...createNewItemProps}
 				>
 					{triggerButton}
 				</QueryListDropdown>
