@@ -29,7 +29,7 @@ type Props = {
 	renderDragElementInPortal?: boolean;
 };
 type TagToCreate = {
-	tagNameToCreate: string;
+	tagTitleToCreate: string;
 };
 
 const PubCollectionsListing = (props: Props) => {
@@ -45,7 +45,6 @@ const PubCollectionsListing = (props: Props) => {
 	} = props;
 	const { communityData, scopeData } = usePageContext();
 	const { pendingPromise } = usePendingChanges();
-
 	const { canAddCollections, canRemoveCollectionIds } = useMemo(() => {
 		const addedCollectionIds = new Set(collectionPubs.map((cp) => cp.collectionId));
 		const userManagedCollections = getUserManagedCollections(allCollections, scopeData);
@@ -63,10 +62,11 @@ const PubCollectionsListing = (props: Props) => {
 
 	const handleAddCollectionPub = async (maybeCollection: Collection | TagToCreate) => {
 		const collection =
-			'tagNameToCreate' in maybeCollection
+			'tagTitleToCreate' in maybeCollection
 				? await api.createTagCollection({
-						title: maybeCollection.tagNameToCreate,
+						title: maybeCollection.tagTitleToCreate,
 						communityId: communityData.id,
+						isPublic: true,
 				  })
 				: maybeCollection;
 		const newCollectionPub = await pendingPromise(
@@ -175,7 +175,7 @@ const PubCollectionsListing = (props: Props) => {
 		handleClick: React.MouseEventHandler<HTMLElement>,
 	) => {
 		return renderCollectionTitle(
-			{ title: query, kind: 'tag', slug: '', id: '', isPublic: false },
+			{ title: query, kind: 'tag', slug: '', id: '', isPublic: true },
 			false,
 			handleClick,
 			active,
@@ -184,7 +184,7 @@ const PubCollectionsListing = (props: Props) => {
 
 	const handleCreateTagFromQuery = (query: string) => {
 		return ({
-			tagNameToCreate: query,
+			tagTitleToCreate: query,
 		} as unknown) as Collection;
 	};
 
@@ -231,7 +231,7 @@ const PubCollectionsListing = (props: Props) => {
 					itemPredicate={(query, collection) => fuzzyMatchCollection(collection, query)}
 					items={canAddCollections}
 					itemRenderer={renderAvailableCollection}
-					emptyListPlaceholder="Create new collection?"
+					emptyListPlaceholder="Create a new Tag with this name"
 					searchPlaceholder="Search for Collections (or create a Tag)"
 					onItemSelect={handleAddCollectionPub}
 					position="bottom-left"
