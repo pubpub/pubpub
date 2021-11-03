@@ -1,7 +1,7 @@
 import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
 
-import { getPermissions } from './permissions';
+import { getPermissions, canUpdate } from './permissions';
 import { createSubmission, updateSubmission, destroySubmission } from './queries';
 
 const getRequestIds = (req) => {
@@ -22,7 +22,7 @@ app.post(
 		if (!permissions.create) {
 			throw new ForbiddenError();
 		}
-		const newSubmission = await createSubmission(req.body, req.user.id);
+		const newSubmission = await createSubmission(req.body);
 		return res.status(201).json(newSubmission);
 	}),
 );
@@ -31,11 +31,11 @@ app.put(
 	'/api/submissions',
 	wrap(async (req, res) => {
 		const ids = getRequestIds(req);
-		const permissions = await getPermissions(ids);
-		if (!permissions.update) {
+		const { status } = req.body;
+		if (!canUpdate({ ...ids, status })) {
 			throw new ForbiddenError();
 		}
-		const updatedValues = await updateSubmission(req.body, permissions.update, req.user.id);
+		const updatedValues = await updateSubmission(req.body);
 		return res.status(201).json(updatedValues);
 	}),
 );
@@ -48,7 +48,7 @@ app.delete(
 		if (!permissions.update) {
 			throw new ForbiddenError();
 		}
-		await destroySubmission(req.body, req.user.id);
+		await destroySubmission(req.body);
 		return res.status(201).json(req.body.submissionId);
 	}),
 );
