@@ -164,10 +164,7 @@ it('does not allow normal users to delete a submission', async () => {
 		title: 'incomplete',
 	});
 	const agent = await login(guest);
-	await agent
-		.delete('/api/submissions')
-		.send({ id: submission.id })
-		.expect(403);
+	await agent.delete('/api/submissions').send({ id: submission.id }).expect(403);
 	const submissionNow = await Submission.findOne({ where: { id: submission.id } });
 	expect(submissionNow.id).toEqual(submission.id);
 });
