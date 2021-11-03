@@ -2,7 +2,11 @@ import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
 
 import { getPermissions } from './permissions';
-import { createCollection, updateCollection, destroyCollection } from './queries';
+import {
+	createSubmissionWorkflow,
+	updateSubmissionWorkflow,
+	destroySubmissionWorkFlow,
+} from './queries';
 
 const getRequestIds = (req) => {
 	const user = req.user || {};
@@ -21,7 +25,7 @@ app.post(
 		if (!permissions.create) {
 			throw new ForbiddenError();
 		}
-		const newCollection = await createCollection(req.body, req.user.id);
+		const newCollection = await createSubmissionWorkflow(req.body, req.user.id);
 		return res.status(201).json(newCollection);
 	}),
 );
@@ -33,7 +37,7 @@ app.put(
 		if (!permissions.update) {
 			throw new ForbiddenError();
 		}
-		const updatedValues = await updateCollection(
+		const updatedValues = await updateSubmissionWorkflow(
 			{
 				...req.body,
 				collectionId: req.body.id,
@@ -52,7 +56,7 @@ app.delete(
 		if (!permissions.update) {
 			throw new ForbiddenError();
 		}
-		await destroyCollection(
+		await destroySubmissionWorkFlow(
 			{
 				...req.body,
 				collectionId: req.body.id,
