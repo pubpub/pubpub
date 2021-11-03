@@ -1,12 +1,11 @@
 import { Submission } from 'server/models';
 import { getScope } from 'server/utils/queryHelpers';
 
-export const getPermissions = async ({ userId, communityId, submissionId, collectionId }) => {
+export const getPermissions = async ({ userId, submissionId, collectionId }) => {
 	if (!userId) {
 		return {};
 	}
 	const scopeData = await getScope({
-		communityId,
 		collectionId,
 		loginId: userId,
 	});
