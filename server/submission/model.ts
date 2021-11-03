@@ -4,7 +4,7 @@ export default (sequelize, dataTypes) => {
 		{
 			id: sequelize.idType,
 			status: {
-				type: dataTypes.ENUM('incomplete', 'submitted', 'accepted', 'declined'),
+				type: dataTypes.TEXT,
 				allowNull: false,
 			},
 			/* Set by Associations */
