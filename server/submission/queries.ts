@@ -1,12 +1,23 @@
 import { Submission } from 'server/models';
+import { managerStatuses, submitterStatuses } from 'types';
 
-export const createSubmission = async ({ pubId, status }) =>
+const updateToStatuses = [...managerStatuses, ...submitterStatuses] as const;
+
+type UpdateToStatus = typeof updateToStatuses;
+
+export const createSubmission = async ({ pubId }) =>
 	Submission.create({
 		pubId,
-		status,
+		status: 'incomplete',
 	});
 
-export const updateSubmission = async ({ status, submissionId }) =>
+export const updateSubmission = async ({
+	status,
+	submissionId,
+}: {
+	status: UpdateToStatus;
+	submissionId: string;
+}) =>
 	Submission.update(
 		{ status },
 		{
@@ -14,7 +25,7 @@ export const updateSubmission = async ({ status, submissionId }) =>
 		},
 	);
 
-export const destroySubmission = async ({ submissionId }) =>
+export const destroySubmission = async ({ submissionId }: { submissionId: string }) =>
 	Submission.destroy({
 		where: {
 			id: submissionId,
