@@ -1,0 +1,20 @@
+$border-color: #ddd;
+
+.workflow-text-editor-component {
+    max-height: 300px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: white;
+
+    .minimal-editor-component {
+        border: 1px solid $border-color;
+        border-radius: 2px;
+
+        > .editor-wrapper {
+            border-top: 1px solid $border-color;
+            padding: 10px;
+            min-height: 150px;;
+        }
+    }
+}
