@@ -1,6 +1,6 @@
 /* global it, expect, beforeAll, afterAll */
 import { setup, teardown, login, modelize } from 'stubstub';
-import { createSubmission } from '../queries';
+// import { createSubmission } from '../queries';
 import { Submission } from '../../models';
 
 const models = modelize`
@@ -11,11 +11,11 @@ const models = modelize`
 		}
 		Collection collection {
 			Member {
-				permissions: "edit"
-				User collectionEditor {}
+				permissions: "view"
+				User collectionMember {}
 			}
 			Member {
-				permissions: "manager"
+				permissions: "manage"
 				User collectionManager {}
 			}
 			CollectionPub {
@@ -45,14 +45,30 @@ setup(beforeAll, async () => {
 	await models.resolve();
 });
 
+it('allows pub editors to set submitted status', async () => {
+	const { pubAdmin, submission, spub } = models;
+	const agent = await login(pubAdmin);
+	await agent
+		.put('/api/submissions')
+		.send({
+			submissionId: submission.id,
+			pubId: spub.id,
+			status: 'submitted',
+		})
+		.expect(201);
+	const { status } = await Submission.findOne({ where: { id: submission.id } });
+	expect(status).toEqual('submitted');
+});
+
 it('creates a new submission', async () => {
-	const { admin, spub } = models;
+	const { admin, spub, community } = models;
 	const agent = await login(admin);
 	const {
 		body: { pubId, status },
 	} = await agent
 		.post('/api/submissions')
 		.send({
+			communityId: community.id,
 			pubId: spub.id,
 			status: 'submitted',
 		})
@@ -61,42 +77,42 @@ it('creates a new submission', async () => {
 	expect(status).toEqual('submitted');
 });
 
-it('changes a submission status', async () => {
-	const { admin, spub, submission } = models;
-	const agent = await login(admin);
-	const {
-		body: { status, id, pubId },
-	} = await agent
+it('allows collection managers to update pub status', async () => {
+	const { collection, collectionManager, submission } = models;
+	const agent = await login(collectionManager);
+	await agent
 		.put('/api/submissions')
 		.send({
-			id: submission.id,
-			status: 'incomplete',
+			collectionId: collection.id,
+			submissionId: submission.id,
+			status: 'accepted',
 		})
 		.expect(201);
-	expect(pubId).toEqual(spub.id);
-	expect(id).toEqual(submission.id);
-	expect(status).toEqual('incomplete');
 });
 
-it('does not allow admins of another community to modify a submission', async () => {
-	const { submission, anotherAdmin } = models;
+it('forbids admins of another community to modify a submission', async () => {
+	const { submission, community, collection, anotherAdmin } = models;
 	const agent = await login(anotherAdmin);
 	await agent
 		.put('/api/submissions')
 		.send({
-			id: submission.id,
+			communityId: community.id,
+			collectionId: collection.id,
+			submissionId: submission.id,
 			status: 'completed',
 		})
 		.expect(403);
 });
+/*
 
-it('does not allow normal users to modify a submission', async () => {
-	const { submission, guest } = models;
-	const agent = await login(guest);
+it('does not allow collection editors to modify a submission', async () => {
+	const { submission, collectionMember, community } = models;
+	const agent = await login(collectionMember);
 	await agent
 		.put('/api/submissions')
 		.send({
-			id: submission.id,
+			communityId: community.id,
+			submissionId: submission.id,
 			status: 'completed',
 		})
 		.expect(403);
@@ -108,19 +124,7 @@ it('does not allow pub admins to update pub status', async () => {
 	await agent
 		.put('/api/submissions')
 		.send({
-			id: submission.id,
-			status: 'completed',
-		})
-		.expect(403);
-});
-
-it('does allow collection managers to update pub status', async () => {
-	const { collectionManager, submission } = models;
-	const agent = await login(collectionManager);
-	await agent
-		.put('/api/submissions')
-		.send({
-			id: submission.id,
+			submissionId: submission.id,
 			status: 'completed',
 		})
 		.expect(403);
@@ -136,7 +140,7 @@ it('does not allow changing status to something besides incomplete, submitted, a
 	await agent
 		.put('/api/submissions')
 		.send({
-			id: submission.id,
+			submissionId: submission.id,
 			status: 'disallowed status',
 		})
 		.expect(400);
@@ -151,7 +155,7 @@ it('deletes an existing submission with appropriate permissions', async () => {
 	const agent = await login(admin);
 	await agent
 		.delete('/api/submissions')
-		.send({ id: submission.id, communityId: community.id })
+		.send({ submissionId: submission.id, communityId: community.id })
 		.expect(200);
 	const submissionNow = await Submission.findOne({ where: { id: submission.id } });
 	expect(submissionNow).toEqual(null);
@@ -164,9 +168,10 @@ it('does not allow normal users to delete a submission', async () => {
 		title: 'incomplete',
 	});
 	const agent = await login(guest);
-	await agent.delete('/api/submissions').send({ id: submission.id }).expect(403);
+	await agent.delete('/api/submissions').send({ submissionId: submission.id }).expect(403);
 	const submissionNow = await Submission.findOne({ where: { id: submission.id } });
 	expect(submissionNow.id).toEqual(submission.id);
 });
+*/
 
 teardown(afterAll);

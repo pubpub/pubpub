@@ -75,7 +75,6 @@ export default (sequelize, dataTypes) => {
 						Release,
 						ReviewNew,
 						ScopeSummary,
-						Submission,
 					} = models;
 					Pub.hasMany(PubAttribution, {
 						onDelete: 'CASCADE',
@@ -138,11 +137,6 @@ export default (sequelize, dataTypes) => {
 					Pub.belongsTo(ScopeSummary, {
 						as: 'scopeSummary',
 						foreignKey: 'scopeSummaryId',
-					});
-					Pub.hasOne(Submission, {
-						onDelete: 'CASCADE',
-						as: 'submission',
-						foreignKey: 'pubId',
 					});
 				},
 			},

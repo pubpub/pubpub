@@ -2,12 +2,13 @@ import { Submission } from 'server/models';
 import { getScope } from 'server/utils/queryHelpers';
 import { initialStatuses, managerStatuses, submitterStatuses } from 'types';
 
-export const getPermissions = async ({ userId, submissionId, collectionId }) => {
+export const getPermissions = async ({ userId, submissionId, collectionId, communityId }) => {
 	if (!userId) {
 		return {};
 	}
 	const scopeData = await getScope({
 		collectionId,
+		communityId,
 		loginId: userId,
 	});
 	const isAuthenticated = scopeData.activePermissions.canManage;
@@ -28,14 +29,9 @@ export const getPermissions = async ({ userId, submissionId, collectionId }) => 
 
 export const canUpdate = async ({ userId, collectionId, status, submissionId }) => {
 	const { status: oldStatus, pubId } = await Submission.findOne({ where: { id: submissionId } });
-	const {
-		activePermissions: { canManage: canManagePub },
-	} = await getScope({ pubId, loginId: userId });
-	const {
-		activePermissions: { canManage: canManageCollection },
-	} = await getScope({ collectionId, loginId: userId });
-	return (
-		(canManagePub && status in submitterStatuses && oldStatus in initialStatuses) ||
-		(canManageCollection && status in managerStatuses)
-	);
+	const { activePermissions } = await getScope({ pubId, loginId: userId, collectionId });
+	const { canManage } = activePermissions;
+	const canSubmitPub = canManage && status in submitterStatuses && oldStatus in initialStatuses;
+	const canManagePub = canManage && status in managerStatuses;
+	return canSubmitPub || canManagePub;
 };
