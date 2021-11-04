@@ -1,20 +1,22 @@
 import { Submission } from 'server/models';
 
-export const createSubmission = async (inputValues) =>
+export const createSubmission = async ({ pubId, status }) =>
 	Submission.create({
-		pubId: inputValues.pubId,
-		status: inputValues.status,
+		pubId,
+		status,
 	});
 
-export const updateSubmission = async (inputValues) =>
-	Submission.update(inputValues, {
-		where: { id: inputValues.submissionId },
-	});
+export const updateSubmission = async ({ status, submissionId }) =>
+	Submission.update(
+		{ status },
+		{
+			where: { id: submissionId },
+		},
+	);
 
-export const destroySubmission = (inputValues) =>
+export const destroySubmission = async ({ submissionId }) =>
 	Submission.destroy({
 		where: {
-			id: inputValues.submissionId,
-			pubId: inputValues.pubId,
+			id: submissionId,
 		},
 	});

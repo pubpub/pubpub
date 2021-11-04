@@ -17,21 +17,23 @@ export const getPermissions = async ({ userId, submissionId, collectionId, commu
 	if (!submissionData) {
 		return { create: isAuthenticated };
 	}
-	const editProps = ['status'];
 	return {
 		setSubmittedStatus: true,
 		manageStatus: true,
 		create: isAuthenticated,
-		update: isAuthenticated && editProps,
+		update: isAuthenticated,
 		destroy: isAuthenticated,
 	};
 };
 
 export const canUpdate = async ({ userId, collectionId, status, submissionId }) => {
 	const { status: oldStatus, pubId } = await Submission.findOne({ where: { id: submissionId } });
-	const { activePermissions } = await getScope({ pubId, loginId: userId, collectionId });
-	const { canManage } = activePermissions;
-	const canSubmitPub = canManage && status in submitterStatuses && oldStatus in initialStatuses;
-	const canManagePub = canManage && status in managerStatuses;
+	const {
+		activePermissions: { canManage },
+	} = await getScope({ pubId, loginId: userId, collectionId });
+	const canSubmitPub =
+		canManage && submitterStatuses.includes(status) && initialStatuses.includes(oldStatus);
+	const canManagePub =
+		canManage && managerStatuses.includes(status) && !initialStatuses.includes(oldStatus);
 	return canSubmitPub || canManagePub;
 };

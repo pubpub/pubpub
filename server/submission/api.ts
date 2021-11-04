@@ -32,7 +32,7 @@ app.put(
 	wrap(async (req, res) => {
 		const ids = getRequestIds(req);
 		const { status } = req.body;
-		if (!canUpdate({ ...ids, status })) {
+		if (!(await canUpdate({ ...ids, status }))) {
 			throw new ForbiddenError();
 		}
 		const updatedValues = await updateSubmission(req.body);
@@ -45,10 +45,10 @@ app.delete(
 	wrap(async (req, res) => {
 		const ids = getRequestIds(req);
 		const permissions = await getPermissions(ids);
-		if (!permissions.update) {
+		if (!permissions.destroy) {
 			throw new ForbiddenError();
 		}
 		await destroySubmission(req.body);
-		return res.status(201).json(req.body.submissionId);
+		return res.status(200).json(req.body.submissionId);
 	}),
 );
