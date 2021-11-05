@@ -2,7 +2,7 @@ import { Submission } from 'server/models';
 import { getScope } from 'server/utils/queryHelpers';
 import { initialStatuses, managerStatuses, submitterStatuses } from 'types';
 
-export const getPermissions = async ({ userId, submissionId, collectionId, communityId }) => {
+export const getPermissions = async ({ userId, id, collectionId, communityId }) => {
 	if (!userId) {
 		return {};
 	}
@@ -12,7 +12,7 @@ export const getPermissions = async ({ userId, submissionId, collectionId, commu
 		loginId: userId,
 	});
 	const isAuthenticated = scopeData.activePermissions.canManage;
-	const submissionData = await Submission.findOne({ where: { id: submissionId } });
+	const submissionData = await Submission.findOne({ where: { id } });
 
 	if (!submissionData) {
 		return { create: isAuthenticated };
@@ -26,8 +26,8 @@ export const getPermissions = async ({ userId, submissionId, collectionId, commu
 	};
 };
 
-export const canUpdate = async ({ userId, collectionId, status, submissionId }) => {
-	const { status: oldStatus, pubId } = await Submission.findOne({ where: { id: submissionId } });
+export const canUpdate = async ({ userId, collectionId, status, id }) => {
+	const { status: oldStatus, pubId } = await Submission.findOne({ where: { id } });
 	const {
 		activePermissions: { canManage },
 	} = await getScope({ pubId, loginId: userId, collectionId });

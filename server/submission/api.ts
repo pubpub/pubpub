@@ -7,10 +7,10 @@ import { createSubmission, updateSubmission, destroySubmission } from './queries
 const getRequestIds = (req) => {
 	const user = req.user || {};
 	return {
+		id: req.body.id || null,
 		userId: user.id,
 		communityId: req.body.communityId,
 		collectionId: req.body.collectionId,
-		submissionId: req.body.submissionId || null,
 	};
 };
 
@@ -49,6 +49,6 @@ app.delete(
 			throw new ForbiddenError();
 		}
 		await destroySubmission(req.body);
-		return res.status(200).json(req.body.submissionId);
+		return res.status(200).json(req.body.id);
 	}),
 );

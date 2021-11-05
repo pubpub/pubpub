@@ -1,6 +1,5 @@
 /* global it, expect, beforeAll, afterAll */
 import { setup, teardown, login, modelize } from 'stubstub';
-import { createSubmission } from '../queries';
 import { Submission } from '../../models';
 
 const models = modelize`
@@ -55,11 +54,10 @@ it('creates a new submission', async () => {
 		.send({
 			communityId: community.id,
 			pubId: spub.id,
-			status: 'submitted',
 		})
 		.expect(201);
 	expect(pubId).toEqual(spub.id);
-	expect(status).toEqual('submitted');
+	expect(status).toEqual('incomplete');
 });
 
 it('forbids pub admins to update pub status beyond completed', async () => {
@@ -68,7 +66,7 @@ it('forbids pub admins to update pub status beyond completed', async () => {
 	await agent
 		.put('/api/submissions')
 		.send({
-			submissionId: submission.id,
+			id: submission.id,
 			status: 'accepted',
 		})
 		.expect(403);
@@ -82,7 +80,7 @@ it('forbids admins of another community to update pub status', async () => {
 		.send({
 			communityId: community.id,
 			collectionId: collection.id,
-			submissionId: submission.id,
+			id: submission.id,
 			status: 'completed',
 		})
 		.expect(403);
@@ -95,7 +93,7 @@ it('forbids collection editors to update pub status', async () => {
 		.put('/api/submissions')
 		.send({
 			communityId: community.id,
-			submissionId: submission.id,
+			id: submission.id,
 			status: 'completed',
 		})
 		.expect(403);
@@ -107,7 +105,7 @@ it('forbids admins to update from incomplete status', async () => {
 	await agent
 		.put('/api/submissions')
 		.send({
-			submissionId: submission.id,
+			id: submission.id,
 			status: 'accepted',
 		})
 		.expect(403);
@@ -119,7 +117,7 @@ it('allows pub editors to set submitted status', async () => {
 	await agent
 		.put('/api/submissions')
 		.send({
-			submissionId: submission.id,
+			id: submission.id,
 			pubId: spub.id,
 			status: 'submitted',
 		})
@@ -134,7 +132,7 @@ it('forbids admins to update status out of one of [submitted, accepted, declined
 	await agent
 		.put('/api/submissions')
 		.send({
-			submissionId: submission.id,
+			id: submission.id,
 			status: 'incomplete',
 		})
 		.expect(403);
@@ -147,7 +145,7 @@ it('allows collection managers to update pub status', async () => {
 		.put('/api/submissions')
 		.send({
 			collectionId: collection.id,
-			submissionId: submission.id,
+			id: submission.id,
 			status: 'accepted',
 		})
 		.expect(201);
@@ -160,7 +158,7 @@ it('forbids normal user to delete a submission', async () => {
 	const agent = await login(guest);
 	await agent
 		.delete('/api/submissions')
-		.send({ submissionId: submission.id, communityId: community.id })
+		.send({ id: submission.id, communityId: community.id })
 		.expect(403);
 	const submissionNow = await Submission.findOne({ where: { id: submission.id } });
 	expect(submissionNow.id).toEqual(submission.id);
@@ -171,7 +169,7 @@ it('allows admin to delete a submission', async () => {
 	const agent = await login(admin);
 	await agent
 		.delete('/api/submissions')
-		.send({ submissionId: submission.id, communityId: community.id })
+		.send({ id: submission.id, communityId: community.id })
 		.expect(200);
 	const submissionNow = await Submission.findOne({ where: { id: submission.id } });
 	expect(submissionNow).toEqual(null);
