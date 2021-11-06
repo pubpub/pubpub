@@ -1,10 +1,12 @@
 import React from 'react';
+import styled from 'styled-components';
+import pick from 'lodash.pick';
+
 import { ActivityRenderContext } from 'client/utils/activity/types';
 import { ActivityItem, ActivityAssociations } from 'types';
-import pick from 'lodash.pick';
-import styled from 'styled-components';
 import { formatDate } from 'utils/dates';
 import { renderActivityItem } from 'client/utils/activity';
+
 import { BaseTableStyle } from '../shared';
 
 type ActivityBundleRowProps = {

@@ -1,8 +1,8 @@
 import pick from 'lodash.pick';
 import omit from 'lodash.omit';
-import { GroupedActivityItems } from 'client/components/Email';
 
 import { ActivityItem } from 'types';
+import { GroupedActivityItems } from 'client/components/Email';
 import { fetchActivityItems } from 'server/activityItem/fetch';
 
 const getAffectedObject = (item) =>

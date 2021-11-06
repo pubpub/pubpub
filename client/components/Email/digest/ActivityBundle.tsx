@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
+
 import { ActivityAssociations } from 'types';
 import { Icon } from 'components';
+
 import { DedupedActivityItems, ActivityBundleRow } from '.';
 
 const H3Style = styled.h3`

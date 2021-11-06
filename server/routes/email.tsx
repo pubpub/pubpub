@@ -1,18 +1,17 @@
 import React from 'react';
-import app from 'server/server';
 import ReactDOMServer from 'react-dom/server';
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
 import juice from 'juice';
-import { handleErrors } from 'server/utils/errors';
-
-import { hostIsValid } from 'server/utils/routes';
-import { getInitialData } from 'server/utils/initData';
 import { minify } from 'html-minifier';
 
+import { isProd } from 'utils/environment';
+import app from 'server/server';
+import { handleErrors } from 'server/utils/errors';
+import { hostIsValid } from 'server/utils/routes';
+import { getDigestData } from 'server/utils/email/digest';
+import { getInitialData } from 'server/utils/initData';
 import { reset, globals } from 'components/Email/styles';
 import { Digest } from 'components/Email';
-
-import { getDigestData } from 'server/utils/email/digest';
 
 const inlineStylesWithMarkup = (emailMarkup: React.ReactNode, extraStyles: string) => {
 	const stylesheet = new ServerStyleSheet();
@@ -64,12 +63,7 @@ app.get('/email/:templateSlug', async (req, res, next) => {
 			loginData: { id: userId },
 		} = initialData;
 		const { templateSlug } = req.params;
-		if (
-			!hostIsValid(req, 'community') ||
-			process.env.NODE_ENV === 'production' ||
-			!userId ||
-			!(templateSlug in templates)
-		) {
+		if (!hostIsValid(req, 'community') || isProd() || !userId || !(templateSlug in templates)) {
 			return next();
 		}
 		const { component, prepData } = templates[templateSlug];

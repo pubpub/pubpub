@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import React from 'react';
+import styled from 'styled-components';
 
 import { BaseTableStyle } from './shared';
 
@@ -8,7 +8,7 @@ const TableStyle = styled(BaseTableStyle).attrs({
 })<StyleProps>`
 	background-color: ${(props) => props.backgroundColor};
 	text-align: center;
-	width: ${(props) => props.width}px !important;
+	width: ${(props) => props.width}px;
 `;
 
 const RowStyle = styled.tr``;
@@ -37,7 +37,7 @@ const ButtonStyle = styled.a<StyleProps>`
 	padding: 12px 18px;
 	text-decoration: none;
 	-webkit-text-size-adjust: none;
-	width: ${(props) => props.width}px !important;
+	width: ${(props) => props.width}px;
 `;
 
 type StyleProps = {

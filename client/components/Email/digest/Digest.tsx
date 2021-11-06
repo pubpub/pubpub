@@ -1,7 +1,9 @@
 import React from 'react';
-import { ActivityItem } from 'types/activity';
+
 import { ActivityAssociations, Community } from 'types';
+import { ActivityItem } from 'types/activity';
 import { IconName } from 'client/components';
+
 import { Spacer, Section, Wrapper, CommunityHeader } from '..';
 import { ActivityBundle, DigestIntro, DigestSectionTitle, DigestFooter } from '.';
 

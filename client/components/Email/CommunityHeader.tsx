@@ -1,8 +1,10 @@
 import React from 'react';
 import dateFormat from 'dateformat';
 import styled from 'styled-components';
+
 import { Community } from 'types';
 import { getResizedUrl } from 'utils/images';
+
 import { Section } from '.';
 
 const H1Style = styled.h1`
@@ -18,9 +20,8 @@ const SpanStyle = styled.span`
 	line-height: 17px;
 `;
 
-const now = new Date();
-
 export const CommunityHeader = (props: CommunityHeaderProps) => {
+	const now = new Date();
 	const {
 		community: {
 			heroLogo = '',
