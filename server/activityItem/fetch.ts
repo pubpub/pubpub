@@ -125,14 +125,14 @@ const fetchActivityItemModels = async (
 	const whereQuery = {
 		...(since && {
 			timestamp: {
-				[Op.gte]: since!,
+				[Op.gte]: since,
 			},
 		}),
 		communityId: scope.communityId,
 		...(await getWhereQueryForChildScopes(scope)),
 	};
 	const models = await ActivityItem.findAll({
-		limit,
+		...(limit && { limit }),
 		offset,
 		where: applyFiltersToWhereQuery(whereQuery, options.filters),
 		order: [['timestamp', 'DESC']],
@@ -289,7 +289,7 @@ const fetchAssociations = (
 export const fetchActivityItems = async (
 	options: FetchActivityItemsOptions,
 ): Promise<ActivityItemsFetchResult> => {
-	const { offset = 0, limit = 50, scope, filters = [], since = '' } = options;
+	const { offset = 0, limit = 0, scope, filters = [], since = '' } = options;
 	const activityItems = await fetchActivityItemModels({
 		since,
 		offset,
