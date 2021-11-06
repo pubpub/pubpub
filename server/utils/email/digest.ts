@@ -34,7 +34,7 @@ const groupByObjectId = (associations: ActivityAssociations) => (
 		const objectId = getAffectedObject(item, associations).id;
 		const payloadKeys = Object.keys(item.payload)
 			.sort()
-			.join();
+			.join('_');
 		const displayKey = `${item.kind} - ${payloadKeys}`;
 		return {
 			...result,
