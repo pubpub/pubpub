@@ -1,9 +1,13 @@
 import pick from 'lodash.pick';
 import omit from 'lodash.omit';
+import flow from 'lodash.flow';
 
 import { InitialData, ActivityItem, ActivityAssociations } from 'types';
-import { GroupedActivityItems } from 'client/components/Email';
 import { fetchActivityItems } from 'server/activityItem/fetch';
+
+type KeyedActivityItem = ActivityItem & {
+	displayKey: string;
+};
 
 const getAffectedObject = (item, associations: ActivityAssociations) =>
 	item.pubId
@@ -23,23 +27,10 @@ const getAffectedObjectIcon = (item: ActivityItem) =>
 		? 'page-layout'
 		: 'office';
 
-type KeyedActivityItem = ActivityItem & {
-	displayKey: string;
-};
-
-export const getDigestData = async (initialData: InitialData) => {
-	const {
-		communityData: { id: communityId },
-		scopeData: { scope },
-		loginData: { id: userId },
-	} = initialData;
-	const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-
-	const { activityItems, associations } = await fetchActivityItems({ scope, since });
-	const activityItemsGroupedByObjectId: Record<
-		string,
-		KeyedActivityItem[]
-	> = activityItems.reduce((result, item) => {
+const groupByObjectId = (associations: ActivityAssociations) => (
+	items: ActivityItem[],
+): Record<string, KeyedActivityItem[]> =>
+	items.reduce((result, item) => {
 		const objectId = getAffectedObject(item, associations).id;
 		const payloadKeys = Object.keys(item.payload)
 			.sort()
@@ -50,35 +41,46 @@ export const getDigestData = async (initialData: InitialData) => {
 			[objectId]: [...(result[objectId] || []), { ...item, displayKey }],
 		};
 	}, {});
-	const dedupedActivityItems = Object.keys(activityItemsGroupedByObjectId).reduce(
-		(memo, objectId) => {
-			const items = activityItemsGroupedByObjectId[objectId];
-			return {
-				...memo,
-				[objectId]: {
-					items: items
-						.sort((first, second) => (first.timestamp > second.timestamp ? -1 : 1))
-						.reduce(
-							(result, item) =>
-								item.displayKey in result
-									? result
-									: { ...result, [item.displayKey]: item },
-							{},
-						),
-					title: getAffectedObject(items[0], associations)?.title,
-					icon: getAffectedObjectIcon(items[0]),
-				},
-			};
-		},
+
+const dedupActivityItems = (associations: ActivityAssociations) => (
+	itemsGroupedByObjectId: Record<string, KeyedActivityItem[]>,
+) =>
+	Object.entries(itemsGroupedByObjectId).reduce(
+		(memo, [objectId, items]) => ({
+			...memo,
+			[objectId]: {
+				items: items
+					.sort((first, second) => (first.timestamp > second.timestamp ? -1 : 1))
+					.reduce(
+						(result, item) =>
+							item.displayKey in result
+								? result
+								: { ...result, [item.displayKey]: item },
+						{},
+					),
+				title: getAffectedObject(items[0], associations)?.title,
+				icon: getAffectedObjectIcon(items[0]),
+			},
+		}),
 		{},
 	);
 
-	const communityItems: GroupedActivityItems = pick(dedupedActivityItems, communityId);
-	const pubItems: GroupedActivityItems = omit(dedupedActivityItems, communityId);
+export const getDigestData = async (initialData: InitialData) => {
+	const {
+		communityData: { id: communityId },
+		scopeData: { scope },
+		loginData: { id: userId },
+	} = initialData;
+	const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+	const { activityItems, associations } = await fetchActivityItems({ scope, since });
+	const dedupedActivityItems = flow([
+		groupByObjectId(associations),
+		dedupActivityItems(associations),
+	])(activityItems);
 	return {
 		userId, // replace this with email recipient's userId
 		associations,
-		pubItems,
-		communityItems,
+		pubItems: omit(dedupedActivityItems, communityId),
+		communityItems: pick(dedupedActivityItems, communityId),
 	};
 };
