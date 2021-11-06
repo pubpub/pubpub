@@ -3,6 +3,16 @@ import styled from 'styled-components';
 
 import { Icon, IconName } from 'components';
 
+type StyleProps = {
+	accentColorDark?: string;
+};
+
+type PropTypes = {
+	accentColorDark: string;
+	title: string;
+	icon: IconName;
+};
+
 const DivStyle = styled.div<StyleProps>`
 	border-bottom: 1px solid ${(props) => props.accentColorDark};
 	padding-bottom: 15px;
@@ -24,10 +34,6 @@ const H2Style = styled.h2<StyleProps>`
 	color: ${(props) => props.accentColorDark};
 `;
 
-type StyleProps = {
-	accentColorDark?: string;
-};
-
 export const DigestSectionTitle = (props: PropTypes) => (
 	<DivStyle accentColorDark={props.accentColorDark}>
 		<SpanStyle>
@@ -36,9 +42,3 @@ export const DigestSectionTitle = (props: PropTypes) => (
 		<H2Style accentColorDark={props.accentColorDark}>{props.title}</H2Style>
 	</DivStyle>
 );
-
-type PropTypes = {
-	accentColorDark: string;
-	title: string;
-	icon: IconName;
-};

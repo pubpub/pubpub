@@ -7,6 +7,11 @@ import { getResizedUrl } from 'utils/images';
 
 import { Section } from '.';
 
+type Props = {
+	title: string;
+	community: Community;
+};
+
 const H1Style = styled.h1`
 	font-weight: 400;
 	font-size: 20px;
@@ -20,7 +25,7 @@ const SpanStyle = styled.span`
 	line-height: 17px;
 `;
 
-export const CommunityHeader = (props: CommunityHeaderProps) => {
+export const CommunityHeader = (props: Props) => {
 	const now = new Date();
 	const {
 		community: {
@@ -54,9 +59,4 @@ export const CommunityHeader = (props: CommunityHeaderProps) => {
 			<SpanStyle>{dateFormat(now, 'mmmm yyyy')}</SpanStyle>
 		</Section>
 	);
-};
-
-type CommunityHeaderProps = {
-	title: string;
-	community: Community;
 };

@@ -3,6 +3,22 @@ import styled from 'styled-components';
 
 import { BaseTableStyle } from './shared';
 
+type StyleProps = {
+	fontFamily?: string;
+	alignment?: string;
+	fontSize?: number;
+	width?: number;
+	backgroundColor?: string;
+	backgroundImage?: string;
+	logo?: string;
+};
+
+type Props = StyleProps & {
+	children: React.ReactNode;
+	color?: string;
+	innerPadding?: string;
+};
+
 const TableStyle = styled(BaseTableStyle)<StyleProps>`
 	background: ${(props) =>
 		`${props.logo ? ` url("${props.logo}") no-repeat right 40px center, ` : ''}${
@@ -43,19 +59,3 @@ export const Section = ({
 		</tr>
 	</TableStyle>
 );
-
-type StyleProps = {
-	fontFamily?: string;
-	alignment?: string;
-	fontSize?: number;
-	width?: number;
-	backgroundColor?: string;
-	backgroundImage?: string;
-	logo?: string;
-};
-
-type Props = StyleProps & {
-	children: React.ReactNode;
-	color?: string;
-	innerPadding?: string;
-};

@@ -3,6 +3,17 @@ import styled from 'styled-components';
 
 import { BaseTableStyle } from './shared';
 
+type StyleProps = {
+	color?: string;
+	width?: string;
+	backgroundColor?: string;
+};
+
+type Props = StyleProps & {
+	children: React.ReactNode;
+	linkUrl?: string;
+};
+
 const TableStyle = styled(BaseTableStyle).attrs({
 	align: 'center',
 })<StyleProps>`
@@ -39,17 +50,6 @@ const ButtonStyle = styled.a<StyleProps>`
 	-webkit-text-size-adjust: none;
 	width: ${(props) => props.width}px;
 `;
-
-type StyleProps = {
-	color?: string;
-	width?: string;
-	backgroundColor?: string;
-};
-
-type Props = StyleProps & {
-	children: React.ReactNode;
-	linkUrl?: string;
-};
 
 export const Button = ({
 	children,

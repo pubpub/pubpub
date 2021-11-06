@@ -4,6 +4,10 @@ import styled from 'styled-components';
 import { communityUrl } from 'utils/canonicalUrls';
 import { Community } from 'types';
 
+type Props = {
+	community: Community;
+};
+
 const ParagraphStyle = styled.p`
 	font-family: Arial;
 	font-size: 10px;
@@ -24,7 +28,3 @@ export const DigestFooter = (props: Props) => (
 		<a href={communityUrl(props.community)}>Unsubscribe</a>.
 	</ParagraphStyle>
 );
-
-type Props = {
-	community: Community;
-};

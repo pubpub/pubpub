@@ -3,6 +3,11 @@ import styled from 'styled-components';
 
 import { BaseTableStyle } from './shared';
 
+type Props = {
+	children: React.ReactNode;
+	backgroundColor?: string;
+};
+
 const TableStyle = styled(BaseTableStyle).attrs({
 	height: '100%',
 	width: '100%',
@@ -29,8 +34,3 @@ export const Wrapper = ({ children, backgroundColor = 'white' }: Props) => (
 		</div>
 	</body>
 );
-
-type Props = {
-	children: React.ReactNode;
-	backgroundColor?: string;
-};

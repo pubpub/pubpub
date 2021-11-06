@@ -7,6 +7,26 @@ import { IconName } from 'client/components';
 import { Spacer, Section, Wrapper, CommunityHeader } from '..';
 import { ActivityBundle, DigestIntro, DigestSectionTitle, DigestFooter } from '.';
 
+type DisplayKey = string;
+
+type AffectedObjectId = string;
+
+export type DedupedActivityItems = {
+	items: Record<DisplayKey, ActivityItem>;
+	title: string;
+	icon: IconName;
+};
+
+export type GroupedActivityItems = Record<AffectedObjectId, DedupedActivityItems>;
+
+type Props = {
+	userId: string;
+	community: Community;
+	associations: ActivityAssociations;
+	pubItems: GroupedActivityItems;
+	communityItems: GroupedActivityItems;
+};
+
 export const Digest = (props: Props) => {
 	const {
 		community: { accentColorDark = 'black' },
@@ -57,24 +77,4 @@ export const Digest = (props: Props) => {
 			</Section>
 		</Wrapper>
 	);
-};
-
-type DisplayKey = string;
-
-type AffectedObjectId = string;
-
-export type DedupedActivityItems = {
-	items: Record<DisplayKey, ActivityItem>;
-	title: string;
-	icon: IconName;
-};
-
-export type GroupedActivityItems = Record<AffectedObjectId, DedupedActivityItems>;
-
-type Props = {
-	userId: string;
-	community: Community;
-	associations: ActivityAssociations;
-	pubItems: GroupedActivityItems;
-	communityItems: GroupedActivityItems;
 };

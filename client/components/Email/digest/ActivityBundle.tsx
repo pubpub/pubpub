@@ -6,6 +6,23 @@ import { Icon } from 'components';
 
 import { DedupedActivityItems, ActivityBundleRow } from '.';
 
+const MAX_TITLE_CHARS = 65;
+
+const truncate = (str: string) =>
+	str.length > MAX_TITLE_CHARS ? str.substr(0, MAX_TITLE_CHARS - 1) + '…' : str;
+
+type StyleProps = {
+	accentColorDark?: string;
+};
+
+type PropTypes = {
+	isWithTitle?: boolean;
+	accentColorDark: string;
+	groupedItems: DedupedActivityItems;
+	associations: ActivityAssociations;
+	userId: string;
+};
+
 const H3Style = styled.h3`
 	font-size: 14px;
 	font-style: normal;
@@ -24,15 +41,6 @@ const SpanStyle = styled.span<StyleProps>`
 	fill: ${(props) => props.accentColorDark};
 	padding-right: 9px;
 `;
-
-type StyleProps = {
-	accentColorDark?: string;
-};
-
-const MAX_TITLE_CHARS = 65;
-
-const truncate = (str: string) =>
-	str.length > MAX_TITLE_CHARS ? str.substr(0, MAX_TITLE_CHARS - 1) + '…' : str;
 
 export const ActivityBundle = (props: PropTypes) => (
 	<ListItemStyle>
@@ -55,11 +63,3 @@ export const ActivityBundle = (props: PropTypes) => (
 		/>
 	</ListItemStyle>
 );
-
-type PropTypes = {
-	isWithTitle?: boolean;
-	accentColorDark: string;
-	groupedItems: DedupedActivityItems;
-	associations: ActivityAssociations;
-	userId: string;
-};

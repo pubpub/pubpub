@@ -3,6 +3,11 @@ import styled from 'styled-components';
 
 import { BaseTableStyle } from './shared';
 
+type Props = {
+	children: React.ReactNode;
+	height?: number;
+};
+
 const CellStyle = styled.td.attrs((props) => ({
 	valign: 'top',
 	height: props.height,
@@ -18,8 +23,3 @@ export const Spacer = ({ children, height = 50 }: Props) => (
 		</tr>
 	</BaseTableStyle>
 );
-
-type Props = {
-	children: React.ReactNode;
-	height?: number;
-};

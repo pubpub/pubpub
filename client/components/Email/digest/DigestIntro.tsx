@@ -10,13 +10,18 @@ import { Icon } from 'client/components';
 import { Section, Button } from '..';
 import { BaseTableStyle } from '../shared';
 
-const TableStyle = styled(BaseTableStyle)<StyleProps>`
-	border-top: 1px solid ${(props) => props.accentColorDark};
-`;
+type PropTypes = {
+	accentColorDark: string;
+	community: Community;
+};
 
 type StyleProps = {
 	accentColorDark: string;
 };
+
+const TableStyle = styled(BaseTableStyle)<StyleProps>`
+	border-top: 1px solid ${(props) => props.accentColorDark};
+`;
 
 const ButtonCellStyle = styled.td`
 	vertical-align: middle;
@@ -81,9 +86,4 @@ export const DigestIntro = (props: PropTypes) => {
 			</tr>
 		</TableStyle>
 	);
-};
-
-type PropTypes = {
-	accentColorDark: string;
-	community: Community;
 };
