@@ -18,7 +18,7 @@ app.post(
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
 		const permissions = await getPermissions(requestIds);
-		if (!permissions.create) {
+		if (!permissions.canCreate) {
 			throw new ForbiddenError();
 		}
 		const newCollection = await createCollection(req.body, req.user.id);
@@ -30,17 +30,10 @@ app.put(
 	'/api/collections',
 	wrap(async (req, res) => {
 		const permissions = await getPermissions(getRequestIds(req));
-		if (!permissions.update) {
+		if (!permissions.canUpdate) {
 			throw new ForbiddenError();
 		}
-		const updatedValues = await updateCollection(
-			{
-				...req.body,
-				collectionId: req.body.id,
-			},
-			permissions.update,
-			req.user.id,
-		);
+		const updatedValues = await updateCollection(req.body, req.user.id);
 		return res.status(200).json(updatedValues);
 	}),
 );
@@ -49,16 +42,10 @@ app.delete(
 	'/api/collections',
 	wrap(async (req, res) => {
 		const permissions = await getPermissions(getRequestIds(req));
-		if (!permissions.update) {
+		if (!permissions.canDestroy) {
 			throw new ForbiddenError();
 		}
-		await destroyCollection(
-			{
-				...req.body,
-				collectionId: req.body.id,
-			},
-			req.user.id,
-		);
+		await destroyCollection(req.body, req.user.id);
 		return res.status(200).json(req.body.id);
 	}),
 );

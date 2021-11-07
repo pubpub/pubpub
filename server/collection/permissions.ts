@@ -1,32 +1,44 @@
 import { getScope } from 'server/utils/queryHelpers';
 
-export const getPermissions = async ({ userId, communityId, collectionId }) => {
+export const editableFields = [
+	'title',
+	'slug',
+	'isRestricted',
+	'isPublic',
+	'pageId',
+	'metadata',
+	'readNextPreviewSize',
+	'layout',
+	'avatar',
+];
+
+type Permissions = {
+	canCreate?: boolean;
+	canDestroy?: boolean;
+	canUpdate?: boolean;
+};
+
+export const getPermissions = async ({
+	userId,
+	communityId,
+	collectionId,
+}): Promise<Permissions> => {
 	if (!userId) {
 		return {};
 	}
-	const scopeData = await getScope({
+	const {
+		activePermissions: { canManage },
+		elements: { activeCollection },
+	} = await getScope({
 		communityId,
 		collectionId,
 		loginId: userId,
 	});
-	const isAuthenticated = scopeData.activePermissions.canManage;
-	if (!scopeData.elements.activeCollection) {
-		return { create: isAuthenticated };
-	}
-	const editProps = [
-		'title',
-		'slug',
-		'isRestricted',
-		'isPublic',
-		'pageId',
-		'metadata',
-		'readNextPreviewSize',
-		'layout',
-		'avatar',
-	];
-	return {
-		create: isAuthenticated,
-		update: isAuthenticated ? editProps : (false as const),
-		destroy: isAuthenticated,
-	};
+	return activeCollection
+		? {
+				canCreate: canManage,
+				canUpdate: canManage,
+				canDestroy: canManage,
+		  }
+		: { canCreate: canManage };
 };

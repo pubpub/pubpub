@@ -4,6 +4,13 @@ import { normalizeMetadataToKind } from 'utils/collections/metadata';
 import { slugifyString } from 'utils/strings';
 import { generateHash } from 'utils/hashes';
 import { PubPubError } from 'server/utils/errors';
+import * as types from 'types';
+import pick from 'lodash.pick';
+
+import { editableFields } from './permissions';
+
+type CollectionCreationData = Partial<types.Collection> &
+	Pick<types.Collection, 'title' | 'communityId' | 'kind'>;
 
 export const generateDefaultCollectionLayout = () => {
 	return {
@@ -27,7 +34,10 @@ export const generateDefaultCollectionLayout = () => {
 };
 
 export const createCollection = async (
-	{
+	creationValues: CollectionCreationData,
+	actorId?: string,
+) => {
+	const {
 		communityId,
 		title,
 		kind,
@@ -37,9 +47,7 @@ export const createCollection = async (
 		isRestricted = true,
 		id = null,
 		slug = null,
-	},
-	actorId?,
-) => {
+	} = creationValues;
 	if (title) {
 		const slugStatus = await slugIsAvailable({
 			slug: slug || slugifyString(title),
@@ -65,7 +73,6 @@ export const createCollection = async (
 			doi,
 			kind,
 			layout: generateDefaultCollectionLayout(),
-			// @ts-expect-error ts-migrate(2698) FIXME: Spread types may only be created from object types... Remove this comment to see the full error message
 			...(id && { id }),
 		};
 		const metadata = normalizeMetadataToKind({}, kind, {
@@ -76,42 +83,34 @@ export const createCollection = async (
 	});
 };
 
-export const updateCollection = async (inputValues, updatePermissions, actorId?) => {
-	// Filter to only allow certain fields to be updated
-	const filteredValues = {};
-	Object.keys(inputValues).forEach((key) => {
-		if (updatePermissions.includes(key)) {
-			filteredValues[key] = inputValues[key];
-		}
+const verifySlug = async (patch: Partial<types.Collection>) => {
+	if (!patch.slug) return patch;
+	const slug = slugifyString(patch.slug);
+	const slugStatus = await slugIsAvailable({
+		slug,
+		communityId: patch.communityId,
+		activeElementId: patch.id,
 	});
-
-	// @ts-expect-error ts-migrate(2339) FIXME: Property 'slug' does not exist on type '{}'.
-	if (filteredValues.slug) {
-		// @ts-expect-error ts-migrate(2339) FIXME: Property 'slug' does not exist on type '{}'.
-		filteredValues.slug = slugifyString(filteredValues.slug);
-		const slugStatus = await slugIsAvailable({
-			// @ts-expect-error ts-migrate(2339) FIXME: Property 'slug' does not exist on type '{}'.
-			slug: filteredValues.slug,
-			communityId: inputValues.communityId,
-			activeElementId: inputValues.collectionId,
-		});
-
-		if (slugStatus !== 'available') {
-			throw new PubPubError.ForbiddenSlugError(slugStatus);
-		}
+	if (slugStatus !== 'available') {
+		throw new PubPubError.ForbiddenSlugError(slugStatus);
 	}
+	return { ...patch, slug };
+};
+
+export const updateCollection = async (patch: Partial<types.Collection>, actorId?: string) => {
+	const withVerifiedSlug = await verifySlug(patch);
+	const filteredValues = pick(withVerifiedSlug, editableFields);
 	await Collection.update(filteredValues, {
-		where: { id: inputValues.collectionId },
+		where: { id: patch.id },
 		individualHooks: true,
 		actorId,
 	});
 	return filteredValues;
 };
 
-export const destroyCollection = (inputValues, actorId?) => {
-	return Collection.destroy({
-		where: { id: inputValues.collectionId },
+export const destroyCollection = (patch: Partial<types.Collection>, actorId?: string) =>
+	Collection.destroy({
+		where: { id: patch.id },
 		individualHooks: true,
 		actorId,
 	});
-};
