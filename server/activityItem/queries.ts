@@ -573,6 +573,7 @@ export const createSubmissionStatusChangedActivityItem = async (
 		pubId: pub.id,
 		kind: 'submission-status-changed' as const,
 		payload: {
+			submissionId,
 			...diffs,
 			pub: {
 				title: pub.title,
@@ -598,6 +599,7 @@ export const createSubmissionActivityItem = async (
 		pubId,
 		kind,
 		payload: {
+			submissionId,
 			pub: {
 				title,
 			},
