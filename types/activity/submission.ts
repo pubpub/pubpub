@@ -6,6 +6,7 @@ import { InsertableActivityItemBase } from './base';
 type SubmissionActivityItemBase = InsertableActivityItemBase & {
 	pubId: string;
 	payload: {
+		submissionId: string;
 		pub: {
 			title: string;
 		};
