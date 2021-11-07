@@ -10,6 +10,7 @@ import { Member } from './member';
 import { Review } from './review';
 import { InboundEdge, OutboundEdge } from './pubEdge';
 import { ScopeSummary } from './scope';
+import { Submission } from './submission';
 import { DefinitelyHas, Maybe } from './util';
 
 export type Draft = {
@@ -82,6 +83,7 @@ export type Pub = {
 	editHash?: string;
 	communityId: string;
 	community?: Community;
+	submission?: Submission;
 	discussions?: Discussion[];
 	attributions: PubAttribution[];
 	collectionPubs?: CollectionPub[];

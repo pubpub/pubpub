@@ -11,6 +11,7 @@ import {
 	PubEdge,
 	Release,
 	ReviewNew,
+	Submission,
 	Thread,
 	ThreadComment,
 } from 'server/models';
@@ -551,6 +552,54 @@ export const createPubDiscussionCommentAddedActivityItem = async (
 				id: threadCommentId,
 				text: threadComment.text,
 				userId: threadComment.userId,
+			},
+		},
+	});
+};
+
+export const createSubmissionStatusChangedActivityItem = async (
+	actorId: null | string,
+	submissionId: string,
+	oldSubmission: types.Submission,
+) => {
+	const submission: types.Submission = await Submission.findOne({ where: { id: submissionId } });
+	const pub: types.Pub = await Pub.findOne({
+		where: { id: submission.pubId },
+	});
+	const diffs = getDiffsForPayload(submission, oldSubmission, ['status']);
+	return createActivityItem({
+		actorId,
+		communityId: pub.communityId,
+		pubId: pub.id,
+		kind: 'submission-status-changed' as const,
+		payload: {
+			...diffs,
+			pub: {
+				title: pub.title,
+			},
+		},
+	});
+};
+
+export const createSubmissionActivityItem = async (
+	kind: 'submission-deleted' | 'submission-created',
+	actorId: null | string,
+	submissionId: string,
+) => {
+	const {
+		pubId,
+		pub: { title, communityId },
+	}: types.DefinitelyHas<types.Submission, 'pub'> = await Submission.findOne({
+		where: { id: submissionId },
+	});
+	return createActivityItem({
+		actorId,
+		communityId,
+		pubId,
+		kind,
+		payload: {
+			pub: {
+				title,
 			},
 		},
 	});

@@ -1,3 +1,4 @@
+import { Submission } from 'types';
 import { Diff } from '../util';
 
 import { InsertableActivityItemBase } from './base';
@@ -18,7 +19,7 @@ export type SubmissionCreatedActivityItem = SubmissionActivityItemBase & {
 export type SubmissionStatusChangedActivityItem = SubmissionActivityItemBase & {
 	kind: 'submission-status-changed';
 	payload: {
-		status: Diff<string>;
+		status?: Diff<Submission['status']>;
 	};
 };
 
