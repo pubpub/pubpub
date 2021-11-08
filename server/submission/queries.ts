@@ -29,5 +29,6 @@ export const updateSubmission = async (patch: PatchType, actorId: string) =>
 export const destroySubmission = async ({ id }: { id: string }, actorId: string) =>
 	Submission.destroy({
 		where: { id },
+		individualHooks: true,
 		actorId,
 	});
