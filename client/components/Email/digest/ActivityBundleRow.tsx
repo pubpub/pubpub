@@ -35,6 +35,9 @@ const MessageSpanStyle = styled.span`
 	line-height: 16px;
 	letter-spacing: 0.01em;
 	text-align: left;
+	& > strong:first-child {
+		text-transform: capitalize;
+	}
 `;
 
 const MessageCellStyle = styled.td`
