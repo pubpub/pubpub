@@ -9,13 +9,13 @@ type KeyedActivityItem = ActivityItem & {
 	displayKey: string;
 };
 
-const getAffectedObject = (item, associations: ActivityAssociations) =>
+const getAffectedObject = (item: ActivityItem, associations: ActivityAssociations) =>
 	item.pubId
 		? { id: item.pubId, title: associations.pub[item.pubId].title }
 		: item.collectionId
 		? { id: item.collectionId, title: associations.collection[item.collectionId].title }
 		: 'page' in item.payload
-		? { id: item.payload.pageId, title: associations.collection[item.payload.pageId].title }
+		? { id: item.payload.page.id, title: associations.collection[item.payload.page.id].title }
 		: { id: item.communityId, title: associations.community[item.communityId].title };
 
 const getAffectedObjectIcon = (item: ActivityItem) =>
