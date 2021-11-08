@@ -1,6 +1,9 @@
+@import './shared.scss';
+
 .submission-workflow-editor-component {
     .step-component {
         margin-bottom: 20px;
+
         h2 {
             display: flex;
             align-items: center;
@@ -19,8 +22,12 @@
                 margin-right: 10px;
                 color: white;
                 background: var(--community-accent-dark);
+                &.done {
+                    background: $good;
+                }        
             }
         }
+
         > p {
             margin-top: 10px;
             margin-bottom: 10px;

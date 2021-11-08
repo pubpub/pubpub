@@ -1,3 +1,5 @@
+@import './shared.scss';
+
 @mixin striped-background($color) {
     background-image: linear-gradient(
         45deg,
@@ -19,8 +21,19 @@
         }
 
         .banner-skeleton {
-            border: 1px solid #ddd;
-            @include striped-background(#ddd);
+            @include box;
+            background: $light-background;
+        }
+    }
+
+    .email-step {
+        .target-email-input {
+            display: flex;
+            max-width: 600px;
+            > .bp3-input-group {
+                flex-grow: 1;
+                margin-right: 10px;
+            }
         }
     }
 }

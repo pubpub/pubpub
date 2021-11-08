@@ -1,4 +1,5 @@
 import { DocJson } from 'types';
+import { LayoutBlockSubmissionBanner } from 'utils/layout';
 
 export type SubmissionWorkflow = {
 	id: string;
@@ -6,7 +7,7 @@ export type SubmissionWorkflow = {
 	updatedAt: string;
 	enabled: boolean;
 	instructionsText: DocJson;
-	afterSubmittedText: DocJson;
 	emailText: DocJson;
-	targetEmailAddress: null | string;
+	targetEmailAddress: string;
+	bannerContent: LayoutBlockSubmissionBanner['content'];
 };

@@ -1,21 +1,26 @@
 import React from 'react';
 import classNames from 'classnames';
 
+import { Icon } from 'components';
+
 require('./step.scss');
 
 type Props = {
-	title: React.ReactNode;
-	number: number;
-	className: string;
 	children: React.ReactNode;
+	className: string;
+	done?: boolean;
+	number: number;
+	title: React.ReactNode;
 };
 
 const Step = (props: Props) => {
-	const { title, number, children, className } = props;
+	const { title, number, children, className, done } = props;
 	return (
 		<div className={classNames('step-component', className)}>
 			<h2>
-				<span className="number">{number}</span>
+				<span className={classNames('number', done && 'done')}>
+					{done ? <Icon icon="tick" /> : number}
+				</span>
 				{title}
 			</h2>
 			{children}
