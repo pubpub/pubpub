@@ -7,21 +7,27 @@ type UpdateToStatus = typeof updateToStatuses;
 
 type PatchType = Partial<SubmissionType> & { status: UpdateToStatus };
 
-export const createSubmission = async ({ pubId }) =>
-	Submission.create({
-		pubId,
-		status: 'incomplete',
-	});
+export const createSubmission = async ({ pubId }, actorId: string) =>
+	Submission.create(
+		{
+			pubId,
+			status: 'incomplete',
+		},
+		{ actorId },
+	);
 
-export const updateSubmission = async (patch: PatchType) =>
+export const updateSubmission = async (patch: PatchType, actorId: string) =>
 	Submission.update(
 		{ status: patch.status },
 		{
 			where: { id: patch.id },
+			individualHooks: true,
+			actorId,
 		},
 	);
 
-export const destroySubmission = async ({ id }: { id: string }) =>
+export const destroySubmission = async ({ id }: { id: string }, actorId: string) =>
 	Submission.destroy({
 		where: { id },
+		actorId,
 	});

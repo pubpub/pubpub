@@ -557,31 +557,6 @@ export const createPubDiscussionCommentAddedActivityItem = async (
 	});
 };
 
-export const createSubmissionStatusChangedActivityItem = async (
-	actorId: null | string,
-	submissionId: string,
-	oldSubmission: types.Submission,
-) => {
-	const submission: types.Submission = await Submission.findOne({ where: { id: submissionId } });
-	const pub: types.Pub = await Pub.findOne({
-		where: { id: submission.pubId },
-	});
-	const diffs = getDiffsForPayload(submission, oldSubmission, ['status']);
-	return createActivityItem({
-		actorId,
-		communityId: pub.communityId,
-		pubId: pub.id,
-		kind: 'submission-status-changed' as const,
-		payload: {
-			submissionId,
-			...diffs,
-			pub: {
-				title: pub.title,
-			},
-		},
-	});
-};
-
 export const createSubmissionActivityItem = async (
 	kind: 'submission-deleted' | 'submission-created',
 	actorId: null | string,
@@ -592,6 +567,12 @@ export const createSubmissionActivityItem = async (
 		pub: { title, communityId },
 	}: types.DefinitelyHas<types.Submission, 'pub'> = await Submission.findOne({
 		where: { id: submissionId },
+		include: [
+			{
+				model: Pub,
+				as: 'pub',
+			},
+		],
 	});
 	return createActivityItem({
 		actorId,
@@ -602,6 +583,36 @@ export const createSubmissionActivityItem = async (
 			submissionId,
 			pub: {
 				title,
+			},
+		},
+	});
+};
+
+export const createSubmissionStatusChangedActivityItem = async (
+	actorId: null | string,
+	submissionId: string,
+	oldSubmission: types.Submission,
+) => {
+	const submission: types.DefinitelyHas<types.Submission, 'pub'> = await Submission.findOne({
+		where: { id: submissionId },
+		include: [
+			{
+				model: Pub,
+				as: 'pub',
+			},
+		],
+	});
+	const diffs = getDiffsForPayload(submission, oldSubmission, ['status']);
+	return createActivityItem({
+		actorId,
+		communityId: submission.pub.communityId,
+		pubId: submission.pub.id,
+		kind: 'submission-status-changed' as const,
+		payload: {
+			submissionId,
+			...diffs,
+			pub: {
+				title: submission.pub.title,
 			},
 		},
 	});

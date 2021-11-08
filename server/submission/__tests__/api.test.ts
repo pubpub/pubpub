@@ -1,5 +1,5 @@
 /* global it, expect, beforeAll, afterAll */
-import { setup, teardown, login, modelize } from 'stubstub';
+import { setup, teardown, login, modelize, expectCreatedActivityItem } from 'stubstub';
 import { Submission } from '../../models';
 
 const models = modelize`
@@ -49,13 +49,22 @@ it('creates a new submission', async () => {
 	const agent = await login(admin);
 	const {
 		body: { pubId, status },
-	} = await agent
-		.post('/api/submissions')
-		.send({
-			communityId: community.id,
-			pubId: spub.id,
-		})
-		.expect(201);
+	} = await expectCreatedActivityItem(
+		agent
+			.post('/api/submissions')
+			.send({
+				communityId: community.id,
+				pubId: spub.id,
+			})
+			.expect(201),
+	).toMatchObject((response) => ({
+		kind: 'submission-created',
+		pubId: response.body.pubId,
+		actorId: admin.id,
+		payload: {
+			submissionId: response.body.id,
+		},
+	}));
 	expect(pubId).toEqual(spub.id);
 	expect(status).toEqual('incomplete');
 });
@@ -167,10 +176,19 @@ it('forbids normal user to delete a submission', async () => {
 it('allows admin to delete a submission', async () => {
 	const { admin, community, submission } = models;
 	const agent = await login(admin);
-	await agent
-		.delete('/api/submissions')
-		.send({ id: submission.id, communityId: community.id })
-		.expect(200);
+	await expectCreatedActivityItem(
+		agent
+			.delete('/api/submissions')
+			.send({ id: submission.id, communityId: community.id })
+			.expect(200),
+	).toMatchObject({
+		kind: 'submission-deleted',
+		pubId: submission.pubId,
+		actorId: admin.id,
+		payload: {
+			submissionId: submission.id,
+		},
+	});
 	const submissionNow = await Submission.findOne({ where: { id: submission.id } });
 	expect(submissionNow).toEqual(null);
 });

@@ -22,7 +22,7 @@ app.post(
 		if (!permissions.create) {
 			throw new ForbiddenError();
 		}
-		const newSubmission = await createSubmission(req.body);
+		const newSubmission = await createSubmission(req.body, ids.userId);
 		return res.status(201).json(newSubmission);
 	}),
 );
@@ -35,7 +35,7 @@ app.put(
 		if (!(await canUpdate({ ...ids, status }))) {
 			throw new ForbiddenError();
 		}
-		const updatedValues = await updateSubmission(req.body);
+		const updatedValues = await updateSubmission(req.body, ids.userId);
 		return res.status(201).json(updatedValues);
 	}),
 );
@@ -48,7 +48,7 @@ app.delete(
 		if (!permissions.destroy) {
 			throw new ForbiddenError();
 		}
-		await destroySubmission(req.body);
+		await destroySubmission(req.body, ids.userId);
 		return res.status(200).json(req.body.id);
 	}),
 );
