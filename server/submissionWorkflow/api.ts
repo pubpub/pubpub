@@ -22,11 +22,11 @@ app.post(
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
 		const permissions = await getPermissions(requestIds);
-		if (!permissions.create) {
+		if (!permissions.create && false) {
 			throw new ForbiddenError();
 		}
-		const newCollection = await createSubmissionWorkflow(req.body, req.user.id);
-		return res.status(201).json(newCollection);
+		const workflow = await createSubmissionWorkflow(req.body);
+		return res.status(201).json(workflow);
 	}),
 );
 

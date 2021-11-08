@@ -14,15 +14,13 @@ export const getPermissions = async ({ userId, communityId, collectionId }) => {
 		return { create: isAuthenticated };
 	}
 	const editProps = [
-		'title',
-		'slug',
-		'isRestricted',
-		'isPublic',
-		'pageId',
-		'metadata',
-		'readNextPreviewSize',
-		'layout',
-		'avatar',
+		`collectionId`,
+		`enabled`,
+		`instructions`,
+		`afterSubmittedText`,
+		`emailText`,
+		`layoutBlock`,
+		`targetEmailAddress`,
 	];
 	return {
 		create: isAuthenticated,
