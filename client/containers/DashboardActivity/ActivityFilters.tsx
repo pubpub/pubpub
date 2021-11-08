@@ -25,6 +25,7 @@ const filterLabels: Record<ActivityFilter, FilterLabel> = {
 	page: { label: 'Pages', icon: 'page-layout' },
 	member: { label: 'Members', icon: 'people' },
 	review: { label: 'Reviews', icon: 'social-media' },
+	submission: { label: 'Submission', icon: 'social-media' },
 	discussion: { label: 'Discussions', icon: 'chat' },
 	pubEdge: { label: 'Connections', icon: 'layout-auto' },
 };
