@@ -16,7 +16,7 @@ export default (sequelize, dataTypes) => {
 					const { Submission, Pub } = models;
 					Submission.belongsTo(Pub, {
 						onDelete: 'CASCADE',
-						as: 'submission',
+						as: 'pub',
 						foreignKey: 'pubId',
 					});
 				},
