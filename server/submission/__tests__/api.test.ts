@@ -1,5 +1,6 @@
 /* global it, expect, beforeAll, afterAll */
 import { setup, teardown, login, modelize, expectCreatedActivityItem } from 'stubstub';
+import * as types from 'types';
 import { Submission } from '../../models';
 
 const models = modelize`
@@ -57,14 +58,11 @@ it('creates a new submission', async () => {
 				pubId: spub.id,
 			})
 			.expect(201),
-	).toMatchObject((response) => ({
+	).toMatchObject({
 		kind: 'submission-created',
-		pubId: response.body.pubId,
+		pubId: spub.id,
 		actorId: admin.id,
-		payload: {
-			submissionId: response.body.id,
-		},
-	}));
+	});
 	expect(pubId).toEqual(spub.id);
 	expect(status).toEqual('incomplete');
 });
@@ -123,14 +121,30 @@ it('forbids admins to update from incomplete status', async () => {
 it('allows pub editors to set submitted status', async () => {
 	const { pubAdmin, submission, spub } = models;
 	const agent = await login(pubAdmin);
-	await agent
-		.put('/api/submissions')
-		.send({
-			id: submission.id,
-			pubId: spub.id,
-			status: 'submitted',
-		})
-		.expect(201);
+	const prevSubmission: types.Submission = await Submission.findOne({
+		where: { id: submission.id },
+	});
+	await expectCreatedActivityItem(
+		agent
+			.put('/api/submissions')
+			.send({
+				id: submission.id,
+				pubId: spub.id,
+				status: 'submitted',
+			})
+			.expect(201),
+	).toMatchObject((response) => ({
+		kind: 'submission-status-changed',
+		pubId: spub.id,
+		actorId: pubAdmin.id,
+		payload: {
+			submissionId: submission.id,
+			status: {
+				from: prevSubmission.status,
+				to: response.body.status,
+			},
+		},
+	}));
 	const { status } = await Submission.findOne({ where: { id: submission.id } });
 	expect(status).toEqual('submitted');
 });
@@ -147,17 +161,33 @@ it('forbids admins to update status out of one of [submitted, accepted, declined
 		.expect(403);
 });
 
-it('allows collection managers to update pub status', async () => {
+it('allows collection managers to update pub status to submitted', async () => {
 	const { collection, collectionManager, submission } = models;
 	const agent = await login(collectionManager);
-	await agent
-		.put('/api/submissions')
-		.send({
-			collectionId: collection.id,
-			id: submission.id,
-			status: 'accepted',
-		})
-		.expect(201);
+	const prevSubmission: types.Submission = await Submission.findOne({
+		where: { id: submission.id },
+	});
+	await expectCreatedActivityItem(
+		agent
+			.put('/api/submissions')
+			.send({
+				collectionId: collection.id,
+				id: submission.id,
+				status: 'submitted',
+			})
+			.expect(201),
+	).toMatchObject((response) => ({
+		kind: 'submission-status-changed',
+		pubId: submission.pubId,
+		actorId: collectionManager.id,
+		payload: {
+			submissionId: submission.id,
+			status: {
+				from: prevSubmission.status,
+				to: response.body.status,
+			},
+		},
+	}));
 	const submissionNow = await Submission.findOne({ where: { id: submission.id } });
 	expect(submissionNow.status).toEqual('accepted');
 });
