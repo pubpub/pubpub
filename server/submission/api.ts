@@ -23,6 +23,7 @@ app.post(
 			throw new ForbiddenError();
 		}
 		const newSubmission = await createSubmission(req.body, ids.userId);
+
 		return res.status(201).json(newSubmission);
 	}),
 );

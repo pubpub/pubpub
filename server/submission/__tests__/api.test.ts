@@ -1,6 +1,7 @@
 /* global it, expect, beforeAll, afterAll */
 import { setup, teardown, login, modelize, expectCreatedActivityItem } from 'stubstub';
 import * as types from 'types';
+
 import { Submission } from '../../models';
 
 const models = modelize`
@@ -63,6 +64,7 @@ it('creates a new submission', async () => {
 		pubId: spub.id,
 		actorId: admin.id,
 	});
+
 	expect(pubId).toEqual(spub.id);
 	expect(status).toEqual('incomplete');
 });
@@ -145,6 +147,7 @@ it('allows pub editors to set submitted status', async () => {
 			},
 		},
 	}));
+
 	const { status } = await Submission.findOne({ where: { id: submission.id } });
 	expect(status).toEqual('submitted');
 });
@@ -188,6 +191,7 @@ it('allows collection managers to update pub status to submitted', async () => {
 			},
 		},
 	}));
+
 	const submissionNow = await Submission.findOne({ where: { id: submission.id } });
 	expect(submissionNow.status).toEqual('accepted');
 });
