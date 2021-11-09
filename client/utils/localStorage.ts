@@ -6,6 +6,7 @@ export type LocalStorageWriter<T extends LocalStorable> = {
 	getChild: <U extends LocalStorable>(key: string) => LocalStorageWriter<U>;
 };
 
+// See https://en.wikipedia.org/wiki/Private_Use_Areas
 const separator = '\uE000';
 
 const assertPathEntryDoesNotContainSeparator = (entry: string) => {
