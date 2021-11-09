@@ -20,11 +20,11 @@ app.get(['/dash/collection/:collectionSlug/submissions'], async (req, res, next)
 
 		const {
 			scopeData: {
-				activePermissions: { canView },
+				activePermissions: { canManage },
 			},
 		} = initialData;
 
-		if (!canView) {
+		if (!canManage) {
 			throw new ForbiddenError();
 		}
 
