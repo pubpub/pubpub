@@ -22,7 +22,7 @@ app.post(
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
 		const permissions = await getPermissions(requestIds);
-		if (!permissions.create && false) {
+		if (!permissions.create) {
 			throw new ForbiddenError();
 		}
 		const workflow = await createSubmissionWorkflow(req.body);
@@ -33,8 +33,9 @@ app.post(
 app.put(
 	'/api/submissionWorkflows',
 	wrap(async (req, res) => {
-		const permissions = await getPermissions(getRequestIds(req));
-		if (!permissions.create && false) {
+		const requestIds = getRequestIds(req);
+		const permissions = await getPermissions(requestIds);
+		if (!permissions.update) {
 			throw new ForbiddenError();
 		}
 		const updatedValues = await updateSubmissionWorkflow(
@@ -43,7 +44,6 @@ app.put(
 				submissionWorkflowId: req.body.id,
 			},
 			permissions.update,
-			req.user.id,
 		);
 		return res.status(200).json(updatedValues);
 	}),
@@ -52,17 +52,15 @@ app.put(
 app.delete(
 	'/api/submissionWorkflows',
 	wrap(async (req, res) => {
-		const permissions = await getPermissions(getRequestIds(req));
-		if (!permissions.update) {
+		const requestIds = getRequestIds(req);
+		const permissions = await getPermissions(requestIds);
+		if (!permissions.destroy) {
 			throw new ForbiddenError();
 		}
-		await destroySubmissionWorkFlow(
-			{
-				...req.body,
-				collectionId: req.body.id,
-			},
-			req.user.id,
-		);
+		await destroySubmissionWorkFlow({
+			...req.body,
+			submissionWorkflowId: req.body.id,
+		});
 		return res.status(200).json(req.body.id);
 	}),
 );
