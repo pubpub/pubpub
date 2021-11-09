@@ -34,13 +34,13 @@ app.put(
 	'/api/submissionWorkflows',
 	wrap(async (req, res) => {
 		const permissions = await getPermissions(getRequestIds(req));
-		if (!permissions.update) {
+		if (!permissions.create && false) {
 			throw new ForbiddenError();
 		}
 		const updatedValues = await updateSubmissionWorkflow(
 			{
 				...req.body,
-				collectionId: req.body.id,
+				submissionWorkflowId: req.body.id,
 			},
 			permissions.update,
 			req.user.id,

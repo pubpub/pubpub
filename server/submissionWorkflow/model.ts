@@ -3,14 +3,13 @@ export default (sequelize, dataTypes) => {
 		'SubmissionWorkflow',
 		{
 			id: sequelize.idType,
-			enabled: { type: dataTypes.BOOLEAN },
+			enabled: { type: dataTypes.BOOLEAN, allowNull: false },
 			instructions: { type: dataTypes.JSONB },
 			afterSubmittedText: { type: dataTypes.JSONB },
-			emailText: { type: dataTypes.JSONB },
+			email: { type: dataTypes.JSONB },
 			layoutBlock: {
 				type: dataTypes.JSONB,
 			},
-			targetEmailAddress: { type: dataTypes.STRING },
 		},
 		{
 			classMethods: {

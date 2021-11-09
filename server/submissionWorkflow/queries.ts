@@ -1,23 +1,21 @@
 import { Collection, SubmissionWorkflow } from 'server/models';
+import { SubmissionWorkflow as SubmissionWorkflowType } from 'types';
 
 export const createSubmissionWorkflow = async ({
 	collectionId,
-	enabled,
 	instructions,
 	afterSubmittedText,
-	emailText,
+	email,
 	layoutBlock,
-	targetEmailAddress,
 }) => {
 	return Collection.findOne({ where: { id: collectionId } }).then(() =>
 		SubmissionWorkflow.create({
 			collectionId,
-			enabled,
+			enabled: false,
 			instructions,
 			afterSubmittedText,
-			emailText,
+			email,
 			layoutBlock,
-			targetEmailAddress,
 		}),
 	);
 };
@@ -36,15 +34,14 @@ export const updateSubmissionWorkflow = async (
 	});
 
 	await SubmissionWorkflow.update(filteredValues, {
-		where: { id: submissionWorkflowId },
-		individualHooks: true,
+		where: { id: inputValues.submissionWorkflowId },
 	});
 	return filteredValues;
 };
 
 export const destroySubmissionWorkFlow = (submissionWorkflowId, inputValues) => {
 	return SubmissionWorkflow.destroy({
-		where: { id: inputValues.collectionId },
+		where: { id: inputValues.submissionWorkflowId0 },
 		individualHooks: true,
 	});
 };
