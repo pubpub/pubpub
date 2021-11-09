@@ -48,19 +48,26 @@ html {
     height: 100%;
     font-size: 16px;
     line-height: 1.4;
+		color: #333333;
+		font-family: Arial;
 }
 
 body {
+		overflow-wrap: anywhere;
     margin: 0;
     min-height: 100%;
 }
 
 a {
-    color: #0096FF;
+    color: inherit;
 }
 
 a:hover {
-    color: #006ebb;
+    color: inherit;
+}
+
+strong {
+	font-weight: normal;
 }
 
 b {
