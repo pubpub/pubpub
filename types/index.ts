@@ -15,6 +15,7 @@ export * from './request';
 export * from './review';
 export * from './scope';
 export * from './sequelize';
+export * from './submission';
 export * from './slug';
 export * from './submissonWorkflow';
 export * from './thread';
