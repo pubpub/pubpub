@@ -1,28 +1,63 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, EditableText, InputGroup } from '@blueprintjs/core';
 
-import { SubmissionWorkflow } from 'types';
+import { Collection, SubmissionWorkflow } from 'types';
 import { LayoutSubmissionBannerSkeleton } from 'client/components/Layout';
 import { usePageContext } from 'utils/hooks';
+import { isValidEmail } from 'utils/email';
+import { withValue } from 'utils/fp';
+import { collectionUrl } from 'utils/canonicalUrls';
 
-import { useSubmissionWorkflow } from './useSubmissionWorkflow';
 import Step from './Step';
 import WorkflowTextEditor from './WorkflowTextEditor';
 import EmailPreview from './EmailPreview';
+import { EditableSubmissionWorkflow } from './types';
+import {
+	RecordValidator,
+	isValidDocJson,
+	isAlwaysValid,
+	isValidBannerContent,
+	validate,
+} from './validators';
 
 require('./submissionWorkflowEditor.scss');
 
 type Props = {
-	initialWorkflow: null | SubmissionWorkflow;
-	collectionUrl: string;
+	collection: Collection;
+	onUpdateWorkflow: (workflow: EditableSubmissionWorkflow) => unknown;
+	renderCompletionButton: (isValid: boolean) => React.ReactNode;
+	workflow: EditableSubmissionWorkflow;
+};
+
+const validator: RecordValidator<EditableSubmissionWorkflow> = {
+	instructionsText: isValidDocJson,
+	emailText: isValidDocJson,
+	targetEmailAddress: isValidEmail,
+	enabled: isAlwaysValid,
+	bannerContent: isValidBannerContent,
 };
 
 const SubmissionWorkflowEditor = (props: Props) => {
-	const { initialWorkflow, collectionUrl } = props;
-	const { workflow, updateWorkflow, fieldValidStates } = useSubmissionWorkflow(initialWorkflow);
+	const { collection, onUpdateWorkflow, renderCompletionButton, workflow } = props;
 	const { communityData } = usePageContext();
 	const { email: communityEmail } = communityData;
 	const { bannerContent } = workflow;
+	const [{ fields: fieldValidStates, isValid }, setValidation] = useState(() =>
+		validate(workflow, validator),
+	);
+
+	const collectionLink = withValue(collectionUrl(communityData, collection), (url) => (
+		<a href={url} target="_blank" rel="noopener noreferrer">
+			{url}
+		</a>
+	));
+
+	const updateWorkflow = (update: Partial<EditableSubmissionWorkflow>) => {
+		const nextWorkflow = { ...workflow, ...update };
+		const nextValidation = validate(nextWorkflow, validator);
+		setValidation(nextValidation);
+		onUpdateWorkflow(nextWorkflow);
+	};
 
 	const updateBannerContent = (update: Partial<SubmissionWorkflow['bannerContent']>) => {
 		updateWorkflow({ bannerContent: { ...bannerContent, ...update } });
@@ -37,11 +72,8 @@ const SubmissionWorkflowEditor = (props: Props) => {
 				done={fieldValidStates.bannerContent}
 			>
 				<p>
-					Visitors to{' '}
-					<a href={collectionUrl} target="_blank" rel="noopener noreferrer">
-						{collectionUrl}
-					</a>{' '}
-					will see a banner inviting them to submit to this Collection.
+					Visitors to {collectionLink} will see a banner inviting them to submit to this
+					Collection.
 				</p>
 				<LayoutSubmissionBannerSkeleton
 					className="banner-skeleton"
@@ -126,6 +158,7 @@ const SubmissionWorkflowEditor = (props: Props) => {
 						/>
 					}
 				/>
+				<p>{renderCompletionButton(isValid)}</p>
 			</Step>
 		</div>
 	);

@@ -1,65 +1,63 @@
-import React from 'react';
-import { Button, Callout } from '@blueprintjs/core';
+import React, { useState } from 'react';
+import { Switch, Popover } from '@blueprintjs/core';
 
-import { DashboardFrame } from 'components';
-import { usePageContext } from 'utils/hooks';
-import { communityUrl } from 'utils/canonicalUrls';
-import { getDashUrl } from 'utils/dashboard';
+import { ClientOnly, DashboardFrame } from 'components';
 
-import SubmissionWorkflowEditor from './SubmissionWorkflowEditor';
+import NewSubmissionWorkflowEditor from './NewSubmissionWorkflowEditor';
+import { EditableSubmissionWorkflow } from './types';
 
 require('./dashboardSubmissions.scss');
 
 const DashboardSubmissions = () => {
-	const {
-		communityData,
-		scopeData: {
-			elements: { activeCollection },
-		},
-	} = usePageContext();
-	const collectionUrl = communityUrl(communityData) + `/${activeCollection.slug}`;
+	const [workflow, setWorkflow] = useState<null | EditableSubmissionWorkflow>(null);
+	const [showSwitchTooltip, setShowSwitchTooltip] = useState(false);
 
-	const renderIntroduction = () => {
-		const pageLinkedToCollection = communityData.pages.find(
-			(page) => page.id === activeCollection.pageId,
-		);
-		return (
-			<Callout
-				title="Enable Submissions"
-				intent={pageLinkedToCollection ? 'warning' : 'primary'}
-				icon={null}
-			>
-				<p>
-					When you enable Submissions for this Collection, anyone with a PubPub account
-					will be able to visit{' '}
-					<a href={collectionUrl} target="_blank" rel="noopener noreferrer">
-						{collectionUrl}
-					</a>{' '}
-					to create a Pub and submit it to this Collection. You'll have the chance to
-					approve or reject these submissions before they can be published.
-				</p>
-				{!pageLinkedToCollection && <Button>Let's do it!</Button>}
-				{pageLinkedToCollection && (
-					<p>
-						Before you can start accepting Submissions, you'll need to unlink this
-						Collection from the Page <b>{pageLinkedToCollection.title}</b> from the{' '}
-						<a
-							href={getDashUrl({
-								collectionSlug: activeCollection.slug,
-								mode: 'layout',
-							})}
-						>
-							Layout tab
-						</a>
-						.
-					</p>
-				)}
-			</Callout>
-		);
+	const handleWorkflowCreated = (w: EditableSubmissionWorkflow) => {
+		setWorkflow(w);
+		setTimeout(() => setShowSwitchTooltip(true), 500);
 	};
 
-	const renderInitialCreationWorkflow = () => {
-		return <SubmissionWorkflowEditor initialWorkflow={null} collectionUrl={collectionUrl} />;
+	const handleToggleSubmissionsEnabled = () => {
+		if (workflow) {
+			setWorkflow({ ...workflow, enabled: !workflow.enabled });
+		}
+		setShowSwitchTooltip(false);
+	};
+
+	const renderControls = () => {
+		if (workflow) {
+			const enabledSwitch = (
+				<Switch large checked={workflow.enabled} onClick={handleToggleSubmissionsEnabled}>
+					Accepting submissions
+				</Switch>
+			);
+			if (showSwitchTooltip) {
+				return (
+					<Popover
+						defaultIsOpen
+						content={
+							<div className="dashboard-submissions-container_accept-popover-content">
+								<h5>Ready to accept submissions?</h5>
+								When you're ready, you can enable submissions to this Collection
+								here.
+							</div>
+						}
+					>
+						{enabledSwitch}
+					</Popover>
+				);
+			}
+			return enabledSwitch;
+		}
+		return null;
+	};
+
+	const renderNewWorkflowEditor = () => {
+		return (
+			<ClientOnly>
+				<NewSubmissionWorkflowEditor onWorkflowCreated={handleWorkflowCreated} />
+			</ClientOnly>
+		);
 	};
 
 	return (
@@ -67,9 +65,9 @@ const DashboardSubmissions = () => {
 			className="dashboard-submissions-container"
 			title="Submissions"
 			icon="inbox"
+			controls={renderControls()}
 		>
-			{/* {renderIntroduction()} */}
-			{renderInitialCreationWorkflow()}
+			{!workflow && renderNewWorkflowEditor()}
 		</DashboardFrame>
 	);
 };

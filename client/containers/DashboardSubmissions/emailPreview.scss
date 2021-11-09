@@ -3,6 +3,7 @@
 .email-preview-component {
     @include box;
     background: $light-background;
+    font-family: monospace;
 
     > .address-header {
         display: flex;
@@ -17,13 +18,11 @@
             > .label {
                 margin-right: 5px;
             }
-            > .address {
-                font-family: monospace;
-            }
         }
     }
 
     > .content-box {
         padding: 10px;
+        font-size: 0.95em;
     }
 }

@@ -17,14 +17,7 @@ export type ValidationResult<Rec extends AnyRecord> = {
 };
 
 export const isValidDocJson = (docJson: DocJson) => {
-	if (docJson.content.length === 0) {
-		return false;
-	}
-	if (docJson.content.length === 1) {
-		const [firstChild] = docJson.content;
-		return firstChild.content && firstChild.content.length > 0;
-	}
-	return true;
+	return docJson.content.some((child) => child.content?.length > 0);
 };
 
 export const isValidBannerContent = (block: LayoutBlockSubmissionBanner['content']) => {
