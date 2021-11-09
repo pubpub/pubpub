@@ -42,13 +42,11 @@ const MessageSpanStyle = styled.span`
 
 const MessageCellStyle = styled.td`
 	width: 70%;
-	whitespace: nowrap;
 `;
 
 const DateCellStyle = styled.td`
 	width: 30%;
 	text-align: 'right';
-	whitespace: nowrap;
 `;
 
 const DateSpanStyle = styled.span`

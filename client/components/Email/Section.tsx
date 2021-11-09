@@ -9,7 +9,6 @@ type StyleProps = {
 	fontSize?: number;
 	width?: number;
 	backgroundColor?: string;
-	backgroundImage?: string;
 	logo?: string;
 };
 
@@ -20,10 +19,7 @@ type Props = StyleProps & {
 };
 
 const TableStyle = styled(BaseTableStyle)<StyleProps>`
-	background: ${(props) =>
-		`${props.logo ? ` url("${props.logo}") no-repeat right 40px center, ` : ''}${
-			props.backgroundImage ? ` url("${props.backgroundImage}") no-repeat right` : ''
-		}`};
+	${({ logo }) => logo && `background: url("${logo}") no-repeat right 40px center;`}
 	background-color: ${(props) => props.backgroundColor};
 	font-size: ${(props) => props.fontSize}px;
 	text-align: ${(props) => props.alignment};
@@ -38,7 +34,6 @@ export const Section = ({
 	fontFamily = 'roboto,helvetica neue,helvetica,arial,sans-serif',
 	backgroundColor = '#FFFFFF',
 	logo,
-	backgroundImage,
 	color = '#333333',
 	innerPadding = '40px',
 	width = 600,
@@ -47,7 +42,6 @@ export const Section = ({
 		fontSize={fontSize}
 		fontFamily={fontFamily}
 		backgroundColor={backgroundColor}
-		backgroundImage={backgroundImage}
 		logo={logo}
 		alignment={alignment}
 		width={width}
