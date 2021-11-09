@@ -68,7 +68,6 @@ const PubCollectionsListing = (props: Props) => {
 				? await api.createTagCollection({
 						title: maybeCollection.tagTitleToCreate,
 						communityId: communityData.id,
-						isPublic: true,
 				  })
 				: maybeCollection;
 		const newCollectionPub = await pendingPromise(
@@ -177,7 +176,7 @@ const PubCollectionsListing = (props: Props) => {
 		handleClick: React.MouseEventHandler<HTMLElement>,
 	) => {
 		return renderCollectionTitle(
-			{ title: query, kind: 'tag', slug: '', id: '', isPublic: true },
+			{ title: `Create new tag: ${query}`, kind: 'tag', slug: '', id: '', isPublic: false },
 			false,
 			handleClick,
 			active,
@@ -226,18 +225,17 @@ const PubCollectionsListing = (props: Props) => {
 		);
 	};
 
-	const emptyListPlaceholderText = scopeData.activePermissions.canManageCommunity
-		? 'Create a new Tag with this name'
-		: 'No Collections match this search.';
-
-	const searchPlaceholderText = scopeData.activePermissions.canManageCommunity
-		? 'Search for Collections (or create a Tag)'
-		: 'Search for Collections';
-
 	const createNewItemProps = scopeData.activePermissions.canManageCommunity
-		? { createNewItemFromQuery: handleCreateTagFromQuery, createNewItemRenderer: renderNewItem }
-		: {};
-
+		? {
+				createNewItemFromQuery: handleCreateTagFromQuery,
+				createNewItemRenderer: renderNewItem,
+				searchPlaceholder: 'Search for Collections (or create a Tag)',
+				emptyListPlaceholder: '',
+		  }
+		: {
+				emptyListPlaceholder: 'No Collections match this search.',
+				searchPlaceholder: 'Search for Collections',
+		  };
 	const renderQueryList = (triggerButton) => {
 		if (canAddCollections.length > 0) {
 			return (
@@ -245,8 +243,6 @@ const PubCollectionsListing = (props: Props) => {
 					itemPredicate={(query, collection) => fuzzyMatchCollection(collection, query)}
 					items={canAddCollections}
 					itemRenderer={renderAvailableCollection}
-					emptyListPlaceholder={emptyListPlaceholderText}
-					searchPlaceholder={searchPlaceholderText}
 					onItemSelect={handleAddCollectionPub}
 					position="bottom-left"
 					onClose={onQueryListClose}
