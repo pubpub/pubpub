@@ -6,6 +6,7 @@ import { Icon } from 'components';
 import { apiFetch } from 'client/utils/apiFetch';
 import { usePageContext } from 'utils/hooks';
 
+import { PubPageData, PubPageDiscussion } from 'types';
 import { discussionMatchesSearchTerm } from '../discussionUtils';
 import DiscussionInput from './DiscussionInput';
 import LabelList from './LabelList';
@@ -14,23 +15,17 @@ import ThreadComment from './ThreadComment';
 
 require('./discussion.scss');
 
-type ThreadCommentType = {
-	createdAt: string;
-	id: string;
-	author: {
-		lastName: string;
-	};
-};
+type PubPageThreadComment = PubPageDiscussion['thread']['comments'][number];
 
 type Props = {
-	pubData: any;
-	discussionData: any;
-	updateLocalData: (...args: any[]) => any;
+	pubData: PubPageData;
+	discussionData: PubPageDiscussion;
+	updateLocalData: (kind: string, patch: any) => unknown;
 	canPreview?: boolean;
 	searchTerm?: string;
 };
 
-const sortThreadComments = (threadComments: ThreadCommentType[], sortType: SortType) => {
+const sortThreadComments = (threadComments: PubPageThreadComment[], sortType: SortType) => {
 	if (sortType === 'alphabetical') {
 		return threadComments
 			.concat()
