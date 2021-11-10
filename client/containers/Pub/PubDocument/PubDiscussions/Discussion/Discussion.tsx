@@ -126,16 +126,19 @@ const Discussion = (props: Props) => {
 	};
 
 	const renderAnchorText = () => {
-		const { anchor } = discussionData;
-		if (anchor) {
-			const { prefix, suffix, exact } = anchor;
-			return (
-				<div className="anchor-text">
-					{prefix}
-					<span className="exact">{exact}</span>
-					{suffix}
-				</div>
-			);
+		const { anchors } = discussionData;
+		if (anchors) {
+			const [firstAnchor] = anchors.sort((a, b) => a.historyKey - b.historyKey);
+			if (firstAnchor) {
+				const { originalTextPrefix, originalText, originalTextSuffix } = firstAnchor;
+				return (
+					<div className="anchor-text">
+						{originalTextPrefix}
+						<span className="exact">{originalText}</span>
+						{originalTextSuffix}
+					</div>
+				);
+			}
 		}
 		return null;
 	};
