@@ -121,7 +121,7 @@ it('forbids admins to update from incomplete status', async () => {
 });
 
 it('allows pub editors to set submitted status', async () => {
-	const { pubAdmin, submission, spub } = models;
+	const { pubAdmin, submission } = models;
 	const agent = await login(pubAdmin);
 	const prevSubmission: types.Submission = await Submission.findOne({
 		where: { id: submission.id },
@@ -131,13 +131,13 @@ it('allows pub editors to set submitted status', async () => {
 			.put('/api/submissions')
 			.send({
 				id: submission.id,
-				pubId: spub.id,
+				pubId: submission.pubId,
 				status: 'submitted',
 			})
 			.expect(201),
 	).toMatchResultingObject((response) => ({
 		kind: 'submission-status-changed',
-		pubId: spub.id,
+		pubId: submission.pubId,
 		actorId: pubAdmin.id,
 		payload: {
 			submissionId: submission.id,
@@ -147,7 +147,6 @@ it('allows pub editors to set submitted status', async () => {
 			},
 		},
 	}));
-
 	const { status } = await Submission.findOne({ where: { id: submission.id } });
 	expect(status).toEqual('submitted');
 });
@@ -174,6 +173,7 @@ it('allows collection managers to update pub status to submitted', async () => {
 		agent
 			.put('/api/submissions')
 			.send({
+				pubId: submission.pubId,
 				collectionId: collection.id,
 				id: submission.id,
 				status: 'submitted',
@@ -191,9 +191,8 @@ it('allows collection managers to update pub status to submitted', async () => {
 			},
 		},
 	}));
-
-	const submissionNow = await Submission.findOne({ where: { id: submission.id } });
-	expect(submissionNow.status).toEqual('accepted');
+	const { status } = await Submission.findOne({ where: { id: submission.id } });
+	expect(status).toEqual('accepted');
 });
 
 it('forbids normal user to delete a submission', async () => {
