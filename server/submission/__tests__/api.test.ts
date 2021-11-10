@@ -135,7 +135,7 @@ it('allows pub editors to set submitted status', async () => {
 				status: 'submitted',
 			})
 			.expect(201),
-	).toMatchObject((response) => ({
+	).toMatchResultingObject((response) => ({
 		kind: 'submission-status-changed',
 		pubId: spub.id,
 		actorId: pubAdmin.id,
@@ -179,7 +179,7 @@ it('allows collection managers to update pub status to submitted', async () => {
 				status: 'submitted',
 			})
 			.expect(201),
-	).toMatchObject((response) => ({
+	).toMatchResultingObject((response) => ({
 		kind: 'submission-status-changed',
 		pubId: submission.pubId,
 		actorId: collectionManager.id,
