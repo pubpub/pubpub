@@ -6,5 +6,4 @@ export type ActivityFilter =
 	| 'page'
 	| 'pub'
 	| 'pubEdge'
-	| 'review'
-	| 'submission';
+	| 'review';

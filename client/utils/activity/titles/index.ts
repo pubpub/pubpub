@@ -7,5 +7,4 @@ export * from './pubEdge';
 export * from './release';
 export * from './review';
 export * from './scope';
-export * from './submission';
 export * from './user';

@@ -74,11 +74,6 @@ const filterDefinitions: Record<ActivityFilter, SequelizeFilter | SequelizeFilte
 		'pub-review-updated',
 		'pub-review-comment-added',
 	]),
-	submission: itemKindFilter([
-		'submission-created',
-		'submission-deleted',
-		'submission-status-changed',
-	]),
 	discussion: itemKindFilter(['pub-discussion-comment-added']),
 	pubEdge: itemKindFilter(['pub-edge-created', 'pub-edge-removed']),
 };

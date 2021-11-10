@@ -22,11 +22,6 @@ import {
 	renderPubReviewUpdated,
 } from './pub';
 import { renderMemberCreated, renderMemberRemoved, renderMemberUpdated } from './member';
-import {
-	renderSubmissionCreated,
-	renderSubmissionDeleted,
-	renderSubmissionStatusChanged,
-} from './submission';
 
 export const activityItemRenderers: ActivityItemRenderers = {
 	'community-created': renderCommunityCreated,
@@ -52,7 +47,4 @@ export const activityItemRenderers: ActivityItemRenderers = {
 	'member-created': renderMemberCreated,
 	'member-updated': renderMemberUpdated,
 	'member-removed': renderMemberRemoved,
-	'submission-created': renderSubmissionCreated,
-	'submission-status-changed': renderSubmissionStatusChanged,
-	'submission-deleted': renderSubmissionDeleted,
 };
