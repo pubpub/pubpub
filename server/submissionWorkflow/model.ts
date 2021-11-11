@@ -3,13 +3,13 @@ export default (sequelize, dataTypes) => {
 		'SubmissionWorkflow',
 		{
 			id: sequelize.idType,
-			enabled: { type: dataTypes.BOOLEAN, allowNull: false },
+			enabled: { type: dataTypes.BOOLEAN },
 			instructions: { type: dataTypes.JSONB },
-			afterSubmittedText: { type: dataTypes.JSONB },
-			email: { type: dataTypes.JSONB },
+			emailText: { type: dataTypes.JSONB },
 			layoutBlock: {
 				type: dataTypes.JSONB,
 			},
+			targetEmailAddress: { type: dataTypes.STRING },
 		},
 		{
 			classMethods: {
@@ -17,7 +17,7 @@ export default (sequelize, dataTypes) => {
 					const { Collection, SubmissionWorkflow } = models;
 					SubmissionWorkflow.belongsTo(Collection, {
 						onDelete: 'CASCADE',
-						as: 'attributions',
+						as: 'submissionWorkflows',
 						foreignKey: 'collectionId',
 					});
 				},

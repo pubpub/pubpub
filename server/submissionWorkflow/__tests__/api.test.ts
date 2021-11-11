@@ -21,15 +21,14 @@ const models = modelize`
 
 			SubmissionWorkflow submissionWorkflow {enabled: false}
 			SubmissionWorkflow destroyThisSubmissionWorkflow {enabled: false}
-
-
 		}
 	}
-	Community {
+	Community community2{
 		Member {
 			permissions: "admin"
 			User anotherAdmin {}
 		}
+		Collection collection2 {}
 	}
 	User guest {}
 	User anotherGuest {}
@@ -44,26 +43,20 @@ it('allows a Community manager to create a new submission workflow', async () =>
 	const { admin, community, collection } = models;
 	const agent = await login(admin);
 	const {
-		body: { enabled, email, collectionId },
+		body: { enabled, targetEmailAddress, collectionId },
 	} = await agent
 		.post('/api/submissionWorkflows')
 		.send({
 			collectionId: collection.id,
 			communityId: community.id,
 			enabled: true,
-			email: {
-				emailAddress: 'finnandjakeforwvwer@adventuretime.com',
-				emailBody: "here's something i emailed you",
-			},
+			targetEmailAddress: 'finnandjakeforwvwer@adventuretime.com',
 		})
 		.expect(201);
 
 	expect(collectionId).toEqual(collection.id);
 	expect(enabled).toEqual(true);
-	expect(email).toEqual({
-		emailAddress: 'finnandjakeforwvwer@adventuretime.com',
-		emailBody: "here's something i emailed you",
-	});
+	expect(targetEmailAddress).toEqual('finnandjakeforwvwer@adventuretime.com');
 });
 
 it('forbids a different Community manager from creating a new submission workflow', async () => {
@@ -75,15 +68,12 @@ it('forbids a different Community manager from creating a new submission workflo
 			collectionId: collection.id,
 			communityId: community.id,
 			enabled: true,
-			email: {
-				emailAddress: 'xfiles@iwannabelieve.com',
-				emailBody: "here's something i emailed you",
-			},
+			targetEmailAddress: 'finnandjakeforwvwer@adventuretime.com',
 		})
 		.expect(403);
 });
 
-it('forbids a rando user from creating a submission workflow', async () => {
+it('forbids a random user from creating a submission workflow', async () => {
 	const { community, collection, guest, anotherGuest } = models;
 	const agent = await login(guest);
 	await agent
@@ -92,10 +82,7 @@ it('forbids a rando user from creating a submission workflow', async () => {
 			collectionId: collection.id,
 			communityId: community.id,
 			enabled: true,
-			email: {
-				emailAddress: 'psylo@cybin.com',
-				emailBody: "here's something ielse  emailed you",
-			},
+			targetEmailAddress: 'finnandjakeforwvwer@adventuretime.com',
 		})
 		.expect(403);
 
@@ -106,15 +93,12 @@ it('forbids a rando user from creating a submission workflow', async () => {
 			collectionId: collection.id,
 			communityId: community.id,
 			enabled: true,
-			email: {
-				emailAddress: 'psylo@cybin.com',
-				emailBody: "here's something ielse  emailed you",
-			},
+			targetEmailAddress: 'finnandjakeforwvwer@adventuretime.com',
 		})
 		.expect(403);
 });
 
-it('forbids a random user from creating a submission workflow', async () => {
+it('forbids a non mananger from creating a submission workflow', async () => {
 	const { community, collection, collectionMember } = models;
 	const agent = await login(collectionMember);
 	await agent
@@ -123,22 +107,18 @@ it('forbids a random user from creating a submission workflow', async () => {
 			collectionId: collection.id,
 			communityId: community.id,
 			enabled: true,
-			email: {
-				emailAddress: 'finnandjakeforwvwer@adventuretime.com',
-				emailBody: "here's something i emailed you",
-			},
+			targetEmailAddress: 'finnandjakeforwvwer@adventuretime.com',
 		})
 		.expect(403);
 });
 
 it('allows a Community manager to update an existing workflow', async () => {
-	const { collectionManager, collection, community, submissionWorkflow } = models;
+	const { collectionManager, collection, community } = models;
 	const agent = await login(collectionManager);
 	const enabled = true;
 	await agent
 		.put('/api/submissionWorkflows')
 		.send({
-			id: submissionWorkflow.id,
 			collectionId: collection.id,
 			communityId: community.id,
 			enabled,
@@ -146,20 +126,29 @@ it('allows a Community manager to update an existing workflow', async () => {
 		.expect(200);
 
 	const updatedSubmission = await SubmissionWorkflow.findOne({
-		where: { id: submissionWorkflow.id },
+		where: { collectionId: collection.id },
 	});
 	expect(updatedSubmission).toMatchObject({ enabled });
 });
 
-it('forbids a non-Community manager from updating an existing workflow', async () => {
-	const { collectionMember, collection, community, submissionWorkflow } = models;
+it('forbids a non-Community manager or attacker from updating a workflow', async () => {
+	const { collectionMember, collection, community, anotherAdmin, collection2 } = models;
 	const agent = await login(collectionMember);
 	const enabled = true;
 	await agent
 		.put('/api/submissionWorkflows')
 		.send({
-			id: submissionWorkflow.id,
 			collectionId: collection.id,
+			communityId: community.id,
+			enabled,
+		})
+		.expect(403);
+
+	const anotherAgent = await login(anotherAdmin);
+	await anotherAgent
+		.put('/api/submissionWorkflows')
+		.send({
+			collectionId: collection2.id,
 			communityId: community.id,
 			enabled,
 		})

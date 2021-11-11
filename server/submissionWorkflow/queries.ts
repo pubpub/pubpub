@@ -1,42 +1,51 @@
-import { Collection, SubmissionWorkflow } from 'server/models';
-// import { SubmissionWorkflow as SubmissionWorkflowType } from 'types';
+import { SubmissionWorkflow } from 'server/models';
+import * as types from 'types';
+import { OmitSequelizeProvidedFields } from 'utils/types';
 
-export const createSubmissionWorkflow = async ({
-	collectionId,
-	enabled,
-	instructions,
-	afterSubmittedText,
-	email,
-	layoutBlock,
-}) => {
-	return Collection.findOne({ where: { id: collectionId } }).then(() =>
-		SubmissionWorkflow.create({
-			collectionId,
-			enabled,
-			instructions,
-			afterSubmittedText,
-			email,
-			layoutBlock,
-		}),
+type Props = OmitSequelizeProvidedFields<
+	types.SubmissionWorkflow,
+	'id' | 'createdAt' | 'updatedAt'
+>;
+
+type Update = Partial<Props>;
+
+export const createSubmissionWorkflow = async (props: Props) => {
+	const {
+		collectionId,
+		enabled,
+		instructionsText,
+		emailText,
+		layoutBlockContent,
+		targetEmailAddress,
+	} = props;
+	const submissionWorkflow = {
+		enabled,
+		instructionsText,
+		emailText,
+		layoutBlockContent,
+		targetEmailAddress,
+		collectionId,
+	};
+	return SubmissionWorkflow.create({ ...submissionWorkflow });
+};
+
+export const updateSubmissionWorkflow = async (update: Update) => {
+	const {
+		collectionId,
+		enabled,
+		instructionsText,
+		emailText,
+		layoutBlockContent,
+		targetEmailAddress,
+	} = update;
+	await SubmissionWorkflow.update(
+		{ enabled, instructionsText, emailText, targetEmailAddress, layoutBlockContent },
+		{ where: { collectionId } },
 	);
 };
 
-export const updateSubmissionWorkflow = async (inputValues, updatePermissions) => {
-	// Filter to only allow certain fields to be updated
-	const filteredValues = {};
-	Object.keys(inputValues).forEach((key) => {
-		if (updatePermissions.includes(key)) {
-			filteredValues[key] = inputValues[key];
-		}
-	});
-	await SubmissionWorkflow.update(filteredValues, {
-		where: { id: inputValues.submissionWorkflowId },
-	});
-	return filteredValues;
-};
-
-export const destroySubmissionWorkFlow = (inputValues) => {
+export const destroySubmissionWorkFlow = ({ id }: { id: string }) => {
 	return SubmissionWorkflow.destroy({
-		where: { id: inputValues.submissionWorkflowId },
+		where: { id },
 	});
 };

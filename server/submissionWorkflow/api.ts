@@ -1,7 +1,7 @@
 import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
 
-import { getPermissions } from './permissions';
+import { canManageSubmissionWorkflow } from './permissions';
 import {
 	createSubmissionWorkflow,
 	updateSubmissionWorkflow,
@@ -21,8 +21,8 @@ app.post(
 	'/api/submissionWorkflows',
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
-		const permissions = await getPermissions(requestIds);
-		if (!permissions.create) {
+		const permissions = await canManageSubmissionWorkflow(requestIds);
+		if (!permissions) {
 			throw new ForbiddenError();
 		}
 		const workflow = await createSubmissionWorkflow(req.body);
@@ -34,17 +34,11 @@ app.put(
 	'/api/submissionWorkflows',
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
-		const permissions = await getPermissions(requestIds);
-		if (!permissions.update) {
+		const permissions = await canManageSubmissionWorkflow(requestIds);
+		if (!permissions) {
 			throw new ForbiddenError();
 		}
-		const updatedValues = await updateSubmissionWorkflow(
-			{
-				...req.body,
-				submissionWorkflowId: req.body.id,
-			},
-			permissions.update,
-		);
+		const updatedValues = await updateSubmissionWorkflow(req.body);
 		return res.status(200).json(updatedValues);
 	}),
 );
@@ -53,14 +47,11 @@ app.delete(
 	'/api/submissionWorkflows',
 	wrap(async (req, res) => {
 		const requestIds = getRequestIds(req);
-		const permissions = await getPermissions(requestIds);
-		if (!permissions.destroy) {
+		const permissions = await canManageSubmissionWorkflow(requestIds);
+		if (!permissions) {
 			throw new ForbiddenError();
 		}
-		await destroySubmissionWorkFlow({
-			...req.body,
-			submissionWorkflowId: req.body.id,
-		});
+		await destroySubmissionWorkFlow(req.body);
 		return res.status(200).json(req.body.id);
 	}),
 );
