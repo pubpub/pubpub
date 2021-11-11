@@ -1,8 +1,8 @@
 import { getScope } from 'server/utils/queryHelpers';
 
-export const canManageSubmissionWorkflow = async ({ userId, collectionId, communityId }) => {
+export const canManageSubmissionWorkflow = async ({ userId, collectionId }) => {
 	const {
 		activePermissions: { canManage },
-	} = await getScope({ collectionId, communityId, loginId: userId });
+	} = await getScope({ collectionId, loginId: userId });
 	return canManage;
 };
