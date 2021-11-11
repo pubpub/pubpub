@@ -12,8 +12,7 @@ const getRequestIds = (req) => {
 	const user = req.user || {};
 	return {
 		userId: user.id,
-		communityId: req.body.communityId,
-		collectionId: req.body.id || null,
+		collectionId: req.body.collectionId,
 	};
 };
 
