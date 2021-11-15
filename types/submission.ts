@@ -17,14 +17,3 @@ export type Submission = {
 	id: string;
 	status: SubmissionStatus;
 };
-
-export type SubmissionWorkflow = {
-	id: string;
-	createdAt: string;
-	updatedAt: string;
-	enabled: boolean;
-	instructionsText: DocJson;
-	emailText: DocJson;
-	targetEmailAddress: string;
-	bannerContent: LayoutBlockSubmissionBanner['content'];
-};
