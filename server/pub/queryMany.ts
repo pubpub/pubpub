@@ -67,6 +67,11 @@ const createJoins = (query: PubsQuery) => {
 		if (typeof hasReviews === 'boolean') {
 			builder.leftOuterJoin('ReviewNews', 'Pubs.id', 'ReviewNews.pubId');
 		}
+		if (submissionStatuses) {
+			builder.innerJoin('Submissions', {
+				'Submissions.status': knex.raw('some(?::string)', [submissionStatuses]),
+			});
+		}
 		if (term) {
 			builder.leftOuterJoin('PubAttributions', 'Pubs.id', 'PubAttributions.pubId');
 			builder.leftOuterJoin(
