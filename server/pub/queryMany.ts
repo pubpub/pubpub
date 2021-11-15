@@ -50,7 +50,7 @@ const createInnerWhereClause = (query: PubsQuery) => {
 };
 
 const createJoins = (query: PubsQuery) => {
-	const { scopedCollectionId, term, hasReviews } = query;
+	const { scopedCollectionId, term, hasReviews, submissionStatus } = query;
 	return (builder: QueryBuilder) => {
 		if (scopedCollectionId) {
 			builder.innerJoin(
@@ -67,9 +67,9 @@ const createJoins = (query: PubsQuery) => {
 		if (typeof hasReviews === 'boolean') {
 			builder.leftOuterJoin('ReviewNews', 'Pubs.id', 'ReviewNews.pubId');
 		}
-		if (submissionStatuses) {
+		if (submissionStatus) {
 			builder.innerJoin('Submissions', {
-				'Submissions.status': knex.raw('some(?::string)', [submissionStatuses]),
+				'Submissions.pubId': 'Pubs.id',
 			});
 		}
 		if (term) {

@@ -1,4 +1,4 @@
-import submissionStatuses from 'types';
+import { SubmissionStatus } from 'types';
 
 export type PubsQueryOrderingField =
 	| 'collectionRank'
@@ -22,7 +22,7 @@ export type PubsQuery = {
 	scopedCollectionId?: string;
 	withinPubIds?: null | string[];
 	term?: string;
-	submissionStatus?: submissionStatuses;
+	submissionStatus?: null | SubmissionStatus;
 };
 
 export type PubEdgeIncludesOptions = {
