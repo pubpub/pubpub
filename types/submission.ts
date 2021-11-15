@@ -1,6 +1,3 @@
-import { DocJson } from 'types';
-import { LayoutBlockSubmissionBanner } from 'utils/layout';
-
 export const managerStatuses = ['submitted', 'accepted', 'declined'] as const;
 export const submitterStatuses = ['submitted'] as const;
 export const initialStatuses = ['incomplete'] as const;
