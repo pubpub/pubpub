@@ -61,6 +61,9 @@ it('allows a Community manager to create a new submission workflow', async () =>
 		.send({
 			collectionId: collection.id,
 			enabled: true,
+			instructionsText: 'Take your time',
+			emailText: { header: 'Welcome to our submission process' },
+			layoutBlockContent: { title: 'Your Block', body: { content: [] } },
 			targetEmailAddress: 'finnandjakeforwvwer@adventuretime.com',
 		})
 		.expect(201);
@@ -77,8 +80,10 @@ it('forbids a different Community manager from creating a new submission workflo
 		.post('/api/submissionWorkflows')
 		.send({
 			collectionId: collection.id,
-
 			enabled: true,
+			instructionsText: 'Take your time',
+			emailText: { header: 'Welcome to our submission process' },
+			layoutBlockContent: { title: 'Your Block', body: { content: [] } },
 			targetEmailAddress: 'finnandjakeforwvwer@adventuretime.com',
 		})
 		.expect(403);
@@ -91,8 +96,10 @@ it('forbids a random user from creating a submission workflow', async () => {
 		.post('/api/submissionWorkflows')
 		.send({
 			collectionId: collection.id,
-
 			enabled: true,
+			instructionsText: 'Take your time',
+			emailText: { header: 'Welcome to our submission process' },
+			layoutBlockContent: { title: 'Your Block', body: { content: [] } },
 			targetEmailAddress: 'finnandjakeforwvwer@adventuretime.com',
 		})
 		.expect(403);
@@ -102,8 +109,10 @@ it('forbids a random user from creating a submission workflow', async () => {
 		.post('/api/submissionWorkflows')
 		.send({
 			collectionId: collection.id,
-
 			enabled: true,
+			instructionsText: 'Take your time',
+			emailText: { header: 'Welcome to our submission process' },
+			layoutBlockContent: { title: 'Your Block', body: { content: [] } },
 			targetEmailAddress: 'finnandjakeforwvwer@adventuretime.com',
 		})
 		.expect(403);
@@ -116,8 +125,10 @@ it('forbids a non mananger from creating a submission workflow', async () => {
 		.post('/api/submissionWorkflows')
 		.send({
 			collectionId: collection.id,
-
 			enabled: true,
+			instructionsText: 'Take your time',
+			emailText: { header: 'Welcome to our submission process' },
+			layoutBlockContent: { title: 'Your Block', body: { content: [] } },
 			targetEmailAddress: 'finnandjakeforwvwer@adventuretime.com',
 		})
 		.expect(403);
