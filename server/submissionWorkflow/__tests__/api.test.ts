@@ -49,6 +49,9 @@ it('allows a Community manager to create a new submission workflow', async () =>
 		.send({
 			collectionId: collection.id,
 			enabled: true,
+			instructionsText: 'Take your time',
+			emailText: { header: 'Welcome to our submission process' },
+			layoutBlockContent: { title: 'Your Block', body: { content: [] } },
 			targetEmailAddress: 'finnandjakeforwvwer@adventuretime.com',
 		})
 		.expect(201);
