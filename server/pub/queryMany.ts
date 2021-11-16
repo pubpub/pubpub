@@ -70,7 +70,7 @@ const createJoins = (query: PubsQuery) => {
 		if (submissionStatus) {
 			builder.innerJoin('Submissions', {
 				'Submissions.pubId': 'Pubs.id',
-				'Submissions.status': knex.raw('some(?::string)', [submissionStatus]),
+				'Submissions.status': knex.raw('some(?::string[])', [submissionStatus]),
 			});
 		}
 		if (term) {
