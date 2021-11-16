@@ -19,8 +19,20 @@ const models = modelize`
 		}
 		Collection collection {
 
-			SubmissionWorkflow submissionWorkflow {enabled: false}
-			SubmissionWorkflow destroyThisSubmissionWorkflow {enabled: false}
+			SubmissionWorkflow submissionWorkflow {
+				enabled: false
+				instructionsText: "{}"
+				emailText: "{}"
+				layoutBlockContent: "{}"
+				targetEmailAddress: ""
+			}
+			SubmissionWorkflow destroyThisSubmissionWorkflow {				
+				enabled: false
+				instructionsText: "{}"
+				emailText: "{}"
+				layoutBlockContent: "{}"
+				targetEmailAddress: ""
+			}
 		}
 	}
 	Community {
