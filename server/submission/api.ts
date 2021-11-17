@@ -8,14 +8,15 @@ app.post(
 	'/api/submissions',
 	wrap(async (req, res) => {
 		const { submissionWorkflowId } = req.body;
+		const userId = req.user?.id;
 		const canCreate = await canCreateSubmission({
-			userId: req.user?.id,
+			userId,
 			submissionWorkflowId,
 		});
 		if (!canCreate) {
 			throw new ForbiddenError();
 		}
-		const newSubmission = await createSubmission(req.body);
+		const newSubmission = await createSubmission({ userId, submissionWorkflowId });
 		return res.status(201).json(newSubmission);
 	}),
 );
