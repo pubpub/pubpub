@@ -44,7 +44,7 @@ export const updateSubmission = async (patch: UpdateOptions, sendEmail = false) 
 	await submission.save();
 	if (sendEmail) {
 		if (previousStatus === 'incomplete' && status === 'submitted') {
-			// Send a freaking email
+			// Send an email from here
 		}
 	}
 
