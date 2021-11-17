@@ -9,6 +9,9 @@ const models = modelize`
 			User admin {}
 		}
 		Collection collection {
+			SubmissionWorkflow {
+				title: "Some workflow"
+			}
 			Member {
 				permissions: "view"
 				User collectionMember {}
@@ -18,7 +21,6 @@ const models = modelize`
 				User collectionManager {}
 			}
 			CollectionPub {
-				Pub spubbable {}
 				Pub spub {
 					Member {
 						permissions: "admin"
@@ -151,28 +153,6 @@ it('allows collection managers to update pub status', async () => {
 		.expect(201);
 	const submissionNow = await Submission.findOne({ where: { id: submission.id } });
 	expect(submissionNow.status).toEqual('accepted');
-});
-
-it('forbids normal user to delete a submission', async () => {
-	const { guest, submission, community } = models;
-	const agent = await login(guest);
-	await agent
-		.delete('/api/submissions')
-		.send({ id: submission.id, communityId: community.id })
-		.expect(403);
-	const submissionNow = await Submission.findOne({ where: { id: submission.id } });
-	expect(submissionNow.id).toEqual(submission.id);
-});
-
-it('allows admin to delete a submission', async () => {
-	const { admin, community, submission } = models;
-	const agent = await login(admin);
-	await agent
-		.delete('/api/submissions')
-		.send({ id: submission.id, communityId: community.id })
-		.expect(200);
-	const submissionNow = await Submission.findOne({ where: { id: submission.id } });
-	expect(submissionNow).toEqual(null);
 });
 
 teardown(afterAll);
