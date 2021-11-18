@@ -64,6 +64,7 @@ export async function asyncMap<T, R>(
 						.then(function onVisitedPromiseUnwrapped(value) {
 							results[index] = value;
 							pending--;
+							enqueueNextPromises();
 						})
 						.catch(function onVisitedPromiseReject(err) {
 							reject(err);
