@@ -199,19 +199,4 @@ describe('queryPubIds', () => {
 			p4,
 		]);
 	});
-
-	it('Queries for pubs that have a submission status', async () => {
-		const { p2, p3 } = models;
-		await expectPubIdsForQuery({ ordering: titleOrdering, limit: 2, offset: 1 }, [p2, p3]);
-	});
-
-	it('Excliudes pubs that do not have a submission status', async () => {
-		const { p2, p3 } = models;
-		await expectPubIdsForQuery({ ordering: titleOrdering, limit: 2, offset: 1 }, [p2, p3]);
-	});
-
-	it('Only includes submission pubs that do not have a submission status', async () => {
-		const { p2, p3 } = models;
-		await expectPubIdsForQuery({ ordering: titleOrdering, limit: 2, offset: 1 }, [p2, p3]);
-	});
 });
