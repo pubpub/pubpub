@@ -11,6 +11,7 @@ import { Review } from './review';
 import { InboundEdge, OutboundEdge } from './pubEdge';
 import { ScopeSummary } from './scope';
 import { Submission } from './submission';
+import { ThreadComment, Thread } from './thread';
 import { DefinitelyHas, Maybe } from './util';
 
 export type Draft = {
@@ -73,7 +74,7 @@ export type Pub = {
 	lastPublishedAt?: string;
 	customPublishedAt?: string;
 	doi: null | string;
-	labels?: string;
+	labels?: string[];
 	downloads?: any[];
 	metadata?: {};
 	licenseSlug?: string;
@@ -115,9 +116,18 @@ export type PubDocInfo = {
 	};
 };
 
-export type PubPageData = DefinitelyHas<Pub, 'attributions' | 'collectionPubs'> &
+export type PubPageDiscussion = DefinitelyHas<Discussion, 'anchors'> & {
+	thread: Thread & {
+		comments: DefinitelyHas<ThreadComment, 'author'>[];
+	};
+};
+
+export type PubPageData = DefinitelyHas<
+	Omit<Pub, 'discussions'>,
+	'attributions' | 'collectionPubs'
+> &
 	PubDocInfo & {
-		discussions: DefinitelyHas<Discussion, 'anchors' | 'thread'>[];
+		discussions: PubPageDiscussion[];
 		viewHash: Maybe<string>;
 		editHash: Maybe<string>;
 		isReadOnly: boolean;

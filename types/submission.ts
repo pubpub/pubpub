@@ -10,9 +10,11 @@ export const submissionStatuses = [
 	...submitterStatuses,
 ] as const;
 
+export type SubmissionStatus = typeof submissionStatuses[number];
+
 export type Submission = {
 	id: string;
 	pubId: string;
 	pub?: Pub;
-	status: typeof submissionStatuses;
+	status: SubmissionStatus;
 };
