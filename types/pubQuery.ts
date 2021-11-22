@@ -22,7 +22,7 @@ export type PubsQuery = {
 	scopedCollectionId?: string;
 	withinPubIds?: null | string[];
 	term?: string;
-	submissionStatus?: null | SubmissionStatus;
+	submissionStatuses?: null | SubmissionStatus[];
 };
 
 export type PubEdgeIncludesOptions = {
