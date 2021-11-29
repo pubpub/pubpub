@@ -18,11 +18,11 @@ export async function asyncForEach<T>(
 	const results: T[] = [];
 	const resolvedList = Array.from(await iterable);
 	const resolvedLength = resolvedList.length;
-	let i = 0;
-	for await (const value of resolvedList) {
+	for (let i = 0; i < resolvedList.length; i++) {
+		// eslint-disable-next-line no-await-in-loop
+		const value = await resolvedList[i];
 		results.push(value);
 		iteratee(value, i, resolvedLength);
-		i++;
 	}
 	return results;
 }
@@ -42,8 +42,8 @@ export async function asyncMap<T, R>(
 	return new Promise((resolve, reject) => {
 		const results: R[] = [];
 
-		let pending = 0;
 		let cursor = 0;
+		let pending = 0;
 
 		function enqueueNextPromises() {
 			// If we have called .then() for all values, and no promises are pending,
@@ -53,24 +53,30 @@ export async function asyncMap<T, R>(
 			} else {
 				// Call .then() in batches for promises moving left->right, only
 				// executing at maximum the value of the configured concurrency.
-				while (pending < Math.min(concurrency, resolvedLength - cursor)) {
+				while (pending < Math.min(concurrency, resolvedLength - cursor + 1)) {
 					const index = cursor;
 					const next = resolvedList[index];
+					cursor++;
 					pending++;
 					Promise.resolve(next)
 						.then(function onVisitedPromiseResolve(value) {
 							return iteratee(value, index, resolvedLength);
 						})
-						.then(function onVisitedPromiseUnwrapped(value) {
-							results[index] = value;
-							pending--;
-							enqueueNextPromises();
-						})
-						.catch(function onVisitedPromiseReject(err) {
-							reject(err);
-							pending--;
-						});
-					cursor++;
+						.then(
+							// eslint-disable-next-line no-loop-func
+							function onVisitedPromiseUnwrapped(value) {
+								pending--;
+								results[index] = value;
+								enqueueNextPromises();
+							},
+						)
+						.catch(
+							// eslint-disable-next-line no-loop-func
+							function onVisitedPromiseReject(err) {
+								pending--;
+								reject(err);
+							},
+						);
 				}
 			}
 		}
