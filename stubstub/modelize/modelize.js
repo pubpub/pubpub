@@ -8,6 +8,10 @@ import { buildProxyObject } from './proxy';
 
 const buildForModelName = async (modelName, args) => {
 	const builderFn = builders[modelName];
+	console.log('MODELNAME', modelName);
+	if (modelName === 'UserNotificationPreferences') {
+		console.log('UNP', args);
+	}
 	if (builderFn) {
 		return builderFn(args);
 	}

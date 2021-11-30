@@ -68,7 +68,7 @@ export default (sequelize, dataTypes) => {
 						as: 'discussions',
 						foreignKey: 'userId',
 					});
-					User.hasOne(UserNotificationPreferences, {
+					User.belongsTo(UserNotificationPreferences, {
 						onDelete: 'CASCADE',
 						as: 'userNotificationPreferences',
 						foreignKey: 'userId',
