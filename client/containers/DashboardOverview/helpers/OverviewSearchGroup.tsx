@@ -9,34 +9,39 @@ require('./overviewSearchGroup.scss');
 
 type SearchTermCallback = (q: string) => unknown;
 
-type Props = {
-	placeholder: string;
-	onUpdateSearchTerm?: SearchTermCallback;
-	onCommitSearchTerm?: SearchTermCallback;
-	onChooseFilter?: (q: null | Partial<PubsQuery>) => unknown;
-	rightControls?: React.ReactNode;
-};
-
 type Filter = {
 	id: string;
 	title: string;
 	query: null | Partial<PubsQuery>;
 };
 
-const filters: Filter[] = [
-	{ id: 'all', title: 'All', query: null },
-	{
-		id: 'latest',
-		title: 'Latest',
-		query: { ordering: { field: 'creationDate', direction: 'DESC' } },
-	},
-	{ id: 'drafts', title: 'Drafts', query: { isReleased: false } },
-	{ id: 'released', title: 'Released', query: { isReleased: true } },
-];
+type Props = {
+	placeholder: string;
+	onUpdateSearchTerm?: SearchTermCallback;
+	onCommitSearchTerm?: SearchTermCallback;
+	onChooseFilter?: (q: null | Partial<PubsQuery>) => unknown;
+	rightControls?: React.ReactNode;
+	filter?: Filter[];
+};
 
 const OverviewSearchGroup = (props: Props) => {
-	const { placeholder, onCommitSearchTerm, onUpdateSearchTerm, rightControls, onChooseFilter } =
-		props;
+	const {
+		placeholder,
+		onCommitSearchTerm,
+		onUpdateSearchTerm,
+		rightControls,
+		onChooseFilter,
+		filter = [
+			{ id: 'all', title: 'All', query: null },
+			{
+				id: 'latest',
+				title: 'Latest',
+				query: { ordering: { field: 'creationDate', direction: 'DESC' } },
+			},
+			{ id: 'drafts', title: 'Drafts', query: { isReleased: false } },
+			{ id: 'released', title: 'Released', query: { isReleased: true } },
+		],
+	} = props;
 	const [isSearchFocused, setIsSearchFocused] = useState(false);
 
 	const handleChange = useCallback(
@@ -62,11 +67,11 @@ const OverviewSearchGroup = (props: Props) => {
 	const handleFilterChange = useCallback(
 		(filterId: string) => {
 			if (onChooseFilter) {
-				const filter = filters.find((f) => f.id === filterId)!;
-				onChooseFilter(filter.query);
+				const filterChange = filter.find((f) => f.id === filterId)!;
+				onChooseFilter(filterChange.query);
 			}
 		},
-		[onChooseFilter],
+		[filter, onChooseFilter],
 	);
 
 	return (
@@ -77,8 +82,8 @@ const OverviewSearchGroup = (props: Props) => {
 					id="overview-search-group-filter"
 					onChange={handleFilterChange}
 				>
-					{filters.map((filter) => (
-						<Tab id={filter.id} key={filter.id} title={filter.title} />
+					{filter.map((filtering) => (
+						<Tab id={filtering.id} key={filtering.id} title={filtering.title} />
 					))}
 				</Tabs>
 			)}
