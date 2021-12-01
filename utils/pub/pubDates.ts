@@ -77,7 +77,7 @@ export const getPubCopyrightYear = (
 		if (metadata) {
 			const { copyrightYear, date, publicationDate } = metadata;
 			const dateSource = copyrightYear || date || publicationDate;
-			if (dateSource) {
+			if (dateSource && new Date(dateSource).getDate()) {
 				return dateFormat(dateSource, 'yyyy');
 			}
 		}

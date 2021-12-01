@@ -2,7 +2,7 @@ import dateFormat from 'dateformat';
 
 import * as types from 'types';
 import ensureUserForAttribution from 'utils/ensureUserForAttribution';
-import { getPubPublishedDate, getPubUpdatedDate } from 'utils/pub/pubDates';
+import { getPubCopyrightYear, getPubPublishedDate, getPubUpdatedDate } from 'utils/pub/pubDates';
 import { getPrimaryCollection } from 'utils/collections/primary';
 import { renderJournalCitation } from 'utils/citations';
 import {
@@ -53,6 +53,7 @@ export const getPubMetadata = async (pubId: string): Promise<PubMetadata> => {
 		],
 	});
 	const publishedDate = getPubPublishedDate(pubData);
+	const copyrightYear = getPubCopyrightYear(pubData);
 	const updatedDate = getPubUpdatedDate({ pub: pubData });
 	const publishedDateString = publishedDate && dateFormat(publishedDate, 'mmm dd, yyyy');
 	const updatedDateString = updatedDate && dateFormat(updatedDate, 'mmm dd, yyyy');
@@ -63,6 +64,7 @@ export const getPubMetadata = async (pubId: string): Promise<PubMetadata> => {
 		licenseSlug: pubData.licenseSlug,
 		publishedDateString,
 		updatedDateString,
+		copyrightYear,
 		communityTitle: renderJournalCitation(
 			primaryCollection?.kind,
 			pubData.community.citeAs,
@@ -77,9 +79,7 @@ export const getPubMetadata = async (pubId: string): Promise<PubMetadata> => {
 		citationStyle: pubData.citationStyle,
 		citationInlineStyle: pubData.citationInlineStyle,
 		nodeLabels: pubData.nodeLabels,
-		...((primaryCollection?.kind === 'conference' || primaryCollection?.kind === 'book') && {
-			publisher: pubData.community.publishAs,
-		}),
+		publisher: pubData.community.publishAs,
 		...getPrimaryCollectionMetadata(pubData.collectionPubs),
 	};
 };

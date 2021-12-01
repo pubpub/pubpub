@@ -8,6 +8,7 @@ export type PubMetadata = {
 	title: string;
 	doi: null | string;
 	licenseSlug: string;
+	copyrightYear: string;
 	publishedDateString: Maybe<string>;
 	updatedDateString: Maybe<string>;
 	communityTitle: string;
