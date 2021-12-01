@@ -36,6 +36,7 @@ const types = {
 	year: {
 		name: 'year',
 		validate: (str) => yearRegex.test(str),
+		deserialize: (str) => str,
 		labelInfo: '(YYYY)',
 	},
 };
