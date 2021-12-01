@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Switch, Popover } from '@blueprintjs/core';
 
-import { ClientOnly, DashboardFrame } from 'components';
-import { Collection, Pub, UserScopeVisit } from 'types';
+import { DashboardFrame } from 'components';
+// import { Collection, Pub, UserScopeVisit } from 'types';
 
 import { usePageContext } from 'utils/hooks';
 import { getDashUrl } from 'utils/dashboard';
@@ -13,25 +13,25 @@ import {
 	OverviewFrame,
 	OverviewSection,
 	ScopeSummaryList,
-	RecentVisitList,
+	// RecentVisitList,
 	QuickActions,
 	QuickAction,
 } from '../DashboardOverview/helpers';
 
 import { EditableSubmissionWorkflow } from './types';
-import NewSubmissionWorkflowEditor from './NewSubmissionWorkflowEditor';
+// import NewSubmissionWorkflowEditor from './NewSubmissionWorkflowEditor';
 
 require('./dashboardSubmissions.scss');
 
-type Props = {
-	overviewData: {
-		collections: Collection[];
-		pubs: Pub[];
-		includesAllPubs: boolean;
-		userScopeVisits: UserScopeVisit[];
-		recentPubs: Pub[];
-	};
-};
+// type Props = {
+// 	overviewData: {
+// 		collections: Collection[];
+// 		pubs: Pub[];
+// 		includesAllPubs: boolean;
+// 		userScopeVisits: UserScopeVisit[];
+// 		recentPubs: Pub[];
+// 	};
+// };
 
 const quickActions: QuickAction[] = [
 	{
@@ -50,8 +50,8 @@ const quickActions: QuickAction[] = [
 		href: getDashUrl({ mode: 'members' }),
 	},
 ];
-const DashboardSubmissions = (props: Props) => {
-	const { overviewData } = props;
+const DashboardSubmissions = () => {
+	// const { overviewData } = props;
 	const [workflow, setWorkflow] = useState<null | EditableSubmissionWorkflow>(null);
 	const [showSwitchTooltip, setShowSwitchTooltip] = useState(false);
 	const {
@@ -61,10 +61,10 @@ const DashboardSubmissions = (props: Props) => {
 		},
 	} = usePageContext();
 
-	const handleWorkflowCreated = (w: EditableSubmissionWorkflow) => {
-		setWorkflow(w);
-		setTimeout(() => setShowSwitchTooltip(true), 500);
-	};
+	// const handleWorkflowCreated = (w: EditableSubmissionWorkflow) => {
+	// 	setWorkflow(w);
+	// 	setTimeout(() => setShowSwitchTooltip(true), 500);
+	// };
 
 	const handleToggleSubmissionsEnabled = () => {
 		if (workflow) {
@@ -101,13 +101,13 @@ const DashboardSubmissions = (props: Props) => {
 		return null;
 	};
 
-	const renderNewWorkflowEditor = () => {
-		return (
-			<ClientOnly>
-				<NewSubmissionWorkflowEditor onWorkflowCreated={handleWorkflowCreated} />
-			</ClientOnly>
-		);
-	};
+	// const renderNewWorkflowEditor = () => {
+	// 	return (
+	// 		<ClientOnly>
+	// 			<NewSubmissionWorkflowEditor onWorkflowCreated={handleWorkflowCreated} />
+	// 		</ClientOnly>
+	// 	);
+	// };
 
 	return (
 		<DashboardFrame
