@@ -37,7 +37,18 @@ const LicenseSection = (props: Props) => {
 					)}
 					{slug !== 'copyright' && (
 						<SectionBullets>
-							<a target="_blank" rel="license noopener noreferrer" href={link!}>
+							<a
+								target="_blank"
+								rel="license noopener noreferrer"
+								className="license-link"
+								href={link!}
+							>
+								<img
+									width={75}
+									alt=""
+									src={`/static/license/${slug}.svg`}
+									className="license-image"
+								/>
 								{`${full} (${short} ${version})`}
 							</a>
 						</SectionBullets>
