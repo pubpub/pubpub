@@ -33,10 +33,7 @@ const LicenseSelect = (props: Props) => {
 	const { communityData } = usePageContext();
 	const currentLicense = getLicenseBySlug(pubData.licenseSlug)!;
 	const pubCopyrightYear = getPubCopyrightYear(pubData);
-	let pubPublisher = communityData.publishAs || communityData.title;
-	if (communityData.id === '78810858-8c4a-4435-a669-6bb176b61d40') {
-		pubPublisher = 'Massachusetts Institute of Technology';
-	}
+	const pubPublisher = communityData.publishAs || communityData.title;
 	if (currentLicense.slug === 'copyright') {
 		currentLicense.full = `Copyright © ${pubCopyrightYear} ${pubPublisher}. All rights reserved.`;
 	}
