@@ -35,14 +35,17 @@ describe('async utils', () => {
 			expect(results).toEqual([1, 2]);
 		});
 		it('throws an error when a promise is rejected', async () => {
+			const error = new Error();
 			const promises = Promise.resolve([
 				Promise.resolve(1),
-				Promise.reject(2),
+				Promise.reject(error),
 				Promise.resolve(3),
 			]);
 			const results: number[] = [];
 			jest.runAllTimers();
-			await expect(asyncForEach(promises, (value) => results.push(value))).rejects.toEqual(2);
+			await expect(asyncForEach(promises, (value) => results.push(value))).rejects.toEqual(
+				error,
+			);
 			expect(results).toEqual([1]);
 		});
 	});
@@ -66,9 +69,15 @@ describe('async utils', () => {
 				return tick();
 			};
 			const iteratee = (n: number) =>
-				new Promise((r) => (pending[n] = r)).then(() => delete pending[n]);
+				new Promise((r) => {
+					pending[n] = r;
+				}).then(() => {
+					delete pending[n];
+				});
 			let done = false;
-			asyncMap(values, iteratee, config).then(() => (done = true));
+			asyncMap(values, iteratee, config).then(() => {
+				done = true;
+			});
 			await tick();
 			expect(pending[0]).toBeInstanceOf(Function);
 			expect(pending[1]).toBeInstanceOf(Function);
