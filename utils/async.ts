@@ -1,7 +1,11 @@
 import { assert } from 'utils/assert';
 
 type AsyncIterable<T> = Iterable<T | Promise<T>> | Promise<Iterable<T | Promise<T>>>;
-type AsyncForEachIteratee<T> = (value: T, index: number, arrayLength: number) => void;
+type AsyncForEachIteratee<T> = (
+	value: T,
+	index: number,
+	arrayLength: number,
+) => unknown | Promise<unknown>;
 
 /**
  * Native port of Bluebird's Promise.prototype.each. Accepts an iterable (or
@@ -22,6 +26,7 @@ export async function asyncForEach<T>(
 		// eslint-disable-next-line no-await-in-loop
 		const value = await resolvedList[i];
 		results.push(value);
+		// eslint-disable-next-line no-await-in-loop
 		await iteratee(value, i, resolvedLength);
 	}
 	return results;
