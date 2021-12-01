@@ -64,10 +64,12 @@ const createYamlMetadataFile = async (pubMetadata: PubMetadata, pandocTarget: st
 		attributions,
 		publishedDateString,
 		licenseSlug,
+		copyrightYear,
 		primaryCollectionMetadata,
 		communityTitle,
 		doi,
 		citationStyle,
+		publisher,
 	} = pubMetadata;
 	const cslFile = getPathToCslFileForCitationStyleKind(citationStyle);
 	const license = getLicenseBySlug(licenseSlug)!;
@@ -91,7 +93,12 @@ const createYamlMetadataFile = async (pubMetadata: PubMetadata, pandocTarget: st
 			title: communityTitle,
 		},
 		copyright: {
-			text: license.full,
+			text:
+				license.short === 'Copyright'
+					? `Copyright © ${copyrightYear} ${
+							publisher || communityTitle
+					  }. All rights reserved.`
+					: license.full,
 			type: license.short,
 			...(license.link && { link: license.link }),
 		},
