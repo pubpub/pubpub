@@ -22,7 +22,7 @@ export async function asyncForEach<T>(
 		// eslint-disable-next-line no-await-in-loop
 		const value = await resolvedList[i];
 		results.push(value);
-		iteratee(value, i, resolvedLength);
+		await iteratee(value, i, resolvedLength);
 	}
 	return results;
 }
