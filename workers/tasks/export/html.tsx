@@ -252,7 +252,7 @@ const renderFrontMatter = ({
 					)}
 				</div>
 			)}
-			<h4>{publisher || ''}</h4>
+			<h4>{pubPublisher}</h4>
 			<div className="details">
 				{publishedDateString && (
 					<div>
