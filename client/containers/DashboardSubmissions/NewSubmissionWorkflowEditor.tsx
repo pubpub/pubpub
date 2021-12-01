@@ -4,9 +4,9 @@ import { Button } from '@blueprintjs/core';
 import { SubmissionWorkflow } from 'types';
 import { useLocalStorage } from 'client/utils/useLocalStorage';
 import { getEmptyDoc } from 'client/components/Editor';
+import { apiFetch } from 'client/utils/apiFetch';
 import { usePageContext } from 'utils/hooks';
 
-import { apiFetch } from 'client/utils/apiFetch';
 import { EditableSubmissionWorkflow } from './types';
 import SubmissionWorkflowEditor from './SubmissionWorkflowEditor';
 import StartWorkflowCallout from './StartWorkflowCallout';
