@@ -4,6 +4,7 @@ import YAML from 'yaml';
 import nodePandoc from 'node-pandoc';
 import { FileResult } from 'tmp-promise';
 import { fromProsemirror, emitPandocJson } from '@pubpub/prosemirror-pandoc';
+import dateFormat from 'dateformat';
 
 import { DocJson } from 'types';
 import { editorSchema, getReactedDocFromJson, Note } from 'client/components/Editor';
@@ -88,9 +89,24 @@ const createYamlMetadataFile = async (pubMetadata: PubMetadata, pandocTarget: st
 	const metadata = YAML.stringify({
 		title,
 		author: formattedAttributions,
-		...(publishedDateString && { date: publishedDateString }),
+		...(publishedDateString && {
+			date: {
+				day: dateFormat(publishedDateString, 'dd'),
+				month: dateFormat(publishedDateString, 'mm'),
+				year: dateFormat(publishedDateString, 'yy'),
+			},
+		}),
 		journal: {
 			title: communityTitle,
+			...(primaryCollectionMetadata && {
+				...(primaryCollectionMetadata.printIssn && {
+					pissn: primaryCollectionMetadata.printIssn,
+				}),
+				...(primaryCollectionMetadata.printIssn && {
+					eissn: primaryCollectionMetadata.electronicIssn,
+				}),
+			}),
+			'publisher-name': publisher || communityTitle,
 		},
 		copyright: {
 			text:
