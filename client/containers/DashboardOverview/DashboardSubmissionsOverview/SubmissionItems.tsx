@@ -23,23 +23,6 @@ type Props = {
 	initiallyLoadedAllPubs: boolean;
 };
 
-const getSearchPlaceholderText = (
-	showCollections: boolean,
-	showPubs: boolean,
-	showSubmissions: boolean,
-) => {
-	if (showCollections && showPubs) {
-		return 'Search Collections and Pubs';
-	}
-	if (showCollections) {
-		return 'Search Collections';
-	}
-	if (showSubmissions) {
-		return 'Search Submitted Pubs';
-	}
-	return 'Search Pubs';
-};
-
 const SubmissionItems = (props: Props) => {
 	const { collections: allCollections, initialPubs, initiallyLoadedAllPubs } = props;
 	const [searchTerm, setSearchTerm] = useState('');
@@ -92,8 +75,8 @@ const SubmissionItems = (props: Props) => {
 				return (
 					<NonIdealState
 						icon="clean"
-						title="This Community looks brand new!"
-						description="Try creating a Pub or Collection from above."
+						title="There doesn't seem to be any"
+						description="No submissions have been submitted yet"
 					/>
 				);
 			}
@@ -107,46 +90,19 @@ const SubmissionItems = (props: Props) => {
 	return (
 		<div className="submission-items-component">
 			<OverviewSearchGroup
-				placeholder={getSearchPlaceholderText(showCollections, showPubs, showSubmissions)}
+				placeholder="Search Submitted Pubs"
 				onUpdateSearchTerm={(t) => t === '' && setSearchTerm(t)}
 				onCommitSearchTerm={setSearchTerm}
 				onChooseFilter={setFilter}
 				rightControls={
 					<>
-						{canShowCollections && (
-							<KindToggle
-								selected={showCollections}
-								onSelect={() => {
-									setShowCollections(!showCollections);
-									if (showCollections && !showPubs) {
-										setShowPubs(true);
-									}
-								}}
-								icon="collection"
-								label="Collections"
-								count={collections.length}
-							/>
-						)}
-						<KindToggle
-							selected={showPubs || !canShowCollections}
-							onSelect={() => {
-								setShowPubs(!showPubs);
-								if (showPubs && !showCollections) {
-									setShowCollections(true);
-								}
-							}}
-							icon="pubDoc"
-							label="Pubs"
-							count={hasLoadedAllPubs ? pubs.length : `${pubs.length}+`}
-							disabled={!canShowCollections}
-						/>
 						<KindToggle
 							selected={showSubmissions}
 							onSelect={() => {
 								setShowSubmissions(!showSubmissions);
 							}}
 							icon="pubDoc"
-							label="Pubs"
+							label="Submitted"
 							count={hasLoadedAllPubs ? pubs.length : `${pubs.length}+`}
 							disabled={!canShowCollections}
 						/>
