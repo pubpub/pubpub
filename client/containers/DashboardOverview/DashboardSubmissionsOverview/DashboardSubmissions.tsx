@@ -4,7 +4,7 @@ import { Switch, Popover } from '@blueprintjs/core';
 import { DashboardFrame } from 'components';
 // import { Collection, Pub, UserScopeVisit } from 'types';
 
-import { usePageContext } from 'utils/hooks';
+// import { usePageContext } from 'utils/hooks';
 
 import SubmissionItems from './SubmissionItems';
 
@@ -29,12 +29,12 @@ const DashboardSubmissions = () => {
 	// const { overviewData } = props;
 	const [workflow, setWorkflow] = useState<null | EditableSubmissionWorkflow>(null);
 	const [showSwitchTooltip, setShowSwitchTooltip] = useState(false);
-	const {
-		communityData,
-		scopeData: {
-			activePermissions: { canManage },
-		},
-	} = usePageContext();
+	// const {
+	// 	communityData,
+	// 	scopeData: {
+	// 		activePermissions: { canManage },
+	// 	},
+	// } = usePageContext();
 
 	const handleToggleSubmissionsEnabled = () => {
 		if (workflow) {
