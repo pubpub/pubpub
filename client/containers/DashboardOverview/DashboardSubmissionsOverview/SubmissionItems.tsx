@@ -38,8 +38,8 @@ const SubmissionItems = (props: Props) => {
 	const { collections: allCollections, initialPubs, initiallyLoadedAllPubs } = props;
 	const [searchTerm, setSearchTerm] = useState('');
 	const [filter, setFilter] = useState<null | Partial<PubsQuery>>(null);
-	const [showPubs, setShowPubs] = useState(true);
-	const [showCollections, setShowCollections] = useState(true);
+	const [showPubs] = useState(true);
+	const [showCollections] = useState(true);
 	const [showSubmissions, setShowSubmissions] = useState(false);
 	const isSearchingOrFiltering = !!filter || !!searchTerm;
 	const collections = useMemo(
