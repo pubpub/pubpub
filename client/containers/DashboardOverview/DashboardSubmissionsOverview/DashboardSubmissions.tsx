@@ -6,7 +6,7 @@ import { DashboardFrame } from 'components';
 
 import { usePageContext } from 'utils/hooks';
 
-import CommunityItems from '../CommunityOverview/CommunityItems';
+import SubmissionItems from './SubmissionItems';
 
 import { OverviewFrame, OverviewSection } from '../helpers';
 
@@ -93,7 +93,7 @@ const DashboardSubmissions = () => {
 			<OverviewFrame
 				primary={
 					<OverviewSection title="In this Collection" icon="overview" descendTitle>
-						<CommunityItems
+						<SubmissionItems
 							initialPubs={[]}
 							collections={[]}
 							initiallyLoadedAllPubs={false}

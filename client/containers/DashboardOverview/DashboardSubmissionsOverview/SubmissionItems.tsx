@@ -15,7 +15,7 @@ import {
 } from '../overviewRows';
 import { KindToggle, OverviewSearchGroup } from '../helpers';
 
-require('./communityItems.scss');
+require('./submissionItems.scss');
 
 type Props = {
 	collections: Collection[];
@@ -23,24 +23,31 @@ type Props = {
 	initiallyLoadedAllPubs: boolean;
 };
 
-const getSearchPlaceholderText = (showCollections: boolean, showPubs: boolean) => {
+const getSearchPlaceholderText = (
+	showCollections: boolean,
+	showPubs: boolean,
+	showSubmissions: boolean,
+) => {
 	if (showCollections && showPubs) {
 		return 'Search Collections and Pubs';
 	}
 	if (showCollections) {
 		return 'Search Collections';
 	}
+	if (showSubmissions) {
+		return 'Search Submitted Pubs';
+	}
 	return 'Search Pubs';
 };
 
-const CommunityItems = (props: Props) => {
+const SubmissionItems = (props: Props) => {
 	const { collections: allCollections, initialPubs, initiallyLoadedAllPubs } = props;
 	const [searchTerm, setSearchTerm] = useState('');
 	const [filter, setFilter] = useState<null | Partial<PubsQuery>>(null);
 	const [showPubs, setShowPubs] = useState(true);
 	const [showCollections, setShowCollections] = useState(true);
+	const [showSubmissions, setShowSubmissions] = useState(false);
 	const isSearchingOrFiltering = !!filter || !!searchTerm;
-
 	const collections = useMemo(
 		() => allCollections.filter((collection) => fuzzyMatchCollection(collection, searchTerm)),
 		[allCollections, searchTerm],
@@ -98,9 +105,9 @@ const CommunityItems = (props: Props) => {
 	};
 
 	return (
-		<div className="community-items-component">
+		<div className="submission-items-component">
 			<OverviewSearchGroup
-				placeholder={getSearchPlaceholderText(showCollections, showPubs)}
+				placeholder={getSearchPlaceholderText(showCollections, showPubs, showSubmissions)}
 				onUpdateSearchTerm={(t) => t === '' && setSearchTerm(t)}
 				onCommitSearchTerm={setSearchTerm}
 				onChooseFilter={setFilter}
@@ -133,6 +140,16 @@ const CommunityItems = (props: Props) => {
 							count={hasLoadedAllPubs ? pubs.length : `${pubs.length}+`}
 							disabled={!canShowCollections}
 						/>
+						<KindToggle
+							selected={showSubmissions}
+							onSelect={() => {
+								setShowSubmissions(!showSubmissions);
+							}}
+							icon="pubDoc"
+							label="Pubs"
+							count={hasLoadedAllPubs ? pubs.length : `${pubs.length}+`}
+							disabled={!canShowCollections}
+						/>
 					</>
 				}
 			/>
@@ -146,4 +163,4 @@ const CommunityItems = (props: Props) => {
 	);
 };
 
-export default CommunityItems;
+export default SubmissionItems;
