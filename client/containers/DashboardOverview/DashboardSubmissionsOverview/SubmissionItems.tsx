@@ -23,6 +23,17 @@ type Props = {
 	initiallyLoadedAllPubs: boolean;
 };
 
+const filteredData = [
+	{ id: 'all', title: 'All', query: null },
+	{
+		id: 'pending',
+		title: 'Pending',
+		query: { ordering: { field: 'creationDate', direction: 'DESC' } },
+	},
+	{ id: 'released', title: 'Released', query: { isReleased: false } },
+	{ id: 'declined', title: 'Declined', query: { isReleased: true } },
+];
+
 const SubmissionItems = (props: Props) => {
 	const { collections: allCollections, initialPubs, initiallyLoadedAllPubs } = props;
 	const [searchTerm, setSearchTerm] = useState('');
@@ -94,6 +105,7 @@ const SubmissionItems = (props: Props) => {
 				onUpdateSearchTerm={(t) => t === '' && setSearchTerm(t)}
 				onCommitSearchTerm={setSearchTerm}
 				onChooseFilter={setFilter}
+				filter={filteredData}
 				rightControls={
 					<>
 						<KindToggle
