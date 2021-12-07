@@ -72,7 +72,7 @@ const createYamlMetadataFile = async (pubMetadata: PubMetadata, pandocTarget: st
 		publisher,
 	} = pubMetadata;
 	const cslFile = getPathToCslFileForCitationStyleKind(citationStyle);
-	const license = getLicenseBySlug(licenseSlug)!;
+	const license = getLicenseBySlug(licenseSlug, publisher, copyrightYear)!;
 	const formattedAttributions = attributions.map((attr) => {
 		if (pandocTarget === 'jats_archiving') {
 			const publicEmail = 'publicEmail' in attr.user ? attr.user.publicEmail : null;
@@ -93,12 +93,7 @@ const createYamlMetadataFile = async (pubMetadata: PubMetadata, pandocTarget: st
 			title: communityTitle,
 		},
 		copyright: {
-			text:
-				license.short === 'Copyright'
-					? `Copyright © ${copyrightYear} ${
-							publisher || communityTitle
-					  }. All rights reserved.`
-					: license.full,
+			text: license.full,
 			type: license.short,
 			...(license.link && { link: license.link }),
 		},

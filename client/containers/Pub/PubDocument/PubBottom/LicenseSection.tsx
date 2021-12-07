@@ -17,9 +17,13 @@ type Props = {
 const LicenseSection = (props: Props) => {
 	const { pubData, updateLocalData } = props;
 	const { communityData, scopeData } = usePageContext();
-	const { link, full, short, version, slug } = getLicenseBySlug(pubData.licenseSlug)!;
 	const pubCopyrightYear = getPubCopyrightYear(pubData as any);
-	const pubPublisher = getPublisherString(communityData);
+	const publisherString = getPublisherString(communityData);
+	const { link, full, slug, summary } = getLicenseBySlug(
+		pubData.licenseSlug,
+		publisherString,
+		pubCopyrightYear,
+	)!;
 
 	return (
 		<PubBottomSection
@@ -29,31 +33,22 @@ const LicenseSection = (props: Props) => {
 			title="License"
 			centerItems={
 				<React.Fragment>
-					{slug === 'copyright' && (
-						<SectionBullets>
-							<span>
-								Copyright © {pubCopyrightYear} {pubPublisher}. All rights reserved.
-							</span>
-						</SectionBullets>
-					)}
-					{slug !== 'copyright' && (
-						<SectionBullets>
-							<a
-								target="_blank"
-								rel="license noopener noreferrer"
-								className="license-link"
-								href={link!}
-							>
-								<img
-									width={75}
-									alt=""
-									src={`/static/license/${slug}.svg`}
-									className="license-image"
-								/>
-								{`${full} (${short} ${version})`}
-							</a>
-						</SectionBullets>
-					)}
+					<SectionBullets>
+						<a
+							target="_blank"
+							rel="license noopener noreferrer"
+							className="license-link"
+							href={link!}
+						>
+							<img
+								width={75}
+								alt=""
+								src={`/static/license/${slug}.svg`}
+								className="license-image"
+							/>
+							{full} {summary}
+						</a>
+					</SectionBullets>
 				</React.Fragment>
 			}
 			iconItems={({ iconColor }) => {

@@ -79,7 +79,7 @@ export const getPubMetadata = async (pubId: string): Promise<PubMetadata> => {
 		citationStyle: pubData.citationStyle,
 		citationInlineStyle: pubData.citationInlineStyle,
 		nodeLabels: pubData.nodeLabels,
-		publisher: pubData.community.publishAs,
+		publisher: pubData.community.publishAs || pubData.communityTitle,
 		...getPrimaryCollectionMetadata(pubData.collectionPubs),
 	};
 };

@@ -153,7 +153,7 @@ const renderDetails = ({
 	publisher,
 }) => {
 	const showUpdatedDate = updatedDateString && updatedDateString !== publishedDateString;
-	const license = getLicenseBySlug(licenseSlug);
+	const license = getLicenseBySlug(licenseSlug, publisher, copyrightYear);
 	return (
 		<>
 			{showUpdatedDate && (
@@ -169,17 +169,10 @@ const renderDetails = ({
 			{license && (
 				<div>
 					<strong>License:</strong>&nbsp;
-					{license.slug === 'copyright' && (
-						<div className="full">
-							Copyright © {copyrightYear} {publisher}. All rights reserved.
-						</div>
-					)}
-					{license.slug !== 'copyright' && (
-						/* @ts-expect-error ts-migrate(2322) FIXME: Type 'string | null' is not assignable to type 'st... Remove this comment to see the full error message */
-						<a href={license.link}>
-							{license.full} ({license.slug.toUpperCase()} {license.version})
-						</a>
-					)}
+					{/* @ts-expect-error ts-migrate(2322) FIXME: Type 'string | null' is not assignable to type 'st... Remove this comment to see the full error message */}
+					<a href={license.link}>
+						{license.full} {license.summary}
+					</a>
 				</div>
 			)}
 		</>

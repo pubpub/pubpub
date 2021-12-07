@@ -32,12 +32,13 @@ const LicenseSelect = (props: Props) => {
 	const { children, onSelect, persistSelections, pubData, updateLocalData } = props;
 	const [isPersisting, setIsPersisting] = useState(false);
 	const { communityData } = usePageContext();
-	const currentLicense = getLicenseBySlug(pubData.licenseSlug)!;
 	const pubCopyrightYear = getPubCopyrightYear(pubData);
-	const pubPublisher = getPublisherString(communityData);
-	if (currentLicense.slug === 'copyright') {
-		currentLicense.full = `Copyright © ${pubCopyrightYear} ${pubPublisher}. All rights reserved.`;
-	}
+	const publisherString = getPublisherString(communityData);
+	const currentLicense = getLicenseBySlug(
+		pubData.licenseSlug,
+		publisherString,
+		pubCopyrightYear,
+	)!;
 	const selectLicense = (license) => {
 		onSelect(license);
 		if (persistSelections) {
@@ -89,15 +90,7 @@ const LicenseSelect = (props: Props) => {
 											</a>
 										)}
 									</div>
-									{license.slug === 'copyright' && (
-										<div className="full">
-											Copyright © {pubCopyrightYear} {pubPublisher}. All
-											rights reserved.
-										</div>
-									)}
-									{license.slug !== 'copyright' && (
-										<div className="full">{license.full}</div>
-									)}
+									<div className="full">{license.full}</div>
 								</div>
 							}
 							icon={renderIcon(license)}
