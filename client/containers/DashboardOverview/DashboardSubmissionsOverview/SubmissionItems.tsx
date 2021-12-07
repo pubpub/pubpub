@@ -1,8 +1,7 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { NonIdealState } from '@blueprintjs/core';
 
-import { Collection, Pub, PubsQuery, submissionStatuses } from 'types';
-import { fuzzyMatchCollection } from 'utils/fuzzyMatch';
+import { Collection, Pub, PubsQuery } from 'types';
 import { useManyPubs } from 'client/utils/useManyPubs';
 import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 
@@ -17,8 +16,10 @@ type Props = {
 	initiallyLoadedAllPubs: boolean;
 };
 
+const defaultQuery: Partial<PubsQuery> = { submissionStatuses: ['incomplete'] };
+
 const filteredData: OverviewSearchFilter[] = [
-	{ id: 'all', title: 'All', query: { submissionStatuses: ['incomplete'] } },
+	{ id: 'all', title: 'All', query: defaultQuery },
 	// {
 	// 	id: 'pending',
 	// 	title: 'Pending',
