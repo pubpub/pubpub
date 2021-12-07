@@ -33,7 +33,7 @@ app.get(['/dash/collection/:collectionSlug/submissions'], async (req, res, next)
 			<Html
 				chunkName="DashboardSubmissions"
 				initialData={initialData}
-				viewData={{}}
+				viewData={{ initialPubs: [], initiallyLoadedAllPubs: false }}
 				headerComponents={generateMetaComponents({
 					initialData,
 					title: `Submissions · ${initialData.scopeData.elements.activeTarget.title}`,

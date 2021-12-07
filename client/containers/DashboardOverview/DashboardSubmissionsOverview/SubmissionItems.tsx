@@ -7,7 +7,7 @@ import { useManyPubs } from 'client/utils/useManyPubs';
 import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 
 import { PubOverviewRow, OverviewRows, LoadMorePubsRow, SpecialRow } from '../overviewRows';
-import { KindToggle, OverviewSearchGroup } from '../helpers';
+import { KindToggle, OverviewSearchGroup, OverviewSearchFilter } from '../helpers';
 
 require('./submissionItems.scss');
 
@@ -17,7 +17,7 @@ type Props = {
 	initiallyLoadedAllPubs: boolean;
 };
 
-const filteredData = [
+const filteredData: OverviewSearchFilter[] = [
 	{ id: 'all', title: 'All', query: { submissionStatuses: ['incomplete'] } },
 	// {
 	// 	id: 'pending',
@@ -31,7 +31,7 @@ const filteredData = [
 const SubmissionItems = (props: Props) => {
 	const { collection, initialPubs, initiallyLoadedAllPubs } = props;
 	const [searchTerm, setSearchTerm] = useState('');
-	const [filter, setFilter] = useState<null | Partial<PubsQuery>>(null);
+	const [filter, setFilter] = useState(filteredData[0].query);
 	const [showPubs] = useState(true);
 	const [showSubmissions, setShowSubmissions] = useState(false);
 	const isSearchingOrFiltering = !!filter || !!searchTerm;

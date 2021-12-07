@@ -1,6 +1,6 @@
 import React from 'react';
 import { DashboardFrame } from 'components';
-// import { Collection, Pub, UserScopeVisit } from 'types';
+import { Pub } from 'types';
 
 import { usePageContext } from 'utils/hooks';
 
@@ -10,9 +10,16 @@ import { OverviewFrame, OverviewSection } from '../helpers';
 
 require('./dashboardSubmissions.scss');
 
-const DashboardSubmissions = () => {
+type Props = {
+	initialPubs: Pub[];
+	initiallyLoadedAllPubs: boolean;
+};
+
+const DashboardSubmissions = (props: Props) => {
+	const { initialPubs, initiallyLoadedAllPubs } = props;
 	const { scopeData } = usePageContext();
 	const collection = scopeData.elements.activeCollection;
+
 	return (
 		<DashboardFrame
 			className="dashboard-submissions-container"
@@ -24,9 +31,9 @@ const DashboardSubmissions = () => {
 				primary={
 					<OverviewSection title="In this Collection" icon="overview" descendTitle>
 						<SubmissionItems
-							initialPubs={[]}
+							initialPubs={initialPubs}
 							collection={collection}
-							initiallyLoadedAllPubs={false}
+							initiallyLoadedAllPubs={initiallyLoadedAllPubs}
 						/>
 					</OverviewSection>
 				}

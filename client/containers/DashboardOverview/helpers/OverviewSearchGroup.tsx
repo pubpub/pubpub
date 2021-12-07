@@ -9,7 +9,7 @@ require('./overviewSearchGroup.scss');
 
 type SearchTermCallback = (q: string) => unknown;
 
-type Filter = {
+export type OverviewSearchFilter = {
 	id: string;
 	title: string;
 	query: null | Partial<PubsQuery>;
@@ -21,7 +21,7 @@ type Props = {
 	onCommitSearchTerm?: SearchTermCallback;
 	onChooseFilter?: (q: null | Partial<PubsQuery>) => unknown;
 	rightControls?: React.ReactNode;
-	filter?: Filter[];
+	filter?: OverviewSearchFilter[];
 };
 
 const OverviewSearchGroup = (props: Props) => {
