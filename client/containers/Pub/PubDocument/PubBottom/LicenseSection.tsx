@@ -6,6 +6,7 @@ import { getLicenseBySlug } from 'utils/licenses';
 import { getPubCopyrightYear } from 'utils/pub/pubDates';
 import { Pub } from 'types';
 
+import { getPublisherString } from 'utils/community';
 import PubBottomSection, { SectionBullets, AccentedIconButton } from './PubBottomSection';
 
 type Props = {
@@ -18,7 +19,7 @@ const LicenseSection = (props: Props) => {
 	const { communityData, scopeData } = usePageContext();
 	const { link, full, short, version, slug } = getLicenseBySlug(pubData.licenseSlug)!;
 	const pubCopyrightYear = getPubCopyrightYear(pubData as any);
-	const pubPublisher = communityData.publishAs || communityData.title;
+	const pubPublisher = getPublisherString(communityData);
 
 	return (
 		<PubBottomSection

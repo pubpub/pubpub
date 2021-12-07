@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Icon, Popover, Menu, MenuItem } from '@blueprintjs/core';
 
+import { getPublisherString } from 'utils/community';
 import { licenses, getLicenseBySlug } from 'utils/licenses';
 import { usePageContext } from 'utils/hooks';
 import { getPubCopyrightYear } from 'utils/pub/pubDates';
@@ -33,7 +34,7 @@ const LicenseSelect = (props: Props) => {
 	const { communityData } = usePageContext();
 	const currentLicense = getLicenseBySlug(pubData.licenseSlug)!;
 	const pubCopyrightYear = getPubCopyrightYear(pubData);
-	const pubPublisher = communityData.publishAs || communityData.title;
+	const pubPublisher = getPublisherString(communityData);
 	if (currentLicense.slug === 'copyright') {
 		currentLicense.full = `Copyright © ${pubCopyrightYear} ${pubPublisher}. All rights reserved.`;
 	}
