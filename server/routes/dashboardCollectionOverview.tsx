@@ -46,7 +46,6 @@ app.get('/dash/collection/:collectionSlug/overview', async (req, res, next) => {
 			collection: { id: collectionId, title },
 		} = overviewData;
 		createUserScopeVisit({ userId, communityId, collectionId });
-		console.log(overviewData);
 		return renderToNodeStream(
 			res,
 			<Html
