@@ -16,17 +16,32 @@ type Props = {
 	initiallyLoadedAllPubs: boolean;
 };
 
-const defaultQuery: Partial<PubsQuery> = { submissionStatuses: ['incomplete'] };
+// i wish for a better way to do this
+
+const queriesForSubmissionPubs: Record<string, Partial<PubsQuery>> = {
+	default: {
+		submissionStatuses: ['incomplete', 'submitted', 'accepted', 'declined'],
+	},
+	pending: {
+		submissionStatuses: ['submitted'],
+	},
+	accpted: {
+		submissionStatuses: ['accepted'],
+	},
+	declined: {
+		submissionStatuses: ['declined'],
+	},
+};
 
 const filteredData: OverviewSearchFilter[] = [
-	{ id: 'all', title: 'All', query: defaultQuery },
-	// {
-	// 	id: 'pending',
-	// 	title: 'Pending',
-	// 	query: { ordering: { field: 'creationDate', direction: 'DESC' } },
-	// },
-	// { id: 'accepted', title: 'Accepted', query: { isReleased: false } },
-	// { id: 'declined', title: 'Declined', query: { isReleased: true } },
+	{ id: 'all', title: 'All', query: queriesForSubmissionPubs.default },
+	{
+		id: 'pending',
+		title: 'Pending',
+		query: queriesForSubmissionPubs.pending,
+	},
+	{ id: 'accepted', title: 'Accepted', query: queriesForSubmissionPubs.accepted },
+	{ id: 'declined', title: 'Declined', query: queriesForSubmissionPubs.declined },
 ];
 
 const SubmissionItems = (props: Props) => {
