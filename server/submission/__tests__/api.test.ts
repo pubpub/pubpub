@@ -125,7 +125,7 @@ describe('/api/submissions', () => {
 			.expect(403);
 	});
 
-	it('allows pub managers to set submitted status', async () => {
+	it('allows pub managers to set submission status', async () => {
 		const { pubManager, submission, spub } = models;
 		const agent = await login(pubManager);
 		await agent
@@ -133,14 +133,14 @@ describe('/api/submissions', () => {
 			.send({
 				id: submission.id,
 				pubId: spub.id,
-				status: 'submitted',
+				status: 'pending',
 			})
 			.expect(201);
 		const { status } = await Submission.findOne({ where: { id: submission.id } });
-		expect(status).toEqual('submitted');
+		expect(status).toEqual('pending');
 	});
 
-	it('forbids admins from updating status out of one of [submitted, accepted, declined]', async () => {
+	it('forbids admins from updating status out of one of [pending, accepted, declined]', async () => {
 		const { admin, submission } = models;
 		const agent = await login(admin);
 		await agent
