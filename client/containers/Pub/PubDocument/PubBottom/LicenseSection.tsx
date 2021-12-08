@@ -15,7 +15,7 @@ type Props = {
 const LicenseSection = (props: Props) => {
 	const { pubData, updateLocalData } = props;
 	const { communityData, scopeData } = usePageContext();
-	const { link, full, slug, summary } = getLicenseForPub(pubData, communityData)
+	const { link, full, slug, summary } = getLicenseForPub(pubData, communityData);
 
 	return (
 		<PubBottomSection
