@@ -12,6 +12,7 @@ type FetchOptions = {
 	userId: string;
 	offset?: number;
 	limit?: number;
+	now?: Date;
 };
 
 type CreateOptions = Pick<
@@ -31,21 +32,24 @@ type DeleteOptions = {
 	userNotificationIds: string[];
 };
 
-const getLatestNotificationDateToShow = async (preferences: types.UserNotificationPreferences) => {
+const getLatestNotificationDateToShow = async (
+	preferences: types.UserNotificationPreferences,
+	now: Date,
+) => {
 	const { userId, notificationCadence, lastReceivedNotificationsAt } = preferences;
-	const now = Date.now();
 
 	const updateLastReceived = async () => {
 		await updateUserNotificationPreferences({
 			userId,
-			preferences: { lastReceivedNotificationsAt: new Date(now).toISOString() },
+			preferences: { lastReceivedNotificationsAt: now.toISOString() },
 		});
 	};
 
 	if (notificationCadence && lastReceivedNotificationsAt) {
+		const nowTimestamp = now.valueOf();
 		const notificationCadenceMs = 1000 * 60 * notificationCadence;
 		const lastReceivedNotificationsTimestamp = new Date(lastReceivedNotificationsAt).valueOf();
-		const timeElapsedSinceReceiving = now - lastReceivedNotificationsTimestamp;
+		const timeElapsedSinceReceiving = nowTimestamp - lastReceivedNotificationsTimestamp;
 		const isTimeToUpdate = timeElapsedSinceReceiving >= notificationCadenceMs;
 		if (isTimeToUpdate) {
 			await updateLastReceived();
@@ -61,9 +65,9 @@ const getLatestNotificationDateToShow = async (preferences: types.UserNotificati
 export const fetchUserNotifications = async (
 	options: FetchOptions,
 ): Promise<types.UserNotificationsFetchResult> => {
-	const { userId, offset = 0, limit = 50 } = options;
+	const { userId, offset = 0, limit = 50, now = new Date() } = options;
 	const notificationPreferences = await getOrCreateUserNotificationPreferences(userId);
-	const latestDateToShow = await getLatestNotificationDateToShow(notificationPreferences);
+	const latestDateToShow = await getLatestNotificationDateToShow(notificationPreferences, now);
 	const sharedWhere = {
 		userId,
 		...(latestDateToShow && { createdAt: { [Op.lte]: latestDateToShow } }),
