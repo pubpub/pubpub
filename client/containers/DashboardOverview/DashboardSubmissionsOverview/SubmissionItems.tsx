@@ -16,35 +16,39 @@ type Props = {
 	initiallyLoadedAllPubs: boolean;
 };
 
-// const pendingQuery: Partial<PubsQuery> = {
-// 	submissionStatuses: ['submitted'],
-// };
-
-// i wish for a better way to do this
-const queriesForSubmissionPubs: Record<string, Partial<PubsQuery>> = {
-	default: {
-		submissionStatuses: ['incomplete', 'submitted', 'accepted', 'declined'],
-	},
-	pending: {
-		submissionStatuses: ['submitted'],
-	},
-	accpted: {
-		submissionStatuses: ['accepted'],
-	},
-	declined: {
-		submissionStatuses: ['declined'],
-	},
+const defaultQuery: Partial<PubsQuery> = {
+	submissionStatuses: ['incomplete', 'submitted', 'accepted', 'declined'],
 };
 
+const pendingQuery: Partial<PubsQuery> = {
+	submissionStatuses: ['submitted'],
+};
+
+// i wish for a better way to do this
+// const queriesForSubmissionPubs: Record<string, Partial<PubsQuery>> = {
+// 	default: {
+// 		submissionStatuses: ['incomplete', 'submitted', 'accepted', 'declined'],
+// 	},
+// 	pending: {
+// 		submissionStatuses: ['submitted'],
+// 	},
+// 	accpted: {
+// 		submissionStatuses: ['accepted'],
+// 	},
+// 	declined: {
+// 		submissionStatuses: ['declined'],
+// 	},
+// };
+
 const filteredData: OverviewSearchFilter[] = [
-	{ id: 'all', title: 'All', query: queriesForSubmissionPubs.default },
+	{ id: 'all', title: 'All', query: defaultQuery },
 	{
 		id: 'pending',
 		title: 'Pending',
-		query: queriesForSubmissionPubs.pending,
+		query: pendingQuery,
 	},
-	{ id: 'accepted', title: 'Accepted', query: queriesForSubmissionPubs.accepted },
-	{ id: 'declined', title: 'Declined', query: queriesForSubmissionPubs.declined },
+	// { id: 'accepted', title: 'Accepted', query: queriesForSubmissionPubs.accepted },
+	// { id: 'declined', title: 'Declined', query: queriesForSubmissionPubs.declined },
 ];
 
 const SubmissionItems = (props: Props) => {
