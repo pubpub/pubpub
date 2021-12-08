@@ -60,7 +60,7 @@ export const licenses = [
 
 export const getLicenseBySlug = (slug = 'cc-by', publisherString, copyrightYear) => {
 	const license = licenses.find((ls) => ls.slug === slug);
-	license.summary = `(${license.slug.toUpperCase()} ${license.version})`;
+	license.summary = `${license.slug.toUpperCase()} ${license.version}`;
 	if (slug === 'copyright' && publisherString && copyrightYear) {
 		license.full = `Copyright © ${copyrightYear} ${publisherString}. All rights reserved.`;
 		license.summary = '';

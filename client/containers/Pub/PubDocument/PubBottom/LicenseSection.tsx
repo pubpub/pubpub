@@ -46,7 +46,7 @@ const LicenseSection = (props: Props) => {
 								src={`/static/license/${slug}.svg`}
 								className="license-image"
 							/>
-							{full} {summary}
+							{full} {summary && `(${summary})`}
 						</a>
 					</SectionBullets>
 				</React.Fragment>

@@ -171,7 +171,7 @@ const renderDetails = ({
 					<strong>License:</strong>&nbsp;
 					{/* @ts-expect-error ts-migrate(2322) FIXME: Type 'string | null' is not assignable to type 'st... Remove this comment to see the full error message */}
 					<a href={license.link}>
-						{license.full} {license.summary}
+						{license.full} {license.summary && `(${license.summary})`}
 					</a>
 				</div>
 			)}
