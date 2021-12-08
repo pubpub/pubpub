@@ -16,9 +16,9 @@ type Props = {
 	initiallyLoadedAllPubs: boolean;
 };
 
-const pendingQuery: Partial<PubsQuery> = {
-	submissionStatuses: ['submitted'],
-};
+// const pendingQuery: Partial<PubsQuery> = {
+// 	submissionStatuses: ['submitted'],
+// };
 
 // i wish for a better way to do this
 const queriesForSubmissionPubs: Record<string, Partial<PubsQuery>> = {
