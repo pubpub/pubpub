@@ -9,10 +9,10 @@ import { fetchUserNotifications } from '../queries';
 
 const communityId = uuid();
 const pubId = uuid();
-const userLastReceivedNotificationsAt = '2021-12-00:00:00.000';
+const baseTimestamp = '2021-12-00:00:00.000';
 
 const getDateForElapsedMinutes = (minutes: number) => {
-	const timestamp = new Date(userLastReceivedNotificationsAt).valueOf();
+	const timestamp = new Date(baseTimestamp).valueOf();
 	return new Date(timestamp + minutes * 60 * 1000);
 };
 
