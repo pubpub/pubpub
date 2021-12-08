@@ -68,6 +68,7 @@ const OverviewSearchGroup = (props: Props) => {
 		(filterId: string) => {
 			if (onChooseFilter) {
 				const filterChange = filter.find((f) => f.id === filterId)!;
+
 				onChooseFilter(filterChange.query);
 			}
 		},

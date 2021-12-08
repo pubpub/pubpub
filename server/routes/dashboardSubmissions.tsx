@@ -35,11 +35,7 @@ app.get(['/dash/collection/:collectionSlug/submissions'], async (req, res, next)
 					limit,
 					communityId: communityData.id,
 					scopedCollectionId: collectionId,
-					ordering: { field: 'collectionRank', direction: 'ASC' },
 					submissionStatuses: ['incomplete', 'submitted', 'accepted', 'declined'],
-				},
-				options: {
-					getCollections: true,
 				},
 			});
 			return result.sanitize(initialData);
