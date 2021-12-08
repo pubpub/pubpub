@@ -25,7 +25,6 @@ const labelsForPreviewElementFields: Record<PreviewElementField, string> = {
 	hideEdges: 'Connections',
 };
 
-
 const deriveFieldStatus = (content: Content, field: PreviewElementField) => {
 	const { pubPreviewType } = content;
 	const fieldValue = content[field];
