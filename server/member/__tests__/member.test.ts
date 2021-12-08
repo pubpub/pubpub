@@ -3,7 +3,7 @@ import { setup, teardown, login, modelize, expectCreatedActivityItem } from 'stu
 
 import { Member, UserSubscription } from 'server/models';
 
-import { getMembersForScope } from '../queries';
+import { createMember, getMembersForScope } from '../queries';
 
 const models = modelize`
     User willBeCommunityViewer {}
@@ -11,10 +11,14 @@ const models = modelize`
     User willBeCollectionManager {}
     User friendOfThePubAdmin {}
 	User willBeSubscribed {
-	
+		UserNotificationPreferences {
+			subscribeToPubsAsMember: true
+		}
 	}
 	User willNotBeSubscribed {
-		
+		UserNotificationPreferences {
+			subscribeToPubsAsMember: false
+		}
 	}
     Community community {
         Member communityManagerMember {
@@ -190,6 +194,28 @@ describe('getMembersForScope', () => {
 	});
 });
 
+describe('createMember()', () => {
+	it("subscribes a user to a Pub's threads when they become a member, according to their notification preferences", async () => {
+		const { willBeSubscribed, willNotBeSubscribed, pub } = models;
+		await Promise.all(
+			(
+				[
+					[willBeSubscribed, 1],
+					[willNotBeSubscribed, 0],
+				] as const
+			).map(async ([user, count]) => {
+				await createMember({
+					target: { pubId: pub.id, userId: user.id },
+					value: { permissions: 'view' },
+				});
+				expect(
+					await UserSubscription.count({ where: { userId: user.id, pubId: pub.id } }),
+				).toEqual(count);
+			}),
+		);
+	});
+});
+
 type CreateMemberRequestOptions = {
 	collection?: any;
 	pub?: any;
@@ -234,28 +260,6 @@ describe('/api/members', () => {
 			},
 		});
 		expect(member.userId).toEqual(willBeCommunityViewer.id);
-	});
-
-
-	it.only("subscribes a user to a Pub's threads when they become a member, according to their notification preferences", async () => {
-		const { communityManagerMember, willBeSubscribed, willNotBeSubscribed, pub } = models;
-		const agent = await login(communityManagerMember);
-		await Promise.all(
-			(
-				[
-					[willBeSubscribed, 1],
-					[willNotBeSubscribed, 0],
-				] as const
-			).map(async ([user, count]) => {
-				await agent
-					.post('/api/members')
-					.send(createMemberRequest({ user, pub, permissions: 'view' }))
-					.expect(201);
-				expect(
-					await UserSubscription.count({ where: { userId: user.id, pubId: pub.id } }),
-				).toEqual(count);
-			}),
-		);
 	});
 
 	it('prevents a member from elevating their own permissions', async () => {

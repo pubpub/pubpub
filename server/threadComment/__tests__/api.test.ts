@@ -67,6 +67,16 @@ const models = modelize`
             User otherCommunityAdmin {}
         }
     }
+    User willBeSubscribed {
+        UserNotificationPreferences {
+            subscribeToPubsAsContributor: true
+        }
+    }
+    User willNotBeSubscribed {
+        UserNotificationPreferences {
+            subscribeToPubsAsContributor: false
+        }
+    }
 `;
 
 setup(beforeAll, async () => {
@@ -75,7 +85,7 @@ setup(beforeAll, async () => {
 
 teardown(afterAll);
 
-const createThreadComment = ({
+const createThreadCommentArgs = ({
 	thread,
 	discussion = null,
 	threadComment = null,
@@ -104,7 +114,7 @@ it('checks that the provided thread and parent model are related', async () => {
 	await agent
 		.post('/api/threadComment')
 		.send(
-			createThreadComment({
+			createThreadCommentArgs({
 				discussion: publicDiscussion,
 				thread: otherPublicThread,
 			}),
@@ -119,7 +129,7 @@ it('allows guests to add to a Discussion with visibility=public', async () => {
 		agent
 			.post('/api/threadComment')
 			.send(
-				createThreadComment({
+				createThreadCommentArgs({
 					discussion: publicDiscussion,
 					thread: publicThread,
 					text: 'Ah, nevertheless',
@@ -144,7 +154,7 @@ it('forbids guests from adding comments to threads with visibility=members', asy
 	await agent
 		.post('/api/threadComment')
 		.send(
-			createThreadComment({
+			createThreadCommentArgs({
 				discussion: membersDiscussion,
 				thread: membersThread,
 			}),
@@ -158,7 +168,7 @@ it('allows members to add to threads with visibility=members', async () => {
 	await agent
 		.post('/api/threadComment')
 		.send(
-			createThreadComment({
+			createThreadCommentArgs({
 				discussion: membersDiscussion,
 				thread: membersThread,
 			}),
@@ -172,7 +182,7 @@ it('forbids adding comments to locked threads', async () => {
 	await agent
 		.post('/api/threadComment')
 		.send(
-			createThreadComment({
+			createThreadCommentArgs({
 				discussion: lockedDiscussion,
 				thread: lockedThread,
 			}),
@@ -186,7 +196,7 @@ it("prevents users from editing others' comments", async () => {
 	await agent
 		.put('/api/threadComment')
 		.send(
-			createThreadComment({
+			createThreadCommentArgs({
 				discussion: membersDiscussion,
 				thread: membersThread,
 				threadComment: existingComment,
@@ -202,7 +212,7 @@ it('allows users to edit their own comments', async () => {
 	const { body: threadComment } = await agent
 		.put('/api/threadComment')
 		.send(
-			createThreadComment({
+			createThreadCommentArgs({
 				discussion: membersDiscussion,
 				thread: membersThread,
 				threadComment: existingComment,
@@ -219,7 +229,7 @@ it('allows admins to edit users comments', async () => {
 	const { body: threadComment } = await agent
 		.put('/api/threadComment')
 		.send(
-			createThreadComment({
+			createThreadCommentArgs({
 				discussion: membersDiscussion,
 				thread: membersThread,
 				threadComment: existingComment,
