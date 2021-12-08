@@ -47,7 +47,7 @@ const filteredData: OverviewSearchFilter[] = [
 const SubmissionItems = (props: Props) => {
 	const { collection, initialPubs, initiallyLoadedAllPubs } = props;
 	const [searchTerm, setSearchTerm] = useState('');
-	const [filter, setFilter] = useState(filteredData[0].query);
+	const [filter, setFilter] = useState<null | Partial<PubsQuery>>(null);
 	const [showPubs] = useState(true);
 	const [showSubmissions, setShowSubmissions] = useState(false);
 	const isSearchingOrFiltering = !!filter || !!searchTerm;
@@ -66,7 +66,6 @@ const SubmissionItems = (props: Props) => {
 		},
 	});
 
-	const canShowCollections = !filter;
 	const canLoadMorePubs = !hasLoadedAllPubs && showPubs;
 
 	useInfiniteScroll({
@@ -84,13 +83,13 @@ const SubmissionItems = (props: Props) => {
 			return (
 				<NonIdealState
 					icon="clean"
-					title="There doesn't seem to be any"
+					title="There doesn't seem to be any submissions"
 					description="No submissions have been submitted yet"
 				/>
 			);
 		}
 		if (pubs.length === 0 && hasLoadedAllPubs && isSearchingOrFiltering) {
-			return <SpecialRow>No matching Pubs or Collections.</SpecialRow>;
+			return <SpecialRow>No Submissions have been found.</SpecialRow>;
 		}
 		return null;
 	};
@@ -103,20 +102,6 @@ const SubmissionItems = (props: Props) => {
 				onCommitSearchTerm={setSearchTerm}
 				onChooseFilter={setFilter}
 				filter={filteredData}
-				rightControls={
-					<>
-						<KindToggle
-							selected={showSubmissions}
-							onSelect={() => {
-								setShowSubmissions(!showSubmissions);
-							}}
-							icon="pubDoc"
-							label="Submitted"
-							count={hasLoadedAllPubs ? pubs.length : `${pubs.length}+`}
-							disabled={!canShowCollections}
-						/>
-					</>
-				}
 			/>
 			<OverviewRows>
 				{showPubs && renderPubs()}
