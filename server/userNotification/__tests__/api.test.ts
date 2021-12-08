@@ -28,19 +28,19 @@ const models = modelize`
 
     ActivityItem activityItem1 {
         communityId: ${communityId}
-        pub: pub
+        pubId: ${pubId}
         kind: 'pub-discussion-comment-added'
     }
 
     ActivityItem activityItem2 {
         communityId: ${communityId}
-        pub: pub
+        pubId: ${pubId}
         kind: 'pub-discussion-comment-added'
     }
 
     ActivityItem activityItem3 {
         communityId: ${communityId}
-        pub: pub
+        pubId: ${pubId}
         kind: 'pub-discussion-comment-added'
     }
 
