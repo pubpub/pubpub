@@ -27,19 +27,19 @@ const models = modelize`
     }
 
     ActivityItem activityItem1 {
-        community: community
+        communityId: ${communityId}
         pub: pub
         kind: 'pub-discussion-comment-added'
     }
 
     ActivityItem activityItem2 {
-        community: community
+        communityId: ${communityId}
         pub: pub
         kind: 'pub-discussion-comment-added'
     }
 
     ActivityItem activityItem3 {
-        community: community
+        communityId: ${communityId}
         pub: pub
         kind: 'pub-discussion-comment-added'
     }
