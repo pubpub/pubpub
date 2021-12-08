@@ -64,7 +64,6 @@ const OverviewSearchGroup = (props: Props) => {
 		[onCommitSearchTerm],
 	);
 
-	console.log(filter);
 	const handleFilterChange = useCallback(
 		(filterId: string) => {
 			if (onChooseFilter) {
