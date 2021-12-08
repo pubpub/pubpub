@@ -64,11 +64,12 @@ const OverviewSearchGroup = (props: Props) => {
 		[onCommitSearchTerm],
 	);
 
-	console.log(filter);
+	// console.log(filter);
 	const handleFilterChange = useCallback(
 		(filterId: string) => {
 			if (onChooseFilter) {
 				const filterChange = filter.find((f) => f.id === filterId)!;
+
 				onChooseFilter(filterChange.query);
 			}
 		},

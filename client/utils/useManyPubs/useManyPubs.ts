@@ -98,7 +98,6 @@ export const useManyPubs = <P extends Pub = Pub>(
 			offset: state.offset,
 			communityId: communityData.id,
 		};
-
 		const result: ManyPubsApiResult = await apiFetch.post('/api/pubs/many', {
 			query,
 			pubOptions,
