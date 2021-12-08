@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Icon, Popover, Menu, MenuItem } from '@blueprintjs/core';
 
-import { getPublisherString } from 'utils/community';
-import { licenses, getLicenseBySlug } from 'utils/licenses';
+import { licenses, getLicenseForPub } from 'utils/licenses';
 import { usePageContext } from 'utils/hooks';
-import { getPubCopyrightYear } from 'utils/pub/pubDates';
 import { apiFetch } from 'client/utils/apiFetch';
 import { Pub, CollectionPub, DefinitelyHas } from 'types';
 
@@ -32,13 +30,7 @@ const LicenseSelect = (props: Props) => {
 	const { children, onSelect, persistSelections, pubData, updateLocalData } = props;
 	const [isPersisting, setIsPersisting] = useState(false);
 	const { communityData } = usePageContext();
-	const pubCopyrightYear = getPubCopyrightYear(pubData);
-	const publisherString = getPublisherString(communityData);
-	const currentLicense = getLicenseBySlug(
-		pubData.licenseSlug,
-		publisherString,
-		pubCopyrightYear,
-	)!;
+	const currentLicense = getLicenseForPub(pubData, communityData);
 	const selectLicense = (license) => {
 		onSelect(license);
 		if (persistSelections) {
@@ -102,7 +94,6 @@ const LicenseSelect = (props: Props) => {
 			</Menu>
 		);
 	};
-
 	return (
 		<Popover content={renderMenu()}>
 			{children({

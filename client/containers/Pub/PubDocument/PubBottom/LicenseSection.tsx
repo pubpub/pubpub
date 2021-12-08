@@ -2,28 +2,20 @@ import React from 'react';
 
 import { LicenseSelect } from 'components';
 import { usePageContext } from 'utils/hooks';
-import { getLicenseBySlug } from 'utils/licenses';
-import { getPubCopyrightYear } from 'utils/pub/pubDates';
-import { Pub } from 'types';
+import { getLicenseForPub } from 'utils/licenses';
+import { PubPageData } from 'types';
 
-import { getPublisherString } from 'utils/community';
 import PubBottomSection, { SectionBullets, AccentedIconButton } from './PubBottomSection';
 
 type Props = {
-	pubData: Pub;
+	pubData: PubPageData;
 	updateLocalData: (...args: any[]) => any;
 };
 
 const LicenseSection = (props: Props) => {
 	const { pubData, updateLocalData } = props;
 	const { communityData, scopeData } = usePageContext();
-	const pubCopyrightYear = getPubCopyrightYear(pubData as any);
-	const publisherString = getPublisherString(communityData);
-	const { link, full, slug, summary } = getLicenseBySlug(
-		pubData.licenseSlug,
-		publisherString,
-		pubCopyrightYear,
-	)!;
+	const { link, full, slug, summary } = getLicenseForPub(pubData, communityData)
 
 	return (
 		<PubBottomSection

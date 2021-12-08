@@ -6,7 +6,6 @@ import ReactDOMServer from 'react-dom/server';
 
 import { DocJson } from 'types';
 import { renderStatic, editorSchema } from 'components/Editor';
-import { getLicenseBySlug } from 'utils/licenses';
 
 import { NotesData, PubMetadata } from './types';
 import { digestCitation } from './util';
@@ -144,16 +143,8 @@ const blankIframes = (nodes) =>
 		nodes,
 	);
 
-const renderDetails = ({
-	updatedDateString,
-	publishedDateString,
-	doi,
-	licenseSlug,
-	copyrightYear,
-	publisher,
-}) => {
+const renderDetails = ({ updatedDateString, publishedDateString, doi, license }) => {
 	const showUpdatedDate = updatedDateString && updatedDateString !== publishedDateString;
-	const license = getLicenseBySlug(licenseSlug, publisher, copyrightYear);
 	return (
 		<>
 			{showUpdatedDate && (
@@ -169,7 +160,6 @@ const renderDetails = ({
 			{license && (
 				<div>
 					<strong>License:</strong>&nbsp;
-					{/* @ts-expect-error ts-migrate(2322) FIXME: Type 'string | null' is not assignable to type 'st... Remove this comment to see the full error message */}
 					<a href={license.link}>
 						{license.full} {license.summary && `(${license.summary})`}
 					</a>
@@ -189,9 +179,8 @@ const renderFrontMatter = ({
 	communityTitle,
 	accentColor,
 	attributions,
-	licenseSlug,
-	copyrightYear,
 	publisher,
+	license,
 }: PubMetadata) => {
 	const affiliations = [
 		...new Set(attributions.map((attr) => attr.affiliation).filter((x) => x)),
@@ -256,9 +245,7 @@ const renderFrontMatter = ({
 					updatedDateString,
 					publishedDateString,
 					doi,
-					licenseSlug,
-					copyrightYear,
-					publisher,
+					license,
 				})}
 			</div>
 		</section>
