@@ -2,7 +2,7 @@ import dateFormat from 'dateformat';
 
 import * as types from 'types';
 import ensureUserForAttribution from 'utils/ensureUserForAttribution';
-import { getPubCopyrightYear, getPubPublishedDate, getPubUpdatedDate } from 'utils/pub/pubDates';
+import { getPubPublishedDate, getPubUpdatedDate } from 'utils/pub/pubDates';
 import { getPrimaryCollection } from 'utils/collections/primary';
 import { renderJournalCitation } from 'utils/citations';
 import {
@@ -15,8 +15,8 @@ import {
 	includeUserModel,
 } from 'server/models';
 
-import { PubMetadata } from './types';
 import { getLicenseForPub } from 'utils/licenses';
+import { PubMetadata } from './types';
 
 const getPrimaryCollectionMetadata = (collectionPubs: types.CollectionPub[]) => {
 	const primaryCollection = getPrimaryCollection(collectionPubs);
@@ -54,7 +54,6 @@ export const getPubMetadata = async (pubId: string): Promise<PubMetadata> => {
 		],
 	});
 	const publishedDate = getPubPublishedDate(pubData);
-	const copyrightYear = getPubCopyrightYear(pubData);
 	const license = getLicenseForPub(pubData, pubData.community);
 	const updatedDate = getPubUpdatedDate({ pub: pubData });
 	const publishedDateString = publishedDate && dateFormat(publishedDate, 'mmm dd, yyyy');
