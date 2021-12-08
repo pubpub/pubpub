@@ -6,7 +6,7 @@ import { useManyPubs } from 'client/utils/useManyPubs';
 import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 
 import { PubOverviewRow, OverviewRows, LoadMorePubsRow, SpecialRow } from '../overviewRows';
-import { KindToggle, OverviewSearchGroup, OverviewSearchFilter } from '../helpers';
+import { OverviewSearchGroup, OverviewSearchFilter } from '../helpers';
 
 require('./submissionItems.scss');
 
@@ -16,8 +16,11 @@ type Props = {
 	initiallyLoadedAllPubs: boolean;
 };
 
-// i wish for a better way to do this
+const pendingQuery: Partial<PubsQuery> = {
+	submissionStatuses: ['submitted'],
+};
 
+// i wish for a better way to do this
 const queriesForSubmissionPubs: Record<string, Partial<PubsQuery>> = {
 	default: {
 		submissionStatuses: ['incomplete', 'submitted', 'accepted', 'declined'],
@@ -49,7 +52,6 @@ const SubmissionItems = (props: Props) => {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [filter, setFilter] = useState<null | Partial<PubsQuery>>(null);
 	const [showPubs] = useState(true);
-	const [showSubmissions, setShowSubmissions] = useState(false);
 	const isSearchingOrFiltering = !!filter || !!searchTerm;
 
 	const {
@@ -104,7 +106,7 @@ const SubmissionItems = (props: Props) => {
 				filter={filteredData}
 			/>
 			<OverviewRows>
-				{showPubs && renderPubs()}
+				{renderPubs()}
 				{canLoadMorePubs && <LoadMorePubsRow isLoading />}
 				{renderEmptyState()}
 			</OverviewRows>
