@@ -17,20 +17,20 @@ type Props = {
 };
 
 const defaultQuery: Partial<PubsQuery> = {
-	submissionStatuses: ['incomplete', 'submitted', 'accepted', 'declined'],
+	submissionStatuses: ['incomplete', 'pending', 'accepted', 'declined'],
 };
 
 const pendingQuery: Partial<PubsQuery> = {
-	submissionStatuses: ['submitted'],
+	submissionStatuses: ['pending'],
 };
 
 // i wish for a better way to do this
 // const queriesForSubmissionPubs: Record<string, Partial<PubsQuery>> = {
 // 	default: {
-// 		submissionStatuses: ['incomplete', 'submitted', 'accepted', 'declined'],
+// 		submissionStatuses: ['incomplete', 'pending', 'accepted', 'declined'],
 // 	},
 // 	pending: {
-// 		submissionStatuses: ['submitted'],
+// 		submissionStatuses: ['pending'],
 // 	},
 // 	accpted: {
 // 		submissionStatuses: ['accepted'],

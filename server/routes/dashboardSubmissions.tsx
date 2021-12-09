@@ -35,7 +35,7 @@ app.get(['/dash/collection/:collectionSlug/submissions'], async (req, res, next)
 					limit,
 					communityId: communityData.id,
 					scopedCollectionId: collectionId,
-					submissionStatuses: ['incomplete', 'submitted', 'accepted', 'declined'],
+					submissionStatuses: ['incomplete', 'pending', 'accepted', 'declined'],
 				},
 			});
 			return result.sanitize(initialData);
