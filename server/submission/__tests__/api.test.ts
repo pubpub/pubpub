@@ -26,7 +26,10 @@ const models = modelize`
 						permissions: "admin"
 						User pubAdmin {}
 					}
-					Submission submission {
+					Submission submission1 {
+						status: "incomplete"
+					}
+					Submission submission2 {
 						status: "incomplete"
 					}
 				}
@@ -70,159 +73,223 @@ it('creates a new submission', async () => {
 });
 
 it('forbids pub admins to update pub status beyond completed', async () => {
-	const { pubAdmin, submission } = models;
+	const { pubAdmin, submission1 } = models;
 	const agent = await login(pubAdmin);
 	await agent
 		.put('/api/submissions')
 		.send({
-			id: submission.id,
+			id: submission1.id,
 			status: 'accepted',
 		})
 		.expect(403);
 });
 
 it('forbids admins of another community to update pub status', async () => {
-	const { submission, community, collection, anotherAdmin } = models;
+	const { submission1, community, collection, anotherAdmin } = models;
 	const agent = await login(anotherAdmin);
 	await agent
 		.put('/api/submissions')
 		.send({
 			communityId: community.id,
 			collectionId: collection.id,
-			id: submission.id,
+			id: submission1.id,
 			status: 'completed',
 		})
 		.expect(403);
 });
 
 it('forbids collection editors to update pub status', async () => {
-	const { submission, collectionMember, community } = models;
+	const { submission1, collectionMember, community } = models;
 	const agent = await login(collectionMember);
 	await agent
 		.put('/api/submissions')
 		.send({
 			communityId: community.id,
-			id: submission.id,
+			id: submission1.id,
 			status: 'completed',
 		})
 		.expect(403);
 });
 
 it('forbids admins to update from incomplete status', async () => {
-	const { admin, submission } = models;
+	const { admin, submission1 } = models;
 	const agent = await login(admin);
 	await agent
 		.put('/api/submissions')
 		.send({
-			id: submission.id,
+			id: submission1.id,
 			status: 'accepted',
 		})
 		.expect(403);
 });
 
 it('allows pub editors to set submitted status', async () => {
-	const { pubAdmin, submission } = models;
+	const { pubAdmin, submission1 } = models;
 	const agent = await login(pubAdmin);
 	const prevSubmission: types.Submission = await Submission.findOne({
-		where: { id: submission.id },
+		where: { id: submission1.id },
 	});
 	await expectCreatedActivityItem(
 		agent
 			.put('/api/submissions')
 			.send({
-				id: submission.id,
-				pubId: submission.pubId,
+				id: submission1.id,
+				pubId: submission1.pubId,
 				status: 'submitted',
 			})
 			.expect(201),
 	).toMatchResultingObject((response) => ({
 		kind: 'submission-status-changed',
-		pubId: submission.pubId,
+		pubId: submission1.pubId,
 		actorId: pubAdmin.id,
 		payload: {
-			submissionId: submission.id,
+			submissionId: submission1.id,
 			status: {
 				from: prevSubmission.status,
 				to: response.body.status,
 			},
 		},
 	}));
-	const { status } = await Submission.findOne({ where: { id: submission.id } });
+	const { status } = await Submission.findOne({ where: { id: submission1.id } });
 	expect(status).toEqual('submitted');
 });
 
 it('forbids admins to update status out of one of [submitted, accepted, declined]', async () => {
-	const { admin, submission } = models;
+	const { admin, submission1 } = models;
 	const agent = await login(admin);
 	await agent
 		.put('/api/submissions')
 		.send({
-			id: submission.id,
+			id: submission1.id,
 			status: 'incomplete',
 		})
 		.expect(403);
 });
 
 it('allows collection managers to update pub status to submitted', async () => {
-	const { collection, collectionManager, submission } = models;
+	const { collection, collectionManager, submission2 } = models;
 	const agent = await login(collectionManager);
 	const prevSubmission: types.Submission = await Submission.findOne({
-		where: { id: submission.id },
+		where: { id: submission2.id },
 	});
 	await expectCreatedActivityItem(
 		agent
 			.put('/api/submissions')
 			.send({
-				pubId: submission.pubId,
+				pubId: submission2.pubId,
 				collectionId: collection.id,
-				id: submission.id,
+				id: submission2.id,
 				status: 'submitted',
 			})
 			.expect(201),
 	).toMatchResultingObject((response) => ({
 		kind: 'submission-status-changed',
-		pubId: submission.pubId,
+		pubId: submission2.pubId,
 		actorId: collectionManager.id,
 		payload: {
-			submissionId: submission.id,
+			submissionId: submission2.id,
 			status: {
 				from: prevSubmission.status,
 				to: response.body.status,
 			},
 		},
 	}));
-	const { status } = await Submission.findOne({ where: { id: submission.id } });
+	const { status } = await Submission.findOne({ where: { id: submission2.id } });
+	expect(status).toEqual('submitted');
+});
+
+it('allows collection managers to update pub status to accepted', async () => {
+	const { collection, collectionManager, submission2 } = models;
+	const agent = await login(collectionManager);
+	const prevSubmission: types.Submission = await Submission.findOne({
+		where: { id: submission2.id },
+	});
+	await expectCreatedActivityItem(
+		agent
+			.put('/api/submissions')
+			.send({
+				pubId: submission2.pubId,
+				collectionId: collection.id,
+				id: submission2.id,
+				status: 'accepted',
+			})
+			.expect(201),
+	).toMatchResultingObject((response) => ({
+		kind: 'submission-status-changed',
+		pubId: submission2.pubId,
+		actorId: collectionManager.id,
+		payload: {
+			submissionId: submission2.id,
+			status: {
+				from: prevSubmission.status,
+				to: response.body.status,
+			},
+		},
+	}));
+	const { status } = await Submission.findOne({ where: { id: submission2.id } });
 	expect(status).toEqual('accepted');
 });
 
+it('allows collection managers to update pub status to declined', async () => {
+	const { collection, collectionManager, submission2 } = models;
+	const agent = await login(collectionManager);
+	const prevSubmission: types.Submission = await Submission.findOne({
+		where: { id: submission2.id },
+	});
+	await expectCreatedActivityItem(
+		agent
+			.put('/api/submissions')
+			.send({
+				pubId: submission2.pubId,
+				collectionId: collection.id,
+				id: submission2.id,
+				status: 'declined',
+			})
+			.expect(201),
+	).toMatchResultingObject((response) => ({
+		kind: 'submission-status-changed',
+		pubId: submission2.pubId,
+		actorId: collectionManager.id,
+		payload: {
+			submissionId: submission2.id,
+			status: {
+				from: prevSubmission.status,
+				to: response.body.status,
+			},
+		},
+	}));
+	const { status } = await Submission.findOne({ where: { id: submission2.id } });
+	expect(status).toEqual('declined');
+});
+
 it('forbids normal user to delete a submission', async () => {
-	const { guest, submission, community } = models;
+	const { guest, submission1, community } = models;
 	const agent = await login(guest);
 	await agent
 		.delete('/api/submissions')
-		.send({ id: submission.id, communityId: community.id })
+		.send({ id: submission1.id, communityId: community.id })
 		.expect(403);
-	const submissionNow = await Submission.findOne({ where: { id: submission.id } });
-	expect(submissionNow.id).toEqual(submission.id);
+	const submissionNow = await Submission.findOne({ where: { id: submission1.id } });
+	expect(submissionNow.id).toEqual(submission1.id);
 });
 
 it('allows admin to delete a submission', async () => {
-	const { admin, community, submission } = models;
+	const { admin, community, submission1 } = models;
 	const agent = await login(admin);
 	await expectCreatedActivityItem(
 		agent
 			.delete('/api/submissions')
-			.send({ id: submission.id, communityId: community.id })
+			.send({ id: submission1.id, communityId: community.id })
 			.expect(200),
 	).toMatchObject({
 		kind: 'submission-deleted',
-		pubId: submission.pubId,
+		pubId: submission1.pubId,
 		actorId: admin.id,
 		payload: {
-			submissionId: submission.id,
+			submissionId: submission1.id,
 		},
 	});
-	const submissionNow = await Submission.findOne({ where: { id: submission.id } });
+	const submissionNow = await Submission.findOne({ where: { id: submission1.id } });
 	expect(submissionNow).toEqual(null);
 });
 
