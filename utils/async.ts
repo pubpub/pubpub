@@ -64,12 +64,12 @@ export async function asyncMap<T, R>(
 					cursor++;
 					pending++;
 					Promise.resolve(next)
-						.then(function onVisitedPromiseResolve(value) {
+						.then((value) => {
 							return iteratee(value, index, resolvedLength);
 						})
 						.then(
 							// eslint-disable-next-line no-loop-func
-							function onVisitedPromiseUnwrapped(value) {
+							(value) => {
 								pending--;
 								results[index] = value;
 								enqueueNextPromises();
@@ -77,7 +77,7 @@ export async function asyncMap<T, R>(
 						)
 						.catch(
 							// eslint-disable-next-line no-loop-func
-							function onVisitedPromiseReject(err) {
+							(err) => {
 								pending--;
 								reject(err);
 							},

@@ -105,7 +105,7 @@ export const updatePub = (inputValues, updatePermissions, actorId) => {
 	});
 };
 
-export const destroyPub = (pubId: string, actorId: string) => {
+export const destroyPub = (pubId: string, actorId: null | string = null) => {
 	return Pub.destroy({
 		where: { id: pubId },
 		individualHooks: true,
