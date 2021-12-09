@@ -7,6 +7,7 @@ import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 
 import { PubOverviewRow, OverviewRows, LoadMorePubsRow, SpecialRow } from '../overviewRows';
 import { OverviewSearchGroup, OverviewSearchFilter } from '../helpers';
+import { queryPub } from 'tools/5to6/v5/queryPub';
 
 require('./submissionItems.scss');
 
@@ -16,46 +17,37 @@ type Props = {
 	initiallyLoadedAllPubs: boolean;
 };
 
-const defaultQuery: Partial<PubsQuery> = {
-	submissionStatuses: ['incomplete', 'pending', 'accepted', 'declined'],
-};
-
-const pendingQuery: Partial<PubsQuery> = {
-	submissionStatuses: ['pending'],
-};
-
 // i wish for a better way to do this
-// const queriesForSubmissionPubs: Record<string, Partial<PubsQuery>> = {
-// 	default: {
-// 		submissionStatuses: ['incomplete', 'pending', 'accepted', 'declined'],
-// 	},
-// 	pending: {
-// 		submissionStatuses: ['pending'],
-// 	},
-// 	accpted: {
-// 		submissionStatuses: ['accepted'],
-// 	},
-// 	declined: {
-// 		submissionStatuses: ['declined'],
-// 	},
-// };
+const queriesForSubmissionPubs: Record<string, Partial<PubsQuery>> = {
+	default: {
+		submissionStatuses: ['incomplete', 'pending', 'accepted', 'declined'],
+	},
+	pending: {
+		submissionStatuses: ['pending'],
+	},
+	accpted: {
+		submissionStatuses: ['accepted'],
+	},
+	declined: {
+		submissionStatuses: ['declined'],
+	},
+};
 
 const filteredData: OverviewSearchFilter[] = [
-	{ id: 'all', title: 'All', query: defaultQuery },
+	{ id: 'all', title: 'All', query: queriesForSubmissionPubs.default },
 	{
 		id: 'pending',
 		title: 'Pending',
-		query: pendingQuery,
+		query: queriesForSubmissionPubs.pending,
 	},
-	// { id: 'accepted', title: 'Accepted', query: queriesForSubmissionPubs.accepted },
-	// { id: 'declined', title: 'Declined', query: queriesForSubmissionPubs.declined },
+	{ id: 'accepted', title: 'Accepted', query: queriesForSubmissionPubs.accepted },
+	{ id: 'declined', title: 'Declined', query: queriesForSubmissionPubs.declined },
 ];
 
 const SubmissionItems = (props: Props) => {
 	const { collection, initialPubs, initiallyLoadedAllPubs } = props;
 	const [searchTerm, setSearchTerm] = useState('');
 	const [filter, setFilter] = useState<null | Partial<PubsQuery>>(null);
-	const [showPubs] = useState(true);
 	const isSearchingOrFiltering = !!filter || !!searchTerm;
 
 	const {
@@ -72,8 +64,7 @@ const SubmissionItems = (props: Props) => {
 		},
 	});
 
-	const canLoadMorePubs = !hasLoadedAllPubs && showPubs;
-
+	const canLoadMorePubs = !hasLoadedAllPubs;
 	useInfiniteScroll({
 		enabled: !isLoading && canLoadMorePubs,
 		useDocumentElement: true,
