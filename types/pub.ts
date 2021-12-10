@@ -84,7 +84,6 @@ export type Pub = {
 	editHash?: string;
 	communityId: string;
 	community?: Community;
-	submission?: Submission;
 	discussions?: Discussion[];
 	attributions: PubAttribution[];
 	collectionPubs?: CollectionPub[];
@@ -103,6 +102,7 @@ export type Pub = {
 	draft?: Draft;
 	scopeSummaryId: null | string;
 	scopeSummary: ScopeSummary;
+	submission?: Submission;
 };
 
 export type PubDocInfo = {

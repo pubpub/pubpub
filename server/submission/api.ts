@@ -1,42 +1,42 @@
 import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
+import { getPub } from 'server/utils/queryHelpers';
 
-import { getPermissions, canUpdate } from './permissions';
+import { canCreateSubmission, canUpdateSubmission, canDeleteSubmission } from './permissions';
 import { createSubmission, updateSubmission, destroySubmission } from './queries';
-
-const getRequestIds = (req) => {
-	const user = req.user || {};
-	return {
-		id: req.body.id || null,
-		userId: user.id,
-		communityId: req.body.communityId,
-		collectionId: req.body.collectionId,
-	};
-};
 
 app.post(
 	'/api/submissions',
 	wrap(async (req, res) => {
-		const ids = getRequestIds(req);
-		const permissions = await getPermissions(ids);
-		if (!permissions.create) {
+		const { submissionWorkflowId } = req.body;
+		const userId = req.user?.id;
+		const canCreate = await canCreateSubmission({
+			userId,
+			submissionWorkflowId,
+		});
+		if (!canCreate) {
 			throw new ForbiddenError();
 		}
-		const newSubmission = await createSubmission(req.body, ids.userId);
-
-		return res.status(201).json(newSubmission);
+		const newSubmission = await createSubmission({ userId, submissionWorkflowId }, userId);
+		const pub = await getPub({ id: newSubmission.pubId });
+		return res.status(201).json({ ...newSubmission.toJSON(), pub: { slug: pub.slug } });
 	}),
 );
 
 app.put(
 	'/api/submissions',
 	wrap(async (req, res) => {
-		const ids = getRequestIds(req);
-		const { status } = req.body;
-		if (!(await canUpdate({ ...ids, status }))) {
+		const { status, id } = req.body;
+		const canUpdate = await canUpdateSubmission({
+			userId: req.user?.id,
+			id,
+			status,
+		});
+
+		if (!canUpdate) {
 			throw new ForbiddenError();
 		}
-		const updatedValues = await updateSubmission(req.body, ids.userId);
+		const updatedValues = await updateSubmission(req.body, req.user?.id);
 		return res.status(201).json(updatedValues);
 	}),
 );
@@ -44,12 +44,15 @@ app.put(
 app.delete(
 	'/api/submissions',
 	wrap(async (req, res) => {
-		const ids = getRequestIds(req);
-		const permissions = await getPermissions(ids);
-		if (!permissions.destroy) {
+		const { id } = req.body;
+		const canDelete = await canDeleteSubmission({
+			userId: req.user?.id,
+			id,
+		});
+		if (!canDelete) {
 			throw new ForbiddenError();
 		}
-		await destroySubmission(req.body, ids.userId);
+		await destroySubmission(req.body, req.user?.id);
 		return res.status(200).json(req.body.id);
 	}),
 );

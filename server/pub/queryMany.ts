@@ -16,7 +16,7 @@ const defaultColumns = {
 };
 
 const createColumns = (query: PubsQuery) => {
-	const { scopedCollectionId, term } = query;
+	const { scopedCollectionId, term, ordering } = query;
 	const collectionRank = scopedCollectionId
 		? knex.raw('(array_agg("scopedCollectionPub"."rank"))[1]')
 		: knex.raw('(array_agg("CollectionPubs"."rank"))[1]');
@@ -28,11 +28,15 @@ const createColumns = (query: PubsQuery) => {
 	const hasReviews =
 		typeof query.hasReviews === 'boolean' &&
 		knex.raw('array_remove(array_agg("ReviewNews"."id"), null) != Array[]::uuid[]');
+	const submittedDate =
+		ordering?.field === 'submittedDate' &&
+		knex.raw('(array_agg("Submissions"."submittedAt"))[1]');
 	return {
 		...defaultColumns,
 		collectionRank,
 		...(authorNames && { authorNames }),
 		...(hasReviews && { hasReviews }),
+		...(submittedDate && { submittedDate }),
 	};
 };
 
@@ -50,7 +54,7 @@ const createInnerWhereClause = (query: PubsQuery) => {
 };
 
 const createJoins = (query: PubsQuery) => {
-	const { scopedCollectionId, term, hasReviews } = query;
+	const { scopedCollectionId, term, hasReviews, submissionStatuses, ordering } = query;
 	return (builder: QueryBuilder) => {
 		if (scopedCollectionId) {
 			builder.innerJoin(
@@ -66,6 +70,15 @@ const createJoins = (query: PubsQuery) => {
 		builder.leftOuterJoin('Drafts', 'Pubs.draftId', 'Drafts.id');
 		if (typeof hasReviews === 'boolean') {
 			builder.leftOuterJoin('ReviewNews', 'Pubs.id', 'ReviewNews.pubId');
+		}
+		if (submissionStatuses || ordering?.field === 'submittedDate') {
+			const joinOnStatuses = submissionStatuses && {
+				'Submissions.status': knex.raw('some(?::text[])', [submissionStatuses]),
+			};
+			builder.innerJoin('Submissions', {
+				'Submissions.pubId': 'Pubs.id',
+				...joinOnStatuses,
+			});
 		}
 		if (term) {
 			builder.leftOuterJoin('PubAttributions', 'Pubs.id', 'PubAttributions.pubId');

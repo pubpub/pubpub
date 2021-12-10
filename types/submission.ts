@@ -15,4 +15,5 @@ export type Submission = {
 	pubId: string;
 	pub?: Pub;
 	status: SubmissionStatus;
+	submittedAt: null | string;
 };

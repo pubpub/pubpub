@@ -11,6 +11,9 @@ const models = modelize`
     User termUser {
         fullName: "Find This Guy"
     }
+	SubmissionWorkflow submissionWorkflow {
+		title: "A workflow"
+	}
     Community community {
         Collection c1 {}
         Collection c2 {}
@@ -28,6 +31,11 @@ const models = modelize`
             PubAttribution {
                 name: "Please Find"
             }
+			Submission {
+				submissionWorkflow
+				status: "accepted"
+				submittedAt: "2021-12-01"
+			}
         }
         Pub p2 {
             title: "2"
@@ -42,6 +50,11 @@ const models = modelize`
             PubAttribution {
                 termUser
             }
+			Submission {
+				submissionWorkflow
+				status: "declined"
+				submittedAt: "2021-12-02"
+			}
         }
         Pub p3 {
             title: "3"
@@ -67,6 +80,10 @@ const models = modelize`
                 Thread {}
                 User {}
             }
+			Submission {
+				submissionWorkflow
+				status: "submitted"
+			}
         }
         Pub p4 {
             title: "4 Find 5 Furious"
@@ -187,6 +204,31 @@ describe('queryPubIds', () => {
 			{ ordering: collectionRankOrdering, scopedCollectionId: c1.id },
 			[p3, p1],
 		);
+	});
+
+	it('Filters for Pubs with certain submission statuses', async () => {
+		const { p1, p2, p3 } = models;
+		await expectPubIdsForQuery(
+			{ ordering: titleOrdering, submissionStatuses: ['accepted', 'submitted'] },
+			[p1, p3],
+		);
+		await expectPubIdsForQuery({ ordering: titleOrdering, submissionStatuses: ['declined'] }, [
+			p2,
+		]);
+	});
+
+	it('Orders Pubs by submission date', async () => {
+		const { p1, p2, p3 } = models;
+		await expectPubIdsForQuery({ ordering: { field: 'submittedDate', direction: 'DESC' } }, [
+			p2,
+			p1,
+			p3,
+		]);
+		await expectPubIdsForQuery({ ordering: { field: 'submittedDate', direction: 'ASC' } }, [
+			p1,
+			p2,
+			p3,
+		]);
 	});
 
 	it('Filters for Pubs by a title or author term', async () => {
