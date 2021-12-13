@@ -21,8 +21,19 @@ type Props = {
 	onCommitSearchTerm?: SearchTermCallback;
 	onChooseFilter?: (q: null | Partial<PubsQuery>) => unknown;
 	rightControls?: React.ReactNode;
-	filter?: OverviewSearchFilter[];
+	filters?: OverviewSearchFilter[];
 };
+
+const defaultFilters: OverviewSearchFilter[] = [
+	{ id: 'all', title: 'All', query: null },
+	{
+		id: 'latest',
+		title: 'Latest',
+		query: { ordering: { field: 'creationDate', direction: 'DESC' } },
+	},
+	{ id: 'drafts', title: 'Drafts', query: { isReleased: false } },
+	{ id: 'released', title: 'Released', query: { isReleased: true } },
+];
 
 const OverviewSearchGroup = (props: Props) => {
 	const {
@@ -31,16 +42,7 @@ const OverviewSearchGroup = (props: Props) => {
 		onUpdateSearchTerm,
 		rightControls,
 		onChooseFilter,
-		filter = [
-			{ id: 'all', title: 'All', query: null },
-			{
-				id: 'latest',
-				title: 'Latest',
-				query: { ordering: { field: 'creationDate', direction: 'DESC' } },
-			},
-			{ id: 'drafts', title: 'Drafts', query: { isReleased: false } },
-			{ id: 'released', title: 'Released', query: { isReleased: true } },
-		],
+		filters = defaultFilters,
 	} = props;
 	const [isSearchFocused, setIsSearchFocused] = useState(false);
 
@@ -67,12 +69,11 @@ const OverviewSearchGroup = (props: Props) => {
 	const handleFilterChange = useCallback(
 		(filterId: string) => {
 			if (onChooseFilter) {
-				const filterChange = filter.find((f) => f.id === filterId)!;
-
-				onChooseFilter(filterChange.query);
+				const filter = filters.find((f) => f.id === filterId)!;
+				onChooseFilter(filter.query);
 			}
 		},
-		[filter, onChooseFilter],
+		[filters, onChooseFilter],
 	);
 
 	return (
@@ -83,7 +84,7 @@ const OverviewSearchGroup = (props: Props) => {
 					id="overview-search-group-filter"
 					onChange={handleFilterChange}
 				>
-					{filter.map((filtering) => (
+					{filters.map((filtering) => (
 						<Tab id={filtering.id} key={filtering.id} title={filtering.title} />
 					))}
 				</Tabs>

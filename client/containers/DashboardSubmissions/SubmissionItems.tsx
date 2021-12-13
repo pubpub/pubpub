@@ -36,7 +36,7 @@ const queriesForSubmissionPubs: Record<string, Partial<PubsQuery>> = {
 	},
 };
 
-const overviewSearchFields: OverviewSearchFilter[] = [
+const overviewSearchFilters: OverviewSearchFilter[] = [
 	{ id: 'all', title: 'All', query: queriesForSubmissionPubs.default },
 	{
 		id: 'pending',
@@ -103,7 +103,7 @@ const SubmissionItems = (props: Props) => {
 				onUpdateSearchTerm={(t) => t === '' && setSearchTerm(t)}
 				onCommitSearchTerm={setSearchTerm}
 				onChooseFilter={setFilter}
-				filter={overviewSearchFields}
+				filters={overviewSearchFilters}
 			/>
 			<OverviewRows>
 				{renderPubs()}
