@@ -1,8 +1,7 @@
 import { useState } from 'react';
 
 import { NoteManager } from 'client/utils/notes';
-import { InitialData, Page } from 'types';
-import { PageContext } from 'types/context';
+import { InitialData, Page, PageContext } from 'types';
 
 // viewData contains container-specific props that we usually shouldn't peek at when doing
 // operations that could occur inside _any_ container -- but sometimes we cheat. This type
@@ -18,6 +17,7 @@ export const usePageState = (initialData: InitialData, viewData: PossibleViewDat
 		locationData: initialLocationData,
 		scopeData: initialScopeData,
 		featureFlags,
+		initialNotificationsData,
 	} = initialData;
 	const { pageData: initialPageData } = viewData;
 	const [loginData] = useState(initialLoginData);
