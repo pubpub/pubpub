@@ -75,7 +75,9 @@ const SubmissionItems = (props: Props) => {
 	});
 
 	const renderPubs = () => {
-		return pubs.map((pub) => <PubOverviewRow pub={pub} key={pub.id} />);
+		return pubs.map((pub) => (
+			<PubOverviewRow pub={pub} key={pub.id} leftIconElement="manually-entered-data" />
+		));
 	};
 
 	const renderEmptyState = () => {
