@@ -1,6 +1,5 @@
 /* global expect */
 import { Op } from 'sequelize';
-import util from 'util';
 
 import { ActivityItem } from 'server/models';
 import { finishDeferredTasks } from 'server/utils/deferred';
