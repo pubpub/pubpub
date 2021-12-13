@@ -68,5 +68,6 @@ export const usePageState = (initialData: InitialData, viewData: PossibleViewDat
 		updateCollection,
 		noteManager,
 		featureFlags,
+		initialNotificationsData,
 	};
 };
