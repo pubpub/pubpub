@@ -7,7 +7,6 @@ import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 
 import { PubOverviewRow, OverviewRows, LoadMorePubsRow, SpecialRow } from '../overviewRows';
 import { OverviewSearchGroup, OverviewSearchFilter } from '../helpers';
-import { queryPub } from 'tools/5to6/v5/queryPub';
 
 require('./submissionItems.scss');
 
@@ -17,7 +16,6 @@ type Props = {
 	initiallyLoadedAllPubs: boolean;
 };
 
-// i wish for a better way to do this
 const queriesForSubmissionPubs: Record<string, Partial<PubsQuery>> = {
 	default: {
 		submissionStatuses: ['incomplete', 'pending', 'accepted', 'declined'],
@@ -25,7 +23,7 @@ const queriesForSubmissionPubs: Record<string, Partial<PubsQuery>> = {
 	pending: {
 		submissionStatuses: ['pending'],
 	},
-	accpted: {
+	accepted: {
 		submissionStatuses: ['accepted'],
 	},
 	declined: {
@@ -33,7 +31,7 @@ const queriesForSubmissionPubs: Record<string, Partial<PubsQuery>> = {
 	},
 };
 
-const filteredData: OverviewSearchFilter[] = [
+const overviewSearchFields: OverviewSearchFilter[] = [
 	{ id: 'all', title: 'All', query: queriesForSubmissionPubs.default },
 	{
 		id: 'pending',
@@ -98,7 +96,7 @@ const SubmissionItems = (props: Props) => {
 				onUpdateSearchTerm={(t) => t === '' && setSearchTerm(t)}
 				onCommitSearchTerm={setSearchTerm}
 				onChooseFilter={setFilter}
-				filter={filteredData}
+				filter={overviewSearchFields}
 			/>
 			<OverviewRows>
 				{renderPubs()}
