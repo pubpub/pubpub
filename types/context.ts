@@ -1,7 +1,6 @@
 import {
 	Collection,
-	Community,
-	InitialNotificationsData,
+	InitialCommunityData,
 	LocationData,
 	LoginData,
 	Maybe,
@@ -16,10 +15,9 @@ export type PageContext = {
 	loginData: LoginData;
 	locationData: LocationData;
 	pageData: Maybe<Page>;
-	communityData: Community;
-	updateCommunity: PatchFn<Community>;
+	communityData: InitialCommunityData;
+	updateCommunity: PatchFn<InitialCommunityData>;
 	updateCollection: PatchFn<Collection>;
 	featureFlags: Record<string, boolean>;
 	noteManager: NoteManager;
-	initialNotificationsData: InitialNotificationsData;
 };
