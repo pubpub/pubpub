@@ -5,8 +5,13 @@ import { Collection, Pub, PubsQuery } from 'types';
 import { useManyPubs } from 'client/utils/useManyPubs';
 import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 
-import { PubOverviewRow, OverviewRows, LoadMorePubsRow, SpecialRow } from '../overviewRows';
-import { OverviewSearchGroup, OverviewSearchFilter } from '../helpers';
+import {
+	PubOverviewRow,
+	OverviewRows,
+	LoadMorePubsRow,
+	SpecialRow,
+} from '../DashboardOverview/overviewRows';
+import { OverviewSearchGroup, OverviewSearchFilter } from '../DashboardOverview/helpers';
 
 require('./submissionItems.scss');
 

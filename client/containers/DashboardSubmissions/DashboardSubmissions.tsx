@@ -6,7 +6,7 @@ import { usePageContext } from 'utils/hooks';
 
 import SubmissionItems from './SubmissionItems';
 import SubmissionWorkFlowButton from './SubmissionWorkflowButton';
-import { OverviewFrame, OverviewSection } from '../helpers';
+import { OverviewFrame, OverviewSection } from '../DashboardOverview/helpers';
 
 require('./dashboardSubmissions.scss');
 
