@@ -1,7 +1,7 @@
 import React from 'react';
 import TimeAgo from 'react-timeago';
 
-import { ScopeSummary, Collection, Pub } from 'types';
+import { ScopeSummary, Collection, Pub, SubmissionStatus } from 'types';
 import { capitalize } from 'utils/strings';
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { formatDate, timeAgoBaseProps } from 'utils/dates';
@@ -77,4 +77,31 @@ export const getPubReleasedStateLabel = (pub: Pub) => {
 		label: 'Unreleased',
 		icon: 'lock' as const,
 	};
+};
+
+export const getSubmissionStatusLabel = (submissionStatus: Partial<SubmissionStatus>) => {
+	if (submissionStatus === 'accepted') {
+		return {
+			label: 'Accepted',
+			icon: <div>Green Block</div>,
+		};
+	}
+	if (submissionStatus === 'declined') {
+		return {
+			label: 'Declined',
+			icon: <div>Red Block</div>,
+		};
+	}
+	if (submissionStatus === 'pending') {
+		return {
+			label: 'Pending',
+			icon: <div>Yellow Block</div>,
+		};
+	}
+	if (submissionStatus === 'incomplete') {
+		return {
+			label: 'Incomplete',
+			icon: <div>Gray Block</div>,
+		};
+	}
 };
