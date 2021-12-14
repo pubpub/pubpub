@@ -23,3 +23,4 @@ export * from './thread';
 export * from './userSubscription';
 export * from './util';
 export * from './visibility';
+export * from './iconLabel';

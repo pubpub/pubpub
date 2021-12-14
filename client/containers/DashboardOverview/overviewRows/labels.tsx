@@ -1,13 +1,12 @@
 import React from 'react';
-import TimeAgo from 'react-timeago';
+import { TimeAgo as Time } from 'react-timeago';
 
-import { ScopeSummary, Collection, Pub, SubmissionStatus } from 'types';
+import { ScopeSummary, Collection, Pub, SubmissionStatus, IconLabelPair } from 'types';
 import { capitalize } from 'utils/strings';
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { formatDate, timeAgoBaseProps } from 'utils/dates';
 import { getPubPublishedDate } from 'utils/pub/pubDates';
-
-import { IconLabelPair } from './OverviewRowSkeleton';
+import TimeAgo from 'client/components/TimeAgo/TimeAgo';
 
 export const getScopeSummaryLabels = (summary: ScopeSummary, showPubs = false) => {
 	const { discussions, reviews, pubs } = summary;
@@ -62,7 +61,7 @@ const getDateLabelPart = (date: Date) => {
 	if (pageLoadTimeMs - date.valueOf() > maxTimeagoPeriod) {
 		return `on ${formatDate(date)}`;
 	}
-	return <TimeAgo {...timeAgoBaseProps} live={false} date={date} />;
+	return <Time {...timeAgoBaseProps} live={false} date={date} />;
 };
 
 export const getPubReleasedStateLabel = (pub: Pub) => {
@@ -79,27 +78,37 @@ export const getPubReleasedStateLabel = (pub: Pub) => {
 	};
 };
 
-export const getSubmissionStatusLabel = (submissionStatus: Partial<SubmissionStatus>) => {
+export const getSubmissionStatusLabel = (
+	submissionStatus: Partial<SubmissionStatus>,
+): IconLabelPair => {
 	if (submissionStatus === 'accepted') {
 		return {
 			label: 'Accepted',
-			icon: <div>Green Block</div>,
+			icon: 'lock',
 		};
 	}
 	if (submissionStatus === 'declined') {
 		return {
 			label: 'Declined',
-			icon: <div>Red Block</div>,
+			icon: 'lock',
 		};
 	}
 	if (submissionStatus === 'pending') {
 		return {
 			label: 'Pending',
-			icon: <div>Yellow Block</div>,
+			icon: 'lock',
 		};
 	}
 	return {
 		label: 'Incomplete',
-		icon: <div>Gray Block</div>,
+		icon: 'lock',
 	};
+};
+
+export const getSubmissionTimeLabel = (
+	date: number | string | Date,
+	useDateCutoffDays: number,
+	className: string,
+) => {
+	return <div> Time-symbol Submitted {TimeAgo({ date, useDateCutoffDays, className })} </div>;
 };
