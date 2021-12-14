@@ -73,6 +73,7 @@ const PubOverviewRow = (props: Props) => {
 		getPubReleasedStateLabel(pub),
 	]);
 
+	console.log(labelPairs);
 	// if submission get submissinolabel pairs
 	// set them in a div as a variable
 	// render div with submissino status
