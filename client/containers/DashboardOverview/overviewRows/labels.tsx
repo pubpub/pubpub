@@ -98,10 +98,8 @@ export const getSubmissionStatusLabel = (submissionStatus: Partial<SubmissionSta
 			icon: <div>Yellow Block</div>,
 		};
 	}
-	if (submissionStatus === 'incomplete') {
-		return {
-			label: 'Incomplete',
-			icon: <div>Gray Block</div>,
-		};
-	}
+	return {
+		label: 'Incomplete',
+		icon: <div>Gray Block</div>,
+	};
 };
