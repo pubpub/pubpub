@@ -1,12 +1,11 @@
 import React from 'react';
-import { TimeAgo as Time } from 'react-timeago';
 
 import { ScopeSummary, Collection, Pub, SubmissionStatus, IconLabelPair } from 'types';
 import { capitalize } from 'utils/strings';
 import { getSchemaForKind } from 'utils/collections/schemas';
-import { formatDate, timeAgoBaseProps } from 'utils/dates';
+import { formatDate } from 'utils/dates';
 import { getPubPublishedDate } from 'utils/pub/pubDates';
-import TimeAgo from 'client/components/TimeAgo/TimeAgo';
+import { TimeAgo } from 'components';
 
 export const getScopeSummaryLabels = (summary: ScopeSummary, showPubs = false) => {
 	const { discussions, reviews, pubs } = summary;
@@ -61,7 +60,7 @@ const getDateLabelPart = (date: Date) => {
 	if (pageLoadTimeMs - date.valueOf() > maxTimeagoPeriod) {
 		return `on ${formatDate(date)}`;
 	}
-	return <Time {...timeAgoBaseProps} live={false} date={date} />;
+	return <TimeAgo date={date} />;
 };
 
 export const getPubReleasedStateLabel = (pub: Pub) => {

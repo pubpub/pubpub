@@ -68,10 +68,13 @@ const PubOverviewRow = (props: Props) => {
 	// get label pairs
 	// set label pairs in a div
 	// render normal div
-	const labelPairs = defaultLabelPairs([
-		...getScopeSummaryLabels(pub.scopeSummary),
-		getPubReleasedStateLabel(pub),
-	]);
+	const labelPairs =
+		typeof window !== 'undefined'
+			? defaultLabelPairs([
+					...getScopeSummaryLabels(pub.scopeSummary),
+					getPubReleasedStateLabel(pub),
+			  ])
+			: null;
 
 	console.log(labelPairs);
 	// if submission get submissinolabel pairs
@@ -84,7 +87,7 @@ const PubOverviewRow = (props: Props) => {
 			href={getDashUrl({ pubSlug: pub.slug })}
 			title={pub.title}
 			byline={<PubByline pubData={pub} linkToUsers={false} truncateAt={8} />}
-			iconLabelPairs={<div>This will render tho</div>}
+			iconLabelPairs={labelPairs}
 			leftIcon={leftIconElement || 'pubDoc'}
 			rightElement={rightElement}
 			darkenRightIcons={inCollection}
