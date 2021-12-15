@@ -19,6 +19,7 @@ type Props = {
 	className?: string;
 	pub: Pub;
 	inCollection?: boolean;
+	isSubmission?: boolean;
 };
 
 const defaultLabelPairs = (iconLabelPairs: IconLabelPair[]) => {
@@ -52,6 +53,7 @@ const PubOverviewRow = (props: Props) => {
 		pub,
 		className,
 		inCollection,
+		isSubmission,
 		leftIconElement = null,
 		rightElement: providedRightElement,
 	} = props;
@@ -68,15 +70,13 @@ const PubOverviewRow = (props: Props) => {
 	// get label pairs
 	// set label pairs in a div
 	// render normal div
-	const labelPairs =
-		typeof window !== 'undefined'
-			? defaultLabelPairs([
-					...getScopeSummaryLabels(pub.scopeSummary),
-					getPubReleasedStateLabel(pub),
-			  ])
-			: null;
+	const labelPairs = isSubmission
+		? null
+		: defaultLabelPairs([
+				...getScopeSummaryLabels(pub.scopeSummary),
+				getPubReleasedStateLabel(pub),
+		  ]);
 
-	console.log(labelPairs);
 	// if submission get submissinolabel pairs
 	// set them in a div as a variable
 	// render div with submissino status

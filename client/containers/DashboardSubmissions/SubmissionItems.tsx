@@ -60,6 +60,7 @@ const SubmissionItems = (props: Props) => {
 		initialPubs,
 		initiallyLoadedAllPubs,
 		batchSize: 200,
+		pubOptions: { getSubmissions: true },
 		query: {
 			term: searchTerm,
 			scopedCollectionId: collection.id,
@@ -73,7 +74,7 @@ const SubmissionItems = (props: Props) => {
 		useDocumentElement: true,
 		onRequestMoreItems: loadMorePubs,
 	});
-
+	console.log(pubs);
 	const renderPubs = () => {
 		return pubs.map((pub) => (
 			<PubOverviewRow pub={pub} key={pub.id} leftIconElement="manually-entered-data" />

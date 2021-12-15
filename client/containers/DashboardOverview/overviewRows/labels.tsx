@@ -104,7 +104,7 @@ export const getSubmissionStatusLabel = (
 	};
 };
 
-export const getSubmissionTimeLabel = (
+export const getSubmissionTimeAgo = (
 	date: number | string | Date,
 	useDateCutoffDays: number,
 	className: string,
