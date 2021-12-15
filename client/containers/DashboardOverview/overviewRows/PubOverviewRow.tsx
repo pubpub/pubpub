@@ -84,10 +84,7 @@ const PubOverviewRow = (props: Props) => {
 			href={getDashUrl({ pubSlug: pub.slug })}
 			title={pub.title}
 			byline={<PubByline pubData={pub} linkToUsers={false} truncateAt={8} />}
-			iconLabelPairs={defaultLabelPairs([
-				...getScopeSummaryLabels(pub.scopeSummary),
-				getPubReleasedStateLabel(pub),
-			])}
+			iconLabelPairs={<div>This will render tho</div>}
 			leftIcon={leftIconElement || 'pubDoc'}
 			rightElement={rightElement}
 			darkenRightIcons={inCollection}
