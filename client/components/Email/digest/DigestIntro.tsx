@@ -44,10 +44,7 @@ const SpanStyle = styled.span`
 
 export const DigestIntro = (props: PropTypes) => {
 	const now = new Date();
-	const fadedBackgroundColor = Color(props.accentColorDark)
-		.fade(0.95)
-		.rgb()
-		.string();
+	const fadedBackgroundColor = Color(props.accentColorDark).fade(0.95).rgb().string();
 
 	return (
 		<TableStyle accentColorDark={props.accentColorDark}>

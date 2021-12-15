@@ -1,9 +1,10 @@
 /* eslint-disable no-console */
-import { User } from 'server/models';
-// import { Op } from 'sequelize';
-import mailgun from 'mailgun.js';
 import stripIndent from 'strip-indent';
+
+import { User } from 'server/models';
+import mailgun from 'server/utils/email/mailgun';
 import { isProd } from 'utils/environment';
+
 import { promptOkay } from './utils/prompt';
 
 const mg = mailgun.client({

@@ -1,9 +1,9 @@
-import mailgun from 'mailgun.js';
+import mailgun from './mailgun';
 import stripIndent from 'strip-indent';
 
 const mg = mailgun.client({
 	username: 'api',
-	key: process.env.MAILGUN_API_KEY,
+	key: process.env.MAILGUN_API_KEY!,
 });
 
 export const sendPasswordResetEmail = ({ toEmail, resetUrl }) => {

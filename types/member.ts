@@ -1,3 +1,5 @@
+import { User } from './attribution';
+
 export type MemberPermission = 'view' | 'edit' | 'manage' | 'admin';
 
 export type Member = {
@@ -9,4 +11,5 @@ export type Member = {
 	collectionId?: string;
 	communityId?: string;
 	organizationId?: string;
+	user?: User;
 };
