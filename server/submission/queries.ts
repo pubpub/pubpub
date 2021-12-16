@@ -49,7 +49,7 @@ export const updateSubmission = async (
 	const { id, status } = patch;
 	const submission: SequelizeModel<SubmissionType> = await Submission.findOne({ where: { id } });
 	const previousStatus = submission.status;
-	const isBeingSubmitted = previousStatus === 'incomplete' && status === 'submitted';
+	const isBeingSubmitted = previousStatus === 'incomplete' && status === 'pending';
 	if (isBeingSubmitted && sendEmail) {
 		// Send an email here
 	}

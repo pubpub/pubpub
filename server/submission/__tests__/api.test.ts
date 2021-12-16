@@ -140,6 +140,34 @@ describe('/api/submissions', () => {
 			})
 			.expect(403);
 	});
+
+	it('allows pub managers to set submission status', async () => {
+		const { pubManager, submission, spub } = models;
+		const agent = await login(pubManager);
+		await agent
+			.put('/api/submissions')
+			.send({
+				id: submission.id,
+				pubId: spub.id,
+				status: 'pending',
+			})
+			.expect(201);
+		const { status, submittedAt } = await Submission.findOne({ where: { id: submission.id } });
+		expect(status).toEqual('pending');
+		expect(Number.isNaN(new Date(submittedAt).getTime())).toEqual(false);
+	});
+
+	it('forbids admins from updating status out of one of [pending, accepted, declined]', async () => {
+		const { admin, submission1 } = models;
+		const agent = await login(admin);
+		await agent
+			.put('/api/submissions')
+			.send({
+				id: submission1.id,
+				status: 'incomplete',
+			})
+			.expect(403);
+	});
 	it('allows pub editors to set submitted status', async () => {
 		const { pubManager, submission1 } = models;
 		const agent = await login(pubManager);

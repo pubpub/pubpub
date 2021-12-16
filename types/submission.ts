@@ -1,7 +1,7 @@
 import { Pub } from 'types';
 
-export const managerStatuses = ['submitted', 'accepted', 'declined'] as const;
-export const submitterStatuses = ['submitted'] as const;
+export const managerStatuses = ['pending', 'accepted', 'declined'] as const;
+export const submitterStatuses = ['pending'] as const;
 export const initialStatuses = ['incomplete'] as const;
 
 export const submissionStatuses = [
