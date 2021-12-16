@@ -12,6 +12,7 @@ import { InitialData } from 'types';
 const getPubs = async (collectionId: string, limit: number, initialData: InitialData) => {
 	const { communityData } = initialData;
 	const result = await getManyPubs({
+		options: { getSubmissions: true },
 		query: {
 			limit,
 			communityId: communityData.id,
