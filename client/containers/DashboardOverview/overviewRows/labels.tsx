@@ -4,7 +4,7 @@ import { ScopeSummary, Collection, Pub, SubmissionStatus, IconLabelPair } from '
 import { capitalize } from 'utils/strings';
 import { getSchemaForKind } from 'utils/collections/schemas';
 import { formatDate } from 'utils/dates';
-import { getPubPublishedDate } from 'utils/pub/pubDates';
+import { getPubPublishedDate, getPubSubmissionDate } from 'utils/pub/pubDates';
 import { TimeAgo } from 'components';
 
 export const getScopeSummaryLabels = (summary: ScopeSummary, showPubs = false) => {
@@ -109,7 +109,7 @@ export const getSubmissionStatusLabel = (
 };
 
 export const getSubmissionTimeLabel = (pub: Pub) => {
-	const publishedDate = getPubPublishedDate(pub, false);
+	const publishedDate = getPubSubmissionDate(pub);
 	if (publishedDate) {
 		return {
 			label: <>Submitted&nbsp;{getDateLabelPart(publishedDate)}</>,
@@ -117,7 +117,7 @@ export const getSubmissionTimeLabel = (pub: Pub) => {
 		};
 	}
 	return {
-		label: 'Unsubmitted',
-		icon: 'lock' as const,
+		label: 'No Submission Status',
+		icon: 'warning-sign' as const,
 	};
 };

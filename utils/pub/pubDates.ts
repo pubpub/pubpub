@@ -85,3 +85,13 @@ export const getPubCopyrightYear = (
 	const pubPublishedDate = getPubPublishedDate(pub);
 	return pubPublishedDate ? dateFormat(pubPublishedDate, 'yyyy') : dateFormat('yyyy');
 };
+
+export const getPubSubmissionDate = (pub: Pub) => {
+	if (pub.submission?.submittedAt) {
+		// This is a date string representing a time at midnight UTC for a given date.
+		// Unfortunately, that represents a time during the previous day in the Western hemisphere,
+		// which will cause this to improperly render the previous day.
+		return getLocalDateMatchingUtcCalendarDate(pub.submission?.submittedAt);
+	}
+	return null;
+};
