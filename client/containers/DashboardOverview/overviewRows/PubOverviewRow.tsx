@@ -31,10 +31,10 @@ const labelPairs = (iconLabelPairs: IconLabelPair[]) => {
 	return (
 		<div className="summary-icons">
 			{iconLabelPairs.map((iconLabelPair, index) => {
-				const { icon, label, iconSize: iconLabelPairIconSize = 12 } = iconLabelPair;
+				const { icon, label, iconSize: iconLabelPairIconSize = 12, intent } = iconLabelPair;
 				const iconElement =
 					typeof icon === 'string' ? (
-						<Icon icon={icon} iconSize={iconLabelPairIconSize} />
+						<Icon icon={icon} iconSize={iconLabelPairIconSize} intent={intent} />
 					) : (
 						icon
 					);
@@ -76,11 +76,7 @@ const PubOverviewRow = (props: Props) => {
 	if (pub.submission) {
 		const { status } = pub.submission;
 		const iconLabelPairs = isSubmission
-			? labelPairs([
-					getSubmissionStatusLabel(status),
-					getSubmissionTimeLabel(pub),
-					getPubReleasedStateLabel(pub),
-			  ])
+			? labelPairs([getSubmissionStatusLabel(status), getSubmissionTimeLabel(pub)])
 			: labelPairs([
 					...getScopeSummaryLabels(pub.scopeSummary),
 					getPubReleasedStateLabel(pub),

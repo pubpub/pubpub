@@ -84,23 +84,27 @@ export const getSubmissionStatusLabel = (
 		return {
 			label: 'Accepted',
 			icon: 'symbol-square' as const,
+			intent: 'success',
 		};
 	}
 	if (submissionStatus === 'declined') {
 		return {
 			label: 'Declined',
 			icon: 'symbol-square' as const,
+			intent: 'danger',
 		};
 	}
 	if (submissionStatus === 'pending') {
 		return {
 			label: 'Pending',
 			icon: 'symbol-square' as const,
+			intent: 'warning',
 		};
 	}
 	return {
 		label: 'Incomplete',
 		icon: 'symbol-square' as const,
+		intent: 'none',
 	};
 };
 

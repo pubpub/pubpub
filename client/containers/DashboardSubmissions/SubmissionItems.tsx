@@ -74,7 +74,7 @@ const SubmissionItems = (props: Props) => {
 		useDocumentElement: true,
 		onRequestMoreItems: loadMorePubs,
 	});
-	console.log(pubs);
+
 	const renderPubs = () => {
 		return pubs.map((pub) => (
 			<PubOverviewRow
