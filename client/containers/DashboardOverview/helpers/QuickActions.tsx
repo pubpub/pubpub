@@ -6,7 +6,7 @@ require('./quickActions.scss');
 
 export type QuickAction = {
 	icon: IconName;
-	label: string;
+	label: React.ReactNode;
 	href: string;
 };
 
@@ -21,7 +21,7 @@ const QuickActions = (props: Props) => {
 			{actions.map((action) => {
 				const { icon, label, href } = action;
 				return (
-					<a className="quick-action" href={href} key={label}>
+					<a className="quick-action" href={href} key={href}>
 						<div className="icon-wrapper">
 							<Icon icon={icon} iconSize={14} />
 						</div>
