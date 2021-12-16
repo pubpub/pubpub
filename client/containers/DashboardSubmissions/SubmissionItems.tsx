@@ -77,7 +77,12 @@ const SubmissionItems = (props: Props) => {
 	console.log(pubs);
 	const renderPubs = () => {
 		return pubs.map((pub) => (
-			<PubOverviewRow pub={pub} key={pub.id} leftIconElement="manually-entered-data" />
+			<PubOverviewRow
+				pub={pub}
+				key={pub.id}
+				leftIconElement="manually-entered-data"
+				isSubmission={true}
+			/>
 		));
 	};
 

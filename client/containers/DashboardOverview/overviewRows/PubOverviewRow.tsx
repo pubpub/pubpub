@@ -9,7 +9,12 @@ import { getDashUrl } from 'utils/dashboard';
 import { usePageContext } from 'utils/hooks';
 
 import OverviewRowSkeleton from './OverviewRowSkeleton';
-import { getPubReleasedStateLabel, getScopeSummaryLabels } from './labels';
+import {
+	getPubReleasedStateLabel,
+	getScopeSummaryLabels,
+	getSubmissionStatusLabel,
+	getSubmissionTimeLabel,
+} from './labels';
 
 type Pub = DefinitelyHas<BasePub, 'attributions'>;
 
@@ -22,7 +27,7 @@ type Props = {
 	isSubmission?: boolean;
 };
 
-const defaultLabelPairs = (iconLabelPairs: IconLabelPair[]) => {
+const labelPairs = (iconLabelPairs: IconLabelPair[]) => {
 	return (
 		<div className="summary-icons">
 			{iconLabelPairs.map((iconLabelPair, index) => {
@@ -67,19 +72,32 @@ const PubOverviewRow = (props: Props) => {
 		/>
 	);
 
-	// get label pairs
-	// set label pairs in a div
-	// render normal div
-	const labelPairs = isSubmission
-		? null
-		: defaultLabelPairs([
-				...getScopeSummaryLabels(pub.scopeSummary),
-				getPubReleasedStateLabel(pub),
-		  ]);
-
-	// if submission get submissinolabel pairs
-	// set them in a div as a variable
-	// render div with submissino status
+	// for when a pub has a submission but is being rendered in collection or community overview
+	if (pub.submission) {
+		const { status } = pub.submission;
+		const iconLabelPairs = isSubmission
+			? labelPairs([
+					getSubmissionStatusLabel(status),
+					getSubmissionTimeLabel(pub),
+					getPubReleasedStateLabel(pub),
+			  ])
+			: labelPairs([
+					...getScopeSummaryLabels(pub.scopeSummary),
+					getPubReleasedStateLabel(pub),
+			  ]);
+		return (
+			<OverviewRowSkeleton
+				className={classNames('pub-overview-row-component', className)}
+				href={getDashUrl({ pubSlug: pub.slug })}
+				title={pub.title}
+				byline={<PubByline pubData={pub} linkToUsers={false} truncateAt={8} />}
+				iconLabelPairs={iconLabelPairs}
+				leftIcon={leftIconElement || 'pubDoc'}
+				rightElement={rightElement}
+				darkenRightIcons={inCollection}
+			/>
+		);
+	}
 
 	return (
 		<OverviewRowSkeleton
@@ -87,7 +105,10 @@ const PubOverviewRow = (props: Props) => {
 			href={getDashUrl({ pubSlug: pub.slug })}
 			title={pub.title}
 			byline={<PubByline pubData={pub} linkToUsers={false} truncateAt={8} />}
-			iconLabelPairs={labelPairs}
+			iconLabelPairs={labelPairs([
+				...getScopeSummaryLabels(pub.scopeSummary),
+				getPubReleasedStateLabel(pub),
+			])}
 			leftIcon={leftIconElement || 'pubDoc'}
 			rightElement={rightElement}
 			darkenRightIcons={inCollection}

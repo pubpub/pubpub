@@ -83,31 +83,37 @@ export const getSubmissionStatusLabel = (
 	if (submissionStatus === 'accepted') {
 		return {
 			label: 'Accepted',
-			icon: 'lock',
+			icon: 'symbol-square' as const,
 		};
 	}
 	if (submissionStatus === 'declined') {
 		return {
 			label: 'Declined',
-			icon: 'lock',
+			icon: 'symbol-square' as const,
 		};
 	}
 	if (submissionStatus === 'pending') {
 		return {
 			label: 'Pending',
-			icon: 'lock',
+			icon: 'symbol-square' as const,
 		};
 	}
 	return {
 		label: 'Incomplete',
-		icon: 'lock',
+		icon: 'symbol-square' as const,
 	};
 };
 
-export const getSubmissionTimeAgo = (
-	date: number | string | Date,
-	useDateCutoffDays: number,
-	className: string,
-) => {
-	return <div> Time-symbol Submitted {TimeAgo({ date, useDateCutoffDays, className })} </div>;
+export const getSubmissionTimeLabel = (pub: Pub) => {
+	const publishedDate = getPubPublishedDate(pub, false);
+	if (publishedDate) {
+		return {
+			label: <>Submitted&nbsp;{getDateLabelPart(publishedDate)}</>,
+			icon: 'time' as const,
+		};
+	}
+	return {
+		label: 'Unsubmitted',
+		icon: 'lock' as const,
+	};
 };
