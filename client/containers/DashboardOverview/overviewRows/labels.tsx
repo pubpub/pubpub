@@ -112,12 +112,16 @@ export const getSubmissionTimeLabel = (pub: Pub) => {
 	const publishedDate = getPubSubmissionDate(pub);
 	if (publishedDate) {
 		return {
-			label: <>Submitted&nbsp;{getDateLabelPart(publishedDate)}</>,
+			label: (
+				<>
+					<em>Submitted</em>&nbsp;{getDateLabelPart(publishedDate)}
+				</>
+			),
 			icon: 'time' as const,
 		};
 	}
 	return {
-		label: 'No Submission Status',
+		label: 'Update Status',
 		icon: 'warning-sign' as const,
 	};
 };
