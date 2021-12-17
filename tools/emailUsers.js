@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import stripIndent from 'strip-indent';
+import mailgun from 'mailgun.js';
 
 import { User } from 'server/models';
-import mailgun from 'server/utils/email/mailgun';
 import { isProd } from 'utils/environment';
 
 import { promptOkay } from './utils/prompt';

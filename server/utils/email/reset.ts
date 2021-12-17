@@ -1,4 +1,4 @@
-import mailgun from './mailgun';
+import mailgun from 'mailgun.js';
 import stripIndent from 'strip-indent';
 
 const mg = mailgun.client({
