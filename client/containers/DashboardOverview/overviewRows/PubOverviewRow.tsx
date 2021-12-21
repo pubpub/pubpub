@@ -31,7 +31,12 @@ const labelPairs = (iconLabelPairs: IconLabelPair[]) => {
 	return (
 		<div className="summary-icons">
 			{iconLabelPairs.map((iconLabelPair, index) => {
-				const { icon, label, iconSize: iconLabelPairIconSize = 12, intent } = iconLabelPair;
+				const {
+					icon,
+					label,
+					iconSize: iconLabelPairIconSize = 12,
+					intent = 'none',
+				} = iconLabelPair;
 				const iconElement =
 					typeof icon === 'string' ? (
 						<Icon icon={icon} iconSize={iconLabelPairIconSize} intent={intent} />
