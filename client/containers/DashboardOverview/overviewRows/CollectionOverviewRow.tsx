@@ -4,7 +4,7 @@ import { Button } from '@blueprintjs/core';
 
 import { Icon } from 'client/components';
 import { getDashUrl } from 'utils/dashboard';
-import { Collection, IconLabelPair } from 'types';
+import { Collection } from 'types';
 import { usePageContext } from 'utils/hooks';
 
 import { iconSize } from './constants';
@@ -12,6 +12,7 @@ import {
 	getCollectionKindLabel,
 	getCollectionPublicStateLabel,
 	getScopeSummaryLabels,
+	renderLabelPairs,
 } from './labels';
 import OverviewRowSkeleton from './OverviewRowSkeleton';
 
@@ -23,37 +24,6 @@ type Props = {
 	isOpen?: boolean;
 	isLoading?: boolean;
 	onToggleOpen?: () => unknown;
-};
-
-const labelPairs = (iconLabelPairs: IconLabelPair[]) => {
-	return (
-		<div className="summary-icons">
-			{iconLabelPairs.map((iconLabelPair, index) => {
-				const {
-					icon,
-					label,
-					iconSize: iconLabelPairIconSize = 12,
-					intent = 'none',
-				} = iconLabelPair;
-				const iconElement =
-					typeof icon === 'string' ? (
-						<Icon icon={icon} iconSize={iconLabelPairIconSize} intent={intent} />
-					) : (
-						icon
-					);
-				return (
-					<div
-						className="summary-icon-pair"
-						// eslint-disable-next-line react/no-array-index-key
-						key={index}
-					>
-						{iconElement}
-						{label}
-					</div>
-				);
-			})}
-		</div>
-	);
 };
 
 const CollectionOverviewRow = React.forwardRef((props: Props, ref: any) => {
@@ -71,7 +41,7 @@ const CollectionOverviewRow = React.forwardRef((props: Props, ref: any) => {
 		},
 		[onToggleOpen],
 	);
-	const iconLabelPairs = labelPairs([
+	const iconLabelPairs = renderLabelPairs([
 		...getScopeSummaryLabels(collection.scopeSummary!, true),
 		getCollectionPublicStateLabel(collection),
 		getCollectionKindLabel(collection),
@@ -98,7 +68,7 @@ const CollectionOverviewRow = React.forwardRef((props: Props, ref: any) => {
 			title={title}
 			leftIcon="collection"
 			href={getDashUrl({ collectionSlug: slug })}
-			iconLabelPairs={iconLabelPairs}
+			details={iconLabelPairs}
 			withHoverEffect={!isOpen}
 			rightElement={toggleButton}
 			ref={ref}

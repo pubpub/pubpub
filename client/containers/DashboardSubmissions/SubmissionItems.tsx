@@ -81,7 +81,7 @@ const SubmissionItems = (props: Props) => {
 				pub={pub}
 				key={pub.id}
 				leftIconElement="manually-entered-data"
-				isSubmission={true}
+				hasSubmission={true}
 			/>
 		));
 	};

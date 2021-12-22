@@ -2,19 +2,14 @@ import React from 'react';
 import classNames from 'classnames';
 import { AnchorButton } from '@blueprintjs/core';
 
-import { PubByline, Icon } from 'components';
-import { DefinitelyHas, Pub as BasePub, IconLabelPair } from 'types';
+import { PubByline } from 'components';
+import { DefinitelyHas, Pub as BasePub } from 'types';
 import { pubUrl } from 'utils/canonicalUrls';
 import { getDashUrl } from 'utils/dashboard';
 import { usePageContext } from 'utils/hooks';
 
 import OverviewRowSkeleton from './OverviewRowSkeleton';
-import {
-	getPubReleasedStateLabel,
-	getScopeSummaryLabels,
-	getSubmissionStatusLabel,
-	getSubmissionTimeLabel,
-} from './labels';
+import { renderDetailsRow } from './labels';
 
 type Pub = DefinitelyHas<BasePub, 'attributions'>;
 
@@ -24,38 +19,7 @@ type Props = {
 	className?: string;
 	pub: Pub;
 	inCollection?: boolean;
-	isSubmission?: boolean;
-};
-
-const labelPairs = (iconLabelPairs: IconLabelPair[]) => {
-	return (
-		<div className="summary-icons">
-			{iconLabelPairs.map((iconLabelPair, index) => {
-				const {
-					icon,
-					label,
-					iconSize: iconLabelPairIconSize = 12,
-					intent = 'none',
-				} = iconLabelPair;
-				const iconElement =
-					typeof icon === 'string' ? (
-						<Icon icon={icon} iconSize={iconLabelPairIconSize} intent={intent} />
-					) : (
-						icon
-					);
-				return (
-					<div
-						className="summary-icon-pair"
-						// eslint-disable-next-line react/no-array-index-key
-						key={index}
-					>
-						{iconElement}
-						{label}
-					</div>
-				);
-			})}
-		</div>
-	);
+	hasSubmission?: boolean;
 };
 
 const PubOverviewRow = (props: Props) => {
@@ -63,7 +27,7 @@ const PubOverviewRow = (props: Props) => {
 		pub,
 		className,
 		inCollection,
-		isSubmission,
+		hasSubmission = false,
 		leftIconElement = null,
 		rightElement: providedRightElement,
 	} = props;
@@ -77,39 +41,14 @@ const PubOverviewRow = (props: Props) => {
 		/>
 	);
 
-	// for when a pub has a submission but is being rendered in collection or community overview
-	if (pub.submission) {
-		const { status } = pub.submission;
-		const iconLabelPairs = isSubmission
-			? labelPairs([getSubmissionStatusLabel(status), getSubmissionTimeLabel(pub)])
-			: labelPairs([
-					...getScopeSummaryLabels(pub.scopeSummary),
-					getPubReleasedStateLabel(pub),
-			  ]);
-		return (
-			<OverviewRowSkeleton
-				className={classNames('pub-overview-row-component', className)}
-				href={getDashUrl({ pubSlug: pub.slug })}
-				title={pub.title}
-				byline={<PubByline pubData={pub} linkToUsers={false} truncateAt={8} />}
-				iconLabelPairs={iconLabelPairs}
-				leftIcon={leftIconElement || 'pubDoc'}
-				rightElement={rightElement}
-				darkenRightIcons={inCollection}
-			/>
-		);
-	}
-
+	const details = renderDetailsRow(pub, hasSubmission);
 	return (
 		<OverviewRowSkeleton
 			className={classNames('pub-overview-row-component', className)}
 			href={getDashUrl({ pubSlug: pub.slug })}
 			title={pub.title}
 			byline={<PubByline pubData={pub} linkToUsers={false} truncateAt={8} />}
-			iconLabelPairs={labelPairs([
-				...getScopeSummaryLabels(pub.scopeSummary),
-				getPubReleasedStateLabel(pub),
-			])}
+			details={details}
 			leftIcon={leftIconElement || 'pubDoc'}
 			rightElement={rightElement}
 			darkenRightIcons={inCollection}
