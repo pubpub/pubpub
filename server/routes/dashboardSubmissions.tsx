@@ -17,7 +17,7 @@ const getPubs = async (collectionId: string, limit: number, initialData: Initial
 			limit,
 			communityId: communityData.id,
 			scopedCollectionId: collectionId,
-			submissionStatuses: ['incomplete', 'pending', 'accepted', 'declined'],
+			submissionStatuses: ['pending', 'accepted', 'declined'],
 		},
 	});
 	return result.sanitize(initialData);

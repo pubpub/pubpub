@@ -102,27 +102,20 @@ export const getSubmissionStatusLabel = (
 			intent: 'danger',
 		};
 	}
-	if (submissionStatus === 'pending') {
-		return {
-			label: 'Pending',
-			icon: 'symbol-square',
-			intent: 'warning',
-		};
-	}
 	return {
-		label: 'Incomplete',
+		label: 'Pending',
 		icon: 'symbol-square',
-		intent: 'none',
+		intent: 'warning',
 	};
 };
 
 export const getSubmissionTimeLabel = (pub: Pub) => {
-	const submissiondDate = getPubSubmissionDate(pub);
-	if (submissiondDate) {
+	const submissionDate = getPubSubmissionDate(pub);
+	if (submissionDate) {
 		return {
 			label: (
 				<>
-					<em>Submitted</em>&nbsp;{getDateLabelPart(submissiondDate)}
+					<em>Submitted</em>&nbsp;{getDateLabelPart(submissionDate)}
 				</>
 			),
 			icon: 'time' as const,
@@ -165,7 +158,7 @@ export const renderLabelPairs = (iconLabelPairs: IconLabelPair[]) => {
 	);
 };
 
-export const renderDetailsRow = (pub: Pub, hasSubmission: boolean): React.ReactNode => {
+export const renderRowDetails = (pub: Pub, hasSubmission: boolean): React.ReactNode => {
 	if (pub.submission) {
 		const { status } = pub.submission;
 		const detailsRow = hasSubmission

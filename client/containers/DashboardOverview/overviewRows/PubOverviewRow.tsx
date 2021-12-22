@@ -9,7 +9,7 @@ import { getDashUrl } from 'utils/dashboard';
 import { usePageContext } from 'utils/hooks';
 
 import OverviewRowSkeleton from './OverviewRowSkeleton';
-import { renderDetailsRow } from './labels';
+import { renderRowDetails } from './labels';
 
 type Pub = DefinitelyHas<BasePub, 'attributions'>;
 
@@ -41,7 +41,7 @@ const PubOverviewRow = (props: Props) => {
 		/>
 	);
 
-	const details = renderDetailsRow(pub, hasSubmission);
+	const details = renderRowDetails(pub, hasSubmission);
 	return (
 		<OverviewRowSkeleton
 			className={classNames('pub-overview-row-component', className)}

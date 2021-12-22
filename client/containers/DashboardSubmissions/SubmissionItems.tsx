@@ -23,7 +23,7 @@ type Props = {
 
 const queriesForSubmissionPubs: Record<string, Partial<PubsQuery>> = {
 	default: {
-		submissionStatuses: ['incomplete', 'pending', 'accepted', 'declined'],
+		submissionStatuses: ['pending', 'accepted', 'declined'],
 	},
 	pending: {
 		submissionStatuses: ['pending'],
@@ -92,7 +92,7 @@ const SubmissionItems = (props: Props) => {
 				<NonIdealState
 					icon="clean"
 					title="There doesn't seem to be any submissions"
-					description="No submissions have been submitted yet"
+					description="Try reaching out to members of your community for submissions"
 				/>
 			);
 		}
