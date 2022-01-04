@@ -1,4 +1,5 @@
 import React from 'react';
+import dateFormat from 'dateformat';
 
 import { ActivityAssociations, Community } from 'types';
 import { ActivityItem } from 'types/activity';
@@ -31,10 +32,21 @@ export const Digest = (props: Props) => {
 	const {
 		community: { accentColorDark = 'black' },
 	} = props;
+	const date = new Date();
+
 	return (
-		<Wrapper>
-			<CommunityHeader community={props.community} title="Activity Digest" />
-			<DigestIntro community={props.community} accentColorDark={accentColorDark} />
+		<Wrapper
+			preview={`Community activity for the week of ${dateFormat(
+				date.setDate(date.getDate() - date.getDay()),
+				'dd mmmm yyyy',
+			)}`}
+		>
+			<CommunityHeader date={date} community={props.community} title="Activity Digest" />
+			<DigestIntro
+				date={date}
+				community={props.community}
+				accentColorDark={accentColorDark}
+			/>
 			<Section alignment="left">
 				<DigestSectionTitle
 					icon="office"

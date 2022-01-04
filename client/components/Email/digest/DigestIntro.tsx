@@ -10,9 +10,10 @@ import { Icon } from 'client/components';
 import { Section, Button } from '..';
 import { BaseTableStyle } from '../shared';
 
-type PropTypes = {
+type Props = {
 	accentColorDark: string;
 	community: Community;
+	date: Date;
 };
 
 type StyleProps = {
@@ -42,8 +43,8 @@ const SpanStyle = styled.span`
 	padding-right: 9px;
 `;
 
-export const DigestIntro = (props: PropTypes) => {
-	const now = new Date();
+export const DigestIntro = (props: Props) => {
+	const { date } = props;
 	const fadedBackgroundColor = Color(props.accentColorDark).fade(0.95).rgb().string();
 
 	return (
@@ -54,13 +55,13 @@ export const DigestIntro = (props: PropTypes) => {
 						<BaseTableStyle>
 							<tr>
 								<TextCellStyle>
-									This digest is a compilation of activity in the{' '}
+									This digest is a compilation of activity in the&nbsp;
 									<a href={communityUrl(props.community)}>
 										{props.community.title}
-									</a>{' '}
-									community during the week of{' '}
+									</a>
+									&nbsp;community during the week of&nbsp;
 									{dateFormat(
-										now.setDate(now.getDate() - now.getDay()),
+										date.setDate(date.getDate() - date.getDay()),
 										'dd mmmm yyyy',
 									)}
 									.

@@ -220,7 +220,11 @@ export const getAllCommunityIds = async () => {
 export const iterAllCommunities = async function* (limit = 10): AsyncGenerator<types.Community[]> {
 	let offset = 0;
 	while (true) {
-		const communities = await Community.findAll({ limit, offset, raw: true });
+		const communities = await Community.findAll({
+			limit,
+			offset,
+			raw: true,
+		});
 		yield communities;
 		if (communities.length < limit) break;
 		offset += limit;

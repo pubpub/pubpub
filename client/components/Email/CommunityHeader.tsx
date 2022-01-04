@@ -9,6 +9,7 @@ import { Section } from '.';
 import { BaseTableStyle } from './shared';
 
 type Props = {
+	date: Date;
 	title: string;
 	community: Community;
 };
@@ -46,7 +47,6 @@ const EmailTitleCellStyle = styled.td`
 `;
 
 export const CommunityHeader = (props: Props) => {
-	const now = new Date();
 	const {
 		community: {
 			hideHeaderLogo = false,
@@ -71,7 +71,7 @@ export const CommunityHeader = (props: Props) => {
 			<TableStyle>
 				<EmailTitleCellStyle>
 					<H1Style>{props.title}</H1Style>
-					<SpanStyle>{dateFormat(now, 'mmmm yyyy')}</SpanStyle>
+					<SpanStyle>{dateFormat(props.date, 'mmmm yyyy')}</SpanStyle>
 				</EmailTitleCellStyle>
 				{showCommunityTitle && (
 					<CommunityTitleCellStyle>{props.community.title}</CommunityTitleCellStyle>

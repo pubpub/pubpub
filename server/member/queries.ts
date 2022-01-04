@@ -33,9 +33,23 @@ export const createMember = async ({
 	return getMemberDataById(memberId);
 };
 
-export const updateMember = async ({ memberId, value: { permissions }, actorId = null }) => {
+type UpdateMemberOptions = {
+	memberId: string;
+	actorId: string | null;
+	value: Partial<{
+		permissions: ['view', 'edit', 'manage', 'admin'];
+		receivesDigestEmail: boolean;
+	}>;
+};
+
+export const updateMember = async (options: UpdateMemberOptions) => {
+	const {
+		memberId,
+		actorId,
+		value: { permissions, receivesDigestEmail },
+	} = options;
 	const existingMember = await Member.findOne({ where: { id: memberId } });
-	await existingMember.update({ permissions }, { actorId });
+	await existingMember.update({ permissions, receivesDigestEmail }, { actorId });
 	return existingMember;
 };
 

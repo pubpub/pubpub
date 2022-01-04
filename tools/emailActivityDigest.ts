@@ -21,17 +21,13 @@ const memberQueryOptions = {
 	nest: true,
 };
 
-// This script will generate ~100 digest emails concurrently, hopefully not
-// spiking CPU or memory usage too hard.
+// This script will generate a maximum of 100 digest emails concurrently,
+// hopefully not spiking CPU or memory usage too hard.
 async function main() {
-	const now = new Date();
-	const date = dateFormat(now.setDate(now.getDate() - now.getDay()), 'dd mmmm yyyy');
-	// TODO: face your fears
-	if (isProd()) return;
-
 	// For each (sensibly-sized) chunk of communities
-	for await (const communities of iterAllCommunities(20)) {
+	for await (const communities of iterAllCommunities(10)) {
 		const tasks = communities.map((community) => {
+			console.log(`community ${community.subdomain}`);
 			// Load all community members who are subscribed to activity digest
 			// emails
 			const members: Promise<types.DefinitelyHas<types.Member, 'user'>[]> = Member.findAll({
@@ -45,17 +41,18 @@ async function main() {
 			return asyncMap(
 				members,
 				async ({ user }) => {
+					console.log(`user ${user.id} ${user.email}`);
 					// Create an activity digest email
 					const scope = { communityId: community.id };
 					const digest = await renderDigestEmail(community, { scope, user });
 					return mg.messages.create('mg.pubpub.org', {
 						from: 'PubPub Team <hello@pubpub.org>',
-						to: ['eric.g.mcdaniel@gmail.com'],
-						subject: `${community.title} activity for the week of ${date}`,
+						to: [user.email],
+						subject: `${community.title} weekly activity digest`,
 						html: digest,
 					});
 				},
-				{ concurrency: 5 },
+				{ concurrency: 10 },
 			);
 		});
 
@@ -66,10 +63,10 @@ async function main() {
 
 main()
 	.then(() => {
-		console.info('Done sending activity digests!');
+		console.info('Done!');
 	})
 	.catch((err) => {
-		console.error('Failed to send activity digests!');
+		console.error('Failed!');
 		console.error(err);
 	})
 	.finally(() => process.exit(0));

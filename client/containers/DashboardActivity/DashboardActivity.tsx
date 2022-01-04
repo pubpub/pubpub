@@ -1,10 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import { Button, NonIdealState, Spinner } from '@blueprintjs/core';
+import { Button, NonIdealState, Spinner, Switch } from '@blueprintjs/core';
 
-import { ActivityFilter } from 'types';
+import { ActivityFilter, Member } from 'types';
 import { usePageContext } from 'utils/hooks';
 import { DashboardFrame } from 'client/components';
 import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
+import * as api from 'client/utils/members/api';
 
 import { useActivityItems } from './useActivityItems';
 import { getBoundaryGroupsForSortedActivityItems } from './boundaries';
@@ -20,10 +21,10 @@ type Props = {
 const DashboardActivity = (props: Props) => {
 	const { activityData } = props;
 	const {
-		scopeData: { scope },
+		scopeData: { scope, memberData },
 		loginData: { id: userId },
 	} = usePageContext();
-
+	const [member, setMember] = useState<Member>(memberData.find((m) => m.communityId));
 	const [filters, setFilters] = useState<ActivityFilter[]>([]);
 
 	const { items, loadMoreItems, isLoading, loadedAllItems } = useActivityItems({
@@ -33,6 +34,8 @@ const DashboardActivity = (props: Props) => {
 		filters,
 	});
 
+	const canEnrollInActivityDigestEmails =
+		member && (member.permissions === 'admin' || member.permissions === 'manage');
 	const boundaryGroups = useMemo(() => getBoundaryGroupsForSortedActivityItems(items), [items]);
 
 	useInfiniteScroll({
@@ -43,7 +46,30 @@ const DashboardActivity = (props: Props) => {
 	});
 
 	return (
-		<DashboardFrame className="dashboard-activity-container" title="Activity">
+		<DashboardFrame
+			className="dashboard-activity-container"
+			title="Activity"
+			controls={
+				canEnrollInActivityDigestEmails && (
+					<Switch
+						checked={member.receivesDigestEmail}
+						className="parent-approval-switch"
+						onChange={(e) =>
+							api
+								.updateMember({
+									member,
+									update: {
+										receivesDigestEmail: (e.target as HTMLInputElement).checked,
+									},
+									scopeIds: { communityId: scope.communityId },
+								})
+								.then(setMember)
+						}
+						label="Enroll in Activity Digest Emails"
+					/>
+				)
+			}
+		>
 			<ActivityFilters
 				activeFilters={filters}
 				onUpdateActiveFilters={setFilters}

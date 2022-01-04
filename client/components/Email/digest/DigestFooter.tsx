@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { communityUrl } from 'utils/canonicalUrls';
+import { getDashUrl } from 'utils/dashboard';
 import { Community } from 'types';
 
 type Props = {
@@ -24,7 +25,10 @@ export const DigestFooter = (props: Props) => (
 	<ParagraphStyle>
 		You are receiving this email because you signed up for the weekly Activity Digest for this
 		PubPub Community. <br />
-		You can <a href={communityUrl(props.community)}>manage your Digest Settings</a>, or{' '}
-		<a href={communityUrl(props.community)}>Unsubscribe</a>.
+		You can{' '}
+		<a href={`${communityUrl(props.community)}${getDashUrl({ mode: 'activity' })}`}>
+			manage your Digest Settings
+		</a>
+		, or <a href={communityUrl(props.community)}>Unsubscribe</a>.
 	</ParagraphStyle>
 );
