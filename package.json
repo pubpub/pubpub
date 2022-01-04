@@ -84,7 +84,6 @@
 		"firebase": "^7.5.2",
 		"firebase-admin": "^9.4.2",
 		"firebase-server": "^1.1.0",
-		"form-data": "^4.0.0",
 		"fs-extra": "^8.1.0",
 		"fuzzysearch": "^1.0.3",
 		"googleapis": "^40.0.0",

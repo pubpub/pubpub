@@ -209,14 +209,6 @@ export const isUserAffiliatedWithCommunity = async (userId: string, communityId:
 	return isHere;
 };
 
-export const getAllCommunityIds = async () => {
-	const communities: { id: string }[] = await Community.findAll({
-		attributes: ['id'],
-		raw: true,
-	});
-	return communities.map((community) => community.id);
-};
-
 export const iterAllCommunities = async function* (limit = 10): AsyncGenerator<types.Community[]> {
 	let offset = 0;
 	while (true) {

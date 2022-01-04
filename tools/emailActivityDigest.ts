@@ -3,9 +3,8 @@ import mailgun from 'mailgun.js';
 import dateFormat from 'dateformat';
 
 import { asyncMap } from 'utils/async';
-import { isProd } from 'utils/environment';
-import { iterAllCommunities, getAllCommunityIds } from 'server/community/queries';
-import { Member, User, Community } from 'server/models';
+import { iterAllCommunities } from 'server/community/queries';
+import { Member, User } from 'server/models';
 import { renderDigestEmail } from 'server/utils/email';
 import * as types from 'types';
 
