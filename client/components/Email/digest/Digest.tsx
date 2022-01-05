@@ -1,5 +1,6 @@
 import React from 'react';
 import dateFormat from 'dateformat';
+import Color from 'color';
 
 import { ActivityAssociations, Community } from 'types';
 import { ActivityItem } from 'types/activity';
@@ -40,6 +41,7 @@ export const Digest = (props: Props) => {
 				date.setDate(date.getDate() - date.getDay()),
 				'dd mmmm yyyy',
 			)}`}
+			backgroundColor={Color(accentColorDark).fade(0.975).rgb().string()}
 		>
 			<CommunityHeader date={date} community={props.community} title="Activity Digest" />
 			<DigestIntro

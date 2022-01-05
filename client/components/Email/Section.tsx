@@ -36,7 +36,7 @@ export const Section = ({
 	logo,
 	color = '#333333',
 	innerPadding = '40px',
-	width = 600,
+	width = 640,
 }: Props) => (
 	<TableStyle
 		fontSize={fontSize}

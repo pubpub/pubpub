@@ -1,10 +1,11 @@
+/* eslint-disable no-restricted-syntax */
+
 import { Op } from 'sequelize';
 import mailgun from 'mailgun.js';
-import dateFormat from 'dateformat';
 
 import { asyncMap } from 'utils/async';
 import { iterAllCommunities } from 'server/community/queries';
-import { Member, User } from 'server/models';
+import { Member, includeUserModel } from 'server/models';
 import { renderDigestEmail } from 'server/utils/email';
 import * as types from 'types';
 
@@ -14,7 +15,7 @@ const mg = mailgun.client({
 });
 
 const memberQueryOptions = {
-	include: [{ model: User, as: 'user' }],
+	include: [includeUserModel({ as: 'user' })],
 	permissions: { [Op.or]: ['admin', 'manage'] },
 	raw: true,
 	nest: true,
@@ -26,6 +27,7 @@ async function main() {
 	// For each (sensibly-sized) chunk of communities
 	for await (const communities of iterAllCommunities(10)) {
 		const tasks = communities.map((community) => {
+			// eslint-disable-next-line no-console
 			console.log(`community ${community.subdomain}`);
 			// Load all community members who are subscribed to activity digest
 			// emails
@@ -40,6 +42,7 @@ async function main() {
 			return asyncMap(
 				members,
 				async ({ user }) => {
+					// eslint-disable-next-line no-console
 					console.log(`user ${user.id} ${user.email}`);
 					// Create an activity digest email
 					const scope = { communityId: community.id };

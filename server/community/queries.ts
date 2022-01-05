@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+
 import uuidv4 from 'uuid/v4';
 
 import * as types from 'types';
@@ -216,6 +218,9 @@ export const iterAllCommunities = async function* (limit = 10): AsyncGenerator<t
 			limit,
 			offset,
 			raw: true,
+			where: {
+				subdomain: 'demo',
+			},
 		});
 		yield communities;
 		if (communities.length < limit) break;

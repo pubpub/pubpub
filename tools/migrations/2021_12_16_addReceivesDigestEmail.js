@@ -6,6 +6,6 @@ export const up = async ({ Sequelize, sequelize }) => {
 	});
 };
 
-export const down = async ({ Sequelize, sequelize }) => {
+export const down = async ({ sequelize }) => {
 	await sequelize.queryInterface.removeColumn('Members', 'receivesDigestEmail');
 };

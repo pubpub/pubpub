@@ -59,7 +59,7 @@ const DateSpanStyle = styled.span`
 `;
 
 const ListStyle = styled.ol`
-	padding: 0 40px 0 20px;
+	padding: 0 20px;
 `;
 
 const TableStyle = styled(BaseTableStyle)`

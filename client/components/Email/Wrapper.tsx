@@ -37,8 +37,9 @@ const EmailPreview = (props: { text: string }) => {
 				opacity: 0,
 				overflow: 'hidden',
 			}}
+			// eslint-disable-next-line react/no-danger
 			dangerouslySetInnerHTML={{ __html: text }}
-		></div>
+		/>
 	);
 };
 
@@ -47,12 +48,11 @@ export const Wrapper = ({ preview, children, backgroundColor = 'white' }: Props)
 		style={{
 			fontFamily: 'Helvetica, Arial, sans-serif',
 			backgroundColor,
-			maxWidth: '600px',
 		}}
 	>
 		<GlobalStyle />
 		{preview && <EmailPreview text={preview} />}
-		<div style={{ textAlign: 'center' }}>
+		<div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto' }}>
 			<TableStyle>
 				<tbody>
 					<tr>
