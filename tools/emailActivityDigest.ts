@@ -15,7 +15,7 @@ const mg = mailgun.client({
 });
 
 const memberQueryOptions = {
-	include: [includeUserModel({ as: 'user' })],
+	include: [includeUserModel({ attributes: ['email'], as: 'user' })],
 	permissions: { [Op.or]: ['admin', 'manage'] },
 	raw: true,
 	nest: true,
