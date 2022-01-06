@@ -166,7 +166,7 @@ const SubmissionWorkflowEditor = (props: Props) => {
 			</Step>
 			<Step
 				number={4}
-				title="Create a template for accepted and declined submissions"
+				title="Create a template response for accepted and declined submissions"
 				className="accept-reject-step"
 				done={fieldValidStates.acceptedText && fieldValidStates.declinedText}
 			>
