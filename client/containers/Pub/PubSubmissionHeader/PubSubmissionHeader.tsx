@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tab, Tabs, Icon } from '@blueprintjs/core';
+import { Tab, Tabs } from '@blueprintjs/core';
 
 import InstructionTab from './InstructionTab';
 import SubmissionTab from './SubmissionTab';
