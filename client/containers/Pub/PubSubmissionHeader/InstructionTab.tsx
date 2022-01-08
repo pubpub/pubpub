@@ -11,6 +11,19 @@ const InstructionTab = () => {
 				the left. step to the right, walk backwards three steps, step left, turn left 270
 				degrees. step forward
 			</p>
+			<li>One</li>
+			<li>Two</li>
+			<li>Three</li>
+			<li>Onto</li>
+			<li>Four</li>
+			<p>
+				If you have any questions, you can email the community admin at
+				hello@institution.com, and could even contain a story about civiizations that have
+				come and gone in the time it takes for a species to evolve past its own
+				technological limtations. Do we really know what exists around us? There are
+				phenomena that exists outside the visible spectrum which we may have no clear
+				perception of.{' '}
+			</p>
 		</>
 	);
 };
