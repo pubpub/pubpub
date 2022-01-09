@@ -4,6 +4,9 @@ const InstructionTab = () => {
 	return (
 		<>
 			<h1>This is the Title for Submissions Set by the Person Calling for Submissions</h1>
+			<br />
+			<br />
+
 			<p>
 				You gotta do a little dance to get into a pocket dimension. You know, like in
 				Fringe. First go to the building from the tape, go to apartment 413, its dangerous
@@ -11,11 +14,14 @@ const InstructionTab = () => {
 				the left. step to the right, walk backwards three steps, step left, turn left 270
 				degrees. step forward
 			</p>
+			<br />
 			<li>One</li>
 			<li>Two</li>
 			<li>Three</li>
 			<li>Onto</li>
 			<li>Four</li>
+			<br />
+			<br />
 			<p>
 				If you have any questions, you can email the community admin at
 				hello@institution.com, and could even contain a story about civiizations that have
