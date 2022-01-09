@@ -31,12 +31,7 @@ const PubSubmissionHeader = () => {
 				selectedTabId={selectedTab}
 			>
 				<Tab id="instructions" title={instructions} panel={<InstructionTab />} />
-				<Tab
-					id="submission"
-					title={submission}
-					panel={<SubmissionTab />}
-					panelClassName="ember-panel"
-				/>
+				<Tab id="submission" title={submission} panel={<SubmissionTab />} />
 				<Tab id="preview" title={preview} panel={<PreviewTab />} />
 			</Tabs>
 		</div>
