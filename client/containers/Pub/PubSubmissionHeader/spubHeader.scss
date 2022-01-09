@@ -10,30 +10,12 @@ $title-elements-spacing: 15px;
 $mobile-bottom-buttons-padding-top: 15px;
 $mobile-bottom-buttons-spacing: 10px;
 
-.pub-header-popover {
-    z-index: 21;
-}
-
 .pub-header-component {
     position: relative;
     z-index: 20;
     border-bottom: 1px solid #d2d2d2;
-
-    .pub-header-sticky-component {
-        opacity: 0;
-        visibility: hidden;
-    }
-
-    &.js-is-sticky,
-    &.js-is-stuck {
-        .pub-header-content-component {
-            opacity: 0;
-        }
-        .pub-header-sticky-component {
-            opacity: 1;
-            visibility: unset;
-        }
-    }
+    padding: 200px;
+    
 
     h1,
     h2,
@@ -56,73 +38,9 @@ $mobile-bottom-buttons-spacing: 10px;
         }
     }
 
-    .details-button {
-        position: absolute;
-        top: $top-bar-total-height / 2;
-        transform: translateY(-50%);
-        right: 0;
-        .icon-container {
-            transition: all 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-        }
-        &.showing-details {
-            .icon-container {
-                transform: rotate(90deg);
-            }
-        }
-    }
-
-    > .container,
-    > .container > .row {
-        height: 100%;
-    }
-
-    .row > .pub-header-column {
-        position: relative;
-        margin-top: $header-margin-top;
-        margin-bottom: $header-margin-bottom;
-        @include mobile {
-            margin-bottom: $header-margin-bottom-mobile;
-        }
-    }
-
-    &.showing-details {
-        .pub-header-column {
-            height: calc(100% - #{$header-margin-top});
-            margin-bottom: 0;
-        }
-    }
-
-    .description {
-        padding-top: $title-elements-spacing;
-        margin: 0;
-        font-size: 18px;
-        font-weight: normal;
-        font-family: $header-font;
-    }
-
-    .byline {
-        padding-top: $title-elements-spacing;
-        margin: 0;
-        font-size: 18px;
-        font-style: italic;
-        font-weight: normal;
-        font-family: $header-font;
-        letter-spacing: 0.5px;
-    }
-
     @include mobile {
         h1 {
             font-size: 24px;
-        }
-        .description {
-            font-size: 14px;
-        }
-        .byline {
-            font-size: 14px;
-            letter-spacing: unset;
-        }
-        .details-button {
-            display: none;
         }
     }
 
