@@ -4,8 +4,6 @@ import { Tab, Tabs, Icon, IconName } from '@blueprintjs/core';
 import InstructionTab from './InstructionTab';
 import SubmissionTab from './SubmissionTab';
 import PreviewTab from './PreviewTab';
-// import { Icon } from 'components';
-// type Props = {};
 
 require('./spubHeader.scss');
 
