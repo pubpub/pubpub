@@ -54,7 +54,6 @@ const PubSubmissionHeader = () => {
 					phenomena that exists outside the visible spectrum which we may have no clear
 					perception of.
 				</p>
-				Alll above will be be forgetten, and what is left?
 			</>,
 		],
 	};
