@@ -1,12 +1,18 @@
 import React from 'react';
 
-const InstructionTab = () => {
+import { SubmissionWorkflow } from 'types';
+
+type Props = {
+	instructions: SubmissionWorkflow['instructionsText'];
+};
+
+const InstructionTab = (props: Props) => {
+	const { instructions = null } = props;
 	return (
 		<>
 			<h1>This is the Title for Submissions Set by the Person Calling for Submissions</h1>
 			<br />
 			<br />
-
 			<p>
 				You gotta do a little dance to get into a pocket dimension. You know, like in
 				Fringe. First go to the building from the tape, go to apartment 413, its dangerous
@@ -30,6 +36,8 @@ const InstructionTab = () => {
 				phenomena that exists outside the visible spectrum which we may have no clear
 				perception of.{' '}
 			</p>
+			Alll above will be be forgetten, and what is left?
+			{instructions}
 		</>
 	);
 };
