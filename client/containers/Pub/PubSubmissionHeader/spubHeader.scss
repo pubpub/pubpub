@@ -38,7 +38,13 @@ $mobile-bottom-buttons-spacing: 10px;
 	}
 
 	.bp3-tabs {
+		// how access colors of community
 		color: #330402;
-        
+		max-width: 900px;
+		.bp3-tab-list {
+			.bp3-tab {
+				color: #330402;
+			}
+		}
 	}
 }
