@@ -28,7 +28,7 @@ const PubSubmissionHeader = () => {
 		attrs: 'What Is This',
 		content: [
 			<>
-				<h1>This is the Title for Submissions Set by the Person Calling for Submissions</h1>
+				<h1>Cartographie 2022: Call for Proposals</h1>
 				<br />
 				<br />
 				<p>
@@ -52,7 +52,7 @@ const PubSubmissionHeader = () => {
 					have come and gone in the time it takes for a species to evolve past its own
 					technological limtations. Do we really know what exists around us? There are
 					phenomena that exists outside the visible spectrum which we may have no clear
-					perception of.{' '}
+					perception of.
 				</p>
 				Alll above will be be forgetten, and what is left?
 			</>,
@@ -66,6 +66,7 @@ const PubSubmissionHeader = () => {
 				// @ts-expect-error ts-migrate(2322) FIXME: Type 'Dispatch<SetStateAction<string>>' is not ass... Remove this comment to see the full error message
 				onChange={setSelectedTab}
 				selectedTabId={selectedTab}
+				className="bp3-large"
 			>
 				<Tab
 					id="instructions"
