@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { Tab, Tabs } from '@blueprintjs/core';
 
 import TitleDescriptionAbstract from './TitleDescriptionAbstract';
+import Contributors from './Contributors';
+import SpubSettings from './SpubSettings';
 
 require('./spubHeader.scss');
 
 const SubmissionTab = () => {
-	const [selectedTab, setSelectedTab] = useState('instructions');
+	const [selectedTab, setSelectedTab] = useState('title');
 
 	return (
 		<>
@@ -18,12 +20,12 @@ const SubmissionTab = () => {
 				className="bp3-large"
 			>
 				<Tab
-					id="instructions"
+					id="title"
 					title="Title, Description & Abstract"
 					panel={<TitleDescriptionAbstract />}
 				/>
-				<Tab id="submission" title="Contributors" panel={<>Here we goooooo</>} />
-				<Tab id="preview" title="Pub Settings" panel={<>Disney movies are under rated</>} />
+				<Tab id="contributors" title="Contributors" panel={<Contributors />} />
+				<Tab id="spubsettings" title="Pub Settings" panel={<SpubSettings />} />
 			</Tabs>
 		</>
 	);
