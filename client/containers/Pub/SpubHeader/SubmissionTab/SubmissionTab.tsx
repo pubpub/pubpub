@@ -5,8 +5,6 @@ import TitleDescriptionAbstract from './TitleDescriptionAbstract';
 import Contributors from './Contributors';
 import SpubSettings from './SpubSettings';
 
-require('./spubSettings.scss');
-
 const SubmissionTab = () => {
 	const [selectedTab, setSelectedTab] = useState('title');
 
