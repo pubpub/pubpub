@@ -38,7 +38,7 @@ type UpdateMemberOptions = {
 	actorId: string | null;
 	value: Partial<{
 		permissions: ['view', 'edit', 'manage', 'admin'];
-		receivesDigestEmail: boolean;
+		subscribedToActivityDigest: boolean;
 	}>;
 };
 
@@ -46,10 +46,10 @@ export const updateMember = async (options: UpdateMemberOptions) => {
 	const {
 		memberId,
 		actorId,
-		value: { permissions, receivesDigestEmail },
+		value: { permissions, subscribedToActivityDigest },
 	} = options;
 	const existingMember = await Member.findOne({ where: { id: memberId } });
-	await existingMember.update({ permissions, receivesDigestEmail }, { actorId });
+	await existingMember.update({ permissions, subscribedToActivityDigest }, { actorId });
 	return existingMember;
 };
 

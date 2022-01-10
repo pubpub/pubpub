@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import dateFormat from 'dateformat';
 import Color from 'color';
 
 import { Community } from 'types';
 import { communityUrl } from 'utils/canonicalUrls';
+import { formatDate } from 'utils/dates';
 import { Icon } from 'client/components';
 
 import { Section, Button } from '..';
@@ -60,11 +60,7 @@ export const DigestIntro = (props: Props) => {
 										{props.community.title}
 									</a>
 									&nbsp;community during the week of&nbsp;
-									{dateFormat(
-										date.setDate(date.getDate() - date.getDay()),
-										'dd mmmm yyyy',
-									)}
-									.
+									{formatDate(date)}.
 								</TextCellStyle>
 								<ButtonCellStyle>
 									<Button

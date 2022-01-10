@@ -1,10 +1,10 @@
 import React from 'react';
-import dateFormat from 'dateformat';
 import Color from 'color';
 
 import { ActivityAssociations, Community } from 'types';
 import { ActivityItem } from 'types/activity';
 import { IconName } from 'client/components';
+import { getSundayOfThisWeek, formatDate } from 'utils/dates';
 
 import { Spacer, Section, Wrapper, CommunityHeader } from '..';
 import { ActivityBundle, DigestIntro, DigestSectionTitle, DigestFooter } from '.';
@@ -34,18 +34,16 @@ export const Digest = (props: Props) => {
 		community: { accentColorDark = 'black' },
 	} = props;
 	const date = new Date();
+	const sundayOfThisWeek = getSundayOfThisWeek();
 
 	return (
 		<Wrapper
-			preview={`Community activity for the week of ${dateFormat(
-				date.setDate(date.getDate() - date.getDay()),
-				'dd mmmm yyyy',
-			)}`}
+			preview={`Community activity for the week of ${formatDate(sundayOfThisWeek)}`}
 			backgroundColor={Color(accentColorDark).fade(0.975).rgb().string()}
 		>
 			<CommunityHeader date={date} community={props.community} title="Activity Digest" />
 			<DigestIntro
-				date={date}
+				date={sundayOfThisWeek}
 				community={props.community}
 				accentColorDark={accentColorDark}
 			/>

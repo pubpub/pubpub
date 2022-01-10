@@ -6,7 +6,7 @@ export type Member = {
 	id: string;
 	permissions: MemberPermission;
 	isOwner?: boolean;
-	receivesDigestEmail: boolean;
+	subscribedToActivityDigest: boolean;
 	userId: string;
 	pubId?: string;
 	collectionId?: string;

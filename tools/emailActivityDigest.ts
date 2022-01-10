@@ -17,8 +17,6 @@ const mg = mailgun.client({
 const memberQueryOptions = {
 	include: [includeUserModel({ attributes: ['email'], as: 'user' })],
 	permissions: { [Op.or]: ['admin', 'manage'] },
-	raw: true,
-	nest: true,
 };
 
 // This script will generate a maximum of 100 digest emails concurrently,
@@ -34,7 +32,7 @@ async function main() {
 			const members: Promise<types.DefinitelyHas<types.Member, 'user'>[]> = Member.findAll({
 				where: {
 					communityId: community.id,
-					receivesDigestEmail: true,
+					subscribedToActivityDigest: true,
 				},
 				...memberQueryOptions,
 			});

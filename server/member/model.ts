@@ -9,7 +9,11 @@ export default (sequelize, dataTypes) => {
 				defaultValue: 'view',
 			},
 			isOwner: { type: dataTypes.BOOLEAN },
-			receivesDigestEmail: { type: dataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+			subscribedToActivityDigest: {
+				type: dataTypes.BOOLEAN,
+				allowNull: false,
+				defaultValue: false,
+			},
 
 			/* Set by Associations */
 			userId: { type: dataTypes.UUID, allowNull: false },

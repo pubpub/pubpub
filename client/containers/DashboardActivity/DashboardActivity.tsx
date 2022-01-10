@@ -6,6 +6,7 @@ import { usePageContext } from 'utils/hooks';
 import { DashboardFrame } from 'client/components';
 import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 import * as api from 'client/utils/members/api';
+import { checkMemberPermission } from 'utils/permissions';
 
 import { useActivityItems } from './useActivityItems';
 import { getBoundaryGroupsForSortedActivityItems } from './boundaries';
@@ -21,9 +22,10 @@ type Props = {
 const DashboardActivity = (props: Props) => {
 	const { activityData } = props;
 	const {
-		scopeData: { scope, memberData },
+		scopeData,
 		loginData: { id: userId },
 	} = usePageContext();
+	const { scope, memberData } = scopeData;
 	const [member, setMember] = useState<Member>(memberData.find((m) => m.communityId));
 	const [filters, setFilters] = useState<ActivityFilter[]>([]);
 
@@ -34,9 +36,20 @@ const DashboardActivity = (props: Props) => {
 		filters,
 	});
 
-	const canEnrollInActivityDigestEmails =
-		member && (member.permissions === 'admin' || member.permissions === 'manage');
 	const boundaryGroups = useMemo(() => getBoundaryGroupsForSortedActivityItems(items), [items]);
+
+	const canSubscribeToActivityDigest =
+		member &&
+		checkMemberPermission(member.permissions, 'manage') &&
+		scopeData.elements.activeTargetType === 'community';
+	const setEnrolledInActivityDigest = (subscribed: boolean): Promise<Member> =>
+		api.updateMember({
+			member,
+			update: {
+				subscribedToActivityDigest: subscribed,
+			},
+			scopeIds: { communityId: scope.communityId },
+		});
 
 	useInfiniteScroll({
 		enabled: !isLoading && !loadedAllItems,
@@ -50,22 +63,16 @@ const DashboardActivity = (props: Props) => {
 			className="dashboard-activity-container"
 			title="Activity"
 			controls={
-				canEnrollInActivityDigestEmails && (
+				canSubscribeToActivityDigest && (
 					<Switch
-						checked={member.receivesDigestEmail}
+						checked={member.subscribedToActivityDigest}
 						className="parent-approval-switch"
 						onChange={(e) =>
-							api
-								.updateMember({
-									member,
-									update: {
-										receivesDigestEmail: (e.target as HTMLInputElement).checked,
-									},
-									scopeIds: { communityId: scope.communityId },
-								})
-								.then(setMember)
+							setEnrolledInActivityDigest(
+								(e.target as HTMLInputElement).checked,
+							).then(setMember)
 						}
-						label="Enroll in Activity Digest Emails"
+						label="Subscribe to Activity Digest Emails"
 					/>
 				)
 			}

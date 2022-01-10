@@ -58,3 +58,8 @@ export const getReadableDateInYear = (date: Date) => {
 
 export const isValidDate = (date: string | number | Date) =>
 	!Number.isNaN(new Date(date).getTime());
+
+export const getSundayOfThisWeek = () => {
+	const date = new Date();
+	return new Date(date.getDate() - date.getDay());
+};
