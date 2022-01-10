@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Tab, Tabs } from '@blueprintjs/core';
 
+import TitleDescriptionAbstract from './TitleDescriptionAbstract';
+
+require('./spubHeader.scss');
+
 const SubmissionTab = () => {
 	const [selectedTab, setSelectedTab] = useState('instructions');
 
@@ -16,7 +20,7 @@ const SubmissionTab = () => {
 				<Tab
 					id="instructions"
 					title="Title, Description & Abstract"
-					panel={<>We have our heading</>}
+					panel={<TitleDescriptionAbstract />}
 				/>
 				<Tab id="submission" title="Contributors" panel={<>Here we goooooo</>} />
 				<Tab id="preview" title="Pub Settings" panel={<>Disney movies are under rated</>} />
