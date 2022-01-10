@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { NonIdealState, Button, Dialog } from '@blueprintjs/core';
+import { NonIdealState } from '@blueprintjs/core';
 
 import { Collection, Pub, PubsQuery } from 'types';
-import { Icon, IconName, DialogLauncher } from 'client/components';
 import { useManyPubs } from 'client/utils/useManyPubs';
 import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 
@@ -13,6 +12,7 @@ import {
 	SpecialRow,
 } from '../DashboardOverview/overviewRows';
 import { OverviewSearchGroup, OverviewSearchFilter } from '../DashboardOverview/helpers';
+import SubmissionRowManagementMenu from './SubmissionRowMagementMenu';
 
 require('./submissionItems.scss');
 
@@ -22,26 +22,20 @@ type Props = {
 	initiallyLoadedAllPubs: boolean;
 };
 
-type SubManageDialogProps = {
-	isOpen: boolean;
-	actionTitle: string;
-	actionHelpText: string;
-	onClose: (...args: any[]) => any;
-};
-
-const SubManageDialog = (props: SubManageDialogProps) => {
-	const { isOpen, onClose, actionTitle, actionHelpText } = props;
-	return (
-		<Dialog
-			lazy={true}
-			title={`${actionTitle} This Submission`}
-			className="submissionManagementDialog"
-			isOpen={isOpen}
-			onClose={onClose}
-		>
-			<div>{actionHelpText}</div>
-		</Dialog>
-	);
+const EmptyState = (props: { isDoneSearching: boolean; initialPubs: Pub[]; pubs: Pub[] }) => {
+	if (props.initialPubs.length === 0) {
+		return (
+			<NonIdealState
+				icon="clean"
+				title="There doesn't seem to be any submissions"
+				description="Try reaching out to members of your community for submissions"
+			/>
+		);
+	}
+	if (props.pubs.length === 0 && props.isDoneSearching) {
+		return <SpecialRow>No Submissions have been found.</SpecialRow>;
+	}
+	return null;
 };
 
 const queriesForSubmissionPubs: Record<string, Partial<PubsQuery>> = {
@@ -98,90 +92,6 @@ const SubmissionItems = (props: Props) => {
 		onRequestMoreItems: loadMorePubs,
 	});
 
-	const submissionManagementOptions = [
-		{
-			icon: 'cross',
-			actionTitle: 'Delete',
-			actionHelpText: 'Would you like to delete this Submission?',
-			onSubmit: () => console.log('they chose death'),
-		},
-		{
-			icon: 'thumbs-down',
-			actionTitle: 'Decline',
-			actionHelpText: 'Would you like to decline this Submission?',
-			onSubmit: () => console.log('they chose death'),
-		},
-		{
-			icon: 'endorsed',
-			actionTitle: 'Accept',
-			actionHelpText: 'Would you like to accept this Submission?',
-			onSubmit: () => console.log('they chose death'),
-		},
-	];
-
-	const rightElement = (
-		<div
-			style={{
-				display: 'grid',
-				gridTemplateColumns: 'repeat(3, 1fr)',
-				gridTemplateRows: '1fr',
-				gridColumnGap: '40px',
-			}}
-		>
-			{submissionManagementOptions.map((option, index) => (
-				<div style={{ gridColumn: index + 1 }}>
-					<DialogLauncher
-						renderLauncherElement={({ openDialog }) => (
-							<Button
-								minimal
-								small
-								icon={<Icon icon={option.icon as IconName} iconSize={20} />}
-								onClick={openDialog}
-							/>
-						)}
-					>
-						{({ isOpen, onClose }) => (
-							<SubManageDialog
-								actionTitle={option.actionTitle}
-								isOpen={isOpen}
-								onClose={onClose}
-								actionHelpText={option.actionHelpText}
-							/>
-						)}
-					</DialogLauncher>
-				</div>
-			))}
-		</div>
-	);
-
-	const renderPubs = () => {
-		return pubs.map((pub) => (
-			<PubOverviewRow
-				pub={pub}
-				key={pub.id}
-				leftIconElement="manually-entered-data"
-				hasSubmission={true}
-				rightElement={rightElement}
-			/>
-		));
-	};
-
-	const renderEmptyState = () => {
-		if (initialPubs.length === 0) {
-			return (
-				<NonIdealState
-					icon="clean"
-					title="There doesn't seem to be any submissions"
-					description="Try reaching out to members of your community for submissions"
-				/>
-			);
-		}
-		if (pubs.length === 0 && hasLoadedAllPubs && isSearchingOrFiltering) {
-			return <SpecialRow>No Submissions have been found.</SpecialRow>;
-		}
-		return null;
-	};
-
 	return (
 		<div className="submission-items-component">
 			<OverviewSearchGroup
@@ -192,9 +102,21 @@ const SubmissionItems = (props: Props) => {
 				filters={overviewSearchFilters}
 			/>
 			<OverviewRows>
-				{renderPubs()}
+				{pubs.map((pub) => (
+					<PubOverviewRow
+						pub={pub}
+						key={pub.id}
+						leftIconElement="manually-entered-data"
+						hasSubmission={true}
+						rightElement={<SubmissionRowManagementMenu pub={pub} />}
+					/>
+				))}
 				{canLoadMorePubs && <LoadMorePubsRow isLoading />}
-				{renderEmptyState()}
+				<EmptyState
+					pubs={pubs}
+					initialPubs={initialPubs}
+					isDoneSearching={hasLoadedAllPubs && isSearchingOrFiltering}
+				/>
 			</OverviewRows>
 		</div>
 	);
