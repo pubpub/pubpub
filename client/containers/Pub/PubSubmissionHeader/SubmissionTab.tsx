@@ -1,9 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Tab, Tabs } from '@blueprintjs/core';
 
 const SubmissionTab = () => {
+	const [selectedTab, setSelectedTab] = useState('instructions');
+
 	return (
 		<>
-			<h6>Submission Tab Content soon come</h6>
+			<Tabs
+				id="TabsExample"
+				// @ts-expect-error ts-migrate(2322) FIXME: Type 'Dispatch<SetStateAction<string>>' is not ass... Remove this comment to see the full error message
+				onChange={setSelectedTab}
+				selectedTabId={selectedTab}
+				className="bp3-large"
+			>
+				<Tab
+					id="instructions"
+					title="Title, Description & Abstract"
+					panel={<>We have our heading</>}
+				/>
+				<Tab id="submission" title="Contributors" panel={<>Here we goooooo</>} />
+				<Tab id="preview" title="Pub Settings" panel={<>Disney movies are under rated</>} />
+			</Tabs>
 		</>
 	);
 };

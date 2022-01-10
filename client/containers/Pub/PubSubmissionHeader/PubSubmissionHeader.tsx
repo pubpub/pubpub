@@ -12,7 +12,7 @@ require('./spubHeader.scss');
 const PubSubmissionHeader = () => {
 	const [selectedTab, setSelectedTab] = useState('instructions');
 
-	const renderInstructionTabTitle = (icon: IconName, title: string) => {
+	const renderTabTitles = (icon: IconName, title: string) => {
 		return (
 			<>
 				<Icon icon={icon} /> {title}
@@ -20,9 +20,10 @@ const PubSubmissionHeader = () => {
 		);
 	};
 
-	const instructions = renderInstructionTabTitle('align-left', 'Instructions');
-	const submission = renderInstructionTabTitle('manually-entered-data', 'Submission');
-	const preview = renderInstructionTabTitle('eye-open', 'Preview & Edit');
+	const instructions = renderTabTitles('align-left', 'Instructions');
+	const submission = renderTabTitles('manually-entered-data', 'Submission');
+	const preview = renderTabTitles('eye-open', 'Preview & Edit');
+
 	const instructionNode: DocJson = {
 		type: 'doc',
 		attrs: 'What Is This',
