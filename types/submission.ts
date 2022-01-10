@@ -17,3 +17,5 @@ export type Submission = {
 	status: SubmissionStatus;
 	submittedAt: null | string;
 };
+
+export type SubmissionEmailKind = 'received' | 'accepted' | 'declined';

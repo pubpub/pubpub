@@ -5,7 +5,9 @@ import {
 	SequelizeModel,
 	managerStatuses,
 	submitterStatuses,
+	DocJson,
 } from 'types';
+import { defer } from 'server/utils/deferred';
 
 const updateToStatuses = [...managerStatuses, ...submitterStatuses] as const;
 
@@ -14,7 +16,7 @@ type CreateOptions = {
 	submissionWorkflowId: string;
 };
 type UpdateToStatus = typeof updateToStatuses;
-type UpdateOptions = Partial<SubmissionType> & { status: UpdateToStatus };
+type UpdateOptions = Partial<SubmissionType> & { status: UpdateToStatus; emailPayload: DocJson };
 
 export const createSubmission = async ({
 	userId,
@@ -46,14 +48,12 @@ export const updateSubmission = async (
 	actorId: string,
 	sendEmail = false,
 ) => {
-	const { id, status } = patch;
+	const { id, status, emailPayload } = patch;
 	const submission: SequelizeModel<SubmissionType> = await Submission.findOne({ where: { id } });
 	const previousStatus = submission.status;
 	const isBeingSubmitted = previousStatus === 'incomplete' && status === 'pending';
-	if (isBeingSubmitted && sendEmail) {
-		// Send an email here
-	}
-	return Submission.update(
+
+	await Submission.update(
 		{
 			status: patch.status,
 			...(isBeingSubmitted && { submittedAt: new Date().toISOString() }),
@@ -61,9 +61,13 @@ export const updateSubmission = async (
 		{
 			where: { id: patch.id },
 			individualHooks: true,
+			sendEmail,
+			emailPayload,
 			actorId,
 		},
-	).then(() => patch);
+	);
+
+	return patch;
 };
 
 export const destroySubmission = async ({ id }: { id: string }, actorId: string) =>

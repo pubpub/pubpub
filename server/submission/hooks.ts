@@ -1,3 +1,4 @@
+import * as types from 'types';
 import { Submission } from 'server/models';
 import { createActivityHooks } from 'server/utils/activityHooks';
 import {
@@ -13,3 +14,4 @@ createActivityHooks({
 	onModelDestroyed: (actorId, id) =>
 		createSubmissionActivityItem('submission-deleted', actorId, id),
 });
+
