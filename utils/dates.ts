@@ -61,5 +61,6 @@ export const isValidDate = (date: string | number | Date) =>
 
 export const getSundayOfThisWeek = () => {
 	const date = new Date();
-	return new Date(date.getDate() - date.getDay());
+	const diff = date.getDate() - date.getDay();
+	return new Date(date.setDate(diff));
 };
