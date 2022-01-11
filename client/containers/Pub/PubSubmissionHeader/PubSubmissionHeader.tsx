@@ -29,15 +29,27 @@ const PubSubmissionHeader = (props: Props) => {
 				id="TabsExample"
 				onChange={(t) => setSelectedTab(t)}
 				selectedTabId={selectedTab}
-				className="bp3-large"
+				className="tabs bp3-large"
 			>
 				<Tab
 					id="instructions"
 					title={instructions}
 					panel={<InstructionsTab instructions={instructionsText} />}
+					className="tab-panel tab"
 				/>
-				<Tab id="submission" title={submission} panel={<SubmissionTab />} />
-				<Tab id="preview" title={preview} panel={<PreviewTab />} />
+
+				<Tab
+					id="submission"
+					title={submission}
+					panel={<SubmissionTab />}
+					className="tab-panel tab"
+				/>
+				<Tab
+					id="preview"
+					title={preview}
+					panel={<PreviewTab />}
+					className="tab-panel tab"
+				/>
 			</Tabs>
 		</div>
 	);
