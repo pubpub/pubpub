@@ -17,12 +17,19 @@
 		color: var(--community-accent-dark);
 	}
 
+<<<<<<< HEAD:client/containers/Pub/SubmissionPubHeader/spubHeader.scss
 	.tabs {
 		max-width: 900px;
 		> .bp3-tab-list {
 			> .bp3-tab-indicator-wrapper > .bp3-tab-indicator {
 				background: var(--community-accent-dark);
 			}
+=======
+	.tabs{
+		color: var(--community-accent-dark);
+		max-width: 900px;
+		> .bp3-tab-list {
+>>>>>>> 34425fd3c (css):client/containers/Pub/PubSubmissionHeader/spubHeader.scss
 			position: absolute;
 			width: 1005.79px;
 			height: 0px;
