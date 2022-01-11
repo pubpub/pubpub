@@ -1,39 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { DashboardFrame } from 'components';
 import { usePageContext } from 'utils/hooks';
-import { Pub } from 'types';
+import { Pub, SubmissionWorkflow } from 'types';
 
 import SubmissionItems from './SubmissionItems';
+import AcceptSubmissionsToggle from './AcceptSubmissionsToggle';
 import SubmissionWorkflowButton from './SubmissionWorkflowButton';
-import { OverviewSection } from '../DashboardOverview/helpers';
 
 require('./dashboardSubmissions.scss');
 
 type Props = {
 	initialPubs: Pub[];
 	initiallyLoadedAllPubs: boolean;
+	initialSubmissionWorkflow: SubmissionWorkflow;
 };
 
 const DashboardSubmissions = (props: Props) => {
-	const { initialPubs, initiallyLoadedAllPubs } = props;
-	const { scopeData } = usePageContext();
-	const collection = scopeData.elements.activeCollection;
+	const { initialPubs, initiallyLoadedAllPubs, initialSubmissionWorkflow } = props;
+	const [submissionWorkflow, setSubmissionWorkflow] = useState(initialSubmissionWorkflow);
+	const {
+		scopeData: {
+			elements: { activeCollection },
+		},
+	} = usePageContext();
 
 	return (
 		<DashboardFrame
 			className="dashboard-submissions-container"
-			title="Submissions Overview"
+			title="Submissions"
 			icon="inbox"
-			controls={<SubmissionWorkflowButton />}
+			controls={
+				<>
+					<SubmissionWorkflowButton />
+					<AcceptSubmissionsToggle
+						workflow={submissionWorkflow}
+						onUpdateWorkflow={(next) =>
+							setSubmissionWorkflow((current) => ({ ...current, ...next }))
+						}
+					/>
+				</>
+			}
 		>
-			<OverviewSection title="In this Collection" icon="overview" descendTitle>
-				<SubmissionItems
-					initialPubs={initialPubs}
-					collection={collection}
-					initiallyLoadedAllPubs={initiallyLoadedAllPubs}
-				/>
-			</OverviewSection>
+			<SubmissionItems
+				initialPubs={initialPubs}
+				collection={activeCollection}
+				initiallyLoadedAllPubs={initiallyLoadedAllPubs}
+			/>
 		</DashboardFrame>
 	);
 };
