@@ -18,7 +18,7 @@ type Props = {
 	useFormattingBar?: boolean;
 	getButtons?: (
 		buttons: Record<string, FormattingBarButtonData[][]>,
-	) => FormattingBarButtonData[][];git add
+	) => FormattingBarButtonData[][];
 };
 
 const handleScrollToSelection = () => true;
