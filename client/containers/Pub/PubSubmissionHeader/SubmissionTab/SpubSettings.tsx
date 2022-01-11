@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@blueprintjs/core';
 
-import DownloadChooser from 'client/containers/DashboardSettings/PubSettings';
+import DownloadChooser from 'client/containers/DashboardSettings/PubSettings/DownloadChooser';
 import { pubData, communityData } from 'utils/storybook/data';
 
 const SpubSettings = () => {
@@ -23,8 +23,10 @@ const SpubSettings = () => {
 					</p>
 				</div>
 				<div>
-					<p>EDIT PUB THEME</p>
-					<Button icon="clean" />
+					<p>
+						EDIT PUB THEME &nbsp;
+						<Button icon="clean" />
+					</p>
 				</div>
 			</div>
 		);
@@ -45,12 +47,18 @@ const SpubSettings = () => {
 					</p>
 				</div>
 				<div>
-					<p>UPLOAD YOUR FILE</p>
-					<DownloadChooser
-						pubData={pubData}
-						communityId={communityData.id}
-						onSetDownloads={(downloads) => updatePersistedPubData({ downloads })}
-					/>
+					<p>
+						UPLOAD YOUR FILE &nbsp;
+						<DownloadChooser
+							pubData={{
+								id: '00f9aaaf-0468-4590-9b86-1a2bff4ffe57',
+
+								downloads: undefined,
+							}}
+							communityId={communityData.id}
+							onSetDownloads={(downloads) => updatePersistedPubData({ downloads })}
+						/>
+					</p>
 				</div>
 			</div>
 		);
