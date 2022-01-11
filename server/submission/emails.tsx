@@ -43,18 +43,15 @@ const getSubmittersInfo = async (members: types.Member[]) => {
 	};
 };
 
-const deriveEmailCustomText = async (
+const deriveEmailCustomText = (
 	emailKind: types.SubmissionEmailKind,
-	submissionWorkflowId: string,
+	submissionWorkflow: types.SubmissionWorkflow,
 	customText: types.Maybe<types.DocJson>,
 ) => {
 	if (customText) {
 		return customText;
 	}
 	if (emailKind === 'received') {
-		const submissionWorkflow: types.SubmissionWorkflow = await SubmissionWorkflow.findOne({
-			where: { id: submissionWorkflowId },
-		});
 		return submissionWorkflow.emailText;
 	}
 	return null;
@@ -65,12 +62,14 @@ export const sendSubmissionEmail = async (options: SendEmailOptions) => {
 	const emailKind = getEmailKindToSend(previousStatus, submission.status);
 	if (emailKind) {
 		const { submitterName, submitterEmails } = await getSubmittersInfo(submission.pub.members);
-		const community = await Community.findOne({ where: { id: submission.pub.communityId } });
-		const customText = await deriveEmailCustomText(
-			emailKind,
-			submission.submissionWorkflowId,
-			providedCustomText,
-		);
+		const [community, submissionWorkflow]: [types.Community, types.SubmissionWorkflow] =
+			await Promise.all([
+				Community.findOne({ where: { id: submission.pub.communityId } }),
+				SubmissionWorkflow.findOne({
+					where: { id: submission.submissionWorkflowId },
+				}),
+			]);
+		const customText = deriveEmailCustomText(emailKind, submissionWorkflow, providedCustomText);
 		const html = ReactDOMServer.renderToString(
 			<SubmissionEmail
 				kind={emailKind}
@@ -82,7 +81,7 @@ export const sendSubmissionEmail = async (options: SendEmailOptions) => {
 		);
 		await sendEmail({
 			from: { address: 'submissions@pubpub.org', name: `PubPub Submissions` },
-			to: submitterEmails,
+			to: [...submitterEmails, submissionWorkflow.targetEmailAddress],
 			subject: `Your submission to ${community.title}`,
 			html,
 		});
