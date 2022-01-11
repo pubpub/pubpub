@@ -1,7 +1,5 @@
 .spub-header-component {
-	position: relative;
-	z-index: 20;
-	border-bottom: 1px solid var(--community-accent-dark);
+	border-bottom: 1000px solid var(--community-accent-dark);
 	padding: 200px;
 
 	h1 {
@@ -17,31 +15,28 @@
 		box-decoration-break: clone;
 	}
 
-	.bp3-tabs {
+	.tabs {
 		color: var(--community-accent-dark);
 		max-width: 900px;
-	}
-
-	.bp3-tab-list {
-		position: absolute;
-		width: 1005.79px;
-		height: 0px;
-		padding-top: 5px;
-	}
-
-	.bp3-tab {
-		color: var(--community-accent-dark);
-		font-size: 14px;
-		font-style: normal;
-		font-weight: 500;
-		line-height: 17px;
-		letter-spacing: 0.15em;
-		text-align: left;
-		padding: 15px;
-		text-transform: uppercase;
-	}
-
-	.bp3-tab-panel {
-		padding-top: 33px;
+		.bp3-tab-list {
+			position: absolute;
+			width: 1005.79px;
+			height: 0px;
+			padding-top: 5px;
+			.tab {
+				color: var(--community-accent-dark);
+				font-size: 14px;
+				font-style: normal;
+				font-weight: 500;
+				line-height: 17px;
+				letter-spacing: 0.15em;
+				text-align: left;
+				padding: 15px;
+				text-transform: uppercase;
+			}
+		}
+		.tab-panel {
+			padding-top: 33px;
+		}
 	}
 }
