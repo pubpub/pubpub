@@ -1,18 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-import dateFormat from 'dateformat';
 import Color from 'color';
 
 import { Community } from 'types';
 import { communityUrl } from 'utils/canonicalUrls';
+import { formatDate } from 'utils/dates';
 import { Icon } from 'client/components';
 
 import { Section, Button } from '..';
 import { BaseTableStyle } from '../shared';
 
-type PropTypes = {
+type Props = {
 	accentColorDark: string;
 	community: Community;
+	date: Date;
 };
 
 type StyleProps = {
@@ -42,12 +43,9 @@ const SpanStyle = styled.span`
 	padding-right: 9px;
 `;
 
-export const DigestIntro = (props: PropTypes) => {
-	const now = new Date();
-	const fadedBackgroundColor = Color(props.accentColorDark)
-		.fade(0.95)
-		.rgb()
-		.string();
+export const DigestIntro = (props: Props) => {
+	const { date } = props;
+	const fadedBackgroundColor = Color(props.accentColorDark).fade(0.95).rgb().string();
 
 	return (
 		<TableStyle accentColorDark={props.accentColorDark}>
@@ -57,16 +55,12 @@ export const DigestIntro = (props: PropTypes) => {
 						<BaseTableStyle>
 							<tr>
 								<TextCellStyle>
-									This digest is a compilation of activity in the{' '}
+									This digest is a compilation of activity in the&nbsp;
 									<a href={communityUrl(props.community)}>
 										{props.community.title}
-									</a>{' '}
-									community during the week of{' '}
-									{dateFormat(
-										now.setDate(now.getDate() - now.getDay()),
-										'dd mmmm yyyy',
-									)}
-									.
+									</a>
+									&nbsp;community during the week of&nbsp;
+									{formatDate(date)}.
 								</TextCellStyle>
 								<ButtonCellStyle>
 									<Button

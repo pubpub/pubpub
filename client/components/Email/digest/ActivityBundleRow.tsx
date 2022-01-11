@@ -59,7 +59,7 @@ const DateSpanStyle = styled.span`
 `;
 
 const ListStyle = styled.ol`
-	padding: 0 40px 0 20px;
+	padding: 0 20px;
 `;
 
 const TableStyle = styled(BaseTableStyle)`
@@ -84,6 +84,7 @@ export const ActivityBundleRow = (props: ActivityBundleRowProps) => {
 		<ListStyle>
 			{props.items
 				.map((item) => renderActivityItem(item, activityRenderContext))
+				.filter(Boolean)
 				.map((renderedItem) => (
 					<ListItemStyle key={renderedItem.id}>
 						<TableStyle>

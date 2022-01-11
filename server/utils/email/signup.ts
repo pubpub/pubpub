@@ -3,7 +3,7 @@ import stripIndent from 'strip-indent';
 
 const mg = mailgun.client({
 	username: 'api',
-	key: process.env.MAILGUN_API_KEY,
+	key: process.env.MAILGUN_API_KEY!,
 });
 
 export const sendSignupEmail = ({ toEmail, signupUrl }) => {
