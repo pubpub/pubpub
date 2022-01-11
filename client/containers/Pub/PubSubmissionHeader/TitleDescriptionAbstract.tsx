@@ -8,28 +8,16 @@ const TitleDescriptionAbstract = () => {
 			submission pub, which you can preview at any time before making your final submission.
 			<br />
 			<br />
-			<FormGroup
-				helperText="Enter pub title here..."
-				label="Title of your submission pub "
-				labelFor="text-input"
-			>
-				<InputGroup id="text-input" placeholder="Placeholder text" />
+			<FormGroup label="Title of your submission pub " labelFor="text-input">
+				<InputGroup id="text-input" placeholder="Enter pub title here..." />
 			</FormGroup>
 			<br />
-			<FormGroup
-				helperText="Enter abstruct here..."
-				label="Abstract Description "
-				labelFor="text-input"
-			>
-				<InputGroup id="text-input" placeholder="Placeholder text" />
+			<FormGroup label="Abstract Description " labelFor="text-input">
+				<InputGroup id="text-input" placeholder="Enter abstruct here..." />
 			</FormGroup>
 			<br />
-			<FormGroup
-				helperText="Enter description text here..."
-				label=" Description "
-				labelFor="text-input"
-			>
-				<InputGroup id="text-input" placeholder="Placeholder text" />
+			<FormGroup label=" Description " labelFor="text-input">
+				<InputGroup id="text-input" placeholder="Enter description text here..." />
 			</FormGroup>
 			<br />
 			Pub Content Enter your primary submission content in the pub body below by typing or by

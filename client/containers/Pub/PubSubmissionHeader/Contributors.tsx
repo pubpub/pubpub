@@ -1,17 +1,25 @@
-import React from 'react';
-// import { PubAttributionEditor } from 'components';
+import React, { useState } from 'react';
+import { PubAttributionEditor } from 'components';
+
+import { pubData, communityData } from 'utils/storybook/data';
+
 const Contributors = () => {
-	// const renderAttributions = () => {
-	// 	return (
-	// 		<PubAttributionEditor
-	// 			pubData={pubData}
-	// 			communityData={communityData}
-	// 			updatePubData={updatePersistedPubData}
-	// 			canEdit={canManage}
-	// 		/>
-	// 	);
-	// };
-	return <>This is already built innit</>;
+	const [persistedPubData, setPersistedPubData] = useState(pubData);
+	const updatePersistedPubData = (values) => {
+		setPersistedPubData({ ...persistedPubData, ...values });
+	};
+
+	const renderAttributions = () => {
+		return (
+			<PubAttributionEditor
+				pubData={pubData}
+				communityData={communityData}
+				updatePubData={updatePersistedPubData}
+				canEdit={true}
+			/>
+		);
+	};
+	return <>{renderAttributions()}</>;
 };
 
 export default Contributors;
