@@ -35,6 +35,8 @@ export const Digest = (props: Props) => {
 	} = props;
 	const date = new Date();
 	const sundayOfThisWeek = getSundayOfThisWeek();
+	const hasCommunityActivity = Object.entries(props.communityItems).length > 0;
+	const hasPubActivity = Object.entries(props.pubItems).length > 0;
 
 	return (
 		<Wrapper
@@ -50,41 +52,45 @@ export const Digest = (props: Props) => {
 			<Section alignment="left">
 				<DigestSectionTitle
 					icon="office"
-					title="Community News"
+					title="Community"
 					accentColorDark={accentColorDark}
 				/>
-				<ol>
-					{Object.entries(props.communityItems).map(([objectId, groupedItems]) => (
-						<ActivityBundle
-							key={objectId}
-							groupedItems={groupedItems}
-							isWithTitle={false}
-							accentColorDark={accentColorDark}
-							associations={props.associations}
-							userId={props.userId}
-						/>
-					))}
-				</ol>
+				{hasCommunityActivity ? (
+					<ol>
+						{Object.entries(props.communityItems).map(([objectId, groupedItems]) => (
+							<ActivityBundle
+								key={objectId}
+								groupedItems={groupedItems}
+								isWithTitle={false}
+								accentColorDark={accentColorDark}
+								associations={props.associations}
+								userId={props.userId}
+							/>
+						))}
+					</ol>
+				) : (
+					<span>No Community activity this week.</span>
+				)}
 				<Spacer height={40}>
 					<span>&nbsp;</span>
 				</Spacer>
-				<DigestSectionTitle
-					icon="pubDoc"
-					title="Pub News"
-					accentColorDark={accentColorDark}
-				/>
-				<ol>
-					{Object.entries(props.pubItems).map(([objectId, groupedItems]) => (
-						<ActivityBundle
-							key={objectId}
-							groupedItems={groupedItems}
-							isWithTitle={true}
-							accentColorDark={accentColorDark}
-							associations={props.associations}
-							userId={props.userId}
-						/>
-					))}
-				</ol>
+				<DigestSectionTitle icon="pubDoc" title="Pubs" accentColorDark={accentColorDark} />
+				{hasPubActivity ? (
+					<ol>
+						{Object.entries(props.pubItems).map(([objectId, groupedItems]) => (
+							<ActivityBundle
+								key={objectId}
+								groupedItems={groupedItems}
+								isWithTitle={true}
+								accentColorDark={accentColorDark}
+								associations={props.associations}
+								userId={props.userId}
+							/>
+						))}
+					</ol>
+				) : (
+					<span>No Pub activity this week.</span>
+				)}
 				<DigestFooter community={props.community} />
 			</Section>
 		</Wrapper>

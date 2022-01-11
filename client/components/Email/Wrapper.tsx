@@ -21,7 +21,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const EmailPreview = (props: { text: string }) => {
-	let text = (props.text += `&nbsp; &zwnj; `.repeat(150 - props.text.length));
+	const text = props.text + `&nbsp; &zwnj; `.repeat(150 - props.text.length);
 	return (
 		<div
 			className="hidden-fix"
