@@ -4,7 +4,7 @@ import { Tab, Tabs, Icon, IconName } from '@blueprintjs/core';
 import { DocJson } from 'types';
 
 import InstructionTab from './InstructionTab';
-import SubmissionTab from './SubmissionTab';
+import SubmissionTab from './SubmissionTab/SubmissionTab';
 import PreviewTab from './PreviewTab';
 
 require('./spubHeader.scss');
