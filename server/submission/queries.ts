@@ -17,8 +17,8 @@ type UpdateToStatus = typeof updateToStatuses;
 type UpdateOptions = Partial<types.Submission> & {
 	id: string;
 	status: UpdateToStatus;
-	sendEmail?: boolean;
-	customEmailText: types.DocJson;
+	skipEmail?: boolean;
+	customEmailText?: types.DocJson;
 };
 
 export const getSubmissionById = async (
@@ -63,12 +63,12 @@ export const createSubmission = async ({
 };
 
 export const updateSubmission = async (options: UpdateOptions, actorId: string) => {
-	const { id, status, customEmailText, sendEmail } = options;
+	const { id, status, customEmailText, skipEmail } = options;
 	const submission = (await getSubmissionById(id))!;
 	const previousStatus = submission.status;
 	const isBeingSubmitted = previousStatus === 'incomplete' && status === 'pending';
 
-	const patch = await Submission.update(
+	await Submission.update(
 		{
 			status,
 			...(isBeingSubmitted && { submittedAt: new Date().toISOString() }),
@@ -81,7 +81,7 @@ export const updateSubmission = async (options: UpdateOptions, actorId: string) 
 	);
 
 	defer(async () => {
-		if (sendEmail) {
+		if (!skipEmail) {
 			await sendSubmissionEmail({
 				previousStatus,
 				submission: (await getSubmissionById(id))!,
@@ -90,7 +90,7 @@ export const updateSubmission = async (options: UpdateOptions, actorId: string) 
 		}
 	});
 
-	return patch;
+	return { status };
 };
 
 export const destroySubmission = async ({ id }: { id: string }, actorId: string) =>

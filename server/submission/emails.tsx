@@ -9,7 +9,7 @@ import { sendEmail } from 'server/utils/email';
 type SendEmailOptions = {
 	previousStatus: types.SubmissionStatus;
 	submission: types.Submission & { pub: types.DefinitelyHas<types.Pub, 'members'> };
-	customText: types.DocJson;
+	customText?: types.DocJson;
 };
 
 const getEmailKindToSend = (
@@ -48,11 +48,11 @@ export const sendSubmissionEmail = async (options: SendEmailOptions) => {
 	const emailKind = getEmailKindToSend(previousStatus, submission.status);
 	if (emailKind) {
 		const { submitterName, submitterEmails } = await getSubmittersInfo(submission.pub.members);
-		const community = await Community.find({ where: { id: submission.pub.communityId } });
+		const community = await Community.findOne({ where: { id: submission.pub.communityId } });
 		const html = ReactDOMServer.renderToString(
 			<SubmissionEmail
 				kind={emailKind}
-				customText={<Editor initialContent={customText} isReadOnly />}
+				customText={customText && <Editor initialContent={customText} isReadOnly />}
 				submissionTitle={submission.pub.title}
 				submitterName={submitterName}
 				community={community}
