@@ -12,7 +12,7 @@ import {
 	SpecialRow,
 } from '../DashboardOverview/overviewRows';
 import { OverviewSearchGroup, OverviewSearchFilter } from '../DashboardOverview/helpers';
-import SubmissionRowManagementMenu from './SubmissionRowMagementMenu';
+import ArbitrationMenu from './ArbitrationMenu';
 
 require('./submissionItems.scss');
 
@@ -108,7 +108,7 @@ const SubmissionItems = (props: Props) => {
 						key={pub.id}
 						leftIconElement="manually-entered-data"
 						hasSubmission={true}
-						rightElement={<SubmissionRowManagementMenu pub={pub} />}
+						rightElement={<ArbitrationMenu pub={pub} />}
 					/>
 				))}
 				{canLoadMorePubs && <LoadMorePubsRow isLoading />}

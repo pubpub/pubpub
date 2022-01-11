@@ -1,15 +1,16 @@
 import React from 'react';
 import { Button, Dialog } from '@blueprintjs/core';
 
+import { Submission } from 'types';
 import { apiFetch } from 'client/utils/apiFetch';
 import { Icon, IconName, DialogLauncher } from 'client/components';
 
-const submissionManagementOptions = [
+const arbitrationOptions = [
 	{
 		icon: 'cross',
 		actionTitle: 'Delete',
 		actionHelpText: 'Would you like to delete this Submission?',
-		onSubmit: (submission) => () => {
+		onSubmit: (submission: Submission) => () => {
 			apiFetch('/api/submissions', {
 				method: 'DELETE',
 				body: JSON.stringify(submission),
@@ -20,7 +21,7 @@ const submissionManagementOptions = [
 		icon: 'thumbs-down',
 		actionTitle: 'Decline',
 		actionHelpText: 'Would you like to decline this Submission?',
-		onSubmit: (submission) => () => {
+		onSubmit: (submission: Submission) => () => {
 			apiFetch('/api/submissions', {
 				method: 'PUT',
 				body: JSON.stringify({
@@ -34,7 +35,7 @@ const submissionManagementOptions = [
 		icon: 'endorsed',
 		actionTitle: 'Accept',
 		actionHelpText: 'Would you like to accept this Submission?',
-		onSubmit: (submission) => () => {
+		onSubmit: (submission: Submission) => () => {
 			apiFetch('/api/submissions', {
 				method: 'PUT',
 				body: JSON.stringify({
@@ -54,17 +55,17 @@ type DialogProps = {
 	isOpen: boolean;
 	actionTitle: string;
 	actionHelpText: string;
-	handleSubmission: (...args: any[]) => any;
+	handleSubmission: () => any;
 	onClose: (...args: any[]) => any;
 };
 
-const SubmissionManageDialog = (props: DialogProps) => {
+const VerdictDialog = (props: DialogProps) => {
 	const { isOpen, onClose, actionTitle, actionHelpText, handleSubmission } = props;
 	return (
 		<Dialog
 			lazy={true}
 			title={`${actionTitle} this submission`}
-			className="submissionManagementDialog"
+			className="verdictDialog"
 			isOpen={isOpen}
 			onClose={onClose}
 		>
@@ -76,7 +77,7 @@ const SubmissionManageDialog = (props: DialogProps) => {
 	);
 };
 
-const SubmissionRowManagementMenu = (props: Props) => {
+const ArbitrationMenu = (props: Props) => {
 	const { pub } = props;
 	return (
 		<div
@@ -87,7 +88,7 @@ const SubmissionRowManagementMenu = (props: Props) => {
 				gridColumnGap: '40px',
 			}}
 		>
-			{submissionManagementOptions.map((option, index) => {
+			{arbitrationOptions.map((option, index) => {
 				return (
 					<div style={{ gridColumn: index + 1 }} key={option.actionTitle}>
 						<DialogLauncher
@@ -101,7 +102,7 @@ const SubmissionRowManagementMenu = (props: Props) => {
 							)}
 						>
 							{({ isOpen, onClose }) => (
-								<SubmissionManageDialog
+								<VerdictDialog
 									handleSubmission={option.onSubmit(pub.submission)}
 									actionTitle={option.actionTitle}
 									isOpen={isOpen}
@@ -117,4 +118,4 @@ const SubmissionRowManagementMenu = (props: Props) => {
 	);
 };
 
-export default SubmissionRowManagementMenu;
+export default ArbitrationMenu;
