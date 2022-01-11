@@ -3,6 +3,7 @@ import { Button } from '@blueprintjs/core';
 
 import DownloadChooser from 'client/containers/DashboardSettings/PubSettings/DownloadChooser';
 import { pubData, communityData } from 'utils/storybook/data';
+import { PubThemePicker, PopoverButton } from 'components';
 
 const SpubSettings = () => {
 	const [persistedPubData, setPersistedPubData] = useState(pubData);
@@ -25,7 +26,15 @@ const SpubSettings = () => {
 				<div>
 					<p>
 						EDIT PUB THEME &nbsp;
-						<Button icon="clean" />
+						<PopoverButton
+							component={PubThemePicker}
+							className="pub-header-popover"
+							pubData={pubData}
+							communityData={communityData}
+							aria-label="Pub header theme options"
+						>
+							<Button icon="clean" />
+						</PopoverButton>
 					</p>
 				</div>
 			</div>
