@@ -1,76 +1,40 @@
 import React, { useState } from 'react';
-import { Tab, Tabs, Icon, IconName } from '@blueprintjs/core';
+import { Tab, Tabs, TabId } from '@blueprintjs/core';
 
-import { DocJson } from 'types';
+import { SubmissionWorkflow } from 'types';
 
-import InstructionTab from './InstructionTab';
+import InstructionsTab from './InstructionsTab';
 import SubmissionTab from './SubmissionTab';
 import PreviewTab from './PreviewTab';
+import { renderInstructionTabTitle } from './utility';
 
 require('./spubHeader.scss');
 
-const PubSubmissionHeader = () => {
-	const [selectedTab, setSelectedTab] = useState('instructions');
+type Props = {
+	workflow: Pick<SubmissionWorkflow, 'instructionsText'>;
+};
 
-	const renderInstructionTabTitle = (icon: IconName, title: string) => {
-		return (
-			<>
-				<Icon icon={icon} /> {title}
-			</>
-		);
-	};
+const PubSubmissionHeader = (props: Props) => {
+	const { workflow } = props;
+	const { instructionsText } = workflow;
+	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');
 
 	const instructions = renderInstructionTabTitle('align-left', 'Instructions');
 	const submission = renderInstructionTabTitle('manually-entered-data', 'Submission');
 	const preview = renderInstructionTabTitle('eye-open', 'Preview & Edit');
-	const instructionNode: DocJson = {
-		type: 'doc',
-		attrs: 'What Is This',
-		content: [
-			<>
-				<h1>Cartographie 2022: Call for Proposals</h1>
-				<br />
-				<br />
-				<p>
-					You gotta do a little dance to get into a pocket dimension. You know, like in
-					Fringe. First go to the building from the tape, go to apartment 413, its
-					dangerous though. careful footing. In the middle of the room walk three steps
-					forwad, step to the left. step to the right, walk backwards three steps, step
-					left, turn left 270 degrees. step forward
-				</p>
-				<br />
-				<li>One</li>
-				<li>Two</li>
-				<li>Three</li>
-				<li>Onto</li>
-				<li>Four</li>
-				<br />
-				<br />
-				<p>
-					If you have any questions, you can email the community admin at
-					hello@institution.com, and could even contain a story about civiizations that
-					have come and gone in the time it takes for a species to evolve past its own
-					technological limtations. Do we really know what exists around us? There are
-					phenomena that exists outside the visible spectrum which we may have no clear
-					perception of.
-				</p>
-			</>,
-		],
-	};
 
 	return (
-		<div className="pub-header-component">
+		<div className="spub-header-component">
 			<Tabs
 				id="TabsExample"
-				// @ts-expect-error ts-migrate(2322) FIXME: Type 'Dispatch<SetStateAction<string>>' is not ass... Remove this comment to see the full error message
-				onChange={setSelectedTab}
+				onChange={(t) => setSelectedTab(t)}
 				selectedTabId={selectedTab}
 				className="bp3-large"
 			>
 				<Tab
 					id="instructions"
 					title={instructions}
-					panel={<InstructionTab instructions={instructionNode} />}
+					panel={<InstructionsTab instructions={instructionsText} />}
 				/>
 				<Tab id="submission" title={submission} panel={<SubmissionTab />} />
 				<Tab id="preview" title={preview} panel={<PreviewTab />} />
