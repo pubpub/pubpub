@@ -3,7 +3,7 @@ import ReactDOMServer from 'react-dom/server';
 
 import * as types from 'types';
 import { SubmissionEmail, Editor } from 'components';
-import { Community, User } from 'server/models';
+import { Community, SubmissionWorkflow, User } from 'server/models';
 import { sendEmail } from 'server/utils/email';
 
 type SendEmailOptions = {
@@ -43,12 +43,34 @@ const getSubmittersInfo = async (members: types.Member[]) => {
 	};
 };
 
+const deriveEmailCustomText = async (
+	emailKind: types.SubmissionEmailKind,
+	submissionWorkflowId: string,
+	customText: types.Maybe<types.DocJson>,
+) => {
+	if (customText) {
+		return customText;
+	}
+	if (emailKind === 'received') {
+		const submissionWorkflow: types.SubmissionWorkflow = await SubmissionWorkflow.findOne({
+			where: { id: submissionWorkflowId },
+		});
+		return submissionWorkflow.emailText;
+	}
+	return null;
+};
+
 export const sendSubmissionEmail = async (options: SendEmailOptions) => {
-	const { previousStatus, submission, customText } = options;
+	const { previousStatus, submission, customText: providedCustomText } = options;
 	const emailKind = getEmailKindToSend(previousStatus, submission.status);
 	if (emailKind) {
 		const { submitterName, submitterEmails } = await getSubmittersInfo(submission.pub.members);
 		const community = await Community.findOne({ where: { id: submission.pub.communityId } });
+		const customText = await deriveEmailCustomText(
+			emailKind,
+			submission.submissionWorkflowId,
+			providedCustomText,
+		);
 		const html = ReactDOMServer.renderToString(
 			<SubmissionEmail
 				kind={emailKind}
