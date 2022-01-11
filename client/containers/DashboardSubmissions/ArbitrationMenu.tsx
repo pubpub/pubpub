@@ -1,9 +1,11 @@
 import React from 'react';
 import { Button, Dialog } from '@blueprintjs/core';
 
-import { Submission } from 'types';
+import { Submission, DefinitelyHas, Pub } from 'types';
 import { apiFetch } from 'client/utils/apiFetch';
 import { Icon, IconName, DialogLauncher } from 'client/components';
+
+require('./arbitrationMenu.scss');
 
 const arbitrationOptions = [
 	{
@@ -19,6 +21,7 @@ const arbitrationOptions = [
 	},
 	{
 		icon: 'thumbs-down',
+		targetStatus: 'declined',
 		actionTitle: 'Decline',
 		actionHelpText: 'Would you like to decline this Submission?',
 		onSubmit: (submission: Submission) => () => {
@@ -34,6 +37,7 @@ const arbitrationOptions = [
 	{
 		icon: 'endorsed',
 		actionTitle: 'Accept',
+		targetStatus: 'accepted',
 		actionHelpText: 'Would you like to accept this Submission?',
 		onSubmit: (submission: Submission) => () => {
 			apiFetch('/api/submissions', {
@@ -48,7 +52,7 @@ const arbitrationOptions = [
 ];
 
 type Props = {
-	pub: any;
+	pub: DefinitelyHas<Pub, 'submission'>;
 };
 
 type DialogProps = {
@@ -77,45 +81,35 @@ const VerdictDialog = (props: DialogProps) => {
 	);
 };
 
-const ArbitrationMenu = (props: Props) => {
-	const { pub } = props;
-	return (
-		<div
-			style={{
-				display: 'grid',
-				gridTemplateColumns: 'repeat(3, 1fr)',
-				gridTemplateRows: '1fr',
-				gridColumnGap: '40px',
-			}}
-		>
-			{arbitrationOptions.map((option, index) => {
-				return (
-					<div style={{ gridColumn: index + 1 }} key={option.actionTitle}>
-						<DialogLauncher
-							renderLauncherElement={({ openDialog }) => (
-								<Button
-									minimal
-									small
-									icon={<Icon icon={option.icon as IconName} iconSize={20} />}
-									onClick={openDialog}
-								/>
-							)}
-						>
-							{({ isOpen, onClose }) => (
-								<VerdictDialog
-									handleSubmission={option.onSubmit(pub.submission)}
-									actionTitle={option.actionTitle}
-									isOpen={isOpen}
-									onClose={onClose}
-									actionHelpText={option.actionHelpText}
-								/>
-							)}
-						</DialogLauncher>
-					</div>
-				);
-			})}
-		</div>
-	);
-};
+const ArbitrationMenu = (props: Props) => (
+	<div className="arbitration-menu">
+		{arbitrationOptions.map((option, index) => (
+			<div style={{ gridColumn: index + 1 }} key={option.actionTitle}>
+				{props.pub.submission.status !== option.targetStatus && (
+					<DialogLauncher
+						renderLauncherElement={({ openDialog }) => (
+							<Button
+								minimal
+								small
+								icon={<Icon icon={option.icon as IconName} iconSize={20} />}
+								onClick={openDialog}
+							/>
+						)}
+					>
+						{({ isOpen, onClose }) => (
+							<VerdictDialog
+								handleSubmission={option.onSubmit(props.pub.submission)}
+								actionTitle={option.actionTitle}
+								isOpen={isOpen}
+								onClose={onClose}
+								actionHelpText={option.actionHelpText}
+							/>
+						)}
+					</DialogLauncher>
+				)}
+			</div>
+		))}
+	</div>
+);
 
 export default ArbitrationMenu;

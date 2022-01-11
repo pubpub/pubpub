@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NonIdealState } from '@blueprintjs/core';
 
-import { Collection, Pub, PubsQuery } from 'types';
+import { Collection, Pub, PubsQuery, DefinitelyHas } from 'types';
 import { useManyPubs } from 'client/utils/useManyPubs';
 import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 
@@ -108,7 +108,10 @@ const SubmissionItems = (props: Props) => {
 						key={pub.id}
 						leftIconElement="manually-entered-data"
 						hasSubmission={true}
-						rightElement={<ArbitrationMenu pub={pub} />}
+						isDeclinedSubmission={!!(pub.submission?.status === 'declined')}
+						rightElement={
+							<ArbitrationMenu pub={pub as DefinitelyHas<Pub, 'submission'>} />
+						}
 					/>
 				))}
 				{canLoadMorePubs && <LoadMorePubsRow isLoading />}
