@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Tab, Tabs, TabId } from '@blueprintjs/core';
 
-import { SubmissionWorkflow } from 'types';
+import { SubmissionWorkflow, Submission, Pub } from 'types';
 
 import InstructionsTab from './InstructionsTab';
 import SubmissionTab from './SubmissionTab/SubmissionTab';
@@ -12,10 +12,12 @@ require('./spubHeader.scss');
 
 type Props = {
 	workflow: Pick<SubmissionWorkflow, 'instructionsText'>;
+	onUpdatePub?: (pub: Partial<Pub>) => unknown;
+	onUpdateSubmission?: (submission: Partial<Submission>) => unknown;
 };
 
 const PubSubmissionHeader = (props: Props) => {
-	const { workflow } = props;
+	const { workflow, onUpdatePub, onUpdateSubmission } = props;
 	const { instructionsText } = workflow;
 	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');
 
@@ -41,7 +43,12 @@ const PubSubmissionHeader = (props: Props) => {
 				<Tab
 					id="submission"
 					title={submission}
-					panel={<SubmissionTab />}
+					panel={
+						<SubmissionTab
+							onUpdatePub={onUpdatePub}
+							onUpdateSubmission={onUpdateSubmission}
+						/>
+					}
 					className="tab-panel tab"
 				/>
 				<Tab
