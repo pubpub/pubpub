@@ -14,7 +14,7 @@ type Props = {
 	workflow: Pick<SubmissionWorkflow, 'instructionsText'>;
 };
 
-const PubSubmissionHeader = (props: Props) => {
+const SubmissionPubHeader = (props: Props) => {
 	const { workflow } = props;
 	const { instructionsText } = workflow;
 	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');
@@ -55,4 +55,4 @@ const PubSubmissionHeader = (props: Props) => {
 	);
 };
 
-export default PubSubmissionHeader;
+export default SubmissionPubHeader;

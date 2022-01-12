@@ -4,6 +4,7 @@ import { usePageContext } from 'utils/hooks';
 
 import PubSyncManager from './PubSyncManager';
 import PubHeader from './PubHeader';
+import SubmissionPubHeader from './SubmissionPubHeader';
 import PubDocument from './PubDocument';
 import { PubSuspendWhileTypingProvider, PubSuspendWhileTyping } from './PubSuspendWhileTyping';
 

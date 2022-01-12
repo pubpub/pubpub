@@ -134,7 +134,6 @@ app.get('/pub/:pubSlug/release-id/:releaseId', async (req, res, next) => {
 		return next();
 	}
 	try {
-		console.log('THIS IS A RELEASED BUT NOT THE LATEST');
 		const initialData = await getInitialData(req);
 		const { pubSlug, releaseId } = req.params;
 		const pub = await getPub({ slug: pubSlug, communityId: initialData.communityData.id });
