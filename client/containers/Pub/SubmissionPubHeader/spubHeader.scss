@@ -1,6 +1,7 @@
 .spub-header-component {
 	border-bottom: 1px solid #d2d2d2;
-	padding: 200px;
+	padding: 26px;
+	height: 550px;
 
 	h1 {
 		margin: 0;
@@ -15,6 +16,7 @@
 		box-decoration-break: clone;
 		color: var(--community-accent-dark);
 	}
+
 
 	.tabs {
 		max-width: 900px;

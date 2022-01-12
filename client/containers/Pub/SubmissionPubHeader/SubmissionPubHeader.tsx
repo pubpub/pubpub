@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Tab, Tabs, TabId } from '@blueprintjs/core';
 
-import { SubmissionWorkflow } from 'types';
+import { GridWrapper } from 'components';
 
+import { SubmissionWorkflow } from 'types';
 import InstructionsTab from './InstructionsTab';
 import SubmissionTab from './SubmissionTab/SubmissionTab';
 import PreviewTab from './PreviewTab';
@@ -25,32 +26,34 @@ const SubmissionPubHeader = (props: Props) => {
 
 	return (
 		<div className="spub-header-component">
-			<Tabs
-				id="TabsExample"
-				onChange={(t) => setSelectedTab(t)}
-				selectedTabId={selectedTab}
-				className="tabs bp3-large"
-			>
-				<Tab
-					id="instructions"
-					title={instructions}
-					panel={<InstructionsTab instructions={instructionsText} />}
-					className="tab-panel tab"
-				/>
+			<GridWrapper containerClassName="pub" columnClassName="spub-header-column">
+				<Tabs
+					id="TabsExample"
+					onChange={(t) => setSelectedTab(t)}
+					selectedTabId={selectedTab}
+					className="tabs bp3-large"
+				>
+					<Tab
+						id="instructions"
+						title={instructions}
+						panel={<InstructionsTab instructions={instructionsText} />}
+						className="tab-panel tab"
+					/>
 
-				<Tab
-					id="submission"
-					title={submission}
-					panel={<SubmissionTab />}
-					className="tab-panel tab"
-				/>
-				<Tab
-					id="preview"
-					title={preview}
-					panel={<PreviewTab />}
-					className="tab-panel tab"
-				/>
-			</Tabs>
+					<Tab
+						id="submission"
+						title={submission}
+						panel={<SubmissionTab />}
+						className="tab-panel tab"
+					/>
+					<Tab
+						id="preview"
+						title={preview}
+						panel={<PreviewTab />}
+						className="tab-panel tab"
+					/>
+				</Tabs>
+			</GridWrapper>
 		</div>
 	);
 };
