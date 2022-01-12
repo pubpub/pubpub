@@ -24,7 +24,7 @@ import {
 import { createUserScopeVisit } from 'server/userScopeVisit/queries';
 import { InitialData } from 'types';
 
-const renderPubDocument = (res, pubData, initialData, customScripts) => {
+const renderPubDocument = (res, pubData, initialData, customScripts, hasSubmission) => {
 	const {
 		communityData: { id: communityId },
 		loginData: { id: userId },
@@ -35,7 +35,7 @@ const renderPubDocument = (res, pubData, initialData, customScripts) => {
 		<Html
 			chunkName="Pub"
 			initialData={initialData}
-			viewData={{ pubData }}
+			viewData={{ pubData, hasSubmission }}
 			customScripts={customScripts}
 			headerComponents={generateMetaComponents({
 				attributions: pubData.attributions,
@@ -122,8 +122,8 @@ app.get('/pub/:pubSlug/release/:releaseNumber', async (req, res, next) => {
 			releaseNumber,
 			initialData,
 		});
-		console.log('THIS IS A RELEASED PUB');
-		return renderPubDocument(res, pubData, initialData, customScripts);
+		const hasSubmission = false;
+		return renderPubDocument(res, pubData, initialData, customScripts, hasSubmission);
 	} catch (err) {
 		return handleErrors(req, res, next)(err);
 	}
@@ -206,12 +206,12 @@ app.get(['/pub/:pubSlug/draft', '/pub/:pubSlug/draft/:historyKey'], async (req, 
 			membersData,
 		}));
 		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
+		// how this gets in is 10000% up for debate
 		const hasSubmission =
 			('submission' in pubData && pubData.submission?.status === 'pending') ||
 			pubData.submission?.status === 'incomplete';
-		console.log('THIS IS A DRAFT PUB', { hasSubmission });
 
-		return renderPubDocument(res, pubData, initialData, customScripts);
+		return renderPubDocument(res, pubData, initialData, customScripts, hasSubmission);
 	} catch (err) {
 		return handleErrors(req, res, next)(err);
 	}

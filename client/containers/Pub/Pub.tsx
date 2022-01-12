@@ -12,6 +12,7 @@ require('./pub.scss');
 
 type Props = {
 	pubData: any;
+	hasSubmission: boolean;
 };
 
 const isInViewport = (rect: DOMRect, offsets: { top?: number; left?: number } = {}) => {
@@ -52,6 +53,7 @@ const scrollToElementTop = (hash: string, delay = 0) => {
 
 const Pub = (props: Props) => {
 	const { loginData, locationData, communityData } = usePageContext();
+	const { hasSubmission } = props;
 
 	useEffect(() => {
 		const { hash } = window.location;
@@ -99,11 +101,19 @@ const Pub = (props: Props) => {
 							firebaseDraftRef,
 							updateLocalData,
 						};
-						return (
+						return hasSubmission ? (
+							<React.Fragment>
+								<PubSuspendWhileTyping delay={1000}>
+									{() => <SubmissionPubHeader workflow={{}} />}
+								</PubSuspendWhileTyping>
+								<PubDocument {...modeProps} />
+							</React.Fragment>
+						) : (
 							<React.Fragment>
 								<PubSuspendWhileTyping delay={1000}>
 									{() => <PubHeader {...modeProps} />}
 								</PubSuspendWhileTyping>
+
 								<PubDocument {...modeProps} />
 							</React.Fragment>
 						);
