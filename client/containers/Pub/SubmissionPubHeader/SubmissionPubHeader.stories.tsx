@@ -5,7 +5,7 @@ import { SubmissionWorkflow } from 'types';
 
 import PubSubmissionHeader from './SubmissionPubHeader';
 
-export const workflow: SubmissionWorkflow = {
+const workflow: SubmissionWorkflow = {
 	id: '12089e31h3f23bf-f23f23f23f2-f23f32bu234v23-f2323f',
 	createdAt: '',
 	updatedAt: '',
