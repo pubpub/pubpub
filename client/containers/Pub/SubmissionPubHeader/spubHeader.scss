@@ -13,10 +13,10 @@
 		text-align: left;
 
 		box-decoration-break: clone;
+		color: var(--community-accent-dark);
 	}
 
 	.tabs {
-		color: var(--community-accent-dark);
 		max-width: 900px;
 		> .bp3-tab-list {
 			position: absolute;
