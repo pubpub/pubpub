@@ -75,7 +75,6 @@ const workflow: SubmissionWorkflow = {
 
 type Props = {
 	pubData: any;
-	hasSubmission: boolean;
 };
 
 const isInViewport = (rect: DOMRect, offsets: { top?: number; left?: number } = {}) => {
@@ -116,7 +115,10 @@ const scrollToElementTop = (hash: string, delay = 0) => {
 
 const Pub = (props: Props) => {
 	const { loginData, locationData, communityData } = usePageContext();
-	const { hasSubmission } = props;
+	const hasSubmission =
+		'submission' in props.pubData && props.pubData.submission?.status === 'incomplete';
+
+	console.log(props.pubData, { hasSubmission });
 
 	useEffect(() => {
 		const { hash } = window.location;

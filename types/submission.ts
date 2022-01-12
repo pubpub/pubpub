@@ -1,4 +1,4 @@
-import { Pub } from 'types';
+import { Pub, SubmissionWorkflow } from 'types';
 
 export const managerStatuses = ['pending', 'accepted', 'declined'] as const;
 export const submitterStatuses = ['pending'] as const;
@@ -16,4 +16,6 @@ export type Submission = {
 	pub?: Pub;
 	status: SubmissionStatus;
 	submittedAt: null | string;
+	submissionWorkflow?: SubmissionWorkflow;
+	submissionWorkflowId: string;
 };

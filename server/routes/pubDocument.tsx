@@ -24,7 +24,7 @@ import {
 import { createUserScopeVisit } from 'server/userScopeVisit/queries';
 import { InitialData } from 'types';
 
-const renderPubDocument = (res, pubData, initialData, customScripts, hasSubmission) => {
+const renderPubDocument = (res, pubData, initialData, customScripts) => {
 	const {
 		communityData: { id: communityId },
 		loginData: { id: userId },
@@ -35,7 +35,7 @@ const renderPubDocument = (res, pubData, initialData, customScripts, hasSubmissi
 		<Html
 			chunkName="Pub"
 			initialData={initialData}
-			viewData={{ pubData, hasSubmission }}
+			viewData={{ pubData }}
 			customScripts={customScripts}
 			headerComponents={generateMetaComponents({
 				attributions: pubData.attributions,
@@ -95,7 +95,6 @@ const getEnrichedPubData = async ({
 
 	const [docInfo, edges] = await Promise.all([getDocInfo(), getPubEdges(pubData, initialData)]);
 	const citations = await getPubCitations(pubData, initialData, docInfo.initialDoc);
-
 	return {
 		...pubData,
 		...citations,
@@ -122,8 +121,8 @@ app.get('/pub/:pubSlug/release/:releaseNumber', async (req, res, next) => {
 			releaseNumber,
 			initialData,
 		});
-		const hasSubmission = false;
-		return renderPubDocument(res, pubData, initialData, customScripts, hasSubmission);
+
+		return renderPubDocument(res, pubData, initialData, customScripts);
 	} catch (err) {
 		return handleErrors(req, res, next)(err);
 	}
@@ -206,12 +205,8 @@ app.get(['/pub/:pubSlug/draft', '/pub/:pubSlug/draft/:historyKey'], async (req, 
 			membersData,
 		}));
 		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
-		// how this gets in is 10000% up for debate
-		const hasSubmission =
-			('submission' in pubData && pubData.submission?.status === 'pending') ||
-			pubData.submission?.status === 'incomplete';
 
-		return renderPubDocument(res, pubData, initialData, customScripts, hasSubmission);
+		return renderPubDocument(res, pubData, initialData, customScripts);
 	} catch (err) {
 		return handleErrors(req, res, next)(err);
 	}

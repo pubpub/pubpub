@@ -19,6 +19,9 @@
 	.tabs {
 		max-width: 900px;
 		> .bp3-tab-list {
+			> .bp3-tab-indicator-wrapper > .bp3-tab-indicator {
+				background: var(--community-accent-dark);
+			}
 			position: absolute;
 			width: 1005.79px;
 			height: 0px;
