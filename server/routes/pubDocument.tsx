@@ -74,6 +74,7 @@ const getEnrichedPubData = async ({
 		releaseNumber,
 		getDraft: true,
 		getDiscussions: true,
+		getSubmissions: true,
 	});
 
 	if (!pubData) {
@@ -121,7 +122,7 @@ app.get('/pub/:pubSlug/release/:releaseNumber', async (req, res, next) => {
 			releaseNumber,
 			initialData,
 		});
-
+		console.log('THIS IS A RELEASED PUB');
 		return renderPubDocument(res, pubData, initialData, customScripts);
 	} catch (err) {
 		return handleErrors(req, res, next)(err);
@@ -133,6 +134,7 @@ app.get('/pub/:pubSlug/release-id/:releaseId', async (req, res, next) => {
 		return next();
 	}
 	try {
+		console.log('THIS IS A RELEASED BUT NOT THE LATEST');
 		const initialData = await getInitialData(req);
 		const { pubSlug, releaseId } = req.params;
 		const pub = await getPub({ slug: pubSlug, communityId: initialData.communityData.id });
@@ -205,6 +207,10 @@ app.get(['/pub/:pubSlug/draft', '/pub/:pubSlug/draft/:historyKey'], async (req, 
 			membersData,
 		}));
 		const customScripts = await getCustomScriptsForCommunity(initialData.communityData.id);
+		const hasSubmission =
+			('submission' in pubData && pubData.submission?.status === 'pending') ||
+			pubData.submission?.status === 'incomplete';
+		console.log('THIS IS A DRAFT PUB', { hasSubmission });
 
 		return renderPubDocument(res, pubData, initialData, customScripts);
 	} catch (err) {
