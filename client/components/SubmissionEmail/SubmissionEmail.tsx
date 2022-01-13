@@ -3,8 +3,6 @@ import React from 'react';
 import { Community, SubmissionEmailKind } from 'types';
 import { communityUrl } from 'utils/canonicalUrls';
 
-type SubmissionEmailKind = 'received' | 'accepted' | 'declined';
-
 type Props = {
 	community: Community;
 	customText: React.ReactNode;
