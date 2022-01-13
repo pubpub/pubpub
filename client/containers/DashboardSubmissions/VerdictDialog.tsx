@@ -4,6 +4,7 @@ import { Callout, Button, Dialog, Classes, Checkbox } from '@blueprintjs/core';
 import { apiFetch } from 'client/utils/apiFetch';
 import { DefinitelyHas, Pub, DocJson } from 'types';
 import { Icon } from 'components';
+import { getEmptyDoc } from 'client/components/Editor/utils/doc';
 import WorkflowTextEditor from '../DashboardSubmissionWorkflow/WorkflowTextEditor';
 
 require('./verdictDialog.scss');
@@ -15,20 +16,21 @@ type Props = {
 	completedName: string;
 	apiMethod: string;
 	status?: string;
+	initialEmailText?: DocJson;
 	pub: DefinitelyHas<Pub, 'submission'>;
 };
 
 type PreSubmissionBodyProps = {
-	handleSubmission: (customEmailText: DocJson, skipEmail: boolean) => void;
+	handleSubmission: (customEmailText: DocJson, shouldSendEmail: boolean) => void;
 	isHandlingSubmission: boolean;
 	actionTitle: string;
 	onClose: () => unknown;
-	initialEmailText: DocJson;
+	initialEmailText?: DocJson;
 };
 
 const PreSubmissionBody = (props: PreSubmissionBodyProps) => {
-	const [customEmailText, setCustomEmailText] = useState(props.initialEmailText);
-	const [shouldSkipEmail, setShouldSkipEmail] = useState(false);
+	const [shouldSendEmail, setShouldSendEmail] = useState(!!props.initialEmailText);
+	const [customEmailText, setCustomEmailText] = useState(props.initialEmailText || getEmptyDoc());
 	return (
 		<>
 			<div className={Classes.DIALOG_BODY}>
@@ -38,7 +40,7 @@ const PreSubmissionBody = (props: PreSubmissionBodyProps) => {
 					{'  '}Email to Authors
 				</p>
 				<WorkflowTextEditor
-					initialContent={props.initialEmailText}
+					initialContent={customEmailText}
 					onContent={setCustomEmailText}
 					placeholder="Specify message to pub author(s)."
 				/>
@@ -46,18 +48,19 @@ const PreSubmissionBody = (props: PreSubmissionBodyProps) => {
 			<div className={Classes.DIALOG_FOOTER}>
 				<div className={Classes.DIALOG_FOOTER_ACTIONS}>
 					<Checkbox
-						checked={shouldSkipEmail}
+						className="email-toggle"
+						checked={shouldSendEmail}
 						disabled={props.isHandlingSubmission}
 						onChange={(e) => {
-							setShouldSkipEmail((e.target as HTMLInputElement).checked);
+							setShouldSendEmail((e.target as HTMLInputElement).checked);
 						}}
-						label="Don't send email to author(s)"
+						label="Notify authors by email"
 					/>
 					<Button onClick={props.onClose} disabled={props.isHandlingSubmission}>
 						Cancel
 					</Button>
 					<Button
-						onClick={() => props.handleSubmission(customEmailText, shouldSkipEmail)}
+						onClick={() => props.handleSubmission(customEmailText, shouldSendEmail)}
 						loading={props.isHandlingSubmission}
 						intent="primary"
 					>
@@ -97,13 +100,13 @@ const VerdictDialog = (props: Props) => {
 	const [isHandlingSubmission, setIsHandlingSubmission] = useState(false);
 	const [updatedSubmission, setUpdatedSubmission] = useState(null);
 	const [submissionError, setSubmissionError] = useState(null);
-	const handleSubmission = (customEmailText: DocJson, skipEmail: boolean) => {
+	const handleSubmission = (customEmailText: DocJson, shouldSendEmail: boolean) => {
 		setIsHandlingSubmission(true);
 		apiFetch('/api/submissions', {
 			method: props.apiMethod,
 			body: JSON.stringify({
 				id: props.pub.submission.id,
-				skipEmail,
+				skipEmail: !shouldSendEmail,
 				...(customEmailText && { customEmailText }),
 				...(props.status && { status: props.status }),
 			}),
@@ -137,7 +140,7 @@ const VerdictDialog = (props: Props) => {
 				<PreSubmissionBody
 					onClose={props.onClose}
 					handleSubmission={handleSubmission}
-					initialEmailText={props.pub.submission.submissionWorkflow.emailText}
+					initialEmailText={props.initialEmailText}
 					isHandlingSubmission={isHandlingSubmission}
 					actionTitle={props.actionTitle}
 				/>

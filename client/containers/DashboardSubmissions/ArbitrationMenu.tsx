@@ -1,13 +1,13 @@
 import React from 'react';
 import { Button } from '@blueprintjs/core';
 
-import { DefinitelyHas, Pub } from 'types';
+import { DefinitelyHas, Pub, SubmissionWorkflow } from 'types';
 import { Icon, IconName, DialogLauncher } from 'client/components';
 import VerdictDialog from './VerdictDialog';
 
 require('./arbitrationMenu.scss');
 
-const arbitrationOptions = [
+const getArbitrationOptions = (submissionWorkflow: SubmissionWorkflow) => [
 	{
 		icon: 'cross',
 		actionTitle: 'Delete',
@@ -20,6 +20,7 @@ const arbitrationOptions = [
 		completedName: 'declined',
 		apiMethod: 'PUT',
 		status: 'declined',
+		initialEmailText: submissionWorkflow.declinedText,
 	},
 	{
 		icon: 'endorsed',
@@ -27,6 +28,7 @@ const arbitrationOptions = [
 		completedName: 'accepted',
 		apiMethod: 'PUT',
 		status: 'accepted',
+		initialEmailText: submissionWorkflow.acceptedText,
 	},
 ];
 
@@ -37,7 +39,7 @@ type Props = {
 const ArbitrationMenu = (props: Props) => {
 	return (
 		<div className="arbitration-menu">
-			{arbitrationOptions.map((option, index) => (
+			{getArbitrationOptions(props.pub.submission.submissionWorkflow).map((option, index) => (
 				<div style={{ gridColumn: index + 1 }} key={option.actionTitle}>
 					{props.pub.submission.status !== option.status && (
 						<DialogLauncher
