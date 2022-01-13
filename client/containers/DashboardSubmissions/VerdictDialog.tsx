@@ -3,7 +3,8 @@ import { Callout, Button, Dialog, Classes, Checkbox } from '@blueprintjs/core';
 
 import { apiFetch } from 'client/utils/apiFetch';
 import { DefinitelyHas, Pub, DocJson } from 'types';
-import { MinimalEditor, Icon } from 'components';
+import { Icon } from 'components';
+import WorkflowTextEditor from '../DashboardSubmissionWorkflow/WorkflowTextEditor';
 
 require('./verdictDialog.scss');
 
@@ -18,7 +19,7 @@ type Props = {
 };
 
 type PreSubmissionBodyProps = {
-	handleSubmission: (emailText: any) => void;
+	handleSubmission: (customEmailText: DocJson, skipEmail: boolean) => void;
 	isHandlingSubmission: boolean;
 	actionTitle: string;
 	onClose: () => unknown;
@@ -26,8 +27,8 @@ type PreSubmissionBodyProps = {
 };
 
 const PreSubmissionBody = (props: PreSubmissionBodyProps) => {
-	const [customEmailText, setCustomEmailText] = useState({ text: props.initialEmailText });
-	const [shouldIncludeEmail, setShouldIncludeEmail] = useState(true);
+	const [customEmailText, setCustomEmailText] = useState(props.initialEmailText);
+	const [shouldSkipEmail, setShouldSkipEmail] = useState(false);
 	return (
 		<>
 			<div className={Classes.DIALOG_BODY}>
@@ -36,28 +37,27 @@ const PreSubmissionBody = (props: PreSubmissionBodyProps) => {
 					<Icon icon="manually-entered-data" iconSize={12} />
 					{'  '}Email to Authors
 				</p>
-				<MinimalEditor
+				<WorkflowTextEditor
 					initialContent={props.initialEmailText}
 					onContent={setCustomEmailText}
-					focusOnLoad={true}
 					placeholder="Specify message to pub author(s)."
 				/>
 			</div>
 			<div className={Classes.DIALOG_FOOTER}>
 				<div className={Classes.DIALOG_FOOTER_ACTIONS}>
 					<Checkbox
-						checked={shouldIncludeEmail}
+						checked={shouldSkipEmail}
 						disabled={props.isHandlingSubmission}
 						onChange={(e) => {
-							setShouldIncludeEmail((e.target as HTMLInputElement).checked);
+							setShouldSkipEmail((e.target as HTMLInputElement).checked);
 						}}
-						label="send email to authors"
+						label="Don't send email to author(s)"
 					/>
 					<Button onClick={props.onClose} disabled={props.isHandlingSubmission}>
 						Cancel
 					</Button>
 					<Button
-						onClick={() => props.handleSubmission(customEmailText.text)}
+						onClick={() => props.handleSubmission(customEmailText, shouldSkipEmail)}
 						loading={props.isHandlingSubmission}
 						intent="primary"
 					>
@@ -97,13 +97,13 @@ const VerdictDialog = (props: Props) => {
 	const [isHandlingSubmission, setIsHandlingSubmission] = useState(false);
 	const [updatedSubmission, setUpdatedSubmission] = useState(null);
 	const [submissionError, setSubmissionError] = useState(null);
-	// TODO: What type should this be?
-	const handleSubmission = (customEmailText: any) => {
+	const handleSubmission = (customEmailText: DocJson, skipEmail: boolean) => {
 		setIsHandlingSubmission(true);
 		apiFetch('/api/submissions', {
 			method: props.apiMethod,
 			body: JSON.stringify({
 				id: props.pub.submission.id,
+				skipEmail,
 				...(customEmailText && { customEmailText }),
 				...(props.status && { status: props.status }),
 			}),

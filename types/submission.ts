@@ -15,10 +15,9 @@ export type Submission = {
 	pubId: string;
 	pub?: Pub;
 	submissionWorkflowId: string;
-	submissionWorkflow?: SubmissionWorkflow;
+	submissionWorkflow: SubmissionWorkflow;
 	status: SubmissionStatus;
 	submittedAt: null | string;
-	submissionWorkflow: SubmissionWorkflow;
 };
 
 export type SubmissionEmailKind = 'received' | 'accepted' | 'declined';
