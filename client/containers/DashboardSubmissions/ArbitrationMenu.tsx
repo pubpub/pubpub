@@ -34,38 +34,38 @@ const getArbitrationOptions = (submissionWorkflow: SubmissionWorkflow) => [
 
 type Props = {
 	pub: DefinitelyHas<Pub, 'submission'>;
+	onJudgePub: (pubId: string, status?: string) => void;
 };
 
-const ArbitrationMenu = (props: Props) => {
-	return (
-		<div className="arbitration-menu">
-			{getArbitrationOptions(props.pub.submission.submissionWorkflow).map((option, index) => (
-				<div style={{ gridColumn: index + 1 }} key={option.actionTitle}>
-					{props.pub.submission.status !== option.status && (
-						<DialogLauncher
-							renderLauncherElement={({ openDialog }) => (
-								<Button
-									minimal
-									small
-									icon={<Icon icon={option.icon as IconName} iconSize={20} />}
-									onClick={openDialog}
-								/>
-							)}
-						>
-							{({ isOpen, onClose }) => (
-								<VerdictDialog
-									isOpen={isOpen}
-									onClose={onClose}
-									{...option}
-									pub={props.pub}
-								/>
-							)}
-						</DialogLauncher>
-					)}
-				</div>
-			))}
-		</div>
-	);
-};
+const ArbitrationMenu = (props: Props) => (
+	<div className="arbitration-menu">
+		{getArbitrationOptions(props.pub.submission.submissionWorkflow).map((option, index) => (
+			<div style={{ gridColumn: index + 1 }} key={option.actionTitle}>
+				{props.pub.submission.status !== option.status && (
+					<DialogLauncher
+						renderLauncherElement={({ openDialog }) => (
+							<Button
+								minimal
+								small
+								icon={<Icon icon={option.icon as IconName} iconSize={20} />}
+								onClick={openDialog}
+							/>
+						)}
+					>
+						{({ isOpen, onClose }) => (
+							<VerdictDialog
+								isOpen={isOpen}
+								onClose={onClose}
+								{...option}
+								pub={props.pub}
+								onJudgePub={props.onJudgePub}
+							/>
+						)}
+					</DialogLauncher>
+				)}
+			</div>
+		))}
+	</div>
+);
 
 export default ArbitrationMenu;

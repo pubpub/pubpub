@@ -18,6 +18,7 @@ type Props = {
 	status?: string;
 	initialEmailText?: DocJson;
 	pub: DefinitelyHas<Pub, 'submission'>;
+	onJudgePub: (pubId: string, status?: string) => void;
 };
 
 type PreSubmissionBodyProps = {
@@ -115,6 +116,7 @@ const VerdictDialog = (props: Props) => {
 				setUpdatedSubmission(submissionRes);
 				setIsHandlingSubmission(false);
 			})
+			.then(() => props.onJudgePub(props.pub.id, props.status))
 			.catch((err) => {
 				setSubmissionError(err);
 				setIsHandlingSubmission(false);

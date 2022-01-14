@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NonIdealState } from '@blueprintjs/core';
 
-import { Collection, Pub, PubsQuery, DefinitelyHas } from 'types';
+import { Collection, Pub, PubsQuery, DefinitelyHas, SubmissionStatus } from 'types';
 import { useManyPubs } from 'client/utils/useManyPubs';
 import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 
@@ -85,11 +85,30 @@ const SubmissionItems = (props: Props) => {
 		},
 	});
 
+	const [localStats, setLocalStats]: [{ [pubId: string]: SubmissionStatus }, any] = useState({});
 	const canLoadMorePubs = !hasLoadedAllPubs;
 	useInfiniteScroll({
 		enabled: !isLoading && canLoadMorePubs,
 		useDocumentElement: true,
 		onRequestMoreItems: loadMorePubs,
+	});
+
+	const trackLocalStatus = (pubId: string, status?: string) => {
+		setLocalStats((prev) => ({
+			...prev,
+			...(status && { [pubId]: status }),
+		}));
+	};
+
+	const omitUpdatedSubmissions = (pub) =>
+		!(pub.id in localStats) ||
+		(!!localStats[pub.id] && filter?.submissionStatuses?.includes(localStats[pub.id]));
+
+	const augmentWithLocalStatus = (pub) => ({
+		...pub,
+		...(pub.id in localStats && {
+			submission: { ...pub.submission, status: localStats[pub.id] },
+		}),
 	});
 
 	return (
@@ -102,18 +121,24 @@ const SubmissionItems = (props: Props) => {
 				filters={overviewSearchFilters}
 			/>
 			<OverviewRows>
-				{pubs.map((pub) => (
-					<PubOverviewRow
-						pub={pub}
-						key={pub.id}
-						leftIconElement="manually-entered-data"
-						hasSubmission={true}
-						isDeclinedSubmission={!!(pub.submission?.status === 'declined')}
-						rightElement={
-							<ArbitrationMenu pub={pub as DefinitelyHas<Pub, 'submission'>} />
-						}
-					/>
-				))}
+				{(pubs as DefinitelyHas<Pub, 'submission'>[])
+					.filter(omitUpdatedSubmissions)
+					.map(augmentWithLocalStatus)
+					.map((pub) => (
+						<PubOverviewRow
+							pub={pub}
+							key={pub.id}
+							leftIconElement="manually-entered-data"
+							hasSubmission={true}
+							isDeclinedSubmission={
+								!!(pub.submission?.status === 'declined') ||
+								localStats[pub.id] === 'declined'
+							}
+							rightElement={
+								<ArbitrationMenu pub={pub} onJudgePub={trackLocalStatus} />
+							}
+						/>
+					))}
 				{canLoadMorePubs && <LoadMorePubsRow isLoading />}
 				<EmptyState
 					pubs={pubs}
