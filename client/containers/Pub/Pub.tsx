@@ -55,7 +55,9 @@ const Pub = (props: Props) => {
 	const { loginData, locationData, communityData } = usePageContext();
 	const hasSubmission =
 		'submission' in props.pubData && props.pubData.submission?.status === 'incomplete';
-	const workflow = props.pubData.submission.submissionWorkflow;
+	const workflow = props.pubData.submission.submissionWorkflow
+		? props.pubData.submission.submissionWorkflow
+		: undefined;
 
 	useEffect(() => {
 		const { hash } = window.location;

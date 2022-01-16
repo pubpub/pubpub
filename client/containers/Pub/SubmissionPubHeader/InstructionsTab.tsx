@@ -4,7 +4,7 @@ import { DocJson } from 'types';
 import { Editor } from 'components';
 
 type Props = {
-	instructions: DocJson;
+	instructions: DocJson | undefined;
 };
 
 const InstructionsTab = (props: Props) => {
