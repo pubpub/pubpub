@@ -136,6 +136,8 @@ export type PubPageData = DefinitelyHas<
 		firebaseToken?: string;
 		initialStructuredCitations: boolean;
 		releaseNumber: Maybe<number>;
+		iSubmission: boolean;
+		submission: null | DefinitelyHas<Submission, 'submissionWorkflow'>;
 	};
 
 export type PubHistoryState = {

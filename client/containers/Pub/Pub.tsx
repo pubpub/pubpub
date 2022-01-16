@@ -4,6 +4,7 @@ import { usePageContext } from 'utils/hooks';
 
 import PubSyncManager from './PubSyncManager';
 import PubHeader from './PubHeader';
+import SubmissionPubHeader from './SubmissionPubHeader';
 import PubDocument from './PubDocument';
 import { PubSuspendWhileTypingProvider, PubSuspendWhileTyping } from './PubSuspendWhileTyping';
 
@@ -51,7 +52,11 @@ const scrollToElementTop = (hash: string, delay = 0) => {
 
 const Pub = (props: Props) => {
 	const { loginData, locationData, communityData } = usePageContext();
-
+	const hasSubmission =
+		'submission' in props.pubData && props.pubData.submission?.status === 'incomplete';
+	const workflow = props.pubData.submission.submissionWorkflow
+		? props.pubData.submission.submissionWorkflow
+		: undefined;
 	useEffect(() => {
 		const { hash } = window.location;
 
@@ -98,11 +103,19 @@ const Pub = (props: Props) => {
 							firebaseDraftRef,
 							updateLocalData,
 						};
-						return (
+						return hasSubmission ? (
+							<React.Fragment>
+								<PubSuspendWhileTyping delay={1000}>
+									{() => <SubmissionPubHeader workflow={workflow} />}
+								</PubSuspendWhileTyping>
+								<PubDocument {...modeProps} />
+							</React.Fragment>
+						) : (
 							<React.Fragment>
 								<PubSuspendWhileTyping delay={1000}>
 									{() => <PubHeader {...modeProps} />}
 								</PubSuspendWhileTyping>
+
 								<PubDocument {...modeProps} />
 							</React.Fragment>
 						);

@@ -74,6 +74,7 @@ const getEnrichedPubData = async ({
 		releaseNumber,
 		getDraft: true,
 		getDiscussions: true,
+		getSubmissions: true,
 	});
 
 	if (!pubData) {
