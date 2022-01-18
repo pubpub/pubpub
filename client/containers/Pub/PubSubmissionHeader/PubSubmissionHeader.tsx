@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
-import { Tab, Tabs, TabId } from '@blueprintjs/core';
+import { Tab, Tabs, TabId, Icon, IconName } from '@blueprintjs/core';
 
 import { SubmissionWorkflow } from 'types';
 
 import InstructionsTab from './InstructionsTab';
 import SubmissionTab from './SubmissionTab';
 import PreviewTab from './PreviewTab';
-import { renderInstructionTabTitle } from './utility';
 
 require('./spubHeader.scss');
 
 type Props = {
 	workflow: Pick<SubmissionWorkflow, 'instructionsText'>;
+};
+
+export const renderInstructionTabTitle = (icon: IconName, title: string) => {
+	return (
+		<>
+			<Icon icon={icon} /> {title}
+		</>
+	);
 };
 
 const PubSubmissionHeader = (props: Props) => {
