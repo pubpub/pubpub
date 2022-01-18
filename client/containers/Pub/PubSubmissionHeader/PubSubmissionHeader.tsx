@@ -35,21 +35,10 @@ const PubSubmissionHeader = (props: Props) => {
 					id="instructions"
 					title={instructions}
 					panel={<InstructionsTab instructions={instructionsText} />}
-					className="tab-panel tab"
 				/>
 
-				<Tab
-					id="submission"
-					title={submission}
-					panel={<SubmissionTab />}
-					className="tab-panel tab"
-				/>
-				<Tab
-					id="preview"
-					title={preview}
-					panel={<PreviewTab />}
-					className="tab-panel tab"
-				/>
+				<Tab id="submission" title={submission} panel={<SubmissionTab />} />
+				<Tab id="preview" title={preview} panel={<PreviewTab />} />
 			</Tabs>
 		</div>
 	);
