@@ -24,9 +24,12 @@ const DashboardActivity = (props: Props) => {
 	const {
 		scopeData,
 		loginData: { id: userId },
+		featureFlags,
 	} = usePageContext();
 	const { scope, memberData } = scopeData;
-	const [member, setMember] = useState<Member>(memberData.find((m) => m.communityId));
+	const [member, setMember] = useState<Member | undefined>(
+		memberData.find((m: Member) => m.communityId),
+	);
 	const [filters, setFilters] = useState<ActivityFilter[]>([]);
 
 	const { items, loadMoreItems, isLoading, loadedAllItems } = useActivityItems({
@@ -39,6 +42,7 @@ const DashboardActivity = (props: Props) => {
 	const boundaryGroups = useMemo(() => getBoundaryGroupsForSortedActivityItems(items), [items]);
 
 	const canSubscribeToActivityDigest =
+		featureFlags.activityDigestSubscribeToggle &&
 		member &&
 		checkMemberPermission(member.permissions, 'manage') &&
 		scopeData.elements.activeTargetType === 'community';
