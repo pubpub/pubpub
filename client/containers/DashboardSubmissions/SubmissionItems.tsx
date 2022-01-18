@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { NonIdealState } from '@blueprintjs/core';
 
-import { Collection, Pub, PubsQuery, DefinitelyHas, SubmissionStatus } from 'types';
+import { Collection, DefinitelyHas, Pub, PubsQuery, SubmissionStatus } from 'types';
 import { useManyPubs } from 'client/utils/useManyPubs';
 import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 
@@ -18,7 +18,7 @@ require('./submissionItems.scss');
 
 type Props = {
 	collection: Collection;
-	initialPubs: Pub[];
+	initialPubs: DefinitelyHas<Pub, 'submission'>[];
 	initiallyLoadedAllPubs: boolean;
 };
 
@@ -85,7 +85,14 @@ const SubmissionItems = (props: Props) => {
 		},
 	});
 
-	const [localStats, setLocalStats]: [{ [pubId: string]: SubmissionStatus }, any] = useState({});
+	const [localStatuses, setLocalStatuses] = useState<{ [pubId: string]: SubmissionStatus }>({});
+	const recordLocalStatus = useCallback((pubId: string, status?: SubmissionStatus) => {
+		setLocalStatuses((prev) => ({
+			...prev,
+			...(status && { [pubId]: status }),
+		}));
+	}, []);
+
 	const canLoadMorePubs = !hasLoadedAllPubs;
 	useInfiniteScroll({
 		enabled: !isLoading && canLoadMorePubs,
@@ -93,21 +100,14 @@ const SubmissionItems = (props: Props) => {
 		onRequestMoreItems: loadMorePubs,
 	});
 
-	const trackLocalStatus = (pubId: string, status?: string) => {
-		setLocalStats((prev) => ({
-			...prev,
-			...(status && { [pubId]: status }),
-		}));
-	};
-
 	const omitUpdatedSubmissions = (pub) =>
-		!(pub.id in localStats) ||
-		(!!localStats[pub.id] && filter?.submissionStatuses?.includes(localStats[pub.id]));
+		!(pub.id in localStatuses) ||
+		(!!localStatuses[pub.id] && filter?.submissionStatuses?.includes(localStatuses[pub.id]));
 
 	const augmentWithLocalStatus = (pub) => ({
 		...pub,
-		...(pub.id in localStats && {
-			submission: { ...pub.submission, status: localStats[pub.id] },
+		...(pub.id in localStatuses && {
+			submission: { ...pub.submission, status: localStatuses[pub.id] },
 		}),
 	});
 
@@ -121,7 +121,7 @@ const SubmissionItems = (props: Props) => {
 				filters={overviewSearchFilters}
 			/>
 			<OverviewRows>
-				{(pubs as DefinitelyHas<Pub, 'submission'>[])
+				{pubs
 					.filter(omitUpdatedSubmissions)
 					.map(augmentWithLocalStatus)
 					.map((pub) => (
@@ -130,12 +130,12 @@ const SubmissionItems = (props: Props) => {
 							key={pub.id}
 							leftIconElement="manually-entered-data"
 							hasSubmission={true}
-							isDeclinedSubmission={
+							isGrayscale={
 								!!(pub.submission?.status === 'declined') ||
-								localStats[pub.id] === 'declined'
+								localStatuses[pub.id] === 'declined'
 							}
 							rightElement={
-								<ArbitrationMenu pub={pub} onJudgePub={trackLocalStatus} />
+								<ArbitrationMenu pub={pub} onJudgePub={recordLocalStatus} />
 							}
 						/>
 					))}

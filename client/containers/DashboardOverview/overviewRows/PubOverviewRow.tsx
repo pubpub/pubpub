@@ -20,7 +20,7 @@ type Props = {
 	pub: Pub;
 	inCollection?: boolean;
 	hasSubmission?: boolean;
-	isDeclinedSubmission?: boolean;
+	isGrayscale?: boolean;
 };
 
 const PubOverviewRow = (props: Props) => {
@@ -28,7 +28,7 @@ const PubOverviewRow = (props: Props) => {
 		pub,
 		className,
 		inCollection,
-		isDeclinedSubmission = false,
+		isGrayscale = false,
 		hasSubmission = false,
 		leftIconElement = null,
 		rightElement: providedRightElement,
@@ -46,11 +46,7 @@ const PubOverviewRow = (props: Props) => {
 	const details = renderRowDetails(pub, hasSubmission);
 	return (
 		<OverviewRowSkeleton
-			className={classNames(
-				'pub-overview-row-component',
-				isDeclinedSubmission && 'isGrayscale',
-				className,
-			)}
+			className={classNames('pub-overview-row-component', className)}
 			href={getDashUrl({ pubSlug: pub.slug })}
 			title={pub.title}
 			byline={<PubByline pubData={pub} linkToUsers={false} truncateAt={8} />}
@@ -58,7 +54,7 @@ const PubOverviewRow = (props: Props) => {
 			leftIcon={leftIconElement || 'pubDoc'}
 			rightElement={rightElement}
 			darkenRightIcons={inCollection}
-			isGrayscale={isDeclinedSubmission}
+			isGrayscale={isGrayscale}
 		/>
 	);
 };

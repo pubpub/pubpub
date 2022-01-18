@@ -1,40 +1,43 @@
 import React from 'react';
 import { Button } from '@blueprintjs/core';
 
-import { DefinitelyHas, Pub, SubmissionWorkflow } from 'types';
+import { DefinitelyHas, Pub, SubmissionWorkflow, SubmissionStatus } from 'types';
 import { Icon, IconName, DialogLauncher } from 'client/components';
 import VerdictDialog from './VerdictDialog';
 
 require('./arbitrationMenu.scss');
 
-const getArbitrationOptions = (submissionWorkflow: SubmissionWorkflow) => [
-	{
-		icon: 'cross',
-		actionTitle: 'Delete',
-		completedName: 'deleted',
-		apiMethod: 'DELETE',
-	},
-	{
-		icon: 'thumbs-down',
-		actionTitle: 'Decline',
-		completedName: 'declined',
-		apiMethod: 'PUT',
-		status: 'declined',
-		initialEmailText: submissionWorkflow.declinedText,
-	},
-	{
-		icon: 'endorsed',
-		actionTitle: 'Accept',
-		completedName: 'accepted',
-		apiMethod: 'PUT',
-		status: 'accepted',
-		initialEmailText: submissionWorkflow.acceptedText,
-	},
-];
+const getArbitrationOptions = (submissionWorkflow?: SubmissionWorkflow) =>
+	!submissionWorkflow
+		? []
+		: [
+				{
+					icon: 'cross',
+					actionTitle: 'Delete',
+					completedName: 'deleted',
+					apiMethod: 'DELETE',
+				},
+				{
+					icon: 'thumbs-down',
+					actionTitle: 'Decline',
+					completedName: 'declined',
+					apiMethod: 'PUT',
+					status: 'declined' as SubmissionStatus,
+					initialEmailText: submissionWorkflow.declinedText,
+				},
+				{
+					icon: 'endorsed',
+					actionTitle: 'Accept',
+					completedName: 'accepted',
+					apiMethod: 'PUT',
+					status: 'accepted' as SubmissionStatus,
+					initialEmailText: submissionWorkflow.acceptedText,
+				},
+		  ];
 
 type Props = {
 	pub: DefinitelyHas<Pub, 'submission'>;
-	onJudgePub: (pubId: string, status?: string) => void;
+	onJudgePub: (pubId: string, status?: SubmissionStatus) => void;
 };
 
 const ArbitrationMenu = (props: Props) => (
@@ -57,7 +60,7 @@ const ArbitrationMenu = (props: Props) => (
 								isOpen={isOpen}
 								onClose={onClose}
 								{...option}
-								pub={props.pub}
+								pub={props.pub as DefinitelyHas<Pub, 'submission'>}
 								onJudgePub={props.onJudgePub}
 							/>
 						)}

@@ -72,6 +72,7 @@ const OverviewRowSkeleton = React.forwardRef((props: Props, ref: any) => {
 			style={{ ...(!isGrayscale && { color: communityData.accentColorDark }) }}
 			className={classNames(
 				'overview-row-skeleton-component',
+				isGrayscale && 'is-grayscale',
 				withHoverEffect && 'with-hover-effect',
 				withBorder && 'with-border',
 				className,

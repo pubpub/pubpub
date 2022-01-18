@@ -15,7 +15,7 @@ export type Submission = {
 	pubId: string;
 	pub?: Pub;
 	submissionWorkflowId: string;
-	submissionWorkflow: SubmissionWorkflow;
+	submissionWorkflow?: SubmissionWorkflow;
 	status: SubmissionStatus;
 	submittedAt: null | string;
 };

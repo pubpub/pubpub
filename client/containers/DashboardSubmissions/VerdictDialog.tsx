@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Callout, Button, Dialog, Classes, Checkbox } from '@blueprintjs/core';
 
 import { apiFetch } from 'client/utils/apiFetch';
-import { DefinitelyHas, Pub, DocJson } from 'types';
+import { DefinitelyHas, SubmissionStatus, Pub, DocJson } from 'types';
 import { Icon } from 'components';
 import { getEmptyDoc } from 'client/components/Editor/utils/doc';
 import WorkflowTextEditor from '../DashboardSubmissionWorkflow/WorkflowTextEditor';
@@ -15,10 +15,10 @@ type Props = {
 	actionTitle: string;
 	completedName: string;
 	apiMethod: string;
-	status?: string;
+	status?: SubmissionStatus;
 	initialEmailText?: DocJson;
 	pub: DefinitelyHas<Pub, 'submission'>;
-	onJudgePub: (pubId: string, status?: string) => void;
+	onJudgePub: (pubId: string, status?: SubmissionStatus) => void;
 };
 
 type PreSubmissionBodyProps = {
