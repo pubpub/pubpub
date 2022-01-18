@@ -22,7 +22,7 @@ const SubmissionPubHeader = (props: Props) => {
 
 	const instructions = renderInstructionTabTitle('align-left', 'Instructions');
 	const submission = renderInstructionTabTitle('manually-entered-data', 'Submission');
-	const preview = renderInstructionTabTitle('eye-open', 'Preview & Edit');
+	const preview = renderInstructionTabTitle('eye-open', 'Preview & Submit');
 
 	return (
 		<div className="spub-header-component">
