@@ -1,12 +1,14 @@
-import app, { wrap } from 'server/server';
-import { ForbiddenError } from 'server/utils/errors';
 import xmlbuilder from 'xmlbuilder';
 
+import app, { wrap } from 'server/server';
+import { ForbiddenError } from 'server/utils/errors';
+import { Release } from 'server/models';
 import { parentToSupplementNeedsDoiError } from 'utils/crossref/createDeposit';
+
 import { getDoiData, setDoiData, generateDoi } from './queries';
 import { getPermissions } from './permissions';
 
-const assertUserAuthenticated = async (target, requestIds) => {
+const assertUserAuthorized = async (target, requestIds) => {
 	const permissions = await getPermissions(requestIds);
 	const isAuthenticated =
 		(target === 'pub' && permissions.pub) ||
@@ -15,6 +17,14 @@ const assertUserAuthenticated = async (target, requestIds) => {
 	if (!isAuthenticated) {
 		throw new ForbiddenError();
 	}
+};
+
+const pubExistsAndIsMissingReleases = async (pubId) => {
+	if (!pubId) {
+		return false;
+	}
+	const releases = await Release.findAll({ where: { pubId } });
+	return releases.length === 0;
 };
 
 const previewOrDepositDoi = async (user, body, options = { deposit: false }) => {
@@ -35,7 +45,11 @@ const previewOrDepositDoi = async (user, body, options = { deposit: false }) => 
 		pubId: pubId || null,
 	};
 
-	await assertUserAuthenticated(target, requestIds);
+	await assertUserAuthorized(target, requestIds);
+
+	if (pubId) {
+		await pubExistsAndIsMissingReleases(pubId);
+	}
 
 	const depositJson = await (deposit ? setDoiData : getDoiData)(
 		{
@@ -105,7 +119,7 @@ app.get(
 			pubId: pubId || null,
 		};
 
-		await assertUserAuthenticated(target, requestIds);
+		await assertUserAuthorized(target, requestIds);
 
 		return res.status(200).json({
 			dois: await generateDoi({ communityId, collectionId, pubId }, target),
