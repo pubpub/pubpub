@@ -8,62 +8,6 @@ import VerdictDialog from './VerdictDialog';
 
 require('./arbitrationMenu.scss');
 
-const getArbitrationOptions = (submission) =>
-	!submission.submissionWorkflow
-		? []
-		: [
-				{
-					icon: 'cross',
-					shouldOfferEmail: false,
-					actionTitle: 'Delete',
-					completedName: 'deleted',
-					onSubmit: () =>
-						apiFetch('/api/pub', {
-							method: 'DELETE',
-							body: JSON.stringify({
-								id: submission.pubId,
-							}),
-						}).then(() => submission),
-				},
-				{
-					icon: 'thumbs-down',
-					shouldOfferEmail: true,
-					actionTitle: 'Decline',
-					completedName: 'declined',
-					status: 'declined' as SubmissionStatus,
-					initialEmailText: submission.submissionWorkflow.declinedText,
-					onSubmit: (customEmailText?: DocJson, shouldSendEmail?: boolean) =>
-						apiFetch('/api/submissions', {
-							method: 'PUT',
-							body: JSON.stringify({
-								id: submission.id,
-								status: 'declined',
-								skipEmail: !shouldSendEmail,
-								customEmailText:
-									customEmailText || submission.submissionWorkflow.declinedText,
-							}),
-						}),
-				},
-				{
-					icon: 'endorsed',
-					shouldOfferEmail: true,
-					actionTitle: 'Accept',
-					completedName: 'accepted',
-					status: 'accepted' as SubmissionStatus,
-					initialEmailText: submission.submissionWorkflow.acceptedText,
-					onSubmit: (customEmailText?: DocJson, shouldSendEmail?: boolean) =>
-						apiFetch('/api/submissions', {
-							method: 'PUT',
-							body: JSON.stringify({
-								id: submission.id,
-								status: 'accepted',
-								skipEmail: !shouldSendEmail,
-								...(customEmailText && { customEmailText }),
-							}),
-						}),
-				},
-		  ];
-
 type Props = {
 	pub: DefinitelyHas<Pub, 'submission'>;
 	onJudgePub: (pubId: string, status?: SubmissionStatus) => void;
@@ -71,30 +15,83 @@ type Props = {
 
 const ArbitrationMenu = (props: Props) => (
 	<div className="arbitration-menu">
-		{getArbitrationOptions(props.pub.submission).map((option, index) => (
-			<div style={{ gridColumn: index + 1 }} key={option.actionTitle}>
-				{props.pub.submission.status !== option.status && (
-					<DialogLauncher
-						renderLauncherElement={({ openDialog }) => (
-							<Button
-								minimal
-								small
-								icon={<Icon icon={option.icon as IconName} iconSize={20} />}
-								onClick={openDialog}
-							/>
-						)}
-					>
-						{({ isOpen, onClose }) => (
-							<VerdictDialog
-								isOpen={isOpen}
-								onClose={onClose}
-								{...option}
-								pub={props.pub as DefinitelyHas<Pub, 'submission'>}
-								onJudgePub={props.onJudgePub}
-							/>
-						)}
-					</DialogLauncher>
+		<div style={{ gridColumn: 1 }}>
+			<DialogLauncher
+				renderLauncherElement={({ openDialog }) => (
+					<Button
+						minimal
+						small
+						icon={<Icon icon={'cross' as IconName} iconSize={20} />}
+						onClick={openDialog}
+					/>
 				)}
+			>
+				{({ isOpen, onClose }) => (
+					<VerdictDialog
+						isOpen={isOpen}
+						onClose={onClose}
+						shouldOfferEmail={false}
+						actionTitle="Delete"
+						completedName="deleted"
+						onSubmit={() =>
+							apiFetch('/api/pub', {
+								method: 'DELETE',
+								body: JSON.stringify({
+									id: props.pub.submission.pubId,
+								}),
+							}).then(() => props.pub.submission)
+						}
+						pub={props.pub as DefinitelyHas<Pub, 'submission'>}
+						onJudgePub={props.onJudgePub}
+					/>
+				)}
+			</DialogLauncher>
+		</div>
+		{[
+			{ presentTense: 'decline', pastTense: 'declined', iconName: 'thumbs-down' },
+			{ presentTense: 'accept', pastTense: 'accepted', iconName: 'endorsed' },
+		].map(({ presentTense, pastTense, iconName }, index) => (
+			<div style={{ gridColumn: index + 2 }}>
+				<DialogLauncher
+					renderLauncherElement={({ openDialog }) => (
+						<Button
+							minimal
+							small
+							icon={<Icon icon={iconName as IconName} iconSize={20} />}
+							onClick={openDialog}
+						/>
+					)}
+				>
+					{({ isOpen, onClose }) => (
+						<VerdictDialog
+							isOpen={isOpen}
+							onClose={onClose}
+							actionTitle={presentTense}
+							completedName={pastTense}
+							status={pastTense as SubmissionStatus}
+							initialEmailText={
+								props.pub.submission.submissionWorkflow?.[`${pastTense}Text`]
+							}
+							onSubmit={(customEmailText?: DocJson, shouldSendEmail?: boolean) =>
+								apiFetch('/api/submissions', {
+									method: 'PUT',
+									body: JSON.stringify({
+										id: props.pub.submission.id,
+										status: pastTense,
+										skipEmail: !shouldSendEmail,
+										customEmailText:
+											customEmailText ||
+											props.pub.submission.submissionWorkflow?.[
+												`${pastTense}Text`
+											],
+									}),
+								})
+							}
+							pub={props.pub as DefinitelyHas<Pub, 'submission'>}
+							onJudgePub={props.onJudgePub}
+						/>
+					)}
+				</DialogLauncher>
 			</div>
 		))}
 	</div>

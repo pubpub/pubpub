@@ -10,7 +10,7 @@ require('./verdictDialog.scss');
 
 type Props = {
 	isOpen: boolean;
-	shouldOfferEmail: boolean;
+	shouldOfferEmail?: boolean;
 	onClose: () => unknown;
 	actionTitle: string;
 	completedName: string;
@@ -141,7 +141,7 @@ const VerdictDialog = (props: Props) => {
 				/>
 			) : (
 				<PreSubmissionBody
-					shouldOfferEmail={props.shouldOfferEmail}
+					shouldOfferEmail={!!props.shouldOfferEmail}
 					onClose={props.onClose}
 					handleSubmission={onSubmit}
 					initialEmailText={props.initialEmailText}
