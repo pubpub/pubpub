@@ -1,23 +1,28 @@
 import React, { useState } from 'react';
-import { Tab, Tabs, TabId } from '@blueprintjs/core';
+import { Tab, Tabs, TabId, Icon, IconName } from '@blueprintjs/core';
 
-import { SubmissionWorkflow, Submission, Pub } from 'types';
+import { SubmissionWorkflow } from 'types';
 
 import InstructionsTab from './InstructionsTab';
-import SubmissionTab from './SubmissionTab/SubmissionTab';
+import SubmissionTab from './SubmissionTab';
 import PreviewTab from './PreviewTab';
-import { renderInstructionTabTitle } from './utility';
 
 require('./spubHeader.scss');
 
 type Props = {
 	workflow: Pick<SubmissionWorkflow, 'instructionsText'>;
-	onUpdatePub?: (pub: Partial<Pub>) => unknown;
-	onUpdateSubmission?: (submission: Partial<Submission>) => unknown;
+};
+
+export const renderInstructionTabTitle = (icon: IconName, title: string) => {
+	return (
+		<>
+			<Icon icon={icon} /> {title}
+		</>
+	);
 };
 
 const PubSubmissionHeader = (props: Props) => {
-	const { workflow, onUpdatePub, onUpdateSubmission } = props;
+	const { workflow } = props;
 	const { instructionsText } = workflow;
 	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');
 
@@ -37,26 +42,9 @@ const PubSubmissionHeader = (props: Props) => {
 					id="instructions"
 					title={instructions}
 					panel={<InstructionsTab instructions={instructionsText} />}
-					className="tab-panel tab"
 				/>
-
-				<Tab
-					id="submission"
-					title={submission}
-					panel={
-						<SubmissionTab
-							onUpdatePub={onUpdatePub}
-							onUpdateSubmission={onUpdateSubmission}
-						/>
-					}
-					className="tab-panel tab"
-				/>
-				<Tab
-					id="preview"
-					title={preview}
-					panel={<PreviewTab />}
-					className="tab-panel tab"
-				/>
+				<Tab id="submission" title={submission} panel={<SubmissionTab />} />
+				<Tab id="preview" title={preview} panel={<PreviewTab />} />
 			</Tabs>
 		</div>
 	);
