@@ -1,37 +1,66 @@
 import React from 'react';
 import { Button } from '@blueprintjs/core';
 
-import { DefinitelyHas, Pub, SubmissionWorkflow, SubmissionStatus } from 'types';
+import { DefinitelyHas, Pub, SubmissionStatus, DocJson } from 'types';
 import { Icon, IconName, DialogLauncher } from 'client/components';
+import { apiFetch } from 'client/utils/apiFetch';
 import VerdictDialog from './VerdictDialog';
 
 require('./arbitrationMenu.scss');
 
-const getArbitrationOptions = (submissionWorkflow?: SubmissionWorkflow) =>
-	!submissionWorkflow
+const getArbitrationOptions = (submission) =>
+	!submission.submissionWorkflow
 		? []
 		: [
 				{
 					icon: 'cross',
+					shouldOfferEmail: false,
 					actionTitle: 'Delete',
 					completedName: 'deleted',
-					apiMethod: 'DELETE',
+					onSubmit: () =>
+						apiFetch('/api/pub', {
+							method: 'DELETE',
+							body: JSON.stringify({
+								id: submission.pubId,
+							}),
+						}).then(() => submission),
 				},
 				{
 					icon: 'thumbs-down',
+					shouldOfferEmail: true,
 					actionTitle: 'Decline',
 					completedName: 'declined',
-					apiMethod: 'PUT',
 					status: 'declined' as SubmissionStatus,
-					initialEmailText: submissionWorkflow.declinedText,
+					initialEmailText: submission.submissionWorkflow.declinedText,
+					onSubmit: (customEmailText?: DocJson, shouldSendEmail?: boolean) =>
+						apiFetch('/api/submissions', {
+							method: 'PUT',
+							body: JSON.stringify({
+								id: submission.id,
+								status: 'declined',
+								skipEmail: !shouldSendEmail,
+								customEmailText:
+									customEmailText || submission.submissionWorkflow.declinedText,
+							}),
+						}),
 				},
 				{
 					icon: 'endorsed',
+					shouldOfferEmail: true,
 					actionTitle: 'Accept',
 					completedName: 'accepted',
-					apiMethod: 'PUT',
 					status: 'accepted' as SubmissionStatus,
-					initialEmailText: submissionWorkflow.acceptedText,
+					initialEmailText: submission.submissionWorkflow.acceptedText,
+					onSubmit: (customEmailText?: DocJson, shouldSendEmail?: boolean) =>
+						apiFetch('/api/submissions', {
+							method: 'PUT',
+							body: JSON.stringify({
+								id: submission.id,
+								status: 'accepted',
+								skipEmail: !shouldSendEmail,
+								...(customEmailText && { customEmailText }),
+							}),
+						}),
 				},
 		  ];
 
@@ -42,7 +71,7 @@ type Props = {
 
 const ArbitrationMenu = (props: Props) => (
 	<div className="arbitration-menu">
-		{getArbitrationOptions(props.pub.submission.submissionWorkflow).map((option, index) => (
+		{getArbitrationOptions(props.pub.submission).map((option, index) => (
 			<div style={{ gridColumn: index + 1 }} key={option.actionTitle}>
 				{props.pub.submission.status !== option.status && (
 					<DialogLauncher

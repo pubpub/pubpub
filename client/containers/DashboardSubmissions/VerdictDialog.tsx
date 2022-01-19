@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Callout, Button, Dialog, Classes, Checkbox } from '@blueprintjs/core';
 
-import { apiFetch } from 'client/utils/apiFetch';
 import { DefinitelyHas, SubmissionStatus, Pub, DocJson } from 'types';
 import { Icon } from 'components';
 import { getEmptyDoc } from 'client/components/Editor/utils/doc';
@@ -11,10 +10,11 @@ require('./verdictDialog.scss');
 
 type Props = {
 	isOpen: boolean;
+	shouldOfferEmail: boolean;
 	onClose: () => unknown;
 	actionTitle: string;
 	completedName: string;
-	apiMethod: string;
+	onSubmit: (customEmailText?: DocJson, shouldSendEmail?: boolean) => any;
 	status?: SubmissionStatus;
 	initialEmailText?: DocJson;
 	pub: DefinitelyHas<Pub, 'submission'>;
@@ -22,6 +22,7 @@ type Props = {
 };
 
 type PreSubmissionBodyProps = {
+	shouldOfferEmail: boolean;
 	handleSubmission: (customEmailText: DocJson, shouldSendEmail: boolean) => void;
 	isHandlingSubmission: boolean;
 	actionTitle: string;
@@ -36,27 +37,33 @@ const PreSubmissionBody = (props: PreSubmissionBodyProps) => {
 		<>
 			<div className={Classes.DIALOG_BODY}>
 				<p>Would you like to {props.actionTitle} this submission?</p>
-				<p className="email-text-header">
-					<Icon icon="manually-entered-data" iconSize={12} />
-					{'  '}Email to Authors
-				</p>
-				<WorkflowTextEditor
-					initialContent={customEmailText}
-					onContent={setCustomEmailText}
-					placeholder="Specify message to pub author(s)."
-				/>
+				{props.shouldOfferEmail && (
+					<>
+						<p className="email-text-header">
+							<Icon icon="manually-entered-data" iconSize={12} />
+							{'  '}Email to Authors
+						</p>
+						<WorkflowTextEditor
+							initialContent={customEmailText}
+							onContent={setCustomEmailText}
+							placeholder="Specify message to pub author(s)."
+						/>
+					</>
+				)}
 			</div>
 			<div className={Classes.DIALOG_FOOTER}>
 				<div className={Classes.DIALOG_FOOTER_ACTIONS}>
-					<Checkbox
-						className="email-toggle"
-						checked={shouldSendEmail}
-						disabled={props.isHandlingSubmission}
-						onChange={(e) => {
-							setShouldSendEmail((e.target as HTMLInputElement).checked);
-						}}
-						label="Notify authors by email"
-					/>
+					{props.shouldOfferEmail && (
+						<Checkbox
+							className="email-toggle"
+							checked={shouldSendEmail}
+							disabled={props.isHandlingSubmission}
+							onChange={(e) => {
+								setShouldSendEmail((e.target as HTMLInputElement).checked);
+							}}
+							label="Notify authors by email"
+						/>
+					)}
 					<Button onClick={props.onClose} disabled={props.isHandlingSubmission}>
 						Cancel
 					</Button>
@@ -65,7 +72,8 @@ const PreSubmissionBody = (props: PreSubmissionBodyProps) => {
 						loading={props.isHandlingSubmission}
 						intent="primary"
 					>
-						Email & {props.actionTitle}
+						{props.shouldOfferEmail && 'Email & '}
+						{props.actionTitle}
 					</Button>
 				</div>
 			</div>
@@ -101,17 +109,10 @@ const VerdictDialog = (props: Props) => {
 	const [isHandlingSubmission, setIsHandlingSubmission] = useState(false);
 	const [updatedSubmission, setUpdatedSubmission] = useState(null);
 	const [submissionError, setSubmissionError] = useState(null);
-	const handleSubmission = (customEmailText: DocJson, shouldSendEmail: boolean) => {
+	const onSubmit = (customEmailText: DocJson, shouldSendEmail: boolean) => {
 		setIsHandlingSubmission(true);
-		apiFetch('/api/submissions', {
-			method: props.apiMethod,
-			body: JSON.stringify({
-				id: props.pub.submission.id,
-				skipEmail: !shouldSendEmail,
-				...(customEmailText && { customEmailText }),
-				...(props.status && { status: props.status }),
-			}),
-		})
+		props
+			.onSubmit(customEmailText, shouldSendEmail)
 			.then((submissionRes) => {
 				setUpdatedSubmission(submissionRes);
 				setIsHandlingSubmission(false);
@@ -131,7 +132,7 @@ const VerdictDialog = (props: Props) => {
 			onClose={props.onClose}
 		>
 			{submissionError ? (
-				<Callout intent="warning" title="There was an error creating this submission." />
+				<Callout intent="warning" title="There was an error updating this submission." />
 			) : updatedSubmission ? (
 				<PostSubmitBody
 					isHandlingSubmission={isHandlingSubmission}
@@ -140,8 +141,9 @@ const VerdictDialog = (props: Props) => {
 				/>
 			) : (
 				<PreSubmissionBody
+					shouldOfferEmail={props.shouldOfferEmail}
 					onClose={props.onClose}
-					handleSubmission={handleSubmission}
+					handleSubmission={onSubmit}
 					initialEmailText={props.initialEmailText}
 					isHandlingSubmission={isHandlingSubmission}
 					actionTitle={props.actionTitle}
