@@ -4,7 +4,7 @@ import { Tab, Tabs, TabId, Icon, IconName } from '@blueprintjs/core';
 import { SubmissionWorkflow } from 'types';
 
 import InstructionsTab from './InstructionsTab';
-import SubmissionTab from './SubmissionTab';
+import SubmissionTab from './SubmissionTab/SubmissionTab';
 import PreviewTab from './PreviewTab';
 
 require('./spubHeader.scss');
