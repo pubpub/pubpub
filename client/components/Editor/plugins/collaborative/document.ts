@@ -40,14 +40,14 @@ export default (
 	collabDocPluginKey: PluginKey,
 	localClientId: string,
 ) => {
-	const { collaborativeOptions } = options;
+	const { collaborativeOptions, isReadOnly, onError = noop } = options;
 	const {
 		firebaseRef: ref,
 		onStatusChange = noop,
 		onUpdateLatestKey = noop,
 	} = collaborativeOptions;
 	let view;
-	let mostRecentRemoteKey = options.collaborativeOptions.initialDocKey;
+	let mostRecentRemoteKey = collaborativeOptions.initialDocKey;
 	let ongoingTransaction = false;
 	let pendingRemoteKeyables = [];
 	/* sendCollabChanges is called only from the main Editor */
@@ -65,7 +65,7 @@ export default (
 	const sendCollabChanges = (newState) => {
 		const sendable = sendableSteps(newState);
 
-		if (options.isReadOnly || ongoingTransaction || !sendable) {
+		if (isReadOnly || ongoingTransaction || !sendable) {
 			return null;
 		}
 
@@ -103,7 +103,7 @@ export default (
 			})
 			.catch((err) => {
 				console.error('Error in firebase transaction:', err);
-				options.onError?.(err);
+				onError(err);
 			});
 	};
 
@@ -139,7 +139,7 @@ export default (
 				onUpdateLatestKey(mostRecentRemoteKey);
 			} catch (err) {
 				console.error('Error in recieveCollabChanges:', err);
-				options.onError?.(err as Error);
+				onError(err as Error);
 			}
 		});
 		pendingRemoteKeyables = [];
@@ -223,7 +223,7 @@ export default (
 				return {
 					isLoaded: false,
 					localClientId,
-					localClientData: options.collaborativeOptions.clientData,
+					localClientData: collaborativeOptions.clientData,
 					sendCollabChanges,
 				};
 			},
@@ -232,7 +232,7 @@ export default (
 					isLoaded: transaction.getMeta('finishedLoading') || pluginState.isLoaded,
 					mostRecentRemoteKey,
 					localClientId,
-					localClientData: options.collaborativeOptions.clientData,
+					localClientData: collaborativeOptions.clientData,
 					sendCollabChanges,
 				};
 			},
