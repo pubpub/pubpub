@@ -1,4 +1,4 @@
-.verdict-dialog {
+.verdict-dialog-component {
 	.email-text-header {
 		text-transform: uppercase;
 		font-size: 12px;
@@ -8,14 +8,6 @@
 	.minimal-editor-component {
 			height: 150px;
 			overflow: auto;
-			.editor-wrapper {
-					min-height: 100%;
-					.ProseMirror {
-						.prosemirror-placeholder {
-							white-space: break-spaces;
-						}
-					}
-			}
 	}
 	.email-toggle {
 		margin: auto 0;

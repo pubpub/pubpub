@@ -14,7 +14,7 @@ type Props = {
 };
 
 const ArbitrationMenu = (props: Props) => (
-	<div className="arbitration-menu">
+	<div className="arbitration-menu-component">
 		<div style={{ gridColumn: 1 }}>
 			<DialogLauncher
 				renderLauncherElement={({ openDialog }) => (
@@ -48,52 +48,58 @@ const ArbitrationMenu = (props: Props) => (
 			</DialogLauncher>
 		</div>
 		{[
-			{ presentTense: 'decline', pastTense: 'declined', iconName: 'thumbs-down' },
-			{ presentTense: 'accept', pastTense: 'accepted', iconName: 'endorsed' },
-		].map(({ presentTense, pastTense, iconName }, index) => (
-			<div style={{ gridColumn: index + 2 }}>
-				<DialogLauncher
-					renderLauncherElement={({ openDialog }) => (
-						<Button
-							minimal
-							small
-							icon={<Icon icon={iconName as IconName} iconSize={20} />}
-							onClick={openDialog}
-						/>
-					)}
-				>
-					{({ isOpen, onClose }) => (
-						<VerdictDialog
-							isOpen={isOpen}
-							onClose={onClose}
-							actionTitle={presentTense}
-							completedName={pastTense}
-							status={pastTense as SubmissionStatus}
-							initialEmailText={
-								props.pub.submission.submissionWorkflow?.[`${pastTense}Text`]
-							}
-							onSubmit={(customEmailText?: DocJson, shouldSendEmail?: boolean) =>
-								apiFetch('/api/submissions', {
-									method: 'PUT',
-									body: JSON.stringify({
-										id: props.pub.submission.id,
-										status: pastTense,
-										skipEmail: !shouldSendEmail,
-										customEmailText:
-											customEmailText ||
-											props.pub.submission.submissionWorkflow?.[
-												`${pastTense}Text`
-											],
-									}),
-								})
-							}
-							pub={props.pub as DefinitelyHas<Pub, 'submission'>}
-							onJudgePub={props.onJudgePub}
-						/>
-					)}
-				</DialogLauncher>
-			</div>
-		))}
+			{ presentTense: 'Decline', pastTense: 'declined', iconName: 'thumbs-down' },
+			{ presentTense: 'Accept', pastTense: 'accepted', iconName: 'endorsed' },
+		].map(
+			({ presentTense, pastTense, iconName }, index) =>
+				props.pub.submission.status !== pastTense && (
+					<div style={{ gridColumn: index + 2 }}>
+						<DialogLauncher
+							renderLauncherElement={({ openDialog }) => (
+								<Button
+									minimal
+									small
+									icon={<Icon icon={iconName as IconName} iconSize={20} />}
+									onClick={openDialog}
+								/>
+							)}
+						>
+							{({ isOpen, onClose }) => (
+								<VerdictDialog
+									isOpen={isOpen}
+									onClose={onClose}
+									shouldOfferEmail={true}
+									actionTitle={presentTense}
+									completedName={pastTense}
+									status={pastTense as SubmissionStatus}
+									initialEmailText={
+										props.pub.submission.submissionWorkflow?.[
+											`${pastTense}Text`
+										]
+									}
+									onSubmit={(
+										customEmailText?: DocJson,
+										shouldSendEmail?: boolean,
+									) =>
+										apiFetch.put('/api/submissions', {
+											id: props.pub.submission.id,
+											status: pastTense,
+											skipEmail: !shouldSendEmail,
+											customEmailText:
+												customEmailText ||
+												props.pub.submission.submissionWorkflow?.[
+													`${pastTense}Text`
+												],
+										})
+									}
+									pub={props.pub as DefinitelyHas<Pub, 'submission'>}
+									onJudgePub={props.onJudgePub}
+								/>
+							)}
+						</DialogLauncher>
+					</div>
+				),
+		)}
 	</div>
 );
 

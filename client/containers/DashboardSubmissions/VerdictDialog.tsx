@@ -21,7 +21,7 @@ type Props = {
 	onJudgePub: (pubId: string, status?: SubmissionStatus) => void;
 };
 
-type PreSubmissionBodyProps = {
+type PreStatusChangeBodyProps = {
 	shouldOfferEmail: boolean;
 	handleSubmission: (customEmailText: DocJson, shouldSendEmail: boolean) => void;
 	isHandlingSubmission: boolean;
@@ -30,23 +30,25 @@ type PreSubmissionBodyProps = {
 	initialEmailText?: DocJson;
 };
 
-const PreSubmissionBody = (props: PreSubmissionBodyProps) => {
+const PreStatusChangeBody = (props: PreStatusChangeBodyProps) => {
 	const [shouldSendEmail, setShouldSendEmail] = useState(!!props.initialEmailText);
-	const [customEmailText, setCustomEmailText] = useState(props.initialEmailText || getEmptyDoc());
+	const [customEmailText, setCustomEmailText] = useState(
+		() => props.initialEmailText || getEmptyDoc(),
+	);
 	return (
 		<>
 			<div className={Classes.DIALOG_BODY}>
-				<p>Would you like to {props.actionTitle} this submission?</p>
+				<p>Would you like to {props.actionTitle.toLowerCase()} this submission?</p>
 				{props.shouldOfferEmail && (
 					<>
 						<p className="email-text-header">
 							<Icon icon="manually-entered-data" iconSize={12} />
-							{'  '}Email to Authors
+							{'  '}Email to submitters
 						</p>
 						<WorkflowTextEditor
 							initialContent={customEmailText}
 							onContent={setCustomEmailText}
-							placeholder="Specify message to pub author(s)."
+							placeholder="Specify message to submitter(s)."
 						/>
 					</>
 				)}
@@ -61,7 +63,7 @@ const PreSubmissionBody = (props: PreSubmissionBodyProps) => {
 							onChange={(e) => {
 								setShouldSendEmail((e.target as HTMLInputElement).checked);
 							}}
-							label="Notify authors by email"
+							label="Notify submitters by email"
 						/>
 					)}
 					<Button onClick={props.onClose} disabled={props.isHandlingSubmission}>
@@ -72,7 +74,7 @@ const PreSubmissionBody = (props: PreSubmissionBodyProps) => {
 						loading={props.isHandlingSubmission}
 						intent="primary"
 					>
-						{props.shouldOfferEmail && 'Email & '}
+						{props.shouldOfferEmail && shouldSendEmail && 'Email & '}
 						{props.actionTitle}
 					</Button>
 				</div>
@@ -81,29 +83,27 @@ const PreSubmissionBody = (props: PreSubmissionBodyProps) => {
 	);
 };
 
-type PostSubmitBodyProps = {
+type PostStatusChangeBodyProps = {
 	completedName: string;
 	onClose: () => unknown;
 	isHandlingSubmission: boolean;
 };
-const PostSubmitBody = (props: PostSubmitBodyProps) => {
-	return (
-		<>
-			<div className={Classes.DIALOG_BODY}>
-				<Callout intent="success" title={`Submission ${props.completedName}!`}>
-					You successfully {props.completedName} the submission!
-				</Callout>
+const PostStatusChangeBody = (props: PostStatusChangeBodyProps) => (
+	<>
+		<div className={Classes.DIALOG_BODY}>
+			<Callout intent="success" title={`Submission ${props.completedName}!`}>
+				You successfully {props.completedName} the submission!
+			</Callout>
+		</div>
+		<div className={Classes.DIALOG_FOOTER}>
+			<div className={Classes.DIALOG_FOOTER_ACTIONS}>
+				<Button onClick={props.onClose} disabled={props.isHandlingSubmission}>
+					Close
+				</Button>
 			</div>
-			<div className={Classes.DIALOG_FOOTER}>
-				<div className={Classes.DIALOG_FOOTER_ACTIONS}>
-					<Button onClick={props.onClose} disabled={props.isHandlingSubmission}>
-						Close
-					</Button>
-				</div>
-			</div>
-		</>
-	);
-};
+		</div>
+	</>
+);
 
 const VerdictDialog = (props: Props) => {
 	const [isHandlingSubmission, setIsHandlingSubmission] = useState(false);
@@ -127,20 +127,20 @@ const VerdictDialog = (props: Props) => {
 		<Dialog
 			lazy={true}
 			title={props.actionTitle}
-			className="verdict-dialog"
+			className="verdict-dialog-component"
 			isOpen={props.isOpen}
 			onClose={props.onClose}
 		>
 			{submissionError ? (
 				<Callout intent="warning" title="There was an error updating this submission." />
 			) : updatedSubmission ? (
-				<PostSubmitBody
+				<PostStatusChangeBody
 					isHandlingSubmission={isHandlingSubmission}
 					completedName={props.completedName}
 					onClose={props.onClose}
 				/>
 			) : (
-				<PreSubmissionBody
+				<PreStatusChangeBody
 					shouldOfferEmail={!!props.shouldOfferEmail}
 					onClose={props.onClose}
 					handleSubmission={onSubmit}
