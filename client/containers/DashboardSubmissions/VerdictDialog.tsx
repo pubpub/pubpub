@@ -15,10 +15,10 @@ type Props = {
 	actionTitle: string;
 	completedName: string;
 	onSubmit: (customEmailText?: DocJson, shouldSendEmail?: boolean) => any;
-	status?: SubmissionStatus;
+	status: SubmissionStatus;
 	initialEmailText?: DocJson;
 	pub: DefinitelyHas<Pub, 'submission'>;
-	onJudgePub: (pubId: string, status?: SubmissionStatus) => void;
+	onJudgePub: (pubId: string, status: SubmissionStatus) => void;
 };
 
 type PreStatusChangeBodyProps = {

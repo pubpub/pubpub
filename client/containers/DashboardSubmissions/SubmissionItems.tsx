@@ -85,11 +85,13 @@ const SubmissionItems = (props: Props) => {
 		},
 	});
 
-	const [localStatuses, setLocalStatuses] = useState<{ [pubId: string]: SubmissionStatus }>({});
-	const recordLocalStatus = useCallback((pubId: string, status?: SubmissionStatus) => {
+	const [localStatuses, setLocalStatuses] = useState<{
+		[pubId: string]: { status: SubmissionStatus; isDeleted: Boolean };
+	}>({});
+	const recordLocalStatus = useCallback((pubId: string, status: SubmissionStatus) => {
 		setLocalStatuses((prev) => ({
 			...prev,
-			...(status && { [pubId]: status }),
+			[pubId]: { status, isDeleted: !status },
 		}));
 	}, []);
 
@@ -102,7 +104,8 @@ const SubmissionItems = (props: Props) => {
 
 	const omitUpdatedSubmissions = (pub) =>
 		!(pub.id in localStatuses) ||
-		(!!localStatuses[pub.id] && filter?.submissionStatuses?.includes(localStatuses[pub.id]));
+		(!!localStatuses[pub.id].isDeleted &&
+			filter?.submissionStatuses?.includes(localStatuses[pub.id].status));
 
 	const augmentWithLocalStatus = (pub) => ({
 		...pub,
@@ -132,7 +135,7 @@ const SubmissionItems = (props: Props) => {
 							hasSubmission={true}
 							isGrayscale={
 								!!(pub.submission?.status === 'declined') ||
-								localStatuses[pub.id] === 'declined'
+								localStatuses[pub.id]?.status === 'declined'
 							}
 							rightElement={
 								<ArbitrationMenu pub={pub} onJudgePub={recordLocalStatus} />

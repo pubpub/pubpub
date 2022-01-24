@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@blueprintjs/core';
 
 import { DefinitelyHas, Pub, SubmissionStatus, DocJson } from 'types';
-import { Icon, IconName, DialogLauncher } from 'client/components';
+import { ConfirmDialog, Icon, IconName, DialogLauncher } from 'client/components';
 import { apiFetch } from 'client/utils/apiFetch';
 import VerdictDialog from './VerdictDialog';
 
@@ -10,42 +10,32 @@ require('./arbitrationMenu.scss');
 
 type Props = {
 	pub: DefinitelyHas<Pub, 'submission'>;
-	onJudgePub: (pubId: string, status?: SubmissionStatus) => void;
+	onJudgePub: (pubId: string, status: SubmissionStatus) => void;
 };
 
 const ArbitrationMenu = (props: Props) => (
 	<div className="arbitration-menu-component">
 		<div style={{ gridColumn: 1 }}>
-			<DialogLauncher
-				renderLauncherElement={({ openDialog }) => (
+			<ConfirmDialog
+				confirmLabel="Delete"
+				text="Are you sure you want to delete this submission?"
+				onConfirm={() =>
+					apiFetch
+						.delete('/api/pubs', {
+							pubId: props.pub.id,
+						})
+						.then(() => props.onJudgePub(props.pub.id, props.pub.submission.status))
+				}
+			>
+				{({ open }) => (
 					<Button
 						minimal
 						small
-						icon={<Icon icon={'cross' as IconName} iconSize={20} />}
-						onClick={openDialog}
+						icon={<Icon icon="cross" iconSize={20} />}
+						onClick={open}
 					/>
 				)}
-			>
-				{({ isOpen, onClose }) => (
-					<VerdictDialog
-						isOpen={isOpen}
-						onClose={onClose}
-						shouldOfferEmail={false}
-						actionTitle="Delete"
-						completedName="deleted"
-						onSubmit={() =>
-							apiFetch('/api/pub', {
-								method: 'DELETE',
-								body: JSON.stringify({
-									id: props.pub.submission.pubId,
-								}),
-							}).then(() => props.pub.submission)
-						}
-						pub={props.pub as DefinitelyHas<Pub, 'submission'>}
-						onJudgePub={props.onJudgePub}
-					/>
-				)}
-			</DialogLauncher>
+			</ConfirmDialog>
 		</div>
 		{[
 			{ presentTense: 'Decline', pastTense: 'declined', iconName: 'thumbs-down' },
@@ -53,7 +43,7 @@ const ArbitrationMenu = (props: Props) => (
 		].map(
 			({ presentTense, pastTense, iconName }, index) =>
 				props.pub.submission.status !== pastTense && (
-					<div style={{ gridColumn: index + 2 }}>
+					<div style={{ gridColumn: index + 2 }} key={pastTense}>
 						<DialogLauncher
 							renderLauncherElement={({ openDialog }) => (
 								<Button
@@ -92,7 +82,7 @@ const ArbitrationMenu = (props: Props) => (
 												],
 										})
 									}
-									pub={props.pub as DefinitelyHas<Pub, 'submission'>}
+									pub={props.pub}
 									onJudgePub={props.onJudgePub}
 								/>
 							)}
