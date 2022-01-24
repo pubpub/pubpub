@@ -7,7 +7,7 @@ import { getPubPageTitle } from 'utils/pubPageTitle';
 import { NoteManager } from 'client/utils/notes';
 import { initFirebase } from 'client/utils/firebaseClient';
 import { apiFetch } from 'client/utils/apiFetch';
-import { NodeLabelMap } from 'client/components/Editor/types';
+import { NodeLabelMap, CollaborativeEditorStatus } from 'client/components/Editor/types';
 import {
 	Maybe,
 	PatchFn,
@@ -59,7 +59,7 @@ type State = {
 	historyData: PubHistoryState;
 	collabData: {
 		editorChangeObject: any;
-		status: string;
+		status: CollaborativeEditorStatus;
 		localCollabUser: CollabUser;
 		remoteCollabUsers: CollabUser[];
 	};
