@@ -3,7 +3,11 @@ import { receiveTransaction, sendableSteps } from 'prosemirror-collab';
 import { Step } from 'prosemirror-transform';
 import { uncompressStepJSON } from 'prosemirror-compress-pubpub';
 
-import { storeCheckpoint, createFirebaseChange } from '../../utils';
+import {
+	storeCheckpoint,
+	createFirebaseChange,
+	getFirebaseConnectionMonitorRef,
+} from '../../utils';
 
 /*
 Rough pipeline:
@@ -142,6 +146,12 @@ export default (schema, props, collabDocPluginKey, localClientId) => {
 	};
 
 	const loadDocument = () => {
+		getFirebaseConnectionMonitorRef(ref).on('value', (snapshot) => {
+			if (!snapshot.val()) {
+				onStatusChange('disconnected');
+			}
+		});
+
 		return ref
 			.child('changes')
 			.orderByKey()
@@ -177,6 +187,7 @@ export default (schema, props, collabDocPluginKey, localClientId) => {
 				const finishedLoadingTrans = view.state.tr;
 				finishedLoadingTrans.setMeta('finishedLoading', true);
 				view.dispatch(finishedLoadingTrans);
+				onStatusChange('connected');
 
 				/* Listen to Changes */
 				return ref

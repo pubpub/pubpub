@@ -200,27 +200,13 @@ class PubSyncManager extends React.Component<Props, State> {
 	componentDidMount() {
 		const { draft } = this.props.pubData;
 		if (draft) {
-			initFirebase(draft.firebasePath, this.props.pubData.firebaseToken).then(
-				(firebaseRefs) => {
-					if (!firebaseRefs) {
-						return;
-					}
-					const [draftRef, connectionRef] = firebaseRefs;
-					this.setState({ firebaseDraftRef: draftRef }, () => {
-						this.state.firebaseDraftRef
-							?.child('cursors')
-							.on('value', this.syncRemoteCollabUsers);
-
-						connectionRef.on('value', (snapshot) => {
-							if (snapshot.val() === true) {
-								this.updateLocalData('collab', { status: 'connected' });
-							} else {
-								this.updateLocalData('collab', { status: 'disconnected' });
-							}
-						});
-					});
-				},
-			);
+			initFirebase(draft.firebasePath, this.props.pubData.firebaseToken!).then((rootRef) => {
+				this.setState({ firebaseDraftRef: rootRef }, () => {
+					this.state.firebaseDraftRef
+						?.child('cursors')
+						.on('value', this.syncRemoteCollabUsers);
+				});
+			});
 		}
 	}
 
