@@ -1,12 +1,10 @@
-import xmlbuilder from 'xmlbuilder';
-
+import { Release } from 'server/models';
 import app, { wrap } from 'server/server';
 import { ForbiddenError } from 'server/utils/errors';
-import { Release } from 'server/models';
 import { parentToSupplementNeedsDoiError } from 'utils/crossref/createDeposit';
-
-import { getDoiData, setDoiData, generateDoi } from './queries';
+import xmlbuilder from 'xmlbuilder';
 import { getPermissions } from './permissions';
+import { generateDoi, getDoiData, setDoiData } from './queries';
 
 const assertUserAuthorized = async (target, requestIds) => {
 	const permissions = await getPermissions(requestIds);
@@ -47,8 +45,8 @@ const previewOrDepositDoi = async (user, body, options = { deposit: false }) => 
 
 	await assertUserAuthorized(target, requestIds);
 
-	if (pubId) {
-		await pubExistsAndIsMissingReleases(pubId);
+	if (pubId && (await pubExistsAndIsMissingReleases(pubId))) {
+		throw new ForbiddenError();
 	}
 
 	const depositJson = await (deposit ? setDoiData : getDoiData)(
