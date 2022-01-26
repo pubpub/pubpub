@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useUpdateEffect } from 'react-use';
 
 import { Pub } from 'types';
 import { usePageContext } from 'utils/hooks';
@@ -51,6 +52,7 @@ export const useManyPubs = <P extends Pub = Pub>(
 		isEager = true,
 		initialPubs = [],
 		initiallyLoadedAllPubs = false,
+		cacheQueries = true,
 	} = options;
 	const { communityData } = usePageContext();
 	const [pubOptions] = useState(initialPubOptions);
@@ -120,6 +122,14 @@ export const useManyPubs = <P extends Pub = Pub>(
 		setState(getFinishedLoadingPubsState(nextState, query, resolvedPubsById, loadedAllPubs));
 		setPubsById(nextPubsById);
 	};
+
+	useUpdateEffect(() => {
+		if (!cacheQueries) {
+			setManyPubsState({
+				[queryKey]: initialQueryState,
+			});
+		}
+	}, [cacheQueries, queryKey]);
 
 	useEffect(() => {
 		if (isEager && state.offset === 0) {

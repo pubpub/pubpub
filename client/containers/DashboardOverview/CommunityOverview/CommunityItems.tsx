@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { NonIdealState } from '@blueprintjs/core';
 
-import { Collection, Pub, PubsQuery } from 'types';
+import { Collection, Pub } from 'types';
 import { fuzzyMatchCollection } from 'utils/fuzzyMatch';
 import { useManyPubs } from 'client/utils/useManyPubs';
 import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
@@ -13,7 +13,7 @@ import {
 	LoadMorePubsRow,
 	SpecialRow,
 } from '../overviewRows';
-import { KindToggle, OverviewSearchGroup } from '../helpers';
+import { KindToggle, OverviewSearchFilter, OverviewSearchGroup } from '../helpers';
 
 require('./communityItems.scss');
 
@@ -36,10 +36,11 @@ const getSearchPlaceholderText = (showCollections: boolean, showPubs: boolean) =
 const CommunityItems = (props: Props) => {
 	const { collections: allCollections, initialPubs, initiallyLoadedAllPubs } = props;
 	const [searchTerm, setSearchTerm] = useState('');
-	const [filter, setFilter] = useState<null | Partial<PubsQuery>>(null);
+	const [filter, setFilter] = useState<null | OverviewSearchFilter>(null);
 	const [showPubs, setShowPubs] = useState(true);
 	const [showCollections, setShowCollections] = useState(true);
-	const isSearchingOrFiltering = !!filter || !!searchTerm;
+	const query = filter?.query;
+	const isSearchingOrFiltering = !!query || !!searchTerm;
 
 	const collections = useMemo(
 		() => allCollections.filter((collection) => fuzzyMatchCollection(collection, searchTerm)),
@@ -56,11 +57,11 @@ const CommunityItems = (props: Props) => {
 		query: {
 			term: searchTerm,
 			ordering: { field: 'title', direction: 'ASC' },
-			...filter,
+			...filter?.query,
 		},
 	});
 
-	const canShowCollections = !filter;
+	const canShowCollections = !query;
 	const canLoadMorePubs = !hasLoadedAllPubs && showPubs;
 
 	useInfiniteScroll({
