@@ -56,18 +56,16 @@ const SpubSettings = () => {
 					</p>
 				</div>
 				<div>
-					<p>
-						UPLOAD YOUR FILE &nbsp;
-						<DownloadChooser
-							pubData={{
-								id: '00f9aaaf-0468-4590-9b86-1a2bff4ffe57',
+					UPLOAD YOUR FILE &nbsp;
+					<DownloadChooser
+						pubData={{
+							id: '00f9aaaf-0468-4590-9b86-1a2bff4ffe57',
 
-								downloads: undefined,
-							}}
-							communityId={communityData.id}
-							onSetDownloads={(downloads) => updatePersistedPubData({ downloads })}
-						/>
-					</p>
+							downloads: undefined,
+						}}
+						communityId={communityData.id}
+						onSetDownloads={(downloads) => updatePersistedPubData({ downloads })}
+					/>
 				</div>
 			</div>
 		);

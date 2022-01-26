@@ -12,7 +12,7 @@ import { renderInstructionTabTitle } from './utility';
 require('./spubHeader.scss');
 
 type Props = {
-	workflow: Pick<SubmissionWorkflow, 'instructionsText'>;
+	workflow: SubmissionWorkflow;
 };
 
 const SpubHeader = (props: Props) => {
