@@ -4,7 +4,7 @@ import { usePageContext } from 'utils/hooks';
 
 import PubSyncManager from './PubSyncManager';
 import PubHeader from './PubHeader';
-import SubmissionPubHeader from './SubmissionPubHeader';
+import SpubHeader from './SpubHeader';
 import PubDocument from './PubDocument';
 import { PubSuspendWhileTypingProvider, PubSuspendWhileTyping } from './PubSuspendWhileTyping';
 
@@ -104,7 +104,7 @@ const Pub = (props: Props) => {
 						return hasSubmission ? (
 							<React.Fragment>
 								<PubSuspendWhileTyping delay={1000}>
-									{() => <SubmissionPubHeader workflow={workflow} />}
+									{() => <SpubHeader workflow={workflow} />}
 								</PubSuspendWhileTyping>
 								<PubDocument {...modeProps} />
 							</React.Fragment>
