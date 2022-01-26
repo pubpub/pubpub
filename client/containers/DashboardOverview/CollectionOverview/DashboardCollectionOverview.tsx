@@ -83,7 +83,6 @@ const DashboardCollectionOverview = (props: Props) => {
 	const canDragDrop = !isSearchingOrFiltering && canManage;
 
 	const {
-		allQueries: { isLoading },
 		currentQuery: { loadMorePubs, pubs: pubsFoundInCollection, hasLoadedAllPubs },
 	} = useManyPubs<PubWithCollections>({
 		initialPubs,
@@ -124,7 +123,7 @@ const DashboardCollectionOverview = (props: Props) => {
 	);
 
 	useInfiniteScroll({
-		enabled: !isLoading && !includesAllPubs,
+		enabled: !includesAllPubs,
 		useDocumentElement: true,
 		onRequestMoreItems: loadMorePubs,
 		scrollTolerance: 100,

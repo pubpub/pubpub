@@ -48,7 +48,7 @@ const CommunityItems = (props: Props) => {
 	);
 
 	const {
-		currentQuery: { pubs, isLoading, hasLoadedAllPubs, loadMorePubs },
+		currentQuery: { pubs, hasLoadedAllPubs, loadMorePubs },
 	} = useManyPubs({
 		isEager: isSearchingOrFiltering,
 		initialPubs,
@@ -65,7 +65,7 @@ const CommunityItems = (props: Props) => {
 	const canLoadMorePubs = !hasLoadedAllPubs && showPubs;
 
 	useInfiniteScroll({
-		enabled: !isLoading && canLoadMorePubs,
+		enabled: canLoadMorePubs,
 		useDocumentElement: true,
 		onRequestMoreItems: loadMorePubs,
 	});
