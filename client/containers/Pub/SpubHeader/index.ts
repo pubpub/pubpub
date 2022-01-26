@@ -1,1 +1,1 @@
-export { default } from './PubSubmissionHeader';
+export { default } from './SpubHeader';
