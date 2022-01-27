@@ -5,7 +5,7 @@ import { GridWrapper } from 'components';
 
 import { SubmissionWorkflow } from 'types';
 import InstructionsTab from './InstructionsTab';
-import SubmissionTab from './SubmissionTab/SubmissionTab';
+import SubmissionTab from './SubmissionTab';
 import PreviewTab from './PreviewTab';
 import { renderInstructionTabTitle } from './utility';
 
