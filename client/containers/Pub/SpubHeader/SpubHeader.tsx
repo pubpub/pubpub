@@ -24,7 +24,7 @@ const SpubHeader = (props: Props) => {
 
 	return (
 		<Tabs
-			id="TabsExample"
+			id="spubHeader"
 			onChange={(t) => setSelectedTab(t)}
 			selectedTabId={selectedTab}
 			className="spub-header-component tabs bp3-large"
@@ -46,7 +46,7 @@ const SpubHeader = (props: Props) => {
 				id="preview"
 				title={preview}
 				panel={<PreviewTab pubData={props.pubData} />}
-				className="tab-panel tab"
+				className="tab preview-tab"
 			/>
 		</Tabs>
 	);
