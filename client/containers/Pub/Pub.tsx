@@ -54,7 +54,6 @@ const Pub = (props: Props) => {
 	const { loginData, locationData, communityData } = usePageContext();
 	const hasSubmission =
 		'submission' in props.pubData && props.pubData.submission?.status === 'incomplete';
-	const workflow = hasSubmission ? props.pubData.submission.submissionWorkflow : undefined;
 	useEffect(() => {
 		const { hash } = window.location;
 
@@ -104,7 +103,7 @@ const Pub = (props: Props) => {
 						return hasSubmission ? (
 							<React.Fragment>
 								<PubSuspendWhileTyping delay={1000}>
-									{() => <SpubHeader workflow={workflow} />}
+									{() => <SpubHeader pubData={pubData} />}
 								</PubSuspendWhileTyping>
 								<PubDocument {...modeProps} />
 							</React.Fragment>
