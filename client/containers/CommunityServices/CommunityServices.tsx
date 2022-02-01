@@ -183,7 +183,7 @@ const CommunityServices = () => {
 		{
 			url: 'https://tmb.apaopen.org/',
 			img: '/static/landing/tmb.png',
-			title: 'Harvard Data Science Review',
+			title: 'Technology, Mind, and Behavior',
 			source: 'American Physcological Association',
 		},
 		{

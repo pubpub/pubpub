@@ -36,9 +36,8 @@ const ServiceOption = ({
 					{options.map((opt, index) => {
 						const tooltipContent = tooltips ? tooltips[index] : '';
 						return (
-							<Tooltip content={tooltipContent}>
+							<Tooltip key={opt} content={tooltipContent}>
 								<Button
-									key={opt}
 									text={opt}
 									active={option === index}
 									disabled={opt === 'Requires Content Production'}
