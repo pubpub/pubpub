@@ -9,14 +9,26 @@ type Props = {
 	prices: string[];
 	initOption: number;
 	description: string;
+	discounts?: string[];
 	setVal: any;
 };
 
-const ServiceOption = ({ title, options, prices, initOption, description, setVal }: Props) => {
+const ServiceOption = ({
+	title,
+	options,
+	prices,
+	initOption,
+	description,
+	discounts,
+	setVal,
+}: Props) => {
 	const [option, setOption] = useState(initOption);
 	return (
 		<div className="service-option">
-			<div className="option-title">{title}</div>
+			<div className="option-title-row">
+				<div className="option-title">{title}</div>
+				{discounts && <div className="option-discount">{discounts[option]}</div>}
+			</div>
 			<div className="option-row">
 				<ButtonGroup>
 					{options.map((opt, index) => {

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { GridWrapper } from 'components';
-import ServiceOption from './ServiceOption';
 import { Button, InputGroup, Intent, Tag, TextArea } from '@blueprintjs/core';
+
+import { GridWrapper } from 'components';
 import { apiFetch } from 'client/utils/apiFetch';
-import stripIndent from 'strip-indent';
+
+import ServiceOption from './ServiceOption';
 
 require('./communityServices.scss');
 
@@ -57,7 +58,7 @@ const CommunityServices = () => {
 			prices: ['$500', '$0'],
 			initOption: 0,
 			description:
-				'We offer 2 recorded training sessions of up to 90 minutes on a one-off or ongoing (yearly) basis for your team.',
+				'We offer two recorded training sessions of up to 90 minutes on a one-off or ongoing (yearly) basis for your team.',
 		},
 		{
 			title: 'Interactives',
@@ -82,10 +83,16 @@ const CommunityServices = () => {
 			initOption: 2,
 			description:
 				'PubPub is built and maintained by a nonprofit organization dedicated to building public knowledge infrastructure. We are supported by members. Membership allows individuals and organizations of all sizes to support open infrastructure; receive additional support on our products; meet and share ideas with other innovative knowledge communities; and join a community passionate about the future of knowledge infrastructure and its development.',
+			discounts: [
+				'0% discount on all services',
+				'5% discount on all services',
+				'10% discount on all services',
+				'15% discount on all services',
+			],
 		},
 	];
 	const [formDetails, setFormDetails] = useState(
-		services.reduce((prev, curr, index) => {
+		services.reduce((prev, curr) => {
 			return { ...prev, [curr.title]: curr.initOption };
 		}, {}),
 	);
@@ -141,6 +148,68 @@ const CommunityServices = () => {
 				setIsLoading(false);
 			});
 	};
+
+	const examples = [
+		{
+			url: 'https://hdsr.mitpress.mit.edu/',
+			img: '/static/landing/hdsr.png',
+			title: 'Harvard Data Science Review',
+			source: 'Harvard Data Science Initiative',
+		},
+		{
+			url: 'https://mit-serc.pubpub.org/',
+			img: '/static/landing/serc.png',
+			title: 'The MIT Case Studies in Social and Ethical Responsibilities of Computing',
+			source: 'Stephen A. Schwarzman College of Computing at MIT',
+		},
+		{
+			url: 'https://tmb.apaopen.org/',
+			img: '/static/landing/tmb.png',
+			title: 'Harvard Data Science Review',
+			source: 'American Physcological Association',
+		},
+		{
+			url: 'https://phone-and-spear.pubpub.org/',
+			img: '/static/landing/ps.png',
+			title: 'Phone & Spear',
+			source: 'Goldsmiths Press',
+		},
+	];
+	const testimonials = [
+		{
+			quote: (
+				<React.Fragment>
+					"The amazing partnership and expertise of the PubPub team have allowed our
+					editors to work with our authors in exciting new ways. They've helped us to
+					develop works in progress, offer supplements and updates to traditionally
+					published books, and produce enhanced digital editions (such as{' '}
+					<a href="https://www.frankenbook.org/">Frankenbook</a>) with innovative features
+					to support teaching and learning. The future of publishing is here, and PubPub
+					is helping us to take advantage of all that the digital medium can offer."
+				</React.Fragment>
+			),
+			source: 'Gita Manaktala, Editorial Director, MIT Press',
+		},
+		{
+			quote: (
+				<React.Fragment>
+					"PubPub has been the ideal technology publishing partner for{' '}
+					<i>Harvard Data Science Review</i> since launching in 2019. The talented team is
+					flexible, easy to work with, and always aligned with our goals and what we are
+					trying to accomplish."
+				</React.Fragment>
+			),
+			source: 'Rebecca McLeod, Managing Director, Harvard Data Science Review',
+		},
+		{
+			quote: '"The PubPub team is bringing academic publishing into the 21st century. For decades I have been hoping to embed interactivity into figures and tables, and for the first time in my career I was able to do so with PubPub. The team\'s innovation and experience made for an incredible collaboration."',
+			source: 'Jeremy Bailenson, Author, "A Theoretical Argument for the Causes of Zoom Fatigue"',
+		},
+		{
+			quote: '"Dawit and the PubPub team have been great in helping our article to be more interactive and exciting. Their expertise and open-minded approach have allowed us to present our work in a way that engages much more with our readers. Collaborating with the PubPub team has been a smooth and enriching experience, where we learned and experimented together with great fun!"',
+			source: 'Silvio Carta,  Author, "Self-Organizing Floor Plans"',
+		},
+	];
 	return (
 		<div id="community-services-container">
 			<GridWrapper containerClassName="narrow">
@@ -202,7 +271,6 @@ const CommunityServices = () => {
 							className="button"
 							intent={Intent.SUCCESS}
 							text="Send Details"
-							large
 							disabled={!email.includes('@')}
 							onClick={onSubmit}
 							loading={isLoading}
@@ -218,12 +286,46 @@ const CommunityServices = () => {
 				</div>
 				<p className="mitops">
 					For publishing services such as peer-review, copyediting, and research support,
-					we partner with MITops. The full list of services offered by MITops are
-					available on their site. Please contact them directly to inquire about their
-					offering.
+					we partner with MITops. The{' '}
+					<a href="https://mitops.mit.edu/services">
+						full list of services offered by MITops
+					</a>{' '}
+					are available on their site. Please{' '}
+					<a href="https://mitops.mit.edu/contact">contact them directly</a> to inquire
+					about their offering.
 				</p>
 				<h2>See what we can do together!</h2>
 				<p>Browse some of our previous and ongoing Community Services projects.</p>
+				<div className="grid-wrapper">
+					{examples.map((example) => {
+						return (
+							<div className="example" key={example.title}>
+								<a href={example.url}>
+									<img
+										className="example-img"
+										src={example.img}
+										alt={example.title}
+									/>
+								</a>
+								<a href={example.url} className="hoverline">
+									<div className="example-title">{example.title}</div>
+								</a>
+								<div className="example-source">{example.source}</div>
+							</div>
+						);
+					})}
+				</div>
+				<h2>Testimonials</h2>
+				<div className="testimonials">
+					{testimonials.map((testimonial) => {
+						return (
+							<div className="testimonial" key={testimonial.source}>
+								<div className="testimonial-quote">{testimonial.quote}</div>
+								<div className="testimonial-source">— {testimonial.source}</div>
+							</div>
+						);
+					})}
+				</div>
 			</GridWrapper>
 		</div>
 	);

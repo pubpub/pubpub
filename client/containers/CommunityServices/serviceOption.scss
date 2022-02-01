@@ -1,6 +1,15 @@
 .service-option {
 	margin-bottom: 40px;
+	.option-title-row {
+		display: flex;
+		width: 100%;
+		justify-content: space-between;
+	}
 	.option-title {
+		font-weight: 600;
+		font-size: 16px;
+	}
+	.option-discount {
 		font-weight: 600;
 		font-size: 16px;
 	}
