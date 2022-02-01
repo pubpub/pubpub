@@ -16,7 +16,7 @@ const CommunityCreate = () => {
 	const [heroLogo, setHeroLogo] = useState('');
 	const [accentColorDark, setAccentColorDark] = useState('#2D2E2F');
 	const [accentColorLight, setAccentColorLight] = useState('#FFFFFF');
-	const [acceptTerms, toggleAcceptTerms] = useState(false);
+	const [acceptTerms, setAcceptTerms] = useState(false);
 	const [createIsLoading, setCreateIsLoading] = useState(false);
 	const [createError, setCreateError] = useState(undefined);
 
@@ -146,7 +146,7 @@ const CommunityCreate = () => {
 								<Checkbox
 									checked={acceptTerms}
 									onChange={() => {
-										toggleAcceptTerms(!acceptTerms);
+										setAcceptTerms(!acceptTerms);
 									}}
 								>
 									I have read and agree to the PubPub{' '}
