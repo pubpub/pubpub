@@ -183,6 +183,11 @@ const Landing = () => {
 									Create your community
 								</a>
 							</div>
+							<div className="buttons">
+								<a href="/pricing" className="custom-button">
+									Support PubPub
+								</a>
+							</div>
 						</div>
 					</div>
 				</div>
