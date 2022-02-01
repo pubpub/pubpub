@@ -84,9 +84,9 @@ const CommunityCreate = () => {
 					<div>
 						<h1>Create Community</h1>
 						<p>
-							PubPub is free to use, without limitation (except for DOI registration
-							<sup>*</sup>). If you value PubPub, we ask you to consider supporting
-							our work by becoming a member of the Knowledge Futures Group.{' '}
+							PubPub and all its features are free to use.<sup>*</sup> If you value
+							PubPub, we ask you to consider supporting our work by becoming a member
+							of the Knowledge Futures Group.{' '}
 							<a
 								href="https://knowledgefutures.org/membership"
 								target="_blank"

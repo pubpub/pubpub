@@ -7,13 +7,13 @@ const Pricing = () => {
 	return (
 		<div id="pricing-container">
 			<GridWrapper>
-				<h1>PubPub is free</h1>
+				<h1>PubPub is free.</h1>
 				<p className="description top">
 					PubPub's goal is to makes knowledge creation accessible to everyone. To fulfill
-					this mission, we offer PubPub for free and, with the exception of DOI
-					registration<sup>*</sup>, without limitation. We do not sell data or rely on
-					ancillary business streams. To ensure our work is community-driven and
-					sustainable for the long term, we offer two ways for users to support us.
+					this mission, we offer access to PubPub and all features for free.
+					<sup>*</sup> We do not sell data or rely on ancillary business streams. To
+					ensure our work is community-driven and sustainable for the long term, we offer
+					two ways for users to support us.
 				</p>
 				<div className="pricing-tiers">
 					<div className="option bp3-card bp3-elevation-1">
@@ -97,9 +97,9 @@ const Pricing = () => {
 					</div>
 				</div>
 				<p className="fine-print">
-					<sup>*</sup> We limit DOI registrations to 10 per community per year, if
-					published via PubPub's Crossref membership. Once the limit is reached, we ask
-					that you become a{' '}
+					<sup>*</sup> For communities requiring DOIs, we have a limit of 10 free DOI
+					registrations per community per year if published via PubPub's Crossref
+					membership. Once the limit is reached, we ask that you become a{' '}
 					<a href="https://knowledgefutures.org/membership">KFG member</a>, at any level,
 					and allow us to pass on the Crossref fee of $1 per DOI registered. For groups
 					with their own Crossref membership, there is no additional fee for creating or

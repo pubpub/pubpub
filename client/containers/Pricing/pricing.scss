@@ -3,10 +3,12 @@
 	background-position: center center;
 	background-color: #f9fafb;
 	background-image: url('/static/loginbg.png');
-	padding-bottom: 12em;
+	min-height: 100vh;
 	h1 {
 		margin: 1em 0em;
 		text-align: center;
+		font-size: 5em;
+		line-height: 1.2;
 	}
 	p.description {
 		margin: 1.5em auto;
