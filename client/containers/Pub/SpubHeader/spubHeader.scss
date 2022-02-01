@@ -1,9 +1,9 @@
 @import '../PubHeader/themes.scss';
+@import 'styles/variables.scss';
 $spub-configuration-width: 1000px;
+$title-elements-spacing: 15px;
 
 .spub-header-component {
-	padding-top: 26px;
-
 	h1 {
 		margin: 0;
 
@@ -15,14 +15,46 @@ $spub-configuration-width: 1000px;
 		text-align: left;
 
 		box-decoration-break: clone;
-		// color: var(--community-accent-dark);
+		color: inherit;
+	}
+
+	.spub-header-content-component {
+		display: grid;
+		grid-template-columns: 1fr 120px;
+		grid-template-areas:
+			'top-left top-right'
+			'bottom bottom';
+		.title-group-component {
+			grid-area: top-left;
+			padding-top: 20px;
+			.description {
+				padding-top: $title-elements-spacing;
+				margin: 0;
+				font-size: 18px;
+				font-weight: normal;
+				font-family: $header-font;
+			}
+			.byline {
+				padding-top: $title-elements-spacing;
+				margin: 0;
+				font-size: 18px;
+				font-style: italic;
+				font-weight: normal;
+				font-family: $header-font;
+				letter-spacing: 0.5px;
+				a,
+				a:visited {
+					color: inherit !important;
+				}
+			}
+		}
 	}
 }
 
 .tabs.spub-header-component {
 	> .bp3-tab-list {
 		max-width: $spub-configuration-width;
-		margin: auto;
+		margin: 15px auto auto;
 		> .bp3-tab-indicator-wrapper > .bp3-tab-indicator {
 			background: var(--community-accent-dark);
 		}
@@ -45,7 +77,6 @@ $spub-configuration-width: 1000px;
 		margin: 0;
 	}
 	.tab-panel {
-		padding-top: 0;
 		margin: 0 auto;
 		max-width: $spub-configuration-width;
 	}

@@ -5,6 +5,8 @@ import TitleDescriptionAbstract from './TitleDescriptionAbstract';
 import Contributors from './Contributors';
 import SpubSettings from './SpubSettings';
 
+require('./spubSettings.scss');
+
 const SubmissionTab = () => {
 	const [selectedTab, setSelectedTab] = useState('title');
 
@@ -12,6 +14,7 @@ const SubmissionTab = () => {
 		<div>
 			<Tabs
 				id="TabsExample"
+				className="submission-tab-tabs"
 				// @ts-expect-error ts-migrate(2322) FIXME: Type 'Dispatch<SetStateAction<string>>' is not ass... Remove this comment to see the full error message
 				onChange={setSelectedTab}
 				selectedTabId={selectedTab}

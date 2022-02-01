@@ -5,8 +5,6 @@ import { usePageContext } from 'utils/hooks';
 import { PubPageData } from 'types';
 import PubHeaderBackground from '../../PubHeader/PubHeaderBackground';
 
-require('./previewTab.scss');
-
 type Props = {
 	pubData: PubPageData;
 };
@@ -16,12 +14,12 @@ const PreviewTab = (props: Props) => {
 	const { pubData } = props;
 	return (
 		<PubHeaderBackground
-			className="pub-header-component"
+			className="spub-header-component"
 			communityData={communityData}
 			pubData={props.pubData}
 		>
 			<GridWrapper containerClassName="pub">
-				<div className="pub-header-content-component">
+				<div className="spub-header-content-component">
 					<div className="title-group-component">
 						<h1 className="title">
 							<span className="text-wrapper">{pubData.title}</span>
