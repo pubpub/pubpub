@@ -42,10 +42,9 @@ const UserCreate = (props: Props) => {
 	const [acceptTerms, setAcceptTerms] = useState(false);
 	const onCreateSubmit = (evt) => {
 		evt.preventDefault();
-		if (!acceptTerms) return false;
 		setPostUserIsLoading(true);
 		setPostUserError(undefined);
-
+		if (!acceptTerms) return false;
 		return apiFetch('/api/users', {
 			method: 'POST',
 			body: JSON.stringify({
