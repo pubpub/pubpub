@@ -55,36 +55,46 @@
 			'e e e f f f'
 			'. g g g g g'
 			'h h h h h .'
-			'. i i i i i';
+			'i i i j j j'
+			'k k k k k .';
 		gap: 50px;
 		font-size: 16px;
 	}
-	.example:nth-of-type(1n) {
+	.example:nth-of-type(1) {
 		grid-area: a;
 	}
-	.example:nth-of-type(2n) {
+	.example:nth-of-type(2) {
 		grid-area: b;
 	}
-	.example:nth-of-type(3n) {
+	.example:nth-of-type(3) {
 		grid-area: c;
 	}
-	.example:nth-of-type(4n) {
+	.example:nth-of-type(4) {
 		grid-area: d;
 	}
-	.example:nth-of-type(5n) {
+	.example:nth-of-type(5) {
 		grid-area: e;
 	}
-	.example:nth-of-type(6n) {
+	.example:nth-of-type(6) {
 		grid-area: f;
 	}
-	.example:nth-of-type(7n) {
+	.example:nth-of-type(7) {
 		grid-area: g;
 	}
-	.example:nth-of-type(8n) {
+	.example:nth-of-type(8) {
 		grid-area: h;
 	}
-	.example:nth-of-type(9n) {
+	.example:nth-of-type(9) {
 		grid-area: i;
+	}
+	.example:nth-of-type(10) {
+		grid-area: j;
+	}
+	.example:nth-of-type(11) {
+		grid-area: k;
+	}
+	.example:nth-of-type(12) {
+		grid-area: l;
 	}
 	.example-img {
 		width: 100%;

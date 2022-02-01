@@ -227,10 +227,22 @@ const CommunityServices = () => {
 			quote: '"Dawit and the PubPub team have been great in helping our article to be more interactive and exciting. Their expertise and open-minded approach have allowed us to present our work in a way that engages much more with our readers. Collaborating with the PubPub team has been a smooth and enriching experience, where we learned and experimented together with great fun!"',
 			source: 'Silvio Carta,  Author, "Self-Organizing Floor Plans"',
 		},
-		// {
-		// 	quote: '"PubPub has helped us transform the way we display and share scholarly works with the research community. The editorial boards of the open access journals that we engage with appreciate the option to embed interactive content and data visualizations into the body of a scholarly article.  Catherine and the PubPub team were incredibly responsive and fun to work with, and were also open to our feedback on platform development. In our experience, PubPub is the clear leader in next-generation academic publishing."',
-		// 	source: 'Agnes B. Gambill, J.D., LLM',
-		// },
+		{
+			url: 'https://jbt.pubpub.org/',
+			img: '/static/landing/jbt.png',
+			title: 'Journal of Biomolecular Techniques',
+			source: 'Association of Biomolecular Resource Facilities',
+		},
+		{
+			url: 'https://contours.pubpub.org',
+			img: '/static/landing/contours.png',
+			title: 'Contours Collaborations',
+			source: 'Vanderbilt university',
+		},
+		{
+			quote: '"PubPub has helped us transform the way we display and share scholarly works with the research community. The editorial boards of the open access journals that we engage with appreciate the option to embed interactive content and data visualizations into the body of a scholarly article.  Catherine and the PubPub team were incredibly responsive and fun to work with, and were also open to our feedback on platform development. In our experience, PubPub is the clear leader in next-generation academic publishing."',
+			source: 'Agnes B. Gambill, J.D., LLM',
+		},
 	];
 	return (
 		<div id="community-services-container">
@@ -240,6 +252,11 @@ const CommunityServices = () => {
 					PubPub is free to use. For groups that want personalized support we offer
 					production, training, and strategy services for building high quality, effective
 					publishing communities.
+				</p>
+				<p>
+					For those looking to structure and operate their PubPub Community on their own,
+					check out our{' '}
+					<a href="https://help.pubpub.org/getting-started">Getting Started guide</a>!
 				</p>
 				<div className="option-form">
 					<div className="title">To get started, tell us about your project</div>
