@@ -3,7 +3,7 @@
 	background-position: center center;
 	background-color: #f9fafb;
 	background-image: url('/static/loginbg.png');
-	padding-bottom: 2em;
+	padding-bottom: 12em;
 	h1 {
 		margin: 1em 0em;
 		text-align: center;
@@ -23,6 +23,9 @@
 		padding: 0;
 		margin-bottom: 35px;
 		line-height: 16.6px;
+	}
+	p.fine-print {
+		font-size: 13px;
 	}
 	h2 span.subhead {
 		color: #555;
@@ -78,6 +81,9 @@
 				background-color: #b2e2bd;
 				color: #14411e;
 			}
+		}
+		p {
+			text-align: left;
 		}
 	}
 }
