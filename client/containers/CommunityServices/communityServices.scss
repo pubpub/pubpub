@@ -1,0 +1,33 @@
+#community-services-container {
+	background-repeat: repeat;
+	background-position: center center;
+	background-color: #f9fafb;
+	background-image: url('/static/loginbg.png');
+	padding-bottom: 2em;
+	// .content {
+	// 	max-width: 800px;
+	// margin: 0 auto;
+	// }
+	h1 {
+		margin: 1em 0em;
+	}
+	p.description {
+		margin: 1.5em 0;
+		font-size: 16px;
+		// max-width: 900px;
+	}
+	.title {
+		font-weight: 600;
+		font-size: 16px;
+	}
+	.option-form {
+		background: #fff;
+		box-shadow: 0 0 0 1px rgba(16,22,26,.1),0 1px 1px rgba(16,22,26,.2),0 2px 6px rgba(16,22,26,.2);
+		padding: 20px;
+	}
+}
+
+@media only screen and (max-width: 720px) {
+	#community-services-container {
+	}
+}
