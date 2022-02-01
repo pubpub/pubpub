@@ -13,6 +13,12 @@ const CommunityServices = () => {
 		{
 			title: 'Content Production',
 			options: ['None', 'Low Volume', 'Medium Volume', 'High Volume'],
+			tooltips: [
+				'',
+				'~10 articles or chapters per year',
+				'~20-30 articles or chapters per year',
+				'50+ articles or chapters per year',
+			],
 			prices: ['$0', '$4,000 - $5,000', '$9,000 - $15,000', '$20,000+'],
 			initOption: 2,
 			description:

@@ -1,4 +1,4 @@
-import { ButtonGroup, Button } from '@blueprintjs/core';
+import { ButtonGroup, Button, Tooltip } from '@blueprintjs/core';
 import React, { ReactElement, useState } from 'react';
 
 require('./serviceOption.scss');
@@ -6,6 +6,7 @@ require('./serviceOption.scss');
 type Props = {
 	title: string;
 	options: string[];
+	tooltips?: string[];
 	prices: string[];
 	initOption: number;
 	description: string | ReactElement;
@@ -16,6 +17,7 @@ type Props = {
 const ServiceOption = ({
 	title,
 	options,
+	tooltips,
 	prices,
 	initOption,
 	description,
@@ -32,17 +34,20 @@ const ServiceOption = ({
 			<div className="option-row">
 				<ButtonGroup>
 					{options.map((opt, index) => {
+						const tooltipContent = tooltips ? tooltips[index] : '';
 						return (
-							<Button
-								key={opt}
-								text={opt}
-								active={option === index}
-								disabled={opt === 'Requires Content Production'}
-								onClick={() => {
-									setOption(index);
-									setVal({ [title]: index });
-								}}
-							/>
+							<Tooltip content={tooltipContent}>
+								<Button
+									key={opt}
+									text={opt}
+									active={option === index}
+									disabled={opt === 'Requires Content Production'}
+									onClick={() => {
+										setOption(index);
+										setVal({ [title]: index });
+									}}
+								/>
+							</Tooltip>
 						);
 					})}
 				</ButtonGroup>
