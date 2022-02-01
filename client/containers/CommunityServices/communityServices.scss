@@ -32,6 +32,11 @@
 		box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 1px 1px rgba(16, 22, 26, 0.2),
 			0 2px 6px rgba(16, 22, 26, 0.2);
 		padding: 20px;
+		.description {
+			border-bottom: 1px solid #ccc;
+			margin-bottom: 25px;
+			padding-bottom: 20px;
+		}
 		.success-row {
 			display: flex;
 			margin-top: 40px;
@@ -39,6 +44,9 @@
 		.tag-wrapper {
 			display: flex;
 			align-items: center;
+		}
+		textarea {
+			resize: vertical;
 		}
 		.button {
 			margin-right: 15px;

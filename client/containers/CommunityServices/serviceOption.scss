@@ -27,3 +27,14 @@
 		font-size: 16px;
 	}
 }
+
+@media only screen and (max-width: 720px) {
+	.service-option {
+		.option-row {
+			display: block;
+		}
+		.option-price {
+			margin-top: 10px;
+		}
+	}
+}

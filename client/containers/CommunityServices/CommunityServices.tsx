@@ -20,7 +20,7 @@ const CommunityServices = () => {
 				'50+ articles or chapters per year',
 			],
 			prices: ['$0', '$4,000 - $5,000', '$9,000 - $15,000', '$20,000+'],
-			initOption: 2,
+			initOption: 0,
 			description:
 				'We ingest finalized, copyedited content into PubPub for you, assure its quality, implement necessary revisions, assign DOIs (if applicable), and implement any Pub design. Content on PubPub does not require typesetting and can be exported to many different file types, including PDF.',
 		},
@@ -28,15 +28,15 @@ const CommunityServices = () => {
 			title: 'Embedded Managing Editor',
 			options: {
 				None: ['Requires Content Production'],
-				'Low Volume': ['Include', 'Do not Include'],
-				'Medium Volume': ['Include', 'Do not Include'],
-				'High Volume': ['Include', 'Do not Include'],
+				'Low Volume': ['Do not Include', 'Include', ],
+				'Medium Volume': ['Do not Include', 'Include', ],
+				'High Volume': ['Do not Include', 'Include', ],
 			},
 			prices: {
 				None: ['$0'],
-				'Low Volume': ['$5,000', '$0'],
-				'Medium Volume': ['$10,000 - $15,000', '$0'],
-				'High Volume': ['$20,000+', '$0'],
+				'Low Volume': ['$0','$5,000', ],
+				'Medium Volume': ['$0','$10,000 - $15,000', ],
+				'High Volume': ['$0','$20,000+', ],
 			},
 			initOption: 0,
 			description:
@@ -44,40 +44,40 @@ const CommunityServices = () => {
 		},
 		{
 			title: 'Community Structure and Design',
-			options: ['Include', 'Do not Include'],
-			prices: ['$2,000 - $3,000', '$0'],
+			options: ['Do not Include', 'Include', ],
+			prices: ['$0','$2,000 - $3,000'],
 			initOption: 0,
 			description:
 				"We believe the content you publish (and how you want readers to understand and interact with it) should inform the structure and design of your community on PubPub. We'll work with you to understand your content—from traditional journal articles and books, to rviews, to video tutorials—in order to design a space that best supports your work.",
 		},
 		{
 			title: 'Back File Import',
-			options: ['Include', 'Do not Include'],
-			prices: ['$1,000 - $5,000', '$0'],
+			options: ['Do not Include', 'Include', ],
+			prices: ['$0','$1,000 - $5,000'],
 			initOption: 0,
 			description:
 				'We help you migrate years of existing content into PubPub so that your existing publication can start its new phase on PubPub without losing its history and archives. This activity often also makes past work more discoverable and navigable for readers.',
 		},
 		{
 			title: 'Training',
-			options: ['Include', 'Do not Include'],
-			prices: ['$500', '$0'],
+			options: ['Do not Include', 'Include', ],
+			prices: ['$0','$500'],
 			initOption: 0,
 			description:
 				"We offer two recorded training sessions of up to 90 minutes on a one-off or ongoing (yearly) basis for your team. These sessions cover basics on how to use PubPub, specifics on your group's workflow, and leave plenty of time for your team to practice and ask questions.",
 		},
 		{
 			title: 'Interactives',
-			options: ['Include', 'Do not Include'],
-			prices: ['$500/interactive', '$0'],
+			options: ['Do not Include', 'Include', ],
+			prices: ['$0','$500/interactive'],
 			initOption: 0,
 			description:
 				'We work with you or directly with your authors to develop media and/or interactive elements to enhance your Community. Our focus is always on more effectively communicating the message(s) of your content.',
 		},
 		{
 			title: 'Branding',
-			options: ['Include', 'Do not Include'],
-			prices: ['$4,500 - $5,500', '$0'],
+			options: ['Do not Include', 'Include', ],
+			prices: ['$0','$4,500 - $5,500'],
 			initOption: 0,
 			description:
 				'Our design team will develop a brand and design scheme for your Community. Groups that find this most useful are those who are starting a new publication, such as a journal, and need a brand to inform the design and appearance of their PubPub Community and other possible communication elements, such as a newsletter.',
@@ -266,6 +266,7 @@ const CommunityServices = () => {
 						point for our conversation, please select the options you're considering and
 						submit the form. We'll then be in touch to schedule a call.
 					</p>
+					
 					{services.map((service, index) => {
 						if (index === 1) {
 							const currentContentProductionSelection =
