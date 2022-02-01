@@ -2,6 +2,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 
 import { SubmissionWorkflow } from 'types';
+import { getEmptyDoc } from 'client/components/Editor';
 
 import PubSubmissionHeader from './PubSubmissionHeader';
 
@@ -13,38 +14,16 @@ const workflow: SubmissionWorkflow = {
 	title: 'A Submission Work-work-work-work-work-work-flow',
 	collectionId: '',
 	targetEmailAddress: '',
-	emailText: {
-		type: 'doc',
-		attrs: {
-			meta: {},
-		},
-		content: [],
-	},
-	introText: {
-		type: 'doc',
-		attrs: {
-			meta: {},
-		},
-		content: [],
-	},
+	acceptedText: getEmptyDoc(),
+	declinedText: getEmptyDoc(),
+	emailText: getEmptyDoc(),
+	introText: getEmptyDoc(),
 	instructionsText: {
 		type: 'doc',
 		attrs: {
 			meta: {},
 		},
 		content: [
-			{
-				type: 'heading',
-				attrs: {
-					level: 1,
-				},
-				content: [
-					{
-						type: 'text',
-						text: 'Cartographie 2022: Call for Proposals',
-					},
-				],
-			},
 			{
 				type: 'paragraph',
 				content: [

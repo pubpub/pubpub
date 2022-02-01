@@ -10,7 +10,7 @@ import PreviewTab from './PreviewTab';
 require('./spubHeader.scss');
 
 type Props = {
-	workflow: Pick<SubmissionWorkflow, 'instructionsText'>;
+	workflow: SubmissionWorkflow;
 };
 
 export const renderInstructionTabTitle = (icon: IconName, title: string) => {
@@ -23,7 +23,6 @@ export const renderInstructionTabTitle = (icon: IconName, title: string) => {
 
 const PubSubmissionHeader = (props: Props) => {
 	const { workflow } = props;
-	const { instructionsText } = workflow;
 	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');
 
 	const instructions = renderInstructionTabTitle('align-left', 'Instructions');
@@ -41,7 +40,7 @@ const PubSubmissionHeader = (props: Props) => {
 				<Tab
 					id="instructions"
 					title={instructions}
-					panel={<InstructionsTab instructions={instructionsText} />}
+					panel={<InstructionsTab workflow={workflow} />}
 				/>
 
 				<Tab id="submission" title={submission} panel={<SubmissionTab />} />

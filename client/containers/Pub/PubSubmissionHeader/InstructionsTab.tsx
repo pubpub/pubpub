@@ -1,15 +1,20 @@
 import React from 'react';
 
-import { DocJson } from 'types';
+import { SubmissionWorkflow } from 'types';
 import { Editor } from 'components';
 
 type Props = {
-	instructions: DocJson;
+	workflow: SubmissionWorkflow;
 };
 
 const InstructionsTab = (props: Props) => {
-	const { instructions } = props;
-	return <Editor initialContent={instructions} isReadOnly />;
+	const { workflow } = props;
+	return (
+		<>
+			<h1 className="submission-workflow-title">{workflow.title}</h1>
+			<Editor initialContent={workflow.instructionsText} isReadOnly />
+		</>
+	);
 };
 
 export default InstructionsTab;
