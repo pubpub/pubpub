@@ -11,13 +11,13 @@ const About = function () {
 				<h2>PubPub makes knowledge creation accessible to everyone.</h2>
 				<p>
 					PubPub supports over three thousand communities, from peer-reviewed scholarly
-					journals and books to ad-hoc community publishing experiments and everything in
-					between created and maintained by not-for-profit university and society
-					publishers, independent publishers, academic departments, research labs,
-					individuals, and many others. PubPub provides infrastructure for each part of
-					the publishing process, from drafting documents, conducting peer review, and
-					hosting entire journal and book websites to collecting and displaying reader
-					feedback and analytics.
+					journals and books to novel community publishing experiments, and everything in
+					between. These communities are created and maintained by university presses,
+					society publishers, library publishers, independent scholar-led publishers,
+					academic departments, research labs, ad-hoc communities, individuals, and many
+					others. PubPub provides infrastructure for each part of the publishing process,
+					from drafting documents, conducting peer review, and hosting entire journal and
+					book websites to collecting and displaying reader feedback and analytics.
 				</p>
 				<p>
 					You can get started now by{' '}
