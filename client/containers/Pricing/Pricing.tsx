@@ -99,9 +99,11 @@ const Pricing = () => {
 				<p className="fine-print">
 					<sup>*</sup> We limit DOI registrations to 10 per community per year, if
 					published via PubPub's Crossref membership. Once the limit is reached, we ask
-					that you become a KFG member, at any level, and allow us to pass on the Crossref
-					fee of $1 per DOI registered. For groups with their own Crossref membership,
-					there is no additional fee for creating or depositing DOIs.
+					that you become a{' '}
+					<a href="https://knowledgefutures.org/membership">KFG member</a>, at any level,
+					and allow us to pass on the Crossref fee of $1 per DOI registered. For groups
+					with their own Crossref membership, there is no additional fee for creating or
+					depositing DOIs.
 				</p>
 			</GridWrapper>
 		</div>
