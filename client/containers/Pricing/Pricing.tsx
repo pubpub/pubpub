@@ -9,11 +9,11 @@ const Pricing = () => {
 			<GridWrapper>
 				<h1>PubPub is free</h1>
 				<p className="description top">
-					PubPub makes knowledge creation accessible to everyone. To fulfill this mission,
-					we offer PubPub for free and, with the exception of DOI registration<sup>*</sup>
-					, without limitation. We do not sell data or rely on ancillary business streams.
-					To ensure our work is community-driven and sustainable for the long term, we
-					offer two ways for users to support us.
+					PubPub's goal is to makes knowledge creation accessible to everyone. To fulfill
+					this mission, we offer PubPub for free and, with the exception of DOI
+					registration<sup>*</sup>, without limitation. We do not sell data or rely on
+					ancillary business streams. To ensure our work is community-driven and
+					sustainable for the long term, we offer two ways for users to support us.
 				</p>
 				<div className="pricing-tiers">
 					<div className="option bp3-card bp3-elevation-1">
@@ -21,7 +21,7 @@ const Pricing = () => {
 						<p>
 							PubPub is built by the{' '}
 							<a href="https://knowledgefutures.org">Knowledge Futures Group</a>, a
-							non-profit dedicated to building open knowledge infrastructure. We ask
+							non-profit dedicated to building public knowledge infrastructure. We ask
 							that users who value PubPub consider becoming KFG Members to help ensure
 							its longterm sustainability.
 						</p>
