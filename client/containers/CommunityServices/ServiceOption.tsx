@@ -25,9 +25,10 @@ const ServiceOption = ({ title, options, prices, initOption, description, setVal
 								key={opt}
 								text={opt}
 								active={option === index}
+								disabled={opt === 'Requires Content Production'}
 								onClick={() => {
 									setOption(index);
-									setVal({ [title]: opt });
+									setVal({ [title]: index });
 								}}
 							/>
 						);

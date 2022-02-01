@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { GridWrapper } from 'components';
 import ServiceOption from './ServiceOption';
+import { Button, InputGroup, Intent, Tag, TextArea } from '@blueprintjs/core';
+import { apiFetch } from 'client/utils/apiFetch';
+import stripIndent from 'strip-indent';
 
 require('./communityServices.scss');
 
 const CommunityServices = () => {
-	const options = [
+	const services = [
 		{
 			title: 'Content Production',
 			options: ['None', 'Low Volume', 'Medium Volume', 'High Volume'],
@@ -16,8 +19,18 @@ const CommunityServices = () => {
 		},
 		{
 			title: 'Embedded Managing Editor',
-			options: ['Include', 'Do not Include'],
-			prices: ['$5,000', '$0'],
+			options: {
+				None: ['Requires Content Production'],
+				'Low Volume': ['Include', 'Do not Include'],
+				'Medium Volume': ['Include', 'Do not Include'],
+				'High Volume': ['Include', 'Do not Include'],
+			},
+			prices: {
+				None: ['$0'],
+				'Low Volume': ['$5,000', '$0'],
+				'Medium Volume': ['$10,000 - $15,000', '$0'],
+				'High Volume': ['$20,000+', '$0'],
+			},
 			initOption: 0,
 			description:
 				'We assign one person from our team to work as your dedicated production point person. This work includes regular calls, communication with authors, and providing general publication strategy as well as insights. Teams who find this service most useful include those that publish on a regular basis, but do not have the internal bandwidth to manage these activities nor the budget to hire an additional full-time person to do so.',
@@ -72,14 +85,62 @@ const CommunityServices = () => {
 		},
 	];
 	const [formDetails, setFormDetails] = useState(
-		options.reduce((prev, curr) => {
-			return { ...prev, [curr.title]: curr.options[curr.initOption] };
+		services.reduce((prev, curr, index) => {
+			return { ...prev, [curr.title]: curr.initOption };
 		}, {}),
 	);
+	const [details, setDetails] = useState('');
+	const [email, setEmail] = useState('');
+	const [submitSuccess, setSubmitSuccess] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 	const setVal = (newVal) => {
 		setFormDetails({ ...formDetails, ...newVal });
 	};
-	console.log(formDetails);
+	const onSubmit = () => {
+		setIsLoading(true);
+		const selections = Object.keys(formDetails).reduce((prev, curr) => {
+			const service = services.find((s) => {
+				return s.title === curr;
+			});
+			if (!service) {
+				return prev;
+			}
+			const selectedOptionIndex = formDetails[curr];
+			const isManagingEditor = curr === 'Embedded Managing Editor';
+			const currentContentProductionSelection =
+				services[0].options[formDetails['Content Production']];
+			const options = isManagingEditor
+				? service.options[currentContentProductionSelection]
+				: service.options;
+			const prices = isManagingEditor
+				? service.prices[currentContentProductionSelection]
+				: service.prices;
+
+			return `${prev}\n\t\t\t${curr}: ${options[selectedOptionIndex]}, ${prices[selectedOptionIndex]}`.trim();
+		}, '');
+
+		return apiFetch('/api/communityServices', {
+			method: 'POST',
+			body: JSON.stringify({
+				contactEmail: email,
+				selections,
+				additionalDetails: details,
+			}),
+		})
+			.then(() => {
+				setEmail('');
+				setDetails('');
+				setIsLoading(false);
+				setSubmitSuccess(true);
+				setTimeout(() => {
+					setSubmitSuccess(false);
+				}, 5000);
+			})
+			.catch((err) => {
+				console.error(err);
+				setIsLoading(false);
+			});
+	};
 	return (
 		<div id="community-services-container">
 			<GridWrapper containerClassName="narrow">
@@ -97,15 +158,65 @@ const CommunityServices = () => {
 						conversation, please select the options you're considering and submit the
 						form. We'll then be in touch to schedule a call.
 					</p>
-					{options.map((option) => {
-						return <ServiceOption {...option} key={option.title}  setVal={setVal} />;
+					{services.map((service, index) => {
+						if (index === 1) {
+							const currentContentProductionSelection =
+								services[0].options[formDetails['Content Production']];
+							return (
+								<ServiceOption
+									{...service}
+									key={service.title}
+									setVal={setVal}
+									options={service.options[currentContentProductionSelection]}
+									prices={service.prices[currentContentProductionSelection]}
+								/>
+							);
+						}
+						// @ts-ignore
+						return <ServiceOption {...service} key={service.title} setVal={setVal} />;
 					})}
 
 					<div className="title">Additional Details</div>
-					<textarea></textarea>
-					<div className="title">Email</div>
+					<TextArea
+						fill
+						growVertically={true}
+						large={true}
+						placeholder="Tell us anything else you’d like us to know (e.g. timeline, content types, file types, links to example content, ...)"
+						value={details}
+						onChange={(evt) => {
+							setDetails(evt.target.value);
+						}}
+					/>
+					<div className="title">Contact Email *</div>
+					<InputGroup
+						placeholder="you@email.com..."
+						value={email}
+						required
+						onChange={(evt) => {
+							setEmail(evt.target.value);
+						}}
+					/>
+
+					<div className="success-row">
+						<Button
+							className="button"
+							intent={Intent.SUCCESS}
+							text="Send Details"
+							large
+							disabled={!email.includes('@')}
+							onClick={onSubmit}
+							loading={isLoading}
+						/>
+						{submitSuccess && (
+							<div className="tag-wrapper">
+								<Tag icon="tick" intent={Intent.SUCCESS} minimal>
+									Submitted! We'll be in touch shortly.
+								</Tag>
+							</div>
+						)}
+					</div>
 				</div>
-				<p>
+				<p className="mitops">
 					For publishing services such as peer-review, copyediting, and research support,
 					we partner with MITops. The full list of services offered by MITops are
 					available on their site. Please contact them directly to inquire about their
