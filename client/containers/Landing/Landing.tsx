@@ -292,7 +292,7 @@ const Landing = () => {
 							<p>
 								For groups that want personalized support we offer production,
 								training, and strategy services for building high quality, effective
-								publishing communities
+								publishing communities.
 							</p>
 							<blockquote>
 								"The team’s innovation and experience made for an incredible
