@@ -1,5 +1,5 @@
 import { ButtonGroup, Button } from '@blueprintjs/core';
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 
 require('./serviceOption.scss');
 
@@ -8,7 +8,7 @@ type Props = {
 	options: string[];
 	prices: string[];
 	initOption: number;
-	description: string;
+	description: string | ReactElement;
 	discounts?: string[];
 	setVal: any;
 };

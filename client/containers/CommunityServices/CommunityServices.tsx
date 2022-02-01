@@ -34,7 +34,7 @@ const CommunityServices = () => {
 			},
 			initOption: 0,
 			description:
-				'We assign one person from our team to work as your dedicated production point person. This work includes regular calls, communication with authors, and providing general publication strategy as well as insights. Teams who find this service most useful include those that publish on a regular basis, but do not have the internal bandwidth to manage these activities nor the budget to hire an additional full-time person to do so.',
+				'We assign one person from our team to work as your dedicated production point person. This work includes regular calls, communication with authors, and providing general publication strategy as well as insights. Teams who find this service most useful include those that publish on a regular basis but do not have the internal bandwidth to manage these activities nor the budget to hire an additional full-time person to do so.',
 		},
 		{
 			title: 'Community Structure and Design',
@@ -42,7 +42,7 @@ const CommunityServices = () => {
 			prices: ['$2,000 - $3,000', '$0'],
 			initOption: 0,
 			description:
-				'We work with you to understand your content and to structure your PubPub community in a way that helps you manage it and readers effectively navigate it—and understand your content.',
+				"We believe the content you publish (and how you want readers to understand and interact with it) should inform the structure and design of your community on PubPub. We'll work with you to understand your content—from traditional journal articles and books, to rviews, to video tutorials—in order to design a space that best supports your work.",
 		},
 		{
 			title: 'Back File Import',
@@ -50,7 +50,7 @@ const CommunityServices = () => {
 			prices: ['$1,000 - $5,000', '$0'],
 			initOption: 0,
 			description:
-				'We help you migrate years of existing content into PubPub so that your journal can start its new phase on the platform without losing its history and archives. This activity often also makes past work more discoverable and navigable for readers.',
+				'We help you migrate years of existing content into PubPub so that your existing publication can start its new phase on PubPub without losing its history and archives. This activity often also makes past work more discoverable and navigable for readers.',
 		},
 		{
 			title: 'Training',
@@ -58,7 +58,7 @@ const CommunityServices = () => {
 			prices: ['$500', '$0'],
 			initOption: 0,
 			description:
-				'We offer two recorded training sessions of up to 90 minutes on a one-off or ongoing (yearly) basis for your team.',
+				"We offer two recorded training sessions of up to 90 minutes on a one-off or ongoing (yearly) basis for your team. These sessions cover basics on how to use PubPub, specifics on your group's workflow, and leave plenty of time for your team to practice and ask questions.",
 		},
 		{
 			title: 'Interactives',
@@ -74,15 +74,27 @@ const CommunityServices = () => {
 			prices: ['$4,500 - $5,500', '$0'],
 			initOption: 0,
 			description:
-				'Our design team will develop a brand and design scheme for your Community. Groups that find this most useful are those who are starting a new publication, such as a journal, and need a brand to inform the design and appearance of their PubPub Community and other possible journal elements, such as a newsletter.',
+				'Our design team will develop a brand and design scheme for your Community. Groups that find this most useful are those who are starting a new publication, such as a journal, and need a brand to inform the design and appearance of their PubPub Community and other possible communication elements, such as a newsletter.',
 		},
 		{
-			title: 'Membership',
+			title: 'Knowledge Futures Membership',
 			options: ['None', 'Supporter', 'Contributor', 'Network'],
 			prices: ['$0', '$60', '$1,150 - $12,500', '$25,000+'],
 			initOption: 2,
-			description:
-				'PubPub is built and maintained by a nonprofit organization dedicated to building public knowledge infrastructure. We are supported by members. Membership allows individuals and organizations of all sizes to support open infrastructure; receive additional support on our products; meet and share ideas with other innovative knowledge communities; and join a community passionate about the future of knowledge infrastructure and its development.',
+			description: (
+				<React.Fragment>
+					PubPub is built and maintained by{' '}
+					<a href="https://www.knowledgefutures.org">Knowledge Futures Group</a>, a
+					nonprofit organization dedicated to building public knowledge infrastructure.
+					KFG is supported by Members.{' '}
+					<a href="https://www.knowledgefutures.org/membership">Membership</a> allows
+					individuals and organizations of all sizes to support open infrastructure;
+					receive discounts on Community Services; receive additional support on our
+					products; meet and share ideas with other innovative knowledge communities; and
+					join a community passionate about the future of knowledge infrastructure and its
+					development.
+				</React.Fragment>
+			),
 			discounts: [
 				'0% discount on all services',
 				'5% discount on all services',
@@ -223,9 +235,9 @@ const CommunityServices = () => {
 					<div className="title">To get started, tell us about your project</div>
 					<p className="description">
 						We will work with you to identify exactly what your community needs. Below
-						is our services menu along with estimated costs. As a starting point for our
-						conversation, please select the options you're considering and submit the
-						form. We'll then be in touch to schedule a call.
+						is our Community Services menu along with estimated costs. As a starting
+						point for our conversation, please select the options you're considering and
+						submit the form. We'll then be in touch to schedule a call.
 					</p>
 					{services.map((service, index) => {
 						if (index === 1) {
@@ -290,7 +302,7 @@ const CommunityServices = () => {
 					<a href="https://mitops.mit.edu/services">
 						full list of services offered by MITops
 					</a>{' '}
-					are available on their site. Please{' '}
+					is available on their site. Please{' '}
 					<a href="https://mitops.mit.edu/contact">contact them directly</a> to inquire
 					about their offering.
 				</p>
