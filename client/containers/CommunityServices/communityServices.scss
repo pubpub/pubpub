@@ -29,7 +29,8 @@
 	}
 	.option-form {
 		background: #fff;
-		box-shadow: 0 0 0 1px rgba(16,22,26,.1),0 1px 1px rgba(16,22,26,.2),0 2px 6px rgba(16,22,26,.2);
+		box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 1px 1px rgba(16, 22, 26, 0.2),
+			0 2px 6px rgba(16, 22, 26, 0.2);
 		padding: 20px;
 		.success-row {
 			display: flex;
@@ -46,27 +47,50 @@
 	.grid-wrapper {
 		margin: 50px 0px;
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+		grid-template-areas:
+			'a a a b b b'
+			'c c c c c .'
+			'. d d d d d'
+			'e e e f f f'
+			'. g g g g g'
+			'h h h h h .'
+			'. i i i i i';
 		gap: 50px;
 		font-size: 16px;
+	}
+	.example:nth-of-type(1n) {
+		grid-area: a;
+	}
+	.example:nth-of-type(2n) {
+		grid-area: b;
+	}
+	.example:nth-of-type(3n) {
+		grid-area: c;
+	}
+	.example:nth-of-type(4n) {
+		grid-area: d;
+	}
+	.example:nth-of-type(5n) {
+		grid-area: e;
+	}
+	.example:nth-of-type(6n) {
+		grid-area: f;
+	}
+	.example:nth-of-type(7n) {
+		grid-area: g;
+	}
+	.example:nth-of-type(8n) {
+		grid-area: h;
+	}
+	.example:nth-of-type(9n) {
+		grid-area: i;
 	}
 	.example-img {
 		width: 100%;
 	}
 	.example-title {
 		font-weight: 600;
-	}
-	.testimonials {
-		margin: 25px 0px;
-	}
-	.testimonial {
-		margin-bottom: 75px;
-		&:nth-child(odd) {
-			padding-right: 100px;
-		}
-		&:nth-child(even) {
-			padding-left: 100px;
-		}
 	}
 	.testimonial-quote {
 		font-size: 16px;
@@ -82,6 +106,10 @@
 	#community-services-container {
 		.grid-wrapper {
 			grid-template-columns: 1fr;
+			grid-template-areas: initial;
+		}
+		.example {
+			grid-area: initial !important;
 		}
 		.testimonial {
 			padding-left: 0px !important;

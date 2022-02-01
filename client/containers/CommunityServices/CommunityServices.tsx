@@ -178,22 +178,8 @@ const CommunityServices = () => {
 			url: 'https://mit-serc.pubpub.org/',
 			img: '/static/landing/serc.png',
 			title: 'The MIT Case Studies in Social and Ethical Responsibilities of Computing',
-			source: 'Stephen A. Schwarzman College of Computing at MIT',
+			source: 'MIT Schwarzman College of Computing',
 		},
-		{
-			url: 'https://tmb.apaopen.org/',
-			img: '/static/landing/tmb.png',
-			title: 'Technology, Mind, and Behavior',
-			source: 'American Physcological Association',
-		},
-		{
-			url: 'https://phone-and-spear.pubpub.org/',
-			img: '/static/landing/ps.png',
-			title: 'Phone & Spear',
-			source: 'Goldsmiths Press',
-		},
-	];
-	const testimonials = [
 		{
 			quote: (
 				<React.Fragment>
@@ -208,6 +194,7 @@ const CommunityServices = () => {
 			),
 			source: 'Gita Manaktala, Editorial Director, MIT Press',
 		},
+
 		{
 			quote: (
 				<React.Fragment>
@@ -220,13 +207,30 @@ const CommunityServices = () => {
 			source: 'Rebecca McLeod, Managing Director, Harvard Data Science Review',
 		},
 		{
+			url: 'https://tmb.apaopen.org/',
+			img: '/static/landing/tmb.png',
+			title: 'Technology, Mind, and Behavior',
+			source: 'American Physcological Association',
+		},
+		{
+			url: 'https://phone-and-spear.pubpub.org/',
+			img: '/static/landing/ps.png',
+			title: 'Phone & Spear',
+			source: 'Goldsmiths Press',
+		},
+		{
 			quote: '"The PubPub team is bringing academic publishing into the 21st century. For decades I have been hoping to embed interactivity into figures and tables, and for the first time in my career I was able to do so with PubPub. The team\'s innovation and experience made for an incredible collaboration."',
 			source: 'Jeremy Bailenson, Author, "A Theoretical Argument for the Causes of Zoom Fatigue"',
 		},
+
 		{
 			quote: '"Dawit and the PubPub team have been great in helping our article to be more interactive and exciting. Their expertise and open-minded approach have allowed us to present our work in a way that engages much more with our readers. Collaborating with the PubPub team has been a smooth and enriching experience, where we learned and experimented together with great fun!"',
 			source: 'Silvio Carta,  Author, "Self-Organizing Floor Plans"',
 		},
+		// {
+		// 	quote: '"PubPub has helped us transform the way we display and share scholarly works with the research community. The editorial boards of the open access journals that we engage with appreciate the option to embed interactive content and data visualizations into the body of a scholarly article.  Catherine and the PubPub team were incredibly responsive and fun to work with, and were also open to our feedback on platform development. In our experience, PubPub is the clear leader in next-generation academic publishing."',
+		// 	source: 'Agnes B. Gambill, J.D., LLM',
+		// },
 	];
 	return (
 		<div id="community-services-container">
@@ -313,33 +317,39 @@ const CommunityServices = () => {
 					about their offering.
 				</p>
 				<h2>See what we can do together!</h2>
-				<p>Browse some of our previous and ongoing Community Services projects.</p>
+				<p>
+					Browse some of our previous and ongoing Community Services projects as well as
+					testimonials from recent collaborators.
+				</p>
 				<div className="grid-wrapper">
 					{examples.map((example) => {
 						return (
-							<div className="example" key={example.title}>
-								<a href={example.url}>
-									<img
-										className="example-img"
-										src={example.img}
-										alt={example.title}
-									/>
-								</a>
-								<a href={example.url} className="hoverline">
-									<div className="example-title">{example.title}</div>
-								</a>
-								<div className="example-source">{example.source}</div>
-							</div>
-						);
-					})}
-				</div>
-				<h2>Testimonials</h2>
-				<div className="testimonials">
-					{testimonials.map((testimonial) => {
-						return (
-							<div className="testimonial" key={testimonial.source}>
-								<div className="testimonial-quote">{testimonial.quote}</div>
-								<div className="testimonial-source">— {testimonial.source}</div>
+							<div className="example" key={example.title || example.source}>
+								{!!example.title && (
+									<React.Fragment>
+										<a href={example.url}>
+											<img
+												className="example-img"
+												src={example.img}
+												alt={example.title}
+											/>
+										</a>
+										<a href={example.url} className="hoverline">
+											<div className="example-title">{example.title}</div>
+										</a>
+										<div className="example-source">{example.source}</div>
+									</React.Fragment>
+								)}
+								{!example.title && (
+									<React.Fragment>
+										<div className="testimonial" key={example.source}>
+											<div className="testimonial-quote">{example.quote}</div>
+											<div className="testimonial-source">
+												— {example.source}
+											</div>
+										</div>
+									</React.Fragment>
+								)}
 							</div>
 						);
 					})}
