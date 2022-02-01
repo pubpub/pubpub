@@ -84,7 +84,7 @@ const Pricing = () => {
 							>
 								MIT's Schwarzman College of Computing
 							</a>
-							, and more.
+							, and others.
 						</p>
 						<a
 							href="/community-services"
