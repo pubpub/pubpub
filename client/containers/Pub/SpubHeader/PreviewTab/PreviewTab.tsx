@@ -2,7 +2,7 @@ import React from 'react';
 
 import { GridWrapper, PubByline } from 'components';
 import { usePageContext } from 'utils/hooks';
-import { Button, Icon } from '@blueprintjs/core';
+import { Icon } from '@blueprintjs/core';
 import { PubPageData } from 'types';
 import PubHeaderBackground from '../../PubHeader/PubHeaderBackground';
 import ResponsiveHeaderButton from '../../PubHeader/ResponsiveHeaderButton';
