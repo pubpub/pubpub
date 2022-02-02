@@ -8,6 +8,8 @@ import PreviewTab from './PreviewTab';
 require('./spubHeader.scss');
 
 type Props = {
+	updateLocalData: any;
+	historyData: any;
 	pubData: any;
 };
 
@@ -27,6 +29,9 @@ const SpubHeader = (props: Props) => {
 	const instructionTabTitle = renderInstructionTabTitle('align-left', 'Instructions');
 	const submissionTabTitle = renderInstructionTabTitle('manually-entered-data', 'Submission');
 	const previewTabTitle = renderInstructionTabTitle('eye-open', 'Preview & Submit');
+	const updateHistoryData = (newHistoryData) => {
+		return props.updateLocalData('history', newHistoryData);
+	};
 
 	return (
 		<Tabs
@@ -51,7 +56,13 @@ const SpubHeader = (props: Props) => {
 			<Tab
 				id="preview"
 				title={previewTabTitle}
-				panel={<PreviewTab pubData={props.pubData} />}
+				panel={
+					<PreviewTab
+						updateHistoryData={updateHistoryData}
+						historyData={props.historyData}
+						pubData={props.pubData}
+					/>
+				}
 				className="tab preview-tab"
 			/>
 		</Tabs>

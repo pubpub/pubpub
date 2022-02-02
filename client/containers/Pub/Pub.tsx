@@ -103,7 +103,7 @@ const Pub = (props: Props) => {
 						return hasSubmission ? (
 							<React.Fragment>
 								<PubSuspendWhileTyping delay={1000}>
-									{() => <SpubHeader pubData={pubData} />}
+									{() => <SpubHeader {...modeProps} />}
 								</PubSuspendWhileTyping>
 								<PubDocument {...modeProps} />
 							</React.Fragment>

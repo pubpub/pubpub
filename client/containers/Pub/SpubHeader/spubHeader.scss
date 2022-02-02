@@ -17,8 +17,8 @@ $title-elements-spacing: 15px;
 		box-decoration-break: clone;
 		color: inherit;
 	}
-
 	.spub-header-content-component {
+		padding-bottom: 50px;
 		display: grid;
 		grid-template-columns: 1fr 120px;
 		grid-template-areas:
@@ -47,6 +47,32 @@ $title-elements-spacing: 15px;
 					color: inherit !important;
 				}
 			}
+		}
+		.draft-submit-buttons-component {
+				grid-area: bottom;
+				display: flex;
+				margin-top: 35px;
+				& > *:not(:last-child) {
+						margin-right: 30px;
+				}
+				.submit-button {
+					background: white;
+					.stacked-label {
+						display: flex;
+						flex-direction: column-reverse;
+					}
+				}
+				.submit-icon {
+					color: white;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					background-color: #1CBC36;
+					width: 24px;
+					height: 24px;
+					border-radius: 50%;
+
+				}
 		}
 	}
 }
