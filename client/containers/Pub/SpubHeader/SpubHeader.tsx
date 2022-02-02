@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Tab, Tabs, TabId } from '@blueprintjs/core';
+import { Tab, Tabs, TabId, Icon, IconName } from '@blueprintjs/core';
 
 import InstructionsTab from './InstructionsTab';
 import SubmissionTab from './SubmissionTab';
 import PreviewTab from './PreviewTab';
-import { renderInstructionTabTitle } from './utility';
 
 require('./spubHeader.scss');
 
@@ -12,15 +11,22 @@ type Props = {
 	pubData: any;
 };
 
+export const renderInstructionTabTitle = (icon: IconName, title: string) => {
+	return (
+		<>
+			<Icon icon={icon} /> {title}
+		</>
+	);
+};
+
 const SpubHeader = (props: Props) => {
 	const { submissionWorkflow } = props.pubData.submission || {};
 	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');
 	if (!submissionWorkflow) return null;
-	const { instructionsText } = submissionWorkflow;
 
-	const instructions = renderInstructionTabTitle('align-left', 'Instructions');
+	const instructionTabTitle = renderInstructionTabTitle('align-left', 'Instructions');
 	const submissionTabTitle = renderInstructionTabTitle('manually-entered-data', 'Submission');
-	const preview = renderInstructionTabTitle('eye-open', 'Preview & Submit');
+	const previewTabTitle = renderInstructionTabTitle('eye-open', 'Preview & Submit');
 
 	return (
 		<Tabs
@@ -31,8 +37,8 @@ const SpubHeader = (props: Props) => {
 		>
 			<Tab
 				id="instructions"
-				title={instructions}
-				panel={<InstructionsTab instructions={instructionsText} />}
+				title={instructionTabTitle}
+				panel={<InstructionsTab workflow={submissionWorkflow} />}
 				className="tab-panel tab"
 			/>
 
@@ -44,7 +50,7 @@ const SpubHeader = (props: Props) => {
 			/>
 			<Tab
 				id="preview"
-				title={preview}
+				title={previewTabTitle}
 				panel={<PreviewTab pubData={props.pubData} />}
 				className="tab preview-tab"
 			/>
