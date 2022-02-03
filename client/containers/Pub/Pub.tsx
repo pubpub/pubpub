@@ -1,17 +1,29 @@
 import React, { useEffect } from 'react';
 
 import { usePageContext } from 'utils/hooks';
+import pick from 'lodash.pick';
+import { PubPageData } from 'types';
 
-import PubSyncManager from './PubSyncManager';
+import PubSyncManager, { PubContextType } from './PubSyncManager';
+// import PubSyncManager from './PubSyncManager';
 import PubHeader from './PubHeader';
+import SpubHeader from './SpubHeader';
 import PubDocument from './PubDocument';
 import { PubSuspendWhileTypingProvider, PubSuspendWhileTyping } from './PubSuspendWhileTyping';
 
 require('./pub.scss');
 
 type Props = {
-	pubData: any;
+	pubData: PubPageData;
 };
+
+type ModePropsType = Pick<
+	PubContextType,
+	'pubData' | 'historyData' | 'collabData' | 'firebaseDraftRef' | 'updateLocalData'
+>;
+
+const getModeProps = (ctx: PubContextType): ModePropsType =>
+	pick(ctx, ['pubData', 'collabData', 'historyData', 'firebaseDraftRef', 'updateLocalData']);
 
 const isInViewport = (rect: DOMRect, offsets: { top?: number; left?: number } = {}) => {
 	const { top, left, bottom, right } = rect;
@@ -51,7 +63,6 @@ const scrollToElementTop = (hash: string, delay = 0) => {
 
 const Pub = (props: Props) => {
 	const { loginData, locationData, communityData } = usePageContext();
-
 	useEffect(() => {
 		const { hash } = window.location;
 
@@ -80,7 +91,10 @@ const Pub = (props: Props) => {
 
 		return () => {};
 	}, [props.pubData]);
-
+	const HeaderComponent =
+		'submission' in props.pubData && props.pubData.submission?.status === 'incomplete'
+			? SpubHeader
+			: PubHeader;
 	return (
 		<PubSuspendWhileTypingProvider>
 			<div id="pub-container">
@@ -90,26 +104,18 @@ const Pub = (props: Props) => {
 					communityData={communityData}
 					loginData={loginData}
 				>
-					{({ pubData, collabData, firebaseDraftRef, updateLocalData, historyData }) => {
-						const modeProps = {
-							pubData,
-							collabData,
-							historyData,
-							firebaseDraftRef,
-							updateLocalData,
-						};
-						return (
-							<React.Fragment>
-								<PubSuspendWhileTyping delay={1000}>
-									{() => <PubHeader {...modeProps} />}
-								</PubSuspendWhileTyping>
-								<PubDocument {...modeProps} />
-							</React.Fragment>
-						);
-					}}
+					{(ctx) => (
+						<>
+							<PubSuspendWhileTyping delay={1000}>
+								{() => <HeaderComponent {...getModeProps(ctx)} />}
+							</PubSuspendWhileTyping>
+							<PubDocument {...getModeProps(ctx)} />
+						</>
+					)}
 				</PubSyncManager>
 			</div>
 		</PubSuspendWhileTypingProvider>
 	);
 };
+
 export default Pub;

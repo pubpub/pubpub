@@ -4,7 +4,7 @@ import { storiesOf } from '@storybook/react';
 import { SubmissionWorkflow } from 'types';
 import { getEmptyDoc } from 'client/components/Editor';
 
-import PubSubmissionHeader from './PubSubmissionHeader';
+import SpubHeader from './SpubHeader';
 
 const workflow: SubmissionWorkflow = {
 	id: '12089e31h3f23bf-f23f23f23f2-f23f32bu234v23-f2323f',
@@ -46,6 +46,6 @@ const workflow: SubmissionWorkflow = {
 	},
 };
 
-storiesOf('containers/Pub/PubSubmissionHeader', module).add('default', () => (
-	<PubSubmissionHeader workflow={workflow} />
+storiesOf('containers/Pub/SpubHeader', module).add('default', () => (
+	<SpubHeader pubData={{ workflow }} />
 ));

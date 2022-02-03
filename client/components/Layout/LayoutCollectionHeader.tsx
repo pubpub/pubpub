@@ -41,7 +41,11 @@ const MetadataDetails = (props: Props) => {
 				const data = metadata[name];
 				const isField = hiddenMetadataFields.includes(name);
 				const formattedData = formattedMetadata(name, data);
-				return <>{data && !isField && <div> {formattedData}</div>}</>;
+				return (
+					<React.Fragment key={field.name}>
+						{data && !isField && <div> {formattedData}</div>}
+					</React.Fragment>
+				);
 			})}
 		</>
 	);

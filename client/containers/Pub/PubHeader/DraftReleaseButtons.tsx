@@ -19,7 +19,7 @@ export type DraftReleaseButtonsProps = {
 	updateHistoryData: (patch: any) => unknown;
 };
 
-const getHistoryButtonLabelForTimestamp = (timestamp, label, noTimestampLabel) => {
+export const getHistoryButtonLabelForTimestamp = (timestamp, label, noTimestampLabel) => {
 	if (timestamp) {
 		const now = Date.now();
 		const justNow = now - timestamp < 60 * 1000;
