@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Tab, Tabs, TabId, Icon, IconName } from '@blueprintjs/core';
 
+import { assert } from 'utils/assert';
+
 import InstructionsTab from './InstructionsTab';
 import SubmissionTab from './SubmissionTab';
 import PreviewTab from './PreviewTab';
@@ -24,7 +26,7 @@ export const renderInstructionTabTitle = (icon: IconName, title: string) => {
 const SpubHeader = (props: Props) => {
 	const { submissionWorkflow } = props.pubData.submission;
 	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');
-	if (!submissionWorkflow) return null;
+	assert(props.pubData.submissionWorkflow !== undefined);
 
 	const instructionTabTitle = renderInstructionTabTitle('align-left', 'Instructions');
 	const submissionTabTitle = renderInstructionTabTitle('manually-entered-data', 'Submission');
@@ -43,7 +45,7 @@ const SpubHeader = (props: Props) => {
 			<Tab
 				id="instructions"
 				title={instructionTabTitle}
-				panel={<InstructionsTab workflow={submissionWorkflow} />}
+				panel={<InstructionsTab submissionWorkflow={submissionWorkflow} />}
 				className="tab-panel tab"
 			/>
 
