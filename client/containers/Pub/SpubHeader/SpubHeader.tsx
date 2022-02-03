@@ -26,7 +26,7 @@ export const renderInstructionTabTitle = (icon: IconName, title: string) => {
 const SpubHeader = (props: Props) => {
 	const { submissionWorkflow } = props.pubData.submission;
 	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');
-	assert(props.pubData.submissionWorkflow !== undefined);
+	assert(props.pubData.submission.submissionWorkflow !== undefined);
 
 	const instructionTabTitle = renderInstructionTabTitle('align-left', 'Instructions');
 	const submissionTabTitle = renderInstructionTabTitle('manually-entered-data', 'Submission');
