@@ -22,7 +22,7 @@ export const renderInstructionTabTitle = (icon: IconName, title: string) => {
 };
 
 const SpubHeader = (props: Props) => {
-	const { submissionWorkflow } = props.pubData.submission || {};
+	const { submissionWorkflow } = props.pubData.submission;
 	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');
 	if (!submissionWorkflow) return null;
 

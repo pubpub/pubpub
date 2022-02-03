@@ -58,7 +58,7 @@ const PubHeader = (props: Props) => {
 	const { collabData, historyData, pubData, updateLocalData, sticky = true } = props;
 	const { communityData } = usePageContext();
 	const [showingDetails, setShowingDetails] = useState(false);
-	const [fixedHeight, setFixedHeight] = useState(null);
+	const [fixedHeight, setFixedHeight] = useState<number | null>(null);
 	const { viewportWidth } = useViewport();
 
 	const pubHeadings = getPubHeadings(pubData, collabData);
@@ -77,13 +77,11 @@ const PubHeader = (props: Props) => {
 				// +1px to take care of that pesky bottom border
 				window.scrollTo(0, 0);
 				const boundingRect = headerRef.current.getBoundingClientRect();
-				// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'number' is not assignable to par... Remove this comment to see the full error message
 				setFixedHeight(1 + window.innerHeight - boundingRect.top);
 				setShowingDetails(true);
 			} else {
 				// Fix the height of the details to that of the main header content
 				const boundingRect = headerRef.current.getBoundingClientRect();
-				// @ts-expect-error ts-migrate(2345) FIXME: Argument of type 'number' is not assignable to par... Remove this comment to see the full error message
 				setFixedHeight(boundingRect.height);
 			}
 		}

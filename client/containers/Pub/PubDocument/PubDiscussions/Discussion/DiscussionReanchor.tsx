@@ -25,9 +25,7 @@ const DiscussionReanchor = (props: Props) => {
 		setIsActive(false);
 	};
 	const [bodyElement, setBodyElement] = useState<HTMLBodyElement | null>(null);
-	useEffect(() => {
-		setBodyElement(document.querySelector('body'));
-	}, []);
+	useEffect(() => setBodyElement(document.querySelector('body')), []);
 
 	return (
 		<>

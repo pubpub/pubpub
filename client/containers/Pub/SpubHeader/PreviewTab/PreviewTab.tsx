@@ -1,9 +1,10 @@
 import React from 'react';
+import { Icon } from '@blueprintjs/core';
 
+import { PubPageData } from 'types';
 import { GridWrapper, PubByline } from 'components';
 import { usePageContext } from 'utils/hooks';
-import { Icon } from '@blueprintjs/core';
-import { PubPageData } from 'types';
+
 import PubHeaderBackground from '../../PubHeader/PubHeaderBackground';
 import ResponsiveHeaderButton from '../../PubHeader/ResponsiveHeaderButton';
 import { getHistoryButtonLabelForTimestamp } from '../../PubHeader/DraftReleaseButtons';
