@@ -1,10 +1,11 @@
 import React from 'react';
 import { Icon } from '@blueprintjs/core';
 
-import { PubPageData } from 'types';
-import { GridWrapper, PubByline } from 'components';
+import { PubPageData, Submission, DefinitelyHas } from 'types';
+import { GridWrapper, PubByline, DialogLauncher } from 'components';
 import { usePageContext } from 'utils/hooks';
 
+import SubmitDialog from './SubmitDialog';
 import PubHeaderBackground from '../../PubHeader/PubHeaderBackground';
 import ResponsiveHeaderButton from '../../PubHeader/ResponsiveHeaderButton';
 import { getHistoryButtonLabelForTimestamp } from '../../PubHeader/DraftReleaseButtons';
@@ -14,7 +15,7 @@ require('../../PubHeader/draftReleaseButtons.scss');
 type Props = {
 	historyData: any;
 	updateHistoryData: any;
-	pubData: PubPageData;
+	pubData: PubPageData & { submission: DefinitelyHas<Submission, 'submissionWorkflow'> };
 };
 
 const PreviewTab = (props: Props) => {
@@ -56,12 +57,34 @@ const PreviewTab = (props: Props) => {
 									})
 								}
 							/>
-							<ResponsiveHeaderButton
-								// @ts-expect-error ts-migrate(2322) FIXME: Type '{ icon: string; tagName: string; href: strin... Remove this comment to see the full error message
-								className="submit-button"
-								icon={<Icon iconSize={13} className="submit-icon" icon="saved" />}
-								label={{ top: 'Submit Pub', bottom: 'finish your submission' }}
-							/>
+							<DialogLauncher
+								renderLauncherElement={({ openDialog }) => (
+									<ResponsiveHeaderButton
+										// @ts-expect-error ts-migrate(2322) FIXME: Type '{ icon: string; tagName: string; href: strin... Remove this comment to see the full error message
+										className="submit-button"
+										onClick={openDialog}
+										icon={
+											<Icon
+												iconSize={13}
+												className="submit-icon"
+												icon="saved"
+											/>
+										}
+										label={{
+											top: 'Submit Pub',
+											bottom: 'finish your submission',
+										}}
+									/>
+								)}
+							>
+								{({ isOpen, onClose }) => (
+									<SubmitDialog
+										submission={props.pubData.submission}
+										isOpen={isOpen}
+										onClose={onClose}
+									/>
+								)}
+							</DialogLauncher>
 						</div>
 					</div>
 				</div>
