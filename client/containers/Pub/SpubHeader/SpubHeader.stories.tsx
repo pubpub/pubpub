@@ -3,8 +3,10 @@ import { storiesOf } from '@storybook/react';
 
 import { SubmissionWorkflow } from 'types';
 import { getEmptyDoc } from 'client/components/Editor';
+import { initialHistoryData } from 'client/components/PubHistoryViewer/PubHistoryViewer.stories';
 
 import SpubHeader from './SpubHeader';
+import './SpubHeader.stories.scss';
 
 const workflow: SubmissionWorkflow = {
 	id: '12089e31h3f23bf-f23f23f23f2-f23f32bu234v23-f2323f',
@@ -47,5 +49,9 @@ const workflow: SubmissionWorkflow = {
 };
 
 storiesOf('containers/Pub/SpubHeader', module).add('default', () => (
-	<SpubHeader pubData={{ workflow }} />
+	<SpubHeader
+		pubData={{ submission: { submissionWorkflow: workflow } }}
+		historyData={initialHistoryData}
+		updateLocalData={() => {}}
+	/>
 ));

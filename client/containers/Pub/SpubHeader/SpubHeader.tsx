@@ -7,7 +7,6 @@ import { assert } from 'utils/assert';
 import InstructionsTab from './InstructionsTab';
 import SubmissionTab from './SubmissionTab';
 import PreviewTab from './PreviewTab';
-``;
 
 require('./spubHeader.scss');
 
