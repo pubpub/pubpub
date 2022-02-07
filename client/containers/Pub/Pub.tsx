@@ -5,7 +5,6 @@ import pick from 'lodash.pick';
 import { PubPageData } from 'types';
 
 import PubSyncManager, { PubContextType } from './PubSyncManager';
-// import PubSyncManager from './PubSyncManager';
 import PubHeader from './PubHeader';
 import SpubHeader from './SpubHeader';
 import PubDocument from './PubDocument';
