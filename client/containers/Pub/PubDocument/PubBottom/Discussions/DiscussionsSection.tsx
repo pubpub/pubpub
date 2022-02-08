@@ -5,7 +5,7 @@ import { usePageContext } from 'utils/hooks';
 import { PubPageData } from 'types';
 import { getAnchoredDiscussionIds } from 'components/Editor/plugins/discussions';
 import { DialogLauncher, SubscriptionButton } from 'components';
-import { usePubContext } from 'client/containers/Pub/pubHooks';
+import { usePubContext } from 'containers/Pub/pubHooks';
 
 import SortList from './SortList';
 import FilterMenu from './FilterMenu';
