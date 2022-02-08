@@ -60,7 +60,7 @@ const DiscussionReanchor = (props: Props) => {
 							</Button>
 						</ButtonGroup>
 					</Card>,
-					document.querySelector('body'),
+					document.body,
 				)}
 		</>
 	);
