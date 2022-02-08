@@ -29,4 +29,10 @@ export type NotesData = {
 	noteManager: NoteManager;
 	citations: NoteWithStructuredHtml[];
 	footnotes: NoteWithStructuredHtml[];
+	canUsePandocJatsElementCitations: boolean;
+};
+
+export type PandocFlag = {
+	name: string;
+	enabled: boolean;
 };

@@ -41,12 +41,12 @@ const getCslJsonForNote = (
 	note: Note,
 	hash: string,
 	renderedStructuredValues: RenderedStructuredValues,
+	treatUnstructuredValueAsTitle: boolean,
 ) => {
 	const renderedStructuredValue = note.structuredValue
 		? renderedStructuredValues[note.structuredValue]
 		: null;
 	const unstructuredValue = getPlainUnstructuredTextForNote(note);
-	const custom = unstructuredValue ? { note: unstructuredValue } : {};
 	if (renderedStructuredValue) {
 		const cslJson = renderedStructuredValue?.json[0];
 		if (cslJson) {
@@ -54,14 +54,16 @@ const getCslJsonForNote = (
 			const normalizedCslJson = { ...cslJson, _graph: undefined };
 			return {
 				...normalizedCslJson,
-				...custom,
 			};
 		}
 	}
-	return {
-		id: hash,
-		...custom,
-	};
+	if (treatUnstructuredValueAsTitle && unstructuredValue) {
+		return {
+			id: hash,
+			title: unstructuredValue,
+		};
+	}
+	return { id: hash };
 };
 
 const getHtmlForNote = (
@@ -103,8 +105,13 @@ export const getNotesData = async (
 		citationInlineStyle,
 	);
 
+	const canUsePandocJatsElementCitations = !citations.some(
+		(citation) => !citation.structuredValue,
+	);
+
 	return {
 		renderedStructuredValues,
+		canUsePandocJatsElementCitations,
 		noteManager: new NoteManager(citationStyle, citationInlineStyle, renderedStructuredValues),
 		footnotes: footnotes.map((note) =>
 			enrichNoteWithStructuredResult(note, renderedStructuredValues),
@@ -121,14 +128,19 @@ export const getHashForNote = (note: Pick<Note, 'structuredValue' | 'unstructure
 	return digest.slice(0, 8);
 };
 
-export const getPandocNotesByHash = (
-	notes: Note[],
-	renderedStructuredValues: RenderedStructuredValues,
-): PandocNotes => {
+export const getPandocNotesByHash = (notesData: NotesData): PandocNotes => {
+	const { citations, footnotes, renderedStructuredValues, canUsePandocJatsElementCitations } =
+		notesData;
+	const notes = [...citations, ...footnotes];
 	const index: PandocNotes = {};
 	notes.forEach((note) => {
 		const hash = getHashForNote(note);
-		const cslJson = getCslJsonForNote(note, hash, renderedStructuredValues);
+		const cslJson = getCslJsonForNote(
+			note,
+			hash,
+			renderedStructuredValues,
+			!canUsePandocJatsElementCitations,
+		);
 		const html = getHtmlForNote(note, renderedStructuredValues);
 		const id = getIdForNote(cslJson, hash);
 		index[hash] = { ...note, id, hash, html, cslJson };

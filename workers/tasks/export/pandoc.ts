@@ -9,10 +9,11 @@ import dateFormat from 'dateformat';
 import { DocJson } from 'types';
 import { editorSchema, getReactedDocFromJson, Note } from 'client/components/Editor';
 import { getPathToCslFileForCitationStyleKind } from 'server/utils/citations';
+import { PandocTarget } from 'utils/export/formats';
 
 import { rules } from '../import/rules';
 import { getTmpFileForExtension } from './util';
-import { NotesData, PubMetadata } from './types';
+import { NotesData, PubMetadata, PandocFlag } from './types';
 import { runTransforms } from './transforms';
 import {
 	getPandocNotesByHash,
@@ -31,16 +32,19 @@ const getTemplatePath = (pandocTarget: string) => {
 };
 
 const createPandocArgs = (
-	pandocTarget: string,
+	pandocTarget: PandocTarget,
+	pandocFlags: PandocFlag[],
 	tmpFilePath: string,
 	metadataFilePath?: string,
 	bibliographyFilePath?: string,
 ) => {
 	// pandoc inexplicably does not include a default template for docx or odt
 	const template = pandocTarget !== 'docx' && pandocTarget !== 'odt' && pandocTarget !== 'json';
+	const targetPlusFlags =
+		pandocTarget + pandocFlags.map((f) => `${f.enabled ? '+' : '-'}${f.name}`).join('');
 	return [
 		['-f', 'json'],
-		['-t', pandocTarget],
+		['-t', targetPlusFlags],
 		['-o', tmpFilePath],
 		template && [`--template=${getTemplatePath(pandocTarget)}`],
 		metadataFilePath && [`--metadata-file=${metadataFilePath}`],
@@ -58,7 +62,7 @@ const createCslJsonBibliographyFile = async (pandocNotes: PandocNotes) => {
 	return file.path;
 };
 
-const createYamlMetadataFile = async (pubMetadata: PubMetadata, pandocTarget: string) => {
+const createYamlMetadataFile = async (pubMetadata: PubMetadata, pandocTarget: PandocTarget) => {
 	const {
 		title,
 		slug,
@@ -73,7 +77,7 @@ const createYamlMetadataFile = async (pubMetadata: PubMetadata, pandocTarget: st
 	} = pubMetadata;
 	const cslFile = getPathToCslFileForCitationStyleKind(citationStyle);
 	const formattedAttributions = attributions.map((attr) => {
-		if (pandocTarget === 'jats_archiving') {
+		if (pandocTarget === 'jats') {
 			const publicEmail = 'publicEmail' in attr.user ? attr.user.publicEmail : null;
 			return {
 				...(attr.user.lastName && { surname: attr.user.lastName }),
@@ -139,9 +143,17 @@ const createResources = (pandocNotes: PandocNotes) => {
 	};
 };
 
+const getPandocFlags = (options: CallPandocOptions): PandocFlag[] => {
+	const { notesData, pandocTarget } = options;
+	if (pandocTarget === 'jats' && notesData.canUsePandocJatsElementCitations) {
+		return [{ name: 'element_citations', enabled: true }];
+	}
+	return [];
+};
+
 type CallPandocOptions = {
 	pubDoc: DocJson;
-	pandocTarget: string;
+	pandocTarget: PandocTarget;
 	pubMetadata: PubMetadata;
 	tmpFile: FileResult;
 	notesData: NotesData;
@@ -159,14 +171,18 @@ const reactPubDoc = (options: CallPandocOptions) => {
 
 export const callPandoc = async (options: CallPandocOptions) => {
 	const { pandocTarget, pubMetadata, tmpFile, notesData } = options;
-	const pandocNotes = getPandocNotesByHash(
-		[...notesData.citations, ...notesData.footnotes],
-		notesData.renderedStructuredValues,
-	);
+	const pandocNotes = getPandocNotesByHash(notesData);
 	const pubDoc = reactPubDoc(options);
 	const metadataFile = await createYamlMetadataFile(pubMetadata, pandocTarget);
 	const bibliographyFile = await createCslJsonBibliographyFile(pandocNotes);
-	const args = createPandocArgs(pandocTarget, tmpFile.path, metadataFile, bibliographyFile);
+	const pandocFlags = getPandocFlags(options);
+	const args = createPandocArgs(
+		pandocTarget,
+		pandocFlags,
+		tmpFile.path,
+		metadataFile,
+		bibliographyFile,
+	);
 	const preTransformedPandocAst = fromProsemirror(pubDoc, rules, {
 		prosemirrorDocWidth: 675,
 		resources: createResources(pandocNotes),
