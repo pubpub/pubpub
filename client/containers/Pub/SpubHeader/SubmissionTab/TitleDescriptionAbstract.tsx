@@ -1,7 +1,16 @@
 import React from 'react';
 import { FormGroup, InputGroup } from '@blueprintjs/core';
+import { Submission, Pub } from 'types';
 
-const TitleDescriptionAbstract = () => {
+type Props = {
+	onUpdatePub?: (pub: Partial<Pub>) => unknown;
+	onUpdateSubmission?: (submission: Partial<Submission>) => unknown;
+};
+
+const TitleDescriptionAbstract = (props: Props) => {
+	const { onUpdatePub, onUpdateSubmission } = props;
+	console.log(onUpdatePub, onUpdateSubmission);
+
 	return (
 		<>
 			The information you enter in this form and pub body below will be used to create a
