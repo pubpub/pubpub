@@ -54,11 +54,11 @@ const DownloadChooser = (props: Props) => {
 
 	return (
 		<div className="download-chooser-component">
-			<p>
+			{/* <p>
 				You can upload a file, like a PDF with custom styling, to associate with this pub.
 				It will be provided to readers as the pub's default download, but they'll still be
 				able to use the automatic export tools.
-			</p>
+			</p> */}
 			<div className="buttons">
 				<FileUploadButton
 					icon="upload"
