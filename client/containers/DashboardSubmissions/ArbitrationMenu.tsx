@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@blueprintjs/core';
 
 import { DefinitelyHas, Pub, SubmissionStatus, DocJson } from 'types';
-import { ConfirmDialog, Icon, IconName, DialogLauncher } from 'client/components';
+import { ConfirmDialog, Icon, IconName, DialogLauncher, PubReleaseDialog } from 'components';
 import { apiFetch } from 'client/utils/apiFetch';
 import VerdictDialog from './VerdictDialog';
 
@@ -37,6 +37,27 @@ const ArbitrationMenu = (props: Props) => (
 				)}
 			</ConfirmDialog>
 		</div>
+		{props.pub.submission.status === 'accepted' && (
+			<DialogLauncher
+				renderLauncherElement={({ openDialog }) => (
+					<Button
+						minimal
+						small
+						icon={<Icon icon="social-media" iconSize={20} />}
+						onClick={openDialog}
+					/>
+				)}
+			>
+				{({ isOpen, onClose }) => (
+					<PubReleaseDialog
+						isOpen={isOpen}
+						onClose={onClose}
+						pubData={props.pub}
+						onCreateRelease={() => {}}
+					/>
+				)}
+			</DialogLauncher>
+		)}
 		{[
 			{ presentTense: 'Decline', pastTense: 'declined', iconName: 'thumbs-down' },
 			{ presentTense: 'Accept', pastTense: 'accepted', iconName: 'endorsed' },

@@ -17,16 +17,17 @@ import { usePageContext } from 'utils/hooks';
 
 import { apiFetch } from 'client/utils/apiFetch';
 import { ClickToCopyButton, MinimalEditor } from 'components';
-import { Release, PubPageData } from 'types';
+import { Release, PubPageData, Pub } from 'types';
 
 require('./pubReleaseDialog.scss');
 
 type Props = {
-	historyData: {
+	historyKey?: number;
+	historyData?: {
 		latestKey?: number;
 	};
 	isOpen: boolean;
-	pubData: PubPageData;
+	pubData: PubPageData | Pub;
 	onClose: () => unknown;
 	onCreateRelease: (r: Release) => unknown;
 };
@@ -61,7 +62,7 @@ const PubReleaseDialog = (props: Props) => {
 			pubId: pubData.id,
 			noteContent: noteData.content,
 			noteText: noteData.text,
-			historyKey: historyData.latestKey,
+			historyKey: historyData?.latestKey,
 		})
 			.then((release) => {
 				setReleleaseError(null);
