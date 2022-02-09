@@ -1,3 +1,5 @@
+import React, { useState } from 'react';
+import TimeAgo from 'react-timeago';
 import {
 	AnchorButton,
 	Button,
@@ -8,8 +10,6 @@ import {
 	Icon,
 	InputGroup,
 } from '@blueprintjs/core';
-import React, { useState } from 'react';
-import TimeAgo from 'react-timeago';
 
 import { pubUrl } from 'utils/canonicalUrls';
 import { formatDate, timeAgoBaseProps } from 'utils/dates';
@@ -98,7 +98,7 @@ const PubReleaseDialog = (props: Props) => {
 			<div>
 				<p className="text-info">{label}</p>
 				<ControlGroup className="url-select">
-					<InputGroup className="display-url" value={url} fill small />
+					<InputGroup className="display-url" value={url} fill small disabled />
 					<ClickToCopyButton
 						minimal={true}
 						copyString={url}
