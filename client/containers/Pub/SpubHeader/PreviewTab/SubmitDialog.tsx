@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Fragment } from 'prosemirror-model';
 
 import { Callout, Button, Classes, Dialog } from '@blueprintjs/core';
 import { apiFetch } from 'client/utils/apiFetch';
@@ -18,30 +19,26 @@ const SubmitDialog = (props: Props) => {
 	const { view } = collabData.editorChangeObject;
 	const [isHandlingSubmission, setIsHandlingSubmission] = useState(false);
 	const [updatedSubmission, setUpdatedSubmission] = useState(null);
-	const abstract = props.submission.abstract || getEmptyDoc();
 	const [submissionErr, setSubmissionErr] = useState(null);
-	const testDoc = collabData.editorChangeObject.view?.state.doc.toJSON() || {};
-	const abstractNode = jsonToNode(abstract);
 	const onSubmit = () => {
+		const abstract = props.submission.abstract || getEmptyDoc();
+		const { schema } = view.state.doc.type;
+		const h1Node = schema.node('heading', { level: 1 }, schema.text('Abstract'));
+		const abstractNode = jsonToNode(abstract, schema);
+		const frag = Fragment.from(h1Node).append(abstractNode.content);
 		setIsHandlingSubmission(true);
-		if (collabData.status !== 'connecting') {
-			const { tr } = view.state;
-			tr.replaceSelectionWith(abstractNode);
-			view.dispatch(tr);
-		}
-		if (collabData.status === 'connecting') {
-			apiFetch
-				.put('/api/submissions', {
-					id: props.submission.id,
-					status: 'pending' as SubmissionStatus,
-				})
-				.then((submissionRes) => setUpdatedSubmission(submissionRes))
-				.catch((err) => setSubmissionErr(err))
-				.finally(() => setIsHandlingSubmission(false));
-		}
-		setIsHandlingSubmission(false);
+		const { tr } = view.state;
+		tr.insert(0, frag);
+		view.dispatch(tr);
+		apiFetch
+			.put('/api/submissions', {
+				id: props.submission.id,
+				status: 'pending' as SubmissionStatus,
+			})
+			.then((submissionRes) => setUpdatedSubmission(submissionRes))
+			.catch((err) => setSubmissionErr(err))
+			.finally(() => setIsHandlingSubmission(false));
 	};
-	console.log(collabData, view?.state.doc.textContent, abstractNode.textContent);
 	return (
 		<Dialog isOpen={props.isOpen} onClose={props.onClose}>
 			{submissionErr ? (
@@ -55,17 +52,11 @@ const SubmitDialog = (props: Props) => {
 								isReadOnly
 								initialContent={props.submission.submissionWorkflow.emailText}
 							/>
-							<Editor isReadOnly initialContent={testDoc} />
 						</Callout>
 					</div>
 					<div className={Classes.DIALOG_FOOTER}>
 						<div className={Classes.DIALOG_FOOTER_ACTIONS}>
-							<Button
-								onClick={props.onClose}
-								disabled={
-									isHandlingSubmission || collabData.status === 'connecting'
-								}
-							>
+							<Button onClick={props.onClose} disabled={isHandlingSubmission}>
 								Close
 							</Button>
 							<Button
@@ -85,12 +76,7 @@ const SubmitDialog = (props: Props) => {
 					</div>
 					<div className={Classes.DIALOG_FOOTER}>
 						<div className={Classes.DIALOG_FOOTER_ACTIONS}>
-							<Button
-								onClick={props.onClose}
-								disabled={
-									isHandlingSubmission || collabData.status === 'connecting'
-								}
-							>
+							<Button onClick={props.onClose} disabled={isHandlingSubmission}>
 								Cancel
 							</Button>
 							<Button

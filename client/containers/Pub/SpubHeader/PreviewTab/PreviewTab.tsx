@@ -4,6 +4,7 @@ import { Icon } from '@blueprintjs/core';
 import { PubPageData, Submission, DefinitelyHas } from 'types';
 import { GridWrapper, PubByline, DialogLauncher } from 'components';
 import { usePageContext } from 'utils/hooks';
+import { usePubContext } from 'containers/Pub/pubHooks';
 
 import SubmitDialog from './SubmitDialog';
 import PubHeaderBackground from '../../PubHeader/PubHeaderBackground';
@@ -23,6 +24,7 @@ const PreviewTab = (props: Props) => {
 	const { pubData, historyData } = props;
 	const { latestKey, timestamps } = historyData;
 	const latestTimestamp = timestamps[latestKey];
+	const { collabData } = usePubContext();
 	return (
 		<PubHeaderBackground
 			className="spub-header-component"
@@ -62,6 +64,7 @@ const PreviewTab = (props: Props) => {
 									<ResponsiveHeaderButton
 										// @ts-expect-error ts-migrate(2322) FIXME: Type '{ icon: string; tagName: string; href: strin... Remove this comment to see the full error message
 										className="submit-button"
+										disabled={collabData.status !== 'connected'}
 										onClick={openDialog}
 										icon={
 											<Icon
