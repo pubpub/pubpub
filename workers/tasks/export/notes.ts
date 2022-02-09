@@ -38,7 +38,7 @@ const getCslJsonForNote = (
 	note: Note,
 	hash: string,
 	renderedStructuredValues: RenderedStructuredValues,
-): [boolean, Record<string, any>] => {
+) => {
 	const renderedStructuredValue = note.structuredValue
 		? renderedStructuredValues[note.structuredValue]
 		: null;
@@ -46,10 +46,10 @@ const getCslJsonForNote = (
 		const cslJson = renderedStructuredValue?.json[0];
 		if (cslJson) {
 			// Citation.js leaves a _graph property on here -- it's noise we don't need to expose
-			return [true, { ...cslJson, _graph: undefined }];
+			return { hasStructuredContent: true, cslJson: { ...cslJson, _graph: undefined } };
 		}
 	}
-	return [false, { id: hash }];
+	return { hasStructuredContent: false, cslJson: { id: hash } };
 };
 
 const getIdForNote = (cslJson: Maybe<Record<string, any>>, hash: string): string => {
@@ -102,7 +102,7 @@ export const getPandocNotesByHash = (notesData: NotesData): PandocNotes => {
 	const index: PandocNotes = {};
 	notes.forEach((note) => {
 		const hash = getHashForNote(note);
-		const [hasStructuredContent, cslJson] = getCslJsonForNote(
+		const { hasStructuredContent, cslJson } = getCslJsonForNote(
 			note,
 			hash,
 			renderedStructuredValues,
