@@ -64,7 +64,7 @@ const PreviewTab = (props: Props) => {
 									<ResponsiveHeaderButton
 										// @ts-expect-error ts-migrate(2322) FIXME: Type '{ icon: string; tagName: string; href: strin... Remove this comment to see the full error message
 										className="submit-button"
-										disabled={collabData.status !== 'connected'}
+										disabled={collabData.status === 'connecting'}
 										onClick={openDialog}
 										icon={
 											<Icon
