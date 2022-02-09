@@ -130,8 +130,9 @@ const createJatsNotesMatchAndReplacer = (notes: PandocNotes, xmlParser: XMLParse
 			const id = node['@id'] as string;
 			if (id && id.startsWith('ref-')) {
 				const hash = id.slice(4);
-				if (notes[hash]) {
-					return notes[hash];
+				const note = notes[hash];
+				if (note && !note.hasStructuredContent && note.unstructuredHtml) {
+					return note;
 				}
 			}
 		}
