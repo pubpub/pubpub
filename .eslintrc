@@ -30,7 +30,7 @@
 	"rules": {
 		"no-restricted-imports": 0,
 		"@typescript-eslint/no-restricted-imports": [
-			"error",
+			"warn",
 			{
 				"paths": [
 					{
