@@ -72,7 +72,9 @@ const SubmitDialog = (props: Props) => {
 			) : (
 				<>
 					<div className={Classes.DIALOG_BODY}>
-						<p>Are you sure you're reade to submit this Pub?</p>
+						<Callout title="Submit Pub?">
+							Are you ready to submit this Pub?
+						</Callout>
 					</div>
 					<div className={Classes.DIALOG_FOOTER}>
 						<div className={Classes.DIALOG_FOOTER_ACTIONS}>
