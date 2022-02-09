@@ -5,7 +5,7 @@ import { Menu, MenuItem } from 'components/Menu';
 import { apiFetch } from 'client/utils/apiFetch';
 import { pingTask } from 'client/utils/pingTask';
 import { usePageContext } from 'utils/hooks';
-import { ExportType } from 'utils/export/formats';
+import { ExportFormat } from 'utils/export/formats';
 
 import { usePubHistory } from '../pubHooks';
 import { getFormattedDownload } from './headerUtils';
@@ -18,7 +18,7 @@ type Props = {
 };
 
 type FormatType = {
-	format: ExportType;
+	format: ExportFormat;
 	title: string;
 };
 

@@ -1,19 +1,23 @@
 import md5 from 'crypto-js/md5';
 import { callPandoc } from '@pubpub/prosemirror-pandoc';
+import { XMLParser, XMLBuilder } from 'fast-xml-parser';
 
 import { DocJson, Maybe } from 'types';
 import { jsonToNode, getNotes, Note } from 'components/Editor';
 import { NoteManager } from 'client/utils/notes';
 import { getStructuredCitations } from 'server/utils/citations';
 import { RenderedStructuredValues } from 'utils/notesCore';
+import { PandocTarget } from 'utils/export/formats';
 
+import { Replacer, Matcher, walkAndReplace } from '../import/transforms/util';
 import { NotesData, NoteWithStructuredHtml, PubMetadata } from './types';
 
 export type PandocNote = Note & {
 	id: string;
 	hash: string;
-	html: null | string;
 	cslJson: Record<string, any>;
+	hasStructuredContent: boolean;
+	unstructuredHtml: string;
 };
 
 export type PandocNotes = Record<string, PandocNote>;
@@ -30,53 +34,22 @@ const enrichNoteWithStructuredResult = (
 	return note;
 };
 
-const getPlainUnstructuredTextForNote = (note: Note): null | string => {
-	if (note.unstructuredValue) {
-		return callPandoc(note.unstructuredValue, 'html', 'plain').trim();
-	}
-	return null;
-};
-
 const getCslJsonForNote = (
 	note: Note,
 	hash: string,
 	renderedStructuredValues: RenderedStructuredValues,
-	treatUnstructuredValueAsTitle: boolean,
-) => {
+): [boolean, Record<string, any>] => {
 	const renderedStructuredValue = note.structuredValue
 		? renderedStructuredValues[note.structuredValue]
 		: null;
-	const unstructuredValue = getPlainUnstructuredTextForNote(note);
 	if (renderedStructuredValue) {
 		const cslJson = renderedStructuredValue?.json[0];
 		if (cslJson) {
 			// Citation.js leaves a _graph property on here -- it's noise we don't need to expose
-			const normalizedCslJson = { ...cslJson, _graph: undefined };
-			return {
-				...normalizedCslJson,
-			};
+			return [true, { ...cslJson, _graph: undefined }];
 		}
 	}
-	if (treatUnstructuredValueAsTitle && unstructuredValue) {
-		return {
-			id: hash,
-			title: unstructuredValue,
-		};
-	}
-	return { id: hash };
-};
-
-const getHtmlForNote = (
-	note: Note,
-	renderedStructuredValues: RenderedStructuredValues,
-): null | string => {
-	const renderedStructuredValue = note.structuredValue
-		? renderedStructuredValues[note.structuredValue]
-		: null;
-	if (renderedStructuredValue) {
-		return renderedStructuredValue.html;
-	}
-	return null;
+	return [false, { id: hash }];
 };
 
 const getIdForNote = (cslJson: Maybe<Record<string, any>>, hash: string): string => {
@@ -105,13 +78,8 @@ export const getNotesData = async (
 		citationInlineStyle,
 	);
 
-	const canUsePandocJatsElementCitations = !citations.some(
-		(citation) => !citation.structuredValue,
-	);
-
 	return {
 		renderedStructuredValues,
-		canUsePandocJatsElementCitations,
 		noteManager: new NoteManager(citationStyle, citationInlineStyle, renderedStructuredValues),
 		footnotes: footnotes.map((note) =>
 			enrichNoteWithStructuredResult(note, renderedStructuredValues),
@@ -129,25 +97,82 @@ export const getHashForNote = (note: Pick<Note, 'structuredValue' | 'unstructure
 };
 
 export const getPandocNotesByHash = (notesData: NotesData): PandocNotes => {
-	const { citations, footnotes, renderedStructuredValues, canUsePandocJatsElementCitations } =
-		notesData;
+	const { citations, footnotes, renderedStructuredValues } = notesData;
 	const notes = [...citations, ...footnotes];
 	const index: PandocNotes = {};
 	notes.forEach((note) => {
 		const hash = getHashForNote(note);
-		const cslJson = getCslJsonForNote(
+		const [hasStructuredContent, cslJson] = getCslJsonForNote(
 			note,
 			hash,
 			renderedStructuredValues,
-			!canUsePandocJatsElementCitations,
 		);
-		const html = getHtmlForNote(note, renderedStructuredValues);
 		const id = getIdForNote(cslJson, hash);
-		index[hash] = { ...note, id, hash, html, cslJson };
+		index[hash] = {
+			...note,
+			id,
+			hash,
+			cslJson,
+			hasStructuredContent,
+			unstructuredHtml: note.unstructuredValue,
+		};
 	});
 	return index;
 };
 
 export const getCslJsonForPandocNotes = (notes: PandocNotes) => {
 	return Object.values(notes).map((note) => note.cslJson);
+};
+
+const createJatsNotesMatchAndReplacer = (notes: PandocNotes, xmlParser: XMLParser) => {
+	const matcher: Matcher<PandocNote> = ({ node, keyPath }) => {
+		if (keyPath[keyPath.length - 1] === 'ref') {
+			const id = node['@id'] as string;
+			if (id && id.startsWith('ref-')) {
+				const hash = id.slice(4);
+				if (notes[hash]) {
+					return notes[hash];
+				}
+			}
+		}
+		return null;
+	};
+	const replacer: Replacer<PandocNote> = ({ match, entry }) => {
+		const { unstructuredHtml, hash } = match;
+		if (unstructuredHtml) {
+			const unstructuredContentAsJats = callPandoc(unstructuredHtml, 'html', 'jats').trim();
+			const jatsXml = xmlParser.parse(unstructuredContentAsJats);
+			return {
+				'@id': `ref-${hash}`,
+				'mixed-citation': jatsXml,
+			};
+		}
+		return entry;
+	};
+	return { matcher, replacer };
+};
+
+export const modifyJatsContentToIncludeUnstructuredNotes = (
+	documentContent: string,
+	target: PandocTarget,
+	notes: PandocNotes,
+) => {
+	if (
+		target === 'jats_archiving' &&
+		Object.values(notes).some((note) => !note.hasStructuredContent)
+	) {
+		const xmlOptions = {
+			ignoreAttributes: false,
+			allowBooleanAttributes: true,
+			format: true,
+			attributeNamePrefix: '@',
+		};
+		const parser = new XMLParser(xmlOptions);
+		const builder = new XMLBuilder(xmlOptions);
+		const matchAndReplace = createJatsNotesMatchAndReplacer(notes, parser);
+		const tree = parser.parse(documentContent);
+		const walked = walkAndReplace(tree, [matchAndReplace]);
+		return builder.build(walked);
+	}
+	return documentContent;
 };

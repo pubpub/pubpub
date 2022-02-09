@@ -1,8 +1,8 @@
 import path from 'path';
 import fs from 'fs';
 import YAML from 'yaml';
-import nodePandoc from 'node-pandoc';
 import { FileResult } from 'tmp-promise';
+import { spawnSync } from 'child_process';
 import { fromProsemirror, emitPandocJson } from '@pubpub/prosemirror-pandoc';
 import dateFormat from 'dateformat';
 
@@ -20,6 +20,7 @@ import {
 	getCslJsonForPandocNotes,
 	getHashForNote,
 	PandocNotes,
+	modifyJatsContentToIncludeUnstructuredNotes,
 } from './notes';
 
 const formatToTemplateExtension = {
@@ -34,7 +35,6 @@ const getTemplatePath = (pandocTarget: string) => {
 const createPandocArgs = (
 	pandocTarget: PandocTarget,
 	pandocFlags: PandocFlag[],
-	tmpFilePath: string,
 	metadataFilePath?: string,
 	bibliographyFilePath?: string,
 ) => {
@@ -45,7 +45,6 @@ const createPandocArgs = (
 	return [
 		['-f', 'json'],
 		['-t', targetPlusFlags],
-		['-o', tmpFilePath],
 		template && [`--template=${getTemplatePath(pandocTarget)}`],
 		metadataFilePath && [`--metadata-file=${metadataFilePath}`],
 		bibliographyFilePath && [`--bibliography=${bibliographyFilePath}`],
@@ -77,7 +76,7 @@ const createYamlMetadataFile = async (pubMetadata: PubMetadata, pandocTarget: Pa
 	} = pubMetadata;
 	const cslFile = getPathToCslFileForCitationStyleKind(citationStyle);
 	const formattedAttributions = attributions.map((attr) => {
-		if (pandocTarget === 'jats') {
+		if (pandocTarget === 'jats_archiving') {
 			const publicEmail = 'publicEmail' in attr.user ? attr.user.publicEmail : null;
 			return {
 				...(attr.user.lastName && { surname: attr.user.lastName }),
@@ -143,23 +142,15 @@ const createResources = (pandocNotes: PandocNotes) => {
 	};
 };
 
-const getPandocFlags = (options: CallPandocOptions): PandocFlag[] => {
-	const { notesData, pandocTarget } = options;
-	if (pandocTarget === 'jats' && notesData.canUsePandocJatsElementCitations) {
+const getPandocFlags = (options: ExportWithPandocOptions): PandocFlag[] => {
+	const { pandocTarget } = options;
+	if (pandocTarget === 'jats_archiving') {
 		return [{ name: 'element_citations', enabled: true }];
 	}
 	return [];
 };
 
-type CallPandocOptions = {
-	pubDoc: DocJson;
-	pandocTarget: PandocTarget;
-	pubMetadata: PubMetadata;
-	tmpFile: FileResult;
-	notesData: NotesData;
-};
-
-const reactPubDoc = (options: CallPandocOptions) => {
+const reactPubDoc = (options: ExportWithPandocOptions) => {
 	const { pubDoc, pubMetadata, notesData } = options;
 	return getReactedDocFromJson(
 		pubDoc,
@@ -169,43 +160,47 @@ const reactPubDoc = (options: CallPandocOptions) => {
 	);
 };
 
-export const callPandoc = async (options: CallPandocOptions) => {
+const callPandoc = (pandocJson: object, args: string[]) => {
+	const pandocJsonString = JSON.stringify(pandocJson);
+	const proc = spawnSync('pandoc', args, {
+		input: pandocJsonString,
+		maxBuffer: 1024 * 1024 * 25,
+	});
+	const output = proc.stdout.toString();
+	const error = proc.stderr.toString();
+	return { output, error };
+};
+
+type ExportWithPandocOptions = {
+	pubDoc: DocJson;
+	pandocTarget: PandocTarget;
+	pubMetadata: PubMetadata;
+	tmpFile: FileResult;
+	notesData: NotesData;
+};
+
+export const exportWithPandoc = async (options: ExportWithPandocOptions) => {
 	const { pandocTarget, pubMetadata, tmpFile, notesData } = options;
 	const pandocNotes = getPandocNotesByHash(notesData);
 	const pubDoc = reactPubDoc(options);
 	const metadataFile = await createYamlMetadataFile(pubMetadata, pandocTarget);
 	const bibliographyFile = await createCslJsonBibliographyFile(pandocNotes);
 	const pandocFlags = getPandocFlags(options);
-	const args = createPandocArgs(
-		pandocTarget,
-		pandocFlags,
-		tmpFile.path,
-		metadataFile,
-		bibliographyFile,
-	);
+	const pandocArgs = createPandocArgs(pandocTarget, pandocFlags, metadataFile, bibliographyFile);
 	const preTransformedPandocAst = fromProsemirror(pubDoc, rules, {
 		prosemirrorDocWidth: 675,
 		resources: createResources(pandocNotes),
 	}).asNode();
 	const pandocAst = runTransforms(preTransformedPandocAst);
 	const pandocJson = emitPandocJson(pandocAst);
-	const pandocJsonString = JSON.stringify(pandocJson);
-	return new Promise((resolve, reject) => {
-		nodePandoc(pandocJsonString, args, (err, result) => {
-			if (err && err.message) {
-				console.warn(err.message);
-			}
-			/* This callback is called multiple times */
-			/* err is sent multiple times and includes warnings */
-			/* So to check if the file generated, check the size */
-			/* of the tmp file. */
-			const wroteToFile = !!fs.statSync(tmpFile.path).size;
-			if (result && wroteToFile) {
-				resolve(result);
-			}
-			if (result && !wroteToFile) {
-				reject(new Error('Error in Pandoc'));
-			}
-		});
-	});
+	const { output, error } = callPandoc(pandocJson, pandocArgs);
+	if (error) {
+		throw new Error(error);
+	}
+	const transformedOutput = modifyJatsContentToIncludeUnstructuredNotes(
+		output,
+		pandocTarget,
+		pandocNotes,
+	);
+	fs.writeFileSync(tmpFile.path, transformedOutput);
 };

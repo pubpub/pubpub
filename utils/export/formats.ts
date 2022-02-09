@@ -7,12 +7,12 @@ export type PandocTarget =
 	| 'markdown'
 	| 'odt'
 	| 'plain'
-	| 'jats'
+	| 'jats_archiving'
 	| 'latex'
 	| 'json';
 
 // These are our names for the same things
-export type ExportType =
+export type ExportFormat =
 	| 'html'
 	| 'pdf'
 	| 'docx'
@@ -24,12 +24,12 @@ export type ExportType =
 	| 'tex'
 	| 'json';
 
-type ExportFormat = {
+type ExportFormatDescription = {
 	extension: string;
 	title: string;
 } & ({ pagedTarget?: true } | { pandocTarget: PandocTarget });
 
-const exportFormats: Record<ExportType, ExportFormat> = {
+const exportFormats: Record<ExportFormat, ExportFormatDescription> = {
 	html: { extension: 'html', title: 'HTML' },
 	pdf: { extension: 'pdf', pagedTarget: true, title: 'PDF' },
 	docx: { pandocTarget: 'docx', extension: 'docx', title: 'Word' },
@@ -37,7 +37,7 @@ const exportFormats: Record<ExportType, ExportFormat> = {
 	markdown: { pandocTarget: 'markdown', extension: 'md', title: 'Markdown' },
 	odt: { pandocTarget: 'odt', extension: 'odt', title: 'OpenDocument' },
 	plain: { pandocTarget: 'plain', extension: 'txt', title: 'Plain Text' },
-	jats: { pandocTarget: 'jats', extension: 'xml', title: 'JATS XML' },
+	jats: { pandocTarget: 'jats_archiving', extension: 'xml', title: 'JATS XML' },
 	tex: { pandocTarget: 'latex', extension: 'tex', title: 'LaTeX' },
 	json: { pandocTarget: 'json', extension: 'json', title: 'JSON' },
 } as const;
