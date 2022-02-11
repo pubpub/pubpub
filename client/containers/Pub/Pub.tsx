@@ -8,7 +8,7 @@ import PubSyncManager, { PubContextType } from './PubSyncManager';
 import PubHeader from './PubHeader';
 
 import SpubHeader from './SpubHeader';
-import SubmissionPubHeader from './SubmissionPubHeader';
+// import SubmissionPubHeader from './SubmissionPubHeader';
 
 import PubDocument from './PubDocument';
 import { PubSuspendWhileTypingProvider, PubSuspendWhileTyping } from './PubSuspendWhileTyping';
@@ -109,31 +109,14 @@ const Pub = (props: Props) => {
 					communityData={communityData}
 					loginData={loginData}
 				>
-					{({ pubData, collabData, firebaseDraftRef, updateLocalData, historyData }) => {
-						const modeProps = {
-							pubData,
-							collabData,
-							historyData,
-							firebaseDraftRef,
-							updateLocalData,
-						};
-						return hasSubmission ? (
-							<React.Fragment>
-								<PubSuspendWhileTyping delay={1000}>
-									{() => <SubmissionPubHeader workflow={workflow} />}
-								</PubSuspendWhileTyping>
-								<PubDocument {...modeProps} />
-							</React.Fragment>
-						) : (
-							<React.Fragment>
-								<PubSuspendWhileTyping delay={1000}>
-									{() => <PubHeader {...modeProps} />}
-								</PubSuspendWhileTyping>
-
-								<PubDocument {...modeProps} />
-							</React.Fragment>
-						);
-					}}
+					{(ctx) => (
+						<>
+							<PubSuspendWhileTyping delay={1000}>
+								{() => <HeaderComponent {...getModeProps(ctx)} />}
+							</PubSuspendWhileTyping>
+							<PubDocument {...getModeProps(ctx)} />
+						</>
+					)}
 				</PubSyncManager>
 			</div>
 		</PubSuspendWhileTypingProvider>
