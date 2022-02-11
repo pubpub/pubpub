@@ -65,9 +65,6 @@ const scrollToElementTop = (hash: string, delay = 0) => {
 
 const Pub = (props: Props) => {
 	const { loginData, locationData, communityData } = usePageContext();
-	const hasSubmission =
-		'submission' in props.pubData && props.pubData.submission?.status === 'incomplete';
-	const workflow = hasSubmission ? props.pubData.submission.submissionWorkflow : undefined;
 	useEffect(() => {
 		const { hash } = window.location;
 
