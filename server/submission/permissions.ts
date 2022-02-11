@@ -101,8 +101,9 @@ export const canUpdateSubmission = async ({ userId, status, id }: CanUpdateOptio
 		getScope({ loginId: userId, collectionId: collection.id }),
 	]);
 
+	const canUpdateAbstractAsSubmitter = canManagePub && oldStatus === status;
 	const canChangeStatusAsSubmitter = canManagePub && pubManagerCanChangeStatus(oldStatus, status);
 	const canChangeStatusAsManager =
 		canManageCollection && collectionManagerCanChangeStatus(oldStatus, status);
-	return canChangeStatusAsManager || canChangeStatusAsSubmitter;
+	return canChangeStatusAsManager || canChangeStatusAsSubmitter || canUpdateAbstractAsSubmitter;
 };

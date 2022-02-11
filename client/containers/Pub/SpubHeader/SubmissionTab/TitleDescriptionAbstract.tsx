@@ -1,15 +1,19 @@
 import React from 'react';
 import { FormGroup, InputGroup } from '@blueprintjs/core';
-import { Submission, Pub } from 'types';
+
+import { Submission, Pub, DocJson } from 'types';
+import { getEmptyDoc } from 'components/Editor';
+import { MinimalEditor } from 'components';
 
 type Props = {
+	submission: Submission;
 	onUpdatePub?: (pub: Partial<Pub>) => unknown;
-	onUpdateSubmission?: (submission: Partial<Submission>) => unknown;
+	onUpdateSubmission: (submission: Partial<Submission>) => unknown;
 };
 
 const TitleDescriptionAbstract = (props: Props) => {
-	const { onUpdatePub, onUpdateSubmission } = props;
-	console.log(onUpdatePub, onUpdateSubmission);
+	const { abstract = getEmptyDoc() } = props.submission;
+	const { onUpdatePub: _, onUpdateSubmission: __ } = props;
 
 	return (
 		<>
@@ -21,9 +25,14 @@ const TitleDescriptionAbstract = (props: Props) => {
 				<InputGroup id="text-input" placeholder="Enter pub title here..." />
 			</FormGroup>
 			<br />
-			<FormGroup label="Abstract Description " labelFor="text-input">
-				<InputGroup id="text-input" placeholder="Enter abstruct here..." />
-			</FormGroup>
+			<h2>Abstract</h2>
+			<MinimalEditor
+				initialContent={abstract}
+				onEdit={(doc) => props.onUpdateSubmission({ abstract: doc.toJSON() as DocJson })}
+				getButtons={(buttons) => buttons.workflowButtonSet}
+				useFormattingBar
+				constrainHeight
+			/>
 			<br />
 			<FormGroup label=" Description " labelFor="text-input">
 				<InputGroup id="text-input" placeholder="Enter description text here..." />
