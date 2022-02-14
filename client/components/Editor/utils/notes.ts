@@ -1,3 +1,4 @@
+import { Node } from 'prosemirror-model';
 import striptags from 'striptags';
 
 export type Note = {
@@ -6,7 +7,7 @@ export type Note = {
 	unstructuredValue: string;
 };
 
-export const getNotes = (doc) => {
+export const getNotes = (doc: Node) => {
 	const citationCounts = {};
 	const footnoteItems: Note[] = [];
 	const citationItems: Note[] = [];
