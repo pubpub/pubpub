@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Tab, Tabs, TabId, Icon, IconName } from '@blueprintjs/core';
 
-import { Submission, Pub } from 'types';
 import { assert } from 'utils/assert';
 
 import InstructionsTab from './InstructionsTab';
@@ -14,8 +13,6 @@ type Props = {
 	updateLocalData: any;
 	historyData: any;
 	pubData: any;
-	onUpdatePub?: (pub: Partial<Pub>) => unknown;
-	onUpdateSubmission?: (submission: Partial<Submission>) => unknown;
 };
 
 export const renderTabTitle = (icon: IconName, title: string) => {
@@ -27,7 +24,7 @@ export const renderTabTitle = (icon: IconName, title: string) => {
 };
 
 const SpubHeader = (props: Props) => {
-	const { submissionWorkflow, onUpdatePub, onUpdateSubmission } = props.pubData.submission;
+	const { submissionWorkflow } = props.pubData.submission;
 	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');
 	assert(props.pubData.submission.submissionWorkflow !== undefined);
 
@@ -55,13 +52,7 @@ const SpubHeader = (props: Props) => {
 			<Tab
 				id="submission"
 				title={submissionTabTitle}
-				panel={
-					<SubmissionTab
-						onUpdatePub={onUpdatePub}
-						onUpdateSubmission={onUpdateSubmission}
-						pubData={props.pubData}
-					/>
-				}
+				panel={<SubmissionTab pubData={props.pubData} />}
 				className="tab-panel tab"
 			/>
 			<Tab

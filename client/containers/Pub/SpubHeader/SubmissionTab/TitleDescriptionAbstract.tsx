@@ -1,32 +1,25 @@
 import React, { useState } from 'react';
 import { FormGroup, InputGroup } from '@blueprintjs/core';
 
-import { Submission, Pub, PubPageData } from 'types';
+import { PubPageData } from 'types';
 import { apiFetch } from 'client/utils/apiFetch';
 import { getDashUrl } from 'utils/dashboard';
 import { usePendingChanges } from 'utils/hooks';
 
 type Props = {
-	onUpdatePub?: (pub: Partial<Pub>) => unknown;
-	onUpdateSubmission?: (submission: Partial<Submission>) => unknown;
 	pubData: PubPageData;
 };
 
 const TitleDescriptionAbstract = (props: Props) => {
-	const { onUpdatePub, onUpdateSubmission } = props;
 	const [pendingPubData, setPendingPubData] = useState({});
-	const [isPersisting, setIsPersisting] = useState(false);
 	const [persistedPubData, setPersistedPubData] = useState(props.pubData);
 
 	const { pendingPromise } = usePendingChanges();
-
-	console.log(onUpdatePub, onUpdateSubmission);
 
 	const updatePubData = (values) => {
 		setPendingPubData({ ...pendingPubData, ...values });
 	};
 	const handleSaveChanges = () => {
-		setIsPersisting(true);
 		return pendingPromise(
 			apiFetch('/api/pubs', {
 				method: 'PUT',
@@ -40,7 +33,6 @@ const TitleDescriptionAbstract = (props: Props) => {
 			.then(() => {
 				const nextPubData = { ...persistedPubData, ...pendingPubData };
 				setPendingPubData({});
-				setIsPersisting(false);
 				setPersistedPubData(nextPubData);
 				if (persistedPubData.slug !== nextPubData.slug) {
 					window.location.href = getDashUrl({
@@ -51,9 +43,9 @@ const TitleDescriptionAbstract = (props: Props) => {
 			})
 			.catch((err) => {
 				console.error(err);
-				setIsPersisting(false);
 			});
 	};
+
 	return (
 		<>
 			The information you enter in this form and pub body below will be used to create a
@@ -74,7 +66,12 @@ const TitleDescriptionAbstract = (props: Props) => {
 			</FormGroup>
 			<br />
 			<FormGroup label=" Description " labelFor="text-input">
-				<InputGroup id="text-input" placeholder="Enter description text here..." />
+				<InputGroup
+					id="text-input"
+					placeholder="Enter description text here..."
+					onChange={(evt) => updatePubData({ description: evt.target.value })}
+					onKeyPress={(evt) => evt.key === 'Enter' && handleSaveChanges()}
+				/>
 			</FormGroup>
 			<br />
 			Pub Content Enter your primary submission content in the pub body below by typing or by
