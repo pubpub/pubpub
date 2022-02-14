@@ -8,7 +8,6 @@ import PubSyncManager, { PubContextType } from './PubSyncManager';
 import PubHeader from './PubHeader';
 
 import SpubHeader from './SpubHeader';
-// import SubmissionPubHeader from './SubmissionPubHeader';
 
 import PubDocument from './PubDocument';
 import { PubSuspendWhileTypingProvider, PubSuspendWhileTyping } from './PubSuspendWhileTyping';

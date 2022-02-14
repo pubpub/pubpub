@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Tab, Tabs } from '@blueprintjs/core';
 
-import { Submission, Pub } from 'types';
+import { Submission, Pub, PubPageData } from 'types';
 
 import TitleDescriptionAbstract from './TitleDescriptionAbstract';
 import Contributors from './Contributors';
@@ -10,6 +10,7 @@ import SpubSettings from './SpubSettings';
 type Props = {
 	onUpdatePub?: (pub: Partial<Pub>) => unknown;
 	onUpdateSubmission?: (submission: Partial<Submission>) => unknown;
+	pubData: PubPageData;
 };
 
 const SubmissionTab = (props: Props) => {
@@ -32,6 +33,7 @@ const SubmissionTab = (props: Props) => {
 						<TitleDescriptionAbstract
 							onUpdatePub={onUpdatePub}
 							onUpdateSubmission={onUpdateSubmission}
+							pubData={props.pubData}
 						/>
 					}
 				/>

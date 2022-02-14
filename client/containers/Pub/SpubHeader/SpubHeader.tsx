@@ -18,7 +18,7 @@ type Props = {
 	onUpdateSubmission?: (submission: Partial<Submission>) => unknown;
 };
 
-export const renderInstructionTabTitle = (icon: IconName, title: string) => {
+export const renderTabTitle = (icon: IconName, title: string) => {
 	return (
 		<>
 			<Icon icon={icon} /> {title}
@@ -31,9 +31,9 @@ const SpubHeader = (props: Props) => {
 	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');
 	assert(props.pubData.submission.submissionWorkflow !== undefined);
 
-	const instructionTabTitle = renderInstructionTabTitle('align-left', 'Instructions');
-	const submissionTabTitle = renderInstructionTabTitle('manually-entered-data', 'Submission');
-	const previewTabTitle = renderInstructionTabTitle('eye-open', 'Preview & Submit');
+	const instructionTabTitle = renderTabTitle('align-left', 'Instructions');
+	const submissionTabTitle = renderTabTitle('manually-entered-data', 'Submission');
+	const previewTabTitle = renderTabTitle('eye-open', 'Preview & Submit');
 	const updateHistoryData = (newHistoryData) => {
 		return props.updateLocalData('history', newHistoryData);
 	};
@@ -59,6 +59,7 @@ const SpubHeader = (props: Props) => {
 					<SubmissionTab
 						onUpdatePub={onUpdatePub}
 						onUpdateSubmission={onUpdateSubmission}
+						pubData={props.pubData}
 					/>
 				}
 				className="tab-panel tab"
