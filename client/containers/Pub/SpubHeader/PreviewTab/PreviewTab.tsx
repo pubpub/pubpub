@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon } from '@blueprintjs/core';
 
-import { PubPageData, DocJson } from 'types';
+import { PubPageData } from 'types';
 import { GridWrapper, PubByline } from 'components';
 import { usePageContext } from 'utils/hooks';
 
