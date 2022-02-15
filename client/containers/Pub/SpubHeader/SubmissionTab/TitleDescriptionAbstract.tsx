@@ -1,45 +1,48 @@
 import React from 'react';
-import { FormGroup, InputGroup } from '@blueprintjs/core';
+import { Label, InputGroup } from '@blueprintjs/core';
+import { useDebouncedCallback } from 'use-debounce';
 
-import { Submission, Pub, DocJson } from 'types';
-import { getEmptyDoc } from 'components/Editor';
+import { Pub, DocJson } from 'types';
 import { MinimalEditor } from 'components';
 
 type Props = {
-	submission: Submission;
-	onUpdatePub?: (pub: Partial<Pub>) => unknown;
-	onUpdateSubmission: (submission: Partial<Submission>) => unknown;
+	pub: Pub;
+	abstract: DocJson;
+	onUpdatePub: (pub: Partial<Pub>) => unknown;
+	onUpdateAbstract: (abstract: DocJson) => Promise<unknown>;
 };
 
 const TitleDescriptionAbstract = (props: Props) => {
-	const { abstract = getEmptyDoc() } = props.submission;
-	const { onUpdatePub: _, onUpdateSubmission: __ } = props;
-
+	const [onUpdatePubDebounced] = useDebouncedCallback(props.onUpdatePub, 250);
 	return (
 		<>
 			The information you enter in this form and pub body below will be used to create a
 			submission pub, which you can preview at any time before making your final submission.
-			<br />
-			<br />
-			<FormGroup label="Title of your submission pub " labelFor="text-input">
-				<InputGroup id="text-input" placeholder="Enter pub title here..." />
-			</FormGroup>
-			<br />
-			<h2>Abstract</h2>
+			<Label>
+				Title of your submission pub
+				<InputGroup
+					onChange={(evt) => onUpdatePubDebounced({ title: evt.target.value })}
+					defaultValue={props.pub.title}
+					placeholder="Enter pub title here..."
+				/>
+			</Label>
+			<Label>Abstract</Label>
 			<MinimalEditor
-				initialContent={abstract}
-				onEdit={(doc) => props.onUpdateSubmission({ abstract: doc.toJSON() as DocJson })}
+				initialContent={props.abstract}
+				onEdit={(doc) => props.onUpdateAbstract(doc.toJSON() as DocJson)}
+				debounceEditsMs={300}
 				getButtons={(buttons) => buttons.workflowButtonSet}
 				useFormattingBar
 				constrainHeight
 			/>
-			<br />
-			<FormGroup label=" Description " labelFor="text-input">
-				<InputGroup id="text-input" placeholder="Enter description text here..." />
-			</FormGroup>
-			<br />
-			Pub Content Enter your primary submission content in the pub body below by typing or by
-			importing files in which you already have content prepared.
+			<Label>
+				Description
+				<InputGroup
+					placeholder="Enter description text here..."
+					defaultValue={props.pub.description}
+					onChange={(evt) => onUpdatePubDebounced({ description: evt.target.value })}
+				/>
+			</Label>
 		</>
 	);
 };

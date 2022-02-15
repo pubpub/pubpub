@@ -9,25 +9,20 @@ const Contributors = () => {
 		setPersistedPubData({ ...persistedPubData, ...values });
 	};
 
-	const renderAttributions = () => {
-		return (
-			<div>
-				<p>
-					Add the names, roles & affiliations of other people who have a part to play in
-					the creation of this submission’s content.
-				</p>
-				<div>
-					<PubAttributionEditor
-						pubData={pubData}
-						communityData={communityData}
-						updatePubData={updatePersistedPubData}
-						canEdit={true}
-					/>
-				</div>
-			</div>
-		);
-	};
-	return <>{renderAttributions()}</>;
+	return (
+		<div>
+			<p>
+				Add the names, roles & affiliations of other people who have a part to play in the
+				creation of this submission’s content.
+			</p>
+			<PubAttributionEditor
+				pubData={pubData}
+				communityData={communityData}
+				updatePubData={updatePersistedPubData}
+				canEdit
+			/>
+		</div>
+	);
 };
 
 export default Contributors;

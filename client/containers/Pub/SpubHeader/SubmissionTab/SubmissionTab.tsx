@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Tab, Tabs } from '@blueprintjs/core';
 
-import { Submission, Pub, DefinitelyHas } from 'types';
+import { Pub, DefinitelyHas, DocJson } from 'types';
 
 import TitleDescriptionAbstract from './TitleDescriptionAbstract';
 import Contributors from './Contributors';
@@ -9,8 +9,9 @@ import SpubSettings from './SpubSettings';
 
 type Props = {
 	pub: DefinitelyHas<Pub, 'submission'>;
-	onUpdatePub?: (pub: Partial<Pub>) => unknown;
-	onUpdateSubmission: (submission: Partial<Submission>) => unknown;
+	abstract: DocJson;
+	onUpdatePub: (pub: Partial<Pub>) => unknown;
+	onUpdateAbstract: (abstract: DocJson) => Promise<unknown>;
 };
 
 const SubmissionTab = (props: Props) => {
@@ -30,9 +31,10 @@ const SubmissionTab = (props: Props) => {
 					title="Title, Description & Abstract"
 					panel={
 						<TitleDescriptionAbstract
-							submission={props.pub.submission}
+							pub={props.pub}
+							abstract={props.abstract}
 							onUpdatePub={props.onUpdatePub}
-							onUpdateSubmission={props.onUpdateSubmission}
+							onUpdateAbstract={props.onUpdateAbstract}
 						/>
 					}
 				/>

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Tab, Tabs, TabId, Icon, IconName } from '@blueprintjs/core';
 
+import { DocJson } from 'types';
+import { getEmptyDoc } from 'components/Editor';
 import { apiFetch } from 'client/utils/apiFetch';
 import { assert } from 'utils/assert';
 
@@ -16,27 +18,26 @@ type Props = {
 	pubData: any;
 };
 
-export const renderInstructionTabTitle = (icon: IconName, title: string) => {
-	return (
-		<>
-			<Icon icon={icon} /> {title}
-		</>
-	);
-};
+export const renderTabTitle = (icon: IconName, title: string) => (
+	<>
+		<Icon icon={icon} /> {title}
+	</>
+);
 
 const SpubHeader = (props: Props) => {
 	const { pubData, updateLocalData } = props;
-	const updateAndSaveSubmissionData = (newSubmissionData) => {
-		const oldSubmissionData = { ...pubData.submission };
-		updateLocalData('submission', newSubmissionData, { isImmediate: true });
+	const [abstract, setAbstract] = useState(pubData.submission.abstract || getEmptyDoc());
+	const updateAbstract = async (newAbstract: DocJson) => {
 		return apiFetch('/api/submissions', {
 			method: 'PUT',
 			body: JSON.stringify({
-				...newSubmissionData,
+				abstract: newAbstract,
 				id: pubData.submission.id,
 				status: pubData.submission.status,
 			}),
-		}).catch(() => updateLocalData('submission', oldSubmissionData));
+		})
+			.then(() => setAbstract(newAbstract))
+			.catch((err) => console.log({ err }));
 	};
 
 	const updateAndSavePubData = (newPubData) => {
@@ -60,9 +61,9 @@ const SpubHeader = (props: Props) => {
 	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');
 	assert(props.pubData.submission.submissionWorkflow !== undefined);
 
-	const instructionTabTitle = renderInstructionTabTitle('align-left', 'Instructions');
-	const submissionTabTitle = renderInstructionTabTitle('manually-entered-data', 'Submission');
-	const previewTabTitle = renderInstructionTabTitle('eye-open', 'Preview & Submit');
+	const instructionTabTitle = renderTabTitle('align-left', 'Instructions');
+	const submissionTabTitle = renderTabTitle('manually-entered-data', 'Submission');
+	const previewTabTitle = renderTabTitle('eye-open', 'Preview & Submit');
 
 	return (
 		<Tabs
@@ -83,8 +84,9 @@ const SpubHeader = (props: Props) => {
 				title={submissionTabTitle}
 				panel={
 					<SubmissionTab
+						abstract={abstract}
 						onUpdatePub={updateAndSavePubData}
-						onUpdateSubmission={updateAndSaveSubmissionData}
+						onUpdateAbstract={updateAbstract}
 						pub={props.pubData}
 					/>
 				}
