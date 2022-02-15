@@ -16,26 +16,21 @@ type Props = {
 
 const ArbitrationMenu = (props: Props) => (
 	<div className="arbitration-menu-component">
-		{props.pub.submission.status === 'accepted' && (
+		{props.pub.submission.status === 'accepted' && !props.pub.releases.length && (
 			<DialogLauncher
 				renderLauncherElement={({ openDialog }) => (
 					<Tooltip content="Release Pub">
 						<Button
 							minimal
 							small
-							icon={<Icon icon="social-media" iconSize={20} />}
+							icon={<Icon icon="document-share" iconSize={20} />}
 							onClick={openDialog}
 						/>
 					</Tooltip>
 				)}
 			>
 				{({ isOpen, onClose }) => (
-					<PubReleaseDialog
-						isOpen={isOpen}
-						onClose={onClose}
-						pub={props.pub}
-						onCreateRelease={() => {}}
-					/>
+					<PubReleaseDialog isOpen={isOpen} onClose={onClose} pub={props.pub} />
 				)}
 			</DialogLauncher>
 		)}

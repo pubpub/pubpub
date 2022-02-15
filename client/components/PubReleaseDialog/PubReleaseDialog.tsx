@@ -65,7 +65,7 @@ const PubReleaseDialog = (props: Props) => {
 				setReleleaseError(null);
 				setCreatedRelease(release);
 				setIsCreatingRelease(false);
-				if (typeof onCreateRelease === 'function') onCreateRelease(release);
+				onCreateRelease?.(release);
 			})
 			.catch((err) => {
 				setReleleaseError(err);
