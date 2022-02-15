@@ -36,7 +36,7 @@ const getAffectedObject = (item: ActivityItem, associations: ActivityAssociation
 		const { id, title } = item.payload.page;
 		return { id, title };
 	}
-	// We can be reasonable sure that this Community still exists since we're sending its digest
+	// We can be reasonably sure that this Community still exists since we're sending its digest
 	const { title } = associations.community[item.communityId];
 	return {
 		id: item.communityId,
