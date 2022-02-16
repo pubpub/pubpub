@@ -37,9 +37,11 @@ const PreviewTab = (props: Props) => {
 						<h1 className="title">
 							<span className="text-wrapper">{pubData.title}</span>
 						</h1>
-						<h3 className="description pub-header-themed-secondary">
-							{pubData.description}
-						</h3>
+						{pubData.description && (
+							<h3 className="description pub-header-themed-secondary">
+								<span className="text-wrapper">{pubData.description}</span>
+							</h3>
+						)}
 						<PubByline pubData={pubData} />
 						<div className="draft-submit-buttons-component">
 							<ResponsiveHeaderButton
