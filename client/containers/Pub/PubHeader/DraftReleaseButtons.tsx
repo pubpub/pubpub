@@ -159,8 +159,8 @@ const DraftReleaseButtons = (props: DraftReleaseButtonsProps) => {
 								key={key}
 								isOpen={isOpen}
 								onClose={onClose}
-								pubData={pubData}
-								historyData={historyData}
+								pub={pubData}
+								historyKey={historyData?.latestKey}
 								onCreateRelease={(release) =>
 									updatePubData((currentPubData) => {
 										return {
