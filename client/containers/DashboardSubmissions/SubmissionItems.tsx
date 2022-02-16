@@ -1,28 +1,26 @@
 import React, { useState } from 'react';
 import { NonIdealState } from '@blueprintjs/core';
 
-import { Collection, Pub, PubsQuery } from 'types';
+import { Collection, PubsQuery } from 'types';
 import { useManyPubs } from 'client/utils/useManyPubs';
 import { useInfiniteScroll } from 'client/utils/useInfiniteScroll';
 
-import {
-	PubOverviewRow,
-	OverviewRows,
-	LoadMorePubsRow,
-	SpecialRow,
-} from '../DashboardOverview/overviewRows';
+import { OverviewRows, LoadMorePubsRow, SpecialRow } from '../DashboardOverview/overviewRows';
 import { OverviewSearchGroup, OverviewSearchFilter } from '../DashboardOverview/helpers';
+
+import { PubWithSubmission } from './types';
+import SubmissionRow from './SubmissionRow';
 
 require('./submissionItems.scss');
 
 type Props = {
 	collection: Collection;
-	initialPubs: Pub[];
+	initialPubs: PubWithSubmission[];
 	initiallyLoadedAllPubs: boolean;
 };
 
 const queriesForSubmissionPubs: Record<string, Partial<PubsQuery>> = {
-	default: {
+	all: {
 		submissionStatuses: ['pending', 'accepted', 'declined'],
 	},
 	pending: {
@@ -36,35 +34,38 @@ const queriesForSubmissionPubs: Record<string, Partial<PubsQuery>> = {
 	},
 };
 
+const pendingSearchFilter: OverviewSearchFilter = {
+	id: 'pending',
+	title: 'Pending',
+	query: queriesForSubmissionPubs.pending,
+};
+
 const overviewSearchFilters: OverviewSearchFilter[] = [
-	{
-		id: 'pending',
-		title: 'Pending',
-		query: queriesForSubmissionPubs.pending,
-	},
+	pendingSearchFilter,
 	{ id: 'accepted', title: 'Accepted', query: queriesForSubmissionPubs.accepted },
 	{ id: 'declined', title: 'Declined', query: queriesForSubmissionPubs.declined },
-	{ id: 'all', title: 'All', query: queriesForSubmissionPubs.default },
+	{ id: 'all', title: 'All', query: queriesForSubmissionPubs.all },
 ];
 
 const SubmissionItems = (props: Props) => {
 	const { collection, initialPubs, initiallyLoadedAllPubs } = props;
 	const [searchTerm, setSearchTerm] = useState('');
-	const [filter, setFilter] = useState<null | Partial<PubsQuery>>(null);
+	const [filter, setFilter] = useState<OverviewSearchFilter>(pendingSearchFilter);
 	const isSearchingOrFiltering = !!filter || !!searchTerm;
 
 	const {
 		currentQuery: { pubs, isLoading, hasLoadedAllPubs, loadMorePubs },
-	} = useManyPubs({
+	} = useManyPubs<PubWithSubmission>({
 		isEager: isSearchingOrFiltering,
 		initialPubs,
 		initiallyLoadedAllPubs,
 		batchSize: 200,
+		cacheQueries: false,
 		pubOptions: { getSubmissions: true },
 		query: {
 			term: searchTerm,
 			scopedCollectionId: collection.id,
-			...filter,
+			...filter?.query,
 		},
 	});
 
@@ -75,29 +76,12 @@ const SubmissionItems = (props: Props) => {
 		onRequestMoreItems: loadMorePubs,
 	});
 
-	const renderPubs = () => {
-		return pubs.map((pub) => (
-			<PubOverviewRow
-				pub={pub}
-				key={pub.id}
-				leftIconElement="manually-entered-data"
-				hasSubmission={true}
-			/>
-		));
-	};
-
 	const renderEmptyState = () => {
-		if (initialPubs.length === 0) {
-			return (
-				<NonIdealState
-					icon="clean"
-					title="There doesn't seem to be any submissions"
-					description="Try reaching out to members of your community for submissions"
-				/>
-			);
-		}
-		if (pubs.length === 0 && hasLoadedAllPubs && isSearchingOrFiltering) {
-			return <SpecialRow>No Submissions have been found.</SpecialRow>;
+		if (pubs.length === 0 && hasLoadedAllPubs) {
+			if (filter === pendingSearchFilter && !searchTerm) {
+				return <NonIdealState icon="clean" title="There aren't any submissions yet." />;
+			}
+			return <SpecialRow>No matching Submissions.</SpecialRow>;
 		}
 		return null;
 	};
@@ -105,14 +89,16 @@ const SubmissionItems = (props: Props) => {
 	return (
 		<div className="submission-items-component">
 			<OverviewSearchGroup
-				placeholder="Enter keyword to search submissions"
+				placeholder="Search for submitted Pubs"
 				onUpdateSearchTerm={(t) => t === '' && setSearchTerm(t)}
 				onCommitSearchTerm={setSearchTerm}
 				onChooseFilter={setFilter}
 				filters={overviewSearchFilters}
 			/>
 			<OverviewRows>
-				{renderPubs()}
+				{pubs.map((pub) => (
+					<SubmissionRow pub={pub} key={pub.id} />
+				))}
 				{canLoadMorePubs && <LoadMorePubsRow isLoading />}
 				{renderEmptyState()}
 			</OverviewRows>

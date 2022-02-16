@@ -5,6 +5,8 @@ import DownloadChooser from 'client/containers/DashboardSettings/PubSettings/Dow
 import { pubData, communityData } from 'utils/storybook/data';
 import { PubThemePicker, PopoverButton } from 'components';
 
+require('./spubSettings.scss');
+
 const SpubSettings = () => {
 	const [persistedPubData, setPersistedPubData] = useState(pubData);
 	const updatePersistedPubData = (values) => {
@@ -56,16 +58,18 @@ const SpubSettings = () => {
 					</p>
 				</div>
 				<div>
-					UPLOAD YOUR FILE &nbsp;
-					<DownloadChooser
-						pubData={{
-							id: '00f9aaaf-0468-4590-9b86-1a2bff4ffe57',
+					<p>
+						UPLOAD YOUR FILE &nbsp;
+						<DownloadChooser
+							pubData={{
+								id: '00f9aaaf-0468-4590-9b86-1a2bff4ffe57',
 
-							downloads: undefined,
-						}}
-						communityId={communityData.id}
-						onSetDownloads={(downloads) => updatePersistedPubData({ downloads })}
-					/>
+								downloads: undefined,
+							}}
+							communityId={communityData.id}
+							onSetDownloads={(downloads) => updatePersistedPubData({ downloads })}
+						/>
+					</p>
 				</div>
 			</div>
 		);

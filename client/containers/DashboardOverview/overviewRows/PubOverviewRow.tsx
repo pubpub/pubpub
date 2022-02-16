@@ -9,17 +9,18 @@ import { getDashUrl } from 'utils/dashboard';
 import { usePageContext } from 'utils/hooks';
 
 import OverviewRowSkeleton from './OverviewRowSkeleton';
-import { renderRowDetails } from './labels';
+import { IconLabelPair, renderLabelPairs, getTypicalPubLabels } from './labels';
 
 type Pub = DefinitelyHas<BasePub, 'attributions'>;
 
 type Props = {
 	leftIconElement?: React.ReactNode;
 	rightElement?: React.ReactNode;
+	labels?: IconLabelPair[];
 	className?: string;
 	pub: Pub;
 	inCollection?: boolean;
-	hasSubmission?: boolean;
+	isGrayscale?: boolean;
 };
 
 const PubOverviewRow = (props: Props) => {
@@ -27,11 +28,13 @@ const PubOverviewRow = (props: Props) => {
 		pub,
 		className,
 		inCollection,
-		hasSubmission = false,
+		isGrayscale = false,
 		leftIconElement = null,
+		labels = null,
 		rightElement: providedRightElement,
 	} = props;
 	const { communityData } = usePageContext();
+
 	const rightElement = providedRightElement || (
 		<AnchorButton
 			minimal
@@ -41,17 +44,19 @@ const PubOverviewRow = (props: Props) => {
 		/>
 	);
 
-	const details = renderRowDetails(pub, hasSubmission);
+	const allLabels = [...(labels || []), ...getTypicalPubLabels(pub)];
+
 	return (
 		<OverviewRowSkeleton
 			className={classNames('pub-overview-row-component', className)}
 			href={getDashUrl({ pubSlug: pub.slug })}
 			title={pub.title}
 			byline={<PubByline pubData={pub} linkToUsers={false} truncateAt={8} />}
-			details={details}
+			details={renderLabelPairs(allLabels)}
 			leftIcon={leftIconElement || 'pubDoc'}
 			rightElement={rightElement}
 			darkenRightIcons={inCollection}
+			isGrayscale={isGrayscale}
 		/>
 	);
 };

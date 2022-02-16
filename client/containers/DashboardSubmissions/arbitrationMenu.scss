@@ -1,0 +1,9 @@
+.arbitration-menu-component {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+
+	> *:not(:first-child) {
+		margin-left: 20px;
+	}
+}

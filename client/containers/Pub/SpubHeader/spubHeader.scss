@@ -49,34 +49,33 @@ $title-elements-spacing: 15px;
 			}
 		}
 		.draft-submit-buttons-component {
-				grid-area: bottom;
-				display: flex;
-				margin-top: 35px;
-				& > *:not(:last-child) {
-						margin-right: 30px;
-				}
-				.submit-button {
-					background: white;
-					.stacked-label {
+			grid-area: bottom;
+			display: flex;
+			margin-top: 35px;
+			& > *:not(:last-child) {
+				margin-right: 30px;
+			}
+			.submit-button {
+				background: white;
+				.stacked-label {
+					color: var(--community-accent-dark);
+					display: flex;
+					flex-direction: column-reverse;
+					.bottom.pub-header-themed-secondary {
 						color: var(--community-accent-dark);
-						display: flex;
-						flex-direction: column-reverse;
-						.bottom.pub-header-themed-secondary {
-							color: var(--community-accent-dark);
-						}
 					}
 				}
-				.submit-icon {
-					color: white;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					background-color: #1CBC36;
-					width: 24px;
-					height: 24px;
-					border-radius: 50%;
-
-				}
+			}
+			.submit-icon {
+				color: white;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				background-color: #1cbc36;
+				width: 24px;
+				height: 24px;
+				border-radius: 50%;
+			}
 		}
 	}
 }
@@ -85,10 +84,12 @@ $title-elements-spacing: 15px;
 	> .bp3-tab-list {
 		max-width: $spub-configuration-width;
 		margin: 15px auto auto;
+		padding-top: 5px;
+
 		> .bp3-tab-indicator-wrapper > .bp3-tab-indicator {
 			background: var(--community-accent-dark);
 		}
-		padding-top: 5px;
+
 		.tab {
 			min-width: 200px;
 			margin: 0;
@@ -99,8 +100,12 @@ $title-elements-spacing: 15px;
 			line-height: 17px;
 			letter-spacing: 0.15em;
 			text-align: left;
-			padding: 15px;
+			padding: 15px 15px 15px 0;
 			text-transform: uppercase;
+		}
+
+		.tab + .tab {
+			padding: 15px;
 		}
 	}
 	.tab {
