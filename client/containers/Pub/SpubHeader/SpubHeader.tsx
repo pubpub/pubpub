@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Tab, Tabs, TabId, Icon, IconName } from '@blueprintjs/core';
 
-import { DocJson } from 'types';
 import { getEmptyDoc } from 'components/Editor';
 import { apiFetch } from 'client/utils/apiFetch';
+import { DocJson, DefinitelyHas, PubHistoryState, PubPageData } from 'types';
 import { assert } from 'utils/assert';
 
 import InstructionsTab from './InstructionsTab';
@@ -13,9 +13,12 @@ import PreviewTab from './PreviewTab';
 require('./spubHeader.scss');
 
 type Props = {
-	updateLocalData: any;
-	historyData: any;
-	pubData: any;
+	historyData: PubHistoryState;
+	updateLocalData: (
+		type: string,
+		patch: Partial<PubPageData> | Partial<PubHistoryState>,
+	) => unknown;
+	pubData: DefinitelyHas<PubPageData, 'submission'>;
 };
 
 export const renderTabTitle = (icon: IconName, title: string) => (
@@ -27,6 +30,7 @@ export const renderTabTitle = (icon: IconName, title: string) => (
 const SpubHeader = (props: Props) => {
 	const { pubData, updateLocalData } = props;
 	const [abstract, setAbstract] = useState(pubData.submission.abstract || getEmptyDoc());
+	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');
 	const updateAbstract = async (newAbstract: DocJson) => {
 		return apiFetch('/api/submissions', {
 			method: 'PUT',
@@ -35,14 +39,12 @@ const SpubHeader = (props: Props) => {
 				id: pubData.submission.id,
 				status: pubData.submission.status,
 			}),
-		})
-			.then(() => setAbstract(newAbstract))
-			.catch((err) => console.log({ err }));
+		}).then(() => setAbstract(newAbstract));
 	};
 
-	const updateAndSavePubData = (newPubData) => {
+	const updateAndSavePubData = async (newPubData: Partial<PubPageData>) => {
 		const oldPubData = { ...pubData };
-		updateLocalData('pub', newPubData, { isImmediate: true });
+		updateLocalData('pub', newPubData);
 		return apiFetch('/api/pubs', {
 			method: 'PUT',
 			body: JSON.stringify({
@@ -52,15 +54,11 @@ const SpubHeader = (props: Props) => {
 			}),
 		}).catch(() => updateLocalData('pub', oldPubData));
 	};
-
-	const updateHistoryData = (newHistoryData) => {
-		return updateLocalData('history', newHistoryData);
-	};
-
-	const { submissionWorkflow } = props.pubData.submission;
-	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');
 	assert(props.pubData.submission.submissionWorkflow !== undefined);
 
+	const updateHistoryData = (newHistoryData: Partial<PubHistoryState>) => {
+		return updateLocalData('history', newHistoryData);
+	};
 	const instructionTabTitle = renderTabTitle('align-left', 'Instructions');
 	const submissionTabTitle = renderTabTitle('manually-entered-data', 'Submission');
 	const previewTabTitle = renderTabTitle('eye-open', 'Preview & Submit');
@@ -75,7 +73,11 @@ const SpubHeader = (props: Props) => {
 			<Tab
 				id="instructions"
 				title={instructionTabTitle}
-				panel={<InstructionsTab submissionWorkflow={submissionWorkflow} />}
+				panel={
+					<InstructionsTab
+						submissionWorkflow={props.pubData.submission.submissionWorkflow}
+					/>
+				}
 				className="tab-panel tab"
 			/>
 

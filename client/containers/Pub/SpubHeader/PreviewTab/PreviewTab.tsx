@@ -1,10 +1,12 @@
 import React from 'react';
 import { Icon } from '@blueprintjs/core';
 
-import { PubPageData } from 'types';
-import { GridWrapper, PubByline } from 'components';
+import { PubPageData, DefinitelyHas, PubHistoryState } from 'types';
+import { GridWrapper, PubByline, DialogLauncher } from 'components';
 import { usePageContext } from 'utils/hooks';
+import { usePubContext } from 'containers/Pub/pubHooks';
 
+import SubmitDialog from './SubmitDialog';
 import PubHeaderBackground from '../../PubHeader/PubHeaderBackground';
 import ResponsiveHeaderButton from '../../PubHeader/ResponsiveHeaderButton';
 import { getHistoryButtonLabelForTimestamp } from '../../PubHeader/DraftReleaseButtons';
@@ -12,9 +14,9 @@ import { getHistoryButtonLabelForTimestamp } from '../../PubHeader/DraftReleaseB
 require('../../PubHeader/draftReleaseButtons.scss');
 
 type Props = {
-	historyData: any;
-	updateHistoryData: any;
-	pubData: PubPageData;
+	historyData: PubHistoryState;
+	updateHistoryData: (patch: Partial<PubHistoryState>) => unknown;
+	pubData: DefinitelyHas<PubPageData, 'submission'>;
 };
 
 const PreviewTab = (props: Props) => {
@@ -22,6 +24,7 @@ const PreviewTab = (props: Props) => {
 	const { pubData, historyData } = props;
 	const { latestKey, timestamps } = historyData;
 	const latestTimestamp = timestamps[latestKey];
+	const { collabData } = usePubContext();
 	return (
 		<PubHeaderBackground
 			className="spub-header-component"
@@ -34,9 +37,11 @@ const PreviewTab = (props: Props) => {
 						<h1 className="title">
 							<span className="text-wrapper">{pubData.title}</span>
 						</h1>
-						<h3 className="description pub-header-themed-secondary">
-							{pubData.description}
-						</h3>
+						{pubData.description && (
+							<h3 className="description pub-header-themed-secondary">
+								<span className="text-wrapper">{pubData.description}</span>
+							</h3>
+						)}
 						<PubByline pubData={pubData} />
 						<div className="draft-submit-buttons-component">
 							<ResponsiveHeaderButton
@@ -56,12 +61,35 @@ const PreviewTab = (props: Props) => {
 									})
 								}
 							/>
-							<ResponsiveHeaderButton
-								// @ts-expect-error ts-migrate(2322) FIXME: Type '{ icon: string; tagName: string; href: strin... Remove this comment to see the full error message
-								className="submit-button"
-								icon={<Icon iconSize={13} className="submit-icon" icon="saved" />}
-								label={{ top: 'Submit Pub', bottom: 'finish your submission' }}
-							/>
+							<DialogLauncher
+								renderLauncherElement={({ openDialog }) => (
+									<ResponsiveHeaderButton
+										// @ts-expect-error ts-migrate(2322) FIXME: Type '{ icon: string; tagName: string; href: strin... Remove this comment to see the full error message
+										className="submit-button"
+										disabled={collabData.status === 'connecting'}
+										onClick={openDialog}
+										icon={
+											<Icon
+												iconSize={13}
+												className="submit-icon"
+												icon="saved"
+											/>
+										}
+										label={{
+											top: 'Submit Pub',
+											bottom: 'finish your submission',
+										}}
+									/>
+								)}
+							>
+								{({ isOpen, onClose }) => (
+									<SubmitDialog
+										submission={props.pubData.submission}
+										isOpen={isOpen}
+										onClose={onClose}
+									/>
+								)}
+							</DialogLauncher>
 						</div>
 					</div>
 				</div>

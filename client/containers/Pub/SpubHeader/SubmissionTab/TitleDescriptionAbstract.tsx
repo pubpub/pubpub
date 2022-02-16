@@ -2,13 +2,13 @@ import React from 'react';
 import { Label, InputGroup } from '@blueprintjs/core';
 import { useDebouncedCallback } from 'use-debounce';
 
-import { Pub, DocJson } from 'types';
+import { PubPageData, Pub, DocJson } from 'types';
 import { MinimalEditor } from 'components';
 
 type Props = {
 	pub: Pub;
 	abstract: DocJson;
-	onUpdatePub: (pub: Partial<Pub>) => unknown;
+	onUpdatePub: (pub: Partial<PubPageData>) => unknown;
 	onUpdateAbstract: (abstract: DocJson) => Promise<unknown>;
 };
 
@@ -21,7 +21,9 @@ const TitleDescriptionAbstract = (props: Props) => {
 			<Label>
 				Title of your submission pub
 				<InputGroup
-					onChange={(evt) => onUpdatePubDebounced({ title: evt.target.value })}
+					onChange={(evt: React.ChangeEvent<HTMLInputElement>) =>
+						onUpdatePubDebounced({ title: evt.target.value })
+					}
 					defaultValue={props.pub.title}
 					placeholder="Enter pub title here..."
 				/>
@@ -40,7 +42,9 @@ const TitleDescriptionAbstract = (props: Props) => {
 				<InputGroup
 					placeholder="Enter description text here..."
 					defaultValue={props.pub.description}
-					onChange={(evt) => onUpdatePubDebounced({ description: evt.target.value })}
+					onChange={(evt: React.ChangeEvent<HTMLInputElement>) =>
+						onUpdatePubDebounced({ description: evt.target.value })
+					}
 				/>
 			</Label>
 		</>
