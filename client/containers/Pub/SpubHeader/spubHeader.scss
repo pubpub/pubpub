@@ -56,14 +56,9 @@ $title-elements-spacing: 15px;
 				margin-right: 30px;
 			}
 			.submit-button {
-				background: white;
 				.stacked-label {
-					color: var(--community-accent-dark);
 					display: flex;
 					flex-direction: column-reverse;
-					.bottom.pub-header-themed-secondary {
-						color: var(--community-accent-dark);
-					}
 				}
 			}
 			.submit-icon {
