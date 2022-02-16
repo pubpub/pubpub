@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Tab, Tabs, TabId, Icon, IconName } from '@blueprintjs/core';
 
-import { Submission, Pub } from 'types';
+import { Submission, Pub, DefinitelyHas, PubHistoryState, PubPageData } from 'types';
 import { assert } from 'utils/assert';
 
 import InstructionsTab from './InstructionsTab';
@@ -11,9 +11,9 @@ import PreviewTab from './PreviewTab';
 require('./spubHeader.scss');
 
 type Props = {
-	updateLocalData: any;
-	historyData: any;
-	pubData: any;
+	historyData: PubHistoryState;
+	updateLocalData: (type: string, patch: Partial<PubPageData>) => unknown;
+	pubData: DefinitelyHas<PubPageData, 'submission'>;
 	onUpdatePub?: (pub: Partial<Pub>) => unknown;
 	onUpdateSubmission?: (submission: Partial<Submission>) => unknown;
 };
@@ -27,7 +27,13 @@ export const renderInstructionTabTitle = (icon: IconName, title: string) => {
 };
 
 const SpubHeader = (props: Props) => {
-	const { submissionWorkflow, onUpdatePub, onUpdateSubmission } = props.pubData.submission;
+	const {
+		pubData: {
+			submission: { submissionWorkflow },
+		},
+		onUpdatePub,
+		onUpdateSubmission,
+	} = props;
 	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');
 	assert(props.pubData.submission.submissionWorkflow !== undefined);
 

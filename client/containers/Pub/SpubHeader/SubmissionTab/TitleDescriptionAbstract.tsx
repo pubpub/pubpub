@@ -8,8 +8,8 @@ type Props = {
 };
 
 const TitleDescriptionAbstract = (props: Props) => {
-	const { onUpdatePub, onUpdateSubmission } = props;
-	console.log(onUpdatePub, onUpdateSubmission);
+	// TODO: weave these in to actually manage the spub
+	const { onUpdatePub: _, onUpdateSubmission: __ } = props;
 
 	return (
 		<>
