@@ -5,9 +5,11 @@ import pick from 'lodash.pick';
 import { PubPageData, DefinitelyHas } from 'types';
 
 import PubSyncManager, { PubContextType } from './PubSyncManager';
-// import PubSyncManager from './PubSyncManager';
 import PubHeader from './PubHeader';
+
 import SpubHeader from './SpubHeader';
+// import SubmissionPubHeader from './SubmissionPubHeader';
+
 import PubDocument from './PubDocument';
 import { PubSuspendWhileTypingProvider, PubSuspendWhileTyping } from './PubSuspendWhileTyping';
 

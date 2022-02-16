@@ -137,6 +137,7 @@ export type PubPageData = DefinitelyHas<
 		initialStructuredCitations: boolean;
 		releaseNumber: Maybe<number>;
 		submission?: DefinitelyHas<Submission, 'submissionWorkflow'>;
+		iSubmission: boolean;
 	};
 
 export type PubHistoryState = {
