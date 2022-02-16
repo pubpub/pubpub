@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import { usePageContext } from 'utils/hooks';
 import pick from 'lodash.pick';
-import { PubPageData } from 'types';
+import { PubPageData, DefinitelyHas } from 'types';
 
 import PubSyncManager, { PubContextType } from './PubSyncManager';
 // import PubSyncManager from './PubSyncManager';
@@ -61,6 +61,15 @@ const scrollToElementTop = (hash: string, delay = 0) => {
 	}, delay);
 };
 
+const HeaderComponent = (props: ModePropsType) => {
+	const { pubData, ...rest } = props;
+	if (props.pubData.submission?.status === 'incomplete')
+		return (
+			<SpubHeader {...rest} pubData={pubData as DefinitelyHas<PubPageData, 'submission'>} />
+		);
+	return <PubHeader {...props} />;
+};
+
 const Pub = (props: Props) => {
 	const { loginData, locationData, communityData } = usePageContext();
 	useEffect(() => {
@@ -91,10 +100,6 @@ const Pub = (props: Props) => {
 
 		return () => {};
 	}, [props.pubData]);
-	const HeaderComponent =
-		'submission' in props.pubData && props.pubData.submission?.status === 'incomplete'
-			? SpubHeader
-			: PubHeader;
 	return (
 		<PubSuspendWhileTypingProvider>
 			<div id="pub-container">

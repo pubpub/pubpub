@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon } from '@blueprintjs/core';
 
-import { PubPageData, Submission, DefinitelyHas } from 'types';
+import { PubPageData, DefinitelyHas, PubHistoryState } from 'types';
 import { GridWrapper, PubByline, DialogLauncher } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { usePubContext } from 'containers/Pub/pubHooks';
@@ -14,9 +14,9 @@ import { getHistoryButtonLabelForTimestamp } from '../../PubHeader/DraftReleaseB
 require('../../PubHeader/draftReleaseButtons.scss');
 
 type Props = {
-	historyData: any;
-	updateHistoryData: any;
-	pubData: PubPageData & { submission: DefinitelyHas<Submission, 'submissionWorkflow'> };
+	historyData: PubHistoryState;
+	updateHistoryData: (patch: Partial<PubHistoryState>) => unknown;
+	pubData: DefinitelyHas<PubPageData, 'submission'>;
 };
 
 const PreviewTab = (props: Props) => {
