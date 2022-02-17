@@ -3,9 +3,8 @@ import { Button } from '@blueprintjs/core';
 
 import { PubPageData, DefinitelyHas } from 'types';
 
-import DownloadChooser from 'client/containers/DashboardSettings/PubSettings/DownloadChooser';
 import { usePageContext } from 'utils/hooks';
-import { PubThemePicker, PopoverButton } from 'components';
+import { PubThemePicker, PopoverButton, DownloadChooser } from 'components';
 
 require('./spubSettings.scss');
 
