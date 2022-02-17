@@ -4,7 +4,7 @@ import { Button } from '@blueprintjs/core';
 import { PubPageData, DefinitelyHas } from 'types';
 
 import DownloadChooser from 'client/containers/DashboardSettings/PubSettings/DownloadChooser';
-import { communityData } from 'utils/storybook/data';
+import { usePageContext } from 'utils/hooks';
 import { PubThemePicker, PopoverButton } from 'components';
 
 require('./spubSettings.scss');
@@ -16,6 +16,7 @@ type Props = {
 
 const SpubSettings = (props: Props) => {
 	const { onUpdatePub, pubData } = props;
+	const { communityData } = usePageContext();
 
 	const renderHeaderAndBackgroundSetting = () => {
 		return (
