@@ -2,4 +2,13 @@
 	.bp3-tab-indicator-wrapper {
 		min-height: 30px;
 	}
+	.pub-header-popover {
+		z-index: 21;
+	}
+	.submission-tab-prompt {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		column-gap: 444px;
+	}
 }

@@ -265,6 +265,7 @@ const PubSettings = (props: Props) => {
 					pubData={pubData}
 					communityId={communityData.id}
 					onSetDownloads={(downloads) => updatePersistedPubData({ downloads })}
+					copy="Upload New File"
 				/>
 			</SettingsSection>
 		);

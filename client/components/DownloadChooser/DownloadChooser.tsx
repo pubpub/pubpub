@@ -15,10 +15,11 @@ type Props = {
 	};
 	communityId: string;
 	onSetDownloads: (...args: any[]) => any;
+	copy: string;
 };
 
 const DownloadChooser = (props: Props) => {
-	const { communityId, pubData, onSetDownloads } = props;
+	const { communityId, pubData, onSetDownloads, copy } = props;
 	const [isRemoving, setIsRemoving] = useState(false);
 
 	const formattedDownload = getFormattedDownload(pubData.downloads);
@@ -60,11 +61,7 @@ const DownloadChooser = (props: Props) => {
 				able to use the automatic export tools.
 			</p> */}
 			<div className="buttons">
-				<FileUploadButton
-					icon="upload"
-					onUploadFinish={updateDownloads}
-					text="Upload new file"
-				/>
+				<FileUploadButton icon="upload" onUploadFinish={updateDownloads} text={copy} />
 				{formattedDownload && (
 					<>
 						<Button
