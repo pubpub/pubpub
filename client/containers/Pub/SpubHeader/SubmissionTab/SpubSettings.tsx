@@ -1,17 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@blueprintjs/core';
 
+import { PubPageData, DefinitelyHas } from 'types';
+
 import DownloadChooser from 'client/containers/DashboardSettings/PubSettings/DownloadChooser';
-import { pubData, communityData } from 'utils/storybook/data';
+import { communityData } from 'utils/storybook/data';
 import { PubThemePicker, PopoverButton } from 'components';
 
 require('./spubSettings.scss');
 
-const SpubSettings = () => {
-	const [persistedPubData, setPersistedPubData] = useState(pubData);
-	const updatePersistedPubData = (values) => {
-		setPersistedPubData({ ...persistedPubData, ...values });
-	};
+type Props = {
+	pubData: DefinitelyHas<PubPageData, 'submission'>;
+	onUpdatePub: (pub: Partial<PubPageData>) => unknown;
+};
+
+const SpubSettings = (props: Props) => {
+	const { onUpdatePub, pubData } = props;
+
 	const renderHeaderAndBackgroundSetting = () => {
 		return (
 			<div>
@@ -31,6 +36,7 @@ const SpubSettings = () => {
 						<PopoverButton
 							component={PubThemePicker}
 							className="pub-header-popover"
+							updatePubData={onUpdatePub}
 							pubData={pubData}
 							communityData={communityData}
 							aria-label="Pub header theme options"
@@ -61,13 +67,9 @@ const SpubSettings = () => {
 					<p>
 						UPLOAD YOUR FILE &nbsp;
 						<DownloadChooser
-							pubData={{
-								id: '00f9aaaf-0468-4590-9b86-1a2bff4ffe57',
-
-								downloads: undefined,
-							}}
+							pubData={pubData}
 							communityId={communityData.id}
-							onSetDownloads={(downloads) => updatePersistedPubData({ downloads })}
+							onSetDownloads={onUpdatePub}
 						/>
 					</p>
 				</div>
