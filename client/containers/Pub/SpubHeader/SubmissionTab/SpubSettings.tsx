@@ -1,10 +1,10 @@
 import React from 'react';
-import { Button } from '@blueprintjs/core';
 
 import { PubPageData, DefinitelyHas } from 'types';
 
 import { usePageContext } from 'utils/hooks';
 import { PubThemePicker, PopoverButton, DownloadChooser } from 'components';
+import SmallHeaderButton from '../../PubHeader/SmallHeaderButton';
 
 require('./spubSettings.scss');
 
@@ -32,7 +32,7 @@ const SpubSettings = (props: Props) => {
 					</p>
 				</div>
 				<div>
-					EDIT PUB THEME &nbsp;
+					&nbsp;
 					<PopoverButton
 						component={PubThemePicker}
 						className="pub-header-popover"
@@ -41,7 +41,12 @@ const SpubSettings = (props: Props) => {
 						communityData={communityData}
 						aria-label="Pub header theme options"
 					>
-						<Button icon="clean" />
+						<SmallHeaderButton
+							label="EDIT PUB THEME"
+							labelPosition="right"
+							icon="clean"
+							className="label"
+						/>
 					</PopoverButton>
 				</div>
 			</div>
@@ -63,12 +68,15 @@ const SpubSettings = (props: Props) => {
 						they'll still be able to use the automatic export tools.
 					</p>
 				</div>
+
 				<div>
 					<DownloadChooser
 						pubData={pubData}
 						communityId={communityData.id}
 						onSetDownloads={onUpdatePub}
 						copy="Upload Your file"
+						isMinimal={true}
+						isSmall={true}
 					/>
 				</div>
 			</div>

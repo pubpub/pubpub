@@ -2,7 +2,6 @@
 	display: flex;
 	flex-direction: column;
 	row-gap: 48px;
-	margin-bottom: 26px;
 
 	.bp3-tab-indicator-wrapper {
 		min-height: 30px;
@@ -14,10 +13,9 @@
 	.submission-tab-prompt {
 		display: flex;
 		flex-direction: row;
-
+		column-gap: 340px;
 	}
 	.submission-tab-prompt-text {
-
 		width: 300px;
 	}
 }

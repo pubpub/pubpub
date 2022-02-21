@@ -16,10 +16,21 @@ type Props = {
 	communityId: string;
 	onSetDownloads: (...args: any[]) => any;
 	copy: string;
+	isLarge?: boolean;
+	isSmall?: boolean;
+	isMinimal?: boolean;
 };
 
 const DownloadChooser = (props: Props) => {
-	const { communityId, pubData, onSetDownloads, copy } = props;
+	const {
+		communityId,
+		pubData,
+		onSetDownloads,
+		copy,
+		isLarge = false,
+		isSmall = false,
+		isMinimal = false,
+	} = props;
 	const [isRemoving, setIsRemoving] = useState(false);
 
 	const formattedDownload = getFormattedDownload(pubData.downloads);
@@ -61,7 +72,14 @@ const DownloadChooser = (props: Props) => {
 				able to use the automatic export tools.
 			</p> */}
 			<div className="buttons">
-				<FileUploadButton icon="upload" onUploadFinish={updateDownloads} text={copy} />
+				<FileUploadButton
+					icon="upload"
+					onUploadFinish={updateDownloads}
+					text={copy}
+					isLarge={isLarge}
+					isSmall={isSmall}
+					isMinimal={isMinimal}
+				/>
 				{formattedDownload && (
 					<>
 						<Button
