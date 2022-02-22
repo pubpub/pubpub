@@ -63,6 +63,8 @@ const SpubHeader = (props: Props) => {
 	const submissionTabTitle = renderTabTitle('manually-entered-data', 'Submission');
 	const previewTabTitle = renderTabTitle('eye-open', 'Preview & Submit');
 
+	const maybeActiveClass = (tabId) => `${tabId === selectedTab ? 'active' : 'inactive'}`;
+
 	return (
 		<Tabs
 			id="spubHeader"
@@ -73,17 +75,18 @@ const SpubHeader = (props: Props) => {
 			<Tab
 				id="instructions"
 				title={instructionTabTitle}
+				className={`tab-panel ${maybeActiveClass('instructions')}`}
 				panel={
 					<InstructionsTab
 						submissionWorkflow={props.pubData.submission.submissionWorkflow}
 					/>
 				}
-				className="tab-panel tab"
 			/>
 
 			<Tab
 				id="submission"
 				title={submissionTabTitle}
+				className={`tab-panel ${maybeActiveClass('submission')}`}
 				panel={
 					<SubmissionTab
 						abstract={abstract}
@@ -92,11 +95,11 @@ const SpubHeader = (props: Props) => {
 						pub={props.pubData}
 					/>
 				}
-				className="tab-panel tab"
 			/>
 			<Tab
 				id="preview"
 				title={previewTabTitle}
+				className={`${maybeActiveClass('preview')}`}
 				panel={
 					<PreviewTab
 						updateHistoryData={updateHistoryData}
@@ -104,7 +107,6 @@ const SpubHeader = (props: Props) => {
 						pubData={props.pubData}
 					/>
 				}
-				className="tab preview-tab"
 			/>
 		</Tabs>
 	);

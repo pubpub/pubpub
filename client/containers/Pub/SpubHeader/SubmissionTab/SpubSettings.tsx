@@ -5,8 +5,6 @@ import DownloadChooser from 'client/containers/DashboardSettings/PubSettings/Dow
 import { pubData, communityData } from 'utils/storybook/data';
 import { PubThemePicker, PopoverButton } from 'components';
 
-require('./spubSettings.scss');
-
 const SpubSettings = () => {
 	const [persistedPubData, setPersistedPubData] = useState(pubData);
 	const updatePersistedPubData = (values) => {

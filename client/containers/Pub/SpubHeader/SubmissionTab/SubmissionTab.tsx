@@ -16,32 +16,42 @@ type Props = {
 
 const SubmissionTab = (props: Props) => {
 	const [selectedTab, setSelectedTab] = useState('title');
+	const maybeActiveClass = (tabId) => `${tabId === selectedTab ? 'active' : 'inactive'}`;
 
 	return (
-		<div>
-			<Tabs
-				id="TabsExample"
-				className="submission-tab-tabs"
-				// @ts-expect-error ts-migrate(2322) FIXME: Type 'Dispatch<SetStateAction<string>>' is not ass... Remove this comment to see the full error message
-				onChange={setSelectedTab}
-				selectedTabId={selectedTab}
-			>
-				<Tab
-					id="title"
-					title="Title, Description & Abstract"
-					panel={
-						<TitleDescriptionAbstract
-							pub={props.pub}
-							abstract={props.abstract}
-							onUpdatePub={props.onUpdatePub}
-							onUpdateAbstract={props.onUpdateAbstract}
-						/>
-					}
-				/>
-				<Tab id="contributors" title="Contributors" panel={<Contributors />} />
-				<Tab id="spubsettings" title="Pub Settings" panel={<SpubSettings />} />
-			</Tabs>
-		</div>
+		<Tabs
+			id="TabsExample"
+			className="submission-tab-component"
+			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Dispatch<SetStateAction<string>>' is not ass... Remove this comment to see the full error message
+			onChange={setSelectedTab}
+			selectedTabId={selectedTab}
+		>
+			<Tab
+				id="title"
+				title="Title, Description & Abstract"
+				className={`title-description-abstract ${maybeActiveClass('title')}`}
+				panel={
+					<TitleDescriptionAbstract
+						pub={props.pub}
+						abstract={props.abstract}
+						onUpdatePub={props.onUpdatePub}
+						onUpdateAbstract={props.onUpdateAbstract}
+					/>
+				}
+			/>
+			<Tab
+				className={maybeActiveClass('contributors')}
+				id="contributors"
+				title="Contributors"
+				panel={<Contributors />}
+			/>
+			<Tab
+				className={maybeActiveClass('spubSettings')}
+				id="spubSettings"
+				title="Pub Settings"
+				panel={<SpubSettings />}
+			/>
+		</Tabs>
 	);
 };
 
