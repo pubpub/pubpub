@@ -15,7 +15,7 @@ type Props = {
 };
 
 const SubmissionTab = (props: Props) => {
-	const [selectedTab, setSelectedTab] = useState('title');
+	const [selectedTab, setSelectedTab] = useState('title-description-abstract');
 	const maybeActiveClass = (tabId: string) => `${tabId === selectedTab ? 'active' : 'inactive'}`;
 
 	return (
