@@ -15,7 +15,7 @@ type Props = {
 	};
 	communityId: string;
 	onSetDownloads: (...args: any[]) => any;
-	text: string;
+	text?: string;
 	isLarge?: boolean;
 	isSmall?: boolean;
 	isMinimal?: boolean;
@@ -26,7 +26,7 @@ const DownloadChooser = (props: Props) => {
 		communityId,
 		pubData,
 		onSetDownloads,
-		text,
+		text = 'Upload your file',
 		isLarge = false,
 		isSmall = false,
 		isMinimal = false,

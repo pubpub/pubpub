@@ -20,13 +20,13 @@ const SpubSettings = (props: Props) => {
 	const renderHeaderAndBackgroundSetting = () => {
 		return (
 			<div className="submission-tab-prompt">
-				<div>
+				<div className="submission-tab-prompt-text">
 					<h4>Header Background & Theme</h4>
-					<p className="submission-tab-prompt-text">
+					<p>
 						You can pick a background image and a custom visual theme for the header of
 						your submission pub.
-						<br />
-						<br />
+					</p>
+					<p>
 						Once you've made your changes, use the Preview tab to see the updated header
 						of your submission pub.
 					</p>
@@ -56,7 +56,7 @@ const SpubSettings = (props: Props) => {
 	const renderDefaultDownloadFile = () => {
 		return (
 			<div className="submission-tab-prompt">
-				<div>
+				<div className="submission-tab-prompt-text">
 					<h4>Default Download File</h4>
 					<p className="submission-tab-prompt-text">
 						Readers of your submission pub can choose to download it as a file,
