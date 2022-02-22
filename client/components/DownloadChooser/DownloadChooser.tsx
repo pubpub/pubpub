@@ -15,7 +15,7 @@ type Props = {
 	};
 	communityId: string;
 	onSetDownloads: (...args: any[]) => any;
-	copy: string;
+	text: string;
 	isLarge?: boolean;
 	isSmall?: boolean;
 	isMinimal?: boolean;
@@ -26,7 +26,7 @@ const DownloadChooser = (props: Props) => {
 		communityId,
 		pubData,
 		onSetDownloads,
-		copy,
+		text,
 		isLarge = false,
 		isSmall = false,
 		isMinimal = false,
@@ -75,7 +75,7 @@ const DownloadChooser = (props: Props) => {
 				<FileUploadButton
 					icon="upload"
 					onUploadFinish={updateDownloads}
-					text={copy}
+					text={text}
 					isLarge={isLarge}
 					isSmall={isSmall}
 					isMinimal={isMinimal}
