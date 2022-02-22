@@ -44,7 +44,11 @@ const SubmissionTab = (props: Props) => {
 					title="Contributors"
 					panel={<Contributors pubData={pub} onUpdatePub={onUpdatePub} />}
 				/>
-				<Tab id="spubsettings" title="Pub Settings" panel={<SpubSettings />} />
+				<Tab
+					id="spubsettings"
+					title="Pub Settings"
+					panel={<SpubSettings pubData={pub} onUpdatePub={onUpdatePub} />}
+				/>
 			</Tabs>
 		</div>
 	);
