@@ -74,7 +74,7 @@ const SpubSettings = (props: Props) => {
 						pubData={pubData}
 						communityId={communityData.id}
 						onSetDownloads={onUpdatePub}
-						copy="Upload Your file"
+						copy="UPLOAD YOUR FILE"
 						isMinimal={true}
 						isSmall={true}
 					/>
