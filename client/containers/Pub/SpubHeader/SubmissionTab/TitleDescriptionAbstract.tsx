@@ -1,15 +1,17 @@
 import React from 'react';
 import { FormGroup, InputGroup } from '@blueprintjs/core';
-import { Submission, Pub } from 'types';
+import { Pub, PubPageData, DocJson } from 'types';
 
 type Props = {
-	onUpdatePub?: (pub: Partial<Pub>) => unknown;
-	onUpdateSubmission?: (submission: Partial<Submission>) => unknown;
+	pub: Pub;
+	abstract: DocJson;
+	onUpdatePub: (pub: Partial<PubPageData>) => unknown;
+	onUpdateAbstract: (abstract: DocJson) => Promise<unknown>;
 };
 
 const TitleDescriptionAbstract = (props: Props) => {
 	// TODO: weave these in to actually manage the spub
-	const { onUpdatePub: _, onUpdateSubmission: __ } = props;
+	const { onUpdatePub: _, onUpdateAbstract: __, abstract: ___, pub: ____ } = props;
 
 	return (
 		<>
