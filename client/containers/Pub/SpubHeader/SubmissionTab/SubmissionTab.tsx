@@ -50,7 +50,7 @@ const SubmissionTab = (props: Props) => {
 				className={maybeActiveClass('spubSettings')}
 				id="spubSettings"
 				title="Pub Settings"
-				panel={<SpubSettings />}
+				panel={<SpubSettings pubData={props.pub} onUpdatePub={props.onUpdatePub} />}
 			/>
 		</Tabs>
 	);
