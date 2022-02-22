@@ -122,10 +122,7 @@ export type PubPageDiscussion = DefinitelyHas<Discussion, 'anchors'> & {
 	};
 };
 
-export type PubPageData = DefinitelyHas<
-	Omit<Pub, 'discussions'>,
-	'attributions' | 'collectionPubs'
-> &
+export type PubPageData = DefinitelyHas<Omit<Pub, 'discussions'>, 'collectionPubs'> &
 	PubDocInfo & {
 		discussions: PubPageDiscussion[];
 		viewHash: Maybe<string>;

@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { PubAttributionEditor } from 'components';
 
-import { pubData, communityData } from 'utils/storybook/data';
+import { usePageContext } from 'utils/hooks';
+import { PubPageData, DefinitelyHas } from 'types';
 
-const Contributors = () => {
-	const [persistedPubData, setPersistedPubData] = useState(pubData);
-	const updatePersistedPubData = (values) => {
-		setPersistedPubData({ ...persistedPubData, ...values });
-	};
+type Props = {
+	pubData: DefinitelyHas<PubPageData, 'submission'>;
+	onUpdatePub: (pub: Partial<PubPageData>) => unknown;
+};
+
+const Contributors = (props: Props) => {
+	const { onUpdatePub, pubData } = props;
+	const { communityData } = usePageContext();
 
 	return (
 		<div>
@@ -18,7 +22,7 @@ const Contributors = () => {
 			<PubAttributionEditor
 				pubData={pubData}
 				communityData={communityData}
-				updatePubData={updatePersistedPubData}
+				updatePubData={onUpdatePub}
 				canEdit
 			/>
 		</div>

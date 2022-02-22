@@ -16,20 +16,21 @@ type Props = {
 
 const SubmissionTab = (props: Props) => {
 	const [selectedTab, setSelectedTab] = useState('title');
-	const maybeActiveClass = (tabId) => `${tabId === selectedTab ? 'active' : 'inactive'}`;
+	const maybeActiveClass = (tabId: string) => `${tabId === selectedTab ? 'active' : 'inactive'}`;
 
 	return (
 		<Tabs
-			id="TabsExample"
 			className="submission-tab-component"
 			// @ts-expect-error ts-migrate(2322) FIXME: Type 'Dispatch<SetStateAction<string>>' is not ass... Remove this comment to see the full error message
 			onChange={setSelectedTab}
 			selectedTabId={selectedTab}
 		>
 			<Tab
-				id="title"
+				id="title-description-abstract"
 				title="Title, Description & Abstract"
-				className={`title-description-abstract ${maybeActiveClass('title')}`}
+				className={`title-description-abstract ${maybeActiveClass(
+					'title-description-abstract',
+				)}`}
 				panel={
 					<TitleDescriptionAbstract
 						pub={props.pub}
@@ -43,7 +44,7 @@ const SubmissionTab = (props: Props) => {
 				className={maybeActiveClass('contributors')}
 				id="contributors"
 				title="Contributors"
-				panel={<Contributors />}
+				panel={<Contributors pubData={props.pub} onUpdatePub={props.onUpdatePub} />}
 			/>
 			<Tab
 				className={maybeActiveClass('spubSettings')}
