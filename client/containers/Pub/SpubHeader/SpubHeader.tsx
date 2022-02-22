@@ -36,7 +36,6 @@ const SpubHeader = (props: Props) => {
 			body: JSON.stringify({
 				abstract: newAbstract,
 				id: props.pubData.submission.id,
-				status: props.pubData.submission.status,
 			}),
 		}).then(() => setAbstract(newAbstract));
 	};

@@ -17,7 +17,7 @@ type UpdateToStatus = typeof updateToStatuses;
 type UpdateOptions = Partial<types.Submission> & {
 	id: string;
 	abstract?: types.DocJson;
-	status: UpdateToStatus;
+	status?: UpdateToStatus;
 	skipEmail?: boolean;
 	customEmailText?: types.DocJson;
 };
@@ -72,7 +72,7 @@ export const updateSubmission = async (options: UpdateOptions, actorId: string) 
 	await Submission.update(
 		{
 			status,
-			...(abstract && { abstract }),
+			abstract,
 			...(isBeingSubmitted && { submittedAt: new Date().toISOString() }),
 		},
 		{
