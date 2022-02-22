@@ -73,6 +73,18 @@ $title-elements-spacing: 15px;
 			}
 		}
 	}
+
+	.small-header-button-component {
+		.label {
+			font-size: 14px;
+		}
+	}
+
+	.file-upload-button-component {
+		.bp3-button-text {
+			font-size: 14px;
+		}
+	}
 }
 
 .tabs.spub-header-component {
@@ -109,17 +121,5 @@ $title-elements-spacing: 15px;
 	.tab-panel {
 		margin: 0 auto;
 		max-width: $spub-configuration-width;
-	}
-}
-
-.small-header-button-component {
-	.label {
-		font-size: 14px;
-	}
-}
-
-.file-upload-button-component {
-	.bp3-button-text {
-		font-size: 14px;
 	}
 }
