@@ -41,7 +41,7 @@ const TitleDescriptionAbstract = (props: Props) => {
 					onEdit={(doc) => props.onUpdateAbstract(doc.toJSON() as DocJson)}
 					debounceEditsMs={300}
 					getButtons={(buttons) => buttons.workflowButtonSet}
-					// useFormattingBar
+					useFormattingBar
 					constrainHeight
 				/>
 			</Label>

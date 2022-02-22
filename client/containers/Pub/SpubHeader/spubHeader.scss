@@ -111,7 +111,7 @@ $title-elements-spacing: 15px;
 
 		h2 {
 			font-size: 14px;
-			font-weight: 500;
+			font-weight: 600;
 			line-height: 17px;
 			letter-spacing: 0.05em;
 		}
@@ -180,20 +180,22 @@ $title-elements-spacing: 15px;
 }
 
 .tabs.spub-header-component {
-	.input-prompt {
+	.input-prompt,
+	.prosemirror-placeholder,
+	.submission-input input::placeholder {
+		font-style: italic;
+		letter-spacing: .015em;
 		color: #747474;
 	}
 	.info-text {
 		color: var(--community-accent-dark);
 	}
-	.submission-input {
-		input {
-			box-shadow: none;
-			border-bottom: 1px solid #BDBDBD;
-			&::placeholder {
-				font-style: italic;
-			}
-		}
+	.minimal-editor-component > .editor-wrapper,
+	.submission-input input {
+		min-height: unset;
+		border: none;
+		border-bottom: 1px solid #BDBDBD;
+		box-shadow: none;
 	}
 	.bp3-tab-list {
 		max-width: $spub-configuration-width;
