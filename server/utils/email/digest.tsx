@@ -7,7 +7,7 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
 
-import { ActivityAssociations, ActivityItem, Community, Scope, User } from 'types';
+import { ActivityAssociations, ActivityItem, Community, Scope, User, Pub, Collection } from 'types';
 import { Digest } from 'components/Email';
 import { globals, reset } from 'components/Email/styles';
 import { fetchActivityItems } from 'server/activityItem/fetch';
@@ -46,14 +46,17 @@ const getAffectedObject = (item: ActivityItem, associations: ActivityAssociation
 };
 
 const getAffectedObjectUrl = (item: ActivityItem, associations: ActivityAssociations) => {
+	const { pubId, collectionId } = item;
 	const community = Object.values(associations.community)[0];
-	if (item.pubId) {
-		return pubUrl(community, associations.pub[item.pubId]);
+	const pub = pubId && associations.pub[pubId];
+	const collection = collectionId && associations.collection[collectionId];
+	if (pub) {
+		return pubUrl(community, pub);
 	}
-	if (item.collectionId) {
-		return collectionUrl(community, associations.collection[item.collectionId]);
+	if (collection) {
+		return collectionUrl(community, collection);
 	}
-	return undefined;
+	return null;
 };
 
 const getAffectedObjectIcon = (item: ActivityItem) =>
