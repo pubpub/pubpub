@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Tab, Tabs, TabId, Icon, IconName } from '@blueprintjs/core';
+import { Tab, Tabs, Icon, IconName } from '@blueprintjs/core';
 
 import { DocJson, DefinitelyHas, PubHistoryState, PubPageData } from 'types';
 import { assert } from 'utils/assert';
@@ -22,6 +22,8 @@ type Props = {
 	pubData: DefinitelyHas<PubPageData, 'submission'>;
 };
 
+export type SpubHeaderTab = 'instructions' | 'submission' | 'preview';
+
 export const renderTabTitle = (icon: IconName, title: string) => (
 	<>
 		<Icon icon={icon} /> {title}
@@ -29,7 +31,9 @@ export const renderTabTitle = (icon: IconName, title: string) => (
 );
 
 const SpubHeader = (props: Props) => {
-	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');
+	const { submissionState, updateSubmissionState } = usePubContext();
+	const selectedTab = submissionState.selectedTab!;
+
 	const [abstract, setAbstract] = useState(
 		() => props.pubData.submission.abstract || getEmptyDoc(),
 	);
@@ -56,6 +60,11 @@ const SpubHeader = (props: Props) => {
 			}),
 		}).catch(() => props.updateLocalData('pub', props.pubData));
 	};
+
+	const setSelectedTab = (nextTab: SpubHeaderTab) => {
+		updateSubmissionState({ selectedTab: nextTab });
+	};
+
 	assert(props.pubData.submission.submissionWorkflow !== undefined);
 	const updateHistoryData = (newHistoryData: Partial<PubHistoryState>) => {
 		return props.updateLocalData('history', newHistoryData);
