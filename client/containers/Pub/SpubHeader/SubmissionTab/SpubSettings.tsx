@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PubPageData, DefinitelyHas } from 'types';
+import { PubPageData } from 'types';
 
 import { usePageContext } from 'utils/hooks';
 import { PubThemePicker, PopoverButton, DownloadChooser } from 'components';
@@ -9,7 +9,7 @@ import SmallHeaderButton from '../../PubHeader/SmallHeaderButton';
 require('./spubSettings.scss');
 
 type Props = {
-	pubData: DefinitelyHas<PubPageData, 'submission'>;
+	pubData: PubPageData;
 	onUpdatePub: (pub: Partial<PubPageData>) => unknown;
 };
 

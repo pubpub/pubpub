@@ -27,7 +27,7 @@ const addAbstractToEditor = (abstract: DocJson, view: EditorView): void => {
 
 const SubmitDialog = (props: Props) => {
 	const { collabData } = usePubContext();
-	const { view } = collabData.editorChangeObject;
+	const { view } = collabData.editorChangeObject!;
 	const [isHandlingSubmission, setIsHandlingSubmission] = useState(false);
 	const [updatedSubmission, setUpdatedSubmission] = useState(null);
 	const [submissionErr, setSubmissionErr] = useState(null);

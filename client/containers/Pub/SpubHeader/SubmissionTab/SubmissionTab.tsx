@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Tab, Tabs } from '@blueprintjs/core';
 
-import { PubPageData, DefinitelyHas, DocJson } from 'types';
+import { PubPageData, DocJson } from 'types';
 
 import TitleDescriptionAbstract from './TitleDescriptionAbstract';
 import Contributors from './Contributors';
 import SpubSettings from './SpubSettings';
 
 type Props = {
-	pub: DefinitelyHas<PubPageData, 'submission'>;
-	abstract: DocJson;
+	pub: PubPageData;
+	abstract: null | DocJson;
 	onUpdatePub: (pub: Partial<PubPageData>) => unknown;
 	onUpdateAbstract: (abstract: DocJson) => Promise<unknown>;
 };

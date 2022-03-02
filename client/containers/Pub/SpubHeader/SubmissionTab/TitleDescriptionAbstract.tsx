@@ -7,7 +7,7 @@ import { MinimalEditor } from 'components';
 
 type Props = {
 	pub: Pub;
-	abstract: DocJson;
+	abstract: null | DocJson;
 	onUpdatePub: (pub: Partial<PubPageData>) => unknown;
 	onUpdateAbstract: (abstract: DocJson) => Promise<unknown>;
 };
