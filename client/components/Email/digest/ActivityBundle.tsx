@@ -34,9 +34,6 @@ const H3Style = styled.h3`
 	a {
 		text-decoration: none;
 	}
-	a:hover {
-		text-decoration: underline;
-	}
 `;
 
 const ListItemStyle = styled.li`
