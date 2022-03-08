@@ -35,6 +35,7 @@ const getInitialOptions = (options: InitialValuesOptions) => {
 		nodeOptions,
 	} = options;
 	const schema = buildSchema(customNodes, customMarks, nodeOptions);
+	console.log('getInitialOptions', initialContent);
 	const hydratedDoc = schema.nodeFromJSON(initialContent);
 	const initialDocNode = isReadOnly ? addTemporaryIdsToDoc(hydratedDoc) : hydratedDoc;
 	const staticContent = renderStatic({

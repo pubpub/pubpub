@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
-import pick from 'lodash.pick';
 
 import { usePageContext } from 'utils/hooks';
 import { PubPageData } from 'types';
 
-import PubSyncManager, { PubContextType } from './PubSyncManager';
+import PubSyncManager from './PubSyncManager';
 import PubHeader from './PubHeader';
 import SpubHeader from './SpubHeader';
 import PubDocument from './PubDocument';
@@ -15,14 +14,6 @@ require('./pub.scss');
 type Props = {
 	pubData: PubPageData;
 };
-
-type ModePropsType = Pick<
-	PubContextType,
-	'pubData' | 'historyData' | 'collabData' | 'firebaseDraftRef' | 'updateLocalData'
->;
-
-const getModeProps = (ctx: PubContextType): ModePropsType =>
-	pick(ctx, ['pubData', 'collabData', 'historyData', 'firebaseDraftRef', 'updateLocalData']);
 
 const isInViewport = (rect: DOMRect, offsets: { top?: number; left?: number } = {}) => {
 	const { top, left, bottom, right } = rect;
@@ -58,13 +49,6 @@ const scrollToElementTop = (hash: string, delay = 0) => {
 			document.body.scrollTop += rect.top - 80;
 		}
 	}, delay);
-};
-
-const HeaderComponent = (props: ModePropsType) => {
-	if (props.pubData.submission?.status === 'incomplete') {
-		return <SpubHeader />;
-	}
-	return <PubHeader {...props} />;
 };
 
 const Pub = (props: Props) => {
@@ -106,14 +90,19 @@ const Pub = (props: Props) => {
 					communityData={communityData}
 					loginData={loginData}
 				>
-					{(ctx) => (
-						<>
-							<PubSuspendWhileTyping delay={1000}>
-								{() => <HeaderComponent {...getModeProps(ctx)} />}
-							</PubSuspendWhileTyping>
-							<PubDocument {...getModeProps(ctx)} />
-						</>
-					)}
+					{(ctx) => {
+						const { submissionState } = ctx;
+						const showDocument = submissionState?.selectedTab !== 'instructions';
+						const HeaderComponent = submissionState ? SpubHeader : PubHeader;
+						return (
+							<>
+								<PubSuspendWhileTyping delay={1000}>
+									{() => <HeaderComponent {...ctx} />}
+								</PubSuspendWhileTyping>
+								{showDocument && <PubDocument {...ctx} />}
+							</>
+						);
+					}}
 				</PubSyncManager>
 			</div>
 		</PubSuspendWhileTypingProvider>

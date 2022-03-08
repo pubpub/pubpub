@@ -36,7 +36,9 @@ export const usePubBodyState = (): PubBodyState => {
 	const editorDoc = editorChangeObject?.view?.state.doc;
 
 	const abstractToCreatePreview =
-		submissionState?.selectedTab === 'preview' && submissionState?.submission.abstract;
+		submissionState?.submission.status === 'incomplete' &&
+		submissionState?.selectedTab === 'preview' &&
+		submissionState?.submission.abstract;
 
 	const submissionPreviewDoc = useMemo(() => {
 		if (abstractToCreatePreview && editorDoc) {

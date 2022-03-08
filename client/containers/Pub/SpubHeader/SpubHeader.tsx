@@ -68,11 +68,6 @@ const SpubHeader = () => {
 	const previewTabTitle = renderTabTitle('eye-open', 'Preview & Submit');
 	const maybeActiveClass = (tabId: string) => (tabId === selectedTab ? 'active' : 'inactive');
 
-	useEffect(() => {
-		updatePubData({ isReadOnly: selectedTab === 'preview' });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [selectedTab]);
-
 	return (
 		<Tabs
 			id="spubHeader"
@@ -86,7 +81,6 @@ const SpubHeader = () => {
 				className={`tab-panel ${maybeActiveClass('instructions')}`}
 				panel={<InstructionsTab submissionWorkflow={submission.submissionWorkflow!} />}
 			/>
-
 			<Tab
 				id="submission"
 				title={submissionTabTitle}

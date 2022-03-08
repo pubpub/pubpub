@@ -44,6 +44,7 @@ const PubBody = (props: Props) => {
 	const [editorErrorTime, setEditorErrorTime] = useState<number | null>(null);
 	const [lastSavedTime, setLastSavedTime] = useState<number | null>(null);
 	const { key, initialContent, isReadOnly } = usePubBodyState();
+	console.log({ initialContent });
 
 	prevStatusRef.current = collabData.status;
 	useBeforeUnload(

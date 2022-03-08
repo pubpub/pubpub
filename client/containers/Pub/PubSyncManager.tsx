@@ -41,14 +41,6 @@ const shimPubContextProps = {
 	noteManager: new NoteManager('apa', 'count', {}),
 } as any;
 
-type Props = {
-	pubData: PubPageData;
-	locationData: LocationData;
-	communityData: Community;
-	loginData: LoginData;
-	children: (ctx: typeof shimPubContextProps) => React.ReactNode;
-};
-
 type CollabUser = {
 	id: string;
 	backgroundColor: string;
@@ -86,6 +78,14 @@ export type PubContextType = State & {
 };
 
 export const PubContext = React.createContext<PubContextType>(shimPubContextProps);
+
+type Props = {
+	pubData: PubPageData;
+	locationData: LocationData;
+	communityData: Community;
+	loginData: LoginData;
+	children: (ctx: PubContextType) => React.ReactNode;
+};
 
 const fetchVersionFromHistory = (pubData, historyKey, accessHash) =>
 	apiFetch(
@@ -167,7 +167,7 @@ const idleStateUpdater = (boundSetState, timeout = 50) => {
 
 const getInitialSubmissionState = (pub: PubPageData): null | SubmissionState => {
 	const { submission } = pub;
-	if (submission) {
+	if (submission && !pub.isRelease) {
 		const { status } = submission;
 		return {
 			selectedTab: status === 'incomplete' ? 'instructions' : 'preview',

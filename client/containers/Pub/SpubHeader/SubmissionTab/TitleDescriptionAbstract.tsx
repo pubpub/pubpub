@@ -14,6 +14,7 @@ type Props = {
 
 const TitleDescriptionAbstract = (props: Props) => {
 	const [onUpdatePubDebounced] = useDebouncedCallback(props.onUpdatePub, 250);
+	console.log('abstract', props.abstract);
 	return (
 		<>
 			<span className="info-text">
