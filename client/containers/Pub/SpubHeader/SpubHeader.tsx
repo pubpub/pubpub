@@ -9,6 +9,8 @@ import { getEmptyDoc } from 'components/Editor';
 import { usePubContext } from '../pubHooks';
 import InstructionsTab from './InstructionsTab';
 import SubmissionTab from './SubmissionTab';
+import ContributorsTab from './ContributorsTab';
+import SpubHeaderTab from './SpubHeaderTab';
 import PreviewTab from './PreviewTab';
 
 require('./spubHeader.scss');
@@ -87,7 +89,19 @@ const SpubHeader = (props: Props) => {
 					/>
 				}
 			/>
-
+			<Tab
+				className={maybeActiveClass('contributors')}
+				id="contributors"
+				title="Contributors"
+				panel={
+					<SpubHeaderTab expandToFold>
+						<ContributorsTab
+							pubData={props.pubData}
+							onUpdatePub={updateAndSavePubData}
+						/>
+					</SpubHeaderTab>
+				}
+			/>
 			<Tab
 				id="submission"
 				title={submissionTabTitle}

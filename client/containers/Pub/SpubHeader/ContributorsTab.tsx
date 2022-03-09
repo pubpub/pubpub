@@ -9,7 +9,7 @@ type Props = {
 	onUpdatePub: (pub: Partial<PubPageData>) => unknown;
 };
 
-const Contributors = (props: Props) => {
+const ContributorsTab = (props: Props) => {
 	const { onUpdatePub, pubData } = props;
 	const { communityData } = usePageContext();
 
@@ -29,4 +29,4 @@ const Contributors = (props: Props) => {
 	);
 };
 
-export default Contributors;
+export default ContributorsTab;
