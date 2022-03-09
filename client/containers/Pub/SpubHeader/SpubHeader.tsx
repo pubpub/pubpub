@@ -7,11 +7,10 @@ import { apiFetch } from 'client/utils/apiFetch';
 import { getEmptyDoc } from 'components/Editor';
 
 import { usePubContext } from '../pubHooks';
+import SpubHeaderTab from './SpubHeaderTab';
 import InstructionsTab from './InstructionsTab';
 import SubmissionTab from './SubmissionTab';
 import ContributorsTab from './ContributorsTab';
-import DetailsTab from './DetailsTab';
-import SpubHeaderTab from './SpubHeaderTab';
 import PreviewTab from './PreviewTab';
 
 require('./spubHeader.scss');
@@ -85,9 +84,11 @@ const SpubHeader = (props: Props) => {
 				title={instructionTabTitle}
 				className={`tab-panel ${maybeActiveClass('instructions')}`}
 				panel={
-					<InstructionsTab
-						submissionWorkflow={props.pubData.submission.submissionWorkflow}
-					/>
+					<SpubHeaderTab>
+						<InstructionsTab
+							submissionWorkflow={props.pubData.submission.submissionWorkflow}
+						/>
+					</SpubHeaderTab>
 				}
 			/>
 			<Tab
@@ -98,7 +99,7 @@ const SpubHeader = (props: Props) => {
 				)}`}
 				panel={
 					<SpubHeaderTab>
-						<DetailsTab
+						<SubmissionTab
 							pub={props.pubData}
 							abstract={abstract}
 							onUpdatePub={updateAndSavePubData}
@@ -119,12 +120,6 @@ const SpubHeader = (props: Props) => {
 						/>
 					</SpubHeaderTab>
 				}
-			/>
-			<Tab
-				id="submission"
-				title={submissionTabTitle}
-				className={`tab-panel ${maybeActiveClass('submission')}`}
-				panel={<SubmissionTab onUpdatePub={updateAndSavePubData} pub={props.pubData} />}
 			/>
 			<Tab
 				id="preview"

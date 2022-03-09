@@ -5,6 +5,8 @@ import { useDebouncedCallback } from 'use-debounce';
 import { PubPageData, Pub, DocJson } from 'types';
 import { MinimalEditor, DownloadChooser } from 'components';
 
+require('./submissionTab.scss');
+
 type Props = {
 	pub: Pub;
 	abstract: DocJson;
@@ -12,7 +14,7 @@ type Props = {
 	onUpdateAbstract: (abstract: DocJson) => Promise<unknown>;
 };
 
-const DetailsTab = (props: Props) => {
+const SubmissionTab = (props: Props) => {
 	const [onUpdatePubDebounced] = useDebouncedCallback(props.onUpdatePub, 250);
 	const renderDefaultDownloadFile = () => {
 		return (
@@ -78,4 +80,4 @@ const DetailsTab = (props: Props) => {
 	);
 };
 
-export default DetailsTab;
+export default SubmissionTab;
