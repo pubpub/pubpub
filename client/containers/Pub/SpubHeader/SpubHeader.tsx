@@ -23,7 +23,7 @@ type Props = {
 	pubData: DefinitelyHas<PubPageData, 'submission'>;
 };
 
-export const renderTabTitle = (icon: IconName, title: string) => (
+const renderTabTitle = (icon: IconName, title: string) => (
 	<>
 		<Icon icon={icon} /> {title}
 	</>
@@ -102,7 +102,7 @@ const SpubHeader = (props: Props) => {
 							abstract={abstract}
 							onUpdatePub={updateAndSavePubData}
 							onUpdateAbstract={updateAbstract}
-							pub={props.pubData}
+							pubData={props.pubData}
 						/>
 					}
 				/>

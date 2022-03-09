@@ -6,7 +6,7 @@ import { PubPageData, Pub, DocJson } from 'types';
 import { MinimalEditor } from 'components';
 
 type Props = {
-	pub: Pub;
+	pubData: Pub;
 	abstract: DocJson;
 	onUpdatePub: (pub: Partial<PubPageData>) => unknown;
 	onUpdateAbstract: (abstract: DocJson) => Promise<unknown>;
@@ -29,7 +29,7 @@ const TitleDescriptionAbstract = (props: Props) => {
 					onChange={(evt: React.ChangeEvent<HTMLInputElement>) =>
 						onUpdatePubDebounced({ title: evt.target.value })
 					}
-					defaultValue={props.pub.title}
+					defaultValue={props.pubData.title}
 					placeholder="Enter pub title here..."
 				/>
 			</Label>
@@ -50,7 +50,7 @@ const TitleDescriptionAbstract = (props: Props) => {
 				<InputGroup
 					className="submission-input"
 					placeholder="Enter description text here..."
-					defaultValue={props.pub.description}
+					defaultValue={props.pubData.description}
 					onChange={(evt: React.ChangeEvent<HTMLInputElement>) =>
 						onUpdatePubDebounced({ description: evt.target.value })
 					}

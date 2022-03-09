@@ -8,7 +8,7 @@ import Contributors from './Contributors';
 import SpubSettings from './SpubSettings';
 
 type Props = {
-	pub: DefinitelyHas<PubPageData, 'submission'>;
+	pubData: DefinitelyHas<PubPageData, 'submission'>;
 	abstract: DocJson;
 	onUpdatePub: (pub: Partial<PubPageData>) => unknown;
 	onUpdateAbstract: (abstract: DocJson) => Promise<unknown>;
@@ -33,7 +33,7 @@ const SubmissionTab = (props: Props) => {
 				)}`}
 				panel={
 					<TitleDescriptionAbstract
-						pub={props.pub}
+						pub={props.pubData}
 						abstract={props.abstract}
 						onUpdatePub={props.onUpdatePub}
 						onUpdateAbstract={props.onUpdateAbstract}
@@ -44,13 +44,13 @@ const SubmissionTab = (props: Props) => {
 				className={maybeActiveClass('contributors')}
 				id="contributors"
 				title="Contributors"
-				panel={<Contributors pubData={props.pub} onUpdatePub={props.onUpdatePub} />}
+				panel={<Contributors pubData={props.pubData} onUpdatePub={props.onUpdatePub} />}
 			/>
 			<Tab
 				className={maybeActiveClass('spubSettings')}
 				id="spubSettings"
 				title="Pub Settings"
-				panel={<SpubSettings pubData={props.pub} onUpdatePub={props.onUpdatePub} />}
+				panel={<SpubSettings pubData={props.pubData} onUpdatePub={props.onUpdatePub} />}
 			/>
 		</Tabs>
 	);
