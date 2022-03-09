@@ -3,6 +3,9 @@ import { Tab, Tabs, TabId, Icon, IconName, Navbar, Alignment, Button } from '@bl
 
 import { GridWrapper } from 'components';
 import { Submission } from 'types';
+import { usePendingChanges } from 'utils/hooks';
+
+require('./spubHeaderToolbar.scss');
 
 const renderTabTitle = (icon: IconName, title: string) => (
 	<>
@@ -14,6 +17,8 @@ type Props = {
 	selectedTab: TabId;
 	onSelectTab: Dispatch<SetStateAction<TabId>>;
 	submission: Submission;
+	showSubmitButton: boolean;
+	onSubmit: () => any;
 };
 
 const SpubHeaderToolbar = (props: Props) => {
@@ -24,14 +29,28 @@ const SpubHeaderToolbar = (props: Props) => {
 	const maybeActiveClass = (tabId: string) =>
 		`${tabId === props.selectedTab ? 'active' : 'inactive'}`;
 
+	const { pendingCount } = usePendingChanges();
+	const isSaving = pendingCount > 0;
+	const status = isSaving ? (
+		<em>Saving</em>
+	) : (
+		<div className="status">{props.submission.status}</div>
+	);
+
+	const renderRight = props.showSubmitButton ? (
+		<Button outlined={true} onSubmit={props.onSubmit}>
+			Submit
+		</Button>
+	) : (
+		<>
+			<em>status:</em> <strong> {status}</strong>
+		</>
+	);
 	return (
 		<GridWrapper>
 			<div>
 				<Navbar.Group align={Alignment.RIGHT}>
-					<Navbar.Heading>
-						status: <strong> {props.submission.status}</strong>
-						<Button>Submit</Button>
-					</Navbar.Heading>
+					<Navbar.Heading>{renderRight}</Navbar.Heading>
 				</Navbar.Group>
 				<Navbar.Group>
 					{/* controlled mode & no panels (see h1 below): */}
