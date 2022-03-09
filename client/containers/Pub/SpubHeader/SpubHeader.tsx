@@ -10,6 +10,7 @@ import { usePubContext } from '../pubHooks';
 import InstructionsTab from './InstructionsTab';
 import SubmissionTab from './SubmissionTab';
 import PreviewTab from './PreviewTab';
+import SpubHeaderToolbar from './SpubHeaderToolBar/SpubHeaderToolbar';
 
 require('./spubHeader.scss');
 
@@ -66,54 +67,59 @@ const SpubHeader = (props: Props) => {
 	const maybeActiveClass = (tabId: string) => `${tabId === selectedTab ? 'active' : 'inactive'}`;
 
 	useEffect(() => {
-		updatePubData({ isReadOnly: selectedTab === 'preview' });
+		if (updatePubData) {
+			updatePubData({ isReadOnly: selectedTab === 'preview' });
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedTab]);
 
 	return (
-		<Tabs
-			id="spubHeader"
-			onChange={(t) => setSelectedTab(t)}
-			selectedTabId={selectedTab}
-			className="spub-header-component tabs bp3-large"
-		>
-			<Tab
-				id="instructions"
-				title={instructionTabTitle}
-				className={`tab-panel ${maybeActiveClass('instructions')}`}
-				panel={
-					<InstructionsTab
-						submissionWorkflow={props.pubData.submission.submissionWorkflow}
-					/>
-				}
-			/>
+		<>
+			<SpubHeaderToolbar />
+			<Tabs
+				id="spubHeader"
+				onChange={(t) => setSelectedTab(t)}
+				selectedTabId={selectedTab}
+				className="spub-header-component tabs bp3-large"
+			>
+				<Tab
+					id="instructions"
+					title={instructionTabTitle}
+					className={`tab-panel ${maybeActiveClass('instructions')}`}
+					panel={
+						<InstructionsTab
+							submissionWorkflow={props.pubData.submission.submissionWorkflow}
+						/>
+					}
+				/>
 
-			<Tab
-				id="submission"
-				title={submissionTabTitle}
-				className={`tab-panel ${maybeActiveClass('submission')}`}
-				panel={
-					<SubmissionTab
-						abstract={abstract}
-						onUpdatePub={updateAndSavePubData}
-						onUpdateAbstract={updateAbstract}
-						pub={props.pubData}
-					/>
-				}
-			/>
-			<Tab
-				id="preview"
-				title={previewTabTitle}
-				className={`${maybeActiveClass('preview')}`}
-				panel={
-					<PreviewTab
-						updateHistoryData={updateHistoryData}
-						historyData={props.historyData}
-						pubData={props.pubData}
-					/>
-				}
-			/>
-		</Tabs>
+				<Tab
+					id="submission"
+					title={submissionTabTitle}
+					className={`tab-panel ${maybeActiveClass('submission')}`}
+					panel={
+						<SubmissionTab
+							abstract={abstract}
+							onUpdatePub={updateAndSavePubData}
+							onUpdateAbstract={updateAbstract}
+							pub={props.pubData}
+						/>
+					}
+				/>
+				<Tab
+					id="preview"
+					title={previewTabTitle}
+					className={`${maybeActiveClass('preview')}`}
+					panel={
+						<PreviewTab
+							updateHistoryData={updateHistoryData}
+							historyData={props.historyData}
+							pubData={props.pubData}
+						/>
+					}
+				/>
+			</Tabs>
+		</>
 	);
 };
 
