@@ -5,6 +5,7 @@ $title-elements-spacing: 15px;
 
 
 .spub-header-component {
+	background-color: #f8f8f8;
 	h1 {
     margin: 0;
 		font-size: 40px;
@@ -82,12 +83,6 @@ $title-elements-spacing: 15px;
 
 	.small-header-button-component {
 		.label {
-			font-size: 14px;
-		}
-	}
-
-	.file-upload-button-component {
-		.bp3-button-text {
 			font-size: 14px;
 		}
 	}
@@ -187,9 +182,6 @@ $title-elements-spacing: 15px;
 		letter-spacing: .015em;
 		color: #747474;
 	}
-	.info-text {
-		color: var(--community-accent-dark);
-	}
 	.minimal-editor-component > .editor-wrapper,
 	.submission-input input {
 		min-height: unset;
@@ -199,7 +191,7 @@ $title-elements-spacing: 15px;
 	}
 	.bp3-tab-list {
 		max-width: $spub-configuration-width;
-		margin: 15px auto auto;
+		margin: auto;
 		padding-top: 5px;
 
 		.bp3-tab-indicator {

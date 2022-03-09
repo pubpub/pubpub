@@ -16,34 +16,9 @@ type Props = {
 
 const SubmissionTab = (props: Props) => {
 	const [onUpdatePubDebounced] = useDebouncedCallback(props.onUpdatePub, 250);
-	const renderDefaultDownloadFile = () => {
-		return (
-			<div className="submission-tab-prompt">
-				<div className="submission-tab-prompt-text">
-					<h2>Default Download File</h2>
-					<p className="submission-tab-prompt-text">
-						You can upload a file, like a PDF with custom styling, to associate with
-						this submission
-					</p>
-				</div>
-
-				<div>
-					<DownloadChooser
-						pubData={props.pub}
-						communityId={props.pub.communityId}
-						onSetDownloads={props.onUpdatePub}
-						text="UPLOAD YOUR FILE"
-						isMinimal
-						isSmall
-					/>
-				</div>
-			</div>
-		);
-	};
-
 	return (
 		<>
-			<span className="info-text">
+			<span>
 				The information you enter in this form and the content section below will be used to
 				create your submission. You can use the Preview tab to see how your submission will
 				appear.
@@ -73,9 +48,19 @@ const SubmissionTab = (props: Props) => {
 				/>
 			</Label>
 			<Label>
-				<h2>Pub Content</h2>
+				<h2>Default Download File</h2>
 			</Label>
-			{renderDefaultDownloadFile()}
+			<p className="submission-tab-prompt-text">
+				You can upload a file, like a PDF with custom styling, to associate with this
+				submission
+			</p>
+			<DownloadChooser
+				pubData={props.pub}
+				communityId={props.pub.communityId}
+				onSetDownloads={props.onUpdatePub}
+				text="Upload new file"
+				isSmall
+			/>
 		</>
 	);
 };

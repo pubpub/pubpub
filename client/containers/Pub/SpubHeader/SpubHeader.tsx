@@ -64,7 +64,9 @@ const SpubHeader = (props: Props) => {
 	};
 	const instructionTabTitle = renderTabTitle('align-left', 'Instructions');
 	const submissionTabTitle = renderTabTitle('manually-entered-data', 'Submission');
-	const previewTabTitle = renderTabTitle('eye-open', 'Preview & Submit');
+	const previewTabTitle = renderTabTitle('eye-open', 'Preview');
+	// TODO supposed to be inherited-group icon, but that throws an error?
+	const contributorsTabTitle = renderTabTitle('people', 'Contributors');
 	const maybeActiveClass = (tabId: string) => `${tabId === selectedTab ? 'active' : 'inactive'}`;
 
 	useEffect(() => {
@@ -92,11 +94,9 @@ const SpubHeader = (props: Props) => {
 				}
 			/>
 			<Tab
-				id="title-description-abstract"
-				title="Title, Description & Abstract"
-				className={`title-description-abstract ${maybeActiveClass(
-					'title-description-abstract',
-				)}`}
+				id="submission"
+				title={submissionTabTitle}
+				className={`tab-panel submission ${maybeActiveClass('submission')}`}
 				panel={
 					<SpubHeaderTab>
 						<SubmissionTab
@@ -109,9 +109,9 @@ const SpubHeader = (props: Props) => {
 				}
 			/>
 			<Tab
-				className={maybeActiveClass('contributors')}
+				className={`tab-panel ${maybeActiveClass('contributors')}`}
 				id="contributors"
-				title="Contributors"
+				title={contributorsTabTitle}
 				panel={
 					<SpubHeaderTab expandToFold>
 						<ContributorsTab
@@ -124,7 +124,7 @@ const SpubHeader = (props: Props) => {
 			<Tab
 				id="preview"
 				title={previewTabTitle}
-				className={`${maybeActiveClass('preview')}`}
+				className={`tab-panel ${maybeActiveClass('preview')}`}
 				panel={
 					<PreviewTab
 						updateHistoryData={updateHistoryData}
