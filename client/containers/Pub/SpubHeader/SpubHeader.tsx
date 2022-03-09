@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Tab, Tabs, TabId, Icon, IconName } from '@blueprintjs/core';
+import { TabId } from '@blueprintjs/core';
 
 import { DocJson, DefinitelyHas, PubHistoryState, PubPageData } from 'types';
 import { assert } from 'utils/assert';
@@ -7,9 +7,7 @@ import { apiFetch } from 'client/utils/apiFetch';
 import { getEmptyDoc } from 'components/Editor';
 
 import { usePubContext } from '../pubHooks';
-import InstructionsTab from './InstructionsTab';
-import SubmissionTab from './SubmissionTab';
-import PreviewTab from './PreviewTab';
+
 import SpubHeaderToolbar from './SpubHeaderToolBar/SpubHeaderToolbar';
 
 require('./spubHeader.scss');
@@ -22,12 +20,6 @@ type Props = {
 	) => unknown;
 	pubData: DefinitelyHas<PubPageData, 'submission'>;
 };
-
-const renderTabTitle = (icon: IconName, title: string) => (
-	<>
-		<Icon icon={icon} /> {title}
-	</>
-);
 
 const SpubHeader = (props: Props) => {
 	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');
@@ -61,10 +53,6 @@ const SpubHeader = (props: Props) => {
 	const updateHistoryData = (newHistoryData: Partial<PubHistoryState>) => {
 		return props.updateLocalData('history', newHistoryData);
 	};
-	const instructionTabTitle = renderTabTitle('align-left', 'Instructions');
-	const submissionTabTitle = renderTabTitle('manually-entered-data', 'Submission');
-	const previewTabTitle = renderTabTitle('eye-open', 'Preview & Submit');
-	const maybeActiveClass = (tabId: string) => `${tabId === selectedTab ? 'active' : 'inactive'}`;
 
 	useEffect(() => {
 		if (updatePubData) {
@@ -75,50 +63,17 @@ const SpubHeader = (props: Props) => {
 
 	return (
 		<>
-			<SpubHeaderToolbar />
-			<Tabs
-				id="spubHeader"
-				onChange={(t) => setSelectedTab(t)}
-				selectedTabId={selectedTab}
-				className="spub-header-component tabs bp3-large"
-			>
-				<Tab
-					id="instructions"
-					title={instructionTabTitle}
-					className={`tab-panel ${maybeActiveClass('instructions')}`}
-					panel={
-						<InstructionsTab
-							submissionWorkflow={props.pubData.submission.submissionWorkflow}
-						/>
-					}
-				/>
-
-				<Tab
-					id="submission"
-					title={submissionTabTitle}
-					className={`tab-panel ${maybeActiveClass('submission')}`}
-					panel={
-						<SubmissionTab
-							abstract={abstract}
-							onUpdatePub={updateAndSavePubData}
-							onUpdateAbstract={updateAbstract}
-							pubData={props.pubData}
-						/>
-					}
-				/>
-				<Tab
-					id="preview"
-					title={previewTabTitle}
-					className={`${maybeActiveClass('preview')}`}
-					panel={
-						<PreviewTab
-							updateHistoryData={updateHistoryData}
-							historyData={props.historyData}
-							pubData={props.pubData}
-						/>
-					}
-				/>
-			</Tabs>
+			<SpubHeaderToolbar
+				selectedTab={selectedTab}
+				onSelectTab={setSelectedTab}
+				submissionWorkflow={props.pubData.submission.submissionWorkflow}
+				pubData={props.pubData}
+				abstract={abstract}
+				onUpdatePub={updateAndSavePubData}
+				onUpdateAbstract={updateAbstract}
+				updateHistoryData={updateHistoryData}
+				historyData={props.historyData}
+			/>
 		</>
 	);
 };

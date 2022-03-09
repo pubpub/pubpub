@@ -33,7 +33,7 @@ const SubmissionTab = (props: Props) => {
 				)}`}
 				panel={
 					<TitleDescriptionAbstract
-						pub={props.pubData}
+						pubData={props.pubData}
 						abstract={props.abstract}
 						onUpdatePub={props.onUpdatePub}
 						onUpdateAbstract={props.onUpdateAbstract}
