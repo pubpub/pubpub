@@ -1,5 +1,9 @@
 @import 'styles/variables.scss';
 
 .status {
-    text-transform: capitalize;
+	display: flex;
+}
+
+.status-text {
+	text-transform: capitalize;
 }

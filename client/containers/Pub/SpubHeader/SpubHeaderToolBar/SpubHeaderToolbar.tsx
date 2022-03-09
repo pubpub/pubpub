@@ -32,9 +32,11 @@ const SpubHeaderToolbar = (props: Props) => {
 	const { pendingCount } = usePendingChanges();
 	const isSaving = pendingCount > 0;
 	const status = isSaving ? (
-		<em>Saving</em>
+		<strong>
+			<em>Saving</em>
+		</strong>
 	) : (
-		<div className="status">{props.submission.status}</div>
+		<p className="status-text">{props.submission.status}</p>
 	);
 
 	const renderRight = props.showSubmitButton ? (
@@ -42,9 +44,9 @@ const SpubHeaderToolbar = (props: Props) => {
 			Submit
 		</Button>
 	) : (
-		<>
-			<em>status:</em> <strong> {status}</strong>
-		</>
+		<div className="status">
+			<em>status: </em> <strong> {status}</strong>
+		</div>
 	);
 	return (
 		<GridWrapper>
