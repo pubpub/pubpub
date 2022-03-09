@@ -10,6 +10,7 @@ import { usePubContext } from '../pubHooks';
 import InstructionsTab from './InstructionsTab';
 import SubmissionTab from './SubmissionTab';
 import ContributorsTab from './ContributorsTab';
+import DetailsTab from './DetailsTab';
 import SpubHeaderTab from './SpubHeaderTab';
 import PreviewTab from './PreviewTab';
 
@@ -90,6 +91,23 @@ const SpubHeader = (props: Props) => {
 				}
 			/>
 			<Tab
+				id="title-description-abstract"
+				title="Title, Description & Abstract"
+				className={`title-description-abstract ${maybeActiveClass(
+					'title-description-abstract',
+				)}`}
+				panel={
+					<SpubHeaderTab>
+						<DetailsTab
+							pub={props.pubData}
+							abstract={abstract}
+							onUpdatePub={updateAndSavePubData}
+							onUpdateAbstract={updateAbstract}
+						/>
+					</SpubHeaderTab>
+				}
+			/>
+			<Tab
 				className={maybeActiveClass('contributors')}
 				id="contributors"
 				title="Contributors"
@@ -106,14 +124,7 @@ const SpubHeader = (props: Props) => {
 				id="submission"
 				title={submissionTabTitle}
 				className={`tab-panel ${maybeActiveClass('submission')}`}
-				panel={
-					<SubmissionTab
-						abstract={abstract}
-						onUpdatePub={updateAndSavePubData}
-						onUpdateAbstract={updateAbstract}
-						pub={props.pubData}
-					/>
-				}
+				panel={<SubmissionTab onUpdatePub={updateAndSavePubData} pub={props.pubData} />}
 			/>
 			<Tab
 				id="preview"

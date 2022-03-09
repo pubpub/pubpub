@@ -3,14 +3,11 @@ import { Tab, Tabs } from '@blueprintjs/core';
 
 import { PubPageData, DefinitelyHas, DocJson } from 'types';
 
-import TitleDescriptionAbstract from './TitleDescriptionAbstract';
 import SpubSettings from './SpubSettings';
 
 type Props = {
 	pub: DefinitelyHas<PubPageData, 'submission'>;
-	abstract: DocJson;
 	onUpdatePub: (pub: Partial<PubPageData>) => unknown;
-	onUpdateAbstract: (abstract: DocJson) => Promise<unknown>;
 };
 
 const SubmissionTab = (props: Props) => {
@@ -24,21 +21,6 @@ const SubmissionTab = (props: Props) => {
 			onChange={setSelectedTab}
 			selectedTabId={selectedTab}
 		>
-			<Tab
-				id="title-description-abstract"
-				title="Title, Description & Abstract"
-				className={`title-description-abstract ${maybeActiveClass(
-					'title-description-abstract',
-				)}`}
-				panel={
-					<TitleDescriptionAbstract
-						pub={props.pub}
-						abstract={props.abstract}
-						onUpdatePub={props.onUpdatePub}
-						onUpdateAbstract={props.onUpdateAbstract}
-					/>
-				}
-			/>
 			<Tab
 				className={maybeActiveClass('spubSettings')}
 				id="spubSettings"
