@@ -6,7 +6,7 @@ require('./spubHeaderTab.scss');
 
 type Props = {
 	children?: React.ReactNode;
-	expandToFold: boolean;
+	expandToFold?: boolean;
 };
 
 const SpubHeaderTab = (props: Props) => {
