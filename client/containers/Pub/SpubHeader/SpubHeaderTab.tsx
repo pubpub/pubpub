@@ -9,7 +9,7 @@ type Props = {
 	expandToFold: boolean;
 };
 
-const SpubHeaderTabWrapper = (props: Props) => {
+const SpubHeaderTab = (props: Props) => {
 	const elementRef = useRef<HTMLDivElement>(null);
 	const [minHeight, setMinHeight] = useState(0);
 	const { viewportHeight } = useViewport();
@@ -33,4 +33,4 @@ const SpubHeaderTabWrapper = (props: Props) => {
 	);
 };
 
-export default SpubHeaderTabWrapper;
+export default SpubHeaderTab;
