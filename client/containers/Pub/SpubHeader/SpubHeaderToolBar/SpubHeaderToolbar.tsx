@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction } from 'react';
-import { Tab, Tabs, TabId, Icon, IconName, Navbar, Alignment, Button } from '@blueprintjs/core';
+import { Tab, Tabs, TabId, Icon, IconName, Button } from '@blueprintjs/core';
 
 import { GridWrapper } from 'components';
 import { Submission } from 'types';
@@ -45,17 +45,14 @@ const SpubHeaderToolbar = (props: Props) => {
 		</Button>
 	) : (
 		<div className="status">
-			<em>status: </em> <strong> {status}</strong>
+			<em>status:&nbsp;</em>
+			<strong>{status}</strong>
 		</div>
 	);
 	return (
 		<GridWrapper>
-			<div>
-				<Navbar.Group align={Alignment.RIGHT}>
-					<Navbar.Heading>{renderRight}</Navbar.Heading>
-				</Navbar.Group>
-				<Navbar.Group>
-					{/* controlled mode & no panels (see h1 below): */}
+			<div className="spubheader-toolbar">
+				<div>
 					<Tabs
 						id="spubHeader"
 						onChange={props.onSelectTab}
@@ -85,7 +82,10 @@ const SpubHeaderToolbar = (props: Props) => {
 							className={`${maybeActiveClass('preview')}`}
 						/>
 					</Tabs>
-				</Navbar.Group>
+				</div>
+				<div>
+					<div>{renderRight}</div>
+				</div>
 			</div>
 		</GridWrapper>
 	);

@@ -1,5 +1,12 @@
 @import 'styles/variables.scss';
 
+.spubheader-toolbar {
+	display: flex;
+	justify-content: center;
+	align-items: baseline;
+	column-gap: 340px;
+}
+
 .status {
 	display: flex;
 }
