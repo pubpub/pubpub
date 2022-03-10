@@ -10,6 +10,8 @@ export type PubBodyState = {
 	includeCollabPlugin: boolean;
 	isReadOnly: boolean;
 	key: string | number;
+	hidePubBody?: true;
+	hidePubDiscussions?: true;
 };
 
 export const usePubBodyState = (options: Options): PubBodyState => {
@@ -42,6 +44,7 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 			isReadOnly: true,
 			initialContent: historyDoc,
 			includeCollabPlugin: false,
+			hidePubDiscussions: true,
 		};
 	}
 
@@ -51,6 +54,7 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 			isReadOnly: true,
 			initialContent: submissionPreviewDoc,
 			includeCollabPlugin: false,
+			hidePubBody: true,
 		};
 	}
 

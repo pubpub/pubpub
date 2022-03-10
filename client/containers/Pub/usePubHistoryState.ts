@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import queryString from 'query-string';
 
-import { PatchFnArg, PubHistoryState, PubPageData, PubDraftInfo } from 'types';
+import { PatchFn, PatchFnArg, PubHistoryState, PubPageData, PubDraftInfo } from 'types';
 import { usePageContext } from 'utils/hooks';
 import { apiFetch } from 'client/utils/apiFetch';
 
@@ -12,6 +12,7 @@ type Options = {
 };
 
 type HistoryStateUpdate = Pick<PubHistoryState, 'currentKey' | 'latestKey' | 'isViewingHistory'>;
+export type PubHistoryStatePatchFn = PatchFn<HistoryStateUpdate>;
 
 const loadPubVersionFromHistory = (
 	pubId: string,

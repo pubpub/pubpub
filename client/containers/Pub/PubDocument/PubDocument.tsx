@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { setLocalHighlight } from 'components/Editor';
+import React, { useRef } from 'react';
 
 import { usePageContext } from 'utils/hooks';
 import { PubHistoryViewer } from 'components';
@@ -9,6 +8,10 @@ import {
 	Mode as PubEdgeMode,
 } from 'components/PubEdgeListing';
 
+import { usePubContext } from '../pubHooks';
+import { usePermalinkOnMount } from '../usePermalinkOnMount';
+import { usePubHrefs } from '../usePubHrefs';
+import { PubSuspendWhileTyping } from '../PubSuspendWhileTyping';
 import PubBody from './PubBody';
 import PubBottom from './PubBottom/PubBottom';
 import PubFileImport from './PubFileImport';
@@ -17,118 +20,35 @@ import PubHistoricalNotice from './PubHistoricalNotice';
 import PubInlineMenu from './PubInlineMenu';
 import PubLinkController from './PubLinkController';
 import PubMaintenanceNotice from './PubMaintenanceNotice';
-import { PubSuspendWhileTyping } from '../PubSuspendWhileTyping';
-import { usePubContext } from '../pubHooks';
 
 require('./pubDocument.scss');
 
-const isInViewport = (rect: DOMRect, offsets: { top?: number; left?: number } = {}) => {
-	const { top, left, bottom, right } = rect;
-	const { innerWidth, innerHeight } = window;
-	const { clientWidth, clientHeight } = document.documentElement;
-	const { top: offsetTop, left: offsetLeft } = { top: 0, left: 0, ...offsets };
-
-	return (
-		top >= offsetTop &&
-		left >= offsetLeft &&
-		bottom <= (innerHeight || clientHeight) &&
-		right <= (innerWidth || clientWidth)
-	);
-};
-
-const scrollToElementTop = (hash: string, delay = 0) => {
-	let element: HTMLElement | null;
-
-	try {
-		element = document.getElementById(hash.replace('#', ''));
-	} catch {
-		return;
-	}
-
-	if (!element) {
-		return;
-	}
-
-	setTimeout(() => {
-		const rect = (element as HTMLElement).getBoundingClientRect();
-
-		if (!isInViewport(rect, { top: 50 })) {
-			document.body.scrollTop += rect.top - 80;
-		}
-	}, delay);
-};
-
 const PubDocument = () => {
-	const { pubData, historyData, collabData, updateLocalData, pubBodyState } = usePubContext();
+	const {
+		pubData,
+		historyData,
+		collabData,
+		updatePubData,
+		updateLocalData,
+		updateHistoryData,
+		pubBodyState: { isReadOnly, hidePubBody, hidePubDiscussions },
+	} = usePubContext();
 	const { isViewingHistory } = historyData;
-	const { editorChangeObject } = collabData;
-	const { isReadOnly } = pubBodyState;
-	const { communityData, locationData, scopeData } = usePageContext();
-	const { canEdit, canEditDraft } = scopeData.activePermissions;
-	const [areDiscussionsShown, setDiscussionsShown] = useState(true);
+	const { communityData, locationData } = usePageContext();
 	const mainContentRef = useRef(null);
 	const sideContentRef = useRef(null);
 	const editorWrapperRef = useRef(null);
-	const editorView = editorChangeObject?.view;
 
-	const updateHistoryData = (next) => updateLocalData('history', next);
+	usePermalinkOnMount();
+	usePubHrefs({ enabled: !isReadOnly });
 
-	useEffect(() => {
-		const fromNumber = Number(locationData.query.from);
-		const toNumber = Number(locationData.query.to);
-		const existingPermElement = document.getElementsByClassName('permanent')[0];
-		if (editorView && fromNumber && toNumber && !existingPermElement) {
-			setTimeout(() => {
-				setLocalHighlight(editorView, fromNumber, toNumber, 'permanent');
-				setTimeout(() => {
-					const newlyCreatedPermElement = document.getElementsByClassName('permanent')[0];
-					if (newlyCreatedPermElement) {
-						newlyCreatedPermElement.scrollIntoView({ block: 'center' });
-					}
-				}, 0);
-			}, 0);
-		}
-	}, [editorView, locationData]);
+	if (hidePubBody) {
+		return null;
+	}
 
-	useEffect(() => {
-		const { hash } = window.location;
-
-		if (hash) {
-			scrollToElementTop(hash, 500);
-		}
-
-		const onClick = (event: MouseEvent) => {
-			const { target, metaKey } = event;
-
-			if (target instanceof HTMLAnchorElement && !metaKey) {
-				const href = target.getAttribute('href');
-
-				if (href && href.indexOf('#') === 0) {
-					event.preventDefault();
-					window.location.hash = href;
-					scrollToElementTop(href);
-				}
-			}
-		};
-
-		if (isReadOnly) {
-			document.addEventListener('click', onClick);
-			return () => document.removeEventListener('click', onClick);
-		}
-
-		return () => {};
-	}, [isReadOnly]);
-
-	// We use the useEffect hook to wait until after the render to show or hide discussions, since
-	// they mount into portals that we rely on Prosemirror to create.
-	useEffect(() => {
-		setDiscussionsShown(!isViewingHistory);
-	}, [isViewingHistory]);
-
-	// const editorFocused = editorChangeObject.view && editorChangeObject.view.hasFocus();
 	return (
 		<div className="pub-document-component">
-			{!isReadOnly && (
+			{(!isReadOnly || isViewingHistory) && (
 				<PubHeaderFormatting
 					collabData={collabData}
 					disabled={isViewingHistory}
@@ -147,10 +67,10 @@ const PubDocument = () => {
 						isolated
 					/>
 					<PubBody editorWrapperRef={editorWrapperRef} />
-					{!isViewingHistory && (canEdit || canEditDraft) && !pubData.isReadOnly && (
+					{!isReadOnly && (
 						<PubFileImport
-							editorChangeObject={collabData.editorChangeObject}
-							updatePubData={(data) => updateLocalData('pub', data)}
+							editorChangeObject={collabData.editorChangeObject!}
+							updatePubData={updatePubData}
 						/>
 					)}
 					{!isViewingHistory && <PubInlineMenu />}
@@ -167,12 +87,12 @@ const PubDocument = () => {
 					/>
 				</div>
 				<div className="side-content" ref={sideContentRef}>
-					{isViewingHistory && !pubData.isRelease && (
+					{isViewingHistory && (
 						<PubHistoryViewer
 							updateHistoryData={updateHistoryData}
 							historyData={historyData}
 							pubData={pubData}
-							onClose={() => updateLocalData('history', { isViewingHistory: false })}
+							onClose={() => updateHistoryData({ isViewingHistory: false })}
 						/>
 					)}
 				</div>
@@ -184,7 +104,7 @@ const PubDocument = () => {
 						updateLocalData={updateLocalData}
 						sideContentRef={sideContentRef}
 						mainContentRef={mainContentRef}
-						showDiscussions={areDiscussionsShown}
+						showDiscussions={!hidePubDiscussions}
 					/>
 				)}
 			</PubSuspendWhileTyping>

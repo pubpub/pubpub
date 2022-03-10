@@ -1,6 +1,5 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 
-import { usePageContext } from 'utils/hooks';
 import { NodeLabelMap } from 'client/components/Editor';
 import { NoteManager } from 'client/utils/notes';
 import { PatchFn, PubHistoryState, PubPageData } from 'types';
@@ -12,7 +11,7 @@ import {
 	usePubSubmissionState,
 } from './usePubSubmissionState';
 import { usePubCollabState, PubCollabState } from './usePubCollabState';
-import { usePubHistoryState } from './usePubHistoryState';
+import { usePubHistoryState, PubHistoryStatePatchFn } from './usePubHistoryState';
 import { useIdlyUpdatedState } from './useIdlyUpdatedState';
 import { PubBodyState, usePubBodyState } from './usePubBodyState';
 
@@ -33,6 +32,7 @@ export type PubContextType = {
 	pubBodyState: PubBodyState;
 	updatePubData: PatchFn<PubPageData>;
 	historyData: PubHistoryState;
+	updateHistoryData: PubHistoryStatePatchFn;
 	collabData: PubCollabState;
 	submissionState: null | PubSubmissionState;
 	updateSubmissionState: PubSubmissionStatePatchFn;
@@ -61,7 +61,6 @@ export const PubContext = React.createContext<PubContextType>(shimPubContextProp
 
 export const PubContextProvider = (props: Props) => {
 	const { children, pubData: initialPubData } = props;
-	const { locationData, communityData, loginData } = usePageContext();
 	const [pubData, updatePubData] = useIdlyUpdatedState(initialPubData);
 	const [collabData, updateCollabData] = usePubCollabState({ pubData });
 	const [historyData, updateHistoryData] = usePubHistoryState({ pubData });
@@ -105,6 +104,7 @@ export const PubContextProvider = (props: Props) => {
 		updatePubData,
 		collabData,
 		historyData,
+		updateHistoryData,
 		submissionState,
 		updateSubmissionState,
 		noteManager,

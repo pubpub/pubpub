@@ -4,6 +4,7 @@ import { NonIdealState } from '@blueprintjs/core';
 
 import { unique } from 'utils/arrays';
 import { getDisplayedPubForPubEdge } from 'utils/pubEdge';
+import { PubPageData } from 'types';
 
 import { Filter, Mode, allFilters } from './constants';
 import PubEdgeListingCard from './PubEdgeListingCard';
@@ -17,11 +18,7 @@ type OwnProps = {
 	className?: string;
 	hideIfNoInitialMatches?: boolean;
 	isolated?: boolean;
-	pubData: {
-		inboundEdges: any[];
-		outboundEdges: any[];
-		siblingEdges: any[];
-	};
+	pubData: PubPageData;
 	initialMode?: string;
 	initialFilters?: string[];
 };
@@ -145,20 +142,17 @@ const PubEdgeListing = (props: Props) => {
 	const back = useCallback(() => setIndex((i) => (i - 1 + length) % length), [length]);
 
 	const onFilterToggle = useCallback((filter) => {
-		// @ts-expect-error ts-migrate(2345) FIXME: Argument of type '(currentFilters: string[]) => vo... Remove this comment to see the full error message
 		setFilters((currentFilters) => {
 			const filterIndex = currentFilters.indexOf(filter);
 
 			if (filterIndex > -1) {
-				setFilters([
+				return [
 					...currentFilters.slice(0, filterIndex),
 					...currentFilters.slice(filterIndex + 1),
-				]);
-			} else {
-				setFilters([...currentFilters, filter]);
+				];
 			}
+			return [...currentFilters, filter];
 		});
-
 		setIndex(0);
 	}, []);
 
@@ -166,7 +160,6 @@ const PubEdgeListing = (props: Props) => {
 		setFilters((currentFilters) =>
 			currentFilters.length === Object.keys(Filter).length ? [] : allFilters,
 		);
-
 		setIndex(0);
 	}, []);
 
