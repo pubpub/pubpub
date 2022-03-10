@@ -1,21 +1,14 @@
-.submission-tab-tabs {
-	display: flex;
-	flex-direction: column;
-	row-gap: 48px;
-
-	.bp3-tab-indicator-wrapper {
-		min-height: 30px;
+.submission-tab-component {
+	.submission-input input::placeholder {
+		font-style: italic;
+		letter-spacing: .015em;
+		color: #747474;
 	}
-	.pub-header-popover {
-		z-index: 21;
-	}
-
-	.submission-tab-prompt {
-		display: flex;
-		flex-direction: row;
-		column-gap: 340px;
-	}
-	.submission-tab-prompt-text {
-		width: 300px;
+	.submission-input input {
+		background: inherit;
+		min-height: unset;
+		border: none;
+		border-bottom: 1px solid #BDBDBD;
+		box-shadow: none;
 	}
 }

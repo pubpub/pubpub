@@ -17,7 +17,7 @@ type Props = {
 const SubmissionTab = (props: Props) => {
 	const [onUpdatePubDebounced] = useDebouncedCallback(props.onUpdatePub, 250);
 	return (
-		<>
+		<div className="submission-tab-component">
 			<span>
 				The information you enter in this form and the content section below will be used to
 				create your submission. You can use the Preview tab to see how your submission will
@@ -35,7 +35,7 @@ const SubmissionTab = (props: Props) => {
 					placeholder="Type your submission's title here..."
 				/>
 			</Label>
-			<Label htmlFor="abstract-input">
+			<Label>
 				<h2>Abstract</h2>
 				<MinimalEditor
 					placeholder="Type your submission's abstract here..."
@@ -61,7 +61,7 @@ const SubmissionTab = (props: Props) => {
 				text="Upload new file"
 				isSmall
 			/>
-		</>
+		</div>
 	);
 };
 
