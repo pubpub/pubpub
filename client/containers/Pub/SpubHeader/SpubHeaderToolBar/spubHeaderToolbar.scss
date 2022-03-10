@@ -14,3 +14,14 @@
 .status-text {
 	text-transform: capitalize;
 }
+
+.submission-button {
+	width: 119px;
+	height: 30px;
+	.bp3-button {
+		background: thistle;
+		border: 1px solid var(--community-accent-dark);
+	}
+
+	border-radius: 2px;
+}

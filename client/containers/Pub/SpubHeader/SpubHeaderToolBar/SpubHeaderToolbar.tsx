@@ -25,12 +25,13 @@ const SpubHeaderToolbar = (props: Props) => {
 	const instructionTabTitle = renderTabTitle('align-left', 'Instructions');
 	const submissionTabTitle = renderTabTitle('manually-entered-data', 'Submission');
 	const contributorsTabTitle = renderTabTitle('people', 'Contributors');
-	const previewTabTitle = renderTabTitle('eye-open', 'Preview & Submit');
+	const previewTabTitle = renderTabTitle('eye-open', 'Preview');
 	const maybeActiveClass = (tabId: string) =>
 		`${tabId === props.selectedTab ? 'active' : 'inactive'}`;
 
 	const { pendingCount } = usePendingChanges();
 	const isSaving = pendingCount > 0;
+
 	const status = isSaving ? (
 		<strong>
 			<em>Saving</em>
@@ -40,12 +41,12 @@ const SpubHeaderToolbar = (props: Props) => {
 	);
 
 	const renderRight = props.showSubmitButton ? (
-		<Button outlined={true} onSubmit={props.onSubmit}>
+		<Button className="submission-button" onSubmit={props.onSubmit}>
 			Submit
 		</Button>
 	) : (
 		<div className="status">
-			<em>status:&nbsp;</em>
+			<em>status:&nbsp;&nbsp;&nbsp;</em>
 			<strong>{status}</strong>
 		</div>
 	);

@@ -15,7 +15,7 @@ const StatefulSpubHeaderToolBaraWrapper = () => {
 			selectedTab={selectedTab}
 			onSelectTab={setSelectedTab}
 			submission={pubData.submission as Submission}
-			showSubmitButton={false}
+			showSubmitButton={true}
 			onSubmit={() => {
 				console.log('clicked');
 			}}
