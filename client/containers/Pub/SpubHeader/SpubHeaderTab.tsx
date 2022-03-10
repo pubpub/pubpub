@@ -1,18 +1,22 @@
 import React, { useRef, useState, useEffect } from 'react';
 
+import { GridWrapper } from 'components';
 import { useViewport } from 'client/utils/useViewport';
 
 require('./spubHeaderTab.scss');
 
 type Props = {
 	children?: React.ReactNode;
+	className?: string;
 	expandToFold?: boolean;
 };
 
 const SpubHeaderTab = (props: Props) => {
+	const { children, className, expandToFold } = props;
 	const elementRef = useRef<HTMLDivElement>(null);
 	const [minHeight, setMinHeight] = useState(0);
 	const { viewportHeight } = useViewport();
+
 	useEffect(() => {
 		if (elementRef.current) {
 			setMinHeight(
@@ -22,14 +26,17 @@ const SpubHeaderTab = (props: Props) => {
 			);
 		}
 	}, [viewportHeight]);
+
 	return (
-		<div
-			style={{ ...(props.expandToFold && { minHeight }) }}
-			className="spub-header-tab-component"
-			ref={elementRef}
-		>
-			{props.children}
-		</div>
+		<GridWrapper containerClassName={className}>
+			<div
+				style={{ ...(expandToFold && { minHeight }) }}
+				className="spub-header-tab-component"
+				ref={elementRef}
+			>
+				{children}
+			</div>
+		</GridWrapper>
 	);
 };
 

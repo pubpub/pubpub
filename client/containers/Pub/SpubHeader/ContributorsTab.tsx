@@ -4,6 +4,8 @@ import { PubAttributionEditor } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { PubPageData, DefinitelyHas } from 'types';
 
+import SpubHeaderTab from './SpubHeaderTab';
+
 type Props = {
 	pubData: DefinitelyHas<PubPageData, 'submission'>;
 	onUpdatePub: (pub: Partial<PubPageData>) => unknown;
@@ -14,7 +16,7 @@ const ContributorsTab = (props: Props) => {
 	const { communityData } = usePageContext();
 
 	return (
-		<div>
+		<SpubHeaderTab>
 			<p>
 				Add the names, roles & affiliations of other people who have a part to play in the
 				creation of this submission’s content.
@@ -25,7 +27,7 @@ const ContributorsTab = (props: Props) => {
 				updatePubData={onUpdatePub}
 				canEdit
 			/>
-		</div>
+		</SpubHeaderTab>
 	);
 };
 

@@ -7,7 +7,6 @@ import { apiFetch } from 'client/utils/apiFetch';
 import { getEmptyDoc } from 'components/Editor';
 
 import { usePubContext } from '../pubHooks';
-import SpubHeaderTab from './SpubHeaderTab';
 import InstructionsTab from './InstructionsTab';
 import SubmissionTab from './SubmissionTab';
 import ContributorsTab from './ContributorsTab';
@@ -65,7 +64,6 @@ const SpubHeader = (props: Props) => {
 	const instructionTabTitle = renderTabTitle('align-left', 'Instructions');
 	const submissionTabTitle = renderTabTitle('manually-entered-data', 'Submission');
 	const previewTabTitle = renderTabTitle('eye-open', 'Preview');
-	// TODO supposed to be inherited-group icon, but that throws an error?
 	const contributorsTabTitle = renderTabTitle('people', 'Contributors');
 	const maybeActiveClass = (tabId: string) => `${tabId === selectedTab ? 'active' : 'inactive'}`;
 
@@ -86,11 +84,9 @@ const SpubHeader = (props: Props) => {
 				title={instructionTabTitle}
 				className={`tab-panel ${maybeActiveClass('instructions')}`}
 				panel={
-					<SpubHeaderTab>
-						<InstructionsTab
-							submissionWorkflow={props.pubData.submission.submissionWorkflow}
-						/>
-					</SpubHeaderTab>
+					<InstructionsTab
+						submissionWorkflow={props.pubData.submission.submissionWorkflow}
+					/>
 				}
 			/>
 			<Tab
@@ -98,14 +94,12 @@ const SpubHeader = (props: Props) => {
 				title={submissionTabTitle}
 				className={`tab-panel submission ${maybeActiveClass('submission')}`}
 				panel={
-					<SpubHeaderTab>
-						<SubmissionTab
-							pub={props.pubData}
-							abstract={abstract}
-							onUpdatePub={updateAndSavePubData}
-							onUpdateAbstract={updateAbstract}
-						/>
-					</SpubHeaderTab>
+					<SubmissionTab
+						pub={props.pubData}
+						abstract={abstract}
+						onUpdatePub={updateAndSavePubData}
+						onUpdateAbstract={updateAbstract}
+					/>
 				}
 			/>
 			<Tab
@@ -113,12 +107,7 @@ const SpubHeader = (props: Props) => {
 				id="contributors"
 				title={contributorsTabTitle}
 				panel={
-					<SpubHeaderTab expandToFold>
-						<ContributorsTab
-							pubData={props.pubData}
-							onUpdatePub={updateAndSavePubData}
-						/>
-					</SpubHeaderTab>
+					<ContributorsTab pubData={props.pubData} onUpdatePub={updateAndSavePubData} />
 				}
 			/>
 			<Tab
