@@ -16,9 +16,7 @@ const StatefulSpubHeaderToolBaraWrapper = () => {
 			onSelectTab={setSelectedTab}
 			status={pubData.submission.status as SubmissionStatus}
 			showSubmitButton={true}
-			onSubmit={() => {
-				console.log('clicked');
-			}}
+			onSubmit={() => {}}
 		/>
 	);
 };

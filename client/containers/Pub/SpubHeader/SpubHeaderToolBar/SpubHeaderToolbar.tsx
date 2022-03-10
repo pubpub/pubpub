@@ -31,7 +31,6 @@ const SpubHeaderToolbar = (props: Props) => {
 		`${tabId === props.selectedTab ? 'active' : 'inactive'}`;
 
 	const { communityData } = usePageContext();
-	console.log(communityData);
 
 	const lighterAccentColor = useMemo(
 		() => Color(communityData.accentColorLight).alpha(0.2),
