@@ -58,16 +58,16 @@ const SpubHeader = (props: Props) => {
 		}).catch(() => props.updateLocalData('pub', props.pubData));
 	};
 
-	// const updateSubmissionStatus = async (newSubmissionStatus: SubmissionStatus) => {
-	// 	return apiFetch('/api/submissions', {
-	// 		method: 'PUT',
-	// 		body: JSON.stringify({
-	// 			status: newSubmissionStatus,
-	// 			id: props.pubData.submission.id,
-	// 		}),
-	// 	}).then(() => setStatus(newSubmissionStatus));
-	// };
-
+	const updateSubmissionStatus = async (newSubmissionStatus: SubmissionStatus) => {
+		return apiFetch('/api/submissions', {
+			method: 'PUT',
+			body: JSON.stringify({
+				status: newSubmissionStatus,
+				id: props.pubData.submission.id,
+			}),
+		}).then(() => setStatus(newSubmissionStatus));
+	};
+	console.log('not in use yet', updateSubmissionStatus, status);
 	assert(props.pubData.submission.submissionWorkflow !== undefined);
 	const updateHistoryData = (newHistoryData: Partial<PubHistoryState>) => {
 		return props.updateLocalData('history', newHistoryData);

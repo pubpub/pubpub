@@ -41,7 +41,7 @@ const SpubHeaderToolbar = (props: Props) => {
 	);
 
 	const renderRight = props.showSubmitButton ? (
-		<Button className="submission-button" outlined={true} onSubmit={props.onSubmit}>
+		<Button className="submission-button" outlined={true} onClick={props.onSubmit}>
 			Submit
 		</Button>
 	) : (
