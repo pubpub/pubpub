@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import classNames from 'classnames';
 
 import { GridWrapper } from 'components';
 import { useViewport } from 'client/utils/useViewport';
@@ -6,7 +7,7 @@ import { useViewport } from 'client/utils/useViewport';
 require('./spubHeaderTab.scss');
 
 type Props = {
-	children?: React.ReactNode;
+	children: React.ReactNode;
 	className?: string;
 	expandToFold?: boolean;
 };
@@ -28,12 +29,8 @@ const SpubHeaderTab = (props: Props) => {
 	}, [viewportHeight]);
 
 	return (
-		<GridWrapper containerClassName={className}>
-			<div
-				style={{ ...(expandToFold && { minHeight }) }}
-				className="spub-header-tab-component"
-				ref={elementRef}
-			>
+		<GridWrapper containerClassName={classNames('spub-header-tab-component', className)}>
+			<div style={{ ...(expandToFold && { minHeight }) }} ref={elementRef}>
 				{children}
 			</div>
 		</GridWrapper>
