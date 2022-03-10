@@ -1,5 +1,5 @@
 import { Node } from 'prosemirror-model';
-import { Step, Transform } from 'prosemirror-transform';
+import { Step } from 'prosemirror-transform';
 import { compressStateJSON, compressStepJSON } from 'prosemirror-compress-pubpub';
 import uuid from 'uuid';
 import firebase from 'firebase';
