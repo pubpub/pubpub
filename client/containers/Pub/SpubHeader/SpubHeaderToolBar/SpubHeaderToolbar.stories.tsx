@@ -5,13 +5,13 @@ import { TabId } from '@blueprintjs/core';
 import { pubData } from 'utils/storybook/data';
 import { SubmissionStatus } from 'types';
 
-import SpubHeaderToolBar from './SpubHeaderToolbar';
-import '../SpubHeader.stories.scss';
+import SpubHeaderToolbar from './SpubHeaderToolbar';
+// import '../SpubHeader.stories.scss';
 
 const StatefulSpubHeaderToolBaraWrapper = () => {
 	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');
 	return (
-		<SpubHeaderToolBar
+		<SpubHeaderToolbar
 			selectedTab={selectedTab}
 			onSelectTab={setSelectedTab}
 			status={pubData.submission.status as SubmissionStatus}

@@ -1,9 +1,10 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useMemo } from 'react';
 import { Tab, Tabs, TabId, Icon, IconName, Button } from '@blueprintjs/core';
+import Color from 'color';
 
 import { GridWrapper } from 'components';
 import { SubmissionStatus } from 'types';
-import { usePendingChanges } from 'utils/hooks';
+import { usePageContext, usePendingChanges } from 'utils/hooks';
 
 require('./spubHeaderToolbar.scss');
 
@@ -29,6 +30,18 @@ const SpubHeaderToolbar = (props: Props) => {
 	const maybeActiveClass = (tabId: string) =>
 		`${tabId === props.selectedTab ? 'active' : 'inactive'}`;
 
+	const { communityData } = usePageContext();
+	console.log(communityData);
+
+	const lighterAccentColor = useMemo(
+		() => Color(communityData.accentColorLight).alpha(0.2),
+		[communityData.accentColorLight],
+	);
+
+	const darkerAccentColor = useMemo(
+		() => Color(communityData.accentColorDark),
+		[communityData.accentColorDark],
+	);
 	const { pendingCount } = usePendingChanges();
 	const isSaving = pendingCount > 0;
 
@@ -52,7 +65,10 @@ const SpubHeaderToolbar = (props: Props) => {
 	);
 	return (
 		<GridWrapper containerClassName="gridParent">
-			<div className="spubheader-toolbar">
+			<div
+				className="spubheader-toolbar"
+				style={{ background: lighterAccentColor, color: darkerAccentColor }}
+			>
 				<Tabs
 					id="spubHeader"
 					onChange={props.onSelectTab}

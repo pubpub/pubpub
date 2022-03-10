@@ -8,14 +8,13 @@
 	.tabs.spub-header-component .bp3-tab-list {
 		margin: 0px;
 	}
-	.bp3-tab-list .bp3-tab.inactive {
+	.spub-header-component .bp3-tab-list .bp3-tab.inactive {
 		opacity: 0.45;
-		color: darken(lightslategray, 10%);
+		color: var(--community-accent-dark);
 	}
 }
 
 .gridParent {
-	background-color: lighten(lightslategray, 30%);
 	&.container {
 		max-width: 100%;
 	}
@@ -33,10 +32,8 @@
 	width: 119px;
 	height: 30px;
 	&.bp3-button.bp3-outlined {
-		border: 1px solid darken(lightslategray, 10%);
-		border-radius: 2px;
-	}
-	.bp3-button-text {
-		color: darken(lightslategray, 10%);
+		border: 20px solid var(--community-accent-dark);
+		color: var(--community-accent-dark);
+		background-color: white;
 	}
 }
