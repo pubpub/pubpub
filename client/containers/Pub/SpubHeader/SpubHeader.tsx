@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Tab, Tabs, TabId, Icon, IconName } from '@blueprintjs/core';
 
-import { DocJson, DefinitelyHas, PubHistoryState, PubPageData } from 'types';
+import { DocJson, DefinitelyHas, PubHistoryState, PubPageData, SubmissionStatus } from 'types';
 import { assert } from 'utils/assert';
 import { apiFetch } from 'client/utils/apiFetch';
 import { getEmptyDoc } from 'components/Editor';
@@ -33,6 +33,7 @@ const SpubHeader = (props: Props) => {
 	const [abstract, setAbstract] = useState(
 		() => props.pubData.submission.abstract || getEmptyDoc(),
 	);
+	const [status, setStatus] = useState(() => props.pubData.submission.status);
 	const { updatePubData } = usePubContext();
 
 	const updateAbstract = async (newAbstract: DocJson) => {
@@ -56,6 +57,17 @@ const SpubHeader = (props: Props) => {
 			}),
 		}).catch(() => props.updateLocalData('pub', props.pubData));
 	};
+
+	// const updateSubmissionStatus = async (newSubmissionStatus: SubmissionStatus) => {
+	// 	return apiFetch('/api/submissions', {
+	// 		method: 'PUT',
+	// 		body: JSON.stringify({
+	// 			status: newSubmissionStatus,
+	// 			id: props.pubData.submission.id,
+	// 		}),
+	// 	}).then(() => setStatus(newSubmissionStatus));
+	// };
+
 	assert(props.pubData.submission.submissionWorkflow !== undefined);
 	const updateHistoryData = (newHistoryData: Partial<PubHistoryState>) => {
 		return props.updateLocalData('history', newHistoryData);

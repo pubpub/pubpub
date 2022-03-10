@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react';
 import { TabId } from '@blueprintjs/core';
 
 import { pubData } from 'utils/storybook/data';
-import { Submission } from 'types';
+import { SubmissionStatus } from 'types';
 
 import SpubHeaderToolBar from './SpubHeaderToolbar';
 import '../SpubHeader.stories.scss';
@@ -14,7 +14,7 @@ const StatefulSpubHeaderToolBaraWrapper = () => {
 		<SpubHeaderToolBar
 			selectedTab={selectedTab}
 			onSelectTab={setSelectedTab}
-			submission={pubData.submission as Submission}
+			status={pubData.submission.status as SubmissionStatus}
 			showSubmitButton={true}
 			onSubmit={() => {
 				console.log('clicked');

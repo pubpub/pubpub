@@ -5,23 +5,34 @@
 	justify-content: center;
 	align-items: baseline;
 	column-gap: 340px;
+	.tabs.spub-header-component .bp3-tab-list {
+		margin: 0px;
+	}
+}
+
+.gridParent {
+    background-color: lighten(lightslategray, 30%);
+    &.container {
+        max-width: 100%;
+    }
 }
 
 .status {
-	display: flex;
+    display: flex;
 }
 
 .status-text {
-	text-transform: capitalize;
+    text-transform: capitalize;
 }
 
 .submission-button {
-	width: 119px;
-	height: 30px;
-	.bp3-button {
-		background: thistle;
-		border: 1px solid var(--community-accent-dark);
-	}
-
-	border-radius: 2px;
+    width: 119px;
+    height: 30px;
+    &.bp3-button.bp3-outlined {
+        border: 1px solid darken(lightslategray, 10%);
+        border-radius: 2px;
+    }
+    .bp3-button-text {
+        color: darken(lightslategray, 10%);
+    }
 }
