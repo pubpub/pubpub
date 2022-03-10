@@ -31,6 +31,13 @@ const SpubHeaderToolbar = (props: Props) => {
 		`${tabId === props.selectedTab ? 'active' : 'inactive'}`;
 
 	const { communityData } = usePageContext();
+	console.log(communityData);
+
+	const lighterAccentColor = useMemo(
+		() => Color(communityData.accentColorLight).alpha(0.2),
+		[communityData.accentColorLight],
+	);
+
 	const darkerAccentColor = useMemo(
 		() => Color(communityData.accentColorDark),
 		[communityData.accentColorDark],
@@ -57,40 +64,42 @@ const SpubHeaderToolbar = (props: Props) => {
 		</div>
 	);
 	return (
-		<GridWrapper containerClassName="gridParent">
-			<div className="spubheader-toolbar" style={{ color: darkerAccentColor }}>
-				<Tabs
-					id="spubHeader"
-					onChange={props.onSelectTab}
-					selectedTabId={props.selectedTab}
-					className="spub-header-component tabs bp3-large"
-				>
-					<Tab
-						id="instructions"
-						title={instructionTabTitle}
-						className={`tab-panel ${maybeActiveClass('instructions')}`}
-					/>
+		<div style={{ background: lighterAccentColor, color: darkerAccentColor }}>
+			<GridWrapper containerClassName="gridParent">
+				<div className="spubheader-toolbar">
+					<Tabs
+						id="spubHeader"
+						onChange={props.onSelectTab}
+						selectedTabId={props.selectedTab}
+						className="spub-header-component tabs bp3-large"
+					>
+						<Tab
+							id="instructions"
+							title={instructionTabTitle}
+							className={`tab-panel ${maybeActiveClass('instructions')}`}
+						/>
 
-					<Tab
-						id="submission"
-						title={submissionTabTitle}
-						className={`tab-panel ${maybeActiveClass('submission')}`}
-					/>
+						<Tab
+							id="submission"
+							title={submissionTabTitle}
+							className={`tab-panel ${maybeActiveClass('submission')}`}
+						/>
 
-					<Tab
-						id="contributors"
-						title={contributorsTabTitle}
-						className={`tab-panel ${maybeActiveClass('contributors')}`}
-					/>
-					<Tab
-						id="preview"
-						title={previewTabTitle}
-						className={`${maybeActiveClass('preview')}`}
-					/>
-				</Tabs>
-				<div>{renderRight}</div>
-			</div>
-		</GridWrapper>
+						<Tab
+							id="contributors"
+							title={contributorsTabTitle}
+							className={`tab-panel ${maybeActiveClass('contributors')}`}
+						/>
+						<Tab
+							id="preview"
+							title={previewTabTitle}
+							className={`${maybeActiveClass('preview')}`}
+						/>
+					</Tabs>
+					<div>{renderRight}</div>
+				</div>
+			</GridWrapper>
+		</div>
 	);
 };
 
