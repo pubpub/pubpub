@@ -31,13 +31,6 @@ const SpubHeaderToolbar = (props: Props) => {
 		`${tabId === props.selectedTab ? 'active' : 'inactive'}`;
 
 	const { communityData } = usePageContext();
-	console.log(communityData);
-
-	const lighterAccentColor = useMemo(
-		() => Color(communityData.accentColorLight).alpha(0.2),
-		[communityData.accentColorLight],
-	);
-
 	const darkerAccentColor = useMemo(
 		() => Color(communityData.accentColorDark),
 		[communityData.accentColorDark],
@@ -65,10 +58,7 @@ const SpubHeaderToolbar = (props: Props) => {
 	);
 	return (
 		<GridWrapper containerClassName="gridParent">
-			<div
-				className="spubheader-toolbar"
-				style={{ background: lighterAccentColor, color: darkerAccentColor }}
-			>
+			<div className="spubheader-toolbar" style={{ color: darkerAccentColor }}>
 				<Tabs
 					id="spubHeader"
 					onChange={props.onSelectTab}
