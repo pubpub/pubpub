@@ -62,6 +62,6 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 		key: firebaseDraftRef ? 'ready' : 'unready',
 		isReadOnly: !(canEdit || canEditDraft),
 		initialContent: initialDoc,
-		includeCollabPlugin: true,
+		includeCollabPlugin: !!firebaseDraftRef,
 	};
 };
