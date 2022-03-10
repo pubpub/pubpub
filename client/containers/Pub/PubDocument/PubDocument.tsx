@@ -18,26 +18,58 @@ import PubInlineMenu from './PubInlineMenu';
 import PubLinkController from './PubLinkController';
 import PubMaintenanceNotice from './PubMaintenanceNotice';
 import { PubSuspendWhileTyping } from '../PubSuspendWhileTyping';
+import { usePubContext } from '../pubHooks';
 
 require('./pubDocument.scss');
 
-type Props = {
-	pubData: any;
-	collabData: any;
-	historyData: any;
-	updateLocalData: (...args: any[]) => any;
+const isInViewport = (rect: DOMRect, offsets: { top?: number; left?: number } = {}) => {
+	const { top, left, bottom, right } = rect;
+	const { innerWidth, innerHeight } = window;
+	const { clientWidth, clientHeight } = document.documentElement;
+	const { top: offsetTop, left: offsetLeft } = { top: 0, left: 0, ...offsets };
+
+	return (
+		top >= offsetTop &&
+		left >= offsetLeft &&
+		bottom <= (innerHeight || clientHeight) &&
+		right <= (innerWidth || clientWidth)
+	);
 };
 
-const PubDocument = (props: Props) => {
-	const { pubData, historyData, collabData, updateLocalData } = props;
+const scrollToElementTop = (hash: string, delay = 0) => {
+	let element: HTMLElement | null;
+
+	try {
+		element = document.getElementById(hash.replace('#', ''));
+	} catch {
+		return;
+	}
+
+	if (!element) {
+		return;
+	}
+
+	setTimeout(() => {
+		const rect = (element as HTMLElement).getBoundingClientRect();
+
+		if (!isInViewport(rect, { top: 50 })) {
+			document.body.scrollTop += rect.top - 80;
+		}
+	}, delay);
+};
+
+const PubDocument = () => {
+	const { pubData, historyData, collabData, updateLocalData, pubBodyState } = usePubContext();
 	const { isViewingHistory } = historyData;
 	const { editorChangeObject } = collabData;
+	const { isReadOnly } = pubBodyState;
 	const { communityData, locationData, scopeData } = usePageContext();
 	const { canEdit, canEditDraft } = scopeData.activePermissions;
 	const [areDiscussionsShown, setDiscussionsShown] = useState(true);
 	const mainContentRef = useRef(null);
 	const sideContentRef = useRef(null);
 	const editorWrapperRef = useRef(null);
+	const editorView = editorChangeObject?.view;
 
 	const updateHistoryData = (next) => updateLocalData('history', next);
 
@@ -45,9 +77,9 @@ const PubDocument = (props: Props) => {
 		const fromNumber = Number(locationData.query.from);
 		const toNumber = Number(locationData.query.to);
 		const existingPermElement = document.getElementsByClassName('permanent')[0];
-		if (editorChangeObject.view && fromNumber && toNumber && !existingPermElement) {
+		if (editorView && fromNumber && toNumber && !existingPermElement) {
 			setTimeout(() => {
-				setLocalHighlight(editorChangeObject.view, fromNumber, toNumber, 'permanent');
+				setLocalHighlight(editorView, fromNumber, toNumber, 'permanent');
 				setTimeout(() => {
 					const newlyCreatedPermElement = document.getElementsByClassName('permanent')[0];
 					if (newlyCreatedPermElement) {
@@ -56,7 +88,36 @@ const PubDocument = (props: Props) => {
 				}, 0);
 			}, 0);
 		}
-	}, [editorChangeObject.view, locationData]);
+	}, [editorView, locationData]);
+
+	useEffect(() => {
+		const { hash } = window.location;
+
+		if (hash) {
+			scrollToElementTop(hash, 500);
+		}
+
+		const onClick = (event: MouseEvent) => {
+			const { target, metaKey } = event;
+
+			if (target instanceof HTMLAnchorElement && !metaKey) {
+				const href = target.getAttribute('href');
+
+				if (href && href.indexOf('#') === 0) {
+					event.preventDefault();
+					window.location.hash = href;
+					scrollToElementTop(href);
+				}
+			}
+		};
+
+		if (isReadOnly) {
+			document.addEventListener('click', onClick);
+			return () => document.removeEventListener('click', onClick);
+		}
+
+		return () => {};
+	}, [isReadOnly]);
 
 	// We use the useEffect hook to wait until after the render to show or hide discussions, since
 	// they mount into portals that we rely on Prosemirror to create.
@@ -67,7 +128,7 @@ const PubDocument = (props: Props) => {
 	// const editorFocused = editorChangeObject.view && editorChangeObject.view.hasFocus();
 	return (
 		<div className="pub-document-component">
-			{!pubData.isReadOnly && (
+			{!isReadOnly && (
 				<PubHeaderFormatting
 					collabData={collabData}
 					disabled={isViewingHistory}

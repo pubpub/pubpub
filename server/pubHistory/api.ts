@@ -5,11 +5,10 @@ import { getPermissions } from './permissions';
 
 const getRequestIds = (req) => {
 	const user = req.user || {};
-	const { pubId, communityId, historyKey, accessHash } = req.query;
+	const { pubId, historyKey, accessHash } = req.query;
 	return {
 		userId: user.id,
 		pubId,
-		communityId,
 		historyKey: parseInt(historyKey, 10),
 		accessHash,
 	};
@@ -18,10 +17,9 @@ const getRequestIds = (req) => {
 app.get(
 	'/api/pubHistory',
 	wrap(async (req, res) => {
-		const { pubId, communityId, historyKey, accessHash, userId } = getRequestIds(req);
+		const { pubId, historyKey, accessHash, userId } = getRequestIds(req);
 		const { canCreateExport } = await getPermissions({
 			userId,
-			communityId,
 			pubId,
 			accessHash,
 			historyKey,

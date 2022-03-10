@@ -118,7 +118,6 @@ export default (
 		reviews,
 		exports: getFilteredExports(pubData, isRelease),
 		collectionPubs: filteredCollectionPubs,
-		isReadOnly: isRelease || !(canEdit || canEditDraft),
 		isRelease,
 		releases: sortedReleases,
 		releaseNumber,

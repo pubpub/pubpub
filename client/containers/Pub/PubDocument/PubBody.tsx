@@ -11,7 +11,7 @@ import Editor, { getJSON } from 'components/Editor';
 import { usePageContext } from 'utils/hooks';
 
 import { usePubContext } from '../pubHooks';
-import { usePubBodyState } from './usePubBodyState';
+import { usePubBodyState } from '../usePubBodyState';
 import { PubSuspendWhileTypingContext } from '../PubSuspendWhileTyping';
 import discussionSchema from './DiscussionAddon/discussionSchema';
 import Discussion from './PubDiscussions/Discussion';
@@ -35,16 +35,16 @@ const shouldSuppressEditorErrors = () => {
 const PubBody = (props: Props) => {
 	const { editorWrapperRef } = props;
 	const { communityData } = usePageContext();
-	const { pubData, noteManager, updateLocalData, collabData, firebaseDraftRef, historyData } =
+	const { pubData, noteManager, updateLocalData, collabData, historyData, pubBodyState } =
 		usePubContext();
+	const { firebaseDraftRef } = collabData;
 	const { isViewingHistory } = historyData;
+	const { key, initialContent, isReadOnly } = pubBodyState;
 	const prevStatusRef = useRef<string | null>(null);
 	const embedDiscussions = useRef({});
 	const [editorError, setEditorError] = useState<Error | null>(null);
 	const [editorErrorTime, setEditorErrorTime] = useState<number | null>(null);
 	const [lastSavedTime, setLastSavedTime] = useState<number | null>(null);
-	const { key, initialContent, isReadOnly } = usePubBodyState();
-	console.log({ initialContent });
 
 	prevStatusRef.current = collabData.status;
 	useBeforeUnload(
@@ -152,7 +152,7 @@ const PubBody = (props: Props) => {
 				enableSuggestions
 				nodeLabels={pubData.nodeLabels}
 				noteManager={noteManager}
-				placeholder={pubData.isReadOnly ? undefined : 'Begin writing here...'}
+				placeholder={isReadOnly ? undefined : 'Begin writing here...'}
 				initialContent={initialContent}
 				isReadOnly={isReadOnly}
 				onKeyPress={handleKeyPress}

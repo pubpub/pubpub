@@ -5,7 +5,7 @@ import { ClickToCopyButton } from 'components';
 import { getLowestAncestorWithId } from 'client/utils/dom';
 import { usePageContext } from 'utils/hooks';
 
-import { usePubData } from '../../pubHooks';
+import { usePubContext } from '../../pubHooks';
 
 export type HeaderPopoverProps = {
 	locationData: any;
@@ -17,7 +17,7 @@ const LinkPopover = (props: HeaderPopoverProps) => {
 	const { element, mainContentRef, locationData } = props;
 	const parent = getLowestAncestorWithId(element);
 	const popoverRef = useRef<null | HTMLDivElement>(null);
-	const pubData = usePubData();
+	const { pubData, pubBodyState } = usePubContext();
 	const {
 		scopeData: {
 			activePermissions: { canManage },
@@ -42,7 +42,7 @@ const LinkPopover = (props: HeaderPopoverProps) => {
 	const unstableLink = Boolean(parent && /^r[0-9]*$/.test(parent.id));
 	const isLatestRelease = pubData.releaseNumber === pubData.releases.length;
 	const managersEnableLinksPrompt =
-		pubData.isReadOnly && isLatestRelease && unstableLink && canManage
+		pubBodyState.isReadOnly && isLatestRelease && unstableLink && canManage
 			? 'You must create a new Release to link to this block.'
 			: '';
 

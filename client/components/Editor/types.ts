@@ -32,7 +32,7 @@ export type EditorChangeObject = ReturnType<typeof getChangeObject>;
 
 export type CollaborativeOptions = {
 	clientData: {
-		id: string;
+		id: null | string;
 	};
 	firebaseRef: firebase.database.Reference;
 	initialDocKey: number;

@@ -127,7 +127,6 @@ export type PubPageData = DefinitelyHas<Omit<Pub, 'discussions'>, 'collectionPub
 		discussions: PubPageDiscussion[];
 		viewHash: Maybe<string>;
 		editHash: Maybe<string>;
-		isReadOnly: boolean;
 		isRelease: boolean;
 		isInMaintenanceMode?: boolean;
 		firebaseToken?: string;
@@ -142,9 +141,17 @@ export type PubHistoryState = {
 	latestKey: number;
 	isViewingHistory: boolean;
 	loadedIntoHistory: boolean;
-	historyDocKey: string;
-	historyDoc?: DocJson;
+	historyDocKey: null | string;
+	historyDoc: null | DocJson;
 	outstandingRequests: number;
 	latestKeyReceivedAt: Maybe<number>;
 	timestamps: Record<string, number>;
+};
+
+export type PubDraftInfo = {
+	doc: DocJson;
+	mostRecentRemoteKey: number;
+	firstTimestamp: number;
+	latestTimestamp: number;
+	historyData: Pick<PubHistoryState, 'currentKey' | 'latestKey' | 'timestamps'>;
 };
