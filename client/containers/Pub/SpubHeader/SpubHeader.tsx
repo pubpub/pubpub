@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Tab, Tabs, Icon, IconName } from '@blueprintjs/core';
 
 import { DocJson, PubHistoryState, PubPageData } from 'types';

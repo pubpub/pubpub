@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Callout, Button, Classes, Dialog } from '@blueprintjs/core';
 import { apiFetch } from 'client/utils/apiFetch';
 import { Submission, SubmissionStatus, DefinitelyHas } from 'types';
-import { Editor } from 'components';
 
 type Props = {
 	submission: DefinitelyHas<Submission, 'submissionWorkflow'>;

@@ -11,7 +11,7 @@ const InstructionsTab = (props: Props) => {
 	return (
 		<>
 			<h1 className="submission-workflow-title">{props.submissionWorkflow.title}</h1>
-			{/* <Editor initialContent={props.submissionWorkflow.instructionsText} isReadOnly /> */}
+			<Editor initialContent={props.submissionWorkflow.instructionsText} isReadOnly />
 		</>
 	);
 };
