@@ -102,7 +102,6 @@ const PubHistoryViewer = (props: Props) => {
 	const hasScrolledRef = useRef<null | boolean>(null);
 	const isLoadingHistory = outstandingRequests > 0;
 	const hasMeaningfulHistory = latestKey >= 0;
-
 	historyScrollRef.current = null;
 
 	const currentDate = getDateForHistoryKey(currentKey, timestamps);

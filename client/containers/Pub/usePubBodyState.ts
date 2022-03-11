@@ -1,4 +1,5 @@
-import { DocJson } from 'types';
+import { useMemo } from 'react';
+import { DiscussionAnchor, DocJson } from 'types';
 import { usePageContext } from 'utils/hooks';
 
 import { PubContextType } from './PubContextProvider';
@@ -11,12 +12,12 @@ export type PubBodyState = {
 	isReadOnly: boolean;
 	key: string | number;
 	hidePubBody?: true;
-	hidePubDiscussions?: true;
+	discussionAnchors?: DiscussionAnchor[];
 };
 
 export const usePubBodyState = (options: Options): PubBodyState => {
 	const {
-		pubData: { initialDoc, isInMaintenanceMode },
+		pubData: { initialDoc, isInMaintenanceMode, isRelease, discussions },
 		submissionState,
 		historyData: { currentKey, isViewingHistory, historyDoc, historyDocKey },
 		collabData: { firebaseDraftRef },
@@ -26,6 +27,17 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 			activePermissions: { canEdit, canEditDraft },
 		},
 	} = usePageContext();
+
+	const discussionAnchors = useMemo(() => {
+		if (isRelease) {
+			return discussions
+				.map((discussion) =>
+					discussion.anchors!.filter((anchor) => anchor.historyKey === currentKey),
+				)
+				.reduce((a, b) => [...a, ...b], []);
+		}
+		return [];
+	}, [discussions, isRelease, currentKey]);
 
 	const submissionPreviewDoc = submissionState?.submissionPreviewDoc;
 
@@ -44,7 +56,6 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 			isReadOnly: true,
 			initialContent: historyDoc,
 			includeCollabPlugin: false,
-			hidePubDiscussions: true,
 		};
 	}
 
@@ -55,6 +66,7 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 			initialContent: submissionPreviewDoc,
 			includeCollabPlugin: false,
 			hidePubBody: true,
+			discussionAnchors,
 		};
 	}
 
@@ -63,5 +75,6 @@ export const usePubBodyState = (options: Options): PubBodyState => {
 		isReadOnly: !(canEdit || canEditDraft),
 		initialContent: initialDoc,
 		includeCollabPlugin: !!firebaseDraftRef,
+		discussionAnchors,
 	};
 };

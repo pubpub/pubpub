@@ -12,7 +12,7 @@ import {
 } from './usePubSubmissionState';
 import { usePubCollabState, PubCollabState } from './usePubCollabState';
 import { usePubHistoryState, PubHistoryStatePatchFn } from './usePubHistoryState';
-import { useIdlyUpdatedState } from './useIdlyUpdatedState';
+import { IdlePatchFn, useIdlyUpdatedState } from './useIdlyUpdatedState';
 import { PubBodyState, usePubBodyState } from './usePubBodyState';
 
 type Props = {
@@ -34,6 +34,7 @@ export type PubContextType = {
 	historyData: PubHistoryState;
 	updateHistoryData: PubHistoryStatePatchFn;
 	collabData: PubCollabState;
+	updateCollabData: IdlePatchFn<PubCollabState>;
 	submissionState: null | PubSubmissionState;
 	updateSubmissionState: PubSubmissionStatePatchFn;
 	updateLocalData: UpdateLocalDataFn;
@@ -103,6 +104,7 @@ export const PubContextProvider = (props: Props) => {
 		pubData,
 		updatePubData,
 		collabData,
+		updateCollabData,
 		historyData,
 		updateHistoryData,
 		submissionState,

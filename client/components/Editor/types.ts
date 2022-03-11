@@ -2,9 +2,10 @@ import { Node, Schema } from 'prosemirror-model';
 import { Plugin, EditorState, Transaction } from 'prosemirror-state';
 import firebase from 'firebase';
 
+import { DiscussionAnchor } from 'types';
+import { PubCollabStatus } from 'client/containers/Pub/usePubCollabState';
 import { NoteManager } from 'client/utils/notes';
 import SuggestionManager from 'client/utils/suggestions/suggestionManager';
-import { DiscussionAnchor } from 'types';
 
 import { getChangeObject } from './plugins/onChange';
 import { NodeReference } from './utils';
@@ -36,7 +37,7 @@ export type CollaborativeOptions = {
 	};
 	firebaseRef: firebase.database.Reference;
 	initialDocKey: number;
-	onStatusChange?: (status: 'saving' | 'saved') => unknown;
+	onStatusChange?: (status: PubCollabStatus) => unknown;
 	onUpdateLatestKey?: (key: number) => unknown;
 };
 
@@ -58,7 +59,7 @@ export type MediaUploadHandler = (file: File) => null | MediaUploadInstance;
 
 export type PluginsOptions = {
 	noteManager?: NoteManager;
-	collaborativeOptions?: CollaborativeOptions;
+	collaborativeOptions?: null | CollaborativeOptions;
 	discussionsOptions?: null | DiscussionsOptions;
 	initialDoc: Node;
 	isReadOnly?: boolean;

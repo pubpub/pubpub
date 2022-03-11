@@ -31,7 +31,7 @@ const PubDocument = () => {
 		updatePubData,
 		updateLocalData,
 		updateHistoryData,
-		pubBodyState: { isReadOnly, hidePubBody, hidePubDiscussions },
+		pubBodyState: { isReadOnly, hidePubBody },
 	} = usePubContext();
 	const { isViewingHistory } = historyData;
 	const { communityData, locationData } = usePageContext();
@@ -104,7 +104,6 @@ const PubDocument = () => {
 						updateLocalData={updateLocalData}
 						sideContentRef={sideContentRef}
 						mainContentRef={mainContentRef}
-						showDiscussions={!hidePubDiscussions}
 					/>
 				)}
 			</PubSuspendWhileTyping>

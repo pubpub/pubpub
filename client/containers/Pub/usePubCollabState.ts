@@ -19,9 +19,11 @@ type CollabUser = {
 	canEdit: boolean;
 };
 
+export type PubCollabStatus = 'connecting' | 'connected' | 'saving' | 'saved' | 'disconnected';
+
 export type PubCollabState = {
 	editorChangeObject: null | EditorChangeObject;
-	status: string;
+	status: PubCollabStatus;
 	localCollabUser: CollabUser;
 	remoteCollabUsers: CollabUser[];
 	firebaseDraftRef: null | firebase.database.Reference;
@@ -86,6 +88,7 @@ export const usePubCollabState = (options: Options) => {
 					return;
 				}
 				const [firebaseDraftRef, connectionRef] = firebaseRefs;
+				updateCollabState({ firebaseDraftRef });
 				firebaseDraftRef?.child('cursors').on('value', syncRemoteCollabUsers);
 				connectionRef.on('value', (snapshot) => {
 					const isConnected = snapshot.val() === true;
