@@ -1,16 +1,16 @@
 import React, { useContext, useState, useCallback } from 'react';
 import { useBeforeUnload } from 'react-use';
 import * as Sentry from '@sentry/browser';
+import { useDebouncedCallback } from 'use-debounce/lib';
 
 import { Editor } from 'components';
 import discussionSchema from 'components/Editor/schemas/discussion';
-
-import { useDebouncedCallback } from 'use-debounce/lib';
 import { EditorChangeObject } from 'client/components/Editor';
-import { PubSuspendWhileTypingContext } from '../PubSuspendWhileTyping';
+
 import { usePubContext } from '../pubHooks';
-import PubErrorAlert from './PubErrorAlert';
+import { PubSuspendWhileTypingContext } from '../PubSuspendWhileTyping';
 import { PubCollabStatus } from '../usePubCollabState';
+import PubErrorAlert from './PubErrorAlert';
 
 require('./pubBody.scss');
 
@@ -85,6 +85,12 @@ const PubBody = (props: Props) => {
 			onUpdateLatestKey: handleLatestKey,
 		};
 
+	const discussionOptions = !isViewingHistory && {
+		draftRef: firebaseDraftRef,
+		initialHistoryKey: initialDocKey,
+		discussionAnchors: discussionAnchors || [],
+	};
+
 	return (
 		<main className="pub-body-component" ref={editorWrapperRef}>
 			<Editor
@@ -99,13 +105,7 @@ const PubBody = (props: Props) => {
 				onKeyPress={handleKeyPress}
 				onChange={handleEditorChange}
 				onError={handleError}
-				discussionsOptions={
-					!isViewingHistory && {
-						draftRef: firebaseDraftRef,
-						initialHistoryKey: initialDocKey,
-						discussionAnchors: discussionAnchors || [],
-					}
-				}
+				discussionsOptions={discussionOptions}
 				collaborativeOptions={collaborativeOptions}
 			/>
 			<PubErrorAlert
