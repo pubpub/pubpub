@@ -42,7 +42,7 @@ const PubBody = (props: Props) => {
 
 	useBeforeUnload(
 		(status === 'saving' || status === 'disconnected') && !editorErrorTime,
-		'Your pub has not finished saving. Are you sure you wish to leave?',
+		'Your Pub has changes that are still unsaved. Are you sure you wish to leave?',
 	);
 
 	const handleKeyPress = useCallback(() => {
