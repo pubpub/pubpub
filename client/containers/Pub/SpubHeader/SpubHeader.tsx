@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Tab, Tabs, TabId, Icon, IconName } from '@blueprintjs/core';
 
 import { DocJson, DefinitelyHas, PubHistoryState, PubPageData, SubmissionStatus } from 'types';
@@ -6,7 +6,6 @@ import { assert } from 'utils/assert';
 import { apiFetch } from 'client/utils/apiFetch';
 import { getEmptyDoc } from 'components/Editor';
 
-import { usePubContext } from '../pubHooks';
 import InstructionsTab from './InstructionsTab';
 import SubmissionTab from './SubmissionTab';
 import PreviewTab from './PreviewTab';
@@ -34,7 +33,6 @@ const SpubHeader = (props: Props) => {
 		() => props.pubData.submission.abstract || getEmptyDoc(),
 	);
 	const [status, setStatus] = useState(() => props.pubData.submission.status);
-	const { updatePubData } = usePubContext();
 
 	const updateAbstract = async (newAbstract: DocJson) => {
 		return apiFetch('/api/submissions', {
@@ -68,19 +66,16 @@ const SpubHeader = (props: Props) => {
 		}).then(() => setStatus(newSubmissionStatus));
 	};
 	console.log('not in use yet', updateSubmissionStatus, status);
+
 	assert(props.pubData.submission.submissionWorkflow !== undefined);
 	const updateHistoryData = (newHistoryData: Partial<PubHistoryState>) => {
 		return props.updateLocalData('history', newHistoryData);
 	};
+
 	const instructionTabTitle = renderTabTitle('align-left', 'Instructions');
 	const submissionTabTitle = renderTabTitle('manually-entered-data', 'Submission');
 	const previewTabTitle = renderTabTitle('eye-open', 'Preview & Submit');
 	const maybeActiveClass = (tabId: string) => `${tabId === selectedTab ? 'active' : 'inactive'}`;
-
-	useEffect(() => {
-		updatePubData({ isReadOnly: selectedTab === 'preview' });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [selectedTab]);
 
 	return (
 		<Tabs
@@ -99,7 +94,6 @@ const SpubHeader = (props: Props) => {
 					/>
 				}
 			/>
-
 			<Tab
 				id="submission"
 				title={submissionTabTitle}
