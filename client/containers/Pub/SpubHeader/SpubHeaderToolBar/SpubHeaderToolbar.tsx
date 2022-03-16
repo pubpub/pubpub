@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Tab, Tabs, TabId, Icon, IconName, Button } from '@blueprintjs/core';
 import Color from 'color';
 
@@ -16,7 +16,7 @@ const renderTabTitle = (icon: IconName, title: string) => (
 
 type Props = {
 	selectedTab: TabId;
-	onSelectTab: Dispatch<SetStateAction<TabId>>;
+	onSelectTab: (t: TabId) => unknown;
 	status: SubmissionStatus;
 	showSubmitButton: boolean;
 	onSubmit: () => any;

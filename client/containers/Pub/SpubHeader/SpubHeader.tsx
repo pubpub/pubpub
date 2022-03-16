@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { Tab, Tabs, TabId, Icon, IconName } from '@blueprintjs/core';
+import { Tab, Tabs, TabId } from '@blueprintjs/core';
 
 import { DocJson, DefinitelyHas, PubHistoryState, PubPageData, SubmissionStatus } from 'types';
 import { assert } from 'utils/assert';
 import { apiFetch } from 'client/utils/apiFetch';
 import { getEmptyDoc } from 'components/Editor';
+import { PendingChangesProvider } from 'components';
 
 import InstructionsTab from './InstructionsTab';
 import SubmissionTab from './SubmissionTab';
 import ContributorsTab from './ContributorsTab';
 import PreviewTab from './PreviewTab';
+import SpubHeaderToolBar from './SpubHeaderToolBar';
 
 require('./spubHeader.scss');
 
@@ -21,12 +23,6 @@ type Props = {
 	) => unknown;
 	pubData: DefinitelyHas<PubPageData, 'submission'>;
 };
-
-export const renderTabTitle = (icon: IconName, title: string) => (
-	<>
-		<Icon icon={icon} /> {title}
-	</>
-);
 
 const SpubHeader = (props: Props) => {
 	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');
@@ -73,63 +69,56 @@ const SpubHeader = (props: Props) => {
 		return props.updateLocalData('history', newHistoryData);
 	};
 
-	const instructionTabTitle = renderTabTitle('align-left', 'Instructions');
-	const submissionTabTitle = renderTabTitle('manually-entered-data', 'Submission');
-	const previewTabTitle = renderTabTitle('eye-open', 'Preview');
-	const contributorsTabTitle = renderTabTitle('people', 'Contributors');
-	const maybeActiveClass = (tabId: string) => `${tabId === selectedTab ? 'active' : 'inactive'}`;
-
 	return (
-		<Tabs
-			id="spubHeader"
-			onChange={(t) => setSelectedTab(t)}
-			selectedTabId={selectedTab}
-			className="spub-header-component tabs bp3-large"
-		>
-			<Tab
-				id="instructions"
-				title={instructionTabTitle}
-				className={`tab-panel ${maybeActiveClass('instructions')}`}
-				panel={
-					<InstructionsTab
-						submissionWorkflow={props.pubData.submission.submissionWorkflow}
-					/>
-				}
+		<PendingChangesProvider>
+			<SpubHeaderToolBar
+				onSelectTab={(t) => setSelectedTab(t)}
+				selectedTab={selectedTab}
+				showSubmitButton={true}
+				onSubmit={() => {}}
+				status={status}
 			/>
-			<Tab
-				id="submission"
-				title={submissionTabTitle}
-				className={`tab-panel submission ${maybeActiveClass('submission')}`}
-				panel={
-					<SubmissionTab
-						abstract={abstract}
-						onUpdatePub={updateAndSavePubData}
-						onUpdateAbstract={updateAbstract}
-						pub={props.pubData}
-					/>
-				}
-			/>
-			<Tab
-				className={`tab-panel ${maybeActiveClass('contributors')}`}
-				id="contributors"
-				title={contributorsTabTitle}
-				panel={
-					<ContributorsTab pubData={props.pubData} onUpdatePub={updateAndSavePubData} />
-				}
-			/>
-			<Tab
-				id="preview"
-				title={previewTabTitle}
-				className={`tab-panel ${maybeActiveClass('preview')}`}
-				panel={
-					<PreviewTab
-						updateHistoryData={updateHistoryData}
-						historyData={props.historyData}
-						pubData={props.pubData}
-					/>
-				}
-			/>
-		</Tabs>
+			<Tabs id="spubHeader" selectedTabId={selectedTab}>
+				<Tab
+					id="instructions"
+					panel={
+						<InstructionsTab
+							submissionWorkflow={props.pubData.submission.submissionWorkflow}
+						/>
+					}
+				/>
+				<Tab
+					id="submission"
+					panel={
+						<SubmissionTab
+							abstract={abstract}
+							onUpdatePub={updateAndSavePubData}
+							onUpdateAbstract={updateAbstract}
+							pub={props.pubData}
+						/>
+					}
+				/>
+				<Tab
+					id="contributors"
+					panel={
+						<ContributorsTab
+							pubData={props.pubData}
+							onUpdatePub={updateAndSavePubData}
+						/>
+					}
+				/>
+				<Tab
+					id="preview"
+					panel={
+						<PreviewTab
+							updateHistoryData={updateHistoryData}
+							historyData={props.historyData}
+							pubData={props.pubData}
+						/>
+					}
+				/>
+			</Tabs>
+		</PendingChangesProvider>
 	);
 };
 
