@@ -33,7 +33,7 @@ const SpubHeader = (props: Props) => {
 	const [abstract, setAbstract] = useState(
 		() => props.pubData.submission.abstract || getEmptyDoc(),
 	);
-	const [status, setStatus] = useState(() => props.pubData.submission.status);
+	const [status, setStatus] = useState(props.pubData.submission.status);
 
 	const updateAbstract = async (newAbstract: DocJson) => {
 		return apiFetch('/api/submissions', {
@@ -58,13 +58,12 @@ const SpubHeader = (props: Props) => {
 	};
 
 	const updateSubmissionStatus = async (newSubmissionStatus: SubmissionStatus) => {
-		return apiFetch('/api/submissions', {
-			method: 'PUT',
-			body: JSON.stringify({
+		return await apiFetch
+			.put('/api/submissions', {
 				status: newSubmissionStatus,
 				id: props.pubData.submission.id,
-			}),
-		}).then(() => setStatus(newSubmissionStatus));
+			})
+			.then(() => setStatus(newSubmissionStatus));
 	};
 	console.log('not in use yet', updateSubmissionStatus, status);
 

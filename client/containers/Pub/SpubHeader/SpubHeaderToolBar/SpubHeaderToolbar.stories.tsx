@@ -6,7 +6,6 @@ import { pubData } from 'utils/storybook/data';
 import { SubmissionStatus } from 'types';
 
 import SpubHeaderToolbar from './SpubHeaderToolbar';
-// import '../SpubHeader.stories.scss';
 
 const StatefulSpubHeaderToolBaraWrapper = () => {
 	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');

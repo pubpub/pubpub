@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Tab, Tabs, TabId, Icon, IconName, Button } from '@blueprintjs/core';
 import Color from 'color';
 
@@ -16,10 +16,10 @@ const renderTabTitle = (icon: IconName, title: string) => (
 
 type Props = {
 	selectedTab: TabId;
-	onSelectTab: Dispatch<SetStateAction<TabId>>;
+	onSelectTab: (t: TabId) => unknown;
 	status: SubmissionStatus;
 	showSubmitButton: boolean;
-	onSubmit: () => any;
+	onSubmit: () => unknown;
 };
 
 const SpubHeaderToolbar = (props: Props) => {
@@ -33,8 +33,8 @@ const SpubHeaderToolbar = (props: Props) => {
 	const { communityData } = usePageContext();
 
 	const lighterAccentColor = useMemo(
-		() => Color(communityData.accentColorLight).alpha(0.2),
-		[communityData.accentColorLight],
+		() => Color(communityData.accentColorDark).alpha(0.1),
+		[communityData.accentColorDark],
 	);
 
 	const darkerAccentColor = useMemo(
@@ -49,11 +49,17 @@ const SpubHeaderToolbar = (props: Props) => {
 			<em>Saving</em>
 		</strong>
 	) : (
-		<p className="status-text">{props.status}</p>
+		<span className="status-text">{props.status}</span>
 	);
 
 	const renderRight = props.showSubmitButton ? (
-		<Button className="submission-button" outlined={true} onClick={props.onSubmit}>
+		<Button
+			className="submission-button"
+			minimal={true}
+			outlined={true}
+			intent="primary"
+			onClick={props.onSubmit}
+		>
 			Submit
 		</Button>
 	) : (
@@ -65,12 +71,13 @@ const SpubHeaderToolbar = (props: Props) => {
 	return (
 		<div style={{ background: lighterAccentColor, color: darkerAccentColor }}>
 			<GridWrapper containerClassName="gridParent">
-				<div className="spubheader-toolbar">
+				<div className="spubheader-toolbar-component">
 					<Tabs
 						id="spubHeader"
 						onChange={props.onSelectTab}
 						selectedTabId={props.selectedTab}
-						className="spub-header-component tabs bp3-large"
+						className="spub-header-component bp3-large"
+						large={true}
 					>
 						<Tab
 							id="instructions"
