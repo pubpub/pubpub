@@ -33,15 +33,13 @@ const SpubHeader = (props: Props) => {
 	const [abstract, setAbstract] = useState(
 		() => props.pubData.submission.abstract || getEmptyDoc(),
 	);
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [status, setStatus] = useState(props.pubData.submission.status);
 
 	const updateAbstract = async (newAbstract: DocJson) => {
-		return apiFetch('/api/submissions', {
-			method: 'PUT',
-			body: JSON.stringify({
+		return apiFetch.put('/api/submissions', {
 				abstract: newAbstract,
 				id: props.pubData.submission.id,
-			}),
 		}).then(() => setAbstract(newAbstract));
 	};
 
@@ -57,15 +55,15 @@ const SpubHeader = (props: Props) => {
 		}).catch(() => props.updateLocalData('pub', props.pubData));
 	};
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const updateSubmissionStatus = async (newSubmissionStatus: SubmissionStatus) => {
-		return await apiFetch
+		return apiFetch
 			.put('/api/submissions', {
 				status: newSubmissionStatus,
 				id: props.pubData.submission.id,
 			})
 			.then(() => setStatus(newSubmissionStatus));
 	};
-	console.log('not in use yet', updateSubmissionStatus, status);
 
 	assert(props.pubData.submission.submissionWorkflow !== undefined);
 	const updateHistoryData = (newHistoryData: Partial<PubHistoryState>) => {
