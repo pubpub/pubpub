@@ -73,7 +73,7 @@ const SpubHeader = (props: Props) => {
 				onSubmit={() => {}}
 				status={status}
 			/>
-			<Tabs id="spubHeader" selectedTabId={selectedTab}>
+			<Tabs id="spubHeaderPanels" className="header-panels" selectedTabId={selectedTab}>
 				<Tab
 					id="instructions"
 					panel={

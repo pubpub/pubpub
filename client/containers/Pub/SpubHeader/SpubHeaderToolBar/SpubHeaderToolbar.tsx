@@ -27,9 +27,6 @@ const SpubHeaderToolbar = (props: Props) => {
 	const submissionTabTitle = renderTabTitle('manually-entered-data', 'Submission');
 	const contributorsTabTitle = renderTabTitle('people', 'Contributors');
 	const previewTabTitle = renderTabTitle('eye-open', 'Preview');
-	const maybeActiveClass = (tabId: string) =>
-		`${tabId === props.selectedTab ? 'active' : 'inactive'}`;
-
 	const { communityData } = usePageContext();
 
 	const lighterAccentColor = useMemo(
@@ -53,7 +50,7 @@ const SpubHeaderToolbar = (props: Props) => {
 	);
 
 	const renderRight = props.showSubmitButton ? (
-		<Button className="submission-button" outlined={true} onClick={props.onSubmit}>
+		<Button className="submit-button" outlined={true} onClick={props.onSubmit}>
 			Submit
 		</Button>
 	) : (
@@ -63,37 +60,23 @@ const SpubHeaderToolbar = (props: Props) => {
 		</div>
 	);
 	return (
-		<div style={{ background: lighterAccentColor, color: darkerAccentColor }}>
-			<GridWrapper containerClassName="gridParent">
-				<div className="spubheader-toolbar">
+		<div
+			style={{ background: lighterAccentColor, color: darkerAccentColor }}
+			className="spubheader-toolbar-component"
+		>
+			<GridWrapper containerClassName="toolbar-container">
+				<div className="toolbar-items">
 					<Tabs
-						id="spubHeader"
+						id="spubHeaderToolbar"
 						onChange={props.onSelectTab}
 						selectedTabId={props.selectedTab}
-						className="spub-header-component tabs bp3-large"
 					>
-						<Tab
-							id="instructions"
-							title={instructionTabTitle}
-							className={`tab-panel ${maybeActiveClass('instructions')}`}
-						/>
+						<Tab id="instructions" title={instructionTabTitle} />
 
-						<Tab
-							id="submission"
-							title={submissionTabTitle}
-							className={`tab-panel ${maybeActiveClass('submission')}`}
-						/>
+						<Tab id="submission" title={submissionTabTitle} />
 
-						<Tab
-							id="contributors"
-							title={contributorsTabTitle}
-							className={`tab-panel ${maybeActiveClass('contributors')}`}
-						/>
-						<Tab
-							id="preview"
-							title={previewTabTitle}
-							className={`${maybeActiveClass('preview')}`}
-						/>
+						<Tab id="contributors" title={contributorsTabTitle} />
+						<Tab id="preview" title={previewTabTitle} />
 					</Tabs>
 					<div>{renderRight}</div>
 				</div>

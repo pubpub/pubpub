@@ -1,40 +1,73 @@
 @import 'styles/variables.scss';
+$spub-configuration-width: 1000px;
 
-.spubheader-toolbar {
-	display: flex;
-	justify-content: center;
-	align-items: baseline;
-	column-gap: 340px;
-	.tabs.spub-header-component .bp3-tab-list {
-		margin: 0px;
+.spubheader-toolbar-component {
+	.toolbar-container .col-12 {
+		margin-top: 0;
+		margin-bottom: 0;
 	}
-	.spub-header-component .bp3-tab-list .bp3-tab.inactive {
-		opacity: 0.45;
-		color: var(--community-accent-dark);
+	.toolbar-items {
+		display: flex;
+		min-height: 50px;
+		justify-content: space-between;
+		align-items: center;
 	}
-}
-
-.gridParent {
-	&.container {
-		max-width: 100%;
+	.bp3-tab {
+		min-width: 200px;
+		font-size: 14px;
+		font-style: normal;
+		font-weight: 500;
+		line-height: 17px;
+		letter-spacing: 0.15em;
+		text-align: left;
+		padding: 15px 0;
+		text-transform: uppercase;
+		&,
+		&[aria-selected="true"],
+		&:not([aria-disabled="true"]):hover {
+			bottom: 1px;
+			color: var(--community-accent-dark);
+		}
+		&:not([aria-selected="true"]) {
+			opacity: 0.45;
+			border-bottom: 1px solid var(--community-accent-dark);
+			&:hover {
+				opacity: 0.75;
+			}
+		}
+		.bp3-icon { 
+			padding-right: 6px;
+		}
+		&:nth-child(n+3) {
+			padding-left: 15px;
+		}
+		&:not(:last-child) {
+			margin-right: 2px;
+			padding-right: 15px;
+		}
 	}
-}
 
-.status {
-	display: flex;
-}
-
-.status-text {
-	text-transform: capitalize;
-}
-
-.submission-button {
-	width: 119px;
-	height: 30px;
-	&.bp3-button.bp3-outlined {
-		border: 2px solid var(--community-accent-dark);
-		color: var(--community-accent-dark);
-		background-color: white;
+	.bp3-tab-indicator-wrapper .bp3-tab-indicator {
+		height: 2px;
+		background-color: var(--community-accent-dark);
 	}
-	
+
+	.status {
+		display: flex;
+	}
+
+	.status-text {
+		text-transform: capitalize;
+	}
+
+	.submit-button {
+		width: 119px;
+		height: 30px;
+		&.bp3-button.bp3-outlined {
+			border: 2px solid var(--community-accent-dark);
+			color: var(--community-accent-dark);
+			background-color: white;
+		}
+		
+	}
 }
