@@ -36,7 +36,7 @@ const SpubHeader = (props: Props) => {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [status, setStatus] = useState(props.pubData.submission.status);
 
-	const updateAbstract = async (newAbstract: DocJson) => {
+	const updateAbstract = (newAbstract: DocJson) => {
 		return apiFetch
 			.put('/api/submissions', {
 				abstract: newAbstract,
@@ -45,16 +45,15 @@ const SpubHeader = (props: Props) => {
 			.then(() => setAbstract(newAbstract));
 	};
 
-	const updateAndSavePubData = async (newPubData: Partial<PubPageData>) => {
+	const updateAndSavePubData = (newPubData: Partial<PubPageData>) => {
 		props.updateLocalData('pub', newPubData);
-		return apiFetch('/api/pubs', {
-			method: 'PUT',
-			body: JSON.stringify({
+		return apiFetch
+			.put('/api/pubs', {
 				...newPubData,
 				pubId: props.pubData.id,
 				communityId: props.pubData.communityId,
-			}),
-		}).catch(() => props.updateLocalData('pub', props.pubData));
+			})
+			.catch(() => props.updateLocalData('pub', props.pubData));
 	};
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
