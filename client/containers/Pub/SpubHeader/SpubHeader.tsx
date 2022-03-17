@@ -10,13 +10,11 @@ import { PendingChangesProvider } from 'components';
 import InstructionsTab from './InstructionsTab';
 import SubmissionTab from './SubmissionTab';
 import ContributorsTab from './ContributorsTab';
-import PreviewTab from './PreviewTab';
 import SpubHeaderToolBar from './SpubHeaderToolBar';
 
 require('./spubHeader.scss');
 
 type Props = {
-	historyData: PubHistoryState;
 	updateLocalData: (
 		type: string,
 		patch: Partial<PubPageData> | Partial<PubHistoryState>,
@@ -65,9 +63,6 @@ const SpubHeader = (props: Props) => {
 	console.log('not in use yet', updateSubmissionStatus, status);
 
 	assert(props.pubData.submission.submissionWorkflow !== undefined);
-	const updateHistoryData = (newHistoryData: Partial<PubHistoryState>) => {
-		return props.updateLocalData('history', newHistoryData);
-	};
 
 	return (
 		<PendingChangesProvider>
@@ -83,6 +78,7 @@ const SpubHeader = (props: Props) => {
 					id="instructions"
 					panel={
 						<InstructionsTab
+							onBeginSubmission={() => setSelectedTab('submission')}
 							submissionWorkflow={props.pubData.submission.submissionWorkflow}
 						/>
 					}
@@ -104,16 +100,6 @@ const SpubHeader = (props: Props) => {
 						<ContributorsTab
 							pubData={props.pubData}
 							onUpdatePub={updateAndSavePubData}
-						/>
-					}
-				/>
-				<Tab
-					id="preview"
-					panel={
-						<PreviewTab
-							updateHistoryData={updateHistoryData}
-							historyData={props.historyData}
-							pubData={props.pubData}
 						/>
 					}
 				/>
