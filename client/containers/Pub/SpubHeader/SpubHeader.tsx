@@ -58,7 +58,7 @@ const SpubHeader = (props: Props) => {
 	};
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const updateSubmissionStatus = async (newSubmissionStatus: SubmissionStatus) => {
+	const updateSubmissionStatus = (newSubmissionStatus: SubmissionStatus) => {
 		return apiFetch
 			.put('/api/submissions', {
 				status: newSubmissionStatus,
