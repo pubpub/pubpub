@@ -37,10 +37,12 @@ const SpubHeader = (props: Props) => {
 	const [status, setStatus] = useState(props.pubData.submission.status);
 
 	const updateAbstract = async (newAbstract: DocJson) => {
-		return apiFetch.put('/api/submissions', {
+		return apiFetch
+			.put('/api/submissions', {
 				abstract: newAbstract,
 				id: props.pubData.submission.id,
-		}).then(() => setAbstract(newAbstract));
+			})
+			.then(() => setAbstract(newAbstract));
 	};
 
 	const updateAndSavePubData = async (newPubData: Partial<PubPageData>) => {
