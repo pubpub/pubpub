@@ -27,28 +27,26 @@ const SpubHeader = (props: Props) => {
 	const [abstract, setAbstract] = useState(
 		() => props.pubData.submission.abstract || getEmptyDoc(),
 	);
-	const [status, setStatus] = useState(() => props.pubData.submission.status);
+	const [status, setStatus] = useState(props.pubData.submission.status);
 
-	const updateAbstract = async (newAbstract: DocJson) => {
-		return apiFetch('/api/submissions', {
-			method: 'PUT',
-			body: JSON.stringify({
+	const updateAbstract = (newAbstract: DocJson) => {
+		return apiFetch
+			.put('/api/submissions', {
 				abstract: newAbstract,
 				id: props.pubData.submission.id,
-			}),
-		}).then(() => setAbstract(newAbstract));
+			})
+			.then(() => setAbstract(newAbstract));
 	};
 
-	const updateAndSavePubData = async (newPubData: Partial<PubPageData>) => {
+	const updateAndSavePubData = (newPubData: Partial<PubPageData>) => {
 		props.updateLocalData('pub', newPubData);
-		return apiFetch('/api/pubs', {
-			method: 'PUT',
-			body: JSON.stringify({
+		return apiFetch
+			.put('/api/pubs', {
 				...newPubData,
 				pubId: props.pubData.id,
 				communityId: props.pubData.communityId,
-			}),
-		}).catch(() => props.updateLocalData('pub', props.pubData));
+			})
+			.catch(() => props.updateLocalData('pub', props.pubData));
 	};
 
 	const updateSubmissionStatus = async (newSubmissionStatus: SubmissionStatus) => {

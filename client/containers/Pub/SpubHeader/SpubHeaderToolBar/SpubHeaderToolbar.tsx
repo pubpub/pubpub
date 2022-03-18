@@ -19,7 +19,7 @@ type Props = {
 	onSelectTab: (t: TabId) => unknown;
 	status: SubmissionStatus;
 	showSubmitButton: boolean;
-	onSubmit: () => any;
+	onSubmit: () => unknown;
 };
 
 const SpubHeaderToolbar = (props: Props) => {
@@ -30,14 +30,10 @@ const SpubHeaderToolbar = (props: Props) => {
 	const { communityData } = usePageContext();
 
 	const lighterAccentColor = useMemo(
-		() => Color(communityData.accentColorLight).alpha(0.2),
-		[communityData.accentColorLight],
-	);
-
-	const darkerAccentColor = useMemo(
-		() => Color(communityData.accentColorDark),
+		() => Color(communityData.accentColorDark).alpha(0.1),
 		[communityData.accentColorDark],
 	);
+
 	const { pendingCount } = usePendingChanges();
 	const isSaving = pendingCount > 0;
 
@@ -46,11 +42,17 @@ const SpubHeaderToolbar = (props: Props) => {
 			<em>Saving</em>
 		</strong>
 	) : (
-		<p className="status-text">{props.status}</p>
+		<span className="status-text">{props.status}</span>
 	);
 
 	const renderRight = props.showSubmitButton ? (
-		<Button className="submit-button" outlined={true} onClick={props.onSubmit}>
+		<Button
+			className="submission-button"
+			minimal={true}
+			outlined={true}
+			intent="primary"
+			onClick={props.onSubmit}
+		>
 			Submit
 		</Button>
 	) : (
@@ -60,13 +62,11 @@ const SpubHeaderToolbar = (props: Props) => {
 		</div>
 	);
 	return (
-		<div
-			style={{ background: lighterAccentColor, color: darkerAccentColor }}
-			className="spubheader-toolbar-component"
-		>
+		<div style={{ background: lighterAccentColor }} className="spubheader-toolbar-component">
 			<GridWrapper containerClassName="toolbar-container">
 				<div className="toolbar-items">
 					<Tabs
+						large
 						id="spubHeaderToolbar"
 						onChange={props.onSelectTab}
 						selectedTabId={props.selectedTab}
