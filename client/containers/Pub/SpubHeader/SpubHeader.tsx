@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
-import { Tab, Tabs, TabId } from '@blueprintjs/core';
+import React from 'react';
+import { Tab, Tabs } from '@blueprintjs/core';
 
-import { DocJson, PubHistoryState, PubPageData } from 'types';
-import { assert } from 'utils/assert';
+import { SubmissionStatus, DocJson, PubPageData } from 'types';
 import { apiFetch } from 'client/utils/apiFetch';
-import { getEmptyDoc } from 'components/Editor';
 import { PendingChangesProvider } from 'components';
-i
 
 import { usePubContext } from '../pubHooks';
 import InstructionsTab from './InstructionsTab';
@@ -19,14 +16,7 @@ require('./spubHeader.scss');
 export type SpubHeaderTab = 'instructions' | 'submission' | 'preview';
 
 const SpubHeader = () => {
-	const {
-		updatePubData,
-		updateLocalData,
-		pubData,
-		updateSubmissionState,
-		submissionState,
-		historyData,
-	} = usePubContext();
+	const { updatePubData, pubData, updateSubmissionState, submissionState } = usePubContext();
 
 	const { selectedTab, submission } = submissionState!;
 
@@ -59,26 +49,27 @@ const SpubHeader = () => {
 		updateSubmissionState({ selectedTab: nextTab });
 	};
 
-	const updateHistoryData = (newHistoryData: Partial<PubHistoryState>) => {
-		return updateLocalData('history', newHistoryData);
-	};
-
 	return (
 		<PendingChangesProvider>
 			<SpubHeaderToolBar
-				onSelectTab={(t) => setSelectedTab(t)}
+				onSelectTab={(t: SpubHeaderTab) => setSelectedTab(t)}
 				selectedTab={selectedTab}
 				showSubmitButton={true}
 				onSubmit={() => {}}
-				status={status}
+				status={submission.status as SubmissionStatus}
 			/>
-			<Tabs id="spubHeaderPanels" className="header-panels" selectedTabId={selectedTab} onChange={(t) => setSelectedTab(t as SpubHeaderTab)} >
+			<Tabs
+				id="spubHeaderPanels"
+				className="header-panels"
+				selectedTabId={selectedTab}
+				onChange={(t) => setSelectedTab(t as SpubHeaderTab)}
+			>
 				<Tab
 					id="instructions"
 					panel={
 						<InstructionsTab
 							onBeginSubmission={() => setSelectedTab('submission')}
-							submissionWorkflow={pubData.submission.submissionWorkflow!}
+							submissionWorkflow={submission.submissionWorkflow!}
 						/>
 					}
 				/>
@@ -95,12 +86,7 @@ const SpubHeader = () => {
 				/>
 				<Tab
 					id="contributors"
-					panel={
-						<ContributorsTab
-							pubData={pubData}
-							onUpdatePub={updateAndSavePubData}
-						/>
-					}
+					panel={<ContributorsTab pubData={pubData} onUpdatePub={updateAndSavePubData} />}
 				/>
 			</Tabs>
 		</PendingChangesProvider>

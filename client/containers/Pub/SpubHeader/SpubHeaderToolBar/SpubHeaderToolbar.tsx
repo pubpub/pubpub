@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react';
-import { Tab, Tabs, TabId, Icon, IconName, Button } from '@blueprintjs/core';
+import { Tab, Tabs, Icon, IconName, Button } from '@blueprintjs/core';
 import Color from 'color';
 
 import { GridWrapper } from 'components';
 import { SubmissionStatus } from 'types';
 import { usePageContext, usePendingChanges } from 'utils/hooks';
+import { SpubHeaderTab } from '../SpubHeader';
 
 require('./spubHeaderToolbar.scss');
 
@@ -15,8 +16,8 @@ const renderTabTitle = (icon: IconName, title: string) => (
 );
 
 type Props = {
-	selectedTab: TabId;
-	onSelectTab: (t: TabId) => unknown;
+	selectedTab: SpubHeaderTab;
+	onSelectTab: (t: SpubHeaderTab) => unknown;
 	status: SubmissionStatus;
 	showSubmitButton: boolean;
 	onSubmit: () => unknown;
