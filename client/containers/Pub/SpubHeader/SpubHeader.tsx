@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Tab, Tabs, TabId } from '@blueprintjs/core';
 
-import { DocJson, DefinitelyHas, PubHistoryState, PubPageData, SubmissionStatus } from 'types';
+import { DocJson, PubHistoryState, PubPageData } from 'types';
 import { assert } from 'utils/assert';
 import { apiFetch } from 'client/utils/apiFetch';
 import { getEmptyDoc } from 'components/Editor';
@@ -22,45 +22,52 @@ type Props = {
 	pubData: DefinitelyHas<PubPageData, 'submission'>;
 };
 
-const SpubHeader = (props: Props) => {
-	const [selectedTab, setSelectedTab] = useState<TabId>('instructions');
-	const [abstract, setAbstract] = useState(
-		() => props.pubData.submission.abstract || getEmptyDoc(),
-	);
-	const [status, setStatus] = useState(props.pubData.submission.status);
+export type SpubHeaderTab = 'instructions' | 'submission' | 'preview';
 
-	const updateAbstract = (newAbstract: DocJson) => {
-		return apiFetch
-			.put('/api/submissions', {
+const SpubHeader = () => {
+	const {
+		updatePubData,
+		updateLocalData,
+		pubData,
+		updateSubmissionState,
+		submissionState,
+		historyData,
+	} = usePubContext();
+
+	const { selectedTab, submission } = submissionState!;
+
+	const updateAbstract = async (newAbstract: DocJson) => {
+		updateSubmissionState(({ submission: currentSubmission }) => ({
+			submission: {
+				...currentSubmission,
 				abstract: newAbstract,
-				id: props.pubData.submission.id,
-			})
-			.then(() => setAbstract(newAbstract));
+			},
+		}));
+		return apiFetch.put('/api/submissions', {
+			abstract: newAbstract,
+			id: submission.id,
+		});
 	};
 
-	const updateAndSavePubData = (newPubData: Partial<PubPageData>) => {
-		props.updateLocalData('pub', newPubData);
-		return apiFetch
-			.put('/api/pubs', {
-				...newPubData,
-				pubId: props.pubData.id,
-				communityId: props.pubData.communityId,
-			})
-			.catch(() => props.updateLocalData('pub', props.pubData));
-	};
-
-	const updateSubmissionStatus = async (newSubmissionStatus: SubmissionStatus) => {
-		return apiFetch('/api/submissions', {
+	const updateAndSavePubData = async (newPubData: Partial<PubPageData>) => {
+		updatePubData(newPubData);
+		return apiFetch('/api/pubs', {
 			method: 'PUT',
 			body: JSON.stringify({
-				status: newSubmissionStatus,
-				id: props.pubData.submission.id,
+				...newPubData,
+				pubId: pubData.id,
+				communityId: pubData.communityId,
 			}),
-		}).then(() => setStatus(newSubmissionStatus));
+		}).catch(() => updatePubData(pubData));
 	};
-	console.log('not in use yet', updateSubmissionStatus, status);
 
-	assert(props.pubData.submission.submissionWorkflow !== undefined);
+	const setSelectedTab = (nextTab: SpubHeaderTab) => {
+		updateSubmissionState({ selectedTab: nextTab });
+	};
+
+	const updateHistoryData = (newHistoryData: Partial<PubHistoryState>) => {
+		return updateLocalData('history', newHistoryData);
+	};
 
 	return (
 		<PendingChangesProvider>
@@ -71,13 +78,13 @@ const SpubHeader = (props: Props) => {
 				onSubmit={() => {}}
 				status={status}
 			/>
-			<Tabs id="spubHeaderPanels" className="header-panels" selectedTabId={selectedTab}>
+			<Tabs id="spubHeaderPanels" className="header-panels" selectedTabId={selectedTab} onChange={(t) => setSelectedTab(t as any)} >
 				<Tab
 					id="instructions"
 					panel={
 						<InstructionsTab
 							onBeginSubmission={() => setSelectedTab('submission')}
-							submissionWorkflow={props.pubData.submission.submissionWorkflow}
+							submissionWorkflow={pubData.submission.submissionWorkflow!}
 						/>
 					}
 				/>
@@ -88,7 +95,7 @@ const SpubHeader = (props: Props) => {
 							abstract={abstract}
 							onUpdatePub={updateAndSavePubData}
 							onUpdateAbstract={updateAbstract}
-							pub={props.pubData}
+							pub={pubData}
 						/>
 					}
 				/>
@@ -96,7 +103,7 @@ const SpubHeader = (props: Props) => {
 					id="contributors"
 					panel={
 						<ContributorsTab
-							pubData={props.pubData}
+							pubData={pubData}
 							onUpdatePub={updateAndSavePubData}
 						/>
 					}
