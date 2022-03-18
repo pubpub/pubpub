@@ -10,7 +10,7 @@ require('./spubHeaderToolbar.scss');
 
 const renderTabTitle = (icon: IconName, title: string) => (
 	<>
-		<Icon icon={icon} /> {title}
+		<Icon icon={icon} iconSize={13} /> {title}
 	</>
 );
 
