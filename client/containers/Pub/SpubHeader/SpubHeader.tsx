@@ -6,21 +6,15 @@ import { assert } from 'utils/assert';
 import { apiFetch } from 'client/utils/apiFetch';
 import { getEmptyDoc } from 'components/Editor';
 import { PendingChangesProvider } from 'components';
+i
 
+import { usePubContext } from '../pubHooks';
 import InstructionsTab from './InstructionsTab';
 import SubmissionTab from './SubmissionTab';
 import ContributorsTab from './ContributorsTab';
 import SpubHeaderToolBar from './SpubHeaderToolBar';
 
 require('./spubHeader.scss');
-
-type Props = {
-	updateLocalData: (
-		type: string,
-		patch: Partial<PubPageData> | Partial<PubHistoryState>,
-	) => unknown;
-	pubData: DefinitelyHas<PubPageData, 'submission'>;
-};
 
 export type SpubHeaderTab = 'instructions' | 'submission' | 'preview';
 
@@ -78,7 +72,7 @@ const SpubHeader = () => {
 				onSubmit={() => {}}
 				status={status}
 			/>
-			<Tabs id="spubHeaderPanels" className="header-panels" selectedTabId={selectedTab} onChange={(t) => setSelectedTab(t as any)} >
+			<Tabs id="spubHeaderPanels" className="header-panels" selectedTabId={selectedTab} onChange={(t) => setSelectedTab(t as SpubHeaderTab)} >
 				<Tab
 					id="instructions"
 					panel={
@@ -92,7 +86,7 @@ const SpubHeader = () => {
 					id="submission"
 					panel={
 						<SubmissionTab
-							abstract={abstract}
+							abstract={submission.abstract}
 							onUpdatePub={updateAndSavePubData}
 							onUpdateAbstract={updateAbstract}
 							pub={pubData}
