@@ -51,44 +51,44 @@ const SpubHeader = () => {
 
 	return (
 		<PendingChangesProvider>
-			<SpubHeaderToolBar
-				onSelectTab={(t: SpubHeaderTab) => setSelectedTab(t)}
-				selectedTab={selectedTab}
-				showSubmitButton={true}
-				onSubmit={() => {}}
-				status={submission.status as SubmissionStatus}
-			/>
-			<Tabs
-				id="spubHeaderPanels"
-				className="header-panels"
-				selectedTabId={selectedTab}
-				onChange={(t) => setSelectedTab(t as SpubHeaderTab)}
-			>
-				<Tab
-					id="instructions"
-					panel={
-						<InstructionsTab
-							onBeginSubmission={() => setSelectedTab('submission')}
-							submissionWorkflow={submission.submissionWorkflow!}
-						/>
-					}
+			<div className="spub-header-component">
+				<SpubHeaderToolBar
+					onSelectTab={(t: SpubHeaderTab) => setSelectedTab(t)}
+					selectedTab={selectedTab}
+					showSubmitButton={selectedTab !== 'instructions'}
+					onSubmit={() => {}}
+					status={submission.status as SubmissionStatus}
 				/>
-				<Tab
-					id="submission"
-					panel={
-						<SubmissionTab
-							abstract={submission.abstract}
-							onUpdatePub={updateAndSavePubData}
-							onUpdateAbstract={updateAbstract}
-							pub={pubData}
-						/>
-					}
-				/>
-				<Tab
-					id="contributors"
-					panel={<ContributorsTab pubData={pubData} onUpdatePub={updateAndSavePubData} />}
-				/>
-			</Tabs>
+				<Tabs id="spubHeaderPanels" selectedTabId={selectedTab}>
+					<Tab
+						id="instructions"
+						panel={
+							<InstructionsTab
+								onBeginSubmission={() => setSelectedTab('submission')}
+								submissionWorkflow={submission.submissionWorkflow!}
+							/>
+						}
+					/>
+					<Tab
+						id="submission"
+						panel={
+							<SubmissionTab
+								abstract={submission.abstract}
+								onUpdatePub={updateAndSavePubData}
+								onUpdateAbstract={updateAbstract}
+								pub={pubData}
+							/>
+						}
+					/>
+					<Tab
+						id="contributors"
+						panel={
+							<ContributorsTab pubData={pubData} onUpdatePub={updateAndSavePubData} />
+						}
+					/>
+					<Tab id="preview" />
+				</Tabs>
+			</div>
 		</PendingChangesProvider>
 	);
 };

@@ -46,28 +46,34 @@ const SpubHeaderToolbar = (props: Props) => {
 		<span className="status-text">{props.status}</span>
 	);
 
-	const renderRight = props.showSubmitButton ? (
-		<Button
-			className="submission-button"
-			minimal={true}
-			outlined={true}
-			intent="primary"
-			onClick={props.onSubmit}
-		>
-			Submit
-		</Button>
-	) : (
-		<div className="status">
-			<em>status:&nbsp;&nbsp;&nbsp;</em>
-			<strong>{status}</strong>
-		</div>
-	);
+	const renderRight = () => {
+		if (props.status !== 'incomplete')
+			return (
+				<div className="status">
+					<em>status:&nbsp;&nbsp;&nbsp;</em>
+					<strong>{status}</strong>
+				</div>
+			);
+		if (props.showSubmitButton)
+			return (
+				<Button
+					className="submission-button"
+					minimal={true}
+					outlined={true}
+					intent="primary"
+					onClick={props.onSubmit}
+				>
+					Submit
+				</Button>
+			);
+		return null;
+	};
+
 	return (
-		<div style={{ background: lighterAccentColor }} className="spubheader-toolbar-component">
+		<div style={{ background: lighterAccentColor }} className="spub-header-toolbar-component">
 			<GridWrapper containerClassName="toolbar-container">
 				<div className="toolbar-items">
 					<Tabs
-						large
 						id="spubHeaderToolbar"
 						onChange={props.onSelectTab}
 						selectedTabId={props.selectedTab}
@@ -79,7 +85,7 @@ const SpubHeaderToolbar = (props: Props) => {
 						<Tab id="contributors" title={contributorsTabTitle} />
 						<Tab id="preview" title={previewTabTitle} />
 					</Tabs>
-					<div>{renderRight}</div>
+					<div>{renderRight()}</div>
 				</div>
 			</GridWrapper>
 		</div>
