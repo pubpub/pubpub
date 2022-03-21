@@ -80,7 +80,7 @@ const NewSubmissionWorkflowEditor = (props: Props) => {
 								icon="tick"
 								intent="primary"
 							>
-								Save and continue
+								Finish creating workflow
 							</Button>
 						}
 					/>
