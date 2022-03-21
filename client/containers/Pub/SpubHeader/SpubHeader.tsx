@@ -71,7 +71,7 @@ const SpubHeader = () => {
 	return (
 		<Tabs
 			id="spubHeader"
-			onChange={(t) => setSelectedTab(t as any)}
+			onChange={(t: SpubHeaderTab) => setSelectedTab(t)}
 			selectedTabId={selectedTab}
 			className="spub-header-component tabs bp3-large"
 		>
