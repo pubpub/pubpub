@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, EditableText, InputGroup, Tabs, Tab } from '@blueprintjs/core';
+import { Button, EditableText, InputGroup } from '@blueprintjs/core';
 
 import { Collection } from 'types';
 import { LayoutSubmissionBannerSkeleton } from 'client/components/Layout';
@@ -8,10 +8,10 @@ import { isValidEmail } from 'utils/email';
 import { withValue } from 'utils/fp';
 import { collectionUrl } from 'utils/canonicalUrls';
 
-import Step from './Step';
 import WorkflowTextEditor from './WorkflowTextEditor';
 import EmailPreview from './EmailPreview';
-import { EditableSubmissionWorkflow } from './types';
+import SubmissionWorkflowStepPicker from './SubmissionWorkflowStepPicker';
+import { EditableSubmissionWorkflow, SubmissionWorkflowConfigStep } from './types';
 import {
 	RecordValidator,
 	isValidDocJson,
@@ -44,6 +44,7 @@ const SubmissionWorkflowEditor = (props: Props) => {
 	const { collection, onUpdateWorkflow, onValidateWorkflow, workflow } = props;
 	const { communityData } = usePageContext();
 	const { email: communityEmail } = communityData;
+	const [step, setStep] = useState<SubmissionWorkflowConfigStep>('instructions-requirements');
 	const [{ fields: fieldValidStates, isValid }, setValidation] = useState(() =>
 		validate(workflow, validator),
 	);
@@ -70,43 +71,10 @@ const SubmissionWorkflowEditor = (props: Props) => {
 
 	useEffect(() => void onValidateWorkflow(isValid), [onValidateWorkflow, isValid]);
 
-	return (
-		<div className="submission-workflow-editor-component">
-			<Step
-				className="banner-step"
-				number={1}
-				title="Invite submitters from this Collection's landing page"
-				done={fieldValidStates.title && fieldValidStates.introText}
-			>
-				<p>
-					Visitors to {collectionLink} will see a banner inviting them to submit to this
-					Collection.
-				</p>
-				<LayoutSubmissionBannerSkeleton
-					className="banner-skeleton"
-					title={
-						<EditableText
-							className="banner-title-text"
-							placeholder='Click to add banner title (e.g. "Call for Submissions")'
-							value={workflow.title}
-							onChange={(title) => updateWorkflow({ title })}
-						/>
-					}
-					content={
-						<WorkflowTextEditor
-							placeholder="Banner content"
-							initialContent={workflow.introText}
-							onContent={(introText) => updateWorkflow({ introText })}
-						/>
-					}
-				/>
-			</Step>
-			<Step
-				className="instructions-step"
-				number={2}
-				title="Add detailed submission instructions"
-				done={fieldValidStates.instructionsText}
-			>
+	const renderInstructionsRequirements = () => {
+		return (
+			<>
+				<h2>Add detailed submission instructions</h2>
 				<p>
 					Now provide instructions detailing any requirements for submissions to this
 					Collection. Submitters will be able to refer to this text at any time.
@@ -116,13 +84,13 @@ const SubmissionWorkflowEditor = (props: Props) => {
 					initialContent={workflow.instructionsText}
 					onContent={(content) => updateWorkflow({ instructionsText: content })}
 				/>
-			</Step>
-			<Step
-				number={3}
-				title="Send an automated email when a submission is received"
-				className="email-step"
-				done={fieldValidStates.targetEmailAddress && fieldValidStates.emailText}
-			>
+			</>
+		);
+	};
+
+	const renderResponseEmails = () => {
+		return (
+			<div className="email-step">
 				<p>
 					When a submission is completed, PubPub will email the submitter and CC this
 					address:
@@ -164,60 +132,84 @@ const SubmissionWorkflowEditor = (props: Props) => {
 						/>
 					}
 				/>
-			</Step>
-			<Step
-				number={4}
-				title="Create a template response for accepted and declined submissions"
-				className="accept-reject-step"
-				done={fieldValidStates.acceptedText && fieldValidStates.declinedText}
-			>
+				<h2>Create a template response for accepted and declined submissions</h2>
 				<p>
 					These are just templates. You'll be able to customize the message you send
 					before each accepted or declined submission.
 				</p>
-				<Tabs id="accepted-declined-email-templates">
-					<Tab
-						id="accepted"
-						title="Accepted"
-						panel={
-							<EmailPreview
-								{...sharedEmailPreviewProps}
-								kind="accepted"
-								collectionTitle={collection.title}
-								body={
-									<WorkflowTextEditor
-										placeholder="Custom email text"
-										initialContent={workflow.acceptedText}
-										onContent={(content) =>
-											updateWorkflow({ acceptedText: content })
-										}
-									/>
-								}
-							/>
-						}
-					/>
-					<Tab
-						id="declined"
-						title="Declined"
-						panel={
-							<EmailPreview
-								{...sharedEmailPreviewProps}
-								kind="declined"
-								collectionTitle={collection.title}
-								body={
-									<WorkflowTextEditor
-										placeholder="Custom email text"
-										initialContent={workflow.declinedText}
-										onContent={(content) =>
-											updateWorkflow({ declinedText: content })
-										}
-									/>
-								}
-							/>
-						}
-					/>
-				</Tabs>
-			</Step>
+				<h3>Accepted submissions</h3>
+				<EmailPreview
+					{...sharedEmailPreviewProps}
+					kind="accepted"
+					collectionTitle={collection.title}
+					body={
+						<WorkflowTextEditor
+							placeholder="Custom email text"
+							initialContent={workflow.acceptedText}
+							onContent={(content) => updateWorkflow({ acceptedText: content })}
+						/>
+					}
+				/>
+				<h3>Declined submissions</h3>
+				<EmailPreview
+					{...sharedEmailPreviewProps}
+					kind="declined"
+					collectionTitle={collection.title}
+					body={
+						<WorkflowTextEditor
+							placeholder="Custom email text"
+							initialContent={workflow.declinedText}
+							onContent={(content) => updateWorkflow({ declinedText: content })}
+						/>
+					}
+				/>
+			</div>
+		);
+	};
+
+	const renderLayoutBanner = () => {
+		return (
+			<>
+				<p>
+					Visitors to {collectionLink} will see a banner inviting them to submit to this
+					Collection.
+				</p>
+				<LayoutSubmissionBannerSkeleton
+					className="banner-skeleton"
+					title={
+						<EditableText
+							className="banner-title-text"
+							placeholder='Click to add banner title (e.g. "Call for Submissions")'
+							value={workflow.title}
+							onChange={(title) => updateWorkflow({ title })}
+						/>
+					}
+					content={
+						<WorkflowTextEditor
+							placeholder="Banner content"
+							initialContent={workflow.introText}
+							onContent={(introText) => updateWorkflow({ introText })}
+						/>
+					}
+				/>
+			</>
+		);
+	};
+
+	return (
+		<div className="submission-workflow-editor-component">
+			<SubmissionWorkflowStepPicker
+				selectedStep={step}
+				onSelectStep={setStep}
+				stepCompletions={{
+					'instructions-requirements': true,
+					'response-emails': false,
+					'layout-banner': false,
+				}}
+			/>
+			{step === 'instructions-requirements' && renderInstructionsRequirements()}
+			{step === 'response-emails' && renderResponseEmails()}
+			{step === 'layout-banner' && renderLayoutBanner()}
 		</div>
 	);
 };

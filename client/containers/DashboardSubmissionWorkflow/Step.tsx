@@ -17,12 +17,7 @@ const Step = (props: Props) => {
 	const { title, number, children, className, done } = props;
 	return (
 		<div className={classNames('step-component', className)}>
-			<h2>
-				<span className={classNames('number', done && 'done')}>
-					{done ? <Icon icon="tick" /> : number}
-				</span>
-				{title}
-			</h2>
+			<h2>{title}</h2>
 			{children}
 		</div>
 	);

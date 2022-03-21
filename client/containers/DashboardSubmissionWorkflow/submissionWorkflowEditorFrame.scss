@@ -1,0 +1,19 @@
+@import './shared.scss';
+
+.submission-workflow-editor-frame-component {
+    .submission-workflow-editor-frame-top {
+        border: 1px solid $border-color;
+        border-top-left-radius: 2px;
+        border-top-right-radius: 2px;
+        overflow: hidden;
+        padding: 10px;
+    }
+
+    .contents {
+        border: 1px solid $border-color;
+        border-top: none;
+        border-bottom-left-radius: 2px;
+        border-bottom-right-radius: 2px;
+        padding: 20px;
+    }
+}
