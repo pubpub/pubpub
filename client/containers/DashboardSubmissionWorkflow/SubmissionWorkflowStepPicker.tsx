@@ -2,7 +2,13 @@ import React, { useEffect } from 'react';
 import classNames from 'classnames';
 import { Tab, TabList, useTabState } from 'reakit/Tab';
 
-import { SubmissionWorkflowConfigStep, submissionWorkflowConfigSteps } from './types';
+import { Icon } from 'components';
+
+import {
+	SubmissionWorkflowConfigStep,
+	submissionWorkflowConfigSteps,
+	submissionWorkflowConfigStepLabels,
+} from './types';
 
 require('./submissionWorkflowStepPicker.scss');
 
@@ -12,22 +18,17 @@ type Props = {
 	stepCompletions: Record<SubmissionWorkflowConfigStep, boolean>;
 };
 
-const stepLabels: Record<SubmissionWorkflowConfigStep, React.ReactNode> = {
-	'instructions-requirements': 'Instructions & Requirements',
-	'response-emails': 'Email templates',
-	'layout-banner': 'Invitation text',
-};
-
 const SubmissionWorkflowStepPicker = (props: Props) => {
 	const { selectedStep, onSelectStep, stepCompletions } = props;
 	const tabs = useTabState({ currentId: selectedStep });
+	const { selectedId, select } = tabs;
 	const selectedStepIndex = submissionWorkflowConfigSteps.indexOf(selectedStep);
 
 	useEffect(() => {
-		if (tabs.currentId) {
-			onSelectStep(tabs.currentId as SubmissionWorkflowConfigStep);
+		if (selectedStep !== selectedId) {
+			select(selectedStep);
 		}
-	}, [tabs.currentId, onSelectStep]);
+	}, [selectedStep, selectedId, select]);
 
 	return (
 		<TabList
@@ -35,20 +36,32 @@ const SubmissionWorkflowStepPicker = (props: Props) => {
 			className="submission-workflow-step-picker-component"
 			aria-label="Workflow configuration steps"
 		>
-			{Object.entries(stepLabels).map(([step, label], index) => {
-				const complete = stepCompletions[step];
-				const passed = selectedStepIndex >= index;
+			{Object.entries(submissionWorkflowConfigStepLabels).map(([step, label], index) => {
+				const reached = selectedStepIndex >= index;
+				const passed = selectedStepIndex > index;
+				const incomplete = passed && !stepCompletions[step];
 				return (
 					<>
 						<Tab
 							{...tabs}
 							id={step}
 							as="div"
-							className={classNames('step', passed && 'passed')}
-							stopId=""
+							className={classNames(
+								'step',
+								reached && 'reached',
+								incomplete && 'incomplete',
+							)}
+							stopId={step}
+							onClick={() => onSelectStep(step as SubmissionWorkflowConfigStep)}
 						>
 							<div className="label">
-								<span className="number">{index + 1}</span>
+								<div className="icon-container">
+									{incomplete ? (
+										<Icon icon="warning-sign" intent="warning" iconSize={22} />
+									) : (
+										<div className="number">{index + 1}</div>
+									)}
+								</div>
 								{label}
 							</div>
 							<div className="progress-indicator" />

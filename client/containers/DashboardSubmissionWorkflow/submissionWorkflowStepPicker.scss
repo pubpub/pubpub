@@ -23,18 +23,27 @@
             padding: 10px;
             flex-grow: 1;
             cursor: pointer;
-            .number {
-                flex-shrink: 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
+
+            .icon-container {
                 width: 22px;
                 height: 22px;
-                font-size: 14px;
-                border-radius: 11px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-shrink: 0;
                 margin-right: 10px;
-                color: white;
-                background: var(--community-accent-dark);
+                .number {
+                    width: 22px;
+                    height: 22px;
+                    flex-shrink: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 14px;
+                    border-radius: 11px;
+                    color: white;
+                    background: var(--community-accent-dark);
+                }
             }
         }
 
@@ -57,9 +66,15 @@
             }
         }
 
-        &.passed {
+        &.reached {
             .progress-indicator {
                 background: var(--community-accent-dark);
+            }
+        }
+
+        &.incomplete {
+            .progress-indicator {
+                background: $warning;
             }
         }
 

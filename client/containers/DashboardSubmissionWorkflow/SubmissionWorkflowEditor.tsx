@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, EditableText, InputGroup } from '@blueprintjs/core';
+import { Button, Checkbox, FormGroup, InputGroup, Label } from '@blueprintjs/core';
 
 import { Collection } from 'types';
 import { LayoutSubmissionBannerSkeleton } from 'client/components/Layout';
@@ -11,7 +11,12 @@ import { collectionUrl } from 'utils/canonicalUrls';
 import WorkflowTextEditor from './WorkflowTextEditor';
 import EmailPreview from './EmailPreview';
 import SubmissionWorkflowStepPicker from './SubmissionWorkflowStepPicker';
-import { EditableSubmissionWorkflow, SubmissionWorkflowConfigStep } from './types';
+import {
+	EditableSubmissionWorkflow,
+	SubmissionWorkflowConfigStep,
+	submissionWorkflowConfigSteps,
+	submissionWorkflowConfigStepLabels,
+} from './types';
 import {
 	RecordValidator,
 	isValidDocJson,
@@ -27,21 +32,30 @@ type Props = {
 	onUpdateWorkflow: (workflow: Partial<EditableSubmissionWorkflow>) => unknown;
 	onValidateWorkflow: (isValid: boolean) => unknown;
 	workflow: EditableSubmissionWorkflow;
+	finalStepButton?: React.ReactNode;
 };
 
 const validator: RecordValidator<EditableSubmissionWorkflow> = {
 	title: isValidTitle,
 	introText: isValidDocJson,
 	instructionsText: isValidDocJson,
-	emailText: isValidDocJson,
+	emailText: isAlwaysValid,
 	acceptedText: isAlwaysValid,
 	declinedText: isAlwaysValid,
 	targetEmailAddress: isValidEmail,
 	enabled: isAlwaysValid,
 };
 
+const youCanLeaveItBlank = <>You can leave it blank if you don't have anything you want to add.</>;
+
 const SubmissionWorkflowEditor = (props: Props) => {
-	const { collection, onUpdateWorkflow, onValidateWorkflow, workflow } = props;
+	const {
+		collection,
+		onUpdateWorkflow,
+		onValidateWorkflow,
+		workflow,
+		finalStepButton = null,
+	} = props;
 	const { communityData } = usePageContext();
 	const { email: communityEmail } = communityData;
 	const [step, setStep] = useState<SubmissionWorkflowConfigStep>('instructions-requirements');
@@ -72,28 +86,59 @@ const SubmissionWorkflowEditor = (props: Props) => {
 	useEffect(() => void onValidateWorkflow(isValid), [onValidateWorkflow, isValid]);
 
 	const renderInstructionsRequirements = () => {
+		const currentYear = new Date().getFullYear().toString();
 		return (
 			<>
-				<h2>Add detailed submission instructions</h2>
+				<Label>
+					<h2>Workflow title</h2>
+					<p>
+						For example, <i>Summer {currentYear} Special Issue: Call for Submissions</i>
+						. Submitters will see this, not the Collection title.
+					</p>
+					<InputGroup
+						large
+						onChange={(e) => updateWorkflow({ title: e.target.value })}
+						value={workflow.title}
+						placeholder="Call for Submissions"
+					/>
+				</Label>
+				<h2>Detailed submission instructions</h2>
 				<p>
-					Now provide instructions detailing any requirements for submissions to this
-					Collection. Submitters will be able to refer to this text at any time.
+					...for content, formatting, etc. Submitters will be able to refer to these at
+					any time.
 				</p>
 				<WorkflowTextEditor
 					placeholder="Detailed submission instructions"
 					initialContent={workflow.instructionsText}
 					onContent={(content) => updateWorkflow({ instructionsText: content })}
 				/>
+				<h2>Submission requirements</h2>
+				<FormGroup
+					helperText={<>We'll merge the abstract into the Pub when it is submitted.</>}
+				>
+					<Checkbox label="Require an abstract" />
+				</FormGroup>
+				<FormGroup
+					helperText={
+						<>
+							A short editorial subtitle shown in the Pub header and in links to the
+							Pub. You may want this for relatively self-serve workflows.
+						</>
+					}
+				>
+					<Checkbox label="Require a description" />
+				</FormGroup>
 			</>
 		);
 	};
 
-	const renderResponseEmails = () => {
+	const renderEmails = () => {
 		return (
 			<div className="email-step">
+				<h2>Email correspondence address</h2>
 				<p>
-					When a submission is completed, PubPub will email the submitter and CC this
-					address:
+					Once a submission is completed, PubPub will email the submitter with an
+					automated response and CC this address (that you control):
 				</p>
 				<div className="target-email-input">
 					<InputGroup
@@ -116,9 +161,10 @@ const SubmissionWorkflowEditor = (props: Props) => {
 						</Button>
 					)}
 				</div>
+				<h2>Automated submission response</h2>
 				<p>
 					You can customize the automated response here, perhaps with a note of thanks and
-					an expected response time:
+					an expected response time. {youCanLeaveItBlank}
 				</p>
 				<EmailPreview
 					{...sharedEmailPreviewProps}
@@ -132,12 +178,11 @@ const SubmissionWorkflowEditor = (props: Props) => {
 						/>
 					}
 				/>
-				<h2>Create a template response for accepted and declined submissions</h2>
+				<h2>Acceptance email template</h2>
 				<p>
-					These are just templates. You'll be able to customize the message you send
-					before each accepted or declined submission.
+					This is just a template that you'll be able to modify before sending each
+					acceptance email. {youCanLeaveItBlank}
 				</p>
-				<h3>Accepted submissions</h3>
 				<EmailPreview
 					{...sharedEmailPreviewProps}
 					kind="accepted"
@@ -150,7 +195,11 @@ const SubmissionWorkflowEditor = (props: Props) => {
 						/>
 					}
 				/>
-				<h3>Declined submissions</h3>
+				<h2>Rejection email template</h2>
+				<p>
+					This is just a template that you'll be able to modify before sending each
+					rejection email. {youCanLeaveItBlank}
+				</p>
 				<EmailPreview
 					{...sharedEmailPreviewProps}
 					kind="declined"
@@ -169,31 +218,47 @@ const SubmissionWorkflowEditor = (props: Props) => {
 
 	const renderLayoutBanner = () => {
 		return (
-			<>
+			<div className="banner-step">
+				<h2>Layout banner text</h2>
 				<p>
 					Visitors to {collectionLink} will see a banner inviting them to submit to this
-					Collection.
+					Collection. You can add a brief description of your call for submissions here.
 				</p>
 				<LayoutSubmissionBannerSkeleton
 					className="banner-skeleton"
-					title={
-						<EditableText
-							className="banner-title-text"
-							placeholder='Click to add banner title (e.g. "Call for Submissions")'
-							value={workflow.title}
-							onChange={(title) => updateWorkflow({ title })}
-						/>
-					}
+					title={workflow.title}
 					content={
-						<WorkflowTextEditor
-							placeholder="Banner content"
-							initialContent={workflow.introText}
-							onContent={(introText) => updateWorkflow({ introText })}
-						/>
+						<>
+							<WorkflowTextEditor
+								placeholder="Banner content"
+								initialContent={workflow.introText}
+								onContent={(introText) => updateWorkflow({ introText })}
+							/>
+						</>
 					}
 				/>
-			</>
+			</div>
 		);
+	};
+
+	const renderNextStepButton = () => {
+		const currentStepIndex = submissionWorkflowConfigSteps.indexOf(step);
+		const nextStep = submissionWorkflowConfigSteps[currentStepIndex + 1];
+		if (nextStep) {
+			const label = submissionWorkflowConfigStepLabels[nextStep];
+			return (
+				<Button
+					minimal
+					outlined
+					rightIcon="arrow-right"
+					intent="primary"
+					onClick={() => setStep(nextStep)}
+				>
+					Next: <b>{label}</b>
+				</Button>
+			);
+		}
+		return finalStepButton;
 	};
 
 	return (
@@ -202,14 +267,18 @@ const SubmissionWorkflowEditor = (props: Props) => {
 				selectedStep={step}
 				onSelectStep={setStep}
 				stepCompletions={{
-					'instructions-requirements': true,
-					'response-emails': false,
-					'layout-banner': false,
+					'instructions-requirements':
+						fieldValidStates.title && fieldValidStates.instructionsText,
+					'response-emails': fieldValidStates.targetEmailAddress,
+					'layout-banner': fieldValidStates.introText,
 				}}
 			/>
-			{step === 'instructions-requirements' && renderInstructionsRequirements()}
-			{step === 'response-emails' && renderResponseEmails()}
-			{step === 'layout-banner' && renderLayoutBanner()}
+			<div className="step-content">
+				{step === 'instructions-requirements' && renderInstructionsRequirements()}
+				{step === 'response-emails' && renderEmails()}
+				{step === 'layout-banner' && renderLayoutBanner()}
+			</div>
+			{renderNextStepButton()}
 		</div>
 	);
 };

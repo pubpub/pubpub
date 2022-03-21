@@ -72,17 +72,18 @@ const NewSubmissionWorkflowEditor = (props: Props) => {
 						}
 						onValidateWorkflow={setIsValid}
 						collection={activeCollection}
+						finalStepButton={
+							<Button
+								disabled={!isValid}
+								onClick={handleCreateNewWorkflow}
+								loading={isPersisting}
+								icon="tick"
+								intent="primary"
+							>
+								Save and continue
+							</Button>
+						}
 					/>
-					<p>
-						<Button
-							disabled={!isValid}
-							onClick={handleCreateNewWorkflow}
-							icon="tick"
-							loading={isPersisting}
-						>
-							Save and continue
-						</Button>
-					</p>
 				</>
 			);
 		}
