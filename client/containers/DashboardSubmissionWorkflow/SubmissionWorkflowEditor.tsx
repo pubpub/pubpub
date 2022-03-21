@@ -44,6 +44,8 @@ const validator: RecordValidator<EditableSubmissionWorkflow> = {
 	declinedText: isAlwaysValid,
 	targetEmailAddress: isValidEmail,
 	enabled: isAlwaysValid,
+	requireAbstract: isAlwaysValid,
+	requireDescription: isAlwaysValid,
 };
 
 const youCanLeaveItBlank = <>You can leave it blank if you don't have anything you want to add.</>;
@@ -116,7 +118,13 @@ const SubmissionWorkflowEditor = (props: Props) => {
 				<FormGroup
 					helperText={<>We'll merge the abstract into the Pub when it is submitted.</>}
 				>
-					<Checkbox label="Require an abstract" />
+					<Checkbox
+						label="Require an abstract"
+						checked={workflow.requireAbstract}
+						onChange={() =>
+							updateWorkflow({ requireAbstract: !workflow.requireAbstract })
+						}
+					/>
 				</FormGroup>
 				<FormGroup
 					helperText={
@@ -126,7 +134,13 @@ const SubmissionWorkflowEditor = (props: Props) => {
 						</>
 					}
 				>
-					<Checkbox label="Require a description" />
+					<Checkbox
+						label="Require a description"
+						checked={workflow.requireDescription}
+						onChange={() =>
+							updateWorkflow({ requireDescription: !workflow.requireDescription })
+						}
+					/>
 				</FormGroup>
 			</>
 		);

@@ -22,6 +22,8 @@ const createEmptyWorkflow = (): EditableSubmissionWorkflow => {
 		emailText: getEmptyDoc(),
 		targetEmailAddress: '',
 		enabled: false,
+		requireAbstract: false,
+		requireDescription: false,
 	};
 };
 
