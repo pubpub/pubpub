@@ -57,10 +57,10 @@ const SpubHeaderToolbar = (props: Props) => {
 		if (props.showSubmitButton)
 			return (
 				<Button
-					className="submission-button"
-					minimal={true}
-					outlined={true}
+					minimal
+					outlined
 					intent="primary"
+					className="submit-button"
 					onClick={props.onSubmit}
 				>
 					Submit
