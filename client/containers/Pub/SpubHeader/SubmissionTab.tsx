@@ -1,7 +1,6 @@
 import React from 'react';
 import { Label, InputGroup } from '@blueprintjs/core';
 import { useDebouncedCallback } from 'use-debounce';
-import { NodeSpec } from 'prosemirror-model';
 
 import { PubPageData, Pub, DocJson } from 'types';
 import { MinimalEditor, DownloadChooser } from 'components';
