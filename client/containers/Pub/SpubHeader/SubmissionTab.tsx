@@ -1,6 +1,7 @@
 import React from 'react';
 import { Label, InputGroup } from '@blueprintjs/core';
 import { useDebouncedCallback } from 'use-debounce';
+import { NodeSpec } from 'prosemirror-model';
 
 import { PubPageData, Pub, DocJson } from 'types';
 import { MinimalEditor, DownloadChooser } from 'components';
@@ -39,12 +40,12 @@ const SubmissionTab = (props: Props) => {
 			<Label>
 				<h2>Abstract</h2>
 				<MinimalEditor
+					customNodes={{ doc: { content: 'paragraph' } }}
 					placeholder="Type your submission's abstract here..."
 					initialContent={props.abstract}
 					onEdit={(doc) => props.onUpdateAbstract(doc.toJSON() as DocJson)}
 					debounceEditsMs={300}
 					getButtons={(buttons) => buttons.workflowButtonSet}
-					useFormattingBar
 					constrainHeight
 				/>
 			</Label>
