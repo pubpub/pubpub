@@ -1,6 +1,8 @@
 import React from 'react';
 import { Button } from '@blueprintjs/core';
 
+import { Placement } from 'popper.js';
+
 import Icon, { IconName } from 'components/Icon/Icon';
 import { Menu, MenuProps } from './Menu';
 
@@ -15,6 +17,7 @@ type MenuButtonProps = {
 		rightIcon?: IconName | React.ReactNode;
 		minimal?: boolean;
 		small?: boolean;
+		placement?: Placement;
 	};
 	disabled?: boolean;
 	children: React.ReactNode;
