@@ -4,7 +4,6 @@ import { Tab, Tabs } from '@blueprintjs/core';
 import { PubPageData, DocJson } from 'types';
 
 import TitleDescriptionAbstract from './TitleDescriptionAbstract';
-import Contributors from './Contributors';
 import SpubSettings from './SpubSettings';
 
 type Props = {
@@ -39,12 +38,6 @@ const SubmissionTab = (props: Props) => {
 						onUpdateAbstract={props.onUpdateAbstract}
 					/>
 				}
-			/>
-			<Tab
-				className={maybeActiveClass('contributors')}
-				id="contributors"
-				title="Contributors"
-				panel={<Contributors pubData={props.pub} onUpdatePub={props.onUpdatePub} />}
 			/>
 			<Tab
 				className={maybeActiveClass('spubSettings')}

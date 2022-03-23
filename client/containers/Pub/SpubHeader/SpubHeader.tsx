@@ -7,6 +7,7 @@ import { apiFetch } from 'client/utils/apiFetch';
 import { usePubContext } from '../pubHooks';
 import InstructionsTab from './InstructionsTab';
 import SubmissionTab from './SubmissionTab';
+import ContributorsTab from './ContributorsTab';
 import PreviewTab from './PreviewTab';
 
 require('./spubHeader.scss');
@@ -66,6 +67,7 @@ const SpubHeader = () => {
 	const instructionTabTitle = renderTabTitle('align-left', 'Instructions');
 	const submissionTabTitle = renderTabTitle('manually-entered-data', 'Submission');
 	const previewTabTitle = renderTabTitle('eye-open', 'Preview & Submit');
+	const contributorsTabTitle = renderTabTitle('people', 'Contributors');
 	const maybeActiveClass = (tabId: string) => (tabId === selectedTab ? 'active' : 'inactive');
 
 	return (
@@ -79,12 +81,17 @@ const SpubHeader = () => {
 				id="instructions"
 				title={instructionTabTitle}
 				className={`tab-panel ${maybeActiveClass('instructions')}`}
-				panel={<InstructionsTab submissionWorkflow={submission.submissionWorkflow!} />}
+				panel={
+					<InstructionsTab
+						submissionWorkflow={submission.submissionWorkflow}
+						onBeginSubmission={() => setSelectedTab('submission')}
+					/>
+				}
 			/>
 			<Tab
 				id="submission"
 				title={submissionTabTitle}
-				className={`tab-panel ${maybeActiveClass('submission')}`}
+				className={`tab-panel submission ${maybeActiveClass('submission')}`}
 				panel={
 					<SubmissionTab
 						abstract={submission.abstract}
@@ -95,9 +102,15 @@ const SpubHeader = () => {
 				}
 			/>
 			<Tab
+				className={`tab-panel ${maybeActiveClass('contributors')}`}
+				id="contributors"
+				title={contributorsTabTitle}
+				panel={<ContributorsTab pubData={pubData} onUpdatePub={updateAndSavePubData} />}
+			/>
+			<Tab
 				id="preview"
 				title={previewTabTitle}
-				className={`${maybeActiveClass('preview')}`}
+				className={`tab-panel ${maybeActiveClass('preview')}`}
 				panel={
 					<PreviewTab
 						updateHistoryData={updateHistoryData}
