@@ -69,10 +69,7 @@ export type ActivityItemRenderer<Item extends InsertableActivityItem> = (
 ) => RenderedActivityItem;
 
 // A manifest of renderers for all activity item types (to make sure they're accounted for)
-type RenderableActivityItemKind = Exclude<
-	ActivityItemKind,
-	'submission-created' | 'submission-deleted' | 'submission-status-changed'
->;
+type RenderableActivityItemKind = Exclude<ActivityItemKind, 'submission-deleted'>;
 export type ActivityItemRenderers = {
 	[K in RenderableActivityItemKind]: ActivityItemRenderer<InsertableActivityItem & { kind: K }>;
 };
