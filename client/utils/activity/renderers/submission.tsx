@@ -2,23 +2,19 @@ import React from 'react';
 
 import { SubmissionCreatedActivityItem, SubmissionStatusUpdatedActivityItem } from 'types';
 
-import { submissionTitle } from '../titles';
+import { submissionTitle, pubTitle, collectionTitle } from '../titles';
 import { itemRenderer } from './itemRenderer';
 
-type Titles = 'submission';
+type Titles = 'pub' | 'collection';
 
 export const renderSubmissionCreated = itemRenderer<SubmissionCreatedActivityItem, Titles>({
 	icon: 'office',
 	titleRenderers: {
-		submission: submissionTitle,
+		pub: pubTitle,
+		collection: collectionTitle,
 	},
 	message: ({ titles }) => {
-		const { actor, submission } = titles;
-		return (
-			<>
-				{actor} created {submission}
-			</>
-		);
+		return 'hi';
 	},
 });
 

@@ -1,10 +1,11 @@
-import { Submission } from 'types';
+import { Submission } from '../submission';
 import { Diff } from '../util';
 
 import { InsertableActivityItemBase } from './base';
 
 type SubmissionActivityItemBase = InsertableActivityItemBase & {
 	pubId: string;
+	collectionId: string;
 	payload: {
 		submissionId: string;
 		pub: {
