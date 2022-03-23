@@ -19,7 +19,6 @@ export type SpubHeaderTab = 'instructions' | 'submission' | 'preview';
 const SpubHeader = () => {
 	const { pendingPromise } = usePendingChanges();
 	const { updatePubData, pubData, updateSubmissionState, submissionState } = usePubContext();
-
 	const { selectedTab, submission } = submissionState!;
 
 	const updateAbstract = async (newAbstract: DocJson) => {
