@@ -27,6 +27,7 @@ const filterLabels: Record<ActivityFilter, FilterLabel> = {
 	review: { label: 'Reviews', icon: 'social-media' },
 	discussion: { label: 'Discussions', icon: 'chat' },
 	pubEdge: { label: 'Connections', icon: 'layout-auto' },
+	submissions: { label: 'Connections', icon: 'layout-auto' },
 };
 
 const allFilters = Object.keys(filterLabels) as ActivityFilter[];
