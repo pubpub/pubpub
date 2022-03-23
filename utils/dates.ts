@@ -49,7 +49,10 @@ export const getLocalDateMatchingUtcCalendarDate = (utcDate: Date | string) => {
 	const formattedUtcDate = dateFormat(utcDate, 'UTC:yyyy-mm-dd');
 	const localDateOnSameDay = new Date(formattedUtcDate);
 	const returnDate = new Date(utcDate);
-	returnDate.setMinutes(returnDate.getMinutes() + localDateOnSameDay.getTimezoneOffset());
+	const isSameTimezone =
+		returnDate.getTimezoneOffset() === localDateOnSameDay.getTimezoneOffset();
+	if (!isSameTimezone)
+		returnDate.setMinutes(returnDate.getMinutes() + localDateOnSameDay.getTimezoneOffset());
 	return returnDate;
 };
 
