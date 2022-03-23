@@ -4,6 +4,7 @@ import { Tab, Tabs } from '@blueprintjs/core';
 import { SubmissionStatus, DocJson, PubPageData } from 'types';
 import { apiFetch } from 'client/utils/apiFetch';
 import { PendingChangesProvider } from 'components';
+import { usePendingChanges } from 'utils/hooks';
 
 import { usePubContext } from '../pubHooks';
 import InstructionsTab from './InstructionsTab';
@@ -16,6 +17,7 @@ require('./spubHeader.scss');
 export type SpubHeaderTab = 'instructions' | 'submission' | 'preview';
 
 const SpubHeader = () => {
+	const { pendingPromise } = usePendingChanges();
 	const { updatePubData, pubData, updateSubmissionState, submissionState } = usePubContext();
 
 	const { selectedTab, submission } = submissionState!;
@@ -27,22 +29,26 @@ const SpubHeader = () => {
 				abstract: newAbstract,
 			},
 		}));
-		return apiFetch.put('/api/submissions', {
-			abstract: newAbstract,
-			id: submission.id,
-		});
+		return pendingPromise(
+			apiFetch.put('/api/submissions', {
+				abstract: newAbstract,
+				id: submission.id,
+			}),
+		);
 	};
 
 	const updateAndSavePubData = async (newPubData: Partial<PubPageData>) => {
 		updatePubData(newPubData);
-		return apiFetch('/api/pubs', {
-			method: 'PUT',
-			body: JSON.stringify({
-				...newPubData,
-				pubId: pubData.id,
-				communityId: pubData.communityId,
-			}),
-		}).catch(() => updatePubData(pubData));
+		return pendingPromise(
+			apiFetch('/api/pubs', {
+				method: 'PUT',
+				body: JSON.stringify({
+					...newPubData,
+					pubId: pubData.id,
+					communityId: pubData.communityId,
+				}),
+			}).catch(() => updatePubData(pubData)),
+		);
 	};
 
 	const setSelectedTab = (nextTab: SpubHeaderTab) => {
@@ -50,47 +56,49 @@ const SpubHeader = () => {
 	};
 
 	return (
-		<PendingChangesProvider>
-			<div className="spub-header-component">
-				<SpubHeaderToolBar
-					onSelectTab={(t: SpubHeaderTab) => setSelectedTab(t)}
-					selectedTab={selectedTab}
-					showSubmitButton={selectedTab !== 'instructions'}
-					onSubmit={() => {}}
-					status={submission.status as SubmissionStatus}
+		<div className="spub-header-component">
+			<SpubHeaderToolBar
+				onSelectTab={(t: SpubHeaderTab) => setSelectedTab(t)}
+				selectedTab={selectedTab}
+				showSubmitButton={
+					submission.status === 'incomplete' && selectedTab !== 'instructions'
+				}
+				onSubmit={() => {}}
+				status={submission.status as SubmissionStatus}
+			/>
+			<Tabs id="spubHeaderPanels" selectedTabId={selectedTab}>
+				<Tab
+					id="instructions"
+					panel={
+						<InstructionsTab
+							onBeginSubmission={() => setSelectedTab('submission')}
+							submissionWorkflow={submission.submissionWorkflow!}
+						/>
+					}
 				/>
-				<Tabs id="spubHeaderPanels" selectedTabId={selectedTab}>
-					<Tab
-						id="instructions"
-						panel={
-							<InstructionsTab
-								onBeginSubmission={() => setSelectedTab('submission')}
-								submissionWorkflow={submission.submissionWorkflow!}
-							/>
-						}
-					/>
-					<Tab
-						id="submission"
-						panel={
-							<SubmissionTab
-								abstract={submission.abstract}
-								onUpdatePub={updateAndSavePubData}
-								onUpdateAbstract={updateAbstract}
-								pub={pubData}
-							/>
-						}
-					/>
-					<Tab
-						id="contributors"
-						panel={
-							<ContributorsTab pubData={pubData} onUpdatePub={updateAndSavePubData} />
-						}
-					/>
-					<Tab id="preview" />
-				</Tabs>
-			</div>
-		</PendingChangesProvider>
+				<Tab
+					id="submission"
+					panel={
+						<SubmissionTab
+							abstract={submission.abstract}
+							onUpdatePub={updateAndSavePubData}
+							onUpdateAbstract={updateAbstract}
+							pub={pubData}
+						/>
+					}
+				/>
+				<Tab
+					id="contributors"
+					panel={<ContributorsTab pubData={pubData} onUpdatePub={updateAndSavePubData} />}
+				/>
+				<Tab id="preview" />
+			</Tabs>
+		</div>
 	);
 };
 
-export default SpubHeader;
+export default () => (
+	<PendingChangesProvider>
+		<SpubHeader />
+	</PendingChangesProvider>
+);

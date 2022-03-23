@@ -34,7 +34,6 @@ const SpubHeaderToolbar = (props: Props) => {
 		() => Color(communityData.accentColorDark).alpha(0.1),
 		[communityData.accentColorDark],
 	);
-
 	const { pendingCount } = usePendingChanges();
 	const isSaving = pendingCount > 0;
 
@@ -46,28 +45,30 @@ const SpubHeaderToolbar = (props: Props) => {
 		<span className="status-text">{props.status}</span>
 	);
 
-	const renderRight = () => {
-		if (props.status !== 'incomplete')
-			return (
-				<div className="status">
-					<em>status:&nbsp;&nbsp;&nbsp;</em>
-					<strong>{status}</strong>
-				</div>
-			);
-		if (props.showSubmitButton)
-			return (
+	const showStatus = props.status !== 'incomplete';
+
+	const renderRight = () => (
+		<>
+			{props.showSubmitButton && (
 				<Button
 					minimal
 					outlined
+					disabled={isSaving}
 					intent="primary"
 					className="submit-button"
 					onClick={props.onSubmit}
 				>
-					Submit
+					{isSaving ? <em>Saving</em> : 'Submit'}
 				</Button>
-			);
-		return null;
-	};
+			)}
+			{showStatus && (
+				<div className="status">
+					<em>status:&nbsp;&nbsp;&nbsp;</em>
+					<strong>{status}</strong>
+				</div>
+			)}
+		</>
+	);
 
 	return (
 		<div style={{ background: lighterAccentColor }} className="spub-header-toolbar-component">
