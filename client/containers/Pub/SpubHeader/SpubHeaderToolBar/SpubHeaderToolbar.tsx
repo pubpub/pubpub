@@ -2,9 +2,11 @@ import React, { useMemo } from 'react';
 import { Tab, Tabs, Icon, IconName, Button } from '@blueprintjs/core';
 import Color from 'color';
 
-import { GridWrapper } from 'components';
-import { SubmissionStatus } from 'types';
+import { GridWrapper, DialogLauncher } from 'components';
+import { SubmissionStatus, Submission, DefinitelyHas } from 'types';
 import { usePageContext, usePendingChanges } from 'utils/hooks';
+
+import SubmitDialog from './SubmitDialog';
 import { SpubHeaderTab } from '../SpubHeader';
 
 require('./spubHeaderToolbar.scss');
@@ -18,9 +20,9 @@ const renderTabTitle = (icon: IconName, title: string) => (
 type Props = {
 	selectedTab: SpubHeaderTab;
 	onSelectTab: (t: SpubHeaderTab) => unknown;
+	submission: DefinitelyHas<Submission, 'submissionWorkflow'>;
 	status: SubmissionStatus;
 	showSubmitButton: boolean;
-	onSubmit: () => unknown;
 };
 
 const SpubHeaderToolbar = (props: Props) => {
@@ -50,16 +52,28 @@ const SpubHeaderToolbar = (props: Props) => {
 	const renderRight = () => (
 		<>
 			{props.showSubmitButton && (
-				<Button
-					minimal
-					outlined
-					disabled={isSaving}
-					intent="primary"
-					className="submit-button"
-					onClick={props.onSubmit}
+				<DialogLauncher
+					renderLauncherElement={({ openDialog }) => (
+						<Button
+							minimal
+							outlined
+							disabled={isSaving}
+							intent="primary"
+							className="submit-button"
+							onClick={openDialog}
+						>
+							{isSaving ? <em>Saving</em> : 'Submit'}
+						</Button>
+					)}
 				>
-					{isSaving ? <em>Saving</em> : 'Submit'}
-				</Button>
+					{({ isOpen, onClose }) => (
+						<SubmitDialog
+							submission={props.submission}
+							isOpen={isOpen}
+							onClose={onClose}
+						/>
+					)}
+				</DialogLauncher>
 			)}
 			{showStatus && (
 				<div className="status">

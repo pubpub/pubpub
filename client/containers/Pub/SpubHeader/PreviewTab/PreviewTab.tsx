@@ -6,7 +6,7 @@ import { GridWrapper, PubByline, DialogLauncher } from 'components';
 import { usePageContext } from 'utils/hooks';
 import { usePubContext } from 'containers/Pub/pubHooks';
 
-import SubmitDialog from './SubmitDialog';
+import SubmitDialog from '../SpubHeaderToolBar/SubmitDialog';
 import PubHeaderBackground from '../../PubHeader/PubHeaderBackground';
 import ResponsiveHeaderButton from '../../PubHeader/ResponsiveHeaderButton';
 import { getHistoryButtonLabelForTimestamp } from '../../PubHeader/DraftReleaseButtons';

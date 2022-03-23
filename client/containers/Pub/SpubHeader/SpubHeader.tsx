@@ -62,7 +62,7 @@ const SpubHeader = () => {
 				showSubmitButton={
 					submission.status === 'incomplete' && selectedTab !== 'instructions'
 				}
-				onSubmit={() => {}}
+				submission={submission}
 				status={submission.status as SubmissionStatus}
 			/>
 			<Tabs id="spubHeaderPanels" selectedTabId={selectedTab}>
