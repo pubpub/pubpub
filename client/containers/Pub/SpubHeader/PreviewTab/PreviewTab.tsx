@@ -22,7 +22,7 @@ type Props = {
 
 const PreviewTab = (props: Props) => {
 	const { communityData } = usePageContext();
-	const { pubData, historyData } = props;
+	const { pubData, historyData, submission } = props;
 	const { latestKey, timestamps } = historyData;
 	const latestTimestamp = timestamps[latestKey];
 	const { collabData } = usePubContext();
@@ -79,7 +79,7 @@ const PreviewTab = (props: Props) => {
 						>
 							{({ isOpen, onClose }) => (
 								<SubmitDialog
-									submission={props.pubData.submission}
+									submission={submission}
 									isOpen={isOpen}
 									onClose={onClose}
 								/>
