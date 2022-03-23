@@ -8,6 +8,7 @@ import { Menu, MenuProps } from './Menu';
 
 type MenuButtonProps = {
 	buttonContent?: React.ReactNode;
+	placement?: Placement;
 	buttonProps?: {
 		className?: string;
 		fill?: boolean;
@@ -17,7 +18,6 @@ type MenuButtonProps = {
 		rightIcon?: IconName | React.ReactNode;
 		minimal?: boolean;
 		small?: boolean;
-		placement?: Placement;
 	};
 	disabled?: boolean;
 	children: React.ReactNode;
@@ -31,7 +31,7 @@ const getIconProp = (icon: IconName | React.ReactNode) => {
 };
 
 export const MenuButton = (props: MenuButtonProps) => {
-	const { buttonContent, children, buttonProps, ...restProps } = props;
+	const { placement = undefined, buttonContent, children, buttonProps, ...restProps } = props;
 
 	const buttonPropsWithIcon = {
 		...buttonProps,
@@ -40,6 +40,7 @@ export const MenuButton = (props: MenuButtonProps) => {
 
 	return (
 		<Menu
+			placement={placement}
 			disclosure={({ ref, ...restDisclosureProps }) => (
 				<Button
 					children={buttonContent}

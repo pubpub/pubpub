@@ -40,11 +40,11 @@ const AcceptSubmissionsToggle = (props: Props) => {
 				<MenuButton
 					aria-label="Accepting submissions"
 					buttonContent="Enabled"
+					placement="bottom-end"
 					buttonProps={{
 						icon: 'tick',
 						rightIcon: 'caret-down',
 						outlined: true,
-						placement: 'bottom-end',
 					}}
 				>
 					<MenuItem

@@ -558,7 +558,7 @@ export const createPubDiscussionCommentAddedActivityItem = async (
 };
 
 export const createSubmissionActivityItem = async (
-	kind: 'submission-deleted' | 'submission-created',
+	kind: 'submission-deleted' | 'submission-updated',
 	actorId: null | string,
 	submissionId: string,
 ) => {
@@ -607,7 +607,7 @@ export const createSubmissionStatusChangedActivityItem = async (
 		actorId,
 		communityId: submission.pub.communityId,
 		pubId: submission.pub.id,
-		kind: 'submission-status-changed' as const,
+		kind: 'submission-updated' as const,
 		payload: {
 			submissionId,
 			...diffs,

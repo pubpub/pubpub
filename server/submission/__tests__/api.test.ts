@@ -164,7 +164,7 @@ describe('/api/submissions', () => {
 				})
 				.expect(201),
 		).toMatchResultingObject((response) => ({
-			kind: 'submission-status-changed',
+			kind: 'submission-updated',
 			pubId: submission.pubId,
 			actorId: collectionManager.id,
 			payload: {
@@ -197,7 +197,7 @@ describe('/api/submissions', () => {
 				})
 				.expect(201),
 		).toMatchResultingObject((response) => ({
-			kind: 'submission-status-changed',
+			kind: 'submission-updated',
 			pubId: submission.pubId,
 			actorId: collectionManager.id,
 			payload: {
@@ -242,7 +242,7 @@ describe('/api/submissions', () => {
 				.send({ submissionWorkflowId: submissionWorkflow.id })
 				.expect(201),
 		).toMatchResultingObject((response) => ({
-			kind: 'submission-created',
+			kind: 'submission-updated',
 			pubId: response.body.pubId,
 			actorId: guest.id,
 		}));
