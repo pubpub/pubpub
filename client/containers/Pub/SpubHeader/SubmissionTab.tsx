@@ -44,7 +44,7 @@ const SubmissionTab = (props: Props) => {
 					initialContent={props.abstract}
 					onEdit={(doc) => props.onUpdateAbstract(doc.toJSON() as DocJson)}
 					debounceEditsMs={300}
-					getButtons={(buttons) => buttons.workflowButtonSet}
+					useFormattingBar
 					constrainHeight
 				/>
 			</Label>
