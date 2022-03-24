@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie';
+import posthog from 'posthog-js';
 
 import { apiFetch } from '../apiFetch';
 
@@ -14,6 +15,7 @@ const deleteOdiousCookies = () => {
 	// @ts-expect-error ts-migrate(2339) FIXME: Property 'heap' does not exist on type 'Window & t... Remove this comment to see the full error message
 	window.heap.clearEventProperties();
 	odiousCookies.map((key) => Cookies.remove(key, { path: '' }));
+	posthog.reset();
 };
 
 export const gdprCookiePersistsSignup = () => Cookies.get(persistSignupCookieKey) === 'yes';
@@ -49,6 +51,9 @@ export const updateGdprConsent = (loginData, doesUserConsent) => {
 			window.heap.identify(Math.random());
 		}
 		deleteOdiousCookies();
+		posthog.opt_out_capturing();
+	} else {
+		posthog.opt_in_capturing();
 	}
 	if (loggedIn) {
 		return apiFetch('/api/users', {

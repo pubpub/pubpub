@@ -7,6 +7,7 @@ import { setEnvironment, setAppCommit } from 'utils/environment';
 
 import { getClientInitialData } from './initialData';
 import { setupHeap } from './heap';
+import { setupPosthog } from './posthog';
 
 const isStorybookEnv = (windowObj) =>
 	windowObj.location.origin === 'http://localhost:9001' || windowObj.STORYBOOK_ENV === 'react';
@@ -37,8 +38,9 @@ export const hydrateWrapper = (Component) => {
 			// @ts-expect-error ts-migrate(2531) FIXME: Object is possibly 'null'.
 			document.getElementById('chunk-name').getAttribute('data-json'),
 		);
+		setupPosthog(initialData);
+		setupHeap(initialData);
 		if (!isLocalEnv(window)) {
-			setupHeap(initialData);
 			// @ts-expect-error ts-migrate(2339) FIXME: Property 'sentryIsActive' does not exist on type '... Remove this comment to see the full error message
 			window.sentryIsActive = true;
 			Sentry.init({
