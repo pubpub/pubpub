@@ -14,10 +14,10 @@ import {
 	Submission,
 	Thread,
 	ThreadComment,
+	SubmissionWorkflow,
 } from 'server/models';
 
 import { getDiffsForPayload, getChangeFlagsForPayload, createActivityItem } from './utils';
-import { SubmissionWorkflow } from 'dist/server/server/models';
 
 const resolvePartialMemberItem = async (member: types.Member) => {
 	if (member.pubId) {
