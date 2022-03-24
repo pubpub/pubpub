@@ -3,7 +3,7 @@ import { Tab, Tabs, Icon, IconName, Button } from '@blueprintjs/core';
 import Color from 'color';
 
 import { GridWrapper, DialogLauncher } from 'components';
-import { SubmissionStatus, Submission, DefinitelyHas } from 'types';
+import { Submission, DefinitelyHas } from 'types';
 import { usePageContext, usePendingChanges } from 'utils/hooks';
 
 import SubmitDialog from './SubmitDialog';
@@ -21,8 +21,6 @@ type Props = {
 	selectedTab: SpubHeaderTab;
 	onSelectTab: (t: SpubHeaderTab) => unknown;
 	submission: DefinitelyHas<Submission, 'submissionWorkflow'>;
-	status: SubmissionStatus;
-	showSubmitButton: boolean;
 };
 
 const SpubHeaderToolbar = (props: Props) => {
@@ -38,20 +36,22 @@ const SpubHeaderToolbar = (props: Props) => {
 	);
 	const { pendingCount } = usePendingChanges();
 	const isSaving = pendingCount > 0;
+	const showSubmitButton =
+		props.submission.status === 'incomplete' && props.selectedTab !== 'instructions';
 
 	const status = isSaving ? (
 		<strong>
 			<em>Saving</em>
 		</strong>
 	) : (
-		<span className="status-text">{props.status}</span>
+		<span className="status-text">{props.submission.status}</span>
 	);
 
-	const showStatus = props.status !== 'incomplete';
+	const showStatus = props.submission.status !== 'incomplete';
 
 	const renderRight = () => (
 		<>
-			{props.showSubmitButton && (
+			{showSubmitButton && (
 				<DialogLauncher
 					renderLauncherElement={({ openDialog }) => (
 						<Button

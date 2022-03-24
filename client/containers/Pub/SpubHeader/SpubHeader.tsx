@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tab, Tabs } from '@blueprintjs/core';
 
-import { SubmissionStatus, DocJson, PubPageData } from 'types';
+import { DocJson, PubPageData } from 'types';
 import { apiFetch } from 'client/utils/apiFetch';
 import { PendingChangesProvider } from 'components';
 import { usePendingChanges } from 'utils/hooks';
@@ -59,11 +59,7 @@ const SpubHeader = () => {
 			<SpubHeaderToolBar
 				onSelectTab={(t: SpubHeaderTab) => setSelectedTab(t)}
 				selectedTab={selectedTab}
-				showSubmitButton={
-					submission.status === 'incomplete' && selectedTab !== 'instructions'
-				}
 				submission={submission}
-				status={submission.status as SubmissionStatus}
 			/>
 			<Tabs id="spubHeaderPanels" selectedTabId={selectedTab}>
 				<Tab
