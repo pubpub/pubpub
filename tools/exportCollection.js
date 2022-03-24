@@ -3,6 +3,7 @@ import fs from 'fs';
 
 import { Collection, CollectionPub } from 'server/models';
 import { getBestDownloadUrl } from 'utils/pub/downloads';
+import { createLatestPubExports } from 'server/export/queries';
 import { getPubData } from 'server/rss/queries';
 import fetch from 'node-fetch';
 import { promptOkay } from './utils/prompt';
@@ -13,21 +14,27 @@ const {
 
 const getPubExports = async (pubId, dest) => {
 	const [pubData] = await getPubData([pubId]);
-	const finalDest = `${dest}/${pubData.slug}`;
-	fs.mkdirSync(finalDest);
-	// console.log(pubData);
 	const pdfUrl = await getBestDownloadUrl(pubData, 'pdf');
 	const jatsUrl = await getBestDownloadUrl(pubData, 'jats');
-	if (jatsUrl) {
-		fetch(jatsUrl).then((res) => {
-			res.body.pipe(fs.createWriteStream(`${finalDest}/${pubData.slug}.xml`));
-		});
+	const finalDest = `${dest}/${pubData.slug}`;
+
+	if (!pdfUrl || !jatsUrl) {
+		console.log('Missing:', pubData.slug);
+		createLatestPubExports(pubId);
+	} else {
+		fs.mkdirSync(finalDest);
+		if (jatsUrl) {
+			await fetch(jatsUrl).then((res) => {
+				res.body.pipe(fs.createWriteStream(`${finalDest}/${pubData.slug}.xml`));
+			});
+		}
+		if (pdfUrl) {
+			await fetch(pdfUrl).then((res) => {
+				res.body.pipe(fs.createWriteStream(`${finalDest}/${pubData.slug}.pdf`));
+			});
+		}
 	}
-	if (pdfUrl) {
-		fetch(pdfUrl).then((res) => {
-			res.body.pipe(fs.createWriteStream(`${finalDest}/${pubData.slug}.pdf`));
-		});
-	}
+	return Promise.resolve();
 };
 
 const main = async () => {
