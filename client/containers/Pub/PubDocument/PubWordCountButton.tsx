@@ -5,7 +5,7 @@ import { Node } from 'prosemirror-model';
 
 require('./pubWordCountButton.scss');
 
-export type Props = {
+type Props = {
 	doc: Node;
 };
 
@@ -19,7 +19,7 @@ const getWordAndCharacterCountsFromDoc = (node: Node) => {
 
 const PubHeaderFormattingWordCountButton = (props: Props) => {
 	const { doc } = props;
-	const [wordCount, characterCount] = useMemo(() => getWordAndCharacterCountsFromDoc(doc), [doc]);
+	const [wordCount, characterCount] = useMemo(() => getWordAndCharacterCountsFromDoc(doc), []);
 	const [open, setOpen] = useState(false);
 	const content = (
 		<div className="pub-word-count-button-popover-content">
