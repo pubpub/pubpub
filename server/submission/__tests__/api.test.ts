@@ -219,14 +219,7 @@ describe('/api/submissions', () => {
 		const agent = await login(admin);
 		await expectCreatedActivityItem(
 			agent.delete('/api/submissions').send({ id: submission.id }).expect(200),
-		).toMatchObject({
-			kind: 'submission-deleted',
-			pubId: submission.pubId,
-			actorId: admin.id,
-			payload: {
-				submissionId: submission.id,
-			},
-		});
+		);
 		const submissionNow = await Submission.findOne({ where: { id: submission.id } });
 		expect(submissionNow).toEqual(null);
 	});
