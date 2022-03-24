@@ -1,4 +1,15 @@
 @import 'styles/variables.scss';
+
+$light-orange: #fbb360;
+$medium-green: #43b177;
+$purple: #5c415d;
+
+$status-colors: (
+	'declined': $purple,
+	'pending': $light-orange,
+	'accepted': $medium-green,
+);
+
 $spub-configuration-width: 1000px;
 
 .spub-header-toolbar-component {
@@ -53,6 +64,17 @@ $spub-configuration-width: 1000px;
 	}
 	.status {
 		display: flex;
+		em {
+			margin-right: 5px;
+		}
+		strong {
+			font-weight: 500;
+		}
+		@each $status, $color in $status-colors {
+			.status-color-#{$status} {
+				color: $color;
+			}
+		}
 	}
 
 	.status-text {
