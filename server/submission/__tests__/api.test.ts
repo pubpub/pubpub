@@ -1,7 +1,7 @@
 /* global describe, it, expect, beforeAll, afterAll, beforeEach, jest */
 import { setup, teardown, login, modelize, expectCreatedActivityItem, stub } from 'stubstub';
 import * as types from 'types';
-import { Member, Submission, SubmissionWorkflow } from 'server/models';
+import { Submission, SubmissionWorkflow } from 'server/models';
 import { finishDeferredTasks } from 'server/utils/deferred';
 
 const models = modelize`
