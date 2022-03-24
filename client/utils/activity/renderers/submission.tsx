@@ -33,6 +33,13 @@ export const renderSubmissionUpdated = itemRenderer<SubmissionStatusUpdatedActiv
 					</>
 				);
 			}
+			if (to === 'declined') {
+				return (
+					<>
+						{actor} denoed {pub} for submission to {collection}
+					</>
+				);
+			}
 		}
 		return (
 			<>

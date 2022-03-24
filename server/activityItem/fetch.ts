@@ -104,7 +104,6 @@ const getWhereQueryForChildScopes = async (scope: Scope) => {
 
 const applyFiltersToWhereQuery = (whereQuery: any, filters: ActivityFilter[]) => {
 	if (filters.length > 0) {
-		console.log(filters);
 		const renderedFilters: SequelizeFilter[] = filters
 			.map((filter) => filterDefinitions[filter])
 			.reduce((acc: SequelizeFilter[], next: SequelizeFilter | SequelizeFilter[]) => {
