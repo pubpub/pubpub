@@ -27,6 +27,7 @@ const commandFiles = {
 	depositCollectionPubs: './depositCollectionPubs',
 	emailActivityDigest: './emailActivityDigest',
 	emailUsers: './emailUsers',
+	exportCollection: './exportCollection',
 	figurelist: './figurelist',
 	firebaseDownload: './firebaseDownload',
 	flattenBranchHistory: './flattenBranchHistory',
