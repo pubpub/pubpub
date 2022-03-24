@@ -1,25 +1,28 @@
 import React, { useMemo } from 'react';
-import { Tab, Tabs, TabId, Icon, IconName, Button } from '@blueprintjs/core';
+import { Tab, Tabs, Icon, IconName, Button } from '@blueprintjs/core';
 import Color from 'color';
 
-import { GridWrapper } from 'components';
-import { SubmissionStatus } from 'types';
+import { GridWrapper, DialogLauncher } from 'components';
+import { SubmissionStatus, Submission, DefinitelyHas } from 'types';
 import { usePageContext, usePendingChanges } from 'utils/hooks';
+
+import SubmitDialog from './SubmitDialog';
+import { SpubHeaderTab } from '../SpubHeader';
 
 require('./spubHeaderToolbar.scss');
 
 const renderTabTitle = (icon: IconName, title: string) => (
 	<>
-		<Icon icon={icon} /> {title}
+		<Icon icon={icon} iconSize={13} /> {title}
 	</>
 );
 
 type Props = {
-	selectedTab: TabId;
-	onSelectTab: (t: TabId) => unknown;
+	selectedTab: SpubHeaderTab;
+	onSelectTab: (t: SpubHeaderTab) => unknown;
+	submission: DefinitelyHas<Submission, 'submissionWorkflow'>;
 	status: SubmissionStatus;
 	showSubmitButton: boolean;
-	onSubmit: () => unknown;
 };
 
 const SpubHeaderToolbar = (props: Props) => {
@@ -27,16 +30,12 @@ const SpubHeaderToolbar = (props: Props) => {
 	const submissionTabTitle = renderTabTitle('manually-entered-data', 'Submission');
 	const contributorsTabTitle = renderTabTitle('people', 'Contributors');
 	const previewTabTitle = renderTabTitle('eye-open', 'Preview');
-	const maybeActiveClass = (tabId: string) =>
-		`${tabId === props.selectedTab ? 'active' : 'inactive'}`;
-
 	const { communityData } = usePageContext();
 
 	const lighterAccentColor = useMemo(
 		() => Color(communityData.accentColorDark).alpha(0.1),
 		[communityData.accentColorDark],
 	);
-
 	const { pendingCount } = usePendingChanges();
 	const isSaving = pendingCount > 0;
 
@@ -48,55 +47,61 @@ const SpubHeaderToolbar = (props: Props) => {
 		<span className="status-text">{props.status}</span>
 	);
 
-	const renderRight = props.showSubmitButton ? (
-		<Button
-			className="submission-button"
-			minimal={true}
-			outlined={true}
-			intent="primary"
-			onClick={props.onSubmit}
-		>
-			Submit
-		</Button>
-	) : (
-		<div className="status">
-			<em>status:&nbsp;&nbsp;&nbsp;</em>
-			<strong>{status}</strong>
-		</div>
-	);
-	return (
-		<div className="spubheader-toolbar-component" style={{ background: lighterAccentColor }}>
-			<GridWrapper>
-				<Tabs
-					id="spubHeader"
-					onChange={props.onSelectTab}
-					selectedTabId={props.selectedTab}
-					large={true}
+	const showStatus = props.status !== 'incomplete';
+
+	const renderRight = () => (
+		<>
+			{props.showSubmitButton && (
+				<DialogLauncher
+					renderLauncherElement={({ openDialog }) => (
+						<Button
+							minimal
+							outlined
+							disabled={isSaving}
+							intent="primary"
+							className="submit-button"
+							onClick={openDialog}
+						>
+							{isSaving ? <em>Saving</em> : 'Submit'}
+						</Button>
+					)}
 				>
-					<Tab
-						id="instructions"
-						title={instructionTabTitle}
-						className={`tab-panel ${maybeActiveClass('instructions')}`}
-					/>
+					{({ isOpen, onClose }) => (
+						<SubmitDialog
+							submission={props.submission}
+							isOpen={isOpen}
+							onClose={onClose}
+						/>
+					)}
+				</DialogLauncher>
+			)}
+			{showStatus && (
+				<div className="status">
+					<em>status:&nbsp;&nbsp;&nbsp;</em>
+					<strong>{status}</strong>
+				</div>
+			)}
+		</>
+	);
 
-					<Tab
-						id="submission"
-						title={submissionTabTitle}
-						className={`tab-panel ${maybeActiveClass('submission')}`}
-					/>
+	return (
+		<div style={{ background: lighterAccentColor }} className="spub-header-toolbar-component">
+			<GridWrapper containerClassName="toolbar-container">
+				<div className="toolbar-items">
+					<Tabs
+						id="spubHeaderToolbar"
+						onChange={props.onSelectTab}
+						selectedTabId={props.selectedTab}
+					>
+						<Tab id="instructions" title={instructionTabTitle} />
 
-					<Tab
-						id="contributors"
-						title={contributorsTabTitle}
-						className={`tab-panel ${maybeActiveClass('contributors')}`}
-					/>
-					<Tab
-						id="preview"
-						title={previewTabTitle}
-						className={`${maybeActiveClass('preview')}`}
-					/>
-				</Tabs>
-				<div>{renderRight}</div>
+						<Tab id="submission" title={submissionTabTitle} />
+
+						<Tab id="contributors" title={contributorsTabTitle} />
+						<Tab id="preview" title={previewTabTitle} />
+					</Tabs>
+					<div>{renderRight()}</div>
+				</div>
 			</GridWrapper>
 		</div>
 	);
