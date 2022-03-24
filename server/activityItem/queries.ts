@@ -17,6 +17,7 @@ import {
 } from 'server/models';
 
 import { getDiffsForPayload, getChangeFlagsForPayload, createActivityItem } from './utils';
+import { SubmissionWorkflow } from 'dist/server/server/models';
 
 const resolvePartialMemberItem = async (member: types.Member) => {
 	if (member.pubId) {
@@ -569,6 +570,10 @@ export const createSubmissionStatusUpdatedActivityItem = async (
 				{
 					model: Pub,
 					as: 'pub',
+				},
+				{
+					model: SubmissionWorkflow,
+					as: 'submissionWorkflow',
 				},
 			],
 		});
