@@ -17,8 +17,7 @@ export const renderSubmissionUpdated = itemRenderer<SubmissionStatusUpdatedActiv
 		const { payload } = item;
 		const { actor, pub, collection } = titles;
 		if (payload.status) {
-			const { from, to } = payload.status;
-			console.log('From:', from, 'To:', to);
+			const { to } = payload.status;
 			if (to === 'pending') {
 				return (
 					<>

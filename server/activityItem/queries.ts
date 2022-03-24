@@ -562,20 +562,21 @@ export const createSubmissionStatusUpdatedActivityItem = async (
 	submissionId: string,
 	oldSubmission: types.Submission,
 ) => {
-	const submission: types.DefinitelyHas<types.Submission, 'pub'> = await Submission.findOne({
-		where: { id: submissionId },
-		include: [
-			{
-				model: Pub,
-				as: 'pub',
-			},
-		],
-	});
+	const submission: types.DefinitelyHas<types.Submission, 'pub' | 'submissionWorkflow'> =
+		await Submission.findOne({
+			where: { id: submissionId },
+			include: [
+				{
+					model: Pub,
+					as: 'pub',
+				},
+			],
+		});
 	const diffs = getDiffsForPayload(submission, oldSubmission, ['status']);
 	return createActivityItem({
 		actorId,
 		communityId: submission.pub.communityId,
-		collectionId: submission.submissionWorkflow?.collectionId || '',
+		collectionId: submission.submissionWorkflow.collectionId,
 		pubId: submission.pub.id,
 		kind: 'submission-updated' as const,
 		payload: {
