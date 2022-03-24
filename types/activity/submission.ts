@@ -29,4 +29,7 @@ export type SubmissionDeletedActivityItem = SubmissionActivityItemBase & {
 	kind: 'submission-deleted';
 };
 
-export type SubmissionActivityItem = SubmissionStatusUpdatedActivityItem;
+export type SubmissionActivityItem =
+	| SubmissionCreatedActivityItem
+	| SubmissionStatusUpdatedActivityItem
+	| SubmissionDeletedActivityItem;
