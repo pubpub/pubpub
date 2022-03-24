@@ -76,7 +76,7 @@ const filterDefinitions: Record<ActivityFilter, SequelizeFilter | SequelizeFilte
 	]),
 	discussion: itemKindFilter(['pub-discussion-comment-added']),
 	pubEdge: itemKindFilter(['pub-edge-created', 'pub-edge-removed']),
-	submissions: itemKindFilter(['submission-updated']),
+	submission: itemKindFilter(['submission-updated']),
 };
 
 const getWhereQueryForChildScopes = async (scope: Scope) => {
@@ -104,6 +104,7 @@ const getWhereQueryForChildScopes = async (scope: Scope) => {
 
 const applyFiltersToWhereQuery = (whereQuery: any, filters: ActivityFilter[]) => {
 	if (filters.length > 0) {
+		console.log(filters);
 		const renderedFilters: SequelizeFilter[] = filters
 			.map((filter) => filterDefinitions[filter])
 			.reduce((acc: SequelizeFilter[], next: SequelizeFilter | SequelizeFilter[]) => {

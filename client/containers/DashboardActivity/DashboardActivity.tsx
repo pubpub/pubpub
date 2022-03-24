@@ -25,7 +25,7 @@ const DashboardActivity = (props: Props) => {
 	} = usePageContext();
 
 	const [filters, setFilters] = useState<ActivityFilter[]>([]);
-
+	console.log(scope);
 	const { items, loadMoreItems, isLoading, loadedAllItems } = useActivityItems({
 		initialActivityData: activityData,
 		scope,

@@ -27,7 +27,7 @@ const filterLabels: Record<ActivityFilter, FilterLabel> = {
 	review: { label: 'Reviews', icon: 'social-media' },
 	discussion: { label: 'Discussions', icon: 'chat' },
 	pubEdge: { label: 'Connections', icon: 'layout-auto' },
-	submissions: { label: 'Submissions', icon: 'layout-auto' },
+	submission: { label: 'Submissions', icon: 'manually-entered-data' },
 };
 
 const allFilters = Object.keys(filterLabels) as ActivityFilter[];
@@ -43,10 +43,10 @@ const filtersByScopeKind = {
 		'member',
 		'review',
 		'discussion',
-		'submissions',
+		'submission',
 	]),
-	collection: sortedFilters(['pub', 'member', 'review', 'discussion', 'submissions']),
-	pub: sortedFilters(['member', 'review', 'discussion', 'pubEdge', 'submissions']),
+	collection: sortedFilters(['pub', 'member', 'review', 'discussion', 'submission']),
+	pub: sortedFilters(['member', 'review', 'discussion', 'pubEdge', 'submission']),
 };
 
 const getFiltersForScope = (scope: Scope) => {
