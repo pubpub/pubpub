@@ -1,14 +1,11 @@
 import React from 'react';
 import { Button } from '@blueprintjs/core';
 
-import { Placement } from 'popper.js';
-
 import Icon, { IconName } from 'components/Icon/Icon';
 import { Menu, MenuProps } from './Menu';
 
 type MenuButtonProps = {
 	buttonContent?: React.ReactNode;
-	placement?: Placement;
 	buttonProps?: {
 		className?: string;
 		fill?: boolean;
