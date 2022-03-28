@@ -1,13 +1,5 @@
 @import 'styles/variables.scss';
-@import '~@blueprintjs/core/lib/scss/variables';
-
-$status-colors: (
-	'pending': $gold4, //#F0B726
-	'accepted': $green2, //#1C6E42
-	'declined': $red2, //#AC2F33
-);
-
-$spub-configuration-width: 1000px;
+@import 'containers/DashboardOverview/overviewStyles.scss';
 
 .spub-header-toolbar-component {
 	.toolbar-container .col-12 {
@@ -66,11 +58,7 @@ $spub-configuration-width: 1000px;
 		strong {
 			font-weight: 500;
 		}
-		@each $status, $color in $status-colors {
-			.status-color-#{$status} {
-				color: $color;
-			}
-		}
+		@include status-colors;
 	}
 
 	.status-text {
