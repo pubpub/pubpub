@@ -21,6 +21,10 @@ const ContributorsTab = (props: Props) => {
 
 	return (
 		<SpubHeaderTab className="contributors-tab-component">
+			<p className="instruction">
+				Add the names, roles & affiliations of other people who have a part to play in the
+				creation of this submission's content.
+			</p>
 			<Label>
 				<h2 className="contributors-header">
 					Contributors {contributorCount && `(${contributorCount})`}
