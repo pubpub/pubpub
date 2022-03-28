@@ -7,6 +7,7 @@ import {
 	CollectionPub,
 	Discussion,
 	ReviewNew,
+	Submission,
 	ScopeSummary,
 } from 'server/models';
 import { ScopeSummary as ScopeSummaryType } from 'types';
@@ -73,6 +74,33 @@ export const summarizeCollection = async (collectionId: string) => {
 		...addScopeSummaries(...scopeSummaries),
 		pubs: collectionPubs.length,
 	});
+};
+
+export const summarizeSubmission = async (pubId: string, summarizeParentScopes = true) => {
+	const pub = await Pub.findOne({
+		where: { id: pubId },
+		include: [{ model: Submission as 'submission' }],
+	});
+	const [discussions, reviews] = await Promise.all([
+		Discussion.count({ where: { pubId } }),
+		ReviewNew.count({ where: { pubId } }),
+	]);
+	await persistScopeSummaryForModel(pub, {
+		discussions,
+		reviews,
+		submissions: 0,
+		pubs: 0,
+		collections: 0,
+	});
+	if (summarizeParentScopes) {
+		const collectionPubs = await CollectionPub.findAll({ where: { pubId } });
+		await Bluebird.map(
+			collectionPubs,
+			(collectionPub) => summarizeCollection(collectionPub.collectionId),
+			{ concurrency: 5 },
+		);
+		await summarizeCommunity(pub.communityId);
+	}
 };
 
 export const summarizePub = async (pubId: string, summarizeParentScopes = true) => {
